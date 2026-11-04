@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx1g",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/319f3e4563d9/r3-build/large-state/checks.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmLargeStateProbe",
+    "/workspace/scratch/319f3e4563d9/model16m/model/continuum-lm1-16011776.lm1",
+    "/workspace/scratch/319f3e4563d9/model16m/tokenizer/lm1-tokenizer.lmbp",
+    "/workspace/scratch/319f3e4563d9/r3-build/large-state-measurement/states",
+    "5b22157baf724824a659d6fbfb5b0fbbe1d411c3c8ad26dfa8f11f5c1feac4c5"
+  ],
+  "optimizerUpdatesAllowed": 0,
+  "sourceCommit": "c11b5d2de9c39d4447fcc03cf33e6d07753b1737",
+  "startedUtc": "2026-11-04T21:52:53.559010+00:00"
+}

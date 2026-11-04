@@ -53,3 +53,28 @@ A second writer was actually blocked by the OS file lock while the native worker
 Total across the four tiny scenarios: **112 actual optimizer updates**, two deliberate native-process kills, zero 16M updates. The tests establish this Linux/JVM recovery path, not Android lifecycle behavior or unbounded overnight service. Full evidence: [M3 manifest](evidence/m3/manifest.json), [all actual run commands and checks](evidence/m3/raw/receipt.json), [prospective protocol](RECOVERY_PROTOCOL.md).
 
 Reproduction uses `build_native.py` with the combined patch plus `LmTrainingFixture.kt`, `LmTrainingState.kt` and `LmSegmentWorker.kt`. On another host, generate and publish a new registration with `register_recovery.py`, then execute `test_recovery_processes.py --repo /path/to/repo --source-commit FULL_REGISTRATION_COMMIT --output /path/to/new-output`. Old registrations bind their exact executable/source paths and must not be edited to describe a later run.
+
+## M4 — completed at the actual 16M size
+
+The separately preregistered source `c11b5d2de9c39d4447fcc03cf33e6d07753b1737` executed once, exit 0, without timeout or optimizer update. Native decoding read all **16,011,776 parameters / 57 tensors** from the existing pinned model. The format fixture created fresh zero moments, saved and decoded the complete training bundle, checked **32,023,552 moment values**, and serialized it again with exactly the same full-file identity.
+
+| Observation | Actual value |
+| --- | ---: |
+| Complete training bundle | 192,143,140 bytes / 183.242 MiB |
+| Whole state-only probe | 8.036579358 seconds |
+| Maximum monitored-child RSS | 732,224 KiB / 715.0625 MiB |
+| Preflight-child RSS baseline | 11,648 KiB |
+| Optimizer updates / inference calls | 0 / 0 |
+| Model and tokenizer input hashes | unchanged |
+
+Canonical parameter fingerprint before and after: `cd90c599dbe271e5ccc9f2281f52d0e84fb7c259d0c18527d47e600a0ea7bba7`. Complete bundle SHA-256: `24661ee1a2db0e00bafc93ae4ea142b3cb996bd28ed64bb720a135bdea50c026`.
+
+The memory observation is Linux `RUSAGE_CHILDREN` maximum with the recorded preflight baseline; it is not simultaneous summed RSS, an isolated optimizer peak or an Android measurement. The observation fits the registered 1 GiB heap / 120-second limits. No bound on device memory or future nonzero 16M training follows from it.
+
+**The 16M moments are fresh zeros. Historical optimizer moments were never present in the LM1C input.** This is real format-size/integrity evidence, not a claim that a historical 16M training trajectory has been resumed. Nonzero continuation is demonstrated only by the separate tiny M2/M3 fixtures.
+
+Evidence: [native rows](evidence/m4/native.tsv), [resource receipt](evidence/m4/receipt.json), [source/compile manifest](evidence/m4/manifest.json), [prospective protocol](LARGE_STATE_PROTOCOL.md). The large derived bundle is a reproducible format-test output; its size/hash are archived, not promoted as a trained model.
+
+## Final scope
+
+Four milestones completed sequentially, without new subagents. Production model/runtime files remain unchanged; all kernel changes are isolated patch artifacts. No main merge, new 16M training, quality-test reuse, APK, device installation, app-network change or background daemon. Remaining work is independent patch integration review, nonzero 16M continuation under a newly justified protocol, Android filesystem/lifecycle testing, and fresh independent quality confirmation after the failed #508 acceptance.

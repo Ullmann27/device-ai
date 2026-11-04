@@ -1,0 +1,53 @@
+{
+  "schema": "continuum-training-continuity-handoff-v1",
+  "status": "M1_M2_M3_M4_VERIFIED_RESEARCH_ONLY",
+  "repository": "Ullmann27/device-ai",
+  "pullRequest": 530,
+  "branch": "research/continuum-lm1-resumable-training-20261104-319f3e",
+  "architecture": {
+    "kernel": "Production LM1 unchanged; isolated combined patch",
+    "checkpoint": "LM1T: weights, two Adam moments, step, schedule, workers, tokenizer, source and data identity",
+    "worker": "Local sequential 8-update segments; 24 committed steps; four attempts maximum; immutable completion receipts"
+  },
+  "milestones": {
+    "M1": {
+      "source": "c9cb7a140eaa86d98ad79cf101208b6f60d365bc",
+      "checksPassed": 34,
+      "originalChecksFailed": 24
+    },
+    "M2": {
+      "source": "2dfe0852a1bb9e32bf701bb0bc8bc594bcca7c0a",
+      "checksPassed": 29,
+      "uninterruptedEqualsResumed": true
+    },
+    "M3": {
+      "registration": "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+      "checksPassed": 38,
+      "actualTinyUpdates": 112,
+      "realKilledNativeProcesses": 2
+    },
+    "M4": {
+      "registration": "c11b5d2de9c39d4447fcc03cf33e6d07753b1737",
+      "parameters": 16011776,
+      "momentValuesChecked": 32023552,
+      "optimizerUpdates": 0,
+      "bundleBytes": 192143140,
+      "bundleSha256": "24661ee1a2db0e00bafc93ae4ea142b3cb996bd28ed64bb720a135bdea50c026"
+    }
+  },
+  "runtime": {
+    "backgroundDaemonStarted": false,
+    "parallelSubagentsStarted": 0,
+    "native16mUpdatesThisRound": 0,
+    "mainMerged": false,
+    "productionChanged": false,
+    "androidVerified": false
+  },
+  "open": [
+    "Independent review before integrating the native source patch",
+    "Nonzero 16M optimizer-state recovery remains untested",
+    "Android filesystem and lifecycle behavior remains untested",
+    "Language-quality acceptance still failed in #508; new confirmation data required for new quality studies"
+  ],
+  "nextEntry": "Read RESULTS.md, current PR530 head, and current #492/#508/#525 handoffs before further scope decisions"
+}

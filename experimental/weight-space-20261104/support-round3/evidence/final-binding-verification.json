@@ -1,0 +1,12 @@
+{
+  "status": "PASS_FINAL_SOURCE_AND_EVIDENCE_BINDING",
+  "hashBindingsChecked": 142,
+  "nativeM1Cases": 34,
+  "nativeM2Cases": 29,
+  "processM3Assertions": 38,
+  "M4": "PASS_16M_STATE_ONLY",
+  "new16mOptimizerUpdates": 0,
+  "productionLmSourcesUnchanged": true,
+  "noAdditionalModelRunForThisCheck": true,
+  "registrationsUnchangedSinceExecution": true
+}

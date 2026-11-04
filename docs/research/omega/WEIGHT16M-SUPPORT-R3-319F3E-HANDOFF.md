@@ -1,6 +1,6 @@
 # LM1 sequential training-continuity support
 
-Status: M1_M2_M3_VERIFIED.
+Status: M1_M2_M3_M4_VERIFIED / RESEARCH_ONLY.
 
 Owner requested sustained sequential research on 2026-11-04. The previous three-agent round is complete in #514. This new branch targets three concrete milestones: invalid-update atomicity, complete optimizer-state recovery, and actual bounded process-interruption recovery.
 
@@ -16,6 +16,10 @@ M2: 29 native continuity/integrity cases PASS. Complete training state after 24 
 
 M3: 38 process checks PASS at preregistered source `fcfe0a93439d087465f9d9a4a4e87daae0340bb2`. Three separate JVMs and two real SIGKILL/recovery scenarios reproduce the uninterrupted complete state and committed step logs exactly. Last confirmed checkpoint is preserved; orphan state is not promoted; competing writer and tampered inputs are blocked. 112 actual tiny updates across four scenarios, including 16 recomputed updates. No 16M update, Android run or daemon activation.
 
-Next useful boundary: test full-state serialization/decoding at the existing 16,011,776-parameter size without any optimizer update, under a separately frozen resource budget. The current functional proof is on the 2,632-parameter synthetic fixture.
+M4: source frozen at `c11b5d2de9c39d4447fcc03cf33e6d07753b1737`, one real 16M state-only roundtrip PASS. All 16,011,776 weights and 32,023,552 fresh-zero moment values checked. 192,143,140-byte bundle, 8.0366 seconds, 715.0625 MiB maximum monitored-child RSS; original inputs unchanged. No 16M update or inference; no claim to restore historical optimizer moments.
+
+All four milestones are documented in [RESULTS.md](../../../experimental/weight-space-20261104/support-round3/RESULTS.md). Compact machine-readable continuation: [STATE.json](../../../experimental/weight-space-20261104/support-round3/STATE.json).
+
+Next: independent integration review of the combined source patch, nonzero 16M continuation only under a newly justified/frozen protocol, Android filesystem/lifecycle verification, and genuinely new quality confirmation data. The old #508 final test is consumed; its acceptance remains failed. No daemon or perpetual background execution is active.
 
 Rollback: omit this isolated research directory and handoff; the current app and active model remain unchanged.

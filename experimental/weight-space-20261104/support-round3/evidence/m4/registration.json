@@ -1,0 +1,58 @@
+{
+  "android": "NOT_RUN",
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx1g",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/319f3e4563d9/r3-build/large-state/checks.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmLargeStateProbe",
+    "/workspace/scratch/319f3e4563d9/model16m/model/continuum-lm1-16011776.lm1",
+    "/workspace/scratch/319f3e4563d9/model16m/tokenizer/lm1-tokenizer.lmbp",
+    "/workspace/scratch/319f3e4563d9/r3-build/large-state-measurement/states",
+    "5b22157baf724824a659d6fbfb5b0fbbe1d411c3c8ad26dfa8f11f5c1feac4c5"
+  ],
+  "files": {
+    "jar": {
+      "path": "/workspace/scratch/319f3e4563d9/r3-build/large-state/checks.jar",
+      "sha256": "34fde09a425b8f1a730b3626afb37a00dd76616efea2f2f91b046620bbbf3339"
+    },
+    "java": {
+      "path": "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+      "sha256": "1a7e0b17c39003c75b457d686775ccb032e56fa9c8afe3c492d8eb3715e8951a"
+    },
+    "model": {
+      "path": "/workspace/scratch/319f3e4563d9/model16m/model/continuum-lm1-16011776.lm1",
+      "sha256": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312"
+    },
+    "stdlib": {
+      "path": "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+      "sha256": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006"
+    },
+    "tokenizer": {
+      "path": "/workspace/scratch/319f3e4563d9/model16m/tokenizer/lm1-tokenizer.lmbp",
+      "sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+    }
+  },
+  "heapMiB": 1024,
+  "maxAttempts": 1,
+  "optimizerUpdates": 0,
+  "output": "/workspace/scratch/319f3e4563d9/r3-build/large-state-measurement",
+  "quality": "NOT_EVALUATED",
+  "schema": "lm1-large-state-only-v1",
+  "sourceDigest": "5b22157baf724824a659d6fbfb5b0fbbe1d411c3c8ad26dfa8f11f5c1feac4c5",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "experimental/weight-space-20261104/support-round3/LmLargeStateProbe.kt": "6be777943638100e4029324700c13d4e22c37fa97ddda7689f90655978ed73b2",
+    "experimental/weight-space-20261104/support-round3/LmTrainingState.kt": "e45eb6b39e2fbaeb07328b175ae118d2ea6f2d827d402b51f3275437d2a3fd10",
+    "experimental/weight-space-20261104/support-round3/build_native.py": "4583447a46e5ff0188ea54e9094f48aab06fef979f62e1fec1e112ab1bd62618",
+    "experimental/weight-space-20261104/support-round3/measure_large_state.py": "126a4f9882269eb0f8db65c77660ccc5be9fa11b6cf14d0022ddcaec6ce597a1",
+    "experimental/weight-space-20261104/support-round3/run_recovery.py": "17c1f594e8bbae6cfe8d8939c9b4841c494d77d751aa4f74b2332a59ca4919a4",
+    "experimental/weight-space-20261104/support-round3/training-continuity.patch": "7deb89ca77f41b45babdf223ec5ce8e1f4771aaea0cbbd92bdfd27edbbc3abb8"
+  },
+  "stateOrigin": "FRESH_ZERO_MOMENTS_NOT_HISTORICAL_RESUME",
+  "timeoutSeconds": 120
+}

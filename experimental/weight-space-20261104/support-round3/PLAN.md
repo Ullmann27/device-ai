@@ -1,6 +1,6 @@
 # LM1 training continuity — prospective support round 3
 
-Status: WIP / EXPERIMENTS_NOT_RUN. Owner continuation: 2026-11-04, sequential work while the owner is unavailable. No new parallel agents.
+Historical prospective status at initial publication: WIP / EXPERIMENTS_NOT_RUN. Owner continuation: 2026-11-04, sequential work while the owner is unavailable. No new parallel agents. Current measured outcomes are in `RESULTS.md`; M4 was separately registered in `LARGE_STATE_PROTOCOL.md` before execution.
 
 ## Immutable starting points
 
