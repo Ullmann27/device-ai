@@ -951,6 +951,7 @@ class AgentActivity : Activity() {
             cockpitBus.subscribe(at.heinz.deviceai.ui.CockpitAnimationPresenter(home)),
             cockpitBus.subscribe { runOnUiThread { pushCockpitState() } }
         )
+        subscribeMemoryEvents()
         dashboard.addView(home, matchWidth())
         workStatusView = textView("Bereit", 13f, ACCENT).apply {
             setPadding(dp(16), dp(10), dp(16), dp(10))
@@ -1195,16 +1196,18 @@ class AgentActivity : Activity() {
     }
 
     /** Live cockpit inputs from the Activity's real sources (turn, worker pool, steps, visible dialog). */
+    /** Memory events → cockpit bus, coalesced on the main thread (closed with the other cockpit subscriptions). */
+    private fun subscribeMemoryEvents() {
+        val source = at.heinz.deviceai.cockpit.MemoryEventSources.production ?: return
+        val main = android.os.Handler(mainLooper)
+        val mapper = at.heinz.deviceai.cockpit.MemoryEventMapper(cockpitBus) { d, r -> main.postDelayed(r, d) }
+        val subscription = source.subscribe(mapper)
+        cockpitSubscriptions += AutoCloseable { mapper.detach(); subscription.close() }
+    }
+
     private fun cockpitStatus(): at.heinz.deviceai.ui.CockpitStatus {
-        val pool = chiefStatusPool
-        return at.heinz.deviceai.ui.CockpitStatus(
-            turnPhase = activeChiefTurn?.phase,
-            workers = pool?.snapshot(),
-            workerCapacity = pool?.capacity,
-            lastReport = lastChiefWorkerReport,
-            steps = cockpitTriggers.latestTimeline(),
-            dialog = cockpitDialog.toList()
-        )
+        return at.heinz.deviceai.ui.CockpitStatus.live(activeChiefTurn, chiefStatusPool, lastChiefWorkerReport,
+            cockpitTriggers, cockpitDialog.toList())
     }
 
     /** Updates only the cockpit part of the shown state; measured dashboard values stay from the last collection. */

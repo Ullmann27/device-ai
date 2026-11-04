@@ -47,9 +47,12 @@ sealed class CockpitAnimationEvent {
     data class DocumentLearned(override val turnId: String, override val atMillis: Long, val docId: String,
                                val kind: String, val entriesAdded: Int) : CockpitAnimationEvent()
 
-    /** One memory entry was written; [status] is the MemoryEntryStatus name (CONFIRMED, UNCONFIRMED, …). */
+    /**
+     * Memory writes (coalesced): latest [entryId]/[status] (MemoryEntryStatus name; HYPOTHETICAL for hypotheses)
+     * and the number of ledger writes since the previous event ([count]).
+     */
     data class MemoryStored(override val turnId: String, override val atMillis: Long, val entryId: String,
-                            val status: String) : CockpitAnimationEvent()
+                            val status: String, val count: Int = 1) : CockpitAnimationEvent()
 
     /** A recall returned [count] hits (light points in the orb); [topScore] of rank 1 or null without hits. */
     data class RecallHits(override val turnId: String, override val atMillis: Long, val queryHash: String,

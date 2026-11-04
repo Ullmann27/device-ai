@@ -54,3 +54,13 @@ Für den E2E-Test „erster Denk-Durchlauf“: `ChiefJobs.agentJob(brief, ChiefJ
 - Verdrahtung von `TurnLifecycle` in `AgentActivity` (lokaler Modellpfad, `eventObserver`) – begonnen, nicht committet.
 - Verdrahtung von `ChiefWorkerPool` in die App (Fold7) – DEVICE_REQUIRED.
 - `LayersMemoryPort` (oben) auf dem Integrationsbranch einchecken und mit echtem `ContinuumMemoryLayers` testen.
+
+## Lese-API für das Cockpit: `ChiefWorkerPool.snapshot()` (Jarvis Kern, #481)
+
+- `fun snapshot(nowNanos: Long = System.nanoTime()): List<WorkerSnapshot>`: eine unveränderliche Kopie der
+  aktuellen Aufträge (wartend und laufend, ohne bereits gemeldete). Sie blockiert den Pool nicht und liest nur die
+  thread-sicheren Slot-Felder.
+- `data class WorkerSnapshot(id, goal, running, cancelling, elapsedMillis, deadlineMillis)`: reine Werte, kein
+  Fortschritt (der Pool meldet keinen). Das Cockpit zeigt nur den „Anteil der Frist“.
+- `val capacity: Int` = maxConcurrent + maxQueued.
+- Kein schreibender Zugriff. Neue Felder nur nach Absprache mit Jarvis Kern. Jarvis Integration ist informiert.

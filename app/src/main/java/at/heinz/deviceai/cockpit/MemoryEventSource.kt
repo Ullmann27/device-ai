@@ -18,29 +18,67 @@ fun interface MemoryEventSource {
 
 object MemoryEventSources {
     const val MISSING = "Quelle fehlt bis ContinuumMemoryEvents (#371-Linie)"
-    /** No production source yet; the Activity shows [MISSING] and subscribes nothing. */
+    /**
+     * Not yet on this branch: ContinuumMemoryEvents (#371 @befdbe89) is emitted from the LEX4 append-only ledger and
+     * ContinuumMemoryRetriever, while this branch's base carries ChatGPT's segmented LEX3 ledger. A cherry-pick/merge
+     * conflicts in ContinuumLearningExperience/ThinkingMemory; that reconciliation belongs to Gedächtnis/Integration.
+     * Once merged, production becomes the 6-line bridge shown in MemoryEventSourceTest (`asSource()`).
+     */
     val production: MemoryEventSource? = null
 }
 
 /**
- * Maps sink calls to [CockpitAnimationEvent]s. The memory listener may run off the main thread, so every
- * emission goes through [post] (on Android: the main-thread Handler) before renderers touch views.
+ * Maps sink calls to [CockpitAnimationEvent]s. The memory hub delivers on its own background thread with an
+ * unbounded queue, so the callbacks stay trivial: they only swap atomic "latest" values / counters and schedule at
+ * most one main-thread flush per [minIntervalMs]. All bus work happens in the flush on the main thread
+ * ([postDelayed] = Handler(mainLooper)::postDelayed on Android).
  */
-class MemoryEventMapper(private val bus: CockpitAnimationBus, private val post: (Runnable) -> Unit) : MemoryEventSink {
+class MemoryEventMapper(
+    private val bus: CockpitAnimationBus,
+    private val minIntervalMs: Long = 100L,
+    private val postDelayed: (Long, Runnable) -> Unit,
+) : MemoryEventSink {
+    private val document = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.DocumentLearned?>()
+    private val stored = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.MemoryStored?>()
+    private val storedCount = java.util.concurrent.atomic.AtomicInteger()
+    private val recall = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.RecallHits?>()
+    private val scheduled = java.util.concurrent.atomic.AtomicBoolean()
+    private val detached = java.util.concurrent.atomic.AtomicBoolean()
+
+    /** After detach, a straggler event from the hub (one may arrive after close()) is ignored. */
+    fun detach() = detached.set(true)
+
     override fun documentLearned(docId: String, kind: String, entriesAdded: Int, atEpochMs: Long) {
         if (docId.isBlank()) return
-        emit(CockpitAnimationEvent.DocumentLearned(MEMORY_TURN, atEpochMs, docId, kind, entriesAdded.coerceAtLeast(0)))
+        document.set(CockpitAnimationEvent.DocumentLearned(MEMORY_TURN, atEpochMs, docId, kind, entriesAdded.coerceAtLeast(0)))
+        schedule()
     }
 
     override fun memoryStored(entryId: String, status: String, atEpochMs: Long) {
         if (entryId.isBlank()) return
-        emit(CockpitAnimationEvent.MemoryStored(MEMORY_TURN, atEpochMs, entryId, status))
+        stored.set(CockpitAnimationEvent.MemoryStored(MEMORY_TURN, atEpochMs, entryId, status))
+        storedCount.incrementAndGet()
+        schedule()
     }
 
     override fun recallHits(queryHash: String, count: Int, topScore: Float?, atEpochMs: Long) {
-        emit(CockpitAnimationEvent.RecallHits(MEMORY_TURN, atEpochMs, queryHash, count.coerceAtLeast(0),
+        recall.set(CockpitAnimationEvent.RecallHits(MEMORY_TURN, atEpochMs, queryHash, count.coerceAtLeast(0),
             topScore.takeIf { count > 0 }))
+        schedule()
     }
 
-    private fun emit(event: CockpitAnimationEvent) = post(Runnable { bus.emit(event) })
+    private fun schedule() {
+        if (detached.get()) return
+        if (scheduled.compareAndSet(false, true)) postDelayed(minIntervalMs, Runnable { flush() })
+    }
+
+    /** Main thread: emits the coalesced latest state (document, writes with count, recall) in that order. */
+    private fun flush() {
+        scheduled.set(false)
+        if (detached.get()) return
+        document.getAndSet(null)?.let(bus::emit)
+        val writes = storedCount.getAndSet(0)
+        stored.getAndSet(null)?.let { bus.emit(it.copy(count = writes.coerceAtLeast(1))) }
+        recall.getAndSet(null)?.let(bus::emit)
+    }
 }
