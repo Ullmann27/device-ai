@@ -1,5 +1,9 @@
 # Complete combined Android gate — PASS
 
+Subsequent result on the same source: the separate actual Activity/Android Handler
+gate also passed **2/2 tests**; see [its execution receipt](../activity-android/RESULT.md).
+The checkpoint text below retains the original timing of this standard unit/lint run.
+
 Published source: fab5f094862c5abae259196f6be1d7a8bc80a75b (#499).
 Locally executed b5ee08039afc7d1dd73139a2b3ac7ac8e0e30ba9 has the exact same tree
 3183aeeeae3532e7f3253de976eabd46efcb940a. Source remained unchanged during the run.
