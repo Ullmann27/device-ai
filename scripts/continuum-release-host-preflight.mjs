@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {assertBranchSourceSafe} from '../.github/continuum/branch-discovery.mjs';
 const ORIGINS=new Set(['https://github.com/Ullmann27/device-ai',
  'https://github.com/Ullmann27/device-ai.git',
  'git@github.com:Ullmann27/device-ai.git',
@@ -62,6 +63,12 @@ export function inspectReleaseCheckout(root,expectedSha) {
     fs.realpathSync(base)!==base)throw Error('UNSAFE_CHECKOUT_PATH');
   if(path.resolve(git(base,['rev-parse','--show-toplevel']))!==base)
     throw Error('INCORRECT_GIT_ROOT');
+  let dirty=false;
+  try{assertBranchSourceSafe(base);}
+  catch(error){
+    if(error.message!=='DISCOVERY_SOURCE_DIRTY')throw error;
+    dirty=true;
+  }
   return evaluateReleaseSource({
     gradle:safePath(base,'app/build.gradle.kts'),
     runner:safePath(base,'scripts/continuum-fusion-full-regression.sh'),
@@ -69,7 +76,7 @@ export function inspectReleaseCheckout(root,expectedSha) {
     branch:git(base,['symbolic-ref','--quiet','--short','HEAD']),
     origin:git(base,['remote','get-url','origin']),
     sha:git(base,['rev-parse','HEAD']),expectedSha,
-    dirty:git(base,['status','--porcelain','--untracked-files=normal'])!==''
+    dirty
   });
 }
 export function inspectHostEnvironment(env=process.env) {

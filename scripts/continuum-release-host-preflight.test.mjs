@@ -121,6 +121,28 @@ test('read-only admission reports dirty synthetic checkout',()=>fixture(({root,h
   write('app/build.gradle.kts','changed');
   const a=inspectReleaseCheckout(root,head);assert.ok(a.blockers.includes('UNCLEAN_CHECKOUT'));
 }));
+test('release source audit refuses fsmonitor before Git status executes it',()=>fixture(({root,git,write})=>{
+ const marker=path.join(root,'monitor-ran'),hook=path.join(root,'hooks','audit-monitor.sh');
+ write('hooks/audit-monitor.sh','#!/bin/sh\nprintf ran > "'+marker+'"\n');fs.chmodSync(hook,0o700);
+ git('add','.');git('commit','-qm','monitor fixture');const head=git('rev-parse','HEAD');
+ git('config','core.fsmonitor',hook);
+ let error;try{inspectReleaseCheckout(root,head);}catch(value){error=value;}
+ assert.equal(fs.existsSync(marker),false,'read-only audit executed fsmonitor');
+ assert.match(error?.message??'',/DISCOVERY_FSMONITOR_UNSUPPORTED/);
+}));
+test('release source audit refuses clean filters without touching their marker',()=>fixture(({root,git,write})=>{
+ write('.gitattributes','app/build.gradle.kts filter=audit\n');git('add','.');git('commit','-qm','filter attributes');
+ const head=git('rev-parse','HEAD'),marker=path.join(root,'filter-ran');
+ git('config','filter.audit.clean',`sh -c 'printf ran > "${marker}"; cat'`);
+ const file=path.join(root,'app','build.gradle.kts'),future=new Date(Date.now()+2000);fs.utimesSync(file,future,future);
+ let error;try{inspectReleaseCheckout(root,head);}catch(value){error=value;}
+ assert.equal(fs.existsSync(marker),false,'read-only audit executed clean filter');
+ assert.match(error?.message??'',/DISCOVERY_CLEAN_FILTER_UNSUPPORTED/);
+}));
+test('release source audit refuses current worktree gitlinks',()=>fixture(({root,git,head})=>{
+ git('update-index','--add','--cacheinfo',`160000,${head},vendor`);git('commit','-qm','gitlink fixture');
+ assert.throws(()=>inspectReleaseCheckout(root,git('rev-parse','HEAD')),/DISCOVERY_SUBMODULE_WORKTREE_UNSUPPORTED/);
+}));
 test('refuses symlinked release source',()=>fixture(({root,head})=>{
   const file=path.join(root,'scripts/continuum-fold7-standalone-apk.sh');fs.unlinkSync(file);fs.symlinkSync('/etc/passwd',file);
   assert.throws(()=>inspectReleaseCheckout(root,head),/SOURCE_SYMLINK/);

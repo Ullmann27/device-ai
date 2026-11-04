@@ -1,0 +1,262 @@
+TAP version 13
+# Subtest: finds unconnected remote, archived and pull refs once per exact source commit
+ok 1 - finds unconnected remote, archived and pull refs once per exact source commit
+  ---
+  duration_ms: 364.165484
+  type: 'test'
+  ...
+# Subtest: distinguishes ancestry from copied changes without using branch names as quality evidence
+ok 2 - distinguishes ancestry from copied changes without using branch names as quality evidence
+  ---
+  duration_ms: 366.196264
+  type: 'test'
+  ...
+# Subtest: reports identical source trees even when commits differ
+ok 3 - reports identical source trees even when commits differ
+  ---
+  duration_ms: 269.803664
+  type: 'test'
+  ...
+# Subtest: detects divergent modifications and deletions without overwriting target files
+ok 4 - detects divergent modifications and deletions without overwriting target files
+  ---
+  duration_ms: 309.573493
+  type: 'test'
+  ...
+# Subtest: keeps tests, build files, symlinks and control plane work protected
+ok 5 - keeps tests, build files, symlinks and control plane work protected
+  ---
+  duration_ms: 291.394801
+  type: 'test'
+  ...
+# Subtest: labels unrelated history and never queues it as an integration candidate
+ok 6 - labels unrelated history and never queues it as an integration candidate
+  ---
+  duration_ms: 313.374157
+  type: 'test'
+  ...
+# Subtest: canonical backlog proposals are idempotent, source bound and never automatically accepted
+ok 7 - canonical backlog proposals are idempotent, source bound and never automatically accepted
+  ---
+  duration_ms: 833.650701
+  type: 'test'
+  ...
+# Subtest: serialized or stale discovery output cannot enqueue fresh review authority
+ok 8 - serialized or stale discovery output cannot enqueue fresh review authority
+  ---
+  duration_ms: 264.268927
+  type: 'test'
+  ...
+# Subtest: state inside the source or redirected into it is refused before writes
+ok 9 - state inside the source or redirected into it is refused before writes
+  ---
+  duration_ms: 350.56404
+  type: 'test'
+  ...
+# Subtest: bounded discovery exposes incomplete source and path coverage
+ok 10 - bounded discovery exposes incomplete source and path coverage
+  ---
+  duration_ms: 357.885042
+  type: 'test'
+  ...
+# Subtest: source pages eventually inspect every unique available commit
+ok 11 - source pages eventually inspect every unique available commit
+  ---
+  duration_ms: 943.27573
+  type: 'test'
+  ...
+# Subtest: page cursors reject malformed positions and changed source identity
+ok 12 - page cursors reject malformed positions and changed source identity
+  ---
+  duration_ms: 1007.54155
+  type: 'test'
+  ...
+# Subtest: last page keeps omitted paths and partial inventory explicit
+ok 13 - last page keeps omitted paths and partial inventory explicit
+  ---
+  duration_ms: 501.736622
+  type: 'test'
+  ...
+# Subtest: invalid limits and option-like target references fail closed
+ok 14 - invalid limits and option-like target references fail closed
+  ---
+  duration_ms: 16.395334
+  type: 'test'
+  ...
+# Subtest: dirty checkouts and planted backlog symlinks are refused
+ok 15 - dirty checkouts and planted backlog symlinks are refused
+  ---
+  duration_ms: 200.28835
+  type: 'test'
+  ...
+# Subtest: branch bot control files are protected by the real coding and repair gates
+ok 16 - branch bot control files are protected by the real coding and repair gates
+  ---
+  duration_ms: 0.493011
+  type: 'test'
+  ...
+# Subtest: configured clean filters cannot execute during the cleanliness check
+ok 17 - configured clean filters cannot execute during the cleanliness check
+  ---
+  duration_ms: 80.267063
+  type: 'test'
+  ...
+# Subtest: preflight rejects fsmonitor hooks and partial clones before inspecting worktree state
+ok 18 - preflight rejects fsmonitor hooks and partial clones before inspecting worktree state
+  ---
+  duration_ms: 92.589289
+  type: 'test'
+  ...
+# Subtest: configuration mask cannot hide executable clean filters from discovery
+ok 19 - configuration mask cannot hide executable clean filters from discovery
+  ---
+  duration_ms: 102.370965
+  type: 'test'
+  ...
+# Subtest: current worktree gitlinks are rejected before nested worktree status
+ok 20 - current worktree gitlinks are rejected before nested worktree status
+  ---
+  duration_ms: 116.186522
+  type: 'test'
+  ...
+# Subtest: valid sources grant only permission to attempt the QA build
+ok 21 - valid sources grant only permission to attempt the QA build
+  ---
+  duration_ms: 2.302158
+  type: 'test'
+  ...
+# Subtest: wrong exact source HEAD fails
+ok 22 - wrong exact source HEAD fails
+  ---
+  duration_ms: 0.35266
+  type: 'test'
+  ...
+# Subtest: dirty checkout fails
+ok 23 - dirty checkout fails
+  ---
+  duration_ms: 0.294713
+  type: 'test'
+  ...
+# Subtest: main, production and release branch variants fail
+ok 24 - main, production and release branch variants fail
+  ---
+  duration_ms: 0.364527
+  type: 'test'
+  ...
+# Subtest: untrusted or missing remote fails
+ok 25 - untrusted or missing remote fails
+  ---
+  duration_ms: 0.169174
+  type: 'test'
+  ...
+# Subtest: old app package fails
+ok 26 - old app package fails
+  ---
+  duration_ms: 0.351348
+  type: 'test'
+  ...
+# Subtest: QA without sign exclusion fails
+ok 27 - QA without sign exclusion fails
+  ---
+  duration_ms: 0.109774
+  type: 'test'
+  ...
+# Subtest: runner without actual QA flag fails
+ok 28 - runner without actual QA flag fails
+  ---
+  duration_ms: 0.261252
+  type: 'test'
+  ...
+# Subtest: wrong signing release lane fails
+ok 29 - wrong signing release lane fails
+  ---
+  duration_ms: 0.14623
+  type: 'test'
+  ...
+# Subtest: host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads
+ok 30 - host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads
+  ---
+  duration_ms: 0.611979
+  type: 'test'
+  ...
+# Subtest: Gradle admission requires one exact stable version line
+ok 31 - Gradle admission requires one exact stable version line
+  ---
+  duration_ms: 160.38512
+  type: 'test'
+  ...
+# Subtest: SDK platform admission requires a nonempty regular file
+ok 32 - SDK platform admission requires a nonempty regular file
+  ---
+  duration_ms: 71.106043
+  type: 'test'
+  ...
+# Subtest: AAPT2 admission requires a nonempty executable regular file
+ok 33 - AAPT2 admission requires a nonempty executable regular file
+  ---
+  duration_ms: 77.640142
+  type: 'test'
+  ...
+# Subtest: host with existing incompatible Java detects JDK17 requirement
+ok 34 - host with existing incompatible Java detects JDK17 requirement
+  ---
+  duration_ms: 0.276275
+  type: 'test'
+  ...
+# Subtest: host probes receive the explicit environment without mutating process.env
+ok 35 - host probes receive the explicit environment without mutating process.env
+  ---
+  duration_ms: 9.470023
+  type: 'test'
+  ...
+# Subtest: read-only admission accepts a clean synthetic Git checkout with exact SHA
+ok 36 - read-only admission accepts a clean synthetic Git checkout with exact SHA
+  ---
+  duration_ms: 96.153777
+  type: 'test'
+  ...
+# Subtest: read-only admission reports dirty synthetic checkout
+ok 37 - read-only admission reports dirty synthetic checkout
+  ---
+  duration_ms: 91.298921
+  type: 'test'
+  ...
+# Subtest: release source audit refuses fsmonitor before Git status executes it
+ok 38 - release source audit refuses fsmonitor before Git status executes it
+  ---
+  duration_ms: 89.981232
+  type: 'test'
+  ...
+# Subtest: release source audit refuses clean filters without touching their marker
+ok 39 - release source audit refuses clean filters without touching their marker
+  ---
+  duration_ms: 120.326305
+  type: 'test'
+  ...
+# Subtest: release source audit refuses current worktree gitlinks
+ok 40 - release source audit refuses current worktree gitlinks
+  ---
+  duration_ms: 188.160165
+  type: 'test'
+  ...
+# Subtest: refuses symlinked release source
+ok 41 - refuses symlinked release source
+  ---
+  duration_ms: 94.123903
+  type: 'test'
+  ...
+# Subtest: refuses parent directory rather than exact repository root
+ok 42 - refuses parent directory rather than exact repository root
+  ---
+  duration_ms: 42.616942
+  type: 'test'
+  ...
+1..42
+# tests 42
+# suites 0
+# pass 42
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7039.906178

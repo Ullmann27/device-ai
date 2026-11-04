@@ -55,3 +55,9 @@ Use the same scan settings for the same private state directory. An exhausted lo
 Three new tests reproduced false host admission: Gradle 8.11.10 matched an 8.11.1 substring, a directory satisfied the SDK platform check, and a non-executable AAPT2 file passed. The corrected diagnostic requires one exact stable Gradle 8.11.1 line, a nonempty readable regular platform file, and a nonempty executable regular AAPT2 file. Near-match prereleases, contradictory/duplicate Gradle banners, empty files and symlink loops are covered.
 
 The relevant CLI/host/mobile-builder subset passes 72/72, no failures/skips. Existing positive fixture AAPT2 entries now have executable permissions. These shell fixtures are not real Android tooling. Executability does not prove AAPT2 ABI compatibility, SDK contents, dependency cache or successful compilation; hostReadyToAttemptQa remains only a preflight indication. The actual APK/device gates remain NOT_RUN.
+
+## M4 — genuinely read-only source audit
+
+Three actual Git fixture regressions were red before the fix. The old release source audit executed a configured fsmonitor helper and a configured clean filter (both harmless marker scripts), and accepted a current-worktree gitlink. The release audit now reuses assertBranchSourceSafe before obtaining cleanliness; unsafe configuration/submodules are rejected before status. A genuinely dirty checkout still returns the existing UNCLEAN_CHECKOUT blocker instead of changing the source-admission contract.
+
+The combined scanner/release-preflight subset passes 42/42, no failures/skips. This is a connection to the existing reader policy, not a second Git sandbox. The module now intentionally imports the existing branch-discovery guard from the repository. No APK was built and no external helper beyond the controlled fixtures was run.

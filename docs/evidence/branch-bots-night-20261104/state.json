@@ -7,7 +7,7 @@
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
   "ownerSession": "672924e4650b-night-20261104",
   "sourceSnapshot": "SELECTED_104_CODE_FILES_VERIFIED",
-  "phase": "AUDIT_READ_ONLY_SOURCE_CHECK",
+  "phase": "COMBINED_VERIFICATION_AND_INTAKE",
   "milestones": [
     {
       "id": "M1",
@@ -52,6 +52,22 @@
       "green": {
         "tests": 72,
         "pass": 72,
+        "fail": 0,
+        "skip": 0
+      },
+      "commit": "24544f970eb9061d6040cc2412cc2473fdfa15ba"
+    },
+    {
+      "id": "M4",
+      "status": "SOURCE_TESTED",
+      "change": "Connect release source audit to existing guarded Git preflight",
+      "red": {
+        "tests": 3,
+        "fail": 3
+      },
+      "green": {
+        "tests": 42,
+        "pass": 42,
         "fail": 0,
         "skip": 0
       }

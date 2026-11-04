@@ -1,0 +1,16 @@
+{
+  "sourceParent": "24544f970eb9061d6040cc2412cc2473fdfa15ba",
+  "files": [
+    {
+      "path": "scripts/continuum-release-host-preflight.mjs",
+      "gitBlob": "ee7fb58a9503d6137b52116b64e350876abf2325",
+      "sha256": "4900ef97b3bf2f2c0234571db2acd3005af925c05eafac53e063dc8027a72a62"
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.test.mjs",
+      "gitBlob": "c8ea91d51aac83d43d71103b3cba86c7ee483aeb",
+      "sha256": "73adec4366e5f3bf734f81f6618cdc0e374bf93ed4b8ab9a8526bc842cdeb0a2"
+    }
+  ],
+  "gitDiffCheck": 0
+}
