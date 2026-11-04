@@ -34,7 +34,9 @@ object ContinuumWorkAreaNavigationSpec {
         if (tapped == ContinuumWorkArea.MEHR) current else tapped
 
     fun showBottomBar(wide: Boolean, keyboardVisible: Boolean, portraitFold: Boolean = false): Boolean =
-        (!wide || portraitFold) && !keyboardVisible
+        // Open Fold7 (portrait and landscape) always uses the labelled side rail; the bottom
+        // bar is only for the cover display and phones. portraitFold is kept for callers.
+        !wide && !keyboardVisible
 
     fun accessibilityLabel(destination: ContinuumWorkArea): String =
         destination.title + " – " + destination.explanation

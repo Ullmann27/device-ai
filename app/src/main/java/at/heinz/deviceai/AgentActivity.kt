@@ -759,13 +759,8 @@ class AgentActivity : Activity() {
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT
             )
         }
-        // Restored from 68a34bd9 (Chef HAUPTBOT / Jarvis Sicherheit): the unfolded portrait Fold7
-        // is full bleed without the side rail and uses its own bottom work-area bar.
-        val portraitFold = wide && at.heinz.deviceai.ui.ContinuumHomeLayout.isPortraitFold(
-            windowWidthDp, windowHeightDp
-        )
-        val portraitNavHeight = if (portraitFold) dp(74) else 0
-        var widePane: View? = null
+        // Heinz 04.11.: the open Fold7 shows the wide labelled side rail in BOTH orientations
+        // (ref5/videos); the 74 dp bottom work-area bar is only for the cover display and phones.
         val phonePane: View?
         val phoneNavHeight: Int
         if (wide) {
@@ -775,27 +770,16 @@ class AgentActivity : Activity() {
                 orientation = LinearLayout.HORIZONTAL
                 setBackgroundColor(BG)
             }
-            widePane = wideContent
-            // Fold landscape keeps the side rail; unfolded portrait uses the bottom work-area bar.
-            if (!portraitFold) {
-                wideContent.addView(buildRail(), LinearLayout.LayoutParams(
-                    railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
-                ))
-            }
+            wideContent.addView(buildRail(), LinearLayout.LayoutParams(
+                railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
+            ))
             wideContent.addView(buildConversationPane(wide = true), LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.MATCH_PARENT, 1f
             ))
             root.addView(wideContent, android.widget.FrameLayout.LayoutParams(
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT
-            ).apply { bottomMargin = portraitNavHeight })
-            if (portraitFold) {
-                root.addView(buildPortraitWorkAreaBar(), android.widget.FrameLayout.LayoutParams(
-                    android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
-                    portraitNavHeight,
-                    Gravity.BOTTOM
-                ))
-            }
+            ))
         } else {
             phoneNavHeight = dp(at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT.toInt())
             phonePane = buildConversationPane(wide = false)
@@ -826,16 +810,12 @@ class AgentActivity : Activity() {
                 ) {
                     view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
                 }
-                val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(
-                    wide, viewport.compactDashboard, portraitFold
-                )
+                val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(wide, viewport.compactDashboard)
                 bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
-                val navigationPane = phonePane ?: if (portraitFold) widePane else null
+                val navigationPane = phonePane
                 if (navigationPane != null) {
                     val paneParams = navigationPane.layoutParams as android.widget.FrameLayout.LayoutParams
-                    val requiredMargin = if (showNavigation) {
-                        if (portraitFold) portraitNavHeight else phoneNavHeight
-                    } else 0
+                    val requiredMargin = if (showNavigation) phoneNavHeight else 0
                     if (paneParams.bottomMargin != requiredMargin) {
                         paneParams.bottomMargin = requiredMargin
                         navigationPane.layoutParams = paneParams
@@ -954,8 +934,7 @@ class AgentActivity : Activity() {
         val windowWidth = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
         // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
         val windowHeight = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()
-        val sideRail = wide && !at.heinz.deviceai.ui.ContinuumHomeLayout.isPortraitFold(windowWidth, windowHeight)
-        home.configure(windowWidth, wide, railOffset = if (sideRail) railWidthPx() / resources.displayMetrics.density else 0f,
+        home.configure(windowWidth, wide, railOffset = if (wide) railWidthPx() / resources.displayMetrics.density else 0f,
             windowHeightDp = windowHeight)
         home.setForegroundActive(foregroundLearningActive)
         homeView = home

@@ -7,7 +7,7 @@ SHAs live per `gh pr view <nr> --json headRefOid`.
 - Draft-PR #483 `integration/jarvis-on-chatgpt-untested-20261104` gegen ChatGPTs #478.
 - Basis: ChatGPT #478 @ d8fd7f7c (kein neuerer ChatGPT-Branch darauf; #481 und #482 bauen darauf auf, sind aber Welten-Optik/Avatar).
 - Hineingemergt: #375 @ b49fb847 (M5-Cap 3.900, B5-Provenienz-Guard, Pool-Fix 6299cbcf).
-- AgentActivity: Portrait-Fold-Handling wiederhergestellt; STOP-Anzeige war bei ChatGPT bereits erhalten (refreshSendButtonPresentation, ■ im gestapelten Composer).
+- AgentActivity: Seitenleiste auf offenem Fold7 in beiden Ausrichtungen (Heinz-Entscheid), untere Leiste nur Cover/Handy; STOP-Anzeige war bei ChatGPT bereits erhalten (refreshSendButtonPresentation, ■ im gestapelten Composer).
 - 3 rote Layouttests im Code repariert; RoutineDispatcher-Fix von ChatGPT behalten + RED→GREEN-Test.
 
 # Archiv: ChatGPT #477 – Erstprüfung (04.11.2026 früh)
@@ -83,7 +83,7 @@ Nebenstrang: Jarvis Gedächtnis (über Kerns Schnittstellen). Chef HAUPTBOT vert
 - ERLEDIGT: Jarvis Sicherheit hat #375 @ b49fb847 geprüft und S4/B5 (9ec6f3f8) sowie den Race-Fix (6299cbcf) BESTÄTIGT (move_file → Owner-Freigabe). Bericht: `docs/reviews/REVIEW-integration-b49fb847-S4-racefix.md` auf `continuum/m5-integration-repair` @ f6580b25. ChatGPTs zwei neue Guard-Tests wurden auf die B5-API umgestellt (Fall „Nicht verschieben“ → move_file entfällt, Frage-Fall mit delete_file geprüft) – Sicherheit bitte kurz mitprüfen.
 - Für Jarvis Kern (ChiefWorkerPool), MITTEL: Der Slot zählt während der Zustellung noch. Ein Re-Submit mit derselben id im Callback wird abgelehnt, und awaitIdle() im Callback wird nie true.
 - Für Jarvis Kern, NIEDRIG: Bei einem Error wie OOM gibt es keine Slot-Freigabe und keinen Bericht.
-- Portrait-Fold: ChatGPT hatte bewusst „gleiche Navigation in beiden Fold-Ausrichtungen“ (Seitenleiste auch im Hochformat) gebaut; wiederhergestellt ist jetzt unser Hochformat ohne Seitenleiste mit unterer Leiste. Design-Entscheid bei Kreativdirektor/Kern bestätigen lassen.
+- ENTSCHIEDEN (Heinz via Chef, 04.11.): Offenes Fold7 zeigt in Hoch UND Quer die breite, beschriftete Seitenleiste (ref5/Videos); die untere 74-dp-Arbeitsleiste nur für Cover-Display und Handy. Umgesetzt in AgentActivity + ContinuumWorkAreaNavigationSpec.showBottomBar (Test RED→GREEN).
 - Aktionsraster: 10 Aktionen auf breiten Layouts jetzt 5 Spalten (2 volle Reihen) statt 4; Label „Agents“ → „Agenten“.
 - Keine Fold7-/Gerätetests.
 
