@@ -1,0 +1,67 @@
+{"checkout": "/workspace/scratch/f5f40c1db981/device-ai-alive", "source_commit": "04db6204e5de4fd7cc805b49fac02df738704564", "source_tree": "0cace1f535c6b9cbd3084c085ab58e6309914e13", "worktree_clean": true, "requested": ["--offline", "-PcontinuumUiWidgetTests=true", ":app:testDebugUnitTest", "--tests", "at.heinz.deviceai.AvatarReferenceEffectsUiTest", "--tests", "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest", "--tests", "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest", "--tests", "at.heinz.deviceai.AvatarRangeFrameConnectionUiTest", "--tests", "at.heinz.deviceai.AvatarSpeechReattachmentUiTest", "--tests", "at.heinz.deviceai.JarvisShellStageUiTest", "--tests", "at.heinz.deviceai.JarvisAvatarSlotUiTest", "--tests", "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest", "--tests", "at.heinz.deviceai.avatar.ContinuumAvatarIconBurstPreviewUiTest"]}
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+
+> Task :app:compileDebugKotlin
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:513:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:514:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:516:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:961:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1361:67 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2753:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4681:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4696:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4725:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7247:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7818:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7818:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:8953:59 Unnecessary safe call on a non-null receiver of type 'Long'.
+w: file:///workspace/scratch/f5f40c1db981/device-ai-alive/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt:792:22 'var isChecked: Boolean' is deprecated. Deprecated in Java.
+
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:testDebugUnitTest

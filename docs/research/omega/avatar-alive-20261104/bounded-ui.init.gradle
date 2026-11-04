@@ -1,0 +1,6 @@
+allprojects {
+    tasks.withType(org.gradle.api.tasks.testing.Test).configureEach {
+        timeout = java.time.Duration.ofSeconds(providers.gradleProperty('continuumTestTimeoutSeconds').orNull?.toLong() ?: 240L)
+        testLogging.events('started', 'passed', 'failed', 'skipped')
+    }
+}

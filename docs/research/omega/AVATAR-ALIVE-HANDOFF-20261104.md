@@ -70,3 +70,12 @@ The owner subsequently made the original Drive videos, including four additional
 - Follow-up source: Home filters live adapters by actual parent, removes pending docking callbacks on detach, and a rejected foreign attach cannot clear the current adapter. Activity destruction unregisters only its own live surface. Document arrival lifetime is separate from owner-work scope cleanup. The existing single-surface ownership requirement remains enforced.
 - The regular already-enabled local voice greeting now uses the existing cockpit greeting text. It still runs through the existing initialized TTS listener, offline voice selection, readiness and foreground gates.
 - **Current follow-up UI/full-unit/lint/APK gates: NOT_RUN at this source checkpoint.** Run those next before treating these new lifecycle changes as verified. Experiment boundary: EXP-12 identity continuity; no memory/model promotion. Rollback: omit this draft branch; no main/release/signing/device change.
+
+## Isolated lifecycle verification and bounded host fixtures
+
+Production source: GitHub `6cab1b9add227c2e0e615191210014d445040567`, local execution twin `04db6204e5de4fd7cc805b49fac02df738704564`, exact tree `0cace1f535c6b9cbd3084c085ab58e6309914e13`.
+
+- **13/13 host UI cases passed**: six visible head-effect cases, six real Activity TTS callback/lifecycle cases, and a rejected foreign-host attach preserving its existing surface. The previously failing sequential/overlapping Activity and unrelated-task cleanup cases now pass. Logs and suite counts: `lifecycle-isolated.*`.
+- A broader UI run was stopped after about six minutes without a completed result; it is `INTERRUPTED`, not PASS. A second run with per-test progress and a 75-second task bound identified `JarvisAvatarSlotUiTest.registeredRendererIsDockedFedAndDetached` as blocking. It timed out with no completed test; `shell-clock-diagnostic.*` records that result.
+- The existing native-Canvas shell/slot fixtures now pause the Robolectric Choreographer before Activity setup and advance frames only through their bounded idle calls. The slot fixture explicitly selects the host 2D renderer, matching the other Canvas fixtures. No production frame policy or existing assertion is changed. `bounded-ui.init.gradle` makes further diagnostics bounded and reproducible.
+- **Broader UI, full unit, lint and APK revalidation remain pending at this test-fixture checkpoint.** No Fold7, native Filament, audible speech or performance result is implied by host Canvas.
