@@ -75,6 +75,69 @@ class JarvisSequenceEffects {
     /** Muster E: [count] document icons fly from the left on a glowing path INTO the brain orb (real reads only). */
     fun dataFlight(count: Int, nowMillis: Long) {
         flightCount = count.coerceIn(1, MAX_FLIGHT); flightAt = nowMillis; lastNow = nowMillis
+        arrivalPulseAt = nowMillis + FLIGHT_MS // neurons flash + orb pulses when the first icon arrives
+    }
+    /** Number of document icons of the running flight (0 when none). */
+    val flightDocuments: Int get() = if (flightAt >= 0) flightCount else 0
+
+    // ---- Orb inputs (owned by Jarvis Gedächtnis). Driven only by real memory events via BrainOrbAnimationRenderer. ----
+    private var arrivalPulseAt = -1L
+    private var pulseAt = -1L
+    private var pulseStrength = 0f
+    private var recallAt = -1L
+    private var recallScore = 0f
+    /** Hits of the last real recall (0 = none). */
+    var recallCount = 0
+        private set
+    private var hypothesisAt = -1L
+
+    /** Orb pulse / neuron flash, e.g. a confirmed memory write. [strength] 0..1. */
+    fun orbPulse(strength: Float, nowMillis: Long) { pulseAt = nowMillis; pulseStrength = strength.coerceIn(0f, 1f) }
+    /** Light point(s) for a real recall: brightness = rank-1 score; nothing without hits/score. */
+    fun recallLight(count: Int, topScore: Float?, nowMillis: Long) {
+        if (count <= 0 || topScore == null) { recallAt = -1L; recallCount = 0; recallScore = 0f; return }
+        recallAt = nowMillis; recallCount = count; recallScore = topScore.coerceIn(0f, 1f)
+    }
+    /** Marks that an UNCONFIRMED hypothesis was stored (dashed violet ring, never a confirmed flash). */
+    fun hypothesisMarker(nowMillis: Long) { hypothesisAt = nowMillis; pulseAt = -1L }
+
+    fun orbPulseLevel(nowMillis: Long): Float {
+        fun decay(at: Long, strength: Float): Float {
+            if (at < 0 || nowMillis < at) return 0f
+            val t = (nowMillis - at).toFloat() / PULSE_MS
+            return if (t >= 1f) 0f else strength * (1f - t)
+        }
+        return maxOf(decay(arrivalPulseAt, 1f), decay(pulseAt, pulseStrength))
+    }
+    fun recallBrightness(nowMillis: Long): Float =
+        if (recallAt >= 0 && nowMillis >= recallAt && nowMillis - recallAt < RECALL_MS) recallScore else 0f
+    fun hypothesisVisible(nowMillis: Long) = hypothesisAt >= 0 && nowMillis >= hypothesisAt && nowMillis - hypothesisAt < HYPOTHESIS_MS
+
+    private fun drawOrbSignals(p: ContinuumPainter, w: Float, h: Float, now: Long) {
+        val cx = w * orbTargetX; val cy = h * orbTargetY
+        val pulse = orbPulseLevel(now)
+        if (pulse > 0f) {
+            p.setAdditive(true)
+            JarvisNeon.halo(p, cx, cy, 30f + 18f * pulse, JarvisDesign.Colors.cyan, .55f * pulse)
+            for (k in 0 until 6) { // neuron flashes: fixed radial directions, length/alpha follow the real pulse
+                val a = (k * 60f + 15f) * (Math.PI.toFloat() / 180f)
+                JarvisNeon.line(p, cx + kotlin.math.cos(a) * 10f, cy + kotlin.math.sin(a) * 10f,
+                    cx + kotlin.math.cos(a) * (18f + 22f * pulse), cy + kotlin.math.sin(a) * (18f + 22f * pulse),
+                    JarvisDesign.Colors.cyan, .9f, JarvisDesign.Glow.SUBTLE)
+            }
+            p.setAdditive(false)
+        }
+        val b = recallBrightness(now)
+        if (b > 0f) {
+            p.setAdditive(true)
+            JarvisNeon.halo(p, cx + 14f, cy - 10f, 6f + 6f * b, JarvisDesign.Colors.cyan, b)
+            p.setAdditive(false)
+        }
+        if (hypothesisVisible(now)) for (k in 0 until 12) if (k % 2 == 0) { // dashed violet ring = unconfirmed
+            val a0 = k * 30f * (Math.PI.toFloat() / 180f); val a1 = (k * 30f + 22f) * (Math.PI.toFloat() / 180f)
+            JarvisNeon.line(p, cx + kotlin.math.cos(a0) * 34f, cy + kotlin.math.sin(a0) * 34f,
+                cx + kotlin.math.cos(a1) * 34f, cy + kotlin.math.sin(a1) * 34f, JarvisDesign.Colors.violet, 1f, JarvisDesign.Glow.SUBTLE)
+        }
     }
     private var command: Command? = null
     private var lastNow = 0L
@@ -114,11 +177,12 @@ class JarvisSequenceEffects {
 
     fun dismissAll(nowMillis: Long) { for (c in cards) if (c.leavingAt < 0) c.leavingAt = nowMillis }
 
-    fun clear() { cards.clear(); command = null; flightAt = -1L; envelope = null; pills = null; alarmAt = -1L }
+    fun clear() { cards.clear(); command = null; flightAt = -1L; arrivalPulseAt = -1L; pulseAt = -1L; recallAt = -1L; recallCount = 0; hypothesisAt = -1L; envelope = null; pills = null; alarmAt = -1L }
 
     /** True while something moves; the host may stop invalidating when false. */
     fun isAnimating(nowMillis: Long): Boolean {
         if (flightAt >= 0 && nowMillis - flightAt < flightDuration()) return true
+        if (orbPulseLevel(nowMillis) > 0f || recallBrightness(nowMillis) > 0f || hypothesisVisible(nowMillis)) return true
         if (envelope != null || pills != null || alarmActive(nowMillis)) return true
         command?.let { if (nowMillis - it.at < COMMAND_MS) return true }
         return cards.any { nowMillis - it.at < FLY_MS + 200 || it.leavingAt >= 0 || it.live ||
@@ -135,6 +199,7 @@ class JarvisSequenceEffects {
         val hubX = width / 2f; val hubY = height * .30f
         drawCommand(p, width, height, hubX, hubY, now)
         drawFlight(p, width, height, now)
+        drawOrbSignals(p, width, height, now)
         drawAlarm(p, width, height, now)
         p.save(); p.translate(shakeOffsetX(now), shakeOffsetY(now))
         drawEnvelope(p, width, height, now)
@@ -274,7 +339,7 @@ class JarvisSequenceEffects {
             val cx = w * .25f; val cy = sy - h * .12f            // control point: arc upwards
             val t = ((elapsed - i * JarvisMotion.Durations.STAGGER).toFloat() / FLIGHT_MS).coerceIn(0f, 1f)
             if (t <= 0f) continue
-            val e = JarvisMotion.Easing.easeInOutCubic(t)
+            val e = ORB_EASE_IN(t)
             fun bx(u: Float) = (1 - u) * (1 - u) * sx + 2 * (1 - u) * u * cx + u * u * tx
             fun by(u: Float) = (1 - u) * (1 - u) * sy + 2 * (1 - u) * u * cy + u * u * ty
             // glowing track (drawn behind the icon, fades once the icon is absorbed)
@@ -286,6 +351,7 @@ class JarvisSequenceEffects {
                     .8f, JarvisDesign.Glow.SUBTLE)
                 px = nx; py = ny
             }
+            if (t < 1f) { p.setAdditive(true); JarvisNeon.halo(p, px, py, 4.5f, JarvisDesign.Colors.cyan, .85f); p.setAdditive(false) } // spark at the head of the track
             if (t < 1f) {
                 val x = bx(e); val y = by(e); val s = 1f - .65f * e    // shrinks as it enters the orb
                 p.save(); p.scale(s, s, x, y)
@@ -429,7 +495,13 @@ class JarvisSequenceEffects {
     companion object {
         const val MAX_CARDS = 4
         const val MAX_FLIGHT = 8
-        const val FLIGHT_MS = 900L
+        /** Ease-in into the orb: Jarvis Mathematik #489 (motion-math @e600add5) Easings.easeInCubic. */
+        val ORB_EASE_IN: (Float) -> Float = at.heinz.deviceai.motion.Easings.easeInCubic::at
+        /** Muster E: 0.6–0.8 s per icon (spec). */
+        const val FLIGHT_MS = 700L
+        const val PULSE_MS = 600L
+        const val RECALL_MS = 1200L
+        const val HYPOTHESIS_MS = 2500L
         const val FLY_MS = JarvisMotion.Durations.PANEL_FLY_IN
         const val LEAVE_MS = 380L
         const val COMMAND_MS = 1100L
