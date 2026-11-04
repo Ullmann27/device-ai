@@ -7,26 +7,26 @@ import at.heinz.deviceai.ContinuumHologramView
 import at.heinz.deviceai.cockpit.CockpitAnimationEvent
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
 import at.heinz.deviceai.ui.JarvisSequenceView
-import at.heinz.deviceai.ui.JarvisShellLayout
+import android.graphics.Rect
 
 /**
  * The one Jarvis avatar for Kern's AVATAR slot (#481): holographic wireframe bust + brain orb
  * (existing [ContinuumHologramView] with [ContinuumAvatarRenderer] / ContinuumHologramRenderer) and the sequence
  * overlay ([JarvisSequenceView]: fly-in, data flight, envelope, pills, alarm).
  *
- * TODO(Kern): declare `: JarvisAvatarRenderer` once that interface is pushed. Written against the announced
- * signature attach(host, slot) / onAvatarState(state) / onAnimationEvent(event) / detach(); assumed types:
- * host = ViewGroup, slot = JarvisShellLayout.Box in dp, state = AvatarContract [AvatarEvent].
+ * TODO(Kern #481): add `: at.heinz.deviceai.cockpit.JarvisAvatarRenderer` and `override` once the interface is on
+ * origin; methods already match its exact signature (attach(ViewGroup, Rect px) / onAvatarState(AvatarState) /
+ * onAnimationEvent / detach). Register via `JarvisAvatarSlot.register(JarvisHoloAvatar())`.
+ * Speech/visemes/gaze/audio level need the full AvatarContract stream: feed [onAvatarEvent].
  */
-class JarvisAvatarSlot {
+class JarvisHoloAvatar : at.heinz.deviceai.cockpit.JarvisAvatarRenderer {
     private var host: ViewGroup? = null
     private var stage: FrameLayout? = null
     var hologram: ContinuumHologramView? = null; private set
     var sequence: JarvisSequenceView? = null; private set
 
-    fun attach(host: ViewGroup, slot: JarvisShellLayout.Box) {
+    override fun attach(host: ViewGroup, slot: Rect) {
         detach()
-        val d = host.resources.displayMetrics.density
         val s = FrameLayout(host.context)
         val holo = ContinuumHologramView(host.context).apply {
             setGeometry(ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT)
@@ -35,18 +35,23 @@ class JarvisAvatarSlot {
         val seq = JarvisSequenceView(host.context)
         s.addView(holo, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
         s.addView(seq, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-        host.addView(s, ViewGroup.MarginLayoutParams((slot.width * d).toInt(), (slot.height * d).toInt()))
-        s.x = slot.left * d; s.y = slot.top * d
+        host.addView(s, ViewGroup.MarginLayoutParams(slot.width(), slot.height()))
+        s.x = slot.left.toFloat(); s.y = slot.top.toFloat()
         this.host = host; stage = s; hologram = holo; sequence = seq
     }
 
-    /** AvatarContract events (state, gaze, speech, visemes, audio level) → the head. */
-    fun onAvatarState(event: AvatarEvent) { hologram?.onAvatarEvent(event) }
+    /** Kern's slot: coarse state → head (expression/gaze stay as last reported). */
+    override fun onAvatarState(state: AvatarState) {
+        hologram?.onAvatarEvent(AvatarEvent.StateChanged(state, AvatarExpression.NEUTRAL, GazeTarget.OWNER, android.os.SystemClock.uptimeMillis()))
+    }
+
+    /** Full AvatarContract stream (speech, visemes, gaze, audio level) → the head. */
+    override fun onAvatarEvent(event: AvatarEvent) { hologram?.onAvatarEvent(event) }
 
     /** Cockpit bus events → sequence animations (Kern may also subscribe [sequence] to the bus directly). */
-    fun onAnimationEvent(event: CockpitAnimationEvent) { sequence?.render(event) }
+    override fun onAnimationEvent(event: CockpitAnimationEvent) { sequence?.render(event) }
 
-    fun detach() {
+    override fun detach() {
         hologram?.setNativeHeadEnabled(false)
         sequence?.clear()
         stage?.let { host?.removeView(it) }
