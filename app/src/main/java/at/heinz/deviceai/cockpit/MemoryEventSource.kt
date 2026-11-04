@@ -26,19 +26,8 @@ object MemoryEventSources {
     val production: MemoryEventSource? = null
 
     /** IDs, states and measured scores from the real ledger/retriever. Subscribing invents no initial activity. */
-    fun forApp(appDirectory: java.io.File): MemoryEventSource = MemoryEventSource { sink ->
-        at.heinz.deviceai.learning.ContinuumMemoryEvents.forApp(appDirectory).addListener { event ->
-            when (event) {
-                is at.heinz.deviceai.learning.DocumentLearned ->
-                    sink.documentLearned(event.docId, event.kind, event.entriesAdded, event.atEpochMs)
-                is at.heinz.deviceai.learning.MemoryStored ->
-                    sink.memoryStored(event.entryId, event.status.name, event.atEpochMs)
-                is at.heinz.deviceai.learning.RecallHits ->
-                    sink.recallHits(event.queryHash, event.hits.size,
-                        event.hits.minByOrNull { it.rank }?.score, event.atEpochMs)
-            }
-        }
-    }
+    fun forApp(appDirectory: java.io.File): MemoryEventSource =
+        ContinuumMemoryEventSource.forApp(appDirectory)
 }
 
 /**
