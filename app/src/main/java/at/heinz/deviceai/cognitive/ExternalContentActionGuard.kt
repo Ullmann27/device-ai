@@ -46,8 +46,9 @@ object ExternalContentActionGuard {
         val v = verb.pattern
         // "nicht verschieben", "bitte nichts (zu) verschieben", "do not move", "ohne zu verschieben"
         val before = Regex("""(?iu)\b(?:$NEG|ohne|without)\b(?:\s+[\p{L}-]+){0,3}?\s+(?:$v)\b""")
-        // "verschiebe nichts", "verschieb die Datei nicht", "move nothing"
-        val after = Regex("""(?iu)\b(?:$v)\b(?:\s+[\p{L}.-]+){0,3}?\s+(?:nicht|nichts|nie|niemals|nothing)\b""")
+        // "verschiebe nichts", "verschieb die Datei nicht", "move nothing",
+        // "lösch bitte auf keinen Fall x", "lösche x keinesfalls" (recheck 1c6e50d9)
+        val after = Regex("""(?iu)\b(?:$v)\b(?:\s+[\p{L}.-]+){0,3}?\s+(?:nicht|nichts|nie|niemals|nothing|keinesfalls|keineswegs|(?:auf\s+)?keinen\s+fall)\b""")
         return before.containsMatchIn(text) || after.containsMatchIn(text)
     }
 
