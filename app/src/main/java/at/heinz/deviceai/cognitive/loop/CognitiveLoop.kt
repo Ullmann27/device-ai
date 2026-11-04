@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  * The cognitive loop: GOAL → (PLAN → TOOL → VERIFY_RESULT → MEMORY_WRITE → NEXT_STEP)* → DONE.
  *
  * Runs synchronously on the caller's worker thread, once per instance. Deterministic: all times come from the
- * injected [clock]; ports receive the step deadline in [LoopBudget] and late results are discarded. No LLM here,
+ * injected [clock]; memory recall runs before every PLAN, recordOutcome after every VERIFY_RESULT; ports receive the step deadline in [LoopBudget] and late results are discarded. No LLM here,
  * only ports. Tools run only via [LoopPorts.tools] (production: the existing ToolGate); a Risk.CONFIRM tool only
  * after an owner yes; DESTRUCTIVE / unknown tools are refused. Ordinary errors end with a calm [CognitiveLoopEvent.Aborted].
  */
@@ -58,7 +58,9 @@ class CognitiveLoop(
                 stepDeadline = minOf(stepStart + limits.stepTimeoutMillis, totalDeadline)
                 checkpoint()
 
-                when (val plan = ports.planner.plan(goal, history.toList(), emptyList(), budget())) {
+                val recalled = if (limits.recallK > 0) ports.memory.recall(goal, limits.recallK).take(limits.recallK) else emptyList()
+                checkpoint()
+                when (val plan = ports.planner.plan(goal, history.toList(), recalled, budget())) {
                     is PlanOutcome.Done -> {
                         checkpoint()
                         emit(CognitiveLoopEvent.Finished(turnId, clock(), stepIndex, plan.summary))
@@ -96,6 +98,7 @@ class CognitiveLoop(
                         checkpoint()
                         emit(CognitiveLoopEvent.ResultVerified(turnId, clock(), stepIndex, verification.passed, verification.reason))
                         val record = StepRecord(stepIndex, step, outcome, verification)
+                        ports.memory.recordOutcome(turnId, stepIndex, step.toolName, outcome.ok && verification.passed, outcome.summary)
                         checkpoint()
                         emit(CognitiveLoopEvent.MemoryWritten(turnId, clock(), stepIndex, null))
                         history += record
