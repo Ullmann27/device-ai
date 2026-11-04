@@ -384,13 +384,22 @@ class Experiment:
         write_new(self.out / "ladder.json", {"stages": attempted, "lastPassed": passed[-1], "stop": stop})
 
     def continuation(self) -> None:
+        ladder = json.loads((self.out / "ladder.json").read_text())
+        if not isinstance(ladder, dict):
+            raise RuntimeError("CONTINUATION_GATE_REJECTED: INVALID_LADDER")
+        expanded = ladder.get("lastPassed")
+        if ladder.get("stop") == "BASELINE_GATE":
+            raise RuntimeError("CONTINUATION_GATE_REJECTED: BASELINE_GATE")
+        if not isinstance(expanded, dict):
+            raise RuntimeError("CONTINUATION_GATE_REJECTED: NO_PASSING_CANDIDATE")
+        if expanded.get("capacityEligible") is not True:
+            raise RuntimeError("CONTINUATION_GATE_REJECTED: LAST_PASSED_INELIGIBLE")
+        # Resume must obey the same mandatory gate as a fresh continuation.
         if (self.out / "frozen-selection.json").exists():
             return
         calibration = self.load_calibration()
-        ladder = json.loads((self.out / "ladder.json").read_text())
         original = calibration["candidates"][0]
         selected = calibration["selected"]
-        expanded = ladder["lastPassed"]
         candidates = {c["sha256"]: dict(c) for c in [original, selected]}
         failures = []
         if expanded and expanded["parameters"] > selected["parameters"]:
