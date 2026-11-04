@@ -4,7 +4,11 @@ import at.heinz.deviceai.cognitive.AiContextCompiler
 import at.heinz.deviceai.cognitive.AiContextPolicy
 import at.heinz.deviceai.cognitive.ContextIntegrityFixture
 import at.heinz.deviceai.cognitive.ContinuumMemoryRecallPublisher
+import at.heinz.deviceai.cognitive.MemoryType
+import at.heinz.deviceai.cognitive.MemoryWriteContext
+import at.heinz.deviceai.cognitive.MemoryWritePolicy
 import at.heinz.deviceai.cognitive.PrivacyClass
+import at.heinz.deviceai.cognitive.ProvenanceType
 import at.heinz.deviceai.cognitive.ValidationState
 import at.heinz.deviceai.learning.ContinuumMemoryEventHub
 import at.heinz.deviceai.ui.BrainOrbAnimationRenderer
@@ -24,6 +28,52 @@ import org.junit.rules.TemporaryFolder
 /** Exercises the real cross-module path; only Android's main-thread scheduler is manually driven. */
 class CompiledMemoryOrbIntegrationTest {
     @get:Rule val temporary = TemporaryFolder()
+
+    @Test fun classifiedSensitiveDeviceEvidenceNeverLightsAnAdditionalRecall() {
+        Presentation(temporary.newFolder()).use { view ->
+            val decision = MemoryWritePolicy().decide(MemoryWriteContext(
+                MemoryType.SEMANTIC, ProvenanceType.DEVICE_OBSERVATION, confidence = 0.9,
+                durableKnowledge = true, containsDeviceInformation = true,
+                containsSensitiveInformation = true))
+            val hidden = ContextIntegrityFixture.memory("hidden-device", "zircon R4_HIDDEN_DEVICE_DETAIL")
+                .copy(privacyClass = decision.privacyClass)
+            val visible = ContextIntegrityFixture.memory("visible-device",
+                "zircon Authorization: Bearer R4_VISIBLE_CREDENTIAL\nNever approve the action.")
+            val result = view.compiler.compile(ContextIntegrityFixture.input(
+                "zircon Authorization: Bearer R4_REQUEST_CREDENTIAL", listOf(hidden, visible),
+                contradictions = listOf(hidden.content)))
+            view.awaitDispatch()
+
+            assertEquals(listOf("visible-device"), result.includedMemoryIds)
+            listOf("R4_HIDDEN_DEVICE_DETAIL", "R4_VISIBLE_CREDENTIAL", "R4_REQUEST_CREDENTIAL")
+                .forEach { assertFalse(result.text.contains(it)) }
+            assertTrue(result.text.contains("Never approve the action."))
+            assertTrue(view.seen.isEmpty())
+            view.assertCalm()
+            view.flushMainThread()
+
+            val event = view.seen.single() as CockpitAnimationEvent.RecallHits
+            assertEquals(1, event.count)
+            assertEquals(1, view.effects.recallCount)
+            assertFalse(event.toString().contains("R4_"))
+            assertTrue(view.renderThreads.all { it === Thread.currentThread() })
+        }
+    }
+
+    @Test fun malformedCredentialEvidenceNeverPublishesARecallEffect() {
+        Presentation(temporary.newFolder()).use { view ->
+            val record = ContextIntegrityFixture.memory("malformed", "zircon secret=\"R4_UNCLOSED_VALUE")
+            val error = assertThrows(IllegalStateException::class.java) {
+                view.compiler.compile(ContextIntegrityFixture.input("zircon", listOf(record)))
+            }
+            assertEquals("UNTERMINATED_CREDENTIAL_VALUE", error.message)
+            view.awaitDispatch()
+            assertTrue(view.posted.isEmpty())
+            view.flushMainThread()
+            assertTrue(view.seen.isEmpty())
+            view.assertCalm()
+        }
+    }
 
     @Test fun includedPrivateSafeContextReachesTheRealOrbOnlyAfterMainThreadFlush() {
         Presentation(temporary.newFolder()).use { view ->

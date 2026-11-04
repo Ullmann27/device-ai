@@ -1,0 +1,326 @@
+{
+  "taskId": "android-ui020-product-01",
+  "localSource": "baf54bdd94878668f6e5e654c01c9fc4e9ace803",
+  "remoteSource": "956d2491c2c7a8d1c6e12d673515260f749d7f03",
+  "tree": "1048c5588b6291baef2695ad092259c7e1c22ef6",
+  "command": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-PcontinuumStandaloneVersionCode=41",
+    "-PcontinuumAuditProgressFile=/workspace/scratch/174c84456ee3/qa/android-ui020-product-01-active-test.json",
+    "-PcontinuumAuditTestClasses=at.heinz.deviceai.ContinuumReferenceCockpitUiTest,at.heinz.deviceai.JarvisShellStageUiTest,at.heinz.deviceai.ui.JarvisShellLayoutTest,at.heinz.deviceai.ui.JarvisShellContentTest,at.heinz.deviceai.ui.JarvisCockpitGridTest",
+    "-PcontinuumUiEvidenceDir=/workspace/scratch/174c84456ee3/qa/android-ui020-product-01-captures",
+    "-I",
+    "/workspace/scratch/174c84456ee3/qa/observe-tests.init.gradle",
+    ":app:testDebugUnitTest"
+  ],
+  "startedAt": "2026-11-04T22:27:11.722399+00:00",
+  "finishedAt": "2026-11-04T22:28:19.823417+00:00",
+  "exitCode": 1,
+  "sourceUnchanged": true,
+  "counts": {
+    "total": 31,
+    "passed": 24,
+    "failed": 7,
+    "skipped": 0
+  },
+  "suites": {
+    "at.heinz.deviceai.ContinuumReferenceCockpitUiTest": 8,
+    "at.heinz.deviceai.JarvisShellStageUiTest": 3,
+    "at.heinz.deviceai.ui.JarvisCockpitGridTest": 7,
+    "at.heinz.deviceai.ui.JarvisShellContentTest": 4,
+    "at.heinz.deviceai.ui.JarvisShellLayoutTest": 9
+  },
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.AssertionError: Home actual width 0.0dp",
+        "type": "java.lang.AssertionError"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "composerDraftSurvivesActualWindowReflowAndActivityRecreation",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.AssertionError: Original recreation restores real window focus",
+        "type": "java.lang.AssertionError"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "foldLandscapeHasRealDestinationsAndReadableLargeType",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.AssertionError: Target must not be a clipped sliver",
+        "type": "java.lang.AssertionError"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "narrowPhoneHasRealDestinationsAndReadableLargeType",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.AssertionError: Wrong destination for Entwicklungszentrum: [Mehr, Systemstatus, Diagnose, Einstellungen, Datenschutz & Freigaben, Modellverwaltung, Entwicklerwerkzeuge, Handy-Builder \u00b7 Termux, , Schlie\u00dfen, ]",
+        "type": "java.lang.AssertionError"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "presentationControlsReuseTheLiveAvatarAndPersistCompactChoice",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.AssertionError: Orb selection must render the preserved original orb",
+        "type": "java.lang.AssertionError"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "phoneHasRealDestinationsAndReadableLargeType",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.AssertionError: Wrong destination for Entwicklungszentrum: [Mehr, Systemstatus, Diagnose, Einstellungen, Datenschutz & Freigaben, Modellverwaltung, Entwicklerwerkzeuge, Handy-Builder \u00b7 Termux, , Schlie\u00dfen, ]",
+        "type": "java.lang.AssertionError"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "foldPortraitHasRealDestinationsAndReadableLargeType",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.AssertionError: Actual visible touch bounds overlap: jarvis-rail:home/jarvis-rail:chat",
+        "type": "java.lang.AssertionError"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "name": "tablet",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "name": "phone",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "name": "foldOpen",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisCockpitGridTest",
+      "name": "ownerRecognitionOnlyFromUnlock",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisCockpitGridTest",
+      "name": "noInventedValuesWithoutSources",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisCockpitGridTest",
+      "name": "tenTilesCanCarryRealValuesAndTheirReferenceSubtitles",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisCockpitGridTest",
+      "name": "referenceCompositionRequiresExpandedReadableWindow",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisCockpitGridTest",
+      "name": "allNamedAreasInsideAndNoOverlap",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisCockpitGridTest",
+      "name": "independentSceneViewportsUseTheLatestMeasuredCoordinates",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisCockpitGridTest",
+      "name": "ref5Arrangement",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellContentTest",
+      "name": "everyContentSlotOfEveryFormFactorHasRealRowsOrNotAvailable",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellContentTest",
+      "name": "timelineTimingsArePinnedToJarvisMotion",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellContentTest",
+      "name": "tilesShowOnlyRealValuesAndRouteToExistingScreens",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellContentTest",
+      "name": "hitTestFindsTileRailAndBottomNavTargets",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellLayoutTest",
+      "name": "glowLevelsAreOrdered",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellLayoutTest",
+      "name": "tabletRetainsTheSameHeadLeftSphereRightComposition",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellLayoutTest",
+      "name": "jarvisColoursFollowVideoSpec",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellLayoutTest",
+      "name": "expandedLargeFontReflowsAndReservesReadableLabels",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellLayoutTest",
+      "name": "iconRailHasASeparateReadableSixtyFourDpColumn",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellLayoutTest",
+      "name": "fold7OpenMatchesRef5",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellLayoutTest",
+      "name": "compactPhoneStacksReadableComponentsAndAllTenTiles",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellLayoutTest",
+      "name": "referenceTilesFromRef5",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisShellLayoutTest",
+      "name": "largeFontStaysSane",
+      "status": "PASS",
+      "failure": null
+    }
+  ],
+  "caseStartEndIdentitiesMatch": true,
+  "scope": "ACTUAL_ANDROID_PROJECT_FOCUSED_JVM_OR_ROBOLECTRIC_CLASSES",
+  "limits": [
+    "Not a full Android or lint gate",
+    "No model, native GPU, physical device or APK acceptance",
+    "Overlapping prior and future test groups must not be added"
+  ],
+  "archive": {
+    "name": "android-ui020-product-01.tar.xz",
+    "bytes": 10816,
+    "sha256": "5bda077e27ce83d1f7be9db316aa0125ac22d8791be2e9975fba0dbfe2347988",
+    "members": [
+      {
+        "path": "android-ui020-product-01-active-test.json",
+        "bytes": 154,
+        "sha256": "df8e36f6c29ad3a92254db544bd6fbe52989d10a2119807bb3eb8009a3c511a8"
+      },
+      {
+        "path": "android-ui020-product-01.log",
+        "bytes": 24948,
+        "sha256": "90236f083472725ad9eb360e92fa95ed29935feceaf9a49d123cb6b5f284b8e2"
+      },
+      {
+        "path": "android-ui020-product-01.result.json",
+        "bytes": 1935,
+        "sha256": "4f1df4fd9e3e40597b96ccc421b38040d44f1a6a73b34ff790193c0d337cf012"
+      },
+      {
+        "path": "archive_android_gate.py",
+        "bytes": 4561,
+        "sha256": "3ef7baedee1123ac7756a5cbc85b960dcb1fd2ae0a30fb55e2ca1806720b3acf"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ContinuumReferenceCockpitUiTest.xml",
+        "bytes": 21487,
+        "sha256": "96cff444f810400181c79078ab4876220a7f03674605ddca176b915a96c6d77f"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.JarvisShellStageUiTest.xml",
+        "bytes": 605,
+        "sha256": "af6aa146ec94e8f91cc3d77925a4bf603dfcb7fac71bfff766f22b614739309b"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ui.JarvisCockpitGridTest.xml",
+        "bytes": 1217,
+        "sha256": "00c231d3a56182858bf0fa14ea3e4117bca8bd6733cbab95cc7ed02407277b58"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ui.JarvisShellContentTest.xml",
+        "bytes": 869,
+        "sha256": "57177f4da2910b71b27b56d39e0d776a07373578941b19ccfda1015175bd5778"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ui.JarvisShellLayoutTest.xml",
+        "bytes": 1423,
+        "sha256": "a04b8ad6aa70e32a6a6a29761e447d89602437a17c31226c8326ab7c121fbc05"
+      },
+      {
+        "path": "observe-tests.init.gradle",
+        "bytes": 1798,
+        "sha256": "5c2471c275872167f60a2ada33f018d01921bb1c563608de00014b568a66fdeb"
+      },
+      {
+        "path": "run_c1_gate_v3.py",
+        "bytes": 5722,
+        "sha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd"
+      },
+      {
+        "path": "summary.json",
+        "bytes": 8961,
+        "sha256": "8f1dc6893abd67aaf8c8454e9c340bd6884d5f1b22127026e90071bf019d85b6"
+      }
+    ]
+  }
+}
