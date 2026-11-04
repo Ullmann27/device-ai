@@ -5,9 +5,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Looper
 import android.view.View
+import android.view.ViewGroup
 import at.heinz.deviceai.avatar.AvatarDirector
 import at.heinz.deviceai.avatar.AvatarRuntimeSignals
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -15,17 +17,42 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowChoreographer
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 /** Actual Android Canvas + existing Director; synthetic TTS events, never a claim of device TTS QA. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumAvatarNativeUiTest {
-    private fun layout(view: View, width: Int, height: Int) {
-        view.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
-        view.layout(0, 0, width, height)
+    @Before fun configureVirtualVsyncClock() {
+        // Automatic virtual-vsync advances time while idleFor drains recurring frames.
+        // Explicit frame advancement keeps the real lifecycle assertions bounded.
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+    }
+
+    private fun advanceFrames(totalMillis: Long) {
+        // Paused VSync is driven by clock changes, not by a queued Looper deadline.
+        var remaining = totalMillis
+        while (remaining > 0) {
+            val step = minOf(16L, remaining)
+            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
+            remaining -= step
+        }
+    }
+
+    private fun attachVisible(activity: Activity, view: View, width: Int = 412, height: Int = 307) {
+        activity.setContentView(view, ViewGroup.LayoutParams(width, height))
+        advanceFrames(16) // Complete the actual window traversal before foreground activation.
+        assertTrue("Fixture must be attached to the real Activity window", view.isAttachedToWindow)
+        assertTrue("Fixture must be shown before testing foreground behavior", view.isShown)
+        assertEquals(View.VISIBLE, view.windowVisibility)
+        assertEquals("Window traversal must preserve the requested viewport width", width, view.width)
+        assertEquals("Window traversal must preserve the requested viewport height", height, view.height)
     }
 
     private fun snapshot(view: View, name: String): Bitmap {
@@ -44,15 +71,21 @@ class ContinuumAvatarNativeUiTest {
             val view = ContinuumHologramView(controller.get())
             val frames = mutableListOf<Bitmap>()
             try {
-                controller.get().setContentView(view)
-                layout(view, width, height)
                 view.setNativeHeadEnabled(true)
+                attachVisible(controller.get(), view, width, height)
                 view.setForegroundActive(true)
                 val director = AvatarDirector(view)
                 director.onRuntime(AvatarRuntimeSignals(speaking = true))
+                assertTrue("Speech pixels require a live visible head", view.motionDiagnostics().contains("LIVE"))
                 val closed = snapshot(view, "head-${width}x$height-closed").also { frames += it }
                 director.speechStarted("fixture", "Hallo Heinz")
-                repeat(8) { director.audioLevel("fixture", .8f) }
+                // Director events and View.pose both use real wall time. Model the existing
+                // 33 ms PCM cadence while keeping virtual idle motion fixed for pixel equality.
+                repeat(8) { index ->
+                    if (index > 0) Thread.sleep(33)
+                    director.audioLevel("fixture", .8f)
+                }
+                assertTrue("Speech pixels require a live visible head", view.motionDiagnostics().contains("LIVE"))
                 val speaking = snapshot(view, "head-${width}x$height-speaking").also { frames += it }
                 assertFalse("Existing speech envelope must visibly open the mouth", closed.sameAs(speaking))
                 var mouthPixels = 0
@@ -63,6 +96,7 @@ class ContinuumAvatarNativeUiTest {
                 director.speechEnded("fixture", true)
                 director.audioLevel("fixture", 1f)
                 director.wordRange("fixture", 0, 5)
+                assertTrue("Speech pixels require a live visible head", view.motionDiagnostics().contains("LIVE"))
                 val stopped = snapshot(view, "head-${width}x$height-stopped").also { frames += it }
                 assertTrue("Interruption and stale callbacks must return to the closed mouth", closed.sameAs(stopped))
             } finally {
@@ -100,29 +134,28 @@ class ContinuumAvatarNativeUiTest {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val view = ContinuumHologramView(controller.get())
         try {
-            controller.get().setContentView(view)
-            layout(view, 412, 307)
             view.setNativeHeadEnabled(false)
+            attachVisible(controller.get(), view)
             assertFalse(ContinuumHologramView(controller.get()).isNativeHeadEnabled())
             view.setNativeHeadEnabled(true)
             assertTrue(ContinuumHologramView(controller.get()).isNativeHeadEnabled())
             view.setForegroundActive(true)
-            shadowOf(Looper.getMainLooper()).idleFor(200, TimeUnit.MILLISECONDS)
+            advanceFrames(200)
             assertTrue(view.sampleMotion().callbackCount > 0)
             view.setForegroundActive(false)
             val paused = view.sampleMotion().callbackCount
-            shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+            advanceFrames(1_000)
             assertEquals(paused, view.sampleMotion().callbackCount)
             view.setAnimationsEnabled(false)
             view.setForegroundActive(true)
-            shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+            advanceFrames(1_000)
             assertEquals(paused, view.sampleMotion().callbackCount)
             view.setAnimationsEnabled(true)
-            shadowOf(Looper.getMainLooper()).idleFor(200, TimeUnit.MILLISECONDS)
+            advanceFrames(200)
             assertTrue(view.sampleMotion().callbackCount > paused)
             controller.get().setContentView(View(controller.get()))
             val detached = view.sampleMotion().callbackCount
-            shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+            advanceFrames(1_000)
             assertEquals(detached, view.sampleMotion().callbackCount)
         } finally {
             view.setNativeHeadEnabled(false)

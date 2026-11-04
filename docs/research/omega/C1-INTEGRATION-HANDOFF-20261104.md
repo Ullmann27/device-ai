@@ -175,3 +175,15 @@ Grenzen: Zwei gezielt ausgeführte Klassen ersetzen keine vollständige Unit-/UI
 Zusätzlich gesichert: C1-PATH-010 mit separat gebundener Quellkette und ausdrücklich korrigierter Fan-out-Aussage; C1-GATES-012 mit vollständigem Pflichtumfang; frischer Fachzweig-Abgleich. Der neue #517-Fokus bei f17ee62 ist extern 53/53 grün, sein vollständiger Androidlauf endet jedoch mit Exit143 an einem anderen ReferenceCockpit-Testtimeout. C1 übernimmt daraus nur das unabhängig geprüfte Vier-Dateien-Paket und führt anschließend einen eigenen gezielten Lauf aus. Tagesgrenzen aus #505 bleiben ein eigener nachfolgender Drei-Dateien-Slice.
 
 Rücknahme: reine neue Beleg-/Boardänderungen können separat revertiert werden; der geprüfte Quellcommit401a5d bleibt erhalten. Nächster Schritt: C1-AVATAR-009 seriell einbauen, tatsächliche drei Avatar-UI-Klassen auf dem neuen C1-Stand prüfen. Externer C2 bleibt PENDING_ACK.
+
+## C1-AVATAR-009 — fertigen Fallback-/Fixture-Slice übernehmen
+
+Basis: lokal `f976d81c4f38258143c82de56766aee4a073ee02`, remote `0e3d181ed36d2ffa4e77fda3aa8b72133fbb8cb0`, vollständiger identischer Tree `9e2b708925daa824b235cdb30a8cef50667560ba`. Die vorherige Dokumentationsscheibe sichert den echten Routing-Android-/NewApi-PASS auf165fc9/401a5d; sie führte selbst keine Tests erneut aus.
+
+Die unabhängige Gegenprüfung bestätigt jetzt das abgeschlossene Vier-Dateien-Paket aus #517 `f17ee62f8cfda8914ed217fe2ed88882ba1fa8a4`. Patch SHA256 `3b0fcaa1a9d093bc26aa7e02fb7b262fcfaf7351f2a616761f223e139e350289`. C1 prüfte alle Basis-/Zielblobs und SHA256, `sha256sum --check --quiet SHA256SUMS` Exit0, `git apply --check` Exit0 und `git diff --check` Exit0. Keine weiteren #517-/#505-Dateien übernommen.
+
+Produktionsumfang: `ContinuumHologramView.kt` rendert den vorhandenen2D-Kopf auch nach tatsächlichem `native3dFailed`; Initialisierungstext nur während ausstehender Initialisierung. Drei vorhandene UI-Klassen erhalten pausierte VSync-Steuerung, echten Fenster-Traversal, feste Viewportgröße und passende PCM-Zeitabstände. Alle13 vorhandenen Testmethoden und78 ursprünglichen Assertions bleiben erhalten;22 zusätzliche Assertions sichern Sichtbarkeit und Layout. Keine Produktionsuhr, Modell-, Tool- oder Freigabeänderung.
+
+Externe Rohbelege: vorher46/53PASS mit7Avatarfehlern auf92f421, danach53/53auf f17ee62. Der ältere RED enthält bereits den Produktions-Fallback und beweist deshalb nicht allein dessen alten C1-Fehler. Der separate vollständige f17ee62-Lauf scheitert mit Exit143/180-Sekunden-Timeout in ReferenceCockpit; diese negative Evidenz bleibt ebenfalls im Paket. Aus allen externen PASS wird kein C1-PASS abgeleitet.
+
+Genaue Pfade, Quellen, Roharchive und Rollback: `docs/evidence/c1-integration-20261104/avatar009/`. **Status OWN_ANDROID_FOCUS_PENDING.** Nächster Schritt: sauberen Commit pinnen und die tatsächlichen drei Avatar-UI-Klassen unter beiden Locks ausführen. Bei Fehler den separat erhaltenen geprüften Routing-Stand verfügbar halten und nur diesen begrenzten Slice korrigieren/zurücknehmen. Keine APK-Freigabe.
