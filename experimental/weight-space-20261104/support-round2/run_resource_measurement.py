@@ -13,6 +13,7 @@ import hashlib
 import json
 from pathlib import Path
 import resource
+import struct
 import subprocess
 import sys
 import time
@@ -28,6 +29,26 @@ def sha256(path):
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def validate_registered_sequence(registration, tokenizer):
+    """Bind the literal registered IDs to this tokenizer's actual special IDs."""
+    path = Path(tokenizer)
+    if not 8 <= path.stat().st_size <= 64008:
+        raise ValueError("invalid tokenizer size")
+    raw = path.read_bytes()
+    magic, merges = struct.unpack(">ii", raw[:8])
+    if magic != 0x4C4D4250 or not 0 <= merges <= 8000 or len(raw) != 8 + 8 * merges:
+        raise ValueError("invalid LMBP tokenizer layout")
+    for index, (left, right) in enumerate(struct.iter_unpack(">ii", raw[8:])):
+        if not 0 <= left < 256 + index or not 0 <= right < 256 + index:
+            raise ValueError("invalid tokenizer merge reference")
+    expected = [256 + merges, 112, 114, 111, 98, 101, 33, 257 + merges]
+    declared = registration.get("sequence")
+    if (not isinstance(declared, list) or any(type(value) is not int for value in declared)
+            or declared != expected or registration.get("targets") != 7):
+        raise ValueError(f"registered sequence disagrees with tokenizer: expected {expected}, got {declared}")
+    return expected
 
 
 def main():
@@ -69,6 +90,7 @@ def main():
     if sha256(timeout["path"]) != timeout["sha256"]:
         raise ValueError("timeout executable changed")
     before = {name: sha256(name) for name in registration["immutableInputs"]}
+    validate_registered_sequence(registration, registration["immutableInputs"][1])
     if args.validate_only:
         print(json.dumps({"status": "REGISTERED_INPUTS_VERIFIED", "sourceCommit": commit,
                           "trainingAttempts": 0, "outputCreated": False}))

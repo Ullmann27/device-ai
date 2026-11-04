@@ -1,0 +1,48 @@
+{
+  "schema": "continuum-lm1-resource-measurement-v1",
+  "sourceCommit": "01a2370df4399191ebfd3555506a0052f7d0a324",
+  "registrationSha256": "49087f011bc8edd4c279b9746f84cf1b455f7a3e711b066cd1130296fe14e3f5",
+  "startedUtc": "2026-11-04T19:26:32.784608+00:00",
+  "finishedUtc": "2026-11-04T19:26:35.438684+00:00",
+  "command": [
+    "/usr/bin/timeout",
+    "--signal=KILL",
+    "120s",
+    "/usr/bin/java",
+    "-Xms64m",
+    "-Xmx3g",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/319f3e4563d9/r2-build/resource-probe.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmTrainingResourceProbe",
+    "--real16m",
+    "/workspace/scratch/319f3e4563d9/model16m/model/continuum-lm1-16011776.lm1",
+    "/workspace/scratch/319f3e4563d9/model16m/tokenizer/lm1-tokenizer.lmbp"
+  ],
+  "exitCode": 0,
+  "processStatus": "COMPLETED",
+  "elapsedSeconds": 2.6041098960013187,
+  "maxRssKiB": 397604,
+  "rssMethod": "LINUX_RUSAGE_CHILDREN_MAX_RSS_WITH_PREFLIGHT_BASELINE",
+  "preflightChildrenMaxRssKiB": 11392,
+  "probeExceedsPreflightRss": true,
+  "rssScope": "wrapper children: Git preflight and timeout/Java tree; includes load, checks, retained comparison arrays and update",
+  "userSeconds": 3.050199,
+  "systemSeconds": 0.25102,
+  "inputHashesBefore": {
+    "/workspace/scratch/319f3e4563d9/model16m/model/continuum-lm1-16011776.lm1": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+    "/workspace/scratch/319f3e4563d9/model16m/tokenizer/lm1-tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+  },
+  "inputHashesAfter": {
+    "/workspace/scratch/319f3e4563d9/model16m/model/continuum-lm1-16011776.lm1": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+    "/workspace/scratch/319f3e4563d9/model16m/tokenizer/lm1-tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+  },
+  "inputsUnchanged": true,
+  "stdoutSha256": "06acb20a683e9da3faa8d0264c68df1d1c9abf95bd8d282480d9ffc2559e15aa",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "trainingAttempts": 1,
+  "trainingOutcome": "REQUIRES_NATIVE_RECORD_REVIEW",
+  "quality": "NOT_EVALUATED",
+  "android": "NOT_RUN",
+  "promotion": false
+}

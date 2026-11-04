@@ -1,6 +1,30 @@
 # Zweite Dreiergruppe: LM1 / 16M-Training
 
-Status: **WIP / UNVERIFIED / NEW_TRAINING_NOT_RUN**. Heinz hat am 04.11.2026 unmittelbar die nächsten drei Helfer und weitere Arbeit beauftragt.
+Status: **SUPPORT_COMPLETED / NATIVE_UPDATE_OBSERVED / REGISTRATION_CONFLICT_RETAINED**. Heinz hat am 04.11.2026 drei weitere Helfer beauftragt. Alle drei Beiträge sind geliefert, integriert und unabhängig geprüft.
+
+## Abschluss dieser Runde
+
+| Beitrag | Geprüftes Ergebnis |
+| --- | --- |
+| `weight16m_gradient_check_r2` | 234 ausgewählte Koordinaten in zwei winzigen minGRU-Fixtures stimmen innerhalb der festen Toleranz mit einer unabhängigen Double-Rechnung überein. Direkte Float32-Differenzen bestehen teilweise nicht; alle Abweichungen sind erhalten. Root hat den Lauf bytegleich reproduziert. |
+| `weight16m_training_probe_r2` | Ein echter nativer AdamW-Update am vorhandenen 16.011.776-Parameter-Modell: 16.000.944 Werte numerisch geändert, Verluste/Gewichte endlich, Originaldateien unverändert. 435,332 ms im Trainingsaufruf, 2,604 s gesamter Prüfprozess, 397.604 KiB / 388,285 MiB maximaler Kindprozess-RSS. |
+| `weight16m_recovery_audit_r2` | 56 Git-Blobs, 20 nicht versiegelte registrierte Dateien, 12 Receipt-/Logpaare und 192 Entwicklungsfallzeilen aus #508 konsistent. Root hat den vollständigen Audit erneut ausgeführt. |
+
+Zusätzlich bestehen 18 neue Python-Prüffälle (13 Recovery-Audit, fünf Sequenzbindung) und der unabhängig wiederholte native Tiny-Selbsttest. Diese Zahlen sind keine Qualitätswerte des 16M-Modells. Die erste Runde mit 109 Prüfungen bleibt als historischer eigener Prüfstand in #507 erhalten; ihre unveränderten Gates wurden hier nicht unnötig erneut ausgeführt.
+
+**Offengelegte Registrierungsabweichung:** Root hat im numerischen JSON vor dem Modelllauf fälschlich BOS/EOS 256/257 eingetragen. Der eingefrorene Harness und das Protokoll verwendeten korrekt `tokenizer.bos/eos`; tatsächlich waren dies beim Tokenizer mit 254 Merges die IDs 510/511. Deshalb gilt **nativeUpdate=PASS_OBSERVED, registrationMetadata=FAIL_SEQUENCE_CONFLICT, vollständige Protokollkonformität=false**. Registrierung und Logs bleiben unverändert. Der neue semantische Vorabcheck weist diese falschen Metadaten zurück. Die unabhängige read-only-Abnahme bestätigt Befund und Einstufung. Es gab keinen weiteren echten Modelllauf.
+
+Die NLL auf denselben sieben synthetischen Trainingszielen sank von 6,7283 auf 2,4385. Das belegt keine allgemeine Sprachqualität. Kein trainierter Checkpoint wurde gespeichert. Direkte Gradienten-/Optimierermomentprüfung am echten Modell, längere Sequenzen, größere Batches, Dauertraining und Android bleiben ungeprüft.
+
+Beim separat geprüften #508-Snapshot `7131c1a50a9c697e481a6debe259758dbf422eef` stiegen Intent-Entwicklungsantworten nach 128 Schritten von 0/24 auf 8/24 (klein) beziehungsweise 10/24 (6,56M). Die festgelegte 12/24-Hürde wurde verfehlt; alle sechs nachgelagerten Kapazitätsprüfungen scheiterten. Spätere #508-Ergebnisse sind anhand ihres neuen Commits separat zu prüfen.
+
+Vollständige Befunde, Erratum, Rohbelege und reproduzierbare Befehle: [R2-Evidenzindex](../../../experimental/weight-space-20261104/support-round2/README.md). Die neue Software und das Ergebnis liegen ausschließlich im experimentellen Bereich. Keine Produktionsruntime-, Modellwahl-, Main-, APK- oder Offline-Einstellungsänderung.
+
+## Nächster Einstieg
+
+Aktuellen #508-Stand prüfen und dessen laufende Qualitätsversuche koordinieren. Ein neuer 16M-Ressourcenversuch muss eine neue, vorab widerspruchsfreie Registrierung erhalten und Batch-/Sequenzlänge ausdrücklich festlegen; die unveränderte fehlerhafte V1-Registrierung darf nicht nachträglich korrigiert oder als vollständig bestanden ausgegeben werden. Ein größerer Trainingslauf oder ein Gerätemeilenstein folgt aus dieser Ein-Schritt-Beobachtung nicht automatisch.
+
+## Historischer Startauftrag und Zwischenstände
 
 ## Gemeinsamer Anschluss
 
