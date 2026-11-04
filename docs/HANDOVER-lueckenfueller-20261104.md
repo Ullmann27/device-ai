@@ -26,3 +26,9 @@ Gemergt: #479 @69b76b2f (ref5-Tokens, docs/JARVIS-REF5-FARBEN.md) und Mathematik
 
 ## Nächster Schritt
 Kompilieren (`/workspace/avatar-build/kotlinc` mit der Dateiliste aus `scripts/jarvis-design-preview.sh` + `ui/video3/*.kt` + `motion/*.kt`), Video3ScenesTest laufen lassen, danach die Ganzkörper-Szene (Punkt 2).
+
+## Teststand Kurz-Sprint 10:05 (Code-Stand 731f7194, dieser Commit ändert nur diese Notiz)
+- Kompiliert (JVM, kotlinc 2.4.0): ui/ContinuumPainter, ContinuumFonts, ContinuumTheme, JarvisDesign, JarvisNeon, JarvisMotion, motion/* (ohne AvatarPoseBridge, Android-/Avatar-Import) und ui/video3/*. Keine Fehler.
+- `Video3ScenesTest` (JUnit 4 direkt, nicht Gradle): **9/9 grün** nach dem Mathematik-Tausch. Ein Code-Fix war nicht nötig.
+- Status-Literal-Scan (m5-integration-repair scan.mjs): 0 Treffer.
+- Gradle `:app:testDebugUnitTest` nicht gelaufen. Für die User-Card gibt es keinen eigenen Test.
