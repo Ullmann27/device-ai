@@ -408,11 +408,12 @@ class JarvisSequenceEffects {
                 val prog = JarvisMotion.laser(lt - i * JarvisMotion.Durations.STAGGER)
                 JarvisNeon.laserSparks(p, cx, docY + 6f, tx, ty, prog, now)
                 if (prog >= 1f) {
-                    val style = JarvisDesign.Type.caption
-                    val pw = min(p.measureText(label, style) + 20f, w * .4f)
+                    val style = JarvisDesign.Type.pill; val st = JarvisDesign.Styles.pill
+                    val pw = min(p.measureText(label, style) + 2f * st.padH, w * .4f)
                     val pl = if (left) (tx - pw / 2f).coerceAtLeast(4f) else (tx - pw / 2f).coerceAtMost(w - pw - 4f)
-                    JarvisNeon.glassCard(p, pl, ty - 13f, pl + pw, ty + 13f, 13f, JarvisDesign.Glow.NORMAL)
-                    p.drawText(label, pl + pw / 2f, ty + 4f, style, Fill.Solid(JarvisDesign.Colors.text), TextAlign.CENTER)
+                    val top = ty - st.height / 2f
+                    JarvisNeon.component(p, pl, top, pl + pw, top + st.height, st)
+                    p.drawText(label, pl + pw / 2f, top + (st.height + p.capHeight(style)) / 2f, style, Fill.Solid(JarvisDesign.Colors.text), TextAlign.CENTER)
                 }
             }
         }
@@ -420,15 +421,19 @@ class JarvisSequenceEffects {
 
     private fun drawPills(p: ContinuumPainter, w: Float, h: Float, now: Long) {
         val pl = pills ?: return
-        val style = JarvisDesign.Type.label   // §11: small type like ref5
+        val style = JarvisDesign.Type.pill    // §11 / REF5-FARBEN: pill type 10 sp
+        val st0 = JarvisDesign.Styles.pill   // #07204D fill, #0175AF rim, 22 dp, round
         pl.items.forEachIndexed { i, text ->
-            val pw = pillWidths.getOrPut(text) { min(p.measureText(text, style) + 28f, w * .44f) }
+            val pw = pillWidths.getOrPut(text) { min(p.measureText(text, style) + 2f * st0.padH, w * .44f) }
             val g = pillGeometry(i, text, pw, w, h, now - pl.at) ?: return@forEachIndexed
             val enabled = answerPills.getOrNull(i)?.enabled ?: true
-            // No alpha fade (Muster G): full opacity from the first frame; landing flash = bloom, not alpha.
-            JarvisNeon.glassCard(p, g.x - pw / 2f, g.y - PILL_HALF_H, g.x + pw / 2f, g.y + PILL_HALF_H, JarvisDesign.Metrics.radiusPill,
-                if (!enabled || glow == JarvisDesign.Glow.OFF) JarvisDesign.Glow.SUBTLE else if (g.t in .85f..1f) JarvisDesign.Glow.STRONG else JarvisDesign.Glow.NORMAL)
-            p.drawText(text, g.x, g.y + 5f, style, Fill.Solid(if (enabled) JarvisDesign.Colors.text else JarvisDesign.Colors.textMuted), TextAlign.CENTER)
+            // No alpha fade (Muster G): full opacity from the first frame; landing flash = bloom/active rim, not alpha.
+            val st = st0.copy(rim = if (enabled) st0.rim else JarvisDesign.Colors.textMuted,
+                glow = if (!enabled || glow == JarvisDesign.Glow.OFF) JarvisDesign.Glow.OFF else if (g.t in .85f..1f) JarvisDesign.Glow.STRONG else st0.glow)
+            val top = g.y - st.height / 2f
+            JarvisNeon.component(p, g.x - pw / 2f, top, g.x + pw / 2f, top + st.height, st, active = enabled && g.t in .85f..1f)
+            p.drawText(text, g.x, top + (st.height + p.capHeight(style)) / 2f, style,
+                Fill.Solid(if (enabled) JarvisDesign.Colors.text else JarvisDesign.Colors.textMuted), TextAlign.CENTER)
         }
     }
 
@@ -478,7 +483,7 @@ class JarvisSequenceEffects {
         const val DOC_RISE_MS = 450L
         const val ENVELOPE_LASER_START = JarvisMotion.Durations.ENVELOPE_IN + JarvisMotion.Durations.ENVELOPE_FLAP + DOC_RISE_MS
         /** Bounded per frame: ≤ 4 lasers × 3 sparks (JarvisNeon.laserSparks draws 3). */
-        /** Pill half height (dp): compact like ref5 (§11), radius = JarvisDesign.Metrics.radiusPill. */
+        /** Touch half height (dp) of a pill; drawn pill is JarvisDesign.Styles.pill (22 dp), hit box kept larger for touch. */
         const val PILL_HALF_H = 14f
         const val MAX_LASERS = 4
         const val SPARKS_PER_LASER = 3
