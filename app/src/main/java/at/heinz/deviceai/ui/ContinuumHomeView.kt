@@ -128,12 +128,38 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until
             field = value
             views.values.forEach { it.refresh() }
+            if (jarvisShellStage) jarvisShell.invalidate()
             updateWaveAnimation()
         }
 
+    /**
+     * Welten-Optik's shell (#479) as the bottom layer. Opt-in stage ("jarvis-shell" preference or
+     * [setJarvisShellStage]): the shell draws phone/Fold7/tablet composition with real content from
+     * [JarvisShellContent]; the live avatar sits in its AVATAR slot. Off by default until the shell offers touch
+     * targets and tile destinations (docs/ARCHITEKTUR-JARVIS.md, "Fehlt an der Schnittstelle").
+     */
+    val jarvisShell = JarvisShellView(context)
+    var jarvisShellStage = presentationPrefs.getBoolean("jarvis-shell", false)
+        private set
+
+    fun setJarvisShellStage(enabled: Boolean) {
+        jarvisShellStage = enabled
+        presentationPrefs.edit().putBoolean("jarvis-shell", enabled).apply()
+        applyShellStage()
+        requestLayout()
+    }
+
+    private fun applyShellStage() {
+        jarvisShell.visibility = if (jarvisShellStage) View.VISIBLE else View.GONE
+        views.values.forEach { it.visibility = if (jarvisShellStage) View.GONE else View.VISIBLE }
+    }
+
     init {
         setWillNotDraw(false)
+        jarvisShell.content = JarvisShellContent.forState({ state })
+        addView(jarvisShell, 0)
         addView(hologram)
+        applyShellStage()
     }
 
     /**
@@ -165,12 +191,16 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             views[slot] = view
             addView(view)
         }
+        applyShellStage()
         requestLayout()
         updateWaveAnimation()
     }
 
     val wide: Boolean get() = layoutSpec?.wide == true
     val referenceCockpit: Boolean get() = layoutSpec?.referenceCockpit == true
+    val landscapeCockpit: Boolean get() = layoutSpec?.landscapeCockpit == true
+    /** The drawn view of [slot] (animation layer / tests); null if the composition has no such slot. */
+    fun viewFor(slot: Slot): View? = if (slot == ContinuumLandscapeCockpitLayout.AVATAR_SLOT) hologram else views[slot]
     /** Geometry belongs to the composition, not to the presence of an adaptive worker card. */
     val intendedGeometry: ContinuumHologramRenderer.Geometry
         get() {
@@ -188,6 +218,32 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     /** Height of a slot in dp (for tap zones inside an element). */
     fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f
 
+    private var transientCard: ContinuumElementView? = null
+
+    /** Shows a transient notice card over the lower avatar stage (account/document scenes), then removes it. */
+    fun showTransientCard(title: String, lines: List<String>, animate: Boolean, durationMs: Long = 6_000L) {
+        transientCard?.let { removeView(it) }
+        val view = ContinuumElementView(context, CockpitNoticeCard(title, lines, textScale)) { _, _ ->
+            transientCard?.let { removeView(it) }; transientCard = null
+        }
+        view.state = state
+        transientCard = view
+        addView(view)
+        if (animate) {
+            view.translationX = 60f * density; view.alpha = 0f
+            view.animate().translationX(0f).alpha(1f).setDuration(300L).start()
+        }
+        postDelayed({ if (transientCard === view) { removeView(view); transientCard = null } }, durationMs)
+    }
+
+    private fun transientBox(): ContinuumHomeLayout.Box? {
+        val hero = layoutSpec?.get(Slot.HERO) ?: return null
+        val h = 84f
+        val l = hero.left + 12f - offset
+        val r = hero.right - 12f - offset
+        return ContinuumHomeLayout.Box(l, hero.bottom - h - 8f, r, hero.bottom - 8f)
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val spec = layoutSpec
@@ -198,16 +254,47 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
         }
-        setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))
+        // The shell stage is one window tall (no scrolling page underneath).
+        val h = if (jarvisShellStage && configuredHeight > 0f) (configuredHeight * density).toInt()
+            else maxOf(contentHeight, suggestedMinimumHeight)
+        jarvisShell.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
+        if (jarvisShellStage) shellAvatarBox(width, h)?.let { box ->
+            hologram.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
+        }
+        transientCard?.let { card -> transientBox()?.let { box ->
+            card.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
+        } }
+        setMeasuredDimension(width, h)
+    }
+
+    /** AVATAR slot of the shell for the given pixel size (dp geometry from JarvisShellLayout). */
+    private fun shellAvatarBox(widthPx: Int, heightPx: Int): JarvisShellLayout.Box? {
+        val w = widthPx / density; val h = heightPx / density
+        if (w < 240f || h < 320f) return null
+        return JarvisShellLayout.create(w, h, resources.configuration.fontScale, jarvisShell.foldRail)[JarvisShellLayout.Slot.AVATAR]
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        jarvisShell.layout(0, 0, r - l, b - t)
+        if (jarvisShellStage) {
+            shellAvatarBox(r - l, b - t)?.let { box ->
+                hologram.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                    (box.right * density).toInt(), (box.bottom * density).toInt())
+            }
+            return
+        }
         for (child in listOf<View>(hologram) + views.values) {
             if (child.parent !== this) continue
             val box = boxOf(child) ?: continue
             child.layout((box.left * density).toInt(), (box.top * density).toInt(),
                 (box.right * density).toInt(), (box.bottom * density).toInt())
         }
+        transientCard?.let { card -> transientBox()?.let { box ->
+            card.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                (box.right * density).toInt(), (box.bottom * density).toInt())
+        } }
     }
 
     private fun boxOf(child: View): ContinuumHomeLayout.Box? {

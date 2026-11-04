@@ -52,6 +52,10 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
     )
 
     private val files: File = context.filesDir
+    // The stats reader parses the whole ledger: at most every 15 s, always on this background collector.
+    private val memoryStats = at.heinz.deviceai.ui.ThrottledRead(15_000L) {
+        at.heinz.deviceai.learning.ContinuumMemoryStatsReader(files).read()
+    }
     private val history = ContinuumMetricHistory(File(files, "diagnostics/quality-history-v1.tsv"))
     private var lastCpuMs = -1L
     private var lastWallMs = -1L
@@ -181,6 +185,7 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 activeProjects = backlog?.let { active }, runningTasks = backlog?.let { running }, errors = backlog?.let { failed },
                 series = ContinuumDashboardMath.dailySeries(doneTimes, now), projects = projects
             ),
+            memory = memoryStats.get(SystemClock.elapsedRealtime()),
             system = ContinuumDashboardState.SystemStatus(
                 appCpuPercent = cpu, batteryPercent = batteryCapacity(), memoryPercent = memory, storagePercent = storage?.usedPercent,
                 networkOnline = online, networkLabel = when (online) { true -> "Verbunden"; false -> "Offline"; null -> "Unbekannt" },
