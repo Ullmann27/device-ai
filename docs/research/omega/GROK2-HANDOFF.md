@@ -229,6 +229,8 @@ Kein PDF-Importpfad im Repo gefunden; der echte Dokument-Import ist das Knowledg
 Status: REVOKED/REJECTED → REVOKED; gehalten mit Modalität HYPOTHETICAL → HYPOTHETICAL; CONFIRMED nur bei Besitzer-Vertrauen; sonst UNCONFIRMED. Hypothesen nie CONFIRMED.
 Zustellung: eigener Daemon-Single-Thread pro App-Verzeichnis, nie auf dem Aufrufer-Thread; Listener-Exceptions werden gefangen und geloggt; nach `close()` keine Zustellung mehr (auch nicht für bereits eingereihte Ereignisse). Ohne Listener entstehen keine Kosten (kein Diff, keine Hash-Berechnung).
 
+**M2.13 Zustellung (öffentliche Signatur unverändert):** Warteschlange begrenzt auf `ContinuumMemoryEventHub.DEFAULT_QUEUE_CAPACITY = 256` (intern `queueCapacity`, für Tests setzbar); bei Überlauf wird das älteste Ereignis verworfen und `droppedEvents` hochgezählt (Diagnose: `ContinuumMemoryEventHub.droppedEventCount(appDirectory)`, internal). `emit` nimmt nur ein kurzes Lock, blockiert nie auf Listenern. Zustell-Thread: Daemon `continuum-memory-events-<8 Hex>` (SHA-256 des Pfads), läuft nur solange Listener registriert sind, endet nach dem letzten `close()` (Warteschlange wird geleert), startet beim nächsten `addListener` neu; Start/Ende unter demselben Lock (kein Race close↔addListener). Ein Listener, der während einer laufenden Zustellung geschlossen wird, kann dieses eine Ereignis noch erhalten.
+
 ## 13. Ledger-Recovery: Persistenz, IO-Fehler, offene Punkte (M2.10/M2.12)
 
 - `LedgerRecoveryReport` wird als `experiences-v2.recovery.properties` (nur Metadaten: Offsets, Zähler, Pfade, fester Grundtext, Fehlerklassen) neben dem Ledger abgelegt; `lastRecovery()` liest ihn nach Neustart wieder.

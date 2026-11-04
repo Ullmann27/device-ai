@@ -53,3 +53,7 @@ Stand: 2026-11-03 14:42 CET, Host-JVM (JDK 17.0.21, Gradle-Wrapper, --no-daemon)
 - M2.12: RED 3 (Kompilier-RED, 37e37676) → GREEN 3/3 (5a84142e): Report übersteht Neustart ohne Inhalte; Quarantäne-IO-Fehler → Laden klappt, Report vermerkt, Schreiben abgelehnt bis Reparatur; Sicherungs-IO-Fehler blockiert Öffnen nicht.
 - Schreib-p95 100/1000/4000: 1,41 / 2,09 / 4,56 ms (1 Lauf).
 - Volle Unit-Suite: **1842 Tests, 0 Fehler, 5 übersprungen**.
+
+## Update 2026-11-04 (M2.13)
+- Event-Queue/Thread: RED 3 (Kompilier-RED, 6830123d) → GREEN 3/3; bestehende 7 Event-Tests grün. Überlauf: 256 bleiben, 44 von 300 verworfen (älteste), Zähler stimmt, emit < 500 ms für 300 Ereignisse bei blockiertem Listener; Thread Daemon + Name, endet nach letztem close(), Neustart bei addListener; 200× close/add-Race ohne Verlust.
+- Volle Unit-Suite: **1845 Tests, 0 Fehler, 5 übersprungen**.
