@@ -38,9 +38,15 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView) : CockpitAn
     private fun motionAllowed() = ValueAnimator.areAnimatorsEnabled() && !power.isPowerSaveMode
 
     private fun present(event: CockpitAnimationEvent) {
-        if (!home.isAttachedToWindow || !home.landscapeCockpit) return
+        if (!home.isAttachedToWindow) return
         val hook = CockpitTransitions.hook
         if (hook != null && runCatching { hook.play(event, home) }.getOrDefault(false)) return
+        if (home.jarvisShellStage) {
+            // Shell stage: Welten-Optik's own entrance (JarvisMotion pattern B inside JarvisShellView).
+            if (event is CockpitAnimationEvent.CommandFlyIn) home.jarvisShell.playEntrance()
+            return
+        }
+        if (!home.landscapeCockpit) return
         when (event) {
             is CockpitAnimationEvent.CommandFlyIn -> flyInCards()
             is CockpitAnimationEvent.ActionStarted -> slotFor(event.action)?.let { slot ->
