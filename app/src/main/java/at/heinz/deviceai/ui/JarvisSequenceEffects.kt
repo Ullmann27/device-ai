@@ -353,7 +353,7 @@ class JarvisSequenceEffects {
 
     // F envelope object colours: NO JarvisDesign token yet (Gmail red / paper are not in the ref5 table) –
     // requested from Welten-Optik (#479); kept as the only literals here until the measured table lands.
-    private val mailRed = Fill.Solid(0xffea4335.toInt())
+    private val mailRed = Fill.Solid(MAIL_RED)
     private val paper = Fill.Solid(0xfff2f6fb.toInt())
     private val paperShade = Fill.Solid(0xffcfd8e6.toInt())
     private val flapPath = VectorPath()
@@ -365,7 +365,7 @@ class JarvisSequenceEffects {
         val scale = pose.depthScale
         val cx = w / 2f; val bob = sin(el / 650f) * 3f                       // floats after arrival
         val cy = h * .42f + bob
-        val ew = min(w * .42f, 150f); val eh = ew * .68f
+        val ew = min(w * ENVELOPE_W_FRAC, ENVELOPE_MAX_W); val eh = ew * .68f   // ref5 scale: small object beside the head
         p.setAdditive(true); JarvisNeon.halo(p, cx, cy, ew * 1.1f * scale, JarvisDesign.Colors.cyan, .3f * bloomStrength(glow, scale)); p.setAdditive(false)
         // spatial entrance from depth: converging depth rings + tilt that straightens as it arrives
         val e = scale.coerceIn(0f, 1f)
@@ -377,7 +377,7 @@ class JarvisSequenceEffects {
             }
             p.setAdditive(false)
         }
-        p.save(); p.scale(scale, scale * (.55f + .45f * e), cx, cy); p.rotate(-pose.tiltDeg, cx, cy)
+        p.save(); p.scale(scale, scale * (.55f + (REST_FORESHORTEN - .55f) * e), cx, cy); p.rotate(-(pose.tiltDeg + REST_TILT_DEG), cx, cy)
         val l = cx - ew / 2f; val r = cx + ew / 2f; val t = cy - eh / 2f; val b = cy + eh / 2f
         // document slides up out of the open envelope (after the flap)
         val docT = pose.docRise
@@ -386,7 +386,14 @@ class JarvisSequenceEffects {
             p.fillRoundRect(l + ew * .14f, docY, r - ew * .14f, docY + eh * .8f, 3f, paper)
             for (k in 0..3) p.drawLine(l + ew * .22f, docY + 10f + k * 8f, r - ew * (.22f + (k % 2) * .12f), docY + 10f + k * 8f, 1.4f, paperShade)
         }
-        p.fillRoundRect(l, t, r, b, 6f, paper)
+        // cinema look (#479 bloom tokens): depth shadow, cyan bloom behind, glass body over a paper core
+        val bs = bloomStrength(glow, e)
+        p.fillRoundRect(l + 4f, t + 8f, r + 4f, b + 10f, 8f, Fill.Solid(JarvisDesign.Colors.background), .55f)
+        JarvisNeon.bloomRoundRect(p, l, t, r, b, 8f, JarvisDesign.Colors.cyan, .8f * bs)
+        p.fillRoundRect(l, t, r, b, 6f, paper, .92f)
+        p.fillRoundRect(l, t + eh * .55f, r, b, 6f, paperShade, .35f)                    // lower body in shade = depth
+        JarvisNeon.glassCard(p, l, t, r, b, 6f, if (bs > 0f) JarvisDesign.Glow.NORMAL else JarvisDesign.Glow.OFF, glowBoost = bs.coerceAtLeast(.01f))
+        p.setAdditive(true); JarvisNeon.bloom(p, cx, cy, ew * .35f, MAIL_RED, .25f * bs); p.setAdditive(false)
         // red M (two diagonals meeting at the centre) and red side bars
         p.drawLine(l + 6f, t + 8f, cx, cy + 2f, 5f, mailRed); p.drawLine(r - 6f, t + 8f, cx, cy + 2f, 5f, mailRed)
         p.drawLine(l + 6f, t + 8f, l + 6f, b - 6f, 6f, mailRed); p.drawLine(r - 6f, t + 8f, r - 6f, b - 6f, 6f, mailRed)
@@ -487,6 +494,13 @@ class JarvisSequenceEffects {
         const val PILL_HALF_H = 14f
         const val MAX_LASERS = 4
         const val SPARKS_PER_LASER = 3
+        /** F at rest (ref5): ~26 % width, max 96 dp, kept slightly foreshortened/tilted so it reads 3-D, not flat. */
+        /** Gmail red: no REF5 token (object colour), flagged for Welten-Optik. */
+        const val MAIL_RED = 0xffea4335.toInt()
+        const val ENVELOPE_W_FRAC = .26f
+        const val ENVELOPE_MAX_W = 96f
+        const val REST_FORESHORTEN = .9f
+        const val REST_TILT_DEG = 6f
         private const val CAMERA_DISTANCE = 8f
         private const val START_DEPTH = 24f
 
