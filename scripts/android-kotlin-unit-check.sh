@@ -23,6 +23,7 @@ mkdir -p "$out"
 "$root/scripts/android-kotlin-compile-check.sh" "$out/compile-check" >"$out/compile-check.txt"   # generated stubs
 cp="$deps/android-all-15.jar"
 for jar in okhttp.jar okio.jar shizuku-api.jar shizuku-aidl.jar shizuku-shared.jar shizuku-provider.jar; do cp="$cp:$deps/$jar"; done
+for jar in filament-android-1.56.0.jar gltfio-android-1.56.0.jar; do [ -f "$deps/$jar" ] && cp="$cp:$deps/$jar"; done
 mkdir -p "$out/stubclasses" "$out/main" "$out/test"
 mapfile -t stubs < <(find "$out/compile-check/stubs" -name '*.java' | sort)
 javac -nowarn -d "$out/stubclasses" -cp "$cp" "${stubs[@]}"
