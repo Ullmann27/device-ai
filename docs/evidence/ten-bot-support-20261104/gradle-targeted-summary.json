@@ -1,0 +1,51 @@
+{
+  "source_local_commit": "8f9b5e9f54c2da7a8a8dd950705690668842fa44",
+  "source_remote_commit": "07dca053eef5b20381469a55d107862c65767658",
+  "source_tree": "6604d82a2eec31be9680ff71bf75bb8df2eb7924",
+  "command": "flock -w 300 -E 73 /workspace/scratch/b3170a7ae924/gradle-build.lock python3 /workspace/scratch/391c0f6de827/build-env/run_gradle.py docs/evidence/ten-bot-support-20261104/gradle-support-targeted.log --offline :app:testDebugUnitTest --tests at.heinz.deviceai.routines.* --tests at.heinz.deviceai.chief.ChiefBrainWiringTest --tests at.heinz.deviceai.chief.ChiefWorkerPoolTest --tests at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest",
+  "exit_code": 0,
+  "counts": {
+    "tests": 31,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "suite": "at.heinz.deviceai.chief.ChiefBrainWiringTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.chief.ChiefWorkerPoolTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.routines.ContinuumRoutinesTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.routines.RoutineBookAdmissionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "scope": "Android production and unit test source compilation plus selected host JVM tests; no APK or device acceptance"
+}

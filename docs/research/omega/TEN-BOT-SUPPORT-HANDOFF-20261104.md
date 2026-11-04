@@ -55,8 +55,11 @@ not counted as agents that already ran.
   book: mutable tool-scope aliases and next-time overflow for very large periods.
   Three new regressions failed on the original source; all 12 routine tests pass
   after the minimal repair. `ROUTINES.md` records actual limits and rollback.
-- Shared Gradle lock was occupied when first checked; no competing Gradle build
-  or daemon termination was attempted. Full Android/device acceptance is pending.
+- Shared Gradle lock was initially occupied. After acquiring it, the offline
+  Android build compiled production and unit-test source and the selected
+  routine/dispatcher/pool tests passed (see gradle-targeted-summary.json).
+  No competing Gradle build or daemon termination was attempted. Full-suite,
+  APK and physical-device acceptance remain separate gates.
 
 ## Execution and evidence rules
 

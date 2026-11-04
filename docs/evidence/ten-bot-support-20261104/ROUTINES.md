@@ -41,8 +41,12 @@ Kotlin compiler/JDK17 and run with JUnit 4.13.2/Hamcrest 1.3.
   at.heinz.deviceai.routines.RoutineBookAdmissionTest`.
 
 The production dispatcher was inspected to verify it only reads/passes the scope
-and does not require a mutable set. Android Gradle consumer verification and
-independent review are subsequent gates; host unit tests are not Fold7 evidence.
+and does not require a mutable set. The real offline Android Gradle build then
+compiled the production and unit-test source and ran the selected routine,
+ChiefBrainWiring and ChiefWorkerPool tests successfully. Exact counts, command,
+tree and local/remote commit binding are in `gradle-targeted-summary.json`; raw
+output is `gradle-support-targeted.log`. Independent review remains a subsequent
+gate; host unit tests are not Fold7 evidence.
 No new scheduler, runtime, model, capability or owner permission was introduced.
 
 Rollback: revert the support commit containing `RoutineBookAdmissionTest` and
