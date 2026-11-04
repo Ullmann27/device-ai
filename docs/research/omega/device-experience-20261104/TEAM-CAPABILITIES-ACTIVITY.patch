@@ -1,0 +1,148 @@
+--- a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -200,6 +200,7 @@
+     private var modelCenterDialog: AlertDialog? = null
+     // catalog listing, refreshed off the UI thread (reloadInstalledModels)
+     private var installedModels: List<ImportedLocalModel> = emptyList()
++    private var knownImportedModelCount: Int? = null
+     private lateinit var activityText: TextView
+     private lateinit var planCard: LinearLayout
+     private lateinit var planText: TextView
+@@ -345,6 +346,8 @@
+     private val responseTimesMs = ArrayDeque<Long>()
+     private var requestStartedAt = 0L
+     private var dashboardCollecting = false
++    private var capabilityDashboard: at.heinz.deviceai.ui.ContinuumDashboardState? = null
++    private var capabilityDashboardAtElapsedMs: Long? = null
+     private var knownOpenIssues: Set<String>? = null
+     private val dashboardRefresh = object : Runnable {
+         override fun run() {
+@@ -1146,6 +1149,7 @@
+     private fun refreshDashboard() {
+         if (homeView == null || dashboardCollecting || !foregroundLearningActive) return
+         dashboardCollecting = true
++        val dashboardSnapshotAtElapsedMs = android.os.SystemClock.elapsedRealtime()
+         val modelReady = ::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY
+         val live = ContinuumDashboardCollector.Live(
+             modelName = if (::localRuntime.isInitialized) localRuntime.loadedModel?.let { it.id + " " + it.version } else null,
+@@ -1167,6 +1171,8 @@
+         onLearningIo({ dashboardCollector.collect(live) to diagnostics.open() }) { result ->
+             dashboardCollecting = false
+             result.onSuccess { (state, open) ->
++                capabilityDashboard = state
++                capabilityDashboardAtElapsedMs = dashboardSnapshotAtElapsedMs
+                 homeView?.state = state
+                 if (centerDialog?.isShowing == true) liveHardwareGauges?.updateTelemetry(state.system)
+                 navigationView?.state = state
+@@ -3176,7 +3182,52 @@
+         }
+     }
+ 
++    /** Public status only: no collector invocation, disk scan, model call, bot seed, grant,
++     * learning radar or memory/context mutation. Current runtime flags outrank cached telemetry. */
++    private fun showCurrentAppCapabilities(request: String) {
++        val runtimeState = if (::localRuntime.isInitialized) when (localRuntime.state) {
++            LocalModelState.EMPTY -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.NOT_LOADED
++            LocalModelState.LOADING -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.LOADING
++            LocalModelState.READY -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.READY
++            LocalModelState.GENERATING -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.GENERATING
++            LocalModelState.UNLOADING -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.UNLOADING
++            LocalModelState.FAILED -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.FAILED
++        } else at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.UNKNOWN
++        val live = at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot(
++            modelState = runtimeState,
++            loadedModelName = if (::localRuntime.isInitialized) localRuntime.loadedModel?.let { it.id + " " + it.version } else null,
++            importedModelCount = knownImportedModelCount,
++            onDeviceSpeechAvailable = if (android.os.Build.VERSION.SDK_INT < 31) false else runCatching {
++                android.speech.SpeechRecognizer.isOnDeviceRecognitionAvailable(this)
++            }.getOrNull(),
++            microphoneGranted = runCatching { checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
++                android.content.pm.PackageManager.PERMISSION_GRANTED }.getOrNull(),
++            internetMode = internetConsent.mode,
++            builderRunning = runCatching { getSharedPreferences(ContinuumMobileBuildResultReceiver.PREFERENCES, MODE_PRIVATE)
++                .contains(ContinuumMobileBuildResultReceiver.JOB_ID) }.getOrNull(),
++            selectedBot = selectedBot != null,
++            botTurnActive = activeBotId != null
++        )
++        val snapshot = at.heinz.deviceai.cognitive.OwnerCapabilityReply.withDashboard(live,
++            capabilityDashboard, capabilityDashboardAtElapsedMs, android.os.SystemClock.elapsedRealtime())
++        input.text.clear()
++        conversationActive = true
++        activeWorkArea = ContinuumWorkArea.CHAT
++        refreshWorkAreaSelection(); refreshConversationLayout()
++        addBubble(request, user = true)
++        addBubble("Continuum · Aktuelle App-Fähigkeiten\n\n" +
++            at.heinz.deviceai.cognitive.OwnerCapabilityReply.describe(snapshot), user = false)
++        addToolActivity("GERÄTESTATUS · nur öffentliche Betriebsdaten · kein Modell- oder Werkzeugaufruf")
++    }
++
+     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
++        // Exact status submissions stay read-only even while a model/bot is busy. The
++        // Send button's explicit Stop/cancel behavior remains in its existing click handler.
++        if (at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(input.text.toString(), neuralCoach.isActive()) ==
++            at.heinz.deviceai.cognitive.OwnerChatLocalIntent.CAPABILITIES) {
++            showCurrentAppCapabilities(input.text.toString().trim())
++            return
++        }
+         // A read-only Chief status question is allowed while Gemma is busy.
+         // It must never cancel or queue behind the current model generation.
+         val chiefStatusRequest = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
+@@ -3364,17 +3415,18 @@
+             request, neuralCoach.isActive()
+         )
+         when (ownerLocalIntent) {
+-            at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING,
+             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.CAPABILITIES -> {
++                showCurrentAppCapabilities(request)
++                return
++            }
++            at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING -> {
+                 if (localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null) {
+                     input.text.clear()
+                     addUserMessage(request)
+                     runLocal(request)
+                     return
+                 }
+-                val canonical = if (
+-                    ownerLocalIntent == at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING
+-                ) "Hallo" else "Was kannst du?"
++                val canonical = "Hallo"
+                 input.text.clear()
+                 addUserMessage(request)
+                 addNonModelReply(request,
+@@ -8480,6 +8532,7 @@
+     private fun chooseInstalledModel() {
+         onLearningIo({ modelCatalog.all() }) { result ->
+             installedModels = result.getOrDefault(emptyList())
++            knownImportedModelCount = result.getOrNull()?.size
+             chooseInstalledModel(installedModels)
+         }
+     }
+@@ -8677,6 +8730,7 @@
+     private fun reloadInstalledModels() {
+         onLearningIo({ modelCatalog.all() }) { result ->
+             installedModels = result.getOrDefault(emptyList())
++            knownImportedModelCount = result.getOrNull()?.size
+             refreshLocalModelUi()
+         }
+     }
+@@ -9616,11 +9670,15 @@
+                     (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog) &&
+                     (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true))applyLocalSpeechText(requestCode,spoken)},
+                 onError={message->
+-                    if (requestCode == READINESS_SPEECH_REQUEST && readinessDialog === readinessScope && readinessScope?.isShowing == true) {
+-                        readinessSpeechResult = message
+-                        refreshReadinessGuide()
++                    if (speechScopeGeneration == scopeGeneration && sessionId == scopeSession && !isFinishing && !isDestroyed &&
++                        (requestCode != DEV_SPEECH_REQUEST || devDialog === scopeDialog && scopeDialog?.isShowing == true) &&
++                        (requestCode != READINESS_SPEECH_REQUEST || readinessDialog === readinessScope && readinessScope?.isShowing == true)) {
++                        if (requestCode == READINESS_SPEECH_REQUEST) {
++                            readinessSpeechResult = message
++                            refreshReadinessGuide()
++                        }
++                        Toast.makeText(this,message,Toast.LENGTH_LONG).show()
+                     }
+-                    Toast.makeText(this,message,Toast.LENGTH_LONG).show()
+                 }) }.onFailure {
+                     speech.cancel();Toast.makeText(this,"Lokale Spracheingabe nicht verfügbar. Keine Audioübertragung gestartet.",Toast.LENGTH_LONG).show()
+                 }

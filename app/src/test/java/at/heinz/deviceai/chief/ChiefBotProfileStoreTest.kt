@@ -51,6 +51,22 @@ class ChiefBotProfileStoreTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun systemParentAliasKeepsRosterDurable() {
+        val base = root()
+        try {
+            val managed = File(base, "managed").apply { mkdir() }
+            val files = File(managed, "app/files").apply { mkdirs() }
+            val alias = File(base, "system-alias")
+            Files.createSymbolicLink(alias.toPath(), managed.toPath())
+            val aliasedFiles = File(alias, "app/files")
+            val store = ChiefBotProfileStore(File(aliasedFiles, "chief-bots"), trustedParentDirectory = aliasedFiles)
+            val original = store.seedDefaults(20).single { it.agentId == "bot-kora" }
+            val renamed = store.rename(original.agentId, "Kora dauerhaft", original.profileVersion)
+            assertEquals(20, ChiefBotProfileStore(File(files, "chief-bots")).page().items.size)
+            assertEquals(renamed, ChiefBotProfileStore(File(aliasedFiles, "chief-bots"), trustedParentDirectory = aliasedFiles).get(original.agentId))
+        } finally { base.deleteRecursively() }
+    }
+
     @Test fun staleUpdatesAndDuplicateIdsDoNotOverwriteAcceptedData() {
         val dir = root()
         try {

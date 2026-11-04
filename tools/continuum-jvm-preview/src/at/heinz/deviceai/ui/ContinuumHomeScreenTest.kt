@@ -25,7 +25,7 @@ class ContinuumHomeScreenTest {
                 assertFalse("cards overlap", a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom)
             }
         }
-        assertEquals(360f / 412f, ContinuumHomeLayout.phone(360f).scale, 1e-6f)
+        assertEquals("Current cockpit keeps physical dp touch sizes", 1f, ContinuumHomeLayout.phone(360f).scale, 1e-6f)
         assertTrue(ContinuumHomeLayout.isWide(840f, 600f))
         assertFalse(ContinuumHomeLayout.isWide(412f, 900f))
     }

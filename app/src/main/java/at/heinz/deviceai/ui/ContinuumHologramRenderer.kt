@@ -60,6 +60,10 @@ class ContinuumHologramRenderer {
             val FOLD_PORTRAIT = Geometry(centerY = .42f, radiusOfWidth = .375f, radiusOfHeight = .37f,
                 pad = .99f, wall = .1f, brand = 1.27f, tagline = 1.42f, marks = null,
                 flat = .62f, sphere = 1.04f, haloNodes = 72, aura = .35f, bloom = 1f)
+            /** The preserved core shares a bounded stage with the native bust. */
+            val REFERENCE_COCKPIT = Geometry(centerY = .42f, radiusOfWidth = .32f, radiusOfHeight = .30f,
+                pad = .99f, wall = .1f, brand = 1.35f, tagline = 1.58f, marks = null,
+                flat = .62f, sphere = 1.04f, haloNodes = 48, aura = .33f, bloom = .88f)
         }
     }
 
@@ -653,11 +657,16 @@ class ContinuumHologramRenderer {
     private val sparkCore = Fill.Solid(Argb.rgb(248, 253, 255))
 
     private fun drawBrand(p: ContinuumPainter) {
-        val brand = ContinuumTheme.display(400, 11.83f * scale, 11.83f * .456f * scale)
-        val tagline = ContinuumTheme.display(500, 7.76f * scale, 7.76f * .476f * scale)
+        val cockpit = geometry == Geometry.REFERENCE_COCKPIT
+        val brand = if (cockpit) ContinuumTheme.display(600, max(11.5f, 13f * scale), 1.5f)
+            else ContinuumTheme.display(400, 11.83f * scale, 11.83f * .456f * scale)
+        val tagline = if (cockpit) ContinuumTheme.display(500, max(9.5f, 10f * scale), .8f)
+            else ContinuumTheme.display(500, 7.76f * scale, 7.76f * .476f * scale)
         // letter spacing also trails the last glyph; shift by half a space to keep the word optically centred
-        p.drawText("CONTINUUM", cx + brand.letterSpacing / 2f, cy + r * geometry.brand, brand, brandFill, TextAlign.CENTER)
-        p.drawText("INTELLIGENCE  LIVES  ON", cx + tagline.letterSpacing / 2f, cy + r * geometry.tagline, tagline, taglineFill, TextAlign.CENTER)
+        p.drawText(if (cockpit) "KI-KERN" else "CONTINUUM", cx + brand.letterSpacing / 2f,
+            cy + r * geometry.brand, brand, brandFill, TextAlign.CENTER)
+        p.drawText(if (cockpit) "CONTINUUM" else "INTELLIGENCE  LIVES  ON", cx + tagline.letterSpacing / 2f,
+            cy + r * geometry.tagline, tagline, taglineFill, TextAlign.CENTER)
         val marks = geometry.marks
         if (pageCount > 1 && marks != null) {
             val y = cy + r * marks

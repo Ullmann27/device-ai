@@ -1,0 +1,76 @@
+DecorView shown=true clickable=false x=0 y=0 w=280 h=720 text=
+FrameLayout shown=true clickable=false x=0 y=0 w=280 h=720 text=
+FrameLayout shown=true clickable=false x=0 y=0 w=280 h=720 text=
+FrameLayout shown=true clickable=false x=0 y=0 w=280 h=720 text=
+LinearLayout shown=true clickable=false x=0 y=0 w=280 h=646 text=
+ScrollView shown=false clickable=false x=0 y=0 w=280 h=646 text=Continuum-Cockpit, vertikal scrollbar: Chat, Arbeitsbereiche und tatsächlicher Systemstatus
+LinearLayout shown=false clickable=false x=0 y=0 w=275 h=5069 text=
+ContinuumHomeView shown=false clickable=false x=0 y=0 w=275 h=4891 text=
+ElementView shown=false clickable=true x=12 y=6 w=256 h=80 text=Continuum. Startseite. Dein KI-Begleiter.
+ElementView shown=false clickable=true x=108 y=92 w=48 h=48 text=Wissensarchiv durchsuchen
+ElementView shown=false clickable=true x=164 y=92 w=48 h=48 text=Keine offenen Hinweise
+ElementView shown=false clickable=true x=220 y=92 w=48 h=48 text=Persönliche Einstellungen
+ElementView shown=false clickable=true x=12 y=628 w=256 h=78 text=Nachricht an Continuum. Chat öffnen und Nachricht eingeben.
+ElementView shown=false clickable=true x=12 y=146 w=256 h=64 text=Ansicht Avatar, ausgewählt
+ElementView shown=false clickable=true x=12 y=220 w=256 h=64 text=Ansicht Kugel, auswählen
+ElementView shown=false clickable=true x=12 y=294 w=256 h=64 text=Ansicht Kompakt, auswählen
+ElementView shown=false clickable=true x=12 y=716 w=256 h=136 text=Chat. Bereit. Öffnen.
+ElementView shown=false clickable=true x=12 y=862 w=256 h=136 text=Agents. Team & Rollen. Öffnen.
+ElementView shown=false clickable=true x=12 y=1008 w=256 h=136 text=Bots. Eigene KI-Profile. Öffnen.
+ElementView shown=false clickable=true x=12 y=1154 w=256 h=136 text=Auftrag. Auftrag vorbereiten. Öffnen.
+ElementView shown=false clickable=true x=12 y=1300 w=256 h=136 text=Gedächtnis. Wissen & Quellen. Öffnen.
+ElementView shown=false clickable=true x=12 y=1446 w=256 h=136 text=Forschung. Bereit. Öffnen.
+ElementView shown=false clickable=true x=12 y=1592 w=256 h=136 text=Entwicklung. Code & Aufträge. Öffnen.
+ElementView shown=false clickable=true x=12 y=1738 w=256 h=136 text=Lernen. Bereit. Öffnen.
+ElementView shown=false clickable=true x=12 y=1884 w=256 h=136 text=Gerät. System & Werkzeuge. Öffnen.
+ElementView shown=false clickable=true x=12 y=2030 w=256 h=136 text=Internet. Offline. Öffnen.
+ElementView shown=false clickable=true x=12 y=2497 w=256 h=368 text=Gehirn & Modell. Modell: Continuum-Startkern (SWB1). Status: Nur Startkern. Kontext: 1 Zug (Thema). Lernkern-Prüffragen: 50%. Prüffragen des Lernkerns, kein Gesamtfortschritt. Details öffnen.
+ElementView shown=false clickable=true x=12 y=3253 w=256 h=368 text=Lernprotokoll. Protokollereignisse heute: 2. Lernprozess: Bereit. Letzter Eintrag: Training geprüft. Details öffnen.
+ElementView shown=false clickable=true x=12 y=2875 w=256 h=368 text=Gedächtnis & Quellen. Gerät belegt: —. Archiv-Einträge: 0. Eigene Dateien: 138 KB. Quellenstatus: Webforschung eingeplant. Gerätebelegung, keine Gedächtniskapazität der KI. Details öffnen.
+ElementView shown=false clickable=true x=12 y=3631 w=256 h=368 text=Entwicklung & Code. Aufträge offen: 0. Laufend: 0. Fehlgeschlagen: 0. Details öffnen.
+ElementView shown=false clickable=true x=12 y=4009 w=256 h=368 text=Aufträge. Aufträge offen: 0. Laufend: 0. Fehlgeschlagen: 0. Details öffnen.
+ElementView shown=false clickable=true x=12 y=2182 w=256 h=305 text=System & Gerät. App-CPU: —. RAM belegt: —. Akku: —. Details öffnen.
+ElementView shown=false clickable=true x=12 y=4387 w=256 h=368 text=Systemaktivität. Netzwerk: Offline. Offene Hinweise: 0. CPU-Messpunkte: 0. Details öffnen.
+ElementView shown=false clickable=true x=12 y=4765 w=256 h=110 text=Lernstatus. Webforschung eingeplant. Lernübersicht öffnen.
+TextView shown=false clickable=false x=0 y=0 w=0 h=0 text=Bereit — · 0s · Fortschritt: nicht messbar
+LinearLayout shown=false clickable=false x=0 y=4891 w=275 h=178 text=
+LinearLayout shown=false clickable=false x=0 y=4891 w=0 h=0 text=
+TextView shown=false clickable=false x=0 y=4891 w=0 h=0 text=AKTIONSPLAN
+TextView shown=false clickable=false x=0 y=4891 w=0 h=0 text=
+TextView shown=false clickable=false x=14 y=4891 w=247 h=168 text=CONTINUUM · unavailable; persistent state failed closed: AndroidKeyStore not found
+LinearLayout shown=true clickable=false x=0 y=0 w=280 h=646 text=
+TextView shown=true clickable=true x=14 y=14 w=252 h=82 text=‹ START   ·   Continuum
+ContinuumHologramView shown=true clickable=false x=14 y=96 w=252 h=160 text=
+LinearLayout shown=true clickable=false x=14 y=260 w=252 h=71 text=
+Button shown=true clickable=true x=19 y=265 w=78 h=61 text=DIALOG
+Button shown=true clickable=true x=101 y=265 w=78 h=61 text=INTERNET
+Button shown=true clickable=true x=183 y=265 w=78 h=61 text=GERÄT
+TextView shown=true clickable=false x=14 y=331 w=252 h=92 text=NEURON · Auto-Lernen aus Noch kein Lernzyklus.
+ProgressBar shown=false clickable=false x=0 y=0 w=0 h=0 text=Fortschritt des lokalen neuronalen Trainings
+ScrollView shown=true clickable=false x=14 y=423 w=252 h=0 text=
+LinearLayout shown=true clickable=false x=14 y=413 w=252 h=721 text=
+LinearLayout shown=true clickable=false x=14 y=425 w=252 h=705 text=
+TextView shown=true clickable=true x=14 y=425 w=228 h=705 text=Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. Sprich oder schreibe mit mir. Mit „Merke dir: ...“ kannst du mein lokales Wissen ausdrücklich erweitern. Mit „Was kannst du?“ erfäh
+LinearLayout shown=true clickable=false x=14 y=423 w=252 h=213 text=
+LinearLayout shown=true clickable=false x=21 y=431 w=238 h=89 text=
+EditText shown=true clickable=true x=21 y=431 w=238 h=89 text=Unveröffentlichter Testentwurf; keine Ausführung.
+LinearLayout shown=true clickable=false x=21 y=526 w=238 h=48 text=
+ shown=true clickable=true x=21 y=526 w=48 h=48 text=＋
+ shown=true clickable=true x=75 y=526 w=48 h=48 text=🎙
+View shown=true clickable=false x=123 y=549 w=80 h=1 text=
+ shown=true clickable=true x=203 y=526 w=56 h=48 text=➤
+HorizontalScrollView shown=true clickable=false x=21 y=580 w=238 h=48 text=
+LinearLayout shown=true clickable=false x=21 y=580 w=440 h=48 text=
+ shown=true clickable=true x=21 y=580 w=124 h=48 text=✧ Denken
+ shown=true clickable=true x=151 y=580 w=88 h=48 text=◎ Web
+ shown=true clickable=true x=245 y=580 w=92 h=48 text=⌁ Datei
+ shown=true clickable=true x=343 y=580 w=118 h=48 text=TON AUS
+FrameLayout shown=true clickable=false x=0 y=646 w=280 h=74 text=Navigation zu allen Continuum-Arbeitsbereichen
+ContinuumElementView shown=true clickable=false x=0 y=646 w=280 h=74 text=Navigation
+LinearLayout shown=true clickable=false x=0 y=646 w=280 h=74 text=
+View shown=true clickable=true x=0 y=646 w=56 h=74 text=Start – Startseite und Übersicht öffnen
+View shown=true clickable=true x=56 y=646 w=56 h=74 text=Chat – Mit der lokalen KI sprechen
+View shown=true clickable=true x=112 y=646 w=56 h=74 text=Lernen – Lernzentrum und Trainingsstand öffnen
+View shown=true clickable=true x=168 y=646 w=56 h=74 text=Entwickeln – Sichere Entwicklungswerkzeuge öffnen
+View shown=true clickable=true x=224 y=646 w=56 h=74 text=Mehr – Forschung, Modelle, Speicher und System öffnen
+ViewStub shown=false clickable=false x=0 y=0 w=0 h=0 text=

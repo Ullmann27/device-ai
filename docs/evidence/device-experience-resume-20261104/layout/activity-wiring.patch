@@ -1,0 +1,11 @@
+--- a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -1115,6 +1115,8 @@
+             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.COMPOSER -> navigateWorkArea(ContinuumWorkArea.CHAT)
+             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_MEMORY -> showMemoryCenter()
+             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_AGENTS -> showBotRoster()
++            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_BOTS -> showBotRoster()
++            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_TASK -> showCodingTaskDraftDialog()
+             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_DEVICE -> showSystemCenter()
+             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_LEARNING, at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LEARNING -> showLearningCenter()
+             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_ANALYSING -> showResearchModeDialog()
