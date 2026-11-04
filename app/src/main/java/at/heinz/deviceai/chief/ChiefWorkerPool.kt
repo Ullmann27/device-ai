@@ -125,6 +125,24 @@ class ChiefWorkerPool(
 
     fun active(): Set<String> = slots.keys.toSet()
 
+    /** Read-only view of one assignment for the cockpit; no progress is invented (there is none). */
+    data class WorkerSnapshot(val id: String, val goal: String, val running: Boolean, val cancelling: Boolean,
+                              val elapsedMillis: Long, val deadlineMillis: Long)
+
+    /** Current assignments (queued and running), oldest first by start; never blocks the pool. */
+    fun snapshot(nowNanos: Long = System.nanoTime()): List<WorkerSnapshot> = slots.values
+        .filterNot { it.reported.get() }
+        .map { slot ->
+            val started = slot.startedNanos
+            WorkerSnapshot(slot.brief.id, slot.brief.goal, running = started != 0L, cancelling = slot.cancelled.get(),
+                elapsedMillis = if (started == 0L) 0L else TimeUnit.NANOSECONDS.toMillis((nowNanos - started).coerceAtLeast(0L)),
+                deadlineMillis = slot.brief.deadlineMillis)
+        }
+        .sortedWith(compareByDescending<WorkerSnapshot> { it.running }.thenByDescending { it.elapsedMillis })
+
+    /** Fixed admission capacity (running + queued). */
+    val capacity: Int get() = maxConcurrent + maxQueued
+
     /** Idle includes report delivery, even when callbacks submit another job. It does not certify
      * termination of a native call that ignores cancellation; inspect its execution receipt. */
     fun awaitIdle(timeoutMillis: Long): Boolean {

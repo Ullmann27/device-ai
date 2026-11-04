@@ -81,6 +81,8 @@ class ContinuumHomeLayoutTest {
     }
 
     @Test fun landscapePlacesActualDeviceAndTaskCardsBesideTheStage() {
+        // 2026-11-04: landscape uses the ref1/ref3 cockpit (details in ContinuumLandscapeCockpitLayoutTest):
+        // system status above the agents in the right column, beside the avatar stage; brain card left of it.
         for ((width, height) in listOf(832f to 708f, 840f to 649f, 1280f to 800f)) {
             val layout = ContinuumHomeLayout.wide(width, height)
             assertFalse(layout.portrait)
@@ -90,9 +92,14 @@ class ContinuumHomeLayoutTest {
             assertTrue(system.left > hero.right)
             assertEquals(system.left, tasks.left, .001f)
             assertTrue(system.bottom < tasks.top)
-            assertEquals(hero.top, system.top, .001f)
-            assertEquals(hero.bottom, tasks.bottom, .001f)
-            assertTrue(layout.boxes.getValue(Slot.MODEL).top > hero.bottom)
+            val model = layout.boxes.getValue(Slot.MODEL)
+            assertTrue(model.right < hero.left)
+            assertEquals("both card columns start on one line", system.top, model.top, .001f)
+            assertTrue("view pills sit above the stage, not under the cards", hero.top > system.top)
+            assertTrue("agents reach down beside the composer", tasks.bottom > hero.bottom)
+            assertTrue(tasks.bottom < layout.boxes.getValue(Slot.ACTION_TASK).top)
+            for ((slot, box) in layout.boxes) assertTrue("$slot inside the window",
+                box.left >= 0f && box.top >= 0f && box.right <= width + .001f && box.bottom <= height + .001f)
         }
     }
 }

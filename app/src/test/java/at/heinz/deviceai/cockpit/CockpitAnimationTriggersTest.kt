@@ -1,0 +1,94 @@
+package at.heinz.deviceai.cockpit
+
+import at.heinz.deviceai.chief.TurnMilestone
+import at.heinz.deviceai.chief.WorkerReport
+import at.heinz.deviceai.chief.WorkerStatus
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+/** Real lifecycle / tool / worker facts → exactly the matching typed animation event (never invented). */
+class CockpitAnimationTriggersTest {
+    private val events = mutableListOf<CockpitAnimationEvent>()
+    private val bus = CockpitAnimationBus().also { it.subscribe { e -> events += e } }
+    private val triggers = CockpitAnimationTriggers(bus, clock = { 1_000L })
+
+    private inline fun <reified T> only(): List<T> = events.filterIsInstance<T>()
+
+    @Test fun acknowledgedCommandFliesInStartsThinkingAndOpensTimeline() {
+        triggers.commandAcknowledged("t1", "Zeig mir\u0007 die Downloads")
+        val fly = only<CockpitAnimationEvent.CommandFlyIn>().single()
+        assertEquals("t1", fly.turnId)
+        assertEquals("Zeig mir die Downloads", fly.commandPreview)
+        assertEquals(CockpitAction.THINK, only<CockpitAnimationEvent.ActionStarted>().single().action)
+        val steps = only<CockpitAnimationEvent.ProcessTimeline>().last().steps
+        assertEquals(listOf(StepState.DONE, StepState.ACTIVE), steps.map { it.state })
+        assertEquals("Auftrag angenommen", steps.first().label)
+    }
+
+    @Test fun toolCallsMapToResearchOrToolAndCompleteTheirStep() {
+        triggers.commandAcknowledged("t1", "Recherche")
+        triggers.toolStarted("t1", "c1", "web_search")
+        triggers.toolStarted("t1", "c2", "list_downloads")
+        val actions = only<CockpitAnimationEvent.ActionStarted>().map { it.action }
+        assertEquals(listOf(CockpitAction.THINK, CockpitAction.RESEARCH, CockpitAction.TOOL), actions)
+        triggers.toolFinished("t1", "c1", "web_search", succeeded = true)
+        triggers.toolFinished("t1", "c2", "list_downloads", succeeded = false)
+        val steps = triggers.timeline("t1").associateBy { it.key }
+        assertEquals(StepState.DONE, steps.getValue("tool:c1").state)
+        assertEquals(StepState.FAILED, steps.getValue("tool:c2").state)
+        assertEquals(steps.values.toList(), only<CockpitAnimationEvent.ProcessTimeline>().last().steps)
+    }
+
+    @Test fun approvalAndBlockedMilestonesAreVisibleSteps() {
+        triggers.commandAcknowledged("t1", "Datei löschen")
+        triggers.milestone("t1", TurnMilestone.APPROVAL_NEEDED)
+        assertEquals(StepState.WAITING, triggers.timeline("t1").last().state)
+        triggers.milestone("t1", TurnMilestone.BLOCKED, "Keine Freigabe")
+        val last = triggers.timeline("t1").last()
+        assertEquals(StepState.BLOCKED, last.state)
+        assertTrue(last.label.contains("Keine Freigabe"))
+    }
+
+    @Test fun endedTurnSettlesStepsAndDropsLateEvents() {
+        triggers.commandAcknowledged("t1", "Hallo")
+        triggers.turnEnded("t1", delivered = true)
+        assertTrue(only<CockpitAnimationEvent.TurnEnded>().single().delivered)
+        assertTrue(triggers.timeline("t1").none { it.state == StepState.ACTIVE })
+        val before = events.size
+        triggers.toolStarted("t1", "late", "web_read")
+        triggers.milestone("t1", TurnMilestone.TOOL_STARTED, "spät")
+        assertEquals("No animation for a closed turn", before, events.size)
+    }
+
+    @Test fun workerStartAndReportAreTheirOwnTimeline() {
+        triggers.workerStarted("status-1", "Teamleiterstatus lesen")
+        assertEquals(CockpitAction.WORKER, only<CockpitAnimationEvent.ActionStarted>().single().action)
+        triggers.workerReported(WorkerReport("status-1", WorkerStatus.TIMED_OUT, "Frist", 15_000))
+        assertEquals(StepState.FAILED, triggers.timeline("status-1").single().state)
+        assertEquals("status-1", only<CockpitAnimationEvent.TurnEnded>().single().turnId)
+    }
+
+    @Test fun accountAndDocumentCardsOnlyFromTheirExplicitRealPaths() {
+        triggers.commandAcknowledged("t1", "Lies meine Mails und das PDF")
+        triggers.toolStarted("t1", "c1", "gmail_read")
+        assertTrue("A tool name alone never fakes the account card", only<CockpitAnimationEvent.AccountCardFlyIn>().isEmpty())
+        assertTrue(only<CockpitAnimationEvent.DocumentQuestion>().isEmpty())
+        triggers.accountToolUsed("t1", "Gmail", "heinz@example.invalid")
+        triggers.documentReceived("t1", "Vertrag.pdf", "application/pdf", "Soll ich das Dokument zusammenfassen?")
+        assertEquals("Gmail", only<CockpitAnimationEvent.AccountCardFlyIn>().single().provider)
+        assertEquals("Vertrag.pdf", only<CockpitAnimationEvent.DocumentQuestion>().single().documentName)
+    }
+
+    @Test fun brokenRendererDoesNotBreakOthersAndExtensionsPassThrough() {
+        val local = CockpitAnimationBus()
+        val seen = mutableListOf<CockpitAnimationEvent>()
+        local.subscribe { error("kaputter Renderer") }
+        local.subscribe { seen += it }
+        class MathPreview : CockpitAnimationEvent.Extension("math") {
+            override val turnId = "t9"; override val atMillis = 5L
+        }
+        local.emit(MathPreview())
+        assertEquals("math", (seen.single() as CockpitAnimationEvent.Extension).kind)
+    }
+}
