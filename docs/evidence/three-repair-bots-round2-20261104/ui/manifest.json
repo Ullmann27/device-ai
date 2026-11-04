@@ -1,11 +1,11 @@
 {
   "date_utc": "2026-11-04",
-  "candidate_source_commit": "3516f1cda681944cede74732dd68e5a47d991e3d",
+  "candidate_source_commit": "0b9c651440a43d446bb116c0794381422be4ff99",
   "baseline_local_commit": "63dec3b1296b1d4257310296de3781d75b7a266a",
   "baseline_production_blob": "bd943129a52c92ccb46022c0f083e328acbf24b9",
-  "candidate_production_blob": "e892cdc13a6dbc30e9b11275861a6826ffea978f",
-  "candidate_production_sha256": "f1925ff6492ee94377ba5e6396cdbbae9aaf18a7906543cfb0ae233463b1a210",
-  "candidate_robolectric_test_sha256": "d76272fe40c8ac815fa9901a7f208996be0c9890da2362aaa25c67a5dba94caf",
+  "candidate_production_blob": "86d39aedf0fadb6e0633bec42112b36f3a6fea9c",
+  "candidate_production_sha256": "cdcab8898e437aa2d8a65a469fda23139792fe139116b72fb9338611d7e28fdb",
+  "candidate_robolectric_test_sha256": "30d64e934a8c2d8fe0f724d79f44ae7dd286223fc527cedb893081f39a440258",
   "phases": {
     "baseline": {
       "status": "PASS",
@@ -42,6 +42,19 @@
       "junit_log_sha256": "f7cf9a44b21a48662654e15e94556bdc0ce9553c4b33c26258e2111b922a2793",
       "inputs_manifest": "green/input-sha256.txt",
       "integrity_log": "green/input-integrity.log"
+    },
+    "handler-green": {
+      "status": "PASS",
+      "total_tests": 25,
+      "failures": 0,
+      "exit_code": 0,
+      "source_commit": "0b9c651440a43d446bb116c0794381422be4ff99",
+      "compiled_production_sources": "Complete original files listed by tools/sequence-turn-check/run.sh",
+      "scope": "HOST_FIXTURE_ONLY; Handler.post fail-fast and never invoked; no simulated Android queue",
+      "junit_log": "handler-green/junit.log",
+      "junit_log_sha256": "4677e6b65919116d77db54d614d3b111f9501bb61f1d12da142bba99a1879541",
+      "inputs_manifest": "handler-green/input-sha256.txt",
+      "integrity_log": "handler-green/input-integrity.log"
     }
   },
   "red_failures": [
@@ -51,9 +64,19 @@
   ],
   "robolectric_candidate": {
     "status": "NOT_RUN_BY_THIS_AGENT",
-    "test_count": 23,
+    "test_count": 25,
     "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt",
-    "pending": "Parent coordinates independent actual Robolectric RED/GREEN using available Android cache."
+    "pending": "Parent coordinates independent actual Robolectric RED/GREEN using available Android cache.",
+    "additional_attachment_red_candidate": {
+      "commit": "d24ad51b0235826cf0baaa998a2fb4af80a17404",
+      "production_blob": "e892cdc13a6dbc30e9b11275861a6826ffea978f",
+      "test_blob": "51db7f4f6996b314ff715a7ea0978b9b744578dd",
+      "status": "INDEPENDENT_RUN_IN_PROGRESS_NOT_CLAIMED_AS_PASS",
+      "methods": [
+        "backgroundCompletionBeforeFirstAttachDoesNotWaitForAttachment",
+        "detachedSubscriberRetiresBackgroundCompletionsWithoutReattach"
+      ]
+    }
   },
   "unchanged_host_regressions": {
     "BrainOrbSignalsTest": 5,
@@ -69,5 +92,9 @@
     "exp07_exp11_exp12_policy_changes": false
   },
   "device_apk_release": "NOT_RUN / NOT_AUTHORIZED",
-  "publication": "LOCAL_ONLY until parent publishes to existing PR505; no own GitHub write"
+  "publication": "LOCAL_ONLY until parent publishes to existing PR505; no own GitHub write",
+  "initial_candidate_source_commit": "3516f1cda681944cede74732dd68e5a47d991e3d",
+  "initial_candidate_production_blob": "e892cdc13a6dbc30e9b11275861a6826ffea978f",
+  "initial_candidate_production_sha256": "f1925ff6492ee94377ba5e6396cdbbae9aaf18a7906543cfb0ae233463b1a210",
+  "initial_candidate_robolectric_test_sha256": "d76272fe40c8ac815fa9901a7f208996be0c9890da2362aaa25c67a5dba94caf"
 }

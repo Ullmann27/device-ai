@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-04",
+  "executor": "root coordinator, independently executed",
+  "source": {
+    "localCommit": "d91fe8b1141d35341b67298a04f3913fd1bf0876",
+    "publishedCommit": "b2bc510a59e29d4ece478109e12b9785be11ee7d",
+    "tree": "7770e3ef628f301bf40161e4a99906836c63b296",
+    "subtrees": {
+      "app": "40f3d8d6c14ad0053f501baa42512ccc096d828a",
+      "scripts": "cd493d45655d6b3d07962af8474a030d65e866b5",
+      "tools": "7ec692de5a4e9edfe58194949b28f8bf1a837b83"
+    },
+    "files": {
+      "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt": {
+        "gitBlob": "86d39aedf0fadb6e0633bec42112b36f3a6fea9c",
+        "sha256": "cdcab8898e437aa2d8a65a469fda23139792fe139116b72fb9338611d7e28fdb"
+      },
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt": {
+        "gitBlob": "857eb1fb8bbada8282a095956667bb521e44abe6",
+        "sha256": "ff8671fc578403f5ad53c3b7b0c50ea689dfffdf5f5d6a62ac8ec5e43871486e"
+      },
+      "scripts/render-continuum-owner-continuous-qa.sh": {
+        "gitBlob": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b",
+        "sha256": "62f6a7cf0168390d98a7b28c7916bfe96bff7284cf755654daf1b07add850f43"
+      },
+      "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt": {
+        "gitBlob": "51db7f4f6996b314ff715a7ea0978b9b744578dd",
+        "sha256": "30d64e934a8c2d8fe0f724d79f44ae7dd286223fc527cedb893081f39a440258"
+      },
+      "app/src/test/java/at/heinz/deviceai/learning/TemporalCueDailyBoundaryTest.kt": {
+        "gitBlob": "63ada554c984cd42d235191d8df280bea86f02f2",
+        "sha256": "d4209213a7ddd6df96e09ad73281ed942b1cf0459da6613a76cf99410acdb3f6"
+      },
+      "app/src/test/java/at/heinz/deviceai/learning/TemporalCueCalendarTest.kt": {
+        "gitBlob": "17baa4a929361617da337615c4070149fce486b9",
+        "sha256": "1a25f175033f39dfffd8670503a05d62da76432304e80ca59c14d11dce65c0e9"
+      },
+      "app/src/test/java/at/heinz/deviceai/learning/ContinuumRetrievalExperimentTest.kt": {
+        "gitBlob": "e86554e48efe833e63d80783f46d3c2d6d36dfe5",
+        "sha256": "f278272a5c4cb9fef1a125481486f2c3ca7ddc25a963409d3aaaae1bd5c9d08e"
+      },
+      "scripts/continuum-owner-continuous-qa-preflight.test.mjs": {
+        "gitBlob": "fe2278df7b543ceb2bd51f22188bd9e361805782",
+        "sha256": "0b310d51369d087bc2ed132608e9e9a976664bd6b25fd75975e286cb0159d341"
+      },
+      "tools/sequence-turn-check/run.sh": {
+        "gitBlob": "011816b1a8c0635d58674d9cb3307b168370abcb",
+        "sha256": "d0695c2e444595a8700ae3754d28d5a8980e52016f9a4a490324f7809a564da5"
+      },
+      "tools/temporal-cue-host-check/run.sh": {
+        "gitBlob": "31073b670a1f1999039357e34b844a1eaeda2427",
+        "sha256": "7d45db86c724933654fee5e1aee7ad19e82e0abf9f6c27e6a2f39de619bb8dcf"
+      }
+    }
+  },
+  "baseline": {
+    "localCommit": "63dec3b1296b1d4257310296de3781d75b7a266a",
+    "publishedCommit": "4ddbcb092d955226bb83c2a10f7ac52bb34f59eb",
+    "tree": "b9b256d7280f28f4ff750557e26b9cbe596f04bd"
+  },
+  "checks": [
+    {
+      "id": "build-contracts-final",
+      "exitCode": 0,
+      "total": 81,
+      "passed": 81,
+      "failed": 0,
+      "skipped": 0,
+      "log": "build-final-green.tap",
+      "scope": "Local Node script contract tests; no real release or network",
+      "reproductionCommand": "node --test --test-reporter=tap scripts/continuum-owner-continuous-qa-preflight.test.mjs scripts/continuum-owner-catalog-contract.test.mjs scripts/continuum-owner-continuous-release.test.mjs scripts/continuum-one-tap-updater-contract.test.mjs scripts/continuum-owner-v38-release.test.mjs scripts/continuum-release-host-preflight.test.mjs"
+    },
+    {
+      "id": "signing-independent",
+      "baseline": {
+        "total": 12,
+        "passed": 10,
+        "failed": 2,
+        "log": "signing-baseline.json",
+        "exitCode": 1
+      },
+      "fixed": {
+        "total": 12,
+        "passed": 12,
+        "failed": 0,
+        "log": "signing-fixed.json",
+        "sourceLocalCommit": "e0714c5f2999346ef4e258e2ffaf224d58cfdc9a",
+        "exitCode": 0
+      },
+      "scope": "Actual QA script with harmless values, temp repos and dummy download canary; production script identical in final source",
+      "reproductionCommand": "python3 docs/evidence/three-repair-bots-round2-20261104/coordinator/qa-signing-probe.py /workspace/scratch/7dcf5d78f2cb/continuum-repair /tmp/continuum-signing-probe.json"
+    },
+    {
+      "id": "memory-final",
+      "exitCode": 0,
+      "total": 29,
+      "passed": 29,
+      "failed": 0,
+      "log": "memory-final.log",
+      "scope": "Full original retriever source; compile-only fail-fast EventEmittingRetriever; JVM only",
+      "reproductionCommand": "JAVA_HOME=/workspace/scratch/b7d23de0e715/build-toolchain/jdk17 bash tools/temporal-cue-host-check/run.sh /workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib"
+    },
+    {
+      "id": "daily-boundary-independent",
+      "baseline": {
+        "exitCode": 1,
+        "total": 8,
+        "passed": 2,
+        "failed": 6,
+        "log": "daily-baseline.log"
+      },
+      "fixed": {
+        "exitCode": 0,
+        "total": 8,
+        "passed": 8,
+        "failed": 0,
+        "log": "daily-fixed.log"
+      },
+      "scope": "Fixed UTC endpoints; six Santiago regressions and two Vienna controls; JVM only",
+      "reproductionCommand": "JAVA_HOME=/workspace/scratch/b7d23de0e715/build-toolchain/jdk17 bash docs/evidence/three-repair-bots-round2-20261104/coordinator/run-daily-boundary-probe.sh /workspace/scratch/7dcf5d78f2cb/continuum-repair /workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib"
+    },
+    {
+      "id": "ui-final-host",
+      "exitCode": 0,
+      "total": 25,
+      "passed": 25,
+      "failed": 0,
+      "logs": [
+        "ui-final-host/compile.log",
+        "ui-final-host/junit.log",
+        "ui-final-host/input-sha256.txt",
+        "ui-final-host/input-integrity.log"
+      ],
+      "inputsChecked": 37,
+      "scope": "Production sequence/effects/bus logic with documented Android/Painter host fixtures; Handler.post fails if called; no Looper/queue claim",
+      "reproductionCommand": "CONTINUUM_KOTLIN_COMPILER_LIB=/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib bash tools/sequence-turn-check/run.sh /workspace/scratch/7dcf5d78f2cb/round2-coordinator/ui-final-host"
+    }
+  ],
+  "ranking": {
+    "corpusQuestions": 44,
+    "recallAt3Hits": 42,
+    "recallAt3": 0.9545454545454546,
+    "roundedRecallAt3": 0.955,
+    "theatreExpectedResultRank": 5,
+    "status": "OPEN_QUALITY_LIMITATION",
+    "newRankingImprovementProved": false
+  },
+  "review": {
+    "document": "REVIEW.md",
+    "noAdditionalBlockingSourceFinding": true,
+    "memoryBotReviewedUiBlob": "86d39aedf0fadb6e0633bec42112b36f3a6fea9c",
+    "uiNativeTestBlobRedEqualsGreen": "51db7f4f6996b314ff715a7ea0978b9b744578dd"
+  },
+  "limitations": {
+    "fullAndroidBuild": "See separate build attempt evidence; not claimed by these coordinator host runs",
+    "nativeQueue": "See separate targeted Robolectric evidence, if completed",
+    "device": "NOT_RUN",
+    "apk": "NOT_BUILT_OR_ACCEPTED",
+    "ranking": "No corpus tuning or M2.9 main-chat promotion",
+    "counts": "Overlapping behavioral coverage is not summed as independent cases",
+    "rawLogs": "Copied byte-for-byte; timings are host observations only"
+  },
+  "evidenceSha256": {
+    "DailyBoundaryProbe.kt": "1b70089593b4601056699e24ad9442fad3150ef47188ae16a7b277456637df13",
+    "REVIEW.md": "784e36795b7d7f6be07771281a8ed112866a90066d3d55c4f4599cd9fc9a027a",
+    "build-final-green.tap": "0d2d9c2217044007746fe8dd60afbde28c18831fb36e02b54a374261dbf090da",
+    "build-root-green.tap": "634caef1693491a1ea1a83ceecc5af604dfc36a4bba2e84887e43547c6bd09dd",
+    "daily-baseline.log": "1e453aca4b5d54c14eeb34db7a4f4011b15bf9ab67d9f3a81380b4c1ce755e7b",
+    "daily-fixed.log": "0e732d28167f70f95b9a712e709058d8bb99cf07a628ccaf39ce27f4d2835915",
+    "integration-512-reconciliation.json": "2629c9b76ed43a2f3e09fe7c51ab5a1f16470e7ce1a76cd502dc86af06ec7880",
+    "memory-baseline.log": "c66d07d9222840befa55cca41c27d0a57ba97d10e307fd6a13b69df72bb40268",
+    "memory-final.log": "d2e009a00027195759168dae5290d64738055ec2bf3851017a8814bab46d4378",
+    "qa-signing-probe.py": "36b550a8796a0519dc7a57123dab70c6fad7a0d0e641af731c9b2c10e4cc1e0d",
+    "run-daily-boundary-probe.sh": "30455ad9c6d33f3e0202f91ea96c36dbbb59a8cd4f77f2c1f397bf5a53de2cad",
+    "signing-baseline.json": "2a7dec7c4579df6917f3df2a0988976192780b19f3f83bd3344277f8c13e753d",
+    "signing-fixed.json": "944e349e6bb03bf2d66999b05b0105fc1a0cbf81b0fb2991728122c53cd7a8c6",
+    "ui-final-host/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ui-final-host/input-integrity.log": "aaa094fe539db0d3bbd7c120c4c48608d67cc7aa9f38dc573b36e208296e9841",
+    "ui-final-host/input-sha256.txt": "3300a921e4ec1119f93ea698e0ae7828f17760c7c320b99185fb2a8f170803c4",
+    "ui-final-host/junit.log": "0dd83a470b864ac0ae4382c0a0189f5fbae71ba1aef2ac572107760f8a50692e"
+  },
+  "reproductionNote": "Commands describe reproduction of retained runs; use a fresh output directory and the stated source revision. Raw logs and source hashes are authoritative; no new execution is claimed by report generation.",
+  "hostToolchain": {
+    "jdk": "Temurin 17.0.20.1+1",
+    "kotlinCompiler": "2.0.20",
+    "junit": "4.13.2",
+    "gradleLib": "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib",
+    "androidRuntimeUsedByTheseChecks": false
+  }
+}

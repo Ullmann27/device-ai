@@ -1,0 +1,7 @@
+allprojects {
+    tasks.withType(Test).configureEach {
+        maxHeapSize = '512m'
+        maxParallelForks = 1
+        systemProperty 'java.io.tmpdir', System.getenv('TMPDIR')
+    }
+}

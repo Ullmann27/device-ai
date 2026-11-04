@@ -1,0 +1,30 @@
+{
+  "createdAtUtc": "2026-11-04T19:48:47.419035+00:00",
+  "donor": "/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches",
+  "destination": "/workspace/scratch/7dcf5d78f2cb/round2-android-env/gradle-cache/caches",
+  "donorLock": "shared flock; existing launcher lock opened rb",
+  "copiedFiles": 5119,
+  "copiedFileBytes": 1493822104,
+  "remainingFileBytesAtResume": 439082869,
+  "manifestSha256": "e1c21558f7244b0f545500e1796656a8966b05feb3512458acfedd48a944d9db",
+  "manifestScope": "Relative file names, sizes and mtime_ns; not every file content hash.",
+  "donorManifestStable": true,
+  "destinationManifestMatches": true,
+  "agpSha256": "637b7a7ecb20533b6d2d5401bed07e20549eb700019c6257f137eca73a0cb419",
+  "agpCopyHashMatches": true,
+  "excluded": [
+    "*.lock",
+    "gc.properties"
+  ],
+  "freeBeforeBytes": 1616482304,
+  "freeAfterBytes": 1165447168,
+  "minimumCopyReserveBytes": 1073741824,
+  "copiesUseHardlinks": false,
+  "readOnlyToolchainReferences": {
+    "jdk17": "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17",
+    "gradle-8.11.1": "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1",
+    "android-sdk": "/workspace/scratch/b6ee64d418cf/toolchain/android-sdk"
+  },
+  "gradleStarted": false,
+  "previousAttempt": "Stopped automatically at 1250 MiB reserve; own historical evidence sparsified before resuming with 1024 MiB reserve."
+}

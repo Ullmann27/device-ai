@@ -1,8 +1,8 @@
 # R2 Build – Signing-Abweisung und Android-Prüfweg
 
 Stand: 04.11.2026. Arbeitszweig `repair/round2-build-local`.
-Status: `NODE_REGRESSION_PASS / INDEPENDENT_FIX_REVIEW_PASS`.
-Eigener Android-Lauf: `NOT_RUN`.
+Status: `NODE_REGRESSION_PASS / INDEPENDENT_FIX_REVIEW_PASS / ISOLATED_ANDROID_CACHE_READY`.
+Eigener Android-Lauf: `NOT_RUN`, wartet auf den zusammengeführten Quellstand.
 
 ## Ergebnis und Quellbindung
 
@@ -67,7 +67,7 @@ Branch- oder Quell-SHA-Prüfung. Die echten Ausführungsproben bestätigen die
 Abweisung in beiden unterstützten Modi. Das Review ist auf diesen Fix und seine
 Preflight-Wirkung begrenzt; es ersetzt keine vollständige Render-/Release-Abnahme.
 
-## Android: verfügbarer Pfad und aktuelle Grenze
+## Android: verfügbarer Pfad und isolierter Snapshot
 
 Der zuvor fehlende AGP-Stand ist inzwischen tatsächlich lokal vorhanden.
 Der erfolgreiche Integrationsprüfweg liegt unter
@@ -82,14 +82,40 @@ Der erfolgreiche Integrationsprüfweg liegt unter
 | Gradle-Versionscache | `gradle-cache/caches/8.11.1`; gemessen 616 MiB |
 | Vorheriges App-Buildverzeichnis | `/workspace/scratch/822e72396ed9/continuum-combined/app/build`; gemessen 389 MiB |
 
-Zum eigenen Check waren 1,8 GiB frei. Eine gewöhnliche Kopie beider Cacheteile
+Beim ersten eigenen Check waren 1,8 GiB frei. Eine gewöhnliche Kopie beider Cacheteile
 zuzüglich eines vergleichbaren Buildverzeichnisses würde ungefähr 1,8 GiB
 belegen, ohne ausreichende Reserve für temporäre Dateien und parallele Arbeit.
 Die geprüfte Reflink-Alternative scheitert bereits an einer einzelnen bekannten
 AGP-JAR. Ihr eigenes temporäres Ziel wurde nach der Probe entfernt.
-Es wurde kein Cache kopiert, kein fremder Checkout beschrieben und kein
-Gradle-Build gestartet. Ein fremder aktiv beschreibbarer Cache wurde auch nicht
-als unveränderlicher `GRADLE_RO_DEP_CACHE` ausgegeben.
+Zu diesem Prüfzeitpunkt wurde deshalb kein Cache kopiert oder Gradle-Build
+gestartet; `receipt.json` hält genau diesen früheren Zwischenstand fest.
+
+Nach dem Freigeben eigener abgeschlossener Arbeitskopien durch den Koordinator
+standen 3,0 GiB zur Verfügung. Der anschließende Kopiervorgang stoppte an der
+gewählten 1.250-MiB-Reserve. Nach Sparse-Checkout historischer Belege im eigenen
+Arbeitsbaum waren 1,6 GiB für die verbleibenden 439.082.869 Bytes vorhanden.
+Mit neu berechneter 1-GiB-Reserve wurde die eigene Teilkopie vollständig ergänzt.
+Der aktuelle isolierte Snapshot liegt unter
+`/workspace/scratch/7dcf5d78f2cb/round2-android-env` und enthält 5.119 Dateien
+mit 1.493.822.104 Dateibytes. Danach waren 1.165.447.168 Bytes frei.
+
+Der vorhandene Donor-Launcher-Lock wurde nur lesend geöffnet und während der
+Kopie per gemeinsamem `flock` gehalten. Quellmanifest vor/nach der Kopie sowie
+Zielmanifest stimmen bei relativen Dateinamen, Größen und `mtime_ns` überein.
+Zusätzlich wurde der Inhaltshash der AGP-JAR verglichen; dies ist ausdrücklich
+kein vollständiger Inhaltshashvergleich aller 5.119 Dateien. Es wurden keine
+Hardlinks und keine `*.lock`-/`gc.properties`-Dateien übernommen. JDK, Gradle
+und SDK werden nur lesend referenziert; der Gradle-Cache, temporäre Dateien,
+Android-Benutzerverzeichnis und Logs gehören ausschließlich dieser Runde.
+
+`snapshot-receipt.json` dokumentiert den neuen Stand;
+`prepare-cache-snapshot.py` hält den tatsächlich verwendeten Kopierweg fest.
+`run-targeted-android.py` verlangt einen ausdrücklich benannten sauberen Commit,
+mindestens 1 GiB freien Platz, Klassenfilter, Offline-Modus und einen Worker.
+Der Gradle-Heap beträgt 1 GiB, der einzelne Testprozess maximal 512 MiB.
+Der Launcher entfernt alle sechs Signing-Umgebungsvariablen. Die Heap-Initdatei
+ändert keine Tests oder Assertions. Ein fremder aktiv beschreibbarer Cache wird
+nicht als unveränderlicher `GRADLE_RO_DEP_CACHE` ausgegeben.
 
 Der bereits erfolgreiche 822e-Lauf bleibt ein eigenständiger Beleg. Sein
 `combined-gradle.log` bindet den Lauf an lokalen Commit
@@ -104,11 +130,10 @@ umetikettiert.
 
 1. Den Testcommit auf den Koordinatorstand mit dem Signing-Fix übernehmen und
    dieselben sechs Node-Suiten unabhängig ausführen.
-2. Für neue Android-Änderungen einen ausreichend großen eigenen Dependency-
-   Snapshot bereitstellen oder einen ausdrücklich unveränderlichen Cache
-   verwenden. JDK/Gradle/SDK können lesend wiederverwendet werden. Dann nur die
-   betroffene UI-Klasse, Temporal-Klasse und nötige Anschlussfälle offline mit
-   einem Worker und begrenztem Heap ausführen; echte XML/Exitcodes sichern.
+2. Den zusammengeführten Quellstand in diesem eigenen Arbeitsbaum auschecken und
+   mit dem vorbereiteten isolierten Snapshot nur die betroffene UI-Klasse,
+   Temporal-Klassen und nötige Anschlussfälle offline ausführen; echte
+   XML/Exitcodes und die genaue Quellbindung sichern.
 3. Fold7-/GPU-/Audio-/Installationsabnahme bleibt offen. Es wurde keine APK
    gebaut, signiert, veröffentlicht oder installiert.
 
