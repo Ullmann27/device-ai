@@ -45,16 +45,27 @@ class AvatarMorphMapper(targetNames: List<String>) {
             headYaw += idleMotion.headYaw; headPitch += idleMotion.headPitch
             eyeYaw += idleMotion.eyeYaw; eyePitch += idleMotion.eyePitch
         }
-        val jaw = finite(pose.jawOpen, 0f, 1f)
         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
+        val bilabialClosure = pose.viseme == Viseme.PP && cueWeight > 0f
+        // M/B/P require a closed lip seal even while the measured audio remains loud.
+        // An outgoing vowel contains authored opening, so its morph must also retire now.
+        val jaw = if (bilabialClosure) 0f else finite(pose.jawOpen, 0f, 1f)
         // The existing reducer expires stale cues/audio and resets interrupted utterances.
         // Linear crossfade over CROSSFADE_S toward the current cue; first frame / clock jump snaps.
         val dt = if (lastSeconds.isFinite() && seconds.isFinite()) seconds - lastSeconds else Float.NaN
         lastSeconds = seconds
         // Crossfade only between two active cues; silence/interruption closes at once (reducer owns stop).
-        // A repeated frame time or a clock jump snaps, so a static frame never shows a stale blend.
+        // Repeated render times are idempotent. A reset/wrapped clock initializes a new epoch.
         if (pose.viseme == Viseme.SIL || cueWeight <= 0f) visemeBlend.fill(0f)
-        val step = if (dt.isFinite() && dt > 0f && dt <= 1f) (dt / CROSSFADE_S).coerceIn(0f, 1f) else 1f
+        if (bilabialClosure) {
+            visemeBlend.fill(0f)
+            visemeBlend[Viseme.PP.ordinal] = cueWeight
+        }
+        val step = when {
+            dt == 0f -> 0f
+            dt.isFinite() && dt > 0f && dt <= 1f -> (dt / CROSSFADE_S).coerceIn(0f, 1f)
+            else -> 1f
+        }
         var renderedOpening = 0f
         for (v in Viseme.entries) {
             val target = if (v == pose.viseme && v != Viseme.SIL) cueWeight else 0f

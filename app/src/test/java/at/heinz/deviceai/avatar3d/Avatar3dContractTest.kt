@@ -12,8 +12,11 @@ class Avatar3dContractTest {
     private fun pose(v: Viseme = Viseme.SIL, jaw: Float = 0f, x: Float = 0f, y: Float = 0f) =
         AvatarPose(AvatarState.SPEAKING, AvatarExpression.NEUTRAL, x, y, jaw, v, 1f, jaw)
     @Test fun allVisemesUseNamesEvenWhenAssetOrderChanges() {
-        val names = AvatarGlbContract.TARGETS.reversed(); val map = AvatarMorphMapper(names)
+        val names = AvatarGlbContract.TARGETS.reversed()
         for (v in Viseme.entries) {
+            // This checks target-name binding, independently of crossfade history.
+            // Advancing an already running blend at the same timestamp is now idempotent.
+            val map = AvatarMorphMapper(names)
             map.update(pose(v, .4f), 0f, true)
             for (other in Viseme.entries) assertEquals(if (other == v && v != Viseme.SIL) 1f else 0f, map.weights[names.indexOf(other.name)], 0f)
             // Preserve name-based lookup under the independently reviewed shared-opening contract.
