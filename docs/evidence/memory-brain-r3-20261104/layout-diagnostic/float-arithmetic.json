@@ -1,0 +1,11 @@
+{
+  "top": 51.48709487915039,
+  "exactSumBeforeFloatRounding": 99.48709487915039,
+  "roundedBottom": 99.48709106445312,
+  "actualFloatHeight": 47.999996185302734,
+  "deficitDp": 3.814697265625e-06,
+  "deficitEquals2PowerMinus18": true,
+  "arithmeticOnlyNextRepresentableBottom": 99.48709869384766,
+  "arithmeticOnlyCorrespondingHeight": 48.000003814697266,
+  "productionChanged": false
+}

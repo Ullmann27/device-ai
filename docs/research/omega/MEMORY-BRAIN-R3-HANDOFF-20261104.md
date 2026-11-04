@@ -1,6 +1,6 @@
 # Memory / brain R3 — C1 integration follow-up
 
-## Current focused checkpoint
+## Current source-bound result
 
 Both bounded repairs are implemented and have actual-source RED/GREEN evidence.
 Contradiction boundary: frozen joint baseline 10 tests, 6 FAIL / 4 PASS; repaired
@@ -11,10 +11,51 @@ The independent compiler patch review found no confirmed blocker in its stated
 scope. See `docs/evidence/memory-brain-r3-20261104/RESULT.md` and `REVIEW.md`.
 
 Tests-before-repair checkpoint is public at
-`33706d166afafe8f93d3b9aa1db34190f950eb68`. The next step is the full source-bound
-Android/lint gate and bounded Activity/Handler test under C1's existing two locks.
-Current status: **focused fixes verified; combined Android gate NOT_RUN**.
-The initial intake text below is preserved as history, not the current outcome.
+`33706d166afafe8f93d3b9aa1db34190f950eb68`. The repaired source was published at
+`3704b62585c6ce6881ab0dfe0c9947cddd1531c2`, full tree
+`ed4984ba9ac873e081a66d7a7be871f029ef5be5`, identical to the local tested commit
+`ec2543bef908d7d346a9767f9b095e84254090d1`.
+
+Actual full Android gate: **2,638 tests; 2,618 PASS, 1 FAIL, 19 SKIP; exit 1**.
+All 14 new memory/mapper regressions passed. The only failure is the existing
+landscape layout assertion `832.0 x 700.0 font 1.0 VIEW_AVATAR ≥ 48 dp`.
+Lint was not reached by that failed command. A subsequent separate run on the
+same unchanged source passed the **2/2 real attached Activity/Handler tests**
+and the configured **NewApi-only lint gate with 0 issues**, exit 0.
+
+Current status: **bounded memory fixes verified; whole Android suite blocked by
+the landscape layout contract**. No APK, physical-device dialogue, microphone,
+TTS, model inference or native-GPU acceptance is claimed. Do not add overlapping
+test counts or apply these results to a newer C1 app tree.
+
+The complete raw receipts and before/after source hashes are retained in
+`docs/evidence/memory-brain-r3-20261104/android-gates/`. The read-only layout
+diagnosis belongs to the handoff to C1/UI; this branch edits no layout or avatar
+production file. The initial intake text below is preserved as history.
+
+The original failing layout method was separately reproduced from immutable
+copies of the actual Android compilation. At 832 x 700 / font 1, adding 48f to
+the represented top and subtracting that top returns 47.999996185302734375f:
+one Float predecessor of 48, a 2^-18 dp deficit. The relevant source blobs match
+the C1 intake, and no already-fixed layout was found in the inspected newer
+sources. Preserve the 48dp contract and let the UI owner correct its numeric
+boundary. This diagnosis is in the adjacent evidence `layout-diagnostic/`
+directory and does not establish a physical rendering or touch-size defect.
+
+## Latest observed C1 advancement and continuation
+
+C1 advanced from the intake to `1a5302c504a78a50d5e64ca727f2915529bf2b06`
+without changing an app file. The later observed head
+`a54583816df92bcd0cdf4e75f06cdefffb5dafcc` additionally changes
+`avatar3d/AvatarIdleMotion.kt`, adds its boundary test, and updates Node source
+contracts and evidence. It changes neither of this patch's two production
+files. These comparisons are source observations, not test results for that
+later C1 commit. C1 remains the only integrator of the combined candidate.
+
+Next: C1 takes this bounded patch, coordinates the existing landscape failure
+with the UI owner, and executes the common candidate's required gates on its
+new exact source. Preserve the old full-run failure and all frozen tests.
+Full APK construction remains after the common work and acceptance gates.
 
 ## Frozen intake and authorization
 
@@ -83,4 +124,5 @@ Baseline and negative results remain preserved. Revert only this branch's
 specific production repair if its regression gates fail; retain the common
 candidate and owner data. No main merge, signing, release or installation.
 Read the actual remote head and the latest C1 ownership comments before
-continuing; status here is **WIP / source-bound repair in progress**.
+continuing. The original intake's WIP/NOT_RUN statements above are historical;
+the source-bound result at the top is the current specialist status.

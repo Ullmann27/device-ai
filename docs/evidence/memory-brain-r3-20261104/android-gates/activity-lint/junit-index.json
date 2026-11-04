@@ -1,0 +1,22 @@
+{
+  "totals": {
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": 1,
+    "passed": 2
+  },
+  "suites": [
+    {
+      "file": "TEST-at.heinz.deviceai.MemoryRecallActivityUiTest.xml",
+      "sha256": "d4f173c1acdce9650287270184c9ea2ece873bd9f29f252f28e7566b31680751",
+      "name": "at.heinz.deviceai.MemoryRecallActivityUiTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failedCases": []
+    }
+  ]
+}

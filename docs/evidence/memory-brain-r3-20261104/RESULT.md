@@ -1,4 +1,38 @@
-# Memory / brain R3 — executed focused repair results
+# Memory / brain R3 — executed repair and Android results
+
+## Current acceptance result
+
+The two bounded memory repairs pass their unchanged regressions, including all
+14 new cases in the actual Android project. The complete Android unit suite is
+**FAIL: 2,638 tests, 2,618 passed, 1 failed, 19 skipped**. Its only failing case is
+`ContinuumLandscapeCockpitLayoutTest.everythingFitsOneScreenWithUsableTargetsAndNoOverlap`,
+with `832.0 x 700.0 font 1.0 VIEW_AVATAR ≥ 48 dp`. This failure is preserved;
+the full suite is not accepted and no original assertion was weakened.
+
+A subsequent separate run on the same unchanged source passed both actual
+`MemoryRecallActivityUiTest` cases and `:app:lintDebug`, exit 0. This repository
+configures lint with **checkOnly = NewApi**; its 0 reported issues do not mean
+that every lint rule was enabled. Production and test compilation succeeded.
+
+Tested local commit: `ec2543bef908d7d346a9767f9b095e84254090d1`.
+Source-equivalent published commit: `3704b62585c6ce6881ab0dfe0c9947cddd1531c2`.
+Their identical full tree is `ed4984ba9ac873e081a66d7a7be871f029ef5be5`;
+the app subtree is `befaef97b94b38ebeba65c0160e332d747dafd7a`.
+Raw results, complete XML archive, before/after source hashes and execution
+limits are in [android-gates/README.md](android-gates/README.md).
+
+The [read-only layout diagnosis](layout-diagnostic/README.md) reproduces the
+unchanged original JUnit failure. Float addition/subtraction produces
+47.999996185302734375 dp, one representable Float below 48, for the three
+presentation controls at that viewport. Nine relevant source/test blobs are
+identical to the C1 intake; the latest inspected C1 layout is also unchanged.
+This is a numerical contract failure with no physical-device measurement.
+The UI owner retains the repair; this specialist patch changes no UI geometry.
+
+The first attempt correctly stopped before Gradle with
+`NOT_RUN_LESS_THAN_1_GIB_FREE` / exit 75. Space subsequently recovered and both
+reported runs actually executed under C1's existing two shared locks. This
+earlier preflight refusal is retained separately and is not counted as a test.
 
 ## Source and independent tests
 
@@ -68,10 +102,13 @@ MemoryEventSources factory while keeping the complete actual mapper/interfaces;
 its other source files are compiled unchanged. No compiler, retriever, mapper
 or bus is replaced by a fake implementation.
 
-These are actual-source JVM runs, not Android Activity, speech, GPU or device
-execution. Full current Android/lint and bounded Activity gates are **NOT_RUN
-at this checkpoint**, to be recorded separately on the frozen combined source.
-No APK was built. The owner’s offline setting and model weights are unchanged.
+The five focused directories contain actual-source JVM runs. They were followed
+by the separately recorded Android gates above. The bounded Robolectric gate
+constructs and attaches the real Activity and exercises its compiler getter,
+subscription closures, memory hub, Android Handler/main looper and orb renderer.
+It does not execute full onCreate/onDestroy, native graphics, a real model turn,
+microphone, TTS or a physical device. No APK was built. The owner's offline
+setting and model weights are unchanged.
 
 The independent compiler review and its limits are in `REVIEW.md`. Original
 tests were neither removed nor weakened. The scope leaves #511's tuning,

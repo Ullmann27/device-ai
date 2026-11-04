@@ -1,0 +1,12 @@
+.E
+Time: 0.06
+There was 1 failure:
+1) everythingFitsOneScreenWithUsableTargetsAndNoOverlap(at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest)
+java.lang.AssertionError: 832.0 x 700.0 font 1.0 VIEW_AVATAR ≥ 48 dp
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest.everythingFitsOneScreenWithUsableTargetsAndNoOverlap(ContinuumLandscapeCockpitLayoutTest.kt:33)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+

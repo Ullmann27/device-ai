@@ -1,0 +1,74 @@
+[
+  {
+    "pr": 491,
+    "sha": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+    "identicalToFrozenC1AndCurrent": true
+  },
+  {
+    "pr": 491,
+    "sha": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+    "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.kt",
+    "identicalToFrozenC1AndCurrent": true
+  },
+  {
+    "pr": 505,
+    "sha": "e83f6ac18243b42aadbe8da88df074c7ea1811ef",
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+    "identicalToFrozenC1AndCurrent": true
+  },
+  {
+    "pr": 505,
+    "sha": "e83f6ac18243b42aadbe8da88df074c7ea1811ef",
+    "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.kt",
+    "identicalToFrozenC1AndCurrent": true
+  },
+  {
+    "pr": 513,
+    "sha": "28b228698aef8c52e46c72b71fdd5e1915d6e76c",
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+    "identicalToFrozenC1AndCurrent": true
+  },
+  {
+    "pr": 513,
+    "sha": "28b228698aef8c52e46c72b71fdd5e1915d6e76c",
+    "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.kt",
+    "identicalToFrozenC1AndCurrent": true
+  },
+  {
+    "pr": 520,
+    "sha": "9094032b05257ef12f882e37cefd7dd8f7ebc203",
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+    "identicalToFrozenC1AndCurrent": true
+  },
+  {
+    "pr": 520,
+    "sha": "9094032b05257ef12f882e37cefd7dd8f7ebc203",
+    "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.kt",
+    "identicalToFrozenC1AndCurrent": true
+  },
+  {
+    "pr": 521,
+    "sha": "653a885435d95a19f341a80a89be1e9fbeccf1f1",
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+    "identicalToFrozenC1AndCurrent": true
+  },
+  {
+    "pr": 521,
+    "sha": "653a885435d95a19f341a80a89be1e9fbeccf1f1",
+    "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.kt",
+    "identicalToFrozenC1AndCurrent": true
+  },
+  {
+    "pr": 519,
+    "sha": "a54583816df92bcd0cdf4e75f06cdefffb5dafcc",
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+    "identicalToFrozenC1AndCurrent": true
+  },
+  {
+    "pr": 519,
+    "sha": "a54583816df92bcd0cdf4e75f06cdefffb5dafcc",
+    "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.kt",
+    "identicalToFrozenC1AndCurrent": true
+  }
+]

@@ -1,5 +1,24 @@
 # Memory mapper cancellation and counted writes — R3
 
+## Current root execution and publication
+
+The root combined this isolated patch into #522 and published the repaired
+source at `3704b62585c6ce6881ab0dfe0c9947cddd1531c2`, full tree
+`ed4984ba9ac873e081a66d7a7be871f029ef5be5` (local tested commit
+`ec2543bef908d7d346a9767f9b095e84254090d1`). The root executed the real baseline:
+4 tests, 3 FAIL / 1 PASS, with 79,387 of 80,000 writes accounted in the observed
+race. The unchanged four tests then passed against the repair, including exact
+80,000-write accounting. All four also pass within the actual Android suite.
+
+The real attached Activity/Handler gate passed 2/2; configured NewApi lint
+reported 0 issues. The complete Android suite still fails one unchanged
+landscape layout assertion: 2,638 tests / 2,618 PASS / 1 FAIL / 19 SKIP. These
+overlapping counts are not additive and do not establish device readiness.
+See `docs/evidence/memory-brain-r3-20261104/RESULT.md` and `android-gates/`.
+
+The implementation-checkpoint notes below record what the subagent had and had
+not run at that earlier point. They are not the current publication status.
+
 ## Source and ownership
 
 - Public integration input: C1 `b04daf5db2cbe40a9fa757499a0d295176a1bfce`.
@@ -89,7 +108,7 @@ independent negative validation. No experiment is promoted or marked complete;
 this is an existing presentation-path repair. Root combines this patch with its
 separate compiler/privacy work and coordinates final Activity ownership with C1.
 
-Next gate: execute the frozen tests-first baseline, execute the repaired mapper,
-retain the actual counter-race outcome, and run existing mapper/adapter regressions.
+Those focused gates have now run through the root as recorded above. Next is
+C1's integration and source-bound acceptance of its combined candidate.
 Rollback consists of reverting this bounded implementation change; it requires no
 database migration, persisted-memory deletion, model change or consent change.

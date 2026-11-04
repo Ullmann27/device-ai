@@ -13,7 +13,14 @@
     "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryHoldoutTest.kt": "dcf924b4e15b74adf2492ae0b38260bd79dbc19f6787abbcdafe3640cde049f7",
     "app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt": "3d490f43091ddff69dd264c5b9f48b73613d82c5bfbddcfc11defaf845be3690"
   },
-  "fullAndroidGate": "NOT_RUN_AT_THIS_CHECKPOINT",
+  "fullAndroidGate": "FAIL_2638_TOTAL_2618_PASS_1_FAIL_19_SKIP",
   "apkBuilt": false,
-  "deviceTested": false
+  "deviceTested": false,
+  "testedLocalCommit": "ec2543bef908d7d346a9767f9b095e84254090d1",
+  "sourceEquivalentPublicCommit": "3704b62585c6ce6881ab0dfe0c9947cddd1531c2",
+  "testedFullTree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5",
+  "testedAppTree": "befaef97b94b38ebeba65c0160e332d747dafd7a",
+  "boundedActivityGate": "PASS_2_OF_2",
+  "configuredLintGate": "PASS_NEWAPI_ONLY_ZERO_ISSUES",
+  "androidEvidence": "android-gates/summary.json"
 }

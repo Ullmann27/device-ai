@@ -32,3 +32,25 @@ global bus cancellation barrier is neither added nor claimed.
 
 No independent full Gradle, complete native Activity, model, device, GPU or audio
 certification is implied by these bounded reviews.
+
+## Subsequent independent Android evidence audit
+
+After the root's actual Android runs, `brain_integrity_review` independently
+audited the complete 480-file raw receipt archive, its SHA256/member sizes and
+hashes, the full 467-suite and separate Activity indexes, and the selected XML
+exports. The reviewer recomputed 2,638 total / 2,618 PASS / 1 FAIL / 19 SKIP,
+the separate 2/2 Activity PASS and all 14 new R3 tests passing.
+
+All four before/after manifests were byte-identical. Their 1,080 source hashes
+matched both the tested `ec2543bef908d7d346a9767f9b095e84254090d1` Git blobs and
+the current working files. The reviewer independently checked published
+`3704b62585c6ce6881ab0dfe0c9947cddd1531c2` against full tree
+`ed4984ba9ac873e081a66d7a7be871f029ef5be5` and found no app diff after execution.
+Raw logs agree with the failed full unit run, lint not reached in that command,
+and the later Activity plus configured NewApi-only lint PASS.
+
+No blocking inconsistency was found in that bounded evidence audit. The reviewer
+did not rerun Gradle or reproduce the separate Float geometry diagnosis. The
+diagnosis was executed by `brain_coordination_now` and reviewed by root against
+the actual layout/test source and raw output. This audit does not turn the
+failed whole-suite gate into a PASS or certify a newer C1 source.

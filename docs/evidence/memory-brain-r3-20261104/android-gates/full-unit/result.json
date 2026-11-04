@@ -1,0 +1,65 @@
+{
+  "apkRequested": false,
+  "buildCacheDisabled": true,
+  "checkout": "/workspace/scratch/624aeb26d481/continuum-brain-r3",
+  "command": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=1",
+    "--console=plain",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pandroid.builder.sdkDownload=false",
+    "-Dorg.gradle.jvmargs=-Xmx1536m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "--init-script",
+    "/workspace/scratch/624aeb26d481/qa-r3/r3-full-unit-lint-retry1/bounded-tests.init.gradle",
+    ":app:testDebugUnitTest",
+    ":app:lintDebug"
+  ],
+  "dependencyDownloadsPermitted": false,
+  "elapsedSeconds": 222.493,
+  "expectedCommit": "ec2543bef908d7d346a9767f9b095e84254090d1",
+  "expectedTree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5",
+  "finishedAt": "2026-11-04T20:22:46.061972+00:00",
+  "freeBytesAfter": 2409779200,
+  "freeBytesBefore": 2020904960,
+  "gradleCache": "/workspace/scratch/d663e8444310/gradle-cache",
+  "gradleExitCode": 1,
+  "junit": {
+    "errors": 0,
+    "failures": 1,
+    "skipped": 19,
+    "suites": 467,
+    "tests": 2638
+  },
+  "lintRequested": true,
+  "lockWaitLimitSeconds": 45,
+  "locks": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+    "/workspace/scratch/d663e8444310/qa/gradle.lock"
+  ],
+  "requestedAt": "2026-11-04T20:19:02.871244+00:00",
+  "runnerSha256": "c0332b570f9ae378eadb1afadd8c4748af981b2e36e8c7677febae568a88b394",
+  "schemaVersion": 1,
+  "sourceAfter": {
+    "commit": "ec2543bef908d7d346a9767f9b095e84254090d1",
+    "dirty": "",
+    "tree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5"
+  },
+  "sourceBefore": {
+    "commit": "ec2543bef908d7d346a9767f9b095e84254090d1",
+    "dirty": "",
+    "tree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5"
+  },
+  "sourceManifestSha256": "4290dc007f67f68a99d6da49a6ca0ea548e914ebc47a69c41f0158ff85b3ee1e",
+  "sourceUnchanged": true,
+  "startedAt": "2026-11-04T20:19:03.158399+00:00",
+  "status": "FAIL",
+  "stopReason": null,
+  "taskId": "BRAIN-R3-ANDROID-GATE",
+  "testClasses": [],
+  "testTaskUpToDateDisabled": true,
+  "uiMode": false,
+  "wrapperExitCode": 1
+}
