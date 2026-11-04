@@ -35,3 +35,8 @@ Stand: 2026-11-03 14:42 CET, Host-JVM (JDK 17.0.21, Gradle-Wrapper, --no-daemon)
 - M2.5 LEX3 (8bdba30e + Benchmark-Test-Anpassung): RED 3 → GREEN. Kapazität 4096 (gemessen: `owner_fact_capacity=4096`, 4097. wirft `IllegalStateException`). 1000 Einträge Round-Trip verlustfrei; Kaltlesen p95 11,3–15,7 ms (3 Läufe). LEX2 (256) verlustfrei gelesen, beim nächsten Schreiben migriert, LKG behält LEX2. Signierte Korrekturen grün, Sicht-Cache invalidiert korrekt, Lotto-Hypothese bleibt unbestätigt bei 300 Einträgen. Warm p95 819 Lookups: 1,43 ms.
 - M2.6 ContinuumThinkingMemory (736d19cc): 4/4 grün (Reflexionen nur HYPOTHESIS, überschreiben keine bestätigten Fakten, Journal begrenzt und neustartfest). Hinweis: WIP-Tests liefen beim ersten Lauf direkt grün (kein separates RED in dieser Sitzung).
 - M2.7 ContinuumMemoryStats (a7365d47): RED (Kompilierfehler) → 2/2 grün (leer = 0/null; Zählung aus echtem Ledger; newToday ab Mitternacht Europe/Vienna).
+
+## Update 2026-11-04 (M2.8–M2.9)
+- M2.8 LEX4 append-only: RED 2/4 → GREEN 4/4. Schreib-p95 100/1000/4000 Einträge: 9,5–11,3 / 24,7–27,0 / 83,3–85,7 ms → 0,47–0,60 / 1,7–1,8 / 4,4–4,9 ms.
+- M2.9 Abruf: B Zeichen-n-Gramm-Hash + Zeit gewinnt (recall@1 0,886, recall@3 0,977, MRR 0,924, p95 0,63 ms, ~625 KB bei 1000), vs. A BM25-de + Zeit (0,818 / 0,841 / 0,830, 0,08 ms, ~119 KB). Details: docs/evidence/m2-retrieval-20261104/RESULTS.md.
+- Volle Unit-Suite: **1827 Tests, 0 Fehler, 5 übersprungen**.

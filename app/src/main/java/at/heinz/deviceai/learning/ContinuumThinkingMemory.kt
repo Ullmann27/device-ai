@@ -53,13 +53,17 @@ class ContinuumThinkingMemory(appDirectory:File, private val core:ContinuumLearn
             items += RecalledMemory(if (h.confirmed) RecallSource.PROFILE else RecallSource.SEARCH, h.entry.id,
                 h.entry.text.take(MAX_TEXT), h.entry.atMillis, h.confirmed)
         }
+        // M2.9: reflections ranked by the on-device retriever (char-n-gram hash + time cue); always confirmed=false.
         val q = words(query)
-        if (q.isNotEmpty()) read().filter { it.kind == ThinkingEntryKind.REFLECTION }
-            .map { it to words(it.text).count { w -> q.any { stem(it, w) } } }.filter { it.second > 0 }
-            .sortedWith(compareByDescending<Pair<ThinkingJournalEntry, Int>> { it.second }.thenByDescending { it.first.atMillis })
-            .take(MAX_RECALL).forEach { (e, _) ->
-                items += RecalledMemory(RecallSource.HYPOTHESIS, "${e.runId}#${e.stepIndex}", e.text.take(MAX_TEXT), e.atMillis, false)
+        val reflections = read().filter { it.kind == ThinkingEntryKind.REFLECTION }
+        if (q.isNotEmpty() && reflections.isNotEmpty()) {
+            val byId = reflections.associateBy { "${it.runId}#${it.stepIndex}" }
+            val retriever = ContinuumMemoryRetriever.default()
+            retriever.index(byId.map { (id, e) -> MemoryDoc(id, e.text, e.atMillis, confirmed = false) })
+            retriever.search(query, now, MAX_RECALL).filter { it.score >= MIN_REFLECTION_SCORE }.forEach { h ->
+                items += RecalledMemory(RecallSource.HYPOTHESIS, h.doc.id, h.doc.text.take(MAX_TEXT), h.doc.atMillis, false)
             }
+        }
         val bounded = items.distinctBy { it.source to it.id }.take(MAX_RECALL)
         return MemoryRecall(step, bounded, bounded.isEmpty())
     }
@@ -111,6 +115,7 @@ class ContinuumThinkingMemory(appDirectory:File, private val core:ContinuumLearn
     companion object {
         const val FILE_NAME = "thinking-journal-v1.log"
         const val MAX_RECALL = 6
+        private const val MIN_REFLECTION_SCORE = 0.12
         const val MAX_ENTRIES = 512
         private const val MAX_TEXT = 400
         private val LOCK = Any()
@@ -118,7 +123,6 @@ class ContinuumThinkingMemory(appDirectory:File, private val core:ContinuumLearn
         private val B64D = Base64.getUrlDecoder()
         private val STOP = setOf("wohin", "woher", "warum", "nochmal", "eine", "einen", "einem", "einer", "mein", "meine", "meinen", "nicht", "auch")
         private fun words(t:String) = t.lowercase(Locale.GERMAN).split(Regex("[^\\p{L}\\p{N}]+")).filter { it.length >= 4 && it !in STOP }.toSet()
-        private fun stem(a:String, b:String) = a == b || a.take(5) == b.take(5) && a.length >= 5 && b.length >= 5 || (a.length == 4 || b.length == 4) && a.take(4) == b.take(4)
         private fun encode(e:ThinkingJournalEntry) = listOf("v1", e.kind.name, B64E.encodeToString(e.runId.toByteArray()), e.stepIndex.toString(),
             e.phase.name, e.status.name, e.atMillis.toString(), B64E.encodeToString(e.text.toByteArray(Charsets.UTF_8))).joinToString("\t")
         private fun decode(line:String):ThinkingJournalEntry? = runCatching {
