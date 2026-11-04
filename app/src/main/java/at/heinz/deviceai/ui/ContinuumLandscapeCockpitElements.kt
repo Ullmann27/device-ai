@@ -163,7 +163,9 @@ abstract class CockpitCard(textScale: Float, private val icon: Icon) : Continuum
 class CockpitBrainCard(textScale: Float) : CockpitCard(textScale, Icon.BRAIN) {
     override fun title(s: ContinuumDashboardState) = "KI-Gehirn"
     override fun pill(s: ContinuumDashboardState) = s.model.stateLabel to (if (s.model.online) C.ok else C.warn)
-    override fun rows(s: ContinuumDashboardState) = ContinuumCockpitPresentation.brainRows(s)
+    override fun rows(s: ContinuumDashboardState) = ContinuumCockpitPresentation.brainRows(s).take(2) +
+        ContinuumCockpitPresentation.memoryRows(s, System.currentTimeMillis()).take(1) +
+        ContinuumCockpitPresentation.brainRows(s).drop(2)
     override fun drawBody(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState, top: Float) {
         // Real TurnLifecycle phase rail: Annehmen → Arbeiten → Ergebnis
         val reached = ContinuumCockpitPresentation.phaseIndex(s.cockpit.turnPhase)

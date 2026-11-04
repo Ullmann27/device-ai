@@ -64,6 +64,17 @@ object ContinuumCockpitPresentation {
         Row("Kontext", s.model.context ?: NOT_AVAILABLE, null)
     )
 
+    /** Memory ledger (PR #371): total, new today, last activity; missing reader → "nicht verfügbar". */
+    fun memoryRows(s: ContinuumDashboardState, nowMillis: Long): List<Row> {
+        val m = s.memory ?: return listOf(Row("Gedächtnis", NOT_AVAILABLE, null))
+        val last = m.lastActivity?.let { ContinuumDashboardState.ago(nowMillis - it.toEpochMilli()) } ?: "noch keine"
+        return listOf(
+            Row("Gedächtnis", "${m.totalEntries} Einträge · +${m.newToday} heute", null, Tone.OK),
+            Row("Bestätigt / offen", "${m.confirmed} / ${m.unconfirmed + m.hypothetical}", null),
+            Row("Letzte Aktivität", last, null)
+        )
+    }
+
     private fun percentRow(label: String, value: Int?) =
         Row(label, value?.let { "$it %" } ?: NOT_AVAILABLE, value?.let { it.coerceIn(0, 100) / 100f })
 
@@ -145,6 +156,19 @@ object ContinuumCockpitPresentation {
     }
 
     private fun seconds(ms: Long): String = if (ms < 1_000) "<1 s" else "${ms / 1_000} s"
+}
+
+/** Caches an expensive read for [intervalMs]; a failed read yields null (shown as "nicht verfügbar"). Thread-safe. */
+class ThrottledRead<T : Any>(private val intervalMs: Long, private val read: () -> T) {
+    private var value: T? = null
+    private var readAt = Long.MIN_VALUE
+    @Synchronized fun get(nowMs: Long): T? {
+        if (readAt == Long.MIN_VALUE || nowMs - readAt >= intervalMs) {
+            value = runCatching(read).getOrNull()
+            readAt = nowMs
+        }
+        return value
+    }
 }
 
 internal object CockpitAnimationLabels {

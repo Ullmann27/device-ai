@@ -86,3 +86,29 @@ class ContinuumCockpitPresentationTest {
         assertFalse(dialog.last().value.contains('\u0000'))
     }
 }
+
+class ContinuumCockpitMemoryTest {
+    @Test fun memoryFiguresComeFromTheLedgerOrSayNotAvailable() {
+        val none = ContinuumCockpitPresentation.memoryRows(ContinuumDashboardState(), 0L)
+        assertEquals(ContinuumCockpitPresentation.NOT_AVAILABLE, none.single().value)
+        val stats = at.heinz.deviceai.learning.ContinuumMemoryStats(12, 3, java.time.Instant.ofEpochMilli(0L), 4, 2, 1, 0)
+        val rows = ContinuumCockpitPresentation.memoryRows(ContinuumDashboardState(memory = stats), 5 * 60_000L)
+        assertEquals("12 Einträge · +3 heute", rows[0].value)
+        assertEquals("4 / 3", rows[1].value)
+        assertEquals("vor 5 Min.", rows[2].value)
+    }
+
+    @Test fun ledgerIsReadAtMostOncePerIntervalAndFailuresAreNull() {
+        var reads = 0
+        val throttled = ThrottledRead(15_000L) { reads++; reads }
+        assertEquals(1, throttled.get(0L)); assertEquals(1, throttled.get(14_999L)); assertEquals(2, throttled.get(15_000L))
+        val broken = ThrottledRead<Int>(1L) { error("unlesbar") }
+        assertNull(broken.get(0L))
+        // A real (empty) ledger directory gives 0, never an invented number.
+        val dir = java.nio.file.Files.createTempDirectory("cockpit-mem").toFile()
+        try {
+            val stats = at.heinz.deviceai.learning.ContinuumMemoryStatsReader(dir).read()
+            assertEquals(0, stats.totalEntries); assertNull(stats.lastActivity)
+        } finally { dir.deleteRecursively() }
+    }
+}
