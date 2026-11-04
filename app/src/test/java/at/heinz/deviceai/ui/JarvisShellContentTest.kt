@@ -20,4 +20,30 @@ class JarvisShellContentTest {
         assertEquals(ContinuumCockpitPresentation.NOT_AVAILABLE, JarvisShellContent.rows(JarvisShellLayout.Slot.ROW_MEMORY, empty, 0L).single().value)
         assertEquals("Noch kein Auftrag", JarvisShellContent.rows(JarvisShellLayout.Slot.ROW_MODEL, empty, 0L).first().value)
     }
+
+    @Test fun tilesShowOnlyRealValuesAndRouteToExistingScreens() {
+        val na = ContinuumCockpitPresentation.NOT_AVAILABLE
+        val tiles = JarvisShellContent.tiles(ContinuumDashboardState(), 0L)
+        assertEquals(JarvisTiles.reference.map { it.target }, tiles.map { it.target })
+        for (t in tiles) {
+            assertTrue("${t.target} routed", t.target in JarvisShellContent.routes)
+            assertTrue("${t.target} has no digit without a source: ${t.displayText}", t.displayText!!.none(Char::isDigit))
+        }
+        assertEquals(na, tiles.first { it.target == "memory" }.displayText)
+        val live = ContinuumDashboardState(system = ContinuumDashboardState.SystemStatus(batteryPercent = 64))
+        assertEquals("Akku 64 %", JarvisShellContent.tileValue("device", live, 0L))
+        for (item in JarvisTiles.railNav + JarvisTiles.bottomNav) assertTrue(item.target in JarvisShellContent.routes)
+    }
+
+    @Test fun hitTestFindsTileRailAndBottomNavTargets() {
+        val tiles = JarvisTiles.reference
+        val fold = JarvisShellLayout.create(884f, 760f)
+        val first = fold.tileBoxes().first()
+        assertEquals("chat", JarvisShellContent.hitTarget(fold, tiles, first.centerX, first.top + first.height / 2f))
+        val rail = fold[JarvisShellLayout.Slot.NAV_RAIL]!!
+        assertEquals("home", JarvisShellContent.hitTarget(fold, tiles, rail.centerX, rail.top + 20f))
+        val phone = JarvisShellLayout.create(412f, 915f)
+        val nav = phone[JarvisShellLayout.Slot.BOTTOM_NAV]!!
+        assertEquals(JarvisTiles.bottomNav.last().target, JarvisShellContent.hitTarget(phone, tiles, nav.right - 4f, nav.top + 10f))
+    }
 }

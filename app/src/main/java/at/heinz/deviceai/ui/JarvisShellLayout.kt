@@ -84,33 +84,32 @@ object JarvisShellLayout {
                 b[Slot.DIALOG] = Box(l, avatarBottom - (80f + big * 36f), l + room * .5f, avatarBottom)
                 Shell(FormFactor.PHONE_PORTRAIT, widthDp, heightDp, b, 2, rows, overlays = setOf(Slot.AVATAR to Slot.DIALOG))
             }
-            FormFactor.FOLD_OPEN -> { // ref5: rail, hero row (bubble | head+orb | modules), 4×2 tiles, agent/task row, status
-                val railW = if (foldRail == Rail.LABELLED) m.railFold else m.railCompact
+            FormFactor.FOLD_OPEN -> { // Review 1: 3 columns ~20/55/25 (labelled nav / avatar + tiles / status), status strip below
                 val statusH = 34f + big * 14f
                 val statusTop = heightDp - m.margin - statusH
                 b[Slot.STATUS] = Box(m.margin, statusTop, widthDp - m.margin, heightDp - m.margin)
-                val l = railW + m.margin + g; val r = widthDp - m.margin; val room = r - l
-                val top = 64f
-                b[Slot.NAV_RAIL] = Box(m.margin, top, m.margin + railW, statusTop - g)
-                b[Slot.TOP_BAR] = Box(m.margin, 0f, r, top - 4f)
+                val inner = widthDp - 2 * m.margin - 2 * g
+                val navW = if (foldRail == Rail.LABELLED) inner * .20f else m.railCompact
+                val statusW = inner * .25f
+                val top = 60f
+                b[Slot.TOP_BAR] = Box(m.margin, 0f, widthDp - m.margin, top - 4f)
+                b[Slot.NAV_RAIL] = Box(m.margin, top, m.margin + navW, statusTop - g)
+                val l = m.margin + navW + g; val r = widthDp - m.margin - statusW - g
                 val cols = if (font > 1.3f) 2 else 4
                 val rows = if (font > 1.3f) 4 else 2
-                val content = statusTop - g - top
-                val rowCards = content * .2f
-                val tilesH = rows * (content * .09f + big * 20f) + (rows - 1) * 8f
-                val rowTop = statusTop - g - rowCards
-                val tilesTop = rowTop - g - tilesH
-                b[Slot.TILES] = Box(l, tilesTop, r, rowTop - g)
-                val q = (room - 3 * g) / 4f
-                listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL).forEachIndexed { i, s ->
-                    val x = l + i * (q + g); b[s] = Box(x, rowTop, x + q, statusTop - g)
-                }
-                val heroBottom = tilesTop - g
-                val leftW = room * .25f; val rightW = room * .22f
-                b[Slot.DIALOG] = Box(l, top, l + leftW, heroBottom)
-                b[Slot.AVATAR] = Box(l + leftW + g, top, r - rightW - g, heroBottom)
-                b[Slot.COCKPIT_SECONDARY] = Box(r - rightW, top, r, heroBottom)
-                Shell(FormFactor.FOLD_OPEN, widthDp, heightDp, b, cols, rows, foldRail)
+                val bottom = statusTop - g
+                val tilesH = rows * (58f + big * 24f) + (rows - 1) * 8f
+                b[Slot.TILES] = Box(l, bottom - tilesH, r, bottom)
+                val avatarBottom = bottom - tilesH - g
+                b[Slot.AVATAR] = Box(l, top, r, avatarBottom)
+                b[Slot.DIALOG] = Box(l, avatarBottom - (84f + big * 36f), l + (r - l) * .42f, avatarBottom)
+                val sl = widthDp - m.margin - statusW
+                val right = listOf(Slot.COCKPIT_SECONDARY, Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL)
+                val weights = floatArrayOf(1.4f, 1f, 1f, .8f, .8f)
+                val avail = bottom - top - (right.size - 1) * g
+                var y = top
+                right.forEachIndexed { k, s -> val h = avail * weights[k] / weights.sum(); b[s] = Box(sl, y, widthDp - m.margin, y + h); y += h + g }
+                Shell(FormFactor.FOLD_OPEN, widthDp, heightDp, b, cols, rows, foldRail, overlays = setOf(Slot.AVATAR to Slot.DIALOG))
             }
             FormFactor.TABLET_LANDSCAPE -> { // ref2: rail, bubble | dominant centred head | status/live feed, input under head
                 val railW = m.railLabelled

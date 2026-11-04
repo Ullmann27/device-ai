@@ -41,12 +41,16 @@ class JarvisShellLayoutTest {
         val s = JarvisShellLayout.create(884f, 760f)
         assertEquals(FormFactor.FOLD_OPEN, s.formFactor)
         assertEquals(Rail.LABELLED, s.rail)
-        assertEquals(JarvisDesign.Metrics.railFold, s[Slot.NAV_RAIL]!!.width, .01f)
+        val inner = 884f - 2 * JarvisDesign.Metrics.margin - 2 * JarvisDesign.Metrics.gap
+        assertEquals(inner * .20f, s[Slot.NAV_RAIL]!!.width, .01f)
+        assertEquals(inner * .55f, s[Slot.AVATAR]!!.width, .01f)
+        assertEquals(inner * .25f, s[Slot.COCKPIT_SECONDARY]!!.width, .01f)
+        assertTrue("tiles in centre column", s[Slot.AVATAR]!!.contains(s[Slot.DIALOG]!!) && s[Slot.TILES]!!.left == s[Slot.AVATAR]!!.left)
         assertEquals(4, s.tileColumns); assertEquals(2, s.tileRows)
         listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL).forEach { assertNotNull(s[it]) }
         val st = s[Slot.STATUS]!!
         assertTrue("status full width", st.left <= JarvisDesign.Metrics.margin + .01f && st.right >= 884f - JarvisDesign.Metrics.margin - .01f)
-        assertTrue(s[Slot.DIALOG]!!.right < s[Slot.AVATAR]!!.left && s[Slot.AVATAR]!!.right < s[Slot.COCKPIT_SECONDARY]!!.left)
+        assertTrue(s[Slot.NAV_RAIL]!!.right < s[Slot.AVATAR]!!.left && s[Slot.AVATAR]!!.right < s[Slot.COCKPIT_SECONDARY]!!.left)
         assertSane(s)
     }
 
@@ -70,6 +74,13 @@ class JarvisShellLayoutTest {
         val f = JarvisShellLayout.create(884f, 760f, 1.5f); assertEquals(2, f.tileColumns); assertSane(f)
     }
 
+    @Test fun referenceTilesFromRef5() {
+        assertEquals(listOf("Chat", "Memory", "Logic", "Research", "Agents", "Learning", "Device Control", "System Status"),
+            JarvisTiles.reference.map { it.label })
+        assertTrue(JarvisTiles.reference.all { it.displayText == null })
+        assertEquals(JarvisTiles.reference.size, JarvisShellLayout.create(884f, 760f).tileBoxes().size)
+    }
+
     @Test fun glowLevelsAreOrdered() {
         val g = JarvisDesign.Glow.values().map { it.haloAlpha }
         assertEquals(g.sorted(), g)
@@ -78,7 +89,9 @@ class JarvisShellLayoutTest {
     @Test fun jarvisColoursFollowVideoSpec() {
         assertEquals(Argb.rgb(0, 255, 255), JarvisDesign.Colors.cyan)
         assertEquals(Argb.rgb(0x8A, 0x2B, 0xE2), JarvisDesign.Colors.violet)
-        assertEquals(Argb.rgb(5, 9, 20), JarvisDesign.Colors.background)
+        assertEquals(Argb.rgb(5, 8, 20), JarvisDesign.Colors.background)
+        assertEquals(Argb.of(128, 10, 17, 40), JarvisDesign.Colors.surface)
+        assertEquals(Argb.of(102, 0, 255, 255), JarvisDesign.Colors.rim)
         assertEquals(Argb.rgb(10, 17, 40), JarvisDesign.Colors.backgroundBottom)
     }
 }
