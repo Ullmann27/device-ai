@@ -1,0 +1,90 @@
+[
+  {
+    "case": "plain_short",
+    "before": {
+      "cpuMicrosecondsPerCall": 21.52941,
+      "allocationBytesPerCall": 4152.0,
+      "sha256": [
+        "1790506a939eb56a34ba65d0c3e92b10e36373dd2947cca6e82b3cf0b53fa402"
+      ],
+      "samples": 15
+    },
+    "after": {
+      "cpuMicrosecondsPerCall": 41.885529999999996,
+      "allocationBytesPerCall": 6664.0,
+      "sha256": [
+        "1790506a939eb56a34ba65d0c3e92b10e36373dd2947cca6e82b3cf0b53fa402"
+      ],
+      "samples": 15
+    },
+    "cpuRatio": 1.945502919030294,
+    "allocationRatio": 1.605009633911368,
+    "sameOutput": true
+  },
+  {
+    "case": "plain_long",
+    "before": {
+      "cpuMicrosecondsPerCall": 239.24406,
+      "allocationBytesPerCall": 4088.0,
+      "sha256": [
+        "44bb6fd5db0622ec5e2b5a3d4a61eb0695b7b7c44a5e54d638d911d3a72c49c5"
+      ],
+      "samples": 15
+    },
+    "after": {
+      "cpuMicrosecondsPerCall": 343.650735,
+      "allocationBytesPerCall": 29880.0,
+      "sha256": [
+        "44bb6fd5db0622ec5e2b5a3d4a61eb0695b7b7c44a5e54d638d911d3a72c49c5"
+      ],
+      "samples": 15
+    },
+    "cpuRatio": 1.4364023708676403,
+    "allocationRatio": 7.309197651663405,
+    "sameOutput": true
+  },
+  {
+    "case": "legacy_assignments",
+    "before": {
+      "cpuMicrosecondsPerCall": 79.47272,
+      "allocationBytesPerCall": 52120.0,
+      "sha256": [
+        "10da94f9d8446f22053d34bbbb8b24c69bb1de69ade3e0f3ae9ea563297a2ce4"
+      ],
+      "samples": 15
+    },
+    "after": {
+      "cpuMicrosecondsPerCall": 142.77054,
+      "allocationBytesPerCall": 46008.32,
+      "sha256": [
+        "10da94f9d8446f22053d34bbbb8b24c69bb1de69ade3e0f3ae9ea563297a2ce4"
+      ],
+      "samples": 15
+    },
+    "cpuRatio": 1.7964722989221964,
+    "allocationRatio": 0.8827382962394474,
+    "sameOutput": true
+  },
+  {
+    "case": "quoted_explicit",
+    "before": {
+      "cpuMicrosecondsPerCall": 37.119745,
+      "allocationBytesPerCall": 26736.0,
+      "sha256": [
+        "ec921903448a481169523e8efbe2e6148ee2033e25b72a6817e11100e8f57882"
+      ],
+      "samples": 15
+    },
+    "after": {
+      "cpuMicrosecondsPerCall": 118.25719000000001,
+      "allocationBytesPerCall": 23192.0,
+      "sha256": [
+        "ac77d69baae9985723459081f8c458c3b60b2b4650cf844a902bab221da76f06"
+      ],
+      "samples": 15
+    },
+    "cpuRatio": 3.1858298056735035,
+    "allocationRatio": 0.8674446439257929,
+    "sameOutput": false
+  }
+]

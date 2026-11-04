@@ -1,0 +1,122 @@
+[
+  {
+    "suite": "at.heinz.deviceai.MemoryRecallActivityUiTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "61d66d4d9bb6e047bbbda2559b295b779782f3b9a3cfd5a64cc21da178ea6c96"
+  },
+  {
+    "suite": "at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "ab4a893a4588218d2f644ed9ffdb79fed2692927cddb2de3a1dd1911957f11f7"
+  },
+  {
+    "suite": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+    "tests": 10,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "743529966fed6922764caa8676d0208c84a587e17d8f18ce112b280771259e6d"
+  },
+  {
+    "suite": "at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "95b3b2a694ad157c37a2afc13ed36442ff6f99a48f3e44661ca8a63474f1aaeb"
+  },
+  {
+    "suite": "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "ab745c2bf603753d7a904dd973322237c450cb61495364497e7c0a78cc742f2c"
+  },
+  {
+    "suite": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "525519c8953202bde3b730185c75d3111e6dd157ff7dda245d19d98868415c58"
+  },
+  {
+    "suite": "at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest",
+    "tests": 12,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "8f8f18d555481bb9bba8bb5072fc7d9d3208f45689c75d2bd164194a8c7e0cb8"
+  },
+  {
+    "suite": "at.heinz.deviceai.cognitive.ContextCredentialFramingTest",
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "e5d3b123ff41c5602db98993b7bed4ce0612a538350745fbcfcd7ea30c8e87ac"
+  },
+  {
+    "suite": "at.heinz.deviceai.cognitive.ContextCredentialHoldoutTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "7013a6c9dcb60161ec6f65ecf93f619b21075febf77479c28fdc502f6bc23883"
+  },
+  {
+    "suite": "at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "94c3c32e82202d2070142ef25f1a94ee05b9e0b25c31a30116bffb7a8579c958"
+  },
+  {
+    "suite": "at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "0ae96b7f843acb5df00684e8d1fcab2e416f11756d1deac14cf626cdbe093e44"
+  },
+  {
+    "suite": "at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "35a2b8ab2c7d1d15de6f86adaf9c6dbac8f889fd6fd51940a1600bb02848ef1a"
+  },
+  {
+    "suite": "at.heinz.deviceai.cognitive.MemoryEcologyTest",
+    "tests": 10,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "8627cfdb37592fbb01c81b359fec4bbd294d9db789704f2afd2055ebeeaf1913"
+  },
+  {
+    "suite": "at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest",
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "a012271a051422aa5ebfccb3513778fcf531dad9b6fed6e928b014fa788fa40c"
+  },
+  {
+    "suite": "at.heinz.deviceai.cognitive.MemoryRecallObservationTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sha256": "a0ee84e240aba0df7d5c2b5eedf5132f425ccb7fe03ad5d223f4991cc172b9dd"
+  }
+]

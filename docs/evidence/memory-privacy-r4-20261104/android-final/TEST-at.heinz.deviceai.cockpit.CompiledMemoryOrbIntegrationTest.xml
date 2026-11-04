@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T22:08:45" hostname="04c8b0ba7ea6" time="0.173">
+  <properties/>
+  <testcase name="failedContextCompilationNeverSchedulesAPresentationEventOrMemoryEffect" classname="at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest" time="0.096"/>
+  <testcase name="classifiedSensitiveDeviceEvidenceNeverLightsAnAdditionalRecall" classname="at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest" time="0.032"/>
+  <testcase name="omittedMemoryGroupClearsThePreviousRecallLightThroughTheSameProductionPath" classname="at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest" time="0.026"/>
+  <testcase name="includedPrivateSafeContextReachesTheRealOrbOnlyAfterMainThreadFlush" classname="at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest" time="0.008"/>
+  <testcase name="replacingTheScreenDropsItsQueuedRecallWithoutDisconnectingTheReplacement" classname="at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest" time="0.006"/>
+  <testcase name="malformedCredentialEvidenceNeverPublishesARecallEffect" classname="at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,118 @@
+[
+  {
+    "case": "plain_short",
+    "variants": {
+      "baseline": {
+        "cpuMicrosecondsPerCall": 21.875125,
+        "allocationBytesPerCall": 4152.0,
+        "outputSha256": [
+          "1790506a939eb56a34ba65d0c3e92b10e36373dd2947cca6e82b3cf0b53fa402"
+        ],
+        "samples": 15
+      },
+      "repaired": {
+        "cpuMicrosecondsPerCall": 37.698155,
+        "allocationBytesPerCall": 6664.0,
+        "outputSha256": [
+          "1790506a939eb56a34ba65d0c3e92b10e36373dd2947cca6e82b3cf0b53fa402"
+        ],
+        "samples": 15
+      },
+      "optimized": {
+        "cpuMicrosecondsPerCall": 21.250700000000002,
+        "allocationBytesPerCall": 1488.0,
+        "outputSha256": [
+          "1790506a939eb56a34ba65d0c3e92b10e36373dd2947cca6e82b3cf0b53fa402"
+        ],
+        "samples": 15
+      }
+    }
+  },
+  {
+    "case": "plain_long",
+    "variants": {
+      "baseline": {
+        "cpuMicrosecondsPerCall": 233.834195,
+        "allocationBytesPerCall": 4088.0,
+        "outputSha256": [
+          "44bb6fd5db0622ec5e2b5a3d4a61eb0695b7b7c44a5e54d638d911d3a72c49c5"
+        ],
+        "samples": 15
+      },
+      "repaired": {
+        "cpuMicrosecondsPerCall": 405.93965000000003,
+        "allocationBytesPerCall": 29880.0,
+        "outputSha256": [
+          "44bb6fd5db0622ec5e2b5a3d4a61eb0695b7b7c44a5e54d638d911d3a72c49c5"
+        ],
+        "samples": 15
+      },
+      "optimized": {
+        "cpuMicrosecondsPerCall": 48.110535000000006,
+        "allocationBytesPerCall": 1456.0,
+        "outputSha256": [
+          "44bb6fd5db0622ec5e2b5a3d4a61eb0695b7b7c44a5e54d638d911d3a72c49c5"
+        ],
+        "samples": 15
+      }
+    }
+  },
+  {
+    "case": "legacy_assignments",
+    "variants": {
+      "baseline": {
+        "cpuMicrosecondsPerCall": 84.61111,
+        "allocationBytesPerCall": 52120.6,
+        "outputSha256": [
+          "10da94f9d8446f22053d34bbbb8b24c69bb1de69ade3e0f3ae9ea563297a2ce4"
+        ],
+        "samples": 15
+      },
+      "repaired": {
+        "cpuMicrosecondsPerCall": 156.967355,
+        "allocationBytesPerCall": 46008.32,
+        "outputSha256": [
+          "10da94f9d8446f22053d34bbbb8b24c69bb1de69ade3e0f3ae9ea563297a2ce4"
+        ],
+        "samples": 15
+      },
+      "optimized": {
+        "cpuMicrosecondsPerCall": 145.125875,
+        "allocationBytesPerCall": 44544.0,
+        "outputSha256": [
+          "10da94f9d8446f22053d34bbbb8b24c69bb1de69ade3e0f3ae9ea563297a2ce4"
+        ],
+        "samples": 15
+      }
+    }
+  },
+  {
+    "case": "quoted_explicit",
+    "variants": {
+      "baseline": {
+        "cpuMicrosecondsPerCall": 29.922895,
+        "allocationBytesPerCall": 26736.0,
+        "outputSha256": [
+          "ec921903448a481169523e8efbe2e6148ee2033e25b72a6817e11100e8f57882"
+        ],
+        "samples": 15
+      },
+      "repaired": {
+        "cpuMicrosecondsPerCall": 84.077215,
+        "allocationBytesPerCall": 23192.0,
+        "outputSha256": [
+          "ac77d69baae9985723459081f8c458c3b60b2b4650cf844a902bab221da76f06"
+        ],
+        "samples": 15
+      },
+      "optimized": {
+        "cpuMicrosecondsPerCall": 85.85961999999999,
+        "allocationBytesPerCall": 22240.0,
+        "outputSha256": [
+          "ac77d69baae9985723459081f8c458c3b60b2b4650cf844a902bab221da76f06"
+        ],
+        "samples": 15
+      }
+    }
+  }
+]

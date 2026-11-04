@@ -1,0 +1,51 @@
+{
+  "apkRequested": false,
+  "checkout": "/workspace/scratch/624aeb26d481/continuum-brain-r3",
+  "expectedCommit": "e510ce5fb415ed07577c79922ca26e715148e92f",
+  "expectedTree": "24d8eb09a7de68af95f7f3a83d5caf993099c1c8",
+  "finishedAt": "2026-11-04T21:52:55.511585+00:00",
+  "freeBytesAfter": 1060175872,
+  "freeBytesBefore": 1064370176,
+  "gradleCache": "/workspace/scratch/d663e8444310/gradle-cache",
+  "gradleExitCode": null,
+  "lintRequested": true,
+  "lockWaitLimitSeconds": 45,
+  "locks": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+    "/workspace/scratch/d663e8444310/qa/gradle.lock"
+  ],
+  "requestedAt": "2026-11-04T21:52:18.309824+00:00",
+  "runnerSha256": "c0332b570f9ae378eadb1afadd8c4748af981b2e36e8c7677febae568a88b394",
+  "schemaVersion": 1,
+  "sourceAfter": {
+    "commit": "e510ce5fb415ed07577c79922ca26e715148e92f",
+    "dirty": "",
+    "tree": "24d8eb09a7de68af95f7f3a83d5caf993099c1c8"
+  },
+  "sourceBefore": {
+    "commit": "e510ce5fb415ed07577c79922ca26e715148e92f",
+    "dirty": "",
+    "tree": "24d8eb09a7de68af95f7f3a83d5caf993099c1c8"
+  },
+  "sourceUnchanged": true,
+  "status": "NOT_RUN_LESS_THAN_1_GIB_FREE",
+  "taskId": "BRAIN-R3-ANDROID-GATE",
+  "testClasses": [
+    "at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest",
+    "at.heinz.deviceai.cognitive.ContextCredentialHoldoutTest",
+    "at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest",
+    "at.heinz.deviceai.cognitive.MemoryEcologyTest",
+    "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+    "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+    "at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest",
+    "at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest",
+    "at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test",
+    "at.heinz.deviceai.cognitive.MemoryRecallObservationTest",
+    "at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest",
+    "at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest",
+    "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+    "at.heinz.deviceai.MemoryRecallActivityUiTest"
+  ],
+  "uiMode": true,
+  "wrapperExitCode": 75
+}

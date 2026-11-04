@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "runs": [
+    {
+      "run": "initial-red",
+      "sourceLocal": "cbb528c963ef83613b5385ef43a6f7106bb4f325",
+      "sourcePublic": "b40a3d8061203bcab5be7c6846f6ad39cadca508",
+      "tree": "51553e4228982649f59f64b17010011f5f49b28d",
+      "tests": 20,
+      "failures": 16,
+      "passed": 4,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 1,
+      "files": {
+        "manifest.json": "5bf738996ef0438df71af5b2ad2563e1367e4091432643d5d169843801d95ad5",
+        "result.json": "b8afe9f254c4e70b589f45c23077a6cd4a2824bb21be58ac695e123fbbfd9fed",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "2630b3172b74c6165c4b649aa05186680c39247d1cbbe85538d5cdc2ec9d5ec0"
+      }
+    },
+    {
+      "run": "credential-green",
+      "sourceLocal": "9ff5e25b706ef40be0696ea2c33871da34874d3d",
+      "sourcePublic": "03b1333d96d36eba5ffc9537a58b489e9c8d5ff5",
+      "tree": "c9f068bdacdb4fbb5f346b75ee6e23ada30b0629",
+      "tests": 35,
+      "failures": 0,
+      "passed": 35,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 0,
+      "files": {
+        "manifest.json": "b6ce6774f577433fa4145bb6b287079edc2d244bc70e239fd77c99505909b475",
+        "result.json": "2e22833a9fad10fff7ab42df4e3776148bfea82218d8980638059cc8a570cbb0",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "08ffdc8c9788cf82186b4ba8b2e24a06531a80ebfb86eceb1315df41d1e8e9f0"
+      }
+    },
+    {
+      "run": "privacy-green",
+      "sourceLocal": "edd5468fa777b13e38f0e4fa6f3917b3240bca97",
+      "sourcePublic": "5f9ea0e532d52f819bd69cc8a61189f5ee064474",
+      "tree": "f418994a3aed2e2fd605c76c701fb65ddbdf111d",
+      "tests": 53,
+      "failures": 0,
+      "passed": 53,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 0,
+      "files": {
+        "manifest.json": "c25840675db43c24f98099dde4761fa22ac329d8f778545e3f1e1d58b0a3f95a",
+        "result.json": "4f0038a14c6e622b09cc01f2cb791e323ea1da9f08762a3d10dcb00ecf90e139",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "a162c41fd3dda4ad2ed60db29bf1daee9d5fc6ace1029478b17ff03eabcd43ea"
+      }
+    },
+    {
+      "run": "edge-holdout-before",
+      "sourceLocal": "707a995921fef2e9ba2b7025c9365ebc6633e31a",
+      "sourcePublic": "410519751c3e40db96a5e4c3727ce8f4980467b1",
+      "tree": "d473620f6320e4a85ca3b84bf60a9579b9e29592",
+      "tests": 6,
+      "failures": 1,
+      "passed": 5,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 1,
+      "files": {
+        "manifest.json": "4d9ee36f9c90eb8fe671950d4c92dd4ca6df1889f048f53f0ee8160a41004786",
+        "result.json": "0048a9ff10e401d1ab60d72dd1f54aea895416d1dce499ac069f3d7fde8a2b94",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "07b5daa1835a912ca68be85c08db80ca2c05b2adc9674f731d1aebd588b5e18a"
+      }
+    },
+    {
+      "run": "combined-holdout-green",
+      "sourceLocal": "df1e401e0130e35b6bcf380000ceedc470581173",
+      "sourcePublic": "dd2b064a9db2c7601f3e2d42e9a620a567a63c46",
+      "tree": "f10daa3aa3610fcd8ecae4b64fea436dd168d124",
+      "tests": 59,
+      "failures": 0,
+      "passed": 59,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 0,
+      "files": {
+        "manifest.json": "af3f593f62404c8b36806537036bf20e0f6a43b860338881247ee2984dfe34ff",
+        "result.json": "6a38fab97edb55482178ac6fcc6db67e831ce37f716626d36f246afefaf597cf",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "fdcffad94732a46ef617f83dc49547ae2e9af122de343453d5417c142151311b"
+      }
+    },
+    {
+      "run": "optimized-green",
+      "sourceLocal": "f8231317be1fc5e525ca1b1ed6b9415e9c49197f",
+      "sourcePublic": "cda3f0b44163ee6115b2a25197516186dca44842",
+      "tree": "9e3b0a6b15d155ad5a27c47b8d6f4b57089025a4",
+      "tests": 59,
+      "failures": 0,
+      "passed": 59,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 0,
+      "files": {
+        "manifest.json": "a446eb7d2ebac109ed0cc2eed6adec648c3acb6ed0f6af159e063470cad830c1",
+        "result.json": "3144b0bad6da2a9cf3d44ee2e73b435beea942845523180eacd5c810f7034053",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "87365257fa54ee12d6197ad839400027a614519d51758a278f325cd0b7c1d282"
+      }
+    },
+    {
+      "run": "framing-red",
+      "sourceLocal": "ac0df517f1c463774cabc2465c5a75b429936d66",
+      "sourcePublic": "cca78329dc2ed3e97451f09c7507870f5b907a67",
+      "tree": "c20b8f2a51654480230a5e4021df40591aa966e3",
+      "tests": 8,
+      "failures": 7,
+      "passed": 1,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 1,
+      "files": {
+        "manifest.json": "a7e147dfadb8d977ef1e084a81e9fe0db115b34a55fb61fb2bd13a769fe47264",
+        "result.json": "fbafc20cea72aa1e63187720b25e501408dff7b7e7c0cc4133a23dfdd9b2baa0",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "fa76ccb98909fa4bb38c48fce3089c5c6afff1feff4a8906a7d2493b06ffdd9c"
+      }
+    },
+    {
+      "run": "framing-green",
+      "sourceLocal": "ce1a4be00ae551df8e7a6d2799e161b30d961034",
+      "sourcePublic": "a717658b91c2f9703d8b6ab36bcdc7eb914cc589",
+      "tree": "6facb6326bc37efc2b40bcec4502105ffd62268a",
+      "tests": 67,
+      "failures": 0,
+      "passed": 67,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 0,
+      "files": {
+        "manifest.json": "70d363c048d43af55c2c8c44216aa249b63fe060f68172a17221a3e6bd976cf3",
+        "result.json": "333ccec9e61747c251a07c8f6ad4b9c28505a42beaa970c41a20164ceb6238fd",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "8e09a4c86e0057fff5f15ba9bdd9e90d727be6e9278e34c34b2e010b24a6dd08"
+      }
+    }
+  ],
+  "scope": "Actual-source host Kotlin/JUnit; not Android framework or AndroidKeyStore. Groups overlap; do not add counts.",
+  "rawLogs": "Copied byte-for-byte from .log to .txt; SHA-256 values above."
+}

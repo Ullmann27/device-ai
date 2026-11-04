@@ -99,9 +99,9 @@ class AiContextCompiler(
 
         // A section is a semantic unit. Cutting a suffix may remove a negation,
         // source boundary or correction while leaving a plausible positive claim.
-        fun appendSection(title: String, raw: String, required: Boolean = false): Boolean {
+        fun appendSection(title: String, raw: String, required: Boolean = false, redact: Boolean = true): Boolean {
             if (raw.isBlank()) return false
-            val sanitized = redactSecrets(raw)
+            val sanitized = if (redact) redactSecrets(raw) else raw
             val prefix = if (buffer.isEmpty()) "" else "\n\n"
             val candidate = prefix + "## " + title + "\n" + sanitized
             if (utf8Size(candidate) <= policy.maxBytes - utf8Size(buffer.toString())) {
@@ -113,9 +113,12 @@ class AiContextCompiler(
             return false
         }
 
-        fun fullUntrusted(text: String): String =
-            sanitizeUntrustedResearchText(text,
-                (text.length.toLong() * 20L).coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
+        fun fullUntrusted(text: String): String {
+            // Redact before display escaping.
+            val redacted = redactSecrets(text)
+            return sanitizeUntrustedResearchText(redacted,
+                (redacted.length.toLong() * 20L).coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
+        }
 
         appendSection(
             "CONTINUUM IDENTITY / GOVERNANCE",
@@ -180,7 +183,7 @@ class AiContextCompiler(
                         .append("Do not guess a resolution.\n")
                 }
             }
-            appendSection("UNRESOLVED CONTRADICTIONS", contradictions, required = true)
+            appendSection("UNRESOLVED CONTRADICTIONS", contradictions, required = true, redact = false)
         }
 
         val retrievalAtMillis = nowMillis()
@@ -225,7 +228,7 @@ class AiContextCompiler(
             }
             // Keep the selected group atomic: an omitted sibling may contradict
             // another record. IDs describe what was actually sent, never intentions.
-            if (appendSection("RELEVANT MEMORY", body)) includedMemoryIds += scored.map { it.memory.id }
+            if (appendSection("RELEVANT MEMORY", body, redact = false)) includedMemoryIds += scored.map { it.memory.id }
         }
 
         input.researchDossier?.let { dossier ->
@@ -252,7 +255,7 @@ class AiContextCompiler(
                         }
                     }
                 }
-                if (appendSection("RESEARCH EVIDENCE", evidence))
+                if (appendSection("RESEARCH EVIDENCE", evidence, redact = false))
                     includedSources += dossier.sources.map { it.canonicalUrl }
             }
         }
@@ -314,15 +317,47 @@ class AiContextCompiler(
     }
 
     private fun redactSecrets(text: String): String {
-        var out = text
-        out = out.replace(
-            Regex("(?i)\\b(password|passwd|token|secret|credential|authorization|api[_-]?key)\\b\\s*[:=]\\s*\\S+")
-        ) { match ->
-            val key = match.groupValues[1]
-            key + "=[REDACTED]"
+        val assignments = if ('=' in text || ':' in text) Regex(
+            """(?i)\b(password|passwd|token|secret|credential|(?:proxy-)?authorization|api[_-]?key)\b["']?[ \t]*[:=][ \t]*"""
+        ).findAll(text) else emptySequence()
+        var out: StringBuilder? = null
+        var copiedUntil = 0
+        for (match in assignments) {
+            if (match.range.first < copiedUntil) continue
+            val valueStart = match.range.last + 1
+            if (valueStart == text.length || text[valueStart].isWhitespace()) continue
+            var valueEnd = valueStart
+            if (match.groupValues[1].endsWith("authorization", ignoreCase = true)) {
+                var schemeEnd = valueStart
+                while (schemeEnd < text.length && !text[schemeEnd].isWhitespace()) schemeEnd++
+                val scheme = text.substring(valueStart, schemeEnd)
+                if (scheme.equals("Bearer", true) || scheme.equals("Basic", true)) {
+                    valueEnd = schemeEnd
+                    while (valueEnd < text.length && (text[valueEnd] == ' ' || text[valueEnd] == '\t')) valueEnd++
+                }
+            }
+            val quote = text.getOrNull(valueEnd)
+            if (quote == '"' || quote == '\'') {
+                valueEnd++
+                var closed = false
+                while (valueEnd < text.length) {
+                    val char = text[valueEnd++]
+                    if (char == '\\' && valueEnd < text.length) valueEnd++
+                    else if (char == quote) {
+                        closed = true
+                        break
+                    }
+                }
+                check(closed) { "UNTERMINATED_CREDENTIAL_VALUE" }
+            } else {
+                while (valueEnd < text.length && !text[valueEnd].isWhitespace()) valueEnd++
+            }
+            if (out == null) out = StringBuilder(text.length)
+            out.append(text, copiedUntil, valueStart).append("[REDACTED]")
+            copiedUntil = valueEnd
         }
-        out = out.replace(Regex("(?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]{8,}"), "Bearer [REDACTED]")
-        return out
+        val assigned = out?.append(text, copiedUntil, text.length)?.toString() ?: text
+        return assigned.replace(Regex("(?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]{8,}"), "Bearer [REDACTED]")
     }
 
     private fun utf8Size(value: String): Int = value.toByteArray(Charsets.UTF_8).size

@@ -1,0 +1,179 @@
+{
+  "runs": [
+    {
+      "label": "baseline",
+      "round": 0,
+      "source": "cbb528c963ef83613b5385ef43a6f7106bb4f325",
+      "tree": "51553e4228982649f59f64b17010011f5f49b28d",
+      "manifestSha256": "5bf738996ef0438df71af5b2ad2563e1367e4091432643d5d169843801d95ad5",
+      "compilerClassSha256": "19c99351fb36135c33a22e758b966cc1169f6fd4566887692620b5f85708c39a",
+      "compilerSourceSha256": "93e24a73389d4e8f05ea9ee2c307b1cb73a0a87e255cadb46dedf50606d9b903",
+      "output": "0-baseline.jsonl",
+      "outputSha256": "486f336c7c7eec3c8989da493e78d1c0adcbda0540bde9eb5ca3ff9f9fa12798",
+      "command": [
+        "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+        "-Xmx384m",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/624aeb26d481/qa-r4/redactor-experiment-final:/workspace/scratch/624aeb26d481/qa-r4/initial-red/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+        "RedactorExperiment"
+      ]
+    },
+    {
+      "label": "repaired",
+      "round": 0,
+      "source": "df1e401e0130e35b6bcf380000ceedc470581173",
+      "tree": "f10daa3aa3610fcd8ecae4b64fea436dd168d124",
+      "manifestSha256": "af3f593f62404c8b36806537036bf20e0f6a43b860338881247ee2984dfe34ff",
+      "compilerClassSha256": "88b242ce164ef9e23a2702fa4dd7f610f1f292b207b52b6a92e981fab216966f",
+      "compilerSourceSha256": "20e607e7a499ce09624ab8bba5268cdb674a40f1745701d0d5f59e1db24f7861",
+      "output": "0-repaired.jsonl",
+      "outputSha256": "f9e9c70c801d57b8cf22a638d295405d102adb27ab0b211ee38e7d40d7f9634e",
+      "command": [
+        "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+        "-Xmx384m",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/624aeb26d481/qa-r4/redactor-experiment-final:/workspace/scratch/624aeb26d481/qa-r4/combined-holdout-green/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+        "RedactorExperiment"
+      ]
+    },
+    {
+      "label": "optimized",
+      "round": 0,
+      "source": "f8231317be1fc5e525ca1b1ed6b9415e9c49197f",
+      "tree": "9e3b0a6b15d155ad5a27c47b8d6f4b57089025a4",
+      "manifestSha256": "a446eb7d2ebac109ed0cc2eed6adec648c3acb6ed0f6af159e063470cad830c1",
+      "compilerClassSha256": "b4b3c76f63cd06b232edff249f9b253a64271ca7e997d9f5d6c233e04e422ea2",
+      "compilerSourceSha256": "0b19ae8a75727c80be3cef424674fd9c34e54418c395410e6e04b154c6d08e30",
+      "output": "0-optimized.jsonl",
+      "outputSha256": "b9f8c86fbba5be1d8e72bb479d68d38a97a96e4552583d935186ea5182fec930",
+      "command": [
+        "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+        "-Xmx384m",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/624aeb26d481/qa-r4/redactor-experiment-final:/workspace/scratch/624aeb26d481/qa-r4/optimized-green/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+        "RedactorExperiment"
+      ]
+    },
+    {
+      "label": "repaired",
+      "round": 1,
+      "source": "df1e401e0130e35b6bcf380000ceedc470581173",
+      "tree": "f10daa3aa3610fcd8ecae4b64fea436dd168d124",
+      "manifestSha256": "af3f593f62404c8b36806537036bf20e0f6a43b860338881247ee2984dfe34ff",
+      "compilerClassSha256": "88b242ce164ef9e23a2702fa4dd7f610f1f292b207b52b6a92e981fab216966f",
+      "compilerSourceSha256": "20e607e7a499ce09624ab8bba5268cdb674a40f1745701d0d5f59e1db24f7861",
+      "output": "1-repaired.jsonl",
+      "outputSha256": "e06a4813d0d616ec56f28a470f2d1c3dca990b8b5d1c66723b3773079ecf3b64",
+      "command": [
+        "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+        "-Xmx384m",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/624aeb26d481/qa-r4/redactor-experiment-final:/workspace/scratch/624aeb26d481/qa-r4/combined-holdout-green/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+        "RedactorExperiment"
+      ]
+    },
+    {
+      "label": "optimized",
+      "round": 1,
+      "source": "f8231317be1fc5e525ca1b1ed6b9415e9c49197f",
+      "tree": "9e3b0a6b15d155ad5a27c47b8d6f4b57089025a4",
+      "manifestSha256": "a446eb7d2ebac109ed0cc2eed6adec648c3acb6ed0f6af159e063470cad830c1",
+      "compilerClassSha256": "b4b3c76f63cd06b232edff249f9b253a64271ca7e997d9f5d6c233e04e422ea2",
+      "compilerSourceSha256": "0b19ae8a75727c80be3cef424674fd9c34e54418c395410e6e04b154c6d08e30",
+      "output": "1-optimized.jsonl",
+      "outputSha256": "4a74bb9f9cddacbddf55f1f92999f1f5d6410babaf95fde1e5ba3ad9edb1d5a5",
+      "command": [
+        "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+        "-Xmx384m",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/624aeb26d481/qa-r4/redactor-experiment-final:/workspace/scratch/624aeb26d481/qa-r4/optimized-green/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+        "RedactorExperiment"
+      ]
+    },
+    {
+      "label": "baseline",
+      "round": 1,
+      "source": "cbb528c963ef83613b5385ef43a6f7106bb4f325",
+      "tree": "51553e4228982649f59f64b17010011f5f49b28d",
+      "manifestSha256": "5bf738996ef0438df71af5b2ad2563e1367e4091432643d5d169843801d95ad5",
+      "compilerClassSha256": "19c99351fb36135c33a22e758b966cc1169f6fd4566887692620b5f85708c39a",
+      "compilerSourceSha256": "93e24a73389d4e8f05ea9ee2c307b1cb73a0a87e255cadb46dedf50606d9b903",
+      "output": "1-baseline.jsonl",
+      "outputSha256": "d27b0de32886828f26738e073f646f3415d2505187d1df5a010c1acaa163a8ef",
+      "command": [
+        "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+        "-Xmx384m",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/624aeb26d481/qa-r4/redactor-experiment-final:/workspace/scratch/624aeb26d481/qa-r4/initial-red/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+        "RedactorExperiment"
+      ]
+    },
+    {
+      "label": "optimized",
+      "round": 2,
+      "source": "f8231317be1fc5e525ca1b1ed6b9415e9c49197f",
+      "tree": "9e3b0a6b15d155ad5a27c47b8d6f4b57089025a4",
+      "manifestSha256": "a446eb7d2ebac109ed0cc2eed6adec648c3acb6ed0f6af159e063470cad830c1",
+      "compilerClassSha256": "b4b3c76f63cd06b232edff249f9b253a64271ca7e997d9f5d6c233e04e422ea2",
+      "compilerSourceSha256": "0b19ae8a75727c80be3cef424674fd9c34e54418c395410e6e04b154c6d08e30",
+      "output": "2-optimized.jsonl",
+      "outputSha256": "4bbd374a8bdb9d49f1352ef1429bbd15f3c10aba01c54f8a6860f663dd55b92a",
+      "command": [
+        "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+        "-Xmx384m",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/624aeb26d481/qa-r4/redactor-experiment-final:/workspace/scratch/624aeb26d481/qa-r4/optimized-green/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+        "RedactorExperiment"
+      ]
+    },
+    {
+      "label": "baseline",
+      "round": 2,
+      "source": "cbb528c963ef83613b5385ef43a6f7106bb4f325",
+      "tree": "51553e4228982649f59f64b17010011f5f49b28d",
+      "manifestSha256": "5bf738996ef0438df71af5b2ad2563e1367e4091432643d5d169843801d95ad5",
+      "compilerClassSha256": "19c99351fb36135c33a22e758b966cc1169f6fd4566887692620b5f85708c39a",
+      "compilerSourceSha256": "93e24a73389d4e8f05ea9ee2c307b1cb73a0a87e255cadb46dedf50606d9b903",
+      "output": "2-baseline.jsonl",
+      "outputSha256": "004c39afdeee4c8c824b875e13897d03533230c02a864427b86e893ddac9def8",
+      "command": [
+        "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+        "-Xmx384m",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/624aeb26d481/qa-r4/redactor-experiment-final:/workspace/scratch/624aeb26d481/qa-r4/initial-red/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+        "RedactorExperiment"
+      ]
+    },
+    {
+      "label": "repaired",
+      "round": 2,
+      "source": "df1e401e0130e35b6bcf380000ceedc470581173",
+      "tree": "f10daa3aa3610fcd8ecae4b64fea436dd168d124",
+      "manifestSha256": "af3f593f62404c8b36806537036bf20e0f6a43b860338881247ee2984dfe34ff",
+      "compilerClassSha256": "88b242ce164ef9e23a2702fa4dd7f610f1f292b207b52b6a92e981fab216966f",
+      "compilerSourceSha256": "20e607e7a499ce09624ab8bba5268cdb674a40f1745701d0d5f59e1db24f7861",
+      "output": "2-repaired.jsonl",
+      "outputSha256": "5c7e515018f9dc698a1306cd245fb39ce58ed3dd0b44549d72cf87fd29292384",
+      "command": [
+        "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+        "-Xmx384m",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/624aeb26d481/qa-r4/redactor-experiment-final:/workspace/scratch/624aeb26d481/qa-r4/combined-holdout-green/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+        "RedactorExperiment"
+      ]
+    }
+  ],
+  "driverSha256": "3a37a8062dd9812590f905371720c3f26ae801446b680d567c126a8893b07ec5",
+  "runnerSha256": "0329155d4bb1a78bfc0647ff937f7a9b76e77179cb4697dfc93f5b49942cbf2e",
+  "scope": "Actual private production method; reflection included. Host JVM only; no model, Android device, battery or whole-app performance claim.",
+  "design": "Rotated sequential process order; each variant occupies each position once. Fixed synthetic inputs; 300 warmup calls then five samples of 200 calls per workload."
+}

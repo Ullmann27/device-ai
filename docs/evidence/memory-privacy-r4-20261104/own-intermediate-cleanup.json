@@ -1,0 +1,20 @@
+{
+  "beforeFreeBytes": 950018048,
+  "removed": [
+    "/workspace/scratch/624aeb26d481/qa-r4/initial-red/classes",
+    "/workspace/scratch/624aeb26d481/qa-r4/initial-red/sources",
+    "/workspace/scratch/624aeb26d481/qa-r4/credential-green/classes",
+    "/workspace/scratch/624aeb26d481/qa-r4/credential-green/sources",
+    "/workspace/scratch/624aeb26d481/qa-r4/privacy-green/classes",
+    "/workspace/scratch/624aeb26d481/qa-r4/privacy-green/sources",
+    "/workspace/scratch/624aeb26d481/qa-r4/edge-holdout-before/classes",
+    "/workspace/scratch/624aeb26d481/qa-r4/edge-holdout-before/sources",
+    "/workspace/scratch/624aeb26d481/qa-r4/combined-holdout-green/classes",
+    "/workspace/scratch/624aeb26d481/qa-r4/combined-holdout-green/sources",
+    "/workspace/scratch/624aeb26d481/qa-r4/optimized-green/classes",
+    "/workspace/scratch/624aeb26d481/qa-r4/optimized-green/sources",
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build"
+  ],
+  "reason": "Reproducible own build/cache only; raw logs and immutable source manifests already committed and public.",
+  "afterFreeBytes": 1375694848
+}

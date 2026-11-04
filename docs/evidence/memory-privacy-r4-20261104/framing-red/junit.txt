@@ -1,0 +1,48 @@
+JUnit version 4.13.2
+.E.E.E.E..E.E.E
+Time: 0.163
+There were 7 failures:
+1) sanitizedTabsCannotSeparateAuthorizationFromItsCredential(at.heinz.deviceai.cognitive.ContextCredentialFramingTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.ContextCredentialFramingTest.sanitizedTabsCannotSeparateAuthorizationFromItsCredential(ContextCredentialFramingTest.kt:24)
+2) researchSnippetPreservesItsFollowingNegation(at.heinz.deviceai.cognitive.ContextCredentialFramingTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.ContextCredentialFramingTest.researchSnippetPreservesItsFollowingNegation(ContextCredentialFramingTest.kt:42)
+3) literalDisplayMarkersInsideCredentialsCannotEscapeRedaction(at.heinz.deviceai.cognitive.ContextCredentialFramingTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.ContextCredentialFramingTest.literalDisplayMarkersInsideCredentialsCannotEscapeRedaction(ContextCredentialFramingTest.kt:51)
+4) malformedResearchTitlesCannotConsumeTheSnippet(at.heinz.deviceai.cognitive.ContextCredentialFramingTest)
+java.lang.AssertionError: expected java.lang.IllegalStateException to be thrown, but nothing was thrown
+	at org.junit.Assert.assertThrows(Assert.java:1028)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at at.heinz.deviceai.cognitive.ContextCredentialFramingTest.malformedResearchTitlesCannotConsumeTheSnippet(ContextCredentialFramingTest.kt:72)
+5) memoryLineBreaksPreserveTheWholeFollowingNegation(at.heinz.deviceai.cognitive.ContextCredentialFramingTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.ContextCredentialFramingTest.memoryLineBreaksPreserveTheWholeFollowingNegation(ContextCredentialFramingTest.kt:16)
+6) contradictionProjectionPreservesItsFollowingNegation(at.heinz.deviceai.cognitive.ContextCredentialFramingTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.ContextCredentialFramingTest.contradictionProjectionPreservesItsFollowingNegation(ContextCredentialFramingTest.kt:34)
+7) malformedCredentialsCannotCloseInAnotherMemoryField(at.heinz.deviceai.cognitive.ContextCredentialFramingTest)
+java.lang.AssertionError: expected java.lang.IllegalStateException to be thrown, but nothing was thrown
+	at org.junit.Assert.assertThrows(Assert.java:1028)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at at.heinz.deviceai.cognitive.ContextCredentialFramingTest.malformedCredentialsCannotCloseInAnotherMemoryField(ContextCredentialFramingTest.kt:60)
+
+FAILURES!!!
+Tests run: 8,  Failures: 7
+
