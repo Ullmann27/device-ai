@@ -93,8 +93,10 @@ class ChiefWorkerPool(
         fun report(status: WorkerStatus, summary: String) {
             if (!slot.reported.compareAndSet(false, true)) return
             val ms = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started)
-            slots.remove(slot.brief.id)
-            runCatching { slot.onReport(WorkerReport(slot.brief.id, status, at.heinz.deviceai.ToolOutputCap.cap(summary), ms)) }
+            // Deliver the report before the slot disappears, so awaitIdle() never returns while a
+            // report (e.g. a routine's mailbox post) is still in flight.
+            try { runCatching { slot.onReport(WorkerReport(slot.brief.id, status, at.heinz.deviceai.ToolOutputCap.cap(summary), ms)) } }
+            finally { slots.remove(slot.brief.id) }
         }
         if (slot.cancelled.get()) return report(WorkerStatus.CANCELLED, "Abgebrochen, bevor der Auftrag startete.")
         try {
