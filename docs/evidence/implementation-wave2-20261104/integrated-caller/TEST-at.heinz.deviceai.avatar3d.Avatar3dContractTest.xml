@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar3d.Avatar3dContractTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:26:21" hostname="04c8b0ba7ea6" time="0.719">
+  <properties/>
+  <testcase name="interruptionAndOldUtteranceUseExistingReducer" classname="at.heinz.deviceai.avatar3d.Avatar3dContractTest" time="0.0"/>
+  <testcase name="allVisemesUseNamesEvenWhenAssetOrderChanges" classname="at.heinz.deviceai.avatar3d.Avatar3dContractTest" time="0.007"/>
+  <testcase name="validBinaryMetadataAndMissingTruncatedInvalidAssets" classname="at.heinz.deviceai.avatar3d.Avatar3dContractTest" time="0.056"/>
+  <testcase name="focusPreservesHeadAcrossNarrowPhoneAndWideFold" classname="at.heinz.deviceai.avatar3d.Avatar3dContractTest" time="0.01"/>
+  <testcase name="malformedSkinIndicesMorphAliasingAndEmptyShapeAreRejected" classname="at.heinz.deviceai.avatar3d.Avatar3dContractTest" time="0.06"/>
+  <testcase name="gazeIsViewerRightAndUpAndNeverNaN" classname="at.heinz.deviceai.avatar3d.Avatar3dContractTest" time="0.0"/>
+  <testcase name="packagedHolographicBustRetainsRigAndFramesActualNeck" classname="at.heinz.deviceai.avatar3d.Avatar3dContractTest" time="0.579"/>
+  <testcase name="reducedMotionClosesSpeechAndBlink" classname="at.heinz.deviceai.avatar3d.Avatar3dContractTest" time="0.0"/>
+  <testcase name="binaryNonFiniteAndNegativeScaleRejected" classname="at.heinz.deviceai.avatar3d.Avatar3dContractTest" time="0.003"/>
+  <testcase name="visemesCrossfadeOverSeventyMillisecondsAndBlinkLastsFifteenHundredths" classname="at.heinz.deviceai.avatar3d.Avatar3dContractTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

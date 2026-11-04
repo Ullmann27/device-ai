@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumBotTaskRoutingUiTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:33:10" hostname="04c8b0ba7ea6" time="0.329">
+  <properties/>
+  <testcase name="busyTaskDoesNotAcceptAnotherAssignmentOrCancelTheCurrentWork" classname="at.heinz.deviceai.ContinuumBotTaskRoutingUiTest" time="0.08"/>
+  <testcase name="staleProfileRefusalKeepsTheWholeTaskTextAvailable" classname="at.heinz.deviceai.ContinuumBotTaskRoutingUiTest" time="0.036"/>
+  <testcase name="changedSessionCannotShowLateCodingReview" classname="at.heinz.deviceai.ContinuumBotTaskRoutingUiTest" time="0.05"/>
+  <testcase name="codingAssignmentPrefillsCompleteExistingReviewWithoutRunningAnything" classname="at.heinz.deviceai.ContinuumBotTaskRoutingUiTest" time="0.121"/>
+  <testcase name="missingModelRefusesTaskWithoutConsumingTheDraftOrChangingBot" classname="at.heinz.deviceai.ContinuumBotTaskRoutingUiTest" time="0.04"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

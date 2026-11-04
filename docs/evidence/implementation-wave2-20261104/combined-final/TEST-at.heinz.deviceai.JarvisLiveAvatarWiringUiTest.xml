@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.JarvisLiveAvatarWiringUiTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:36:32" hostname="04c8b0ba7ea6" time="1.469">
+  <properties/>
+  <testcase name="foldSlotContainsTheSeparateHeadAndOrbAreas" classname="at.heinz.deviceai.JarvisLiveAvatarWiringUiTest" time="0.13"/>
+  <testcase name="heightOnlyWindowResizeUpdatesTheViewportWithoutReplacingLiveOwners" classname="at.heinz.deviceai.JarvisLiveAvatarWiringUiTest" time="0.138"/>
+  <testcase name="crossingThe600DpBoundaryReassignsNavigationEvenForASmallWidthDelta" classname="at.heinz.deviceai.JarvisLiveAvatarWiringUiTest" time="0.198"/>
+  <testcase name="dockingAndDetachingDoNotRewriteTheSaved3dChoice" classname="at.heinz.deviceai.JarvisLiveAvatarWiringUiTest" time="0.057"/>
+  <testcase name="shellUsesTheOneSurfaceReceivingActivitySignals" classname="at.heinz.deviceai.JarvisLiveAvatarWiringUiTest" time="0.139"/>
+  <testcase name="actualDirectorSpeechReachesTheVisibleHead" classname="at.heinz.deviceai.JarvisLiveAvatarWiringUiTest" time="0.151"/>
+  <testcase name="resizingTheSlotPreservesTheSurfaceAndCurrentSpeech" classname="at.heinz.deviceai.JarvisLiveAvatarWiringUiTest" time="0.129"/>
+  <testcase name="shortMediumWindowOwnsOneSidebarAndNoPhoneBottomNavigation" classname="at.heinz.deviceai.JarvisLiveAvatarWiringUiTest" time="0.114"/>
+  <testcase name="separateRegionsPositionTheNativeViewportAndMemoryTargetOnTheSameGrid" classname="at.heinz.deviceai.JarvisLiveAvatarWiringUiTest" time="0.048"/>
+  <testcase name="semanticMenuDestinationsOpenTheirNamedScreensWithoutStartingATurn" classname="at.heinz.deviceai.JarvisLiveAvatarWiringUiTest" time="0.362"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

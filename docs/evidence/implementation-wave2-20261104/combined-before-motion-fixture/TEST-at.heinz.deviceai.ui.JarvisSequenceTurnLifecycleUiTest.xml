@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:33:16" hostname="04c8b0ba7ea6" time="0.343">
+  <properties/>
+  <testcase name="memoryRecallRemainsIndependentOfCompletedTurns" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.061"/>
+  <testcase name="delayedCommandCannotReopenACompletedTurn" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.035"/>
+  <testcase name="bootEventDoesNotBlockTheFirstWorker" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.03"/>
+  <testcase name="lateTimelineCannotReopenACompletedTurn" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.023"/>
+  <testcase name="aNewWorkerCanStartAfterACompletedTurn" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.023"/>
+  <testcase name="recentCompletionsRemainClosedAfterALongSession" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.026"/>
+  <testcase name="motionPauseKeepsCompletedTurnsClosed" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.023"/>
+  <testcase name="motionPauseDoesNotDeclareActiveWorkCompleted" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.027"/>
+  <testcase name="delayedOldCommandCannotDisplaceTheCurrentTurn" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.029"/>
+  <testcase name="navigationEventDoesNotBlockTheFirstWorker" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.036"/>
+  <testcase name="lateCallbackFromANonvisibleCompletedTurnIsDropped" classname="at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest" time="0.03"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

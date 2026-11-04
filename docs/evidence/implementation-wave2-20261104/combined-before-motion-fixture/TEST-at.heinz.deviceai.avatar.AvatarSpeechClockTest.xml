@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar.AvatarSpeechClockTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:33:13" hostname="04c8b0ba7ea6" time="0.001">
+  <properties/>
+  <testcase name="duplicateStartCannotClearAnAlreadyVisibleWord" classname="at.heinz.deviceai.avatar.AvatarSpeechClockTest" time="0.0"/>
+  <testcase name="aConstantAudioEnvelopeDependsOnElapsedTimeRatherThanCallbackCount" classname="at.heinz.deviceai.avatar.AvatarSpeechClockTest" time="0.0"/>
+  <testcase name="anEndedDifferentUtteranceCannotAdvanceTheCurrentSpeechClock" classname="at.heinz.deviceai.avatar.AvatarSpeechClockTest" time="0.0"/>
+  <testcase name="aCueFromAnotherUtteranceCannotAdvanceTheCurrentSpeechClock" classname="at.heinz.deviceai.avatar.AvatarSpeechClockTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

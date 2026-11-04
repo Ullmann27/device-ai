@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:26:22" hostname="04c8b0ba7ea6" time="0.003">
+  <properties/>
+  <testcase name="vowelTransitionAtTheSameElapsedTimeDoesNotDependOnFrameCount" classname="at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest" time="0.0"/>
+  <testcase name="bilabialOnsetClosesOutgoingVowelsAndMeasuredJawTogether" classname="at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest" time="0.001"/>
+  <testcase name="bilabialClosureAlsoWinsAtAnUnchangedRenderTimestamp" classname="at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest" time="0.0"/>
+  <testcase name="renderingTheSameInstantTwiceDoesNotAdvanceAVowelTransition" classname="at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

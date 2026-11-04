@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar.AvatarPortedPartsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:33:13" hostname="04c8b0ba7ea6" time="0.001">
+  <properties/>
+  <testcase name="poseReducerGivesRenderersOneBoundedPose" classname="at.heinz.deviceai.avatar.AvatarPortedPartsTest" time="0.0"/>
+  <testcase name="germanDiphthongsBecomeTwoVisemes" classname="at.heinz.deviceai.avatar.AvatarPortedPartsTest" time="0.0"/>
+  <testcase name="wordRangeFallbackWhenTtsDeliversNoPcm" classname="at.heinz.deviceai.avatar.AvatarPortedPartsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
