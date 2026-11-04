@@ -1,0 +1,25 @@
+id	label	prompt
+dev-0001	2	Lass Ablauf.txt zu und recherchiere über Arbeitspausen.
+dev-0002	2	Öffne Ablauf.txt. Änderung: Stattdessen über Arbeitspausen recherchieren.
+dev-0003	0	Bitte unterlasse das Öffnen von Ablauf.txt.
+dev-0004	1	Ich möchte Pruefbogen.txt sehen. Öffne sie bitte.
+dev-0005	1	Ich möchte Ablauf.txt sehen. Öffne sie bitte.
+dev-0006	0	Bitte unterlasse das Öffnen von Pruefbogen.txt.
+dev-0007	2	Sammle Informationen zum Thema Dateiformate.
+dev-0008	3	Halte fest: Der Entwurf bleibt vorerst unverändert.
+dev-0009	1	Notiere nichts. Änderung des Auftrags: Ablauf.txt öffnen.
+dev-0010	3	Recherchiere nicht. Neuer Auftrag: Die Zeichnung braucht eine zweite Prüfung. Bitte als Notiz sichern.
+dev-0011	2	Lass Pruefbogen.txt zu und recherchiere über Dateiformate.
+dev-0012	1	Keine Recherche zum Thema Dateiformate. Mach nur Pruefbogen.txt auf.
+dev-0013	0	Der Auftrag zum Thema Arbeitspausen ist gestrichen. Keine Aktion.
+dev-0014	3	Halte fest: Die Zeichnung braucht eine zweite Prüfung.
+dev-0015	3	Recherchiere nicht. Neuer Auftrag: Der Entwurf bleibt vorerst unverändert. Bitte als Notiz sichern.
+dev-0016	1	Keine Recherche zum Thema Arbeitspausen. Mach nur Ablauf.txt auf.
+dev-0017	2	Öffne Pruefbogen.txt. Änderung: Stattdessen über Dateiformate recherchieren.
+dev-0018	3	Lass die Dateien geschlossen. Speichere als Gedankenstütze: Die Zeichnung braucht eine zweite Prüfung.
+dev-0019	2	Sammle Informationen zum Thema Arbeitspausen.
+dev-0020	0	Der Auftrag zum Thema Dateiformate ist gestrichen. Keine Aktion.
+dev-0021	1	Notiere nichts. Änderung des Auftrags: Pruefbogen.txt öffnen.
+dev-0022	0	Notiere: Der Entwurf bleibt vorerst unverändert. Widerruf: nichts ausführen.
+dev-0023	0	Notiere: Die Zeichnung braucht eine zweite Prüfung. Widerruf: nichts ausführen.
+dev-0024	3	Lass die Dateien geschlossen. Speichere als Gedankenstütze: Der Entwurf bleibt vorerst unverändert.

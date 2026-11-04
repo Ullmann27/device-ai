@@ -1,0 +1,162 @@
+{
+  "files": {
+    "dev.tsv": {
+      "labelCounts": {
+        "0": 6,
+        "1": 6,
+        "2": 6,
+        "3": 6
+      },
+      "objectGroups": 2,
+      "patternCounts": {
+        "cancellation": 2,
+        "correction": 8,
+        "direct": 6,
+        "negated_distractor": 6,
+        "negation": 2
+      },
+      "promptUtf8BytesMax": 104,
+      "promptUtf8BytesMin": 44,
+      "rows": 24,
+      "sha256": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe",
+      "split": "dev",
+      "templateFamilyIds": [
+        "dev-0-01",
+        "dev-0-02",
+        "dev-0-03",
+        "dev-1-01",
+        "dev-1-02",
+        "dev-1-03",
+        "dev-2-01",
+        "dev-2-02",
+        "dev-2-03",
+        "dev-3-01",
+        "dev-3-02",
+        "dev-3-03"
+      ]
+    },
+    "test.sealed.tsv": {
+      "labelCounts": {
+        "0": 12,
+        "1": 12,
+        "2": 12,
+        "3": 12
+      },
+      "objectGroups": 3,
+      "patternCounts": {
+        "correction": 12,
+        "direct": 18,
+        "negated_distractor": 9,
+        "negation": 9
+      },
+      "promptUtf8BytesMax": 132,
+      "promptUtf8BytesMin": 54,
+      "rows": 48,
+      "sha256": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+      "split": "test",
+      "templateFamilyIds": [
+        "test-0-01",
+        "test-0-02",
+        "test-0-03",
+        "test-0-04",
+        "test-1-01",
+        "test-1-02",
+        "test-1-03",
+        "test-1-04",
+        "test-2-01",
+        "test-2-02",
+        "test-2-03",
+        "test-2-04",
+        "test-3-01",
+        "test-3-02",
+        "test-3-03",
+        "test-3-04"
+      ]
+    },
+    "train.tsv": {
+      "labelCounts": {
+        "0": 32,
+        "1": 32,
+        "2": 32,
+        "3": 32
+      },
+      "objectGroups": 4,
+      "patternCounts": {
+        "cancellation": 12,
+        "correction": 32,
+        "direct": 36,
+        "negated_distractor": 24,
+        "negation": 12,
+        "request": 12
+      },
+      "promptUtf8BytesMax": 87,
+      "promptUtf8BytesMin": 28,
+      "rows": 128,
+      "sha256": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b",
+      "split": "train",
+      "templateFamilyIds": [
+        "train-0-01",
+        "train-0-02",
+        "train-0-03",
+        "train-0-04",
+        "train-0-05",
+        "train-0-06",
+        "train-0-07",
+        "train-0-08",
+        "train-1-01",
+        "train-1-02",
+        "train-1-03",
+        "train-1-04",
+        "train-1-05",
+        "train-1-06",
+        "train-1-07",
+        "train-1-08",
+        "train-2-01",
+        "train-2-02",
+        "train-2-03",
+        "train-2-04",
+        "train-2-05",
+        "train-2-06",
+        "train-2-07",
+        "train-2-08",
+        "train-3-01",
+        "train-3-02",
+        "train-3-03",
+        "train-3-04",
+        "train-3-05",
+        "train-3-06",
+        "train-3-07",
+        "train-3-08"
+      ]
+    }
+  },
+  "format": {
+    "encoding": "UTF-8",
+    "header": "id\tlabel\tprompt",
+    "lineEnding": "LF",
+    "modelInput": "Auftrag: {prompt}\nAktion:",
+    "target": "one label digit followed by EOS"
+  },
+  "generatorSha256": "4682b2d34d7fcf09dc87918e123c2a08f24833928c2df11f5f319dee6445ea6c",
+  "labelMap": {
+    "0": "keine Handlung oder Abbruch",
+    "1": "Datei öffnen",
+    "2": "Informationen suchen",
+    "3": "Notiz merken"
+  },
+  "limitations": [
+    "Only four predefined intents; no tool execution or authorization.",
+    "Template and object separation is not proof of open-domain generalization.",
+    "Sealing is a preregistered no-peeking rule, not cryptographic secrecy."
+  ],
+  "origin": "self-authored German sentences; no downloaded corpus or model-generated examples",
+  "seed": 20261104,
+  "validation": {
+    "balancedLabels": true,
+    "normalizedPromptsDisjoint": true,
+    "objectValuesDisjoint": true,
+    "sentenceTemplatesDisjoint": true,
+    "testAccessBeforeFreeze": "hashes and metadata only"
+  },
+  "version": "lm1-intent-study-v1"
+}
