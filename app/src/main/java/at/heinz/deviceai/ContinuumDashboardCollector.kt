@@ -179,7 +179,9 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 segments = storage?.segments.orEmpty(),
                 activeSources = sources,
                 totalSources = sources,
-                syncLabel = publicStudyLabel
+                // A scheduled research job is not evidence of a synchronization service.
+                syncLabel = ContinuumDashboardState.UNKNOWN,
+                researchLabel = publicStudyLabel
             ),
             development = ContinuumDashboardState.DevelopmentStatus(
                 activeProjects = backlog?.let { active }, runningTasks = backlog?.let { running }, errors = backlog?.let { failed },

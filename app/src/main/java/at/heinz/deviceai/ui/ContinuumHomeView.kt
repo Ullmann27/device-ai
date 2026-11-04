@@ -27,6 +27,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private var compactPresentation = presentationPrefs.getBoolean("compact", false)
     private var configuredWidth = 0f
     private var configuredHeight = 0f
+    private var externalBottomBarHeightDp = 0f
     private var configuredWide = false
     private var configuredNavigation = false
 
@@ -44,7 +45,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
         compactPresentation = compact
         presentationPrefs.edit().putBoolean("compact", compact).apply()
-        configure(configuredWidth, configuredWide, offset, configuredNavigation, configuredHeight)
+        configure(configuredWidth, configuredWide, offset, configuredNavigation, configuredHeight, externalBottomBarHeightDp)
         views.values.forEach { it.refresh() }
         views[slot]?.requestFocus()
     }
@@ -134,6 +135,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             field = value
             views.values.forEach { it.refresh() }
             if (jarvisShellStage) jarvisShell.tiles = shellTiles(value)
+            shellForeground.invalidate()
+            refreshShellActionDescriptions()
             updateWaveAnimation()
         }
 
@@ -144,8 +147,49 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
      * targets and tile destinations (docs/ARCHITEKTUR-JARVIS.md, "Fehlt an der Schnittstelle").
      */
     val jarvisShell = JarvisShellView(context)
+    private val shellForeground = object : View(context) {
+        init {
+            tag = "jarvis-foreground"
+            isClickable = false
+            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+            translationZ = density * .5f
+        }
+        override fun onDraw(canvas: Canvas) { jarvisShell.drawForeground(canvas) }
+    }
     var jarvisShellStage = presentationPrefs.getBoolean("jarvis-shell", false)
         private set
+
+    /** Existing Activity navigator, including explicit microphone / camera / appearance actions. */
+    var onNavigateTarget: ((String) -> Unit)? = null
+        set(value) { field = value; refreshShellActionDescriptions() }
+    private var selectedJarvisTarget = "home"
+    private var pressedJarvisTarget: String? = null
+    private val shellActions = linkedMapOf<String, ShellActionView>()
+    private var shellActionBounds: Map<String, JarvisShellLayout.Box> = emptyMap()
+    private val shellRailList = ShellRailList(context)
+    private val shellRailScroll = android.widget.ScrollView(context).apply {
+        isFillViewport = true
+        isVerticalScrollBarEnabled = false
+        clipToPadding = true
+        contentDescription = "Navigation"
+        addView(shellRailList, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
+    }
+
+    /** Selection follows the existing navigator; it never starts an agent or a model operation. */
+    fun selectJarvisTarget(target: String) {
+        selectedJarvisTarget = target
+        shellActions.values.forEach { it.isSelected = it.target == target }
+        shellRailList.refreshSelection()
+        if (jarvisShellStage) jarvisShell.tiles = shellTiles(state)
+    }
+
+    private fun openJarvisTarget(target: String) {
+        val native = onNavigateTarget
+        val route = JarvisShellContent.routes[target]
+        if (native == null && route == null) return
+        if (route != null) selectJarvisTarget(target)
+        if (native != null) native(target) else onSlot(requireNotNull(route), 0f, 0f)
+    }
 
     fun setJarvisShellStage(enabled: Boolean) {
         jarvisShellStage = enabled
@@ -156,7 +200,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private fun applyShellStage() {
         jarvisShell.visibility = if (jarvisShellStage) View.VISIBLE else View.GONE
+        shellForeground.visibility = jarvisShell.visibility
         views.values.forEach { it.visibility = if (jarvisShellStage) View.GONE else View.VISIBLE }
+        shellActions.values.forEach { it.visibility = if (jarvisShellStage) View.VISIBLE else View.GONE }
+        shellRailScroll.visibility = if (jarvisShellStage && shellRailScroll.width > 0) View.VISIBLE else View.GONE
         applyAvatarSlot()
     }
 
@@ -193,7 +240,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     /** Children added by a docked renderer (attach): sized to the slot; the renderer positions them via x/y. */
     private fun isForeign(child: View) = child !== jarvisShell && child !== hologram && child !== avatarPlaceholder &&
-        child !== transientCard && child !in views.values
+        child !== shellForeground && child !== transientCard && child !== shellRailScroll && child !in views.values && child !in shellActions.values
 
     private fun layoutForeign() {
         val w = avatarRect.width(); val h = avatarRect.height()
@@ -255,20 +302,20 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     init {
         setWillNotDraw(false)
-        jarvisShell.content = JarvisShellContent.forState({ state }, grid = { jarvisShell.shell?.grid })
+        jarvisShell.content = JarvisShellContent.forState({ state }, grid = { jarvisShell.shell?.grid },
+            shell = { jarvisShell.shell }) + mapOf(
+                JarvisShellLayout.Slot.NAV_RAIL to JarvisShellRenderer.SlotContent { _, _ -> },
+                JarvisShellLayout.Slot.AVATAR to JarvisShellRenderer.SlotContent { _, _ -> })
+        jarvisShell.onFrameDrawn = { shellForeground.invalidate() }
         jarvisShell.tiles = shellTiles(state)
-        jarvisShell.setOnTouchListener { v, e ->
-            if (e.actionMasked == android.view.MotionEvent.ACTION_UP) {
-                val shell = jarvisShell.shell
-                val target = shell?.let { JarvisShellContent.hitTarget(it, jarvisShell.tiles, e.x / density, e.y / density) }
-                val route = target?.let { JarvisShellContent.routes[it] }
-                if (route != null) { v.performClick(); onSlot(route, 0f, 0f) }
-            }
-            true
-        }
+        // Drawing and hit targets are separate. Real Views own DOWN/MOVE/CANCEL/UP, keyboard focus and TalkBack.
+        jarvisShell.isClickable = false
+        jarvisShell.importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
         addView(jarvisShell, 0)
         addView(hologram)
         addView(avatarPlaceholder)
+        addView(shellForeground)
+        addView(shellRailScroll)
         applyShellStage()
     }
 
@@ -277,14 +324,17 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
      * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.
      */
     fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,
-                  windowHeightDp: Float = 0f) {
+                  windowHeightDp: Float = 0f, externalBottomBarHeightDp: Float = 0f) {
+        require(externalBottomBarHeightDp.isFinite() && externalBottomBarHeightDp >= 0f)
         configuredWidth = windowWidthDp
         configuredHeight = windowHeightDp
+        val bottomChanged = this.externalBottomBarHeightDp != externalBottomBarHeightDp
+        this.externalBottomBarHeightDp = externalBottomBarHeightDp
         configuredWide = wide
         configuredNavigation = includeNavigation
         val spec = ContinuumReferenceLayout.create(windowWidthDp, if (wide) windowHeightDp else 0f,
             wide, textScale, compactPresentation)
-        if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return
+        if (spec == layoutSpec && offset == railOffset && views.isNotEmpty() && !bottomChanged) return
         layoutSpec = spec
         offset = railOffset
         jarvisShell.contentRailInsetDp = offset
@@ -305,6 +355,22 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         applyShellStage()
         requestLayout()
         updateWaveAnimation()
+    }
+
+    /**
+     * Updates only the available window height after system insets, before the external bottom navigation.
+     * The shell reserves that navigation exactly once. No child, renderer, speech session or legacy layout is
+     * rebuilt; the next measurement applies the current profile to the existing live surface and controls.
+     */
+    fun updateAvailableViewport(heightDp: Float) {
+        require(heightDp.isFinite() && heightDp > 0f)
+        // Extremely short transient windows still expose scrollable content with usable controls.
+        val available = heightDp.coerceAtLeast(160f)
+        val viewport = (available - externalBottomBarHeightDp).coerceAtLeast(160f)
+        if (configuredHeight == available && jarvisShell.viewportHeightDp == viewport) return
+        configuredHeight = available
+        jarvisShell.viewportHeightDp = viewport
+        requestLayout()
     }
 
     val wide: Boolean get() = layoutSpec?.wide == true
@@ -365,10 +431,23 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
         }
-        // The shell stage is one window tall (no scrolling page underneath).
-        val h = if (jarvisShellStage && configuredHeight > 0f) (configuredHeight * density).toInt()
+        // Responsive phone / medium / large-type content scrolls through the existing Activity ScrollView.
+        // Keep the visible height separate, otherwise measuring an expanded page would grow it on every pass.
+        val measuredLimitDp = MeasureSpec.getSize(heightMeasureSpec) / density
+        val viewport = when {
+            MeasureSpec.getMode(heightMeasureSpec) != MeasureSpec.UNSPECIFIED && measuredLimitDp >= 160f ->
+                if (configuredHeight >= 160f) minOf(configuredHeight, measuredLimitDp) else measuredLimitDp
+            configuredHeight >= 160f -> configuredHeight
+            else -> maxOf(160f, contentHeight / density)
+        } - externalBottomBarHeightDp
+        jarvisShell.viewportHeightDp = viewport.coerceAtLeast(160f)
+        val h = if (jarvisShellStage && width / density >= 240f)
+            (JarvisShellLayout.forContent(width / density, jarvisShell.viewportHeightDp,
+                resources.configuration.fontScale, jarvisShell.foldRail, offset).height * density).toInt()
             else maxOf(contentHeight, suggestedMinimumHeight)
         jarvisShell.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
+        shellForeground.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
+        if (jarvisShellStage) shellGeometry(width, h)?.let(::measureShellActions)
         updateCockpitRegions(width, h)
         if (jarvisShellStage && hologram.parent === this) shellAvatarBox(width, h)?.let { box ->
             hologram.measure(MeasureSpec.makeMeasureSpec((box.right * density).toInt() - (box.left * density).toInt(), MeasureSpec.EXACTLY),
@@ -381,9 +460,16 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         setMeasuredDimension(width, h)
     }
 
-    /** Tiles with ref5 subtitles when the Fold7 grid is active (Kern, §11). */
+    /** The same ten destinations and subtitles in every responsive composition. */
     private fun shellTiles(s: ContinuumDashboardState): List<JarvisTile> =
-        JarvisShellContent.tiles(s, System.currentTimeMillis(), subtitles = jarvisShell.shell?.ref5Grid == true)
+        JarvisShellContent.tiles(s, System.currentTimeMillis(), subtitles = true).map { tile ->
+            tile.copy(controlState = when {
+                tile.target !in JarvisShellContent.routes -> JarvisControlState.DISABLED
+                tile.target == pressedJarvisTarget -> JarvisControlState.PRESSED
+                tile.target == selectedJarvisTarget -> JarvisControlState.SELECTED
+                else -> JarvisControlState.NORMAL
+            })
+        }
 
     /**
      * Avatar slot of the shell for the given pixel size (dp geometry from JarvisShellLayout). In the ref5 grid
@@ -396,30 +482,217 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private fun updateCockpitRegions(widthPx: Int, heightPx: Int) {
         if (hologram.parent !== this) return
         val shell = if (jarvisShellStage) shellGeometry(widthPx, heightPx) else null
-        val grid = shell?.grid
         val stage = shell?.get(JarvisShellLayout.Slot.AVATAR)
-        if (grid == null || stage == null) {
+        val head = shell?.headBounds
+        val orb = shell?.orbBounds
+        if (stage == null || head == null || orb == null) {
             hologram.setCockpitRegions(null, null)
             return
         }
         val originX = (stage.left * density).toInt(); val originY = (stage.top * density).toInt()
-        fun local(area: JarvisCockpitGrid.Area): android.graphics.Rect {
-            val box = grid[area]
+        fun local(box: JarvisShellLayout.Box): android.graphics.Rect {
             return android.graphics.Rect((box.left * density).toInt() - originX, (box.top * density).toInt() - originY,
                 (box.right * density).toInt() - originX, (box.bottom * density).toInt() - originY)
         }
-        val head = local(JarvisCockpitGrid.Area.HEAD)
-        val userCard = local(JarvisCockpitGrid.Area.USER_CARD)
-        // HEAD includes the reference's user card on the left. Keep the portrait to its right so no text covers it.
-        head.left = maxOf(head.left, userCard.right + (6f * grid.unit * density).toInt())
-        hologram.setCockpitRegions(head, local(JarvisCockpitGrid.Area.ORB))
+        // The latest reference has no owner card reserving half the face viewport.
+        hologram.setCockpitRegions(local(head), local(orb))
     }
 
     private fun shellGeometry(widthPx: Int, heightPx: Int): JarvisShellLayout.Shell? {
-        val w = widthPx / density; val h = heightPx / density
-        if (w < 240f || h < 320f) return null
-        return JarvisShellLayout.forContent(w, h, resources.configuration.fontScale, jarvisShell.foldRail,
+        val w = widthPx / density
+        val viewport = jarvisShell.viewportHeightDp.takeIf { it >= 160f } ?: (heightPx / density)
+        if (w < 240f || viewport < 160f) return null
+        return JarvisShellLayout.forContent(w, viewport, resources.configuration.fontScale, jarvisShell.foldRail,
             externalRailWidthDp = offset)
+    }
+
+    private data class ShellActionSpec(val key: String, val target: String, val label: String,
+                                       val box: JarvisShellLayout.Box)
+    private var shellRailBounds: JarvisShellLayout.Box? = null
+
+    /** One real focusable View per visible action; the painter is never the input dispatcher. */
+    private fun measureShellActions(shell: JarvisShellLayout.Shell) {
+        val actions = ArrayList<ShellActionSpec>()
+        fun add(key: String, target: String, label: String, box: JarvisShellLayout.Box?) {
+            if (box != null && box.width > 0f && box.height > 0f) actions += ShellActionSpec(key, target, label, box)
+        }
+        val tiles = shellTiles(state)
+        shell.tileBoxes().forEachIndexed { i, box ->
+            tiles.getOrNull(i)?.let { add("tile:${it.target}", it.target, it.label, box) }
+        }
+        shell[JarvisShellLayout.Slot.DIALOG]?.let { b ->
+            add("dialog:conversation", "chat", "JARVIS: Konversation öffnen",
+                JarvisShellLayout.Box(b.left, b.top, b.right, b.bottom - 55f))
+            val controls = listOf("voice-input" to "Mikrofon starten",
+                "camera-settings" to "Kamera und Wahrnehmung: Einstellungen", "avatar-appearance" to "Avatar-Darstellung")
+            shell.dialogControlBoxes().forEachIndexed { i, box ->
+                add("dialog:${controls[i].first}", controls[i].first, controls[i].second, box)
+            }
+        }
+        add("input:conversation", "chat", "Konversation öffnen", shell[JarvisShellLayout.Slot.INPUT])
+        add("camera:settings", "camera-settings", "Kamera und Wahrnehmung: Einstellungen", shell[JarvisShellLayout.Slot.CAMERA_STATUS])
+        val panelTargets = listOf(JarvisShellLayout.Slot.ROW_AGENTS to "agents", JarvisShellLayout.Slot.ROW_TASKS to "tasks",
+            JarvisShellLayout.Slot.ROW_MEMORY to "memory", JarvisShellLayout.Slot.ROW_MODEL to "model-management",
+            JarvisShellLayout.Slot.COCKPIT_SECONDARY to "system", JarvisShellLayout.Slot.STATUS to "system")
+        panelTargets.forEach { (slot, target) ->
+            val label = if (target == "model-management") "Lokales Modell und Gerät"
+                else JarvisTiles.railNav.first { it.target == target }.label
+            add("panel:$slot", target, label, shell[slot])
+        }
+        shell.grid?.areas?.get(JarvisCockpitGrid.Area.BRAND)?.let { box ->
+            val h = maxOf(48f, box.height)
+            val top = maxOf(0f, box.centerY - h / 2f)
+            add("header:home", "home", "Device AI Continuum: Home", box.copy(top = top, bottom = top + h))
+        }
+        shell.grid?.areas?.get(JarvisCockpitGrid.Area.MODE_PILL)?.let { box ->
+            val h = maxOf(48f, box.height)
+            val top = maxOf(0f, box.centerY - h / 2f)
+            add("header:mode", "avatar-appearance", "JARVIS Mode: Darstellung", box.copy(top = top, bottom = top + h))
+        }
+        shell.headerActionBoxes().forEach { (target, box) ->
+            val label = when (target) { "notifications" -> "Benachrichtigungen"; "settings" -> "Einstellungen"; else -> "Mehr" }
+            add("header:$target", target, label, box)
+        }
+        shell[JarvisShellLayout.Slot.BOTTOM_NAV]?.let { b ->
+            val items = JarvisTiles.bottomNav
+            val cell = b.width / items.size
+            items.forEachIndexed { i, item ->
+                add("bottom:${item.target}", item.target, item.label,
+                    JarvisShellLayout.Box(b.left + i * cell, b.top, b.left + (i + 1) * cell, b.bottom))
+            }
+        }
+        val desired = actions.map { it.key }.toSet()
+        shellActions.keys.filter { it !in desired }.forEach { key -> shellActions.remove(key)?.let(::removeView) }
+        shellActionBounds = actions.associate { it.key to it.box }
+        actions.forEach { spec ->
+            val view = shellActions.getOrPut(spec.key) {
+                ShellActionView(context, spec.key, spec.target, spec.label).also { addView(it) }
+            }
+            view.visibility = View.VISIBLE
+            view.refresh()
+            val px = spec.box.width * density
+            val py = spec.box.height * density
+            view.measure(MeasureSpec.makeMeasureSpec(px.toInt().coerceAtLeast(1), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(py.toInt().coerceAtLeast(1), MeasureSpec.EXACTLY))
+        }
+        shellRailBounds = shell[JarvisShellLayout.Slot.NAV_RAIL]
+        shellRailScroll.visibility = if (shellRailBounds != null) View.VISIBLE else View.GONE
+        shellRailBounds?.let { box ->
+            shellRailList.labelled = shell.rail != JarvisShellLayout.Rail.ICONS
+            shellRailScroll.translationZ = density
+            shellRailScroll.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
+        }
+    }
+
+    private fun layoutShellActions() {
+        shellActionBounds.forEach { (key, box) ->
+            shellActions[key]?.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                (box.right * density).toInt(), (box.bottom * density).toInt())
+        }
+        shellRailBounds?.let { box ->
+            shellRailScroll.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                (box.right * density).toInt(), (box.bottom * density).toInt())
+        }
+    }
+
+    private fun refreshShellActionDescriptions() {
+        shellActions.values.forEach { it.refresh() }
+        shellRailList.refreshSelection()
+    }
+
+    private inner class ShellActionView(context: Context, val key: String, val target: String,
+                                        private val label: String) : View(context) {
+        init {
+            id = View.generateViewId()
+            tag = "jarvis-$key"
+            isClickable = true
+            isFocusable = true
+            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
+            translationZ = density
+            ContinuumControls.feedback(this, if (key.startsWith("dialog:")) 24f else 10f)
+            setOnClickListener { openJarvisTarget(target) }
+            refresh()
+        }
+
+        fun refresh() {
+            val available = target in JarvisShellContent.routes || onNavigateTarget != null
+            isEnabled = available
+            isSelected = target == selectedJarvisTarget
+            val value = if (key.startsWith("tile:")) JarvisShellContent.tileValue(target, state, System.currentTimeMillis()) else null
+            contentDescription = label + (value?.let { ": $it" } ?: "") + if (available) "" else ": nicht verfügbar"
+        }
+
+        override fun onInitializeAccessibilityNodeInfo(info: android.view.accessibility.AccessibilityNodeInfo) {
+            super.onInitializeAccessibilityNodeInfo(info)
+            info.className = android.widget.Button::class.java.name
+        }
+
+        @SuppressLint("ClickableViewAccessibility")
+        override fun onTouchEvent(event: MotionEvent): Boolean {
+            val handled = super.onTouchEvent(event)
+            val down = event.actionMasked != MotionEvent.ACTION_UP && event.actionMasked != MotionEvent.ACTION_CANCEL && isPressed
+            if (key.startsWith("tile:")) {
+                val wanted = target.takeIf { down }
+                if (pressedJarvisTarget != wanted) {
+                    pressedJarvisTarget = wanted
+                    jarvisShell.tiles = shellTiles(state)
+                }
+            }
+            if (key.startsWith("rail:")) shellRailList.invalidate()
+            return handled
+        }
+    }
+
+    /** Rail rows scroll on their own when eleven 48dp targets cannot fit the available hero height. */
+    private inner class ShellRailList(context: Context) : ViewGroup(context) {
+        private val painter = AndroidContinuumPainter(context.assets)
+        private val buttons = JarvisTiles.railNav.map { item ->
+            ShellActionView(context, "rail:${item.target}", item.target, item.label)
+        }
+        var labelled = true
+
+        init {
+            setWillNotDraw(false)
+            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+            clipChildren = false
+            buttons.forEach(::addView)
+        }
+
+        fun refreshSelection() { buttons.forEach { it.refresh() }; invalidate() }
+
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+            val w = MeasureSpec.getSize(widthMeasureSpec)
+            val font = resources.configuration.fontScale
+            val required = (JarvisTiles.railContentHeight(w / density, font) * density).toInt()
+            val h = maxOf(required, MeasureSpec.getSize(heightMeasureSpec))
+            val rows = JarvisTiles.railItemBoxes(JarvisShellLayout.Box(0f, 0f, w / density, h / density), fontScale = font)
+            buttons.forEachIndexed { i, view ->
+                view.measure(MeasureSpec.makeMeasureSpec((rows[i].width * density).toInt().coerceAtLeast(0), MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec((rows[i].height * density).toInt(), MeasureSpec.EXACTLY))
+            }
+            setMeasuredDimension(w, h)
+        }
+
+        override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+            val rows = JarvisTiles.railItemBoxes(JarvisShellLayout.Box(0f, 0f, width / density, height / density),
+                fontScale = resources.configuration.fontScale)
+            buttons.forEachIndexed { i, view ->
+                val box = rows[i]
+                view.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                    (box.right * density).toInt(), (box.bottom * density).toInt())
+            }
+        }
+
+        override fun onDraw(canvas: Canvas) {
+            painter.begin(canvas)
+            val save = canvas.save()
+            canvas.scale(density, density)
+            JarvisTiles.drawRail(painter, JarvisShellLayout.Box(0f, 0f, width / density, height / density),
+                selected = JarvisTiles.railNav.indexOfFirst { it.target == selectedJarvisTarget }, labelled = labelled,
+                fontScale = resources.configuration.fontScale, pressed = buttons.indexOfFirst { it.isPressed })
+            canvas.restoreToCount(save)
+        }
     }
 
     /** Publishes the ref5 user card bounds (window pixels) for Lückenfüller's view; null outside the grid. */
@@ -432,6 +705,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         jarvisShell.layout(0, 0, r - l, b - t)
+        shellForeground.layout(0, 0, r - l, b - t)
         updateCockpitRegions(r - l, b - t)
         if (jarvisShellStage) {
             publishUserCardBounds(r - l, b - t)
@@ -440,6 +714,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
                 layoutAvatarSlot((box.left * density).toInt(), (box.top * density).toInt(),
                     (box.right * density).toInt(), (box.bottom * density).toInt())
             }
+            layoutShellActions()
             return
         }
         for (child in listOf<View>(hologram) + views.values) {

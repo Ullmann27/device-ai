@@ -51,7 +51,37 @@ internal class Lex3LearningExperienceStore(private val directory: File) {
     /** Caller holds the store's JVM + OS lock and has validated the current complete ledger.
      * [beforeCommit] is an internal fault-injection seam, never used by runtime callers.
      */
-    fun save(items: List<LearningExperience>, previous: ByteArray?, beforeCommit: () -> Unit = {}, afterCommit: () -> Unit = {}) {
+    fun save(items: List<LearningExperience>, previous: ByteArray?, beforeCommit: () -> Unit = {}, afterCommit: () -> Unit = {}) =
+        saveInternal(items,previous,beforeCommit,afterCommit,preserveExistingSegments=false)
+
+    /** Recovery is explicitly authorized by the caller's consent barrier. Keep all original segments. */
+    fun restoreVerified(items:List<LearningExperience>, beforeCommit:()->Unit) =
+        saveInternal(items,null,beforeCommit,{},preserveExistingSegments=true)
+
+    /** Only independently verified segments from a verified manifest may survive automatic recovery.
+     * Missing or damaged segments supply no records, including no purported owner confirmations.
+     * Unsafe paths and structural inconsistencies still fail closed. */
+    fun verifiedSurvivors(manifest:ByteArray):List<LearningExperience> {
+        requireDirectory(root)
+        val segments=decodeManifest(manifest)
+        val result=ArrayList<LearningExperience>()
+        for(segment in segments) {
+            val file=File(root,"${segment.hash}.seg")
+            if(!Files.exists(file.toPath(),LinkOption.NOFOLLOW_LINKS))continue
+            requireRegular(file)
+            val records=try {
+                val bytes=readBounded(file,segment.bytes)
+                require(bytes.size==segment.bytes && hash(bytes)==segment.hash)
+                LearningExperienceCodec.decode(bytes).also { require(it.size==segment.records) }
+            } catch(_:java.io.IOException) { continue } catch(_:IllegalArgumentException) { continue }
+            result.addAll(records)
+        }
+        require(result.map { it.id }.distinct().size==result.size && result==result.sortedWith(RECORD_ORDER))
+        return result
+    }
+
+    private fun saveInternal(items: List<LearningExperience>, previous: ByteArray?, beforeCommit: () -> Unit,
+                             afterCommit: () -> Unit, preserveExistingSegments:Boolean) {
         require(items.size <= MAX_RECORDS && items.map { it.id }.distinct().size == items.size)
         val encoded = items.sortedWith(RECORD_ORDER).chunked(SEGMENT_RECORDS).map(LearningExperienceCodec::encode)
         require(encoded.sumOf { it.size.toLong() } <= MAX_TOTAL_BYTES) { "LEX3 byte capacity reached" }
@@ -74,7 +104,7 @@ internal class Lex3LearningExperienceStore(private val directory: File) {
         }
         val prior = if (previous != null && isManifest(previous)) decodeManifest(previous).map { it.hash }.toSet() else emptySet()
         // Clear only unreferenced segment artifacts from interrupted writes, under the same OS lock.
-        cleanup(prior)
+        if(!preserveExistingSegments)cleanup(prior)
         encoded.forEachIndexed { index, bytes -> writeImmutable(File(root,"${descriptors[index].hash}.seg"),bytes) }
         syncDirectory(root)
         beforeCommit()
@@ -83,7 +113,7 @@ internal class Lex3LearningExperienceStore(private val directory: File) {
         // A failure here reports an uncertain commit. Retry through the store is idempotent; never roll back.
         syncDirectory(directory)
         // Cleanup is advisory after the commit point; its failure cannot change the committed result.
-        runCatching { cleanup(descriptors.map { it.hash }.toSet()); syncDirectory(root) }
+        if(!preserveExistingSegments)runCatching { cleanup(descriptors.map { it.hash }.toSet()); syncDirectory(root) }
     }
 
     /** Reassert publication durability before acknowledging ANY mutation, including idempotent retries.
@@ -182,7 +212,7 @@ internal class Lex3LearningExperienceStore(private val directory: File) {
                 out.toByteArray()
             }
         }
-        private fun writeAtomic(target: File, bytes: ByteArray) {
+        internal fun writeAtomic(target: File, bytes: ByteArray) {
             requireDirectory(target.parentFile!!)
             if (Files.exists(target.toPath(),LinkOption.NOFOLLOW_LINKS)) requireRegular(target)
             val temp=File.createTempFile("lex3-", ".tmp",target.parentFile)
@@ -192,7 +222,7 @@ internal class Lex3LearningExperienceStore(private val directory: File) {
                 Files.move(temp.toPath(),target.toPath(),StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING)
             } finally { temp.delete() }
         }
-        private fun syncDirectory(file: File) {
+        internal fun syncDirectory(file: File) {
             FileChannel.open(file.toPath(),StandardOpenOption.READ).use { it.force(true) }
         }
     }

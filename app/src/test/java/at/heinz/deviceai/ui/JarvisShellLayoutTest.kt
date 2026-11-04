@@ -21,31 +21,33 @@ class JarvisShellLayoutTest {
         }
         for (i in e.indices) for (j in i + 1 until e.size) {
             val pair = e[i].key to e[j].key
-            if (pair in s.overlays || pair.second to pair.first in s.overlays) assertTrue(e[i].value.contains(e[j].value) || e[j].value.contains(e[i].value))
-            else assertTrue("$pair overlap", !overlaps(e[i].value, e[j].value))
+            if (pair !in s.overlays && pair.second to pair.first !in s.overlays) assertTrue("$pair overlap", !overlaps(e[i].value, e[j].value))
         }
     }
 
-    @Test fun phonePortraitMatchesRef4() {
+    @Test fun compactPhoneStacksReadableComponentsAndAllTenTiles() {
         val s = JarvisShellLayout.create(412f, 915f)
         assertEquals(FormFactor.PHONE_PORTRAIT, s.formFactor)
-        listOf(Slot.TOP_BAR, Slot.AVATAR, Slot.DIALOG, Slot.INPUT, Slot.TILES, Slot.STATUS, Slot.BOTTOM_NAV).forEach { assertNotNull(it.name, s[it]) }
+        listOf(Slot.TOP_BAR, Slot.AVATAR, Slot.DIALOG, Slot.INPUT, Slot.TILES, Slot.STATUS).forEach { assertNotNull(it.name, s[it]) }
         assertNull(s[Slot.NAV_RAIL])
-        assertEquals(2, s.tileColumns); assertEquals(4, s.tileRows); assertEquals(8, s.tileBoxes().size)
+        assertEquals(2, s.tileColumns); assertEquals(5, s.tileRows); assertEquals(10, s.tileBoxes().size)
+        assertNull("External Activity owns the phone category bar", s[Slot.BOTTOM_NAV])
+        assertTrue(s.requiresVerticalScroll)
         assertTrue("input below hero, above tiles", s[Slot.INPUT]!!.top >= s[Slot.AVATAR]!!.bottom && s[Slot.INPUT]!!.bottom <= s[Slot.TILES]!!.top)
         assertTrue("hero dominates", s[Slot.AVATAR]!!.height > 300f)
         assertSane(s)
     }
 
     @Test fun fold7OpenMatchesRef5() {
-        // §11: Kern's ref5 grid (JarvisCockpitGrid) – everything of ref5 at once, compact.
+        // Latest canonical composition when five columns remain readable.
         val s = JarvisShellLayout.create(884f, 760f)
         assertEquals(FormFactor.FOLD_OPEN, s.formFactor)
         assertEquals(Rail.LABELLED, s.rail)
         assertTrue(s.ref5Grid)
-        assertTrue("dialog and user card over the head stage",
-            s[Slot.AVATAR]!!.contains(s[Slot.DIALOG]!!) && s[Slot.AVATAR]!!.contains(s[Slot.USER_CARD]!!))
-        assertEquals(4, s.tileColumns); assertEquals(2, s.tileRows)
+        assertTrue("dialog overlays the live stage", s[Slot.AVATAR]!!.contains(s[Slot.DIALOG]!!))
+        assertNull("The obsolete owner card cannot cover the face", s[Slot.USER_CARD])
+        assertEquals(5, s.tileColumns); assertEquals(2, s.tileRows)
+        assertEquals(10, s.tileBoxes().size)
         listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL).forEach { assertNotNull(s[it]) }
         val st = s[Slot.STATUS]!!
         assertTrue("status full width", st.left <= 10f && st.right >= 884f - 10f)
@@ -53,38 +55,44 @@ class JarvisShellLayoutTest {
         assertSane(s)
     }
 
-    @Test fun fold7LargeFontKeepsLegacyColumns() {
-        val s = JarvisShellLayout.create(884f, 760f, 1.5f)
-        val inner = 884f - 2 * JarvisDesign.Metrics.margin - 2 * JarvisDesign.Metrics.gap
-        assertTrue(!s.ref5Grid)
-        assertEquals(inner * .20f, s[Slot.NAV_RAIL]!!.width, .01f)
-        assertEquals(inner * .55f, s[Slot.AVATAR]!!.width, .01f)
-        assertEquals(inner * .25f, s[Slot.COCKPIT_SECONDARY]!!.width, .01f)
+    @Test fun expandedLargeFontReflowsAndReservesReadableLabels() {
+        val regular = JarvisShellLayout.create(884f, 760f)
+        val large = JarvisShellLayout.create(884f, 760f, 1.5f)
+        assertTrue(!large.ref5Grid)
+        assertTrue(large[Slot.NAV_RAIL]!!.width > regular[Slot.NAV_RAIL]!!.width)
+        assertTrue(large.tileColumns < 5)
+        assertEquals(10, large.tileBoxes().size)
+        assertTrue(large.requiresVerticalScroll)
+        assertTrue(large.tileBoxes().all { it.height >= 96f })
+        assertSane(large)
+    }
+
+    @Test fun iconRailHasASeparateReadableSixtyFourDpColumn() {
+        val s = JarvisShellLayout.create(884f, 760f, foldRail = Rail.ICONS)
+        assertEquals(64f, s.profile.railWidthDp, .01f)
+        assertTrue(s[Slot.NAV_RAIL]!!.width >= 48f)
+        assertEquals(10, s.tileBoxes().size)
         assertSane(s)
     }
 
-    @Test fun fold7IconRailIsOptional() {
-        val s = JarvisShellLayout.create(884f, 760f, foldRail = Rail.ICONS)
-        assertEquals(JarvisDesign.Metrics.railCompact, s[Slot.NAV_RAIL]!!.width, .01f); assertSane(s)
-    }
-
-    @Test fun tabletHeadCentredAndDominant() {
+    @Test fun tabletRetainsTheSameHeadLeftSphereRightComposition() {
         val s = JarvisShellLayout.create(1280f, 800f)
         assertEquals(FormFactor.TABLET_LANDSCAPE, s.formFactor)
-        val a = s[Slot.AVATAR]!!
-        val contentCentre = (s[Slot.NAV_RAIL]!!.right + 1280f) / 2f
-        assertTrue("centred", kotlin.math.abs(a.centerX - contentCentre) < 40f)
-        assertTrue("dominant", s.boxes.values.all { it === a || it.width * it.height < a.width * a.height })
+        assertTrue(s.ref5Grid)
+        assertTrue(s.headBounds!!.right < s.orbBounds!!.left)
+        assertEquals(250f / 1536f * s.width, s.headBounds!!.left, .001f)
+        assertEquals(1212f / 1536f * s.width, s.orbBounds!!.right, .001f)
+        assertEquals(5, s.tileColumns)
         assertSane(s)
     }
 
     @Test fun largeFontStaysSane() {
         assertSane(JarvisShellLayout.create(360f, 780f, 1.5f))
-        val f = JarvisShellLayout.create(884f, 760f, 1.5f); assertEquals(2, f.tileColumns); assertSane(f)
+        val f = JarvisShellLayout.create(884f, 760f, 1.5f); assertEquals(3, f.tileColumns); assertSane(f)
     }
 
     @Test fun referenceTilesFromRef5() {
-        assertEquals(listOf("Chat", "Gedächtnis", "Logik", "Recherche", "Agenten", "Lernen", "Gerätesteuerung", "Systemstatus"),
+        assertEquals(listOf("Chat", "Memory", "Logic", "Research", "Agents", "Tasks", "Web", "Learning", "Device Control", "System Status"),
             JarvisTiles.reference.map { it.label })
         assertTrue(JarvisTiles.reference.all { it.displayText == null })
         assertEquals(JarvisTiles.reference.size, JarvisShellLayout.create(884f, 760f).tileBoxes().size)
@@ -96,15 +104,15 @@ class JarvisShellLayoutTest {
     }
 
     @Test fun jarvisColoursFollowVideoSpec() {
-        assertEquals(Argb.rgb(0x2F, 0xF9, 0xFE), JarvisDesign.Colors.cyan)
-        assertEquals(Argb.rgb(0x91, 0x4C, 0xEF), JarvisDesign.Colors.violet)
-        assertEquals(Argb.rgb(0x00, 0x0C, 0x16), JarvisDesign.Colors.background)
+        assertEquals(Argb.rgb(0x00, 0xE5, 0xFF), JarvisDesign.Colors.cyan)
+        assertEquals(Argb.rgb(0xA4, 0x3B, 0xFF), JarvisDesign.Colors.violet)
+        assertEquals(Argb.rgb(0x02, 0x07, 0x13), JarvisDesign.Colors.background)
         assertEquals(Argb.of(204, 0x01, 0x1D, 0x2F), JarvisDesign.Colors.surface)
         assertEquals(Argb.rgb(0x17, 0x68, 0x7F), JarvisDesign.Colors.rim)
-        assertEquals(Argb.rgb(0x01, 0x0C, 0x17), JarvisDesign.Colors.backgroundBottom)
+        assertEquals(Argb.rgb(0x03, 0x0B, 0x21), JarvisDesign.Colors.backgroundBottom)
         // ref5 component styles (px x 0.642 = dp)
         assertEquals(51f, JarvisDesign.Styles.tile.height, 0f); assertEquals(8f, JarvisDesign.Styles.tile.radius, 0f)
         assertEquals(32f, JarvisDesign.Styles.button.height, 0f); assertEquals(22f, JarvisDesign.Styles.pill.height, 0f)
-        assertEquals(11f, JarvisDesign.Type.tileLabel.size, 0f); assertEquals(9f, JarvisDesign.Type.subtitle.size, 0f)
+        assertEquals(13f, JarvisDesign.Type.tileLabel.size, 0f); assertEquals(10f, JarvisDesign.Type.subtitle.size, 0f)
     }
 }

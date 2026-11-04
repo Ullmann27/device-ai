@@ -1,0 +1,109 @@
+{
+  "source_commit": "e19df1533c6da19bab4bdcb4b4580e28a5488669",
+  "baseline_application_commit": "ad2fa70bd84988c79b9bd13319cf1a178f99ab3b",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumDashboardState.kt",
+      "sha256": "272412b4dfe734d51298aa322ce2e3aa6c71add49cf96553e25606b3bb9170c0",
+      "original_sha256": "272412b4dfe734d51298aa322ce2e3aa6c71add49cf96553e25606b3bb9170c0"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGridContent.kt",
+      "sha256": "2c7745842937ee68d887ee28930af77eaa331d8b6c23d0f4b0df36ffd269351a",
+      "original_sha256": "2c7745842937ee68d887ee28930af77eaa331d8b6c23d0f4b0df36ffd269351a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt",
+      "sha256": "34072c59c23653c996b64eb52b98cc520fa69864c5eb26b49d880f4b9cc139de",
+      "original_sha256": "34072c59c23653c996b64eb52b98cc520fa69864c5eb26b49d880f4b9cc139de"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
+      "sha256": "8e4f0ec62c8753fde26a930aa9e2071e4a43a80a7b2be491ce61a69d3a612601",
+      "original_sha256": "8e4f0ec62c8753fde26a930aa9e2071e4a43a80a7b2be491ce61a69d3a612601"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMemoryActivityPanel.kt",
+      "sha256": "4b8289a5348761cf9d20b6570ff169071e1aa01d016e43025e36fd5b1938548c",
+      "original_sha256": "4b8289a5348761cf9d20b6570ff169071e1aa01d016e43025e36fd5b1938548c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMenuRail.kt",
+      "sha256": "a9456e5ade8634698908c61567b20929d912188e7a3f84f5c9dc15965f3b1221",
+      "original_sha256": "a9456e5ade8634698908c61567b20929d912188e7a3f84f5c9dc15965f3b1221"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisNeon.kt",
+      "sha256": "faf9cfc3010b9d15b8e470d3767b52906020db5445bf0da73889b92457c5f521",
+      "original_sha256": "faf9cfc3010b9d15b8e470d3767b52906020db5445bf0da73889b92457c5f521"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisOwnerCardContent.kt",
+      "sha256": "01b0848cd09a988e7148825db8e6c973b9330cbb4adbc4ba5ce4dcbfd3a9f35d",
+      "original_sha256": "01b0848cd09a988e7148825db8e6c973b9330cbb4adbc4ba5ce4dcbfd3a9f35d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "sha256": "098a954f20ae5260a94a0764f8da1a08a1b9bf86ecec1fd18639254dff59326b",
+      "original_sha256": "098a954f20ae5260a94a0764f8da1a08a1b9bf86ecec1fd18639254dff59326b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt",
+      "sha256": "52cc8ca87bf089b57a0b176fa7ea8e0ed9ca9f4d2e26d3f9e7bd655bc239fd60",
+      "original_sha256": "52cc8ca87bf089b57a0b176fa7ea8e0ed9ca9f4d2e26d3f9e7bd655bc239fd60"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt",
+      "sha256": "4de058e9743850ede4cad1e56709a6f2950c7f20829546e181a1cf9d892f1975",
+      "original_sha256": "4de058e9743850ede4cad1e56709a6f2950c7f20829546e181a1cf9d892f1975"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/LocalModelStatusPresentation.kt",
+      "sha256": "46b5b88e4e715e3c8aeb54bf026959de4d598a6acd5176a6ecc0143def79c0d4",
+      "original_sha256": "46b5b88e4e715e3c8aeb54bf026959de4d598a6acd5176a6ecc0143def79c0d4"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisPresentationRecordingPainter.kt",
+      "sha256": "55d1a8d39bddedb97085e8a3a117b9b9d18c1e0affe68ad9562282ae21505f89",
+      "original_sha256": "55d1a8d39bddedb97085e8a3a117b9b9d18c1e0affe68ad9562282ae21505f89"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisLivePanelsRegressionTest.kt",
+      "sha256": "906cdbba90eeb2e1fbb44d15cf5df59b200ddefd0b9a174d0b087d33eab53749",
+      "original_sha256": "906cdbba90eeb2e1fbb44d15cf5df59b200ddefd0b9a174d0b087d33eab53749"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisMenuNavigationTest.kt",
+      "sha256": "adf05ca6688664317d4df00f8a7342b53b43636c47c4057581e913ca2c0e69c1",
+      "original_sha256": "adf05ca6688664317d4df00f8a7342b53b43636c47c4057581e913ca2c0e69c1"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/LocalModelStatusPresentationTest.kt",
+      "sha256": "e5776a7d574a3ec8c37816a82963a4ec1990ca5b7b3061b22956200f221b2e17",
+      "original_sha256": "e5776a7d574a3ec8c37816a82963a4ec1990ca5b7b3061b22956200f221b2e17"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitGridTest.kt",
+      "sha256": "b5fb91bfb0bbc54313c4001a43f8706f97472430c70a25eeb579396006874614",
+      "original_sha256": "b5fb91bfb0bbc54313c4001a43f8706f97472430c70a25eeb579396006874614"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisMemoryActivityPanelTest.kt",
+      "sha256": "66975b68f91da3f5be5895cad2648c0b799ba7b9456bd5a64b33528da9624aaf",
+      "original_sha256": "66975b68f91da3f5be5895cad2648c0b799ba7b9456bd5a64b33528da9624aaf"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisExternalRailLayoutTest.kt",
+      "sha256": "2513c10b42f034804bc9c787ea73cc54523c9c6c0f14ecd69f81ecb14eb8690b",
+      "original_sha256": "2513c10b42f034804bc9c787ea73cc54523c9c6c0f14ecd69f81ecb14eb8690b"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisOwnerCardContentTest.kt",
+      "sha256": "2937bec2bfba58d1e29880e51dfe7bec41fb513d628e02d6368abc5b79854685",
+      "original_sha256": "2937bec2bfba58d1e29880e51dfe7bec41fb513d628e02d6368abc5b79854685"
+    }
+  ],
+  "graphics_override": null,
+  "classpath_prefix": [],
+  "junit_exit": 0
+}

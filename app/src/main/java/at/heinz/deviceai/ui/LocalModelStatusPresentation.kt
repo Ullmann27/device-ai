@@ -41,7 +41,10 @@ object LocalModelStatusPresentation {
             Row("Latency", m.latencyMs?.let { "$it ms" } ?: MISSING, null)
         )
         if (resources == null) {
-            rows += Row("RAM", MISSING, null); rows += Row("Thermal", MISSING, null); rows += Row("Load", MISSING, null)
+            rows += Row("RAM", s.system.memoryPercent?.let { "$it % Gerät" } ?: MISSING,
+                s.system.memoryPercent?.takeIf { it in 0..100 }?.div(100f))
+            rows += Row("Thermal", s.system.thermalStatus?.let { THERMAL.getOrNull(it) } ?: MISSING, null)
+            rows += Row("Load", MISSING, null)
         } else {
             rows += Row("RAM", "%.1f / %.1f GB".format(java.util.Locale.ROOT, gb(resources.totalRamBytes - resources.availableRamBytes), gb(resources.totalRamBytes)),
                 (1f - resources.availableRamBytes.toFloat() / resources.totalRamBytes).coerceIn(0f, 1f),
@@ -66,7 +69,7 @@ object LocalModelStatusPresentation {
  * label/value column right (Model, Mode, Status, RAM) and the RAM usage bar below. Only #479 tokens are used.
  */
 class CockpitLocalModelCard(textScale: Float) : CockpitCard(textScale, ContinuumIcons.Icon.CPU) {
-    override fun title(s: ContinuumDashboardState) = "Local Model Status"
+    override fun title(s: ContinuumDashboardState) = "Model & Device"
     override fun rows(s: ContinuumDashboardState) = LocalModelStatusPresentation.rows(s)
 
     override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
@@ -78,7 +81,7 @@ class CockpitLocalModelCard(textScale: Float) : CockpitCard(textScale, Continuum
         val iconSize = JarvisDesign.Styles.pill.height * .7f
         val titleMid = pad + iconSize / 2f
         ContinuumIcons.draw(p, ContinuumIcons.Icon.CPU, pad + iconSize / 2f, titleMid, iconSize, Fill.Solid(c.cyanSoft), iconSize / 12f)
-        p.drawText(title(s), pad + iconSize + JarvisDesign.Styles.pill.iconGap, titleMid + p.capHeight(type.heading) / 2f, type.heading, Fill.Solid(c.text))
+        p.drawText(ContinuumSurfaces.fit(p, title(s), type.heading, w - pad * 3 - iconSize), pad + iconSize + JarvisDesign.Styles.pill.iconGap, titleMid + p.capHeight(type.heading) / 2f, type.heading, Fill.Solid(c.text))
         ContinuumSurfaces.chevron(p, w - pad - iconSize * .25f, titleMid, iconSize * .55f, c.cyan)
         // Headline + connectivity pill.
         val (txt, tone) = LocalModelStatusPresentation.modelAvailability(s)
@@ -98,7 +101,7 @@ class CockpitLocalModelCard(textScale: Float) : CockpitCard(textScale, Continuum
         val bodyTop = pillTop + ph + pad * .6f
         val barH = 4f
         val barTop = h - pad - barH
-        val colX = w * .38f
+        val colX = w * .30f
         val lineH = ((barTop - pad * .5f - bodyTop) / shown.size).coerceAtLeast(p.capHeight(type.caption) * 1.4f)
         drawEmblem(p, pad, bodyTop, colX - pad * 1.5f, barTop + barH - bodyTop)
         val labelW = shown.maxOf { p.measureText(it.label + ":", type.caption) } + JarvisDesign.Styles.pill.iconGap

@@ -1,5 +1,6 @@
 package at.heinz.deviceai.ui
 
+import at.heinz.deviceai.chief.TurnPhase
 import at.heinz.deviceai.ui.ContinuumCockpitPresentation.Row
 import at.heinz.deviceai.ui.ContinuumCockpitPresentation.Tone
 import at.heinz.deviceai.ui.ContinuumIcons.Icon
@@ -7,65 +8,54 @@ import at.heinz.deviceai.ui.JarvisCockpitGrid.Area
 import at.heinz.deviceai.ui.JarvisDesign.Colors
 import at.heinz.deviceai.ui.JarvisDesign.Type
 import at.heinz.deviceai.ui.JarvisShellLayout.Box
+import at.heinz.deviceai.ui.JarvisShellLayout.Shell
 import at.heinz.deviceai.ui.JarvisShellLayout.Slot
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-/**
- * Jarvis Kern: compact ref5 content for the Fold7 grid ([JarvisCockpitGrid]). Only #479 tokens (JarvisDesign.Colors /
- * Type / Styles, JarvisNeon.pill). Values only from real sources (CockpitStatus, MemoryEvents → state); where nothing
- * is wired a small "—" or "offline" in the same style. Tile subtitles are descriptions of the function, not data.
- */
+/** One presentation for all window profiles. Decoration is separate from real status and native hit targets. */
 object JarvisCockpitGridContent {
     const val NONE = "—"
     private val localModelCard = CockpitLocalModelCard(1f)
+    private val clockFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("EEE, d. MMM", Locale.getDefault())
 
-    /** ref5 tile subtitles (German), two short lines each. */
     val tileSubtitles: Map<String, List<String>> = mapOf(
-        "chat" to listOf("Natürliches KI-Gespräch", "über mehrere Runden"),
-        "memory" to listOf("Langzeit-Gedächtnis,", "persönlicher Kontext"),
-        "logic" to listOf("Schlussfolgern, planen,", "Probleme lösen"),
-        "research" to listOf("Tiefe Recherche", "mit Quellen"),
-        "agents" to listOf("Spezialisierte", "KI-Teammitglieder"),
-        "learning" to listOf("Anpassen, verbessern,", "neue Fähigkeiten"),
-        "device" to listOf("Android-Gerät, Apps", "und System steuern"),
-        "system" to listOf("Zustand, Leistung", "und Modellstatus"),
-    )
+        "chat" to listOf("Natural, multi-turn", "AI conversation"),
+        "memory" to listOf("Long-term", "personal context"),
+        "logic" to listOf("Reasoning, planning,", "problem solving"),
+        "research" to listOf("Deep research", "with sources"),
+        "agents" to listOf("Specialized AI", "teammates"),
+        "tasks" to listOf("Plan, track, and", "automate work"),
+        "web" to listOf("Browse, summarize,", "and take action"),
+        "learning" to listOf("Adapt, improve", "and build skills"),
+        "device" to listOf("Control your Android,", "apps and system"),
+        "system" to listOf("Health, performance,", "and model status"))
 
-    /** Module column right of the orb (ref5: Memory / Logic / Agents / Learning / Local Model) with status dot. */
     data class Module(val label: String, val icon: Icon, val value: String, val ok: Boolean)
 
+    /** A loaded language model is not evidence that a separate reasoning service is initialized. */
     fun modules(s: ContinuumDashboardState): List<Module> = listOf(
-        Module("Gedächtnis", Icon.DATABASE, if (s.memory != null) "aktiv" else "offline", s.memory != null),
-        Module("Logik", Icon.ATOM, if (s.model.online) "bereit" else "offline", s.model.online),
-        s.cockpit.workers.let { w -> Module("Agenten", Icon.USERS, w?.let { "${it.count { x -> x.running }} aktiv" } ?: NONE, w != null) },
-        Module("Lernen", Icon.BOOK, if (s.learning.live) "aktiv" else NONE, s.learning.live),
-        Module("Lokales Modell", Icon.CPU, if (s.model.online) "online" else "offline", s.model.online),
-    )
+        Module("Memory", Icon.DATABASE, if (s.memory != null) "aktiv" else NONE, s.memory != null),
+        Module("Logic", Icon.ATOM, if (s.cockpit.turnPhase == TurnPhase.WORKING) "arbeitet" else NONE,
+            s.cockpit.turnPhase == TurnPhase.WORKING),
+        s.cockpit.workers.let { workers ->
+            val running = workers?.count { it.running }
+            Module("Agents", Icon.USERS, running?.let { "$it aktiv" } ?: NONE, running != null && running > 0)
+        },
+        Module("Learning", Icon.BOOK, if (s.learning.live) "aktiv" else "ruhend", s.learning.live),
+        Module("Local Model", Icon.CPU, if (s.model.online) "online" else s.model.stateLabel, s.model.online))
 
-    /** Status bar segments (ref5 order). Missing sources → "—". */
-    fun statusSegments(s: ContinuumDashboardState): List<Pair<String, Boolean>> {
-        val sys = s.system
-        val net = when (sys.networkOnline) { true -> "online"; false -> "offline"; null -> NONE }
-        fun pct(v: Int?) = v?.let { "$it %" } ?: NONE
-        val temp = sys.temperatureC?.let { String.format(java.util.Locale.GERMANY, "%.0f °C", it) } ?: NONE
-        return listOf(
-            "Systemstatus: ${sys.overall}" to (sys.openIssues == 0),
-            "Netz: $net" to (sys.networkOnline == true),
-            "Lokale KI: ${s.model.stateLabel}" to s.model.online,
-            "Sync: ${s.storage.syncLabel}" to false,
-            "CPU ${pct(sys.appCpuPercent)} | RAM ${pct(sys.memoryPercent)} | $temp" to false,
-        )
-    }
+    fun statusSegments(s: ContinuumDashboardState): List<Pair<String, Boolean>> =
+        JarvisCockpitPanels.statusSegments(s).map { it.text to it.ok }
 
     fun title(slot: Slot, s: ContinuumDashboardState): String = when (slot) {
         Slot.ROW_AGENTS -> ContinuumCockpitPresentation.agentsTitle(s.cockpit)
-        Slot.ROW_TASKS -> "Aktueller Ablauf"
-        Slot.ROW_MEMORY -> "Gedächtnis-Aktivität"
-        Slot.ROW_MODEL -> "Lokales Modell"
+        Slot.ROW_TASKS -> "Current Task Flow"
+        Slot.ROW_MEMORY -> "Memory Activity"
+        Slot.ROW_MODEL -> "Model & Device"
         else -> ""
-    }
-
-    private fun icon(slot: Slot) = when (slot) {
-        Slot.ROW_AGENTS -> Icon.USERS; Slot.ROW_TASKS -> Icon.CHECK_CIRCLE; Slot.ROW_MEMORY -> Icon.DATABASE; else -> Icon.CPU
     }
 
     fun rows(slot: Slot, s: ContinuumDashboardState, now: Long): List<Row> = when (slot) {
@@ -76,150 +66,213 @@ object JarvisCockpitGridContent {
         else -> emptyList()
     }
 
-    private fun tone(t: Tone) = when (t) {
-        Tone.OK -> Colors.ok; Tone.WARN -> Colors.warn; Tone.ERROR -> Colors.error; Tone.ACTIVE -> Colors.cyan
-        Tone.NEUTRAL -> Colors.textSecondary
-    }
+    private fun fit(p: ContinuumPainter, text: String, style: TextStyle, width: Float) =
+        JarvisShellRenderer.fit(p, text, style, width)
 
-    private fun fit(p: ContinuumPainter, t: String, st: TextStyle, w: Float) = JarvisShellRenderer.fit(p, t, st, w)
-
-    /** Draws [slot] in the ref5 grid; false → caller falls back to its own drawing. */
-    fun draw(p: ContinuumPainter, slot: Slot, b: Box, grid: JarvisCockpitGrid.Grid, s: ContinuumDashboardState, now: Long): Boolean {
+    fun draw(p: ContinuumPainter, slot: Slot, b: Box, grid: JarvisCockpitGrid.Grid?,
+             s: ContinuumDashboardState, now: Long, shell: Shell? = null): Boolean {
         when (slot) {
-            Slot.TOP_BAR -> header(p, grid, s)
+            Slot.AVATAR -> Unit // the existing live View owns both render objects; never draw a stand-in behind it
+            Slot.TOP_BAR -> header(p, b, grid, shell, s, now)
+            Slot.CONTINUUM_HEADER -> brainHeader(p, b)
+            Slot.CAMERA_STATUS -> cameraStatus(p, b, s)
             Slot.COCKPIT_SECONDARY -> modulesPanel(p, b, s)
-            // Integration (#486): ref5 Active Agents / Current Task Flow / status bar.
             Slot.ROW_AGENTS -> JarvisCockpitPanels.drawAgents(p, b, s)
             Slot.ROW_TASKS -> JarvisCockpitPanels.drawTaskFlow(p, b, s)
             Slot.ROW_MEMORY -> JarvisMemoryActivityPanel.draw(p, b.left, b.top, b.right, b.bottom,
-                MemoryActivitySnapshot.from(s.memory, null))
+                s.memoryActivity ?: MemoryActivitySnapshot.from(s.memory, null))
             Slot.ROW_MODEL -> {
-                p.save()
-                p.translate(b.left, b.top)
+                p.save(); p.translate(b.left, b.top)
                 localModelCard.draw(p, b.width, b.height, s)
                 p.restore()
             }
             Slot.STATUS -> JarvisCockpitPanels.drawStatusBar(p, b, s)
-            Slot.DIALOG -> dialog(p, b, s)
-            Slot.USER_CARD -> userCard(p, b)
+            Slot.DIALOG -> dialog(p, b, s, shell)
+            Slot.USER_CARD -> {
+                if (at.heinz.deviceai.cockpit.JarvisUserCardSlot.renderer == null)
+                    JarvisOwnerCardContent.draw(p, b, at.heinz.deviceai.cockpit.JarvisUserCardSlot.latest)
+            }
             else -> return false
         }
         return true
     }
 
-    private fun header(p: ContinuumPainter, g: JarvisCockpitGrid.Grid, s: ContinuumDashboardState) {
-        val brand = g[Area.BRAND]
-        val logo = minOf(brand.height * .62f, 26f)
-        val lx = brand.left + logo / 2f; val cy = brand.top + brand.height / 2f
-        ContinuumIcons.draw(p, Icon.MODE, lx, cy, logo, Fill.Solid(Colors.cyan))
-        val tx = brand.left + logo + 8f; val room = brand.right - tx
-        val capB = p.capHeight(Type.brand); val capC = p.capHeight(Type.caption)
-        val top = cy - (capB * 2 + 6f + capC + 5f) / 2f
-        JarvisNeon.text(p, fit(p, "Device AI", Type.brand, room), tx, top + capB, Type.brand, Colors.text)
-        JarvisNeon.text(p, fit(p, "Continuum", Type.brand, room), tx, top + capB * 2 + 6f, Type.brand, Colors.text)
-        p.drawText(fit(p, "Android-KI-Kontrollzentrum", Type.caption, room), tx, top + capB * 2 + 11f + capC, Type.caption,
-            Fill.Solid(Colors.cyanSoft))
-        val pillH = JarvisDesign.Styles.pill.height
-        val mode = g[Area.MODE_PILL]
-        JarvisNeon.pill(p, mode.left, mode.top + (mode.height - pillH) / 2f, "JARVIS-Modus", rim = Colors.violetRim)
-        val priv = g[Area.PRIVACY_PILL]
-        JarvisNeon.pill(p, priv.left, priv.top + (priv.height - pillH) / 2f, "${s.model.mode} · Privat · On-Device",
-            rim = if (s.model.online) Colors.ok else Colors.cyanDeep)
-        val icons = g[Area.ICONS]
-        val d = minOf(icons.height, (icons.width - 8f) / 3f)
-        listOf(Icon.BELL, Icon.GEAR, Icon.DOTS_HORIZONTAL).forEachIndexed { i, ic ->
-            val icy = icons.top + icons.height / 2f
-            val x = icons.right - d / 2f - (2 - i) * (d + 4f)
-            p.strokeCircle(x, icy, d / 2f, 1f, Fill.Solid(Colors.rim))
-            ContinuumIcons.draw(p, ic, x, icy, d * .55f, Fill.Solid(Colors.cyanSoft))
-            if (ic == Icon.BELL && s.pendingNotifications > 0) p.fillCircle(x + d * .3f, icy - d * .3f, 2.5f, Fill.Solid(Colors.magenta))
+    private fun header(p: ContinuumPainter, b: Box, g: JarvisCockpitGrid.Grid?, shell: Shell?,
+                       s: ContinuumDashboardState, now: Long) {
+        val brand = g?.areas?.get(Area.BRAND) ?: Box(b.left + 9f, b.top + 4f, b.right - 104f, b.bottom - 4f)
+        val logo = minOf(brand.height * .73f, 48f)
+        JarvisReferenceHud.brandMark(p, brand.left, brand.top + (brand.height - logo) / 2f, logo)
+        val tx = brand.left + logo + 8f
+        val room = brand.right - tx
+        val brandStyle = Type.brand
+        val cap = p.capHeight(brandStyle)
+        val caption = Type.caption
+        val cy = brand.centerY
+        val top = cy - (cap * 2f + p.capHeight(caption) + 9f) / 2f
+        p.drawText(fit(p, "Device AI", brandStyle, room), tx, top + cap, brandStyle, Fill.Solid(Colors.text))
+        p.drawText(fit(p, "Continuum", brandStyle, room), tx, top + 2f * cap + 3f, brandStyle, Fill.Solid(Colors.text))
+        p.drawText(fit(p, "Android AI Control Center", caption, room), tx,
+            top + 2f * cap + 9f + p.capHeight(caption), caption, Fill.Solid(Colors.cyanSoft))
+        g?.areas?.get(Area.DEVICE_STATUS)?.let { clock ->
+            JarvisReferenceHud.surface(p, clock, 14f, Colors.cyanDeep, Colors.cyanDeep)
+            val style = Type.title.copy(size = 26f)
+            val date = Date(now)
+            val timeText: String
+            val dateText: String
+            synchronized(clockFormat) {
+                // System timezone can change while the process remains alive.
+                clockFormat.timeZone = java.util.TimeZone.getDefault()
+                dateFormat.timeZone = clockFormat.timeZone
+                timeText = clockFormat.format(date); dateText = dateFormat.format(date)
+            }
+            p.drawText(fit(p, timeText, style, clock.width - 18f), clock.left + 9f,
+                clock.top + 8f + p.capHeight(style), style, Fill.Solid(Colors.text))
+            p.drawText(fit(p, dateText, Type.caption, clock.width - 18f), clock.left + 9f,
+                clock.bottom - 7f, Type.caption, Fill.Solid(Colors.textSecondary))
+        }
+        g?.areas?.get(Area.TAGLINE)?.let { tag ->
+            p.drawLine(tag.left, tag.top + 3f, tag.left, tag.bottom - 5f, 1f, Fill.Solid(Colors.cyan), .7f)
+            listOf("Your Personal AI", "Intelligence Continuum").forEachIndexed { i, line ->
+                p.drawText(fit(p, line, Type.caption, tag.width - 18f), tag.left + 17f,
+                    tag.top + 5f + p.capHeight(Type.caption) + i * (p.capHeight(Type.caption) + 3f),
+                    Type.caption, Fill.Solid(Colors.text))
+            }
+        }
+        g?.areas?.get(Area.MODE_PILL)?.let { mode ->
+            val box = Box(mode.left, mode.centerY - 14f, mode.right, mode.centerY + 14f)
+            JarvisReferenceHud.surface(p, box, 14f, Colors.cyan, Colors.violetRim)
+            JarvisReferenceHud.crown(p, Box(box.left + 9f, box.centerY - 7f, box.left + 25f, box.centerY + 7f))
+            p.drawText(fit(p, "JARVIS Mode", Type.heading, box.width - 35f), box.left + 31f,
+                box.centerY + p.capHeight(Type.heading) / 2f, Type.heading, Fill.Solid(Colors.text))
+        }
+        g?.areas?.get(Area.PRIVACY_PILL)?.let { priv ->
+            val box = Box(priv.left, priv.centerY - 13f, priv.right, priv.centerY + 13f)
+            JarvisReferenceHud.surface(p, box, 13f, Colors.cyanDeep, Colors.cyanDeep)
+            val local = s.presentation.localOnly
+            p.fillCircle(box.left + 11f, box.centerY, 4f, Fill.Solid(if (local == true) Colors.ok else Colors.textMuted))
+            val text = when (local) { true -> "Local · Internet gesperrt"; false -> "Online nach Freigabe"; null -> "Freigaben: —" }
+            p.drawText(fit(p, text, Type.caption, box.width - 27f), box.left + 22f,
+                box.centerY + p.capHeight(Type.caption) / 2f, Type.caption, Fill.Solid(Colors.text))
+        }
+        val actions = shell?.headerActionBoxes().orEmpty()
+        actions.forEach { (target, box) ->
+            val radius = minOf(16f, box.width * .35f)
+            p.strokeCircle(box.centerX, box.centerY, radius, 1f, Fill.Solid(Colors.rim))
+            ContinuumIcons.draw(p, when (target) { "notifications" -> Icon.BELL; "settings" -> Icon.GEAR; else -> Icon.DOTS_HORIZONTAL },
+                box.centerX, box.centerY, radius * 1.3f, Fill.Solid(Colors.cyanSoft))
+            if (target == "notifications" && s.pendingNotifications > 0)
+                p.fillCircle(box.centerX + radius * .65f, box.centerY - radius * .65f, 3f, Fill.Solid(Colors.magenta))
         }
     }
 
-    private fun panelTitle(p: ContinuumPainter, b: Box, text: String, icon: Icon?): Float {
-        val cap = p.capHeight(Type.heading)
-        val y = b.top + 8f + cap
-        var x = b.left + 9f
-        if (icon != null) { ContinuumIcons.draw(p, icon, x + 6f, y - cap / 2f, 12f, Fill.Solid(Colors.cyanSoft)); x += 17f }
-        p.drawText(fit(p, text, Type.heading, b.right - 9f - x), x, y, Type.heading, Fill.Solid(Colors.text))
-        return y
+    private fun brainHeader(p: ContinuumPainter, b: Box) {
+        val radius = minOf(18f, b.height * .26f)
+        val cx = b.left + radius + 5f
+        val cy = b.top + radius + 3f
+        JarvisNeon.halo(p, cx, cy, radius * 1.8f, Colors.cyan, .2f)
+        p.strokeCircle(cx, cy, radius, 1.2f, Fill.Solid(Colors.cyanSoft))
+        p.drawText("∞", cx, cy + p.capHeight(Type.title) / 2f, Type.title, Fill.Solid(Colors.cyan), TextAlign.CENTER)
+        val x = cx + radius + 11f
+        p.drawText(fit(p, "Continuum", Type.title, b.right - x), x, cy + 1f,
+            Type.title, Fill.Solid(Colors.text))
+        p.drawText(fit(p, "Unified Intelligence Across Your Devices", Type.caption, b.right - x),
+            x, cy + p.capHeight(Type.caption) + 7f, Type.caption, Fill.Solid(Colors.textSecondary))
+        val stripTop = maxOf(cy + 20f, b.bottom - 20f)
+        val strip = Box(b.left, stripTop, b.right, b.bottom)
+        if (strip.height >= 12f) {
+            JarvisReferenceHud.surface(p, strip, 10f, Colors.cyan, Colors.cyanDeep)
+            p.drawText(fit(p, "Chat · Reason · Research · Act · Learn · Evolve", Type.status, strip.width - 10f),
+                strip.centerX, strip.centerY + p.capHeight(Type.status) / 2f,
+                Type.status, Fill.Solid(Colors.text), TextAlign.CENTER)
+        }
+    }
+
+    private fun cameraStatus(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
+        val x = b.left + 22f; val cy = b.centerY
+        cameraGlyph(p, x, cy, 19f, Colors.cyanSoft)
+        p.drawText(fit(p, "Camera-aware", Type.heading, b.width - 58f), b.left + 43f,
+            cy - 2f, Type.heading, Fill.Solid(Colors.text))
+        val status = when { s.presentation.tracking -> "Gesicht erkannt"; s.presentation.cameraSessionActive -> "Kamera aktiv"; else -> "Kamera aus" }
+        p.fillCircle(b.left + 47f, cy + 10f, 3f, Fill.Solid(if (s.presentation.cameraSessionActive) Colors.ok else Colors.textMuted))
+        p.drawText(fit(p, status, Type.caption, b.width - 62f), b.left + 55f,
+            cy + 10f + p.capHeight(Type.caption) / 2f, Type.caption, Fill.Solid(Colors.textSecondary))
     }
 
     private fun modulesPanel(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
-        val list = modules(s)
-        val rowH = (b.height - 8f) / list.size
-        val st = Type.caption; val cap = p.capHeight(st)
+        val list = modules(s); val rowH = (b.height - 8f) / list.size
+        val style = Type.caption; val cap = p.capHeight(style)
         list.forEachIndexed { i, m ->
-            val cy = b.top + 4f + rowH * i + rowH / 2f
-            ContinuumIcons.draw(p, m.icon, b.left + 12f, cy, 12f, Fill.Solid(Colors.cyanSoft))
-            val valueW = p.measureText(m.value, st)
-            val dotX = b.right - 9f - valueW - 7f
-            p.drawText(fit(p, m.label, st, dotX - 6f - (b.left + 22f)), b.left + 22f, cy + cap / 2f, st, Fill.Solid(Colors.text))
-            p.fillCircle(dotX, cy, 2.5f, Fill.Solid(if (m.ok) Colors.ok else Colors.textMuted))
-            p.drawText(m.value, b.right - 9f, cy + cap / 2f, st, Fill.Solid(if (m.ok) Colors.okSoft else Colors.textSecondary), TextAlign.RIGHT)
+            val cy = b.top + 4f + rowH * (i + .5f)
+            if (i > 0) p.drawLine(b.left + 12f, cy - rowH / 2f, b.right - 10f, cy - rowH / 2f, .6f, Fill.Solid(Colors.rim), .65f)
+            ContinuumIcons.draw(p, m.icon, b.left + 17f, cy, 18f, Fill.Solid(Colors.cyanSoft))
+            val valueWidth = minOf(p.measureText(m.value, style), b.width * .32f)
+            val valueStart = b.right - 10f - valueWidth
+            p.drawText(fit(p, m.label, style, valueStart - b.left - 47f), b.left + 34f, cy + cap / 2f,
+                style, Fill.Solid(Colors.text))
+            p.fillCircle(valueStart - 7f, cy, 2.5f, Fill.Solid(if (m.ok) Colors.ok else Colors.textMuted))
+            p.drawText(fit(p, m.value, style, valueWidth), b.right - 9f, cy + cap / 2f, style,
+                Fill.Solid(if (m.ok) Colors.okSoft else Colors.textSecondary), TextAlign.RIGHT)
         }
     }
 
-    private fun rowPanel(p: ContinuumPainter, slot: Slot, b: Box, s: ContinuumDashboardState, now: Long) {
-        val y0 = panelTitle(p, b, title(slot, s), icon(slot))
-        if (slot == Slot.ROW_MODEL) {
-            val label = if (s.model.online) "Online" else "Offline"
-            val w = JarvisNeon.pillWidth(p, label, false)
-            if (w < b.width * .4f) JarvisNeon.pill(p, b.right - 8f - w, b.top + 5f, label, rim = if (s.model.online) Colors.ok else Colors.cyanDeep)
+    private fun dialog(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, shell: Shell?) {
+        val heading = Type.heading.copy(size = 16f)
+        val cap = p.capHeight(heading)
+        val titleY = b.top + 8f + cap
+        ContinuumIcons.draw(p, Icon.PULSE, b.left + 21f, titleY - cap / 2f, 22f, Fill.Solid(Colors.cyan))
+        p.drawText("JARVIS", b.left + 39f, titleY, heading, Fill.Solid(Colors.cyan))
+        val live = s.presentation.live
+        val badge = if (live) "Live" else "Ruhe"
+        p.drawText(badge, b.right - 12f, titleY, Type.caption,
+            Fill.Solid(if (live) Colors.ok else Colors.textMuted), TextAlign.RIGHT)
+        p.drawText(fit(p, "Your On-Device AI Companion", Type.caption, b.width - 45f), b.left + 39f,
+            titleY + 4f + p.capHeight(Type.caption), Type.caption, Fill.Solid(Colors.textSecondary))
+        val controls = shell?.dialogControlBoxes().orEmpty()
+        val controlTop = controls.minOfOrNull { it.top } ?: (b.bottom - 6f)
+        val bubble = Box(b.left + 10f, titleY + p.capHeight(Type.caption) + 12f, b.right - 10f, controlTop - 4f)
+        if (bubble.height > 18f) {
+            JarvisReferenceHud.surface(p, bubble, 10f, Colors.cyan, Colors.cyanDeep)
+            val latest = s.cockpit.dialog.lastOrNull { !it.fromOwner }?.text
+                ?: s.cockpit.dialog.lastOrNull()?.text ?: "Noch kein Gespräch."
+            val lineHeight = p.capHeight(Type.caption) + 4f
+            val count = ((bubble.height - 12f) / lineHeight).toInt().coerceAtLeast(1)
+            wrap(p, latest, Type.caption, bubble.width - 18f).take(count).forEachIndexed { i, line ->
+                p.drawText(line, bubble.left + 9f, bubble.top + 6f + p.capHeight(Type.caption) + i * lineHeight,
+                    Type.caption, Fill.Solid(Colors.text))
+            }
         }
-        val st = Type.caption; val cap = p.capHeight(st)
-        val pitch = cap + 6f
-        val room = ((b.bottom - 6f - (y0 + 8f)) / pitch).toInt().coerceAtLeast(0)
-        rows(slot, s, now).take(room).forEachIndexed { i, row ->
-            val y = y0 + 8f + pitch * (i + 1) - 2f
-            p.fillCircle(b.left + 12f, y - cap / 2f, 2.2f, Fill.Solid(tone(row.state)))
-            val valueW = if (row.value.isEmpty()) 0f else minOf(p.measureText(row.value, st), b.width * .5f)
-            p.drawText(fit(p, row.label, st, b.width - 30f - valueW), b.left + 19f, y, st, Fill.Solid(Colors.text))
-            if (row.value.isNotEmpty()) p.drawText(fit(p, row.value, st, b.width * .5f), b.right - 9f, y, st,
-                Fill.Solid(tone(row.state)), TextAlign.RIGHT)
-        }
-    }
-
-    private fun statusBar(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
-        val segs = statusSegments(s)
-        val w = b.width / segs.size; val st = Type.status; val cy = b.top + b.height / 2f
-        segs.forEachIndexed { i, (text, ok) ->
-            val l = b.left + i * w
-            if (i > 0) p.drawLine(l, b.top + 6f, l, b.bottom - 6f, 1f, Fill.Solid(Colors.rim))
-            var x = l + 10f
-            if (i == 0) { p.fillCircle(x + 2f, cy, 3f, Fill.Solid(if (ok) Colors.ok else Colors.textMuted)); x += 10f }
-            p.drawText(fit(p, text, st, l + w - 6f - x), x, cy + p.capHeight(st) / 2f, st,
-                Fill.Solid(if (i == 0 && ok) Colors.okSoft else Colors.textSecondary))
-        }
-    }
-
-    private fun dialog(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
-        val capT = p.capHeight(Type.heading)
-        ContinuumIcons.draw(p, Icon.PULSE, b.left + 15f, b.top + 9f + capT / 2f, 16f, Fill.Solid(Colors.cyan))
-        JarvisNeon.text(p, "JARVIS", b.left + 28f, b.top + 9f + capT, Type.heading, Colors.cyan)
-        p.drawText(fit(p, "Dein On-Device-KI-Begleiter", Type.caption, b.width - 36f), b.left + 28f, b.top + 9f + capT + 5f + p.capHeight(Type.caption),
-            Type.caption, Fill.Solid(Colors.textSecondary))
-        val st = Type.caption; val cap = p.capHeight(st); val pitch = cap + 6f
-        var y = b.top + 9f + capT + 5f + p.capHeight(Type.caption) + 12f
-        for (row in ContinuumCockpitPresentation.dialogRows(s.cockpit)) {
-            val text = if (row.value.isEmpty()) row.label else row.value
-            val color = if (row.state == Tone.ACTIVE) Colors.text else Colors.textSecondary
-            for (line in wrap(p, text, st, b.width - 20f)) {
-                if (y + cap > b.bottom - 6f) return
-                y += pitch; p.drawText(line, b.left + 10f, y, st, Fill.Solid(color))
+        controls.forEachIndexed { i, box ->
+            val active = (i == 0 && s.presentation.listening) || (i == 1 && s.presentation.cameraSessionActive)
+            val color = if (active) Colors.ok else if (i == 2) Colors.violetRim else Colors.cyan
+            val radius = minOf(15f, box.width * .36f)
+            JarvisNeon.halo(p, box.centerX, box.centerY, radius * 1.7f, color, if (active) .30f else .14f)
+            p.strokeCircle(box.centerX, box.centerY, radius, 1f, Fill.Solid(color))
+            when (i) {
+                0 -> microphoneGlyph(p, box.centerX, box.centerY, 17f, color)
+                1 -> cameraGlyph(p, box.centerX, box.centerY, 17f, color)
+                else -> ContinuumIcons.draw(p, Icon.ATOM, box.centerX, box.centerY, 19f, Fill.Solid(color))
             }
         }
     }
 
-    private fun userCard(p: ContinuumPainter, b: Box) {
-        if (at.heinz.deviceai.cockpit.JarvisUserCardSlot.renderer != null) return // the registered view draws itself
-        JarvisOwnerCardContent.draw(p, b, at.heinz.deviceai.cockpit.JarvisUserCardSlot.latest)
+    private fun microphoneGlyph(p: ContinuumPainter, x: Float, y: Float, size: Float, color: Int) {
+        val k = size / 18f; val fill = Fill.Solid(color)
+        p.strokeRoundRect(x - 3f*k, y - 8f*k, x + 3f*k, y + 3f*k, 3f*k, 1.3f, fill)
+        p.strokeArc(x - 6f*k, y - 3f*k, x + 6f*k, y + 7f*k, 0f, 180f, 1.3f, fill)
+        p.drawLine(x, y + 7f*k, x, y + 10f*k, 1.3f, fill)
+        p.drawLine(x - 4f*k, y + 10f*k, x + 4f*k, y + 10f*k, 1.3f, fill)
     }
 
-    /** Greedy word wrap. */
+    private fun cameraGlyph(p: ContinuumPainter, x: Float, y: Float, size: Float, color: Int) {
+        val k = size / 20f; val fill = Fill.Solid(color)
+        p.strokeRoundRect(x - 10f*k, y - 7f*k, x + 10f*k, y + 7f*k, 4f*k, 1.2f, fill)
+        p.strokeCircle(x, y, 4f*k, 1.2f, fill)
+        p.fillCircle(x, y, 1.7f*k, fill)
+    }
+
     fun wrap(p: ContinuumPainter, text: String, st: TextStyle, w: Float): List<String> {
         val out = mutableListOf<String>(); var line = ""
-        for (word in text.split(' ').filter { it.isNotEmpty() }) {
+        for (word in text.split(Regex("\\s+")).filter { it.isNotEmpty() }) {
             val next = if (line.isEmpty()) word else "$line $word"
             if (p.measureText(next, st) <= w || line.isEmpty()) line = next else { out += line; line = word }
         }
@@ -227,22 +280,19 @@ object JarvisCockpitGridContent {
         return out.map { fit(p, it, st, w) }
     }
 
-    /** Tile content inside the already drawn tile card (ref5: icon left, title, two subtitle lines, chevron). */
     fun drawTile(p: ContinuumPainter, b: Box, tile: JarvisTile, subtitle: List<String>) {
-        val st = JarvisDesign.Styles.tile
-        val iconSize = minOf(st.iconSize, b.height * .5f)
-        val ix = b.left + 12f + iconSize / 2f; val cy = b.top + b.height / 2f
+        val iconSize = minOf(26f, b.height * .5f)
+        val ix = b.left + 10f + iconSize / 2f; val cy = b.centerY
         val accent = if (tile.target in setOf("memory", "agents")) Colors.violetRim else Colors.cyan
         JarvisNeon.halo(p, ix, cy, iconSize * .85f, accent, .20f)
         if (!JarvisRailIcons.draw(p, tile.target, ix - iconSize / 2f, cy - iconSize / 2f, iconSize, Colors.iconCore))
             ContinuumIcons.draw(p, tile.icon, ix, cy, iconSize, Fill.Solid(Colors.iconCore))
-        val x = ix + iconSize * .5f + 10f; val room = b.right - 18f - x
+        val x = ix + iconSize / 2f + 10f; val room = b.right - 7f - x
         val lines = subtitle.take(2)
-        val capT = p.capHeight(Type.tileLabel)
-        val lh = minOf(Type.subtitleLineHeight, (b.height - capT - 8f) / maxOf(1, lines.size))
-        var y = cy - (capT + lines.size * lh) / 2f + capT
+        val cap = p.capHeight(Type.tileLabel)
+        val pitch = p.capHeight(Type.subtitle) + 3f
+        var y = cy - (cap + lines.size * pitch) / 2f + cap
         p.drawText(fit(p, tile.label, Type.tileLabel, room), x, y, Type.tileLabel, Fill.Solid(Colors.text))
-        lines.forEach { y += lh; p.drawText(fit(p, it, Type.subtitle, room), x, y, Type.subtitle, Fill.Solid(Colors.textSecondary)) }
-        ContinuumIcons.draw(p, Icon.CHEVRON_RIGHT, b.right - 9f, b.top + 11f, 8f, Fill.Solid(Colors.textSecondary), 1f)
+        lines.forEach { y += pitch; p.drawText(fit(p, it, Type.subtitle, room), x, y, Type.subtitle, Fill.Solid(Colors.textSecondary)) }
     }
 }

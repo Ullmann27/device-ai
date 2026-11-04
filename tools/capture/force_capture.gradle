@@ -1,0 +1,16 @@
+// Explicit capture invocation only: rerun this Test task, not its compilation dependencies.
+gradle.projectsEvaluated {
+    gradle.rootProject.allprojects { project ->
+        project.tasks.withType(org.gradle.api.tasks.testing.Test).configureEach { task ->
+            if (task.path == ':app:testDebugUnitTest') {
+                task.outputs.upToDateWhen { false }
+                task.maxParallelForks = 1
+                task.testLogging {
+                    events 'started', 'passed', 'failed', 'skipped'
+                    exceptionFormat 'full'
+                    showStandardStreams = true
+                }
+            }
+        }
+    }
+}

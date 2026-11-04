@@ -41,8 +41,10 @@ class JarvisShellContentTest {
         val first = fold.tileBoxes().first()
         assertEquals("chat", JarvisShellContent.hitTarget(fold, tiles, first.centerX, first.top + first.height / 2f))
         val rail = fold[JarvisShellLayout.Slot.NAV_RAIL]!!
-        assertEquals("home", JarvisShellContent.hitTarget(fold, tiles, rail.centerX, rail.top + 20f))
-        val phone = JarvisShellLayout.create(412f, 915f)
+        val firstRailRow = JarvisTiles.railItemBoxes(rail).first()
+        assertEquals("home", JarvisShellContent.hitTarget(fold, tiles, firstRailRow.centerX, firstRailRow.centerY))
+        assertEquals(null, JarvisShellContent.hitTarget(fold, tiles, rail.left, rail.top))
+        val phone = JarvisShellLayout.create(412f, 915f, includeBottomNavigation = true)
         val nav = phone[JarvisShellLayout.Slot.BOTTOM_NAV]!!
         assertEquals(JarvisTiles.bottomNav.last().target, JarvisShellContent.hitTarget(phone, tiles, nav.right - 4f, nav.top + 10f))
     }

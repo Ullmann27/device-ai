@@ -29,6 +29,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private lateinit var focus: AvatarGlbContract.Focus
     private var viewportWidth = 0
     private var viewportHeight = 0
+    private var bloomSettings: com.google.android.filament.View.BloomOptions? = null
+    private var reducedQuality = false
 
     private fun initialize(bytes: ByteArray, metadata: AvatarGlbContract.Metadata) {
         Gltfio.init()
@@ -60,7 +62,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
                 lensFlare = false
                 starburst = false
                 chromaticAberration = 0f
-            }
+            }.also { options -> bloomSettings = options }
         }
         swapChain = e.createSwapChain(surface, SwapChainFlags.CONFIG_TRANSPARENT)
         provider = UbershaderProvider(e)
@@ -82,7 +84,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             joints[name] = Joint(instance, e.transformManager.getTransform(instance, FloatArray(16)))
         }
         focus = metadata.focus
-        camera!!.lookAt(focus.centerX, focus.centerY, focus.centerZ + 2.0,
+        val cameraAngle = Math.toRadians(focus.azimuthDegrees)
+        camera!!.lookAt(focus.centerX + kotlin.math.sin(cameraAngle) * 2.0, focus.centerY,
+            focus.centerZ + kotlin.math.cos(cameraAngle) * 2.0,
             focus.centerX, focus.centerY, focus.centerZ, 0.0, 1.0, 0.0)
         scene!!.addEntities(a.entities)
         // Filament supports one directional key. Bounded point fills add real
@@ -96,41 +100,34 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         addLight(LightManager.Builder(LightManager.Type.POINT)
             .color(.18f, .82f, 1f).intensity(24_000f)
             .position(.32f, .35f, -.16f).falloff(1.2f).castShadows(false))
-        // VIDEO-SPEC: eyes without pupils (cyan/white). Hide iris/pupil meshes via layer mask; asset unchanged.
-        for (name in listOf("IrisLeftMesh", "IrisRightMesh", "PupilLeftMesh", "PupilRightMesh")) {
-            val entity = a.getFirstEntityByName(name)
-            if (entity == 0) continue
-            val ri = e.renderableManager.getInstance(entity)
-            if (ri != 0) e.renderableManager.setLayerMask(ri, 0xff, 0)
-        }
-        for (name in listOf("EyeballLeftMesh", "EyeballRightMesh")) {
-            val entity = a.getFirstEntityByName(name)
-            if (entity != 0) eyeMaterials += materialsOf(e, entity)
-        }
-        // Holo glow: emissive of every glTF material instance, driven by the TTS envelope in render().
-        holoMaterials += a.instance.materialInstances.filter { mi -> runCatching { mi.material.hasParameter("emissiveFactor") }.getOrDefault(false) }
+        // The current portrait reference includes a readable iris and pupil.
+        // Keep the authored glTF materials and eye meshes; a global cyan
+        // emissive override would erase the violet/cyan surface design.
         a.releaseSourceData()
-    }
-
-    private val holoMaterials = ArrayList<com.google.android.filament.MaterialInstance>()
-    private val eyeMaterials = ArrayList<com.google.android.filament.MaterialInstance>()
-
-    private fun materialsOf(e: Engine, entity: Int): List<com.google.android.filament.MaterialInstance> {
-        val ri = e.renderableManager.getInstance(entity)
-        if (ri == 0) return emptyList()
-        return (0 until e.renderableManager.getPrimitiveCount(ri)).map { e.renderableManager.getMaterialInstanceAt(ri, it) }
-            .filter { mi -> runCatching { mi.material.hasParameter("emissiveFactor") }.getOrDefault(false) }
     }
 
     private var lastGlow = -1f
 
-    /** #00FFFF..#0088FF emissive, quiet at rest and brighter with the real speech envelope (no invented speech). */
+    /** Real speech may brighten bloom slightly; it never changes the authored material hues. */
     private fun applyGlow(speak: Float) {
-        val k = .22f + .78f * speak.coerceIn(0f, 1f)
+        val k = if (speak.isFinite()) speak.coerceIn(0f, 1f) else 0f
         if (kotlin.math.abs(k - lastGlow) < .01f) return
         lastGlow = k
-        for (mi in holoMaterials) runCatching { mi.setParameter("emissiveFactor", 0f, .53f + .47f * k * k, 1f * k) }
-        for (mi in eyeMaterials) runCatching { mi.setParameter("emissiveFactor", .75f, 1f, 1f) }
+        bloomSettings?.let { options ->
+            options.strength = .35f + .12f * k
+            view?.bloomOptions = options
+        }
+    }
+
+    /** Same animated model at every quality level; only bounded bloom buffers change. */
+    fun setQuality(reduced: Boolean) {
+        if (reducedQuality == reduced) return
+        reducedQuality = reduced
+        bloomSettings?.let { options ->
+            options.resolution = if (reduced) 64 else 128
+            options.levels = if (reduced) 3 else 4
+            view?.bloomOptions = options
+        }
     }
 
     private fun addLight(builder: LightManager.Builder) {
@@ -154,15 +151,17 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         }
         mapper.update(pose, seconds, motion)
         applyGlow(if (motion) pose.speakEnergy else 0f)
-        // VIDEO-SPEC C: idle float (4 s sine, ~2.5 px) + slow camera drift; static when motion is off.
-        if (motion && seconds.isFinite()) {
-            val vertical = focus.verticalHalfSpan(width.toDouble() / height)
-            val px = 2.0 * vertical / height
-            val dy = kotlin.math.sin(seconds * (2.0 * Math.PI / 4.0)) * 2.5 * 2.6 * px
-            val dz = kotlin.math.sin(seconds * .21) * .06
-            camera!!.lookAt(focus.centerX, focus.centerY - dy, focus.centerZ + 2.0 + dz,
-                focus.centerX, focus.centerY - dy, focus.centerZ, 0.0, 1.0, 0.0)
-        }
+        // Cosmetic view drift uses the existing clock. Reduced motion restores
+        // the same rest camera immediately; it does not change the actual pose.
+        val vertical = focus.verticalHalfSpan(width.toDouble() / height)
+        val px = 2.0 * vertical / height
+        val moving = motion && seconds.isFinite()
+        val dy = if (moving) kotlin.math.sin(seconds * (2.0 * Math.PI / 4.0)) * 2.5 * 2.6 * px else 0.0
+        val distance = 2.0 + if (moving) kotlin.math.sin(seconds * .21) * .06 else 0.0
+        val cameraAngle = Math.toRadians(focus.azimuthDegrees)
+        camera!!.lookAt(focus.centerX + kotlin.math.sin(cameraAngle) * distance, focus.centerY - dy,
+            focus.centerZ + kotlin.math.cos(cameraAngle) * distance,
+            focus.centerX, focus.centerY - dy, focus.centerZ, 0.0, 1.0, 0.0)
         for (instance in morphInstances) e.renderableManager.setMorphWeights(instance, mapper.weights, 0)
         rotate("Head", mapper.headPitch, mapper.headYaw)
         rotate("EyeLeft", mapper.eyePitch, mapper.eyeYaw); rotate("EyeRight", mapper.eyePitch, mapper.eyeYaw)

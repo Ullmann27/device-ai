@@ -1,0 +1,9 @@
+START expandedCanonical(at.heinz.deviceai.JarvisDeterministicCaptureUiTest)
+CAPTURE_PHASE activity.setup; native Canvas, explicitly selected 2D head
+CAPTURE_PHASE layout
+CAPTURE_PHASE draw
+CAPTURE_IMAGE /workspace/scratch/b3170a7ae924/screenshots/diagnostic/activity-expanded-960x640.png
+CAPTURE_PHASE cleanup
+FINISH expandedCanonical(at.heinz.deviceai.JarvisDeterministicCaptureUiTest)
+RESULT total=1 failed=0 ignored=0
+EXIT_CODE=0

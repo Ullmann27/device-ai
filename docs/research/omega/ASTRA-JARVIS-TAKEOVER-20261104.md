@@ -12,7 +12,37 @@ Owner request in this session: continue the supplied three-phase plan; reuse the
 
 The owner's latest M2.10 decision supersedes older undecided handoffs: automatic recovery remains; recovered owner facts stay inactive until explicit owner confirmation. A damaged revocation frame must never reactivate a revoked fact.
 
-## Execution ledger
+## Current integrated result
+
+The selected WIPs, visual refinement, original avatar/orb wiring and reviewed memory recovery are integrated. The completed standard unit gate is bound to local source `f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b`; subsequent additions are UI tests and documentation only. Its `app/src/main` Git tree is `9228dfb380983f59c96ac8d1fcd290b99624cd44`. The remote snapshot is delivered through open **Draft PR #491**, based on PR #483's integration branch, with exact local/remote tree equality verified when publishing.
+
+### Interface and genuine events
+
+The single Activity-owned menu rail now reserves space once. Buttons visually adjoin while keeping separate >=48 dp touch rows. Shared cyan/violet materials, soft layered glow, actual vector icons and truthful owner/status content are used by the cockpit. The original live hologram view retains its state/audio/director ownership; separate HEAD and ORB regions fix the previous collision and squeezed sphere. Docking/resizing no longer rewrites the saved 3D preference. Curved fibres and revised portrait framing improve the Canvas fallback without replacing the original GLB.
+
+`MemoryEventSources.forApp(filesDir)` now subscribes to the real app-scoped hub through the existing source adapter. Research start does not manufacture document arrivals; only genuine confirmed writes produce a confirmed arrival effect, hypotheses remain distinct, and pause/detach reject late visual callbacks. Unknown counters and absent sensors remain unknown. The hourly Memory Activity chart still lacks a live producer and therefore remains empty rather than showing invented bars.
+
+The current picture and exact render provenance are under `docs/evidence/astra-takeover-20261104`. Visual source `41433ff0` is unchanged by the later recovery/caller work. The picture is a production Java2D component preview of the Canvas fallback, **not** an Activity/Fold7/Filament capture or a claim of exact ref5 likeness.
+
+### Recovery and caller safeguards
+
+The existing compatible LEX2 / segmented LEX3 v1 store now supports the explicitly selected automatic recovery path, without substituting #371's incompatible flat format. Verified surviving data is recovered, damaged evidence preserved, and a durable consent marker written before a recovered primary is published. Restored owner facts remain inactive until the trusted owner's new decision binds the exact displayed IDs/content hashes and review fingerprint.
+
+The production Activity uses the reviewed recovery factory on its existing I/O executor. The memory center provides the explicit review dialog, initially selecting no facts, with lifecycle cancellation and stale/write-failure handling. Existing strict archival readers remain strict. A recovery history, including a completed empty marker, blocks re-import of old preference facts under the same store transaction; a fresh explicit owner confirmation remains available.
+
+Legacy `BootstrapBrain` overview, structured-knowledge and revision routes also read currently eligible Core facts through the existing executor. The memory display no longer treats raw old preferences as current consent. Callback token ownership, session identity and cancellation are checked before presentation; STOP and a later typed draft are preserved. The ordinary dialogue callback also rejects cancelled/stale-session output. Independent source review approved this combined route; actual Caller tests now pass.
+
+### Verification and remaining scope
+
+- Complete standard Gradle unit suite: **2416 total / 0 failures/errors / 19 skipped** (2397 passed), 434 suites, successful complete compilation. Baseline was independently reproduced at 2371/0/19.
+- **21 targeted real Robolectric UI cases passed** on the same fully compiled application. Seven new Caller cases use `09e23507`; the other fourteen cover original avatar view/viewport, genuine events, attach/detach and explicit owner review. No product assertion was removed or weakened.
+- Configured NewApi-only lint gate: 0 issues, exit 0. `assembleDebug`: successful local QA APK, exit 0; no installation or publication. Exact source binding, hashes and any additional host gate are in `docs/evidence/astra-takeover-20261104/final-qa.json`.
+- Full Activity capture/lifecycle gate is still open after a bounded pre-assertion Robolectric traversal timeout; no Fold7 is connected. Java2D/LEGACY tests do not prove native GPU appearance or performance.
+- Original GLB provenance remains unresolved; its bytes are unchanged. Ref5 facial anatomy, 3D surface shading, final native glow and actual-device typography/animation still require native comparison. This is not a pixel-perfect or release acceptance.
+- Broader CognitiveLoop/ReasoningModel/LoopMemoryPort and action-scene work, unconnected calculation/chart producers and owner-gated provider/permission decisions remain follow-up scope. Existing local model/orchestrator/ToolGate/ThinkingMemory are reused, not replaced. F1 exact outbound query approval remains mandatory before attaching the document-derived web search.
+- After a real recovery has occurred on a device, do not roll back to an older reader that ignores the consent marker without first re-blocking restored facts. No device installation occurred here.
+
+## Initial execution ledger (historical checkpoints)
 
 1. BASELINE — PASS: official JDK 17 and Android SDK 36; unchanged application source compiled, unit suite, configured NewApi lint and assembleDebug passed. Separate serial gates succeeded after an earlier concurrent Gradle attempt lost its daemon. Native screenshot gate remains NOT_RUN to completion (see evidence README).
 2. WIP RECOVERY — IN_PROGRESS: selected changes from all three saved branches are present in the candidate, not yet accepted. Imported source commits: `76469429`, `4d755c50`, `69b82313`, `34d3488b`, `c7fc330d`, `d1da1d1d`. The shared glow commit is imported once. Existing laser methods and Android 12 on-device speech restrictions are retained. Five new regressions failed on this combined WIP, then all five and 26 existing related tests passed on local fix `e33a4dd9`. The latest combined candidate has additional changes and still needs its own final gate.
@@ -23,7 +53,7 @@ The owner's latest M2.10 decision supersedes older undecided handoffs: automatic
 7. FINAL HOST QA — PENDING: source-bound unit, UI, lint and build evidence; visual comparison with the existing references; independent review.
 8. FOLD7 — NOT_RUN: no connected device identified. No device or GPU claims from host tests.
 
-## Preflight findings (source inspection, not executed reproductions)
+## Initial preflight findings (historical source inspection)
 
 - Existing Activity signals target the original `ContinuumHologramView`, while the cockpit avatar adapter creates another view and hides the original. Test visible-state propagation and resize identity before fixing.
 - Memory candidate writes reconfirmation sidecar after recovering the ledger and tolerates sidecar write errors. Test persistence across reopen/process restart before accepting it; also test temporal-cache invalidation after reconfirmation.
@@ -44,7 +74,7 @@ Owner steering: ref5 is the visual reference, including adjoining buttons and so
 
 The navigation WIP is five unique commits ahead of the integration baseline (including two merge commits), not 42 missing development changes. Safety's API-31 guard already exists in the baseline; only its new presentation changes are imported. Old author messages containing test claims refer to their original source commits, not this candidate.
 
-## Reviewable visual integration checkpoint
+## Earlier visual integration checkpoint (historical e19 state)
 
 Local candidate `e19df153` combines the shared window/rail geometry, reference tile materials/icons, truthful owner-card content and avatar wiring. Local follow-up `f43b521e` also gives native AGSL the same measured colour tokens as the portable painter; native shader execution remains unverified here.
 

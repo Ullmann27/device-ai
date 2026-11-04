@@ -98,6 +98,13 @@ object BootstrapBrain {
         }
     }
 
+    /** These routes read existing owner statements. The Activity resolves them through the checked ledger on IO. */
+    fun requiresOwnerFacts(utterance: String): Boolean {
+        val low = utterance.trim().lowercase(Locale.ROOT)
+        return low.startsWith("korrigiere:") || low.startsWith("widerrufe:") || low.startsWith("prüfe wissen:") ||
+            low.contains("was weißt du") || low.contains("was hast du dir gemerkt") || low == "erinnerungen"
+    }
+
     fun decide(utterance: String, facts: List<String>,
                learnedCommands: Map<String, String> = emptyMap()): BootstrapDecision {
         if (utterance.length > 2_048) return BootstrapDecision(BootstrapKind.REPLY,

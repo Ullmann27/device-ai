@@ -74,6 +74,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (isAttachedToWindow && foregroundActive && isShown) invalidate()
     }
     private val renderer = ContinuumHologramRenderer()
+    private val referenceBrain = at.heinz.deviceai.ui.ContinuumBrainOrbRenderer()
     private val avatarBrandFill = Fill.Solid(0xff9aefff.toInt())
     private val avatarBrandStyle = TextStyle(FontFamily.DISPLAY, 700, 14f, letterSpacing = 2f)
     private val painter = AndroidContinuumPainter(context.assets)
@@ -151,7 +152,8 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (canAnimateFrame() && !framePending) {
             framePending = true
             // Vsync-paced with a positive delay; moderate heat reduces requests, severe heat stops them.
-            postOnAnimationDelayed(drawFrame, if (head3dEnabled) { if (thermalStatus >= 2) 65L else 25L } else if (thermalStatus >= 2) 32L else 8L)
+            val delay = (renderBudget().frameDelayMillis - 16L).coerceAtLeast(0L)
+            postOnAnimationDelayed(drawFrame, delay)
         }
     }
     private val motionObserver = object : ContentObserver(mainHandler) {
@@ -267,7 +269,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     private fun canDisplay3d() = head3dEnabled && foregroundActive && isAttachedToWindow && isShown &&
-        windowVisibility == VISIBLE && !powerManager.isPowerSaveMode && thermalStatus < 3
+        windowVisibility == VISIBLE
 
     private fun update3d() {
         if (!canDisplay3d()) { release3d(clearAsset = !head3dEnabled); return }
@@ -337,14 +339,14 @@ class ContinuumHologramView @JvmOverloads constructor(
         val bytes = assetBytes ?: return
         val metadata = assetMetadata ?: return
         runCatching { FilamentAvatarRenderer.create(surface, bytes, metadata) }
-            .onSuccess { native3d = it }.onFailure { fail3d() }
+            .onSuccess { native3d = it; it.setQuality(renderBudget().reducedBloom) }.onFailure { fail3d() }
     }
 
     private fun fail3d() {
         native3dFailed = true
         release3d(clearAsset = true)
         if (isAttachedToWindow && foregroundActive) Toast.makeText(context,
-            "3D-Kopf derzeit nicht verfügbar · native 2D-Vorschau aktiv", Toast.LENGTH_LONG).show()
+            "3D-Kopf derzeit nicht verfügbar", Toast.LENGTH_LONG).show()
         invalidate()
     }
 
@@ -440,7 +442,8 @@ class ContinuumHologramView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         cockpitSequence?.setMotionAllowed(false)
         clearTaskEffects()
-        release3d(clearAsset = true)
+        // A fold/navigation reparent destroys the surface, but retains validated immutable asset bytes.
+        release3d(clearAsset = false)
         mainHandler.removeCallbacks(avatarInvalidation)
         avatarInvalidationPending.set(false)
         synchronized(avatarPose) {
@@ -485,6 +488,12 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun canAnimateFrame() =
         foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE
 
+    private fun renderBudget() = at.heinz.deviceai.ui.JarvisRenderQuality.resolve(
+        foregroundActive && isAttachedToWindow && isShown && windowVisibility == VISIBLE,
+        powerManager.isPowerSaveMode, thermalStatus,
+        !animationsEnabled || !ValueAnimator.areAnimatorsEnabled(),
+        currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING)
+
     /** No private content. Owner can inspect this by long-pressing the hologram. */
     /** Read only on the Android UI thread. Compares scheduled callbacks and real View draws. */
     data class MotionSample(val callbackCount: Long, val drawCount: Long, val phase: Float, val reason: String)
@@ -518,6 +527,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         }
         cockpitSequence?.setMotionAllowed(canAnimateFrame())
         update3d()
+        native3d?.setQuality(renderBudget().reducedBloom)
         invalidate()
         scheduleFrame()
     }
@@ -570,11 +580,14 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (headEnabled) {
             val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
             if (canDisplay3d() && native3d != null) {
-                runCatching { native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0) }
+                runCatching {
+                    native3d!!.setQuality(renderBudget().reducedBloom)
+                    native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0)
+                }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
                     .onFailure { fail3d() }
             }
-            if (!native3dDrawn) {
+            if (!native3dDrawn && !head3dEnabled) {
                 val headCanvas = canvas.save()
                 canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
                 avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
@@ -589,11 +602,34 @@ class ContinuumHologramView @JvmOverloads constructor(
                 val orbCanvas = canvas.save()
                 canvas.translate(orbDrawBounds.left / density, orbDrawBounds.top / density)
                 canvas.clipRect(0f, 0f, orbWidth, orbHeight)
-                renderer.layout(orbWidth, orbHeight)
-                renderer.draw(painter, renderFrame)
+                if (cockpitOrbBounds != null) {
+                    val r = at.heinz.deviceai.ui.ContinuumBrainOrbRenderer.radiusFor(orbWidth, orbHeight)
+                    val cy = (orbHeight - 2.44f * r) / 2f + r
+                    val now = SystemClock.uptimeMillis()
+                    val effects = cockpitSequence?.effects
+                    val budget = at.heinz.deviceai.ui.JarvisRenderQuality.resolve(
+                        foregroundActive, powerManager.isPowerSaveMode, thermalStatus, !canAnimateFrame(),
+                        currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING)
+                    referenceBrain.draw(painter, orbWidth / 2f, cy, r,
+                        at.heinz.deviceai.ui.ContinuumBrainOrbRenderer.Signals(
+                            pulse = effects?.orbPulseLevel(now) ?: 0f,
+                            recall = effects?.recallBrightness(now) ?: 0f,
+                            hypothesis = effects?.hypothesisVisible(now) ?: false,
+                            phase = avatarSeconds * .14f,
+                            processing = currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING,
+                            particles = budget.particleCount, orbitSegments = budget.orbitSegments))
+                } else {
+                    renderer.layout(orbWidth, orbHeight)
+                    renderer.draw(painter, renderFrame)
+                }
                 canvas.restoreToCount(orbCanvas)
             }
-            if (cockpit) painter.drawText("JARVIS", headDrawBounds.centerX() / density,
+            if (!native3dDrawn && head3dEnabled) {
+                val status = if (native3dFailed) "3D derzeit nicht verfügbar" else "3D wird initialisiert …"
+                painter.drawText(status, headDrawBounds.centerX() / density,
+                    headDrawBounds.centerY() / density, TextStyle(FontFamily.TEXT, 400, 12f), avatarBrandFill, TextAlign.CENTER)
+            }
+            if (cockpit && cockpitHeadBounds == null) painter.drawText("JARVIS", headDrawBounds.centerX() / density,
                 if (cockpitHeadBounds != null) (headDrawBounds.top + headDrawBounds.height() * .96f) / density else height / density * .96f,
                 avatarBrandStyle, avatarBrandFill, TextAlign.CENTER)
         } else {

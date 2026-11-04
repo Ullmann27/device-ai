@@ -12,7 +12,8 @@ object AvatarGlbContract {
     val TARGETS = listOf("SIL", "PP", "FF", "TH", "DD", "KK", "CH", "SS", "NN", "RR", "AA", "E", "I", "O", "U",
         "BlinkLeft", "BlinkRight", "BrowUp", "BrowDown", "Smile", "JawOpen")
     val NODES = listOf("AvatarRoot", "Neck", "Head", "EyeLeft", "EyeRight", "Jaw")
-    data class Focus(val centerX: Double, val centerY: Double, val centerZ: Double, val halfWidth: Double, val halfHeight: Double) {
+    data class Focus(val centerX: Double, val centerY: Double, val centerZ: Double, val halfWidth: Double,
+        val halfHeight: Double, val azimuthDegrees: Double = 0.0) {
         /** Bust framing includes the neck and upper shoulders; only the outer torso is cropped. */
         fun verticalHalfSpan(aspect: Double): Double {
             require(aspect.isFinite() && aspect > 0)
@@ -129,6 +130,10 @@ object AvatarGlbContract {
         val neckY = worldFrame(names.indexOf("Neck"))[4]
         var minHeadX = Double.POSITIVE_INFINITY; var maxHeadX = Double.NEGATIVE_INFINITY
         var minHeadZ = Double.POSITIVE_INFINITY; var maxHeadZ = Double.NEGATIVE_INFINITY
+        val portraitAzimuth = -22.0
+        val portraitAngle = Math.toRadians(portraitAzimuth)
+        val portraitCos = kotlin.math.cos(portraitAngle); val portraitSin = kotlin.math.sin(portraitAngle)
+        var minPortraitX = Double.POSITIVE_INFINITY; var maxPortraitX = Double.NEGATIVE_INFINITY
         var maxHeadY = Double.NEGATIVE_INFINITY
         var minBustY = Double.POSITIVE_INFINITY
         var minBustX = Double.POSITIVE_INFINITY; var maxBustX = Double.NEGATIVE_INFINITY
@@ -192,6 +197,8 @@ object AvatarGlbContract {
                                 val z = vertex[2] * world[2] + world[5]
                                 minHeadX = minOf(minHeadX, x); maxHeadX = maxOf(maxHeadX, x)
                                 minHeadZ = minOf(minHeadZ, z); maxHeadZ = maxOf(maxHeadZ, z); maxHeadY = maxOf(maxHeadY, y)
+                                val portraitX = x * portraitCos - z * portraitSin
+                                minPortraitX = minOf(minPortraitX, portraitX); maxPortraitX = maxOf(maxPortraitX, portraitX)
                             }
                         }
                         val skin = skins.getJSONObject(nodes.getJSONObject(node).getInt("skin"))
@@ -220,8 +227,14 @@ object AvatarGlbContract {
         val top = maxHeadY + (maxHeadY - bottom) * .05
         require(listOf(minHeadX, maxHeadX, minHeadZ, maxHeadZ, bottom, top).all { it.isFinite() } &&
             maxHeadX > minHeadX && maxHeadZ > minHeadZ && top > bottom)
-        val focus = Focus((minHeadX + maxHeadX) / 2, (bottom + top) / 2, (minHeadZ + maxHeadZ) / 2,
-            minOf((maxBustX - minBustX) / 2, (maxHeadX - minHeadX) * .825), (top - bottom) / 2)
+        val centerZ = (minHeadZ + maxHeadZ) / 2
+        val portraitCenter = (minPortraitX + maxPortraitX) / 2
+        val centerX = (portraitCenter + centerZ * portraitSin) / portraitCos
+        // Frame the real projected head, with 10 mm of pose margin. Fitting the
+        // shoulder width made the head occupy only 53% of the narrow cockpit.
+        // The neck remains in the vertical frame; the broad torso can crop.
+        val focus = Focus(centerX, (bottom + top) / 2, centerZ,
+            (maxPortraitX - minPortraitX) / 2 + .010, (top - bottom) / 2, portraitAzimuth)
         return Metadata(requireNotNull(targets) { "No morph mesh" }, morphNodes, focus)
     }
 }

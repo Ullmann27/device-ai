@@ -32,7 +32,7 @@ object JarvisCockpitPanels {
     private fun rowsTop(p: ContinuumPainter, titleBaseline: Float) = titleBaseline + 8f
 
     private fun pitch(p: ContinuumPainter, b: Box, top: Float, n: Int) =
-        ((b.bottom - 6f - top) / maxOf(n, 1)).coerceIn(p.capHeight(Type.caption) + 6f, 18f)
+        ((b.bottom - 6f - top) / maxOf(n, 1)).coerceAtLeast(p.capHeight(Type.caption) + 6f)
 
     // ---- Active Agents --------------------------------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ object JarvisCockpitPanels {
     fun taskRows(s: ContinuumDashboardState): List<Row> = ContinuumCockpitPresentation.processRows(s.cockpit)
 
     fun drawTaskFlow(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
-        val y0 = title(p, b, "Aktueller Ablauf") { x, y -> ContinuumIcons.draw(p, Icon.REFRESH, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f) }
+        val y0 = title(p, b, "Current Task Flow") { x, y -> ContinuumIcons.draw(p, Icon.REFRESH, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f) }
         val rows = taskRows(s); val st = Type.caption; val cap = p.capHeight(st)
         val top = rowsTop(p, y0); val h = pitch(p, b, top, 5)
         val n = rows.take(((b.bottom - 4f - top) / h).toInt().coerceAtLeast(0))
@@ -97,36 +97,52 @@ object JarvisCockpitPanels {
         val temp = sys.temperatureC?.let { String.format(java.util.Locale.GERMANY, "%.0f °C", it) } ?: NONE
         return listOf(
             Segment(Seg.SYSTEM, "Systemstatus: ${sys.overall}", sys.openIssues == 0),
-            Segment(Seg.DEVICE, "Gerät: $net", sys.networkOnline == true),
+            Segment(Seg.DEVICE, "Netz: $net", sys.networkOnline == true),
             Segment(Seg.LOCAL_AI, "Lokale KI: ${s.model.stateLabel}", s.model.online),
             Segment(Seg.SYNC, "Continuum-Sync: ${s.storage.syncLabel}", false),
-            Segment(Seg.PRIVACY, "Privatsphäre: ${s.model.mode}", true),
-            Segment(Seg.LOAD, "CPU ${pct(sys.appCpuPercent)} | RAM ${pct(sys.memoryPercent)} | $temp", false),
+            Segment(Seg.PRIVACY, when (s.presentation.localOnly) {
+                true -> "Internet gesperrt"; false -> "Online nach Freigabe"; null -> "Freigaben: —"
+            }, s.presentation.localOnly == true),
+            Segment(Seg.LOAD, "App-CPU ${pct(sys.appCpuPercent)} · Geräte-RAM ${pct(sys.memoryPercent)} · Akku $temp", false),
         )
     }
 
     fun drawStatusBar(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
-        JarvisNeon.glassCard(p, b.left, b.top, b.right, b.bottom, b.height / 2.5f, JarvisDesign.Glow.SUBTLE)
-        val segs = statusSegments(s)
-        // ref5 widths (px): 160 | 150 | 165 | 200 | 205 | 210 → proportional
-        val weights = floatArrayOf(160f, 150f, 165f, 200f, 205f, 210f); val sum = weights.sum()
-        val st = Type.status; val cap = p.capHeight(st); val cy = b.top + b.height / 2f
-        var l = b.left
-        segs.forEachIndexed { i, seg ->
-            val w = b.width * weights[i] / sum
-            if (i > 0) p.drawLine(l, b.top + 5f, l, b.bottom - 5f, 1f, Fill.Solid(Colors.rim))
-            val ix = l + 12f
-            when (seg.kind) {
-                Seg.SYSTEM -> { if (seg.ok) JarvisNeon.bloom(p, ix, cy, 5f, Colors.ok, .6f); p.fillCircle(ix, cy, 3f, Fill.Solid(if (seg.ok) Colors.ok else Colors.textMuted)) }
-                Seg.DEVICE -> JarvisRailIcons.draw(p, "device", ix - 6f, cy - 6f, 12f, Colors.cyanSoft)
-                Seg.LOCAL_AI -> ContinuumIcons.draw(p, Icon.CPU, ix, cy, 12f, Fill.Solid(Colors.cyanSoft), 1f)
-                Seg.SYNC -> ContinuumIcons.draw(p, Icon.REFRESH, ix, cy, 12f, Fill.Solid(Colors.cyanSoft), 1f)
-                Seg.PRIVACY -> shield(p, ix, cy, 12f, Colors.cyanSoft)
-                Seg.LOAD -> JarvisRailIcons.draw(p, "system", ix - 6f, cy - 6f, 12f, Colors.violetSoft)
+        JarvisReferenceHud.surface(p, b, minOf(18f, b.height / 3f), Colors.violetRim, Colors.cyan)
+        val segments = statusSegments(s)
+        val compact = b.width < 600f || p.measureText(segments.last().text, Type.status) > b.width * .3f
+        val columns = if (b.width < 480f) 2 else if (compact) 3 else 6
+        val rows = (segments.size + columns - 1) / columns
+        val rowHeight = b.height / rows
+        segments.forEachIndexed { i, segment ->
+            val column = i % columns; val row = i / columns
+            val weights = floatArrayOf(1.1f, .8f, 1f, 1.2f, 1.1f, 1.8f)
+            val left = if (columns == 6) b.left + b.width * weights.take(i).sum() / weights.sum()
+                else b.left + column * b.width / columns
+            val width = if (columns == 6) b.width * weights[i] / weights.sum() else b.width / columns
+            val cy = b.top + (row + .5f) * rowHeight
+            if (column > 0) p.drawLine(left, cy - rowHeight * .32f, left, cy + rowHeight * .32f,
+                .8f, Fill.Solid(Colors.rim))
+            val x = left + 12f
+            when (segment.kind) {
+                Seg.SYSTEM -> {
+                    if (segment.ok) JarvisNeon.halo(p, x, cy, 9f, Colors.ok, .25f)
+                    p.fillCircle(x, cy, 3.5f, Fill.Solid(if (segment.ok) Colors.ok else Colors.textMuted))
+                }
+                Seg.DEVICE -> JarvisRailIcons.draw(p, "device", x - 6f, cy - 6f, 12f, Colors.cyanSoft)
+                Seg.LOCAL_AI -> ContinuumIcons.draw(p, Icon.CPU, x, cy, 14f, Fill.Solid(Colors.cyanSoft))
+                Seg.SYNC -> ContinuumIcons.draw(p, Icon.REFRESH, x, cy, 14f, Fill.Solid(Colors.cyanSoft))
+                Seg.PRIVACY -> shield(p, x, cy, 14f, Colors.cyanSoft)
+                Seg.LOAD -> JarvisRailIcons.draw(p, "system", x - 6f, cy - 6f, 12f, Colors.cyanSoft)
             }
-            val color = if (seg.kind == Seg.SYSTEM && seg.ok) Colors.ok else Colors.textSecondary
-            p.drawText(fit(p, seg.text, st, l + w - 4f - (ix + 10f)), ix + 10f, cy + cap / 2f, st, Fill.Solid(color))
-            l += w
+            val lines = JarvisCockpitGridContent.wrap(p, segment.text, Type.status, width - 28f)
+            val lineHeight = p.capHeight(Type.status) + 3f
+            val available = (rowHeight / lineHeight).toInt().coerceAtLeast(1)
+            val visible = lines.take(available)
+            visible.forEachIndexed { j, line ->
+                p.drawText(line, left + 24f, cy - visible.size * lineHeight / 2f + p.capHeight(Type.status) + j * lineHeight,
+                    Type.status, Fill.Solid(if (segment.kind == Seg.SYSTEM && segment.ok) Colors.ok else Colors.textSecondary))
+            }
         }
     }
 
