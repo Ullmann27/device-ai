@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "R4_SOURCE_INSPECTION_AND_PREREGISTRATION",
+  "status": "R5_PREREGISTERED_AFTER_R4_REJECTION",
   "owner": "tuning-automation-r4-20261104T2224Z",
   "leaseExpiresAtUtc": "2026-11-04T23:09:12.992Z",
-  "updatedAtUtc": "2026-11-04T22:24:12.993Z",
+  "updatedAtUtc": "2026-11-04T22:28:11.600Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -107,7 +107,7 @@
   "activeRound": "R4",
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
-    "stage": "PREREGISTERED",
+    "stage": "REJECTED_ARCHIVE_PENDING",
     "sourceHeadAtAcquisition": "2cee96fbe849d0fd79d055af56dcb7286c718377",
     "sourceBlobSha": "2e773ac829a29f8c1567c5e5632960ae25b5a2d5",
     "hypothesis": "Replace mutable boxed-Int lists and per-merge ArrayLists with a fixed primitive IntArray plus stable in-place left-to-right compaction, retaining rank/tie/UTF-8/cache and serialized vocabulary identity.",
@@ -122,6 +122,38 @@
       "no changed checkpoint or model weights",
       "no third-party API",
       "no other branches"
-    ]
+    ],
+    "evidence": {
+      "host": "OpenJDK 21.0.12.1, kotlinc 1.9.0, Linux, 8 visible CPUs",
+      "sourceGitBlob": "39faa03f2c5dc9d86422e5bffa7a6c563274f35e",
+      "aaPairs": "8 scenarios x 9 pairs",
+      "abPairs": "8 scenarios x 9 pairs",
+      "parity": "2544 token checks PASS",
+      "allocationSavings": "6 of 8 scenarios, 2 controls unchanged; best -20.9%",
+      "rejectReason": "Material unexplained CPU regressions 0/9 faster pairs on learned-long, cache-hit and punctuation controls; reject despite allocation savings; no second timing allowed.",
+      "rawFilePaths": [
+        "/mnt/data/continuum-r4/aa.csv",
+        "/mnt/data/continuum-r4/ab.csv"
+      ]
+    }
+  },
+  "r5": {
+    "target": "LmBpeTokenizer.decode",
+    "stage": "PREREGISTERED",
+    "hypothesis": "Eliminate ByteArrayOutputStream intermediate growth and duplicate copy with a checked two-pass byte-length calculation and one exact ByteArray, preserving behavior of negative, BOS/EOS and out-of-bounds IDs.",
+    "comparison": "Current public tokenizer unchanged versus one candidate; Kotlin-host source-bound parity and A/A then one A/B; 4 warmup + 9 alternating pairs; no favorable timing retries.",
+    "scenarios": [
+      "empty-id-control",
+      "tiny-byte-control",
+      "single-word-cached",
+      "many-byte-ids",
+      "learned-multi-piece",
+      "unicode-pieces",
+      "mostly-ignored-special-ids",
+      "long-repetitive-byte-ids"
+    ],
+    "repetitions": "Each scenario fixed 120 decode calls per pair; no JVM heap change; same fixed inputs in both arms; serialization and cached vocabulary hash parity.",
+    "acceptance": "Exact decoded String including malformed UTF-8 replacements/invalid ids, same serialized bytes, unchanged encode; allocations decrease in major scenarios and no material CPU regression in control cases.",
+    "regressionLimits": "If controls materially regress or results cannot be attributed to exact source, reject and archive both arms; no Android claims."
   }
 }
