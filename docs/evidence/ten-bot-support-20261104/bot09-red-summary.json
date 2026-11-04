@@ -1,0 +1,70 @@
+{
+  "execution": "coordinator RED confirmation after bot09 RED; same six tests, not additive",
+  "exit_code": 1,
+  "suite": {
+    "name": "at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest",
+    "tests": "6",
+    "skipped": "0",
+    "failures": "6",
+    "errors": "0",
+    "timestamp": "2026-11-04T11:03:51",
+    "hostname": "8c129114cae4",
+    "time": "0.059"
+  },
+  "cases": [
+    {
+      "name": "queuedAssignmentDoesNotGainToolsAddedAfterSubmission",
+      "failures": [
+        {
+          "message": "java.lang.AssertionError: expected:<BLOCKED> but was:<DONE>",
+          "type": "java.lang.AssertionError"
+        }
+      ]
+    },
+    {
+      "name": "queuedAssignmentKeepsToolsRemovedAfterSubmission",
+      "failures": [
+        {
+          "message": "java.lang.AssertionError: expected:<DONE> but was:<BLOCKED>",
+          "type": "java.lang.AssertionError"
+        }
+      ]
+    },
+    {
+      "name": "directRunnerDoesNotGainToolsAddedAfterCreation",
+      "failures": [
+        {
+          "message": "java.lang.AssertionError",
+          "type": "java.lang.AssertionError"
+        }
+      ]
+    },
+    {
+      "name": "directRunnerKeepsToolsRemovedAfterCreation",
+      "failures": [
+        {
+          "message": "at.heinz.deviceai.ToolBackendFailure: Werkzeug get_battery_info ist f\u00fcr Auftrag runner_remove nicht freigegeben.",
+          "type": "at.heinz.deviceai.ToolBackendFailure"
+        }
+      ]
+    },
+    {
+      "name": "directModelKeepsToolsRemovedAfterCreation",
+      "failures": [
+        {
+          "message": "at.heinz.deviceai.chief.WorkerBlocked: Werkzeug get_battery_info ist f\u00fcr Auftrag model_remove nicht freigegeben.",
+          "type": "at.heinz.deviceai.chief.WorkerBlocked"
+        }
+      ]
+    },
+    {
+      "name": "directModelDoesNotGainToolsAddedAfterCreation",
+      "failures": [
+        {
+          "message": "java.lang.AssertionError",
+          "type": "java.lang.AssertionError"
+        }
+      ]
+    }
+  ]
+}

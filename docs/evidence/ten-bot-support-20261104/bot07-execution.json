@@ -1,0 +1,40 @@
+[
+  {
+    "label": "unittest",
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/epsilon-avatar-contract",
+      "-p",
+      "test_validate_glb.py",
+      "-v"
+    ],
+    "cwd": "/workspace/scratch/fd4940f23688/device-ai-support",
+    "started_at": "2026-11-04T10:44:48.727634+00:00",
+    "finished_at": "2026-11-04T10:44:48.869950+00:00",
+    "exit_code": 0,
+    "environment_override": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    }
+  },
+  {
+    "label": "validator",
+    "command": [
+      "python3",
+      "tools/epsilon-avatar-contract/validate_glb.py",
+      "app/src/main/assets/avatar3d/continuum-avatar.glb",
+      "--output",
+      "docs/evidence/ten-bot-support-20261104/bot07-avatar-validation.json"
+    ],
+    "cwd": "/workspace/scratch/fd4940f23688/device-ai-support",
+    "started_at": "2026-11-04T10:44:48.870190+00:00",
+    "finished_at": "2026-11-04T10:44:49.361055+00:00",
+    "exit_code": 1,
+    "environment_override": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    }
+  }
+]

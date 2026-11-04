@@ -1,0 +1,42 @@
+{
+  "bot": "04",
+  "scope": "Worker lifecycle / bounded independent control-plane fixtures",
+  "started_at_utc": "2026-11-04T10:38:25.429884+00:00",
+  "head_before": "d234f8d8c3efd2efcbc9e6a264c91f50d56337cf",
+  "head_after": "d234f8d8c3efd2efcbc9e6a264c91f50d56337cf",
+  "branch": "support/continuum-ten-bot-assist-20261104",
+  "node": "v24.22.1",
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "tools/independence-service-review/lifecycle.test.mjs",
+    "tools/independence-service-review/active-recovery.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/fd4940f23688/device-ai-support",
+  "environment_presence_only": {
+    "SERVICE_REVIEW_CLASSPATH_FILE": false,
+    "SERVICE_REVIEW_RUNTIME_ENV": false,
+    "SERVICE_REVIEW_ISOLATION": false
+  },
+  "evidence_environment": {
+    "SERVICE_REVIEW_EVIDENCE": "/workspace/scratch/fd4940f23688/device-ai-support/docs/evidence/ten-bot-support-20261104/bot04"
+  },
+  "exit_code": 1,
+  "timed_out": false,
+  "elapsed_seconds": 0.331,
+  "classification": "BLOCKED_MISSING_FIXTURE_PREREQUISITES",
+  "production_changes_by_bot": false,
+  "model_execution_by_bot": false,
+  "commit_by_bot": false,
+  "source_sha256": {
+    "tools/independence-service-review/process-fixture.mjs": "8006d83a332d377636e0a5f68bf404b5e3870c55d17695319b1c669ce2f76b3f",
+    "tools/independence-service-review/lifecycle.test.mjs": "fa0c7b600be3fb7326ae67747910f18f3266d1ad70ad561d06e57ebe42aec302",
+    "tools/independence-service-review/active-recovery.test.mjs": "0592d5634af863b642b40bafff51e3068f5da2f75d6eea90c088a9915d2987da",
+    ".github/continuum/coding-service-reader.mjs": "25d0de29be3f5d20c064521074a6e362297cbeed5742ccf23f40820498d6a6bb",
+    ".github/continuum/coding-service-store.mjs": "7be02a65dc53187ae0817bb4cc110b1ac71310481d54da04ac9af602b861b21b",
+    ".github/continuum/coding-service-worker.mjs": "24c767ceccba81c52e9a0922eec5ee3ef6e7444e3d12ed1efc6cc5c234822f6e",
+    ".github/continuum/coding-service.mjs": "a654c79f578bd3f8e44d8bd176546e37bff7adb21c8c8f41126dde3a68048cb2",
+    ".github/continuum/coding-service.test.mjs": "c741740288a23f9e8001d0ad406c7c37bc5a093cf4db2bb53e5757efec31799f"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "source_local_head": "ebc1c54e8630ce0b79379604f93992f53baf06e1",
+  "tests_uncommitted": true,
+  "sha256": {
+    "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt": "5eca4e174105d671f5b92c323555ed12b56d35e1ffee66e32e35ac04ed0911a2",
+    "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkerScopeAdmissionTest.kt": "3b1b8c2765a65447379a2e4d580d19ef53d1f240ad7151321e54d2d0b0cfb31d"
+  }
+}

@@ -1,0 +1,12 @@
+Working directory: /workspace/scratch/fd4940f23688/device-ai-support
+
+Read-only identity checks:
+git rev-parse HEAD
+git branch --show-current
+node --version
+
+Test command (SERVICE_REVIEW_EVIDENCE points to this evidence directory):
+node --test --test-concurrency=1 tools/independence-service-review/lifecycle.test.mjs tools/independence-service-review/active-recovery.test.mjs
+
+Fixture prerequisite check: only presence/nonempty status of SERVICE_REVIEW_CLASSPATH_FILE, SERVICE_REVIEW_RUNTIME_ENV, SERVICE_REVIEW_ISOLATION; no values or secrets printed.
+Source SHA-256: hashlib.sha256(path.read_bytes()).hexdigest() for files listed in result.json.

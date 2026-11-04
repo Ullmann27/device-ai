@@ -1,0 +1,13 @@
+test_eye_node_mirror_and_rig_nonmoving (test_validate_glb.GeometryContractTest.test_eye_node_mirror_and_rig_nonmoving) ... ok
+test_full_fixture_and_zero_sil (test_validate_glb.GeometryContractTest.test_full_fixture_and_zero_sil) ... ok
+test_independent_blink_mirror_detected (test_validate_glb.GeometryContractTest.test_independent_blink_mirror_detected) ... ok
+test_invalid_binary_and_resources_fail_before_geometry (test_validate_glb.GeometryContractTest.test_invalid_binary_and_resources_fail_before_geometry) ... ok
+test_named_morph_duplicate_and_missing (test_validate_glb.GeometryContractTest.test_named_morph_duplicate_and_missing) ... ok
+test_nonfinite_geometry_rejected (test_validate_glb.GeometryContractTest.test_nonfinite_geometry_rejected) ... ok
+test_pivots_and_transforms_cannot_move_localization_boundary (test_validate_glb.GeometryContractTest.test_pivots_and_transforms_cannot_move_localization_boundary) ... ok
+test_zero_non_silent_target_and_excessive_deformation (test_validate_glb.GeometryContractTest.test_zero_non_silent_target_and_excessive_deformation) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.055s
+
+OK

@@ -1,0 +1,6 @@
+test_rejects_changed_runner_before_module_execution (test_weight_phase_resume_probe.ReviewedSourceBoundaryTest.test_rejects_changed_runner_before_module_execution) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK

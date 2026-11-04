@@ -5,6 +5,7 @@ import at.heinz.deviceai.ToolExecutionStatus
 import at.heinz.deviceai.ToolRunner
 import at.heinz.deviceai.cognitive.AgentModel
 import at.heinz.deviceai.cognitive.AgentModelOutput
+import java.util.Collections
 import java.util.concurrent.CancellationException
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ConcurrentHashMap
@@ -31,6 +32,9 @@ data class WorkerBrief(
         require(deadlineMillis in 1..600_000)
     }
 }
+
+private fun immutableToolScope(tools: Set<String>): Set<String> =
+    Collections.unmodifiableSet(LinkedHashSet(tools))
 
 enum class WorkerStatus { DONE, BLOCKED, FAILED, TIMED_OUT, CANCELLED }
 data class WorkerReport(val id: String, val status: WorkerStatus, val summary: String, val durationMillis: Long)
@@ -87,7 +91,9 @@ class ChiefWorkerPool(
     fun submit(brief: WorkerBrief, onReport: (WorkerReport) -> Unit): Boolean {
         if (closed) throw RejectedExecutionException("Chief worker pool is closed")
         if (slots.containsKey(brief.id) || slots.size >= maxConcurrent + maxQueued) return false
-        val slot = Slot(brief, onReport)
+        // A queued assignment retains exactly the scope accepted at admission.
+        val admitted = brief.copy(allowedTools = immutableToolScope(brief.allowedTools))
+        val slot = Slot(admitted, onReport)
         unfinishedAssignments.incrementAndGet()
         slots[brief.id] = slot
         try {
@@ -232,16 +238,22 @@ class ChiefWorkerPool(
 
 /** Tool scoping for a worker brief, enforced twice: before the approval prompt (model) and at execution (runner). */
 object WorkerScope {
-    fun runner(brief: WorkerBrief, delegate: ToolRunner): ToolRunner = ToolRunner { call ->
-        if (call.name !in brief.allowedTools)
-            throw ToolBackendFailure(ToolExecutionStatus.FAILED, "Werkzeug ${call.name} ist für Auftrag ${brief.id} nicht freigegeben.")
-        at.heinz.deviceai.ToolOutputCap.cap(delegate.execute(call))
+    fun runner(brief: WorkerBrief, delegate: ToolRunner): ToolRunner {
+        val allowedTools = immutableToolScope(brief.allowedTools)
+        return ToolRunner { call ->
+            if (call.name !in allowedTools)
+                throw ToolBackendFailure(ToolExecutionStatus.FAILED, "Werkzeug ${call.name} ist für Auftrag ${brief.id} nicht freigegeben.")
+            at.heinz.deviceai.ToolOutputCap.cap(delegate.execute(call))
+        }
     }
 
-    fun model(brief: WorkerBrief, delegate: AgentModel): AgentModel = AgentModel { task, memories, reflection, observations ->
-        val out = delegate.generate(task, memories, reflection, observations)
-        val proposal = out.proposal
-        if (proposal == null || proposal.toolName in brief.allowedTools) out
-        else throw WorkerBlocked("Werkzeug ${proposal.toolName} ist für Auftrag ${brief.id} nicht freigegeben.")
+    fun model(brief: WorkerBrief, delegate: AgentModel): AgentModel {
+        val allowedTools = immutableToolScope(brief.allowedTools)
+        return AgentModel { task, memories, reflection, observations ->
+            val out = delegate.generate(task, memories, reflection, observations)
+            val proposal = out.proposal
+            if (proposal == null || proposal.toolName in allowedTools) out
+            else throw WorkerBlocked("Werkzeug ${proposal.toolName} ist für Auftrag ${brief.id} nicht freigegeben.")
+        }
     }
 }

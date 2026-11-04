@@ -1,0 +1,38 @@
+{
+  "sourceSha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+  "worldPivotsMetres": {
+    "EyeLeft": [
+      0.030511943623423576,
+      0.2884144186973572,
+      0.12453499529510736
+    ],
+    "EyeRight": [
+      -0.030511943623423576,
+      0.2884144186973572,
+      0.12453499529510736
+    ],
+    "Jaw": [
+      0.0,
+      0.26699999809265135,
+      0.03499999921768904
+    ]
+  },
+  "eyeYMetres": 0.2884144186973572,
+  "jawYMetres": 0.26699999809265135,
+  "eyeJawDistanceYMetres": 0.02141442060470583,
+  "existingContract": {
+    "eyeYRange": [
+      0.25,
+      0.32
+    ],
+    "jawYRange": [
+      0.2,
+      0.25
+    ],
+    "eyeJawDistanceYRange": [
+      0.04,
+      0.09
+    ]
+  },
+  "interpretation": "Exact mismatch against the existing pivot contract; the intended jaw hinge and the contract must be adjudicated by the avatar workstream. No asset changed."
+}

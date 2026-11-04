@@ -1,0 +1,41 @@
+{
+  "agent": "bot08_update_gate",
+  "started_at": "2026-11-04T10:56:24.593282+00:00",
+  "source_head_before": "b368a8c569cba0c07c878c012766fb8fbaa2e346",
+  "branch": "support/continuum-ten-bot-assist-20261104",
+  "node_version": "v24.22.1",
+  "command": [
+    "node",
+    "--test",
+    "scripts/continuum-owner-continuous-release.test.mjs",
+    "scripts/continuum-fold7-owner-update-gate.test.mjs"
+  ],
+  "files_sha256_before": {
+    "AGENTS.md": "deec8d8638ee7837ab6a686644312e072a4421a22173803bf2b95e7048fdf534",
+    "scripts/continuum-owner-continuous-release.test.mjs": "cdb92362c49baf349ca90584836761eb727e2fb111e9122514c7c351348f1576",
+    "scripts/continuum-fold7-owner-update-gate.test.mjs": "9173b3a24e9c50a6f5404b95147c35da126a407792fd2f5cb5e578b1a703a182",
+    "scripts/continuum-owner-catalog-contract.mjs": "9ad010e1d560d5f803270d56a30eb66b1fce904d66488ac93158d35dabf02618",
+    "scripts/continuum-fold7-owner-update-gate.sh": "fb87e95c49af40881cf8d46ed28ac84d47354e25dac071d9da461b6951ae324b",
+    "scripts/render-continuum-m8-owner-release.sh": "a734e840ba0d91d798c6bc9b7d8040c69da72ceb6373b945b120f94847b1c40e",
+    "scripts/render-continuum-owner-continuous-release.sh": "bc52ce7858a503ac30c221bac16092ebf85da4a95d842b8734fc76b0af537954",
+    "scripts/render-continuum-owner-continuous-qa.sh": "46122a5f88ed91e2fd1e9c033b66b0d41825e059b6c27ddcc3e9e772018f1120",
+    "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdateCatalog.kt": "d55b36b8bdd0a76a1aac1c034e37c11f5ff1bb3fb6b0d42cbfa226013bd2ccf2",
+    "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumSignedUpdatePolicy.kt": "9d6ba9700b1f680aa97a6019cccbebe7c8f9613d99dd10d9bcc5b6f4f93ef825"
+  },
+  "finished_at": "2026-11-04T10:56:25.453804+00:00",
+  "exit_code": 0,
+  "source_head_after": "b368a8c569cba0c07c878c012766fb8fbaa2e346",
+  "files_sha256_after": {
+    "AGENTS.md": "deec8d8638ee7837ab6a686644312e072a4421a22173803bf2b95e7048fdf534",
+    "scripts/continuum-owner-continuous-release.test.mjs": "cdb92362c49baf349ca90584836761eb727e2fb111e9122514c7c351348f1576",
+    "scripts/continuum-fold7-owner-update-gate.test.mjs": "9173b3a24e9c50a6f5404b95147c35da126a407792fd2f5cb5e578b1a703a182",
+    "scripts/continuum-owner-catalog-contract.mjs": "9ad010e1d560d5f803270d56a30eb66b1fce904d66488ac93158d35dabf02618",
+    "scripts/continuum-fold7-owner-update-gate.sh": "fb87e95c49af40881cf8d46ed28ac84d47354e25dac071d9da461b6951ae324b",
+    "scripts/render-continuum-m8-owner-release.sh": "a734e840ba0d91d798c6bc9b7d8040c69da72ceb6373b945b120f94847b1c40e",
+    "scripts/render-continuum-owner-continuous-release.sh": "bc52ce7858a503ac30c221bac16092ebf85da4a95d842b8734fc76b0af537954",
+    "scripts/render-continuum-owner-continuous-qa.sh": "46122a5f88ed91e2fd1e9c033b66b0d41825e059b6c27ddcc3e9e772018f1120",
+    "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdateCatalog.kt": "d55b36b8bdd0a76a1aac1c034e37c11f5ff1bb3fb6b0d42cbfa226013bd2ccf2",
+    "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumSignedUpdatePolicy.kt": "9d6ba9700b1f680aa97a6019cccbebe7c8f9613d99dd10d9bcc5b6f4f93ef825"
+  },
+  "source_unchanged": true
+}

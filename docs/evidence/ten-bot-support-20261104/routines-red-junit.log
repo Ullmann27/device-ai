@@ -1,0 +1,27 @@
+JUnit version 4.13.2
+..........E.E.E
+Time: 0.045
+There were 3 failures:
+1) aLargePeriodCannotOverflowIntoAnImmediatelyDueRoutine(at.heinz.deviceai.routines.RoutineBookAdmissionTest)
+java.lang.AssertionError: overflow must not schedule another immediate execution
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.routines.RoutineBookAdmissionTest.aLargePeriodCannotOverflowIntoAnImmediatelyDueRoutine(RoutineBookAdmissionTest.kt:39)
+2) aReturnedClaimCannotChangeTheStoredToolScope(at.heinz.deviceai.routines.RoutineBookAdmissionTest)
+java.lang.AssertionError: expected:<[get_battery_info]> but was:<[get_battery_info, install_apk]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.routines.RoutineBookAdmissionTest.aReturnedClaimCannotChangeTheStoredToolScope(RoutineBookAdmissionTest.kt:27)
+3) changingTheCallerToolSetCannotExpandAnAdmittedRoutine(at.heinz.deviceai.routines.RoutineBookAdmissionTest)
+java.lang.AssertionError: expected:<[get_battery_info]> but was:<[install_apk]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.routines.RoutineBookAdmissionTest.changingTheCallerToolSetCannotExpandAnAdmittedRoutine(RoutineBookAdmissionTest.kt:16)
+
+FAILURES!!!
+Tests run: 12,  Failures: 3
+
