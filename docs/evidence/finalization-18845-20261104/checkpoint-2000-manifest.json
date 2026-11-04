@@ -1,0 +1,134 @@
+{
+  "archive": "checkpoint-2000.tar.gz",
+  "archiveBytes": 48880,
+  "archiveSha256": "5ba29a696ac00bf528b4350d15cdf4013e5380833f5f1ecca551295159b4476a",
+  "sourceCommit": "20f888660a967aa1d6b5446e892540538372d319",
+  "status": "WIP_COMBINED_QA_INCOMPLETE",
+  "files": [
+    {
+      "path": "coordinator-audit/PROGRESS-20261104-2000.md",
+      "bytes": 6340,
+      "sha256": "afb77f277c88c0de5dc9481ac33bb98094887cabdb816da0606fab68ffb84b01"
+    },
+    {
+      "path": "contract-review/root-source-contracts-wave2.patch",
+      "bytes": 3186,
+      "sha256": "faa6a58df4e3eb994faa97027e9fa213e88e7d54a21c5199a31a450b3c23ce9b"
+    },
+    {
+      "path": "contract-review/result.json",
+      "bytes": 2451,
+      "sha256": "40b9e9cfb61903adc3b422be42bec0a1260e5da24c091fd088b5594786893276"
+    },
+    {
+      "path": "contract-review/wave2-result.json",
+      "bytes": 608,
+      "sha256": "11835cd65de8bda268266d71e222f213f955d2654ec37ab6c6819294393e06cf"
+    },
+    {
+      "path": "host-qa/idle-motion-boundary/idle-motion-boundary.patch",
+      "bytes": 2614,
+      "sha256": "f689bb8cd5ffd999a16a2f15d97e2726bf6fc9b794a6e5cc527dca1a8932bb1d"
+    },
+    {
+      "path": "host-qa/idle-motion-boundary/result.json",
+      "bytes": 649,
+      "sha256": "711d779643db30a40bdd90eb6d6f70b6a52cebfcf37cd388fb2878bdee55d9c4"
+    },
+    {
+      "path": "host-qa/idle-motion-boundary/red.log",
+      "bytes": 516,
+      "sha256": "f2472bd90ab031f3dc1ef487a5dadc71ade3a8df390a593dcc38b9aa97a7775c"
+    },
+    {
+      "path": "host-qa/idle-motion-boundary/green.log",
+      "bytes": 51,
+      "sha256": "fb927dadff17da5f7dae5225a7f07183df347aaecafff1b75fb0ce57c730ad40"
+    },
+    {
+      "path": "integration-audit/echo515-four-file.patch",
+      "bytes": 27720,
+      "sha256": "ab432d4782be02820ca40cb38dc5b9ae1a7b9610986b31b2c6e2be7bbaa599d2"
+    },
+    {
+      "path": "integration-audit/echo515-materialization.json",
+      "bytes": 1818,
+      "sha256": "d915c40649c982997684e9daafd3c1c19947b14973ae940714c385bb093623e7"
+    },
+    {
+      "path": "integration-audit/ECHO-REVIEW.md",
+      "bytes": 7526,
+      "sha256": "ca0c19815478394137c421697805412cba9f9acdefd6974ff6870e8902fcae03"
+    },
+    {
+      "path": "regression-audit/REGRESSION_HANDOFF.md",
+      "bytes": 13624,
+      "sha256": "016dcb8db537e3d941e922be0fd6345026f037bdc35323cff2e9923dc4069bba"
+    },
+    {
+      "path": "regression-audit/android-integration-wiring.patch",
+      "bytes": 3279,
+      "sha256": "c28b5a1f8abfebdb00ae4b78ad9697524e665f1ad9a0ebe48c0886901aa5206d"
+    },
+    {
+      "path": "regression-audit/trace-context-speech-contracts.patch",
+      "bytes": 4300,
+      "sha256": "82c072f71e0e9573ee1d73754dfd673de5cac0a80094976e993dc5cf7161fee8"
+    },
+    {
+      "path": "regression-audit/learning-readout-contract.patch",
+      "bytes": 728,
+      "sha256": "e5bec01122954298bdba1dcae9737db0849699d96ccc0e8047c7f86a4927e764"
+    },
+    {
+      "path": "regression-audit/qa-signing-exclusion.patch",
+      "bytes": 2053,
+      "sha256": "d0872ef956695a6009cb4e42f6e76f5b0c3079a78e76c85414e27440d86bc9d1"
+    },
+    {
+      "path": "regression-audit/tool-memory-fixtures.patch",
+      "bytes": 15516,
+      "sha256": "ed1be3b648287cd46b571a1153e7ffb18b2f33f159c3c0d7ab8d593a2e83a065"
+    },
+    {
+      "path": "regression-audit/node-final-summary.json",
+      "bytes": 24536,
+      "sha256": "dca353f1713db75dab8bb75fd59d87e06d43e903629340d051849601bbaa9103"
+    },
+    {
+      "path": "regression-audit/tools-final-summary.json",
+      "bytes": 29083,
+      "sha256": "f6473de92d63752e1ae5b423418a5633be82a1f7f1decad243212e54f1cda004"
+    },
+    {
+      "path": "regression-audit/node-skip-inventory.json",
+      "bytes": 19273,
+      "sha256": "272606428ccbee633e8dc2802b95cdda09753b6ef9e6d97c61bb2b063c8930fe"
+    },
+    {
+      "path": "regression-audit/skip-inventory.md",
+      "bytes": 18790,
+      "sha256": "c41834be8368fb6819b8675b88c053667d2e157d84b1c7ab322108140bdefd7d"
+    },
+    {
+      "path": "regression-audit/negative-contract-controls.json",
+      "bytes": 2563,
+      "sha256": "84ec501496051fa4969b2317b4b3dde55945f8ecd8f9167ea929d00be70df77c"
+    },
+    {
+      "path": "coordinator-audit/backend-final-result.json",
+      "bytes": 4709,
+      "sha256": "377dfada1d997d368624b23da566fc506f7d0afc8c3677aeb6e7a633855ef237"
+    },
+    {
+      "path": "build-audit/full-qa-20f888660a96-resume1.result.json",
+      "bytes": 2705,
+      "sha256": "c55db27def487bbfd43702eee514933e49fae1bfda774371e49d8032c1bbe310"
+    },
+    {
+      "path": "staged-513-files.json",
+      "bytes": 6883,
+      "sha256": "d8af33096df3c8d06ce9aa23ccccb6eb1a405e3913b6887ec0b275a93f632e38"
+    }
+  ]
+}
