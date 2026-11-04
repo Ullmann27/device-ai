@@ -1,0 +1,94 @@
+{
+  "recordedAt": "2026-11-03T20:23:06.610622+00:00",
+  "reviewSource": "b26a7da496c8da27cb16d3171de19ac1959bfe27",
+  "composedTree": "5d7c6bb534ea01b0f9ab87ee3afea4c5204ec315",
+  "node": "v24.19.0",
+  "kernel": "6.18.57",
+  "architecture": "x86_64",
+  "results": {
+    "runtimeIndependent": {
+      "pass": 50,
+      "fail": 0,
+      "skip": 0,
+      "exit": 0
+    },
+    "lineageIndependent": {
+      "pass": 33,
+      "fail": 0,
+      "skip": 0,
+      "exit": 0
+    },
+    "composedContracts": {
+      "pass": 83,
+      "fail": 0,
+      "skip": 0,
+      "exit": 0
+    }
+  },
+  "freshNeuralInference": false,
+  "artifactDirectoryAvailable": false,
+  "hiddenQa413Opened": false,
+  "setupFailureBeforeNode": "initial lineage output directory absent; subsequent actual invocation passes33/33",
+  "sha256": {
+    "docs/research/omega/synapse-swarm/runtime-audit/FROZEN-CRITERIA.md": "cb7c3eb1f56982cf6fd00e3f6e1fdd0d6822dc03b07d5842100c301cc5116410",
+    "docs/research/omega/synapse-swarm/runtime-audit/HANDOFF.md": "c1c003ddccc0d55f565d8e0e620ba34307ffdd383b429bb94b34f26d0b47d369",
+    "docs/research/omega/synapse-swarm/runtime-audit/evidence/fresh-composed-contracts.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/research/omega/synapse-swarm/runtime-audit/evidence/fresh-composed-contracts.tap": "fbf61f1ee9654d0568e5441ca15d2f4897a9ba56acf2bf984b9124ddf1b78021",
+    "docs/research/omega/synapse-swarm/runtime-audit/evidence/fresh-lineage-controls.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/research/omega/synapse-swarm/runtime-audit/evidence/fresh-lineage-controls.tap": "b56faf5c3ca9be42bbaa9c79bcfdd3a9fa7a41414d8e38e38fc691ab52754374",
+    "docs/research/omega/synapse-swarm/runtime-audit/evidence/fresh-runtime-controls.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/research/omega/synapse-swarm/runtime-audit/evidence/fresh-runtime-controls.tap": "09ea926990b185862aa541568b21e4408a3b3ae601be88927bb841336bbc8bb8",
+    "docs/research/omega/synapse-swarm/runtime-audit/evidence/provenance-and-source-checks.json": "baed04790ee1aa910713a9df1d5a7fe8923dd02c016741c7e6bc1ec68f7767d0",
+    "/workspace/synapse-runtime-controls/tools/momega1-challenger/genuine-brand-forgery.test.mjs": "fd77d172bb67690d55f94198d41dff982b3a66c545764723c2aae488727891f5",
+    "/workspace/synapse-runtime-controls/tools/momega1-challenger/provider-contract.test.mjs": "bcccaa2cb8f04c539333974c6b43e793ebb9aa58c5b5d24a85fc74dc7a95e02b",
+    "/workspace/synapse-runtime-controls/tools/momega1-challenger/reviewed-pair-contract.test.mjs": "6e700ec51a2624001ff6e6a605ea3afb26928a5e49e778c3ce35aedd1ec60a60",
+    "/workspace/synapse-runtime-controls/tools/momega1-challenger/runtime-review.test.mjs": "cedf626877e1880fd9646517591f81f4ed754662fb372fedeb2ce721e182dc81",
+    "/workspace/synapse-runtime-controls/tools/momega1-challenger/synthetic-runtime.c": "9f2989a10c2666b20fce4fb985c46b54bb84c47573bb7fc1307a7b1370231a3e",
+    "/workspace/synapse-runtime-frozen/tools/momega1-memory-review/tests/ablation-fixture.mjs": "9c80f73f8b5e83f8c807665daa23151f70c9c58fe5d974fecdda831b84d84927",
+    "/workspace/synapse-runtime-frozen/tools/momega1-memory-review/tests/canonical-anchor.test.mjs": "7864a7ffb3edfdc2fd4b4e6956da125d9d20fe570f92d9722b586e628d978879",
+    "/workspace/synapse-runtime-frozen/tools/momega1-memory-review/tests/challenge.test.mjs": "ead053958090110c7a5d6a54a2e10079249eda79bc1d69bc60c6a2772aa781bc",
+    "/workspace/synapse-runtime-frozen/tools/momega1-memory-review/tests/fixture-tier-compat.mjs": "1303d3c74bebd77368f4a6bccca6ad9c60ce2a0657ff4b7eb86bb996f2ff6741",
+    "/workspace/synapse-runtime-frozen/tools/momega1-memory-review/tests/fixture.mjs": "cd1e002711f854e36f8fb0a9f7e62959130a73e3bf2b7f61d5690ad126465f31",
+    "/workspace/synapse-runtime-frozen/tools/momega1-memory-review/tests/git-lineage.test.mjs": "8175aced7edde6c71dfb93e7d0bb546071adb65fdfd4b4a9fb10cc3e3223d1dc",
+    "/workspace/synapse-runtime-frozen/tools/momega1-memory-review/tests/recall-ablation.test.mjs": "b1c7aada3395f288a9988a81fbec318a4878297ab11d0ee7762053698ffdefb6",
+    "tools/synapse-runtime-audit/run-contracts.sh": "dd5df968fc5424c85e56b3a5031ca9782c63a95a2261015da9c0abecb168e2ad",
+    "docs/research/omega/synapse-swarm/runtime-audit/evidence/d8-caller-controls.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/research/omega/synapse-swarm/runtime-audit/evidence/d8-caller-controls.tap": "095d2c9126a8659b742c019db45615328bed988c7d14e0aee46a793edbb4f507",
+    "docs/research/omega/synapse-swarm/runtime-audit/evidence/d8-uninstrumented-contracts.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/research/omega/synapse-swarm/runtime-audit/evidence/d8-uninstrumented-contracts.tap": "c6cb4af0f424a57ed5b2050010acc366634af9f71c474e13d97d3ddfe0bac0a4",
+    "tools/synapse-runtime-audit/run-caller-d8.sh": "9b65bdff17a93956f5292c9f72fba1f2fab7b44b48e5331f7381433c2ead1b0d",
+    "/workspace/synapse-runtime-d8-frozen/tools/momega1-memory-review/tests/ablation-fixture.mjs": "9c80f73f8b5e83f8c807665daa23151f70c9c58fe5d974fecdda831b84d84927",
+    "/workspace/synapse-runtime-d8-frozen/tools/momega1-memory-review/tests/caller-accounting.test.mjs": "ec9fa822a48a6525bfbeefc9f88e42a1146b8ee589d9efe6c40152837c4b8f25",
+    "/workspace/synapse-runtime-d8-frozen/tools/momega1-memory-review/tests/caller-brand-loader.mjs": "1a08ca361bbcb3230e11ce157d3eda795591a90e09ff37aff1ade63e14c9a586",
+    "/workspace/synapse-runtime-d8-frozen/tools/momega1-memory-review/tests/caller-fixture-deps.mjs": "c63cc073a19dfdcf9e928a3d939706c2c4f3e3e494615b60f9f7088f43eea026",
+    "/workspace/synapse-runtime-d8-frozen/tools/momega1-memory-review/tests/caller-fixture-runtime.mjs": "c2cdff4cfeba12f0047ce8520bdea4aedbdbe30c9b214f7f9681eee61b1b738f",
+    "/workspace/synapse-runtime-d8-frozen/tools/momega1-memory-review/tests/canonical-anchor.test.mjs": "7864a7ffb3edfdc2fd4b4e6956da125d9d20fe570f92d9722b586e628d978879",
+    "/workspace/synapse-runtime-d8-frozen/tools/momega1-memory-review/tests/challenge.test.mjs": "ead053958090110c7a5d6a54a2e10079249eda79bc1d69bc60c6a2772aa781bc",
+    "/workspace/synapse-runtime-d8-frozen/tools/momega1-memory-review/tests/fixture-tier-compat.mjs": "1303d3c74bebd77368f4a6bccca6ad9c60ce2a0657ff4b7eb86bb996f2ff6741",
+    "/workspace/synapse-runtime-d8-frozen/tools/momega1-memory-review/tests/fixture.mjs": "cd1e002711f854e36f8fb0a9f7e62959130a73e3bf2b7f61d5690ad126465f31",
+    "/workspace/synapse-runtime-d8-frozen/tools/momega1-memory-review/tests/git-lineage.test.mjs": "8175aced7edde6c71dfb93e7d0bb546071adb65fdfd4b4a9fb10cc3e3223d1dc",
+    "/workspace/synapse-runtime-d8-frozen/tools/momega1-memory-review/tests/recall-ablation.test.mjs": "b1c7aada3395f288a9988a81fbec318a4878297ab11d0ee7762053698ffdefb6"
+  },
+  "d8Followup": {
+    "source": "d8a927dd6ced4dea489e2042afb4b5624157fa3b",
+    "tree": "9247a67f7ae8ab51ef2879c2704b8f715482aa01",
+    "newProductionFile": ".github/continuum/repair-loop.mjs",
+    "fileSha256": "82c85fc68ed5fbdf21daa78c0bad448906d6d7a8407d0f906ba9011ba1e4184a",
+    "equivalentReviewedSource": "19474261c15a3503a9f041244b4b4c3eaed4636f",
+    "callerControls": {
+      "pass": 28,
+      "fail": 0,
+      "skip": 0,
+      "exit": 0,
+      "syntheticBrandSeam": true
+    },
+    "uninstrumentedContracts": {
+      "pass": 84,
+      "fail": 0,
+      "skip": 0,
+      "exit": 0
+    },
+    "currentModelFilesRead": false,
+    "furtherRemoteChangesExcluded": true
+  }
+}
