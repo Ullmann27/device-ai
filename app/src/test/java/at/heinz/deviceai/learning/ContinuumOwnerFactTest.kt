@@ -76,7 +76,7 @@ class ContinuumOwnerFactTest {
         core.confirmOwnerFact(revoked)
         core.revokeOwnerFact(revoked)
         val store=FileLearningExperienceStore(File(dir,"learning-core-v2"))
-        store.appendMissing((0..300).map { i ->
+        store.appendMissing((0..FileLearningExperienceStore.MAX_RECORDS+44).map { i ->
             LearningExperienceFactory.create(
                 if(i%2==0) LearningExperienceType.TRAINING_AUDIT else LearningExperienceType.SOURCE_TEXT,
                 LearningProvenance.LOCAL_TRAINING,LearningTrustClass.SYSTEM_MEASUREMENT,
@@ -93,21 +93,29 @@ class ContinuumOwnerFactTest {
     @Test fun corruptPrimaryCannotResurrectARevokedFactFromAnOlderBackup() = withCore { core, dir ->
         val fact="Mein Hund heißt Bello."
         core.confirmOwnerFact(fact)
+        // LEX4 appends without rewriting; an older generation (here: pre-revocation copy) is the LKG scenario.
+        ledger(dir).copyTo(File(dir,"learning-core-v2/experiences-v2.lkg"))
         core.revokeOwnerFact(fact)
         val backup=File(dir,"learning-core-v2/experiences-v2.lkg")
         val beforeBackup=backup.readBytes()
         val damaged=ledger(dir).readBytes().also { it[40]=(it[40].toInt() xor 1).toByte() }
         ledger(dir).writeBytes(damaged)
+        FileLearningExperienceStore.resetCachesForTest()
+        // M2.10: the rolling backup (bak1) may predate the revocation; restrictive salvage re-applies the revocation
+        // from the unverified frames, so the restored ledger never re-activates the revoked fact.
         val reopened=ContinuumLearningCore(dir)
-        assertThrows(IllegalArgumentException::class.java) { reopened.activeOwnerFacts() }
-        assertThrows(IllegalArgumentException::class.java) { reopened.replyFromMemory("Wie heißt mein Hund?") }
-        assertArrayEquals("retain corrupt evidence for explicit repair",damaged,ledger(dir).readBytes())
-        assertArrayEquals("an older backup is diagnostic, not current consent",beforeBackup,backup.readBytes())
+        assertEquals(emptyList<String>(),reopened.activeOwnerFacts().map { it.content })
+        val store=FileLearningExperienceStore(File(dir,"learning-core-v2"))
+        val r=store.lastRecovery()!!
+        assertArrayEquals("retain corrupt evidence for explicit repair",damaged,r.quarantineFile!!.readBytes())
+        assertArrayEquals("an older LKG backup is diagnostic, not current consent",beforeBackup,backup.readBytes())
     }
 
     @Test fun missingPrimaryWithAnOlderBackupCannotStartAnEmptyLedger() = withCore { core, dir ->
         val fact="Mein Hund heißt Bello."
         core.confirmOwnerFact(fact)
+        // LEX4 appends without rewriting; an older generation (here: pre-revocation copy) is the LKG scenario.
+        ledger(dir).copyTo(File(dir,"learning-core-v2/experiences-v2.lkg"))
         core.revokeOwnerFact(fact)
         assertTrue(File(dir,"learning-core-v2/experiences-v2.lkg").isFile)
         assertTrue(ledger(dir).delete())

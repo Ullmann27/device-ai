@@ -136,7 +136,7 @@ object PersonalLearningTransfer {
      */
     fun inspectDocument(bytes: ByteArray): PersonalLearningBackup {
         require(bytes.size in 4..MAX_BYTES) { "Invalid learning document size" }
-        if (ByteBuffer.wrap(bytes, 0, 4).int != 0x4c455832) return inspect(bytes)
+        if (ByteBuffer.wrap(bytes, 0, 4).int !in setOf(0x4c455832, 0x4c455833, 0x4c455834)) return inspect(bytes) // LEX2/3/4
         val records = try {
             FileLearningExperienceStore.inspectSnapshot(bytes)
         } catch (_: Exception) {

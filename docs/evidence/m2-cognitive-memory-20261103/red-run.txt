@@ -1,0 +1,49 @@
+RED-Lauf (Stubs, vor Implementierung) · Basis 7316b1f5d32cf9ad52d9f463a987aae23bf26ba2 · 2026-11-03 13:52 CET
+Befehl: ./gradlew --no-daemon :app:testDebugUnitTest --tests <5 M2-Klassen> --continue
+ContinuumTemporalMemoryBenchmarkTest > tenYearOwnerHistoryIsAnsweredCorrectlyAndHypotheticalsNeverLeak FAILED
+ContinuumTemporalMemorySpecialistTest > onKeepsTheBaselineOutsideItsGrammar FAILED
+ContinuumTemporalMemorySpecialistTest > onNeverPresentsAHypotheticalAsAFact FAILED
+ContinuumTemporalMemorySpecialistTest > offAndShadowNeverChangeTheShownAnswer FAILED
+ContinuumTemporalMemorySpecialistTest > onAnswersFromTheCanonicalLedgerWithCitations FAILED
+ContinuumTemporalMemorySpecialistTest > onClarifiesAnUnmarkedContradiction FAILED
+ContinuumTemporalMemorySpecialistTest > workingMemoryIsUsedButNeverWrittenToTheLedger FAILED
+ContinuumTemporalMemoryTest > anUnmarkedContradictionAsksInsteadOfSilentlyOverwriting FAILED
+ContinuumTemporalMemoryTest > namedAttributesAndOtherPeopleAreSeparate FAILED
+ContinuumTemporalMemoryTest > pastYearsAndTheOriginalValueStayRetrievable FAILED
+ContinuumTemporalMemoryTest > agesAreReportedAsOfTheStatementNotExtrapolated FAILED
+ContinuumTemporalMemoryTest > explicitValidityRangesAreHonoured FAILED
+ContinuumTemporalMemoryTest > workingMemoryIsSessionScopedLabelledAndGated FAILED
+ContinuumTemporalMemoryTest > aNegationEndsAValueWithoutInventingANewOne FAILED
+ContinuumTemporalMemoryTest > currentResidenceFollowsAnExplicitMove FAILED
+ContinuumTemporalMemoryTest > hypotheticalStatementsNeverAnswerAsFacts FAILED
+ContinuumTemporalMemoryTest > sinceWhenUsesTheStatedStart FAILED
+ContinuumTemporalMemoryTest > aCorrectionRetractsTheWrongValueButKeepsWhatWasBelievedThen FAILED
+ContinuumTemporalMemoryTest > aRevokedFactIsGoneNowButVisibleForEarlierKnowledge FAILED
+OwnerHypotheticalGateTest > legacyConfirmedHypotheticalsAreQuarantinedOnSync FAILED
+OwnerHypotheticalGateTest > aHeldStatementIsNotConfirmedByRepeatingIt FAILED
+OwnerHypotheticalGateTest > explicitRememberOfANonAssertionIsHeldUnconfirmed FAILED
+OwnerHypotheticalGateTest > syncAndPlainRecordAlsoNeverConfirmANonAssertion FAILED
+OwnerStatementModalityTest > hedgedStatementsAreUncertain FAILED
+OwnerStatementModalityTest > conditionalAndCounterfactualStatementsAreHypothetical FAILED
+OwnerStatementModalityTest > reportedAndQuotedSpeechBelongsToSomeoneElse FAILED
+OwnerStatementModalityTest > onlyAssertionsAndBarriersMayBecomeConfirmed FAILED
+OwnerStatementModalityTest > questionsAreNeverFacts FAILED
+OwnerStatementModalityTest > negatedStatementsAreBarriersNotPositiveValues FAILED
+OwnerStatementModalityTest > plansAndWishesAreIntentionsNotStates FAILED
+34 tests completed, 30 failed
+ContinuumTemporalMemoryBenchmarkTest tests 2 failures 1
+   M2-METRIC owner_fact_capacity=256 failure=IllegalStateException
+   M2-METRIC statements_written=220
+   M2-METRIC ledger_records=220 ledger_bytes=45638
+   M2-METRIC hypothetical_statements=25 leaked_into_confirmed=25
+   M2-METRIC questions=273 specialist_correct=54 baseline_correct=67
+   M2-METRIC category=current n=21 specialist=0 baseline=13
+   M2-METRIC category=original n=21 specialist=0 baseline=0
+   M2-METRIC category=year n=231 specialist=54 baseline=54
+   M2-METRIC trap_city_in_answer specialist=0 baseline=17
+   M2-METRIC latency_ms specialist_p50=0.03 specialist_p95=0.05 baseline_p50=5.56 baseline_p95=11.51
+   M2-METRIC write_ms p50=3.65 p95=6.78
+ContinuumTemporalMemorySpecialistTest tests 6 failures 6
+ContinuumTemporalMemoryTest tests 13 failures 12
+OwnerHypotheticalGateTest tests 5 failures 4
+OwnerStatementModalityTest tests 8 failures 7
