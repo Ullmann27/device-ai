@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "taskId": "MEMORY-R5-BOUNDARIES-20261105",
+  "status": "SOURCE_METHOD_HOST_GREEN_ANDROID_NOT_RUN",
+  "repository": "Ullmann27/device-ai",
+  "branch": "fix/continuum-memory-r5-credential-boundaries-20261105",
+  "parentPr": 529,
+  "parentPublicCommit": "00049e5c76b30e3a3587755a65ac6a30a693eb8a",
+  "integratorPr": 519,
+  "c1ObservedHead": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+  "frozenTestCommit": "9e2fbbde4e35b4e4f6d0c87dbe8442bb13d863bf",
+  "productionFixCommit": "ad80eb74f43bd04d72c3d8c3d85934ecd3cc4633",
+  "productionPath": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+  "originalBlob": "0e4718176518131828688092ea95e894a1d4c2fa",
+  "candidateBlob": "e2c1e39d4282b91e3af6a5237b0c88e054dc61be",
+  "methodCopyBinding": {
+    "originalCodeUnits": 2248,
+    "originalFNV32": "e80709ad",
+    "candidateCodeUnits": 2317,
+    "candidateFNV32": "9ba369a4",
+    "comparison": "exact production method body mirrored verbatim; equal FNV on connector content and local Kotlin mirror"
+  },
+  "architecture": [
+    "MemoryWritePolicy (unchanged)",
+    "AiContextCompiler.redactSecrets (R5 two-line fix)",
+    "MemoryEventHub / Orb (unchanged)",
+    "C1-owned common Activity/factory/worker (unchanged)"
+  ],
+  "changes": [
+    "standalone Bearer accepts ASCII spaces/tabs but not cross-line word to avoid silent negation removal",
+    "standard OAuth underscore aliases recognized by assignment-field redactor",
+    "six original failing host cases green; four unrelated controls remained green"
+  ],
+  "host": {
+    "compiler": "kotlinc-jvm 1.9.0",
+    "jre": "21",
+    "scope": "source-bound exact-method Kotlin host test, not full Android project",
+    "total": 10,
+    "before": {
+      "pass": 4,
+      "fail": 6,
+      "exit": 1
+    },
+    "after": {
+      "pass": 10,
+      "fail": 0,
+      "exit": 0
+    },
+    "rawEvidence": [
+      "docs/evidence/memory-privacy-r5-20261105/host-red.txt",
+      "docs/evidence/memory-privacy-r5-20261105/host-green.txt"
+    ],
+    "repeatableRunner": "tools/memory-privacy-r5/run.sh"
+  },
+  "projectJUnit": {
+    "frozenMethods": 5,
+    "compiled": false,
+    "executed": false,
+    "status": "NOT_RUN_ANDROID_SDK_AND_SHARED_BUILD_LOCKS_UNAVAILABLE_IN_THIS_RUNTIME"
+  },
+  "limits": [
+    "No complete Android Gradle gate, Robolectric, NewApi or physical Fold7 rerun on R5 source",
+    "Stand-alone malformed Bearer with a token on the following physical line is no longer recognized; RFC syntax uses same-line space, but this filter is not a universal detector",
+    "No retroactive ledger migration, automatic credential discovery, inference or model quality claim"
+  ],
+  "next": [
+    "Ask C1 to evaluate full R5 JUnit and all 100 R4 regressions on exact integrated source",
+    "Review malformed line-wrapped credential tradeoff and reject/adjust R5 if stricter fail-closed handling required",
+    "Run complete mandatory common gates and preserve original package and data",
+    "Do not APK/sign/release without separate owner acceptance"
+  ]
+}
