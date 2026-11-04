@@ -1,0 +1,2 @@
+# Local dependencies installed by reproducible npm ci; never commit vendor packages.
+node_modules/
