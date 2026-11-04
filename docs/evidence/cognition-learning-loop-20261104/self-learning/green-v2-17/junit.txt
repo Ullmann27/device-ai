@@ -1,0 +1,7 @@
+JUnit version 4.13.2
+....SOURCE_RETRY completed=true steps=550 claimed=1
+......................
+Time: 1.095
+
+OK (26 tests)
+

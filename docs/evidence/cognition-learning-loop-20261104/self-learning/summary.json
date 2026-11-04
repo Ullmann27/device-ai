@@ -1,0 +1,62 @@
+{
+  "status": "MOCK_TESTED",
+  "scope": "Actual Kotlin learning call on synthetic temporary data; frozen C1 dependency classes",
+  "runs": [
+    {
+      "run": "red-original-48",
+      "tests": 8,
+      "failures": 6,
+      "coreSha256": "909b3269977cdaf415ab9951e8e6ef1642c8cc68b2d3cae04dedf69dac173205",
+      "regressionTestSha256": "1def41ffbb78122d728e6640a4251f5f1a0db9e570c02507297ce5e940c25b5c",
+      "compileExit": 0,
+      "junitExit": 1,
+      "dependenciesUnchanged": true,
+      "seconds": 15.454
+    },
+    {
+      "run": "red-completed-48",
+      "tests": 8,
+      "failures": 6,
+      "coreSha256": "909b3269977cdaf415ab9951e8e6ef1642c8cc68b2d3cae04dedf69dac173205",
+      "regressionTestSha256": "8ae3996e97c475a1bb37369c402312cd23a35319ec1da387d2c63434aa0b4a39",
+      "compileExit": 0,
+      "junitExit": 1,
+      "dependenciesUnchanged": true,
+      "seconds": 12.76
+    },
+    {
+      "run": "red-v2-17",
+      "tests": 8,
+      "failures": 5,
+      "coreSha256": "909b3269977cdaf415ab9951e8e6ef1642c8cc68b2d3cae04dedf69dac173205",
+      "regressionTestSha256": "581eb469af8353dfc1fc563aff95ca8f8c96a468605593dcc4c4f5a7f60c1539",
+      "compileExit": 0,
+      "junitExit": 1,
+      "dependenciesUnchanged": true,
+      "seconds": 12.432
+    },
+    {
+      "run": "green-v2-17",
+      "tests": 26,
+      "failures": 0,
+      "coreSha256": "3883330655a6f3750da418f758ac39d6c3542a8a34dc9788f6bec749c259e2cf",
+      "regressionTestSha256": "581eb469af8353dfc1fc563aff95ca8f8c96a468605593dcc4c4f5a7f60c1539",
+      "compileExit": 0,
+      "junitExit": 0,
+      "dependenciesUnchanged": true,
+      "seconds": 13.387
+    }
+  ],
+  "sameV2RegressionTests": true,
+  "android": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "paidApiCalls": 0,
+  "productionWeightsChanged": false,
+  "runnerSha256": "95aa872e80388e3f7c40486003b259f59570a83e9116540cf5783e6f4157dd44",
+  "limits": {
+    "currentUniqueSources": 17,
+    "sourceAuditRefChars": 500,
+    "sourceReplay": 48,
+    "trainingExamplesCap": 96
+  }
+}

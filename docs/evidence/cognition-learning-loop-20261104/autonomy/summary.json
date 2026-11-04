@@ -1,0 +1,49 @@
+{
+  "current": {
+    "acceptanceOwner": "root combined source gate",
+    "lastOwnAttempt": "LOCK_BUSY before compilation",
+    "sources": {
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt": "f14706ac6d255467051d01c496c3b7168f111cefaa6d9151fd001a111ff3e093",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumSourceNovelty.kt": "833a6b8fa31e11f49c54632231d6465b0166110f96b1597b2c302e1a2a90d0d6",
+      "app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceNoveltyTest.kt": "452320b6d4de316fcffec034fcb3d6aa3ad74950366f1da46f6e7cec146e71d7",
+      "app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceResumeTest.kt": "f532c17ef3af40daa2189793d1d6f4504148e9cfdd5c32f75a31eac6c0591660",
+      "app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceRoundJournalTest.kt": "376d6a40245a65ccd7ec82bb087a71512566f34dc39c758d13175b5b077267c8"
+    },
+    "status": "NOT_RUN",
+    "testCount": 15
+  },
+  "deviceRun": false,
+  "experiments": [
+    "EXP-01",
+    "EXP-04",
+    "EXP-12"
+  ],
+  "greenPreviousSnapshot": {
+    "compileExit": 0,
+    "currentSourceEquivalent": false,
+    "directory": "green-attempt-1",
+    "failed": 0,
+    "junitExit": 0,
+    "passed": 14,
+    "tests": 14
+  },
+  "limits": {
+    "historicalUnmarkedArchiveReinterpreted": false,
+    "maxJournalReadBytes": 8192,
+    "newSchedulerOrQueue": false,
+    "openRowsEvicted": false,
+    "sourceRoundRows": 120
+  },
+  "modelTrainingRun": false,
+  "productiveWeightsChanged": false,
+  "red": {
+    "compileExit": 0,
+    "directory": "red-attempt-1",
+    "failed": 2,
+    "junitExit": 1,
+    "passed": 3,
+    "tests": 5
+  },
+  "sourceWiring": "wiring.json",
+  "task": "AUTONOMY-COGNITION-LOOP-20261104"
+}

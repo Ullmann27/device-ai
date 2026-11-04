@@ -15,6 +15,7 @@ import at.heinz.deviceai.cognitive.ValidationState
 import at.heinz.deviceai.cognitive.memoryRecordHash
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.ByteBuffer
 import java.util.Base64
 
 enum class CorrectionAuditStatus { NOT_CONFIGURED, VERIFIED, TAMPERED, UNSIGNED_LEDGER_CHANGE }
@@ -76,12 +77,15 @@ class SignedOwnerCorrectionJournal(private val directory:File, private val signe
         val entries = try { entries() } catch (e:IllegalStateException) {
             return CorrectionAudit(CorrectionAuditStatus.TAMPERED, 0, emptyList())
         }
-        val last = HashMap<String, String>()
-        entries.forEach { last[it.payload.recordId] = it.payload.afterHash }
-        val unsigned = ownerFacts(ledger).values.filter { e ->
+        val last = HashMap<String, MemoryMutationPayload>()
+        entries.forEach { last[it.payload.recordId] = it.payload }
+        val current = ownerFacts(ledger)
+        val changed = current.values.filter { e ->
             val signed = last[e.id]
-            if (signed == null) e.status != LearningStatus.OBSERVED else signed != memoryRecordHash(toMemoryRecord(e))
-        }.map { it.id }.sorted()
+            if (signed == null) e.status != LearningStatus.OBSERVED
+            else signed.afterHash != memoryRecordHash(toMemoryRecord(e), signed.schemaVersion)
+        }.map { it.id }
+        val unsigned = (changed + (last.keys - current.keys)).distinct().sorted()
         return CorrectionAudit(if (unsigned.isEmpty()) CorrectionAuditStatus.VERIFIED else CorrectionAuditStatus.UNSIGNED_LEDGER_CHANGE,
             entries.size, unsigned)
     }
@@ -107,21 +111,37 @@ class SignedOwnerCorrectionJournal(private val directory:File, private val signe
 
     private fun encode(m:ProofCarryingMemoryMutation):String {
         val p = m.payload
-        fun b(s:String) = Base64.getUrlEncoder().withoutPadding().encodeToString(s.toByteArray(Charsets.UTF_8))
-        return listOf("v1", p.mutationId, b(p.recordId), p.beforeHash ?: "-", p.afterHash, p.reason.name, p.provenance.name,
-            b(p.evidenceReferences.joinToString("\n")), b(p.contradictionReferences.joinToString("\n")),
+        require(p.schemaVersion == MemoryMutationPayload.CURRENT_SCHEMA_VERSION)
+        fun b(s:String):String {
+            val bytes = ByteBuffer.allocate(s.length * Char.SIZE_BYTES)
+            s.forEach { bytes.putChar(it) }
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes.array())
+        }
+        return listOf("v2", p.mutationId, b(p.recordId), p.beforeHash ?: "-", p.afterHash, p.reason.name, p.provenance.name,
+            p.evidenceReferences.joinToString(",") { b(it) }, p.contradictionReferences.joinToString(",") { b(it) },
             p.previousMutationHash ?: "-", p.createdAtMillis.toString(),
             Base64.getUrlEncoder().withoutPadding().encodeToString(m.signature)).joinToString("\t")
     }
 
     private fun decode(line:String):ProofCarryingMemoryMutation {
         val f = line.split('\t')
-        require(f.size == 12 && f[0] == "v1")
-        fun s(x:String) = String(Base64.getUrlDecoder().decode(x), Charsets.UTF_8)
-        fun list(x:String) = s(x).split('\n').filter { it.isNotEmpty() }
+        require(f.size == 12)
+        val schemaVersion = when (f[0]) {
+            "v1" -> 1
+            "v2" -> MemoryMutationPayload.CURRENT_SCHEMA_VERSION
+            else -> throw IllegalArgumentException("Unsupported correction journal version")
+        }
+        fun s(x:String):String {
+            val bytes = Base64.getUrlDecoder().decode(x)
+            if (schemaVersion == 1) return String(bytes, Charsets.UTF_8)
+            require(bytes.size % Char.SIZE_BYTES == 0)
+            return ByteBuffer.wrap(bytes).asCharBuffer().toString()
+        }
+        fun list(x:String):List<String> = if (schemaVersion == 1) s(x).split('\n').filter { it.isNotEmpty() }
+            else if (x.isEmpty()) emptyList() else x.split(',').map(::s)
         val payload = MemoryMutationPayload(f[1], s(f[2]), f[3].takeUnless { it == "-" }, f[4],
             MemoryMutationReason.valueOf(f[5]), ProvenanceType.valueOf(f[6]), list(f[7]), list(f[8]),
-            f[9].takeUnless { it == "-" }, f[10].toLong())
+            f[9].takeUnless { it == "-" }, f[10].toLong(), schemaVersion)
         return ProofCarryingMemoryMutation(payload, Base64.getUrlDecoder().decode(f[11]))
     }
 

@@ -1,0 +1,33 @@
+[
+  [
+    "/workspace/scratch/b6ee64d418cf/toolchain/jdk17/bin/java",
+    "-Xmx512m",
+    "-cp",
+    "/workspace/scratch/bb03c70897d0/avatar-test-deps/annotations-13.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/hamcrest-core-1.3.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/json-20240303.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/junit-4.13.2.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-reflect-1.6.10.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-stdlib-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlinx-coroutines-core-jvm-1.8.0.jar",
+    "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+    "-no-stdlib",
+    "-no-reflect",
+    "-jvm-target",
+    "17",
+    "-module-name",
+    "DeviceAI_app_debug",
+    "-Xfriend-paths=/workspace/scratch/344de8bc2104/memory-jvm-base.jar",
+    "-classpath",
+    "/workspace/scratch/344de8bc2104/memory-jvm-base.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/annotations-13.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/hamcrest-core-1.3.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/json-20240303.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/junit-4.13.2.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-reflect-1.6.10.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-stdlib-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlinx-coroutines-core-jvm-1.8.0.jar",
+    "-d",
+    "/workspace/scratch/344de8bc2104/self-learning-red-v2/classes",
+    "/workspace/scratch/344de8bc2104/self-learning-red-v2/sources/ContinuumLearningCore.kt",
+    "/workspace/scratch/344de8bc2104/self-learning-red-v2/sources/ContinuumLearningExperience.kt",
+    "/workspace/scratch/344de8bc2104/self-learning-red-v2/sources/TrainableSubwordEncoder.kt",
+    "/workspace/scratch/344de8bc2104/self-learning-red-v2/sources/MentorSource.kt",
+    "/workspace/scratch/344de8bc2104/self-learning-red-v2/sources/ContinuumSourceReplayCoverageTest.kt"
+  ],
+  [
+    "/workspace/scratch/b6ee64d418cf/toolchain/jdk17/bin/java",
+    "-Xmx512m",
+    "-cp",
+    "/workspace/scratch/344de8bc2104/self-learning-red-v2/classes:/workspace/scratch/344de8bc2104/continuum-cognition/app/src/test/resources:/workspace/scratch/344de8bc2104/memory-jvm-base.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/annotations-13.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/hamcrest-core-1.3.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/json-20240303.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/junit-4.13.2.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-reflect-1.6.10.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-stdlib-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlinx-coroutines-core-jvm-1.8.0.jar",
+    "org.junit.runner.JUnitCore",
+    "at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest"
+  ]
+]

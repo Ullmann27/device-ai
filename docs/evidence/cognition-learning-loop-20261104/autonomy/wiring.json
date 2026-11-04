@@ -1,0 +1,11 @@
+{
+  "kind": "SOURCE_WIRING_CHECK_ONLY",
+  "checks": {
+    "unwrapped_start_before_archive": true,
+    "source_write_order": true,
+    "evaluation_and_cancellation_gate": true,
+    "original_owner_gates_present": true
+  },
+  "source": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+  "sha256": "f14706ac6d255467051d01c496c3b7168f111cefaa6d9151fd001a111ff3e093"
+}

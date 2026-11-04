@@ -1,0 +1,12 @@
+docs/evidence/cognition-learning-loop-20261104/coordinator/combined-red-01/sources/ContinuumLearningCore.kt:296:31: warning: unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+                (semanticTrain?.steps ?: 0),trainIntentBefore,trainIntentAfter,
+                              ^^
+docs/evidence/cognition-learning-loop-20261104/coordinator/combined-red-01/sources/ContinuumLearningCore.kt:406:37: warning: unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+                trainI.steps+(trainS?.steps ?: 0),
+                                    ^^
+docs/evidence/cognition-learning-loop-20261104/coordinator/combined-red-01/sources/ContinuumPublicStudyScheduler.kt:86:25: warning: 'val networkType: Int' is deprecated. Deprecated in Java.
+                pending.networkType==JobInfo.NETWORK_TYPE_ANY &&
+                        ^^^^^^^^^^^
+docs/evidence/cognition-learning-loop-20261104/coordinator/combined-red-01/sources/ContinuumPublicStudyScheduler.kt:248:37: warning: no cast needed.
+                val candidate=value as? String ?: ""
+                                    ^^^^^^^^^^

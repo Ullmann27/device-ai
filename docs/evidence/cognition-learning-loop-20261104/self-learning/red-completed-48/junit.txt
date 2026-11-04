@@ -1,0 +1,60 @@
+JUnit version 4.13.2
+..E.E.SOURCE_RETRY completed=true steps=550 claimed=1
+E.E.E..E
+Time: 0.754
+There were 6 failures:
+1) duplicateInputDoesNotConsumeReplayCapacity(at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest)
+java.lang.IllegalArgumentException: Failed requirement.
+	at at.heinz.deviceai.learning.LearningExperience.<init>(ContinuumLearningExperience.kt:40)
+	at at.heinz.deviceai.learning.LearningExperienceFactory.create(ContinuumLearningExperience.kt:64)
+	at at.heinz.deviceai.learning.ContinuumLearningCore.appendAudit(ContinuumLearningCore.kt:1090)
+	at at.heinz.deviceai.learning.ContinuumLearningCore.learnFromSources(ContinuumLearningCore.kt:551)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.duplicateInputDoesNotConsumeReplayCapacity$lambda$0(ContinuumSourceReplayCoverageTest.kt:94)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.fixture(ContinuumSourceReplayCoverageTest.kt:143)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.duplicateInputDoesNotConsumeReplayCapacity(ContinuumSourceReplayCoverageTest.kt:92)
+2) normalizedShortTopicsAreRejectedBeforeAnyLedgerWrite(at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest)
+java.lang.AssertionError: expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown
+	at org.junit.Assert.assertThrows(Assert.java:1028)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.normalizedShortTopicsAreRejectedBeforeAnyLedgerWrite$lambda$0(ContinuumSourceReplayCoverageTest.kt:66)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.fixture(ContinuumSourceReplayCoverageTest.kt:143)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.normalizedShortTopicsAreRejectedBeforeAnyLedgerWrite(ContinuumSourceReplayCoverageTest.kt:64)
+3) retriedOldSourceParticipatesDespiteNewerReplay(at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest)
+java.lang.AssertionError: the current source must enter the measured training set expected:<0.6927604443382278> but was:<0.6927586491041351>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:555)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.retriedOldSourceParticipatesDespiteNewerReplay$lambda$0(ContinuumSourceReplayCoverageTest.kt:24)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.fixture(ContinuumSourceReplayCoverageTest.kt:143)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.retriedOldSourceParticipatesDespiteNewerReplay(ContinuumSourceReplayCoverageTest.kt:9)
+4) boundedAuditReferencesRetainEverySource(at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest)
+java.lang.IllegalArgumentException: Failed requirement.
+	at at.heinz.deviceai.learning.LearningExperience.<init>(ContinuumLearningExperience.kt:40)
+	at at.heinz.deviceai.learning.LearningExperienceFactory.create(ContinuumLearningExperience.kt:64)
+	at at.heinz.deviceai.learning.ContinuumLearningCore.appendAudit(ContinuumLearningCore.kt:1090)
+	at at.heinz.deviceai.learning.ContinuumLearningCore.learnFromSources(ContinuumLearningCore.kt:551)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.boundedAuditReferencesRetainEverySource$lambda$0(ContinuumSourceReplayCoverageTest.kt:78)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.fixture(ContinuumSourceReplayCoverageTest.kt:143)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.boundedAuditReferencesRetainEverySource(ContinuumSourceReplayCoverageTest.kt:75)
+5) unusableHistoricalTopicsCannotDisplaceCurrentSource(at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest)
+java.lang.AssertionError: expected:<7> but was:<6>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.unusableHistoricalTopicsCannotDisplaceCurrentSource$lambda$0(ContinuumSourceReplayCoverageTest.kt:47)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.fixture(ContinuumSourceReplayCoverageTest.kt:143)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.unusableHistoricalTopicsCannotDisplaceCurrentSource(ContinuumSourceReplayCoverageTest.kt:31)
+6) oversizedDistinctBatchIsRefusedBeforeLedgerWrites(at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest)
+java.lang.IllegalArgumentException: Failed requirement.
+	at at.heinz.deviceai.learning.LearningExperience.<init>(ContinuumLearningExperience.kt:40)
+	at at.heinz.deviceai.learning.LearningExperienceFactory.create(ContinuumLearningExperience.kt:64)
+	at at.heinz.deviceai.learning.ContinuumLearningCore.appendAudit(ContinuumLearningCore.kt:1090)
+	at at.heinz.deviceai.learning.ContinuumLearningCore.learnFromSources(ContinuumLearningCore.kt:551)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.oversizedDistinctBatchIsRefusedBeforeLedgerWrites$lambda$0(ContinuumSourceReplayCoverageTest.kt:57)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.fixture(ContinuumSourceReplayCoverageTest.kt:143)
+	at at.heinz.deviceai.learning.ContinuumSourceReplayCoverageTest.oversizedDistinctBatchIsRefusedBeforeLedgerWrites(ContinuumSourceReplayCoverageTest.kt:53)
+
+FAILURES!!!
+Tests run: 8,  Failures: 6
+

@@ -1,0 +1,17 @@
+{
+  "androidBuild": "NOT_RUN",
+  "compileExit": 0,
+  "dependenciesUnchanged": true,
+  "device": "NOT_RUN",
+  "exit": 1,
+  "failures": 5,
+  "hostOnly": true,
+  "javaExit": 0,
+  "junitExit": 1,
+  "resourcesUnchanged": true,
+  "seconds": 17.709,
+  "sourcesUnchanged": true,
+  "startedAt": "2026-11-04T21:30:02.244164+00:00",
+  "status": "FAIL",
+  "tests": 80
+}

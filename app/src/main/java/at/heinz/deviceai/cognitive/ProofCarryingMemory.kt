@@ -1,5 +1,8 @@
 package at.heinz.deviceai.cognitive
 
+import java.io.ByteArrayOutputStream
+import java.io.DataOutputStream
+
 enum class MemoryMutationReason {
     USER_CORRECTION,
     NEW_EVIDENCE,
@@ -19,7 +22,8 @@ data class MemoryMutationPayload(
     val evidenceReferences: List<String>,
     val contradictionReferences: List<String>,
     val previousMutationHash: String?,
-    val createdAtMillis: Long
+    val createdAtMillis: Long,
+    val schemaVersion: Int = CURRENT_SCHEMA_VERSION
 ) {
     init {
         require(mutationId.matches(Regex("[A-Za-z0-9._:-]{1,128}")))
@@ -30,9 +34,24 @@ data class MemoryMutationPayload(
         require(evidenceReferences.size <= 128 && evidenceReferences.none(String::isBlank))
         require(contradictionReferences.size <= 128 && contradictionReferences.none(String::isBlank))
         require(createdAtMillis >= 0)
+        require(schemaVersion == 1 || schemaVersion == CURRENT_SCHEMA_VERSION)
     }
 
-    fun canonicalBytes(): ByteArray = buildString {
+    fun canonicalBytes(): ByteArray = if (schemaVersion == 1) legacyCanonicalBytes() else
+        canonicalMemoryBytes(0x50434d32) {
+            writeMemoryString(mutationId)
+            writeMemoryString(recordId)
+            writeMemoryString(beforeHash)
+            writeMemoryString(afterHash)
+            writeMemoryString(reason.name)
+            writeMemoryString(provenance.name)
+            writeMemoryReferences(evidenceReferences)
+            writeMemoryReferences(contradictionReferences)
+            writeMemoryString(previousMutationHash)
+            writeLong(createdAtMillis)
+        }
+
+    private fun legacyCanonicalBytes(): ByteArray = buildString {
         append(mutationId).append('|')
         append(recordId).append('|')
         append(beforeHash.orEmpty()).append('|')
@@ -46,6 +65,10 @@ data class MemoryMutationPayload(
     }.toByteArray(Charsets.UTF_8)
 
     fun hash(): String = sha256Bytes(canonicalBytes()).toHex()
+
+    companion object {
+        const val CURRENT_SCHEMA_VERSION = 2
+    }
 }
 
 data class ProofCarryingMemoryMutation(
@@ -133,7 +156,31 @@ class MemoryMutationLedger(private val signer: IdentitySigner) {
     fun lastHash(): String? = entries.lastOrNull()?.payload?.hash()
 }
 
-fun memoryRecordHash(record: MemoryRecord): String {
+fun memoryRecordHash(record: MemoryRecord): String =
+    memoryRecordHash(record, MemoryMutationPayload.CURRENT_SCHEMA_VERSION)
+
+fun memoryRecordHash(record: MemoryRecord, schemaVersion: Int): String {
+    require(schemaVersion == 1 || schemaVersion == MemoryMutationPayload.CURRENT_SCHEMA_VERSION)
+    if (schemaVersion == 1) return legacyMemoryRecordHash(record)
+    val bytes = canonicalMemoryBytes(0x4d524332) {
+        writeMemoryString(record.id)
+        writeMemoryString(record.type.name)
+        writeMemoryString(record.content)
+        writeMemoryString(record.provenance.name)
+        writeDouble(record.confidence)
+        writeLong(record.createdAt)
+        writeLong(record.updatedAt)
+        writeMemoryReferences(record.tags)
+        writeMemoryReferences(record.parentIds)
+        writeMemoryString(record.sourceReference)
+        writeMemoryString(record.validationState.name)
+        writeMemoryString(record.privacyClass.name)
+        writeMemoryReferences(record.validationEvidenceReferences)
+    }
+    return sha256Bytes(bytes).toHex()
+}
+
+private fun legacyMemoryRecordHash(record: MemoryRecord): String {
     val canonical = buildString {
         append(record.id).append('|')
         append(record.type.name).append('|')
@@ -149,4 +196,24 @@ fun memoryRecordHash(record: MemoryRecord): String {
         append(record.validationEvidenceReferences.distinct().sorted().joinToString(","))
     }
     return sha256Bytes(canonical.toByteArray(Charsets.UTF_8)).toHex()
+}
+
+private fun canonicalMemoryBytes(magic: Int, write: DataOutputStream.() -> Unit): ByteArray {
+    val bytes = ByteArrayOutputStream()
+    DataOutputStream(bytes).use { output ->
+        output.writeInt(magic)
+        output.write()
+    }
+    return bytes.toByteArray()
+}
+
+private fun DataOutputStream.writeMemoryString(value: String?) {
+    writeInt(value?.length ?: -1)
+    if (value != null) writeChars(value)
+}
+
+private fun DataOutputStream.writeMemoryReferences(values: List<String>) {
+    val normalized = values.distinct().sorted()
+    writeInt(normalized.size)
+    normalized.forEach { writeMemoryString(it) }
 }

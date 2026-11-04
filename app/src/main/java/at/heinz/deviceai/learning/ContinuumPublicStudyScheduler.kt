@@ -387,6 +387,8 @@ class ContinuumPublicStudyJobService:JobService() {
                 if(pending.isEmpty()) {
                     phase="SOURCE_UNCHANGED"
                 } else {
+                    operation="START_SOURCE_ROUND"
+                    ContinuumSourceNovelty.markStarted(filesDir,pending)
                     operation="ARCHIVE_SOURCE"
                     ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                         ContinuumTrainingMonitor.PUBLIC,"ARCHIVE_SOURCE")
