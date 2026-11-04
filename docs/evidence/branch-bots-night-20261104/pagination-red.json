@@ -1,0 +1,11 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern=source pages|page cursors|last page",
+    ".github/continuum/branch-discovery.test.mjs"
+  ],
+  "exitCode": 1,
+  "time": "2026-11-04T21:27:55.943979+00:00"
+}

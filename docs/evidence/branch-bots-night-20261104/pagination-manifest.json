@@ -1,0 +1,17 @@
+{
+  "sourceParent": "bfa3f5ca709c6abd6850726a5b5053ecbef46aa6",
+  "baselineCode": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
+  "files": [
+    {
+      "path": ".github/continuum/branch-discovery.mjs",
+      "gitBlob": "07fcc10c502dfd7f60346a74f705e324973e5be6",
+      "sha256": "27dc93fb3c26f24f91d4e2f00bd573cf1a2eb4c33913670066194e460e2835ae"
+    },
+    {
+      "path": ".github/continuum/branch-discovery.test.mjs",
+      "gitBlob": "ae3ddbb2447bbd236a6d9c1c3b0c957bbf169668",
+      "sha256": "46768cd0c17a5726552f7e1a845950931278d912c4f55af1874296b4cb4c87a8"
+    }
+  ],
+  "gitDiffCheck": 0
+}

@@ -7,8 +7,24 @@
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
   "ownerSession": "672924e4650b-night-20261104",
   "sourceSnapshot": "SELECTED_104_CODE_FILES_VERIFIED",
-  "phase": "REPRODUCE_AND_IMPLEMENT",
-  "milestones": [],
+  "phase": "IMPLEMENT_DURABLE_CONTINUATION",
+  "milestones": [
+    {
+      "id": "M1",
+      "status": "SOURCE_TESTED",
+      "change": "Source-bound paginated discovery",
+      "red": {
+        "tests": 3,
+        "fail": 3
+      },
+      "green": {
+        "tests": 27,
+        "pass": 27,
+        "fail": 0,
+        "skip": 0
+      }
+    }
+  ],
   "androidCompilation": "NOT_RUN",
   "deviceTest": "NOT_RUN",
   "apk": "NOT_RUN",

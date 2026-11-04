@@ -137,6 +137,59 @@ test('bounded discovery exposes incomplete source and path coverage',t=>{
  assert.equal(candidate.changesTruncated,true);assert.equal(candidate.changeCount,2);
 });
 
+test('source pages eventually inspect every unique available commit',t=>{
+ const f=fixture(t),sources=[];
+ for(const name of ['alpha','bravo','charlie','delta','echo'])sources.push(feature(f,name));
+ f.git('update-ref','refs/archive/alpha-copy',sources[0]);
+ const pages=[],seen=[];let cursor=null;
+ for(let i=0;i<3;i++){
+  const report=discoverBranches({root:f.root,maxSources:2,cursor});
+  pages.push(report);seen.push(...report.branches.map(x=>x.sourceCommit));
+  cursor=report.nextCursor?JSON.parse(JSON.stringify(report.nextCursor)):null;
+ }
+ assert.deepEqual([...seen].sort(),[...sources].sort());assert.equal(new Set(seen).size,5);
+ pages.forEach((report,i)=>{
+  assert.equal(report.coverage.sourceOffset,i*2);
+  assert.equal(report.coverage.endOffset,Math.min(5,i*2+2));
+  assert.equal(report.coverage.remainingSources,Math.max(0,5-i*2-2));
+  assert.equal(report.coverage.complete,false);
+  if(i<2)assert.ok(report.nextCursor);else assert.equal(report.nextCursor,null);
+ });
+ assert.equal(pages.reduce((n,p)=>n+proposeBranchReviews({report:p,stateDir:f.state}).proposed,0),5);
+ assert.ok(new BacklogStore(path.join(f.state,'development-backlog.json')).read().doc.tasks.every(x=>x.state==='PROPOSED'));
+ assert.equal(f.git('rev-parse','HEAD'),f.base);assert.equal(f.git('status','--porcelain'),'');
+});
+
+test('page cursors reject malformed positions and changed source identity',t=>{
+ const f=fixture(t);feature(f,'alpha');feature(f,'bravo');
+ const cursor=discoverBranches({root:f.root,maxSources:1}).nextCursor;
+ assert.ok(cursor);
+ for(const value of [{},'cursor',[],{...cursor,nextSourceOffset:0},{...cursor,nextSourceOffset:2},
+  {...cursor,nextSourceOffset:1.5},{...cursor,unexpected:true}])
+  assert.throws(()=>discoverBranches({root:f.root,maxSources:1,cursor:value}),/INVALID_DISCOVERY_CURSOR/);
+ const other=fixture(t);
+ assert.throws(()=>discoverBranches({root:other.root,maxSources:1,cursor}),/DISCOVERY_CURSOR_STALE/);
+ assert.throws(()=>discoverBranches({root:f.root,targetRef:'alpha',maxSources:1,cursor}),/DISCOVERY_CURSOR_STALE/);
+ f.git('update-ref','refs/archive/new-alias',f.base);
+ assert.throws(()=>discoverBranches({root:f.root,maxSources:1,cursor}),/DISCOVERY_CURSOR_STALE/);
+ assert.equal(fs.existsSync(f.state),false);
+});
+
+test('last page keeps omitted paths and partial inventory explicit',t=>{
+ const f=fixture(t);feature(f,'alpha');
+ f.git('switch','-qc','bravo');f.write('lib/b.mjs','export const b=1;\n');
+ f.write('lib/c.mjs','export const c=1;\n');f.commit('large source');f.git('switch','-q','target');
+ const first=discoverBranches({root:f.root,maxSources:1,maxChanges:1});
+ assert.ok(first.nextCursor);
+ const last=discoverBranches({root:f.root,maxSources:1,maxChanges:1,cursor:first.nextCursor});
+ assert.equal(last.nextCursor,null);assert.equal(last.coverage.remainingSources,0);
+ assert.equal(last.coverage.complete,false);assert.equal(last.branches[0].changesTruncated,true);
+ assert.equal(last.branches[0].changeCount,2);
+ const full=discoverBranches({root:f.root});assert.equal(full.coverage.complete,true);
+ assert.equal(full.nextCursor,null);assert.equal(full.coverage.sourceOffset,0);
+ assert.equal(full.approvedForMerge,false);assert.equal(full.executedTests,0);assert.equal(full.apk,'NOT_RUN');
+});
+
 test('invalid limits and option-like target references fail closed',t=>{
  const f=fixture(t);
  for(const options of [{maxSources:0},{maxSources:5001},{maxChanges:-1},{timeoutMs:0},{targetRef:'--upload-pack=anything'}])

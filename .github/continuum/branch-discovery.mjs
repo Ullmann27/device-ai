@@ -149,7 +149,7 @@ export function assertBranchSourceSafe(root){
 }
 
 /** Reads only locally available refs and committed trees; never fetches or checks out a branch. */
-export function discoverBranches({root,targetRef='HEAD',maxSources=1000,maxChanges=200,timeoutMs=120000}={}){
+export function discoverBranches({root,targetRef='HEAD',maxSources=1000,maxChanges=200,timeoutMs=120000,cursor=null}={}){
  if(typeof root!=='string'||!root||typeof targetRef!=='string'||
     !/^[A-Za-z0-9][A-Za-z0-9._/-]{0,254}$/.test(targetRef))throw Error('INVALID_SOURCE_OR_TARGET');
  integer(maxSources,1,5000,'SOURCE_LIMIT');integer(maxChanges,1,2000,'CHANGE_LIMIT');integer(timeoutMs,1,300000,'TIMEOUT');
@@ -166,8 +166,22 @@ export function discoverBranches({root,targetRef='HEAD',maxSources=1000,maxChang
   grouped.get(entry.commit).push(entry.ref);
  }
  const sources=[...grouped.entries()].sort((a,b)=>a[1][0].localeCompare(b[1][0]));
+ const identity={version:1,sourceRoot,checkoutCommit,targetRef,targetCommit,refSnapshotSha256:snapshot.digest};
+ let sourceOffset=0;
+ if(cursor!==null){
+  if(!cursor||typeof cursor!=='object'||Array.isArray(cursor)||
+     Object.keys(cursor).sort().join()!==[...Object.keys(identity),'nextSourceOffset'].sort().join()||
+     cursor.version!==1||typeof cursor.sourceRoot!=='string'||typeof cursor.targetRef!=='string'||
+     !COMMIT.test(cursor.checkoutCommit)||!COMMIT.test(cursor.targetCommit)||
+     !/^[a-f0-9]{64}$/.test(cursor.refSnapshotSha256)||
+     !Number.isSafeInteger(cursor.nextSourceOffset)||cursor.nextSourceOffset<1)
+   throw Error('INVALID_DISCOVERY_CURSOR');
+  if(Object.entries(identity).some(([key,value])=>cursor[key]!==value))throw Error('DISCOVERY_CURSOR_STALE');
+  if(cursor.nextSourceOffset>=sources.length)throw Error('INVALID_DISCOVERY_CURSOR');
+  sourceOffset=cursor.nextSourceOffset;
+ }
  const branches=[];
- for(const [sourceCommit,refs] of sources.slice(0,maxSources)){
+ for(const [sourceCommit,refs] of sources.slice(sourceOffset,sourceOffset+maxSources)){
   const branch={sourceCommit,refs,mergeBase:null,status:null,changes:[],changeCount:0,
    alreadyPresentCount:0,missingCount:0,divergedCount:0,deletionCount:0,changesTruncated:false,
    quality:'NOT_BENCHMARKED',apk:'NOT_RUN'};
@@ -204,10 +218,13 @@ export function discoverBranches({root,targetRef='HEAD',maxSources=1000,maxChang
  if(resolveCommit(git,'HEAD')!==checkoutCommit||resolveCommit(git,targetRef)!==targetCommit||readRefs(git).digest!==snapshot.digest)
   throw Error('DISCOVERY_REFS_CHANGED_DURING_SCAN');
  cleanSource(git,sourceRoot);
+ const endOffset=sourceOffset+branches.length;
  const report=freeze({schema:'continuum-branch-discovery',version:1,sourceRoot,checkoutCommit,targetRef,targetCommit,
   refSnapshotSha256:snapshot.digest,scope:'LOCAL_AVAILABLE_REFS_ONLY',networkFetch:false,historyComplete,
   coverage:{availableRefs:snapshot.refs.length,ignoredRefs:snapshot.ignored,totalSources:sources.length,
-   scannedSources:branches.length,complete:branches.length===sources.length&&!branches.some(x=>x.changesTruncated),maxSources,maxChanges},
+   scannedSources:branches.length,sourceOffset,endOffset,remainingSources:sources.length-endOffset,
+   complete:sourceOffset===0&&branches.length===sources.length&&!branches.some(x=>x.changesTruncated),maxSources,maxChanges},
+  nextCursor:endOffset<sources.length?{...identity,nextSourceOffset:endOffset}:null,
   branches,executedTests:0,approvedForMerge:false,deviceVerified:false,apk:'NOT_RUN'});
  admitted.set(report,{sourceRoot,checkoutCommit,targetRef,targetCommit,refDigest:snapshot.digest});
  return report;

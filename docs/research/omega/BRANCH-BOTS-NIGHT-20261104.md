@@ -24,3 +24,9 @@ No main merge, package/signing/model change, paid model API, Actions invocation,
 The accompanying state.json is ACTIVE during this session. A scheduled continuation must not edit an ACTIVE checkpoint or infer that elapsed time alone makes another session inactive. Once this round is complete, state becomes READY_FOR_NEXT_ITERATION with exact evidence and next scope. Missing access is a blocker, never an invented continuation.
 
 Rollback: individually withdraw this round's bounded source changes; retain all earlier commits and evidence.
+
+## M1 — bounded discovery progression
+
+Reproduced the original starvation with five real Git fixture branches: three bounded passes repeatedly selected the same two sources. Three new regressions failed before the change; the full scanner/CLI subset now passes 27/27, zero failures/skips.
+
+The scanner returns a source-root/checkout/target/ref-snapshot-bound nextCursor. Resumed pages report their own range and remaining sources. Even the final partial page never claims a full inventory. Malformed, out-of-range and stale cursors are rejected. Serialized navigation is not proposal authority; existing in-process report admission remains unchanged. CLI persistence is the next milestone, not yet implemented at this checkpoint.
