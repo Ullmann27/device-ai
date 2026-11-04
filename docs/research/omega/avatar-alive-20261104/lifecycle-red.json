@@ -1,0 +1,42 @@
+{
+  "baseSource": "d65b5b23fff6aa19c80413ac80095daa9f387266",
+  "worktreeClean": false,
+  "suites": [
+    {
+      "suite": "at.heinz.deviceai.AvatarReferenceEffectsUiTest",
+      "tests": 1,
+      "failed": 1,
+      "failures": [
+        {
+          "name": "finishingUnrelatedWorkDoesNotCancelADocumentArrival",
+          "message": "java.lang.AssertionError: Document arrivals outlive unrelated work scopes"
+        }
+      ]
+    },
+    {
+      "suite": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "tests": 2,
+      "failed": 2,
+      "failures": [
+        {
+          "name": "measuredSilenceClosesTheVisibleMouthBeforeTheUtteranceEnds",
+          "message": "java.lang.IllegalArgumentException: The Activity owns the live avatar's parent"
+        },
+        {
+          "name": "retiringThePreviousActivityPreservesTheNewSpeechSurface",
+          "message": "java.lang.IllegalArgumentException: The Activity owns the live avatar's parent"
+        }
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "672c9e1853025eaf7ced56b348aa0b66c31f39a63e37e40c17596e5edce7cad9",
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "04f26fd0d999f85f54ad42bffb142d3a1fe0d5d585b79506e9b324bc9fe6efb3",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarIconBurst.kt": "63ed8083a4e7bdc9cee05501e5d7ddf0c853058bc5a91792119fb89585eae12f",
+    "app/src/main/java/at/heinz/deviceai/avatar/ContinuumAvatarRenderer.kt": "e83f15889b743d922bf6cd3f729f3f552d0794205c09dbffd2fd11c6e030bb20",
+    "app/src/main/java/at/heinz/deviceai/avatar/JarvisHoloAvatar.kt": "f4107a83fa08f0378efbf780d1d6c95336079f30be4cabed6a071cb01067919b",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt": "2952a1a322c6a085aae4ebc396a05fc6b8543a18b0f7477bcc81be74b9b47f1b",
+    "app/src/uiTest/java/at/heinz/deviceai/AvatarReferenceEffectsUiTest.kt": "ef6ca2d65a3407ea15f8ce43faad309a3e00c92813677a3fccb85d0702e93e03",
+    "app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt": "1a447d5379943642ebcdff91b58b6417caca8b5b44f9fae5a465c51903229859"
+  }
+}

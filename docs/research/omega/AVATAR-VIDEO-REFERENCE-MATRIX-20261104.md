@@ -8,6 +8,8 @@ Besitzerauftrag: Kopf, Sprechen und Programmablauf müssen den Originalvideos ei
 
 Im angegebenen Ordner liegen zehn MP4-Dateien. Fünf davon sind die Avatar-Clips: ursprüngliche Referenz plus genau vier Ergänzungen. Alle Dateien wurden vollständig heruntergeladen, mit SHA-256 erfasst und mit ffprobe geprüft. Private Dateien, Drive-Kennungen und Downloadadressen werden nicht ins Repository kopiert.
 
+Dateigrößen, vollständige Hashes und Medienströme: `avatar-alive-20261104/reference-media-inventory.json`.
+
 Die fünf Avatar-Clips wurden über ihre gesamte Bilddauer im Abstand von 0,5 Sekunden extrahiert, mit Zeitmarken versehen und auf acht Kontaktbögen betrachtet. Das ist eine visuelle Stichprobenprüfung mit 160 Bildern, keine lückenlose Bild-für-Bild- oder Tonabnahme. Alle fünf enthalten eine Audiospur. Deren hörbarer Inhalt und eine genaue Phonemzuordnung sind hier **NOT_RUN**; es wird kein gehörtes Transkript behauptet.
 
 | Datei | Dauer | SHA-256 |
@@ -49,11 +51,12 @@ Die drei 20-Sekunden-Clips wiederholen im ersten Abschnitt weitgehend die urspr�
 | Leben im Ruhezustand | `AvatarIdleMotion`, `AvatarMorphMapper`, `AvatarDirector` | Blinzeln, kleine Blick-/Kopfbewegung, kamerabezogener Blick und dezentes Lächeln hostseitig geprüft |
 | Sprechen / STOP | `AgentActivity` → `TtsHologramSignal` → Director → Reducer → Mapper | Vorhanden. PCM-Stille und fehlende PCM-Daten nun getrennt; vier nachgewiesene Stillefehler behoben. Hörbare Geräteabnahme offen |
 | Exakte Phonemsynchronität | `GermanVisemeApproximation` und Android-Wortbereichsrückmeldungen | Derzeit wortbasierte Annäherung; keine nachgewiesen genaue Phonemzeitachse. Nicht als exakt videoidentisch ausgeben |
-| Kopf bleibt verbunden | `ContinuumHomeView`, `JarvisHoloAvatar`, `JarvisAvatarSlot` | Eine bestehende Oberfläche/Director-Verbindung; keine zweite Figur oder zusätzliche Sprachschleife |
-| Start und Kopf-Effekte | `CockpitTimeline`, `CockpitAnimationPresenter`, `ContinuumAvatarRenderer.headIconBurst` | Zeitplan vorhanden; Avatar-Cues ohne registrierten Ausführer werden bisher ignoriert. Der Burst besitzt keinen Produktionsaufrufer. Anschlusslücke |
+| Kopf bleibt verbunden | `ContinuumHomeView`, `JarvisHoloAvatar`, `JarvisAvatarSlot` | Eine bestehende Oberfläche/Director-Verbindung. Reproduzierter Fehler beim Überlappen alter/neuer Activity-Instanzen wird durch Eigentümerprüfung vor dem Andocken und beim Aufräumen korrigiert; aktuelle Regression siehe Handoff |
+| Start und Kopf-Effekte | `CockpitTimeline`, `CockpitAnimationPresenter` → `JarvisHoloAvatar` → bestehende `ContinuumHologramView` | `CockpitEntered` und bestätigtes `DocumentLearned` lösen nun begrenzte Symbole über der Kopfebene aus. Kein zweiter Animationszyklus. Tiefe/Verkleinerung der vollständigen Startsequenz bleiben offen |
+| Begrüßung | Bestehende lokale TTS-Initialisierung → `CockpitTimeline.GREETING_TEXT` | Reguläre freigegebene Begrüßung nutzt denselben Text wie das Cockpit. Bestehende Bereitschafts-, Offline-Stimmen- und Vordergrundregeln bleiben erhalten; kein neuer Mikrofonstart |
 | Dokumentflug / Gedächtnis | `MemoryEventMapper`, `BrainOrbAnimationRenderer`, `JarvisSequenceView` | Speicher-/Abrufereignisse haben einen Weg zur Darstellung. Allgemeiner PDF-Eingang und dessen Auswahl noch nicht angeschlossen |
 | Arbeitsprozesse | `CockpitAnimationTriggers`, `ContinuumTaskEffects`, `JarvisSequenceView` | Reale Start-/Endereignisse vorhanden; neuere Referenzgestaltung separat zu prüfen |
-| Antwortoptionen | `SafePillActionGate`, `PillActionGate`, `DocumentQuestion` | Gate vorhanden, aber kein allgemeiner Produktionsaufrufer für Dokumenteingang. Der Overlay zeigt bisher nur eine Frage |
+| Antwortoptionen | `ToolGatePillActionGate` in `SafePillActionGate.kt`, `DocumentQuestion` | Gate vorhanden, aber kein allgemeiner Produktionsaufrufer für Dokumenteingang. Der Overlay zeigt bisher nur eine Frage |
 | Gmail / Konten | `ApprovedAccountEventSource`, `AccountEventSource` | Vertrag und Gate allein sind kein Kontozugriff. Vollständiger Anbieteranschluss und Kontoberechtigung offen |
 | Wetter / Kalender | Bestehende App-/Werkzeugnavigation gesondert prüfen | Referenzkarten beweisen keine Live-Datenquelle; keine Referenzwerte übernehmen |
 | Ganzkörperfigur / Geräteraum | `AvatarPresentation.FULL_BODY_ORB` ist eine Schnittstelle | Kein nachgewiesenes vollständiges Körpermodell oder entsprechender Ablauf im geprüften Avatar-Pfad |

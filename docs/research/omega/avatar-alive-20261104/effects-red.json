@@ -1,0 +1,23 @@
+{
+  "baseSource": "d65b5b23fff6aa19c80413ac80095daa9f387266",
+  "changes": "New effect tests and floor-aligned layout header; no effect implementation",
+  "suites": [
+    {
+      "suite": "at.heinz.deviceai.AvatarReferenceEffectsUiTest",
+      "tests": 5,
+      "failed": 4,
+      "messages": [
+        "java.lang.AssertionError",
+        "java.lang.AssertionError: The actual cockpit event must reach the visible head layer",
+        "java.lang.AssertionError: Confirmed document intake must reach the head layer",
+        "java.lang.AssertionError"
+      ]
+    },
+    {
+      "suite": "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+      "tests": 4,
+      "failed": 0,
+      "messages": []
+    }
+  ]
+}

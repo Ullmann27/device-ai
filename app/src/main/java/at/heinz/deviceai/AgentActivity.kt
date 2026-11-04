@@ -714,7 +714,10 @@ class AgentActivity : Activity() {
     override fun onDestroy() {
         ownerRecoveryReview?.close()
         ownerRecoveryReview = null
-        at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
+        val registeredAvatar = at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer
+        if (registeredAvatar is at.heinz.deviceai.avatar.JarvisHoloAvatar && registeredAvatar.isBoundTo(hologramView)) {
+            at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
+        }
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cockpitSubscriptions = emptyList()
         cameraDrift?.close()
@@ -3112,7 +3115,7 @@ class AgentActivity : Activity() {
             refreshOfflineVoice()
             if (readinessWelcomePending) maybePlayReadinessWelcome()
             else if (allowRegularGreeting && voiceReady && voiceEnabled)
-                speakBootstrap("Hallo. Device AI ist bereit.")
+                speakBootstrap(at.heinz.deviceai.cockpit.CockpitTimeline.GREETING_TEXT)
         }
         refreshReadinessGuide()
     }

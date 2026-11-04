@@ -75,7 +75,7 @@ object ContinuumLandscapeCockpitLayout {
         val secondary = Box(sl, contentTop, sr, bar.top - g)
 
         // Top bar
-        val ty = kotlin.math.ceil(top.top + (top.height - TARGET) / 2f)
+        val ty = kotlin.math.floor(top.top + (top.height - TARGET) / 2f)
         val brandWidth = (top.width * .24f).coerceIn(150f, 240f)
         boxes[Slot.BRAND] = Box(top.left, ty, top.left + brandWidth, ty + TARGET)
         var x = top.right

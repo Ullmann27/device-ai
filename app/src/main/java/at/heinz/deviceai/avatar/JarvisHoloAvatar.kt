@@ -24,11 +24,14 @@ class JarvisHoloAvatar(private val liveSurface: ContinuumHologramView? = null) :
     var hologram: ContinuumHologramView? = null; private set
     var sequence: JarvisSequenceView? = null; private set
 
+    internal fun canAttachTo(host: ViewGroup): Boolean = liveSurface == null || liveSurface.parent === host
+    internal fun isBoundTo(surface: ContinuumHologramView?): Boolean = liveSurface != null && liveSurface === surface
+
     override fun attach(host: ViewGroup, slot: Rect) {
         if (this.host === host && isAttached) { onSlotChanged(slot); return }
-        detach()
         val holo = liveSurface ?: ContinuumHologramView(host.context)
         if (liveSurface != null) require(holo.parent === host) { "The Activity owns the live avatar's parent" }
+        detach()
         holo.setGeometry(ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT)
         val seq = JarvisSequenceView(host.context)
         holo.setCockpitSequence(seq)
@@ -59,7 +62,16 @@ class JarvisHoloAvatar(private val liveSurface: ContinuumHologramView? = null) :
     override fun onAvatarEvent(event: AvatarEvent) { hologram?.onAvatarEvent(event) }
 
     /** Cockpit bus events → sequence animations (Kern may also subscribe [sequence] to the bus directly). */
-    override fun onAnimationEvent(event: CockpitAnimationEvent) { sequence?.render(event) }
+    override fun onAnimationEvent(event: CockpitAnimationEvent) {
+        val headBurst = when (event) {
+            is CockpitAnimationEvent.CockpitEntered -> event.turnId == at.heinz.deviceai.cockpit.BOOT_TURN
+            is CockpitAnimationEvent.DocumentLearned -> event.turnId == at.heinz.deviceai.cockpit.MEMORY_TURN &&
+                event.entriesAdded > 0 && event.docId.isNotBlank()
+            else -> false
+        }
+        if (headBurst) hologram?.playHeadIconBurst(event.atMillis)
+        sequence?.render(event)
+    }
 
     override fun detach() {
         hologram?.setCockpitSequence(null)

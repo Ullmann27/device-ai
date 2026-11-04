@@ -1,0 +1,17 @@
+{
+  "localSource": "11ac7d6179a509c602b2383bd10b02504b1f2931",
+  "remoteSource": "d65b5b23fff6aa19c80413ac80095daa9f387266",
+  "tree": "790edcfc6a0d609f7d5c3991fbf304f9dd6ae8ad",
+  "tests": 2639,
+  "failed": 1,
+  "skipped": 19,
+  "failures": [
+    {
+      "suite": "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+      "message": "java.lang.AssertionError: 840.0 x 649.0 font 1.0 ACTION_MEMORY overlaps MODEL"
+    }
+  ],
+  "lint": "PASS",
+  "assembleDebug": "PASS",
+  "device": "NOT_RUN"
+}
