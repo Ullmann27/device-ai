@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="CONTRACT_TEST signed fixture survives a genuine fresh Node process restart" time="0.174050" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="unbranded observations and copied success flags cannot be admitted" time="0.010046" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="legacy successful terminal records do not become technical proof" time="0.009436" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted source SHA" time="0.008048" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted model/source" time="0.009867" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted model/task" time="0.012100" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted model/request" time="0.010178" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted model/output" time="0.010491" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted model/identity" time="0.008757" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted model/proposal" time="0.010593" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted verifier/patch" time="0.009815" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted verifier/task" time="0.009649" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted missing verification" time="0.010533" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted missing diagnostics" time="0.010809" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted missing RED" time="0.009960" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted receipt" time="0.008011" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted journal head" time="0.007760" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted permission promotion" time="0.012726" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted evidence class" time="0.015762" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted future time" time="0.011894" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST replay rejects substituted unbounded age" time="0.007939" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="hash-chain recomputation does not replace the runtime proof MAC" time="0.010587" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="wrong runtime key cannot authenticate persisted proof or canonical journal" time="0.007837" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="revocation persists and is consulted by the next fresh recall" time="0.016002" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="forged revocations block recall instead of being silently ignored" time="0.008380" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="deleted current canonical grant fails closed even with valid historical proof" time="0.005195" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="canonical journal corruption and torn experience tail fail closed" time="0.007177" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="freshness and exact repository/source/file scope are enforced" time="0.009777" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="no partial historical proof is emitted when it exceeds context budget" time="0.011363" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="real concurrent child writers preserve every task exactly once" time="0.248701" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="a terminated process leaves an uncertain writer lease, never automatic stale recovery" time="2.095842" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="requesting task needs its own current canonical grant and authenticated owner GOAL" time="0.030474" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="a full 4096-record ledger cannot block durable withdrawal" time="0.170217" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="a full byte-budget ledger cannot block withdrawal or exceed the bound" time="0.325119" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="canonical withdrawal survives ledger-tail truncation and rehashed tombstone stripping" time="0.016931" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="withdrawal reaches canonical grant even if experience ledger is already damaged" time="0.009617" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="process-only or mutable observations cannot enter model-derived technical strategy tier" time="0.009200" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="signed process-only historical proof remains ineligible for technical strategy recall" time="0.009106" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="CONTRACT_TEST real producer serialization signs the persisted verifier snapshot before restart" time="0.160899" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="withdrawal refuses to overwrite a concurrently changed canonical grant" time="0.010145" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="uncertain post-rename fsync error stays withdrawn and idempotent retry reasserts durability" time="0.014553" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="real concurrent withdrawing processes keep one canonical anchor and one mirror" time="0.347890" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="a real killed withdrawal leaves its lease blocking recall rather than recovering stale eligibility" time="0.136681" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<testcase name="historical canonical withdrawal is checked independently of a different authorized requesting grant" time="0.028558" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-technical-recall.test.mjs"/>
+	<!-- tests 44 -->
+	<!-- suites 0 -->
+	<!-- pass 44 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 4202.333306 -->
+</testsuites>

@@ -1,0 +1,24 @@
+{
+  "checkedDateUtc": "2026-11-04",
+  "primarySources": [
+    {
+      "url": "https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html",
+      "retrievalRefs": ["turn7438854view0", "turn9108694view0"],
+      "section": "3.7.2.2 Morph Targets",
+      "supports": "Base POSITION plus weighted target POSITION deltas; basis of the numerical geometry experiment.",
+      "limit": "Format definition, not native device performance."
+    },
+    {
+      "url": "https://developer.android.com/reference/android/speech/tts/UtteranceProgressListener",
+      "retrievalRefs": ["turn7438854view1", "turn9108694view2", "turn9108694view3"],
+      "supports": "Audio synthesis availability is not audible playback; onStart is shortly before playback, onRangeStart is expected speaker playback timing only when the engine supplies it.",
+      "limit": "No guaranteed engine phoneme timestamps or measured speaker/display latency."
+    },
+    {
+      "url": "https://github.com/google/filament/blob/main/android/filament-android/src/main/java/com/google/android/filament/RenderableManager.java",
+      "retrievalRefs": ["turn9108694search4"],
+      "supports": "Official Java morphing API; setMorphWeights can be called per frame.",
+      "limit": "Current upstream documentation, not exact-version Android execution. App source separately pins filament/gltfio 1.56.0 and invokes setMorphWeights."
+    }
+  ]
+}

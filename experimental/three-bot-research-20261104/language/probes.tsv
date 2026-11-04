@@ -1,0 +1,18 @@
+capacity_complete	legacy	closed	Ein kurzer Bericht beschreibt den Ablauf einer Prüfung. Zuerst wird die Aufgabe gelesen, danach wird das Ergebnis geprüft.
+capacity_no_period	legacy	open_punctuation	Ein kurzer Bericht beschreibt den Ablauf einer Prüfung. Zuerst wird die Aufgabe gelesen, danach wird das Ergebnis geprüft
+capacity_open_clause	legacy	open	Ein kurzer Bericht beschreibt den Ablauf einer Prüfung. Zuerst wird die Aufgabe gelesen, danach wird das Ergebnis
+capacity_open_verb	legacy	open	Ein kurzer Bericht beschreibt den Ablauf einer Prüfung. Zuerst wird die Aufgabe gelesen, danach wird
+garden_closed	development	closed	Im stillen Garten steht ein kleiner Birnbaum.
+garden_open	development	open	Im stillen Garten steht ein kleiner
+window_closed	development	closed	Am frühen Morgen öffnet die Frau das Fenster.
+window_open	development	open	Am frühen Morgen öffnet die Frau das
+lamp_closed	development	closed	Neben dem blauen Sofa steht eine gelbe Lampe.
+lamp_open	development	open	Neben dem blauen Sofa steht eine gelbe
+drawer_closed	test	closed	Die silberne Schere liegt in der oberen Schublade.
+drawer_open	test	open	Die silberne Schere liegt in der oberen
+river_closed	test	closed	Hinter der alten Brücke fließt ein schmaler Fluss.
+river_open	test	open	Hinter der alten Brücke fließt ein schmaler
+train_closed	test	closed	Der letzte Zug fährt um neun Uhr zum Bahnhof.
+train_open	test	open	Der letzte Zug fährt um neun Uhr zum
+qa_marker	format_probe	answer_prefix	Frage: Wie heißt die Farbe von frischem Gras? Antwort:
+qa_question	format_probe	question	Wie heißt die Farbe von frischem Gras?

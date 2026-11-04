@@ -1,0 +1,13 @@
+{
+  "command": [
+    "node",
+    "/workspace/scratch/9d2785b5ab4e/research/autonomy/probe.mjs",
+    "/workspace/scratch/9d2785b5ab4e/continuum-research",
+    "/workspace/scratch/9d2785b5ab4e/research/verification/autonomy-root-recheck/tmp"
+  ],
+  "exitCode": 1,
+  "seconds": 0.24646023800050898,
+  "probeSha256": "bc5cc05b62aeb88b161abe134f20c98d668760ca874fca115543cff863ad246b",
+  "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "rawTopKeys": null
+}

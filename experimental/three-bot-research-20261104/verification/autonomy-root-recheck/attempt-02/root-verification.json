@@ -1,0 +1,13 @@
+{
+  "command": [
+    "node",
+    "/workspace/scratch/9d2785b5ab4e/research/autonomy/probe.mjs",
+    "/workspace/scratch/9d2785b5ab4e/continuum-research",
+    "/workspace/scratch/9d2785b5ab4e/research/verification/autonomy-root-recheck/attempt-02/tmp"
+  ],
+  "exitCode": 0,
+  "seconds": 0.5929057249995822,
+  "probeSha256": "bc5cc05b62aeb88b161abe134f20c98d668760ca874fca115543cff863ad246b",
+  "outputSha256": "a0f2aa16046467af4b20655bc660f51e5fbde2e4e2453e7783f1cae7dd04e9b3",
+  "initialAttempt": "Invocation error ENOENT: required parent temporary directory missing; no source assertion ran. Preserved in parent directory."
+}

@@ -1,0 +1,156 @@
+{
+  "repository": "Ullmann27/device-ai",
+  "sha": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "status": "READY",
+      "bytes": 6695,
+      "sha256": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "status": "READY",
+      "bytes": 5547,
+      "sha256": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+      "status": "READY",
+      "bytes": 4496,
+      "sha256": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "status": "READY",
+      "bytes": 13794,
+      "sha256": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+      "status": "READY",
+      "bytes": 9364,
+      "sha256": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "status": "READY",
+      "bytes": 17044,
+      "sha256": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab"
+    },
+    {
+      "path": "experimental/weight-space-20261104/CORE_6_10M_PLAN.md",
+      "status": "READY",
+      "bytes": 6624,
+      "sha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd"
+    },
+    {
+      "path": "experimental/weight-space-20261104/CORE_6_10M_RESULTS.md",
+      "status": "READY",
+      "bytes": 12954,
+      "sha256": "4fd4ddb17fcef7cb5ef5da3e6594363da255e2ef5fb1da842e56bd51c6ca35b6"
+    },
+    {
+      "path": "experimental/weight-space-20261104/G1-INTEGRATION.md",
+      "status": "READY",
+      "bytes": 10762,
+      "sha256": "6d515cc2f31dd045aec6d75832a22c267daf8f48f3910a4932643a3a9f32bd91"
+    },
+    {
+      "path": "experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+      "status": "READY",
+      "bytes": 12149,
+      "sha256": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c"
+    },
+    {
+      "path": "experimental/weight-space-20261104/LmWeightExperiment.kt",
+      "status": "READY",
+      "bytes": 15243,
+      "sha256": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68"
+    },
+    {
+      "path": "experimental/weight-space-20261104/LmWeightSurgery.kt",
+      "status": "READY",
+      "bytes": 8378,
+      "sha256": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e"
+    },
+    {
+      "path": "experimental/weight-space-20261104/LmWeightSurgeryTest.kt",
+      "status": "READY",
+      "bytes": 17079,
+      "sha256": "b850a4b5a14ec02b86e0209062ae52f4124f1a9943f1218f934e8c8f81540a98"
+    },
+    {
+      "path": "experimental/weight-space-20261104/PROTOCOL.md",
+      "status": "READY",
+      "bytes": 7540,
+      "sha256": "f6830becc381fb638b63917763546d178838d32a8e4ba569cf31af66d32d8ee2"
+    },
+    {
+      "path": "experimental/weight-space-20261104/README.md",
+      "status": "READY",
+      "bytes": 9608,
+      "sha256": "86e7f372bdafa438b4db7ebe93fb2ad54197927ba3f5c070a5402ede8eb4eedf"
+    },
+    {
+      "path": "experimental/weight-space-20261104/development.txt",
+      "status": "READY",
+      "bytes": 1676,
+      "sha256": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111"
+    },
+    {
+      "path": "experimental/weight-space-20261104/prepare_inputs.py",
+      "status": "READY",
+      "bytes": 3334,
+      "sha256": "c6cc5b355d7cd92fbdbba2e945eaa890a59cf07373b02aef28aa2ee3570ae5af"
+    },
+    {
+      "path": "experimental/weight-space-20261104/run_experiment.py",
+      "status": "READY",
+      "bytes": 62626,
+      "sha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be"
+    },
+    {
+      "path": "experimental/weight-space-20261104/tests/README.md",
+      "status": "READY",
+      "bytes": 6108,
+      "sha256": "d5ee6a99fd5605d6d812cc5c3ed47e5d4f0ac0dfd722ab03e1a053477e525f21"
+    },
+    {
+      "path": "experimental/weight-space-20261104/tests/adversarial_driver_gate.py",
+      "status": "READY",
+      "bytes": 27581,
+      "sha256": "27abd1f9c223cc9c40daa8d27e3a9b48805b37ee5a9a07827d000f49bc789020"
+    },
+    {
+      "path": "experimental/weight-space-20261104/tests/audit_completed_profiles.py",
+      "status": "READY",
+      "bytes": 25395,
+      "sha256": "eabb75eace76a54ffcbe5ae40c879d674c6a381ed93c08f38322edab18d051f8"
+    },
+    {
+      "path": "experimental/weight-space-20261104/tests/direct_dispatch_gate.py",
+      "status": "READY",
+      "bytes": 8124,
+      "sha256": "5dbab83c01eb95d87a102684964e9cd3d07ab40c5b611c76b17c062f10332281"
+    },
+    {
+      "path": "experimental/weight-space-20261104/tests/registered_profiles_gate.py",
+      "status": "READY",
+      "bytes": 27361,
+      "sha256": "e6afccf4ae5bf0c243ecd8e92452c0c25c928912d704bf6977d9018fda2fd937"
+    },
+    {
+      "path": "experimental/weight-space-20261104/tests/targeted_final_creation_gate.py",
+      "status": "READY",
+      "bytes": 7877,
+      "sha256": "c7185a6edcf8a7f11a9684bf0c5febfc141fe32d7fd6a227aff5f7575f91921f"
+    },
+    {
+      "path": "experimental/weight-space-20261104/train-source-manifest.json",
+      "status": "READY",
+      "bytes": 18766,
+      "sha256": "af590c4a47bf553a5ac1c331c9235aad4cd8608dd349db9ea25e9b7a1544074a"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Drei Forschungsbots: Eigenständigkeit, eigene Sprachmodelle, Live-Avatar
 
-Datum: 2026-11-04 (Europe/Vienna). Status: RESEARCH_SHADOW / WIP.
+Datum: 2026-11-04 (Europe/Vienna). Status: RESEARCH_SHADOW / ERSTE RUNDE ABGESCHLOSSEN.
 Auftrag: drei tatsächlich gestartete, getrennte Forschungs- und Experimentieraufträge; keine produktive Integration.
 
 ## Quellenbindung
@@ -36,7 +36,7 @@ Bestehende Haupt-App, Originalkopf/Referenzen, dunkles Cyan-/Violett-Cockpit, pl
 - Kein zusätzlicher produktiver Scheduler oder Gate-Umgehung.
 - Frühere Forschungs-Freeze-Texte vom 31.10. ändern den expliziten heutigen Forschungsauftrag nicht; alle Schutz- und Freigabegrenzen gelten weiter.
 
-## Prüfstand beim Start
+## Prüfstand beim Start (historischer Ausgangspunkt)
 
 Drei Bots gestartet. Lokaler eingefrorener #491-Checkout sauber. Python/NumPy, Node, Java und Blender vorhanden; adb nicht vorhanden, Torch nicht vorhanden. Neue Experimente: NOT_RUN. Geräte-/GPU-/Sprachqualität: NOT_RUN.
 
@@ -48,3 +48,13 @@ Pro Bot erst Quellen prüfen, dann kleinsten aussagekräftigen Versuch durchfüh
 
 Die vier vorhandenen Prüfprogramme aus #492 bei `30cd3a89810ed14fa84eca95236d3177e016118d` wurden unverändert gegen den exakten Treiberhash `8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be` erneut ausgeführt: **36 + 6 + 4 + 29 = 75 PASS, 0 FAIL**. Alle vier Prozesse endeten mit Exitcode 0. Dies sind synthetische Steuerungs-/Negativprüfungen, **null echte Trainingsläufe**, keine Geräteabnahme. Rohlogs und Befehle: `experimental/three-bot-research-20261104/verification/`. Die Forschungsversuche der drei Bots bleiben separat zu berichten.
 
+## Abschluss und verbindlicher nächster Einstieg
+
+Alle drei Forschungsbots haben ihre Versuche abgeschlossen. Vollständiger Gesamtbericht, Programme und Nachweise: [experimental/three-bot-research-20261104/README.md](../../../experimental/three-bot-research-20261104/README.md). Draft-PR: [#509](https://github.com/Ullmann27/device-ai/pull/509).
+
+- Eigenständigkeit: 51 vorhandene Tests und 9 zusätzliche Manipulations-/Neustartproben bestanden. Der Koordinator hat die 9 Probes separat wiederholt. Keine echte Modellreparatur oder Leistungssteigerung gemessen.
+- Sprachmodell: 9 echte kurze Trainingsläufe auf dem Originalkern mit 132.160 Parametern und 77 originalen TRAIN-Dokumenten. Drei Seeds, zwei wirksame Trainingsbedingungen plus Absatz-Nullkontrolle. Promptabhängiger EOS-Rangwechsel bestätigt; Sprache bleibt unbrauchbar. Das unveränderte Original-Kapazitätsgate des trainierten Kontrollarms fällt auch in unabhängiger Wiederholung durch. Drei reale Wachstumsparitätsprüfungen bestanden; kein trainiertes 16M-Modell.
+- Avatar: gleicher echter GLB in #491/#503, 57.000 Dreiecke und 21 Morphziele. Je Stand 10.000 synthetische Wechsel mit 20.017 Assertions. PP-Schluss und idempotenter Framezeitpunkt in #503 reproduziert. Sechs tatsächliche Blender-Bilder; Referenztreue noch nicht erreicht. NOTICE-Metadaten widersprechen den realen GLB-Bytes.
+- Reproduktion: 50 gepinnte Quellen und 77 TRAIN-Dokumente mit dem neuen Forschungshelfer aus vorhandenen lokalen Git-Objekten rekonstruiert. Hashes, Rohlogs und bewusst ausgelassene reproduzierbare Binärzwischenprodukte sind im Gesamtbericht erläutert.
+
+Die nächsten Hypothesen sind im Gesamtbericht für dieselben drei Rollen formuliert. Keine Dauerläufe installiert, keine App-/Produktquellen geändert, kein Merge, Release, Signieren oder Installieren. Geräte-/Filament-/Lautsprecherabnahme bleibt NOT_RUN. Vor jeder Folgerunde Quellenstand erneut binden; diese bekannten Diagnoseprompts nicht als neuen unberührten Endtest ausgeben.

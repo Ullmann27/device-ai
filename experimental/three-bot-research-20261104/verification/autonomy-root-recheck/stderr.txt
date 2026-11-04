@@ -1,0 +1,14 @@
+node:fs:3144
+  return binding.mkdtemp(prefix, options.encoding);
+                 ^
+
+Error: ENOENT: no such file or directory, mkdtemp '/workspace/scratch/9d2785b5ab4e/research/verification/autonomy-root-recheck/tmp/independent-experience-XXXXXX'
+    at Object.mkdtempSync (node:fs:3144:18)
+    at file:///workspace/scratch/9d2785b5ab4e/research/autonomy/probe.mjs:34:23 {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'mkdtemp',
+  path: '/workspace/scratch/9d2785b5ab4e/research/verification/autonomy-root-recheck/tmp/independent-experience-XXXXXX'
+}
+
+Node.js v24.22.1

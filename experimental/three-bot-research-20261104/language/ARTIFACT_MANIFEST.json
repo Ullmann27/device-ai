@@ -1,0 +1,218 @@
+{
+  "scope": "RESEARCH_SHADOW",
+  "sourceCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "files": [
+    {
+      "path": "MechanismExperiment.kt",
+      "bytes": 13136,
+      "sha256": "f3cb19c37646b4229a5fc6f7a19384e0cd31888d3ad21bbcd5895141814857de"
+    },
+    {
+      "path": "Report.md",
+      "bytes": 29171,
+      "sha256": "245c48307c35eef8d510b29b013642989c86e98f8b1d0686c2af91e585a4f5bf"
+    },
+    {
+      "path": "analyze_results.py",
+      "bytes": 4777,
+      "sha256": "cc82e34187c2a425b89c744fc683baa3b9ea893be57a54d6fcf371764b770b93"
+    },
+    {
+      "path": "probes.tsv",
+      "bytes": 1623,
+      "sha256": "35fe4c8ac8de447a05b386ffba4c7dd2798a65d86ad2e2489224882352650947"
+    },
+    {
+      "path": "run-20261104/20261104-no_eos_target_ablation.lm1",
+      "bytes": 529371,
+      "sha256": "23c9d3a5a8c4c0bc3b07b2c11ac5ab42d6a6d58250f82b0ed59921cfe7d7a601"
+    },
+    {
+      "path": "run-20261104/20261104-original_eos.lm1",
+      "bytes": 529361,
+      "sha256": "8abb295a6c97bb2eca7647b4b1297e9cdcd4af6f563bc9f54ad126be2452fc38"
+    },
+    {
+      "path": "run-20261104/20261104-paragraph_end_eos.lm1",
+      "bytes": 529366,
+      "sha256": "8bb01e98b2d86ffb00f8ce09b59cfe68f160d0a8a517af2184867e3845dc62cb"
+    },
+    {
+      "path": "run-20261104/20261105-no_eos_target_ablation.lm1",
+      "bytes": 529371,
+      "sha256": "cef23aa46d62bf32b4165bae44f91abdc41517f7ebb6fdf0dae0fabcdb5feb7a"
+    },
+    {
+      "path": "run-20261104/20261105-original_eos.lm1",
+      "bytes": 529361,
+      "sha256": "9d4943f3feb7483a5b78840b817b09e8b65ebce653d1fd722efcd17fc50f7d93"
+    },
+    {
+      "path": "run-20261104/20261105-paragraph_end_eos.lm1",
+      "bytes": 529366,
+      "sha256": "8dc25b9ebf566b1b406613e2c770ef1bfb8a4145f09f7341788599c8925b22cb"
+    },
+    {
+      "path": "run-20261104/20261106-no_eos_target_ablation.lm1",
+      "bytes": 529371,
+      "sha256": "72036f0fae5e7e271851690541ea57a25b771c6c5c916535a55dedad195ece18"
+    },
+    {
+      "path": "run-20261104/20261106-original_eos.lm1",
+      "bytes": 529361,
+      "sha256": "948cdae13c4e0e6dd746481e44b1060272b9ced95445a0e58c9ac5cb10f45a01"
+    },
+    {
+      "path": "run-20261104/20261106-paragraph_end_eos.lm1",
+      "bytes": 529366,
+      "sha256": "49c582e78a1eb52e0461ed34352e0bb81609e58e20fe508132734e0f6bf4d3cc"
+    },
+    {
+      "path": "run-20261104/analysis.json",
+      "bytes": 67232,
+      "sha256": "88f1717ec99d2e31cea9de17faac949d03ab99a487c31656cd82232186a35227"
+    },
+    {
+      "path": "run-20261104/baseline-capacity.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run-20261104/baseline-capacity.stdout",
+      "bytes": 5060,
+      "sha256": "e1b62fda3a666249b64decbc644a11188257e3d4282461acefa3c8ed120aa7d3"
+    },
+    {
+      "path": "run-20261104/commands.json",
+      "bytes": 20338,
+      "sha256": "a68d25f35b963ce14a44aa42d0b134d5e779abb667f27b478a0a64d449fbfcf0"
+    },
+    {
+      "path": "run-20261104/compile.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run-20261104/compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run-20261104/frozen-source/LmBpeTokenizer.kt",
+      "bytes": 6695,
+      "sha256": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e"
+    },
+    {
+      "path": "run-20261104/frozen-source/LmCapacityBenchmark.kt",
+      "bytes": 12149,
+      "sha256": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c"
+    },
+    {
+      "path": "run-20261104/frozen-source/LmCheckpointStore.kt",
+      "bytes": 5547,
+      "sha256": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+    },
+    {
+      "path": "run-20261104/frozen-source/LmCorpus.kt",
+      "bytes": 4496,
+      "sha256": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4"
+    },
+    {
+      "path": "run-20261104/frozen-source/LmModel.kt",
+      "bytes": 13794,
+      "sha256": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099"
+    },
+    {
+      "path": "run-20261104/frozen-source/LmRuntime.kt",
+      "bytes": 9364,
+      "sha256": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2"
+    },
+    {
+      "path": "run-20261104/frozen-source/LmTensor.kt",
+      "bytes": 17044,
+      "sha256": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab"
+    },
+    {
+      "path": "run-20261104/frozen-source/LmWeightSurgery.kt",
+      "bytes": 8378,
+      "sha256": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e"
+    },
+    {
+      "path": "run-20261104/mechanism.jar",
+      "bytes": 159634,
+      "sha256": "8c3f63526977ba8f868778e5a574c218a690ed40d1817d4af7419d1a272d94ce"
+    },
+    {
+      "path": "run-20261104/mechanism.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run-20261104/mechanism.stdout",
+      "bytes": 93723,
+      "sha256": "ac5cab2054986fd2b4bfb4e7a462a9858e845b14408a83aa3ccd6236f33fe425"
+    },
+    {
+      "path": "run-20261104/results.json",
+      "bytes": 163954,
+      "sha256": "564c6b0c6ccfbe74a865503deb9884096d8415421dfcecf0794ef18a3fabe7a8"
+    },
+    {
+      "path": "run-20261104/schedule-20261104-no_eos_target_ablation.txt",
+      "bytes": 12435,
+      "sha256": "20d9ae0d8ce4aa2b9d0eaeb282cbd91f53703a73593bc72edeac5cc2652503b0"
+    },
+    {
+      "path": "run-20261104/schedule-20261104-original_eos.txt",
+      "bytes": 12539,
+      "sha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee"
+    },
+    {
+      "path": "run-20261104/schedule-20261104-paragraph_end_eos.txt",
+      "bytes": 12539,
+      "sha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee"
+    },
+    {
+      "path": "run-20261104/schedule-20261105-no_eos_target_ablation.txt",
+      "bytes": 12791,
+      "sha256": "aa6f9c01138e5b34d37668c9a6d2fe44d8f1cdf9fe1ed939ae7ee1612111154a"
+    },
+    {
+      "path": "run-20261104/schedule-20261105-original_eos.txt",
+      "bytes": 12875,
+      "sha256": "8df0a93451c9a99b3dd81766198db181b0a061284a2427716dd94dc86ba4bfca"
+    },
+    {
+      "path": "run-20261104/schedule-20261105-paragraph_end_eos.txt",
+      "bytes": 12875,
+      "sha256": "8df0a93451c9a99b3dd81766198db181b0a061284a2427716dd94dc86ba4bfca"
+    },
+    {
+      "path": "run-20261104/schedule-20261106-no_eos_target_ablation.txt",
+      "bytes": 13461,
+      "sha256": "52689441424b4f24c1fb272352f7fa0095e581e9d8603638352386ebdc7e0337"
+    },
+    {
+      "path": "run-20261104/schedule-20261106-original_eos.txt",
+      "bytes": 13525,
+      "sha256": "2020a7364af1042544388b0de26a7e6a1cec397353518fc83948f436a8951873"
+    },
+    {
+      "path": "run-20261104/schedule-20261106-paragraph_end_eos.txt",
+      "bytes": 13525,
+      "sha256": "2020a7364af1042544388b0de26a7e6a1cec397353518fc83948f436a8951873"
+    },
+    {
+      "path": "run-20261104/train-cleaned.txt",
+      "bytes": 429290,
+      "sha256": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9"
+    },
+    {
+      "path": "run_experiment.py",
+      "bytes": 8647,
+      "sha256": "147afb2932c8d021b935d2a4df6b50b4ba0fde4e0743e34c57952e9f849b7459"
+    }
+  ],
+  "fileCount": 42,
+  "totalBytes": 5954911
+}

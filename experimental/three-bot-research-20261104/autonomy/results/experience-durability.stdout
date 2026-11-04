@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="experience journal refuses complete JSON without newline as uncertain torn append" time="0.005721" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-experience-durability.test.mjs"/>
+	<testcase name="experience journal validates sequence independently of rehashed bytes" time="0.004011" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-experience-durability.test.mjs"/>
+	<testcase name="experience journal rejects an oversized record before publication" time="0.002051" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-experience-durability.test.mjs"/>
+	<testcase name="experience journal refuses a held cross-process writer lease" time="2.010255" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-experience-durability.test.mjs"/>
+	<testcase name="experience journal refuses symlink storage" time="0.001072" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-experience-durability.test.mjs"/>
+	<testcase name="experience journal enforces record and byte hard bounds" time="0.048599" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-experience-durability.test.mjs"/>
+	<testcase name="experience journal rejects blank lines and duplicate tasks even with recomputed hashes" time="0.003641" classname="test" file="/workspace/scratch/9d2785b5ab4e/continuum-research/.github/continuum/ccc1-experience-durability.test.mjs"/>
+	<!-- tests 7 -->
+	<!-- suites 0 -->
+	<!-- pass 7 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 2240.782707 -->
+</testsuites>

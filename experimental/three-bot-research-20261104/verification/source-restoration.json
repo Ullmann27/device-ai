@@ -1,0 +1,435 @@
+{
+  "scope": "RESEARCH_SHADOW_INPUT_RESTORE",
+  "sourceRepository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+  "additionalSourceRepositories": [
+    "/workspace/scratch/9d2785b5ab4e/continuum-research"
+  ],
+  "output": "/workspace/scratch/9d2785b5ab4e/research/reproduction-check",
+  "sourceFiles": [
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "local": "sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 6695,
+      "sha256": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "local": "sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 5547,
+      "sha256": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+      "local": "sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 4496,
+      "sha256": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "local": "sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 13794,
+      "sha256": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+      "local": "sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 9364,
+      "sha256": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "local": "sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 17044,
+      "sha256": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/CORE_6_10M_PLAN.md",
+      "local": "sources/weight/experimental/weight-space-20261104/CORE_6_10M_PLAN.md",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 6624,
+      "sha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/CORE_6_10M_RESULTS.md",
+      "local": "sources/weight/experimental/weight-space-20261104/CORE_6_10M_RESULTS.md",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 12954,
+      "sha256": "4fd4ddb17fcef7cb5ef5da3e6594363da255e2ef5fb1da842e56bd51c6ca35b6"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/G1-INTEGRATION.md",
+      "local": "sources/weight/experimental/weight-space-20261104/G1-INTEGRATION.md",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 10762,
+      "sha256": "6d515cc2f31dd045aec6d75832a22c267daf8f48f3910a4932643a3a9f32bd91"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+      "local": "sources/weight/experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 12149,
+      "sha256": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/LmWeightExperiment.kt",
+      "local": "sources/weight/experimental/weight-space-20261104/LmWeightExperiment.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 15243,
+      "sha256": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/LmWeightSurgery.kt",
+      "local": "sources/weight/experimental/weight-space-20261104/LmWeightSurgery.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 8378,
+      "sha256": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/LmWeightSurgeryTest.kt",
+      "local": "sources/weight/experimental/weight-space-20261104/LmWeightSurgeryTest.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 17079,
+      "sha256": "b850a4b5a14ec02b86e0209062ae52f4124f1a9943f1218f934e8c8f81540a98"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/PROTOCOL.md",
+      "local": "sources/weight/experimental/weight-space-20261104/PROTOCOL.md",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 7540,
+      "sha256": "f6830becc381fb638b63917763546d178838d32a8e4ba569cf31af66d32d8ee2"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/README.md",
+      "local": "sources/weight/experimental/weight-space-20261104/README.md",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 9608,
+      "sha256": "86e7f372bdafa438b4db7ebe93fb2ad54197927ba3f5c070a5402ede8eb4eedf"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/development.txt",
+      "local": "sources/weight/experimental/weight-space-20261104/development.txt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 1676,
+      "sha256": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/prepare_inputs.py",
+      "local": "sources/weight/experimental/weight-space-20261104/prepare_inputs.py",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 3334,
+      "sha256": "c6cc5b355d7cd92fbdbba2e945eaa890a59cf07373b02aef28aa2ee3570ae5af"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/run_experiment.py",
+      "local": "sources/weight/experimental/weight-space-20261104/run_experiment.py",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 62626,
+      "sha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/tests/README.md",
+      "local": "sources/weight/experimental/weight-space-20261104/tests/README.md",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 6108,
+      "sha256": "d5ee6a99fd5605d6d812cc5c3ed47e5d4f0ac0dfd722ab03e1a053477e525f21"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/tests/adversarial_driver_gate.py",
+      "local": "sources/weight/experimental/weight-space-20261104/tests/adversarial_driver_gate.py",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 27581,
+      "sha256": "27abd1f9c223cc9c40daa8d27e3a9b48805b37ee5a9a07827d000f49bc789020"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/tests/audit_completed_profiles.py",
+      "local": "sources/weight/experimental/weight-space-20261104/tests/audit_completed_profiles.py",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 25395,
+      "sha256": "eabb75eace76a54ffcbe5ae40c879d674c6a381ed93c08f38322edab18d051f8"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/tests/direct_dispatch_gate.py",
+      "local": "sources/weight/experimental/weight-space-20261104/tests/direct_dispatch_gate.py",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 8124,
+      "sha256": "5dbab83c01eb95d87a102684964e9cd3d07ab40c5b611c76b17c062f10332281"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/tests/registered_profiles_gate.py",
+      "local": "sources/weight/experimental/weight-space-20261104/tests/registered_profiles_gate.py",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 27361,
+      "sha256": "e6afccf4ae5bf0c243ecd8e92452c0c25c928912d704bf6977d9018fda2fd937"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/tests/targeted_final_creation_gate.py",
+      "local": "sources/weight/experimental/weight-space-20261104/tests/targeted_final_creation_gate.py",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 7877,
+      "sha256": "c7185a6edcf8a7f11a9684bf0c5febfc141fe32d7fd6a227aff5f7575f91921f"
+    },
+    {
+      "commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "path": "experimental/weight-space-20261104/train-source-manifest.json",
+      "local": "sources/weight/experimental/weight-space-20261104/train-source-manifest.json",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 18766,
+      "sha256": "af590c4a47bf553a5ac1c331c9235aad4cd8608dd349db9ea25e9b7a1544074a"
+    },
+    {
+      "commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "path": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+      "local": "avatar/source/p491/continuum-avatar.glb",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 10165644,
+      "sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3"
+    },
+    {
+      "commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "path": "app/src/main/assets/avatar3d/NOTICE.json",
+      "local": "avatar/source/p491/NOTICE.json",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 1352,
+      "sha256": "a0c7e11a78d5a2a54dbf743b74dadd9bd434191a2800d668c7b9316f78652e14"
+    },
+    {
+      "commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "path": "app/src/main/assets/avatar3d/LICENSE.ASSETS.md",
+      "local": "avatar/source/p491/LICENSE.ASSETS.md",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 6962,
+      "sha256": "f6089cba01cb570a24712b41ab8a586ccd3cc5ef53dc266ca50b95c288956d2c"
+    },
+    {
+      "commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "local": "avatar/source/p491/AvatarMorphMapper.kt",
+      "repository": "/workspace/scratch/9d2785b5ab4e/continuum-research",
+      "bytes": 5630,
+      "sha256": "8c3768c6e0dfc488a924b29fb1c38c2125acbe25efbf4b6dbb24b7b8fd7b60bd"
+    },
+    {
+      "commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "local": "avatar/source/p491/AvatarContract.kt",
+      "repository": "/workspace/scratch/9d2785b5ab4e/continuum-research",
+      "bytes": 9913,
+      "sha256": "8706a1b0adc7db80cb70da053d2afa779f4e160c6217a762a7a6eaebe01f54e2"
+    },
+    {
+      "commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+      "local": "avatar/source/p491/AvatarDirector.kt",
+      "repository": "/workspace/scratch/9d2785b5ab4e/continuum-research",
+      "bytes": 7720,
+      "sha256": "4a22ae65d02d2b7b339808e5a3ad8653f94dfef4643fe780f1a9b249c71bb5d9"
+    },
+    {
+      "commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "path": "app/src/main/java/at/heinz/deviceai/TtsHologramSignal.kt",
+      "local": "avatar/source/p491/TtsHologramSignal.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 2945,
+      "sha256": "e09827ead1e0f523a107cac0bf815d1dbf110a654a5a7c9dc4dfe79dec875eea"
+    },
+    {
+      "commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "path": "app/src/main/java/at/heinz/deviceai/HologramAudio.kt",
+      "local": "avatar/source/p491/HologramAudio.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 2899,
+      "sha256": "671fe68134834778c218291c4593520db51d411be5ec3fc9d5a9ed265fa14bf8"
+    },
+    {
+      "commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+      "local": "avatar/source/p491/FilamentAvatarRenderer.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 11402,
+      "sha256": "a9bc7d64624e3ed10a6f4440b813d5ca1171ce464f6489b7731ad494bf1d642d"
+    },
+    {
+      "commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "path": "tools/avatar-3d/build_bust.py",
+      "local": "avatar/source/p491/build_bust.py",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 21675,
+      "sha256": "7c1457d06dc659590172c097e91875a0be2776d658dadf3806aee37170c46e5e"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+      "local": "avatar/source/p503/continuum-avatar.glb",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 10165644,
+      "sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "app/src/main/assets/avatar3d/NOTICE.json",
+      "local": "avatar/source/p503/NOTICE.json",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 1352,
+      "sha256": "a0c7e11a78d5a2a54dbf743b74dadd9bd434191a2800d668c7b9316f78652e14"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "app/src/main/assets/avatar3d/LICENSE.ASSETS.md",
+      "local": "avatar/source/p503/LICENSE.ASSETS.md",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 6962,
+      "sha256": "f6089cba01cb570a24712b41ab8a586ccd3cc5ef53dc266ca50b95c288956d2c"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "local": "avatar/source/p503/AvatarMorphMapper.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 5533,
+      "sha256": "27f619196873eff007eefc3169ac732d4b757feeaadb371dd866f05972d1fe59"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "local": "avatar/source/p503/AvatarContract.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 11019,
+      "sha256": "aa6c9d7299ac4e36290e1ab6ba35cd11a267a991caa43d4880e4a761306483ae"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+      "local": "avatar/source/p503/AvatarDirector.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 9136,
+      "sha256": "240b2c7eaa69fc992fac49bc371d5140e9e2cab46c39af7c7eb46530d6536312"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "app/src/main/java/at/heinz/deviceai/TtsHologramSignal.kt",
+      "local": "avatar/source/p503/TtsHologramSignal.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 2945,
+      "sha256": "e09827ead1e0f523a107cac0bf815d1dbf110a654a5a7c9dc4dfe79dec875eea"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "app/src/main/java/at/heinz/deviceai/HologramAudio.kt",
+      "local": "avatar/source/p503/HologramAudio.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 2899,
+      "sha256": "671fe68134834778c218291c4593520db51d411be5ec3fc9d5a9ed265fa14bf8"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+      "local": "avatar/source/p503/FilamentAvatarRenderer.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 11402,
+      "sha256": "a9bc7d64624e3ed10a6f4440b813d5ca1171ce464f6489b7731ad494bf1d642d"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "tools/avatar-3d/build_bust.py",
+      "local": "avatar/source/p503/build_bust.py",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 21675,
+      "sha256": "7c1457d06dc659590172c097e91875a0be2776d658dadf3806aee37170c46e5e"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+      "local": "avatar/source/p503/AvatarIdleMotion.kt",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 3711,
+      "sha256": "88bbdff0ca524500a5e63fdac6c360868f05a4c0606d84acdb44ea5577d7634a"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "docs/design-references/jarvis-genesis-20261104/ref-01-head-frontal.jpeg",
+      "local": "avatar/references/ref-01-head-frontal.jpeg",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 307077,
+      "sha256": "83e950e0e6b6d3791d4de09b760fe46b8c723c7962f0351eb001409f3fbec16e"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "docs/design-references/jarvis-genesis-20261104/ref-02-head-torso-threequarter.jpeg",
+      "local": "avatar/references/ref-02-head-torso-threequarter.jpeg",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 140434,
+      "sha256": "84aeaebd2b292050363fbbe5ffb7d6687ddc487eb49ff4aea7a353bf4bfc8264"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "docs/design-references/jarvis-genesis-20261104/ref-03-head-profile-eyes.jpg",
+      "local": "avatar/references/ref-03-head-profile-eyes.jpg",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 43283,
+      "sha256": "bf91dbf2deddd927a1407a6c537cbbf2de47d364fcceefba4eaa37575563cd77"
+    },
+    {
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "path": "docs/design-references/jarvis-genesis-20261104/ref-04-dashboard-fold7.jpeg",
+      "local": "avatar/references/ref-04-dashboard-fold7.jpeg",
+      "repository": "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+      "bytes": 243949,
+      "sha256": "452b841dea79c6dd67a2b9a5821dcd11f530e391fb4df1911b01fedc33484036"
+    }
+  ],
+  "inputPreparationCommand": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/workspace/scratch/9d2785b5ab4e/research/reproduction-check/sources/weight/experimental/weight-space-20261104/prepare_inputs.py",
+    "--repo",
+    "/workspace/scratch/b7d23de0e715/device-ai-recovery",
+    "--output",
+    "/workspace/scratch/9d2785b5ab4e/research/reproduction-check/sources/lm1-original-inputs"
+  ],
+  "inputPreparation": {
+    "output": "/workspace/scratch/9d2785b5ab4e/research/reproduction-check/sources/lm1-original-inputs",
+    "trainingDocuments": 77,
+    "checkpointSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "pathsSha256": "bfbb448a46eade19bf947a69e9f35ba5f190b621c460708103ae08e0b13b5e9d"
+  },
+  "networkFetchRequested": false,
+  "experimentsExecuted": false,
+  "autonomySourceRequirement": "Separate clean checkout at e101e393dd6c80803ac9d9ac91fccd9812c4a18d; pass --source explicitly",
+  "verification": {
+    "result": "PASS",
+    "sourceFiles": 50,
+    "trainingDocuments": 77,
+    "initialAttempt": "One existing local object database lacked some pinned e101 source blobs. A second existing local checkout supplied them. No network fetch was requested.",
+    "scriptSha256": "25a6d74b20405a029bd562b2eaa72c92231c0a2cf3dd805978bb51f6ca10b2dc"
+  }
+}

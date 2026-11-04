@@ -1,0 +1,18 @@
+{
+  "command": [
+    "java",
+    "-Xmx1024m",
+    "-cp",
+    "/workspace/scratch/9d2785b5ab4e/research/language/run-20261104/mechanism.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+    "at.heinz.deviceai.learning.lm.LmCapacityBenchmark",
+    "/workspace/scratch/9d2785b5ab4e/research/language/run-20261104/20261104-original_eos.lm1",
+    "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-tokenizer.lmbp"
+  ],
+  "exitCode": 1,
+  "seconds": 0.45391737399950216,
+  "checkpointSha256": "8abb295a6c97bb2eca7647b4b1297e9cdcd4af6f563bc9f54ad126be2452fc38",
+  "capacityLines": [
+    "CAPACITY_RESULT\tpass=false\treasons=NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD\tcheckpointSha256=8abb295a6c97bb2eca7647b4b1297e9cdcd4af6f563bc9f54ad126be2452fc38\tparameters=132160\tloadMs=110.74016\tmeasuredRepeats=3\tmaxFirstTokenCallMs=18.722839\tmaxGeneration32CallMs=8.970852\tfirstTokenObservations=0\tfull32TokenObservations=0\tvmHwmKiB=71168\tfinalVmHwmKiB=71168\trssMethod=MAXIMUM_OBSERVED_VMHWM\tfailure=UNAVAILABLE"
+  ],
+  "harnessSourceSha256": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c"
+}

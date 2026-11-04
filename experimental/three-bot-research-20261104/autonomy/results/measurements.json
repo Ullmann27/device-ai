@@ -1,0 +1,591 @@
+{
+  "schema": "continuum-autonomy-research-v1",
+  "started_at": "2026-11-04T18:48:58.255654+00:00",
+  "baseline_sha": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "source_directory": "/workspace/scratch/9d2785b5ab4e/continuum-research",
+  "source_hashes_before": {
+    ".github/continuum/ccc1-experience.mjs": "81e27f07d92a183cdd6d87d0fe3e834e48f16db9b55c7ee76056cc9c04cc3b1d",
+    ".github/continuum/ccc1-experience-durability.test.mjs": "72047810a525fcf901ca16533d5d18147dcf67fa188feaf4416e124085159b78",
+    ".github/continuum/ccc1-technical-recall.mjs": "b37f88b38e4ccb6cb787e5609f1653a1c0dbb604995839ef2044e448b7fc75d6",
+    ".github/continuum/ccc1-technical-recall.test.mjs": "2f871f4465b2445d6c998bb2dbc5c5a17c7e7a2b002810344c6a269a224ba71c",
+    ".github/continuum/ccc1-journal.mjs": "e4cfe7b3cf59e42c25d890751eb21ccf97f0e7c81c20c7f29641235c6a43f1c0",
+    ".github/continuum/ccc1-envelope.mjs": "74c040d9df6f77759da428e5df32fea1be171a8024c5bed57759f83a19cc36dc",
+    ".github/continuum/ccc1-orchestrator.mjs": "d2bb41170b338a739add36d026c6d3598bf7decbaba25630720715eda52917ec",
+    ".github/continuum/ccc1-worker.mjs": "0245ce756c289c8777607cdee7223c45152187eee4d5ea503ac2ad98dce87096",
+    ".github/continuum/coding-orchestrator.mjs": "24a2afc64f73a04357ecb1a9a49a08c61cdc8ca0d28148063f9e086e27561f89",
+    ".github/continuum/coding-provider.mjs": "15b59137c396fe1544ba36336c1e9925fb35700b585e4eb2d15344af646a80e8",
+    "scripts/continuum-local-model-observation.mjs": "1e9222b80220efbed50a75a07467dc27c20238c39ed340283a0c93381e0e9cf5"
+  },
+  "tracked_changes_before": "",
+  "untracked_paths_before": [
+    "docs/research/omega/THREE-RESEARCH-BOTS-20261104.md",
+    "experimental/three-bot-research-20261104/verification/adversarial_driver_gate.py.txt",
+    "experimental/three-bot-research-20261104/verification/direct_dispatch_gate.py.txt",
+    "experimental/three-bot-research-20261104/verification/registered_profiles_gate.py.txt",
+    "experimental/three-bot-research-20261104/verification/targeted_final_creation_gate.py.txt",
+    "experimental/three-bot-research-20261104/verification/training-gates.json"
+  ],
+  "runtime": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "node": "v24.22.1",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "cpu_count": 9
+  },
+  "evidence_class": "CPU_HOST_CONTRACT_TEST_WITH_SYNTHETIC_TASK_DATA",
+  "model_inference": "NOT_RUN",
+  "neural_training": "NOT_RUN",
+  "device_fold7": "NOT_RUN",
+  "apk_build_install": "NOT_RUN",
+  "external_api_calls_by_experiment": 0,
+  "temporary_directory": "/workspace/scratch/9d2785b5ab4e/research/autonomy/tmp",
+  "runs": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=junit",
+        ".github/continuum/ccc1-experience-durability.test.mjs"
+      ],
+      "cwd": "/workspace/scratch/9d2785b5ab4e/continuum-research",
+      "started_at": "2026-11-04T18:48:58.517071+00:00",
+      "finished_at": "2026-11-04T18:49:00.851514+00:00",
+      "wall_seconds": 2.334157340999809,
+      "exit_code": 0,
+      "timeout_seconds": 90,
+      "timed_out": false,
+      "stdout_file": "results/experience-durability.stdout",
+      "stderr_file": "results/experience-durability.stderr",
+      "stdout_sha256": "61c28040a044f3d6b8c687b6fdead60616ca376214902b0b8aac78c9bd4aa4d0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "testcases": [
+        {
+          "name": "experience journal refuses complete JSON without newline as uncertain torn append",
+          "seconds": 0.005721,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "experience journal validates sequence independently of rehashed bytes",
+          "seconds": 0.004011,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "experience journal rejects an oversized record before publication",
+          "seconds": 0.002051,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "experience journal refuses a held cross-process writer lease",
+          "seconds": 2.010255,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "experience journal refuses symlink storage",
+          "seconds": 0.001072,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "experience journal enforces record and byte hard bounds",
+          "seconds": 0.048599,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "experience journal rejects blank lines and duplicate tasks even with recomputed hashes",
+          "seconds": 0.003641,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        }
+      ],
+      "totals": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=junit",
+        ".github/continuum/ccc1-technical-recall.test.mjs"
+      ],
+      "cwd": "/workspace/scratch/9d2785b5ab4e/continuum-research",
+      "started_at": "2026-11-04T18:49:00.852026+00:00",
+      "finished_at": "2026-11-04T18:49:05.129672+00:00",
+      "wall_seconds": 4.277363655999579,
+      "exit_code": 0,
+      "timeout_seconds": 90,
+      "timed_out": false,
+      "stdout_file": "results/technical-recall.stdout",
+      "stderr_file": "results/technical-recall.stderr",
+      "stdout_sha256": "764fde91a5c9f4bd6c03a5850e8f4b0f7e08a54aa3defd88d31fef6bc8f01126",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "testcases": [
+        {
+          "name": "CONTRACT_TEST signed fixture survives a genuine fresh Node process restart",
+          "seconds": 0.17405,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "unbranded observations and copied success flags cannot be admitted",
+          "seconds": 0.010046,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "legacy successful terminal records do not become technical proof",
+          "seconds": 0.009436,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted source SHA",
+          "seconds": 0.008048,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted model/source",
+          "seconds": 0.009867,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted model/task",
+          "seconds": 0.0121,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted model/request",
+          "seconds": 0.010178,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted model/output",
+          "seconds": 0.010491,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted model/identity",
+          "seconds": 0.008757,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted model/proposal",
+          "seconds": 0.010593,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted verifier/patch",
+          "seconds": 0.009815,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted verifier/task",
+          "seconds": 0.009649,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted missing verification",
+          "seconds": 0.010533,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted missing diagnostics",
+          "seconds": 0.010809,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted missing RED",
+          "seconds": 0.00996,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted receipt",
+          "seconds": 0.008011,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted journal head",
+          "seconds": 0.00776,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted permission promotion",
+          "seconds": 0.012726,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted evidence class",
+          "seconds": 0.015762,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted future time",
+          "seconds": 0.011894,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST replay rejects substituted unbounded age",
+          "seconds": 0.007939,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "hash-chain recomputation does not replace the runtime proof MAC",
+          "seconds": 0.010587,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "wrong runtime key cannot authenticate persisted proof or canonical journal",
+          "seconds": 0.007837,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "revocation persists and is consulted by the next fresh recall",
+          "seconds": 0.016002,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "forged revocations block recall instead of being silently ignored",
+          "seconds": 0.00838,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "deleted current canonical grant fails closed even with valid historical proof",
+          "seconds": 0.005195,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "canonical journal corruption and torn experience tail fail closed",
+          "seconds": 0.007177,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "freshness and exact repository/source/file scope are enforced",
+          "seconds": 0.009777,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "no partial historical proof is emitted when it exceeds context budget",
+          "seconds": 0.011363,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "real concurrent child writers preserve every task exactly once",
+          "seconds": 0.248701,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "a terminated process leaves an uncertain writer lease, never automatic stale recovery",
+          "seconds": 2.095842,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "requesting task needs its own current canonical grant and authenticated owner GOAL",
+          "seconds": 0.030474,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "a full 4096-record ledger cannot block durable withdrawal",
+          "seconds": 0.170217,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "a full byte-budget ledger cannot block withdrawal or exceed the bound",
+          "seconds": 0.325119,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "canonical withdrawal survives ledger-tail truncation and rehashed tombstone stripping",
+          "seconds": 0.016931,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "withdrawal reaches canonical grant even if experience ledger is already damaged",
+          "seconds": 0.009617,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "process-only or mutable observations cannot enter model-derived technical strategy tier",
+          "seconds": 0.0092,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "signed process-only historical proof remains ineligible for technical strategy recall",
+          "seconds": 0.009106,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "CONTRACT_TEST real producer serialization signs the persisted verifier snapshot before restart",
+          "seconds": 0.160899,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "withdrawal refuses to overwrite a concurrently changed canonical grant",
+          "seconds": 0.010145,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "uncertain post-rename fsync error stays withdrawn and idempotent retry reasserts durability",
+          "seconds": 0.014553,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "real concurrent withdrawing processes keep one canonical anchor and one mirror",
+          "seconds": 0.34789,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "a real killed withdrawal leaves its lease blocking recall rather than recovering stale eligibility",
+          "seconds": 0.136681,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        },
+        {
+          "name": "historical canonical withdrawal is checked independently of a different authorized requesting grant",
+          "seconds": 0.028558,
+          "failed": false,
+          "error": false,
+          "skipped": false
+        }
+      ],
+      "totals": {
+        "tests": 44,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "command": [
+        "node",
+        "/workspace/scratch/9d2785b5ab4e/research/autonomy/probe.mjs",
+        "/workspace/scratch/9d2785b5ab4e/continuum-research",
+        "/workspace/scratch/9d2785b5ab4e/research/autonomy/tmp"
+      ],
+      "cwd": "/workspace/scratch/9d2785b5ab4e/continuum-research",
+      "started_at": "2026-11-04T18:49:05.130193+00:00",
+      "finished_at": "2026-11-04T18:49:05.412943+00:00",
+      "wall_seconds": 0.2824843640000836,
+      "exit_code": 0,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "stdout_file": "results/independent-probe.stdout",
+      "stderr_file": "results/independent-probe.stderr",
+      "stdout_sha256": "960b5c1939992b04f0051abaeda780a833eee6b6bffeabebb270a67f3ff10195",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "observations": {
+        "schema": "independent-ccc1-experience-probe-v1",
+        "evidence_class": "CONTRACT_TEST_SYNTHETIC_RECEIPTS",
+        "started_at": "2026-11-04T18:49:05.241Z",
+        "finished_at": "2026-11-04T18:49:05.403Z",
+        "wall_ms": 161.53256399999998,
+        "model_inference": "NOT_RUN",
+        "repair_execution": "NOT_RUN",
+        "neural_training": "NOT_RUN",
+        "parent_pid": 180,
+        "cases": [
+          {
+            "name": "open_task_is_not_an_experience",
+            "expected_behavior_observed": true,
+            "experience": null,
+            "wall_ms": 0.8434570000000008
+          },
+          {
+            "name": "terminal_summary_is_durable_and_idempotent",
+            "expected_behavior_observed": true,
+            "outcome": "COMPLETED",
+            "stored_records": 1,
+            "duplicate_appended": false,
+            "wall_ms": 4.498716999999999
+          },
+          {
+            "name": "fresh_node_process_replays_same_summary_but_no_strategy",
+            "expected_behavior_observed": true,
+            "pid": 188,
+            "entries": 5,
+            "records": 1,
+            "eligible_count": 0,
+            "recall_status": "OK",
+            "ledger_sha256": "69deb781d6bb01d781fd9d85b3e769e852052a87496081c2c362f5703ef99504",
+            "independent_process": true,
+            "inference": "NOT_RUN",
+            "note": "Legacy success summary is deliberately ineligible for technical recall",
+            "wall_ms": 137.117879
+          },
+          {
+            "name": "same_task_conflicting_summary_does_not_upgrade_record",
+            "expected_behavior_observed": true,
+            "append_returned": false,
+            "stored_bytes_unchanged": true,
+            "limitation": "Task-id deduplication is not semantic conflict reporting",
+            "wall_ms": 1.534069000000045
+          },
+          {
+            "name": "unrehashed_ledger_edit_is_detected",
+            "expected_behavior_observed": true,
+            "rejected": true,
+            "error": "experience log damaged sequence or record at line 1",
+            "wall_ms": 0.6573569999999904
+          },
+          {
+            "name": "rehashed_ledger_forgery_is_readable_but_not_recall_authority",
+            "expected_behavior_observed": true,
+            "ledger_accepts_recomputed_hash": true,
+            "forged_patch_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "recall_status": "OK",
+            "eligible_count": 0,
+            "limitation": "The ledger hash chain authenticates neither the writer nor semantic truth",
+            "wall_ms": 2.85168299999998
+          },
+          {
+            "name": "self_reported_model_success_cannot_enter_technical_proof",
+            "expected_behavior_observed": true,
+            "rejected": true,
+            "error": "TECHNICAL_RUNTIME_OBSERVATION_REQUIRED",
+            "ledger_unchanged": true,
+            "wall_ms": 1.2792610000000195
+          },
+          {
+            "name": "rehashed_trusted_receipt_edit_fails_runtime_mac",
+            "expected_behavior_observed": true,
+            "rejected": true,
+            "error": "entry 3 claims sender VERIFIER without a valid runtime MAC",
+            "wall_ms": 1.0499570000000062
+          },
+          {
+            "name": "torn_ledger_tail_blocks_recall_without_automatic_recovery",
+            "expected_behavior_observed": true,
+            "status": "BLOCKED_LEDGER_DAMAGED",
+            "eligible_count": 0,
+            "wall_ms": 1.4497279999999932
+          }
+        ],
+        "cases_count": 9,
+        "passed": true,
+        "fixture_ledger_sha256": "69deb781d6bb01d781fd9d85b3e769e852052a87496081c2c362f5703ef99504",
+        "fixture_journal_sha256": "14c9afc0619b19711d7fdb7b9380638002e497cb7685d3a56a43c3d45385b9f0"
+      }
+    }
+  ],
+  "wall_seconds": 6.8961854250001124,
+  "finished_at": "2026-11-04T18:49:05.413254+00:00",
+  "source_hashes_after": {
+    ".github/continuum/ccc1-experience.mjs": "81e27f07d92a183cdd6d87d0fe3e834e48f16db9b55c7ee76056cc9c04cc3b1d",
+    ".github/continuum/ccc1-experience-durability.test.mjs": "72047810a525fcf901ca16533d5d18147dcf67fa188feaf4416e124085159b78",
+    ".github/continuum/ccc1-technical-recall.mjs": "b37f88b38e4ccb6cb787e5609f1653a1c0dbb604995839ef2044e448b7fc75d6",
+    ".github/continuum/ccc1-technical-recall.test.mjs": "2f871f4465b2445d6c998bb2dbc5c5a17c7e7a2b002810344c6a269a224ba71c",
+    ".github/continuum/ccc1-journal.mjs": "e4cfe7b3cf59e42c25d890751eb21ccf97f0e7c81c20c7f29641235c6a43f1c0",
+    ".github/continuum/ccc1-envelope.mjs": "74c040d9df6f77759da428e5df32fea1be171a8024c5bed57759f83a19cc36dc",
+    ".github/continuum/ccc1-orchestrator.mjs": "d2bb41170b338a739add36d026c6d3598bf7decbaba25630720715eda52917ec",
+    ".github/continuum/ccc1-worker.mjs": "0245ce756c289c8777607cdee7223c45152187eee4d5ea503ac2ad98dce87096",
+    ".github/continuum/coding-orchestrator.mjs": "24a2afc64f73a04357ecb1a9a49a08c61cdc8ca0d28148063f9e086e27561f89",
+    ".github/continuum/coding-provider.mjs": "15b59137c396fe1544ba36336c1e9925fb35700b585e4eb2d15344af646a80e8",
+    "scripts/continuum-local-model-observation.mjs": "1e9222b80220efbed50a75a07467dc27c20238c39ed340283a0c93381e0e9cf5"
+  },
+  "source_hashes_unchanged": true,
+  "tracked_changes_after": "",
+  "head_after": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "script_hashes": {
+    "run_experiment.py": "9fff6856b7c63ef1e96c21e3486eddd0da162193884e4cc72e7f68b933ae0734",
+    "probe.mjs": "bc5cc05b62aeb88b161abe134f20c98d668760ca874fca115543cff863ad246b"
+  },
+  "passed": true
+}

@@ -1,0 +1,92 @@
+{
+  "schema": "independent-ccc1-experience-probe-v1",
+  "evidence_class": "CONTRACT_TEST_SYNTHETIC_RECEIPTS",
+  "started_at": "2026-11-04T18:49:05.241Z",
+  "finished_at": "2026-11-04T18:49:05.403Z",
+  "wall_ms": 161.53256399999998,
+  "model_inference": "NOT_RUN",
+  "repair_execution": "NOT_RUN",
+  "neural_training": "NOT_RUN",
+  "parent_pid": 180,
+  "cases": [
+    {
+      "name": "open_task_is_not_an_experience",
+      "expected_behavior_observed": true,
+      "experience": null,
+      "wall_ms": 0.8434570000000008
+    },
+    {
+      "name": "terminal_summary_is_durable_and_idempotent",
+      "expected_behavior_observed": true,
+      "outcome": "COMPLETED",
+      "stored_records": 1,
+      "duplicate_appended": false,
+      "wall_ms": 4.498716999999999
+    },
+    {
+      "name": "fresh_node_process_replays_same_summary_but_no_strategy",
+      "expected_behavior_observed": true,
+      "pid": 188,
+      "entries": 5,
+      "records": 1,
+      "eligible_count": 0,
+      "recall_status": "OK",
+      "ledger_sha256": "69deb781d6bb01d781fd9d85b3e769e852052a87496081c2c362f5703ef99504",
+      "independent_process": true,
+      "inference": "NOT_RUN",
+      "note": "Legacy success summary is deliberately ineligible for technical recall",
+      "wall_ms": 137.117879
+    },
+    {
+      "name": "same_task_conflicting_summary_does_not_upgrade_record",
+      "expected_behavior_observed": true,
+      "append_returned": false,
+      "stored_bytes_unchanged": true,
+      "limitation": "Task-id deduplication is not semantic conflict reporting",
+      "wall_ms": 1.534069000000045
+    },
+    {
+      "name": "unrehashed_ledger_edit_is_detected",
+      "expected_behavior_observed": true,
+      "rejected": true,
+      "error": "experience log damaged sequence or record at line 1",
+      "wall_ms": 0.6573569999999904
+    },
+    {
+      "name": "rehashed_ledger_forgery_is_readable_but_not_recall_authority",
+      "expected_behavior_observed": true,
+      "ledger_accepts_recomputed_hash": true,
+      "forged_patch_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "recall_status": "OK",
+      "eligible_count": 0,
+      "limitation": "The ledger hash chain authenticates neither the writer nor semantic truth",
+      "wall_ms": 2.85168299999998
+    },
+    {
+      "name": "self_reported_model_success_cannot_enter_technical_proof",
+      "expected_behavior_observed": true,
+      "rejected": true,
+      "error": "TECHNICAL_RUNTIME_OBSERVATION_REQUIRED",
+      "ledger_unchanged": true,
+      "wall_ms": 1.2792610000000195
+    },
+    {
+      "name": "rehashed_trusted_receipt_edit_fails_runtime_mac",
+      "expected_behavior_observed": true,
+      "rejected": true,
+      "error": "entry 3 claims sender VERIFIER without a valid runtime MAC",
+      "wall_ms": 1.0499570000000062
+    },
+    {
+      "name": "torn_ledger_tail_blocks_recall_without_automatic_recovery",
+      "expected_behavior_observed": true,
+      "status": "BLOCKED_LEDGER_DAMAGED",
+      "eligible_count": 0,
+      "wall_ms": 1.4497279999999932
+    }
+  ],
+  "cases_count": 9,
+  "passed": true,
+  "fixture_ledger_sha256": "69deb781d6bb01d781fd9d85b3e769e852052a87496081c2c362f5703ef99504",
+  "fixture_journal_sha256": "14c9afc0619b19711d7fdb7b9380638002e497cb7685d3a56a43c3d45385b9f0"
+}
