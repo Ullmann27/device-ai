@@ -1,0 +1,192 @@
+--- a/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt
++++ b/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt
+@@ -158,6 +158,10 @@
+ }
+ 
+ /** AdamW with decoupled weight decay on weight matrices (not on gains, biases or embeddings). */
++data class LmOptimizerState(val steps: Int, val weightDecay: Float, val beta1: Float,
++                            val beta2: Float, val epsilon: Float,
++                            val first: Map<String, FloatArray>, val second: Map<String, FloatArray>)
++
+ class LmAdamW(private val params: LmParams, private val weightDecay: Float, private val beta1: Float = .9f,
+               private val beta2: Float = .98f, private val eps: Float = 1e-8f) {
+     private val m = params.mats.mapValues { FloatArray(it.value.data.size) }
+@@ -166,31 +170,98 @@
+         val leaf = n.substringAfterLast('.')
+         n != "tok" && n != "pos" && leaf.startsWith("w")
+     }
++    private val owned = java.util.IdentityHashMap<FloatArray, Boolean>()
++    init {
++        require(weightDecay.isFinite() && weightDecay >= 0f)
++        require(beta1.isFinite() && beta1 >= 0f && beta1 < 1f)
++        require(beta2.isFinite() && beta2 >= 0f && beta2 < 1f)
++        require(eps.isFinite() && eps > 0f)
++        require(params.allFinite())
++        for (p in params.mats.values) require(owned.put(p.data, true) == null) { "aliased parameters" }
++        for (state in listOf(m, v)) for (array in state.values) owned[array] = true
++    }
+     var steps = 0
+         private set
+ 
+-    /** One update with [grads]; returns the global gradient norm before clipping to [clip]. */
++    @Synchronized
++    fun snapshot(): LmOptimizerState = LmOptimizerState(steps, weightDecay, beta1, beta2, eps,
++        m.mapValues { it.value.copyOf() }, v.mapValues { it.value.copyOf() })
++
++    @Synchronized
++    fun restore(state: LmOptimizerState) {
++        require(steps == 0) { "restore requires fresh optimizer" }
++        require(state.steps >= 0)
++        require(state.weightDecay.toRawBits() == weightDecay.toRawBits() &&
++            state.beta1.toRawBits() == beta1.toRawBits() && state.beta2.toRawBits() == beta2.toRawBits() &&
++            state.epsilon.toRawBits() == eps.toRawBits()) { "optimizer controls differ" }
++        require(state.first.keys == m.keys && state.second.keys == v.keys)
++        for ((name, target) in m) {
++            val a = state.first.getValue(name); val b = state.second.getValue(name)
++            require(a.size == target.size && b.size == target.size)
++            require(a.all { it.isFinite() } && b.all { it.isFinite() && it >= 0f })
++        }
++        for (name in m.keys) {
++            state.first.getValue(name).copyInto(m.getValue(name))
++            state.second.getValue(name).copyInto(v.getValue(name))
++        }
++        steps = state.steps
++    }
++
++    @Synchronized
++    internal fun writeState(out: java.io.DataOutputStream) {
++        out.writeInt(steps)
++        for (x in floatArrayOf(weightDecay, beta1, beta2, eps)) out.writeFloat(x)
++        for ((name, array) in m) {
++            out.writeUTF(name); out.writeInt(array.size)
++            for (x in array) { require(x.isFinite()); out.writeFloat(x) }
++            for (x in v.getValue(name)) { require(x.isFinite() && x >= 0f); out.writeFloat(x) }
++        }
++    }
++
++    /** Validate fully before mutation. */
++    @Synchronized
+     fun step(grads: Map<String, Mat>, lr: Float, clip: Float): Double {
++        require(lr.isFinite() && lr >= 0f && clip.isFinite() && clip > 0f)
++        require(steps < Int.MAX_VALUE)
++        require(grads.keys == params.mats.keys) { "gradient names differ" }
++        for ((name, p) in params.mats) {
++            val g = grads.getValue(name)
++            require(g.rows == p.rows && g.cols == p.cols) { "gradient shape differs: $name" }
++            require(!owned.containsKey(g.data)) { "gradient aliases optimizer state" }
++            require(g.data.all { it.isFinite() }) { "non-finite gradient: $name" }
++        }
+         var sq = 0.0
+         for (g in grads.values) for (x in g.data) sq += x.toDouble() * x
+         val norm = sqrt(sq)
++        require(norm.isFinite())
+         val scale = if (norm > clip && norm > 0) (clip / norm).toFloat() else 1f
+-        steps++
+-        val b1 = 1.0 - Math.pow(beta1.toDouble(), steps.toDouble())
+-        val b2 = 1.0 - Math.pow(beta2.toDouble(), steps.toDouble())
++        val nextStep = steps + 1
++        val b1 = 1.0 - Math.pow(beta1.toDouble(), nextStep.toDouble())
++        val b2 = 1.0 - Math.pow(beta2.toDouble(), nextStep.toDouble())
+         val stepSize = (lr * sqrt(b2) / b1).toFloat()
+-        for ((name, p) in params.mats) {
+-            val g = grads.getValue(name).data
+-            val mm = m.getValue(name); val vv = v.getValue(name)
+-            val decay = decays.getValue(name)
+-            for (i in p.data.indices) {
+-                val gi = g[i] * scale
+-                mm[i] = beta1 * mm[i] + (1 - beta1) * gi
+-                vv[i] = beta2 * vv[i] + (1 - beta2) * gi * gi
+-                if (decay) p.data[i] -= lr * weightDecay * p.data[i]
+-                p.data[i] -= stepSize * mm[i] / (sqrt(vv[i]) + eps)
+-            }
+-        }
++        require(stepSize.isFinite()) { "step size overflow" }
++        for (apply in listOf(false, true)) {
++            for ((name, p) in params.mats) {
++                val g = grads.getValue(name).data
++                val mm = m.getValue(name); val vv = v.getValue(name)
++                val decay = decays.getValue(name)
++                for (i in p.data.indices) {
++                    val gi = g[i] * scale
++                    val nextM = beta1 * mm[i] + (1 - beta1) * gi
++                    val nextV = beta2 * vv[i] + (1 - beta2) * gi * gi
++                    val decayed = if (decay) p.data[i] - lr * weightDecay * p.data[i] else p.data[i]
++                    val nextP = decayed - stepSize * nextM / (sqrt(nextV) + eps)
++                    if (apply) {
++                        mm[i] = nextM; vv[i] = nextV; p.data[i] = nextP
++                    } else {
++                        require(nextM.isFinite() && nextV.isFinite() && nextV >= 0f && nextP.isFinite()) {
++                            "non-finite prospective update: $name/$i"
++                        }
++                    }
++                }
++            }
++        }
++        steps = nextStep
+         return norm
+     }
+ }
+@@ -201,13 +272,21 @@
+  */
+ class LmTrainer(val model: LmModel, val learningRate: Float, val weightDecay: Float, val warmup: Int, val totalSteps: Int,
+                 val clip: Float = 1f, threads: Int = Runtime.getRuntime().availableProcessors().coerceIn(1, 8)) : AutoCloseable {
++    init {
++        require(learningRate.isFinite() && learningRate > 0f)
++        require(weightDecay.isFinite() && weightDecay >= 0f && clip.isFinite() && clip > 0f)
++        require(warmup >= 0 && totalSteps > 0 && warmup <= totalSteps && threads in 1..8)
++    }
+     private val workers = threads
++    val workerCount: Int get() = workers
++    private var closed = false
+     private val pool: ExecutorService = Executors.newFixedThreadPool(threads) { r -> Thread(r, "lm-train").apply { isDaemon = true } }
+     private val optimizer = LmAdamW(model.params, weightDecay)
+     private val buffers = List(threads) { model.params.zeros() }
+     val steps: Int get() = optimizer.steps
+ 
+     fun rate(step: Int): Float {
++        require(step >= 0)
+         if (step < warmup) return learningRate * (step + 1) / warmup
+         val progress = ((step - warmup).toDouble() / (totalSteps - warmup).coerceAtLeast(1)).coerceIn(0.0, 1.0)
+         return (learningRate * (.1 + .9 * .5 * (1 + cos(PI * progress)))).toFloat()
+@@ -217,7 +296,9 @@
+      * One optimizer step on [batch]; each sequence is BOS + tokens + EOS and is trained on every next-token target.
+      * Returns the mean NLL (nats/token) of the batch before the update.
+      */
++    @Synchronized
+     fun step(batch: List<IntArray>): Double {
++        check(!closed) { "trainer is closed" }
+         require(batch.isNotEmpty() && batch.all { it.size >= 2 })
+         val totalTargets = batch.sumOf { it.size - 1 }
+         for (b in buffers) for (m in b.values) m.data.fill(0f)
+@@ -240,12 +321,30 @@
+         }).sumOf { it.get() }
+         val total = buffers[0]
+         for (w in 1 until workers) for ((n, m) in buffers[w]) { val t = total.getValue(n).data; for (i in t.indices) t[i] += m.data[i] }
++        check(losses.isFinite()) { "non-finite batch loss" }
+         optimizer.step(total, rate(optimizer.steps), clip)
+         check(model.params.allFinite()) { "non-finite parameter after step ${optimizer.steps}" }
+         return losses / totalTargets
+     }
+ 
+-    override fun close() { pool.shutdownNow() }
++    @Synchronized
++    fun optimizerState(): LmOptimizerState = optimizer.snapshot()
++
++    @Synchronized
++    fun restoreOptimizerState(state: LmOptimizerState) {
++        check(!closed)
++        require(state.steps <= totalSteps)
++        optimizer.restore(state)
++    }
++
++    @Synchronized
++    internal fun writeOptimizerState(out: java.io.DataOutputStream) {
++        check(!closed)
++        optimizer.writeState(out)
++    }
++
++    @Synchronized
++    override fun close() { if (!closed) { closed = true; pool.shutdownNow() } }
+ }
+ 
+ /** Shared evaluation and sampling over a tokenizer and a model. */
