@@ -1,0 +1,175 @@
+✖ S09: cancellation of a real dispatched child reaches the canonical task and cannot become late success (1.500741ms)
+✖ S10: actual daemon crash after dispatch preserves UNKNOWN and never restarts the claimed work (0.479657ms)
+✖ S02 supplement: per-UID admission excludes a second different project and state directory until verified stop (0.204561ms)
+✖ S10 supplement: per-UID admission retains a live orphan across different project and state directories (2.853378ms)
+✖ S10 critical supplement: unexpected worker death pauses a different queued task (0.327512ms)
+✖ S01/S15: real idle daemon starts, stops and starts again without creating model work (1.537465ms)
+✖ S02: concurrent actual starts leave exactly one daemon ownership (0.341713ms)
+✖ S04/S11: SIGKILL of an idle daemon cannot leave live status and can restart safely (0.185724ms)
+✖ S03: stale descriptor pointing at an unrelated live process never authorizes killing it (0.34641ms)
+✖ S05: last-slot admission is atomic across independent CLI processes (0.409863ms)
+✖ S06/S08: duplicate identity is durable; cancellation prevents resubmission and restart resurrection (0.211351ms)
+✖ S07/S13: owner acceptance binds the exact task and source, not an arbitrary approve flag (0.189609ms)
+✖ S14: corrupt delivery state is rejected rather than reset to a fresh accepting queue (0.206564ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 0
+ℹ fail 13
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 235.431427
+
+✖ failing tests:
+
+test at tools/independence-service-review/active-recovery.test.mjs:73:1
+✖ S09: cancellation of a real dispatched child reaches the canonical task and cannot become late success (1.500741ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/active-recovery.test.mjs:74:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at tools/independence-service-review/active-recovery.test.mjs:102:1
+✖ S10: actual daemon crash after dispatch preserves UNKNOWN and never restarts the claimed work (0.479657ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/active-recovery.test.mjs:103:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at tools/independence-service-review/active-recovery.test.mjs:143:1
+✖ S02 supplement: per-UID admission excludes a second different project and state directory until verified stop (0.204561ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/active-recovery.test.mjs:144:23)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tools/independence-service-review/active-recovery.test.mjs:165:1
+✖ S10 supplement: per-UID admission retains a live orphan across different project and state directories (2.853378ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/active-recovery.test.mjs:166:23)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tools/independence-service-review/active-recovery.test.mjs:201:1
+✖ S10 critical supplement: unexpected worker death pauses a different queued task (0.327512ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/active-recovery.test.mjs:202:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tools/independence-service-review/lifecycle.test.mjs:37:1
+✖ S01/S15: real idle daemon starts, stops and starts again without creating model work (1.537465ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/lifecycle.test.mjs:38:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at tools/independence-service-review/lifecycle.test.mjs:62:1
+✖ S02: concurrent actual starts leave exactly one daemon ownership (0.341713ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/lifecycle.test.mjs:63:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at tools/independence-service-review/lifecycle.test.mjs:82:1
+✖ S04/S11: SIGKILL of an idle daemon cannot leave live status and can restart safely (0.185724ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/lifecycle.test.mjs:83:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tools/independence-service-review/lifecycle.test.mjs:98:1
+✖ S03: stale descriptor pointing at an unrelated live process never authorizes killing it (0.34641ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/lifecycle.test.mjs:99:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tools/independence-service-review/lifecycle.test.mjs:116:1
+✖ S05: last-slot admission is atomic across independent CLI processes (0.409863ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/lifecycle.test.mjs:117:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tools/independence-service-review/lifecycle.test.mjs:135:1
+✖ S06/S08: duplicate identity is durable; cancellation prevents resubmission and restart resurrection (0.211351ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/lifecycle.test.mjs:136:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tools/independence-service-review/lifecycle.test.mjs:162:1
+✖ S07/S13: owner acceptance binds the exact task and source, not an arbitrary approve flag (0.189609ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/lifecycle.test.mjs:163:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tools/independence-service-review/lifecycle.test.mjs:179:1
+✖ S14: corrupt delivery state is rejected rather than reset to a fresh accepting queue (0.206564ms)
+  Error: SERVICE_REVIEW_CLASSPATH_FILE required: absent prerequisites are not a test PASS
+      at fixture (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/process-fixture.mjs:87:34)
+      at TestContext.<anonymous> (file:///workspace/scratch/fd4940f23688/device-ai-support/tools/independence-service-review/lifecycle.test.mjs:180:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

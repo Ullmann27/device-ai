@@ -34,15 +34,15 @@ stores, bot profiles and avatar renderers stay with their current owners.
 | 01 | Map current owners, branches and file conflicts | COMPLETE, read-only report |
 | 02 | Verify available local build and test tools | COMPLETE, read-only report |
 | 03 | Audit existing local worker and scheduler for reproducible gaps | COMPLETE, no reproduced defect in inspected scope |
-| 04 | Test coding-service lifecycle and active recovery | RUNNING |
-| 05 | Check model artifact and evidence contracts for the weights team | RUNNING |
-| 06 | Check brain/retrieval integration boundaries and evidence | RUNNING |
-| 07 | Check avatar/design integration and asset contracts | QUEUED |
-| 08 | Check update identity, source binding and version monotonicity | QUEUED |
-| 09 | Check app-bot assignments and permissions against existing gates | QUEUED |
+| 04 | Test coding-service lifecycle and active recovery | COMPLETE: BLOCKED by three missing fixture prerequisites |
+| 05 | Check model artifact and evidence contracts for the weights team | COMPLETE: resume-integrity finding, independently reproduced and sent to #492 |
+| 06 | Check brain/retrieval integration boundaries and evidence | COMPLETE: bounded read-only review, no demonstrated residual defect |
+| 07 | Check avatar/design integration and asset contracts | RUNNING |
+| 08 | Check update identity, source binding and version monotonicity | RUNNING |
+| 09 | Check immutable tool scope at worker admission/adapters | RUNNING, exclusive ChiefWorkerPool.kt and new admission test |
 | 10 | Independently review fixes, regressions and integration conflicts | QUEUED |
 
-Six separate agents have actually been dispatched at this checkpoint. Reports
+Nine separate agents have actually been dispatched at this checkpoint. Reports
 and raw evidence are in `docs/evidence/ten-bot-support-20261104/`. Queued roles are
 not counted as agents that already ran.
 
@@ -60,6 +60,15 @@ not counted as agents that already ran.
   routine/dispatcher/pool tests passed (see gradle-targeted-summary.json).
   No competing Gradle build or daemon termination was attempted. Full-suite,
   APK and physical-device acceptance remain separate gates.
+- Bot 04's extra service process suites returned exit 1: all 13 cases were
+  blocked at fixture setup by missing classpath/runtime/isolation inputs. No
+  service/model was started, no pass is claimed, and no fixture was fabricated.
+- Bot 05's interrupted-result finding was reproduced in the weight runner using
+  temporary malformed phase outputs, without invoking its constructor or model.
+  The three existing-output guards silently skipped malformed JSON. This remains
+  an owner-workstream handoff, not an applied weight-runner change.
+- Bot 06 independently reviewed the brain team's committed context/snapshot
+  corrections; that review's inherited test counts are excluded from our totals.
 
 ## Execution and evidence rules
 
