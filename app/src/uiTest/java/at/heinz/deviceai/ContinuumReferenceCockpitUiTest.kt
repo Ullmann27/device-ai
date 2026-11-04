@@ -10,6 +10,7 @@ import android.os.Looper
 import android.os.SystemClock
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ScrollView
@@ -189,6 +190,21 @@ class ContinuumReferenceCockpitUiTest {
                         first.top < second.bottom && second.top < first.bottom)
             }
         }
+        if (home.jarvisShellStage && home.wide) {
+            val railContent = shellControl(home, "rail:home").parent as View
+            val viewport = railContent.parent as ScrollView
+            val railBounds = Rect()
+            assertTrue("The shell rail viewport must be visible", viewport.getLocalVisibleRect(railBounds))
+            home.offsetDescendantRectToMyCoords(viewport, railBounds)
+            for (target in targets.filter { it.parent === home }) {
+                val visibleBounds = Rect()
+                if (target.getLocalVisibleRect(visibleBounds)) {
+                    home.offsetDescendantRectToMyCoords(target, visibleBounds)
+                    assertFalse("Rail viewport overlaps the visible shell target ${target.tag}",
+                        Rect.intersects(railBounds, visibleBounds))
+                }
+            }
+        }
     }
 
     /** Scroll the actual ancestor, then dispatch through the decor tree so a
@@ -366,6 +382,8 @@ class ContinuumReferenceCockpitUiTest {
             val decor = requireNotNull(dialog.window).decorView
             val option = descendants(decor).filterIsInstance<TextView>().single { it.text.toString() == label }
             tap(decor, option)
+            // Deliver delayed ListView selection.
+            advanceFrames(ViewConfiguration.getPressedStateDuration().toLong())
             assertFalse("A real selection closes its chooser", dialog.isShowing)
             measure(root, 412, 915)
         }

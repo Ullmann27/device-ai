@@ -544,7 +544,13 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         panelTargets.forEach { (slot, target) ->
             val label = if (target == "model-management") "Lokales Modell und Gerät"
                 else JarvisTiles.railNav.first { it.target == target }.label
-            add("panel:$slot", target, label, shell[slot])
+            val touchBox = shell[slot]?.let { box ->
+                val minimumHeight = kotlin.math.ceil(48f * density) / density
+                // Status uses unused bottom gutter.
+                if (slot == JarvisShellLayout.Slot.STATUS && box.height < minimumHeight)
+                    box.copy(bottom = Math.nextUp(box.top + minimumHeight)) else box
+            }
+            add("panel:$slot", target, label, touchBox)
         }
         shell.grid?.areas?.get(JarvisCockpitGrid.Area.BRAND)?.let { box ->
             val h = maxOf(48f, box.height)
