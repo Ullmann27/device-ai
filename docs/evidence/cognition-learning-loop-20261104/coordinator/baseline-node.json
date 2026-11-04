@@ -1,0 +1,22 @@
+{
+  "scope": "HOST_NODE_TARGETED_BASELINE",
+  "start_utc": "2026-11-04T21:07:49.411230+00:00",
+  "end_utc": "2026-11-04T21:07:50.327708+00:00",
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    ".github/continuum/research-evidence-gate.test.mjs",
+    ".github/continuum/public-research-failure-safety.test.mjs",
+    ".github/continuum/research-learning-cycle.test.mjs"
+  ],
+  "exit_code": 0,
+  "source_head": "5a3f33b4dd65d5840d22d18f4c73ea6f9e394c66",
+  "source_tree": "b3b48d1906cd53fa5e4a0a9c2d99a1eb1b8f3494",
+  "node_version": "v24.22.1",
+  "files": {
+    ".github/continuum/research-evidence-gate.test.mjs": "7a767a0ab92aa83d35722d5cf78458deb0151fa80fadd64b66e564d76f542ef4",
+    ".github/continuum/public-research-failure-safety.test.mjs": "4b522f98a9c3cd1005f2e4398e803513c5f19d3591ed6264679ef9b6b9c1c715",
+    ".github/continuum/research-learning-cycle.test.mjs": "04c4cd50b5e17a25434be5045be47ad7f62d751c669a188828fbc4358dcdb85c"
+  }
+}
