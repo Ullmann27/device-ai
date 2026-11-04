@@ -25,11 +25,11 @@ class CockpitBrandElement(textScale: Float) : ContinuumElement(textScale) {
         val cy = h / 2f
         JarvisNeon.halo(p, 24f, cy, 24f, C.violet, .25f)
         ContinuumIcons.logo(p, 24f, cy, 40f, 21f)
-        val title = d(600, 17f, 2f)
-        p.drawText(ContinuumSurfaces.fit(p, "CONTINUUM", title, w - 52f), 50f, cy - 1f, title,
-            Fill.Linear(50f, 0f, w, 0f, C.brand))
-        val sub = t(400, 10f)
-        p.drawText(ContinuumSurfaces.fit(p, "Device AI · JARVIS · Lokal", sub, w - 52f), 50f, cy + 13f, sub, solid(C.textMuted))
+        val title = fittedTitle(p, "CONTINUUM", 600, 15f, w - 54f)
+        p.drawText("CONTINUUM", 50f, cy - 3f, title, Fill.Linear(50f, 0f, w, 0f, C.brand))
+        val sub = t(400, 9.5f)
+        p.drawText(ContinuumSurfaces.fit(p, "Device AI · JARVIS · Lokal", sub, w - 52f), 50f,
+            cy + 2f + p.capHeight(sub) + 4f, sub, solid(C.textMuted))
     }
     override fun describe(s: ContinuumDashboardState) = "Continuum, Device AI, JARVIS. Zur Startseite."
 }
@@ -120,8 +120,13 @@ abstract class CockpitCard(textScale: Float, private val icon: Icon) : Continuum
         val titleStyle = d(600, 13f, .4f)
         var titleRoom = w - 48f
         pill(s)?.let { (text, color) ->
-            val pw = ContinuumSurfaces.pill(p, w - 10f, 12f, 20f, text, t(500, 9.5f), color, alignRight = true)
-            titleRoom -= pw + 6f
+            val pillStyle = t(500, 9.5f)
+            val needed = p.measureText(title(s), titleStyle) + p.measureText(text, pillStyle) + 40f
+            // The title has priority; the pill (also spoken in describe) is drawn only when both fit.
+            if (needed <= titleRoom) {
+                val pw = ContinuumSurfaces.pill(p, w - 10f, 12f, 20f, text, pillStyle, color, alignRight = true)
+                titleRoom -= pw + 6f
+            }
         }
         p.drawText(ContinuumSurfaces.fit(p, title(s), titleStyle, titleRoom), 38f, 27f, titleStyle, solid(C.text))
         drawBody(p, w, h, s, 44f)
@@ -152,7 +157,7 @@ abstract class CockpitCard(textScale: Float, private val icon: Icon) : Continuum
     }
 
     override fun describe(s: ContinuumDashboardState): String =
-        title(s) + ". " + rows(s).joinToString(". ") { if (it.value.isEmpty()) it.label else it.label + ": " + it.value }
+        title(s) + ". " + (pill(s)?.let { it.first + ". " } ?: "") + rows(s).joinToString(". ") { if (it.value.isEmpty()) it.label else it.label + ": " + it.value }
 }
 
 class CockpitBrainCard(textScale: Float) : CockpitCard(textScale, Icon.BRAIN) {
