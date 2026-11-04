@@ -178,3 +178,10 @@ Stand: 04.11.2026 09:31 CET (Europe/Vienna). WIP, gegen Kerns `design/jarvis-coc
 - **Jarvis Lückenfüller:** schließt die Lücken, die der Kreativdirektor findet. Erstes Stück: Video 3 – Alarm H, Warp-Flug, Ganzkörper-Avatar in der Energiekugel (Kopf über Avatar bzw. JarvisAvatarSlot).
 - **Jarvis Mathematik:** Animations-Mathematik als getestete Bibliothek (Kurven, Federn mit Overshoot, Z-Kamerafahrten, Stagger, Zeitachse) und Avatar-Mimik (Viseme/Blendshapes, Lippensync aus Audio, Blinzeln, Atmen). Avatar zeichnet, Mathematik rechnet.
 - **Grundregel für alle:** Branches offen halten, nie Code oder Branches löschen, kein Force-Push – alles bleibt für ChatGPT auf GitHub einsehbar.
+
+## Integration Phase 1 (04.11. 10:03–10:08, Sammel-Branch -untested)
+- Head nach #486-Merge @249a939d (Basis 07fc0bf1). Merge-Fix @502bac81: SafePillActionGate übergibt `proposal.arguments` an `ExternalContentActionGuard.refusal` (#485 gegen die Guard-Signatur von #483; bitte Sicherheit prüfen).
+- #486 @fc33c497 gemergt: Sprachdateien = #483-Seite (nur API ≥31 on-device, sonst NONE mit Grund, Stand dcde4b6e unverändert); CockpitAnimationPresenter = Kerns #481-Konstruktor + optionales `drift`; BOT-HANDOFF beide Teile.
+- Voll @249a939d: assembleDebug OK, lintDebug 0 Befunde, testDebugUnitTest 2371 Tests, 0 Fehler, 19 übersprungen → keine roten Tests (Logs: /workspace/grok1-logs/full-1.log).
+- #371/M2.10: kein #371-Commit ist Vorfahr (Head de333693 nicht enthalten, kein „M2.10“-Commit). ABER über #484-Commit 434033ed7 („bring M2 retriever + memory event hub from #371 @de333693, file-level“) sind #371-Dateien drin: learning/ContinuumMemoryEvents.kt, learning/ContinuumMemoryRetriever.kt (+ ContinuumMemoryStats.kt aus #484 eade35d22). Die M2.10-Recovery-Dateien (ContinuumLearningExperience.kt, ContinuumThinkingMemory.kt, experiences-v2.recovery) sind NICHT verändert. Nichts zurückgesetzt; Entscheidung bei Heinz/Sicherheit.
+- `integration/jarvis-on-chatgpt-20261104` bleibt @dcde4b6e.
