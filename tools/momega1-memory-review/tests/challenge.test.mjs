@@ -13,7 +13,15 @@ function restart(f,extra={}){
 }
 test('C01 CONTRACT_TEST original MAC proof survives a separate Node restart',t=>{const f=fixture(t);f.publish();assert.equal(restart(f).items.length,1);});
 test('C02 cloned success objects cannot acquire production private brands',t=>{const f=fixture(t);assert.throws(()=>api.recordTechnicalExperience({...f.options,taskId:f.taskId,modelTask:f.modelTask,modelObservation:structuredClone(f.modelObservation),verification:structuredClone(f.verification),reflection:f.reflection}),/RUNTIME_OBSERVATION_REQUIRED/);assert.equal(fs.existsSync(f.file),false);});
-test('C03 exact frozen production has no positive admission exports',async()=>{const runtime=await import(url('coding-provider.mjs'));const verifier=await import(url('ccc1-redgreen-verifier.mjs'));assert.equal(runtime.isTrustedLocalModelObservation,undefined);assert.equal(verifier.isTrustedCodingVerification,undefined);});
+test('C03 production read-only brand validators reject synthetic or copied evidence',async t=>{
+ const f=fixture(t),runtime=await import(url('coding-provider.mjs')),verifier=await import(url('ccc1-redgreen-verifier.mjs'));
+ assert.equal(typeof runtime.isTrustedLocalModelObservation,'function');
+ assert.equal(typeof verifier.isTrustedCodingVerification,'function');
+ for(const value of [null,{},f.modelObservation,Object.freeze({...f.modelObservation}),structuredClone(f.modelObservation)])
+  assert.equal(runtime.isTrustedLocalModelObservation(value),false);
+ for(const value of [null,{},f.verification,Object.freeze({...f.verification}),structuredClone(f.verification)])
+  assert.equal(verifier.isTrustedCodingVerification(value),false);
+});
 test('C04 a ledger-only rehash cannot authenticate substituted output',t=>{const f=fixture(t);f.publish();const r=new ExperienceLog(f.file).entries()[0].record;r.technicalProof.modelObservation.outputSha256=A;writeRecords(f.file,[r]);assert.equal(f.recall().items.length,0);});
 test('C05 a valid proof copy under another task identity is ineligible',t=>{const f=fixture(t);f.publish();const r=f.record();r.taskId='t-aaaaaaaaaaaaaaaa';writeRecords(f.file,[r]);assert.equal(f.recall().items.length,0);});
 test('C06 changing model identity without the MAC is rejected after restart',t=>{const f=fixture(t);const r=f.record();r.technicalProof.modelObservation.modelSha256=A;writeRecords(f.file,[r]);assert.equal(restart(f).items.length,0);});

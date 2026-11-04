@@ -10,11 +10,20 @@ const router=read('app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter
 const tests=read('app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt');
 const recognizer=read('app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt');
 const builder=read('app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt');
+const navigation=read('app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt');
+const menu=read('app/src/main/java/at/heinz/deviceai/ui/JarvisMenu.kt');
 
 test('coding agent has one integrated entry from Android home, no second app',()=>{
-  // start screen (label, card or navigation "Entwickeln") -> development center -> coding-agent dialog
+  // The existing home slot and More category reach development through the same trusted navigator.
   assert.match(activity,/Slot\.LABEL_DEVELOPING -> showDevelopmentCenter\(\)/);
-  assert.match(activity,/ContinuumWorkArea\.ENTWICKELN -> showDevelopmentCenter\(\)/);
+  assert.match(activity,/ContinuumWorkArea\.MEHR -> showMoreWorkAreas\(\)/);
+  assert.match(activity,/showDashboardCategory\("Mehr", ContinuumWorkAreaNavigationSpec\.moreEntries\)/);
+  assert.match(navigation,/CategoryEntry\("Entwicklerwerkzeuge", "development"\)/);
+  assert.match(activity,/navigateDashboardTarget\(entries\[index\]\.target\)/);
+  assert.match(activity,/else -> menuNavigator\.navigate\(target\)/);
+  assert.match(menu,/"development" to Slot\.LABEL_DEVELOPING/);
+  assert.match(menu,/if \(openTarget\?\.invoke\(target\) != true\) open\(slot\)/);
+  assert.match(activity,/JarvisMenuNavigator\(cockpitTriggers, \{ slot -> openHomeSlot\(slot, 0f, 0f\) \}/);
   assert.match(activity,/CenterAction\("ENTWICKLUNGSAUFGABE · STARTEN", accent = true\) \{ showDevelopmentDialog\(\) \}/);
   assert.match(activity,/CONTINUUM.*Teamleiter|ContinuumDeviceTeamleaderScheduler/);
 });
@@ -25,7 +34,7 @@ test('developer speech uses actual German Android recognizer and a unique callba
   assert.match(activity,/AndroidOnDeviceSpeechInput\(this\)/);
   assert.match(recognizer,/SpeechRecognizer\.createOnDeviceSpeechRecognizer\(context\)/);
   assert.match(recognizer,/RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/);
-  assert.match(recognizer,/RecognizerIntent\.EXTRA_LANGUAGE,"de-AT"/);
+  assert.match(recognizer,/RecognizerIntent\.EXTRA_LANGUAGE,\s*"de-AT"/);
   assert.match(activity,/applyLocalSpeechText\(requestCode,spoken\)/);
   assert.match(activity,/requestCode==DEV_SPEECH_REQUEST/);
   assert.match(activity,/devDialog\?\.isShowing==true/);

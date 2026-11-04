@@ -9,6 +9,7 @@ import at.heinz.deviceai.avatar.AvatarEvent
 import at.heinz.deviceai.avatar.AvatarPoseReducer
 import at.heinz.deviceai.avatar.GazeTarget
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -16,13 +17,24 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowChoreographer
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 /** Real View/Canvas lifecycle checks; never initializes Android Filament JNI on the host. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumAvatar3dLifecycleUiTest {
+    @Before fun configureVirtualVsyncClock() {
+        // Automatic virtual-vsync advances time while idleFor drains recurring frames.
+        // Explicit frame advancement keeps the real lifecycle assertions bounded.
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+    }
+
     private fun field(view: ContinuumHologramView, name: String): Any? =
         ContinuumHologramView::class.java.getDeclaredField(name).apply { isAccessible = true }.get(view)
     private fun draw(view: ContinuumHologramView): Bitmap {

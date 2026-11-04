@@ -1,0 +1,221 @@
+{
+  "parent": "46e5fa6b09454ad6f6862e80478eb0f2d5545149",
+  "wave2Source": "28b228698aef8c52e46c72b71fdd5e1915d6e76c",
+  "wave2Files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "sha": "c1482ed3be0cb91734e10947613ec62d1a3c38cb",
+      "mode": "100644",
+      "sha256": "7a10cb4f0eabb5fb223bf329b7e26ac063cda8ca2a9c4ab11348917ebf529848",
+      "bytes": 618692
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "sha": "42a92a5f57512344a403a5910daab07a93bf7154",
+      "mode": "100644",
+      "sha256": "02b04292e0cd3c9e46cfa8cdfe262e17ffee5eb7da7a29746adf1a4b561fba9d",
+      "bytes": 11263
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+      "sha": "641ebbc3586b95b28c037e152e013ede3572a450",
+      "mode": "100644",
+      "sha256": "5b40cbcab5512ec50423c7b894efa476af429648204188872833d03cc6d9a203",
+      "bytes": 10257
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+      "sha": "c60d0e180d2d3393b2db355b188a61dcba42f79e",
+      "mode": "100644",
+      "sha256": "88bbdff0ca524500a5e63fdac6c360868f05a4c0606d84acdb44ea5577d7634a",
+      "bytes": 3711
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "sha": "d1961d03d43652ab52deb0a2676c4de8dc285889",
+      "mode": "100644",
+      "sha256": "27f619196873eff007eefc3169ac732d4b757feeaadb371dd866f05972d1fe59",
+      "bytes": 5533
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt",
+      "sha": "15fe1e9cdf33ed41f598116bf8b0e4dfcc0a83e5",
+      "mode": "100644",
+      "sha256": "4c962590a49dca664330d9a878e9fbc6ebb49dad8816354a8d6b96ff501f3f1d",
+      "bytes": 6237
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechAdmissionTest.kt",
+      "sha": "352f17e5b89914adb1ead99f4567dfbc637f232c",
+      "mode": "100644",
+      "sha256": "3a52cc42c073309510d22add76324d61d9cbf6b43838178e613cc690b3babf32",
+      "bytes": 3436
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechBoundaryTest.kt",
+      "sha": "61ede947d9a95a4ff77d045abd9ed57d79e34f1d",
+      "mode": "100644",
+      "sha256": "261d9b464eadf1ccb9e097e69a976c1c6edcb8a48142d6c0ae6b534bcadaa396",
+      "bytes": 4585
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechClockTest.kt",
+      "sha": "92315e3ea7783102f9cf944658538150727b1b3a",
+      "mode": "100644",
+      "sha256": "715d88e73472dd7c73b88df6e82575aa5352adab592b150017822413614b78e7",
+      "bytes": 2035
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt",
+      "sha": "61ad57e32acf45f3730ed998ef79295727c1fced",
+      "mode": "100644",
+      "sha256": "5422856d01d829f24c028c539b05013833436182161ede4d00750d622201cadc",
+      "bytes": 7864
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechReattachmentTest.kt",
+      "sha": "47c94f6a96c818b33fc340b618710c73393cd19d",
+      "mode": "100644",
+      "sha256": "55b7957eb10e5888d969719e2f7f4d88ba2d8d5548fea2a6b0e41a5cdb6adb69",
+      "bytes": 4287
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt",
+      "sha": "ad30277acb517e0228a28ee54b602b3a8dd07b7a",
+      "mode": "100644",
+      "sha256": "32261f6c6b8adc189f73032fbef49fe7c584db5427225a602bec161f5c9f3553",
+      "bytes": 12000
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarArticulationBoundaryTest.kt",
+      "sha": "2147bb19d626eed138038c92623e6ad5ddb69a4f",
+      "mode": "100644",
+      "sha256": "48cf6c5bd6353dd9da54e9c418caaf35ec8ec862e5a887cb881d41c3b525fd25",
+      "bytes": 3024
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt",
+      "sha": "509fae0e419f2c3be5b555b2fb20b9969728e1a0",
+      "mode": "100644",
+      "sha256": "71b268df1487042801ebea79260b5c110a56e7b106bff9cebdee9182d41f17a2",
+      "bytes": 5419
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/motion/LipSyncFaceSourceTest.kt",
+      "sha": "50ba3e361daae6e352c8d36b99f11a45d37618c4",
+      "mode": "100644",
+      "sha256": "036fc90d6210be1e62531eaf0cec41e23199174a313700b0048e9feb1b14b66f",
+      "bytes": 6383
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/AvatarRangeFrameConnectionUiTest.kt",
+      "sha": "bf7e38d0bb6f07bfe4aa4e2a8594dac451c8ed96",
+      "mode": "100644",
+      "sha256": "3c50b9d020bb5131e7c1b7b27b228ec097586831e5d802fb5e8d3095de58e4b3",
+      "bytes": 9207
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/AvatarSpeechReattachmentUiTest.kt",
+      "sha": "ab8a461d18f8297db5c40dff9b0ab2827bb1a39d",
+      "mode": "100644",
+      "sha256": "a52ce5c557910b8152588201e197edf8553ff21748d7760da4d0fb593e90e08a",
+      "bytes": 12446
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt",
+      "sha": "101aaf2f64c2e51355ff7d8e7be5862b0f785068",
+      "mode": "100644",
+      "sha256": "eb79cb833bc0fe64305bf9b28988387cac1c190ce0f59df7fc15f16ec49ac0b1",
+      "bytes": 13239
+    },
+    {
+      "path": "tools/fable-avatar-motion-check/Main.kt",
+      "sha": "3b3b6fed8d44b2793664519d2185334a198c6ea8",
+      "mode": "100644",
+      "sha256": "6f3ff17ea0335e7f23645a052a8c46dcd5e61efab6c275119615debbe90555f0",
+      "bytes": 11363
+    },
+    {
+      "path": "tools/fable-avatar-motion-check/README.md",
+      "sha": "81360c0bb46f239010a9feedacff2cb99b045162",
+      "mode": "100644",
+      "sha256": "448d0d1c1a8eb12db21a58c7fc55cbe6825f228ad1c230a0be1fd80645d2ef0d",
+      "bytes": 2881
+    },
+    {
+      "path": "tools/fable-avatar-motion-check/run.sh",
+      "sha": "a5775a643b2e9607d51146f02af94e4e2a238965",
+      "mode": "100755",
+      "sha256": "31e3ef854861ef4b1bb4066748a739b1cf791ecc9f0dbb945005743e77927c60",
+      "bytes": 1830
+    },
+    {
+      "path": "docs/research/omega/IMPLEMENTATION-WAVE2-HANDOFF-20261104.md",
+      "sha": "ee460e0616a884b06006d02c20a3e933b75d6a5f",
+      "mode": "100644",
+      "sha256": "363df63c711cda856892b229a3c7482a7e26318ddb1a6d4b19d7c31efa2c0981",
+      "bytes": 11664
+    },
+    {
+      "path": "docs/research/omega/IMPLEMENTATION-WAVE2-INDEPENDENT-REVIEWS-20261104.md",
+      "sha": "a70468fbef94f776613568b1d0fa5d38e7e89017",
+      "mode": "100644",
+      "sha256": "8612041c2346fb6d1d5f8c2f0810ccf0e5327f94b3888b02a54d33e65bac2adf",
+      "bytes": 7988
+    },
+    {
+      "path": "docs/evidence/implementation-wave2-20261104/combined-final/summary.json",
+      "sha": "bf62119dbb60c9d399e7fbca235a59d6a566400a",
+      "mode": "100644",
+      "sha256": "1ce29c175e056183a8be5b1d48e3aa4c3118dfb881e0c13dfaab069eb0848bef",
+      "bytes": 9979
+    }
+  ],
+  "patches": [
+    {
+      "path": "host-qa/idle-motion-boundary/idle-motion-boundary.patch",
+      "sha256": "f689bb8cd5ffd999a16a2f15d97e2726bf6fc9b794a6e5cc527dca1a8932bb1d"
+    },
+    {
+      "path": "integration-audit/echo515-four-file.patch",
+      "sha256": "ab432d4782be02820ca40cb38dc5b9ae1a7b9610986b31b2c6e2be7bbaa599d2"
+    },
+    {
+      "path": "contract-review/root-source-contracts-wave2.patch",
+      "sha256": "faa6a58df4e3eb994faa97027e9fa213e88e7d54a21c5199a31a450b3c23ce9b"
+    },
+    {
+      "path": "integration-audit/ui-contracts/ui-source-contracts.patch",
+      "sha256": "c78066e2a6f0b3f1ff42add03eabcb26361ad10f33e1e49352d44bba8da49b50"
+    },
+    {
+      "path": "regression-audit/android-integration-wiring.patch",
+      "sha256": "c28b5a1f8abfebdb00ae4b78ad9697524e665f1ad9a0ebe48c0886901aa5206d"
+    },
+    {
+      "path": "regression-audit/trace-context-speech-contracts.patch",
+      "sha256": "82c072f71e0e9573ee1d73754dfd673de5cac0a80094976e993dc5cf7161fee8"
+    },
+    {
+      "path": "regression-audit/learning-readout-contract.patch",
+      "sha256": "e5bec01122954298bdba1dcae9737db0849699d96ccc0e8047c7f86a4927e764"
+    },
+    {
+      "path": "regression-audit/qa-signing-exclusion.patch",
+      "sha256": "d0872ef956695a6009cb4e42f6e76f5b0c3079a78e76c85414e27440d86bc9d1"
+    },
+    {
+      "path": "regression-audit/tool-memory-fixtures.patch",
+      "sha256": "ed1be3b648287cd46b571a1153e7ffb18b2f33f159c3c0d7ab8d593a2e83a065"
+    },
+    {
+      "path": "build-audit/proposed-2d-fallback.patch",
+      "sha256": "5010b1e7ea5e4570cd920b543a450ce0ae6c470389a966a328ff564d53c8aae2"
+    },
+    {
+      "path": "build-audit/proposed-robolectric-vsync.patch",
+      "sha256": "691da3b274532bc2e20395cb29e353293189a8d5a280e447e07a8718b3f36ac8"
+    }
+  ],
+  "gitStatus": "M .github/continuum/aaa-cockpit-and-effects.test.mjs\n M .github/continuum/android-avatar-wiring.test.mjs\n M .github/continuum/android-holographic-home.test.mjs\n M .github/continuum/android-integration-wiring.test.mjs\n M .github/continuum/app-navigation-wiring.test.mjs\n M .github/continuum/coding-agent-speech-wiring.test.mjs\n M .github/continuum/coding-orchestrator.mjs\n M .github/continuum/coding-service-reader.mjs\n M .github/continuum/coding-service-worker.mjs\n M .github/continuum/cognitive-trace-wiring.test.mjs\n M .github/continuum/continuum-fold7-hologram-live-diagnostics.test.mjs\n M .github/continuum/continuum-local-dialogue-quality-wiring.test.mjs\n M .github/continuum/fold-responsive-reflow.test.mjs\n M .github/continuum/fold7-portrait-reference.test.mjs\n M .github/continuum/mobile-builder-existing-integration.test.mjs\n M .github/continuum/nexus-beginner-ui.test.mjs\n M .github/continuum/premium-phone-viewport-wiring.test.mjs\n M app/src/main/java/at/heinz/deviceai/AgentActivity.kt\n M app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt\n M app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt\n M app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt\n M app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt\n M app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt\n M app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt\n M app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt\n M app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt\n M app/src/test/java/at/heinz/deviceai/motion/LipSyncFaceSourceTest.kt\n M app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt\n M app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatar3dLifecycleUiTest.kt\n M app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatarNativeUiTest.kt\n M app/src/uiTest/java/at/heinz/deviceai/ContinuumHologramMotionUiTest.kt\n M scripts/continuum-learning-parity-readout.test.mjs\n M scripts/continuum-owner-continuous-qa-preflight.test.mjs\n M scripts/continuum-ui-routing.test.mjs\n M scripts/render-continuum-owner-continuous-qa.sh\n M tools/momega1-memory-review/tests/caller-accounting.test.mjs\n M tools/momega1-memory-review/tests/challenge.test.mjs\n M tools/momega1-memory-review/tests/fixture.mjs\n?? .github/continuum/coding-orchestrator-failure-report.test.mjs\n?? app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt\n?? app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechAdmissionTest.kt\n?? app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechBoundaryTest.kt\n?? app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechClockTest.kt\n?? app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechReattachmentTest.kt\n?? app/src/test/java/at/heinz/deviceai/avatar3d/AvatarArticulationBoundaryTest.kt\n?? app/src/test/java/at/heinz/deviceai/avatar3d/AvatarIdleMotionBoundaryTest.kt\n?? app/src/uiTest/java/at/heinz/deviceai/AvatarRangeFrameConnectionUiTest.kt\n?? app/src/uiTest/java/at/heinz/deviceai/AvatarSpeechReattachmentUiTest.kt\n?? docs/evidence/implementation-wave2-20261104/\n?? docs/research/omega/IMPLEMENTATION-WAVE2-HANDOFF-20261104.md\n?? docs/research/omega/IMPLEMENTATION-WAVE2-INDEPENDENT-REVIEWS-20261104.md\n?? tools/fable-avatar-motion-check/"
+}

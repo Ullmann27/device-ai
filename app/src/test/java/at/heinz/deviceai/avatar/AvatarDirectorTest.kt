@@ -98,15 +98,15 @@ class AvatarPortedPartsTest {
         p.apply(AvatarEvent.StateChanged(AvatarState.THINKING, AvatarExpression.FOCUSED, GazeTarget.THINKING_AWAY, 1))
         assertEquals(GazeTarget.THINKING_AWAY.x, p.pose().gazeX)
         p.apply(AvatarEvent.SpeechStarted("u", "Hallo", 2))
-        repeat(12) { p.apply(AvatarEvent.AudioLevel("u", 1f, 3L + it, AudioLevelSource.PCM_ENVELOPE)) }
+        repeat(12) { p.apply(AvatarEvent.AudioLevel("u", 1f, 3L + it * 33L, AudioLevelSource.PCM_ENVELOPE)) }
         assertTrue(p.pose().jawOpen in 0.9f..1f)
-        p.apply(AvatarEvent.VisemeCue("u", Viseme.O, 1f, 80, 20))
+        p.apply(AvatarEvent.VisemeCue("u", Viseme.O, 1f, 80, 400))
         assertEquals(Viseme.O, p.pose().viseme)
-        p.apply(AvatarEvent.SpeechEnded("u", false, 30))
+        p.apply(AvatarEvent.SpeechEnded("u", false, 450))
         assertEquals(0f, p.pose().jawOpen); assertEquals(Viseme.SIL, p.pose().viseme)
         // Small envelope noise below the dead zone never opens the mouth.
         val q = AvatarPoseReducer(); q.apply(AvatarEvent.SpeechStarted("v", "x", 1))
-        repeat(10) { q.apply(AvatarEvent.AudioLevel("v", 0.02f, 2L + it, AudioLevelSource.PCM_ENVELOPE)) }
+        repeat(10) { q.apply(AvatarEvent.AudioLevel("v", 0.02f, 2L + it * 33L, AudioLevelSource.PCM_ENVELOPE)) }
         assertEquals(0f, q.pose().jawOpen)
     }
 }

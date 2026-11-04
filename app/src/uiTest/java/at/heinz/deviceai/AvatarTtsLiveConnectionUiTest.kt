@@ -159,7 +159,7 @@ class AvatarTtsLiveConnectionUiTest {
     }
 
     private fun startPendingSpeech(fixture: SpeechFixture, id: String, text: String,
-        reportRange: Boolean = true) {
+        reportRange: Boolean = true, rangeEnd: Int = text.length) {
         // Only the already-accepted synthesis-request context is fixture state. Calling the
         // shadow's speak() would automatically post onDone before controlled PCM/range callbacks.
         // These are the three assignments made by speakBootstrap; no Director/View event is faked.
@@ -169,7 +169,7 @@ class AvatarTtsLiveConnectionUiTest {
         fixture.listener.onBeginSynthesis(id, 8_000, AudioFormat.ENCODING_PCM_16BIT, 1)
         fixture.listener.onAudioAvailable(id, pcm16())
         fixture.listener.onStart(id)
-        if (reportRange) fixture.listener.onRangeStart(id, 0, text.length, 0)
+        if (reportRange) fixture.listener.onRangeStart(id, 0, rangeEnd, 0)
         // The real voiceFrame schedules itself every 33 ms. A one-letter word starts with SIL
         // and reaches its non-silent viseme after 160 ms, using the production word-range mapper.
         advance(170)
@@ -237,7 +237,7 @@ class AvatarTtsLiveConnectionUiTest {
     }
 
     @Test fun chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks() = withSpeechShell { f ->
-        startPendingSpeech(f, "moving", "A")
+        startPendingSpeech(f, "moving", "A O", rangeEnd = 1)
         assertTrue(pose(f).speakEnergy > .35f)
 
         set(f.activity, "conversationActive", true)
@@ -247,11 +247,11 @@ class AvatarTtsLiveConnectionUiTest {
         assertSame(f.live, field(f.activity, "hologramView"))
         assertTrue(f.live.isShown)
         assertEquals(1, descendants(f.activity.window.decorView).count { it is ContinuumHologramView })
-        // Reparenting clears transient geometry. Fresh real callbacks must reach the reattached
-        // live view in Chat even when the Home's docked wrapper is detached.
-        f.listener.onRangeStart("moving", 0, 1, 0)
+        // A genuinely later word must reach the reattached live view in Chat. Replaying
+        // the original range cannot extend its lifetime; a separate regression covers that.
+        f.listener.onRangeStart("moving", 2, 3, 3_200)
         advance(170)
-        assertEquals(Viseme.AA, pose(f).viseme)
+        assertEquals(Viseme.O, pose(f).viseme)
         assertTrue(pose(f).speakEnergy > .35f)
 
         f.pause()
