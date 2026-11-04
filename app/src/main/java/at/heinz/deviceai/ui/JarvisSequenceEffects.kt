@@ -75,7 +75,7 @@ class JarvisSequenceEffects {
         val pl = pills ?: return emptyMap()
         return pl.items.mapIndexedNotNull { i, text ->
             val g = pillGeometry(i, text, pillWidths[text] ?: estimateWidth(text, w), w, h, nowMillis - pl.at)
-            if (g == null) null else i to PillBox(g.x - g.pw / 2f, g.y - 17f, g.x + g.pw / 2f, g.y + 17f)
+            if (g == null) null else i to PillBox(g.x - g.pw / 2f, g.y - PILL_HALF_H, g.x + g.pw / 2f, g.y + PILL_HALF_H)
         }.toMap()
     }
 
@@ -351,6 +351,8 @@ class JarvisSequenceEffects {
         }
     }
 
+    // F envelope object colours: NO JarvisDesign token yet (Gmail red / paper are not in the ref5 table) –
+    // requested from Welten-Optik (#479); kept as the only literals here until the measured table lands.
     private val mailRed = Fill.Solid(0xffea4335.toInt())
     private val paper = Fill.Solid(0xfff2f6fb.toInt())
     private val paperShade = Fill.Solid(0xffcfd8e6.toInt())
@@ -418,13 +420,13 @@ class JarvisSequenceEffects {
 
     private fun drawPills(p: ContinuumPainter, w: Float, h: Float, now: Long) {
         val pl = pills ?: return
-        val style = JarvisDesign.Type.body
+        val style = JarvisDesign.Type.label   // §11: small type like ref5
         pl.items.forEachIndexed { i, text ->
             val pw = pillWidths.getOrPut(text) { min(p.measureText(text, style) + 28f, w * .44f) }
             val g = pillGeometry(i, text, pw, w, h, now - pl.at) ?: return@forEachIndexed
             val enabled = answerPills.getOrNull(i)?.enabled ?: true
             // No alpha fade (Muster G): full opacity from the first frame; landing flash = bloom, not alpha.
-            JarvisNeon.glassCard(p, g.x - pw / 2f, g.y - 17f, g.x + pw / 2f, g.y + 17f, 17f,
+            JarvisNeon.glassCard(p, g.x - pw / 2f, g.y - PILL_HALF_H, g.x + pw / 2f, g.y + PILL_HALF_H, JarvisDesign.Metrics.radiusPill,
                 if (!enabled || glow == JarvisDesign.Glow.OFF) JarvisDesign.Glow.SUBTLE else if (g.t in .85f..1f) JarvisDesign.Glow.STRONG else JarvisDesign.Glow.NORMAL)
             p.drawText(text, g.x, g.y + 5f, style, Fill.Solid(if (enabled) JarvisDesign.Colors.text else JarvisDesign.Colors.textMuted), TextAlign.CENTER)
         }
@@ -476,6 +478,8 @@ class JarvisSequenceEffects {
         const val DOC_RISE_MS = 450L
         const val ENVELOPE_LASER_START = JarvisMotion.Durations.ENVELOPE_IN + JarvisMotion.Durations.ENVELOPE_FLAP + DOC_RISE_MS
         /** Bounded per frame: ≤ 4 lasers × 3 sparks (JarvisNeon.laserSparks draws 3). */
+        /** Pill half height (dp): compact like ref5 (§11), radius = JarvisDesign.Metrics.radiusPill. */
+        const val PILL_HALF_H = 14f
         const val MAX_LASERS = 4
         const val SPARKS_PER_LASER = 3
         private const val CAMERA_DISTANCE = 8f
