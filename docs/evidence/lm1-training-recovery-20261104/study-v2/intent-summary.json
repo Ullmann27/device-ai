@@ -1,0 +1,182 @@
+{
+  "sourceCommit": "fc2eb797210bee25091caf734aacbfd694a3372e",
+  "status": "ELIGIBLE_DEVELOPMENT_CANDIDATE_TEST_DEFERRED_FOR_REGISTERED_SUFFIX_COMPARISON",
+  "testEvaluated": false,
+  "modelPromotion": false,
+  "arms": {
+    "small": {
+      "scores": [
+        {
+          "split": "dev",
+          "step": "0",
+          "correct": "0",
+          "total": "24",
+          "answerNll": "8.842064727366754",
+          "eosNll": "6.472776359654485",
+          "prematureEos": "0",
+          "classCorrect": "0,0,0,0",
+          "classTotal": "6,6,6,6",
+          "meanFirstEosProbability": "0.14750363864004612",
+          "missingEos": "24",
+          "generatedTokens": "96"
+        },
+        {
+          "split": "dev",
+          "step": "128",
+          "correct": "12",
+          "total": "24",
+          "answerNll": "1.3038244527311702",
+          "eosNll": "0.03630752016274341",
+          "prematureEos": "0",
+          "classCorrect": "4,6,0,2",
+          "classTotal": "6,6,6,6",
+          "meanFirstEosProbability": "5.95919289480662E-4",
+          "missingEos": "0",
+          "generatedTokens": "24"
+        },
+        {
+          "split": "dev",
+          "step": "256",
+          "correct": "13",
+          "total": "24",
+          "answerNll": "1.353088923177873",
+          "eosNll": "0.014163899910088004",
+          "prematureEos": "0",
+          "classCorrect": "2,6,5,0",
+          "classTotal": "6,6,6,6",
+          "meanFirstEosProbability": "8.727782066368188E-5",
+          "missingEos": "0",
+          "generatedTokens": "24"
+        },
+        {
+          "split": "dev",
+          "step": "512",
+          "correct": "12",
+          "total": "24",
+          "answerNll": "1.7544272247620238",
+          "eosNll": "0.005881279594185385",
+          "prematureEos": "0",
+          "classCorrect": "2,6,4,0",
+          "classTotal": "6,6,6,6",
+          "meanFirstEosProbability": "2.9864347993679985E-5",
+          "missingEos": "0",
+          "generatedTokens": "24"
+        }
+      ],
+      "selection": {
+        "checkpointSha256": "c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309",
+        "step": "256",
+        "devCorrect": "13",
+        "devTotal": "24",
+        "devAnswerNll": "1.353088923177873",
+        "testRead": "false",
+        "inputsUnchanged": "true",
+        "generalModelPromotion": "NOT_PERMITTED",
+        "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK"
+      },
+      "capacity": {
+        "pass": "false",
+        "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+        "checkpointSha256": "c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309",
+        "parameters": "132160",
+        "loadMs": "83.588139",
+        "measuredRepeats": "3",
+        "maxFirstTokenCallMs": "8.803361",
+        "maxGeneration32CallMs": "8.867207",
+        "firstTokenObservations": "0",
+        "full32TokenObservations": "0",
+        "vmHwmKiB": "72380",
+        "finalVmHwmKiB": "72380",
+        "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+        "failure": "UNAVAILABLE"
+      }
+    },
+    "wide": {
+      "scores": [
+        {
+          "split": "dev",
+          "step": "0",
+          "correct": "0",
+          "total": "24",
+          "answerNll": "8.84206392326258",
+          "eosNll": "6.47277743563133",
+          "prematureEos": "0",
+          "classCorrect": "0,0,0,0",
+          "classTotal": "6,6,6,6",
+          "meanFirstEosProbability": "0.14750359704097113",
+          "missingEos": "24",
+          "generatedTokens": "96"
+        },
+        {
+          "split": "dev",
+          "step": "128",
+          "correct": "13",
+          "total": "24",
+          "answerNll": "1.7133914955007874",
+          "eosNll": "0.01520302341314069",
+          "prematureEos": "0",
+          "classCorrect": "2,6,4,1",
+          "classTotal": "6,6,6,6",
+          "meanFirstEosProbability": "1.3129762834296343E-5",
+          "missingEos": "0",
+          "generatedTokens": "24"
+        },
+        {
+          "split": "dev",
+          "step": "256",
+          "correct": "11",
+          "total": "24",
+          "answerNll": "2.084923759357262",
+          "eosNll": "0.004671863392407512",
+          "prematureEos": "0",
+          "classCorrect": "2,6,1,2",
+          "classTotal": "6,6,6,6",
+          "meanFirstEosProbability": "7.277918276334579E-6",
+          "missingEos": "0",
+          "generatedTokens": "24"
+        },
+        {
+          "split": "dev",
+          "step": "512",
+          "correct": "11",
+          "total": "24",
+          "answerNll": "2.6535228169841227",
+          "eosNll": "0.0017632604922298196",
+          "prematureEos": "0",
+          "classCorrect": "2,6,1,2",
+          "classTotal": "6,6,6,6",
+          "meanFirstEosProbability": "8.559865058543892E-6",
+          "missingEos": "0",
+          "generatedTokens": "24"
+        }
+      ],
+      "selection": {
+        "checkpointSha256": "7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2",
+        "step": "128",
+        "devCorrect": "13",
+        "devTotal": "24",
+        "devAnswerNll": "1.7133914955007874",
+        "testRead": "false",
+        "inputsUnchanged": "true",
+        "generalModelPromotion": "NOT_PERMITTED",
+        "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK"
+      },
+      "capacity": {
+        "pass": "false",
+        "reasons": "INCOMPLETE_32_TOKEN_WORKLOAD",
+        "checkpointSha256": "7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2",
+        "parameters": "6562304",
+        "loadMs": "283.16535",
+        "measuredRepeats": "3",
+        "maxFirstTokenCallMs": "188.225062",
+        "maxGeneration32CallMs": "202.460422",
+        "firstTokenObservations": "3",
+        "full32TokenObservations": "0",
+        "vmHwmKiB": "175512",
+        "finalVmHwmKiB": "175512",
+        "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+        "failure": "UNAVAILABLE"
+      }
+    }
+  }
+}
