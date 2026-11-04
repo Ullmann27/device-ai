@@ -1,5 +1,24 @@
 # Memory / brain handoff — 2026-11-04
 
+## Current verified status
+
+Memory source is implemented and published in #494; actual app integration is
+published in #499. Tested combined public source: fab5f094862c5abae259196f6be1d7a8bc80a75b,
+exact tree3183aeeeae3532e7f3253de976eabd46efcb940a.
+
+- Full combined standard Android unit gate:2,489 total;2,470 passed;0failures/
+  errors;19existing skips. Production/test compilation passed.
+- Configured NewApi-only lint:0issues; Gradle BUILD SUCCESSFUL.
+- Actual Activity/lazy compiler/Android main-looper/real orb/teardown gate:
+  2/2passed,0failures/errors/skips on that same exact tree.
+- Final native pane/full Activity, microphone/TTS/GPU/Fold7, remaining external
+  workstream readiness and final original-signed APK remain open. No combined
+  APK was built. These tests do not prove the complete device dialogue.
+
+Current receipts: docs/evidence/memory-brain-20261104/android-combined and
+activity-android. Earlier NOT_RUN/failed checkpoints below are historical and
+retained for provenance; they do not override these later source-bound results.
+
 Branch: `feat/continuum-memory-brain-20261104`; draft PR #494 targets PR #483's
 integration branch, base 578bdfd12f896cc990bf1a043bc1b248ba3adb6d. Original scope
 and parallel ownership are in [the coordination ledger](MEMORY-BRAIN-COORDINATION-20261104.md).
@@ -98,3 +117,26 @@ The independent static review found no confirmed unaddressed blocking issue in
 its reviewed scope; explicit partial-review limits and build-lock attempts are
 in `docs/evidence/memory-brain-20261104/final-review/REVIEW.md`. Final full combined
 Gradle/lint, device and APK gates remain open. This is not release acceptance.
+
+## Complete combined Android gate now passed
+
+The later actual source gate supersedes the earlier build-lock-only status:
+#499 atfab5f094862c5abae259196f6be1d7a8bc80a75b (exact tree3183aeee) passed the
+full standard Gradle unit task and configured NewApi lint:2,489 tests total,
+2,470 passed,0failures/errors,19baseline skips; lint0issues. All five memory
+production files are byte-identical to #4947e2d69a5. Evidence and exact binding:
+`docs/evidence/memory-brain-20261104/android-combined/RESULT.md`.
+
+The separate actual Activity/Handler test remains a distinct pending gate at
+this checkpoint; native/device and final combined APK are still not accepted.
+
+## Actual Activity / main-looper gate now passed
+
+The targeted UI gate on public#499fab5f094 also passed:2/2 tests,0failures/errors/
+skips. Actual Activity constructor, lazy compiler, real subscription, Android
+Handler/main-looper, Activity bus, real orb effects and teardown/re-subscription
+are exercised. Full onCreate/onDestroy/chat/audio/GPU/device is outside this
+bounded test. Evidence: docs/evidence/memory-brain-20261104/activity-android.
+All requested memory code and the actual app hooks are now source-integrated
+and verified within these stated boundaries. Final owner APK still follows the
+other workstreams' native/device/readiness and original-signing gates.

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-11-04T11:06:10" hostname="8c129114cae4" time="0.024">
+  <properties/>
+  <testcase name="excludedConflictsCannotChangeTheScoresOfSafeRecords" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.001"/>
+  <testcase name="mixedCaseUnicodeAndLateUniqueTermsRemainSearchableInsideTheExistingTokenBound" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.014"/>
+  <testcase name="sourceReferenceDifferenceMakesAnIdentityAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="parentReferenceDifferenceMakesAnIdentityAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.001"/>
+  <testcase name="confidenceDifferenceMakesAnIdentityAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="inaccessiblePrivacyCounterpartStillMakesThePublicIdentityAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="scorerFallbackAndFiniteClampingPreserveTheExistingContract" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.002"/>
+  <testcase name="repetitionCannotVoteAnAmbiguousIdentityBackIntoResults" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="evidenceReferenceDifferenceMakesAnIdentityAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="absentTopicCannotBeInventedFromConfidenceOrValidationQuality" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.001"/>
+  <testcase name="uniqueSafeFixtureRetainsItsFrozenBaselineScoreBreakdownsAndOrder" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="validationStateDifferenceMakesAnIdentityAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="repeatedReferenceCannotConsumeTheDistinctResultLimit" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="orderedMetadataDiscrepanciesAlsoRemainAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.001"/>
+  <testcase name="nonFiniteSemanticScoresCannotManufactureAnOtherwiseAbsentTopic" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="provenanceDifferenceMakesAnIdentityAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.001"/>
+  <testcase name="memoryTypeDifferenceMakesAnIdentityAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="negatedContentWithTheSameIdIsAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.001"/>
+  <testcase name="updateTimestampDifferenceMakesAnIdentityAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="equalCopiesCountOnceAndLeaveEveryScoreUnchanged" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="uniqueInputPermutationsKeepScoresAndIdTieBreakStable" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.001"/>
+  <testcase name="staleAndContradictedEvidenceRemainsAvailableForConflictAudit" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="tagDifferenceMakesAnIdentityAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <testcase name="scorersReceiveNeitherHiddenNorAmbiguousMemoriesAndSeeExactCopiesOnce" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.001"/>
+  <testcase name="creationTimestampDifferenceMakesAnIdentityAmbiguous" classname="at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

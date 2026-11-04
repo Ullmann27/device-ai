@@ -1,0 +1,22 @@
+{
+  "head": "b5ee08039afc7d1dd73139a2b3ac7ac8e0e30ba9",
+  "tree": "3183aeeeae3532e7f3253de976eabd46efcb940a",
+  "command": [
+    "flock",
+    "-w",
+    "50",
+    "/workspace/scratch/b3170a7ae924/gradle-build.lock",
+    "./gradlew",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    ":app:testDebugUnitTest",
+    ":app:lintDebug"
+  ],
+  "started": 1793790214.693351,
+  "seconds": 286.4727849960327,
+  "exit": 0,
+  "source_changed": false
+}

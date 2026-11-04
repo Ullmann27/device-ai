@@ -63,13 +63,13 @@ Consumes `ContinuumMemoryEvents`; produces existing `MemoryEventSource`.
 - [x] Test actual hub recall/storage/document dispatch with main-thread mapping,
   listener failures, close/race/isolation and no source-text exposure.
 - [x] Implement small lifecycle-bound adapter; use actual finite counts/scores.
-- [ ] Provide the exact factory/hook contract to the visual integrator and
+- [x] Provide the exact factory/hook contract to the visual integrator and
   validate the combined path once its source is available.
 
 ## Task 4 — Integration and handoff
 
 - [ ] Independent review and fixes with reproducing tests.
-- [ ] Run relevant complete regression, Android compilation and lint on frozen
+- [x] Run relevant complete regression, Android compilation and lint on frozen
   combined source; compare other workstream heads and changed paths afresh.
 - [ ] Build APK only when all requested workstreams have finished and their
   integration gate is satisfied; record exact package/version/source/hash.

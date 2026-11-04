@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T11:06:10" hostname="8c129114cae4" time="0.001">
+  <properties/>
+  <testcase name="mutatingAGetResultCannotChangeTheStoredTagsParentsOrEvidence" classname="at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest" time="0.0"/>
+  <testcase name="clearingEvidenceThroughAllCannotLeaveAVerifiedRecordWithoutProof" classname="at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest" time="0.0"/>
+  <testcase name="callerCannotChangeFutureRecallByEditingAReturnedTag" classname="at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest" time="0.0"/>
+  <testcase name="mutatingReturnedExperienceCannotChangePastOutcomesOrProvenance" classname="at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest" time="0.0"/>
+  <testcase name="storedSnapshotsAlsoRemainIndependentFromInputCollections" classname="at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest" time="0.0"/>
+  <testcase name="similarResultsCannotCorruptEvaluationScores" classname="at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
