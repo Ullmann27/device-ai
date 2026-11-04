@@ -32,3 +32,10 @@ Kompilieren (`/workspace/avatar-build/kotlinc` mit der Dateiliste aus `scripts/j
 - `Video3ScenesTest` (JUnit 4 direkt, nicht Gradle): **9/9 grün** nach dem Mathematik-Tausch. Ein Code-Fix war nicht nötig.
 - Status-Literal-Scan (m5-integration-repair scan.mjs): 0 Treffer.
 - Gradle `:app:testDebugUnitTest` nicht gelaufen. Für die User-Card gibt es keinen eigenen Test.
+
+## Endspurt 10:11 – zwei ref5-Kästchen
+- `JarvisUserCard.kt` („User Recognized“, links oben neben dem Kopf). Layout in ref5-Pixeln der Karte (193 × 179 px), englische Labels wie ref5. Titel und grünes Häkchen nur bei RECOGNIZED, Untertitel = method, sonst „—“. Presence/Attention/Gaze/Emotion immer „—“; der Presence-Punkt ist gedämpft, nie grün. Raster (Kern): links 0,157, oben 0,123, Breite 0,149, Höhe 0,194 der Cockpit-Fläche.
+- `JarvisGreetingCard.kt` (JARVIS-Grußkarte unter dem Kopf). Eingabe `JarvisGreeting(hourOfDay, statusText)`. Der Gruß kommt aus der echten Uhrzeit, ohne Uhrzeit steht „—“. Dahinter steht nur ein neutrales Angebot, kein „fully synced“. Ein statusText erscheint nur, wenn eine echte Quelle ihn liefert. Gemessen in ref5: x 290–565, y 390–555 px. Anteile der Display-Fläche (x 80–1375, y 67–986): links 0,162, oben 0,351, Breite 0,212, Höhe 0,180.
+- Tests (JUnit 4 direkt, kotlinc 2.4.0, nicht Gradle): `Video3ScenesTest` 9/9 + `JarvisCardsTest` 2/2 = **11/11 grün** auf dem Code dieses Commits. Status-Literal-Scan: 0 Treffer.
+- Vergleichsbilder (nicht im Git): `kontrolle-3/lueckenfueller-user-recognized.png` (UNKNOWN | RECOGNIZED | ref5) und `kontrolle-3/lueckenfueller-jarvis-gruss.png` (Vorschau | ref5).
+- Ehrlicher Abstand: Die Schrift ist etwas größer und weniger fett als in ref5 (kleinste #479-Tokens caption/status). „JARVIS“ ist in ref5 fetter und größer. Der violette Verlauf hinter der Grußkarte kommt vom Hintergrund (Welten-Optik/Kern), nicht von der Karte.

@@ -16,7 +16,7 @@ import javax.imageio.ImageIO
 object Video3Preview {
     @JvmStatic fun main(args: Array<String>) {
         val root = File(args[0]); val out = File(args[1]).apply { mkdirs() }
-        val pieces = if (args.size > 2) args.drop(2).toSet() else setOf("user-recognized", "alarm", "calm", "warp")
+        val pieces = if (args.size > 2) args.drop(2).toSet() else setOf("user-recognized", "jarvis-gruss", "alarm", "calm", "warp")
         fun shot(name: String, w: Float, h: Float, d: Float, draw: (Java2DContinuumPainter) -> Unit) {
             val img = BufferedImage((w * d).toInt(), (h * d).toInt(), BufferedImage.TYPE_INT_ARGB)
             val g = img.createGraphics()
@@ -34,6 +34,18 @@ object Video3Preview {
                 shot("user-recognized-$suffix", JarvisUserCard.REF_W + 2 * pad, JarvisUserCard.REF_H + 2 * pad, 2f * 193f / 124f) { p ->
                     p.fillRect(0f, 0f, 200f, 200f, Fill.Solid(JarvisDesign.Colors.background))
                     card.draw(p, pad, pad, pad + JarvisUserCard.REF_W, pad + JarvisUserCard.REF_H)
+                }
+            }
+        }
+        if ("jarvis-gruss" in pieces) {
+            // ref5 box 275 × 165 px; 1 px = 0.642 dp; rendered at 2 × ref5 pixels
+            val dp = .642f; val pad = 6f
+            val cw = 275f * dp; val ch = 165f * dp
+            val card = JarvisGreetingCard()
+            for ((suffix, hour) in listOf("14h" to 14, "ohne-uhr" to null)) {
+                shot("jarvis-gruss-$suffix", cw + 2 * pad, ch + 2 * pad, 2f / dp) { p ->
+                    p.fillRect(0f, 0f, 400f, 400f, Fill.Solid(JarvisDesign.Colors.background))
+                    card.draw(p, pad, pad, pad + cw, pad + ch, JarvisGreeting(hour))
                 }
             }
         }

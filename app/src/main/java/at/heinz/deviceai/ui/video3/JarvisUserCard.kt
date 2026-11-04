@@ -54,44 +54,39 @@ class JarvisUserCard(private val onChanged: () -> Unit = {}) : UserCardRenderer 
     override fun render(model: OwnerRecognition) { this.model = model; onChanged() }
 
     fun title(m: OwnerRecognition = model) = when (m.state) {
-        OwnerRecognitionState.RECOGNIZED -> "Nutzer erkannt"
-        OwnerRecognitionState.NOT_RECOGNIZED -> "Nicht erkannt"
+        OwnerRecognitionState.RECOGNIZED -> "User Recognized"
+        OwnerRecognitionState.NOT_RECOGNIZED -> "Not Recognized"
         OwnerRecognitionState.UNKNOWN -> NONE
     }
 
     fun subtitle(m: OwnerRecognition = model) = m.method?.takeIf { it.isNotBlank() } ?: NONE
 
-    /** Draws the card into (l, t, r, b) in dp; all sizes follow the card height (ref5 proportions). */
+    /** Draws the card into (l, t, r, b) in dp. Layout in ref5 pixels of the 193 × 179 px card, scaled to the box. */
     fun draw(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, glow: Boolean = true) {
-        val h = b - t
-        val u = h / REF_H
-        val radius = JarvisDesign.Styles.tile.radius * u
-        if (glow) JarvisNeon.rimGlow(p, l, t, r, b, radius, JarvisDesign.Glow.SUBTLE, 1f, Fill.Solid(Colors.panelRim))
+        val k = (b - t) / REF_PX_H
+        fun x(px: Float) = l + px * k
+        fun y(px: Float) = t + px * k
+        val radius = JarvisDesign.Styles.tile.radius * k / DP_PER_PX
+        if (glow) JarvisNeon.rimGlow(p, l, t, r, b, radius, JarvisDesign.Glow.SUBTLE, 1f, rimFill)
         p.fillRoundRect(l, t, r, b, radius, cardFill)
         p.strokeRoundRect(l, t, r, b, radius, 1f, rimFill)
         val m = model
-        // head row: user icon in a corner frame, title (+ check when recognized), method
-        val ix = l + 9f * u; val iy = t + 9f * u; val isz = 25f * u
-        drawUserIcon(p, ix, iy, isz)
-        val tx = ix + isz + 9f * u
+        drawUserIcon(p, x(15f), y(12f), 33f * k)
         val title = title(m)
-        val titleStyle = JarvisDesign.Type.pill
-        p.drawText(title, tx, t + 22f * u, titleStyle, titleFill)
+        p.drawText(title, x(60f), y(29f), TITLE_STYLE, titleFill)
         if (m.state == OwnerRecognitionState.RECOGNIZED) {
-            val cx = tx + p.measureText(title, titleStyle) + 5f * u; val cy = t + 18f * u
-            path.reset().moveTo(cx, cy).lineTo(cx + 3f * u, cy + 3f * u).lineTo(cx + 8f * u, cy - 3.5f * u)
-            p.strokePath(path, 1.4f * u, okFill)
+            val cx = x(60f) + p.measureText(title, TITLE_STYLE) + 6f * k; val cy = y(24f)
+            path.reset().moveTo(cx, cy).lineTo(cx + 4f * k, cy + 4f * k).lineTo(cx + 11f * k, cy - 5f * k)
+            p.strokePath(path, 1.6f * k, okFill)
         }
-        p.drawText(subtitle(m), tx, t + 34f * u, JarvisDesign.Type.caption, subFill)
-        p.drawLine(l + 8f * u, t + 45f * u, r - 8f * u, t + 45f * u, 1f, dividerFill, .8f)
-        // four rows without a source: always "—"
-        val rowX = l + 30f * u
+        p.drawText(subtitle(m), x(60f), y(43f), ROW_STYLE, subFill)
+        p.drawLine(x(10f), y(53f), r - 10f * k, y(53f), 1f, dividerFill, .8f)
         for (i in ROWS.indices) {
-            val y = t + (62f + i * 15.5f) * u
-            drawRowIcon(p, i, l + 16f * u, y - 3.5f * u, u)
-            p.drawText("${ROWS[i]}:", rowX, y, ROW_STYLE, subFill)
-            p.drawText(NONE, rowX + p.measureText("${ROWS[i]}:", ROW_STYLE) + 5f * u, y,
-                ROW_STYLE, dimFill)
+            val by = y(ROW_BASELINES[i])
+            drawRowIcon(p, i, x(26f), by - 4f * k, k * 1.6f)
+            val label = "${ROWS[i]}:"
+            p.drawText(label, x(43f), by, ROW_STYLE, subFill)
+            p.drawText(NONE, x(43f) + p.measureText(label, ROW_STYLE) + 6f * k, by, ROW_STYLE, dimFill)
         }
     }
 
@@ -109,7 +104,7 @@ class JarvisUserCard(private val onChanged: () -> Unit = {}) : UserCardRenderer 
     private fun drawRowIcon(p: ContinuumPainter, i: Int, cx: Float, cy: Float, u: Float) {
         val r = 4f * u
         when (i) {
-            0 -> p.strokeCircle(cx, cy, r * .8f, 1f, dimFill)   // presence: no source ⇒ hollow, not green
+            0 -> p.fillCircle(cx, cy, r * .7f, dimFill)   // presence: no source ⇒ muted, never the green 'active' dot
             1 -> {
                 path.reset().moveTo(cx - r * 1.3f, cy).lineTo(cx - r * .5f, cy).lineTo(cx - r * .1f, cy - r)
                     .lineTo(cx + r * .4f, cy + r).lineTo(cx + r * .8f, cy).lineTo(cx + r * 1.3f, cy)
@@ -129,7 +124,12 @@ class JarvisUserCard(private val onChanged: () -> Unit = {}) : UserCardRenderer 
     companion object {
         const val NONE = "—"
         private val ROW_STYLE = JarvisDesign.Type.status
-        val ROWS = arrayOf("Anwesenheit", "Aufmerksamkeit", "Blick", "Stimmung")
+        val ROWS = arrayOf("Presence", "Attention", "Gaze", "Emotion")
+        private val ROW_BASELINES = floatArrayOf(75f, 99f, 124f, 151f)
+        private val TITLE_STYLE = JarvisDesign.Type.caption
+        const val REF_PX_H = 179f
+        /** ref5: 1 px = 0,642 dp (docs/JARVIS-REF5-FARBEN.md). */
+        const val DP_PER_PX = .642f
         /** Card size in ref5 in dp (124 × 115); [draw] scales from this height. */
         const val REF_W = 124f
         const val REF_H = 115f
