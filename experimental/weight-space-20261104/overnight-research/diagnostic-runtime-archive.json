@@ -1,0 +1,22 @@
+{
+  "purpose": "EXACT_RESEARCH_DIAGNOSTIC_BINARIES_NO_MODEL_CHECKPOINTS",
+  "repository": "Ullmann27/device-ai",
+  "inferenceSourceCommit": "3397fc445b5c40dee987399bd38d8c1226bd5b87",
+  "gradientSourceCommit": "c966de3b9c0e12f0f3eb469d964c79ba41ba0138",
+  "sourceFolder": "experimental/weight-space-20261104/overnight-research",
+  "modelPromotion": false,
+  "runtimeDependencySha256": "8075d799b42f3b4f23f2f154af09685f52074503b0a4103ba336a618a3be1950",
+  "stdlibDependencySha256": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006",
+  "files": {
+    "channel-diagnostic.jar": {
+      "sha256": "26aabef28874dc5d69eb54f76da5d6b4c7fd0267c45378e23269a89a9b627dca",
+      "bytes": 14371
+    },
+    "gradient-access.jar": {
+      "sha256": "e65cd7a6ac506546424466d6a23b5e803f63ddc3a9466747d1f67b694345c189",
+      "bytes": 17974
+    }
+  },
+  "archiveSha256": "70eb2c359fc1585a8544fce7e6369de27520ed18258be91af982deb76c8de91d",
+  "archiveBytes": 32686
+}

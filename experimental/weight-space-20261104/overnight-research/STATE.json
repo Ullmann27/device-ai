@@ -1,6 +1,6 @@
 {
   "task": "G1-INTEGRATE-WEIGHT-002",
-  "phase": "GRADIENT_ACCESS_SOURCE_FROZEN_NOT_RUN",
+  "phase": "GRADIENT_ACCESS_VERIFIED_NEXT_OPEN_PATH_PROBE",
   "parentCommit": "0af14f75b04e68ba849a92316b8be51041e8738b",
   "comparisonPr508Commit": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
   "ownerSession": "0549bca61ccf",
@@ -13,11 +13,11 @@
     "exact checkpoint replica measurements",
     "240 native/intervention distributions and 1440 activation traces",
     "independent NumPy recomputation of all 240 forward passes",
-    "16 fail-closed resume cases with zero JVM launches"
+    "16 fail-closed resume cases with zero JVM launches",
+    "6.56M/9.71M gradient access, chain-rule and twenty finite-difference checks"
   ],
   "next": [
-    "execute registered S0/W0/D0 gradient diagnostics",
-    "verify exact common-gradient and widening chain-rule gates",
-    "publish results and overnight continuation handoff"
+    "test whether all initially inactive added parameters receive gradients after one fixed small output-path perturbation",
+    "publish consolidated handoff and schedule bounded overnight continuation"
   ]
 }

@@ -1,0 +1,282 @@
+{
+  "profiles": {
+    "S0": {
+      "parameters": 132160,
+      "parameterBytes": 528640,
+      "gradientTensorRecords": 96,
+      "cases": [
+        {
+          "probe": "general-next",
+          "parameters": 132160,
+          "nonzeroGradientCoordinates": 132160,
+          "totalGradientL2": 14.383474931708825,
+          "meanNll": 2.479774807124175
+        },
+        {
+          "probe": "general-note",
+          "parameters": 132160,
+          "nonzeroGradientCoordinates": 132160,
+          "totalGradientL2": 26.886572494348385,
+          "meanNll": 4.036143959820518
+        },
+        {
+          "probe": "general-tool",
+          "parameters": 132160,
+          "nonzeroGradientCoordinates": 132160,
+          "totalGradientL2": 24.555637184681373,
+          "meanNll": 3.786460073990444
+        },
+        {
+          "probe": "general-count",
+          "parameters": 132160,
+          "nonzeroGradientCoordinates": 132160,
+          "totalGradientL2": 19.23363146399361,
+          "meanNll": 4.1555823586748675
+        }
+      ],
+      "directionalChecks": [
+        {
+          "probe": "general-next",
+          "tensor": "nf",
+          "absoluteError": 9.067017396163779e-05,
+          "limit": 0.0039656750808932184,
+          "fractionOfLimit": 0.022863742518516035
+        },
+        {
+          "probe": "general-note",
+          "tensor": "nf",
+          "absoluteError": 1.758248074670843e-05,
+          "limit": 0.005291772530615536,
+          "fractionOfLimit": 0.0033226070555725956
+        },
+        {
+          "probe": "general-tool",
+          "tensor": "nf",
+          "absoluteError": 3.2363354486031337e-06,
+          "limit": 0.0040255548916227745,
+          "fractionOfLimit": 0.0008039476632992844
+        },
+        {
+          "probe": "general-count",
+          "tensor": "nf",
+          "absoluteError": 4.137173277446449e-05,
+          "limit": 0.004096624252116767,
+          "fractionOfLimit": 0.010098981558556975
+        }
+      ],
+      "receiptSha256": "40dccfbca407155d4e87ee4f57a8d61992cb4867d1096cb8002e7dc3521b2c90",
+      "processSeconds": 0.8621593649986607,
+      "maxRssKiB": 231032
+    },
+    "W0": {
+      "parameters": 6562304,
+      "parameterBytes": 26249216,
+      "gradientTensorRecords": 96,
+      "cases": [
+        {
+          "probe": "general-next",
+          "parameters": 6562304,
+          "nonzeroGradientCoordinates": 6562304,
+          "totalGradientL2": 12.66364686329508,
+          "meanNll": 2.4797741868682386
+        },
+        {
+          "probe": "general-note",
+          "parameters": 6562304,
+          "nonzeroGradientCoordinates": 6562304,
+          "totalGradientL2": 23.54088697058506,
+          "meanNll": 4.036144526482889
+        },
+        {
+          "probe": "general-tool",
+          "parameters": 6562304,
+          "nonzeroGradientCoordinates": 6562304,
+          "totalGradientL2": 22.359868276432387,
+          "meanNll": 3.786460546376214
+        },
+        {
+          "probe": "general-count",
+          "parameters": 6562304,
+          "nonzeroGradientCoordinates": 6562304,
+          "totalGradientL2": 16.774090327741305,
+          "meanNll": 4.155581745450156
+        }
+      ],
+      "directionalChecks": [
+        {
+          "probe": "general-next",
+          "tensor": "nf",
+          "absoluteError": 0.000924899229350018,
+          "limit": 0.010301649294348476,
+          "fractionOfLimit": 0.08978166533561002
+        },
+        {
+          "probe": "general-note",
+          "tensor": "nf",
+          "absoluteError": 0.0005862491783568125,
+          "limit": 0.01405290666372355,
+          "fractionOfLimit": 0.04171728969567325
+        },
+        {
+          "probe": "general-tool",
+          "tensor": "nf",
+          "absoluteError": 0.0010015062924570994,
+          "limit": 0.010471635365208495,
+          "fractionOfLimit": 0.09563991272887097
+        },
+        {
+          "probe": "general-count",
+          "tensor": "nf",
+          "absoluteError": 0.000492425639445293,
+          "limit": 0.010673496147602884,
+          "fractionOfLimit": 0.0461353648922134
+        }
+      ],
+      "receiptSha256": "2809109b18a8a8c1d69e9ea4266efcbac74ad99bf44b38bef7efacf9bd0070d9",
+      "processSeconds": 3.404931637000118,
+      "maxRssKiB": 366868
+    },
+    "D0": {
+      "parameters": 9712128,
+      "parameterBytes": 38848512,
+      "gradientTensorRecords": 140,
+      "cases": [
+        {
+          "probe": "general-next",
+          "parameters": 9712128,
+          "nonzeroGradientCoordinates": 7873536,
+          "totalGradientL2": 13.620134010034949,
+          "meanNll": 2.4797741868682386
+        },
+        {
+          "probe": "general-note",
+          "parameters": 9712128,
+          "nonzeroGradientCoordinates": 7873536,
+          "totalGradientL2": 24.73717417639419,
+          "meanNll": 4.036144526482889
+        },
+        {
+          "probe": "general-tool",
+          "parameters": 9712128,
+          "nonzeroGradientCoordinates": 7873536,
+          "totalGradientL2": 23.390325409831807,
+          "meanNll": 3.786460546376214
+        },
+        {
+          "probe": "general-count",
+          "parameters": 9712128,
+          "nonzeroGradientCoordinates": 7873536,
+          "totalGradientL2": 17.596321744102145,
+          "meanNll": 4.155581745450156
+        }
+      ],
+      "directionalChecks": [
+        {
+          "probe": "general-next",
+          "tensor": "nf",
+          "absoluteError": 0.000924899229350018,
+          "limit": 0.010301649294348476,
+          "fractionOfLimit": 0.08978166533561002
+        },
+        {
+          "probe": "general-next",
+          "tensor": "l2.wo",
+          "absoluteError": 0.00016779151830603745,
+          "limit": 0.03103087141541081,
+          "fractionOfLimit": 0.0054072448066252955
+        },
+        {
+          "probe": "general-next",
+          "tensor": "l2.w2",
+          "absoluteError": 0.00028631682888757837,
+          "limit": 0.09596129594552674,
+          "fractionOfLimit": 0.0029836698855141407
+        },
+        {
+          "probe": "general-note",
+          "tensor": "nf",
+          "absoluteError": 0.0005862491783568125,
+          "limit": 0.01405290666372355,
+          "fractionOfLimit": 0.04171728969567325
+        },
+        {
+          "probe": "general-note",
+          "tensor": "l2.wo",
+          "absoluteError": 0.0005011724921433203,
+          "limit": 0.04047444422735198,
+          "fractionOfLimit": 0.01238244284042907
+        },
+        {
+          "probe": "general-note",
+          "tensor": "l2.w2",
+          "absoluteError": 0.0012065703125445637,
+          "limit": 0.14707031212029517,
+          "fractionOfLimit": 0.008204037206079073
+        },
+        {
+          "probe": "general-tool",
+          "tensor": "nf",
+          "absoluteError": 0.0010015062924570994,
+          "limit": 0.010471635365208495,
+          "fractionOfLimit": 0.09563991272887097
+        },
+        {
+          "probe": "general-tool",
+          "tensor": "l2.wo",
+          "absoluteError": 4.755486926377728e-05,
+          "limit": 0.04243247165764911,
+          "fractionOfLimit": 0.0011207188128812377
+        },
+        {
+          "probe": "general-tool",
+          "tensor": "l2.w2",
+          "absoluteError": 7.32725539416279e-05,
+          "limit": 0.13119762716805522,
+          "fractionOfLimit": 0.0005584899325029008
+        },
+        {
+          "probe": "general-count",
+          "tensor": "nf",
+          "absoluteError": 0.000492425639445293,
+          "limit": 0.010673496147602884,
+          "fractionOfLimit": 0.0461353648922134
+        },
+        {
+          "probe": "general-count",
+          "tensor": "l2.wo",
+          "absoluteError": 0.00027505115675019454,
+          "limit": 0.034141711917073055,
+          "fractionOfLimit": 0.00805616184151127
+        },
+        {
+          "probe": "general-count",
+          "tensor": "l2.w2",
+          "absoluteError": 0.0005929188465758628,
+          "limit": 0.1012880304760746,
+          "fractionOfLimit": 0.005853789868250198
+        }
+      ],
+      "receiptSha256": "6fdee3f87344df53b9723106b4b3971275927e41b34a9807d1d5d90da84cd331",
+      "processSeconds": 6.710739324000315,
+      "maxRssKiB": 474728
+    }
+  },
+  "nfRelativeGradientRatioWideOverSmall": {
+    "general-next": 7.9999959003384165,
+    "general-note": 8.000000850563495,
+    "general-tool": 8.000002440688682,
+    "general-count": 7.9999965469638274
+  },
+  "status": "GRADIENT_EVIDENCE_RECOUNT_PASS",
+  "registrationSha256": "3ee5dc40b67fad6c86c0c0b8487740834526530637e5ee9a9f992691d26f4f88",
+  "checkerSha256": "f2d38877426384fe6fc10b7ee1b53d7aabce93063fc23bfa33553ed76eeed75c",
+  "gradientTensorRecords": 332,
+  "directionalChecks": 20,
+  "wideningChainChecks": 4,
+  "depthCommonGradientChecks": 4,
+  "maximumWideningPullbackAbsoluteError": 3.5017728805541992e-06,
+  "maximumWideningPullbackRelativeL2Error": 2.0592031598261704e-06,
+  "optimizerUpdates": 0,
+  "serializedCheckpoints": 0,
+  "limitation": "Independent evidence arithmetic; backward arrays are checked by the pinned JVM source and finite differences, not recomputed by this Python auditor."
+}

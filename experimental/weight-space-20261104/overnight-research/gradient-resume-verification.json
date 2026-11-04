@@ -1,0 +1,83 @@
+{
+  "status": "GRADIENT_SOURCE_BOUND_REPLAY_PASS",
+  "registrationSha256": "3ee5dc40b67fad6c86c0c0b8487740834526530637e5ee9a9f992691d26f4f88",
+  "checkerSha256": "1f22f623f77209f9dd34c2034952eb8685a826e6e10e25dfc7e2e442b2a53809",
+  "controllerSha256": "b95e2d071be0b111791246868313a99b6fad432f983fc537b62247fe08d2297d",
+  "cases": [
+    {
+      "case": "actual_complete_resume",
+      "status": "PASS",
+      "jvmLaunches": 0,
+      "persistentFilesUnchanged": true,
+      "rejection": null
+    },
+    {
+      "case": "missing_first_receipt",
+      "status": "PASS",
+      "jvmLaunches": 0,
+      "persistentFilesUnchanged": true,
+      "rejection": "ValueError: partial profile blocks resume"
+    },
+    {
+      "case": "missing_last_receipt",
+      "status": "PASS",
+      "jvmLaunches": 0,
+      "persistentFilesUnchanged": true,
+      "rejection": "ValueError: partial profile blocks resume"
+    },
+    {
+      "case": "rebound_bad_derivative",
+      "status": "PASS",
+      "jvmLaunches": 0,
+      "persistentFilesUnchanged": true,
+      "rejection": "ValueError: direction arithmetic failed"
+    },
+    {
+      "case": "rebound_unrestored_array",
+      "status": "PASS",
+      "jvmLaunches": 0,
+      "persistentFilesUnchanged": true,
+      "rejection": "ValueError: completion gate failed"
+    },
+    {
+      "case": "valid_private_copy",
+      "status": "PASS",
+      "jvmLaunches": 0,
+      "persistentFilesUnchanged": true,
+      "rejection": null
+    },
+    {
+      "case": "changed_compiled_gradient_source",
+      "status": "PASS",
+      "jvmLaunches": 0,
+      "persistentFilesUnchanged": true,
+      "rejection": "ValueError: source binding failed"
+    },
+    {
+      "case": "rehashing_cannot_increase_budget",
+      "status": "PASS",
+      "jvmLaunches": 0,
+      "persistentFilesUnchanged": true,
+      "rejection": "ValueError: changed profiles or budgets"
+    }
+  ],
+  "jvmLaunches": 0,
+  "originalFilesUnchanged": true,
+  "originalInventory": {
+    "D0.receipt.json": "6fdee3f87344df53b9723106b4b3971275927e41b34a9807d1d5d90da84cd331",
+    "D0.started.json": "c80ce39950aff780b6f4af231b740beb4888438b940bae79d9eb56d8e28e1b93",
+    "D0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "D0.stdout.tsv": "800b82c550f9bba6a4cb1f88ef67ceca96340b342aeb19b1dc97f2addbe14590",
+    "S0.receipt.json": "40dccfbca407155d4e87ee4f57a8d61992cb4867d1096cb8002e7dc3521b2c90",
+    "S0.started.json": "68ad2b79639808ad73eb2ec025f5dce7ac42582e6ca8a3f90fae9ff83fb15ec8",
+    "S0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "S0.stdout.tsv": "389df0f607c6a179ab3f43c804075c2b349b463d8194b1b12d844953e03277bb",
+    "W0.receipt.json": "2809109b18a8a8c1d69e9ea4266efcbac74ad99bf44b38bef7efacf9bd0070d9",
+    "W0.started.json": "ead8b88831820ea76deca44001f37ccb55bc1de2a53c70cea21c74cdaac06d3d",
+    "W0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "W0.stdout.tsv": "1b0b0a60f18f7fb558f968316774aa4afb533fdbf95e624bc82ef759b47f2430",
+    "registration.json": "3ee5dc40b67fad6c86c0c0b8487740834526530637e5ee9a9f992691d26f4f88",
+    "summary.json": "466655ac4722ca31fe1eae8294904d9da017f6abb50d9ffbc4bd7de18cb15e22"
+  },
+  "transientExclusiveLockUsed": true
+}
