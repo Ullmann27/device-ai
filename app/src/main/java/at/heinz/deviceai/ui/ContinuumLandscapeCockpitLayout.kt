@@ -38,6 +38,9 @@ object ContinuumLandscapeCockpitLayout {
         wide && !compact && fontScale <= 1.3f && height >= 480f && !ContinuumHomeLayout.isPortraitFold(width, height) &&
             width >= 720f
 
+    /** left cards | avatar | right cards, share of the content width (ref1/ref3). */
+    val COLUMNS = floatArrayOf(.27f, .46f, .27f)
+
     fun create(width: Float, height: Float, fontScale: Float): Layout {
         val rail = ContinuumHomeLayout.railWidthDp(width)
         // Build the shell on a virtual width so that its own rail coincides with the real Activity rail.
@@ -53,19 +56,13 @@ object ContinuumLandscapeCockpitLayout {
         // The Activity rail owns the left edge; the cockpit top bar starts after it.
         val top = Box(maxOf(shellTop.left, rail + g), shellTop.top, shellTop.right, shellTop.bottom)
         val margin = JarvisDesign.Metrics.margin
-        // Column proportions come from the shell's FOLD_OPEN composition (ref5 = ref1/ref3 three columns), also on
-        // tablets, so the cockpit keeps the reference arrangement while Welten-Optik owns the numbers.
-        val ref = JarvisShellLayout.create(800f, 700f, fontScale)
-        val refLeft = requireNotNull(ref[JarvisShellLayout.Slot.DIALOG]).left
-        val refRight = requireNotNull(ref[JarvisShellLayout.Slot.COCKPIT_SECONDARY]).right
-        fun frac(slot: JarvisShellLayout.Slot): Pair<Float, Float> = requireNotNull(ref[slot]).let {
-            (it.left - refLeft) / (refRight - refLeft) to (it.right - refLeft) / (refRight - refLeft)
-        }
-        fun xs(f: Pair<Float, Float>) = top.left + top.width * f.first to top.left + top.width * f.second
-        // FOLD_OPEN shell (#479 c617e1ab): DIALOG left | AVATAR | COCKPIT_SECONDARY right.
-        val (pl, pr) = xs(frac(JarvisShellLayout.Slot.DIALOG))
-        val (al, ar) = xs(frac(JarvisShellLayout.Slot.AVATAR))
-        val (sl, sr) = xs(frac(JarvisShellLayout.Slot.COCKPIT_SECONDARY))
+        // Three card columns of ref1/ref3. Since #479 @ba798359 the FOLD_OPEN shell is nav/avatar+tiles/status
+        // (20/55/25) and no longer offers this card-column split, so Kern keeps the proportions here
+        // (gap reported to Welten-Optik); spacing and colours stay JarvisDesign.
+        val cw = top.width - 2 * g
+        val pl = top.left; val pr = pl + cw * COLUMNS[0]
+        val al = pr + g; val ar = al + cw * COLUMNS[1]
+        val sl = ar + g; val sr = top.right
         val il = pl
         val ir = ar
         val inputHeight = JarvisDesign.Metrics.inputBarHeight

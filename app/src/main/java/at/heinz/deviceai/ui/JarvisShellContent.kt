@@ -36,6 +36,64 @@ object JarvisShellContent {
         else -> emptyList()
     }
 
+    /**
+     * Tile and nav targets of #479 (JarvisTiles) → existing owner-controlled screens (ContinuumHomeLayout slot,
+     * handled by AgentActivity.openHomeSlot). A target without a route is drawn disabled ("nicht verfügbar").
+     * Nothing here starts work by itself.
+     */
+    val routes: Map<String, ContinuumHomeLayout.Slot> = mapOf(
+        "home" to ContinuumHomeLayout.Slot.BRAND,
+        "chat" to ContinuumHomeLayout.Slot.LABEL_THINKING,
+        "memory" to ContinuumHomeLayout.Slot.ACTION_MEMORY,
+        "logic" to ContinuumHomeLayout.Slot.MODEL,
+        "research" to ContinuumHomeLayout.Slot.LABEL_ANALYSING,
+        "agents" to ContinuumHomeLayout.Slot.ACTION_AGENTS,
+        "tasks" to ContinuumHomeLayout.Slot.ACTION_TASK,
+        "web" to ContinuumHomeLayout.Slot.LABEL_CONNECTED,
+        "learning" to ContinuumHomeLayout.Slot.LABEL_LEARNING,
+        "device" to ContinuumHomeLayout.Slot.ACTION_DEVICE,
+        "system" to ContinuumHomeLayout.Slot.SYSTEM_STATUS,
+    )
+
+    /** Real value per tile target; never an invented number. */
+    fun tileValue(target: String, s: ContinuumDashboardState, nowMillis: Long): String {
+        val na = ContinuumCockpitPresentation.NOT_AVAILABLE
+        if (target !in routes) return na
+        return when (target) {
+            "chat" -> ContinuumCockpitPresentation.phaseLabel(s.cockpit.turnPhase)
+            "memory" -> s.memory?.let { "${it.totalEntries} Einträge" } ?: na
+            "logic" -> s.model.name.ifBlank { na }
+            "agents" -> s.cockpit.workers?.let { w -> "${w.count { it.running }} aktiv" + (s.cockpit.workerCapacity?.let { " / $it" } ?: "") } ?: na
+            "device" -> s.system.batteryPercent?.let { "Akku $it %" } ?: na
+            "system" -> s.system.memoryPercent?.let { "RAM $it %" } ?: na
+            else -> na // research, learning: no live counter source yet
+        }
+    }
+
+    fun tiles(s: ContinuumDashboardState, nowMillis: Long): List<JarvisTile> =
+        JarvisTiles.reference.map { it.copy(displayText = tileValue(it.target, s, nowMillis)) }
+
+    /**
+     * Kern-side hit test (dp) for tiles, rail and bottom nav. #479 has no hit-test API yet, so the row/column
+     * geometry of JarvisTiles.drawRail/drawBottomNav is mirrored here (reported interface gap).
+     */
+    fun hitTarget(shell: JarvisShellLayout.Shell, tiles: List<JarvisTile>, x: Float, y: Float): String? {
+        shell.tileBoxes().forEachIndexed { i, b -> if (i < tiles.size && b.contains(x, y)) return tiles[i].target }
+        shell[Slot.NAV_RAIL]?.takeIf { it.contains(x, y) }?.let { b ->
+            val items = JarvisTiles.railNav
+            val rowH = minOf(44f, (b.height - 16f) / items.size)
+            val i = ((y - b.top - 8f) / rowH).toInt()
+            return items.getOrNull(i)?.target
+        }
+        shell[Slot.BOTTOM_NAV]?.takeIf { it.contains(x, y) }?.let { b ->
+            val items = JarvisTiles.bottomNav
+            return items.getOrNull(((x - b.left) / (b.width / items.size)).toInt())?.target
+        }
+        return null
+    }
+
+    private fun JarvisShellLayout.Box.contains(x: Float, y: Float) = x in left..right && y in top..bottom
+
     /** One SlotContent per filled slot; [state] is read at draw time so the map can be built once. */
     fun forState(state: () -> ContinuumDashboardState, clock: () -> Long = System::currentTimeMillis):
         Map<Slot, JarvisShellRenderer.SlotContent> = filled.associateWith { slot ->

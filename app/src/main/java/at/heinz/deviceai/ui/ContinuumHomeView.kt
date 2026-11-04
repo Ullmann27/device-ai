@@ -128,7 +128,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until
             field = value
             views.values.forEach { it.refresh() }
-            if (jarvisShellStage) jarvisShell.invalidate()
+            if (jarvisShellStage) jarvisShell.tiles = JarvisShellContent.tiles(value, System.currentTimeMillis())
             updateWaveAnimation()
         }
 
@@ -157,6 +157,16 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     init {
         setWillNotDraw(false)
         jarvisShell.content = JarvisShellContent.forState({ state })
+        jarvisShell.tiles = JarvisShellContent.tiles(state, System.currentTimeMillis())
+        jarvisShell.setOnTouchListener { v, e ->
+            if (e.actionMasked == android.view.MotionEvent.ACTION_UP) {
+                val shell = jarvisShell.shell
+                val target = shell?.let { JarvisShellContent.hitTarget(it, jarvisShell.tiles, e.x / density, e.y / density) }
+                val route = target?.let { JarvisShellContent.routes[it] }
+                if (route != null) { v.performClick(); onSlot(route, 0f, 0f) }
+            }
+            true
+        }
         addView(jarvisShell, 0)
         addView(hologram)
         applyShellStage()
