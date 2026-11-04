@@ -24,7 +24,8 @@ Der führende Chat behält seine laufenden Experimente, Originaldateien und Hold
 
 - GitHub-HEAD, PR-Diskussion, Experimentvertrag und Versuchsprotokoll gelesen.
 - Alle neun Dateien des Gewichte-PRs gegen ihre Git-Blob-Identitäten geprüft; der vollständige lokale Indexbaum entspricht der angegebenen GitHub-Basis.
-- Eigene neue Funktionsprüfungen: NOT_RUN. Beiträge werden erst nach Quellenprüfung und tatsächlicher Ausführung als bestanden ausgewiesen.
+- Unabhängiger Ausgangslauf auf exakt `ee577972`: Kotlin 2.4.0 / JDK 21, Ziel JVM 17; `LmCoreTest`, `LmRuntimeTest` und `LmWeightSurgeryTest`: **24 Tests, 0 Fehler**. Kompilierung bestanden mit einer vorhandenen Warnung über einen unnötigen Safe Call in `LmCapacityBenchmark.kt`. Rohlogs und Quell-/Befehlsmanifest: [`docs/evidence/weight-helper-team-20261104/baseline`](../../evidence/weight-helper-team-20261104/baseline).
+- Ein verbliebener Ablaufdefekt wurde separat reproduziert: `continuation()` erreicht `continued-small-train`, obwohl `ladder.json` mit `BASELINE_GATE` und `lastPassed: null` keinen bestandenen Kandidaten ausweist. Korrektur und unabhängiger Regressionstest sind in Arbeit; hier noch kein Fix behauptet.
 - Zusätzliches Training im Helferchat: NOT_RUN. Kein Qualitätszuwachs, Geräteergebnis oder produktives Modell wird hier behauptet.
 
 ## Grenzen und Wiederaufnahme
@@ -32,3 +33,4 @@ Der führende Chat behält seine laufenden Experimente, Originaldateien und Hold
 Keine Änderung am aktiven Branch/Workspace des führenden Chats, keine Einsicht in versiegelte Holdouttexte, kein Training mit Prüfdaten, kein Modelldownload, kein kostenpflichtiger Dienst, kein Main-Merge, kein Release, keine Installation oder Modell-Promotion. Kein geänderter Paketname, Signaturvertrag oder Updatekanal. Private Datensätze und Gewichtsdateien bleiben außerhalb des öffentlichen Repositories.
 
 Vor Wiederaufnahme aktuellen HEAD von #492 und diesem Helfer-PR prüfen, neue Kommentare abgleichen und ausschließlich noch offene Arbeit übernehmen. Tests, Quell-SHAs, genaue Änderungen und nächster Einstieg werden mit jedem überprüften Checkpoint ergänzt. Rückfall: Helferänderung nicht übernehmen; Originalgewichte und bestehender Lauf bleiben erhalten.
+
