@@ -1,0 +1,62 @@
+JUnit version 4.13.2
+.....E.E.E..E.E..E.E.E.E.....
+Time: 0.071
+There were 9 failures:
+1) delayedCommandCannotReopenACompletedTurn(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: End wins over a delayed command expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.delayedCommandCannotReopenACompletedTurn(SequenceLifecycleHostTest.kt:69)
+2) bootEventDoesNotBlockTheFirstWorker(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: Boot cannot claim worker ownership expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.bootEventDoesNotBlockTheFirstWorker(SequenceLifecycleHostTest.kt:46)
+3) lateTimelineCannotReopenACompletedTurn(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: A finished work card cannot be resurrected expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.lateTimelineCannotReopenACompletedTurn(SequenceLifecycleHostTest.kt:62)
+4) recentCompletionsRemainClosedAfterALongSession(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: Recent retirement survives more turns than the history window expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.recentCompletionsRemainClosedAfterALongSession(SequenceLifecycleHostTest.kt:140)
+5) motionPauseKeepsCompletedTurnsClosed(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: A visual clear does not erase known completion expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.motionPauseKeepsCompletedTurnsClosed(SequenceLifecycleHostTest.kt:151)
+6) delayedOldCommandCannotDisplaceTheCurrentTurn(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: A displaced command cannot remove current cards expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.delayedOldCommandCannotDisplaceTheCurrentTurn(SequenceLifecycleHostTest.kt:78)
+7) navigationEventDoesNotBlockTheFirstWorker(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: Navigation cannot claim worker ownership expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.navigationEventDoesNotBlockTheFirstWorker(SequenceLifecycleHostTest.kt:52)
+8) lateCallbackFromANonvisibleCompletedTurnIsDropped(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: A background completion must still close the old turn expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.lateCallbackFromANonvisibleCompletedTurnIsDropped(SequenceLifecycleHostTest.kt:86)
+9) alarmStatusCannotBlockAWorker(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: A global status event cannot claim a task expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.alarmStatusCannotBlockAWorker(SequenceLifecycleHostTest.kt:108)
+
+FAILURES!!!
+Tests run: 20,  Failures: 9
+

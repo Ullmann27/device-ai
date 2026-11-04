@@ -1,0 +1,41 @@
+{
+  "scope": "HOST_FIXTURE_VERIFIED",
+  "baselineCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "baselineSource": "git archive, original complete production files",
+  "productionFilesCompiled": 25,
+  "sourceDifferences": [
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt"
+  ],
+  "sequenceViewSha256": {
+    "red": "3fe781afa11883bf5e853e359e0364c6c9c6632c41729b378e82b1fc08d1dd61",
+    "green": "f8898aa6d06b4b74da04f1a99a3e445bb257c87e6b8ab5c5c0f7c3ffa93ea01d"
+  },
+  "sameHarnessAndOtherInputs": true,
+  "checks": {
+    "total": 20,
+    "newHostLifecycle": 15,
+    "unchangedBrainOrbSignals": 5,
+    "redFailures": 9,
+    "redPass": 11,
+    "greenFailures": 0,
+    "greenPass": 20
+  },
+  "uiTests": {
+    "count": 11,
+    "status": "NOT_RUN"
+  },
+  "toolchain": {
+    "compiler": "Kotlin 2.0.20",
+    "jvmTarget": "17",
+    "junit": "4.13.2"
+  },
+  "limitations": [
+    "Android Gradle plugin 8.10.0 unavailable in offline cache",
+    "No Robolectric execution",
+    "Explicit platform stand-ins: no Android lifecycle, queue, rendering, resources or device",
+    "Pill labels fail-fast compile stand-in; no ToolGate/pill actions tested",
+    "24 recent retired turn IDs retained; no persistent or indefinite replay ledger",
+    "Physical Fold7, APK, signing, release and installation not performed"
+  ],
+  "rollback": "Revert JarvisSequenceView.kt change; no migration or stored owner data changes"
+}
