@@ -62,7 +62,7 @@ class ContinuumReferenceCockpitUiTest {
         root.layout(0, 0, width, height)
     }
 
-    private fun withActivity(width: Int, height: Int, font: Float, body: (AgentActivity, View) -> Unit) {
+    private fun withActivity(width: Int, height: Int, font: Float, body: (AgentActivity, View, org.robolectric.android.controller.ActivityController<AgentActivity>) -> Unit) {
         val previousFont = RuntimeEnvironment.getFontScale()
         RuntimeEnvironment.setFontScale(font)
         val app = RuntimeEnvironment.getApplication()
@@ -87,7 +87,7 @@ class ContinuumReferenceCockpitUiTest {
             settle()
             measure(root, width, height)
             assertEquals("A hidden test window is not a screenshot", View.VISIBLE, root.windowVisibility)
-            body(activity, root)
+            body(activity, root, controller)
         } finally {
             ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
             runCatching { controller.pause() }
@@ -191,7 +191,7 @@ class ContinuumReferenceCockpitUiTest {
     }
 
     private fun checkProfile(label: String, width: Int, height: Int) {
-        for (font in listOf(1f, 1.5f, 2f)) withActivity(width, height, font) { activity, root ->
+        for (font in listOf(1f, 1.5f, 2f)) withActivity(width, height, font) { activity, root, _ ->
             val tag = "$label-font${(font * 100).toInt()}"
             val home = field(activity, "homeView") as ContinuumHomeView
             val avatar = field(activity, "hologramView") as ContinuumHologramView
@@ -202,6 +202,8 @@ class ContinuumReferenceCockpitUiTest {
             for ((name, title) in listOf(
                 "ACTION_MEMORY" to "Gedächtniszentrum",
                 "ACTION_AGENTS" to "Team · Bots",
+                "ACTION_BOTS" to "Team · Bots",
+                "ACTION_TASK" to "CODING-AUFTRAG ENTWERFEN",
                 "ACTION_DEVICE" to "Systemstatus"
             )) {
                 tap(root, slot(home, name))
@@ -220,6 +222,18 @@ class ContinuumReferenceCockpitUiTest {
             assertEquals(1, descendants(root).count { it is ContinuumHologramView })
             val draft = "Unveröffentlichter Testentwurf; keine Ausführung."
             input.setText(draft)
+            measure(root, width, height)
+            val density = root.resources.displayMetrics.density
+            assertTrue("Editor must have usable width", input.width / density >= 120f)
+            for (description in listOf("Neue Chat-Sitzung", "Spracheingabe starten", "Nachricht senden")) {
+                val control = descendants(root).single { it.contentDescription?.toString() == description }
+                assertTrue("$description touch width", control.width / density >= 48f)
+                assertTrue("$description touch height", control.height / density >= 48f)
+                val rect = Rect()
+                assertTrue("$description visible", control.getGlobalVisibleRect(rect))
+                assertEquals("$description fully on screen", control.height, rect.height())
+                assertEquals("$description fully within width", control.width, rect.width())
+            }
             capture(root, "$tag-chat", width, height)
 
             val back = descendants(root).firstOrNull {
@@ -239,7 +253,7 @@ class ContinuumReferenceCockpitUiTest {
     }
 
     @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
-    fun presentationControlsReuseTheLiveAvatarAndPersistCompactChoice() = withActivity(412, 915, 1f) { activity, root ->
+    fun presentationControlsReuseTheLiveAvatarAndPersistCompactChoice() = withActivity(412, 915, 1f) { activity, root, _ ->
         val home = field(activity, "homeView") as ContinuumHomeView
         val avatar = field(activity, "hologramView") as ContinuumHologramView
         val originalHeight = avatar.height
@@ -269,6 +283,56 @@ class ContinuumReferenceCockpitUiTest {
         assertFalse("Presentation selection must never submit a task", field(activity, "busy") as Boolean)
     }
 
+    @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
+    fun composerDraftSurvivesActualWindowReflowAndActivityRecreation() = withActivity(412, 915, 1f) { activity, root, controller ->
+        tap(root, slot(field(activity, "homeView") as ContinuumHomeView, "COMPOSER"))
+        val draft = "Nicht gesendeter Entwurf\nZweite Zeile bleibt erhalten."
+        val input = field(activity, "input") as EditText
+        input.setText(draft)
+        input.setSelection(4, 15)
+        org.robolectric.shadows.ShadowDisplayManager.changeDisplay(0, "w280dp-h720dp-mdpi")
+        activity.window.setLayout(280, 720)
+        settle()
+        val windowRoot = field(activity, "uiWindowRoot") as View
+        measure(windowRoot, 280, 720)
+        settle()
+        println("REFLOW_OBSERVATION old=${windowRoot.width} current=${(field(activity, "uiWindowRoot") as View).width} measured=${field(activity, "renderedWindowWidthDp")}")
+        val rebuilt = field(activity, "input") as EditText
+        assertEquals(draft, rebuilt.text.toString())
+        assertEquals(4, rebuilt.selectionStart)
+        assertEquals(15, rebuilt.selectionEnd)
+        assertTrue(rebuilt.hasFocus())
+        assertEquals(2, rebuilt.maxLines)
+        assertFalse(field(activity, "busy") as Boolean)
+        controller.recreate()
+        settle()
+        val resumed = controller.get()
+        assertEquals(draft, (field(resumed, "input") as EditText).text.toString())
+        assertEquals(ContinuumWorkArea.CHAT, field(resumed, "activeWorkArea"))
+        assertFalse("Rotation cannot submit the retained draft", field(resumed, "busy") as Boolean)
+    }
+
+    @Test @Config(qualifiers = "w280dp-h720dp-mdpi")
+    fun narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor() = withActivity(280, 720, 2f) { activity, root, _ ->
+        tap(root, slot(field(activity, "homeView") as ContinuumHomeView, "COMPOSER"))
+        val input = field(activity, "input") as EditText
+        input.setText("Was kannst du?")
+        measure(root, 280, 720)
+        tap(root, field(activity, "sendButton") as View)
+        assertEquals("", input.text.toString())
+        assertTrue(descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>()
+            .any { it.text.toString().contains("Continuum · Aktuelle App-Fähigkeiten") })
+        assertFalse(field(activity, "busy") as Boolean)
+        AgentActivity::class.java.getDeclaredField("activeLocalRequest").apply { isAccessible = true }.set(activity, true)
+        AgentActivity::class.java.getDeclaredMethod("setBusy", Boolean::class.javaPrimitiveType)
+            .apply { isAccessible = true }.invoke(activity, true)
+        measure(root, 280, 720)
+        val stop = field(activity, "sendButton") as TextView
+        capture(root, "narrow-280x720-font200-stop", 280, 720)
+        assertEquals("Lokale Anfrage abbrechen", stop.contentDescription)
+        assertEquals("Stop label must not wrap outside the primary control", 1, stop.layout.lineCount)
+    }
+
     @Test @Config(qualifiers = "w280dp-h720dp-mdpi")
     fun narrowPhoneHasRealDestinationsAndReadableLargeType() = checkProfile("narrow-280x720", 280, 720)
 
@@ -282,7 +346,7 @@ class ContinuumReferenceCockpitUiTest {
     fun foldPortraitHasRealDestinationsAndReadableLargeType() = checkProfile("fold-portrait-840x1050", 840, 1050)
 
     @Test @Config(qualifiers = "w840dp-h649dp-land-mdpi")
-    fun shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable() = withActivity(840, 649, 2f) { activity, root ->
+    fun shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable() = withActivity(840, 649, 2f) { activity, root, _ ->
         val avatar = field(activity, "hologramView") as ContinuumHologramView
         val rail = field(activity, "railView") as View
         val frame = rail.parent as ViewGroup

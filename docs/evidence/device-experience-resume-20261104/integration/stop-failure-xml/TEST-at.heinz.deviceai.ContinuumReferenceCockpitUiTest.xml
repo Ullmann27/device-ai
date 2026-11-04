@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" tests="8" skipped="0" failures="2" errors="0" timestamp="2026-11-04T06:28:08" hostname="8c129114cae4" time="19.588">
+  <properties/>
+  <testcase name="shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="5.565"/>
+  <testcase name="narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="0.579">
+    <failure message="java.lang.AssertionError: Stop label must not wrap outside the primary control expected:&lt;1&gt; but was:&lt;4&gt;" type="java.lang.AssertionError">java.lang.AssertionError: Stop label must not wrap outside the primary control expected:&lt;1&gt; but was:&lt;4&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor$lambda$0(ContinuumReferenceCockpitUiTest.kt:331)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.withActivity(ContinuumReferenceCockpitUiTest.kt:90)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor(ContinuumReferenceCockpitUiTest.kt:314)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="composerDraftSurvivesActualWindowReflowAndActivityRecreation" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="0.484">
+    <failure message="java.lang.AssertionError: expected:&lt;2&gt; but was:&lt;7&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;2&gt; but was:&lt;7&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.composerDraftSurvivesActualWindowReflowAndActivityRecreation$lambda$0(ContinuumReferenceCockpitUiTest.kt:303)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.withActivity(ContinuumReferenceCockpitUiTest.kt:90)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.composerDraftSurvivesActualWindowReflowAndActivityRecreation(ContinuumReferenceCockpitUiTest.kt:287)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="foldLandscapeHasRealDestinationsAndReadableLargeType" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="4.366"/>
+  <testcase name="narrowPhoneHasRealDestinationsAndReadableLargeType" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="2.081"/>
+  <testcase name="presentationControlsReuseTheLiveAvatarAndPersistCompactChoice" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="0.511"/>
+  <testcase name="phoneHasRealDestinationsAndReadableLargeType" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="2.256"/>
+  <testcase name="foldPortraitHasRealDestinationsAndReadableLargeType" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="3.746"/>
+  <system-out><![CDATA[REFERENCE_CAPTURE fold-short-840x320-font200-rail 840x320 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE narrow-280x720-font200-stop 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFLOW_OBSERVATION old=280 current=412 measured=412.0
+REFERENCE_CAPTURE fold-landscape-840x649-font100-home 840x649 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-landscape-840x649-font100-actions 840x649 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-landscape-840x649-font100-chat 840x649 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-landscape-840x649-font150-home 840x649 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-landscape-840x649-font150-actions 840x649 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-landscape-840x649-font150-chat 840x649 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-landscape-840x649-font200-home 840x649 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-landscape-840x649-font200-actions 840x649 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-landscape-840x649-font200-chat 840x649 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE narrow-280x720-font100-home 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE narrow-280x720-font100-actions 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE narrow-280x720-font100-chat 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE narrow-280x720-font150-home 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE narrow-280x720-font150-actions 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE narrow-280x720-font150-chat 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE narrow-280x720-font200-home 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE narrow-280x720-font200-actions 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE narrow-280x720-font200-chat 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-original-orb 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-compact 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-font100-home 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-font100-actions 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-font100-chat 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-font150-home 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-font150-actions 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-font150-chat 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-font200-home 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-font200-actions 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-font200-chat 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-portrait-840x1050-font100-home 840x1050 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-portrait-840x1050-font100-actions 840x1050 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-portrait-840x1050-font100-chat 840x1050 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-portrait-840x1050-font150-home 840x1050 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-portrait-840x1050-font150-actions 840x1050 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-portrait-840x1050-font150-chat 840x1050 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-portrait-840x1050-font200-home 840x1050 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-portrait-840x1050-font200-actions 840x1050 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-portrait-840x1050-font200-chat 840x1050 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

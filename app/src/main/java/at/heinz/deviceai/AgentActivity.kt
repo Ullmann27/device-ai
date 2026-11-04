@@ -200,6 +200,7 @@ class AgentActivity : Activity() {
     private var modelCenterDialog: AlertDialog? = null
     // catalog listing, refreshed off the UI thread (reloadInstalledModels)
     private var installedModels: List<ImportedLocalModel> = emptyList()
+    private var knownImportedModelCount: Int? = null
     private lateinit var activityText: TextView
     private lateinit var planCard: LinearLayout
     private lateinit var planText: TextView
@@ -345,6 +346,8 @@ class AgentActivity : Activity() {
     private val responseTimesMs = ArrayDeque<Long>()
     private var requestStartedAt = 0L
     private var dashboardCollecting = false
+    private var capabilityDashboard: at.heinz.deviceai.ui.ContinuumDashboardState? = null
+    private var capabilityDashboardAtElapsedMs: Long? = null
     private var knownOpenIssues: Set<String>? = null
     private val dashboardRefresh = object : Runnable {
         override fun run() {
@@ -394,7 +397,8 @@ class AgentActivity : Activity() {
     private var chiefStatusPool: at.heinz.deviceai.chief.ChiefWorkerPool? = null
     private var botRosterDialog: ContinuumBotRosterDialog? = null
     private val botProfiles by lazy {
-        at.heinz.deviceai.chief.ChiefBotProfileStore(java.io.File(filesDir, "chief-bots"))
+        at.heinz.deviceai.chief.ChiefBotProfileStore(
+            java.io.File(filesDir, "chief-bots"), trustedParentDirectory = filesDir)
     }
     private val botConversation by lazy { at.heinz.deviceai.chief.ChiefBotConversation(botProfiles) }
     private var selectedBot: at.heinz.deviceai.chief.ChiefBotProfile? = null
@@ -1115,6 +1119,8 @@ class AgentActivity : Activity() {
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.COMPOSER -> navigateWorkArea(ContinuumWorkArea.CHAT)
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_MEMORY -> showMemoryCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_AGENTS -> showBotRoster()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_BOTS -> showBotRoster()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_TASK -> showCodingTaskDraftDialog()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_DEVICE -> showSystemCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_LEARNING, at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LEARNING -> showLearningCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_ANALYSING -> showResearchModeDialog()
@@ -1137,6 +1143,7 @@ class AgentActivity : Activity() {
     private fun refreshDashboard() {
         if (homeView == null || dashboardCollecting || !foregroundLearningActive) return
         dashboardCollecting = true
+        val dashboardSnapshotAtElapsedMs = android.os.SystemClock.elapsedRealtime()
         val modelReady = ::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY
         val live = ContinuumDashboardCollector.Live(
             modelName = if (::localRuntime.isInitialized) localRuntime.loadedModel?.let { it.id + " " + it.version } else null,
@@ -1158,6 +1165,8 @@ class AgentActivity : Activity() {
         onLearningIo({ dashboardCollector.collect(live) to diagnostics.open() }) { result ->
             dashboardCollecting = false
             result.onSuccess { (state, open) ->
+                capabilityDashboard = state
+                capabilityDashboardAtElapsedMs = dashboardSnapshotAtElapsedMs
                 homeView?.state = state
                 if (centerDialog?.isShowing == true) liveHardwareGauges?.updateTelemetry(state.system)
                 navigationView?.state = state
@@ -2216,7 +2225,7 @@ class AgentActivity : Activity() {
                     // never enter the shared status response; profiles are not running workers.
                     val roster = runCatching {
                         val page = at.heinz.deviceai.chief.ChiefBotProfileStore(
-                            java.io.File(filesDir, "chief-bots")).page(limit = 20)
+                            java.io.File(filesDir, "chief-bots"), trustedParentDirectory = filesDir).page(limit = 20)
                         if (page.items.isEmpty()) "Bot-Profile: noch nicht eingerichtet. Öffne Team · Bots."
                         else "Gespeicherte Bot-Profile: " + page.items.size +
                             (if (page.nextAfterId != null) " oder mehr" else "") + "\n" +
@@ -3013,7 +3022,12 @@ class AgentActivity : Activity() {
         return grid
     }
 
+    private fun usesStackedComposer(): Boolean =
+        (renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()) < 360f ||
+            resources.configuration.fontScale > 1.3f
+
     private fun buildComposer(): View {
+        val stackedComposer = usesStackedComposer()
         val shell = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             background = roundedGradient(
@@ -3032,7 +3046,7 @@ class AgentActivity : Activity() {
             textSize = 23f
             setOnClickListener { newSession() }
         }
-        inputRow.addView(newChat, LinearLayout.LayoutParams(dp(48), dp(48)))
+        if (!stackedComposer) inputRow.addView(newChat, LinearLayout.LayoutParams(dp(48), dp(48)))
         input = EditText(this).apply {
             hint = "Schreibe eine Nachricht …"
             setOnTouchListener { _, event ->
@@ -3047,7 +3061,7 @@ class AgentActivity : Activity() {
             setTextColor(TEXT)
             textSize = 14f
             minLines = 1
-            maxLines = 7
+            maxLines = if (stackedComposer) 2 else 7
             gravity = Gravity.TOP or Gravity.START
             setHorizontallyScrolling(false)
             isVerticalScrollBarEnabled = true
@@ -3062,13 +3076,13 @@ class AgentActivity : Activity() {
         }
         inputRow.addView(input, LinearLayout.LayoutParams(0,
             LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-            marginStart = dp(7)
+            marginStart = if (stackedComposer) 0 else dp(7)
         })
         val mic = actionButton("🎙", compact = true).apply {
             contentDescription = "Spracheingabe starten"
             setOnClickListener { startVoiceInput() }
         }
-        inputRow.addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply {
+        if (!stackedComposer) inputRow.addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply {
             marginStart = dp(6)
         })
         shell.addView(inputRow, matchWidth())
@@ -3131,7 +3145,31 @@ class AgentActivity : Activity() {
         actions.addView(sendButton,
             LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .85f).apply { marginStart = dp(4) }
         )
-        shell.addView(actions, matchWidth(top = 8))
+        if (stackedComposer) {
+            // Keep editing and sending reachable at narrow widths and large system text.
+            actions.removeView(sendButton)
+            val primary = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                addView(newChat, LinearLayout.LayoutParams(dp(48), dp(48)))
+                addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply { marginStart = dp(6) })
+                addView(View(this@AgentActivity), LinearLayout.LayoutParams(0, 1, 1f))
+                addView(sendButton, LinearLayout.LayoutParams(dp(56), dp(48)))
+            }
+            shell.addView(primary, matchWidth(top = 6))
+            for (index in 0 until actions.childCount) {
+                actions.getChildAt(index).layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply { if (index > 0) marginStart = dp(6) }
+            }
+            shell.addView(android.widget.HorizontalScrollView(this).apply {
+                isHorizontalScrollBarEnabled = true
+                addView(actions, android.widget.FrameLayout.LayoutParams(
+                    android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                    android.widget.FrameLayout.LayoutParams.WRAP_CONTENT))
+            }, matchWidth(top = 6))
+        } else shell.addView(actions, matchWidth(top = 8))
+        refreshSendButtonPresentation()
         return shell
     }
 
@@ -3167,7 +3205,52 @@ class AgentActivity : Activity() {
         }
     }
 
+    /** Public status only: no collector invocation, disk scan, model call, bot seed, grant,
+     * learning radar or memory/context mutation. Current runtime flags outrank cached telemetry. */
+    private fun showCurrentAppCapabilities(request: String) {
+        val runtimeState = if (::localRuntime.isInitialized) when (localRuntime.state) {
+            LocalModelState.EMPTY -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.NOT_LOADED
+            LocalModelState.LOADING -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.LOADING
+            LocalModelState.READY -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.READY
+            LocalModelState.GENERATING -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.GENERATING
+            LocalModelState.UNLOADING -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.UNLOADING
+            LocalModelState.FAILED -> at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.FAILED
+        } else at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot.ModelState.UNKNOWN
+        val live = at.heinz.deviceai.cognitive.OwnerCapabilitySnapshot(
+            modelState = runtimeState,
+            loadedModelName = if (::localRuntime.isInitialized) localRuntime.loadedModel?.let { it.id + " " + it.version } else null,
+            importedModelCount = knownImportedModelCount,
+            onDeviceSpeechAvailable = if (android.os.Build.VERSION.SDK_INT < 31) false else runCatching {
+                android.speech.SpeechRecognizer.isOnDeviceRecognitionAvailable(this)
+            }.getOrNull(),
+            microphoneGranted = runCatching { checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
+                android.content.pm.PackageManager.PERMISSION_GRANTED }.getOrNull(),
+            internetMode = internetConsent.mode,
+            builderRunning = runCatching { getSharedPreferences(ContinuumMobileBuildResultReceiver.PREFERENCES, MODE_PRIVATE)
+                .contains(ContinuumMobileBuildResultReceiver.JOB_ID) }.getOrNull(),
+            selectedBot = selectedBot != null,
+            botTurnActive = activeBotId != null
+        )
+        val snapshot = at.heinz.deviceai.cognitive.OwnerCapabilityReply.withDashboard(live,
+            capabilityDashboard, capabilityDashboardAtElapsedMs, android.os.SystemClock.elapsedRealtime())
+        input.text.clear()
+        conversationActive = true
+        activeWorkArea = ContinuumWorkArea.CHAT
+        refreshWorkAreaSelection(); refreshConversationLayout()
+        addBubble(request, user = true)
+        addBubble("Continuum · Aktuelle App-Fähigkeiten\n\n" +
+            at.heinz.deviceai.cognitive.OwnerCapabilityReply.describe(snapshot), user = false)
+        addToolActivity("GERÄTESTATUS · nur öffentliche Betriebsdaten · kein Modell- oder Werkzeugaufruf")
+    }
+
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
+        // Exact status submissions stay read-only even while a model/bot is busy. The
+        // Send button's explicit Stop/cancel behavior remains in its existing click handler.
+        if (at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(input.text.toString(), neuralCoach.isActive()) ==
+            at.heinz.deviceai.cognitive.OwnerChatLocalIntent.CAPABILITIES) {
+            showCurrentAppCapabilities(input.text.toString().trim())
+            return
+        }
         // A read-only Chief status question is allowed while Gemma is busy.
         // It must never cancel or queue behind the current model generation.
         val chiefStatusRequest = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
@@ -3355,17 +3438,18 @@ class AgentActivity : Activity() {
             request, neuralCoach.isActive()
         )
         when (ownerLocalIntent) {
-            at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING,
             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.CAPABILITIES -> {
+                showCurrentAppCapabilities(request)
+                return
+            }
+            at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING -> {
                 if (localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null) {
                     input.text.clear()
                     addUserMessage(request)
                     runLocal(request)
                     return
                 }
-                val canonical = if (
-                    ownerLocalIntent == at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING
-                ) "Hallo" else "Was kannst du?"
+                val canonical = "Hallo"
                 input.text.clear()
                 addUserMessage(request)
                 addNonModelReply(request,
@@ -8471,6 +8555,7 @@ class AgentActivity : Activity() {
     private fun chooseInstalledModel() {
         onLearningIo({ modelCatalog.all() }) { result ->
             installedModels = result.getOrDefault(emptyList())
+            knownImportedModelCount = result.getOrNull()?.size
             chooseInstalledModel(installedModels)
         }
     }
@@ -8668,6 +8753,7 @@ class AgentActivity : Activity() {
     private fun reloadInstalledModels() {
         onLearningIo({ modelCatalog.all() }) { result ->
             installedModels = result.getOrDefault(emptyList())
+            knownImportedModelCount = result.getOrNull()?.size
             refreshLocalModelUi()
         }
     }
@@ -9488,14 +9574,21 @@ class AgentActivity : Activity() {
         refreshConversationLayout()
         if (starting) beginTaskEffects()
         refreshHologramState()
-        if (::sendButton.isInitialized) {
-            sendButton.isEnabled = true
-            sendButton.text = if (value && activeLocalRequest) "STOP" else if (value) "…" else "➤"
-            sendButton.contentDescription = if (value && activeLocalRequest) "Lokale Anfrage abbrechen"
-                else if (value) "Device AI arbeitet" else "Nachricht senden"
-            sendButton.alpha = if (value && !activeLocalRequest) 0.65f else 1f
-        }
+        refreshSendButtonPresentation()
         if (::modelCatalog.isInitialized && ::localBadge.isInitialized) refreshLocalModelUi()
+    }
+
+    private fun refreshSendButtonPresentation() {
+        if (!::sendButton.isInitialized) return
+        sendButton.isEnabled = true
+        // The compact 48dp row cannot fit a four-letter STOP label at 200% text.
+        // Preserve the cancellation action and spoken label with a standard stop icon.
+        sendButton.text = if (busy && activeLocalRequest) {
+            if (usesStackedComposer()) "■" else "STOP"
+        } else if (busy) "…" else "➤"
+        sendButton.contentDescription = if (busy && activeLocalRequest) "Lokale Anfrage abbrechen"
+            else if (busy) "Device AI arbeitet" else "Nachricht senden"
+        sendButton.alpha = if (busy && !activeLocalRequest) 0.65f else 1f
     }
 
     /** UI thread. One bounded visual scope for existing owner work, never a scheduler. */
@@ -9607,11 +9700,15 @@ class AgentActivity : Activity() {
                     (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog) &&
                     (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true))applyLocalSpeechText(requestCode,spoken)},
                 onError={message->
-                    if (requestCode == READINESS_SPEECH_REQUEST && readinessDialog === readinessScope && readinessScope?.isShowing == true) {
-                        readinessSpeechResult = message
-                        refreshReadinessGuide()
+                    if (speechScopeGeneration == scopeGeneration && sessionId == scopeSession && !isFinishing && !isDestroyed &&
+                        (requestCode != DEV_SPEECH_REQUEST || devDialog === scopeDialog && scopeDialog?.isShowing == true) &&
+                        (requestCode != READINESS_SPEECH_REQUEST || readinessDialog === readinessScope && readinessScope?.isShowing == true)) {
+                        if (requestCode == READINESS_SPEECH_REQUEST) {
+                            readinessSpeechResult = message
+                            refreshReadinessGuide()
+                        }
+                        Toast.makeText(this,message,Toast.LENGTH_LONG).show()
                     }
-                    Toast.makeText(this,message,Toast.LENGTH_LONG).show()
                 }) }.onFailure {
                     speech.cancel();Toast.makeText(this,"Lokale Spracheingabe nicht verfügbar. Keine Audioübertragung gestartet.",Toast.LENGTH_LONG).show()
                 }
