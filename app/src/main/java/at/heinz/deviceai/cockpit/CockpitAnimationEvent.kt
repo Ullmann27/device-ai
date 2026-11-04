@@ -40,12 +40,30 @@ sealed class CockpitAnimationEvent {
         CockpitAnimationEvent()
 
     /**
+     * Memory events (#371 line). Not bound to a turn: [turnId] is [MEMORY_TURN]. Visuals of the orb (document
+     * flying into the brain with lightning, light points for recall hits) belong to Jarvis Avatar / Welten-Optik.
+     * Production source: "Quelle fehlt bis ContinuumMemoryEvents (#371-Linie)" (see [MemoryEventSources]).
+     */
+    data class DocumentLearned(override val turnId: String, override val atMillis: Long, val docId: String,
+                               val kind: String, val entriesAdded: Int) : CockpitAnimationEvent()
+
+    /** One memory entry was written; [status] is the MemoryEntryStatus name (CONFIRMED, UNCONFIRMED, …). */
+    data class MemoryStored(override val turnId: String, override val atMillis: Long, val entryId: String,
+                            val status: String) : CockpitAnimationEvent()
+
+    /** A recall returned [count] hits (light points in the orb); [topScore] of rank 1 or null without hits. */
+    data class RecallHits(override val turnId: String, override val atMillis: Long, val queryHash: String,
+                          val count: Int, val topScore: Float?) : CockpitAnimationEvent()
+
+    /**
      * Extension point for future event families, first of all the calculation / math visualisation of the
      * reference videos (e.g. `class MathVisualization(...) : CockpitAnimationEvent.Extension("math")`).
      * Not implemented yet; renderers that do not know a [kind] must ignore it.
      */
     abstract class Extension(val kind: String) : CockpitAnimationEvent()
 }
+
+const val MEMORY_TURN = "memory"
 
 /** Controls of the cockpit action bar plus the two non-bar work kinds. */
 enum class CockpitAction { THINK, RESEARCH, LEARN, DEVELOP, EXECUTE, VERIFY, TOOL, WORKER }

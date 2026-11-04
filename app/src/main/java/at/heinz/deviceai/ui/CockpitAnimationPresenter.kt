@@ -66,6 +66,9 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView) : CockpitAn
                     (view.element as? CockpitActionElement)?.let { it.active = false; view.invalidate() }
                 }
             }
+            // Orb visuals (document into the brain, light points) belong to Avatar; minimal default: brain card glows.
+            is CockpitAnimationEvent.DocumentLearned, is CockpitAnimationEvent.MemoryStored -> highlight(Slot.MODEL)
+            is CockpitAnimationEvent.RecallHits -> if (event.count > 0) highlight(Slot.MODEL)
             is CockpitAnimationEvent.Extension -> Unit // unknown kinds are ignored by design
         }
     }
