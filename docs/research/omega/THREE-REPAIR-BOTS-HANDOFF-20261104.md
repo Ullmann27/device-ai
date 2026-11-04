@@ -25,3 +25,4 @@ Keine Modellgewichte, Paketidentität, Signatur, Versionsnummer, Internetfreigab
 ## Nächster Einstieg und Rücknahme
 
 Je Bereich zuerst reproduzierbaren Befund und kleinstmöglichen Test festhalten, dann gezielte Reparatur und unabhängiges Review. Belege mit Quellidentität und tatsächlichen Exitcodes ergänzen. Einzelne Reparaturcommits können separat zurückgenommen werden; persönliche Daten und Persistenzformate sollen unverändert bleiben.
+
