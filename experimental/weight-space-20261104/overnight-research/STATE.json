@@ -17,9 +17,10 @@
     "6.56M/9.71M gradient access, chain-rule and twenty finite-difference checks"
   ],
   "next": [
-    "source-bound postmortem of the rejected path opening without a model run",
-    "review isolated capacity and candidate-choice repair against current PR 508",
-    "prepare a prospective retention and learning-rate study with unchanged acceptance gates"
+    "maintain immutable M6 rejection and M5_UNCHANGED; no further model runs in this round",
+    "restore a permitted checkout only if available and independently run existing failure/resume tests against the unchanged combined patch, without any JVM or real final test",
+    "review residual candidate/receipt trust boundaries and prepare isolated fixes only after runnable RED->GREEN independent evidence",
+    "publish a separate fully source-bound future registration and newly independent data partitions before requesting any training authorization"
   ],
   "acceptedResearchState": "M5_UNCHANGED",
   "newModelExperimentsPermittedThisRound": false,
@@ -28,22 +29,32 @@
     "sourceCommit": "8e0dadceef6a39cac86817b52340b79e185b160f",
     "registrationSha256": "0b9b97874c42da9ee1f0c4f4f113790f6c50e960612a961dcac579b42d8daa78",
     "probe": "general-tool",
-    "maximumProbabilityDelta": 1.3113021850585938e-05,
-    "limit": 1e-05,
+    "maximumProbabilityDelta": 0.000013113021850585938,
+    "limit": 0.00001,
     "backwardPasses": 0,
     "optimizerUpdates": 0,
     "exactRestorationVerified": true
   },
   "continuation": {
-    "status": "SCHEDULED_NOT_YET_EXECUTED",
+    "status": "FIRST_SOURCE_ONLY_REVIEW_PUBLISHED",
     "scope": "source audit, gate repair and prospective study design only",
     "iterations": 8,
     "frequency": "HOURLY",
     "timezone": "Europe/Vienna",
     "startLocal": "2026-11-05T00:30:00+01:00",
     "timingMode": "flexible_schedule",
-    "executionEnvironmentConfirmed": false,
-    "nextRunTimestampReturned": false
+    "executionEnvironmentConfirmed": true,
+    "nextRunTimestampReturned": false,
+    "executionEnvironmentStatus": "PRIOR_CHECKOUT_MISSING; CONNECTOR_SOURCE_READ_AVAILABLE; MODEL_AND_DYNAMIC_TESTS_NOT_RUN",
+    "latestReviewedHead": "e6dcac515d8670fdc5d3653fa1f919e1a03424c2",
+    "latestEvidenceCommit": "e6dcac515d8670fdc5d3653fa1f919e1a03424c2",
+    "modelProcessesThisRun": 0,
+    "optimizerUpdatesThisRun": 0,
+    "newTestsRunThisContinuation": "SOURCE_AUDIT_STATIC_ONLY",
+    "sourcePatchMatchedHunks": 16,
+    "sourcePatchMatchedFiles": 3,
+    "patchIntegratedInto508": false,
+    "leaseStatus": "RELEASED"
   },
   "leaseReleasedAtUtc": "2026-11-04T22:30:38.987172+00:00",
   "evidenceCommit": "1c3c26cf04d8a28059bbe0bba4ac30e2bef032c5"
