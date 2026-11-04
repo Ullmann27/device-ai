@@ -7,10 +7,12 @@ import android.media.AudioTrack
 import android.os.Looper
 import android.provider.Settings
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import at.heinz.deviceai.ui.ContinuumTaskEffects
 import at.heinz.deviceai.ui.ContinuumUiFeedback
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -18,6 +20,9 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowChoreographer
+import java.time.Duration
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -27,7 +32,23 @@ import java.util.concurrent.atomic.AtomicReference
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk=[28], shadows=[Pcm16FeedbackAudioTrackShadow::class])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumTaskEffectsCallerUiTest {
+    @Before fun configureVirtualVsyncClock() {
+        // Activity setup can start the real avatar loop before fixture code can pause it.
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+    }
+
+    private fun advanceFrames(totalMillis: Long) {
+        var remaining = totalMillis
+        while (remaining > 0) {
+            val step = minOf(16L, remaining)
+            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
+            remaining -= step
+        }
+    }
+
     private fun set(a:AgentActivity,n:String,v:Any?)=AgentActivity::class.java.getDeclaredField(n).apply {isAccessible=true}.set(a,v)
     private fun get(a:AgentActivity,n:String)=AgentActivity::class.java.getDeclaredField(n).apply {isAccessible=true}.get(a)
     private fun call(a:AgentActivity,n:String,vararg args:Any?) = AgentActivity::class.java.declaredMethods
@@ -35,17 +56,20 @@ class ContinuumTaskEffectsCallerUiTest {
     private fun field(o:Any,n:String)=o.javaClass.getDeclaredField(n).apply {isAccessible=true}.get(o)
     private fun pulses(h:ContinuumHologramView)=field(field(h,"taskEffects")!!,"pulses") as List<*>
     private fun idle()=shadowOf(Looper.getMainLooper()).idle()
-    private fun advance()=shadowOf(Looper.getMainLooper()).idleFor(20,TimeUnit.MILLISECONDS)
+    private fun advance()=advanceFrames(20)
     private fun withFixture(block:(AgentActivity,ContinuumHologramView)->Unit) {
         val a=Robolectric.buildActivity(AgentActivity::class.java).get()
         val host=Robolectric.buildActivity(Activity::class.java).setup().visible()
-        val h=ContinuumHologramView(a)
+        val h=ContinuumHologramView(a).apply { setNativeHeadEnabled(false) }
         set(a,"hologramView",h);set(a,"foregroundLearningActive",true)
         set(a,"chatContainer",android.widget.LinearLayout(a))
         set(a,"receiptStore",FileToolExecutionReceiptStore(java.io.File(a.filesDir,"effects-"+UUID.randomUUID())))
-        host.get().setContentView(h);advance()
-        h.measure(View.MeasureSpec.makeMeasureSpec(412,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(307,View.MeasureSpec.EXACTLY))
-        h.layout(0,0,412,307);h.setForegroundActive(true);advance()
+        host.get().setContentView(h,ViewGroup.LayoutParams(412,307));advance()
+        assertTrue("Caller fixture must be attached to its real host window",h.isAttachedToWindow)
+        assertTrue("Caller fixture must be shown",h.isShown)
+        assertEquals(412,h.width);assertEquals(307,h.height)
+        h.setForegroundActive(true);advance()
+        assertTrue("Caller events require a live foreground clock",h.motionDiagnostics().contains("LIVE"))
         assertEquals("Positive control: the actual host window must be visible",View.VISIBLE,h.windowVisibility)
         try {block(a,h)} finally {
             (get(a,"chiefStatusPool") as? at.heinz.deviceai.chief.ChiefWorkerPool)?.shutdown()
