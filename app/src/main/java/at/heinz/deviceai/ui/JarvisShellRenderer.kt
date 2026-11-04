@@ -52,7 +52,8 @@ object JarvisShellRenderer {
 
     fun draw(p: ContinuumPainter, shell: Shell, content: Map<Slot, SlotContent> = emptyMap(),
              elapsedMs: Long = Long.MAX_VALUE / 4, animatorScale: Float = 1f,
-             tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L) {
+             tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L,
+             deferForeground: Boolean = false) {
         background(p, shell.width, shell.height)
         JarvisReferenceHud.backdrop(p, shell.width, shell.height)
         val dolly = 1f
@@ -109,6 +110,7 @@ object JarvisShellRenderer {
         }
         p.restore()
         JarvisReferenceHud.frame(p, shell.width, shell.height)
+        if (!deferForeground) drawForeground(p, shell, content)
     }
 
     private fun Box.centerY() = (top + bottom) / 2f

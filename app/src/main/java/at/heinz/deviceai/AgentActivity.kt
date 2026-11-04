@@ -345,7 +345,15 @@ class AgentActivity : Activity() {
     // Jarvis menu navigation (Integration): ref5 rail + action bar over Kern's JarvisNavigator / CockpitActionHandler.
     private val menuNavigator: at.heinz.deviceai.ui.JarvisMenuNavigator by lazy {
         at.heinz.deviceai.ui.JarvisMenuNavigator(cockpitTriggers, { slot -> openHomeSlot(slot, 0f, 0f) },
-            onSelected = { target -> selectRail(target) })
+            onSelected = { target -> selectRail(target) },
+            openTarget = { target ->
+                when (target) {
+                    "logic" -> { showLogicCenter(); true }
+                    "tasks" -> { showDevelopmentBacklog(); true }
+                    "web" -> { showWebCenter(); true }
+                    else -> false
+                }
+            })
     }
     val cockpitActions: at.heinz.deviceai.cockpit.CockpitActionHandler by lazy { at.heinz.deviceai.ui.JarvisCockpitActions(menuNavigator) }
     private var cameraDrift: at.heinz.deviceai.ui.JarvisCameraDrift? = null
@@ -774,8 +782,9 @@ class AgentActivity : Activity() {
 
     private fun buildUi(): View {
         val windowWidthDp = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
-        val windowHeightDp = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()
-        val wide = at.heinz.deviceai.ui.ContinuumHomeLayout.isWide(windowWidthDp, windowHeightDp)
+        // Navigation ownership follows the same width classes as the shared HUD.
+        // A short medium window scrolls its content; it must not acquire a second phone navigation.
+        val wide = windowWidthDp >= at.heinz.deviceai.ui.JarvisWindowProfile.MEDIUM_MIN_DP
         // A wide rebuild must drop stale references to the old phone bottom bar.
         bottomWorkAreaBar = null
         navigationView = null
@@ -830,57 +839,36 @@ class AgentActivity : Activity() {
             ))
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= 30) {
-            window.setDecorFitsSystemWindows(false)
-            root.setOnApplyWindowInsetsListener { view, insets ->
-                val bars = insets.getInsets(
-                    WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout()
-                )
-                val ime = insets.getInsets(WindowInsets.Type.ime())
-                val viewport = ComposerUiPolicy.viewport(
-                    bars.top, bars.bottom, ime.bottom,
-                    insets.isVisible(WindowInsets.Type.ime()), wide
-                )
-                if (view.paddingLeft != bars.left || view.paddingTop != viewport.top ||
-                    view.paddingRight != bars.right || view.paddingBottom != viewport.bottom
-                ) {
-                    view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
-                }
-                val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(wide, viewport.compactDashboard)
-                bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
-                val navigationPane = phonePane
-                if (navigationPane != null) {
-                    val paneParams = navigationPane.layoutParams as android.widget.FrameLayout.LayoutParams
-                    val requiredMargin = if (showNavigation) phoneNavHeight else 0
-                    if (paneParams.bottomMargin != requiredMargin) {
-                        paneParams.bottomMargin = requiredMargin
-                        navigationPane.layoutParams = paneParams
-                    }
-                }
-                if (keyboardCompact != viewport.compactDashboard) {
-                    keyboardCompact = viewport.compactDashboard
-                    refreshConversationLayout()
-                }
-                insets
-            }
-            root.post { root.requestApplyInsets() }
+        fun availableWidthDp(): Float =
+            (root.width - root.paddingLeft - root.paddingRight).coerceAtLeast(1) / resources.displayMetrics.density
+
+        fun updateAvailableHeight() {
+            if (uiWindowRoot !== root || root.height <= 0) return
+            val availableHeightDp = (root.height - root.paddingTop - root.paddingBottom)
+                .coerceAtLeast(1) / resources.displayMetrics.density
+            renderedWindowHeightDp = availableHeightDp
+            // Insets and height-only resize change bounds, never the dialog, audio or renderer ownership.
+            homeView?.updateAvailableViewport(availableHeightDp)
         }
-        // The Fold can resize an existing Activity without immediately supplying a
-        // fresh Configuration. Observe the actual window width, not just screenWidthDp.
-        // Rebuild is posted after layout, never during ViewGroup.onLayout.
-        uiWindowRoot = root
-        root.addOnLayoutChangeListener { _, left, top, right, bottom, _, _, _, _ ->
-            if (right <= left || bottom <= top || viewportRebuildScheduled) return@addOnLayoutChangeListener
-            val measuredWidthDp = (right - left) / resources.displayMetrics.density
-            if (!at.heinz.deviceai.ui.ContinuumHomeLayout.needsWindowWidthReflow(windowWidthDp, measuredWidthDp)) {
-                return@addOnLayoutChangeListener
+
+        fun needsNavigationReflow(actualWidthDp: Float): Boolean =
+            wide != (actualWidthDp >= at.heinz.deviceai.ui.JarvisWindowProfile.MEDIUM_MIN_DP) ||
+                at.heinz.deviceai.ui.ContinuumHomeLayout.needsWindowWidthReflow(windowWidthDp, actualWidthDp)
+
+        fun applyViewportChange() {
+            if (uiWindowRoot !== root || root.width <= 0 || root.height <= 0) return
+            updateAvailableHeight()
+            if (viewportRebuildScheduled) return
+            val measuredWidthDp = availableWidthDp()
+            if (!needsNavigationReflow(measuredWidthDp)) {
+                return
             }
             viewportRebuildScheduled = true
             root.post {
                 viewportRebuildScheduled = false
                 if (uiWindowRoot !== root || !root.isAttachedToWindow || isFinishing || isDestroyed) return@post
-                val actualWidthDp = root.width / resources.displayMetrics.density
-                if (!at.heinz.deviceai.ui.ContinuumHomeLayout.needsWindowWidthReflow(windowWidthDp, actualWidthDp)) {
+                val actualWidthDp = availableWidthDp()
+                if (!needsNavigationReflow(actualWidthDp)) {
                     return@post
                 }
                 val composerDraft = if (::input.isInitialized) {
@@ -906,7 +894,8 @@ class AgentActivity : Activity() {
                     }
                 }
                 renderedWindowWidthDp = actualWidthDp
-                renderedWindowHeightDp = root.height / resources.displayMetrics.density
+                renderedWindowHeightDp = (root.height - root.paddingTop - root.paddingBottom)
+                    .coerceAtLeast(1) / resources.displayMetrics.density
                 keyboardCompact = false
                 setContentView(buildUi())
                 chatMessages.forEach { chatContainer.addView(it) }
@@ -948,6 +937,48 @@ class AgentActivity : Activity() {
                 uiWindowRoot?.requestApplyInsets()
             }
         }
+
+        if (android.os.Build.VERSION.SDK_INT >= 30) {
+            window.setDecorFitsSystemWindows(false)
+            root.setOnApplyWindowInsetsListener { view, insets ->
+                val bars = insets.getInsets(
+                    WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout()
+                )
+                val ime = insets.getInsets(WindowInsets.Type.ime())
+                val viewport = ComposerUiPolicy.viewport(
+                    bars.top, bars.bottom, ime.bottom,
+                    insets.isVisible(WindowInsets.Type.ime()), wide
+                )
+                if (view.paddingLeft != bars.left || view.paddingTop != viewport.top ||
+                    view.paddingRight != bars.right || view.paddingBottom != viewport.bottom
+                ) {
+                    view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
+                }
+                val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(wide, viewport.compactDashboard)
+                bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
+                val navigationPane = phonePane
+                if (navigationPane != null) {
+                    val paneParams = navigationPane.layoutParams as android.widget.FrameLayout.LayoutParams
+                    val requiredMargin = if (showNavigation) phoneNavHeight else 0
+                    if (paneParams.bottomMargin != requiredMargin) {
+                        paneParams.bottomMargin = requiredMargin
+                        navigationPane.layoutParams = paneParams
+                    }
+                }
+                if (keyboardCompact != viewport.compactDashboard) {
+                    keyboardCompact = viewport.compactDashboard
+                    refreshConversationLayout()
+                }
+                root.post { applyViewportChange() }
+                insets
+            }
+            root.post { root.requestApplyInsets() }
+        }
+        // The Fold can resize an existing Activity without immediately supplying a
+        // fresh Configuration. Observe the actual window width, not just screenWidthDp.
+        // Rebuild is posted after layout, never during ViewGroup.onLayout.
+        uiWindowRoot = root
+        root.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> applyViewportChange() }
         return root
     }
 
@@ -1030,9 +1061,9 @@ class AgentActivity : Activity() {
             isFillViewport = true
             clipToPadding = false
             isVerticalScrollBarEnabled = true
-            isScrollbarFadingEnabled = false
-            scrollBarSize = dp(5)
-            scrollBarStyle = View.SCROLLBARS_INSIDE_INSET
+            isScrollbarFadingEnabled = true
+            scrollBarSize = dp(3)
+            scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
             isSmoothScrollingEnabled = true
             contentDescription = "Continuum-Cockpit, vertikal scrollbar: Chat, Arbeitsbereiche und tatsächlicher Systemstatus"
         }
@@ -1191,6 +1222,7 @@ class AgentActivity : Activity() {
 
     /** Rail highlight follows the navigator (no own animation in the rail). */
     private fun selectRail(target: String) {
+        homeView?.selectJarvisTarget(target)
         val index = at.heinz.deviceai.ui.JarvisMenu.railIndex(target)
         if (index < 0) return
         (railView?.element as? at.heinz.deviceai.ui.JarvisMenuRailElement)?.selected = index
@@ -1246,7 +1278,8 @@ class AgentActivity : Activity() {
         if (homeView == null || dashboardCollecting || !foregroundLearningActive) return
         dashboardCollecting = true
         val dashboardSnapshotAtElapsedMs = android.os.SystemClock.elapsedRealtime()
-        val modelReady = ::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY
+        val modelReady = ::localRuntime.isInitialized && localRuntime.loadedModel != null &&
+            localRuntime.state in setOf(LocalModelState.READY, LocalModelState.GENERATING)
         val live = ContinuumDashboardCollector.Live(
             modelName = if (::localRuntime.isInitialized) localRuntime.loadedModel?.let { it.id + " " + it.version } else null,
             modelReady = modelReady,
@@ -2056,6 +2089,53 @@ class AgentActivity : Activity() {
             done(result.getOrElse { "Status nicht lesbar (${failureName(it)}); es wurde nichts verändert." })
         }
     }
+
+    private fun showLogicCenter() = showCenter(
+        "Logik und Planung",
+        "Der Ablauf stammt aus dem aktuellen Gespräch und den tatsächlich gemeldeten Arbeitsschritten. " +
+            "Ein geöffneter Planungsbereich startet keinen Auftrag.",
+        { done ->
+            val state = at.heinz.deviceai.ui.CockpitStatus.live(activeChiefTurn, chiefStatusPool,
+                lastChiefWorkerReport, cockpitTriggers, cockpitDialog.toList())
+            done(buildString {
+                append("Auftrag: ").append(at.heinz.deviceai.ui.ContinuumCockpitPresentation.phaseLabel(state.turnPhase))
+                if (state.steps.isEmpty()) append("\nNoch keine gemeldeten Planungsschritte.")
+                state.steps.forEach { step ->
+                    append("\n").append(step.label).append(": ")
+                        .append(at.heinz.deviceai.ui.ContinuumCockpitPresentation.stepLabel(step.state))
+                }
+            })
+        },
+        listOf(
+            CenterAction("AUFTRAG IM CHAT BESPRECHEN", accent = true) { focusChatComposer() },
+            CenterAction("AUFGABENÜBERSICHT") { showDevelopmentBacklog() },
+            CenterAction("LOKALES MODELL") { showModelCenter() },
+            CenterAction("AGENTENSTATUS") { showChiefWorkerStatus() }
+        ),
+        experimental = listOf(CenterAction("M5 · PROJEKTPLAN PRÜFEN") { openM5ProjectPlan() })
+    )
+
+    private fun showWebCenter() = showCenter(
+        "Web und Quellen",
+        "Gespeicherte Quellen sind lokal lesbar. Eine neue Webrecherche verwendet die vorhandene Internetfreigabe " +
+            "und beginnt erst nach deiner Eingabe.",
+        { done ->
+            val mode = when (internetConsent.mode) {
+                at.heinz.deviceai.cognitive.InternetAccessMode.OFF -> "Aus · kein Webzugriff"
+                at.heinz.deviceai.cognitive.InternetAccessMode.ASK -> "Auf Nachfrage"
+                at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON -> "Vom Besitzer dauerhaft freigegeben"
+            }
+            val storage = homeView?.state?.storage
+            done("Internet: $mode\nGespeicherte Quellen: ${storage?.totalSources ?: "—"}" +
+                "\n${storage?.researchLabel ?: "Forschungsstatus: —"}")
+        },
+        listOf(
+            CenterAction("GESPEICHERTE QUELLEN", accent = true) { showKnowledgeArchiveSearch() },
+            CenterAction("WEBRECHERCHE VORBEREITEN") { showResearchModeDialog() },
+            CenterAction("LERNSTOFF PRÜFEN") { showWebLearningInbox() },
+            CenterAction("INTERNETFREIGABE") { showInternetSettings() }
+        )
+    )
 
     private fun showCenter(
         title: String,

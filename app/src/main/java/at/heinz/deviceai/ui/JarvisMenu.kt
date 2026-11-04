@@ -87,6 +87,8 @@ class JarvisMenuNavigator(
     private val open: (Slot) -> Unit,
     private val routes: Map<String, Slot> = JarvisMenu.routes,
     private val onSelected: (String) -> Unit = {},
+    /** A semantic destination may own a dedicated screen while older slot callers remain compatible. */
+    private val openTarget: ((String) -> Boolean)? = null,
 ) : JarvisNavigator {
     @Volatile var current: String? = "home"
         private set
@@ -97,7 +99,7 @@ class JarvisMenuNavigator(
         current = target
         if (from != target) triggers?.areaChanged(from, target, JarvisMenu.patternFor(from, target))
         onSelected(target)
-        open(slot)
+        if (openTarget?.invoke(target) != true) open(slot)
     }
 
     /** Keeps the selection in sync when another path (bottom bar, tile) changed the area; no event. */

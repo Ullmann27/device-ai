@@ -83,7 +83,10 @@ data class ContinuumDashboardState(
         val segments: List<Segment> = emptyList(),
         val activeSources: Int? = null,
         val totalSources: Int? = null,
-        val syncLabel: String = "Keine Synchronisation"
+        /** Actual synchronization status; unavailable until a synchronization source is connected. */
+        val syncLabel: String = UNKNOWN,
+        /** Separate public-research scheduling status; never presented as synchronization. */
+        val researchLabel: String = UNKNOWN
     )
 
     data class Project(val name: String, val status: String, val state: ProjectState, val ago: String)

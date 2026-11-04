@@ -39,6 +39,8 @@ object JarvisCockpitGrid {
     const val TILE_COLUMNS = 5
     const val TILE_ROWS = 2
     const val MIN_TOUCH_DP = 48f
+    /** Heading, companion line, a real two-line reply and the unchanged 48dp action row. */
+    const val MIN_DIALOG_DP = 144f
 
     /** Both open-Fold orientations and wide tablets retain the same five-column composition. */
     fun applies(widthDp: Float, heightDp: Float, fontScale: Float): Boolean =
@@ -79,7 +81,10 @@ object JarvisCockpitGrid {
         a[Area.CAMERA_STATUS] = b(1199f, cameraTop, 1520f, cameraBottom)
         a[Area.MODULES] = b(1219f, maxOf(156f * u, cameraBottom + 8f * u), 1520f,
             minOf(heroBottom - 8f * u, 405f * u + heroExtension * .6f))
-        a[Area.DIALOG] = b(256f, maxOf(190f * u, heroBottom - 199f * u), 640f, heroBottom - 5f * u)
+        val dialogBottom = heroBottom - 5f * u
+        val dialogHeight = maxOf(194f * u, MIN_DIALOG_DP * maxOf(1f, fontScale))
+        a[Area.DIALOG] = b(256f, maxOf(a.getValue(Area.HEAD).top + 8f * u, dialogBottom - dialogHeight),
+            640f, dialogBottom)
 
         a[Area.TILES] = b(258f, 503f * u + heroExtension, 1520f,
             685f * u + extraHeight * .8f - rowExtra)

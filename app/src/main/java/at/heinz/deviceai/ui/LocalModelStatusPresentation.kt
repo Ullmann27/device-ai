@@ -36,7 +36,7 @@ object LocalModelStatusPresentation {
         val rows = mutableListOf(
             Row("Model", if (m.online) m.name else MISSING, null, if (m.online) Tone.OK else Tone.NEUTRAL),
             // ref5 "Mode: Local (Private)" has no runtime source (no routing-mode field) -> always the placeholder.
-            Row("Mode", if (m.online) "Lokal" else MISSING, null),
+            Row("Mode", MISSING, null),
             Row("Status", m.stateLabel, null, if (m.online) Tone.OK else Tone.NEUTRAL),
             Row("Latency", m.latencyMs?.let { "$it ms" } ?: MISSING, null)
         )

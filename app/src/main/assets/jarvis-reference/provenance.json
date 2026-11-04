@@ -18,7 +18,7 @@
         78,
         75
       ],
-      "sha256": "3cf0c97eb4be2efe7d78f9cc2168993e211676ed9212831e12637b1527bd666c"
+      "sha256": "5e663f030e25c1026178d1b1191f34657f478f7bf92f2eb2f5292c236b4d7274"
     },
     {
       "asset": "jarvis-reference/rail-energy.png",
@@ -33,7 +33,7 @@
         221,
         154
       ],
-      "sha256": "a6c63accb0dbfb059fdb72d9c73bf5194a8cbff19cfa9dc418f8d06aab9c1de1"
+      "sha256": "18a610c4b9a24dcfc43577f09f06e99dc9205fc20000af9420969410fc6c0ea6"
     },
     {
       "asset": "jarvis-reference/tile-cyan-energy.png",
@@ -48,7 +48,7 @@
         250,
         87
       ],
-      "sha256": "66ec88c429e649f67dfdb9a83b75c1d7566106f8a9cae69239f619e1ede04fbc"
+      "sha256": "c1cb975f73e899457c5897faf5e247a06d1007ed6071897c55beedb77f9b40b4"
     },
     {
       "asset": "jarvis-reference/tile-violet-energy.png",
@@ -63,7 +63,7 @@
         238,
         87
       ],
-      "sha256": "cbf11f1bce5200993c3287299aae5eff53af34edba9795dabb34614e6d8c7e57"
+      "sha256": "7bd893567fa30e410d58fa90205c7504f4f73f7e126fdfdec4d50d3a78d6aca6"
     }
   ]
 }

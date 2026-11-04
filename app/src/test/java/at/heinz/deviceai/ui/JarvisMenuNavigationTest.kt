@@ -50,6 +50,25 @@ class JarvisMenuNavigationTest {
         assertTrue(opened.isEmpty()); assertTrue(events.isEmpty()); assertEquals("home", nav.current)
     }
 
+    @Test fun dedicatedDestinationsKeepSelectionAndEventsWithoutOpeningTheObsoleteSlot() {
+        val bus = CockpitAnimationBus()
+        val events = mutableListOf<CockpitAnimationEvent>()
+        bus.subscribe { events += it }
+        val selected = mutableListOf<String>()
+        val semantic = mutableListOf<String>()
+        val slots = mutableListOf<Slot>()
+        val nav = JarvisMenuNavigator(CockpitAnimationTriggers(bus) { 42L }, { slots += it },
+            onSelected = { selected += it }, openTarget = {
+                if (it in setOf("logic", "tasks", "web")) { semantic += it; true } else false
+            })
+        listOf("logic", "tasks", "web", "memory", "unknown").forEach(nav::navigate)
+        assertEquals(listOf("logic", "tasks", "web"), semantic)
+        assertEquals(listOf(Slot.ACTION_MEMORY), slots)
+        assertEquals(listOf("logic", "tasks", "web", "memory"), selected)
+        assertEquals(selected, events.filterIsInstance<CockpitAnimationEvent.AreaChanged>().map { it.toTarget })
+        assertEquals("memory", nav.current)
+    }
+
     @Test fun areaToAreaIsPatternBSceneIsPatternA() {
         val (nav, _, events) = setup()
         nav.navigate("chat"); nav.navigate("memory"); nav.navigate("home"); nav.navigate("home")
@@ -114,7 +133,7 @@ class JarvisMenuNavigationTest {
         assertEquals(JarvisMenu.railEntries.size, texts.size - 3) // one label per button
     }
 
-    @Test fun longGermanLabelsFitTheRef5Button() {
+    @Test fun theExistingOtherPaneRailFitsTheSharedNavigationLabels() {
         val p = TextPainter(mutableListOf(), charWidth = 6f)
         JarvisMenu.railEntries.forEach { e ->
             val label = JarvisMenu.fitLabel(p, e, 108f)
@@ -122,7 +141,7 @@ class JarvisMenuNavigationTest {
             assertTrue("${e.label} → $label", p.measureText(label, JarvisDesign.Type.nav) <= 108f - st.padH - st.iconSize - st.iconGap - JarvisMenu.LABEL_END)
         }
         assertEquals("Gerät", JarvisMenu.fitLabel(p, JarvisMenu.railEntries.first { it.target == "device" }, 108f))
-        assertEquals("Gedächtnis", JarvisMenu.fitLabel(p, JarvisMenu.railEntries.first { it.target == "memory" }, 108f)) // no "…"
+        assertEquals("Memory", JarvisMenu.fitLabel(p, JarvisMenu.railEntries.first { it.target == "memory" }, 108f)) // no "…"
     }
 
     @Test fun everyRailEntryHasItsRef5Icon() {
@@ -159,7 +178,7 @@ class JarvisMenuNavigationTest {
         assertEquals(32f, st.height, 0f); assertEquals(Argb.rgb(0x04, 0x15, 0x21), st.fill)
         assertEquals(Argb.rgb(0x01, 0x2C, 0x3C), JarvisDesign.Styles.buttonActive.fill)
         assertEquals(Argb.rgb(0x32, 0xD6, 0xED), JarvisDesign.Styles.buttonActive.rim)
-        assertEquals(11f, JarvisDesign.Type.nav.size, 0f)
+        assertEquals(13f, JarvisDesign.Type.nav.size, 0f)
         assertEquals(JarvisMenuRail.MARGIN + 108f, JarvisMenuRail.MIN_WIDTH, 0f)
     }
 }

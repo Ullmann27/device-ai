@@ -12,7 +12,7 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Slot
 object JarvisShellContent {
     val filled = listOf(Slot.TOP_BAR, Slot.DIALOG, Slot.INPUT, Slot.COCKPIT_PRIMARY, Slot.COCKPIT_SECONDARY,
         Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS, Slot.USER_CARD,
-        Slot.AVATAR, Slot.CONTINUUM_HEADER, Slot.CAMERA_STATUS)
+        Slot.CONTINUUM_HEADER, Slot.CAMERA_STATUS)
 
     fun title(slot: Slot, s: ContinuumDashboardState): String = when (slot) {
         Slot.TOP_BAR -> "CONTINUUM"
@@ -84,10 +84,9 @@ object JarvisShellContent {
     fun hitTarget(shell: JarvisShellLayout.Shell, tiles: List<JarvisTile>, x: Float, y: Float): String? {
         shell.tileBoxes().forEachIndexed { i, b -> if (i < tiles.size && b.contains(x, y)) return tiles[i].target }
         shell[Slot.NAV_RAIL]?.takeIf { it.contains(x, y) }?.let { b ->
-            val items = JarvisTiles.railNav
-            val rowH = minOf(44f, (b.height - 16f) / items.size)
-            val i = ((y - b.top - 8f) / rowH).toInt()
-            return items.getOrNull(i)?.target
+            val i = JarvisTiles.railItemBoxes(b, fontScale = shell.profile.fontScale)
+                .indexOfFirst { it.contains(x, y) }
+            return JarvisTiles.railNav.getOrNull(i)?.target
         }
         shell[Slot.BOTTOM_NAV]?.takeIf { it.contains(x, y) }?.let { b ->
             val items = JarvisTiles.bottomNav

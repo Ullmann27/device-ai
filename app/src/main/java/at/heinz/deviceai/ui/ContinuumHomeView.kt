@@ -357,6 +357,22 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         updateWaveAnimation()
     }
 
+    /**
+     * Updates only the available window height after system insets, before the external bottom navigation.
+     * The shell reserves that navigation exactly once. No child, renderer, speech session or legacy layout is
+     * rebuilt; the next measurement applies the current profile to the existing live surface and controls.
+     */
+    fun updateAvailableViewport(heightDp: Float) {
+        require(heightDp.isFinite() && heightDp > 0f)
+        // Extremely short transient windows still expose scrollable content with usable controls.
+        val available = heightDp.coerceAtLeast(160f)
+        val viewport = (available - externalBottomBarHeightDp).coerceAtLeast(160f)
+        if (configuredHeight == available && jarvisShell.viewportHeightDp == viewport) return
+        configuredHeight = available
+        jarvisShell.viewportHeightDp = viewport
+        requestLayout()
+    }
+
     val wide: Boolean get() = layoutSpec?.wide == true
     val referenceCockpit: Boolean get() = layoutSpec?.referenceCockpit == true
     val landscapeCockpit: Boolean get() = layoutSpec?.landscapeCockpit == true
@@ -516,10 +532,12 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         add("input:conversation", "chat", "Konversation öffnen", shell[JarvisShellLayout.Slot.INPUT])
         add("camera:settings", "camera-settings", "Kamera und Wahrnehmung: Einstellungen", shell[JarvisShellLayout.Slot.CAMERA_STATUS])
         val panelTargets = listOf(JarvisShellLayout.Slot.ROW_AGENTS to "agents", JarvisShellLayout.Slot.ROW_TASKS to "tasks",
-            JarvisShellLayout.Slot.ROW_MEMORY to "memory", JarvisShellLayout.Slot.ROW_MODEL to "logic",
+            JarvisShellLayout.Slot.ROW_MEMORY to "memory", JarvisShellLayout.Slot.ROW_MODEL to "model-management",
             JarvisShellLayout.Slot.COCKPIT_SECONDARY to "system", JarvisShellLayout.Slot.STATUS to "system")
         panelTargets.forEach { (slot, target) ->
-            add("panel:$slot", target, JarvisTiles.railNav.first { it.target == target }.label, shell[slot])
+            val label = if (target == "model-management") "Lokales Modell und Gerät"
+                else JarvisTiles.railNav.first { it.target == target }.label
+            add("panel:$slot", target, label, shell[slot])
         }
         shell.grid?.areas?.get(JarvisCockpitGrid.Area.BRAND)?.let { box ->
             val h = maxOf(48f, box.height)

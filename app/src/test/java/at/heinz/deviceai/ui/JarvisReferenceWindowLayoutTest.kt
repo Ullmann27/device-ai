@@ -47,6 +47,7 @@ class JarvisReferenceWindowLayoutTest {
         assertEquals(1024f, s.height, 0f)
         assertEquals(Box(250f, 70f, 800f, 497f), g[Area.HEAD])
         assertEquals(Box(805f, 183f, 1212f, 497f), g[Area.ORB])
+        assertEquals(Box(256f, 298f, 640f, 492f), g[Area.DIALOG])
         assertEquals(Box(258f, 503f, 1520f, 685f), g[Area.TILES])
         assertEquals(Box(12f, 97f, 243f, 896f), g[Area.RAIL])
         assertEquals(Box(16f, 906f, 1520f, 978f), g[Area.STATUS])
@@ -156,6 +157,18 @@ class JarvisReferenceWindowLayoutTest {
             }
             controls.zipWithNext().forEach { (a, b) -> assertFalse(intersects(a, b)) }
             shell.headerActionBoxes().values.zipWithNext().forEach { (a, b) -> assertFalse(intersects(a, b)) }
+        }
+    }
+
+    @Test fun narrowReferenceDialogReservesReplySpaceAboveUnchangedControls() {
+        for ((w, h) in listOf(840f to 560f, 840f to 900f, 884f to 760f, 960f to 640f)) {
+            val shell = JarvisShellLayout.create(w, h)
+            assertTrue(shell.ref5Grid)
+            val dialog = requireNotNull(shell[Slot.DIALOG])
+            assertTrue("$w×$h real reply space", dialog.height >= JarvisCockpitGrid.MIN_DIALOG_DP)
+            assertTrue("heading and reply stay above controls", shell.dialogControlBoxes().first().top - dialog.top >= 90f)
+            shell.dialogControlBoxes().forEach { assertEquals(48f, it.height, .001f) }
+            sane(shell)
         }
     }
 

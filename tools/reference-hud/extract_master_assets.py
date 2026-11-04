@@ -37,6 +37,7 @@ def extract(name, box, kind):
     # Straight alpha: color * alpha reproduces the extracted light on a dark base.
     straight = np.divide(rgb, np.maximum(rgb.max(axis=2, keepdims=True) / 255., .001))
     rgba = np.dstack([straight.clip(0, 255), (a * 255).clip(0, 255)]).astype(np.uint8)
+    rgba[rgba[:, :, 3] == 0, :3] = 0  # no hidden source labels in fully transparent pixels
     path = OUT / name
     Image.fromarray(rgba).save(path, optimize=True)
     return {"asset": "jarvis-reference/" + name, "source_box": box,

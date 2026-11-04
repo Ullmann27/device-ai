@@ -48,8 +48,8 @@ class JarvisShellView(context: Context) : View(context) {
             invalidate()
         }
 
-    /** Continuous camera drift / dolly / dust. Off: static composition (also off for reduced motion). */
-    var ambientMotionEnabled = true
+    /** Optional decorative refresh. Native head/orb own their frame clock; static HUD needs no continuous redraw. */
+    var ambientMotionEnabled = false
         set(value) { field = value; invalidate() }
 
     private fun ambientMotion(scale: Float) = ambientMotionEnabled && scale > 0f && isShown &&
@@ -80,11 +80,11 @@ class JarvisShellView(context: Context) : View(context) {
         painter.begin(canvas); glass.begin(canvas, d, width, height)
         textPainter.fontScale = font
         canvas.save(); canvas.scale(d, d)
-        JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, now)
+        JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, now, deferForeground = true)
         canvas.restore()
         onFrameDrawn?.invoke()
         val total = JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, s.boxes.size + s.tileBoxes().size, animatorScale = scale)
-        // Camera never static (drift + dolly): keep ticking while visible and animators are enabled.
+        // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
         if ((startMs >= 0 && elapsed < total) || ambientMotion(scale)) postInvalidateOnAnimation()
         if (frameLogging) frames.onDrawn(SystemClock.elapsedRealtimeNanos() - drawStart(now))
     }
