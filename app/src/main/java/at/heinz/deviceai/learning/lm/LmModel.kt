@@ -151,9 +151,9 @@ class LmModel(val params: LmParams) {
         val tape = Tape(training = false)
         val logits = logits(tape, frozenNodes(tape), ids).value
         val v = logits.cols
-        val out = FloatArray(logits.data.size)
-        Kernels.softmaxRow(logits.data, (ids.size - 1) * v, v, out)
-        return out.copyOfRange((ids.size - 1) * v, ids.size * v)
+        val out = FloatArray(v)
+        Kernels.softmaxRow(logits.data, (ids.size - 1) * v, v, out, 0)
+        return out
     }
 }
 

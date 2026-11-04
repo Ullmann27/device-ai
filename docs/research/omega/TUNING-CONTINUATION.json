@@ -3,8 +3,8 @@
   "scope": "existing-function tuning only",
   "status": "RUNNING",
   "owner": "tuning-root-59ad19c6d3b7-r3",
-  "leaseExpiresAtUtc": "2026-11-04T23:35:22.903117+00:00",
-  "updatedAtUtc": "2026-11-04T21:35:22.903117+00:00",
+  "leaseExpiresAtUtc": "2026-11-04T23:37:47.997686+00:00",
+  "updatedAtUtc": "2026-11-04T21:37:47.997686+00:00",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -24,13 +24,16 @@
       "hypothesis": "Replace sequence-sized output scratch with one vocabulary row; preserve floating-point expression order",
       "status": "ADOPTED_IN_DRAFT",
       "evidence": "docs/evidence/tuning-r3-20261104/m1/RESULTS.md",
-      "tests": "24/24 PASS"
+      "tests": "24/24 PASS",
+      "publishedCommit": "facc6aa2f809ef1094c27dcc693a1b0f22f7942d"
     },
     {
       "id": "R3-M2",
       "target": "LmModel.nextDistribution",
       "hypothesis": "Write final probabilities directly to the result row; eliminate sequence-sized scratch and result copy",
-      "status": "PLANNED"
+      "status": "ADOPTED_IN_DRAFT",
+      "evidence": "docs/evidence/tuning-r3-20261104/m2/RESULTS.md",
+      "tests": "24/24 PASS"
     },
     {
       "id": "R3-M3",
@@ -39,7 +42,7 @@
       "status": "PLANNED"
     }
   ],
-  "next": "R3-M2: direct next-distribution result; preserve R3-M1",
+  "next": "R3-M3: primitive token assembly; preserve M1/M2",
   "limits": [
     "no main merge",
     "no APK/install",
