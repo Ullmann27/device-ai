@@ -111,7 +111,7 @@ Zuordnung je Bot (Jarvis Integration, Kern, Avatar, Gedächtnis, Sicherheit, Wel
 | #368 | research/continuum-native-session-lifecycle-20261103 | 85602f73 | Draft | perf(litertlm): reuse only the pristine load-time conversation on first owner turn |
 | #367 | research/continuum-omega-task-scoped-temporal-20261103 | ff3059e2 | Draft | research(omega): bounded temporal owner-state + clause-scoped storage negation |
 
-Jarvis Integration aktuell: #375 `integration/continuum-grok1-369-372-20261103` @ 68a34bd9 (grün), #480 `integration/continuum-grok1-m5-b5-untested-20261104` (M5-Cap + B5-Fix, Testlauf läuft).
+Jarvis Integration aktuell: #375 `integration/continuum-grok1-369-372-20261103` @ 68a34bd9 (grün), #480 `integration/continuum-grok1-m5-b5-untested-20261104` (M5-Cap + B5-Fix, 1955/0/17 grün, auch auf #375 gepusht).
 
 ## Plan
 1. M5/B5 auf #375-Basis (#480) voll testen; bei 0 Fehlern normaler Push auf #375.
