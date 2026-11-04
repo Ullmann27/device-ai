@@ -8,20 +8,19 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Box
  * Pure presentation model of an action tile (look code only, NOT a data interface).
  * Real values reach the tile through Jarvis Kern's interfaces → [displayText]; how is Kern's decision.
  */
-data class JarvisTile(val target: String, val label: String, val subtitle: String, val icon: Icon,
-                      val displayText: String? = null)
+data class JarvisTile(val target: String, val label: String, val icon: Icon, val displayText: String? = null)
 
 object JarvisTiles {
-    /** The eight action tiles read from ref5 (Fold7 open), same order. */
+    /** The eight action tiles of ref5 (same order), titles translated to German. No invented subtitles. */
     val reference = listOf(
-        JarvisTile("chat", "Chat", "Natural, multi-turn AI conversation", Icon.CHAT),
-        JarvisTile("memory", "Memory", "Long-term personal context", Icon.DATABASE),
-        JarvisTile("logic", "Logic", "Reasoning, planning, problem solving", Icon.ATOM),
-        JarvisTile("research", "Research", "Deep research with sources", Icon.SEARCH),
-        JarvisTile("agents", "Agents", "Specialized AI teammates", Icon.USERS),
-        JarvisTile("learning", "Learning", "Adapt, improve and build new skills", Icon.BOOK),
-        JarvisTile("device", "Device Control", "Control your Android, apps and system", Icon.CPU),
-        JarvisTile("system", "System Status", "Health, performance and model status", Icon.PULSE),
+        JarvisTile("chat", "Chat", Icon.CHAT),
+        JarvisTile("memory", "Gedächtnis", Icon.DATABASE),
+        JarvisTile("logic", "Logik", Icon.ATOM),
+        JarvisTile("research", "Recherche", Icon.SEARCH),
+        JarvisTile("agents", "Agenten", Icon.USERS),
+        JarvisTile("learning", "Lernen", Icon.BOOK),
+        JarvisTile("device", "Gerätesteuerung", Icon.CPU),
+        JarvisTile("system", "Systemstatus", Icon.PULSE),
     )
 
     /** Draws tile content inside an already drawn glass card. */
@@ -33,10 +32,12 @@ object JarvisTiles {
         ContinuumIcons.draw(p, tile.icon, ix, cy, iconSize, Fill.Solid(Colors.cyan))
         val tx = ix + iconSize / 2f + 10f; val room = b.right - 10f - tx
         val title = JarvisDesign.Type.title; val sub = JarvisDesign.Type.caption
-        p.drawText(JarvisShellRenderer.fit(p, tile.label, title, room), tx, cy - 2f, title, Fill.Solid(Colors.text))
-        val second = tile.displayText ?: tile.subtitle
-        p.drawText(JarvisShellRenderer.fit(p, second, sub, room), tx, cy + p.capHeight(sub) + 5f, sub,
-            Fill.Solid(if (tile.displayText != null) Colors.cyanSoft else Colors.textSecondary))
+        val value = tile.displayText
+        if (value == null) p.drawText(JarvisShellRenderer.fit(p, tile.label, title, room), tx, cy + p.capHeight(title) / 2f, title, Fill.Solid(Colors.text))
+        else {
+            p.drawText(JarvisShellRenderer.fit(p, tile.label, title, room), tx, cy - 2f, title, Fill.Solid(Colors.text))
+            p.drawText(JarvisShellRenderer.fit(p, value, sub, room), tx, cy + p.capHeight(sub) + 5f, sub, Fill.Solid(Colors.cyanSoft))
+        }
         ContinuumIcons.draw(p, Icon.CHEVRON_RIGHT, b.right - 10f, cy, 10f, Fill.Solid(Colors.textSecondary), 1.1f)
     }
 
@@ -47,17 +48,17 @@ object JarvisTiles {
         val cx = b.centerX; val iy = b.top + b.height * .40f
         ContinuumIcons.draw(p, tile.icon, cx, iy, iconSize, Fill.Solid(Colors.cyan), iconSize / 13f * 2.6f, .18f)
         ContinuumIcons.draw(p, tile.icon, cx, iy, iconSize, Fill.Solid(Colors.cyan))
-        val text = tile.displayText ?: tile.label
-        p.drawText(JarvisShellRenderer.fit(p, text, title, b.width - 12f), cx, b.bottom - 9f, title, Fill.Solid(Colors.text), TextAlign.CENTER)
+        p.drawText(JarvisShellRenderer.fit(p, tile.label, title, b.width - 12f), cx, b.bottom - 9f, title, Fill.Solid(Colors.text), TextAlign.CENTER)
+        tile.displayText?.let { p.drawText(JarvisShellRenderer.fit(p, it, JarvisDesign.Type.caption, b.width - 12f), cx, b.top + 12f, JarvisDesign.Type.caption, Fill.Solid(Colors.cyanSoft), TextAlign.CENTER) }
     }
 
     /** Navigation entries read from ref5 (rail) and ref4 (bottom nav). Presentation only. */
     data class NavItem(val target: String, val label: String, val icon: Icon)
-    val railNav = listOf(NavItem("home", "Home", Icon.HOME), NavItem("chat", "Chat", Icon.CHAT), NavItem("memory", "Memory", Icon.DATABASE),
-        NavItem("logic", "Logic", Icon.ATOM), NavItem("research", "Research", Icon.SEARCH), NavItem("agents", "Agents", Icon.CUBE),
-        NavItem("tasks", "Tasks", Icon.CHECK_CIRCLE), NavItem("web", "Web", Icon.GLOBE), NavItem("learning", "Learning", Icon.BOOK),
-        NavItem("device", "Device Control", Icon.CPU), NavItem("system", "System Status", Icon.PULSE))
-    val bottomNav = listOf(railNav[0], railNav[1], railNav[2], railNav[5], railNav[6], NavItem("device", "Device", Icon.CPU))
+    val railNav = listOf(NavItem("home", "Start", Icon.HOME), NavItem("chat", "Chat", Icon.CHAT), NavItem("memory", "Gedächtnis", Icon.DATABASE),
+        NavItem("logic", "Logik", Icon.ATOM), NavItem("research", "Recherche", Icon.SEARCH), NavItem("agents", "Agenten", Icon.CUBE),
+        NavItem("tasks", "Aufgaben", Icon.CHECK_CIRCLE), NavItem("web", "Web", Icon.GLOBE), NavItem("learning", "Lernen", Icon.BOOK),
+        NavItem("device", "Gerätesteuerung", Icon.CPU), NavItem("system", "Systemstatus", Icon.PULSE))
+    val bottomNav = listOf(railNav[0], railNav[1], railNav[2], railNav[5], railNav[6], NavItem("device", "Gerät", Icon.CPU))
 
     fun drawRail(p: ContinuumPainter, b: Box, items: List<NavItem> = railNav, selected: Int = 0, labelled: Boolean = true) {
         val rowH = minOf(44f, (b.height - 16f) / items.size)
