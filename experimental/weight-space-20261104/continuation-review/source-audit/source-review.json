@@ -1,0 +1,408 @@
+{
+  "schemaVersion": 1,
+  "status": "CURRENT_FREEZE_CONSISTENT_REPAIR_NOT_INTEGRATED",
+  "reviewedCommit": "9ceffc26a2159c8dc726c1f13d2882119159c130",
+  "previousReviewedSourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "patchSha256": "c69cb427e4ba0624720380edef9f7f0ce3e418591c10bd0a35f56590ad67e38f",
+  "runnerComparisons": {
+    "v1": {
+      "sourcePath": "experimental/lm1-training-recovery-20261104/run_registered_study.py",
+      "sha256": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "gitBlobSha1": "28908e07d6217f10882429047c853d1dd8667912",
+      "byteIdenticalToReproducedOriginal": true,
+      "byteIdenticalToRepairedFixture": false,
+      "reviewedRepairedSha256": "b1bed4338bb187ae6d835a46368cc05773ae96143559af368361103b64a7b327",
+      "postCapacityValidatorPresent": false,
+      "freezeEvidenceCalls": [
+        "Path",
+        "RuntimeError",
+        "append",
+        "int",
+        "len",
+        "next",
+        "rows",
+        "selection",
+        "set",
+        "sha",
+        "verify"
+      ],
+      "testCalls": [
+        "Path",
+        "RuntimeError",
+        "all",
+        "dumps",
+        "freeze_evidence",
+        "int",
+        "len",
+        "loads",
+        "map",
+        "min",
+        "print",
+        "read_text",
+        "rows",
+        "run",
+        "sha",
+        "split",
+        "str",
+        "verify",
+        "write_new"
+      ],
+      "studyMethods": [
+        "__init__",
+        "benchmark",
+        "diagnostic_variant",
+        "diagnostics",
+        "freeze",
+        "freeze_evidence",
+        "intent",
+        "run",
+        "selection",
+        "test",
+        "verify"
+      ],
+      "currentTestFunctionSha256": "bf3c90fc9072ca527577ef4bab9f9b736da0b4157c77585bafe96b5c5083bb7d"
+    },
+    "long": {
+      "sourcePath": "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+      "sha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "gitBlobSha1": "30119435feed1728c5d22fec40830654a7a19861",
+      "byteIdenticalToReproducedOriginal": true,
+      "byteIdenticalToRepairedFixture": false,
+      "reviewedRepairedSha256": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+      "postCapacityValidatorPresent": false,
+      "freezeEvidenceCalls": [
+        "Path",
+        "RuntimeError",
+        "append",
+        "int",
+        "len",
+        "next",
+        "rows",
+        "selection",
+        "set",
+        "sha",
+        "verify"
+      ],
+      "testCalls": [
+        "Path",
+        "RuntimeError",
+        "all",
+        "dumps",
+        "freeze_evidence",
+        "int",
+        "len",
+        "loads",
+        "map",
+        "min",
+        "print",
+        "read_text",
+        "rows",
+        "run",
+        "sha",
+        "split",
+        "str",
+        "verify",
+        "write_new"
+      ],
+      "studyMethods": [
+        "__init__",
+        "benchmark",
+        "freeze",
+        "freeze_evidence",
+        "intent",
+        "run",
+        "selection",
+        "test",
+        "verify"
+      ],
+      "currentTestFunctionSha256": "4a187592e848409094ce4d66eebdf155412b757b0ce2852c357ae80f4a1978d3"
+    },
+    "suffix": {
+      "sourcePath": "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py",
+      "sha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+      "gitBlobSha1": "417e4b3289bb692e72dc80398b51b67e106b8907",
+      "byteIdenticalToReproducedOriginal": true,
+      "byteIdenticalToRepairedFixture": false,
+      "reviewedRepairedSha256": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067",
+      "postCapacityValidatorPresent": false,
+      "freezeEvidenceCalls": [
+        "Path",
+        "RuntimeError",
+        "append",
+        "int",
+        "len",
+        "next",
+        "rows",
+        "selection",
+        "set",
+        "sha",
+        "verify"
+      ],
+      "testCalls": [
+        "Path",
+        "RuntimeError",
+        "all",
+        "dumps",
+        "freeze_evidence",
+        "int",
+        "len",
+        "loads",
+        "map",
+        "min",
+        "print",
+        "read_text",
+        "rows",
+        "run",
+        "sha",
+        "split",
+        "str",
+        "verify",
+        "write_new"
+      ],
+      "studyMethods": [
+        "__init__",
+        "benchmark",
+        "freeze",
+        "freeze_evidence",
+        "intent",
+        "run",
+        "selection",
+        "test",
+        "verify"
+      ],
+      "currentTestFunctionSha256": "c6b532c8ae4ed05d23444bb32f19a545098f81d871328b06437d5fe0821f8a17"
+    }
+  },
+  "selector": {
+    "sourcePath": "experimental/lm1-training-recovery-20261104/suffix-study/choose_development_study.py",
+    "sha256": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520",
+    "unchangedSincePreviousSourceCommit": true,
+    "capacityAuditCalls": [
+      "RuntimeError",
+      "len",
+      "loads",
+      "read_text",
+      "rows",
+      "sha"
+    ],
+    "mainCalls": [
+      "ArgumentParser",
+      "Namespace",
+      "RuntimeError",
+      "Study",
+      "add",
+      "add_argument",
+      "any",
+      "append",
+      "audit_post_capacity",
+      "controller",
+      "dump",
+      "float",
+      "freeze_evidence",
+      "get",
+      "getattr",
+      "glob",
+      "int",
+      "is_dir",
+      "iter",
+      "len",
+      "list",
+      "min",
+      "next",
+      "open",
+      "parse_args",
+      "print",
+      "range",
+      "rows",
+      "selection",
+      "set",
+      "str",
+      "update",
+      "verify",
+      "write"
+    ]
+  },
+  "registrations": {
+    "v1": {
+      "path": "experimental/lm1-training-recovery-20261104/registration.json",
+      "sha256": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+      "unchangedSincePreviousSourceCommit": true,
+      "checkedRegisteredSourceFiles": {
+        "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5",
+        "experimental/lm1-training-recovery-20261104/run_registered_study.py": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f"
+      },
+      "registeredFileCount": 21,
+      "trainingProcessSeconds": 600,
+      "capacityProcessSeconds": 120,
+      "testSha256ReportedOnly": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a"
+    },
+    "v2": {
+      "path": "experimental/lm1-training-recovery-20261104/long-study/registration.json",
+      "sha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+      "unchangedSincePreviousSourceCommit": true,
+      "checkedRegisteredSourceFiles": {
+        "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5",
+        "experimental/lm1-training-recovery-20261104/long-study/INTENT_LONG_PROTOCOL.md": "150ce71af4239563ce8142163e5e456f0554cf1263f4e6c2ad61bb842cc87800",
+        "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+        "experimental/lm1-training-recovery-20261104/registration.json": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+        "experimental/lm1-training-recovery-20261104/run_registered_study.py": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f"
+      },
+      "registeredFileCount": 27,
+      "trainingProcessSeconds": 900,
+      "capacityProcessSeconds": 120,
+      "testSha256ReportedOnly": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a"
+    },
+    "v3": {
+      "path": "experimental/lm1-training-recovery-20261104/suffix-study/registration.json",
+      "sha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+      "unchangedSincePreviousSourceCommit": true,
+      "checkedRegisteredSourceFiles": {
+        "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5",
+        "experimental/lm1-training-recovery-20261104/long-study/INTENT_LONG_PROTOCOL.md": "150ce71af4239563ce8142163e5e456f0554cf1263f4e6c2ad61bb842cc87800",
+        "experimental/lm1-training-recovery-20261104/long-study/registration.json": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+        "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+        "experimental/lm1-training-recovery-20261104/registration.json": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+        "experimental/lm1-training-recovery-20261104/run_registered_study.py": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+        "experimental/lm1-training-recovery-20261104/suffix-study/SUFFIX_PROTOCOL.md": "176cd8a63462822b67bde234f60c57d90c8fe4066c6461eee18c0474b98359d4",
+        "experimental/lm1-training-recovery-20261104/suffix-study/choose_development_study.py": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520",
+        "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68"
+      },
+      "registeredFileCount": 35,
+      "trainingProcessSeconds": 900,
+      "capacityProcessSeconds": 120,
+      "testSha256ReportedOnly": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a"
+    }
+  },
+  "changedPathsSincePreviousSourceCommit": [
+    "A\tdocs/evidence/lm1-training-recovery-20261104/REPRODUCE.md",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/final-selection/before-test-verification.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/final-selection/development-study-choice.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/final-selection/selection-freeze.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/intent-epoch-losses.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/capacity-before.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/selection.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/capacity-before.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/selection.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/development-summary.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/intent-small/capacity-before.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/intent-small/selection.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/intent-wide/capacity-before.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/intent-wide/selection.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small-capacity-after.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small-capacity-after.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide-capacity-after.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide-capacity-after.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide.tsv",
+    "M\tdocs/research/omega/LM1-TRAINING-RECOVERY-HANDOFF-20261104.md"
+  ],
+  "publishedCoordinatorEvidence": {
+    "choicePath": "docs/evidence/lm1-training-recovery-20261104/final-selection/development-study-choice.json",
+    "freezePath": "docs/evidence/lm1-training-recovery-20261104/final-selection/selection-freeze.json",
+    "verificationPath": "docs/evidence/lm1-training-recovery-20261104/final-selection/before-test-verification.json",
+    "selectedStudy": "v3",
+    "choiceSha256": "1325d06208d8850e6ce3aa5969d68f37cdaa3e26c46c50f66743ddd3dc442cac",
+    "freezeSha256": "6c069dd1ab21d792b9985333b14b2d6a0c51b66affbc8a90de0f37092c5a49f4",
+    "verificationSha256": "b12fdea44b7a3531be407f542d66c104406e7d51038956a048403b57d18136c6",
+    "choiceAndFreezePayloadEqual": true,
+    "coordinatorRecordedHashesMatch": true,
+    "selectedSourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+    "selectedRegistrationSha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+    "boundPostCapacityObjectInFreeze": false,
+    "selectedArmPostCapacityMarkers": {
+      "S1": "REQUIRES_SEPARATE_BENCHMARK",
+      "W1": "REQUIRES_SEPARATE_BENCHMARK"
+    },
+    "testEvaluatedReported": false,
+    "publishedFinalTestPaths": [],
+    "coordinatorEvidenceReadByCurrentStudyTest": false,
+    "interpretation": "Published coordinator comparison is consistent; the standalone test entry point does not enforce the version-choice artifact. This is not evidence of an actual wrong-study execution."
+  },
+  "handoffContainsStaleRunningV3Description": true,
+  "sourceInventory": {
+    "docs/evidence/lm1-training-recovery-20261104/final-selection/before-test-verification.json": {
+      "sha256": "b12fdea44b7a3531be407f542d66c104406e7d51038956a048403b57d18136c6",
+      "bytes": 342,
+      "gitBlobSha1": "96e0d1b26d1f1b0d296f8c773e1566bdd67eadfa"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/final-selection/development-study-choice.json": {
+      "sha256": "1325d06208d8850e6ce3aa5969d68f37cdaa3e26c46c50f66743ddd3dc442cac",
+      "bytes": 8116,
+      "gitBlobSha1": "9cee641a61eef5da2cfb71b6d6d868248e961d61"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/final-selection/selection-freeze.json": {
+      "sha256": "6c069dd1ab21d792b9985333b14b2d6a0c51b66affbc8a90de0f37092c5a49f4",
+      "bytes": 2209,
+      "gitBlobSha1": "751ca9d9081d0102c0952c26ff473b5183cad4e6"
+    },
+    "docs/research/omega/LM1-TRAINING-RECOVERY-HANDOFF-20261104.md": {
+      "sha256": "c7ae1a49b357b1fca9a956137d5a5794bcb08c5a7204857beb282a9182d7fcf9",
+      "bytes": 4890,
+      "gitBlobSha1": "72b99c5a30bcf52f39c8e9e7a32aa05a0011e9fb"
+    },
+    "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md": {
+      "sha256": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5",
+      "bytes": 13627,
+      "gitBlobSha1": "2bf761f7c6bea28a3d1f0b99e63fafa995cf1a7f"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/INTENT_LONG_PROTOCOL.md": {
+      "sha256": "150ce71af4239563ce8142163e5e456f0554cf1263f4e6c2ad61bb842cc87800",
+      "bytes": 6447,
+      "gitBlobSha1": "01c1f0508877a353924a3f35a4d7129f28f33e64"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/registration.json": {
+      "sha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+      "bytes": 4772,
+      "gitBlobSha1": "aa9f4a75a72674f6bb62ab48b0dc0cab43027457"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py": {
+      "sha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "bytes": 13739,
+      "gitBlobSha1": "30119435feed1728c5d22fec40830654a7a19861"
+    },
+    "experimental/lm1-training-recovery-20261104/registration.json": {
+      "sha256": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+      "bytes": 3716,
+      "gitBlobSha1": "7e5c6f92ff1ab96c520d5b5d9bb5294fb05065d4"
+    },
+    "experimental/lm1-training-recovery-20261104/run_registered_study.py": {
+      "sha256": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "bytes": 15810,
+      "gitBlobSha1": "28908e07d6217f10882429047c853d1dd8667912"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/SUFFIX_PROTOCOL.md": {
+      "sha256": "176cd8a63462822b67bde234f60c57d90c8fe4066c6461eee18c0474b98359d4",
+      "bytes": 5856,
+      "gitBlobSha1": "bff3f2bfc4742c77b9d6ab03a017a393d2f6ccfc"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/choose_development_study.py": {
+      "sha256": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520",
+      "bytes": 5922,
+      "gitBlobSha1": "77133d843d7fc03a8a87b595c75a948387c55464"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/registration.json": {
+      "sha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+      "bytes": 6080,
+      "gitBlobSha1": "0c9fef1a06cfc890e3caa4d2d6c71f1d38c6e5fb"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py": {
+      "sha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+      "bytes": 13745,
+      "gitBlobSha1": "417e4b3289bb692e72dc80398b51b67e106b8907"
+    }
+  },
+  "modelProcessesStarted": 0,
+  "modelAndDatasetBytesRead": 0,
+  "historicalFilesModified": false,
+  "scope": "PINNED_TEXT_SOURCE_AND_PUBLISHED_COORDINATOR_IDENTITY_REVIEW_ONLY"
+}

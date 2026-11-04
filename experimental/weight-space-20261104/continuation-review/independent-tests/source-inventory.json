@@ -1,0 +1,20 @@
+{
+  "commit": "9ceffc26a2159c8dc726c1f13d2882119159c130",
+  "sources": {
+    "long": {
+      "sourcePath": "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+      "sha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "gitBlob": "30119435feed1728c5d22fec40830654a7a19861"
+    },
+    "suffix": {
+      "sourcePath": "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py",
+      "sha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+      "gitBlob": "417e4b3289bb692e72dc80398b51b67e106b8907"
+    },
+    "selector": {
+      "sourcePath": "experimental/lm1-training-recovery-20261104/suffix-study/choose_development_study.py",
+      "sha256": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520",
+      "gitBlob": "77133d843d7fc03a8a87b595c75a948387c55464"
+    }
+  }
+}

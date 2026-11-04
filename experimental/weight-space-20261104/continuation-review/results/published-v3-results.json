@@ -1,0 +1,3835 @@
+{
+  "status": "PUBLISHED_V3_AND_LEGACY_FREEZE_CONSISTENT_CAPACITY_FAIL_FINAL_TEST_NOT_PUBLISHED",
+  "reviewedCommit": "9ceffc26a2159c8dc726c1f13d2882119159c130",
+  "previousReviewedCommit": "e3c5aeadd6336f843bd625d56431208d3a03b5ad",
+  "executedSourceCommitReported": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "evidenceCommitTime": "2026-11-04T20:31:51+01:00",
+  "addedEvidencePaths": [
+    "A\tdocs/evidence/lm1-training-recovery-20261104/final-selection/before-test-verification.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/final-selection/development-study-choice.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/final-selection/selection-freeze.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/development-summary.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/intent-small/capacity-before.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/intent-small/selection.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/intent-wide/capacity-before.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/intent-wide/selection.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small-capacity-after.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small-capacity-after.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide-capacity-after.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide-capacity-after.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide.tsv"
+  ],
+  "executableSourcesChangedByEvidenceCommit": false,
+  "registrationSha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+  "jarSha256Reported": "8075d799b42f3b4f23f2f154af09685f52074503b0a4103ba336a618a3be1950",
+  "registeredSourcesRehashed": [
+    "experimental/lm1-training-recovery-20261104/run_registered_study.py",
+    "experimental/lm1-training-recovery-20261104/LmRecoveryDiagnostic.kt",
+    "experimental/lm1-training-recovery-20261104/DIAGNOSTIC_PROTOCOL.md",
+    "experimental/lm1-training-recovery-20261104/LmIntentStudy.kt",
+    "experimental/lm1-training-recovery-20261104/LmIntentStudyChecks.kt",
+    "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+    "experimental/weight-space-20261104/LmWeightExperiment.kt",
+    "experimental/weight-space-20261104/LmWeightSurgery.kt",
+    "experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudy.kt",
+    "experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudyChecks.kt",
+    "experimental/lm1-training-recovery-20261104/registration.json",
+    "experimental/lm1-training-recovery-20261104/long-study/INTENT_LONG_PROTOCOL.md",
+    "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+    "experimental/lm1-training-recovery-20261104/long-study/test_study_controller.py",
+    "experimental/lm1-training-recovery-20261104/suffix-study/LmIntentSuffixStudy.kt",
+    "experimental/lm1-training-recovery-20261104/suffix-study/LmIntentSuffixStudyChecks.kt",
+    "experimental/lm1-training-recovery-20261104/long-study/registration.json",
+    "experimental/lm1-training-recovery-20261104/suffix_probe.py",
+    "experimental/lm1-training-recovery-20261104/suffix-study/SUFFIX_PROTOCOL.md",
+    "experimental/lm1-training-recovery-20261104/suffix-study/choose_development_study.py",
+    "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py",
+    "experimental/lm1-training-recovery-20261104/suffix-study/test_study_controller.py"
+  ],
+  "registeredFilesIntentionallyNotRead": [
+    "experimental/lm1-training-recovery-20261104/make_intent_data.py",
+    "experimental/lm1-training-recovery-20261104/intent-data/dev.tsv",
+    "experimental/lm1-training-recovery-20261104/intent-data/test.sealed.tsv",
+    "experimental/lm1-training-recovery-20261104/intent-data/train.tsv",
+    "experimental/lm1-training-recovery-20261104/intent-data/manifest.json",
+    "experimental/weight-space-20261104/development.txt"
+  ],
+  "frozenPreviousFiles": {
+    "audit_published_results.py": "def7392d9afbe3fa4e7086b42e1e4168d2b1b124c25d3f90f815a1bb633dab6b",
+    "published-results.json": "6f6cd60b94a5b3191b60d284eb0eb676d921379bd26c3c0e36083e9eb237384d",
+    "README.md": "b639ba726a0712e5f4dacb04b1a15626cf88169ef6491f8fd87cf65bc2bc5ff8",
+    "audit_published_v2.py": "7f02e19ac4d465b96b231f6677c0dbe4274113d229e77287b958b699fd749e6c",
+    "published-v2-results.json": "334c6f521c91bfd29433c50fc14a542f22e6c3b32102fbad04f908268082cc88",
+    "V2_ADDENDUM.md": "ba0bace3d54a83506b616f576367108013d10f08b36998afc1f790a1be1a9a01"
+  },
+  "unchangedPreviouslyAuditedV2Evidence": [
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/capacity-before.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/selection.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-summary.json",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/capacity-before.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/selection.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.receipt.json",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.receipt.json",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.receipt.json",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.receipt.json",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.tsv"
+  ],
+  "sourceInventory": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": {
+      "sha256": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+      "bytes": 6695,
+      "gitBlobSha1": "a81eb0256ad6c59584df78ee589d4c7490545e29"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": {
+      "sha256": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+      "bytes": 5547,
+      "gitBlobSha1": "7bc91176ea240bd287fcc214a8204d93298a9f17"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt": {
+      "sha256": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+      "bytes": 4496,
+      "gitBlobSha1": "5c5705d614f8bb457cfb10bd497e646577667005"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": {
+      "sha256": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+      "bytes": 13794,
+      "gitBlobSha1": "1df9dc9378a732e37e8e4568a2d46310442d15a8"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": {
+      "sha256": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+      "bytes": 9364,
+      "gitBlobSha1": "6de174dc400bfc5bd5bfb0facc56fc4820550b25"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": {
+      "sha256": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+      "bytes": 17044,
+      "gitBlobSha1": "bc1176e2b230439c3fa36d6be996444eaab8efbd"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/final-selection/before-test-verification.json": {
+      "sha256": "b12fdea44b7a3531be407f542d66c104406e7d51038956a048403b57d18136c6",
+      "bytes": 342,
+      "gitBlobSha1": "96e0d1b26d1f1b0d296f8c773e1566bdd67eadfa"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/final-selection/development-study-choice.json": {
+      "sha256": "1325d06208d8850e6ce3aa5969d68f37cdaa3e26c46c50f66743ddd3dc442cac",
+      "bytes": 8116,
+      "gitBlobSha1": "9cee641a61eef5da2cfb71b6d6d868248e961d61"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/final-selection/selection-freeze.json": {
+      "sha256": "6c069dd1ab21d792b9985333b14b2d6a0c51b66affbc8a90de0f37092c5a49f4",
+      "bytes": 2209,
+      "gitBlobSha1": "751ca9d9081d0102c0952c26ff473b5183cad4e6"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/capacity-before.tsv": {
+      "sha256": "1663bf55b1f8903fe183a1423b6e245c2f58c52ca6014a811fc4d2cf0912d553",
+      "bytes": 5098,
+      "gitBlobSha1": "cb102fa10528c81f5c86800c3c9645b61f5e47af"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/selection.tsv": {
+      "sha256": "18098f8160f757c86c1c7a9f2d3725b60699ae5096b46494b15d0706e26896a7",
+      "bytes": 241,
+      "gitBlobSha1": "c917515bf3ebb3f723987be4687ff54fdb136f76"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-summary.json": {
+      "sha256": "5d9936e8a1ca6952249d627d360fb958f57584748d855ca2cb1ab6acf71558ae",
+      "bytes": 5917,
+      "gitBlobSha1": "d3c984aef8aa91942e25f928bbd14e30adbcdd18"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/capacity-before.tsv": {
+      "sha256": "de6e44608ed09ea99a97c2af6aadfce09114e94aa1a35607ed8340ec6904b08a",
+      "bytes": 5171,
+      "gitBlobSha1": "a5afe7d3a31ae01458178d6b8033ba3da79acaad"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/selection.tsv": {
+      "sha256": "ad504999e4f62d00565d2db365438b26c11aa818b070b32dfe3a47d41d646b71",
+      "bytes": 241,
+      "gitBlobSha1": "8e095582b0537654c553381ffde6097586a697bf"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.receipt.json": {
+      "sha256": "34f2b265bc28982804c50cb87e9956f0060b7f2d906b4af15a00b5e0a9602f3d",
+      "bytes": 1100,
+      "gitBlobSha1": "8a1f2f2b582109be8bea067cae4dc49fd1892ecc"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.tsv": {
+      "sha256": "9fbd48e66b7993ceaf3b82bcae5e32ed934ac1b2e2baf4d7f6faf7ee7c9d7eaf",
+      "bytes": 5095,
+      "gitBlobSha1": "c1b85b56a3ef10c27cb18693d6ad63399403b63b"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.receipt.json": {
+      "sha256": "6cace1fab93046698844c53dd87dc688c6f199e74bdef33bdee07dc1fb976f05",
+      "bytes": 1231,
+      "gitBlobSha1": "e1fd827d2e18e2caf0df7e996c34db4098820a94"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.tsv": {
+      "sha256": "a6ce3a1c31b2faa398abf2a0d5ba1c80015c9bb01ad52a0a4faeca5ab075f154",
+      "bytes": 87330,
+      "gitBlobSha1": "4fdc8a4da95445905fe22e11f5dd3616db3d1ace"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.receipt.json": {
+      "sha256": "bd5774c59a5cd061e51ac68d68b2e54a1f31f03637fce3bbca9f869619332fe7",
+      "bytes": 1096,
+      "gitBlobSha1": "23dff1bb7c12f4597eb0ca3c1a217949171789c7"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.tsv": {
+      "sha256": "d5a178857895f3aa46792b70049899fcff5752271b270dee76fd1aea8e6d65a7",
+      "bytes": 5162,
+      "gitBlobSha1": "156924be718e186328ab928d1d0d2c1e16be6d3e"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.receipt.json": {
+      "sha256": "1560ff0f106352d2ba3338298046e53ed780b7caa330639b3e49fe9716b0c303",
+      "bytes": 1227,
+      "gitBlobSha1": "336f6d1755e793dc0794bb38098da06ad082e1d5"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.tsv": {
+      "sha256": "3538ebc9857a8f2d10f184b6c03ab4179e9b17dffb54959c3fd84deb8318ac57",
+      "bytes": 89436,
+      "gitBlobSha1": "193a6dc84fbb17e687c12ad09934c389049049f0"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/development-summary.json": {
+      "sha256": "546a4581d7b23bdb083b1daf5f420b60d5283eec8e22ed01f5f1e9a40b2e2b90",
+      "bytes": 5889,
+      "gitBlobSha1": "fc25fc7ab9edce813028092a0783d07366ede35e"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/intent-small/capacity-before.tsv": {
+      "sha256": "5e10fcc232403792f92085d958d7a19abcfcc0769795578060d1600034c4a05a",
+      "bytes": 5097,
+      "gitBlobSha1": "eabccf19c87b65958bc7bf8587c246c639f61984"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/intent-small/selection.tsv": {
+      "sha256": "eaea63ccb229e6393cff2c89733f27552f9ffd8a45ef545e0d65f70651cb3021",
+      "bytes": 241,
+      "gitBlobSha1": "8824b552888659a411723a72587acf2f41ebf68c"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/intent-wide/capacity-before.tsv": {
+      "sha256": "f3b73587450ee4535eb4ed459f50ec2ca13d19e5ae9bed6d06470398b156fec6",
+      "bytes": 5173,
+      "gitBlobSha1": "2dfa4f3d38b5ab51bea25070671d3c83e1f4666a"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/intent-wide/selection.tsv": {
+      "sha256": "df39db8d37194d634276e9003f924ecc8a7d7fad500c13dc758c4d9a3c5c1491",
+      "bytes": 240,
+      "gitBlobSha1": "b72a0c001b94e5082a98399bb13e004a43e5eec6"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small-capacity-after.receipt.json": {
+      "sha256": "c53257915677fd06aacec281b6206911a77b220f2bd776bac6e084753ccb1aac",
+      "bytes": 1102,
+      "gitBlobSha1": "a6876bf5684f58162cbd12b7e5d1083656f14be3"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small-capacity-after.tsv": {
+      "sha256": "9b6856d5a2d5dca0184c0e2f00e3094a76d96b657cc694dafe61e211bf0f93b5",
+      "bytes": 5096,
+      "gitBlobSha1": "d3a1e474f282209453d4ca6e5c3517a83c9a74df"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small.receipt.json": {
+      "sha256": "48a045a1fca06dadcd223ae75685c08405aa211869239587a03d37ef31e07f31",
+      "bytes": 1235,
+      "gitBlobSha1": "a9960aa17b75d6c1257f96f867cdbc0155c8e479"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-small.tsv": {
+      "sha256": "7d73888a10cde861154aa42d54a9d1eb340fc1e1e2af17891106186b5e1fc1d6",
+      "bytes": 87617,
+      "gitBlobSha1": "e8edb62ddeb042e4a6150c60baa3a6bfd9ff3096"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide-capacity-after.receipt.json": {
+      "sha256": "3ffd8aebfc003c76a0b0d715e8236ae602707f282c5be62de72d6790afb6cee4",
+      "bytes": 1099,
+      "gitBlobSha1": "f9e67eb8144ec8d527d86703e8150415a7712a2e"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide-capacity-after.tsv": {
+      "sha256": "99c7c791c4e63ff4c346767b2a89d3c2ba96f9e1bc14fbd8c8ab49f6069cd1d5",
+      "bytes": 5166,
+      "gitBlobSha1": "8f3124e7c3aa2ff6123e7d81ec95f25f69ebe3cd"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide.receipt.json": {
+      "sha256": "c34f8e60bab945e154ea3e99cc1d73da7e46e4a2a20d7fe69be8da099ebda73c",
+      "bytes": 1227,
+      "gitBlobSha1": "7ab54c7f091e85d857c288a8cbe6502168dbffaf"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/intent-wide.tsv": {
+      "sha256": "aa44e7cf82dd5717b48e4eae3617fac7800ad96cb8392de3ea758f1b0ad31523",
+      "bytes": 88962,
+      "gitBlobSha1": "0a51d3f8fcb64a49f860cf5f70f2d784f2a5f3e3"
+    },
+    "docs/research/omega/LM1-TRAINING-RECOVERY-HANDOFF-20261104.md": {
+      "sha256": "c7ae1a49b357b1fca9a956137d5a5794bcb08c5a7204857beb282a9182d7fcf9",
+      "bytes": 4890,
+      "gitBlobSha1": "72b99c5a30bcf52f39c8e9e7a32aa05a0011e9fb"
+    },
+    "experimental/lm1-training-recovery-20261104/DIAGNOSTIC_PROTOCOL.md": {
+      "sha256": "e8027ce981be5b27a20542353c5aa2803ce09589c230041b2d2bc1c3ab584614",
+      "bytes": 5301,
+      "gitBlobSha1": "ee4ba5439a7d59beaa38fc2fa7d4a49c82afcad7"
+    },
+    "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md": {
+      "sha256": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5",
+      "bytes": 13627,
+      "gitBlobSha1": "2bf761f7c6bea28a3d1f0b99e63fafa995cf1a7f"
+    },
+    "experimental/lm1-training-recovery-20261104/LmIntentStudy.kt": {
+      "sha256": "0fb9552ad0d8cc4d2f6cc43ad8700374da27ae9ca2e794f1765fca45c11c2e9d",
+      "bytes": 16459,
+      "gitBlobSha1": "337fa9c582579c3239ec81cad8295d7cf61c5b42"
+    },
+    "experimental/lm1-training-recovery-20261104/LmIntentStudyChecks.kt": {
+      "sha256": "6275790deb920139ff3eb627200a7dc502b427dee357576ba9d471341dc71aa4",
+      "bytes": 3910,
+      "gitBlobSha1": "c5f1dea8d29ac78fdf2088aed32e663cc6b30e16"
+    },
+    "experimental/lm1-training-recovery-20261104/LmRecoveryDiagnostic.kt": {
+      "sha256": "4eb3eb594f03a30ad00b750a31ea899c8a937f0783473b71f70a576648f7f4e3",
+      "bytes": 15636,
+      "gitBlobSha1": "8644cf774168403a52158e0790744bce94ec8e2e"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/INTENT_LONG_PROTOCOL.md": {
+      "sha256": "150ce71af4239563ce8142163e5e456f0554cf1263f4e6c2ad61bb842cc87800",
+      "bytes": 6447,
+      "gitBlobSha1": "01c1f0508877a353924a3f35a4d7129f28f33e64"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudy.kt": {
+      "sha256": "e1d469e0d702041a12cf250ac86bd5fcde18351347ba05a4824566c79b846fe4",
+      "bytes": 16470,
+      "gitBlobSha1": "3e8efe053de3a3736f535e156115cb0c3ea65c6a"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudyChecks.kt": {
+      "sha256": "2316beddd404f311a866191b749e9d8ae4825a44ea519a0d858e208abafc23e6",
+      "bytes": 3950,
+      "gitBlobSha1": "7eeab71ec2c1a5cf39fdbadfc911c7f6193c0117"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/registration.json": {
+      "sha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+      "bytes": 4772,
+      "gitBlobSha1": "aa9f4a75a72674f6bb62ab48b0dc0cab43027457"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py": {
+      "sha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "bytes": 13739,
+      "gitBlobSha1": "30119435feed1728c5d22fec40830654a7a19861"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/test_study_controller.py": {
+      "sha256": "9948d55f3aaf9fbcc2f3a0b9c02badebb6d8605b91581569ef688d6c118d9d95",
+      "bytes": 11043,
+      "gitBlobSha1": "10e1e6939280e7c7d205e7d21c14a99c89a92104"
+    },
+    "experimental/lm1-training-recovery-20261104/registration.json": {
+      "sha256": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+      "bytes": 3716,
+      "gitBlobSha1": "7e5c6f92ff1ab96c520d5b5d9bb5294fb05065d4"
+    },
+    "experimental/lm1-training-recovery-20261104/run_registered_study.py": {
+      "sha256": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "bytes": 15810,
+      "gitBlobSha1": "28908e07d6217f10882429047c853d1dd8667912"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/LmIntentSuffixStudy.kt": {
+      "sha256": "2ca026da5ecebb79f9fcbb0d49d39cc6c1485b0d31b19fe10118cb4ff711ef89",
+      "bytes": 16467,
+      "gitBlobSha1": "05b764ba26c38948bd79aec77d07f882274a9245"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/LmIntentSuffixStudyChecks.kt": {
+      "sha256": "8c5eeac72c6fb6c2d97be0f0ff1a87cc9790a361e258bc56c98b31bf81522497",
+      "bytes": 3970,
+      "gitBlobSha1": "e6b1a7bd56902f43ead9eca59ab0445df3d27e73"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/SUFFIX_PROTOCOL.md": {
+      "sha256": "176cd8a63462822b67bde234f60c57d90c8fe4066c6461eee18c0474b98359d4",
+      "bytes": 5856,
+      "gitBlobSha1": "bff3f2bfc4742c77b9d6ab03a017a393d2f6ccfc"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/choose_development_study.py": {
+      "sha256": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520",
+      "bytes": 5922,
+      "gitBlobSha1": "77133d843d7fc03a8a87b595c75a948387c55464"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/registration.json": {
+      "sha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+      "bytes": 6080,
+      "gitBlobSha1": "0c9fef1a06cfc890e3caa4d2d6c71f1d38c6e5fb"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py": {
+      "sha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+      "bytes": 13745,
+      "gitBlobSha1": "417e4b3289bb692e72dc80398b51b67e106b8907"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/test_study_controller.py": {
+      "sha256": "2ffbe1a8514bf5591578d386c0e881821b533bd41439065240a4dc4074e659cd",
+      "bytes": 11047,
+      "gitBlobSha1": "c78a2cc8434753fba8c2a9b3928438b54110e121"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix_probe.py": {
+      "sha256": "57bfd97df92dc1f795f83c8adc8f81e3f398b5b54586417bbb8b7caf71ecb7b2",
+      "bytes": 10125,
+      "gitBlobSha1": "5368ba4edfc051e5c8c22d4d30f621fbc3f0ca8c"
+    },
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt": {
+      "sha256": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+      "bytes": 12149,
+      "gitBlobSha1": "c7d20d2f85b5fdc9af7b6a7079eb9c4d60e9fd79"
+    },
+    "experimental/weight-space-20261104/LmWeightExperiment.kt": {
+      "sha256": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+      "bytes": 15243,
+      "gitBlobSha1": "ea2541c10536956afb39167536c4476ec9650081"
+    },
+    "experimental/weight-space-20261104/LmWeightSurgery.kt": {
+      "sha256": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+      "bytes": 8378,
+      "gitBlobSha1": "42840f62b22f21b3418fe79269a32e95237b6ce5"
+    }
+  },
+  "actualModelProcesses": 0,
+  "modelJarTokenizerAndDatasetBytesRead": 0,
+  "receiptsChecked": 4,
+  "updatesChecked": 1024,
+  "devCasesRescored": 192,
+  "rawCapacityRunsRecomputed": 4,
+  "onlineEpochMeansRecomputed": 32,
+  "arms": {
+    "small": {
+      "manifest": {
+        "variant": "small",
+        "scope": "RESEARCH_SHADOW",
+        "parameters": "132160",
+        "steps": "512",
+        "batch": "4",
+        "learningRate": "1.0E-4",
+        "warmup": "4",
+        "weightDecay": "0.01",
+        "seed": "20261104",
+        "workers": "2",
+        "scheduleSha256": "0c977d357e9a3c19496890faf9f3f593169064380475a171a3553ba30364ff48",
+        "tokenScheduleSha256": "9e06273da0661c5fc12b8b92ca1701d437e01f4946b0aa19351f3f6b570d6fb3",
+        "objective": "ANSWER_AND_EOS_ONLY",
+        "testReadDuringTraining": "false"
+      },
+      "trainingReceipt": {
+        "label": "intent-small",
+        "command": [
+          "java",
+          "-Xms64m",
+          "-Xmx3g",
+          "-cp",
+          "/workspace/scratch/3112c86b5191/training-recovery-suffix-build/experiment.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+          "at.heinz.deviceai.learning.lm.LmIntentSuffixStudy",
+          "train",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-baseline.lm1",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "/workspace/scratch/3112c86b5191/device-ai-training-research/experimental/lm1-training-recovery-20261104/intent-data",
+          "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small",
+          "small"
+        ],
+        "startedUtc": "2026-11-04T19:20:35.221088+00:00",
+        "wallSeconds": 12.816204507998918,
+        "returncode": 0,
+        "timeout": false,
+        "timeoutSeconds": 900,
+        "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+        "registrationSha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+        "jarSha256": "8075d799b42f3b4f23f2f154af09685f52074503b0a4103ba336a618a3be1950",
+        "logSha256": "7d73888a10cde861154aa42d54a9d1eb340fc1e1e2af17891106186b5e1fc1d6",
+        "registeredBytesUnchanged": true
+      },
+      "capacityReceipt": {
+        "label": "intent-small-capacity-after",
+        "command": [
+          "java",
+          "-Xms64m",
+          "-Xmx1g",
+          "-cp",
+          "/workspace/scratch/3112c86b5191/training-recovery-suffix-build/experiment.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+          "at.heinz.deviceai.learning.lm.LmCapacityBenchmark",
+          "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f.lm1",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp"
+        ],
+        "startedUtc": "2026-11-04T19:20:48.044540+00:00",
+        "wallSeconds": 0.42341480199866055,
+        "returncode": 1,
+        "timeout": false,
+        "timeoutSeconds": 120,
+        "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+        "registrationSha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+        "jarSha256": "8075d799b42f3b4f23f2f154af09685f52074503b0a4103ba336a618a3be1950",
+        "logSha256": "9b6856d5a2d5dca0184c0e2f00e3094a76d96b657cc694dafe61e211bf0f93b5",
+        "registeredBytesUnchanged": true
+      },
+      "updates": 512,
+      "supervisedTargets": 4096,
+      "lastLoggedTrainingMillis": 11274,
+      "snapshots": [
+        {
+          "step": 0,
+          "score": {
+            "split": "dev",
+            "step": "0",
+            "correct": "0",
+            "total": "24",
+            "answerNll": "4.3214416167930505",
+            "eosNll": "8.113153474345408",
+            "prematureEos": "0",
+            "classCorrect": "0,0,0,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "1.6199882672178015E-4",
+            "missingEos": "24",
+            "generatedTokens": "96"
+          },
+          "validDigitEos": 0,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": false,
+            "dev-0002": false,
+            "dev-0003": false,
+            "dev-0004": false,
+            "dev-0005": false,
+            "dev-0006": false,
+            "dev-0007": false,
+            "dev-0008": false,
+            "dev-0009": false,
+            "dev-0010": false,
+            "dev-0011": false,
+            "dev-0012": false,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": false,
+            "dev-0016": false,
+            "dev-0017": false,
+            "dev-0018": false,
+            "dev-0019": false,
+            "dev-0020": false,
+            "dev-0021": false,
+            "dev-0022": false,
+            "dev-0023": false,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            }
+          }
+        },
+        {
+          "step": 128,
+          "score": {
+            "split": "dev",
+            "step": "128",
+            "correct": "11",
+            "total": "24",
+            "answerNll": "1.2711227451237115",
+            "eosNll": "0.046497025463020446",
+            "prematureEos": "0",
+            "classCorrect": "2,5,4,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "1.8900469801034583E-4",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              2,
+              2,
+              0,
+              2,
+              0
+            ],
+            [
+              1,
+              5,
+              0,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              4,
+              0,
+              0
+            ],
+            [
+              4,
+              2,
+              0,
+              0,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": false,
+            "dev-0002": true,
+            "dev-0003": false,
+            "dev-0004": true,
+            "dev-0005": true,
+            "dev-0006": false,
+            "dev-0007": true,
+            "dev-0008": false,
+            "dev-0009": false,
+            "dev-0010": false,
+            "dev-0011": true,
+            "dev-0012": true,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": false,
+            "dev-0016": true,
+            "dev-0017": true,
+            "dev-0018": false,
+            "dev-0019": false,
+            "dev-0020": false,
+            "dev-0021": true,
+            "dev-0022": true,
+            "dev-0023": true,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            }
+          }
+        },
+        {
+          "step": 256,
+          "score": {
+            "split": "dev",
+            "step": "256",
+            "correct": "12",
+            "total": "24",
+            "answerNll": "1.4676687020349501",
+            "eosNll": "0.012083073147811282",
+            "prematureEos": "0",
+            "classCorrect": "0,6,6,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "3.781639732854577E-5",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              0,
+              2,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              6,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              6,
+              0,
+              0
+            ],
+            [
+              1,
+              2,
+              3,
+              0,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": true,
+            "dev-0002": true,
+            "dev-0003": false,
+            "dev-0004": true,
+            "dev-0005": true,
+            "dev-0006": false,
+            "dev-0007": true,
+            "dev-0008": false,
+            "dev-0009": true,
+            "dev-0010": false,
+            "dev-0011": true,
+            "dev-0012": true,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": false,
+            "dev-0016": true,
+            "dev-0017": true,
+            "dev-0018": false,
+            "dev-0019": true,
+            "dev-0020": false,
+            "dev-0021": true,
+            "dev-0022": false,
+            "dev-0023": false,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            }
+          }
+        },
+        {
+          "step": 512,
+          "score": {
+            "split": "dev",
+            "step": "512",
+            "correct": "13",
+            "total": "24",
+            "answerNll": "1.635475808193661",
+            "eosNll": "0.005600932744699749",
+            "prematureEos": "0",
+            "classCorrect": "1,6,6,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "2.6880261420577273E-5",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              1,
+              2,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              6,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              6,
+              0,
+              0
+            ],
+            [
+              2,
+              2,
+              2,
+              0,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": true,
+            "dev-0002": true,
+            "dev-0003": false,
+            "dev-0004": true,
+            "dev-0005": true,
+            "dev-0006": false,
+            "dev-0007": true,
+            "dev-0008": false,
+            "dev-0009": true,
+            "dev-0010": false,
+            "dev-0011": true,
+            "dev-0012": true,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": false,
+            "dev-0016": true,
+            "dev-0017": true,
+            "dev-0018": false,
+            "dev-0019": true,
+            "dev-0020": false,
+            "dev-0021": true,
+            "dev-0022": false,
+            "dev-0023": true,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            }
+          }
+        }
+      ],
+      "selection": {
+        "checkpointSha256": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+        "step": "512",
+        "devCorrect": "13",
+        "devTotal": "24",
+        "devAnswerNll": "1.635475808193661",
+        "testRead": "false",
+        "inputsUnchanged": "true",
+        "generalModelPromotion": "NOT_PERMITTED",
+        "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK"
+      },
+      "checkpointRows": {
+        "0": {
+          "step": "0",
+          "sha256": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435.lm1"
+        },
+        "128": {
+          "step": "128",
+          "sha256": "15a4b2ec7fec71c8ac3db59bc9b83d45c846d3a172427069f2c057ac6480ea4d",
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/15a4b2ec7fec71c8ac3db59bc9b83d45c846d3a172427069f2c057ac6480ea4d.lm1"
+        },
+        "256": {
+          "step": "256",
+          "sha256": "9e4c3554379ef21eb9778aff2b5a18b260024f77406144a8f96a670f800ffdc3",
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/9e4c3554379ef21eb9778aff2b5a18b260024f77406144a8f96a670f800ffdc3.lm1"
+        },
+        "512": {
+          "step": "512",
+          "sha256": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f.lm1"
+        }
+      },
+      "capacityBefore": {
+        "protocol": {
+          "firstTokenLimitMs": "1500.0",
+          "generation32LimitMs": "5000.0",
+          "vmHwmLimitKiB": "786432",
+          "requestMaxMillis": "30000",
+          "warmups": "1",
+          "measuredRepeats": "3",
+          "ttftMethod": "SEPARATE_ONE_TOKEN_CALL_UPPER_BOUND",
+          "processTimeoutRequired": "true",
+          "promptSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435.lm1",
+          "checkpointSha256": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+          "checkpointBytes": "529671",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "132160",
+          "parameterBytes": "528640",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "64",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "256",
+          "loadMs": "66.278675",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "result": {
+          "pass": "true",
+          "reasons": "NONE",
+          "checkpointSha256": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+          "parameters": "132160",
+          "loadMs": "66.278675",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "6.603968",
+          "maxGeneration32CallMs": "15.778938",
+          "firstTokenObservations": "3",
+          "full32TokenObservations": "3",
+          "vmHwmKiB": "81396",
+          "finalVmHwmKiB": "81396",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "trials": [
+          {
+            "phase": "warmup",
+            "trial": "1",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "43.344239",
+            "runtimeMillis": "41",
+            "ttftUpperBoundMs": "43.344239",
+            "textSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+          },
+          {
+            "phase": "warmup",
+            "trial": "1",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "32",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "27.41855",
+            "runtimeMillis": "27",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "221a6db6c3a5ee7fff5d5b1bf023a32bd9d45f597f745d397933fe620ce89f27"
+          },
+          {
+            "phase": "measured",
+            "trial": "1",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "5.686811",
+            "runtimeMillis": "5",
+            "ttftUpperBoundMs": "5.686811",
+            "textSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+          },
+          {
+            "phase": "measured",
+            "trial": "1",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "32",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "15.778938",
+            "runtimeMillis": "15",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "221a6db6c3a5ee7fff5d5b1bf023a32bd9d45f597f745d397933fe620ce89f27"
+          },
+          {
+            "phase": "measured",
+            "trial": "2",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "6.603968",
+            "runtimeMillis": "6",
+            "ttftUpperBoundMs": "6.603968",
+            "textSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+          },
+          {
+            "phase": "measured",
+            "trial": "2",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "32",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "13.204001",
+            "runtimeMillis": "13",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "221a6db6c3a5ee7fff5d5b1bf023a32bd9d45f597f745d397933fe620ce89f27"
+          },
+          {
+            "phase": "measured",
+            "trial": "3",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "6.41225",
+            "runtimeMillis": "6",
+            "ttftUpperBoundMs": "6.41225",
+            "textSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+          },
+          {
+            "phase": "measured",
+            "trial": "3",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "32",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "12.928158",
+            "runtimeMillis": "12",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "221a6db6c3a5ee7fff5d5b1bf023a32bd9d45f597f745d397933fe620ce89f27"
+          }
+        ],
+        "peakVmHwmKiBRecomputed": 81396,
+        "completeCalls": 8,
+        "loadAndCallMilliseconds": 197.65559000000002
+      },
+      "capacityAfter": {
+        "protocol": {
+          "firstTokenLimitMs": "1500.0",
+          "generation32LimitMs": "5000.0",
+          "vmHwmLimitKiB": "786432",
+          "requestMaxMillis": "30000",
+          "warmups": "1",
+          "measuredRepeats": "3",
+          "ttftMethod": "SEPARATE_ONE_TOKEN_CALL_UPPER_BOUND",
+          "processTimeoutRequired": "true",
+          "promptSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f.lm1",
+          "checkpointSha256": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+          "checkpointBytes": "529673",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "132160",
+          "parameterBytes": "528640",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "64",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "256",
+          "loadMs": "78.971813",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "result": {
+          "pass": "false",
+          "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+          "checkpointSha256": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+          "parameters": "132160",
+          "loadMs": "78.971813",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "8.169152",
+          "maxGeneration32CallMs": "8.969214",
+          "firstTokenObservations": "0",
+          "full32TokenObservations": "0",
+          "vmHwmKiB": "69268",
+          "finalVmHwmKiB": "69268",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "trials": [
+          {
+            "phase": "warmup",
+            "trial": "1",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "0",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "44.243155",
+            "runtimeMillis": "42",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "phase": "warmup",
+            "trial": "1",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "0",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "24.835861",
+            "runtimeMillis": "24",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "phase": "measured",
+            "trial": "1",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "0",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "7.074457",
+            "runtimeMillis": "7",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "phase": "measured",
+            "trial": "1",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "0",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "8.969214",
+            "runtimeMillis": "8",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "phase": "measured",
+            "trial": "2",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "0",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "8.169152",
+            "runtimeMillis": "8",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "phase": "measured",
+            "trial": "2",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "0",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "8.208071",
+            "runtimeMillis": "8",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "phase": "measured",
+            "trial": "3",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "0",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "6.924032",
+            "runtimeMillis": "6",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "phase": "measured",
+            "trial": "3",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "0",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "8.506709",
+            "runtimeMillis": "8",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "peakVmHwmKiBRecomputed": 69268,
+        "completeCalls": 8,
+        "loadAndCallMilliseconds": 195.902464
+      },
+      "initialParity": [
+        {
+          "id": "dev-0001",
+          "probabilityDelta": "0.0"
+        },
+        {
+          "id": "dev-0002",
+          "probabilityDelta": "0.0"
+        },
+        {
+          "id": "dev-0003",
+          "probabilityDelta": "0.0"
+        }
+      ],
+      "onlineEpochLossesRecomputed": [
+        {
+          "epoch": 1,
+          "first_step": 1,
+          "last_step": 32,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 256,
+          "mean_online_nll": 2.7937592770904303,
+          "minimum_minibatch_nll": 1.0274573862552643,
+          "maximum_minibatch_nll": 6.525914907455444
+        },
+        {
+          "epoch": 2,
+          "first_step": 33,
+          "last_step": 64,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 512,
+          "mean_online_nll": 0.9297653688117862,
+          "minimum_minibatch_nll": 0.6418995410203934,
+          "maximum_minibatch_nll": 1.3601157069206238
+        },
+        {
+          "epoch": 3,
+          "first_step": 65,
+          "last_step": 96,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 768,
+          "mean_online_nll": 0.5863429841119796,
+          "minimum_minibatch_nll": 0.3736888989806175,
+          "maximum_minibatch_nll": 0.791425421833992
+        },
+        {
+          "epoch": 4,
+          "first_step": 97,
+          "last_step": 128,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1024,
+          "mean_online_nll": 0.356395956419874,
+          "minimum_minibatch_nll": 0.12069075927138329,
+          "maximum_minibatch_nll": 0.7066873610019684
+        },
+        {
+          "epoch": 5,
+          "first_step": 129,
+          "last_step": 160,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1280,
+          "mean_online_nll": 0.23289400720386766,
+          "minimum_minibatch_nll": 0.06585961021482944,
+          "maximum_minibatch_nll": 0.66916448995471
+        },
+        {
+          "epoch": 6,
+          "first_step": 161,
+          "last_step": 192,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1536,
+          "mean_online_nll": 0.1813156521820929,
+          "minimum_minibatch_nll": 0.03725349344313145,
+          "maximum_minibatch_nll": 0.8262933865189552
+        },
+        {
+          "epoch": 7,
+          "first_step": 193,
+          "last_step": 224,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1792,
+          "mean_online_nll": 0.16382166746916482,
+          "minimum_minibatch_nll": 0.018401202512905,
+          "maximum_minibatch_nll": 0.6203880161046982
+        },
+        {
+          "epoch": 8,
+          "first_step": 225,
+          "last_step": 256,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2048,
+          "mean_online_nll": 0.16727935779636027,
+          "minimum_minibatch_nll": 0.0138738879468292,
+          "maximum_minibatch_nll": 1.2952393346931785
+        },
+        {
+          "epoch": 9,
+          "first_step": 257,
+          "last_step": 288,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2304,
+          "mean_online_nll": 0.16262177147291368,
+          "minimum_minibatch_nll": 0.009820929495617747,
+          "maximum_minibatch_nll": 0.6901343427598476
+        },
+        {
+          "epoch": 10,
+          "first_step": 289,
+          "last_step": 320,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2560,
+          "mean_online_nll": 0.15218836986241513,
+          "minimum_minibatch_nll": 0.010187942767515779,
+          "maximum_minibatch_nll": 1.1510801694821566
+        },
+        {
+          "epoch": 11,
+          "first_step": 321,
+          "last_step": 352,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2816,
+          "mean_online_nll": 0.14548596414897474,
+          "minimum_minibatch_nll": 0.00771666073706001,
+          "maximum_minibatch_nll": 0.57960812211968
+        },
+        {
+          "epoch": 12,
+          "first_step": 353,
+          "last_step": 384,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3072,
+          "mean_online_nll": 0.15463061312766513,
+          "minimum_minibatch_nll": 0.006670704577118158,
+          "maximum_minibatch_nll": 1.1871585785411298
+        },
+        {
+          "epoch": 13,
+          "first_step": 385,
+          "last_step": 416,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3328,
+          "mean_online_nll": 0.14762839029572206,
+          "minimum_minibatch_nll": 0.006209379876963794,
+          "maximum_minibatch_nll": 1.034032360999845
+        },
+        {
+          "epoch": 14,
+          "first_step": 417,
+          "last_step": 448,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3584,
+          "mean_online_nll": 0.15258583931063185,
+          "minimum_minibatch_nll": 0.007157432613894343,
+          "maximum_minibatch_nll": 1.8988013009075075
+        },
+        {
+          "epoch": 15,
+          "first_step": 449,
+          "last_step": 480,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3840,
+          "mean_online_nll": 0.14223022054648027,
+          "minimum_minibatch_nll": 0.005887187551707029,
+          "maximum_minibatch_nll": 0.6557720077689737
+        },
+        {
+          "epoch": 16,
+          "first_step": 481,
+          "last_step": 512,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 4096,
+          "mean_online_nll": 0.14936618691353942,
+          "minimum_minibatch_nll": 0.004630189156159759,
+          "maximum_minibatch_nll": 1.0994778017047793
+        }
+      ]
+    },
+    "wide": {
+      "manifest": {
+        "variant": "wide",
+        "scope": "RESEARCH_SHADOW",
+        "parameters": "6562304",
+        "steps": "512",
+        "batch": "4",
+        "learningRate": "1.0E-4",
+        "warmup": "4",
+        "weightDecay": "0.01",
+        "seed": "20261104",
+        "workers": "2",
+        "scheduleSha256": "0c977d357e9a3c19496890faf9f3f593169064380475a171a3553ba30364ff48",
+        "tokenScheduleSha256": "9e06273da0661c5fc12b8b92ca1701d437e01f4946b0aa19351f3f6b570d6fb3",
+        "objective": "ANSWER_AND_EOS_ONLY",
+        "testReadDuringTraining": "false"
+      },
+      "trainingReceipt": {
+        "label": "intent-wide",
+        "command": [
+          "java",
+          "-Xms64m",
+          "-Xmx3g",
+          "-cp",
+          "/workspace/scratch/3112c86b5191/training-recovery-suffix-build/experiment.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+          "at.heinz.deviceai.learning.lm.LmIntentSuffixStudy",
+          "train",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-baseline.lm1",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "/workspace/scratch/3112c86b5191/device-ai-training-research/experimental/lm1-training-recovery-20261104/intent-data",
+          "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide",
+          "wide"
+        ],
+        "startedUtc": "2026-11-04T19:20:48.472053+00:00",
+        "wallSeconds": 583.045912349,
+        "returncode": 0,
+        "timeout": false,
+        "timeoutSeconds": 900,
+        "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+        "registrationSha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+        "jarSha256": "8075d799b42f3b4f23f2f154af09685f52074503b0a4103ba336a618a3be1950",
+        "logSha256": "aa44e7cf82dd5717b48e4eae3617fac7800ad96cb8392de3ea758f1b0ad31523",
+        "registeredBytesUnchanged": true
+      },
+      "capacityReceipt": {
+        "label": "intent-wide-capacity-after",
+        "command": [
+          "java",
+          "-Xms64m",
+          "-Xmx1g",
+          "-cp",
+          "/workspace/scratch/3112c86b5191/training-recovery-suffix-build/experiment.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+          "at.heinz.deviceai.learning.lm.LmCapacityBenchmark",
+          "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c.lm1",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp"
+        ],
+        "startedUtc": "2026-11-04T19:30:31.562076+00:00",
+        "wallSeconds": 1.9783031599999958,
+        "returncode": 1,
+        "timeout": false,
+        "timeoutSeconds": 120,
+        "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+        "registrationSha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+        "jarSha256": "8075d799b42f3b4f23f2f154af09685f52074503b0a4103ba336a618a3be1950",
+        "logSha256": "99c7c791c4e63ff4c346767b2a89d3c2ba96f9e1bc14fbd8c8ab49f6069cd1d5",
+        "registeredBytesUnchanged": true
+      },
+      "updates": 512,
+      "supervisedTargets": 4096,
+      "lastLoggedTrainingMillis": 560725,
+      "snapshots": [
+        {
+          "step": 0,
+          "score": {
+            "split": "dev",
+            "step": "0",
+            "correct": "0",
+            "total": "24",
+            "answerNll": "4.32144280526187",
+            "eosNll": "8.113152863973694",
+            "prematureEos": "0",
+            "classCorrect": "0,0,0,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "1.6199867483616495E-4",
+            "missingEos": "24",
+            "generatedTokens": "96"
+          },
+          "validDigitEos": 0,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": false,
+            "dev-0002": false,
+            "dev-0003": false,
+            "dev-0004": false,
+            "dev-0005": false,
+            "dev-0006": false,
+            "dev-0007": false,
+            "dev-0008": false,
+            "dev-0009": false,
+            "dev-0010": false,
+            "dev-0011": false,
+            "dev-0012": false,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": false,
+            "dev-0016": false,
+            "dev-0017": false,
+            "dev-0018": false,
+            "dev-0019": false,
+            "dev-0020": false,
+            "dev-0021": false,
+            "dev-0022": false,
+            "dev-0023": false,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "- `app",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "- `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            }
+          }
+        },
+        {
+          "step": 128,
+          "score": {
+            "split": "dev",
+            "step": "128",
+            "correct": "16",
+            "total": "24",
+            "answerNll": "1.652808382948238",
+            "eosNll": "0.017160924988449604",
+            "prematureEos": "0",
+            "classCorrect": "2,4,6,4",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "3.396180264777134E-5",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              2,
+              2,
+              0,
+              2,
+              0
+            ],
+            [
+              2,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              6,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              4,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": true,
+            "dev-0002": true,
+            "dev-0003": false,
+            "dev-0004": false,
+            "dev-0005": false,
+            "dev-0006": false,
+            "dev-0007": true,
+            "dev-0008": true,
+            "dev-0009": true,
+            "dev-0010": true,
+            "dev-0011": true,
+            "dev-0012": true,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": true,
+            "dev-0016": true,
+            "dev-0017": true,
+            "dev-0018": false,
+            "dev-0019": true,
+            "dev-0020": false,
+            "dev-0021": true,
+            "dev-0022": true,
+            "dev-0023": true,
+            "dev-0024": true
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            }
+          }
+        },
+        {
+          "step": 256,
+          "score": {
+            "split": "dev",
+            "step": "256",
+            "correct": "14",
+            "total": "24",
+            "answerNll": "1.8883839297034462",
+            "eosNll": "0.006043763753238007",
+            "prematureEos": "0",
+            "classCorrect": "0,4,6,4",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "1.9095221406454737E-5",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              0,
+              2,
+              2,
+              2,
+              0
+            ],
+            [
+              2,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              6,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              4,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": true,
+            "dev-0002": true,
+            "dev-0003": false,
+            "dev-0004": false,
+            "dev-0005": false,
+            "dev-0006": false,
+            "dev-0007": true,
+            "dev-0008": true,
+            "dev-0009": true,
+            "dev-0010": true,
+            "dev-0011": true,
+            "dev-0012": true,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": true,
+            "dev-0016": true,
+            "dev-0017": true,
+            "dev-0018": false,
+            "dev-0019": true,
+            "dev-0020": false,
+            "dev-0021": true,
+            "dev-0022": false,
+            "dev-0023": false,
+            "dev-0024": true
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            }
+          }
+        },
+        {
+          "step": 512,
+          "score": {
+            "split": "dev",
+            "step": "512",
+            "correct": "16",
+            "total": "24",
+            "answerNll": "1.967191765432629",
+            "eosNll": "0.0026868831340685815",
+            "prematureEos": "0",
+            "classCorrect": "2,4,6,4",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "1.4380971383805749E-5",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              2,
+              2,
+              2,
+              0,
+              0
+            ],
+            [
+              2,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              6,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              4,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": true,
+            "dev-0002": true,
+            "dev-0003": false,
+            "dev-0004": false,
+            "dev-0005": false,
+            "dev-0006": false,
+            "dev-0007": true,
+            "dev-0008": true,
+            "dev-0009": true,
+            "dev-0010": true,
+            "dev-0011": true,
+            "dev-0012": true,
+            "dev-0013": true,
+            "dev-0014": false,
+            "dev-0015": true,
+            "dev-0016": true,
+            "dev-0017": true,
+            "dev-0018": false,
+            "dev-0019": true,
+            "dev-0020": true,
+            "dev-0021": true,
+            "dev-0022": false,
+            "dev-0023": false,
+            "dev-0024": true
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            }
+          }
+        }
+      ],
+      "selection": {
+        "checkpointSha256": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c",
+        "step": "128",
+        "devCorrect": "16",
+        "devTotal": "24",
+        "devAnswerNll": "1.652808382948238",
+        "testRead": "false",
+        "inputsUnchanged": "true",
+        "generalModelPromotion": "NOT_PERMITTED",
+        "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK"
+      },
+      "checkpointRows": {
+        "0": {
+          "step": "0",
+          "sha256": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d",
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d.lm1"
+        },
+        "128": {
+          "step": "128",
+          "sha256": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c",
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c.lm1"
+        },
+        "256": {
+          "step": "256",
+          "sha256": "46d955d150bd88afc8988e52b3d4dea286308e93c40ec733d61ede4c65fd2f34",
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/46d955d150bd88afc8988e52b3d4dea286308e93c40ec733d61ede4c65fd2f34.lm1"
+        },
+        "512": {
+          "step": "512",
+          "sha256": "89cda1f332f6db7e29a7d630e83aff5b5cc6d2db7c1161f56be700f95ee336e9",
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/89cda1f332f6db7e29a7d630e83aff5b5cc6d2db7c1161f56be700f95ee336e9.lm1"
+        }
+      },
+      "capacityBefore": {
+        "protocol": {
+          "firstTokenLimitMs": "1500.0",
+          "generation32LimitMs": "5000.0",
+          "vmHwmLimitKiB": "786432",
+          "requestMaxMillis": "30000",
+          "warmups": "1",
+          "measuredRepeats": "3",
+          "ttftMethod": "SEPARATE_ONE_TOKEN_CALL_UPPER_BOUND",
+          "processTimeoutRequired": "true",
+          "promptSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d.lm1",
+          "checkpointSha256": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d",
+          "checkpointBytes": "26250247",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "6562304",
+          "parameterBytes": "26249216",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "512",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "2048",
+          "loadMs": "262.064578",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "result": {
+          "pass": "true",
+          "reasons": "NONE",
+          "checkpointSha256": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d",
+          "parameters": "6562304",
+          "loadMs": "262.064578",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "172.235262",
+          "maxGeneration32CallMs": "249.488695",
+          "firstTokenObservations": "3",
+          "full32TokenObservations": "3",
+          "vmHwmKiB": "181192",
+          "finalVmHwmKiB": "181192",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "trials": [
+          {
+            "phase": "warmup",
+            "trial": "1",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "228.471944",
+            "runtimeMillis": "226",
+            "ttftUpperBoundMs": "228.471944",
+            "textSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+          },
+          {
+            "phase": "warmup",
+            "trial": "1",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "32",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "294.05557",
+            "runtimeMillis": "294",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "221a6db6c3a5ee7fff5d5b1bf023a32bd9d45f597f745d397933fe620ce89f27"
+          },
+          {
+            "phase": "measured",
+            "trial": "1",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "172.235262",
+            "runtimeMillis": "172",
+            "ttftUpperBoundMs": "172.235262",
+            "textSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+          },
+          {
+            "phase": "measured",
+            "trial": "1",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "32",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "249.488695",
+            "runtimeMillis": "249",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "221a6db6c3a5ee7fff5d5b1bf023a32bd9d45f597f745d397933fe620ce89f27"
+          },
+          {
+            "phase": "measured",
+            "trial": "2",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "162.055002",
+            "runtimeMillis": "162",
+            "ttftUpperBoundMs": "162.055002",
+            "textSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+          },
+          {
+            "phase": "measured",
+            "trial": "2",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "32",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "242.356538",
+            "runtimeMillis": "242",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "221a6db6c3a5ee7fff5d5b1bf023a32bd9d45f597f745d397933fe620ce89f27"
+          },
+          {
+            "phase": "measured",
+            "trial": "3",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "166.736664",
+            "runtimeMillis": "166",
+            "ttftUpperBoundMs": "166.736664",
+            "textSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+          },
+          {
+            "phase": "measured",
+            "trial": "3",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "32",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "242.264991",
+            "runtimeMillis": "242",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "221a6db6c3a5ee7fff5d5b1bf023a32bd9d45f597f745d397933fe620ce89f27"
+          }
+        ],
+        "peakVmHwmKiBRecomputed": 181192,
+        "completeCalls": 8,
+        "loadAndCallMilliseconds": 2019.729244
+      },
+      "capacityAfter": {
+        "protocol": {
+          "firstTokenLimitMs": "1500.0",
+          "generation32LimitMs": "5000.0",
+          "vmHwmLimitKiB": "786432",
+          "requestMaxMillis": "30000",
+          "warmups": "1",
+          "measuredRepeats": "3",
+          "ttftMethod": "SEPARATE_ONE_TOKEN_CALL_UPPER_BOUND",
+          "processTimeoutRequired": "true",
+          "promptSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c.lm1",
+          "checkpointSha256": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c",
+          "checkpointBytes": "26250249",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "6562304",
+          "parameterBytes": "26249216",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "512",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "2048",
+          "loadMs": "272.102183",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "result": {
+          "pass": "false",
+          "reasons": "INCOMPLETE_32_TOKEN_WORKLOAD",
+          "checkpointSha256": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c",
+          "parameters": "6562304",
+          "loadMs": "272.102183",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "182.574414",
+          "maxGeneration32CallMs": "171.791777",
+          "firstTokenObservations": "3",
+          "full32TokenObservations": "0",
+          "vmHwmKiB": "171660",
+          "finalVmHwmKiB": "171660",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "trials": [
+          {
+            "phase": "warmup",
+            "trial": "1",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "231.477611",
+            "runtimeMillis": "229",
+            "ttftUpperBoundMs": "231.477611",
+            "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+          },
+          {
+            "phase": "warmup",
+            "trial": "1",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "209.153067",
+            "runtimeMillis": "209",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+          },
+          {
+            "phase": "measured",
+            "trial": "1",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "182.574414",
+            "runtimeMillis": "182",
+            "ttftUpperBoundMs": "182.574414",
+            "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+          },
+          {
+            "phase": "measured",
+            "trial": "1",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "165.718782",
+            "runtimeMillis": "165",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+          },
+          {
+            "phase": "measured",
+            "trial": "2",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "164.750547",
+            "runtimeMillis": "164",
+            "ttftUpperBoundMs": "164.750547",
+            "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+          },
+          {
+            "phase": "measured",
+            "trial": "2",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "171.791777",
+            "runtimeMillis": "171",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+          },
+          {
+            "phase": "measured",
+            "trial": "3",
+            "requestedNewTokens": "1",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "MAX_TOKENS",
+            "elapsedMs": "169.042251",
+            "runtimeMillis": "169",
+            "ttftUpperBoundMs": "169.042251",
+            "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+          },
+          {
+            "phase": "measured",
+            "trial": "3",
+            "requestedNewTokens": "32",
+            "actualNewTokens": "1",
+            "promptTokens": "64",
+            "promptTruncated": "false",
+            "stop": "EOS",
+            "elapsedMs": "167.100493",
+            "runtimeMillis": "167",
+            "ttftUpperBoundMs": "UNAVAILABLE",
+            "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+          }
+        ],
+        "peakVmHwmKiBRecomputed": 171660,
+        "completeCalls": 8,
+        "loadAndCallMilliseconds": 1733.711125
+      },
+      "initialParity": [
+        {
+          "id": "dev-0001",
+          "probabilityDelta": "7.748603820800781E-7"
+        },
+        {
+          "id": "dev-0002",
+          "probabilityDelta": "5.960464477539062E-7"
+        },
+        {
+          "id": "dev-0003",
+          "probabilityDelta": "2.980232238769531E-7"
+        }
+      ],
+      "onlineEpochLossesRecomputed": [
+        {
+          "epoch": 1,
+          "first_step": 1,
+          "last_step": 32,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 256,
+          "mean_online_nll": 1.399288177024573,
+          "minimum_minibatch_nll": 0.47348950803279877,
+          "maximum_minibatch_nll": 6.525915265083313
+        },
+        {
+          "epoch": 2,
+          "first_step": 33,
+          "last_step": 64,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 512,
+          "mean_online_nll": 0.397297743067611,
+          "minimum_minibatch_nll": 0.12035565078258514,
+          "maximum_minibatch_nll": 0.933776818215847
+        },
+        {
+          "epoch": 3,
+          "first_step": 65,
+          "last_step": 96,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 768,
+          "mean_online_nll": 0.2024461935943691,
+          "minimum_minibatch_nll": 0.024124777875840664,
+          "maximum_minibatch_nll": 0.774984996765852
+        },
+        {
+          "epoch": 4,
+          "first_step": 97,
+          "last_step": 128,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1024,
+          "mean_online_nll": 0.15404764215054456,
+          "minimum_minibatch_nll": 0.011410277802497149,
+          "maximum_minibatch_nll": 0.585461508249864
+        },
+        {
+          "epoch": 5,
+          "first_step": 129,
+          "last_step": 160,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1280,
+          "mean_online_nll": 0.13879822182207135,
+          "minimum_minibatch_nll": 0.011596253025345504,
+          "maximum_minibatch_nll": 0.81201780308038
+        },
+        {
+          "epoch": 6,
+          "first_step": 161,
+          "last_step": 192,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1536,
+          "mean_online_nll": 0.128082187842665,
+          "minimum_minibatch_nll": 0.008055529440753162,
+          "maximum_minibatch_nll": 0.7629806827753782
+        },
+        {
+          "epoch": 7,
+          "first_step": 193,
+          "last_step": 224,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1792,
+          "mean_online_nll": 0.13675023529140162,
+          "minimum_minibatch_nll": 0.007552335737273097,
+          "maximum_minibatch_nll": 0.5872771423310041
+        },
+        {
+          "epoch": 8,
+          "first_step": 225,
+          "last_step": 256,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2048,
+          "mean_online_nll": 0.12686204450074,
+          "minimum_minibatch_nll": 0.005002869991585612,
+          "maximum_minibatch_nll": 0.8834607077296823
+        },
+        {
+          "epoch": 9,
+          "first_step": 257,
+          "last_step": 288,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2304,
+          "mean_online_nll": 0.12405975322872109,
+          "minimum_minibatch_nll": 0.003614902147091925,
+          "maximum_minibatch_nll": 0.4893837496638298
+        },
+        {
+          "epoch": 10,
+          "first_step": 289,
+          "last_step": 320,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2560,
+          "mean_online_nll": 0.11038888966504601,
+          "minimum_minibatch_nll": 0.0034730721381492913,
+          "maximum_minibatch_nll": 0.7438959393184632
+        },
+        {
+          "epoch": 11,
+          "first_step": 321,
+          "last_step": 352,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2816,
+          "mean_online_nll": 0.10676322355902812,
+          "minimum_minibatch_nll": 0.002955726988147944,
+          "maximum_minibatch_nll": 0.35299211886012927
+        },
+        {
+          "epoch": 12,
+          "first_step": 353,
+          "last_step": 384,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3072,
+          "mean_online_nll": 0.1112155692462693,
+          "minimum_minibatch_nll": 0.0025329184718430042,
+          "maximum_minibatch_nll": 0.7294240891933441
+        },
+        {
+          "epoch": 13,
+          "first_step": 385,
+          "last_step": 416,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3328,
+          "mean_online_nll": 0.10800869101694843,
+          "minimum_minibatch_nll": 0.0023638062993995845,
+          "maximum_minibatch_nll": 0.6429505798150785
+        },
+        {
+          "epoch": 14,
+          "first_step": 417,
+          "last_step": 448,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3584,
+          "mean_online_nll": 0.10997347479678865,
+          "minimum_minibatch_nll": 0.009124257223447785,
+          "maximum_minibatch_nll": 1.1915179437492043
+        },
+        {
+          "epoch": 15,
+          "first_step": 449,
+          "last_step": 480,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3840,
+          "mean_online_nll": 0.10763675431826414,
+          "minimum_minibatch_nll": 0.002210990263847634,
+          "maximum_minibatch_nll": 0.41576612726203166
+        },
+        {
+          "epoch": 16,
+          "first_step": 481,
+          "last_step": 512,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 4096,
+          "mean_online_nll": 0.10975873085953936,
+          "minimum_minibatch_nll": 0.0018770465394482017,
+          "maximum_minibatch_nll": 0.7380007421597838
+        }
+      ]
+    }
+  },
+  "selectedPairedDevResults": {
+    "bothCorrect": 11,
+    "onlySmallCorrect": 2,
+    "onlyWideCorrect": 5,
+    "bothWrong": 6
+  },
+  "studyChoice": {
+    "selectedStudy": "v3",
+    "v2WideCorrect": 13,
+    "v3WideCorrect": 16,
+    "choice": {
+      "status": "DEVELOPMENT_CHOICE_BEFORE_TEST",
+      "testEvaluated": false,
+      "rule": "Wide Dev exact descending, answer NLL ascending, then retain v2",
+      "candidates": {
+        "v2": {
+          "status": "ELIGIBLE",
+          "freezePayload": {
+            "status": "FROZEN_BEFORE_TEST",
+            "arms": {
+              "S0": {
+                "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-small/checkpoints/6ad41c9c11003d8e9724e67d342d3a5e957ecea3c272f88b35594cb262fa3ba1.lm1",
+                "checkpointSha256": "6ad41c9c11003d8e9724e67d342d3a5e957ecea3c272f88b35594cb262fa3ba1",
+                "step": 0
+              },
+              "S1": {
+                "checkpointSha256": "c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309",
+                "step": "256",
+                "devCorrect": "13",
+                "devTotal": "24",
+                "devAnswerNll": "1.353088923177873",
+                "testRead": "false",
+                "inputsUnchanged": "true",
+                "generalModelPromotion": "NOT_PERMITTED",
+                "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+                "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-small/checkpoints/c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309.lm1"
+              },
+              "W0": {
+                "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-wide/checkpoints/61ac5a3fad0523d5ad5df8e6b87df5dec893230c30b87b72324e1b970794947e.lm1",
+                "checkpointSha256": "61ac5a3fad0523d5ad5df8e6b87df5dec893230c30b87b72324e1b970794947e",
+                "step": 0
+              },
+              "W1": {
+                "checkpointSha256": "7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2",
+                "step": "128",
+                "devCorrect": "13",
+                "devTotal": "24",
+                "devAnswerNll": "1.7133914955007874",
+                "testRead": "false",
+                "inputsUnchanged": "true",
+                "generalModelPromotion": "NOT_PERMITTED",
+                "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+                "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-wide/checkpoints/7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2.lm1"
+              }
+            },
+            "sourceCommit": "fc2eb797210bee25091caf734aacbfd694a3372e",
+            "registrationSha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+            "tokenScheduleSha256": "56fe2778eaccc2e29e13e629295452199ba19f94211c10fbae07cd4b6f3f375c",
+            "testSha256": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+            "rule": "Dev exact descending, answer NLL ascending, fewer steps; development threshold passed"
+          }
+        },
+        "v3": {
+          "status": "ELIGIBLE",
+          "freezePayload": {
+            "status": "FROZEN_BEFORE_TEST",
+            "arms": {
+              "S0": {
+                "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435.lm1",
+                "checkpointSha256": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+                "step": 0
+              },
+              "S1": {
+                "checkpointSha256": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+                "step": "512",
+                "devCorrect": "13",
+                "devTotal": "24",
+                "devAnswerNll": "1.635475808193661",
+                "testRead": "false",
+                "inputsUnchanged": "true",
+                "generalModelPromotion": "NOT_PERMITTED",
+                "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+                "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f.lm1"
+              },
+              "W0": {
+                "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d.lm1",
+                "checkpointSha256": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d",
+                "step": 0
+              },
+              "W1": {
+                "checkpointSha256": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c",
+                "step": "128",
+                "devCorrect": "16",
+                "devTotal": "24",
+                "devAnswerNll": "1.652808382948238",
+                "testRead": "false",
+                "inputsUnchanged": "true",
+                "generalModelPromotion": "NOT_PERMITTED",
+                "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+                "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c.lm1"
+              }
+            },
+            "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+            "registrationSha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+            "tokenScheduleSha256": "9e06273da0661c5fc12b8b92ca1701d437e01f4946b0aa19351f3f6b570d6fb3",
+            "testSha256": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+            "rule": "Dev exact descending, answer NLL ascending, fewer steps; development threshold passed"
+          }
+        }
+      },
+      "schedules": {
+        "v2": {
+          "scheduleSha256": "0c977d357e9a3c19496890faf9f3f593169064380475a171a3553ba30364ff48",
+          "tokenScheduleSha256": "56fe2778eaccc2e29e13e629295452199ba19f94211c10fbae07cd4b6f3f375c"
+        },
+        "v3": {
+          "scheduleSha256": "0c977d357e9a3c19496890faf9f3f593169064380475a171a3553ba30364ff48",
+          "tokenScheduleSha256": "9e06273da0661c5fc12b8b92ca1701d437e01f4946b0aa19351f3f6b570d6fb3"
+        }
+      },
+      "testSha256": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+      "selectedStudy": "v3",
+      "selectedFreezePayload": {
+        "status": "FROZEN_BEFORE_TEST",
+        "arms": {
+          "S0": {
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435.lm1",
+            "checkpointSha256": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+            "step": 0
+          },
+          "S1": {
+            "checkpointSha256": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+            "step": "512",
+            "devCorrect": "13",
+            "devTotal": "24",
+            "devAnswerNll": "1.635475808193661",
+            "testRead": "false",
+            "inputsUnchanged": "true",
+            "generalModelPromotion": "NOT_PERMITTED",
+            "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f.lm1"
+          },
+          "W0": {
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d.lm1",
+            "checkpointSha256": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d",
+            "step": 0
+          },
+          "W1": {
+            "checkpointSha256": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c",
+            "step": "128",
+            "devCorrect": "16",
+            "devTotal": "24",
+            "devAnswerNll": "1.652808382948238",
+            "testRead": "false",
+            "inputsUnchanged": "true",
+            "generalModelPromotion": "NOT_PERMITTED",
+            "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c.lm1"
+          }
+        },
+        "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+        "registrationSha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+        "tokenScheduleSha256": "9e06273da0661c5fc12b8b92ca1701d437e01f4946b0aa19351f3f6b570d6fb3",
+        "testSha256": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+        "rule": "Dev exact descending, answer NLL ascending, fewer steps; development threshold passed"
+      }
+    },
+    "freeze": {
+      "status": "FROZEN_BEFORE_TEST",
+      "arms": {
+        "S0": {
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435.lm1",
+          "checkpointSha256": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+          "step": 0
+        },
+        "S1": {
+          "checkpointSha256": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+          "step": "512",
+          "devCorrect": "13",
+          "devTotal": "24",
+          "devAnswerNll": "1.635475808193661",
+          "testRead": "false",
+          "inputsUnchanged": "true",
+          "generalModelPromotion": "NOT_PERMITTED",
+          "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f.lm1"
+        },
+        "W0": {
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d.lm1",
+          "checkpointSha256": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d",
+          "step": 0
+        },
+        "W1": {
+          "checkpointSha256": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c",
+          "step": "128",
+          "devCorrect": "16",
+          "devTotal": "24",
+          "devAnswerNll": "1.652808382948238",
+          "testRead": "false",
+          "inputsUnchanged": "true",
+          "generalModelPromotion": "NOT_PERMITTED",
+          "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+          "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c.lm1"
+        }
+      },
+      "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+      "registrationSha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+      "tokenScheduleSha256": "9e06273da0661c5fc12b8b92ca1701d437e01f4946b0aa19351f3f6b570d6fb3",
+      "testSha256": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+      "rule": "Dev exact descending, answer NLL ascending, fewer steps; development threshold passed"
+    },
+    "beforeTestVerification": {
+      "choiceSha256": "1325d06208d8850e6ce3aa5969d68f37cdaa3e26c46c50f66743ddd3dc442cac",
+      "freezeSha256": "6c069dd1ab21d792b9985333b14b2d6a0c51b66affbc8a90de0f37092c5a49f4",
+      "selectedStudy": "v3",
+      "selectedSourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+      "allFinalTestLogsAbsent": true,
+      "choiceMatchesFreezeExactly": true
+    },
+    "legacyFreezeMatchesRawSelection": true,
+    "boundPostCapacityEvidencePresentInFreeze": false,
+    "observedArmCapacityFields": {
+      "S1": "REQUIRES_SEPARATE_BENCHMARK",
+      "W1": "REQUIRES_SEPARATE_BENCHMARK"
+    },
+    "newTestExecutionAuthorizedByThisAudit": false
+  },
+  "publishedFinalTestPaths": [],
+  "holdoutState": "NO_FINAL_TEST_PUBLICATION_AT_PIN; not a forensic claim about unpublished processes",
+  "handoffStillCallsV3Running": true,
+  "interpretation": {
+    "developmentSelectionValidUnderPublishedLegacyProtocol": true,
+    "capacityPassed": false,
+    "independentFinalGeneralizationEvidenceAvailable": false,
+    "sourceBoundGateRepairAdoptedByThisAudit": false,
+    "modelPromotion": false,
+    "checkpointBinaryIntegrityIndependentlyRechecked": false,
+    "sourceBoundLogIdentityIsNotSignedProcessAttestation": true,
+    "noNewTrainingOrTuningRecommendationFromFinalTest": true,
+    "selectedCheckpointTargets": {
+      "small": 4096,
+      "wide": 1024
+    },
+    "onlineEpochMeansAreNotFixedCheckpointOrGeneralizationLosses": true,
+    "wrapperChangeDoesNotIsolateForgetGateDamping": true
+  }
+}

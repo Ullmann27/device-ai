@@ -1,0 +1,52 @@
+{
+  "status": "INDEPENDENT_SOURCE_COMPARISON_PASS",
+  "probeSha256": "0327b70c36d9c4e853a288272fcf4e779b682d52de47cb0f3572c27db16f2ead",
+  "comparedAgainst": "previously verified c69cb427 capacity repair",
+  "combinedPatchSha256": "87d54102113944c0884081b44cbb05eb6d253d56f8df0c84f9c31bc4f7039d05",
+  "controllers": {
+    "v1": {
+      "beforeSha256": "b1bed4338bb187ae6d835a46368cc05773ae96143559af368361103b64a7b327",
+      "afterSha256": "b1bed4338bb187ae6d835a46368cc05773ae96143559af368361103b64a7b327",
+      "byteIdentical": true
+    },
+    "long": {
+      "beforeSha256": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+      "afterSha256": "e1fa9104ec41c926423b8b7d011c05b9e6a298ee794972bc8ff7d0013bfa27b4",
+      "addedMethods": [
+        "study_choice_authorization"
+      ],
+      "changedMethods": [
+        "test"
+      ],
+      "allOtherStudyMethodsAstIdentical": true,
+      "capacityValidatorSourceTextIdentical": true,
+      "capacityValidatorSha256": "c843621f7f29675159ad5b091720d6a23d573bc2ac57c467863cc1d291f436d1",
+      "newCliArguments": [
+        "--before-test-verification",
+        "--before-test-verification-sha256",
+        "--development-choice"
+      ]
+    },
+    "suffix": {
+      "beforeSha256": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067",
+      "afterSha256": "67da16654388d322f3735a67f3fbf1d42635ffccf6ac62668ff46b80b47f1942",
+      "addedMethods": [
+        "study_choice_authorization"
+      ],
+      "changedMethods": [
+        "test"
+      ],
+      "allOtherStudyMethodsAstIdentical": true,
+      "capacityValidatorSourceTextIdentical": true,
+      "capacityValidatorSha256": "c843621f7f29675159ad5b091720d6a23d573bc2ac57c467863cc1d291f436d1",
+      "newCliArguments": [
+        "--before-test-verification",
+        "--before-test-verification-sha256",
+        "--development-choice"
+      ]
+    }
+  },
+  "actualModelProcesses": 0,
+  "realHoldoutRead": false,
+  "scope": "Read-only AST/text comparison; not a repeated execution of the old 165-case suite."
+}
