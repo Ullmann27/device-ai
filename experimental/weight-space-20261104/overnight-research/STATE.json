@@ -1,14 +1,21 @@
 {
   "task": "G1-INTEGRATE-WEIGHT-002",
-  "phase": "PROTOCOL_DECLARED_IMPLEMENTATION_PENDING",
+  "phase": "STRUCTURAL_MEASUREMENTS_COMPLETE_INFERENCE_NOT_RUN",
   "parentCommit": "0af14f75b04e68ba849a92316b8be51041e8738b",
   "comparisonPr508Commit": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
   "ownerSession": "0549bca61ccf",
   "leaseUntilUtc": "2026-11-04T23:30:00Z",
   "parallelAgents": 0,
-  "newMeasurementsRun": false,
+  "newMeasurementsRun": true,
   "trainingPermitted": false,
   "modelPromotion": false,
-  "completedMilestones": [],
-  "next": ["source-bound structural audit", "native activation and EOS diagnostics", "fixed bidirectional block interventions", "independent arithmetic and resume verification"]
+  "completedMilestones": [
+    "exact checkpoint replica measurements"
+  ],
+  "next": [
+    "freeze source-bound inference harness",
+    "native activation and EOS diagnostics",
+    "fixed bidirectional block interventions",
+    "independent arithmetic and resume verification"
+  ]
 }
