@@ -102,7 +102,15 @@ object JarvisShellRenderer {
 
     /** Upper bounds for the portable particle layers (fallback path; the AGSL path is per-pixel, fixed cost). */
     const val BOKEH_MAX = 60
-    const val DUST_MAX = 90
+    const val DUST_MAX = 240
+
+    /**
+     * ref5 (docs/JARVIS-REF5-FARBEN.md): the clean background varies only +11 (G) / +21 (B) at p95, so bokeh may add
+     * at most ~5 % cyan; dust = 2 motes of ~2 x 2 px (r 0.65 dp) in 5940 px² → one per ~1200 dp² (small sample).
+     */
+    const val BOKEH_ALPHA = .05f
+    const val DUST_AREA_DP2 = 1200f
+    const val DUST_RADIUS_DP = .65f
 
     /** Bokeh discs and fine dust (deterministic positions, Signatur 15 "Staub"); counts capped. */
     fun bokeh(p: ContinuumPainter, w: Float, h: Float) {
@@ -114,13 +122,13 @@ object JarvisShellRenderer {
             val by = ((seed ushr 8) % 10000) / 10000f * h; seed = seed * 1103515245 + 12345
             val br = 1f + ((seed ushr 8) % 100) / 100f * 5f
             val c = if (it % 3 == 0) Colors.violet else Colors.cyan
-            p.fillCircle(bx, by, br * 2.2f, Fill.Radial(bx, by, br * 2.2f, intArrayOf(Argb.withAlpha(c, .22f), 0)))
+            p.fillCircle(bx, by, br * 2.2f, Fill.Radial(bx, by, br * 2.2f, intArrayOf(Argb.withAlpha(c, BOKEH_ALPHA), 0)))
         }
-        repeat(((w * h) / 5000f).toInt().coerceIn(20, DUST_MAX)) {
+        repeat(((w * h) / DUST_AREA_DP2).toInt().coerceIn(20, DUST_MAX)) {
             seed = seed * 1103515245 + 12345
             val dx = ((seed ushr 8) % 10000) / 10000f * w; seed = seed * 1103515245 + 12345
             val dy = ((seed ushr 8) % 10000) / 10000f * h
-            p.fillCircle(dx, dy, .7f, Fill.Solid(Argb.withAlpha(Colors.cyanSoft, .45f)))
+            p.fillCircle(dx, dy, DUST_RADIUS_DP, Fill.Solid(Colors.dust))
         }
         p.setAdditive(false)
     }

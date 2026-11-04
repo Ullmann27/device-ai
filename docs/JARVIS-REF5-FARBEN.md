@@ -36,6 +36,22 @@ Methoden: `median` (flache Fläche), `dark` (Median der dunkelsten 30 %, Fläche
 | `glow.core` | `#ABF8FF` | peak | `(92, 205, 100, 240)` |
 | `glow.halo` | `#012539` | median | `(82, 205, 90, 240)` |
 
+### Nachtrag Review 3 (Verläufe, Chevron)
+
+| Rolle | Wert | Methode | Box |
+|---|---|---|---|
+| `tile.fill.left` | `#013F51` | dark | `(295, 615, 312, 640)` |
+| `tile.fill.right` | `#0A1E38` | dark | `(500, 615, 535, 640)` |
+| `tile.rim.left` | `#01DAE8` | peak | `(287, 585, 292, 630)` |
+| `tile.rim.right` | `#2E5289` | peak | `(541, 585, 547, 630)` |
+| `tile.chevron` | `#51ADC5` | peak | `(520, 585, 535, 605)` (1-px-Strich, antialiased → echte Farbe heller) |
+| `pill.rim.left` | `#2AEAFC` | peak | `(762, 112, 768, 135)` |
+| `pill.rim.right` | `#CC94EF` | peak | `(911, 112, 917, 135)` |
+
+Kachel: Füllung und Rand als horizontaler Verlauf links → rechts (Füllung @80 % über `bg.top` aufgelöst). Der frühere
+`tile.rim` (#17687F) stammte nur von der Oberkante und unterschätzte den Rand. Pille: Rand Cyan → Violett.
+`backdropBlur` (24 dp) ist GESCHÄTZT, in ref5 nicht messbar.
+
 ## Ehrliche Grenzen
 
 - ref5 ist ein KI-gerendertes, JPEG-artig komprimiertes Bild. Text, 1-px-Ränder und Icons sind antialiased:
@@ -75,3 +91,17 @@ Schrift: ref5 nutzt eine humanistische Sans (Segoe-/Noto-ähnlich). Gebündelt s
 | Button (Nav) | 168 x 50, Abstand 9 | 108 x 32, Abstand 6 | 12 px → 8 | 1 | `navSurface` / `rim` |
 | Button aktiv | wie oben, Glow-Hof ca. 8 px | Glow NORMAL | 8 | 1 | `navSurfaceActive` / `navRimActive`, Kern `glowCore` |
 | Pille | 151 x 35, Icon 14 | Höhe 22, Icon 9 | rund | 1 | `pillSurface` / `cyanDeep` (Varianten `violetRim`, `ok`) |
+
+## Bloom (Leuchten) und Staub/Bokeh – gemessen
+
+**Bloom** am aktiven Nav-Button "Home" (Profil quer zur Kante, x 60–100 bei y 223 und y 180–202 bei x 180):
+- Kern `glow.core` #ABF8FF / #A8E9FA direkt an der Kante, Hof 4 px außerhalb #034666 → Farbton normiert `bloomHalo` #08AFFF (abgeleitet).
+- Überschuss über dem Untergrund: 21 / 17 / 12 / 9 / 7 / 6 / 4 / 3 / 1 (Luma) bei 1…9 px → e-Faltung ≈ 3,5 px, nach 12 px (= 7,7 dp) weg.
+- Einstellung: `Glow.NORMAL` = Hof 8 dp, Alpha 0,08 (an der Kante ≈ 10 % des Kerns bei aktivem Boost 1,4);
+  `JarvisNeon.BLOOM_RADIUS_DP` 12 → 4 dp (σ ≈ 2,6 dp, Android-Radius ≈ (σ − 0,5 px) / 0,57). SUBTLE/STRONG bleiben GESCHÄTZT.
+
+**Staub/Bokeh** (freier Hintergrund nur in der Spalte x 268–278, y 270–380 und 430–860 sauber messbar, 5940 px²):
+- Hintergrund-Streuung p5/Median/p95: R 0/1/5, G 12/15/26, B 23/28/49 → Bokeh darf höchstens ≈ 5 % Cyan beitragen (`BOKEH_ALPHA` 0,22 → 0,05; AGSL 0,10 → 0,05).
+- Staub: 2 Partikel à ca. 2 x 2 px, Kern #0F93C4 (`Colors.dust`) → r 0,65 dp, Dichte ≈ 1 je 1200 dp² (AGSL-Zelle 35 dp).
+  **Geringe Stichprobe (n = 2), Werte vorläufig.** Größere Funken in ref5 (#FFFFFF/#F5C4FF, 3–7 px) sitzen auf Orbit-Linien von Kopf und Kugel, gehören also zu Avatar/Gedächtnis, nicht zum Hintergrund.
+- Raster: In ref5 zwischen den Panels nicht sichtbar; das bestehende Raster (Alpha 0,05 + 0,05) liegt über der gemessenen Streuung – offen, nicht in diesem Schritt geändert.

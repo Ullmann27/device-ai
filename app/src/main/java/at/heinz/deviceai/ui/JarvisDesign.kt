@@ -24,12 +24,21 @@ object JarvisDesign {
         val navSurface = Argb.rgb(0x04, 0x15, 0x21)         // button.fill #041521
         val navSurfaceActive = Argb.rgb(0x01, 0x2C, 0x3C)   // button.fill.active #012C3C
         val navRimActive = Argb.rgb(0x32, 0xD6, 0xED)       // button.rim.active #32D6ED
+        val tileFillStart = Argb.of(204, 0x01, 0x4C, 0x60) // tile.fill.left composite #013F51 @80 %
+        val tileFillEnd = Argb.of(204, 0x0C, 0x23, 0x41)   // tile.fill.right composite #0A1E38 @80 %
+        val tileRimStart = Argb.rgb(0x01, 0xDA, 0xE8)       // tile.rim.left #01DAE8
+        val tileRimEnd = Argb.rgb(0x2E, 0x52, 0x89)         // tile.rim.right #2E5289
+        val chevron = Argb.rgb(0x51, 0xAD, 0xC5)            // tile.chevron #51ADC5 (antialiased 1 px stroke, true colour brighter)
+        val pillRimStart = Argb.rgb(0x2A, 0xEA, 0xFC)       // pill.rim.left #2AEAFC
+        val pillRimEnd = Argb.rgb(0xCC, 0x94, 0xEF)         // pill.rim.right #CC94EF
         val pillSurface = Argb.rgb(0x07, 0x20, 0x4D)        // pill.fill #07204D
         val cyan = Argb.rgb(0x2F, 0xF9, 0xFE)               // cyan.text #2FF9FE
         val cyanSoft = Argb.rgb(0x78, 0xF6, 0xFB)           // cyan.icon #78F6FB
         val iconCore = Argb.rgb(0xC9, 0xFF, 0xFF)           // tile.icon #C9FFFF
         val glowCore = Argb.rgb(0xAB, 0xF8, 0xFF)           // glow.core #ABF8FF
         val glowHalo = Argb.rgb(0x01, 0x25, 0x39)           // glow.halo #012539
+        val bloomHalo = Argb.rgb(0x08, 0xAF, 0xFF)          // bloom halo hue: #034666 at 4 px off the active rim, normalised to full brightness
+        val dust = Argb.rgb(0x0F, 0x93, 0xC4)               // dust mote core #0F93C4 (only 2 motes in the clean sample – low confidence)
         val violet = Argb.rgb(0x91, 0x4C, 0xEF)             // violet.hair #914CEF
         val violetSoft = Argb.rgb(0x91, 0x6D, 0xC9)         // violet.icon #916DC9
         val violetRim = Argb.rgb(0x9E, 0x5B, 0xD5)          // violet.pillRim #9E5BD5
@@ -71,23 +80,30 @@ object JarvisDesign {
     data class ComponentStyle(
         val height: Float, val radius: Float, val rimWidth: Float, val fill: Int, val rim: Int,
         val padH: Float, val iconSize: Float, val iconGap: Float, val glow: Glow,
+        /** Optional horizontal gradient end colours (left = [fill]/[rim], right = these), measured in ref5. */
+        val fillEnd: Int? = null, val rimEnd: Int? = null,
     )
 
     object Styles {
         /** Tile 258 x 79 px → 166 x 51 dp, corner 12 px, icon 39 px, inset 25 px, icon→text 26 px. */
-        val tile = ComponentStyle(51f, 8f, 1f, Colors.surfaceLow, Colors.rim, 16f, 24f, 16f, Glow.SUBTLE)
+        val tile = ComponentStyle(51f, 8f, 1f, Colors.tileFillStart, Colors.tileRimStart, 16f, 24f, 16f, Glow.SUBTLE,
+            fillEnd = Colors.tileFillEnd, rimEnd = Colors.tileRimEnd)
+        /** Tile chevron: glyph 8 px high, 22 px from the right edge → box 10 dp, inset 14 dp. */
+        const val chevronSize = 10f
+        const val chevronInset = 14f
         /** Nav button 168 x 50 px → 108 x 32 dp, corner 12 px, gap 9 px. Active: brighter fill + rim + glow. */
         val button = ComponentStyle(32f, 8f, 1f, Colors.navSurface, Colors.rim, 12f, 16f, 12f, Glow.OFF)
         val buttonActive = button.copy(fill = Colors.navSurfaceActive, rim = Colors.navRimActive, glow = Glow.NORMAL)
         /** Pill "JARVIS Mode" 151 x 35 px → 97 x 22 dp, fully round, icon 14 px. */
-        val pill = ComponentStyle(22f, 11f, 1f, Colors.pillSurface, Colors.cyanDeep, 10f, 9f, 6f, Glow.SUBTLE)
+        val pill = ComponentStyle(22f, 11f, 1f, Colors.pillSurface, Colors.pillRimStart, 10f, 9f, 6f, Glow.SUBTLE,
+            rimEnd = Colors.pillRimEnd)
         const val buttonGap = 6f
     }
 
     /** Spacing / shape tokens (dp). */
     object Metrics {
         const val radiusCard = 14f       // 12–16 dp (VIDEO-ANALYSE)
-        const val backdropBlur = 24f     // dp, RenderEffect blur radius (Wert geschätzt: "starker Blur")
+        const val backdropBlur = 24f     // dp, RenderEffect blur radius. GESCHÄTZT: in ref5 nicht messbar (Blur hinter Panels nicht trennbar)
         const val radiusControl = 12f
         const val radiusPill = 999f
         const val gap = ContinuumTheme.CARD_GAP
@@ -100,7 +116,11 @@ object JarvisDesign {
     }
 
     /** Glow strength levels; [Level.OFF] for low-power / reduced-motion. */
+    /** Glow strength levels; SUBTLE and STRONG are GESCHÄTZT (ref5 shows only the NORMAL case). */
     enum class Glow(val haloAlpha: Float, val haloWidth: Float) {
-        OFF(0f, 0f), SUBTLE(.18f, 4f), NORMAL(.32f, 7f), STRONG(.5f, 11f)
+        OFF(0f, 0f), SUBTLE(.05f, 4f), // SUBTLE kept below the measured NORMAL
+        /** ref5 active Home button: halo reaches 12 px = 8 dp; 1 px off the rim it adds ~10 % of the core (0.9 x .08 x 1.4). */
+        NORMAL(.08f, 8f),
+        STRONG(.5f, 11f)
     }
 }
