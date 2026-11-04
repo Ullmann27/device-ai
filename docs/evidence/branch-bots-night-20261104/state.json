@@ -1,13 +1,13 @@
 {
   "schema": "continuum-branch-bots-development-continuation",
   "version": 1,
-  "status": "READY_FOR_NEXT_ITERATION",
+  "status": "ACTIVE",
   "repository": "Ullmann27/device-ai",
   "branch": "codex/continuum-branch-integration-bots-20261104",
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
-  "ownerSession": "672924e4650b-night-20261104",
+  "ownerSession": "scheduled-20261104-2313-candidate-review",
   "sourceSnapshot": "SELECTED_104_CODE_FILES_VERIFIED",
-  "phase": "COMPLETED_VERIFIED_CHECKPOINT",
+  "phase": "VERIFY_CURRENT_INTAKE_AND_FREE_NEXT_SLICE",
   "milestones": [
     {
       "id": "M1",
@@ -139,5 +139,10 @@
     "timezone": "Europe/Vienna",
     "scope": "Separate scheduled development turns, not an always-running Android worker",
     "activeCheckpointMustNotBeModified": true
+  },
+  "currentIntake": {
+    "c1": "0d8a3d46c409e5918c49b6f3407bb63f3519b846",
+    "integration": "a6b314d3e8fac796ce7059a336bf5e79eb622ede",
+    "comparison": "7 night source/test blobs differ from current integration, no code import yet"
   }
 }
