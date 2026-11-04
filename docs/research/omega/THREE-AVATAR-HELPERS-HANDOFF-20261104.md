@@ -12,8 +12,11 @@ Base: `codex/astra-jarvis-takeover-20261104` at
 `d352bab6855db2a44def0bbf60fd93202b4e3066` (#491), independently read through GitHub.
 Branch: `codex/continuum-three-avatar-helpers-20261104`.
 
-This first checkpoint is planning only: implementation and this branch's tests
-are **NOT_RUN**. Earlier PR test counts are historical, not this branch's evidence.
+The first checkpoint was planning only. The unchanged production baseline was
+then compiled and tested locally: **62 JUnit tests, 0 failures/errors/skips** on
+`a65cfcac63c794ea9953034349989b4a45f6ac73` (production tree from `d352bab6`).
+Implementation is still in progress. Earlier PR counts are historical and are
+not this branch's evidence.
 
 ## Three active assignments
 
@@ -56,6 +59,25 @@ videos, owner data and uncertain-provenance GLB assets are not added or replaced
 
 Device and native Filament visual acceptance remain **NOT_RUN** unless separately
 observed. A host render must be labelled as such and cannot stand in for Fold7.
+
+### Fresh baseline
+
+Executed locally with the existing JDK 17 / Android SDK and a shared builder lock:
+
+```sh
+./gradlew --no-daemon --max-workers=1 --console=plain \
+  -Pkotlin.compiler.execution.strategy=in-process :app:testDebugUnitTest \
+  --tests 'at.heinz.deviceai.avatar.*' \
+  --tests 'at.heinz.deviceai.avatar3d.*' \
+  --tests 'at.heinz.deviceai.motion.*'
+```
+
+Exit 0; 62 tests, no failures/errors/skips. Original XML, full console log and
+source-bound summary are in `docs/evidence/three-avatar-helpers-20261104/baseline`.
+This is a focused Android Gradle/JVM baseline, not a full application, device or
+native GPU acceptance. Shared local builder wrapper:
+`/workspace/scratch/b3170a7ae924/run_gradle.py`, with `CONTINUUM_BUILD_ROOT` set to
+this helper checkout and log `three-helpers-baseline.log`.
 
 ## Rollback and continuation
 
