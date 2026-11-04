@@ -1,36 +1,46 @@
 # LM1 training recovery — 2026-11-04
 
-Status: WIP / EXPERIMENTS_NOT_RUN. This is a new research round authorized by the owner after the completed G1 gate repair and 6–10M experiments.
+Status: four diagnosis arms and intent rounds v1/v2 completed; final registered suffix comparison v3 running. The fresh final test remains unevaluated. Draft PR #508 owns this isolated work.
 
 ## Source of truth
 
-- Parent: PR #492, commit `30cd3a89810ed14fa84eca95236d3177e016118d`.
+- Parent core: PR #492, commit `30cd3a89810ed14fa84eca95236d3177e016118d`.
 - Own branch: `research/continuum-lm1-training-recovery-20261104`.
-- The earlier helper PR #497 is historical. Use the strengthened integrated gates in #492; do not replace them with the earlier helper patch.
-- Keep all new research code under `experimental/lm1-training-recovery-20261104/` and its evidence under `docs/evidence/lm1-training-recovery-20261104/`.
+- V1 registered execution: `def5acf9cbba82ee51a53cc06fecc52e9cd0324d`.
+- V2 registered execution: `fc2eb797210bee25091caf734aacbfd694a3372e`.
+- V3 and final Dev-only choice registration: `be4e49600fed1db4c697230bb8e42c150dbfbdaf`.
+- Historical helper PR #497 must not replace the strengthened integrated G1 gates in #492.
 
-## Verified starting point
+All new code lives under `experimental/lm1-training-recovery-20261104/`; evidence lives under `docs/evidence/lm1-training-recovery-20261104/`. Registered v1/v2 source and inputs stayed unchanged while later variants were added in separate subdirectories.
 
-The parent reports successful initial 6,562,304 and 9,712,128 parameter checkpoints. Its four 16-step continuation runs complete optimization but produce immediate EOS at the capacity prompt and are rejected. Weight changes alone do not establish learning. The parent production runtime and all historical inputs/evidence remain unchanged.
+## Completed findings
 
-## Assigned independent work
+Four 16-step diagnoses used the exact same TRAIN schedule (3,255 targets each). All improve the fixed first TRAIN minibatch, but none passes the final unchanged capacity benchmark. Wide standard and final-norm-delta/8 worsen fixed development BPB. Global LR/8 improves BPB slightly without restoring the required generation workload. The implemented norm scaling is numerically verified near1/8.
 
-1. Training helper: inspect the EOS mechanism and implement an isolated diagnostic harness around the existing LM1 kernels/trainer.
-2. Architecture helper: primary-source research on function-preserving growth, width-dependent optimization and small-model curricula.
-3. Validation helper: independent new intent-task data splits and prospectively specified acceptance criteria.
-4. Coordinator: bind source/input identities, build locally, run bounded comparisons, review all outcomes and publish raw evidence.
+The EOS behavior is context-specific. At all actual half-prefix probes EOS remains below the best other token. At the fixed capacity prompt a competing-logit rank change can make EOS win even when its absolute probability decreases. These data do not establish a global EOS collapse.
 
-## Planned research, not results
+| Fresh intent round | Selected small Dev exact | Selected wide Dev exact | Final-test disposition |
+|---|---:|---:|---|
+| v1:128 updates, long suffix | 8/24 at128 | 10/24 at128 | NO_DEVELOPMENT_SIGNAL; no test |
+| v2:512 updates, long suffix | 13/24 at256 | 13/24 at128 | Eligible; test deferred before the registered v3 comparison |
+| v3:512 updates, short suffix | 13/24 at512 | Intermediate16/24 at128; run still active | No final selection or test yet |
 
-- Reproduce the unchanged small and width-8 continuation on the same historical TRAIN token schedule; record EOS probability/margin and fixed development loss at steps 0, 1, 4 and 16.
-- Test two isolated alternatives: a smaller final-norm update and a smaller global learning rate. These are hypotheses, not presumed repairs and not a full muP implementation.
-- Independently test a narrow German intent-learning task using self-authored train/development/test templates. Compare small and widened models before and after training. Use free greedy output, including the expected EOS, rather than only teacher-forced scores.
-- Bind the new test split before training. Select candidates on development data only; do not tune against old disclosed holdouts or the new final test results.
+The models learn digit-plus-EOS formatting, but development transfer is incomplete. V2 wide answer NLL worsens from1.713 at128 to2.654 at512 while its online training loss becomes very small. Its capacity follow-up produces one content token before EOS, not the required32; small produces immediate EOS. These are failures, not performance improvements.
 
-Every actual experiment needs its final protocol, source hashes, fixed budget and input hashes committed before it starts. Empty/failed results are retained. No claims of general intelligence, Android performance or successful app integration follow from a task-specific host result.
+The isolated suffix-path probe finds strong damping on the original layer-0 direct state path across the common long suffix. It does not measure the whole network gradient. V3 changes only the prompt suffix from a newline plus `Aktion:` to a newline; all four eventual controls use the same selected wrapper. It tests the complete wrapper effect, not forget gates alone.
+
+## Final evaluation rule
+
+V3 is the last development variant in this round. Among complete eligible v2/v3 studies, select by wide Dev exact descending, answer NLL ascending, and retain v2 on an exact tie. Publish the chosen complete four-arm freeze before evaluating the48 final cases once. Require at least36/48 wide exact, at least8/12 per class and at least eight more than both untrained controls for the limited task criterion. Report a wide-versus-small advantage separately. The unchanged capacity benchmark remains separate and cannot be replaced with one-digit completion.
+
+## Independent work and reproduction
+
+The training helper independently audited diagnosis and long-training logs; the validation helper audited selection guards and all v1 case judgments; the architecture helper supplied primary-source research, the reproducible suffix-path measurement and controlled-diff reviews. Root performs compilation, bounded runs, prospective publication, final selection and evidence integration.
+
+See `docs/evidence/lm1-training-recovery-20261104/REPRODUCE.md`, the registration files, per-process receipts, raw logs and independent reviews. The input reconstruction helper has reproduced the original checkpoint, tokenizer and corpus with exact hashes from pinned git objects.
+
+Research foundations: Net2Net (https://arxiv.org/abs/1511.05641), Tensor Programs V / muP (https://arxiv.org/abs/2203.03466), and TinyStories (https://arxiv.org/abs/2305.07759). They motivate hypotheses; they do not establish success for LM1. No full muP implementation or imported TinyStories dataset is claimed.
 
 ## Boundaries and rollback
 
-No foreign pretrained weights, paid AI API, GitHub Actions, production training, model promotion, release or change to active app selection. Run only on isolated copies of the owner's LM1 checkpoint. Keep original checkpoints immutable. Each failed gate stops the affected run. Discard any unsuccessful candidate and keep the existing model; existing evidence must not be overwritten.
-
-Current execution status: no new training run has started. Local build tools are being verified; source and result checkpoints will follow here before experiments.
+Only isolated copies of the owner's LM1 are trained locally. No foreign pretrained weight download, paid inference API, production training, runtime/active-selection change, model promotion, Android installation, main merge or release. Keep the original model and reject research candidates when their gates fail; no deployed application behavior needs reverting. Preserve negative evidence.

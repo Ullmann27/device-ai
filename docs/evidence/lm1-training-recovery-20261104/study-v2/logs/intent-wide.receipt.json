@@ -1,0 +1,27 @@
+{
+  "label": "intent-wide",
+  "command": [
+    "java",
+    "-Xms64m",
+    "-Xmx3g",
+    "-cp",
+    "/workspace/scratch/3112c86b5191/training-recovery-long-build/experiment.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+    "train",
+    "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-baseline.lm1",
+    "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/3112c86b5191/device-ai-training-research/experimental/lm1-training-recovery-20261104/intent-data",
+    "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-wide",
+    "wide"
+  ],
+  "startedUtc": "2026-11-04T19:03:12.381773+00:00",
+  "wallSeconds": 653.7896026090002,
+  "returncode": 0,
+  "timeout": false,
+  "timeoutSeconds": 900,
+  "sourceCommit": "fc2eb797210bee25091caf734aacbfd694a3372e",
+  "registrationSha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+  "jarSha256": "d92acf410494bba98ad5299b0abfe13bdac3bb508dd9dd7bbf25f96a3ba5a20d",
+  "logSha256": "3538ebc9857a8f2d10f184b6c03ab4179e9b17dffb54959c3fd84deb8318ac57",
+  "registeredBytesUnchanged": true
+}
