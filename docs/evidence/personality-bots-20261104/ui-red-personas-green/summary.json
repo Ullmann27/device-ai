@@ -1,0 +1,30 @@
+[
+  {
+    "suite": "at.heinz.deviceai.chief.ChiefBotTaskIntakeTest",
+    "tests": 6,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "at.heinz.deviceai.ContinuumBotPersonalityUiTest",
+    "tests": 2,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "at.heinz.deviceai.chief.ChiefBotConversationTest",
+    "tests": 10,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "at.heinz.deviceai.chief.ChiefBotPersonasTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+]
