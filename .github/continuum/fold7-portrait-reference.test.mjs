@@ -37,8 +37,10 @@ test('Fold portrait uses the shared width/font profile and one labelled rail',()
  assert.match(profile,/const val MEDIUM_MIN_DP = 600f/);
  assert.match(profile,/const val EXPANDED_MIN_DP = 840f/);
  assert.match(profile,/val reference = size == WidthClass\.EXPANDED && heightDp >= REFERENCE_MIN_HEIGHT_DP &&\s*font <= 1\.3f && readableColumns == 5 && rail == JarvisShellLayout\.Rail\.LABELLED/);
+ assert.match(shell,/fun create\(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail\.LABELLED,\s*includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false\): Shell \{/);
+ assert.match(shell,/val full = create\(widthDp \+ externalRailWidthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation\)/);
  assert.match(shell,/val profile = JarvisWindowProfile\.resolve\(widthDp, heightDp, fontScale, foldRail\)/);
- assert.match(shell,/if \(profile\.referenceComposition\) reference\(widthDp, heightDp, profile, foldRail\)\s*else reflow\(widthDp, heightDp, profile, foldRail, includeBottomNavigation\)/);
+ assert.match(shell,/return if \(profile\.referenceComposition\) reference\(widthDp, heightDp, profile, foldRail\)\.let \{\s*if \(compactPresentation\) compactReference\(it\) else it\s*\} else reflow\(widthDp, heightDp, profile, foldRail, includeBottomNavigation, compactPresentation\)/);
  const ui=activityMember('private fun buildUi(): View');
  assert.match(ui,/val wide = windowWidthDp >= at\.heinz\.deviceai\.ui\.JarvisWindowProfile\.MEDIUM_MIN_DP/);
  assert.match(ui,/val rail = buildRail\(\)\.also/);
