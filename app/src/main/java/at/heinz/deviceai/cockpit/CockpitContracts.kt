@@ -23,9 +23,13 @@ interface JarvisAvatarRenderer {
     fun detach()
     /** Optional: slot moved/resized (rotation, fold, font scale). */
     fun onSlotChanged(slot: Rect) = Unit
+    /** Optional: head only vs. full body with orb (video 3). */
+    fun onPresentation(mode: AvatarPresentation) = Unit
     /** Optional: full avatar contract events (speech, visemes, audio level, gaze) for lip-sync. */
     fun onAvatarEvent(event: AvatarEvent) = Unit
 }
+
+enum class AvatarPresentation { HEAD, FULL_BODY_ORB }
 
 object JarvisAvatarSlot {
     @Volatile var renderer: JarvisAvatarRenderer? = null
@@ -71,9 +75,17 @@ interface CockpitActionHandler {
 }
 
 /** A = menu/scene change as depth move (JarvisMotion.Depth); B = area/panel fly-in (JarvisShellView.playEntrance). */
-enum class TransitionPattern { A_DEPTH, B_FLY_IN }
+enum class TransitionPattern { A_DEPTH, B_FLY_IN, C_WARP }
 
 const val NAV_TURN = "nav"
+
+// ---- Alarms, video 3 (Jarvis Lückenfüller draws them; emitted only from real signals) ----
+
+/**
+ * DATA_OVERLOAD: memory event hub dropped events (droppedEventCount rising) or the worker queue is full.
+ * THERMAL: PowerManager thermal status. MEMORY_PRESSURE: onTrimMemory / low-memory.
+ */
+enum class AlarmKind { DATA_OVERLOAD, THERMAL, MEMORY_PRESSURE }
 
 // ---- Answer pills and Gmail, patterns F/G (implemented by Jarvis Sicherheit) ----
 

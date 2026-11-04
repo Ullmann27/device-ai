@@ -144,4 +144,16 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
         if (target.isEmpty()) return
         bus.emit(CockpitAnimationEvent.AreaChanged(NAV_TURN, clock(), from?.let { clean(it, 64) }?.ifEmpty { null }, target, pattern))
     }
+
+    private val activeAlarms = java.util.EnumSet.noneOf(AlarmKind::class.java)
+
+    /** Real alarm signal (edge-triggered): raises once when [active] turns true, clears once when it turns false. */
+    fun alarm(kind: AlarmKind, active: Boolean, sourceLabel: String, measured: Double? = null, threshold: Double? = null) {
+        val changed = synchronized(activeAlarms) { if (active) activeAlarms.add(kind) else activeAlarms.remove(kind) }
+        if (!changed) return
+        bus.emit(if (active) CockpitAnimationEvent.AlarmRaised(ALARM_TURN, clock(), kind, clean(sourceLabel, 64), measured, threshold)
+            else CockpitAnimationEvent.AlarmCleared(ALARM_TURN, clock(), kind))
+    }
 }
+
+const val ALARM_TURN = "alarm"

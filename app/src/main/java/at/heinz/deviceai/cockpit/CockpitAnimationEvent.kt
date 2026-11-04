@@ -67,6 +67,13 @@ sealed class CockpitAnimationEvent {
     data class AreaChanged(override val turnId: String, override val atMillis: Long, val fromTarget: String?,
                            val toTarget: String, val pattern: TransitionPattern) : CockpitAnimationEvent()
 
+    /** A real alarm signal crossed its threshold ([measured]/[threshold] null when the platform gives only a level). */
+    data class AlarmRaised(override val turnId: String, override val atMillis: Long, val kind: AlarmKind,
+                           val sourceLabel: String, val measured: Double?, val threshold: Double?) : CockpitAnimationEvent()
+
+    data class AlarmCleared(override val turnId: String, override val atMillis: Long, val kind: AlarmKind) :
+        CockpitAnimationEvent()
+
     /**
      * Extension point for future event families, first of all the calculation / math visualisation of the
      * reference videos (e.g. `class MathVisualization(...) : CockpitAnimationEvent.Extension("math")`).

@@ -178,8 +178,19 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             dockedRenderer = null
             if (wanted != null && !avatarRect.isEmpty) { wanted.attach(this, android.graphics.Rect(avatarRect)); dockedRenderer = wanted }
         }
-        hologram.visibility = if (owns) View.GONE else View.VISIBLE
+        // Only while the home hosts it: chat and other panes reparent the same avatar and keep it visible.
+        if (hologram.parent === this) hologram.visibility = if (owns) View.GONE else View.VISIBLE
         avatarPlaceholder.visibility = if (owns && dockedRenderer == null) View.VISIBLE else View.GONE
+    }
+
+    override fun onViewRemoved(child: View?) {
+        super.onViewRemoved(child)
+        if (child === hologram) child.visibility = View.VISIBLE
+    }
+
+    override fun onViewAdded(child: View?) {
+        super.onViewAdded(child)
+        if (child === hologram && views.isNotEmpty()) applyAvatarSlot()
     }
 
     private fun layoutAvatarSlot(left: Int, top: Int, right: Int, bottom: Int) {

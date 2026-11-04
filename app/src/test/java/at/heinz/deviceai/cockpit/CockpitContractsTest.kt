@@ -58,4 +58,18 @@ class CockpitContractsTest {
             CockpitAnimationEvent.AreaChanged(NAV_TURN, 7L, "home", "memory", TransitionPattern.B_FLY_IN),
             CockpitAnimationEvent.AreaChanged(NAV_TURN, 7L, null, "logic", TransitionPattern.A_DEPTH)), seen)
     }
+
+    @Test fun alarmsAreEdgeTriggeredFromRealSignals() {
+        val bus = CockpitAnimationBus()
+        val seen = mutableListOf<CockpitAnimationEvent>()
+        bus.subscribe { seen += it }
+        val t = CockpitAnimationTriggers(bus) { 3L }
+        t.alarm(AlarmKind.THERMAL, true, "Thermal-Status", 4.0, 3.0)
+        t.alarm(AlarmKind.THERMAL, true, "Thermal-Status", 5.0, 3.0)
+        t.alarm(AlarmKind.DATA_OVERLOAD, false, "Worker-Warteschlange")
+        t.alarm(AlarmKind.THERMAL, false, "Thermal-Status")
+        assertEquals(listOf(
+            CockpitAnimationEvent.AlarmRaised(ALARM_TURN, 3L, AlarmKind.THERMAL, "Thermal-Status", 4.0, 3.0),
+            CockpitAnimationEvent.AlarmCleared(ALARM_TURN, 3L, AlarmKind.THERMAL)), seen)
+    }
 }

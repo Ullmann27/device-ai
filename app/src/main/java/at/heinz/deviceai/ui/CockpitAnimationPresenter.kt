@@ -43,6 +43,7 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView) : CockpitAn
         when (event.pattern) {
             at.heinz.deviceai.cockpit.TransitionPattern.B_FLY_IN ->
                 if (home.jarvisShellStage) home.jarvisShell.playEntrance() else if (home.landscapeCockpit) flyInCards()
+            at.heinz.deviceai.cockpit.TransitionPattern.C_WARP -> Unit // visual via hook only (no default)
             at.heinz.deviceai.cockpit.TransitionPattern.A_DEPTH -> if (motionAllowed()) {
                 val s = JarvisMotion.Depth.scale(JarvisMotion.Depth.Layer.FAR)
                 home.animate().cancel()
@@ -92,6 +93,9 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView) : CockpitAn
                 event.steps.take(4).map { it.label + " = " + it.value } + ("Ergebnis = " + event.result + (event.unit?.let { " $it" } ?: "")),
                 motionAllowed())
             is CockpitAnimationEvent.AreaChanged -> Unit // handled by playArea
+            // Alarm visuals belong to Jarvis Lückenfüller (hook); minimal default: system card glows.
+            is CockpitAnimationEvent.AlarmRaised -> highlight(Slot.SYSTEM_STATUS)
+            is CockpitAnimationEvent.AlarmCleared -> Unit
             is CockpitAnimationEvent.Extension -> Unit // unknown kinds are ignored by design
         }
     }
