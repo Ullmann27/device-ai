@@ -161,7 +161,7 @@ object JarvisNeon {
             val t = ((timeMs % 900L) / 900f + k / 3f) % 1f
             val sx = x0 + (x1 - x0) * t; val sy = y0 + (y1 - y0) * t
             p.fillCircle(sx, sy, 4f, Fill.Radial(sx, sy, 4f, intArrayOf(Argb.withAlpha(color, .8f), 0)))
-            p.fillCircle(sx, sy, 1.2f, Fill.Solid(0xffe6fdff.toInt()), .95f)
+            p.fillCircle(sx, sy, 1.2f, Fill.Solid(Colors.glowCore), .95f)
         }
         p.setAdditive(false)
     }
