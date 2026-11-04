@@ -1,0 +1,3 @@
+[0.001s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/51 because it is locked by another process (errno = 11)
+REGISTRY_FAILURE escaped=false renderer_callbacks_queued=1
+OBSOLETE_RENDERER old_deliveries=0 current_deliveries=0
