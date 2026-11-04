@@ -1,0 +1,101 @@
+{"source": "6c6fbfb3abed6afeccfb2eadcd24ce4754e7a349", "tree": "d12064587a108dafe3ca8049d46c658d3dbfdfe0", "dirty": "", "checkout": "/workspace/scratch/d663e8444310/continuum-anschluss", "args": ["/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle", "--offline", "--no-daemon", "--max-workers=1", "--console=plain", "-Pkotlin.compiler.execution.strategy=in-process", ":app:testDebugUnitTest", "-PcontinuumUiWidgetTests=true", "--tests", "*AvatarRangeFrameConnectionUiTest"], "started_at": "2026-11-04T19:23:07.919638+00:00"}
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+
+> Task :app:compileDebugKotlin
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:511:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:512:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:514:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:956:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1356:67 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2748:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4676:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4691:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4720:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7241:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7812:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7812:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:8947:59 Unnecessary safe call on a non-null receiver of type 'Long'.
+
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+
+AvatarRangeFrameConnectionUiTest > invalidAudioMarkerCannotStartAVisibleWordThroughTheActualCallback FAILED
+    java.lang.AssertionError at AvatarRangeFrameConnectionUiTest.kt:140
+
+AvatarRangeFrameConnectionUiTest > installedCallbackRejectsBackwardAudioMarkerAndAcceptsTheNextValidWord FAILED
+    java.lang.AssertionError at AvatarRangeFrameConnectionUiTest.kt:116
+
+AvatarRangeFrameConnectionUiTest > orderedPunctuationAnchorsPcmWithoutInventingVisemesOrAdmittingOlderFrames FAILED
+    java.lang.AssertionError at AvatarRangeFrameConnectionUiTest.kt:182
+
+AvatarRangeFrameConnectionUiTest > aDuplicateStartCannotRewindTheAcceptedPcmPosition FAILED
+    java.lang.AssertionError at AvatarRangeFrameConnectionUiTest.kt:166
+
+AvatarRangeFrameConnectionUiTest > aRejectedRangeCannotRewindTheMeasuredPcmPlaybackPosition FAILED
+    java.lang.AssertionError at AvatarRangeFrameConnectionUiTest.kt:154
+
+6 tests completed, 5 failed
+
+> Task :app:testDebugUnitTest FAILED
+[Incubating] Problems report is available at: file:///workspace/scratch/d663e8444310/continuum-anschluss/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///workspace/scratch/d663e8444310/continuum-anschluss/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 54s
+30 actionable tasks: 5 executed, 25 up-to-date
+
+EXIT_CODE=1
