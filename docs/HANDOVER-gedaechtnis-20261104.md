@@ -45,3 +45,9 @@
 - Fix in 7403142e59c998290cb30a95cb801efd2dd62ab6: letzter close() leert die Queue, löst den Worker unter dem Lock ab (worker=null) und joint ihn (max. 1 s, nie vom Worker selbst); der Worker endet, sobald er nicht mehr der aktuelle ist. Gleiches Muster in ContinuumMemoryEventHub angeglichen. Test unverändert.
 - Tests: RetrievalCalculationSourceTest 10/10 Läufe grün (je 4/4); auf 7403142e59c998290cb30a95cb801efd2dd62ab6 grün: RetrievalCalculationSourceTest 4/4, ContinuumMemoryEventQueueTest 3/3, BrainOrbSignalsTest 5/5, JarvisMemoryActivityPanelTest 3/3.
 - #371 (continuum/m2-cognitive-memory @de333693) hat im ContinuumMemoryEventHub dieselbe Race; dort nicht geändert.
+
+## Nachtrag Endspurt (Memory Activity)
+- 295c95c4e8d4bc13a5bbf6b5462d47cd3ec63819: Befund: learning.MemoryStored wird auf diesem Branch von niemandem gesendet (Hub sendet nur RecallHits aus EventEmittingRetriever; cockpit.MemoryEventSource nutzt Kerns eigenes CockpitAnimationEvent.MemoryStored). Daher zeigt "Context updates" "—" statt 0, bis ein Erzeuger angeschlossen ist und der Tracker mit storedEventsWired = true gebaut wird.
+- Labels englisch wie ref5 (Hypothesen = "Hypotheses", nicht "Insights extracted"), Wert links / Label linksbündig, Balken aus echten Ereignissen pro Stunde, ohne Daten gedimmt leer.
+- Tests auf 295c95c4e8d4bc13a5bbf6b5462d47cd3ec63819: JarvisMemoryActivityPanelTest 5/5 grün (neu: Dash ohne Stored-Erzeuger, englische Labels).
+- Bilder neu: kontrolle-3/gedaechtnis-memory-activity.png (leer), gedaechtnis-memory-activity-live.png (Testdaten: echtes Temp-Gedächtnis + 4 echte Recall-Suchen).
