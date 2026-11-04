@@ -44,3 +44,8 @@
    - Dolly-Strecke 8 s
    - Warp 5,2
 4. Laser D: `JarvisMotion.laser` bleibt linear; der Lückenfüller kann `Easings.easeOutCubic` nutzen.
+
+## Sprint 10:05 – Merge-Prüfung (09:58)
+- `git merge-tree` von HEAD gegen #481 (`design/jarvis-cockpit-home-20261104` @5a1076ca) und #482 (`jarvis-grafik/avatar-ref-match` @2e49ea74): beide konfliktfrei.
+- API-Hinweis: AvatarMorphMapper hat auf #481/#482 jetzt eine eigene 70-ms-Visem-Überblendung und ein festes Blinzeln (alle 4,6 s, ca. 0,15 s). Wenn die Gewichte aus `LipSyncFaceSource` über `applyTo(pose)` in den Mapper laufen, wird doppelt überblendet und doppelt geblinzelt. Lösung bei Avatar: entweder `weightsAt` direkt an den Renderer geben oder im Mapper die eigene Überblendung und das eigene Blinzeln abschalten, wenn die Mathematik-Quelle aktiv ist. Die JawOpen-Logik des Mappers ist unverändert, damit stimmt der Kopplungstest weiter.
+- Für den Merge-Stand wurden keine Tests gelaufen (nur Textmerge geprüft).
