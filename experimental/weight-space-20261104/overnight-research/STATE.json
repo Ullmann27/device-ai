@@ -1,6 +1,6 @@
 {
   "task": "G1-INTEGRATE-WEIGHT-002",
-  "phase": "STRUCTURAL_MEASUREMENTS_COMPLETE_INFERENCE_NOT_RUN",
+  "phase": "INFERENCE_SOURCE_FROZEN_NOT_RUN",
   "parentCommit": "0af14f75b04e68ba849a92316b8be51041e8738b",
   "comparisonPr508Commit": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
   "ownerSession": "0549bca61ccf",
@@ -13,9 +13,8 @@
     "exact checkpoint replica measurements"
   ],
   "next": [
-    "freeze source-bound inference harness",
-    "native activation and EOS diagnostics",
-    "fixed bidirectional block interventions",
+    "execute four native diagnostic arms",
+    "execute sixteen fixed block interventions",
     "independent arithmetic and resume verification"
   ]
 }

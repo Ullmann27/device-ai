@@ -1,0 +1,25 @@
+test_all_identity_and_integrity_mutations_rejected (test_diagnostic_gate.DiagnosticGateTest.test_all_identity_and_integrity_mutations_rejected) ... ok
+test_all_twenty_valid_arm_structures (test_diagnostic_gate.DiagnosticGateTest.test_all_twenty_valid_arm_structures) ... ok
+test_duplicate_key_rejected (test_diagnostic_gate.DiagnosticGateTest.test_duplicate_key_rejected) ... ok
+test_existing_file_never_overwritten (test_diagnostic_gate.DiagnosticGateTest.test_existing_file_never_overwritten) ... ok
+test_initial_probability_parity_fail_closed (test_diagnostic_gate.DiagnosticGateTest.test_initial_probability_parity_fail_closed) ... ok
+test_invalid_registration_starts_nothing (test_diagnostic_gate.DiagnosticGateTest.test_invalid_registration_starts_nothing) ... ok
+test_missing_duplicate_extra_or_reordered_rows (test_diagnostic_gate.DiagnosticGateTest.test_missing_duplicate_extra_or_reordered_rows) ... ok
+test_probability_corruption_rejected (test_diagnostic_gate.DiagnosticGateTest.test_probability_corruption_rejected) ... ok
+test_receipt_failure_and_binding_rejected (test_diagnostic_gate.DiagnosticGateTest.test_receipt_failure_and_binding_rejected) ... ok
+test_symlink_input_rejected (test_diagnostic_gate.DiagnosticGateTest.test_symlink_input_rejected) ... ok
+test_asymmetric_update_breaks_cancellation (test_replica_metrics.ReplicaMetricsTest.test_asymmetric_update_breaks_cancellation) ... ok
+test_collapse_rejects_wrong_replication (test_replica_metrics.ReplicaMetricsTest.test_collapse_rejects_wrong_replication) ... ok
+test_exact_replicas (test_replica_metrics.ReplicaMetricsTest.test_exact_replicas) ... ok
+test_independent_hand_calculation (test_replica_metrics.ReplicaMetricsTest.test_independent_hand_calculation) ... ok
+test_invalid_shape (test_replica_metrics.ReplicaMetricsTest.test_invalid_shape) ... ok
+test_nonfinite_rejected (test_replica_metrics.ReplicaMetricsTest.test_nonfinite_rejected) ... ok
+test_paired_noise_cancels_on_equal_inputs (test_replica_metrics.ReplicaMetricsTest.test_paired_noise_cancels_on_equal_inputs) ... ok
+test_signed_zero_is_bit_distinct (test_replica_metrics.ReplicaMetricsTest.test_signed_zero_is_bit_distinct) ... ok
+test_single_replica (test_replica_metrics.ReplicaMetricsTest.test_single_replica) ... ok
+test_zero_reference_is_defined (test_replica_metrics.ReplicaMetricsTest.test_zero_reference_is_defined) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.112s
+
+OK

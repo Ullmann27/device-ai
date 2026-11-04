@@ -1,0 +1,32 @@
+{
+  "command": [
+    "java",
+    "-Xmx768m",
+    "-cp",
+    "/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-stdlib-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-reflect-1.6.10.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/annotations-13.0.jar",
+    "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+    "-no-stdlib",
+    "-no-reflect",
+    "-jvm-target",
+    "17",
+    "-classpath",
+    "/workspace/scratch/3112c86b5191/LM1_Training_Research_20261104/runtime/v3-experiment.jar:/workspace/scratch/3112c86b5191/LM1_Training_Research_20261104/runtime/kotlin-stdlib-2.0.20.jar",
+    "-d",
+    "/workspace/scratch/0549bca61ccf/night-diagnostic-build/diagnostic.jar",
+    "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/overnight-research/LmChannelDiagnostic.kt"
+  ],
+  "exitCode": 0,
+  "stdout": "",
+  "stderr": "",
+  "compilerFiles": {
+    "kotlin-compiler-embeddable-2.4.0.jar": "c2b25e8c1c93ec416ba4327f5e31eaec0f0c8847241b9353e294b8db9dce564f",
+    "kotlin-stdlib-2.4.0.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+    "kotlin-script-runtime-2.4.0.jar": "196e8ecbf63daf477e34e67c2f871ee232ae7bf8b377432d876d1bbf9d273de3",
+    "kotlin-reflect-1.6.10.jar": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203",
+    "kotlin-daemon-embeddable-2.4.0.jar": "383093af5e078435b60043d19bfa83eb6191be0f4d13a28fb1c8a0f3ab24fe66",
+    "kotlinx-coroutines-core-jvm-1.8.0.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+    "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+  },
+  "sourceSha256": "df8266d07c6ce587d8f0f6fa41a81696448273330fddaca968289b9094acff90",
+  "jarSha256": "26aabef28874dc5d69eb54f76da5d6b4c7fd0267c45378e23269a89a9b627dca"
+}
