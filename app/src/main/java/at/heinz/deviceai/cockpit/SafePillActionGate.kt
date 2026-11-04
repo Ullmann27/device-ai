@@ -44,7 +44,7 @@ class ToolGatePillActionGate(
         val proposal = ToolProposal(tool, argumentsFor(pill.kind, doc) ?: return onDecision(false))
         if (proposal.validate() != null) return onDecision(false)
         // S4: the document is external content; the owner tapped a pill but typed no target.
-        if (ExternalContentActionGuard.refusal("", tool, spec.risk, untrustedObservationsSeen = true) != null)
+        if (ExternalContentActionGuard.refusal("", tool, spec.risk, proposal.arguments, untrustedObservationsSeen = true) != null)
             return onDecision(false)
         val approval = approvals.requestApproval(proposal, spec.risk)
         if (!approval.userConfirmed || (spec.risk == Risk.DESTRUCTIVE && !approval.destructiveConfirmed)) return onDecision(false)
