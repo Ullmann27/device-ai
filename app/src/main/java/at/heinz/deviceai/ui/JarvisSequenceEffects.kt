@@ -495,8 +495,8 @@ class JarvisSequenceEffects {
     companion object {
         const val MAX_CARDS = 4
         const val MAX_FLIGHT = 8
-        /** Ease-in into the orb. JarvisMotion has no plain easeInCubic yet (request to Jarvis Mathematik); t³ meanwhile. */
-        val ORB_EASE_IN: (Float) -> Float = { it * it * it }
+        /** Ease-in into the orb: Jarvis Mathematik #489 (motion-math @e600add5) Easings.easeInCubic. */
+        val ORB_EASE_IN: (Float) -> Float = at.heinz.deviceai.motion.Easings.easeInCubic::at
         /** Muster E: 0.6–0.8 s per icon (spec). */
         const val FLIGHT_MS = 700L
         const val PULSE_MS = 600L
