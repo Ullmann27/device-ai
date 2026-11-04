@@ -1,0 +1,35 @@
+{
+  "baseCommit": "15e90e4a8d385f46818a8b619d26d3e5ece1806a",
+  "baseApplicationSource": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+  "branch": "fix/continuum-status-history-20261104",
+  "pullRequest": 475,
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumBentoCockpit.kt": "09dfc20ba2982123fb48ce7906e12a35b7ecfbbee57b8ea0eb320e68c8db6fb6",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/ContinuumControlsTest.kt": "ba8c2827801317881e7d16acdc1dffe057cd8f4a1251aee09f5412eddbe41719"
+  },
+  "ownerScreenshotSha256": "742e9a597e31140b0cc5a2290301b20d2f9d2ec8da9dfcf3f9876d9c99e08458",
+  "ownerScreenshotScope": "User-supplied status screen reports installed/running 0.3.39 (code 40), Shizuku connected, Gemma READY, verified archive generation 56, 33 stored receipts, historical offline job FINISHED. No ADB/physical action/inference acceptance was performed.",
+  "testResults": {
+    "red": {
+      "total": 3,
+      "pass": 0,
+      "fail": 3,
+      "skip": 0
+    },
+    "green": {
+      "total": 10,
+      "pass": 10,
+      "fail": 0,
+      "skip": 0
+    },
+    "wiring": {
+      "total": 29,
+      "pass": 29,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "lintIssues": 0,
+  "productionChanges": "Display-only colon classification and exact known event-phase formatting; no model, scheduling, preferences, owner-data, backend or permission changes",
+  "S01": "NO_RUN_BARRIER_UNCHANGED"
+}
