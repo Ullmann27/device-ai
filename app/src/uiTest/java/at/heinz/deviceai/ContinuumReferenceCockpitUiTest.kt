@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.os.Bundle
 import android.os.Looper
 import android.os.SystemClock
 import android.view.MotionEvent
@@ -95,7 +96,9 @@ class ContinuumReferenceCockpitUiTest {
         app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         try {
-            controller.setup().visible().windowFocusChanged(true)
+            controller.setup().visible()
+            advanceFrames(16)
+            controller.windowFocusChanged(true)
             val activity = controller.get()
             val root = activity.window.decorView
             val avatar = field(activity, "hologramView") as ContinuumHologramView
@@ -110,9 +113,7 @@ class ContinuumReferenceCockpitUiTest {
             body(activity, root, controller)
         } finally {
             ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
-            runCatching { controller.pause() }
-            runCatching { controller.stop() }
-            runCatching { controller.destroy() }
+            runCatching { controller.close() }
             RuntimeEnvironment.setFontScale(previousFont)
         }
     }
@@ -327,12 +328,22 @@ class ContinuumReferenceCockpitUiTest {
         assertTrue(rebuilt.hasFocus())
         assertEquals(2, rebuilt.maxLines)
         assertFalse(field(activity, "busy") as Boolean)
-        controller.recreate()
-        settle()
-        val resumed = controller.get()
-        assertEquals(draft, (field(resumed, "input") as EditText).text.toString())
-        assertEquals(ContinuumWorkArea.CHAT, field(resumed, "activeWorkArea"))
-        assertFalse("Rotation cannot submit the retained draft", field(resumed, "busy") as Boolean)
+        // Preserve real saved-instance recreation.
+        val savedState = Bundle()
+        controller.pause().stop().saveInstanceState(savedState).destroy()
+        val recreated = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            recreated.setup(savedState).visible()
+            advanceFrames(16)
+            recreated.windowFocusChanged(true)
+            settle()
+            val resumed = recreated.get()
+            assertEquals(draft, (field(resumed, "input") as EditText).text.toString())
+            assertEquals(ContinuumWorkArea.CHAT, field(resumed, "activeWorkArea"))
+            assertFalse("Rotation cannot submit the retained draft", field(resumed, "busy") as Boolean)
+        } finally {
+            recreated.close()
+        }
     }
 
     @Test @Config(qualifiers = "w280dp-h720dp-mdpi")

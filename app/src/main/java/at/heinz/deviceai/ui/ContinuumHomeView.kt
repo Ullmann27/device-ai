@@ -104,12 +104,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         slotRegistration?.close()
-        slotRegistration = at.heinz.deviceai.cockpit.JarvisAvatarSlot.addListener { post { applyAvatarSlot() } }
+        slotRegistration = at.heinz.deviceai.cockpit.JarvisAvatarSlot.addListener { post(avatarSlotUpdate) }
+        post(avatarSlotUpdate)
         updateWaveAnimation()
     }
 
     override fun onDetachedFromWindow() {
         slotRegistration?.close(); slotRegistration = null
+        removeCallbacks(avatarSlotUpdate)
         dockedRenderer?.let { runCatching { it.detach() } }
         dockedRenderer = null
         removeCallbacks(waveFrame)
@@ -213,6 +215,9 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private val avatarPlaceholder = AvatarSlotPlaceholder(context)
     private var dockedRenderer: at.heinz.deviceai.cockpit.JarvisAvatarRenderer? = null
     private val avatarRect = android.graphics.Rect()
+    private val avatarSlotUpdate = Runnable {
+        if (isAttachedToWindow) applyAvatarSlot()
+    }
 
     val avatarRenderer: at.heinz.deviceai.cockpit.JarvisAvatarRenderer? get() = dockedRenderer
     /** Pixel rect of the avatar slot (cockpit modes). */
@@ -222,7 +227,9 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private fun applyAvatarSlot() {
         val owns = ownsAvatarSlot
-        val wanted = if (owns && hologram.parent === this) at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer else null
+        val registered = at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer
+        val compatible = registered !is at.heinz.deviceai.avatar.JarvisHoloAvatar || registered.canAttachTo(this)
+        val wanted = if (owns && isAttachedToWindow && hologram.parent === this && compatible) registered else null
         if (wanted !== dockedRenderer) {
             dockedRenderer?.let { runCatching { it.detach() } }
             dockedRenderer = null
@@ -272,12 +279,12 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         avatarPlaceholder.measure(MeasureSpec.makeMeasureSpec(right - left, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(bottom - top, MeasureSpec.EXACTLY))
         avatarPlaceholder.layout(left, top, right, bottom)
-        if (dockedRenderer == null) { if (at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer != null) post { applyAvatarSlot() } }
+        if (dockedRenderer == null) { if (at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer != null) post(avatarSlotUpdate) }
         else if (changed) dockedRenderer?.let { r ->
             r.onSlotChanged(android.graphics.Rect(avatarRect))
             // The live adapter handles resize in place. Preserve compatibility with other slot implementations.
             if (r !is at.heinz.deviceai.avatar.JarvisHoloAvatar) {
-                post { if (dockedRenderer === r) r.attach(this, android.graphics.Rect(avatarRect)) }
+                post { if (isAttachedToWindow && dockedRenderer === r) r.attach(this, android.graphics.Rect(avatarRect)) }
             }
         }
         if (hologram.parent === this) hologram.layout(left, top, right, bottom)

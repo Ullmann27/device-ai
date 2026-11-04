@@ -40,4 +40,20 @@ New practice histories require the V3-capable reader once used; ordinary histori
 
 ## Continuation and rollback
 
+## First actual common gate and bounded follow-up
+
+Frozen local `f3e70a45469a03df7032ce6d71c91a7525b91eb2` equals published `d2aedf2c272bfa20d4e1930a0f65277c3f02be0f`, complete tree `fdae24c1778b456509ab588120b8abdcf9f93aa8`. Both common Node profiles completed with unchanged source: critical **135 PASS / 0 FAIL / 0 SKIP**, full-node **2,362 PASS / 0 FAIL / 31 SKIP**. These overlap and are not added.
+
+The UI-enabled Android run without class filters completed: **3,008 total / 2,974 PASS / 15 FAIL / 19 SKIP**, Gradle exit1; lint was not reached. This first invocation used the default app mode; the following invocation explicitly selects the existing canonical standalone-QA flags with code41 solely as a compile/test parameter. It is not a new release version. All new connection suites passed within that first run; the complete Android gate remained FAIL.
+
+All original 562 evidence files, 530 JUnit reports, source hashes, commands and negative results are retained in `coordinator/first-run-evidence.tar.xz`, with individual hashes and a readable summary next to it. Nothing is reclassified as PASS.
+
+The three agents then delivered bounded responses to the actual stacks:
+
+- Twelve failures in `windowFocusChanged` at Robolectric's missing ViewRoot: advance a bounded real traversal frame before focus. The recreation fixture now executes the actual saved-instance lifecycle around a Bundle, preserving every original draft/reflow assertion.
+- Two reflective tool-caller failures: pass the existing fourth `botTask` argument explicitly. Kotlin's default value does not create a three-argument reflection overload. Authorization and backend assertions stay unchanged.
+- One stale avatar-slot failure: cancel the named callback on detach, recheck window attachment and the registered adapter's live-surface parent before docking. The direct ownership rejection stays intact. Three new UI cases cover stale callbacks, foreign ownership and positive redocking. The originally failing AdaptiveCockpit test remains unchanged.
+
+The original node PASS applies to the first frozen source. Fresh Android and appropriate Node gates are required on the repaired combined source; no result is inherited across these changes.
+
 Read the latest version of this handoff and exact remote branch ref. Review each agent's bounded diff, combine serially, freeze source, then execute actual checks. Revert individual R3 commits to withdraw a slice; the two frozen parent histories and all previous evidence remain available. No force update, main merge, release, signing or installation is included.

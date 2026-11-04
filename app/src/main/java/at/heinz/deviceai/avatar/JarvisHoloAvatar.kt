@@ -24,6 +24,9 @@ class JarvisHoloAvatar(private val liveSurface: ContinuumHologramView? = null) :
     var hologram: ContinuumHologramView? = null; private set
     var sequence: JarvisSequenceView? = null; private set
 
+    /** Preserve the Activity's surface ownership. */
+    internal fun canAttachTo(host: ViewGroup): Boolean = liveSurface == null || liveSurface.parent === host
+
     override fun attach(host: ViewGroup, slot: Rect) {
         if (this.host === host && isAttached) { onSlotChanged(slot); return }
         detach()
