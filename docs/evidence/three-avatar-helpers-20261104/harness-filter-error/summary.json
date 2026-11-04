@@ -1,0 +1,9 @@
+{
+  "source_commit": "f828f50c0173f440ecb0a1eba2f33b6023156957",
+  "exit_code": 1,
+  "outcome": "HARNESS_FILTER_ERROR",
+  "tests_executed": 0,
+  "reason": "Guessed method filter did not match any test. This is not a product regression result. Superseded by the full AvatarSpeechOrderingRegressionTest class run.",
+  "incorrect_filter": "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.futureAudioDoesNotPoisonLaterValidSamplesOrReviveOldReplays",
+  "correct_method": "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.rejectedFutureAudioCannotPoisonEnergyOrderingOrTheDefaultPoseClock"
+}

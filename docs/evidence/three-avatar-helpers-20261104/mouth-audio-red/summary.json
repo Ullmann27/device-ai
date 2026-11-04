@@ -1,0 +1,12 @@
+{
+  "source_commit": "cce9ae9bcd11d06e7798632b3e886ded11268f16",
+  "production_base": "d352bab6855db2a44def0bbf60fd93202b4e3066",
+  "totals": {
+    "tests": 14,
+    "failures": 8,
+    "errors": 0,
+    "skipped": 0
+  },
+  "exit_code": 1,
+  "expected": "RED (unfixed mouth and audio defects)"
+}

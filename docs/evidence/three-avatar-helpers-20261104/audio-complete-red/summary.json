@@ -1,0 +1,15 @@
+{
+  "source_commit": "538295da168de5ad639fb1240a195ad7d6fec4c5",
+  "source_tree": "9def814e50667020d60627c1d1ff2d2a65b767a5",
+  "production_base": "d352bab6855db2a44def0bbf60fd93202b4e3066",
+  "production_unchanged": true,
+  "totals": {
+    "tests": 10,
+    "failures": 7,
+    "errors": 0,
+    "skipped": 0
+  },
+  "exit_code": 1,
+  "expected": "RED (unfixed audio ordering and future-sample recovery defects)",
+  "filter": "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest"
+}

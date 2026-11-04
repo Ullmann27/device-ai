@@ -1,0 +1,12 @@
+{
+  "source_commit": "b7091a7ffb819a816c181e5508606ef6a9229dfa",
+  "production_base": "d352bab6855db2a44def0bbf60fd93202b4e3066",
+  "totals": {
+    "tests": 9,
+    "failures": 7,
+    "errors": 0,
+    "skipped": 0
+  },
+  "exit_code": 1,
+  "expected": "RED (unfixed dispatch defects)"
+}
