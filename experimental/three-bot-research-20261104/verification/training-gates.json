@@ -1,0 +1,76 @@
+{
+  "scope": "Synthetic orchestration gates; no model inference or training",
+  "sourceSha": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "driverSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "executedBy": "coordinator, independently of all three research agents",
+  "totalPassed": 75,
+  "totalFailed": 0,
+  "realTrainingRuns": 0,
+  "deviceValidation": "NOT_RUN",
+  "suites": [
+    {
+      "suite": "adversarial_driver_gate.py",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/weight/experimental/weight-space-20261104/tests/adversarial_driver_gate.py",
+        "--workspace",
+        "/workspace/scratch/9d2785b5ab4e/research/verification/training-gates/adversarial_driver_gate"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 1.4890682329996707,
+      "log": "adversarial_driver_gate.py.txt",
+      "logSha256": "1d1125ed990cc6c7d1e856baa75e2dde9a9a7842fbd6d7fc09ec38f663c95d99",
+      "passed": 36,
+      "failed": 0,
+      "reportSha256": "a46280ede67a15fb72dde511578024165b572c77e79b01bba8805c46f2f37076"
+    },
+    {
+      "suite": "targeted_final_creation_gate.py",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/weight/experimental/weight-space-20261104/tests/targeted_final_creation_gate.py",
+        "--workspace",
+        "/workspace/scratch/9d2785b5ab4e/research/verification/training-gates/targeted_final_creation_gate"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.382684756999879,
+      "log": "targeted_final_creation_gate.py.txt",
+      "logSha256": "3358b68ae1f457270159f07e151fda7b2959f229132da6e00ee387c0c815b00b",
+      "passed": 6,
+      "failed": 0,
+      "reportSha256": "6e0c8d35898d4e9a134d3dd4bd16783468834228eede25a66be1468232accfe8"
+    },
+    {
+      "suite": "direct_dispatch_gate.py",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/weight/experimental/weight-space-20261104/tests/direct_dispatch_gate.py",
+        "--workspace",
+        "/workspace/scratch/9d2785b5ab4e/research/verification/training-gates/direct_dispatch_gate"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.316493174000243,
+      "log": "direct_dispatch_gate.py.txt",
+      "logSha256": "14d1dbb56609d9bc345c62f22673e553805c225788197512c4b50e626fc6f3e9",
+      "passed": 4,
+      "failed": 0,
+      "reportSha256": "12e2ff95a512e8c26019816717f0ad6973c295eccaf11c5b442facae475aff59"
+    },
+    {
+      "suite": "registered_profiles_gate.py",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/weight/experimental/weight-space-20261104/tests/registered_profiles_gate.py",
+        "--workspace",
+        "/workspace/scratch/9d2785b5ab4e/research/verification/training-gates/registered_profiles_gate"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 7.4482245749995855,
+      "log": "registered_profiles_gate.py.txt",
+      "logSha256": "1ab164f623d16f2230d5bc9ab96edb9b49f2d374f5b7f25ecfa6420f207449d9",
+      "passed": 29,
+      "failed": 0,
+      "reportSha256": "2ad82770a645bc335f588db06f1eaa170c1a41b7be78e11eeb581ae35c4ac87d"
+    }
+  ]
+}

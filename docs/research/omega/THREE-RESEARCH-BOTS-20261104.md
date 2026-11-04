@@ -43,3 +43,8 @@ Drei Bots gestartet. Lokaler eingefrorener #491-Checkout sauber. Python/NumPy, N
 ## Nächster Einstieg und Rückfall
 
 Pro Bot erst Quellen prüfen, dann kleinsten aussagekräftigen Versuch durchführen, danach unabhängige Koordinatorprüfung. Ergebnisse werden im selben Branch gesichert. Bei Fehlschlag Erkenntnisse behalten, keine Kandidatenpromotion. Rückfall: Forschungsbranch nicht übernehmen; keine Produktionsmigration nötig.
+
+## Koordinator-Checkpoint: Trainingsgates unabhängig wiederholt
+
+Die vier vorhandenen Prüfprogramme aus #492 bei `30cd3a89810ed14fa84eca95236d3177e016118d` wurden unverändert gegen den exakten Treiberhash `8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be` erneut ausgeführt: **36 + 6 + 4 + 29 = 75 PASS, 0 FAIL**. Alle vier Prozesse endeten mit Exitcode 0. Dies sind synthetische Steuerungs-/Negativprüfungen, **null echte Trainingsläufe**, keine Geräteabnahme. Rohlogs und Befehle: `experimental/three-bot-research-20261104/verification/`. Die Forschungsversuche der drei Bots bleiben separat zu berichten.
+

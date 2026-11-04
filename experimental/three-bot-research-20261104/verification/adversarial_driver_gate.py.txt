@@ -1,0 +1,39 @@
+{"case": "valid_gate_positive_control", "pass": true, "trainAttempts": 1, "exception": {"type": "TrainingBlocked", "message": "training trapped before dispatch"}}
+{"case": "valid_earlier_stage_after_later_failure", "pass": true, "trainAttempts": 1, "exception": {"type": "TrainingBlocked", "message": "training trapped before dispatch"}}
+{"case": "valid_fully_legacy_capacity_positive_control", "pass": true, "trainAttempts": 1, "exception": {"type": "TrainingBlocked", "message": "training trapped before dispatch"}}
+{"case": "original_fails_even_selected_calibration_passes", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: existing capacity proof failed for baseline"}}
+{"case": "original_reordered_fails_even_selected_passes", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: existing capacity proof failed for baseline"}}
+{"case": "original_missing_from_calibration", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "calibration must contain exactly one canonical original baseline"}}
+{"case": "original_duplicated_in_calibration", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "calibration must contain exactly one canonical original baseline"}}
+{"case": "baseline_failed_lastpassed_null", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"}}
+{"case": "baseline_failed_receipt_but_eligible_flags_true", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: existing capacity proof failed for baseline"}}
+{"case": "lastpassed_null_but_baseline_passes", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"}}
+{"case": "baseline_gate_stop_but_stale_lastpassed", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"}}
+{"case": "missing_baseline_capacity_receipt", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "required completed invocation is missing: baseline-capacity"}}
+{"case": "missing_baseline_capacity_log", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "required completed invocation is missing: baseline-capacity"}}
+{"case": "tampered_baseline_capacity_log", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "invocation identity or execution contract changed: baseline-capacity"}}
+{"case": "missing_baseline_capacity_result", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: existing capacity proof failed for baseline"}}
+{"case": "baseline_capacity_process_failed", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: existing capacity proof failed for baseline"}}
+{"case": "baseline_capacity_process_timed_out", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: existing capacity proof failed for baseline"}}
+{"case": "capacity_wrong_checkpoint_in_log", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "CAPACITY_MODEL input identity mismatch"}}
+{"case": "capacity_stale_checkpoint_input_hash", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "invocation input or orchestrator binding changed: baseline-capacity"}}
+{"case": "capacity_wrong_compiled_program", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "invocation identity or execution contract changed: baseline-capacity"}}
+{"case": "capacity_wrong_orchestrator_source", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "invocation input or orchestrator binding changed: baseline-capacity"}}
+{"case": "capacity_missing_input_binding", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "invocation input or orchestrator binding changed: baseline-capacity"}}
+{"case": "capacity_first_token_over_limit_but_pass_claimed", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: existing capacity proof failed for baseline"}}
+{"case": "capacity_generation_over_limit_but_pass_claimed", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: existing capacity proof failed for baseline"}}
+{"case": "capacity_intermediate_memory_over_limit_but_terminal_pass", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: existing capacity proof failed for baseline"}}
+{"case": "capacity_nonfinite_latency_but_pass_claimed", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "BASELINE_GATE: existing capacity proof failed for baseline"}}
+{"case": "lastpassed_not_in_stages", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "lastPassed is not the last independently verified passing stage"}}
+{"case": "missing_lastpassed_capacity_receipt", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "required completed invocation is missing: depth-5-capacity"}}
+{"case": "tampered_lastpassed_checkpoint", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "candidate checkpoint changed: depth-5"}}
+{"case": "stale_lastpassed_parity_binding", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "invocation input or orchestrator binding changed: depth-5-parity"}}
+{"case": "frozen_resume_malformed_json", "pass": true, "trainAttempts": 0, "exception": {"type": "JSONDecodeError", "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"}}
+{"case": "frozen_resume_stale_incomplete_record", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "frozen selection has stale source, data or starting-checkpoint identities"}}
+{"case": "missing_ladder_negative_control", "pass": true, "trainAttempts": 0, "exception": {"type": "FileNotFoundError", "message": "[Errno 2] No such file or directory: '/workspace/scratch/9d2785b5ab4e/research/verification/training-gates/adversarial_driver_gate/audit-8f2f49bda56c-fqurgd2z/missing_ladder_negative_control/results/ladder.json'"}}
+{"case": "malformed_ladder_negative_control", "pass": true, "trainAttempts": 0, "exception": {"type": "JSONDecodeError", "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"}}
+{"case": "missing_development_receipt_negative_control", "pass": true, "trainAttempts": 0, "exception": {"type": "RuntimeError", "message": "completed calibration lacks a development receipt"}}
+{"case": "changed_jar_negative_control", "pass": true, "trainAttempts": 0, "exception": {"type": "ValueError", "message": "compiled program or frozen protocol changed; use a new experiment directory"}}
+{"report": "/workspace/scratch/9d2785b5ab4e/research/verification/training-gates/adversarial_driver_gate/audit-8f2f49bda56c-fqurgd2z/report.json", "sha256": "a46280ede67a15fb72dde511578024165b572c77e79b01bba8805c46f2f37076", "sourceSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be", "passed": 36, "failed": 0, "realTrainingRuns": 0}
+
+STDERR
