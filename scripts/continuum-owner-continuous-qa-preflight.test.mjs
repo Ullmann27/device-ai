@@ -108,12 +108,17 @@ for (const [name, mode, overrides, message] of [
   ['owner pinned host', '1', {CONTINUUM_RELEASE_HOST: 'example.invalid'}, /Owner QA requires/],
   ['ordinary isolated service', '0', {RENDER_SERVICE_NAME: 'wrong-service'}, /Only isolated QA service/],
   ['QA mode', '2', {}, /Invalid owner QA mode/],
-  ['QA signing exclusion', '0', {CONTINUUM_LOCAL_SIGNING_FILE: 'fixture-not-a-key'}, /Signing material forbidden/]
+  ...['0', '1'].flatMap(mode => signingKeys.map(key => [
+    'QA mode ' + mode + ' signing exclusion: ' + key,
+    mode, {[key]: 'fixture-not-a-key'}, /Signing material forbidden/
+  ]))
 ]) {
   test(name + ' gate remains enforced for a valid version', t => {
     const result = runPreflight(t, {mode, version: '42', overrides});
     assert.equal(result.status, 69, result.stderr);
     assert.match(result.stderr, message);
     assert.equal(result.downloadAttempted, false);
+    assert.equal(result.workspaceCreated, false);
+    assert.equal(result.logsCreated, false);
   });
 }

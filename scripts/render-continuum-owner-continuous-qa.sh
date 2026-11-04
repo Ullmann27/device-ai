@@ -46,7 +46,7 @@ if [[ "$branch_name" != "integration/continuum-all-systems-apk-qa-20261102" ]]; 
 fi
 git -c core.fileMode=false diff --quiet HEAD -- || fail 'Changed tracked source'
 [[ -z "$(git ls-files --others --exclude-standard -- app/src scripts backend/src backend/test)" ]] || fail 'Untracked executable source'
-for key in CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_LOCAL_SIGNING_P12_BASE64 CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD; do
+for key in CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_LOCAL_SIGNING_P12_BASE64 CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_P12_BASE64; do
   [[ -z "$(printenv "$key" 2>/dev/null || true)" ]] || fail 'Signing material forbidden in QA'
 done
 [[ ! -e continuum-all-systems-site && ! -e continuum-all-systems-logs ]] || fail 'Stale QA directory'

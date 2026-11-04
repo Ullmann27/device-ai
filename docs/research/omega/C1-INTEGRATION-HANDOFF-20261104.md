@@ -131,3 +131,13 @@ Das bestehende Team #517 übergab zusätzlich einen fertigen lokalen Neun-Dateie
 Eigener gezielter Lauf mit allen neun Dateien: **48 PASS / 0 FAIL / 0 SKIP, Exit0**. Die ursprünglichen24 Fehler dieser Dateien bleiben im full-node-01-Archiv nachgewiesen. Weitere17 negative Quellkontrollen stammen vom Lieferteam; deren Rohlogs wurden sowohl unabhängig als auch durch C1 dekomprimiert, gehasht und auf erwartete Fehler geprüft, aber nicht als eigene C1-Ausführungen gezählt. Unabhängiger statischer Review: Anforderungen folgen der dokumentierten neuen Referenz und den tatsächlichen Klick-/Layout-/Reflow-/Modellpfaden; keine materielle Absenkung festgestellt.
 
 Roharchive/Dateihashes/Befehl: `docs/evidence/c1-integration-20261104/ui-contracts/`. Visuelle Referenzabnahme, 2D-Fallback und tatsächliche Android-/GPU-/Gerätefunktion bleiben gesonderte Gates. Ein anderer #517-Stand hat weiterhin sieben rote Avatar-UI-Tests trotz beendeter VSync-Hängerdiagnose; dieses unfertige Vier-Dateien-Paket wird nicht als fertig übernommen. Rücknahme: nur diese neun Testdateien revertieren, Belege erhalten.
+
+## C1-QA-GUARD-008 — abgeschlossenen Signing-Ausschluss aus #505 ergänzen
+
+Voriger UI-Checkpoint: lokal `1666b3c9fa9fa9fe360f0983213f3413de7d0218`, remote `6ac2e1506071c5782bc06e83d043f3c2e082fb23`, vollständiger identischer Tree `5a314dc09d2b623a0097819856a1e33c8e883f1e`.
+
+Die Produktionszeile stammt aus abgeschlossenem #505 `84cd8cfc05dedef5d4feb28ecfa103530e95f7ff`. C1 las das Skript direkt am GitHub-Pin: Blob `9ea8eae2011504b5283a0cf4e62231f0aaa7c39b`. Das vollständige eigene Skript nach der einzigen zusätzlichen Variable ist genau blobgleich. Der bestehende QA-Guard erfasst nun auch `CONTINUUM_MENTOR_SIGNING_P12_BASE64`. Die erweiterte bestehende Testsuite stammt aus dem #517-Archiv; sechs Variablen in beiden Modi werden vor Logs/Buildverzeichnis/Download abgewiesen.
+
+Eigener RED: 43 Tests,41 PASS/2 FAIL,Exit1 (die beiden vorher fehlenden Mentor-Base64-Fälle). Nach Produktionsfix: **43 PASS/0 FAIL/0 SKIP,Exit0**. Statisch unabhängig befürwortet. Ausschließlich synthetische `fixture-not-a-key`-Werte und lokaler Fake-curl; keine echten Schlüssel gelesen, kein Download, keine Signierung/Veröffentlichung. Echte Befehle/Dateihashes/Logs: `docs/evidence/c1-integration-20261104/qa-signing-guard/`.
+
+Rücknahme betrifft nur die beiden benannten Guard-/Testdateien; negative Belege bleiben. Nächster Schritt: nach isoliertem Routing-GREEN und unabhängigem Review C1-ROUTING-006 seriell einbauen, gemeinsamen Stand einfrieren und aktuelle vollständige Hostgates ausführen.
