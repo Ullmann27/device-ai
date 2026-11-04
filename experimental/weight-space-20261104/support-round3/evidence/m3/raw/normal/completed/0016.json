@@ -1,0 +1,11 @@
+{
+  "attempt": "attempt-0002",
+  "attemptReceiptSha256": "e8271be1f797d95aae2ec97f6c4b9f743dee3d6c3dc940a2f090d4d10e86a370",
+  "end": 16,
+  "inputState": "832d267a5a0b9e7065c0bad2e9f66a21914f36ae4d587ab02532914ce98ac1e0",
+  "registrationSha256": "d7195a8a3d1d98c11835b23c5979ab810a7b4ffc3ce17b2c6b56efa506d22eb0",
+  "sourceCommit": "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+  "start": 8,
+  "state": "087ecfdfcbd13e4ad8094e974f8bb4aa5a710c0810aafc1e498f275efc9e55fd",
+  "weights": "273c9c00afb6a6eff2a646c9a7914d336b13f72fccaef92b45df7312cfe46604"
+}

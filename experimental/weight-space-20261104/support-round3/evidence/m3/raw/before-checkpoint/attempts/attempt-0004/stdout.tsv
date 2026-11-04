@@ -1,0 +1,11 @@
+START	start=16	end=24	input=087ecfdfcbd13e4ad8094e974f8bb4aa5a710c0810aafc1e498f275efc9e55fd
+UPDATE	step=17	targets=10	rate=6.2280195E-4	loss=5.3703107833862305
+UPDATE	step=18	targets=10	rate=5.743625E-4	loss=5.364063024520874
+UPDATE	step=19	targets=10	rate=5.2563753E-4	loss=5.393011212348938
+UPDATE	step=20	targets=10	rate=4.7719813E-4	loss=5.387987375259399
+UPDATE	step=21	targets=10	rate=4.2961226E-4	loss=5.347893238067627
+UPDATE	step=22	targets=10	rate=3.8343784E-4	loss=5.34338903427124
+UPDATE	step=23	targets=10	rate=3.392162E-4	loss=5.375388860702515
+UPDATE	step=24	targets=10	rate=2.9746583E-4	loss=5.371906399726868
+SAVED	step=24	state=0d2006b5c9ecf307eae5b5fbdd29dfd9bb07d24f47e4e8ab4fc2871681d0ee16	weights=4b553795ba1356037b40d70ad2bc1dc4075c164e03dfda3c6fd63c1dcf39e540
+DONE	start=16	end=24	state=0d2006b5c9ecf307eae5b5fbdd29dfd9bb07d24f47e4e8ab4fc2871681d0ee16	weights=4b553795ba1356037b40d70ad2bc1dc4075c164e03dfda3c6fd63c1dcf39e540	data=dc5cb361bd99b6ed6be0c5acc6d099c2207bbaeaf95cf69a730e2bca505df901	parameters=2632

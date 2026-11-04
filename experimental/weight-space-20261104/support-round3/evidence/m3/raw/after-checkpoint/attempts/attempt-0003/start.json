@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx1g",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/319f3e4563d9/r3-build/segment-worker/checks.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmSegmentWorker",
+    "run",
+    "23e30ec811605fc9f0a9412df3ec5aa34a22888a890f51a868c354be14e4e8fb",
+    "dc5cb361bd99b6ed6be0c5acc6d099c2207bbaeaf95cf69a730e2bca505df901",
+    "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/after-checkpoint/states",
+    "832d267a5a0b9e7065c0bad2e9f66a21914f36ae4d587ab02532914ce98ac1e0",
+    "8",
+    "16"
+  ],
+  "dataDigest": "dc5cb361bd99b6ed6be0c5acc6d099c2207bbaeaf95cf69a730e2bca505df901",
+  "end": 16,
+  "inputState": "832d267a5a0b9e7065c0bad2e9f66a21914f36ae4d587ab02532914ce98ac1e0",
+  "registrationSha256": "d7195a8a3d1d98c11835b23c5979ab810a7b4ffc3ce17b2c6b56efa506d22eb0",
+  "sourceCommit": "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+  "sourceDigest": "23e30ec811605fc9f0a9412df3ec5aa34a22888a890f51a868c354be14e4e8fb",
+  "start": 8,
+  "startedUtc": "2026-11-04T21:46:39.644102+00:00"
+}

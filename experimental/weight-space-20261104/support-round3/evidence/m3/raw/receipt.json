@@ -1,0 +1,405 @@
+{
+  "actualUpdates": {
+    "afterCheckpointKill": 32,
+    "beforeCheckpointKill": 32,
+    "normal": 24,
+    "reference": 24
+  },
+  "android": "NOT_RUN",
+  "cases": [
+    {
+      "name": "uninterrupted_reference_exit",
+      "passed": true
+    },
+    {
+      "name": "normal_exit",
+      "passed": true
+    },
+    {
+      "name": "three_processes_exact_state",
+      "passed": true
+    },
+    {
+      "name": "three_processes_exact_step_logs",
+      "passed": true
+    },
+    {
+      "name": "completed_job_again_exit",
+      "passed": true
+    },
+    {
+      "name": "completed_job_no_new_training",
+      "passed": true
+    },
+    {
+      "name": "before-checkpoint-prefix_exit",
+      "passed": true
+    },
+    {
+      "name": "before-checkpoint_reached_real_pause",
+      "passed": true
+    },
+    {
+      "name": "before-checkpoint_controller_reports_incomplete",
+      "passed": true
+    },
+    {
+      "name": "before-checkpoint_actual_native_sigkill",
+      "passed": true
+    },
+    {
+      "name": "before-checkpoint_previous_commit_preserved",
+      "passed": true
+    },
+    {
+      "name": "before-checkpoint_checkpoint_publication_boundary",
+      "passed": true
+    },
+    {
+      "name": "before-checkpoint-recovered_exit",
+      "passed": true
+    },
+    {
+      "name": "before-checkpoint_exact_recovered_state",
+      "passed": true
+    },
+    {
+      "name": "before-checkpoint_exact_committed_step_logs",
+      "passed": true
+    },
+    {
+      "name": "before-checkpoint_bounded_replay_32_actual_updates",
+      "passed": true
+    },
+    {
+      "name": "after-checkpoint-prefix_exit",
+      "passed": true
+    },
+    {
+      "name": "after-checkpoint_reached_real_pause",
+      "passed": true
+    },
+    {
+      "name": "concurrent_writer_exit",
+      "passed": true
+    },
+    {
+      "name": "concurrent_writer_blocked_by_lock",
+      "passed": true
+    },
+    {
+      "name": "concurrent_writer_created_no_attempt",
+      "passed": true
+    },
+    {
+      "name": "after-checkpoint_controller_reports_incomplete",
+      "passed": true
+    },
+    {
+      "name": "after-checkpoint_actual_native_sigkill",
+      "passed": true
+    },
+    {
+      "name": "after-checkpoint_previous_commit_preserved",
+      "passed": true
+    },
+    {
+      "name": "after-checkpoint_checkpoint_publication_boundary",
+      "passed": true
+    },
+    {
+      "name": "after-checkpoint-recovered_exit",
+      "passed": true
+    },
+    {
+      "name": "after-checkpoint_exact_recovered_state",
+      "passed": true
+    },
+    {
+      "name": "after-checkpoint_exact_committed_step_logs",
+      "passed": true
+    },
+    {
+      "name": "after-checkpoint_bounded_replay_32_actual_updates",
+      "passed": true
+    },
+    {
+      "name": "tampered_completed_receipt_exit",
+      "passed": true
+    },
+    {
+      "name": "tampered_receipt_rejected",
+      "passed": true
+    },
+    {
+      "name": "damaged_completed_state_exit",
+      "passed": true
+    },
+    {
+      "name": "damaged_state_rejected",
+      "passed": true
+    },
+    {
+      "name": "wrong_job_identity_exit",
+      "passed": true
+    },
+    {
+      "name": "wrong_job_identity_rejected",
+      "passed": true
+    },
+    {
+      "name": "exhausted_budget_exit",
+      "passed": true
+    },
+    {
+      "name": "exhausted_budget_rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid_jobs_created_no_new_training",
+      "passed": true
+    }
+  ],
+  "committedStepsPerScenario": 24,
+  "failed": 0,
+  "native16mUpdates": 0,
+  "passed": 38,
+  "promotion": false,
+  "realNativeProcessesKilled": 2,
+  "referenceState": "0d2006b5c9ecf307eae5b5fbdd29dfd9bb07d24f47e4e8ab4fc2871681d0ee16",
+  "referenceWeights": "4b553795ba1356037b40d70ad2bc1dc4075c164e03dfda3c6fd63c1dcf39e540",
+  "registrationSha256": "d7195a8a3d1d98c11835b23c5979ab810a7b4ffc3ce17b2c6b56efa506d22eb0",
+  "runs": [
+    {
+      "command": [
+        "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "-Xmx1g",
+        "-XX:ActiveProcessorCount=1",
+        "-cp",
+        "/workspace/scratch/319f3e4563d9/r3-build/segment-worker/checks.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+        "at.heinz.deviceai.learning.lm.LmSegmentWorker",
+        "run",
+        "23e30ec811605fc9f0a9412df3ec5aa34a22888a890f51a868c354be14e4e8fb",
+        "dc5cb361bd99b6ed6be0c5acc6d099c2207bbaeaf95cf69a730e2bca505df901",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/reference/states",
+        "NEW",
+        "0",
+        "24"
+      ],
+      "exitCode": 0,
+      "name": "uninterrupted_reference"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/normal"
+      ],
+      "elapsedSeconds": 0.9424265440029558,
+      "exitCode": 0,
+      "name": "normal"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/normal"
+      ],
+      "elapsedSeconds": 0.2721444800008612,
+      "exitCode": 0,
+      "name": "completed_job_again"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/before-checkpoint",
+        "--segments",
+        "1"
+      ],
+      "elapsedSeconds": 0.40674407000187784,
+      "exitCode": 0,
+      "name": "before-checkpoint-prefix"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/before-checkpoint",
+        "--segments",
+        "1",
+        "--fault",
+        "before-checkpoint"
+      ],
+      "exitCode": 2,
+      "injectedSignal": "SIGKILL",
+      "name": "before-checkpoint-killed",
+      "nativePid": 165
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/before-checkpoint"
+      ],
+      "elapsedSeconds": 0.9183983219991205,
+      "exitCode": 0,
+      "name": "before-checkpoint-recovered"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/after-checkpoint",
+        "--segments",
+        "1"
+      ],
+      "elapsedSeconds": 0.36150733699832927,
+      "exitCode": 0,
+      "name": "after-checkpoint-prefix"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/after-checkpoint"
+      ],
+      "elapsedSeconds": 0.07486020000214921,
+      "exitCode": 1,
+      "name": "concurrent_writer"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/after-checkpoint",
+        "--segments",
+        "1",
+        "--fault",
+        "after-checkpoint"
+      ],
+      "exitCode": 2,
+      "injectedSignal": "SIGKILL",
+      "name": "after-checkpoint-killed",
+      "nativePid": 286
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/after-checkpoint"
+      ],
+      "elapsedSeconds": 0.8848742909976863,
+      "exitCode": 0,
+      "name": "after-checkpoint-recovered"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/normal"
+      ],
+      "elapsedSeconds": 0.09329353199791512,
+      "exitCode": 1,
+      "name": "tampered_completed_receipt"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/normal"
+      ],
+      "elapsedSeconds": 0.08450074399661389,
+      "exitCode": 1,
+      "name": "damaged_completed_state"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/normal"
+      ],
+      "elapsedSeconds": 0.08481914199728635,
+      "exitCode": 1,
+      "name": "wrong_job_identity"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round3/run_recovery.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--source-commit",
+        "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+        "--job",
+        "/workspace/scratch/319f3e4563d9/r3-build/process-recovery-v2/exhausted"
+      ],
+      "elapsedSeconds": 0.09722911900098552,
+      "exitCode": 1,
+      "name": "exhausted_budget"
+    }
+  ],
+  "sourceCommit": "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+  "sourceDigest": "23e30ec811605fc9f0a9412df3ec5aa34a22888a890f51a868c354be14e4e8fb",
+  "status": "PASS_REAL_PROCESS_RECOVERY"
+}

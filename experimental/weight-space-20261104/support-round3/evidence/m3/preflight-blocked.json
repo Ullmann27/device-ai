@@ -1,0 +1,8 @@
+{
+  "status": "BLOCKED_BEFORE_NATIVE_EXECUTION",
+  "reason": "Registered remote commit not yet present while Git fetch was still running",
+  "sourceCommit": "fcfe0a93439d087465f9d9a4a4e87daae0340bb2",
+  "nativeProcesses": 0,
+  "optimizerUpdates": 0,
+  "softwareChanged": false
+}

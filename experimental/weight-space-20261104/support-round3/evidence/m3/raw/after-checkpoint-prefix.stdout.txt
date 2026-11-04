@@ -1,0 +1,1 @@
+{"status": "CHECKPOINTED", "committedStep": 8, "state": "832d267a5a0b9e7065c0bad2e9f66a21914f36ae4d587ab02532914ce98ac1e0", "weights": "ff7f20eb3ecfb2a11f901015e2a7dfc58f5dcb67c14c1de070fa86e7e9337d54"}

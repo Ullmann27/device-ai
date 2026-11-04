@@ -35,6 +35,21 @@ Additional rejected inputs include wrong source/data/seed/tokenizer/schedule, fu
 
 Source frozen before this test: `2dfe0852a1bb9e32bf701bb0bc8bc594bcca7c0a`. [M2 receipt](evidence/m2/receipt.json), [continuity output](evidence/m2/candidate/continuity.stdout.txt), [original training output](evidence/m2/original/fixture.stdout.txt), [candidate training output](evidence/m2/candidate/fixture.stdout.txt).
 
-## M3
+## M3 — completed
 
-WIP / NOT_RUN. Next: exact continuation across separate JVM processes and deliberately terminated work. An interrupted, uncommitted segment must be replayed from the last completed checkpoint; its orphan output must never masquerade as a completed run.
+**38 process-recovery assertions passed.** The prospective source and generated registration were published at `fcfe0a93439d087465f9d9a4a4e87daae0340bb2` before native training. One initial invocation was blocked because the remote commit was still being fetched; its preflight refusal is preserved with zero native processes/updates. The unchanged committed experiment then ran once in a fresh output directory after fetch completion.
+
+| Fixed scenario | Physically executed updates | Committed steps | Full state vs reference |
+| --- | ---: | ---: | --- |
+| One uninterrupted JVM | 24 | 24 | reference |
+| Three separate JVM segments | 24 | 24 | byte-identical |
+| SIGKILL before checkpoint publication | 32 | 24 | byte-identical |
+| SIGKILL after publication, before completion | 32 | 24 | byte-identical |
+
+Both intentionally killed JVMs actually exited with signal 9. The last completed head remained at step 8. The before-publication case had only the original checkpoint; the after-publication case retained a step-16 orphan. Neither incomplete segment was promoted. Eight lost/uncommitted updates were recomputed in each interrupted scenario, accounting for the additional work. All committed per-update logs exactly match the uninterrupted reference.
+
+A second writer was actually blocked by the OS file lock while the native worker was paused, with no extra attempt created. Reopening a completed job started no further training. Tampered receipt ancestry, a damaged checkpoint, wrong job identity and the four-attempt budget all blocked new training.
+
+Total across the four tiny scenarios: **112 actual optimizer updates**, two deliberate native-process kills, zero 16M updates. The tests establish this Linux/JVM recovery path, not Android lifecycle behavior or unbounded overnight service. Full evidence: [M3 manifest](evidence/m3/manifest.json), [all actual run commands and checks](evidence/m3/raw/receipt.json), [prospective protocol](RECOVERY_PROTOCOL.md).
+
+Reproduction uses `build_native.py` with the combined patch plus `LmTrainingFixture.kt`, `LmTrainingState.kt` and `LmSegmentWorker.kt`. On another host, generate and publish a new registration with `register_recovery.py`, then execute `test_recovery_processes.py --repo /path/to/repo --source-commit FULL_REGISTRATION_COMMIT --output /path/to/new-output`. Old registrations bind their exact executable/source paths and must not be edited to describe a later run.

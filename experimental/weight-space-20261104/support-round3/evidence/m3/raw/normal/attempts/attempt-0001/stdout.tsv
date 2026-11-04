@@ -1,0 +1,11 @@
+START	start=0	end=8	input=NEW
+UPDATE	step=1	targets=10	rate=3.3333336E-4	loss=5.518327236175537
+UPDATE	step=2	targets=10	rate=6.666667E-4	loss=5.512820720672607
+UPDATE	step=3	targets=10	rate=0.001	loss=5.534866571426392
+UPDATE	step=4	targets=10	rate=0.001	loss=5.5233094692230225
+UPDATE	step=5	targets=10	rate=9.973621E-4	loss=5.478753089904785
+UPDATE	step=6	targets=10	rate=9.894792E-4	loss=5.4672276973724365
+UPDATE	step=7	targets=10	rate=9.76444E-4	loss=5.490509748458862
+UPDATE	step=8	targets=10	rate=9.58409E-4	loss=5.478883504867554
+SAVED	step=8	state=832d267a5a0b9e7065c0bad2e9f66a21914f36ae4d587ab02532914ce98ac1e0	weights=ff7f20eb3ecfb2a11f901015e2a7dfc58f5dcb67c14c1de070fa86e7e9337d54
+DONE	start=0	end=8	state=832d267a5a0b9e7065c0bad2e9f66a21914f36ae4d587ab02532914ce98ac1e0	weights=ff7f20eb3ecfb2a11f901015e2a7dfc58f5dcb67c14c1de070fa86e7e9337d54	data=dc5cb361bd99b6ed6be0c5acc6d099c2207bbaeaf95cf69a730e2bca505df901	parameters=2632
