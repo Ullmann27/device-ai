@@ -1,0 +1,26 @@
+[
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+    "unchangedGitBlob": "074b2b80af3ba202c0e92a1fe6c2d88e75c7c294"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+    "unchangedGitBlob": "6acb79eaf1b90d49037acdfd4a7245e1119a271c"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt",
+    "unchangedGitBlob": "bfca80b88de4fd2acabc59cc357171c3846f9d58"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+    "unchangedGitBlob": "66212f59703e454eb2cc0b7ba98e8c6d6f493f76"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
+    "unchangedGitBlob": "d9756a5d82793c970b59b215150619472f8e6b69"
+  },
+  {
+    "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.kt",
+    "unchangedGitBlob": "6554c2ed59d79f2ac9626f32c5e8acee0499c1ca"
+  }
+]

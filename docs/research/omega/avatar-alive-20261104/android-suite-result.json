@@ -1,0 +1,153 @@
+{
+  "sourceCommit": "0a79c703be62f4ade6737eaa9d13fea1dc35c5bb",
+  "sourceTree": "5e3bf0670aa6f463fdc785cabfdc8fc0b25f5266",
+  "counts": {
+    "tests": 2633,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 19
+  },
+  "failures": [
+    {
+      "suite": "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+      "test": "everythingFitsOneScreenWithUsableTargetsAndNoOverlap",
+      "message": "java.lang.AssertionError: 832.0 x 700.0 font 1.0 VIEW_AVATAR \u2265 48 dp"
+    }
+  ],
+  "avatarSuites": [
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarAssetProvenanceTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarNativeRegressionTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarSpeechPipelineTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarObservedGazeTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.TtsHologramSignalTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarDirectorTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarSpeechClockTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarPortedPartsTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarPortraitFramingTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarSpeechReattachmentTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "status": "FAIL_ONE_LAYOUT_TEST"
+}
