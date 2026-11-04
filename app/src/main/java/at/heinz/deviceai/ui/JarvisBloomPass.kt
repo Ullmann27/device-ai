@@ -33,7 +33,8 @@ class JarvisBloomPass(private val painter: AndroidContinuumPainter) {
      */
     fun draw(canvas: Canvas, density: Float, widthPx: Int, heightPx: Int, radiusDp: Float, intensity: Float,
              emissive: (ContinuumPainter) -> Unit): Boolean {
-        if (!supported(canvas) || intensity <= 0f || widthPx <= 0 || heightPx <= 0) return false
+        if (Build.VERSION.SDK_INT < 31 || !canvas.isHardwareAccelerated) return false
+        if (intensity <= 0f || widthPx <= 0 || heightPx <= 0) return false
         return record(canvas, density, widthPx, heightPx, radiusDp, intensity, emissive)
     }
 

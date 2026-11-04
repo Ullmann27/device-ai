@@ -27,7 +27,8 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
             return { handler.removeCallbacks(runnable) }
         }
         override fun create(callbacks: LocalSpeechSession.Callbacks): LocalSpeechSession.Recognizer {
-            if (Build.VERSION.SDK_INT < 31) error("ON_DEVICE_RECOGNITION_REQUIRES_API_31")
+            // Below API 31 there is no on-device recognizer; never fall back to the (possibly online) default one.
+            if (Build.VERSION.SDK_INT < 31) throw IllegalStateException("ON_DEVICE_RECOGNITION_REQUIRES_API_31")
             val recognizer = SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
             try {
                 recognizer.setRecognitionListener(object : RecognitionListener {
