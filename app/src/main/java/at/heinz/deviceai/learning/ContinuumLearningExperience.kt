@@ -289,7 +289,9 @@ class FileLearningExperienceStore(private val directory:File) {
     }
 
     companion object {
-        const val MAX_RECORDS=256
+        /** LEX3 capacity (was 256 in LEX2). LEX2 files (≤256) are still read and migrated on the next write. */
+        const val MAX_RECORDS=4096
+        const val LEGACY_LEX2_MAX_RECORDS=256
 
         /** Validate a separately backed-up original LEX2 file without opening or
          * writing a ledger. This is integrity checking, never consent recovery.
@@ -304,13 +306,16 @@ class FileLearningExperienceStore(private val directory:File) {
 }
 
 private object LearningExperienceCodec {
-    private const val MAGIC=0x4c455832
-    private const val MAX_BYTES=512*1024
+    private const val MAGIC_LEX2=0x4c455832
+    /** LEX3 = LEX2 record layout + explicit format version int after the magic. */
+    private const val MAGIC=0x4c455833
+    const val FORMAT_VERSION=3
+    private const val MAX_BYTES=48*1024*1024
 
     fun encode(items:List<LearningExperience>):ByteArray {
         val payload=ByteArrayOutputStream().also { buffer ->
             DataOutputStream(buffer).use { out ->
-                out.writeInt(MAGIC);out.writeInt(items.size)
+                out.writeInt(MAGIC);out.writeInt(FORMAT_VERSION);out.writeInt(items.size)
                 items.forEach { e ->
                     out.writeUTF(e.id)
                     out.writeUTF(e.type.name);out.writeUTF(e.provenance.name)
@@ -336,8 +341,13 @@ private object LearningExperienceCodec {
         }
         try {
             val input=DataInputStream(ByteArrayInputStream(payload))
-            require(input.readInt()==MAGIC)
-            val count=input.readInt().also { require(it in 0..FileLearningExperienceStore.MAX_RECORDS) }
+            val limit=when(input.readInt()) {
+                MAGIC_LEX2 -> FileLearningExperienceStore.LEGACY_LEX2_MAX_RECORDS
+                MAGIC -> { require(input.readInt()==FORMAT_VERSION) { "Unsupported ledger format version" }
+                    FileLearningExperienceStore.MAX_RECORDS }
+                else -> throw IllegalArgumentException("Unknown learning ledger magic")
+            }
+            val count=input.readInt().also { require(it in 0..limit) }
             val result=List(count) {
                 LearningExperience(
                     id=input.readUTF(),

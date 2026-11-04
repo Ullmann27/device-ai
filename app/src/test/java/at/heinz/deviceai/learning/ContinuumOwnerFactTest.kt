@@ -76,7 +76,7 @@ class ContinuumOwnerFactTest {
         core.confirmOwnerFact(revoked)
         core.revokeOwnerFact(revoked)
         val store=FileLearningExperienceStore(File(dir,"learning-core-v2"))
-        store.appendMissing((0..300).map { i ->
+        store.appendMissing((0..FileLearningExperienceStore.MAX_RECORDS+44).map { i ->
             LearningExperienceFactory.create(
                 if(i%2==0) LearningExperienceType.TRAINING_AUDIT else LearningExperienceType.SOURCE_TEXT,
                 LearningProvenance.LOCAL_TRAINING,LearningTrustClass.SYSTEM_MEASUREMENT,

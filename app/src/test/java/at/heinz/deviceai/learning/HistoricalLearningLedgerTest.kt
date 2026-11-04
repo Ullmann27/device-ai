@@ -98,7 +98,7 @@ class HistoricalLearningLedgerTest {
             rejects { PersonalLearningTransfer.inspectDocument(bytes.copyOf(39)) }
             rejects { PersonalLearningTransfer.inspectDocument(ByteArray(1024 * 1024 + 1)) }
             val payload = bytes.copyOfRange(0, bytes.size - 32)
-            payload[3] = 0x33 // LEX3 with an otherwise matching checksum.
+            payload[3] = 0x34 // unknown LEX4 with an otherwise matching checksum.
             rejects { PersonalLearningTransfer.inspectDocument(payload +
                 MessageDigest.getInstance("SHA-256").digest(payload)) }
         } finally { dir.deleteRecursively() }

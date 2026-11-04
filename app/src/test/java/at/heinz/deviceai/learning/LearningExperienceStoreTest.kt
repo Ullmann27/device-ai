@@ -56,20 +56,20 @@ class LearningExperienceStoreTest {
         val dir=Files.createTempDirectory("device-ai-experience-bound").toFile()
         try {
             val store=FileLearningExperienceStore(dir)
-            repeat(280) { i ->
-                store.append(LearningExperienceFactory.create(
+            val total=FileLearningExperienceStore.MAX_RECORDS+24
+            fun audit(i:Int)=LearningExperienceFactory.create(
                     LearningExperienceType.TRAINING_AUDIT,
                     LearningProvenance.LOCAL_TRAINING,
                     LearningTrustClass.SYSTEM_MEASUREMENT,
                     LearningStatus.LEARNED,
                     "audit-$i",
-                    now=i.toLong()
-                ))
-            }
+                    now=i.toLong())
+            store.appendMissing((0 until total-2).map(::audit))
+            store.append(audit(total-2));store.append(audit(total-1))
             val all=store.all()
             assertEquals(FileLearningExperienceStore.MAX_RECORDS,all.size)
             assertEquals("audit-24",all.first().content)
-            assertEquals("audit-279",all.last().content)
+            assertEquals("audit-${total-1}",all.last().content)
         } finally { dir.deleteRecursively() }
     }
 
@@ -89,7 +89,7 @@ class LearningExperienceStoreTest {
                 LearningStatus.LEARNED,"new audit",now=1000L)
             assertFalse("a declined observation must not claim persistence",store.append(audit))
             assertEquals(0,store.appendMissing(listOf(audit)))
-            assertThrows(IllegalStateException::class.java) { store.append(fact(500)) }
+            assertThrows(IllegalStateException::class.java) { store.append(fact(FileLearningExperienceStore.MAX_RECORDS+1)) }
             assertArrayEquals("capacity failures must leave the ledger intact",before,
                 File(dir,"experiences-v2.bin").readBytes())
             assertEquals(FileLearningExperienceStore.MAX_RECORDS,FileLearningExperienceStore(dir).all().size)
