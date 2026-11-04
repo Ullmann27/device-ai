@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:42:58" hostname="04c8b0ba7ea6" time="0.105">
+  <properties/>
+  <testcase name="sixBoundedIrisCasesHaveFourExercisesAndTwoDistinctTransferCases" classname="at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest" time="0.063"/>
+  <testcase name="revocationInvalidatesTheTokenAndCannotBeUndoneByAFreshLateFrame" classname="at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest" time="0.01"/>
+  <testcase name="interruptionClosesMouthWithoutInventingARuntimeStateChange" classname="at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest" time="0.002"/>
+  <testcase name="promptsContainOnlyEmptyStringSchemasAndNeverTheAnswerOrCorrection" classname="at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest" time="0.011"/>
+  <testcase name="replacementTransferKeepsNewSpeechAliveAndDropsEveryOldCallback" classname="at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest" time="0.004"/>
+  <testcase name="exactGazeExpiryIsIncludedButTheNextMillisecondAndLowConfidenceAreRejected" classname="at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest" time="0.002"/>
+  <testcase name="priorityOraclePreservesTheExistingStateAndExpressionContract" classname="at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest" time="0.002"/>
+  <testcase name="taskGazeTransferRejectsEvenFreshHighConfidenceObservation" classname="at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest" time="0.002"/>
+  <testcase name="repeatedCatalogConstructionHasNoRetainedClockSpeechOrCameraState" classname="at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

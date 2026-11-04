@@ -1,0 +1,83 @@
+{
+  "schema": "continuum-internal-bot-practice-developer-checks",
+  "version": 1,
+  "startedAt": "2026-11-04T19:40:44.628704+00:00",
+  "finishedAt": "2026-11-04T19:43:00.254801+00:00",
+  "seconds": 135.626,
+  "baseHead": "b1701e7e3bf52047efff05ae33f0ba602dcc3d4b",
+  "worktreeAtStart": "",
+  "exitCode": 0,
+  "timedOut": false,
+  "sourceFiles": 975,
+  "sourceUnchangedDuringCheck": true,
+  "allSelectedClassesExecuted": true,
+  "suites": [
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBotPracticeTest",
+      "status": "EXECUTED",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBotPracticeConversationTest",
+      "status": "EXECUTED",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest",
+      "status": "EXECUTED",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest",
+      "status": "EXECUTED",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBotConversationTest",
+      "status": "EXECUTED",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBotProfileStoreTest",
+      "status": "EXECUTED",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest",
+      "status": "EXECUTED",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "totals": {
+    "tests": 70,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "passed": true,
+  "actualBotModelAttempts": 0,
+  "weightUpdates": 0,
+  "deviceVerified": false,
+  "limits": "Real source compilation and developer tests with fixture replies; no bot-training success claim."
+}

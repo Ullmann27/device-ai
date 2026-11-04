@@ -90,8 +90,9 @@ def main() -> int:
         env.pop(key, None)
     env.update(JAVA_HOME=str(java_home), ANDROID_HOME=str(sdk), ANDROID_SDK_ROOT=str(sdk),
                GRADLE_USER_HOME=str(cache), PATH=str(java_home / "bin") + os.pathsep + env.get("PATH", ""))
-    command = [str(gradle), "--offline", "--no-daemon", "--console=plain", "--max-workers=2",
-               "--rerun-tasks", "-Dorg.gradle.jvmargs=-Xmx2g -Dfile.encoding=UTF-8",
+    # Keep the full source gate bounded on shared local hosts. No cache deletion or downloads.
+    command = [str(gradle), "--offline", "--no-daemon", "--console=plain", "--max-workers=1",
+               "--rerun-tasks", "-Dorg.gradle.jvmargs=-Xmx1536m -Dfile.encoding=UTF-8",
                "-Pkotlin.compiler.execution.strategy=in-process", ":app:testDebugUnitTest"]
     for name in TEST_CLASSES:
         command.extend(("--tests", name))

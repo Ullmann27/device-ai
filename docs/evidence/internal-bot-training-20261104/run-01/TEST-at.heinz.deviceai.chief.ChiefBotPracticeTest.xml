@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefBotPracticeTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:42:59" hostname="04c8b0ba7ea6" time="0.021">
+  <properties/>
+  <testcase name="feedbackRemainsASeparateBoundedCorrectionForOneResponse" classname="at.heinz.deviceai.chief.ChiefBotPracticeTest" time="0.001"/>
+  <testcase name="malformedJsonDuplicateKeysAndEveryTrailingPayloadAreRejected" classname="at.heinz.deviceai.chief.ChiefBotPracticeTest" time="0.002"/>
+  <testcase name="exerciseAndAnswerBudgetsAreCheckedBeforeFeedbackIsCreated" classname="at.heinz.deviceai.chief.ChiefBotPracticeTest" time="0.005"/>
+  <testcase name="onlyExplicitWholeCommandsSelectTheNamedBotsCurriculum" classname="at.heinz.deviceai.chief.ChiefBotPracticeTest" time="0.008"/>
+  <testcase name="expectedAnswersAreImmutableAndAbsentFromTheModelPrompt" classname="at.heinz.deviceai.chief.ChiefBotPracticeTest" time="0.001"/>
+  <testcase name="exactStringValuesAllowJsonWhitespaceKeyOrderAndValidEscapes" classname="at.heinz.deviceai.chief.ChiefBotPracticeTest" time="0.001"/>
+  <testcase name="differentStringValuesFailWithoutNormalizationOrPartialCredit" classname="at.heinz.deviceai.chief.ChiefBotPracticeTest" time="0.0"/>
+  <testcase name="missingExtraOrNonStringFieldsAreInvalidIncludingToolProposals" classname="at.heinz.deviceai.chief.ChiefBotPracticeTest" time="0.001"/>
+  <testcase name="invalidExerciseNumbersCannotSilentlySelectAnotherTask" classname="at.heinz.deviceai.chief.ChiefBotPracticeTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

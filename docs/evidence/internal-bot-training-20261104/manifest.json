@@ -1,0 +1,32 @@
+{
+  "schema": "continuum-internal-bot-practice-evidence",
+  "version": 1,
+  "files": {
+    "README.md": "7f3ad8190bb4cd9631a3772a8589d98484e5c6d8e83e60db8b82fc6f9819826b",
+    "run-01/TEST-at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest.xml": "a2daf09c369b3334e91ac13f54027a620bbbf8ccc7c3a59ae409030135fc095c",
+    "run-01/TEST-at.heinz.deviceai.chief.ChiefBotConversationTest.xml": "84ecfdc545b075b539a280a330b39317f8d35df2d76c4fd2dc81bb4735b61a38",
+    "run-01/TEST-at.heinz.deviceai.chief.ChiefBotPracticeConversationTest.xml": "99b050eb0aae7b84a203070d7e1c783aae032b41e88618bdb2508caa3e797f46",
+    "run-01/TEST-at.heinz.deviceai.chief.ChiefBotPracticeTest.xml": "e0a4f6c439376603c6f437f6213abdbe9268ea55aabfb09bcd9b9d13e3b484de",
+    "run-01/TEST-at.heinz.deviceai.chief.ChiefBotProfileStoreTest.xml": "a7138fcddb967a0176f48e484f65a3c7387bf354c4895ef2f3cc094a04bd249a",
+    "run-01/TEST-at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest.xml": "99970e6c10f7712c56cc5843a7cb4f26630fa0a9fb055f01dec65fadb17d11eb",
+    "run-01/TEST-at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest.xml": "db2d6396605aaa3273ae8c774c0918e6ed288c038016813d6107a133a0662bb3",
+    "run-01/command.json": "469f808bdeb1d17a73c798d3a1997dfc83ff7d2f1bfaeb060103594cff27830f",
+    "run-01/gradle.log": "0a74ecde430190b8ff3e95621553e82fbb8c13e2fdf7886eea06c702240722f5",
+    "run-01/java-version.txt": "8ffd2d05de22acb2a1f82845905d499e807c7595cf7c3e7f2a2cab7e576a26de",
+    "run-01/result.json": "ffc07a654ff488ddbcf5cff7c45374582c88d78a5e2c1fd1edb9b89b97d544f5",
+    "run-01/source-after.json": "88d9e820422e0b1e620bc1a727c9466d2c0ed7be9e4664e4d7352220911902a6",
+    "run-01/source-before.json": "88d9e820422e0b1e620bc1a727c9466d2c0ed7be9e4664e4d7352220911902a6",
+    "run-02/command.json": "469f808bdeb1d17a73c798d3a1997dfc83ff7d2f1bfaeb060103594cff27830f",
+    "run-02/gradle.log": "3538734f971c4407b6a0006d2f1936d6e3b1fc29d88d3efa1638e6ce23830c5f",
+    "run-02/java-version.txt": "8ffd2d05de22acb2a1f82845905d499e807c7595cf7c3e7f2a2cab7e576a26de",
+    "run-02/result.json": "76b515c466da57cf0c1a2559c1ca9e82817e06ebdd2df2dcced9f846296a9a19",
+    "run-02/source-after.json": "705b653c9f2cdc2ba0bc1886b8c42e87d2be1f858f1bbae4e648c98db0a9da6d",
+    "run-02/source-before.json": "705b653c9f2cdc2ba0bc1886b8c42e87d2be1f858f1bbae4e648c98db0a9da6d",
+    "run-03/command.json": "469f808bdeb1d17a73c798d3a1997dfc83ff7d2f1bfaeb060103594cff27830f",
+    "run-03/gradle.log": "7cbcefcd3aaf925b9bb81b051e4030e70fc00e1c028ee3ef607639de2f833ad0",
+    "run-03/java-version.txt": "8ffd2d05de22acb2a1f82845905d499e807c7595cf7c3e7f2a2cab7e576a26de",
+    "run-03/result.json": "93ce8bdf6dd361f09dbb13e35833eb88643e6ca5a6d6fa04669bd89111ffbf59",
+    "run-03/source-after.json": "705b653c9f2cdc2ba0bc1886b8c42e87d2be1f858f1bbae4e648c98db0a9da6d",
+    "run-03/source-before.json": "705b653c9f2cdc2ba0bc1886b8c42e87d2be1f858f1bbae4e648c98db0a9da6d"
+  }
+}

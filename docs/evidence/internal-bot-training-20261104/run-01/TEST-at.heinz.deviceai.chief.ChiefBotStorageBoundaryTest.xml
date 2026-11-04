@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:42:59" hostname="04c8b0ba7ea6" time="0.028">
+  <properties/>
+  <testcase name="diagnosticsNeverEchoArbitraryOwnerPathsOrText" classname="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" time="0.0"/>
+  <testcase name="primaryAndLockLinksCannotReadOrModifyOutsideRecords" classname="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" time="0.002"/>
+  <testcase name="trustedParentIsExplicitAndDoesNotPermitStoreOrParentLinks" classname="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" time="0.001"/>
+  <testcase name="ownedRootLinkIsRejectedWithoutWritingOutside" classname="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" time="0.0"/>
+  <testcase name="trustedParentAliasCreatesTwentyProfilesAndReopensThroughBothPaths" classname="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" time="0.002"/>
+  <testcase name="ownedContextAndConversationDirectoryLinksAreRejected" classname="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" time="0.003"/>
+  <testcase name="failedFilesystemWriteRetainsRegistryAndSafeDiagnostic" classname="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" time="0.002"/>
+  <testcase name="failedSeedCapacityLeavesExistingSafeReadAndRegistryUnchanged" classname="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" time="0.002"/>
+  <testcase name="aliasesShareTheProcessLockForConcurrentCreates" classname="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" time="0.011"/>
+  <testcase name="corruptAndUnsupportedRegistriesRemainByteExactAcrossFailedSeedAndRead" classname="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" time="0.002"/>
+  <testcase name="legacySchemaOneReadIsUnmodifiedAndExplicitWritePreservesOwnerProfile" classname="at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
