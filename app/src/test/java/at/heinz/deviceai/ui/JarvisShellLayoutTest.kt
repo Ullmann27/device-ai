@@ -38,19 +38,28 @@ class JarvisShellLayoutTest {
     }
 
     @Test fun fold7OpenMatchesRef5() {
+        // §11: Kern's ref5 grid (JarvisCockpitGrid) – everything of ref5 at once, compact.
         val s = JarvisShellLayout.create(884f, 760f)
         assertEquals(FormFactor.FOLD_OPEN, s.formFactor)
         assertEquals(Rail.LABELLED, s.rail)
-        val inner = 884f - 2 * JarvisDesign.Metrics.margin - 2 * JarvisDesign.Metrics.gap
-        assertEquals(inner * .20f, s[Slot.NAV_RAIL]!!.width, .01f)
-        assertEquals(inner * .55f, s[Slot.AVATAR]!!.width, .01f)
-        assertEquals(inner * .25f, s[Slot.COCKPIT_SECONDARY]!!.width, .01f)
-        assertTrue("tiles in centre column", s[Slot.AVATAR]!!.contains(s[Slot.DIALOG]!!) && s[Slot.TILES]!!.left == s[Slot.AVATAR]!!.left)
+        assertTrue(s.ref5Grid)
+        assertTrue("dialog and user card over the head stage",
+            s[Slot.AVATAR]!!.contains(s[Slot.DIALOG]!!) && s[Slot.AVATAR]!!.contains(s[Slot.USER_CARD]!!))
         assertEquals(4, s.tileColumns); assertEquals(2, s.tileRows)
         listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL).forEach { assertNotNull(s[it]) }
         val st = s[Slot.STATUS]!!
-        assertTrue("status full width", st.left <= JarvisDesign.Metrics.margin + .01f && st.right >= 884f - JarvisDesign.Metrics.margin - .01f)
+        assertTrue("status full width", st.left <= 10f && st.right >= 884f - 10f)
         assertTrue(s[Slot.NAV_RAIL]!!.right < s[Slot.AVATAR]!!.left && s[Slot.AVATAR]!!.right < s[Slot.COCKPIT_SECONDARY]!!.left)
+        assertSane(s)
+    }
+
+    @Test fun fold7LargeFontKeepsLegacyColumns() {
+        val s = JarvisShellLayout.create(884f, 760f, 1.5f)
+        val inner = 884f - 2 * JarvisDesign.Metrics.margin - 2 * JarvisDesign.Metrics.gap
+        assertTrue(!s.ref5Grid)
+        assertEquals(inner * .20f, s[Slot.NAV_RAIL]!!.width, .01f)
+        assertEquals(inner * .55f, s[Slot.AVATAR]!!.width, .01f)
+        assertEquals(inner * .25f, s[Slot.COCKPIT_SECONDARY]!!.width, .01f)
         assertSane(s)
     }
 

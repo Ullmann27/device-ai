@@ -57,10 +57,13 @@ class JarvisShellStageUiTest {
             root.draw(Canvas(bitmap))
             val shell = requireNotNull(home.jarvisShell.shell) { "shell drawn" }
             val d = home.resources.displayMetrics.density
-            val box = requireNotNull(shell[JarvisShellLayout.Slot.AVATAR])
-            assertEquals("ONE avatar slot = shell AVATAR box", (box.left * d).toInt(), home.avatarSlotRect.left)
+            // Fold7 ref5 grid: the head gets the HEAD area (orb right of it belongs to Gedächtnis); else shell AVATAR.
+            val box = shell.grid?.get(at.heinz.deviceai.ui.JarvisCockpitGrid.Area.HEAD) ?: requireNotNull(shell[JarvisShellLayout.Slot.AVATAR])
+            assertEquals("ONE avatar slot = head box", (box.left * d).toInt(), home.avatarSlotRect.left)
             assertEquals((box.top * d).toInt(), home.avatarSlotRect.top)
-            assertTrue("empty named placeholder without a renderer", home.avatarSlotShown)
+            assertTrue("the real head is registered by the activity",
+                at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer is at.heinz.deviceai.avatar.JarvisHoloAvatar)
+            assertTrue("head docked in the slot", home.avatarSlotShown && home.avatarRenderer is at.heinz.deviceai.avatar.JarvisHoloAvatar)
             assertEquals("no own head/orb in the cockpit", View.GONE, avatar.visibility)
             System.getProperty("continuum.ui.evidenceDir")?.let { dir ->
                 File(dir).mkdirs()
@@ -69,6 +72,7 @@ class JarvisShellStageUiTest {
             bitmap.recycle()
         } finally {
             runCatching { controller.pause(); controller.stop(); controller.destroy() }
+            assertEquals("onDestroy unregisters the head", null, at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer)
             app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
         }
     }

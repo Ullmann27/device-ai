@@ -125,3 +125,37 @@ interface PillActionGate {
 interface AccountEventSource {
     fun addListener(l: (CockpitAnimationEvent.AccountCardFlyIn) -> Unit): AutoCloseable
 }
+
+// ---- Owner recognition card "User Recognized" (ref5, view by Jarvis Lückenfüller #487) ----
+
+enum class OwnerRecognitionState { RECOGNIZED, NOT_RECOGNIZED, UNKNOWN }
+
+/** Only real signals. [method] names the signal (e.g. "Geräte-Entsperrung"); null when nothing is known. */
+data class OwnerRecognition(val state: OwnerRecognitionState, val method: String?, val sinceMillis: Long?) {
+    companion object { val UNKNOWN = OwnerRecognition(OwnerRecognitionState.UNKNOWN, null, null) }
+}
+
+interface OwnerRecognitionSource {
+    fun current(): OwnerRecognition
+    fun addListener(l: (OwnerRecognition) -> Unit): AutoCloseable
+}
+
+fun interface UserCardRenderer { fun render(model: OwnerRecognition) }
+
+/**
+ * The ONE user card slot (left of the head, ref5 grid area USER_CARD). Without a renderer the cockpit draws a
+ * small "—". The host publishes the latest [OwnerRecognition]; a newly registered renderer gets it immediately.
+ */
+object JarvisUserCardSlot {
+    @Volatile var renderer: UserCardRenderer? = null
+        private set
+    @Volatile var latest: OwnerRecognition = OwnerRecognition.UNKNOWN
+        private set
+    /** Slot bounds in window pixels (left, top, right, bottom), set by the cockpit host; null before layout. */
+    @Volatile var bounds: Rect? = null
+        internal set
+
+    fun register(r: UserCardRenderer?) { renderer = r; r?.render(latest) }
+
+    fun publish(model: OwnerRecognition) { latest = model; renderer?.render(model) }
+}
