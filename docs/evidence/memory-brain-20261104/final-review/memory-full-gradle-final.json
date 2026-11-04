@@ -1,0 +1,21 @@
+{
+  "head": "1342e5076b38a7a72cd18a394d12586829e9b54b",
+  "command": [
+    "flock",
+    "-n",
+    "/workspace/scratch/b3170a7ae924/gradle-build.lock",
+    "./gradlew",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    ":app:testDebugUnitTest",
+    ":app:lintDebug"
+  ],
+  "started": 1793789329.6824415,
+  "seconds": 0.002502918243408203,
+  "exit": 1,
+  "source_changed": false,
+  "outcome": "NOT_RUN_SHARED_BUILD_LOCK_BUSY"
+}

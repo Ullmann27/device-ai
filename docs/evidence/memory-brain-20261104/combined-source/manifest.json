@@ -1,0 +1,68 @@
+{
+  "assembled_local_head": "5a9b5059f6dbfb8e1fcd68b33cc372e3a4309351",
+  "avatar_remote": "e10f4785284ab08f1d5d0a77b64ab8631ed5b9cb",
+  "avatar_tree": "8bbb63663edaa44c85b6645e4151b5c2a3d2eb46",
+  "avatar_local_tree_equivalent": "8bb6d8b0424e5c991c866536fa5e73daa08161f6",
+  "memory_remote": "7e2d69a53f42d22c890e56ab5921295ff408ecd5",
+  "source_files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "sha256": "63fb9aa044608cc22fdb794f08708bf9188c7e2d5419db28310bc20e1677caa4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "sha256": "4dff8d890a476cf92d7bfbc0e13f30cc8e99036f8f284a46a03863b572762181"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/ContinuumMemoryEventSource.kt",
+      "sha256": "ffe1a3e6a3f71a1ce441f39107a3382a9c616ec974b45536d91fb7ecb1fb9806"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "sha256": "b2fb053666fc6a056ce8d5351ed01f76cc8514ca59a231b2667c1ecec116711a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt",
+      "sha256": "1a6df4ba2890c13397b4f0224ef5fa2030010371dd4e5bb1b40e0d3beb3d068d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
+      "sha256": "5c44fde6c65ac53c41ab989fd65fd03491b74c2b1168c3ac7a5ac057446302af"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumMemoryRecallPublisher.kt",
+      "sha256": "1ac591de0b32b4d1d19d7e25d7fa169e9cc292cb1b0c4ca536a6f36a2b61a423"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/MemoryRecallActivityUiTest.kt",
+      "sha256": "58392cc6a196f31db99c487cc09b2fea8a524cb6bf1b4cacaca1166dd7932ad4"
+    }
+  ],
+  "latest_avatar_merge_changed_production": false,
+  "weights_runtime_change": false,
+  "complete_combined_Android_gate": "PASS",
+  "physical_device": "NOT_CONNECTED",
+  "apk": "NOT_BUILT",
+  "verified_public_source": "fab5f094862c5abae259196f6be1d7a8bc80a75b",
+  "verified_tree": "3183aeeeae3532e7f3253de976eabd46efcb940a",
+  "standard_units": {
+    "tests": 2489,
+    "passed": 2470,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 19,
+    "suites": 444
+  },
+  "lint": {
+    "scope": "NewApi only",
+    "issues": 0
+  },
+  "actual_activity_gate": {
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "full_onCreate_onDestroy": false
+  },
+  "subsequent_committed_changes_are_documentation_only": true
+}

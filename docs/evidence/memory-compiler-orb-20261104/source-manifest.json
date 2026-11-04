@@ -1,0 +1,56 @@
+{
+  "base_commit": "cbb9b18b8deee147a68685067bcee2d73956b2bb",
+  "production_edits": false,
+  "result": "HOST_CONNECTED_COMPILER_TO_REAL_ORB_STATE_TESTED",
+  "green_junit": {
+    "tests": 9,
+    "failures": 0
+  },
+  "disconnected_observer_negative_control": {
+    "tests": 9,
+    "expected_failures": 3
+  },
+  "activity_android_looper_face_audio_gpu_device_apk": "NOT_RUN",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "sha256": "8aa8e89ca266047c345ffedb3668f8325789457aa631fc4184ec28ad581ec5c2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt",
+      "sha256": "8279ac693175e929f7ec6b8d64ac61861f97085e8ee4cab8a0d4e8236e3c0a15"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
+      "sha256": "5c44fde6c65ac53c41ab989fd65fd03491b74c2b1168c3ac7a5ac057446302af"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumMemoryRecallPublisher.kt",
+      "sha256": "1ac591de0b32b4d1d19d7e25d7fa169e9cc292cb1b0c4ca536a6f36a2b61a423"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/ContinuumMemoryEventSource.kt",
+      "sha256": "ffe1a3e6a3f71a1ce441f39107a3382a9c616ec974b45536d91fb7ecb1fb9806"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "sha256": "775894cb1a91f594f42f9a85e5dd9d90f3ca94030e1d565361334f611518ddac"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryEvents.kt",
+      "sha256": "66225f8e77cea0ccfe0f6a727aab10fc49571b54cfed399fca668adc1a6fbae7"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/BrainOrbAnimationRenderer.kt",
+      "sha256": "4c6a36270709671bfc889570debb431c65f9cf2802361b0e47149d4ec0dd6112"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+      "sha256": "ab683b92971e7d6459bcbcef252a3f7db569bd72fbccde129d495be1645bb34c"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/CompiledMemoryOrbIntegrationTest.kt",
+      "sha256": "0457154ad9f78695bbf3cbfed87581489320755bd3bdf95384d7891692ea6cfd"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "red": {
+    "source_commit": "17812cdd5867a2b3c0d03d78b64a2b355fa42ade",
+    "files": [
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cognitive/MemoryContextBoundaryTest.kt",
+        "sha256": "7c3015a6a545a1e1a0804a73060365c59074749ad43f9667b56314da6843c2f9"
+      }
+    ],
+    "junit_exit": 1,
+    "tests": [
+      "at.heinz.deviceai.cognitive.MemoryContextBoundaryTest"
+    ]
+  },
+  "green": {
+    "source_commit": "17812cdd5867a2b3c0d03d78b64a2b355fa42ade",
+    "files": [
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+        "sha256": "941c922e03683ca0899bcde168bc08c6c3bbceea6d1a06a0b152e0f10520b6f0"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cognitive/MemoryContextBoundaryTest.kt",
+        "sha256": "7c3015a6a545a1e1a0804a73060365c59074749ad43f9667b56314da6843c2f9"
+      }
+    ],
+    "junit_exit": 0,
+    "tests": [
+      "at.heinz.deviceai.cognitive.MemoryContextBoundaryTest",
+      "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+      "at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest",
+      "at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest"
+    ]
+  }
+}

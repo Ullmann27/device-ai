@@ -1,0 +1,62 @@
+{
+  "sourceParents": {
+    "avatarRecovery": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+    "memory": "8a98ea4d10126041b1a43cb7623c0f324ab18ec1",
+    "commonAncestor": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d"
+  },
+  "mergeConflicts": [],
+  "sourceFiles": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "sha256": "63fb9aa044608cc22fdb794f08708bf9188c7e2d5419db28310bc20e1677caa4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "sha256": "4dff8d890a476cf92d7bfbc0e13f30cc8e99036f8f284a46a03863b572762181"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/ContinuumMemoryEventSource.kt",
+      "sha256": "ffe1a3e6a3f71a1ce441f39107a3382a9c616ec974b45536d91fb7ecb1fb9806"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "sha256": "8aa8e89ca266047c345ffedb3668f8325789457aa631fc4184ec28ad581ec5c2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumMemoryRecallPublisher.kt",
+      "sha256": "1ac591de0b32b4d1d19d7e25d7fa169e9cc292cb1b0c4ca536a6f36a2b61a423"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventFactoryIntegrationTest.kt",
+      "sha256": "80233e8b1ae0fa984228fdccccb2e8a5ec75ebcb754bc66139a77ef471b49af7"
+    },
+    {
+      "path": "tools/memory-brain-review/activity-memory-wiring.test.mjs",
+      "sha256": "f8a845561557ed563f8b592f0f4d39cbe5ff4d83fd584b2532e7d05ece9045e7"
+    }
+  ],
+  "tests": {
+    "factoryRed": {
+      "tests": 2,
+      "failures": 2,
+      "compileExit": 0
+    },
+    "factoryMapperAdapterGreen": {
+      "tests": 14,
+      "failures": 0,
+      "compileExit": 0
+    },
+    "activitySourceContractRed": {
+      "tests": 3,
+      "failures": 2
+    },
+    "activitySourceContractGreen": {
+      "tests": 3,
+      "failures": 0
+    }
+  },
+  "androidActivityRuntime": "NOT_RUN",
+  "fullGradle": "NOT_RUN",
+  "apkBuild": "NOT_RUN",
+  "publication": "NOT_PUSHED"
+}
