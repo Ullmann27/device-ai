@@ -1,0 +1,286 @@
+// Frozen test-only reference from 578bdfd12f896cc990bf1a043bc1b248ba3adb6d.
+// Original source SHA-256: a5c963b7abd170fac0494c2a2d79cd0e313028189864969856aaf4bd99108aea
+// Only the package and imports of shared memory types differ from that source.
+package at.heinz.deviceai.cognitive.fixtures
+
+import at.heinz.deviceai.cognitive.MemoryRecord
+import at.heinz.deviceai.cognitive.PrivacyClass
+import at.heinz.deviceai.cognitive.ProvenanceType
+import at.heinz.deviceai.cognitive.ValidationState
+
+import java.util.Locale
+import kotlin.math.ln
+
+data class MemoryScoreBreakdown(
+    val lexicalBm25: Double,
+    val semanticSimilarity: Double,
+    val entityMatch: Double,
+    val temporalRelevance: Double,
+    val sourceTrust: Double,
+    val validationQuality: Double,
+    val provenanceQuality: Double,
+    val recency: Double,
+    val contradictionPenalty: Double,
+    val total: Double
+) {
+    init {
+        listOf(
+            lexicalBm25,
+            semanticSimilarity,
+            entityMatch,
+            temporalRelevance,
+            sourceTrust,
+            validationQuality,
+            provenanceQuality,
+            recency,
+            contradictionPenalty,
+            total
+        ).forEach { require(it.isFinite()) }
+        require(
+            listOf(
+                lexicalBm25,
+                semanticSimilarity,
+                entityMatch,
+                temporalRelevance,
+                sourceTrust,
+                validationQuality,
+                provenanceQuality,
+                recency,
+                contradictionPenalty
+            ).all { it in 0.0..1.0 }
+        )
+        require(total in 0.0..1.0)
+    }
+}
+
+data class ScoredMemory(
+    val memory: MemoryRecord,
+    val score: MemoryScoreBreakdown
+)
+
+object HybridMemoryRetriever {
+    fun retrieve(
+        query: String,
+        records: Collection<MemoryRecord>,
+        limit: Int = 8,
+        nowMillis: Long = System.currentTimeMillis(),
+        allowedPrivacy: Set<PrivacyClass> = PrivacyClass.values().toSet(),
+        semanticScorer: ((String, MemoryRecord) -> Double)? = null,
+        sourceTrustScorer: ((MemoryRecord) -> Double)? = null
+    ): List<ScoredMemory> {
+        require(limit >= 0)
+        require(nowMillis >= 0)
+        if (limit == 0) return emptyList()
+
+        // Grammar words alone do not establish a topic match. Otherwise an
+        // unrelated private fact containing "ist"/"is" enters almost every
+        // knowledge prompt. This affects scoring only; evidence stays literal.
+        val rawQueryTerms = tokens(query).filterNot { it in QUERY_STOP_WORDS }.toSet()
+        if (rawQueryTerms.isEmpty()) return emptyList()
+        // M3: light German normalization (umlaut folding + conservative suffix stripping) so
+        // "Kind"/"Kinder", "Neffe"/"Neffen", "Großeltern"/"Grosseltern" meet. Scoring only.
+        val queryTerms = rawQueryTerms.map(::normalizeTerm).toSet()
+
+        val candidates = records.filter { it.privacyClass in allowedPrivacy }
+        if (candidates.isEmpty()) return emptyList()
+
+        val tokenized = candidates.associateWith { memory ->
+            val terms = tokens(memory.content + " " + memory.tags.joinToString(" ")).map(::normalizeTerm)
+            // Compound-aware matching: a long query term that is the head or tail of a
+            // document compound ("termin" in "zahnarzttermin") counts as that term.
+            terms + queryTerms.filter { q -> q.length >= 5 && q !in terms &&
+                terms.any { t -> t.length >= q.length + 3 && (t.startsWith(q) || t.endsWith(q)) } }
+        }
+        val averageDocumentLength = tokenized.values.map { it.size }.average().coerceAtLeast(1.0)
+        val documentFrequency = queryTerms.associateWith { term ->
+            tokenized.values.count { term in it }.coerceAtLeast(0)
+        }
+        val temporalQuery = rawQueryTerms.any { it in TEMPORAL_TERMS }
+
+        return candidates.asSequence()
+            .map { memory ->
+                val documentTerms = tokenized.getValue(memory)
+                val lexical = bm25Like(
+                    queryTerms,
+                    documentTerms,
+                    documentFrequency,
+                    candidates.size,
+                    averageDocumentLength
+                )
+                val entity = entityScore(queryTerms, memory.tags)
+                val semantic = semanticScorer
+                    ?.invoke(query, memory)
+                    ?.takeIf(Double::isFinite)
+                    ?.coerceIn(0.0, 1.0)
+                    ?: 0.0
+
+                if (lexical <= 0.0 && entity <= 0.0 && semantic <= 0.0) {
+                    return@map null
+                }
+
+                val temporal = temporalScore(memory, nowMillis, temporalQuery)
+                val sourceTrust = sourceTrustScorer
+                    ?.invoke(memory)
+                    ?.takeIf(Double::isFinite)
+                    ?.coerceIn(0.0, 1.0)
+                    ?: 0.5
+                val validation = validationScore(memory.validationState)
+                val provenance = provenanceScore(memory.provenance)
+                val recency = recencyScore(memory.updatedAt, nowMillis)
+                val penalty = when (memory.validationState) {
+                    ValidationState.CONTRADICTED -> 0.35
+                    ValidationState.STALE -> 0.15
+                    else -> 0.0
+                }
+
+                val weighted =
+                    0.30 * lexical +
+                        0.25 * semantic +
+                        0.12 * entity +
+                        0.10 * temporal +
+                        0.08 * sourceTrust +
+                        0.07 * validation +
+                        0.03 * provenance +
+                        0.05 * recency
+
+                val total = (weighted - penalty).coerceIn(0.0, 1.0)
+                ScoredMemory(
+                    memory,
+                    MemoryScoreBreakdown(
+                        lexicalBm25 = lexical,
+                        semanticSimilarity = semantic,
+                        entityMatch = entity,
+                        temporalRelevance = temporal,
+                        sourceTrust = sourceTrust,
+                        validationQuality = validation,
+                        provenanceQuality = provenance,
+                        recency = recency,
+                        contradictionPenalty = penalty,
+                        total = total
+                    )
+                )
+            }
+            .filterNotNull()
+            // Relevant contradicted/stale memories remain visible with a low score so
+            // the agent can reason about conflicts instead of silently forgetting them.
+            .sortedWith(
+                compareByDescending<ScoredMemory> { it.score.total }
+                    .thenByDescending { it.memory.updatedAt }
+                    .thenBy { it.memory.id }
+            )
+            .take(limit)
+            .toList()
+    }
+
+    private fun bm25Like(
+        queryTerms: Set<String>,
+        documentTerms: List<String>,
+        documentFrequency: Map<String, Int>,
+        documentCount: Int,
+        averageDocumentLength: Double
+    ): Double {
+        if (documentTerms.isEmpty()) return 0.0
+        val termFrequency = documentTerms.groupingBy { it }.eachCount()
+        val length = documentTerms.size.toDouble()
+        var raw = 0.0
+        queryTerms.forEach { term ->
+            val tf = termFrequency[term]?.toDouble() ?: return@forEach
+            val df = (documentFrequency[term] ?: 0).toDouble()
+            val idf = ln(1.0 + ((documentCount - df + 0.5) / (df + 0.5)))
+            val denominator = tf + K1 * (1.0 - B + B * length / averageDocumentLength)
+            raw += idf * (tf * (K1 + 1.0) / denominator)
+        }
+        return if (raw <= 0.0) 0.0 else (raw / (raw + BM25_NORMALIZER)).coerceIn(0.0, 1.0)
+    }
+
+    private fun entityScore(queryTerms: Set<String>, tags: List<String>): Double {
+        if (tags.isEmpty()) return 0.0
+        val tagTerms = tags.flatMap(::tokens).map(::normalizeTerm).toSet()
+        if (tagTerms.isEmpty()) return 0.0
+        return queryTerms.intersect(tagTerms).size.toDouble() / queryTerms.size.toDouble()
+    }
+
+    private fun temporalScore(memory: MemoryRecord, nowMillis: Long, temporalQuery: Boolean): Double {
+        if (!temporalQuery) return 0.5
+        val ageDays = ageDays(memory.updatedAt, nowMillis)
+        return when {
+            ageDays <= 1.0 -> 1.0
+            ageDays <= 7.0 -> 0.85
+            ageDays <= 30.0 -> 0.60
+            ageDays <= 180.0 -> 0.35
+            else -> 0.15
+        }
+    }
+
+    private fun recencyScore(updatedAt: Long, nowMillis: Long): Double {
+        val ageDays = ageDays(updatedAt, nowMillis)
+        return (1.0 / (1.0 + ageDays / 30.0)).coerceIn(0.0, 1.0)
+    }
+
+    private fun ageDays(updatedAt: Long, nowMillis: Long): Double {
+        val ageMillis = (nowMillis - updatedAt).coerceAtLeast(0L)
+        return ageMillis.toDouble() / MILLIS_PER_DAY.toDouble()
+    }
+
+    private fun validationScore(state: ValidationState): Double = when (state) {
+        ValidationState.VERIFIED -> 1.0
+        ValidationState.CORROBORATED -> 0.85
+        ValidationState.UNVERIFIED -> 0.45
+        ValidationState.STALE -> 0.20
+        ValidationState.CONTRADICTED -> 0.0
+    }
+
+    private fun provenanceScore(provenance: ProvenanceType): Double = when (provenance) {
+        ProvenanceType.DIRECT_OBSERVATION -> 1.0
+        ProvenanceType.DEVICE_OBSERVATION -> 0.95
+        ProvenanceType.USER_PROVIDED -> 0.95
+        ProvenanceType.EXTERNAL_SOURCE -> 0.85
+        ProvenanceType.INFERENCE -> 0.65
+        ProvenanceType.MODEL_GENERATED -> 0.40
+        ProvenanceType.UNVERIFIED -> 0.20
+    }
+
+    internal fun normalizeTerm(term: String): String {
+        val folded = term.replace("ä", "a").replace("ö", "o").replace("ü", "u").replace("ß", "ss")
+        if (folded.length < 5 || folded.any(Char::isDigit)) return folded
+        for (suffix in GERMAN_SUFFIXES) {
+            if (folded.endsWith(suffix) && folded.length - suffix.length >= 4) return folded.dropLast(suffix.length)
+        }
+        return folded
+    }
+
+    private val GERMAN_SUFFIXES = listOf("ern", "em", "en", "er", "es", "e", "n", "s")
+
+    private fun tokens(text: String): List<String> =
+        text.lowercase(Locale.ROOT)
+            .split(Regex("[^\\p{L}\\p{N}]+"))
+            .filter(String::isNotBlank)
+            .take(MAX_TOKENS)
+
+    private val TEMPORAL_TERMS = setOf(
+        "today", "yesterday", "recent", "recently", "latest", "current", "now",
+        "heute", "gestern", "kürzlich", "zuletzt", "aktuell", "jetzt"
+    )
+
+    private val QUERY_STOP_WORDS = setOf(
+        "a", "an", "and", "are", "as", "at", "be", "been", "by", "can", "could",
+        "do", "does", "for", "from", "has", "have", "how", "i", "in", "is", "it",
+        "me", "my", "of", "on", "or", "please", "that", "the", "their", "this", "to",
+        "was", "were", "what", "when", "where", "which", "who", "why", "with", "you", "your",
+        "aber", "als", "am", "auf", "aus", "bei", "bin", "bitte", "das", "dass", "dem",
+        "den", "der", "des", "die", "dir", "du", "ein", "eine", "einem", "einen", "einer",
+        "eines", "er", "es", "für", "hat", "haben", "ich", "ihm", "ihn", "ihr", "im", "ist",
+        "kann", "kannst", "mein", "meine", "meiner", "mir", "mit", "oder", "sein", "seine",
+        "sich", "sie", "sind", "und", "vom", "von", "war", "warum", "welche", "welcher",
+        "welches", "wer", "wie", "wir", "wird", "wo", "zu", "zum", "zur",
+        "über", "nicht", "auch", "noch", "wann", "wenn", "so", "man", "uns", "unser",
+        "dein", "deine", "weißt", "weiß", "etwas", "mich", "dich", "nach", "bis", "um",
+        "about", "tell", "know", "not", "any", "some", "there", "would", "will"
+    )
+
+    private const val K1 = 1.2
+    private const val B = 0.75
+    private const val BM25_NORMALIZER = 4.0
+    private const val MAX_TOKENS = 4_096
+    private const val MILLIS_PER_DAY = 86_400_000L
+}

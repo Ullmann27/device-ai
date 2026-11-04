@@ -1,0 +1,35 @@
+JUnit version 4.13.2
+.E.E.E.E
+Time: 0.158
+There were 4 failures:
+1) completeEvidenceFrameKeepsItsLateCorrectionAndIndependentSource(at.heinz.deviceai.cognitive.MemoryContextBoundaryTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.MemoryContextBoundaryTest.completeEvidenceFrameKeepsItsLateCorrectionAndIndependentSource(MemoryContextBoundaryTest.kt:51)
+2) sourceMetadataCannotInjectAModelControlToken(at.heinz.deviceai.cognitive.MemoryContextBoundaryTest)
+java.lang.AssertionError: expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryContextBoundaryTest.sourceMetadataCannotInjectAModelControlToken(MemoryContextBoundaryTest.kt:69)
+3) retrievedMemoryCannotCreateASecondOwnerOrSystemMessage(at.heinz.deviceai.cognitive.MemoryContextBoundaryTest)
+java.lang.AssertionError: expected:<1> but was:<2>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryContextBoundaryTest.retrievedMemoryCannotCreateASecondOwnerOrSystemMessage(MemoryContextBoundaryTest.kt:23)
+4) memoryIdCannotEscapeMetadataWhileTheOriginalIdRemainsBound(at.heinz.deviceai.cognitive.MemoryContextBoundaryTest)
+java.lang.AssertionError: expected:<1> but was:<2>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryContextBoundaryTest.memoryIdCannotEscapeMetadataWhileTheOriginalIdRemainsBound(MemoryContextBoundaryTest.kt:36)
+
+FAILURES!!!
+Tests run: 4,  Failures: 4
+

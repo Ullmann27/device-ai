@@ -1,0 +1,18 @@
+JUnit version 4.13.2
+....E......Nov 04, 2026 11:29:05 AM at.heinz.deviceai.learning.ContinuumMemoryEventHub runWorker
+WARNING: memory event listener failed: IllegalStateException
+Nov 04, 2026 11:29:05 AM at.heinz.deviceai.learning.ContinuumMemoryEventHub runWorker
+WARNING: memory event listener failed: IllegalStateException
+.....
+Time: 0.239
+There was 1 failure:
+1) closeWaitsForDeliveryAlreadyInProgressAndNoDeliveryStartsAfterItReturns(at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest)
+java.lang.AssertionError: close must not finish with an unguarded sink callback still running
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest.closeWaitsForDeliveryAlreadyInProgressAndNoDeliveryStartsAfterItReturns(ContinuumMemoryEventSourceIntegrationTest.kt:149)
+
+FAILURES!!!
+Tests run: 15,  Failures: 1
+

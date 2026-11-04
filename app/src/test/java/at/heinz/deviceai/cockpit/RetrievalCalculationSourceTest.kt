@@ -57,9 +57,14 @@ class RetrievalCalculationSourceTest {
         val good=source.addListener { got+=it }
         r.search("Brot gekauft",now,3); source.awaitIdleForTest()
         assertEquals(1,got.size)
+        val worker=checkNotNull(source.dispatchThreadForTest())
         good.close(); bad.close()
         r.search("Brot gekauft",now,3); source.awaitIdleForTest()
         assertEquals(1,got.size)
+        // An empty queue is not thread termination: close only notifies the dispatcher.
+        // Join the actual worker outside the source monitor before asserting shutdown.
+        worker.join(5_000L)
+        assertFalse("dispatcher must terminate after the final listener closes",worker.isAlive)
         assertEquals(null,source.dispatchThreadForTest())
     }
 

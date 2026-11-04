@@ -1,0 +1,47 @@
+JUnit version 4.13.2
+..E.E.E.E.E.E......
+Time: 0.132
+There were 6 failures:
+1) aLateConflictIsRejectedEvenWhenTheResultLimitIsOne(at.heinz.deviceai.cognitive.HybridMemoryIdentityTest)
+java.lang.AssertionError: expected:<[safe]> but was:<[collision]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.HybridMemoryIdentityTest.aLateConflictIsRejectedEvenWhenTheResultLimitIsOne(HybridMemoryIdentityTest.kt:110)
+2) repeatedIdenticalRecordsHaveTheSameScoresAsOneRecord(at.heinz.deviceai.cognitive.HybridMemoryIdentityTest)
+java.lang.AssertionError: expected:<[ScoredMemory(memory=MemoryRecord(id=repeated, type=SEMANTIC, content=Werkstatt öffnet am Montag., provenance=USER_PROVIDED, confidence=0.9, createdAt=1730678400000, updatedAt=1730678400000, tags=[], parentIds=[], sourceReference=null, validationState=UNVERIFIED, privacyClass=PUBLIC, validationEvidenceReferences=[]), score=MemoryScoreBreakdown(lexicalBm25=0.1795660652372575, semanticSimilarity=0.0, entityMatch=0.0, temporalRelevance=0.5, sourceTrust=0.5, validationQuality=0.45, provenanceQuality=0.95, recency=1.0, contradictionPenalty=0.0, total=0.25386981957117727)), ScoredMemory(memory=MemoryRecord(id=other, type=SEMANTIC, content=Werkstatt öffnet am Dienstag., provenance=USER_PROVIDED, confidence=0.9, createdAt=1730678400000, updatedAt=1730678400000, tags=[], parentIds=[], sourceReference=null, validationState=UNVERIFIED, privacyClass=PUBLIC, validationEvidenceReferences=[]), score=MemoryScoreBreakdown(lexicalBm25=0.04359338571128829, semanticSimilarity=0.0, entityMatch=0.0, temporalRelevance=0.5, sourceTrust=0.5, validationQuality=0.45, provenanceQuality=0.95, recency=1.0, contradictionPenalty=0.0, total=0.21307801571338647))]> but was:<[ScoredMemory(memory=MemoryRecord(id=repeated, type=SEMANTIC, content=Werkstatt öffnet am Montag., provenance=USER_PROVIDED, confidence=0.9, createdAt=1730678400000, updatedAt=1730678400000, tags=[], parentIds=[], sourceReference=null, validationState=UNVERIFIED, privacyClass=PUBLIC, validationEvidenceReferences=[]), score=MemoryScoreBreakdown(lexicalBm25=0.3217027955592112, semanticSimilarity=0.0, entityMatch=0.0, temporalRelevance=0.5, sourceTrust=0.5, validationQuality=0.45, provenanceQuality=0.95, recency=1.0, contradictionPenalty=0.0, total=0.2965108386677634)), ScoredMemory(memory=MemoryRecord(id=repeated, type=SEMANTIC, content=Werkstatt öffnet am Montag., provenance=USER_PROVIDED, confidence=0.9, createdAt=1730678400000, updatedAt=1730678400000, tags=[], parentIds=[], sourceReference=null, validationState=UNVERIFIED, privacyClass=PUBLIC, validationEvidenceReferences=[]), score=MemoryScoreBreakdown(lexicalBm25=0.3217027955592112, semanticSimilarity=0.0, entityMatch=0.0, temporalRelevance=0.5, sourceTrust=0.5, validationQuality=0.45, provenanceQuality=0.95, recency=1.0, contradictionPenalty=0.0, total=0.2965108386677634)), ScoredMemory(memory=MemoryRecord(id=repeated, type=SEMANTIC, content=Werkstatt öffnet am Montag., provenance=USER_PROVIDED, confidence=0.9, createdAt=1730678400000, updatedAt=1730678400000, tags=[], parentIds=[], sourceReference=null, validationState=UNVERIFIED, privacyClass=PUBLIC, validationEvidenceReferences=[]), score=MemoryScoreBreakdown(lexicalBm25=0.3217027955592112, semanticSimilarity=0.0, entityMatch=0.0, temporalRelevance=0.5, sourceTrust=0.5, validationQuality=0.45, provenanceQuality=0.95, recency=1.0, contradictionPenalty=0.0, total=0.2965108386677634)), ScoredMemory(memory=MemoryRecord(id=other, type=SEMANTIC, content=Werkstatt öffnet am Dienstag., provenance=USER_PROVIDED, confidence=0.9, createdAt=1730678400000, updatedAt=1730678400000, tags=[], parentIds=[], sourceReference=null, validationState=UNVERIFIED, privacyClass=PUBLIC, validationEvidenceReferences=[]), score=MemoryScoreBreakdown(lexicalBm25=0.14769346749471535, semanticSimilarity=0.0, entityMatch=0.0, temporalRelevance=0.5, sourceTrust=0.5, validationQuality=0.45, provenanceQuality=0.95, recency=1.0, contradictionPenalty=0.0, total=0.24430804024841463))]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.HybridMemoryIdentityTest.repeatedIdenticalRecordsHaveTheSameScoresAsOneRecord(HybridMemoryIdentityTest.kt:86)
+3) privacyConflictsAreRejectedBeforeAnyScorerSeesEitherVariant(at.heinz.deviceai.cognitive.HybridMemoryIdentityTest)
+java.lang.AssertionError: expected:<[safe]> but was:<[collision, safe]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.HybridMemoryIdentityTest.privacyConflictsAreRejectedBeforeAnyScorerSeesEitherVariant(HybridMemoryIdentityTest.kt:66)
+4) aThirdCopyCannotReviveAnAlreadyConflictingIdentity(at.heinz.deviceai.cognitive.HybridMemoryIdentityTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.HybridMemoryIdentityTest.aThirdCopyCannotReviveAnAlreadyConflictingIdentity(HybridMemoryIdentityTest.kt:95)
+5) identicalTextDoesNotHideConflictingProvenanceOrEvidence(at.heinz.deviceai.cognitive.HybridMemoryIdentityTest)
+java.lang.AssertionError: Conflicting identity remained retrievable: MemoryRecord(id=collision, type=SEMANTIC, content=Werkstatt ist geöffnet., provenance=MODEL_GENERATED, confidence=0.9, createdAt=1730678400000, updatedAt=1730678400000, tags=[], parentIds=[], sourceReference=null, validationState=UNVERIFIED, privacyClass=PUBLIC, validationEvidenceReferences=[])
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.HybridMemoryIdentityTest.identicalTextDoesNotHideConflictingProvenanceOrEvidence(HybridMemoryIdentityTest.kt:38)
+6) conflictingContentsCannotShareAnEvidenceIdentity(at.heinz.deviceai.cognitive.HybridMemoryIdentityTest)
+java.lang.AssertionError: expected:<[safe]> but was:<[safe, collision, collision]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.HybridMemoryIdentityTest.conflictingContentsCannotShareAnEvidenceIdentity(HybridMemoryIdentityTest.kt:15)
+
+FAILURES!!!
+Tests run: 13,  Failures: 6
+
