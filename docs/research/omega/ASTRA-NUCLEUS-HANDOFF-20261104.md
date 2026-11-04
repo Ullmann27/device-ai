@@ -21,7 +21,7 @@ Dieser Abschnitt führt den direkten Besitzerauftrag auf demselben zentralen Boa
 | C1-CONTRACTS-003 | C1, Lieferant #517 | Vier Archivpatches bei `46e5fa6b09454ad6f6862e80478eb0f2d5545149`, sieben Testdateien | 48 PASS / 0 FAIL / 0 SKIP; 9/9 Negativkontrollen erkannt; statisch unabhängig befürwortet |
 | C1-APK-CHANNEL-004 | C1 / apk_readiness | Gradle-Konfiguration, #475, tatsächlicher Kanalversuch und Toolchain-Dateien | Aktueller Kanal UNVERIFIED: Web-Tool kann URL nicht abrufen; historische41 nicht als aktuell ausgeben |
 | C1-AVATAR-005 | C1, Lieferant #517 | Signed-zero-Patch AvatarIdleMotion + zwei Grenztests aus demselben Archiv | TARGETED_KOTLIN_PASS; echter ArrayIndexOutOfBounds-RED, danach 2/2 GREEN; unabhängiger statischer Review positiv |
-| C1-ROUTING-006 | C1, begrenzter Patch von source_audit | routeBotInput; unbekannte natürliche Select-Formulierungen | PREPARING; bekannte/mehrdeutige/explizite Adressen und Storefehler getrennt erhalten |
+| C1-ROUTING-006 | C1, begrenzter Patch von source_audit | routeBotInput; unbekannte natürliche Select-Formulierungen | ISOLATED_KOTLIN_PASS;27/27 auf tatsächlichem Methodenkörper, statischer Fremdreview; echte Activity-UI-Abnahme noch NOT_RUN |
 | C1-UI-CONTRACT-007 | C1 / apk_readiness read-only | Vorhandenes UI-Vertragspaket des laufenden Teams #517 | TARGETED_SOURCE_PASS; eigener48/48-Lauf, unabhängiger statischer Review,17 Autoren-Negativlogs geprüft; keine Geräteabnahme |
 | C1-QA-GUARD-008 | C1; Produktion #505, Tests #517 | Sechste Signing-Umgebungsvariable in bestehendem QA-Guard | TARGETED_HOST_PASS; eigener43-Test-RED mit2 Fehlern, danach43/43 GREEN; direkter #505-Blobabgleich und unabhängiger statischer Review |
 | C1-AVATAR-FALLBACK-009 | laufendes Team #517; Einbau erst C1 | Bestehender2D-Fallback und virtuelle VSync-Fixture | BLOCKED_PARTIAL; ein Fallback-Fall grün, sieben tatsächliche Avatar-UI-Assertions weiter rot; kein fertiges Gesamtpaket |
@@ -37,7 +37,7 @@ Dieser Abschnitt führt den direkten Besitzerauftrag auf demselben zentralen Boa
 
 Enthalten: #491-Grundintegration, #506 Bot-/Recall-/Scope-Anschlüsse, #512 Cockpit-Lifecycle/Kalender/QA-Vorprüfung, #513 Sprachcaller/Reattach und #502/#503-Motion. Hinzu kamen genau der negative #515-ECHO-Slice und die getrennte QA-Manifestkorrektur. Branch-Discovery/Scheduler aus #515 bleiben separat.
 
-Fehlend: Nachgewiesene Behandlung unbekannter natürlicher Botwechsel-Sätze und vollständige aktuelle Quellvertragsabnahme. Der Signed-zero-Randfall ist inzwischen im eigenen Kotlin RED/GREEN behoben. Neueste #493-Routerbytes enthalten den abgefangenen Normaltextfehler weiterhin. #517 arbeitet separat an UI-Fallback/Testhänger; dessen roter Gesamtstand wird nicht als Abnahme übernommen.
+Offen: gemeinsame vollständige Abnahme der inzwischen gezielt reparierten Quellverträge und echte Activity-Abnahme des nun eingebauten unbekannten-Bot-Select-Rückwegs. Der Signed-zero-Randfall ist inzwischen im eigenen Kotlin RED/GREEN behoben. Neueste #493-Routerbytes enthalten den abgefangenen Normaltextfehler weiterhin. #517 arbeitet separat an UI-Fallback/Testhänger; dessen roter Gesamtstand wird nicht als Abnahme übernommen.
 
 Widersprüchlich/überholt: #506s initiales UNVERIFIED-Handoff, alte starre UI-/Aufrufer-Strings in Tests, historische AGENTS-Releaseangaben. Der Avatar-Vertrag belegt die angeschlossene Live-Hologrammfläche; dauerhaftes Fan-out an sämtliche Registry-Empfänger ist dadurch nicht bewiesen.
 

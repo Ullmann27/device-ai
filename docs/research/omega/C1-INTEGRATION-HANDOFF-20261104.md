@@ -141,3 +141,15 @@ Die Produktionszeile stammt aus abgeschlossenem #505 `84cd8cfc05dedef5d4feb28ecf
 Eigener RED: 43 Tests,41 PASS/2 FAIL,Exit1 (die beiden vorher fehlenden Mentor-Base64-Fälle). Nach Produktionsfix: **43 PASS/0 FAIL/0 SKIP,Exit0**. Statisch unabhängig befürwortet. Ausschließlich synthetische `fixture-not-a-key`-Werte und lokaler Fake-curl; keine echten Schlüssel gelesen, kein Download, keine Signierung/Veröffentlichung. Echte Befehle/Dateihashes/Logs: `docs/evidence/c1-integration-20261104/qa-signing-guard/`.
 
 Rücknahme betrifft nur die beiden benannten Guard-/Testdateien; negative Belege bleiben. Nächster Schritt: nach isoliertem Routing-GREEN und unabhängigem Review C1-ROUTING-006 seriell einbauen, gemeinsamen Stand einfrieren und aktuelle vollständige Hostgates ausführen.
+
+## C1-ROUTING-006 — unbekannte natürliche Botwechsel weiterreichen
+
+Basis: lokal `ced43fbe26cfc97c5c8fbbc3f429cd0845047c4f`, remote `9e84803cc1907d9618669ab039b1fd667ab5b207`, gleicher Tree `18806a9172380187f7485eaa0e3490b27fb8a79a`. Der durch C1-Unteragent source_audit gelieferte Patch SHA-256 `c47ab9c0c70ca271f47f190ec475f9d6ce02ffdd60774679249de730356830ed` ist vom zweiten Unteragent repair_review statisch unabhängig befürwortet und wird ausschließlich durch C1 eingebaut.
+
+Nach erfolgreicher Profilauflösung ohne Treffer führen natürliche Formulierungen wie „wechsle zu dunklem Modus“ in den vorhandenen Eingabepfad. Ein bereits gewählter privater Bot bleibt zuständig. Bekannte Botwahl, direkte @-Nachricht sowie @-markiertes Select-Ziel, Mehrdeutigkeit, Speicherfehler und geänderte Eingabe behalten ihre Schranken. Router und Store werden produktiv nicht geändert. Activity-Basisblob `c1482ed3be0cb91734e10947613ec62d1a3c38cb` → Kandidat `bc1a08495f56696b2f0a6613260beb92bb3dbc62`; zwei bestehende Testklassen ergänzt.
+
+Isolierter tatsächlicher Kotlin-Methodentest mit echtem Router und Profil-Metadatenspeicher: Autor-RED **25 Tests,22 PASS/3 FAIL, Compile0/JUnit1**. Nach zwei ergänzten expliziten @-Schutzkontrollen führte C1 selbst den aktuellen Kandidaten aus: **27 PASS/0 FAIL, Compile0/JUnit0**. Beide vorhandenen Locks wurden gehalten. Zuvor blockierte Compiler-Erwerbsversuche bleiben als NOT_RUN erhalten. Nach Einbau wurden die drei Dateien bytegenau gegen diesen geprüften Kandidaten verglichen.
+
+Dieser Methodentest enthält explizite UI-/Queue-/Aufrufziel-Doubles und unbenutzte Conversation-Speicher-Compilegrenzen. Er ist keine reale Android-, Thread-, Conversation-Speicher-, Modell- oder Geräteabnahme. Die sechs neuen Activity-/Robolectric-Methoden sind bis zum nächsten Gradle-Lauf **NOT_COMPILED/NOT_RUN**. Vollständige ursprüngliche und neue Quellen, Befehle, Rohlogs und Hashmanifest: `docs/evidence/c1-integration-20261104/routing006/`.
+
+Rücknahme: nur den kleinen null-Profil-Zweig und die beiden Testergänzungen revertieren; keine neuere Activity durch eine alte Gesamtdatei ersetzen. Nächster Schritt: gepinnten sauberen Gesamtstand zunächst mit tatsächlichen Router-/Activity-Tests samt Compilation/NewApi prüfen; danach volle Node-/Backend-/Android-Gates. Keine APK aus einem unvollständig abgenommenen Stand.

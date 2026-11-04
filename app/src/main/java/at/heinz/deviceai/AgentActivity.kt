@@ -2020,9 +2020,11 @@ class AgentActivity : Activity() {
                 }
                 val (profile, history) = found.getOrThrow()
                 if (profile == null) {
-                    if (address is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Select) {
-                        Toast.makeText(this, "Kein eindeutiger Bot dieses Namens gefunden.", Toast.LENGTH_LONG).show()
-                    } else if (request.trimStart().startsWith("@")) {
+                    // A successful lookup with no bot leaves natural selection syntax as ordinary text.
+                    // Lookup failures above and explicit mentions still fail closed.
+                    if (request.trimStart().startsWith("@") ||
+                        (address is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Select &&
+                            address.name.startsWith("@"))) {
                         Toast.makeText(this, "Diesen Bot finde ich nicht. Bitte Namen prüfen oder über Team auswählen.", Toast.LENGTH_LONG).show()
                     } else if (selectedBot != null) {
                         input.text.clear(); runBotDialogue(selectedBot!!, request)
