@@ -10,7 +10,8 @@ bot or an independently running local model.
 - Repository: `Ullmann27/device-ai`, owner-authorized public collaboration.
 - Base: PR #483, `578bdfd12f896cc990bf1a043bc1b248ba3adb6d`.
 - Branch: `support/continuum-ten-bot-assist-20261104`.
-- Initial checkpoint: coordination only; implementation and new tests NOT_RUN.
+- Current checkpoint: all ten assignments completed, with bounded repairs and
+  actual execution receipts below.
 - Capacity: three concurrent helper agents plus the coordinator; dispatch in waves.
 
 ## Protected workstreams
@@ -39,12 +40,13 @@ stores, bot profiles and avatar renderers stay with their current owners.
 | 06 | Check brain/retrieval integration boundaries and evidence | COMPLETE: bounded read-only review, no demonstrated residual defect |
 | 07 | Check avatar/design integration and asset contracts | COMPLETE: 8 validator tests PASS, real asset contract FAIL, handed to #491 |
 | 08 | Check update identity, source binding and version monotonicity | COMPLETE: 18 local fixture/contract tests PASS; no release or device execution |
-| 09 | Check immutable tool scope at worker admission/adapters | RUNNING, exclusive ChiefWorkerPool.kt and new admission test |
-| 10 | Independently review fixes, regressions and integration conflicts | RUNNING, read-only review of committed support changes |
+| 09 | Check immutable tool scope at worker admission/adapters | COMPLETE: six regressions reproduced; coordinator repair verified with 37 selected Android JVM tests |
+| 10 | Independently review fixes, regressions and integration conflicts | COMPLETE: routine, probe and worker reviews; original probe finding closed by SHA guard |
 
-Ten separate agents have actually been dispatched at this checkpoint. Reports
-and raw evidence are in `docs/evidence/ten-bot-support-20261104/`. Queued roles are
-not counted as agents that already ran.
+Ten separate agents actually worked on these assignments. Reports and raw
+evidence are in `docs/evidence/ten-bot-support-20261104/`. Completed agent work
+does not turn a blocked fixture or failed asset contract into a passing test.
+The agents were dispatched in waves; this is not a persistent Android service.
 
 ## Verified support work
 
@@ -71,6 +73,10 @@ not counted as agents that already ran.
   source-boundary regression passes; replay on the original reviewed bytes
   confirms the original finding. The owner has since changed the runner, so
   those earlier findings must not automatically be applied to the new source.
+  A later static follow-up saw added continuation/final validation, but direct
+  final-path writes and the ladder existing-file shortcut remained in that
+  exact snapshot. No new model or behavioral test was run on the changed owner
+  source. `BOT05-WEIGHTS.md` records its hash and this partial correction.
 - Bot 06 independently reviewed the brain team's committed context/snapshot
   corrections; that review's inherited test counts are excluded from our totals.
 - Bot 07 passed the existing validator's 8 unit tests. The real unchanged GLB
@@ -81,6 +87,49 @@ not counted as agents that already ran.
   failures or skips. They exercise local synthetic fixtures and source
   contracts; their titles do not establish Android parser, signer, publisher or
   Fold7 execution. No production file or update channel was changed.
+- Bot 09 wrote six regression cases for changing caller-owned tool sets after
+  queue admission or direct adapter creation. All six failed on the old source.
+  The coordinator added unmodifiable snapshots at those three boundaries.
+  After shared-lock timeouts, the final offline Android run actually compiled
+  production/test Kotlin and passed all 37 selected cases, with zero failures,
+  errors or skips. The 37 include the earlier 31; repeated RED runs are not
+  additional coverage. Raw XML and source-hash checks accompany the result.
+- Bot 10 reviewed the routine patch, the diagnostic source guard and the exact
+  worker patch/test hashes independently. It found an important issue in the
+  original unbound diagnostic and confirmed closure by the SHA guard. No other
+  demonstrated critical, important or minor issue remained in those inspected
+  scopes. Code review and the coordinator's execution results are recorded
+  separately in `BOT10-INDEPENDENT-REVIEW.md`.
+
+## Source and evidence checkpoint
+
+The production changes and completed reports were published with identical
+local/remote Git tree `86bcedb08da338178e2fdb5735829fb3600aac9b`:
+
+- Local commit: `43f0a7ee10f70a1772a065e280e90b586e0b8972`.
+- GitHub commit: `c50402f6ea66694b0cc1d4367935da3a43d61763`.
+- Earlier routine repair: GitHub `07dca053eef5b20381469a55d107862c65767658`.
+- Diagnostic SHA guard: GitHub `186183389913b9d4388c2b03a7f1bcb7d101dbee`.
+
+The final 37-test run's before/after source hashes match the committed worker
+and routine files. The connector-created commits have different identifiers
+from local commits, so tree identity, not equal commit strings, is the content
+check. This final ledger update changes documentation only.
+
+| Verification | Actual result | Boundary |
+| --- | --- | --- |
+| Worker/update Node baseline | 45 PASS | Local synthetic process and contract tests |
+| Signed update policy | 8 PASS | Pure Kotlin/JUnit |
+| Additional update/release suites | 18 PASS | Local fixtures/source contracts |
+| Final routine/chief/worker Android JVM run | 37 PASS | Includes earlier 31 and all 9 new Android regressions |
+| Probe source boundary | 1 PASS | Unknown module rejected before execution |
+| Avatar validator self-tests | 8 PASS | Does not validate the real asset |
+| Real avatar GLB contract | FAIL | Eye/jaw world-pivot contract; handed to #491 |
+| Extra service fixtures | BLOCKED, 13 setup failures | Missing reviewed classpath/runtime/isolation |
+| Old weight runner synthetic resume probe | Defect reproduced | Exact old hash; newer source only statically reviewed |
+
+No combined unique-test total is claimed. Full repository suite, APK, physical
+Fold7, signing and native model acceptance remain outside this checkpoint.
 
 ## Execution and evidence rules
 
