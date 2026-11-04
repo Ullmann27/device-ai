@@ -1,0 +1,46 @@
+{
+  "sourceCurrent": "ce1a4be00ae551df8e7a6d2799e161b30d961034",
+  "sourceSdkBase": "e510ce5fb415ed07577c79922ca26e715148e92f",
+  "unchangedSdkRuntimeSourcesExcept": [
+    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt"
+  ],
+  "currentSourceManifestSha256": "70d363c048d43af55c2c8c44216aa249b63fe060f68172a17221a3e6bd976cf3",
+  "sdkReceiptSha256": "f713874f9e2b9e02b1fe77ea20d8bd3f39e72024b8e9afad7b28d25f9b6ccc37",
+  "sdkSourceManifestSha256": "b688f721dbdeb3dbc9c64c31e59c708c49e287aac243a5b1deba015d5fd331cb",
+  "classPathOrder": [
+    {
+      "directory": "/workspace/scratch/624aeb26d481/qa-r4/framing-green/classes",
+      "classCount": 373,
+      "inventorySha256": "e900cb86d01ecf622c19d460a95c901d07ce1eacda2a4737728ecad2242d1d8f"
+    },
+    {
+      "directory": "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug",
+      "classCount": 2292,
+      "inventorySha256": "dcbe7fed246b62602361f121e35f371277f8dc05a6520438f61defb116a71722"
+    },
+    {
+      "directory": "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debugUnitTest",
+      "classCount": 1061,
+      "inventorySha256": "eb8068bdaa9786331deb87030153b99bfef335c503fde0ae919b7e2e2ec2b429"
+    }
+  ],
+  "testClasses": [
+    "at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest",
+    "at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest",
+    "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+    "at.heinz.deviceai.cognitive.MemoryRecallObservationTest"
+  ],
+  "command": [
+    "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+    "-Xmx512m",
+    "-XX:ActiveProcessorCount=2",
+    "-cp",
+    "/workspace/scratch/624aeb26d481/qa-r4/framing-green/classes:/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug:/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debugUnitTest:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+    "org.junit.runner.JUnitCore",
+    "at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest",
+    "at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest",
+    "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+    "at.heinz.deviceai.cognitive.MemoryRecallObservationTest"
+  ],
+  "scope": "Host composition: fresh exact-source compiler classes first; unchanged actual SDK-compiled hub/mapper/renderer and tests second. Manually driven scheduling; not Android framework, Activity or GPU acceptance."
+}

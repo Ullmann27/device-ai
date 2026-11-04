@@ -108,6 +108,42 @@
         "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "junit.txt": "87365257fa54ee12d6197ad839400027a614519d51758a278f325cd0b7c1d282"
       }
+    },
+    {
+      "run": "framing-red",
+      "sourceLocal": "ac0df517f1c463774cabc2465c5a75b429936d66",
+      "sourcePublic": "cca78329dc2ed3e97451f09c7507870f5b907a67",
+      "tree": "c20b8f2a51654480230a5e4021df40591aa966e3",
+      "tests": 8,
+      "failures": 7,
+      "passed": 1,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 1,
+      "files": {
+        "manifest.json": "a7e147dfadb8d977ef1e084a81e9fe0db115b34a55fb61fb2bd13a769fe47264",
+        "result.json": "fbafc20cea72aa1e63187720b25e501408dff7b7e7c0cc4133a23dfdd9b2baa0",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "fa76ccb98909fa4bb38c48fce3089c5c6afff1feff4a8906a7d2493b06ffdd9c"
+      }
+    },
+    {
+      "run": "framing-green",
+      "sourceLocal": "ce1a4be00ae551df8e7a6d2799e161b30d961034",
+      "sourcePublic": "a717658b91c2f9703d8b6ab36bcdc7eb914cc589",
+      "tree": "6facb6326bc37efc2b40bcec4502105ffd62268a",
+      "tests": 67,
+      "failures": 0,
+      "passed": 67,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 0,
+      "files": {
+        "manifest.json": "70d363c048d43af55c2c8c44216aa249b63fe060f68172a17221a3e6bd976cf3",
+        "result.json": "333ccec9e61747c251a07c8f6ad4b9c28505a42beaa970c41a20164ceb6238fd",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "8e09a4c86e0057fff5f15ba9bdd9e90d727be6e9278e34c34b2e010b24a6dd08"
+      }
     }
   ],
   "scope": "Actual-source host Kotlin/JUnit; not Android framework or AndroidKeyStore. Groups overlap; do not add counts.",
