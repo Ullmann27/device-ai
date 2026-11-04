@@ -1,0 +1,85 @@
+{
+  "observedAt": "2026-11-04T20:44Z",
+  "sources": [
+    {
+      "number": 492,
+      "head": "0af14f75b04e68ba849a92316b8be51041e8738b",
+      "updatedAt": "2026-11-04T20:24:23Z",
+      "state": "open",
+      "draft": true,
+      "title": "research: integrate fail-closed training gates and audit 6\u201310M LM1 profiles"
+    },
+    {
+      "number": 493,
+      "head": "ee2fa0ee5567e5d34bcdfe229425a71df9818183",
+      "updatedAt": "2026-11-04T20:12:05Z",
+      "state": "open",
+      "draft": true,
+      "title": "[DRAFT] Continuum: 20 callable personalities and connected bot assignments"
+    },
+    {
+      "number": 494,
+      "head": "93f1f1130a3963062ad4c43c4a1edfe0cf7e2759",
+      "updatedAt": "2026-11-04T20:38:37Z",
+      "state": "open",
+      "draft": true,
+      "title": "[Draft] Memory integrity, measured retrieval and actual recall-to-avatar bridge"
+    },
+    {
+      "number": 495,
+      "head": "7b6971af997e02d3577d361a4adfa152aaba1813",
+      "updatedAt": "2026-11-04T20:12:06Z",
+      "state": "open",
+      "draft": true,
+      "title": "[Draft] Connect avatar speech and motion with three helpers: 168 tests"
+    },
+    {
+      "number": 496,
+      "head": "3968d785df607f8d461162c50bb3d710a925503e",
+      "updatedAt": "2026-11-04T11:34:15Z",
+      "state": "open",
+      "draft": true,
+      "title": "[DRAFT] Ten-bot support: immutable routine/worker scopes and verified handoff"
+    },
+    {
+      "number": 497,
+      "head": "06f071e5850dd405f374bbb58d826f64740d83af",
+      "updatedAt": "2026-11-04T11:11:21Z",
+      "state": "open",
+      "draft": true,
+      "title": "[DRAFT] G1-REPAIR-WEIGHT-001: Pflichtgate vor Trainingsfortsetzung reparieren"
+    },
+    {
+      "number": 505,
+      "head": "e83f6ac18243b42aadbe8da88df074c7ea1811ef",
+      "updatedAt": "2026-11-04T20:21:40Z",
+      "state": "open",
+      "draft": true,
+      "title": "[Draft] Fix calendar boundaries, completion delivery and QA preflight"
+    },
+    {
+      "number": 514,
+      "head": "bfed526727041b2581f22b5d613dcb5cd8c188b3",
+      "updatedAt": "2026-11-04T19:44:36Z",
+      "state": "open",
+      "draft": true,
+      "title": "[DRAFT] LM1 16M round 2: native update observation, gradient audit and registration erratum"
+    },
+    {
+      "number": 515,
+      "head": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
+      "updatedAt": "2026-11-04T20:32:55Z",
+      "state": "open",
+      "draft": true,
+      "title": "feat(continuum): connect branch bots, Termux diagnosis and APK QA gates"
+    },
+    {
+      "number": 518,
+      "head": "4167961234452c8845416ec99b241bd501b7f038",
+      "updatedAt": "2026-11-04T19:41:23Z",
+      "state": "open",
+      "draft": true,
+      "title": "WIP: Avatar nach neuer Vorlage kostenlos lokal rendern und anschlie\u00dfen"
+    }
+  ]
+}

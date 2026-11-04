@@ -1,0 +1,172 @@
+{
+  "task_id": "C1-PATH-010",
+  "status": "SOURCE_TRACE_ONLY",
+  "source": {
+    "repository": "Ullmann27/device-ai",
+    "checkout": "/workspace/scratch/174c84456ee3/continuum-c1",
+    "inspected_head": "ced43fbe26cfc97c5c8fbbc3f429cd0845047c4f",
+    "inspected_app_tree": "91b313577cc3bf15ec73423e15cbadafb3c0acd6",
+    "app_working_tree_at_last_inspection": "clean",
+    "later_head_reported_by_c1": "165fc9f58ae9e36295690df60145174fd5dc58e7",
+    "later_head_scope_reported_by_c1": "Small bot null-profile branch and tests",
+    "later_head_reviewed_by_this_audit": false
+  },
+  "execution": {
+    "tests_run": false,
+    "builds_run": false,
+    "repository_files_modified": false,
+    "old_test_passes_inherited": false
+  },
+  "main_path": [
+    {
+      "from": "AgentActivity.sendCurrentInput()",
+      "to": "runLocal(), directly or via runContinuumDialogue()",
+      "constraint": "Deterministic status/bootstrap/fact replies may end before the model path."
+    },
+    {
+      "from": "runLocal()",
+      "to": "BoundedAgentOrchestrator + LocalFollowUpTaskFrame",
+      "constraint": "Requires a loaded local model in READY state; binds cancellation, session and model identity."
+    },
+    {
+      "from": "AgentModel lambda",
+      "to": "contextCompiler.compile(AiContextInput(...))",
+      "constraint": "Normal owner path uses memoryStore.all() + ownerFactMemories(); private owner context is not imported into assigned bot tasks. Compilation is conditional on continuumState."
+    },
+    {
+      "from": "AiContextCompiler.compile()",
+      "to": "HybridMemoryRetriever.unambiguousRecords() and retrieve()",
+      "constraint": "Validation state, privacy and whole-group context budgets remain enforced; memories are untrusted evidence."
+    },
+    {
+      "from": "generateLocal()",
+      "to": "LocalToolContinuation.submit() -> localRuntime.stream() or respondToTools()",
+      "constraint": "A source call path is not evidence of an actual model execution."
+    },
+    {
+      "from": "Structured model tool proposal",
+      "to": "BoundedAgentOrchestrator -> createToolGate() -> ToolGate.execute() -> ToolRunner.execute()",
+      "constraint": "Validation, receipts/replay, risk confirmation, call budget and deadline precede actual execution. Observations feed the bounded local continuation."
+    },
+    {
+      "from": "orchestrator.run(agentTask)",
+      "to": "current result delivery -> addAssistantMessage(visibleAnswer) -> session/context updates",
+      "constraint": "Cancelled/stale delivery is gated; evaluationConfirmsOutcome=false."
+    },
+    {
+      "from": "setBusy()/refreshHologramState()",
+      "to": "hologramView.setState(...) + avatarDirector.onRuntime(...)",
+      "constraint": "Runtime presentation must not turn a model answer into a verified external outcome."
+    }
+  ],
+  "recall_path": [
+    "AgentActivity lazy contextCompiler.withRecallObserver(ContinuumMemoryRecallPublisher(filesDir))",
+    "AiContextCompiler.compile(): only included memory IDs/scores/ranks; omitted group produces zero hits; failed compilation does not call observer",
+    "ContinuumMemoryRecallPublisher.invoke() -> ContinuumMemoryEventHub.forApp(filesDir).emit(RecallHits)",
+    "AgentActivity.subscribeMemoryEvents() -> MemoryEventSources.forApp(filesDir) -> ContinuumMemoryEventSource.subscribe(mapper)",
+    "MemoryEventMapper.recallHits() -> coalesced Handler(mainLooper) flush, default 100 ms -> cockpitBus.emit(RecallHits with MEMORY_TURN)",
+    "CockpitAnimationPresenter.present() -> attached home.avatarRenderer.onAnimationEvent(event)",
+    "ContinuumHomeView.applyAvatarSlot() -> docked JarvisHoloAvatar(home.hologram)",
+    "JarvisHoloAvatar.onAnimationEvent() -> JarvisSequenceView.render()/apply() -> BrainOrbAnimationRenderer.render() -> JarvisSequenceEffects.recallLight()",
+    "JarvisHoloAvatar.attach() -> hologram.setCockpitSequence(seq)",
+    "ContinuumHologramView.onDraw() -> effects.recallBrightness(now) -> ContinuumBrainOrbRenderer.Signals(recall=...)"
+  ],
+  "recall_boundaries": [
+    "The active path uses MemoryEventSources.forApp(filesDir); the null legacy production field is not used.",
+    "Presentation metadata carries salted query hash, IDs, scores and ranks, not raw query or memory text.",
+    "Recall is a successful context-selection observation, not proof of model submission, answer correctness or confirmed storage.",
+    "MEMORY_TURN is handled before normal conversation-turn filtering.",
+    "Zero hits clear prior recall light; teardown detaches mapper and closes subscriptions."
+  ],
+  "avatar_binding": {
+    "verified_initial_constructor": "AvatarDirector(JarvisAvatarSlot.fanOut { Handler(mainLooper).post(it) })",
+    "verified_later_call": "AgentActivity.buildConversationPane(): avatarDirector.attach(liveHologram)",
+    "correction": "C1 has not decided to replace the initial fanOut. The earlier statement of replacement intent was incorrect and is withdrawn.",
+    "unresolved": "Permanent fanOut beyond the later attach is not established by this audit.",
+    "speech_adapter": "Existing TTS callbacks feed speechStarted(), wordRange(..., audioFrame=frame), and stop/end events; this is separate from recall lighting."
+  },
+  "required_existing_test_classes": {
+    "context": [
+      "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+      "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "at.heinz.deviceai.cognitive.MemoryContextBoundaryTest",
+      "at.heinz.deviceai.cognitive.MemoryRecallObservationTest"
+    ],
+    "recall": [
+      "at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest",
+      "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+      "at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest",
+      "at.heinz.deviceai.MemoryRecallActivityUiTest",
+      "at.heinz.deviceai.ui.JarvisMemorySignalWiringUiTest",
+      "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest"
+    ],
+    "live_avatar": [
+      "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest",
+      "at.heinz.deviceai.avatar.JarvisHoloAvatarUiTest",
+      "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "at.heinz.deviceai.AvatarRangeFrameConnectionUiTest",
+      "at.heinz.deviceai.AvatarSpeechReattachmentUiTest"
+    ],
+    "model_tool_boundaries": [
+      "at.heinz.deviceai.localmodel.LocalToolContinuationTest",
+      "at.heinz.deviceai.cognitive.BoundedAgentTest",
+      "at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest",
+      "at.heinz.deviceai.AgentToolLayerTest",
+      "at.heinz.deviceai.ToolReplayGuardTest",
+      "at.heinz.deviceai.ToolDurableOutcomeTest"
+    ]
+  },
+  "test_scope_limits": [
+    "CompiledMemoryOrbIntegrationTest uses real compiler/hub/mapper/effects with a manually drained scheduler.",
+    "MemoryRecallActivityUiTest uses Activity construction/getter/subscription/Android Handler and a directly subscribed effects renderer; it does not execute full onCreate or a model.",
+    "The listed classes are required existing coverage, not test results.",
+    "No one listed test proves a complete real user-input -> model/tool -> delivered answer -> physical visible-device chain."
+  ],
+  "open_runtime_proofs": [
+    "Actual local model execution, quality, memory use and latency",
+    "Physical Fold7, native Filament, real TTS and end-to-end pixels",
+    "Complete integration gates on the final C1 source; no old PASS transfers",
+    "Initial sink/attach behavior beyond the calls directly established here"
+  ],
+  "source_paths": [
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt",
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+    "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumMemoryRecallPublisher.kt",
+    "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalToolContinuation.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryEvents.kt",
+    "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+    "app/src/main/java/at/heinz/deviceai/cockpit/ContinuumMemoryEventSource.kt",
+    "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitAnimationPresenter.kt",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+    "app/src/main/java/at/heinz/deviceai/avatar/JarvisHoloAvatar.kt",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+    "app/src/main/java/at/heinz/deviceai/ui/BrainOrbAnimationRenderer.kt",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer.kt"
+  ],
+  "artifact_created_at_utc": "2026-11-04T20:37:58.652229+00:00",
+  "absolute_source_paths": [
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/cognitive/ContinuumMemoryRecallPublisher.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/localmodel/LocalToolContinuation.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryEvents.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/cockpit/ContinuumMemoryEventSource.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/ui/CockpitAnimationPresenter.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/avatar/JarvisHoloAvatar.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/ui/BrainOrbAnimationRenderer.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+    "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer.kt"
+  ]
+}

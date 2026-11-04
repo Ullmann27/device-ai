@@ -153,3 +153,25 @@ Isolierter tatsächlicher Kotlin-Methodentest mit echtem Router und Profil-Metad
 Dieser Methodentest enthält explizite UI-/Queue-/Aufrufziel-Doubles und unbenutzte Conversation-Speicher-Compilegrenzen. Er ist keine reale Android-, Thread-, Conversation-Speicher-, Modell- oder Geräteabnahme. Die sechs neuen Activity-/Robolectric-Methoden sind bis zum nächsten Gradle-Lauf **NOT_COMPILED/NOT_RUN**. Vollständige ursprüngliche und neue Quellen, Befehle, Rohlogs und Hashmanifest: `docs/evidence/c1-integration-20261104/routing006/`.
 
 Rücknahme: nur den kleinen null-Profil-Zweig und die beiden Testergänzungen revertieren; keine neuere Activity durch eine alte Gesamtdatei ersetzen. Nächster Schritt: gepinnten sauberen Gesamtstand zunächst mit tatsächlichen Router-/Activity-Tests samt Compilation/NewApi prüfen; danach volle Node-/Backend-/Android-Gates. Keine APK aus einem unvollständig abgenommenen Stand.
+
+## C1-ROUTING-006-ANDROID — tatsächlicher Activity-Fokus abgeschlossen
+
+Geprüfte Quelle: lokal `165fc9f58ae9e36295690df60145174fd5dc58e7`, remote `401a5d01a7b2e0e0f8c50531daf5fa24814fbbda`, identischer vollständiger Baum `4b3e47f30517cf952ab50c0a52b27bb96d281504`. Der saubere Stand blieb während des Laufs unverändert.
+
+Der erste Aufruf mit CLI-`--tests` scheiterte vor Tests an der vorhandenen Aufgaben-Allowlist (Exit 1). Diese Schutzprüfung wurde nicht verändert. Der reguläre Gradle-Testfilter wird über ein gesichertes Init-Skript gesetzt; die angeforderten Aufgaben bleiben ausschließlich Compile/Test/Lint. Versuch 02 startete wegen belegter gemeinsamer Locks keinen Build (äußerer Exit 75). Erst nach neuer Freigabe-Beobachtung lief Versuch 03 unter beiden vorhandenen Locks. Alle Versuche bleiben mit tatsächlichen Befehlen und Ergebnissen erhalten.
+
+Tatsächlicher erfolgreicher Befehl, über `qa/run_c1_gate.py android-routing-03` gestartet:
+
+```bash
+/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle --offline --no-daemon --rerun-tasks --max-workers=2 --console=plain '-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=41 -PcontinuumAuditProgressFile=/workspace/scratch/174c84456ee3/qa/android-routing-03-active-test.json -PcontinuumAuditTestClasses=at.heinz.deviceai.chief.ChiefBotAddressRouterTest,at.heinz.deviceai.ContinuumBotTaskRoutingUiTest -I /workspace/scratch/174c84456ee3/qa/observe-tests.init.gradle :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
+```
+
+Ergebnis vom 04.11.2026, 20:46:04 UTC: **Exit 0, 29 PASS / 0 FAIL / 0 SKIP**, davon 18 `ChiefBotAddressRouterTest` und 11 `ContinuumBotTaskRoutingUiTest`. Vollständige Appquelle und aktivierte UI-Testquellen kompiliert. Konfigurierter **NewApi-Lint: 0 Issues**. Frische vollständige XML-Testfälle, Zeitgrenzen und Lint-XML durch C1 geprüft. Der vorherige isolierte 27-Test-Lauf überlappt und wird nicht addiert.
+
+Archiv und eigenständiges Manifest: `docs/evidence/c1-integration-20261104/android-routing-165fc9/`, Archiv SHA256 `2815f76c19c903cf2cabf73ef69ac2eae66e70f5453fa45b4d59eb8a887976d6`. Diese Sicherung ändert ausschließlich Dokumentation. Sie behauptet keinen erneuten Lauf auf einem späteren Commit.
+
+Grenzen: Zwei gezielt ausgeführte Klassen ersetzen keine vollständige Unit-/UI-Suite. Die Activity-Fixture ruft echte Intake-Methoden und Android-Queues auf, nicht den vollständigen onCreate-/geladenen Modellpfad. QA-Code41 ist ein historischer ausdrücklicher Compile-/Test-/Lint-Parameter; kein aktueller Updatecode wurde gewählt, keine APK erzeugt.
+
+Zusätzlich gesichert: C1-PATH-010 mit separat gebundener Quellkette und ausdrücklich korrigierter Fan-out-Aussage; C1-GATES-012 mit vollständigem Pflichtumfang; frischer Fachzweig-Abgleich. Der neue #517-Fokus bei f17ee62 ist extern 53/53 grün, sein vollständiger Androidlauf endet jedoch mit Exit143 an einem anderen ReferenceCockpit-Testtimeout. C1 übernimmt daraus nur das unabhängig geprüfte Vier-Dateien-Paket und führt anschließend einen eigenen gezielten Lauf aus. Tagesgrenzen aus #505 bleiben ein eigener nachfolgender Drei-Dateien-Slice.
+
+Rücknahme: reine neue Beleg-/Boardänderungen können separat revertiert werden; der geprüfte Quellcommit401a5d bleibt erhalten. Nächster Schritt: C1-AVATAR-009 seriell einbauen, tatsächliche drei Avatar-UI-Klassen auf dem neuen C1-Stand prüfen. Externer C2 bleibt PENDING_ACK.
