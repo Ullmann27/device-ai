@@ -87,11 +87,15 @@ class JarvisShellLayoutTest {
     }
 
     @Test fun jarvisColoursFollowVideoSpec() {
-        assertEquals(Argb.rgb(0, 255, 255), JarvisDesign.Colors.cyan)
-        assertEquals(Argb.rgb(0x8A, 0x2B, 0xE2), JarvisDesign.Colors.violet)
-        assertEquals(Argb.rgb(5, 8, 20), JarvisDesign.Colors.background)
-        assertEquals(Argb.of(128, 10, 17, 40), JarvisDesign.Colors.surface)
-        assertEquals(Argb.of(102, 0, 255, 255), JarvisDesign.Colors.rim)
-        assertEquals(Argb.rgb(10, 17, 40), JarvisDesign.Colors.backgroundBottom)
+        assertEquals(Argb.rgb(0x2F, 0xF9, 0xFE), JarvisDesign.Colors.cyan)
+        assertEquals(Argb.rgb(0x91, 0x4C, 0xEF), JarvisDesign.Colors.violet)
+        assertEquals(Argb.rgb(0x00, 0x0C, 0x16), JarvisDesign.Colors.background)
+        assertEquals(Argb.of(204, 0x01, 0x1D, 0x2F), JarvisDesign.Colors.surface)
+        assertEquals(Argb.rgb(0x17, 0x68, 0x7F), JarvisDesign.Colors.rim)
+        assertEquals(Argb.rgb(0x01, 0x0C, 0x17), JarvisDesign.Colors.backgroundBottom)
+        // ref5 component styles (px x 0.642 = dp)
+        assertEquals(51f, JarvisDesign.Styles.tile.height, 0f); assertEquals(8f, JarvisDesign.Styles.tile.radius, 0f)
+        assertEquals(32f, JarvisDesign.Styles.button.height, 0f); assertEquals(22f, JarvisDesign.Styles.pill.height, 0f)
+        assertEquals(11f, JarvisDesign.Type.tileLabel.size, 0f); assertEquals(9f, JarvisDesign.Type.subtitle.size, 0f)
     }
 }
