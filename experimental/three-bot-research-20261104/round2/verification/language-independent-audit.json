@@ -1,0 +1,80 @@
+{
+  "checkedUtc": "2026-11-04T19:28:56.243432+00:00",
+  "method": "independent metadata and raw-score audit; no training or model inference",
+  "modelCount": 5,
+  "evaluationCount": 10,
+  "caseCount": 720,
+  "decisionCount": 8,
+  "mixedDecisionsPerScore": 2,
+  "registrationCommit": "93b43fa2a80109c64c30335149227ccfcebe0f0a",
+  "completedSha256": "76b86e965d4e188a229434fcbb1d5fc4a56728be77c8cbbc7f4e8e493d4487be",
+  "analysisSha256": "17e58f4b0861049b743aa960e3560afe5d002b0ff2e0a552c768eebadc60d89d",
+  "testResults": {
+    "baseline": {
+      "n": 96,
+      "freeCorrect": 0,
+      "choiceCorrect": 24,
+      "criticalN": 32,
+      "criticalFree": 0,
+      "criticalChoice": 8,
+      "freeOutputs": {
+        "** Dieser Quellen.\n-": 96
+      },
+      "capacityPass": true
+    },
+    "mixed-202611041": {
+      "n": 96,
+      "freeCorrect": 24,
+      "choiceCorrect": 24,
+      "criticalN": 32,
+      "criticalFree": 8,
+      "criticalChoice": 8,
+      "freeOutputs": {
+        "B": 96
+      },
+      "capacityPass": false
+    },
+    "mixed-202611042": {
+      "n": 96,
+      "freeCorrect": 27,
+      "choiceCorrect": 27,
+      "criticalN": 32,
+      "criticalFree": 8,
+      "criticalChoice": 8,
+      "freeOutputs": {
+        "C": 59,
+        "D": 37
+      },
+      "capacityPass": false
+    },
+    "curriculum-202611041": {
+      "n": 96,
+      "freeCorrect": 24,
+      "choiceCorrect": 24,
+      "criticalN": 32,
+      "criticalFree": 8,
+      "criticalChoice": 8,
+      "freeOutputs": {
+        "B": 96
+      },
+      "capacityPass": true
+    },
+    "curriculum-202611042": {
+      "n": 96,
+      "freeCorrect": 24,
+      "choiceCorrect": 24,
+      "criticalN": 32,
+      "criticalFree": 8,
+      "criticalChoice": 8,
+      "freeOutputs": {
+        "C": 96
+      },
+      "capacityPass": false
+    }
+  },
+  "recomputedPrimaryMixedBothSeedsPass": {
+    "freeCorrect": false,
+    "choiceCorrect": false
+  },
+  "passed": true
+}

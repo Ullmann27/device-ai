@@ -1,0 +1,10 @@
+{
+  "method": "Local index tree before adding round2 equals independently verified published round1 tree; all 74 manifest records rehashed",
+  "publishedRound1Commit": "b90285bdb3d7e5f5dd4dc723d641182d25442ac5",
+  "publishedRound1Tree": "efccd142598e7927cbd676693f56a212009eb355",
+  "indexTreeBeforeRound2": "efccd142598e7927cbd676693f56a212009eb355",
+  "manifestRecordsChecked": 74,
+  "mismatches": [],
+  "round1FilesIncludingManifest": 75,
+  "passed": true
+}

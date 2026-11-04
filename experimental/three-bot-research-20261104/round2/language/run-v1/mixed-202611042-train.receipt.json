@@ -1,0 +1,28 @@
+{
+  "label": "mixed-202611042-train",
+  "argv": [
+    "java",
+    "-Xmx1024m",
+    "-XX:ActiveProcessorCount=2",
+    "-cp",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/build/state-study.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+    "at.heinz.deviceai.learning.lm.StateLearningStudy",
+    "train",
+    "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-baseline.lm1",
+    "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/data/train.tsv",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/data/schedule-202611042-mixed.txt",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/run-v1/mixed-202611042.lm1",
+    "mixed",
+    "202611042"
+  ],
+  "wallSeconds": 11.650348260998726,
+  "exitCode": 0,
+  "timedOut": false,
+  "timeoutSeconds": 270,
+  "stdout": "mixed-202611042-train.stdout",
+  "stdoutSha256": "a6576f83f3c07b8e59981bed79b25f4a4e1337d6815b380b66905bcb056dd91f",
+  "stderr": "mixed-202611042-train.stderr",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "completedUtc": "2026-11-04T19:25:34.707471+00:00"
+}

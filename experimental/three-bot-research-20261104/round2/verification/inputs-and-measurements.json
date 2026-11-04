@@ -1,0 +1,117 @@
+{
+  "checkedUtc": "2026-11-04T19:26:28.123749+00:00",
+  "checker": "root-independent-read-only",
+  "newModelExecution": false,
+  "newBenchmarkExecution": false,
+  "androidExecution": false,
+  "autonomyDeliverableHashesChecked": 25,
+  "avatarArtifactHashesChecked": 29,
+  "avatarSourceBindingsChecked": 8,
+  "avatarVariants": [
+    {
+      "name": "v1_soft_flow",
+      "sha256": "ecead099e3e8312e8211dbfd48228a0af258836476691ce3302a58cf0dc0d6e3",
+      "originalBinPrefixBytes": 10130320,
+      "unchangedStructuralKeys": [
+        "accessors",
+        "meshes",
+        "nodes",
+        "skins",
+        "scenes",
+        "scene",
+        "animations"
+      ],
+      "morphCountsPerMesh": [
+        0,
+        0,
+        21,
+        0,
+        0,
+        0,
+        21,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "v2_fine_flow",
+      "sha256": "60e4107e4577070ef123652501956e6cd41f678c8cd4b65f405ab19d73a07a14",
+      "originalBinPrefixBytes": 10130320,
+      "unchangedStructuralKeys": [
+        "accessors",
+        "meshes",
+        "nodes",
+        "skins",
+        "scenes",
+        "scene",
+        "animations"
+      ],
+      "morphCountsPerMesh": [
+        0,
+        0,
+        21,
+        0,
+        0,
+        0,
+        21,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "autonomyRawMeasurementSha256": "3ee5cbc74df106400dbbc299bf550f0769dfb2d26de92f40cbf47918fa6cd2c9",
+  "rawMediansChecked": 13,
+  "pairedRecallChecks": [
+    {
+      "records": 32,
+      "pairs": 20,
+      "identicalOutputs": true,
+      "limit3MedianMs": 18.01002900000003,
+      "limit2MedianMs": 6.574403499999335,
+      "ratioOfMedians": 2.7394164352707975
+    },
+    {
+      "records": 128,
+      "pairs": 20,
+      "identicalOutputs": true,
+      "limit3MedianMs": 65.95890449999933,
+      "limit2MedianMs": 15.343859000000066,
+      "ratioOfMedians": 4.298716802598293
+    }
+  ],
+  "languageRegisteredFilesChecked": 19,
+  "languageRegistrationSha256": "b0a70dec25b1b3c8b3aef567f2e03ac4667b886555e6bb3fff7b8fa8426eedcc",
+  "passed": true
+}

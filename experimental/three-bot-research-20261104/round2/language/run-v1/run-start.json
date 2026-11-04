@@ -1,0 +1,11 @@
+{
+  "registrationCommit": "93b43fa2a80109c64c30335149227ccfcebe0f0a",
+  "registrationSha256": "b0a70dec25b1b3c8b3aef567f2e03ac4667b886555e6bb3fff7b8fa8426eedcc",
+  "startedUtc": "2026-11-04T19:24:56.303934+00:00",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "java": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)\n",
+  "physicalReportedCpus": 9,
+  "effectiveJavaCpus": 2,
+  "hostOnly": true
+}

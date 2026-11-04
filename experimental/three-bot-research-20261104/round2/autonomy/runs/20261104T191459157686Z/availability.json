@@ -1,0 +1,51 @@
+{
+  "checked_at": "2026-11-04T19:14:59.323820+00:00",
+  "executables_in_path": {
+    "node": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "python3": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "java": "/usr/bin/java",
+    "llama-cli": null,
+    "llama-completion": null,
+    "llama-server": null,
+    "ollama": null,
+    "litert-lm": null,
+    "litertlm": null,
+    "adb": null,
+    "bwrap": "/usr/bin/bwrap"
+  },
+  "configuration_variable_names_only": [],
+  "credential_values_read_or_published": false,
+  "historical_S01_replayed_or_unblocked": false,
+  "network_probes": 0,
+  "downloads": 0,
+  "owner_task_submissions": 0,
+  "model_invocations": 0,
+  "scope_limit": "PATH, current process environment and named model/runtime files beneath /workspace/scratch; not an exhaustive machine-wide inventory",
+  "named_model_or_runtime_paths": [],
+  "file_inventory_exit_code": 1,
+  "process_names_only": [
+    "COMMAND",
+    "codex",
+    "python",
+    "ps"
+  ],
+  "reported_pr510_sha": "2a364005b52e3240eb799f86aea31be90b390b10",
+  "pr510_object_available_in_supplied_repository": false,
+  "reported_pr510_status": "LIVE_ACTIVATION_BLOCKED (parent handoff; not a new live probe)",
+  "production_preflight": {
+    "status": "BLOCKED_LOCAL_MODEL_UNAVAILABLE",
+    "error": "BLOCKED_LOCAL_MODEL_UNAVAILABLE",
+    "missing_variable_names": [
+      "CONTINUUM_LOCAL_BRAIN_MODEL_PATH",
+      "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH",
+      "CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST",
+      "CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256",
+      "CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND"
+    ],
+    "model_invocations": 0,
+    "owner_task_submissions": 0,
+    "wall_ms": 0.6189999999999998,
+    "evidence_class": "READ_ONLY_PRODUCTION_PREREQUISITE_CHECK"
+  },
+  "wall_seconds": 1.3655648330004624
+}

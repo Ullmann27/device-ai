@@ -1,0 +1,22 @@
+{
+  "label": "mixed-202611042-capacity",
+  "argv": [
+    "java",
+    "-Xmx1024m",
+    "-XX:ActiveProcessorCount=2",
+    "-cp",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/build/state-study.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+    "at.heinz.deviceai.learning.lm.LmCapacityBenchmark",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/run-v1/mixed-202611042.lm1",
+    "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-tokenizer.lmbp"
+  ],
+  "wallSeconds": 0.5694124010005908,
+  "exitCode": 1,
+  "timedOut": false,
+  "timeoutSeconds": 60,
+  "stdout": "mixed-202611042-capacity.stdout",
+  "stdoutSha256": "39b096eae99c50592145be0c3fb7cff31b82c424c20a64307bd2f3c9f811d51f",
+  "stderr": "mixed-202611042-capacity.stderr",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "completedUtc": "2026-11-04T19:25:35.278350+00:00"
+}
