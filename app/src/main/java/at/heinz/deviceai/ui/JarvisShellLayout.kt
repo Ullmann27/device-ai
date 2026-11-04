@@ -100,11 +100,11 @@ object JarvisShellLayout {
      */
     fun forContent(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,
                    externalRailWidthDp: Float = 0f, externalBottomBarHeightDp: Float = 0f,
-                   includeBottomNavigation: Boolean = false): Shell {
+                   includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false): Shell {
         require(externalRailWidthDp.isFinite() && externalRailWidthDp >= 0f)
         require(externalBottomBarHeightDp.isFinite() && externalBottomBarHeightDp >= 0f && externalBottomBarHeightDp < heightDp)
         val viewport = heightDp - externalBottomBarHeightDp
-        val full = create(widthDp + externalRailWidthDp, viewport, fontScale, foldRail, includeBottomNavigation)
+        val full = create(widthDp + externalRailWidthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation)
         if (externalRailWidthDp == 0f) return full
         fun shift(box: Box): Box = Box(maxOf(0f, box.left - externalRailWidthDp), box.top,
             maxOf(0f, box.right - externalRailWidthDp), box.bottom)
@@ -120,11 +120,11 @@ object JarvisShellLayout {
     }
 
     fun create(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,
-               includeBottomNavigation: Boolean = false): Shell {
+               includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false): Shell {
         require(widthDp.isFinite() && widthDp >= 240f && heightDp.isFinite() && heightDp >= 160f)
         val profile = JarvisWindowProfile.resolve(widthDp, heightDp, fontScale, foldRail)
-        return if (profile.referenceComposition) reference(widthDp, heightDp, profile, foldRail)
-            else reflow(widthDp, heightDp, profile, foldRail, includeBottomNavigation)
+        return if (profile.referenceComposition && !compactPresentation) reference(widthDp, heightDp, profile, foldRail)
+            else reflow(widthDp, heightDp, profile, foldRail, includeBottomNavigation, compactPresentation)
     }
 
     private fun reference(w: Float, h: Float, profile: JarvisWindowProfile, rail: Rail): Shell {
@@ -149,7 +149,7 @@ object JarvisShellLayout {
 
     /** Readable vertical composition; there is no aspect-ratio container and nothing is squeezed to fit height. */
     private fun reflow(w: Float, viewport: Float, p: JarvisWindowProfile, rail: Rail,
-                       includeBottomNavigation: Boolean): Shell {
+                       includeBottomNavigation: Boolean, compactPresentation: Boolean): Shell {
         val b = linkedMapOf<Slot, Box>()
         val gap = 10f
         val margin = 12f
@@ -163,7 +163,18 @@ object JarvisShellLayout {
         var y = top + gap
         val head: Box
         val orb: Box
-        if (compact) {
+        if (compactPresentation) {
+            // Opt-in only: the same original orb uses a shorter live surface; later controls move upward.
+            // Keep disjoint head/orb regions for the existing renderer contract even while the head is disabled.
+            b[Slot.CONTINUUM_HEADER] = Box(left, y, right, y + 70f * font)
+            y = b.getValue(Slot.CONTINUUM_HEADER).bottom + gap
+            val split = left + room * .5f
+            head = Box(left, y, split - gap / 2f, y + 120f)
+            orb = Box(split + gap / 2f, y, right, y + 120f)
+            y = orb.bottom + gap
+            b[Slot.DIALOG] = Box(left, y, right, y + 128f * font)
+            y = b.getValue(Slot.DIALOG).bottom + gap
+        } else if (compact) {
             val headH = maxOf(300f, minOf(room * 1.08f, 440f))
             head = Box(left, y, right, y + headH)
             y = head.bottom + gap
@@ -212,7 +223,8 @@ object JarvisShellLayout {
         if (!compact) b[Slot.NAV_RAIL] = Box(margin, top + gap, p.railWidthDp, b.getValue(Slot.STATUS).top - gap)
         return Shell(formFactor(w, viewport), w, maxOf(viewport, y), b, p.tileColumns, rows,
             if (compact) null else rail,
-            if (compact) setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER)
+            if (compactPresentation) emptySet()
+                else if (compact) setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER)
                 else setOf(Slot.AVATAR to Slot.CONTINUUM_HEADER),
             viewportHeight = viewport, profile = p, tileGap = gap, headBounds = head, orbBounds = orb)
     }

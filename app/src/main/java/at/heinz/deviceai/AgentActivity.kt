@@ -712,6 +712,7 @@ class AgentActivity : Activity() {
     override fun onDestroy() {
         ownerRecoveryReview?.close()
         ownerRecoveryReview = null
+        hologramView?.onAppearanceChanged = null
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cockpitSubscriptions = emptyList()
@@ -1025,6 +1026,9 @@ class AgentActivity : Activity() {
         home.setJarvisShellStage(true)
         home.setForegroundActive(foregroundLearningActive)
         homeView = home
+        liveHologram.onAppearanceChanged = {
+            if (!isFinishing && !isDestroyed) homeView?.refreshPresentation()
+        }
         // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar(home.hologram))
         cockpitSubscriptions.forEach { runCatching { it.close() } }
@@ -2861,6 +2865,7 @@ class AgentActivity : Activity() {
         "Dienste, Hintergrundjobs und Freigaben. Internet und Cloud nur nach ausdrücklicher Freigabe.",
         learningIoStatus { systemCenterStatus() },
         listOf(
+            CenterAction("MEHR · ARBEITSBEREICHE") { showMoreWorkAreas() },
             CenterAction("SHIZUKU · VERBINDEN") { showShizukuConnectionDialog() },
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },

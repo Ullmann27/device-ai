@@ -49,6 +49,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         views.values.forEach { it.refresh() }
         views[slot]?.requestFocus()
     }
+    /** Reuse the existing owner preference after any entry into the same appearance chooser. */
+    fun refreshPresentation() {
+        compactPresentation = presentationPrefs.getBoolean("compact", false)
+        configure(configuredWidth, configuredWide, offset, configuredNavigation, configuredHeight, externalBottomBarHeightDp)
+        views.values.forEach { it.refresh() }
+        requestLayout()
+    }
+
     private val views = linkedMapOf<Slot, ElementView>()
     private val backgroundPainter = AndroidContinuumPainter(context.assets)
     private val sciFiEffects = ContinuumSciFiEffects(density)
@@ -332,6 +340,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         this.externalBottomBarHeightDp = externalBottomBarHeightDp
         configuredWide = wide
         configuredNavigation = includeNavigation
+        jarvisShell.compactPresentation = compactPresentation
         val spec = ContinuumReferenceLayout.create(windowWidthDp, if (wide) windowHeightDp else 0f,
             wide, textScale, compactPresentation)
         if (spec == layoutSpec && offset == railOffset && views.isNotEmpty() && !bottomChanged) return
@@ -443,7 +452,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         jarvisShell.viewportHeightDp = viewport.coerceAtLeast(160f)
         val h = if (jarvisShellStage && width / density >= 240f)
             (JarvisShellLayout.forContent(width / density, jarvisShell.viewportHeightDp,
-                resources.configuration.fontScale, jarvisShell.foldRail, offset).height * density).toInt()
+                resources.configuration.fontScale, jarvisShell.foldRail, offset, compactPresentation = compactPresentation).height * density).toInt()
             else maxOf(contentHeight, suggestedMinimumHeight)
         jarvisShell.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         shellForeground.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
@@ -503,7 +512,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val viewport = jarvisShell.viewportHeightDp.takeIf { it >= 160f } ?: (heightPx / density)
         if (w < 240f || viewport < 160f) return null
         return JarvisShellLayout.forContent(w, viewport, resources.configuration.fontScale, jarvisShell.foldRail,
-            externalRailWidthDp = offset)
+            externalRailWidthDp = offset, compactPresentation = compactPresentation)
     }
 
     private data class ShellActionSpec(val key: String, val target: String, val label: String,
@@ -572,8 +581,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             view.refresh()
             val px = spec.box.width * density
             val py = spec.box.height * density
+            // The reference status strip may paint below 48dp; keep its native action reachable.
+            val minHeightPx = if (spec.key == "panel:STATUS") kotlin.math.ceil(48f * density).toInt() else 1
             view.measure(MeasureSpec.makeMeasureSpec(px.toInt().coerceAtLeast(1), MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(py.toInt().coerceAtLeast(1), MeasureSpec.EXACTLY))
+                MeasureSpec.makeMeasureSpec(py.toInt().coerceAtLeast(minHeightPx), MeasureSpec.EXACTLY))
         }
         shellRailBounds = shell[JarvisShellLayout.Slot.NAV_RAIL]
         shellRailScroll.visibility = if (shellRailBounds != null) View.VISIBLE else View.GONE
@@ -587,8 +598,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private fun layoutShellActions() {
         shellActionBounds.forEach { (key, box) ->
-            shellActions[key]?.layout((box.left * density).toInt(), (box.top * density).toInt(),
-                (box.right * density).toInt(), (box.bottom * density).toInt())
+            shellActions[key]?.let { view ->
+                val top = (box.top * density).toInt()
+                // Extend only STATUS downward into its existing footer space; painted geometry is unchanged.
+                val bottom = if (key == "panel:STATUS")
+                    maxOf((box.bottom * density).toInt(), top + view.measuredHeight)
+                else (box.bottom * density).toInt()
+                view.layout((box.left * density).toInt(), top, (box.right * density).toInt(), bottom)
+            }
         }
         shellRailBounds?.let { box ->
             shellRailScroll.layout((box.left * density).toInt(), (box.top * density).toInt(),
