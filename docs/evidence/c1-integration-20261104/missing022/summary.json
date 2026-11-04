@@ -1,0 +1,185 @@
+{
+  "taskId": "C1-MISSING-022",
+  "sourcePrHead": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
+  "baseLocal": "445807c4ee97c59122a6c98a08866fa932ca24d7",
+  "baseRemote": "cff4bdc0963111c81c991d3cc38c7ca3ed64a103",
+  "baseTree": "8df03efe1e56233cbb24a5f59057aa21a29efd54",
+  "productionBefore": "3dc5d63077fce0244e2bdeeb20b310aa762d2cfa",
+  "productionAfter": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+  "testBlob": "13c5661432115c883fc2b64161757aad9d1128f4",
+  "ownRuns": [
+    {
+      "label": "missing022-red-01",
+      "counts": {
+        "tests": 4,
+        "pass": 0,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "result": {
+        "taskId": "C1-COMBINED-GATES-001",
+        "label": "missing022-red-01",
+        "source": {
+          "commit": "445807c4ee97c59122a6c98a08866fa932ca24d7",
+          "tree": "8df03efe1e56233cbb24a5f59057aa21a29efd54",
+          "dirty": ""
+        },
+        "command": [
+          "node",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter=tap",
+          "/workspace/scratch/174c84456ee3/repair-review/missing022-intake/red/.github/continuum/local-teamleader-loop-source-preflight.test.mjs"
+        ],
+        "runnerSha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd",
+        "requestedAt": "2026-11-04T21:59:53.624327+00:00",
+        "locks": [
+          "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+          "/workspace/scratch/d663e8444310/qa/gradle.lock"
+        ],
+        "exitCode": 1,
+        "status": "FAIL",
+        "lockWaitSeconds": 45,
+        "freeBytesAtStart": 955740160,
+        "startedAt": "2026-11-04T21:59:53.624634+00:00",
+        "overallTimeoutSeconds": 1800,
+        "individualTestTimeoutSeconds": null,
+        "processReturnCode": 1,
+        "finishedAt": "2026-11-04T21:59:54.125938+00:00",
+        "sourceUnchanged": true,
+        "recordedAt": "2026-11-04T21:59:54.164804+00:00"
+      },
+      "sourceKind": "Own actual isolated minimal scheduler module and frozen regressions; candidate integration tested separately"
+    },
+    {
+      "label": "missing022-green-01",
+      "counts": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "result": {
+        "taskId": "C1-COMBINED-GATES-001",
+        "label": "missing022-green-01",
+        "source": {
+          "commit": "445807c4ee97c59122a6c98a08866fa932ca24d7",
+          "tree": "8df03efe1e56233cbb24a5f59057aa21a29efd54",
+          "dirty": ""
+        },
+        "command": [
+          "node",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter=tap",
+          "/workspace/scratch/174c84456ee3/repair-review/missing022-intake/green/.github/continuum/local-teamleader-loop-source-preflight.test.mjs"
+        ],
+        "runnerSha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd",
+        "requestedAt": "2026-11-04T22:00:07.937198+00:00",
+        "locks": [
+          "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+          "/workspace/scratch/d663e8444310/qa/gradle.lock"
+        ],
+        "exitCode": 0,
+        "status": "PASS",
+        "lockWaitSeconds": 45,
+        "freeBytesAtStart": 954785792,
+        "startedAt": "2026-11-04T22:00:07.937737+00:00",
+        "overallTimeoutSeconds": 1800,
+        "individualTestTimeoutSeconds": null,
+        "processReturnCode": 0,
+        "finishedAt": "2026-11-04T22:00:08.439117+00:00",
+        "sourceUnchanged": true,
+        "recordedAt": "2026-11-04T22:00:08.477174+00:00"
+      },
+      "sourceKind": "Own actual isolated minimal scheduler module and frozen regressions; candidate integration tested separately"
+    }
+  ],
+  "integratedCompatibilityStatus": "PENDING",
+  "expectedIntegratedCases": 26,
+  "archiveSha256": "7b30398f74e4fee1e5ea73186c2c91582fa6a0b014c4694d989769d6208fa6b9",
+  "members": [
+    {
+      "path": "intake/ACCEPTANCE.md",
+      "sha256": "bb77bd49c64dca457c51f9a412783ab1de42f8d5411740ca3491012ef846cf34"
+    },
+    {
+      "path": "intake/C1-MISSING-022-source-preflight.patch",
+      "sha256": "79b7beb43a946c839b93fa7fde6c4371bbc60d64a6eea264894938f6c66fb247"
+    },
+    {
+      "path": "intake/INTAKE.md",
+      "sha256": "20b0aa1c8ac74bb050ba5c11bde2a5464092ec907279bfa1d86f52787b5b2d6e"
+    },
+    {
+      "path": "intake/SHA256SUMS",
+      "sha256": "037c94eeb49a6be6e36c911b4c5bba73fe3e7da85297013dc61f9097b3cf21b5"
+    },
+    {
+      "path": "intake/SOURCE-MANIFEST.json",
+      "sha256": "5764463527b025054dbf99113899b649c229f5449c31c9f95701b54a319a4a05"
+    },
+    {
+      "path": "intake/STATIC-CHECK.txt",
+      "sha256": "5c4cebe96025b0b3bb52e1f825c8876d4e1ff3702c7ad1542061fd5bb518aa7b"
+    },
+    {
+      "path": "intake/green/.github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "sha256": "8c7cf6ff3391da4c5742edb3650459333985c60b41faa9ee98d1a102c4f1c219"
+    },
+    {
+      "path": "intake/green/.github/continuum/local-teamleader-loop.mjs",
+      "sha256": "a6f9cf6b556386ca7f04eeedaa97fdf277817ed160f40f7a6945d4b28641e71e"
+    },
+    {
+      "path": "intake/red/.github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "sha256": "8c7cf6ff3391da4c5742edb3650459333985c60b41faa9ee98d1a102c4f1c219"
+    },
+    {
+      "path": "intake/red/.github/continuum/local-teamleader-loop.mjs",
+      "sha256": "09e5e3ff93e615270e955055777d5549477ba496b688095389eafa01cbe558f4"
+    },
+    {
+      "path": "matrix/MATRIX.md",
+      "sha256": "a545f5e23479dfdcf24c88358030b62c93f8198c616c94e2fcfe2a8b856d09c9"
+    },
+    {
+      "path": "matrix/SHA256SUMS",
+      "sha256": "e3899bccf23ecb0493b2ad6bf1caaecd15757e99bab037c471f8508e0ea88496"
+    },
+    {
+      "path": "matrix/matrix.json",
+      "sha256": "5c3000819e72451791bf8c112c48e8570de375611dae71c569605b7b3d2f124c"
+    },
+    {
+      "path": "own-runs/missing022-red-01.log",
+      "sha256": "5e5e36d22b1359b67b0110d06b4a6633a4afbd9ed073960709b340a31b8750f5"
+    },
+    {
+      "path": "own-runs/missing022-red-01.result.json",
+      "sha256": "1f60afba4ab0bdaacd051ecfee39d4815ddce4360da7ed95602a5f3a43852176"
+    },
+    {
+      "path": "own-runs/missing022-green-01.log",
+      "sha256": "45ed986351dee74a97ce8b41a498622c288ca51d69cc3b7892e0438487bda5a8"
+    },
+    {
+      "path": "own-runs/missing022-green-01.result.json",
+      "sha256": "be6189c26a3b322b1dd5a38b4ce04f4f3dbbb9ad68bab8cbb6d021431c6f52dd"
+    },
+    {
+      "path": "own-runs/run_c1_gate_v3.py",
+      "sha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd"
+    }
+  ],
+  "limits": [
+    "Existing callers do not bind sourcePreflight yet",
+    "No activated branchbot or OS sandbox guarantee",
+    "Historical 183 includes these four and existing22; no addition",
+    "No Android/model/device/APK acceptance"
+  ]
+}
