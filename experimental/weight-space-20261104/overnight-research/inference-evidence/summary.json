@@ -1,0 +1,40 @@
+{
+  "arms": 20,
+  "initialParity": {
+    "limit": 1e-05,
+    "maximumAbsoluteProbabilityDelta": 1.1920928955078125e-06,
+    "pass": true
+  },
+  "inputsUnchanged": true,
+  "maximumProcessRssKiB": 512372,
+  "modelPromotion": false,
+  "nativeGenerations": 48,
+  "probes": 240,
+  "receiptHashes": {
+    "S0": "3bd25e30d0e3f9afee5441ea389381341cfda294cf2813d4119750f698a81c78",
+    "S0_from_S1_l0": "0c5b7544e5189940a7dd1e28e4783902b08a64380b90a80d00195ee2c11e283b",
+    "S0_from_S1_l1": "88f00e66604faef7522f08904a70a7bb41b240e4521595a8cd173ba61bfd0645",
+    "S0_from_S1_nf": "91504b477d325f45527c08d43b41583e06bddf8fc0b5022ffc66de4447a9c5be",
+    "S0_from_S1_tok": "018f4d7f79bab83604fb9d441b359efca631fe330af710b46f2a3254439508b5",
+    "S1": "ca69fbfbd44cfc8af56c3ebf2c8d4db1fd4763132a81cd14c5d003903633afd4",
+    "S1_from_S0_l0": "436f13c9272322eadad62be48a63172371c87140aef233b20a456db36baded34",
+    "S1_from_S0_l1": "ce5574702a35f5d122c95a0c15204c9414ff3de82deb474939e3d9d54fc4d631",
+    "S1_from_S0_nf": "d5b09e17288cb5011001e842d4c5d7aa1df2cc753bb31b3bb5f5f210a35cb62f",
+    "S1_from_S0_tok": "a73b9eb66bcbdae5a396270e7acb4e83aa6404a71f694dc8eeaab49bddbda26c",
+    "W0": "6e88ecf457400d574a7ae530f5313b13847a19d1292876b7fce8c24023a1d9cc",
+    "W0_from_W1_l0": "2403a612623440efce9b0fc5d0911b41ff97dac4902dad57261be2a539e0ebd7",
+    "W0_from_W1_l1": "915bc97c3b98d061e31ef2c6bddb5b84fae3b6371dda1ac1e8a9a4ff9a590fac",
+    "W0_from_W1_nf": "c522342bfd4633e97eb47d344bab5e7f0d39feafb598a4a995ea297976d8df30",
+    "W0_from_W1_tok": "a4f7ad5dc111c30b2c595f67d559ab15bcd556b7ca32221ef7efcb83d3b27572",
+    "W1": "14c04a4755cc14a9f150612ec5bcee27daabb59a89d01f7086aca24f1e4fe9e0",
+    "W1_from_W0_l0": "297c7ea2091b1f57ac77f7b3fd8ec4fd25ddcfa20a1085176fd0f749716a90cb",
+    "W1_from_W0_l1": "99a17e88c8688d35d280639cb0689bb25c931b027e12991e8869310b03b4809c",
+    "W1_from_W0_nf": "d211021d5edbb1012f603d84b1c67297e23bc71574c8b076ac7f1e75dcba7c54",
+    "W1_from_W0_tok": "c6267f3fcee77fc7c30bad270f7e8fc40c4fc6198fadc3db642d6a3c725b7c49"
+  },
+  "registrationSha256": "9dd0171df1e8bf1adb0ed64cc3fa8bea1436d78773003341d75aa896492dc70e",
+  "status": "DIAGNOSTIC_EXECUTION_COMPLETE_NO_TRAINING",
+  "totalProcessSeconds": 34.5105051999999,
+  "traceRows": 1440,
+  "trainingUpdates": 0
+}

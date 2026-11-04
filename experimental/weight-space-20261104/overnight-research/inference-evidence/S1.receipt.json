@@ -1,0 +1,33 @@
+{
+  "arm": {
+    "block": "native",
+    "donor": "S1",
+    "id": "S1",
+    "receiver": "S1"
+  },
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx1g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/night-diagnostic-build/diagnostic.jar:/workspace/scratch/3112c86b5191/LM1_Training_Research_20261104/runtime/v3-experiment.jar:/workspace/scratch/3112c86b5191/LM1_Training_Research_20261104/runtime/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmChannelDiagnostic",
+    "/workspace/scratch/0549bca61ccf/night-diagnostic-run/inputs",
+    "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/0549bca61ccf/night-diagnostic-run/inputs/probes.tsv",
+    "S1",
+    "S1",
+    "S1",
+    "native"
+  ],
+  "elapsedSeconds": 0.6125982089979516,
+  "exitCode": 0,
+  "maxRssKiB": 92004,
+  "registrationSha256": "9dd0171df1e8bf1adb0ed64cc3fa8bea1436d78773003341d75aa896492dc70e",
+  "schemaVersion": 1,
+  "status": "PASS",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdoutSha256": "4c781d0e41cca52e4554f0517e167e287f378103e370199acb0d89661e5a81a5",
+  "systemSeconds": 0.062898,
+  "timedOut": false,
+  "userSeconds": 1.193907
+}
