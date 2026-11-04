@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import shutil
@@ -48,6 +49,7 @@ class Experiment:
         self.jar = args.jar.resolve()
         self.holdout = args.holdout.resolve()
         self.source = Path(__file__).resolve().parent
+        self.orchestrator_sha = sha(Path(__file__).resolve())
         self.tokenizer = self.inputs / "lm1-tokenizer.lmbp"
         self.base = self.inputs / "lm1-baseline.lm1"
         self.development = self.source / "development.txt"
@@ -66,6 +68,7 @@ class Experiment:
                 "platform": list(os.uname()), "cpus": os.cpu_count(),
                 "javaVersion": subprocess.run(["java", "-version"], capture_output=True, text=True).stderr,
                 "jarSha256": sha(self.jar), "protocolSha256": sha(self.source / "PROTOCOL.md"),
+                "orchestratorSha256": self.orchestrator_sha,
                 "developmentSha256": sha(self.development), "holdoutSha256": HOLDOUT_SHA,
                 "baseSha256": BASE_SHA, "tokenizerSha256": TOKENIZER_SHA,
                 "sourceHashes": {p.name: sha(p) for p in sorted(self.source.glob("*.kt"))},
@@ -77,20 +80,111 @@ class Experiment:
             previous = json.loads((self.out / "environment.json").read_text())
             if previous["jarSha256"] != sha(self.jar) or previous["protocolSha256"] != sha(self.source / "PROTOCOL.md"):
                 raise ValueError("compiled program or frozen protocol changed; use a new experiment directory")
+        self.environment = json.loads((self.out / "environment.json").read_text())
+        self.development_sha = self.environment["developmentSha256"]
+        if sha(self.development) != self.development_sha:
+            raise ValueError("frozen development data changed")
+        if (self.logs / "prepare-corpus.receipt.json").exists():
+            self.training_hash()
+
+    def training_hash(self) -> str:
+        """The original successful corpus receipt seals the continuation dataset."""
+        path = self.logs / "prepare-corpus.tsv"
+        receipt = json.loads((self.logs / "prepare-corpus.receipt.json").read_text())
+        expected_arguments = ["corpus", str(self.inputs / "original-train-docs"), str(self.out / "train.txt")]
+        if (receipt["arguments"] != expected_arguments or receipt["logSha256"] != sha(path)
+                or receipt["returncode"] != 0 or receipt.get("timeout", False)
+                or receipt.get("identityValidationFailure")):
+            raise RuntimeError("invalid original training-corpus receipt")
+        expected = self.one(records(path), "CORPUS")["sha256"]
+        if sha(self.out / "train.txt") != expected:
+            raise RuntimeError("continuation data no longer matches the original CORPUS record")
+        return expected
+
+    def dataset_hash(self, path: Path) -> str:
+        path = path.resolve()
+        if path == self.development.resolve():
+            expected = self.development_sha
+        elif path == (self.out / "train.txt").resolve():
+            expected = self.training_hash()
+        elif path == self.holdout:
+            expected = HOLDOUT_SHA
+        else:
+            raise ValueError("unregistered experiment dataset")
+        if sha(path) != expected:
+            raise RuntimeError("dataset differs from its frozen identity")
+        return expected
+
+    def input_hashes(self, arguments: list[str], benchmark: bool) -> dict[str, str]:
+        if not benchmark and arguments[0] == "corpus":
+            root = Path(arguments[1])
+            digest = hashlib.sha256()
+            for document in sorted(root.glob("*.md")):
+                digest.update(document.name.encode("utf-8") + b"\0")
+                digest.update(sha(document).encode("ascii") + b"\0")
+            return {"corpusManifestSha256": sha(root / "paths.tsv"),
+                    "corpusDocumentsSha256": digest.hexdigest()}
+        offset = 0 if benchmark else 1
+        checkpoint = Path(arguments[offset])
+        result = {"checkpointSha256": sha(checkpoint), "tokenizerSha256": sha(Path(arguments[offset + 1]))}
+        if result["tokenizerSha256"] != TOKENIZER_SHA:
+            raise RuntimeError("tokenizer changed")
+        if checkpoint.resolve() == self.base.resolve() and result["checkpointSha256"] != BASE_SHA:
+            raise RuntimeError("baseline changed")
+        if not benchmark and arguments[0] in {"evaluate", "train"}:
+            result["datasetSha256"] = self.dataset_hash(Path(arguments[3]))
+        if not benchmark and arguments[0] == "parity":
+            result["comparisonCheckpointSha256"] = sha(Path(arguments[3]))
+        return result
+
+    def verify_records(self, rows: list[dict], arguments: list[str], benchmark: bool,
+                       inputs: dict[str, str], *, successful: bool, legacy: bool) -> None:
+        """Legacy receipts need identity evidence in the JVM log, never just matching paths."""
+        def check_record(kind: str, expected: dict[str, str], required: bool) -> None:
+            matching = [row for row in rows if row["kind"] == kind]
+            if not matching and not required:
+                return
+            row = self.one(rows, kind)
+            if any(row.get(key) != value for key, value in expected.items()):
+                raise RuntimeError(f"{kind} input identity mismatch")
+
+        required = successful or legacy
+        if benchmark:
+            check_record("CAPACITY_MODEL", {key: inputs[key] for key in ("checkpointSha256", "tokenizerSha256")}, required)
+        elif arguments[0] == "corpus":
+            if required:
+                check_record("CORPUS", {"sha256": sha(Path(arguments[2]))}, True)
+        else:
+            check_record("SOURCE", {"sha256": inputs["checkpointSha256"],
+                                    "tokenizerSha256": inputs["tokenizerSha256"]}, required)
+            if arguments[0] in {"evaluate", "train"}:
+                kind = "EVALUATION" if arguments[0] == "evaluate" else "TRAIN_INPUT"
+                check_record(kind, {key: inputs[key] for key in ("datasetSha256", "tokenizerSha256")}, required)
+            if arguments[0] == "parity" and legacy:
+                raise RuntimeError("legacy parity receipt does not bind the comparison checkpoint; explicit review required")
 
     def call(self, label: str, arguments: list[str], *, benchmark: bool = False,
              timeout: int = 180, allow_failure: bool = False) -> list[dict]:
         path = self.logs / f"{label}.tsv"
         receipt = self.logs / f"{label}.receipt.json"
+        inputs = self.input_hashes(arguments, benchmark)
         if path.exists() or receipt.exists():
             if not receipt.exists():
                 raise RuntimeError(f"unfinished invocation requires explicit review: {label}")
             saved = json.loads(receipt.read_text())
             if saved["logSha256"] != sha(path) or saved["arguments"] != arguments:
                 raise RuntimeError(f"invocation changed: {label}")
-            if saved["returncode"] != 0 and not allow_failure:
+            if saved.get("identityValidationFailure"):
+                raise RuntimeError(f"previous invocation has invalid identities: {label}")
+            legacy = "inputHashes" not in saved
+            if not legacy and saved["inputHashes"] != inputs:
+                raise RuntimeError(f"invocation input bytes changed: {label}")
+            result = records(path)
+            successful = saved["returncode"] == 0 and not saved.get("timeout", False)
+            self.verify_records(result, arguments, benchmark, inputs, successful=successful, legacy=legacy)
+            if not successful and not allow_failure:
                 raise RuntimeError(f"previous invocation failed: {label}")
-            return records(path)
+            return result
         main = PACKAGE + ("LmCapacityBenchmark" if benchmark else "LmWeightExperiment")
         command = ["java", "-Xms64m", "-Xmx1g" if benchmark else "-Xmx3g", "-cp", str(self.jar), main, *arguments]
         print(f"START {label}", flush=True)
@@ -105,13 +199,25 @@ class Experiment:
                 os.killpg(process.pid, signal.SIGKILL)
                 returncode = process.wait()
         elapsed = time.monotonic() - start
+        result = records(path)
+        identity_failure = None
+        try:
+            if self.input_hashes(arguments, benchmark) != inputs:
+                raise RuntimeError("input bytes changed during invocation")
+            self.verify_records(result, arguments, benchmark, inputs,
+                                successful=returncode == 0 and not timed_out, legacy=False)
+        except (OSError, ValueError, RuntimeError, KeyError) as error:
+            identity_failure = f"{type(error).__name__}: {error}"
         write_new(receipt, {"arguments": arguments, "command": command, "returncode": returncode,
                            "timeout": timed_out, "timeoutSeconds": timeout, "wallSeconds": elapsed,
-                           "logSha256": sha(path)})
-        result = records(path)
+                           "logSha256": sha(path), "inputHashes": inputs,
+                           "orchestratorSha256": self.orchestrator_sha,
+                           "identityValidationFailure": identity_failure})
         highlights = [r for r in result if r["kind"] in {"EVALUATION", "CAPACITY_RESULT", "PARITY", "TRAIN_RESULT", "PROBE_RESULT", "CHECKPOINT", "CORPUS"}]
         print(json.dumps({"finished": label, "returncode": returncode, "seconds": elapsed,
                           "highlights": highlights}, ensure_ascii=False), flush=True)
+        if identity_failure:
+            raise RuntimeError(f"{label} identity verification failed: {identity_failure}")
         if returncode and not allow_failure:
             raise RuntimeError(f"{label} failed; inspect {path}")
         return result
@@ -126,6 +232,25 @@ class Experiment:
             raise RuntimeError(f"expected one {kind}, found {len(matching)}")
         return matching[0]
 
+    @staticmethod
+    def matched_training_inputs(candidates: list[dict]) -> bool:
+        inputs = [c["trainingInput"] for c in candidates if "trainingInput" in c]
+        fields = ("datasetSha256", "tokenScheduleSha256", "tokenizerSha256")
+        if any(not row.get(key) for row in inputs for key in fields):
+            raise RuntimeError("continuation lacks a complete TRAIN_INPUT identity")
+        if len(inputs) > 1 and any(row[key] != inputs[0][key] for row in inputs[1:] for key in fields):
+            raise RuntimeError("small and expanded continuation used different training data or token schedules")
+        return len(inputs) == 2
+
+    @staticmethod
+    def preferred_candidate(candidates: list[dict]) -> dict | None:
+        eligible = [c for c in candidates if c.get("capacityEligible") is True]
+        if not eligible:
+            return None
+        minimum_bpb = min(c["devBpb"] for c in eligible)
+        equivalent = [c for c in eligible if c["devBpb"] <= minimum_bpb + 0.00001]
+        return min(equivalent, key=lambda c: (c["parameters"], c["devBpb"]))
+
     def candidate(self, rows: list[dict], label: str) -> dict:
         row = self.one(rows, "CHECKPOINT")
         if sha(Path(row["path"])) != row["sha256"]:
@@ -133,13 +258,31 @@ class Experiment:
         return {"label": label, "path": row["path"], "sha256": row["sha256"],
                 "parameters": int(row["parameters"]), "bytes": int(row["bytes"])}
 
+    @staticmethod
+    def verify_candidate(candidate: dict) -> None:
+        if sha(Path(candidate["path"])) != candidate["sha256"]:
+            raise RuntimeError(f"candidate checkpoint changed: {candidate['label']}")
+
     def score(self, candidate: dict, suffix: str = "dev") -> dict:
+        if suffix not in {"dev", "holdout"}:
+            raise ValueError("unknown evaluation split")
+        self.verify_candidate(candidate)
         dataset = self.development if suffix == "dev" else self.holdout
-        score = self.one(self.invoke(f"{candidate['label']}-{suffix}", "evaluate", Path(candidate["path"]), dataset), "EVALUATION")
-        candidate[f"{suffix}Bpb"] = float(score["bpb"])
+        expected_dataset = self.dataset_hash(dataset)
+        rows = self.invoke(f"{candidate['label']}-{suffix}", "evaluate", Path(candidate["path"]), dataset)
+        source = self.one(rows, "SOURCE")
+        score = self.one(rows, "EVALUATION")
+        if (source["sha256"] != candidate["sha256"] or source["tokenizerSha256"] != TOKENIZER_SHA
+                or score["datasetSha256"] != expected_dataset or score["tokenizerSha256"] != TOKENIZER_SHA):
+            raise RuntimeError("score does not belong to the frozen candidate and dataset")
+        value = float(score["bpb"])
+        if not math.isfinite(value):
+            raise RuntimeError("non-finite BPB")
+        candidate[f"{suffix}Bpb"] = value
         return score
 
     def benchmark(self, candidate: dict) -> bool:
+        self.verify_candidate(candidate)
         result = self.call(f"{candidate['label']}-capacity", [candidate["path"], str(self.tokenizer)],
                            benchmark=True, timeout=120, allow_failure=True)
         rows = [r for r in result if r["kind"] == "CAPACITY_RESULT"]
@@ -147,11 +290,32 @@ class Experiment:
         candidate["capacity"] = rows[0] if len(rows) == 1 else {"pass": "false", "reasons": "MISSING_FINAL_RESULT"}
         candidate["capacity"]["processReturncode"] = receipt["returncode"]
         candidate["capacity"]["processTimedOut"] = receipt["timeout"]
-        return (receipt["returncode"] == 0 and candidate["capacity"]["pass"] == "true"
+        candidate["capacityEligible"] = (receipt["returncode"] == 0 and not receipt["timeout"]
+                and candidate["capacity"]["pass"] == "true"
+                and candidate["capacity"].get("checkpointSha256") == candidate["sha256"]
+                and candidate["capacity"].get("measuredRepeats") == "3"
+                and candidate["capacity"].get("firstTokenObservations") == "3"
                 and candidate["capacity"].get("full32TokenObservations") == "3")
+        return candidate["capacityEligible"]
+
+    def load_calibration(self) -> dict:
+        calibration = json.loads((self.out / "calibration.json").read_text())
+        for candidate in calibration["candidates"]:
+            if not (self.logs / f"{candidate['label']}-dev.receipt.json").exists():
+                raise RuntimeError("completed calibration lacks a development receipt")
+            recorded = candidate["devBpb"]
+            self.score(candidate)
+            if candidate["devBpb"] != recorded:
+                raise RuntimeError("calibration score differs from its verified evaluation")
+        expected = min(calibration["candidates"], key=lambda c: (c["devBpb"], c["label"] != "baseline"))
+        if expected["sha256"] != calibration["selected"]["sha256"]:
+            raise RuntimeError("calibration selection differs from the fixed selection rule")
+        calibration["selected"] = dict(expected)
+        return calibration
 
     def calibration(self) -> None:
         if (self.out / "calibration.json").exists():
+            self.load_calibration()
             return
         train = self.out / "train.txt"
         self.call("prepare-corpus", ["corpus", str(self.inputs / "original-train-docs"), str(train)])
@@ -175,7 +339,7 @@ class Experiment:
     def ladder(self) -> None:
         if (self.out / "ladder.json").exists():
             return
-        selection = json.loads((self.out / "calibration.json").read_text())["selected"]
+        selection = self.load_calibration()["selected"]
         source = Path(selection["path"])
         selected = dict(selection)
         passed = []
@@ -222,7 +386,7 @@ class Experiment:
     def continuation(self) -> None:
         if (self.out / "frozen-selection.json").exists():
             return
-        calibration = json.loads((self.out / "calibration.json").read_text())
+        calibration = self.load_calibration()
         ladder = json.loads((self.out / "ladder.json").read_text())
         original = calibration["candidates"][0]
         selected = calibration["selected"]
@@ -234,6 +398,7 @@ class Experiment:
         for label, initial in [("continued-small", selected), ("continued-expanded", expanded)]:
             if initial is None or (label == "continued-expanded" and initial["parameters"] == selected["parameters"]):
                 continue
+            self.verify_candidate(initial)
             rows = self.invoke(label + "-train", "train", Path(initial["path"]), self.out / "train.txt", self.store,
                                timeout=600, allow_failure=True)
             receipt = json.loads((self.logs / f"{label}-train.receipt.json").read_text())
@@ -246,18 +411,20 @@ class Experiment:
             self.score(candidate)
             self.benchmark(candidate)
             candidates[candidate["sha256"]] = candidate
+        matched_training = self.matched_training_inputs(list(candidates.values()))
         for candidate in candidates.values():
-            if "devBpb" not in candidate:
-                self.score(candidate)
+            self.score(candidate)
+            self.benchmark(candidate)
             self.invoke(candidate["label"] + "-probes", "probes", Path(candidate["path"]))
-        eligible = [c for c in candidates.values() if c.get("capacity", {}).get("pass", "true") == "true"]
-        minimum_bpb = min(c["devBpb"] for c in eligible)
-        equivalent = [c for c in eligible if c["devBpb"] <= minimum_bpb + 0.00001]
-        preferred = min(equivalent, key=lambda c: (c["parameters"], c["devBpb"]))
+        preferred = self.preferred_candidate(list(candidates.values()))
         write_new(self.out / "frozen-selection.json", {
             "frozenUtc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "holdoutSha256": HOLDOUT_SHA, "holdoutOpened": False,
+            "orchestratorSha256": self.orchestrator_sha,
+            "developmentSha256": self.development_sha, "trainingSha256": self.training_hash(),
             "candidates": list(candidates.values()), "developmentPreferred": preferred,
+            "selectionStatus": "SELECTED" if preferred else "NO_CAPACITY_ELIGIBLE_CANDIDATE",
+            "matchedTrainingInputs": matched_training,
             "lastCapacityPassed": expanded, "trainingFailures": failures,
             "selectionRule": "minimum development BPB among completed eligible candidates; within 0.00001 BPB prefer fewer parameters",
         })
