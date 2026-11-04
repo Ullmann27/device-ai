@@ -94,9 +94,9 @@ object JarvisShellRenderer {
 
     fun label(slot: Slot) = when (slot) {
         Slot.NAV_RAIL, Slot.BOTTOM_NAV -> "Navigation"; Slot.DIALOG -> "JARVIS"
-        Slot.INPUT -> "Message Continuum …"; Slot.COCKPIT_PRIMARY -> "Kern-Status"; Slot.COCKPIT_SECONDARY -> "System-Status"
+        Slot.INPUT -> "Nachricht an Continuum …"; Slot.COCKPIT_PRIMARY -> "Kern-Status"; Slot.COCKPIT_SECONDARY -> "System-Status"
         Slot.ROW_AGENTS -> "Aktive Agenten"; Slot.ROW_TASKS -> "Aktueller Ablauf"; Slot.ROW_MEMORY -> "Gedächtnis-Aktivität"
-        Slot.ROW_MODEL -> "Lokales Modell"; Slot.STATUS -> "System & Continuum Status"; else -> slot.name
+        Slot.ROW_MODEL -> "Lokales Modell"; Slot.STATUS -> "System- & Continuum-Status"; else -> slot.name
     }
 
     /** Panel header (title only; values come from Kern via SlotContent). */
