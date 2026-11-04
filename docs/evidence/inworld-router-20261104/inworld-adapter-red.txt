@@ -1,0 +1,166 @@
+✖ Inworld sends the configured credential unchanged with Basic and the Playground reasoning body (1.373173ms)
+✖ Inworld configuration requires enablement and a nonblank server credential (0.308965ms)
+✖ Inworld validates reasoning before requests and accepts a server-selected effort (0.836192ms)
+✖ Inworld returns only text and actual model identity, discarding reasoning and tool proposals (0.292411ms)
+✖ Inworld errors are sanitized, typed and do not cause a retry or provider fallback (0.492416ms)
+✖ Inworld reasoning-only or empty completions never repeat a billable request (0.17629ms)
+✖ Inworld rejects invalid prompts without spending quota and bounds each UTC day (0.204482ms)
+✖ Inworld bounds malformed and oversized upstream responses (0.283928ms)
+✖ Inworld rejects concurrent questions and releases its lease after failure (0.208337ms)
+✖ Inworld cancellation aborts upstream and prevents a pre-cancelled request (0.357607ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 0
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 104.594509
+
+✖ failing tests:
+
+test at backend/test/inworld-mentor.test.js:24:1
+✖ Inworld sends the configured credential unchanged with Basic and the Playground reasoning body (1.373173ms)
+  Error: Ungültiger Mentor-Anbieter.
+      at new GroqMentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/src/groq-mentor.js:32:13)
+      at mentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:20:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:26:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at backend/test/inworld-mentor.test.js:56:1
+✖ Inworld configuration requires enablement and a nonblank server credential (0.308965ms)
+  Error: Ungültiger Mentor-Anbieter.
+      at new GroqMentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/src/groq-mentor.js:32:13)
+      at mentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:20:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:59:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at backend/test/inworld-mentor.test.js:66:1
+✖ Inworld validates reasoning before requests and accepts a server-selected effort (0.836192ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Denkstufe/. Input:
+  
+  'Error: Ungültiger Mentor-Anbieter.'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:67:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Ungültiger Mentor-Anbieter.
+        at new GroqMentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/src/groq-mentor.js:32:13)
+        at mentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:20:10)
+        at file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:67:23
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:67:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1402:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+        at Test.postRun (node:internal/test_runner/test:1542:19),
+    expected: /Denkstufe/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at backend/test/inworld-mentor.test.js:76:1
+✖ Inworld returns only text and actual model identity, discarding reasoning and tool proposals (0.292411ms)
+  Error: Ungültiger Mentor-Anbieter.
+      at new GroqMentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/src/groq-mentor.js:32:13)
+      at mentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:20:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:77:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at backend/test/inworld-mentor.test.js:89:1
+✖ Inworld errors are sanitized, typed and do not cause a retry or provider fallback (0.492416ms)
+  Error: Ungültiger Mentor-Anbieter.
+      at new GroqMentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/src/groq-mentor.js:32:13)
+      at mentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:20:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:94:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at backend/test/inworld-mentor.test.js:103:1
+✖ Inworld reasoning-only or empty completions never repeat a billable request (0.17629ms)
+  Error: Ungültiger Mentor-Anbieter.
+      at new GroqMentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/src/groq-mentor.js:32:13)
+      at mentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:20:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:106:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at backend/test/inworld-mentor.test.js:116:1
+✖ Inworld rejects invalid prompts without spending quota and bounds each UTC day (0.204482ms)
+  Error: Ungültiger Mentor-Anbieter.
+      at new GroqMentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/src/groq-mentor.js:32:13)
+      at mentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:20:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:119:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at backend/test/inworld-mentor.test.js:133:1
+✖ Inworld bounds malformed and oversized upstream responses (0.283928ms)
+  Error: Ungültiger Mentor-Anbieter.
+      at new GroqMentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/src/groq-mentor.js:32:13)
+      at mentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:20:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:135:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at backend/test/inworld-mentor.test.js:140:1
+✖ Inworld rejects concurrent questions and releases its lease after failure (0.208337ms)
+  Error: Ungültiger Mentor-Anbieter.
+      at new GroqMentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/src/groq-mentor.js:32:13)
+      at mentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:20:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:142:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at backend/test/inworld-mentor.test.js:152:1
+✖ Inworld cancellation aborts upstream and prevents a pre-cancelled request (0.357607ms)
+  Error: Ungültiger Mentor-Anbieter.
+      at new GroqMentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/src/groq-mentor.js:32:13)
+      at mentor (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:20:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:154:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

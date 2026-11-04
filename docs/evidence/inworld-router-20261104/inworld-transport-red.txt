@@ -1,0 +1,39 @@
+✔ Inworld sends the configured credential unchanged with Basic and the Playground reasoning body (9.38901ms)
+✔ Inworld configuration requires enablement and a nonblank server credential (0.361843ms)
+✔ Inworld validates reasoning before requests and accepts a server-selected effort (1.101693ms)
+✔ Inworld returns only text and actual model identity, discarding reasoning and tool proposals (0.607405ms)
+✔ Inworld errors are sanitized, typed and do not cause a retry or provider fallback (1.539788ms)
+✔ Inworld reasoning-only or empty completions never repeat a billable request (0.788141ms)
+✔ Inworld rejects invalid prompts without spending quota and bounds each UTC day (1.688587ms)
+✔ Inworld bounds malformed and oversized upstream responses (1.338893ms)
+✔ Inworld rejects concurrent questions and releases its lease after failure (0.661084ms)
+✔ Inworld cancellation aborts upstream and prevents a pre-cancelled request (0.998791ms)
+✔ Inworld enforces its overall deadline and releases the request slot (4.048314ms)
+✖ Inworld closes the upstream transport after an early HTTP error (1.222481ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 11
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 151.184988
+
+✖ failing tests:
+
+test at backend/test/inworld-mentor.test.js:184:1
+✖ Inworld closes the upstream transport after an early HTTP error (1.222481ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/ea8ef7c67841/device-ai-inworld/backend/test/inworld-mentor.test.js:191:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

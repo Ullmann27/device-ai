@@ -15,6 +15,19 @@ const MAX_INPUT_CHARS = 1800;
 const MAX_RESPONSE_BYTES = 64 * 1024;
 const DEFAULT_MAX_DAILY = 20;
 
+/** Backend-only configuration shared by the HTTP service and explicit smoke test. */
+export function createInworldMentor({ env = process.env, fetcher = globalThis.fetch } = {}) {
+  return new GroqMentor({
+    provider: "INWORLD",
+    enabled: (env.INWORLD_MENTOR_ENABLED ?? "false").toLowerCase() === "true",
+    apiKey: env.INWORLD_API_KEY ?? "",
+    model: env.INWORLD_MENTOR_MODEL ?? INWORLD_MODEL,
+    reasoningEffort: env.INWORLD_MENTOR_REASONING_EFFORT ?? "medium",
+    dailyLimit: Number(env.INWORLD_MENTOR_DAILY_LIMIT ?? 10),
+    fetcher
+  });
+}
+
 export class GroqMentor {
   constructor({
     enabled = false,

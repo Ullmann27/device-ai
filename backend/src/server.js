@@ -11,7 +11,7 @@ import { HypothesisTournament, createOpenAiHypothesisAdapters } from "./hypothes
 import { ContinuumStateStore, mergeResearchQuestions } from "./continuum-state.js";
 import { selectResearchKnowledge } from "./continuum-knowledge.js";
 import { androidWebTools } from "./android-web-tools.js";
-import { GroqMentor } from "./groq-mentor.js";
+import { GroqMentor, createInworldMentor } from "./groq-mentor.js";
 import { MentorDevicePairing } from "./mentor-pairing.js";
 
 const app = express();
@@ -45,6 +45,10 @@ const openRouterMentor = new GroqMentor({
   model: process.env.OPENROUTER_MENTOR_MODEL ?? "openai/gpt-4o",
   dailyLimit: Number(process.env.OPENROUTER_MENTOR_DAILY_LIMIT ?? 10)
 });
+const inworldMentor = createInworldMentor();
+const mentors = new Map([
+  ["GROQ", groqMentor], ["OPENROUTER", openRouterMentor], ["INWORLD", inworldMentor]
+]);
 const mentorPairing = new MentorDevicePairing({
   rootToken: DEVICE_AI_TOKEN,
   approvedFingerprints: process.env.DEVICE_AI_MENTOR_APPROVED_DEVICES ?? ""
@@ -360,16 +364,18 @@ app.post("/v1/mentor/pairing/redeem", pairingLimiter, (req, res) => {
 /** Private status: never returns API keys or user prompts. */
 app.get("/v1/mentor/status", mentorAuth, (req, res) => {
   const provider = req.query.provider ?? "GROQ";
-  if (provider !== "GROQ" && provider !== "OPENROUTER") {
+  const mentor = mentors.get(provider);
+  if (!mentor) {
     return res.status(400).json({ error: "INVALID_PROVIDER" });
   }
   res.set("Cache-Control", "no-store");
-  res.json(provider === "OPENROUTER" ? openRouterMentor.status() : groqMentor.status());
+  res.json(mentor.status());
 });
 
 /** Explicit text-only mentor. No tools, no context, no persistent learning. */
 app.post("/v1/mentor/answer", mentorAuth, async (req, res) => {
-  if (!["GROQ", "OPENROUTER"].includes(req.body?.provider) || req.body?.consent !== true) {
+  res.set("Cache-Control", "no-store");
+  if (!mentors.has(req.body?.provider) || req.body?.consent !== true) {
     return res.status(400).json({ error: "OWNER_CONSENT_REQUIRED" });
   }
   if (typeof req.body?.question !== "string" ||
@@ -378,11 +384,23 @@ app.post("/v1/mentor/answer", mentorAuth, async (req, res) => {
       Object.keys(req.body).sort().join("|") !== "consent|provider|question") {
     return res.status(400).json({ error: "INVALID_QUESTION" });
   }
-  const mentor = req.body.provider === "OPENROUTER" ? openRouterMentor : groqMentor;
-  const result = await mentor.answer(req.body.question);
+  const mentor = mentors.get(req.body.provider);
+  const abort = new AbortController();
+  const onDisconnect = () => { if (!res.writableEnded) abort.abort(); };
+  req.once("aborted", onDisconnect);
+  res.once("close", onDisconnect);
+  let result;
+  try {
+    result = await mentor.answer(req.body.question, { signal: abort.signal });
+  } finally {
+    req.removeListener("aborted", onDisconnect);
+    res.removeListener("close", onDisconnect);
+  }
+  if (res.destroyed || abort.signal.aborted) return;
   if (!result.ok) {
     const status = result.code === "DISABLED" ? 503 :
       result.code === "INVALID_QUESTION" ? 400 :
+      result.code === "UPSTREAM_TIMEOUT" ? 504 :
       result.code === "DAILY_LIMIT" || result.code === "BUSY" || result.code === "UPSTREAM_LIMIT" ? 429 : 502;
     return res.status(status).json({ error: result.code });
   }
@@ -617,6 +635,7 @@ const httpServer = app.listen(PORT, "0.0.0.0", () => {
   console.log("Continuum mentor readiness:", JSON.stringify({
     groqConfigured: groqMentor.status().available,
     openRouterConfigured: openRouterMentor.status().available,
+    inworldConfigured: inworldMentor.status().available,
     deviceAuthenticationConfigured: DEVICE_AI_TOKEN.length >= 16
   }));
   // Explicit operator-only synthetic smoke check; disabled by default.
