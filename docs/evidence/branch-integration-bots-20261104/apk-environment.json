@@ -1,0 +1,31 @@
+{
+  "schema": "continuum-branch-bots-apk-environment-v1",
+  "observedAt": "2026-11-04T19:37:03.778649+00:00",
+  "profile": "existing-continuum-host-preflight",
+  "inspectorGitBlob": "15d448e47828c02b7a24c1b1b92c40ed3200776a",
+  "command": [
+    "node",
+    "--input-type=module",
+    "-e",
+    "import {inspectHostEnvironment} from \"./scripts/continuum-release-host-preflight.mjs\"; console.log(JSON.stringify(inspectHostEnvironment(),null,2));"
+  ],
+  "exitCode": 0,
+  "apk": "NOT_RUN",
+  "result": {
+    "hostReadyToAttemptQa": false,
+    "blockers": [
+      "EXPLICIT_JDK_NOT_FOUND",
+      "SDK36_NOT_FOUND",
+      "GRADLE8111_NOT_FOUND",
+      "NATIVE_AAPT2_NOT_FOUND"
+    ],
+    "androidCompilationExecuted": false,
+    "androidTestExecuted": false,
+    "apkSigned": false
+  },
+  "limitations": [
+    "Tool probes run trusted installed executables in the current process environment.",
+    "Tool availability is not Android compilation, dependency cache validation, native ABI validation or device acceptance.",
+    "The older inspectReleaseCheckout source/version contract was not used."
+  ]
+}

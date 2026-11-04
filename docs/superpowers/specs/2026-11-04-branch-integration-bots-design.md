@@ -1,6 +1,6 @@
 # Continuum branch integration bots
 
-Status: WIP / UNVERIFIED. Owner request: discover unexplored, hidden and completed but unconnected branches, connect useful existing technology and progress towards a verifiable Android APK.
+Status: implemented for the documented local Node scope; 138 targeted tests passed, independent review completed. APK and device acceptance remain NOT_RUN. Owner request: discover unexplored, hidden and completed but unconnected branches, connect useful existing technology and progress towards a verifiable Android APK.
 
 ## Existing architecture and source
 
@@ -10,7 +10,7 @@ Product baseline: `Ullmann27/device-ai`, `codex/astra-jarvis-takeover-20261104`,
 
 Add a bounded, deterministic branch discovery operation that reads locally available Git refs, pins source and target commits and compares actual source trees. It may propose review work in the existing development backlog. It does not execute code from candidate branches, create a second task ledger, auto-merge, infer that a newer branch is better or assert that a static finding proves runtime integration.
 
-The operation uses the existing local Teamleader loop for optional repeated execution. A single run is the default. Repeated operation requires a finite cycle budget and uses external state, the existing locking/restart rules and a fixed interval. No network fetch, paid AI API or GitHub Actions dependency is added.
+The operation uses the existing local Teamleader loop for optional repeated execution. Single-run mode is explicit. Repeated operation requires a finite cycle budget and uses external state, the existing locking/restart rules and a fixed interval. No network fetch, paid AI API or GitHub Actions dependency is added.
 
 Inspect local branches, remote tracking refs and available pull-request/archive refs; report which refs were actually available. Hidden means discoverable Git references, not bypassing access controls. Deduplicate identical source commits, distinguish already inherited, byte-identical, missing and divergent work. A source/target pair is the unit of evidence and queue idempotency. Quality and APK readiness remain unverified until separate real tests/builds establish them.
 
@@ -35,3 +35,7 @@ Real Git fixtures must cover remote/archive refs, aliases, already-integrated wo
 ## Alternatives considered
 
 A second independent bot scheduler/task store would conflict with the existing canonical pipeline. Automatic merging of every non-ancestor branch would conflate missing history, divergent work and quality. The chosen bounded scout plus existing backlog makes the evidence and the next allowed step explicit while development helpers integrate verified fixes.
+
+## Implemented review refinements
+
+The scanner rejects configurations that could execute clean/process filters or nested submodule status helpers and checks them immediately before status operations. A trusted awaited source-preflight hook is bound at all existing scheduler identity boundaries. The CLI adds the existing `inspectHostEnvironment()` diagnostic to the immutable scan artifact; exact saved bytes define its SHA-256. Tool availability remains separate from actual APK build evidence. Full operating instructions, pinned source findings and limitations are in the handoff.

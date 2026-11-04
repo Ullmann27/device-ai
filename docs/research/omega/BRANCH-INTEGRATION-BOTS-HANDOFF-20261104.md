@@ -1,21 +1,94 @@
 # Branch integration bots — 4 November 2026
 
-Implementation checkpoint: WIP; targeted checks passed, final integration review pending.
+Status: implemented and independently reviewed for the documented local scope. **138 targeted Node tests passed, 0 failed, 0 skipped. APK: NOT_RUN.**
 
-Owner task: create development bots to investigate unexplored/hidden/completed branches, connect suitable existing technology and work towards APK readiness.
+Repository: `Ullmann27/device-ai`. Product baseline: `e101e393dd6c80803ac9d9ac91fccd9812c4a18d` (`codex/astra-jarvis-takeover-20261104`). Integration branch: `codex/continuum-branch-integration-bots-20261104`. Draft PR: [#515](https://github.com/Ullmann27/device-ai/pull/515), based on the takeover branch.
 
-Source baseline: `e101e393dd6c80803ac9d9ac91fccd9812c4a18d` (`codex/astra-jarvis-takeover-20261104`). Dedicated branch: `codex/continuum-branch-integration-bots-20261104`.
+## What now runs
 
-Work is split between source/branch investigation, isolated implementation, independent review and build-environment verification. The existing FORGE → LINT → ECHO, local scheduler and BacklogStore remain authoritative. This work does not mean that a live Android model worker has been reached or activated.
+The new entry point, `.github/continuum/branch-bots-cli.mjs`, coordinates bounded branch discovery, the existing canonical proposed-task backlog and the existing local scheduler. It attaches the existing APK host-environment diagnostic to each completed scan. It adds no package dependency, paid model API or GitHub Actions requirement.
 
-Concrete source observation: strict model rejection in `coding-orchestrator.mjs` occurs before deterministic ECHO reporting. A negative report must not grant success or bypass the rejection.
+| Responsibility | Implementation and result |
+|---|---|
+| Discover disconnected work | `branch-discovery.mjs` reads locally available heads, remote-tracking refs, available pull/archive refs and commit tags. It pins complete source/target commit IDs and the ref snapshot. |
+| Separate already present work | Compare committed blobs and modes against the common ancestor and target. Distinguish inherited commits, identical trees, copied changes, missing paths, divergent edits and source deletions. |
+| Prepare integration work | Use the existing `BacklogStore` to create idempotent `PROPOSED` / `BRANCH_REVIEW` tasks. A report does not create execution permission. Protected paths remain review-only. |
+| Repeat locally | Reuse `runTeamleaderLoop` with its lock, checkpoint, restart and failure semantics. The CLI requires an explicit finite cycle budget. |
+| Check APK prerequisites | Call the existing `inspectHostEnvironment()`. Report the actual host blockers while keeping `apk: NOT_RUN`. |
+| Preserve negative outcomes | A strictly rejected, canonically journaled `ABSTAINED` attempt may write its permitted ECHO report and authenticated public snapshot. The original error and UNKNOWN service result remain. |
 
-Local tool observation: Node 24.22.1, Git 2.52.0 and Java runtime 21.0.13 exist. No JDK compiler, Gradle installation/cache or Android SDK was found in the inspected standard paths. APK/Gradle/device gates: NOT_RUN / TOOLCHAIN_UNAVAILABLE.
+The development agents used in this session investigated sources, implemented isolated patches and independently reviewed them. That is separate from activating a persistent model worker on Heinz's Android device. No reachable live owner worker was activated here.
 
-Implemented: bounded Git-ref/tree discovery with source-bound proposed review tasks; protected branch-bot control paths; negative canonical ECHO reports on a strict model rejection while preserving the original error and UNKNOWN service result. A one-shot/finite-loop CLI is under final integration review. The latest discovery/CLI fixture run passed 23/23 tests, with no failures or skips. Negative ECHO's independently reviewed focused suite passed 9/9. These are targeted checks, not Android or full-repository acceptance.
+## Start on a complete, clean local checkout
 
-Open review item: the existing scheduler must run the branch source safety check immediately before all its own status reads, including after a configuration change between cycles. The isolated fix is in progress; the WIP checkpoint does not certify unattended loop operation.
+Requirements: Node.js and Git, a trusted installed tool environment, the code from this PR, and the branches/refs to be inspected already present locally. Run from the checkout root. Choose an external state directory belonging to this bot session; it contains the canonical `development-backlog.json`, private reports and scheduler state.
 
-The source has been materialized selectively through the authorized GitHub connector; local snapshot commits are not the upstream product commits. No APK success is claimed.
+One scan:
 
-Next entry: read the design and plan under `docs/superpowers/`, inspect the actual branch HEAD, then the code and tests referenced there. Preserve failed checks and exact source identities. Rollback is to omit this isolated branch. No main merge, release, signing or installation is authorized by this checkpoint.
+```sh
+node .github/continuum/branch-bots-cli.mjs \
+  --root "$PWD" \
+  --state "$HOME/.local/state/device-ai-continuum/branch-bots-once" \
+  --once
+```
+
+Eight bounded cycles, one hour apart:
+
+```sh
+node .github/continuum/branch-bots-cli.mjs \
+  --root "$PWD" \
+  --state "$HOME/.local/state/device-ai-continuum/branch-bots-eight-cycles" \
+  --loop --max-cycles 8 --interval-minutes 60
+```
+
+The same loop state resumes its remaining budget; it does not reset completed cycles. Changing the checkout HEAD or immutable loop configuration requires a new reviewed session. SIGINT/SIGTERM stops further admission. Use the existing integration/CCC1 owner workflow to turn reviewed branch findings into scoped executable tasks. The discovery bot does not turn a `BRANCH_REVIEW` proposal directly into a `REPAIR` command.
+
+`--target` defaults to `HEAD`; `--max-sources` defaults to 1000, `--max-changes` to 200 per source, `--max-proposals` to 20 and `--timeout-ms` to 60000. Truncation is explicitly reported and returns a nonzero discovery result. No remote fetch is performed. Missing objects, inaccessible branches or refs not present locally cannot be claimed as inspected.
+
+Exit 0 means the requested branch inventory completed. It **does not mean the APK passed**. Read `apkEnvironment`, `apk`, `executedTests`, `coverage` and `queue` separately. The report's SHA-256 is the hash of the exact saved JSON file bytes, including its final newline.
+
+## Boundaries verified in review
+
+The scanner refuses a dirty source, state writes inside source, redirected/symlinked state files, configured clean/process filters, active fsmonitor helpers, current worktree submodules, partial clones and legacy grafts. The CLI refuses inherited Git repository/index/config overrides. The reader removes those overrides and disables lazy fetching and replacement objects.
+
+The scanner checks the configuration immediately before its status reads. The existing scheduler now accepts a trusted asynchronous `sourcePreflight` callback and awaits it at initial checkpoint open and before/after each work callback. The CLI binds the same source policy at those boundaries. A deterministic reviewer probe changed fsmonitor during the wait between cycles: the next check stopped with `DISCOVERY_FSMONITOR_UNSUPPORTED`, no hook marker was written, only one cycle completed and the persisted checkpoint became `ERROR`.
+
+This is a source/configuration boundary on a trusted local host, not an operating-system sandbox against a hostile process racing filesystem changes. The APK diagnostic probes trusted installed Java/Javac/Gradle tools and inherits the process environment. Its AAPT2 check is existence-only. It does not prove dependency-cache completeness, native ABI compatibility, compilation or device behaviour. The older `inspectReleaseCheckout()` release/version contract is deliberately not invoked.
+
+Negative ECHO reporting uses the actual canonical attempt, reporter assignment, source identity and matching journal head. A blocked writer or old successful journal cannot supply the negative report. No rejected inference is promoted into success, experience or training. The unresolved older S01 resource barrier remains intact.
+
+## Concrete branch findings
+
+These observations concern pinned sources, not a complete live repository sweep. Full identities and the four shared file blobs are in `docs/evidence/branch-integration-bots-20261104/branch-candidates.json`.
+
+| Source | Observation and disposition |
+|---|---|
+| #496 at `3968d785df607f8d461162c50bb3d710a925503e` | Worker `allowedTools` snapshots and routine overflow fixes, with their two test files, are already blob-identical in #506 at `8abea828833d8833d40e3d3d36feaa6d3685b82e`. Do not duplicate that four-file patch. This is not a claim that it is merged into main. |
+| #505 at `4ddbcb092d955226bb83c2a10f7ac52bb34f59eb` | Avatar turn/lifecycle changes still need real Android regression evidence. Keep the unrelated ranking regression separate. Its full QA script may download tools and is not a discovery entry point. |
+| #493 at `ee2fa0ee5567e5d34bcdfe229425a71df9818183` | Existing bot profiles, UI and local tool/coding routes span 111 changed files. No bulk integration; profiles alone do not establish active workers. |
+| #510 at `2a364005b52e3240eb799f86aea31be90b390b10` | The missing negative ECHO reporting path has been repaired in this PR. The earlier activation handoff itself had not submitted live owner tasks. |
+
+No unverified Kotlin feature patch was copied into this Node integration change. Better technology is not inferred from a branch name or from being newer. Integration requires scoped comparison and relevant real checks.
+
+## Verification and remaining APK gates
+
+The final combined run executed the 11 test files named in `node-tests.json`: **138 PASS, 0 FAIL, 0 SKIP**, Node 24.22.1 and Git 2.52.0. All 11 changed/new JavaScript files passed `node --check`; `git diff --check` passed. `node-tests.tap` contains the actual output, and `patch-manifest.json` binds the checked code to file hashes.
+
+Tests include real temporary Git repositories, canonical backlog transitions, real canonical journal/report/grant stores and process-level CLI/restart/lock behavior. External model/Docker/JVM boundaries and existing mobile build/signature cases use test fixtures where documented. Those fixtures are not model inference, Docker isolation, Android compilation, APK signing or device evidence.
+
+Source files were materialized selectively from the pinned upstream commit and checked by Git blob identity. This environment is **not a full Android checkout**. The combined run is a targeted regression suite, not the full repository suite.
+
+The actual APK host diagnostic reports:
+
+- `EXPLICIT_JDK_NOT_FOUND`
+- `SDK36_NOT_FOUND`
+- `GRADLE8111_NOT_FOUND`
+- `NATIVE_AAPT2_NOT_FOUND`
+
+`androidCompilationExecuted`, `androidTestExecuted` and `apkSigned` are all false. There is no APK artifact or installation claim. The next executable Android gate requires the existing owner host/toolchain and a complete isolated checkout, followed by the existing real unit/lint/build/device acceptance route. Keep source, package identity, version and signing verification attached to that future build.
+
+## Review and rollback
+
+All changes are isolated in Draft PR #515. The source-provenance, protected-path, scheduler and negative-report changes received independent review. The concrete findings were corrected and rechecked; no additional proven open finding remained in that review scope. This does not constitute release acceptance.
+
+Rollback: omit or revert the commits of this isolated PR. Existing main/production, release identity, signing keys and owner data were not changed.

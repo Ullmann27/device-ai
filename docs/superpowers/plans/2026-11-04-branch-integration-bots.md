@@ -29,33 +29,37 @@
 
 Files: new `.github/continuum/branch-discovery.mjs`, `.github/continuum/branch-discovery.test.mjs`.
 
-- [ ] Write real Git fixture tests for ancestor, identical, missing and divergent source.
-- [ ] Observe the new tests fail before implementing the discovery functions.
-- [ ] Implement pinned, bounded, read-only Git comparisons; never run branch code.
-- [ ] Propose idempotent `BRANCH_REVIEW` tasks in the existing BacklogStore without accepting them.
-- [ ] Verify that source/target drift changes the proposal identity and protected paths remain review-only.
+- [x] Write real Git fixture tests for ancestor, identical, missing and divergent source.
+- [x] Observe concrete regression tests fail before their corresponding fixes (protected paths, executable filters/configuration masks, report file hash and APK diagnostic connection).
+- [x] Implement pinned, bounded, read-only Git comparisons; never run branch code.
+- [x] Propose idempotent `BRANCH_REVIEW` tasks in the existing BacklogStore without accepting them.
+- [x] Verify that source/target drift changes the proposal identity and protected paths remain review-only.
 
 ## Task 2: Existing cadence and executable entry point
 
 Files: new `.github/continuum/branch-bots-cli.mjs` and its behavior tests.
 
-- [ ] Add one-shot execution and an explicit finite loop using runTeamleaderLoop.
-- [ ] Keep report/checkpoint/backlog files outside the source tree and use canonical source identity.
-- [ ] Run subprocess tests for option validation, meaningful output and unchanged source worktree.
-- [ ] Document exact commands and the distinction between discovery, integration, build and device acceptance.
+- [x] Add one-shot execution and an explicit finite loop using runTeamleaderLoop.
+- [x] Keep report/checkpoint/backlog files outside the source tree and use canonical source identity.
+- [x] Run subprocess tests for option validation, meaningful output and unchanged source worktree.
+- [x] Document exact commands and the distinction between discovery, integration, build and device acceptance.
 
 ## Task 3: Negative ECHO report on strict model rejection
 
 Files: existing `.github/continuum/coding-orchestrator.mjs`, new `.github/continuum/coding-orchestrator-failure-report.test.mjs`.
 
-- [ ] Reproduce the skipped-report path without disabling isolation or model admission.
-- [ ] Ensure reporting runs only after validated canonical task execution and current identity checks.
-- [ ] Preserve rejection and forbid experience promotion/success on unadmitted inference.
-- [ ] Run targeted existing reporting, assignment, scheduler and coding regressions; disclose any incomplete-snapshot failures.
+- [x] Reproduce the skipped-report path without disabling isolation or model admission.
+- [x] Ensure reporting runs only after validated canonical task execution and current identity checks.
+- [x] Preserve rejection and forbid experience promotion/success on unadmitted inference.
+- [x] Run targeted existing reporting, assignment, scheduler and coding regressions; disclose any incomplete-snapshot failures.
 
 ## Task 4: Independent integration review and handoff
 
-- [ ] Review selected current feature branch changes against pinned source hashes.
-- [ ] Integrate only verified compatible changes; retain conflicting or unverified candidates in the handoff.
-- [ ] Independently review security and evidence semantics of Tasks 1–3.
-- [ ] Publish exact code, tests, test results and remaining APK gates in the Draft PR.
+- [x] Review selected current feature branch changes against pinned source hashes.
+- [x] Integrate only verified compatible changes; retain conflicting or unverified candidates in the handoff.
+- [x] Independently review security and evidence semantics of Tasks 1–3.
+- [x] Publish exact code, tests, test results and remaining APK gates in the Draft PR.
+
+## Final evidence
+
+The implemented Node scope passed 138 targeted tests with no failures or skips. The existing scheduler gained a trusted source-preflight hook; the CLI binds it before all scheduler source checks. The existing read-only APK host inspector is attached to each cycle. Independent review rechecked every concrete reported flaw. Android compilation, device acceptance and live owner-worker activation remain unavailable. Read `docs/research/omega/BRANCH-INTEGRATION-BOTS-HANDOFF-20261104.md` and the exact evidence under `docs/evidence/branch-integration-bots-20261104/`. Unverified Kotlin candidates remain observations rather than merged patches.
