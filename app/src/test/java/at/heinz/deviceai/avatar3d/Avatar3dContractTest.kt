@@ -143,4 +143,17 @@ class Avatar3dContractTest {
         buffer.putInt(data.size()).putInt(0x004e4942).put(data.toByteArray())
         return buffer.array()
     }
+    @Test fun visemesCrossfadeOverSeventyMillisecondsAndBlinkLastsFifteenHundredths() {
+        val map = AvatarMorphMapper(AvatarGlbContract.TARGETS)
+        val idx = { n: String -> AvatarGlbContract.TARGETS.indexOf(n) }
+        map.update(pose(Viseme.AA, .4f), 1f, true)
+        assertEquals(1f, map.weights[idx("AA")], 0f)
+        map.update(pose(Viseme.O, .4f), 1.035f, true)          // half of the 70 ms crossfade
+        assertEquals(.5f, map.weights[idx("AA")], .02f); assertEquals(.5f, map.weights[idx("O")], .02f)
+        map.update(pose(Viseme.O, .4f), 1.08f, true)
+        assertEquals(0f, map.weights[idx("AA")], 0f); assertEquals(1f, map.weights[idx("O")], 0f)
+        val closed = AvatarMorphMapper(AvatarGlbContract.TARGETS)
+        closed.update(pose(Viseme.SIL, 0f), 4.525f, true); assertEquals(1f, closed.weights[idx("BlinkLeft")], 0f)
+        closed.update(pose(Viseme.SIL, 0f), 4.44f, true); assertEquals(0f, closed.weights[idx("BlinkLeft")], 0f)
+    }
 }

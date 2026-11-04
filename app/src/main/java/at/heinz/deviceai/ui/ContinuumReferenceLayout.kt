@@ -20,6 +20,8 @@ object ContinuumReferenceLayout {
         require(width.isFinite() && width > 0f && height.isFinite() && height >= 0f)
         require(fontScale.isFinite() && fontScale > 0f)
         val font = fontScale.coerceIn(.85f, 2f)
+        if (ContinuumLandscapeCockpitLayout.applies(width, height, wide, font, compact))
+            return ContinuumLandscapeCockpitLayout.create(width, height, font)
         val largeType = font > 1.3f
         val portrait = wide && height > 0f && ContinuumHomeLayout.isPortraitFold(width, height)
         val rail = if (wide) ContinuumHomeLayout.railWidthDp(width) else 0f

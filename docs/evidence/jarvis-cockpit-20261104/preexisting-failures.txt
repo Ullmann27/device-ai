@@ -1,0 +1,9 @@
+Vorbestehende Fehlschläge auf der Basis d8fd7f7c (ChatGPT, fix/continuum-device-experience-resume-20261104),
+unverändert und ohne Cockpit-Änderung reproduziert am 04.11.2026 (separater Worktree, gleiche JDK17/Gradle-Umgebung):
+
+  ContinuumAdaptiveCockpitLayoutTest.everyHeaderAndActionHasUnscaledFortyEightDpTouchArea
+    320.0 SEARCH target 48.0x47.999992   (Telefon 320 dp, Gleitkomma-Rundung im Telefon-Layout)
+  ContinuumCoreMirrorTest.allEightControlsKeepEqualBoundsAndBalancedRows   expected:<824.0> but was:<458.0>
+  ContinuumCoreMirrorTest.actionTextUsesReadableDestinationNamesOnBothSides
+
+Diese betreffen nur Telefon-/Hochformat-Layouts, nicht das Querformat-Cockpit, und wurden hier nicht verändert.

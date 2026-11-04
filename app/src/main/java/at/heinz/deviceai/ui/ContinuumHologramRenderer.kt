@@ -386,6 +386,7 @@ class ContinuumHologramRenderer {
         p.setAdditive(true)
         p.fillCircle(cx, cy, rs * .68f, coreHalo, .85f + f.energy * .15f)
         drawPlexus(p, f, front = false)
+        drawLightning(p, f)
         // fan of light rays rising from the projection pad
         for (i in 0 until 15) {
             val t = (i - 7) / 7f
@@ -422,6 +423,38 @@ class ContinuumHologramRenderer {
         p.fillOval(cx - rs * .82f, cy - rs * .9f, cx - rs * .05f, cy - rs * .32f, specular)
         p.setAdditive(false)
         p.restore()
+    }
+
+    // VIDEO-SPEC 6-7 s: "Gehirn-Kugel mit Blitz-Neuronen". Jagged discharges from the core towards the glass,
+    // re-seeded deterministically per phase epoch (no random state); stronger with the reported state energy.
+    private val bolts = FloatArray(BOLTS * BOLT_SEGMENTS * 4)
+    private fun hash(i: Int, j: Int): Float {
+        var h = i * 374761393 + j * 668265263
+        h = (h xor (h ushr 13)) * 1274126177
+        return ((h xor (h ushr 16)) and 0xffff) / 65535f
+    }
+    private fun drawLightning(p: ContinuumPainter, f: Frame) {
+        val clock = f.phase * 2.4f
+        val epoch = kotlin.math.floor(clock).toInt()
+        val flicker = sin((clock - epoch) * PI.toFloat()).coerceAtLeast(0f)
+        val k = flicker * (.35f + .65f * f.energy + .3f * f.weight(Mode.THINKING))
+        if (k <= .02f) return
+        var n = 0
+        for (b in 0 until BOLTS) {
+            val angle = hash(b, epoch) * 2f * PI.toFloat()
+            val ux = cos(angle); val uy = sin(angle)
+            var x = cx + ux * rs * .36f; var y = cy + uy * rs * .36f
+            for (s in 1..BOLT_SEGMENTS) {
+                val r = rs * (.36f + .6f * s / BOLT_SEGMENTS)
+                val j = (hash(b * 31 + s, epoch) - .5f) * rs * .16f
+                val nx = cx + ux * r - uy * j; val ny = cy + uy * r + ux * j
+                bolts[n] = x; bolts[n + 1] = y; bolts[n + 2] = nx; bolts[n + 3] = ny; n += 4
+                x = nx; y = ny
+            }
+        }
+        p.strokeSegments(bolts, n, 3.4f * sphereScale, stateViolet, .22f * k)
+        p.strokeSegments(bolts, n, 1.4f * sphereScale, stateCyan, .55f * k)
+        p.strokeSegments(bolts, n, .55f * sphereScale, pulseFill, .9f * k)
     }
 
     // Reuses the same bounded 3-D orbit buffers as the outer rings; no particle worker or random samples.
@@ -698,5 +731,7 @@ class ContinuumHologramRenderer {
 
     private companion object {
         const val DEPTH_BUCKETS = 9
+        const val BOLTS = 7
+        const val BOLT_SEGMENTS = 6
     }
 }

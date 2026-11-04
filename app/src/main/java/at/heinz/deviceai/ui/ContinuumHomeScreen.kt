@@ -14,6 +14,7 @@ object ContinuumHomeScreen {
         Icon.CHART_UP to "Analysieren", Icon.DATABASE to "Speicher", Icon.GEAR to "System")
 
     fun elements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
+        if (layout.landscapeCockpit) return landscapeCockpitElements(layout, textScale)
         if (layout.referenceCockpit) return referenceElements(layout, textScale)
         if (layout.adaptive) return adaptiveElements(layout, textScale)
         val wide = layout.wide
@@ -76,6 +77,27 @@ object ContinuumHomeScreen {
         map[Slot.LABEL_EVOLVING] = ReferenceLearningStatusElement(textScale)
         if (layout[Slot.RAIL] != null) map[Slot.RAIL] = RailElement(railNavigation, 0, textScale)
         if (layout[Slot.NAV] != null) map[Slot.NAV] = BottomNavElement(phoneNavigation, 0, textScale)
+        return map
+    }
+
+    /** ref1/ref3 landscape cockpit; HERO stays the avatar slot (live hologram / Jarvis Avatar via avatar contract). */
+    private fun landscapeCockpitElements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
+        val map = linkedMapOf<Slot, ContinuumElement>(
+            Slot.BRAND to CockpitBrandElement(textScale),
+            Slot.SEARCH to HeaderButtonElement(HeaderButtonElement.Kind.SEARCH, textScale),
+            Slot.NOTIFICATIONS to HeaderButtonElement(HeaderButtonElement.Kind.NOTIFICATIONS, textScale),
+            Slot.PROFILE to HeaderButtonElement(HeaderButtonElement.Kind.PROFILE, textScale),
+            Slot.MODEL to CockpitBrainCard(textScale),
+            Slot.PROCESSES to CockpitProcessesCard(textScale),
+            Slot.LIVE_DIALOG to CockpitDialogCard(textScale),
+            Slot.SYSTEM_STATUS to CockpitSystemCard(textScale),
+            Slot.WORKERS to CockpitAgentsCard(textScale),
+            Slot.COMPOSER to CockpitComposerElement(textScale)
+        )
+        for (slot in ContinuumLandscapeCockpitLayout.topTabs) map[slot] = CockpitTabElement(slot, textScale)
+        for (slot in ContinuumLandscapeCockpitLayout.actionBar) map[slot] = CockpitActionElement(slot, textScale)
+        for (slot in listOf(Slot.VIEW_AVATAR, Slot.VIEW_ORB, Slot.VIEW_COMPACT)) map[slot] = ReferenceViewModeElement(slot, textScale)
+        if (layout[Slot.RAIL] != null) map[Slot.RAIL] = RailElement(railNavigation, 0, textScale)
         return map
     }
 
