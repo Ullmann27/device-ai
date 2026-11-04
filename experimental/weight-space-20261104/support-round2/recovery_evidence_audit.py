@@ -167,6 +167,7 @@ def audit(reader):
             continue
         require(sha(content) == expected, 'registered source/data bytes mismatch: ' + path)
         verified.append(path)
+    require(not unavailable, 'registered source/data bytes unavailable: ' + ', '.join(unavailable))
     results = {'snapshot': reader.commit, 'recordedRunSourceCommit': source,
                'registrationSha256': registration_hash, 'verifiedRegisteredFiles': verified,
                'sealedFilesNotRead': skipped, 'registeredFilesUnavailable': unavailable, 'diagnostic': {}, 'intent': {}}

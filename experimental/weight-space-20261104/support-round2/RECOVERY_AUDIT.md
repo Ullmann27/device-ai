@@ -61,7 +61,7 @@ The later long-study protocol registers a fresh-start 512-update study with deve
 
 `recovery_evidence_audit.py` is a Python standard-library-only, read-only checker. It checks:
 
-1. Registration identity and available registered source/data file SHA-256 values, excluding the sealed split.
+1. Registration identity and every registered source/data file SHA-256 value, excluding the sealed split. Any unavailable non-sealed registered source/data file rejects the audit.
 2. All six training receipts and six post-training capacity receipts against their raw log hashes, recorded source/JAR/registration identities, completion flags, and configured timeouts.
 3. Every diagnostic summary's loss/probe/first-batch records against the raw logs, finite/range checks, EOS-margin arithmetic, final checkpoint identity, training sequence, equal token schedule, and acceptance predicate.
 4. Both intent summaries against raw SCORE/SELECTION records and the selection tables/checkpoint identities. It independently reconstructs all 192 development CASE outcomes, per-class counts, EOS counts, token counts, and reported mean losses/probabilities, then recalculates checkpoint ranking and the 12/24 signal gate.
@@ -70,7 +70,7 @@ The later long-study protocol registers a fresh-start 512-update study with deve
 
 It does not independently execute Kotlin, regenerate NLL from weights, rehash unavailable model/JAR/baseline binaries, inspect sealed contents, or infer Android behavior. A recorded source commit is checked consistently across receipts; this is not independent proof of the process that originally ran. Loss aggregation uses only a narrow tolerance for JVM Float-to-string rounding.
 
-The script disables Git lazy fetch and sets per-read timeouts. This matters for a partial clone: otherwise a missing blob can stall while Git tries an unavailable network origin. Missing registered source blobs are explicitly reported; missing decisive result logs/receipts fail the audit. A complete clone with the pinned objects is sufficient to rerun without network.
+The script disables Git lazy fetch and sets per-read timeouts. This matters for a partial clone: otherwise a missing blob can stall while Git tries an unavailable network origin. Missing registered source blobs and missing decisive result logs/receipts fail the audit. A complete clone with the pinned objects is sufficient to rerun without network.
 
 ## Commands and evidence
 
@@ -84,6 +84,12 @@ python -m unittest -v test_recovery_evidence_audit
 **Actual full audit: PASS**, with 56 audited Git blobs, all 20 non-sealed registered files hash-matched, no unavailable registered source files, 12 receipt/log pairs, and 192 development CASE records independently aggregated. **Actual targeted tests: 13 tests PASS.** The machine-readable result is recorded in `evidence/recovery-audit.json`; the read trace is `evidence/recovery-audit-readlog.txt`; test output is `evidence/recovery-audit-tests.txt`. Treat the JSON's status as authoritative. At the first attempt, the local partial clone lacked several published receipt/capacity blobs, so that attempt correctly failed rather than claiming a full audit. The parent subsequently supplied the five required missing blobs through its authorized connector and verified their Git object identity against the pinned tree. The final full rerun then passed with lazy fetch disabled; the current evidence file is that successful rerun.
 
 The targeted tests cover tampered log identity, source/JAR/registration mismatch, invalid checkpoint schedules, selection tie-breaking, NaN/infinity, duplicate TSV keys, false exact-answer claims, two-token answers incorrectly counted as exact, aggregate discrepancies, and the sealed-read prohibition. These tests run no model or training pipeline.
+
+### Root integration correction
+
+The preceding 13-test evidence describes the original helper delivery. Root subsequently reproduced a missing-source defect: the original checker listed an unavailable registered source blob but could still return PASS. The integrated checker now rejects that case before the full audit. A new regression test brings the recovery suite to **14 passing tests**; the real pinned-snapshot audit with all source blobs available still produces the same result. No model process was started for this correction.
+
+The original checker, tests and this report are preserved under `evidence/recovery-delivered-source/`; `evidence/deliverable-sha256.json` remains the original helper manifest and refers to those original bytes. The other original evidence files remain unchanged. Current source hashes and actual v2 run-log hashes are recorded in `root-final-verification/receipt.json`. The exact reproduced failure and corrected rejection are recorded in `root-final-verification/missing-registered-blob-red.json` and `root-final-verification/missing-registered-blob-green.json`.
 
 ## Remaining measurement
 

@@ -6,6 +6,28 @@ import recovery_evidence_audit as audit
 
 
 class AuditChecks(unittest.TestCase):
+    def test_unavailable_registered_source_rejected_before_full_audit(self):
+        registration = {'files': {'missing.kt': audit.sha(b'synthetic source')}}
+        raw = audit.json.dumps(registration).encode()
+        registration_hash = audit.sha(raw)
+        available = {
+            audit.EXPERIMENT + 'registration.json': raw,
+            audit.EVIDENCE + 'diagnostic-summary.json': audit.json.dumps({'registrationSha256': registration_hash}).encode(),
+            audit.EVIDENCE + 'intent-summary.json': audit.json.dumps({'sourceCommit': 'synthetic'}).encode(),
+            audit.EVIDENCE + 'no-development-signal.json': audit.json.dumps({'registrationSha256': registration_hash}).encode(),
+        }
+        class MissingReader:
+            commit = audit.SNAPSHOT
+            cache = {}
+            def read(self, path):
+                if path == 'missing.kt':
+                    raise audit.subprocess.CalledProcessError(128, ['git', 'show'])
+                return available[path]
+            def json(self, path):
+                return audit.json.loads(self.read(path))
+        with self.assertRaisesRegex(ValueError, 'registered source/data bytes unavailable'):
+            audit.audit(MissingReader())
+
     def scores(self):
         return [dict(split='dev', step=str(step), correct=str(n), total='24', answerNll=str(loss))
                 for step, n, loss in [(0, 0, 8.8), (32, 6, 1.7), (64, 8, 1.4), (128, 10, 1.25)]]

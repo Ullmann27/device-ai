@@ -1,0 +1,12 @@
+{
+  "case": "missing_registered_blob_must_not_report_full_pass",
+  "sourceSha256": "be0f46ded7114bb659de06c53a77dc6e267f0fa6f4cee5a6aa8eba3a0fe56690",
+  "injectedMissingPath": "experimental/lm1-training-recovery-20261104/run_registered_study.py",
+  "actualStatus": "PASS",
+  "registeredFilesUnavailable": [
+    "experimental/lm1-training-recovery-20261104/run_registered_study.py"
+  ],
+  "expectedStatus": "FAIL",
+  "casePassed": false,
+  "modelProcesses": 0
+}

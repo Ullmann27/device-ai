@@ -1,11 +1,93 @@
 {
   "status": "SOFTWARE_VERIFIED_NATIVE_OBSERVATION_WITH_REGISTRATION_CONFLICT",
-  "pythonChecksPassed": 18,
-  "recoveryChecks": 13,
+  "pythonChecksPassed": 19,
+  "recoveryChecks": 14,
   "sequenceChecks": 5,
   "fullRecoveryAudit": "PASS_MATCHES_AGENT",
   "noNativeTrainingInTheseChecks": true,
   "results": [
+    {
+      "name": "recovery-tests-v2",
+      "exitCode": 0,
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "-v",
+        "test_recovery_evidence_audit"
+      ],
+      "stdoutFile": "recovery-tests-v2.stdout.txt",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrFile": "recovery-tests-v2.stderr.txt",
+      "stderrSha256": "0bf75f3377300675a9db207317cf66d89932eaa036a20065bb02e528f3e79abb"
+    },
+    {
+      "name": "sequence-tests",
+      "exitCode": 0,
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round2/tests",
+        "-p",
+        "test_resource_sequence.py",
+        "-v"
+      ],
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f90852d4397315c4c427a309c9ee9be7626f993435224fd8306a8b49dcdee283"
+    },
+    {
+      "name": "recovery-audit-v2",
+      "exitCode": 0,
+      "command": [
+        "python3",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round2/recovery_evidence_audit.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-r2",
+        "--commit",
+        "7131c1a50a9c697e481a6debe259758dbf422eef"
+      ],
+      "stdoutFile": "recovery-audit-v2.stdout.txt",
+      "stdoutSha256": "b13b1b9c2ceec56b0bdddccde4c9b5922b53f3e925614176ed905e03ee647008",
+      "stderrFile": "recovery-audit-v2.stderr.txt",
+      "stderrSha256": "464471319fc98939f2949f13831f12fd7b734933d3ddb8bfa3b7bc8f5564ce50"
+    }
+  ],
+  "sourceHashes": {
+    "recovery_evidence_audit.py": "f89cd8df66f07e39de308a7fc253ab881e26792ed3e97a5852c47cb04e7802f2",
+    "test_recovery_evidence_audit.py": "70662e0d4d5bc2b64081e2ed4034691e4a4e0ced82553d3c025720115950132c",
+    "run_resource_measurement.py": "26b84f9bf977dd29ee1ed305af6b4f0ba6085d43c80ea45069363f73cac3656d",
+    "tests/test_resource_sequence.py": "246ba10060f7c8011f019696bc70e02088a3ab4154dd7863c156d0fff28d6543"
+  },
+  "gradientNativeReplay": "PASS_BYTE_IDENTICAL_LOG_AND_234_COORDINATE_VALUES",
+  "gradientCoordinatesCompared": 234,
+  "gradientDoubleToleranceFailures": 0,
+  "floatDifferenceChecksAllPassed": false,
+  "real16mTrainingAttempts": 1,
+  "real16mNativeUpdate": "PASS_OBSERVED",
+  "real16mRegistrationMetadata": "FAIL_SEQUENCE_CONFLICT",
+  "fullReal16mProtocolConformity": false,
+  "noAutomaticRerun": true,
+  "originalRegistrationAndNativeLogsUnchanged": true,
+  "registeredWrapperSha256": "84d9127c81b859d703db2b9a4a38854cc0c142fdc7060613313b387cd7f6b69e",
+  "currentWrapperSha256": "26b84f9bf977dd29ee1ed305af6b4f0ba6085d43c80ea45069363f73cac3656d",
+  "currentWrapperChange": "Tokenizer-derived sequence rejection before process start; old registration intentionally preserved",
+  "sourceHashesAdditional": {
+    "LmGradientAudit.kt": "3dae55568efae84dd3ca4ae70feb05d150fa0046c1f98f67717bc773ca9ad18a",
+    "LmTrainingResourceProbe.kt": "7638fcbe04f7ae53a0ab086ca716002218955d27b7dc2abb7d48d50fa79e31bf",
+    "replay_gradient_audit.sh": "5b72478a5237898fdcff7981a34d77713ef2b1e92396fad4fafc0cd1be4c821d"
+  },
+  "softwareChecks": "PASS",
+  "missingRegisteredBlobRegression": "RED_REPRODUCED_GREEN_CONFIRMED",
+  "recoveryV2RawEvidence": [
+    "recovery-tests-v2.stdout.txt",
+    "recovery-tests-v2.stderr.txt",
+    "recovery-audit-v2.stdout.txt",
+    "recovery-audit-v2.stderr.txt"
+  ],
+  "historicalInitialResults": [
     {
       "name": "recovery-tests",
       "exitCode": 0,
@@ -51,29 +133,6 @@
       "stderrSha256": "464471319fc98939f2949f13831f12fd7b734933d3ddb8bfa3b7bc8f5564ce50"
     }
   ],
-  "sourceHashes": {
-    "recovery_evidence_audit.py": "be0f46ded7114bb659de06c53a77dc6e267f0fa6f4cee5a6aa8eba3a0fe56690",
-    "test_recovery_evidence_audit.py": "e3e5efff15fa4cd64c68659771cd71aa1c4d31e147f5e3797cdf4068cd4f3521",
-    "run_resource_measurement.py": "26b84f9bf977dd29ee1ed305af6b4f0ba6085d43c80ea45069363f73cac3656d",
-    "tests/test_resource_sequence.py": "246ba10060f7c8011f019696bc70e02088a3ab4154dd7863c156d0fff28d6543"
-  },
-  "gradientNativeReplay": "PASS_BYTE_IDENTICAL_LOG_AND_234_COORDINATE_VALUES",
-  "gradientCoordinatesCompared": 234,
-  "gradientDoubleToleranceFailures": 0,
-  "floatDifferenceChecksAllPassed": false,
-  "real16mTrainingAttempts": 1,
-  "real16mNativeUpdate": "PASS_OBSERVED",
-  "real16mRegistrationMetadata": "FAIL_SEQUENCE_CONFLICT",
-  "fullReal16mProtocolConformity": false,
-  "noAutomaticRerun": true,
-  "originalRegistrationAndNativeLogsUnchanged": true,
-  "registeredWrapperSha256": "84d9127c81b859d703db2b9a4a38854cc0c142fdc7060613313b387cd7f6b69e",
-  "currentWrapperSha256": "26b84f9bf977dd29ee1ed305af6b4f0ba6085d43c80ea45069363f73cac3656d",
-  "currentWrapperChange": "Tokenizer-derived sequence rejection before process start; old registration intentionally preserved",
-  "sourceHashesAdditional": {
-    "LmGradientAudit.kt": "3dae55568efae84dd3ca4ae70feb05d150fa0046c1f98f67717bc773ca9ad18a",
-    "LmTrainingResourceProbe.kt": "7638fcbe04f7ae53a0ab086ca716002218955d27b7dc2abb7d48d50fa79e31bf",
-    "replay_gradient_audit.sh": "5b72478a5237898fdcff7981a34d77713ef2b1e92396fad4fafc0cd1be4c821d"
-  },
-  "softwareChecks": "PASS"
+  "sequenceChecksReusedUnchangedResult": true,
+  "historicalRecoveryManifest": "evidence/deliverable-sha256.json describes the original helper delivery; its checker, tests and report bytes are preserved in evidence/recovery-delivered-source/"
 }

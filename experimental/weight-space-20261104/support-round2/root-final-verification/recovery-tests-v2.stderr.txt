@@ -1,0 +1,19 @@
+test_capacity_failure_binds_actual_trials (test_recovery_evidence_audit.AuditChecks.test_capacity_failure_binds_actual_trials) ... ok
+test_capacity_forged_pass_and_wrong_checkpoint_rejected (test_recovery_evidence_audit.AuditChecks.test_capacity_forged_pass_and_wrong_checkpoint_rejected) ... ok
+test_case_totals_reconstructed (test_recovery_evidence_audit.AuditChecks.test_case_totals_reconstructed) ... ok
+test_claimed_correct_but_wrong_output_rejected (test_recovery_evidence_audit.AuditChecks.test_claimed_correct_but_wrong_output_rejected) ... ok
+test_duplicate_tsv_key_rejected (test_recovery_evidence_audit.AuditChecks.test_duplicate_tsv_key_rejected) ... ok
+test_missing_checkpoint_rejected (test_recovery_evidence_audit.AuditChecks.test_missing_checkpoint_rejected) ... ok
+test_nan_case_and_wrong_aggregate_rejected (test_recovery_evidence_audit.AuditChecks.test_nan_case_and_wrong_aggregate_rejected) ... ok
+test_nonfinite_candidate_rejected (test_recovery_evidence_audit.AuditChecks.test_nonfinite_candidate_rejected) ... ok
+test_receipt_log_tampering_rejected (test_recovery_evidence_audit.AuditChecks.test_receipt_log_tampering_rejected) ... ok
+test_sealed_read_rejected_before_git (test_recovery_evidence_audit.AuditChecks.test_sealed_read_rejected_before_git) ... ok
+test_selection_ties_use_loss_then_earlier_step (test_recovery_evidence_audit.AuditChecks.test_selection_ties_use_loss_then_earlier_step) ... ok
+test_selects_highest_correct (test_recovery_evidence_audit.AuditChecks.test_selects_highest_correct) ... ok
+test_two_tokens_cannot_count_as_exact_answer (test_recovery_evidence_audit.AuditChecks.test_two_tokens_cannot_count_as_exact_answer) ... ok
+test_unavailable_registered_source_rejected_before_full_audit (test_recovery_evidence_audit.AuditChecks.test_unavailable_registered_source_rejected_before_full_audit) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.002s
+
+OK
