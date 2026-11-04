@@ -1,0 +1,18 @@
+{
+  "status": "RETURNED_TO_R1 / CANDIDATE_NOT_ADOPTED",
+  "reason": "Measured secret-rich CPU regression despite lower allocation",
+  "measuredCandidatePathAtExecution": "/workspace/scratch/59ad19c6d3b7/tuning-memory/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+  "archivedCandidatePath": "tools/tuning-memory-r2-20261104/candidate/AiContextCompiler.kt",
+  "candidateSha256": "cc95d26e60fe464223db1db171234e2d9eca0c215e94a9069e1a14d00fd9d2d0",
+  "restoredActiveSourceSha256": "2100c6d1b4ecd0e2398ef4039266d9456cc33a69b4ea3700b5e4b79b9c7a5a13",
+  "measuredRunnerSnapshot": "runner-at-measurement.py.txt",
+  "measuredRunnerSha256": "236bd6748e741ecb0d2e85a2bdbe7576de340c61cf5232f887a92107a5dbc5de",
+  "measuredManifest": "manifest.json",
+  "extraMeasurementRounds": 0,
+  "archiveRunnerSha256": "8037fd7b4f9019b03662e52864c05804f25c54bb391fbcfd444ed236438912d6",
+  "activeSourceMatchesR1": true,
+  "archiveRunnerSyntax": "Python AST PASS; no new JVM execution after archive routing",
+  "candidatePatchSha256": "150ac240ae97c37e3040b87134a197ee23bf416d34db4ab5821f055054ea12b6",
+  "candidatePatchCheckAgainstR1": "PASS (git apply --unidiff-zero --check; not applied)",
+  "candidatePatchFormat": "unified diff with zero context"
+}

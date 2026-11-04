@@ -1,0 +1,244 @@
+{
+  "comparison": "R1 vs R2 only",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "cpuCount": 9,
+  "cpuAffinityCount": 9,
+  "primaryRunCount": 1,
+  "diagnosticFollowups": 0,
+  "hot": [
+    {
+      "workload": "no-secrets",
+      "instanceMode": "reused",
+      "warmupPairs": 10000,
+      "rounds": 12,
+      "batch": 2000,
+      "outputBytes": 451,
+      "includedMemoryCount": 0,
+      "includedSourceCount": 0,
+      "truncated": false,
+      "inputUtf16Sha256": "115a4142493f4fb01b0343005a8deac901c8ff63de6b9472c5801164a360049d",
+      "resultUtf16Sha256": "2cb5529eab3a3cbbf1377a67d88aeefc32f304bb4ac4caf2ac8bee2a6da39d31",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 11788.7775,
+          "candidateMedian": 9360.578000000001,
+          "reductionOfMediansPercent": 20.597551357636522,
+          "pairedMedianReductionPercent": 20.369496740710133,
+          "pairedReductionRangePercent": [
+            -22.258546240903378,
+            48.818195739355026
+          ],
+          "candidateLowerRounds": 11
+        },
+        "threadCpuNs": {
+          "baselineMedian": 11589.48525,
+          "candidateMedian": 9304.80825,
+          "reductionOfMediansPercent": 19.713360435917544,
+          "pairedMedianReductionPercent": 19.184503681214384,
+          "pairedReductionRangePercent": [
+            -15.240369141613318,
+            46.066611200565674
+          ],
+          "candidateLowerRounds": 11
+        },
+        "allocatedBytes": {
+          "baselineMedian": 14424.0,
+          "candidateMedian": 7160.0,
+          "reductionOfMediansPercent": 50.36051026067665,
+          "pairedMedianReductionPercent": 50.36051026067665,
+          "pairedReductionRangePercent": [
+            50.19412090959512,
+            50.36051026067665
+          ],
+          "candidateLowerRounds": 12
+        }
+      }
+    },
+    {
+      "workload": "no-secrets",
+      "instanceMode": "fresh-per-call",
+      "warmupPairs": 10000,
+      "rounds": 12,
+      "batch": 2000,
+      "outputBytes": 451,
+      "includedMemoryCount": 0,
+      "includedSourceCount": 0,
+      "truncated": false,
+      "inputUtf16Sha256": "115a4142493f4fb01b0343005a8deac901c8ff63de6b9472c5801164a360049d",
+      "resultUtf16Sha256": "2cb5529eab3a3cbbf1377a67d88aeefc32f304bb4ac4caf2ac8bee2a6da39d31",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 16119.056499999999,
+          "candidateMedian": 12901.830249999999,
+          "reductionOfMediansPercent": 19.959147422803564,
+          "pairedMedianReductionPercent": 22.446167575921862,
+          "pairedReductionRangePercent": [
+            -3.825702537047627,
+            32.7961148185793
+          ],
+          "candidateLowerRounds": 11
+        },
+        "threadCpuNs": {
+          "baselineMedian": 15975.412,
+          "candidateMedian": 12329.16525,
+          "reductionOfMediansPercent": 22.824117149529542,
+          "pairedMedianReductionPercent": 22.36971430040807,
+          "pairedReductionRangePercent": [
+            -3.7975802345944234,
+            32.99729783324225
+          ],
+          "candidateLowerRounds": 11
+        },
+        "allocatedBytes": {
+          "baselineMedian": 14448.0,
+          "candidateMedian": 7184.0,
+          "reductionOfMediansPercent": 50.27685492801772,
+          "pairedMedianReductionPercent": 50.27685492801772,
+          "pairedReductionRangePercent": [
+            50.27685492801772,
+            50.27685492801772
+          ],
+          "candidateLowerRounds": 12
+        }
+      }
+    },
+    {
+      "workload": "secret-rich-sections",
+      "instanceMode": "reused",
+      "warmupPairs": 1000,
+      "rounds": 12,
+      "batch": 200,
+      "outputBytes": 5332,
+      "includedMemoryCount": 4,
+      "includedSourceCount": 2,
+      "truncated": false,
+      "inputUtf16Sha256": "373afa388cbaecefee66d40e586bf7d72817a2bbdc6567335dc28195691b92dc",
+      "resultUtf16Sha256": "82fc972ce8475d197891b108549a40a8093efb3af288b464d5348a753932aba9",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 295781.625,
+          "candidateMedian": 393430.2825,
+          "reductionOfMediansPercent": -33.01376733595265,
+          "pairedMedianReductionPercent": -27.85559380137841,
+          "pairedReductionRangePercent": [
+            -73.91136348332289,
+            16.95409341925861
+          ],
+          "candidateLowerRounds": 1
+        },
+        "threadCpuNs": {
+          "baselineMedian": 279007.2075,
+          "candidateMedian": 392124.33999999997,
+          "reductionOfMediansPercent": -40.54272773580587,
+          "pairedMedianReductionPercent": -27.527490388083706,
+          "pairedReductionRangePercent": [
+            -73.58281174874922,
+            9.785170653012853
+          ],
+          "candidateLowerRounds": 1
+        },
+        "allocatedBytes": {
+          "baselineMedian": 197840.0,
+          "candidateMedian": 170208.0,
+          "reductionOfMediansPercent": 13.966841892438334,
+          "pairedMedianReductionPercent": 13.991909642808704,
+          "pairedReductionRangePercent": [
+            13.962597426965662,
+            14.846083357145844
+          ],
+          "candidateLowerRounds": 12
+        }
+      }
+    },
+    {
+      "workload": "secret-rich-sections",
+      "instanceMode": "fresh-per-call",
+      "warmupPairs": 1000,
+      "rounds": 12,
+      "batch": 200,
+      "outputBytes": 5332,
+      "includedMemoryCount": 4,
+      "includedSourceCount": 2,
+      "truncated": false,
+      "inputUtf16Sha256": "373afa388cbaecefee66d40e586bf7d72817a2bbdc6567335dc28195691b92dc",
+      "resultUtf16Sha256": "82fc972ce8475d197891b108549a40a8093efb3af288b464d5348a753932aba9",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 264549.47,
+          "candidateMedian": 328702.3775,
+          "reductionOfMediansPercent": -24.249871867065178,
+          "pairedMedianReductionPercent": -29.475689397298623,
+          "pairedReductionRangePercent": [
+            -58.527659497841036,
+            14.959394811011128
+          ],
+          "candidateLowerRounds": 2
+        },
+        "threadCpuNs": {
+          "baselineMedian": 253773.565,
+          "candidateMedian": 328781.41500000004,
+          "reductionOfMediansPercent": -29.55699897268655,
+          "pairedMedianReductionPercent": -31.85581087893421,
+          "pairedReductionRangePercent": [
+            -58.88165312881117,
+            12.627839784305998
+          ],
+          "candidateLowerRounds": 1
+        },
+        "allocatedBytes": {
+          "baselineMedian": 197680.0,
+          "candidateMedian": 170008.0,
+          "reductionOfMediansPercent": 13.998381222177256,
+          "pairedMedianReductionPercent": 13.998381222177256,
+          "pairedReductionRangePercent": [
+            13.973411574261439,
+            13.998381222177256
+          ],
+          "candidateLowerRounds": 12
+        }
+      }
+    }
+  ],
+  "cold": {
+    "pairCount": 3,
+    "interpretation": "exploratory first constructor plus compile; not a robust startup-speed result",
+    "metrics": {
+      "wallNs": {
+        "baselineMedian": 10048342,
+        "candidateMedian": 8532849,
+        "baselineRange": [
+          6572586,
+          10218456
+        ],
+        "candidateRange": [
+          8047238,
+          10867047
+        ]
+      },
+      "cpuNs": {
+        "baselineMedian": 9743267,
+        "candidateMedian": 8452096,
+        "baselineRange": [
+          6530811,
+          10240396
+        ],
+        "candidateRange": [
+          7927528,
+          10207407
+        ]
+      },
+      "allocatedBytes": {
+        "baselineMedian": 263896,
+        "candidateMedian": 265360,
+        "baselineRange": [
+          263896,
+          263896
+        ],
+        "candidateRange": [
+          265360,
+          265360
+        ]
+      }
+    }
+  }
+}

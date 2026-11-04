@@ -1,0 +1,116 @@
+private final java.util.regex.Pattern nativePattern;
+  public final kotlin.text.MatchResult find(java.lang.CharSequence, int);
+    Code:
+       0: aload_1
+       1: ldc           #139                // String input
+       3: invokestatic  #18                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_0
+       7: getfield      #24                 // Field nativePattern:Ljava/util/regex/Pattern;
+      10: aload_1
+      11: invokevirtual #143                // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      14: dup
+      15: ldc           #157                // String matcher(...)
+      17: invokestatic  #40                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+      20: iload_2
+      21: aload_1
+      22: invokestatic  #161                // Method kotlin/text/RegexKt.access$findNext:(Ljava/util/regex/Matcher;ILjava/lang/CharSequence;)Lkotlin/text/MatchResult;
+      25: areturn
+
+  public final java.lang.String replace(java.lang.CharSequence, java.lang.String);
+    Code:
+       0: aload_1
+       1: ldc           #139                // String input
+       3: invokestatic  #18                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_2
+       7: ldc_w         #272                // String replacement
+      10: invokestatic  #18                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+      13: aload_0
+      14: getfield      #24                 // Field nativePattern:Ljava/util/regex/Pattern;
+      17: aload_1
+      18: invokevirtual #143                // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      21: aload_2
+      22: invokevirtual #276                // Method java/util/regex/Matcher.replaceAll:(Ljava/lang/String;)Ljava/lang/String;
+      25: dup
+      26: ldc_w         #278                // String replaceAll(...)
+      29: invokestatic  #40                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+      32: areturn
+
+  public final java.lang.String replace(java.lang.CharSequence, kotlin.jvm.functions.Function1<? super kotlin.text.MatchResult, ? extends java.lang.CharSequence>);
+    Code:
+       0: aload_1
+       1: ldc           #139                // String input
+       3: invokestatic  #18                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_2
+       7: ldc_w         #282                // String transform
+      10: invokestatic  #18                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+      13: aload_0
+      14: aload_1
+      15: iconst_0
+      16: iconst_2
+      17: aconst_null
+      18: invokestatic  #284                // Method find$default:(Lkotlin/text/Regex;Ljava/lang/CharSequence;IILjava/lang/Object;)Lkotlin/text/MatchResult;
+      21: dup
+      22: ifnonnull     31
+      25: pop
+      26: aload_1
+      27: invokevirtual #285                // Method java/lang/Object.toString:()Ljava/lang/String;
+      30: areturn
+      31: astore_3
+      32: iconst_0
+      33: istore        4
+      35: aload_1
+      36: invokeinterface #174,  1          // InterfaceMethod java/lang/CharSequence.length:()I
+      41: istore        5
+      43: new           #178                // class java/lang/StringBuilder
+      46: dup
+      47: iload         5
+      49: invokespecial #286                // Method java/lang/StringBuilder."<init>":(I)V
+      52: astore        6
+      54: aload_3
+      55: astore        7
+      57: aload         6
+      59: aload_1
+      60: iload         4
+      62: aload         7
+      64: invokeinterface #290,  1          // InterfaceMethod kotlin/text/MatchResult.getRange:()Lkotlin/ranges/IntRange;
+      69: invokevirtual #296                // Method kotlin/ranges/IntRange.getStart:()Ljava/lang/Integer;
+      72: invokevirtual #301                // Method java/lang/Integer.intValue:()I
+      75: invokevirtual #304                // Method java/lang/StringBuilder.append:(Ljava/lang/CharSequence;II)Ljava/lang/StringBuilder;
+      78: pop
+      79: aload         6
+      81: aload_2
+      82: aload         7
+      84: invokeinterface #307,  2          // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+      89: checkcast     #171                // class java/lang/CharSequence
+      92: invokevirtual #310                // Method java/lang/StringBuilder.append:(Ljava/lang/CharSequence;)Ljava/lang/StringBuilder;
+      95: pop
+      96: aload         7
+      98: invokeinterface #290,  1          // InterfaceMethod kotlin/text/MatchResult.getRange:()Lkotlin/ranges/IntRange;
+     103: invokevirtual #313                // Method kotlin/ranges/IntRange.getEndInclusive:()Ljava/lang/Integer;
+     106: invokevirtual #301                // Method java/lang/Integer.intValue:()I
+     109: iconst_1
+     110: iadd
+     111: istore        4
+     113: aload         7
+     115: invokeinterface #316,  1          // InterfaceMethod kotlin/text/MatchResult.next:()Lkotlin/text/MatchResult;
+     120: astore_3
+     121: iload         4
+     123: iload         5
+     125: if_icmpge     132
+     128: aload_3
+     129: ifnonnull     54
+     132: iload         4
+     134: iload         5
+     136: if_icmpge     150
+     139: aload         6
+     141: aload_1
+     142: iload         4
+     144: iload         5
+     146: invokevirtual #304                // Method java/lang/StringBuilder.append:(Ljava/lang/CharSequence;II)Ljava/lang/StringBuilder;
+     149: pop
+     150: aload         6
+     152: invokevirtual #193                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     155: dup
+     156: ldc_w         #318                // String toString(...)
+     159: invokestatic  #40                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+     162: areturn
