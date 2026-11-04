@@ -314,17 +314,17 @@ class AiContextCompiler(
     }
 
     private fun redactSecrets(text: String): String {
-        val assignments = Regex(
-            """(?i)(?<![\p{L}\p{N}_])(["']?)(password|passwd|token|secret|credential|(?:proxy-)?authorization|api[_-]?key)\1[ \t]*[:=][ \t]*"""
-        )
-        val out = StringBuilder(text.length)
+        val assignments = if ('=' in text || ':' in text) Regex(
+            """(?i)\b(password|passwd|token|secret|credential|(?:proxy-)?authorization|api[_-]?key)\b["']?[ \t]*[:=][ \t]*"""
+        ).findAll(text) else emptySequence()
+        var out: StringBuilder? = null
         var copiedUntil = 0
-        for (match in assignments.findAll(text)) {
+        for (match in assignments) {
             if (match.range.first < copiedUntil) continue
             val valueStart = match.range.last + 1
             if (valueStart == text.length || text[valueStart].isWhitespace()) continue
             var valueEnd = valueStart
-            if (match.groupValues[2].endsWith("authorization", ignoreCase = true)) {
+            if (match.groupValues[1].endsWith("authorization", ignoreCase = true)) {
                 var schemeEnd = valueStart
                 while (schemeEnd < text.length && !text[schemeEnd].isWhitespace()) schemeEnd++
                 val scheme = text.substring(valueStart, schemeEnd)
@@ -349,11 +349,12 @@ class AiContextCompiler(
             } else {
                 while (valueEnd < text.length && !text[valueEnd].isWhitespace()) valueEnd++
             }
+            if (out == null) out = StringBuilder(text.length)
             out.append(text, copiedUntil, valueStart).append("[REDACTED]")
             copiedUntil = valueEnd
         }
-        out.append(text, copiedUntil, text.length)
-        return out.toString().replace(Regex("(?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]{8,}"), "Bearer [REDACTED]")
+        val assigned = out?.append(text, copiedUntil, text.length)?.toString() ?: text
+        return assigned.replace(Regex("(?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]{8,}"), "Bearer [REDACTED]")
     }
 
     private fun utf8Size(value: String): Int = value.toByteArray(Charsets.UTF_8).size
