@@ -1,6 +1,6 @@
 {
   "task": "G1-INTEGRATE-WEIGHT-002",
-  "phase": "GRADIENT_ACCESS_VERIFIED_NEXT_OPEN_PATH_PROBE",
+  "phase": "OPEN_PATH_SOURCE_FROZEN_NOT_RUN",
   "parentCommit": "0af14f75b04e68ba849a92316b8be51041e8738b",
   "comparisonPr508Commit": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
   "ownerSession": "0549bca61ccf",
@@ -17,7 +17,7 @@
     "6.56M/9.71M gradient access, chain-rule and twenty finite-difference checks"
   ],
   "next": [
-    "test whether all initially inactive added parameters receive gradients after one fixed small output-path perturbation",
-    "publish consolidated handoff and schedule bounded overnight continuation"
+    "execute one registered fixed path-opening probe",
+    "preserve result, restore original arrays, and publish final handoff"
   ]
 }
