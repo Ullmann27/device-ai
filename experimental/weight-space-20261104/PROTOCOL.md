@@ -25,6 +25,7 @@ callers and private snapshot remain unchanged.
 - A separate agent authors 32 fresh generic German holdout paragraphs. Its text is
   withheld from the selecting agent; seal the hash before candidate evaluation.
   These are synthetic language-probability probes, not an external capability benchmark.
+  Sealed SHA-256: `d5a5858f0eaff24495cd98c337fc662271c4a1b41027b1142764735c244942af`.
 
 ## Experiment A: no-gradient edit
 
@@ -57,15 +58,38 @@ tied. Optional deterministic zero-sum perturbations across replicated input
 channels break symmetry while preserving the initial function within measured
 floating-point tolerance.
 
-- Factor 4: 1,708,288 parameters.
-- Factor 8: 6,562,304 parameters, 26,249,216 parameter bytes (FP32), excluding runtime state.
-- Trial target: factor 8 if resource and parity checks pass. No larger shape is
-  needed for this bounded experiment.
+- Amendment before expanded-model outcomes: the owner requested successive increases
+  until a limit is reached, then retention of the last passing model. The fixed
+  ladder is factor 2 (460,928), factor 4 (1,708,288), factor 8 (6,562,304),
+  then dim 512 with 3 (9,712,128), 4 (12,861,952) and 5 (16,011,776) layers.
+  A sixth layer would require 76,646,400 bytes for parameters alone and is rejected
+  before allocation by the current runtime's 64 MiB checkpoint contract.
+- Each width is independently derived from the selected calibration checkpoint,
+  with noiseStd exactly 0.001 and seed 20261104. Added layers use seed 20261104;
+  their output projections and final MLP bias are zero so their residual maps
+  initially preserve the source function. No settings are retuned after a failure.
+- Each stage must pass forward, recurrent-runtime and greedy-generation parity
+  before a separate fresh-JVM capacity benchmark. The fixed prompt has 64 tokens
+  with the original tokenizer; record its actual count, one warmup and three trials.
+  Gates: maximum one-token generation-call wall time <=1500 ms (a conservative
+  first-token latency bound, not streamed TTFT); maximum 32-token generation-call
+  time <=5000 ms; Linux VmHWM <=768 MiB; exactly 32 generated tokens in those
+  throughput trials; no TIME, CANCELLED, CONTEXT, integrity or finite-value failures.
+  A whole benchmark process has a separate 120-second timeout. Record all failures.
+  Stop at the first failing stage; keep the preceding passing checkpoint.
+- These are declared host engineering gates, not measured Fold7 limits. Reaching
+  the 64 MiB software contract is a compatibility limit, not a hardware crash.
 - Fresh forward/generation and checkpoint round-trip tests must show that expansion
   preserves the learned baseline before any additional updates.
 - Run the same fixed 16-step data schedule for a small-model control and the expanded
   model. Learning rate 0.0001, AdamW weight decay 0.01, warmup 2, gradient clip 1,
   two workers. These are engineering choices, not owner-specified hyperparameters.
+  The expanded model is the last stage passing the fixed capacity gates. Each
+  training process has a 600-second limit and 3 GiB maximum Java heap. Failed or
+  incomplete continuation is not used as a successful candidate.
+  This comparison measures these two operational recipes. Identical Adam settings
+  do not isolate parameter-count effects: replication changes optimization geometry,
+  including the final normalization scale. No causal size benefit is claimed.
 - Record parameter changes and replica divergence after training. Expanded copies
   before adaptation add capacity, not new knowledge; report this explicitly.
 
@@ -77,6 +101,8 @@ edit, continued small control, expanded initial model and continued expanded mod
 once on the same holdout. Do not tune again on it. A new experiment needs a new
 holdout. Prefer the smaller model unless the larger one demonstrates an actual
 benefit; every result remains an offline research result.
+For final development selection, differences within 0.00001 BPB of the best value
+are treated as numerically equivalent and the smaller model is preferred.
 
 Report BPB, matched training tokens, parameter count, changed weights, source and
 tokenizer hashes, wall times, integrity tests, and all failures. Show a fixed set of
