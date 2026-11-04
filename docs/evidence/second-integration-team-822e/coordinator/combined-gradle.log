@@ -1,0 +1,72 @@
+{"checkout": "/workspace/scratch/822e72396ed9/continuum-combined", "source_commit": "377ac199b1e360cecefbe1e04bf43e68e94695b9", "source_tree": "2be53764ed72e00e780c7b87ff1401c195ac0a50", "worktree_clean": true, "requested": ["--offline", "-Dorg.gradle.jvmargs=-Xmx1g", "-PcontinuumUiWidgetTests=true", ":app:testDebugUnitTest", "--tests", "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest", "--tests", "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest", "--tests", "at.heinz.deviceai.ContinuumBotPersonalityUiTest", "--tests", "at.heinz.deviceai.ContinuumBotTaskRoutingUiTest", "--tests", "at.heinz.deviceai.ContinuumBotToolTaskUiTest", "--tests", "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest", "--tests", "at.heinz.deviceai.MemoryRecallActivityUiTest", "--tests", "at.heinz.deviceai.avatar.AvatarDirectorTest", "--tests", "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest", "--tests", "at.heinz.deviceai.avatar.AvatarNativeRegressionTest", "--tests", "at.heinz.deviceai.avatar.AvatarObservedGazeTest", "--tests", "at.heinz.deviceai.avatar.AvatarPortedPartsTest", "--tests", "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest", "--tests", "at.heinz.deviceai.avatar3d.Avatar3dContractTest", "--tests", "at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest", "--tests", "at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest", "--tests", "at.heinz.deviceai.chief.ChiefBotAddressRouterTest", "--tests", "at.heinz.deviceai.chief.ChiefBotConversationTest", "--tests", "at.heinz.deviceai.chief.ChiefBotPersonasTest", "--tests", "at.heinz.deviceai.chief.ChiefBotTaskIntakeTest", "--tests", "at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest", "--tests", "at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest", "--tests", "at.heinz.deviceai.cockpit.CockpitContractsTest", "--tests", "at.heinz.deviceai.cockpit.CockpitTimelineTest", "--tests", "at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest", "--tests", "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest", "--tests", "at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest", "--tests", "at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest", "--tests", "at.heinz.deviceai.cockpit.MemoryEventSourceTest", "--tests", "at.heinz.deviceai.cockpit.PillGateMappingTest", "--tests", "at.heinz.deviceai.cockpit.RetrievalCalculationSourceTest", "--tests", "at.heinz.deviceai.cockpit.SafeFlowsFgTest", "--tests", "at.heinz.deviceai.cognitive.HybridMemoryIdentityTest", "--tests", "at.heinz.deviceai.cognitive.HybridMemoryRetrievalParityTest", "--tests", "at.heinz.deviceai.cognitive.MemoryContextBoundaryTest", "--tests", "at.heinz.deviceai.cognitive.MemoryContextIdentityTest", "--tests", "at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest", "--tests", "at.heinz.deviceai.cognitive.MemoryRecallObservationTest", "--tests", "at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest", "--tests", "at.heinz.deviceai.learning.TemporalCueCalendarTest", "--tests", "at.heinz.deviceai.motion.LipSyncFaceSourceTest", "--tests", "at.heinz.deviceai.motion.MotionCurvesTest", "--tests", "at.heinz.deviceai.motion.MotionLibraryTest", "--tests", "at.heinz.deviceai.routines.RoutineBookAdmissionTest", "--tests", "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest", ":app:lintDebug"]}
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+
+> Task :app:compileDebugKotlin
+w: file:///workspace/scratch/822e72396ed9/continuum-combined/app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt:138:13 'when' is exhaustive so 'else' is redundant here.
+w: file:///workspace/scratch/822e72396ed9/continuum-combined/app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt:138:13 'when' is exhaustive so 'else' is redundant here.
+
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:prepareUiTestSdk
+> Task :app:processDebugJavaRes
+> Task :app:processDebugUnitTestJavaRes
+> Task :app:testDebugUnitTest
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:extractProguardFiles
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintReportDebug
+> Task :app:lintDebug
+[Incubating] Problems report is available at: file:///workspace/scratch/822e72396ed9/continuum-combined/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 2m 49s
+40 actionable tasks: 23 executed, 17 up-to-date
+
+EXIT_CODE=0
