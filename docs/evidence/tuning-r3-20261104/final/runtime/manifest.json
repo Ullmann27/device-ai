@@ -1,0 +1,51 @@
+{
+  "status": "CHECKS_PASS",
+  "baselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
+  "baselineTree": "f6297e08d03eae74283f43b1ce5abf80c5f7e666",
+  "sourceReceiptSha256": "69d5c3c459b6d7c1ff0ca9e051e76170d37c758800a9d9965ebbb2fa3e810d41",
+  "sourceSha256": {
+    "baseline/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "baseline/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "baseline/LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "baseline/LmModel.kt": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+    "baseline/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "baseline/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "candidate/LmBpeTokenizer.kt": "eaad68236366584fc6e21473ebf8332b3ea389511b252caaf1cc1f0bf3e3a233",
+    "candidate/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "candidate/LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "candidate/LmModel.kt": "845575c5757f9c41ea1f483fb2d490864533e5a08a0a2113d888d0ca4b7e66c5",
+    "candidate/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "candidate/LmTensor.kt": "2c1d375454331b814d1362af5506d87f34a24a1a16fd29cfaf7de371f5cd38d7"
+  },
+  "runtimeTestSha256": "5a8d542ca92c10d7367f60d45c72c82d0b120091d5321ea8af9fccf65bd0087d",
+  "referenceTestSha256": "a9a4a3bdb5280d148d5faaa9c88f1be5b4df3b079e4f20e24773034e87ee3690",
+  "harnessSha256": "97ec30482fe8ab7672d097e8669c57b188be0bfe6eec13c341d60213c4d3dbe1",
+  "packageTransformation": "baseline source and test package declarations only",
+  "dependencies": {
+    "kotlin-stdlib-2.0.20.jar": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006",
+    "junit-4.13.2.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "hamcrest-core-1.3.jar": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+  },
+  "classpath": "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar",
+  "distinctTestMethods": 5,
+  "suiteExecutions": 2,
+  "jarSha256": "9981db8d8dce5d699f1644df1f202aab675f6ee1ef8e65726de05b282f065cdf",
+  "testCommands": {
+    "baseline": [
+      "java",
+      "-Xmx512m",
+      "-cp",
+      "/workspace/scratch/59ad19c6d3b7/tuning-r3-output/final-runtime/runtime-checks.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar",
+      "org.junit.runner.JUnitCore",
+      "at.heinz.deviceai.learning.lm.reference.LmRuntimeTest"
+    ],
+    "candidate": [
+      "java",
+      "-Xmx512m",
+      "-cp",
+      "/workspace/scratch/59ad19c6d3b7/tuning-r3-output/final-runtime/runtime-checks.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar",
+      "org.junit.runner.JUnitCore",
+      "at.heinz.deviceai.learning.lm.LmRuntimeTest"
+    ]
+  }
+}

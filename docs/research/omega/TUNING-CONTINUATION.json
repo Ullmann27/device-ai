@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "RUNNING",
-  "owner": "tuning-root-59ad19c6d3b7-r3",
-  "leaseExpiresAtUtc": "2026-11-04T23:52:58.467208+00:00",
-  "updatedAtUtc": "2026-11-04T21:52:58.467208+00:00",
+  "status": "READY_FOR_NEXT_RUN",
+  "owner": null,
+  "leaseExpiresAtUtc": null,
+  "updatedAtUtc": "2026-11-04T21:56:41.791652+00:00",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -54,10 +54,11 @@
       "status": "ADOPTED_IN_DRAFT",
       "tests": "26/26 PASS",
       "evidence": "docs/evidence/tuning-r3-20261104/m4/RESULTS.md",
-      "registrationCommit": "40ba0479717c91a206fd55f8134fd610b3c077b2"
+      "registrationCommit": "40ba0479717c91a206fd55f8134fd610b3c077b2",
+      "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "Final actual baseline/candidate runtime caller checks and source/evidence audit; no further timing",
+  "next": "Read fresh PR/head/ownership; acquire lease; inspect new bounded candidates sequentially; preserve every prior receipt",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -65,5 +66,42 @@
     "no redaction repair",
     "no other-team branch mutation",
     "no repeated favorable-sample search"
+  ],
+  "lastOwner": "tuning-root-59ad19c6d3b7-r3",
+  "completedRound": "R3",
+  "lastPublishedProductionCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
+  "completedMilestones": 4,
+  "verification": {
+    "distinctMethods": 31,
+    "runtime": "5 baseline + 5 candidate executions, 5 distinct methods",
+    "timingProcesses": 7,
+    "rawSamples": 1332,
+    "audit": "docs/evidence/tuning-r3-20261104/final/audit.json",
+    "rejectedCandidate": "M3A retained and reproduced; not active",
+    "android": "unmeasured"
+  },
+  "queue": [
+    {
+      "target": "LmBpeTokenizer.encodeWord temporary allocations",
+      "status": "NOT_YET_INVESTIGATED",
+      "gate": "Inspect current code and callers; preregister a new source-bound hypothesis before measurement; preserve merge/cache/vocabulary behavior"
+    },
+    {
+      "target": "Remaining local-inference allocation sites",
+      "status": "NOT_YET_INVESTIGATED",
+      "gate": "Use fresh source and actual caller profile; coordinate ownership; no architecture or weight changes"
+    },
+    {
+      "target": "Android/Fold7 component and end-to-end profiling",
+      "status": "WAITING_FOR_AVAILABLE_TARGET",
+      "gate": "Only when an authorized target exists; do not substitute host results or install/release automatically"
+    }
+  ],
+  "stopRules": [
+    "No overlapping active lease",
+    "No repeated old timings without a new hypothesis",
+    "No newly spawned subagents",
+    "A failed gate archives and rejects the candidate",
+    "Report concrete blockers without claiming completion"
   ]
 }

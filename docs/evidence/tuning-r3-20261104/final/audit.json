@@ -1,0 +1,91 @@
+{
+  "status": "PASS",
+  "auditedHead": "8b30bb6f76aece62696fd627992fa5dcd2394fec",
+  "harnessSha256": "b12d579b54e21481fbfa445ed1741a1d80fbcdf7429b672f8e10a4a11b246de6",
+  "timingProcesses": 7,
+  "samples": 1332,
+  "stages": {
+    "baseline": {
+      "sourceRevision": "2f20c19b7e37197a6accac0c226b5401e25f1f99",
+      "publicCompanionSourceCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
+      "samples": 468,
+      "rawSha256": "55fdebedaceaae521adcebc2820a5da1907d627e59b8d032ae61d525b700cec6",
+      "summaryRecomputedExactly": true,
+      "sourceAndHarnessVerified": true,
+      "warnings": []
+    },
+    "m1": {
+      "sourceRevision": "6156d048264ffd2cfed38ab7ea11658a64eecd54",
+      "publicCompanionSourceCommit": "facc6aa2f809ef1094c27dcc693a1b0f22f7942d",
+      "samples": 144,
+      "rawSha256": "f141e326b8d16263eda5b8e23c3cf577f014fa50ba38420a9c30342ca032b253",
+      "summaryRecomputedExactly": true,
+      "sourceAndHarnessVerified": true,
+      "warnings": []
+    },
+    "m2": {
+      "sourceRevision": "54a4342c778d169f1af22a1b15f8b397b0d751cf",
+      "publicCompanionSourceCommit": "7d9fbea5e7b02ca80abd037c4cfb3a0c6a0c4e02",
+      "samples": 144,
+      "rawSha256": "eb429abed6c9faaa934c1bc94e1647ce3815f9b7bb9fe41301f952d216dbe3a8",
+      "summaryRecomputedExactly": true,
+      "sourceAndHarnessVerified": true,
+      "warnings": []
+    },
+    "m3a": {
+      "sourceRevision": "54a4342c778d169f1af22a1b15f8b397b0d751cf",
+      "publicCompanionSourceCommit": "7d9fbea5e7b02ca80abd037c4cfb3a0c6a0c4e02",
+      "samples": 180,
+      "rawSha256": "108126bb239b6e07959701c497fea8f41b94df20d821a831f21ad310ae721955",
+      "summaryRecomputedExactly": true,
+      "sourceAndHarnessVerified": true,
+      "warnings": []
+    },
+    "m3b": {
+      "sourceRevision": "565b3e0ac34aa7c16b4a6dad4939772140f93a4b",
+      "publicCompanionSourceCommit": "e5f05b92d71890a9c9ebb6c95649d5ef1e0edea0",
+      "samples": 180,
+      "rawSha256": "0c72b3eceb7735286a9599248683f761a80d0a1149466424cf96e7cd10e60113",
+      "summaryRecomputedExactly": true,
+      "sourceAndHarnessVerified": true,
+      "warnings": []
+    },
+    "m4-control": {
+      "sourceRevision": "565b3e0ac34aa7c16b4a6dad4939772140f93a4b",
+      "publicCompanionSourceCommit": "e5f05b92d71890a9c9ebb6c95649d5ef1e0edea0",
+      "samples": 108,
+      "rawSha256": "bf77a9172862bcfcebfc5756637e25c9d3dd0efe46a2fa313dd4ce42b77e50d4",
+      "summaryRecomputedExactly": true,
+      "sourceAndHarnessVerified": true,
+      "warnings": []
+    },
+    "m4": {
+      "sourceRevision": "8b30bb6f76aece62696fd627992fa5dcd2394fec",
+      "publicCompanionSourceCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
+      "samples": 108,
+      "rawSha256": "6867bfc1ceb8eab3a8febbd4705ddd4a7acf413c3c1dfdcb2a8ea7f8d417ab5b",
+      "summaryRecomputedExactly": true,
+      "sourceAndHarnessVerified": true,
+      "warnings": []
+    }
+  },
+  "distinctTestMethods": 31,
+  "runtimeSuites": "5 original + 5 final executions, 5 distinct methods",
+  "archiveFunctionalChecks": "24 methods, no new timing",
+  "historicalReceiptsUnchanged": {
+    "docs/evidence/three-tuning-bots-20261104": {
+      "files": 37,
+      "treeListingSha256": "043105ddfeecc1e453e88d4aeaa2a54064fab59015c5a280c2335ff7cbb17b75"
+    },
+    "docs/evidence/three-tuning-bots-r2-20261104": {
+      "files": 89,
+      "treeListingSha256": "1ef3475175aa49fe261b6f3e96f33464cd59a8c7dd4e07bc8e667129b59e1bad"
+    }
+  },
+  "productionChanged": [
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt"
+  ],
+  "r1SamplerAndOtherProductionPreserved": true
+}
