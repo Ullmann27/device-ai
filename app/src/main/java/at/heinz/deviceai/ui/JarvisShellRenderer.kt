@@ -60,7 +60,15 @@ object JarvisShellRenderer {
     private fun placeholder(p: ContinuumPainter, b: Box, text: String) {
         val style = JarvisDesign.Type.title
         val y = if (b.height < 70f) b.top + b.height / 2f + p.capHeight(style) / 2f else b.top + 14f + p.capHeight(style)
-        JarvisNeon.text(p, ContinuumSurfaces.fit(p, text, style, b.width - 24f), b.left + 12f, y, style, Colors.text)
+        JarvisNeon.text(p, fit(p, text, style, b.width - 24f), b.left + 12f, y, style, Colors.text)
+    }
+
+    private fun fit(p: ContinuumPainter, text: String, style: TextStyle, maxWidth: Float): String {
+        if (maxWidth <= 0f) return ""
+        if (p.measureText(text, style) <= maxWidth) return text
+        var end = text.length
+        while (end > 1 && p.measureText(text.substring(0, end) + "…", style) > maxWidth) end--
+        return text.substring(0, end).trimEnd() + "…"
     }
 
     private fun topBarPlaceholder(p: ContinuumPainter, b: Box) {

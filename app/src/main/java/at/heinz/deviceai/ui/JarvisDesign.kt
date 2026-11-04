@@ -55,7 +55,7 @@ object JarvisDesign {
         const val gap = ContinuumTheme.CARD_GAP
         const val margin = ContinuumTheme.SCREEN_MARGIN
         const val inputBarHeight = 52f
-        const val bottomNavHeight = ContinuumHomeLayout.PHONE_NAV_HEIGHT
+        const val bottomNavHeight = 74f // = ContinuumHomeLayout.PHONE_NAV_HEIGHT
         const val railCompact = 56f      // Fold7: icon-only rail
         const val railLabelled = 168f    // tablet: icon + label
         const val railFold = 124f        // Fold7 open: icon + label (ref5, Heinz-Entscheid)
