@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumBotStatusRoutingUiTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-04T10:51:13" hostname="8c129114cae4" time="0.404">
+  <properties/>
+  <testcase name="pendingBotLookupDoesNotBlockReadOnlyChiefStatus" classname="at.heinz.deviceai.ContinuumBotStatusRoutingUiTest" time="0.232"/>
+  <testcase name="commaAddressedJarvisStatusKeepsActiveBotSelected" classname="at.heinz.deviceai.ContinuumBotStatusRoutingUiTest" time="0.065"/>
+  <testcase name="ordinaryBotTextStaysPendingWhileTheExistingJobOwnsTheModel" classname="at.heinz.deviceai.ContinuumBotStatusRoutingUiTest" time="0.047"/>
+  <testcase name="spaceAddressedChiefStatusDoesNotEnterThePrivateBotRouter" classname="at.heinz.deviceai.ContinuumBotStatusRoutingUiTest" time="0.057"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -8,17 +8,38 @@ object ChiefBotAddressRouter {
         data class Jarvis(val text: String?) : Address
     }
 
+    private const val JARVIS_PREFIX = "(?:JARVIS[, :]\\s*)?"
+    private val selectionPatterns = listOf(
+        Regex("^${JARVIS_PREFIX}rufe\\s+([^\\r\\n]{1,80}?)(?:\\s+auf)?[.!]?$", RegexOption.IGNORE_CASE),
+        Regex("^${JARVIS_PREFIX}sprich\\s+mit\\s+([^\\r\\n]{1,80}?)[.!]?$", RegexOption.IGNORE_CASE),
+        Regex("^${JARVIS_PREFIX}wechsle\\s+zu\\s+([^\\r\\n]{1,80}?)[.!]?$", RegexOption.IGNORE_CASE)
+    )
+    // Mentions take one name token. Multiword names use the colon/comma forms.
+    private val mentionPattern = Regex("^@([^\\s,:]{1,80})(?::\\s+|\\s+)(\\S[\\s\\S]*)$")
+    // Require a letter-led name and separated body, avoiding times, URLs and paths.
+    private val colonPattern = Regex("^(\\p{L}[^,:\\r\\n]{0,79}):\\s+(\\S[\\s\\S]*)$")
+    private val commaPattern = Regex("^([^,\\r\\n]{1,80}),\\s*(\\S[\\s\\S]*)$")
+
     fun parse(text: String): Address? {
-        val value = text.trim()
-        if (value.equals("JARVIS", true)) return Address.Jarvis(null)
-        val selection = Regex("^(?:JARVIS[, :]\\s*)?rufe\\s+([^\\r\\n]{1,80}?)[.!]?$", RegexOption.IGNORE_CASE)
-            .matchEntire(value)
-        if (selection != null) {
+        // Trim only the address prefix. Message content, including its final
+        // restriction, indentation and trailing newline, must survive unchanged.
+        val value = text.trimStart()
+        val command = value.trimEnd()
+        if (command.equals("JARVIS", true)) return Address.Jarvis(null)
+        for (pattern in selectionPatterns) {
+            val selection = pattern.matchEntire(command) ?: continue
             val name = selection.groupValues[1].trim()
+            if (name.isEmpty()) return null
             return if (name.equals("JARVIS", true)) Address.Jarvis(null) else Address.Select(name)
         }
-        val addressed = Regex("^([^,\\r\\n]{1,80}),\\s*(\\S[\\s\\S]*)$").matchEntire(value) ?: return null
+        // Match the address before examining punctuation in its body.
+        val addressed = if (value.startsWith("@")) {
+            mentionPattern.matchEntire(value)
+        } else {
+            colonPattern.matchEntire(value) ?: commaPattern.matchEntire(value)
+        } ?: return null
         val name = addressed.groupValues[1].trim()
+        if (name.isEmpty()) return null
         val body = addressed.groupValues[2]
         return if (name.equals("JARVIS", true)) Address.Jarvis(body) else Address.Message(name, body)
     }

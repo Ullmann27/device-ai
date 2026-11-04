@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-04T10:47:21" hostname="8c129114cae4" time="0.595">
+  <properties/>
+  <testcase name="shutdownReportsQueuedJobsEvenWhileAFactoryIgnoresInterruption" classname="at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest" time="0.011"/>
+  <testcase name="cancelledLateReturnNeverCreatesASecondSuccessOrReopensAdmission" classname="at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest" time="0.012"/>
+  <testcase name="cancelledWorkerQueueDoesNotAccumulateBehindAnUncooperativeCall" classname="at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest" time="0.554"/>
+  <testcase name="callbackCanShutdownItsOwnPoolAndTerminateQueuedJobsExactlyOnce" classname="at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest" time="0.003"/>
+  <testcase name="shutdownRejectsReentrantSubmissionBeforeCallingQueuedReportConsumers" classname="at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest" time="0.014"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,475 @@
+{
+  "source_commit": "dbb8e2f7085b0140ed437502b27fac5f988ac834",
+  "artifacts": [
+    {
+      "path": "docs/evidence/personality-bots-20261104/README.md",
+      "bytes": 2958,
+      "sha256": "af3c1aa4b994084e7d0a35e089ab9bdb78a464737a6e90f032df479d36d1cf0d"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/activity-red/README.md",
+      "bytes": 186,
+      "sha256": "d69c2051cd7c88b5cc7fdb7179e1a841ca3ccf80dea4ecce519423511c5e16b7"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/activity-red/TEST-at.heinz.deviceai.ContinuumBotTaskRoutingUiTest.xml",
+      "bytes": 11705,
+      "sha256": "3e1ee2275f249587e08b80b8764ece81adabec9cb2542d8125ef80f26d4c3c63"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/activity-red/gradle.log",
+      "bytes": 15422,
+      "sha256": "280b41ee98d6c8dcbfe89d61a195d237cc7baa1a30e34a14e52500c2554a2039"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/address-red-task-green/TEST-at.heinz.deviceai.chief.ChiefBotAddressRouterTest.xml",
+      "bytes": 69267,
+      "sha256": "55aab50897b13510749530a4de501efdac1528e42af08808c2e5aecaa1826723"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/address-red-task-green/TEST-at.heinz.deviceai.chief.ChiefBotTaskIntakeTest.xml",
+      "bytes": 1173,
+      "sha256": "373ea8242810828d0206e1e21008f1fe5d2c8a89e5b05df160d9a6854aab45be"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/address-red-task-green/gradle.log",
+      "bytes": 4419,
+      "sha256": "3636b2bd276f16f82d24718ef3c5109125a445de04ffd4886eaf265965e512de"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/address-red-task-green/summary.json",
+      "bytes": 289,
+      "sha256": "8ea724e8010abc8b8f49f1ae0b155d9bb175160ef96ab4b4d19a88019798b225"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/all-widget-suite-interrupted/README.md",
+      "bytes": 879,
+      "sha256": "be1af706ae229a350cb46fe158cf52656e54dffebfaf4eafc6d1f055915cef1e"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/all-widget-suite-interrupted/gradle.log",
+      "bytes": 2812,
+      "sha256": "152ac15f3e7ad113413a5a1fda1475916fc3fd5d74128822f6a0f43d45a73878"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/all-widget-suite-interrupted/source-manifest.json",
+      "bytes": 184486,
+      "sha256": "61aa970b1070dc9300d11310c183aa672911da556eba50e3a3263e48a3b45dcd"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/baseline/TEST-at.heinz.deviceai.ContinuumBotRosterStorageUiTest.xml",
+      "bytes": 1300,
+      "sha256": "321d2040dd75bd396720ba7b7b8e0c75b36d2279224514eec21ef64fb8d3b3e7"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/baseline/TEST-at.heinz.deviceai.ContinuumBotStatusRoutingUiTest.xml",
+      "bytes": 929,
+      "sha256": "27047f263217ebdd03afdc91320d7597f9f41d870d73baf2827f4266124c5179"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/baseline/TEST-at.heinz.deviceai.chief.ChiefBotConversationTest.xml",
+      "bytes": 1389,
+      "sha256": "7999cfe3b1b2fa38931ecc219b9f656c5b03f48220d267492ddee0388a1c881f"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/baseline/TEST-at.heinz.deviceai.chief.ChiefBotProfileStoreTest.xml",
+      "bytes": 1774,
+      "sha256": "771e23a0d31befa0d95e3e71695be18185d9ba0840750dc2af2bdffa98e83dad"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/baseline/TEST-at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest.xml",
+      "bytes": 2032,
+      "sha256": "453ed108d940b54ae0ad5d1e0cbfe8b4dbfc1296baa1d808c80e0f74a57ee558"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/baseline/TEST-at.heinz.deviceai.chief.ChiefDelegationCoordinatorTest.xml",
+      "bytes": 992,
+      "sha256": "5d12f1c5a5a0544d9b1c0ecf942a5eaf36903b9b8d87c3ff1fca87a3c21bd43f"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/baseline/TEST-at.heinz.deviceai.chief.ChiefMemoryAndJobTest.xml",
+      "bytes": 1166,
+      "sha256": "6a8fbb48e2570de8738c1e9d03dbdd2ea0d28f3ac380ce92dfa83c0f068ff54c"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/baseline/TEST-at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest.xml",
+      "bytes": 1145,
+      "sha256": "ae654675de7bde418c0f1f8d42ab3d4e7ac6a32803b9860d31821108a31faba5"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/baseline/TEST-at.heinz.deviceai.chief.ChiefWorkerPoolTest.xml",
+      "bytes": 1639,
+      "sha256": "71bcf16e1ca7d517179ac71d8a94a3f2ee57d3d3554220ff8d1ced3f8e84d977"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/baseline/gradle.log",
+      "bytes": 33256,
+      "sha256": "0857e788877d860ef571889485d24338f914ea3fe348970860a8c80f1c07d439"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/baseline/summary.json",
+      "bytes": 302,
+      "sha256": "9d632070bd8a79f31f6f53263c375d51a6eccb0669ae450d3d4c61a86844b6b8"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/README.md",
+      "bytes": 553,
+      "sha256": "fd8f47c3b18eeb6a913f0f09a4ab3fcf579ed3d3f26559c61ce4fc18859cee79"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.ContinuumBotPersonalityUiTest.xml",
+      "bytes": 9018,
+      "sha256": "27894b43b2c811528f924d3fea864510cf574d47e0a73fe36acd131d3a897c3d"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.ContinuumBotRosterStorageUiTest.xml",
+      "bytes": 1300,
+      "sha256": "12b87e54695bf185728494c4e707f31ba3be3ab2da289e49357dd409ce385ab1"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.ContinuumBotStatusRoutingUiTest.xml",
+      "bytes": 929,
+      "sha256": "004cf9359a709eba54225eabe7a4de83444daddda9d6abdc25aa64fc99d8124b"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.ContinuumBotTaskRoutingUiTest.xml",
+      "bytes": 1081,
+      "sha256": "197e41783887862b021d9cdae599c99e2e1163c6e3fb2373b4da0b53849ca6d1"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.ContinuumBotToolTaskUiTest.xml",
+      "bytes": 968,
+      "sha256": "2bd04487e32591adb880b96e4bc412c1786a9a64d45b05d16b8ee7f1985744ce"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.chief.ChiefBotAddressRouterTest.xml",
+      "bytes": 2418,
+      "sha256": "d2c681bb6c317a7aa418984f668d455c66dac6e8f332528dd259e4349669dbdd"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.chief.ChiefBotConversationTest.xml",
+      "bytes": 1859,
+      "sha256": "849bee34d232b235e59eab1192561c98fa832de3f1f74bfd5956d2b312591411"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.chief.ChiefBotPersonasTest.xml",
+      "bytes": 1272,
+      "sha256": "d90e941f1aec5d5dc45918856e7bddc948d1be64b4038fb019180eb7cb554698"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.chief.ChiefBotProfileStoreTest.xml",
+      "bytes": 1774,
+      "sha256": "2668d78bd683f650ce9429317f2618efc47be445617cf3329a8a45f4bea691f0"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest.xml",
+      "bytes": 2030,
+      "sha256": "78ed409ad299844b9848182483f17e87d331b41753f125386a615643ae33f94f"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.chief.ChiefBotTaskIntakeTest.xml",
+      "bytes": 1490,
+      "sha256": "5c3d2f312586d79e3475ff992121ed999fac13bb59e030b93f4bf259d6ca1565"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.chief.ChiefDelegationCoordinatorTest.xml",
+      "bytes": 992,
+      "sha256": "44ccd1a3d3244aafcb0a932bcd0ecf151fe85f2aaf3c7e32b3318e80648ab3d2"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.chief.ChiefMemoryAndJobTest.xml",
+      "bytes": 1166,
+      "sha256": "8a2928d0797c1d1cceb319cc8148927f375341999f5057079d00afcb0fdd8028"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest.xml",
+      "bytes": 1145,
+      "sha256": "49ea205c142d8c7fe8ed18b57ca240b0a1cf820e19e3062fca92431dc48f6712"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/TEST-at.heinz.deviceai.chief.ChiefWorkerPoolTest.xml",
+      "bytes": 1638,
+      "sha256": "a54e7e7b649f316aa7d3f9383fd7c99bacaf4c3fa2c5651cd40a84841ffbeed4"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/gradle.log",
+      "bytes": 7235,
+      "sha256": "49674234c5e395384750ce8b8fe93b8a886dbd8e716560182a202f7379f76176"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/source-manifest.json",
+      "bytes": 184486,
+      "sha256": "1ac129a29e9dc88d43103bbe363feb03747d7b2af60b5239f48c9eb8a9bdf3c3"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-first-run/summary.json",
+      "bytes": 2253,
+      "sha256": "32f08ee353b65dd1400562cbef1552305225661a3b9269535843360fc9f68f0d"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/README.md",
+      "bytes": 680,
+      "sha256": "188a096d73bef0955f59da8ffa9bfd66da37a41d1530ce5dc10b3f19febc3bd4"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.ContinuumBotPersonalityUiTest.xml",
+      "bytes": 2054,
+      "sha256": "531a10e1689a5b709fa65e2af8c18b10a772a2553227fab7054cddcc63411ad1"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.ContinuumBotRosterStorageUiTest.xml",
+      "bytes": 1300,
+      "sha256": "0962d2435a2d526f2a1e40290231220e549a93d6b2cbd2dc56310fda5c19e92d"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.ContinuumBotStatusRoutingUiTest.xml",
+      "bytes": 929,
+      "sha256": "7bba18856a6f5147a1866c9e9ba8e48cd8bc51220525278d68f6700c3f33f8ea"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.ContinuumBotTaskRoutingUiTest.xml",
+      "bytes": 1081,
+      "sha256": "6208f6e8a62b53b06a9a9621b2021d130e95936ee9792ffb589fb736b20ce120"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.ContinuumBotToolTaskUiTest.xml",
+      "bytes": 970,
+      "sha256": "3bf04ea0cd54807d997347a148d735e5e515606b0e86c9367e891c7446ca6125"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.chief.ChiefBotAddressRouterTest.xml",
+      "bytes": 2420,
+      "sha256": "4cb2c1d7fa035aff51d186f6f0c22b75fb1f8d0cd5a6de95205c8108bd9b9fae"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.chief.ChiefBotConversationTest.xml",
+      "bytes": 1859,
+      "sha256": "e810df1c5dd509bb7053e1ebe6f3186cadeb3ce6534a435f64255fb207cf7bec"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.chief.ChiefBotPersonasTest.xml",
+      "bytes": 1272,
+      "sha256": "568050742b1518e48b81bba8b5f40f1a55993f58a144e2f2e6847d0540a14bc6"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.chief.ChiefBotProfileStoreTest.xml",
+      "bytes": 1774,
+      "sha256": "280bf9cfe542fc254f69ebc7aa679ba674240380fffc61a667c6352b4daafed8"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest.xml",
+      "bytes": 2030,
+      "sha256": "c53cd995d63e907075c1860ad2cff5530d61c5afc493822d4bafe78f60584400"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.chief.ChiefBotTaskIntakeTest.xml",
+      "bytes": 1490,
+      "sha256": "9ce2ee3d1a02b8d6140e72e040fbec465cdd5bba83525641a92d0fdb024618a3"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.chief.ChiefDelegationCoordinatorTest.xml",
+      "bytes": 992,
+      "sha256": "f2a9032c619f97c9c0a998461c4e946e64a2359d0cd26908cb717ace16f6cfc0"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.chief.ChiefMemoryAndJobTest.xml",
+      "bytes": 1165,
+      "sha256": "1e0f868dae6965708377995534845ecfca8ed142db89ee431050b58e3982396e"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest.xml",
+      "bytes": 1145,
+      "sha256": "f3f509abe79bddfe317abf0083bdb83c5f81e43a7bd92492f7103e40df710c46"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/TEST-at.heinz.deviceai.chief.ChiefWorkerPoolTest.xml",
+      "bytes": 1637,
+      "sha256": "0f475d90263f3a0bae2bf650fa6bccc3f4ef28800c9d7a52b05f94f909ef7525"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/gradle.log",
+      "bytes": 5872,
+      "sha256": "bafaaf970210edd80a4b1d11c51f312f137380b28d303620ac23f3e143d04724"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/source-manifest.json",
+      "bytes": 184486,
+      "sha256": "61aa970b1070dc9300d11310c183aa672911da556eba50e3a3263e48a3b45dcd"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/focused-green/summary.json",
+      "bytes": 2546,
+      "sha256": "d65dac7966bd0706d0df25807044199de6378e15163078f87b558f391c80d5b0"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/full-verification/README.md",
+      "bytes": 1648,
+      "sha256": "9e430664b2f7f73ea87fcabe59a044cf14e9587066ff8ab3ca3d74a96710753f"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/full-verification/gradle.log",
+      "bytes": 419317,
+      "sha256": "935117441e02cb4a01e0a65ca764a13883b6cfc9dee4e62d15e88e786e4e4a39"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/full-verification/junit-results.tar.gz",
+      "bytes": 92354,
+      "sha256": "67a0229ae9df46e06e72a323fb83ad799badb6dda404b106f809f2012fd41129"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/full-verification/lint-results-debug.txt",
+      "bytes": 17,
+      "sha256": "a69ecb171bea9d40de22744c85220b4a4ea12f5a25ce7976d67f2c88c9195334"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/full-verification/lint-results-debug.xml",
+      "bytes": 87,
+      "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/full-verification/source-manifest.json",
+      "bytes": 184486,
+      "sha256": "61aa970b1070dc9300d11310c183aa672911da556eba50e3a3263e48a3b45dcd"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/full-verification/summary.json",
+      "bytes": 75410,
+      "sha256": "fe885daca27587b3c4cb5f88f7e0142d7be7301a743939865c657baaae9c8d01"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/full-verification/test-progress.init.gradle",
+      "bytes": 190,
+      "sha256": "5e9433394976b664d4d9561a9c7e05a56fe870598cc93befa3163dd02c7d4917"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/independent-review.md",
+      "bytes": 2083,
+      "sha256": "4a0de4265697e7ae7cfe59fea0e471bb5d08e8a0ee41498dc9479c271b7b3ead"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/integration-preview.json",
+      "bytes": 1003,
+      "sha256": "29e9f55de5eb72ccb49cffd166f6a20e71f214106146e2406a8e5fd31fe05523"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/personas-red/TEST-at.heinz.deviceai.chief.ChiefBotConversationTest.xml",
+      "bytes": 11153,
+      "sha256": "ab25d191214fb533e5a5745806598a92841e5a6e4a4e65f3943fa06207028b35"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/personas-red/gradle.log",
+      "bytes": 3326,
+      "sha256": "8163390448d69b0444898206266403a529c3463f7005d17d9c71d677c235dcc5"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/personas-red/summary.json",
+      "bytes": 66,
+      "sha256": "3a5083a2a043da26f82a0fe8b19ba6f91438282c97ddceacf50f97f65a686fe8"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/published-source-verification.json",
+      "bytes": 242,
+      "sha256": "9e10347f063adb2d99c60ff99342a4eaa36717ce99e384a80a6b5eb8637495c6"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/task-api-red/README.md",
+      "bytes": 222,
+      "sha256": "a4f4080d824c3b7d6f1002d4c1b6ffe224753c4c2d2c5a9fca6298ad520d25dd"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/task-api-red/gradle.log",
+      "bytes": 8505,
+      "sha256": "989203fb666be4acaff56e3c63b469a29110b1348a6193df85af6b9f16c74031"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/ui-red-personas-green/README.md",
+      "bytes": 251,
+      "sha256": "237be5c853d2aec9ef4e3cc2add33e73fc8fd14fd1b06d8da310b87db2294f93"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/ui-red-personas-green/TEST-at.heinz.deviceai.ContinuumBotPersonalityUiTest.xml",
+      "bytes": 5199,
+      "sha256": "8df2ab623c15f67bd3bba86eaac1a8c0ea9e2051756c81f0437652badc7efa94"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/ui-red-personas-green/TEST-at.heinz.deviceai.chief.ChiefBotConversationTest.xml",
+      "bytes": 1861,
+      "sha256": "0120544f8b157a798dae8459be3f7d272c89d91f130b60f4a566468c524dd871"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/ui-red-personas-green/TEST-at.heinz.deviceai.chief.ChiefBotPersonasTest.xml",
+      "bytes": 1273,
+      "sha256": "a0a8da4414878b43d3737d241def27651077d88ee22eab0c221faaf805fa71d6"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/ui-red-personas-green/TEST-at.heinz.deviceai.chief.ChiefBotTaskIntakeTest.xml",
+      "bytes": 5513,
+      "sha256": "a6554bb702a0ddf421b96ad55f55868b6b8af8efe61a95bb9869e0ce96f4adb5"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/ui-red-personas-green/gradle.log",
+      "bytes": 11771,
+      "sha256": "62563cdb3664522706efef75065eea3b4160a0fdb4a1a57ef00ef2fe46c754dd"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/ui-red-personas-green/summary.json",
+      "bytes": 569,
+      "sha256": "f2644c543a9622c4beaa8c6479354e00a2ae55ae8a8eb458763a56e80e902a8d"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/widget-renders/README.md",
+      "bytes": 964,
+      "sha256": "887d6b66bb4ad82be59670aa69e8aa361f05590bc08b2cbfd3ff9f435fdcee6f"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/widget-renders/bots-fold-840x649-composer-details.png",
+      "bytes": 62151,
+      "sha256": "21982792660bc4c0817f7a8225ce663f7102978eaefac2c1aba7f3e3e3d94f34"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/widget-renders/bots-fold-840x649-composer.png",
+      "bytes": 52352,
+      "sha256": "e60b45ac8df66a9dede128ce79c47109406048a609381180a2e0a5a9bc35605a"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/widget-renders/bots-fold-840x649-roster.png",
+      "bytes": 106639,
+      "sha256": "6aebe582e7a0dae2b88cc2d5043310a4b8ba0ab4b5bcf1567ce02e42b49adb4b"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/widget-renders/bots-narrow-320x720-font200-composer-details.png",
+      "bytes": 70123,
+      "sha256": "11278a8ab6ac394c2425a494b65c88134b9aaaeda98e1ac67eee11e6c44f7331"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/widget-renders/bots-narrow-320x720-font200-composer-height360.png",
+      "bytes": 31927,
+      "sha256": "dc7362aae04ecbc12746f3a1f099ae9e9c1e2ac41d3fa47e8f8408db26a58cf6"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/widget-renders/bots-narrow-320x720-font200-composer.png",
+      "bytes": 49810,
+      "sha256": "477f7846234b553cd7ca7c383b4dd22f7bf0a623abfd9d49ad4e72c1c9fd794d"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/widget-renders/bots-narrow-320x720-font200-roster.png",
+      "bytes": 55260,
+      "sha256": "45474dc1a0aa3e54bd74b0dd0db1e624a4e5fc042d61a8be109b7c8b7a8f1732"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/widget-renders/bots-phone-412x915-composer-details.png",
+      "bytes": 75523,
+      "sha256": "c7a0c599e82dc8efeb1d1eb6ccc43a5461a627875a6ee4dd8818d25854de7cd3"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/widget-renders/bots-phone-412x915-composer.png",
+      "bytes": 71650,
+      "sha256": "7461aa43104cc360399983a88166a36df3726aeac4644a55924fb7572accec1a"
+    },
+    {
+      "path": "docs/evidence/personality-bots-20261104/widget-renders/bots-phone-412x915-roster.png",
+      "bytes": 81443,
+      "sha256": "cf75877aa15386bf0b66ef3ee66665ed993e0f79b0064cfefcc295798c503844"
+    }
+  ]
+}

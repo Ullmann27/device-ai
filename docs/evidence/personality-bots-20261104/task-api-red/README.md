@@ -1,0 +1,1 @@
+Initial new-API compilation was expected to fail: ChiefBotTaskRequest, ChiefBotTaskMode and ChiefBotTaskIntake did not exist yet. This is a compile-time missing-API check, not a runtime assertion failure or a device test.

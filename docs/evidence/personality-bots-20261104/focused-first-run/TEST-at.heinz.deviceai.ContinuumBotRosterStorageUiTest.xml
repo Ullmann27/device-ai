@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumBotRosterStorageUiTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T10:47:19" hostname="8c129114cae4" time="1.063">
+  <properties/>
+  <testcase name="aliasedSystemParentShowsTwentyBotsAndEditsKeepStableIdentityAfterReopen" classname="at.heinz.deviceai.ContinuumBotRosterStorageUiTest" time="0.738"/>
+  <testcase name="unsafeBotRootLinkShowsSafetyDiagnosticWithoutOutsideWrite" classname="at.heinz.deviceai.ContinuumBotRosterStorageUiTest" time="0.072"/>
+  <testcase name="closedRosterDoesNotReviveAfterBackgroundPersistenceCompletes" classname="at.heinz.deviceai.ContinuumBotRosterStorageUiTest" time="0.048"/>
+  <testcase name="realReadonlyDirectoryFailureDoesNotShowSeededProfilesOrReplaceRegistry" classname="at.heinz.deviceai.ContinuumBotRosterStorageUiTest" time="0.066"/>
+  <testcase name="unsupportedSchemaShowsCompatibleVersionAdviceWithoutReseeding" classname="at.heinz.deviceai.ContinuumBotRosterStorageUiTest" time="0.055"/>
+  <testcase name="corruptRegistryShowsAccessibleFixedDiagnosticAndPreservesOwnerBytes" classname="at.heinz.deviceai.ContinuumBotRosterStorageUiTest" time="0.083"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

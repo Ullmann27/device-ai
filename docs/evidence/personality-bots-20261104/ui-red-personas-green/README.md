@@ -1,0 +1,1 @@
+Two intended roster behavior failures. Persona suites: 16 PASS. Task intake: 5 PASS; UTF8 test fixture mistakenly allocated 4001 bytes while expecting acceptance at 4000, corrected before subsequent execution. No success is claimed for the whole run.

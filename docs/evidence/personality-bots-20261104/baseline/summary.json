@@ -1,0 +1,10 @@
+{
+  "local_log_head": "fc727819ad5c5d513a3931ae9846838326efeff3",
+  "published_identical_tree_head": "8d90b97c00f04aa9e055e424fc6ca869dd269f5f",
+  "application_source_base": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+  "result": "PASS",
+  "tests": 62,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0
+}

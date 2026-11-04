@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefBotConversationTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-04T10:27:31" hostname="8c129114cae4" time="0.372">
+  <properties/>
+  <testcase name="dataAndOutputBudgetsFailWithoutPartialPersistence" classname="at.heinz.deviceai.chief.ChiefBotConversationTest" time="0.146"/>
+  <testcase name="unsafeInjectedCompilerIsRejectedAndScopeDoesNotComeFromText" classname="at.heinz.deviceai.chief.ChiefBotConversationTest" time="0.019"/>
+  <testcase name="v1MigrationPreservesExistingNotesAndRejectsFutureSchema" classname="at.heinz.deviceai.chief.ChiefBotConversationTest" time="0.018"/>
+  <testcase name="selectionCancelResetModelAndSessionChangesRejectLateCompletion" classname="at.heinz.deviceai.chief.ChiefBotConversationTest" time="0.021"/>
+  <testcase name="privateHistoryUsesOneSelectedIdentityAndExistingCompilerWithoutOwnerData" classname="at.heinz.deviceai.chief.ChiefBotConversationTest" time="0.025"/>
+  <testcase name="restartRenameAndHistoryPreserveBinding" classname="at.heinz.deviceai.chief.ChiefBotConversationTest" time="0.014"/>
+  <testcase name="personaNeverDisplacesTheFinalNegationOfAMaximumSizeRequest" classname="at.heinz.deviceai.chief.ChiefBotConversationTest" time="0.048"/>
+  <testcase name="savedPersonalityAndOwnVoiceReachTheCompleteRestrictedRequest" classname="at.heinz.deviceai.chief.ChiefBotConversationTest" time="0.018"/>
+  <testcase name="everySelectedBotUsesItsOwnApproachWithoutOtherBotsPrivateContext" classname="at.heinz.deviceai.chief.ChiefBotConversationTest" time="0.037"/>
+  <testcase name="noteWithdrawalDropsDerivedConversationAndLateAnswers" classname="at.heinz.deviceai.chief.ChiefBotConversationTest" time="0.023"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

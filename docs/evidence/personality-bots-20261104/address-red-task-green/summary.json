@@ -1,0 +1,16 @@
+[
+  {
+    "suite": "at.heinz.deviceai.chief.ChiefBotTaskIntakeTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "at.heinz.deviceai.chief.ChiefBotAddressRouterTest",
+    "tests": 14,
+    "failures": 9,
+    "errors": 0,
+    "skipped": 0
+  }
+]
