@@ -1,0 +1,79 @@
+{
+  "schema": "CONTINUUM_G1_SOURCE_REVIEW_V1",
+  "reviewedUtc": "2026-11-04T11:06:44Z",
+  "reviewer": "weights_inventory",
+  "source": {
+    "path": "experimental/weight-space-20261104/run_experiment.py",
+    "sha256": "9a68ddf27158692044738aed96892ad6476a520b7e30ab6651adfff2c4f38447"
+  },
+  "decision": "PASS_FOR_REVIEWED_P0_TRAINING_AUTHORIZATION_SCOPE",
+  "scope": [
+    "Unabhängige lesende Prüfung des zentralen Trainingseinstiegs und seiner Identitätsbindung.",
+    "Kanonisches Ausgangsmodell, ausgewählte Kalibrierungsquelle und zusammenhängend belegte letzte bestandene Stufe.",
+    "Wiederaufnahme ausschließlich aus vorhandenen, verifizierten Belegen; kein Ersatz fehlender Nachweise durch Modellaufrufe.",
+    "Direkter final-Aufruf, eingefrorene Auswahl und Herkunft der Breiten- und Tiefenerweiterungen.",
+    "Vergleich der Grenzwerte mit dem vorhandenen Kotlin-Paritäts- und Kapazitätsvertrag."
+  ],
+  "closedFindings": [
+    {
+      "finding": "DIRECT_FINAL_BYPASSED_VALIDATED_SELECTION",
+      "disposition": "CLOSED",
+      "evidence": "final() ruft continuation_preflight() und verify_frozen_selection() vor vorhandenem final.json-Rücksprung und vor einer neuen Holdout-Auswertung auf."
+    },
+    {
+      "finding": "CREATION_PROVENANCE_NOT_REQUIRED",
+      "disposition": "CLOSED",
+      "evidence": "verify_creation() prüft vorhandene Erzeugungsbelege samt Parent- und Ergebnisidentität. Gebunden sind die registrierte Normskalierung, Breitenfaktoren 2/4/8 mit noiseStd=0.001 und Seed 20261104 sowie Tiefenerweiterungen um 1/2/3 Schichten aus verifiziertem width-8."
+    },
+    {
+      "finding": "AUTHORIZED_DIGEST_REPLACED_BY_RESAMPLED_INPUT",
+      "disposition": "CLOSED_WITH_BOUNDED_LOADING_LIMITATION",
+      "evidence": "authorize_training_call() liefert die autorisierten Checkpoint-, Tokenizer-, Datensatz- und Laufzeitidentitäten. call() vergleicht sie vor Belegwiederverwendung bzw. vor Prozessstart und kontrolliert die Identitäten nach Abschluss."
+    }
+  ],
+  "preservedGates": {
+    "firstTokenCallMs": 1500,
+    "generation32CallMs": 5000,
+    "benchmarkVmHwmKiB": 786432,
+    "benchmarkProcessSeconds": 120,
+    "trainingProcessSeconds": 600,
+    "checkpointBytes": 67108864,
+    "promptTokens": 64,
+    "warmups": 1,
+    "measuredRepeats": 3,
+    "requiredGeneratedTokens": [
+      1,
+      32
+    ],
+    "parityMaxLogitDelta": 0.001,
+    "parityMaxProbabilityDelta": 0.00001,
+    "parityMaxStepwiseLogitDelta": 0.001,
+    "parityIdenticalGenerations": 3,
+    "developmentBpbEquivalenceTolerance": 0.00001,
+    "equivalencePreference": "fewer_parameters",
+    "unintendedThresholdDriftObserved": false
+  },
+  "boundedResiduals": [
+    {
+      "finding": "LOADING_IS_NOT_ATOMIC_AGAINST_ARBITRARY_CONCURRENT_PATH_SWAPS",
+      "impact": "Vor- und Nachprüfungen binden die bekannten Identitäten, beweisen aber kein atomares Laden gegenüber beliebigen gleichzeitigen Dateiaustauschen.",
+      "boundary": "Der unveränderte JVM-Experiment-CLI übernimmt keinen vom Orchestrator vorgegebenen erwarteten Checkpoint-Hash.",
+      "reopensReviewedP0": false
+    },
+    {
+      "finding": "COMPLETED_FINAL_METRICS_NOT_REVALIDATED_AGAINST_EVALUATION_RECEIPTS",
+      "impact": "Vorhandene final.json wird an Auswahlhash und Kandidatenidentitäten gebunden. Ihre gespeicherten Holdout-Messwerte werden beim Rücksprung nicht erneut mit den Auswertungsbelegen abgeglichen.",
+      "boundary": "Ein geänderter BPB-Berichtswert könnte als Cacheinhalt akzeptiert werden; dies eröffnet keinen Trainingsaufruf unter Umgehung des reparierten Gates.",
+      "reopensReviewedP0": false
+    }
+  ],
+  "executionDuringThisSourceReview": {
+    "orchestratorExecuted": false,
+    "testsExecuted": false,
+    "modelProcessesStarted": 0,
+    "trainingPerformed": false,
+    "holdoutRead": false,
+    "productionSourceModified": false
+  },
+  "verificationLimit": "Dies ist ein eigenständiger Quelltextreview. Ausführungsnachweise der unabhängigen Testmatrix und der historischen Wiederaufnahme sind separat zu bewerten; dieser Nachweis behauptet keine eigene Test- oder Modell-Ausführung."
+}

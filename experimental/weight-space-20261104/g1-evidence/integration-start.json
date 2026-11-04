@@ -1,0 +1,25 @@
+{
+  "task": "G1-INTEGRATE-WEIGHT-002",
+  "basisRequested": "ee5779725690c573d3310c061c6e2e6faf5f0a8b",
+  "integrationStart": "88d7b05072bdec6250990efaa9914a1e6744c29b",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "experimental/weight-space-20261104/PROTOCOL.md": "f6830becc381fb638b63917763546d178838d32a8e4ba569cf31af66d32d8ee2",
+    "experimental/weight-space-20261104/LmWeightExperiment.kt": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+    "experimental/weight-space-20261104/LmWeightSurgery.kt": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c"
+  },
+  "inputSha256": {
+    "lm1-baseline.lm1": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "lm1-tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "continuum-swb1-backup.bin": "5ba8ba7e22efc19a099148d224ab000dcd21953bb74b5d6504f49621fe56b2b6"
+  },
+  "knownCapacityCandidates": {
+    "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+    "5e2332b0c15646b574d9c3f8cf48378f13eed1daaed7e652328588eedae85950": "5e2332b0c15646b574d9c3f8cf48378f13eed1daaed7e652328588eedae85950",
+    "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312"
+  },
+  "historicalResultManifest": "23df9babbc03c8785c24eb67904fe9d6fee1b45bf14d7998bfae874e975ec87d"
+}

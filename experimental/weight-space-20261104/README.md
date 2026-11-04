@@ -21,6 +21,28 @@ Der Speicherhöchstwert wird über alle Messpunkte gebildet, und die eingefroren
 Auswahl muss während der Schlussauswertung unverändert bleiben. Die historischen
 Rohlogs werden dadurch nicht nachträglich geändert.
 
+## P0-Integration und unabhängige Gate-Tests
+
+Der Folgeauftrag `G1-INTEGRATE-WEIGHT-002` prüft die Trainingsfreigabe aus
+Helfer-PR #497 unabhängig und übernimmt eine zusätzlich abgesicherte Reparatur.
+Die Entscheidung, Quellhashes, Vergleichsergebnisse und unveränderten Grenzen
+stehen in [G1-INTEGRATION.md](G1-INTEGRATION.md).
+
+Die folgenden Tests benötigen nur Python und führen keine Modellprozesse aus.
+Sie schreiben synthetische Belege ausschließlich in neue temporäre Verzeichnisse:
+
+```bash
+python3 experimental/weight-space-20261104/tests/adversarial_driver_gate.py
+python3 experimental/weight-space-20261104/tests/targeted_final_creation_gate.py
+python3 experimental/weight-space-20261104/tests/direct_dispatch_gate.py
+```
+
+Die abgenommene Integrationsfassung besteht 36 allgemeine Gate-Fälle, sechs
+gezielte Abschluss-/Herkunftsprüfungen und vier direkte Aufrufprüfungen. Jede
+Suite bindet ihren Bericht an die tatsächlich gelesenen Quell- und Testhashes.
+Ein optionaler erster Dateiparameter erlaubt denselben Vergleich gegen eine
+unveränderte historische Quelldatei.
+
 ## Werkzeuge bauen
 
 Aus dem Repository-Stamm, mit `kotlinc` und Java auf dem Suchpfad:
