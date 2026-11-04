@@ -1,0 +1,20 @@
+Corpus probe: final; original corpus read via reflection, no expectations or data modified
+8d095be29157246c8f7dad09e2ae3960519ae816c428dfe399ebcdfe65463e1d  /workspace/scratch/7dcf5d78f2cb/bot-memory/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt
+f278272a5c4cb9fef1a125481486f2c3ca7ddc25a963409d3aaaae1bd5c9d08e  /workspace/scratch/7dcf5d78f2cb/bot-memory/app/src/test/java/at/heinz/deviceai/learning/ContinuumRetrievalExperimentTest.kt
+query=Wohin ging ich letzten Monat mit Thomas?
+now=2026-11-04T09:00:00Z zone=Europe/Vienna corpusSize=1000
+windowStart=2026-09-30T22:00:00Z windowEndExclusive=2026-10-31T23:00:00Z
+expected=t14 at=2026-10-05T08:00:00Z localAt=2026-10-05T10:00+02:00[Europe/Vienna] insideWindow=true
+expectedText=Letzten Monat war ich mit Thomas im Theater.
+rank=1 id=d0855 at=2026-10-24T08:00:00Z confirmed=false score=0.19437710661441088 cosine=0.19437710661441088 timeWeight=1.0
+text=Thomas hat den Bus online.
+rank=2 id=d0570 at=2026-10-25T08:00:00Z confirmed=false score=0.18374881613999605 cosine=0.18374881613999605 timeWeight=1.0
+text=Thomas habe die Jacke zu Hause.
+rank=3 id=d0757 at=2026-10-07T08:00:00Z confirmed=true score=0.14960756059736013 cosine=0.14960756059736013 timeWeight=1.0
+text=Thomas hat den Staubsauger im Park.
+rank=4 id=d0882 at=2026-10-30T08:00:00Z confirmed=false score=0.14960756059736013 cosine=0.14960756059736013 timeWeight=1.0
+text=Thomas habe den Staubsauger im Park.
+rank=5 id=t14 at=2026-10-05T08:00:00Z confirmed=true score=0.14520920161157846 cosine=0.14520920161157846 timeWeight=1.0
+text=Letzten Monat war ich mit Thomas im Theater.
+rank=6 id=d0382 at=2026-10-05T08:00:00Z confirmed=false score=0.14502106420695782 cosine=0.14502106420695782 timeWeight=1.0
+text=Thomas reparierte einen Kuchen in Wien.

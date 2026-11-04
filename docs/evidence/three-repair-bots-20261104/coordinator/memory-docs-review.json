@@ -1,0 +1,7 @@
+{
+  "docs_commit": "fd78869915032dd84e2e02d26c677d16c5a217e4",
+  "evidence_files_checked": 11,
+  "committed_content_matches_original": "PASS; only disclosed trailing blank-line normalization for logs",
+  "count_and_ranking_report": "PASS",
+  "diff_check": "PASS"
+}

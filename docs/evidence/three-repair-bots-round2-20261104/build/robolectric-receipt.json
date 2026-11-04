@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "status": "FOCUSED_REAL_ROBOLECTRIC_RED_TO_GREEN_PASS",
+  "red": {
+    "sourceCommit": "d24ad51b0235826cf0baaa998a2fb4af80a17404",
+    "sourceTree": "45dff2f8cd7c2a34aadd1690502316878be83394",
+    "compileExitCode": 0,
+    "junitExitCode": 1,
+    "testsRun": 2,
+    "failures": 2,
+    "failureType": "Expected product assertions: one stale visible card before attach; missing last 24 retired turns after 1,000 detached completions.",
+    "selectedMethods": [
+      "backgroundCompletionBeforeFirstAttachDoesNotWaitForAttachment",
+      "detachedSubscriberRetiresBackgroundCompletionsWithoutReattach"
+    ]
+  },
+  "green": {
+    "sourceCommit": "d91fe8b1141d35341b67298a04f3913fd1bf0876",
+    "officialSourceCommit": "b2bc510a59e29d4ece478109e12b9785be11ee7d",
+    "sourceTree": "7770e3ef628f301bf40161e4a99906836c63b296",
+    "compileExitCode": 0,
+    "junitExitCode": 0,
+    "testsRun": 25,
+    "failures": 0,
+    "rawJUnitResult": "OK (25 tests)"
+  },
+  "freshOriginalProductionFilesCompiledPerRun": 24,
+  "testSourceUnchanged": true,
+  "changedSourceFilesBetweenRuns": [
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt"
+  ],
+  "classPathOrder": "Fresh candidate classes; official Android SDK36 compile jar; exact cached runtime jars and extracted AndroidX classes; existing real donor app classes last. Full orders and hashes are in both manifests.",
+  "framework": "Robolectric 4.14.1; JUnit 4.13.2; instrumented Android API 28 selected by unchanged @Config(sdk=[28]); compiler Kotlin 2.4.0 / JDK 17.0.20.1+1",
+  "frameworkOrHandlerStandIns": false,
+  "businessStandIns": false,
+  "businessDependency": {
+    "source": {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/SafePillActionGate.kt",
+      "sha256": "aa2e6134aa84764176ab2a890034dd6a7d896219896fa9593022c1acc89aae27",
+      "matchesDonor": true,
+      "donorCheckout": "/workspace/scratch/822e72396ed9/continuum-combined",
+      "classes": {
+        "at/heinz/deviceai/cockpit/ToolGatePillActionGate.class": "2042748f23e4456f0b9cbf6770cde6f5c91f3d9685f82c292218d154f62323c6",
+        "at/heinz/deviceai/cockpit/ToolGatePillActionGate$Companion.class": "374d443467459be57341736c8c0b00839979a6ae9b4a6bcb0c26c83ba2bc491c",
+        "at/heinz/deviceai/cockpit/ToolGatePillActionGate$WhenMappings.class": "97dc6818dc3af0f73996d2ca7943c0137cb1c329d72c44d9e3f3cd7e0db8ffab",
+        "at/heinz/deviceai/cockpit/ToolGatePillActionGate$documents$1.class": "81af77c5f7e84df7616d95009f03af1c84a55d575366d86faa0765f5bb3f888b"
+      }
+    },
+    "purpose": "Compile resolution of real ToolGatePillActionGate LABELS and SOURCE_MISSING only; no owner/tool action is exercised.",
+    "pillClassObservedInEitherRuntimeTrace": false
+  },
+  "sourceAudit": {
+    "red-1": {
+      "allSourceSnapshotsStillMatchManifest": true,
+      "observedAppNamesAbsentFromFreshCandidateCompilation": []
+    },
+    "green-1": {
+      "allSourceSnapshotsStillMatchManifest": true,
+      "observedAppNamesAbsentFromFreshCandidateCompilation": []
+    }
+  },
+  "offline": {
+    "robolectricOffline": true,
+    "dependencyDirectory": "Existing cached instrumented Android9 and Android15 jars; symlinked within own runtime and hash-bound in manifests.",
+    "networkDownloads": "NONE_REQUESTED; no fetch/install code in launcher"
+  },
+  "scopeLimits": [
+    "No app AndroidManifest.xml: Robolectric explicitly falls back to Android OS resources. Original tests were not edited to suppress the warning.",
+    "Not a full Gradle, APK/resource-packaging, Android device, GPU, audio, signing, release or installation gate.",
+    "Prior full Gradle attempt failed during Kotlin compilation before tests; this focused run does not replace that failure.",
+    "Real compiled business dependency directory comes from the prior 822e build; exact SafePillActionGate source equality and four class hashes are recorded. All observed app-class names belong to the fresh candidate compilation; no Pill class appeared in either trace."
+  ],
+  "artifacts": {
+    "robolectric-red-1/result.json": "61aa3e9e3a6c35bac445c585c57eaed71cd03a39265af682e6f0232654161878",
+    "robolectric-red-1/class-source-audit.json": "4fa7a20c61bab574a5b97fa38a55fd2b6d4b386943f6d72490b65399892e6734",
+    "robolectric-red-1/class-load-selected.log": "a88c4b931ba1c81c3ebcde63d4e48eba7d17a8c95e8542ea247a17bb3a1047fe",
+    "robolectric-red-1/JarvisSequenceView.kt.source": "f1925ff6492ee94377ba5e6396cdbbae9aaf18a7906543cfb0ae233463b1a210",
+    "robolectric-red-1/junit.log": "79a66064771bb8b58c49a775c5af9610a6688e1625d4cee657f1aae205ac2cb9",
+    "robolectric-red-1/compile.log": "d84927fe2a26f500c540f2a747b0550086907a154bea84a9addc30ae1150138c",
+    "robolectric-red-1/manifest.json": "31485141e14e2fbc93ae50c3d48a6534b6a576df236d348b61bb38cea6bbe1ae",
+    "robolectric-green-1/result.json": "9947a92f467a01a2cb95d7b649cc16b079c542bb5282a6a1d832e4c18905bfbe",
+    "robolectric-green-1/class-source-audit.json": "ddbbabd5e360caa218d5f65edc0a5a921da527ca4ac15dab635a56b0ba647b44",
+    "robolectric-green-1/class-load-selected.log": "d59a91e54bd327813cd415d931da8e5cb908528e43a09f30a93ab695c29d0e53",
+    "robolectric-green-1/junit.log": "efe45d71f4593aecea32e3f86f732f97ca2fdcaa130e73d0366960c86e0eb6f8",
+    "robolectric-green-1/compile.log": "b91cb40f5d56b1a3ba3d4e33aa8fa8fad6bf8b55b903bfd1a2bbdcc0c253a35e",
+    "robolectric-green-1/manifest.json": "f12c60482072269c123e3c7dec25f4246b22bd4f975ff3848d3a4af0e4487291"
+  }
+}

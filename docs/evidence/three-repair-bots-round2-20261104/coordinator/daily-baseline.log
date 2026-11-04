@@ -1,0 +1,14 @@
+8d095be29157246c8f7dad09e2ae3960519ae816c428dfe399ebcdfe65463e1d  /workspace/scratch/7dcf5d78f2cb/continuum-repair/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt
+1b70089593b4601056699e24ad9442fad3150ef47188ae16a7b277456637df13  /workspace/scratch/7dcf5d78f2cb/continuum-repair/docs/evidence/three-repair-bots-round2-20261104/coordinator/DailyBoundaryProbe.kt
+30455ad9c6d33f3e0202f91ea96c36dbbb59a8cd4f77f2c1f397bf5a53de2cad  /workspace/scratch/7dcf5d78f2cb/continuum-repair/docs/evidence/three-repair-bots-round2-20261104/coordinator/run-daily-boundary-probe.sh
+DAILY_BOUNDARY zone=America/Santiago now=2026-09-06T15:00:00Z query=heute expected=1788667200000..1788749999999 actual=1788667200000..1788753599999 pass=false
+DAILY_BOUNDARY zone=America/Santiago now=2026-09-06T15:00:00Z query=gestern expected=1788580800000..1788667199999 actual=1788584400000..1788667199999 pass=false
+DAILY_BOUNDARY zone=America/Santiago now=2026-09-06T15:00:00Z query=vorgestern expected=1788494400000..1788580799999 actual=1788498000000..1788584399999 pass=false
+DAILY_BOUNDARY zone=America/Santiago now=2026-09-06T15:00:00Z query=vor zwei Tagen expected=1788494400000..1788580799999 actual=1788498000000..1788584399999 pass=false
+DAILY_BOUNDARY zone=America/Santiago now=2026-09-06T15:00:00Z query=vor 3 Tagen expected=1788408000000..1788494399999 actual=1788411600000..1788497999999 pass=false
+DAILY_BOUNDARY zone=America/Santiago now=2026-09-06T15:00:00Z query=vor einem Monat expected=1784779200000..1787025599999 actual=1784782800000..1787029199999 pass=false
+DAILY_BOUNDARY zone=Europe/Vienna now=2026-03-29T12:00:00Z query=heute expected=1774738800000..1774821599999 actual=1774738800000..1774821599999 pass=true
+DAILY_BOUNDARY zone=Europe/Vienna now=2026-10-25T12:00:00Z query=heute expected=1792879200000..1792969199999 actual=1792879200000..1792969199999 pass=true
+DAILY_BOUNDARY_TOTAL cases=8 pass=2 fail=6
+Exception in thread "main" java.lang.IllegalStateException: Daily calendar boundary mismatch in 6 cases
+	at at.heinz.deviceai.learning.DailyBoundaryProbe.main(DailyBoundaryProbe.kt:34)

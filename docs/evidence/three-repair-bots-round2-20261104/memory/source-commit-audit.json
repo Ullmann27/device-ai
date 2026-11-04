@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "status": "HOST_JVM_ONLY",
+  "baseCommit": "63dec3b1296b1d4257310296de3781d75b7a266a",
+  "frozenSourceCommit": "4b120c2a5d5b8425c0a99d0668a9d869c153ab27",
+  "sourceAndTestsMatchCommittedBytes": true,
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+      "sha256": "ff8671fc578403f5ad53c3b7b0c50ea689dfffdf5f5d6a62ac8ec5e43871486e",
+      "candidate_matches_worktree": true,
+      "recorded_in_green_log": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/TemporalCueDailyBoundaryTest.kt",
+      "sha256": "d4209213a7ddd6df96e09ad73281ed942b1cf0459da6613a76cf99410acdb3f6",
+      "candidate_matches_worktree": true,
+      "recorded_in_green_log": true
+    },
+    {
+      "path": "tools/temporal-cue-host-check/run.sh",
+      "sha256": "7d45db86c724933654fee5e1aee7ad19e82e0abf9f6c27e6a2f39de619bb8dcf",
+      "candidate_matches_worktree": true,
+      "recorded_in_green_log": false
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/TemporalCueCalendarTest.kt",
+      "sha256": "1a25f175033f39dfffd8670503a05d62da76432304e80ca59c14d11dce65c0e9",
+      "candidate_matches_worktree": true,
+      "recorded_in_green_log": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumRetrievalExperimentTest.kt",
+      "sha256": "f278272a5c4cb9fef1a125481486f2c3ca7ddc25a963409d3aaaae1bd5c9d08e",
+      "candidate_matches_worktree": true,
+      "recorded_in_green_log": true
+    }
+  ],
+  "existingTestsByteIdentical": {
+    "app/src/test/java/at/heinz/deviceai/learning/TemporalCueCalendarTest.kt": true,
+    "app/src/test/java/at/heinz/deviceai/learning/ContinuumRetrievalExperimentTest.kt": true
+  },
+  "germanTextByteIdentical": true,
+  "bm25AndCharRankingByteIdentical": true,
+  "red": {
+    "exitCode": 1,
+    "tests": 29,
+    "failures": 8,
+    "originalSourceSha256": "8d095be29157246c8f7dad09e2ae3960519ae816c428dfe399ebcdfe65463e1d"
+  },
+  "green": {
+    "exitCode": 0,
+    "tests": 29,
+    "failures": 0,
+    "sourceSha256": "ff8671fc578403f5ad53c3b7b0c50ea689dfffdf5f5d6a62ac8ec5e43871486e"
+  },
+  "corpusMetricsUnchanged": true,
+  "corpusMetrics": [
+    {
+      "variant": "A BM25-de",
+      "recallAt1": "0.773",
+      "recallAt3": "0.818",
+      "mrr": "0.792"
+    },
+    {
+      "variant": "A BM25-de + Zeit",
+      "recallAt1": "0.795",
+      "recallAt3": "0.841",
+      "mrr": "0.818"
+    },
+    {
+      "variant": "B Char-3-5-Gramm-Hash",
+      "recallAt1": "0.841",
+      "recallAt3": "0.909",
+      "mrr": "0.871"
+    },
+    {
+      "variant": "B Char-3-5-Gramm-Hash + Zeit",
+      "recallAt1": "0.886",
+      "recallAt3": "0.955",
+      "mrr": "0.921"
+    }
+  ],
+  "logs": [
+    {
+      "path": "docs/evidence/three-repair-bots-round2-20261104/memory/host-red.log",
+      "sha256": "4bb426b1ed5f1496c91952923ff467b9e33ed05d69eb008df394a2826c7a1680"
+    },
+    {
+      "path": "docs/evidence/three-repair-bots-round2-20261104/memory/host-green-before-commit.log",
+      "sha256": "0cdd0a14288c2d92fab2b71fa04b442dccc58aa3e680e06d80478fcd888d4b55"
+    }
+  ]
+}

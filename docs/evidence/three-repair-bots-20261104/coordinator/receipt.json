@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "dateEuropeVienna": "2026-11-04",
+  "repository": "Ullmann27/device-ai",
+  "draftPullRequest": 505,
+  "baseCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "publishedSourceCommit": "edd41aeb25c4a0a39247344c27e9f395ebe8a5d2",
+  "localSourceCommit": "f6ddd0f62afe9c09af7b06f96abdd257c6fab25b",
+  "identicalSourceCheckpointTree": "fbcc38ed2bb570f929be4f9f4f94affafe8b424b",
+  "productionSourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt": "f8898aa6d06b4b74da04f1a99a3e445bb257c87e6b8ab5c5c0f7c3ffa93ea01d",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt": "8d095be29157246c8f7dad09e2ae3960519ae816c428dfe399ebcdfe65463e1d",
+    "scripts/render-continuum-owner-continuous-qa.sh": "9673936c27c789c66ba2cd55a9fbd95479d66c5a24b6c1e0c4e6d2ce7fe3d2e3"
+  },
+  "sourceSubtrees": {
+    "app": "f69a9e0b2149b2c6d5c099e4c02161896ae6e23f",
+    "scripts": "d5bc5ebea9ce73901ec8b773fbc845e6250b99b8",
+    "tools": "d064e9cd3b0224cd694af6ab3c95a6dc0c72a9e3"
+  },
+  "rootChecks": {
+    "buildBaseline": {
+      "tests": 32,
+      "pass": 20,
+      "fail": 12,
+      "exitCode": 1
+    },
+    "buildFinalCombined": {
+      "tests": 70,
+      "pass": 70,
+      "fail": 0,
+      "skip": 0,
+      "exitCode": 0
+    },
+    "uiHost": {
+      "tests": 20,
+      "pass": 20,
+      "fail": 0,
+      "exitCode": 0,
+      "inputFilesUnchanged": 36
+    },
+    "memoryHost": {
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "exitCode": 0,
+      "runtime": "Temurin 17.0.20.1+1"
+    }
+  },
+  "independentChecks": {
+    "uiByBuildBot": "20/20 PASS",
+    "memoryByAppBot": "17/17 PASS",
+    "memoryDocsByAppBot": "PASS"
+  },
+  "memoryQualityLimit": {
+    "corpusMemories": 1000,
+    "queries": 44,
+    "recallAt3Before": "43/44",
+    "recallAt3After": "42/44",
+    "affectedExpectedRank": [
+      3,
+      5
+    ],
+    "corpusOrGateChanged": false,
+    "activeMainChatCallerProven": false
+  },
+  "limits": [
+    "Full Android Gradle build unavailable: Android plugin 8.10.0 missing offline",
+    "11 new Robolectric UI cases not run",
+    "UI host platform stand-ins; no actual Android queue/rendering/lifecycle",
+    "Memory event-decorator fail-fast compile stand-in, not executed",
+    "No Fold7, model inference, APK, signing, installation, release or main merge"
+  ],
+  "logNormalization": "Whitespace-only lines were normalized to empty lines and trailing empty lines removed from coordinator text logs. Output values are unchanged; hashes describe stored bytes.",
+  "evidenceSha256": {
+    "build-final-combined-green.tap": "bf7d2b11edf7062b3c2b00b7ea8a00de060c3fe642c8ad2330220557b130c61d",
+    "build-root-baseline-red.tap": "412ad3ca2b8a597702459060fdae19bfd309d297a6acce8f3cf12627690db66b",
+    "build-root-green.tap": "aff024d666396946308ca70f2ddda93c441e493eaa914cd666fa7c3e0924afa9",
+    "memory-commit-review.json": "37bcaa57bf8b5ebc78c0bd229c60b5d5830ffde982b4e3c358a0eeaf63736166",
+    "memory-docs-review.json": "052dd98954ef08400e87a03ab566344b4f1afdf1ca77776a27c03f0c14cddf37",
+    "memory-independent-review-green.log": "db5f35ded4c1e99bc48f00e1d9dd94f0964efdef2d06d3c375e85a519c99ddae",
+    "memory-independent-review.json": "b7215d019c9fdf09937d107fcc1ce319b1829d74da4bed8305b4f5125a75016c",
+    "memory-root-green.log": "2bfffe98d7908af20406c276350e85c2fa990fa63d1d9d56144e8f8dfa0129fd",
+    "ui-independent-review-green.log": "78343e9d8623725e7447501dc1d29d7bbeb0cbdc269f2ad3b67a4f6fa111d988",
+    "ui-root-green.log": "5a4092c8a0f36e8500563990b25032fe502c023ac3c6ff42dfc265b0e55b60d9",
+    "ui-root-input-integrity.log": "f524669728f4389f54d92c1182ea34458d943f821a7d6745d4736f49ae8a77ef",
+    "ui-root-input-sha256.txt": "e5dbebdd36199a2effc18013cc2751a751190a68d1797b3c1a1f59ba25c6a2ad"
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "sourceSha256": "62f6a7cf0168390d98a7b28c7916bfe96bff7284cf755654daf1b07add850f43",
+  "caseCount": 12,
+  "pass": 12,
+  "fail": 0,
+  "networkBuildSigningExecuted": false,
+  "cases": [
+    {
+      "mode": "0",
+      "variable": "CONTINUUM_LOCAL_SIGNING_FILE",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    },
+    {
+      "mode": "0",
+      "variable": "CONTINUUM_LOCAL_SIGNING_PASSWORD",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    },
+    {
+      "mode": "0",
+      "variable": "CONTINUUM_LOCAL_SIGNING_P12_BASE64",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    },
+    {
+      "mode": "0",
+      "variable": "CONTINUUM_MENTOR_SIGNING_FILE",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    },
+    {
+      "mode": "0",
+      "variable": "CONTINUUM_MENTOR_SIGNING_PASSWORD",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    },
+    {
+      "mode": "0",
+      "variable": "CONTINUUM_MENTOR_SIGNING_P12_BASE64",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    },
+    {
+      "mode": "1",
+      "variable": "CONTINUUM_LOCAL_SIGNING_FILE",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    },
+    {
+      "mode": "1",
+      "variable": "CONTINUUM_LOCAL_SIGNING_PASSWORD",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    },
+    {
+      "mode": "1",
+      "variable": "CONTINUUM_LOCAL_SIGNING_P12_BASE64",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    },
+    {
+      "mode": "1",
+      "variable": "CONTINUUM_MENTOR_SIGNING_FILE",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    },
+    {
+      "mode": "1",
+      "variable": "CONTINUUM_MENTOR_SIGNING_PASSWORD",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    },
+    {
+      "mode": "1",
+      "variable": "CONTINUUM_MENTOR_SIGNING_P12_BASE64",
+      "exitCode": 69,
+      "signingRefused": true,
+      "downloadAttempted": false,
+      "workspaceCreated": false,
+      "logsCreated": false,
+      "dummyValuePrinted": false,
+      "pass": true
+    }
+  ]
+}

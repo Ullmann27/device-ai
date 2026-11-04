@@ -1,0 +1,19 @@
+{
+  "removedOnlyOwnReproducibleGeneratedData": [
+    {
+      "path": "/workspace/scratch/7dcf5d78f2cb/round2-android-env/gradle-cache/caches/8.11.1",
+      "fileBytesRemoved": 623270916
+    },
+    {
+      "path": "/workspace/scratch/7dcf5d78f2cb/round2-build/app/build",
+      "fileBytesRemoved": 186838
+    },
+    {
+      "path": "/workspace/scratch/7dcf5d78f2cb/round2-build/.gradle",
+      "fileBytesRemoved": 167087
+    }
+  ],
+  "modules2Preserved": true,
+  "rawLogSha256": "883cb056026e0a0075a8c986dceeb3fadf571afeb32cea9e5555422ee74d512a",
+  "freeDiskBytesAfter": 1759690752
+}

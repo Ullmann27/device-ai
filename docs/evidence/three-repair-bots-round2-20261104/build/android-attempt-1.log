@@ -1,0 +1,116 @@
+{"sourceCommit": "d24ad51b0235826cf0baaa998a2fb4af80a17404", "sourceTree": "45dff2f8cd7c2a34aadd1690502316878be83394", "checkout": "/workspace/scratch/7dcf5d78f2cb/round2-build", "cleanBeforeRun": true, "testClasses": ["at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.backgroundCompletionBeforeFirstAttachDoesNotWaitForAttachment", "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.detachedSubscriberRetiresBackgroundCompletionsWithoutReattach"], "command": ["/workspace/scratch/7dcf5d78f2cb/round2-android-env/gradle-8.11.1/bin/gradle", "--offline", "--no-daemon", "--max-workers=1", "--console=plain", "--stacktrace", "-Dorg.gradle.jvmargs=-Xmx1g -Djava.io.tmpdir=/workspace/scratch/7dcf5d78f2cb/round2-android-env/tmp", "-Pkotlin.compiler.execution.strategy=in-process", "-Pandroid.builder.sdkDownload=false", "-PcontinuumUiWidgetTests=true", "--init-script", "/workspace/scratch/7dcf5d78f2cb/round2-android-env/bounded-tests.init.gradle", ":app:testDebugUnitTest", "--tests", "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.backgroundCompletionBeforeFirstAttachDoesNotWaitForAttachment", "--tests", "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.detachedSubscriberRetiresBackgroundCompletionsWithoutReattach"], "freeBeforeBytes": 1448382464, "signingEnvironmentRemoved": true, "realNetworkDownloadsPermitted": false}
+[0.002s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/90 because it is locked by another process (errno = 11)
+
+Welcome to Gradle 8.11.1!
+
+Here are the highlights of this release:
+ - Parallel load and store for Configuration Cache
+ - Java compilation errors at the end of the build output
+ - Consolidated report for warnings and deprecations
+
+For more details see https://docs.gradle.org/8.11.1/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig
+> Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:mergeDebugResources
+> Task :app:packageDebugResources
+> Task :app:parseDebugLocalResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :app:processDebugResources
+> Task :app:compileDebugKotlin
+
+The message received from the daemon indicates that the daemon has disappeared.
+Build request sent: Build{id=b7c15d41-837f-4840-bc44-e8e5e2e76099, currentDir=/workspace/scratch/7dcf5d78f2cb/round2-build}
+Attempting to read last messages from the daemon log...
+Daemon pid: 132
+  log file: /workspace/scratch/7dcf5d78f2cb/round2-android-env/gradle-cache/daemon/8.11.1/daemon-132.out.log
+----- Last 20 lines from daemon log file - daemon-132.out.log -----
+2026-11-04T20:52:04.750+0100 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon is running. Sleeping until state changes.
+2026-11-04T20:52:04.753+0100 [INFO] [org.gradle.launcher.daemon.server.exec.StartBuildOrRespondWithBusy] Daemon is about to start building Build{id=b7c15d41-837f-4840-bc44-e8e5e2e76099, currentDir=/workspace/scratch/7dcf5d78f2cb/round2-build}. Dispatching build started information...
+2026-11-04T20:52:04.753+0100 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 23: dispatching org.gradle.launcher.daemon.protocol.BuildStarted@3ab53a27
+2026-11-04T20:52:04.755+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.EstablishBuildEnvironment] Configuring env variables: [PATH, CAAS_IMAGE_VERSION, NO_PROXY, ELECTRON_GET_USE_PROXY, PIP_CERT, ANDROID_HOME, XDG_CACHE_HOME, GH_PAGER, PLAYWRIGHT_NODEJS_PATH, COLORTERM, NPM_CONFIG_AUDIT, NODE_USE_ENV_PROXY, PWD, NPM_CONFIG_HTTP_PROXY, FTP_PROXY, PAGER, CLOUD_AEON_OS_PERSONALIZATION_URL, CODEX_HOME, CODEX_NETWORK_PROXY_ACTIVE, ALL_PROXY, LC_ALL, BROWSER_USE_CHATGPT_ENVIRONMENT, npm_config_http_proxy, LC_CTYPE, CODEX_SESSION_ID, SHLVL, NPM_CONFIG_PROXY, CAAS_IMAGE_GIT_COMMIT_SHA, CODEX_FLORA_CCA_GATEWAY_RESOLUTION_HOST, JAVA_HOME, CODEX_NETWORK_ALLOW_LOCAL_BINDING, TERM, HTTP_PROXY, ENABLE_BROWSER_AUTH, CODEX_FLORA_CCA_REUSE_EXECUTOR, CODEX_FLORA_CCA_WORKSPACE_CWD, GRADLE_USER_HOME, CODEX_FLORA_CCA_BOOTSTRAP_ATTEMPT_ID, CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS, HTTPS_PROXY, NODE_EXTRA_CA_CERTS, CODEX_THREAD_ID, _, SSL_CERT_FILE, no_proxy, OTEL_TRACES_SAMPLER_ARG, DOCKER_HTTP_PROXY, ENABLE_BROWSER_WEBMCP, CODEX_PRIMARY_RUNTIME_NODE, GRADLE_OPTS, YARN_HTTPS_PROXY, https_proxy, GIT_PAGER, BUNDLE_HTTP_PROXY, CODEX_PRIMARY_RUNTIME, CODEX_BROWSER_DEFER_ACTIVATION, WSS_PROXY, XDG_STATE_HOME, CODEX_PRIMARY_RUNTIME_ROOT, CODEX_PRIMARY_RUNTIME_BUNDLE_VERSION, DD_SERVICE, YARN_HTTP_PROXY, npm_config_https_proxy, wss_proxy, NETWORK, CODEX_SANDBOX_NETWORK_DISABLED, npm_config_noproxy, REQUESTS_CA_BUNDLE, NPM_CONFIG_PREFIX, TMPDIR, ENABLE_BROWSER_CREDENTIAL_CAPABILITIES, SITES_MANAGED_LINUX_CONTAINER, PIP_PROXY, NPM_CONFIG_FUND, DEBIAN_FRONTEND, CODEX_EXEC_SERVER_REMOTE_BASE_URL, BUNDLE_HTTPS_PROXY, CODEX_ENVIRONMENT_ID, CODEX_PRIMARY_RUNTIME_NODE_MODULES, LANG, NPM_CONFIG_NOPROXY, ftp_proxy, BUNDLE_NO_PROXY, all_proxy, NO_COLOR, NPM_CONFIG_HTTPS_PROXY, NODE_PATH, CODEX_FLORA_CCA_EXPECTED_EXECUTOR_PID, ws_proxy, BROWSER_USE_AUTOMATIC_OTP_ENABLED, CODEX_CI, http_proxy, DOCKER_HTTPS_PROXY, XDG_DATA_HOME, npm_config_proxy, CODEX_PRIMARY_RUNTIME_PYTHON, CODEX_TOOL_CALL_ID, ANDROID_SDK_ROOT, ANDROID_USER_HOME, XDG_CONFIG_HOME, OTEL_TRACES_SAMPLER, BROWSER_MANAGEMENT_SOCKET_PATH, CODEX_PROXY_CERT, OTEL_RESOURCE_ATTRIBUTES, CODEX_FLORA_CCA_GATEWAY_HOST_ALIASES, CODEX_VERSION, XDG_RUNTIME_DIR, WS_PROXY, HOME, OPENAI_CLUSTER]
+2026-11-04T20:52:04.763+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.LogToClient] About to start relaying all logs to the client via the connection.
+2026-11-04T20:52:04.764+0100 [INFO] [org.gradle.launcher.daemon.server.exec.LogToClient] The client will now receive all logging from the daemon (pid: 132). The daemon log file: /workspace/scratch/7dcf5d78f2cb/round2-android-env/gradle-cache/daemon/8.11.1/daemon-132.out.log
+2026-11-04T20:52:04.777+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.RequestStopIfSingleUsedDaemon] Requesting daemon stop after processing Build{id=b7c15d41-837f-4840-bc44-e8e5e2e76099, currentDir=/workspace/scratch/7dcf5d78f2cb/round2-build}
+2026-11-04T20:52:04.778+0100 [LIFECYCLE] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Daemon will be stopped at the end of the build 
+2026-11-04T20:52:04.778+0100 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Stop as soon as idle requested. The daemon is busy
+2026-11-04T20:52:04.778+0100 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon stop has been requested. Sleeping until state changes.
+2026-11-04T20:52:04.779+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] The daemon has started executing the build.
+2026-11-04T20:52:04.779+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] Executing build with daemon context: DefaultDaemonContext[uid=b108442b-1260-4859-9813-b35afcaf85c9,javaHome=/workspace/scratch/b7d23de0e715/build-toolchain/jdk17,javaVersion=17,javaVendor=Eclipse Adoptium,daemonRegistryDir=/workspace/scratch/7dcf5d78f2cb/round2-android-env/gradle-cache/daemon,pid=132,idleTimeout=120000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-Xmx1g,-Dfile.encoding=UTF-8,-Djava.io.tmpdir=/workspace/scratch/7dcf5d78f2cb/round2-android-env/tmp,-Duser.country,-Duser.language=en,-Duser.variant]
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+----- End of the daemon log -----
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Gradle build daemon disappeared unexpectedly (it may have been killed or may have crashed)
+
+* Try:
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+* Exception is:
+org.gradle.launcher.daemon.client.DaemonDisappearedException: Gradle build daemon disappeared unexpectedly (it may have been killed or may have crashed)
+	at org.gradle.launcher.daemon.client.DaemonClient.handleDaemonDisappearance(DaemonClient.java:283)
+	at org.gradle.launcher.daemon.client.DaemonClient.monitorBuild(DaemonClient.java:256)
+	at org.gradle.launcher.daemon.client.DaemonClient.executeBuild(DaemonClient.java:209)
+	at org.gradle.launcher.daemon.client.SingleUseDaemonClient.execute(SingleUseDaemonClient.java:63)
+	at org.gradle.launcher.daemon.client.SingleUseDaemonClient.execute(SingleUseDaemonClient.java:37)
+	at org.gradle.launcher.cli.RunBuildAction.run(RunBuildAction.java:56)
+	at org.gradle.internal.Actions$RunnableActionAdapter.execute(Actions.java:167)
+	at org.gradle.launcher.cli.DefaultCommandLineActionFactory$ParseAndBuildAction.execute(DefaultCommandLineActionFactory.java:370)
+	at org.gradle.launcher.cli.DefaultCommandLineActionFactory$ParseAndBuildAction.execute(DefaultCommandLineActionFactory.java:334)
+	at org.gradle.launcher.cli.DebugLoggerWarningAction.execute(DebugLoggerWarningAction.java:74)
+	at org.gradle.launcher.cli.DebugLoggerWarningAction.execute(DebugLoggerWarningAction.java:30)
+	at org.gradle.launcher.cli.WelcomeMessageAction.execute(WelcomeMessageAction.java:97)
+	at org.gradle.launcher.cli.WelcomeMessageAction.execute(WelcomeMessageAction.java:40)
+	at org.gradle.launcher.cli.NativeServicesInitializingAction.execute(NativeServicesInitializingAction.java:50)
+	at org.gradle.launcher.cli.NativeServicesInitializingAction.execute(NativeServicesInitializingAction.java:27)
+	at org.gradle.launcher.cli.ExceptionReportingAction.execute(ExceptionReportingAction.java:41)
+	at org.gradle.launcher.cli.ExceptionReportingAction.execute(ExceptionReportingAction.java:26)
+	at org.gradle.launcher.cli.DefaultCommandLineActionFactory$WithLogging.execute(DefaultCommandLineActionFactory.java:482)
+	at org.gradle.launcher.Main.doAction(Main.java:35)
+	at org.gradle.launcher.bootstrap.EntryPoint.run(EntryPoint.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.gradle.launcher.bootstrap.ProcessBootstrap.runNoExit(ProcessBootstrap.java:72)
+	at org.gradle.launcher.bootstrap.ProcessBootstrap.run(ProcessBootstrap.java:39)
+	at org.gradle.launcher.GradleMain.main(GradleMain.java:31)
+
+
+EXIT_CODE=1
+FREE_AFTER_BYTES=725544960

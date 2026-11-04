@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "reviewType": "READ_ONLY_REMOTE_EVIDENCE_RECONCILIATION",
+  "sourcePR": 512,
+  "reviewedRemoteHead": "f9267a3743a87a77bf6421011c014b2ca2d6b0d6",
+  "reportedTestSource": "52fbfc624c9a2846c1da571d330327c7874b1639",
+  "reportedTree": "2be53764ed72e00e780c7b87ff1401c195ac0a50",
+  "reportedFullSelection": {
+    "tests": 305,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "verifiedOriginalXmlSuites": [
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.learning.TemporalCueCalendarTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "verifiedSources": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+      "blob": "bd943129a52c92ccb46022c0f083e328acbf24b9",
+      "sha256": "f8898aa6d06b4b74da04f1a99a3e445bb257c87e6b8ab5c5c0f7c3ffa93ea01d",
+      "matchesRound1": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+      "blob": "fa67f32044e57a3f23fdd158924f1f8bf004d5cf",
+      "sha256": "8d095be29157246c8f7dad09e2ae3960519ae816c428dfe399ebcdfe65463e1d",
+      "matchesRound1": true
+    },
+    {
+      "path": "scripts/render-continuum-owner-continuous-qa.sh",
+      "blob": "696d553af4b4af8af27a60d18b1258e9f696f030",
+      "sha256": "9673936c27c789c66ba2cd55a9fbd95479d66c5a24b6c1e0c4e6d2ce7fe3d2e3",
+      "matchesRound1": true
+    }
+  ],
+  "verifiedEvidence": [
+    {
+      "path": "summary.json",
+      "sha256": "50eabb2e2ec90b3e7e944e3325d04c7adca4c30e6333a0ac93c2fce1caecd74b"
+    },
+    {
+      "path": "combined-gradle.log",
+      "sha256": "f56573d297e31ee683c5f7f089a39510f0ca2c5418c34a7434bd8384d67ddabf"
+    },
+    {
+      "path": "xml/TEST-at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.xml",
+      "sha256": "d956d3b17251f7ae33b342fb5abed2f337510656368866666a5e19195032a4b2"
+    },
+    {
+      "path": "xml/TEST-at.heinz.deviceai.learning.TemporalCueCalendarTest.xml",
+      "sha256": "a4c4d96881129c0c80c6c9373d55794d8f27546593de589393f5dd0ad496036f"
+    }
+  ],
+  "limits": [
+    "This is not a new execution by this coordinator",
+    "Only the two imported regression XML suites were individually inspected; the45-class total was reconciled with the receipt",
+    "Robolectric host evidence is not Fold7 acceptance",
+    "No new round2 source is covered by these historical tests"
+  ]
+}

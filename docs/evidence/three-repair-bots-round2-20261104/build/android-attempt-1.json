@@ -1,0 +1,45 @@
+{
+  "status": "BUILD_FAILED_BEFORE_TEST_EXECUTION",
+  "source": {
+    "sourceCommit": "d24ad51b0235826cf0baaa998a2fb4af80a17404",
+    "sourceTree": "45dff2f8cd7c2a34aadd1690502316878be83394",
+    "checkout": "/workspace/scratch/7dcf5d78f2cb/round2-build",
+    "cleanBeforeRun": true,
+    "testClasses": [
+      "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.backgroundCompletionBeforeFirstAttachDoesNotWaitForAttachment",
+      "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.detachedSubscriberRetiresBackgroundCompletionsWithoutReattach"
+    ],
+    "command": [
+      "/workspace/scratch/7dcf5d78f2cb/round2-android-env/gradle-8.11.1/bin/gradle",
+      "--offline",
+      "--no-daemon",
+      "--max-workers=1",
+      "--console=plain",
+      "--stacktrace",
+      "-Dorg.gradle.jvmargs=-Xmx1g -Djava.io.tmpdir=/workspace/scratch/7dcf5d78f2cb/round2-android-env/tmp",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pandroid.builder.sdkDownload=false",
+      "-PcontinuumUiWidgetTests=true",
+      "--init-script",
+      "/workspace/scratch/7dcf5d78f2cb/round2-android-env/bounded-tests.init.gradle",
+      ":app:testDebugUnitTest",
+      "--tests",
+      "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.backgroundCompletionBeforeFirstAttachDoesNotWaitForAttachment",
+      "--tests",
+      "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.detachedSubscriberRetiresBackgroundCompletionsWithoutReattach"
+    ],
+    "freeBeforeBytes": 1448382464,
+    "signingEnvironmentRemoved": true,
+    "realNetworkDownloadsPermitted": false
+  },
+  "exitCode": 1,
+  "lastTask": ":app:compileDebugKotlin",
+  "failure": "Gradle build daemon disappeared unexpectedly",
+  "failureCause": "UNDETERMINED; no hs_err file found; cgroup memory metrics not exposed",
+  "junitXmlCount": 0,
+  "testOutcome": "NOT_RUN; not an expected regression RED",
+  "retryStatus": "NOT_STARTED; free disk below launcher minimum of 1 GiB",
+  "freeDiskBytesNow": 211558400,
+  "productSourceChanged": false,
+  "independentPriorAndroidProof": "PR512; not treated as execution of this candidate"
+}

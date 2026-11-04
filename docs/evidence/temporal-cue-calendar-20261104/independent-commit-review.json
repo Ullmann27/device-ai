@@ -1,0 +1,10 @@
+{
+  "reviewed_commit": "b62101a13ff7fc6c5cd038fb8a412250af19852c",
+  "base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "all_committed_inputs_match_independent_run": true,
+  "existing_corpus_unchanged_from_base": true,
+  "diff_check": "PASS",
+  "bash_syntax": "PASS",
+  "tests": "17/17 PASS",
+  "scope": "JVM original source, fail-fast event-decorator stand-in, no Android/device/mainchat activation evidence"
+}
