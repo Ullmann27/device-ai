@@ -7,6 +7,9 @@ import { formatMentorAnswer } from "./mentor-answer-format.js";
 
 const API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+const INWORLD_URL = "https://api.inworld.ai/v1/chat/completions";
+const INWORLD_MODEL = "inworld/models/gemma-4-31b-it";
+const REASONING_EFFORTS = new Set(["none", "minimal", "low", "medium", "high", "xhigh", "max"]);
 const DEFAULT_MODEL = "openai/gpt-oss-20b";
 const MAX_INPUT_CHARS = 1800;
 const MAX_RESPONSE_BYTES = 64 * 1024;
@@ -17,7 +20,8 @@ export class GroqMentor {
     enabled = false,
     apiKey = "",
     provider = "GROQ",
-    model = DEFAULT_MODEL,
+    model = provider === "INWORLD" ? INWORLD_MODEL : DEFAULT_MODEL,
+    reasoningEffort = "medium",
     dailyLimit = DEFAULT_MAX_DAILY,
     fetcher = globalThis.fetch,
     clock = () => Date.now()
@@ -28,14 +32,19 @@ export class GroqMentor {
     if (typeof model !== "string" || !/^[a-z0-9][a-z0-9/_.-]{2,100}$/i.test(model)) {
       throw Error("Ungültige Modellkennung.");
     }
-    if (provider !== "GROQ" && provider !== "OPENROUTER") {
+    if (!["GROQ", "OPENROUTER", "INWORLD"].includes(provider)) {
       throw Error("Ungültiger Mentor-Anbieter.");
     }
+    if (provider === "INWORLD" && !REASONING_EFFORTS.has(reasoningEffort)) {
+      throw Error("Ungültige Inworld-Denkstufe.");
+    }
     this.provider = provider;
-    this.apiUrl = provider === "OPENROUTER" ? OPENROUTER_URL : API_URL;
+    this.apiUrl = provider === "INWORLD" ? INWORLD_URL :
+      provider === "OPENROUTER" ? OPENROUTER_URL : API_URL;
     this.enabled = enabled === true && apiKey.trim().length >= 12;
     this.key = apiKey.trim();
     this.model = model;
+    this.reasoningEffort = reasoningEffort;
     this.limit = dailyLimit;
     this.fetcher = fetcher;
     this.clock = clock;
@@ -68,8 +77,9 @@ export class GroqMentor {
     return { error: null };
   }
 
-  async answer(question) {
+  async answer(question, { signal } = {}) {
     if (!this.enabled) return { ok: false, code: "DISABLED" };
+    if (signal?.aborted) return { ok: false, code: "REQUEST_CANCELLED" };
     if (typeof question !== "string" || question.trim().length < 3 ||
         question.length > MAX_INPUT_CHARS || /[\u0000-\u0008\u000B-\u001F]/.test(question)) {
       return { ok: false, code: "INVALID_QUESTION" };
@@ -77,19 +87,25 @@ export class GroqMentor {
     const ticket = this.reserve();
     if (ticket.error) return { ok: false, code: ticket.error };
     const abort = new AbortController();
-    const timeout = setTimeout(() => abort.abort(), 16_000);
+    const onCancel = () => abort.abort();
+    signal?.addEventListener("abort", onCancel, { once: true });
+    let timedOut = false;
+    const timeout = setTimeout(() => { timedOut = true; abort.abort(); },
+      this.provider === "INWORLD" ? 45_000 : 16_000);
     try {
-      // One owner-approved mentor request may repeat the same bounded question
-      // once when the provider returns no user-visible content. Reasoning-only
+      // Preserve the existing Groq/OpenRouter empty-answer recovery. Reasoning
       // fields are deliberately never shown or written to memory.
-      const gptOss = /^openai\/gpt-oss-(?:20b|120b)$/.test(this.model);
-      for (let attempt = 0; attempt < 2; attempt++) {
+      const inworld = this.provider === "INWORLD";
+      const gptOss = !inworld && /^openai\/gpt-oss-(?:20b|120b)$/.test(this.model);
+      // Inworld has one bounded attempt per consent; no extra billable retry.
+      const maxAttempts = inworld ? 1 : 2;
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
         const response = await this.fetcher(this.apiUrl, {
           method: "POST",
           redirect: "error",
           signal: abort.signal,
           headers: {
-            Authorization: "Bearer " + this.key,
+            Authorization: (inworld ? "Basic " : "Bearer ") + this.key,
             "Content-Type": "application/json",
             Accept: "application/json"
           },
@@ -98,9 +114,10 @@ export class GroqMentor {
             temperature: 0.3,
             max_completion_tokens: attempt === 0 ? 2048 : 3072,
             ...(gptOss ? { reasoning_effort: "low", include_reasoning: false } : {}),
+            ...(inworld ? { extra_body: { reasoning: { effort: this.reasoningEffort } } } : {}),
             stream: false,
             tool_choice: "none",
-            n: 1,
+            ...(!inworld ? { n: 1 } : {}),
             messages: [
               { role: "system", content:
                 "Du bist ein externer, unverifizierter Sprachmentor für die Android-App Device AI Continuum. " +
@@ -135,14 +152,11 @@ export class GroqMentor {
         });
         if (response.status === 429) return { ok: false, code: "UPSTREAM_LIMIT" };
         if (response.status === 401 || response.status === 403) {
-          return { ok: false, code: this.provider === "OPENROUTER"
-            ? "OPENROUTER_KEY_REJECTED" : "GROQ_KEY_REJECTED" };
+          return { ok: false, code: this.provider + "_KEY_REJECTED" };
         }
-        if (response.status === 404) return { ok: false, code: this.provider === "OPENROUTER"
-          ? "OPENROUTER_MODEL_UNAVAILABLE" : "GROQ_MODEL_UNAVAILABLE" };
+        if (response.status === 404) return { ok: false, code: this.provider + "_MODEL_UNAVAILABLE" };
         if (response.status === 400 || response.status === 422) {
-          return { ok: false, code: this.provider === "OPENROUTER"
-            ? "OPENROUTER_REQUEST_REJECTED" : "GROQ_REQUEST_REJECTED" };
+          return { ok: false, code: this.provider + "_REQUEST_REJECTED" };
         }
         if (!response.ok) return { ok: false, code: "UPSTREAM_UNAVAILABLE" };
         const declared = Number(response.headers?.get?.("content-length") ?? 0);
@@ -183,14 +197,17 @@ export class GroqMentor {
           return {
             ok: true,
             message: answer,
-            model: this.model,
+            // Inworld may resolve a model alias/router; expose only the bounded
+            // model identifier, never the provider's metadata or reasoning.
+            model: inworld && typeof payload.model === "string" &&
+              /^[a-z0-9][a-z0-9/_.-]{2,100}$/i.test(payload.model) ? payload.model : this.model,
             provider: this.provider,
             trust: "UNVERIFIED_EXTERNAL",
             tool_calls: [],
             memory_written: false
           };
         }
-        if (attempt === 1) {
+        if (attempt === maxAttempts - 1) {
           return {
             ok: false,
             code: payload?.choices?.[0]?.finish_reason === "length"
@@ -200,9 +217,14 @@ export class GroqMentor {
       }
       return { ok: false, code: "EMPTY_RESPONSE" };
     } catch {
+      if (signal?.aborted) return { ok: false, code: "REQUEST_CANCELLED" };
+      if (timedOut && this.provider === "INWORLD") return { ok: false, code: "UPSTREAM_TIMEOUT" };
       return { ok: false, code: "UPSTREAM_UNAVAILABLE" };
     } finally {
       clearTimeout(timeout);
+      signal?.removeEventListener("abort", onCancel);
+      // Also close unread response bodies on early status/size rejection.
+      abort.abort();
       this.inFlight = false;
     }
   }
