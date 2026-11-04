@@ -19,6 +19,10 @@ Status: **WIP / UNVERIFIED / NEW_TRAINING_NOT_RUN**. Heinz hat am 04.11.2026 unm
 
 Root integriert, prüft und veröffentlicht. Vor einem tatsächlichen 16M-Optimizerschritt werden der fertige Harness, die genaue Konfiguration, Quellen-/Eingabehashes und der Ablauf separat festgeschrieben und veröffentlicht. Tiny-Gradienten-/Format-/Controllerprüfungen sind keine Modellqualitätsexperimente.
 
+## Koordinator-Zwischenstand
+
+Der neue externe Messwrapper `support-round2/run_resource_measurement.py` ist erstellt; Python-Syntaxprüfung PASS, echte Ausführung noch NOT_RUN. Er verlangt eine vorher committed Registrierung und überprüft deren exakte Bytes sowie die Dateiidentitäten vor dem Start. Er verwendet den vorhandenen GNU-timeout-Prozess mit festem 120-Sekunden-Limit, startet keinen Shelltext und hält native Ausgabe, Fehlerausgabe, unveränderte Eingabehashes und Linux-Ressourcendaten fest. Der Peak wird als Prozessmessung mit offengelegtem Git-Preflight-Basiswert ausgewiesen. Eine erfolgreiche Prozessbeendigung allein wird nicht als erfolgreicher Lernnachweis ausgegeben.
+
 ## Geplanter eng begrenzter Ressourcenversuch
 
 Geplant ist ein einzelner AdamW-Update mit dem vorhandenen 16.011.776-Parameter-Checkpoint, einem frisch festgelegten synthetischen Beispiel mit höchstens acht Tokens, Batch 1 und einem Worker. Maximale JVM-Heapgrenze 3 GiB, Prozesszeit höchstens 120 Sekunden. Keine adaptive Erweiterung nach Fehler oder Timeout. Die konkreten Hyperparameter und Ein-/Ausgabebelege werden vor Ausführung festgelegt; ein einzelner Schritt muss tatsächlich eine von null verschiedene Lernrate verwenden.
