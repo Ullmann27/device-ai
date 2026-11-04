@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "scope": "existing-function tuning only",
+  "status": "RUNNING",
+  "owner": "tuning-root-59ad19c6d3b7-r3",
+  "leaseExpiresAtUtc": "2026-11-04T23:25:56.567891+00:00",
+  "updatedAtUtc": "2026-11-04T21:25:56.567891+00:00",
+  "branch": "tuning/continuum-three-bots-20261104",
+  "pullRequest": 511,
+  "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
+  "localEquivalentBaseline": "2f20c19b7e37197a6accac0c226b5401e25f1f99",
+  "baselineTree": "f6297e08d03eae74283f43b1ce5abf80c5f7e666",
+  "baselineSourceSha256": {
+    "LmModel.kt": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+    "LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e"
+  },
+  "execution": "sequential; no new subagents",
+  "automation": "enabled; hourly continuation; actual future execution unverified",
+  "milestones": [
+    {
+      "id": "R3-M1",
+      "target": "LmModel.nll",
+      "hypothesis": "Replace sequence-sized output scratch with one vocabulary row; preserve floating-point expression order",
+      "status": "PLANNED"
+    },
+    {
+      "id": "R3-M2",
+      "target": "LmModel.nextDistribution",
+      "hypothesis": "Write final probabilities directly to the result row; eliminate sequence-sized scratch and result copy",
+      "status": "PLANNED"
+    },
+    {
+      "id": "R3-M3",
+      "target": "LmBpeTokenizer.encode",
+      "hypothesis": "Assemble cached token arrays into one primitive output instead of boxing every token",
+      "status": "PLANNED"
+    }
+  ],
+  "next": "Record protocol and baseline checks, then implement/measure one milestone at a time",
+  "limits": [
+    "no main merge",
+    "no APK/install",
+    "no model weights/training job",
+    "no redaction repair",
+    "no other-team branch mutation",
+    "no repeated favorable-sample search"
+  ]
+}
