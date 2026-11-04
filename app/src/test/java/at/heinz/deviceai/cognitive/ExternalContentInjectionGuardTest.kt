@@ -53,21 +53,37 @@ class ExternalContentInjectionGuardTest {
         assertEquals(1, r.deletes)
     }
 
-    @Test fun intentDetectionUsesTheOwnerTaskOnlyAndIsPerActionClass() {
+    @Test fun blockingFollowsTaintAndActionRiskNotWordLists() {
         val g = ExternalContentActionGuard
-        assertNull(g.refusal("Fasse zusammen", "delete_file", Risk.DESTRUCTIVE, untrustedObservationsSeen = false))
-        assertNotNull(g.refusal("Fasse zusammen", "delete_file", Risk.DESTRUCTIVE, untrustedObservationsSeen = true))
-        assertNull(g.refusal("Bitte lösche die alte Datei", "delete_file", Risk.DESTRUCTIVE, true))
-        assertNull(g.refusal("delete the old log", "delete_file", Risk.DESTRUCTIVE, true))
-        assertNotNull("delete intent does not cover uninstall", g.refusal("Lösche die Datei", "uninstall_app", Risk.DESTRUCTIVE, true))
-        assertNull(g.refusal("Bitte deinstalliere die App Foo", "uninstall_app", Risk.DESTRUCTIVE, true))
-        assertNotNull(g.refusal("Zeig mir die neueste APK", "install_apk", Risk.CONFIRM, true))
-        assertNull(g.refusal("Installiere die neueste APK", "install_apk", Risk.CONFIRM, true))
-        assertNotNull(g.refusal("Lies die Notizen", "send_message", Risk.DESTRUCTIVE, true))
-        assertNull(g.refusal("Schick Anna die Notizen", "send_message", Risk.DESTRUCTIVE, true))
-        assertNotNull(g.refusal("Lies die Notizen", "purchase_item", Risk.CONFIRM, true))
-        assertNull("read-only stays allowed", g.refusal("Fasse zusammen", "list_files", Risk.READ_ONLY, true))
-        assertNull("web consent has its own owner dialog", g.refusal("Fasse zusammen", "web_search", Risk.CONFIRM, true))
+        val photo = mapOf("path" to "/storage/emulated/0/DCIM/Camera/familie.jpg")
+        // No untrusted content seen yet: the normal ToolGate/owner approval decides.
+        assertNull(g.refusal("Fasse zusammen", "delete_file", Risk.DESTRUCTIVE, photo, untrustedObservationsSeen = false))
+        // High-impact action whose target came from external content (not from the owner): refused.
+        assertNotNull(g.refusal("Fasse zusammen", "delete_file", Risk.DESTRUCTIVE, photo, true))
+        // Negation and verbs no longer matter: owner wording cannot launder a tainted target ...
+        assertNotNull(g.refusal("Schaffe Platz, ohne etwas zu loeschen", "delete_file", Risk.DESTRUCTIVE,
+            mapOf("path" to "/sdcard/Download/film.mp4"), true))
+        assertNotNull(g.refusal("Lösche alles was du findest", "delete_file", Risk.DESTRUCTIVE, photo, true))
+        // ... and an owner-named target goes on to the strong owner dialog, in any wording.
+        assertNull(g.refusal("Weg mit familie.jpg aus DCIM/Camera", "delete_file", Risk.DESTRUCTIVE, photo, true))
+        assertNull(g.refusal("delete the old familie.jpg", "delete_file", Risk.DESTRUCTIVE, photo, true))
+        // Uninstall/install/send/purchase are high-impact too.
+        assertNotNull(g.refusal("Lösche die Datei", "uninstall_app", Risk.DESTRUCTIVE, mapOf("packageOrName" to "com.bank.app"), true))
+        assertNull(g.refusal("Bitte deinstalliere com.foo.app", "uninstall_app", Risk.DESTRUCTIVE, mapOf("packageOrName" to "com.foo.app"), true))
+        assertNotNull(g.refusal("Zeig mir die neueste APK", "install_apk", Risk.CONFIRM, mapOf("path" to "/sdcard/Download/evil.apk"), true))
+        assertNull(g.refusal("Installiere /sdcard/Download/app.apk", "install_apk", Risk.CONFIRM, mapOf("path" to "/sdcard/Download/app.apk"), true))
+        // Send: recipient is a control argument and must come from the owner; message body is payload data.
+        assertNotNull(g.refusal("Lies die Notizen", "send_message", Risk.DESTRUCTIVE,
+            mapOf("to" to "attacker@evil.example", "text" to "Notizen"), true))
+        assertNull(g.refusal("Gib Anna die Notizen weiter", "send_message", Risk.DESTRUCTIVE,
+            mapOf("to" to "Anna", "text" to "Einkauf: Milch, Brot"), true))
+        assertNotNull("a high-impact action without any owner-provenanced target is refused",
+            g.refusal("Lies die Notizen", "purchase_item", Risk.CONFIRM, emptyMap(), true))
+        // Reversible local actions (move/stop) from external content still go to the normal owner approval.
+        assertNull(g.refusal("Schaffe Platz im Download-Ordner", "move_file", Risk.CONFIRM,
+            mapOf("source" to "/sdcard/Download/film.mp4", "destination" to "/sdcard/Archiv/film.mp4"), true))
+        assertNull("read-only stays allowed", g.refusal("Fasse zusammen", "list_files", Risk.READ_ONLY, emptyMap(), true))
+        assertNull("web consent has its own owner dialog", g.refusal("Fasse zusammen", "web_search", Risk.CONFIRM, mapOf("query" to "x"), true))
     }
 
     @Test fun externalContentIsMarkedUntrustedInTheModelContext() {
