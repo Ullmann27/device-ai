@@ -357,6 +357,13 @@ class AiContextCompiler(
             copiedUntil = valueEnd
         }
         val assigned = out?.append(text, copiedUntil, text.length)?.toString() ?: text
+        // A bare Bearer marker followed by a physical line break is ambiguous:
+        // neither leak a possible wrapped token nor erase the next statement.
+        if (assigned.contains("bearer", ignoreCase = true) &&
+            Regex("""(?im)^[ \t]*bearer[ \t]*(?:\r\n|\r|\n)[ \t]*[A-Za-z0-9._~+/=-]{8,}""")
+                .containsMatchIn(assigned)) {
+            error("UNTERMINATED_CREDENTIAL_VALUE")
+        }
         return assigned.replace(Regex("(?i)\\bbearer[ \\t]+[A-Za-z0-9._~+/=-]{8,}"), "Bearer [REDACTED]")
     }
 
