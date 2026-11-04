@@ -1,0 +1,19 @@
+SOURCE_SHA256=ab372415453a4340c74f46f6bdfde7c6d7677a70543e18b88afb83a5907a3108
+METHOD_SHA256=b915dbb97399c952f1bb9cff8963ca73024c457b0c63ee0194781280559a6b0b
+EXTRACTED_KOTLIN_CODE_UNCHANGED=true
+PASS	standalone-bearer-lf-preserve-negation	output=Documentation mentions Bearer\nNevermore approve the action.
+PASS	standalone-bearer-crlf-preserve-negation	output=Documentation mentions Bearer\r\nNevermore approve the action.
+PASS	standalone-bearer-tab-removes-token	output=Bearer [REDACTED]
+PASS	access_token-json	output={"access_token":[REDACTED],"keep":"Never approve"}
+PASS	refresh_token-form	output=refresh_token=[REDACTED]\nNever approve
+PASS	client_secret-form	output=client_secret=[REDACTED]\nNever approve
+PASS	session_token-form	output=session_token=[REDACTED]\nNever approve
+PASS	legacy-bearer-assignment	output=Authorization: [REDACTED]\nNever approve
+PASS	legacy-token	output=x-token=[REDACTED]\nNever approve
+PASS	non-key-control	output=access_tokenizer=public\nNever approve
+FAIL	wrapper-case-0	reason=NO_ERROR
+FAIL	wrapper-case-1	reason=NO_ERROR
+TOTAL=12 PASS=10 FAIL=2
+Exception in thread "main" java.lang.IllegalStateException: REGRESSION_RED_2
+	at RedactorProbeKt.main(RedactorProbe.kt:34)
+	at RedactorProbeKt.main(RedactorProbe.kt)
