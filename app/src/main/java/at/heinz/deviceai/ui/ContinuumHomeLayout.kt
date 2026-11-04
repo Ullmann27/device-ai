@@ -39,10 +39,13 @@ object ContinuumHomeLayout {
     const val WIDE_REFERENCE_HEIGHT = 649f
     const val PHONE_NAV_HEIGHT = 74f
 
-    /** Navigation reserves readable dp instead of shrinking every control with the window. */
+    /**
+     * Navigation reserves readable dp instead of shrinking every control with the window. Open Fold7 (both
+     * orientations): ~20 % labelled rail after ref5 / JARVIS-DESIGN-BILDBESCHRIEB (was 10 %, 88–120 dp).
+     */
     fun railWidthDp(windowWidthDp: Float): Float {
         require(windowWidthDp.isFinite() && windowWidthDp > 0f)
-        return (windowWidthDp * .10f).coerceIn(88f, 120f)
+        return (windowWidthDp * JarvisMenuRail.WIDTH_FRACTION).coerceIn(JarvisMenuRail.MIN_WIDTH, JarvisMenuRail.MAX_WIDTH)
     }
 
     /** Height-only changes (IME and system bars) never reset the active work area. */

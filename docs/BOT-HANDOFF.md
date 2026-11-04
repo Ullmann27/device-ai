@@ -162,3 +162,19 @@ Nebenstrang: Jarvis Gedächtnis (über Kerns Schnittstellen). Chef HAUPTBOT vert
 - Auf `integration/jarvis-on-chatgpt-untested-20261104` (Basis dcde4b6e) gemergt: #479 @0ceedb1f, #481 @5a1076ca, #482 @2e49ea74, #484 @c980315f, #485 @f77424c2, #489 @18fc049e (je ein Merge-Commit, Head 17c6e6cb).
 - #486 @fc33c497 übersprungen, Konflikte: AgentActivity.kt, AndroidOnDeviceSpeechInput.kt, cognitive/LocalSpeechEngine.kt, ui/CockpitAnimationPresenter.kt, LocalSpeechEngineTest.kt, docs/BOT-HANDOFF.md (Sprach-Konflikte: #486 trägt den älteren Sprach-Fix 73be6722, #483 hat den neueren dcde4b6e → beim Lösen die #483-Seite nehmen).
 - Offen: #486 nachmergen, compileDebugKotlin/Tests NICHT gelaufen, Sicherheit-Prüfung der Merges, `integration/jarvis-on-chatgpt-20261104` unverändert @dcde4b6e.
+---
+
+## Menüführung (Jarvis Integration) – Branch `design/jarvis-menu-navigation-20261104`, Draft-PR #486
+Stand: 04.11.2026 09:31 CET (Europe/Vienna). WIP, gegen Kerns `design/jarvis-cockpit-home-20261104` (#481). Nie mergen.
+- Basis: #481 @02097c48, danach Kerns neuester Stand @5f846eb7 hineingemergt (Verträge, AreaChanged, JarvisAvatarSlot, #479 @35a68f49).
+- Umgesetzt: `JarvisMenuNavigator` (JarvisNavigator), `JarvisCockpitActions` (CockpitActionHandler, „Quelle fehlt“ ohne Pfad),
+  ref5-Leiste `JarvisMenuRailElement` (8 Einträge, ~20 %, Glas #0A1128@50 %, aktiver Eintrag weiß + Cyan-Bloom),
+  Muster B/A in `CockpitAnimationPresenter.playArea` über `JarvisMenuMotion`, Kamera-Drift `JarvisCameraDrift` (Z-Dolly 1,00→1,03),
+  Szene 3b nur als Spec/Layout (`JarvisMenuMotion.PhoneScene`).
+- Offen für Kern: Auslöser/Cue für Szene 3b; Aktionsleisten-Elemente im Querformat-Cockpit laufen jetzt über CockpitActionHandler.
+- Widgets-Einflug: nicht hier (→ Jarvis Gedächtnis).
+
+## Neue Bots (Bildbeschrieb Abschnitt 7, 09:25)
+- **Jarvis Lückenfüller:** schließt die Lücken, die der Kreativdirektor findet. Erstes Stück: Video 3 – Alarm H, Warp-Flug, Ganzkörper-Avatar in der Energiekugel (Kopf über Avatar bzw. JarvisAvatarSlot).
+- **Jarvis Mathematik:** Animations-Mathematik als getestete Bibliothek (Kurven, Federn mit Overshoot, Z-Kamerafahrten, Stagger, Zeitachse) und Avatar-Mimik (Viseme/Blendshapes, Lippensync aus Audio, Blinzeln, Atmen). Avatar zeichnet, Mathematik rechnet.
+- **Grundregel für alle:** Branches offen halten, nie Code oder Branches löschen, kein Force-Push – alles bleibt für ChatGPT auf GitHub einsehbar.
