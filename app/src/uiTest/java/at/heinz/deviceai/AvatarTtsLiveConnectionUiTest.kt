@@ -9,6 +9,7 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.view.View
 import android.view.ViewGroup
+import at.heinz.deviceai.avatar.AvatarDirector
 import at.heinz.deviceai.avatar.AvatarPose
 import at.heinz.deviceai.avatar.AvatarPoseReducer
 import at.heinz.deviceai.avatar.AvatarState
@@ -31,6 +32,7 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowSystem
 import java.util.concurrent.TimeUnit
 
 /**
@@ -38,7 +40,10 @@ import java.util.concurrent.TimeUnit
  * Callback IDs/PCM are synthetic. LEGACY host graphics proves neither audible output nor GPU pixels.
  */
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [28], qualifiers = "w884dp-h760dp-land-mdpi")
+@Config(sdk = [28], qualifiers = "w884dp-h760dp-land-mdpi", instrumentedPackages = [
+    "at.heinz.deviceai.avatar.AvatarDirector",
+    "at.heinz.deviceai.ContinuumHologramView"
+])
 @GraphicsMode(GraphicsMode.Mode.LEGACY)
 @LooperMode(LooperMode.Mode.PAUSED)
 class AvatarTtsLiveConnectionUiTest {
@@ -102,6 +107,22 @@ class AvatarTtsLiveConnectionUiTest {
             assertTrue(live.isShown)
             assertEquals(1, descendants(activity.window.decorView).count { it is ContinuumHologramView })
 
+            // PAUSED idleFor advances Android's virtual time, not the host JVM wall clock.
+            // Instrument the existing Director (including its default clock function) and View
+            // so their System.currentTimeMillis calls share Robolectric's render/event clock.
+            // @RunWith test classes are not instrumented, so pose() reads ShadowSystem explicitly.
+            val director = field(activity, "avatarDirector") as AvatarDirector
+            @Suppress("UNCHECKED_CAST")
+            val eventClock = field(director, "clock") as () -> Long
+            val beforeAdvance = ShadowSystem.currentTimeMillis()
+            assertEquals("The existing Director and render fixture must use the same controlled clock",
+                beforeAdvance, eventClock())
+            advance(33)
+            assertEquals("idleFor must advance the render fixture clock deterministically",
+                beforeAdvance + 33, ShadowSystem.currentTimeMillis())
+            assertEquals("The existing Director clock must follow the same idleFor advance",
+                ShadowSystem.currentTimeMillis(), eventClock())
+
             val engine = field(activity, "voiceEngine") as TextToSpeech
             val shadowTts = shadowOf(engine)
             // Robolectric 4.14.1 exposes both getters. Deliver the constructor's real init callback
@@ -130,7 +151,7 @@ class AvatarTtsLiveConnectionUiTest {
     }
 
     private fun pose(fixture: SpeechFixture): AvatarPose =
-        (field(fixture.live, "avatarPose") as AvatarPoseReducer).pose(System.currentTimeMillis())
+        (field(fixture.live, "avatarPose") as AvatarPoseReducer).pose(ShadowSystem.currentTimeMillis())
 
     private fun pcm16(frames: Int = 8_000): ByteArray = ByteArray(frames * 2) { index ->
         // Synthetic +0.5 full-scale PCM16, mono, one second at 8 kHz.
