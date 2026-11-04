@@ -333,6 +333,7 @@ class AgentActivity : Activity() {
     private val cockpitBus = at.heinz.deviceai.cockpit.CockpitAnimationBus()
     private val cockpitTriggers = at.heinz.deviceai.cockpit.CockpitAnimationTriggers(cockpitBus)
     private var cockpitSubscriptions: List<AutoCloseable> = emptyList()
+    private val cockpitSessionId = java.util.UUID.randomUUID().toString()
     @Volatile private var activeChiefTurn: at.heinz.deviceai.chief.TurnLifecycle? = null
     private var lastChiefWorkerReport: at.heinz.deviceai.chief.WorkerReport? = null
     private val cockpitDialog = ArrayDeque<at.heinz.deviceai.ui.CockpitStatus.DialogLine>()
@@ -675,6 +676,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cockpitSubscriptions = emptyList()
         clearTaskEffects()
@@ -948,13 +950,19 @@ class AgentActivity : Activity() {
             windowHeightDp = windowHeight)
         home.setForegroundActive(foregroundLearningActive)
         homeView = home
+        // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar())
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cockpitSubscriptions = listOf(
-            cockpitBus.subscribe(at.heinz.deviceai.ui.CockpitAnimationPresenter(home)),
+            cockpitBus.subscribe(at.heinz.deviceai.ui.CockpitAnimationPresenter(home, cockpitBus, cockpitSessionId) { line ->
+                runOnUiThread { recordCockpitDialog(false, line) }
+            }),
             cockpitBus.subscribe { runOnUiThread { pushCockpitState() } }
         )
         subscribeMemoryEvents()
         subscribeRealSignals()
+        // Scene 1: the real first cockpit start of this process.
+        cockpitTriggers.bootOnce()
         dashboard.addView(home, matchWidth())
         workStatusView = textView("Bereit", 13f, ACCENT).apply {
             setPadding(dp(16), dp(10), dp(16), dp(10))

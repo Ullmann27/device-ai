@@ -35,7 +35,13 @@ object JarvisAvatarSlot {
     @Volatile var renderer: JarvisAvatarRenderer? = null
         private set
 
-    fun register(r: JarvisAvatarRenderer?) { renderer = r }
+    private val listeners = java.util.concurrent.CopyOnWriteArrayList<(JarvisAvatarRenderer?) -> Unit>()
+
+    /** Register (or with null: unregister → the host detaches the old one). Hosts are notified. */
+    fun register(r: JarvisAvatarRenderer?) { renderer = r; listeners.forEach { it(r) } }
+
+    /** Host side (ContinuumHomeView): re-dock when the registration changes. */
+    fun addListener(l: (JarvisAvatarRenderer?) -> Unit): AutoCloseable { listeners += l; return AutoCloseable { listeners -= l } }
 
     /** AvatarDirector sink: existing AvatarSinkRegistry sink plus the docked renderer (posted to [main]). */
     fun fanOut(main: (Runnable) -> Unit): AvatarSink = AvatarSink { event ->
@@ -85,7 +91,20 @@ const val NAV_TURN = "nav"
  * DATA_OVERLOAD: memory event hub dropped events (droppedEventCount rising) or the worker queue is full.
  * THERMAL: PowerManager thermal status. MEMORY_PRESSURE: onTrimMemory / low-memory.
  */
-enum class AlarmKind { DATA_OVERLOAD, THERMAL, MEMORY_PRESSURE }
+enum class AlarmKind {
+    /** Status only (no alarm scene). */
+    DATA_OVERLOAD, THERMAL, MEMORY_PRESSURE,
+    /** The ONLY kind that starts alarm scene H: a real security event of the connected system (e.g. virus-scan finding). */
+    SECURITY_FINDING
+}
+
+/**
+ * Real security events only. Quelle fehlt: the app has no virus scanner. No auto-remediation; whether coding
+ * agents remediate is a separate, pending chief decision.
+ */
+fun interface SecurityEventSource {
+    fun addListener(l: (CockpitAnimationEvent.AlarmRaised) -> Unit): AutoCloseable
+}
 
 // ---- Answer pills and Gmail, patterns F/G (implemented by Jarvis Sicherheit) ----
 
@@ -105,4 +124,38 @@ interface PillActionGate {
 /** Emits only after a real, ToolGate-approved account tool call. Listener may run off the main thread. */
 interface AccountEventSource {
     fun addListener(l: (CockpitAnimationEvent.AccountCardFlyIn) -> Unit): AutoCloseable
+}
+
+// ---- Owner recognition card "User Recognized" (ref5, view by Jarvis Lückenfüller #487) ----
+
+enum class OwnerRecognitionState { RECOGNIZED, NOT_RECOGNIZED, UNKNOWN }
+
+/** Only real signals. [method] names the signal (e.g. "Geräte-Entsperrung"); null when nothing is known. */
+data class OwnerRecognition(val state: OwnerRecognitionState, val method: String?, val sinceMillis: Long?) {
+    companion object { val UNKNOWN = OwnerRecognition(OwnerRecognitionState.UNKNOWN, null, null) }
+}
+
+interface OwnerRecognitionSource {
+    fun current(): OwnerRecognition
+    fun addListener(l: (OwnerRecognition) -> Unit): AutoCloseable
+}
+
+fun interface UserCardRenderer { fun render(model: OwnerRecognition) }
+
+/**
+ * The ONE user card slot (left of the head, ref5 grid area USER_CARD). Without a renderer the cockpit draws a
+ * small "—". The host publishes the latest [OwnerRecognition]; a newly registered renderer gets it immediately.
+ */
+object JarvisUserCardSlot {
+    @Volatile var renderer: UserCardRenderer? = null
+        private set
+    @Volatile var latest: OwnerRecognition = OwnerRecognition.UNKNOWN
+        private set
+    /** Slot bounds in window pixels (left, top, right, bottom), set by the cockpit host; null before layout. */
+    @Volatile var bounds: Rect? = null
+        internal set
+
+    fun register(r: UserCardRenderer?) { renderer = r; r?.render(latest) }
+
+    fun publish(model: OwnerRecognition) { latest = model; renderer?.render(model) }
 }

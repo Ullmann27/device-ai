@@ -102,10 +102,13 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        slotRegistration?.close()
+        slotRegistration = at.heinz.deviceai.cockpit.JarvisAvatarSlot.addListener { post { applyAvatarSlot() } }
         updateWaveAnimation()
     }
 
     override fun onDetachedFromWindow() {
+        slotRegistration?.close(); slotRegistration = null
         dockedRenderer?.let { runCatching { it.detach() } }
         dockedRenderer = null
         removeCallbacks(waveFrame)
@@ -130,7 +133,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until
             field = value
             views.values.forEach { it.refresh() }
-            if (jarvisShellStage) jarvisShell.tiles = JarvisShellContent.tiles(value, System.currentTimeMillis())
+            if (jarvisShellStage) jarvisShell.tiles = shellTiles(value)
             updateWaveAnimation()
         }
 
@@ -183,6 +186,22 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         avatarPlaceholder.visibility = if (owns && dockedRenderer == null) View.VISIBLE else View.GONE
     }
 
+    private var slotRegistration: AutoCloseable? = null
+
+    /** Children added by a docked renderer (attach): sized to the slot; the renderer positions them via x/y. */
+    private fun isForeign(child: View) = child !== jarvisShell && child !== hologram && child !== avatarPlaceholder &&
+        child !== transientCard && child !in views.values
+
+    private fun layoutForeign() {
+        val w = avatarRect.width(); val h = avatarRect.height()
+        for (i in 0 until childCount) {
+            val c = getChildAt(i)
+            if (!isForeign(c)) continue
+            c.measure(MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
+            c.layout(0, 0, w, h)
+        }
+    }
+
     override fun onViewRemoved(child: View?) {
         super.onViewRemoved(child)
         if (child === hologram) child.visibility = View.VISIBLE
@@ -199,8 +218,13 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         avatarPlaceholder.measure(MeasureSpec.makeMeasureSpec(right - left, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(bottom - top, MeasureSpec.EXACTLY))
         avatarPlaceholder.layout(left, top, right, bottom)
-        if (dockedRenderer == null) applyAvatarSlot()
-        else if (changed) dockedRenderer?.onSlotChanged(android.graphics.Rect(avatarRect))
+        if (dockedRenderer == null) { if (at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer != null) post { applyAvatarSlot() } }
+        else if (changed) dockedRenderer?.let { r ->
+            r.onSlotChanged(android.graphics.Rect(avatarRect))
+            // Renderers without onSlotChanged are re-attached (their attach() detaches first).
+            post { if (dockedRenderer === r) r.attach(this, android.graphics.Rect(avatarRect)) }
+        }
+        layoutForeign()
     }
 
     /** Empty, clearly named slot until Jarvis Avatar docks a renderer. Draws only a thin rim and the name. */
@@ -221,8 +245,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     init {
         setWillNotDraw(false)
-        jarvisShell.content = JarvisShellContent.forState({ state })
-        jarvisShell.tiles = JarvisShellContent.tiles(state, System.currentTimeMillis())
+        jarvisShell.content = JarvisShellContent.forState({ state }, grid = { jarvisShell.shell?.grid })
+        jarvisShell.tiles = shellTiles(state)
         jarvisShell.setOnTouchListener { v, e ->
             if (e.actionMasked == android.view.MotionEvent.ACTION_UP) {
                 val shell = jarvisShell.shell
@@ -345,16 +369,37 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         setMeasuredDimension(width, h)
     }
 
-    /** AVATAR slot of the shell for the given pixel size (dp geometry from JarvisShellLayout). */
-    private fun shellAvatarBox(widthPx: Int, heightPx: Int): JarvisShellLayout.Box? {
+    /** Tiles with ref5 subtitles when the Fold7 grid is active (Kern, §11). */
+    private fun shellTiles(s: ContinuumDashboardState): List<JarvisTile> =
+        JarvisShellContent.tiles(s, System.currentTimeMillis(), subtitles = jarvisShell.shell?.ref5Grid == true)
+
+    /**
+     * Avatar slot of the shell for the given pixel size (dp geometry from JarvisShellLayout). In the ref5 grid
+     * (Fold7 open) the head renderer gets the HEAD area only; the brain orb right of it belongs to Gedächtnis.
+     */
+    private fun shellAvatarBox(widthPx: Int, heightPx: Int): JarvisShellLayout.Box? = shellGeometry(widthPx, heightPx)?.let { shell ->
+        shell.grid?.get(JarvisCockpitGrid.Area.HEAD) ?: shell[JarvisShellLayout.Slot.AVATAR]
+    }
+
+    private fun shellGeometry(widthPx: Int, heightPx: Int): JarvisShellLayout.Shell? {
         val w = widthPx / density; val h = heightPx / density
         if (w < 240f || h < 320f) return null
-        return JarvisShellLayout.create(w, h, resources.configuration.fontScale, jarvisShell.foldRail)[JarvisShellLayout.Slot.AVATAR]
+        return JarvisShellLayout.create(w, h, resources.configuration.fontScale, jarvisShell.foldRail)
+    }
+
+    /** Publishes the ref5 user card bounds (window pixels) for Lückenfüller's view; null outside the grid. */
+    private fun publishUserCardBounds(widthPx: Int, heightPx: Int) {
+        val box = shellGeometry(widthPx, heightPx)?.get(JarvisShellLayout.Slot.USER_CARD)
+        at.heinz.deviceai.cockpit.JarvisUserCardSlot.bounds = box?.let {
+            android.graphics.Rect((it.left * density).toInt(), (it.top * density).toInt(), (it.right * density).toInt(), (it.bottom * density).toInt())
+        }
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         jarvisShell.layout(0, 0, r - l, b - t)
         if (jarvisShellStage) {
+            publishUserCardBounds(r - l, b - t)
+            if (changed) jarvisShell.tiles = shellTiles(state)
             shellAvatarBox(r - l, b - t)?.let { box ->
                 layoutAvatarSlot((box.left * density).toInt(), (box.top * density).toInt(),
                     (box.right * density).toInt(), (box.bottom * density).toInt())
@@ -365,6 +410,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             if (child.parent !== this) continue
             val box = boxOf(child) ?: continue
             child.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                (box.right * density).toInt(), (box.bottom * density).toInt())
+        }
+        if (ownsAvatarSlot) boxOf(hologram)?.let { box ->
+            layoutAvatarSlot((box.left * density).toInt(), (box.top * density).toInt(),
                 (box.right * density).toInt(), (box.bottom * density).toInt())
         }
         transientCard?.let { card -> transientBox()?.let { box ->

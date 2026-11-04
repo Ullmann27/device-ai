@@ -57,10 +57,13 @@ class JarvisShellStageUiTest {
             root.draw(Canvas(bitmap))
             val shell = requireNotNull(home.jarvisShell.shell) { "shell drawn" }
             val d = home.resources.displayMetrics.density
-            val box = requireNotNull(shell[JarvisShellLayout.Slot.AVATAR])
-            assertEquals("ONE avatar slot = shell AVATAR box", (box.left * d).toInt(), home.avatarSlotRect.left)
+            // Fold7 ref5 grid: the head gets the HEAD area (orb right of it belongs to Gedächtnis); else shell AVATAR.
+            val box = shell.grid?.get(at.heinz.deviceai.ui.JarvisCockpitGrid.Area.HEAD) ?: requireNotNull(shell[JarvisShellLayout.Slot.AVATAR])
+            assertEquals("ONE avatar slot = head box", (box.left * d).toInt(), home.avatarSlotRect.left)
             assertEquals((box.top * d).toInt(), home.avatarSlotRect.top)
-            assertTrue("empty named placeholder without a renderer", home.avatarSlotShown)
+            assertTrue("the real head is registered by the activity",
+                at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer is at.heinz.deviceai.avatar.JarvisHoloAvatar)
+            assertTrue("head docked in the slot", home.avatarSlotShown && home.avatarRenderer is at.heinz.deviceai.avatar.JarvisHoloAvatar)
             assertEquals("no own head/orb in the cockpit", View.GONE, avatar.visibility)
             System.getProperty("continuum.ui.evidenceDir")?.let { dir ->
                 File(dir).mkdirs()
@@ -69,6 +72,7 @@ class JarvisShellStageUiTest {
             bitmap.recycle()
         } finally {
             runCatching { controller.pause(); controller.stop(); controller.destroy() }
+            assertEquals("onDestroy unregisters the head", null, at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer)
             app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
         }
     }
@@ -76,4 +80,60 @@ class JarvisShellStageUiTest {
     @Test @Config(qualifiers = "w412dp-h915dp-mdpi") fun phone() = run("shell-phone-412x915", 412, 915)
     @Test @Config(qualifiers = "w884dp-h760dp-land-mdpi") fun foldOpen() = run("shell-fold7-884x760", 884, 760)
     @Test @Config(qualifiers = "w1280dp-h800dp-land-mdpi") fun tablet() = run("shell-tablet-1280x800", 1280, 800)
+}
+
+/** The ONE avatar slot: a registered renderer gets attach + events, unregistering detaches it. */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28], qualifiers = "w884dp-h760dp-land-mdpi")
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class JarvisAvatarSlotUiTest {
+    private class Fake : at.heinz.deviceai.cockpit.JarvisAvatarRenderer {
+        val calls = mutableListOf<String>(); var slot: android.graphics.Rect? = null
+        override fun attach(host: android.view.ViewGroup, slot: android.graphics.Rect) { calls += "attach"; this.slot = slot }
+        override fun onAvatarState(state: at.heinz.deviceai.avatar.AvatarState) { calls += "state" }
+        override fun onAnimationEvent(event: at.heinz.deviceai.cockpit.CockpitAnimationEvent) { calls += "event:" + event::class.simpleName }
+        override fun detach() { calls += "detach" }
+    }
+
+    @Test fun registeredRendererIsDockedFedAndDetached() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit().putBoolean("introduced", true).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().putBoolean("jarvis-shell", true).commit()
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible().windowFocusChanged(true)
+            val activity = controller.get()
+            val root = activity.window.decorView
+            val home = AgentActivity::class.java.getDeclaredField("homeView").apply { isAccessible = true }.get(activity) as ContinuumHomeView
+            fun settle() {
+                root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
+                root.layout(0, 0, 884, 760); shadowOf(Looper.getMainLooper()).idleFor(100, TimeUnit.MILLISECONDS)
+            }
+            settle()
+            val fake = Fake()
+            at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(fake)
+            settle(); settle()
+            assertTrue(fake.calls.toString(), "attach" in fake.calls)
+            assertTrue("slot rect is the avatar slot", fake.slot!!.width() > 0 && fake.slot == home.avatarSlotRect)
+            assertTrue(home.avatarRenderer === fake)
+            val bus = AgentActivity::class.java.getDeclaredField("cockpitBus").apply { isAccessible = true }.get(activity)
+                as at.heinz.deviceai.cockpit.CockpitAnimationBus
+            bus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.CommandFlyIn("t", 1L, "x"))
+            settle()
+            assertTrue(fake.calls.toString(), "event:CommandFlyIn" in fake.calls)
+            at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut { it.run() }.onAvatarEvent(
+                at.heinz.deviceai.avatar.AvatarEvent.StateChanged(at.heinz.deviceai.avatar.AvatarState.THINKING,
+                    at.heinz.deviceai.avatar.AvatarExpression.FOCUSED, at.heinz.deviceai.avatar.GazeTarget.OWNER, 1L))
+            assertTrue("state" in fake.calls)
+            at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
+            settle()
+            assertEquals("detach", fake.calls.last())
+            assertTrue(home.avatarSlotShown) // placeholder again
+        } finally {
+            at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
+            runCatching { controller.pause(); controller.stop(); controller.destroy() }
+            app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        }
+    }
 }

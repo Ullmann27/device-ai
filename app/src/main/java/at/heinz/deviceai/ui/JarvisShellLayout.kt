@@ -23,7 +23,8 @@ object JarvisShellLayout {
         COCKPIT_SECONDARY, // fold: module list right of the head; tablet: live feed / resources
         TILES,             // action tile grid (phone 2×4, fold 4×2)
         ROW_AGENTS, ROW_TASKS, ROW_MEMORY, ROW_MODEL, // fold: agent / task-flow / memory / model row (ref5)
-        STATUS             // status strip (fold: full width)
+        STATUS,            // status strip (fold: full width)
+        USER_CARD          // fold (ref5 grid): owner recognition card left of the head (JarvisUserCardSlot, Lückenfüller #487)
     }
 
     data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {
@@ -35,7 +36,10 @@ object JarvisShellLayout {
 
     data class Shell(val formFactor: FormFactor, val width: Float, val height: Float, val boxes: Map<Slot, Box>,
                      val tileColumns: Int, val tileRows: Int, val rail: Rail? = null,
-                     val overlays: Set<Pair<Slot, Slot>> = emptySet()) {
+                     val overlays: Set<Pair<Slot, Slot>> = emptySet(),
+                     /** Fold7 open: Kern's ref5 grid ([JarvisCockpitGrid]); null = legacy composition. */
+                     val grid: JarvisCockpitGrid.Grid? = null) {
+        val ref5Grid: Boolean get() = grid != null
         operator fun get(slot: Slot) = boxes[slot]
 
         /** Individual tile rectangles inside [Slot.TILES], row-major. */
@@ -84,7 +88,26 @@ object JarvisShellLayout {
                 b[Slot.DIALOG] = Box(l, avatarBottom - (80f + big * 36f), l + room * .5f, avatarBottom)
                 Shell(FormFactor.PHONE_PORTRAIT, widthDp, heightDp, b, 2, rows, overlays = setOf(Slot.AVATAR to Slot.DIALOG))
             }
-            FormFactor.FOLD_OPEN -> { // Review 1: 3 columns ~20/55/25 (labelled nav / avatar + tiles / status), status strip below
+            FormFactor.FOLD_OPEN -> if (foldRail == Rail.LABELLED && JarvisCockpitGrid.applies(widthDp, heightDp, font)) {
+                // §11: ref5 grid (Jarvis Kern), everything visible at once, compact sizes.
+                val gr = JarvisCockpitGrid.create(widthDp, heightDp)
+                fun box(a: JarvisCockpitGrid.Area) = gr[a]
+                val head = box(JarvisCockpitGrid.Area.HEAD); val orb = box(JarvisCockpitGrid.Area.ORB)
+                b[Slot.TOP_BAR] = box(JarvisCockpitGrid.Area.HEADER)
+                b[Slot.NAV_RAIL] = box(JarvisCockpitGrid.Area.RAIL)
+                b[Slot.AVATAR] = Box(head.left, head.top, orb.right, head.bottom) // head + brain orb
+                b[Slot.USER_CARD] = box(JarvisCockpitGrid.Area.USER_CARD)
+                b[Slot.DIALOG] = box(JarvisCockpitGrid.Area.DIALOG)
+                b[Slot.COCKPIT_SECONDARY] = box(JarvisCockpitGrid.Area.MODULES)
+                b[Slot.TILES] = box(JarvisCockpitGrid.Area.TILES)
+                b[Slot.ROW_AGENTS] = box(JarvisCockpitGrid.Area.ROW_AGENTS)
+                b[Slot.ROW_TASKS] = box(JarvisCockpitGrid.Area.ROW_TASKS)
+                b[Slot.ROW_MEMORY] = box(JarvisCockpitGrid.Area.ROW_MEMORY)
+                b[Slot.ROW_MODEL] = box(JarvisCockpitGrid.Area.ROW_MODEL)
+                b[Slot.STATUS] = box(JarvisCockpitGrid.Area.STATUS)
+                Shell(FormFactor.FOLD_OPEN, widthDp, heightDp, b, 4, 2, foldRail,
+                    overlays = setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.USER_CARD), grid = gr)
+            } else { // Review 1: 3 columns ~20/55/25 (labelled nav / avatar + tiles / status), status strip below
                 val statusH = 34f + big * 14f
                 val statusTop = heightDp - m.margin - statusH
                 b[Slot.STATUS] = Box(m.margin, statusTop, widthDp - m.margin, heightDp - m.margin)

@@ -27,7 +27,14 @@ object CockpitTransitions {
  * button pulse, process-card highlight, transient account/document card. ViewPropertyAnimator only (RenderThread
  * transforms, no per-frame allocation); disabled for "Animationen entfernen" and energy saving.
  */
-class CockpitAnimationPresenter(private val home: ContinuumHomeView) : CockpitAnimationRenderer {
+class CockpitAnimationPresenter(
+    private val home: ContinuumHomeView,
+    /** Bus for timeline-emitted events (CockpitEntered); null = timeline emits nothing. */
+    private val bus: at.heinz.deviceai.cockpit.CockpitAnimationBus? = null,
+    private val sessionId: String = "",
+    /** Default for the GREETING cue without an Avatar cue renderer: show the line in the live dialog. */
+    private val onGreeting: (String) -> Unit = {},
+) : CockpitAnimationRenderer {
     private val density = home.resources.displayMetrics.density
     private val power = home.context.getSystemService(Context.POWER_SERVICE) as PowerManager
 
@@ -60,6 +67,41 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView) : CockpitAn
         if (home.ownsAvatarSlot) home.avatarRenderer?.let { r -> runCatching { r.onAnimationEvent(event) } }
         val hook = CockpitTransitions.hook
         if (hook != null && runCatching { hook.play(event, home) }.getOrDefault(false)) return
+        runTimeline(event)
+    }
+
+    /** Executes CockpitTimeline: each cue goes to its owner's CockpitCueRenderer, else the minimal default. */
+    private fun runTimeline(event: CockpitAnimationEvent) {
+        val motion = motionAllowed()
+        for (step in at.heinz.deviceai.cockpit.CockpitTimeline.steps(event)) {
+            val delay = if (motion) step.atMs else 0L
+            if (delay == 0L) execute(step) else home.postDelayed({ if (home.isAttachedToWindow) execute(step) }, delay)
+        }
+        if (event is CockpitAnimationEvent.BootStarted && bus != null) {
+            val end = if (motion) at.heinz.deviceai.cockpit.CockpitTimeline.bootEndMs else 0L
+            home.postDelayed({
+                at.heinz.deviceai.cockpit.CockpitTimeline.cockpitEntered(sessionId, System.currentTimeMillis())?.let(bus::emit)
+            }, end)
+        }
+    }
+
+    private fun execute(step: at.heinz.deviceai.cockpit.TimelineStep) {
+        val renderer = at.heinz.deviceai.cockpit.CockpitCues.rendererFor(step.cue.owner)
+        if (renderer != null && runCatching { renderer.play(step) }.getOrDefault(false)) return
+        when (step.cue) {
+            at.heinz.deviceai.cockpit.Cue.GREETING ->
+                (step.event as? CockpitAnimationEvent.BootStarted)?.let { onGreeting(it.greeting) }
+            // Avatar's head visuals: nothing of our own (empty slot without a renderer).
+            at.heinz.deviceai.cockpit.Cue.AVATAR_FROM_DEPTH, at.heinz.deviceai.cockpit.Cue.AVATAR_SHRINK,
+            at.heinz.deviceai.cockpit.Cue.HEAD_ICON_BURST, at.heinz.deviceai.cockpit.Cue.FILE_ICONS_FROM_HEAD -> Unit
+            at.heinz.deviceai.cockpit.Cue.COCKPIT_FLY_IN ->
+                if (home.jarvisShellStage) home.jarvisShell.playEntrance() else if (home.landscapeCockpit) flyInCards()
+            else -> legacyPresent(step.event)
+        }
+    }
+
+    /** Minimal default visuals per event (kept from the first cockpit version; owners replace them via cue renderers). */
+    private fun legacyPresent(event: CockpitAnimationEvent) {
         if (event is CockpitAnimationEvent.AreaChanged) return playArea(event)
         if (home.jarvisShellStage) {
             // Shell stage: pattern B entrance inside JarvisShellView (JarvisMotion).
@@ -94,8 +136,9 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView) : CockpitAn
                 motionAllowed())
             is CockpitAnimationEvent.AreaChanged -> Unit // handled by playArea
             // Alarm visuals belong to Jarvis Lückenfüller (hook); minimal default: system card glows.
-            is CockpitAnimationEvent.AlarmRaised -> highlight(Slot.SYSTEM_STATUS)
+            is CockpitAnimationEvent.AlarmRaised -> highlight(Slot.SYSTEM_STATUS) // status default; scene H = Lückenfüller
             is CockpitAnimationEvent.AlarmCleared -> Unit
+            is CockpitAnimationEvent.BootStarted, is CockpitAnimationEvent.CockpitEntered -> Unit
             is CockpitAnimationEvent.Extension -> Unit // unknown kinds are ignored by design
         }
     }

@@ -132,6 +132,43 @@ object JarvisNeon {
         p.drawText(s, x, y, style, Fill.Solid(if (active) Argb.mix(color, Colors.activeWhite, .35f) else color), align)
     }
 
+    // ---- Active-state bloom (Jarvis Avatar extension, VIDEO-SPEC "starker Bloom") -------------------------------
+    /**
+     * Bloom for batched light segments (head wireframe, orbit rings): two wide additive halo passes under the crisp
+     * line. [strength] 0..1 (1 = active/speaking); [Glow.OFF] / strength 0 draws nothing (reduced motion, power save).
+     */
+    fun bloomSegments(p: ContinuumPainter, points: FloatArray, count: Int, width: Float, color: Int, strength: Float) {
+        if (count <= 0 || strength <= 0f) return
+        val fill = Fill.Solid(color)
+        p.setAdditive(true)
+        p.strokeSegments(points, count, width * 7f, fill, .035f * strength)
+        p.strokeSegments(points, count, width * 3f, fill, .09f * strength)
+        p.setAdditive(false)
+    }
+
+    /**
+     * Laser (Muster D) with bloom and sparks running along it: [progress] draws the line on (0.3 s, JarvisMotion.laser),
+     * [timeMs] moves 3 sparks from start to end once it is drawn.
+     */
+    fun laserSparks(p: ContinuumPainter, x0: Float, y0: Float, x1: Float, y1: Float, progress: Float, timeMs: Long,
+                    color: Int = Colors.cyan) {
+        if (progress <= 0f) return
+        val x = x0 + (x1 - x0) * progress; val y = y0 + (y1 - y0) * progress
+        p.setAdditive(true)
+        p.drawLine(x0, y0, x, y, 7f, Fill.Solid(color), .08f)
+        p.setAdditive(false)
+        laser(p, x0, y0, x1, y1, progress)
+        if (progress < 1f) return
+        p.setAdditive(true)
+        for (k in 0 until 3) {
+            val t = ((timeMs % 900L) / 900f + k / 3f) % 1f
+            val sx = x0 + (x1 - x0) * t; val sy = y0 + (y1 - y0) * t
+            p.fillCircle(sx, sy, 4f, Fill.Radial(sx, sy, 4f, intArrayOf(Argb.withAlpha(color, .8f), 0)))
+            p.fillCircle(sx, sy, 1.2f, Fill.Solid(0xffe6fdff.toInt()), .95f)
+        }
+        p.setAdditive(false)
+    }
+
     /** Draws an icon into the square (left, top, size); supplied by the caller. */
     fun interface IconPainter { fun draw(p: ContinuumPainter, left: Float, top: Float, size: Float, color: Int) }
 
