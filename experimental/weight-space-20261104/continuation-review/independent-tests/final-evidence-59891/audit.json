@@ -1,0 +1,703 @@
+{
+  "actualModelProcesses": 0,
+  "armCaseJudgmentsRecomputed": 192,
+  "checkCount": 105,
+  "checkerSha256": "118b7fdf75e7286a0e3ddc431f1662980680d7cadd51e8da8f69eac1752dc4e9",
+  "checks": [
+    "pretest document unchanged: docs/evidence/lm1-training-recovery-20261104/final-selection/development-study-choice.json",
+    "pretest document unchanged: docs/evidence/lm1-training-recovery-20261104/final-selection/selection-freeze.json",
+    "pretest document unchanged: docs/evidence/lm1-training-recovery-20261104/final-selection/before-test-verification.json",
+    "published choice selects the complete V3 freeze",
+    "pretest JSON binds choice and freeze raw hashes",
+    "freeze source and common test identity",
+    "acceptance protocol predates results and is unchanged",
+    "recorded execution source unchanged: experimental/lm1-training-recovery-20261104/suffix-study/LmIntentSuffixStudy.kt",
+    "recorded execution source unchanged: experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py",
+    "strict scorer is source bound",
+    "unweakened numerical acceptance is source bound",
+    "summary binds the previously published freeze",
+    "S0 exact frozen checkpoint/test/parameter identity",
+    "S0 score equals published summary",
+    "S0 frozen step and final split",
+    "S0 receipt binds log and declared source artifacts",
+    "S0 unchanged parent process bounds and selected checkpoint path",
+    "S0 timestamp has an explicit timezone",
+    "S0 complete balanced final cases",
+    "S0 CASE-derived SCORE correct",
+    "S0 CASE-derived SCORE total",
+    "S0 CASE-derived SCORE classCorrect",
+    "S0 CASE-derived SCORE classTotal",
+    "S0 CASE-derived SCORE prematureEos",
+    "S0 CASE-derived SCORE missingEos",
+    "S0 CASE-derived SCORE generatedTokens",
+    "S0 CASE-derived SCORE answerNll",
+    "S0 CASE-derived SCORE eosNll",
+    "S0 CASE-derived SCORE meanFirstEosProbability",
+    "W0 exact frozen checkpoint/test/parameter identity",
+    "W0 score equals published summary",
+    "W0 frozen step and final split",
+    "W0 receipt binds log and declared source artifacts",
+    "W0 unchanged parent process bounds and selected checkpoint path",
+    "W0 timestamp has an explicit timezone",
+    "W0 complete balanced final cases",
+    "W0 CASE-derived SCORE correct",
+    "W0 CASE-derived SCORE total",
+    "W0 CASE-derived SCORE classCorrect",
+    "W0 CASE-derived SCORE classTotal",
+    "W0 CASE-derived SCORE prematureEos",
+    "W0 CASE-derived SCORE missingEos",
+    "W0 CASE-derived SCORE generatedTokens",
+    "W0 CASE-derived SCORE answerNll",
+    "W0 CASE-derived SCORE eosNll",
+    "W0 CASE-derived SCORE meanFirstEosProbability",
+    "S1 exact frozen checkpoint/test/parameter identity",
+    "S1 score equals published summary",
+    "S1 frozen step and final split",
+    "S1 receipt binds log and declared source artifacts",
+    "S1 unchanged parent process bounds and selected checkpoint path",
+    "S1 timestamp has an explicit timezone",
+    "S1 complete balanced final cases",
+    "S1 CASE-derived SCORE correct",
+    "S1 CASE-derived SCORE total",
+    "S1 CASE-derived SCORE classCorrect",
+    "S1 CASE-derived SCORE classTotal",
+    "S1 CASE-derived SCORE prematureEos",
+    "S1 CASE-derived SCORE missingEos",
+    "S1 CASE-derived SCORE generatedTokens",
+    "S1 CASE-derived SCORE answerNll",
+    "S1 CASE-derived SCORE eosNll",
+    "S1 CASE-derived SCORE meanFirstEosProbability",
+    "W1 exact frozen checkpoint/test/parameter identity",
+    "W1 score equals published summary",
+    "W1 frozen step and final split",
+    "W1 receipt binds log and declared source artifacts",
+    "W1 unchanged parent process bounds and selected checkpoint path",
+    "W1 timestamp has an explicit timezone",
+    "W1 complete balanced final cases",
+    "W1 CASE-derived SCORE correct",
+    "W1 CASE-derived SCORE total",
+    "W1 CASE-derived SCORE classCorrect",
+    "W1 CASE-derived SCORE classTotal",
+    "W1 CASE-derived SCORE prematureEos",
+    "W1 CASE-derived SCORE missingEos",
+    "W1 CASE-derived SCORE generatedTokens",
+    "W1 CASE-derived SCORE answerNll",
+    "W1 CASE-derived SCORE eosNll",
+    "W1 CASE-derived SCORE meanFirstEosProbability",
+    "S0 same ordered IDs and expected labels across arms",
+    "W0 same ordered IDs and expected labels across arms",
+    "S1 same ordered IDs and expected labels across arms",
+    "W1 same ordered IDs and expected labels across arms",
+    "summary limited criterion agrees with unchanged thresholds",
+    "summary wider advantage agrees with unchanged four-case threshold",
+    "summary makes no promotion, general-intelligence or Android claim",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/README.md",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/audit_choice_sources.py",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/capacity-repair-choice-binding.json",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/capacity-repair-registration.json",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/choice-repair-choice-binding.json",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/choice-repair-registration.json",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/fixtures/original-long.py.txt",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/fixtures/original-selector.py.txt",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/fixtures/original-suffix.py.txt",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/independent-source-comparison.json",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/original-choice-binding.json",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/probe_choice_binding.py",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/probe_prospective_registration.py",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/published-binding-review.json",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/independent-tests/source-inventory.json",
+    "frozen local SHA256: experimental/weight-space-20261104/continuation-review/source-audit/fixtures/suffix/run_registered_study.py.txt",
+    "repaired runner refuses either existing final artifact before first process",
+    "existing real-method synthetic probes bind this exact repaired source"
+  ],
+  "criteria": {
+    "wideAtLeast36Of48": false,
+    "wideAtLeast8MoreThanS0": true,
+    "wideAtLeast8MoreThanW0": true,
+    "wideEveryClassAtLeast8Of12": false
+  },
+  "finalCommit": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
+  "inputs": {
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/final-selection/before-test-verification.json": {
+      "bytes": 342,
+      "sha256": "b12fdea44b7a3531be407f542d66c104406e7d51038956a048403b57d18136c6"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/final-selection/development-study-choice.json": {
+      "bytes": 8116,
+      "sha256": "1325d06208d8850e6ce3aa5969d68f37cdaa3e26c46c50f66743ddd3dc442cac"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/final-selection/selection-freeze.json": {
+      "bytes": 2209,
+      "sha256": "6c069dd1ab21d792b9985333b14b2d6a0c51b66affbc8a90de0f37092c5a49f4"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/study-v3/intent-summary.json": {
+      "bytes": 1888,
+      "sha256": "beebdba627b492b11e86f7d54e4bb2e4bac29383c62fe6117c9c38a1b52073a3"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S0.receipt.json": {
+      "bytes": 1232,
+      "sha256": "7bd25881f0cbba82a95c14fa9a16759c06b96985e5ae886796ed0ebd1457ccea"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S0.tsv": {
+      "bytes": 9644,
+      "sha256": "53e555ca61c642768ca836ad57df003bcd87e6f28c3ce268e0171c969856d8d8"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S1.receipt.json": {
+      "bytes": 1232,
+      "sha256": "8d0f206266da1fce557f83767343260d3fe205bb230631061284c82f063c0573"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S1.tsv": {
+      "bytes": 9378,
+      "sha256": "3759f58b9f7b79ac7b254c0f7f6d2f3e302119ad57f822764e61954e87e6fde8"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W0.receipt.json": {
+      "bytes": 1230,
+      "sha256": "ae91a437619a75e592bfd0cdbe0623bea3bdacc97d9287678dfc658d39b2b7d0"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W0.tsv": {
+      "bytes": 9783,
+      "sha256": "64d129845568391b9a46e342c1c1c815821139a69a3240adeec954dff70c4d04"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W1.receipt.json": {
+      "bytes": 1231,
+      "sha256": "6c3e8b80664ea053ca4ed815518261909ef9f249a1a320ec66e3f580c43da356"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W1.tsv": {
+      "bytes": 9361,
+      "sha256": "fbd6fe20d781bd9aedc1ddc86fb5054273bd845826bc6fa7d74966e883c6a0ee"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:experimental/lm1-training-recovery-20261104/suffix-study/LmIntentSuffixStudy.kt": {
+      "bytes": 16467,
+      "sha256": "2ca026da5ecebb79f9fcbb0d49d39cc6c1485b0d31b19fe10118cb4ff711ef89"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:experimental/lm1-training-recovery-20261104/suffix-study/SUFFIX_PROTOCOL.md": {
+      "bytes": 5856,
+      "sha256": "176cd8a63462822b67bde234f60c57d90c8fe4066c6461eee18c0474b98359d4"
+    },
+    "59891cfad6dd015f47c187cc688ea94b0026ad7d:experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py": {
+      "bytes": 13745,
+      "sha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68"
+    },
+    "9ceffc26a2159c8dc726c1f13d2882119159c130:docs/evidence/lm1-training-recovery-20261104/final-selection/before-test-verification.json": {
+      "bytes": 342,
+      "sha256": "b12fdea44b7a3531be407f542d66c104406e7d51038956a048403b57d18136c6"
+    },
+    "9ceffc26a2159c8dc726c1f13d2882119159c130:docs/evidence/lm1-training-recovery-20261104/final-selection/development-study-choice.json": {
+      "bytes": 8116,
+      "sha256": "1325d06208d8850e6ce3aa5969d68f37cdaa3e26c46c50f66743ddd3dc442cac"
+    },
+    "9ceffc26a2159c8dc726c1f13d2882119159c130:docs/evidence/lm1-training-recovery-20261104/final-selection/selection-freeze.json": {
+      "bytes": 2209,
+      "sha256": "6c069dd1ab21d792b9985333b14b2d6a0c51b66affbc8a90de0f37092c5a49f4"
+    },
+    "9ceffc26a2159c8dc726c1f13d2882119159c130:experimental/lm1-training-recovery-20261104/suffix-study/SUFFIX_PROTOCOL.md": {
+      "bytes": 5856,
+      "sha256": "176cd8a63462822b67bde234f60c57d90c8fe4066c6461eee18c0474b98359d4"
+    },
+    "be4e49600fed1db4c697230bb8e42c150dbfbdaf:experimental/lm1-training-recovery-20261104/suffix-study/LmIntentSuffixStudy.kt": {
+      "bytes": 16467,
+      "sha256": "2ca026da5ecebb79f9fcbb0d49d39cc6c1485b0d31b19fe10118cb4ff711ef89"
+    },
+    "be4e49600fed1db4c697230bb8e42c150dbfbdaf:experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py": {
+      "bytes": 13745,
+      "sha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/README.md": {
+      "bytes": 9710,
+      "sha256": "20b0b92b3b5d21ceadd55d59c8cffd3b8fcf548d12dea03353b76ccb1c529cde"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/audit_choice_sources.py": {
+      "bytes": 4951,
+      "sha256": "0327b70c36d9c4e853a288272fcf4e779b682d52de47cb0f3572c27db16f2ead"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/capacity-repair-choice-binding.json": {
+      "bytes": 24839,
+      "sha256": "3c457a000863e00d39f40a4903a61505235056016a38b35e4d54094474e0588d"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/capacity-repair-registration.json": {
+      "bytes": 3150,
+      "sha256": "4e19e11a3dbfee2c0bbcb45ec87dd9f5cd17541c9d110d408414f49297ebf128"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/choice-repair-choice-binding.json": {
+      "bytes": 20750,
+      "sha256": "2448b021e1bc0fcc0558acac795ebe7f76049e7158410729d7946c028f8b89a8"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/choice-repair-registration.json": {
+      "bytes": 3148,
+      "sha256": "a55bb00be92ffa6f28fa87a8980e8fc4239fb8df09169ee7b076c5742d2a29ab"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/fixtures/original-long.py.txt": {
+      "bytes": 13739,
+      "sha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/fixtures/original-selector.py.txt": {
+      "bytes": 5922,
+      "sha256": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/fixtures/original-suffix.py.txt": {
+      "bytes": 13745,
+      "sha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/independent-source-comparison.json": {
+      "bytes": 2045,
+      "sha256": "9514ca4ee2e1ad21e11fc7c6a174b85aa64f951db6419526f5c8553e805e9164"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/original-choice-binding.json": {
+      "bytes": 24832,
+      "sha256": "4980a0f1be2bf0adfda607fa05dd88c797b010bfcca5119999a0e1eef863842f"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/probe_choice_binding.py": {
+      "bytes": 18165,
+      "sha256": "5954cf5cfd6effe29738f9dae5213287b73430b85f9f076d5d6e3481670cd4a9"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/probe_prospective_registration.py": {
+      "bytes": 6350,
+      "sha256": "03102af2856607b88d607c0c84caa6647b3fba445485242c625e4a6937ad183b"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/published-binding-review.json": {
+      "bytes": 1485,
+      "sha256": "82e20c37e99ad6f9e5721430330c89e1f2357c2bfcd95428a739356a8cb9bf2c"
+    },
+    "experimental/weight-space-20261104/continuation-review/independent-tests/source-inventory.json": {
+      "bytes": 893,
+      "sha256": "0ef9d94dd579db3bd994309320bf73969a826317e6038caf6184c06888b757df"
+    },
+    "experimental/weight-space-20261104/continuation-review/source-audit/fixtures/suffix/run_registered_study.py.txt": {
+      "bytes": 40451,
+      "sha256": "67da16654388d322f3735a67f3fbf1d42635ffccf6ac62668ff46b80b47f1942"
+    }
+  },
+  "interpretation": {
+    "causalParameterAdvantageEstablished": false,
+    "confirmationRoundClosed": true,
+    "generalCapacityRecomputedHere": false,
+    "generalCapacityRequirementsRelaxed": false,
+    "modelPromotion": false,
+    "newSelectionOrTrainingRuleDerived": false,
+    "selectedStepsDiffer": true,
+    "statisticalSignificanceClaim": false
+  },
+  "limitations": [
+    "Expected labels are compared across the published logs; the sealed test file is deliberately not opened.",
+    "Checkpoint, registration and JAR identities are compared as recorded; the referenced binary bytes are not rehashed.",
+    "Reported process limits and completion are checked from receipts; no independent resource measurement is performed.",
+    "The 31 versus 25 result describes preselected checkpoints at steps 512 and 128; it does not isolate a parameter-count effect.",
+    "The protocol states template dependence; neither 48 independent draws nor statistical significance is claimed.",
+    "Historical choice and freeze bytes are checked at fixed commits; cryptographic publication time is not established.",
+    "Post-test train-fit data and the published final audit are not inputs to this independent recomputation.",
+    "Replay enforcement is a source-bound inference backed by earlier synthetic probes, not a new execution of historical models."
+  ],
+  "limitedBenchmarkLearningCriterionPassed": false,
+  "pairedSmallWideCounts": {
+    "bothCorrect": 20,
+    "bothWrong": 12,
+    "smallOnly": 11,
+    "wideOnly": 5
+  },
+  "pairedSmallWideIds": {
+    "bothCorrect": [
+      "test-0001",
+      "test-0005",
+      "test-0006",
+      "test-0008",
+      "test-0013",
+      "test-0016",
+      "test-0019",
+      "test-0022",
+      "test-0023",
+      "test-0024",
+      "test-0029",
+      "test-0030",
+      "test-0031",
+      "test-0035",
+      "test-0036",
+      "test-0037",
+      "test-0039",
+      "test-0042",
+      "test-0046",
+      "test-0048"
+    ],
+    "bothWrong": [
+      "test-0003",
+      "test-0004",
+      "test-0009",
+      "test-0011",
+      "test-0012",
+      "test-0014",
+      "test-0018",
+      "test-0020",
+      "test-0026",
+      "test-0027",
+      "test-0038",
+      "test-0044"
+    ],
+    "smallOnly": [
+      "test-0002",
+      "test-0010",
+      "test-0015",
+      "test-0017",
+      "test-0025",
+      "test-0028",
+      "test-0032",
+      "test-0040",
+      "test-0041",
+      "test-0045",
+      "test-0047"
+    ],
+    "wideOnly": [
+      "test-0007",
+      "test-0021",
+      "test-0033",
+      "test-0034",
+      "test-0043"
+    ]
+  },
+  "previousChoiceFreezeCommit": "9ceffc26a2159c8dc726c1f13d2882119159c130",
+  "recordedExecutionSourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "replay": {
+    "applicability": "With these test artifacts present in the active study logs directory, the repaired runner rejects a new final test before any process; earlier authorization checks may reject historical evidence first.",
+    "assessment": "STATIC_GUARD_PLUS_EXISTING_SYNTHETIC_REAL_METHOD_PROBES",
+    "existingProbeCases": [
+      {
+        "actualModelProcesses": 0,
+        "case": "later_test_log_already_exists",
+        "errorOrBoundary": "RuntimeError: FINAL_TEST_ALREADY_STARTED",
+        "existingEvidenceBytesUnchangedByTest": true,
+        "expected": "reject",
+        "freezeBytesUnchanged": true,
+        "passed": true,
+        "processBoundaryCalls": 0,
+        "realSelectorWinner": "v3",
+        "stdout": "",
+        "summaryAuthorizationPresent": false,
+        "summaryCreated": false,
+        "testedStudy": "v3"
+      },
+      {
+        "actualModelProcesses": 0,
+        "case": "later_test_receipt_already_exists",
+        "errorOrBoundary": "RuntimeError: FINAL_TEST_ALREADY_STARTED",
+        "existingEvidenceBytesUnchangedByTest": true,
+        "expected": "reject",
+        "freezeBytesUnchanged": true,
+        "passed": true,
+        "processBoundaryCalls": 0,
+        "realSelectorWinner": "v3",
+        "stdout": "",
+        "summaryAuthorizationPresent": false,
+        "summaryCreated": false,
+        "testedStudy": "v3"
+      }
+    ],
+    "historicalFinalRunUsedThisRepair": false,
+    "newReplayExecutionPerformed": false,
+    "publishedFinalLogs": [
+      "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S0.tsv",
+      "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W0.tsv",
+      "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S1.tsv",
+      "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W1.tsv"
+    ],
+    "publishedFinalReceipts": [
+      "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S0.receipt.json",
+      "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W0.receipt.json",
+      "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S1.receipt.json",
+      "docs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W1.receipt.json"
+    ],
+    "repairedSourceSha256": "67da16654388d322f3735a67f3fbf1d42635ffccf6ac62668ff46b80b47f1942"
+  },
+  "results": {
+    "S0": {
+      "answerNll": 4.332935463711269,
+      "checkpointSha256": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+      "classCorrect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "classTotal": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "confusionColumns": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "invalid"
+      ],
+      "confusionRows": [
+        [
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          12
+        ]
+      ],
+      "correct": 0,
+      "eosNll": 8.03145657669588,
+      "generatedTokens": 192,
+      "meanFirstEosProbability": 0.0001812078186655223,
+      "missingEos": 48,
+      "nonCaseDiagnostics": [],
+      "parameters": 132160,
+      "prematureEos": 0,
+      "receiptStartedUtc": "2026-11-04T19:31:59.698108+00:00",
+      "receiptWallSeconds": 1.2379394820000016,
+      "selectedStep": 0,
+      "total": 48,
+      "validDigitAndEosFormat": 0
+    },
+    "S1": {
+      "answerNll": 0.9777143339565053,
+      "checkpointSha256": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+      "classCorrect": [
+        7,
+        12,
+        10,
+        2
+      ],
+      "classTotal": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "confusionColumns": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "invalid"
+      ],
+      "confusionRows": [
+        [
+          7,
+          4,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          12,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          10,
+          0,
+          0
+        ],
+        [
+          4,
+          3,
+          3,
+          2,
+          0
+        ]
+      ],
+      "correct": 31,
+      "eosNll": 0.005596800070208537,
+      "generatedTokens": 48,
+      "meanFirstEosProbability": 0.00018158556787758093,
+      "missingEos": 0,
+      "nonCaseDiagnostics": [],
+      "parameters": 132160,
+      "prematureEos": 0,
+      "receiptStartedUtc": "2026-11-04T19:32:25.471332+00:00",
+      "receiptWallSeconds": 1.3783930419995158,
+      "selectedStep": 512,
+      "total": 48,
+      "validDigitAndEosFormat": 48
+    },
+    "W0": {
+      "answerNll": 4.332935254016773,
+      "checkpointSha256": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d",
+      "classCorrect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "classTotal": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "confusionColumns": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "invalid"
+      ],
+      "confusionRows": [
+        [
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          12
+        ]
+      ],
+      "correct": 0,
+      "eosNll": 8.03145638742694,
+      "generatedTokens": 192,
+      "meanFirstEosProbability": 0.0001812079702479726,
+      "missingEos": 48,
+      "nonCaseDiagnostics": [
+        "[0.001s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/26 because it is locked by another process (errno = 11)"
+      ],
+      "parameters": 6562304,
+      "prematureEos": 0,
+      "receiptStartedUtc": "2026-11-04T19:32:00.966630+00:00",
+      "receiptWallSeconds": 24.46884389099978,
+      "selectedStep": 0,
+      "total": 48,
+      "validDigitAndEosFormat": 0
+    },
+    "W1": {
+      "answerNll": 1.0642731289654292,
+      "checkpointSha256": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c",
+      "classCorrect": [
+        6,
+        9,
+        7,
+        3
+      ],
+      "classTotal": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "confusionColumns": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "invalid"
+      ],
+      "confusionRows": [
+        [
+          6,
+          0,
+          2,
+          4,
+          0
+        ],
+        [
+          3,
+          9,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          7,
+          5,
+          0
+        ],
+        [
+          3,
+          0,
+          6,
+          3,
+          0
+        ]
+      ],
+      "correct": 25,
+      "eosNll": 0.017161896102407075,
+      "generatedTokens": 48,
+      "meanFirstEosProbability": 2.9706054739619958e-05,
+      "missingEos": 0,
+      "nonCaseDiagnostics": [],
+      "parameters": 6562304,
+      "prematureEos": 0,
+      "receiptStartedUtc": "2026-11-04T19:32:26.877315+00:00",
+      "receiptWallSeconds": 29.005734850999943,
+      "selectedStep": 128,
+      "total": 48,
+      "validDigitAndEosFormat": 48
+    }
+  },
+  "schemaVersion": 1,
+  "scope": "INDEPENDENT_PUBLISHED_FINAL_LOG_RECOMPUTATION_WITHOUT_MODEL_EXECUTION",
+  "sealedDatasetOrGeneratorOrModelOrTokenizerOrJarBytesRead": false,
+  "selectedFreezeSha256": "6c069dd1ab21d792b9985333b14b2d6a0c51b66affbc8a90de0f37092c5a49f4",
+  "selectedStudy": "v3",
+  "status": "PASS_TEXT_EVIDENCE_CONSISTENCY__PREDECLARED_MODEL_CRITERION_FAILED",
+  "testCases": 48,
+  "unchangedEarlierIndependentFiles": {
+    "README.md": "20b0b92b3b5d21ceadd55d59c8cffd3b8fcf548d12dea03353b76ccb1c529cde",
+    "audit_choice_sources.py": "0327b70c36d9c4e853a288272fcf4e779b682d52de47cb0f3572c27db16f2ead",
+    "capacity-repair-choice-binding.json": "3c457a000863e00d39f40a4903a61505235056016a38b35e4d54094474e0588d",
+    "capacity-repair-registration.json": "4e19e11a3dbfee2c0bbcb45ec87dd9f5cd17541c9d110d408414f49297ebf128",
+    "choice-repair-choice-binding.json": "2448b021e1bc0fcc0558acac795ebe7f76049e7158410729d7946c028f8b89a8",
+    "choice-repair-registration.json": "a55bb00be92ffa6f28fa87a8980e8fc4239fb8df09169ee7b076c5742d2a29ab",
+    "fixtures/original-long.py.txt": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+    "fixtures/original-selector.py.txt": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520",
+    "fixtures/original-suffix.py.txt": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+    "independent-source-comparison.json": "9514ca4ee2e1ad21e11fc7c6a174b85aa64f951db6419526f5c8553e805e9164",
+    "original-choice-binding.json": "4980a0f1be2bf0adfda607fa05dd88c797b010bfcca5119999a0e1eef863842f",
+    "probe_choice_binding.py": "5954cf5cfd6effe29738f9dae5213287b73430b85f9f076d5d6e3481670cd4a9",
+    "probe_prospective_registration.py": "03102af2856607b88d607c0c84caa6647b3fba445485242c625e4a6937ad183b",
+    "published-binding-review.json": "82e20c37e99ad6f9e5721430330c89e1f2357c2bfcd95428a739356a8cb9bf2c",
+    "source-inventory.json": "0ef9d94dd579db3bd994309320bf73969a826317e6038caf6184c06888b757df"
+  },
+  "untrainedControlOutputsIdenticalOnAll48": true,
+  "wideMinusSmallCorrect": -6,
+  "widerSelectedCheckpointHasFourCaseAdvantage": false
+}

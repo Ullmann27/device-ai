@@ -1,12 +1,15 @@
 # Fortsetzung mit drei Helfern: Studienwahl vor dem Finaltest durchsetzen
 
 Auftrag: `G1-INTEGRATE-WEIGHT-002`, Besitzerfortsetzung „Weiter“ am 04.11.2026.
-Status: **CHOICE_REPAIR_VERIFIED_AND_ROOT_REPEATED**.
+Status: **REPAIR_AND_EVIDENCE_INTEGRITY_PASS — MODEL_QUALITY_AND_CAPACITY_FAIL**.
 
 Eigener PR: [#492](https://github.com/Ullmann27/device-ai/pull/492).
 Ausgangspunkt: `f2421698c15195505b0632bf40ff596f0ee0e87f`.
 Vollständig geprüfter Quellen-/Entwicklungsbelegstand aus PR #508:
 `9ceffc26a2159c8dc726c1f13d2882119159c130`.
+Abschließender Ergebnisnachtrag: `59891cfad6dd015f47c187cc688ea94b0026ad7d`.
+Die Reparatur wurde vor dieser Finalnachprüfung in
+`e6aa65a81f593107aab07a93694a09685cacb92c` veröffentlicht und danach nicht geändert.
 
 ## Ergebnis und konkrete Reparatur
 
@@ -105,10 +108,10 @@ ein Token und dann EOS. Die volle 32-Token-Anforderung scheitert weiterhin.
 Der Freeze enthält weiterhin nur den alten Kapazitätsmarker und keine
 gebundenen `postTrainingCapacity`-Belege.
 
-Die Rohbelege sind quellengebunden und konsistent. Checkpoint-, JAR- und
-Tokenizerbins wurden in dieser Runde nicht erneut gelesen oder gehasht;
-eine neue unabhängige Binärintegritätsabnahme wird nicht behauptet.
-Details: [Ergebnisbericht](results/README.md).
+Der erste Rohbelegaudit war ausschließlich textbasiert und bestätigte noch
+keine tatsächlichen Binärbytes. Danach konnte Root das zugehörige Archiv
+direkt prüfen; dieser zusätzliche Nachweis steht getrennt weiter unten.
+Der ursprüngliche [Ergebnisbericht](results/README.md) bleibt unverändert.
 
 ## Späterer Branchstand: getrennte Aktualitätskontrolle
 
@@ -122,11 +125,104 @@ Der neuere Baum enthält zusätzliche Dateien mit finalen Testergebnissen.
 Die ursprünglichen Berichte bleiben an `9ceffc26…` gebunden; ihre Aussage
 „keine veröffentlichten Finaltestlogs“ darf nicht auf den späteren Baum
 übertragen werden. Die erste Aktualitätskontrolle liest ausschließlich
-Git-Identitäten und geänderte Pfadnamen. Die anschließende Prüfung der neuen
-Ergebnisbelege wird separat dokumentiert; Reparaturcode und unabhängige Tests
-stehen vorher fest.
+Git-Identitäten und geänderte Pfadnamen. Die anschließend abgeschlossene
+Prüfung der neuen Ergebnisbelege ist separat dokumentiert; Reparaturcode
+und unabhängige Tests standen vorher fest.
 
 Nachweis: [Quellenaktualität](root-verification/upstream-source-freshness.json).
+
+## Abschließende Nachrechnung der veröffentlichten Finaltests
+
+Dieselben drei Helfer prüften den festgelegten neuen Commit. Root hat alle
+drei Auditoren danach selbst ausgeführt; jede gespeicherte JSON-Ausgabe ist
+bytegleich mit dem jeweiligen Helferbericht. Die Reparatur und ihre 37 neuen
+Gegenproben wurden durch die später gelesenen Finalergebnisse nicht verändert.
+
+| Vorher eingefrorener Arm | Parameter | Schritt | Final richtig | Klassen 0/1/2/3, jeweils von zwölf |
+|---|---:|---:|---:|---|
+| S0 | 132.160 | 0 | 0/48 | 0 / 0 / 0 / 0 |
+| W0 | 6.562.304 | 0 | 0/48 | 0 / 0 / 0 / 0 |
+| S1 | 132.160 | 512 | **31/48** | **7 / 12 / 10 / 2** |
+| W1 | 6.562.304 | 128 | **25/48** | **6 / 9 / 7 / 3** |
+
+Alle 192 Arm-Fall-Urteile wurden aus veröffentlichtem Antworttext, Tokenzahl
+und Stopgrund neu berechnet. S1 und W1 erzeugen jeweils in 48/48 Fällen das
+geforderte Ziffer-plus-EOS-Format. Die verbleibenden Fehler sind falsche Klassen.
+Gepaarter Vergleich: 20 beide richtig, elf nur Small, fünf nur Wide, zwölf beide
+falsch. Die Auswahlpräfixe unterscheiden sich; dieser deskriptive Unterschied
+isoliert keinen kausalen Parameterzahleffekt und ist keine nachträgliche
+Modellauswahl.
+
+W1 verfehlt die ursprünglichen **36/48**, die Mindestgrenze **8/12 in jeder
+Klasse** sowie den zusätzlichen Größenvorteil von **vier Fällen gegenüber
+S1**. Beide Kontrollen werden zwar um 25 Treffer übertroffen, doch die
+verfehlten Pflichtschwellen bleiben verfehlt. Die schon geprüfte vollständige
+32-Token-Kapazität scheitert bei beiden ausgewählten Checkpoints weiterhin.
+
+Die nachfolgenden Auswertungen bekannter TRAIN-Beispiele ergeben je Arm
+120/128. Diese 256 separat nachgerechneten Urteile verwenden dieselben
+eingefrorenen Gewichte und enthalten **keine Optimiererupdates**. Der Scorer
+nennt seinen Auswertungszweig intern `test`; TRAIN-Dateipfad und TRAIN-Hash
+trennen diese Belege eindeutig von den 48 finalen Testfällen.
+
+Der reine Quellen-/Publikationsaudit besteht 514 Konsistenzkontrollen:
+65 tatsächliche Quellhashprüfungen über 29 unterschiedliche Pfade, die
+historischen Ausführungscommits, sieben unveränderte Kontroll-/Registrierungs-
+dateien und sechs Log-/Receiptbindungen. Der unabhängig implementierte
+Finalchecker besteht 105 Belegkontrollen. Diese Zahlen sind keine zusätzlich
+ausgeführten Modelltests. Die Zeitbelege passen zusammen, liefern aber keine
+unabhängige signierte Zeit- oder Prozessattestation.
+
+Nachweise: [Finaler Ergebnisbericht](results/final-evidence-59891/README.md),
+[unabhängige Finalnachrechnung](independent-tests/final-evidence-59891/README.md),
+[Publikationsprüfung](source-audit/final-publication-59891/README.md).
+
+## Tatsächliche Binärintegrität zusätzlich geprüft
+
+Root hat das reale Archiv `LM1_Training_Research_20261104.zip` gelesen:
+**51.103.436 Bytes**, SHA-256
+`428d62b308e308afd9c971ff4974981e96b9dc8a783d80e3653c226983dcc016`.
+Alle zehn Mitglieder stimmen mit dem internen Manifest überein. Die vier
+Modellhashes stimmen mit dem zuvor veröffentlichten Freeze überein; die vier
+JAR-Hashes stimmen mit den jeweiligen Registrierungen überein.
+
+An den tatsächlichen Checkpoints wurden Header, interne SHA-256-Prüfsumme,
+vollständige Tensorreihenfolge, Dimensionen, Dateiende und Endlichkeit aller
+Float32-Parameter geprüft. Die Parameterzahlen sind aus den Tensorlayouts
+neu gezählt: **132.160 und 6.562.304**, mit **528.640 und 26.249.216 Bytes**
+reinen Parameterdaten. Die eingebetteten Adaptionsschritte, Trainingsidentität
+und Schedule entsprechen dem Freeze und der Registrierung.
+
+Die Unterschiede zwischen den jeweiligen Ausgangs- und trainierten Dateien
+betreffen tatsächliche Parameterbytes: 132.160 beziehungsweise 6.562.303
+Float32-Slots haben verschiedene Bitmuster. Das ist kein alleiniger
+Metadatenwechsel. Der Wert zählt Bitmuster, nicht die Zahl unabhängig
+nachgewiesener Optimiererschritte.
+
+Der separat vorhandene Tokenizer ist ebenfalls tatsächlich gehasht und
+strukturell geprüft: 2.040 Bytes, 254 gültige BPE-Merges, 512 Vokabeleinträge,
+passende Identität in allen Checkpoints. Er ist **nicht im ZIP enthalten**.
+Es wurde weder aus dem Archiv extrahiert noch ein Modell oder JAR gestartet.
+Der unabhängige Helfer prüfte zusätzlich den neuen binären Leser als Quelltext
+gegen die gepinnten Kotlinformate; er beansprucht keine eigene Binärausführung.
+
+Nachweise: [Binärintegritätsbericht](root-verification/BINARY_INTEGRITY.md),
+[maschinenlesbare Binärprüfung](root-verification/binary-integrity.json),
+[abschließende Gegenbindung](root-verification/final-verification.json).
+
+## Abnahme dieser Fortsetzung
+
+**Reparatur und Beleg-/Artefaktintegrität bestehen. Modellqualität und
+vollständige Ausgabekapazität sind verfehlt.** Aus dieser Bestätigungsrunde
+folgen keine weitere Parametersteigerung, kein zusätzliches Training und
+keine Modell-Promotion. Die bestehenden Checkpoints, Registrierungen,
+Quittungen und die vorherige Auswahl bleiben erhalten.
+
+Die veröffentlichten Finalantworten wurden jetzt zur Abnahme gelesen;
+dieser Holdout ist verbraucht. Die eigentlichen Datensatzdateien und deren
+Generator wurden nicht geöffnet. Ein späterer unabhängiger Bestätigungsversuch
+benötigt einen vorher festgelegten neuen Bestätigungssatz. Die Resultate
+werden nicht zur nachträglichen Änderung der Kriterien verwendet.
 
 ## Artefakte und Integration
 
