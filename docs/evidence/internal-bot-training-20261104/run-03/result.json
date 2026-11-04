@@ -1,0 +1,55 @@
+{
+  "schema": "continuum-internal-bot-practice-developer-checks",
+  "version": 1,
+  "startedAt": "2026-11-04T19:47:07.749176+00:00",
+  "finishedAt": "2026-11-04T19:49:59.151520+00:00",
+  "seconds": 171.402,
+  "baseHead": "90cc7373b2c3bac1d7b9f77e582958e359d00b20",
+  "worktreeAtStart": " M docs/research/omega/INTERNAL-BOT-TRAINING-HANDOFF-20261104.md\n",
+  "exitCode": 1,
+  "timedOut": false,
+  "sourceFiles": 975,
+  "sourceUnchangedDuringCheck": true,
+  "allSelectedClassesExecuted": false,
+  "suites": [
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBotPracticeTest",
+      "status": "STALE_RESULT_REJECTED"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBotPracticeConversationTest",
+      "status": "STALE_RESULT_REJECTED"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest",
+      "status": "STALE_RESULT_REJECTED"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest",
+      "status": "STALE_RESULT_REJECTED"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBotConversationTest",
+      "status": "STALE_RESULT_REJECTED"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBotProfileStoreTest",
+      "status": "STALE_RESULT_REJECTED"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest",
+      "status": "STALE_RESULT_REJECTED"
+    }
+  ],
+  "totals": {
+    "tests": 0,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "passed": false,
+  "actualBotModelAttempts": 0,
+  "weightUpdates": 0,
+  "deviceVerified": false,
+  "limits": "Real source compilation and developer tests with fixture replies; no bot-training success claim."
+}

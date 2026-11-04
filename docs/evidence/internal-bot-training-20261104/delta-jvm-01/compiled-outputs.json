@@ -1,0 +1,35 @@
+{
+  "/workspace/scratch/8f5df1fd155a/internal-training-delta-checks-01/DeltaJvmGate.java": {
+    "bytes": 4454,
+    "sha256": "cd27586fd26213755cd817f0eb5233de5e7de315687be720b421c48b5a692e14"
+  },
+  "/workspace/scratch/8f5df1fd155a/internal-training-delta-checks-01/audit": {
+    "files": {
+      "DeltaJvmGate.class": "4e9609708e1e55a11e58b04602b99a1e18463638e42e734b6cfaa2bdf00e998f"
+    }
+  },
+  "/workspace/scratch/8f5df1fd155a/internal-training-delta-checks-01/production": {
+    "files": {
+      "META-INF/DeviceAI_app_debug.kotlin_module": "06d262cf732152000d8cb1453e8dc1209b37fa4411e5c4d202265ff0d18ec16d",
+      "at/heinz/deviceai/chief/ChiefBotConversation$1.class": "a0e2fb2a7dd9fd0858fdeec06c8f0e7809010cc32641aedf6a424ad523c6864b",
+      "at/heinz/deviceai/chief/ChiefBotConversation$Companion.class": "4515fdfe16bc8e06f943f5d370d28a07fc0c29f6f040601e8a21c4f745abd85d",
+      "at/heinz/deviceai/chief/ChiefBotConversation.class": "963eb548d99ac2966c0a6e1094e1333ec630922172c527e03f5706c36cc48e09",
+      "at/heinz/deviceai/chief/ChiefBotConversationCodec.class": "fabb57f7ad546040b0747dc5840e8bc4dd60324db5d1129d28071ecf769f5e50",
+      "at/heinz/deviceai/chief/ChiefBotConversationEntry$Companion.class": "da96610d8cdc9aaa4a31a564689687dbfcda1b9512909c8ab93e59ded75215e0",
+      "at/heinz/deviceai/chief/ChiefBotConversationEntry.class": "88712e130ded2a3714638930607cfd18afc991e3130c5582c5b5e9c6c728b65b",
+      "at/heinz/deviceai/chief/ChiefBotConversationHistory$Companion.class": "74277dac429d3d5c8e9c8bda7d4a1ea6678650cb7ae592df752dff8c672f149d",
+      "at/heinz/deviceai/chief/ChiefBotConversationHistory.class": "7ee0efadce4c709429b9f1d0fc9f2f605e457a80eb99a6e09ab04f6aa9b0c042",
+      "at/heinz/deviceai/chief/ChiefBotConversationSnapshot.class": "0a56243c518baee80ae9cd75861f56a9dfc4f751833b8d37123ca0f1510b04ca",
+      "at/heinz/deviceai/chief/ChiefBotConversationTurn$1.class": "8ffae61589267947226a225deeee7d4cba8e416e76ca95b3f725a76bcee9707e",
+      "at/heinz/deviceai/chief/ChiefBotConversationTurn.class": "08950eceef7d0bb27df955456596cd0eb71675c71e7673483e802dcbaf7d7e92"
+    }
+  },
+  "/workspace/scratch/8f5df1fd155a/internal-training-delta-checks-01/tests": {
+    "files": {
+      "META-INF/DeviceAI_app_debugUnitTest.kotlin_module": "06d262cf732152000d8cb1453e8dc1209b37fa4411e5c4d202265ff0d18ec16d",
+      "at/heinz/deviceai/chief/ChiefBotPracticeConversationTest$fixture$runtime$1.class": "7602bd376051379f104526eead0d4fb66b40b28793e7bd095399936c6f9015a6",
+      "at/heinz/deviceai/chief/ChiefBotPracticeConversationTest$fixture$signer$1.class": "fc01cc0e19aeb1d2cacc219e117aed78ecd356e9257313ad9cf2ac21346c1323",
+      "at/heinz/deviceai/chief/ChiefBotPracticeConversationTest.class": "2b903fa9e839410563bbd6a52c740e1c088faf909d219f9802135170f852790d"
+    }
+  }
+}

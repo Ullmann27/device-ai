@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:42:59" hostname="04c8b0ba7ea6" time="0.015">
+  <properties/>
+  <testcase name="cancellationAnswerMatchesTheProductionCheckAfterExecuteReturns" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.002"/>
+  <testcase name="fullMailboxAnswerPreservesRetryAfterAnObservedDeliveryRejection" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.004"/>
+  <testcase name="uncertainTeardownTransferAnswerMatchesTheProductionResourceBarrier" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.001"/>
+  <testcase name="promptsAndAnswersStayBoundedAndKeepTheAnswerKeySeparate" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.001"/>
+  <testcase name="minimalLimitAnswerPreservesOrderIncludingEmptyAndOversizedLimits" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.001"/>
+  <testcase name="eachExistingEngineeringBotHasFourExercisesAndTwoSeparateTransferCases" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.001"/>
+  <testcase name="zeroDefaultAnswerPreservesExplicitValuesAndRejectsBothWrongAlternatives" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.001"/>
+  <testcase name="reportIdentityAnswerMatchesTheExistingProductionMailboxAdapter" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.001"/>
+  <testcase name="falsyTransferAnswerUsesDifferentInputsWithoutCollapsingThem" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.0"/>
+  <testcase name="requestHashTransferAnswerMatchesTheProductionScopeRejection" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.001"/>
+  <testcase name="idempotenceAnswerMatchesTwoCallsToTheSameProductionReporter" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.0"/>
+  <testcase name="absentReproductionAndAbsentIndependentTestsNeverHavePositiveAnswerKeys" classname="at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

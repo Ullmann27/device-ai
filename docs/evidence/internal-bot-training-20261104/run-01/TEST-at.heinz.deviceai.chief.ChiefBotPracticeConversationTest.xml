@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefBotPracticeConversationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:42:59" hostname="04c8b0ba7ea6" time="0.137">
+  <properties/>
+  <testcase name="expiredInferenceAndExpiryDuringDurableCommitLeaveNoVisibleFeedback" classname="at.heinz.deviceai.chief.ChiefBotPracticeConversationTest" time="0.027"/>
+  <testcase name="incorrectAndMalformedRepliesStayOriginalWhileTheirCorrectionsAreSeparate" classname="at.heinz.deviceai.chief.ChiefBotPracticeConversationTest" time="0.019"/>
+  <testcase name="terminalAnswerIsPreservedAndOnlyItsSuccessfulCommitExposesFeedback" classname="at.heinz.deviceai.chief.ChiefBotPracticeConversationTest" time="0.013"/>
+  <testcase name="feedbackSurvivesRestartWithoutCrossingBotIdentityOrBecomingOwnerMemory" classname="at.heinz.deviceai.chief.ChiefBotPracticeConversationTest" time="0.013"/>
+  <testcase name="codecReadsBothLegacyFormatsAndRoundTripsBoundedV3Feedback" classname="at.heinz.deviceai.chief.ChiefBotPracticeConversationTest" time="0.009"/>
+  <testcase name="cancelSelectionModelSessionAndProfileChangesCannotCreateFeedback" classname="at.heinz.deviceai.chief.ChiefBotPracticeConversationTest" time="0.011"/>
+  <testcase name="plainConversationHasNoFeedbackAndOversizedPracticeAnswersCannotCommit" classname="at.heinz.deviceai.chief.ChiefBotPracticeConversationTest" time="0.01"/>
+  <testcase name="historyBudgetIncludesCorrectionsAndEvictsWholeEntries" classname="at.heinz.deviceai.chief.ChiefBotPracticeConversationTest" time="0.019"/>
+  <testcase name="laterExercisesReceivePrivateCorrectionsButRepeatsDoNotReceiveTheirOwnAnswer" classname="at.heinz.deviceai.chief.ChiefBotPracticeConversationTest" time="0.014"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

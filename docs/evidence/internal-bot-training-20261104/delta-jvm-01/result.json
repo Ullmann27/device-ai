@@ -1,0 +1,95 @@
+{
+  "schema": "continuum-delta-jvm-gate",
+  "version": 1,
+  "evidenceClass": "DELTA_JVM_GATE",
+  "startedAt": "2026-11-04T20:07:32.501983+00:00",
+  "passed": true,
+  "fullAndroidBuildVerified": false,
+  "fullAndroidBuildStatus": "BLOCKED",
+  "modelAttempts": 0,
+  "weightUpdates": 0,
+  "deviceVerified": false,
+  "expectedTests": 70,
+  "phases": [
+    {
+      "phase": "compile-production",
+      "startedAt": "2026-11-04T20:07:34.754059+00:00",
+      "finishedAt": "2026-11-04T20:07:46.355739+00:00",
+      "seconds": 11.602,
+      "exitCode": 0,
+      "timedOut": false
+    },
+    {
+      "phase": "compile-current-test",
+      "startedAt": "2026-11-04T20:07:46.356280+00:00",
+      "finishedAt": "2026-11-04T20:07:57.918339+00:00",
+      "seconds": 11.562,
+      "exitCode": 0,
+      "timedOut": false
+    },
+    {
+      "phase": "compile-origin-auditor",
+      "startedAt": "2026-11-04T20:07:57.918828+00:00",
+      "finishedAt": "2026-11-04T20:07:58.891398+00:00",
+      "seconds": 0.973,
+      "exitCode": 0,
+      "timedOut": false
+    },
+    {
+      "phase": "junit",
+      "startedAt": "2026-11-04T20:07:58.891985+00:00",
+      "finishedAt": "2026-11-04T20:07:59.761414+00:00",
+      "seconds": 0.869,
+      "exitCode": 0,
+      "timedOut": false
+    }
+  ],
+  "limits": "Two freshly compiled Kotlin files over the real successful Gradle baseline; not a current full Android build, APK, device or model-training result.",
+  "currentHead": "c17c77102b1a7fd3054b326eed98f98b94c00a52",
+  "worktreeAtStart": "",
+  "baseHead": "b1701e7e3bf52047efff05ae33f0ba602dcc3d4b",
+  "changedSources": [
+    "app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt",
+    "app/src/test/java/at/heinz/deviceai/chief/ChiefBotPracticeConversationTest.kt"
+  ],
+  "baselineAppJar": "/workspace/scratch/8f5df1fd155a/continuum-internal-bot-training/app/build/intermediates/runtime_app_classes_jar/debug/bundleDebugClassesToRuntimeJar/classes.jar",
+  "baselineAppSha256": "2d5453084954a025a3c0a251735db7ecaf84a35ae4ea965c0161065eda6a4b42",
+  "omittedClasspathEntries": [
+    {
+      "path": "/workspace/scratch/8f5df1fd155a/continuum-internal-bot-training/app/build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes",
+      "reason": "ORIGINAL_GRADLE_JAVAC_NO_SOURCE_DIRECTORY"
+    }
+  ],
+  "compilerVersion": "2.4.0",
+  "heapMiB": 640,
+  "baselineProvenance": "Original Gradle task outputs within run01 timestamps; app JAR externally pinned by SHA256. Run01 did not archive a separate test-bytecode manifest.",
+  "junit": {
+    "schema": "continuum-delta-junit-result",
+    "version": 1,
+    "codeSourcesVerified": true,
+    "junitStarted": true,
+    "junitCompleted": true,
+    "tests": 70,
+    "failures": 0,
+    "ignored": 0,
+    "assumptionFailures": 0,
+    "passed": true,
+    "codeSources": {
+      "at.heinz.deviceai.chief.ChiefBotConversationCodec": "/workspace/scratch/8f5df1fd155a/internal-training-delta-checks-01/production",
+      "at.heinz.deviceai.chief.ChiefBotConversation": "/workspace/scratch/8f5df1fd155a/internal-training-delta-checks-01/production",
+      "at.heinz.deviceai.chief.ChiefBotProfileStore": "/workspace/scratch/8f5df1fd155a/continuum-internal-bot-training/app/build/intermediates/runtime_app_classes_jar/debug/bundleDebugClassesToRuntimeJar/classes.jar",
+      "at.heinz.deviceai.chief.ChiefBotPracticeConversationTest": "/workspace/scratch/8f5df1fd155a/internal-training-delta-checks-01/tests",
+      "at.heinz.deviceai.chief.ChiefBotPracticeTest": "/workspace/scratch/8f5df1fd155a/continuum-internal-bot-training/app/build/tmp/kotlin-classes/debugUnitTest",
+      "at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest": "/workspace/scratch/8f5df1fd155a/continuum-internal-bot-training/app/build/tmp/kotlin-classes/debugUnitTest",
+      "at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest": "/workspace/scratch/8f5df1fd155a/continuum-internal-bot-training/app/build/tmp/kotlin-classes/debugUnitTest",
+      "at.heinz.deviceai.chief.ChiefBotConversationTest": "/workspace/scratch/8f5df1fd155a/continuum-internal-bot-training/app/build/tmp/kotlin-classes/debugUnitTest",
+      "at.heinz.deviceai.chief.ChiefBotProfileStoreTest": "/workspace/scratch/8f5df1fd155a/continuum-internal-bot-training/app/build/tmp/kotlin-classes/debugUnitTest",
+      "at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest": "/workspace/scratch/8f5df1fd155a/continuum-internal-bot-training/app/build/tmp/kotlin-classes/debugUnitTest"
+    },
+    "error": null
+  },
+  "sourceUnchangedDuringCheck": true,
+  "dependenciesUnchangedDuringCheck": true,
+  "status": "DELTA_JVM_PASS",
+  "finishedAt": "2026-11-04T20:08:00.180037+00:00"
+}
