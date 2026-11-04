@@ -9,6 +9,7 @@ import kotlin.math.sqrt
 
 /** One retrievable memory. [confirmed] is copied verbatim into every hit; a retriever can never upgrade it. */
 data class MemoryDoc(val id:String, val text:String, val atMillis:Long, val confirmed:Boolean)
+data class ScoredParts(val hit:RetrievalHit, val cosine:Double, val timeWeight:Double)
 data class RetrievalHit(val doc:MemoryDoc, val score:Double) { val confirmed:Boolean get()=doc.confirmed }
 
 /** M2.9: small on-device retrieval interface (no large model). */
@@ -137,13 +138,17 @@ class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val
         idf=FloatArray(dim){ ln((1.0+docs.size)/(1.0+df[it])).toFloat()+1f }
         vectors=gs.map(::vec)
     }
-    override fun search(query:String,nowMillis:Long,k:Int):List<RetrievalHit> {
+    override fun search(query:String,nowMillis:Long,k:Int):List<RetrievalHit> = scoredParts(query,nowMillis,k).map { it.hit }
+
+    /** The real score computation with its parts: score = cosine × timeWeight (same code path as [search]). */
+    fun scoredParts(query:String,nowMillis:Long,k:Int):List<ScoredParts> {
         if(docs.isEmpty())return emptyList()
         val (qk,qv)=vec(grams(query)); val w=temporal?.window(query,nowMillis)
         return vectors.mapIndexed { i,(dk,dv) -> var s=0.0; var a=0; var c=0
             while(a<qk.size && c<dk.size){ when { qk[a]==dk[c] -> { s+=qv[a]*dv[c];a++;c++ }; qk[a]<dk[c] -> a++; else -> c++ } }
-            RetrievalHit(docs[i],s*(temporal?.weight(w,docs[i].atMillis) ?: 1.0)) }
-            .filter { it.score>0 }.sortedByDescending { it.score }.take(k)
+            val tw=temporal?.weight(w,docs[i].atMillis) ?: 1.0
+            ScoredParts(RetrievalHit(docs[i],s*tw),s,tw) }
+            .filter { it.hit.score>0 }.sortedByDescending { it.hit.score }.take(k)
     }
     override fun approxIndexBytes()=vectors.sumOf { it.first.size*8L+32 }+idf.size*4L
 }

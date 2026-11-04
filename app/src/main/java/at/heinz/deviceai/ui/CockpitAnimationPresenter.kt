@@ -70,6 +70,7 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView) : CockpitAn
             is CockpitAnimationEvent.DocumentLearned, is CockpitAnimationEvent.MemoryStored -> highlight(Slot.MODEL)
             is CockpitAnimationEvent.RecallHits -> if (event.count > 0) highlight(Slot.MODEL)
             is CockpitAnimationEvent.Extension -> Unit // unknown kinds are ignored by design
+            is CockpitAnimationEvent.CalculationShown -> Unit // rendering (donut/bars/cascade) belongs to Kern/Avatar
         }
     }
 
