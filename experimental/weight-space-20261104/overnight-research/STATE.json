@@ -1,6 +1,6 @@
 {
   "task": "G1-INTEGRATE-WEIGHT-002",
-  "phase": "INFERENCE_AND_INDEPENDENT_VERIFICATION_COMPLETE",
+  "phase": "GRADIENT_ACCESS_SOURCE_FROZEN_NOT_RUN",
   "parentCommit": "0af14f75b04e68ba849a92316b8be51041e8738b",
   "comparisonPr508Commit": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
   "ownerSession": "0549bca61ccf",
@@ -16,7 +16,8 @@
     "16 fail-closed resume cases with zero JVM launches"
   ],
   "next": [
-    "publish complete diagnostic evidence",
-    "register gradient access diagnostic for 6.56M and 9.71M"
+    "execute registered S0/W0/D0 gradient diagnostics",
+    "verify exact common-gradient and widening chain-rule gates",
+    "publish results and overnight continuation handoff"
   ]
 }
