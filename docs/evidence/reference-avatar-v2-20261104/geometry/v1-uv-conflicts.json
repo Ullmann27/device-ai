@@ -1,0 +1,676 @@
+{
+  "status": "FAIL",
+  "samplingOnly": true,
+  "rasterPixels": [
+    1024,
+    1024
+  ],
+  "triangleCount": 25924,
+  "sampledTriangles": 24103,
+  "coveredTexels": 464931,
+  "conflictingTexelsOverOneMillimetre": 158,
+  "maximumConflictingPositionDifferenceMetres": 0.01772916203569014,
+  "degenerateUvTriangles": 0,
+  "conflictingTrianglePairs": [
+    {
+      "earlierTriangle": 5406,
+      "laterTriangle": 5566,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 5406,
+      "laterTriangle": 5567,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 5406,
+      "laterTriangle": 5569,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 5406,
+      "laterTriangle": 12062,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5406,
+      "laterTriangle": 12065,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5440,
+      "laterTriangle": 5859,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 5441,
+      "laterTriangle": 5570,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5441,
+      "laterTriangle": 5571,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 5441,
+      "laterTriangle": 12024,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5441,
+      "laterTriangle": 12063,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5441,
+      "laterTriangle": 12066,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5470,
+      "laterTriangle": 6219,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5487,
+      "laterTriangle": 6213,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5487,
+      "laterTriangle": 12706,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5522,
+      "laterTriangle": 12713,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5530,
+      "laterTriangle": 12738,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5538,
+      "laterTriangle": 12713,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5539,
+      "laterTriangle": 12712,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 5539,
+      "laterTriangle": 12713,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5548,
+      "laterTriangle": 12712,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5549,
+      "laterTriangle": 6248,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 5549,
+      "laterTriangle": 12712,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5550,
+      "laterTriangle": 6248,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5550,
+      "laterTriangle": 12741,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 5557,
+      "laterTriangle": 12774,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5558,
+      "laterTriangle": 6239,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5563,
+      "laterTriangle": 6213,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5563,
+      "laterTriangle": 12706,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5564,
+      "laterTriangle": 12706,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5565,
+      "laterTriangle": 11941,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5568,
+      "laterTriangle": 11900,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5574,
+      "laterTriangle": 6237,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5574,
+      "laterTriangle": 6239,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5575,
+      "laterTriangle": 6214,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5575,
+      "laterTriangle": 12732,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5780,
+      "laterTriangle": 6248,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5781,
+      "laterTriangle": 6245,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5781,
+      "laterTriangle": 12738,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5782,
+      "laterTriangle": 6245,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5782,
+      "laterTriangle": 12739,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5846,
+      "laterTriangle": 6245,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5846,
+      "laterTriangle": 12739,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 5880,
+      "laterTriangle": 6239,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 6214,
+      "laterTriangle": 12059,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 6219,
+      "laterTriangle": 11964,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 6219,
+      "laterTriangle": 12034,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 6245,
+      "laterTriangle": 12289,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 6245,
+      "laterTriangle": 12290,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 6248,
+      "laterTriangle": 11963,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 6248,
+      "laterTriangle": 12043,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 6264,
+      "laterTriangle": 12773,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 6265,
+      "laterTriangle": 12774,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 6266,
+      "laterTriangle": 6281,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 6281,
+      "laterTriangle": 12756,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 6281,
+      "laterTriangle": 12758,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 6281,
+      "laterTriangle": 12759,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 11900,
+      "laterTriangle": 12063,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 11900,
+      "laterTriangle": 12064,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 11932,
+      "laterTriangle": 12067,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 11932,
+      "laterTriangle": 12289,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 11941,
+      "laterTriangle": 12058,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 12031,
+      "laterTriangle": 12712,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 12034,
+      "laterTriangle": 12713,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 12043,
+      "laterTriangle": 12741,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 12044,
+      "laterTriangle": 12712,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 12052,
+      "laterTriangle": 12774,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 12060,
+      "laterTriangle": 12706,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 12061,
+      "laterTriangle": 12705,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 12073,
+      "laterTriangle": 12732,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 12290,
+      "laterTriangle": 12739,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 12290,
+      "laterTriangle": 12741,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 12353,
+      "laterTriangle": 12739,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 12756,
+      "laterTriangle": 12773,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 13520,
+      "laterTriangle": 20033,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18368,
+      "laterTriangle": 18834,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18368,
+      "laterTriangle": 19226,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18368,
+      "laterTriangle": 25024,
+      "sampledConflicts": 3
+    },
+    {
+      "earlierTriangle": 18368,
+      "laterTriangle": 25027,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18368,
+      "laterTriangle": 25721,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18380,
+      "laterTriangle": 24980,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18403,
+      "laterTriangle": 18532,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 18403,
+      "laterTriangle": 18826,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18403,
+      "laterTriangle": 24986,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18403,
+      "laterTriangle": 25025,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18403,
+      "laterTriangle": 25026,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18403,
+      "laterTriangle": 25028,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 18403,
+      "laterTriangle": 25328,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18403,
+      "laterTriangle": 25332,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 18431,
+      "laterTriangle": 19209,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 18432,
+      "laterTriangle": 25673,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18492,
+      "laterTriangle": 24894,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 18519,
+      "laterTriangle": 25736,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 18525,
+      "laterTriangle": 25668,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18526,
+      "laterTriangle": 19175,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18527,
+      "laterTriangle": 24903,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18529,
+      "laterTriangle": 24862,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18530,
+      "laterTriangle": 24862,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18533,
+      "laterTriangle": 24894,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18536,
+      "laterTriangle": 19199,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18742,
+      "laterTriangle": 25700,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18742,
+      "laterTriangle": 25702,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18743,
+      "laterTriangle": 19206,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18743,
+      "laterTriangle": 25700,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18744,
+      "laterTriangle": 24894,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18744,
+      "laterTriangle": 25700,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 18844,
+      "laterTriangle": 19176,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 19175,
+      "laterTriangle": 25020,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 19176,
+      "laterTriangle": 25021,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 19199,
+      "laterTriangle": 25036,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 19200,
+      "laterTriangle": 25034,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 19226,
+      "laterTriangle": 25735,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 19227,
+      "laterTriangle": 19243,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 19228,
+      "laterTriangle": 19243,
+      "sampledConflicts": 3
+    },
+    {
+      "earlierTriangle": 19228,
+      "laterTriangle": 25735,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 19243,
+      "laterTriangle": 25719,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 19244,
+      "laterTriangle": 25014,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 24862,
+      "laterTriangle": 25025,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 24862,
+      "laterTriangle": 25026,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 24862,
+      "laterTriangle": 25027,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 24894,
+      "laterTriangle": 25028,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 24894,
+      "laterTriangle": 25029,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 24903,
+      "laterTriangle": 24988,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 24978,
+      "laterTriangle": 25672,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 25005,
+      "laterTriangle": 25702,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 25022,
+      "laterTriangle": 25668,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 25023,
+      "laterTriangle": 25667,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 25033,
+      "laterTriangle": 25692,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 25251,
+      "laterTriangle": 25700,
+      "sampledConflicts": 2
+    },
+    {
+      "earlierTriangle": 25718,
+      "laterTriangle": 25735,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 25719,
+      "laterTriangle": 25736,
+      "sampledConflicts": 1
+    },
+    {
+      "earlierTriangle": 25720,
+      "laterTriangle": 25736,
+      "sampledConflicts": 1
+    }
+  ],
+  "criterion": "Strict triangle interior (barycentric > 1e-4); repeated texel with surface positions differing > 1 mm",
+  "limitations": [
+    "Finite raster sampling does not prove absence of all continuous/subtexel UV intersections",
+    "No texture likeness or device rendering acceptance"
+  ]
+}

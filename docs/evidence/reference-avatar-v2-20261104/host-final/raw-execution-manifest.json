@@ -1,0 +1,38 @@
+{
+  "archive": "raw-execution.zip",
+  "bytes": 3936,
+  "sha256": "91912d72c8b50aa8ba018dfbdf398af206449991da3b9e3e6da002e618b420a5",
+  "files": [
+    {
+      "path": "commands.json",
+      "bytes": 7921,
+      "sha256": "4bb6d57dcc7cb7a2838ad2f5609ddd238d7119fe884c4aac64adcd3825a3f5d7"
+    },
+    {
+      "path": "compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "junit.log",
+      "bytes": 136,
+      "sha256": "17ea4eeb838c7dc79d300807b20678b5774345e52dac1dc787f7796a543fa4b8"
+    },
+    {
+      "path": "motion.log",
+      "bytes": 1637,
+      "sha256": "14867263597b428b8331bbf30b14b2b82355d537d079fd02d43141b4cdf0a0a3"
+    },
+    {
+      "path": "results.json",
+      "bytes": 48,
+      "sha256": "61724a91f86f6ea1fb54799d6e37d21d6a84b3f1bb9264976f712c637f65c688"
+    },
+    {
+      "path": "run_avatar_checks.py",
+      "bytes": 3179,
+      "sha256": "1218906ff03acd9dde73150e80bb59d27f07ddbd18b5e375d35272ff52ea5158"
+    }
+  ],
+  "note": "Original execution bytes. Absolute paths in raw receipts describe the observed run; portable reproduction commands are in tools/avatar-3d/reference-atlas/README.md."
+}

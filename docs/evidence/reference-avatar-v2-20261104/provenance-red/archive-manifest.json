@@ -1,0 +1,32 @@
+{
+  "archive": "raw-execution.zip",
+  "sha256": "db0fdbb29775545e0314b7915fd0265c385aebaf26d8e808f9e43446c40b8135",
+  "bytes": 4272,
+  "members": {
+    "commands.json": {
+      "sha256": "32e8741914d9becfca280313636506c223996904cab5bec6973d5f1d7766d437",
+      "bytes": 7948
+    },
+    "results.json": {
+      "sha256": "0b366234a369f20d6dce2b7c45c51d12c1701647a31e63558f1e5d50337ca5b2",
+      "bytes": 48
+    },
+    "compile.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "junit.log": {
+      "sha256": "750aa3c7916f334ad9bdc580fd46f6cee20565f9632a1d029ebddbb5d41c3cab",
+      "bytes": 704
+    },
+    "motion.log": {
+      "sha256": "14867263597b428b8331bbf30b14b2b82355d537d079fd02d43141b4cdf0a0a3",
+      "bytes": 1637
+    },
+    "run_avatar_checks.py": {
+      "sha256": "1218906ff03acd9dde73150e80bb59d27f07ddbd18b5e375d35272ff52ea5158",
+      "bytes": 3179
+    }
+  },
+  "archiveIdentity": "Original bytes preserved; fixed ZIP member timestamps for deterministic packaging"
+}

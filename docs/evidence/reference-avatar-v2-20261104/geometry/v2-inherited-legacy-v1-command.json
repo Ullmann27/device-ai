@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/tools/epsilon-avatar-contract/validate_glb.py",
+    "/workspace/scratch/acc992a972a4/geometry-work/v2/continuum-reference-head-v1.glb",
+    "--output",
+    "/workspace/scratch/acc992a972a4/motion-review/v2-inherited-legacy-v1.json"
+  ],
+  "exitCode": 1,
+  "seconds": 0.41877675900104805,
+  "validatorSha256": "4550fb6deaa92d92401f482baad1dff80636c71d6e516cb46a7dc4fdc8fc445e"
+}

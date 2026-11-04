@@ -1,0 +1,25 @@
+{
+  "evidenceClass": "ROOT_OBSERVED_EXECUTION_TRANSCRIPT",
+  "command": [
+    "python3",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/tools/jarvis-reference-review/validate_hinge_v2.py",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/tools/epsilon-avatar-contract/validate_glb.py",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/assets/avatar/jarvis-runtime-v1.glb",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/assets/avatar3d/continuum-avatar.glb",
+    "/workspace/scratch/acc992a972a4/qa/final-hinge-v2.json"
+  ],
+  "exitCode": 0,
+  "stdout": {
+    "originalV1": "PASS",
+    "actualCandidateV1": "FAIL",
+    "v2": "PASS_SEPARATE_HINGE_AND_FIXED_REGION_V2"
+  },
+  "recordedFrom": "Root agent tools.exec_command session 28911 and completed tools.write_stdin exit_code=0; no original local command receipt existed.",
+  "inputSha256": {
+    "tools/jarvis-reference-review/validate_hinge_v2.py": "27ca004de5691c18f3c10f5e3dc98aec06ec7d98b9fbd01f526276fb1bc8f6d9",
+    "tools/epsilon-avatar-contract/validate_glb.py": "4550fb6deaa92d92401f482baad1dff80636c71d6e516cb46a7dc4fdc8fc445e",
+    "assets/avatar/jarvis-runtime-v1.glb": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+    "app/src/main/assets/avatar3d/continuum-avatar.glb": "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145"
+  },
+  "outputSha256": "6a6e1c1e7f2dc24f389048f7a733ddc7eec6d3e783ce8ab259d3779a763bca70"
+}

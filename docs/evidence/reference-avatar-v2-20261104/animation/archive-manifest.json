@@ -1,0 +1,10 @@
+{
+  "source": "animation-frames/pose-replay-manifest.json",
+  "sourceBytes": 196554,
+  "sourceSha256": "8454fe01008463e2045517fc884e55e5e802e03277c00ae80b897eb6cf4f71e6",
+  "archive": "pose-replay-manifest.json.gz",
+  "archiveBytes": 25723,
+  "archiveSha256": "972073f51255ce114d2caac9c84d3b2a1d62bc13220e6b599a75d5a3a9f5def3",
+  "videoBinaryCommitted": false,
+  "framePngsCommitted": false
+}

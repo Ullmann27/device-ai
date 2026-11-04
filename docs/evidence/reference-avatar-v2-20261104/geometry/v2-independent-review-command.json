@@ -1,0 +1,15 @@
+{
+  "command": [
+    "python3",
+    "/workspace/scratch/acc992a972a4/motion-review/verify-reference-candidate.py",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/assets/avatar3d/continuum-avatar.glb",
+    "/workspace/scratch/acc992a972a4/geometry-work/v2/continuum-reference-head-v1.glb",
+    "--output",
+    "/workspace/scratch/acc992a972a4/motion-review/v2-independent-review.json",
+    "--uv-size",
+    "2048",
+    "--negative-controls"
+  ],
+  "exitCode": 0,
+  "seconds": 5.120342842999889
+}

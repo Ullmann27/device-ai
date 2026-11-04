@@ -1,0 +1,23 @@
+{
+  "archive": "raw-execution.zip",
+  "bytes": 21063,
+  "sha256": "c25de32611609028059b578ab3168a922d41f9d1ca35f90814382a154dec1aab",
+  "files": [
+    {
+      "path": "compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "export.log",
+      "bytes": 211,
+      "sha256": "7e62df15732196da67ebc74616238eea9120c4fc2bbf49f9e84e82d537d980a3"
+    },
+    {
+      "path": "packaged-replay.log",
+      "bytes": 130382,
+      "sha256": "0040e6b3a39519eacae2273fa81db08907ac8df562162683036963276563c0c3"
+    }
+  ],
+  "note": "Original execution bytes. Absolute paths in raw receipts describe the observed run; portable reproduction commands are in tools/avatar-3d/reference-atlas/README.md."
+}

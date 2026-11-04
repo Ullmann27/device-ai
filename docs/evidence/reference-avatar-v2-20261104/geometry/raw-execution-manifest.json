@@ -1,0 +1,22 @@
+{
+  "archive": "raw-execution.zip",
+  "bytes": 3655,
+  "sha256": "0dca61fb88e8f9df2c90db03e099f1b8aebfdf19fa7ddbe512aa1f36adeb5596",
+  "files": [
+    {
+      "path": "v1-red-final-verifier.log",
+      "bytes": 17576,
+      "sha256": "d261896ff4ab548faa62866435042fd2b8739a36c71a7101f0af4198dc5c8981"
+    },
+    {
+      "path": "v2-independent-review.log",
+      "bytes": 1830,
+      "sha256": "b0d6683266fe6758ed7979a07af29ee4c281bda2158879328f29e4fb062f620d"
+    },
+    {
+      "path": "v2-inherited-legacy-v1.log",
+      "bytes": 348,
+      "sha256": "3ffe57cee5095f86942621d0fdfcf19b9c3800d0d654625599363a432140b8de"
+    }
+  ]
+}

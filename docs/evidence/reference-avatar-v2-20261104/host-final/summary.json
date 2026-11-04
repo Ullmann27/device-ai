@@ -1,0 +1,58 @@
+{
+  "schema": "continuum-reference-avatar-final-host-checks-v1",
+  "evidenceClass": "KOTLIN_JVM_HOST_NOT_ANDROID_DEVICE",
+  "status": "PASS",
+  "observedBy": "root agent, followed by integration-agent receipt inspection",
+  "checkoutHeadAtRun": "460730178b4f0a52648462ddb61a0f8737fc1b0a",
+  "sourceInputsCommittedAtThatHead": false,
+  "sourceCommitMeaning": "HEAD before the frozen asset swap was committed; exact files below bind the tested working tree. The final published tree is verified to preserve these bytes.",
+  "compileExitCode": 0,
+  "junit": {
+    "tests": 86,
+    "passed": 86,
+    "failed": 0
+  },
+  "motion": {
+    "tests": 26,
+    "passed": 26,
+    "failed": 0
+  },
+  "kotlinGlbContract": "PASS",
+  "frozenIntegrationInputsSha256": {
+    "app/src/main/assets/avatar3d/continuum-avatar.glb": "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145",
+    "app/src/main/assets/avatar3d/NOTICE.json": "fb07b7b96aaebda7c223357150783ba7fb2fc4f83efad5cc4522191b6b9512f0",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "1f416d4ba9c5865550a225e66deb86e893143a7ff5530d06d59772950a05d269",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarAssetProvenanceTest.kt": "bb9a0256e64d091c6d448ea1e8dc0f2216ce552812113c703f65bd070a76adfb"
+  },
+  "compiledSourcesSha256": {
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "02b04292e0cd3c9e46cfa8cdfe262e17ffee5eb7da7a29746adf1a4b561fba9d",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "5b40cbcab5512ec50423c7b894efa476af429648204188872833d03cc6d9a203",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "1f416d4ba9c5865550a225e66deb86e893143a7ff5530d06d59772950a05d269",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "27f619196873eff007eefc3169ac732d4b757feeaadb371dd866f05972d1fe59",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": "88bbdff0ca524500a5e63fdac6c360868f05a4c0606d84acdb44ea5577d7634a",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt": "4c962590a49dca664330d9a878e9fbc6ebb49dad8816354a8d6b96ff501f3f1d",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarExistingContractRegressionTest.kt": "c4f53100ce44533402a91b521aec77333aa42aec9f4b8f53a37365a230429f70",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarNativeRegressionTest.kt": "8f706326c80615d8fc060f40f21e750506cf8cf5a764b27edd70d5c9acfbcecb",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarObservedGazeTest.kt": "3aabe8bfc0785be1a5d7993c7e3d7c0bebb71a9f11ae3305dbadf0179f37b87d",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechAdmissionTest.kt": "3a52cc42c073309510d22add76324d61d9cbf6b43838178e613cc690b3babf32",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechBoundaryTest.kt": "261d9b464eadf1ccb9e097e69a976c1c6edcb8a48142d6c0ae6b534bcadaa396",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechClockTest.kt": "715d88e73472dd7c73b88df6e82575aa5352adab592b150017822413614b78e7",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt": "5422856d01d829f24c028c539b05013833436182161ede4d00750d622201cadc",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechReattachmentTest.kt": "55b7957eb10e5888d969719e2f7f4d88ba2d8d5548fea2a6b0e41a5cdb6adb69",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt": "32261f6c6b8adc189f73032fbef49fe7c584db5427225a602bec161f5c9f3553",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarArticulationBoundaryTest.kt": "48cf6c5bd6353dd9da54e9c418caaf35ec8ec862e5a887cb881d41c3b525fd25",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarAssetProvenanceTest.kt": "bb9a0256e64d091c6d448ea1e8dc0f2216ce552812113c703f65bd070a76adfb",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt": "71b268df1487042801ebea79260b5c110a56e7b106bff9cebdee9182d41f17a2",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMouthCouplingTest.kt": "51e6c9e7ebd605673718203ddd49946b163765ce0aa1f36c6be77f6a4137fca3",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarPortraitFramingTest.kt": "600f8917df10936fe00e0bf46086a051ea85b0681f1e719da6cceb09e8e0d93c",
+    "tools/fable-avatar-motion-check/Main.kt": "6f3ff17ea0335e7f23645a052a8c46dcd5e61efab6c275119615debbe90555f0",
+    "tools/epsilon-avatar-contract/ValidateAvatarGlb.kt": "b97e0e557a0d25a8b4cdf4515c5e26503944b7c04354a5852509beedb748df4d"
+  },
+  "toolchain": {
+    "java": 17,
+    "kotlin": "2.4.0",
+    "junit": "4.13.2",
+    "json": "20240303"
+  },
+  "scope": "All existing pure avatar/avatar3d JUnit tests plus the existing motion runner and actual Kotlin GLB preflight. No full Android APK build or native renderer execution claimed."
+}

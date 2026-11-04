@@ -1,0 +1,68 @@
+{
+  "schema": "continuum-reference-atlas-v1",
+  "source": "/workspace/scratch/d663e8444310/implement-avatar/app/src/main/assets/avatar3d/continuum-avatar.glb",
+  "sourceSha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+  "sourceReference": "/workspace/scratch/acc992a972a4/generated_images/exec-a3b0921d-caf2-4d2c-8952-381849237cb3.png",
+  "referenceSha256": "0ca742ef92bb9db1bd012df7677594c37b58e77c40e4fc92a946e8e0fb886b1e",
+  "candidate": "continuum-reference-head-v1.glb",
+  "candidateSha256": "eb61fff8ef4c7a11ef97927c5115841f133e780035c372230664cbdb78bf340e",
+  "candidateBytes": 11398288,
+  "atlasSize": [
+    2048,
+    2048
+  ],
+  "atlasSha256": "de6255ff25ddf261a55ae0843df98c04607804d38f51550062acd1ba96729115",
+  "morphNames": [
+    "SIL",
+    "PP",
+    "FF",
+    "TH",
+    "DD",
+    "KK",
+    "CH",
+    "SS",
+    "NN",
+    "RR",
+    "AA",
+    "E",
+    "I",
+    "O",
+    "U",
+    "BlinkLeft",
+    "BlinkRight",
+    "BrowUp",
+    "BrowDown",
+    "Smile",
+    "JawOpen"
+  ],
+  "geometryChanges": "UV seam vertex duplication only",
+  "controlTransformsUnchanged": true,
+  "paidApiCalls": 0,
+  "backend": "Blender 4.3.2 Cycles CPU emission bake",
+  "objects": {
+    "Face": {
+      "oldVertexCount": 12980,
+      "newVertexCount": 16177,
+      "seamDuplicates": 3197,
+      "cornerCount": 77772
+    },
+    "IrisLeft": {
+      "oldVertexCount": 266,
+      "newVertexCount": 394,
+      "seamDuplicates": 128,
+      "cornerCount": 1584
+    },
+    "IrisRight": {
+      "oldVertexCount": 266,
+      "newVertexCount": 394,
+      "seamDuplicates": 128,
+      "cornerCount": 1584
+    }
+  },
+  "limitations": [
+    "Single frontal reference; unseen profile is approximate",
+    "Portrait contains authored lighting baked into surface color",
+    "Original position-only morphs retained; no new phonetic accuracy claim",
+    "No Android GPU, FPS, thermal, or device acceptance established"
+  ]
+}

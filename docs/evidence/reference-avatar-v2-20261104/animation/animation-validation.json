@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "videoSha256": "657e63521b925f7919de28552ea1bedea287545d9a2a65aaec892fb699690f87",
+  "exactFrameFilesAndHashesVerified": 96,
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 384,
+        "height": 512,
+        "r_frame_rate": "12/1",
+        "nb_read_frames": "96"
+      }
+    ],
+    "format": {
+      "duration": "8.000000",
+      "size": "1434559"
+    }
+  },
+  "renderManifestSha256": "8454fe01008463e2045517fc884e55e5e802e03277c00ae80b897eb6cf4f71e6",
+  "maxSkinPositionErrorMetres": 6.435738668423218e-08,
+  "limits": "Host animation preview, not device/TTS evidence"
+}

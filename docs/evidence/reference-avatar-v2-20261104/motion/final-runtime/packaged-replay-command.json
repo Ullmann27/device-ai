@@ -1,0 +1,28 @@
+{
+  "command": [
+    "blender",
+    "-b",
+    "-t",
+    "1",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "/workspace/scratch/acc992a972a4/motion-review/render-production-poses.py",
+    "--",
+    "--asset",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/assets/avatar3d/continuum-avatar.glb",
+    "--poses",
+    "/workspace/scratch/acc992a972a4/motion-review/final-runtime/actual-mapper-poses.json",
+    "--output",
+    "/workspace/scratch/acc992a972a4/motion-review/final-runtime/packaged-replay",
+    "--expected-asset-sha256",
+    "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145",
+    "--expected-poses-sha256",
+    "43b1e4e65c5d52de20c0efee60886a17bcd9b30e070286e0fbd20a3d7e10080f",
+    "--frames",
+    "all",
+    "--no-render"
+  ],
+  "exitCode": 0,
+  "seconds": 7.16075893299967
+}
