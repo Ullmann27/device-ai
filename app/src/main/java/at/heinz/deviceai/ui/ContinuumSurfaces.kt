@@ -7,15 +7,17 @@ object ContinuumSurfaces {
     /** Dark glass card with the cyan-to-violet edge light of the reference. */
     fun glassCard(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, radius: Float = ContinuumTheme.CARD_RADIUS) {
         val fill = Fill.Linear(l, t, r, b, intArrayOf(ContinuumTheme.CARD_FILL_TOP, ContinuumTheme.CARD_FILL_BOTTOM))
-        p.fillRoundRect(l - 1.5f, t - 1.5f, r + 1.5f, b + 1.5f, radius + 1.5f,
-            Fill.Linear(l, t, r, b, intArrayOf(Argb.of(60, 40, 150, 255), Argb.of(10, 40, 90, 200), Argb.of(50, 120, 80, 255))), .55f)
+        // Bounded vector halos stay behind text; no full-screen blur or extra render surface.
+        val glow = Fill.Linear(l, t, r, b, intArrayOf(ContinuumTheme.CYAN, Argb.rgb(29, 92, 167), ContinuumTheme.VIOLET))
+        p.strokeRoundRect(l + .5f, t + .5f, r - .5f, b - .5f, radius, 6f, glow, .07f)
+        p.strokeRoundRect(l + .5f, t + .5f, r - .5f, b - .5f, radius, 3f, glow, .12f)
         p.fillRoundRect(l, t, r, b, radius, fill)
         // soft inner sheen along the top
         p.fillRoundRect(l + 1f, t + 1f, r - 1f, t + (b - t) * .45f, radius - 1f,
-            Fill.Linear(0f, t, 0f, t + (b - t) * .45f, intArrayOf(Argb.of(28, 90, 160, 255), 0)))
+            Fill.Linear(0f, t, 0f, t + (b - t) * .45f, intArrayOf(Argb.of(32, 80, 192, 232), 0)))
         val edge = Fill.Linear(l, t, r, b, intArrayOf(ContinuumTheme.BORDER_LEFT, ContinuumTheme.BORDER_TOP,
-            Argb.rgb(30, 50, 110), ContinuumTheme.BORDER_RIGHT), floatArrayOf(0f, .35f, .65f, 1f))
-        p.strokeRoundRect(l, t, r, b, radius, 1f, edge, .95f)
+            Argb.rgb(31, 63, 116), ContinuumTheme.BORDER_RIGHT), floatArrayOf(0f, .35f, .65f, 1f))
+        p.strokeRoundRect(l + .5f, t + .5f, r - .5f, b - .5f, radius, 1.15f, edge, .95f)
         // bright corner light top-left and violet light bottom-right, as in the reference
         p.strokeArc(l, t, l + radius * 2f, t + radius * 2f, 180f, 90f, 1.2f, Fill.Solid(Argb.rgb(80, 200, 255)), .7f)
         p.strokeArc(r - radius * 2f, b - radius * 2f, r, b, 0f, 90f, 1.2f, Fill.Solid(Argb.rgb(150, 110, 255)), .55f)

@@ -91,8 +91,12 @@ class ContinuumAdaptiveCockpitUiTest {
                         val child = home.getChildAt(index)
                         if (child is ContinuumHomeView.ElementView) {
                             assertTrue("${child.slot} has spoken real state", child.contentDescription.isNotBlank())
-                            child.performClick()
-                            assertEquals(child.slot, clicked.last())
+                            // Presentation controls are handled by the home itself; real pointer
+                            // selection and preserved avatar identity are covered by ReferenceCockpitUiTest.
+                            if (child.element !is at.heinz.deviceai.ui.ReferenceViewModeElement) {
+                                child.performClick()
+                                assertEquals(child.slot, clicked.last())
+                            }
                         }
                     }
                 } finally { controller.pause().stop().destroy() }
@@ -114,7 +118,8 @@ class ContinuumAdaptiveCockpitUiTest {
         try {
             for ((width, height) in listOf(320f to 720f, 412f to 915f, 600f to 840f, 840f to 960f, 1280f to 800f)) {
                 for (font in listOf(1f, 1.3f, 1.6f, 2f)) {
-                    val layout = ContinuumAdaptiveHomeLayout.create(width, height, width >= 600f, font)
+                    val layout = if (ContinuumHomeLayout.isWide(width, height))
+                        ContinuumHomeLayout.wide(width, height, font) else ContinuumHomeLayout.phone(width, font)
                     for ((slot, element) in ContinuumHomeScreen.elements(layout, font)) {
                         if (slot == ContinuumHomeLayout.Slot.NAV || slot == ContinuumHomeLayout.Slot.RAIL) continue
                         val box = requireNotNull(layout[slot])

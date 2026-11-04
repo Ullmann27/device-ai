@@ -7,7 +7,7 @@ import com.google.android.filament.*
 import com.google.android.filament.gltfio.*
 import java.nio.ByteBuffer
 
-/** UI-thread owned, only allocated for an explicitly selected, validated, visible 3D asset. */
+/** UI-thread owned, only allocated for a selected, validated, visible 3D asset. */
 class FilamentAvatarRenderer private constructor(private val surface: Surface) : AutoCloseable {
     private var engine: Engine? = null
     private var renderer: Renderer? = null
@@ -19,7 +19,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private var loader: AssetLoader? = null
     private var asset: FilamentAsset? = null
     private var cameraEntity = 0
-    private var lightEntity = 0
+    private val lightEntities = mutableListOf<Int>()
     private lateinit var mapper: AvatarMorphMapper
     private var morphInstances = intArrayOf()
     private data class Joint(val instance: Int, val rest: FloatArray)
@@ -38,7 +38,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         }
         scene = e.createScene()
         cameraEntity = EntityManager.get().create()
-        camera = e.createCamera(cameraEntity).also { it.setExposure(16f, 1f / 125f, 100f) }
+        // A fixed studio exposure keeps the low-reflectance face readable. It is
+        // independent of app/model activity and does not pump with speech energy.
+        camera = e.createCamera(cameraEntity).also { it.setExposure(11f, 1f / 125f, 100f) }
         view = e.createView().also {
             it.scene = scene; it.camera = camera
             it.blendMode = com.google.android.filament.View.BlendMode.TRANSLUCENT
@@ -49,7 +51,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             it.isPostProcessingEnabled = true
             it.bloomOptions = com.google.android.filament.View.BloomOptions().apply {
                 enabled = true
-                strength = .06f
+                strength = .10f
                 resolution = 128
                 levels = 4
                 quality = com.google.android.filament.View.QualityLevel.LOW
@@ -82,11 +84,27 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         focus = metadata.focus
         camera!!.lookAt(focus.centerX, focus.centerY, focus.centerZ + 2.0,
             focus.centerX, focus.centerY, focus.centerZ, 0.0, 1.0, 0.0)
-        lightEntity = EntityManager.get().create()
-        LightManager.Builder(LightManager.Type.DIRECTIONAL).color(.72f, .90f, 1f).intensity(90_000f)
-            .direction(-.4f, -.5f, -1f).castShadows(false).build(e, lightEntity)
-        scene!!.addEntities(a.entities); scene!!.addEntity(lightEntity)
+        scene!!.addEntities(a.entities)
+        // Filament supports one directional key. Bounded point fills add real
+        // cyan/violet facial volume without an IBL download or a new render pass.
+        addLight(LightManager.Builder(LightManager.Type.DIRECTIONAL)
+            .color(.50f, .82f, 1f).intensity(80_000f)
+            .direction(-.35f, -.40f, -1f).castShadows(false))
+        addLight(LightManager.Builder(LightManager.Type.POINT)
+            .color(.55f, .24f, 1f).intensity(28_000f)
+            .position(-.38f, .32f, .38f).falloff(1.5f).castShadows(false))
+        addLight(LightManager.Builder(LightManager.Type.POINT)
+            .color(.18f, .82f, 1f).intensity(24_000f)
+            .position(.32f, .35f, -.16f).falloff(1.2f).castShadows(false))
         a.releaseSourceData()
+    }
+
+    private fun addLight(builder: LightManager.Builder) {
+        val entity = EntityManager.get().create()
+        // Track before build: partial initialization follows the same close path.
+        lightEntities += entity
+        builder.build(requireNotNull(engine), entity)
+        requireNotNull(scene).addEntity(entity)
     }
 
     /** Called by the existing View frame clock; never posts a callback of its own. */
@@ -125,7 +143,12 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         runCatching { asset?.let { scene?.removeEntities(it.entities); loader?.destroyAsset(it) } }; asset = null
         runCatching { loader?.destroy() }; loader = null
         runCatching { provider?.destroyMaterials() }; runCatching { provider?.destroy() }; provider = null
-        if (lightEntity != 0) { runCatching { e.destroyEntity(lightEntity) }; runCatching { EntityManager.get().destroy(lightEntity) }; lightEntity = 0 }
+        for (entity in lightEntities) {
+            runCatching { scene?.removeEntity(entity) }
+            runCatching { e.destroyEntity(entity) }
+            runCatching { EntityManager.get().destroy(entity) }
+        }
+        lightEntities.clear()
         runCatching { view?.let(e::destroyView) }; view = null
         runCatching { scene?.let(e::destroyScene) }; scene = null
         if (cameraEntity != 0) { runCatching { e.destroyCameraComponent(cameraEntity) }; runCatching { EntityManager.get().destroy(cameraEntity) }; cameraEntity = 0 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.ContinuumReferenceCockpitLayoutTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T06:15:36" hostname="8c129114cae4" time="0.027">
+  <properties/>
+  <testcase name="bothFoldOrientationsRetainTheRailAndAllDirectActions" classname="at.heinz.deviceai.ui.ContinuumReferenceCockpitLayoutTest" time="0.003"/>
+  <testcase name="compactPresentationKeepsAllDestinationsAndReducesStageSpace" classname="at.heinz.deviceai.ui.ContinuumReferenceCockpitLayoutTest" time="0.002"/>
+  <testcase name="interactiveTargetsDoNotOverlapEachOtherOrTheAvatarViewport" classname="at.heinz.deviceai.ui.ContinuumReferenceCockpitLayoutTest" time="0.008"/>
+  <testcase name="anUnmeasuredCockpitDoesNotCopyTheReferenceArtworkNumbers" classname="at.heinz.deviceai.ui.ContinuumReferenceCockpitLayoutTest" time="0.009"/>
+  <testcase name="largerTextAddsSpaceInsteadOfDroppingDestinations" classname="at.heinz.deviceai.ui.ContinuumReferenceCockpitLayoutTest" time="0.0"/>
+  <testcase name="everyDirectDestinationRemainsReachableAtPhoneFoldAndLargeType" classname="at.heinz.deviceai.ui.ContinuumReferenceCockpitLayoutTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
