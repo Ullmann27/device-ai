@@ -50,10 +50,10 @@ Interface: `ChiefBotPersonas.describe(profile): ChiefBotPersona` returns
 The existing saved name/role/style take precedence; custom IDs get a generic
 method using their current profile. Twenty stable IDs get distinct approaches.
 
-- [ ] Add prompt regressions against existing real conversation assembly; run RED.
-- [ ] Implement distinct methods/examples and model-visible own-voice guidance.
-- [ ] Verify full final request, private context isolation and role/authority limits.
-- [ ] Run focused tests; root reviews and publishes the checkpoint.
+- [x] Add prompt regressions against existing real conversation assembly; run RED.
+- [x] Implement distinct methods/examples and model-visible own-voice guidance.
+- [x] Verify full final request, private context isolation and role/authority limits.
+- [x] Run focused tests; root reviews and publishes the checkpoint.
 
 ## Task 2: Explicit task intake and existing execution path
 
@@ -68,12 +68,12 @@ original request for ToolGate and receives only selected persona metadata as
 separate bounded context. Its observed progress/result comes from the actual
 existing task callback. Coding handoff remains visibly a draft until accepted.
 
-- [ ] Add regressions for missing assignment route, full request retention,
+- [x] Add regressions for missing assignment route, full request retention,
   unknown/stale profile, duplicate/stale callback and unavailable runtime.
-- [ ] Add typed intake and Activity connections to existing private/local/coding paths.
-- [ ] Keep private profile budgets unchanged; explicit owner tasks admit at most four model calls, four tools and two minutes, with lower profile tool/time limits respected.
-- [ ] Add cancellation/current-session checks and truthful task status labels.
-- [ ] Run task/widget regressions; independent review then publish.
+- [x] Add typed intake and Activity connections to existing private/local/coding paths.
+- [x] Keep private profile budgets unchanged; explicit owner tasks admit at most four model calls, four tools and two minutes, with lower profile tool/time limits respected.
+- [x] Add cancellation/current-session checks and truthful task status labels.
+- [ ] Complete independent review and publish after the full verification gate. Focused task/widget regressions passed.
 
 ## Task 3: Modern bot roster and assignment composer
 
@@ -86,19 +86,19 @@ roster constructor parameter. Existing callers remain valid. Use persona API
 from Task 1 and typed request from Task 2. Search by current name, role and style;
 use actual bounded stored profiles and preserve pagination behavior.
 
-- [ ] Add failing widget checks for assignment entry, search and lifecycle.
-- [ ] Build cyan/violet cards, compact bot identity marks, role/method/status,
+- [x] Add failing widget checks for assignment entry, search and lifecycle.
+- [x] Build cyan/violet cards, compact bot identity marks, role/method/status,
   direct conversation and assignment actions, plus editable starter requests.
-- [ ] Make task mode explicit; never auto-submit a starter example or on opening.
-- [ ] Preserve all storage diagnostics, revision checks and close/destroy behavior.
-- [ ] Test narrow width/font scaling; capture actual host-widget screenshots.
+- [x] Make task mode explicit; never auto-submit a starter example or on opening.
+- [x] Preserve all storage diagnostics, revision checks and close/destroy behavior.
+- [x] Test narrow width/font scaling; capture actual host-widget screenshots.
 
 ## Verification ledger
 
 - Baseline: **62 PASS, 0 FAIL, 0 SKIP**, actual application source #483. Evidence
   in `docs/evidence/personality-bots-20261104/baseline`.
-- RED/GREEN runs: pending.
-- Whole-branch unit/widget/compile/lint: pending.
+- RED/GREEN runs: recorded in the handoff; current focused gate **114 PASS, 0 FAIL, 0 SKIP**. Three first-run render-fixture failures and their corrections are retained as evidence.
+- Whole-branch unit/widget/configured NewApi lint: running. Application/test compilation passed in the focused gate.
 - Physical Fold7 / native model / release: NOT_RUN.
 
 ## Decisions

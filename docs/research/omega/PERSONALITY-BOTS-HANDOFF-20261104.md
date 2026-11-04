@@ -9,7 +9,9 @@ active development conversations.
 
 - Base: PR #483, `578bdfd12f896cc990bf1a043bc1b248ba3adb6d`.
 - Branch: `feat/continuum-personality-bots-20261104`.
-- Initial status: **WIP / new implementation NOT_RUN / APK NOT_RUN**.
+- Delivery: draft PR #493, `https://github.com/Ullmann27/device-ai/pull/493`.
+- Current status: implementation complete for host verification; final GREEN/review pending.
+  Physical Fold7/native model/release APK: **NOT_RUN**.
 - Actual current code already contains 20 persisted profiles, private local bot
   dialogue, address routing, ChiefWorkerPool, typed delegation and CCC1 contracts.
   A private bot dialogue currently cannot dispatch tools. A profile is neither a
@@ -32,8 +34,9 @@ Other current workstreams:
 - #492 / `research/continuum-weight-space-audit-20261104`: weights and capacity
   experiments.
 
-Shared-file policy: any unavoidable AgentActivity edit is confined to the bot
-selection/dialogue/assignment methods and imports/fields they need. No wholesale
+Shared-file policy: AgentActivity edits are confined to the bot selection/dialogue/assignment
+hooks, their imports/fields and optional task attribution inside the existing
+runLocal/createToolGate path, with raw addressed input preserved. No wholesale
 Activity replacement, avatar geometry, speech renderer, model weights, cognitive
 retriever or recovery-store changes. Compare exact heads before combined
 integration. This written coordination is not an acknowledgement by another chat.
@@ -70,13 +73,94 @@ S01 replay, sign/release/version changes or installation. Preserve package
 `at.heinz.deviceai.continuumlocal`, the original signer and current update path.
 No private owner inputs or credentials in Git.
 
-## Execution ledger
+## Implemented behavior
 
-1. Source / app-path audit: IN_PROGRESS (three read-only specialists).
-2. Baseline: NOT_RUN in this branch.
-3. Personality and callable addressing: PENDING.
-4. Assignment connection and status: PENDING.
-5. Modern roster and UI acceptance: PENDING.
-6. Independent review / integration handoff: PENDING.
+Twenty existing stable IDs have distinct working methods and editable starter
+requests, while current saved names, roles and communication styles take
+precedence. `ChiefBotPersonas` contributes bounded descriptive JSON to the real
+private dialogue and explicit owner-task prompt. It never grants tools or claims
+independently verified competence. Custom profiles receive a general method.
+
+The roster exposes the current name, role, style, method, model availability and
+last observed task phase, plus direct conversation and assignment actions. Search
+covers names/roles/styles across all stored pages. It uses the existing Jarvis
+colors/fonts, one column on narrow or large-text windows and two on wide windows.
+The composer requires an explicit mode and final submit; examples only prefill.
+
+| Mode | Existing path | Boundary |
+| --- | --- | --- |
+| `PRIVATE_REPLY` | `runBotDialogue` → `ChiefBotConversation` → `streamThinking` | Existing isolated private context; no tools; unchanged profile call budget. |
+| `LOCAL_TOOLS` | `runLocal` → `BoundedAgentOrchestrator` → `ToolGate` | Explicit owner task attributed to the bot; original request remains tool authority; existing confirmations and receipts. |
+| `CODING_DRAFT` | `showCodingTaskDraftDialog` | Prefills the complete goal only; no guessed repository/SHA/path/approval and no execution. |
+
+An explicit owner task admits at most four **actual** model calls (including
+rejected-tool recovery), four tools and 120 seconds. Lower profile tool/time
+limits remain effective. Private dialogue keeps its original one-model-call
+budget. The complete request is bounded at 4,000 UTF-8 bytes, and coding goals
+also retain the canonical 600-character limit. Oversized or malformed input is
+rejected as a whole; no trailing restriction is clipped.
+
+The owner-task prompt starts fresh and excludes owner conversation/identity
+compilation, persistent owner memories, private bot history and working notes.
+The native runtime remains shared. Session/profile/deadline/cancellation are
+rechecked before each actual model or tool dispatch. A logical cancellation does
+not release the busy lane while the runtime is still GENERATING. Status labels
+come from actual orchestrator phases and tool receipts; fresh tool output is not
+labelled independent outcome verification. Bot task model responses are not
+promoted into owner memory or persistent learned experience.
+
+Address forms include `@Kora text`, `@Kora: text`, `Kora: text`, multiword names
+with a comma/colon, and `Rufe Kora auf`, `Sprich mit Kora`, `Wechsle zu Kora`.
+Names resolve to current saved profiles across pages; duplicate names fail
+closed. Addressing alone remains private conversation, not execution authority.
+Unknown explicit @-names do not silently fall back to a different selected bot.
+
+## Host verification ledger
+
+| Run | Actual result | Evidence directory |
+| --- | --- | --- |
+| Existing source baseline | 62 tests, 0 failures, 0 skipped | `baseline` |
+| Real private prompt RED | 10 tests, 2 intended failures | `personas-red` |
+| New task API RED | Missing API compilation failure; no runtime test claim | `task-api-red` |
+| Persona GREEN / roster RED | Persona+conversation 16 pass; 2 intended UI failures; 1 task fixture byte-count error subsequently corrected | `ui-red-personas-green` |
+| Address RED / task GREEN | Router 14 tests/9 intended failures; task intake 6 pass | `address-red-task-green` |
+| Activity assignment RED | 5 tests/5 missing-route failures; prior unsupported dialog overload corrected before this run | `activity-red` |
+| First combined implementation | 114 tests, 3 render-fixture failures; remaining 111 pass | `focused-first-run` |
+| Current focused GREEN | **114 tests, 0 failures, 0 errors, 0 skipped** | `focused-green` |
+| Complete unit/widget suite + configured NewApi lint | RUNNING | `full-verification` |
+
+All evidence paths are below `docs/evidence/personality-bots-20261104/`.
+The source manifest binds the working-source bytes, not merely the old local
+HEAD printed by the shared build wrapper. Host fixtures use synthetic text only.
+
+Review corrections already included: fixed an invalid owner-context compiler
+configuration before a ready-model assignment; guarded old composer cancel
+controls; prevented retry when a callback may have accepted before throwing;
+kept feedback in scrollable content for compact, enlarged-text windows; and
+revalidated task session/profile during actual model-budget reservation. Another
+bot now reports the shared lane as occupied while a task is running.
+
+## Integration notes
+
+- Roster constructor adds optional **last** parameter
+  `onAssign: ((ChiefBotTaskRequest) -> Boolean)?`.
+- `true` means the Activity has custody of the complete request. `false` retains
+  the draft. A thrown callback leaves acceptance unknown and disables retry.
+- AgentActivity adds the optional last `botTask` parameter to `runLocal` and
+  `createToolGate`; ordinary owner/coding calls retain their existing paths.
+- Existing bot/menu/team entry points already reach `showBotRoster()`.
+- Latest inspected sibling worktrees at 2026-11-04: avatar `09e235070cb87ed6ff3dd8d327a01659ced0d396`,
+  memory-brain `8a98ea4d10126041b1a43cb7623c0f324ab18ec1`, combined avatar/memory
+  `f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b`. These are observations, not acknowledgements
+  or combined acceptance. Recheck exact heads before merging; AgentActivity overlaps
+  the avatar workstream. Do not replace its complete file from this older base.
+
+## Remaining acceptance
+
+Focused host/widget tests and visual inspection of actual native widget renders
+are complete. Finish the full unit/widget suite and configured NewApi lint, resolve
+independent review findings, and publish the source-bound evidence to PR #493. No physical
+Fold7, native LiteRT inference/quality, speech, GPU, installation or combined
+release acceptance is asserted by these host tests.
 
 Revert only this branch's new commits to roll back. Do not reset shared branches.

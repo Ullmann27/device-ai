@@ -16,6 +16,7 @@ data class ChiefBotTaskRequest(
 ) {
     init {
         require(ChiefBotProfile.ID.matches(agentId) && profileVersion >= 1) { "BOT_TASK_ID_INVALID" }
+        require(text.length <= MAX_TEXT_BYTES) { "BOT_TASK_TEXT_TOO_LARGE" }
         require(text.isNotBlank() && text.none {
             it.code in 0..8 || it.code in 11..12 || it.code in 14..31 || it.code == 127
         }) { "BOT_TASK_TEXT_INVALID" }
@@ -83,15 +84,33 @@ class ChiefBotTaskTicket internal constructor(
     /** Disk-bound check for the executor, never a per-frame UI status read. */
     fun profileCurrent(): Boolean = runCatching { profiles.get(profile.agentId) == profile }.getOrDefault(false)
 
-    @Synchronized fun reserveModelCall(): Long {
-        check(!cancelled) { "BOT_TASK_CANCELLED" }
-        check(claimed && !ended) { "BOT_TASK_NOT_ACTIVE" }
-        val remaining = remainingMillis()
-        check(remaining > 0) { "BOT_TASK_DEADLINE_EXCEEDED" }
+    /** Revalidate identity before each actual model or tool dispatch, on its executor. */
+    fun requireCurrent(currentSessionId: String) {
+        checkActive(currentSessionId)
+        check(profileCurrent()) { "BOT_TASK_PROFILE_CHANGED" }
+        checkActive(currentSessionId)
+    }
+
+    fun reserveModelCall(currentSessionId: String): Long {
+        requireCurrent(currentSessionId)
+        return synchronized(this) { reserveCurrentModelCall(currentSessionId) }
+    }
+
+    private fun reserveCurrentModelCall(currentSessionId: String): Long {
+        val remaining = checkActive(currentSessionId)
         val maximum = if (request.mode == ChiefBotTaskMode.LOCAL_TOOLS) MAX_OWNER_MODEL_CALLS
             else profile.resourceBudget.maxModelCalls
         check(modelCalls < maximum) { "BOT_TASK_MODEL_BUDGET_EXHAUSTED" }
         modelCalls++
+        return remaining
+    }
+
+    @Synchronized private fun checkActive(currentSessionId: String): Long {
+        check(!cancelled) { "BOT_TASK_CANCELLED" }
+        check(claimed && !ended) { "BOT_TASK_NOT_ACTIVE" }
+        check(currentSessionId == sessionId) { "BOT_TASK_STALE_OR_EXPIRED" }
+        val remaining = remainingMillis()
+        check(remaining > 0) { "BOT_TASK_DEADLINE_EXCEEDED" }
         return remaining
     }
 

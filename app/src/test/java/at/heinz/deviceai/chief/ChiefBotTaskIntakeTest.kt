@@ -42,7 +42,7 @@ class ChiefBotTaskIntakeTest {
         task.cancel()
         assertFalse(task.isCurrent("session-one"))
         assertFalse(task.claim("session-one"))
-        assertEquals("BOT_TASK_CANCELLED", runCatching { task.reserveModelCall() }.exceptionOrNull()?.message)
+        assertEquals("BOT_TASK_CANCELLED", runCatching { task.reserveModelCall("session-one") }.exceptionOrNull()?.message)
     }
 
     @Test fun freshProfileRevisionAndMissingBotFailClosed() = withStore { store ->
@@ -81,13 +81,45 @@ class ChiefBotTaskIntakeTest {
         val intake = ChiefBotTaskIntake(store) { now }
         val task = intake.prepare(request, "session-one")
         assertTrue(task.claim("session-one"))
-        repeat(ChiefBotTaskTicket.MAX_OWNER_MODEL_CALLS) { task.reserveModelCall() }
-        assertEquals("BOT_TASK_MODEL_BUDGET_EXHAUSTED", runCatching { task.reserveModelCall() }.exceptionOrNull()?.message)
+        repeat(ChiefBotTaskTicket.MAX_OWNER_MODEL_CALLS) { task.reserveModelCall("session-one") }
+        assertEquals("BOT_TASK_MODEL_BUDGET_EXHAUSTED", runCatching { task.reserveModelCall("session-one") }.exceptionOrNull()?.message)
         val expiring = intake.prepare(request, "session-one")
         assertTrue(expiring.claim("session-one"))
         now += java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(profile.resourceBudget.deadlineMillis)
         assertEquals(0L, expiring.remainingMillis())
         assertFalse(expiring.isCurrent("session-one"))
-        assertEquals("BOT_TASK_DEADLINE_EXCEEDED", runCatching { expiring.reserveModelCall() }.exceptionOrNull()?.message)
+        assertEquals("BOT_TASK_DEADLINE_EXCEEDED", runCatching { expiring.reserveModelCall("session-one") }.exceptionOrNull()?.message)
+    }
+
+    @Test fun privateConversationBudgetDoesNotBecomeTheExplicitOwnerTaskBudget() = withStore { store ->
+        val profile = requireNotNull(store.get("bot-kora"))
+        assertEquals(1, profile.resourceBudget.maxModelCalls)
+        val intake = ChiefBotTaskIntake(store)
+        val privateTask = intake.prepare(ChiefBotTaskRequest(profile.agentId, profile.profileVersion,
+            "Erkläre mir den Unterschied.", ChiefBotTaskMode.PRIVATE_REPLY), "session-one")
+        assertTrue(privateTask.claim("session-one"))
+        privateTask.reserveModelCall("session-one")
+        assertEquals("BOT_TASK_MODEL_BUDGET_EXHAUSTED", runCatching {
+            privateTask.reserveModelCall("session-one")
+        }.exceptionOrNull()?.message)
+        assertEquals(profile, store.get(profile.agentId))
+    }
+
+    @Test fun modelReservationRevalidatesSessionAndProfileBeforeSpendingBudget() = withStore { store ->
+        val profile = requireNotNull(store.get("bot-kora"))
+        val task = ChiefBotTaskIntake(store).prepare(ChiefBotTaskRequest(profile.agentId,
+            profile.profileVersion, "Prüfe nur den lokalen Status.", ChiefBotTaskMode.LOCAL_TOOLS), "session-one")
+        assertTrue(task.claim("session-one"))
+        assertEquals("BOT_TASK_STALE_OR_EXPIRED", runCatching {
+            task.reserveModelCall("session-two")
+        }.exceptionOrNull()?.message)
+        task.reserveModelCall("session-one")
+        store.rename(profile.agentId, "Kora Neu", profile.profileVersion)
+        assertEquals("BOT_TASK_PROFILE_CHANGED", runCatching {
+            task.reserveModelCall("session-one")
+        }.exceptionOrNull()?.message)
+        assertEquals("BOT_TASK_PROFILE_CHANGED", runCatching {
+            task.requireCurrent("session-one")
+        }.exceptionOrNull()?.message)
     }
 }
