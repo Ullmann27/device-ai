@@ -1,0 +1,120 @@
+{
+  "task": "C1-LAYOUT-018",
+  "review": "Independent receipt/scope validation; no own build or test",
+  "base": "d3487a83ea1cc61a34afcde4e17601c56def9ed2",
+  "target": "59d8d7e25a5936403e8579373883fa04bec5c37f",
+  "tree": "90d68760d9a0533c169697902b61eda126e9b20b",
+  "archiveSha256": "8eab7fdf35f9e9b7cddc54d0eb1dd774bac449db9b45db4c940642d7bbfcdbfa",
+  "applicationPaths": [
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+    "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeTargetPrecisionChecks.kt",
+    "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeTargetPrecisionTest.kt"
+  ],
+  "originalTestByteIdentical": true,
+  "strict48DpUnchanged": true,
+  "heroExpressionUnchanged": true,
+  "sourceBlobs": {
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt": "245c8c94abdadbe065138561d2c9a2901456b3c2",
+    "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeTargetPrecisionChecks.kt": "5ca3700d084a3914fba23526ef9309b02cc3f0fc",
+    "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeTargetPrecisionTest.kt": "cae7403e7291b61cf435679c03c4e6a0756a2503"
+  },
+  "xml": [
+    {
+      "path": "junit/TEST-at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest.xml",
+      "sha256": "06301f6a8eea15a53cb8bc87800a8a1ac613b3405962c620f3592df910a335d6",
+      "name": "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+      "tests": "4",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-04T21:37:06",
+      "hostname": "04c8b0ba7ea6",
+      "time": "0.078",
+      "cases": [
+        "everythingFitsOneScreenWithUsableTargetsAndNoOverlap",
+        "compositionFollowsTheReferences",
+        "freshStateDrawsNotAvailableNeverReferenceNumbers",
+        "landscapeWindowsUseTheCockpitAndPortraitOrLargeTypeDoNot"
+      ]
+    },
+    {
+      "path": "junit/TEST-at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest.xml",
+      "sha256": "abf7fcb4927ac61c21c74dcc91de59a54760f6beed41a67d50282e9a581a4838",
+      "name": "at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest",
+      "tests": "3",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-04T21:37:06",
+      "hostname": "04c8b0ba7ea6",
+      "time": "0.006",
+      "cases": [
+        "fractionalTargetsRemainAtLeast48Dp",
+        "legacyWindowsRetainStrictGeometry",
+        "avatarBoundsRemainBitIdentical"
+      ]
+    }
+  ],
+  "log": {
+    "path": "android-layout018-01.log",
+    "sha256": "7310268f6d8487acd6848e64e901d57bcc29ef932b9224d246099e4c205279d0",
+    "starts": 7,
+    "ends": 7,
+    "exitFooter": 0
+  },
+  "runnerResult": {
+    "taskId": "C1-COMBINED-GATES-001",
+    "label": "android-layout018-01",
+    "source": {
+      "commit": "59d8d7e25a5936403e8579373883fa04bec5c37f",
+      "tree": "90d68760d9a0533c169697902b61eda126e9b20b",
+      "dirty": ""
+    },
+    "command": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+      "--offline",
+      "--no-daemon",
+      "--no-build-cache",
+      "--max-workers=2",
+      "--console=plain",
+      "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-PdeviceAiMentorPreview=true",
+      "-PcontinuumUiWidgetTests=true",
+      "-PcontinuumLocalStandaloneQa=true",
+      "-PcontinuumStandaloneVersionCode=41",
+      "-PcontinuumAuditProgressFile=/workspace/scratch/174c84456ee3/qa/android-layout018-01-active-test.json",
+      "-PcontinuumAuditTestClasses=at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest,at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest",
+      "-I",
+      "/workspace/scratch/174c84456ee3/qa/observe-tests.init.gradle",
+      ":app:testDebugUnitTest"
+    ],
+    "runnerSha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd",
+    "requestedAt": "2026-11-04T21:36:46.202876+00:00",
+    "locks": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+      "/workspace/scratch/d663e8444310/qa/gradle.lock"
+    ],
+    "exitCode": 0,
+    "status": "PASS",
+    "lockWaitSeconds": 900,
+    "freeBytesAtStart": 1196924928,
+    "startedAt": "2026-11-04T21:36:46.203154+00:00",
+    "overallTimeoutSeconds": 1800,
+    "individualTestTimeoutSeconds": 180,
+    "processReturnCode": 0,
+    "finishedAt": "2026-11-04T21:37:06.999442+00:00",
+    "sourceUnchanged": true,
+    "recordedAt": "2026-11-04T21:37:07.039756+00:00"
+  },
+  "counts": {
+    "total": 7,
+    "original": 4,
+    "new": 3,
+    "pass": 7,
+    "fail": 0,
+    "error": 0,
+    "skip": 0
+  },
+  "xmlTimestampsInsideRun": true
+}
