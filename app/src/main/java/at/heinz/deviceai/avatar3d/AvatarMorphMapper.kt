@@ -6,7 +6,7 @@ import at.heinz.deviceai.avatar.AvatarState
 import at.heinz.deviceai.avatar.Viseme
 
 /** Presentation mapping only. No state derivation, speech clock, listener or retained text. */
-class AvatarMorphMapper(targetNames: List<String>) {
+class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegrees: Double = 0.0) {
     private val indices = targetNames.withIndex().associate { it.value to it.index }
     val weights = FloatArray(targetNames.size)
     var headYaw = 0f; private set
@@ -19,7 +19,10 @@ class AvatarMorphMapper(targetNames: List<String>) {
     private var lastSeconds = Float.NaN
     private val idleMotion = AvatarIdleMotion()
 
-    init { require(targetNames.toSet().size == targetNames.size && indices.keys == AvatarGlbContract.TARGETS.toSet()) }
+    init {
+        require(targetNames.toSet().size == targetNames.size && indices.keys == AvatarGlbContract.TARGETS.toSet())
+        require(cameraAzimuthDegrees.isFinite() && cameraAzimuthDegrees in -45.0..45.0)
+    }
 
     fun update(pose: AvatarPose, seconds: Float, motion: Boolean) {
         weights.fill(0f)
@@ -28,13 +31,15 @@ class AvatarMorphMapper(targetNames: List<String>) {
         val gy = finite(pose.gazeY, -1f, 1f)
         // Right-handed Y-up +Z front: positive yaw goes viewer right, negative pitch looks up.
         headYaw = gx * 8f; headPitch = -gy * 5f
-        eyeYaw = gx * 17f; eyePitch = -gy * 10f
+        eyeYaw = cameraAzimuthDegrees.toFloat() + gx * 17f; eyePitch = -gy * 10f
         jawPitch = 0f
         when (pose.expression) {
             AvatarExpression.ATTENTIVE -> weight("BrowUp", .20f)
             AvatarExpression.CURIOUS -> weight("BrowUp", .32f)
             AvatarExpression.FOCUSED -> weight("BrowDown", .18f)
             AvatarExpression.CONCERNED -> weight("BrowDown", .28f)
+            AvatarExpression.WARM -> if (pose.state == AvatarState.IDLE && pose.viseme == Viseme.SIL &&
+                pose.jawOpen == 0f && pose.speakEnergy == 0f) weight("Smile", .18f)
             AvatarExpression.NEUTRAL -> Unit
         }
         if (!motion) { visemeBlend.fill(0f); lastSeconds = Float.NaN; return }

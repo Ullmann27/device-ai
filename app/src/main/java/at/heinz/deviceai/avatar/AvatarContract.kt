@@ -8,7 +8,7 @@ package at.heinz.deviceai.avatar
  */
 enum class AvatarState { IDLE, LISTENING, THINKING, RESEARCHING, LEARNING, WAITING_FOR_APPROVAL, SPEAKING, BLOCKED }
 
-enum class AvatarExpression { NEUTRAL, ATTENTIVE, FOCUSED, CURIOUS, CONCERNED }
+enum class AvatarExpression { NEUTRAL, ATTENTIVE, FOCUSED, CURIOUS, CONCERNED, WARM }
 
 /** Normalized gaze: x,y in -1..1, (0,0) = straight at the owner/camera. */
 data class GazeTarget(val x: Float, val y: Float) {
@@ -188,7 +188,9 @@ class AvatarPoseReducer {
             newestFreshGazeAtMillis = maxOf(newestFreshGazeAtMillis, observedAtMillis)
         }
         val shownGaze = observedGaze ?: gaze
-        return AvatarPose(state, expression, shownGaze.x, shownGaze.y, jaw, viseme, visemeWeight, liveEnergy,
+        val shownExpression = if (utterance != null && expression == AvatarExpression.WARM)
+            AvatarExpression.NEUTRAL else expression
+        return AvatarPose(state, shownExpression, shownGaze.x, shownGaze.y, jaw, viseme, visemeWeight, liveEnergy,
             gazeObserved = observedGaze != null)
     }
 

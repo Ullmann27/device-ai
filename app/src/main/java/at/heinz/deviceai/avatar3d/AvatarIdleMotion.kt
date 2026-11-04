@@ -20,7 +20,12 @@ internal class AvatarIdleMotion {
         headYaw = 0f; headPitch = 0f; eyeYaw = 0f; eyePitch = 0f; blinkWeight = 0f
         if (!seconds.isFinite()) return
         val remainder = seconds.toDouble() % CYCLE_SECONDS
-        val t = if (remainder < 0.0) remainder + CYCLE_SECONDS else remainder
+        val t = when {
+            // binarySearch orders -0.0 before STARTS[0]; canonicalize exact cycle boundaries.
+            remainder == 0.0 -> 0.0
+            remainder < 0.0 -> remainder + CYCLE_SECONDS
+            else -> remainder
+        }
         val phase = t * (2.0 * PI / CYCLE_SECONDS)
         // Preserve the existing small head harmonics and their continuous clock wrap.
         headYaw = (1.20 * sin(phase * 27) + .35 * sin(phase * 65)).toFloat()

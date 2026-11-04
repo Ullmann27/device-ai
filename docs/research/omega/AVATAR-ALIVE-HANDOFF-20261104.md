@@ -27,3 +27,15 @@ Use existing Kotlin/Filament components and packaged local model. The alternativ
 Baseline tests, new failing cases, fixes, Android build and rendered sequence: pending at this checkpoint. No prior parent tests are claimed as current-source execution. Native Fold7 pixels, audible synchronization and performance require actual device evidence.
 
 No main merge, release, installation, paid API, model training or APK signature change. EXP-12 identity continuity and existing avatar contract remain applicable. Rollback omits this branch; previous branches and owner files remain intact.
+
+## Functional checkpoint
+
+- Approved head is packaged as SHA-256 `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`; runtime pin and NOTICE agree. Existing geometry, rig and 21 targets are retained.
+- `AvatarDirector` emits WARM only for IDLE. The reducer suppresses it during admitted speech, even before runtime flags catch up. The mapper uses a restrained 0.18 Smile weight only on an idle, closed, silent mouth. The 2D fallback keeps its prior neutral appearance.
+- `FilamentAvatarRenderer` passes the validated portrait azimuth into its mapper. Owner gaze now points toward the existing -22-degree camera; framing is preserved. Canonical zero-camera callers retain their existing gaze contract.
+- Imported the signed-zero/full-negative-cycle correction from #520, source commit `9094032b05257ef12f882e37cefd7dd8f7ebc203`, production blob `31801578f47f6a677c58283a408bc2840297de6d`.
+- Baseline: 86 JUnit + 26 motion checks passed. New behavioral cases then reproduced 5 failures: two negative-time crashes, two camera-relative gaze failures, missing idle smile. The constructor parameter was introduced without behavior for this red run.
+- Current host gate: **101 JUnit tests + 26 motion checks passed**, including actual PCM envelope -> Director -> reducer -> mapper, vowel-to-bilabial closure, interruption and stale callback rejection.
+- Raw baseline/red/green outputs: `avatar-alive-20261104/`. Synthetic test PCM is not evidence of audible device synchronization.
+- `ExportAvatarAlive.kt` uses the actual audio signal, Director, reducer and mapper to export a 12-second synthetic runtime sequence. The Blender replay checks canonical control matrices and skinned vertices before rendering. Video/render and Android gates are pending at this checkpoint.
+- Native Fold7 visual/lifecycle/performance, audible TTS and owner-camera checks remain OPEN. The earlier rear-head texture/protrusion findings are not repaired by this motion change.

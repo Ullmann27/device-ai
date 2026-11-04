@@ -138,7 +138,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     private fun stateEvent(s: AvatarState): AvatarEvent.StateChanged {
         val (expression, gaze) = when (s) {
-            AvatarState.IDLE -> AvatarExpression.NEUTRAL to GazeTarget.OWNER
+            AvatarState.IDLE -> AvatarExpression.WARM to GazeTarget.OWNER
             AvatarState.LISTENING -> AvatarExpression.ATTENTIVE to GazeTarget.OWNER
             AvatarState.THINKING -> AvatarExpression.FOCUSED to GazeTarget.THINKING_AWAY
             AvatarState.RESEARCHING -> AvatarExpression.CURIOUS to GazeTarget.READING_DOWN

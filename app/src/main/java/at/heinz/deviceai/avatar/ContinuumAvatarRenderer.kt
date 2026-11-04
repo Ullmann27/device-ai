@@ -723,7 +723,7 @@ class ContinuumAvatarRenderer {
             AvatarExpression.CONCERNED -> 3f
             AvatarExpression.FOCUSED -> 1.5f
             AvatarExpression.CURIOUS -> -2f
-            AvatarExpression.NEUTRAL -> 0f
+            AvatarExpression.NEUTRAL, AvatarExpression.WARM -> 0f
         }
         for (side in intArrayOf(-1, 1)) {
             surface(side * .2f, -37f, 0f); val x0 = px; val y0 = py

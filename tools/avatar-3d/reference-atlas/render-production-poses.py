@@ -1,8 +1,8 @@
 """Replay exported production Kotlin poses on the actual GLB with verified skinning.
 
 Run with Blender 4.3+ in background mode. Synthetic inputs and a Blender studio
-are host evidence only. No camera-relative gaze correction, smile, additional
-morph, or inferred speech is introduced here.
+are host evidence only. All expression and gaze values come from the exported
+production poses. The renderer adds no expression or inferred speech.
 """
 import argparse
 import hashlib
@@ -33,9 +33,11 @@ def main():
     parser.add_argument("--width", type=int, default=384)
     parser.add_argument("--height", type=int, default=512)
     parser.add_argument("--samples", type=int, default=12)
+    parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--no-render", action="store_true")
     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
     require(128 <= args.width <= 1024 and 128 <= args.height <= 1024 and 1 <= args.samples <= 64, "Bounded render parameters required")
+    require(1 <= args.threads <= 8, "Bounded CPU threads required")
     raw = args.asset.read_bytes()
     pose_raw = args.poses.read_bytes()
     asset_hash = hashlib.sha256(raw).hexdigest()
@@ -134,7 +136,8 @@ def main():
     scene.cycles.seed = 731
     scene.cycles.use_denoising = False
     scene.render.threads_mode = "FIXED"
-    scene.render.threads = 1
+    scene.render.threads = args.threads
+    scene.render.use_persistent_data = True
     scene.render.resolution_x, scene.render.resolution_y = args.width, args.height
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = "PNG"
@@ -218,7 +221,7 @@ def main():
         require(actual_positions.shape == expected_positions.shape, "Importer changed face vertex order/count; cannot certify direct replay")
         maximum_skin_error = float(np.max(np.linalg.norm(actual_positions - expected_positions, axis=1)))
         require(maximum_skin_error < 2e-6, "Imported face differs from canonical runtime skin/morph pose")
-        # Reproduce the current renderer camera formulas without fixing its known gaze offset.
+        # Replay current camera framing.
         vertical = max(focus["halfHeight"], focus["halfWidth"] / (args.width / args.height)) * 1.08
         camera_data.ortho_scale = vertical * 2
         seconds = frame["seconds"]
@@ -248,13 +251,12 @@ def main():
         "assetSha256": asset_hash, "poseExportSha256": pose_hash,
         "renderScriptSha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "mapperSourceCommit": poses["sourceCommit"], "mapperSourceHashes": poses["sourceHashes"],
-        "backend": "Blender " + bpy.app.version_string + " Cycles CPU", "cpuThreads": 1,
+        "backend": "Blender " + bpy.app.version_string + " Cycles CPU", "cpuThreads": args.threads,
         "pixels": [args.width, args.height], "samples": args.samples, "denoising": False,
         "rendered": not args.no_render, "frames": records,
         "limitations": ["Actual compiled mapper with synthetic inputs; no actual TTS/camera session",
             "Blender materials, studio lights and glow are not native Filament pixel/performance evidence",
-            "Existing portrait camera/gaze offset remains unchanged",
-            "No app-driven smile exists in the exported contract; no smile is fabricated",
+            "Camera-relative gaze and smile are replayed only when present in exported poses",
             "Reference likeness still requires visual review"]}
     (args.output / "pose-replay-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
 

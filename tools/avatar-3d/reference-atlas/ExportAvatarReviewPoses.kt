@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
     fun pose(state: AvatarState = AvatarState.LISTENING, gazeX: Float = 0f, gazeY: Float = 0f,
              jaw: Float = 0f, viseme: Viseme = Viseme.SIL, weight: Float = 0f) =
         AvatarPose(state, AvatarExpression.NEUTRAL, gazeX, gazeY, jaw, viseme, weight, jaw)
-    fun capture(name: String, value: AvatarPose, seconds: Float, map: AvatarMorphMapper = AvatarMorphMapper(metadata.targets), motion: Boolean = true) {
+    fun capture(name: String, value: AvatarPose, seconds: Float, map: AvatarMorphMapper = AvatarMorphMapper(metadata.targets, metadata.focus.azimuthDegrees), motion: Boolean = true) {
         map.update(value, seconds, motion)
         val weights = JSONObject()
         for ((index, target) in metadata.targets.withIndex()) weights.put(target, map.weights[index].toDouble())
@@ -49,7 +49,7 @@ fun main(args: Array<String>) {
     capture("gaze-left", pose(gazeX = -1f), 1f)
     capture("gaze-right-up", pose(gazeX = 1f, gazeY = .6f), 1f)
     capture("idle-2s", pose(AvatarState.IDLE), 2f)
-    val transition = AvatarMorphMapper(metadata.targets)
+    val transition = AvatarMorphMapper(metadata.targets, metadata.focus.azimuthDegrees)
     capture("aa-before-transition", pose(AvatarState.SPEAKING, jaw = .6f, viseme = Viseme.AA, weight = 1f), 1f, transition)
     capture("aa-to-o-16ms", pose(AvatarState.SPEAKING, jaw = .6f, viseme = Viseme.O, weight = 1f), 1.016f, transition)
     capture("aa-to-o-48ms", pose(AvatarState.SPEAKING, jaw = .6f, viseme = Viseme.O, weight = 1f), 1.048f, transition)
@@ -57,7 +57,7 @@ fun main(args: Array<String>) {
     reducer.apply(AvatarEvent.SpeechStarted("review-synthetic", "A", 100))
     reducer.apply(AvatarEvent.AudioLevel("review-synthetic", 1f, 101))
     reducer.apply(AvatarEvent.VisemeCue("review-synthetic", Viseme.AA, 1f, 500, 101))
-    val stopping = AvatarMorphMapper(metadata.targets)
+    val stopping = AvatarMorphMapper(metadata.targets, metadata.focus.azimuthDegrees)
     capture("before-interruption", reducer.pose(102), 1f, stopping)
     reducer.apply(AvatarEvent.SpeechEnded("review-synthetic", true, 103))
     reducer.apply(AvatarEvent.AudioLevel("review-synthetic", 1f, 104))
@@ -67,7 +67,7 @@ fun main(args: Array<String>) {
     for (viseme in Viseme.entries) require(stopping.weights[metadata.targets.indexOf(viseme.name)] == 0f)
     val idleCount = if (args.size == 4) args[3].toInt() else 0
     require(idleCount in 0..240)
-    val animatedIdle = AvatarMorphMapper(metadata.targets)
+    val animatedIdle = AvatarMorphMapper(metadata.targets, metadata.focus.azimuthDegrees)
     for (index in 0 until idleCount) {
         capture("idle-f%03d".format(index), pose(AvatarState.IDLE), index / 12f, animatedIdle)
     }
@@ -80,8 +80,8 @@ fun main(args: Array<String>) {
         .put("frames", frames).put("limitations", JSONArray(listOf(
             "Synthetic inputs through actual compiled source; no real TTS, microphone or camera",
             "Weights and joint angles are exact mapper outputs; render backend remains separate",
-            "Smile has no current application event driver; no smile pose is fabricated here",
-            "Existing portrait camera/gaze mismatch remains visible and unchanged"
+            "Legacy diagnostic inputs do not exercise the idle smile; use ExportAvatarAlive",
+            "Gaze uses the same portrait-camera azimuth as the native renderer"
         )))
     if (idleCount > 0) result.put("idleAnimation", JSONObject().put("framesPerSecond", 12).put("frameCount", idleCount)
         .put("durationSeconds", idleCount / 12.0).put("inputOrigin", "SYNTHETIC_IDLE_THROUGH_ACTUAL_PRODUCTION_MAPPER"))
