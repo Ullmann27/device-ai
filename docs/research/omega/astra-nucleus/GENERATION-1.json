@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generation": 1,
-  "phase": "source_review_and_handoffs",
+  "phase": "initial_source_reviews_complete_followups_ready",
   "repository": "Ullmann27/device-ai",
   "board_pr": 498,
   "parallel_subagent_limit": 3,
@@ -25,7 +25,8 @@
       "session": "/root/m2_cognition_manager",
       "status": "COMPLETE",
       "result": "#492 contains executable research code and specified 6.56M/9.71M ladder; #494 is coordination at ca31eb8; successful larger-model training and Fold7 quality not established.",
-      "tests_run": false
+      "tests_run": false,
+      "followup": "Original manager review covered #494 ca31eb8 and #492 ee577972. Root later directly read #492 88d7b050 capacity/training evidence and #494 8a98ea4d production adapter/repairs. Latest status is in the 11:51 Europe/Vienna source cut; no larger-model quality improvement or Fold7 acceptance established."
     },
     {
       "id": "M3",
@@ -48,7 +49,8 @@
       "evidence": [],
       "self_check": "Source basis and missing runtime evidence explicitly separated",
       "result": "Memory event bridge remains unproven at #494 ca31eb8 and #491 d352bab6; preserve exact owners and give #494 adapter + #491 Activity handoff.",
-      "tests_run": false
+      "tests_run": false,
+      "followup": "Root verified new #494 8a98ea4d adds the planned identity/context/snapshot repairs and adapter. Original findings are baseline history; next task is independent review and combined Activity activation, not duplicate implementation."
     },
     {
       "id": "G1-O2",
@@ -73,8 +75,12 @@
       "session": "/root/g1_o3_training_gates",
       "evidence": [],
       "self_check": "Source basis and missing runtime evidence explicitly separated",
-      "result": "Resume checks omit stored orchestrator hash and execution timeout identity at ee577972; coordinator read source and confirmed the static omission; synthetic mutation regression and repair still required.",
-      "tests_run": false
+      "result": "Static missing orchestrator/command/heap/timeout binding rechecked at #497 06f071e5850dd405f374bbb58d826f64740d83af and #492 88d7b05072bdec6250990efaa9914a1e6744c29b; remains open. #497 fixes separate continuation baseline-gate ordering with reported 12 synthetic tests; preserve this existing fix.",
+      "tests_run": false,
+      "recheck_sources": [
+        "06f071e5850dd405f374bbb58d826f64740d83af",
+        "88d7b05072bdec6250990efaa9914a1e6744c29b"
+      ]
     },
     {
       "id": "G1-O4",
@@ -87,7 +93,8 @@
       "evidence": [],
       "self_check": "Static source evidence and limits declared",
       "result": "Retriever filters privacy before resolving duplicate IDs; conflicting ID variants could survive as one visible record. Static finding matches plan; add synthetic cross-privacy duplicate-ID test and verify upstream invariants.",
-      "tests_run": false
+      "tests_run": false,
+      "followup": "Root verified new #494 8a98ea4d adds the planned identity/context/snapshot repairs and adapter. Original findings are baseline history; next task is independent review and combined Activity activation, not duplicate implementation."
     },
     {
       "id": "G1-I1",
@@ -100,7 +107,8 @@
       "evidence": [],
       "self_check": "Read actual hub/sink interfaces; static integration contract, no runtime pass",
       "result": "Existing MemoryEventSource.subscribe and ContinuumMemoryEvents listener contracts are present; production factory null at baseline. #494 supplies adapter, #491 owns main-thread mapper/lifecycle binding. Finite topScore selection, event producer truthfulness and close-race tests required.",
-      "tests_run": false
+      "tests_run": false,
+      "followup": "Root verified new #494 8a98ea4d adds the planned identity/context/snapshot repairs and adapter. Original findings are baseline history; next task is independent review and combined Activity activation, not duplicate implementation."
     },
     {
       "id": "G1-I2",
@@ -121,11 +129,12 @@
       "title": "Gemeinsames Integrationspaket",
       "agent_name": "g1_i3_assembly",
       "assignment": "Manifest exakter Quellstände, Eigentümer, gültiger Prüfbefehle, kombinierter Abnahme und Rückfall; nicht auf aktive fremde Branches schreiben.",
-      "status": "RUNNING",
+      "status": "SOURCE_REVIEW_COMPLETE",
       "session": "/root/g1_i3_assembly",
       "evidence": [],
-      "self_check": "NOT_RUN",
-      "result": null
+      "self_check": "Static findings and source limits declared",
+      "result": "Integration acceptance source must be frozen explicitly; one writer (#491) for shared Activity/factory; merge reviewed independent fixes, then interfaces, then UI wiring, then exact-source combined gates.",
+      "tests_run": false
     },
     {
       "id": "G1-R1",
@@ -133,11 +142,12 @@
       "title": "Avatar, Mimik und Lebenszyklus",
       "agent_name": "g1_r1_avatar",
       "assignment": "#491/#495 Renderer/FaceWeights/LipSync; reproduzierbare Fehler oder präzise offene Prüfpunkte bei stop, surface recreation, dt und numerischen Grenzwerten.",
-      "status": "RUNNING",
+      "status": "SOURCE_REVIEW_COMPLETE",
       "session": "/root/g1_r1_avatar",
       "evidence": [],
-      "self_check": "NOT_RUN",
-      "result": null
+      "self_check": "Static findings and source limits declared",
+      "result": "AA→PP probe shows residual shared opening plus full JawOpen. Require extra jaw from actual blended frame weights, not only target cue; compare live #495 fixes and respect distinct #489/#491 source versions.",
+      "tests_run": false
     },
     {
       "id": "G1-R2",
@@ -145,11 +155,12 @@
       "title": "Worker-Abbruch und Wiedereinstieg",
       "agent_name": "g1_r2_worker",
       "assignment": "Bestehenden Worker/Scheduler zu duplicate task, owner cancel, callback, reclaim und resume prüfen; kein neuer Scheduler.",
-      "status": "RUNNING",
+      "status": "SOURCE_REVIEW_COMPLETE",
       "session": "/root/g1_r2_worker",
       "evidence": [],
-      "self_check": "NOT_RUN",
-      "result": null
+      "self_check": "Static findings and source limits declared",
+      "result": "Conditional stale routine callback risk when an in-flight routine ID is removed and re-added. Verify dispatcher caller identity before declaring defect; deterministic A/B callback regression, no sleeps.",
+      "tests_run": false
     },
     {
       "id": "G1-R3",
@@ -157,12 +168,121 @@
       "title": "Unabhängige Abnahme und Update",
       "agent_name": "g1_r3_acceptance",
       "assignment": "Source-bound Testbelege, Originalpaket/Signer/versionCode/Render; Preview/Host/Android/echtes Gerät sauber trennen.",
-      "status": "QUEUED",
-      "session": null,
+      "status": "SOURCE_REVIEW_COMPLETE",
+      "session": "/root/g1_r3_acceptance",
       "evidence": [],
-      "self_check": "NOT_RUN",
-      "result": null
+      "self_check": "Three provided documentation/evidence files reviewed; no tool execution, changes, builds, training or device tests.",
+      "result": "No material documentation inconsistency found. Preserve the 11:51 Europe/Vienna source cut; later heads inherit neither PASS nor failure. Final APK acceptance requires exact source/logs/APK hash, original package, version/signature continuity, original update path and actual Fold7 evidence.",
+      "tests_run": false
     }
   ],
-  "parameter_count_evidence": "docs/evidence/astra-nucleus-20261104/parameter-layout-counts.json"
+  "parameter_count_evidence": "docs/evidence/astra-nucleus-20261104/parameter-layout-counts.json",
+  "source_cut": {
+    "at": "2026-11-04T11:51:11+01:00",
+    "timezone": "Europe/Vienna",
+    "note": "Subsequent targeted reads use the same immutable heads. Refresh heads before implementing.",
+    "heads": [
+      {
+        "pr": 491,
+        "head": "codex/astra-jarvis-takeover-20261104",
+        "sha": "d352bab6855db2a44def0bbf60fd93202b4e3066",
+        "base": "integration/jarvis-on-chatgpt-untested-20261104",
+        "base_sha": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+        "changed_files": 38,
+        "updated_at": "2026-11-04T10:48:30Z",
+        "draft": true,
+        "url": "https://github.com/Ullmann27/device-ai/pull/491"
+      },
+      {
+        "pr": 492,
+        "head": "research/continuum-weight-space-audit-20261104",
+        "sha": "88d7b05072bdec6250990efaa9914a1e6744c29b",
+        "base": "fix/continuum-device-experience-resume-20261104",
+        "base_sha": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944",
+        "changed_files": 129,
+        "updated_at": "2026-11-04T10:43:07Z",
+        "draft": true,
+        "url": "https://github.com/Ullmann27/device-ai/pull/492"
+      },
+      {
+        "pr": 493,
+        "head": "feat/continuum-personality-bots-20261104",
+        "sha": "e4631a034ae25381acd3043cbb95a753b92614f8",
+        "base": "integration/jarvis-on-chatgpt-untested-20261104",
+        "base_sha": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+        "changed_files": 35,
+        "updated_at": "2026-11-04T10:36:26Z",
+        "draft": true,
+        "url": "https://github.com/Ullmann27/device-ai/pull/493"
+      },
+      {
+        "pr": 494,
+        "head": "feat/continuum-memory-brain-20261104",
+        "sha": "8a98ea4d10126041b1a43cb7623c0f324ab18ec1",
+        "base": "integration/jarvis-on-chatgpt-untested-20261104",
+        "base_sha": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+        "changed_files": 65,
+        "updated_at": "2026-11-04T10:40:10Z",
+        "draft": true,
+        "url": "https://github.com/Ullmann27/device-ai/pull/494"
+      },
+      {
+        "pr": 495,
+        "head": "codex/continuum-three-avatar-helpers-20261104",
+        "sha": "7859d5d212d61829fabc7dfdbd3ca7587852388d",
+        "base": "codex/astra-jarvis-takeover-20261104",
+        "base_sha": "d352bab6855db2a44def0bbf60fd93202b4e3066",
+        "changed_files": 45,
+        "updated_at": "2026-11-04T10:50:29Z",
+        "draft": true,
+        "url": "https://github.com/Ullmann27/device-ai/pull/495"
+      },
+      {
+        "pr": 496,
+        "head": "support/continuum-ten-bot-assist-20261104",
+        "sha": "76184a860cf78c054d6cd94ea83882148cee191d",
+        "base": "integration/jarvis-on-chatgpt-untested-20261104",
+        "base_sha": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+        "changed_files": 38,
+        "updated_at": "2026-11-04T10:50:00Z",
+        "draft": true,
+        "url": "https://github.com/Ullmann27/device-ai/pull/496"
+      },
+      {
+        "pr": 497,
+        "head": "research/continuum-weight-helper-team-20261104",
+        "sha": "06f071e5850dd405f374bbb58d826f64740d83af",
+        "base": "research/continuum-weight-space-audit-20261104",
+        "base_sha": "ee5779725690c573d3310c061c6e2e6faf5f0a8b",
+        "changed_files": 10,
+        "updated_at": "2026-11-04T10:50:22Z",
+        "draft": true,
+        "url": "https://github.com/Ullmann27/device-ai/pull/497"
+      }
+    ]
+  },
+  "execution_summary": {
+    "manager_sessions_completed": 3,
+    "specialist_sessions_completed": 10,
+    "concurrent_child_limit": 3,
+    "children_running_at_checkpoint": 0,
+    "external_chat_receipts": "UNVERIFIED"
+  },
+  "verification": {
+    "own_checks": [
+      "source and immutable commit comparison",
+      "independent LmConfig.layout tensor enumeration",
+      "documentation structure and JSON validation"
+    ],
+    "app_tests_run": false,
+    "training_run": false,
+    "device_tests_run": false,
+    "author_results": "attributed separately; not reproduced by this coordinator"
+  },
+  "next_generation": {
+    "generation": 2,
+    "status": "NOT_STARTED",
+    "trigger": "new evidence or an available independent implementation/review task after handoff",
+    "maximum_meaningful_steps_per_stream": 10
+  }
 }
