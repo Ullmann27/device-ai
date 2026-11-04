@@ -6,7 +6,7 @@ Heinz hat die Fortsetzung der drei Forschungsaufträge ausdrücklich beauftragt.
 
 ## Geprüfter Anschlussstand
 
-Die GitHub-Metadaten wurden am 4. November 2026 um 19:08 UTC erneut gelesen. Der Vergleich von #492 `30cd3a89810ed14fa84eca95236d3177e016118d` mit `f9a594641f4f2101e84d46baa8dd87e85b5364cd` zeigt 20 zusätzliche Analyse-/Auditdateien; Runtime, Trainer und ursprünglicher Trainingstreiber wurden dazwischen nicht geändert. Die neue Studie kann deshalb ausdrücklich auf den bereits gehashten Kotlin-Quellen bei `30cd3a89` aufbauen.
+Die GitHub-Metadaten wurden am 4. November 2026 um 19:08 UTC erneut gelesen. Der Vergleich von #492 `30cd3a89810ed14fa84eca95236d3177e016118d` mit `f9a594641f4f2101e84d46baa8dd87e85b5364cd` zeigt 21 zusätzliche Analyse-/Auditdateien; Runtime, Trainer und ursprünglicher Trainingstreiber wurden dazwischen nicht geändert. Die neue Studie kann deshalb ausdrücklich auf den bereits gehashten Kotlin-Quellen bei `30cd3a89` aufbauen. Die anfängliche Zahl 20 wurde anhand der vollständig gezählten Compare-Liste auf 21 berichtigt.
 
 Parallel bearbeitet #508 bei `7131c1a50a9c697e481a6debe259758dbf422eef` EOS-/Optimierungsdiagnostik und ein deutsches Intent-Lernexperiment. Unsere Lernaufgabe wird davon getrennt: einfache Zustandsänderung und anschließende Abfrage statt Intentklassifikation. Die zusätzlichen Integrations- und Tuningzweige #511–#513 werden hier nicht verändert.
 
