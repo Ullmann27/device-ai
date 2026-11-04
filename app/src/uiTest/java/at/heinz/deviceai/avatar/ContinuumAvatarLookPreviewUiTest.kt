@@ -83,3 +83,23 @@ class JarvisShellWithAvatarPreviewUiTest {
         }
     }
 }
+
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28])
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class ContinuumAvatarIconBurstPreviewUiTest {
+    @Test fun iconBurstFliesOutAndEnds() {
+        val activity = Robolectric.buildActivity(Activity::class.java).setup().get()
+        val r = ContinuumAvatarRenderer()
+        val pose = AvatarPose(AvatarState.IDLE, AvatarExpression.NEUTRAL, 0f, 0f, 0f, Viseme.SIL, 0f, 0f)
+        r.headIconBurst(10f)
+        assertTrue(r.isBursting(10.6f)); assertFalse(r.isBursting(12.5f))
+        val bmp = Bitmap.createBitmap(560, 720, Bitmap.Config.ARGB_8888)
+        val c = Canvas(bmp); val p = AndroidContinuumPainter(activity.assets); p.begin(c); c.scale(2f, 2f)
+        r.draw(p, 280f, 360f, pose, 10.7f, true)
+        System.getProperty("continuum.ui.evidenceDir")?.let { path ->
+            java.io.File(path).mkdirs()
+            java.io.File(path, "look-280x360-icon-burst.png").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        }
+    }
+}
