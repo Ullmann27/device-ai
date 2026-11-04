@@ -6,7 +6,7 @@ Status: **INTEGRIERT, GEMEINSAME ABNAHME AUSSTEHEND**. Dieser Stand wird in PR #
 
 - #513, `28b228698aef8c52e46c72b71fdd5e1915d6e76c`: 21 Avatar-, Sprach-, Test- und Hostwerkzeugdateien sowie drei zugehörige Herkunftsbelege. Die dort berichteten 352 Tests sind Upstream-Belege; sie ersetzen keine Prüfung dieses gemeinsamen Standes.
 - #515, `572e12ecc4ce5f7c79f2634a5b5773047b6d674f`: genau vier ECHO-Dateien für die nachvollziehbare negative Rückmeldung bei fehlendem lokalen Modellnachweis. Die produktiven Autoritätsgrenzen bleiben erhalten.
-- Die fehlende Mentor-Base64-Variable im bestehenden Ausschluss von Signiermaterial für lokale QA wurde ergänzt. Die Produktionskorrektur entspricht dem bereits abgeschlossenen Teil von #505; der zusätzliche Test deckt alle sieben Variablen in beiden QA-Modi ab.
+- Die fehlende Mentor-Base64-Variable im bestehenden Ausschluss von Signiermaterial für lokale QA wurde ergänzt. Die Produktionskorrektur entspricht dem bereits abgeschlossenen Teil von #505; der zusätzliche Test deckt alle sechs Variablen in beiden QA-Modi ab.
 
 ## Zusätzlich nachgewiesene und behobene Fehler
 
@@ -22,3 +22,13 @@ Die drei Fertigstellungsbots prüfen diesen eingefrorenen gemeinsamen Stand auf 
 Ein erfolgreicher Quelltest belegt weder einen gebauten APK noch eine erfolgreiche Installation oder Geräteabnahme. Originalsignatur, Updatefähigkeit, reale Fold7-Grafik, Sprache und lokale Modellinferenz benötigen ihre tatsächlichen Nachweise. Der Offline-Schalter und die Regeln für Kernreparaturen bleiben bestehen. Die laufenden unfertigen Arbeiten anderer PRs sind kein Bestandteil dieses eingefrorenen Kandidaten.
 
 Die genaue Liste der Eingangsdateien und Patch-Hashes liegt in `docs/evidence/finalization-18845-20261104/combined-integration-inputs.json`.
+
+## Nachträglich fertiggestellte Reparaturen aus #505
+
+Nach Veröffentlichung des ersten Kandidaten `f69cfef3230e7a5a8abcacef0103feb39e325a51` wurde der fertige Quellstand `b2bc510a59e29d4ece478109e12b9785be11ee7d` geprüft. Genau 17 dazugehörige Dateien werden übernommen; ihr Manifest liegt in `docs/evidence/finalization-18845-20261104/round2-505-manifest.json`.
+
+- Relative Tagesfenster lösen Start und Ende getrennt aus dem jeweiligen lokalen Kalenderdatum auf. Eine Mitternachtslücke darf die Uhrzeit benachbarter Tagesgrenzen nicht verschieben. Zwölf neue Unit-Tests prüfen feste UTC-Grenzen, Wiener 23-/25-Stunden-Tage und die tatsächliche zeitliche Suchgewichtung. Rankingformel, Corpus, Schwellen und Bestätigungsstatus bleiben unverändert.
+- Tatsächlich empfangene Auftragsabschlüsse werden auch während Motionpause oder Detach in der bestehenden begrenzten Historie vermerkt. Hintergrund-Abschlüsse werden über den Main-Handler unabhängig von einem späteren View-Attach zugestellt. Normale visuelle Ereignisse behalten ihren bisherigen Generationsschutz. Die bestehende UI-Klasse umfasst jetzt 25 Fälle; neu erzeugte Views oder nie zugestellte Ereignisse erhalten dadurch keine erfundene Historie.
+- Das zugehörige Sequence-Hostwerkzeug wird vollständig mit seinen originalen Test-Fixtures übernommen. Diese simulieren weder eine Android-Queue noch Grafik oder Gerätebetrieb; ein aufgerufener Host-Handler schlägt ausdrücklich fehl. Der vorhandene Temporal-Runner bindet den neuen Tagesgrenzentest ein.
+
+Der fokussierte Android-Lauf des ersten Kandidaten stoppte vor dem Start der UI-Tests wegen `ENOSPC` beim Kompilieren der Tests. Sein Quellstand blieb unverändert. Der parallel begonnene Node-Lauf wurde nach dem neuen Reparaturbefund kontrolliert beendet und gilt nicht als Gesamtabnahme. Der erweiterte Kandidat benötigt einen neuen, exakt gebundenen Prüflauf.

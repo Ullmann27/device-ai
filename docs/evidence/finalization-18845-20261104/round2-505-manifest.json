@@ -1,0 +1,376 @@
+{
+  "sourceCommit": "b2bc510a59e29d4ece478109e12b9785be11ee7d",
+  "evidenceCommit": "8b72db66e5338fbc3a791adc30254f4ca77007ad",
+  "baselineCommit": "f69cfef3230e7a5a8abcacef0103feb39e325a51",
+  "baselineTree": "986a791259d23749545484d125cd5ab5d240f60f",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+      "sourceBlob": "857eb1fb8bbada8282a095956667bb521e44abe6",
+      "sha256": "ff8671fc578403f5ad53c3b7b0c50ea689dfffdf5f5d6a62ac8ec5e43871486e",
+      "bytes": 10452,
+      "mode": "100644",
+      "baseBlob": "fa67f32044e57a3f23fdd158924f1f8bf004d5cf",
+      "baseSha256": "8d095be29157246c8f7dad09e2ae3960519ae816c428dfe399ebcdfe65463e1d",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+      "sourceBlob": "86d39aedf0fadb6e0633bec42112b36f3a6fea9c",
+      "sha256": "cdcab8898e437aa2d8a65a469fda23139792fe139116b72fb9338611d7e28fdb",
+      "bytes": 8831,
+      "mode": "100644",
+      "baseBlob": "bd943129a52c92ccb46022c0f083e328acbf24b9",
+      "baseSha256": "f8898aa6d06b4b74da04f1a99a3e445bb257c87e6b8ab5c5c0f7c3ffa93ea01d",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/TemporalCueDailyBoundaryTest.kt",
+      "sourceBlob": "63ada554c984cd42d235191d8df280bea86f02f2",
+      "sha256": "d4209213a7ddd6df96e09ad73281ed942b1cf0459da6613a76cf99410acdb3f6",
+      "bytes": 6145,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/app/src/test/java/at/heinz/deviceai/learning/TemporalCueDailyBoundaryTest.kt"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt",
+      "sourceBlob": "51db7f4f6996b314ff715a7ea0978b9b744578dd",
+      "sha256": "30d64e934a8c2d8fe0f724d79f44ae7dd286223fc527cedb893081f39a440258",
+      "bytes": 13602,
+      "mode": "100644",
+      "baseBlob": "265b67a874deecedc262b3403349f2151e09af1e",
+      "baseSha256": "dff58dda90ff558834d4772f499b3bb3052d8911b4e15f14aec05929c8349d33",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt"
+    },
+    {
+      "path": "tools/sequence-turn-check/README.md",
+      "sourceBlob": "2456ef7b659c0504ef70b2c6af59d213acc8a814",
+      "sha256": "c20f2d1ac586bc0d61ae8550d030814ce38114ea7481271a1e29ef261320fb8e",
+      "bytes": 2488,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/README.md"
+    },
+    {
+      "path": "tools/sequence-turn-check/SequenceLifecycleHostTest.kt",
+      "sourceBlob": "57d572cee8c0fd959b05e79e06bbe731847c2241",
+      "sha256": "081cf33bb82624f4456f67309bb2c29f2eb6c30174f82a6c1605af4489df43a1",
+      "bytes": 8452,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/SequenceLifecycleHostTest.kt"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/Handler.kt",
+      "sourceBlob": "bc432c4e33c8a078b69d46fecd4e3545b6e6dc35",
+      "sha256": "7610ddc3d86a3c73a137a7d840188c137e25f982a4dabf1940d679d3499717a0",
+      "bytes": 306,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/fixtures/Handler.kt"
+    },
+    {
+      "path": "tools/temporal-cue-host-check/run.sh",
+      "sourceBlob": "31073b670a1f1999039357e34b844a1eaeda2427",
+      "sha256": "7d45db86c724933654fee5e1aee7ad19e82e0abf9f6c27e6a2f39de619bb8dcf",
+      "bytes": 2542,
+      "mode": "100755",
+      "baseBlob": "eebce493ffa12c009997a897c913951d2b638aea",
+      "baseSha256": "3cd1bf43eb9becd21614bfaa6081567a4b7c8cbf2e0d6a4571ed6c0d6a205f5a",
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/temporal-cue-host-check/run.sh"
+    },
+    {
+      "path": "tools/sequence-turn-check/run.sh",
+      "sourceBlob": "011816b1a8c0635d58674d9cb3307b168370abcb",
+      "sha256": "d0695c2e444595a8700ae3754d28d5a8980e52016f9a4a490324f7809a564da5",
+      "bytes": 3042,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/run.sh"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/AndroidContinuumPainter.kt",
+      "sourceBlob": "90215867a0bce33d1d9d8050af1873308783a8ae",
+      "sha256": "45bbb1501da778a1bb56d91f87b7dfa884f0dadea064b830c28a895da9d9c96e",
+      "bytes": 612,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/fixtures/AndroidContinuumPainter.kt"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/Canvas.kt",
+      "sourceBlob": "55f9830a93f49e26826aa66dbab72b0598608ca0",
+      "sha256": "74f6b890409bc6593ec84d16fb235606fef87559c5c2b132a4bb2710ecc75a1b",
+      "bytes": 392,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/fixtures/Canvas.kt"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/Clock.kt",
+      "sourceBlob": "44a9036b054884aaf0ea5f7ffaf3111f0f2cbf6c",
+      "sha256": "1ddec874f3c9c11e88cdb824ee0a1fd80089f4f35b418891881a5391d7c124a1",
+      "bytes": 371,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/fixtures/Clock.kt"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/Context.kt",
+      "sourceBlob": "bc17a921b3747f36c1d0efeaa84052d2d2d77481",
+      "sha256": "794b13c1769b0d8df88d0aa08882d8a7f155f0219cb9ab6867cc5e65bd236627",
+      "bytes": 220,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/fixtures/Context.kt"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/DisplayMetrics.kt",
+      "sourceBlob": "2f9b0601fbd09a1cec4f0b5f39e85dd6dc7644db",
+      "sha256": "000abdf4b73413578a7ab628ebf41b2a88341227779a4fe3d09ee61b0de91c95",
+      "bytes": 87,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/fixtures/DisplayMetrics.kt"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/Resources.kt",
+      "sourceBlob": "195fe8046da71a915593f3b0b3fe4550f5d201e6",
+      "sha256": "c3dde4b96f6ba7dafcf201f9df1cddf1a4b29c25282db269f65d1930c7ce6631",
+      "bytes": 104,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/fixtures/Resources.kt"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/UnavailablePillLabels.kt",
+      "sourceBlob": "0557fa864939401a3eedf71e2a92a861a435a62d",
+      "sha256": "ef12ca2c7295f3c688b70e030ef8f5a6df291bfb2795f1321395ad7974395985",
+      "bytes": 384,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/fixtures/UnavailablePillLabels.kt"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/View.kt",
+      "sourceBlob": "e84c5349bc4a1e4649830e179db6b4970a6f1e53",
+      "sha256": "abf2856be5aaa4c3893ff3cbb00d098ad12d39940d194da1d12ca7ac201986d0",
+      "bytes": 1142,
+      "mode": "100644",
+      "baseBlob": null,
+      "baseSha256": null,
+      "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/sequence-turn-check/fixtures/View.kt"
+    }
+  ],
+  "patchPath": "/workspace/scratch/18845e31bc4a/integration-audit/round2-505-f69.patch",
+  "patchSha256": "0a822ab40543393eba0526ca188943ce81cdce4a12c9f57ed99a6b8772a4b3b3",
+  "applyCheck": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "modePolicy": "Existing baseline modes preserved; complete new upstream sequence tool uses regular100644 including run.sh (remote tree verified); new Kotlin100644",
+  "materializationOnly": true,
+  "sharedCheckoutChanged": false,
+  "syntaxChecks": [
+    {
+      "path": "tools/sequence-turn-check/run.sh",
+      "exit": 0
+    },
+    {
+      "path": "tools/temporal-cue-host-check/run.sh",
+      "exit": 0
+    }
+  ],
+  "sequenceHostInputClosure": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/AvatarPoseBridge.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/DampedSpring.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/Easings.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/MotionPresets.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/Staggers.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/TrackTimeline.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumTheme.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumIcons.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumSurfaces.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisNeon.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisReferenceHud.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/BrainOrbAnimationRenderer.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+      "source": "staged upstream"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/BrainOrbSignalsTest.kt",
+      "source": "unchanged f69"
+    },
+    {
+      "path": "tools/sequence-turn-check/SequenceLifecycleHostTest.kt",
+      "source": "staged upstream"
+    },
+    {
+      "path": "tools/sequence-turn-check/run.sh",
+      "source": "staged upstream"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/AndroidContinuumPainter.kt",
+      "source": "staged upstream"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/Canvas.kt",
+      "source": "staged upstream"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/Clock.kt",
+      "source": "staged upstream"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/Context.kt",
+      "source": "staged upstream"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/DisplayMetrics.kt",
+      "source": "staged upstream"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/Handler.kt",
+      "source": "staged upstream"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/Resources.kt",
+      "source": "staged upstream"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/UnavailablePillLabels.kt",
+      "source": "staged upstream"
+    },
+    {
+      "path": "tools/sequence-turn-check/fixtures/View.kt",
+      "source": "staged upstream"
+    }
+  ],
+  "testMethods": {
+    "app/src/test/java/at/heinz/deviceai/learning/TemporalCueDailyBoundaryTest.kt": 12,
+    "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt": 25,
+    "tools/sequence-turn-check/SequenceLifecycleHostTest.kt": 20
+  },
+  "upstreamEvidence": [
+    {
+      "path": "docs/evidence/three-repair-bots-round2-20261104/coordinator/REVIEW.md",
+      "claim": "Independent upstream coordinator: temporal29/29, fixed-UTC8/8, sequence host25/25; no Android acceptance",
+      "url": "https://github.com/Ullmann27/device-ai/blob/8b72db66e5338fbc3a791adc30254f4ca77007ad/docs/evidence/three-repair-bots-round2-20261104/coordinator/REVIEW.md"
+    },
+    {
+      "path": "docs/evidence/three-repair-bots-round2-20261104/memory/HANDOFF.md",
+      "claim": "Same29tests: baseline8fail, green0fail; existing corpus/trust17 tests unchanged",
+      "url": "https://github.com/Ullmann27/device-ai/blob/8b72db66e5338fbc3a791adc30254f4ca77007ad/docs/evidence/three-repair-bots-round2-20261104/memory/HANDOFF.md"
+    },
+    {
+      "path": "docs/evidence/three-repair-bots-round2-20261104/ui/README.md",
+      "claim": "Host20baseline; same25 expanded tests3fail then0; 25new/current Robolectric NOT_RUN_BY_THIS_AGENT",
+      "url": "https://github.com/Ullmann27/device-ai/blob/8b72db66e5338fbc3a791adc30254f4ca77007ad/docs/evidence/three-repair-bots-round2-20261104/ui/README.md"
+    },
+    {
+      "path": "docs/research/omega/R2-BUILD-HANDOFF-20261104.md",
+      "claim": "Own Android run NOT_RUN; isolated cache readiness is not a result",
+      "url": "https://github.com/Ullmann27/device-ai/blob/8b72db66e5338fbc3a791adc30254f4ca77007ad/docs/research/omega/R2-BUILD-HANDOFF-20261104.md"
+    }
+  ],
+  "ownTests": "No JVM/Android execution; byte provenance, full diff review, git apply --check, bash -n, and host input closure only"
+}
