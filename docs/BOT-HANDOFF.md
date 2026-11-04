@@ -80,7 +80,9 @@ Nebenstrang: Jarvis Gedächtnis (über Kerns Schnittstellen). Chef HAUPTBOT vert
 4. Nie nach main mergen, kein Release, kein signierter Build.
 
 ## Offene Punkte
-- Jarvis Sicherheit soll die inhaltliche Änderung des S4-Tests bestätigen: move_file nach externem Inhalt geht jetzt zur Owner-Freigabe (B5), statt vorher geblockt zu werden. Betroffen auch ChatGPTs zwei neue Guard-Tests (auf B5-API umgestellt; der Fall „Nicht verschieben, nur anzeigen“ → move_file entfällt, weil B5 Moves bewusst zur Owner-Freigabe durchlässt; Frage-Fall jetzt mit delete_file geprüft).
+- ERLEDIGT: Jarvis Sicherheit hat #375 @ b49fb847 geprüft und S4/B5 (9ec6f3f8) sowie den Race-Fix (6299cbcf) BESTÄTIGT (move_file → Owner-Freigabe). Bericht: `docs/reviews/REVIEW-integration-b49fb847-S4-racefix.md` auf `continuum/m5-integration-repair` @ f6580b25. ChatGPTs zwei neue Guard-Tests wurden auf die B5-API umgestellt (Fall „Nicht verschieben“ → move_file entfällt, Frage-Fall mit delete_file geprüft) – Sicherheit bitte kurz mitprüfen.
+- Für Jarvis Kern (ChiefWorkerPool), MITTEL: Der Slot zählt während der Zustellung noch. Ein Re-Submit mit derselben id im Callback wird abgelehnt, und awaitIdle() im Callback wird nie true.
+- Für Jarvis Kern, NIEDRIG: Bei einem Error wie OOM gibt es keine Slot-Freigabe und keinen Bericht.
 - Portrait-Fold: ChatGPT hatte bewusst „gleiche Navigation in beiden Fold-Ausrichtungen“ (Seitenleiste auch im Hochformat) gebaut; wiederhergestellt ist jetzt unser Hochformat ohne Seitenleiste mit unterer Leiste. Design-Entscheid bei Kreativdirektor/Kern bestätigen lassen.
 - Aktionsraster: 10 Aktionen auf breiten Layouts jetzt 5 Spalten (2 volle Reihen) statt 4; Label „Agents“ → „Agenten“.
 - Keine Fold7-/Gerätetests.
