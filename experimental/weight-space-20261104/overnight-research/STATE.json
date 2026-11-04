@@ -1,6 +1,6 @@
 {
   "task": "G1-INTEGRATE-WEIGHT-002",
-  "phase": "OPEN_PATH_SOURCE_FROZEN_NOT_RUN",
+  "phase": "OPEN_PATH_PARITY_FAIL_RESTORED",
   "parentCommit": "0af14f75b04e68ba849a92316b8be51041e8738b",
   "comparisonPr508Commit": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
   "ownerSession": "0549bca61ccf",
@@ -17,7 +17,25 @@
     "6.56M/9.71M gradient access, chain-rule and twenty finite-difference checks"
   ],
   "next": [
-    "execute one registered fixed path-opening probe",
-    "preserve result, restore original arrays, and publish final handoff"
-  ]
+    "preserve failed-attempt evidence and exact binaries",
+    "publish handoff and final source/input/scope checks",
+    "continue source-level postmortem and gate integration without another model run"
+  ],
+  "acceptedResearchState": "M5_UNCHANGED",
+  "newModelExperimentsPermittedThisRound": false,
+  "failedAttempt": {
+    "name": "M6_FIXED_PATH_OPENING",
+    "sourceCommit": "8e0dadceef6a39cac86817b52340b79e185b160f",
+    "registrationSha256": "0b9b97874c42da9ee1f0c4f4f113790f6c50e960612a961dcac579b42d8daa78",
+    "probe": "general-tool",
+    "maximumProbabilityDelta": 1.3113021850585938e-05,
+    "limit": 1e-05,
+    "backwardPasses": 0,
+    "optimizerUpdates": 0,
+    "exactRestorationVerified": true
+  },
+  "continuation": {
+    "status": "NOT_YET_SCHEDULED",
+    "scope": "source audit, gate repair and prospective study design only"
+  }
 }

@@ -1,0 +1,71 @@
+{
+  "status": "PARITY_REJECTION_AND_EXACT_RESTORATION_VERIFIED",
+  "registrationSha256": "0b9b97874c42da9ee1f0c4f4f113790f6c50e960612a961dcac579b42d8daa78",
+  "checkerSha256": "29441db4c07f6af0562503e419f38c8113655b518fbfa1fa9cb84929dd18ebf8",
+  "passedInitialParityCases": 12,
+  "openedParityCases": [
+    {
+      "kind": "OPEN_PARITY",
+      "probe": "general-next",
+      "maximumProbabilityDelta": "1.6093254089355469E-6",
+      "pass": "true"
+    },
+    {
+      "kind": "OPEN_PARITY",
+      "probe": "general-note",
+      "maximumProbabilityDelta": "9.28342342376709E-6",
+      "pass": "true"
+    },
+    {
+      "kind": "OPEN_PARITY",
+      "probe": "general-tool",
+      "maximumProbabilityDelta": "1.3113021850585938E-5",
+      "pass": "false"
+    }
+  ],
+  "remainingOpenedParityCases": "NOT_RUN_9",
+  "backwardPasses": 0,
+  "plannedLossProbes": "NOT_RUN_4",
+  "optimizerUpdates": 0,
+  "restoredParameterIdentity": "d6d3d64b01a12fe8d0e8c81527aff276bfefb776f09c2ed37f7f6eb21fd24640",
+  "originalInputIdentities": {
+    "harness": "e464182f50e8bf5d0405bd4169ad3fb1ac24fbe65cad73f0ee4c5154641d9dfc",
+    "runtime": "8075d799b42f3b4f23f2f154af09685f52074503b0a4103ba336a618a3be1950",
+    "stdlib": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006",
+    "tokenizer": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "probes": "0269d022a59a3408783e7541d81ed4950b61c099ebbb4f8c26706473eeba8e4f",
+    "modelHashes": {
+      "S0": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+      "W0": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d"
+    }
+  },
+  "originalArchiveSha256": "428d62b308e308afd9c971ff4974981e96b9dc8a783d80e3653c226983dcc016",
+  "replayChecks": [
+    {
+      "case": "actual_failed_attempt_cannot_resume",
+      "status": "PASS",
+      "jvmLaunches": 0,
+      "persistentFilesUnchanged": true,
+      "reason": "attempt failed or budget exceeded"
+    },
+    {
+      "case": "relabelled_receipt_still_fails_raw_gate",
+      "status": "PASS",
+      "jvmLaunches": 0,
+      "persistentFilesUnchanged": true,
+      "reason": "opened-path parity failed"
+    },
+    {
+      "case": "deleted_receipt_cannot_restart_partial_attempt",
+      "status": "PASS",
+      "jvmLaunches": 0,
+      "persistentFilesUnchanged": true,
+      "reason": "partial attempt blocks rerun"
+    }
+  ],
+  "jvmLaunchesDuringVerification": 0,
+  "processSeconds": 2.859959336998145,
+  "maxRssKiB": 288804,
+  "acceptedResearchState": "M5_UNCHANGED",
+  "newModelExperimentsPermittedThisRound": false
+}

@@ -15,8 +15,16 @@
     "gradient-access.jar": {
       "sha256": "e65cd7a6ac506546424466d6a23b5e803f63ddc3a9466747d1f67b694345c189",
       "bytes": 17974
+    },
+    "open-path.jar": {
+      "sha256": "e464182f50e8bf5d0405bd4169ad3fb1ac24fbe65cad73f0ee4c5154641d9dfc",
+      "bytes": 11735
     }
   },
-  "archiveSha256": "70eb2c359fc1585a8544fce7e6369de27520ed18258be91af982deb76c8de91d",
-  "archiveBytes": 32686
+  "archiveFormatVersion": 2,
+  "previousArchiveSha256": "70eb2c359fc1585a8544fce7e6369de27520ed18258be91af982deb76c8de91d",
+  "openPathSourceCommit": "8e0dadceef6a39cac86817b52340b79e185b160f",
+  "openPathOutcome": "PARITY_FAIL_RESTORED_NO_BACKWARD",
+  "archiveSha256": "d4c7bb064c0fa4d4954acd7d2882d6dd21efdf00e0cc066c9f2cce9bbe60fdd9",
+  "archiveBytes": 44516
 }

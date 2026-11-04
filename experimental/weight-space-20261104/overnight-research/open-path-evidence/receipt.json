@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx3g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/night-open-path-build/open-path.jar:/workspace/scratch/3112c86b5191/LM1_Training_Research_20261104/runtime/v3-experiment.jar:/workspace/scratch/3112c86b5191/LM1_Training_Research_20261104/runtime/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmDepthAccessProbe",
+    "/workspace/scratch/0549bca61ccf/night-diagnostic-run/inputs",
+    "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/0549bca61ccf/night-diagnostic-run/inputs/probes.tsv"
+  ],
+  "elapsedSeconds": 2.859959336998145,
+  "exitCode": 1,
+  "maxRssKiB": 288804,
+  "registrationSha256": "0b9b97874c42da9ee1f0c4f4f113790f6c50e960612a961dcac579b42d8daa78",
+  "status": "FAIL",
+  "stderrSha256": "47c1fb6e1bb636c0c454de2a968fa5f646dda5be6bd333e604a22520072a105a",
+  "stdoutSha256": "19705c2a2de8df0fb9487b0bf41d38f3e705e27d55f7dba00e9c1018953d882a",
+  "systemSeconds": 0.124789,
+  "timedOut": false,
+  "userSeconds": 3.542587
+}
