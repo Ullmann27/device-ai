@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "taskId": "MEMORY-PRIVACY-R4-20261104",
+  "status": "WIP_NOT_RUN",
+  "branch": "fix/continuum-memory-privacy-r4-20261104",
+  "inputPublicCommit": "eadc72bac95f8b1a554a59e5baff624977b09f73",
+  "inputLocalCommit": "61b961bfcd63cf572a06a7d5b31bf2fe622e7ae3",
+  "inputTree": "187aab3fe44a94b9b01451a867589c8e967cc641",
+  "architecture": ["MemoryWritePolicy", "ProofCarryingMemory", "AiContextCompiler", "existing memory event hub", "C1-owned Activity and avatar"],
+  "scope": ["AiContextCompiler.redactSecrets", "MemoryWritePolicy.decide", "own tests and evidence"],
+  "frozenDependencyPr": 522,
+  "integratorPr": 519,
+  "newSubagents": 0,
+  "next": ["freeze credential regression inputs", "execute actual-source RED", "repair and validate credential boundary", "validate sensitive/device precedence", "combined source-bound gate and C1 handoff"],
+  "newRuntimeResults": [],
+  "automation": {"enabled": true, "firstLocal": "2026-11-05T00:30:00+01:00", "timezone": "Europe/Vienna", "cadence": "HOURLY"},
+  "apkBuilt": false,
+  "deviceTested": false
+}
