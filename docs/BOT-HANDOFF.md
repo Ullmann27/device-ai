@@ -157,3 +157,8 @@ Nebenstrang: Jarvis Gedächtnis (über Kerns Schnittstellen). Chef HAUPTBOT vert
 - Optional (905924a6): ownerNegated erkennt "auf keinen Fall" und nachgestelltes "keinesfalls"; Fehlalarm-Tests abgesichert.
 - ChatGPT #478 unverändert @d8fd7f7c. Volle Suite 2228 Tests, 0 Fehler, 19 übersprungen; lintDebug 0 Befunde; assembleDebug grün.
 - Offen für Sicherheit: Nachprüfung dieser drei Commits.
+
+## Sprint 04.11. 09:56 (Integration #483, -untested)
+- Auf `integration/jarvis-on-chatgpt-untested-20261104` (Basis dcde4b6e) gemergt: #479 @0ceedb1f, #481 @5a1076ca, #482 @2e49ea74, #484 @c980315f, #485 @f77424c2, #489 @18fc049e (je ein Merge-Commit, Head 17c6e6cb).
+- #486 @fc33c497 übersprungen, Konflikte: AgentActivity.kt, AndroidOnDeviceSpeechInput.kt, cognitive/LocalSpeechEngine.kt, ui/CockpitAnimationPresenter.kt, LocalSpeechEngineTest.kt, docs/BOT-HANDOFF.md (Sprach-Konflikte: #486 trägt den älteren Sprach-Fix 73be6722, #483 hat den neueren dcde4b6e → beim Lösen die #483-Seite nehmen).
+- Offen: #486 nachmergen, compileDebugKotlin/Tests NICHT gelaufen, Sicherheit-Prüfung der Merges, `integration/jarvis-on-chatgpt-20261104` unverändert @dcde4b6e.
