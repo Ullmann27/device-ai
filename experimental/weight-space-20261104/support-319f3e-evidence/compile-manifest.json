@@ -1,0 +1,19 @@
+{
+  "purpose": "Read-only validation build; not the historically registered training JAR",
+  "compilerVersion": "2.0.20",
+  "exitCode": 0,
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "experimental/weight-space-20261104/LmWeightSurgery.kt": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+    "experimental/weight-space-20261104/LmWeightExperiment.kt": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c"
+  },
+  "compilerSha256": "a3604bf350c8bcce27102158bbb383fa4d1814bc486aaed59f278eada51ff6ad",
+  "stdlibSha256": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006",
+  "jarSha256": "299da40e98f03cbb24278df9d7266066594bf9f161042441194763188482256c"
+}

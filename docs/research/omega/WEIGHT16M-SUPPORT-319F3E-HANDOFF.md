@@ -29,3 +29,9 @@ Grenzen bleiben unverändert: 64-MiB-Checkpoint, 768-MiB beobachteter Prozessspe
 ## Fortsetzung und Rückfall
 
 Nach jedem belegten Beitrag: Tests mit exakter Quellbindung, Ergebnis und Grenzen hier ergänzen, auf diesem Branch sichern. Erst danach ist eine Übernahme durch den Hauptforschungszweig reviewbar. Rückfall: diesen Entwurf nicht übernehmen; alle bisherigen Modelle, Daten und Forschungsbelege bleiben erhalten.
+
+## Erster belegter Zwischenstand
+
+Die unveränderten 75 Python-Gateprüfungen bestehen. Der echte gespeicherte 16.011.776-Parameter-Initialcheckpoint wurde mit neu kompilierten, unveränderten Kotlinquellen auf diesem Host geladen und besteht die vollständige Kapazitätsprüfung: drei gemessene 1-/32-Token-Paare, maximal 624,662 ms / 889,600 ms, beobachtetes Prozessmaximum 282,402 MiB. Modell und Tokenizer bleiben bytegleich. Neue Trainingsläufe: 0.
+
+Rohbelege, Quell-/Werkzeugbindung und Reproduktion: `experimental/weight-space-20261104/support-319f3e-evidence/README.md`. Der Test bestätigt den vorhandenen Ausgangscheckpoint; er behebt den EOS-Fehler der trainierten Fortsetzungen noch nicht. Die drei Implementierungsbeiträge bleiben bis zu ihrer separaten Prüfung WIP.
