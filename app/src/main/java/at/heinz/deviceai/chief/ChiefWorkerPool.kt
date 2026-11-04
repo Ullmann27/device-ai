@@ -163,7 +163,7 @@ class ChiefWorkerPool(
         val message = if (terminal != status) "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen." else summary
         slots.remove(slot.brief.id, slot)
         try {
-            runCatching { slot.onReport(WorkerReport(slot.brief.id, terminal, message.take(4_000), ms)) }
+            runCatching { slot.onReport(WorkerReport(slot.brief.id, terminal, at.heinz.deviceai.ToolOutputCap.cap(message), ms)) }
         } finally {
             unfinishedAssignments.decrementAndGet()
         }
@@ -217,7 +217,7 @@ object WorkerScope {
     fun runner(brief: WorkerBrief, delegate: ToolRunner): ToolRunner = ToolRunner { call ->
         if (call.name !in brief.allowedTools)
             throw ToolBackendFailure(ToolExecutionStatus.FAILED, "Werkzeug ${call.name} ist für Auftrag ${brief.id} nicht freigegeben.")
-        delegate.execute(call)
+        at.heinz.deviceai.ToolOutputCap.cap(delegate.execute(call))
     }
 
     fun model(brief: WorkerBrief, delegate: AgentModel): AgentModel = AgentModel { task, memories, reflection, observations ->

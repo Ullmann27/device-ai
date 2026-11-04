@@ -41,3 +41,11 @@ Fluss: Ziel (`WorkerBrief`) → Plan/Handeln (`ChiefJobs.agentJob` = `BoundedAge
 ## Tests (tatsächlich gelaufen)
 - `assembleDebug` + `testDebugUnitTest` auf 08cfb2cb: BUILD SUCCESSFUL, 1951 Tests, 0 Fehler, 17 übersprungen.
 - `testDebugUnitTest` auf finalem Stand (nur Test-Änderungen seit 08cfb2cb): 1951 Tests, 0 Fehler, 24 übersprungen (17 + 7 B5). Kein Fold7-Test.
+
+## M5-Cap + B5-Fix (2026-11-04, Basis 68a34bd9)
+- 9d85b362 M5-Patch (ChiefWorkerPool Tool-Output-Cap 3.900) aus aff0b852; 9aaec2c2 ToolOutputCap.kt + Test aus aff0b852 (Patch hing davon ab).
+- aeec8a7e Cherry-pick 0c2d5a16 (S4 nach Taint/Aktionsrisiko statt Wortlisten; Herkunft origin/continuum/m5-integration-repair).
+- aaafb183 7 B5-Schritte in FirstThinkingRunE2ETest ohne @Ignore.
+- 9ec6f3f8 S4-Guard-Unittest auf neue API (aus 8c31ecaa, Sicherheits-RED-Test zu 0c2d5a16).
+- 6299cbcf Fix ChiefWorkerPool: Report vor Slot-Freigabe (awaitIdle-Race, ChiefBrainWiringTest unter Last rot).
+- Voller Lauf assembleDebug testDebugUnitTest: 1955 Tests, 0 Fehler, 17 skipped (vorher 24), assembleDebug OK.
