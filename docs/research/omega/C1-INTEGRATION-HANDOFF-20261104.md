@@ -203,3 +203,13 @@ Basis ist der oben gezielt geprüfte Avatar-Stand53ca8b6/5d7ddf. Quelle #505 `b2
 Beide Tagesgrenzen werden separat aus dem jeweiligen lokalen Datum mit atStartOfDay(zone) bestimmt. Dadurch überträgt eine heutige Mitternachtslücke nicht deren verschobene Uhrzeit auf andere Tage. Wochen-/Monatsfenster, Ranking, Corpus, Trust und Hauptchat-Aktivierung bleiben erhalten. Zwölf feste Grenz-/Suchtests ergänzen17unveränderte Tests. Gelesene originale Quellenbelege:29Tests/8Fehler vor der Korrektur und29/0danach; bisher keine eigene C1-Ausführung dieses neuen Slices.
 
 Status **OWN_HOST_RUN_PENDING**. Nächster echter Befehl unter beiden Locks: `bash tools/temporal-cue-host-check/run.sh /workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/lib` mit vorhandenem JDK17. Der vorhandene Runner nutzt Kotlin2.0.20, JUnit4.13.2 und eine bewusst fehlschlagende Compilegrenze für den hier nicht ausgeführten Event-Decorator. Android wird separat mit Projektcompiler2.4geprüft. Keine42/44-Rankinggrenze aufgehoben, keine Modellpromotion. Belege: `daily011/`; Rücknahme nur der drei genannten Dateien, negativer Bestand erhalten.
+
+## C1-TEMPORAL-011 — eigener Hostlauf abgeschlossen
+
+Geprüft: lokal `ce5bcf6d7c7e87e630b33df86d021dfd4bd52ccd`, remote `9c09a6add6c52f0be01a2e6b18e9cd2fdf4f3cc7`, identischer vollständiger Tree `d27f253b1b922c98c72acb8fc4bdf3b8bdf27e41`. Tatsächlicher Befehl unter `qa/run_c1_gate.py daily-host-01`: `bash tools/temporal-cue-host-check/run.sh /workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/lib`. Vorhandener JDK17, Kotlin2.0.20 und JUnit4.13.2.
+
+Ergebnis20:54:02UTC: **Compiler0, JUnit0, Gesamt-Exit0,29 PASS/0 FAIL/0 SKIP**, vollständige originale Retrieverquelle, unveränderte vorhandene Tests und zwölf neue Grenztests. Quelle vor/nach unverändert, beide Maschinenlocks gehalten. Der ausdrücklich fehlschlagende Compile-Stand-in für den nicht ausgeführten Event-Decorator bleibt eine Host-Prüfgrenze.
+
+Der tatsächliche Lauf meldet weiterhin die bekannten Retrieval-Misses; default Recall@3 bleibt42/44, Theater Rang5. Das ist keine reparierte Gesamtqualität und keine Promotion in den Hauptchat. Rohlog, tatsächlicher Befehl, Exitcode, Quellenstand und Hashes: `docs/evidence/c1-integration-20261104/daily011-own-host/`. Diese nachfolgende Sicherung ist ausschließlich Dokumentation; kein neuer Testlauf auf ihrem späteren Commit wird behauptet.
+
+Nächster Schritt: abgeschlossene14-Dateien-Abschlusszustellung separat prüfen und seriell aufnehmen. Der andere ReferenceCockpit-/UI-Vollsuite-Beitrag ist um20:56UTC noch WIP, ohne finalen Handoff/Ergebnis. Sein bekannter Vollgate-Timeout wird nicht ohne neue Hypothese erneut ausgeführt. Vollständige gemeinsame Gates bleiben unverändert Pflicht. Externer C2 PENDING_ACK.
