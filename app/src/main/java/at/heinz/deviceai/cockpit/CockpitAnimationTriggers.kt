@@ -145,6 +145,13 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
         bus.emit(CockpitAnimationEvent.AreaChanged(NAV_TURN, clock(), from?.let { clean(it, 64) }?.ifEmpty { null }, target, pattern))
     }
 
+    /** Real first cockpit start (the Activity built the home). Emits scene 1 once per process. */
+    fun bootOnce(): Boolean {
+        if (!bootPlayed.compareAndSet(false, true)) return false
+        bus.emit(CockpitAnimationEvent.BootStarted(BOOT_TURN, clock(), CockpitTimeline.GREETING_TEXT))
+        return true
+    }
+
     private val activeAlarms = java.util.EnumSet.noneOf(AlarmKind::class.java)
 
     /** Real alarm signal (edge-triggered): raises once when [active] turns true, clears once when it turns false. */
@@ -157,3 +164,8 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
 }
 
 const val ALARM_TURN = "alarm"
+
+/** Process-wide: scene 1 plays once per process, on the first real cockpit start. */
+private val bootPlayed = java.util.concurrent.atomic.AtomicBoolean()
+
+internal fun resetBootForTest() = bootPlayed.set(false)

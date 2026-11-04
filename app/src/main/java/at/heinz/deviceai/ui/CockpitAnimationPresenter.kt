@@ -96,6 +96,7 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView) : CockpitAn
             // Alarm visuals belong to Jarvis Lückenfüller (hook); minimal default: system card glows.
             is CockpitAnimationEvent.AlarmRaised -> highlight(Slot.SYSTEM_STATUS)
             is CockpitAnimationEvent.AlarmCleared -> Unit
+            is CockpitAnimationEvent.BootStarted, is CockpitAnimationEvent.CockpitEntered -> Unit
             is CockpitAnimationEvent.Extension -> Unit // unknown kinds are ignored by design
         }
     }

@@ -85,7 +85,20 @@ const val NAV_TURN = "nav"
  * DATA_OVERLOAD: memory event hub dropped events (droppedEventCount rising) or the worker queue is full.
  * THERMAL: PowerManager thermal status. MEMORY_PRESSURE: onTrimMemory / low-memory.
  */
-enum class AlarmKind { DATA_OVERLOAD, THERMAL, MEMORY_PRESSURE }
+enum class AlarmKind {
+    /** Status only (no alarm scene). */
+    DATA_OVERLOAD, THERMAL, MEMORY_PRESSURE,
+    /** The ONLY kind that starts alarm scene H: a real security event of the connected system (e.g. virus-scan finding). */
+    SECURITY_FINDING
+}
+
+/**
+ * Real security events only. Quelle fehlt: the app has no virus scanner. No auto-remediation; whether coding
+ * agents remediate is a separate, pending chief decision.
+ */
+fun interface SecurityEventSource {
+    fun addListener(l: (CockpitAnimationEvent.AlarmRaised) -> Unit): AutoCloseable
+}
 
 // ---- Answer pills and Gmail, patterns F/G (implemented by Jarvis Sicherheit) ----
 

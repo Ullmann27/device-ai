@@ -58,6 +58,14 @@ sealed class CockpitAnimationEvent {
     data class RecallHits(override val turnId: String, override val atMillis: Long, val queryHash: String,
                           val count: Int, val topScore: Float?) : CockpitAnimationEvent()
 
+    /** Scene 1: the real first cockpit start of this session (once per process). [turnId] = [BOOT_TURN]. */
+    data class BootStarted(override val turnId: String, override val atMillis: Long, val greeting: String) :
+        CockpitAnimationEvent()
+
+    /** Scene 1 finished, the cockpit is visible: exactly once per app session (triggers Avatar's headIconBurst, scene 2). */
+    data class CockpitEntered(override val turnId: String, override val atMillis: Long, val sessionId: String) :
+        CockpitAnimationEvent()
+
     /** Pattern E: a real calculation with its steps and result; [chart] selects the live chart (NONE = numbers only). */
     data class CalculationShown(override val turnId: String, override val atMillis: Long, val expression: String,
                                 val steps: List<CalcStep>, val result: Double, val unit: String?, val chart: ChartKind) :
@@ -83,6 +91,7 @@ sealed class CockpitAnimationEvent {
 }
 
 const val MEMORY_TURN = "memory"
+const val BOOT_TURN = "boot"
 
 /** Controls of the cockpit action bar plus the two non-bar work kinds. */
 enum class CockpitAction { THINK, RESEARCH, LEARN, DEVELOP, EXECUTE, VERIFY, TOOL, WORKER }
