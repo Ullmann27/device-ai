@@ -153,13 +153,15 @@ Nebenstrang: Jarvis Gedächtnis (über Kerns Schnittstellen). Chef HAUPTBOT vert
 
 ---
 
-## Menüführung (Jarvis Integration) – Branch `design/jarvis-menu-navigation-20261104`
-Stand: 04.11.2026 09:23 CET (Europe/Vienna). WIP, Draft-PR gegen Kerns `design/jarvis-cockpit-home-20261104` (#481).
-- Basis: #481 @ 02097c48. #481 enthält #479 nur als Datei-Stand **ba798359** (nicht @35a68f49, kein Git-Vorfahre).
-  Auf diesem Branch: Jarvis*-Dateien aus #479 @35a68f49 übernommen (JarvisMotion.Depth, Bloom-API) – identischer Inhalt, damit Kern beim Nachziehen keine Konflikte hat.
-- Auftrag: Kerns JarvisNavigator/CockpitActionHandler implementieren, Fold7-Seitenleiste nach ref5 (beide Ausrichtungen, ~20 %), Muster B/A über CockpitAnimationTriggers.areaChanged, Kamera-Drift (Z-Dolly 1,00→1,03), Szene 3b (Phone-Hochformat, Kopf nur über JarvisAvatarSlot), Aktionsleiste.
-- Nicht mehr meins: Widgets-Einflug → Jarvis Gedächtnis (Bildbeschrieb Abschnitt 6).
-- Offen: siehe Draft-PR-Beschreibung (wird mit jedem Push aktualisiert).
+## Menüführung (Jarvis Integration) – Branch `design/jarvis-menu-navigation-20261104`, Draft-PR #486
+Stand: 04.11.2026 09:31 CET (Europe/Vienna). WIP, gegen Kerns `design/jarvis-cockpit-home-20261104` (#481). Nie mergen.
+- Basis: #481 @02097c48, danach Kerns neuester Stand @5f846eb7 hineingemergt (Verträge, AreaChanged, JarvisAvatarSlot, #479 @35a68f49).
+- Umgesetzt: `JarvisMenuNavigator` (JarvisNavigator), `JarvisCockpitActions` (CockpitActionHandler, „Quelle fehlt“ ohne Pfad),
+  ref5-Leiste `JarvisMenuRailElement` (8 Einträge, ~20 %, Glas #0A1128@50 %, aktiver Eintrag weiß + Cyan-Bloom),
+  Muster B/A in `CockpitAnimationPresenter.playArea` über `JarvisMenuMotion`, Kamera-Drift `JarvisCameraDrift` (Z-Dolly 1,00→1,03),
+  Szene 3b nur als Spec/Layout (`JarvisMenuMotion.PhoneScene`).
+- Offen für Kern: Auslöser/Cue für Szene 3b; Aktionsleisten-Elemente im Querformat-Cockpit laufen jetzt über CockpitActionHandler.
+- Widgets-Einflug: nicht hier (→ Jarvis Gedächtnis).
 
 ## Neue Bots (Bildbeschrieb Abschnitt 7, 09:25)
 - **Jarvis Lückenfüller:** schließt die Lücken, die der Kreativdirektor findet. Erstes Stück: Video 3 – Alarm H, Warp-Flug, Ganzkörper-Avatar in der Energiekugel (Kopf über Avatar bzw. JarvisAvatarSlot).
