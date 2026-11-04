@@ -195,7 +195,10 @@ class ContinuumReferenceCockpitUiTest {
             val tag = "$label-font${(font * 100).toInt()}"
             val home = field(activity, "homeView") as ContinuumHomeView
             val avatar = field(activity, "hologramView") as ContinuumHologramView
-            assertTrue("The real home avatar must be visible", avatar.isShown)
+            // 2026-11-04 (Kreativdirektor, "ein Kopf"): in the landscape cockpit the ONE avatar slot is held by the
+            // docked JarvisAvatarRenderer or its named placeholder; elsewhere the real home avatar stays visible.
+            if (home.ownsAvatarSlot) assertTrue("The avatar slot must be held", home.avatarSlotShown)
+            else assertTrue("The real home avatar must be visible", avatar.isShown)
             assertRealTargets(home)
             capture(root, "$tag-home", width, height)
 

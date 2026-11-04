@@ -24,6 +24,19 @@ data class CockpitStatus(
     val dialog: List<DialogLine> = emptyList()
 ) {
     data class DialogLine(val fromOwner: Boolean, val text: String)
+
+    companion object {
+        /** Live status from the real sources the Activity holds (TurnLifecycle, ChiefWorkerPool snapshot, triggers). */
+        fun live(turn: at.heinz.deviceai.chief.TurnLifecycle?, pool: ChiefWorkerPool?, lastReport: WorkerReport?,
+                 triggers: at.heinz.deviceai.cockpit.CockpitAnimationTriggers, dialog: List<DialogLine>) = CockpitStatus(
+            turnPhase = turn?.phase,
+            workers = pool?.snapshot(),
+            workerCapacity = pool?.capacity,
+            lastReport = lastReport,
+            steps = triggers.latestTimeline(),
+            dialog = dialog
+        )
+    }
 }
 
 /**

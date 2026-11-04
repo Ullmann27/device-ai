@@ -35,14 +35,34 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView) : CockpitAn
         home.post { present(event) }
     }
 
+    /**
+     * The ONE area/scene transition. B: JarvisShellView entrance (shell stage) or card fly-in (cockpit).
+     * A: minimal depth move with JarvisMotion.Depth (FAR scale → 1); full depth scene is Avatar/hook territory.
+     */
+    private fun playArea(event: CockpitAnimationEvent.AreaChanged) {
+        when (event.pattern) {
+            at.heinz.deviceai.cockpit.TransitionPattern.B_FLY_IN ->
+                if (home.jarvisShellStage) home.jarvisShell.playEntrance() else if (home.landscapeCockpit) flyInCards()
+            at.heinz.deviceai.cockpit.TransitionPattern.C_WARP -> Unit // visual via hook only (no default)
+            at.heinz.deviceai.cockpit.TransitionPattern.A_DEPTH -> if (motionAllowed()) {
+                val s = JarvisMotion.Depth.scale(JarvisMotion.Depth.Layer.FAR)
+                home.animate().cancel()
+                home.scaleX = s; home.scaleY = s
+                home.animate().scaleX(1f).scaleY(1f).setDuration(JarvisMotion.Durations.SCENE_Z).start()
+            }
+        }
+    }
+
     private fun motionAllowed() = ValueAnimator.areAnimatorsEnabled() && !power.isPowerSaveMode
 
     private fun present(event: CockpitAnimationEvent) {
         if (!home.isAttachedToWindow) return
+        if (home.ownsAvatarSlot) home.avatarRenderer?.let { r -> runCatching { r.onAnimationEvent(event) } }
         val hook = CockpitTransitions.hook
         if (hook != null && runCatching { hook.play(event, home) }.getOrDefault(false)) return
+        if (event is CockpitAnimationEvent.AreaChanged) return playArea(event)
         if (home.jarvisShellStage) {
-            // Shell stage: Welten-Optik's own entrance (JarvisMotion pattern B inside JarvisShellView).
+            // Shell stage: pattern B entrance inside JarvisShellView (JarvisMotion).
             if (event is CockpitAnimationEvent.CommandFlyIn) home.jarvisShell.playEntrance()
             return
         }
@@ -69,6 +89,13 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView) : CockpitAn
             // Orb visuals (document into the brain, light points) belong to Avatar; minimal default: brain card glows.
             is CockpitAnimationEvent.DocumentLearned, is CockpitAnimationEvent.MemoryStored -> highlight(Slot.MODEL)
             is CockpitAnimationEvent.RecallHits -> if (event.count > 0) highlight(Slot.MODEL)
+            is CockpitAnimationEvent.CalculationShown -> home.showTransientCard("Berechnung · " + event.expression,
+                event.steps.take(4).map { it.label + " = " + it.value } + ("Ergebnis = " + event.result + (event.unit?.let { " $it" } ?: "")),
+                motionAllowed())
+            is CockpitAnimationEvent.AreaChanged -> Unit // handled by playArea
+            // Alarm visuals belong to Jarvis Lückenfüller (hook); minimal default: system card glows.
+            is CockpitAnimationEvent.AlarmRaised -> highlight(Slot.SYSTEM_STATUS)
+            is CockpitAnimationEvent.AlarmCleared -> Unit
             is CockpitAnimationEvent.Extension -> Unit // unknown kinds are ignored by design
         }
     }

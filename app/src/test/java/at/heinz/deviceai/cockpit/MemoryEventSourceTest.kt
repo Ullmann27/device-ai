@@ -39,22 +39,33 @@ class MemoryEventSourceTest {
         val bus = CockpitAnimationBus()
         val seen = mutableListOf<CockpitAnimationEvent>()
         bus.subscribe { seen += it }
-        val posted = mutableListOf<Runnable>()
+        val posted = mutableListOf<Pair<Long, Runnable>>()
         val fake = FakeMemoryEvents()
-        val sub = fake.asSource().subscribe(MemoryEventMapper(bus) { posted += it })
+        val mapper = MemoryEventMapper(bus) { d, r -> posted += d to r }
+        val sub = fake.asSource().subscribe(mapper)
 
-        fake.fire(DocumentLearned("doc-1", "pdf", 4, 10L))
+        fake.fire(DocumentLearned("doc-1", "ARCHIVE_IMPORT", 4, 10L))
         fake.fire(MemoryStored("e-1", MemoryEntryStatus.UNCONFIRMED, 11L))
-        fake.fire(RecallHits("q", listOf(RecallHit("e-2", .4f, 2), RecallHit("e-1", .9f, 1)), 12L))
-        fake.fire(RecallHits("q2", emptyList(), 13L))
+        fake.fire(MemoryStored("e-2", MemoryEntryStatus.HYPOTHETICAL, 12L))
+        fake.fire(RecallHits("q", listOf(RecallHit("e-2", .4f, 2), RecallHit("e-1", .9f, 1)), 13L))
         assertTrue("nothing reaches renderers before the main-thread post", seen.isEmpty())
-        posted.forEach { it.run() }
+        assertEquals("one coalesced flush, throttled to 100 ms", listOf(100L), posted.map { it.first })
+        posted.removeAt(0).second.run()
 
-        assertEquals(CockpitAnimationEvent.DocumentLearned(MEMORY_TURN, 10L, "doc-1", "pdf", 4), seen[0])
-        assertEquals(CockpitAnimationEvent.MemoryStored(MEMORY_TURN, 11L, "e-1", "UNCONFIRMED"), seen[1])
-        assertEquals(CockpitAnimationEvent.RecallHits(MEMORY_TURN, 12L, "q", 2, .9f), seen[2])
+        assertEquals(CockpitAnimationEvent.DocumentLearned(MEMORY_TURN, 10L, "doc-1", "ARCHIVE_IMPORT", 4), seen[0])
+        assertEquals(CockpitAnimationEvent.MemoryStored(MEMORY_TURN, 12L, "e-2", "HYPOTHETICAL", count = 2), seen[1])
+        assertEquals(CockpitAnimationEvent.RecallHits(MEMORY_TURN, 13L, "q", 2, .9f), seen[2])
+        assertEquals(3, seen.size)
+
+        fake.fire(RecallHits("q2", emptyList(), 14L))
+        assertEquals(1, posted.size)
+        posted.removeAt(0).second.run()
         assertEquals(0, (seen[3] as CockpitAnimationEvent.RecallHits).count)
         assertNull((seen[3] as CockpitAnimationEvent.RecallHits).topScore)
+        // A straggler between detach and close (the hub may deliver one after close()) is ignored.
+        mapper.detach()
+        fake.fire(MemoryStored("late", MemoryEntryStatus.CONFIRMED, 15L))
+        assertTrue(posted.isEmpty())
         sub.close()
         assertTrue(fake.listeners.isEmpty())
     }

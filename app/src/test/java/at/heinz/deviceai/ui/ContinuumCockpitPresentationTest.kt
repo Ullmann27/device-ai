@@ -112,3 +112,28 @@ class ContinuumCockpitMemoryTest {
         } finally { dir.deleteRecursively() }
     }
 }
+
+/** Security review #481 (2): CockpitStatus is filled live from the real TurnLifecycle / ChiefWorkerPool. */
+class ContinuumCockpitLiveStatusTest {
+    @Test fun realPhaseAndRealJobChangeTheCockpitState() {
+        val bus = at.heinz.deviceai.cockpit.CockpitAnimationBus()
+        val triggers = at.heinz.deviceai.cockpit.CockpitAnimationTriggers(bus) { 1L }
+        val before = CockpitStatus.live(null, null, null, triggers, emptyList())
+        assertEquals("noch nicht gestartet", ContinuumCockpitPresentation.agentRows(before).single().value)
+        assertNull(before.turnPhase)
+
+        val turn = at.heinz.deviceai.chief.TurnLifecycle("t1")
+        turn.acknowledge(); triggers.commandAcknowledged("t1", "Status prüfen")
+        val release = CountDownLatch(1); val started = CountDownLatch(1)
+        val pool = ChiefWorkerPool(1, 1) { WorkerJob { started.countDown(); release.await(5, TimeUnit.SECONDS); "ok" } }
+        try {
+            assertTrue(pool.submit(WorkerBrief("w1", "Echter Auftrag", emptySet(), 60_000)) {})
+            assertTrue(started.await(5, TimeUnit.SECONDS))
+            val live = CockpitStatus.live(turn, pool, null, triggers, emptyList())
+            assertEquals(TurnPhase.ACKNOWLEDGED, live.turnPhase)
+            assertEquals("Echter Auftrag", ContinuumCockpitPresentation.agentRows(live).single().label)
+            assertTrue(live.steps.isNotEmpty())
+            assertTrue(ContinuumCockpitPresentation.processRows(live).none { it.label == "Keine laufenden Prozesse" })
+        } finally { release.countDown(); pool.awaitIdle(5_000); pool.shutdown() }
+    }
+}
