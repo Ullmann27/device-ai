@@ -19,6 +19,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -27,8 +28,11 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowAlertDialog
+import org.robolectric.shadows.ShadowChoreographer
 import java.io.File
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 /** Independent real-Activity navigation and native host-Canvas captures.
@@ -37,7 +41,23 @@ import java.util.concurrent.TimeUnit
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28], qualifiers = "w412dp-h915dp-mdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumReferenceCockpitUiTest {
+    @Before fun configureVirtualVsyncClock() {
+        // Activity setup can start the real avatar loop before fixture code can pause it.
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+    }
+
+    private fun advanceFrames(totalMillis: Long) {
+        var remaining = totalMillis
+        while (remaining > 0) {
+            val step = minOf(16L, remaining)
+            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
+            remaining -= step
+        }
+    }
+
     private val actionNames = listOf(
         "LABEL_THINKING", "ACTION_MEMORY", "LABEL_ANALYSING", "LABEL_DEVELOPING",
         "ACTION_AGENTS", "ACTION_BOTS", "ACTION_TASK", "LABEL_LEARNING", "ACTION_DEVICE", "LABEL_CONNECTED"
@@ -54,7 +74,7 @@ class ContinuumReferenceCockpitUiTest {
         (0 until view.childCount).flatMap { descendants(view.getChildAt(it)) }
     } else emptyList()
 
-    private fun settle() = shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+    private fun settle() = advanceFrames(40)
 
     private fun measure(root: View, width: Int, height: Int) {
         fun exact(value: Int) = View.MeasureSpec.makeMeasureSpec(value, View.MeasureSpec.EXACTLY)
