@@ -1,0 +1,21 @@
+{
+  "sourceParent": "ef2146e560452ac7fe65603a31930ecf234eedaf",
+  "files": [
+    {
+      "path": ".github/continuum/branch-discovery.mjs",
+      "gitBlob": "98697dbc54189796b9fb3c1ffa6b2d849e6271b3",
+      "sha256": "2fb90f20eb50f685ea41369012f00f61c13a4a1cfc8740c5e4f5691a953a700b"
+    },
+    {
+      "path": ".github/continuum/branch-discovery.test.mjs",
+      "gitBlob": "50d76399ede405fc436aee30b912fbead4d57da7",
+      "sha256": "61304e7b5973a08ac3ae4a089dc26a0bfd56bfe00d54794bb897063af47b7d07"
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.test.mjs",
+      "gitBlob": "ce3ba2c97935e68933648838a68a0bf191b00c82",
+      "sha256": "a33c7afd51ea2cbc7213d18140b34c7e9917bc68209d041e4f01741c7a7ca438"
+    }
+  ],
+  "gitDiffCheck": 0
+}

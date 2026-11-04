@@ -190,6 +190,20 @@ test('last page keeps omitted paths and partial inventory explicit',t=>{
  assert.equal(full.approvedForMerge,false);assert.equal(full.executedTests,0);assert.equal(full.apk,'NOT_RUN');
 });
 
+test('one oversized source retains exact totals while bounding path details',t=>{
+ const f=fixture(t);f.git('switch','-qc','large-source');
+ const directory=Array.from({length:12},(_,i)=>'segment-'+i+'-'+'x'.repeat(116)).join('/');
+ for(let i=0;i<2000;i++)f.write(directory+'/module-'+String(i).padStart(4,'0')+'.mjs','export const value=1;\n');
+ f.commit('long path inventory');f.git('switch','-q','target');
+ const report=discoverBranches({root:f.root,maxChanges:2000}),branch=report.branches[0];
+ assert.equal(branch.changeCount,2000);assert.equal(branch.missingCount,2000);
+ assert.ok(branch.changes.length>0&&branch.changes.length<2000);assert.equal(branch.changesTruncated,true);
+ assert.equal(report.coverage.byteLimitReached,true);assert.equal(report.coverage.complete,false);
+ assert.equal(report.nextCursor,null);
+ assert.ok(Buffer.byteLength(JSON.stringify(report)+'\n')<=report.coverage.reportByteLimit);
+ assert.equal(report.approvedForMerge,false);assert.equal(report.apk,'NOT_RUN');
+});
+
 test('invalid limits and option-like target references fail closed',t=>{
  const f=fixture(t);
  for(const options of [{maxSources:0},{maxSources:5001},{maxChanges:-1},{timeoutMs:0},{targetRef:'--upload-pack=anything'}])

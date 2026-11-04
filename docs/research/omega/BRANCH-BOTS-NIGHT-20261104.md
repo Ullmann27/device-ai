@@ -61,3 +61,13 @@ The relevant CLI/host/mobile-builder subset passes 72/72, no failures/skips. Exi
 Three actual Git fixture regressions were red before the fix. The old release source audit executed a configured fsmonitor helper and a configured clean filter (both harmless marker scripts), and accepted a current-worktree gitlink. The release audit now reuses assertBranchSourceSafe before obtaining cleanliness; unsafe configuration/submodules are rejected before status. A genuinely dirty checkout still returns the existing UNCLEAN_CHECKOUT blocker instead of changing the source-admission contract.
 
 The combined scanner/release-preflight subset passes 42/42, no failures/skips. This is a connection to the existing reader policy, not a second Git sandbox. The module now intentionally imports the existing branch-discovery guard from the repository. No APK was built and no external helper beyond the controlled fixtures was run.
+
+## M5 — bounded report volume
+
+A real Git fixture with 81 distinct source commits reproduced SERVICE_RECORD_TOO_LARGE under the previous default scan: the private 4 MiB record writer rejected the completed report, so no continuation could advance. Discovery now budgets its source report at 3 MiB, leaving room for the CLI's small environment diagnostic within the existing 4 MiB storage contract. A byte boundary creates another source page rather than an oversized write.
+
+The scanner/CLI subset passes 37/37, no failures/skips. It visits all 81 fixture source commits across actual process restarts. A separate 2,000-long-path source proves that a single oversized branch keeps its exact change totals while truncating detail explicitly; coverage remains incomplete and no APK or merge authority is granted. Oversized metadata or an individually unrepresentable record still fail closed. Git-output, time, proposal and canonical-backlog limits remain intact.
+
+## Current integration intake comparison
+
+Pinned PR #527 at ca80459a3f6695c8fecff4a217fbe93318452121 was compared against all 104 selected baseline code/test blobs. Exactly two differ: development-backlog.mjs contains the existing one-pass task-selection optimization, and the owner QA test arranges the same signing exclusions in its common negative-gate table. The seven files changed by this continuation have matching old preimages. Preserve both upstream files; never replace the complete current integration tree with this older branch base. A selected compatibility test and a bounded patch are being prepared.

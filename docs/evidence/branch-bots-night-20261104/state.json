@@ -7,7 +7,7 @@
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
   "ownerSession": "672924e4650b-night-20261104",
   "sourceSnapshot": "SELECTED_104_CODE_FILES_VERIFIED",
-  "phase": "COMBINED_VERIFICATION_AND_INTAKE",
+  "phase": "FINAL_INTAKE_VERIFICATION",
   "milestones": [
     {
       "id": "M1",
@@ -68,6 +68,22 @@
       "green": {
         "tests": 42,
         "pass": 42,
+        "fail": 0,
+        "skip": 0
+      },
+      "commit": "ef2146e560452ac7fe65603a31930ecf234eedaf"
+    },
+    {
+      "id": "M5",
+      "status": "SOURCE_TESTED",
+      "change": "Bound source report bytes and continue large inventories",
+      "red": {
+        "tests": 1,
+        "fail": 1
+      },
+      "green": {
+        "tests": 37,
+        "pass": 37,
         "fail": 0,
         "skip": 0
       }

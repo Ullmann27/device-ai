@@ -1,0 +1,232 @@
+TAP version 13
+# Subtest: one-shot bot persists genuine source differences and only canonical proposed work
+ok 1 - one-shot bot persists genuine source differences and only canonical proposed work
+  ---
+  duration_ms: 597.504768
+  type: 'test'
+  ...
+# Subtest: CLI restores installed Termux paths for diagnosis and keeps missing tools blocked
+ok 2 - CLI restores installed Termux paths for diagnosis and keeps missing tools blocked
+  ---
+  duration_ms: 588.777417
+  type: 'test'
+  ...
+# Subtest: finite loop uses the existing durable scheduler and stops at the approved budget
+ok 3 - finite loop uses the existing durable scheduler and stops at the approved budget
+  ---
+  duration_ms: 572.032595
+  type: 'test'
+  ...
+# Subtest: CLI refuses unknown, duplicate and unbounded modes before creating state
+ok 4 - CLI refuses unknown, duplicate and unbounded modes before creating state
+  ---
+  duration_ms: 786.103035
+  type: 'test'
+  ...
+# Subtest: CLI incomplete coverage is nonzero and never reports a completed full inventory
+ok 5 - CLI incomplete coverage is nonzero and never reports a completed full inventory
+  ---
+  duration_ms: 328.43342
+  type: 'test'
+  ...
+# Subtest: resumable single passes reach later branches across process restarts
+ok 6 - resumable single passes reach later branches across process restarts
+  ---
+  duration_ms: 1377.881288
+  type: 'test'
+  ...
+# Subtest: finite scheduler records successful pages without declaring a full inventory
+ok 7 - finite scheduler records successful pages without declaring a full inventory
+  ---
+  duration_ms: 627.22075
+  type: 'test'
+  ...
+# Subtest: changed refs restart source paging while crash replay deduplicates proposals
+ok 8 - changed refs restart source paging while crash replay deduplicates proposals
+  ---
+  duration_ms: 857.488995
+  type: 'test'
+  ...
+# Subtest: scan state rejects corruption, changed settings and altered report bytes
+ok 9 - scan state rejects corruption, changed settings and altered report bytes
+  ---
+  duration_ms: 797.433193
+  type: 'test'
+  ...
+# Subtest: scan state cannot follow links or steal a live existing scheduler lock
+ok 10 - scan state cannot follow links or steal a live existing scheduler lock
+  ---
+  duration_ms: 634.149957
+  type: 'test'
+  ...
+# Subtest: partial paths remain errors while subsequent pages keep progressing
+ok 11 - partial paths remain errors while subsequent pages keep progressing
+  ---
+  duration_ms: 730.110715
+  type: 'test'
+  ...
+# Subtest: proposal budget deferrals are recovered on the next source sweep
+ok 12 - proposal budget deferrals are recovered on the next source sweep
+  ---
+  duration_ms: 847.723722
+  type: 'test'
+  ...
+# Subtest: termination during diagnosis leaves resumable state and queue unadvanced
+ok 13 - termination during diagnosis leaves resumable state and queue unadvanced
+  ---
+  duration_ms: 544.193966
+  type: 'test'
+  ...
+# Subtest: large branch inventories advance within the existing private record size limit
+ok 14 - large branch inventories advance within the existing private record size limit
+  ---
+  duration_ms: 2459.621571
+  type: 'test'
+  ...
+# Subtest: CLI cannot write through a state path into the source checkout
+ok 15 - CLI cannot write through a state path into the source checkout
+  ---
+  duration_ms: 136.647262
+  type: 'test'
+  ...
+# Subtest: CLI rejects a configuration mask before the existing scheduler can inspect source
+ok 16 - CLI rejects a configuration mask before the existing scheduler can inspect source
+  ---
+  duration_ms: 118.805302
+  type: 'test'
+  ...
+# Subtest: finds unconnected remote, archived and pull refs once per exact source commit
+ok 17 - finds unconnected remote, archived and pull refs once per exact source commit
+  ---
+  duration_ms: 171.366668
+  type: 'test'
+  ...
+# Subtest: distinguishes ancestry from copied changes without using branch names as quality evidence
+ok 18 - distinguishes ancestry from copied changes without using branch names as quality evidence
+  ---
+  duration_ms: 198.5916
+  type: 'test'
+  ...
+# Subtest: reports identical source trees even when commits differ
+ok 19 - reports identical source trees even when commits differ
+  ---
+  duration_ms: 127.45891
+  type: 'test'
+  ...
+# Subtest: detects divergent modifications and deletions without overwriting target files
+ok 20 - detects divergent modifications and deletions without overwriting target files
+  ---
+  duration_ms: 137.537329
+  type: 'test'
+  ...
+# Subtest: keeps tests, build files, symlinks and control plane work protected
+ok 21 - keeps tests, build files, symlinks and control plane work protected
+  ---
+  duration_ms: 132.619079
+  type: 'test'
+  ...
+# Subtest: labels unrelated history and never queues it as an integration candidate
+ok 22 - labels unrelated history and never queues it as an integration candidate
+  ---
+  duration_ms: 147.822687
+  type: 'test'
+  ...
+# Subtest: canonical backlog proposals are idempotent, source bound and never automatically accepted
+ok 23 - canonical backlog proposals are idempotent, source bound and never automatically accepted
+  ---
+  duration_ms: 399.55571
+  type: 'test'
+  ...
+# Subtest: serialized or stale discovery output cannot enqueue fresh review authority
+ok 24 - serialized or stale discovery output cannot enqueue fresh review authority
+  ---
+  duration_ms: 131.075679
+  type: 'test'
+  ...
+# Subtest: state inside the source or redirected into it is refused before writes
+ok 25 - state inside the source or redirected into it is refused before writes
+  ---
+  duration_ms: 148.019619
+  type: 'test'
+  ...
+# Subtest: bounded discovery exposes incomplete source and path coverage
+ok 26 - bounded discovery exposes incomplete source and path coverage
+  ---
+  duration_ms: 210.727118
+  type: 'test'
+  ...
+# Subtest: source pages eventually inspect every unique available commit
+ok 27 - source pages eventually inspect every unique available commit
+  ---
+  duration_ms: 509.889645
+  type: 'test'
+  ...
+# Subtest: page cursors reject malformed positions and changed source identity
+ok 28 - page cursors reject malformed positions and changed source identity
+  ---
+  duration_ms: 509.915604
+  type: 'test'
+  ...
+# Subtest: last page keeps omitted paths and partial inventory explicit
+ok 29 - last page keeps omitted paths and partial inventory explicit
+  ---
+  duration_ms: 292.659608
+  type: 'test'
+  ...
+# Subtest: one oversized source retains exact totals while bounding path details
+ok 30 - one oversized source retains exact totals while bounding path details
+  ---
+  duration_ms: 448.703391
+  type: 'test'
+  ...
+# Subtest: invalid limits and option-like target references fail closed
+ok 31 - invalid limits and option-like target references fail closed
+  ---
+  duration_ms: 22.449037
+  type: 'test'
+  ...
+# Subtest: dirty checkouts and planted backlog symlinks are refused
+ok 32 - dirty checkouts and planted backlog symlinks are refused
+  ---
+  duration_ms: 162.090815
+  type: 'test'
+  ...
+# Subtest: branch bot control files are protected by the real coding and repair gates
+ok 33 - branch bot control files are protected by the real coding and repair gates
+  ---
+  duration_ms: 0.270696
+  type: 'test'
+  ...
+# Subtest: configured clean filters cannot execute during the cleanliness check
+ok 34 - configured clean filters cannot execute during the cleanliness check
+  ---
+  duration_ms: 56.424614
+  type: 'test'
+  ...
+# Subtest: preflight rejects fsmonitor hooks and partial clones before inspecting worktree state
+ok 35 - preflight rejects fsmonitor hooks and partial clones before inspecting worktree state
+  ---
+  duration_ms: 43.355688
+  type: 'test'
+  ...
+# Subtest: configuration mask cannot hide executable clean filters from discovery
+ok 36 - configuration mask cannot hide executable clean filters from discovery
+  ---
+  duration_ms: 33.818145
+  type: 'test'
+  ...
+# Subtest: current worktree gitlinks are rejected before nested worktree status
+ok 37 - current worktree gitlinks are rejected before nested worktree status
+  ---
+  duration_ms: 50.832175
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12113.851861

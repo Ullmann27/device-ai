@@ -11,6 +11,7 @@ const ZERO='0'.repeat(40);
 const admitted=new WeakMap();
 const ACTOR='branch-discovery-bot';
 const MAX_OUTPUT=8*1024*1024;
+const MAX_REPORT_BYTES=3*1024*1024;
 const freeze=value=>{
  if(value&&typeof value==='object'&&!Object.isFrozen(value)){
   for(const child of Object.values(value))freeze(child);
@@ -181,21 +182,47 @@ export function discoverBranches({root,targetRef='HEAD',maxSources=1000,maxChang
   sourceOffset=cursor.nextSourceOffset;
  }
  const branches=[];
+ const metadata={schema:'continuum-branch-discovery',version:1,sourceRoot,checkoutCommit,targetRef,targetCommit,
+  refSnapshotSha256:snapshot.digest,scope:'LOCAL_AVAILABLE_REFS_ONLY',networkFetch:false,historyComplete,
+  coverage:{availableRefs:snapshot.refs.length,ignoredRefs:snapshot.ignored,totalSources:sources.length,
+   scannedSources:10000,sourceOffset,endOffset:10000,remainingSources:10000,complete:false,maxSources,maxChanges,
+   reportByteLimit:MAX_REPORT_BYTES,byteLimitReached:false},
+  nextCursor:{...identity,nextSourceOffset:10000},branches:[],executedTests:0,approvedForMerge:false,deviceVerified:false,apk:'NOT_RUN'};
+ let reportBytes=Buffer.byteLength(JSON.stringify(metadata)+'\n'),byteLimitReached=false;
+ if(reportBytes>MAX_REPORT_BYTES)throw Error('DISCOVERY_REPORT_METADATA_LIMIT');
+ const appendBranch=branch=>{
+  const separator=branches.length?1:0;
+  let bytes=Buffer.byteLength(JSON.stringify(branch));
+  if(reportBytes+bytes+separator>MAX_REPORT_BYTES){
+   byteLimitReached=true;
+   if(branches.length)return false;
+   const details=branch.changes;let lower=0,upper=details.length;
+   branch.changesTruncated=true;
+   while(lower<upper){
+    const middle=Math.ceil((lower+upper)/2);branch.changes=details.slice(0,middle);
+    if(reportBytes+Buffer.byteLength(JSON.stringify(branch))<=MAX_REPORT_BYTES)lower=middle;
+    else upper=middle-1;
+   }
+   branch.changes=details.slice(0,lower);bytes=Buffer.byteLength(JSON.stringify(branch));
+   if(reportBytes+bytes>MAX_REPORT_BYTES)throw Error('DISCOVERY_REPORT_RECORD_LIMIT');
+  }
+  reportBytes+=bytes+separator;branches.push(branch);return true;
+ };
  for(const [sourceCommit,refs] of sources.slice(sourceOffset,sourceOffset+maxSources)){
   const branch={sourceCommit,refs,mergeBase:null,status:null,changes:[],changeCount:0,
    alreadyPresentCount:0,missingCount:0,divergedCount:0,deletionCount:0,changesTruncated:false,
    quality:'NOT_BENCHMARKED',apk:'NOT_RUN'};
   if(git(['merge-base','--is-ancestor',sourceCommit,targetCommit],[0,1]).status===0){
-   branch.status='ALREADY_ANCESTOR';branches.push(branch);continue;
+   branch.status='ALREADY_ANCESTOR';if(!appendBranch(branch))break;continue;
   }
   if(git(['rev-parse',sourceCommit+'^{tree}']).stdout.trim()===targetTreeSha){
-   branch.status='TREE_IDENTICAL';branches.push(branch);continue;
+   branch.status='TREE_IDENTICAL';if(!appendBranch(branch))break;continue;
   }
   const merge=git(['merge-base','--all',targetCommit,sourceCommit],[0,1]);
   const bases=merge.stdout.trim()?merge.stdout.trim().split('\n'):[];
   if(bases.length!==1){
    branch.status=bases.length>1?'AMBIGUOUS_MERGE_BASE':historyComplete?'UNRELATED_HISTORY':'INCOMPLETE_HISTORY';
-   branches.push(branch);continue;
+   if(!appendBranch(branch))break;continue;
   }
   if(!COMMIT.test(bases[0]))throw Error('DISCOVERY_MERGE_BASE_INVALID');
   branch.mergeBase=bases[0];
@@ -212,20 +239,18 @@ export function discoverBranches({root,targetRef='HEAD',maxSources=1000,maxChang
   }
   branch.changesTruncated=branch.changeCount>branch.changes.length;
   branch.status=branch.changeCount?'UNINTEGRATED_CHANGES':'CHANGES_ALREADY_PRESENT';
-  branches.push(branch);
+  if(!appendBranch(branch))break;
  }
  // Moving refs or source edits cannot turn a mixed scan into a pinned observation.
  if(resolveCommit(git,'HEAD')!==checkoutCommit||resolveCommit(git,targetRef)!==targetCommit||readRefs(git).digest!==snapshot.digest)
   throw Error('DISCOVERY_REFS_CHANGED_DURING_SCAN');
  cleanSource(git,sourceRoot);
  const endOffset=sourceOffset+branches.length;
- const report=freeze({schema:'continuum-branch-discovery',version:1,sourceRoot,checkoutCommit,targetRef,targetCommit,
-  refSnapshotSha256:snapshot.digest,scope:'LOCAL_AVAILABLE_REFS_ONLY',networkFetch:false,historyComplete,
-  coverage:{availableRefs:snapshot.refs.length,ignoredRefs:snapshot.ignored,totalSources:sources.length,
-   scannedSources:branches.length,sourceOffset,endOffset,remainingSources:sources.length-endOffset,
-   complete:sourceOffset===0&&branches.length===sources.length&&!branches.some(x=>x.changesTruncated),maxSources,maxChanges},
+ const report=freeze({...metadata,
+  coverage:{...metadata.coverage,scannedSources:branches.length,endOffset,remainingSources:sources.length-endOffset,
+   complete:sourceOffset===0&&branches.length===sources.length&&!branches.some(x=>x.changesTruncated),byteLimitReached},
   nextCursor:endOffset<sources.length?{...identity,nextSourceOffset:endOffset}:null,
-  branches,executedTests:0,approvedForMerge:false,deviceVerified:false,apk:'NOT_RUN'});
+  branches});
  admitted.set(report,{sourceRoot,checkoutCommit,targetRef,targetCommit,refDigest:snapshot.digest});
  return report;
 }

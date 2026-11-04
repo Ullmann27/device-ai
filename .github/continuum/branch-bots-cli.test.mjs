@@ -224,6 +224,27 @@ test('termination during diagnosis leaves resumable state and queue unadvanced',
  }finally{if(child.exitCode===null&&child.signalCode===null)child.kill('SIGKILL');await done;}
 });
 
+test('large branch inventories advance within the existing private record size limit',t=>{
+ const f=fixture(t);f.git('switch','-qc','bulk-source');
+ for(let i=0;i<200;i++)f.write('lib/module-'+String(i).padStart(3,'0')+'-'+'x'.repeat(80)+'.mjs','export const value=1;\n');
+ const source=f.commit('bulk source'),tree=f.git('rev-parse','HEAD^{tree}');f.git('switch','-q','target');
+ const sources=[source,f.source];
+ for(let i=0;i<79;i++){
+  const sha=f.git('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit-tree',tree,'-p',f.base,'-m','branch '+i);
+  f.git('update-ref','refs/archive/bulk-'+String(i).padStart(3,'0'),sha);sources.push(sha);
+ }
+ const seen=[];
+ for(let i=0;i<8;i++){
+  const result=f.run('--once','--continue-scan');assert.equal(result.status,0,result.stderr);
+  const cycle=JSON.parse(result.stdout).cycle,bytes=fs.readFileSync(cycle.report),report=JSON.parse(bytes);
+  assert.ok(bytes.length<=4*1024*1024);assert.equal(cycle.complete,false);assert.equal(cycle.pageComplete,true);
+  seen.push(...report.branches.map(x=>x.sourceCommit));
+  if(cycle.nextCursor===null)break;
+ }
+ assert.deepEqual(seen.sort(),sources.sort());assert.equal(new Set(seen).size,81);
+ assert.equal(f.git('status','--porcelain'),'');assert.equal(f.git('rev-parse','HEAD'),f.base);
+});
+
 test('CLI cannot write through a state path into the source checkout',t=>{
  const f=fixture(t),r=spawnSync(process.execPath,[cli,'--root',f.root,'--state',path.join(f.root,'state'),'--once'],{encoding:'utf8',timeout:10000});
  assert.notEqual(r.status,0);assert.match(r.stderr,/STATE_INSIDE_SOURCE/);assert.equal(f.git('status','--porcelain'),'');
