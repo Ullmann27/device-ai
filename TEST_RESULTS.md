@@ -35,3 +35,9 @@ JarvisMotion/JarvisNeon/JarvisDesign taken unchanged from #479 tip c617e1ab (fil
 ## Step 4 (Muster F envelope, G question pills, H alarm) – rerun
 `--tests 'at.heinz.deviceai.ui.Jarvis*' 'avatar.*' 'cockpit.*' ContinuumAvatarNativeUiTest` + compileDebugKotlin: BUILD SUCCESSFUL, all green.
 (Wider `ui.*` run: only the 3 pre-existing AdaptiveCockpit/CoreMirror failures.)
+
+## Step 5 (Filament path + AvatarMorphMapper) – rerun
+`compileDebugKotlin` + `avatar3d.*`, `avatar.*`, ContinuumAvatar3dLifecycleUiTest, ContinuumAvatarNativeUiTest: all green,
+incl. new Avatar3dContractTest.visemesCrossfadeOverSeventyMillisecondsAndBlinkLastsFifteenHundredths.
+Filament changes (bloom .35, iris/pupil hidden via layer mask, emissive glow from TTS envelope, idle float + Z drift)
+compile only – NOT verifiable on host (no GPU); needs device check.
