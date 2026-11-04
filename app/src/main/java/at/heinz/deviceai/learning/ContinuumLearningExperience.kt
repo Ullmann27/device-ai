@@ -292,7 +292,7 @@ class FileLearningExperienceStore(private val directory:File) {
                 else scan.state.unrepaired=true
                 val r=LedgerRecoveryReport(off,frames,frames-1,q,null,scan.reason ?: "damaged record",sideEffectFailures=failures)
                 report(r)
-                return salvageRestrictive(scan.state,bytes,off,r)
+                return pendRecovered(salvageRestrictive(scan.state,bytes,off,r),bytes.copyOfRange(off.toInt(),bytes.size))
             }
         } else if(!LearningExperienceCodec.isLog(bytes)) {
             runCatching { LearningExperienceCodec.decode(bytes) }.getOrNull()?.let { items ->
@@ -317,7 +317,7 @@ class FileLearningExperienceStore(private val directory:File) {
             val r=LedgerRecoveryReport(0,LearningExperienceCodec.countFrames(damaged,minOf(8L,damaged.size.toLong())),0,q,bak,
                 "primary unreadable from the start; restored newest valid backup",sideEffectFailures=failures)
             report(r)
-            return salvageRestrictive(state,damaged,minOf(8L,damaged.size.toLong()),r)
+            return pendRecovered(salvageRestrictive(state,damaged,minOf(8L,damaged.size.toLong()),r),damaged)
         }
         if(LearningExperienceCodec.isLog(damaged) && LearningExperienceCodec.hasLogVersion(damaged) && damaged.size>8) {
             val frames=LearningExperienceCodec.countFrames(damaged,8)
@@ -326,7 +326,7 @@ class FileLearningExperienceStore(private val directory:File) {
             if(q!=null) java.io.RandomAccessFile(primary,"rw").use { it.setLength(8);it.fd.sync() }
             report(LedgerRecoveryReport(8,frames,frames-1,q,null,"first record damaged and no valid backup; ledger restarted empty",
                 sideEffectFailures=failures))
-            return LearningExperienceCodec.scanLog(damaged.copyOf(8)).state.also { it.unrepaired=q==null }
+            return pendRecovered(LearningExperienceCodec.scanLog(damaged.copyOf(8)).state.also { it.unrepaired=q==null },damaged)
         }
         throw IllegalArgumentException("Learning ledger unreadable and no valid backup")
     }
@@ -353,6 +353,87 @@ class FileLearningExperienceStore(private val directory:File) {
         report(r.copy(salvagedRevocations=updates.size))
         return loadState()
     }
+
+    private val pendingFile=File(directory,"experiences-v2.pending-reconfirm.properties")
+
+    /** M2.10 (Heinz, 04.11. 10:07): after ANY recovery every restored active owner fact (USER_FACT +
+     * OWNER_CONFIRMED) is marked pendingOwnerReconfirmation in a sidecar (the LEX4 record format is unchanged)
+     * and counts as inactive (projected to OBSERVED, i.e. UNCONFIRMED, by [effective]) until the owner confirms
+     * it via [reconfirmPending]. A pending fact whose id also appears in the damaged/unverified bytes may have
+     * been revoked there; it is marked BLOCKED and can never be reactivated through reconfirmation. */
+    private fun pendRecovered(state:LearningExperienceCodec.LogState,damaged:ByteArray):LearningExperienceCodec.LogState {
+        val text=String(damaged,Charsets.ISO_8859_1)
+        val marks=LinkedHashMap(pendingMarks())
+        state.items.filter { isOwnerFact(it) && it.status in ACTIVE }.forEach { e ->
+            marks[e.id]=if(marks[e.id]==BLOCKED || text.contains(e.id)) BLOCKED else e.contentHash
+        }
+        writePendingMarks(marks)
+        return state
+    }
+
+    private fun pendingMarks():Map<String,String> {
+        PENDING[primary.absolutePath]?.let { return it }
+        if(!pendingFile.isFile)return emptyMap()
+        val p=runCatching { java.util.Properties().apply { pendingFile.inputStream().use { load(it) } } }.getOrNull()
+        // An unreadable marker file fails closed: every owner fact stays inactive until it is readable again.
+        val m=p?.stringPropertyNames()?.filter { it.startsWith("lx-") }?.associateWith { p.getProperty(it) }
+            ?: mapOf(UNREADABLE to BLOCKED)
+        PENDING[primary.absolutePath]=m
+        return m
+    }
+
+    private fun writePendingMarks(marks:Map<String,String>) {
+        PENDING[primary.absolutePath]=marks // the in-process view stays authoritative even if the disk write fails
+        try {
+            ioFaultForTest?.invoke(pendingFile)
+            if(marks.isEmpty()) { if(pendingFile.exists())writeAtomically(pendingFile,ByteArray(0));return }
+            val p=java.util.Properties().apply { setProperty("format","1");marks.forEach { (k,v) -> setProperty(k,v) } }
+            val out=ByteArrayOutputStream().also { p.store(it,"M2.10 pendingOwnerReconfirmation: ids and hashes only, no content") }
+            writeAtomically(pendingFile,out.toByteArray())
+        } catch(e:Exception) {
+            java.util.logging.Logger.getLogger("ContinuumLedger").warning("Pending-reconfirmation write failed: ${e.javaClass.simpleName}")
+        }
+    }
+
+    /** Ids of restored owner facts that still await the owner's reconfirmation (BLOCKED ones included). */
+    fun pendingOwnerReconfirmation():Set<String> = synchronized(FILE_LOCK) {
+        if(primary.exists()) loadValidated()
+        pendingMarks().keys.filter { it.startsWith("lx-") }.toSet()
+    }
+
+    /** Ledger view for every reader that decides what is active: pending owner facts are projected to OBSERVED,
+     * so retrieval, stats and events count them as unconfirmed. [all] stays the raw, unchanged ledger. */
+    fun effective():List<LearningExperience> = synchronized(FILE_LOCK) { project(loadValidated()) }
+
+    internal fun project(items:List<LearningExperience>):List<LearningExperience> {
+        val marks=pendingMarks()
+        if(marks.isEmpty())return items
+        val failClosed=UNREADABLE in marks
+        return items.map { e ->
+            if(isOwnerFact(e) && e.status in ACTIVE && (failClosed || e.id in marks)) e.copy(status=LearningStatus.OBSERVED) else e
+        }
+    }
+
+    /** Clears pendingOwnerReconfirmation for [ids] (null = all reconfirmable). Only active, hash-matching,
+     * non-BLOCKED owner facts are reactivated; a revoked/rejected record is never touched. Callers must hold an
+     * owner proof (ContinuumLearningCore.reconfirmRecoveredOwnerFacts). Returns the reactivated ids. */
+    internal fun reconfirmPending(ids:Set<String>?):Set<String> = synchronized(FILE_LOCK) {
+        val current=loadValidated().associateBy { it.id }
+        val marks=LinkedHashMap(pendingMarks())
+        if(UNREADABLE in marks)return@synchronized emptySet()
+        val done=marks.filter { (id,hash) -> (ids==null || id in ids) && hash!=BLOCKED &&
+            current[id]?.let { it.contentHash==hash && it.status in ACTIVE && isOwnerFact(it) }==true }.keys.toSet()
+        if(done.isEmpty())return@synchronized done
+        done.forEach(marks::remove)
+        writePendingMarks(marks)
+        val hub=events
+        if(hub.hasListeners()) done.forEach { id -> current[id]?.let {
+            hub.emit(MemoryStored(it.id,ContinuumMemoryEventHub.statusOf(it),it.updatedAt)) } }
+        done
+    }
+
+    private fun isOwnerFact(e:LearningExperience)=
+        e.type==LearningExperienceType.USER_FACT && e.trust==LearningTrustClass.OWNER_CONFIRMED
 
     private fun quarantine(bytes:ByteArray,failures:MutableList<String>):File? = try { quarantineOrThrow(bytes) } catch(e:Exception) {
         failures+="quarantine: ${e.javaClass.simpleName}"
@@ -443,7 +524,7 @@ class FileLearningExperienceStore(private val directory:File) {
         if(!hub.hasListeners()) { saveInner(items);return }
         val previous=if(primary.exists()) runCatching { loadState().items.associateBy { it.id } }.getOrNull() ?: emptyMap() else emptyMap()
         saveInner(items)
-        items.filter { previous[it.id]!=it }.forEach {
+        project(items.filter { previous[it.id]!=it }).forEach {
             hub.emit(MemoryStored(it.id,ContinuumMemoryEventHub.statusOf(it),it.updatedAt)) }
     }
 
@@ -516,11 +597,16 @@ class FileLearningExperienceStore(private val directory:File) {
         private val LOG_CACHE=HashMap<String,LearningExperienceCodec.LogState>()
         private val RECOVERY=HashMap<String,LedgerRecoveryReport>()
         private val APPENDS=HashMap<String,Int>()
+        private val PENDING=HashMap<String,Map<String,String>>()
+        private val ACTIVE=setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING)
+        private const val BLOCKED="BLOCKED"
+        private const val UNREADABLE="unreadable"
+
         /** Amortised: one ~1 MB copy per 256 appends keeps write p95 flat (affects <0.4 % of writes). */
         const val ROTATE_EVERY_APPENDS=256
         /** Test-only IO fault injection for side writes (backup, quarantine, report). */
         @Volatile internal var ioFaultForTest:((File)->Unit)?=null
-        internal fun resetCachesForTest() = synchronized(FILE_LOCK) { LOG_CACHE.clear();RECOVERY.clear();APPENDS.clear() }
+        internal fun resetCachesForTest() = synchronized(FILE_LOCK) { LOG_CACHE.clear();RECOVERY.clear();APPENDS.clear();PENDING.clear() }
         internal const val ABSENT_FINGERPRINT="absent"
     }
 }

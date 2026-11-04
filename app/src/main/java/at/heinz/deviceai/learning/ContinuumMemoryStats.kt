@@ -30,7 +30,7 @@ class ContinuumMemoryStatsReader(appDirectory:File, private val clock:Clock = Cl
     private val store=FileLearningExperienceStore(File(appDirectory,"learning-core-v2"))
 
     fun read():ContinuumMemoryStats {
-        val items=store.all()
+        val items=store.effective() // M2.10: pending restored facts count as unconfirmed
         val midnight=LocalDate.now(clock).atStartOfDay(clock.zone).toInstant().toEpochMilli()
         val owner=items.filter { it.type==LearningExperienceType.USER_FACT && it.trust==LearningTrustClass.OWNER_CONFIRMED }
         val held=owner.filter { it.status==LearningStatus.OBSERVED }
