@@ -27,8 +27,10 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
             return { handler.removeCallbacks(runnable) }
         }
         override fun create(callbacks: LocalSpeechSession.Callbacks): LocalSpeechSession.Recognizer {
-            if (Build.VERSION.SDK_INT < 31) error("ON_DEVICE_RECOGNITION_REQUIRES_API_31")
-            val recognizer = SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
+            // Guard in the expression itself so lint sees the API check (same behaviour as before).
+            val recognizer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
+            else error("ON_DEVICE_RECOGNITION_REQUIRES_API_31")
             try {
                 recognizer.setRecognitionListener(object : RecognitionListener {
                     override fun onReadyForSpeech(params: Bundle?) = callbacks.ready()
