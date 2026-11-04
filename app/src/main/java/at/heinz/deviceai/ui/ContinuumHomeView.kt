@@ -171,6 +171,9 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     val wide: Boolean get() = layoutSpec?.wide == true
     val referenceCockpit: Boolean get() = layoutSpec?.referenceCockpit == true
+    val landscapeCockpit: Boolean get() = layoutSpec?.landscapeCockpit == true
+    /** The drawn view of [slot] (animation layer / tests); null if the composition has no such slot. */
+    fun viewFor(slot: Slot): View? = if (slot == ContinuumLandscapeCockpitLayout.AVATAR_SLOT) hologram else views[slot]
     /** Geometry belongs to the composition, not to the presence of an adaptive worker card. */
     val intendedGeometry: ContinuumHologramRenderer.Geometry
         get() {

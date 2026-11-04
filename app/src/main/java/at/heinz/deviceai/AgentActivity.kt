@@ -1134,7 +1134,11 @@ class AgentActivity : Activity() {
                     showDevelopmentBacklog() else showDevelopmentCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SYSTEM_STATUS -> showSystemCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SYSTEM_ACTIVITY -> showDiagnosticsCenter()
-            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.WORKERS -> showDevelopmentBacklog()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.WORKERS ->
+                if (homeView?.landscapeCockpit == true) showChiefWorkerStatus() else showDevelopmentBacklog()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.PROCESSES -> navigateWorkArea(ContinuumWorkArea.CHAT)
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LIVE_DIALOG -> navigateWorkArea(ContinuumWorkArea.CHAT)
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_VERIFY -> showDiagnosticsCenter()
             else -> Unit
         }
     }

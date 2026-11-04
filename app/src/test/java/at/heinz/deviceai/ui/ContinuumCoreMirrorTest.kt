@@ -13,7 +13,9 @@ class ContinuumCoreMirrorTest {
         ContinuumHomeLayout.phone(360f), ContinuumHomeLayout.phone(412f),
         ContinuumHomeLayout.wide(840f, 649f), ContinuumHomeLayout.wide(832f, 708f),
         ContinuumHomeLayout.wide(656f, 690f), ContinuumHomeLayout.wide(840f, 1050f)
-    )
+    // 2026-11-04: landscape windows now use the ref1/ref3 cockpit (ContinuumLandscapeCockpitLayoutTest);
+    // this mirror composition remains the phone/portrait/large-type layout.
+    ).filterNot { it.landscapeCockpit }
 
     @Test fun allEightControlsKeepEqualBoundsAndBalancedRows() {
         for (layout in layouts) {
