@@ -1079,23 +1079,46 @@ class AgentActivity : Activity() {
         renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat(),
         renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()) * resources.displayMetrics.density)
 
-    /** ref5 side rail (open Fold7, both orientations): 8 entries, each through [menuNavigator]. */
+    /** Real device status for the rail header (ref5 top left): user device name, system clock and date. */
+    private fun currentDeviceStatus(): at.heinz.deviceai.ui.JarvisDeviceStatus {
+        val name = runCatching {
+            android.provider.Settings.Global.getString(contentResolver, android.provider.Settings.Global.DEVICE_NAME)
+        }.getOrNull()?.takeIf { it.isNotBlank() } ?: android.os.Build.MODEL?.takeIf { it.isNotBlank() }
+        val now = java.util.Date()
+        val time = android.text.format.DateFormat.getTimeFormat(this).format(now)
+        val date = java.text.SimpleDateFormat(
+            android.text.format.DateFormat.getBestDateTimePattern(java.util.Locale.getDefault(), "EEEdMMM"),
+            java.util.Locale.getDefault()).format(now)
+        return at.heinz.deviceai.ui.JarvisDeviceStatus(name, time, date)
+    }
+
+    /** ref5 side rail (open Fold7, both orientations): the 11 ref5 entries, each through [menuNavigator]. */
     private fun buildRail(): View {
         val element = at.heinz.deviceai.ui.JarvisMenuRailElement(
             at.heinz.deviceai.ui.JarvisMenu.railIndex(menuNavigator.current).coerceAtLeast(0),
-            resources.configuration.fontScale.coerceIn(.85f, 1.3f))
+            resources.configuration.fontScale.coerceIn(.85f, 1.3f), device = currentDeviceStatus())
         val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element, 1f) { _, _ -> }.apply {
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             isClickable = false
         }
+        // Clock/date of the rail header follow the real system time (one redraw per minute while attached).
+        val tick = object : Runnable {
+            override fun run() {
+                element.device = currentDeviceStatus(); drawn.invalidate()
+                drawn.postDelayed(this, 60_000L - System.currentTimeMillis() % 60_000L)
+            }
+        }
+        drawn.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) { v.post(tick) }
+            override fun onViewDetachedFromWindow(v: View) { v.removeCallbacks(tick) }
+        })
         railView = drawn
         val density = resources.displayMetrics.density
         val entries = at.heinz.deviceai.ui.JarvisMenu.railEntries
         val container = object : android.widget.FrameLayout(this) {
             override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
                 // Keep every rail destination at least 48dp tall when the IME reduces the window.
-                val minPx = dp((at.heinz.deviceai.ui.JarvisMenuRail.MIN_ROW * entries.size +
-                    2 * at.heinz.deviceai.ui.JarvisMenuRail.PAD).toInt())
+                val minPx = dp(kotlin.math.ceil(at.heinz.deviceai.ui.JarvisMenuRail.minHeightDp(entries.size)).toInt())
                 super.onMeasure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(
                     maxOf(View.MeasureSpec.getSize(heightMeasureSpec), minPx), View.MeasureSpec.EXACTLY))
             }

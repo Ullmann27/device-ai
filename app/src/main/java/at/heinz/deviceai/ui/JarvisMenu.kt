@@ -20,17 +20,25 @@ object JarvisMenu {
 
     data class Entry(val target: String, val label: String, val icon: Icon, val kind: Kind)
 
-    /** ref5 / VIDEO-SPEC rail (German labels from the spec, same order). */
-    val railEntries = listOf(
-        Entry("home", "Übersicht", Icon.HOME, Kind.AREA),
-        Entry("chat", "Chat", Icon.CHAT, Kind.AREA),
-        Entry("agents", "Agenten", Icon.USERS, Kind.SCENE),
-        Entry("memory", "Gedächtnis", Icon.DATABASE, Kind.SCENE),
-        Entry("research", "Forschung", Icon.SEARCH, Kind.SCENE),
-        Entry("development", "Entwicklung", Icon.CODE, Kind.SCENE),
-        Entry("system", "System", Icon.GEAR, Kind.SCENE),
-        Entry("live", "Live-Status", Icon.PULSE, Kind.SCENE),
-    )
+    /**
+     * ref5 rail: the eleven entries in ref5's order (Home, Chat, Memory, Logic, Research, Agents, Tasks, Web,
+     * Learning, Device Control, System Status), German labels and icons from Kern's JarvisTiles.railNav, so
+     * there is one list. Home/Chat switch the main pane (B), all others open their own screen (A).
+     */
+    val railEntries: List<Entry> = JarvisTiles.railNav.map {
+        Entry(it.target, it.label, it.icon, if (it.target == "home" || it.target == "chat") Kind.AREA else Kind.SCENE)
+    }
+
+    /** Shorter label when the full one does not fit the 108 dp ref5 button at Type.nav (full label stays for TalkBack). */
+    val shortLabels: Map<String, String> = mapOf("device" to "Gerät", "system" to "System")
+
+    fun fitLabel(p: ContinuumPainter, e: Entry, buttonWidth: Float): String {
+        val st = JarvisDesign.Styles.button
+        val room = buttonWidth - 2 * st.padH - st.iconSize - st.iconGap
+        if (p.measureText(e.label, JarvisDesign.Type.nav) <= room) return e.label
+        val short = shortLabels[e.target] ?: e.label
+        return JarvisShellRenderer.fit(p, short, JarvisDesign.Type.nav, room)
+    }
 
     /**
      * Kern's tile/nav routes (JarvisShellContent.routes, JarvisTile.target) plus the three targets the rail and the

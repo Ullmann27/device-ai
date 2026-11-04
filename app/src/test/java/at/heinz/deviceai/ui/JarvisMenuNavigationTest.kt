@@ -22,15 +22,19 @@ class JarvisMenuNavigationTest {
         return Triple(JarvisMenuNavigator(CockpitAnimationTriggers(bus) { 42L }, { opened += it }), opened, events)
     }
 
-    @Test fun railHasTheEightSpecEntriesInOrder() {
-        assertEquals(listOf("Übersicht", "Chat", "Agenten", "Gedächtnis", "Forschung", "Entwicklung", "System", "Live-Status"),
-            JarvisMenu.railEntries.map { it.label })
+    @Test fun railHasTheElevenRef5EntriesInOrder() {
+        // ref5: Home, Chat, Memory, Logic, Research, Agents, Tasks, Web, Learning, Device Control, System Status
+        assertEquals(listOf("home", "chat", "memory", "logic", "research", "agents", "tasks", "web", "learning", "device", "system"),
+            JarvisMenu.railEntries.map { it.target })
+        assertEquals(JarvisTiles.railNav.map { it.label }, JarvisMenu.railEntries.map { it.label }) // one list (Kern)
+        assertEquals(listOf("home", "chat"), JarvisMenu.railEntries.filter { it.kind == JarvisMenu.Kind.AREA }.map { it.target })
     }
 
     @Test fun everyRailAndTileTargetOpensAnExistingScreen() {
-        val expected = mapOf("home" to Slot.BRAND, "chat" to Slot.LABEL_THINKING, "agents" to Slot.ACTION_AGENTS,
-            "memory" to Slot.ACTION_MEMORY, "research" to Slot.LABEL_ANALYSING, "development" to Slot.LABEL_DEVELOPING,
-            "system" to Slot.SYSTEM_STATUS, "live" to Slot.SYSTEM_ACTIVITY)
+        val expected = mapOf("home" to Slot.BRAND, "chat" to Slot.LABEL_THINKING, "memory" to Slot.ACTION_MEMORY,
+            "logic" to Slot.MODEL, "research" to Slot.LABEL_ANALYSING, "agents" to Slot.ACTION_AGENTS,
+            "tasks" to Slot.ACTION_TASK, "web" to Slot.LABEL_CONNECTED, "learning" to Slot.LABEL_LEARNING,
+            "device" to Slot.ACTION_DEVICE, "system" to Slot.SYSTEM_STATUS)
         JarvisMenu.railEntries.forEach { e ->
             val (nav, opened, _) = setup()
             nav.navigate(e.target)
@@ -77,22 +81,79 @@ class JarvisMenuNavigationTest {
     }
 
     @Test fun railSpecFold7BothOrientationsCoverAndPhoneBottomBar() {
-        for ((w, h) in listOf(884f to 760f, 760f to 884f, 840f to 649f, 673f to 841f)) {
+        for ((w, h) in listOf(884f to 760f, 760f to 884f, 840f to 649f, 832f to 700f, 673f to 841f)) {
             assertEquals(JarvisMenuRail.Mode.SIDE_RAIL, JarvisMenuRail.mode(w, h))
             val rail = JarvisMenuRail.widthDp(w, h)
-            assertEquals("$w×$h", (w * .20f).coerceIn(132f, 200f), rail, .001f)
-            assertTrue(rail / w in .15f..0.21f)
-            val rows = JarvisMenuRail.rows(h - 120f)
-            assertEquals(8, rows.size); assertTrue(rows.all { it.second - it.first >= 48f })
+            // ref5: rail column 191 px of 1301 px screen width = 14.7 %; never narrower than margin + 108 dp button
+            assertEquals("$w×$h", (w * .147f).coerceIn(122f, 168f), rail, .001f)
+            assertTrue(rail - JarvisMenuRail.MARGIN >= JarvisDesign.Styles.button.let { 108f })
+            val rows = JarvisMenuRail.rows(h)
+            assertEquals(11, rows.size); assertTrue(rows.all { it.second - it.first >= 48f })
+            assertTrue("all 11 entries visible without scrolling at $w×$h", JarvisMenuRail.minHeightDp() <= h)
         }
+        assertEquals(.147f, 832f * JarvisMenuRail.WIDTH_FRACTION / 832f, 1e-6f)
         for ((w, h) in listOf(412f to 915f, 360f to 780f, 915f to 412f)) { // phone, cover, phone landscape
             assertEquals(JarvisMenuRail.Mode.BOTTOM_BAR, JarvisMenuRail.mode(w, h)); assertEquals(0f, JarvisMenuRail.widthDp(w, h))
         }
-        assertEquals(3, JarvisMenuRail.hit(10f + 3 * 64f + 1f, 2000f))
+        // ref5: first button top 98 dp, 32 dp tall; hit rows 48 dp
+        val first = JarvisMenuRail.button(122f, JarvisMenuRail.rows(700f)[0])
+        assertEquals(98f, first[1], .001f); assertEquals(JarvisDesign.Styles.button.height, first[3] - first[1], .001f)
+        assertEquals(3, JarvisMenuRail.hit(JarvisMenuRail.FIRST_ROW + 3 * 48f + 1f, 2000f))
+        assertEquals(-1, JarvisMenuRail.hit(JarvisMenuRail.FIRST_ROW - 1f, 2000f)) // device status block is not a button
+    }
+
+    @Test fun deviceStatusShowsOnlyRealValuesOtherwiseDash() {
+        val texts = mutableListOf<String>()
+        val p = TextPainter(texts)
+        JarvisMenuRailElement(device = JarvisDeviceStatus.EMPTY).draw(p, 122f, 700f, ContinuumDashboardState())
+        assertEquals(listOf("—", "—", "—"), texts.take(3))
+        assertTrue("no ref5 numbers", texts.none { it.contains("12:47") || it.contains("Jan 29") || it.contains("Fold7") })
+        texts.clear()
+        JarvisMenuRailElement(device = JarvisDeviceStatus("SM-F966B", "09:41", "Mi., 4. Nov.")).draw(p, 122f, 700f, ContinuumDashboardState())
+        assertEquals(listOf("SM-F966B", "09:41", "Mi., 4. Nov."), texts.take(3))
+        assertEquals(JarvisMenu.railEntries.size, texts.size - 3) // one label per button
+    }
+
+    @Test fun longGermanLabelsFitTheRef5Button() {
+        val p = TextPainter(mutableListOf(), charWidth = 6f)
+        JarvisMenu.railEntries.forEach { e ->
+            val label = JarvisMenu.fitLabel(p, e, 108f)
+            val st = JarvisDesign.Styles.button
+            assertTrue("${e.label} → $label", p.measureText(label, JarvisDesign.Type.nav) <= 108f - 2 * st.padH - st.iconSize - st.iconGap)
+        }
+        assertEquals("Gerät", JarvisMenu.fitLabel(p, JarvisMenu.railEntries.first { it.target == "device" }, 108f))
+    }
+
+    /** Records drawn text; fixed advance per char. */
+    private class TextPainter(val texts: MutableList<String>, val charWidth: Float = 5f) : ContinuumPainter {
+        override fun save() {}
+        override fun restore() {}
+        override fun translate(dx: Float, dy: Float) {}
+        override fun scale(sx: Float, sy: Float, px: Float, py: Float) {}
+        override fun rotate(degrees: Float, px: Float, py: Float) {}
+        override fun clipRect(left: Float, top: Float, right: Float, bottom: Float) {}
+        override fun clipRoundRect(left: Float, top: Float, right: Float, bottom: Float, radius: Float) {}
+        override fun fillRect(left: Float, top: Float, right: Float, bottom: Float, fill: Fill, alpha: Float) {}
+        override fun fillRoundRect(left: Float, top: Float, right: Float, bottom: Float, radius: Float, fill: Fill, alpha: Float) {}
+        override fun strokeRoundRect(left: Float, top: Float, right: Float, bottom: Float, radius: Float, width: Float, fill: Fill, alpha: Float) {}
+        override fun fillOval(left: Float, top: Float, right: Float, bottom: Float, fill: Fill, alpha: Float) {}
+        override fun strokeOval(left: Float, top: Float, right: Float, bottom: Float, width: Float, fill: Fill, alpha: Float) {}
+        override fun strokeArc(left: Float, top: Float, right: Float, bottom: Float, startDegrees: Float, sweepDegrees: Float, width: Float, fill: Fill, alpha: Float, roundCap: Boolean) {}
+        override fun drawLine(x0: Float, y0: Float, x1: Float, y1: Float, width: Float, fill: Fill, alpha: Float, roundCap: Boolean) {}
+        override fun fillPath(path: VectorPath, fill: Fill, alpha: Float) {}
+        override fun strokePath(path: VectorPath, width: Float, fill: Fill, alpha: Float, roundCap: Boolean) {}
+        override fun drawText(text: String, x: Float, y: Float, style: TextStyle, fill: Fill, align: TextAlign, alpha: Float) { texts += text }
+        override fun measureText(text: String, style: TextStyle): Float = text.length * charWidth
+        override fun capHeight(style: TextStyle): Float = style.size * .7f
     }
 
     @Test fun railUsesDesignTokensOnly() {
-        assertEquals(Argb.of(128, 0x0A, 0x11, 0x28), JarvisDesign.Colors.surface)
-        assertEquals(Argb.rgb(0, 255, 255), JarvisDesign.Colors.cyan)
+        // Welten-Optik's ref5 tokens (#479 @69b76b2f): button 108 x 32 dp, fill #041521, active #012C3C / rim #32D6ED, nav 11 sp
+        val st = JarvisDesign.Styles.button
+        assertEquals(32f, st.height, 0f); assertEquals(Argb.rgb(0x04, 0x15, 0x21), st.fill)
+        assertEquals(Argb.rgb(0x01, 0x2C, 0x3C), JarvisDesign.Styles.buttonActive.fill)
+        assertEquals(Argb.rgb(0x32, 0xD6, 0xED), JarvisDesign.Styles.buttonActive.rim)
+        assertEquals(11f, JarvisDesign.Type.nav.size, 0f)
+        assertEquals(JarvisMenuRail.MARGIN + 108f, JarvisMenuRail.MIN_WIDTH, 0f)
     }
 }
