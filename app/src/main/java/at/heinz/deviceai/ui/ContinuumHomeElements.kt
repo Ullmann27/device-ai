@@ -527,34 +527,29 @@ object EventDot {
 class BottomNavElement(private val labels: List<Pair<Icon, String>>, var selected: Int = 0, textScale: Float = 1f) :
     ContinuumElement(textScale) {
     override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
-        p.fillRoundRect(0f, 0f, w, h + 30f, 22f, Fill.Linear(0f, 0f, 0f, h, intArrayOf(Argb.rgb(6, 16, 40), Argb.rgb(2, 9, 26))))
-        p.strokeRoundRect(0f, 0f, w, h + 30f, 22f, 1f, Fill.Linear(0f, 0f, w, 0f,
-            intArrayOf(Argb.rgb(40, 90, 170), Argb.rgb(24, 46, 96), Argb.rgb(60, 60, 140))), .9f)
-        val centers = floatArrayOf(49.7f, 127f, 205f, 285f, 363f).map { it * w / 412f }
+        p.fillRoundRect(0f, 0f, w, h + 24f, 18f, Fill.Linear(0f, 0f, 0f, h,
+            intArrayOf(Argb.rgb(4, 19, 36), Argb.rgb(2, 8, 23))))
+        p.strokeRoundRect(.5f, .5f, w - .5f, h + 24f, 18f, 1f, Fill.Linear(0f, 0f, w, 0f,
+            intArrayOf(ContinuumTheme.CYAN, Argb.rgb(29, 77, 122), ContinuumTheme.VIOLET)), .75f)
+        val cell = w / labels.size
         for ((i, item) in labels.withIndex()) {
-            val cx = centers.getOrElse(i) { w * (i + .5f) / labels.size }
+            val cx = cell * (i + .5f)
             val active = i == selected
             if (active) {
-                p.fillCircle(cx, 20f, 18f, Fill.Radial(cx, 20f, 18f, intArrayOf(Argb.of(110, 40, 150, 255), 0)))
-                ContinuumIcons.draw(p, item.first, cx, 20.2f, 22f, Fill.Linear(cx, 9f, cx, 31f,
-                    intArrayOf(Argb.rgb(120, 225, 255), Argb.rgb(40, 110, 255))), 2.1f)
-                p.drawText(item.second, cx, 44f, t(500, 9.5f), Fill.Solid(Argb.rgb(70, 170, 255)), TextAlign.CENTER)
-                p.fillRoundRect(cx - 16f, 47.2f, cx + 16f, 48.8f, .8f, Fill.Solid(Argb.rgb(70, 170, 255)))
-                p.fillRoundRect(cx - 18f, 46f, cx + 18f, 50f, 2f, Fill.Solid(Argb.rgb(70, 170, 255)), .18f)
-                // Persistent cinematic glow, without changing the active navigation destination.
-                val pulse = motionPhase?.takeIf { it.isFinite() }?.let {
-                    .35f + .65f * kotlin.math.abs(kotlin.math.sin(Math.PI.toFloat() * it))
-                } ?: .35f
-                p.fillRoundRect(cx - 20f, 46.3f, cx + 20f, 50.3f, 2f,
-                    Fill.Solid(Argb.rgb(90, 190, 255)), .23f * pulse)
-                if (motionPhase != null) {
-                    val scan = cx - 18f + (36f * motionPhase!!.coerceIn(0f, 1f))
-                    p.fillCircle(scan, 48f, 2.5f, Fill.Solid(Argb.rgb(220, 245, 255)), .55f * pulse)
-                }
+                p.fillRoundRect(cx - cell / 2f + 5f, 6f, cx + cell / 2f - 5f, h - 7f, 12f,
+                    Fill.Linear(cx, 6f, cx, h, intArrayOf(Argb.rgb(12, 64, 82), Argb.rgb(6, 25, 48))))
+                p.strokeRoundRect(cx - cell / 2f + 5f, 6f, cx + cell / 2f - 5f, h - 7f, 12f, .8f,
+                    Fill.Solid(ContinuumTheme.CYAN), .55f)
+                ContinuumSurfaces.iconGlow(p, item.first, cx, 25f, 24f)
+                p.drawLine(cx - 12f, h - 11f, cx + 12f, h - 11f, 1.5f, Fill.Solid(ContinuumTheme.CYAN))
             } else {
-                ContinuumIcons.draw(p, item.first, cx, 20.2f, 22f, Fill.Solid(Argb.rgb(168, 190, 225)), 1.6f)
-                p.drawText(item.second, cx, 44f, t(500, 8.95f), Fill.Solid(Argb.rgb(178, 190, 212)), TextAlign.CENTER)
+                ContinuumIcons.draw(p, item.first, cx, 25f, 22f,
+                    Fill.Solid(ContinuumTheme.TEXT_SECONDARY), 1.6f)
             }
+            val label = if (w < 360f && item.second == "Entwickeln") "Code" else item.second
+            val style = fittedTitle(p, label, 500, 11f, cell - 10f)
+            p.drawText(label, cx, 51f, style,
+                Fill.Solid(if (active) ContinuumTheme.CYAN_SOFT else ContinuumTheme.TEXT_SECONDARY), TextAlign.CENTER)
         }
     }
     override fun describe(s: ContinuumDashboardState) = "Navigation"

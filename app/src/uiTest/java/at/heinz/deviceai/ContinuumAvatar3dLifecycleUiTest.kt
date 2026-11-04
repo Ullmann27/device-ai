@@ -30,6 +30,32 @@ class ContinuumAvatar3dLifecycleUiTest {
         view.layout(0, 0, 412, 307)
         return Bitmap.createBitmap(412, 307, Bitmap.Config.ARGB_8888).also { view.draw(Canvas(it)) }
     }
+    @Test fun newAppearanceUses3dButSavedOrbAndLegacy2dStayChosen() {
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
+        val context = controller.get()
+        val prefs = context.getSharedPreferences("continuum-avatar-appearance", android.content.Context.MODE_PRIVATE)
+        try {
+            prefs.edit().clear().commit()
+            val fresh = ContinuumHologramView(context)
+            assertTrue(fresh.isNativeHeadEnabled())
+            assertEquals(true, field(fresh, "head3dEnabled"))
+            assertEquals(false, field(fresh, "assetLoading"))
+            assertNull(field(fresh, "native3d")) // Selection alone grants no native work while hidden.
+            fresh.setNativeHeadEnabled(false)
+            val orb = ContinuumHologramView(context)
+            assertFalse(orb.isNativeHeadEnabled())
+            assertEquals(false, field(orb, "head3dEnabled"))
+            prefs.edit().clear().putBoolean("native-head", true).commit()
+            val legacy = ContinuumHologramView(context)
+            assertTrue(legacy.isNativeHeadEnabled())
+            assertEquals(false, field(legacy, "head3dEnabled"))
+            prefs.edit().clear().putBoolean("native-head-3d", true).commit()
+            assertTrue(ContinuumHologramView(context).isNativeHeadEnabled())
+        } finally {
+            prefs.edit().clear().commit()
+            controller.pause().stop().destroy()
+        }
+    }
     @Test fun defaultOrbAndPausedOptional3dNeverStartAssetOrNativeWork() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val view = ContinuumHologramView(controller.get())

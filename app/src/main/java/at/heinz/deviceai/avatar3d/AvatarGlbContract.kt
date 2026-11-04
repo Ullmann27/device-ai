@@ -8,12 +8,12 @@ import java.nio.ByteOrder
 object AvatarGlbContract {
     const val MAX_BYTES = 16 * 1024 * 1024
     const val ASSET_PATH = "avatar3d/continuum-avatar.glb"
-    const val ASSET_SHA256 = "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e"
+    const val ASSET_SHA256 = "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3"
     val TARGETS = listOf("SIL", "PP", "FF", "TH", "DD", "KK", "CH", "SS", "NN", "RR", "AA", "E", "I", "O", "U",
         "BlinkLeft", "BlinkRight", "BrowUp", "BrowDown", "Smile", "JawOpen")
     val NODES = listOf("AvatarRoot", "Neck", "Head", "EyeLeft", "EyeRight", "Jaw")
     data class Focus(val centerX: Double, val centerY: Double, val centerZ: Double, val halfWidth: Double, val halfHeight: Double) {
-        /** Explicit lower/outer shoulder crop, fitted to actual viewport while preserving skull/ears. */
+        /** Bust framing includes the neck and upper shoulders; only the outer torso is cropped. */
         fun verticalHalfSpan(aspect: Double): Double {
             require(aspect.isFinite() && aspect > 0)
             return maxOf(halfHeight, halfWidth / aspect) * 1.08
@@ -130,6 +130,8 @@ object AvatarGlbContract {
         var minHeadX = Double.POSITIVE_INFINITY; var maxHeadX = Double.NEGATIVE_INFINITY
         var minHeadZ = Double.POSITIVE_INFINITY; var maxHeadZ = Double.NEGATIVE_INFINITY
         var maxHeadY = Double.NEGATIVE_INFINITY
+        var minBustY = Double.POSITIVE_INFINITY
+        var minBustX = Double.POSITIVE_INFINITY; var maxBustX = Double.NEGATIVE_INFINITY
         val skins = root.getJSONArray("skins"); require(skins.length() in 1..8)
         for (i in 0 until skins.length()) {
             val skin = skins.getJSONObject(i); val joints = skin.getJSONArray("joints")
@@ -183,8 +185,11 @@ object AvatarGlbContract {
                         val world = worldFrame(node)
                         for (vertex in neutral) {
                             val y = vertex[1] * world[1] + world[4]
+                            val x = vertex[0] * world[0] + world[3]
+                            minBustY = minOf(minBustY, y)
+                            minBustX = minOf(minBustX, x); maxBustX = maxOf(maxBustX, x)
                             if (y >= headY) {
-                                val x = vertex[0] * world[0] + world[3]; val z = vertex[2] * world[2] + world[5]
+                                val z = vertex[2] * world[2] + world[5]
                                 minHeadX = minOf(minHeadX, x); maxHeadX = maxOf(maxHeadX, x)
                                 minHeadZ = minOf(minHeadZ, z); maxHeadZ = maxOf(maxHeadZ, z); maxHeadY = maxOf(maxHeadY, y)
                             }
@@ -208,12 +213,15 @@ object AvatarGlbContract {
         require(vertices <= 100_000 && triangles <= 200_000)
         val morphNodes = (0 until nodes.length()).filter { nodes.getJSONObject(it).optInt("mesh", -1) in morphMeshes }.map { names[it] }
         require(morphNodes.isNotEmpty() && morphNodes.all { it.isNotBlank() && names.count { n -> n == it } == 1 })
-        val bottom = neckY + (headY - neckY) * .25
+        // The former crop began above the Neck joint, leaving a floating face.
+        // Keep the existing rig and bring its actual neck/upper shoulder skin
+        // into frame, without shrinking the head to fit the entire chest mesh.
+        val bottom = maxOf(minBustY, neckY - (headY - neckY) * .85)
         val top = maxHeadY + (maxHeadY - bottom) * .05
         require(listOf(minHeadX, maxHeadX, minHeadZ, maxHeadZ, bottom, top).all { it.isFinite() } &&
             maxHeadX > minHeadX && maxHeadZ > minHeadZ && top > bottom)
         val focus = Focus((minHeadX + maxHeadX) / 2, (bottom + top) / 2, (minHeadZ + maxHeadZ) / 2,
-            (maxHeadX - minHeadX) / 2, (top - bottom) / 2)
+            minOf((maxBustX - minBustX) / 2, (maxHeadX - minHeadX) * .825), (top - bottom) / 2)
         return Metadata(requireNotNull(targets) { "No morph mesh" }, morphNodes, focus)
     }
 }
