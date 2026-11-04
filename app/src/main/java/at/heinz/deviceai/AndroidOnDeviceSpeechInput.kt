@@ -32,7 +32,6 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                 LocalSpeechEngine.ON_DEVICE -> if (Build.VERSION.SDK_INT >= 31) {
                     SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
                 } else error("ON_DEVICE_RECOGNITION_REQUIRES_API_31")
-                LocalSpeechEngine.LEGACY_PREFER_OFFLINE -> SpeechRecognizer.createSpeechRecognizer(context)
                 LocalSpeechEngine.NONE -> error("SPEECH_RECOGNITION_UNAVAILABLE")
             }
             try {
@@ -71,9 +70,7 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
     private fun engine(): LocalSpeechEngine {
         val onDevice = Build.VERSION.SDK_INT >= 31 &&
             runCatching { SpeechRecognizer.isOnDeviceRecognitionAvailable(context) }.getOrDefault(false)
-        val legacy = Build.VERSION.SDK_INT < 31 &&
-            runCatching { SpeechRecognizer.isRecognitionAvailable(context) }.getOrDefault(false)
-        return LocalSpeechEngine.choose(Build.VERSION.SDK_INT, onDevice, legacy)
+        return LocalSpeechEngine.choose(Build.VERSION.SDK_INT, onDevice)
     }
     fun microphoneGranted() = context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
     fun cancel() { checkMainThread(); session.cancel() }

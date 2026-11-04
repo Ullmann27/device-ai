@@ -6,6 +6,11 @@ internal object LocalSpeechInputPolicy {
     enum class Failure { NO_MATCH, NO_INPUT, PERMISSION, SERVICE_UNAVAILABLE, LANGUAGE_UNSUPPORTED,
         LANGUAGE_UNAVAILABLE, BUSY, AUDIO, NETWORK, SERVICE_FAILURE, START_FAILED, TIMEOUT, CANCELLED }
 
+    /** Clear reason when no on-device recognizer exists; below API 31 there is none by design. */
+    fun unavailableReason(sdkInt: Int): String = if (sdkInt < 31)
+        "Spracheingabe braucht Android 12 oder neuer: Nur dort gibt es echte Erkennung auf dem Gerät. Bitte tippen; keine Audioübertragung gestartet."
+    else "Kein lokaler Android-Spracherkenner verfügbar. Bitte tippen; keine Audioübertragung gestartet."
+
     fun message(failure: Failure): String = when (failure) {
         Failure.NO_MATCH -> "Keine verständlichen Wörter erkannt. Bitte erneut auf das Mikrofon tippen und deutlich sprechen."
         Failure.NO_INPUT -> "Keine Sprache gehört. Bitte erneut auf das Mikrofon tippen und nach dem Start sprechen."

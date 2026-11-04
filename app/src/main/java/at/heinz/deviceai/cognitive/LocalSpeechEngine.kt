@@ -1,18 +1,16 @@
 package at.heinz.deviceai.cognitive
 
 /**
- * Which platform recognizer to use. API 31+ uses only the on-device recognizer (no fallback).
- * Below API 31 (minSdk 26) that API does not exist; the legacy SpeechRecognizer is used with
- * EXTRA_PREFER_OFFLINE, which asks the system service to stay on the device.
+ * Which platform recognizer to use. Only real on-device recognition counts as available:
+ * API 31+ with an on-device recognizer -> ON_DEVICE, everything else -> NONE.
+ * Below API 31 (minSdk 26) there is no on-device API; the legacy SpeechRecognizer is NOT used,
+ * because EXTRA_PREFER_OFFLINE is only advisory and audio could leave the device unnoticed.
  */
 internal enum class LocalSpeechEngine {
-    ON_DEVICE, LEGACY_PREFER_OFFLINE, NONE;
+    ON_DEVICE, NONE;
 
     companion object {
-        fun choose(sdkInt: Int, onDeviceAvailable: Boolean, legacyAvailable: Boolean): LocalSpeechEngine = when {
-            sdkInt >= 31 -> if (onDeviceAvailable) ON_DEVICE else NONE
-            legacyAvailable -> LEGACY_PREFER_OFFLINE
-            else -> NONE
-        }
+        fun choose(sdkInt: Int, onDeviceAvailable: Boolean): LocalSpeechEngine =
+            if (sdkInt >= 31 && onDeviceAvailable) ON_DEVICE else NONE
     }
 }

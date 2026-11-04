@@ -9713,7 +9713,7 @@ class AgentActivity : Activity() {
                 }) }.onFailure {
                     speech.cancel();Toast.makeText(this,"Lokale Spracheingabe nicht verfügbar. Keine Audioübertragung gestartet.",Toast.LENGTH_LONG).show()
                 }
-            else -> Toast.makeText(this,"Kein lokaler Android-Spracherkenner verfügbar. Bitte tippen; keine Audioübertragung gestartet.",Toast.LENGTH_LONG).show()
+            else -> Toast.makeText(this,at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.unavailableReason(android.os.Build.VERSION.SDK_INT),Toast.LENGTH_LONG).show()
         }
     }
 
