@@ -755,11 +755,6 @@ class AgentActivity : Activity() {
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT
             )
         }
-        val portraitFold = wide && at.heinz.deviceai.ui.ContinuumHomeLayout.isPortraitFold(
-            windowWidthDp, windowHeightDp
-        )
-        val portraitNavHeight = if (portraitFold) dp(74) else 0
-        var widePane: View? = null
         val phonePane: View?
         val phoneNavHeight: Int
         if (wide) {
@@ -769,34 +764,19 @@ class AgentActivity : Activity() {
                 orientation = LinearLayout.HORIZONTAL
                 setBackgroundColor(BG)
             }
-            widePane = wideContent
-            // The unfolded portrait reference is full bleed: no left navigation rail.
-            // Fold landscape retains its tested sidebar and the same work-area handling.
-            if (!portraitFold) {
-                wideContent.addView(buildRail(), LinearLayout.LayoutParams(
-                    railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
-                ))
-            }
+            // The reference cockpit keeps the same navigation in both open-Fold orientations.
+            wideContent.addView(buildRail(), LinearLayout.LayoutParams(
+                railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
+            ))
             wideContent.addView(buildConversationPane(wide = true), LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.MATCH_PARENT, 1f
             ))
             root.addView(wideContent, android.widget.FrameLayout.LayoutParams(
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT
-            ).apply { bottomMargin = portraitNavHeight })
-            if (portraitFold) {
-                root.addView(buildPortraitWorkAreaBar(), android.widget.FrameLayout.LayoutParams(
-                    android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
-                    portraitNavHeight,
-                    Gravity.BOTTOM
-                ))
-            }
+            ))
         } else {
-            val navScale = windowWidthDp /
-                at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_REFERENCE_WIDTH
-            phoneNavHeight = dp(
-                (at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT * navScale).toInt()
-            )
+            phoneNavHeight = dp(at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT.toInt())
             phonePane = buildConversationPane(wide = false)
             root.addView(phonePane, android.widget.FrameLayout.LayoutParams(
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
@@ -825,16 +805,12 @@ class AgentActivity : Activity() {
                 ) {
                     view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
                 }
-                val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(
-                    wide, viewport.compactDashboard, portraitFold
-                )
+                val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(wide, viewport.compactDashboard)
                 bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
-                val navigationPane = phonePane ?: if (portraitFold) widePane else null
+                val navigationPane = phonePane
                 if (navigationPane != null) {
                     val paneParams = navigationPane.layoutParams as android.widget.FrameLayout.LayoutParams
-                    val requiredMargin = if (showNavigation) {
-                        if (portraitFold) portraitNavHeight else phoneNavHeight
-                    } else 0
+                    val requiredMargin = if (showNavigation) phoneNavHeight else 0
                     if (paneParams.bottomMargin != requiredMargin) {
                         paneParams.bottomMargin = requiredMargin
                         navigationPane.layoutParams = paneParams
@@ -953,8 +929,7 @@ class AgentActivity : Activity() {
         val windowWidth = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
         // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
         val windowHeight = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()
-        val sideRail = wide && !at.heinz.deviceai.ui.ContinuumHomeLayout.isPortraitFold(windowWidth, windowHeight)
-        home.configure(windowWidth, wide, railOffset = if (sideRail) railWidthPx() / resources.displayMetrics.density else 0f,
+        home.configure(windowWidth, wide, railOffset = if (wide) railWidthPx() / resources.displayMetrics.density else 0f,
             windowHeightDp = windowHeight)
         home.setForegroundActive(foregroundLearningActive)
         homeView = home
@@ -997,7 +972,7 @@ class AgentActivity : Activity() {
             scrollBarSize = dp(5)
             scrollBarStyle = View.SCROLLBARS_INSIDE_INSET
             isSmoothScrollingEnabled = true
-            contentDescription = "Continuum-Cockpit, vertikal scrollbar: sechs Diagrammkarten und Systemstatus"
+            contentDescription = "Continuum-Cockpit, vertikal scrollbar: Chat, Arbeitsbereiche und tatsächlicher Systemstatus"
         }
         dashboardScroll.addView(dashboard, matchWidth())
         dashboardSection = dashboardScroll
@@ -1070,8 +1045,7 @@ class AgentActivity : Activity() {
     private fun buildRail(): View {
         val element = at.heinz.deviceai.ui.RailElement(at.heinz.deviceai.ui.ContinuumHomeScreen.railNavigation, 0,
             resources.configuration.fontScale.coerceIn(.85f, 1.3f))
-        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element,
-            (renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()) / at.heinz.deviceai.ui.ContinuumHomeLayout.WIDE_REFERENCE_WIDTH) { _, _ -> }.apply {
+        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element, 1f) { _, _ -> }.apply {
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             isClickable = false
         }
@@ -1088,6 +1062,11 @@ class AgentActivity : Activity() {
         )
         val density = resources.displayMetrics.density
         val container = object : android.widget.FrameLayout(this) {
+            override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+                // Keep every rail destination at least 48dp tall when the IME reduces the window.
+                super.onMeasure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(
+                    maxOf(View.MeasureSpec.getSize(heightMeasureSpec), dp(476)), View.MeasureSpec.EXACTLY))
+            }
             override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
                 super.onLayout(changed, l, t, r, b)
                 val targets = element.targets((b - t) / density)
@@ -1109,7 +1088,13 @@ class AgentActivity : Activity() {
                 setOnClickListener { action() }
             }, android.widget.FrameLayout.LayoutParams(1, 1))
         }
-        return container
+        return ScrollView(this).apply {
+            isFillViewport = true
+            isVerticalScrollBarEnabled = false
+            addView(container, android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT))
+        }
     }
 
     /** Taps on the start screen open the existing owner-controlled screens; nothing here starts work on its own. */
@@ -1127,14 +1112,20 @@ class AgentActivity : Activity() {
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.MODEL_PILL, at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.MODEL -> showModelCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_CONNECTED -> showInternetSettings()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_THINKING -> navigateWorkArea(ContinuumWorkArea.CHAT)
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.COMPOSER -> navigateWorkArea(ContinuumWorkArea.CHAT)
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_MEMORY -> showMemoryCenter()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_AGENTS -> showBotRoster()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_DEVICE -> showSystemCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_LEARNING, at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LEARNING -> showLearningCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_ANALYSING -> showResearchModeDialog()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_DEVELOPING -> showDevelopmentCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_EVOLVING -> showContinuumLearningDashboard()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.STORAGE ->
-                if (heightDp > 0f && y / heightDp > .78f) showMentorSources() else showMemoryCenter()
+                if (homeView?.referenceCockpit != true && heightDp > 0f && y / heightDp > .78f)
+                    showMentorSources() else showMemoryCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.DEVELOPMENT ->
-                if (homeView?.wide == true && heightDp > 0f && y / heightDp > .47f) showDevelopmentBacklog() else showDevelopmentCenter()
+                if (homeView?.referenceCockpit != true && homeView?.wide == true && heightDp > 0f && y / heightDp > .47f)
+                    showDevelopmentBacklog() else showDevelopmentCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SYSTEM_STATUS -> showSystemCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SYSTEM_ACTIVITY -> showDiagnosticsCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.WORKERS -> showDevelopmentBacklog()
@@ -1428,20 +1419,20 @@ class AgentActivity : Activity() {
     }
 
     private fun buildBottomWorkAreaBar(): View {
-        val u = (renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()) / 412f
         val element = at.heinz.deviceai.ui.BottomNavElement(at.heinz.deviceai.ui.ContinuumHomeScreen.phoneNavigation, 0,
             resources.configuration.fontScale.coerceIn(.85f, 1.3f))
-        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element, u) { _, _ -> }.apply {
+        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element, 1f) { _, _ -> }.apply {
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             isClickable = false
         }
         navigationView = drawn
         val container = android.widget.FrameLayout(this).apply {
             contentDescription = "Navigation zu allen Continuum-Arbeitsbereichen"
-            minimumHeight = dp((at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT * u).toInt())
+            minimumHeight = dp(at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT.toInt())
         }
         container.addView(drawn, android.widget.FrameLayout.LayoutParams(
-            android.widget.FrameLayout.LayoutParams.MATCH_PARENT, dp((at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT * u).toInt())))
+            android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+            dp(at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT.toInt())))
         val targets = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         for (destination in ContinuumWorkAreaNavigationSpec.destinations) {
             targets.addView(View(this).apply {

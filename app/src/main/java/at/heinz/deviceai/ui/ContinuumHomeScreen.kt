@@ -14,6 +14,7 @@ object ContinuumHomeScreen {
         Icon.CHART_UP to "Analysieren", Icon.DATABASE to "Speicher", Icon.GEAR to "System")
 
     fun elements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
+        if (layout.referenceCockpit) return referenceElements(layout, textScale)
         if (layout.adaptive) return adaptiveElements(layout, textScale)
         val wide = layout.wide
         val portrait = wide && layout[Slot.WORKERS] != null
@@ -57,6 +58,25 @@ object ContinuumHomeScreen {
         return map
     }
 
+    private fun referenceElements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
+        val map = linkedMapOf<Slot, ContinuumElement>(
+            Slot.BRAND to ReferenceBrandElement(textScale),
+            Slot.SEARCH to HeaderButtonElement(HeaderButtonElement.Kind.SEARCH, textScale),
+            Slot.NOTIFICATIONS to HeaderButtonElement(HeaderButtonElement.Kind.NOTIFICATIONS, textScale),
+            Slot.PROFILE to HeaderButtonElement(HeaderButtonElement.Kind.PROFILE, textScale),
+            Slot.COMPOSER to ReferenceComposerElement(textScale)
+        )
+        for (slot in ContinuumReferenceLayout.actions) map[slot] = ReferenceActionElement(slot, textScale)
+        for (slot in listOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT,
+            Slot.WORKERS, Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)) {
+            if (layout[slot] != null) map[slot] = ReferenceMetricCard(slot, textScale)
+        }
+        map[Slot.LABEL_EVOLVING] = ReferenceLearningStatusElement(textScale)
+        if (layout[Slot.RAIL] != null) map[Slot.RAIL] = RailElement(railNavigation, 0, textScale)
+        if (layout[Slot.NAV] != null) map[Slot.NAV] = BottomNavElement(phoneNavigation, 0, textScale)
+        return map
+    }
+
     private fun adaptiveElements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
         val map = linkedMapOf<Slot, ContinuumElement>(
             Slot.BRAND to AdaptiveHeaderBrandElement(textScale),
@@ -82,7 +102,7 @@ object ContinuumHomeScreen {
     /** Page background: deep navy with the blue haze behind the core and faint star dust, as in the references. */
     fun drawBackground(p: ContinuumPainter, width: Float, height: Float, layout: ContinuumHomeLayout.Layout) {
         p.fillRect(0f, 0f, width, height, Fill.Linear(0f, 0f, 0f, height,
-            intArrayOf(Argb.rgb(3, 14, 36), ContinuumTheme.BACKGROUND, Argb.rgb(0, 8, 24))))
+            intArrayOf(Argb.rgb(2, 7, 20), ContinuumTheme.BACKGROUND, Argb.rgb(1, 5, 17))))
         val hero = layout[Slot.HERO] ?: return
         val cx = (hero.left + hero.right) / 2f
         val cy = hero.top + hero.height * .45f

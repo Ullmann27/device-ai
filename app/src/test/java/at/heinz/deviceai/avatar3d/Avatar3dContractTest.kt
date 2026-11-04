@@ -90,6 +90,23 @@ class Avatar3dContractTest {
         }
         try { focus.verticalHalfSpan(Double.NaN); fail("nonfinite viewport") } catch (_: IllegalArgumentException) { }
     }
+    @Test fun packagedHolographicBustRetainsRigAndFramesActualNeck() {
+        val bytes = sequenceOf(java.io.File("src/main/assets/avatar3d/continuum-avatar.glb"),
+            java.io.File("app/src/main/assets/avatar3d/continuum-avatar.glb")).first { it.isFile }.readBytes()
+        val metadata = AvatarGlbContract.validate(bytes)
+        val digest = java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
+            .joinToString("") { "%02x".format(it) }
+        assertEquals(AvatarGlbContract.ASSET_SHA256, digest)
+        assertEquals(AvatarGlbContract.TARGETS, metadata.targets)
+        assertEquals(setOf("Face", "NeuralThreads"), metadata.morphNodeNames.toSet())
+        val focus = metadata.focus
+        // Frozen actual anatomy: Neck world Y=.149m; skull crown Y=.393m.
+        assertTrue("The real neck/upper shoulders must remain inside the camera crop", focus.centerY - focus.halfHeight < .12)
+        assertTrue("The complete skull remains visible", focus.centerY + focus.halfHeight > .392)
+        for (aspect in listOf(256.0 / 281, 306.0 / 294, 475.0 / 359)) {
+            assertTrue(focus.verticalHalfSpan(aspect) * aspect >= focus.halfWidth)
+        }
+    }
     private fun assertRejected(bytes: ByteArray) {
         try { AvatarGlbContract.validate(bytes); fail("invalid asset accepted") } catch (_: IllegalArgumentException) { } catch (_: org.json.JSONException) { }
     }

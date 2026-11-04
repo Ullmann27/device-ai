@@ -1,17 +1,12 @@
 package at.heinz.deviceai.ui
 
-/**
- * Positions of every start-screen element, measured from the owner's reference images.
- *
- * Phone reference: 412 dp wide (reference-phone.png, 713 px screen, 1.7306 px/dp), origin below the status bar.
- * Wide/Fold reference: 840 dp wide (reference-fold.png, 1294 px screen, 1.54 px/dp), origin at the screen top.
- * Other window sizes scale the whole composition uniformly with the width, so proportions never change.
- */
+/** Native cockpit geometry shared by the Activity, drawn elements and review captures. */
 object ContinuumHomeLayout {
     enum class Slot {
         BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,
         LABEL_CONNECTED, LABEL_LEARNING, LABEL_DEVELOPING, LABEL_THINKING, LABEL_ANALYSING, LABEL_EVOLVING,
-        MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL
+        MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL,
+        COMPOSER, ACTION_MEMORY, ACTION_AGENTS, ACTION_DEVICE
     }
 
     data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {
@@ -20,26 +15,32 @@ object ContinuumHomeLayout {
         fun scaled(u: Float) = Box(left * u, top * u, right * u, bottom * u)
     }
 
-    /** [scale] maps reference dp to window dp; [contentHeight] is the scrolling part above a phone navigation bar. */
-    data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>, val adaptive: Boolean = false) {
+    /** Coordinates are dp; [scale] is one for the current responsive cockpit. */
+    data class Layout(
+        val wide: Boolean,
+        val width: Float,
+        val scale: Float,
+        val contentHeight: Float,
+        val boxes: Map<Slot, Box>,
+        val adaptive: Boolean = false,
+        val referenceCockpit: Boolean = false,
+        val portrait: Boolean = false
+    ) {
         operator fun get(slot: Slot): Box? = boxes[slot]
     }
 
     const val PHONE_REFERENCE_WIDTH = 412f
     const val WIDE_REFERENCE_WIDTH = 840f
+    const val WIDE_REFERENCE_HEIGHT = 649f
     const val PHONE_NAV_HEIGHT = 74f
 
-    /** Shared Fold rail width in dp, used for both the rendered rail and the dashboard offset. */
+    /** Navigation reserves readable dp instead of shrinking every control with the window. */
     fun railWidthDp(windowWidthDp: Float): Float {
         require(windowWidthDp.isFinite() && windowWidthDp > 0f)
-        return windowWidthDp * 76f / WIDE_REFERENCE_WIDTH
+        return (windowWidthDp * .10f).coerceIn(88f, 120f)
     }
 
-    /**
-     * The Activity may keep the cover-display configuration while its real window has
-     * expanded to the Fold inner display. Rebuild only on a substantial actual WIDTH
-     * change; height-only changes (IME / system bars) must never reset the screen.
-     */
+    /** Height-only changes (IME and system bars) never reset the active work area. */
     fun needsWindowWidthReflow(configuredWidthDp: Float, measuredWidthDp: Float): Boolean {
         if (!configuredWidthDp.isFinite() || !measuredWidthDp.isFinite() ||
             configuredWidthDp <= 0f || measuredWidthDp <= 0f
@@ -47,175 +48,22 @@ object ContinuumHomeLayout {
         return kotlin.math.abs(configuredWidthDp - measuredWidthDp) >= 24f
     }
 
-    /**
-     * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display
-     * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).
-     */
     fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f
 
-    /** Unfolded Fold7 held upright: balanced core, six cards, persistent work-area navigation. */
     fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =
         isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f
 
-    /** Retain the reviewed composition at ordinary type sizes; enlarged type gets full-size readable cards. */
-    private fun usesAdaptiveLayout(widthDp: Float, fontScale: Float): Boolean {
-        require(fontScale.isFinite() && fontScale > 0f)
-        // Transient sub-240dp windows still use the bounded reference composition during resize.
-        return widthDp >= 240f && (widthDp < 320f || fontScale > 1.3f)
-    }
-
-    // Centerline of the hologram is 206 dp. Opposing controls use equal widths and mirrored x-coordinates.
-    private val phoneReference = mapOf(
-        Slot.BRAND to Box(0f, 0f, 276f, 68.8f),
-        Slot.SEARCH to Box(279f, 22f, 311f, 54f),
-        Slot.NOTIFICATIONS to Box(322f, 22f, 354f, 54f),
-        Slot.PROFILE to Box(364f, 22f, 396f, 54f),
-        Slot.HERO to Box(0f, 68.8f, 412f, 375.6f),
-        Slot.LABEL_CONNECTED to Box(10f, 96f, 119f, 136f),
-        Slot.LABEL_LEARNING to Box(10f, 165.4f, 119f, 205.4f),
-        Slot.LABEL_DEVELOPING to Box(10f, 242.2f, 119f, 282.2f),
-        Slot.LABEL_THINKING to Box(293f, 96f, 402f, 136f),
-        Slot.LABEL_ANALYSING to Box(293f, 165.4f, 402f, 205.4f),
-        Slot.LABEL_EVOLVING to Box(293f, 242.2f, 402f, 282.2f),
-        Slot.MODEL to Box(13.3f, 380.3f, 398.8f, 469.4f),
-        Slot.LEARNING to Box(13.3f, 479.6f, 215.5f, 661.6f),
-        Slot.STORAGE to Box(224.8f, 479.6f, 398.8f, 661.6f),
-        Slot.DEVELOPMENT to Box(13.3f, 673.2f, 398.8f, 773.2f),
-        Slot.NAV to Box(0f, 787f, 412f, 787f + PHONE_NAV_HEIGHT)
-    )
-
-    // Wide reference centerline is 417 dp (the center of the existing hero slot).
-    private val wideReference = mapOf(
-        Slot.RAIL to Box(0f, 0f, 76f, 649f),
-        Slot.BRAND to Box(80f, 30f, 420f, 86f),
-        Slot.SEARCH to Box(579.9f, 42.2f, 608.5f, 70.8f),
-        Slot.NOTIFICATIONS to Box(616.9f, 42.2f, 645.5f, 70.8f),
-        Slot.PROFILE to Box(657.7f, 42.2f, 686.3f, 70.8f),
-        Slot.MODEL_PILL to Box(709f, 30.5f, 826f, 72.7f),
-        Slot.HERO to Box(212f, 0f, 622f, 291f),
-        Slot.LABEL_CONNECTED to Box(188f, 97f, 302f, 138f),
-        Slot.LABEL_LEARNING to Box(188f, 148.5f, 302f, 192f),
-        Slot.LABEL_DEVELOPING to Box(188f, 201.3f, 302f, 247f),
-        Slot.LABEL_THINKING to Box(532f, 97f, 646f, 138f),
-        Slot.LABEL_ANALYSING to Box(532f, 148.5f, 646f, 192f),
-        Slot.LABEL_EVOLVING to Box(532f, 201.3f, 646f, 247f),
-        Slot.SYSTEM_STATUS to Box(657.1f, 84.4f, 829.2f, 276f),
-        Slot.MODEL to Box(87.7f, 290.9f, 335.7f, 475.3f),
-        Slot.LEARNING to Box(345.5f, 290.9f, 613f, 475.3f),
-        Slot.STORAGE to Box(624.7f, 290.9f, 829.2f, 475.3f),
-        Slot.DEVELOPMENT to Box(87.7f, 485.7f, 492.9f, 642.9f),
-        Slot.SYSTEM_ACTIVITY to Box(504.5f, 485.7f, 829.2f, 642.9f)
-    )
-
     @JvmOverloads
-    fun phone(widthDp: Float, fontScale: Float = 1f): Layout {
-        require(widthDp.isFinite() && widthDp > 0f)
-        if (usesAdaptiveLayout(widthDp, fontScale)) return ContinuumAdaptiveHomeLayout.create(widthDp, 0f, false, fontScale)
-        val u = widthDp / PHONE_REFERENCE_WIDTH
-        return Layout(false, widthDp, u, 787f * u, phoneReference.mapValues { it.value.scaled(u) })
-    }
+    fun phone(widthDp: Float, fontScale: Float = 1f): Layout =
+        ContinuumReferenceLayout.create(widthDp, 0f, false, fontScale)
 
-    const val WIDE_REFERENCE_HEIGHT = 649f
-    private val TOP_BAR = setOf(Slot.BRAND, Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE, Slot.MODEL_PILL)
-    private val HERO_BAND = setOf(Slot.LABEL_CONNECTED, Slot.LABEL_LEARNING, Slot.LABEL_DEVELOPING, Slot.LABEL_THINKING,
-        Slot.LABEL_ANALYSING, Slot.LABEL_EVOLVING, Slot.SYSTEM_STATUS)
-    private val FIRST_ROW = setOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE)
-    private val SECOND_ROW = setOf(Slot.DEVELOPMENT, Slot.SYSTEM_ACTIVITY)
-
-    /**
-     * Unfolded Fold7: equal left/right action columns with an unobstructed
-     * living hologram between them. Six existing live chart cards retain a
-     * 3x2 grid. CPU/network/activity telemetry remains on the same start
-     * page in a horizontal status strip after the cards, reached by scrolling.
-     * No renderer, animations, business actions or source data are replaced.
-     */
     @JvmOverloads
     fun portraitFold(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Layout {
-        require(widthDp.isFinite() && heightDp.isFinite() && widthDp > 0f && heightDp > 0f)
-        if (usesAdaptiveLayout(widthDp, fontScale)) return ContinuumAdaptiveHomeLayout.create(widthDp, heightDp, true, fontScale)
-        val scale = widthDp / WIDE_REFERENCE_WIDTH
-        val frame = (heightDp / scale).coerceAtLeast(800f)
-        val heroExtra = ((frame - 886f).coerceAtLeast(0f) * .12f).coerceAtMost(45f)
-        val heroBottom = 384f + heroExtra
-        val firstTop = heroBottom + 16f
-        val cardHeight = 216f
-        val gap = 12f
-        val secondTop = firstTop + cardHeight + gap
-        val statusTop = secondTop + cardHeight + 16f
-        val positions = linkedMapOf(
-            Slot.BRAND to Box(12f, 5f, 353f, 62f),
-            Slot.SEARCH to Box(698f, 16f, 729f, 48f),
-            Slot.NOTIFICATIONS to Box(742f, 16f, 773f, 48f),
-            Slot.PROFILE to Box(786f, 15f, 818f, 49f),
-            Slot.HERO to Box(240f, 60f, 600f, heroBottom),
-            Slot.LABEL_CONNECTED to Box(14f, 81f, 230f, 163f),
-            Slot.LABEL_LEARNING to Box(14f, 177f, 230f, 259f),
-            Slot.LABEL_DEVELOPING to Box(14f, 273f, 230f, 355f),
-            Slot.LABEL_THINKING to Box(610f, 81f, 826f, 163f),
-            Slot.LABEL_ANALYSING to Box(610f, 177f, 826f, 259f),
-            Slot.LABEL_EVOLVING to Box(610f, 273f, 826f, 355f),
-            Slot.MODEL to Box(12f, firstTop, 276f, firstTop + cardHeight),
-            Slot.LEARNING to Box(288f, firstTop, 552f, firstTop + cardHeight),
-            Slot.STORAGE to Box(564f, firstTop, 828f, firstTop + cardHeight),
-            Slot.DEVELOPMENT to Box(12f, secondTop, 276f, secondTop + cardHeight),
-            Slot.SYSTEM_ACTIVITY to Box(288f, secondTop, 552f, secondTop + cardHeight),
-            Slot.WORKERS to Box(564f, secondTop, 828f, secondTop + cardHeight),
-            Slot.SYSTEM_STATUS to Box(12f, statusTop, 828f, statusTop + 130f)
-        )
-        val contentHeight = maxOf(frame, statusTop + 142f)
-        return Layout(true, widthDp, scale, contentHeight * scale,
-            positions.mapValues { it.value.scaled(scale) })
+        require(heightDp.isFinite() && heightDp > 0f)
+        return ContinuumReferenceLayout.create(widthDp, heightDp, true, fontScale)
     }
 
-    /**
-     * Wide composition for a [widthDp] x [heightDp] window, scaled uniformly with the width like the reference
-     * (840 x 649 dp, landscape). A window that is taller than that proportion – the Fold7 main display held upright is
-     * almost square – would otherwise end in an empty band. The extra height first enlarges the hero stage: the hologram
-     * box grows in height and, as far as the side columns allow, in width, so the core itself becomes larger; the side
-     * labels and the system status column move with the hologram's centre. What remains opens the gaps above both card
-     * rows equally. Cards keep their reference shape. [heightDp] = 0 keeps the reference proportion.
-     */
     @JvmOverloads
-    fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout {
-        require(widthDp.isFinite() && widthDp > 0f && heightDp.isFinite() && heightDp >= 0f)
-        if (usesAdaptiveLayout(widthDp, fontScale)) return ContinuumAdaptiveHomeLayout.create(widthDp, heightDp, true, fontScale)
-        if (heightDp > 0f && isPortraitFold(widthDp, heightDp)) return portraitFold(widthDp, heightDp, fontScale)
-        val u = widthDp / WIDE_REFERENCE_WIDTH
-        val extra = if (heightDp > 0f) (heightDp / u - WIDE_REFERENCE_HEIGHT).coerceIn(0f, 420f) else 0f
-        val hero = wideReference.getValue(Slot.HERO)
-        val heroGrow = minOf(extra, 150f)
-        // The renderer's width/height ratio governs enlargement, capped by the 8dp label clearance below.
-        // Keep the actually rendered glass sphere outside both mirrored control columns.
-        // Tall Fold windows enlarge the hero vertically; its width must not grow past the
-        // inner text edges. The renderer's radius/sphere factors are the source of truth.
-        val foldGeometry = ContinuumHologramRenderer.Geometry.FOLD
-        val heroCenterX = (hero.left + hero.right) / 2f
-        val controlInnerEdge = wideReference.getValue(Slot.LABEL_THINKING).left
-        val sphereClearance = 8f
-        val permittedSphereRadius = (controlInnerEdge - heroCenterX - sphereClearance).coerceAtLeast(0f)
-        val permittedHeroWidth = permittedSphereRadius / (foldGeometry.radiusOfWidth * foldGeometry.sphere)
-        val heroWiden = minOf(
-            heroGrow * (foldGeometry.radiusOfHeight / foldGeometry.radiusOfWidth),
-            140f,
-            (permittedHeroWidth - hero.width).coerceAtLeast(0f)
-        )
-        val rowGap = (extra - heroGrow) / 2f
-        val firstRow = heroGrow + rowGap
-        val secondRow = heroGrow + 2f * rowGap
-        val boxes = wideReference.mapValues { (slot, b) ->
-            when {
-                slot in TOP_BAR -> b
-                slot == Slot.HERO -> Box(b.left - heroWiden / 2f, b.top, b.right + heroWiden / 2f, b.bottom + heroGrow)
-                slot == Slot.RAIL -> b.copy(bottom = b.bottom + extra)
-                slot in HERO_BAND -> {
-                    val shift = heroGrow * ((b.top + b.bottom) / 2f - hero.top) / hero.height
-                    b.copy(top = b.top + shift, bottom = b.bottom + shift)
-                }
-                slot in FIRST_ROW -> b.copy(top = b.top + firstRow, bottom = b.bottom + firstRow)
-                slot in SECOND_ROW -> b.copy(top = b.top + secondRow, bottom = b.bottom + secondRow)
-                else -> b
-            }.scaled(u)
-        }
-        return Layout(true, widthDp, u, (WIDE_REFERENCE_HEIGHT + extra) * u, boxes)
-    }
+    fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout =
+        ContinuumReferenceLayout.create(widthDp, heightDp, true, fontScale)
 }

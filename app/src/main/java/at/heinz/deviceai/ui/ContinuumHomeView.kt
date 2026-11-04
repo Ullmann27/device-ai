@@ -124,7 +124,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         // The portrait hero retains its exact layout/3D viewport. Its decorative
         // floor rings may paint behind the later foreground controls, without
         // moving or enlarging their touch targets or introducing another surface.
-        clipChildren = spec.adaptive || spec[Slot.WORKERS] == null
+        clipChildren = spec.referenceCockpit || spec.adaptive || spec[Slot.WORKERS] == null
         views.values.forEach { removeView(it) }
         views.clear()
         hologram.setGeometry(intendedGeometry)
@@ -140,11 +140,13 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     }
 
     val wide: Boolean get() = layoutSpec?.wide == true
+    val referenceCockpit: Boolean get() = layoutSpec?.referenceCockpit == true
     /** Geometry belongs to the composition, not to the presence of an adaptive worker card. */
     val intendedGeometry: ContinuumHologramRenderer.Geometry
         get() {
             val spec = layoutSpec ?: return ContinuumHologramRenderer.Geometry.PHONE
             return when {
+                spec.referenceCockpit -> ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
                 !spec.adaptive && spec[Slot.WORKERS] != null -> ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT
                 spec.wide -> ContinuumHologramRenderer.Geometry.FOLD
                 else -> ContinuumHologramRenderer.Geometry.PHONE

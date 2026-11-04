@@ -29,3 +29,6 @@ No main merge, force-push, key replacement, owner-data reset or automatic instal
 
 ## Next
 Three teams implement and checkpoint; coordinator prepares tooling and release path, integrates bounded patches, independently reviews changed code, runs required combined gates and reports exact receipts. Never leave usable changes only in this transient workspace.
+
+## Recovery update
+All six original reference images were found privately. The original clean integration worktree at ad68e9a8cdfba50e31e99906a4eca37f6130b155, containing eac0c3656 and the FrameLayout compile fix, was recovered. Application/tool files were copied into this continuation with exact Git-blob verification; original worktrees remain untouched. See RECOVERED-SOURCE.json. The prior unavailable statements describe the earlier lookup only. Owner expanded the assignment to at least ten specialized bots, executed in waves of three. Actual code verification is in progress.
