@@ -19,13 +19,13 @@ import android.graphics.Rect
  * onAnimationEvent / detach). Register via `JarvisAvatarSlot.register(JarvisHoloAvatar())`.
  * Speech/visemes/gaze/audio level need the full AvatarContract stream: feed [onAvatarEvent].
  */
-class JarvisHoloAvatar {
+class JarvisHoloAvatar : at.heinz.deviceai.cockpit.JarvisAvatarRenderer {
     private var host: ViewGroup? = null
     private var stage: FrameLayout? = null
     var hologram: ContinuumHologramView? = null; private set
     var sequence: JarvisSequenceView? = null; private set
 
-    fun attach(host: ViewGroup, slot: Rect) {
+    override fun attach(host: ViewGroup, slot: Rect) {
         detach()
         val s = FrameLayout(host.context)
         val holo = ContinuumHologramView(host.context).apply {
@@ -41,17 +41,17 @@ class JarvisHoloAvatar {
     }
 
     /** Kern's slot: coarse state → head (expression/gaze stay as last reported). */
-    fun onAvatarState(state: AvatarState) {
+    override fun onAvatarState(state: AvatarState) {
         hologram?.onAvatarEvent(AvatarEvent.StateChanged(state, AvatarExpression.NEUTRAL, GazeTarget.OWNER, android.os.SystemClock.uptimeMillis()))
     }
 
     /** Full AvatarContract stream (speech, visemes, gaze, audio level) → the head. */
-    fun onAvatarEvent(event: AvatarEvent) { hologram?.onAvatarEvent(event) }
+    override fun onAvatarEvent(event: AvatarEvent) { hologram?.onAvatarEvent(event) }
 
     /** Cockpit bus events → sequence animations (Kern may also subscribe [sequence] to the bus directly). */
-    fun onAnimationEvent(event: CockpitAnimationEvent) { sequence?.render(event) }
+    override fun onAnimationEvent(event: CockpitAnimationEvent) { sequence?.render(event) }
 
-    fun detach() {
+    override fun detach() {
         hologram?.setNativeHeadEnabled(false)
         sequence?.clear()
         stage?.let { host?.removeView(it) }
