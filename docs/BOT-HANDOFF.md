@@ -1,6 +1,6 @@
 # Bot-Handoff – Jarvis-Integration auf ChatGPT-Stand
 
-Aktualisiert: 04.11.2026 09:07 CET (aus `date`, Europe/Vienna). Der frühere Zeitstempel „~09:20 MEZ“ lag in der Zukunft und war falsch.
+Aktualisiert: 04.11.2026 09:14 CET (aus `date`, Europe/Vienna). Der frühere Zeitstempel „~09:20 MEZ“ lag in der Zukunft und war falsch.
 SHAs live per `gh pr view <nr> --json headRefOid`.
 
 ## Aktueller Integrationsstand (Jarvis Integration)
@@ -80,6 +80,8 @@ Nebenstrang: Jarvis Gedächtnis (über Kerns Schnittstellen). Chef HAUPTBOT vert
 4. Nie nach main mergen, kein Release, kein signierter Build.
 
 ## Offene Punkte
+- Jarvis Gedächtnis #371 abgeschlossen auf befdbe89: laut Chef 1842 Tests / 0 Fehler, Ereignisstrom M2.11 nach Kerns Signatur, Recovery M2.12. Status: Integration erst nach Freigabe durch Jarvis Sicherheit. Offene Risiken (GROK2-HANDOFF.md §13): Quarantäne-Dateien werden nie automatisch aufgeräumt (Vorschlag Owner-Aktion „Quarantäne prüfen/löschen“); bei Wiederherstellung aus Sicherung gehen spätere Bestätigungen verloren (nur Widerrufe übernommen); Sicherung nur alle 256 Anhänge erneuert; leeres gültiges Präfix ohne Sicherung → Gedächtnis startet leer (Daten nur in Quarantäne); Report hält nur die letzte Recovery; scheitert die Quarantäne, werden Schreibzugriffe mit IOException abgelehnt bis zum nächsten erfolgreichen Öffnen.
+- Jarvis Kern #481 (@ 86263a81) bringt `ChiefWorkerPool.snapshot()` (nur lesend, thread-sicher, unveränderlicher Schnappschuss für CockpitStatus, API in docs/CHIEF-PATTERN.md). `git merge-tree --write-tree 847a5dc8 86263a81` → 0 Konflikte (auch ChiefWorkerPool.kt; ToolOutputCap in report() und runner bleibt erhalten). Nicht gemergt.
 - ERLEDIGT: Jarvis Sicherheit hat #375 @ b49fb847 geprüft und S4/B5 (9ec6f3f8) sowie den Race-Fix (6299cbcf) BESTÄTIGT (move_file → Owner-Freigabe). Bericht: `docs/reviews/REVIEW-integration-b49fb847-S4-racefix.md` auf `continuum/m5-integration-repair` @ f6580b25. ChatGPTs zwei neue Guard-Tests wurden auf die B5-API umgestellt (Fall „Nicht verschieben“ → move_file entfällt, Frage-Fall mit delete_file geprüft) – Sicherheit bitte kurz mitprüfen.
 - Für Jarvis Kern (ChiefWorkerPool), MITTEL: Der Slot zählt während der Zustellung noch. Ein Re-Submit mit derselben id im Callback wird abgelehnt, und awaitIdle() im Callback wird nie true.
 - Für Jarvis Kern, NIEDRIG: Bei einem Error wie OOM gibt es keine Slot-Freigabe und keinen Bericht.
