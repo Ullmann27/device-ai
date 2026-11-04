@@ -1,0 +1,310 @@
+{
+  "all_four_continuations_have_eight_immediate_eos_capacity_calls": true,
+  "all_four_continuations_have_six_immediate_eos_probes": true,
+  "checkpoint_bytes_rehashed": false,
+  "distinct_continued_checkpoint_count": 3,
+  "limits": [
+    "Verifies archived log consistency, not authenticity or absent checkpoint bytes.",
+    "Capacity calls repeat one protocol prompt; they are not distinct tasks.",
+    "Six instruction prompts are reused across runs and are not a fresh quality test.",
+    "Logs do not contain first-token logits, EOS probability or margin.",
+    "The small controls exhibit the same phenomenon; width-specific causation is unproven.",
+    "No training, model inference, holdout evaluation or promotion was performed."
+  ],
+  "log_consistency": "PASS",
+  "revision": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "runs": [
+    {
+      "capacity": {
+        "distinct_protocol_prompts": 1,
+        "first_token_observations": 0,
+        "full_32_token_observations": 0,
+        "identity": {
+          "checkpoint_sha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+          "parameters": 132160,
+          "tokenizer_sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+        },
+        "immediate_eos_calls": 8,
+        "measured_calls": 6,
+        "protocol_prompt_sha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+        "reported_capacity_pass": false,
+        "trial_calls": 8,
+        "warmup_calls": 2
+      },
+      "checkpoint_sha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+      "continued_correct": 0,
+      "continued_immediate_eos_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "initial_correct": 0,
+      "initial_immediate_eos_indices": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "new_immediate_eos_indices": [
+        2,
+        3
+      ],
+      "parameters": 132160,
+      "profile": "core-6562304",
+      "size": "small",
+      "source_sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "steps": 16,
+      "tokens": 3255,
+      "unique_instruction_prompts": 6
+    },
+    {
+      "capacity": {
+        "distinct_protocol_prompts": 1,
+        "first_token_observations": 0,
+        "full_32_token_observations": 0,
+        "identity": {
+          "checkpoint_sha256": "8fd24c8fcc273bb46faa4a994c31dcd6d0cf7e6964942ef33aa1c4c782d42384",
+          "parameters": 6562304,
+          "tokenizer_sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+        },
+        "immediate_eos_calls": 8,
+        "measured_calls": 6,
+        "protocol_prompt_sha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+        "reported_capacity_pass": false,
+        "trial_calls": 8,
+        "warmup_calls": 2
+      },
+      "checkpoint_sha256": "8fd24c8fcc273bb46faa4a994c31dcd6d0cf7e6964942ef33aa1c4c782d42384",
+      "continued_correct": 0,
+      "continued_immediate_eos_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "initial_correct": 0,
+      "initial_immediate_eos_indices": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "new_immediate_eos_indices": [
+        2,
+        3
+      ],
+      "parameters": 6562304,
+      "profile": "core-6562304",
+      "size": "expanded",
+      "source_sha256": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+      "steps": 16,
+      "tokens": 3255,
+      "unique_instruction_prompts": 6
+    },
+    {
+      "capacity": {
+        "distinct_protocol_prompts": 1,
+        "first_token_observations": 0,
+        "full_32_token_observations": 0,
+        "identity": {
+          "checkpoint_sha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+          "parameters": 132160,
+          "tokenizer_sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+        },
+        "immediate_eos_calls": 8,
+        "measured_calls": 6,
+        "protocol_prompt_sha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+        "reported_capacity_pass": false,
+        "trial_calls": 8,
+        "warmup_calls": 2
+      },
+      "checkpoint_sha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+      "continued_correct": 0,
+      "continued_immediate_eos_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "initial_correct": 0,
+      "initial_immediate_eos_indices": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "new_immediate_eos_indices": [
+        2,
+        3
+      ],
+      "parameters": 132160,
+      "profile": "core-9712128",
+      "size": "small",
+      "source_sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "steps": 16,
+      "tokens": 3255,
+      "unique_instruction_prompts": 6
+    },
+    {
+      "capacity": {
+        "distinct_protocol_prompts": 1,
+        "first_token_observations": 0,
+        "full_32_token_observations": 0,
+        "identity": {
+          "checkpoint_sha256": "49a6ef6d9e710cd1fcc407e1aa9b4a72a5a7a205be5bd8ccf9e2d2093e9568f0",
+          "parameters": 9712128,
+          "tokenizer_sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+        },
+        "immediate_eos_calls": 8,
+        "measured_calls": 6,
+        "protocol_prompt_sha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+        "reported_capacity_pass": false,
+        "trial_calls": 8,
+        "warmup_calls": 2
+      },
+      "checkpoint_sha256": "49a6ef6d9e710cd1fcc407e1aa9b4a72a5a7a205be5bd8ccf9e2d2093e9568f0",
+      "continued_correct": 0,
+      "continued_immediate_eos_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "initial_correct": 0,
+      "initial_immediate_eos_indices": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "new_immediate_eos_indices": [
+        2,
+        3
+      ],
+      "parameters": 9712128,
+      "profile": "core-9712128",
+      "size": "expanded",
+      "source_sha256": "5e2332b0c15646b574d9c3f8cf48378f13eed1daaed7e652328588eedae85950",
+      "steps": 16,
+      "tokens": 3255,
+      "unique_instruction_prompts": 6
+    }
+  ],
+  "schema": "continuum-historical-eos-audit-v1",
+  "shared_cumulative_tokens": [
+    234,
+    429,
+    658,
+    844,
+    1046,
+    1249,
+    1501,
+    1753,
+    2005,
+    2201,
+    2451,
+    2651,
+    2769,
+    2943,
+    3146,
+    3255
+  ],
+  "shared_training_inputs": {
+    "datasetSha256": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+    "scheduleSha256": "346e93c510dafe5e12ee6a0e54ae94a0f0d099e7c0fc8c6f8973e5ff9a6b5066",
+    "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+    "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+  },
+  "small_control_checkpoint_identical_across_profiles": true,
+  "sources": [
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/baseline-probes.tsv",
+      "sha256": "394241dd1601a66d9d8f3cbd0d41466db56e7d34c680806d55252971b27cc84f",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/baseline-probes.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/width-8-probes.tsv",
+      "sha256": "2b1e3463fa07d5c5c57dd3a449e16a2d08f349500276442b919115b0841b5420",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/width-8-probes.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-small-train.tsv",
+      "sha256": "c8af895cb59d175ec2c8273bba9ee18b7a41e42ff861b6c89df6cb9f89489513",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-small-train.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-small-probes.tsv",
+      "sha256": "fa68c360ece12fa538e6afefa182e1ad66f82e6d8cb95126c431214ee6bb5bbc",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-small-probes.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-small-capacity.tsv",
+      "sha256": "977a3da218f6e10ee2bbbb9533772b91c254323fea8d3c1d846b1090b1d1c0c2",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-small-capacity.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-expanded-train.tsv",
+      "sha256": "545292e52ddda6d17213ed685fe189b6e4a091214b3d533fa29a0d68ff8dc5cd",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-expanded-train.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-expanded-probes.tsv",
+      "sha256": "7017bf32cab3897b2d67671a0ae0dbea72d5ae655e592ce0e983cf6a5216edec",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-expanded-probes.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-expanded-capacity.tsv",
+      "sha256": "b182e6bbeb183a8f26680983ea8006e1562291f1c8ed4322197719e5fd27fd78",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-expanded-capacity.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/baseline-probes.tsv",
+      "sha256": "9b2c06041c9368dc68fdb279bdbe8235b8f239659dd728b4dd78605c3ee9c8a8",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/baseline-probes.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/depth-3-probes.tsv",
+      "sha256": "6e27a2c7b3d3141597de4859597370ec44f34af56d699b2bcf4a61b47f302522",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/depth-3-probes.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-small-train.tsv",
+      "sha256": "27e866d8f5a958c0e163884641641baad11678863905c809563e1011df8b606f",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-small-train.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-small-probes.tsv",
+      "sha256": "8dd69508fc1e413350e17441fe41ec00c5c6a6ada58fed9c019a61dec44d88ce",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-small-probes.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-small-capacity.tsv",
+      "sha256": "36ac698d8260c67ce269d474d3dbde987331e884f8a3c05ded10c8932f8a8089",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-small-capacity.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-expanded-train.tsv",
+      "sha256": "d85bce3f6b6bad12907378dbc26a435d9009c36b21ae9a98b6b5abdbfdea9ce0",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-expanded-train.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-expanded-probes.tsv",
+      "sha256": "50aa28017eba4697e4fc95fd71b7b396f2ab6e7181caa6fe21106224baf73850",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-expanded-probes.tsv"
+    },
+    {
+      "path": "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-expanded-capacity.tsv",
+      "sha256": "cbb7697d67f37bbce919d0f925e03d21f484fc2f82e1848a77448042174c9f47",
+      "url": "https://github.com/Ullmann27/device-ai/blob/30cd3a89810ed14fa84eca95236d3177e016118d/experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-expanded-capacity.tsv"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+test_16m_layout_and_next_depth_raw_size (test_weight16m_preflight.PreflightTests.test_16m_layout_and_next_depth_raw_size) ... ok
+test_cli_missing_is_unavailable_and_real_target_is_default (test_weight16m_preflight.PreflightTests.test_cli_missing_is_unavailable_and_real_target_is_default) ... ok
+test_header_and_parameter_identity (test_weight16m_preflight.PreflightTests.test_header_and_parameter_identity) ... ok
+test_internal_checksum_corruption (test_weight16m_preflight.PreflightTests.test_internal_checksum_corruption) ... ok
+test_invalid_tokenizer_forward_reference (test_weight16m_preflight.PreflightTests.test_invalid_tokenizer_forward_reference) ... ok
+test_modified_utf_java_null_and_surrogates (test_weight16m_preflight.PreflightTests.test_modified_utf_java_null_and_surrogates) ... ok
+test_nonfinite_weights_even_with_valid_checksum (test_weight16m_preflight.PreflightTests.test_nonfinite_weights_even_with_valid_checksum) ... ok
+test_oversize_file_is_rejected_before_loading_weights (test_weight16m_preflight.PreflightTests.test_oversize_file_is_rejected_before_loading_weights) ... ok
+test_trailing_and_truncated_body (test_weight16m_preflight.PreflightTests.test_trailing_and_truncated_body) ... ok
+test_transformer_positions_and_layout (test_weight16m_preflight.PreflightTests.test_transformer_positions_and_layout) ... ok
+test_valid_mingru_counts_actual_values_and_reports_limits (test_weight16m_preflight.PreflightTests.test_valid_mingru_counts_actual_values_and_reports_limits) ... ok
+test_wrong_tensor_name_with_valid_checksum (test_weight16m_preflight.PreflightTests.test_wrong_tensor_name_with_valid_checksum) ... ok
+test_wrong_tensor_shape_with_valid_checksum (test_weight16m_preflight.PreflightTests.test_wrong_tensor_shape_with_valid_checksum) ... ok
+test_wrong_tokenizer_binding_with_valid_checksum (test_weight16m_preflight.PreflightTests.test_wrong_tokenizer_binding_with_valid_checksum) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.022s
+
+OK

@@ -1,6 +1,24 @@
-# Drei zusätzliche Helfer: Ausgangsprüfung
+# Drei zusätzliche Helfer: Evidenz und integrierte Prüfung
 
 Forschungsbasis: `30cd3a89810ed14fa84eca95236d3177e016118d`, PR #492. Anschluss: Draft-PR #507.
+
+## Abgeschlossene Unterstützung
+
+Alle drei Beiträge sind integriert und unabhängig geprüft. Die unten beschriebene Ausgangsprüfung bleibt als eigener Messzeitpunkt erhalten. Am korrigierten Driver bestehen die 75 bisherigen Gates, zehn neue Veröffentlichungsfälle und ein unabhängiger echter SIGKILL-Fall: **86/86**. Dazu bestehen neun EOS-Tests mit historischer Regression und 14 Preflight-Tests: **109/109 Software-Prüffälle** insgesamt. Neue Trainingsläufe: **0**.
+
+| Beleg | Inhalt |
+| --- | --- |
+| [Integrierte Gates](integrated-gates/summary.json) | Driver-/Testhashes, Exitcodes und SHA-256 der sechs vollständigen Logdateien im selben Ordner; 86 Fälle. |
+| [SIGKILL-Gegenprobe vor dem Fix](independent-publish-crash-red.json) | Echter Prozessabbruch hinterlässt am ursprünglichen Driver einen unvollständigen endgültigen Marker; derselbe Fall besteht am korrigierten Driver. |
+| [Teilwrite-Gegenprobe](independent-partial-write-baseline.json) | Ursprünglicher Fehler bei abgebrochener JSON-Ausgabe. |
+| [Finales Prüfreceipt](final-checks/receipt.json) | 23 weitere Tests, echte historische EOS-Auswertung und tatsächlicher 16M-Preflight, genaue Befehle und Vor-/Nachher-Identitäten. |
+| [Python-Preflight](final-checks/preflight-real16m.json) | 57 Tensoren und 16.011.776 endliche Floatwerte vollständig gelesen; Checkpoint und Tokenizer geprüft. |
+| [EOS-Auswertung](final-checks/eos-actual-audit.json) | 16 festgelegte Git-Blobs; vier Laufaufzeichnungen, drei fortgesetzte Checkpoint-Identitäten, keine neue Inferenz. |
+| [Native Kapazitätsrohdaten](real16m/capacity.tsv) / [Receipt](real16m/receipt.json) | Separater tatsächlicher Inferenztest am vorhandenen 16M-Modell. |
+
+Die neue Gate-Suite reproduzierte am unveränderten Driver vier Fehler. Ihre unveränderten Rohbelege sind zusätzlich unter [RED](../g1-evidence/red-report.json), [GREEN](../g1-evidence/green-report.json) und den benachbarten `red.log`/`green.log` gespeichert. Die absoluten Arbeitsverzeichnisse im Helferreceipt beschreiben die ursprüngliche Ausführung; die kopierten Berichte behalten ihre dort angegebenen Prüfsummen.
+
+Die Integrationskontrolle vergleicht Logs und finale Quellen erneut mit den Receipts. Die Veröffentlichung muss denselben Git-Baum wie die lokal geprüfte Fassung enthalten; eine abweichende Baumidentität gilt nicht als geprüfter Abschluss. Die endgültige Commit-/Baumidentität wird im PR-Kopf dokumentiert.
 
 ## Tatsächlich ausgeführt
 

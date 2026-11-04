@@ -1,0 +1,50 @@
+{
+  "sourceSha256": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+  "sourceHashAfter": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+  "results": [
+    {
+      "test": "adversarial_driver_gate.py",
+      "exitCode": 0,
+      "testSha256": "27abd1f9c223cc9c40daa8d27e3a9b48805b37ee5a9a07827d000f49bc789020",
+      "logSha256": "d1139f34eb242efb6c96c423a1fd5f3c7a4ad49032dbd5cad7163480dc50a884",
+      "tail": "ed in double quotes: line 1 column 2 (char 1)\"}}\n{\"case\": \"missing_development_receipt_negative_control\", \"pass\": true, \"trainAttempts\": 0, \"exception\": {\"type\": \"RuntimeError\", \"message\": \"completed calibration lacks a development receipt\"}}\n{\"case\": \"changed_jar_negative_control\", \"pass\": true, \"trainAttempts\": 0, \"exception\": {\"type\": \"ValueError\", \"message\": \"compiled program or frozen protocol changed; use a new experiment directory\"}}\n{\"report\": \"/tmp/continuum-g1-gate-review-f7bzaiat/audit-e991683e6abf-3_793sty/report.json\", \"sha256\": \"5fea1639e3ad944630785ba287342737d0c579248b619158bfa98338a8d83cb7\", \"sourceSha256\": \"e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f\", \"passed\": 36, \"failed\": 0, \"realTrainingRuns\": 0}\n"
+    },
+    {
+      "test": "targeted_final_creation_gate.py",
+      "exitCode": 0,
+      "testSha256": "c7185a6edcf8a7f11a9684bf0c5febfc141fe32d7fd6a227aff5f7575f91921f",
+      "logSha256": "8b3cf9a9835f7b0d92f8b7afa8b09cca18510206514f207d447f0dde2a7639f6",
+      "tail": "fw00x8/targeted-e991683e6abf-_bk8zz11/tampered_width_creation_noise\"}\n{\"case\": \"tampered_depth_creation_seed\", \"pass\": true, \"positiveControl\": false, \"trainAttempts\": 0, \"returnedWithoutValidationError\": false, \"exception\": {\"type\": \"RuntimeError\", \"message\": \"invocation identity or execution contract changed: depth-3-create\"}, \"events\": [], \"fixture\": \"/tmp/continuum-g1-targeted-review-71fw00x8/targeted-e991683e6abf-_bk8zz11/tampered_depth_creation_seed\"}\n{\"report\": \"/tmp/continuum-g1-targeted-review-71fw00x8/targeted-e991683e6abf-_bk8zz11/report.json\", \"sha256\": \"5f4e4c5dabe5db25afb14f2f1d04128c76f1fee98493ad58a2c40bc25b44d6bd\", \"sourceSha256\": \"e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f\", \"passed\": 6, \"failed\": 0}\n"
+    },
+    {
+      "test": "direct_dispatch_gate.py",
+      "exitCode": 0,
+      "testSha256": "5dbab83c01eb95d87a102684964e9cd3d07ab40c5b611c76b17c062f10332281",
+      "logSha256": "a5cae885432d8ac33ce363c9e95bf5ac0c74872ce96ff5d8ca7bcf26556f26fb",
+      "tail": "thorization/results/checkpoints/98ced0261d04cac821c9c9d868b7ceab8977fe48e41cb59a1252c8197c2bda56.lm1\", \"beforeSha256\": \"98ced0261d04cac821c9c9d868b7ceab8977fe48e41cb59a1252c8197c2bda56\", \"afterSha256\": \"4b649dad7f12f05e90b2e8931a815b15109edd1a01e981ffddb2860913906a89\", \"byteLengthPreserved\": true, \"authorizationReturnType\": \"tuple\"}], \"fixture\": \"/tmp/continuum-g1-direct-review-hlqxxqzt/direct-e991683e6abf-uajgz89y/expanded_checkpoint_swap_after_authorization\"}\n{\"report\": \"/tmp/continuum-g1-direct-review-hlqxxqzt/direct-e991683e6abf-uajgz89y/report.json\", \"sha256\": \"d16aa4047a04215454bba60eb27319e03d994308ae5a19c057f1d3dc8d9219cc\", \"sourceSha256\": \"e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f\", \"passed\": 4, \"failed\": 0}\n"
+    },
+    {
+      "test": "registered_profiles_gate.py",
+      "exitCode": 0,
+      "testSha256": "e6afccf4ae5bf0c243ecd8e92452c0c25c928912d704bf6977d9018fda2fd937",
+      "logSha256": "79d2b8752c55f98e5eb13cafc2cc4fe2d3c5eb95807f60364636e1617811d4e3",
+      "tail": "ptsBlocked\": 0, \"syntheticHoldoutBoundaryCalls\": 0, \"returnedWithoutValidationError\": false, \"exception\": {\"type\": \"RuntimeError\", \"message\": \"registered study child output cannot be reopened under another profile\"}, \"events\": [{\"event\": \"ENVIRONMENT_VERSION_STUB\"}, {\"event\": \"ENVIRONMENT_VERSION_STUB\"}], \"fixture\": \"/tmp/continuum-core-profile-review-vtft9v0f/profiles-e991683e6abf-uf8a6q9i/global_freeze_blocks_historical_downgrade_through_child_symlink\"}\n{\"report\": \"/tmp/continuum-core-profile-review-vtft9v0f/profiles-e991683e6abf-uf8a6q9i/report.json\", \"sha256\": \"61146933739b0403bdc3f2373c2970bbed11b83dad914a3485565826a6e0b31d\", \"sourceSha256\": \"e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f\", \"passed\": 29, \"failed\": 0}\n"
+    },
+    {
+      "test": "atomic_phase_publication_gate.py",
+      "exitCode": 0,
+      "testSha256": "d19eecec009a08417c117e97c14ee8744e6b29307567324ab8dfa286ae621cf5",
+      "logSha256": "d8b9769817ef279b264319462443a18c6b5baca477f1a5baa070921c6b8056f1",
+      "tail": "rogress_json_is_not_visible_under_final_name (__main__.PublicationGate.test_in_progress_json_is_not_visible_under_final_name) ... ok\ntest_partial_write_failure_leaves_no_marker_and_allows_retry (__main__.PublicationGate.test_partial_write_failure_leaves_no_marker_and_allows_retry) ... ok\ntest_serialization_failure_leaves_no_marker_and_allows_retry (__main__.PublicationGate.test_serialization_failure_leaves_no_marker_and_allows_retry) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.224s\n\nOK\n{\"report\": \"/tmp/continuum-publication-gate-vkwo55li/publication-e991683e6abf-cq_edg19/report.json\", \"sha256\": \"74fee8935258b9cc753cb4d241251bcbe61bf9c25c525b680f955e42cead3b4f\", \"passed\": 10, \"failed\": 0}\n"
+    },
+    {
+      "test": "independent_publish_crash.py",
+      "exitCode": 0,
+      "testSha256": "ab056818594370beb0fd7e612f9a82cc0cfa4b3379ff1bb994b594cc8f2b7cec",
+      "logSha256": "6449b2c8c02afc1c418778ba35d951b62c32f91378bec9cccbba4656f9a536d6",
+      "tail": "{\n  \"case\": \"real_process_kill_during_phase_serialization\",\n  \"sourceSha256\": \"e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f\",\n  \"childReturnCode\": -9,\n  \"finalMarkerPresent\": false,\n  \"finalMarkerComplete\": false,\n  \"parseError\": null,\n  \"passed\": true,\n  \"stderr\": \"\",\n  \"modelProcesses\": 0,\n  \"trainingRuns\": 0,\n  \"scope\": \"local synthetic phase marker; Linux SIGKILL, not power-loss durability\"\n}\n"
+    }
+  ],
+  "realModelProcesses": 0,
+  "realTrainingRuns": 0
+}

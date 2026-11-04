@@ -1,0 +1,41 @@
+{
+  "schema": "continuum-support-publication-verification-v1",
+  "utc": "2026-11-04T18:58:05.394492+00:00",
+  "baseCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "previousSupportCommit": "a7339f6065d5a9defdc1980a9f2af532115c00ff",
+  "gateSuites": [
+    {
+      "suite": "adversarial_driver_gate.py",
+      "passed": 36
+    },
+    {
+      "suite": "targeted_final_creation_gate.py",
+      "passed": 6
+    },
+    {
+      "suite": "direct_dispatch_gate.py",
+      "passed": 4
+    },
+    {
+      "suite": "registered_profiles_gate.py",
+      "passed": 29
+    },
+    {
+      "suite": "atomic_phase_publication_gate.py",
+      "passed": 10
+    },
+    {
+      "suite": "independent_publish_crash.py",
+      "passed": 1
+    }
+  ],
+  "additionalTestsPassed": 23,
+  "allTestsPassed": 109,
+  "testsFailed": 0,
+  "testSourcesMatchReceipts": true,
+  "evidenceLogsMatchReceipts": true,
+  "historicalEosAuditMatchesAgent": true,
+  "actualModelAndTokenizerUnchanged": true,
+  "newTrainingRuns": 0,
+  "scope": "isolated experimental support and its handoff only"
+}

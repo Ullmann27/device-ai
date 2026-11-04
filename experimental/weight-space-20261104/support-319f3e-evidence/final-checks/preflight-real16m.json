@@ -1,0 +1,397 @@
+{
+  "scope": "CHECKPOINT_PREFLIGHT_ONLY",
+  "status": "PASS",
+  "checkpointSha256": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+  "checkpointBytes": 64048511,
+  "checkpointBodySha256": "2eb1dece023077dc656364db3685b63aff83b47078109e06d8d78da10cdc4dd7",
+  "checkpointLimitBytes": 67108864,
+  "checkpointHeadroomBytes": 3060353,
+  "architecture": "MINGRU",
+  "config": {
+    "arch": 1,
+    "vocab": 512,
+    "dim": 512,
+    "layers": 5,
+    "heads": 4,
+    "context": 256,
+    "mlp": 2048
+  },
+  "parameters": 16011776,
+  "parameterBytes": 64047104,
+  "tensorCount": 57,
+  "tensors": [
+    {
+      "name": "tok",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l0.n1",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l0.wz",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l0.bz",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l0.wc",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l0.wg",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l0.wo",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l0.n2",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l0.w1",
+      "rows": 512,
+      "columns": 2048,
+      "parameters": 1048576
+    },
+    {
+      "name": "l0.b1",
+      "rows": 1,
+      "columns": 2048,
+      "parameters": 2048
+    },
+    {
+      "name": "l0.w2",
+      "rows": 2048,
+      "columns": 512,
+      "parameters": 1048576
+    },
+    {
+      "name": "l0.b2",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l1.n1",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l1.wz",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l1.bz",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l1.wc",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l1.wg",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l1.wo",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l1.n2",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l1.w1",
+      "rows": 512,
+      "columns": 2048,
+      "parameters": 1048576
+    },
+    {
+      "name": "l1.b1",
+      "rows": 1,
+      "columns": 2048,
+      "parameters": 2048
+    },
+    {
+      "name": "l1.w2",
+      "rows": 2048,
+      "columns": 512,
+      "parameters": 1048576
+    },
+    {
+      "name": "l1.b2",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l2.n1",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l2.wz",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l2.bz",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l2.wc",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l2.wg",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l2.wo",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l2.n2",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l2.w1",
+      "rows": 512,
+      "columns": 2048,
+      "parameters": 1048576
+    },
+    {
+      "name": "l2.b1",
+      "rows": 1,
+      "columns": 2048,
+      "parameters": 2048
+    },
+    {
+      "name": "l2.w2",
+      "rows": 2048,
+      "columns": 512,
+      "parameters": 1048576
+    },
+    {
+      "name": "l2.b2",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l3.n1",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l3.wz",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l3.bz",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l3.wc",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l3.wg",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l3.wo",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l3.n2",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l3.w1",
+      "rows": 512,
+      "columns": 2048,
+      "parameters": 1048576
+    },
+    {
+      "name": "l3.b1",
+      "rows": 1,
+      "columns": 2048,
+      "parameters": 2048
+    },
+    {
+      "name": "l3.w2",
+      "rows": 2048,
+      "columns": 512,
+      "parameters": 1048576
+    },
+    {
+      "name": "l3.b2",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l4.n1",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l4.wz",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l4.bz",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l4.wc",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l4.wg",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l4.wo",
+      "rows": 512,
+      "columns": 512,
+      "parameters": 262144
+    },
+    {
+      "name": "l4.n2",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "l4.w1",
+      "rows": 512,
+      "columns": 2048,
+      "parameters": 1048576
+    },
+    {
+      "name": "l4.b1",
+      "rows": 1,
+      "columns": 2048,
+      "parameters": 2048
+    },
+    {
+      "name": "l4.w2",
+      "rows": 2048,
+      "columns": 512,
+      "parameters": 1048576
+    },
+    {
+      "name": "l4.b2",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    },
+    {
+      "name": "nf",
+      "rows": 1,
+      "columns": 512,
+      "parameters": 512
+    }
+  ],
+  "finiteWeights": true,
+  "tokenizer": {
+    "sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "bytes": 2040,
+    "merges": 254,
+    "vocab": 512
+  },
+  "metadata": {
+    "additionalLayers": "3",
+    "commit": "1d92db03b87558c0b330dc584fd1f4c025a93c82",
+    "corpus": "f73f286c36df816447bd0c4800219d257d78d0e5b4c31a665450821c8e6f8af4",
+    "depthSeed": "20261104",
+    "epoch": "8",
+    "experiment": "weight-space-20261104",
+    "family": "LM1-GM-v512",
+    "noiseSeed": "20261104",
+    "parameters": "16011776",
+    "parent": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+    "scope": "RESEARCH_SHADOW",
+    "seed": "1",
+    "widthFactor": "8",
+    "zeroSumNoise": "0.001"
+  },
+  "optimizerState": "ABSENT_FROM_LM1C_V1",
+  "exactOptimizerResume": "UNAVAILABLE",
+  "continuation": "WEIGHTS_LOADABLE_FRESH_OPTIMIZER_REQUIRED",
+  "trainingMemory": "UNMEASURED",
+  "trainingRuns": 0,
+  "quality": "NOT_EVALUATED",
+  "inferenceCapacity": "NOT_MEASURED_BY_PREFLIGHT",
+  "androidValidation": "NOT_RUN"
+}

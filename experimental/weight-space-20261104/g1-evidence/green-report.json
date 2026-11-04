@@ -1,0 +1,54 @@
+{
+  "task": "ATOMIC-PHASE-PUBLICATION-20261104",
+  "sourcePath": "/workspace/scratch/319f3e4563d9/agents/gate/experimental/weight-space-20261104/run_experiment.py",
+  "sourceSha256": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+  "sourceHashAfterRun": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+  "harnessSha256": "d19eecec009a08417c117e97c14ee8744e6b29307567324ab8dfa286ae621cf5",
+  "passed": 10,
+  "failed": 0,
+  "cases": [
+    {
+      "case": "test_competing_writers_have_exactly_one_complete_winner",
+      "pass": true
+    },
+    {
+      "case": "test_complete_unicode_publication",
+      "pass": true
+    },
+    {
+      "case": "test_constructor_restarts_after_interrupted_environment_write",
+      "pass": true
+    },
+    {
+      "case": "test_dangling_symlink_is_not_replaced_or_followed",
+      "pass": true
+    },
+    {
+      "case": "test_existing_invalid_marker_is_not_silently_repaired",
+      "pass": true
+    },
+    {
+      "case": "test_existing_marker_is_not_overwritten",
+      "pass": true
+    },
+    {
+      "case": "test_existing_symlink_and_referent_are_unchanged",
+      "pass": true
+    },
+    {
+      "case": "test_in_progress_json_is_not_visible_under_final_name",
+      "pass": true
+    },
+    {
+      "case": "test_partial_write_failure_leaves_no_marker_and_allows_retry",
+      "pass": true
+    },
+    {
+      "case": "test_serialization_failure_leaves_no_marker_and_allows_retry",
+      "pass": true
+    }
+  ],
+  "realModelProcesses": 0,
+  "realTrainingRuns": 0,
+  "realHoldoutEvaluations": 0
+}

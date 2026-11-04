@@ -12,6 +12,7 @@ from pathlib import Path
 import shutil
 import signal
 import subprocess
+import tempfile
 import time
 
 BASE_SHA = "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd"
@@ -46,10 +47,19 @@ def path_present(path: Path) -> bool:
 
 
 def write_new(path: Path, value: dict) -> None:
+    """Publish complete JSON atomically, without replacing an existing marker."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("x", encoding="utf-8") as stream:
-        json.dump(value, stream, indent=2, ensure_ascii=False)
-        stream.write("\n")
+    descriptor, staged = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+            json.dump(value, stream, indent=2, ensure_ascii=False)
+            stream.write("\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        # A same-directory hard link publishes once, including against symlinks.
+        os.link(staged, path)
+    finally:
+        os.unlink(staged)
 
 
 def records(path: Path) -> list[dict]:
