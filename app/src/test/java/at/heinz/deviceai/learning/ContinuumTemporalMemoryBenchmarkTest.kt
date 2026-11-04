@@ -201,9 +201,13 @@ class ContinuumTemporalMemoryBenchmarkTest {
         try {
             var clock = 1L
             val core = ContinuumLearningCore(dir) { clock++ }
-            var stored = 0
+            val prefill = FileLearningExperienceStore.MAX_RECORDS - 4 // LEX3: bulk prefill, then hit the limit via the core
+            FileLearningExperienceStore(java.io.File(dir, "learning-core-v2")).appendMissing((1..prefill).map { k ->
+                LearningExperienceFactory.create(LearningExperienceType.USER_FACT, LearningProvenance.USER_CONFIRMED,
+                    LearningTrustClass.OWNER_CONFIRMED, LearningStatus.CONFIRMED, "Mein Notizbuch $k ist grün.", now = clock++) })
+            var stored = prefill
             val failure = runCatching {
-                for (k in 1..300) { core.confirmOwnerFact("Mein Notizbuch $k ist grün."); stored++ }
+                for (k in prefill + 1..prefill + 10) { core.confirmOwnerFact("Mein Notizbuch $k ist grün."); stored++ }
             }.exceptionOrNull()
             println("M2-METRIC owner_fact_capacity=$stored failure=${failure?.javaClass?.simpleName}")
             assertEquals(FileLearningExperienceStore.MAX_RECORDS, stored)

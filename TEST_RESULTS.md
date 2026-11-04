@@ -29,3 +29,9 @@ Stand: 2026-11-03 14:42 CET, Host-JVM (JDK 17.0.21, Gradle-Wrapper, --no-daemon)
 - Kein Lauf auf Gerät/Emulator (Fold7), keine instrumentierten Android-Tests.
 - Avatar-Gedächtnissignale (ehem. Punkt 4 der alten Liste): bewusst nicht gebaut (Vertrag bei Continuum HAUPT, PR #373); nur Feld-Abbildung in GROK2-HANDOFF.md §10.
 - Holdout-Fehler nicht nachgebessert (Dev-Set + neuer Holdout nötig).
+
+## Update 2026-11-04 (M2.5–M2.7)
+- Volle Unit-Suite (`:app:testDebugUnitTest --rerun-tasks`): **1820 Tests, 0 Fehler, 5 übersprungen**.
+- M2.5 LEX3 (8bdba30e + Benchmark-Test-Anpassung): RED 3 → GREEN. Kapazität 4096 (gemessen: `owner_fact_capacity=4096`, 4097. wirft `IllegalStateException`). 1000 Einträge Round-Trip verlustfrei; Kaltlesen p95 11,3–15,7 ms (3 Läufe). LEX2 (256) verlustfrei gelesen, beim nächsten Schreiben migriert, LKG behält LEX2. Signierte Korrekturen grün, Sicht-Cache invalidiert korrekt, Lotto-Hypothese bleibt unbestätigt bei 300 Einträgen. Warm p95 819 Lookups: 1,43 ms.
+- M2.6 ContinuumThinkingMemory (736d19cc): 4/4 grün (Reflexionen nur HYPOTHESIS, überschreiben keine bestätigten Fakten, Journal begrenzt und neustartfest). Hinweis: WIP-Tests liefen beim ersten Lauf direkt grün (kein separates RED in dieser Sitzung).
+- M2.7 ContinuumMemoryStats (a7365d47): RED (Kompilierfehler) → 2/2 grün (leer = 0/null; Zählung aus echtem Ledger; newToday ab Mitternacht Europe/Vienna).
