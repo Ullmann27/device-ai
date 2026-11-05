@@ -17,10 +17,10 @@
     "6.56M/9.71M gradient access, chain-rule and twenty finite-difference checks"
   ],
   "next": [
-    "maintain immutable M6 rejection and M5_UNCHANGED; no further model runs in this round",
-    "restore a permitted checkout only if available and independently run existing failure/resume tests against the unchanged combined patch, without any JVM or real final test",
-    "review residual candidate/receipt trust boundaries and prepare isolated fixes only after runnable RED->GREEN independent evidence",
-    "publish a separate fully source-bound future registration and newly independent data partitions before requesting any training authorization"
+    "preserve M5_UNCHANGED and immutable M6 failure; no model launches, training, or old final re-use",
+    "on a permitted restored checkout run existing source-pinned real-controller RED->GREEN tests with synthetic failed-baseline, corrupted-checkpoint and forged-resume fixtures, without any actual model launch",
+    "add an independent RED cross-study consumed-final artifact scenario to true patched v2/v3 controller and test before proposing source-only patch update",
+    "require externally pinned exclusive final-consumption ledger and prospective new independent train/dev/unused-final datasets before any future authorized model study"
   ],
   "acceptedResearchState": "M5_UNCHANGED",
   "newModelExperimentsPermittedThisRound": false,
@@ -36,7 +36,7 @@
     "exactRestorationVerified": true
   },
   "continuation": {
-    "status": "FIRST_SOURCE_ONLY_REVIEW_PUBLISHED",
+    "status": "SECOND_CROSS_STUDY_PROTOTYPE_PUBLISHED",
     "scope": "source audit, gate repair and prospective study design only",
     "iterations": 8,
     "frequency": "HOURLY",
@@ -45,17 +45,24 @@
     "timingMode": "flexible_schedule",
     "executionEnvironmentConfirmed": true,
     "nextRunTimestampReturned": false,
-    "executionEnvironmentStatus": "PRIOR_CHECKOUT_MISSING; CONNECTOR_SOURCE_READ_AVAILABLE; MODEL_AND_DYNAMIC_TESTS_NOT_RUN",
-    "latestReviewedHead": "e6dcac515d8670fdc5d3653fa1f919e1a03424c2",
-    "latestEvidenceCommit": "e6dcac515d8670fdc5d3653fa1f919e1a03424c2",
+    "executionEnvironmentStatus": "ORIGINAL_CHECKOUT_MISSING; CONTAINER_PYTHON_AVAILABLE; GITHUB_DNS_BLOCKED; CONNECTOR_SOURCE_READ_AVAILABLE",
+    "latestReviewedHead": "7e6bda9b8180c98dd011cbfde590047424cccd60",
+    "latestEvidenceCommit": "7e6bda9b8180c98dd011cbfde590047424cccd60",
     "modelProcessesThisRun": 0,
     "optimizerUpdatesThisRun": 0,
-    "newTestsRunThisContinuation": "SOURCE_AUDIT_STATIC_ONLY",
+    "newTestsRunThisContinuation": "12/12 ISOLATED_SYNTHETIC_PYTHON; STATIC_PATCH_16/16_AND_3_MUTANTS; FULL_RUNNER_NOT_RUN",
     "sourcePatchMatchedHunks": 16,
     "sourcePatchMatchedFiles": 3,
     "patchIntegratedInto508": false,
-    "leaseStatus": "RELEASED"
+    "leaseStatus": "RELEASED",
+    "prototypePath": "experimental/weight-space-20261104/overnight-research/continuation-02/",
+    "prototypeCodeGitBlob": "5b068596a0b2301f373fe89421189654db15c963",
+    "prototypeTestGitBlob": "aa85775476cbb70e9d3e5852db860575f76cc932",
+    "scopeLimit": "Standalone local inventory preflight is not external publication attestation, atomic lock, or final-test authorization",
+    "fullRunnerDynamic": "NOT_RUN",
+    "corruptCheckpointDynamic": "NOT_RUN",
+    "badBaselineResumeDynamic": "NOT_RUN"
   },
   "leaseReleasedAtUtc": "2026-11-04T22:30:38.987172+00:00",
-  "evidenceCommit": "1c3c26cf04d8a28059bbe0bba4ac30e2bef032c5"
+  "evidenceCommit": "7e6bda9b8180c98dd011cbfde590047424cccd60"
 }
