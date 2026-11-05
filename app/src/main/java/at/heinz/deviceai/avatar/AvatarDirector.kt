@@ -48,6 +48,18 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         if (next == state) return
         state = next
         emit(stateEvent(next))
+        if (next == AvatarState.THINKING)
+            emit(AvatarEvent.Gesture(AvatarGestureIntent.THINK_MICRO, GazeTarget.THINKING_AWAY, clock()))
+    }
+
+    /** Explicitly presented in-app window. Decorative gaze; no camera observation. */
+    @Synchronized fun onWindowPresented() {
+        emit(AvatarEvent.Gesture(AvatarGestureIntent.WINDOW_FOCUS, GazeTarget(.42f, -.18f), clock()))
+    }
+
+    /** True owner approval only; does not indicate tool completion. */
+    @Synchronized fun onActionConfirmed() {
+        emit(AvatarEvent.Gesture(AvatarGestureIntent.CONFIRM_NOD, GazeTarget.OWNER, clock()))
     }
 
     /** Adapter computes age using elapsedRealtime; do not mix its timestamp with this clock.

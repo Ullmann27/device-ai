@@ -26,6 +26,9 @@ enum class Viseme { SIL, PP, FF, TH, DD, KK, CH, SS, NN, RR, AA, E, I, O, U }
 /** PCM_ENVELOPE = measured synthesized audio; WORD_RANGE_FALLBACK = coarse motion when the TTS engine gives word ranges but no PCM. */
 enum class AudioLevelSource { PCM_ENVELOPE, WORD_RANGE_FALLBACK }
 
+/** Real UI intentions, separate from camera observations and tool outcome status. */
+enum class AvatarGestureIntent { WINDOW_FOCUS, CONFIRM_NOD, THINK_MICRO }
+
 sealed interface AvatarEvent {
     val atMillis: Long
     data class StateChanged(val state: AvatarState, val expression: AvatarExpression, val gaze: GazeTarget,
@@ -34,6 +37,9 @@ sealed interface AvatarEvent {
      * atMillis is observation time in the Director's existing clock domain. */
     data class GazeObserved(val gaze: GazeTarget, val confidence: Int, override val atMillis: Long) : AvatarEvent
     data class GazeCleared(override val atMillis: Long) : AvatarEvent
+    /** Presentation cue only. Never implies owner recognition, approval, or task success. */
+    data class Gesture(val intent: AvatarGestureIntent, val target: GazeTarget,
+                       override val atMillis: Long) : AvatarEvent
     data class SpeechStarted(val utteranceId: String, val text: String, override val atMillis: Long) : AvatarEvent
     /** Approximate mouth shape for the word the TTS engine is speaking now (not phoneme-accurate). */
     data class VisemeCue(val utteranceId: String, val viseme: Viseme, val weight: Float, val durationMs: Long,
@@ -65,7 +71,8 @@ object AvatarSinkRegistry { @Volatile var sink: AvatarSink = NoOpAvatarSink }
 /** Renderer-facing snapshot (subset of the PR #350 AvatarPose plan). Blink, head motion and idle are renderer-owned. */
 data class AvatarPose(val state: AvatarState, val expression: AvatarExpression, val gazeX: Float, val gazeY: Float,
                       val jawOpen: Float, val viseme: Viseme, val visemeWeight: Float, val speakEnergy: Float,
-                      val gazeObserved: Boolean = false)
+                      val gazeObserved: Boolean = false,
+                      val gesture: AvatarGestureIntent? = null, val gestureProgress: Float = 0f)
 
 /**
  * Reference reducer: folds [AvatarEvent]s into one bounded [AvatarPose] so every renderer maps mouth/gaze
@@ -77,6 +84,10 @@ class AvatarPoseReducer {
     private var state = AvatarState.IDLE
     private var expression = AvatarExpression.NEUTRAL
     private var gaze = GazeTarget.OWNER
+    private var gesture: AvatarGestureIntent? = null
+    private var gestureTarget = GazeTarget.OWNER
+    private var gestureAtMillis = Long.MIN_VALUE
+    private var gestureClearMillis = Long.MIN_VALUE
     private var observedGaze: GazeTarget? = null
     private var observedAtMillis = Long.MIN_VALUE
     private var newestFreshGazeAtMillis = Long.MIN_VALUE
@@ -102,6 +113,8 @@ class AvatarPoseReducer {
         // cues neither multiply the bounded queue nor change the default pose clock.
         if (event is AvatarEvent.VisemeCue && event in cues) return
         if (event is AvatarEvent.SpeechEnded && event.utteranceId != utterance) return
+        if (event is AvatarEvent.Gesture &&
+            (event.atMillis <= gestureClearMillis || event.atMillis < gestureAtMillis)) return
         if (event is AvatarEvent.SpeechStarted && (event.utteranceId.isBlank() || event.utteranceId == utterance)) return
         lastEventMillis = event.atMillis
         when (event) {
@@ -116,6 +129,11 @@ class AvatarPoseReducer {
                 }
             }
             is AvatarEvent.GazeCleared -> clearObservedGaze(event.atMillis)
+            is AvatarEvent.Gesture -> {
+                gesture = event.intent
+                gestureTarget = event.target
+                gestureAtMillis = event.atMillis
+            }
             is AvatarEvent.SpeechStarted -> {
                 clearSpeech()
                 utterance = event.utteranceId
@@ -148,6 +166,8 @@ class AvatarPoseReducer {
     /** Drop transient mouth state on pause/detach; never retain spoken text in a renderer. */
     fun clearSpeech() {
         utterance = null
+        gesture = null
+        gestureClearMillis = maxOf(gestureClearMillis, lastEventMillis)
         energy = 0f
         lastAudioMillis = Long.MIN_VALUE
         lastSmoothedAudioMillis = Long.MIN_VALUE
@@ -197,9 +217,20 @@ class AvatarPoseReducer {
         } else if (observedGaze != null) {
             newestFreshGazeAtMillis = maxOf(newestFreshGazeAtMillis, observedAtMillis)
         }
-        val shownGaze = observedGaze ?: gaze
+        val gestureDuration = when (gesture) {
+            AvatarGestureIntent.WINDOW_FOCUS -> 1_100L
+            AvatarGestureIntent.CONFIRM_NOD -> 560L
+            AvatarGestureIntent.THINK_MICRO -> 900L
+            null -> 0L
+        }
+        val gestureAge = if (gestureAtMillis == Long.MIN_VALUE) Long.MAX_VALUE else atMillis - gestureAtMillis
+        val activeGesture = gesture.takeIf { gestureAge in 0 until gestureDuration }
+        val gestureProgress = if (activeGesture != null) gestureAge / gestureDuration.toFloat() else 0f
+        // Real camera observation keeps priority over a decorative window focus cue.
+        val shownGaze = if (activeGesture == AvatarGestureIntent.WINDOW_FOCUS && observedGaze == null)
+            gestureTarget else observedGaze ?: gaze
         return AvatarPose(state, expression, shownGaze.x, shownGaze.y, jaw, viseme, visemeWeight, liveEnergy,
-            gazeObserved = observedGaze != null)
+            gazeObserved = observedGaze != null, gesture = activeGesture, gestureProgress = gestureProgress)
     }
 
     companion object {

@@ -1778,6 +1778,8 @@ class AgentActivity : Activity() {
             "brain" -> showBrainScene()
             else -> menuNavigator.navigate(target)
         }
+        if (target in setOf("avatar-appearance", "notifications", "settings", "more",
+                "model-management", "privacy", "brain")) avatarDirector.onWindowPresented()
     }
 
     private fun showBrainScene() {
@@ -7915,6 +7917,7 @@ class AgentActivity : Activity() {
         val callback: (Boolean) -> Unit = { approved ->
             avatarAwaitingApproval = false
             refreshHologramState()
+            if (approved) avatarDirector.onActionConfirmed()
             onDecision(approved)
         }
         if(proposal.toolName in setOf("web_search","web_read")) {

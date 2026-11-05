@@ -1,5 +1,6 @@
 package at.heinz.deviceai.avatar3d
 
+import at.heinz.deviceai.avatar.AvatarGestureIntent
 import at.heinz.deviceai.avatar.AvatarExpression
 import at.heinz.deviceai.avatar.AvatarPose
 import at.heinz.deviceai.avatar.AvatarState
@@ -78,6 +79,17 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             // Calm breathing: a slow, small nod (idle only; never during observed gaze or speech).
             if (seconds.isFinite()) headPitch += BREATH_PITCH_DEGREES *
                 kotlin.math.sin(2.0 * Math.PI * seconds / BREATH_PERIOD_S).toFloat()
+        }
+        // Gesture motion reuses the renderer clock and never drives mouth morphs.
+        val progress = finite(pose.gestureProgress, 0f, 1f)
+        when (pose.gesture) {
+            AvatarGestureIntent.CONFIRM_NOD -> headPitch -= 4.5f *
+                kotlin.math.sin(Math.PI * progress).toFloat()
+            AvatarGestureIntent.THINK_MICRO -> {
+                headPitch += 1.2f * kotlin.math.sin(Math.PI * progress).toFloat()
+                headYaw += 1.4f * kotlin.math.sin(2.0 * Math.PI * progress).toFloat()
+            }
+            AvatarGestureIntent.WINDOW_FOCUS, null -> Unit
         }
         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
         val bilabialClosure = pose.viseme == Viseme.PP && cueWeight > 0f
