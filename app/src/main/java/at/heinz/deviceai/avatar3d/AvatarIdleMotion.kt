@@ -20,8 +20,8 @@ internal class AvatarIdleMotion {
         headYaw = 0f; headPitch = 0f; eyeYaw = 0f; eyePitch = 0f; blinkWeight = 0f
         if (!seconds.isFinite()) return
         val remainder = seconds.toDouble() % CYCLE_SECONDS
-        // Binary search orders -0.0 before the first +0.0 boundary. Both are phase zero.
         val t = when {
+            // binarySearch orders -0.0 before STARTS[0]; canonicalize exact cycle boundaries.
             remainder == 0.0 -> 0.0
             remainder < 0.0 -> remainder + CYCLE_SECONDS
             else -> remainder
@@ -42,10 +42,19 @@ internal class AvatarIdleMotion {
 
         val group = (t / BLINK_PERIOD).toInt().coerceIn(0, 99)
         val local = (t - group * BLINK_PERIOD).toFloat()
-        // Retain the 150 ms primary blink; every fifth group adds a separate earlier blink.
-        // In 460 seconds: 100 primary + 20 extra closures, about 15.65 per minute.
-        val extra = if (group % 5 == 2) pulse(local, 4.225f) else 0f
-        blinkWeight = maxOf(pulse(local, 4.525f), extra)
+        // Vary cadence without a random timer.
+        val primary = 4.525f - blinkLead(group)
+        val extra = if (group % 5 == 2) pulse(local, primary - .30f) else 0f
+        blinkWeight = maxOf(pulse(local, primary), extra)
+    }
+
+    private fun blinkLead(group: Int): Float {
+        if (group == 0 || group == 99) return 0f
+        var bits = group + 13579
+        bits = (bits xor (bits ushr 16)) * 0x45d9f3b
+        bits = (bits xor (bits ushr 16)) * 0x45d9f3b
+        bits = bits xor (bits ushr 16)
+        return ((bits ushr 1) % 1001) / 1000f * .44f
     }
 
     private fun pulse(t: Float, center: Float) = (1f - abs(t - center) / .075f).coerceIn(0f, 1f)
