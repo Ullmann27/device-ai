@@ -234,13 +234,15 @@ class ContinuumBrainOrbRenderer {
         p.setAdditive(true)
         // Fills depend on geometry only (cached); breathing changes the paint alpha, so no shader per frame.
         val g = listOf("core", cx.toInt(), cy.toInt(), r.toInt())
+        // The cached colours carry the maximum gain; alpha k / CORE_GAIN_MAX keeps real pulse and processing visible.
         val corona = JarvisSceneFills.cached(g + 0) { Fill.Radial(cx, y, r * .78f,
-            intArrayOf(Argb.withAlpha(C.magenta, .20f), Argb.withAlpha(C.violet, .14f), 0)) }
+            intArrayOf(Argb.withAlpha(C.magenta, .20f * CORE_GAIN_MAX), Argb.withAlpha(C.violet, .14f * CORE_GAIN_MAX), 0)) }
         val heart = JarvisSceneFills.cached(g + 1) { Fill.Radial(cx, y, r * .42f,
-            intArrayOf(Argb.withAlpha(C.glowCore, .75f), Argb.withAlpha(C.cyan, .35f), 0)) }
+            intArrayOf(Argb.withAlpha(C.glowCore, (.75f * CORE_GAIN_MAX).coerceAtMost(1f)),
+                Argb.withAlpha(C.cyan, .35f * CORE_GAIN_MAX), 0)) }
         val shell = JarvisSceneFills.cached(g + 2) { Fill.Sweep(cx, cy, intArrayOf(C.violetRim, C.cyan, C.magenta, C.violetRim)) }
-        p.fillCircle(cx, y, r * .78f, corona, k.coerceAtMost(1f))
-        p.fillCircle(cx, y, r * .42f, heart, k.coerceAtMost(1f))
+        p.fillCircle(cx, y, r * .78f, corona, (k / CORE_GAIN_MAX).coerceIn(0f, 1f))
+        p.fillCircle(cx, y, r * .42f, heart, (k / CORE_GAIN_MAX).coerceIn(0f, 1f))
         // Second, inner glass shell slightly offset in depth.
         p.strokeCircle(cx, cy, r * .84f, r * .012f, shell, .35f)
         // Light pillars from the pedestal into the sphere.
@@ -286,6 +288,8 @@ class ContinuumBrainOrbRenderer {
     }
 
     companion object {
+        /** Largest core gain: breath 1 + MemoryStored pulse .25 + processing .12. */
+        const val CORE_GAIN_MAX = 1.37f
         /** Ref5-Komposition (gemessen): Kugelradius ≈ 0.36 × Slotbreite, Mitte bei (0.63 w, 0.445 h) des Ausschnitts. */
         fun radiusFor(slotW: Float, slotH: Float) = minOf(slotW * .36f, slotH / 2.9f)
         @Suppress("unused") private fun len(x: Float, y: Float) = sqrt(x * x + y * y)

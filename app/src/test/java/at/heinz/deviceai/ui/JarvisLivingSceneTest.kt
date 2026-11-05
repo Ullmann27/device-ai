@@ -68,4 +68,23 @@ class JarvisLivingSceneTest {
             assertEquals(1f, JarvisHeadAura.fadeAlpha(stage.width * shell.headAnchorX, stage.height * .4f, stage.width, stage.height), 0f)
         }
     }
+
+    @Test fun realPulseAndProcessingBrightenTheOrbCore() {
+        fun coreAlpha(s: ContinuumBrainOrbRenderer.Signals): Float {
+            val alphas = mutableListOf<Float>()
+            val p = Proxy.newProxyInstance(ContinuumPainter::class.java.classLoader, arrayOf(ContinuumPainter::class.java)) { _, m, a ->
+                when (m.name) {
+                    "measureText", "capHeight" -> 0f; "drawRaster" -> false
+                    "fillCircle" -> { if ((a[2] as Float) == 100f * .78f) alphas += a[4] as Float; null }
+                    else -> null
+                }
+            } as ContinuumPainter
+            ContinuumBrainOrbRenderer().draw(p, 0f, 0f, 100f, s)
+            return alphas.single()
+        }
+        val calm = coreAlpha(ContinuumBrainOrbRenderer.Signals(phase = 0f))
+        val active = coreAlpha(ContinuumBrainOrbRenderer.Signals(phase = 0f, pulse = 1f, processing = true))
+        assertTrue("pulse/processing must brighten the core: $calm -> $active", active > calm + .2f)
+        assertTrue(active <= 1f)
+    }
 }
