@@ -40,3 +40,27 @@
 - Die gerade genannten neuen Tests wurden auf diesem Gesamt-HEAD **noch nicht als GREEN nachgewiesen**.
 - 3D-Gerätebild, reale Blick-/Gesichtserkennung, Fold7-FPS und Bildvergleich zu privaten Video-Referenzen: **NOT_RUN**.
 - Kein Bot startet durch dieses Dokument automatisch. Es beschreibt abgegrenzte Arbeitspakete für bereits angeschlossene Entwickler/Prüfer.
+
+## Fortsetzung 05.11.2026 – zusätzliche Produktänderungen
+
+| HEAD/Commit | Abgrenzung |
+|---|---|
+| `49574620` + `b8e3c29e` | Denkgestik endet beim Zustandswechsel; langes tatsächliches Denken/Lernen/Forschen behält minimale Kopf- und Augenmikrobewegungen ohne zweite Frame-Uhr oder Frame-Collections. Zwei zusätzliche Tests in `AvatarTaskGestureTest`. |
+| `c7819628` | Bestehende beiden Neon-Kachelrandstrokes wiederhergestellt, **zusätzlich** abgerundeter 13-s-Lichtpunkt mit Nachleuchten. Neue `JarvisTileAmbientNeonTest`-Proxyprobe; ursprünglicher Zwei-Striche-Vertrag bleibt erhalten. |
+| `c744a3b8` + `13141935` | Bei 3D-Laden oder Filament-Fehler bleibt der vorhandene native 2D-Hologrammkopf sichtbar. Die TextureView startet transparent und wird erst nach gültigem 3D-Frame gezeigt. Zwei neue Robolectric-Pixelvergleichstests. |
+| `29673102` | `JarvisHeadAura` erhält ausschließlich echte `energy` und `audioEnergy` aus `ContinuumHologramView`; Ready-Basisglow bleibt unverändert, gebundene Verstärkung bei Arbeit/Sprache. Drei neue Signalgating-Tests. |
+
+**Verifizierte Code-Lesegates**: Auf HEAD `29673102378f4f6da910719cb78564e69b7a2b5c` wurden 18 von 18 gezielten Quellcode-Verträgen über GitHub-Readback positiv geprüft. Dies ist **kein** Gradle-/JUnit-/Robolectric-/Filament-/Fold7-Test. Zusammengefasste frühere Tests nicht als neue Ergebnisse ausgeben.
+
+**Neue notwendige Abnahme in den drei bestehenden Prüfschienen**:
+- A: `AvatarTaskGestureTest` inkl. Zustandswechsel/Long-Think sowie TTS-STOP, reale GLB, `ContinuumAvatarFallbackUiTest` bis erster GPU-Frame und nach 3D-Absturz.
+- B: `JarvisTileAmbientNeonTest` (alter Zwei-Stroke-Vertrag und neue Beads), `JarvisTileEnergyTest` (Rundweg), `JarvisHeadAuraSignalTest` (keine falsche Aktivität), Farben vor/nach nach Ref5.
+- C: kombinierter Kotlin/Gradle-/UI-Test auf exakt gleichem Commit, danach echte Fold7-Filament-Aufnahmen inkl. Pause/Resume, Fold-wechsel, STOP und FPS. Separater GPU-Nachweis verpflichtend.
+
+Mögliche begrenzte Host-Befehle (nur in vorhandener Android-SDK-Toolchain, keine GitHub-Actions-Neustarts):
+```bash
+./gradlew :app:testDebugUnitTest --tests 'at.heinz.deviceai.avatar.AvatarTaskGestureTest' --tests 'at.heinz.deviceai.ui.JarvisTileEnergyTest' --tests 'at.heinz.deviceai.ui.JarvisTileAmbientNeonTest' --tests 'at.heinz.deviceai.ui.JarvisHeadAuraSignalTest'
+./gradlew -PcontinuumUiWidgetTests=true :app:testDebugUnitTest --tests 'at.heinz.deviceai.ContinuumAvatarFallbackUiTest' --tests 'at.heinz.deviceai.ContinuumAuraLifecycleUiTest'
+```
+
+Die obigen Befehle sind **noch nicht auf diesem HEAD ausgeführt**. Kein APK-Build, kein Release, kein Main-Merge, keine Originalsignaturänderung; privat gespeicherte Referenzvideos werden nicht publiziert.
