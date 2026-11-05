@@ -283,6 +283,8 @@ class AgentActivity : Activity() {
     // Explicitly started hands-free conversation (long press on the chat microphone).
     // Ordinary dictation keeps filling the composer only; this mode never approves tools.
     private val continuousConversation = at.heinz.deviceai.cognitive.ContinuousConversationMode()
+    // Voice turns begun on START must not force the full-screen chat layout.
+    private var keepCockpitDuringHandsFree = false
     private var chatMicButton: Button? = null
     private val conversationListen = Runnable { listenForConversationTurn() }
     private val conversationResume = Runnable { resumeConversationAfterReply() }
@@ -2219,6 +2221,8 @@ class AgentActivity : Activity() {
 
     private fun focusChatComposer() {
         if (!::input.isInitialized) return
+        // An explicit chat tap wins over the home-only voice presentation.
+        keepCockpitDuringHandsFree = false
         activeWorkArea = ContinuumWorkArea.CHAT
         refreshWorkAreaSelection()
         conversationActive = true
@@ -10337,11 +10341,13 @@ class AgentActivity : Activity() {
             }
         }
         requestStartedAt = android.os.SystemClock.elapsedRealtime()
-        conversationActive = true
-        activeWorkArea = ContinuumWorkArea.CHAT
-        refreshWorkAreaSelection()
-        refreshConversationLayout()
-        (dashboardSection as? ScrollView)?.scrollTo(0, 0)
+        if (!(keepCockpitDuringHandsFree && continuousConversation.active && !conversationActive)) {
+            conversationActive = true
+            activeWorkArea = ContinuumWorkArea.CHAT
+            refreshWorkAreaSelection()
+            refreshConversationLayout()
+            (dashboardSection as? ScrollView)?.scrollTo(0, 0)
+        }
         addBubble(value, user = true)
         val radarEnabled = NeuralPracticeScheduler(this).enabled && !neuralCoach.isActive()
         if (radarEnabled && neuralCuriosityRadar.peek() == null) {
@@ -10390,11 +10396,13 @@ class AgentActivity : Activity() {
             while (responseTimesMs.size > 20) responseTimesMs.removeFirst()
             requestStartedAt = 0L
         }
-        conversationActive = true
-        activeWorkArea = ContinuumWorkArea.CHAT
-        refreshWorkAreaSelection()
-        refreshConversationLayout()
-        (dashboardSection as? ScrollView)?.scrollTo(0, 0)
+        if (!(keepCockpitDuringHandsFree && continuousConversation.active && !conversationActive)) {
+            conversationActive = true
+            activeWorkArea = ContinuumWorkArea.CHAT
+            refreshWorkAreaSelection()
+            refreshConversationLayout()
+            (dashboardSection as? ScrollView)?.scrollTo(0, 0)
+        }
         addHomeGreeting(value)
     }
 
@@ -10582,6 +10590,7 @@ class AgentActivity : Activity() {
     }
 
     private fun stopConversationState() {
+        keepCockpitDuringHandsFree = false
         mainHandler.removeCallbacks(conversationListen)
         mainHandler.removeCallbacks(conversationResume)
         mainHandler.removeCallbacks(conversationIdleCheck)
@@ -10606,7 +10615,12 @@ class AgentActivity : Activity() {
 
     /** Tap: start hands-free conversation, or speak now / resume while it is active. */
     private fun onChatMicrophoneTap() {
-        if (!continuousConversation.active) { toggleContinuousConversation(); return }
+        if (!continuousConversation.active) {
+            keepCockpitDuringHandsFree = !conversationActive && activeWorkArea == ContinuumWorkArea.START
+            toggleContinuousConversation()
+            if (!continuousConversation.active) keepCockpitDuringHandsFree = false
+            return
+        }
         when (continuousConversation.ownerTap(sessionId)) {
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.LISTEN -> {
                 mainHandler.removeCallbacks(conversationResume)
