@@ -136,7 +136,7 @@ for prerequisite in git node java python3 timeout readlink; do
     printf "CONTINUUM_QA_TOOL_MISSING %s\n" "$prerequisite"
   fi
 done
-node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs scripts/continuum-owner-v38-release.test.mjs scripts/continuum-owner-continuous-release.test.mjs > continuum-all-systems-logs/NODE-SPECIAL.txt 2>&1 ||
+node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs scripts/continuum-owner-v38-release.test.mjs scripts/continuum-owner-continuous-release.test.mjs scripts/continuum-owner-backend-gate.test.mjs > continuum-all-systems-logs/NODE-SPECIAL.txt 2>&1 ||
   { tail -n 50 continuum-all-systems-logs/NODE-SPECIAL.txt; gateFailures=$((gateFailures+1)); echo 'QA_RED node-special'; }
 qa_proofs="$(mktemp -d "${TMPDIR:-/tmp}/continuum-integrated-qa.XXXXXXXX")"
 node -p 'Date.now()' > continuum-all-systems-logs/CRITICAL-START.txt
@@ -185,6 +185,22 @@ else
   gateFailures=$((gateFailures+1))
   echo 'QA_RED missing-full-node-receipt; still checking remaining Android gates'
 fi
+# CONTINUUM_OWNER_BACKEND_GATE_START
+# Dependency lock, backend syntax, and all backend tests must pass before signing.
+printf 'source=%s\n' "$sha" > continuum-all-systems-logs/BACKEND-SOURCE.txt
+if (
+  cd backend &&
+  npm ci --ignore-scripts --no-audit --no-fund &&
+  npm run check &&
+  npm test
+) > continuum-all-systems-logs/BACKEND-TESTS.txt 2>&1; then
+  echo 'QA_GREEN backend-lockfile-check-and-tests'
+else
+  tail -n 100 continuum-all-systems-logs/BACKEND-TESTS.txt
+  gateFailures=$((gateFailures+1))
+  echo 'QA_RED backend-lockfile-check-and-tests'
+fi
+# CONTINUUM_OWNER_BACKEND_GATE_END
 node -p 'Date.now()' > continuum-all-systems-logs/GRADLE-START.txt
 gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode="$CONTINUUM_RELEASE_VERSION_CODE" :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug > continuum-all-systems-logs/ANDROID-TESTS.txt 2>&1 ||
   { tail -n 100 continuum-all-systems-logs/ANDROID-TESTS.txt; gateFailures=$((gateFailures+1)); echo 'QA_RED android-gradle'; }
