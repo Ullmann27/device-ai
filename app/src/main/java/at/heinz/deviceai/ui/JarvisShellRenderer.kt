@@ -85,7 +85,8 @@ object JarvisShellRenderer {
             val ownsSurface = content[slot] != null &&
                 slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS)
             if (tile != null) {
-                JarvisTiles.drawSurface(p, box, tile, f.glow > .5f)
+                JarvisTiles.drawSurface(p, box, tile, f.glow > .5f,
+                    if (animatorScale > 0f) timeMs else 0L)
             } else if (!ownsSurface) {
                 val r = JarvisDesign.Metrics.radiusCard
                 // Static HUD panels do not need repeated full-screen backdrop-blur copies.
