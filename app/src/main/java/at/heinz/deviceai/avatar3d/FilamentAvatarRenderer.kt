@@ -101,6 +101,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             focus.centerZ + kotlin.math.cos(cameraAngle) * 2.0,
             focus.centerX, focus.centerY, focus.centerZ, 0.0, 1.0, 0.0)
         scene!!.addEntities(a.entities)
+        // Owner decision 2026-11-05: the visible tooth rows read as uneven in the hologram. They stay in the
+        // packaged GLB (bytes, pin and rig unchanged) but are not rendered; the dark mouth interior remains.
+        a.getEntitiesByPrefix(HIDDEN_NODE_PREFIX).forEach { scene!!.removeEntity(it) }
         // Filament supports one directional key. Bounded point fills add real
         // cyan/violet facial volume without an IBL download or a new render pass.
         addLight(LightManager.Builder(LightManager.Type.DIRECTIONAL)
@@ -219,6 +222,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     }
 
     companion object {
+        /** GLB nodes kept in the asset but not rendered (ToothUpper0..7, ToothLower0..7). */
+        const val HIDDEN_NODE_PREFIX = "Tooth"
         fun create(surface: Surface, bytes: ByteArray, metadata: AvatarGlbContract.Metadata): FilamentAvatarRenderer {
             val candidate = FilamentAvatarRenderer(surface)
             try { candidate.initialize(bytes, metadata); return candidate }

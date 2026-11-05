@@ -11,3 +11,9 @@ kein Emulator, kein Fold7, leerer Datenzustand.
   Neonanteil 9,6 % (12,0 %). Ausgang dieses Tages: 0,253 / 0,177 / 6,1 %.
 - Zeichenkosten pro Bild (Host-Zählung, `JarvisLivingSceneTest`): Energieflüsse ≤ 64, Kopf-Aura ≤ 80 Primitive,
   zeitunabhängig. GPU-Bildzeiten auf dem Fold7: NOT_RUN.
+
+## Zähne ausgeblendet (Besitzerentscheidung)
+
+`FilamentAvatarRenderer` entfernt die 16 Knoten `ToothUpper0..7`/`ToothLower0..7` nach dem Laden aus der Szene. Das GLB
+(`c8b88385…`), NOTICE, Pin, Rig und die 21 Morph-Ziele bleiben bytegleich. `mund-vorher-nachher-ohne-zaehne.png` zeigt
+dieselbe AA-Pose als Host-Rendering. Offen: heller Keil der inneren Lippenfläche am linken Mundwinkel.
