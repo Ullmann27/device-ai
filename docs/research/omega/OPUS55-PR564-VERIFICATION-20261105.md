@@ -12,3 +12,11 @@
   `ContinuumHomeView.layoutAvatarSlot` reiht bei jedem Layout `avatarSlotUpdate` ein, solange kein Renderer
   andockt. Reproduktion: Prefs `continuum-avatar-appearance` = {native-head-3d:false}, Activity `setup()`.
   Auf dem Fold7 prüfen: CPU/Akku bei „Kopf aus“.
+
+## Auflösung (gleicher Tag)
+- Eigentliche Ursache: dem neuen Test fehlte die virtuelle VSync-Uhr der bestehenden Cockpit-Tests
+  (`ShadowChoreographer.setPaused(true)`, 16 ms). Ohne sie startet `setup()` die echte Avatar-Frameschleife und
+  der PAUSED-Looper wird nie idle. Nachweis: `ContinuumReferenceCockpitUiTest` auf demselben #564-Stand 12/12 in 48 s;
+  der Hands-free-Test mit gleicher Uhr + zwei Frames vor `windowFocusChanged` **1/1 PASS**.
+- Der vermutete Produkt-Busy-Loop bei „Kopf aus“ ist damit **nicht belegt** (gleiches Testartefakt); bleibt als
+  Fold7-Beobachtungspunkt (CPU/Akku bei Kopf aus) notiert, ohne Codeänderung.
