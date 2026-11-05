@@ -2167,6 +2167,14 @@ class AgentActivity : Activity() {
         })
     }
 
+    /**
+     * The one presentation decision for turns while hands-free pins the START cockpit. Voice/status guards use it
+     * instead of the raw [conversationActive] flag, which a composer touch can set without showing CHAT (#564).
+     */
+    private fun handsFreeKeepsHome(): Boolean =
+        at.heinz.deviceai.cognitive.CockpitConversationPresentation.keepHomeForResult(
+            continuousConversation.active, keepCockpitDuringHandsFree, activeWorkArea == ContinuumWorkArea.START)
+
     private fun refreshConversationLayout() {
         val chat = at.heinz.deviceai.cognitive.CockpitConversationPresentation.showChat(
             explicitChatSelected = activeWorkArea == ContinuumWorkArea.CHAT,
@@ -2700,12 +2708,7 @@ class AgentActivity : Activity() {
      * Explicit selection of CHAT still takes precedence via focusChatComposer().
      */
     private fun showActionResultWithoutForcingChat() {
-        val pinned = at.heinz.deviceai.cognitive.CockpitConversationPresentation.keepHomeForResult(
-            continuousConversation.active,
-            keepCockpitDuringHandsFree,
-            activeWorkArea == ContinuumWorkArea.START
-        )
-        if (!pinned) {
+        if (!handsFreeKeepsHome()) {
             conversationActive = true
             activeWorkArea = ContinuumWorkArea.CHAT
             refreshWorkAreaSelection()
@@ -3766,7 +3769,9 @@ class AgentActivity : Activity() {
         input = EditText(this).apply {
             hint = "Schreibe eine Nachricht …"
             setOnTouchListener { _, event ->
-                if (event.action == android.view.MotionEvent.ACTION_DOWN && !conversationActive) {
+                // While hands-free pins the START cockpit, typing stays in the cockpit composer (#564 review):
+                // a raw chat flag here would route the next spoken turn to CHAT.
+                if (event.action == android.view.MotionEvent.ACTION_DOWN && !conversationActive && !handsFreeKeepsHome()) {
                     conversationActive = true
                     refreshConversationLayout()
                     (dashboardSection as? ScrollView)?.scrollTo(0, 0)
@@ -10372,7 +10377,7 @@ class AgentActivity : Activity() {
             }
         }
         requestStartedAt = android.os.SystemClock.elapsedRealtime()
-        if (!(keepCockpitDuringHandsFree && continuousConversation.active && !conversationActive)) {
+        if (!handsFreeKeepsHome()) {
             conversationActive = true
             activeWorkArea = ContinuumWorkArea.CHAT
             refreshWorkAreaSelection()
@@ -10427,7 +10432,7 @@ class AgentActivity : Activity() {
             while (responseTimesMs.size > 20) responseTimesMs.removeFirst()
             requestStartedAt = 0L
         }
-        if (!(keepCockpitDuringHandsFree && continuousConversation.active && !conversationActive)) {
+        if (!handsFreeKeepsHome()) {
             conversationActive = true
             activeWorkArea = ContinuumWorkArea.CHAT
             refreshWorkAreaSelection()
