@@ -39,3 +39,27 @@ Weitere Bot-Läufe und eine kombinierte Endabnahme stehen noch aus.
 Fold7, reale Kamera, echte TTS, Geräte-FPS, APK und Installation: `NOT_RUN`.
 PR #565 bleibt Draft/offen; kein Main-Merge, keine Paket-/Signatur-/Versions-
 änderung und keine Veröffentlichung einer App.
+
+## Posenabhängige Kinn-Überlappung
+
+Produktbasis `0bfa86db8b7364dc6129bd6b87e9f787f64e41b0`.
+Der neue Test `turningChinNeverEntersTheDialogueCard` rechnet mit unabhängiger
+Linear-Blend-Skinning-Geometrie der unveränderten GLB. RED: 7 Fälle, 6 PASS,
+1 FAIL, 0 SKIP; bei 884×760 bis 67,062326 dp Eindringen in die Dialogkarte.
+
+Ursache: bisherige Einpassung verwendet nur die Ruhe-Silhouette und überspringt
+bei großen Bühnen die Dialog-Kollisionsprüfung vollständig. Jetzt umfasst die
+Silhouette die geprüften Kopfposen und konservativ die Head/Neck/Rest-Mischungen.
+Die Suche prüft beide zulässigen Richtungen vom bevorzugten Anker und maximiert
+die Größe unter den Kollisionsgrenzen. Kronenrand, Rig, Materialien und GLB bleiben.
+
+Die stärkere Anforderung verändert notwendigerweise frühere reine Größen- und
+Ankererwartungen: 87,5 % bzw. unveränderte Tablet-Komposition dürfen kein Gesicht
+über der Dialogkarte erzwingen. Zwei Zwischenläufe bleiben negativ archiviert
+(7 Fälle: zunächst 5 PASS/2 FAIL, dann 4 PASS/3 FAIL). Diese alten Layoutannahmen
+wurden ausdrücklich auf die nun geforderte kollisionsfreie Posenreichweite
+angepasst; die neue geometrische Nichtüberlappungsprüfung bleibt unverändert.
+
+Abschließende eigene `avatar3d.*`-Regression: **61 PASS, 0 FAIL, 0 SKIP**, Exit 0.
+`framing-red-green.patch` enthält den vollständigen Delta. Das sind Host-
+Geometrie- und Mappertests, weiterhin kein Filament-/Fold7-Abnahmeergebnis.

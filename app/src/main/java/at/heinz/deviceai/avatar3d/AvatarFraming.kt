@@ -11,9 +11,8 @@ package at.heinz.deviceai.avatar3d
  *
  * The window now always holds the measured pose reach of the rig ([AvatarGlbContract.Focus.reachLeft],
  * [AvatarGlbContract.Focus.reachRight]). A stage with enough room keeps the owner-calibrated close-up and anchor
- * unchanged (`headScale == 1`; in the 1536 × 1024 reference the lower face may still overlap the dialogue in a
- * full turn, as calibrated). Only a narrow stage is solved anew: with a [KeepOut], the largest head first, then the
- * anchor closest to the preferred one (never left of [MIN_ANCHOR_X]) whose rest face stays out of that area;
+ * unchanged when its full pose silhouette also clears the dialogue. With a [KeepOut], fit the largest head first,
+ * then the anchor closest to the preferred one (never left of [MIN_ANCHOR_X]) whose posed face stays clear;
  * without one, the size alone. The crown margin stays fixed, so a larger window only reveals more neck.
  * Pure arithmetic; callers cache the result per size change, never per frame.
  */
@@ -25,7 +24,7 @@ object AvatarFraming {
     private const val ANCHOR_STEP = .01
 
     /**
-     * Stage-normalized rectangle the rest face (chin to crown) must not enter when a narrow stage is re-solved:
+     * Stage-normalized rectangle the posed face must not enter:
      * `x < right` and `y > top` (0..1 of the stage width/height from its top-left corner). The cockpit passes its
      * dialogue card.
      */
@@ -67,9 +66,7 @@ object AvatarFraming {
             vertical = maxOf(vertical, focus.reachLeft / (2.0 * aspect * anchorX))
             return result(anchorX, vertical)
         }
-        // A stage that holds the full pose reach keeps the owner-calibrated composition exactly.
         val sizeOnly = reachFit()
-        if (sizeOnly.headScale >= 1.0) return sizeOnly
         // Without a declared free area the head never moves sideways; only its size adapts.
         val face = focus.face
         if (keepOut == null || face == null) return sizeOnly
@@ -77,7 +74,7 @@ object AvatarFraming {
         fun fits(anchor: Double, vertical: Double): Boolean {
             // Horizontal room on each side of the axis is 2·h·aspect·(1 − anchor) and 2·h·aspect·anchor.
             val width = 2.0 * vertical * aspect
-            if (anchor < 1.0 && focus.reachRight > width * (1.0 - anchor)) return false
+            if (focus.reachRight > width * (1.0 - anchor)) return false
             if (focus.reachLeft > width * anchor) return false
             for (band in face.left.indices) {
                 // The lowest point of a band is its lower edge: the most conservative stage row.
@@ -91,10 +88,13 @@ object AvatarFraming {
         var scale = 1.0
         while (scale >= MIN_SEARCH_SCALE - 1e-9) {
             val vertical = calibrated / scale
-            var anchor = anchorX
-            while (anchor >= lowestAnchor - 1e-9) {
-                if (fits(anchor, vertical)) return result(anchor, vertical)
-                anchor -= ANCHOR_STEP
+            var distance = 0.0
+            while (distance <= 1.0 - lowestAnchor + 1e-9) {
+                val right = anchorX + distance
+                if (right < 1.0 && fits(right, vertical)) return result(right, vertical)
+                val left = anchorX - distance
+                if (left >= lowestAnchor - 1e-9 && fits(left, vertical)) return result(left, vertical)
+                distance += ANCHOR_STEP
             }
             scale -= SCALE_STEP
         }

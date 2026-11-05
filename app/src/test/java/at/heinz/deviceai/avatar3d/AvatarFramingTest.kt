@@ -105,24 +105,27 @@ class AvatarFramingTest {
             assertEquals("${stage.label} left $fit", 0.0, fit.leftDp, 0.0)
             assertEquals("${stage.label} right $fit", 0.0, fit.rightDp, 0.0)
             assertEquals("${stage.label} crown $fit", 0.0, fit.crownDp, 0.0)
-            assertTrue("${stage.label} anchor ${w.anchorX}", w.anchorX in AvatarFraming.MIN_ANCHOR_X..stage.shell.headAnchorX.toDouble())
-            if (w.headScale >= 1.0) {
-                assertEquals("${stage.label} roomy stage keeps the calibrated anchor", stage.shell.headAnchorX.toDouble(), w.anchorX, 0.0)
-            } else {
-                assertEquals("${stage.label} re-solved stage keeps the resting face out of the dialogue", 0.0, stage.restDialogDp(w), 0.0)
-            }
+            assertTrue("${stage.label} anchor ${w.anchorX}", w.anchorX >= AvatarFraming.MIN_ANCHOR_X && w.anchorX < 1.0)
+            assertEquals("${stage.label} resting face clears dialogue", 0.0, stage.restDialogDp(w), 0.0)
         }
     }
 
-    @Test fun fold7KeepsAMuchLargerHeadByMovingItBeforeShrinkingIt() {
+    @Test fun turningChinNeverEntersTheDialogueCard() {
+        for (stage in stages()) {
+            val fit = stage.fit(stage.window(keep = true))
+            assertEquals("${stage.label} animated face overlaps dialogue: $fit", 0.0, fit.dialogDp, 0.0)
+        }
+    }
+
+    @Test fun fold7KeepsALargerHeadByMovingItBeforeShrinkingIt() {
         // 884×760 dp: open Fold7 in the reference composition (832×748 dp is a MEDIUM window and reflows).
         for (label in listOf("884x760")) {
             val stage = stages().first { it.label == label }
             val sizeOnly = stage.window(keep = false)
             val cockpit = stage.window(keep = true)
             assertTrue("$label size-only fit ${sizeOnly.headScale}", sizeOnly.headScale < .70)
-            assertTrue("$label cockpit fit ${cockpit.headScale} at ${cockpit.anchorX}", cockpit.headScale >= .84)
-            assertTrue("$label head moves only towards the centre", cockpit.anchorX < stage.shell.headAnchorX)
+            assertTrue("$label cockpit fit ${cockpit.headScale} at ${cockpit.anchorX}", cockpit.headScale > sizeOnly.headScale + .05)
+            assertEquals("$label moving face clears dialogue", 0.0, stage.fit(cockpit).dialogDp, 0.0)
         }
     }
 
@@ -135,9 +138,9 @@ class AvatarFramingTest {
         }
     }
 
-    @Test fun roomyStagesKeepTheCalibratedCompositionAndTheCrownMarginNeverMoves() {
-        val wide = stages().first { it.label == "1536x1024" }.window(keep = true)
-        assertEquals("The 1536×1024 reference composition is unchanged", 1.0, wide.headScale, 0.0)
+    @Test fun unconstrainedRoomyStageKeepsCompositionAndCrownMarginNeverMoves() {
+        val wide = stages().first { it.label == "1536x1024" }.window(keep = false)
+        assertEquals("Unconstrained reference composition stays unchanged", 1.0, wide.headScale, 0.0)
         assertEquals(.70, wide.anchorX, 1e-6)
         val fold = stages().first { it.label == "884x760" }
         val f = fold.window(keep = true)
@@ -155,6 +158,10 @@ class AvatarFramingTest {
         for (p in restFace) {
             val band = ((p[1] - face.bottom) / face.step).toInt().coerceIn(0, face.left.size - 1)
             assertTrue("rest silhouette band $band misses x ${p[0]}", p[0] - focus.centerX >= face.left[band])
+        }
+        for (pose in posedFaces) for (p in pose) {
+            val band = ((p[1] - face.bottom) / face.step).toInt().coerceIn(0, face.left.size - 1)
+            assertTrue("posed silhouette band $band misses x ${p[0]}", p[0] - focus.centerX >= face.left[band])
         }
     }
 }

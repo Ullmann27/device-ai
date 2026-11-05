@@ -20,7 +20,7 @@ object AvatarGlbContract {
     data class Focus(val centerX: Double, val centerY: Double, val centerZ: Double, val halfWidth: Double,
         val halfHeight: Double, val azimuthDegrees: Double = 0.0,
         val reachLeft: Double = halfWidth, val reachRight: Double = halfWidth,
-        /** Rest face silhouette (chin to crown): leftmost camera-x relative to [centerX] per height band. */
+        /** Posed face silhouette, including skin blends. */
         val face: FaceProfile? = null) {
         /** Bust framing includes the neck and upper shoulders; only the outer torso is cropped. */
         fun verticalHalfSpan(aspect: Double): Double {
@@ -30,7 +30,7 @@ object AvatarGlbContract {
     }
     /**
      * [left] holds, for each world-height band `[bottom + i·step, bottom + (i + 1)·step)`, the leftmost projected
-     * x (negative = left of the camera axis) of the rest face in that band, widened by the reach margin.
+     * x across head poses, widened by the reach margin.
      */
     data class FaceProfile(val bottom: Double, val step: Double, val left: List<Double>) {
         init { require(bottom.isFinite() && step.isFinite() && step > 0 && left.isNotEmpty() && left.all { it.isFinite() }) }
@@ -278,7 +278,7 @@ object AvatarGlbContract {
      * FilamentAvatarRenderer: world = T(neck)·R(share·turn) · T(head − neck)·R((1 − share)·turn) with
      * R(yaw, pitch) = Ry(yaw)·Rx(pitch). Every face vertex is visited fully Head-driven and Neck-driven; a vertex
      * of the Neck→Head blend band is a convex mix of those and its rest position, so the reach is an upper bound.
-     * The silhouette is the rest face. Runs once per validation (asset thread), never per frame.
+     * Runs once, never per frame.
      */
     private fun poseFit(points: List<Double>, neck: DoubleArray, head: DoubleArray, centerX: Double,
                         centerZ: Double, azimuthDegrees: Double): PoseFit {
@@ -300,7 +300,7 @@ object AvatarGlbContract {
             v[0] = rx; v[2] = rz2
         }
         /** Visits every posed vertex as (projected x, world y). */
-        fun forEachPosed(visit: (Double, Double) -> Unit) {
+        fun forEachPosed(blend: ((Double, Double, Double) -> Unit)? = null, visit: (Double, Double) -> Unit) {
             for (yawStep in -4..4) for (pitchStep in -2..2) {
                 val yaw = maxYaw * yawStep / 4.0; val pitch = maxPitch * pitchStep / 2.0
                 var i = 0
@@ -310,11 +310,18 @@ object AvatarGlbContract {
                     rotate(yaw * (1 - share), pitch * (1 - share))
                     v[0] += hx; v[1] += hy; v[2] += hz
                     rotate(yaw * share, pitch * share)
-                    visit((v[0] + neck[3] - centerX) * cosA - (v[2] + neck[5] - centerZ) * sinA, v[1] + neck[4])
+                    val headX = (v[0] + neck[3] - centerX) * cosA - (v[2] + neck[5] - centerZ) * sinA
+                    val headY = v[1] + neck[4]
+                    visit(headX, headY)
                     // ... and the Neck turn alone (Neck-weighted part of the chin blend band).
                     v[0] = points[i] - neck[3]; v[1] = points[i + 1] - neck[4]; v[2] = points[i + 2] - neck[5]
                     rotate(yaw * share, pitch * share)
-                    visit((v[0] + neck[3] - centerX) * cosA - (v[2] + neck[5] - centerZ) * sinA, v[1] + neck[4])
+                    val neckX = (v[0] + neck[3] - centerX) * cosA - (v[2] + neck[5] - centerZ) * sinA
+                    val neckY = v[1] + neck[4]
+                    visit(neckX, neckY)
+                    val restX = (points[i] - centerX) * cosA - (points[i + 2] - centerZ) * sinA
+                    blend?.invoke(minOf(headX, neckX, restX), minOf(headY, neckY, points[i + 1]),
+                        maxOf(headY, neckY, points[i + 1]))
                     i += 3
                 }
             }
@@ -328,22 +335,17 @@ object AvatarGlbContract {
             if (y > high) high = y
         }
         require(left.isFinite() && right.isFinite() && left > 0 && right > 0 && high > low) { "Invalid head reach" }
-        // Rest silhouette: the composition the owner sees between turns (exact rest positions, no pose).
-        var restLow = Double.POSITIVE_INFINITY; var restHigh = Double.NEGATIVE_INFINITY
-        var i = 1
-        while (i < points.size) { restLow = minOf(restLow, points[i]); restHigh = maxOf(restHigh, points[i]); i += 3 }
-        val step = (restHigh - restLow) / FACE_BANDS * (1 + 1e-9)
+        val bottom = low - REACH_MARGIN
+        val step = (high - low + 2 * REACH_MARGIN) / FACE_BANDS * (1 + 1e-9)
         val bandLeft = DoubleArray(FACE_BANDS) { Double.POSITIVE_INFINITY }
-        i = 0
-        while (i < points.size) {
-            val x = (points[i] - centerX) * cosA - (points[i + 2] - centerZ) * sinA
-            val band = ((points[i + 1] - restLow) / step).toInt().coerceIn(0, FACE_BANDS - 1)
-            if (x < bandLeft[band]) bandLeft[band] = x
-            i += 3
-        }
-        // A band without vertices inherits its lower neighbour, so the silhouette stays closed.
+        forEachPosed(blend = { x, minY, maxY ->
+            val first = ((minY - REACH_MARGIN - bottom) / step).toInt().coerceIn(0, FACE_BANDS - 1)
+            val last = ((maxY + REACH_MARGIN - bottom) / step).toInt().coerceIn(0, FACE_BANDS - 1)
+            for (band in first..last) bandLeft[band] = minOf(bandLeft[band], x)
+        }) { _, _ -> }
+        // Close gaps conservatively.
         for (band in bandLeft.indices) if (!bandLeft[band].isFinite()) bandLeft[band] = if (band > 0) bandLeft[band - 1] else -left
         return PoseFit(left + REACH_MARGIN, right + REACH_MARGIN,
-            FaceProfile(restLow, step, bandLeft.map { it - REACH_MARGIN }))
+            FaceProfile(bottom, step, bandLeft.map { it - REACH_MARGIN }))
     }
 }
