@@ -29,7 +29,8 @@ Veröffentlichung. **Alle Belege sind Host-Tests (JVM/Robolectric); auf dem Fold
    fehlt noch (`LocalChatTranscriptStore.delete` existiert, keine Oberfläche).
 4. **Bots:** Fold7 zeigte „Lokales Modell nicht geladen“ bei Bot-Karten trotz früherer Gemma-Antworten – Status-Quelle prüfen
    (`ChiefBotProfileStore`, Bot-Karten, `localRuntime.state`). Danach einen kleinsten echten Auftragspfad mit Quittung.
-5. **Werkzeugfenster:** `ToolGate`-Runner (`AgentActivity.createToolGate`, `cockpitTriggers.toolStarted/toolFinished`) →
+5. **Werkzeugfenster (Grundstufe erledigt, siehe Commit „feat(cockpit): a real tool run flies in …“):** Runner-Start öffnet das Fenster neben dem Gesicht mit echtem Status, Ende zeigt „Werkzeug hat geantwortet“/bernstein, schließt nach 1,6 s, Blick kehrt zurück (Host-Test). Offen: echter ToolGate-Lauf im Test, Ergebnisdaten im Fenster, App-Symbol aus PackageManager.
+   Ursprünglicher Plan: `ToolGate`-Runner (`AgentActivity.createToolGate`, `cockpitTriggers.toolStarted/toolFinished`) →
    `JarvisActionScenes.forTool` → `JarvisWorkWindowHost.show(..., scene)` mit echtem Werkzeugergebnis, z. B. `get_storage_info`.
    Fehlschlag bernstein, Erfolg nur nach echter Rückmeldung; Gmail/PDF haben keine Quelle (siehe Szenenmatrix).
 6. **Gates vor Code44:** volle Android-Suite, Node24, Backend, NewApi-Lint und signierter ARM64-Preflight auf exakt demselben SHA

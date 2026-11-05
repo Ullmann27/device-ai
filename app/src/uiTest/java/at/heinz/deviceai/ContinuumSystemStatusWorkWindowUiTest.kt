@@ -235,4 +235,50 @@ class ContinuumSystemStatusWorkWindowUiTest {
             runCatching { controller.close() }
         }
     }
+
+    /** Owner brief: a real tool run flies in beside the face, shows only the runner's state, then folds back. */
+    @Test fun toolRunUnfoldsBesideTheFaceShowsRealStateAndReturnsTheGaze() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible(); advance(32L); controller.windowFocusChanged(true)
+            val activity = controller.get()
+            val root = activity.window.decorView
+            framePump = CockpitHostFramePump { controller.get().window.decorView }
+            val avatar = field(activity, "hologramView") as ContinuumHologramView
+            val home = field(activity, "homeView") as ContinuumHomeView
+            val director = field(activity, "avatarDirector")!!
+            fun windowIntent() = director.javaClass.getDeclaredField("windowIntent").apply { isAccessible = true }.get(director)
+            avatar.setAnimationsEnabled(true); avatar.setForegroundActive(true); home.setForegroundActive(true)
+            measure(root); advance(320L); measure(root); draw(root)
+            fun call(name: String, vararg args: Any) = AgentActivity::class.java.declaredMethods.single { it.name == name }
+                .apply { isAccessible = true }.invoke(activity, *args)
+            for ((answered, expected) in listOf(true to "Das Werkzeug hat geantwortet", false to "Werkzeug nicht abgeschlossen")) {
+                call("presentToolScene", "call-$answered", "get_storage_info")
+                advance(640L); measure(root); draw(root)
+                val work = shown(root, "jarvis-work-window")
+                val labels = { descendants(work).filterIsInstance<TextView>().map { it.text.toString() } }
+                assertTrue(labels().toString(), labels().any { it.startsWith("WERKZEUG · ") })
+                assertTrue("only the runner state, no result claim", labels().any { it.startsWith("Läuft") })
+                assertTrue("the avatar glances at it", windowIntent() != null)
+                call("finishToolScene", "stale-call", true)
+                assertTrue("a stale call changes nothing", labels().any { it.startsWith("Läuft") })
+                call("finishToolScene", "call-$answered", answered)
+                assertTrue(labels().toString(), labels().any { it.startsWith(expected) })
+                advance(1_600L + 640L); measure(root); draw(root)
+                assertTrue("folds back after the hold", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+                assertEquals("gaze returns to the owner", null, windowIntent())
+            }
+            assertFalse("inspection starts no model task", field(activity, "busy") as Boolean)
+        } finally {
+            framePump?.close(); framePump = null
+            runCatching { controller.close() }
+        }
+    }
 }

@@ -2324,6 +2324,40 @@ class AgentActivity : Activity() {
 
     private var centerDialog: AlertDialog? = null
     private val workWindowHost by lazy { at.heinz.deviceai.ui.JarvisWorkWindowHost(this, avatarDirector) }
+
+    /**
+     * Cockpit scene of a tool run the ToolGate runner really started (#565, owner brief „Einfliegen der Apps“): the
+     * window forms beside the face, the avatar glances at it, it shows only the runner's real state and closes after
+     * the tool answered. Never a success claim of its own: the verified result stays in the dialog and receipts.
+     */
+    private var toolScene: Pair<String, TextView>? = null
+
+    private fun presentToolScene(callId: String, toolName: String) {
+        val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown } ?: return
+        if (workWindowHost.isShowing || centerDialog?.isShowing == true) return
+        val label = ToolRegistry.label(toolName)
+        val status = textView("Läuft … das Ergebnis kommt vom Werkzeug.", 13f, MUTED)
+        val body = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(textView(label, 15f, TEXT, bold = true))
+            addView(textView("Werkzeug $toolName · gestartet über die Werkzeugfreigabe", 11f, MUTED))
+            addView(status)
+        }
+        workWindowHost.show(home, body, "WERKZEUG · $label", at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName)) {
+            if (toolScene?.first == callId) toolScene = null
+        } ?: return
+        toolScene = callId to status
+    }
+
+    private fun finishToolScene(callId: String, answered: Boolean) {
+        val (id, status) = toolScene ?: return
+        if (id != callId) return
+        status.text = if (answered) "Das Werkzeug hat geantwortet · Ergebnis und Prüfung im Dialog."
+            else "Werkzeug nicht abgeschlossen · Rückmeldung im Dialog."
+        status.setTextColor(if (answered) CYAN else AMBER)
+        // A short hold so the real end state is readable, then the window folds back and the gaze returns.
+        homeView?.postDelayed({ if (toolScene?.first == callId) workWindowHost.close() }, 1_600L)
+    }
     private var quickActionsDialog: AlertDialog? = null
 
     @Suppress("DEPRECATION")
@@ -7894,6 +7928,7 @@ class AgentActivity : Activity() {
             fun actualStart() {
                 effectStarted = true
                 cockpitTurn?.let { cockpitTriggers.toolStarted(it, request.callId, request.name) }
+                runOnUiThread { presentToolScene(request.callId, request.name) }
                 postTaskEffect(effectContext,
                     at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Started(request.callId,
                         at.heinz.deviceai.ui.ContinuumTaskEffects.Kind.TOOL), android.os.SystemClock.uptimeMillis())
@@ -7947,7 +7982,9 @@ class AgentActivity : Activity() {
                     cockpitTriggers.toolFinished(cockpitTurn, request.callId, request.name, succeeded = !toolFailed)
                 if (effectStarted) postTaskEffect(effectContext,
                     at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Finished(request.callId), android.os.SystemClock.uptimeMillis())
+                val toolAnswered = !toolFailed
                 runOnUiThread {
+                    finishToolScene(request.callId, toolAnswered)
                     if(workToolCall == request.callId) {
                         workTool=null; workToolCall=null; refreshWorkPresentation()
                     }
