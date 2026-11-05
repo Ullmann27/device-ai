@@ -629,21 +629,15 @@ class ContinuumHologramView @JvmOverloads constructor(
                 canvas.translate(orbDrawBounds.left / density, orbDrawBounds.top / density)
                 canvas.clipRect(0f, 0f, orbWidth, orbHeight)
                 if (cockpitOrbBounds != null) {
-                    val r = at.heinz.deviceai.ui.ContinuumBrainOrbRenderer.radiusFor(orbWidth, orbHeight)
-                    val cy = (orbHeight - 2.44f * r) / 2f + r
+                    // Reuse the exact original animated sphere/rings with no opaque tile.
                     val now = SystemClock.uptimeMillis()
                     val effects = cockpitSequence?.effects
-                    val budget = at.heinz.deviceai.ui.JarvisRenderQuality.resolve(
-                        foregroundActive, powerManager.isPowerSaveMode, thermalStatus, !canAnimateFrame(),
-                        currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING)
-                    referenceBrain.draw(painter, orbWidth / 2f, cy, r,
-                        at.heinz.deviceai.ui.ContinuumBrainOrbRenderer.Signals(
-                            pulse = effects?.orbPulseLevel(now) ?: 0f,
-                            recall = effects?.recallBrightness(now) ?: 0f,
-                            hypothesis = effects?.hypothesisVisible(now) ?: false,
-                            phase = avatarSeconds * .14f,
-                            processing = currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING,
-                            particles = budget.particleCount, orbitSegments = budget.orbitSegments))
+                    val originalEnergy = renderFrame.energy
+                    renderFrame.energy = maxOf(originalEnergy, effects?.orbPulseLevel(now) ?: 0f,
+                        effects?.recallBrightness(now) ?: 0f)
+                    renderer.layout(orbWidth, orbHeight)
+                    renderer.draw(painter, renderFrame, transparentBackdrop = true)
+                    renderFrame.energy = originalEnergy
                 } else {
                     renderer.layout(orbWidth, orbHeight)
                     renderer.draw(painter, renderFrame)
