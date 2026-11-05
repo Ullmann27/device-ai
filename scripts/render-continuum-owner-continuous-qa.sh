@@ -102,6 +102,10 @@ export GRADLE_USER_HOME="$workspace/gradle-cache"
 mkdir -p "$GRADLE_USER_HOME"
 gradle --version
 node --version
+# The CCC1 RED→GREEN verifier needs Node 24 JUnit file identities (.node-version pins 24.22.1).
+# Node 22 omits <testcase file=…>; fail clearly here instead of with misleading CCC1 reasons later.
+[[ "$(node -p 'process.versions.node.split(".")[0]')" == "24" ]] ||
+  fail "Node 24 runtime required for CCC1 test identities; found $(node --version)"
 
 gateFailures=0
 # The historical v25 owner-release protocol test deliberately replays a

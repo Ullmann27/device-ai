@@ -81,6 +81,16 @@ export function parseJunit(xml,{root=null}={}){
 }
 
 /** Runs the fixed node test profile in a fresh detached worktree at `commit`, optionally after applying a patch. */
+/**
+ * True only when every reported testcase carries the file attribute (Node 24 JUnit reporter).
+ * Without it, test identities cannot be bound to their files; the verifier must reject, never guess.
+ */
+export function junitHasFileIdentity(xml){
+ const cases=String(xml).match(/<testcase\b[^>]*>/g)||[];
+ // An empty report keeps its existing downstream verdict (missing targets / no executed tests).
+ return cases.every(tag=>/\bfile="[^"]+"/.test(tag));
+}
+
 export function runNodeProfile(repo,commit,{patchPath=null,timeoutMs=120000}={}){
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'ccc1-rg-'));
  const wt=path.join(dir,'wt');
@@ -103,6 +113,8 @@ export function runNodeProfile(repo,commit,{patchPath=null,timeoutMs=120000}={})
    {cwd:wt,encoding:'utf8',timeout:timeoutMs,env:{PATH:process.env.PATH,HOME:dir}});
   if(r.error||r.signal)return {ok:false,reason:'TIMEOUT_OR_SIGNAL'};
   const xml=fs.existsSync(out)?fs.readFileSync(out):Buffer.alloc(0);
+  // Node 22 JUnit omits <testcase file=…>; target identities would silently collapse to "test.*".
+  if(!junitHasFileIdentity(xml.toString('utf8')))return {ok:false,reason:'JUNIT_FILE_IDENTITY_UNSUPPORTED_RUNTIME'};
   const cases=parseJunit(xml.toString('utf8'),{root:wt});
   return {ok:true,exitCode:r.status,xmlSha256:sha256(xml),cases,
    executed:[...cases.values()].filter(c=>!c.skipped).length,failed:[...cases.values()].filter(c=>c.failed).length};
