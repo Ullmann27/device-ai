@@ -33,6 +33,8 @@ object GermanText {
         "fuer","noch","nochmal","schon","auch","so","um","uhr","gestern","heute","vorgestern","letzte","letzten","letzter","woche",
         "monat","vor","seit","hatte","wurde","wird","denn","mal","eigentlich","bitte","weisst","sag","nochmal","dass","als","ob","nach","fuers")
     private val SUFFIXES=listOf("innen","ungen","ung","ern","en","er","es","em","st","e","s","n","t")
+    private val NEGATION_STEMS=setOf("nicht","nichts","kein","keine","keinen","nie","niemals","ohne").map(::stem).toSet()
+    fun isNegationStem(stem:String)=stem in NEGATION_STEMS
     fun normalize(s:String)=s.lowercase(Locale.GERMAN).replace("ä","ae").replace("ö","oe").replace("ü","ue").replace("ß","ss")
     fun rawTokens(s:String)=normalize(s).split(Regex("[^a-z0-9]+")).filter { it.length>=2 }
     fun stem(t:String):String { if(t.length<=4)return t; for(x in SUFFIXES) if(t.endsWith(x) && t.length-x.length>=4)return t.dropLast(x.length); return t }
@@ -126,6 +128,8 @@ class Bm25GermanRetriever(private val temporal:TemporalCue?=null, private val k1
     }
     private fun resolve(t:String,index:IndexState):List<String> {
         if(t in index.vocab)return listOf(t)
+        // Negations must not be silently corrected into unrelated positive evidence.
+        if(GermanText.isNegationStem(t))return emptyList()
         val limit=if(t.length>=7)2 else 1
         return index.vocab.asSequence().filter { it.length>=4 && it[0]==t[0] }.map { it to GermanText.editDistance(it,t,limit) }
             .filter { it.second<=limit }.sortedWith(compareBy<Pair<String,Int>>{ it.second }.thenByDescending { index.postings[it.first]!!.size }).take(1).map { it.first }.toList()
@@ -181,12 +185,14 @@ class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val
         if(k<=0)return emptyList()
         val index=state
         if(index.docs.isEmpty())return emptyList()
+        val soleNegation=GermanText.contentStems(query).singleOrNull()?.takeIf { GermanText.isNegationStem(it) }
         val (qk,qv)=vec(grams(query),index.idf); val w=temporal?.window(query,nowMillis)
         return index.vectors.mapIndexed { i,(dk,dv) -> var s=0.0; var a=0; var c=0
             while(a<qk.size && c<dk.size){ when { qk[a]==dk[c] -> { s+=qv[a]*dv[c];a++;c++ }; qk[a]<dk[c] -> a++; else -> c++ } }
             val tw=temporal?.weight(w,index.docs[i].atMillis) ?: 1.0
             ScoredParts(RetrievalHit(index.docs[i],s*tw),s,tw) }
-            .filter { it.hit.score>0 }.sortedByDescending { it.hit.score }.take(k)
+            .filter { it.hit.score>0 && (soleNegation==null || soleNegation in GermanText.contentStems(it.hit.doc.text)) }
+            .sortedByDescending { it.hit.score }.take(k)
     }
     override fun approxIndexBytes()=state.approxBytes
 }

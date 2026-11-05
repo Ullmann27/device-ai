@@ -1,0 +1,63 @@
+{
+  "taskId": "MEMORY-R9-EXACT-NEGATION-20261105",
+  "repository": "Ullmann27/device-ai",
+  "testFreezes": {
+    "R6": "0240f1273745acd80f0be1851b07ce86655e682f",
+    "R7": "76c793321a6476dbaa9e28eaa10248f65d526fdb",
+    "R8": "a2c62141b9b1c2d9a4557e983c1433a1ac28438c",
+    "R9First": "70b70b0ab8ca316c3c835cbc0857562f91a30047",
+    "R9Holdout": "bf2fa57a1976dde44e20b1aada5f2e5d2e5e8a71"
+  },
+  "production": {
+    "baselineCommit": "6b79a9c001f7607db1511d2398b62b744e362e50",
+    "baselineBlob": "b0200e5246130d056ce02eb570f69dbcfa641ae5",
+    "patchedCommit": "1ca1edca7865ef804dac307c82814b8167e2c5a5",
+    "patchedBlob": "12c1c716c57bc9656897a6428ed0ee1c4f443142"
+  },
+  "host": {
+    "platform": "JRE 21.0.12.1 / kotlinc-jvm 1.9.0",
+    "compiledProductionFile": true,
+    "compiledFrozenProjectTestMethods": true,
+    "stubbed": [
+      "EventEmittingRetriever",
+      "JUnit4 annotation and assert API"
+    ],
+    "baseline": {
+      "compileExit": 0,
+      "testExit": 1,
+      "pass": 16,
+      "fail": 4,
+      "logSha256": "62963b1788e083f4866cb96ba8d6bba0459978b371bcef5f936db3f04e580534"
+    },
+    "patched": {
+      "compileExit": 0,
+      "testExit": 0,
+      "pass": 20,
+      "fail": 0,
+      "logSha256": "1de9129e8bed6245cc9432e7be41c6e94f4411ea0d13ff0867117b20c85f3179"
+    },
+    "notes": [
+      "All five source/test blobs matched GitHub Git hash-object before compilation.",
+      "Initial R9 case 'nicht' vs 'Licht' for BM25 passed on baseline because first-letter filter already prevented this alias; independent near-neighbor Nische/Keim holdouts were added and reproduced baseline failures.",
+      "Previous R6,R7,R8 frozen methods were actually invoked, not mocked."
+    ]
+  },
+  "notRun": [
+    "Gradle",
+    "Android/JUnit4 runner",
+    "Robolectric",
+    "44-question holdout",
+    "1,000-doc corpus",
+    "NewApi lint",
+    "native model",
+    "physical Fold7",
+    "APK"
+  ],
+  "safety": {
+    "newSubBots": 0,
+    "signing": false,
+    "paid": false,
+    "mainMerge": false,
+    "originalAppChanged": false
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "taskId": "MEMORY-R9-PARITY-20261105",
+  "sourceBefore": "b0200e5246130d056ce02eb570f69dbcfa641ae5",
+  "sourceAfter": "12c1c716c57bc9656897a6428ed0ee1c4f443142",
+  "harnessBlob": "71b05f18e5ddf22abddd07e2ea1e581c556d7693",
+  "shellBlob": "aa4d5b2b71b9bde58bcf4e314f26db1bced8150d",
+  "scope": {
+    "syntheticDocs": 40,
+    "syntheticQueries": 48,
+    "variants": [
+      "BM25",
+      "CharNgramHashRetriever"
+    ],
+    "comparedResultLines": 96,
+    "indexByteSummaryLines": 2,
+    "queryKinds": "positive and multi-content-term negation, excluding one-stem negation intentional change"
+  },
+  "actual": {
+    "compileR8Exit": 0,
+    "compileR9Exit": 0,
+    "runnerExit": 0,
+    "diffLines": 0,
+    "identicalSerializedResults": 96,
+    "scoreDecimalPlaces": 12,
+    "outputRowsEach": 98,
+    "baselineStdoutSha256": "ae061eb1d38ce3df38051a59e336621820208e93b6d38f54d415361ea78de7fc",
+    "patchedStdoutSha256": "ae061eb1d38ce3df38051a59e336621820208e93b6d38f54d415361ea78de7fc"
+  },
+  "execution": "JRE21/kotlinc1.9, exact original production Git blobs and original EventEmittingCompileStub, locally assembled mirror of repository paths; parity.sh exact Git blob executed successfully",
+  "notRun": [
+    "44-question production-quality holdout",
+    "1,000-document real corpus",
+    "Android/Gradle",
+    "NewApi",
+    "physical device"
+  ]
+}

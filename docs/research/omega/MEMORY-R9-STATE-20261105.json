@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "taskId": "MEMORY-R9-EXACT-NEGATION-20261105",
+  "status": "PRODUCTION_R9_PATCH_HOST_JVM_GREEN_ANDROID_NOT_RUN",
+  "repository": "Ullmann27/device-ai",
+  "branch": "fix/continuum-memory-r9-negation-fuzzy-boundary-20261105",
+  "base": {
+    "pr": 534,
+    "head": "6b79a9c001f7607db1511d2398b62b744e362e50",
+    "c1Pr": 519,
+    "c1Observed": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "memoryR3AlreadyInC1": true
+  },
+  "architecture": "GermanText.contentStems -> BM25 exact/fuzzy resolve | char 3-5 gram cosine -> RetrievalHit(doc,score), confirmed is never upgraded",
+  "source": {
+    "freezeFirst": "1fec1fc258449e629ee4a6e5ab89f1381fcc0994",
+    "holdoutAfterFix": "21866a8561897e4d8ca78d7792472a7b4f1f30bc",
+    "fixCommit": "1ca1edca7865ef804dac307c82814b8167e2c5a5",
+    "beforeBlob": "b0200e5246130d056ce02eb570f69dbcfa641ae5",
+    "afterBlob": "12c1c716c57bc9656897a6428ed0ee1c4f443142",
+    "productionPaths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt"
+    ]
+  },
+  "changes": [
+    "BM25 explicit negation stems never fuzzy-resolve to unrelated words",
+    "N-gram lone explicit negation requires same stem in evidence doc",
+    "retain existing R6/R7/R8 scoring, snapshots, k boundaries and confirmation flags"
+  ],
+  "evidence": {
+    "baseline": "20 tests: 16 PASS / 4 FAIL, compile0/test1",
+    "patched": "20 tests: 20 PASS / 0 FAIL, compile0/test0",
+    "runtime": "JVM21 / kotlinc1.9, exact production and test blobs, host-only JUnit/EventEmitting stub",
+    "receipt": "docs/evidence/memory-r9-negation-20261105/RESULT.json",
+    "hostRunner": "tools/memory-r9-exact-negation/run.sh",
+    "scriptExecutedFromGitHubCheckout": false,
+    "publishedRunnerExecutedOnExactLocalMirror": true,
+    "publishedRunnerExit": 0,
+    "publishedRunnerPass": 20,
+    "publishedRunnerFail": 0,
+    "fullAndroidProjectStillNotRun": true,
+    "nonTargetParity": {
+      "cases": 96,
+      "equal": 96,
+      "syntheticDocs": 40,
+      "queries": 48,
+      "diffLines": 0,
+      "hostRunnerExit": 0,
+      "outputSha256": "ae061eb1d38ce3df38051a59e336621820208e93b6d38f54d415361ea78de7fc",
+      "notOfficialHoldout": true
+    }
+  },
+  "pending": [
+    "C1 independent R6-R7-R8-R9 source integration",
+    "Actual Android JUnit/Gradle and NewApi",
+    "44-question/1,000-doc holdout with no unaccepted quality regression",
+    "Complete Node/backend/Android UI and physical Fold7 gate",
+    "APK only after independent C2 approval and owner release procedure"
+  ],
+  "limits": [
+    "Only isolated explicit negation-only queries are gated in n-gram; general multiword contradiction handling remains unsolved",
+    "No Android Project JUnit or real device build executed here",
+    "The original BM25 licht case was already a PASS and is documented honestly",
+    "This specialist branch is not the shared C1 candidate"
+  ],
+  "safety": {
+    "bots": 0,
+    "mainMerge": false,
+    "actions": false,
+    "paid": false,
+    "signing": false,
+    "apk": false,
+    "installation": false
+  }
+}
