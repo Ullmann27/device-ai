@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "task_id": "MEMORY-R11-20261105",
+  "kind": "source_bound_host_experiment",
+  "baseline_ref": "3e1e465bf425d3eafd7155da51aa7cb2fc59b808",
+  "baseline_blob": "c7c4d8d701e8fd1d2b886aa0a6b627c1b6a1bd99",
+  "patched_blob": "b8c4930ce54b7dd6528beb9bee2a1fc84c122301",
+  "frozen_test_commits": [
+    "aca5d2f6cd6bb266468e882bb39a55faa3d17844",
+    "6ac97959b53e66c9ab325b0c9198be71f7095024"
+  ],
+  "frozen_test_blobs": {
+    "one_digit": "efeee016465f7eb4f1fca00801ba121b9cada180",
+    "repeated_negation": "6764f1af7a6c744bda7a009784f33174f88408c0"
+  },
+  "source_owner": "R11 specialist, one production Kotlin retriever source only; C1/#519 sole integrator",
+  "source_test_method": "full original production Kotlin file compiled with kotlinc 1.9.0/JRE21; host-only JUnit annotations/assert and EventEmitting adapter",
+  "commands": {
+    "red_compile": "kotlinc ContinuumMemoryRetriever.R10.kt MemoryOneDigitEvidenceR11Test.kt MemoryRepeatedNegationR11Test.kt EventEmittingStub.kt JUnitHostR11.kt RunR11.kt -include-runtime -d red.jar",
+    "red_run": "java -Xmx512m -jar red.jar",
+    "green_compile": "kotlinc ContinuumMemoryRetriever.kt MemoryOneDigitEvidenceR11Test.kt MemoryRepeatedNegationR11Test.kt EventEmittingStub.kt JUnitHostR11.kt RunR11.kt -include-runtime -d green.jar",
+    "green_run": "java -Xmx512m -jar green.jar",
+    "parity": "kotlinc [baseline/patched production Kotlin] EventEmittingStub.kt ParityR10.kt -include-runtime -d [baseline/patched].jar; java -Xmx512m -jar each > parity_[base/fix].txt; diff -u"
+  },
+  "actual_results": {
+    "red": {
+      "compile_exit": 0,
+      "run_exit": 1,
+      "total": 9,
+      "pass": 2,
+      "fail": 7,
+      "receipt": "baseline.txt",
+      "sha256": "e1c736b4082fe576769b020b166543d8196f3dcc69f4d51f46b9725a98d8adb5"
+    },
+    "green": {
+      "compile_exit": 0,
+      "run_exit": 0,
+      "total": 9,
+      "pass": 9,
+      "fail": 0,
+      "receipt": "patched.txt",
+      "sha256": "59000cb6ac623599958ee93da8e57fd4c5b4e34d12224d557da1fba8ad552b79"
+    },
+    "parity": {
+      "compile_exit": 0,
+      "run_exit": 0,
+      "observations": 112,
+      "mismatches": 0,
+      "baseline_sha256": "643a9ac0a14626ce10874947591354e1a702f167c9dca5008664a5514e9f70ff",
+      "patched_sha256": "643a9ac0a14626ce10874947591354e1a702f167c9dca5008664a5514e9f70ff",
+      "fixture": "R10 published ParityR10.kt exact Git blob 982dfc1597a9530e2a3a0323b084b69e09f11a6c"
+    }
+  },
+  "limitations": {
+    "full_Android_Gradle": "NOT_RUN",
+    "official_1000_doc_44_query_holdout": "NOT_RUN",
+    "complete_existing_project_suite": "NOT_RUN",
+    "real_model": "NOT_RUN",
+    "Fold7": "NOT_RUN",
+    "APK": "NOT_RUN",
+    "published_run_sh_end_to_end": "TIMEOUT in local mirror after RED; direct frozen RED/GREEN and parity were separately executed successfully",
+    "git_clone": "FAILED DNS github.com exit128; full Kotlin source and test blobs reconstructed from GitHub connector and verified with git hash-object",
+    "real_device_claim": false
+  },
+  "forbidden_changes": {
+    "main": false,
+    "actions": false,
+    "paid": false,
+    "signing": false,
+    "release": false,
+    "install": false,
+    "owner_files": false,
+    "offline_switch": false,
+    "weights": false,
+    "Activity": false,
+    "worker": false
+  },
+  "next": "C1 source/ownership review; R6-R11 serial integrate; own Android/JUnit+official retrieval holdout and full gates; rollback R11 two hunks on ranking regression"
+}
