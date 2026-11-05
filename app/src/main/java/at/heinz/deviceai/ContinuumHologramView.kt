@@ -75,7 +75,6 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (isAttachedToWindow && foregroundActive && isShown) invalidate()
     }
     private val renderer = ContinuumHologramRenderer()
-    private val referenceBrain = at.heinz.deviceai.ui.ContinuumBrainOrbRenderer()
     private val avatarBrandFill = Fill.Solid(0xff9aefff.toInt())
     private val avatarBrandStyle = TextStyle(FontFamily.DISPLAY, 700, 14f, letterSpacing = 2f)
     private val painter = AndroidContinuumPainter(context.assets)
