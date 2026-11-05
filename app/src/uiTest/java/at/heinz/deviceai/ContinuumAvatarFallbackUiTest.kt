@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.view.View
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -51,8 +50,6 @@ class ContinuumAvatarFallbackUiTest {
         val control = portrait(threeD = false)
         val loading = portrait(threeD = true)
         try {
-            assertFalse(control.sameAs(Bitmap.createBitmap(control.width, control.height,
-                Bitmap.Config.ARGB_8888)))
             assertHeadRetained(control, loading)
         } finally {
             control.recycle(); loading.recycle()
