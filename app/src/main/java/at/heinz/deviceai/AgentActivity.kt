@@ -2191,8 +2191,8 @@ class AgentActivity : Activity() {
             (head.parent as? android.view.ViewGroup)?.removeView(head)
             if (chat) column.addView(head, minOf(1, column.childCount),
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height))
-            else home.addView(head, 0, android.view.ViewGroup.LayoutParams(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT))
+            // The home restores its own drawing order: above the opaque shell, never behind it.
+            else home.adoptHologram()
             // Detach clears transient speech geometry; reattach the same current utterance.
             avatarDirector.attach(head)
         }

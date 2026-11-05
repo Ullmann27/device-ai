@@ -280,6 +280,23 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
     }
 
+    /**
+     * Re-adopt the shared live avatar after another pane (chat) borrowed it. The avatar must return to its
+     * original drawing layer directly above the opaque shell background; index 0 would hide head and orb
+     * behind the shell (owner Fold7 report, code42: avatar "vanished" after leaving chat).
+     */
+    fun adoptHologram() {
+        if (hologram.parent === this) return
+        (hologram.parent as? ViewGroup)?.removeView(hologram)
+        val shellIndex = indexOfChild(jarvisShell)
+        addView(hologram, if (shellIndex >= 0) shellIndex + 1 else 0,
+            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
+    }
+
+    /** The avatar draws above the shell background whenever this view hosts it. */
+    val hologramAboveShell: Boolean get() = hologram.parent === this &&
+        indexOfChild(hologram) > indexOfChild(jarvisShell)
+
     override fun onViewRemoved(child: View?) {
         super.onViewRemoved(child)
         if (child === hologram) {

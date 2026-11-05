@@ -624,6 +624,9 @@ class ContinuumReferenceCockpitUiTest {
 
             returnHomeThroughDecor(activity)
             assertSame("Return to the current home keeps the same live avatar", currentHome(activity), avatar.parent)
+            // Code42 Fold7 regression: index 0 put head and orb behind the opaque shell background.
+            assertTrue("Returned avatar must draw above the shell background", currentHome(activity).hologramAboveShell)
+            assertEquals("Returned avatar stays visible", View.VISIBLE, avatar.visibility)
             assertEquals("Navigation must preserve an unsent draft", draft, (field(activity, "input") as EditText).text.toString())
             assertEquals(1, descendants(activity.window.decorView).count { it is ContinuumHologramView })
             assertFalse(field(activity, "busy") as Boolean)
@@ -739,6 +742,7 @@ class ContinuumReferenceCockpitUiTest {
         }
         assertSame(avatar, field(activity, "hologramView"))
         assertSame(currentHome(activity), avatar.parent)
+        assertTrue("Avatar returns above the shell after chat and dialogs", currentHome(activity).hologramAboveShell)
         assertEquals(1, descendants(root).count { it is ContinuumHologramView })
         assertFalse("Presentation selection must never submit a task", field(activity, "busy") as Boolean)
 
@@ -914,6 +918,7 @@ class ContinuumReferenceCockpitUiTest {
         assertEquals(draft, (field(activity, "input") as EditText).text.toString())
         assertSame(avatar, field(activity, "hologramView"))
         assertSame(currentHome(activity), avatar.parent)
+        assertTrue("Avatar returns above the shell after chat and dialogs", currentHome(activity).hologramAboveShell)
         assertEquals(1, descendants(activity.window.decorView).count { it is ContinuumHologramView })
         assertFalse(field(activity, "busy") as Boolean)
         capture(activity.window.decorView, "fold-short-840x320-font200-rail", 840, 320)
