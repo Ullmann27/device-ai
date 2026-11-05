@@ -285,6 +285,8 @@ class AgentActivity : Activity() {
     private var ownerFace: AndroidOwnerFaceRecognition? = null
     private var ownerFaceDialogs: OwnerFaceDialogs? = null
     private var ownerFaceCameraToken: Long? = null
+    private val ownerFaceConversation = OwnerFaceConversation()
+    private var ownerFaceGreetingUtteranceId: String? = null
     private var readinessDialog: AlertDialog? = null
     private var readinessRows: LinearLayout? = null
     private var readinessCamera: AndroidAvatarCameraInput? = null
@@ -2968,6 +2970,7 @@ class AgentActivity : Activity() {
                 readinessCameraEnabled = false
                 if (ownerFaceCameraToken != null) {
                     ownerFaceCameraToken = null
+                    ownerFaceConversation.stop()
                     ownerFace?.stop()
                 }
             }
@@ -2979,15 +2982,31 @@ class AgentActivity : Activity() {
         }).also { readinessCamera = it }
 
     private fun ownerFaceRecognition(): AndroidOwnerFaceRecognition = ownerFace ?:
-        AndroidOwnerFaceRecognition(this) { state ->
-            if (!isFinishing && !isDestroyed) {
-                ownerFaceDialogs?.update(state)
-                if (!state.sessionActive && ownerFaceCameraToken != null) {
-                    ownerFaceCameraToken = null
-                    stopReadinessCamera()
-                }
+        AndroidOwnerFaceRecognition(this, ::onOwnerFaceState).also { ownerFace = it }
+
+    private fun onOwnerFaceState(state: OwnerFaceStatus) {
+        val face = ownerFace ?: return
+        if (isFinishing || isDestroyed || state !== face.status) return
+        if (state.phase != OwnerFacePhase.MATCH) stopOwnerFaceGreeting()
+        ownerFaceDialogs?.update(state)
+        if (!state.sessionActive && ownerFaceCameraToken != null) stopReadinessCamera()
+        refreshConversationCameraControls()
+        if (state === face.status && ownerFaceCameraToken == face.sessionToken && readinessCameraEnabled) {
+            ownerFaceConversation.greeting(face.sessionToken, state, canSpeakCameraPrompt())?.let {
+                speakBootstrap(it)
+                ownerFaceGreetingUtteranceId = voiceUtteranceId
             }
-        }.also { ownerFace = it }
+        }
+    }
+
+    private fun stopOwnerFaceGreeting() {
+        val utterance = ownerFaceGreetingUtteranceId
+        ownerFaceGreetingUtteranceId = null
+        if (utterance != null && utterance == voiceUtteranceId) {
+            voiceEngine?.stop()
+            stopVoiceAnimation()
+        }
+    }
 
     private fun showOwnerFaceControls() {
         if (!foregroundLearningActive || isFinishing || isDestroyed) return
@@ -2998,6 +3017,10 @@ class AgentActivity : Activity() {
             override fun cameraActive() = readinessCameraEnabled && foregroundLearningActive
             override fun startEnrollment(name: String) = startOwnerFaceCamera(name)
             override fun startRecognition() = startOwnerFaceCamera(null)
+            override fun canContinueConversation() = foregroundLearningActive && readinessCameraEnabled &&
+                !isFinishing && !isDestroyed && ownerFaceCameraToken == face.sessionToken &&
+                ownerFaceConversation.canContinue(face.sessionToken, face.status)
+            override fun continueConversation() = canContinueConversation()
             override fun stop() = stopReadinessCamera()
             override fun deleteProfile() {
                 stopReadinessCamera()
@@ -3030,7 +3053,10 @@ class AgentActivity : Activity() {
         }
         readinessCameraEnabled = camera.start(true, foregroundLearningActive, degrees,
             analyzeOwnerFace = true, ownerFaceSessionToken = face.sessionToken)
-        if (readinessCameraEnabled) ownerFaceCameraToken = face.sessionToken
+        if (readinessCameraEnabled) {
+            ownerFaceCameraToken = face.sessionToken
+            if (enrollmentName == null) ownerFaceConversation.beginComparison(face.sessionToken)
+        }
         if (!readinessCameraEnabled) {
             ownerFaceCameraToken = null
             face.stop()
@@ -3046,6 +3072,8 @@ class AgentActivity : Activity() {
     private fun stopReadinessCamera() {
         readinessCameraEnabled = false
         ownerFaceCameraToken = null
+        ownerFaceConversation.stop()
+        stopOwnerFaceGreeting()
         ownerFace?.stop()
         cameraConsentDialog?.dismiss()
         cameraConsentDialog = null
@@ -3058,6 +3086,7 @@ class AgentActivity : Activity() {
     private fun buildCameraSessionStopControl(): Button = actionButton("KAMERA AN · STOPPEN").apply {
         tag = "conversation-camera-stop"
         contentDescription = "Frontkamera aktiv. Antippen beendet den Kamerablick sofort."
+        minHeight = dp(48)
         visibility = if (readinessCameraEnabled && foregroundLearningActive) View.VISIBLE else View.GONE
         setOnClickListener { stopReadinessCamera() }
     }
@@ -3066,7 +3095,19 @@ class AgentActivity : Activity() {
         val active = readinessCameraEnabled && foregroundLearningActive
         cameraButton?.text = if (active) "■" else "📷"
         cameraButton?.contentDescription = if (active) "Kamerablick sofort stoppen" else "Kamerablick ausdrücklich freigeben"
-        cameraSessionStopButton?.visibility = if (active) View.VISIBLE else View.GONE
+        val face = ownerFace
+        val state = face?.status
+        val faceActive = active && face != null && ownerFaceCameraToken == face.sessionToken && state?.sessionActive == true
+        val status = if (faceActive && face != null && state != null) {
+            ownerFaceConversation.statusLine(face.sessionToken, state)
+                ?: "Gesicht einlernen · ${state.acceptedSamples}/${state.requiredSamples}"
+        } else null
+        cameraSessionStopButton?.apply {
+            visibility = if (active) View.VISIBLE else View.GONE
+            text = if (status != null) "$status\nKAMERA AN · STOPPEN" else "KAMERA AN · STOPPEN"
+            contentDescription = if (status != null) "$status. Frontkamera aktiv. Antippen stoppt die Kamera sofort."
+                else "Frontkamera aktiv. Antippen beendet den Kamerablick sofort."
+        }
         ownerFace?.let { ownerFaceDialogs?.update(it.status) }
     }
 
@@ -3106,8 +3147,7 @@ class AgentActivity : Activity() {
             if (cameraConsentDialog === dialog) cameraConsentDialog = null
         }
         dialog.show()
-        if (voiceEnabled && voiceReady && !voiceSpeaking && !voiceListening &&
-            voiceUtteranceId == null && voiceEngine?.isSpeaking != true && !busy) {
+        if (canSpeakCameraPrompt()) {
             speakBootstrap("Darf ich dich beim Gespräch anschauen?")
         }
         getSharedPreferences("continuum-readiness", MODE_PRIVATE).edit()
@@ -3132,6 +3172,10 @@ class AgentActivity : Activity() {
             }
         }
     }
+
+    private fun canSpeakCameraPrompt() = foregroundLearningActive && !isFinishing && !isDestroyed &&
+        voiceEnabled && voiceReady && !voiceSpeaking && !voiceListening && voiceUtteranceId == null &&
+        voiceEngine?.isSpeaking != true && !busy
 
     private fun readinessSnapshot(): ContinuumReadinessGuide.Snapshot {
         val camera = readinessCameraInput()
@@ -6888,6 +6932,7 @@ class AgentActivity : Activity() {
     private fun stopVoiceAnimation() = stopVoiceAnimation(true)
 
     private fun stopVoiceAnimation(interrupted: Boolean) {
+        if (ownerFaceGreetingUtteranceId == voiceUtteranceId) ownerFaceGreetingUtteranceId = null
         voiceUtteranceId?.let { avatarDirector.speechEnded(it, interrupted = interrupted) }
         voiceUtteranceId = null
         voiceSpeaking = false

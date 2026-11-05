@@ -20,6 +20,8 @@ internal class OwnerFaceDialogs(private val activity: Activity, private val acti
         fun cameraActive(): Boolean
         fun startEnrollment(name: String): Boolean
         fun startRecognition(): Boolean
+        fun canContinueConversation(): Boolean
+        fun continueConversation(): Boolean
         fun stop()
         fun deleteProfile()
     }
@@ -31,6 +33,8 @@ internal class OwnerFaceDialogs(private val activity: Activity, private val acti
     private var enrollButton: Button? = null
     private var compareButton: Button? = null
     private var deleteButton: Button? = null
+    private var continueButton: Button? = null
+    private var continueOnDismiss = false
     val isShowing: Boolean get() = dialog?.isShowing == true
 
     private fun dp(value: Int) = (value * activity.resources.displayMetrics.density + .5f).toInt()
@@ -59,6 +63,7 @@ internal class OwnerFaceDialogs(private val activity: Activity, private val acti
 
     fun show() {
         if (activity.isFinishing || activity.isDestroyed || isShowing) return
+        continueOnDismiss = false
         val body = LinearLayout(activity).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(16), dp(12), dp(16), dp(12))
@@ -79,7 +84,14 @@ internal class OwnerFaceDialogs(private val activity: Activity, private val acti
             .also { body.addView(it, row()) }
         deleteButton = button("Gesichtsvorlage löschen", "owner-face-delete", ::confirmDeletion)
             .also { body.addView(it, row()) }
-        body.addView(text("Schließen oder STOPPEN beendet die Kamera. Nach dem Verlassen der App " +
+        continueButton = button("Zum Gespräch", "owner-face-continue") {
+            if (actions.continueConversation()) {
+                continueOnDismiss = true
+                dialog?.dismiss()
+            }
+        }.also { body.addView(it, row(14)) }
+        body.addView(text("Zum Gespräch lässt den freigegebenen Vergleich weiterlaufen. " +
+            "Schließen oder STOPPEN beendet die Kamera. Nach dem Verlassen der App " +
             "startet sie erst nach deiner erneuten Freigabe.", 12f), row(14))
         val window = AlertDialog.Builder(activity).setTitle("Continuum · Wiedererkennen")
             .setView(ScrollView(activity).apply { addView(body) })
@@ -96,7 +108,10 @@ internal class OwnerFaceDialogs(private val activity: Activity, private val acti
                 enrollButton = null
                 compareButton = null
                 deleteButton = null
-                actions.stop()
+                continueButton = null
+                val continued = continueOnDismiss
+                continueOnDismiss = false
+                if (!continued) actions.stop()
             }
         }
         window.show()
@@ -111,8 +126,11 @@ internal class OwnerFaceDialogs(private val activity: Activity, private val acti
 
     fun update(state: OwnerFaceStatus) {
         if (!isShowing) return
-        val profile = if (state.hasProfile) "Lokales Profil: ${state.displayName ?: "—"}"
-            else "Noch kein Gesicht eingelernt."
+        val profile = when {
+            state.hasProfile -> "Lokales Profil: ${state.displayName ?: "—"}"
+            state.phase == OwnerFacePhase.ERROR -> "Das lokale Profil konnte nicht bestätigt werden."
+            else -> "Noch kein Gesicht eingelernt."
+        }
         if (profileText?.text?.toString() != profile) profileText?.text = profile
         val progress = if (state.phase == OwnerFacePhase.ENROLLING && state.requiredSamples > 0)
             "\nAufnahmen: ${state.acceptedSamples} / ${state.requiredSamples}" else ""
@@ -122,12 +140,16 @@ internal class OwnerFaceDialogs(private val activity: Activity, private val acti
         val busy = state.sessionActive || state.phase == OwnerFacePhase.LOADING
         enrollButton?.isEnabled = !busy
         compareButton?.isEnabled = state.hasProfile && !busy
-        deleteButton?.isEnabled = state.hasProfile && state.phase != OwnerFacePhase.LOADING
-        listOf(enrollButton, compareButton, deleteButton).forEach { it?.alpha = if (it?.isEnabled == true) 1f else .45f }
+        deleteButton?.isEnabled = (state.hasProfile || state.phase == OwnerFacePhase.ERROR) &&
+            state.phase != OwnerFacePhase.LOADING
+        continueButton?.isEnabled = actions.canContinueConversation()
+        listOf(enrollButton, compareButton, deleteButton, continueButton).filterNotNull()
+            .forEach { it.alpha = if (it.isEnabled) 1f else .45f }
         dialog?.getButton(AlertDialog.BUTTON_NEGATIVE)?.isEnabled = state.sessionActive || actions.cameraActive()
     }
 
     fun dismiss() {
+        continueOnDismiss = false
         confirmation?.dismiss()
         confirmation = null
         dialog?.dismiss()
@@ -193,7 +215,8 @@ internal class OwnerFaceDialogs(private val activity: Activity, private val acti
 
     private fun confirmDeletion() {
         val state = actions.status()
-        if (!state.hasProfile || state.phase == OwnerFacePhase.LOADING || confirmation?.isShowing == true) return
+        if ((!state.hasProfile && state.phase != OwnerFacePhase.ERROR) || state.phase == OwnerFacePhase.LOADING ||
+            confirmation?.isShowing == true) return
         actions.stop()
         val window = AlertDialog.Builder(activity).setTitle("Gesichtsvorlage löschen?")
             .setMessage("Die lokale Gesichtsvorlage und ihr gespeicherter Name werden gelöscht. " +

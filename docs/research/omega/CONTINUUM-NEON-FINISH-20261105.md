@@ -82,3 +82,19 @@ another branch or delete existing evidence.
 - No authentication or tool rights derive from face comparison. Actual
   recognition quality, hardware camera behavior and GPU performance remain
   device checks; no successful personal match is claimed.
+
+## Checkpoint 5 — explicit continuation into conversation
+
+- `Zum Gespräch` closes face controls only for the current, explicitly approved
+  comparison session. Enrollment cannot continue this way. Ordinary closing,
+  STOPPEN and Activity pause still terminate capture and comparison.
+- The visible camera stop bar shows the current local comparison result. A
+  missing/poor/stale observation replaces a match; stopping clears the label.
+- A confirmed current match may greet the confirmed profile name once per
+  session through the existing TTS path. Busy/disabled/background speech skips
+  that greeting permanently for this session; no delayed replay is queued.
+- Six pure `OwnerFaceConversationTest` cases compiled with the real policy and
+  passed under JUnit 4.13.2/Kotlin 2.4.0. Dialog source also compiled. New dialog
+  continuation/expiry tests await the coordinator's Android run.
+- Read the actual avatar-branch controller and Camera2 implementation; the UI
+  uses their unchanged token/frame API. Full integrated APK remains a root gate.
