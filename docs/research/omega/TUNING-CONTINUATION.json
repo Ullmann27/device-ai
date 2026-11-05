@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "READY_FOR_NEXT_RUN",
-  "owner": null,
-  "leaseExpiresAtUtc": null,
-  "updatedAtUtc": "2026-11-05T02:37:57.472Z",
+  "status": "R13_IN_PROGRESS",
+  "owner": "tuning-sequential-r13-20261105T0331Z",
+  "leaseExpiresAtUtc": "2026-11-05T03:51:00Z",
+  "updatedAtUtc": "2026-11-05T03:31:06.617Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -104,7 +104,13 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": null,
+  "activeRound": {
+    "id": "R13",
+    "target": "source-complete LM1 Kotlin compile & deterministic synthetic execution counters",
+    "candidate": "NONE",
+    "scope": "tooling / local checks only",
+    "sourceHead": "2aed82502e1921ed02be3453476ff93130683aec"
+  },
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
