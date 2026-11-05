@@ -217,7 +217,7 @@ object JarvisShellLayout {
         } else if (compact) {
             val minimumHero = maxOf(220f, 74f * font + 112f)
             val heroH = minOf(320f, maxOf(minimumHero,
-                viewport - y - 128f * font - gap - 176f))
+                viewport - y - 128f * font - gap - 178f))
             val split = left + room * .55f
             head = Box(left, y, split - gap / 2f, y + heroH)
             b[Slot.CONTINUUM_HEADER] = Box(split + gap / 2f, y, right, y + 74f * font)
