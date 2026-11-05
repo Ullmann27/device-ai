@@ -1764,7 +1764,7 @@ class AgentActivity : Activity() {
     /** All responsive presentations enter the existing owner-gated routes through this one adapter. */
     private fun navigateDashboardTarget(target: String) {
         when (target) {
-            "voice-input" -> startVoiceInput()
+            "voice-input" -> onChatMicrophoneTap()
             "camera-settings" -> toggleConversationCamera()
             "avatar-appearance" -> hologramView?.showAppearanceChooser()
             "notifications" -> showDiagnosticsCenter()
@@ -3769,9 +3769,10 @@ class AgentActivity : Activity() {
         })
         val mic = actionButton("🎙", compact = true).apply {
             contentDescription = "Spracheingabe starten"
+            // Owner decision (Fold7, 05.11.): a tap talks with Continuum hands-free; the finished
+            // sentence is sent after the speech pause. Long press keeps silent dictation into the draft.
             setOnClickListener { onChatMicrophoneTap() }
-            // Deliberate second gesture: hands-free conversation on/off.
-            setOnLongClickListener { toggleContinuousConversation(); true }
+            setOnLongClickListener { onChatMicrophoneLongPress(); true }
         }
         chatMicButton = mic
         refreshConversationMicPresentation()
@@ -10597,9 +10598,15 @@ class AgentActivity : Activity() {
         else "Spracheingabe starten"
     }
 
-    /** Tap: ordinary dictation, or speak now / resume while hands-free mode is active. */
+    /** Long press: end hands-free mode, or dictate silently into the draft (never sends). */
+    private fun onChatMicrophoneLongPress() {
+        if (continuousConversation.active) endContinuousConversation("Gesprächsmodus beendet.")
+        else startVoiceInput()
+    }
+
+    /** Tap: start hands-free conversation, or speak now / resume while it is active. */
     private fun onChatMicrophoneTap() {
-        if (!continuousConversation.active) { startVoiceInput(); return }
+        if (!continuousConversation.active) { toggleContinuousConversation(); return }
         when (continuousConversation.ownerTap(sessionId)) {
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.LISTEN -> {
                 mainHandler.removeCallbacks(conversationResume)
@@ -10622,7 +10629,7 @@ class AgentActivity : Activity() {
         if (!continuousConversation.start(sessionId)) return
         refreshConversationMicPresentation()
         Toast.makeText(this, "Gesprächsmodus an: Nach jeder Antwort höre ich wieder zu. " +
-            "„Stopp“ sagen oder lange auf das Mikrofon drücken beendet ihn. " +
+            "Nach deiner Sprechpause sende ich automatisch. „Stopp“ sagen oder lange auf das Mikrofon drücken beendet ihn. " +
             "Geräteaktionen brauchen weiterhin deine ausdrückliche Bestätigung.", Toast.LENGTH_LONG).show()
         startVoiceInput()
     }

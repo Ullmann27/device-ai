@@ -34,12 +34,19 @@ test('dictation remains a draft; only the explicit mode routes recognized speech
   assert.match(conversation, /continuousConversation\.sendRejected\(\)/);
 });
 
-test('the mode needs a deliberate long press; a tap keeps ordinary dictation when inactive', () => {
+test('owner decision: a microphone tap starts hands-free talk; long press keeps silent dictation', () => {
   assert.match(activity, /setOnClickListener \{ onChatMicrophoneTap\(\) \}/);
-  assert.match(activity, /setOnLongClickListener \{ toggleContinuousConversation\(\); true \}/);
+  assert.match(activity, /setOnLongClickListener \{ onChatMicrophoneLongPress\(\); true \}/);
+  assert.match(activity, /"voice-input" -> onChatMicrophoneTap\(\)/);
   const tap = body('private fun onChatMicrophoneTap(');
-  assert.match(tap, /if \(!continuousConversation\.active\) \{ startVoiceInput\(\); return \}/);
+  assert.match(tap, /if \(!continuousConversation\.active\) \{ toggleContinuousConversation\(\); return \}/);
+  const longPress = body('private fun onChatMicrophoneLongPress(');
+  assert.match(longPress, /if \(continuousConversation\.active\) endContinuousConversation\(/);
+  assert.match(longPress, /else startVoiceInput\(\)/);
   assert.match(body('private fun toggleContinuousConversation('), /Geräteaktionen brauchen weiterhin deine ausdrückliche Bestätigung/);
+  const recognizer = fs.readFileSync(dir + 'AndroidOnDeviceSpeechInput.kt', 'utf8');
+  assert.match(recognizer, /EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, SENTENCE_END_SILENCE_MS/);
+  assert.match(recognizer, /SENTENCE_END_SILENCE_MS = 3_000L/);
 });
 
 test('listening resumes only after the bound reply and never over dialogs or approvals', () => {

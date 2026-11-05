@@ -58,6 +58,9 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                     putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
                     putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
                     putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
+                    // Owner request: a natural ~3 s pause ends the sentence (engines may clamp these hints).
+                    putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, SENTENCE_END_SILENCE_MS)
+                    putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, SENTENCE_END_SILENCE_MS)
                 })
                 override fun cancel() = recognizer.cancel()
                 override fun destroy() = recognizer.destroy()
@@ -80,6 +83,9 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
     }
     private fun checkMainThread() = check(Looper.myLooper() == Looper.getMainLooper())
 }
+
+/** Pause after which a spoken sentence counts as finished (hands-free turn and dictation alike). */
+internal const val SENTENCE_END_SILENCE_MS = 3_000L
 
 /** Android constants remain at the adapter boundary; the lifecycle policy has no Android dependency. */
 internal fun classifySpeechError(error: Int): LocalSpeechInputPolicy.Failure = when (error) {
