@@ -37,4 +37,4 @@ Das Skript prüft zwingend den Quellenblob `b0200e5...` (sonst Exit76), kompilie
 
 ## Rücknahme und nächste Schritte
 
-Nur die drei Quelledits aus `48bd147` zurücknehmen; gefrorene Tests, R6/R7, negative Belege und übrige C1-Arbeit erhalten. C1: nach serieller R6/R7-Aufnahme erst den R8-Fokus samt zwölf? **Nein: elf** R6/R7/R8-Hostmethoden, dann die fünf echten Projekt-JUnit-Methoden mit den vorhandenen Temporal-/Retrieval-/Holdout-Suites ausführen, gemeinsame Node-/Backend-/Android-/UI-/NewApi-Gates und danach Gerät. Keine APK-Signierung, Veröffentlichung, Installation, Actions, Bezahlrunner oder Main-Merge.
+Nur die drei Quelledits aus `48bd147` zurücknehmen; gefrorene Tests, R6/R7, negative Belege und übrige C1-Arbeit erhalten. C1: nach serieller R6/R7-Aufnahme erst den R8-Fokus mit **elf** R6/R7/R8-Hostmethoden, dann die fünf echten Projekt-JUnit-Methoden mit den vorhandenen Temporal-/Retrieval-/Holdout-Suites ausführen, gemeinsame Node-/Backend-/Android-/UI-/NewApi-Gates und danach Gerät. Keine APK-Signierung, Veröffentlichung, Installation, Actions, Bezahlrunner oder Main-Merge.
