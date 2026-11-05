@@ -67,3 +67,58 @@ Originalpaket, Signatur, Offline-/Owner-Daten, GLB, Sprach- und Navigationspfade
 `AgentActivity`, `ContinuumHologramView`, `main`, Release, Actions und
 Installationskanal bleiben unverändert. Der Slice begründet **keine**
 Live-Status- oder fremde-App-Datenansprüche.
+
+## Zweiter Bot-2-Checkpoint — gerundete Randbahn (05.11.2026)
+
+**Neuer echter visueller Defekt:** Der erste Slice #549 bewegte den Leuchtpunkt
+auf einem *eckigen* Innenrechteck, während `JarvisNeon.component` gerundete
+Glaskacheln mit 8-dp-Radius zeichnet. Beim Kurvenwechsel schnitt der Lichtpunkt
+sichtbar die Rundung ab, statt der Kante mit stetiger Tangente zu folgen.
+
+**RED (Kotlin 1.9 / JDK 21, lokale Host-Reproduktion der vorherigen
+Helper-Quelle `c718a6ae4af679d2c0cab92fecbe99ab69e0f406`):**
+Von 1.858 Zeitpunkten im 13-s-Zyklus weichen **144** um mehr als 0,07 dp
+vom echten 5-dp-Innenradius ab; maximale Abweichung **2,0478 dp**.
+Die negative Property-Prüfung brach mit Exitcode 1 ab. Berechnung:
+außen 8 dp, Einrückung 3 dp, innen 5 dp.
+
+**Fix und GREEN (separat eingecheckt):**
+
+- `JarvisTileEnergy.kt`: Geraden mit vier Viertelkreisbögen, über die
+  *echte Bogenlänge* parametrisiert (konstante Geschwindigkeit, stetiger
+  Tangentenverlauf, geschlossener 13-s-Zyklus); scharfer Fallback nur bei
+  Radius null. Keine neue Uhr oder Render-Schleife. Sicherer Umgang mit
+  Long-Grenzen, ungültigen/extremen Größen und deaktivierten kleinen Controls.
+  Git-Blob **`43dd016796976e66547ae55ecc359e5e140f4941`**,
+  Commit **`58927d42db5f1b13ecaf7f11f565a7c9373acfc2`**.
+- `JarvisTileEnergyTest.kt`: bestehende eckige Rand-Assertion durch
+  Geometrie-Vertrag ersetzt; fünf Testmethoden für verschiedene Größen,
+  alle Bögen, 13.000 Ein-Millisekunden-Schritte einschließlich Zyklusübergang,
+  extreme Zeitwerte, 48-dp-Grenze und wiederholbare Ziel-Versetzung.
+  Git-Blob **`575cd431a6bdb975548a59b0b218a882e90c4cbe`**,
+  Commit **`2f0df62bf347336548dd3ae6b5894ed4d54c20c2`**.
+- **Host GREEN:** identischer Kotlin-Produkt- und JUnit-Testquelltext
+  kompiliert, 5/5 Testmethoden bestanden, ohne echte JUnit-/AGP-Laufzeit
+  (eine lokale Minimal-Annotation/-Assertion-Brücke führte die Methoden aus).
+  Unabhängige Rundungs-Property danach 0/1.858 Abweichungen
+  über 0,07 dp; Maximum **0,00000763 dp**.
+- **Sichtnachweis:** Zwei neue Java2D-Hostbilder
+  `jarvis-rounded-vorher-java2d.png` und
+  `jarvis-rounded-nachher-java2d.png` mit mathematisch gebundenen
+  Vorher-/Nachher-Koordinaten. Als Laufartefakte außerhalb des
+  Repositorys gespeichert; **keine** nativen Android-/GPU-Bilder.
+
+**SOURCE_STAGED / HOST_KOTLIN_TESTS_PASS / ANDROID_NOT_RUN.**
+Die älteren 205 Host-Assertions beziehen sich auf den *ersten* Slice/Blob,
+nicht auf diese neue Revision. Auch für diesen zweiten Checkpoint sind
+Android-Kompilierung, echtes JUnit/Robolectric, Lint, APK, Filament,
+Fold7, Temperatur/FPS/Jank und C1-Gesamtintegration **NOT_RUN**.
+
+**Bewusst offen:** `JarvisShellView.ambientMotionEnabled` bleibt default
+`false`. Die Kachel folgt vorhandener Framezeit, aber im ruhenden Bildschirm
+ist ohne spätere, thermisch überprüfte Aktivierung keine Dauerbewegung
+zugesichert. Nichts an Haupt-Activity, Navigation, Sprache, Eigentümer-Signer,
+Offline-Funktion, APK oder `main` geändert. C1 #519 bitte nur diesen
+isolierten Diff auf dem aktuellen gemeinsamen Kandidaten prüfen, die
+vollen Android-Gates erneut ausführen und den Design-Donor nicht
+pauschal zusammenmergen.
