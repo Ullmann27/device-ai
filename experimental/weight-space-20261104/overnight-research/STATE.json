@@ -17,10 +17,10 @@
     "6.56M/9.71M gradient access, chain-rule and twenty finite-difference checks"
   ],
   "next": [
-    "preserve M5_UNCHANGED and immutable M6 parity FAIL; model runs, training, and old final reuse forbidden",
-    "verify authorized original runner checkout and SHA-pinned registrations BEFORE attempting synthetic source-pinned full-controller RED->GREEN cases; absent originals remain NOT_RUN",
-    "adversarially test bad baseline, missing capacity receipt, corrupted checkpoint and forged or foreign resume on truly patched v2/v3 controllers without model starts",
-    "externally pinned atomic exclusive final-consumption ledger and prospectively registered new train/dev/unused-final plus retention/LR selection required before any new study"
+    "Keep M5_UNCHANGED, immutable M6 parity FAIL, quality FAIL and consumed old final dataset; no model starts or S1/W1 training",
+    "Verify a genuine authorized original #508 runner checkout, registered original model inputs and their hashes before any controller tests",
+    "Run independently source-pinned full patched controller synthetic negative gates: baseline FAIL, manipulated capacity receipt, checkpoint corruption, unauthorized resume and cross-study final consumption; no model processes",
+    "Prospective independent split/retention/LR preregistration and externally authoritative atomic final consumption ledger still mandatory before any newly approved study"
   ],
   "acceptedResearchState": "M5_UNCHANGED",
   "newModelExperimentsPermittedThisRound": false,
@@ -36,7 +36,7 @@
     "exactRestorationVerified": true
   },
   "continuation": {
-    "status": "THIRD_SOURCE_PINNED_ADVERSARIAL_GUARD_PUBLISHED",
+    "status": "FOURTH_SOURCE_PINNED_INVENTORY_NEGATIVE_GATES_PUBLISHED",
     "scope": "source audit, gate repair and prospective study design only",
     "iterations": 8,
     "frequency": "HOURLY",
@@ -45,24 +45,24 @@
     "timingMode": "flexible_schedule",
     "executionEnvironmentConfirmed": true,
     "nextRunTimestampReturned": false,
-    "executionEnvironmentStatus": "ORIGINAL_CHECKOUT_MISSING; PYTHON_3_13_5_AVAILABLE; GITHUB_DNS_BLOCKED; CONNECTOR_READ_AND_PUBLISH_AVAILABLE",
-    "latestReviewedHead": "0e7afb37ba3ac73aa074f6c02dd242e5c7826232",
-    "latestEvidenceCommit": "0e7afb37ba3ac73aa074f6c02dd242e5c7826232",
+    "executionEnvironmentStatus": "ORIGINAL_CHECKOUT_MISSING; PYTHON_3_13_5_AVAILABLE; GIT_GITHUB_DNS_BLOCKED; CONNECTOR_READ_AND_PUBLISH_AVAILABLE",
+    "latestReviewedHead": "f79dbb4b5b81918c11d14ec4c0fd3def64c06969",
+    "latestEvidenceCommit": "f79dbb4b5b81918c11d14ec4c0fd3def64c06969",
     "modelProcessesThisRun": 0,
     "optimizerUpdatesThisRun": 0,
-    "newTestsRunThisContinuation": "19/19 local PYTHON PASS: 6 ORIGINAL_RED -> HARDENED_GREEN, 1 CLEAN, 12 ORIGINAL_REGRESSIONS",
+    "newTestsRunThisContinuation": "20/20 local Python 3.13.5 PASS: 7 new RED->GREEN, 1 clean, 12 pinned prior regressions",
     "sourcePatchMatchedHunks": 16,
     "sourcePatchMatchedFiles": 3,
     "patchIntegratedInto508": false,
     "leaseStatus": "RELEASED",
-    "prototypePath": "experimental/weight-space-20261104/overnight-research/continuation-03/",
-    "prototypeCodeGitBlob": "b322675b6c68798ff9cef83160bab436a77f8814",
-    "prototypeTestGitBlob": "0da4412367ea85cb83f9efb7333bd51269949b12",
-    "scopeLimit": "Synthetic local cross-study inspection only; non-atomic, not global, not trusted final authorization",
+    "prototypePath": "experimental/weight-space-20261104/overnight-research/continuation-04/",
+    "prototypeCodeGitBlob": "16217bfb24daba244d17af5d4ea65810cd43ce99",
+    "prototypeTestGitBlob": "3472ab6b804483a2f8253266b571c4a6f54db985",
+    "scopeLimit": "SYNTHETIC_LOCAL_READ_ONLY_NO_ATOMICITY_NO_GLOBAL_ATTESTATION",
     "fullRunnerDynamic": "NOT_RUN",
     "corruptCheckpointDynamic": "NOT_RUN",
     "badBaselineResumeDynamic": "NOT_RUN"
   },
   "leaseReleasedAtUtc": "2026-11-04T22:30:38.987172+00:00",
-  "evidenceCommit": "0e7afb37ba3ac73aa074f6c02dd242e5c7826232"
+  "evidenceCommit": "f79dbb4b5b81918c11d14ec4c0fd3def64c06969"
 }
