@@ -51,7 +51,16 @@ Backend 64/0/0, Lint 0 auf Baum `7563a881` – exakt passend zum veröffentlicht
 
 ## 5. Prüfnachweise Abschlussstand
 
-@@GATES@@
+Eigene Läufe, Quelle `0830ad68fc0625bd7cadf84214b77f329685c57c` (Belege: `docs/evidence/apk43-closeout-20261105/`):
+
+| Gate | Ergebnis |
+| --- | --- |
+| Android compile + Unit/UI + Lint (QA-Flags, versionCode 43, ARM64) | BUILD SUCCESSFUL · 3248 Tests / 3229 PASS / 0 FAIL / 19 SKIP · Lint: No issues found |
+| Pflicht-Suiten des Publishers | GREEN (Shizuku 14+2, Controls 10, IntentRouter 5, HybridMemory 6) |
+| Node full (24.22.1) | PASS · 2413 / 2376 PASS / 0 FAIL / 37 SKIP · Quelle unverändert |
+| Backend (npm ci, Lock 8.7.1) | 64/64 (auf `6ab4c67a`, `backend/` identisch) |
+| CCC1-Verifier | Node 24: 37/37; Node 22: explizit abgelehnt (neuer Test) |
+| Unsigniertes assembleRelease, Signatur, Veröffentlichung, Fold7 | **nicht ausgeführt** (Render-Publisher führt QA + Signatur aus) |
 
 ## 6. Veröffentlichung Code 43 – offen
 
