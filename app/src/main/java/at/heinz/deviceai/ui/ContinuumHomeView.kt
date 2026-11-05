@@ -513,10 +513,11 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         if (hologram.parent !== this) return
         val shell = if (jarvisShellStage) shellGeometry(widthPx, heightPx) else null
         val stage = shell?.get(JarvisShellLayout.Slot.AVATAR)
-        val head = shell?.headBounds
+        val head = shell?.headStage ?: shell?.headBounds
         val orb = shell?.orbBounds
         if (stage == null || head == null || orb == null) {
             hologram.setCockpitRegions(null, null)
+            hologram.setHeadFraming(.5f, 1f)
             return
         }
         val originX = (stage.left * density).toInt(); val originY = (stage.top * density).toInt()
@@ -526,6 +527,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
         // The latest reference has no owner card reserving half the face viewport.
         hologram.setCockpitRegions(local(head), local(orb))
+        hologram.setHeadFraming(shell.headAnchorX, shell.headCloseUp)
     }
 
     private fun shellGeometry(widthPx: Int, heightPx: Int): JarvisShellLayout.Shell? {
@@ -578,12 +580,12 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         shell.grid?.areas?.get(JarvisCockpitGrid.Area.BRAND)?.let { box ->
             val h = maxOf(48f, box.height)
             val top = maxOf(0f, box.centerY - h / 2f)
-            add("header:home", "home", "Device AI Continuum: Home", box.copy(top = top, bottom = top + h))
+            add("header:home", "home", "Device AI Continuum: Start", box.copy(top = top, bottom = top + h))
         }
         shell.grid?.areas?.get(JarvisCockpitGrid.Area.MODE_PILL)?.let { box ->
             val h = maxOf(48f, box.height)
             val top = maxOf(0f, box.centerY - h / 2f)
-            add("header:mode", "avatar-appearance", "JARVIS Mode: Darstellung", box.copy(top = top, bottom = top + h))
+            add("header:mode", "avatar-appearance", "JARVIS-Modus: Darstellung", box.copy(top = top, bottom = top + h))
         }
         shell.headerActionBoxes().forEach { (target, box) ->
             val label = when (target) { "notifications" -> "Benachrichtigungen"; "settings" -> "Einstellungen"; else -> "Mehr" }

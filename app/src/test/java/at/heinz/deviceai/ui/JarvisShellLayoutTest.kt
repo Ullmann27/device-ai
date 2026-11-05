@@ -44,7 +44,7 @@ class JarvisShellLayoutTest {
         assertEquals(FormFactor.FOLD_OPEN, s.formFactor)
         assertEquals(Rail.LABELLED, s.rail)
         assertTrue(s.ref5Grid)
-        assertTrue("dialog overlays the live stage", s[Slot.AVATAR]!!.contains(s[Slot.DIALOG]!!))
+        assertTrue("dialogue stays beside the free head", s[Slot.DIALOG]!!.right <= s.headBounds!!.left)
         assertNull("The obsolete owner card cannot cover the face", s[Slot.USER_CARD])
         assertEquals(5, s.tileColumns); assertEquals(2, s.tileRows)
         assertEquals(10, s.tileBoxes().size)
@@ -80,7 +80,7 @@ class JarvisShellLayoutTest {
         assertEquals(FormFactor.TABLET_LANDSCAPE, s.formFactor)
         assertTrue(s.ref5Grid)
         assertTrue(s.headBounds!!.right < s.orbBounds!!.left)
-        assertEquals(250f / 1536f * s.width, s.headBounds!!.left, .001f)
+        assertEquals(JarvisCockpitGrid.HEAD_LEFT / 1536f * s.width, s.headBounds!!.left, .001f)
         assertEquals(1212f / 1536f * s.width, s.orbBounds!!.right, .001f)
         assertEquals(5, s.tileColumns)
         assertSane(s)
@@ -92,7 +92,7 @@ class JarvisShellLayoutTest {
     }
 
     @Test fun referenceTilesFromRef5() {
-        assertEquals(listOf("Chat", "Memory", "Logic", "Research", "Agents", "Tasks", "Web", "Learning", "Device Control", "System Status"),
+        assertEquals(listOf("Gespräch", "Gedächtnis", "Denken und Planen", "Forschung", "Assistenten", "Aufgaben", "Internet", "Lernen", "Gerätesteuerung", "Systemstatus"),
             JarvisTiles.reference.map { it.label })
         assertTrue(JarvisTiles.reference.all { it.displayText == null })
         assertEquals(JarvisTiles.reference.size, JarvisShellLayout.create(884f, 760f).tileBoxes().size)

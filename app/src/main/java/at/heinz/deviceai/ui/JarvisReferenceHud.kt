@@ -38,14 +38,17 @@ object JarvisReferenceHud {
         if (width <= 0f || height <= 0f) return
         p.save()
         p.clipRect(0f, 0f, width, height)
-        JarvisNeon.halo(p, width * .34f, height * .25f, width * .25f, Colors.violet, .13f)
-        JarvisNeon.halo(p, width * .67f, height * .37f, width * .20f, Colors.cyan, .08f)
+        // 59509: saturated violet/cyan light behind the hero and a magenta glow along the lower-left edge.
+        JarvisNeon.halo(p, width * .34f, height * .25f, width * .27f, Colors.violet, .22f)
+        JarvisNeon.halo(p, width * .67f, height * .37f, width * .22f, Colors.cyan, .14f)
+        JarvisNeon.halo(p, width * .04f, height * .86f, width * .16f, Colors.magenta, .16f)
+        JarvisNeon.halo(p, width * .55f, height * .50f, width * .30f, Colors.violet, .08f)
         p.scale(width, height)
         p.setAdditive(true)
         (heroRibbons + railRibbons).forEachIndexed { i, path ->
-            p.strokePath(path, .009f, ribbonGradient, .022f)
-            p.strokePath(path, .0022f, ribbonGradient, .10f)
-            p.strokePath(path, if (i % 4 == 0) .00085f else .00035f, ribbonGradient, if (i % 4 == 0) .76f else .32f)
+            p.strokePath(path, .009f, ribbonGradient, .04f)
+            p.strokePath(path, .0022f, ribbonGradient, .16f)
+            p.strokePath(path, if (i % 4 == 0) .00085f else .00035f, ribbonGradient, if (i % 4 == 0) .92f else .48f)
         }
         p.setAdditive(false)
         p.restore()
@@ -83,25 +86,27 @@ object JarvisReferenceHud {
         val enabled = interaction != Interaction.DISABLED
         val selected = interaction == Interaction.SELECTED || interaction == Interaction.PRESSED
         val opacity = if (enabled) 1f else .42f
-        val glow = if (selected) 1f else .56f
+        // Owner correction 2026-11-05: 59509 is clearly more luminous than the earlier ref5 calibration.
+        val glow = if (selected) 1.15f else .86f
         val r = radius.coerceIn(1f, minOf(b.width, b.height) * .5f)
         val edge = Fill.Linear(b.left, b.top, b.right, b.bottom,
             intArrayOf(Argb.mix(accent, Colors.activeWhite, .22f), accent,
                 Argb.mix(endAccent, Colors.activeWhite, .18f), endAccent), floatArrayOf(0f, .28f, .73f, 1f))
         p.setAdditive(true)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 15f, edge, .035f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 7f, edge, .10f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 3.5f, edge, .22f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 16f, edge, .05f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 7f, edge, .14f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 3.5f, edge, .30f * opacity * glow)
         p.setAdditive(false)
         p.fillRoundRect(b.left, b.top, b.right, b.bottom, r,
             Fill.Linear(b.left, b.top, b.right, b.bottom,
-                intArrayOf(Argb.of(228, 4, 28, 47), Argb.of(238, 2, 10, 24), Argb.of(228, 8, 19, 43))), opacity)
+                intArrayOf(Argb.mix(Argb.of(232, 4, 30, 52), accent, .20f), Argb.of(236, 5, 16, 40),
+                    Argb.mix(Argb.of(232, 10, 20, 52), endAccent, .20f))), opacity)
         p.save(); p.clipRoundRect(b.left, b.top, b.right, b.bottom, r)
         p.fillRect(b.left, b.top, b.right, b.top + b.height * .24f,
             Fill.Linear(b.left, b.top, b.left, b.top + b.height * .24f,
-                intArrayOf(Argb.withAlpha(accent, if (selected) .28f else .14f), 0)), opacity)
-        JarvisNeon.halo(p, b.left, b.bottom, minOf(b.width * .52f, b.height * 1.8f), accent, .19f * opacity)
-        JarvisNeon.halo(p, b.right, b.bottom, minOf(b.width * .44f, b.height * 1.5f), endAccent, .16f * opacity)
+                intArrayOf(Argb.withAlpha(accent, if (selected) .34f else .22f), 0)), opacity)
+        JarvisNeon.halo(p, b.left, b.bottom, minOf(b.width * .52f, b.height * 1.8f), accent, .30f * opacity)
+        JarvisNeon.halo(p, b.right, b.bottom, minOf(b.width * .44f, b.height * 1.5f), endAccent, .28f * opacity)
         if (decorativeRibbons) {
             p.setAdditive(true)
             p.drawRaster("jarvis-reference/" +
@@ -113,13 +118,13 @@ object JarvisReferenceHud {
                 intArrayOf(Argb.withAlpha(accent, 0f), accent, endAccent))
             p.setAdditive(true)
             tileRibbons.forEachIndexed { i, path ->
-                p.strokePath(path, .018f, color, .026f * opacity)
-                p.strokePath(path, if (i == 4) .006f else .0018f, color, (if (i == 4) .68f else .27f) * opacity)
+                p.strokePath(path, .018f, color, .05f * opacity)
+                p.strokePath(path, if (i == 4) .006f else .0018f, color, (if (i == 4) .92f else .45f) * opacity)
             }
             p.setAdditive(false); p.restore()
         }
         p.restore()
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, if (selected) 1.7f else .85f, edge, opacity)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, if (selected) 1.9f else 1.25f, edge, opacity)
         p.strokeRoundRect(b.left + 1.2f, b.top + 1.2f, b.right - 1.2f, b.bottom - 1.2f,
             (r - 1f).coerceAtLeast(1f), .5f, Fill.Linear(b.left, b.top, b.right, b.bottom,
                 intArrayOf(Colors.glowCore, 0, Argb.withAlpha(endAccent, .8f))), .62f * opacity)

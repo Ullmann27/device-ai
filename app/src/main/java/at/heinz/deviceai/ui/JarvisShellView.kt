@@ -1,7 +1,14 @@
 package at.heinz.deviceai.ui
 
 import android.content.Context
+import android.content.BroadcastReceiver
+import android.content.Intent
+import android.content.IntentFilter
+import android.database.ContentObserver
 import android.graphics.Canvas
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.os.PowerManager
 import android.provider.Settings
@@ -59,11 +66,77 @@ class JarvisShellView(context: Context) : View(context) {
 
     /** Optional decorative refresh. Native head/orb own their frame clock; static HUD needs no continuous redraw. */
     var ambientMotionEnabled = true
-        set(value) { field = value; invalidate() }
+        set(value) { field = value; refreshMotion() }
 
     private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-    private fun ambientMotion(scale: Float) = ambientMotionEnabled && scale > 0f && isShown &&
+    private fun motionAllowed(scale: Float) = isAttachedToWindow && scale > 0f && isShown &&
         windowVisibility == VISIBLE && hasWindowFocus() && !powerManager.isPowerSaveMode
+    private fun ambientMotion(scale: Float) = ambientMotionEnabled && motionAllowed(scale)
+    private val ambientFrame = Runnable {
+        if (ambientMotion(animatorScale())) invalidate()
+    }
+    private val motionObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
+        override fun onChange(selfChange: Boolean) = refreshMotion()
+    }
+    private val powerReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) = refreshMotion()
+    }
+    private var motionObserverRegistered = false
+    private var powerReceiverRegistered = false
+
+    private fun refreshMotion() {
+        removeCallbacks(ambientFrame)
+        invalidate()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (!motionObserverRegistered) runCatching {
+            context.contentResolver.registerContentObserver(
+                Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE), false, motionObserver)
+            motionObserverRegistered = true
+        }.onFailure { Log.w("JarvisMotion", "Motion observer unavailable", it) }
+        if (!powerReceiverRegistered) runCatching {
+            val filter = IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
+            if (Build.VERSION.SDK_INT >= 33) context.registerReceiver(powerReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            else context.registerReceiver(powerReceiver, filter)
+            powerReceiverRegistered = true
+        }.onFailure { Log.w("JarvisMotion", "Power observer unavailable", it) }
+        refreshMotion()
+    }
+
+    override fun onDetachedFromWindow() {
+        removeCallbacks(ambientFrame)
+        if (motionObserverRegistered) {
+            runCatching { context.contentResolver.unregisterContentObserver(motionObserver) }
+            motionObserverRegistered = false
+        }
+        if (powerReceiverRegistered) {
+            runCatching { context.unregisterReceiver(powerReceiver) }
+            powerReceiverRegistered = false
+        }
+        super.onDetachedFromWindow()
+    }
+
+    override fun onVisibilityAggregated(isVisible: Boolean) {
+        super.onVisibilityAggregated(isVisible)
+        if (isAttachedToWindow) refreshMotion()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (isAttachedToWindow) refreshMotion()
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (isAttachedToWindow) refreshMotion()
+    }
+
+    override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
+        super.onWindowFocusChanged(hasWindowFocus)
+        if (isAttachedToWindow) refreshMotion()
+    }
 
     /** Latest shell geometry (dp) – lets Kern position its own child views on the same slots. */
     var shell: JarvisShellLayout.Shell? = null
@@ -91,13 +164,15 @@ class JarvisShellView(context: Context) : View(context) {
         painter.begin(canvas); glass.begin(canvas, d, width, height)
         textPainter.fontScale = font
         canvas.save(); canvas.scale(d, d)
-        JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, now, deferForeground = true)
+        val sceneTime = if (ambientMotion(scale)) now else 0L
+        JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true)
         canvas.restore()
         onFrameDrawn?.invoke()
         val total = JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, s.boxes.size + s.tileBoxes().size, animatorScale = scale)
         // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
-        if (startMs >= 0 && elapsed < total) postInvalidateOnAnimation()
-        else if (ambientMotion(scale)) postInvalidateDelayed(66L)
+        removeCallbacks(ambientFrame)
+        if (motionAllowed(scale) && startMs >= 0 && elapsed < total) postInvalidateOnAnimation()
+        else if (ambientMotion(scale)) postDelayed(ambientFrame, 66L)
         if (frameLogging) frames.onDrawn(SystemClock.elapsedRealtimeNanos() - drawStart(now))
     }
 
