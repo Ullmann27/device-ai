@@ -13,16 +13,24 @@ import kotlin.math.sin
  * with reduced motion the caller passes a constant time and nothing moves.
  */
 object JarvisHeadAura {
-    /** Approximate face centre of the anchored close-up framing inside the head stage. */
-    fun faceCenter(stage: Box, anchorX: Float = .5f): Pair<Float, Float> =
-        stage.left + stage.width * anchorX to stage.top + stage.height * .45f
+    /**
+     * Approximate face centre of the anchored close-up framing inside the head stage. [headScale] is the live 3D
+     * window's head size relative to the calibrated close-up (AvatarFraming); the crown margin is fixed, so the face
+     * centre moves towards the top by the same factor.
+     */
+    fun faceCenter(stage: Box, anchorX: Float = .5f, headScale: Float = 1f): Pair<Float, Float> =
+        stage.left + stage.width * anchorX to stage.top + stage.height * .45f * validScale(headScale)
+
+    private fun validScale(scale: Float) = if (scale.isFinite() && scale > 0f) scale.coerceAtMost(1f) else 1f
 
     private fun wave(t: Float, period: Float, phase: Float = 0f) = sin(2f * Math.PI.toFloat() * t / period + phase)
 
-    fun draw(p: ContinuumPainter, stage: Box, anchorX: Float = .5f, t: Float = 0f, enabled: Boolean = true) {
+    fun draw(p: ContinuumPainter, stage: Box, anchorX: Float = .5f, t: Float = 0f, enabled: Boolean = true,
+             headScale: Float = 1f) {
         if (!enabled || stage.width <= 8f || stage.height <= 8f || !t.isFinite()) return
-        val (cx, cy) = faceCenter(stage, anchorX)
-        val h = stage.height
+        val (cx, cy) = faceCenter(stage, anchorX, headScale)
+        // Rings and arcs are calibrated to the stage height at headScale 1; they follow the fitted head size.
+        val h = stage.height * validScale(headScale)
         // Soft back light: violet left/top, cyan right – the reference's two-tone hologram.
         JarvisSceneFills.halo(p, cx - h * .08f, cy - h * .06f, h * .62f, Colors.violet, .26f)
         JarvisSceneFills.halo(p, cx + h * .12f, cy + h * .04f, h * .46f, Colors.cyan, .14f)

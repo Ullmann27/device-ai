@@ -9,8 +9,16 @@ import at.heinz.deviceai.avatar.Viseme
 class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegrees: Double = 0.0) {
     private val indices = targetNames.withIndex().associate { it.value to it.index }
     val weights = FloatArray(targetNames.size)
+    /** Total head orientation (degrees). The renderer splits it into the Neck and Head joints, see [neckYaw]. */
     var headYaw = 0f; private set
     var headPitch = 0f; private set
+    /**
+     * Part of [headYaw]/[headPitch] carried by the Neck joint; the Head joint carries the remainder. The packaged
+     * face skin blends Neck→Head inside the chin/lower-lip band, so turning only the Head joint stretched that band
+     * (measured edge strain up to 133 %) and the jaw looked detached. Splitting the turn keeps the face orientation.
+     */
+    var neckYaw = 0f; private set
+    var neckPitch = 0f; private set
     var eyeYaw = 0f; private set
     var eyePitch = 0f; private set
     var jawPitch = 0f; private set
@@ -60,7 +68,7 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             AvatarExpression.CONCERNED -> weight("BrowDown", .28f)
             AvatarExpression.NEUTRAL -> Unit
         }
-        if (!motion) { visemeBlend.fill(0f); lastSeconds = Float.NaN; return }
+        if (!motion) { visemeBlend.fill(0f); lastSeconds = Float.NaN; splitNeck(); return }
         idleMotion.update(seconds)
         // Cosmetic idle motion, not observed gaze or invented speech/work. The existing view
         // owns the clock and stops it on pause/reduced motion. Actual task/observed gaze wins.
@@ -105,6 +113,12 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         weight("JawOpen", (jaw - renderedOpening).coerceAtLeast(0f))
         jawPitch = maxOf(jaw, renderedOpening) * JAW_BONE_DEGREES
         weight("BlinkLeft", idleMotion.blinkWeight); weight("BlinkRight", idleMotion.blinkWeight)
+        splitNeck()
+    }
+
+    private fun splitNeck() {
+        neckYaw = headYaw * NECK_SHARE
+        neckPitch = headPitch * NECK_SHARE
     }
 
     companion object {
@@ -125,6 +139,16 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         const val EYE_MAX_PITCH_DEGREES = 20f
         const val BREATH_PITCH_DEGREES = .5f
         const val BREATH_PERIOD_S = 4.6
+        /**
+         * Share of the head turn carried by the Neck joint. Measured on the packaged GLB (linear-blend skinning,
+         * renderer rotation formula, poses up to the full range): 0.65 balances the neck band (y .12–.20 m) and the
+         * chin band (y .20–.27 m); worst-pose p99 edge strain falls from 95 % (Head only) to about 30 %.
+         */
+        const val NECK_SHARE = .65f
+        /** Reachable total head rotation: full gaze plus idle sway and breathing. The camera framing reserves it. */
+        const val MAX_HEAD_YAW_DEGREES = HEAD_YAW_DEGREES + IDLE_HEAD_GAIN * AvatarIdleMotion.HEAD_YAW_AMPLITUDE
+        const val MAX_HEAD_PITCH_DEGREES = HEAD_PITCH_DEGREES + IDLE_HEAD_GAIN * AvatarIdleMotion.HEAD_PITCH_AMPLITUDE +
+            BREATH_PITCH_DEGREES
     }
 
     private fun finite(value: Float, min: Float, max: Float) = if (value.isFinite()) value.coerceIn(min, max) else 0f

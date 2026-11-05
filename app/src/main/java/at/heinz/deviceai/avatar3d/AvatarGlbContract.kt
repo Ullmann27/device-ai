@@ -12,13 +12,28 @@ object AvatarGlbContract {
     val TARGETS = listOf("SIL", "PP", "FF", "TH", "DD", "KK", "CH", "SS", "NN", "RR", "AA", "E", "I", "O", "U",
         "BlinkLeft", "BlinkRight", "BrowUp", "BrowDown", "Smile", "JawOpen")
     val NODES = listOf("AvatarRoot", "Neck", "Head", "EyeLeft", "EyeRight", "Jaw")
+    /**
+     * [reachLeft]/[reachRight]: camera-horizontal extent of the head left/right of [centerX] over the complete pose
+     * range the mapper can produce (Neck+Head turn, see [AvatarMorphMapper.MAX_HEAD_YAW_DEGREES]). The framing keeps
+     * this reach inside the asymmetric cockpit window. Defaults keep hand-built foci symmetric.
+     */
     data class Focus(val centerX: Double, val centerY: Double, val centerZ: Double, val halfWidth: Double,
-        val halfHeight: Double, val azimuthDegrees: Double = 0.0) {
+        val halfHeight: Double, val azimuthDegrees: Double = 0.0,
+        val reachLeft: Double = halfWidth, val reachRight: Double = halfWidth,
+        /** Rest face silhouette (chin to crown): leftmost camera-x relative to [centerX] per height band. */
+        val face: FaceProfile? = null) {
         /** Bust framing includes the neck and upper shoulders; only the outer torso is cropped. */
         fun verticalHalfSpan(aspect: Double): Double {
             require(aspect.isFinite() && aspect > 0)
             return maxOf(halfHeight, halfWidth / aspect) * 1.08
         }
+    }
+    /**
+     * [left] holds, for each world-height band `[bottom + i·step, bottom + (i + 1)·step)`, the leftmost projected
+     * x (negative = left of the camera axis) of the rest face in that band, widened by the reach margin.
+     */
+    data class FaceProfile(val bottom: Double, val step: Double, val left: List<Double>) {
+        init { require(bottom.isFinite() && step.isFinite() && step > 0 && left.isNotEmpty() && left.all { it.isFinite() }) }
     }
     data class Metadata(val targets: List<String>, val morphNodeNames: List<String>, val focus: Focus)
 
@@ -136,6 +151,10 @@ object AvatarGlbContract {
         val portraitCos = kotlin.math.cos(portraitAngle); val portraitSin = kotlin.math.sin(portraitAngle)
         var minPortraitX = Double.POSITIVE_INFINITY; var maxPortraitX = Double.NEGATIVE_INFINITY
         var maxHeadY = Double.NEGATIVE_INFINITY
+        // World positions (x, y, z interleaved) of the rendered face from the chin line up, for the pose fit below.
+        // Chin line: 30 % of the Neck→Head joint distance below the Head joint (packaged rig: 0.2015 m; chin ≈ 0.20 m).
+        val chinY = headY - (headY - neckY) * .30
+        val facePoints = ArrayList<Double>()
         var minBustY = Double.POSITIVE_INFINITY
         var minBustX = Double.POSITIVE_INFINITY; var maxBustX = Double.NEGATIVE_INFINITY
         val skins = root.getJSONArray("skins"); require(skins.length() in 1..8)
@@ -194,6 +213,9 @@ object AvatarGlbContract {
                             val x = vertex[0] * world[0] + world[3]
                             minBustY = minOf(minBustY, y)
                             minBustX = minOf(minBustX, x); maxBustX = maxOf(maxBustX, x)
+                            if (y >= chinY) {
+                                facePoints += x; facePoints += y; facePoints += vertex[2] * world[2] + world[5]
+                            }
                             if (y >= headY) {
                                 val z = vertex[2] * world[2] + world[5]
                                 minHeadX = minOf(minHeadX, x); maxHeadX = maxOf(maxHeadX, x)
@@ -234,8 +256,94 @@ object AvatarGlbContract {
         // Frame the real projected head, with 10 mm of pose margin. Fitting the
         // shoulder width made the head occupy only 53% of the narrow cockpit.
         // The neck remains in the vertical frame; the broad torso can crop.
+        val neckFrame = worldFrame(names.indexOf("Neck"))
+        val headFrame = worldFrame(names.indexOf("Head"))
+        val fit = poseFit(facePoints, neckFrame, headFrame, centerX, centerZ, portraitAzimuth)
         val focus = Focus(centerX, (bottom + top) / 2, centerZ,
-            (maxPortraitX - minPortraitX) / 2 + .010, (top - bottom) / 2, portraitAzimuth)
+            (maxPortraitX - minPortraitX) / 2 + .010, (top - bottom) / 2, portraitAzimuth,
+            fit.reachLeft, fit.reachRight, fit.face)
         return Metadata(requireNotNull(targets) { "No morph mesh" }, morphNodes, focus)
+    }
+
+    /** Antialiasing and bloom fringe kept inside the viewport beyond the posed silhouette (metres). */
+    private const val REACH_MARGIN = .004
+
+    private class PoseFit(val reachLeft: Double, val reachRight: Double, val face: FaceProfile)
+
+    /** Height bands of [FaceProfile] (packaged rig: about 5 mm each). */
+    private const val FACE_BANDS = 40
+
+    /**
+     * Camera-horizontal reach and posed face silhouette over the mapper's full pose range, mirroring
+     * FilamentAvatarRenderer: world = T(neck)·R(share·turn) · T(head − neck)·R((1 − share)·turn) with
+     * R(yaw, pitch) = Ry(yaw)·Rx(pitch). Every face vertex is visited fully Head-driven and Neck-driven; a vertex
+     * of the Neck→Head blend band is a convex mix of those and its rest position, so the reach is an upper bound.
+     * The silhouette is the rest face. Runs once per validation (asset thread), never per frame.
+     */
+    private fun poseFit(points: List<Double>, neck: DoubleArray, head: DoubleArray, centerX: Double,
+                        centerZ: Double, azimuthDegrees: Double): PoseFit {
+        require(points.size >= 3 && points.size % 3 == 0) { "No face vertices" }
+        val maxYaw = AvatarMorphMapper.MAX_HEAD_YAW_DEGREES.toDouble()
+        val maxPitch = AvatarMorphMapper.MAX_HEAD_PITCH_DEGREES.toDouble()
+        val share = AvatarMorphMapper.NECK_SHARE.toDouble()
+        val azimuth = Math.toRadians(azimuthDegrees)
+        val cosA = kotlin.math.cos(azimuth); val sinA = kotlin.math.sin(azimuth)
+        // Head pivot relative to the Neck pivot (rest rotations are identity, checked above).
+        val hx = head[3] - neck[3]; val hy = head[4] - neck[4]; val hz = head[5] - neck[5]
+        val v = DoubleArray(3)
+        fun rotate(yawDegrees: Double, pitchDegrees: Double) {
+            val p = Math.toRadians(pitchDegrees); val y = Math.toRadians(yawDegrees)
+            val cp = kotlin.math.cos(p); val sp = kotlin.math.sin(p); val cy = kotlin.math.cos(y); val sy = kotlin.math.sin(y)
+            val ry = v[1] * cp - v[2] * sp; val rz = v[1] * sp + v[2] * cp
+            v[1] = ry; v[2] = rz
+            val rx = v[0] * cy + v[2] * sy; val rz2 = -v[0] * sy + v[2] * cy
+            v[0] = rx; v[2] = rz2
+        }
+        /** Visits every posed vertex as (projected x, world y). */
+        fun forEachPosed(visit: (Double, Double) -> Unit) {
+            for (yawStep in -4..4) for (pitchStep in -2..2) {
+                val yaw = maxYaw * yawStep / 4.0; val pitch = maxPitch * pitchStep / 2.0
+                var i = 0
+                while (i < points.size) {
+                    // Full chain (Head-weighted vertices) ...
+                    v[0] = points[i] - head[3]; v[1] = points[i + 1] - head[4]; v[2] = points[i + 2] - head[5]
+                    rotate(yaw * (1 - share), pitch * (1 - share))
+                    v[0] += hx; v[1] += hy; v[2] += hz
+                    rotate(yaw * share, pitch * share)
+                    visit((v[0] + neck[3] - centerX) * cosA - (v[2] + neck[5] - centerZ) * sinA, v[1] + neck[4])
+                    // ... and the Neck turn alone (Neck-weighted part of the chin blend band).
+                    v[0] = points[i] - neck[3]; v[1] = points[i + 1] - neck[4]; v[2] = points[i + 2] - neck[5]
+                    rotate(yaw * share, pitch * share)
+                    visit((v[0] + neck[3] - centerX) * cosA - (v[2] + neck[5] - centerZ) * sinA, v[1] + neck[4])
+                    i += 3
+                }
+            }
+        }
+        var right = Double.NEGATIVE_INFINITY; var left = Double.NEGATIVE_INFINITY
+        var low = Double.POSITIVE_INFINITY; var high = Double.NEGATIVE_INFINITY
+        forEachPosed { x, y ->
+            if (x > right) right = x
+            if (-x > left) left = -x
+            if (y < low) low = y
+            if (y > high) high = y
+        }
+        require(left.isFinite() && right.isFinite() && left > 0 && right > 0 && high > low) { "Invalid head reach" }
+        // Rest silhouette: the composition the owner sees between turns (exact rest positions, no pose).
+        var restLow = Double.POSITIVE_INFINITY; var restHigh = Double.NEGATIVE_INFINITY
+        var i = 1
+        while (i < points.size) { restLow = minOf(restLow, points[i]); restHigh = maxOf(restHigh, points[i]); i += 3 }
+        val step = (restHigh - restLow) / FACE_BANDS * (1 + 1e-9)
+        val bandLeft = DoubleArray(FACE_BANDS) { Double.POSITIVE_INFINITY }
+        i = 0
+        while (i < points.size) {
+            val x = (points[i] - centerX) * cosA - (points[i + 2] - centerZ) * sinA
+            val band = ((points[i + 1] - restLow) / step).toInt().coerceIn(0, FACE_BANDS - 1)
+            if (x < bandLeft[band]) bandLeft[band] = x
+            i += 3
+        }
+        // A band without vertices inherits its lower neighbour, so the silhouette stays closed.
+        for (band in bandLeft.indices) if (!bandLeft[band].isFinite()) bandLeft[band] = if (band > 0) bandLeft[band - 1] else -left
+        return PoseFit(left + REACH_MARGIN, right + REACH_MARGIN,
+            FaceProfile(restLow, step, bandLeft.map { it - REACH_MARGIN }))
     }
 }

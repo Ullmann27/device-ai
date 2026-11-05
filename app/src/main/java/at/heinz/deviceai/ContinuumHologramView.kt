@@ -205,11 +205,45 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var headAnchorX = .5f
     private var headCloseUp = 1f
 
-    fun setHeadFraming(anchorX: Float, closeUp: Float) {
+    private var headKeepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null
+    private var auraFocus: AvatarGlbContract.Focus? = null
+    private var auraWidth = -1f
+    private var auraHeight = -1f
+    private var auraAnchor = Float.NaN
+    private var auraCloseUp = Float.NaN
+    private var auraKeepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null
+    private var auraScale = 1f
+    private var auraAnchorEffective = .5f
+
+    /**
+     * Head size and effective anchor of the live 3D window (the calibrated values for the 2D head), so the aura
+     * rings stay around the fitted head. Same [at.heinz.deviceai.avatar3d.AvatarFraming] window as the renderer;
+     * recomputed only when the stage, the framing or the asset changes, never allocated per frame.
+     */
+    private fun updateAuraFraming() {
+        val focus = if (head3dEnabled && native3dDrawn) assetMetadata?.focus else null
+        val w = headDrawBounds.width(); val h = headDrawBounds.height()
+        if (focus == null || w <= 0f || h <= 0f) { auraScale = 1f; auraAnchorEffective = headAnchorX; return }
+        if (focus !== auraFocus || w != auraWidth || h != auraHeight || headAnchorX != auraAnchor ||
+            headCloseUp != auraCloseUp || headKeepOut != auraKeepOut) {
+            auraFocus = focus; auraWidth = w; auraHeight = h; auraAnchor = headAnchorX; auraCloseUp = headCloseUp
+            auraKeepOut = headKeepOut
+            val window = at.heinz.deviceai.avatar3d.AvatarFraming.window(focus, (w / h).toDouble(),
+                headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut)
+            auraScale = window.headScale.toFloat(); auraAnchorEffective = window.anchorX.toFloat()
+        }
+    }
+
+    /**
+     * Cockpit framing of the live head. [keepOut]: stage-normalized area (the dialogue card) the posed face must not
+     * enter; the 3D window may then move the head towards the stage centre before it shrinks it.
+     */
+    fun setHeadFraming(anchorX: Float, closeUp: Float, keepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null) {
         require(anchorX.isFinite() && anchorX in .2f..1f && closeUp.isFinite() && closeUp in .4f..1f)
-        if (headAnchorX == anchorX && headCloseUp == closeUp) return
+        if (headAnchorX == anchorX && headCloseUp == closeUp && headKeepOut == keepOut) return
         headAnchorX = anchorX
         headCloseUp = closeUp
+        headKeepOut = keepOut
         invalidate()
     }
 
@@ -598,16 +632,17 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (headEnabled && cockpitHeadBounds != null) {
             val t = if (canAnimateFrame()) avatarSeconds else 0f
             at.heinz.deviceai.ui.JarvisEnergyFlows.draw(painter, width / density, height / density, t, energy)
+            updateAuraFraming()
             at.heinz.deviceai.ui.JarvisHeadAura.draw(painter, at.heinz.deviceai.ui.JarvisShellLayout.Box(
                 headDrawBounds.left / density, headDrawBounds.top / density, headDrawBounds.right / density,
-                headDrawBounds.bottom / density), headAnchorX, t)
+                headDrawBounds.bottom / density), auraAnchorEffective, t, headScale = auraScale)
         }
         if (headEnabled) {
             val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
             if (canDisplay3d() && native3d != null) {
                 runCatching {
                     native3d!!.setQuality(renderBudget().reducedBloom)
-                    native3d!!.setFraming(headAnchorX, headCloseUp)
+                    native3d!!.setFraming(headAnchorX, headCloseUp, headKeepOut)
                     native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0)
                 }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }

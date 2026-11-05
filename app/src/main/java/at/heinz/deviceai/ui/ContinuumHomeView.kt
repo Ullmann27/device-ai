@@ -544,7 +544,22 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
         // The latest reference has no owner card reserving half the face viewport.
         hologram.setCockpitRegions(local(head), local(orb))
-        hologram.setHeadFraming(shell.headAnchorX, shell.headCloseUp)
+        hologram.setHeadFraming(shell.headAnchorX, shell.headCloseUp, dialogKeepOut(shell, head))
+    }
+
+    /**
+     * The dialogue card inside the transparent head stage, normalized to that stage, plus a small gap. The live 3D
+     * head is drawn above the shell; when a narrow stage (open Fold7) re-solves the head window, the resting face
+     * (chin to crown) stays out of the card while the dissolving neck may pass behind it, as in the reference.
+     * Null outside the reference cockpit.
+     */
+    private fun dialogKeepOut(shell: JarvisShellLayout.Shell, stage: JarvisShellLayout.Box): at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? {
+        val dialog = shell[JarvisShellLayout.Slot.DIALOG] ?: return null
+        if (shell.headStage == null || stage.width <= 0f || stage.height <= 0f) return null
+        val gap = 6f
+        return at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut(
+            ((dialog.right + gap - stage.left) / stage.width).toDouble(),
+            ((dialog.top - gap - stage.top) / stage.height).toDouble())
     }
 
     private fun shellGeometry(widthPx: Int, heightPx: Int): JarvisShellLayout.Shell? {

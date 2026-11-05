@@ -1,8 +1,8 @@
 package at.heinz.deviceai.avatar3d
 
 /**
- * Pure mirror of FilamentAvatarRenderer's current ORTHO projection math.
- * Does not claim to know the animated GLB vertex positions or skin weights.
+ * Pixel view of FilamentAvatarRenderer's ORTHO projection (same [AvatarFraming] window).
+ * Does not itself know the animated GLB vertex positions or skin weights.
  * Feed projected camera-relative vertex bounds from a separate rig probe.
  */
 internal object OrthographicCockpitProbe {
@@ -38,23 +38,26 @@ internal object OrthographicCockpitProbe {
 
     data class Clip(val leftOverhangPx: Double, val rightOverhangPx: Double, val fits: Boolean)
 
+    /** Delegates to [AvatarFraming], the function the renderer itself uses; reach defaults to the half width. */
     fun fromCurrentFilamentMath(
         widthPx: Int,
         heightPx: Int,
         focusHalfWidthWorld: Double,
         focusHalfHeightWorld: Double,
         closeUp: Double,
-        anchorX: Double
+        anchorX: Double,
+        reachLeftWorld: Double = focusHalfWidthWorld,
+        reachRightWorld: Double = focusHalfWidthWorld
     ): Window {
         require(widthPx > 0 && heightPx > 0)
         require(focusHalfWidthWorld.isFinite() && focusHalfWidthWorld > 0.0)
         require(focusHalfHeightWorld.isFinite() && focusHalfHeightWorld > 0.0)
+        require(reachLeftWorld.isFinite() && reachLeftWorld > 0.0 && reachRightWorld.isFinite() && reachRightWorld > 0.0)
         require(closeUp.isFinite() && closeUp in 0.4..1.0)
         require(anchorX.isFinite() && anchorX in 0.2..1.0)
-        val aspect = widthPx.toDouble() / heightPx
-        val vertical = maxOf(focusHalfHeightWorld, focusHalfWidthWorld / aspect) * 1.08 * closeUp
-        val horizontal = vertical * aspect
-        return Window(widthPx, heightPx, -2.0 * horizontal * anchorX,
-            2.0 * horizontal * (1.0 - anchorX), -vertical, vertical)
+        val focus = AvatarGlbContract.Focus(0.0, 0.0, 0.0, focusHalfWidthWorld, focusHalfHeightWorld, 0.0,
+            reachLeftWorld, reachRightWorld)
+        val fitted = AvatarFraming.window(focus, widthPx.toDouble() / heightPx, anchorX, closeUp)
+        return Window(widthPx, heightPx, fitted.left, fitted.right, -fitted.halfHeight, fitted.halfHeight)
     }
 }

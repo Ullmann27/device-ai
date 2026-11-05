@@ -34,12 +34,19 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     @Volatile private var closeUp = 1.0
     @Volatile private var framingVersion = 0
     private var appliedFraming = -1
+    /** Projection window of the current viewport/framing; recomputed only when either changes. */
+    private var window: AvatarFraming.Window? = null
 
-    /** Same rig, morphs and asset; only the orthographic window moves (asymmetric frustum) and tightens. */
-    fun setFraming(anchorX: Float, closeUp: Float) {
+    @Volatile private var keepOut: AvatarFraming.KeepOut? = null
+
+    /**
+     * Same rig, morphs and asset; only the orthographic window moves (asymmetric frustum) and tightens.
+     * [keepOut]: stage area the posed face must not enter (the cockpit dialogue card), see [AvatarFraming].
+     */
+    fun setFraming(anchorX: Float, closeUp: Float, keepOut: AvatarFraming.KeepOut? = null) {
         require(anchorX.isFinite() && anchorX in .2f..1f && closeUp.isFinite() && closeUp in .4f..1f)
-        if (this.anchorX == anchorX.toDouble() && this.closeUp == closeUp.toDouble()) return
-        this.anchorX = anchorX.toDouble(); this.closeUp = closeUp.toDouble(); framingVersion++
+        if (this.anchorX == anchorX.toDouble() && this.closeUp == closeUp.toDouble() && this.keepOut == keepOut) return
+        this.anchorX = anchorX.toDouble(); this.closeUp = closeUp.toDouble(); this.keepOut = keepOut; framingVersion++
     }
     private var bloomSettings: com.google.android.filament.View.BloomOptions? = null
     private var reducedQuality = false
@@ -91,7 +98,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             require(e.renderableManager.getMorphTargetCount(instance) == metadata.targets.size)
             instance
         }.toIntArray()
-        for (name in listOf("Head", "EyeLeft", "EyeRight", "Jaw")) {
+        for (name in listOf("Neck", "Head", "EyeLeft", "EyeRight", "Jaw")) {
             val instance = e.transformManager.getInstance(a.getFirstEntityByName(name)); require(instance != 0)
             joints[name] = Joint(instance, e.transformManager.getTransform(instance, FloatArray(16)))
         }
@@ -160,21 +167,20 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         if (viewportWidth != width || viewportHeight != height || appliedFraming != framingVersion) {
             viewportWidth = width; viewportHeight = height; appliedFraming = framingVersion
             view!!.viewport = Viewport(0, 0, width, height)
-            val aspect = width.toDouble() / height
-            val vertical = focus.verticalHalfSpan(aspect) * closeUp
-            val horizontal = vertical * aspect
-            camera!!.setProjection(Camera.Projection.ORTHO, -2.0 * horizontal * anchorX, 2.0 * horizontal * (1.0 - anchorX),
-                -vertical, vertical, .05, 10.0)
+            // Same window as the 2D head aura and the probe; it keeps the full pose reach inside the stage.
+            val fitted = AvatarFraming.window(focus, width.toDouble() / height, anchorX, closeUp, keepOut)
+            window = fitted
+            camera!!.setProjection(Camera.Projection.ORTHO, fitted.left, fitted.right,
+                -fitted.halfHeight, fitted.halfHeight, .05, 10.0)
         }
         mapper.update(pose, seconds, motion)
         applyGlow(if (motion) pose.speakEnergy else 0f)
         // Cosmetic view drift uses the existing clock. Reduced motion restores
         // the same rest camera immediately; it does not change the actual pose.
-        val full = focus.verticalHalfSpan(width.toDouble() / height)
-        val vertical = full * closeUp
+        val fitted = window!!
         // A close-up keeps the crown margin and crops from below (neck and shoulders dissolve in the view mask).
-        val centerY = focus.centerY + (full - vertical)
-        val px = 2.0 * vertical / height
+        val centerY = fitted.cameraCenterY
+        val px = 2.0 * fitted.halfHeight / height
         val moving = motion && seconds.isFinite()
         val dy = if (moving) kotlin.math.sin(seconds * (2.0 * Math.PI / 4.0)) * 2.5 * 2.6 * px else 0.0
         val distance = 2.0 + if (moving) kotlin.math.sin(seconds * .21) * .06 else 0.0
@@ -183,7 +189,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             focus.centerZ + kotlin.math.cos(cameraAngle) * distance,
             focus.centerX, centerY - dy, focus.centerZ, 0.0, 1.0, 0.0)
         for (instance in morphInstances) e.renderableManager.setMorphWeights(instance, mapper.weights, 0)
-        rotate("Head", mapper.headPitch, mapper.headYaw)
+        // The neck carries most of the turn, the head the rest: the skin blends Neck→Head inside the chin band.
+        rotate("Neck", mapper.neckPitch, mapper.neckYaw)
+        rotate("Head", mapper.headPitch - mapper.neckPitch, mapper.headYaw - mapper.neckYaw)
         rotate("EyeLeft", mapper.eyePitch, mapper.eyeYaw); rotate("EyeRight", mapper.eyePitch, mapper.eyeYaw)
         rotate("Jaw", mapper.jawPitch, 0f)
         asset!!.instance.animator.updateBoneMatrices()
