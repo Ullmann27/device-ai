@@ -4,7 +4,7 @@
   "status": "READY_FOR_NEXT_RUN",
   "owner": null,
   "leaseExpiresAtUtc": null,
-  "updatedAtUtc": "2026-11-05T03:38:07.422Z",
+  "updatedAtUtc": "2026-11-05T04:30:16Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -58,7 +58,7 @@
       "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "R13 produced a source-bound six-file LM1 Kotlin compile and synthetic call-path profiler stored in 4 hash-verified GitHub Base64 pieces (12/12 Node fail-closed tests PASS). Full six-source Kotlin compilation and synthetic execution NOT_RUN due missing authorized checkout. Next run: use official authenticated checkout or approved source transfer, verify exact commit-bound files, reconstruct archive, run full Kotlin graph + 8 fixture cases and independent trace parity before measuring representative real LM1 caller frequency. Only then preregister a new CPU/alloc candidate.",
+  "next": "R14 independently validated the 4-piece R13 remote tar.gz SHA256, extracted all 3 tools and replayed 12/12 Node tests from the exact archive. Full original six-source Kotlin compile and synthetic 8-case probe still NOT_RUN without authenticated source checkout (git DNS unavailable). Next: authorized exact HEAD-bound checkout, compile/execute original vs instrumented Kotlin, measure representative LM1 real host calls; only then preregister new bounded A/A/A-B performance candidate.",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -67,8 +67,8 @@
     "no other-team branch mutation",
     "no repeated favorable-sample search"
   ],
-  "lastOwner": "tuning-sequential-r13-20261105T0331Z",
-  "completedRound": "R13",
+  "lastOwner": "tuning-sequential-r14-20261105T0427Z",
+  "completedRound": "R14",
   "lastPublishedProductionCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
   "completedMilestones": 4,
   "verification": {
@@ -88,8 +88,8 @@
     },
     {
       "target": "Real source LM1 on-host caller profile and full-graph Kotlin compile",
-      "status": "PROFILER_ARCHIVED_12_NODE_TESTS_PASS_FULL_GRAPH_NOT_RUN",
-      "gate": "Official R13 archived profiler source and negative gates available with verified per-blob SHA; authenticated checkout unavailable in current runtime. Need full original Kotlin compile and instrumented parity before actual workload profiling."
+      "status": "REMOTE_PROFILER_REPLAY_12_TESTS_PASS_FULL_GRAPH_NOT_RUN",
+      "gate": "R14: GitHub R13 archive SHA-256 and 4 original Git blob identities verified, local re-extract 3 members and replay 12/12 Node tests PASS; six-source Kotlin compile and real LM1 call count NOT_RUN without authenticated source checkout."
     },
     {
       "target": "Android/Fold7 device measured A/B",
@@ -449,5 +449,19 @@
     "android": "NOT_RUN",
     "candidate": "NONE",
     "otherPRs": "Other open PRs #523/#527 touch LmModel.kt; no integration performed"
+  },
+  "r14": {
+    "stage": "REMOTE_R13_ARCHIVE_VERIFIED_NODE_PASS",
+    "headAtAcquisition": "ce0619a5fbc4b3223777f5e8495aba49a744bdea",
+    "archiveSha256": "18613f6c765d7d499d318622d9650dabd97bd139d6030077e35dcb58894a9ddb",
+    "archiveBytes": 5007,
+    "remotePartsVerified": 4,
+    "archiveMembersExtracted": 3,
+    "nodeTests": "12/12 PASS",
+    "nodeTapSha256": "d1ad777199c57b00fe71b34ac8599e250697a81e2490642f4cd9bf1d2e78e3e8",
+    "kotlinSixSource": "NOT_RUN_NO_AUTHENTICATED_CHECKOUT",
+    "newProductionPatch": false,
+    "android": "NOT_RUN",
+    "report": "docs/research/omega/TUNING-R14-20261105.md"
   }
 }
