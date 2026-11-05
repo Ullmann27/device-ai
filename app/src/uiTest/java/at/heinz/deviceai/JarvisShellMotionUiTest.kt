@@ -154,4 +154,24 @@ class JarvisShellMotionUiTest {
         f.parent.addView(f.shell, FrameLayout.LayoutParams(-1, -1))
         assertRunning(f)
     }
+
+    @Test fun frameLoggingDoesNotKeepUnfocusedShellDrawing() = withShell { f ->
+        f.shell.frameLogging = true
+        try {
+            f.controller.windowFocusChanged(false)
+            assertStopped(f)
+            f.controller.windowFocusChanged(true)
+            assertRunning(f)
+        } finally { f.shell.frameLogging = false }
+    }
+
+    @Test fun frameLoggingHonoursReducedMotion() = withShell { f ->
+        f.shell.frameLogging = true
+        try {
+            val resolver = f.controller.get().contentResolver
+            Settings.Global.putFloat(resolver, Settings.Global.ANIMATOR_DURATION_SCALE, 0f)
+            resolver.notifyChange(Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE), null)
+            assertStopped(f)
+        } finally { f.shell.frameLogging = false }
+    }
 }
