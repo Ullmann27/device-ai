@@ -1,13 +1,13 @@
 {
   "schema": "continuum-branch-bots-development-continuation",
   "version": 1,
-  "status": "ACTIVE",
+  "status": "READY_FOR_NEXT_ITERATION",
   "repository": "Ullmann27/device-ai",
   "branch": "codex/continuum-branch-integration-bots-20261104",
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
   "ownerSession": "scheduled-20261105-0130-trace-audit",
-  "sourceSnapshot": "SELECTED_104_CODE_FILES_VERIFIED",
-  "phase": "M8_TRACE_ENV_REPRODUCED_FIX_PENDING",
+  "sourceSnapshot": "SELECTED_104_PREVIOUS_FULL_NODE_PLUS_CURRENT_4_TRACE_PATHS",
+  "phase": "M8_M9_TARGETED_SOURCE_CHECK_COMPLETE_FULL_NODE_PENDING",
   "milestones": [
     {
       "id": "M1",
@@ -101,6 +101,39 @@
       "status": "CURRENT_GATE_TRIAGED",
       "change": "Current #527 Android gate still red in recorded 3011-case run; C1 UI test fixes active under separate ownership",
       "testsExecuted": 0
+    },
+    {
+      "id": "M8",
+      "status": "TARGETED_SOURCE_CHECK",
+      "change": "Read-only discovery strips inherited GIT_TRACE* output destinations before spawning Git",
+      "red": {
+        "realGitTraceFamiliesWriting": 4,
+        "sourceFunctionInheritedTraceKeys": 4
+      },
+      "green": {
+        "realGitFixtureTests": 5,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0,
+        "sharedWithM9": true,
+        "sourceExtractedTraceKeys": 0
+      },
+      "commit": "ef48e63713fa966710647dc4eadd4da671df39a8",
+      "integratedNode": "NOT_RUN"
+    },
+    {
+      "id": "M9",
+      "status": "TARGETED_SOURCE_CHECK",
+      "change": "Existing local teamleader source-identity Git probes also strip inherited GIT_TRACE* from copy",
+      "red": {
+        "sourceFunctionInheritedTraceKeys": 4
+      },
+      "green": {
+        "sourceExtractedTraceKeys": 0,
+        "realGitFixtureTestsSharedWithM8": 5
+      },
+      "commit": "ef48e63713fa966710647dc4eadd4da671df39a8",
+      "integratedNode": "NOT_RUN"
     }
   ],
   "androidCompilation": "NOT_RUN",
@@ -139,12 +172,28 @@
     "wholeRepositoryGate": "NOT_RUN",
     "androidCompilation": "NOT_RUN",
     "deviceTest": "NOT_RUN",
-    "apk": "NOT_RUN"
+    "apk": "NOT_RUN",
+    "currentSourceNode": "NOT_RUN",
+    "m8m9": {
+      "sourceFilesParsed": 4,
+      "sourceFunctionChecks": "ORIGINAL_PASS_THROUGH_4_VS_PATCHED_ZERO_FOR_READER_AND_SCHEDULER",
+      "independentRealGitFixture": {
+        "cases": 5,
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "tapSha256": "8daae19f680b1a9baec80ef5ba3134d7720d1c3249a99e9091f003b16fc6a2e2"
+      },
+      "completeImportedNode": "NOT_RUN",
+      "android": "NOT_RUN",
+      "apk": "NOT_RUN"
+    }
   },
   "nextTasks": [
-    "Reproduce inherited Git trace environment causing disk writes; add minimal source reader env isolation regression and fix only the own branch source paths.",
-    "Run real Git fixture red/green and source-bound selected checks; keep failed or unavailable full-suite explicit.",
-    "Read back own branch and current R3/C1 heads, close ACTIVE with exact handoff and READY_FOR_NEXT_ITERATION."
+    "Run the two actual expanded Node/Git regression test files on a complete checkout at source commit ef48e63713fa966710647dc4eadd4da671df39a8, then the prior 202-case selection. The 5-case real Git fixture and source-extracted checks do not certify integrated Node tests.",
+    "Check current C1 #519 and #527 exact heads before any selective import; leave their active UI, memory, avatar and shared worker scope untouched.",
+    "Only propose the seven-path older night delta plus M8/M9 trace env changes for independent integrator review; preserve both newer worker and QA files and every original owner/release authority. No APK promotion."
   ],
   "scheduledContinuation": {
     "enabled": true,
@@ -154,10 +203,14 @@
     "activeCheckpointMustNotBeModified": true
   },
   "currentIntake": {
-    "c1": "4d74de6c5ca04582ff455356440046e9148acbb0",
-    "integration": "a6b314d3e8fac796ce7059a336bf5e79eb622ede",
-    "preimagesVerified": 7,
-    "nightDeltaNotAdopted": 7,
-    "conflictsAgainstExactPreimages": 0
-  }
+    "c1": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "integration": "19039e5b822310cd5ab1ce5cc5cb854822a1bcd3",
+    "nightDeltaAdopted": false,
+    "traceFixAdopted": false,
+    "gateOn19039": "ANDROID3032_PASS_0_FAIL_19_SKIP;NODE2362_PASS_0_FAIL_31_SKIP;BACKEND64_PASS;LINT_NEWAPI0"
+  },
+  "latestTargetedCodeCommit": "ef48e63713fa966710647dc4eadd4da671df39a8",
+  "additionalChangedPaths": [
+    ".github/continuum/local-teamleader-loop-source-preflight.test.mjs"
+  ]
 }
