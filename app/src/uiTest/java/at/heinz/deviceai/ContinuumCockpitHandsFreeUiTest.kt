@@ -16,7 +16,8 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [28], qualifiers = "w840dp-h649dp-mdpi")
+@Config(sdk = [28], qualifiers = "w840dp-h649dp-land-mdpi")
+@org.robolectric.annotation.LooperMode(org.robolectric.annotation.LooperMode.Mode.PAUSED)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ContinuumCockpitHandsFreeUiTest {
     private fun field(a: AgentActivity, name: String): Any? =
