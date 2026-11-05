@@ -1,0 +1,8 @@
+PASS at.heinz.deviceai.learning.MemoryRetrieverFuzzyAmbiguityR10Test.documentFrequencyBreaksOtherwiseAmbiguousTie
+FAIL at.heinz.deviceai.learning.MemoryRetrieverFuzzyAmbiguityR10Test.equalDistanceAndFrequencyMustAbstain: AssertionError: balk is equally close to ball and bald
+PASS at.heinz.deviceai.learning.MemoryRetrieverFuzzyAmbiguityR10Test.exactTermsStillOverrideTypoDisambiguation
+PASS at.heinz.deviceai.learning.MemoryRetrieverFuzzyAmbiguityR10Test.uniqueTypoStillRetrievesOriginalConfirmation
+PASS at.heinz.deviceai.learning.MemoryNegationIndexR10Test.distinctNegationsMustRemainDistinct
+PASS at.heinz.deviceai.learning.MemoryNegationIndexR10Test.mixedTextRetainsExistingCosineAndTimeWeight
+PASS at.heinz.deviceai.learning.MemoryNegationIndexR10Test.soleNegationSelectsOnlyExactStemAcrossReindex
+TOTAL=7 PASS=6 FAIL=1
