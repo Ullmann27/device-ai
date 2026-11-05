@@ -634,7 +634,8 @@ class ContinuumHologramView @JvmOverloads constructor(
             updateAuraFraming()
             at.heinz.deviceai.ui.JarvisHeadAura.draw(painter, at.heinz.deviceai.ui.JarvisShellLayout.Box(
                 headDrawBounds.left / density, headDrawBounds.top / density, headDrawBounds.right / density,
-                headDrawBounds.bottom / density), auraAnchorEffective, t, headScale = auraScale)
+                headDrawBounds.bottom / density), auraAnchorEffective, t,
+                headScale = auraScale, activityEnergy = energy, speechLevel = audioEnergy)
         }
         if (headEnabled) {
             val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }

@@ -25,15 +25,23 @@ object JarvisHeadAura {
 
     private fun wave(t: Float, period: Float, phase: Float = 0f) = sin(2f * Math.PI.toFloat() * t / period + phase)
 
+    /** Actual runtime energy only. */
+    internal fun activityBoost(energy: Float, speech: Float): Float {
+        val e = if (energy.isFinite()) energy.coerceIn(0f, 1f) else .18f
+        val s = if (speech.isFinite()) speech.coerceIn(0f, 1f) else 0f
+        return (((e - .18f).coerceAtLeast(0f) * .16f) + s * .15f).coerceIn(0f, .27f)
+    }
+
     fun draw(p: ContinuumPainter, stage: Box, anchorX: Float = .5f, t: Float = 0f, enabled: Boolean = true,
-             headScale: Float = 1f) {
+             headScale: Float = 1f, activityEnergy: Float = .18f, speechLevel: Float = 0f) {
         if (!enabled || stage.width <= 8f || stage.height <= 8f || !t.isFinite()) return
         val (cx, cy) = faceCenter(stage, anchorX, headScale)
-        // Rings and arcs are calibrated to the stage height at headScale 1; they follow the fitted head size.
         val h = stage.height * validScale(headScale)
-        // Soft back light: violet left/top, cyan right – the reference's two-tone hologram.
-        JarvisSceneFills.halo(p, cx - h * .08f, cy - h * .06f, h * .62f, Colors.violet, .26f)
-        JarvisSceneFills.halo(p, cx + h * .12f, cy + h * .04f, h * .46f, Colors.cyan, .14f)
+        val signal = activityBoost(activityEnergy, speechLevel)
+        JarvisSceneFills.halo(p, cx - h * .08f, cy - h * .06f, h * .62f, Colors.violet, .26f + signal)
+        JarvisSceneFills.halo(p, cx + h * .12f, cy + h * .04f, h * .46f, Colors.cyan, .14f + signal * .65f)
+        if (signal > .015f) JarvisSceneFills.halo(p, cx + h * .03f,
+            cy - h * .04f, h * .24f, Colors.glowCore, signal * .34f)
         p.setAdditive(true)
         ring(p, cx, cy - h * .12f, h * .62f, h * .13f, -14f + 3f * wave(t, 9f), Colors.magenta, Colors.violet, 1.5f,
             bead = t / 14f)
