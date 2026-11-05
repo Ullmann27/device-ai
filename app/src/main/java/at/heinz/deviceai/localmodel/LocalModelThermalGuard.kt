@@ -44,7 +44,8 @@ object LocalModelThermalGuard {
         private val thermalStatus: () -> Int?
     ) : LocalModelRuntime by delegate {
         private val lock = Any()
-        private var inFlight: Run? = null
+        /** Every admitted start until its terminal event; a start the busy runtime rejects leaves again at once. */
+        private val inFlight = LinkedHashSet<Run>()
 
         override fun stream(prompt: String, callback: LocalInferenceCallback) =
             guarded(callback) { delegate.stream(prompt, it) }
@@ -62,22 +63,27 @@ object LocalModelThermalGuard {
                 return
             }
             val run = Run()
-            synchronized(lock) { inFlight = run }
-            start(LocalInferenceCallback { event ->
-                val terminal = event is LocalInferenceEvent.Completed || event is LocalInferenceEvent.Cancelled ||
-                    event is LocalInferenceEvent.Failed
-                if (terminal) synchronized(lock) { if (inFlight === run) inFlight = null }
-                callback.onEvent(if (terminal && run.stoppedByHeat && event !is LocalInferenceEvent.Completed)
-                    LocalInferenceEvent.Failed(STOPPED_THERMAL) else event)
-            })
+            synchronized(lock) { inFlight += run }
+            try {
+                start(LocalInferenceCallback { event ->
+                    val terminal = event is LocalInferenceEvent.Completed || event is LocalInferenceEvent.Cancelled ||
+                        event is LocalInferenceEvent.Failed
+                    if (terminal) synchronized(lock) { inFlight -= run }
+                    callback.onEvent(if (terminal && run.stoppedByHeat && event !is LocalInferenceEvent.Completed)
+                        LocalInferenceEvent.Failed(STOPPED_THERMAL) else event)
+                })
+            } catch (rejected: Throwable) {
+                synchronized(lock) { inFlight -= run }
+                throw rejected
+            }
         }
 
         fun onThermalStatus(status: Int) {
             if (status < SEVERE) return
-            val run = synchronized(lock) {
-                inFlight?.takeIf { !it.stoppedByHeat }?.also { it.stoppedByHeat = true }
-            } ?: return
-            if (run.stoppedByHeat) delegate.cancel()
+            val marked = synchronized(lock) {
+                inFlight.filter { !it.stoppedByHeat }.onEach { it.stoppedByHeat = true }.isNotEmpty()
+            }
+            if (marked) delegate.cancel()
         }
     }
 }

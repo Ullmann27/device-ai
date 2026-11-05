@@ -19,7 +19,10 @@ class LocalModelThermalGuardTest {
         private var active: LocalInferenceCallback? = null
         override fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit) {}
         override fun unload(callback: (Result<Unit>) -> Unit) {}
-        override fun stream(prompt: String, callback: LocalInferenceCallback) { started += prompt; state = LocalModelState.GENERATING; active = callback }
+        override fun stream(prompt: String, callback: LocalInferenceCallback) {
+            check(state == LocalModelState.READY) { "A local model is not ready." } // like LiteRtLmLocalModelRuntime
+            started += prompt; state = LocalModelState.GENERATING; active = callback
+        }
         override fun streamThinking(prompt: String, callback: LocalInferenceCallback) = stream("thinking:$prompt", callback)
         override fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) = stream("tools", callback)
         override fun cancel() { cancels++; finish(LocalInferenceEvent.Cancelled) }
@@ -77,5 +80,24 @@ class LocalModelThermalGuardTest {
         thermal = 3
         runtime.stream("drei") { events += it }
         assertEquals("after heat the owner must ask again; nothing is queued", listOf("eins", "zwei"), native.started)
+    }
+
+    /** Gitar review on #565: a second caller rejected by the busy runtime must not take over the running answer. */
+    @Test fun rejectedSecondStartKeepsTheHeatReasonForTheRunningAnswer() {
+        val native = NativeStandIn()
+        val runtime = LocalModelThermalGuard.wrap(native) { thermal }
+        val first = mutableListOf<LocalInferenceEvent>()
+        val second = mutableListOf<LocalInferenceEvent>()
+        runtime.stream("Antwort A") { first += it }
+        val rejected = runCatching { runtime.stream("Bot-Auftrag B") { second += it } }
+        assertTrue("the busy runtime rejects B", rejected.isFailure)
+        LocalModelThermalGuard.onThermalStatus(runtime, 3)
+        assertEquals(1, native.cancels)
+        assertEquals("A's owner sees the heat reason", listOf(LocalInferenceEvent.Failed(LocalModelThermalGuard.STOPPED_THERMAL)), first)
+        assertEquals(emptyList<LocalInferenceEvent>(), second)
+        thermal = 0
+        runtime.stream("Antwort C") { }
+        LocalModelThermalGuard.onThermalStatus(runtime, 3)
+        assertEquals("the next answer is guarded as well", 2, native.cancels)
     }
 }
