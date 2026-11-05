@@ -4,6 +4,7 @@ import java.time.DateTimeException
 import java.time.Instant
 import java.time.ZoneId
 import java.util.Locale
+import java.util.BitSet
 import kotlin.math.ln
 import kotlin.math.sqrt
 
@@ -131,8 +132,14 @@ class Bm25GermanRetriever(private val temporal:TemporalCue?=null, private val k1
         // Negations must not be silently corrected into unrelated positive evidence.
         if(GermanText.isNegationStem(t))return emptyList()
         val limit=if(t.length>=7)2 else 1
-        return index.vocab.asSequence().filter { it.length>=4 && it[0]==t[0] }.map { it to GermanText.editDistance(it,t,limit) }
-            .filter { it.second<=limit }.sortedWith(compareBy<Pair<String,Int>>{ it.second }.thenByDescending { index.postings[it.first]!!.size }).take(1).map { it.first }.toList()
+        val ranked=index.vocab.asSequence().filter { it.length>=4 && it[0]==t[0] }
+            .map { it to GermanText.editDistance(it,t,limit) }.filter { it.second<=limit }
+            .sortedWith(compareBy<Pair<String,Int>>{ it.second }.thenByDescending { index.postings[it.first]!!.size }.thenBy { it.first })
+            .take(2).toList()
+        // Two equally plausible spellings are not evidence for either memory.
+        if(ranked.size==2 && ranked[0].second==ranked[1].second &&
+            index.postings[ranked[0].first]!!.size==index.postings[ranked[1].first]!!.size) return emptyList()
+        return ranked.take(1).map { it.first }
     }
     override fun search(query:String,nowMillis:Long,k:Int):List<RetrievalHit> {
         if(k<=0)return emptyList()
@@ -153,9 +160,9 @@ class Bm25GermanRetriever(private val temporal:TemporalCue?=null, private val k1
 class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val dim:Int=1 shl 15):ContinuumMemoryRetriever {
     private data class IndexState(
         val docs:List<MemoryDoc>, val vectors:List<Pair<IntArray,FloatArray>>,
-        val idf:FloatArray, val approxBytes:Long,
+        val idf:FloatArray, val negationDocIds:Map<String,BitSet>, val approxBytes:Long,
     )
-    @Volatile private var state=IndexState(emptyList(),emptyList(),FloatArray(0),0L)
+    @Volatile private var state=IndexState(emptyList(),emptyList(),FloatArray(0),emptyMap(),0L)
     private fun grams(text:String):Map<Int,Int> {
         val m=HashMap<Int,Int>()
         for(w in GermanText.contentStems(text)) { val s=" $w "
@@ -174,9 +181,17 @@ class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val
         val df=IntArray(dim); gs.forEach { it.keys.forEach { k -> df[k]++ } }
         val nextIdf=FloatArray(dim){ ln((1.0+snapshot.size)/(1.0+df[it])).toFloat()+1f }
         val nextVectors=gs.map { vec(it,nextIdf) }
-        val bytes=nextVectors.sumOf { it.first.size*8L+32 }+nextIdf.size*4L
-        // Publish docs, vectors and IDF as one generation; active readers keep their prior generation.
-        state=IndexState(snapshot,nextVectors,nextIdf,bytes)
+        // Cache exact negation membership with this generation, not by rescanning all document text per query.
+        val nextNegationDocIds=HashMap<String,BitSet>()
+        snapshot.forEachIndexed { i,doc ->
+            GermanText.contentStems(doc.text).asSequence().filter { GermanText.isNegationStem(it) }.distinct().forEach { stem ->
+                nextNegationDocIds.getOrPut(stem) { BitSet(snapshot.size) }.set(i)
+            }
+        }
+        val negationBytes=nextNegationDocIds.entries.sumOf { (stem,bits) -> 40L+stem.length*2L+bits.toLongArray().size*8L }
+        val bytes=nextVectors.sumOf { it.first.size*8L+32 }+nextIdf.size*4L+negationBytes
+        // Publish docs, vectors, IDF and polarity membership together. No post-publication mutation.
+        state=IndexState(snapshot,nextVectors,nextIdf,nextNegationDocIds,bytes)
     }
     override fun search(query:String,nowMillis:Long,k:Int):List<RetrievalHit> = scoredParts(query,nowMillis,k).map { it.hit }
 
@@ -186,12 +201,15 @@ class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val
         val index=state
         if(index.docs.isEmpty())return emptyList()
         val soleNegation=GermanText.contentStems(query).singleOrNull()?.takeIf { GermanText.isNegationStem(it) }
+        val eligible=soleNegation?.let { index.negationDocIds[it] ?: return emptyList() }
         val (qk,qv)=vec(grams(query),index.idf); val w=temporal?.window(query,nowMillis)
-        return index.vectors.mapIndexed { i,(dk,dv) -> var s=0.0; var a=0; var c=0
+        return index.vectors.mapIndexedNotNull { i,(dk,dv) ->
+            if(eligible!=null && !eligible.get(i)) return@mapIndexedNotNull null
+            var s=0.0; var a=0; var c=0
             while(a<qk.size && c<dk.size){ when { qk[a]==dk[c] -> { s+=qv[a]*dv[c];a++;c++ }; qk[a]<dk[c] -> a++; else -> c++ } }
             val tw=temporal?.weight(w,index.docs[i].atMillis) ?: 1.0
             ScoredParts(RetrievalHit(index.docs[i],s*tw),s,tw) }
-            .filter { it.hit.score>0 && (soleNegation==null || soleNegation in GermanText.contentStems(it.hit.doc.text)) }
+            .filter { it.hit.score>0 }
             .sortedByDescending { it.hit.score }.take(k)
     }
     override fun approxIndexBytes()=state.approxBytes
