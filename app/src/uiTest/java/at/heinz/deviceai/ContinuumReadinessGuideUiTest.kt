@@ -27,6 +27,8 @@ class ContinuumReadinessGuideUiTest {
         AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }.get(a)
     private fun open(): Pair<AgentActivity, AlertDialog> {
         val a = Robolectric.buildActivity(AgentActivity::class.java).get()
+        a.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("camera-question-shown-v1", true).commit()
         field(a, "foregroundLearningActive", true)
         val method = AgentActivity::class.java.declaredMethods.firstOrNull { it.name == "showReadinessGuide" }
         assertNotNull("The app has no connected spoken setup/test guide", method)
@@ -62,12 +64,12 @@ class ContinuumReadinessGuideUiTest {
             assertNull(shadowOf(a.application).nextStartedService)
         } finally { d.dismiss() }
     }
-    @Test fun dismissEndsTheCameraOptInScope() {
+    @Test fun dismissKeepsExplicitCameraSessionInForegroundConversation() {
         val (a, d) = open()
         field(a, "readinessCameraEnabled", true)
         d.dismiss()
         shadowOf(android.os.Looper.getMainLooper()).idle() // Android delivers OnDismissListener on its queue.
-        assertEquals(false, read(a, "readinessCameraEnabled"))
+        assertEquals(true, read(a, "readinessCameraEnabled"))
         assertNull(read(a, "readinessDialog"))
     }
     @Test fun speechSampleNeverChangesOrSubmitsExistingComposer() {

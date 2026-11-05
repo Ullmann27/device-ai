@@ -63,7 +63,7 @@ class ContinuumAvatar3dLifecycleUiTest {
         assertEquals(307, view.height)
         return Bitmap.createBitmap(412, 307, Bitmap.Config.ARGB_8888).also { view.draw(Canvas(it)) }
     }
-    @Test fun newAppearanceUses3dButSavedOrbAndLegacy2dStayChosen() {
+    @Test fun legacyEnabledHeadUpgradesButExplicitOrbAnd2dStayChosen() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val context = controller.get()
         val prefs = context.getSharedPreferences("continuum-avatar-appearance", android.content.Context.MODE_PRIVATE)
@@ -81,7 +81,11 @@ class ContinuumAvatar3dLifecycleUiTest {
             prefs.edit().clear().putBoolean("native-head", true).commit()
             val legacy = ContinuumHologramView(context)
             assertTrue(legacy.isNativeHeadEnabled())
-            assertEquals(false, field(legacy, "head3dEnabled"))
+            assertEquals(true, field(legacy, "head3dEnabled"))
+            prefs.edit().putBoolean("native-head-3d", false).commit()
+            val explicit2d = ContinuumHologramView(context)
+            assertTrue(explicit2d.isNativeHeadEnabled())
+            assertFalse(explicit2d.isNative3dEnabled())
             prefs.edit().clear().putBoolean("native-head-3d", true).commit()
             assertTrue(ContinuumHologramView(context).isNativeHeadEnabled())
         } finally {
