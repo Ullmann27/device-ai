@@ -106,23 +106,20 @@
     "Report concrete blockers without claiming completion"
   ],
   "activeRound": {
-    "id": "R8",
+    "id": "R9",
     "stage": "PREREGISTERED",
-    "headAtAcquisition": "2a383a4b7e22b3c3340dd5a1eb886ca580a27d00",
-    "targets": [
-      "LmRuntime.MinGruStepper.step"
+    "target": "LmRuntime.MinGruStepper.step final mmBt logits output",
+    "hypothesis": "Direct final one-row projection into the caller-owned logits FloatArray avoids temporary Mat and System.arraycopy without changing float sum order; unlike R8 matrix scratch candidate, no per-layer clearing/refactoring.",
+    "baselineHead": "f1ca172636dc745a5365acde4ff194f75c651488",
+    "baselineFiles": [
+      "LmRuntime.kt git blob 6de174dc400bfc5bd5bfb0facc56fc4820550b25",
+      "LmTensor.kt git blob 1ebd9b6803a3eb54a6a1baea25430b49e588665d"
     ],
-    "experimentIds": [
+    "matrix": "Kotlin/JDK21 source-faithful exact method; bit-exact logits at 8,32,64,128 dim, 1..4 layers, vocab 258 and 1024, seeded multi-token; invalid IDs; 6 fixed scenarios tiny_8_1_258 small_32_1_258 multilayer_32_3_258 medium_64_2_258 wide_128_2_258 vocab_32_1_1024. Four warmup pairs + nine alternating measured pairs per case, one A/A and one A/B, same fixed fixtures, no favorable rerun.",
+    "adoptionGate": "No parity deviations; allocation reductions at all target scenarios; no material CPU regression in small controls; full module/Gradle Android NOT_RUN must be disclosed; do not merge to main.",
+    "experiments": [
       "EXP-05",
       "EXP-12"
-    ],
-    "hypothesis": "Reusable per-step one-row Mat scratch buffers for six minGRU matrix products remove repeated per-layer temporary matrix allocation without altering floating point order; avoid changing the GEMMA/LiteRT path.",
-    "control": "Exact original source method versus one fixed candidate, source-faithful isolated Kotlin/JDK host test. All bitwise outputs and gradients/checkpoint params unchanged; minGRU 1,2,4 layers and dims 8,32,64,128; seeded 1/4/16/64-step sequences; normal and invalid-token negative control. Four warmup paired batches and nine alternating A/A pairs before candidate; one A/B with same exact fixtures; no favorable rerun.",
-    "acceptance": "Exact bitwise logits, source-bound compile, CPU/allocation improvement in target cases without material small-control regression; reject on any uncertainty, keep source unchanged and archive all outcomes. Android/Gradle/actual Gemma NOT_RUN.",
-    "filesOutsideScope": [
-      "AGENTS.md",
-      "main",
-      "other teams branches"
     ]
   },
   "r4": {
@@ -292,6 +289,25 @@
       "remoteGitBlobMatches": "6/6",
       "remoteReassembly": "NOT_RUN",
       "sourceChanged": false
+    }
+  },
+  "r8": {
+    "target": "LmRuntime.MinGruStepper.step six matrix-product scratch buffers",
+    "status": "REJECTED_ARCHIVE_PENDING",
+    "baselineRuntimeGitBlob": "6de174dc400bfc5bd5bfb0facc56fc4820550b25",
+    "baselineTensorGitBlob": "1ebd9b6803a3eb54a6a1baea25430b49e588665d",
+    "method": "source-faithful isolated Kotlin/JDK21 fixture; exact original arithmetic; no module build",
+    "parityBitChecks": 1403522,
+    "aaMeasuredRows": 108,
+    "abMeasuredRows": 108,
+    "warmupRows": 96,
+    "AAallocations": "identical all 6 controls",
+    "ABallocations": "-18.3% to -85.1%",
+    "ABadverse": "tiny CPU +6.9% with 3/9 favorable; medium CPU +6.4% with 1/9 favorable, where A/A CPU -0.2%; reject",
+    "outputHashes": {
+      "fixture": "f05adccac2da23451b1edcc1ef9d9837229486ed3b4505445582a0f62169c5c8",
+      "aa": "cc6a27136f49b3e60a64c705e3455ede1762816ea0f815158ee577d622e90e85",
+      "ab": "3fcaecc327c5bd5cdb89c93a4c74324a284263b36cc0b32515f88cac0eb1742f"
     }
   }
 }
