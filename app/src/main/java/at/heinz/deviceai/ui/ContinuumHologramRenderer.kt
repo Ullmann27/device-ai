@@ -231,16 +231,15 @@ class ContinuumHologramRenderer {
         taglineFill = Fill.Solid(Argb.rgb(178, 194, 222))
     }
 
-    fun draw(p: ContinuumPainter, f: Frame) {
+    fun draw(p: ContinuumPainter, f: Frame, transparentBackdrop: Boolean = false) {
         if (r <= 0f) return
-        if (geometry == Geometry.FOLD_PORTRAIT) {
-            // HomeView permits portrait decoration beyond the narrow hero slot.
-            // Paint the complete radial support so its alpha reaches zero before
-            // the edge; the old slot-sized rectangle left a visible hard seam.
-            val reach = r * 2.1f
-            val center = cy + r * .15f
-            p.fillRect(cx - reach, center - reach, cx + reach, center + reach, backdrop)
-        } else p.fillRect(0f, 0f, w, h, backdrop)
+        if (!transparentBackdrop) {
+            if (geometry == Geometry.FOLD_PORTRAIT) {
+                val reach = r * 2.1f
+                val center = cy + r * .15f
+                p.fillRect(cx - reach, center - reach, cx + reach, center + reach, backdrop)
+            } else p.fillRect(0f, 0f, w, h, backdrop)
+        }
         drawRays(p, f)
         drawStars(p, f)
         p.fillCircle(cx - rs * .3f, cy, rs * 1.7f, aura, geometry.aura)
