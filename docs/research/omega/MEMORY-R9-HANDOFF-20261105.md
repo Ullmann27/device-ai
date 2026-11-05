@@ -30,3 +30,12 @@ This is not broad natural-language contradiction detection. Multiple-content-wor
 C1 action order: independently take R6, R7, R8 and only then R9 into the current common source with file/blob review; compile/execute the original Android JUnit methods and full TemporalCue/retrieval tests; run the 1,000-document/44-question holdout with ranking comparison (historical Recall@3 42/44); then complete critical, full-node, backend, full Android Unit/UI without class filters, NewApi and eventual Fold7. At any red gate, do not promote this specialist patch. Roll back only R9's bounded production diff; retain frozen tests/negative receipts. C2 ACK and APK gates remain separate.
 
 No paid resources, actions, sub-bots, main merge, signing, install, release, APK or owner changes.
+
+
+## Separate validation of the published runner
+
+After publishing the script, its **exact Git blob** `e063ec3b3b7832a4b076deac2e7c9797db048950`, Kotlin runner `a7739b83d8dc1d0e482ffe47f5e24724ef8a628e`, JUnit shim `5bcd689ee297986dab4cbaeb780bfb7bd9ab6082`, and the original upstream EventEmitting host stub `936205beeba284ab9844d79f199d9256ef6fb0b7` were assembled into an **isolated local mirror of the relevant repository paths**. Every referenced production/test source Git blob was rechecked before execution. `bash -n` passed, and the **published `run.sh` executed on the exact patched production blob with exit 0 and 20/20 PASS**, using Kotlin 1.9/JRE21.
+
+The baseline invocation also produced the complete expected `TOTAL=20 PASS=16 FAIL=4` and four exact negative assertions; a supervisory wrapper timed out after the complete transcript and therefore no independent script-process exit code is asserted for that second invocation. The initial direct-source JVM baseline had already returned exit 1.
+
+The local mirror is **not** a Gradle/Android checkout and does **not** certify that the complete repository's build or the 44-query holdout passes. Host runner proof stays a host-only bound.
