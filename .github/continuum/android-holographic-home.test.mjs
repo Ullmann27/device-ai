@@ -102,7 +102,9 @@ test('reference-style composer keeps real model/web/file actions and truthful id
  assert.match(composer,/showDevelopmentDialog\(\)/);
  assert.match(composer,/localRuntime\.state == LocalModelState\.READY/);
  assert.match(composer,/else showModelCenter\(\)/);
- assert.match(composer,/startVoiceInput\(\)/);
+ // Owner decision 05.11.: the composer microphone starts hands-free talk; long press dictates.
+ assert.match(composer,/setOnClickListener \{ onChatMicrophoneTap\(\) \}/);
+ assert.match(composer,/setOnLongClickListener \{ onChatMicrophoneLongPress\(\); true \}/);
  assert.match(composer,/sendCurrentInput\(\)/);
  assert.match(busy,/sendButton\.contentDescription/);
  assert.match(busy,/else "➤"/);

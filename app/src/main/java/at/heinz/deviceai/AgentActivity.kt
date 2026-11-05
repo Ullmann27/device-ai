@@ -134,6 +134,9 @@ class AgentActivity : Activity() {
     companion object {
         @Volatile private var crashHandlerInstalled = false
         private const val SPEECH_REQUEST = 2207
+        private const val CONVERSATION_RESUME_DELAY_MS = 450L
+        private const val CONVERSATION_RETRY_DELAY_MS = 300L
+        private const val CONVERSATION_IDLE_CHECK_MS = 900L
         private const val LOCAL_SPEECH_PERMISSION_REQUEST = 2241
         private const val READINESS_CAMERA_PERMISSION_REQUEST = 2242
         private const val READINESS_MIC_PERMISSION_REQUEST = 2243
@@ -252,9 +255,11 @@ class AgentActivity : Activity() {
     private val voiceFrame = object : Runnable {
         override fun run() {
             if (!voiceSpeaking || !foregroundLearningActive || isDestroyed) return
-            val level = voiceSignal.level(android.os.SystemClock.elapsedRealtime())
+            val utteranceId = voiceUtteranceId
+            val measured = utteranceId?.let { voiceSignal.measuredLevel(it, android.os.SystemClock.elapsedRealtime()) }
+            val level = measured ?: 0f
             hologramView?.setAudioLevel(level)
-            voiceUtteranceId?.let { avatarDirector.audioLevel(it, level) }
+            utteranceId?.let { avatarDirector.audioLevel(it, level, measuredPcmAvailable = measured != null) }
             mainHandler.postDelayed(this, 33L)
         }
     }
@@ -275,6 +280,13 @@ class AgentActivity : Activity() {
     private var pendingLocalSpeechDialog: AlertDialog? = null
     private var activeLocalSpeechRequest: Int? = null
     private var speechScopeGeneration = 0L
+    // Explicitly started hands-free conversation (long press on the chat microphone).
+    // Ordinary dictation keeps filling the composer only; this mode never approves tools.
+    private val continuousConversation = at.heinz.deviceai.cognitive.ContinuousConversationMode()
+    private var chatMicButton: Button? = null
+    private val conversationListen = Runnable { listenForConversationTurn() }
+    private val conversationResume = Runnable { resumeConversationAfterReply() }
+    private val conversationIdleCheck = Runnable { checkConversationReplyIdle() }
     private var voiceReady = false
     private var voiceInitialized = false
     private var voiceEnabled = false
@@ -1752,7 +1764,7 @@ class AgentActivity : Activity() {
     /** All responsive presentations enter the existing owner-gated routes through this one adapter. */
     private fun navigateDashboardTarget(target: String) {
         when (target) {
-            "voice-input" -> startVoiceInput()
+            "voice-input" -> onChatMicrophoneTap()
             "camera-settings" -> toggleConversationCamera()
             "avatar-appearance" -> hologramView?.showAppearanceChooser()
             "notifications" -> showDiagnosticsCenter()
@@ -2179,8 +2191,8 @@ class AgentActivity : Activity() {
             (head.parent as? android.view.ViewGroup)?.removeView(head)
             if (chat) column.addView(head, minOf(1, column.childCount),
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height))
-            else home.addView(head, 0, android.view.ViewGroup.LayoutParams(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT))
+            // The home restores its own drawing order: above the opaque shell, never behind it.
+            else home.adoptHologram()
             // Detach clears transient speech geometry; reattach the same current utterance.
             avatarDirector.attach(head)
         }
@@ -3757,8 +3769,13 @@ class AgentActivity : Activity() {
         })
         val mic = actionButton("🎙", compact = true).apply {
             contentDescription = "Spracheingabe starten"
-            setOnClickListener { startVoiceInput() }
+            // Owner decision (Fold7, 05.11.): a tap talks with Continuum hands-free; the finished
+            // sentence is sent after the speech pause. Long press keeps silent dictation into the draft.
+            setOnClickListener { onChatMicrophoneTap() }
+            setOnLongClickListener { onChatMicrophoneLongPress(); true }
         }
+        chatMicButton = mic
+        refreshConversationMicPresentation()
         if (!stackedComposer) inputRow.addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply {
             marginStart = dp(6)
         })
@@ -6989,6 +7006,9 @@ class AgentActivity : Activity() {
                     if(id != null && id == voiceUtteranceId) {
                         stopVoiceAnimation(interrupted || failed)
                     }
+                    // Hands-free mode listens again only after its bound reply ends; a failed but
+                    // visible reply also continues, an owner interruption pauses the mode.
+                    if (id != null) onConversationSpeechFinished(id, interrupted)
                 }
             }
         })
@@ -7007,6 +7027,7 @@ class AgentActivity : Activity() {
         voiceAvatarText = spoken.orEmpty()
         if (spoken == null || voiceEngine?.speak(spoken, TextToSpeech.QUEUE_FLUSH, null, id) != TextToSpeech.SUCCESS)
             stopVoiceAnimation()
+        else continuousConversation.assistantSpeechQueued(id)
     }
 
     private fun showWebLearningInbox() {
@@ -10556,6 +10577,174 @@ class AgentActivity : Activity() {
         pendingLocalSpeechGeneration=-1L;pendingLocalSpeechDialog=null;activeLocalSpeechRequest=null
         voiceListening=false
         onDeviceSpeech?.cancel()
+        // Ending the full recognition scope (pause, chat/bot switch) also ends hands-free mode.
+        stopConversationState()
+    }
+
+    private fun stopConversationState() {
+        mainHandler.removeCallbacks(conversationListen)
+        mainHandler.removeCallbacks(conversationResume)
+        mainHandler.removeCallbacks(conversationIdleCheck)
+        if (continuousConversation.active) continuousConversation.stop()
+        refreshConversationMicPresentation()
+    }
+
+    private fun refreshConversationMicPresentation() {
+        val mic = chatMicButton ?: return
+        val active = continuousConversation.active
+        mic.text = if (active) "🗣" else "🎙"
+        mic.contentDescription = if (active)
+            "Gesprächsmodus aktiv. Antippen: jetzt sprechen. Lange drücken: Gesprächsmodus beenden."
+        else "Spracheingabe starten"
+    }
+
+    /** Long press: end hands-free mode, or dictate silently into the draft (never sends). */
+    private fun onChatMicrophoneLongPress() {
+        if (continuousConversation.active) endContinuousConversation("Gesprächsmodus beendet.")
+        else startVoiceInput()
+    }
+
+    /** Tap: start hands-free conversation, or speak now / resume while it is active. */
+    private fun onChatMicrophoneTap() {
+        if (!continuousConversation.active) { toggleContinuousConversation(); return }
+        when (continuousConversation.ownerTap(sessionId)) {
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.LISTEN -> {
+                mainHandler.removeCallbacks(conversationResume)
+                mainHandler.removeCallbacks(conversationIdleCheck)
+                startVoiceInput()
+            }
+            else -> endContinuousConversation("Gesprächsmodus beendet: neue Chat-Sitzung.")
+        }
+    }
+
+    private fun toggleContinuousConversation() {
+        if (continuousConversation.active) {
+            endContinuousConversation("Gesprächsmodus beendet.")
+            return
+        }
+        if (busy || botLookupPending) {
+            Toast.makeText(this, "Bitte warte, bis die aktuelle Antwort fertig ist.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (!continuousConversation.start(sessionId)) return
+        refreshConversationMicPresentation()
+        Toast.makeText(this, "Gesprächsmodus an: Nach jeder Antwort höre ich wieder zu. " +
+            "Nach deiner Sprechpause sende ich automatisch. „Stopp“ sagen oder lange auf das Mikrofon drücken beendet ihn. " +
+            "Geräteaktionen brauchen weiterhin deine ausdrückliche Bestätigung.", Toast.LENGTH_LONG).show()
+        startVoiceInput()
+    }
+
+    private fun endContinuousConversation(message: String?) {
+        val listening = voiceListening && activeLocalSpeechRequest == SPEECH_REQUEST
+        stopConversationState()
+        if (listening) cancelSpeechInputScope()
+        if (message != null && !isFinishing && !isDestroyed)
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun pauseContinuousConversationNotice(reason: String) {
+        refreshConversationMicPresentation()
+        if (!isFinishing && !isDestroyed) Toast.makeText(this,
+            "Gesprächsmodus pausiert: $reason Mikrofon antippen zum Weitersprechen, lange drücken beendet.",
+            Toast.LENGTH_LONG).show()
+    }
+
+    private fun listenForConversationTurn() {
+        if (continuousConversation.listeningTurn(sessionId) == null) return
+        if (!foregroundLearningActive || isFinishing || isDestroyed) { stopConversationState(); return }
+        startVoiceInput()
+    }
+
+    /** A recognized hands-free utterance becomes one ordinary chat turn via the Send path. */
+    private fun applyConversationSpeech(turnToken: Long, spoken: String) {
+        if (isFinishing || isDestroyed) return
+        when (continuousConversation.recognized(turnToken, sessionId, spoken)) {
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.SEND -> {
+                val focused = input.hasFocus()
+                val merged = at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.mergeDictation(
+                    input.text.toString(), if (focused) input.selectionStart else -1,
+                    if (focused) input.selectionEnd else -1, spoken)
+                input.setText(merged.text); input.setSelection(merged.cursor.coerceIn(0, input.text.length))
+                sendCurrentInput()
+                when {
+                    // Bot routing, cancellation or a new session ended the recognition scope.
+                    !continuousConversation.active -> endContinuousConversation(
+                        "Gesprächsmodus beendet: Dieser Auftrag läuft in einem eigenen Dialog weiter.")
+                    input.text.isNotBlank() -> {
+                        continuousConversation.sendRejected()
+                        pauseContinuousConversationNotice("Die Nachricht wurde nicht gesendet und bleibt als Entwurf.")
+                    }
+                    else -> scheduleConversationIdleCheck()
+                }
+            }
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.STOP ->
+                endContinuousConversation("Gesprächsmodus beendet.")
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.PAUSE ->
+                pauseContinuousConversationNotice("Auf deinen Wunsch.")
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.RETRY_LISTEN ->
+                mainHandler.postDelayed(conversationListen, CONVERSATION_RETRY_DELAY_MS)
+            else -> Unit
+        }
+    }
+
+    private fun onConversationListenFailed(turnToken: Long, message: String) {
+        val silence = message == at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.message(
+                at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Failure.NO_MATCH) ||
+            message == at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.message(
+                at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Failure.NO_INPUT) ||
+            message == at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.message(
+                at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Failure.TIMEOUT)
+        when (continuousConversation.listenFailed(turnToken, sessionId, silence)) {
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.RETRY_LISTEN ->
+                mainHandler.postDelayed(conversationListen, CONVERSATION_RETRY_DELAY_MS)
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.PAUSE ->
+                pauseContinuousConversationNotice(if (silence) "Ich habe nichts gehört." else message)
+            else -> Unit
+        }
+    }
+
+    private fun scheduleConversationIdleCheck() {
+        mainHandler.removeCallbacks(conversationIdleCheck)
+        mainHandler.postDelayed(conversationIdleCheck, CONVERSATION_IDLE_CHECK_MS)
+    }
+
+    /** Covers replies without audible speech (voice output off) and long model runs. */
+    private fun checkConversationReplyIdle() {
+        if (continuousConversation.state != at.heinz.deviceai.cognitive.ContinuousConversationMode.State.THINKING) return
+        if (busy || botLookupPending || voiceSpeaking || voiceUtteranceId != null) {
+            scheduleConversationIdleCheck()
+            return
+        }
+        if (continuousConversation.replyIdle() == at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.LISTEN)
+            resumeConversationAfterReply()
+    }
+
+    private fun onConversationSpeechFinished(utteranceId: String, interrupted: Boolean) {
+        when (continuousConversation.assistantSpeechFinished(utteranceId, interrupted)) {
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.LISTEN -> {
+                mainHandler.removeCallbacks(conversationResume)
+                // Short gap so the microphone does not capture the end of our own voice.
+                mainHandler.postDelayed(conversationResume, CONVERSATION_RESUME_DELAY_MS)
+            }
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.PAUSE ->
+                pauseContinuousConversationNotice("Die Antwort wurde unterbrochen.")
+            else -> Unit
+        }
+    }
+
+    /** The microphone reopens only in the foreground, without open dialog or pending approval. */
+    private fun resumeConversationAfterReply() {
+        val canListen = foregroundLearningActive && !isFinishing && !isDestroyed && hasWindowFocus() &&
+            !avatarAwaitingApproval && !voiceListening && input.text.isNullOrBlank()
+        when (continuousConversation.resume(sessionId, canListen, busy || botLookupPending || voiceSpeaking)) {
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.LISTEN -> startVoiceInput()
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.PAUSE ->
+                pauseContinuousConversationNotice("Bitte zuerst den offenen Dialog oder Entwurf erledigen.")
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.STOP ->
+                endContinuousConversation("Gesprächsmodus beendet: neue Chat-Sitzung.")
+            else -> if (continuousConversation.state ==
+                at.heinz.deviceai.cognitive.ContinuousConversationMode.State.THINKING) scheduleConversationIdleCheck()
+        }
     }
 
     private fun startVoiceInput(requestCode: Int = SPEECH_REQUEST) {
@@ -10572,6 +10761,8 @@ class AgentActivity : Activity() {
         val scopeSession=sessionId
         val scopeDialog=devDialog
         val readinessScope = if (requestCode == READINESS_SPEECH_REQUEST) readinessDialog else null
+        // Non-null only while the owner deliberately started hands-free mode; dictation stays a draft.
+        val conversationTurn = if (requestCode == SPEECH_REQUEST) continuousConversation.listeningTurn(scopeSession) else null
         activeLocalSpeechRequest=requestCode
         val speech=onDeviceSpeech?:AndroidOnDeviceSpeechInput(this).also { onDeviceSpeech=it }
         val route=at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.route(internetConsent.mode,
@@ -10592,9 +10783,12 @@ class AgentActivity : Activity() {
                 onState={if(speechScopeGeneration==scopeGeneration){voiceListening=it;refreshHologramState()}},
                 onText={spoken->if(speechScopeGeneration==scopeGeneration&&sessionId==scopeSession&&
                     (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog) &&
-                    (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true))applyLocalSpeechText(requestCode,spoken)},
+                    (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true)){
+                    if(conversationTurn!=null)applyConversationSpeech(conversationTurn,spoken) else applyLocalSpeechText(requestCode,spoken)}},
                 onError={message->
-                    if (speechScopeGeneration == scopeGeneration && sessionId == scopeSession && !isFinishing && !isDestroyed &&
+                    if (conversationTurn != null && speechScopeGeneration == scopeGeneration && sessionId == scopeSession &&
+                        !isFinishing && !isDestroyed) onConversationListenFailed(conversationTurn, message)
+                    else if (speechScopeGeneration == scopeGeneration && sessionId == scopeSession && !isFinishing && !isDestroyed &&
                         (requestCode != DEV_SPEECH_REQUEST || devDialog === scopeDialog && scopeDialog?.isShowing == true) &&
                         (requestCode != READINESS_SPEECH_REQUEST || readinessDialog === readinessScope && readinessScope?.isShowing == true)) {
                         if (requestCode == READINESS_SPEECH_REQUEST) {
@@ -10659,6 +10853,10 @@ class AgentActivity : Activity() {
                 (pending!=DEV_SPEECH_REQUEST || devDialog===originalDialog && originalDialog?.isShowing==true) &&
                 grantResults.firstOrNull()==android.content.pm.PackageManager.PERMISSION_GRANTED)
                 startVoiceInput(pending)
+            // Without a granted microphone, hands-free mode must not stay armed invisibly.
+            if (continuousConversation.active &&
+                grantResults.firstOrNull()!=android.content.pm.PackageManager.PERMISSION_GRANTED)
+                endContinuousConversation("Gesprächsmodus beendet: Mikrofon nicht freigegeben.")
         }
     }
 

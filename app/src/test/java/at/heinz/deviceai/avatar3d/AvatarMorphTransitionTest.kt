@@ -97,7 +97,7 @@ class AvatarMorphTransitionTest {
         val faceOpening = weight(map, "JawOpen") + authoredOpening
         val expected = maxOf(measuredJaw, authoredOpening)
         assertEquals("$label: common face opening", expected, faceOpening, EPSILON)
-        assertEquals("$label: inner jaw follows the visible opening", expected * 12f, map.jawPitch, EPSILON * 12f)
+        assertEquals("$label: inner jaw follows the visible opening", expected * AvatarMorphMapper.JAW_BONE_DEGREES, map.jawPitch, EPSILON * AvatarMorphMapper.JAW_BONE_DEGREES)
         assertTrue("$label: finite, bounded morph weights", map.weights.all { it.isFinite() && it in 0f..1f })
     }
 

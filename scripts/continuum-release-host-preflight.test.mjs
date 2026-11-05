@@ -48,7 +48,8 @@ test('host probes receive the explicit environment without mutating process.env'
     ['javac','printf \'javac 17.0.1\\n\''],['gradle','printf \'Gradle 8.11.1\\n\'']]){
     fs.writeFileSync(path.join(bin,name),guard+`printf '%s\\n' '${name}' >> "$JAVA_HOME/probes.log"\n`+version+'\n',{mode:0o700});
   }
-  const aapt2=path.join(bin,'aapt2');fs.writeFileSync(aapt2,'fixture only');
+  const aapt2=path.join(bin,'aapt2');
+  fs.writeFileSync(aapt2,'#!/bin/sh\nprintf "%s\\n" "Android Asset Packaging Tool (aapt) 2.19-12345678"\n',{mode:0o700});
   const env={JAVA_HOME:home,PATH:bin,ANDROID_HOME:sdk,CONTINUUM_GRADLE_PATH:path.join(bin,'gradle'),CONTINUUM_AAPT2_PATH:aapt2};
   const before={...process.env},input={...env},r=inspectHostEnvironment(env);
   assert.deepEqual(r.blockers,[]);assert.equal(r.hostReadyToAttemptQa,true);
@@ -85,3 +86,34 @@ test('refuses symlinked release source',()=>fixture(({root,head})=>{
 test('refuses parent directory rather than exact repository root',()=>fixture(({root,head})=>{
   assert.throws(()=>inspectReleaseCheckout(path.dirname(root),head));
 }));
+
+test('native AAPT2 must execute and identify as AAPT2 before QA admission',t=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-apk-b6-'));
+  t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
+  const bin=path.join(root,'bin'),sdk=path.join(root,'sdk');
+  fs.mkdirSync(bin);
+  fs.mkdirSync(path.join(sdk,'platforms','android-36'),{recursive:true});
+  fs.writeFileSync(path.join(sdk,'platforms','android-36','android.jar'),'fixture only');
+  for(const [name,version] of [
+    ['java','printf \'openjdk version "17.0.1"\\n\' >&2'],
+    ['javac','printf \'javac 17.0.1\\n\''],
+    ['gradle','printf \'Gradle 8.11.1\\n\'']
+  ])fs.writeFileSync(path.join(bin,name),'#!/bin/sh\n'+version+'\n',{mode:0o700});
+  const aapt2=path.join(bin,'aapt2');
+  const env={JAVA_HOME:root,PATH:bin,ANDROID_HOME:sdk,
+    CONTINUUM_GRADLE_PATH:path.join(bin,'gradle'),
+    CONTINUUM_AAPT2_PATH:aapt2};
+  const verify=(script,mode,allowed)=>{
+    fs.writeFileSync(aapt2,script,{mode});
+    fs.chmodSync(aapt2,mode);
+    const result=inspectHostEnvironment(env);
+    assert.equal(result.hostReadyToAttemptQa,allowed,result.blockers.join(','));
+    assert.equal(result.blockers.includes('NATIVE_AAPT2_INVALID'),!allowed);
+    assert.equal(result.androidCompilationExecuted,false);
+    assert.equal(result.apkSigned,false);
+  };
+  verify('fixture only',0o600,false);
+  verify('#!/bin/sh\nexit 77\n',0o700,false);
+  verify('#!/bin/sh\necho another-tool\n',0o700,false);
+  verify('#!/bin/sh\necho "Android Asset Packaging Tool (aapt) 2.19-123"\n',0o700,true);
+});

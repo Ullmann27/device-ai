@@ -26,7 +26,9 @@ test('the five beginner destinations stay reachable from the reference start scr
     'KI personalisieren',
     'Meine Aufgaben'
   ]) assert.ok(spec.includes('"'+title+'"'), title);
-  for (const route of ['startVoiceInput()', 'showDevelopmentDialog()', 'showMemoryCenter()',
+  // Owner decision 05.11.: the voice destination starts hands-free talk (onChatMicrophoneTap →
+  // toggleContinuousConversation → startVoiceInput, guarded in continuous-conversation-wiring).
+  for (const route of ['onChatMicrophoneTap()', 'showDevelopmentDialog()', 'showMemoryCenter()',
     'showNexusPersonalization()', 'showDevelopmentBacklog()']) assert.ok(home.includes(route), 'Beginner destination lost: '+route);
 });
 

@@ -6,7 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {verifyCommitReceipt,verifyRepairPatch,parseJunit,runNodeProfile,ATTESTATION_SCHEMA} from './ccc1-redgreen-verifier.mjs';
+import {verifyCommitReceipt,verifyRepairPatch,parseJunit,runNodeProfile,junitHasFileIdentity,ATTESTATION_SCHEMA} from './ccc1-redgreen-verifier.mjs';
 
 const sha256=b=>crypto.createHash('sha256').update(b).digest('hex');
 function g(repo,...args){const r=spawnSync('git',['-C',repo,...args],{encoding:'utf8'});assert.equal(r.status,0,r.stderr);return r.stdout.trim();}
@@ -201,5 +201,25 @@ test('Delta follow-up preserves omitted optional legacy metadata and unique alia
  for(const result of [verifyCommitReceipt({repo:f.repo,receiptBytes}),
   verifyRepairPatch({repo:f.repo,baseCommit:f.red,patchPath:f.patchPath,patchSha256:sha256(f.patch),receiptBytes})]){
   assert.equal(result.verdict,'VERIFIED',result.reasons.join());
+ }
+});
+
+// APK42 / owner report: under Node 22 the JUnit reporter omits <testcase file=…>, so seven genuine
+// RED→GREEN chains were REJECTED with misleading TARGET_MISSING reasons. The verifier now names the
+// runtime cause explicitly and still never returns VERIFIED without file-bound test identities.
+test('JUnit without file identity is rejected with an explicit runtime reason, never verified',()=>{
+ const node22='<testsuites><testcase name="adds_two" time="0.001" classname="test"/></testsuites>';
+ const node24='<testsuites><testcase name="adds_two" time="0.001" classname="test" file="/w/tests/sum.test.mjs"/></testsuites>';
+ const mixed=node24.replace('</testsuites>','<testcase name="x" classname="test"/></testsuites>');
+ assert.equal(junitHasFileIdentity(node22),false);
+ assert.equal(junitHasFileIdentity(mixed),false);
+ assert.equal(junitHasFileIdentity(node24),true);
+ const f=fixture();
+ const a=verifyCommitReceipt({repo:f.repo,receiptBytes:receipt(f)});
+ if(Number(process.versions.node.split('.')[0])>=24){
+  assert.equal(a.verdict,'VERIFIED',a.reasons.join());
+ }else{
+  assert.equal(a.verdict,'REJECTED');
+  assert.ok(a.reasons.includes('RED_RUN_JUNIT_FILE_IDENTITY_UNSUPPORTED_RUNTIME'),a.reasons.join());
  }
 });

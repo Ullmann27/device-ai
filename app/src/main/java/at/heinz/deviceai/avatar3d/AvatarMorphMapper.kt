@@ -30,8 +30,9 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         val gx = finite(pose.gazeX, -1f, 1f)
         val gy = finite(pose.gazeY, -1f, 1f)
         // Right-handed Y-up +Z front: positive yaw goes viewer right, negative pitch looks up.
-        headYaw = gx * 8f; headPitch = -gy * 5f
-        eyeYaw = cameraAzimuthDegrees.toFloat() + gx * 17f; eyePitch = -gy * 10f
+        // Owner request (Fold7, 05.11.): turn and nod in a wide, human radius; eyes lead, head follows.
+        headYaw = gx * HEAD_YAW_DEGREES; headPitch = -gy * HEAD_PITCH_DEGREES
+        eyeYaw = cameraAzimuthDegrees.toFloat() + gx * EYE_YAW_DEGREES; eyePitch = -gy * EYE_PITCH_DEGREES
         jawPitch = 0f
         when (pose.expression) {
             AvatarExpression.ATTENTIVE -> weight("BrowUp", .20f)
@@ -45,7 +46,7 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         // Cosmetic idle motion, not observed gaze or invented speech/work. The existing view
         // owns the clock and stops it on pause/reduced motion. Actual task/observed gaze wins.
         if (pose.state == AvatarState.IDLE && !pose.gazeObserved) {
-            headYaw += idleMotion.headYaw; headPitch += idleMotion.headPitch
+            headYaw += idleMotion.headYaw * IDLE_HEAD_GAIN; headPitch += idleMotion.headPitch * IDLE_HEAD_GAIN
             eyeYaw += idleMotion.eyeYaw; eyePitch += idleMotion.eyePitch
         }
         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
@@ -80,11 +81,22 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         // The pinned CC0 recipes already include mouth-open inside the viseme targets.
         // Compensate the visible blend, including outgoing cues, once; preserve lip shapes.
         weight("JawOpen", (jaw - renderedOpening).coerceAtLeast(0f))
-        jawPitch = maxOf(jaw, renderedOpening) * 12f
+        jawPitch = maxOf(jaw, renderedOpening) * JAW_BONE_DEGREES
         weight("BlinkLeft", idleMotion.blinkWeight); weight("BlinkRight", idleMotion.blinkWeight)
     }
 
-    private companion object { const val CROSSFADE_S = .07f }
+    companion object {
+        private const val CROSSFADE_S = .07f
+        /** Full gaze deflection (|gaze| = 1) of the head bone and the eyes, in degrees. */
+        const val HEAD_YAW_DEGREES = 24f
+        const val HEAD_PITCH_DEGREES = 12f
+        const val EYE_YAW_DEGREES = 12f
+        const val EYE_PITCH_DEGREES = 8f
+        /** Inner jaw bone rotation at full mouth opening. */
+        const val JAW_BONE_DEGREES = 15f
+        /** Cosmetic idle head sway gain (idle only, never during observed gaze or speech). */
+        const val IDLE_HEAD_GAIN = 2.5f
+    }
 
     private fun finite(value: Float, min: Float, max: Float) = if (value.isFinite()) value.coerceIn(min, max) else 0f
 

@@ -75,6 +75,8 @@ class NetworkTurnConstraintTest {
     }
     private val negative = listOf(
         "Mara hat drei Würfel. Antworte ohne Internetrecherche.",
+        // Owner acceptance phrase (APK42): a bare follow-up constraint must also stay offline.
+        "Ohne Internetrecherche.",
         "Erkläre mir maschinelles Lernen ohne Internet.",
         "Beantworte diese Frage ohne Websuche.",
         "Bitte antworte ohne externe Websuche.",
