@@ -1,0 +1,5 @@
+Source Git blobs: R6 b2d6ac9b078557f8c74fe0be9dc0032a15e52323 vs R7 a0849ac148164fb94e7f0725182ce831546519d4.
+JRE21.0.12 / kotlinc-jvm 1.9.0. Same complete production file; R6 classes renamed to separate baseline class names without changing method bodies.
+Kotlin compiler exit 0; parity program exit 0.
+PARITY_PASS comparisons=144 corpus=2x40 queries=48 scoreTolerance=1e-7 indexByteEqual=true
+Queries include German time cue "gestern". This is deterministic sampled score parity, not the 1,000-doc/44-query M2.9 official holdout.
