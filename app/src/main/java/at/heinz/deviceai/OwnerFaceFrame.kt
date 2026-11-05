@@ -3,6 +3,10 @@ package at.heinz.deviceai
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicBoolean
 
+internal interface OwnerFaceInference : AutoCloseable {
+    fun observe(frame: OwnerFaceFrame): OwnerFaceObservation
+}
+
 /** Ownership transfers to the consumer. */
 internal class OwnerFaceFrame(
     val width: Int,

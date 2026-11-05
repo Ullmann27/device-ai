@@ -55,6 +55,8 @@ class ContinuumConversationCameraUiTest {
     @After fun cleanup() {
         set("foregroundLearningActive", false)
         call("stopReadinessCamera")
+        (read("ownerFaceDialogs") as? OwnerFaceDialogs)?.dismiss()
+        (read("ownerFace") as? AndroidOwnerFaceRecognition)?.close()
         (read("readinessDialog") as? AlertDialog)?.dismiss()
         for (name in listOf("localAgentExecutor", "backlogExecutor", "learningIoExecutor")) {
             (read(name) as ExecutorService).shutdownNow()
@@ -66,11 +68,11 @@ class ContinuumConversationCameraUiTest {
         call("maybeAskForConversationCamera")
         val dialog = consent()
         assertTrue(dialog.isShowing)
-        assertEquals("NEIN", dialog.getButton(AlertDialog.BUTTON_NEUTRAL).text.toString())
-        assertEquals("SPÄTER", dialog.getButton(AlertDialog.BUTTON_NEGATIVE).text.toString())
+        assertEquals("MICH EINLERNEN", dialog.getButton(AlertDialog.BUTTON_NEUTRAL).text.toString())
+        assertEquals("NEIN", dialog.getButton(AlertDialog.BUTTON_NEGATIVE).text.toString())
         assertEquals(false, read("readinessCameraEnabled"))
         assertEquals(CameraTrackingState.OFF, (read("readinessCamera") as AndroidAvatarCameraInput).state)
-        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).performClick()
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
         idle()
         call("maybeAskForConversationCamera")
         assertNull(read("cameraConsentDialog"))
@@ -79,7 +81,7 @@ class ContinuumConversationCameraUiTest {
         assertEquals(false, read("readinessCameraEnabled"))
     }
 
-    @Test fun laterAndBackAlsoLeaveCameraOffWithoutNagging() {
+    @Test fun declineAndBackAlsoLeaveCameraOffWithoutNagging() {
         for (later in listOf(true, false)) {
             call("showConversationCameraConsent")
             val dialog = consent()
@@ -89,6 +91,15 @@ class ContinuumConversationCameraUiTest {
             assertNull(read("cameraConsentDialog"))
             assertFalse(presentation().cameraSessionActive)
         }
+    }
+
+    @Test fun enrollmentShortcutOpensControlsWithoutStartingCamera() {
+        call("showConversationCameraConsent")
+        consent().getButton(AlertDialog.BUTTON_NEUTRAL).performClick()
+        idle()
+        assertTrue((read("ownerFaceDialogs") as OwnerFaceDialogs).isShowing)
+        assertFalse(presentation().cameraSessionActive)
+        assertFalse((read("ownerFace") as AndroidOwnerFaceRecognition).status.sessionActive)
     }
 
     @Test fun permissionResultCannotStartCameraOrReuseDismissedApproval() {

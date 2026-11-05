@@ -32,6 +32,8 @@ internal class OwnerFaceProfileStore(
     private val profileFile get() = File(directory, "profile.aes")
     private val pendingFile get() = File(directory, "profile.pending")
 
+    internal class Prepared internal constructor(internal val file: File, internal val generation: Long)
+
     fun load(): OwnerFaceProfile? = synchronized(storeLock) {
         if (!profileFile.exists()) return null
         require(profileFile.length() in (HEADER.size + IV_BYTES + 16L)..MAX_FILE_BYTES)
@@ -52,11 +54,18 @@ internal class OwnerFaceProfileStore(
         }
     }
 
-    fun save(profile: OwnerFaceProfile) = synchronized(storeLock) {
+    fun save(profile: OwnerFaceProfile) {
+        val pending = prepare(profile)
+        try { commit(pending) } finally { discard(pending) }
+    }
+
+    fun prepare(profile: OwnerFaceProfile): Prepared = synchronized(storeLock) {
         require(profile.valid())
         require(directory.isDirectory || directory.mkdirs())
         val plaintext = encode(profile)
         var encrypted: ByteArray? = null
+        val temporary = File(directory, "profile.${java.util.UUID.randomUUID()}.pending")
+        var prepared = false
         try {
             val cipher = Cipher.getInstance("AES/GCM/NoPadding")
             cipher.init(Cipher.ENCRYPT_MODE, key())
@@ -65,26 +74,45 @@ internal class OwnerFaceProfileStore(
             require(iv.size == IV_BYTES)
             encrypted = cipher.doFinal(plaintext)
             require(HEADER.size + iv.size + encrypted.size <= MAX_FILE_BYTES)
-            FileOutputStream(pendingFile).use { stream ->
+            FileOutputStream(temporary).use { stream ->
                 stream.write(HEADER)
                 stream.write(iv)
                 stream.write(encrypted)
                 stream.fd.sync()
             }
-            Files.move(pendingFile.toPath(), profileFile.toPath(),
-                StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
+            prepared = true
+            Prepared(temporary, storageGeneration)
         } finally {
             plaintext.fill(0)
             encrypted?.fill(0)
-            if (pendingFile.exists()) pendingFile.delete()
+            if (!prepared) temporary.delete()
         }
     }
 
+    fun commit(prepared: Prepared) = synchronized(storeLock) {
+        check(prepared.generation == storageGeneration)
+        check(prepared.file.parentFile == directory)
+        Files.move(prepared.file.toPath(), profileFile.toPath(),
+            StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
+        storageGeneration++
+    }
+
+    fun discard(prepared: Prepared) = synchronized(storeLock) {
+        check(prepared.file.parentFile == directory)
+        if (prepared.file.exists() && !prepared.file.delete()) throw IOException("FACE_PROFILE_DISCARD_FAILED")
+    }
+
     fun delete() = synchronized(storeLock) {
-        for (file in listOf(profileFile, pendingFile)) {
-            if (file.exists() && !file.delete()) throw IOException("FACE_PROFILE_DELETE_FAILED")
+        storageGeneration++
+        var failure: Exception? = null
+        val pending = directory.listFiles().orEmpty().filter {
+            it.name.startsWith("profile.") && it.name.endsWith(".pending")
         }
-        deleteKey()
+        for (file in listOf(profileFile, pendingFile) + pending) {
+            if (file.exists() && !file.delete()) failure = IOException("FACE_PROFILE_DELETE_FAILED")
+        }
+        try { deleteKey() } catch (error: Exception) { failure = error }
+        failure?.let { throw it }
         Unit
     }
 
@@ -129,6 +157,7 @@ internal class OwnerFaceProfileStore(
         val AAD = ("continuum-owner-face-v1|" + OwnerFaceModelContract.RECOGNIZER_SHA256)
             .toByteArray(StandardCharsets.US_ASCII)
         val storeLock = Any()
+        var storageGeneration = 0L
 
         fun androidKeyStore(): KeyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
 

@@ -282,6 +282,10 @@ class AgentActivity : Activity() {
     private var cameraButton: Button? = null
     private var cameraSessionStopButton: Button? = null
     private var cameraConsentDialog: AlertDialog? = null
+    private var ownerFace: AndroidOwnerFaceRecognition? = null
+    private var ownerFaceDialogs: OwnerFaceDialogs? = null
+    private var ownerFaceCameraToken: Long? = null
+    private val ownerFaceConversation = OwnerFaceConversation()
     private var readinessDialog: AlertDialog? = null
     private var readinessRows: LinearLayout? = null
     private var readinessCamera: AndroidAvatarCameraInput? = null
@@ -676,6 +680,7 @@ class AgentActivity : Activity() {
         // Ending the full recognition scope also invalidates pending Android permission callbacks.
         cancelSpeechInputScope()
         stopReadinessCamera()
+        ownerFaceDialogs?.dismiss()
         readinessVoiceSampleId = null
         readinessVoiceSampleStarted = false
         readinessWelcomePending = false
@@ -726,6 +731,10 @@ class AgentActivity : Activity() {
         uiFeedback = null
         readinessDialog?.dismiss()
         stopReadinessCamera()
+        ownerFaceDialogs?.dismiss()
+        ownerFaceDialogs = null
+        ownerFace?.close()
+        ownerFace = null
         botLookupRevision++
         botConversation.invalidate()
         activeBotTask?.cancel()
@@ -2899,6 +2908,7 @@ class AgentActivity : Activity() {
             },
             CenterAction("MODELLVERWALTUNG") { showModelCenter() },
             CenterAction("STIMME, BLICK & STARTBEGLEITUNG", accent = true) { showReadinessGuide() },
+            CenterAction("MEIN GESICHT · LOKALE WIEDERERKENNUNG") { showOwnerFaceControls() },
             CenterAction("GERÄTE-SCHNELLZUGRIFFE") { showQuickActionsDialog() },
             CenterAction("AVATAR · KUGEL ODER KOPF") { hologramView?.showAppearanceChooser() },
             CenterAction("HOLOGRAMM · LIVE-FRAMES PRÜFEN", accent = true) { showHologramMotionAudit() }
@@ -2955,14 +2965,104 @@ class AgentActivity : Activity() {
             } else avatarDirector.clearObservedGaze()
         }, onClear = { avatarDirector.clearObservedGaze() }, onState = { state ->
             if (state !in setOf(CameraTrackingState.STARTING, CameraTrackingState.TRACKING,
-                    CameraTrackingState.NO_FACE, CameraTrackingState.AMBIGUOUS)) readinessCameraEnabled = false
+                    CameraTrackingState.NO_FACE, CameraTrackingState.AMBIGUOUS)) {
+                readinessCameraEnabled = false
+                if (ownerFaceCameraToken != null) {
+                    ownerFaceCameraToken = null
+                    ownerFaceConversation.stop()
+                    ownerFace?.stop()
+                }
+            }
             refreshConversationCameraControls()
             refreshReadinessGuide()
             pushCockpitState()
+        }, onFaceFrame = { frame ->
+            ownerFace?.acceptFrame(frame) ?: frame.close()
         }).also { readinessCamera = it }
+
+    private fun ownerFaceRecognition(): AndroidOwnerFaceRecognition = ownerFace ?:
+        AndroidOwnerFaceRecognition(this) { state ->
+            if (!isFinishing && !isDestroyed) {
+                ownerFaceDialogs?.update(state)
+                if (!state.sessionActive && ownerFaceCameraToken != null) {
+                    ownerFaceCameraToken = null
+                    stopReadinessCamera()
+                }
+                refreshConversationCameraControls()
+                val face = ownerFace
+                if (face != null && ownerFaceCameraToken == face.sessionToken && readinessCameraEnabled) {
+                    ownerFaceConversation.greeting(face.sessionToken, state, canSpeakCameraPrompt())
+                        ?.let(::speakBootstrap)
+                }
+            }
+        }.also { ownerFace = it }
+
+    private fun showOwnerFaceControls() {
+        if (!foregroundLearningActive || isFinishing || isDestroyed) return
+        cameraConsentDialog?.dismiss()
+        val face = ownerFaceRecognition()
+        val controls = ownerFaceDialogs ?: OwnerFaceDialogs(this, object : OwnerFaceDialogs.Actions {
+            override fun status() = face.status
+            override fun cameraActive() = readinessCameraEnabled && foregroundLearningActive
+            override fun startEnrollment(name: String) = startOwnerFaceCamera(name)
+            override fun startRecognition() = startOwnerFaceCamera(null)
+            override fun canContinueConversation() = foregroundLearningActive && readinessCameraEnabled &&
+                !isFinishing && !isDestroyed && ownerFaceCameraToken == face.sessionToken &&
+                ownerFaceConversation.canContinue(face.sessionToken, face.status)
+            override fun continueConversation() = canContinueConversation()
+            override fun stop() = stopReadinessCamera()
+            override fun deleteProfile() {
+                stopReadinessCamera()
+                face.deleteProfile()
+            }
+        }).also { ownerFaceDialogs = it }
+        controls.show()
+    }
+
+    private fun startOwnerFaceCamera(enrollmentName: String?): Boolean {
+        if (!foregroundLearningActive || isFinishing || isDestroyed) return false
+        val camera = readinessCameraInput()
+        if (!camera.permissionGranted()) {
+            Toast.makeText(this, "Erlaube die Kamera in Android. Starte danach das Einlernen oder den Vergleich erneut.",
+                Toast.LENGTH_LONG).show()
+            requestPermissions(arrayOf(android.Manifest.permission.CAMERA), READINESS_CAMERA_PERMISSION_REQUEST)
+            return false
+        }
+        stopReadinessCamera()
+        val face = ownerFaceRecognition()
+        val started = if (enrollmentName != null) face.beginEnrollment(enrollmentName, ownerConsent = true)
+            else face.beginRecognition(ownerConsent = true)
+        if (!started) return false
+        @Suppress("DEPRECATION") val rotation = windowManager.defaultDisplay.rotation
+        val degrees = when (rotation) {
+            android.view.Surface.ROTATION_90 -> 90
+            android.view.Surface.ROTATION_180 -> 180
+            android.view.Surface.ROTATION_270 -> 270
+            else -> 0
+        }
+        readinessCameraEnabled = camera.start(true, foregroundLearningActive, degrees,
+            analyzeOwnerFace = true, ownerFaceSessionToken = face.sessionToken)
+        if (readinessCameraEnabled) {
+            ownerFaceCameraToken = face.sessionToken
+            if (enrollmentName == null) ownerFaceConversation.beginComparison(face.sessionToken)
+        }
+        if (!readinessCameraEnabled) {
+            ownerFaceCameraToken = null
+            face.stop()
+            Toast.makeText(this, "Die Frontkamera konnte nicht starten. Es wurde keine Aufnahme eingelernt oder verglichen.",
+                Toast.LENGTH_LONG).show()
+        }
+        refreshConversationCameraControls()
+        refreshReadinessGuide()
+        pushCockpitState()
+        return readinessCameraEnabled
+    }
 
     private fun stopReadinessCamera() {
         readinessCameraEnabled = false
+        ownerFaceCameraToken = null
+        ownerFaceConversation.stop()
+        ownerFace?.stop()
         cameraConsentDialog?.dismiss()
         cameraConsentDialog = null
         readinessCamera?.stop()
@@ -2974,6 +3074,7 @@ class AgentActivity : Activity() {
     private fun buildCameraSessionStopControl(): Button = actionButton("KAMERA AN · STOPPEN").apply {
         tag = "conversation-camera-stop"
         contentDescription = "Frontkamera aktiv. Antippen beendet den Kamerablick sofort."
+        minHeight = dp(48)
         visibility = if (readinessCameraEnabled && foregroundLearningActive) View.VISIBLE else View.GONE
         setOnClickListener { stopReadinessCamera() }
     }
@@ -2982,7 +3083,20 @@ class AgentActivity : Activity() {
         val active = readinessCameraEnabled && foregroundLearningActive
         cameraButton?.text = if (active) "■" else "📷"
         cameraButton?.contentDescription = if (active) "Kamerablick sofort stoppen" else "Kamerablick ausdrücklich freigeben"
-        cameraSessionStopButton?.visibility = if (active) View.VISIBLE else View.GONE
+        val face = ownerFace
+        val state = face?.status
+        val faceActive = active && face != null && ownerFaceCameraToken == face.sessionToken && state?.sessionActive == true
+        val status = if (faceActive && face != null && state != null) {
+            ownerFaceConversation.statusLine(face.sessionToken, state)
+                ?: "Gesicht einlernen · ${state.acceptedSamples}/${state.requiredSamples}"
+        } else null
+        cameraSessionStopButton?.apply {
+            visibility = if (active) View.VISIBLE else View.GONE
+            text = if (status != null) "$status\nKAMERA AN · STOPPEN" else "KAMERA AN · STOPPEN"
+            contentDescription = if (status != null) "$status. Frontkamera aktiv. Antippen stoppt die Kamera sofort."
+                else "Frontkamera aktiv. Antippen beendet den Kamerablick sofort."
+        }
+        ownerFace?.let { ownerFaceDialogs?.update(it.status) }
     }
 
     private fun toggleConversationCamera() {
@@ -2992,6 +3106,7 @@ class AgentActivity : Activity() {
     private fun maybeAskForConversationCamera() {
         if (!foregroundLearningActive || isFinishing || isDestroyed || readinessCameraEnabled ||
             readinessDialog?.isShowing == true || cameraConsentDialog?.isShowing == true ||
+            ownerFaceDialogs?.isShowing == true ||
             modelCenterDialog?.isShowing == true || centerDialog?.isShowing == true) return
         if (!getSharedPreferences("continuum-readiness", MODE_PRIVATE)
                 .getBoolean("camera-question-shown-v1", false)) showConversationCameraConsent()
@@ -3004,21 +3119,25 @@ class AgentActivity : Activity() {
         val dialog = AlertDialog.Builder(this)
             .setTitle("Darf ich dich beim Gespräch anschauen?")
             .setMessage("Mit deiner Frontkamera richte ich meinen Blick nach deiner Gesichtsposition aus. " +
-                "Ich erkenne dadurch nicht, wer du bist; persönliche Gesichtserkennung ist noch nicht verfügbar. " +
-                "Es werden keine Bilder gespeichert oder übertragen.\n\n" +
+                "Dieser Kamerablick merkt sich kein Gesicht. Wenn ich dich wiedererkennen soll, " +
+                "wähle MICH EINLERNEN und bestätige dort die lokale Gesichtsvorlage. " +
+                "Beim Kamerablick werden keine Bilder gespeichert oder übertragen.\n\n" +
                 "Der Kamerablick bleibt nach dem Schließen der Einrichtung im Gespräch aktiv. " +
                 "Mit KAMERA AN · STOPPEN beendest du ihn jederzeit. Sobald du die App verlässt, stoppt er. " +
                 "Danach musst du ihn erneut starten." +
                 if (granted) "" else "\n\nErlaube zuerst die Kamera in Android. Tippe danach erneut auf KAMERA, um den Blick zu starten.")
             .setPositiveButton(if (granted) "JETZT ANSCHAUEN" else "KAMERA FREIGEBEN", null)
-            .setNegativeButton("SPÄTER", null)
-            .setNeutralButton("NEIN", null)
+            .setNegativeButton("NEIN", null)
+            .setNeutralButton("MICH EINLERNEN") { _, _ -> showOwnerFaceControls() }
             .create()
         cameraConsentDialog = dialog
         dialog.setOnDismissListener {
             if (cameraConsentDialog === dialog) cameraConsentDialog = null
         }
         dialog.show()
+        if (canSpeakCameraPrompt()) {
+            speakBootstrap("Darf ich dich beim Gespräch anschauen?")
+        }
         getSharedPreferences("continuum-readiness", MODE_PRIVATE).edit()
             .putBoolean("camera-question-shown-v1", true).apply()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
@@ -3041,6 +3160,10 @@ class AgentActivity : Activity() {
             }
         }
     }
+
+    private fun canSpeakCameraPrompt() = foregroundLearningActive && !isFinishing && !isDestroyed &&
+        voiceEnabled && voiceReady && !voiceSpeaking && !voiceListening && voiceUtteranceId == null &&
+        voiceEngine?.isSpeaking != true && !busy
 
     private fun readinessSnapshot(): ContinuumReadinessGuide.Snapshot {
         val camera = readinessCameraInput()
@@ -3114,6 +3237,12 @@ class AgentActivity : Activity() {
             }
             if (step.id == "speech") box.addView(textView(readinessSpeechResult, 12f, MUTED), matchWidth(top = 4))
         }
+        box.addView(actionButton("MICH EINLERNEN & WIEDERERKENNEN").apply {
+            setOnClickListener {
+                readinessDialog?.dismiss()
+                showOwnerFaceControls()
+            }
+        }, matchWidth(top = 16))
         box.addView(actionButton("ANLEITUNG VORLESEN").apply {
             isEnabled = voiceReady && voiceEnabled
             setOnClickListener {
