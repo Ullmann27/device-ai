@@ -81,8 +81,8 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
                 kotlin.math.sin(2.0 * Math.PI * seconds / BREATH_PERIOD_S).toFloat()
         }
         // Long-running work stays visually alive without inventing task progress.
-        if (seconds.isFinite() && pose.state in setOf(AvatarState.THINKING,
-                AvatarState.RESEARCHING, AvatarState.LEARNING)) {
+        if (seconds.isFinite() && (pose.state == AvatarState.THINKING ||
+                pose.state == AvatarState.RESEARCHING || pose.state == AvatarState.LEARNING)) {
             val cycle = 2.0 * Math.PI * seconds.toDouble()
             headPitch += (.35 * kotlin.math.sin(cycle / 5.3)).toFloat()
             headYaw += (.40 * kotlin.math.sin(cycle / 7.7)).toFloat()
