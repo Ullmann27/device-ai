@@ -5,7 +5,6 @@ import android.graphics.RectF
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.ScrollView
 import at.heinz.deviceai.avatar.AvatarDirector
 import at.heinz.deviceai.avatar.GazeTarget
@@ -32,8 +31,13 @@ class JarvisWorkWindowHost(
         val source = home.findViewWithTag<View>("jarvis-tile:system") ?: return null
         val origin = localBounds(source, container)
         var parent = home.parent
+        var background: ScrollView? = null
         while (parent is View) {
-            if (parent is ScrollView) { parent.scrollTo(0, 0); break }
+            if (parent is ScrollView) {
+                background = parent
+                parent.scrollTo(0, 0)
+                break
+            }
             parent = parent.parent
         }
         val offset = localBounds(shell, container)
@@ -64,12 +68,12 @@ class JarvisWorkWindowHost(
         })
         if (!accepted) { window.dispose(); container.removeView(window); return null }
         current = window
-        val observer = home.viewTreeObserver
-        val scroll = ViewTreeObserver.OnScrollChangedListener {
-            if (current === window && localBounds(shell, container) != offset) window.close(immediate = true)
+        val initialX = background?.scrollX ?: 0
+        val initialY = background?.scrollY ?: 0
+        background?.setOnScrollChangeListener { _, x, y, _, _ ->
+            if (current === window && (x != initialX || y != initialY)) window.close(immediate = true)
         }
-        observer.addOnScrollChangedListener(scroll)
-        releaseGeometry = { if (observer.isAlive) observer.removeOnScrollChangedListener(scroll) }
+        releaseGeometry = { if (current === window) background?.setOnScrollChangeListener(null) }
         val headX = face?.centerX() ?: viewport.centerX()
         val headY = face?.centerY() ?: viewport.centerY()
         director.windowOpened(id, GazeTarget(

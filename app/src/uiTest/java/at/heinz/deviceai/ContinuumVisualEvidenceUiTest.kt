@@ -201,6 +201,36 @@ class ContinuumVisualEvidenceUiTest {
         assertProtectedRegions(work, head)
         capture(root, "$tag-6b-systemstatus-open", w, h)
 
+        val scrolling = shown(work, "jarvis-work-window:scroll") as ScrollView
+        val modelLabel = descendants(work).filterIsInstance<TextView>()
+            .single { it.text.toString() == "Sprachmodell" }
+        val modelCard = modelLabel.parent as View
+        val shell = (field(a, "homeView") as ContinuumHomeView).jarvisShell
+        val shellBefore = IntArray(2).also { shell.getLocationInWindow(it) }
+        val cardPosition = IntArray(2).also { modelCard.getLocationInWindow(it) }
+        val scrollPosition = IntArray(2).also { scrolling.getLocationInWindow(it) }
+        val previousScroll = scrolling.scrollY
+        scrolling.scrollTo(0, scrolling.scrollY + cardPosition[1] - scrollPosition[1])
+        advance(32L); measure(root, w, h)
+        assertTrue("Actual inner status scroll advances", scrolling.scrollY > previousScroll)
+        assertTrue("Inner scroll keeps the work area open", work.isShown)
+        assertTrue("Inner scroll preserves cockpit position",
+            shellBefore.contentEquals(IntArray(2).also { shell.getLocationInWindow(it) }))
+        val modelBounds = Rect()
+        assertTrue("Actual model card is visible", modelCard.getGlobalVisibleRect(modelBounds))
+        assertEquals("Model card is not vertically clipped", modelCard.height, modelBounds.height())
+        assertEquals("Model card is not horizontally clipped", modelCard.width, modelBounds.width())
+        val modelValues = descendants(modelCard).filterIsInstance<TextView>().map { it.text.toString() }
+        assertTrue("Model card contains its actual label", modelValues.contains("Sprachmodell"))
+        assertTrue("Model card contains an actual value", modelValues.any { it.isNotBlank() && it != "Sprachmodell" })
+        assertSame(head, field(a, "hologramView"))
+        assertTrue("Inner scrolling keeps focus", a.hasWindowFocus())
+        assertProtectedRegions(work, head)
+        capture(root, "$tag-6b-data-systemstatus-scrolled", w, h)
+        scrolling.scrollTo(0, 0)
+        advance(32L); measure(root, w, h)
+        assertTrue("Returning inside content keeps work visible", work.isShown)
+
         val close = shown(work, "jarvis-work-window:close")
         assertTrue("Close remains accessible", close.isClickable && close.isFocusable && !close.contentDescription.isNullOrBlank())
         assertTrue("Close retains its minimum target", close.width / close.resources.displayMetrics.density >= 48f &&
