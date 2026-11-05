@@ -4,7 +4,7 @@
   "status": "READY_FOR_NEXT_RUN",
   "owner": null,
   "leaseExpiresAtUtc": null,
-  "updatedAtUtc": "2026-11-05T00:55:00Z",
+  "updatedAtUtc": "2026-11-05T00:32:07.505Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -297,7 +297,15 @@
       "repo": "NOT_PUSHED",
       "localPath": "/mnt/data/continuum-r8/experiments/R8-evidence.tar.xz"
     },
-    "report": "docs/research/omega/TUNING-R8-R9-20261105.md"
+    "report": "docs/research/omega/TUNING-R8-R9-20261105.md",
+    "archiveAudit": {
+      "localTarReadable": true,
+      "files": 3,
+      "allCsvRows": 312,
+      "measuredRows": 216,
+      "warmupRows": 96,
+      "archiveSha256Confirmed": true
+    }
   },
   "r9": {
     "status": "REJECTED_LOCAL_EVIDENCE_RETAINED",
@@ -320,6 +328,14 @@
       "repo": "NOT_PUSHED",
       "localPath": "/mnt/data/continuum-r8/experiments/R9-evidence.tar.xz"
     },
-    "report": "docs/research/omega/TUNING-R8-R9-20261105.md"
+    "report": "docs/research/omega/TUNING-R8-R9-20261105.md",
+    "archiveAudit": {
+      "localTarReadable": true,
+      "files": 3,
+      "allCsvRows": 312,
+      "measuredRows": 216,
+      "warmupRows": 96,
+      "archiveSha256Confirmed": true
+    }
   }
 }
