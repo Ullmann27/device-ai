@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "READY_FOR_NEXT_RUN",
-  "owner": null,
-  "leaseExpiresAtUtc": null,
-  "updatedAtUtc": "2026-11-04T23:34:50Z",
+  "status": "RUNNING",
+  "owner": "tuning-sequential-r8-20261105",
+  "leaseExpiresAtUtc": "2026-11-05T01:15:00Z",
+  "updatedAtUtc": "2026-11-05T00:22:33Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -105,7 +105,26 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": null,
+  "activeRound": {
+    "id": "R8",
+    "stage": "PREREGISTERED",
+    "headAtAcquisition": "2a383a4b7e22b3c3340dd5a1eb886ca580a27d00",
+    "targets": [
+      "LmRuntime.MinGruStepper.step"
+    ],
+    "experimentIds": [
+      "EXP-05",
+      "EXP-12"
+    ],
+    "hypothesis": "Reusable per-step one-row Mat scratch buffers for six minGRU matrix products remove repeated per-layer temporary matrix allocation without altering floating point order; avoid changing the GEMMA/LiteRT path.",
+    "control": "Exact original source method versus one fixed candidate, source-faithful isolated Kotlin/JDK host test. All bitwise outputs and gradients/checkpoint params unchanged; minGRU 1,2,4 layers and dims 8,32,64,128; seeded 1/4/16/64-step sequences; normal and invalid-token negative control. Four warmup paired batches and nine alternating A/A pairs before candidate; one A/B with same exact fixtures; no favorable rerun.",
+    "acceptance": "Exact bitwise logits, source-bound compile, CPU/allocation improvement in target cases without material small-control regression; reject on any uncertainty, keep source unchanged and archive all outcomes. Android/Gradle/actual Gemma NOT_RUN.",
+    "filesOutsideScope": [
+      "AGENTS.md",
+      "main",
+      "other teams branches"
+    ]
+  },
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
