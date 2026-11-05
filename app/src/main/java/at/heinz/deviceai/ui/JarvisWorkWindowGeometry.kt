@@ -3,22 +3,26 @@ package at.heinz.deviceai.ui
 import android.graphics.PointF
 import android.graphics.RectF
 import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.hypot
 
 /** Free space in overlay pixels. */
 object JarvisWorkWindowGeometry {
-    fun destination(viewport: RectF, protectedBounds: List<RectF>, density: Float = 1f): RectF? {
+    fun destination(viewport: RectF, protectedBounds: List<RectF>, density: Float = 1f): RectF? =
+        candidates(viewport, protectedBounds, density).firstOrNull()
+
+    fun candidates(viewport: RectF, protectedBounds: List<RectF>, density: Float = 1f): List<RectF> {
         if (!valid(viewport) || !density.isFinite() || density <= 0f ||
-            protectedBounds.any { !finite(it) }) return null
+            protectedBounds.any { !finite(it) }) return emptyList()
         val gap = 8f * density
         val area = RectF(viewport).apply { inset(gap, gap) }
-        if (area.width() < 200f * density || area.height() < 160f * density) return null
+        if (area.width() < 200f * density || area.height() < 160f * density) return emptyList()
         val blocked = protectedBounds.filter(::valid).map { RectF(it).apply { inset(-gap, -gap) } }
             .filter { it.intersect(area) }
         val xs = (listOf(area.left, area.right) + blocked.flatMap { listOf(it.left, it.right) }).distinct().sorted()
         val ys = (listOf(area.top, area.bottom) + blocked.flatMap { listOf(it.top, it.bottom) }).distinct().sorted()
-        var best: RectF? = null
-        var bestArea = 0f
+        val candidates = mutableListOf<Pair<Float, RectF>>()
         for (left in xs.indices) for (right in left + 1 until xs.size) {
             if (xs[right] - xs[left] < 200f * density) continue
             for (top in ys.indices) for (bottom in top + 1 until ys.size) {
@@ -26,14 +30,14 @@ object JarvisWorkWindowGeometry {
                 if (candidate.height() < 160f * density || blocked.any { RectF.intersects(candidate, it) }) continue
                 val width = minOf(candidate.width(), 640f * density)
                 val score = width * candidate.height()
-                if (score <= bestArea) continue
                 val inset = (candidate.width() - width) * .5f
                 candidate.inset(inset, 0f)
-                best = candidate
-                bestArea = score
+                if (floor(candidate.right) - ceil(candidate.left) < 200f * density ||
+                    floor(candidate.bottom) - ceil(candidate.top) < 160f * density) continue
+                candidates.add(score to candidate)
             }
         }
-        return best
+        return candidates.sortedByDescending { it.first }.map { it.second }
     }
 
     internal fun finite(box: RectF) = box.left.isFinite() && box.top.isFinite() &&

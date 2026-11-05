@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import at.heinz.deviceai.avatar.AvatarDirector
 import at.heinz.deviceai.avatar.GazeTarget
+import kotlin.math.ceil
+import kotlin.math.floor
 
 /** Owns presentation, never tool access. */
 class JarvisWorkWindowHost(
@@ -18,6 +20,12 @@ class JarvisWorkWindowHost(
     private var serial = 0L
     private var back: android.window.OnBackInvokedCallback? = null
     val isShowing: Boolean get() = current?.isShowing == true
+    internal class LayoutCheck(bounds: RectF, val requiredHeightPx: Int) {
+        private val measuredBounds = RectF(bounds)
+        val bounds: RectF get() = RectF(measuredBounds)
+    }
+    private var measuredLayoutChecks = emptyList<LayoutCheck>()
+    internal val lastLayoutChecks: List<LayoutCheck> get() = measuredLayoutChecks.toList()
 
     fun close(immediate: Boolean = false) { current?.close(immediate) }
 
@@ -27,6 +35,8 @@ class JarvisWorkWindowHost(
      */
     fun show(home: ContinuumHomeView, body: View, title: String,
              scene: JarvisActionScenes.Scene = STATUS_SCENE, onClosed: () -> Unit): JarvisWorkWindow? {
+        measuredLayoutChecks = emptyList()
+        if (body.parent != null) return null
         if (!home.jarvisShellStage || !home.isShown) return null
         val container = activity.findViewById<ViewGroup>(android.R.id.content) ?: return null
         val shell = home.jarvisShell
@@ -54,11 +64,20 @@ class JarvisWorkWindowHost(
             ?: besideFace(face, viewport, density)
         val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
         val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))
-        val destination = JarvisWorkWindowGeometry.destination(viewport, withOrb, density)
-            ?: return null
+        val candidates = JarvisWorkWindowGeometry.candidates(viewport, withOrb, density)
+        if (candidates.isEmpty()) return null
+        val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
+        val checks = mutableListOf<LayoutCheck>()
+        val destination = candidates.firstOrNull { candidate ->
+            val widthPx = (floor(candidate.right) - ceil(candidate.left)).toInt()
+            val requiredHeight = window.requiredHeightPx(body, title, widthPx)
+            checks.add(LayoutCheck(candidate, requiredHeight))
+            floor(candidate.bottom) - ceil(candidate.top) >= requiredHeight
+        }
+        measuredLayoutChecks = checks.toList()
+        if (destination == null) { window.dispose(); return null }
         close(immediate = true)
         val id = "work-window-${++serial}"
-        val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
         var releaseGeometry: () -> Unit = {}
         container.addView(window, ViewGroup.LayoutParams(-1, -1))
         val accepted = window.open(body, origin, destination, title, withOrb, accent = scene.accent, onClosed = {

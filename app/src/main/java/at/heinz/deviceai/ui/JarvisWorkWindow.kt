@@ -10,6 +10,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -83,17 +84,17 @@ class JarvisWorkWindow(
         isFillViewport = false
         clipToPadding = true
     }
+    private val header = LinearLayout(context).apply {
+        gravity = Gravity.CENTER_VERTICAL
+        minimumHeight = dp(48f)
+        addView(titleView, LinearLayout.LayoutParams(0, -2, 1f))
+        addView(closeView, LinearLayout.LayoutParams(-2, -2))
+    }
     private val panel = GlassPanel(context).apply {
         tag = "jarvis-work-window:panel"
         orientation = LinearLayout.VERTICAL
         isClickable = true
         setPadding(dp(8f), dp(4f), dp(8f), dp(8f))
-        val header = LinearLayout(context).apply {
-            gravity = Gravity.CENTER_VERTICAL
-            minimumHeight = dp(48f)
-            addView(titleView, LinearLayout.LayoutParams(0, -2, 1f))
-            addView(closeView, LinearLayout.LayoutParams(-2, -2))
-        }
         addView(header, LinearLayout.LayoutParams(-1, -2))
         addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         pivotX = 0f
@@ -110,6 +111,29 @@ class JarvisWorkWindow(
         clipToPadding = false
         visibility = GONE
         addView(panel)
+    }
+
+    /** Measures detached content only. */
+    internal fun requiredHeightPx(body: View, title: String, widthPx: Int): Int {
+        require(body.parent == null)
+        val contentWidth = (widthPx - panel.paddingLeft - panel.paddingRight).coerceAtLeast(0)
+        val unbounded = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        titleView.text = title
+        header.measure(View.MeasureSpec.makeMeasureSpec(contentWidth, View.MeasureSpec.EXACTLY), unbounded)
+        body.measure(View.MeasureSpec.makeMeasureSpec(
+            (contentWidth - scroll.paddingLeft - scroll.paddingRight).coerceAtLeast(0),
+            View.MeasureSpec.EXACTLY), unbounded)
+        var targetHeight = dp(48f)
+        fun inspect(view: View) {
+            if (view.visibility != View.VISIBLE) return
+            if (view.isClickable || view.isLongClickable || view.isFocusable) {
+                targetHeight = maxOf(targetHeight, view.measuredHeight)
+            }
+            if (view is ViewGroup) for (index in 0 until view.childCount) inspect(view.getChildAt(index))
+        }
+        inspect(body)
+        return panel.paddingTop + header.measuredHeight + scroll.paddingTop + targetHeight +
+            scroll.paddingBottom + panel.paddingBottom
     }
 
     /** Rectangles use local overlay pixels. */
