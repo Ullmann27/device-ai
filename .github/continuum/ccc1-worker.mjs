@@ -14,6 +14,7 @@ import {spawnSync} from 'node:child_process';
 import {startTask,runTask,taskState,ownerAction} from './ccc1-orchestrator.mjs';
 import {Ccc1Reasoner,indexExports,interpretGoal,LexicalLanguageCore} from './ccc1-interpreter.mjs';
 import {DisambiguatingProbeCore,ProbeLanguageCore} from './behaviour-probe.mjs';
+import {LocalModelLanguageCore} from './ccc1-local-model-core.mjs';
 import {DurableTaskJournal,JournalCorruption,runtimeKey} from './ccc1-journal.mjs';
 import {ExperienceLog,experienceOf} from './ccc1-experience.mjs';
 import {buildCodeIndex,saveCodeIndex} from './code-index.mjs';
@@ -27,7 +28,9 @@ import {ensureCcc1StateOutsideSource} from './ccc1-path-policy.mjs';
 export const OUTCOME_FOR={COMPLETED:'VERIFIED_PATCH_PENDING_REVIEW',ABSTAINED:'DONE_INVESTIGATION',ABORTED:'DONE_INVESTIGATION',
  FAILED:'ERROR',STOPPED_CORRUPT_JOURNAL:'ERROR',WAITING_FOR_WORKER:'INTERRUPTED',BLOCKED_WRITER_ACTIVE:'INTERRUPTED',
  TURN_LIMIT_REACHED:'INTERRUPTED',WAITING_FOR_OWNER:'NO_READY_INVESTIGATION'};
+// local-model: on-device LLM (loopback CONTINUUM_CCC1_MODEL_URL); falls back to lexical when absent or invalid.
 const CORES={lexical:()=>new LexicalLanguageCore(),probe:root=>new ProbeLanguageCore({root}),
+ 'local-model':()=>new LocalModelLanguageCore(),
  disambiguate:root=>new DisambiguatingProbeCore({root})};
 
 const REPO=/^[A-Za-z0-9][A-Za-z0-9-]{0,38}\/[A-Za-z0-9._-]{1,100}$/;

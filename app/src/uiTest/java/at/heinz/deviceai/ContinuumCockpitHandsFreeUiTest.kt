@@ -1,13 +1,19 @@
 package at.heinz.deviceai
 
 import android.content.Context
+import android.os.Looper
 import android.view.View
 import at.heinz.deviceai.cognitive.ContinuousConversationMode
 import at.heinz.deviceai.ui.ContinuumHomeView
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
+import org.robolectric.Shadows.shadowOf
+import org.robolectric.shadows.ShadowChoreographer
+import java.util.concurrent.TimeUnit
+import java.time.Duration
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
@@ -16,9 +22,17 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [28], qualifiers = "w840dp-h649dp-mdpi")
+@Config(sdk = [28], qualifiers = "w840dp-h649dp-land-mdpi")
+@org.robolectric.annotation.LooperMode(org.robolectric.annotation.LooperMode.Mode.PAUSED)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ContinuumCockpitHandsFreeUiTest {
+    @Before fun configureVirtualVsyncClock() {
+        // Same as ContinuumReferenceCockpitUiTest: Activity setup starts the real avatar frame loop;
+        // without a paused virtual vsync the PAUSED main looper never becomes idle (22 min hang).
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+    }
+
     private fun field(a: AgentActivity, name: String): Any? =
         AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }.get(a)
 
@@ -37,11 +51,17 @@ class ContinuumCockpitHandsFreeUiTest {
             .edit().putBoolean("voice_enabled", false).commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE)
             .edit().putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        // Same start state as ContinuumReferenceCockpitUiTest: 2D head on, cockpit presentation reset.
+        // With native-head unset (head off) setup() never idles; see OPUS55-PR564-VERIFICATION-20261105.md.
         app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
-            .edit().putBoolean("native-head-3d", false).commit()
+            .edit().putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         try {
             controller.setup().visible()
+            // Let the paused virtual vsync run one window traversal so the decor is attached before focus.
+            repeat(2) { shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS) }
+            assertTrue("decor attached before focus", controller.get().window.decorView.isAttachedToWindow)
             controller.windowFocusChanged(true)
             val a = controller.get()
             val session = field(a, "sessionId") as String
@@ -60,6 +80,22 @@ class ContinuumCockpitHandsFreeUiTest {
             assertEquals(false, field(a, "conversationActive"))
             assertEquals(View.VISIBLE, (field(a, "dashboardSection") as View).visibility)
             assertSame(home, head.parent)
+            // A non-navigational status result keeps START visible.
+            val statusRoute = AgentActivity::class.java.getDeclaredMethod("showActionResultWithoutForcingChat")
+                .apply { isAccessible = true }
+            statusRoute.invoke(a)
+            assertEquals(false, field(a, "conversationActive"))
+            assertEquals(View.VISIBLE, (field(a, "dashboardSection") as View).visibility)
+            // Re-entering START after a spoken turn must rearm presentation.
+            set(a, "keepCockpitDuringHandsFree", false)
+            AgentActivity::class.java.getDeclaredMethod("showHomeDashboard")
+                .apply { isAccessible = true }.invoke(a)
+            assertEquals(true, field(a, "keepCockpitDuringHandsFree"))
+            set(a, "keyboardCompact", true)
+            AgentActivity::class.java.getDeclaredMethod("refreshConversationLayout")
+                .apply { isAccessible = true }.invoke(a)
+            assertEquals(View.VISIBLE, (field(a, "dashboardSection") as View).visibility)
+            set(a, "keyboardCompact", false)
             mode.stop()
             call(a, "addUserMessage", "Expliziter Chat")
             assertEquals(true, field(a, "conversationActive"))

@@ -18,6 +18,10 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
     private val visemeBlend = FloatArray(Viseme.entries.size)
     private var lastSeconds = Float.NaN
     private val idleMotion = AvatarIdleMotion()
+    /** Damped head state behind the instantaneous gaze target (eyes lead, head follows). */
+    private var followedYaw = 0f
+    private var followedPitch = 0f
+    private var followSeconds = Float.NaN
 
     init {
         require(targetNames.toSet().size == targetNames.size && indices.keys == AvatarGlbContract.TARGETS.toSet())
@@ -31,8 +35,23 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         val gy = finite(pose.gazeY, -1f, 1f)
         // Right-handed Y-up +Z front: positive yaw goes viewer right, negative pitch looks up.
         // Owner request (Fold7, 05.11.): turn and nod in a wide, human radius; eyes lead, head follows.
-        headYaw = gx * HEAD_YAW_DEGREES; headPitch = -gy * HEAD_PITCH_DEGREES
-        eyeYaw = cameraAzimuthDegrees.toFloat() + gx * EYE_YAW_DEGREES; eyePitch = -gy * EYE_PITCH_DEGREES
+        val targetHeadYaw = gx * HEAD_YAW_DEGREES; val targetHeadPitch = -gy * HEAD_PITCH_DEGREES
+        // Head follows with a first-order lag; the first frame, clock jumps and reduced motion snap.
+        val followDt = if (followSeconds.isFinite() && seconds.isFinite()) seconds - followSeconds else Float.NaN
+        if (!motion || !followDt.isFinite() || followDt < 0f || followDt > 1f) {
+            followedYaw = targetHeadYaw; followedPitch = targetHeadPitch
+        } else if (followDt > 0f) {
+            val a = 1f - kotlin.math.exp(-followDt / HEAD_FOLLOW_TAU_S)
+            followedYaw += (targetHeadYaw - followedYaw) * a; followedPitch += (targetHeadPitch - followedPitch) * a
+        }
+        followSeconds = if (motion) seconds else Float.NaN
+        headYaw = followedYaw; headPitch = followedPitch
+        // Eyes lead: they hold the full gaze target while the head is still catching up.
+        // Written as eye share + remaining head lag, so a settled head yields the exact eye share.
+        eyeYaw = cameraAzimuthDegrees.toFloat() +
+            (gx * EYE_YAW_DEGREES + (targetHeadYaw - followedYaw)).coerceIn(-EYE_MAX_YAW_DEGREES, EYE_MAX_YAW_DEGREES)
+        eyePitch = (-gy * EYE_PITCH_DEGREES + (targetHeadPitch - followedPitch))
+            .coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
         jawPitch = 0f
         when (pose.expression) {
             AvatarExpression.ATTENTIVE -> weight("BrowUp", .20f)
@@ -48,6 +67,9 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         if (pose.state == AvatarState.IDLE && !pose.gazeObserved) {
             headYaw += idleMotion.headYaw * IDLE_HEAD_GAIN; headPitch += idleMotion.headPitch * IDLE_HEAD_GAIN
             eyeYaw += idleMotion.eyeYaw; eyePitch += idleMotion.eyePitch
+            // Calm breathing: a slow, small nod (idle only; never during observed gaze or speech).
+            if (seconds.isFinite()) headPitch += BREATH_PITCH_DEGREES *
+                kotlin.math.sin(2.0 * Math.PI * seconds / BREATH_PERIOD_S).toFloat()
         }
         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
         val bilabialClosure = pose.viseme == Viseme.PP && cueWeight > 0f
@@ -96,6 +118,13 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         const val JAW_BONE_DEGREES = 15f
         /** Cosmetic idle head sway gain (idle only, never during observed gaze or speech). */
         const val IDLE_HEAD_GAIN = 2.5f
+        /** Head follow time constant: eyes reach the target at once, the head ~95 % after 3τ. */
+        const val HEAD_FOLLOW_TAU_S = .18f
+        /** Human oculomotor range used while the head is still turning. */
+        const val EYE_MAX_YAW_DEGREES = 30f
+        const val EYE_MAX_PITCH_DEGREES = 20f
+        const val BREATH_PITCH_DEGREES = .5f
+        const val BREATH_PERIOD_S = 4.6
     }
 
     private fun finite(value: Float, min: Float, max: Float) = if (value.isFinite()) value.coerceIn(min, max) else 0f

@@ -11,7 +11,7 @@
 // branch, clean checkout, state outside the source). With --order <uuid> (the Android request id) it is idempotent;
 // an open task with the same goal at the same commit is reused (`duplicate: true`).
 //   node .github/continuum/ccc1-cli.mjs status   --state <dir> [--format json]
-//   node .github/continuum/ccc1-cli.mjs run-once --project <repo> --state <dir> [--core disambiguate|probe|lexical] [--index-on-idle true]
+//   node .github/continuum/ccc1-cli.mjs run-once --project <repo> --state <dir> [--core disambiguate|probe|lexical|local-model] [--index-on-idle true]
 //   node .github/continuum/ccc1-cli.mjs loop     --project <repo> --state <dir> --cycles <n> [--interval <minutes>] [--index-on-idle true]
 //   node .github/continuum/ccc1-cli.mjs abort    --project <repo> --state <dir> --task t-<16 hex>   (owner cancel)
 import fs from 'node:fs';
