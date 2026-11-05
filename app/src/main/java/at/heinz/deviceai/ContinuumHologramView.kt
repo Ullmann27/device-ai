@@ -203,6 +203,16 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     /** Ref5 HEAD and ORB in local pixels. Null restores the existing phone/legacy composition. */
+    private var headAnchorX = .5f
+    private var headCloseUp = 1f
+
+    /** Native head framing inside the head region (anchor 0..1 of its width, close-up share of the bust). */
+    fun setHeadFraming(anchorX: Float, closeUp: Float) {
+        if (headAnchorX == anchorX && headCloseUp == closeUp) return
+        headAnchorX = anchorX; headCloseUp = closeUp
+        invalidate()
+    }
+
     fun setCockpitRegions(head: Rect?, orb: Rect?) {
         require((head == null) == (orb == null)) { "Head and orb bounds must be supplied together" }
         if (head != null && orb != null) {
@@ -593,11 +603,20 @@ class ContinuumHologramView @JvmOverloads constructor(
         val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
         resolveHeadBounds(width, height)
         updateOrbTarget(width, height)
+        if (headEnabled && cockpitHeadBounds != null) {
+            // 59509 scene layers behind the TextureView head, on this view's single frame clock.
+            val t = if (canAnimateFrame()) avatarSeconds else 0f
+            at.heinz.deviceai.ui.JarvisEnergyFlows.draw(painter, width / density, height / density, t, energy)
+            at.heinz.deviceai.ui.JarvisHeadAura.draw(painter, at.heinz.deviceai.ui.JarvisShellLayout.Box(
+                headDrawBounds.left / density, headDrawBounds.top / density, headDrawBounds.right / density,
+                headDrawBounds.bottom / density), headAnchorX, t)
+        }
         if (headEnabled) {
             val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
             if (canDisplay3d() && native3d != null) {
                 runCatching {
                     native3d!!.setQuality(renderBudget().reducedBloom)
+                    native3d!!.setFraming(headAnchorX, headCloseUp)
                     native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0)
                 }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
@@ -716,10 +735,11 @@ class ContinuumHologramView @JvmOverloads constructor(
         val side = b.width() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE
         headFadePaint.shader = android.graphics.LinearGradient(b.left, 0f, b.left + side, 0f, clear, opaque,
             android.graphics.Shader.TileMode.CLAMP)
-        canvas.drawRect(b.left, b.top, b.left + side, b.bottom, headFadePaint)
+        val sideTop = b.top + b.height() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE_FROM
+        canvas.drawRect(b.left, sideTop, b.left + side, b.bottom, headFadePaint)
         headFadePaint.shader = android.graphics.LinearGradient(b.right - side, 0f, b.right, 0f, opaque, clear,
             android.graphics.Shader.TileMode.CLAMP)
-        canvas.drawRect(b.right - side, b.top, b.right, b.bottom, headFadePaint)
+        canvas.drawRect(b.right - side, sideTop, b.right, b.bottom, headFadePaint)
         headFadePaint.shader = null
     }
 

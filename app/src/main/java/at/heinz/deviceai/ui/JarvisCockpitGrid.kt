@@ -44,6 +44,13 @@ object JarvisCockpitGrid {
     /** Reference-x of the dialogue's right edge and of the free head stage's left edge (gap 8 reference px). */
     const val DIALOG_RIGHT = 540f
     const val HEAD_LEFT = 548f
+    /**
+     * Live head framing measured on renders of the packaged GLB against 59509: crown-to-chin ≈ 70 % of the hero
+     * (before 47 %). The head centre sits at 70 % of the stage that reaches behind the dialogue; in the -22° three-
+     * quarter view the whole head (ear to cheek) then spans ≈ 51–90 % of the stage width, right of the dialogue edge.
+     */
+    const val HEAD_ANCHOR_X = .70f
+    const val HEAD_CLOSE_UP = .92f
 
     /** Both open-Fold orientations and wide tablets retain the same five-column composition. */
     fun applies(widthDp: Float, heightDp: Float, fontScale: Float): Boolean =

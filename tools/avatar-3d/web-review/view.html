@@ -24,8 +24,10 @@ new GLTFLoader().load('model.glb',g=>{
 const ocam=new THREE.OrthographicCamera(-1,1,1,-1,.05,10);
 window.shot=(az,el,dist,ty,hidden,morph,fov,ortho)=>{
   let c=cam;
-  if(ortho){ c=ocam; const a=W/H; const v=Math.max(ortho.half, ortho.halfW/a)*1.08; ocam.left=-v*a; ocam.right=v*a; ocam.top=v; ocam.bottom=-v; ocam.updateProjectionMatrix();
-    const ang=ortho.az*Math.PI/180; ocam.position.set(ortho.cx+Math.sin(ang)*2, ortho.cy, ortho.cz+Math.cos(ang)*2); ocam.lookAt(ortho.cx,ortho.cy,ortho.cz);
+  if(ortho){ c=ocam; const a=W/H; const full=Math.max(ortho.half, ortho.halfW/a)*1.08; const v=full*(ortho.close||1); const hh=v*a; const an=(ortho.anchor===undefined)?.5:ortho.anchor;
+    ocam.left=-2*hh*an; ocam.right=2*hh*(1-an); ocam.top=v; ocam.bottom=-v; ocam.updateProjectionMatrix();
+    const ccy=ortho.cy+(full-v);
+    const ang=ortho.az*Math.PI/180; ocam.position.set(ortho.cx+Math.sin(ang)*2, ccy, ortho.cz+Math.cos(ang)*2); ocam.lookAt(ortho.cx,ccy,ortho.cz);
     window.root.traverse(o=>{ if(o.isMesh){ o.visible=!(hidden||[]).includes(o.name); }});
     (window.morphMesh||[]).forEach(m=>{ m.morphTargetInfluences.fill(0); for(const k in (morph||{})){ const i=m.morphTargetDictionary[k]; if(i!==undefined) m.morphTargetInfluences[i]=morph[k]; }});
     renderer.render(scene,ocam); return renderer.domElement.toDataURL('image/png'); }

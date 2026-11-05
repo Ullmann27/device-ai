@@ -8,29 +8,35 @@ import kotlin.math.sin
 /**
  * 59509 head stage: violet/cyan aura, two tilted orbital rings and segmented HUD arcs around the live head.
  *
- * Drawn by the shell underneath the transparent native avatar surface, so the rings sit behind the 3D head and
- * never cover the face. Purely decorative and static: it reports no state, starts no animation loop and is
- * omitted when [enabled] is false (reduced motion keeps it; it does not move).
+ * Drawn by the live avatar view underneath its transparent native head surface, so the rings sit behind the 3D head
+ * and never cover the face. Purely decorative: it reports no state. Time [t] is the existing avatar frame clock;
+ * with reduced motion the caller passes a constant time and nothing moves.
  */
 object JarvisHeadAura {
-    /** Approximate face centre inside the native bust framing (head, neck, upper shoulders). */
-    fun faceCenter(head: Box): Pair<Float, Float> = head.centerX to head.top + head.height * .40f
+    /** Approximate face centre of the anchored close-up framing inside the head stage. */
+    fun faceCenter(stage: Box, anchorX: Float = .5f): Pair<Float, Float> =
+        stage.left + stage.width * anchorX to stage.top + stage.height * .45f
 
-    fun draw(p: ContinuumPainter, head: Box, enabled: Boolean = true) {
-        if (!enabled || head.width <= 8f || head.height <= 8f) return
-        val (cx, cy) = faceCenter(head)
-        val h = head.height
+    private fun wave(t: Float, period: Float, phase: Float = 0f) = sin(2f * Math.PI.toFloat() * t / period + phase)
+
+    fun draw(p: ContinuumPainter, stage: Box, anchorX: Float = .5f, t: Float = 0f, enabled: Boolean = true) {
+        if (!enabled || stage.width <= 8f || stage.height <= 8f || !t.isFinite()) return
+        val (cx, cy) = faceCenter(stage, anchorX)
+        val h = stage.height
         // Soft back light: violet left/top, cyan right – the reference's two-tone hologram.
         JarvisNeon.halo(p, cx - h * .08f, cy - h * .06f, h * .62f, Colors.violet, .26f)
         JarvisNeon.halo(p, cx + h * .12f, cy + h * .04f, h * .46f, Colors.cyan, .14f)
         p.setAdditive(true)
-        ring(p, cx, cy - h * .10f, h * .60f, h * .13f, -14f, Colors.magenta, Colors.violet, 1.5f)
-        ring(p, cx, cy - h * .02f, h * .52f, h * .11f, 9f, Colors.cyan, Colors.violetRim, 1.1f)
-        hudArc(p, cx, cy, h * .66f, 148f, 66f, Colors.magenta, segments = 9)
-        hudArc(p, cx, cy, h * .66f, -36f, 62f, Colors.cyan, segments = 8)
-        hudArc(p, cx, cy, h * .74f, 160f, 40f, Colors.violetRim, segments = 0)
-        hudArc(p, cx, cy, h * .74f, -20f, 34f, Colors.cyanSoft, segments = 0)
-        sparks(p, cx, cy, h)
+        ring(p, cx, cy - h * .12f, h * .62f, h * .13f, -14f + 3f * wave(t, 9f), Colors.magenta, Colors.violet, 1.5f,
+            bead = t / 14f)
+        ring(p, cx, cy - h * .02f, h * .54f, h * .11f, 9f + 2.5f * wave(t, 11f, 1f), Colors.cyan, Colors.violetRim, 1.1f,
+            bead = .5f - t / 17f)
+        val sway = 6f * wave(t, 16f)
+        hudArc(p, cx, cy, h * .68f, 148f + sway, 66f, Colors.magenta, segments = 9)
+        hudArc(p, cx, cy, h * .68f, -36f - sway, 62f, Colors.cyan, segments = 8)
+        hudArc(p, cx, cy, h * .76f, 160f - sway * .6f, 40f, Colors.violetRim, segments = 0)
+        hudArc(p, cx, cy, h * .76f, -20f + sway * .6f, 34f, Colors.cyanSoft, segments = 0)
+        sparks(p, cx, cy, h, t)
         p.setAdditive(false)
     }
 
@@ -38,6 +44,8 @@ object JarvisHeadAura {
     const val BOTTOM_FADE = .26f
     /** Share of the head stage width over which the cut shoulders dissolve at each side. */
     const val SIDE_FADE = .09f
+    /** Side fades start below this share of the height, so ears and the back of the head are never masked. */
+    const val SIDE_FADE_FROM = .60f
 
     /**
      * Alpha (0..1) the native head layer keeps at head-local ([x], [y]) inside a [w]×[h] stage. The Android view
@@ -47,7 +55,7 @@ object JarvisHeadAura {
         if (w <= 0f || h <= 0f) return 1f
         fun smooth(t: Float) = t.coerceIn(0f, 1f).let { it * it * (3f - 2f * it) }
         val bottom = smooth((h - y) / (h * BOTTOM_FADE))
-        val side = smooth(minOf(x, w - x) / (w * SIDE_FADE))
+        val side = if (y < h * SIDE_FADE_FROM) 1f else smooth(minOf(x, w - x) / (w * SIDE_FADE))
         return bottom * side
     }
 
@@ -70,12 +78,17 @@ object JarvisHeadAura {
     }
 
     private fun ring(p: ContinuumPainter, cx: Float, cy: Float, rx: Float, ry: Float, degrees: Float,
-                     from: Int, to: Int, width: Float) {
+                     from: Int, to: Int, width: Float, bead: Float) {
         val fill = Fill.Linear(cx - rx, cy, cx + rx, cy, intArrayOf(from, to, Argb.mix(to, Colors.cyan, .4f)))
         p.save(); p.rotate(degrees, cx, cy)
         p.strokeOval(cx - rx, cy - ry, cx + rx, cy + ry, width * 5f, fill, .07f)
         p.strokeOval(cx - rx, cy - ry, cx + rx, cy + ry, width * 2.2f, fill, .20f)
         p.strokeOval(cx - rx, cy - ry, cx + rx, cy + ry, width, fill, .85f)
+        // A light bead travels around the ring (continuous angle, no jump).
+        val a = 2.0 * Math.PI * (((bead % 1f) + 1f) % 1f)
+        val bx = cx + (cos(a) * rx).toFloat(); val by = cy + (sin(a) * ry).toFloat()
+        JarvisNeon.halo(p, bx, by, width * 9f, from, .35f)
+        p.fillCircle(bx, by, width * 1.2f, Fill.Solid(Colors.glowCore), .95f)
         p.restore()
     }
 
@@ -97,13 +110,13 @@ object JarvisHeadAura {
         }
     }
 
-    private fun sparks(p: ContinuumPainter, cx: Float, cy: Float, h: Float) {
+    private fun sparks(p: ContinuumPainter, cx: Float, cy: Float, h: Float, t: Float) {
         for (i in 0 until 18) {
             val a = (i * 137.5f) * (Math.PI / 180.0)
             val r = h * (.50f + (i % 5) * .045f)
             val x = cx + (cos(a) * r).toFloat(); val y = cy + (sin(a) * r * .55f).toFloat()
             val c = if (i % 3 == 0) Colors.magenta else if (i % 3 == 1) Colors.cyanSoft else Colors.violetRim
-            p.fillCircle(x, y, if (i % 4 == 0) 1.6f else 1f, Fill.Solid(c), .85f)
+            p.fillCircle(x, y, if (i % 4 == 0) 1.6f else 1f, Fill.Solid(c), .45f + .4f * wave(t, 3f + i % 4, i.toFloat()))
         }
     }
 }

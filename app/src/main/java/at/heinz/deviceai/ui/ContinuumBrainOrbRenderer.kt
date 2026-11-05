@@ -30,6 +30,7 @@ class ContinuumBrainOrbRenderer {
         p.fillCircle(cx, cy, r, Fill.Radial(cx, cy - r * .25f, r * 1.05f,
             intArrayOf(C.cyanDeep, C.backgroundHaze, C.pillSurface, Argb.withAlpha(C.pillSurface, .9f)), floatArrayOf(0f, .45f, .8f, 1f)), .92f)
         drawNet(p, cx, cy, r, s)
+        drawCore(p, cx, cy, r, s)
         drawBrain(p, cx, cy - r * .33f, r, s)
         // Rand-Bloom: mehrere additive Ringe (violett oben/rechts, cyan unten/links), dann scharfe Kante.
         p.setAdditive(true)
@@ -75,8 +76,11 @@ class ContinuumBrainOrbRenderer {
                 val behind = (a[2] + b[2]) < 0f
                 if (behind == back) {
                     val alpha = if (behind) .28f else .70f
-                    val color = if ((i + ring * 13) % segments < segments / 2) c.cyan else c.violetRim
-                    p.drawLine(a[0], a[1], b[0], b[1], r * .040f, Fill.Solid(color), alpha * .12f)
+                    val half = (i + ring * 13) % segments < segments / 2
+                    val color = when (ring) { 0 -> if (half) c.magenta else c.violetRim; 1 -> if (half) c.cyan else c.violet
+                        else -> if (half) c.violetRim else c.cyan }
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .060f, Fill.Solid(color), alpha * .10f)
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .030f, Fill.Solid(color), alpha * .18f)
                     p.drawLine(a[0], a[1], b[0], b[1], r * .012f, Fill.Solid(color), alpha)
                     p.drawLine(a[0], a[1], b[0], b[1], r * .004f, Fill.Solid(c.glowCore), alpha)
                 }
@@ -221,6 +225,29 @@ class ContinuumBrainOrbRenderer {
         p.drawText(label2, cx, cy + r * .72f, st, Fill.Solid(C.activeWhite), TextAlign.CENTER)
     }
 
+    /** Luminous inner source (59509): white-cyan centre, violet/magenta corona, slow sine breathing. */
+    private fun drawCore(p: ContinuumPainter, cx: Float, cy: Float, r: Float, s: Signals) {
+        val C = JarvisDesign.Colors
+        val breath = .5f + .5f * sin(s.phase * 2f * PI.toFloat() * .35f)
+        val k = .85f + .15f * breath + .25f * s.pulse.coerceIn(0f, 1f) + if (s.processing) .12f else 0f
+        val y = cy + r * .10f
+        p.setAdditive(true)
+        p.fillCircle(cx, y, r * .78f, Fill.Radial(cx, y, r * .78f,
+            intArrayOf(Argb.withAlpha(C.magenta, .20f * k), Argb.withAlpha(C.violet, .14f * k), 0)), 1f)
+        p.fillCircle(cx, y, r * .42f, Fill.Radial(cx, y, r * .42f,
+            intArrayOf(Argb.withAlpha(C.glowCore, .75f * k), Argb.withAlpha(C.cyan, .35f * k), 0)), 1f)
+        // Second, inner glass shell slightly offset in depth.
+        p.strokeCircle(cx, cy, r * .84f, r * .012f, Fill.Sweep(cx, cy, intArrayOf(C.violetRim, C.cyan, C.magenta, C.violetRim)), .35f)
+        // Light pillars from the pedestal into the sphere.
+        for (i in -2..2) {
+            val x = cx + i * r * .16f
+            val a = (.22f - kotlin.math.abs(i) * .05f) * (.7f + .3f * sin(s.phase * 2f * PI.toFloat() * .5f + i))
+            p.fillRect(x - r * .02f, cy + r * .1f, x + r * .02f, cy + r * 1.02f, Fill.Linear(x, cy + r * 1.02f, x, cy + r * .1f,
+                intArrayOf(Argb.withAlpha(C.cyan, a), 0)), 1f)
+        }
+        p.setAdditive(false)
+    }
+
     private fun drawPedestal(p: ContinuumPainter, cx: Float, top: Float, r: Float) {
         val C = JarvisDesign.Colors
         p.fillOval(cx - r * 1.45f, top - r * .05f, cx + r * 1.45f, top + r * .42f, Fill.Solid(C.glowHalo), .95f)
@@ -238,7 +265,9 @@ class ContinuumBrainOrbRenderer {
             }
         }
         p.fillOval(cx - r * .9f, top + r * .06f, cx + r * .9f, top + r * .28f, Fill.Radial(cx, top + r * .17f, r * .9f,
-            intArrayOf(Argb.withAlpha(C.cyan, .35f), Argb.withAlpha(C.cyanDeep, .12f), 0)), 1f)
+            intArrayOf(Argb.withAlpha(C.glowCore, .45f), Argb.withAlpha(C.cyan, .30f), Argb.withAlpha(C.magenta, .10f), 0)), 1f)
+        p.strokeOval(cx - r * 1.32f, top + r * .02f, cx + r * 1.32f, top + r * .40f, r * .012f,
+            Fill.Linear(cx - r * 1.32f, top, cx + r * 1.32f, top, intArrayOf(C.magenta, C.violetRim, C.cyan, C.violetRim, C.magenta)), .85f)
         // Lichtbalken unter dem Sockel
         val by = top + r * .40f; val bw = r * .16f; val gap = r * .06f
         for (k in -1..1) {

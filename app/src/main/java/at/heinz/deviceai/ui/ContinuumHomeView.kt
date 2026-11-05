@@ -308,10 +308,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         jarvisShell.content = JarvisShellContent.forState({ state }, grid = { jarvisShell.shell?.grid },
             shell = { jarvisShell.shell }) + mapOf(
                 JarvisShellLayout.Slot.NAV_RAIL to JarvisShellRenderer.SlotContent { _, _ -> },
-                // Rings and HUD arcs of the reference sit beneath the transparent live head surface.
-                JarvisShellLayout.Slot.AVATAR to JarvisShellRenderer.SlotContent { p, _ ->
-                    jarvisShell.shell?.headBounds?.let { JarvisHeadAura.draw(p, it) }
-                })
+                // The live avatar view draws head aura, energy streams and orb on its own frame clock.
+                JarvisShellLayout.Slot.AVATAR to JarvisShellRenderer.SlotContent { _, _ -> })
         jarvisShell.onFrameDrawn = { shellForeground.invalidate() }
         jarvisShell.tiles = shellTiles(state)
         // Drawing and hit targets are separate. Real Views own DOWN/MOVE/CANCEL/UP, keyboard focus and TalkBack.
@@ -489,7 +487,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         if (hologram.parent !== this) return
         val shell = if (jarvisShellStage) shellGeometry(widthPx, heightPx) else null
         val stage = shell?.get(JarvisShellLayout.Slot.AVATAR)
-        val head = shell?.headBounds
+        val head = shell?.headStage ?: shell?.headBounds
         val orb = shell?.orbBounds
         if (stage == null || head == null || orb == null) {
             hologram.setCockpitRegions(null, null)
@@ -502,6 +500,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
         // The latest reference has no owner card reserving half the face viewport.
         hologram.setCockpitRegions(local(head), local(orb))
+        hologram.setHeadFraming(shell.headAnchorX, shell.headCloseUp)
     }
 
     private fun shellGeometry(widthPx: Int, heightPx: Int): JarvisShellLayout.Shell? {
