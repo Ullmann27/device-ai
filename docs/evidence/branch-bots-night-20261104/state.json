@@ -1,13 +1,13 @@
 {
   "schema": "continuum-branch-bots-development-continuation",
   "version": 1,
-  "status": "READY_FOR_NEXT_ITERATION",
+  "status": "ACTIVE",
   "repository": "Ullmann27/device-ai",
   "branch": "codex/continuum-branch-integration-bots-20261104",
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
-  "ownerSession": "scheduled-20261105-0130-trace-audit",
+  "ownerSession": "scheduled-20261105-0209-source-env-isolation",
   "sourceSnapshot": "SELECTED_104_PREVIOUS_FULL_NODE_PLUS_CURRENT_4_TRACE_PATHS",
-  "phase": "M8_M9_TARGETED_SOURCE_CHECK_COMPLETE_FULL_NODE_PENDING",
+  "phase": "M10_REAL_GIT_ENV_RED_FIRST",
   "milestones": [
     {
       "id": "M1",
@@ -191,9 +191,9 @@
     }
   },
   "nextTasks": [
-    "Run the two actual expanded Node/Git regression test files on a complete checkout at source commit ef48e63713fa966710647dc4eadd4da671df39a8, then the prior 202-case selection. The 5-case real Git fixture and source-extracted checks do not certify integrated Node tests.",
-    "Check current C1 #519 and #527 exact heads before any selective import; leave their active UI, memory, avatar and shared worker scope untouched.",
-    "Only propose the seven-path older night delta plus M8/M9 trace env changes for independent integrator review; preserve both newer worker and QA files and every original owner/release authority. No APK promotion."
+    "Reproduce inherited GIT_DIR/GIT_WORK_TREE source-identity misbinding with real Git on isolated fixtures",
+    "Repair minimum sourceIdentity Git environment without changing scheduler authority, sourcePreflight, model/release configuration",
+    "Run exact tests and preserve RED/GREEN evidence; if complete checkout unavailable report bounded tests only"
   ],
   "scheduledContinuation": {
     "enabled": true,
