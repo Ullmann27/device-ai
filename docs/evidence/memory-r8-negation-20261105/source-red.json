@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "taskId": "MEMORY-R8-NEGATION-K-20261105",
+  "phase": "BEFORE_FIX_SOURCE_RED",
+  "sourceCommit": "22d58502c367be4cce6709a762df9d102c421697",
+  "sourceBlob": "a0849ac148164fb94e7f0725182ce831546519d4",
+  "frozenProjectTests": "app/src/test/java/at/heinz/deviceai/learning/MemoryRetrieverPolarityAndLimitR8Test.kt",
+  "checkType": "static source-pattern assertions evaluated against the production Kotlin file; not executed Kotlin or Android JUnit",
+  "staticResults": [
+    {
+      "name": "nicht is retained as a GermanText.contentStems token",
+      "status": "FAIL"
+    },
+    {
+      "name": "BM25.search returns empty for k<=0",
+      "status": "FAIL"
+    },
+    {
+      "name": "CharNgramHashRetriever.scoredParts returns empty for k<=0",
+      "status": "FAIL"
+    }
+  ],
+  "androidProjectTests": "NOT_RUN",
+  "expectedFailures": "5 frozen Android/JUnit cases; not executed; no asserted runtime result"
+}
