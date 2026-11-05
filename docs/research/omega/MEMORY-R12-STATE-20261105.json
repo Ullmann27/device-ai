@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "task_id": "MEMORY-R12-20261105",
+  "status": "DRAFT_SPECIALIST_SOURCE_BOUND_HOST_GREEN_ANDROID_HOLDOUT_NOT_RUN",
+  "branch": "fix/continuum-memory-r12-numeric-evidence-20261105",
+  "base_pr": 538,
+  "base_sha": "915dba534eb7c79b6343636cc6646226a044998f",
+  "observed_c1": {
+    "pr": 519,
+    "head": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "sole_integrator": true,
+    "r3_522_accepted": true,
+    "r4_529_in_intake": true
+  },
+  "architecture": "GermanText numericEvidenceTerms -> BM25 exact postings or char-ngram same-generation numeric BitSets -> RetrievalHit retains original confirmed -> TemporalCue window",
+  "source": {
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+    "r11_blob": "b8c4930ce54b7dd6528beb9bee2a1fc84c122301",
+    "r12_blob": "dcaeed0b13eb3f4f88128e45c250d6d84a319c72",
+    "test_freeze_commit": "7a44d1ef5761713810999d07f46069af009cc17d",
+    "production_commit": "c0113a8c85a01121384e4a68574d9a461516230d",
+    "test_blob": "c6fc1b7ed6a8cbbbaf87c46a2e3e685a5878ed8e"
+  },
+  "tests": {
+    "actual_host_baseline": "17 total / 11 PASS / 6 FAIL / compile0 / exit1 (9 prior R11 + 8 R12 cases)",
+    "actual_host_patched": "18 total / 18 PASS / 0 FAIL / compile0 / exit0 (9 prior R11 + 9 R12)",
+    "unchanged_parity": "112/112 identical to 12 decimals / SHA256 643a9ac0a14626ce10874947591354e1a702f167c9dca5008664a5514e9f70ff",
+    "published_full_script": "NOT_COMPLETED end-to-end, timeout after RED/GREEN; individual parity run PASS",
+    "evidence": "docs/evidence/memory-r12-numeric-20261105/RESULT.json"
+  },
+  "outstanding": [
+    "C1 intake R6→R12 only once and source conflict review",
+    "R12 Android JUnit with all nine frozen cases",
+    "official M2.9 1,000-document/44-query holdout and ranking/no-recall-loss check",
+    "full integrated Node/backend/Android/NewApi gates",
+    "independent C2 acceptance",
+    "real local model and Fold7 hardware acceptance",
+    "APK candidate only after approval"
+  ],
+  "safety": {
+    "main": false,
+    "actions": false,
+    "paid": false,
+    "other_bots": 0,
+    "signing": false,
+    "package": false,
+    "owner_data": false,
+    "offline": false,
+    "model_weights": false,
+    "apk": false
+  }
+}
