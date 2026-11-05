@@ -1,0 +1,104 @@
+{
+  "schema": "continuum-pcm-silence-repair-v1",
+  "remoteBaseline": "c69199cda71c4d561c2f4721ff5d8c3a7eeefcac",
+  "baselineTree": "db16767156bae99af8a41b3ef56e64b3670182ee",
+  "equivalentLocalBaseline": "cdd9ed6b49b3da928f2b3f6cd8a4f8d2ef131b31",
+  "donor": "5a18f74f18d9b7d927f8c622052369496153829f",
+  "productionPaths": [
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "app/src/main/java/at/heinz/deviceai/TtsHologramSignal.kt",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt"
+  ],
+  "changedFiles": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "sha256": "8a653e48f1e8bfced617e33a24e465056a898ac4acfeadc33986162dc7420eec",
+      "gitBlob": "477b480f760fe246100365bbb0b2bbf9bb179bbd"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/TtsHologramSignal.kt",
+      "sha256": "e1190434295abd06fb7f9dfdafda620fab781ccf5bda942476e7d6e95868520e",
+      "gitBlob": "8f3da133e8d7532c32d2cb5c45ab9bcd0ef8f294"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+      "sha256": "0820fa07265cfada4cc5c79776e05383f2e83b8f755b94deff3e4384cda2761c",
+      "gitBlob": "d96b79d7f084740cfe4fe90dffc5fbce0f6adf95"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "sha256": "c3948cfa76b8690e2446cdd1c22e939fb3324cf075bed1b65e2be6f4a3aa66c8",
+      "gitBlob": "4cbda8531b1ee9e61e18f04d79d0853680f14544"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt",
+      "sha256": "dac03e4877ecc83ee84055eea9828881ca95494c14c6f604b1327a3e00ca90cc",
+      "gitBlob": "483d2dc036469dad1d173bea25ea51c9de385758"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMeasuredSilenceTest.kt",
+      "sha256": "d245b1e2da8c90f002203bbb6531ce01043386a04095b589c36b6a6da9190222",
+      "gitBlob": "1d60e46c2293639bc2db89dddf22f05bb72e0664"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarSpeechPipelineTest.kt",
+      "sha256": "16e910902a9ecbb0e84b17924e8ee9f101ab3c1a1efd3d20692b7fc563124a4e",
+      "gitBlob": "f254cb9df6bae6a69ad469e5f3b0c211ca5215c9"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt",
+      "sha256": "bd91b2a99bdebbc2039ff50f0c8414607ed849d88b8d171f9dc4152e4992bdfa",
+      "gitBlob": "4d1467f789521954c5613af6462fefadc6e87660"
+    }
+  ],
+  "executions": {
+    "red": {
+      "compileExitCode": 0,
+      "testExitCode": 1,
+      "tests": 2,
+      "failures": 2,
+      "elapsedSeconds": 12.246,
+      "sourceUnchanged": true,
+      "rawLogs": {
+        "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.log": "fe84570acfc5466e3ec07b0fbe2c2d6b9fa3127fdc3b6169d43929d495ea3c0a"
+      }
+    },
+    "green-counterexamples": {
+      "compileExitCode": 0,
+      "testExitCode": 0,
+      "tests": 2,
+      "failures": 0,
+      "elapsedSeconds": 10.584,
+      "sourceUnchanged": true,
+      "rawLogs": {
+        "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.log": "1aa638feb1d44929bf4a3f68330b4d35f1ea39cdae1e6e80ad23a5a3a1dc76b4"
+      }
+    },
+    "focused": {
+      "compileExitCode": 0,
+      "testExitCode": 0,
+      "tests": 85,
+      "failures": 0,
+      "elapsedSeconds": 14.708,
+      "sourceUnchanged": true,
+      "rawLogs": {
+        "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.log": "3eb16df1fb41d668f71f1869883c98c071b8258d48961f9ebb0372cb98a80e56"
+      }
+    }
+  },
+  "counterexampleOverlap": "Two baseline counterexamples are extracted without body changes from two of the six donor silence tests; do not count them as additional distinct focused cases.",
+  "stagedUiCases": [
+    "measuredSilenceClosesTheVisibleMouthBeforeTheUtteranceEnds",
+    "aTtsEngineWithoutPcmRetainsWordRangeMotion"
+  ],
+  "androidActivityCompilation": "NOT_RUN",
+  "androidUiExecution": "NOT_RUN",
+  "signedApk": "NOT_BUILT",
+  "fold7": "NOT_RUN",
+  "sharedBuildLease": "Observed busy; no competing Gradle process started. Standalone JVM compilation reads pinned jars and uses one active processor.",
+  "sourceBoundary": "Executed seven real production Kotlin files and fourteen test classes; per-file SHA256 manifests and original logs are preserved. Activity source change is included but not compiled by the standalone JVM runner."
+}

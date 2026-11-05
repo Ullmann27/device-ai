@@ -255,9 +255,11 @@ class AgentActivity : Activity() {
     private val voiceFrame = object : Runnable {
         override fun run() {
             if (!voiceSpeaking || !foregroundLearningActive || isDestroyed) return
-            val level = voiceSignal.level(android.os.SystemClock.elapsedRealtime())
+            val utteranceId = voiceUtteranceId
+            val measured = utteranceId?.let { voiceSignal.measuredLevel(it, android.os.SystemClock.elapsedRealtime()) }
+            val level = measured ?: 0f
             hologramView?.setAudioLevel(level)
-            voiceUtteranceId?.let { avatarDirector.audioLevel(it, level) }
+            utteranceId?.let { avatarDirector.audioLevel(it, level, measuredPcmAvailable = measured != null) }
             mainHandler.postDelayed(this, 33L)
         }
     }

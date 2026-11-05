@@ -48,13 +48,13 @@ class AvatarSpeechOrderingRegressionTest {
         val reducer = speakingReducer()
         reducer.apply(AvatarEvent.AudioLevel("current", .9f, 200))
         reducer.apply(AvatarEvent.AudioLevel("current", .1f, 250))
-        reducer.apply(AvatarEvent.VisemeCue("current", Viseme.AA, .7f, 100, 550))
+        reducer.apply(AvatarEvent.VisemeCue("current", Viseme.AA, .7f, 100, 350))
         reducer.apply(AvatarEvent.StateChanged(
-            AvatarState.SPEAKING, AvatarExpression.NEUTRAL, GazeTarget.OWNER, 600
+            AvatarState.SPEAKING, AvatarExpression.NEUTRAL, GazeTarget.OWNER, 400
         ))
         val currentPose = reducer.pose()
         assertEquals(Viseme.AA, currentPose.viseme)
-        assertEquals(0f, currentPose.speakEnergy, 0f)
+        assertEquals(.21990544f, currentPose.speakEnergy, .000001f)
 
         for (rejected in listOf(
             AvatarEvent.AudioLevel("current", .9f, 200),
@@ -90,7 +90,8 @@ class AvatarSpeechOrderingRegressionTest {
         reducer.apply(AvatarEvent.AudioLevel("current", 1f, Long.MAX_VALUE))
         val afterRejection = reducer.pose(201)
         assertEquals(0f, afterRejection.speakEnergy, 0f)
-        assertEquals(Viseme.AA, afterRejection.viseme)
+        assertEquals(Viseme.SIL, afterRejection.viseme)
+        assertEquals(0f, afterRejection.visemeWeight, 0f)
         assertEquals(afterRejection, reducer.pose())
 
         // Rejecting a future timestamp must preserve the last confirmed ordering boundary.
