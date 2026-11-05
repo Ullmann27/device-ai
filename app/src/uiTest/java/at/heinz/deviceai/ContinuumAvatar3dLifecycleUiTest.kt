@@ -63,7 +63,7 @@ class ContinuumAvatar3dLifecycleUiTest {
         assertEquals(307, view.height)
         return Bitmap.createBitmap(412, 307, Bitmap.Config.ARGB_8888).also { view.draw(Canvas(it)) }
     }
-    @Test fun newAppearanceUses3dButSavedOrbAndLegacy2dStayChosen() {
+    @Test fun legacyEnabledHeadUpgradesButExplicitOrbAnd2dStayChosen() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val context = controller.get()
         val prefs = context.getSharedPreferences("continuum-avatar-appearance", android.content.Context.MODE_PRIVATE)
@@ -81,7 +81,11 @@ class ContinuumAvatar3dLifecycleUiTest {
             prefs.edit().clear().putBoolean("native-head", true).commit()
             val legacy = ContinuumHologramView(context)
             assertTrue(legacy.isNativeHeadEnabled())
-            assertEquals(false, field(legacy, "head3dEnabled"))
+            assertEquals(true, field(legacy, "head3dEnabled"))
+            prefs.edit().putBoolean("native-head-3d", false).commit()
+            val explicit2d = ContinuumHologramView(context)
+            assertTrue(explicit2d.isNativeHeadEnabled())
+            assertFalse(explicit2d.isNative3dEnabled())
             prefs.edit().clear().putBoolean("native-head-3d", true).commit()
             assertTrue(ContinuumHologramView(context).isNativeHeadEnabled())
         } finally {
@@ -110,7 +114,7 @@ class ContinuumAvatar3dLifecycleUiTest {
             } finally { orb.recycle() }
         } finally { view.setNativeHeadEnabled(false); controller.pause().stop().destroy() }
     }
-    @Test fun actualFailurePathRetains2dAndOriginalSingleLifecycleClock() {
+    @Test fun actualFailureReportsUnavailabilityAndRetainsSingleLifecycleClock() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val view = ContinuumHologramView(controller.get())
         try {
@@ -122,7 +126,11 @@ class ContinuumAvatar3dLifecycleUiTest {
                 ContinuumHologramView::class.java.getDeclaredMethod("fail3d").apply { isAccessible = true }.invoke(view)
                 view.setForegroundActive(true)
                 val fallback = draw(view)
-                try { assertTrue("Rejected 3D must show existing 2D pixels", baseline.sameAs(fallback)) } finally { fallback.recycle() }
+                try {
+                    assertFalse("Unavailable 3D must not substitute a different face", baseline.sameAs(fallback))
+                    assertEquals(true, field(view, "native3dFailed"))
+                    assertEquals(true, field(view, "head3dEnabled"))
+                } finally { fallback.recycle() }
                 assertEquals(0, view.childCount); assertNull(field(view, "native3d"))
                 advanceFrames(1_000)
                 assertEquals(0L, view.sampleMotion().callbackCount)

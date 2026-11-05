@@ -64,11 +64,11 @@ internal object ContinuumReadinessGuide {
         !s.cameraHardwareSupported -> Step("camera", "Kamerablick", Status.UNAVAILABLE,
             "Die Frontkamera stellt die benötigten lokalen Positionsdaten nicht bereit. Die normale Avatarbewegung bleibt verfügbar.", Action.NONE)
         !s.cameraPermissionGranted -> Step("camera", "Kamerablick", Status.NEEDS_SETUP,
-            "Die optionale Blickausrichtung braucht deine Kamerafreigabe. Es werden keine Bilder gespeichert oder übertragen.", Action.REQUEST_CAMERA)
+            "Darf ich dich beim Gespräch anschauen? Die optionale Blickausrichtung braucht deine Kamerafreigabe. Es werden keine Bilder gespeichert oder übertragen.", Action.REQUEST_CAMERA)
         !s.cameraOwnerEnabled -> Step("camera", "Kamerablick", Status.NEEDS_SETUP,
-            "Starte den Kameratest ausdrücklich. Eine vorhandene Android-Berechtigung schaltet die Kamera nicht von selbst ein.", Action.ENABLE_CAMERA_TEST)
+            "Starte den Kamerablick ausdrücklich. Eine Android-Berechtigung allein schaltet die Kamera nicht ein. Nach einer App-Pause bleibt sie aus, bis du erneut zustimmst.", Action.ENABLE_CAMERA_TEST)
         s.cameraState == CameraTrackingState.TRACKING -> Step("camera", "Kamerablick", Status.AVAILABLE,
-            "Eine aktuelle Gesichtsposition wird beobachtet. Bewege den Kopf langsam und prüfe die Blickausrichtung. Dies ist keine Identitäts- oder Augenbewegungserkennung.", Action.STOP_CAMERA)
+            "Die Blickausrichtung folgt einer aktuellen Gesichtsposition, auch nach Schließen dieser Einrichtung. KAMERA AN · STOPPEN beendet sie. Dies ist keine Identitäts- oder Augenbewegungserkennung.", Action.STOP_CAMERA)
         s.cameraState == CameraTrackingState.NO_FACE -> Step("camera", "Kamerablick", Status.NEEDS_SETUP,
             "Aktuell ist keine eindeutige Gesichtsposition sichtbar. Schau in die Frontkamera; die Blickausrichtung bleibt bis dahin neutral.", Action.STOP_CAMERA)
         s.cameraState == CameraTrackingState.AMBIGUOUS -> Step("camera", "Kamerablick", Status.NEEDS_SETUP,
@@ -76,7 +76,7 @@ internal object ContinuumReadinessGuide {
         s.cameraState == CameraTrackingState.STARTING -> Step("camera", "Kamerablick", Status.UNKNOWN,
             "Die freigegebene Frontkamera wird gestartet.", Action.STOP_CAMERA)
         else -> Step("camera", "Kamerablick", Status.UNAVAILABLE,
-            "Die Kameraverbindung ist beendet oder nicht verfügbar. Prüfe die Freigabe und starte den Test bei Bedarf erneut.", Action.ENABLE_CAMERA_TEST)
+            "Die Kameraverbindung ist beendet oder nicht verfügbar. Prüfe die Freigabe und starte den Kamerablick bei Bedarf erneut.", Action.ENABLE_CAMERA_TEST)
     }
 
     fun matchesSpeechSample(transcript: String): Boolean {

@@ -54,9 +54,10 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val avatarPose = AvatarPoseReducer()
     private val appearancePrefs = context.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
     private val hasSavedAppearance = appearancePrefs.contains("native-head") || appearancePrefs.contains("native-head-3d")
-    // New installations use the requested 3D cockpit. An existing explicit orb
-    // or 2D choice is preserved; this never requests camera/audio permissions.
-    private var head3dEnabled = appearancePrefs.getBoolean("native-head-3d", !hasSavedAppearance)
+    // Upgrade legacy enabled heads.
+    // Explicit 3D choices remain authoritative.
+    private var head3dEnabled = appearancePrefs.getBoolean("native-head-3d",
+        appearancePrefs.getBoolean("native-head", !hasSavedAppearance))
     private var headEnabled = head3dEnabled || appearancePrefs.getBoolean("native-head", !hasSavedAppearance)
     private var native3d: FilamentAvatarRenderer? = null
     private var nativeTexture: TextureView? = null

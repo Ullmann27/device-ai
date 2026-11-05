@@ -51,7 +51,7 @@ class JarvisShellStageUiTest {
     private fun run(label: String, width: Int, height: Int) {
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
-        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit().putBoolean("introduced", true).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit().putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
         // Native host Canvas capture; optional Android Filament rendering is checked on the device separately.
         app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
             .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
@@ -145,7 +145,7 @@ class JarvisAvatarSlotUiTest {
     @Test fun registeredRendererIsDockedFedAndDetached() {
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
-        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit().putBoolean("introduced", true).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit().putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
         // This host slot/lifecycle test uses the real Canvas head; Filament is a separate device check.
         app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
             .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()

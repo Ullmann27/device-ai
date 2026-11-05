@@ -51,7 +51,7 @@ class JarvisShellMotionUiTest {
 
     private fun withShell(block: (Fixture) -> Unit) {
         val controller = Robolectric.buildActivity(Activity::class.java)
-        val activity = controller.get()
+        val activity = controller.setup().get()
         val resolver = activity.contentResolver
         val scale = Settings.Global.getString(resolver, Settings.Global.ANIMATOR_DURATION_SCALE)
         Settings.Global.putFloat(resolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)
@@ -61,7 +61,6 @@ class JarvisShellMotionUiTest {
         shell.onFrameDrawn = { fixture.frames++ }
         parent.addView(shell, FrameLayout.LayoutParams(-1, -1))
         try {
-            controller.setup()
             activity.setContentView(parent)
             controller.visible()
             advance(32L)
