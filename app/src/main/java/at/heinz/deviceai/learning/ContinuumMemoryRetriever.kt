@@ -40,6 +40,10 @@ object GermanText {
     fun rawTokens(s:String)=normalize(s).split(Regex("[^a-z0-9]+")).filter { it.length>=2 || (it.length==1 && it[0] in '0'..'9') }
     fun stem(t:String):String { if(t.length<=4)return t; for(x in SUFFIXES) if(t.endsWith(x) && t.length-x.length>=4)return t.dropLast(x.length); return t }
     fun contentStems(s:String)=rawTokens(s).filter { it !in STOP }.map(::stem)
+    /** Explicit numeric facts require exact evidence; "vor N Tagen" is a time cue, not a fact. */
+    fun numericEvidenceTerms(query:String):Set<String> =
+        rawTokens(normalize(query).replace(Regex("\\bvor\\s+\\d+\\s+tagen\\b"), " "))
+            .filter { token -> token.all { it in '0'..'9' } }.toSet()
     fun editDistance(a:String,b:String,limit:Int):Int {
         if(kotlin.math.abs(a.length-b.length)>limit)return limit+1
         var prev=IntArray(b.length+1){it}; var cur=IntArray(b.length+1)
@@ -145,12 +149,16 @@ class Bm25GermanRetriever(private val temporal:TemporalCue?=null, private val k1
         if(k<=0)return emptyList()
         val index=state
         if(index.docs.isEmpty())return emptyList()
+        val requiredNumbers=GermanText.numericEvidenceTerms(query).map { token ->
+            (index.postings[token] ?: return emptyList()).mapTo(HashSet<Int>()) { it[0] }
+        }
         val scores=DoubleArray(index.docs.size); val n=index.docs.size.toDouble()
         terms(query,index.vocab).flatMap { resolve(it,index) }.distinct().forEach { t -> val p=index.postings[t] ?: return@forEach
             val idf=ln(1+(n-p.size+0.5)/(p.size+0.5))
             p.forEach { (d,tf) -> scores[d]+=idf*tf*(k1+1)/(tf+k1*(1-b+b*index.lengths[d]/index.avg)) } }
         val w=temporal?.window(query,nowMillis)
-        return scores.indices.filter { scores[it]>0 }.map { RetrievalHit(index.docs[it],scores[it]*(temporal?.weight(w,index.docs[it].atMillis) ?: 1.0)) }
+        return scores.indices.filter { i -> scores[i]>0 && requiredNumbers.all { i in it } }
+            .map { RetrievalHit(index.docs[it],scores[it]*(temporal?.weight(w,index.docs[it].atMillis) ?: 1.0)) }
             .sortedByDescending { it.score }.take(k)
     }
     override fun approxIndexBytes()=state.approxBytes
@@ -160,9 +168,10 @@ class Bm25GermanRetriever(private val temporal:TemporalCue?=null, private val k1
 class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val dim:Int=1 shl 15):ContinuumMemoryRetriever {
     private data class IndexState(
         val docs:List<MemoryDoc>, val vectors:List<Pair<IntArray,FloatArray>>,
-        val idf:FloatArray, val negationDocIds:Map<String,BitSet>, val approxBytes:Long,
+        val idf:FloatArray, val negationDocIds:Map<String,BitSet>,
+        val numericDocIds:Map<String,BitSet>, val approxBytes:Long,
     )
-    @Volatile private var state=IndexState(emptyList(),emptyList(),FloatArray(0),emptyMap(),0L)
+    @Volatile private var state=IndexState(emptyList(),emptyList(),FloatArray(0),emptyMap(),emptyMap(),0L)
     private fun grams(text:String):Map<Int,Int> {
         val m=HashMap<Int,Int>()
         for(w in GermanText.contentStems(text)) { val s=" $w "
@@ -183,15 +192,21 @@ class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val
         val nextVectors=gs.map { vec(it,nextIdf) }
         // Cache exact negation membership with this generation, not by rescanning all document text per query.
         val nextNegationDocIds=HashMap<String,BitSet>()
+        val nextNumericDocIds=HashMap<String,BitSet>()
         snapshot.forEachIndexed { i,doc ->
-            GermanText.contentStems(doc.text).asSequence().filter { GermanText.isNegationStem(it) }.distinct().forEach { stem ->
+            val stems=GermanText.contentStems(doc.text)
+            stems.asSequence().filter { GermanText.isNegationStem(it) }.distinct().forEach { stem ->
                 nextNegationDocIds.getOrPut(stem) { BitSet(snapshot.size) }.set(i)
+            }
+            stems.asSequence().filter { token -> token.all { it in '0'..'9' } }.distinct().forEach { token ->
+                nextNumericDocIds.getOrPut(token) { BitSet(snapshot.size) }.set(i)
             }
         }
         val negationBytes=nextNegationDocIds.entries.sumOf { (stem,bits) -> 40L+stem.length*2L+bits.toLongArray().size*8L }
-        val bytes=nextVectors.sumOf { it.first.size*8L+32 }+nextIdf.size*4L+negationBytes
+        val numericBytes=nextNumericDocIds.entries.sumOf { (token,bits) -> 40L+token.length*2L+bits.toLongArray().size*8L }
+        val bytes=nextVectors.sumOf { it.first.size*8L+32 }+nextIdf.size*4L+negationBytes+numericBytes
         // Publish docs, vectors, IDF and polarity membership together. No post-publication mutation.
-        state=IndexState(snapshot,nextVectors,nextIdf,nextNegationDocIds,bytes)
+        state=IndexState(snapshot,nextVectors,nextIdf,nextNegationDocIds,nextNumericDocIds,bytes)
     }
     override fun search(query:String,nowMillis:Long,k:Int):List<RetrievalHit> = scoredParts(query,nowMillis,k).map { it.hit }
 
@@ -202,9 +217,11 @@ class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val
         if(index.docs.isEmpty())return emptyList()
         val soleNegation=GermanText.contentStems(query).distinct().singleOrNull()?.takeIf { GermanText.isNegationStem(it) }
         val eligible=soleNegation?.let { index.negationDocIds[it] ?: return emptyList() }
+        val numericEligible=GermanText.numericEvidenceTerms(query).map { index.numericDocIds[it] ?: return emptyList() }
         val (qk,qv)=vec(grams(query),index.idf); val w=temporal?.window(query,nowMillis)
         return index.vectors.mapIndexedNotNull { i,(dk,dv) ->
             if(eligible!=null && !eligible.get(i)) return@mapIndexedNotNull null
+            if(numericEligible.any { !it.get(i) }) return@mapIndexedNotNull null
             var s=0.0; var a=0; var c=0
             while(a<qk.size && c<dk.size){ when { qk[a]==dk[c] -> { s+=qv[a]*dv[c];a++;c++ }; qk[a]<dk[c] -> a++; else -> c++ } }
             val tw=temporal?.weight(w,index.docs[i].atMillis) ?: 1.0
