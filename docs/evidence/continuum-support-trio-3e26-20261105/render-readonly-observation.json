@@ -1,0 +1,38 @@
+{
+  "service": {
+    "id": "srv-dbf1tr2vcj2c73ehpfog",
+    "name": "continuum-owner-v23-release-preflight",
+    "type": "static_site",
+    "repo": "https://github.com/Ullmann27/device-ai",
+    "branch": "research/continuum-m8-render-signed-release-20261031",
+    "autoDeploy": "no",
+    "url": "https://continuum-owner-v23-release-preflight.onrender.com",
+    "buildCommand": "bash scripts/render-continuum-m8-owner-release.sh",
+    "buildPlan": "starter",
+    "publishPath": "continuum-m8-owner-release"
+  },
+  "deploys": [
+    {
+      "id": "dep-dblbct6gekts73fte14g",
+      "status": "live",
+      "commit": "a8e58ae09f6f1a8f43bd0a6f3b30b7e81bb79be6",
+      "finishedAt": "2026-11-04T04:51:07.038382Z"
+    },
+    {
+      "id": "dep-dbl70arm8hqs73ch40pg",
+      "status": "deactivated",
+      "commit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+      "finishedAt": "2026-11-03T23:51:49.880689Z"
+    },
+    {
+      "id": "dep-dbkokcdlmcpc73diq5c0",
+      "status": "deactivated",
+      "commit": "a9709854f48d2fd6589f9ce5ea97f6ec3be0d233",
+      "finishedAt": "2026-11-03T07:34:15.63722Z"
+    }
+  ],
+  "scope": "Read-only service/deploy metadata; no manifest or APK byte readback, no build or deployment triggered",
+  "observedBy": "root, independently of build/update subagent",
+  "reviewedCandidate": "08aa76e8393bfedfeb1274c4e292b7e2a3139d15",
+  "candidateDeploymentVerified": false
+}
