@@ -159,7 +159,7 @@ class AvatarTtsLiveConnectionUiTest {
     }
 
     private fun startPendingSpeech(fixture: SpeechFixture, id: String, text: String,
-        reportRange: Boolean = true, rangeEnd: Int = text.length) {
+        reportRange: Boolean = true, rangeEnd: Int = text.length, chunks: List<ByteArray> = listOf(pcm16())) {
         // Only the already-accepted synthesis-request context is fixture state. Calling the
         // shadow's speak() would automatically post onDone before controlled PCM/range callbacks.
         // These are the three assignments made by speakBootstrap; no Director/View event is faked.
@@ -167,7 +167,7 @@ class AvatarTtsLiveConnectionUiTest {
         set(fixture.activity, "voiceAvatarText", text)
         (field(fixture.activity, "voiceSignal") as TtsHologramSignal).activate(id)
         fixture.listener.onBeginSynthesis(id, 8_000, AudioFormat.ENCODING_PCM_16BIT, 1)
-        fixture.listener.onAudioAvailable(id, pcm16())
+        chunks.forEach { fixture.listener.onAudioAvailable(id, it) }
         fixture.listener.onStart(id)
         if (reportRange) fixture.listener.onRangeStart(id, 0, rangeEnd, 0)
         // The real voiceFrame schedules itself every 33 ms. A one-letter word starts with SIL
@@ -204,6 +204,30 @@ class AvatarTtsLiveConnectionUiTest {
         f.listener.onDone("current")
         shadowOf(Looper.getMainLooper()).idle()
         assertSilent(f)
+    }
+
+    @Test fun measuredSilenceClosesTheVisibleMouthBeforeTheUtteranceEnds() {
+        for (chunks in listOf(listOf(pcm16(2_000), ByteArray(1_600)), listOf(pcm16(2_000)))) {
+            withSpeechShell { f ->
+                startPendingSpeech(f, "silence", "A", chunks = chunks)
+                assertEquals(Viseme.AA, pose(f).viseme)
+                assertTrue(pose(f).jawOpen > 0f)
+                advance(110)
+                assertEquals(0f, pose(f).jawOpen, 0f)
+                assertEquals(0f, pose(f).speakEnergy, 0f)
+                assertEquals(Viseme.SIL, pose(f).viseme)
+                assertTrue(field(f.activity, "voiceSpeaking") as Boolean)
+                assertEquals("silence", field(f.activity, "voiceUtteranceId"))
+            }
+        }
+    }
+
+    @Test fun aTtsEngineWithoutPcmRetainsWordRangeMotion() = withSpeechShell { f ->
+        startPendingSpeech(f, "no-pcm", "A", chunks = emptyList())
+        assertEquals(Viseme.AA, pose(f).viseme)
+        assertTrue(pose(f).speakEnergy > 0f)
+        assertTrue(pose(f).speakEnergy <= .28f)
+        assertTrue(pose(f).jawOpen > 0f)
     }
 
     @Test fun previousAndFinishedUtteranceCallbacksCannotMutateTheCurrentSurface() = withSpeechShell { f ->
