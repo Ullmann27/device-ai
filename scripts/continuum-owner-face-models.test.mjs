@@ -47,6 +47,7 @@ test('production pins use immutable official URLs and source contains no weights
     ['LICENSE-YUNET.txt', 'c83b8120c50ccbd4c4f96edf53141bdd566ebb8f8e9227e415326aa1b1aba958'],
     ['LICENSE-SFACE.txt', 'cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30'],
     ['LICENSE-OPENCV.txt', 'cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30'],
+    ['LICENSE-LIBCXX.txt', '539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b'],
   ];
   for (const [file, digest] of licenses)
     assert.equal(sha(await fs.readFile(path.join(root, 'app/src/main/assets/faceid', file))), digest);

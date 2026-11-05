@@ -33,6 +33,11 @@ internal class OwnerFaceProfileStore(
     private val pendingFile get() = File(directory, "profile.pending")
 
     internal class Prepared internal constructor(internal val file: File, internal val generation: Long)
+    internal class Snapshot(val profile: OwnerFaceProfile?, val revision: Long)
+
+    val revision: Long get() = storageGeneration
+
+    fun loadSnapshot(): Snapshot = synchronized(storeLock) { Snapshot(load(), storageGeneration) }
 
     fun load(): OwnerFaceProfile? = synchronized(storeLock) {
         if (!profileFile.exists()) return null
@@ -59,7 +64,8 @@ internal class OwnerFaceProfileStore(
         try { commit(pending) } finally { discard(pending) }
     }
 
-    fun prepare(profile: OwnerFaceProfile): Prepared = synchronized(storeLock) {
+    fun prepare(profile: OwnerFaceProfile, expectedRevision: Long? = null): Prepared = synchronized(storeLock) {
+        check(expectedRevision == null || expectedRevision == storageGeneration)
         require(profile.valid())
         require(directory.isDirectory || directory.mkdirs())
         val plaintext = encode(profile)
@@ -157,7 +163,7 @@ internal class OwnerFaceProfileStore(
         val AAD = ("continuum-owner-face-v1|" + OwnerFaceModelContract.RECOGNIZER_SHA256)
             .toByteArray(StandardCharsets.US_ASCII)
         val storeLock = Any()
-        var storageGeneration = 0L
+        @Volatile var storageGeneration = 0L
 
         fun androidKeyStore(): KeyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
 

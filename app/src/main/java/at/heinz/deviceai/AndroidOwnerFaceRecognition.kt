@@ -40,21 +40,30 @@ internal class AndroidOwnerFaceRecognition(
     private var lastIssuedAt = 0L
     private var lastSubmittedCaptureAt = -1L
     private var lastObservedAt = -1L
+    private var sessionRevision = -1L
     private var watchdog: Runnable? = null
     @Volatile private var closed = false
     @Volatile private var activeToken = 0L
     @Volatile var status = OwnerFaceStatus(OwnerFacePhase.LOADING, message = "Lokales Gesichtsprofil wird geprüft.")
+        get() = synchronized(lock) {
+            if (activeToken > 0 && sessionRevision != store.revision) profileChangedLocked()
+            field
+        }
         private set
-    val wantsFrames: Boolean get() = !closed && activeToken > 0
-    val sessionToken: Long get() = activeToken
+    val wantsFrames: Boolean get() = synchronized(lock) { currentLocked(activeToken) }
+    val sessionToken: Long get() = synchronized(lock) { if (currentLocked(activeToken)) activeToken else 0 }
 
-    init {
+    init { readProfileMetadata(0L) }
+
+    private fun readProfileMetadata(operation: Long) {
         worker.execute {
             var loaded: OwnerFaceProfile? = null
             try {
-                loaded = store.load()
+                val snapshot = store.loadSnapshot()
+                loaded = snapshot.profile
                 synchronized(lock) {
-                    if (!closed && profileOperation == 0L) {
+                    if (!closed && profileOperation == operation && activeToken == 0L) {
+                        check(snapshot.revision == store.revision)
                         hasProfile = loaded != null
                         profileName = loaded?.displayName
                         profileLoaded = true
@@ -65,7 +74,7 @@ internal class AndroidOwnerFaceRecognition(
                 }
             } catch (_: Exception) {
                 synchronized(lock) {
-                    if (!closed && profileOperation == 0L) {
+                    if (!closed && profileOperation == operation && activeToken == 0L) {
                         profileLoaded = true
                         publishLocked(OwnerFacePhase.ERROR,
                             "Das gespeicherte Gesichtsprofil konnte nicht geöffnet werden. Du kannst es löschen oder neu einlernen.")
@@ -99,6 +108,7 @@ internal class AndroidOwnerFaceRecognition(
             val fresh = nextSession.incrementAndGet()
             check(fresh > 0)
             activeToken = fresh
+            sessionRevision = store.revision
             enrollingName = name
             startedAt = elapsed()
             lastIssuedAt = startedAt
@@ -113,7 +123,13 @@ internal class AndroidOwnerFaceRecognition(
                 if (!current(token)) return@execute
                 var loaded: OwnerFaceProfile? = null
                 try {
-                    if (name == null) loaded = store.load()
+                    if (name == null) {
+                        val snapshot = store.loadSnapshot()
+                        loaded = snapshot.profile
+                        synchronized(lock) {
+                            if (!currentLocked(token) || snapshot.revision != sessionRevision) return@execute
+                        }
+                    }
                     if (name == null && loaded == null) {
                         finish(token, OwnerFacePhase.NOT_ENROLLED, "Kein gültiges lokales Gesichtsprofil vorhanden.")
                         return@execute
@@ -174,7 +190,11 @@ internal class AndroidOwnerFaceRecognition(
                     completed = completedProfile
                     if (completedProfile != null) {
                         if (!current(token)) return@execute
-                        val prepared = store.prepare(completedProfile)
+                        val expectedRevision = synchronized(lock) {
+                            if (!currentLocked(token)) return@execute
+                            sessionRevision
+                        }
+                        val prepared = store.prepare(completedProfile, expectedRevision)
                         try {
                             synchronized(lock) {
                                 if (currentLocked(token)) {
@@ -273,10 +293,32 @@ internal class AndroidOwnerFaceRecognition(
     }
 
     private fun current(token: Long): Boolean = synchronized(lock) { currentLocked(token) }
-    private fun currentLocked(token: Long) = !closed && token > 0 && token == activeToken
+    private fun currentLocked(token: Long): Boolean {
+        if (closed || token <= 0 || token != activeToken) return false
+        if (sessionRevision != store.revision) {
+            profileChangedLocked()
+            return false
+        }
+        return true
+    }
+
+    private fun profileChangedLocked() {
+        invalidateLocked()
+        hasProfile = false
+        profileName = null
+        profileLoaded = false
+        val operation = ++profileOperation
+        publishLocked(OwnerFacePhase.OFF, "Das lokale Gesichtsprofil wurde geändert. Die vorige Sitzung ist beendet.")
+        try { readProfileMetadata(operation) }
+        catch (_: RejectedExecutionException) {
+            profileLoaded = true
+            publishLocked(OwnerFacePhase.ERROR, "Die Profiländerung konnte nicht geladen werden. Bitte erneut öffnen.")
+        }
+    }
 
     private fun invalidateLocked() {
         activeToken = 0
+        sessionRevision = -1L
         policy?.close()
         policy = null
         enrollingName = null
@@ -289,7 +331,17 @@ internal class AndroidOwnerFaceRecognition(
             if (enrollingName != null || phase == OwnerFacePhase.ENROLLED) OwnerFacePolicy.ENROLLMENT_SAMPLES
             else OwnerFacePolicy.REQUIRED_MATCHES, activeToken > 0, text)
         status = value
-        main.post { synchronized(lock) { if (!closed && status === value) onState(value) } }
+        val revision = store.revision
+        val token = activeToken
+        main.post {
+            synchronized(lock) {
+                if (!closed && status === value) {
+                    if (revision != store.revision) { profileChangedLocked(); return@post }
+                    if (token > 0 && !currentLocked(token)) return@post
+                    onState(value)
+                }
+            }
+        }
     }
 
     private fun armWatchdogLocked(token: Long) {

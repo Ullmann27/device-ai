@@ -21,6 +21,7 @@ import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowAlertDialog
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28], qualifiers = "w360dp-h740dp-mdpi")
@@ -65,11 +66,15 @@ class OwnerFaceDialogsUiTest {
     }
 
     private fun withUi(actions: Actions = Actions(), block: (OwnerFaceDialogs, Actions, AlertDialog) -> Unit) {
-        val controller: ActivityController<Activity> = Robolectric.buildActivity(Activity::class.java).setup()
+        val controller: ActivityController<Activity> = Robolectric.buildActivity(Activity::class.java)
         controller.get().setTheme(R.style.AppTheme)
+        controller.setup().visible()
+        shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
+        controller.windowFocusChanged(true)
         val ui = OwnerFaceDialogs(controller.get(), actions)
         try {
             ui.show()
+            shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
             block(ui, actions, ShadowAlertDialog.getLatestAlertDialog())
         } finally {
             ui.dismiss()
@@ -223,6 +228,7 @@ class OwnerFaceDialogsUiTest {
 
     @Test fun narrowLayoutKeepsControlsReadableAndTouchable() = withUi { _, _, dialog ->
         val decor = dialog.window!!.decorView
+        assertTrue("Capture requires an attached window", decor.isAttachedToWindow)
         decor.measure(View.MeasureSpec.makeMeasureSpec(360, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.makeMeasureSpec(740, View.MeasureSpec.AT_MOST))
         decor.layout(0, 0, decor.measuredWidth, decor.measuredHeight)

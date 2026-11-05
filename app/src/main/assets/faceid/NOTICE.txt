@@ -4,13 +4,18 @@ OpenCV 4.13.0: org.opencv:opencv:4.13.0, OpenCV Team.
 Distribution: https://repo.maven.apache.org/maven2/org/opencv/opencv/4.13.0/
 License: Apache-2.0; see LICENSE-OPENCV.txt.
 
+Bundled libc++ runtime: LLVM Project, Apache-2.0 WITH LLVM-exception.
+See LICENSE-LIBCXX.txt, including retained legacy notices.
+Source commit recorded by the native library's compiler:
+https://android.googlesource.com/toolchain/llvm-project/+/d8003a456d14a3deb8054cdaa529ffbf02d9b262/libcxx/LICENSE.TXT
+
 Models: OpenCV Zoo commit 48b10fa505aeb51fbd127fc60a5c660040e823b7.
 Repository: https://github.com/opencv/opencv_zoo
 
 YuNet: face_detection_yunet_2023mar.onnx.
 Upstream directory: models/face_detection_yunet.
 License: MIT; see LICENSE-YUNET.txt.
-Copyright (c) 2020 Shiqi Yu <yusq@sustech.edu.cn>.
+Copyright (c) 2020 Shiqi Yu <shiqi.yu@gmail.com>.
 
 SFace: face_recognition_sface_2021dec.onnx.
 Upstream directory: models/face_recognition_sface.
