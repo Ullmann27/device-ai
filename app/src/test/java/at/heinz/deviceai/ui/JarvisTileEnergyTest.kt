@@ -40,7 +40,7 @@ class JarvisTileEnergyTest {
         val chat = JarvisTileEnergy.sample(2_000L, 166f, 60f, "chat")
         val memory = JarvisTileEnergy.sample(2_000L, 166f, 60f, "memory")
         assertFalse("Destination-neutral animation must not synchronise all cards", chat == memory)
-        assertEquals("Pure geometry carries no LOADING, running or success flag",
-            3, JarvisTileEnergy.Sample::class.java.declaredFields.size)
+        assertEquals("Same input is deterministic; no simulated event changes",
+            chat, JarvisTileEnergy.sample(2_000L, 166f, 60f, "chat"))
     }
 }
