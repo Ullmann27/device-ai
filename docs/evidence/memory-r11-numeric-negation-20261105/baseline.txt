@@ -1,0 +1,10 @@
+FAIL at.heinz.deviceai.learning.MemoryOneDigitEvidenceR11Test.bm25DisambiguatesOtherwiseIdenticalChildCounts: AssertionError: expected MemoryDoc(id=two, text=Ich habe 2 Kinder, atMillis=200, confirmed=false) actual MemoryDoc(id=three, text=Ich habe 3 Kinder, atMillis=100, confirmed=true)
+FAIL at.heinz.deviceai.learning.MemoryOneDigitEvidenceR11Test.bm25ExactOneDigitRetrievesOnlyMatchingRecord: AssertionError: expected [MemoryDoc(id=two, text=2, atMillis=200, confirmed=false)] actual []
+PASS at.heinz.deviceai.learning.MemoryOneDigitEvidenceR11Test.multiDigitTokensAndSingleLetterFilteringRemain
+FAIL at.heinz.deviceai.learning.MemoryOneDigitEvidenceR11Test.ngramExactOneDigitRetrievesMatchingRecord: AssertionError: expected [MemoryDoc(id=two, text=2, atMillis=200, confirmed=false)] actual []
+FAIL at.heinz.deviceai.learning.MemoryOneDigitEvidenceR11Test.singleDigitsRemainTokensWithoutAdmittingSingleLetters: AssertionError: expected [2, 0] actual []
+FAIL at.heinz.deviceai.learning.MemoryRepeatedNegationR11Test.duplicatedNichtAfterReindexMustNotReusePriorMembership: AssertionError: expected true
+FAIL at.heinz.deviceai.learning.MemoryRepeatedNegationR11Test.duplicatedNichtCannotRetrievePositiveLicht: AssertionError: expected [MemoryDoc(id=not, text=Nicht, atMillis=200, confirmed=false)] actual [MemoryDoc(id=not, text=Nicht, atMillis=200, confirmed=false), MemoryDoc(id=light, text=Licht, atMillis=100, confirmed=true)]
+FAIL at.heinz.deviceai.learning.MemoryRepeatedNegationR11Test.duplicatedOhneCannotRetrievePositiveBohnen: AssertionError: expected [MemoryDoc(id=without, text=Ohne, atMillis=200, confirmed=false)] actual [MemoryDoc(id=without, text=Ohne, atMillis=200, confirmed=false), MemoryDoc(id=beans, text=Bohnen, atMillis=100, confirmed=true)]
+PASS at.heinz.deviceai.learning.MemoryRepeatedNegationR11Test.oneNegationAndMixedContentRetainExistingBehavior
+TOTAL=9 PASS=2 FAIL=7
