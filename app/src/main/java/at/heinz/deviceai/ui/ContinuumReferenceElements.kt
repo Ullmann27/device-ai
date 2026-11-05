@@ -34,17 +34,17 @@ class ReferenceComposerElement(textScale: Float) : ContinuumElement(textScale) {
         val detail = t(400, 10.5f)
         p.drawText(ContinuumSurfaces.fit(p, "Nachricht an Continuum …", title, w - 108f),
             53f, cy - 2f, title, solid(ContinuumTheme.TEXT))
-        p.drawText(ContinuumSurfaces.fit(p, "Chat öffnen", detail, w - 108f),
+        p.drawText(ContinuumSurfaces.fit(p, "Gespräch öffnen", detail, w - 108f),
             53f, cy + 15f * textScale, detail, solid(ContinuumTheme.CYAN_SOFT))
         p.strokeCircle(w - 28f, cy, 17f, 1f, solid(ContinuumTheme.CYAN), .7f)
         ContinuumSurfaces.chevron(p, w - 28f, cy, 13f, ContinuumTheme.CYAN_SOFT)
     }
-    override fun describe(s: ContinuumDashboardState) = "Nachricht an Continuum. Chat öffnen und Nachricht eingeben."
+    override fun describe(s: ContinuumDashboardState) = "Nachricht an Continuum. Gespräch öffnen und Nachricht eingeben."
 }
 
 class ReferenceActionElement(private val slot: Slot, textScale: Float) : ContinuumElement(textScale) {
     private val title: String get() = when (slot) {
-        Slot.LABEL_THINKING -> "Chat"
+        Slot.LABEL_THINKING -> "Gespräch"
         Slot.ACTION_MEMORY -> "Gedächtnis"
         Slot.LABEL_ANALYSING -> "Forschung"
         Slot.LABEL_DEVELOPING -> "Entwicklung"

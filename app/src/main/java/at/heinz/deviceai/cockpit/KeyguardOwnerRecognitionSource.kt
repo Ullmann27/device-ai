@@ -38,7 +38,7 @@ class KeyguardOwnerRecognitionSource(
     }
 
     companion object {
-        const val METHOD_UNLOCK = "Geräte-Entsperrung"
+        const val METHOD_UNLOCK = OwnerRecognition.METHOD_UNLOCK
 
         /** Keyguard state → card model. Unlocked = RECOGNIZED; locked or unknown = UNKNOWN (never guessed). */
         fun map(deviceLocked: Boolean?, sinceMillis: Long?): OwnerRecognition = when (deviceLocked) {

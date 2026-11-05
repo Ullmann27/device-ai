@@ -29,8 +29,12 @@ object JarvisMenu {
         Entry(it.target, it.label, it.icon, if (it.target == "home" || it.target == "chat") Kind.AREA else Kind.SCENE)
     }
 
-    /** Shorter label when the full one does not fit the 108 dp ref5 button at Type.nav (full label stays for TalkBack). */
-    val shortLabels: Map<String, String> = mapOf("device" to "Gerät", "system" to "System")
+    /**
+     * Shorter label when the full German term does not fit the 108 dp ref5 button at Type.nav. The full term stays
+     * the accessibility label and the label of every wider rail, tile and title.
+     */
+    val shortLabels: Map<String, String> = mapOf("logic" to "Denken", "device" to "Geräte", "system" to "System",
+        "agents" to "Helfer")
 
     /** ref5: label may run to 4 dp before the button edge ("Device Control" ends ~6 px inside). */
     const val LABEL_END = 4f

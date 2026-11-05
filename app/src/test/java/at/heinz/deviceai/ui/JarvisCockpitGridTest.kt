@@ -4,6 +4,7 @@ import at.heinz.deviceai.cockpit.KeyguardOwnerRecognitionSource
 import at.heinz.deviceai.cockpit.OwnerRecognitionState
 import at.heinz.deviceai.ui.JarvisCockpitGrid.Area
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -40,8 +41,9 @@ class JarvisCockpitGridTest {
         assertTrue("orb right of head", orb.left >= head.right)
         assertTrue("modules right of orb", g[Area.MODULES].left > orb.right)
         assertTrue("latest reference has no owner card shrinking the face", Area.USER_CARD !in g.areas)
-        assertTrue("dialog intentionally overlaps the lower head stage", overlaps(g[Area.DIALOG], head))
-        assertTrue("foreground dialogue leaves upper face visible", g[Area.DIALOG].top > head.top + head.height / 2f)
+        // Owner correction 2026-11-05: the head stays completely free; the dialogue sits beside it.
+        assertFalse("dialog never covers the head stage", overlaps(g[Area.DIALOG], head))
+        assertTrue("dialog left of the free head", g[Area.DIALOG].right <= head.left)
         assertTrue("tiles under the stage", g[Area.TILES].top > head.bottom)
         listOf(Area.ROW_AGENTS, Area.ROW_TASKS, Area.ROW_MEMORY, Area.ROW_MODEL).zipWithNext().forEach { (a, b) ->
             assertTrue("$a left of $b", g[a].right < g[b].left); assertEquals(g[a].top, g[b].top, .01f)
@@ -54,10 +56,10 @@ class JarvisCockpitGridTest {
 
     @Test fun independentSceneViewportsUseTheLatestMeasuredCoordinates() {
         val g = JarvisCockpitGrid.create(1536f, 1024f)
-        assertEquals(JarvisShellLayout.Box(250f, 70f, 800f, 497f), g[Area.HEAD])
+        assertEquals(JarvisShellLayout.Box(548f, 70f, 800f, 497f), g[Area.HEAD])
         assertEquals(JarvisShellLayout.Box(805f, 183f, 1212f, 497f), g[Area.ORB])
         assertEquals(JarvisShellLayout.Box(1199f, 83f, 1520f, 141f), g[Area.CAMERA_STATUS])
-        assertTrue(g[Area.HEAD].width > g[Area.ORB].width)
+        assertTrue("bust stage is taller than wide", g[Area.HEAD].height > g[Area.HEAD].width)
     }
 
     @Test fun referenceCompositionRequiresExpandedReadableWindow() {
@@ -78,7 +80,7 @@ class JarvisCockpitGridTest {
     @Test fun noInventedValuesWithoutSources() {
         val s = ContinuumDashboardState()
         val m = JarvisCockpitGridContent.modules(s)
-        assertEquals(listOf("Memory", "Logic", "Agents", "Learning", "Local Model"), m.map { it.label })
+        assertEquals(listOf("Gedächtnis", "Denken", "Assistenten", "Lernen", "Lokales Modell"), m.map { it.label })
         assertEquals(listOf("—", "—", "—", "ruhend", s.model.stateLabel), m.map { it.value })
         assertTrue(m.none { it.ok })
         assertTrue(JarvisCockpitGridContent.statusSegments(s).last().first.contains("CPU —"))

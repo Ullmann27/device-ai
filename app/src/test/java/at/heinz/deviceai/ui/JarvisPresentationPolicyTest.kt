@@ -49,8 +49,8 @@ class JarvisPresentationPolicyTest {
         val state = ContinuumDashboardState(
             model = ContinuumDashboardState.ModelStatus(online = true, stateLabel = "Bereit"))
         val modules = JarvisCockpitGridContent.modules(state).associateBy { it.label }
-        assertTrue(modules.getValue("Local Model").ok)
-        for (name in listOf("Memory", "Logic", "Agents", "Learning")) {
+        assertTrue(modules.getValue("Lokales Modell").ok)
+        for (name in listOf("Gedächtnis", "Denken", "Assistenten", "Lernen")) {
             assertFalse("Loading a model does not start $name", modules.getValue(name).ok)
         }
     }
@@ -59,12 +59,12 @@ class JarvisPresentationPolicyTest {
         for (phase in listOf(null) + TurnPhase.entries) {
             val module = JarvisCockpitGridContent.modules(
                 ContinuumDashboardState(cockpit = CockpitStatus(turnPhase = phase)))
-                .single { it.label == "Logic" }
+                .single { it.label == "Denken" }
             assertEquals("Actual turn phase=$phase", phase == TurnPhase.WORKING, module.ok)
         }
         val agents = JarvisCockpitGridContent.modules(
             ContinuumDashboardState(cockpit = CockpitStatus(workers = emptyList(), workerCapacity = 4)))
-            .single { it.label == "Agents" }
+            .single { it.label == "Assistenten" }
         assertEquals("0 aktiv", agents.value)
         assertFalse("Pool capacity is not a running-worker count", agents.ok)
     }

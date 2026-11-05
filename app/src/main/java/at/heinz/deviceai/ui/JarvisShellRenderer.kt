@@ -175,6 +175,15 @@ object JarvisShellRenderer {
         p.drawText(fit(p, text, style, b.width - 24f), b.left + 12f, y, style, Fill.Solid(Colors.text))
     }
 
+    /** Shrink before bounded ellipsis. */
+    fun shrinkToFit(p: ContinuumPainter, text: String, style: TextStyle, maxWidth: Float,
+                    minScale: Float = .82f): TextStyle {
+        if (maxWidth <= 0f) return style
+        val width = p.measureText(text, style)
+        if (width <= maxWidth || width <= 0f) return style
+        return style.copy(size = style.size * maxOf(minScale, maxWidth / width))
+    }
+
     fun fit(p: ContinuumPainter, text: String, style: TextStyle, maxWidth: Float): String {
         if (maxWidth <= 0f) return ""
         if (p.measureText(text, style) <= maxWidth) return text
