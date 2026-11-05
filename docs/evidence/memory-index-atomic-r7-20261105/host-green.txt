@@ -1,0 +1,12 @@
+Source: R7 production fix 8905679e5e396e8ee560d8ce11d7d804365b31ba
+Source Git blob: a0849ac148164fb94e7f0725182ce831546519d4
+Frozen R7 test blob: 76c793321a6476dbaa9e28eaa10248f65d526fdb
+Toolchain: JRE21.0.12, kotlinc-jvm 1.9.0; complete production retrieval file, host EventEmittingRetriever stub and JUnit4 API shim.
+Kotlin compile exit 0; runner exit 0.
+PASS bm25ConcurrentReindexPublishesOneCompleteGeneration
+PASS charNgramConcurrentReindexPublishesOneCompleteGeneration
+PASS replacingCallerListEntryCannotRelabelAnExistingScoreOrConfirmation
+PASS clearingCallerListAfterIndexDoesNotEraseOrCrashTheIndex
+PASS onlyExplicitReindexReplacesTheSnapshotAndPreservesUnconfirmedStatus
+PASS scoredPartsUseTheIndexedDocumentAndSameConfirmationAsSearch
+HOST_JVM totals=6 PASS, 0 FAIL

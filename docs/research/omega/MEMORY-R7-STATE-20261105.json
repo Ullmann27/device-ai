@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "taskId": "MEMORY-R7-ATOMIC-INDEX-20261105",
+  "status": "TWO_SOURCE_BOUND_HOST_REPAIRS_GREEN__ANDROID_NOT_RUN",
+  "repository": "Ullmann27/device-ai",
+  "base": {
+    "c1Pr": 519,
+    "c1Head": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "r6Pr": 532,
+    "r6Head": "5073cdc0ee96687d3b17cfefa8710174c8514b96",
+    "blobBefore": "b2d6ac9b078557f8c74fe0be9dc0032a15e52323"
+  },
+  "source": {
+    "testFreezeCommit": "bddbe018efe52ddb0f71341768c39e52428dbc51",
+    "productionCommit": "8905679e5e396e8ee560d8ce11d7d804365b31ba",
+    "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+    "blobAfter": "a0849ac148164fb94e7f0725182ce831546519d4",
+    "testBlob": "76c793321a6476dbaa9e28eaa10248f65d526fdb"
+  },
+  "fixes": [
+    "BM25 atomic index-generation publication",
+    "3-5gram atomic index-generation publication",
+    "consistent per-generation index-size observation"
+  ],
+  "host": {
+    "runtime": "JRE21.0.12/kotlinc1.9.0; full production Kotlin file; EventEmittingRetriever compile stub and JUnit API shim",
+    "red": {
+      "pass": 4,
+      "fail": 2,
+      "exit": 1
+    },
+    "green": {
+      "pass": 6,
+      "fail": 0,
+      "exit": 0
+    },
+    "parity": {
+      "hitComparisons": 144,
+      "queries": 48,
+      "corpora": 2,
+      "docsPerCorpus": 40,
+      "exit": 0
+    }
+  },
+  "pending": [
+    "C1 independent R6 then R7 intake",
+    "full Android project/JUnit/Robolectric and NewApi",
+    "retrieval 1000-doc/44-question and Temporal tests",
+    "common Node/Backend/Android/UI gates",
+    "physical Fold7, owner APK acceptance"
+  ],
+  "limits": [
+    "Host JUnit-API shim is not real Android/JUnit execution",
+    "no guarantee of concurrent caller List mutation during toList",
+    "concurrent index writers publish last completed, not ordered by invocation",
+    "no measured Recall@3 improvement"
+  ],
+  "scope": {
+    "productionPaths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt"
+    ],
+    "otherOwnersUntouched": true
+  },
+  "safety": {
+    "mainMerge": false,
+    "paid": false,
+    "actions": false,
+    "release": false,
+    "apk": false,
+    "install": false
+  }
+}
