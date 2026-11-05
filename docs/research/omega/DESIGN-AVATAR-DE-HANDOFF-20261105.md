@@ -106,3 +106,25 @@ Leistung) bleibt offen.
 Rücknahme: diesen Zweig aus der Integration auslassen oder die Label-Commits zurücknehmen; keine Daten-, Paket-,
 Signatur-, Berechtigungs- oder Modelländerung. Kein Main-Merge, keine Installation, kein Release, kein bezahlter Dienst.
 Private Originalvideos und die vollständigen Besitzervorlagen sind nicht im Repository.
+
+## 7. Design-Nachbesserung „Kopf frei, lebendige 59509-Szene“ (WIP, nicht abgenommen)
+
+| Commit | Inhalt |
+|---|---|
+| `3a21a45` | Sprachfeld links unten (Ref.-x 256–540), freie Kopfzone 548–800; kräftigere Glas-/Neonflächen und Hintergrund |
+| `aaffac0` | Echte Alphamaske (DST_IN, nur TextureView-Kind) statt rechteckiger Büstenkanten |
+| `c49248d` | Verankerte Nahaufnahme im `FilamentAvatarRenderer` (asymmetrische Ortho-Projektion, Anker 0,70, Ausschnitt 0,92), Kopfbühne hinter dem Sprachfeld; animierte Energieflüsse (`JarvisEnergyFlows`) und Kopf-Aura auf der Bilduhr der Hologramm-Ansicht; Gehirnkugel mit Magenta/Violett/Cyan-Ringen, pulsierendem Kern, zweiter Schale, Lichtsäulen, beleuchtetem Sockel |
+
+Messung (Host-Vorschau gegen 59509, gleiche Bereiche): Helligkeit 0,253 → 0,346 (Ref. 0,351), Farbigkeit 0,177 → 0,241
+(0,258), Neonanteil 6,1 % → 9,6 % (12,0 %). Kopf Scheitel–Kinn ≈ 47 % → ≈ 65 % der Hero-Höhe (Ref. ≈ 80 %, dort
+überlappt die Karte den Hals; hier bleibt der ganze Kopf frei).
+
+**Größter verbleibender Unterschied — Avatar-Material:** A zeigt ein leuchtendes Linienhologramm mit sehr feinen
+hellen Strukturen und kräftigem Randlicht; das gepinnte GLB trägt einen dunkleren gebackenen Atlas. Nächster Schritt:
+Atlas außerhalb der bestätigten Gesichtszüge neu backen (feine Linien, Rückseite/Schädeldecke ohne Naht, Lücke L3)
+und Fresnel-Randlicht im Filament-Material; GLB, NOTICE und `AvatarGlbContract`-Pin gemeinsam ändern. Das braucht
+Filament-Pixel auf dem Gerät als Abnahme.
+
+Weitere offene Punkte: Lichtimpulse entlang der Menüränder und Übergänge zwischen Arbeitsflächen (gemeinsamer Takt
+statt Shell-Dauerneuzeichnung), Kompaktlayout nach Hochformatvorlage, Fold7-Bildzeiten/Speicher/Temperatur.
+Android-Emulator und Gerät: in dieser Umgebung nicht verfügbar (kein SDK, `dl.google.com` gesperrt).
