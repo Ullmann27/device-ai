@@ -38,7 +38,17 @@
     "publishedRunnerExit": 0,
     "publishedRunnerPass": 20,
     "publishedRunnerFail": 0,
-    "fullAndroidProjectStillNotRun": true
+    "fullAndroidProjectStillNotRun": true,
+    "nonTargetParity": {
+      "cases": 96,
+      "equal": 96,
+      "syntheticDocs": 40,
+      "queries": 48,
+      "diffLines": 0,
+      "hostRunnerExit": 0,
+      "outputSha256": "ae061eb1d38ce3df38051a59e336621820208e93b6d38f54d415361ea78de7fc",
+      "notOfficialHoldout": true
+    }
   },
   "pending": [
     "C1 independent R6-R7-R8-R9 source integration",
