@@ -1,0 +1,40 @@
+{
+ "harness": "tools/host-jvm-harness (Kotlin 2.4.0 JVM, JDK21 -> bytecode 17, android-all 15-robolectric-12650502 compileOnly, no Android runtime)",
+ "baseline": {
+  "source": "origin/codex/continuum-avatar-alive-20261104 @ 5a18f74f18d9b7d927f8c622052369496153829f (unmodified worktree)",
+  "tests": 2639,
+  "skipped": 17,
+  "failed": 9,
+  "failures": {
+   "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest.failureBeforeAnyModelWasLoadedCanRetryWithoutUnload": "java.lang.NoSuchFieldException: state",
+   "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest.failedRuntimeWithRetainedModelRefusesReloadUntilExplicitUnload": "java.lang.NoSuchFieldException: loadedModel",
+   "at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest.failedFilesystemWriteRetainsRegistryAndSafeDiagnostic": "java.lang.AssertionError: Expected a real read-only-directory write failure",
+   "at.heinz.deviceai.VerifiedAppDispatchTest.unobservedForegroundCannotBecomeAClaimOfSuccessfulLaunch": "java.lang.NoClassDefFoundError: android/content/ContextWrapper",
+   "at.heinz.deviceai.VerifiedAppDispatchTest.approvedLaunchUsesPostconditionAdapterRatherThanShellDispatchSuccess": "java.lang.NoClassDefFoundError: android/content/ContextWrapper",
+   "at.heinz.deviceai.ShellExecutionTest.successfulGermanOutputRoundTripsThroughStrictVersionedWire": "org.junit.ComparisonFailure: expected:<Gr[üße vom Gerä]t> but was:<Gr[??e vom Ger?]t>",
+   "at.heinz.deviceai.learning.RetrievalBenchmarkTest.benchmarkSplitsDoNotLeakIntoCandidates": "java.lang.NullPointerException",
+   "at.heinz.deviceai.learning.RetrievalBenchmarkTest.unknownTopicsAreMostlyDeclinedInsteadOfAnsweredWithAWrongMemory": "java.lang.NullPointerException",
+   "at.heinz.deviceai.learning.RetrievalBenchmarkTest.kotlinRankingMatchesCurrentFrozenFixture": "java.lang.NullPointerException"
+  },
+  "xmlFiles": 468
+ },
+ "candidate": {
+  "source": "working tree of this commit (German UI)",
+  "tests": 2639,
+  "skipped": 17,
+  "failed": 9,
+  "failures": {
+   "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest.failureBeforeAnyModelWasLoadedCanRetryWithoutUnload": "java.lang.NoSuchFieldException: state",
+   "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest.failedRuntimeWithRetainedModelRefusesReloadUntilExplicitUnload": "java.lang.NoSuchFieldException: loadedModel",
+   "at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest.failedFilesystemWriteRetainsRegistryAndSafeDiagnostic": "java.lang.AssertionError: Expected a real read-only-directory write failure",
+   "at.heinz.deviceai.VerifiedAppDispatchTest.unobservedForegroundCannotBecomeAClaimOfSuccessfulLaunch": "java.lang.NoClassDefFoundError: android/content/ContextWrapper",
+   "at.heinz.deviceai.VerifiedAppDispatchTest.approvedLaunchUsesPostconditionAdapterRatherThanShellDispatchSuccess": "java.lang.NoClassDefFoundError: android/content/ContextWrapper",
+   "at.heinz.deviceai.ShellExecutionTest.successfulGermanOutputRoundTripsThroughStrictVersionedWire": "org.junit.ComparisonFailure: expected:<Gr[üße vom Gerä]t> but was:<Gr[??e vom Ger?]t>",
+   "at.heinz.deviceai.learning.RetrievalBenchmarkTest.benchmarkSplitsDoNotLeakIntoCandidates": "java.lang.NullPointerException",
+   "at.heinz.deviceai.learning.RetrievalBenchmarkTest.unknownTopicsAreMostlyDeclinedInsteadOfAnsweredWithAWrongMemory": "java.lang.NullPointerException",
+   "at.heinz.deviceai.learning.RetrievalBenchmarkTest.kotlinRankingMatchesCurrentFrozenFixture": "java.lang.NullPointerException"
+  },
+  "xmlFiles": 468
+ },
+ "interpretation": "Identical failure sets. All 9 are environment limits of the host harness: LiteRT-LM AAR unreachable (stub runtime), no Android runtime classes, root ignores read-only dirs, non-UTF-8 default charset, missing benchmark fixture path. They are NOT Android AGP results."
+}

@@ -545,12 +545,12 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         shell.grid?.areas?.get(JarvisCockpitGrid.Area.BRAND)?.let { box ->
             val h = maxOf(48f, box.height)
             val top = maxOf(0f, box.centerY - h / 2f)
-            add("header:home", "home", "Device AI Continuum: Home", box.copy(top = top, bottom = top + h))
+            add("header:home", "home", "Device AI Continuum: Start", box.copy(top = top, bottom = top + h))
         }
         shell.grid?.areas?.get(JarvisCockpitGrid.Area.MODE_PILL)?.let { box ->
             val h = maxOf(48f, box.height)
             val top = maxOf(0f, box.centerY - h / 2f)
-            add("header:mode", "avatar-appearance", "JARVIS Mode: Darstellung", box.copy(top = top, bottom = top + h))
+            add("header:mode", "avatar-appearance", "JARVIS-Modus: Darstellung", box.copy(top = top, bottom = top + h))
         }
         shell.headerActionBoxes().forEach { (target, box) ->
             val label = when (target) { "notifications" -> "Benachrichtigungen"; "settings" -> "Einstellungen"; else -> "Mehr" }

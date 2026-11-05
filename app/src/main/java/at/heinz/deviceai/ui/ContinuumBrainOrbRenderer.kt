@@ -19,7 +19,7 @@ class ContinuumBrainOrbRenderer {
                        val processing: Boolean = false, val particles: Int = 70, val orbitSegments: Int = 96)
 
     var label1 = "Continuum"
-    var label2 = "Brain"
+    var label2 = "Gehirn"
 
     /** Kugelmitte ([cx],[cy]) und Radius [r] in px; Sockel und Lichtbalken liegen unter der Kugel bis cy + 1.30 r. */
     fun draw(p: ContinuumPainter, cx: Float, cy: Float, r: Float, s: Signals = Signals()) {

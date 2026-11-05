@@ -18,7 +18,7 @@ import at.heinz.deviceai.ui.ContinuumCockpitPresentation.Tone
 object LocalModelStatusPresentation {
     /** ref5 placeholder for any value without a source (never an invented number). */
     const val MISSING = "—"
-    private val THERMAL = arrayOf("Normal", "Light", "Moderate", "Severe", "Critical", "Emergency", "Shutdown")
+    private val THERMAL = arrayOf("Normal", "Leicht", "Mäßig", "Stark", "Kritisch", "Notfall", "Abschaltung")
 
     /** Online/Offline pill from the collector's ConnectivityManager state (ACCESS_NETWORK_STATE, already declared). */
     fun connectivity(s: ContinuumDashboardState): Pair<String, Tone> = when (s.system.networkOnline) {
@@ -34,29 +34,29 @@ object LocalModelStatusPresentation {
              admissionRefusal: String? = null): List<Row> {
         val m = s.model
         val rows = mutableListOf(
-            Row("Model", if (m.online) m.name else MISSING, null, if (m.online) Tone.OK else Tone.NEUTRAL),
+            Row("Modell", if (m.online) m.name else MISSING, null, if (m.online) Tone.OK else Tone.NEUTRAL),
             // ref5 "Mode: Local (Private)" has no runtime source (no routing-mode field) -> always the placeholder.
-            Row("Mode", MISSING, null),
+            Row("Modus", MISSING, null),
             Row("Status", m.stateLabel, null, if (m.online) Tone.OK else Tone.NEUTRAL),
-            Row("Latency", m.latencyMs?.let { "$it ms" } ?: MISSING, null)
+            Row("Antwortzeit", m.latencyMs?.let { "$it ms" } ?: MISSING, null)
         )
         if (resources == null) {
             rows += Row("RAM", s.system.memoryPercent?.let { "$it % Gerät" } ?: MISSING,
                 s.system.memoryPercent?.takeIf { it in 0..100 }?.div(100f))
-            rows += Row("Thermal", s.system.thermalStatus?.let { THERMAL.getOrNull(it) } ?: MISSING, null)
-            rows += Row("Load", MISSING, null)
+            rows += Row("Wärme", s.system.thermalStatus?.let { THERMAL.getOrNull(it) } ?: MISSING, null)
+            rows += Row("Ladefreigabe", MISSING, null)
         } else {
             rows += Row("RAM", "%.1f / %.1f GB".format(java.util.Locale.ROOT, gb(resources.totalRamBytes - resources.availableRamBytes), gb(resources.totalRamBytes)),
                 (1f - resources.availableRamBytes.toFloat() / resources.totalRamBytes).coerceIn(0f, 1f),
                 if (resources.systemLowMemory) Tone.WARN else Tone.NEUTRAL)
-            rows += Row("Thermal", resources.thermalStatus?.let { THERMAL[it] } ?: MISSING, null,
+            rows += Row("Wärme", resources.thermalStatus?.let { THERMAL[it] } ?: MISSING, null,
                 if ((resources.thermalStatus ?: 0) >= 3) Tone.WARN else Tone.NEUTRAL)
-            rows += Row("Load", if (admissionRefusal == null) "Admitted" else LocalModelLoadAdmission.ownerMessage(admissionRefusal), null,
+            rows += Row("Ladefreigabe", if (admissionRefusal == null) "Freigegeben" else LocalModelLoadAdmission.ownerMessage(admissionRefusal), null,
                 if (admissionRefusal == null) Tone.OK else Tone.WARN)
         }
-        rows += Row("Battery", s.system.temperatureC?.let { "%.1f °C".format(java.util.Locale.ROOT, it) } ?: MISSING, null)
+        rows += Row("Akku-Temp.", s.system.temperatureC?.let { "%.1f °C".format(java.util.Locale.ROOT, it) } ?: MISSING, null)
         val w = s.cockpit.workers
-        rows += Row("Agents", if (w == null) MISSING else "${w.count { it.running }}" + (s.cockpit.workerCapacity?.let { " / $it" } ?: ""), null)
+        rows += Row("Assistenten", if (w == null) MISSING else "${w.count { it.running }}" + (s.cockpit.workerCapacity?.let { " / $it" } ?: ""), null)
         return rows
     }
 
@@ -69,7 +69,7 @@ object LocalModelStatusPresentation {
  * label/value column right (Model, Mode, Status, RAM) and the RAM usage bar below. Only #479 tokens are used.
  */
 class CockpitLocalModelCard(textScale: Float) : CockpitCard(textScale, ContinuumIcons.Icon.CPU) {
-    override fun title(s: ContinuumDashboardState) = "Model & Device"
+    override fun title(s: ContinuumDashboardState) = "Modell und Gerät"
     override fun rows(s: ContinuumDashboardState) = LocalModelStatusPresentation.rows(s)
 
     override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
@@ -97,7 +97,7 @@ class CockpitLocalModelCard(textScale: Float) : CockpitCard(textScale, Continuum
             pillTop + (ph + p.capHeight(type.tileLabel)) / 2f, type.tileLabel, Fill.Solid(c.text))
         // Body: emblem left, label/value rows right, RAM bar below.
         val all = rows(s)
-        val shown = listOf("Model", "Mode", "Status", "RAM").mapNotNull { l -> all.firstOrNull { it.label == l } }
+        val shown = listOf("Modell", "Modus", "Status", "RAM").mapNotNull { l -> all.firstOrNull { it.label == l } }
         val bodyTop = pillTop + ph + pad * .6f
         val barH = 4f
         val barTop = h - pad - barH

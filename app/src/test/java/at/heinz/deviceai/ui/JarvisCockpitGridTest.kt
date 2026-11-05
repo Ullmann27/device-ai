@@ -78,7 +78,7 @@ class JarvisCockpitGridTest {
     @Test fun noInventedValuesWithoutSources() {
         val s = ContinuumDashboardState()
         val m = JarvisCockpitGridContent.modules(s)
-        assertEquals(listOf("Memory", "Logic", "Agents", "Learning", "Local Model"), m.map { it.label })
+        assertEquals(listOf("Gedächtnis", "Denken", "Assistenten", "Lernen", "Lokales Modell"), m.map { it.label })
         assertEquals(listOf("—", "—", "—", "ruhend", s.model.stateLabel), m.map { it.value })
         assertTrue(m.none { it.ok })
         assertTrue(JarvisCockpitGridContent.statusSegments(s).last().first.contains("CPU —"))

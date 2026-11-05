@@ -64,7 +64,7 @@ object JarvisCockpitPanels {
     fun taskRows(s: ContinuumDashboardState): List<Row> = ContinuumCockpitPresentation.processRows(s.cockpit)
 
     fun drawTaskFlow(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
-        val y0 = title(p, b, "Current Task Flow") { x, y -> ContinuumIcons.draw(p, Icon.REFRESH, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f) }
+        val y0 = title(p, b, "Aktueller Ablauf") { x, y -> ContinuumIcons.draw(p, Icon.REFRESH, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f) }
         val rows = taskRows(s); val st = Type.caption; val cap = p.capHeight(st)
         val top = rowsTop(p, y0); val h = pitch(p, b, top, 5)
         val n = rows.take(((b.bottom - 4f - top) / h).toInt().coerceAtLeast(0))

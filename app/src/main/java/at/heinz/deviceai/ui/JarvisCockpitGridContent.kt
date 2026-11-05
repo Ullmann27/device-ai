@@ -18,43 +18,45 @@ import java.util.Locale
 object JarvisCockpitGridContent {
     const val NONE = "—"
     private val localModelCard = CockpitLocalModelCard(1f)
-    private val clockFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-    private val dateFormat = SimpleDateFormat("EEE, d. MMM", Locale.getDefault())
+    /** The owner's interface is German regardless of the system language (e.g. "Mi., 29. Jan."). */
+    private val clockFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
+    private val dateFormat = SimpleDateFormat("EEE, d. MMM", Locale.GERMANY)
+    const val MODE_LABEL = "JARVIS-Modus"
 
     val tileSubtitles: Map<String, List<String>> = mapOf(
-        "chat" to listOf("Natural, multi-turn", "AI conversation"),
-        "memory" to listOf("Long-term", "personal context"),
-        "logic" to listOf("Reasoning, planning,", "problem solving"),
-        "research" to listOf("Deep research", "with sources"),
-        "agents" to listOf("Specialized AI", "teammates"),
-        "tasks" to listOf("Plan, track, and", "automate work"),
-        "web" to listOf("Browse, summarize,", "and take action"),
-        "learning" to listOf("Adapt, improve", "and build skills"),
-        "device" to listOf("Control your Android,", "apps and system"),
-        "system" to listOf("Health, performance,", "and model status"))
+        "chat" to listOf("Natürlich sprechen", "und nachfragen"),
+        "memory" to listOf("Persönlicher Kontext", "und Erinnerungen"),
+        "logic" to listOf("Überlegen, planen", "und Probleme lösen"),
+        "research" to listOf("Recherchieren", "mit Quellen"),
+        "agents" to listOf("Spezialisierte", "KI-Helfer"),
+        "tasks" to listOf("Planen, verfolgen", "und erledigen"),
+        "web" to listOf("Suchen und", "zusammenfassen"),
+        "learning" to listOf("Anpassen, verbessern", "und dazulernen"),
+        "device" to listOf("Android und Apps", "nach Freigabe steuern"),
+        "system" to listOf("Zustand, Leistung", "und Modellstatus"))
 
     data class Module(val label: String, val icon: Icon, val value: String, val ok: Boolean)
 
     /** A loaded language model is not evidence that a separate reasoning service is initialized. */
     fun modules(s: ContinuumDashboardState): List<Module> = listOf(
-        Module("Memory", Icon.DATABASE, if (s.memory != null) "aktiv" else NONE, s.memory != null),
-        Module("Logic", Icon.ATOM, if (s.cockpit.turnPhase == TurnPhase.WORKING) "arbeitet" else NONE,
+        Module("Gedächtnis", Icon.DATABASE, if (s.memory != null) "aktiv" else NONE, s.memory != null),
+        Module("Denken", Icon.ATOM, if (s.cockpit.turnPhase == TurnPhase.WORKING) "arbeitet" else NONE,
             s.cockpit.turnPhase == TurnPhase.WORKING),
         s.cockpit.workers.let { workers ->
             val running = workers?.count { it.running }
-            Module("Agents", Icon.USERS, running?.let { "$it aktiv" } ?: NONE, running != null && running > 0)
+            Module("Assistenten", Icon.USERS, running?.let { "$it aktiv" } ?: NONE, running != null && running > 0)
         },
-        Module("Learning", Icon.BOOK, if (s.learning.live) "aktiv" else "ruhend", s.learning.live),
-        Module("Local Model", Icon.CPU, if (s.model.online) "online" else s.model.stateLabel, s.model.online))
+        Module("Lernen", Icon.BOOK, if (s.learning.live) "aktiv" else "ruhend", s.learning.live),
+        Module("Lokales Modell", Icon.CPU, if (s.model.online) "online" else s.model.stateLabel, s.model.online))
 
     fun statusSegments(s: ContinuumDashboardState): List<Pair<String, Boolean>> =
         JarvisCockpitPanels.statusSegments(s).map { it.text to it.ok }
 
     fun title(slot: Slot, s: ContinuumDashboardState): String = when (slot) {
         Slot.ROW_AGENTS -> ContinuumCockpitPresentation.agentsTitle(s.cockpit)
-        Slot.ROW_TASKS -> "Current Task Flow"
-        Slot.ROW_MEMORY -> "Memory Activity"
-        Slot.ROW_MODEL -> "Model & Device"
+        Slot.ROW_TASKS -> "Aktueller Ablauf"
+        Slot.ROW_MEMORY -> JarvisMemoryActivityPanel.TITLE
+        Slot.ROW_MODEL -> "Modell und Gerät"
         else -> ""
     }
 
@@ -111,7 +113,7 @@ object JarvisCockpitGridContent {
         val top = cy - (cap * 2f + p.capHeight(caption) + 9f) / 2f
         p.drawText(fit(p, "Device AI", brandStyle, room), tx, top + cap, brandStyle, Fill.Solid(Colors.text))
         p.drawText(fit(p, "Continuum", brandStyle, room), tx, top + 2f * cap + 3f, brandStyle, Fill.Solid(Colors.text))
-        p.drawText(fit(p, "Android AI Control Center", caption, room), tx,
+        p.drawText(fit(p, "Deine KI-Steuerzentrale", caption, room), tx,
             top + 2f * cap + 9f + p.capHeight(caption), caption, Fill.Solid(Colors.cyanSoft))
         g?.areas?.get(Area.DEVICE_STATUS)?.let { clock ->
             JarvisReferenceHud.surface(p, clock, 14f, Colors.cyanDeep, Colors.cyanDeep)
@@ -132,7 +134,7 @@ object JarvisCockpitGridContent {
         }
         g?.areas?.get(Area.TAGLINE)?.let { tag ->
             p.drawLine(tag.left, tag.top + 3f, tag.left, tag.bottom - 5f, 1f, Fill.Solid(Colors.cyan), .7f)
-            listOf("Your Personal AI", "Intelligence Continuum").forEachIndexed { i, line ->
+            listOf("Deine persönliche KI", "auf deinem Gerät").forEachIndexed { i, line ->
                 p.drawText(fit(p, line, Type.caption, tag.width - 18f), tag.left + 17f,
                     tag.top + 5f + p.capHeight(Type.caption) + i * (p.capHeight(Type.caption) + 3f),
                     Type.caption, Fill.Solid(Colors.text))
@@ -142,15 +144,18 @@ object JarvisCockpitGridContent {
             val box = Box(mode.left, mode.centerY - 14f, mode.right, mode.centerY + 14f)
             JarvisReferenceHud.surface(p, box, 14f, Colors.cyan, Colors.violetRim)
             JarvisReferenceHud.crown(p, Box(box.left + 9f, box.centerY - 7f, box.left + 25f, box.centerY + 7f))
-            p.drawText(fit(p, "JARVIS Mode", Type.heading, box.width - 35f), box.left + 31f,
-                box.centerY + p.capHeight(Type.heading) / 2f, Type.heading, Fill.Solid(Colors.text))
+            val room = box.width - 35f
+            val modeStyle = JarvisShellRenderer.shrinkToFit(p, MODE_LABEL, Type.heading, room)
+            val mode = if (p.measureText(MODE_LABEL, modeStyle) <= room) MODE_LABEL else "JARVIS"
+            p.drawText(fit(p, mode, modeStyle, room), box.left + 31f,
+                box.centerY + p.capHeight(modeStyle) / 2f, modeStyle, Fill.Solid(Colors.text))
         }
         g?.areas?.get(Area.PRIVACY_PILL)?.let { priv ->
             val box = Box(priv.left, priv.centerY - 13f, priv.right, priv.centerY + 13f)
             JarvisReferenceHud.surface(p, box, 13f, Colors.cyanDeep, Colors.cyanDeep)
             val local = s.presentation.localOnly
             p.fillCircle(box.left + 11f, box.centerY, 4f, Fill.Solid(if (local == true) Colors.ok else Colors.textMuted))
-            val text = when (local) { true -> "Local · Internet gesperrt"; false -> "Online nach Freigabe"; null -> "Freigaben: —" }
+            val text = when (local) { true -> "Lokal · Internet gesperrt"; false -> "Online nach Freigabe"; null -> "Freigaben: —" }
             p.drawText(fit(p, text, Type.caption, box.width - 27f), box.left + 22f,
                 box.centerY + p.capHeight(Type.caption) / 2f, Type.caption, Fill.Solid(Colors.text))
         }
@@ -175,13 +180,13 @@ object JarvisCockpitGridContent {
         val x = cx + radius + 11f
         p.drawText(fit(p, "Continuum", Type.title, b.right - x), x, cy + 1f,
             Type.title, Fill.Solid(Colors.text))
-        p.drawText(fit(p, "Unified Intelligence Across Your Devices", Type.caption, b.right - x),
+        p.drawText(fit(p, "Ein Gedächtnis für alle deine Geräte", Type.caption, b.right - x),
             x, cy + p.capHeight(Type.caption) + 7f, Type.caption, Fill.Solid(Colors.textSecondary))
         val stripTop = maxOf(cy + 20f, b.bottom - 20f)
         val strip = Box(b.left, stripTop, b.right, b.bottom)
         if (strip.height >= 12f) {
             JarvisReferenceHud.surface(p, strip, 10f, Colors.cyan, Colors.cyanDeep)
-            p.drawText(fit(p, "Chat · Reason · Research · Act · Learn · Evolve", Type.status, strip.width - 10f),
+            p.drawText(fit(p, "Reden · Denken · Forschen · Handeln · Lernen · Wachsen", Type.status, strip.width - 10f),
                 strip.centerX, strip.centerY + p.capHeight(Type.status) / 2f,
                 Type.status, Fill.Solid(Colors.text), TextAlign.CENTER)
         }
@@ -190,7 +195,7 @@ object JarvisCockpitGridContent {
     private fun cameraStatus(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
         val x = b.left + 22f; val cy = b.centerY
         cameraGlyph(p, x, cy, 19f, Colors.cyanSoft)
-        p.drawText(fit(p, "Camera-aware", Type.heading, b.width - 58f), b.left + 43f,
+        p.drawText(fit(p, "Kamerawahrnehmung", Type.heading, b.width - 58f), b.left + 43f,
             cy - 2f, Type.heading, Fill.Solid(Colors.text))
         val status = when { s.presentation.tracking -> "Gesicht erkannt"; s.presentation.cameraSessionActive -> "Kamera aktiv"; else -> "Kamera aus" }
         p.fillCircle(b.left + 47f, cy + 10f, 3f, Fill.Solid(if (s.presentation.cameraSessionActive) Colors.ok else Colors.textMuted))
@@ -225,7 +230,7 @@ object JarvisCockpitGridContent {
         val badge = if (live) "Live" else "Ruhe"
         p.drawText(badge, b.right - 12f, titleY, Type.caption,
             Fill.Solid(if (live) Colors.ok else Colors.textMuted), TextAlign.RIGHT)
-        p.drawText(fit(p, "Your On-Device AI Companion", Type.caption, b.width - 45f), b.left + 39f,
+        p.drawText(fit(p, "Dein KI-Begleiter auf dem Gerät", Type.caption, b.width - 45f), b.left + 39f,
             titleY + 4f + p.capHeight(Type.caption), Type.caption, Fill.Solid(Colors.textSecondary))
         val controls = shell?.dialogControlBoxes().orEmpty()
         val controlTop = controls.minOfOrNull { it.top } ?: (b.bottom - 6f)
@@ -292,7 +297,12 @@ object JarvisCockpitGridContent {
         val cap = p.capHeight(Type.tileLabel)
         val pitch = p.capHeight(Type.subtitle) + 3f
         var y = cy - (cap + lines.size * pitch) / 2f + cap
-        p.drawText(fit(p, tile.label, Type.tileLabel, room), x, y, Type.tileLabel, Fill.Solid(Colors.text))
-        lines.forEach { y += pitch; p.drawText(fit(p, it, Type.subtitle, room), x, y, Type.subtitle, Fill.Solid(Colors.textSecondary)) }
+        val labelStyle = JarvisShellRenderer.shrinkToFit(p, tile.label, Type.tileLabel, room)
+        p.drawText(fit(p, tile.label, labelStyle, room), x, y, labelStyle, Fill.Solid(Colors.text))
+        lines.forEach {
+            y += pitch
+            val style = JarvisShellRenderer.shrinkToFit(p, it, Type.subtitle, room, minScale = .88f)
+            p.drawText(fit(p, it, style, room), x, y, style, Fill.Solid(Colors.textSecondary))
+        }
     }
 }
