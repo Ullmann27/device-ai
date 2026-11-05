@@ -112,6 +112,11 @@ export async function prepareOwnerFaceModels({manifest, out, cache, opencvAar, t
   await directory(cacheDir);
   const assets = path.join(output, 'faceid');
   await directory(assets);
+  const expectedAssets = new Set([...manifest.models.map(model => model.filename), 'model-manifest.json']);
+  for (const name of await fsp.readdir(assets)) {
+    if (!expectedAssets.has(name)) fail('UNEXPECTED_GENERATED_FACE_ASSET');
+    await regularFile(path.join(assets, name));
+  }
   const ready = [];
   for (const model of manifest.models) ready.push(await cachedModel(manifest, model, cacheDir, transfer));
   for (let i = 0; i < manifest.models.length; i++) {

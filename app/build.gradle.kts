@@ -21,7 +21,7 @@ val prepareOwnerFaceModels = tasks.register<Exec>("prepareOwnerFaceModels") {
             "--opencv-aar", ownerFaceOpenCvAar.singleFile)
     }
 }
-tasks.named("preBuild").configure { dependsOn(prepareOwnerFaceModels) }
+tasks.matching { it.name == "preBuild" }.configureEach { dependsOn(prepareOwnerFaceModels) }
 
 // Optional desktop widget QA; ordinary Android/Termux unit/build tasks keep their existing dependencies.
 val continuumUiWidgetTests = providers.gradleProperty("continuumUiWidgetTests").orNull == "true"
@@ -56,6 +56,14 @@ require(listOf(continuumLocalStandalone, continuumLocalStandaloneQa, continuumLo
 }
 require(!(continuumLocalStandalone && continuumLocalStandaloneQa)) {
     "Standalone owner release and disposable QA cannot be enabled together."
+}
+val continuumOwnerArm64Text = providers.gradleProperty("continuumOwnerArm64").orNull
+require(continuumOwnerArm64Text == null || continuumOwnerArm64Text in setOf("true", "false")) {
+    "continuumOwnerArm64 must be true or false."
+}
+val continuumOwnerArm64 = continuumOwnerArm64Text == "true"
+require(!continuumOwnerArm64 || continuumLocalStandalone || continuumLocalStandaloneQa || continuumLocalRenderUnsigned) {
+    "continuumOwnerArm64 requires standalone owner, QA or unsigned local mode."
 }
 val continuumLocalSigningPath = providers.environmentVariable("CONTINUUM_LOCAL_SIGNING_FILE").orNull
 val continuumLocalSigningPassword = providers.environmentVariable("CONTINUUM_LOCAL_SIGNING_PASSWORD").orNull
@@ -175,6 +183,7 @@ android {
 
     defaultConfig {
         applicationId = if (continuumLocalStandalone || continuumLocalStandaloneQa || continuumLocalRenderUnsigned) "at.heinz.deviceai.continuumlocal" else "at.heinz.deviceai"
+        if (continuumOwnerArm64) ndk { abiFilters.add("arm64-v8a") }
         minSdk = 26
         targetSdk = 36
         // Preview variants only: ensure Samsung recognises the new artifact

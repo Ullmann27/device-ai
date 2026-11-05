@@ -1,0 +1,555 @@
+{
+  "schema": 1,
+  "date": "2026-11-05",
+  "modelLock": {
+    "schema": 1,
+    "repository": "opencv/opencv_zoo",
+    "commit": "48b10fa505aeb51fbd127fc60a5c660040e823b7",
+    "opencv": {
+      "coordinate": "org.opencv:opencv:4.13.0",
+      "byteLength": 121695690,
+      "sha256": "a8c9b0929d8d6367bb476320a1f36587db2b57ea18d8f7521ce509514903ca04",
+      "license": "Apache-2.0"
+    },
+    "models": [
+      {
+        "id": "yunet",
+        "directory": "face_detection_yunet",
+        "filename": "face_detection_yunet_2023mar.onnx",
+        "byteLength": 232589,
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "license": "MIT"
+      },
+      {
+        "id": "sface",
+        "directory": "face_recognition_sface",
+        "filename": "face_recognition_sface_2021dec.onnx",
+        "byteLength": 38696353,
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "license": "Apache-2.0"
+      }
+    ]
+  },
+  "modelTests": {
+    "sourceBefore": {
+      "commit": "222f81fbde31e702bd823726022078410db10f42",
+      "tree": "2bfbd207e88aac88126c130eeb62acc0b33cfd8d",
+      "status": ""
+    },
+    "sourceAfter": {
+      "commit": "222f81fbde31e702bd823726022078410db10f42",
+      "tree": "2bfbd207e88aac88126c130eeb62acc0b33cfd8d",
+      "status": ""
+    },
+    "sourceUnchanged": true,
+    "startedAt": "2026-11-05T08:25:14.467734+00:00",
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "scripts/continuum-owner-face-models.test.mjs"
+    ],
+    "exitCode": 0,
+    "tests": 11,
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "elapsedSeconds": 0.588
+  },
+  "abiPropertyConfiguration": {
+    "startedAt": "2026-11-05T08:18:47.962580+00:00",
+    "sourceBefore": {
+      "commit": "26aa7896faec5205a4f8d3b9ad9565e83024fce6",
+      "tree": "1c9332fca773b104bcad64fa0f4fe905099e5cc6",
+      "status": ""
+    },
+    "tests": [
+      {
+        "case": "generic-default",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 17.89,
+        "expectedError": null,
+        "taskArguments": [
+          "help"
+        ],
+        "environmentOverride": {}
+      },
+      {
+        "case": "unsigned-default",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 10.08,
+        "expectedError": null,
+        "taskArguments": [
+          ":app:assembleRelease",
+          "-PdeviceAiMentorPreview=true",
+          "-PcontinuumLocalRenderUnsigned=true",
+          "-PcontinuumStandaloneVersionCode=42"
+        ],
+        "environmentOverride": {}
+      },
+      {
+        "case": "unsigned-false",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 9.61,
+        "expectedError": null,
+        "taskArguments": [
+          ":app:assembleRelease",
+          "-PdeviceAiMentorPreview=true",
+          "-PcontinuumLocalRenderUnsigned=true",
+          "-PcontinuumStandaloneVersionCode=42",
+          "-PcontinuumOwnerArm64=false"
+        ],
+        "environmentOverride": {}
+      },
+      {
+        "case": "unsigned-arm64-env",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 9.21,
+        "expectedError": null,
+        "taskArguments": [
+          ":app:assembleRelease",
+          "-PdeviceAiMentorPreview=true",
+          "-PcontinuumLocalRenderUnsigned=true",
+          "-PcontinuumStandaloneVersionCode=42"
+        ],
+        "environmentOverride": {
+          "ORG_GRADLE_PROJECT_continuumOwnerArm64": "true"
+        }
+      },
+      {
+        "case": "qa-arm64-cli",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 8.86,
+        "expectedError": null,
+        "taskArguments": [
+          ":app:compileDebugKotlin",
+          "-PdeviceAiMentorPreview=true",
+          "-PcontinuumLocalStandaloneQa=true",
+          "-PcontinuumStandaloneVersionCode=42",
+          "-PcontinuumOwnerArm64=true"
+        ],
+        "environmentOverride": {}
+      },
+      {
+        "case": "generic-arm64-rejected",
+        "exitCode": 1,
+        "passed": true,
+        "seconds": 8.0,
+        "expectedError": "continuumOwnerArm64 requires standalone owner, QA or unsigned local mode.",
+        "taskArguments": [
+          "help",
+          "-PcontinuumOwnerArm64=true"
+        ],
+        "environmentOverride": {}
+      },
+      {
+        "case": "noncanonical-rejected",
+        "exitCode": 1,
+        "passed": true,
+        "seconds": 7.65,
+        "expectedError": "continuumOwnerArm64 must be true or false.",
+        "taskArguments": [
+          ":app:assembleRelease",
+          "-PdeviceAiMentorPreview=true",
+          "-PcontinuumLocalRenderUnsigned=true",
+          "-PcontinuumStandaloneVersionCode=42",
+          "-PcontinuumOwnerArm64=TRUE"
+        ],
+        "environmentOverride": {}
+      },
+      {
+        "case": "owner-signer-still-required",
+        "exitCode": 1,
+        "passed": true,
+        "seconds": 7.5,
+        "expectedError": "Standalone local main-app requires its own protected signer and isolated Mentor Pair feature set.",
+        "taskArguments": [
+          ":app:assembleRelease",
+          "-PdeviceAiMentorPreview=true",
+          "-PcontinuumLocalStandalone=true",
+          "-PcontinuumStandaloneVersionCode=42",
+          "-PcontinuumOwnerArm64=true"
+        ],
+        "environmentOverride": {}
+      }
+    ],
+    "deviceTested": false,
+    "apkAssembled": false,
+    "proxy": "inherited from same exec environment",
+    "sourceAfter": {
+      "commit": "26aa7896faec5205a4f8d3b9ad9565e83024fce6",
+      "tree": "1c9332fca773b104bcad64fa0f4fe905099e5cc6",
+      "status": ""
+    },
+    "sourceUnchanged": true,
+    "passed": true
+  },
+  "abiPropertyAssertions": "import groovy.json.JsonOutput\n\ngradle.projectsEvaluated {\n    def android = gradle.rootProject.project(':app').extensions.getByName('android')\n    def actual = android.defaultConfig.ndk.abiFilters.toList().sort()\n    def expected = System.getProperty('continuum.audit.abi', '').tokenize(',').sort()\n    assert actual == expected : \"Unexpected ABI filters: ${actual}; expected ${expected}\"\n    assert android.defaultConfig.applicationId == System.getProperty('continuum.audit.appId')\n    assert android.defaultConfig.versionCode.toString() == System.getProperty('continuum.audit.version')\n    assert android.buildTypes.getByName('release').signingConfig == null\n    println 'CONTINUUM_ABI_CONFIGURATION_VERIFIED ' + JsonOutput.toJson([\n        abis: actual,\n        applicationId: android.defaultConfig.applicationId,\n        versionCode: android.defaultConfig.versionCode,\n        releaseSigningConfig: null\n    ])\n}\n",
+  "nativeAudit": {
+    "source": "org.opencv:opencv:4.13.0",
+    "aarSha256": "a8c9b0929d8d6367bb476320a1f36587db2b57ea18d8f7521ce509514903ca04",
+    "aarBytes": 121695690,
+    "arm64NativeBytes": 25265448,
+    "allAbiNativeBytes": 147302860,
+    "arm64Elf16KiBAligned": true,
+    "apkZipAlignmentVerified": false,
+    "device16KiBVerified": false,
+    "nativeLibraries": [
+      {
+        "path": "jni/arm64-v8a/libc++_shared.so",
+        "bytes": 1292904,
+        "compressedBytes": 406563,
+        "sha256": "4397241b4bd20a8e579bfb41d21107857e12985f6a01ca0c2a5f83380d1270b4",
+        "elfLoadSegments": [
+          {
+            "offset": 0,
+            "virtualAddress": 0,
+            "alignment": 16384,
+            "passes16KiB": true
+          },
+          {
+            "offset": 634032,
+            "virtualAddress": 650416,
+            "alignment": 16384,
+            "passes16KiB": true
+          },
+          {
+            "offset": 1250032,
+            "virtualAddress": 1282800,
+            "alignment": 16384,
+            "passes16KiB": true
+          },
+          {
+            "offset": 1289792,
+            "virtualAddress": 1338944,
+            "alignment": 16384,
+            "passes16KiB": true
+          }
+        ],
+        "elfMachine": "AArch64"
+      },
+      {
+        "path": "jni/arm64-v8a/libopencv_java4.so",
+        "bytes": 23972544,
+        "compressedBytes": 9512122,
+        "sha256": "d331aac20d0a76981ea652f7df7978e3b82ccc46d5926dc7c394d33c813694ab",
+        "elfLoadSegments": [
+          {
+            "offset": 0,
+            "virtualAddress": 0,
+            "alignment": 16384,
+            "passes16KiB": true
+          },
+          {
+            "offset": 23236848,
+            "virtualAddress": 23253232,
+            "alignment": 16384,
+            "passes16KiB": true
+          },
+          {
+            "offset": 23683280,
+            "virtualAddress": 23716048,
+            "alignment": 16384,
+            "passes16KiB": true
+          }
+        ],
+        "elfMachine": "AArch64"
+      }
+    ],
+    "references": [
+      "https://developer.android.com/guide/practices/page-sizes",
+      "https://developer.android.com/tools/zipalign"
+    ]
+  },
+  "sizeInputs": {
+    "liveApkBytes": 84298233,
+    "liveNativeByAbi": {
+      "arm64-v8a": {
+        "uncompressed": 29101560,
+        "compressed": 29101560,
+        "methods": [
+          0
+        ],
+        "files": [
+          {
+            "name": "lib/arm64-v8a/libfilament-jni.so",
+            "uncompressed": 2266408,
+            "compressed": 2266408,
+            "compressionMethod": 0
+          },
+          {
+            "name": "lib/arm64-v8a/libgltfio-jni.so",
+            "uncompressed": 4679472,
+            "compressed": 4679472,
+            "compressionMethod": 0
+          },
+          {
+            "name": "lib/arm64-v8a/liblitertlm_jni.so",
+            "uncompressed": 22155680,
+            "compressed": 22155680,
+            "compressionMethod": 0
+          }
+        ]
+      },
+      "armeabi-v7a": {
+        "uncompressed": 5905576,
+        "compressed": 5905576,
+        "methods": [
+          0
+        ],
+        "files": [
+          {
+            "name": "lib/armeabi-v7a/libfilament-jni.so",
+            "uncompressed": 1808980,
+            "compressed": 1808980,
+            "compressionMethod": 0
+          },
+          {
+            "name": "lib/armeabi-v7a/libgltfio-jni.so",
+            "uncompressed": 4096596,
+            "compressed": 4096596,
+            "compressionMethod": 0
+          }
+        ]
+      },
+      "x86": {
+        "uncompressed": 7443464,
+        "compressed": 7443464,
+        "methods": [
+          0
+        ],
+        "files": [
+          {
+            "name": "lib/x86/libfilament-jni.so",
+            "uncompressed": 2490912,
+            "compressed": 2490912,
+            "compressionMethod": 0
+          },
+          {
+            "name": "lib/x86/libgltfio-jni.so",
+            "uncompressed": 4952552,
+            "compressed": 4952552,
+            "compressionMethod": 0
+          }
+        ]
+      },
+      "x86_64": {
+        "uncompressed": 33604776,
+        "compressed": 33604776,
+        "methods": [
+          0
+        ],
+        "files": [
+          {
+            "name": "lib/x86_64/libfilament-jni.so",
+            "uncompressed": 2394920,
+            "compressed": 2394920,
+            "compressionMethod": 0
+          },
+          {
+            "name": "lib/x86_64/libgltfio-jni.so",
+            "uncompressed": 4856696,
+            "compressed": 4856696,
+            "compressionMethod": 0
+          },
+          {
+            "name": "lib/x86_64/liblitertlm_jni.so",
+            "uncompressed": 26353160,
+            "compressed": 26353160,
+            "compressionMethod": 0
+          }
+        ]
+      }
+    },
+    "newOpenCvByAbi": {
+      "x86_64": {
+        "uncompressed": 60544696,
+        "compressed": 24831210,
+        "methods": [
+          8
+        ],
+        "files": [
+          {
+            "name": "jni/x86_64/libc++_shared.so",
+            "uncompressed": 1252080,
+            "compressed": 416045,
+            "compressionMethod": 8
+          },
+          {
+            "name": "jni/x86_64/libopencv_java4.so",
+            "uncompressed": 59292616,
+            "compressed": 24415165,
+            "compressionMethod": 8
+          }
+        ]
+      },
+      "x86": {
+        "uncompressed": 44808820,
+        "compressed": 17715797,
+        "methods": [
+          8
+        ],
+        "files": [
+          {
+            "name": "jni/x86/libc++_shared.so",
+            "uncompressed": 1254988,
+            "compressed": 437373,
+            "compressionMethod": 8
+          },
+          {
+            "name": "jni/x86/libopencv_java4.so",
+            "uncompressed": 43553832,
+            "compressed": 17278424,
+            "compressionMethod": 8
+          }
+        ]
+      },
+      "arm64-v8a": {
+        "uncompressed": 25265448,
+        "compressed": 9918685,
+        "methods": [
+          8
+        ],
+        "files": [
+          {
+            "name": "jni/arm64-v8a/libc++_shared.so",
+            "uncompressed": 1292904,
+            "compressed": 406563,
+            "compressionMethod": 8
+          },
+          {
+            "name": "jni/arm64-v8a/libopencv_java4.so",
+            "uncompressed": 23972544,
+            "compressed": 9512122,
+            "compressionMethod": 8
+          }
+        ]
+      },
+      "armeabi-v7a": {
+        "uncompressed": 16683896,
+        "compressed": 8211456,
+        "methods": [
+          8
+        ],
+        "files": [
+          {
+            "name": "jni/armeabi-v7a/libc++_shared.so",
+            "uncompressed": 872872,
+            "compressed": 349046,
+            "compressionMethod": 8
+          },
+          {
+            "name": "jni/armeabi-v7a/libopencv_java4.so",
+            "uncompressed": 15811024,
+            "compressed": 7862410,
+            "compressionMethod": 8
+          }
+        ]
+      }
+    },
+    "newModels": [
+      {
+        "file": "face_detection_yunet_2023mar.onnx",
+        "bytes": 232589,
+        "deflateLevel6Bytes": 202604
+      },
+      {
+        "file": "face_recognition_sface_2021dec.onnx",
+        "bytes": 38696353,
+        "deflateLevel6Bytes": 35912476
+      }
+    ]
+  },
+  "sizeEstimate": {
+    "oldGlb": {
+      "bytes": 8690616,
+      "compressed": 1554287,
+      "method": 8
+    },
+    "currentGlb": {
+      "bytes": 12038416,
+      "deflate6": 3859456
+    },
+    "glbDeltaEstimate": 2305169,
+    "opencvClassesJar": {
+      "bytes": 439073,
+      "compressed": 415227
+    },
+    "universalBeforeDexAndOtherSourceChanges": 270021342,
+    "arm64BeforeDexAndOtherSourceChanges": 101030114,
+    "nativeBytesSavedByArm64": 168991228
+  },
+  "hostInference": {
+    "passed": true,
+    "runtime": "OpenCV Python on Linux x86_64",
+    "opencvVersion": "4.13.0",
+    "numpyVersion": "2.3.5",
+    "fixture": {
+      "url": "https://raw.githubusercontent.com/opencv/opencv/fe38fc608f6acb8b68953438a62305d8318f4fcd/samples/data/lena.jpg",
+      "sha256": "7de7ed51a1594fff247f4cae2301eceacf5313d6011e37b4a4c8733f7bb72c07",
+      "bytes": 91814
+    },
+    "modelPins": [
+      {
+        "id": "yunet",
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "bytes": 232589
+      },
+      {
+        "id": "sface",
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "bytes": 38696353
+      }
+    ],
+    "inputShape": [
+      512,
+      512,
+      3
+    ],
+    "detectorReturn": 1,
+    "yunetShape": [
+      1,
+      15
+    ],
+    "yunetType": "float32",
+    "alignedShape": [
+      112,
+      112,
+      3
+    ],
+    "sfaceShape": [
+      1,
+      128
+    ],
+    "sfaceType": "float32",
+    "finiteValues": true,
+    "blankFaceCount": 0,
+    "seconds": 0.15,
+    "androidRuntimeTested": false,
+    "deviceTested": false,
+    "ownerIdentityAccuracyTested": false,
+    "embeddingValuesExported": false
+  },
+  "hostInferenceProvenance": {
+    "opencvPythonWheel": {
+      "version": "4.13.0.92",
+      "url": "https://files.pythonhosted.org/packages/92/ce/bd17ff5772938267fd49716e94ca24f616ff4cb1ff4c6be13085108037be/opencv_python_headless-4.13.0.92-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "0525a3d2c0b46c611e2130b5fdebc94cf404845d8fa64d2f3a3b679572a5bd22",
+      "bytes": 56016764
+    },
+    "fixture": {
+      "url": "https://raw.githubusercontent.com/opencv/opencv/fe38fc608f6acb8b68953438a62305d8318f4fcd/samples/data/lena.jpg",
+      "sha256": "7de7ed51a1594fff247f4cae2301eceacf5313d6011e37b4a4c8733f7bb72c07",
+      "bytes": 91814
+    },
+    "scope": "Public upstream sample only; output dimensions, not identity/accuracy/device validation."
+  },
+  "finalNewApkVerified": false,
+  "newOriginalSignedApkVerified": false,
+  "deviceTested": false
+}
