@@ -110,10 +110,11 @@ class Bm25GermanRetriever(private val temporal:TemporalCue?=null, private val k1
         return out
     }
     override fun index(docs:List<MemoryDoc>) {
-        this.docs=docs; postings.clear()
-        val base=docs.flatMap { GermanText.contentStems(it.text) }.toHashSet()
-        lengths=IntArray(docs.size)
-        docs.forEachIndexed { i,d -> val ts=terms(d.text,base); lengths[i]=ts.size
+        val snapshot=docs.toList()
+        this.docs=snapshot; postings.clear()
+        val base=snapshot.flatMap { GermanText.contentStems(it.text) }.toHashSet()
+        lengths=IntArray(snapshot.size)
+        snapshot.forEachIndexed { i,d -> val ts=terms(d.text,base); lengths[i]=ts.size
             ts.groupingBy { it }.eachCount().forEach { (t,c) -> postings.getOrPut(t){ ArrayList() }.add(intArrayOf(i,c)) } }
         avg=lengths.average().takeIf { it>0 } ?: 1.0
         vocab=HashSet(postings.keys)
@@ -155,9 +156,10 @@ class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val
         return keys to v
     }
     override fun index(docs:List<MemoryDoc>) {
-        this.docs=docs; val gs=docs.map { grams(it.text) }
+        val snapshot=docs.toList()
+        this.docs=snapshot; val gs=snapshot.map { grams(it.text) }
         val df=IntArray(dim); gs.forEach { it.keys.forEach { k -> df[k]++ } }
-        idf=FloatArray(dim){ ln((1.0+docs.size)/(1.0+df[it])).toFloat()+1f }
+        idf=FloatArray(dim){ ln((1.0+snapshot.size)/(1.0+df[it])).toFloat()+1f }
         vectors=gs.map(::vec)
     }
     override fun search(query:String,nowMillis:Long,k:Int):List<RetrievalHit> = scoredParts(query,nowMillis,k).map { it.hit }
