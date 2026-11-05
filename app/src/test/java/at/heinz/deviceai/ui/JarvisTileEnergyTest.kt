@@ -5,23 +5,59 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.math.abs
+import kotlin.math.hypot
 
-/** Pure source-bound geometry gate; native painter/Fold7 measurements are separate gates. */
+/** Pure source-bound geometry gate; Android painter/Fold7 measurements remain separate. */
 class JarvisTileEnergyTest {
-    @Test fun innerRimAndMinimumSizeRemainValid() {
-        for (target in listOf("chat", "memory", "research", "agents", "system")) {
-            for (time in listOf(0L, 1L, 1000L, 12999L, -1L, -13000L, Long.MIN_VALUE, Long.MAX_VALUE)) {
-                val s = JarvisTileEnergy.sample(time, 166f, 60f, target)!!
-                assertTrue("x $target/$time", s.x in 3f..163f)
-                assertTrue("y $target/$time", s.y in 3f..57f)
-                assertTrue(s.phase >= 0f && s.phase < 1f)
-                assertTrue(s.x == 3f || s.x == 163f || s.y == 3f || s.y == 57f)
+    private fun innerRimError(s: JarvisTileEnergy.Sample, width: Float, height: Float): Float {
+        // Outer tile radius 8 dp, inset 3 dp => inner quarter-circle radius 5 dp.
+        val dx = when { s.x < 8f -> 8f - s.x; s.x > width - 8f -> s.x - (width - 8f); else -> 0f }
+        val dy = when { s.y < 8f -> 8f - s.y; s.y > height - 8f -> s.y - (height - 8f); else -> 0f }
+        return if (dx > 0f && dy > 0f) abs(hypot(dx, dy) - 5f)
+            else minOf(abs(s.x - 3f), abs(s.x - (width - 3f)),
+                abs(s.y - 3f), abs(s.y - (height - 3f)))
+    }
+
+    @Test fun followsRealRoundedRimAtAllFourCorners() {
+        for ((w, h) in listOf(166f to 60f, 48f to 48f, 128f to 80f)) {
+            for (time in 0L until JarvisTileEnergy.CYCLE_MS step 7) {
+                val s = JarvisTileEnergy.sample(time, w, h, "chat")!!
+                assertTrue("x=$w/$h/$time: ${s.x}", s.x in 3f..(w - 3f))
+                assertTrue("y=$w/$h/$time: ${s.y}", s.y in 3f..(h - 3f))
+                assertTrue("not on rounded rim, t=$time err=${innerRimError(s, w, h)}",
+                    innerRimError(s, w, h) <= .002f)
             }
+        }
+    }
+
+    @Test fun travelsContinuouslyAcrossCornersAndCycleBoundary() {
+        val w = 166f; val h = 60f; val radius = 5f
+        val perimeter = 2f * ((w - 6f - 2f * radius) + (h - 6f - 2f * radius)) +
+            2f * Math.PI.toFloat() * radius
+        val oneMsStep = perimeter / JarvisTileEnergy.CYCLE_MS
+        for (time in 0L until JarvisTileEnergy.CYCLE_MS) {
+            val a = JarvisTileEnergy.sample(time, w, h, "memory")!!
+            val b = JarvisTileEnergy.sample(time + 1L, w, h, "memory")!!
+            val actual = hypot(b.x - a.x, b.y - a.y)
+            assertTrue("teleport/speed jump at $time: $actual", actual <= oneMsStep + .002f)
+            assertTrue("not moving smoothly at $time: $actual", actual >= oneMsStep - .002f)
+        }
+    }
+
+    @Test fun minSizeRadiusAndExtremeInputsRemainSafe() {
+        for (t in listOf(0L, -1L, Long.MIN_VALUE, Long.MAX_VALUE)) {
+            val s = JarvisTileEnergy.sample(t, 48f, 48f, "device")!!
+            assertTrue(s.x.isFinite() && s.y.isFinite() && s.phase in 0f..<1f)
         }
         assertNull(JarvisTileEnergy.sample(0L, 47f, 60f, "chat"))
         assertNull(JarvisTileEnergy.sample(0L, 70f, 47f, "chat"))
         assertNull(JarvisTileEnergy.sample(0L, Float.NaN, 70f, "chat"))
         assertNull(JarvisTileEnergy.sample(0L, 70f, Float.POSITIVE_INFINITY, "chat"))
+        assertNull(JarvisTileEnergy.sample(0L, Float.MAX_VALUE, 70f, "chat"))
+        assertNull(JarvisTileEnergy.sample(0L, 48f, 48f, "chat", Float.NaN))
+        assertNull(JarvisTileEnergy.sample(0L, 48f, 48f, "chat", -1f))
+        assertTrue(JarvisTileEnergy.sample(0L, 60f, 60f, "chat", 0f) != null)
     }
 
     @Test fun repeatsWithoutJumpAfterCompleteCycle() {
