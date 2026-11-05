@@ -130,7 +130,8 @@ object AvatarGlbContract {
         val neckY = worldFrame(names.indexOf("Neck"))[4]
         var minHeadX = Double.POSITIVE_INFINITY; var maxHeadX = Double.NEGATIVE_INFINITY
         var minHeadZ = Double.POSITIVE_INFINITY; var maxHeadZ = Double.NEGATIVE_INFINITY
-        val portraitAzimuth = -22.0
+        // Owner requirement (05.11.): frontal default view; the head turns itself instead of a fixed 3/4 camera.
+        val portraitAzimuth = 0.0
         val portraitAngle = Math.toRadians(portraitAzimuth)
         val portraitCos = kotlin.math.cos(portraitAngle); val portraitSin = kotlin.math.sin(portraitAngle)
         var minPortraitX = Double.POSITIVE_INFINITY; var maxPortraitX = Double.NEGATIVE_INFINITY

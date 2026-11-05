@@ -1,6 +1,7 @@
 package at.heinz.deviceai.avatar3d
 
 import org.json.JSONObject
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
@@ -13,7 +14,7 @@ import kotlin.math.sin
 class AvatarPortraitFramingTest {
     @Test fun narrowCockpitUsesHeadWidthInsteadOfFittingTheWholeShoulderStage() {
         val head = readHead()
-        assertTrue("The reference camera must remain a three-quarter view", head.focus.azimuthDegrees in -28.0..-16.0)
+        assertEquals("Owner requirement: frontal default camera, never a permanent side view", 0.0, head.focus.azimuthDegrees, 0.0)
         val horizontal = head.focus.verticalHalfSpan(204.0 / 398.0) * 204.0 / 398.0
         val projected = head.points.map { projectX(it, head.focus) }
         val occupied = (projected.max() - projected.min()) / (2 * horizontal)
