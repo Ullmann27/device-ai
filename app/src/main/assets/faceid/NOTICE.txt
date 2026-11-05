@@ -1,0 +1,26 @@
+Continuum owner recognition — third-party components
+
+OpenCV 4.13.0: org.opencv:opencv:4.13.0, OpenCV Team.
+Distribution: https://repo.maven.apache.org/maven2/org/opencv/opencv/4.13.0/
+License: Apache-2.0; see LICENSE-OPENCV.txt.
+
+Models: OpenCV Zoo commit 48b10fa505aeb51fbd127fc60a5c660040e823b7.
+Repository: https://github.com/opencv/opencv_zoo
+
+YuNet: face_detection_yunet_2023mar.onnx.
+Upstream directory: models/face_detection_yunet.
+License: MIT; see LICENSE-YUNET.txt.
+Copyright (c) 2020 Shiqi Yu <yusq@sustech.edu.cn>.
+
+SFace: face_recognition_sface_2021dec.onnx.
+Upstream directory: models/face_recognition_sface.
+License: Apache-2.0; see LICENSE-SFACE.txt.
+Contributed to OpenCV Zoo by Yaoyao Zhong; ONNX conversion by Chengrui Wang.
+
+The pinned upstream README files state that their respective licenses cover
+all files in each model directory. The generated model-manifest.json records
+the exact model hashes and byte lengths used in this APK.
+
+Model weights are downloaded and verified during the build. They are not
+stored in the Continuum Git repository. Recognition runs locally and is
+independent of Android device unlock or biometric authentication.

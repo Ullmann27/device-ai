@@ -3,6 +3,26 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val ownerFaceOpenCvAar by configurations.creating {
+    isTransitive = false
+    isCanBeConsumed = false
+}
+val ownerFaceAssets = layout.buildDirectory.dir("generated/owner-face-model-assets")
+val prepareOwnerFaceModels = tasks.register<Exec>("prepareOwnerFaceModels") {
+    val manifest = project.file("owner-face-models.lock.json")
+    val downloader = rootProject.file("scripts/continuum-owner-face-models.mjs")
+    inputs.files(manifest, downloader, ownerFaceOpenCvAar)
+    outputs.dir(ownerFaceAssets)
+    workingDir(rootProject.projectDir)
+    doFirst {
+        commandLine("node", downloader, "--manifest", manifest,
+            "--out", ownerFaceAssets.get().asFile,
+            "--cache", gradle.gradleUserHomeDir.resolve("caches/continuum-owner-face-models"),
+            "--opencv-aar", ownerFaceOpenCvAar.singleFile)
+    }
+}
+tasks.named("preBuild").configure { dependsOn(prepareOwnerFaceModels) }
+
 // Optional desktop widget QA; ordinary Android/Termux unit/build tasks keep their existing dependencies.
 val continuumUiWidgetTests = providers.gradleProperty("continuumUiWidgetTests").orNull == "true"
 val uiTestAndroidSdk by configurations.creating { isTransitive = false }
@@ -222,6 +242,7 @@ android {
 
     sourceSets {
         getByName("main") {
+            assets.srcDir(ownerFaceAssets)
             if (deviceAiMobileAidlFallback) {
                 java.srcDir("src/termux/java")
             }
@@ -259,6 +280,8 @@ kotlin {
 }
 
 dependencies {
+    implementation("org.opencv:opencv:4.13.0")
+    ownerFaceOpenCvAar("org.opencv:opencv:4.13.0@aar")
     if (continuumUiWidgetTests) {
         // Runtime API 28 and Robolectric 4.14.1's API 35 resource platform, resolved via Gradle's proxy/cache.
         uiTestAndroidSdk("org.robolectric:android-all-instrumented:9-robolectric-4913185-2-i7")
