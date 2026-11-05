@@ -1,4 +1,4 @@
-SOURCE=local method-bearing post-fix source; NOT full repository file; production index bodies independently FNV-bound
+SOURCE=/mnt/data/memory-r6-host/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt SHA256=a620eb16b5b7882cb37e35c9b32f5e9d2075ac8a06f7190a9febf06d069484d4
 INDEX Bm25GermanRetriever chars=553 FNV32=ee11dd94
 INDEX CharNgramHashRetriever chars=339 FNV32=fc6e1a8a
 KOTLIN_COMPILE_EXIT=0
