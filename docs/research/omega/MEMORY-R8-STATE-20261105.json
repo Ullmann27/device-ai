@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "taskId": "MEMORY-R8-NEGATION-K-20261105",
+  "status": "PUBLISHED__SOURCE_CHECK_7_OF_7__KOTLIN_ANDROID_NOT_RUN",
+  "repository": "Ullmann27/device-ai",
+  "branch": "fix/continuum-memory-r8-negation-k-boundary-20261105",
+  "base": {
+    "stackedOnR7Pr": 533,
+    "stackedOnR7Head": "a1e0ceca7fbbbc378e508f16868bcac2f676a222",
+    "c1Pr": 519,
+    "c1ObservedHead": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "prior522RepairsKept": true
+  },
+  "source": {
+    "frozenTestCommit": "22d58502c367be4cce6709a762df9d102c421697",
+    "testBlob": "a2c62141b9b1c2d9a4557e983c1433a1ac28438c",
+    "productionFixCommit": "48bd147f30a68cd7c6c902cd9a7d42cb0b1c29ad",
+    "beforeBlob": "a0849ac148164fb94e7f0725182ce831546519d4",
+    "afterBlob": "b0200e5246130d056ce02eb570f69dbcfa641ae5",
+    "productionPaths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt"
+    ]
+  },
+  "architecture": "GermanText.contentStems -> BM25 / char n-gram indexing and query -> RetrievalHit identity + confirmed flag",
+  "changes": [
+    "retain explicit 'nicht' as content evidence in both variants",
+    "BM25 nonpositive k safely returns empty",
+    "char n-gram scoredParts and delegated search nonpositive k safely returns empty"
+  ],
+  "evidence": {
+    "staticBefore": {
+      "pass": 0,
+      "fail": 3,
+      "location": "docs/evidence/memory-r8-negation-20261105/source-red.json"
+    },
+    "staticAfter": {
+      "pass": 7,
+      "fail": 0,
+      "location": "docs/evidence/memory-r8-negation-20261105/source-green.json"
+    },
+    "frozenAndroidJunitMethods": 5,
+    "hostSuitePreparedMethods": 11,
+    "hostExecuted": false,
+    "androidExecuted": false,
+    "holdoutExecuted": false
+  },
+  "pending": [
+    "independent C1 intake R6 -> R7 -> R8",
+    "run 11-source-bound Kotlin host cases",
+    "run 5 real Android JUnit cases and existing retrieval/temporal gates",
+    "run 1000-doc 44-question holdout and record recall/ranking differences",
+    "run common Node/Backend/Android/UI/NewApi and Fold7 before APK"
+  ],
+  "limits": [
+    "No Kotlin/Android JVM runtime executed in this automation run",
+    "Negation changes tokenization and may change rankings; no recall gain promised",
+    "All checks here are source-level and must not be labeled runtime PASS",
+    "C1 owns common integration, no changes to main or release"
+  ],
+  "safety": {
+    "subBots": 0,
+    "mainMerge": false,
+    "paid": false,
+    "githubActions": false,
+    "apk": false,
+    "install": false,
+    "signing": false
+  }
+}

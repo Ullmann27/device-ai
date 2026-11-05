@@ -1,0 +1,24 @@
+{
+  "taskId": "MEMORY-R8-NEGATION-K-20261105",
+  "kind": "RUNTIME_ACCESS_OBSERVATION",
+  "localEnvironment": {
+    "kotlinc": "kotlinc-jvm 1.9.0",
+    "jdk": "OpenJDK 21.0.12.1",
+    "gitCheckoutUnderMntData": false,
+    "lsRemote": {
+      "command": "timeout 8 git ls-remote https://github.com/Ullmann27/device-ai.git HEAD",
+      "exitCode": 128,
+      "stderr": "fatal: unable to access 'https://github.com/Ullmann27/device-ai.git/': Could not resolve host: github.com"
+    }
+  },
+  "connector": {
+    "githubReadAndWrite": "AVAILABLE",
+    "workingCheckoutMaterialization": "NOT_AVAILABLE_TO_LOCAL_TERMINAL"
+  },
+  "consequence": "No full Kotlin production compilation, Android Gradle, Robolectric, official holdout or device test claimed. Committed runnable source-bound host gate for environment with checkout.",
+  "constraints": [
+    "No shared C1 lock disturbed",
+    "No paid tool used",
+    "No GitHub Actions triggered"
+  ]
+}

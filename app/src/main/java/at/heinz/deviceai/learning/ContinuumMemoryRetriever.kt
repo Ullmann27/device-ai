@@ -30,7 +30,7 @@ object GermanText {
     private val STOP=setOf("der","die","das","den","dem","des","ein","eine","einen","einem","einer","und","oder","aber","ich","du","er","sie","es",
         "wir","ihr","mein","meine","meinen","meinem","meiner","mir","mich","dir","dich","ist","bin","sind","war","hat","habe","hast","haben",
         "wo","wann","was","wer","wie","welche","welcher","welches","warum","im","in","am","an","auf","bei","mit","zu","zum","zur","von","vom",
-        "fuer","noch","nochmal","schon","nicht","auch","so","um","uhr","gestern","heute","vorgestern","letzte","letzten","letzter","woche",
+        "fuer","noch","nochmal","schon","auch","so","um","uhr","gestern","heute","vorgestern","letzte","letzten","letzter","woche",
         "monat","vor","seit","hatte","wurde","wird","denn","mal","eigentlich","bitte","weisst","sag","nochmal","dass","als","ob","nach","fuers")
     private val SUFFIXES=listOf("innen","ungen","ung","ern","en","er","es","em","st","e","s","n","t")
     fun normalize(s:String)=s.lowercase(Locale.GERMAN).replace("ä","ae").replace("ö","oe").replace("ü","ue").replace("ß","ss")
@@ -131,6 +131,7 @@ class Bm25GermanRetriever(private val temporal:TemporalCue?=null, private val k1
             .filter { it.second<=limit }.sortedWith(compareBy<Pair<String,Int>>{ it.second }.thenByDescending { index.postings[it.first]!!.size }).take(1).map { it.first }.toList()
     }
     override fun search(query:String,nowMillis:Long,k:Int):List<RetrievalHit> {
+        if(k<=0)return emptyList()
         val index=state
         if(index.docs.isEmpty())return emptyList()
         val scores=DoubleArray(index.docs.size); val n=index.docs.size.toDouble()
@@ -177,6 +178,7 @@ class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val
 
     /** The real score computation with its parts: score = cosine × timeWeight (same code path as [search]). */
     fun scoredParts(query:String,nowMillis:Long,k:Int):List<ScoredParts> {
+        if(k<=0)return emptyList()
         val index=state
         if(index.docs.isEmpty())return emptyList()
         val (qk,qv)=vec(grams(query),index.idf); val w=temporal?.window(query,nowMillis)
