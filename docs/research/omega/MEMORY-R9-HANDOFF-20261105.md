@@ -39,3 +39,10 @@ After publishing the script, its **exact Git blob** `e063ec3b3b7832a4b076deac2e7
 The baseline invocation also produced the complete expected `TOTAL=20 PASS=16 FAIL=4` and four exact negative assertions; a supervisory wrapper timed out after the complete transcript and therefore no independent script-process exit code is asserted for that second invocation. The initial direct-source JVM baseline had already returned exit 1.
 
 The local mirror is **not** a Gradle/Android checkout and does **not** certify that the complete repository's build or the 44-query holdout passes. Host runner proof stays a host-only bound.
+
+
+## Non-target query parity
+
+The published `tools/memory-r9-exact-negation/parity.sh` (blob `aa4d5b2b71b9bde58bcf4e314f26db1bced8150d`) was executed in the isolated exact-source mirror, with exit **0**. A deterministic synthetic 40-document corpus and 48 queries (each with more than one content term) were processed by BM25 and n-gram, yielding **96 identical serialized ID/confirmed/score comparisons**, plus two identical index-byte summary lines: old R8 and R9 each produced 98 lines, identical SHA256 `ae061eb1d38ce3df38051a59e336621820208e93b6d38f54d415361ea78de7fc`, diff 0. Scores were serialized to 12 decimal places; this is not a bit-level floating-point proof. Source copies matched the two pinned Git blobs, and the full published parity script/harness blobs matched their local counterparts. [Machine-readable parity receipt](../evidence/memory-r9-negation-20261105/PARITY.json).
+
+This is a **bounded synthetic non-target parity check**, not a measured improvement in retrieval quality or a substitute for the real 44-question holdout. Bare negation queries intentionally differ and are covered by the RED/GREEN regressions above.
