@@ -93,10 +93,12 @@ class TemporalCue(private val zone:ZoneId) {
 
 /** Variant A: BM25 over normalized German stems + corpus-driven compound splitting + typo fallback (edit distance). */
 class Bm25GermanRetriever(private val temporal:TemporalCue?=null, private val k1:Double=1.2, private val b:Double=0.75):ContinuumMemoryRetriever {
-    private var docs=emptyList<MemoryDoc>()
-    private val postings=HashMap<String,MutableList<IntArray>>() // term -> [doc, tf]
-    private var lengths=IntArray(0); private var avg=1.0
-    private var vocab=HashSet<String>()
+    /** A search must never combine the corpus of one generation with postings from another. */
+    private data class IndexState(
+        val docs:List<MemoryDoc>, val postings:Map<String,List<IntArray>>,
+        val lengths:IntArray, val avg:Double, val vocab:Set<String>, val approxBytes:Long,
+    )
+    @Volatile private var state=IndexState(emptyList(),emptyMap(),IntArray(0),1.0,emptySet(),0L)
 
     private fun terms(text:String,known:Set<String>):List<String> {
         val out=ArrayList<String>()
@@ -111,45 +113,51 @@ class Bm25GermanRetriever(private val temporal:TemporalCue?=null, private val k1
     }
     override fun index(docs:List<MemoryDoc>) {
         val snapshot=docs.toList()
-        this.docs=snapshot; postings.clear()
+        val nextPostings=HashMap<String,MutableList<IntArray>>()
         val base=snapshot.flatMap { GermanText.contentStems(it.text) }.toHashSet()
-        lengths=IntArray(snapshot.size)
-        snapshot.forEachIndexed { i,d -> val ts=terms(d.text,base); lengths[i]=ts.size
-            ts.groupingBy { it }.eachCount().forEach { (t,c) -> postings.getOrPut(t){ ArrayList() }.add(intArrayOf(i,c)) } }
-        avg=lengths.average().takeIf { it>0 } ?: 1.0
-        vocab=HashSet(postings.keys)
+        val nextLengths=IntArray(snapshot.size)
+        snapshot.forEachIndexed { i,d -> val ts=terms(d.text,base); nextLengths[i]=ts.size
+            ts.groupingBy { it }.eachCount().forEach { (t,c) -> nextPostings.getOrPut(t){ ArrayList() }.add(intArrayOf(i,c)) } }
+        val nextAvg=nextLengths.average().takeIf { it>0 } ?: 1.0
+        val nextVocab=HashSet(nextPostings.keys)
+        val bytes=nextPostings.entries.sumOf { 40L+2*it.key.length+it.value.size*24L }+nextLengths.size*4L
+        // The maps and arrays are built locally and are never mutated after publication.
+        state=IndexState(snapshot,nextPostings,nextLengths,nextAvg,nextVocab,bytes)
     }
-    private fun resolve(t:String):List<String> {
-        if(t in vocab)return listOf(t)
+    private fun resolve(t:String,index:IndexState):List<String> {
+        if(t in index.vocab)return listOf(t)
         val limit=if(t.length>=7)2 else 1
-        return vocab.asSequence().filter { it.length>=4 && it[0]==t[0] }.map { it to GermanText.editDistance(it,t,limit) }
-            .filter { it.second<=limit }.sortedWith(compareBy<Pair<String,Int>>{ it.second }.thenByDescending { postings[it.first]!!.size }).take(1).map { it.first }.toList()
+        return index.vocab.asSequence().filter { it.length>=4 && it[0]==t[0] }.map { it to GermanText.editDistance(it,t,limit) }
+            .filter { it.second<=limit }.sortedWith(compareBy<Pair<String,Int>>{ it.second }.thenByDescending { index.postings[it.first]!!.size }).take(1).map { it.first }.toList()
     }
     override fun search(query:String,nowMillis:Long,k:Int):List<RetrievalHit> {
-        if(docs.isEmpty())return emptyList()
-        val scores=DoubleArray(docs.size); val n=docs.size.toDouble()
-        terms(query,vocab).flatMap(::resolve).distinct().forEach { t -> val p=postings[t] ?: return@forEach
+        val index=state
+        if(index.docs.isEmpty())return emptyList()
+        val scores=DoubleArray(index.docs.size); val n=index.docs.size.toDouble()
+        terms(query,index.vocab).flatMap { resolve(it,index) }.distinct().forEach { t -> val p=index.postings[t] ?: return@forEach
             val idf=ln(1+(n-p.size+0.5)/(p.size+0.5))
-            p.forEach { (d,tf) -> scores[d]+=idf*tf*(k1+1)/(tf+k1*(1-b+b*lengths[d]/avg)) } }
+            p.forEach { (d,tf) -> scores[d]+=idf*tf*(k1+1)/(tf+k1*(1-b+b*index.lengths[d]/index.avg)) } }
         val w=temporal?.window(query,nowMillis)
-        return scores.indices.filter { scores[it]>0 }.map { RetrievalHit(docs[it],scores[it]*(temporal?.weight(w,docs[it].atMillis) ?: 1.0)) }
+        return scores.indices.filter { scores[it]>0 }.map { RetrievalHit(index.docs[it],scores[it]*(temporal?.weight(w,index.docs[it].atMillis) ?: 1.0)) }
             .sortedByDescending { it.score }.take(k)
     }
-    override fun approxIndexBytes()=postings.entries.sumOf { 40L+2*it.key.length+it.value.size*24L }+lengths.size*4L
+    override fun approxIndexBytes()=state.approxBytes
 }
 
 /** Variant B: hashed character 3–5-gram TF-IDF vectors (cosine), robust to typos and compounds by construction. */
 class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val dim:Int=1 shl 15):ContinuumMemoryRetriever {
-    private var docs=emptyList<MemoryDoc>()
-    private var vectors=emptyList<Pair<IntArray,FloatArray>>()
-    private var idf=FloatArray(0)
+    private data class IndexState(
+        val docs:List<MemoryDoc>, val vectors:List<Pair<IntArray,FloatArray>>,
+        val idf:FloatArray, val approxBytes:Long,
+    )
+    @Volatile private var state=IndexState(emptyList(),emptyList(),FloatArray(0),0L)
     private fun grams(text:String):Map<Int,Int> {
         val m=HashMap<Int,Int>()
         for(w in GermanText.contentStems(text)) { val s=" $w "
             for(n in 3..5) for(i in 0..s.length-n) { val h=Math.floorMod(s.substring(i,i+n).hashCode(),dim); m[h]=(m[h]?:0)+1 } }
         return m
     }
-    private fun vec(g:Map<Int,Int>):Pair<IntArray,FloatArray> {
+    private fun vec(g:Map<Int,Int>,idf:FloatArray):Pair<IntArray,FloatArray> {
         val keys=g.keys.sorted().toIntArray(); val v=FloatArray(keys.size){ sqrt(g[keys[it]]!!.toFloat())*idf[keys[it]] }
         val norm=sqrt(v.sumOf { (it*it).toDouble() }).toFloat().takeIf { it>0 } ?: 1f
         for(i in v.indices) v[i]/=norm
@@ -157,22 +165,26 @@ class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val
     }
     override fun index(docs:List<MemoryDoc>) {
         val snapshot=docs.toList()
-        this.docs=snapshot; val gs=snapshot.map { grams(it.text) }
+        val gs=snapshot.map { grams(it.text) }
         val df=IntArray(dim); gs.forEach { it.keys.forEach { k -> df[k]++ } }
-        idf=FloatArray(dim){ ln((1.0+snapshot.size)/(1.0+df[it])).toFloat()+1f }
-        vectors=gs.map(::vec)
+        val nextIdf=FloatArray(dim){ ln((1.0+snapshot.size)/(1.0+df[it])).toFloat()+1f }
+        val nextVectors=gs.map { vec(it,nextIdf) }
+        val bytes=nextVectors.sumOf { it.first.size*8L+32 }+nextIdf.size*4L
+        // Publish docs, vectors and IDF as one generation; active readers keep their prior generation.
+        state=IndexState(snapshot,nextVectors,nextIdf,bytes)
     }
     override fun search(query:String,nowMillis:Long,k:Int):List<RetrievalHit> = scoredParts(query,nowMillis,k).map { it.hit }
 
     /** The real score computation with its parts: score = cosine × timeWeight (same code path as [search]). */
     fun scoredParts(query:String,nowMillis:Long,k:Int):List<ScoredParts> {
-        if(docs.isEmpty())return emptyList()
-        val (qk,qv)=vec(grams(query)); val w=temporal?.window(query,nowMillis)
-        return vectors.mapIndexed { i,(dk,dv) -> var s=0.0; var a=0; var c=0
+        val index=state
+        if(index.docs.isEmpty())return emptyList()
+        val (qk,qv)=vec(grams(query),index.idf); val w=temporal?.window(query,nowMillis)
+        return index.vectors.mapIndexed { i,(dk,dv) -> var s=0.0; var a=0; var c=0
             while(a<qk.size && c<dk.size){ when { qk[a]==dk[c] -> { s+=qv[a]*dv[c];a++;c++ }; qk[a]<dk[c] -> a++; else -> c++ } }
-            val tw=temporal?.weight(w,docs[i].atMillis) ?: 1.0
-            ScoredParts(RetrievalHit(docs[i],s*tw),s,tw) }
+            val tw=temporal?.weight(w,index.docs[i].atMillis) ?: 1.0
+            ScoredParts(RetrievalHit(index.docs[i],s*tw),s,tw) }
             .filter { it.hit.score>0 }.sortedByDescending { it.hit.score }.take(k)
     }
-    override fun approxIndexBytes()=vectors.sumOf { it.first.size*8L+32 }+idf.size*4L
+    override fun approxIndexBytes()=state.approxBytes
 }
