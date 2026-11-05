@@ -638,7 +638,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                 headScale = auraScale, activityEnergy = energy, speechLevel = audioEnergy)
         }
         if (headEnabled) {
-            val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
+            val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis(), canAnimateFrame()) }
             if (canDisplay3d() && native3d != null) {
                 runCatching {
                     native3d!!.setQuality(renderBudget().reducedBloom)

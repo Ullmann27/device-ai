@@ -1,0 +1,169 @@
+package at.heinz.deviceai
+
+import android.app.Activity
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.RectF
+import android.os.Looper
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ScrollView
+import android.widget.TextView
+import at.heinz.deviceai.ui.JarvisWorkWindow
+import org.junit.Assert.*
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.Robolectric
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.LooperMode
+
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28], qualifiers = "w884dp-h760dp-mdpi")
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
+class JarvisWorkWindowLifecycleUiTest {
+    private class DrawingClock(context: Context) : View(context) {
+        val listeners = linkedSetOf<(Long, Float) -> Boolean>()
+        var time = 0L
+        var inDraw = false
+        val source: ((Long, Float) -> Boolean) -> AutoCloseable = { listener ->
+            listeners.add(listener)
+            AutoCloseable { listeners.remove(listener) }
+        }
+        override fun onDraw(canvas: Canvas) {
+            inDraw = true
+            try { listeners.toList().forEach { it(time, 1f) } }
+            finally { inDraw = false }
+        }
+    }
+
+    private class Fixture {
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
+        val activity = controller.get()
+        val root = FrameLayout(activity)
+        val clock = DrawingClock(activity)
+        val window = JarvisWorkWindow(activity, clock.source) {}
+        init {
+            root.addView(clock, FrameLayout.LayoutParams(-1, -1))
+            root.addView(window, FrameLayout.LayoutParams(-1, -1))
+            activity.setContentView(root)
+            controller.visible()
+            layout()
+        }
+        fun body(label: String) = TextView(activity).apply { text = label }
+        fun open(body: View, closed: () -> Unit) = window.open(body,
+            RectF(30f, 540f, 190f, 600f), RectF(220f, 440f, 820f, 700f),
+            "Systemstatus", listOf(RectF(250f, 30f, 820f, 420f)), onClosed = closed)
+        fun layout() {
+            root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
+            root.layout(0, 0, 884, 760)
+        }
+        fun draw(time: Long) {
+            clock.time = time
+            layout()
+            val bitmap = Bitmap.createBitmap(884, 760, Bitmap.Config.ARGB_8888)
+            try { root.draw(Canvas(bitmap)) } finally { bitmap.recycle() }
+        }
+        fun dispose() {
+            window.dispose()
+            shadowOf(Looper.getMainLooper()).idle()
+            controller.pause().stop().destroy()
+        }
+    }
+
+    private fun withWindow(block: (Fixture) -> Unit) {
+        val fixture = Fixture()
+        try { block(fixture) } finally { fixture.dispose() }
+    }
+
+    @Test fun finalDrawClosesLogicallyBeforeReleasingViewsAndCallingHost() = withWindow { f ->
+        val body = f.body("Status ist vorhanden")
+        var closed = 0
+        var callbackDuringDraw = false
+        var removalDuringDraw = false
+        assertTrue(f.open(body) {
+            closed++
+            callbackDuringDraw = callbackDuringDraw || f.clock.inDraw
+            if (!f.clock.inDraw) f.root.removeView(f.window)
+        })
+        val scroll = f.window.findViewWithTag<ScrollView>("jarvis-work-window:scroll")
+        scroll.setOnHierarchyChangeListener(object : ViewGroup.OnHierarchyChangeListener {
+            override fun onChildViewAdded(parent: View, child: View) = Unit
+            override fun onChildViewRemoved(parent: View, child: View) {
+                removalDuringDraw = removalDuringDraw || f.clock.inDraw
+            }
+        })
+        f.draw(1_000)
+        f.draw(2_000)
+        f.window.close()
+        f.draw(2_400)
+        assertFalse(f.window.isShowing)
+        assertEquals(View.GONE, f.window.visibility)
+        assertTrue(f.clock.listeners.isEmpty())
+        assertFalse("Draw must not change child hierarchy", removalDuringDraw)
+        assertFalse("Host callback must leave draw", callbackDuringDraw)
+        assertSame("Body stays until cleanup", scroll, body.parent)
+        assertEquals(0, closed)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertNull(body.parent)
+        assertNull(f.window.parent)
+        assertEquals(1, closed)
+    }
+
+    @Test fun reopeningBeforeCleanupCannotRemoveNewBodyOrRunStaleClose() = withWindow { f ->
+        val first = f.body("Erster Status")
+        val second = f.body("Neuer Status")
+        var oldCloses = 0
+        var newCloses = 0
+        assertTrue(f.open(first) {
+            oldCloses++
+            if (!f.clock.inDraw) f.root.removeView(f.window)
+        })
+        f.draw(1_000)
+        f.draw(2_000)
+        f.window.close()
+        f.draw(2_400)
+        assertTrue(f.open(second) { newCloses++ })
+        shadowOf(Looper.getMainLooper()).idle()
+        assertTrue(f.window.isShowing)
+        assertSame(f.root, f.window.parent)
+        assertNull(first.parent)
+        assertNotNull(second.parent)
+        assertEquals("Superseded callback is cancelled", 0, oldCloses)
+        assertEquals(1, f.clock.listeners.size)
+        f.window.close(immediate = true)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals(1, newCloses)
+        assertEquals(0, oldCloses)
+        assertNull(second.parent)
+    }
+
+    @Test fun fractionalDestinationSettlesExactlyInsideSafePixelBounds() = withWindow { f ->
+        val requested = RectF(220.35f, 440.75f, 820.9f, 700.2f)
+        val keepOut = RectF(0f, 0f, 220.34f, 760f)
+        assertTrue(f.window.open(f.body("Bruchteilige Zielbox"),
+            RectF(30.25f, 540.3f, 190.65f, 600.4f), requested, "Systemstatus", listOf(keepOut)))
+        f.draw(1_000)
+        f.draw(2_000)
+        val panel = f.window.findViewWithTag<View>("jarvis-work-window:panel")
+        assertEquals(1f, panel.scaleX, 0f)
+        assertEquals(1f, panel.scaleY, 0f)
+        assertEquals(0f, panel.translationX, 0f)
+        assertEquals(0f, panel.translationY, 0f)
+        val actual = RectF(panel.left.toFloat(), panel.top.toFloat(), panel.right.toFloat(), panel.bottom.toFloat())
+        assertTrue("Pixel bounds stay inside request", requested.contains(actual))
+        assertFalse("Rounding preserves protected area", RectF.intersects(actual, keepOut))
+        val close = f.window.findViewWithTag<View>("jarvis-work-window:close")
+        val visible = Rect()
+        assertTrue(close.getGlobalVisibleRect(visible))
+        assertEquals(48, close.height)
+        assertEquals("Close target stays unscaled", close.height, visible.height())
+    }
+}

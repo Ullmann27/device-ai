@@ -680,6 +680,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        workWindowHost.close(immediate = true)
+        avatarDirector.clearAnimationIntents()
         ownerRecoveryReview?.close()
         ownerRecoveryReview = null
         clearTaskEffects()
@@ -823,6 +825,7 @@ class AgentActivity : Activity() {
     }
 
     private fun buildUi(): View {
+        workWindowHost.close(immediate = true)
         val windowWidthDp = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
         // Navigation ownership follows the same width classes as the shared HUD.
         // A short medium window scrolls its content; it must not acquire a second phone navigation.
@@ -1355,7 +1358,7 @@ class AgentActivity : Activity() {
                 capabilityDashboardAtElapsedMs = dashboardSnapshotAtElapsedMs
                 homeView?.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
                     memoryActivity = memoryActivitySnapshot(state.memory))
-                if (centerDialog?.isShowing == true) liveHardwareGauges?.updateTelemetry(state.system)
+                if (centerDialog?.isShowing == true || workWindowHost.isShowing) liveHardwareGauges?.updateTelemetry(state.system)
                 navigationView?.state = state
                 railView?.state = state
                 announceNewIssues(open)
@@ -1765,6 +1768,7 @@ class AgentActivity : Activity() {
 
     /** All responsive presentations enter the existing owner-gated routes through this one adapter. */
     private fun navigateDashboardTarget(target: String) {
+        if (target !in setOf("system", "device", "voice-input", "camera-settings")) workWindowHost.close(immediate = true)
         when (target) {
             "voice-input" -> onChatMicrophoneTap()
             "camera-settings" -> toggleConversationCamera()
@@ -2185,6 +2189,7 @@ class AgentActivity : Activity() {
             handsFreeActive = continuousConversation.active,
             pinHomeCockpit = keepCockpitDuringHandsFree
         )
+        if (chat) workWindowHost.close(immediate = true)
         conversationRail?.visibility = if (chat) View.VISIBLE else View.GONE
         dashboardSection?.visibility = if (chat) View.GONE else View.VISIBLE
         chatColumn?.visibility = if (chat) View.VISIBLE else View.GONE
@@ -2288,7 +2293,13 @@ class AgentActivity : Activity() {
     private class CenterAction(val label: String, val accent: Boolean = false, val run: () -> Unit)
 
     private var centerDialog: AlertDialog? = null
+    private val workWindowHost by lazy { at.heinz.deviceai.ui.JarvisWorkWindowHost(this, avatarDirector) }
     private var quickActionsDialog: AlertDialog? = null
+
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() {
+        if (workWindowHost.isShowing) workWindowHost.close() else super.onBackPressed()
+    }
 
     private fun learningIoStatus(read: () -> String): ((String) -> Unit) -> Unit = { done ->
         onLearningIo(read) { result ->
@@ -2351,6 +2362,7 @@ class AgentActivity : Activity() {
         experimental: List<CenterAction> = emptyList()
     ) {
         centerDialog?.dismiss()
+        workWindowHost.close(immediate = true)
         liveHardwareGauges = null
         val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
         val box = cockpit.panel(this, "DEVICE AI · DEIN BEREICH", title, intro)
@@ -2371,11 +2383,12 @@ class AgentActivity : Activity() {
                 "App-CPU statt Gesamt-CPU. GPU ist auf diesem Android-Gerät derzeit nicht zuverlässig messbar.",
                 10f, MUTED), matchWidth(top = 1))
         }
-        lateinit var dialog: AlertDialog
+        lateinit var dismissCenter: (Boolean) -> Unit
+        lateinit var centerShowing: () -> Boolean
         fun makeAction(action: CenterAction): View =
             cockpit.action(this, action.label, primary = action.accent,
                 critical = action.label.contains("LÖSCHEN", ignoreCase = true)) {
-                dialog.dismiss()
+                dismissCenter(true)
                 action.run()
             }
         box.addView(cockpit.section(this, "FUNKTIONEN · WÄHLE EIN WERKZEUG"), matchWidth(top = 9))
@@ -2387,17 +2400,26 @@ class AgentActivity : Activity() {
             cockpit.grid(this, box, experimental.map(::makeAction),
                 if (resources.configuration.screenWidthDp >= 600) 3 else 2)
         }
-        box.addView(cockpit.action(this, "SCHLIESSEN") { dialog.dismiss() }, matchWidth(top = 14))
-        dialog = cockpit.show(this, box)
-        dialog.setOnDismissListener {
-            if (centerDialog === dialog) {
-                centerDialog = null
-                liveHardwareGauges = null
+        val home = homeView?.takeIf { title == "Systemstatus" && activeWorkArea == ContinuumWorkArea.START && it.isShown }
+        val workWindow = home?.let { workWindowHost.show(it, box, title) { liveHardwareGauges = null } }
+        if (workWindow != null) {
+            dismissCenter = { immediate -> workWindow.close(immediate) }
+            centerShowing = { workWindow.isShowing }
+        } else {
+            box.addView(cockpit.action(this, "SCHLIESSEN") { dismissCenter(false) }, matchWidth(top = 14))
+            val dialog = cockpit.show(this, box)
+            dismissCenter = { _ -> dialog.dismiss() }
+            centerShowing = { dialog.isShowing }
+            dialog.setOnDismissListener {
+                if (centerDialog === dialog) {
+                    centerDialog = null
+                    liveHardwareGauges = null
+                }
             }
+            centerDialog = dialog
         }
-        centerDialog = dialog
         status { value ->
-            if (dialog.isShowing) cockpit.updateStatus(statusGrid, value)
+            if (centerShowing()) cockpit.updateStatus(statusGrid, value)
         }
     }
 
@@ -3163,7 +3185,7 @@ class AgentActivity : Activity() {
         if (!foregroundLearningActive || isFinishing || isDestroyed || readinessCameraEnabled ||
             readinessDialog?.isShowing == true || cameraConsentDialog?.isShowing == true ||
             ownerFaceDialogs?.isShowing == true ||
-            modelCenterDialog?.isShowing == true || centerDialog?.isShowing == true) return
+            modelCenterDialog?.isShowing == true || centerDialog?.isShowing == true || workWindowHost.isShowing) return
         if (!getSharedPreferences("continuum-readiness", MODE_PRIVATE)
                 .getBoolean("camera-question-shown-v1", false)) showConversationCameraConsent()
     }
@@ -7917,7 +7939,6 @@ class AgentActivity : Activity() {
         val callback: (Boolean) -> Unit = { approved ->
             avatarAwaitingApproval = false
             refreshHologramState()
-            if (approved) avatarDirector.onActionConfirmed()
             onDecision(approved)
         }
         if(proposal.toolName in setOf("web_search","web_read")) {
@@ -7933,19 +7954,24 @@ class AgentActivity : Activity() {
         val message = "${spec?.label ?: proposal.toolName}\nRisk: ${spec?.risk?.name ?: "UNKNOWN"}\n\n" +
             "Reason: ${spec?.description ?: "Tool is not registered."}\n\n" +
             "Arguments:\n${safeArgumentSummary(proposal.arguments)}"
+        val explicitApproval = {
+            callback(true)
+            avatarDirector.confirmationAccepted("approval-${java.util.UUID.randomUUID()}")
+            Unit
+        }
         AlertDialog.Builder(this)
             .setTitle(if (destructive) "Kritische Aktion bestätigen" else "Aktion freigeben")
             .setMessage(message)
             .setNegativeButton("Ablehnen") { _, _ -> callback(false) }
             .setPositiveButton(if (destructive) "Weiter prüfen" else "Ausführen") { _, _ ->
                 if (!destructive) {
-                    callback(true)
+                    explicitApproval()
                 } else {
                     AlertDialog.Builder(this)
                         .setTitle("Starke Bestätigung erforderlich")
                         .setMessage("Diese Aktion kann Daten verändern oder löschen.\n\n$message")
                         .setNegativeButton("Abbrechen") { _, _ -> callback(false) }
-                        .setPositiveButton("Destruktiv ausführen") { _, _ -> callback(true) }
+                        .setPositiveButton("Destruktiv ausführen") { _, _ -> explicitApproval() }
                         .setOnCancelListener { callback(false) }
                         .show()
                 }
@@ -9123,6 +9149,10 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        workWindowHost.close(immediate = true)
+        avatarDirector.clearAnimationIntents()
+        voiceEngine?.stop()
+        stopVoiceAnimation()
         clearTaskEffects()
         activeBotTask?.let { task ->
             task.cancel()
@@ -9132,7 +9162,6 @@ class AgentActivity : Activity() {
         }
         if (activeBotId != null) {
             // Stop this utterance/model turn only. An independent CCC1 job is not a speech turn.
-            voiceEngine?.stop(); stopVoiceAnimation()
             activeBotTurn?.let(botConversation::cancel)
             botConversation.invalidate()
             activeChatCancellation?.cancel()

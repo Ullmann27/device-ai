@@ -26,6 +26,14 @@ class JarvisShellView(context: Context) : View(context) {
     private val glass = JarvisGlassRenderer(painter)
     /** The separate foreground layer follows this layer's invalidation without owning an animation clock. */
     var onFrameDrawn: (() -> Unit)? = null
+    private val motionFrames = linkedSetOf<(Long, Float) -> Boolean>()
+
+    /** Shares the existing draw clock. */
+    fun observeMotionFrames(listener: (Long, Float) -> Boolean): AutoCloseable {
+        motionFrames.add(listener)
+        invalidate()
+        return AutoCloseable { motionFrames.remove(listener) }
+    }
     var content: Map<JarvisShellLayout.Slot, JarvisShellRenderer.SlotContent> = emptyMap()
         set(value) { field = value; invalidate() }
     /** Presentation model of the action tiles (label/icon/target, optional display text from Kern). */
@@ -168,11 +176,16 @@ class JarvisShellView(context: Context) : View(context) {
         val sceneTime = if (ambientMotion(scale)) now else 0L
         JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true)
         canvas.restore()
+        var workWindowMoving = false
+        val effectiveScale = if (motionAllowed(scale)) scale else 0f
+        motionFrames.toList().forEach { listener ->
+            if (listener(now, effectiveScale)) workWindowMoving = true
+        }
         onFrameDrawn?.invoke()
         val total = JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, s.boxes.size + s.tileBoxes().size, animatorScale = scale)
         // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
         removeCallbacks(ambientFrame)
-        if (motionAllowed(scale) && startMs >= 0 && elapsed < total) postInvalidateOnAnimation()
+        if (motionAllowed(scale) && (workWindowMoving || startMs >= 0 && elapsed < total)) postInvalidateOnAnimation()
         else if (ambientMotion(scale)) postDelayed(ambientFrame, 66L)
         if (frameLogging) recordFrame(drawStartedNanos, System.nanoTime())
     }

@@ -1,0 +1,173 @@
+package at.heinz.deviceai
+
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Rect
+import android.os.Looper
+import android.os.SystemClock
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import at.heinz.deviceai.ui.ContinuumHomeView
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.Robolectric
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowAlertDialog
+import org.robolectric.shadows.ShadowChoreographer
+import java.time.Duration
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.TimeUnit
+
+/** Host Canvas; no Filament acceptance. */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28], qualifiers = "w884dp-h760dp-land-mdpi")
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
+class ContinuumSystemStatusWorkWindowUiTest {
+    private var framePump: CockpitHostFramePump? = null
+    @Before fun pauseVsync() {
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+    }
+
+    private fun field(owner: Any, name: String): Any? = owner.javaClass
+        .getDeclaredField(name).apply { isAccessible = true }.get(owner)
+
+    private fun descendants(view: View): List<View> = listOf(view) + if (view is ViewGroup)
+        (0 until view.childCount).flatMap { descendants(view.getChildAt(it)) } else emptyList()
+
+    private fun advance(ms: Long) {
+        var remaining = ms
+        while (remaining > 0L) {
+            val step = minOf(16L, remaining)
+            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
+            framePump?.drawRequestedFrame()
+            remaining -= step
+        }
+    }
+
+    private fun measure(root: View) {
+        root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
+        root.layout(0, 0, 884, 760)
+    }
+
+    private fun draw(root: View) {
+        val bitmap = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
+        try { root.draw(Canvas(bitmap)) } finally { bitmap.recycle() }
+    }
+
+    private fun shown(root: View, tag: String): View {
+        val matches = descendants(root).filter { it.tag == tag && it.isShown }
+        assertEquals("One visible $tag belongs to the Activity", 1, matches.size)
+        return matches.single()
+    }
+
+    private fun tap(root: View, view: View) {
+        val bounds = Rect()
+        assertTrue("Tap target is visible: ${view.tag}", view.getGlobalVisibleRect(bounds))
+        assertEquals("Tap target is not vertically clipped", view.height, bounds.height())
+        assertEquals("Tap target is not horizontally clipped", view.width, bounds.width())
+        val at = SystemClock.uptimeMillis()
+        val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN,
+            bounds.exactCenterX(), bounds.exactCenterY(), 0)
+        val up = MotionEvent.obtain(at, at + 16L, MotionEvent.ACTION_UP,
+            bounds.exactCenterX(), bounds.exactCenterY(), 0)
+        try {
+            assertTrue(root.dispatchTouchEvent(down))
+            assertTrue(root.dispatchTouchEvent(up))
+        } finally { down.recycle(); up.recycle() }
+    }
+
+    @Test fun systemTileOpensInsideCockpitWithRealStatusAndSameAvatar() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
+            .putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible()
+            advance(32L)
+            controller.windowFocusChanged(true)
+            val activity = controller.get()
+            val root = activity.window.decorView
+            framePump = CockpitHostFramePump { controller.get().window.decorView }
+            val avatar = field(activity, "hologramView") as ContinuumHologramView
+            val home = field(activity, "homeView") as ContinuumHomeView
+            avatar.setAnimationsEnabled(true)
+            avatar.setForegroundActive(true)
+            home.setForegroundActive(true)
+            measure(root); advance(320L); measure(root); draw(root)
+            assertTrue(home.jarvisShellStage)
+            assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
+            val headBounds = Rect(field(avatar, "cockpitHeadBounds") as Rect)
+            val orbBounds = Rect(field(avatar, "cockpitOrbBounds") as Rect)
+            assertFalse(headBounds.isEmpty)
+            assertFalse(orbBounds.isEmpty)
+            val beforeDialog = ShadowAlertDialog.getLatestAlertDialog()
+            val beforeMotion = avatar.sampleMotion()
+
+            tap(root, shown(root, "jarvis-tile:system"))
+            advance(640L); measure(root); draw(root)
+            val work = shown(root, "jarvis-work-window")
+            assertSame("Opening uses the existing Activity window", root, work.rootView)
+            assertSame("Systemstatus creates no AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
+            assertSame("Opening retains the original avatar", avatar, field(activity, "hologramView"))
+            assertEquals(1, descendants(root).count { it is ContinuumHologramView })
+            assertTrue("Avatar stays attached and visible", avatar.isAttachedToWindow && avatar.isShown)
+            assertTrue("Cockpit retains window focus", activity.hasWindowFocus())
+            assertEquals(headBounds, field(avatar, "cockpitHeadBounds"))
+            assertEquals(orbBounds, field(avatar, "cockpitOrbBounds"))
+            assertTrue("Head and orb continue advancing", avatar.sampleMotion().callbackCount > beforeMotion.callbackCount)
+
+            val io = field(activity, "learningIoExecutor") as ExecutorService
+            io.submit {}.get(5L, TimeUnit.SECONDS)
+            advance(64L); measure(root); draw(root)
+            val labels = descendants(work).filterIsInstance<TextView>().map { it.text.toString() }
+            assertTrue("Visible title identifies the work area", labels.any { it.equals("Systemstatus", true) })
+            assertFalse("Status callback must replace loading", labels.any { it.contains("Status wird gelesen") })
+            val status = labels.joinToString("\n")
+            assertTrue("Real build version is present", status.contains("Device AI ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"))
+            for (label in listOf("Shizuku", "Internetzugang", "Sprachmodell", "Werkzeugquittungen")) {
+                assertTrue("Actual status includes $label", status.contains(label))
+            }
+            assertTrue("Offline model state remains truthful", status.contains("keines geladen"))
+            assertFalse("Inspection starts no model task", field(activity, "busy") as Boolean)
+            val close = shown(work, "jarvis-work-window:close")
+            assertTrue(close.isClickable && close.isFocusable)
+            assertNotNull(close.contentDescription)
+            tap(root, close)
+            advance(640L); measure(root); draw(root)
+            assertTrue("Close removes the visible work area", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+            assertSame(avatar, field(activity, "hologramView"))
+            assertTrue(avatar.isShown)
+            assertEquals(headBounds, field(avatar, "cockpitHeadBounds"))
+            assertEquals(orbBounds, field(avatar, "cockpitOrbBounds"))
+            assertTrue("System tile is reachable again", shown(root, "jarvis-tile:system").isClickable)
+            assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
+        } finally {
+            framePump?.close()
+            framePump = null
+            ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
+            runCatching { controller.close() }
+        }
+    }
+}

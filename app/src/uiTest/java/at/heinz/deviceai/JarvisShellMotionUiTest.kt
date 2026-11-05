@@ -174,4 +174,37 @@ class JarvisShellMotionUiTest {
             assertStopped(f)
         } finally { f.shell.frameLogging = false }
     }
+
+    @Test fun workWindowSharesShellFramesThenSettles() = withShell { f ->
+        f.shell.ambientMotionEnabled = false
+        assertStopped(f)
+        var callbacks = 0
+        val until = android.os.SystemClock.uptimeMillis() + 96L
+        val subscription = f.shell.observeMotionFrames { now, scale ->
+            assertTrue(scale > 0f)
+            callbacks++
+            now < until
+        }
+        try {
+            advance()
+            assertTrue("Window uses supplied frames", callbacks > 1)
+            val settled = callbacks
+            advance()
+            assertEquals("Completed window schedules nothing", settled, callbacks)
+        } finally { subscription.close() }
+    }
+
+    @Test fun workWindowReceivesReducedMotionWithoutLoop() = withShell { f ->
+        f.shell.ambientMotionEnabled = false
+        var latestScale = -1f
+        val subscription = f.shell.observeMotionFrames { _, scale -> latestScale = scale; true }
+        try {
+            advance(32L)
+            val resolver = f.controller.get().contentResolver
+            Settings.Global.putFloat(resolver, Settings.Global.ANIMATOR_DURATION_SCALE, 0f)
+            resolver.notifyChange(Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE), null)
+            assertStopped(f)
+            assertEquals("Reduced motion settles windows", 0f, latestScale, 0f)
+        } finally { subscription.close() }
+    }
 }

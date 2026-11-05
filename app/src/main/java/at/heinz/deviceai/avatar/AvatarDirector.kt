@@ -17,6 +17,15 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     // AgentActivity admits callbacks only for its current, unique TTS id. Keep a bounded
     // recent-terminal guard here as well, so replayed starts cannot reset that live speech.
     private val retiredUtterances = LinkedHashSet<String>()
+    private data class WindowIntent(val id: String, val gaze: GazeTarget, val atMillis: Long, val durationMs: Long, val yieldsToObservedGaze: Boolean)
+    private var windowIntent: WindowIntent? = null
+    private var confirmationAtMillis = Long.MIN_VALUE
+    private var lastConfirmationAtMillis = Long.MIN_VALUE
+    private var animationRevision = 0L
+    private var legacyIntentSerial = 0L
+    private var thinkingAtMillis = Long.MIN_VALUE
+    private val retiredWindows = LinkedHashSet<String>()
+    private val seenConfirmations = LinkedHashSet<String>()
 
     @Synchronized fun attach(newSink: AvatarSink) {
         sink = newSink
@@ -32,9 +41,19 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
             }
             lastWordCues.forEach(::emit)
         }
+        if (animationRevision > 0) {
+            val at = clock()
+            expireAnimationIntents(at)
+            publishAnimationIntents(at)
+        }
     }
 
     @Synchronized fun onRuntime(signals: AvatarRuntimeSignals) {
+        if ((signals.listening || signals.speaking) && windowIntent != null) {
+            windowIntent?.let { remember(retiredWindows, it.id) }
+            windowIntent = null
+            publishAnimationIntents(clock())
+        }
         val next = when {
             signals.awaitingApproval -> AvatarState.WAITING_FOR_APPROVAL
             signals.listening -> AvatarState.LISTENING
@@ -46,20 +65,11 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
             else -> AvatarState.IDLE
         }
         if (next == state) return
+        val hadThinking = thinkingAtMillis != Long.MIN_VALUE
         state = next
+        thinkingAtMillis = if (next == AvatarState.THINKING) clock() else Long.MIN_VALUE
         emit(stateEvent(next))
-        if (next == AvatarState.THINKING)
-            emit(AvatarEvent.Gesture(AvatarGestureIntent.THINK_MICRO, GazeTarget.THINKING_AWAY, clock()))
-    }
-
-    /** Explicitly presented in-app window. Decorative gaze; no camera observation. */
-    @Synchronized fun onWindowPresented() {
-        emit(AvatarEvent.Gesture(AvatarGestureIntent.WINDOW_FOCUS, GazeTarget(.42f, -.18f), clock()))
-    }
-
-    /** True owner approval only; does not indicate tool completion. */
-    @Synchronized fun onActionConfirmed() {
-        emit(AvatarEvent.Gesture(AvatarGestureIntent.CONFIRM_NOD, GazeTarget.OWNER, clock()))
+        if (next == AvatarState.THINKING || hadThinking) publishAnimationIntents(clock())
     }
 
     /** Adapter computes age using elapsedRealtime; do not mix its timestamp with this clock.
@@ -77,9 +87,110 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     @Synchronized fun clearObservedGaze() = emit(AvatarEvent.GazeCleared(clock()))
 
+    /** One glance per unique window. */
+    @Synchronized fun windowOpened(windowId: String, target: GazeTarget = GazeTarget.WORK_WINDOW): Boolean =
+        requestWindow(windowId, target, AvatarPoseReducer.WINDOW_GAZE_TTL_MS)
+
+    private fun requestWindow(windowId: String, target: GazeTarget, durationMs: Long, yieldsToObservedGaze: Boolean = false): Boolean {
+        val at = clock()
+        expireAnimationIntents(at)
+        if (windowId.isBlank() || windowId == windowIntent?.id || windowId in retiredWindows) return false
+        if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) {
+            remember(retiredWindows, windowId)
+            return false
+        }
+        windowIntent?.let { remember(retiredWindows, it.id) }
+        windowIntent = WindowIntent(windowId, GazeTarget(
+            target.x.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
+            target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y)), at, durationMs, yieldsToObservedGaze)
+        thinkingAtMillis = Long.MIN_VALUE
+        publishAnimationIntents(at)
+        return true
+    }
+
+    /** Legacy presentation adapter, shared admission. */
+    @Synchronized fun onWindowPresented() {
+        requestWindow("legacy-window-${++legacyIntentSerial}", GazeTarget(.42f, -.18f),
+            AvatarPoseReducer.LEGACY_WINDOW_GAZE_TTL_MS, yieldsToObservedGaze = true)
+    }
+
+    /** Legacy explicit acceptance, shared cooldown. */
+    @Synchronized fun onActionConfirmed() {
+        confirmationAccepted("legacy-confirmation-${++legacyIntentSerial}")
+    }
+
+    /** Stale windows cannot clear successors. */
+    @Synchronized fun windowClosed(windowId: String): Boolean {
+        if (windowIntent?.id != windowId) return false
+        remember(retiredWindows, windowId)
+        windowIntent = null
+        publishAnimationIntents(clock())
+        return true
+    }
+
+    /** Call only after explicit acceptance. */
+    @Synchronized fun confirmationAccepted(confirmationId: String): Boolean {
+        if (confirmationId.isBlank() || confirmationId in seenConfirmations) return false
+        remember(seenConfirmations, confirmationId)
+        val at = clock()
+        val elapsed = at.toDouble() - lastConfirmationAtMillis.toDouble()
+        if (lastConfirmationAtMillis != Long.MIN_VALUE && elapsed < CONFIRMATION_COOLDOWN_MS) return false
+        expireAnimationIntents(at)
+        confirmationAtMillis = at
+        thinkingAtMillis = Long.MIN_VALUE
+        lastConfirmationAtMillis = at
+        publishAnimationIntents(at)
+        return true
+    }
+
+    /** STOP/pause cancel presentation intents. */
+    @Synchronized fun clearAnimationIntents() {
+        windowIntent?.let { remember(retiredWindows, it.id) }
+        windowIntent = null
+        confirmationAtMillis = Long.MIN_VALUE
+        thinkingAtMillis = Long.MIN_VALUE
+        publishAnimationIntents(clock())
+    }
+
+    private fun expireAnimationIntents(at: Long) {
+        windowIntent?.let {
+            val age = at.toDouble() - it.atMillis.toDouble()
+            if (age < 0 || age >= it.durationMs) {
+                remember(retiredWindows, it.id)
+                windowIntent = null
+            }
+        }
+        val confirmationAge = at.toDouble() - confirmationAtMillis.toDouble()
+        if (confirmationAge < 0 || confirmationAge >= AvatarPoseReducer.CONFIRMATION_DURATION_MS) {
+            confirmationAtMillis = Long.MIN_VALUE
+        }
+        val thinkingAge = at.toDouble() - thinkingAtMillis.toDouble()
+        if (state != AvatarState.THINKING || thinkingAge < 0 || thinkingAge >= AvatarPoseReducer.THINKING_DURATION_MS) {
+            thinkingAtMillis = Long.MIN_VALUE
+        }
+    }
+
+    private fun publishAnimationIntents(at: Long) {
+        animationRevision++
+        emit(AvatarEvent.AnimationIntentsChanged(animationRevision, windowIntent?.gaze,
+            windowIntent?.atMillis ?: Long.MIN_VALUE, confirmationAtMillis, at,
+            windowIntent?.durationMs ?: AvatarPoseReducer.WINDOW_GAZE_TTL_MS, thinkingAtMillis,
+            windowIntent?.yieldsToObservedGaze ?: false))
+    }
+
+    private fun remember(ids: LinkedHashSet<String>, id: String) {
+        ids += id
+        if (ids.size > MAX_RECENT_INTENTS) {
+            val oldest = ids.iterator()
+            oldest.next()
+            oldest.remove()
+        }
+    }
+
     /** Returns admission independently of rendering, so the caller can share it with PCM state. */
     @Synchronized fun speechStarted(utteranceId: String, text: String): Boolean {
         if (utteranceId.isBlank() || utteranceId == utterance || utteranceId in retiredUtterances) return false
+        if (windowIntent != null || confirmationAtMillis != Long.MIN_VALUE || thinkingAtMillis != Long.MIN_VALUE) clearAnimationIntents()
         utterance?.let(::retireUtterance)
         utterance = utteranceId
         lastRangeAt = Long.MIN_VALUE
@@ -133,6 +244,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     @Synchronized fun speechEnded(utteranceId: String, interrupted: Boolean) {
         if (utteranceId != utterance) return
+        if (windowIntent != null || confirmationAtMillis != Long.MIN_VALUE || thinkingAtMillis != Long.MIN_VALUE) clearAnimationIntents()
         retireUtterance(utteranceId)
         utterance = null; text = ""
         lastWordCues = emptyList()
@@ -165,6 +277,8 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     private fun emit(event: AvatarEvent) { runCatching { sink.onAvatarEvent(event) } }
 
     private companion object {
+        const val MAX_RECENT_INTENTS = 128
+        const val CONFIRMATION_COOLDOWN_MS = 4_000L
         const val MAX_TEXT = 4_000
         const val MAX_RETIRED_UTTERANCES = 128
         const val MAX_REATTACHED_CUES = 64

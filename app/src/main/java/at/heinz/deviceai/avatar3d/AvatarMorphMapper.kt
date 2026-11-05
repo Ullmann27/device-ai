@@ -40,8 +40,9 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
     fun update(pose: AvatarPose, seconds: Float, motion: Boolean) {
         weights.fill(0f)
         fun weight(name: String, value: Float) { weights[indices.getValue(name)] = finite(value, 0f, 1f) }
-        val gx = finite(pose.gazeX, -1f, 1f)
-        val gy = finite(pose.gazeY, -1f, 1f)
+        val staticWindow = !motion && (pose.gazeDirected || pose.gesture == AvatarGestureIntent.WINDOW_FOCUS)
+        val gx = finite(if (staticWindow) pose.fallbackGazeX else pose.gazeX, -1f, 1f)
+        val gy = finite(if (staticWindow) pose.fallbackGazeY else pose.gazeY, -1f, 1f)
         // Right-handed Y-up +Z front: positive yaw goes viewer right, negative pitch looks up.
         // Owner request (Fold7, 05.11.): turn and nod in a wide, human radius; eyes lead, head follows.
         val targetHeadYaw = gx * HEAD_YAW_DEGREES; val targetHeadPitch = -gy * HEAD_PITCH_DEGREES
@@ -73,31 +74,27 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         idleMotion.update(seconds)
         // Cosmetic idle motion, not observed gaze or invented speech/work. The existing view
         // owns the clock and stops it on pause/reduced motion. Actual task/observed gaze wins.
-        if (pose.state == AvatarState.IDLE && !pose.gazeObserved) {
+        if (pose.state == AvatarState.IDLE && !pose.gazeObserved && !pose.gazeDirected &&
+            pose.confirmationProgress < 0f) {
             headYaw += idleMotion.headYaw * IDLE_HEAD_GAIN; headPitch += idleMotion.headPitch * IDLE_HEAD_GAIN
             eyeYaw += idleMotion.eyeYaw; eyePitch += idleMotion.eyePitch
             // Calm breathing: a slow, small nod (idle only; never during observed gaze or speech).
             if (seconds.isFinite()) headPitch += BREATH_PITCH_DEGREES *
                 kotlin.math.sin(2.0 * Math.PI * seconds / BREATH_PERIOD_S).toFloat()
         }
-        // Long-running work stays visually alive without inventing task progress.
-        if (seconds.isFinite() && (pose.state == AvatarState.THINKING ||
-                pose.state == AvatarState.RESEARCHING || pose.state == AvatarState.LEARNING)) {
+        if (!pose.gazeDirected && seconds.isFinite() &&
+            (pose.state == AvatarState.THINKING || pose.state == AvatarState.RESEARCHING || pose.state == AvatarState.LEARNING)) {
             val cycle = 2.0 * Math.PI * seconds.toDouble()
             headPitch += (.35 * kotlin.math.sin(cycle / 5.3)).toFloat()
             headYaw += (.40 * kotlin.math.sin(cycle / 7.7)).toFloat()
             eyeYaw += (.65 * kotlin.math.sin(cycle / 2.9)).toFloat()
         }
-        // Gesture motion reuses the renderer clock and never drives mouth morphs.
-        val progress = finite(pose.gestureProgress, 0f, 1f)
-        when (pose.gesture) {
-            AvatarGestureIntent.CONFIRM_NOD -> headPitch -= 4.5f *
-                kotlin.math.sin(Math.PI * progress).toFloat()
-            AvatarGestureIntent.THINK_MICRO -> {
-                headPitch += 1.2f * kotlin.math.sin(Math.PI * progress).toFloat()
-                headYaw += 1.4f * kotlin.math.sin(2.0 * Math.PI * progress).toFloat()
-            }
-            AvatarGestureIntent.WINDOW_FOCUS, null -> Unit
+        val progress = pose.confirmationProgress
+        if (progress.isFinite() && progress in 0f..1f) {
+            val wave = kotlin.math.sin(Math.PI * progress).toFloat()
+            val nod = CONFIRMATION_PITCH_DEGREES * wave * wave
+            headPitch += nod
+            eyePitch = (eyePitch - nod).coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
         }
         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
         val bilabialClosure = pose.viseme == Viseme.PP && cueWeight > 0f
@@ -137,12 +134,15 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
     }
 
     private fun splitNeck() {
+        headYaw = finite(headYaw, -MAX_HEAD_YAW_DEGREES, MAX_HEAD_YAW_DEGREES)
+        headPitch = finite(headPitch, -MAX_HEAD_PITCH_DEGREES, MAX_HEAD_PITCH_DEGREES)
         neckYaw = headYaw * NECK_SHARE
         neckPitch = headPitch * NECK_SHARE
     }
 
     companion object {
         private const val CROSSFADE_S = .07f
+        const val CONFIRMATION_PITCH_DEGREES = 3f
         /** Full gaze deflection (|gaze| = 1) of the head bone and the eyes, in degrees. */
         const val HEAD_YAW_DEGREES = 24f
         const val HEAD_PITCH_DEGREES = 12f

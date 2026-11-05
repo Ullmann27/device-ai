@@ -1,5 +1,42 @@
 # JARVIS Visual – Fortsetzung 05.11.2026
 
+## Aktuelle Fortsetzung – zusammenhängender Arbeitsablauf
+
+**WIP / UNVERIFIED auf integriertem Stand nach `a5723ac9`.** Die folgenden
+historischen Startangaben bleiben zur Herkunft erhalten. Drei Fachbots arbeiten
+jetzt nach dem erweiterten Besitzerauftrag: `avatar_motion` (ein Originalkopf),
+`neon_flow` (Originalkugel, Glasfenster, Licht), `original_orb` (unabhängige QA).
+Die Integrationsleitung hält gemeinsame Änderungen in `AgentActivity` klein;
+`JarvisCockpitGrid` bleibt unverändert. Keine zusätzlichen Bots.
+
+Das vorhandene Systemstatus-Fenster wird als erster real angeschlossener Ablauf
+im START-Cockpit dargestellt: echte bestehende Statusabfrage, gemeinsamer
+Shell-Zeittakt, geschützte Kopf-/Kugel-/Dialogbereiche, dedizierter Fensterblick,
+Öffnen und Schließen. Kein neuer Gmail-/Dokument-/Coding-Erfolg wird simuliert.
+Die originale Kugel war bereits korrekt transparent angeschlossen und bleibt.
+
+Die parallel eingetroffenen Commits bis `a5723ac9` wurden gelesen und erhalten.
+Überlappende Avatar-Intents werden zu einer einzigen revisions- und
+fenstergebundenen Verarbeitung zusammengeführt; Legacy-APIs bleiben Adapter.
+Ein Nicken wird nur an den letzten ausdrücklichen positiven Freigabeknopf
+gebunden, nicht an einen eventuell automatisch erfolgreichen Web-Callback.
+
+Letzter kombinierter Lauf vor dieser Zusammenführung: `2859f18d` plus
+archivierter Quellpatch, identisch zum lokalen Checkpoint `cc2848bb`:
+**127 Tests, 110 PASS, 17 FAIL, 0 SKIP**. Ursachen: 7 TTS-Fixture-Zeitfehler,
+6 Draw-Hierarchiefehler und 4 native Pixel-/Skalierungsfehler. Sechs neue
+isolierte Gegenproben danach: **0 PASS, 6 FAIL, 0 SKIP** auf `cc2848bb` plus
+Testpatch. Dazu zählen Gesten bei wiederholtem Listening/reduzierter Bewegung,
+Entfernen einer Ansicht während Draw und gebrochene Zielpixel.
+
+Nächste Schritte: Draw-sichere Freigabe und Pixelrundung abschließen, integrierte
+Avatar-/Window-/TTS-Tests ausführen, frische native Canvas-Aufnahmen aufnehmen,
+semantische Ref5-Messung und Original-GLB-Replay an den finalen Quellcommit binden.
+Der integrierte Stand ist bis zu diesen Läufen **nicht GREEN**.
+Die Besitzerabnahme ist in
+`docs/evidence/astra-jarvis-visual-20261105/FOLD7-OWNER-ACCEPTANCE.md` vorbereitet;
+Filament-GPU, physischer Fold7 und echte TTS bleiben `NOT_RUN`.
+
 ## Quellen und Auftrag
 
 - Arbeitsbranch: `claude/continuum-jarvis-cockpit-z7bo60`, Draft-PR #565.

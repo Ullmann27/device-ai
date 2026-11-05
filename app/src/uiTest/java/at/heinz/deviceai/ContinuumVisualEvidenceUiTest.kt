@@ -1,6 +1,5 @@
 package at.heinz.deviceai
 
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -10,9 +9,15 @@ import android.os.SystemClock
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.ScrollView
 import at.heinz.deviceai.avatar.AvatarDirector
+import at.heinz.deviceai.avatar.AvatarPoseReducer
 import at.heinz.deviceai.avatar.AvatarRuntimeSignals
 import at.heinz.deviceai.ui.ContinuumHomeView
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -28,6 +33,7 @@ import org.robolectric.shadows.ShadowAlertDialog
 import org.robolectric.shadows.ShadowChoreographer
 import java.io.File
 import java.time.Duration
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
 /**
@@ -41,6 +47,7 @@ import java.util.concurrent.TimeUnit
 @LooperMode(LooperMode.Mode.PAUSED)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ContinuumVisualEvidenceUiTest {
+    private var framePump: CockpitHostFramePump? = null
     @Before fun configureVirtualVsyncClock() {
         ShadowChoreographer.setPaused(true)
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
@@ -48,7 +55,12 @@ class ContinuumVisualEvidenceUiTest {
 
     private fun advance(ms: Long) {
         var left = ms
-        while (left > 0) { val step = minOf(16L, left); shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS); left -= step }
+        while (left > 0) {
+            val step = minOf(16L, left)
+            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
+            framePump?.drawRequestedFrame()
+            left -= step
+        }
     }
 
     private fun field(a: AgentActivity, name: String): Any? =
@@ -68,7 +80,16 @@ class ContinuumVisualEvidenceUiTest {
             view.draw(Canvas(bitmap))
             assertTrue("$label must not be blank", (0 until 200).any { bitmap.getPixel(w * it / 200, h / 3) != bitmap.getPixel(0, 0) })
             System.getProperty("continuum.ui.evidenceDir")?.let { dir ->
-                File(dir).apply { mkdirs() }.resolve("$label.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                val directory = File(dir).apply { mkdirs() }
+                directory.resolve("$label.png").outputStream().use {
+                    assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it))
+                }
+                directory.resolve("$label.views.txt").writeText(descendants(view).joinToString("\n") { node ->
+                    val bounds = Rect().also { node.getGlobalVisibleRect(it) }
+                    val value = (node as? TextView)?.text ?: node.contentDescription
+                    "${node.javaClass.simpleName} tag=${node.tag} shown=${node.isShown} bounds=$bounds " +
+                        "alpha=${node.alpha} scale=${node.scaleX}/${node.scaleY} text=${value?.toString().orEmpty().replace('\n', ' ').take(240)}"
+                })
             }
             println("EVIDENCE_CAPTURE $label ${w}x$h HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT")
         } finally { bitmap.recycle() }
@@ -77,6 +98,11 @@ class ContinuumVisualEvidenceUiTest {
     /** Real DOWN (and optional UP) through the decor at the control centre; false if it is off screen. */
     private fun touch(root: View, target: View, release: Boolean): Boolean {
         val r = Rect()
+        if (!target.getGlobalVisibleRect(r) || r.width() < target.width - 1 || r.height() < target.height - 1) {
+            target.requestRectangleOnScreen(Rect(0, 0, target.width, target.height), true)
+            advance(32L)
+            measure(root, root.width, root.height)
+        }
         if (!target.getGlobalVisibleRect(r) || r.width() < target.width - 1 || r.height() < target.height - 1) return false
         val at = SystemClock.uptimeMillis()
         val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN, r.exactCenterX(), r.exactCenterY(), 0)
@@ -86,6 +112,139 @@ class ContinuumVisualEvidenceUiTest {
             try { root.dispatchTouchEvent(up) } finally { up.recycle() }
         }
         return true
+    }
+
+    private fun shown(root: View, tag: String): View {
+        val matches = descendants(root).filter { it.tag == tag && it.isShown }
+        assertEquals("Exactly one visible $tag", 1, matches.size)
+        return matches.single()
+    }
+
+    private fun avatarRegion(head: ContinuumHologramView, name: String): Rect =
+        Rect(ContinuumHologramView::class.java.getDeclaredField(name)
+            .apply { isAccessible = true }.get(head) as Rect)
+
+    private fun avatarPose(head: ContinuumHologramView) =
+        (ContinuumHologramView::class.java.getDeclaredField("avatarPose")
+            .apply { isAccessible = true }.get(head) as AvatarPoseReducer).pose()
+
+    private fun assertProtectedRegions(work: View, head: ContinuumHologramView) {
+        val headPosition = IntArray(2).also { head.getLocationOnScreen(it) }
+        val workPosition = IntArray(2).also { work.getLocationOnScreen(it) }
+        val bitmap = Bitmap.createBitmap(work.width, work.height, Bitmap.Config.ARGB_8888)
+        try {
+            work.draw(Canvas(bitmap))
+            for (name in listOf("cockpitHeadBounds", "cockpitOrbBounds")) {
+                val region = avatarRegion(head, name)
+                region.offset(headPosition[0] - workPosition[0], headPosition[1] - workPosition[1])
+                assertFalse("Protected region exists: $name", region.isEmpty)
+                assertTrue("Protected region stays within the cockpit: $name $region",
+                    Rect(0, 0, work.width, work.height).contains(region))
+                for (y in region.top + 1 until region.bottom - 1 step 7) {
+                    for (x in region.left + 1 until region.right - 1 step 7) {
+                        assertEquals("Work surface must leave $name transparent at $x/$y",
+                            0, bitmap.getPixel(x, y).ushr(24))
+                    }
+                }
+            }
+        } finally { bitmap.recycle() }
+    }
+
+    private fun systemStatusScenes(a: AgentActivity, root: View, head: ContinuumHologramView,
+                                   tag: String, w: Int, h: Int) {
+        val originalHead = avatarRegion(head, "cockpitHeadBounds")
+        val originalOrb = avatarRegion(head, "cockpitOrbBounds")
+        val beforeDialog = ShadowAlertDialog.getLatestAlertDialog()
+        val beforeMotion = head.sampleMotion()
+        assertTrue("System tile receives a real touch", touch(root, shown(root, "jarvis-tile:system"), true))
+        advance(80L); measure(root, w, h)
+        val work = shown(root, "jarvis-work-window")
+        val panel = shown(work, "jarvis-work-window:panel")
+        assertSame("Work area uses the original window", root, work.rootView)
+        assertSame("Systemstatus must not create AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
+        assertTrue("Opening has an intermediate scale", panel.scaleX > 0f && panel.scaleX < 1f)
+        assertTrue("Opening has visible content", panel.alpha > 0f && panel.alpha <= 1f)
+        assertProtectedRegions(work, head)
+        assertTrue("Opening reaches the existing avatar gaze", avatarPose(head).gazeDirected)
+        assertFalse("Directed glance is not camera tracking", avatarPose(head).gazeObserved)
+        capture(root, "$tag-6a-systemstatus-opening", w, h)
+
+        advance(960L)
+        val io = field(a, "learningIoExecutor") as ExecutorService
+        io.submit(Runnable {}).get(5L, TimeUnit.SECONDS)
+        advance(64L); measure(root, w, h)
+        assertTrue("Work area remains visible after opening", work.isShown)
+        assertEquals(1f, panel.alpha, .001f)
+        assertEquals(1f, panel.scaleX, .001f)
+        assertEquals(1f, panel.scaleY, .001f)
+        val panelBounds = Rect()
+        assertTrue(panel.getGlobalVisibleRect(panelBounds))
+        assertEquals("Open panel width is visible", panel.width, panelBounds.width())
+        assertEquals("Open panel height is visible", panel.height, panelBounds.height())
+        val labels = descendants(work).filterIsInstance<TextView>().map { it.text.toString() }
+        assertTrue("Real title is present", labels.any { it.equals("Systemstatus", true) })
+        assertFalse("Real status callback must complete", labels.any { it.contains("Status wird gelesen") })
+        val status = labels.joinToString("\n")
+        assertTrue("Actual build version must be displayed",
+            status.contains("Device AI ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"))
+        for (label in listOf("Shizuku", "Internetzugang", "Sprachmodell", "Werkzeugquittungen")) {
+            assertTrue("Real status includes $label", status.contains(label))
+        }
+        assertFalse("Status inspection starts no model task", field(a, "busy") as Boolean)
+        assertSame("Original Hologram instance survives opening", head, field(a, "hologramView"))
+        assertEquals(1, descendants(root).count { it is ContinuumHologramView })
+        assertTrue(head.isAttachedToWindow && head.isShown)
+        assertTrue("Cockpit retains window focus", a.hasWindowFocus())
+        assertTrue("Avatar keeps advancing", head.sampleMotion().callbackCount > beforeMotion.callbackCount)
+        assertEquals(originalHead, avatarRegion(head, "cockpitHeadBounds"))
+        assertEquals(originalOrb, avatarRegion(head, "cockpitOrbBounds"))
+        assertProtectedRegions(work, head)
+        capture(root, "$tag-6b-systemstatus-open", w, h)
+
+        val close = shown(work, "jarvis-work-window:close")
+        assertTrue("Close remains accessible", close.isClickable && close.isFocusable && !close.contentDescription.isNullOrBlank())
+        assertTrue("Close retains its minimum target", close.width / close.resources.displayMetrics.density >= 48f &&
+            close.height / close.resources.displayMetrics.density >= 48f)
+        assertTrue("Close receives a real touch", touch(root, close, true))
+        advance(80L); measure(root, w, h)
+        assertTrue("Closing remains visible between frames", work.isShown)
+        assertTrue("Closing has an intermediate scale", panel.scaleX > 0f && panel.scaleX < 1f)
+        assertProtectedRegions(work, head)
+        capture(root, "$tag-6c-systemstatus-closing", w, h)
+
+        advance(640L); measure(root, w, h)
+        assertTrue("Close removes the shown work area", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+        assertSame("Original Hologram instance survives closing", head, field(a, "hologramView"))
+        assertTrue(head.isShown)
+        assertEquals(originalHead, avatarRegion(head, "cockpitHeadBounds"))
+        assertEquals(originalOrb, avatarRegion(head, "cockpitOrbBounds"))
+        assertTrue(shown(root, "jarvis-tile:system").isClickable)
+        assertEquals(ContinuumWorkArea.START, field(a, "activeWorkArea"))
+        assertFalse("Closing clears the window glance", avatarPose(head).gazeDirected)
+        capture(root, "$tag-6d-systemstatus-closed", w, h)
+
+        if (w < 600) {
+            assertTrue("Phone reopens through its real tile", touch(root, shown(root, "jarvis-tile:system"), true))
+            advance(1_040L); measure(root, w, h)
+            val reopened = shown(root, "jarvis-work-window")
+            assertEquals("Closed work areas do not accumulate", 1,
+                descendants(root).count { it.tag == "jarvis-work-window" })
+            val home = field(a, "homeView") as ContinuumHomeView
+            val viewport = generateSequence(home.parent as? View) { it.parent as? View }
+                .filterIsInstance<ScrollView>().firstOrNull {
+                    it.childCount > 0 && it.getChildAt(0).height > it.height
+                }
+            assertTrue("Phone retains a real scrolling cockpit", viewport != null)
+            val scrolling = requireNotNull(viewport)
+            val beforeScroll = scrolling.scrollY
+            scrolling.scrollTo(scrolling.scrollX, beforeScroll + 32)
+            assertTrue("The actual background scroll changed", scrolling.scrollY != beforeScroll)
+            advance(32L)
+            assertFalse("A moved background invalidates protected work bounds", reopened.isShown)
+            assertTrue("Scroll closes the work area", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+            assertFalse("Scroll clears the window glance", avatarPose(head).gazeDirected)
+            assertSame(head, field(a, "hologramView"))
+        }
     }
 
     private fun scenes(tag: String, w: Int, h: Int, font: Float) {
@@ -105,6 +264,7 @@ class ContinuumVisualEvidenceUiTest {
             controller.windowFocusChanged(true)
             val a = controller.get()
             val root = a.window.decorView
+            framePump = CockpitHostFramePump { controller.get().window.decorView }
             val head = field(a, "hologramView") as ContinuumHologramView
             val home = field(a, "homeView") as ContinuumHomeView
             val director = field(a, "avatarDirector") as AvatarDirector
@@ -134,27 +294,18 @@ class ContinuumVisualEvidenceUiTest {
             director.onRuntime(AvatarRuntimeSignals()); head.setState(ContinuumHologramView.State.READY)
             advance(900)
 
-            val memory = descendants(root).firstOrNull { it.tag == "jarvis-tile:memory" && it.isShown }
-            if (memory != null && touch(root, memory, release = false)) {
-                advance(120)
-                capture(root, "$tag-5-tile-pressed", w, h)
-                val at = SystemClock.uptimeMillis()
-                val cancel = MotionEvent.obtain(at, at, MotionEvent.ACTION_CANCEL, 0f, 0f, 0)
-                try { root.dispatchTouchEvent(cancel) } finally { cancel.recycle() }
-                advance(300)
-            }
-            val system = descendants(root).firstOrNull { (it.tag == "jarvis-tile:device" || it.tag == "jarvis-tile:system") && it.isShown }
-            if (system != null && touch(root, system, release = true)) {
-                advance(600)
-                val dialog: AlertDialog? = ShadowAlertDialog.getLatestAlertDialog()
-                if (dialog != null && dialog.isShowing) {
-                    val decor = requireNotNull(dialog.window).decorView
-                    capture(root, "$tag-6-window-behind", w, h)
-                    capture(decor, "$tag-6-window-systemstatus", decor.width.coerceAtLeast(1), decor.height.coerceAtLeast(1))
-                    dialog.dismiss(); advance(300)
-                }
-            }
+            val memory = shown(root, "jarvis-tile:memory")
+            assertTrue("Memory tile receives a real press", touch(root, memory, release = false))
+            advance(120)
+            capture(root, "$tag-5-tile-pressed", w, h)
+            val at = SystemClock.uptimeMillis()
+            val cancel = MotionEvent.obtain(at, at, MotionEvent.ACTION_CANCEL, 0f, 0f, 0)
+            try { root.dispatchTouchEvent(cancel) } finally { cancel.recycle() }
+            advance(300)
+            systemStatusScenes(a, root, head, tag, w, h)
         } finally {
+            framePump?.close()
+            framePump = null
             ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
             runCatching { controller.close() }
             RuntimeEnvironment.setFontScale(previousFont)
