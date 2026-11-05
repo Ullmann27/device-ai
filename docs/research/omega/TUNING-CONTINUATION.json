@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "RUNNING",
-  "owner": "tuning-sequential-r15-20261105T0531Z",
-  "leaseExpiresAtUtc": "2026-11-05T06:00:00Z",
-  "updatedAtUtc": "2026-11-05T05:31:56.399Z",
+  "status": "READY_FOR_NEXT_RUN",
+  "owner": null,
+  "leaseExpiresAtUtc": null,
+  "updatedAtUtc": "2026-11-05T05:35:16.801Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -58,7 +58,7 @@
       "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "R15: point-in-time source-hash comparison of PR #511 versus C1 #519 and integration #527; no candidate until real LM1 full-graph Kotlin and representative caller profile.",
+  "next": "R15 established at pinned heads that integration PR #527 includes R1 sampler/context/worker but not four R3 LM1/Tokenizer allocation optimizations. Keep the changes isolated; do not cherry-pick without separate source-bound parity and Android gates. R13 full six-source Kotlin compile and eight synthetic LM1 profile requests remain NOT_RUN until an authorized exact-head checkout is available; then collect representative real LM1 call counts before registering any new bounded A/A or A/B hypothesis.",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -67,8 +67,8 @@
     "no other-team branch mutation",
     "no repeated favorable-sample search"
   ],
-  "lastOwner": "tuning-sequential-r14-20261105T0427Z",
-  "completedRound": "R14",
+  "lastOwner": "tuning-sequential-r15-20261105T0531Z",
+  "completedRound": "R15",
   "lastPublishedProductionCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
   "completedMilestones": 4,
   "verification": {
@@ -89,7 +89,7 @@
     {
       "target": "Real source LM1 on-host caller profile and full-graph Kotlin compile",
       "status": "REMOTE_PROFILER_REPLAY_12_TESTS_PASS_FULL_GRAPH_NOT_RUN",
-      "gate": "R14: GitHub R13 archive SHA-256 and 4 original Git blob identities verified, local re-extract 3 members and replay 12/12 Node tests PASS; six-source Kotlin compile and real LM1 call count NOT_RUN without authenticated source checkout."
+      "gate": "R15: Cross-branch source-identity audit confirms R3 four source footprints absent in integration PR #527 (exact head 19039e5), while R1 is present. Original LM1 six-source source-bound Kotlin compile and real caller counts remain NOT_RUN; don't confuse remote source inspection with a checkout."
     },
     {
       "target": "Android/Fold7 device measured A/B",
@@ -104,7 +104,7 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": "R15",
+  "activeRound": null,
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
@@ -463,5 +463,23 @@
     "newProductionPatch": false,
     "android": "NOT_RUN",
     "report": "docs/research/omega/TUNING-R14-20261105.md"
+  },
+  "r15": {
+    "stage": "SOURCE_FOOTPRINT_GAP_CONFIRMED",
+    "sourceHeads": {
+      "511": "c67d8538e879cf8a2188ec004e812c6de9e3848f",
+      "519": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+      "523": "7c1642af96ccf626c91a40a602c7127e02fb9eea",
+      "527": "19039e5b822310cd5ab1ce5cc5cb854822a1bcd3"
+    },
+    "r3In511": 4,
+    "r3In527": 0,
+    "r1In527": 3,
+    "negativeControls": "7/7 source-footprint mutation checks PASS",
+    "report": "docs/research/omega/TUNING-R15-20261105.md",
+    "evidence": "docs/evidence/tuning-r15-20261105/branch-footprints.json",
+    "kotlin": "NOT_RUN",
+    "newProductionPatch": false,
+    "otherBranchesEdited": false
   }
 }
