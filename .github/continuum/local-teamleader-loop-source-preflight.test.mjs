@@ -197,3 +197,30 @@ test('outside-source checkpoint still completes one bounded cycle',async t=>{
  assert.equal(summary.lastOutcome,'IDLE');assert.equal(summary.state,'LIMIT_REACHED');
  assert.equal(fs.existsSync(f.stateFile),true);
 });
+
+
+for(const kind of ['count','parameters']){
+ test('durable source Git checks ignore inherited inline config ('+kind+')',async t=>{
+  const f=fixture(t),dir=path.dirname(f.sourceRoot);
+  const marker=path.join(dir,'inline-config-'+kind+'.marker');
+  const monitor=path.join(dir,'inline-config-'+kind+'.sh');
+  fs.writeFileSync(monitor,"#!/bin/sh\nprintf invoked >> "+JSON.stringify(marker)+"\nprintf 'token\\\\000'\n",{mode:0o700});
+  const injected=kind==='count'?{
+   GIT_CONFIG_COUNT:'1',GIT_CONFIG_KEY_0:'core.fsmonitor',GIT_CONFIG_VALUE_0:monitor
+  }:{GIT_CONFIG_PARAMETERS:"'core.fsmonitor="+monitor+"'"};
+  const saved=new Map(Object.keys(injected).map(key=>[key,process.env[key]]));
+  let outcome;
+  try{
+   Object.assign(process.env,injected);
+   outcome=await runTeamleaderLoop({sourceRoot:f.sourceRoot,stateFile:f.stateFile,maxCycles:1,
+    work:()=>({outcome:'IDLE'})});
+   assert.equal(outcome.state,'LIMIT_REACHED');
+   assert.equal(outcome.lastOutcome,'IDLE');
+   assert.equal(fs.existsSync(marker),false,'Read-only Git must not execute ambient monitor');
+   for(const [key,value] of Object.entries(injected))assert.equal(process.env[key],value);
+  }finally{
+   for(const [key,value] of saved)
+    if(value===undefined)delete process.env[key];else process.env[key]=value;
+  }
+ });
+}

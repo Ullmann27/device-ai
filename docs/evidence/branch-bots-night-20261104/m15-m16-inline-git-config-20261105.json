@@ -1,0 +1,47 @@
+{
+  "schema": "continuum-m15-m16-inline-config-git-safety",
+  "version": 1,
+  "repository": "Ullmann27/device-ai",
+  "startingHead": "95c7c967a9a11c1a6472ac2892ea1b17f71df9a0",
+  "sourcePreimage": "577db114a3944b1130005d20ca074aac0c7b2f23",
+  "testPreimage": "2e5b1be4dd44c5806f6c3f763faababacda2a509",
+  "sourcePath": ".github/continuum/local-teamleader-loop.mjs",
+  "testPath": ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+  "findings": [
+    {
+      "id": "M15",
+      "vector": "GIT_CONFIG_COUNT with GIT_CONFIG_KEY_0 and GIT_CONFIG_VALUE_0",
+      "original": "status launched an injected fsmonitor executable and wrote a marker",
+      "patched": "child env removes inline parameter selectors; no marker written"
+    },
+    {
+      "id": "M16",
+      "vector": "GIT_CONFIG_PARAMETERS",
+      "original": "status launched an injected fsmonitor executable and wrote a marker",
+      "patched": "child env removes inherited inline parameter; no marker written"
+    }
+  ],
+  "realGitFixture": {
+    "test": "isolated real Git status/HEAD excerpt, not full project module",
+    "node": "v22.16.0",
+    "git": "git version 2.47.3",
+    "cases": 4,
+    "originalCasesWithUnwantedWrites": 2,
+    "correctedCasesWithoutWrites": 2,
+    "allCasesExpected": 4,
+    "allCasesMatched": true,
+    "sourceScriptSha256": "6bade443211980f4d96abb5f659d3f1f60092b7806b8738d71047855a740b4ba",
+    "resultsSha256": "9df5c6afae7cf7f3c8906c00d057d121a802d1543d5a4cc4e25155bc51762b68"
+  },
+  "sourceAndTestSyntax": "V8_PARSE_PASS_IMPORT_STRIPPED",
+  "fullProjectTests": "NOT_RUN",
+  "android": "NOT_RUN",
+  "apk": "NOT_RUN",
+  "integration": {
+    "c1": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "combined": "19039e5b822310cd5ab1ce5cc5cb854822a1bcd3",
+    "bothSharedPreimageSource": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+    "bothSharedPreimageTest": "13c5661432115c883fc2b64161757aad9d1128f4",
+    "sharedBranchesModified": false
+  }
+}

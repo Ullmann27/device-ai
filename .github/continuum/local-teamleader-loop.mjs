@@ -91,7 +91,14 @@ async function sourceIdentity(root,sourcePreflight){
  for(const key of ['GIT_DIR','GIT_WORK_TREE','GIT_INDEX_FILE','GIT_COMMON_DIR',
   'GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES','GIT_SHALLOW_FILE',
   'GIT_NAMESPACE','GIT_CONFIG'])delete gitEnv[key];
- for(const key of Object.keys(gitEnv))if(key.startsWith('GIT_TRACE'))delete gitEnv[key];
+ // Inline Git config is inherited through different variables than GIT_CONFIG.
+ // It can activate an fsmonitor during a read-only status even for a clean tree.
+ // Preserve the parent environment, but never pass these overrides to Git.
+ for(const key of Object.keys(gitEnv)){
+  if(key.startsWith('GIT_TRACE')||key==='GIT_CONFIG_COUNT'||
+     key==='GIT_CONFIG_PARAMETERS'||/^GIT_CONFIG_(?:KEY|VALUE)_[0-9]+$/.test(key))
+   delete gitEnv[key];
+ }
  const git=args=>{
   const result=spawnSync('git',['-C',canonical,...args],{
    encoding:'utf8',timeout:10_000,maxBuffer:2*1024*1024,shell:false,
