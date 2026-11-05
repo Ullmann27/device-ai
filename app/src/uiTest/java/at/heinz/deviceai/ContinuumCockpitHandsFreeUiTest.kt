@@ -37,8 +37,11 @@ class ContinuumCockpitHandsFreeUiTest {
             .edit().putBoolean("voice_enabled", false).commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE)
             .edit().putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        // Same start state as ContinuumReferenceCockpitUiTest: 2D head on, cockpit presentation reset.
+        // With native-head unset (head off) setup() never idles; see OPUS55-PR564-VERIFICATION-20261105.md.
         app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
-            .edit().putBoolean("native-head-3d", false).commit()
+            .edit().putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         try {
             controller.setup().visible()
