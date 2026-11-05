@@ -9,3 +9,8 @@ Farbigkeit S·V 0,177 → 0,238 (Ref. 0,258), Neonanteil 6,1 % → 9,1 % (Ref. 1
 
 Geometrie: Sprachfeld 256–540, freie Kopfbühne 548–800 (Referenzbreite 1536); Überdeckung Kopf/Sprachfeld = 0 in allen
 geprüften Referenzfenstern (Test `theDialogueNeverCoversTheHeadInAnyReferenceWindow`).
+
+Quellstand: `3a21a453309b9c645bad80a8ca72917585fbb78f`. Host-UI-Paket 178/178 PASSED, darunter
+`theDialogueNeverCoversTheHeadInAnyReferenceWindow`; volle Suite ohne neue Fehler gegenüber der Basis (siehe
+`host-tests/host-unit-baseline-vs-candidate.json`). Android/Gerät: NOT_RUN. Rücknahme: `HEAD_LEFT = 250f`,
+`DIALOG_RIGHT = 640f`.

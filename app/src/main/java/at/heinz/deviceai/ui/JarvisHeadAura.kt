@@ -24,8 +24,8 @@ object JarvisHeadAura {
         val (cx, cy) = faceCenter(stage, anchorX)
         val h = stage.height
         // Soft back light: violet left/top, cyan right – the reference's two-tone hologram.
-        JarvisNeon.halo(p, cx - h * .08f, cy - h * .06f, h * .62f, Colors.violet, .26f)
-        JarvisNeon.halo(p, cx + h * .12f, cy + h * .04f, h * .46f, Colors.cyan, .14f)
+        JarvisSceneFills.halo(p, cx - h * .08f, cy - h * .06f, h * .62f, Colors.violet, .26f)
+        JarvisSceneFills.halo(p, cx + h * .12f, cy + h * .04f, h * .46f, Colors.cyan, .14f)
         p.setAdditive(true)
         ring(p, cx, cy - h * .12f, h * .62f, h * .13f, -14f + 3f * wave(t, 9f), Colors.magenta, Colors.violet, 1.5f,
             bead = t / 14f)
@@ -79,7 +79,9 @@ object JarvisHeadAura {
 
     private fun ring(p: ContinuumPainter, cx: Float, cy: Float, rx: Float, ry: Float, degrees: Float,
                      from: Int, to: Int, width: Float, bead: Float) {
-        val fill = Fill.Linear(cx - rx, cy, cx + rx, cy, intArrayOf(from, to, Argb.mix(to, Colors.cyan, .4f)))
+        val fill = JarvisSceneFills.cached(listOf("ring", cx.toInt(), cy.toInt(), rx.toInt(), from, to)) {
+            Fill.Linear(cx - rx, cy, cx + rx, cy, intArrayOf(from, to, Argb.mix(to, Colors.cyan, .4f)))
+        }
         p.save(); p.rotate(degrees, cx, cy)
         p.strokeOval(cx - rx, cy - ry, cx + rx, cy + ry, width * 5f, fill, .07f)
         p.strokeOval(cx - rx, cy - ry, cx + rx, cy + ry, width * 2.2f, fill, .20f)
@@ -87,7 +89,7 @@ object JarvisHeadAura {
         // A light bead travels around the ring (continuous angle, no jump).
         val a = 2.0 * Math.PI * (((bead % 1f) + 1f) % 1f)
         val bx = cx + (cos(a) * rx).toFloat(); val by = cy + (sin(a) * ry).toFloat()
-        JarvisNeon.halo(p, bx, by, width * 9f, from, .35f)
+        JarvisSceneFills.halo(p, bx, by, width * 9f, from, .35f)
         p.fillCircle(bx, by, width * 1.2f, Fill.Solid(Colors.glowCore), .95f)
         p.restore()
     }

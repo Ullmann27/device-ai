@@ -727,20 +727,34 @@ class ContinuumHologramView @JvmOverloads constructor(
     /** DST_IN gradients matching [at.heinz.deviceai.ui.JarvisHeadAura.fadeAlpha] (bottom and both sides). */
     private fun applyHeadFade(canvas: Canvas) {
         val b = headDrawBounds
-        val opaque = android.graphics.Color.BLACK; val clear = android.graphics.Color.TRANSPARENT
+        val (bottom, left, right) = headFadeShaders(b)
         val bottomTop = b.bottom - b.height() * at.heinz.deviceai.ui.JarvisHeadAura.BOTTOM_FADE
-        headFadePaint.shader = android.graphics.LinearGradient(0f, bottomTop, 0f, b.bottom, opaque, clear,
-            android.graphics.Shader.TileMode.CLAMP)
-        canvas.drawRect(b.left, bottomTop, b.right, b.bottom, headFadePaint)
         val side = b.width() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE
-        headFadePaint.shader = android.graphics.LinearGradient(b.left, 0f, b.left + side, 0f, clear, opaque,
-            android.graphics.Shader.TileMode.CLAMP)
         val sideTop = b.top + b.height() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE_FROM
+        headFadePaint.shader = bottom
+        canvas.drawRect(b.left, bottomTop, b.right, b.bottom, headFadePaint)
+        headFadePaint.shader = left
         canvas.drawRect(b.left, sideTop, b.left + side, b.bottom, headFadePaint)
-        headFadePaint.shader = android.graphics.LinearGradient(b.right - side, 0f, b.right, 0f, opaque, clear,
-            android.graphics.Shader.TileMode.CLAMP)
+        headFadePaint.shader = right
         canvas.drawRect(b.right - side, sideTop, b.right, b.bottom, headFadePaint)
         headFadePaint.shader = null
+    }
+
+    private var headFadeShaders: Array<android.graphics.Shader>? = null
+    private val headFadeShaderBounds = RectF()
+
+    /** The three mask gradients depend only on the head bounds; they are rebuilt only when those change. */
+    private fun headFadeShaders(b: RectF): Array<android.graphics.Shader> {
+        headFadeShaders?.takeIf { headFadeShaderBounds == b }?.let { return it }
+        val opaque = android.graphics.Color.BLACK; val clear = android.graphics.Color.TRANSPARENT
+        val clamp = android.graphics.Shader.TileMode.CLAMP
+        val bottomTop = b.bottom - b.height() * at.heinz.deviceai.ui.JarvisHeadAura.BOTTOM_FADE
+        val side = b.width() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE
+        return arrayOf<android.graphics.Shader>(
+            android.graphics.LinearGradient(0f, bottomTop, 0f, b.bottom, opaque, clear, clamp),
+            android.graphics.LinearGradient(b.left, 0f, b.left + side, 0f, clear, opaque, clamp),
+            android.graphics.LinearGradient(b.right - side, 0f, b.right, 0f, opaque, clear, clamp)
+        ).also { headFadeShaders = it; headFadeShaderBounds.set(b) }
     }
 
     private fun advanceFrame() {

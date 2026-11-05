@@ -9,8 +9,8 @@ kein Emulator, kein Fold7, leerer Datenzustand.
   `ContinuumHologramView` als `avatarSeconds` verwendet. Blinzeln bei 1,4 s und 4,9 s, Sprechlaute 2,4–4,4 s.
 - Farbmessung gegen 59509 (gleiche Bereiche): Helligkeit 0,346 (Ref. 0,351), Farbigkeit 0,241 (0,258),
   Neonanteil 9,6 % (12,0 %). Ausgang dieses Tages: 0,253 / 0,177 / 6,1 %.
-- Zeichenkosten pro Bild (Host-Zählung, `JarvisLivingSceneTest`): Energieflüsse ≤ 64, Kopf-Aura ≤ 80 Primitive,
-  zeitunabhängig. GPU-Bildzeiten auf dem Fold7: NOT_RUN.
+- Zeichenkosten pro Bild (Host-Zählung, `JarvisLivingSceneTest`, 5/5 PASSED auf `c49248dcbffb4d687ccb5a780bef3f20c21af6f2`,
+  UI-Paket 183/183): Energieflüsse ≤ 64, Kopf-Aura ≤ 80 Primitive, zeitunabhängig. GPU-Bildzeiten auf dem Fold7: NOT_RUN.
 
 ## Zähne ausgeblendet (Besitzerentscheidung)
 

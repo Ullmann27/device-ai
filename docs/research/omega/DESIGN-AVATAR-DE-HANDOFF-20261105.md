@@ -12,6 +12,7 @@ Erlebnisses“ (05.11.2026). Verbindliche Gestaltungsvorlagen: 59509 (Querformat
 |---|---|
 | Basis | #526 `codex/continuum-avatar-alive-20261104` @ `5a18f74f18d9b7d927f8c622052369496153829f` (enthält #521) |
 | Arbeitszweig | `ccr-4f80075a-ycl67y` |
+| Geprüfte Kandidaten | `d497d1b00dab5ea6d337cd784d7b440e0a1ca904`, `3a21a453309b9c645bad80a8ca72917585fbb78f`, `c49248dcbffb4d687ccb5a780bef3f20c21af6f2` (Details und Quellstand je Lauf: `docs/evidence/design-de-20261105/host-tests/host-unit-baseline-vs-candidate.json`) |
 | Avatar-GLB | unverändert `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`, 12.038.416 Bytes |
 | Neuere Köpfe geprüft | #519 `13c37f5`, #527 `19039e5`, #491 `e101e39` — keine dieser Quellen enthält die Kacheltexte des Fold7-Screenshots |
 
@@ -128,3 +129,26 @@ Filament-Pixel auf dem Gerät als Abnahme.
 Weitere offene Punkte: Lichtimpulse entlang der Menüränder und Übergänge zwischen Arbeitsflächen (gemeinsamer Takt
 statt Shell-Dauerneuzeichnung), Kompaktlayout nach Hochformatvorlage, Fold7-Bildzeiten/Speicher/Temperatur.
 Android-Emulator und Gerät: in dieser Umgebung nicht verfügbar (kein SDK, `dl.google.com` gesperrt).
+
+### Prüfbefehle, Status und Rücknahme zu Abschnitt 7
+
+Befehl (Host-JVM, kein AGP): `cd tools/host-jvm-harness && gradle --no-daemon test -Prepo=<repo> -Plibs=<libs> -PmainList=<Hauptquellen> -PtestList=<Testquellen>`; nur UI-Paket: `-PtestList` = `app/src/test/java/at/heinz/deviceai/ui/*.kt`.
+
+| Quellstand | Lauf | Ergebnis |
+|---|---|---|
+| `3a21a453309b9c645bad80a8ca72917585fbb78f` | volle Suite | 2.640 Tests, 9 Fehler = Basis-Umgebungsfehler, 17 übersprungen: **PASSED gegenüber Basis** |
+| `3a21a453…` | UI-Paket inkl. `theDialogueNeverCoversTheHeadInAnyReferenceWindow` | 178/178 **PASSED** |
+| `c49248dcbffb4d687ccb5a780bef3f20c21af6f2` | volle Suite | 2.649 Tests, dieselben 9 Umgebungsfehler: **PASSED gegenüber Basis** |
+| `c49248dc…` / `927d0c1` | UI-Paket inkl. `JarvisLivingSceneTest` (5 Fälle) | 183/183 **PASSED** |
+| alle | AGP-Unit, Robolectric-UI, Lint, APK, Gerät | **NOT_RUN** |
+
+Kopfgröße: Scheitel bis Kinn ≈ 65 % der Hero-Höhe (gleicher Wert in `JarvisCockpitGrid`-KDoc).
+
+Rücknahme der Geometrie ohne Revert: `JarvisCockpitGrid.HEAD_LEFT = 250f`, `DIALOG_RIGHT = 640f`, `HEAD_ANCHOR_X = .5f`,
+`HEAD_CLOSE_UP = 1f`; dann sitzt die Kopfbühne wieder im alten HEAD-Bereich und `Shell.headStage` deckt sich mit ihm. Die
+Szenenebenen lassen sich einzeln über `JarvisEnergyFlows.draw(enabled = false)` und `JarvisHeadAura.draw(enabled = false)`
+abschalten; das Ausblenden der Zähne über `FilamentAvatarRenderer.HIDDEN_NODE_PREFIX`.
+
+Laufzeitkosten: Die Szenenebenen verwenden Fill-Instanzen erneut (`JarvisSceneFills`). Shader entstehen nur bei
+Geometrieänderung oder bei einem 1/128-Farbschritt (≈ 0,2 s). Die Kopfmaske hält ihre drei Gradienten pro Kopfrahmen;
+Kurvenpunkte schreiben in ein wiederverwendetes Array.

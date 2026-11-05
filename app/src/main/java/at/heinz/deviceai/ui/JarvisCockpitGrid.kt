@@ -45,7 +45,7 @@ object JarvisCockpitGrid {
     const val DIALOG_RIGHT = 540f
     const val HEAD_LEFT = 548f
     /**
-     * Live head framing measured on renders of the packaged GLB against 59509: crown-to-chin ≈ 70 % of the hero
+     * Live head framing measured on renders of the packaged GLB against 59509: crown-to-chin ≈ 65 % of the hero
      * (before 47 %). The head centre sits at 70 % of the stage that reaches behind the dialogue; in the -22° three-
      * quarter view the whole head (ear to cheek) then spans ≈ 51–90 % of the stage width, right of the dialogue edge.
      */

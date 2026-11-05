@@ -232,18 +232,25 @@ class ContinuumBrainOrbRenderer {
         val k = .85f + .15f * breath + .25f * s.pulse.coerceIn(0f, 1f) + if (s.processing) .12f else 0f
         val y = cy + r * .10f
         p.setAdditive(true)
-        p.fillCircle(cx, y, r * .78f, Fill.Radial(cx, y, r * .78f,
-            intArrayOf(Argb.withAlpha(C.magenta, .20f * k), Argb.withAlpha(C.violet, .14f * k), 0)), 1f)
-        p.fillCircle(cx, y, r * .42f, Fill.Radial(cx, y, r * .42f,
-            intArrayOf(Argb.withAlpha(C.glowCore, .75f * k), Argb.withAlpha(C.cyan, .35f * k), 0)), 1f)
+        // Fills depend on geometry only (cached); breathing changes the paint alpha, so no shader per frame.
+        val g = listOf("core", cx.toInt(), cy.toInt(), r.toInt())
+        val corona = JarvisSceneFills.cached(g + 0) { Fill.Radial(cx, y, r * .78f,
+            intArrayOf(Argb.withAlpha(C.magenta, .20f), Argb.withAlpha(C.violet, .14f), 0)) }
+        val heart = JarvisSceneFills.cached(g + 1) { Fill.Radial(cx, y, r * .42f,
+            intArrayOf(Argb.withAlpha(C.glowCore, .75f), Argb.withAlpha(C.cyan, .35f), 0)) }
+        val shell = JarvisSceneFills.cached(g + 2) { Fill.Sweep(cx, cy, intArrayOf(C.violetRim, C.cyan, C.magenta, C.violetRim)) }
+        p.fillCircle(cx, y, r * .78f, corona, k.coerceAtMost(1f))
+        p.fillCircle(cx, y, r * .42f, heart, k.coerceAtMost(1f))
         // Second, inner glass shell slightly offset in depth.
-        p.strokeCircle(cx, cy, r * .84f, r * .012f, Fill.Sweep(cx, cy, intArrayOf(C.violetRim, C.cyan, C.magenta, C.violetRim)), .35f)
+        p.strokeCircle(cx, cy, r * .84f, r * .012f, shell, .35f)
         // Light pillars from the pedestal into the sphere.
         for (i in -2..2) {
             val x = cx + i * r * .16f
             val a = (.22f - kotlin.math.abs(i) * .05f) * (.7f + .3f * sin(s.phase * 2f * PI.toFloat() * .5f + i))
-            p.fillRect(x - r * .02f, cy + r * .1f, x + r * .02f, cy + r * 1.02f, Fill.Linear(x, cy + r * 1.02f, x, cy + r * .1f,
-                intArrayOf(Argb.withAlpha(C.cyan, a), 0)), 1f)
+            val pillar = JarvisSceneFills.cached(g + (10 + i)) {
+                Fill.Linear(x, cy + r * 1.02f, x, cy + r * .1f, intArrayOf(C.cyan, Argb.withAlpha(C.cyan, 0f)))
+            }
+            p.fillRect(x - r * .02f, cy + r * .1f, x + r * .02f, cy + r * 1.02f, pillar, a)
         }
         p.setAdditive(false)
     }

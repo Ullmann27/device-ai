@@ -38,8 +38,11 @@ object JarvisEnergyFlows {
         return Argb.mix(palette[i], palette[(i + 1) % palette.size], s)
     }
 
-    /** Cubic Bézier point of [f] at [u] after drift, in stage pixels. */
-    private fun point(f: Flow, w: Float, h: Float, t: Float, u: Float): FloatArray {
+    private val scratch = FloatArray(2)
+    private const val HUE_STEPS = 128
+
+    /** Cubic Bézier point of [f] at [u] after drift, in stage pixels, written into [out] (no allocation). */
+    private fun point(f: Flow, w: Float, h: Float, t: Float, u: Float, out: FloatArray = scratch): FloatArray {
         val d = .022f + f.depth * .008f
         val wave = 2f * PI.toFloat() * t / f.period + f.phase
         fun c(i: Int) = f.p[i] + d * sin(wave + i * 1.7f)
@@ -47,7 +50,8 @@ object JarvisEnergyFlows {
         val v = 1f - u
         val x = v * v * v * x0 + 3 * v * v * u * x1 + 3 * v * u * u * x2 + u * u * u * x3
         val y = v * v * v * y0 + 3 * v * v * u * y1 + 3 * v * u * u * y2 + u * u * u * y3
-        return floatArrayOf(x * w, y * h)
+        out[0] = x * w; out[1] = y * h
+        return out
     }
 
     fun draw(p: ContinuumPainter, w: Float, h: Float, t: Float, energy: Float = 0f, enabled: Boolean = true) {
@@ -60,10 +64,14 @@ object JarvisEnergyFlows {
                 val q = point(f, w, h, t, k / 24f)
                 if (k == 0) path.moveTo(q[0], q[1]) else path.lineTo(q[0], q[1])
             }
-            val shift = t * .035f + index * .17f
-            val a = point(f, w, h, t, 0f); val b = point(f, w, h, t, 1f)
-            val fill = Fill.Linear(a[0], a[1], b[0], b[1], intArrayOf(Argb.withAlpha(hue(shift), 0f), hue(shift + .25f),
-                hue(shift + .5f), Argb.withAlpha(hue(shift + .75f), 0f)), floatArrayOf(0f, .3f, .7f, 1f))
+            // Gradient endpoints are the flow's static anchors; the hue advances in 1/128 cycle steps (≈0.2 s), so a
+            // shader is built only on a step change, not on every frame.
+            val step = (((t * .035f + index * .17f) * HUE_STEPS).toInt() % HUE_STEPS + HUE_STEPS) % HUE_STEPS
+            val shift = step / HUE_STEPS.toFloat()
+            val fill = JarvisSceneFills.cached(Triple(index, step, w.toInt() * 100_000 + h.toInt())) {
+                Fill.Linear(f.p[0] * w, f.p[1] * h, f.p[6] * w, f.p[7] * h, intArrayOf(Argb.withAlpha(hue(shift), 0f),
+                    hue(shift + .25f), hue(shift + .5f), Argb.withAlpha(hue(shift + .75f), 0f)), floatArrayOf(0f, .3f, .7f, 1f))
+            }
             val near = .55f + f.depth * .225f
             p.strokePath(path, (10f + f.depth * 6f) * near, fill, .045f * boost)
             p.strokePath(path, (3.2f + f.depth * 1.6f) * near, fill, .16f * boost)
@@ -73,8 +81,8 @@ object JarvisEnergyFlows {
                 val u = (((t * f.pulseSpeed + j * .5f + f.phase * .1f) % 1f) + 1f) % 1f
                 val q = point(f, w, h, t, u)
                 val glow = sin(PI.toFloat() * u)                 // fades in and out at the ends, no hard jump
-                val color = hue(shift + u * .5f)
-                JarvisNeon.halo(p, q[0], q[1], 9f + f.depth * 3f, color, .32f * glow * boost)
+                val color = hue(shift + (u * 8f).toInt() / 16f)
+                JarvisSceneFills.halo(p, q[0], q[1], 9f + f.depth * 3f, color, .32f * glow * boost)
                 p.fillCircle(q[0], q[1], 1.3f + f.depth * .4f, Fill.Solid(Colors.glowCore), .9f * glow)
             }
         }
