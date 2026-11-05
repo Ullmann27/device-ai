@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "task_id": "MEMORY-R10-20261105",
+  "status": "DRAFT_SPECIALIST_HOST_7_OF_7_AND_112_PARITY_GREEN_ANDROID_NOT_RUN",
+  "repository": "Ullmann27/device-ai",
+  "branch": "fix/continuum-memory-r10-fuzzy-ambiguity-20261105",
+  "base_pr": 536,
+  "base_sha": "386389e9aaaa44dadd3bbb919f2658dbaf43fa86",
+  "c1": {
+    "pr": 519,
+    "last_observed_head": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "sole_integrator": true,
+    "memory_r3_522_integrated": true,
+    "privacy_r4_529_in_separate_intake": true
+  },
+  "source": {
+    "test_freeze_commits": [
+      "dbd15d42cb5ae42a6956aac5809ffffe36ae2647",
+      "e17bb7420fd5a2ba237de7f8cc7828bb4650ca3e"
+    ],
+    "production_commit": "c9d122aa941e9994c56cce62fb808e76b5283e60",
+    "before_blob": "12c1c716c57bc9656897a6428ed0ee1c4f443142",
+    "after_blob": "c7c4d8d701e8fd1d2b886aa0a6b627c1b6a1bd99",
+    "only_production_path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt"
+  },
+  "architecture": "GermanText -> BM25 exact/fuzzy ambiguity gate | CharNgram atomic IndexState(immutable docs, vectors, idf, negation BitSets, bytes) -> RetrievalHit(doc, score) preserving confirmed",
+  "outcomes": [
+    "BM25 ambiguous typo fallback no longer returns arbitrary equal-ranked evidence",
+    "sole-negation ngram retrieval uses published generation BitSet and skips unrelated scores",
+    "published host baseline RED 6/7 and patched GREEN 7/7",
+    "112/112 synthetic ID, confirmation, score parity and bounded 240-document latency measurement"
+  ],
+  "evidence": {
+    "handoff": "docs/research/omega/MEMORY-R10-HANDOFF-20261105.md",
+    "result": "docs/evidence/memory-r10-fuzzy-20261105/RESULT.json",
+    "runner": "tools/memory-r10/run.sh",
+    "parity": "tools/memory-r10/parity.sh",
+    "host_status": "actual JRE21/kotlinc1.9 compiled exact product; JUnit/EventEmitting host shims only",
+    "baseline": "6 PASS/1 FAIL; expected red",
+    "patched": "7 PASS/0 FAIL; exit 0",
+    "non_target_parity": "112/112 equal; 40 docs; 56 queries; 2 retrievers; output SHA256 643a9ac0a14626ce10874947591354e1a702f167c9dca5008664a5514e9f70ff",
+    "synthetic_perf": "median 75 calls 330.945146ms -> 10.397357ms, single host benchmark; approxIndexBytes 140816 -> 140896"
+  },
+  "pending": [
+    "C1 independently inspect stacked R6-R10 before inclusion",
+    "Android project JUnit+full retrieval/TemporalCue",
+    "official 1000-doc/44-query holdout, preserve quality threshold",
+    "C1 critical, full-node, backend, Android full suite, lint, C2 and Fold7",
+    "owner-verified original-signature APK update only after final release approval"
+  ],
+  "not_run": [
+    "Android Gradle",
+    "full 44-query holdout",
+    "real model inference",
+    "NewApi lint",
+    "Fold7",
+    "APK"
+  ],
+  "safe": {
+    "new_subbots": 0,
+    "main": false,
+    "actions": false,
+    "paid": false,
+    "signing": false,
+    "release": false,
+    "install": false,
+    "owner_data_touched": false,
+    "offline_touched": false
+  }
+}
