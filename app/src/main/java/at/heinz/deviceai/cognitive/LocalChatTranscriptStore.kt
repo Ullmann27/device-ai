@@ -55,15 +55,32 @@ class LocalChatTranscriptStore(private val dir: File) {
     @Synchronized fun appendContextTurn(id: String, request: String, response: String, atMillis: Long) {
         require(ID.matches(id)) { "Conversation id" }
         if (request.isBlank() || response.isBlank()) return
-        appendLine(id, JSONObject().put("k", "ctx").put("q", request.take(MAX_CONTEXT_REQUEST))
+        appendLine(id, JSONObject().put("k", CONTEXT).put("q", request.take(MAX_CONTEXT_REQUEST))
             .put("r", response.take(MAX_CONTEXT_RESPONSE)).put("at", atMillis).toString())
     }
 
-    /** The last [limit] context turns in order (the model context itself keeps at most four). */
-    @Synchronized fun loadContextTurns(id: String, limit: Int = 4): List<ContextTurn> = lines(id).mapNotNull { line ->
-        runCatching { JSONObject(line).takeIf { it.optString("k") == "ctx" }?.let { ContextTurn(it.getString("q"), it.getString("r")) } }
-            .getOrNull()
-    }.toList().takeLast(maxOf(0, limit))
+    /**
+     * The app deliberately invalidated the model context of this conversation (non-model answer, topic reset,
+     * correction); context turns stored before this marker are never restored. No file is created for it.
+     */
+    @Synchronized fun appendContextReset(id: String, atMillis: Long) {
+        require(ID.matches(id)) { "Conversation id" }
+        if (!File(dir, "$id$SUFFIX").isFile) return
+        appendLine(id, JSONObject().put("k", CONTEXT_RESET).put("at", atMillis).toString())
+    }
+
+    /** The last [limit] context turns after the last reset marker, in order (the model context keeps at most four). */
+    @Synchronized fun loadContextTurns(id: String, limit: Int = 4): List<ContextTurn> {
+        val out = ArrayList<ContextTurn>()
+        lines(id).forEach { line ->
+            val o = runCatching { JSONObject(line) }.getOrNull() ?: return@forEach
+            when (o.optString("k")) {
+                CONTEXT_RESET -> out.clear()
+                CONTEXT -> runCatching { out += ContextTurn(o.getString("q"), o.getString("r")) }
+            }
+        }
+        return out.takeLast(maxOf(0, limit))
+    }
 
     /** The last [limit] readable entries in order; a torn last line (process death mid-write) is skipped. */
     @Synchronized fun load(id: String, limit: Int = 200): List<Entry> {
@@ -107,6 +124,8 @@ class LocalChatTranscriptStore(private val dir: File) {
     companion object {
         val ID = Regex("[a-f0-9-]{36}")
         private const val ACTIVE = "active-conversation"
+        private const val CONTEXT = "ctx"
+        private const val CONTEXT_RESET = "ctx-reset"
         private const val SUFFIX = ".jsonl"
         private const val MAX_TEXT = 32_000
         private const val MAX_CONTEXT_REQUEST = 1_000

@@ -657,6 +657,7 @@ class AgentActivity : Activity() {
         restoreOriginalGemmaOnOpen()
         showPendingReceiptReview()
         restoreChatTranscript()
+        persistContextInvalidations()
         restoreModelContext()
         addHomeGreeting(persist = false, value =
             "Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. " +
@@ -10543,6 +10544,21 @@ class AgentActivity : Activity() {
     private fun addHomeGreeting(value: String, persist: Boolean = true) {
         addBubble(value, user = false, persist = persist)
         speakBootstrap(value)
+    }
+
+    /**
+     * A deliberately invalidated model context stays invalid after an exit (#565 review): the store gets a reset
+     * marker and restores only later turns. The listener lives on the process-wide context, so it must not hold
+     * this Activity; it captures only the app-private store and the shared I/O executor.
+     */
+    private fun persistContextInvalidations() {
+        val store = chatTranscripts
+        localConversationContext.onTurnsInvalidated = { id ->
+            if (at.heinz.deviceai.cognitive.LocalChatTranscriptStore.ID.matches(id)) {
+                val at = System.currentTimeMillis()
+                chatTranscriptIo.execute { runCatching { store.appendContextReset(id, at) } }
+            }
+        }
     }
 
     /** Stores a turn the model context just admitted, so the same chat keeps its context after an exit (#568). */

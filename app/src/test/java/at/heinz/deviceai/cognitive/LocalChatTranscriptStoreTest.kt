@@ -64,4 +64,21 @@ class LocalChatTranscriptStoreTest {
         assertEquals("bounded like the model context", listOf("Frage 2", "Frage 3", "Frage 4", "Frage 5"),
             store.loadContextTurns(c).map { it.request })
     }
+
+    /** #565 review: a reset marker hides earlier context turns; bubbles stay; no file is created for a marker alone. */
+    @Test fun contextResetHidesEarlierTurnsOnly() {
+        val dir = tmp.newFolder("chat-history")
+        val store = LocalChatTranscriptStore(dir)
+        val c = store.activeConversation { id() }
+        store.append(c, true, "Erfinde einen Mond.", 1)
+        store.appendContextTurn(c, "Erfinde einen Mond.", "Aetheria.", 2)
+        store.appendContextReset(c, 3)
+        assertTrue("invalidated turns are not restored", LocalChatTranscriptStore(dir).loadContextTurns(c).isEmpty())
+        store.appendContextTurn(c, "Neue Frage", "Neue Antwort", 4)
+        assertEquals(listOf("Neue Frage"), store.loadContextTurns(c).map { it.request })
+        assertEquals("the visible chat is unaffected", listOf("Erfinde einen Mond."), store.load(c).map { it.text })
+        val untouched = id()
+        store.appendContextReset(untouched, 5)
+        assertFalse(dir.resolve("$untouched.jsonl").exists())
+    }
 }

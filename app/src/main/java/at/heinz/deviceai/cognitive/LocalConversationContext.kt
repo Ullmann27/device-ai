@@ -21,11 +21,11 @@ class LocalConversationContext {
      */
     @Synchronized fun inspectRequest(sessionId:String,request:String):ContextDirective? {
         require(sessionId.isNotBlank())
-        if(session!=sessionId){clear();session=sessionId}
+        if(session!=sessionId)switchTo(sessionId)
         val text=request.trim()
         if(text.length>512)return null
         if(Regex("(?iu)^(anderes thema|neues thema)\\b").containsMatchIn(text)) {
-            turns.clear();explicitFocus=null;research=null;return null
+            dropTurns();explicitFocus=null;research=null;return null
         }
         if(Regex("(?iu)^(?:bitte )?(?:merke|merk|speichere) (?:dir )?(?:das|dies|diese entscheidung|diesen beschluss)(?: bitte)?[.!]?$").matches(text))
             return ContextDirective(ContextDirectiveKind.MEMORY_LITERAL_REQUIRED)
@@ -34,7 +34,7 @@ class LocalConversationContext {
         val correction=Regex("(?iu)^(?:nein[,!:]?\\s+)?(?:ich (?:meinte|meine)|gemeint war)\\s+(.+)$").matchEntire(text)?:return null
         // A scope correction invalidates every old topic channel, including typed
         // research and its freshness evidence, not only the visible dialogue turns.
-        turns.clear();research=null
+        dropTurns();research=null
         val focus=correction.groupValues[1].trim().trimEnd('.','!')
             .replace(Regex("(?iu)^(den|dem|der|die|das)\\s+"),"")
         val ambiguous=Regex("(?iu)\\b(sie|er|ihn|ihm|das|diese|dieses|nicht|kein|keine|oder|und|meine|mein|meinen|andere[nmrs]?|vorherige[nmrs]?|lösche|installiere|starte|ignoriere)\\b")
@@ -47,7 +47,7 @@ class LocalConversationContext {
 
     @Synchronized fun record(sessionId: String, request: String, response: String) {
         require(sessionId.isNotBlank() && request.isNotBlank() && response.isNotBlank())
-        if (session != sessionId) { clear(); session = sessionId }
+        if (session != sessionId) switchTo(sessionId)
         // The short sanitized preview belongs ONLY to the model prompt. A proof must use
         // the complete literal, including whitespace, or abstain when it exceeds the bound.
         turns.addLast(Turn(data(request, 300), data(response, 350), request.takeIf { it.length <= 1000 }))
@@ -60,7 +60,7 @@ class LocalConversationContext {
      */
     @Synchronized fun recordUnanswered(sessionId: String, request: String) {
         require(sessionId.isNotBlank() && request.isNotBlank())
-        if (session != sessionId) { clear(); session = sessionId }
+        if (session != sessionId) switchTo(sessionId)
         // Several revoked callbacks for the same request must not displace
         // four independent owner turns with identical failed-turn placeholders.
         val last = turns.lastOrNull()
@@ -76,7 +76,7 @@ class LocalConversationContext {
      * never tool output or model text. Bounded to four turns like every other turn. */
     @Synchronized fun recordNonModel(sessionId: String, request: String, label: String) {
         require(sessionId.isNotBlank() && request.isNotBlank() && label.isNotBlank())
-        if (session != sessionId) { clear(); session = sessionId }
+        if (session != sessionId) switchTo(sessionId)
         turns.addLast(Turn(data(request, 300), data(label, 120), request.takeIf { it.length <= 1000 }))
         while (turns.size > 4) turns.removeFirst()
     }
@@ -85,7 +85,7 @@ class LocalConversationContext {
      *  Replaces any earlier research digest; never persists and never becomes an owner fact. */
     @Synchronized fun recordResearch(sessionId: String, digest: ResearchDialogueHandoff.Digest) {
         require(sessionId.isNotBlank())
-        if (session != sessionId) { clear(); session = sessionId }
+        if (session != sessionId) switchTo(sessionId)
         research = digest
         turns.addLast(Turn(data(digest.question, 300), "(Antwort aus Webrecherche; siehe EXTERNE RECHERCHEDATEN)",
             isOwnerTurn = false))
@@ -110,7 +110,25 @@ class LocalConversationContext {
         return turns.mapNotNull { it.originalUserRequest }
     }
 
-    @Synchronized fun clear() { turns.clear(); session = null;explicitFocus=null;research=null }
+    /**
+     * Called inside the lock when admitted turns are deliberately invalidated (non-model answer, topic reset,
+     * correction, new session); the argument is the conversation they belonged to. A persisted copy of the
+     * context must honour this (#565 review). Not called by [forgetForExit] or when another session replaces them.
+     */
+    @Volatile var onTurnsInvalidated: ((String) -> Unit)? = null
+
+    private fun dropTurns() {
+        if (turns.isEmpty()) return
+        turns.clear()
+        session?.let { id -> runCatching { onTurnsInvalidated?.invoke(id) } }
+    }
+
+    private fun switchTo(sessionId: String) { turns.clear(); session = sessionId; explicitFocus = null; research = null }
+
+    @Synchronized fun clear() { dropTurns(); session = null;explicitFocus=null;research=null }
+
+    /** End of the process-scoped RAM lifetime (real Activity finish): nothing was invalidated, so nothing is reported. */
+    @Synchronized fun forgetForExit() { turns.clear(); session = null; explicitFocus = null; research = null }
 
     /** Access is supplied by the current turn, never inferred from a saved research digest.
      * onlineApprovalActive must come from an existing authorized session of this turn. */

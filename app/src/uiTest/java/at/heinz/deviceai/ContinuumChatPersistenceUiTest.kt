@@ -122,6 +122,31 @@ class ContinuumChatPersistenceUiTest {
         }
     }
 
+    /** Gitar review on #565: context the app dropped on purpose (non-model answer) must stay dropped after a restart. */
+    @Test fun restartDoesNotBringBackContextTheAppHadCleared() {
+        val request = "Erfinde einen Namen für einen Mond."
+        val toolAnswer = "Werkzeugergebnis: Systemstatus angezeigt."
+        val session = withActivity { a ->
+            val id = field(a, "sessionId") as String
+            val context = field(a, "localConversationContext") as at.heinz.deviceai.cognitive.LocalConversationContext
+            context.record(id, request, "Der erfundene Mond heißt Aetheria.")
+            AgentActivity::class.java.getDeclaredMethod("rememberContextTurn", String::class.java, String::class.java,
+                String::class.java).apply { isAccessible = true }.invoke(a, id, request, "Der erfundene Mond heißt Aetheria.")
+            // A non-model answer (tool result, memory reply, error) invalidates the model context in RAM.
+            AgentActivity::class.java.getDeclaredMethod("addAssistantMessage", String::class.java, Boolean::class.javaPrimitiveType)
+                .apply { isAccessible = true }.invoke(a, toolAnswer, false)
+            assertEquals("cleared in RAM", emptyList<String>(), context.priorUserTurns(id))
+            id
+        }
+        assertTrue(waitForTranscript(toolAnswer))
+        withActivity { a ->
+            val context = field(a, "localConversationContext") as at.heinz.deviceai.cognitive.LocalConversationContext
+            assertEquals(session, field(a, "sessionId"))
+            assertEquals("the restart must not resurrect the cleared turn", emptyList<String>(), context.priorUserTurns(session))
+            assertTrue("the visible chat is unaffected", texts(field(a, "chatContainer") as LinearLayout).contains(toolAnswer))
+        }
+    }
+
     private fun waitForContextTurn(text: String): Boolean {
         val dir = File(RuntimeEnvironment.getApplication().filesDir, "chat-history")
         repeat(60) {
