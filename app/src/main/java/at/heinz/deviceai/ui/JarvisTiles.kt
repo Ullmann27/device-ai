@@ -16,6 +16,17 @@ data class JarvisTile(val target: String, val label: String, val icon: Icon, val
                       val controlState: JarvisControlState = JarvisControlState.NORMAL)
 
 object JarvisTiles {
+    // One cached 64-step palette, sampled along the EXISTING tile draw time; no per-frame shader palette arrays.
+    // Palette uses the shared cyan, blue, violet and magenta tokens only; never communicates runtime status.
+    private val edgePalette = intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.violet, Colors.magenta)
+    private val edgeEnergyColors = IntArray(64) { step ->
+        val pos = step * edgePalette.size / 64f
+        val i = pos.toInt()
+        val t = pos - i
+        val smooth = t * t * (3f - 2f * t)
+        Argb.mix(edgePalette[i], edgePalette[(i + 1) % edgePalette.size], smooth)
+    }
+
     /** ref5 uses two violet cards among the cyan cards. Colour describes the destination, never live status. */
     fun style(target: String): JarvisDesign.ComponentStyle = when (target) {
         "memory" -> JarvisDesign.Styles.memoryTile
@@ -24,7 +35,8 @@ object JarvisTiles {
         else -> JarvisDesign.Styles.tile
     }
 
-    fun drawSurface(p: ContinuumPainter, b: Box, tile: JarvisTile, highlighted: Boolean) {
+    fun drawSurface(p: ContinuumPainter, b: Box, tile: JarvisTile, highlighted: Boolean,
+                    timeMs: Long = 0L, animateEdge: Boolean = false) {
         val source = style(tile.target)
         val disabled = tile.controlState == JarvisControlState.DISABLED
         val st = if (disabled) source.copy(glow = JarvisDesign.Glow.OFF,
@@ -37,6 +49,22 @@ object JarvisTiles {
             Fill.Linear(0f, b.top, 0f, b.top + b.height * .30f,
                 intArrayOf(Argb.withAlpha(st.rim, .12f), 0)))
         JarvisNeon.halo(p, b.left + 16f, b.top + b.height / 2f, b.height * .42f, st.rim, .14f)
+        // Pure ambient edge bead, not an activity, loading, success or external-app signal.
+        // The shell provides its own running draw time and controls whether motion is allowed.
+        if (!disabled && animateEdge) {
+            JarvisTileEnergy.sample(timeMs, b.width, b.height, tile.target)?.let { edge ->
+                val x = b.left + edge.x; val y = b.top + edge.y
+                val color = edgeEnergyColors[(edge.phase * edgeEnergyColors.size).toInt()
+                    .coerceIn(0, edgeEnergyColors.lastIndex)]
+                p.save()
+                p.clipRoundRect(b.left, b.top, b.right, b.bottom, radius)
+                JarvisSceneFills.halo(p, x, y, if (active) 8f else 6f, color,
+                    if (active) .30f else .17f)
+                p.fillCircle(x, y, if (active) 1.35f else .9f, Fill.Solid(Colors.glowCore),
+                    if (active) .80f else .55f)
+                p.restore()
+            }
+        }
         // LOADING is explicit caller state. Never infer work from a destination's decorative animation.
         if (tile.controlState == JarvisControlState.LOADING) {
             p.drawText("…", b.right - 9f, b.top + 15f, JarvisDesign.Type.caption,
