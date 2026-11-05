@@ -47,9 +47,10 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         followSeconds = if (motion) seconds else Float.NaN
         headYaw = followedYaw; headPitch = followedPitch
         // Eyes lead: they hold the full gaze target while the head is still catching up.
+        // Written as eye share + remaining head lag, so a settled head yields the exact eye share.
         eyeYaw = cameraAzimuthDegrees.toFloat() +
-            (gx * (HEAD_YAW_DEGREES + EYE_YAW_DEGREES) - followedYaw).coerceIn(-EYE_MAX_YAW_DEGREES, EYE_MAX_YAW_DEGREES)
-        eyePitch = (-gy * (HEAD_PITCH_DEGREES + EYE_PITCH_DEGREES) - followedPitch)
+            (gx * EYE_YAW_DEGREES + (targetHeadYaw - followedYaw)).coerceIn(-EYE_MAX_YAW_DEGREES, EYE_MAX_YAW_DEGREES)
+        eyePitch = (-gy * EYE_PITCH_DEGREES + (targetHeadPitch - followedPitch))
             .coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
         jawPitch = 0f
         when (pose.expression) {
