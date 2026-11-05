@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: exact approved bytes and dimensions are bound
+ok 1 - exact approved bytes and dimensions are bound
+  ---
+  duration_ms: 8.26656
+  type: 'test'
+  ...
+# Subtest: same filename and dimensions cannot bypass pin
+ok 2 - same filename and dimensions cannot bypass pin
+  ---
+  duration_ms: 3.795155
+  type: 'test'
+  ...
+# Subtest: same filename and hash cannot bypass wrong reference dimensions
+ok 3 - same filename and hash cannot bypass wrong reference dimensions
+  ---
+  duration_ms: 2.988969
+  type: 'test'
+  ...
+# Subtest: invalid contract schema and hash are rejected
+ok 4 - invalid contract schema and hash are rejected
+  ---
+  duration_ms: 8.99554
+  type: 'test'
+  ...
+# Subtest: invalid contract dimensions are rejected
+ok 5 - invalid contract dimensions are rejected
+  ---
+  duration_ms: 13.049645
+  type: 'test'
+  ...
+# Subtest: invalid PNG header is rejected
+ok 6 - invalid PNG header is rejected
+  ---
+  duration_ms: 3.908556
+  type: 'test'
+  ...
+# Subtest: misnamed JPEG cannot masquerade as approved PNG
+ok 7 - misnamed JPEG cannot masquerade as approved PNG
+  ---
+  duration_ms: 3.690878
+  type: 'test'
+  ...
+# Subtest: truncated PNG is rejected
+ok 8 - truncated PNG is rejected
+  ---
+  duration_ms: 4.057581
+  type: 'test'
+  ...
+# Subtest: CLI uses nonzero exit on mismatches, succeeds when bound
+ok 9 - CLI uses nonzero exit on mismatches, succeeds when bound
+  ---
+  duration_ms: 76.649688
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 187.117328

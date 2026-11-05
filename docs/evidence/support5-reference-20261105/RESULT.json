@@ -1,0 +1,24 @@
+{
+  "schema": "continuum-support5-reference-qa-v1",
+  "date": "2026-11-05",
+  "base": "19039e5b822310cd5ab1ce5cc5cb854822a1bcd3",
+  "nodeVersion": "v22.16.0",
+  "command": "node --test --test-reporter=tap reference-contract.test.mjs",
+  "result": {
+    "tests": 9,
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0
+  },
+  "testedBlobs": {
+    "scripts/reference-contract.mjs": "3971464f97d07ca65ca91b6843c58058d9535c40",
+    "scripts/reference-contract.test.mjs": "a951ba6036d00b809c54625dc59908dfa034746a"
+  },
+  "tapSha256": "544f50952e66a054cd2d08a59039de774161be255de21a8c07dca745e6ed63de",
+  "referenceNote": "Private same-name JPEG and expected 1536x1024 wide PNG differ; no private image bytes published.",
+  "nativeAndroid": "NOT_RUN",
+  "filament": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "apk": "NOT_RUN"
+}

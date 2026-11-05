@@ -1,0 +1,50 @@
+{
+  "schema": "continuum-support5-png-structural-qa-v1",
+  "date": "2026-11-05",
+  "repository": "Ullmann27/device-ai",
+  "baseCommit": "8313c61c14d06a6ee48b6a6132bd428fc6ce5b4c",
+  "originalBlobs": {
+    "scripts/reference-contract.mjs": "3971464f97d07ca65ca91b6843c58058d9535c40",
+    "scripts/reference-contract.test.mjs": "a951ba6036d00b809c54625dc59908dfa034746a"
+  },
+  "localTestedBlobs": {
+    "scripts/reference-contract.mjs": "5086d6ad187eb5a416c5066b66b38be51645499e",
+    "scripts/reference-contract.test.mjs": "b3362cd68e08f71829c6693638d86ba2070dc1a0"
+  },
+  "command": "node --test --test-reporter=tap scripts/reference-contract.test.mjs",
+  "node": "22.16.0",
+  "baseline": {
+    "tests": 15,
+    "pass": 9,
+    "fail": 6,
+    "skip": 0,
+    "exit": 1,
+    "tapSHA256": "e21c038c003f8abbb36dee094e8d5697a9d3ca2fed74c9e69aecb263f2b311ad",
+    "failingCases": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ]
+  },
+  "repaired": {
+    "tests": 15,
+    "pass": 15,
+    "fail": 0,
+    "skip": 0,
+    "exit": 0,
+    "tapSHA256": "2daaade27a9641d29ef5021a71e1ec024274695e3de3d40dbc312ada587e804f"
+  },
+  "syntaxChecks": [
+    "node --check scripts/reference-contract.mjs",
+    "node --check scripts/reference-contract.test.mjs"
+  ],
+  "scope": "offline PNG structural preflight; does not decode pixels or test app display",
+  "android": "NOT_RUN",
+  "robolectric": "NOT_RUN",
+  "filament": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "apk": "NOT_RUN"
+}
