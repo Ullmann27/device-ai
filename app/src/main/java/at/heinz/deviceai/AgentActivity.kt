@@ -8665,6 +8665,8 @@ class AgentActivity : Activity() {
                             "in derselben Nachricht oder beginne einen neuen zusammenhängenden Test."
                     else if (error.message == "LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT")
                         ContinuumUiCopy.modelFailure(error.message)
+                    else if (at.heinz.deviceai.localmodel.LocalModelThermalGuard.isThermal(error.message))
+                        at.heinz.deviceai.localmodel.LocalModelThermalGuard.ownerMessage(error.message)
                     else groundedRecall?.failureAnswer() ?:
                         "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn)
                     if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)
