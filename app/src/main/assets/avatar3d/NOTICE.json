@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "asset": "continuum-avatar.glb",
-  "sha256": "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145",
-  "bytes": 12552372,
+  "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "bytes": 12038416,
   "meshLicense": {
     "spdx": "CC0-1.0",
     "scope": "Inherited MakeHuman graphical mesh assets only",
@@ -16,12 +16,27 @@
     "metadata": "assets/avatar/reference/continuum-neural-front-20261104.provenance.json",
     "generationTool": "image_gen.imagegen",
     "ownerReferenceSha256": "b1575d98f24db11e68c449728c0252652657ad4fd252431e962fd5e7e9288c40",
-    "use": "Generated portrait pixels baked into an embedded UV atlas on the existing animated mesh",
-    "atlasSha256": "92d5adebe1e794cfbed434ac533f53dda25053177129a399e5eaf0c07c79533b",
+    "use": "Original generated artwork retained for torso and mouth; owner-supplied correction projected onto head surface",
+    "atlasSha256": "d1006978fb39d742e066742c911d59b0889c1c9229d40a59e429dfbfdac4df1d",
     "atlasPixels": [
       2048,
       2048
-    ]
+    ],
+    "headCorrection": {
+      "sourceKind": "OWNER_SUPPLIED_VISUAL_CORRECTION",
+      "source": "assets/avatar/reference/continuum-owner-head-correction-20261104.png",
+      "sha256": "f70460e42e7b89db5dd4c1f94228d3b7afa7c54a06774ebd57132ab27ecad7a4",
+      "metadata": "assets/avatar/reference/continuum-owner-head-correction-20261104.provenance.json",
+      "selectedPanel": "Right Nachher panel",
+      "tool": "tools/avatar-3d/reference-atlas/correct_head_surface.py",
+      "toolSha256": "735d55ee03b31cada330c6eff1e4de26cbda8ffc5f9b2f16c4c693b75cea37ae",
+      "sourceCommit": "653a885435d95a19f341a80a89be1e9fbeccf1f1",
+      "sourceAssetSha256": "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145",
+      "geometryRigMorphsMaterialsUnchanged": true,
+      "lowerTorsoTexelsUnchanged": 1183703,
+      "newImageGeneration": false,
+      "unseenSide": "Mirrored, color-adjusted continuation"
+    }
   },
   "derivation": {
     "tool": "tools/avatar-3d/reference-atlas/build_reference_avatar.py",
@@ -53,7 +68,7 @@
   "identityStatus": "REFERENCE_GUIDED_UV_APPROXIMATION_REQUIRES_OWNER_REVIEW",
   "runtime": "No authored animation clips. Existing AvatarPose and the same 21-target rig controls.",
   "limitations": [
-    "Single frontal artwork; unseen profile is an authored approximation",
+    "Frontal artwork plus an owner-supplied quarter-view correction; unseen anatomy remains approximate",
     "Portrait lighting is baked into surface color",
     "Inherited independent rig_hierarchy_orientation window failure remains open; geometry preservation is not anatomical approval",
     "Native Filament/Fold7 rendering, performance and audible lip synchronization are not established by host renders"

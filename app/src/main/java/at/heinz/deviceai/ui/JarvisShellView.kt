@@ -3,6 +3,7 @@ package at.heinz.deviceai.ui
 import android.content.Context
 import android.graphics.Canvas
 import android.os.SystemClock
+import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
 import android.view.Choreographer
@@ -57,11 +58,12 @@ class JarvisShellView(context: Context) : View(context) {
         }
 
     /** Optional decorative refresh. Native head/orb own their frame clock; static HUD needs no continuous redraw. */
-    var ambientMotionEnabled = false
+    var ambientMotionEnabled = true
         set(value) { field = value; invalidate() }
 
+    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
     private fun ambientMotion(scale: Float) = ambientMotionEnabled && scale > 0f && isShown &&
-        windowVisibility == VISIBLE && hasWindowFocus()
+        windowVisibility == VISIBLE && hasWindowFocus() && !powerManager.isPowerSaveMode
 
     /** Latest shell geometry (dp) – lets Kern position its own child views on the same slots. */
     var shell: JarvisShellLayout.Shell? = null
@@ -94,7 +96,8 @@ class JarvisShellView(context: Context) : View(context) {
         onFrameDrawn?.invoke()
         val total = JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, s.boxes.size + s.tileBoxes().size, animatorScale = scale)
         // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
-        if ((startMs >= 0 && elapsed < total) || ambientMotion(scale)) postInvalidateOnAnimation()
+        if (startMs >= 0 && elapsed < total) postInvalidateOnAnimation()
+        else if (ambientMotion(scale)) postInvalidateDelayed(66L)
         if (frameLogging) frames.onDrawn(SystemClock.elapsedRealtimeNanos() - drawStart(now))
     }
 

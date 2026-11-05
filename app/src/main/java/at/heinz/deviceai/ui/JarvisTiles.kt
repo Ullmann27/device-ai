@@ -24,7 +24,15 @@ object JarvisTiles {
         else -> JarvisDesign.Styles.tile
     }
 
-    fun drawSurface(p: ContinuumPainter, b: Box, tile: JarvisTile, highlighted: Boolean) {
+    fun ambientPhase(target: String, timeMs: Long): Float {
+        if (timeMs <= 0L) return 0f
+        val position = (timeMs % 14_000L).toDouble() / 14_000.0
+        val offset = (target.hashCode() and 7) * .36
+        return (.5 + .5 * kotlin.math.sin(2.0 * kotlin.math.PI * position + offset)).toFloat()
+    }
+
+    fun drawSurface(p: ContinuumPainter, b: Box, tile: JarvisTile, highlighted: Boolean,
+                    timeMs: Long = 0L) {
         val source = style(tile.target)
         val disabled = tile.controlState == JarvisControlState.DISABLED
         val st = if (disabled) source.copy(glow = JarvisDesign.Glow.OFF,
@@ -37,6 +45,16 @@ object JarvisTiles {
             Fill.Linear(0f, b.top, 0f, b.top + b.height * .30f,
                 intArrayOf(Argb.withAlpha(st.rim, .12f), 0)))
         JarvisNeon.halo(p, b.left + 16f, b.top + b.height / 2f, b.height * .42f, st.rim, .14f)
+        if (!disabled && timeMs > 0L) {
+            val wave = ambientPhase(tile.target, timeMs)
+            val color = if (wave <= .5f) Argb.mix(Colors.cyan, Colors.violet, wave * 2f)
+                else Argb.mix(Colors.violet, Colors.magenta, (wave - .5f) * 2f)
+            val edge = Fill.Solid(color)
+            p.setAdditive(true)
+            p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius, 3f, edge, .045f + .035f * wave)
+            p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius, 1.1f, edge, .12f + .10f * wave)
+            p.setAdditive(false)
+        }
         // LOADING is explicit caller state. Never infer work from a destination's decorative animation.
         if (tile.controlState == JarvisControlState.LOADING) {
             p.drawText("…", b.right - 9f, b.top + 15f, JarvisDesign.Type.caption,
