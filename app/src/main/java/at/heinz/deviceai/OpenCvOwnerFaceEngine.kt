@@ -19,12 +19,13 @@ import kotlin.math.abs
 import kotlin.math.sqrt
 
 /** Real pinned YuNet and SFace. */
-internal class OpenCvOwnerFaceEngine(context: Context) {
-    private val detector: FaceDetectorYN
-    private val recognizer: FaceRecognizerSF
+internal class OpenCvOwnerFaceEngine(context: Context) : OwnerFaceInference {
+    private var detector: FaceDetectorYN?
+    private var recognizer: FaceRecognizerSF?
 
     init {
         check(OpenCVLoader.initLocal())
+        Core.setNumThreads(1)
         val detectorPath = verifiedAsset(context, OwnerFaceModelContract.DETECTOR_ASSET,
             OwnerFaceModelContract.DETECTOR_BYTES, OwnerFaceModelContract.DETECTOR_SHA256)
         val recognizerPath = verifiedAsset(context, OwnerFaceModelContract.RECOGNIZER_ASSET,
@@ -34,8 +35,10 @@ internal class OpenCvOwnerFaceEngine(context: Context) {
         recognizer = FaceRecognizerSF.create(recognizerPath, "", Dnn.DNN_BACKEND_OPENCV, Dnn.DNN_TARGET_CPU)
     }
 
-    fun observe(frame: OwnerFaceFrame): OwnerFaceObservation {
+    override fun observe(frame: OwnerFaceFrame): OwnerFaceObservation {
         require(frame.valid())
+        val detector = checkNotNull(detector)
+        val recognizer = checkNotNull(recognizer)
         val raw = Mat(frame.height + frame.height / 2, frame.width, CvType.CV_8UC1)
         val bgr = Mat()
         val upright = Mat()
@@ -77,6 +80,11 @@ internal class OpenCvOwnerFaceEngine(context: Context) {
             bgr.release()
             raw.release()
         }
+    }
+
+    override fun close() {
+        detector = null
+        recognizer = null
     }
 
     private fun quality(image: Mat, face: FloatArray): OwnerFaceQuality {

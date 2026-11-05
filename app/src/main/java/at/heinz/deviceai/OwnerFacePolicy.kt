@@ -118,6 +118,7 @@ internal class OwnerFacePolicy(
             matches = 0
             return decision(OwnerFacePhase.LOW_QUALITY)
         }
+        if (lastObservedAt >= 0 && captured - lastObservedAt > MAX_FRAME_AGE_MS) matches = 0
         lastObservedAt = captured
         if (observation.faceCount != 1) {
             matches = 0
@@ -164,6 +165,7 @@ internal class OwnerFacePolicy(
 
     private fun decision(phase: OwnerFacePhase) = OwnerFaceDecision(phase, if (enrolling) enrollment.size else matches)
     private fun clearEnrollment() { enrollment.forEach { it.fill(0f) }; enrollment.clear() }
+    fun expireMatch() { matches = 0 }
     override fun close() {
         clearEnrollment()
         reference.forEach { it.fill(0f) }

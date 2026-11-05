@@ -70,4 +70,46 @@ class OwnerFaceProfileStoreTest {
         file.writeBytes(ByteArray(65_537))
         assertThrows(IllegalArgumentException::class.java) { store().load() }
     }
+
+    @Test fun snapshotRevisionChangesAfterOtherStoreDeletesOrReplaces() {
+        val first = store()
+        val other = store()
+        first.save(profile("Before"))
+        val snapshot = first.loadSnapshot()
+        assertEquals("Before", snapshot.profile!!.displayName)
+        assertEquals(first.revision, snapshot.revision)
+        other.save(profile("Replacement"))
+        assertNotEquals(snapshot.revision, first.revision)
+        val replacement = first.loadSnapshot()
+        assertEquals("Replacement", replacement.profile!!.displayName)
+        other.delete()
+        assertNotEquals(replacement.revision, first.revision)
+        assertNull(first.loadSnapshot().profile)
+        snapshot.profile!!.clear()
+        replacement.profile!!.clear()
+    }
+
+    @Test fun deleteInvalidatesPreparedProfileAcrossStoreInstances() {
+        val first = store()
+        first.save(profile("Before"))
+        val revision = first.revision
+        val prepared = first.prepare(profile("Pending"), revision)
+        store().delete()
+        assertThrows(IllegalStateException::class.java) { first.commit(prepared) }
+        assertThrows(IllegalStateException::class.java) { first.prepare(profile("Late"), revision) }
+        first.discard(prepared)
+        assertNull(first.load())
+        assertTrue(directory.listFiles().orEmpty().isEmpty())
+    }
+
+    @Test fun cancelledReplacementLeavesPreviousCiphertextUntouched() {
+        val first = store()
+        first.save(profile("Before"))
+        val original = directory.resolve("profile.aes").readBytes()
+        val prepared = first.prepare(profile("Pending"), first.revision)
+        assertEquals("Before", first.load()!!.displayName)
+        first.discard(prepared)
+        assertArrayEquals(original, directory.resolve("profile.aes").readBytes())
+        assertEquals(listOf("profile.aes"), directory.listFiles().orEmpty().map { it.name })
+    }
 }
