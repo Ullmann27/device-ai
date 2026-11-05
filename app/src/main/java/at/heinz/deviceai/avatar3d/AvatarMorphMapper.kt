@@ -80,6 +80,14 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             if (seconds.isFinite()) headPitch += BREATH_PITCH_DEGREES *
                 kotlin.math.sin(2.0 * Math.PI * seconds / BREATH_PERIOD_S).toFloat()
         }
+        // Long-running work stays visually alive without inventing task progress.
+        if (seconds.isFinite() && pose.state in setOf(AvatarState.THINKING,
+                AvatarState.RESEARCHING, AvatarState.LEARNING)) {
+            val cycle = 2.0 * Math.PI * seconds.toDouble()
+            headPitch += (.35 * kotlin.math.sin(cycle / 5.3)).toFloat()
+            headYaw += (.40 * kotlin.math.sin(cycle / 7.7)).toFloat()
+            eyeYaw += (.65 * kotlin.math.sin(cycle / 2.9)).toFloat()
+        }
         // Gesture motion reuses the renderer clock and never drives mouth morphs.
         val progress = finite(pose.gestureProgress, 0f, 1f)
         when (pose.gesture) {

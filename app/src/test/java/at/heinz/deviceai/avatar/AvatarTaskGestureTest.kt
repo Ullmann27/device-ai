@@ -77,4 +77,35 @@ class AvatarTaskGestureTest {
         assertEquals(0f, mapper.jawPitch, 0f)
         assertTrue(mapper.weights.all { it == 0f })
     }
+    @Test fun thinkingGestureIsNotShownAfterSpeechStateBegins() {
+        director.onRuntime(AvatarRuntimeSignals(busy = true))
+        assertEquals(AvatarGestureIntent.THINK_MICRO, reducer.pose(now).gesture)
+        now += 80
+        director.onRuntime(AvatarRuntimeSignals(speaking = true))
+        assertNull("Think motion must stop as soon as speaking begins", reducer.pose(now).gesture)
+        now += 50
+        assertNull("Former thought cue cannot reappear", reducer.pose(now).gesture)
+    }
+
+    @Test fun longWorkKeepsSubtleBoundedMotionWithoutTalking() {
+        director.onRuntime(AvatarRuntimeSignals(busy = true))
+        now += 3_000L
+        val pose = reducer.pose(now)
+        assertNull("Short thinking intent has expired", pose.gesture)
+        assertEquals(0f, pose.jawOpen, 0f)
+        val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
+        mapper.update(pose, 3f, true)
+        val firstYaw = mapper.headYaw
+        val firstPitch = mapper.headPitch
+        mapper.update(pose, 4.2f, true)
+        val change = abs(mapper.headYaw - firstYaw) + abs(mapper.headPitch - firstPitch)
+        assertTrue("Long work needs calm, non-frozen movement: $change", change > .03f)
+        assertTrue("Long work must not have a head snap: $change", change < 1.5f)
+        assertEquals(0f, mapper.jawPitch, 0f)
+        val fixed = AvatarMorphMapper(AvatarGlbContract.TARGETS)
+        fixed.update(pose, 4.2f, false)
+        assertTrue("Reduced motion suppresses ambient movement",
+            abs(mapper.headYaw - fixed.headYaw) + abs(mapper.headPitch - fixed.headPitch) > .02f)
+    }
+
 }

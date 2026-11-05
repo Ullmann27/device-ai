@@ -224,7 +224,10 @@ class AvatarPoseReducer {
             null -> 0L
         }
         val gestureAge = if (gestureAtMillis == Long.MIN_VALUE) Long.MAX_VALUE else atMillis - gestureAtMillis
-        val activeGesture = gesture.takeIf { gestureAge in 0 until gestureDuration }
+        val activeGesture = gesture.takeIf {
+            gestureAge in 0 until gestureDuration &&
+                (it != AvatarGestureIntent.THINK_MICRO || state == AvatarState.THINKING)
+        }
         val gestureProgress = if (activeGesture != null) gestureAge / gestureDuration.toFloat() else 0f
         // Real camera observation keeps priority over a decorative window focus cue.
         val shownGaze = if (activeGesture == AvatarGestureIntent.WINDOW_FOCUS && observedGaze == null)
