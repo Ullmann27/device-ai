@@ -1,7 +1,6 @@
 package at.heinz.deviceai.avatar3d
 
 import kotlin.math.PI
-import kotlin.math.abs
 import kotlin.math.sin
 
 /**
@@ -42,13 +41,24 @@ internal class AvatarIdleMotion {
 
         val group = (t / BLINK_PERIOD).toInt().coerceIn(0, 99)
         val local = (t - group * BLINK_PERIOD).toFloat()
-        // Retain the 150 ms primary blink; every fifth group adds a separate earlier blink.
-        // In 460 seconds: 100 primary + 20 extra closures, about 15.65 per minute.
-        val extra = if (group % 5 == 2) pulse(local, 4.225f) else 0f
-        blinkWeight = maxOf(pulse(local, 4.525f), extra)
+        // Preserve 150-ms windows and the existing full-closure contract at 4.525 s.
+        // Close in 55 ms, hold for 20 ms, reopen in 75 ms; all joins are smooth.
+        // Every fifth group adds a second, earlier blink (100 + 20 per 460-second cycle).
+        val extra = if (group % 5 == 2) pulse(local, 4.205f) else 0f
+        blinkWeight = maxOf(pulse(local, 4.505f), extra)
     }
 
-    private fun pulse(t: Float, center: Float) = (1f - abs(t - center) / .075f).coerceIn(0f, 1f)
+    private fun pulse(t: Float, apex: Float): Float {
+        val offset = t - apex
+        val progress = when {
+            offset <= 0f -> (offset + .055f) / .055f
+            offset <= .020f -> 1f
+            else -> (.095f - offset) / .075f
+        }
+        val u = progress.coerceIn(0f, 1f)
+        // Minimum-jerk eyelid easing: no triangular cusp at start, apex or finish.
+        return (u * u * u * (u * (u * 6f - 15f) + 10f)).coerceIn(0f, 1f)
+    }
     private fun interpolate(a: Float, b: Float, amount: Float) = a + (b - a) * amount
 
     private fun target(slot: Int, salt: Int, amplitude: Float): Float {
