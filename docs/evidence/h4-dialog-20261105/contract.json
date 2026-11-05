@@ -1,0 +1,30 @@
+{
+  "schema": "continuum-h4-dialog-static-contract-v1",
+  "date": "2026-11-05",
+  "repository": "Ullmann27/device-ai",
+  "base": "93b92a33e583ba3d88079cb24325d7b00c8c5714",
+  "baseTree": "3a3691b36c6f843334597caacc79905e3517d913",
+  "scope": "TEST_ONLY",
+  "sourceBlobs": {
+    "agentActivity": "9ad943b9dc63c6692a036cda28cc13f0d1abc3d7",
+    "signal": "c8dcbcb54410c7c8b48fcf12cf0b1196a2fe8eb3",
+    "director": "641ebbc3586b95b28c037e152e013ede3572a450"
+  },
+  "staticSourceAssertions": {
+    "passed": 7,
+    "total": 7,
+    "engine": "V8",
+    "kind": "STATIC_TEXT_ONLY"
+  },
+  "newAndroidTests": {
+    "cases": 2,
+    "status": "NOT_RUN",
+    "claimedPass": 0
+  },
+  "containerEnvironment": "UNAVAILABLE_INFRA_TOOL_ERROR",
+  "testedSourceCodeChange": false,
+  "model": "NOT_RUN",
+  "apk": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "next": "Run unchanged AvatarStopNextTurnUiTest via Android shared lease, integrate selectively after C1 approval"
+}
