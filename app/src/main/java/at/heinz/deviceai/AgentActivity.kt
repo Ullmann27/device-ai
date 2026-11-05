@@ -132,6 +132,9 @@ class AgentActivity : Activity() {
     )
 
     companion object {
+        /** One ordered writer for the persistent central-chat transcript (#568), shared across Activity instances. */
+        internal val chatTranscriptIo: java.util.concurrent.ExecutorService =
+            java.util.concurrent.Executors.newSingleThreadExecutor { java.lang.Thread(it, "continuum-chat-transcript").apply { isDaemon = true } }
         /** Last spoken piece when a reply exceeds the speech queue capacity (#566 review). */
         private const val SPOKEN_REST_IN_CHAT = "Der Rest der Antwort steht im Chat."
         @Volatile private var crashHandlerInstalled = false
@@ -423,6 +426,9 @@ class AgentActivity : Activity() {
     private val modeButtons = linkedMapOf<AssistantMode, Button>()
     private var mode = AssistantMode.AUTO
     @Volatile private var sessionId = UUID.randomUUID().toString()
+    private val chatTranscripts by lazy {
+        at.heinz.deviceai.cognitive.LocalChatTranscriptStore(java.io.File(filesDir, "chat-history"))
+    }
     private val sessionResetLifetime = java.util.concurrent.atomic.AtomicBoolean(true)
     private var busy = false
     private var activeLocalRequest = false
@@ -529,6 +535,12 @@ class AgentActivity : Activity() {
         savedInstanceState?.getString("ctx3_chat_id_v1")?.takeIf {
             Regex("[a-f0-9-]{36}").matches(it)
         }?.let { sessionId = it }
+            // #568: after an app exit or process death the same central conversation continues.
+            ?: runCatching {
+                chatTranscriptIo.submit(java.util.concurrent.Callable {
+                    chatTranscripts.activeConversation { sessionId }
+                }).get(2, java.util.concurrent.TimeUnit.SECONDS)
+            }.getOrNull()?.let { sessionId = it }
         // Only a recreated instance of the same chat restores its last local answer anchor.
         if (savedInstanceState != null) {
             at.heinz.deviceai.cognitive.LocalDialogueRetention.replyFor(sessionId)?.let {
@@ -644,7 +656,8 @@ class AgentActivity : Activity() {
         // the original SHA-256 is the selected catalog entry.
         restoreOriginalGemmaOnOpen()
         showPendingReceiptReview()
-        addHomeGreeting(
+        restoreChatTranscript()
+        addHomeGreeting(persist = false, value =
             "Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. " +
                 "Sprich oder schreibe mit mir. Mit „Merke dir: ...“ kannst du mein lokales Wissen ausdrücklich erweitern. " +
                 "Mit „Was kannst du?“ erfährst du meine aktuellen Fähigkeiten."
@@ -2032,7 +2045,8 @@ class AgentActivity : Activity() {
         selectedBot = null
         chatContainer.removeAllViews()
         input.hint = "Was soll ich auf deinem Gerät tun?"
-        addBubble("JARVIS · Zentraler Dialog", false)
+        addBubble("JARVIS · Zentraler Dialog", false, persist = false)
+        restoreChatTranscript()
     }
 
     /** Addressing is metadata selection, never an action grant. Runs before owner-only routers. */
@@ -10423,6 +10437,9 @@ class AgentActivity : Activity() {
                 return@onLearningIo
             }
             sessionId = UUID.randomUUID().toString()
+            // The previous conversation stays stored; only the active pointer moves (#568).
+            val newConversation = sessionId
+            chatTranscriptIo.execute { runCatching { chatTranscripts.setActive(newConversation) } }
             clearTaskEffects()
             workOutcome = null; workTool = null; workToolCall = null
             workStarted = null; workElapsed = 0L
@@ -10434,7 +10451,7 @@ class AgentActivity : Activity() {
             planCard.visibility = View.GONE
             chatContainer.removeAllViews()
             showHomeDashboard()
-            addHomeGreeting("Neue Sitzung gestartet. Was soll ich tun?")
+            addHomeGreeting("Neue Sitzung gestartet. Was soll ich tun?", persist = false)
             addToolActivity("Neue Sitzung")
         }
     }
@@ -10521,12 +10538,28 @@ class AgentActivity : Activity() {
 
     /** Startup/session greetings remain available in chat without taking space
      * from the home dashboard. Every actual action result opens the conversation. */
-    private fun addHomeGreeting(value: String) {
-        addBubble(value, user = false)
+    private fun addHomeGreeting(value: String, persist: Boolean = true) {
+        addBubble(value, user = false, persist = persist)
         speakBootstrap(value)
     }
 
-    private fun addBubble(value: String, user: Boolean) {
+    /** Re-renders the stored central conversation as text only; nothing is re-run or re-stored (#568). */
+    private fun restoreChatTranscript() {
+        if (selectedBot != null) return
+        val id = sessionId
+        val entries = runCatching {
+            chatTranscriptIo.submit(java.util.concurrent.Callable { chatTranscripts.load(id) })
+                .get(2, java.util.concurrent.TimeUnit.SECONDS)
+        }.getOrDefault(emptyList())
+        entries.forEach { addBubble(it.text, it.user, persist = false) }
+    }
+
+    private fun addBubble(value: String, user: Boolean, persist: Boolean = true) {
+        // Central chat only; bot dialogues have their own ChiefBotProfileStore history.
+        if (persist && selectedBot == null) {
+            val id = sessionId; val at = System.currentTimeMillis()
+            chatTranscriptIo.execute { runCatching { chatTranscripts.append(id, user, value, at) } }
+        }
         val row = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = if (user) Gravity.END else Gravity.START
