@@ -1,0 +1,41 @@
+{
+  "schema": "h4-source-bound-pcm-host-v1",
+  "date": "2026-11-05",
+  "common": {
+    "pr": 544,
+    "head": "8a903fbebe605716b6163da35e1c3b2129af40a4",
+    "signalBlob": "c8dcbcb54410c7c8b48fcf12cf0b1196a2fe8eb3"
+  },
+  "donor": {
+    "pr": 526,
+    "head": "5a18f74f18d9b7d927f8c622052369496153829f",
+    "signalBlob": "8f3da133e8d7532c32d2cb5c45ab9bcd0ef8f294"
+  },
+  "helperBlob": "313530d45824a01ccf3b551891c71f327ecb0403",
+  "hostTestGitBlob": "2b886c994babbe601cab7941f2e5ae5f628c80f1",
+  "hostTestSha256": "cf47307f7dcf1d1d2cf4df7a8be532d66e72b1a77015f61e28eeec94e121e4fb",
+  "compiler": "kotlinc-jvm 1.9.0",
+  "jdk": "21.0.12.1",
+  "command": "kotlinc HologramAudio.kt TtsHologramSignal.kt MeasuredPcmHost.kt -include-runtime -d voice.jar && java -jar voice.jar",
+  "original": {
+    "compileExit": 0,
+    "runExit": 1,
+    "pass": 1,
+    "fail": 1,
+    "expectedRed": true,
+    "stdoutSha256": "1580791082f6bc9cd0096c171c86e13e132a3f5670b7dee49c4a9df10205801f"
+  },
+  "donorRun": {
+    "compileExit": 0,
+    "runExit": 0,
+    "pass": 12,
+    "fail": 0,
+    "stdoutSha256": "8238736981160818f6bdfd66a6573a29c0e6c71806a346f3151b2ec514046a0b"
+  },
+  "androidUi": "NOT_RUN",
+  "physicalFold7": "NOT_RUN",
+  "liveTts": "NOT_RUN",
+  "models": "NOT_RUN",
+  "productionChanges": 0,
+  "note": "Host signal contract only; C1/#545 own caller integration."
+}

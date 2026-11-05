@@ -1,0 +1,13 @@
+ok 1 - required nullable PCM evidence interface exists
+ok 2 - legacy level API cannot distinguish unavailable from silence
+ok 3 - no PCM before synthesis is unavailable
+ok 4 - PCM before audible anchor is unavailable
+ok 5 - measured silent PCM is zero rather than missing
+ok 6 - incorrect utterance cannot read current signal
+ok 7 - audible nonzero PCM is measured
+ok 8 - finished buffer has measured zero
+ok 9 - old utterance cannot read next utterance
+ok 10 - new utterance has isolated PCM
+ok 11 - delayed old callbacks cannot corrupt new signal
+ok 12 - stopped utterance cannot expose stale PCM
+TOTAL=12 PASS=12 FAIL=0
