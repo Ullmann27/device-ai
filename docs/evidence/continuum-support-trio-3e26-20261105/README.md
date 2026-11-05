@@ -23,3 +23,8 @@ After those executions, the previously accessible workspace and /tmp source/evid
 ## Remaining acceptance
 
 The primary implementation team owns #544/#545/#546. Its reported AvatarExpression.WARM compiler mismatch, speech/consent integration and ambient restart require product fixes and new tests on the resulting exact combined source. This support branch does not overwrite those files. These results establish no Android compilation, full JUnit/Robolectric, NewApi lint, GPU rendering, audible conversation, enrolled identity recognition, original-signed APK or physical Fold7 acceptance. Main, signing, installed app, update channel and user files were not changed.
+
+
+## Final source-review handoffs (not additional runtime tests)
+
+See `docs/research/omega/CONTINUUM-SUPPORT-TRIO-3E26-20261105.md`, the PCM intake, and ambient lifecycle matrix. `update-audit.json` records eight gate groups at 7ecdafac and the unchanged audited-file boundary to 08aa76e. `render-readonly-observation.json` preserves root's independent service/deploy readback. None of these source/API reviews extends the #543 test result to a later candidate, validates live APK bytes, or establishes physical Fold7 acceptance.
