@@ -1,0 +1,11 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern=resumable single|finite scheduler records|changed refs restart|scan state",
+    ".github/continuum/branch-bots-cli.test.mjs"
+  ],
+  "exitCode": 1,
+  "time": "2026-11-04T21:30:45.220821+00:00"
+}

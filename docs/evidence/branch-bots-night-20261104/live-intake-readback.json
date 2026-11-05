@@ -1,0 +1,99 @@
+{
+  "schema": "continuum-branch-night-intake-readback",
+  "version": 1,
+  "date": "2026-11-04",
+  "repo": "Ullmann27/device-ai",
+  "sourceBaseline": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
+  "testedCodeHead": "c216ebcd4726fefd221a6ee347699c9a1280fc47",
+  "publishedNightHead": "793e2ab77661c239fbc0667db71757964002f142",
+  "selectedIntakePreviouslyTested": "ca80459a3f6695c8fecff4a217fbe93318452121",
+  "currentIntakeHead": "a6b314d3e8fac796ce7059a336bf5e79eb622ede",
+  "currentC1Head": "4d74de6c5ca04582ff455356440046e9148acbb0",
+  "verification": "GITHUB_PINNED_BLOB_IDENTITY_READBACK_ONLY",
+  "files": [
+    {
+      "path": ".github/continuum/branch-bots-cli.mjs",
+      "baselineBlob": "d9174f55c45013bd6a0db2b979eff3033d95cc9b",
+      "intakeBlob": "d9174f55c45013bd6a0db2b979eff3033d95cc9b",
+      "nightBlob": "3ebb541477ff4b817a922a4fec01d6ee0b031721",
+      "intakePreimageMatchesBaseline": true,
+      "nightDeltaNotAdopted": true
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.test.mjs",
+      "baselineBlob": "b1f85c32abce041b595f34fa34a724824cfbd3a5",
+      "intakeBlob": "b1f85c32abce041b595f34fa34a724824cfbd3a5",
+      "nightBlob": "ce3ba2c97935e68933648838a68a0bf191b00c82",
+      "intakePreimageMatchesBaseline": true,
+      "nightDeltaNotAdopted": true
+    },
+    {
+      "path": ".github/continuum/branch-discovery.mjs",
+      "baselineBlob": "45e8c8e9d19405117207678598673d7f1e12dcec",
+      "intakeBlob": "45e8c8e9d19405117207678598673d7f1e12dcec",
+      "nightBlob": "98697dbc54189796b9fb3c1ffa6b2d849e6271b3",
+      "intakePreimageMatchesBaseline": true,
+      "nightDeltaNotAdopted": true
+    },
+    {
+      "path": ".github/continuum/branch-discovery.test.mjs",
+      "baselineBlob": "27666c5ce287b663dd92e0e875510808065c3076",
+      "intakeBlob": "27666c5ce287b663dd92e0e875510808065c3076",
+      "nightBlob": "50d76399ede405fc436aee30b912fbead4d57da7",
+      "intakePreimageMatchesBaseline": true,
+      "nightDeltaNotAdopted": true
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "baselineBlob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+      "intakeBlob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+      "nightBlob": "e9520fc95ecce6aa3864d36ef4da660f194dd2d7",
+      "intakePreimageMatchesBaseline": true,
+      "nightDeltaNotAdopted": true
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.mjs",
+      "baselineBlob": "c273b39943047b2b1e658eabe4c77646de9c77c8",
+      "intakeBlob": "c273b39943047b2b1e658eabe4c77646de9c77c8",
+      "nightBlob": "ee7fb58a9503d6137b52116b64e350876abf2325",
+      "intakePreimageMatchesBaseline": true,
+      "nightDeltaNotAdopted": true
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.test.mjs",
+      "baselineBlob": "783cbb7bd26fcd2bb1b56d9ff32869e4318d9d35",
+      "intakeBlob": "783cbb7bd26fcd2bb1b56d9ff32869e4318d9d35",
+      "nightBlob": "c8ea91d51aac83d43d71103b3cba86c7ee483aeb",
+      "intakePreimageMatchesBaseline": true,
+      "nightDeltaNotAdopted": true
+    }
+  ],
+  "summary": {
+    "preimagesVerified": 7,
+    "nightBlobsDifferent": 7,
+    "alreadyAdopted": 0,
+    "conflictsAgainstExactPreimages": 0
+  },
+  "caveat": "No new checkout patch execution, runtime tests, APK, compiler or device test in this audit. GitHub blob identity is not end-to-end acceptance. C1 remains sole shared integrator.",
+  "integrationPatch": "docs/evidence/branch-bots-night-20261104/integration-delta.patch",
+  "integrationPatchSha256": "68a8b0bff7d3a09d7f58c4ac16a119e8d0cd84cdc2935e966d18eb0551bb0669",
+  "historicalSelectedOverlay": {
+    "head": "ca80459a3f6695c8fecff4a217fbe93318452121",
+    "testCases": 202,
+    "pass": 202,
+    "fail": 0,
+    "skip": 0
+  },
+  "currentAndroidGateFromPr527": {
+    "head": "ca80459a3f6695c8fecff4a217fbe93318452121",
+    "tests": 3011,
+    "pass": 2984,
+    "fail": 8,
+    "skip": 19,
+    "status": "FAIL"
+  },
+  "notes": [
+    "A later #527 head includes newer UI fixtures; no current full Android PASS is claimed.",
+    "Current C1 #519 is separately advancing UI and worker slices; import may only be done by C1 after its exact-source checks."
+  ]
+}

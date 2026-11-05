@@ -1,0 +1,526 @@
+{
+  "schema": "continuum-branch-bots-patch-manifest-v1",
+  "repository": "Ullmann27/device-ai",
+  "sourceBaseline": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "baselineTree": "72e62267ba22309d60ad13abb3e2a5c6a155e544",
+  "localMaterialization": "SELECTED_FILES_NOT_A_FULL_ANDROID_CHECKOUT",
+  "verifiedPatchFiles": [
+    {
+      "path": ".github/continuum/branch-discovery.mjs",
+      "baselineBlob": null,
+      "gitBlob": "45e8c8e9d19405117207678598673d7f1e12dcec",
+      "sha256": "04852134888a7d76d87b19f0c2d8225665bfbf8935d27bce328cbf26ecc2740b",
+      "bytes": 15030
+    },
+    {
+      "path": ".github/continuum/branch-discovery.test.mjs",
+      "baselineBlob": null,
+      "gitBlob": "27666c5ce287b663dd92e0e875510808065c3076",
+      "sha256": "adc47b6decae18715c5d11b69a34e88fb3af2932c19aa91dd7fad28c41211bf0",
+      "bytes": 12794
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.mjs",
+      "baselineBlob": null,
+      "gitBlob": "b6b786ab68645dad1e1ad3f09e7f5642882a83d8",
+      "sha256": "ca01894379f4bfbe74d0a9472eaeb66b6380c1c31b1c1589f37f3e3c6dbe1f85",
+      "bytes": 7299
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.test.mjs",
+      "baselineBlob": null,
+      "gitBlob": "0c947fbe6a7fdbb071b2eaebcb9f218a1b7f1d1e",
+      "sha256": "35d9ffcf7a6f42a46ee77750d34235aad8b4ccb346d28326f5b238e06a035a4b",
+      "bytes": 5546
+    },
+    {
+      "path": ".github/continuum/repair-critic.mjs",
+      "baselineBlob": "472f0721fc86507def7de7b3ea4e87a2ec6503ab",
+      "gitBlob": "f40fec66618c1315e4144cf0e6d196a16afd3409",
+      "sha256": "b0a608fd6d55840e65a741f74bbe562768c16b05ca6aa6594ea5fb740a7c5097",
+      "bytes": 7525
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator.mjs",
+      "baselineBlob": "c6927f90e510e8cb62e214655f84ff79e7901425",
+      "gitBlob": "31f7a598d4d560e0374b9e8656446b30c512e611",
+      "sha256": "0ef121bb5dfba45a800f73543bacb0c6fbded3b4a4020a674df999d7503131dd",
+      "bytes": 15246
+    },
+    {
+      "path": ".github/continuum/coding-service-worker.mjs",
+      "baselineBlob": "0f6db2f363530124d0886c7bfc812a02f2099bc7",
+      "gitBlob": "0d3097bd2b9422993849fb6882868e1d431b65b6",
+      "sha256": "4de2311305c1dd536e185afe06bdaeb44081324c96243f1b176cbcdcc4e5b062",
+      "bytes": 6235
+    },
+    {
+      "path": ".github/continuum/coding-service-reader.mjs",
+      "baselineBlob": "6368654ed693d2ada9622c45de0fd1942c24d9c8",
+      "gitBlob": "eef34b205f791e1b8e82871020635400addfbde4",
+      "sha256": "970b9461a893bf81c72ef23630e991c4142e212f9a2056f17453bb5e2a7e32b4",
+      "bytes": 14432
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator-failure-report.test.mjs",
+      "baselineBlob": null,
+      "gitBlob": "8ebcc0900571c78fdf279038a40fff7706a491be",
+      "sha256": "21b472c0dc965f4896e42e967a362baaf156ccf3b67f5a79ec0c59439de6aa12",
+      "bytes": 16936
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "baselineBlob": "3dc5d63077fce0244e2bdeeb20b310aa762d2cfa",
+      "gitBlob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+      "sha256": "a6f9cf6b556386ca7f04eeedaa97fdf277817ed160f40f7a6945d4b28641e71e",
+      "bytes": 14729
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "baselineBlob": null,
+      "gitBlob": "13c5661432115c883fc2b64161757aad9d1128f4",
+      "sha256": "8c7cf6ff3391da4c5742edb3650459333985c60b41faa9ee98d1a102c4f1c219",
+      "bytes": 5251
+    }
+  ],
+  "nodeSyntaxChecks": [
+    {
+      "path": ".github/continuum/branch-discovery.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/branch-discovery.test.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.test.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/repair-critic.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/coding-service-worker.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/coding-service-reader.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator-failure-report.test.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "exitCode": 0
+    }
+  ],
+  "gitDiffCheckExitCode": 0,
+  "originalDependenciesVerifiedByBlob": true,
+  "verification": "node-tests.json",
+  "networkFetchByDiscovery": false,
+  "automaticTaskAcceptance": false,
+  "androidCompilationExecuted": false,
+  "deviceTestsExecuted": false,
+  "apkCreated": false,
+  "verifiedUnchangedInputs": [
+    {
+      "path": ".github/continuum/teamleader-cli.mjs",
+      "gitBlob": "1937f58b8cb8a4a123e1bd9c8ef1e712d0d0d13a"
+    },
+    {
+      "path": ".github/continuum/coding-service.mjs",
+      "gitBlob": "3ed14b5f495a4a306d3706aa70755aa1fa0c5db8"
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-assignment.mjs",
+      "gitBlob": "155553b2f21fa283655385aa59a297d9b7eb8ce3"
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-report.mjs",
+      "gitBlob": "10154b536a4a18624d5897b357a2bdc4c5bf2b70"
+    },
+    {
+      "path": ".github/continuum/local-integration-status.mjs",
+      "gitBlob": "50b38c5b6f1b93de4245aecee9ca647378f6d283"
+    },
+    {
+      "path": ".github/continuum/autonomous-teamleader.mjs",
+      "gitBlob": "3921067b0e23f8fddd66fb65724bfb374fc0416b"
+    },
+    {
+      "path": ".github/continuum/repair-cycle-safety.mjs",
+      "gitBlob": "a2a9ea34fa58793edba950c816b6004a4189945f"
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator.test.mjs",
+      "gitBlob": "5db1808f67bebaa497b7a6a99e0ec3d65102da1b"
+    },
+    {
+      "path": ".github/continuum/coding-task.mjs",
+      "gitBlob": "51c3f19832f6d0e72c316dbc0e27a0257e66b6a9"
+    },
+    {
+      "path": ".github/continuum/coding-service.test.mjs",
+      "gitBlob": "c62bf55e5aef37605ddef210a6c0d713f4676ac3"
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-assignment.test.mjs",
+      "gitBlob": "043eb0596c336e43a8f4307f28d61bfd95302187"
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-report.test.mjs",
+      "gitBlob": "f85576a51b61515f3c7b4096e1d5eee1d5b4f7c0"
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.test.mjs",
+      "gitBlob": "d325c114c5a35a5d1ce21969f5aa58d53cf4ad56"
+    },
+    {
+      "path": ".github/continuum/backlog-repair-worker.mjs",
+      "gitBlob": "05a5ac8efc427e0147fdc41218eb08506041326a"
+    },
+    {
+      "path": ".github/continuum/teamleader-review-handoff.mjs",
+      "gitBlob": "5e5bbccfb2d71555ab47504863fa13ef9eaaa2f4"
+    },
+    {
+      "path": ".github/continuum/ccc1-worker.mjs",
+      "gitBlob": "bbd3f2ecc0122b62b7a0d27e57eb789d21085a57"
+    },
+    {
+      "path": "tools/genesis-workspaces/adapter-bridge.mjs",
+      "gitBlob": "79c0d7fca2a28e636743bc3c5110be8e13da3af5"
+    },
+    {
+      "path": ".github/continuum/coding-service-store.mjs",
+      "gitBlob": "00baf139506f79b6c31b314064cac1ac6d7b3a20"
+    },
+    {
+      "path": ".github/continuum/development-backlog.mjs",
+      "gitBlob": "64f798d5cf86ec7b541bd5135972f30fef1be746"
+    },
+    {
+      "path": ".github/continuum/ccc1-journal.mjs",
+      "gitBlob": "1a2ffbfc932b2ec59d5522b220ea92bfe7ccb384"
+    },
+    {
+      "path": "scripts/continuum-typed-coding-bridge.mjs",
+      "gitBlob": "b901deac48b0c3e781bb91e750bf371ced24eb83"
+    },
+    {
+      "path": ".github/continuum/ccc1-orchestrator.mjs",
+      "gitBlob": "23cd0780c4e8f885bf4ea04728954a381e9b461e"
+    },
+    {
+      "path": ".github/continuum/ccc1-recovery.mjs",
+      "gitBlob": "76a2b3d9af5f54bd4bf4e54995aa7502138eb8e6"
+    },
+    {
+      "path": ".github/continuum/ccc1-path-policy.mjs",
+      "gitBlob": "5e7502d39634acbd3fcd8135f997f96d9227cc23"
+    },
+    {
+      "path": "scripts/continuum-mobile-coding.mjs",
+      "gitBlob": "71006a6517701b2bd36dcdf18875541de6a77405"
+    },
+    {
+      "path": ".github/continuum/ccc1-verifier.mjs",
+      "gitBlob": "3860fd7c58480ca7b125fe7c26ddb50f91f10c0a"
+    },
+    {
+      "path": ".github/continuum/repair-loop.mjs",
+      "gitBlob": "baf1eeb8c68f80f2e508738a6b3b71f3bdc1f88d"
+    },
+    {
+      "path": ".github/continuum/ansk-baseline-triage.mjs",
+      "gitBlob": "698e34ea07db12b8cc43b70ec0bdd01b02518567"
+    },
+    {
+      "path": ".github/continuum/teamleader-mcp-preflight.mjs",
+      "gitBlob": "8cba1914419649ceac72b7360df38b5965924b55"
+    },
+    {
+      "path": ".github/continuum/backlog-investigator.mjs",
+      "gitBlob": "ee9c9ef4a38d1cf7b394c086019c4a8d45c31e24"
+    },
+    {
+      "path": ".github/continuum/teamleader-handoffs.mjs",
+      "gitBlob": "64e3074bc0ef2fb7c19835102f56e4e62bfd1818"
+    },
+    {
+      "path": ".github/continuum/shared-build-lease.mjs",
+      "gitBlob": "0ae4599e6fe897c8c8392a2d604e82b9aafaa945"
+    },
+    {
+      "path": ".github/continuum/repair-ledger.mjs",
+      "gitBlob": "3bc9107ef05a1da77db48d1bdacaf731cb7f7606"
+    },
+    {
+      "path": ".github/continuum/code-analyzer.mjs",
+      "gitBlob": "5c245dd38b0758db246a161812dcc96b53fd1acd"
+    },
+    {
+      "path": ".github/continuum/development-planner.mjs",
+      "gitBlob": "03f6b4c88bf6507cf22ad96fcfb1e10fee56183e"
+    },
+    {
+      "path": ".github/continuum/owner-contract-worker.mjs",
+      "gitBlob": "44a47c9a5952670459b09d49bf896c589647b3ef"
+    },
+    {
+      "path": ".github/continuum/cefr-repair-ranker.mjs",
+      "gitBlob": "30843cb4fd447195ec9e46a8f68ef8c1dcf91277"
+    },
+    {
+      "path": ".github/continuum/cefr-dev-checkpoint.mjs",
+      "gitBlob": "9f601180bdcea29158dcc265450e34b739ee9b1c"
+    },
+    {
+      "path": ".github/continuum/repair-publish.mjs",
+      "gitBlob": "cf7b447147f32e21acd2586b3ea929882e3b03ec"
+    },
+    {
+      "path": ".github/continuum/cefr-shadow-benchmark.mjs",
+      "gitBlob": "0b8bd68fc1bbec89e2caab239c84620dea54bf9d"
+    },
+    {
+      "path": ".github/continuum/coding-provider.mjs",
+      "gitBlob": "b481ca578a10c22743e57c8d27d7fab1e6240998"
+    },
+    {
+      "path": ".github/continuum/coding-agent-loop.mjs",
+      "gitBlob": "c31689ce331db9ecc3180439a3daf865505dbdc6"
+    },
+    {
+      "path": ".github/continuum/ccc1-interpreter.mjs",
+      "gitBlob": "f1e9c6876732afbc10b53ac7335eb2c8c92cc916"
+    },
+    {
+      "path": ".github/continuum/ccc1-envelope.mjs",
+      "gitBlob": "687e5b3f327fa4d6a0a61c4d2fcc209d41ec81ef"
+    },
+    {
+      "path": ".github/continuum/isolated-executor.mjs",
+      "gitBlob": "e1a50061683de286db8edf20ecb1acaa76ba22e1"
+    },
+    {
+      "path": ".github/continuum/ccc1-workspace.mjs",
+      "gitBlob": "3fe7a31db1f334be917303ade6cc477d2e63f688"
+    },
+    {
+      "path": ".github/continuum/ccc1-experience.mjs",
+      "gitBlob": "395e359bf9432d6fab53a0301707a46cea43ae53"
+    },
+    {
+      "path": ".github/continuum/ccc1-technical-recall.mjs",
+      "gitBlob": "ab0d5464c64beb26491da3f2c8a4b04f44e6eb9d"
+    },
+    {
+      "path": "scripts/continuum-local-model-pins.mjs",
+      "gitBlob": "5c15d69e618800a70787f0a27620d0b2696cd22e"
+    },
+    {
+      "path": ".github/continuum/repair-research-verifier.mjs",
+      "gitBlob": "262a03351919f43e8a9cf0eb496a4c97cd7aed3e"
+    },
+    {
+      "path": ".github/continuum/ccc1-redgreen-verifier.mjs",
+      "gitBlob": "54c2c3cedf150b3690580f7989ab3bad7f3c1a2c"
+    },
+    {
+      "path": ".github/continuum/behaviour-probe.mjs",
+      "gitBlob": "7d353a415b531dc8ce9cf64f299b162dde649938"
+    },
+    {
+      "path": ".github/continuum/code-index.mjs",
+      "gitBlob": "f7c7999a6f69b4ec4a05f95f11cd89be31d28caa"
+    },
+    {
+      "path": ".github/continuum/ccc1-local-preflight.mjs",
+      "gitBlob": "be1cdd32e990b5e6ff439a273ab8a17e5d7d7eab"
+    },
+    {
+      "path": ".github/continuum/ccc1-gate.mjs",
+      "gitBlob": "d6ac7c7c053055edbc7ab3007b0d9f67a531a962"
+    },
+    {
+      "path": ".github/continuum/backlog-cli.mjs",
+      "gitBlob": "64d6dd3a48d769c475d919c1828da926fae9ad08"
+    },
+    {
+      "path": ".github/continuum/owned-project-evidence.mjs",
+      "gitBlob": "6e1d4aacac12c2dbf87b1272842b6dcc4dd7ce88"
+    },
+    {
+      "path": ".github/continuum/repair-diagnostics.mjs",
+      "gitBlob": "ecc826ef24804524c10394d5889830de9d1dc936"
+    },
+    {
+      "path": ".github/continuum/repair-strategies.mjs",
+      "gitBlob": "53631d4b6cb0896e78e749310d501926f6dd9af2"
+    },
+    {
+      "path": ".github/continuum/candidate-kotlin-syntax.mjs",
+      "gitBlob": "6623e100c28ff5f189d7e449b07a7df52cd2d135"
+    },
+    {
+      "path": "scripts/continuum-mobile-builder.mjs",
+      "gitBlob": "b94013980ebef24d0dc3e3455a3a1131b91d04ab"
+    },
+    {
+      "path": ".github/continuum/local-numeric-patch.mjs",
+      "gitBlob": "ccc85b7b60e6635958a7798557cd4dc20510569f"
+    },
+    {
+      "path": ".github/continuum/ansk-lab-contract.mjs",
+      "gitBlob": "14cc73f75ab06de8f182c0e7db6278d50aa6f6e8"
+    },
+    {
+      "path": ".github/continuum/mcp-adapter.mjs",
+      "gitBlob": "74bf88d961d9631e8cd84783fa01d68e7beb45fd"
+    },
+    {
+      "path": ".github/continuum/repair-experience.mjs",
+      "gitBlob": "eccbc10cb5a4670a1f55b23d3f692d82a2df7c10"
+    },
+    {
+      "path": ".github/continuum/kotlin-tokenizer.mjs",
+      "gitBlob": "1e5baf93f750da0b2c2418d355f927e2669fa9e1"
+    },
+    {
+      "path": ".github/continuum/node-contract-synthesizer.mjs",
+      "gitBlob": "3461f542a7bfa72ae7364abaeb130215e713e324"
+    },
+    {
+      "path": ".github/continuum/cre-encoder.mjs",
+      "gitBlob": "3b8e88d8b7a0d967689307c45e4f8db43bcaac5d"
+    },
+    {
+      "path": "scripts/continuum-local-model-job.mjs",
+      "gitBlob": "441ec43cddb5d4d5d0713a8c2df652b57aa32ab1"
+    },
+    {
+      "path": "scripts/continuum-local-model-observation.mjs",
+      "gitBlob": "33dc2b6ef30c72407cc35ab43ba397d8edbd0ca5"
+    },
+    {
+      "path": "scripts/continuum-local-brain.mjs",
+      "gitBlob": "6c3b23d264f664c06d8a80eb7f5d26c7d972e15c"
+    },
+    {
+      "path": ".github/continuum/coding-context.mjs",
+      "gitBlob": "512e608c4e181c93a5a9bf5acbbe1482d591600a"
+    },
+    {
+      "path": "scripts/continuum-deepseek-bridge.mjs",
+      "gitBlob": "d6f18f4a19ee0d2144f3061035fd249a81891996"
+    },
+    {
+      "path": "scripts/continuum-deepseek-tier-plan.mjs",
+      "gitBlob": "fa5b423e182ded0de80fbc3b83b2da42a2ab6c85"
+    },
+    {
+      "path": ".github/continuum/risk-file-ranker.mjs",
+      "gitBlob": "9f80f0dde1eab44c5ea4193e404ea09d90d0aeb0"
+    },
+    {
+      "path": ".github/continuum/contract-test-template.mjs",
+      "gitBlob": "f8a9fa5b05abdee2b608b9fccaac47ad66003a41"
+    },
+    {
+      "path": ".github/continuum/kotlin-delegate-acceptance.mjs",
+      "gitBlob": "3c43a2279be535775ec84e4b4764cd07e52f9ea0"
+    },
+    {
+      "path": ".github/continuum/m4-junit-evidence.mjs",
+      "gitBlob": "a78817d35759598b4dfae31325811972fe5f2f4f"
+    },
+    {
+      "path": "scripts/continuum-project-plan.mjs",
+      "gitBlob": "f3d3510975c1a7a141947d2a44dc89d6f618648f"
+    },
+    {
+      "path": ".github/continuum/repair-engine.mjs",
+      "gitBlob": "5d2a1e3109b972d1d2fabe95f0c0c7681c621385"
+    },
+    {
+      "path": ".github/continuum/ccc1-cli.mjs",
+      "gitBlob": "715d63179fd5174d8b5444819c4e2226dcc87878"
+    },
+    {
+      "path": ".github/continuum/relational-memory-data.mjs",
+      "gitBlob": "f4632fa2343ec97415b88918272a76004e5262c2"
+    },
+    {
+      "path": "scripts/continuum-gguf-preflight.mjs",
+      "gitBlob": "3b7471cf69983adc8b41f5e6a902b9d150cab08d"
+    },
+    {
+      "path": "scripts/continuum-gguf.mjs",
+      "gitBlob": "82bdb06b50548db083ceb2c02915617abdd0f16c"
+    },
+    {
+      "path": "scripts/continuum-m2-model-preflight.mjs",
+      "gitBlob": "bbfd4ffc4e5f6c6c623e1ae6317f1d1e66d74fa2"
+    },
+    {
+      "path": "scripts/continuum-owned-process.mjs",
+      "gitBlob": "38ab306d3ea96bf3514309444d42bb2f964b1369"
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.mjs",
+      "gitBlob": "15d448e47828c02b7a24c1b1b92c40ed3200776a"
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.test.mjs",
+      "gitBlob": "1b67da869f36cebb917f859d907b0f461ddf1c30"
+    },
+    {
+      "path": "scripts/continuum-mobile-builder.test.mjs",
+      "gitBlob": "c3a130d17624e213e8e73b35dc41bef1a63a540f"
+    },
+    {
+      "path": ".github/continuum/step-watchdog.mjs",
+      "gitBlob": "3839160d2d5c90d2d3cb8219cf250f1ecedf2c2d"
+    },
+    {
+      "path": ".github/continuum/isolated-profile-runner.mjs",
+      "gitBlob": "5de11f1dacddc2e8eadeffa4b49f486a5db76098"
+    },
+    {
+      "path": "scripts/continuum-isolation-kotlin-fixture.sh",
+      "gitBlob": "9586934c661b9baa1db1a34d359879a1b47dc749"
+    },
+    {
+      "path": "docs/CONTINUUM-CURRENT-STATE-20261031.md",
+      "gitBlob": "00e2b555ff23db33aebd781979f7dae63b212007"
+    },
+    {
+      "path": "docs/handoff/CONTINUUM_FRONTIER_COMPUTE_20261031.md",
+      "gitBlob": "c004622c31fe210aca7e180937463afc762e5d5c"
+    },
+    {
+      "path": "docs/CONTINUUM-EXPERIMENTVERTRAG.md",
+      "gitBlob": "1e10c49c019109a3ea1c790490328ecaf2fb6348"
+    },
+    {
+      "path": "docs/CONTINUUM-EXPERIMENTE.json",
+      "gitBlob": "bfd992f5d21e9543eaee486042692384a24ee254"
+    }
+  ]
+}

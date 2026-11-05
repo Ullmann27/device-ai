@@ -1,0 +1,92 @@
+{
+  "schema": "continuum-git-trace-environment-source-check",
+  "version": 1,
+  "sourceRepo": "Ullmann27/device-ai",
+  "baselineCommit": "ffb193998233a3bb1b7c620e95129decfb0980e7",
+  "patchCommit": "ef48e63713fa966710647dc4eadd4da671df39a8",
+  "platform": {
+    "node": "22.16.0",
+    "git": "2.47.3",
+    "runner": "local independent real Git fixture and source-extracted V8 checks, not complete repo"
+  },
+  "paths": [
+    {
+      "path": ".github/continuum/branch-discovery.mjs",
+      "oldGitBlob": "98697dbc54189796b9fb3c1ffa6b2d849e6271b3",
+      "newGitBlob": "2785415bcb6f107b32de0a0be1f1cff2837e6f48"
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "oldGitBlob": "e9520fc95ecce6aa3864d36ef4da660f194dd2d7",
+      "newGitBlob": "9b1384135f0747f9b573e0f6341abf966b8a66d0"
+    },
+    {
+      "path": ".github/continuum/branch-discovery.test.mjs",
+      "newGitBlob": "0d84236cda95c1cbc72114aa5cf0b930197a04b9"
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "newGitBlob": "a4c10466d47441e6ddedde470e4878212d073088"
+    }
+  ],
+  "negative": {
+    "reproducedWithRealGit": true,
+    "variables": [
+      "GIT_TRACE",
+      "GIT_TRACE_PERFORMANCE",
+      "GIT_TRACE2_EVENT",
+      "GIT_TRACE2_PERF"
+    ],
+    "observed": "Each variable wrote nonempty external trace file during original read-only Git status",
+    "sourceFunctionTraceKeys": {
+      "originalReader": 4,
+      "originalScheduler": 4,
+      "patchedReader": 0,
+      "patchedScheduler": 0
+    }
+  },
+  "targeted": {
+    "realGitFixture": {
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "rawTapSha256": "8daae19f680b1a9baec80ef5ba3134d7720d1c3249a99e9091f003b16fc6a2e2"
+    },
+    "patchedSourceSyntax": {
+      "files": 4,
+      "pass": 4
+    },
+    "sourceExtractedFunctions": {
+      "originalReaderTraceKeys": 4,
+      "originalSchedulerTraceKeys": 4,
+      "patchedReaderTraceKeys": 0,
+      "patchedSchedulerTraceKeys": 0,
+      "unchangedOtherSetting": true
+    }
+  },
+  "coverage": {
+    "integratedNode": "NOT_RUN",
+    "historical202Suite": "HISTORICAL_AT_OLDER_SOURCE",
+    "android": "NOT_RUN",
+    "apk": "NOT_RUN",
+    "device": "NOT_RUN"
+  },
+  "scope": {
+    "changes": 4,
+    "src": 2,
+    "tests": 2,
+    "appPaths": 0
+  },
+  "integration": {
+    "c1": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "r3": "19039e5b822310cd5ab1ce5cc5cb854822a1bcd3",
+    "adopted": false
+  },
+  "reproduce": [
+    "node --test .github/continuum/branch-discovery.test.mjs .github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+    "Run original and patched selected Node suite on complete source with same child process and Git binary"
+  ],
+  "notes": "Standalone local fixture exercises the same Git invocation and environment sanitation, not the whole imported module; V8 source extraction separately verifies exact original/patched source function subprocess environments."
+}

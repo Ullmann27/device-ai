@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: source pages eventually inspect every unique available commit
+not ok 1 - source pages eventually inspect every unique available commit
+  ---
+  duration_ms: 372.240522
+  type: 'test'
+  location: '/workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-discovery.test.mjs:140:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        '2c24c6615fd5a7ca118cf548825f122ed3e7dc25',
+    +   '2c24c6615fd5a7ca118cf548825f122ed3e7dc25',
+    +   '2c24c6615fd5a7ca118cf548825f122ed3e7dc25',
+    -   '5da8983372948e7bf04a7a17372e1e24f1ab1ec3',
+        '655443f5b59891af8ef0cb89f61520fad00508e5',
+    +   '655443f5b59891af8ef0cb89f61520fad00508e5',
+    +   '655443f5b59891af8ef0cb89f61520fad00508e5'
+    -   '69fb3269cacd0a5cce9b2e6d46be5f7eb233963e',
+    -   'a86f98acfd16dbe2489d915b4a2e838f867e7237'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: '2c24c6615fd5a7ca118cf548825f122ed3e7dc25'
+    1: '5da8983372948e7bf04a7a17372e1e24f1ab1ec3'
+    2: '655443f5b59891af8ef0cb89f61520fad00508e5'
+    3: '69fb3269cacd0a5cce9b2e6d46be5f7eb233963e'
+    4: 'a86f98acfd16dbe2489d915b4a2e838f867e7237'
+  actual:
+    0: '2c24c6615fd5a7ca118cf548825f122ed3e7dc25'
+    1: '2c24c6615fd5a7ca118cf548825f122ed3e7dc25'
+    2: '2c24c6615fd5a7ca118cf548825f122ed3e7dc25'
+    3: '655443f5b59891af8ef0cb89f61520fad00508e5'
+    4: '655443f5b59891af8ef0cb89f61520fad00508e5'
+    5: '655443f5b59891af8ef0cb89f61520fad00508e5'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-discovery.test.mjs:150:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: page cursors reject malformed positions and changed source identity
+not ok 2 - page cursors reject malformed positions and changed source identity
+  ---
+  duration_ms: 160.188926
+  type: 'test'
+  location: '/workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-discovery.test.mjs:163:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(cursor)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-discovery.test.mjs:166:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: last page keeps omitted paths and partial inventory explicit
+not ok 3 - last page keeps omitted paths and partial inventory explicit
+  ---
+  duration_ms: 134.35679
+  type: 'test'
+  location: '/workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-discovery.test.mjs:178:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(first.nextCursor)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-discovery.test.mjs:183:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 0
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 818.793526

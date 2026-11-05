@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/branch-discovery.test.mjs",
+    "scripts/continuum-release-host-preflight.test.mjs"
+  ],
+  "exitCode": 0,
+  "time": "2026-11-04T21:38:36.502246+00:00",
+  "tapSha256": "1d99a6e8e5177f5b5d4391dbe045ece296dab328b50dee5a307d1e7c9217728e"
+}

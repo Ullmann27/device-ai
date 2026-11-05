@@ -1,0 +1,40 @@
+{
+  "schema": "continuum-branch-integration-bots-verification-v1",
+  "startedAt": "2026-11-04T19:35:04.336548+00:00",
+  "durationSeconds": 7.216,
+  "sourceBaseline": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "checkoutKind": "SELECTED_EXACT_SOURCE_FILES_WITH_ISOLATED_PATCHES",
+  "fullRepositorySuite": false,
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/branch-bots-cli.test.mjs",
+    ".github/continuum/branch-discovery.test.mjs",
+    ".github/continuum/ccc1-bot-assignment.test.mjs",
+    ".github/continuum/ccc1-bot-report.test.mjs",
+    ".github/continuum/coding-orchestrator-failure-report.test.mjs",
+    ".github/continuum/coding-orchestrator.test.mjs",
+    ".github/continuum/coding-service.test.mjs",
+    ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+    ".github/continuum/local-teamleader-loop.test.mjs",
+    "scripts/continuum-mobile-builder.test.mjs",
+    "scripts/continuum-release-host-preflight.test.mjs"
+  ],
+  "exitCode": 0,
+  "counts": {
+    "tests": 138,
+    "suites": 0,
+    "pass": 138,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "nodeVersion": "v24.22.1",
+  "gitVersion": "git version 2.52.0",
+  "androidCompilationExecuted": false,
+  "deviceTestsExecuted": false,
+  "apkCreated": false,
+  "logSha256": "b0fcfbb50e9de3f378dd06865c210c6787374686ba444b90d034b0fb6168c001"
+}

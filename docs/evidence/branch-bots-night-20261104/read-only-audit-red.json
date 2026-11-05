@@ -1,0 +1,11 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern=release source audit",
+    "scripts/continuum-release-host-preflight.test.mjs"
+  ],
+  "exitCode": 1,
+  "time": "2026-11-04T21:38:15.701792+00:00"
+}

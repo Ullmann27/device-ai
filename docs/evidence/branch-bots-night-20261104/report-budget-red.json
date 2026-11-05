@@ -1,0 +1,11 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern=large branch inventories",
+    ".github/continuum/branch-bots-cli.test.mjs"
+  ],
+  "exitCode": 1,
+  "time": "2026-11-04T21:43:11.439232+00:00"
+}

@@ -1,0 +1,21 @@
+{
+  "sourceParent": "030578c0aede7745b24915a50a14a2eac8f4859b",
+  "files": [
+    {
+      "path": ".github/continuum/branch-bots-cli.mjs",
+      "gitBlob": "3ebb541477ff4b817a922a4fec01d6ee0b031721",
+      "sha256": "1e4e3741624f861a2807e0c1bc7674235944ad33df52247ccbaede8af6f4e19e"
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.test.mjs",
+      "gitBlob": "610650bc7e74d5cbd9a06dfff1b19775ae27c7de",
+      "sha256": "d1933a2ddacc0952aec754359d587852e63107bab5e488512a6c210e8124fc56"
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "gitBlob": "e9520fc95ecce6aa3864d36ef4da660f194dd2d7",
+      "sha256": "e449b39c2b8826176e798b6dce082b7e6e912c9b626780a77bf945265e65523d"
+    }
+  ],
+  "gitDiffCheck": 0
+}

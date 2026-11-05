@@ -17,7 +17,7 @@ const FORBIDDEN_PATHS=[
   /^\.github\/continuum\/(?:m4-|cegis-|cefr-|local-m4-)/,/^scripts\//,
   // The synthesis/template/gate pipeline must not modify its own rules or
   // verifier via an automatically proposed patch.
-  /^\.github\/continuum\/(development-backlog|autonomous-teamleader|backlog-repair-worker|owner-contract-worker|node-contract-synthesizer|contract-test-template|teamleader-cli|backlog-cli|kotlin-delegate-synthesizer|kotlin-delegate-acceptance|owner-kotlin-preview|local-teamleader-loop)\.mjs$/,
+  /^\.github\/continuum\/(development-backlog|autonomous-teamleader|backlog-repair-worker|owner-contract-worker|node-contract-synthesizer|contract-test-template|teamleader-cli|backlog-cli|kotlin-delegate-synthesizer|kotlin-delegate-acceptance|owner-kotlin-preview|local-teamleader-loop|branch-discovery|branch-bots-cli)\.mjs$/,
   /(^|\/)(build\.gradle(\.kts)?|settings\.gradle(\.kts)?|gradle\.properties|local\.properties)$/,/^gradle\//,
   /AndroidManifest\.xml$/,/\.(jks|keystore|p12|pem|key)$/i,/^\.continuum\//,/(^|\/)\.git(\/|$)/,
   /(ToolGate|InternetConsent|SecureToken|Signer|Identity|Governance|Credential|Secret|Permission|ConsentPolicy)/i

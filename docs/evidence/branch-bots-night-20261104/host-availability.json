@@ -1,0 +1,18 @@
+{
+  "observedAtUtc": "2026-11-04T21:48:47.838259+00:00",
+  "sourceCommit": "c216ebcd4726fefd221a6ee347699c9a1280fc47",
+  "result": {
+    "hostReadyToAttemptQa": false,
+    "blockers": [
+      "EXPLICIT_JDK_NOT_FOUND",
+      "SDK36_NOT_FOUND",
+      "GRADLE8111_NOT_FOUND",
+      "NATIVE_AAPT2_NOT_FOUND"
+    ],
+    "androidCompilationExecuted": false,
+    "androidTestExecuted": false,
+    "apkSigned": false
+  },
+  "fullAndroidCheckout": false,
+  "buildAttempted": false
+}

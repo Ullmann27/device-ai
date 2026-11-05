@@ -6,11 +6,21 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {assertBranchSourceSafe} from '../.github/continuum/branch-discovery.mjs';
 const ORIGINS=new Set(['https://github.com/Ullmann27/device-ai',
  'https://github.com/Ullmann27/device-ai.git',
  'git@github.com:Ullmann27/device-ai.git',
  'ssh://git@github.com/Ullmann27/device-ai.git']);
 const PROTECTED=/^(?:main|master|prod|production|release)(?:$|\/)/i;
+function availableFile(file,executable=false){
+  if(typeof file!=='string'||!file)return false;
+  try{
+    const stat=fs.statSync(file);
+    if(!stat.isFile()||stat.size===0)return false;
+    fs.accessSync(file,executable?fs.constants.X_OK:fs.constants.R_OK);
+    return true;
+  }catch{return false;}
+}
 const safePath=(root,rel)=>{
   let p=root;
   for(const part of rel.split('/')){
@@ -53,6 +63,12 @@ export function inspectReleaseCheckout(root,expectedSha) {
     fs.realpathSync(base)!==base)throw Error('UNSAFE_CHECKOUT_PATH');
   if(path.resolve(git(base,['rev-parse','--show-toplevel']))!==base)
     throw Error('INCORRECT_GIT_ROOT');
+  let dirty=false;
+  try{assertBranchSourceSafe(base);}
+  catch(error){
+    if(error.message!=='DISCOVERY_SOURCE_DIRTY')throw error;
+    dirty=true;
+  }
   return evaluateReleaseSource({
     gradle:safePath(base,'app/build.gradle.kts'),
     runner:safePath(base,'scripts/continuum-fusion-full-regression.sh'),
@@ -60,7 +76,7 @@ export function inspectReleaseCheckout(root,expectedSha) {
     branch:git(base,['symbolic-ref','--quiet','--short','HEAD']),
     origin:git(base,['remote','get-url','origin']),
     sha:git(base,['rev-parse','HEAD']),expectedSha,
-    dirty:git(base,['status','--porcelain','--untracked-files=normal'])!==''
+    dirty
   });
 }
 export function inspectHostEnvironment(env=process.env) {
@@ -70,22 +86,23 @@ export function inspectHostEnvironment(env=process.env) {
   if(!env.JAVA_HOME||!fs.existsSync(path.join(env.JAVA_HOME,'bin','javac')))
     blockers.push('EXPLICIT_JDK_NOT_FOUND');
   else {
-    const java=spawnSync(path.join(env.JAVA_HOME,'bin','java'),['-version'],{encoding:'utf8',timeout:5000});
-    const javac=spawnSync(path.join(env.JAVA_HOME,'bin','javac'),['-version'],{encoding:'utf8',timeout:5000});
+    const java=spawnSync(path.join(env.JAVA_HOME,'bin','java'),['-version'],{env,encoding:'utf8',timeout:5000});
+    const javac=spawnSync(path.join(env.JAVA_HOME,'bin','javac'),['-version'],{env,encoding:'utf8',timeout:5000});
     if(java.status!==0||!/version "17\./.test(java.stderr)||javac.status!==0||!/javac 17\./.test(javac.stdout+ ' '+javac.stderr))
       blockers.push('JDK17_REQUIRED');
   }
   const sdk=env.ANDROID_HOME || env.ANDROID_SDK_ROOT;
-  if(!sdk||!fs.existsSync(path.join(sdk,'platforms','android-36','android.jar')))
+  if(!sdk||!availableFile(path.join(sdk,'platforms','android-36','android.jar')))
     blockers.push('SDK36_NOT_FOUND');
   const gradle=env.CONTINUUM_GRADLE_PATH;
   if(!gradle||!fs.existsSync(gradle))blockers.push('GRADLE8111_NOT_FOUND');
   else {
-    const x=spawnSync(gradle,['--version'],{encoding:'utf8',timeout:6000,maxBuffer:20000});
-    if(x.status!==0||!x.stdout.includes('Gradle 8.11.1'))blockers.push('GRADLE8111_INVALID');
+    const x=spawnSync(gradle,['--version'],{env,encoding:'utf8',timeout:6000,maxBuffer:20000});
+    const versions=(x.stdout??'').split(/\r?\n/).map(line=>line.trim()).filter(line=>line.startsWith('Gradle '));
+    if(x.status!==0||versions.length!==1||versions[0]!=='Gradle 8.11.1')blockers.push('GRADLE8111_INVALID');
   }
   const aapt2=env.CONTINUUM_AAPT2_PATH || (sdk?path.join(sdk,'build-tools','35.0.0','aapt2'):null);
-  if(!aapt2||!fs.existsSync(aapt2))blockers.push('NATIVE_AAPT2_NOT_FOUND');
+  if(!availableFile(aapt2,true))blockers.push('NATIVE_AAPT2_NOT_FOUND');
   return Object.freeze({hostReadyToAttemptQa:!blockers.length,blockers,
     androidCompilationExecuted:false,androidTestExecuted:false,apkSigned:false});
 }

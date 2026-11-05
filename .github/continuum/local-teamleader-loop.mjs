@@ -77,16 +77,45 @@ function atomicCheckpoint(file,value){
   try{fs.fsyncSync(directory);}finally{fs.closeSync(directory);}
  }finally{fs.rmSync(temporary,{force:true});}
 }
-function sourceIdentity(root){
+async function sourceIdentity(root,sourcePreflight){
  const canonical=fs.realpathSync(root);
+ // Trusted caller policy runs before Git can invoke configured status helpers.
+ // A thrown/rejected check vetoes this source boundary, including initial open.
+ if(sourcePreflight!==null)await sourcePreflight(canonical);
+ else{
+  // No caller hook: reuse existing read-only Git safety policy.
+  const {assertBranchSourceSafe}=await import('./branch-discovery.mjs');
+  assertBranchSourceSafe(canonical);
+ }
+ // The scheduler must not let inherited Git trace destinations write files.
+ const gitEnv={...process.env,GIT_TERMINAL_PROMPT:'0',GIT_OPTIONAL_LOCKS:'0'};
+ // Git -C does not override inherited repository/index selectors. Without this,
+ // a clean foreign GIT_DIR/GIT_WORK_TREE can mask a dirty intended checkout and
+ // bind the scheduler checkpoint to an unrelated commit. Match the existing
+ // guarded branch-discovery reader's structural Git environment boundary.
+ for(const key of ['GIT_DIR','GIT_WORK_TREE','GIT_INDEX_FILE','GIT_COMMON_DIR',
+  'GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES','GIT_SHALLOW_FILE',
+  'GIT_NAMESPACE','GIT_CONFIG'])delete gitEnv[key];
+ // Inline Git config is inherited through different variables than GIT_CONFIG.
+ // It can activate an fsmonitor during a read-only status even for a clean tree.
+ // Preserve the parent environment, but never pass these overrides to Git.
+ for(const key of Object.keys(gitEnv)){
+  if(key.startsWith('GIT_TRACE')||key==='GIT_CONFIG_COUNT'||
+     key==='GIT_CONFIG_PARAMETERS'||/^GIT_CONFIG_(?:KEY|VALUE)_[0-9]+$/.test(key))
+   delete gitEnv[key];
+ }
  const git=args=>{
   const result=spawnSync('git',['-C',canonical,...args],{
    encoding:'utf8',timeout:10_000,maxBuffer:2*1024*1024,shell:false,
-   env:{...process.env,GIT_TERMINAL_PROMPT:'0',GIT_OPTIONAL_LOCKS:'0'}
+   env:gitEnv
   });
   if(result.error||result.status!==0)throw Error('Cannot validate local loop source');
   return result.stdout;
  };
+ // A nested -C path still resolves Git HEAD, but would shrink the safety boundary
+ // for state files inside the surrounding checkout.
+ const top=fs.realpathSync(git(['rev-parse','--show-toplevel']).trim());
+ if(top!==canonical)throw Error('Local loop requires repository root');
  const head=git(['rev-parse','HEAD']).trim();
  if(!/^[0-9a-f]{40}$/.test(head))throw Error('Local loop requires a full source HEAD');
  if(git(['status','--porcelain=v1','--untracked-files=all','-z']))
@@ -99,7 +128,7 @@ function sourceIdentity(root){
  * creator may rename that directory, even when several dead-PID recoverers race.
  * Unknown hosts, live PIDs and incomplete lock metadata fail closed.
  */
-function acquireLoopLock(file){
+export function acquireLoopLock(file){
  const lock=file+'.lock';
  const payload=JSON.stringify({pid:process.pid,host:os.hostname(),
   nonce:crypto.randomBytes(16).toString('hex')});
@@ -146,12 +175,28 @@ function acquireLoopLock(file){
  };
 }
 
-function openCheckpoint(stateFile,sourceRoot,settings){
+async function openCheckpoint(stateFile,sourceRoot,settings,sourcePreflight){
  if(settings.maxCycles===null)throw Error('Durable local loop requires a finite cycle budget');
  if(typeof sourceRoot!=='string'||typeof stateFile!=='string')
   throw Error('Durable local loop needs stateFile and sourceRoot');
- const source=sourceIdentity(sourceRoot);
+ const source=await sourceIdentity(sourceRoot,sourcePreflight);
  const requested=path.resolve(stateFile);
+ // Check the literal path AND the nearest existing real ancestor before
+ // mkdir. Otherwise a rejected checkpoint creates directories in the source.
+ const forbidden=file=>file===source.root||file.startsWith(source.root+path.sep);
+ const missing=[];let ancestor=path.dirname(requested),prospective;
+ for(;;){
+  try{
+   prospective=path.join(fs.realpathSync(ancestor),...missing.reverse(),path.basename(requested));break;
+  }catch(error){
+   if(error.code!=='ENOENT')throw error;
+   const parent=path.dirname(ancestor);
+   if(parent===ancestor)throw error;
+   missing.push(path.basename(ancestor));ancestor=parent;
+  }
+ }
+ if(forbidden(requested)||forbidden(prospective))
+  throw Error('Local loop checkpoint must remain outside source checkout');
  fs.mkdirSync(path.dirname(requested),{recursive:true,mode:0o700});
  const file=path.join(fs.realpathSync(path.dirname(requested)),path.basename(requested));
  if(file===source.root||file.startsWith(source.root+path.sep))
@@ -177,8 +222,8 @@ function openCheckpoint(stateFile,sourceRoot,settings){
   const runId=saved?.runId??crypto.randomBytes(16).toString('hex');
   return {saved,release,source,
    cycleId:number=>'lc-'+digest({runId,number,source}).slice(0,24),
-   checkSource:()=>{
-    if(JSON.stringify(sourceIdentity(sourceRoot))!==JSON.stringify(source))
+   checkSource:async()=>{
+    if(JSON.stringify(await sourceIdentity(sourceRoot,sourcePreflight))!==JSON.stringify(source))
      throw Error('Local loop source HEAD/root changed during session');
    },
    save:heartbeat=>{
@@ -193,11 +238,13 @@ function openCheckpoint(stateFile,sourceRoot,settings){
 export async function runTeamleaderLoop({
  work,intervalMinutes=DEFAULT_INTERVAL_MINUTES,maxCycles=null,
  signal=null,wait=null,onHeartbeat=()=>{},log=()=>{},
- stateFile=null,sourceRoot=null,now=Date.now
+ stateFile=null,sourceRoot=null,sourcePreflight=null,now=Date.now
 }={}){
  if(typeof work!=='function')throw Error('Local worker needs a real bounded cycle');
+ if(sourcePreflight!==null&&typeof sourcePreflight!=='function')
+  throw Error('Local loop source preflight must be a function');
  const settings=validateLoopOptions({intervalMinutes,maxCycles});
- const store=stateFile===null?null:openCheckpoint(stateFile,sourceRoot,settings);
+ const store=stateFile===null?null:await openCheckpoint(stateFile,sourceRoot,settings,sourcePreflight);
  const pause=wait??((ms,abortSignal)=>sleep(ms,null,{signal:abortSignal}));
  let heartbeat=store?.saved?.heartbeat??null;
  let cycles=heartbeat?.cycles??0,failures=heartbeat?.failures??0;
@@ -249,7 +296,7 @@ export async function runTeamleaderLoop({
  }
  if(heartbeat?.state==='WAITING')await waitForNext(true);
  while(!signal?.aborted&&(maxCycles===null||cycles<maxCycles)){
-  try{store?.checkSource();}catch(error){
+  try{if(store)await store.checkSource();}catch(error){
    if(heartbeat)await emit({...heartbeat,state:'ERROR',nextAttemptAt:null,
     detail:String(error?.message??error).slice(0,160)});
    throw error;
@@ -269,7 +316,7 @@ export async function runTeamleaderLoop({
    try{if(!signal?.aborted)result=await work({signal,cycleNumber:cycles+1,
     cycleId:store?.cycleId(cycles+1)??null,sourceHead:store?.source.head??null});}
    catch(error){workError=error;}
-   try{store?.checkSource();}catch(error){sourceError=true;throw error;}
+   try{if(store)await store.checkSource();}catch(error){sourceError=true;throw error;}
    if(signal?.aborted)result={outcome:'INTERRUPTED',detail:'Cycle cancelled; verification not accepted'};
    else if(workError)throw workError;
    if(!result||!COMPLETE_OUTCOMES.has(result.outcome))

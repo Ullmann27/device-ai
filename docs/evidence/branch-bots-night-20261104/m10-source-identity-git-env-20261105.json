@@ -1,0 +1,126 @@
+{
+  "schema": "continuum-m10-source-identity-env",
+  "version": 1,
+  "source": {
+    "repository": "Ullmann27/device-ai",
+    "baseline": "e3bf60c0be6128d16f821719d69cef3e0124aba6",
+    "reservation": "f66100e51060d0c86b9fc3efde6dcb80c5611256",
+    "patched": "a03224f68a1e9f44bdbcbde6cd04b2808a75e4ec",
+    "originalSourceBlob": "9b1384135f0747f9b573e0f6341abf966b8a66d0",
+    "patchedSourceBlob": "2c486f03df19d09989a0f295373645608cb884d4",
+    "originalTestBlob": "a4c10466d47441e6ddedde470e4878212d073088",
+    "patchedTestBlob": "1f9450897ee8c41f31ad509a313e90b78051f753"
+  },
+  "problem": "Git -C does not neutralize GIT_DIR/GIT_WORK_TREE. Existing scheduler sourceIdentity can record a clean foreign HEAD and miss a dirty actual checkout when inherited selectors are set.",
+  "patch": "Only the sourceIdentity child environment copy drops GIT_DIR, GIT_WORK_TREE, GIT_INDEX_FILE, GIT_COMMON_DIR, GIT_OBJECT_DIRECTORY, GIT_ALTERNATE_OBJECT_DIRECTORIES, GIT_SHALLOW_FILE, GIT_NAMESPACE and GIT_CONFIG. Existing GIT_TRACE* hygiene, caller environment, authority, preflight, cycle and lock behavior retained.",
+  "realGitFixture": {
+    "scope": "standalone sourceIdentity Git-subprocess excerpt reproducing exact pinned spawnSync env Git commands; not full imported module",
+    "node": "v22.16.0",
+    "git": "2.47.3",
+    "commandRed": "node --test /tmp/continuum-m10-sourceidentity.test.mjs",
+    "red": {
+      "exit": 1,
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "tapSha256": "f5ec08ea3fe66c5f8ac6ee19e505f431c14fa7f8d5b17a0ead3a821e5ed88f8c"
+    },
+    "commandGreen": "M10_REPAIRED=1 node --test /tmp/continuum-m10-sourceidentity.test.mjs",
+    "green": {
+      "exit": 0,
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "tapSha256": "86503c531a6ae56f1d72f30183b16ebfd652ec434e458cbc3f6230fcff3759a3"
+    },
+    "cases": [
+      "clean intended source receives its own HEAD rather than inherited foreign HEAD",
+      "dirty intended source must be rejected rather than masked by clean foreign repo"
+    ],
+    "sourceSyntaxChecks": {
+      "count": 2,
+      "passed": 2,
+      "method": "V8 JS syntax parser with ESM imports/exports stripped; no runtime module imports"
+    }
+  },
+  "integration": {
+    "c1Head": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "c1OwnsSharedEntrypoints": true,
+    "combinedHead": "19039e5b822310cd5ab1ce5cc5cb854822a1bcd3",
+    "sourceCodeGateCommit": "80c01939e8a1fdd04cfa9a818c352be494bc1719",
+    "targetPreimages": [
+      {
+        "path": ".github/continuum/branch-bots-cli.mjs",
+        "originalBlob": "d9174f55c45013bd6a0db2b979eff3033d95cc9b",
+        "proposedBlob": "3ebb541477ff4b817a922a4fec01d6ee0b031721",
+        "targetBlob": "d9174f55c45013bd6a0db2b979eff3033d95cc9b",
+        "targetMatchesOriginal": true,
+        "proposedDiffers": true
+      },
+      {
+        "path": ".github/continuum/branch-bots-cli.test.mjs",
+        "originalBlob": "b1f85c32abce041b595f34fa34a724824cfbd3a5",
+        "proposedBlob": "ce3ba2c97935e68933648838a68a0bf191b00c82",
+        "targetBlob": "b1f85c32abce041b595f34fa34a724824cfbd3a5",
+        "targetMatchesOriginal": true,
+        "proposedDiffers": true
+      },
+      {
+        "path": ".github/continuum/branch-discovery.mjs",
+        "originalBlob": "45e8c8e9d19405117207678598673d7f1e12dcec",
+        "proposedBlob": "2785415bcb6f107b32de0a0be1f1cff2837e6f48",
+        "targetBlob": "45e8c8e9d19405117207678598673d7f1e12dcec",
+        "targetMatchesOriginal": true,
+        "proposedDiffers": true
+      },
+      {
+        "path": ".github/continuum/branch-discovery.test.mjs",
+        "originalBlob": "27666c5ce287b663dd92e0e875510808065c3076",
+        "proposedBlob": "0d84236cda95c1cbc72114aa5cf0b930197a04b9",
+        "targetBlob": "27666c5ce287b663dd92e0e875510808065c3076",
+        "targetMatchesOriginal": true,
+        "proposedDiffers": true
+      },
+      {
+        "path": ".github/continuum/local-teamleader-loop.mjs",
+        "originalBlob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+        "proposedBlob": "2c486f03df19d09989a0f295373645608cb884d4",
+        "targetBlob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+        "targetMatchesOriginal": true,
+        "proposedDiffers": true
+      },
+      {
+        "path": ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+        "originalBlob": "13c5661432115c883fc2b64161757aad9d1128f4",
+        "proposedBlob": "1f9450897ee8c41f31ad509a313e90b78051f753",
+        "targetBlob": "13c5661432115c883fc2b64161757aad9d1128f4",
+        "targetMatchesOriginal": true,
+        "proposedDiffers": true
+      },
+      {
+        "path": "scripts/continuum-release-host-preflight.mjs",
+        "originalBlob": "c273b39943047b2b1e658eabe4c77646de9c77c8",
+        "proposedBlob": "ee7fb58a9503d6137b52116b64e350876abf2325",
+        "targetBlob": "c273b39943047b2b1e658eabe4c77646de9c77c8",
+        "targetMatchesOriginal": true,
+        "proposedDiffers": true
+      },
+      {
+        "path": "scripts/continuum-release-host-preflight.test.mjs",
+        "originalBlob": "783cbb7bd26fcd2bb1b56d9ff32869e4318d9d35",
+        "proposedBlob": "c8ea91d51aac83d43d71103b3cba86c7ee483aeb",
+        "targetBlob": "783cbb7bd26fcd2bb1b56d9ff32869e4318d9d35",
+        "targetMatchesOriginal": true,
+        "proposedDiffers": true
+      }
+    ],
+    "preimageMatches": 8,
+    "changedPathsNotAdopted": 8,
+    "gitApplyCurrentTarget": "NOT_RUN",
+    "fullNodeOnPatched": "NOT_RUN",
+    "androidOnPatched": "NOT_RUN",
+    "apk": "NOT_RUN",
+    "device": "NOT_RUN"
+  },
+  "conclusion": "Two real-Git excerpt-level regressions resolved and eight exact preimages verified. Full project runtime and Android acceptance not established; selective integration must be done by shared integrator with full checkout tests."
+}

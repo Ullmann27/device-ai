@@ -1,0 +1,11 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern=Gradle admission|SDK platform admission|AAPT2 admission",
+    "scripts/continuum-release-host-preflight.test.mjs"
+  ],
+  "exitCode": 1,
+  "time": "2026-11-04T21:35:21.229927+00:00"
+}

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/branch-discovery.test.mjs",
+    ".github/continuum/branch-bots-cli.test.mjs"
+  ],
+  "exitCode": 0,
+  "time": "2026-11-04T21:44:38.850905+00:00",
+  "tapSha256": "f969a26e9be014ee442c0eb29fe76f30a4d7fc7c31728b150c66dec85c9b6f9e"
+}

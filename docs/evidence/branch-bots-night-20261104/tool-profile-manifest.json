@@ -1,0 +1,21 @@
+{
+  "sourceParent": "9423d5fb6978496ec843d0f7bcbe8285ee63677f",
+  "files": [
+    {
+      "path": "scripts/continuum-release-host-preflight.mjs",
+      "gitBlob": "b66167c4503f75793b6b36f59e45260767ae04b1",
+      "sha256": "96b1c914abec3708eb954d353c350d3d181c5c4b52f72209f8fdda04279b3de5"
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.test.mjs",
+      "gitBlob": "7fa5250bc314c51c3925c60aa31b9b8b3ffe5d4c",
+      "sha256": "75cb3915feebcfe739b95fb26c552acfa89e8ba55d57985142a975e97500a177"
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.test.mjs",
+      "gitBlob": "44fab56fd79f5e6f4172f5d40fb8c284768a108f",
+      "sha256": "f775329702d3b6e7f35905bda5e6d529e215b68d2977d5759e2c93ce4acf6b9f"
+    }
+  ],
+  "gitDiffCheck": 0
+}

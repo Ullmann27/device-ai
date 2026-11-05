@@ -1,0 +1,246 @@
+/** Real Git fixtures prove that rejected source configuration cannot run its
+ * fsmonitor/filter commands through the scheduler's own status checks. */
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {runTeamleaderLoop} from './local-teamleader-loop.mjs';
+
+function fixture(t){
+ const saved=new Map(['GIT_CONFIG_NOSYSTEM','GIT_CONFIG_GLOBAL'].map(key=>[key,process.env[key]]));
+ process.env.GIT_CONFIG_NOSYSTEM='1';process.env.GIT_CONFIG_GLOBAL='/dev/null';
+ t.after(()=>{for(const [key,value] of saved)if(value===undefined)delete process.env[key];else process.env[key]=value;});
+ const home=fs.mkdtempSync(path.join(os.tmpdir(),'loop-source-preflight-'));
+ t.after(()=>fs.rmSync(home,{recursive:true,force:true}));
+ const sourceRoot=path.join(home,'source');fs.mkdirSync(sourceRoot);
+ const git=(args,{allowMissing=false}={})=>{
+  const r=spawnSync('git',['-C',sourceRoot,...args],{encoding:'utf8',timeout:5000,shell:false});
+  assert.ok(r.status===0||allowMissing&&r.status===1,r.stderr);return r;
+ };
+ git(['init','-q','-b','source-preflight-fixture']);
+ fs.writeFileSync(path.join(sourceRoot,'source.txt'),'source\n');
+ fs.writeFileSync(path.join(sourceRoot,'.gitattributes'),'source.txt filter=fixture\n');
+ git(['add','.']);git(['-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','source fixture']);
+ const marker=path.join(home,'command-invoked'),monitor=path.join(home,'fsmonitor.sh'),filter=path.join(home,'clean.sh');
+ fs.writeFileSync(monitor,"#!/bin/sh\nprintf invoked >> '"+marker+"'\nprintf 'token\\000'\n",{mode:0o700});
+ fs.writeFileSync(filter,"#!/bin/sh\nprintf invoked >> '"+marker+"'\ncat\n",{mode:0o700});
+ const denied=Error('SOURCE_PREFLIGHT_REJECTED');
+ const sourcePreflight=async root=>{
+  assert.equal(root,sourceRoot);
+  // Deliberate asynchronous boundary: an un-awaited policy must not race Git.
+  await new Promise(resolve=>setImmediate(resolve));
+  const config=git(['config','--local','--get-regexp','^(core\\.fsmonitor|filter\\..*\\.clean)$'],{allowMissing:true});
+  if(config.status===0)throw denied;
+ };
+ const armMonitor=()=>git(['config','core.fsmonitor',monitor]);
+ const armFilter=()=>{
+  git(['config','filter.fixture.clean',filter]);
+  // The bytes stay identical; the changed stat makes Git evaluate the filter.
+  fs.writeFileSync(path.join(sourceRoot,'source.txt'),'source\n');
+ };
+ return {sourceRoot,stateFile:path.join(home,'state','loop.json'),marker,denied,sourcePreflight,armMonitor,armFilter};
+}
+
+test('initial durable source preflight rejects fsmonitor before any Git status or checkpoint',async t=>{
+ const f=fixture(t);f.armMonitor();let calls=0,failure;
+ try{await runTeamleaderLoop({...f,maxCycles:1,work:()=>{calls++;return {outcome:'IDLE'};}});}
+ catch(error){failure=error;}
+ assert.equal(fs.existsSync(f.marker),false,'Git status must not execute the rejected fsmonitor');
+ assert.equal(failure,f.denied);assert.equal(calls,0);
+ assert.equal(fs.existsSync(f.stateFile),false);assert.equal(fs.existsSync(f.stateFile+'.lock'),false);
+});
+
+test('configuration changed while waiting is rejected before the next scheduler status check',async t=>{
+ const f=fixture(t);let calls=0,failure;
+ try{await runTeamleaderLoop({...f,maxCycles:2,intervalMinutes:1,
+  work:()=>{calls++;return {outcome:'IDLE'};},wait:async()=>f.armMonitor()});}
+ catch(error){failure=error;}
+ assert.equal(fs.existsSync(f.marker),false,'The between-cycle status must not invoke the changed fsmonitor');
+ assert.equal(failure,f.denied);assert.equal(calls,1);
+ const saved=JSON.parse(fs.readFileSync(f.stateFile));
+ assert.equal(saved.heartbeat.state,'ERROR');assert.equal(saved.heartbeat.cycles,1);
+ assert.equal(saved.heartbeat.nextAttemptAt,null);assert.equal(fs.existsSync(f.stateFile+'.lock'),false);
+});
+
+test('configuration changed during work is rejected before post-work Git filters or success acceptance',async t=>{
+ const f=fixture(t);let calls=0;
+ const summary=await runTeamleaderLoop({...f,maxCycles:2,wait:async()=>{},work:()=>{
+  calls++;f.armFilter();return {outcome:'VERIFIED_PATCH_PENDING_REVIEW'};
+ }});
+ assert.equal(fs.existsSync(f.marker),false,'The post-work status must not execute the changed clean filter');
+ assert.equal(calls,1);assert.equal(summary.state,'ERROR');assert.equal(summary.lastOutcome,'ERROR');
+ assert.equal(summary.cycles,1);assert.equal(summary.failures,1);
+ const saved=JSON.parse(fs.readFileSync(f.stateFile));
+ assert.equal(saved.heartbeat.detail,'SOURCE_PREFLIGHT_REJECTED');assert.equal(saved.heartbeat.nextAttemptAt,null);
+ assert.equal(fs.existsSync(f.stateFile+'.lock'),false);
+});
+
+test('an invalid preflight option fails closed before a source status or work callback',async t=>{
+ const f=fixture(t);f.armMonitor();let calls=0,failure;
+ try{await runTeamleaderLoop({...f,maxCycles:1,sourcePreflight:'not executable',work:()=>{calls++;return {outcome:'IDLE'};}});}
+ catch(error){failure=error;}
+ assert.equal(fs.existsSync(f.marker),false);
+ assert.match(failure?.message??'',/source preflight.*function/i);assert.equal(calls,0);
+ assert.equal(fs.existsSync(f.stateFile),false);
+});
+
+test('durable loop source verification ignores ambient Git trace destinations',async t=>{
+ const f=fixture(t),keys=['GIT_TRACE','GIT_TRACE_PERFORMANCE','GIT_TRACE2_EVENT','GIT_TRACE2_PERF'];
+ const previous=new Map(keys.map(key=>[key,process.env[key]]));
+ const markers=keys.map((_,index)=>path.join(path.dirname(f.sourceRoot),'loop-trace-'+index+'.log'));
+ keys.forEach((key,index)=>{process.env[key]=markers[index];});
+ let summary;
+ try{
+  summary=await runTeamleaderLoop({sourceRoot:f.sourceRoot,stateFile:f.stateFile,maxCycles:1,
+   work:()=>({outcome:'IDLE'})});
+ }finally{
+  for(const [key,value] of previous)if(value===undefined)delete process.env[key];else process.env[key]=value;
+ }
+ assert.equal(summary.state,'LIMIT_REACHED');
+ for(const marker of markers)assert.equal(fs.existsSync(marker),false,'Git must not write '+marker);
+});
+
+function foreignGitFixture(f){
+ const foreignRoot=path.join(path.dirname(f.sourceRoot),'foreign-git-dir');
+ fs.mkdirSync(foreignRoot);
+ const run=args=>{
+  const result=spawnSync('git',['-C',foreignRoot,...args],{encoding:'utf8',timeout:5000,shell:false});
+  assert.equal(result.status,0,result.stderr);
+  return result.stdout.trim();
+ };
+ run(['init','-q','-b','foreign-source']);
+ fs.writeFileSync(path.join(foreignRoot,'other.txt'),'foreign source\n');
+ run(['add','.']);
+ run(['-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','foreign']);
+ return {foreignRoot,foreignHead:run(['rev-parse','HEAD'])};
+}
+
+async function withForeignGitEnvironment(foreignRoot,callback){
+ const entries=[['GIT_DIR',path.join(foreignRoot,'.git')],['GIT_WORK_TREE',foreignRoot]];
+ const prior=new Map(entries.map(([key])=>[key,process.env[key]]));
+ try{
+  for(const [key,value] of entries)process.env[key]=value;
+  return await callback();
+ }finally{
+  for(const [key,value] of prior)
+   if(value===undefined)delete process.env[key];else process.env[key]=value;
+ }
+}
+
+test('local loop binds the intended source despite inherited foreign Git repository selectors',async t=>{
+ const f=fixture(t),foreign=foreignGitFixture(f);
+ const sourceHead=spawnSync('git',['-C',f.sourceRoot,'rev-parse','HEAD'],{encoding:'utf8'}).stdout.trim();
+ assert.match(sourceHead,/^[0-9a-f]{40}$/);
+ assert.notEqual(sourceHead,foreign.foreignHead);
+ let observedHead=null;
+ const result=await withForeignGitEnvironment(foreign.foreignRoot,()=>runTeamleaderLoop({
+  sourceRoot:f.sourceRoot,stateFile:f.stateFile,maxCycles:1,
+  work:({sourceHead:boundHead})=>{observedHead=boundHead;return {outcome:'IDLE'};}
+ }));
+ assert.equal(result.lastOutcome,'IDLE');
+ assert.equal(observedHead,sourceHead,'checkpoint cannot identify a foreign repository');
+ const recorded=JSON.parse(fs.readFileSync(f.stateFile,'utf8'));
+ assert.equal(recorded.source.head,sourceHead);
+});
+
+test('local loop refuses dirty intended checkout even when inherited foreign Git repository is clean',async t=>{
+ const f=fixture(t),foreign=foreignGitFixture(f);
+ fs.appendFileSync(path.join(f.sourceRoot,'source.txt'),'dirty after commit\n');
+ let workCalls=0;
+ await assert.rejects(
+  ()=>withForeignGitEnvironment(foreign.foreignRoot,()=>runTeamleaderLoop({
+   sourceRoot:f.sourceRoot,stateFile:f.stateFile,maxCycles:1,
+   work:()=>{workCalls++;return {outcome:'IDLE'};}
+  })),/Local loop refuses a dirty source checkout/
+ );
+ assert.equal(workCalls,0);
+ assert.equal(fs.existsSync(f.stateFile),false);
+ assert.equal(fs.existsSync(f.stateFile+'.lock'),false);
+});
+
+test('durable scheduler rejects a nested Git source path before writing a checkpoint',async t=>{
+ const f=fixture(t),nested=path.join(f.sourceRoot,'nested-checkout-root');
+ fs.mkdirSync(nested);
+ const stateFile=path.join(path.dirname(f.sourceRoot),'nested-state','loop.json');
+ let calls=0;
+ await assert.rejects(()=>runTeamleaderLoop({sourceRoot:nested,stateFile,maxCycles:1,
+  work:()=>{calls++;return {outcome:'IDLE'};}}),/requires repository root/);
+ assert.equal(calls,0);
+ assert.equal(fs.existsSync(stateFile),false);
+});
+
+test('refused in-checkout checkpoint does not create a previously absent parent',async t=>{
+ const f=fixture(t),parent=path.join(f.sourceRoot,'no-checkpoint-created'),stateFile=path.join(parent,'loop.json');
+ let calls=0;
+ await assert.rejects(()=>runTeamleaderLoop({sourceRoot:f.sourceRoot,stateFile,maxCycles:1,
+  work:()=>{calls++;return {outcome:'IDLE'};}}),/outside source checkout/);
+ assert.equal(calls,0);assert.equal(fs.existsSync(parent),false);
+});
+
+test('in-checkout checkpoint through an external symlink is refused before mkdir',async t=>{
+ const f=fixture(t),alias=path.join(path.dirname(f.sourceRoot),'external-checkpoint-alias');
+ fs.symlinkSync(f.sourceRoot,alias,'dir');
+ const parent=path.join(f.sourceRoot,'no-symlink-checkpoint-created');
+ let calls=0;
+ await assert.rejects(()=>runTeamleaderLoop({sourceRoot:f.sourceRoot,
+  stateFile:path.join(alias,path.basename(parent),'loop.json'),maxCycles:1,
+  work:()=>{calls++;return {outcome:'IDLE'};}}),/outside source checkout/);
+ assert.equal(calls,0);assert.equal(fs.existsSync(parent),false);
+});
+
+test('outside-source checkpoint still completes one bounded cycle',async t=>{
+ const f=fixture(t),summary=await runTeamleaderLoop({
+  sourceRoot:f.sourceRoot,stateFile:f.stateFile,maxCycles:1,
+  work:()=>({outcome:'IDLE'})});
+ assert.equal(summary.lastOutcome,'IDLE');assert.equal(summary.state,'LIMIT_REACHED');
+ assert.equal(fs.existsSync(f.stateFile),true);
+});
+
+
+for(const kind of ['count','parameters']){
+ test('durable source Git checks ignore inherited inline config ('+kind+')',async t=>{
+  const f=fixture(t),dir=path.dirname(f.sourceRoot);
+  const marker=path.join(dir,'inline-config-'+kind+'.marker');
+  const monitor=path.join(dir,'inline-config-'+kind+'.sh');
+  fs.writeFileSync(monitor,"#!/bin/sh\nprintf invoked >> "+JSON.stringify(marker)+"\nprintf 'token\\\\000'\n",{mode:0o700});
+  const injected=kind==='count'?{
+   GIT_CONFIG_COUNT:'1',GIT_CONFIG_KEY_0:'core.fsmonitor',GIT_CONFIG_VALUE_0:monitor
+  }:{GIT_CONFIG_PARAMETERS:"'core.fsmonitor="+monitor+"'"};
+  const saved=new Map(Object.keys(injected).map(key=>[key,process.env[key]]));
+  let outcome;
+  try{
+   Object.assign(process.env,injected);
+   outcome=await runTeamleaderLoop({sourceRoot:f.sourceRoot,stateFile:f.stateFile,maxCycles:1,
+    work:()=>({outcome:'IDLE'})});
+   assert.equal(outcome.state,'LIMIT_REACHED');
+   assert.equal(outcome.lastOutcome,'IDLE');
+   assert.equal(fs.existsSync(marker),false,'Read-only Git must not execute ambient monitor');
+   for(const [key,value] of Object.entries(injected))assert.equal(process.env[key],value);
+  }finally{
+   for(const [key,value] of saved)
+    if(value===undefined)delete process.env[key];else process.env[key]=value;
+  }
+ });
+}
+
+test('durable loop without caller preflight rejects configured fsmonitor before its own status',async t=>{
+ const f=fixture(t);f.armMonitor();let workCalls=0;
+ await assert.rejects(()=>runTeamleaderLoop({...f,sourcePreflight:null,maxCycles:1,
+  work:()=>{workCalls++;return {outcome:'IDLE'};}}),/DISCOVERY_FSMONITOR_UNSUPPORTED/);
+ assert.equal(workCalls,0);
+ assert.equal(fs.existsSync(f.marker),false,'unsafe monitor must never execute');
+ assert.equal(fs.existsSync(f.stateFile),false);
+ assert.equal(fs.existsSync(f.stateFile+'.lock'),false);
+});
+
+test('durable loop without caller preflight rejects clean filter before its own status',async t=>{
+ const f=fixture(t);f.armFilter();let workCalls=0;
+ await assert.rejects(()=>runTeamleaderLoop({...f,sourcePreflight:null,maxCycles:1,
+  work:()=>{workCalls++;return {outcome:'IDLE'};}}),/DISCOVERY_CLEAN_FILTER_UNSUPPORTED/);
+ assert.equal(workCalls,0);
+ assert.equal(fs.existsSync(f.marker),false,'unsafe clean filter must never execute');
+ assert.equal(fs.existsSync(f.stateFile),false);
+ assert.equal(fs.existsSync(f.stateFile+'.lock'),false);
+});

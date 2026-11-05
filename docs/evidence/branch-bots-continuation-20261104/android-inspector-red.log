@@ -1,0 +1,35 @@
+✖ host probes receive the explicit environment without mutating process.env (14.963374ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 127.947762
+
+✖ failing tests:
+
+test at scripts/continuum-release-host-preflight.test.mjs:40:1
+✖ host probes receive the explicit environment without mutating process.env (14.963374ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   'JDK17_REQUIRED',
+  +   'GRADLE8111_INVALID'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///tmp/continuum-android-bot-connection-672924e4650b/scripts/continuum-release-host-preflight.test.mjs:54:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'JDK17_REQUIRED', 'GRADLE8111_INVALID' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

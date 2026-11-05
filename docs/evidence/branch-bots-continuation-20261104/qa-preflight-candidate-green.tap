@@ -1,0 +1,268 @@
+TAP version 13
+# Subtest: ordinary QA rejects missing version before setup or downloads
+ok 1 - ordinary QA rejects missing version before setup or downloads
+  ---
+  duration_ms: 23.901752
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects empty version before setup or downloads
+ok 2 - ordinary QA rejects empty version before setup or downloads
+  ---
+  duration_ms: 17.412343
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects below the supported range version before setup or downloads
+ok 3 - ordinary QA rejects below the supported range version before setup or downloads
+  ---
+  duration_ms: 17.720179
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects above the supported range version before setup or downloads
+ok 4 - ordinary QA rejects above the supported range version before setup or downloads
+  ---
+  duration_ms: 19.05533
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects fractional version before setup or downloads
+ok 5 - ordinary QA rejects fractional version before setup or downloads
+  ---
+  duration_ms: 17.705893
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects negative version before setup or downloads
+ok 6 - ordinary QA rejects negative version before setup or downloads
+  ---
+  duration_ms: 17.146128
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects leading zero version before setup or downloads
+ok 7 - ordinary QA rejects leading zero version before setup or downloads
+  ---
+  duration_ms: 17.868888
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects whitespace version before setup or downloads
+ok 8 - ordinary QA rejects whitespace version before setup or downloads
+  ---
+  duration_ms: 18.852841
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects non-numeric version before setup or downloads
+ok 9 - ordinary QA rejects non-numeric version before setup or downloads
+  ---
+  duration_ms: 17.393028
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects overflowing shell integer version before setup or downloads
+ok 10 - ordinary QA rejects overflowing shell integer version before setup or downloads
+  ---
+  duration_ms: 17.34751
+  type: 'test'
+  ...
+# Subtest: ordinary QA still admits canonical version 39 to setup
+ok 11 - ordinary QA still admits canonical version 39 to setup
+  ---
+  duration_ms: 38.495932
+  type: 'test'
+  ...
+# Subtest: ordinary QA still admits canonical version 42 to setup
+ok 12 - ordinary QA still admits canonical version 42 to setup
+  ---
+  duration_ms: 35.869524
+  type: 'test'
+  ...
+# Subtest: ordinary QA still admits canonical version 9999 to setup
+ok 13 - ordinary QA still admits canonical version 9999 to setup
+  ---
+  duration_ms: 35.738897
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+ok 14 - ordinary QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 26.569153
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+ok 15 - ordinary QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 41.242111
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+ok 16 - ordinary QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 33.513246
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+ok 17 - ordinary QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 32.907876
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+ok 18 - ordinary QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 29.818752
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+ok 19 - ordinary QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 30.69563
+  type: 'test'
+  ...
+# Subtest: owner QA rejects missing version before setup or downloads
+ok 20 - owner QA rejects missing version before setup or downloads
+  ---
+  duration_ms: 16.975331
+  type: 'test'
+  ...
+# Subtest: owner QA rejects empty version before setup or downloads
+ok 21 - owner QA rejects empty version before setup or downloads
+  ---
+  duration_ms: 16.277173
+  type: 'test'
+  ...
+# Subtest: owner QA rejects below the supported range version before setup or downloads
+ok 22 - owner QA rejects below the supported range version before setup or downloads
+  ---
+  duration_ms: 16.398299
+  type: 'test'
+  ...
+# Subtest: owner QA rejects above the supported range version before setup or downloads
+ok 23 - owner QA rejects above the supported range version before setup or downloads
+  ---
+  duration_ms: 21.265243
+  type: 'test'
+  ...
+# Subtest: owner QA rejects fractional version before setup or downloads
+ok 24 - owner QA rejects fractional version before setup or downloads
+  ---
+  duration_ms: 17.223093
+  type: 'test'
+  ...
+# Subtest: owner QA rejects negative version before setup or downloads
+ok 25 - owner QA rejects negative version before setup or downloads
+  ---
+  duration_ms: 16.929883
+  type: 'test'
+  ...
+# Subtest: owner QA rejects leading zero version before setup or downloads
+ok 26 - owner QA rejects leading zero version before setup or downloads
+  ---
+  duration_ms: 16.41825
+  type: 'test'
+  ...
+# Subtest: owner QA rejects whitespace version before setup or downloads
+ok 27 - owner QA rejects whitespace version before setup or downloads
+  ---
+  duration_ms: 19.686572
+  type: 'test'
+  ...
+# Subtest: owner QA rejects non-numeric version before setup or downloads
+ok 28 - owner QA rejects non-numeric version before setup or downloads
+  ---
+  duration_ms: 17.90055
+  type: 'test'
+  ...
+# Subtest: owner QA rejects overflowing shell integer version before setup or downloads
+ok 29 - owner QA rejects overflowing shell integer version before setup or downloads
+  ---
+  duration_ms: 17.296595
+  type: 'test'
+  ...
+# Subtest: owner QA still admits canonical version 39 to setup
+ok 30 - owner QA still admits canonical version 39 to setup
+  ---
+  duration_ms: 34.424554
+  type: 'test'
+  ...
+# Subtest: owner QA still admits canonical version 42 to setup
+ok 31 - owner QA still admits canonical version 42 to setup
+  ---
+  duration_ms: 39.186679
+  type: 'test'
+  ...
+# Subtest: owner QA still admits canonical version 9999 to setup
+ok 32 - owner QA still admits canonical version 9999 to setup
+  ---
+  duration_ms: 39.923517
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+ok 33 - owner QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 26.762609
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+ok 34 - owner QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 25.634163
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+ok 35 - owner QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 30.030901
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+ok 36 - owner QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 34.244784
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+ok 37 - owner QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 33.593976
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+ok 38 - owner QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 35.932188
+  type: 'test'
+  ...
+# Subtest: owner source approval gate remains enforced for a valid version
+ok 39 - owner source approval gate remains enforced for a valid version
+  ---
+  duration_ms: 21.150526
+  type: 'test'
+  ...
+# Subtest: owner publisher gate remains enforced for a valid version
+ok 40 - owner publisher gate remains enforced for a valid version
+  ---
+  duration_ms: 20.269377
+  type: 'test'
+  ...
+# Subtest: owner pinned host gate remains enforced for a valid version
+ok 41 - owner pinned host gate remains enforced for a valid version
+  ---
+  duration_ms: 19.029907
+  type: 'test'
+  ...
+# Subtest: ordinary isolated service gate remains enforced for a valid version
+ok 42 - ordinary isolated service gate remains enforced for a valid version
+  ---
+  duration_ms: 17.833089
+  type: 'test'
+  ...
+# Subtest: QA mode gate remains enforced for a valid version
+ok 43 - QA mode gate remains enforced for a valid version
+  ---
+  duration_ms: 18.354983
+  type: 'test'
+  ...
+1..43
+# tests 43
+# suites 0
+# pass 43
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1162.025818

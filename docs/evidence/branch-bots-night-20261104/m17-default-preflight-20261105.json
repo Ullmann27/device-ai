@@ -1,0 +1,59 @@
+{
+  "schema": "continuum-source-gate-research",
+  "id": "M17-M18",
+  "date": "2026-11-05",
+  "baseline": "bca4a28ceb6ae3f578f7aad812415b0627d945e8",
+  "sourcePreimage": "888e52cbbd1f8766625646f7ba0fe6fc8bf6c88c",
+  "testPreimage": "835f7a7e158dec2c9598106b358f135009d6b5ec",
+  "cause": "Durable runTeamleaderLoop accepted sourcePreflight=null; sourceIdentity then ran git status with effective local core.fsmonitor or filter.*.clean helpers.",
+  "negativeFixture": "/tmp/continuum_scheduler_guard_probe.mjs (external fixture only)",
+  "negativeFixtureSha256": "0c18c3ffaab08f00811863284a805066336fbb6ffae3a1e74394c16db8b76e37",
+  "negativeFixtureResult": {
+    "cases": 3,
+    "passed": 3,
+    "failed": 0,
+    "observedOldGitWrites": [
+      "core.fsmonitor",
+      "filter.test-filter.clean"
+    ],
+    "guardRejectedWithoutMarkerWrites": true
+  },
+  "codeChange": "If no trusted caller sourcePreflight provided, dynamically reuse existing assertBranchSourceSafe before sourceIdentity's own git command. Explicit provided callback remains unchanged.",
+  "addedProjectRegressions": 2,
+  "verified": {
+    "sourceAndTestV8FunctionParse": true,
+    "independentGitFixture": true,
+    "fullModuleNodeTest": "NOT_RUN",
+    "selected202Node": "NOT_RUN",
+    "android": "NOT_RUN",
+    "apk": "NOT_RUN"
+  },
+  "limits": "Fixture tests Git commands and a reduced guard test; does not import the full GitHub ESM dependency graph. The two added project tests are not executed in this environment. Reusing the shared branch policy can reject previously accepted unsafe checkouts.",
+  "protectedPaths": "No package, signing, owner data, offline, models, main, or release change.",
+  "codeCommit": "fff98ea4b2bd3b236a5c0f48bd86d564b4cdaea8",
+  "codeBlob": "ff64083be41389f87c907d2b291472020de74cda",
+  "testBlob": "11ad08af03ba6bb459d616fb34a6064adb89df15",
+  "sourceExcerptChecks": {
+    "mode": "EXACT_SOURCE_FUNCTION_EXTRACTED_WITH_STUBBED_GIT_AND_IMPORT (not actual module execution)",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "cases": [
+      "missing trusted hook: guard failure before any Git",
+      "missing hook: guard called before Git then correct source",
+      "explicit hook retains existing semantics",
+      "explicit hook rejection prevents Git"
+    ]
+  },
+  "upstreamPreimages": {
+    "c1": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+    "connection527": "f83e6a1dcd40e7841734f893895766c6c3b1ed29"
+  },
+  "scope": {
+    "productionFiles": 1,
+    "testFiles": 1,
+    "newEvidenceFiles": 1,
+    "mainUntouched": true,
+    "fullAndroidCheckoutAvailable": false
+  }
+}

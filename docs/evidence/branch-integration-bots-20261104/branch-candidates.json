@@ -1,0 +1,64 @@
+{
+  "schema": "continuum-branch-candidate-observations-v1",
+  "targetBaseline": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "scope": "SELECTED_PINNED_REMOTE_SOURCES_NOT_A_COMPLETE_REPOSITORY_SCAN",
+  "canonicalTasksEnqueuedByThisStaticFile": 0,
+  "androidTestsExecutedHere": false,
+  "findings": [
+    {
+      "sourcePr": 496,
+      "sourceCommit": "3968d785df607f8d461162c50bb3d710a925503e",
+      "subject": "Worker allowedTools snapshots and routine scheduling overflow",
+      "status": "ALREADY_PRESENT_IN_REVIEWED_INTEGRATION_BRANCH",
+      "destinationPr": 506,
+      "destinationCommit": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt",
+          "sameBlob": "d927e45c83ea075e78d2296c1c534eea5b2ab378"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/routines/ContinuumRoutines.kt",
+          "sameBlob": "a6bf2fe690be880dc002019ca5eef2f0d0d3e9ea"
+        },
+        {
+          "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkerScopeAdmissionTest.kt",
+          "sameBlob": "5801e50c57f88937ee0aa02bec63f5ee0bf13926"
+        },
+        {
+          "path": "app/src/test/java/at/heinz/deviceai/routines/RoutineBookAdmissionTest.kt",
+          "sameBlob": "817772f8f8192fef670dbcd8c3318a3ca6510a2e"
+        }
+      ],
+      "decision": "Do not duplicate the four-file patch. This is not evidence of a main merge or an Android test run."
+    },
+    {
+      "sourcePr": 505,
+      "sourceCommit": "4ddbcb092d955226bb83c2a10f7ac52bb34f59eb",
+      "subject": "Avatar turn/lifecycle protection and build-version preflight",
+      "status": "REVIEW_REQUIRED",
+      "decision": "Keep Android lifecycle work separate until real Android regression evidence; do not adopt the unrelated ranking regression. Full QA runner can download tools and is not called by discovery."
+    },
+    {
+      "sourcePr": 493,
+      "sourceCommit": "ee2fa0ee5567e5d34bcdfe229425a71df9818183",
+      "subject": "Existing bot personalities, UI and local tool/coding draft routes",
+      "status": "LARGE_BRANCH_REVIEW_REQUIRED",
+      "decision": "111 changed files observed; no bulk integration or inference that profiles are active workers."
+    },
+    {
+      "sourcePr": 510,
+      "sourceCommit": "2a364005b52e3240eb799f86aea31be90b390b10",
+      "subject": "Bot activation handoff and missing negative ECHO report",
+      "status": "REPORTING_GAP_REPAIRED_IN_THIS_PR",
+      "decision": "Preserve original strict model rejection, canonical source/reporter checks and UNKNOWN service result. No live owner worker was activated."
+    },
+    {
+      "sourcePr": 456,
+      "sourceCommit": "546e056648d04a2d084f3c1cd99d725a35496156",
+      "subject": "Existing coding service and unresolved earlier S01 task",
+      "status": "EXISTING_RESOURCE_BARRIER_PRESERVED",
+      "decision": "Do not replay S01 or clear the unresolved resource lock."
+    }
+  ]
+}

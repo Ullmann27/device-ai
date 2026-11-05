@@ -1,0 +1,142 @@
+TAP version 13
+# Subtest: resumable single passes reach later branches across process restarts
+not ok 1 - resumable single passes reach later branches across process restarts
+  ---
+  duration_ms: 334.748792
+  type: 'test'
+  location: '/workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-bots-cli.test.mjs:97:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    BRANCH_BOTS_UNKNOWN_OPTION
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-bots-cli.test.mjs:105:72)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: finite scheduler records successful pages without declaring a full inventory
+not ok 2 - finite scheduler records successful pages without declaring a full inventory
+  ---
+  duration_ms: 671.921363
+  type: 'test'
+  location: '/workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-bots-cli.test.mjs:122:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-bots-cli.test.mjs:125:74)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: changed refs restart source paging while crash replay deduplicates proposals
+not ok 3 - changed refs restart source paging while crash replay deduplicates proposals
+  ---
+  duration_ms: 200.22399
+  type: 'test'
+  location: '/workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-bots-cli.test.mjs:135:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    BRANCH_BOTS_UNKNOWN_OPTION
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-bots-cli.test.mjs:139:36)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: scan state rejects corruption, changed settings and altered report bytes
+not ok 4 - scan state rejects corruption, changed settings and altered report bytes
+  ---
+  duration_ms: 332.675308
+  type: 'test'
+  location: '/workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-bots-cli.test.mjs:150:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    BRANCH_BOTS_UNKNOWN_OPTION
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-bots-cli.test.mjs:152:36)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: scan state cannot follow links or steal a live existing scheduler lock
+not ok 5 - scan state cannot follow links or steal a live existing scheduler lock
+  ---
+  duration_ms: 274.333139
+  type: 'test'
+  location: '/workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-bots-cli.test.mjs:165:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    BRANCH_BOTS_UNKNOWN_OPTION
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/672924e4650b/branch-bots-night/.github/continuum/branch-bots-cli.test.mjs:167:36)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 0
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2001.663286

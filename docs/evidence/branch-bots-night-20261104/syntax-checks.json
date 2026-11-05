@@ -1,0 +1,34 @@
+{
+  "checks": [
+    {
+      "path": ".github/continuum/branch-bots-cli.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.test.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/branch-discovery.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/branch-discovery.test.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.test.mjs",
+      "exitCode": 0
+    }
+  ],
+  "ownDiffCheck": 0,
+  "intakeDiffCheck": 0
+}

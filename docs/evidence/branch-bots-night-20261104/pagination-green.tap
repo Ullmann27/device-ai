@@ -1,0 +1,172 @@
+TAP version 13
+# Subtest: one-shot bot persists genuine source differences and only canonical proposed work
+ok 1 - one-shot bot persists genuine source differences and only canonical proposed work
+  ---
+  duration_ms: 755.827164
+  type: 'test'
+  ...
+# Subtest: CLI restores installed Termux paths for diagnosis and keeps missing tools blocked
+ok 2 - CLI restores installed Termux paths for diagnosis and keeps missing tools blocked
+  ---
+  duration_ms: 826.886075
+  type: 'test'
+  ...
+# Subtest: finite loop uses the existing durable scheduler and stops at the approved budget
+ok 3 - finite loop uses the existing durable scheduler and stops at the approved budget
+  ---
+  duration_ms: 773.892881
+  type: 'test'
+  ...
+# Subtest: CLI refuses unknown, duplicate and unbounded modes before creating state
+ok 4 - CLI refuses unknown, duplicate and unbounded modes before creating state
+  ---
+  duration_ms: 844.495191
+  type: 'test'
+  ...
+# Subtest: CLI incomplete coverage is nonzero and never reports a completed full inventory
+ok 5 - CLI incomplete coverage is nonzero and never reports a completed full inventory
+  ---
+  duration_ms: 331.508332
+  type: 'test'
+  ...
+# Subtest: CLI cannot write through a state path into the source checkout
+ok 6 - CLI cannot write through a state path into the source checkout
+  ---
+  duration_ms: 212.569515
+  type: 'test'
+  ...
+# Subtest: CLI rejects a configuration mask before the existing scheduler can inspect source
+ok 7 - CLI rejects a configuration mask before the existing scheduler can inspect source
+  ---
+  duration_ms: 170.503101
+  type: 'test'
+  ...
+# Subtest: finds unconnected remote, archived and pull refs once per exact source commit
+ok 8 - finds unconnected remote, archived and pull refs once per exact source commit
+  ---
+  duration_ms: 199.655219
+  type: 'test'
+  ...
+# Subtest: distinguishes ancestry from copied changes without using branch names as quality evidence
+ok 9 - distinguishes ancestry from copied changes without using branch names as quality evidence
+  ---
+  duration_ms: 268.468376
+  type: 'test'
+  ...
+# Subtest: reports identical source trees even when commits differ
+ok 10 - reports identical source trees even when commits differ
+  ---
+  duration_ms: 183.637879
+  type: 'test'
+  ...
+# Subtest: detects divergent modifications and deletions without overwriting target files
+ok 11 - detects divergent modifications and deletions without overwriting target files
+  ---
+  duration_ms: 243.707383
+  type: 'test'
+  ...
+# Subtest: keeps tests, build files, symlinks and control plane work protected
+ok 12 - keeps tests, build files, symlinks and control plane work protected
+  ---
+  duration_ms: 202.953868
+  type: 'test'
+  ...
+# Subtest: labels unrelated history and never queues it as an integration candidate
+ok 13 - labels unrelated history and never queues it as an integration candidate
+  ---
+  duration_ms: 200.681494
+  type: 'test'
+  ...
+# Subtest: canonical backlog proposals are idempotent, source bound and never automatically accepted
+ok 14 - canonical backlog proposals are idempotent, source bound and never automatically accepted
+  ---
+  duration_ms: 495.216665
+  type: 'test'
+  ...
+# Subtest: serialized or stale discovery output cannot enqueue fresh review authority
+ok 15 - serialized or stale discovery output cannot enqueue fresh review authority
+  ---
+  duration_ms: 157.293873
+  type: 'test'
+  ...
+# Subtest: state inside the source or redirected into it is refused before writes
+ok 16 - state inside the source or redirected into it is refused before writes
+  ---
+  duration_ms: 308.980394
+  type: 'test'
+  ...
+# Subtest: bounded discovery exposes incomplete source and path coverage
+ok 17 - bounded discovery exposes incomplete source and path coverage
+  ---
+  duration_ms: 249.481516
+  type: 'test'
+  ...
+# Subtest: source pages eventually inspect every unique available commit
+ok 18 - source pages eventually inspect every unique available commit
+  ---
+  duration_ms: 626.96714
+  type: 'test'
+  ...
+# Subtest: page cursors reject malformed positions and changed source identity
+ok 19 - page cursors reject malformed positions and changed source identity
+  ---
+  duration_ms: 565.137601
+  type: 'test'
+  ...
+# Subtest: last page keeps omitted paths and partial inventory explicit
+ok 20 - last page keeps omitted paths and partial inventory explicit
+  ---
+  duration_ms: 362.031568
+  type: 'test'
+  ...
+# Subtest: invalid limits and option-like target references fail closed
+ok 21 - invalid limits and option-like target references fail closed
+  ---
+  duration_ms: 21.054421
+  type: 'test'
+  ...
+# Subtest: dirty checkouts and planted backlog symlinks are refused
+ok 22 - dirty checkouts and planted backlog symlinks are refused
+  ---
+  duration_ms: 200.07976
+  type: 'test'
+  ...
+# Subtest: branch bot control files are protected by the real coding and repair gates
+ok 23 - branch bot control files are protected by the real coding and repair gates
+  ---
+  duration_ms: 0.305979
+  type: 'test'
+  ...
+# Subtest: configured clean filters cannot execute during the cleanliness check
+ok 24 - configured clean filters cannot execute during the cleanliness check
+  ---
+  duration_ms: 82.694265
+  type: 'test'
+  ...
+# Subtest: preflight rejects fsmonitor hooks and partial clones before inspecting worktree state
+ok 25 - preflight rejects fsmonitor hooks and partial clones before inspecting worktree state
+  ---
+  duration_ms: 59.797016
+  type: 'test'
+  ...
+# Subtest: configuration mask cannot hide executable clean filters from discovery
+ok 26 - configuration mask cannot hide executable clean filters from discovery
+  ---
+  duration_ms: 39.320383
+  type: 'test'
+  ...
+# Subtest: current worktree gitlinks are rejected before nested worktree status
+ok 27 - current worktree gitlinks are rejected before nested worktree status
+  ---
+  duration_ms: 52.645416
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4709.392119

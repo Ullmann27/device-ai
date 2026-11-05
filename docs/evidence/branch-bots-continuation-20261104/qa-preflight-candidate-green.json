@@ -1,0 +1,24 @@
+{
+  "sourcePr": 505,
+  "sourceCommit": "8b72db66e5338fbc3a791adc30254f4ca77007ad",
+  "scope": "Selective existing QA preflight connection; downloads stopped by local canary before any network access",
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "scripts/continuum-owner-continuous-qa-preflight.test.mjs"
+  ],
+  "exitCode": 0,
+  "counts": {
+    "tests": 43,
+    "pass": 43,
+    "fail": 0,
+    "skipped": 0
+  },
+  "seconds": 1.229,
+  "bashSyntaxExitCode": 0,
+  "androidCompilationExecuted": false,
+  "apkCreated": false,
+  "serviceDeploymentExecuted": false,
+  "signingExecuted": false
+}

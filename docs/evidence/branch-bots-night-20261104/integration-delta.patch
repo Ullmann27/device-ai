@@ -1,0 +1,685 @@
+diff --git a/.github/continuum/branch-bots-cli.mjs b/.github/continuum/branch-bots-cli.mjs
+index d9174f55c45013bd6a0db2b979eff3033d95cc9b..3ebb541477ff4b817a922a4fec01d6ee0b031721 100644
+--- a/.github/continuum/branch-bots-cli.mjs
++++ b/.github/continuum/branch-bots-cli.mjs
+@@ -4,8 +4,8 @@ import fs from 'node:fs';
+ import path from 'node:path';
+ import {fileURLToPath} from 'node:url';
+ import {setImmediate as checkpoint} from 'node:timers/promises';
+-import {sha256Hex} from './development-backlog.mjs';
+-import {runTeamleaderLoop,validateLoopOptions} from './local-teamleader-loop.mjs';
++import {canonical,sha256Hex} from './development-backlog.mjs';
++import {acquireLoopLock,runTeamleaderLoop,validateLoopOptions} from './local-teamleader-loop.mjs';
+ import {privateDirectory,plainBytes,writePrivateJson} from './coding-service-store.mjs';
+ import {discoverBranches,proposeBranchReviews,branchStateDirectory,assertBranchStateFile,assertBranchSourceSafe} from './branch-discovery.mjs';
+ import {inspectHostEnvironment} from '../../scripts/continuum-release-host-preflight.mjs';
+@@ -15,20 +15,21 @@ const NUMBERS={maxSources:[1,5000,1000],maxChanges:[1,2000,200],timeoutMs:[1,300
+  maxProposals:[1,100,20],intervalMinutes:[1,1440,60],maxCycles:[1,1000,null]};
+ 
+ export function parseBranchBotArgs(args){
+- const flags=new Set(['--once','--loop']);
++ const flags=new Set(['--once','--loop','--continue-scan']);
+  const valued=new Set(['--root','--state','--target','--max-sources','--max-changes',
+   '--timeout-ms','--max-proposals','--interval-minutes','--max-cycles']);
+  const options={},seen=new Set();
+  for(let i=0;i<args.length;i++){
+   const arg=args[i];
+   if(seen.has(arg))throw Error('BRANCH_BOTS_DUPLICATE_OPTION');seen.add(arg);
+-  if(flags.has(arg)){options[arg.slice(2)]=true;continue;}
++  if(flags.has(arg)){options[arg.slice(2).replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]=true;continue;}
+   if(!valued.has(arg))throw Error('BRANCH_BOTS_UNKNOWN_OPTION');
+   const value=args[++i];if(!value||value.startsWith('--'))throw Error('BRANCH_BOTS_INVALID_ARGUMENT');
+   options[arg.slice(2).replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]=value;
+  }
+  if([options.once,options.loop].filter(Boolean).length!==1)throw Error('BRANCH_BOTS_MODE_REQUIRED');
+  if(!options.state)throw Error('BRANCH_BOTS_INVALID_STATE');
++ if(options.continueScan&&!options.once)throw Error('BRANCH_BOTS_INVALID_CONTINUE_MODE');
+  if(options.loop&&options.maxCycles===undefined)throw Error('BRANCH_BOTS_FINITE_LOOP_REQUIRED');
+  if(!options.loop&&(options.maxCycles!==undefined||options.intervalMinutes!==undefined))throw Error('BRANCH_BOTS_LOOP_OPTIONS_REQUIRE_LOOP');
+  for(const [key,[min,max,fallback]] of Object.entries(NUMBERS)){
+@@ -53,9 +54,9 @@ function immutableJson(file,value){
+ }
+ 
+ export async function runBranchBotCycle({root,stateDir,targetRef='HEAD',maxSources=1000,maxChanges=200,
+- timeoutMs=60000,maxProposals=20,signal=null}={}){
++ timeoutMs=60000,maxProposals=20,signal=null,cursor=null,paged=false}={}){
+  if(signal?.aborted)return {outcome:'INTERRUPTED',complete:false,detail:'Stopped before branch discovery'};
+- const report=discoverBranches({root,targetRef,maxSources,maxChanges,timeoutMs});
++ const report=discoverBranches({root,targetRef,maxSources,maxChanges,timeoutMs,cursor});
+  // Synchronous bounded Git reads yield before any queue/write boundary so
+  // SIGINT/SIGTERM observed during discovery can stop the cycle without work admission.
+  await checkpoint();
+@@ -71,12 +72,67 @@ export async function runBranchBotCycle({root,stateDir,targetRef='HEAD',maxSourc
+  const digest=sha256Hex(Buffer.from(JSON.stringify(artifact)+'\n')),file=path.join(reports,digest+'.json');
+  immutableJson(file,artifact);
+  const queue=proposeBranchReviews({report,stateDir:state,maxProposals});
+- return {outcome:report.coverage.complete?'DONE_INVESTIGATION':'ERROR',complete:report.coverage.complete,
+-  detail:report.coverage.complete?'Pinned branch differences recorded; integration review pending':'Incomplete branch/path coverage; no full inventory claim',
+-  targetCommit:report.targetCommit,report:file,reportSha256:digest,coverage:report.coverage,queue,
++ const pageComplete=!report.branches.some(branch=>branch.changesTruncated);
++ return {outcome:report.coverage.complete||paged&&pageComplete?'DONE_INVESTIGATION':'ERROR',complete:report.coverage.complete,
++  detail:report.coverage.complete?'Pinned branch differences recorded; integration review pending':
++   paged&&pageComplete?'Bounded source page recorded; full inventory unverified':'Incomplete branch/path coverage; no full inventory claim',
++  targetCommit:report.targetCommit,report:file,reportSha256:digest,coverage:report.coverage,queue,pageComplete,nextCursor:report.nextCursor,
+   executedTests:0,apk:'NOT_RUN',apkEnvironment,approvedForMerge:false};
+ }
+ 
++function readScanState(file,config){
++ assertBranchStateFile(file);
++ if(!fs.existsSync(file))return null;
++ let saved;
++ try{saved=JSON.parse(plainBytes(file,65536,{privateFile:true}));}
++ catch{throw Error('BRANCH_BOTS_SCAN_STATE_INVALID');}
++ if(!saved||typeof saved!=='object'||Array.isArray(saved))throw Error('BRANCH_BOTS_SCAN_STATE_INVALID');
++ const {integrity,...data}=saved;
++ if(Object.keys(data).sort().join()!=='configSha256,lastReportSha256,nextCursor,schema,version'||
++    data.schema!=='continuum-branch-scan-cursor'||data.version!==1||
++    !/^[a-f0-9]{64}$/.test(data.configSha256)||!/^[a-f0-9]{64}$/.test(data.lastReportSha256)||
++    integrity!==sha256Hex(canonical(data))||
++    data.nextCursor!==null&&(!data.nextCursor||typeof data.nextCursor!=='object'||Array.isArray(data.nextCursor)))
++  throw Error('BRANCH_BOTS_SCAN_STATE_INVALID');
++ if(data.configSha256!==sha256Hex(canonical(config)))throw Error('BRANCH_BOTS_SCAN_CONFIG_CHANGED');
++ const reportFile=path.join(path.dirname(file),'branch-discovery-reports',data.lastReportSha256+'.json');
++ let report;
++ try{
++  const bytes=plainBytes(reportFile,4*1024*1024,{privateFile:true});
++  if(sha256Hex(bytes)!==data.lastReportSha256)throw Error('HASH_MISMATCH');
++  report=JSON.parse(bytes);
++  if(report.schema!=='continuum-branch-discovery'||report.version!==1||
++     report.sourceRoot!==config.root||report.targetRef!==config.targetRef||
++     canonical(report.nextCursor)!==canonical(data.nextCursor))throw Error('CURSOR_MISMATCH');
++ }catch{throw Error('BRANCH_BOTS_SCAN_REPORT_CHANGED');}
++ return data;
++}
++
++async function runBranchBotPage({root,stateDir,signal,...config}){
++ if(signal?.aborted)return {outcome:'INTERRUPTED',complete:false,detail:'Stopped before source page'};
++ assertBranchSourceSafe(root);
++ const state=branchStateDirectory(root,stateDir);privateDirectory(state);
++ const file=path.join(state,'branch-bots-scan.json');assertBranchStateFile(file);
++ const release=acquireLoopLock(file);
++ try{
++  const settings={root,...config},saved=readScanState(file,settings);
++  let cycle,scanRestarted=false;
++  try{cycle=await runBranchBotCycle({root,stateDir:state,signal,...config,paged:true,cursor:saved?.nextCursor??null});}
++  catch(error){
++   if(error.message!=='DISCOVERY_CURSOR_STALE')throw error;
++   scanRestarted=true;
++   cycle=await runBranchBotCycle({root,stateDir:state,signal,...config,paged:true});
++  }
++  await checkpoint();
++  if(signal?.aborted)return {...cycle,outcome:'INTERRUPTED',complete:false,detail:'Stopped before cursor persistence'};
++  if(!cycle.report)return cycle;
++  const data={schema:'continuum-branch-scan-cursor',version:1,configSha256:sha256Hex(canonical(settings)),
++   nextCursor:cycle.nextCursor,lastReportSha256:cycle.reportSha256};
++  writePrivateJson(file,{...data,integrity:sha256Hex(canonical(data))});
++  return {...cycle,scanRestarted,scanState:file};
++ }finally{release();}
++}
++
+ export async function branchBotsMain(argv=process.argv.slice(2)){
+  const options=parseBranchBotArgs(argv),root=fs.realpathSync(path.resolve(options.root??process.cwd()));
+  // The existing scheduler must not inherit a different Git worktree or index.
+@@ -91,7 +147,7 @@ export async function branchBotsMain(argv=process.argv.slice(2)){
+  process.on('SIGINT',stop);process.on('SIGTERM',stop);
+  try{
+   if(options.once){
+-   const cycle=await runBranchBotCycle({root,stateDir,...config,signal:controller.signal});
++   const cycle=await (options.continueScan?runBranchBotPage:runBranchBotCycle)({root,stateDir,...config,signal:controller.signal});
+    return {mode:'LOCAL_BRANCH_BOTS',cycle,exitCode:cycle.outcome==='DONE_INVESTIGATION'?0:1};
+   }
+   // Cadence owns restart/locking; this file binds its work callback's immutable settings.
+@@ -105,7 +161,7 @@ export async function branchBotsMain(argv=process.argv.slice(2)){
+    work:async()=>{
+     // Configuration is checked again immediately before each scheduler callback.
+     assertBranchSourceSafe(root);
+-    cycle=await runBranchBotCycle({root,stateDir,...config,signal:controller.signal});return cycle;
++    cycle=await runBranchBotPage({root,stateDir,...config,signal:controller.signal});return cycle;
+    },
+    onHeartbeat:value=>writePrivateJson(heartbeat,value)});
+   return {mode:'LOCAL_BRANCH_BOTS',loop,cycle,exitCode:loop.failures>0||loop.stoppedBySignal||loop.state==='ERROR'?1:0};
+diff --git a/.github/continuum/branch-bots-cli.test.mjs b/.github/continuum/branch-bots-cli.test.mjs
+index b1f85c32abce041b595f34fa34a724824cfbd3a5..ce3ba2c97935e68933648838a68a0bf191b00c82 100644
+--- a/.github/continuum/branch-bots-cli.test.mjs
++++ b/.github/continuum/branch-bots-cli.test.mjs
+@@ -4,7 +4,8 @@ import fs from 'node:fs';
+ import os from 'node:os';
+ import path from 'node:path';
+ import {fileURLToPath} from 'node:url';
+-import {spawnSync} from 'node:child_process';
++import {spawn,spawnSync} from 'node:child_process';
++import {setTimeout as pause} from 'node:timers/promises';
+ import {createHash} from 'node:crypto';
+ import {BacklogStore} from './development-backlog.mjs';
+ 
+@@ -44,7 +45,7 @@ test('CLI restores installed Termux paths for diagnosis and keeps missing tools
+  const gradle=path.join(home,'continuum-toolchains','gradle-8.11.1','bin','gradle'),aapt2=path.join(home,'aapt2');
+  fs.mkdirSync(path.join(java,'bin'),{recursive:true});fs.mkdirSync(path.dirname(gradle),{recursive:true});
+  fs.mkdirSync(path.join(sdk,'platforms','android-36'),{recursive:true});
+- fs.writeFileSync(path.join(sdk,'platforms','android-36','android.jar'),'fixture only');fs.writeFileSync(aapt2,'fixture only');
++ fs.writeFileSync(path.join(sdk,'platforms','android-36','android.jar'),'fixture only');fs.writeFileSync(aapt2,'#!/bin/sh\nexit 0\n',{mode:0o700});
+  const guard='#!/bin/sh\ncase "$PATH" in "$JAVA_HOME/bin:"*) ;; *) exit 71 ;; esac\n';
+  fs.writeFileSync(path.join(java,'bin','java'),guard+'printf \'openjdk version "17.0.1"\\n\' >&2\n',{mode:0o700});
+  fs.writeFileSync(path.join(java,'bin','javac'),guard+'printf \'javac 17.0.1\\n\'\n',{mode:0o700});
+@@ -94,6 +95,156 @@ test('CLI incomplete coverage is nonzero and never reports a completed full inve
+  const result=JSON.parse(r.stdout);assert.equal(result.cycle.complete,false);assert.equal(result.cycle.outcome,'ERROR');
+ });
+ 
++test('resumable single passes reach later branches across process restarts',t=>{
++ const f=fixture(t),sources=[f.source];
++ for(const name of ['alpha','bravo','charlie','delta']){
++  f.git('switch','-qc',name);f.write('lib/'+name+'.mjs','export const value=1;\n');
++  sources.push(f.commit(name));f.git('switch','-q','target');
++ }
++ const seen=[];
++ for(let i=0;i<3;i++){
++  const r=f.run('--once','--continue-scan','--max-sources','2');assert.equal(r.status,0,r.stderr);
++  const cycle=JSON.parse(r.stdout).cycle;
++  assert.equal(cycle.complete,false);assert.equal(cycle.pageComplete,true);
++  assert.equal(cycle.coverage.sourceOffset,i*2);assert.equal(cycle.scanRestarted,false);
++  const report=JSON.parse(fs.readFileSync(cycle.report,'utf8'));
++  seen.push(...report.branches.map(x=>x.sourceCommit));
++  const saved=JSON.parse(fs.readFileSync(path.join(f.state,'branch-bots-scan.json'),'utf8'));
++  assert.equal(saved.lastReportSha256,cycle.reportSha256);assert.deepEqual(saved.nextCursor,report.nextCursor);
++ }
++ assert.deepEqual(seen.sort(),sources.sort());
++ const next=f.run('--once','--continue-scan','--max-sources','2');assert.equal(next.status,0,next.stderr);
++ assert.equal(JSON.parse(next.stdout).cycle.coverage.sourceOffset,0);
++ const tasks=new BacklogStore(path.join(f.state,'development-backlog.json')).read().doc.tasks;
++ assert.equal(tasks.length,5);assert.ok(tasks.every(x=>x.state==='PROPOSED'&&x.subject.automaticExecution===false));
++ assert.equal(f.git('status','--porcelain'),'');assert.equal(f.git('rev-parse','HEAD'),f.base);
++});
++
++test('finite scheduler records successful pages without declaring a full inventory',t=>{
++ const f=fixture(t);f.git('switch','-qc','alpha');f.write('lib/alpha.mjs','export const alpha=1;\n');
++ f.commit('alpha');f.git('switch','-q','target');
++ const run=f.run('--loop','--max-cycles','1','--max-sources','1');assert.equal(run.status,0,run.stderr);
++ const first=JSON.parse(run.stdout);
++ assert.equal(first.loop.cycles,1);assert.equal(first.loop.failures,0);assert.equal(first.loop.state,'LIMIT_REACHED');
++ assert.equal(first.cycle.complete,false);assert.equal(first.cycle.coverage.sourceOffset,0);
++ const resumed=f.run('--once','--continue-scan','--max-sources','1');assert.equal(resumed.status,0,resumed.stderr);
++ const second=JSON.parse(resumed.stdout).cycle;
++ assert.equal(second.coverage.sourceOffset,1);assert.equal(second.complete,false);
++ assert.equal(second.nextCursor,null);assert.equal(second.approvedForMerge,false);assert.equal(second.apk,'NOT_RUN');
++});
++
++test('changed refs restart source paging while crash replay deduplicates proposals',t=>{
++ const f=fixture(t);f.git('switch','-qc','alpha');f.write('lib/alpha.mjs','export const alpha=1;\n');
++ f.commit('alpha');f.git('switch','-q','target');
++ const args=['--once','--continue-scan','--max-sources','1'];
++ const first=f.run(...args);assert.equal(first.status,0,first.stderr);
++ const saved=path.join(f.state,'branch-bots-scan.json');fs.unlinkSync(saved);
++ const replay=f.run(...args);assert.equal(replay.status,0,replay.stderr);
++ assert.equal(JSON.parse(replay.stdout).cycle.queue.proposed,0);
++ f.git('update-ref','refs/archive/source-alias',f.source);
++ const changed=f.run(...args);assert.equal(changed.status,0,changed.stderr);
++ const cycle=JSON.parse(changed.stdout).cycle;
++ assert.equal(cycle.scanRestarted,true);assert.equal(cycle.coverage.sourceOffset,0);
++ assert.equal(cycle.complete,false);assert.equal(cycle.executedTests,0);
++});
++
++test('scan state rejects corruption, changed settings and altered report bytes',t=>{
++ const f=fixture(t),args=['--once','--continue-scan'];
++ const first=f.run(...args);assert.equal(first.status,0,first.stderr);
++ const file=path.join(f.state,'branch-bots-scan.json'),bytes=fs.readFileSync(file);
++ const queue=fs.readFileSync(path.join(f.state,'development-backlog.json'));
++ fs.writeFileSync(file,'{"broken":true}\n');
++ const corrupt=f.run(...args);assert.equal(corrupt.status,1);assert.match(corrupt.stderr,/BRANCH_BOTS_SCAN_STATE_INVALID/);
++ fs.writeFileSync(file,bytes);
++ const changed=f.run(...args,'--max-sources','1');assert.equal(changed.status,1);assert.match(changed.stderr,/BRANCH_BOTS_SCAN_CONFIG_CHANGED/);
++ assert.deepEqual(fs.readFileSync(file),bytes);
++ const report=JSON.parse(first.stdout).cycle.report;fs.appendFileSync(report,' ');
++ const tampered=f.run(...args);assert.equal(tampered.status,1);assert.match(tampered.stderr,/BRANCH_BOTS_SCAN_REPORT_CHANGED/);
++ assert.deepEqual(fs.readFileSync(file),bytes);assert.deepEqual(fs.readFileSync(path.join(f.state,'development-backlog.json')),queue);
++});
++
++test('scan state cannot follow links or steal a live existing scheduler lock',t=>{
++ const f=fixture(t),args=['--once','--continue-scan'];
++ const first=f.run(...args);assert.equal(first.status,0,first.stderr);
++ const file=path.join(f.state,'branch-bots-scan.json'),bytes=fs.readFileSync(file);
++ const outside=path.join(path.dirname(f.root),'outside.json');fs.writeFileSync(outside,bytes,{mode:0o600});
++ fs.unlinkSync(file);fs.symlinkSync(outside,file);
++ const linked=f.run(...args);assert.equal(linked.status,1);assert.match(linked.stderr,/UNSAFE_STATE_FILE/);
++ assert.deepEqual(fs.readFileSync(outside),bytes);fs.unlinkSync(file);fs.writeFileSync(file,bytes,{mode:0o600});
++ const lock=file+'.lock';fs.mkdirSync(lock,{mode:0o700});
++ const owner=JSON.stringify({pid:process.pid,host:os.hostname(),nonce:'b'.repeat(32)});
++ fs.writeFileSync(path.join(lock,'owner.json'),owner,{mode:0o600});
++ const busy=f.run(...args);assert.equal(busy.status,1);assert.match(busy.stderr,/Local loop already running/);
++ assert.equal(fs.readFileSync(path.join(lock,'owner.json'),'utf8'),owner);assert.deepEqual(fs.readFileSync(file),bytes);
++});
++
++test('partial paths remain errors while subsequent pages keep progressing',t=>{
++ const f=fixture(t);f.git('switch','-qc','alpha');f.write('lib/a.mjs','export const a=1;\n');
++ f.write('lib/b.mjs','export const b=1;\n');f.commit('two paths');f.git('switch','-q','target');
++ const args=['--once','--continue-scan','--max-sources','1','--max-changes','1'];
++ const partial=f.run(...args);assert.equal(partial.status,1,partial.stderr);
++ const first=JSON.parse(partial.stdout).cycle;
++ assert.equal(first.outcome,'ERROR');assert.equal(first.pageComplete,false);assert.equal(first.complete,false);
++ const next=f.run(...args);assert.equal(next.status,0,next.stderr);
++ const last=JSON.parse(next.stdout).cycle;
++ assert.equal(last.coverage.sourceOffset,1);assert.equal(last.pageComplete,true);assert.equal(last.complete,false);
++ assert.equal(last.nextCursor,null);
++});
++
++test('proposal budget deferrals are recovered on the next source sweep',t=>{
++ const f=fixture(t);
++ for(const name of ['alpha','bravo']){
++  f.git('switch','-qc',name);f.write('lib/'+name+'.mjs','export const value=1;\n');f.commit(name);f.git('switch','-q','target');
++ }
++ const args=['--once','--continue-scan','--max-sources','2','--max-proposals','1'];
++ const cycles=[];
++ for(let i=0;i<3;i++){const r=f.run(...args);assert.equal(r.status,0,r.stderr);cycles.push(JSON.parse(r.stdout).cycle);}
++ assert.deepEqual(cycles.map(x=>x.coverage.sourceOffset),[0,2,0]);
++ assert.deepEqual(cycles.map(x=>x.queue.proposed),[1,1,1]);assert.equal(cycles[0].queue.deferred,1);
++ const tasks=new BacklogStore(path.join(f.state,'development-backlog.json')).read().doc.tasks;
++ assert.equal(tasks.length,3);assert.ok(tasks.every(x=>x.state==='PROPOSED'));
++});
++
++test('termination during diagnosis leaves resumable state and queue unadvanced',async t=>{
++ const f=fixture(t),home=path.join(path.dirname(f.root),'jdk'),marker=path.join(home,'started');
++ fs.mkdirSync(path.join(home,'bin'),{recursive:true});
++ fs.writeFileSync(path.join(home,'bin','java'),'#!/bin/sh\nprintf ready > "$JAVA_HOME/started"\nsleep 0.3\nprintf \'openjdk version "17.0.1"\\n\' >&2\n',{mode:0o700});
++ fs.writeFileSync(path.join(home,'bin','javac'),'#!/bin/sh\nprintf \'javac 17.0.1\\n\'\n',{mode:0o700});
++ const child=spawn(process.execPath,[cli,'--root',f.root,'--state',f.state,'--once','--continue-scan'],{
++  env:{...process.env,JAVA_HOME:home},stdio:['ignore','pipe','pipe']});
++ let stdout='',stderr='';child.stdout.on('data',x=>stdout+=x);child.stderr.on('data',x=>stderr+=x);
++ const done=new Promise((resolve,reject)=>{child.on('error',reject);child.on('close',(code,signal)=>resolve({code,signal}));});
++ try{
++  for(let i=0;i<100&&!fs.existsSync(marker);i++)await pause(20);
++  assert.equal(fs.existsSync(marker),true,stderr);child.kill('SIGTERM');
++  const result=await done;assert.equal(result.code,1,stderr);assert.equal(result.signal,null);
++  assert.equal(JSON.parse(stdout).cycle.outcome,'INTERRUPTED');
++  for(const name of ['branch-bots-scan.json','branch-bots-scan.json.lock','development-backlog.json'])
++   assert.equal(fs.existsSync(path.join(f.state,name)),false,name);
++ }finally{if(child.exitCode===null&&child.signalCode===null)child.kill('SIGKILL');await done;}
++});
++
++test('large branch inventories advance within the existing private record size limit',t=>{
++ const f=fixture(t);f.git('switch','-qc','bulk-source');
++ for(let i=0;i<200;i++)f.write('lib/module-'+String(i).padStart(3,'0')+'-'+'x'.repeat(80)+'.mjs','export const value=1;\n');
++ const source=f.commit('bulk source'),tree=f.git('rev-parse','HEAD^{tree}');f.git('switch','-q','target');
++ const sources=[source,f.source];
++ for(let i=0;i<79;i++){
++  const sha=f.git('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit-tree',tree,'-p',f.base,'-m','branch '+i);
++  f.git('update-ref','refs/archive/bulk-'+String(i).padStart(3,'0'),sha);sources.push(sha);
++ }
++ const seen=[];
++ for(let i=0;i<8;i++){
++  const result=f.run('--once','--continue-scan');assert.equal(result.status,0,result.stderr);
++  const cycle=JSON.parse(result.stdout).cycle,bytes=fs.readFileSync(cycle.report),report=JSON.parse(bytes);
++  assert.ok(bytes.length<=4*1024*1024);assert.equal(cycle.complete,false);assert.equal(cycle.pageComplete,true);
++  seen.push(...report.branches.map(x=>x.sourceCommit));
++  if(cycle.nextCursor===null)break;
++ }
++ assert.deepEqual(seen.sort(),sources.sort());assert.equal(new Set(seen).size,81);
++ assert.equal(f.git('status','--porcelain'),'');assert.equal(f.git('rev-parse','HEAD'),f.base);
++});
++
+ test('CLI cannot write through a state path into the source checkout',t=>{
+  const f=fixture(t),r=spawnSync(process.execPath,[cli,'--root',f.root,'--state',path.join(f.root,'state'),'--once'],{encoding:'utf8',timeout:10000});
+  assert.notEqual(r.status,0);assert.match(r.stderr,/STATE_INSIDE_SOURCE/);assert.equal(f.git('status','--porcelain'),'');
+diff --git a/.github/continuum/branch-discovery.mjs b/.github/continuum/branch-discovery.mjs
+index 45e8c8e9d19405117207678598673d7f1e12dcec..98697dbc54189796b9fb3c1ffa6b2d849e6271b3 100644
+--- a/.github/continuum/branch-discovery.mjs
++++ b/.github/continuum/branch-discovery.mjs
+@@ -11,6 +11,7 @@ const ZERO='0'.repeat(40);
+ const admitted=new WeakMap();
+ const ACTOR='branch-discovery-bot';
+ const MAX_OUTPUT=8*1024*1024;
++const MAX_REPORT_BYTES=3*1024*1024;
+ const freeze=value=>{
+  if(value&&typeof value==='object'&&!Object.isFrozen(value)){
+   for(const child of Object.values(value))freeze(child);
+@@ -149,7 +150,7 @@ export function assertBranchSourceSafe(root){
+ }
+ 
+ /** Reads only locally available refs and committed trees; never fetches or checks out a branch. */
+-export function discoverBranches({root,targetRef='HEAD',maxSources=1000,maxChanges=200,timeoutMs=120000}={}){
++export function discoverBranches({root,targetRef='HEAD',maxSources=1000,maxChanges=200,timeoutMs=120000,cursor=null}={}){
+  if(typeof root!=='string'||!root||typeof targetRef!=='string'||
+     !/^[A-Za-z0-9][A-Za-z0-9._/-]{0,254}$/.test(targetRef))throw Error('INVALID_SOURCE_OR_TARGET');
+  integer(maxSources,1,5000,'SOURCE_LIMIT');integer(maxChanges,1,2000,'CHANGE_LIMIT');integer(timeoutMs,1,300000,'TIMEOUT');
+@@ -166,22 +167,62 @@ export function discoverBranches({root,targetRef='HEAD',maxSources=1000,maxChang
+   grouped.get(entry.commit).push(entry.ref);
+  }
+  const sources=[...grouped.entries()].sort((a,b)=>a[1][0].localeCompare(b[1][0]));
++ const identity={version:1,sourceRoot,checkoutCommit,targetRef,targetCommit,refSnapshotSha256:snapshot.digest};
++ let sourceOffset=0;
++ if(cursor!==null){
++  if(!cursor||typeof cursor!=='object'||Array.isArray(cursor)||
++     Object.keys(cursor).sort().join()!==[...Object.keys(identity),'nextSourceOffset'].sort().join()||
++     cursor.version!==1||typeof cursor.sourceRoot!=='string'||typeof cursor.targetRef!=='string'||
++     !COMMIT.test(cursor.checkoutCommit)||!COMMIT.test(cursor.targetCommit)||
++     !/^[a-f0-9]{64}$/.test(cursor.refSnapshotSha256)||
++     !Number.isSafeInteger(cursor.nextSourceOffset)||cursor.nextSourceOffset<1)
++   throw Error('INVALID_DISCOVERY_CURSOR');
++  if(Object.entries(identity).some(([key,value])=>cursor[key]!==value))throw Error('DISCOVERY_CURSOR_STALE');
++  if(cursor.nextSourceOffset>=sources.length)throw Error('INVALID_DISCOVERY_CURSOR');
++  sourceOffset=cursor.nextSourceOffset;
++ }
+  const branches=[];
+- for(const [sourceCommit,refs] of sources.slice(0,maxSources)){
++ const metadata={schema:'continuum-branch-discovery',version:1,sourceRoot,checkoutCommit,targetRef,targetCommit,
++  refSnapshotSha256:snapshot.digest,scope:'LOCAL_AVAILABLE_REFS_ONLY',networkFetch:false,historyComplete,
++  coverage:{availableRefs:snapshot.refs.length,ignoredRefs:snapshot.ignored,totalSources:sources.length,
++   scannedSources:10000,sourceOffset,endOffset:10000,remainingSources:10000,complete:false,maxSources,maxChanges,
++   reportByteLimit:MAX_REPORT_BYTES,byteLimitReached:false},
++  nextCursor:{...identity,nextSourceOffset:10000},branches:[],executedTests:0,approvedForMerge:false,deviceVerified:false,apk:'NOT_RUN'};
++ let reportBytes=Buffer.byteLength(JSON.stringify(metadata)+'\n'),byteLimitReached=false;
++ if(reportBytes>MAX_REPORT_BYTES)throw Error('DISCOVERY_REPORT_METADATA_LIMIT');
++ const appendBranch=branch=>{
++  const separator=branches.length?1:0;
++  let bytes=Buffer.byteLength(JSON.stringify(branch));
++  if(reportBytes+bytes+separator>MAX_REPORT_BYTES){
++   byteLimitReached=true;
++   if(branches.length)return false;
++   const details=branch.changes;let lower=0,upper=details.length;
++   branch.changesTruncated=true;
++   while(lower<upper){
++    const middle=Math.ceil((lower+upper)/2);branch.changes=details.slice(0,middle);
++    if(reportBytes+Buffer.byteLength(JSON.stringify(branch))<=MAX_REPORT_BYTES)lower=middle;
++    else upper=middle-1;
++   }
++   branch.changes=details.slice(0,lower);bytes=Buffer.byteLength(JSON.stringify(branch));
++   if(reportBytes+bytes>MAX_REPORT_BYTES)throw Error('DISCOVERY_REPORT_RECORD_LIMIT');
++  }
++  reportBytes+=bytes+separator;branches.push(branch);return true;
++ };
++ for(const [sourceCommit,refs] of sources.slice(sourceOffset,sourceOffset+maxSources)){
+   const branch={sourceCommit,refs,mergeBase:null,status:null,changes:[],changeCount:0,
+    alreadyPresentCount:0,missingCount:0,divergedCount:0,deletionCount:0,changesTruncated:false,
+    quality:'NOT_BENCHMARKED',apk:'NOT_RUN'};
+   if(git(['merge-base','--is-ancestor',sourceCommit,targetCommit],[0,1]).status===0){
+-   branch.status='ALREADY_ANCESTOR';branches.push(branch);continue;
++   branch.status='ALREADY_ANCESTOR';if(!appendBranch(branch))break;continue;
+   }
+   if(git(['rev-parse',sourceCommit+'^{tree}']).stdout.trim()===targetTreeSha){
+-   branch.status='TREE_IDENTICAL';branches.push(branch);continue;
++   branch.status='TREE_IDENTICAL';if(!appendBranch(branch))break;continue;
+   }
+   const merge=git(['merge-base','--all',targetCommit,sourceCommit],[0,1]);
+   const bases=merge.stdout.trim()?merge.stdout.trim().split('\n'):[];
+   if(bases.length!==1){
+    branch.status=bases.length>1?'AMBIGUOUS_MERGE_BASE':historyComplete?'UNRELATED_HISTORY':'INCOMPLETE_HISTORY';
+-   branches.push(branch);continue;
++   if(!appendBranch(branch))break;continue;
+   }
+   if(!COMMIT.test(bases[0]))throw Error('DISCOVERY_MERGE_BASE_INVALID');
+   branch.mergeBase=bases[0];
+@@ -198,17 +239,18 @@ export function discoverBranches({root,targetRef='HEAD',maxSources=1000,maxChang
+   }
+   branch.changesTruncated=branch.changeCount>branch.changes.length;
+   branch.status=branch.changeCount?'UNINTEGRATED_CHANGES':'CHANGES_ALREADY_PRESENT';
+-  branches.push(branch);
++  if(!appendBranch(branch))break;
+  }
+  // Moving refs or source edits cannot turn a mixed scan into a pinned observation.
+  if(resolveCommit(git,'HEAD')!==checkoutCommit||resolveCommit(git,targetRef)!==targetCommit||readRefs(git).digest!==snapshot.digest)
+   throw Error('DISCOVERY_REFS_CHANGED_DURING_SCAN');
+  cleanSource(git,sourceRoot);
+- const report=freeze({schema:'continuum-branch-discovery',version:1,sourceRoot,checkoutCommit,targetRef,targetCommit,
+-  refSnapshotSha256:snapshot.digest,scope:'LOCAL_AVAILABLE_REFS_ONLY',networkFetch:false,historyComplete,
+-  coverage:{availableRefs:snapshot.refs.length,ignoredRefs:snapshot.ignored,totalSources:sources.length,
+-   scannedSources:branches.length,complete:branches.length===sources.length&&!branches.some(x=>x.changesTruncated),maxSources,maxChanges},
+-  branches,executedTests:0,approvedForMerge:false,deviceVerified:false,apk:'NOT_RUN'});
++ const endOffset=sourceOffset+branches.length;
++ const report=freeze({...metadata,
++  coverage:{...metadata.coverage,scannedSources:branches.length,endOffset,remainingSources:sources.length-endOffset,
++   complete:sourceOffset===0&&branches.length===sources.length&&!branches.some(x=>x.changesTruncated),byteLimitReached},
++  nextCursor:endOffset<sources.length?{...identity,nextSourceOffset:endOffset}:null,
++  branches});
+  admitted.set(report,{sourceRoot,checkoutCommit,targetRef,targetCommit,refDigest:snapshot.digest});
+  return report;
+ }
+diff --git a/.github/continuum/branch-discovery.test.mjs b/.github/continuum/branch-discovery.test.mjs
+index 27666c5ce287b663dd92e0e875510808065c3076..50d76399ede405fc436aee30b912fbead4d57da7 100644
+--- a/.github/continuum/branch-discovery.test.mjs
++++ b/.github/continuum/branch-discovery.test.mjs
+@@ -137,6 +137,73 @@ test('bounded discovery exposes incomplete source and path coverage',t=>{
+  assert.equal(candidate.changesTruncated,true);assert.equal(candidate.changeCount,2);
+ });
+ 
++test('source pages eventually inspect every unique available commit',t=>{
++ const f=fixture(t),sources=[];
++ for(const name of ['alpha','bravo','charlie','delta','echo'])sources.push(feature(f,name));
++ f.git('update-ref','refs/archive/alpha-copy',sources[0]);
++ const pages=[],seen=[];let cursor=null;
++ for(let i=0;i<3;i++){
++  const report=discoverBranches({root:f.root,maxSources:2,cursor});
++  pages.push(report);seen.push(...report.branches.map(x=>x.sourceCommit));
++  cursor=report.nextCursor?JSON.parse(JSON.stringify(report.nextCursor)):null;
++ }
++ assert.deepEqual([...seen].sort(),[...sources].sort());assert.equal(new Set(seen).size,5);
++ pages.forEach((report,i)=>{
++  assert.equal(report.coverage.sourceOffset,i*2);
++  assert.equal(report.coverage.endOffset,Math.min(5,i*2+2));
++  assert.equal(report.coverage.remainingSources,Math.max(0,5-i*2-2));
++  assert.equal(report.coverage.complete,false);
++  if(i<2)assert.ok(report.nextCursor);else assert.equal(report.nextCursor,null);
++ });
++ assert.equal(pages.reduce((n,p)=>n+proposeBranchReviews({report:p,stateDir:f.state}).proposed,0),5);
++ assert.ok(new BacklogStore(path.join(f.state,'development-backlog.json')).read().doc.tasks.every(x=>x.state==='PROPOSED'));
++ assert.equal(f.git('rev-parse','HEAD'),f.base);assert.equal(f.git('status','--porcelain'),'');
++});
++
++test('page cursors reject malformed positions and changed source identity',t=>{
++ const f=fixture(t);feature(f,'alpha');feature(f,'bravo');
++ const cursor=discoverBranches({root:f.root,maxSources:1}).nextCursor;
++ assert.ok(cursor);
++ for(const value of [{},'cursor',[],{...cursor,nextSourceOffset:0},{...cursor,nextSourceOffset:2},
++  {...cursor,nextSourceOffset:1.5},{...cursor,unexpected:true}])
++  assert.throws(()=>discoverBranches({root:f.root,maxSources:1,cursor:value}),/INVALID_DISCOVERY_CURSOR/);
++ const other=fixture(t);
++ assert.throws(()=>discoverBranches({root:other.root,maxSources:1,cursor}),/DISCOVERY_CURSOR_STALE/);
++ assert.throws(()=>discoverBranches({root:f.root,targetRef:'alpha',maxSources:1,cursor}),/DISCOVERY_CURSOR_STALE/);
++ f.git('update-ref','refs/archive/new-alias',f.base);
++ assert.throws(()=>discoverBranches({root:f.root,maxSources:1,cursor}),/DISCOVERY_CURSOR_STALE/);
++ assert.equal(fs.existsSync(f.state),false);
++});
++
++test('last page keeps omitted paths and partial inventory explicit',t=>{
++ const f=fixture(t);feature(f,'alpha');
++ f.git('switch','-qc','bravo');f.write('lib/b.mjs','export const b=1;\n');
++ f.write('lib/c.mjs','export const c=1;\n');f.commit('large source');f.git('switch','-q','target');
++ const first=discoverBranches({root:f.root,maxSources:1,maxChanges:1});
++ assert.ok(first.nextCursor);
++ const last=discoverBranches({root:f.root,maxSources:1,maxChanges:1,cursor:first.nextCursor});
++ assert.equal(last.nextCursor,null);assert.equal(last.coverage.remainingSources,0);
++ assert.equal(last.coverage.complete,false);assert.equal(last.branches[0].changesTruncated,true);
++ assert.equal(last.branches[0].changeCount,2);
++ const full=discoverBranches({root:f.root});assert.equal(full.coverage.complete,true);
++ assert.equal(full.nextCursor,null);assert.equal(full.coverage.sourceOffset,0);
++ assert.equal(full.approvedForMerge,false);assert.equal(full.executedTests,0);assert.equal(full.apk,'NOT_RUN');
++});
++
++test('one oversized source retains exact totals while bounding path details',t=>{
++ const f=fixture(t);f.git('switch','-qc','large-source');
++ const directory=Array.from({length:12},(_,i)=>'segment-'+i+'-'+'x'.repeat(116)).join('/');
++ for(let i=0;i<2000;i++)f.write(directory+'/module-'+String(i).padStart(4,'0')+'.mjs','export const value=1;\n');
++ f.commit('long path inventory');f.git('switch','-q','target');
++ const report=discoverBranches({root:f.root,maxChanges:2000}),branch=report.branches[0];
++ assert.equal(branch.changeCount,2000);assert.equal(branch.missingCount,2000);
++ assert.ok(branch.changes.length>0&&branch.changes.length<2000);assert.equal(branch.changesTruncated,true);
++ assert.equal(report.coverage.byteLimitReached,true);assert.equal(report.coverage.complete,false);
++ assert.equal(report.nextCursor,null);
++ assert.ok(Buffer.byteLength(JSON.stringify(report)+'\n')<=report.coverage.reportByteLimit);
++ assert.equal(report.approvedForMerge,false);assert.equal(report.apk,'NOT_RUN');
++});
++
+ test('invalid limits and option-like target references fail closed',t=>{
+  const f=fixture(t);
+  for(const options of [{maxSources:0},{maxSources:5001},{maxChanges:-1},{timeoutMs:0},{targetRef:'--upload-pack=anything'}])
+diff --git a/.github/continuum/local-teamleader-loop.mjs b/.github/continuum/local-teamleader-loop.mjs
+index f83e6a1dcd40e7841734f893895766c6c3b1ed29..e9520fc95ecce6aa3864d36ef4da660f194dd2d7 100644
+--- a/.github/continuum/local-teamleader-loop.mjs
++++ b/.github/continuum/local-teamleader-loop.mjs
+@@ -102,7 +102,7 @@ async function sourceIdentity(root,sourcePreflight){
+  * creator may rename that directory, even when several dead-PID recoverers race.
+  * Unknown hosts, live PIDs and incomplete lock metadata fail closed.
+  */
+-function acquireLoopLock(file){
++export function acquireLoopLock(file){
+  const lock=file+'.lock';
+  const payload=JSON.stringify({pid:process.pid,host:os.hostname(),
+   nonce:crypto.randomBytes(16).toString('hex')});
+diff --git a/scripts/continuum-release-host-preflight.mjs b/scripts/continuum-release-host-preflight.mjs
+index c273b39943047b2b1e658eabe4c77646de9c77c8..ee7fb58a9503d6137b52116b64e350876abf2325 100644
+--- a/scripts/continuum-release-host-preflight.mjs
++++ b/scripts/continuum-release-host-preflight.mjs
+@@ -6,11 +6,21 @@ import fs from 'node:fs';
+ import path from 'node:path';
+ import {spawnSync} from 'node:child_process';
+ import {fileURLToPath} from 'node:url';
++import {assertBranchSourceSafe} from '../.github/continuum/branch-discovery.mjs';
+ const ORIGINS=new Set(['https://github.com/Ullmann27/device-ai',
+  'https://github.com/Ullmann27/device-ai.git',
+  'git@github.com:Ullmann27/device-ai.git',
+  'ssh://git@github.com/Ullmann27/device-ai.git']);
+ const PROTECTED=/^(?:main|master|prod|production|release)(?:$|\/)/i;
++function availableFile(file,executable=false){
++  if(typeof file!=='string'||!file)return false;
++  try{
++    const stat=fs.statSync(file);
++    if(!stat.isFile()||stat.size===0)return false;
++    fs.accessSync(file,executable?fs.constants.X_OK:fs.constants.R_OK);
++    return true;
++  }catch{return false;}
++}
+ const safePath=(root,rel)=>{
+   let p=root;
+   for(const part of rel.split('/')){
+@@ -53,6 +63,12 @@ export function inspectReleaseCheckout(root,expectedSha) {
+     fs.realpathSync(base)!==base)throw Error('UNSAFE_CHECKOUT_PATH');
+   if(path.resolve(git(base,['rev-parse','--show-toplevel']))!==base)
+     throw Error('INCORRECT_GIT_ROOT');
++  let dirty=false;
++  try{assertBranchSourceSafe(base);}
++  catch(error){
++    if(error.message!=='DISCOVERY_SOURCE_DIRTY')throw error;
++    dirty=true;
++  }
+   return evaluateReleaseSource({
+     gradle:safePath(base,'app/build.gradle.kts'),
+     runner:safePath(base,'scripts/continuum-fusion-full-regression.sh'),
+@@ -60,7 +76,7 @@ export function inspectReleaseCheckout(root,expectedSha) {
+     branch:git(base,['symbolic-ref','--quiet','--short','HEAD']),
+     origin:git(base,['remote','get-url','origin']),
+     sha:git(base,['rev-parse','HEAD']),expectedSha,
+-    dirty:git(base,['status','--porcelain','--untracked-files=normal'])!==''
++    dirty
+   });
+ }
+ export function inspectHostEnvironment(env=process.env) {
+@@ -76,16 +92,17 @@ export function inspectHostEnvironment(env=process.env) {
+       blockers.push('JDK17_REQUIRED');
+   }
+   const sdk=env.ANDROID_HOME || env.ANDROID_SDK_ROOT;
+-  if(!sdk||!fs.existsSync(path.join(sdk,'platforms','android-36','android.jar')))
++  if(!sdk||!availableFile(path.join(sdk,'platforms','android-36','android.jar')))
+     blockers.push('SDK36_NOT_FOUND');
+   const gradle=env.CONTINUUM_GRADLE_PATH;
+   if(!gradle||!fs.existsSync(gradle))blockers.push('GRADLE8111_NOT_FOUND');
+   else {
+     const x=spawnSync(gradle,['--version'],{env,encoding:'utf8',timeout:6000,maxBuffer:20000});
+-    if(x.status!==0||!x.stdout.includes('Gradle 8.11.1'))blockers.push('GRADLE8111_INVALID');
++    const versions=(x.stdout??'').split(/\r?\n/).map(line=>line.trim()).filter(line=>line.startsWith('Gradle '));
++    if(x.status!==0||versions.length!==1||versions[0]!=='Gradle 8.11.1')blockers.push('GRADLE8111_INVALID');
+   }
+   const aapt2=env.CONTINUUM_AAPT2_PATH || (sdk?path.join(sdk,'build-tools','35.0.0','aapt2'):null);
+-  if(!aapt2||!fs.existsSync(aapt2))blockers.push('NATIVE_AAPT2_NOT_FOUND');
++  if(!availableFile(aapt2,true))blockers.push('NATIVE_AAPT2_NOT_FOUND');
+   return Object.freeze({hostReadyToAttemptQa:!blockers.length,blockers,
+     androidCompilationExecuted:false,androidTestExecuted:false,apkSigned:false});
+ }
+diff --git a/scripts/continuum-release-host-preflight.test.mjs b/scripts/continuum-release-host-preflight.test.mjs
+index 783cbb7bd26fcd2bb1b56d9ff32869e4318d9d35..c8ea91d51aac83d43d71103b3cba86c7ee483aeb 100644
+--- a/scripts/continuum-release-host-preflight.test.mjs
++++ b/scripts/continuum-release-host-preflight.test.mjs
+@@ -30,6 +30,49 @@ test('host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads',()=
+   for(const name of ['EXPLICIT_JDK_NOT_FOUND','SDK36_NOT_FOUND','GRADLE8111_NOT_FOUND','NATIVE_AAPT2_NOT_FOUND'])
+     assert.ok(r.blockers.includes(name),name);
+ });
++function toolFixture(t){
++ const home=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-tool-profile-')),bin=path.join(home,'bin'),sdk=path.join(home,'sdk');
++ t.after(()=>fs.rmSync(home,{recursive:true,force:true}));
++ fs.mkdirSync(bin);fs.mkdirSync(path.join(sdk,'platforms','android-36'),{recursive:true});
++ const jar=path.join(sdk,'platforms','android-36','android.jar'),gradle=path.join(bin,'gradle'),aapt2=path.join(bin,'aapt2');
++ fs.writeFileSync(jar,'fixture only');fs.writeFileSync(aapt2,'#!/bin/sh\nexit 0\n',{mode:0o700});
++ fs.writeFileSync(path.join(bin,'java'),'#!/bin/sh\nprintf \'openjdk version "17.0.1"\\n\' >&2\n',{mode:0o700});
++ fs.writeFileSync(path.join(bin,'javac'),'#!/bin/sh\nprintf \'javac 17.0.1\\n\'\n',{mode:0o700});
++ const version=output=>fs.writeFileSync(gradle,"#!/bin/sh\ncat <<'GRADLE_FIXTURE'\n"+output+'\nGRADLE_FIXTURE\n',{mode:0o700});
++ version('Gradle 8.11.1');
++ const env={JAVA_HOME:home,PATH:process.env.PATH,ANDROID_HOME:sdk,CONTINUUM_GRADLE_PATH:gradle,CONTINUUM_AAPT2_PATH:aapt2};
++ return {env,jar,aapt2,version};
++}
++test('Gradle admission requires one exact stable version line',t=>{
++ const f=toolFixture(t);
++ for(const output of ['Gradle 8.11.1','-----\r\nGradle 8.11.1\r\n-----']){
++  f.version(output);assert.equal(inspectHostEnvironment(f.env).hostReadyToAttemptQa,true,output);
++ }
++ for(const output of ['Gradle 8.11.10','Gradle 8.11.1-rc-1','Gradle 8.11.1-nightly','Unavailable: Gradle 8.11.1',
++  'Gradle 8.11.2\nGradle 8.11.1','Gradle 8.11.1\nGradle 8.11.1']){
++  f.version(output);const result=inspectHostEnvironment(f.env);
++  assert.equal(result.hostReadyToAttemptQa,false,output);assert.ok(result.blockers.includes('GRADLE8111_INVALID'));
++ }
++});
++test('SDK platform admission requires a nonempty regular file',t=>{
++ const f=toolFixture(t);assert.equal(inspectHostEnvironment(f.env).hostReadyToAttemptQa,true);
++ fs.unlinkSync(f.jar);fs.mkdirSync(f.jar);
++ assert.ok(inspectHostEnvironment(f.env).blockers.includes('SDK36_NOT_FOUND'));
++ fs.rmdirSync(f.jar);fs.writeFileSync(f.jar,'');
++ assert.ok(inspectHostEnvironment(f.env).blockers.includes('SDK36_NOT_FOUND'));
++ fs.unlinkSync(f.jar);fs.symlinkSync(f.jar,f.jar);
++ assert.ok(inspectHostEnvironment(f.env).blockers.includes('SDK36_NOT_FOUND'));
++});
++test('AAPT2 admission requires a nonempty executable regular file',t=>{
++ const f=toolFixture(t);assert.equal(inspectHostEnvironment(f.env).hostReadyToAttemptQa,true);
++ fs.chmodSync(f.aapt2,0o600);
++ assert.ok(inspectHostEnvironment(f.env).blockers.includes('NATIVE_AAPT2_NOT_FOUND'));
++ fs.chmodSync(f.aapt2,0o700);fs.writeFileSync(f.aapt2,'');
++ assert.ok(inspectHostEnvironment(f.env).blockers.includes('NATIVE_AAPT2_NOT_FOUND'));
++ fs.unlinkSync(f.aapt2);fs.mkdirSync(f.aapt2);
++ const result=inspectHostEnvironment(f.env);assert.ok(result.blockers.includes('NATIVE_AAPT2_NOT_FOUND'));
++ assert.equal(result.androidCompilationExecuted,false);assert.equal(result.androidTestExecuted,false);assert.equal(result.apkSigned,false);
++});
+ test('host with existing incompatible Java detects JDK17 requirement',()=>{
+   const home=process.env.JAVA_HOME;
+   if(!home || !fs.existsSync(path.join(home,'bin','javac')))return;
+@@ -48,7 +91,7 @@ test('host probes receive the explicit environment without mutating process.env'
+     ['javac','printf \'javac 17.0.1\\n\''],['gradle','printf \'Gradle 8.11.1\\n\'']]){
+     fs.writeFileSync(path.join(bin,name),guard+`printf '%s\\n' '${name}' >> "$JAVA_HOME/probes.log"\n`+version+'\n',{mode:0o700});
+   }
+-  const aapt2=path.join(bin,'aapt2');fs.writeFileSync(aapt2,'fixture only');
++  const aapt2=path.join(bin,'aapt2');fs.writeFileSync(aapt2,'#!/bin/sh\nexit 0\n',{mode:0o700});
+   const env={JAVA_HOME:home,PATH:bin,ANDROID_HOME:sdk,CONTINUUM_GRADLE_PATH:path.join(bin,'gradle'),CONTINUUM_AAPT2_PATH:aapt2};
+   const before={...process.env},input={...env},r=inspectHostEnvironment(env);
+   assert.deepEqual(r.blockers,[]);assert.equal(r.hostReadyToAttemptQa,true);
+@@ -78,6 +121,28 @@ test('read-only admission reports dirty synthetic checkout',()=>fixture(({root,h
+   write('app/build.gradle.kts','changed');
+   const a=inspectReleaseCheckout(root,head);assert.ok(a.blockers.includes('UNCLEAN_CHECKOUT'));
+ }));
++test('release source audit refuses fsmonitor before Git status executes it',()=>fixture(({root,git,write})=>{
++ const marker=path.join(root,'monitor-ran'),hook=path.join(root,'hooks','audit-monitor.sh');
++ write('hooks/audit-monitor.sh','#!/bin/sh\nprintf ran > "'+marker+'"\n');fs.chmodSync(hook,0o700);
++ git('add','.');git('commit','-qm','monitor fixture');const head=git('rev-parse','HEAD');
++ git('config','core.fsmonitor',hook);
++ let error;try{inspectReleaseCheckout(root,head);}catch(value){error=value;}
++ assert.equal(fs.existsSync(marker),false,'read-only audit executed fsmonitor');
++ assert.match(error?.message??'',/DISCOVERY_FSMONITOR_UNSUPPORTED/);
++}));
++test('release source audit refuses clean filters without touching their marker',()=>fixture(({root,git,write})=>{
++ write('.gitattributes','app/build.gradle.kts filter=audit\n');git('add','.');git('commit','-qm','filter attributes');
++ const head=git('rev-parse','HEAD'),marker=path.join(root,'filter-ran');
++ git('config','filter.audit.clean',`sh -c 'printf ran > "${marker}"; cat'`);
++ const file=path.join(root,'app','build.gradle.kts'),future=new Date(Date.now()+2000);fs.utimesSync(file,future,future);
++ let error;try{inspectReleaseCheckout(root,head);}catch(value){error=value;}
++ assert.equal(fs.existsSync(marker),false,'read-only audit executed clean filter');
++ assert.match(error?.message??'',/DISCOVERY_CLEAN_FILTER_UNSUPPORTED/);
++}));
++test('release source audit refuses current worktree gitlinks',()=>fixture(({root,git,head})=>{
++ git('update-index','--add','--cacheinfo',`160000,${head},vendor`);git('commit','-qm','gitlink fixture');
++ assert.throws(()=>inspectReleaseCheckout(root,git('rev-parse','HEAD')),/DISCOVERY_SUBMODULE_WORKTREE_UNSUPPORTED/);
++}));
+ test('refuses symlinked release source',()=>fixture(({root,head})=>{
+   const file=path.join(root,'scripts/continuum-fold7-standalone-apk.sh');fs.unlinkSync(file);fs.symlinkSync('/etc/passwd',file);
+   assert.throws(()=>inspectReleaseCheckout(root,head),/SOURCE_SYMLINK/);

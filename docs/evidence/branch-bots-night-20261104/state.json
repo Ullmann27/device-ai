@@ -1,0 +1,420 @@
+{
+  "schema": "continuum-branch-bots-development-continuation",
+  "version": 1,
+  "status": "READY_FOR_NEXT_ITERATION",
+  "repository": "Ullmann27/device-ai",
+  "branch": "codex/continuum-branch-integration-bots-20261104",
+  "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
+  "ownerSession": "scheduled-20261105-0539-continuation",
+  "sourceSnapshot": "SELECTED_HISTORICAL_104_PLUS_TARGETED_M15_M16_SOURCE_FUNCTION_AND_REAL_GIT_FIXTURE",
+  "phase": "M17_M18_SOURCE_BOUND_GIT_PROBE_GREEN_PROJECT_TESTS_PENDING",
+  "milestones": [
+    {
+      "id": "M1",
+      "status": "SOURCE_TESTED",
+      "change": "Source-bound paginated discovery",
+      "red": {
+        "tests": 3,
+        "fail": 3
+      },
+      "green": {
+        "tests": 27,
+        "pass": 27,
+        "fail": 0,
+        "skip": 0
+      },
+      "commit": "030578c0aede7745b24915a50a14a2eac8f4859b"
+    },
+    {
+      "id": "M2",
+      "status": "SOURCE_TESTED",
+      "change": "Private resumable page navigation using existing scheduler lock",
+      "red": {
+        "tests": 5,
+        "fail": 5
+      },
+      "green": {
+        "tests": 61,
+        "pass": 61,
+        "fail": 0,
+        "skip": 0
+      },
+      "commit": "9423d5fb6978496ec843d0f7bcbe8285ee63677f"
+    },
+    {
+      "id": "M3",
+      "status": "SOURCE_TESTED",
+      "change": "Exact Gradle profile and real file-shape admission",
+      "red": {
+        "tests": 3,
+        "fail": 3
+      },
+      "green": {
+        "tests": 72,
+        "pass": 72,
+        "fail": 0,
+        "skip": 0
+      },
+      "commit": "24544f970eb9061d6040cc2412cc2473fdfa15ba"
+    },
+    {
+      "id": "M4",
+      "status": "SOURCE_TESTED",
+      "change": "Connect release source audit to existing guarded Git preflight",
+      "red": {
+        "tests": 3,
+        "fail": 3
+      },
+      "green": {
+        "tests": 42,
+        "pass": 42,
+        "fail": 0,
+        "skip": 0
+      },
+      "commit": "ef2146e560452ac7fe65603a31930ecf234eedaf"
+    },
+    {
+      "id": "M5",
+      "status": "SOURCE_TESTED",
+      "change": "Bound source report bytes and continue large inventories",
+      "red": {
+        "tests": 1,
+        "fail": 1
+      },
+      "green": {
+        "tests": 37,
+        "pass": 37,
+        "fail": 0,
+        "skip": 0
+      },
+      "commit": "c216ebcd4726fefd221a6ee347699c9a1280fc47"
+    },
+    {
+      "id": "M6",
+      "status": "PINNED_SOURCE_REVIEWED",
+      "change": "7/7 current #527 integration preimages unchanged; seven night deltas remain unadopted",
+      "commit": "9da2195853940e2b2468e9e6a4993e614cf9e0e0",
+      "testsExecuted": 0
+    },
+    {
+      "id": "M7",
+      "status": "CURRENT_GATE_TRIAGED",
+      "change": "Current #527 Android gate still red in recorded 3011-case run; C1 UI test fixes active under separate ownership",
+      "testsExecuted": 0
+    },
+    {
+      "id": "M8",
+      "status": "TARGETED_SOURCE_CHECK",
+      "change": "Read-only discovery strips inherited GIT_TRACE* output destinations before spawning Git",
+      "red": {
+        "realGitTraceFamiliesWriting": 4,
+        "sourceFunctionInheritedTraceKeys": 4
+      },
+      "green": {
+        "realGitFixtureTests": 5,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0,
+        "sharedWithM9": true,
+        "sourceExtractedTraceKeys": 0
+      },
+      "commit": "ef48e63713fa966710647dc4eadd4da671df39a8",
+      "integratedNode": "NOT_RUN"
+    },
+    {
+      "id": "M9",
+      "status": "TARGETED_SOURCE_CHECK",
+      "change": "Existing local teamleader source-identity Git probes also strip inherited GIT_TRACE* from copy",
+      "red": {
+        "sourceFunctionInheritedTraceKeys": 4
+      },
+      "green": {
+        "sourceExtractedTraceKeys": 0,
+        "realGitFixtureTestsSharedWithM8": 5
+      },
+      "commit": "ef48e63713fa966710647dc4eadd4da671df39a8",
+      "integratedNode": "NOT_RUN"
+    },
+    {
+      "id": "M10",
+      "status": "TARGETED_REAL_GIT_EXCERPT_RED_GREEN",
+      "change": "Prevent foreign inherited Git selectors from redirecting scheduler source identity or hiding dirty checkout",
+      "red": {
+        "tests": 2,
+        "pass": 0,
+        "fail": 2
+      },
+      "green": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0
+      },
+      "commit": "a03224f68a1e9f44bdbcbde6cd04b2808a75e4ec",
+      "integratedNode": "NOT_RUN",
+      "evidence": "docs/evidence/branch-bots-night-20261104/m10-source-identity-git-env-20261105.json"
+    },
+    {
+      "id": "M11",
+      "status": "PINNED_SOURCE_REVIEWED",
+      "change": "Current #527 contains the original exact preimages for all 8 changed paths; no shared branch changes",
+      "files": 8,
+      "testsExecuted": 0,
+      "commit": "a03224f68a1e9f44bdbcbde6cd04b2808a75e4ec",
+      "evidence": "docs/evidence/branch-bots-night-20261104/m10-source-identity-git-env-20261105.json"
+    },
+    {
+      "id": "M12",
+      "status": "REAL_GIT_BOUNDARY_EXCERPT_RED_GREEN",
+      "change": "Reject nested repository source roots before durable scheduler state can be created",
+      "commit": "f9bd4e2949ef2d09d9c45c4c93924390650a1f81",
+      "red": {
+        "failed": 1
+      },
+      "green": {
+        "passed": 1
+      },
+      "fullNode": "NOT_RUN"
+    },
+    {
+      "id": "M13",
+      "status": "FILESYSTEM_EXCERPT_RED_GREEN",
+      "change": "Reject direct in-checkout state path before mkdir creates a new untracked directory",
+      "commit": "f9bd4e2949ef2d09d9c45c4c93924390650a1f81",
+      "red": {
+        "failed": 1
+      },
+      "green": {
+        "passed": 1
+      },
+      "fullNode": "NOT_RUN"
+    },
+    {
+      "id": "M14",
+      "status": "REAL_SYMLINK_EXCERPT_RED_GREEN",
+      "change": "Resolve nearest existing checkpoint ancestor before mkdir, preventing creation via external symlink back into checkout",
+      "commit": "f9bd4e2949ef2d09d9c45c4c93924390650a1f81",
+      "red": {
+        "failed": 1
+      },
+      "green": {
+        "passed": 1
+      },
+      "fullNode": "NOT_RUN"
+    },
+    {
+      "id": "M15",
+      "status": "TARGETED_REAL_GIT_AND_SOURCE_FUNCTION_PROVED",
+      "change": "Block ambient Git config count/key/value selectors from read-only scheduler Git children",
+      "commit": "aa5255ea00da8f4753cbd7de48c849783acbb45a",
+      "realGitOriginalMarkerWrites": 1,
+      "realGitPatchedMarkerWrites": 0,
+      "sourceFunctionOriginalSelectorsForwarded": 3,
+      "sourceFunctionPatchedSelectorsForwarded": 0,
+      "integratedNode": "NOT_RUN"
+    },
+    {
+      "id": "M16",
+      "status": "TARGETED_REAL_GIT_AND_SOURCE_FUNCTION_PROVED",
+      "change": "Block inherited GIT_CONFIG_PARAMETERS from read-only scheduler Git children",
+      "commit": "aa5255ea00da8f4753cbd7de48c849783acbb45a",
+      "realGitOriginalMarkerWrites": 1,
+      "realGitPatchedMarkerWrites": 0,
+      "sourceFunctionOriginalSelectorsForwarded": 1,
+      "sourceFunctionPatchedSelectorsForwarded": 0,
+      "integratedNode": "NOT_RUN"
+    },
+    {
+      "id": "M17",
+      "status": "SOURCE_FUNCTION_TEST_AND_REAL_GIT_FIXTURE",
+      "change": "Default durable loop without caller preflight now connects the existing safe branch-source audit before Git reads",
+      "commit": "fff98ea4b2bd3b236a5c0f48bd86d564b4cdaea8",
+      "realGitCases": 3,
+      "realGitPassed": 3,
+      "sourceExcerptCases": 4,
+      "sourceExcerptPassed": 4,
+      "integratedProjectNode": "NOT_RUN"
+    },
+    {
+      "id": "M18",
+      "status": "REGRESSIONS_COMMITTED_NOT_RUN",
+      "change": "Reject fsmonitor and clean-filter helpers before any durable scheduler Git side effect with missing trusted callback",
+      "commit": "fff98ea4b2bd3b236a5c0f48bd86d564b4cdaea8",
+      "projectTestsAdded": 2,
+      "projectTestsRun": "NOT_RUN",
+      "android": "NOT_RUN"
+    }
+  ],
+  "androidCompilation": "NOT_RUN",
+  "deviceTest": "NOT_RUN",
+  "apk": "NOT_RUN",
+  "parallelAgents": 0,
+  "latestVerifiedCodeCommit": "c216ebcd4726fefd221a6ee347699c9a1280fc47",
+  "changedPaths": [
+    ".github/continuum/branch-bots-cli.mjs",
+    ".github/continuum/branch-bots-cli.test.mjs",
+    ".github/continuum/branch-discovery.mjs",
+    ".github/continuum/branch-discovery.test.mjs",
+    ".github/continuum/local-teamleader-loop.mjs",
+    "scripts/continuum-release-host-preflight.mjs",
+    "scripts/continuum-release-host-preflight.test.mjs"
+  ],
+  "validation": {
+    "targetedNode": {
+      "tests": 202,
+      "pass": 202,
+      "fail": 0,
+      "skip": 0,
+      "sourceUnchanged": true
+    },
+    "selectedIntakeNode": {
+      "upstreamCommit": "ca80459a3f6695c8fecff4a217fbe93318452121",
+      "overlayCommit": "c216ebcd4726fefd221a6ee347699c9a1280fc47",
+      "tests": 202,
+      "pass": 202,
+      "fail": 0,
+      "skip": 0,
+      "sourceUnchanged": true
+    },
+    "publishedCodeBlobsMatched": 104,
+    "syntaxChecksPassed": 7,
+    "wholeRepositoryGate": "NOT_RUN",
+    "androidCompilation": "NOT_RUN",
+    "deviceTest": "NOT_RUN",
+    "apk": "NOT_RUN",
+    "currentSourceNode": "NOT_RUN",
+    "m8m9": {
+      "sourceFilesParsed": 4,
+      "sourceFunctionChecks": "ORIGINAL_PASS_THROUGH_4_VS_PATCHED_ZERO_FOR_READER_AND_SCHEDULER",
+      "independentRealGitFixture": {
+        "cases": 5,
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "tapSha256": "8daae19f680b1a9baec80ef5ba3134d7720d1c3249a99e9091f003b16fc6a2e2"
+      },
+      "completeImportedNode": "NOT_RUN",
+      "android": "NOT_RUN",
+      "apk": "NOT_RUN"
+    },
+    "m10m11": {
+      "excerptRed": {
+        "total": 2,
+        "fail": 2,
+        "exit": 1
+      },
+      "excerptGreen": {
+        "total": 2,
+        "pass": 2,
+        "exit": 0
+      },
+      "projectSyntaxParsed": 2,
+      "exactTargetPreimages": 8,
+      "actualFullNode": "NOT_RUN",
+      "android": "NOT_RUN",
+      "apk": "NOT_RUN"
+    },
+    "m12m14": {
+      "standaloneSourceMatchedControlFlow": {
+        "baseline": {
+          "tests": 4,
+          "pass": 1,
+          "fail": 3
+        },
+        "candidate": {
+          "tests": 4,
+          "pass": 4,
+          "fail": 0
+        },
+        "execution": "ACTUAL_LOCAL_NODE_AND_GIT_EXCERPT_NOT_FULL_IMPORTED_PROJECT",
+        "node": "v22.16.0",
+        "git": "2.47.3",
+        "scriptSha256": "a614ad6881e46f76428afbcba3e0d6cb65d9951b42b2072c7d374614951936b6",
+        "outputSha256": "22843897463d81a80343273c3c859e20c0c4fcc801507f9519f86e5494194f11"
+      },
+      "sourceSyntax": "V8_FUNCTION_PARSE_PASS_AFTER_ESM_IMPORT_EXPORT_STRIP",
+      "testSyntax": "V8_FUNCTION_PARSE_PASS_AFTER_ESM_IMPORT_STRIP",
+      "projectTestFileAddedCases": 4,
+      "projectTestFileRun": "NOT_RUN",
+      "previous202": "HISTORICAL_ONLY",
+      "android": "NOT_RUN",
+      "apk": "NOT_RUN",
+      "changedSourceBlobs": {
+        ".github/continuum/local-teamleader-loop.mjs": "577db114a3944b1130005d20ca074aac0c7b2f23",
+        ".github/continuum/local-teamleader-loop-source-preflight.test.mjs": "2e5b1be4dd44c5806f6c3f763faababacda2a509"
+      }
+    },
+    "m15m16": {
+      "baseline": "9ad392964f78f740c56e54617a9c1ae44d13ea1a",
+      "realGitCaseCount": 4,
+      "unwantedMarkerCasesBefore": 2,
+      "unwantedMarkerCasesAfter": 0,
+      "sourceFunctionCases": 4,
+      "allSourceChecksPassed": true,
+      "projectTestsAdded": 2,
+      "projectTestsRun": "NOT_RUN",
+      "fullNode": "NOT_RUN",
+      "android": "NOT_RUN",
+      "apk": "NOT_RUN",
+      "sourceBlob": "888e52cbbd1f8766625646f7ba0fe6fc8bf6c88c",
+      "testBlob": "835f7a7e158dec2c9598106b358f135009d6b5ec"
+    },
+    "m17m18": {
+      "realGitFixture": {
+        "cases": 3,
+        "pass": 3,
+        "fail": 0,
+        "scriptSha256": "0c18c3ffaab08f00811863284a805066336fbb6ffae3a1e74394c16db8b76e37"
+      },
+      "sourceExcerpt": {
+        "cases": 4,
+        "pass": 4,
+        "fail": 0,
+        "transport": "STUBBED"
+      },
+      "sourceBlob": "ff64083be41389f87c907d2b291472020de74cda",
+      "testBlob": "11ad08af03ba6bb459d616fb34a6064adb89df15",
+      "projectNode": "NOT_RUN",
+      "apk": "NOT_RUN",
+      "fold7": "NOT_RUN"
+    }
+  },
+  "nextTasks": [
+    "Run actual imports in a complete clean pinned checkout: node --test .github/continuum/local-teamleader-loop-source-preflight.test.mjs .github/continuum/local-teamleader-loop.test.mjs, including the 2 added M17/M18 cases.",
+    "Execute the full selected 202-case Node suite afresh on this source; previous cases are historical only.",
+    "C1 owner: verify current PR #519 and #527 heads, selectively integrate M1-M18 source and tests preserving newer commits; do not overwrite shared branches.",
+    "After common candidate freeze, run critical/full Node, backend, complete Android unit/UI, configured lint and original-signature owner update gates; APK/device NOT_RUN.",
+    "Audit Git configuration and checkout TOCTOU separately; no broad sandbox guarantee."
+  ],
+  "scheduledContinuation": {
+    "enabled": true,
+    "cadence": "HOURLY",
+    "timezone": "Europe/Vienna",
+    "scope": "Separate scheduled development turns, not an always-running Android worker",
+    "activeCheckpointMustNotBeModified": true
+  },
+  "currentIntake": {
+    "c1": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "integration": "19039e5b822310cd5ab1ce5cc5cb854822a1bcd3",
+    "nightDeltaAdopted": false,
+    "traceFixAdopted": false,
+    "gateOn19039": "ANDROID3032_PASS_0_FAIL_19_SKIP;NODE2362_PASS_0_FAIL_31_SKIP;BACKEND64_PASS;LINT_NEWAPI0",
+    "m10FixAdopted": false,
+    "eightPathPreimagesMatched": 8,
+    "m12m14Adopted": false,
+    "schedulerPreimagesBothSharedHeadsMatchOriginal": true,
+    "schedulerPreimageOriginal": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+    "schedulerTestPreimageOriginal": "13c5661432115c883fc2b64161757aad9d1128f4",
+    "m15m16Adopted": false,
+    "sourceSharedPreimage": "f83e6a1dcd40e7841734f893895766c6b3b1ed29",
+    "testSharedPreimage": "13c5661432115c883fc2b64161757aad9d1128f4",
+    "m17m18Adopted": false
+  },
+  "latestTargetedCodeCommit": "fff98ea4b2bd3b236a5c0f48bd86d564b4cdaea8",
+  "additionalChangedPaths": [
+    ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+    ".github/continuum/local-teamleader-loop.mjs"
+  ],
+  "lastCleanCheckpoint": "fff98ea4b2bd3b236a5c0f48bd86d564b4cdaea8",
+  "lastCompletedCheckpoint": "fff98ea4b2bd3b236a5c0f48bd86d564b4cdaea8"
+}

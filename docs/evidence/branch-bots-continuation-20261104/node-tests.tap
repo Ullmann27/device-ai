@@ -1,0 +1,1108 @@
+TAP version 13
+# Subtest: one-shot bot persists genuine source differences and only canonical proposed work
+ok 1 - one-shot bot persists genuine source differences and only canonical proposed work
+  ---
+  duration_ms: 1116.914121
+  type: 'test'
+  ...
+# Subtest: CLI restores installed Termux paths for diagnosis and keeps missing tools blocked
+ok 2 - CLI restores installed Termux paths for diagnosis and keeps missing tools blocked
+  ---
+  duration_ms: 733.871154
+  type: 'test'
+  ...
+# Subtest: finite loop uses the existing durable scheduler and stops at the approved budget
+ok 3 - finite loop uses the existing durable scheduler and stops at the approved budget
+  ---
+  duration_ms: 592.070023
+  type: 'test'
+  ...
+# Subtest: CLI refuses unknown, duplicate and unbounded modes before creating state
+ok 4 - CLI refuses unknown, duplicate and unbounded modes before creating state
+  ---
+  duration_ms: 702.098594
+  type: 'test'
+  ...
+# Subtest: CLI incomplete coverage is nonzero and never reports a completed full inventory
+ok 5 - CLI incomplete coverage is nonzero and never reports a completed full inventory
+  ---
+  duration_ms: 260.752318
+  type: 'test'
+  ...
+# Subtest: CLI cannot write through a state path into the source checkout
+ok 6 - CLI cannot write through a state path into the source checkout
+  ---
+  duration_ms: 144.224828
+  type: 'test'
+  ...
+# Subtest: CLI rejects a configuration mask before the existing scheduler can inspect source
+ok 7 - CLI rejects a configuration mask before the existing scheduler can inspect source
+  ---
+  duration_ms: 120.738173
+  type: 'test'
+  ...
+# Subtest: finds unconnected remote, archived and pull refs once per exact source commit
+ok 8 - finds unconnected remote, archived and pull refs once per exact source commit
+  ---
+  duration_ms: 324.533099
+  type: 'test'
+  ...
+# Subtest: distinguishes ancestry from copied changes without using branch names as quality evidence
+ok 9 - distinguishes ancestry from copied changes without using branch names as quality evidence
+  ---
+  duration_ms: 419.429311
+  type: 'test'
+  ...
+# Subtest: reports identical source trees even when commits differ
+ok 10 - reports identical source trees even when commits differ
+  ---
+  duration_ms: 214.153341
+  type: 'test'
+  ...
+# Subtest: detects divergent modifications and deletions without overwriting target files
+ok 11 - detects divergent modifications and deletions without overwriting target files
+  ---
+  duration_ms: 202.095444
+  type: 'test'
+  ...
+# Subtest: keeps tests, build files, symlinks and control plane work protected
+ok 12 - keeps tests, build files, symlinks and control plane work protected
+  ---
+  duration_ms: 158.454444
+  type: 'test'
+  ...
+# Subtest: labels unrelated history and never queues it as an integration candidate
+ok 13 - labels unrelated history and never queues it as an integration candidate
+  ---
+  duration_ms: 177.359244
+  type: 'test'
+  ...
+# Subtest: canonical backlog proposals are idempotent, source bound and never automatically accepted
+ok 14 - canonical backlog proposals are idempotent, source bound and never automatically accepted
+  ---
+  duration_ms: 468.203885
+  type: 'test'
+  ...
+# Subtest: serialized or stale discovery output cannot enqueue fresh review authority
+ok 15 - serialized or stale discovery output cannot enqueue fresh review authority
+  ---
+  duration_ms: 138.433522
+  type: 'test'
+  ...
+# Subtest: state inside the source or redirected into it is refused before writes
+ok 16 - state inside the source or redirected into it is refused before writes
+  ---
+  duration_ms: 176.003669
+  type: 'test'
+  ...
+# Subtest: bounded discovery exposes incomplete source and path coverage
+ok 17 - bounded discovery exposes incomplete source and path coverage
+  ---
+  duration_ms: 188.008087
+  type: 'test'
+  ...
+# Subtest: invalid limits and option-like target references fail closed
+ok 18 - invalid limits and option-like target references fail closed
+  ---
+  duration_ms: 13.954596
+  type: 'test'
+  ...
+# Subtest: dirty checkouts and planted backlog symlinks are refused
+ok 19 - dirty checkouts and planted backlog symlinks are refused
+  ---
+  duration_ms: 127.700794
+  type: 'test'
+  ...
+# Subtest: branch bot control files are protected by the real coding and repair gates
+ok 20 - branch bot control files are protected by the real coding and repair gates
+  ---
+  duration_ms: 0.236074
+  type: 'test'
+  ...
+# Subtest: configured clean filters cannot execute during the cleanliness check
+ok 21 - configured clean filters cannot execute during the cleanliness check
+  ---
+  duration_ms: 41.758747
+  type: 'test'
+  ...
+# Subtest: preflight rejects fsmonitor hooks and partial clones before inspecting worktree state
+ok 22 - preflight rejects fsmonitor hooks and partial clones before inspecting worktree state
+  ---
+  duration_ms: 31.916547
+  type: 'test'
+  ...
+# Subtest: configuration mask cannot hide executable clean filters from discovery
+ok 23 - configuration mask cannot hide executable clean filters from discovery
+  ---
+  duration_ms: 29.73401
+  type: 'test'
+  ...
+# Subtest: current worktree gitlinks are rejected before nested worktree status
+ok 24 - current worktree gitlinks are rejected before nested worktree status
+  ---
+  duration_ms: 36.438322
+  type: 'test'
+  ...
+# Subtest: existing profile port selects distinct immutable identities without changing task budget
+ok 25 - existing profile port selects distinct immutable identities without changing task budget
+  ---
+  duration_ms: 11.235716
+  type: 'test'
+  ...
+# Subtest: copied JSON and unregistered identities cannot acquire assignment origin
+ok 26 - copied JSON and unregistered identities cannot acquire assignment origin
+  ---
+  duration_ms: 1.708997
+  type: 'test'
+  ...
+# Subtest: same builder/verifier and unsupported stage are rejected
+ok 27 - same builder/verifier and unsupported stage are rejected
+  ---
+  duration_ms: 0.660693
+  type: 'test'
+  ...
+# Subtest: prepared task fingerprint and canonical task cannot be exchanged
+ok 28 - prepared task fingerprint and canonical task cannot be exchanged
+  ---
+  duration_ms: 0.718079
+  type: 'test'
+  ...
+# Subtest: rename retains identity; removal and workspace change invalidate current association
+ok 29 - rename retains identity; removal and workspace change invalidate current association
+  ---
+  duration_ms: 2.202308
+  type: 'test'
+  ...
+# Subtest: replacing the external store method cannot substitute the admitted reader
+ok 30 - replacing the external store method cannot substitute the admitted reader
+  ---
+  duration_ms: 2.332006
+  type: 'test'
+  ...
+# Subtest: profile model cap restricts task and a later budget reduction revokes the association
+ok 31 - profile model cap restricts task and a later budget reduction revokes the association
+  ---
+  duration_ms: 1.733684
+  type: 'test'
+  ...
+# Subtest: bot execution requires actual admitted isolation before reading journals or invoking provider
+ok 32 - bot execution requires actual admitted isolation before reading journals or invoking provider
+  ---
+  duration_ms: 1.634224
+  type: 'test'
+  ...
+# Subtest: Echo executes deterministic canonical report without extra model call, journal mutation or owner text
+ok 33 - Echo executes deterministic canonical report without extra model call, journal mutation or owner text
+  ---
+  duration_ms: 2268.013235
+  type: 'test'
+  ...
+# Subtest: reporter must still exist; rename preserves stable identity
+ok 34 - reporter must still exist; rename preserves stable identity
+  ---
+  duration_ms: 20.773767
+  type: 'test'
+  ...
+# Subtest: current prepared grant fingerprint cannot be replaced
+ok 35 - current prepared grant fingerprint cannot be replaced
+  ---
+  duration_ms: 0.830277
+  type: 'test'
+  ...
+# Subtest: changed source is blocked before a success report
+ok 36 - changed source is blocked before a success report
+  ---
+  duration_ms: 5.49318
+  type: 'test'
+  ...
+# Subtest: tampered canonical journal MAC cannot be summarized
+ok 37 - tampered canonical journal MAC cannot be summarized
+  ---
+  duration_ms: 5.592668
+  type: 'test'
+  ...
+# Subtest: owner abort cannot be promoted to confirmed success
+ok 38 - owner abort cannot be promoted to confirmed success
+  ---
+  duration_ms: 6.581454
+  type: 'test'
+  ...
+# Subtest: missing or modified execution receipt invalidates confirmed result
+ok 39 - missing or modified execution receipt invalidates confirmed result
+  ---
+  duration_ms: 14.601222
+  type: 'test'
+  ...
+# Subtest: modified report artifact is rejected rather than silently overwritten
+ok 40 - modified report artifact is rejected rather than silently overwritten
+  ---
+  duration_ms: 31.957048
+  type: 'test'
+  ...
+# Subtest: assignment expiry blocks reporter with no additional inference
+ok 41 - assignment expiry blocks reporter with no additional inference
+  ---
+  duration_ms: 0.761353
+  type: 'test'
+  ...
+# Subtest: strict observation failure exposes the canonical negative Echo report without learning
+ok 42 - strict observation failure exposes the canonical negative Echo report without learning
+  ---
+  duration_ms: 693.948345
+  type: 'test'
+  ...
+# Subtest: resuming a negative task reuses its report without inference, execution or journal changes
+ok 43 - resuming a negative task reuses its report without inference, execution or journal changes
+  ---
+  duration_ms: 495.141289
+  type: 'test'
+  ...
+# Subtest: a reporter removed during a failed attempt cannot receive a canonical report
+ok 44 - a reporter removed during a failed attempt cannot receive a canonical report
+  ---
+  duration_ms: 352.094594
+  type: 'test'
+  ...
+# Subtest: strict replay of an older completed repair cannot publish success without a current model observation
+ok 45 - strict replay of an older completed repair cannot publish success without a current model observation
+  ---
+  duration_ms: 1643.568735
+  type: 'test'
+  ...
+# Subtest: a competing writer cannot turn a strict observation failure into an older success report
+ok 46 - a competing writer cannot turn a strict observation failure into an older success report
+  ---
+  duration_ms: 1341.272583
+  type: 'test'
+  ...
+# Subtest: service attempt persists the canonical negative report for owner lookup while rejecting
+ok 47 - service attempt persists the canonical negative report for owner lookup while rejecting
+  ---
+  duration_ms: 224.227095
+  type: 'test'
+  ...
+# Subtest: provider-shaped and JSON-copied errors cannot acquire canonical failure evidence
+ok 48 - provider-shaped and JSON-copied errors cannot acquire canonical failure evidence
+  ---
+  duration_ms: 213.233926
+  type: 'test'
+  ...
+# Subtest: failure evidence persistence cannot replace the model error or overwrite a prior record
+ok 49 - failure evidence persistence cannot replace the model error or overwrite a prior record
+  ---
+  duration_ms: 255.562388
+  type: 'test'
+  ...
+# Subtest: owner lookup offers only the checked negative report for an unknown delivery
+ok 50 - owner lookup offers only the checked negative report for an unknown delivery
+  ---
+  duration_ms: 479.114765
+  type: 'test'
+  ...
+# Subtest: typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
+ok 51 - typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
+  ---
+  duration_ms: 2750.4033
+  type: 'test'
+  ...
+# Subtest: private durable config keeps service, project, model and profile identities separate
+ok 52 - private durable config keeps service, project, model and profile identities separate
+  ---
+  duration_ms: 33.08374
+  type: 'test'
+  ...
+# Subtest: read-only status leaves unstarted state byte-identical and cannot create canonical keys
+ok 53 - read-only status leaves unstarted state byte-identical and cannot create canonical keys
+  ---
+  duration_ms: 17.113834
+  type: 'test'
+  ...
+# Subtest: public permissions, symlinks, hardlinks and oversized private files fail closed
+ok 54 - public permissions, symlinks, hardlinks and oversized private files fail closed
+  ---
+  duration_ms: 1.594815
+  type: 'test'
+  ...
+# Subtest: runtime configuration rejects unknown cloud controls and nonreviewed model hashes
+ok 55 - runtime configuration rejects unknown cloud controls and nonreviewed model hashes
+  ---
+  duration_ms: 1.173663
+  type: 'test'
+  ...
+# Subtest: bounded inbox rejects duplicate identities, unknown delivery states and excess records
+ok 56 - bounded inbox rejects duplicate identities, unknown delivery states and excess records
+  ---
+  duration_ms: 13.638194
+  type: 'test'
+  ...
+# Subtest: profile bridge code change invalidates its pinned artifact
+ok 57 - profile bridge code change invalidates its pinned artifact
+  ---
+  duration_ms: 9.782593
+  type: 'test'
+  ...
+# Subtest: source/profile overlap and artificial unbounded queue limits are rejected
+ok 58 - source/profile overlap and artificial unbounded queue limits are rejected
+  ---
+  duration_ms: 13.90887
+  type: 'test'
+  ...
+# Subtest: inherited cloud flags and Node injection never reach the worker environment
+ok 59 - inherited cloud flags and Node injection never reach the worker environment
+  ---
+  duration_ms: 10.603872
+  type: 'test'
+  ...
+# Subtest: process identity binds boot and kernel start ticks, never a PID alone
+ok 60 - process identity binds boot and kernel start ticks, never a PID alone
+  ---
+  duration_ms: 1.204109
+  type: 'test'
+  ...
+# Subtest: initial durable source preflight rejects fsmonitor before any Git status or checkpoint
+ok 61 - initial durable source preflight rejects fsmonitor before any Git status or checkpoint
+  ---
+  duration_ms: 67.411938
+  type: 'test'
+  ...
+# Subtest: configuration changed while waiting is rejected before the next scheduler status check
+ok 62 - configuration changed while waiting is rejected before the next scheduler status check
+  ---
+  duration_ms: 123.939479
+  type: 'test'
+  ...
+# Subtest: configuration changed during work is rejected before post-work Git filters or success acceptance
+ok 63 - configuration changed during work is rejected before post-work Git filters or success acceptance
+  ---
+  duration_ms: 65.080706
+  type: 'test'
+  ...
+# Subtest: an invalid preflight option fails closed before a source status or work callback
+ok 64 - an invalid preflight option fails closed before a source status or work callback
+  ---
+  duration_ms: 51.540806
+  type: 'test'
+  ...
+# Subtest: three local cycles pace on a fixed one-hour schedule and persist honest heartbeat
+ok 65 - three local cycles pace on a fixed one-hour schedule and persist honest heartbeat
+  ---
+  duration_ms: 3.275879
+  type: 'test'
+  ...
+# Subtest: failures stay failed, sleep with increasing backoff and eventually recover
+ok 66 - failures stay failed, sleep with increasing backoff and eventually recover
+  ---
+  duration_ms: 0.644839
+  type: 'test'
+  ...
+# Subtest: signal stopping terminates without another cycle or artificial success
+ok 67 - signal stopping terminates without another cycle or artificial success
+  ---
+  duration_ms: 0.780453
+  type: 'test'
+  ...
+# Subtest: invalid intervals, cycle limits and CLI mode combinations are rejected
+ok 68 - invalid intervals, cycle limits and CLI mode combinations are rejected
+  ---
+  duration_ms: 1.190949
+  type: 'test'
+  ...
+# Subtest: unverified repair and interruption increment failure counters, not successes
+ok 69 - unverified repair and interruption increment failure counters, not successes
+  ---
+  duration_ms: 0.471538
+  type: 'test'
+  ...
+# Subtest: unknown or unfinished worker result must fail closed
+ok 70 - unknown or unfinished worker result must fail closed
+  ---
+  duration_ms: 0.564277
+  type: 'test'
+  ...
+# Subtest: signal while waiting persists terminal STOPPED heartbeat
+ok 71 - signal while waiting persists terminal STOPPED heartbeat
+  ---
+  duration_ms: 0.661974
+  type: 'test'
+  ...
+# Subtest: one-shot CLI exits nonzero for failed, unverified or unknown outcomes
+ok 72 - one-shot CLI exits nonzero for failed, unverified or unknown outcomes
+  ---
+  duration_ms: 0.296796
+  type: 'test'
+  ...
+# Subtest: failure backoff never retries before a user configured interval
+ok 73 - failure backoff never retries before a user configured interval
+  ---
+  duration_ms: 0.53917
+  type: 'test'
+  ...
+# Subtest: a failing baseline without a code diagnostic remains a failed worker cycle
+ok 74 - a failing baseline without a code diagnostic remains a failed worker cycle
+  ---
+  duration_ms: 0.594383
+  type: 'test'
+  ...
+# Subtest: scheduler wait failure persists terminal ERROR rather than false WAITING
+ok 75 - scheduler wait failure persists terminal ERROR rather than false WAITING
+  ---
+  duration_ms: 1.143227
+  type: 'test'
+  ...
+# Subtest: saved status validates legitimate heartbeats and rejects spoofed or corrupt states
+ok 76 - saved status validates legitimate heartbeats and rejects spoofed or corrupt states
+  ---
+  duration_ms: 0.815495
+  type: 'test'
+  ...
+# Subtest: durable restart retains total cycle budget and pending backoff
+ok 77 - durable restart retains total cycle budget and pending backoff
+  ---
+  duration_ms: 182.988149
+  type: 'test'
+  ...
+# Subtest: durable cancellation during work records interruption and a stopped session
+ok 78 - durable cancellation during work records interruption and a stopped session
+  ---
+  duration_ms: 79.437443
+  type: 'test'
+  ...
+# Subtest: pre-aborted durable run writes STOPPED without executing work
+ok 79 - pre-aborted durable run writes STOPPED without executing work
+  ---
+  duration_ms: 53.188513
+  type: 'test'
+  ...
+# Subtest: durable state fails closed on corruption, changed budgets and changed source
+ok 80 - durable state fails closed on corruption, changed budgets and changed source
+  ---
+  duration_ms: 136.537439
+  type: 'test'
+  ...
+# Subtest: durable scheduling requires a finite budget and state outside source
+ok 81 - durable scheduling requires a finite budget and state outside source
+  ---
+  duration_ms: 53.539379
+  type: 'test'
+  ...
+# Subtest: durable integrity validation rejects plausible counter edits
+ok 82 - durable integrity validation rejects plausible counter edits
+  ---
+  duration_ms: 94.470294
+  type: 'test'
+  ...
+# Subtest: source drift while waiting terminates the saved cadence before another cycle
+ok 83 - source drift while waiting terminates the saved cadence before another cycle
+  ---
+  duration_ms: 67.555167
+  type: 'test'
+  ...
+# Subtest: source drift during a cycle cannot retain its reported verification success
+ok 84 - source drift during a cycle cannot retain its reported verification success
+  ---
+  duration_ms: 51.290673
+  type: 'test'
+  ...
+# Subtest: durable loop rejects a competing scheduler before its work executes
+ok 85 - durable loop rejects a competing scheduler before its work executes
+  ---
+  duration_ms: 66.815847
+  type: 'test'
+  ...
+# Subtest: SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay
+ok 86 - SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay
+  ---
+  duration_ms: 218.713746
+  type: 'test'
+  ...
+# Subtest: CLI supports only explicitly approved commands and flags
+ok 87 - CLI supports only explicitly approved commands and flags
+  ---
+  duration_ms: 2.780205
+  type: 'test'
+  ...
+# Subtest: Android runner requires Termux ARM64
+ok 88 - Android runner requires Termux ARM64
+  ---
+  duration_ms: 2.784742
+  type: 'test'
+  ...
+# Subtest: doctor without native toolchain reports unavailable
+ok 89 - doctor without native toolchain reports unavailable
+  ---
+  duration_ms: 0.986201
+  type: 'test'
+  ...
+# Subtest: state directory may not be inside source
+ok 90 - state directory may not be inside source
+  ---
+  duration_ms: 2.122478
+  type: 'test'
+  ...
+# Subtest: unavailable tools prevent Gradle invocation
+ok 91 - unavailable tools prevent Gradle invocation
+  ---
+  duration_ms: 3.273606
+  type: 'test'
+  ...
+# Subtest: uncommitted source blocks build before running Gradle
+ok 92 - uncommitted source blocks build before running Gradle
+  ---
+  duration_ms: 1.742127
+  type: 'test'
+  ...
+# Subtest: synthetic Gradle failure is not a successful build
+ok 93 - synthetic Gradle failure is not a successful build
+  ---
+  duration_ms: 1.808696
+  type: 'test'
+  ...
+# Subtest: unverified artifact is rejected and not published
+ok 94 - unverified artifact is rejected and not published
+  ---
+  duration_ms: 2.92326
+  type: 'test'
+  ...
+# Subtest: synthetic signed output saves a distinct hash-tied copy; not proof of an on-device build
+ok 95 - synthetic signed output saves a distinct hash-tied copy; not proof of an on-device build
+  ---
+  duration_ms: 22.216765
+  type: 'test'
+  ...
+# Subtest: owner Android build automatically publishes a hash-checked APK in the dedicated Download folder
+ok 96 - owner Android build automatically publishes a hash-checked APK in the dedicated Download folder
+  ---
+  duration_ms: 27.685357
+  type: 'test'
+  ...
+# Subtest: owner file created during a publication race is never overwritten
+ok 97 - owner file created during a publication race is never overwritten
+  ---
+  duration_ms: 7.990285
+  type: 'test'
+  ...
+# Subtest: a corrupted final Download copy is reported without deleting owner files
+ok 98 - a corrupted final Download copy is reported without deleting owner files
+  ---
+  duration_ms: 5.60326
+  type: 'test'
+  ...
+# Subtest: missing owner Download storage never fakes a published installer copy
+ok 99 - missing owner Download storage never fakes a published installer copy
+  ---
+  duration_ms: 4.829934
+  type: 'test'
+  ...
+# Subtest: unsafe symlink install folder is rejected without modifying the source project
+ok 100 - unsafe symlink install folder is rejected without modifying the source project
+  ---
+  duration_ms: 2.929399
+  type: 'test'
+  ...
+# Subtest: pre-existing conflicting APK is never overwritten by automatic publication
+ok 101 - pre-existing conflicting APK is never overwritten by automatic publication
+  ---
+  duration_ms: 10.485778
+  type: 'test'
+  ...
+# Subtest: rejected signature never generates an owner Download installation APK
+ok 102 - rejected signature never generates an owner Download installation APK
+  ---
+  duration_ms: 3.561788
+  type: 'test'
+  ...
+# Subtest: Gradle failure reports only fresh failing JVM tests, never a false build success
+ok 103 - Gradle failure reports only fresh failing JVM tests, never a false build success
+  ---
+  duration_ms: 3.088648
+  type: 'test'
+  ...
+# Subtest: JUnit diagnostics ignore stale files and symlinks
+ok 104 - JUnit diagnostics ignore stale files and symlinks
+  ---
+  duration_ms: 0.961795
+  type: 'test'
+  ...
+# Subtest: a changed HEAD during Gradle blocks APK publication
+ok 105 - a changed HEAD during Gradle blocks APK publication
+  ---
+  duration_ms: 2.067164
+  type: 'test'
+  ...
+# Subtest: a dirty checkout produced during Gradle blocks APK publication
+ok 106 - a dirty checkout produced during Gradle blocks APK publication
+  ---
+  duration_ms: 1.101154
+  type: 'test'
+  ...
+# Subtest: signature parser recognizes legacy and modern apksigner certificates only
+ok 107 - signature parser recognizes legacy and modern apksigner certificates only
+  ---
+  duration_ms: 0.202073
+  type: 'test'
+  ...
+# Subtest: modern apksigner result is accepted only after executable verification succeeds
+ok 108 - modern apksigner result is accepted only after executable verification succeeds
+  ---
+  duration_ms: 11.688814
+  type: 'test'
+  ...
+# Subtest: genuine apksigner rejection persists diagnostic without publishing APK
+ok 109 - genuine apksigner rejection persists diagnostic without publishing APK
+  ---
+  duration_ms: 1.73806
+  type: 'test'
+  ...
+# Subtest: Termux RUN_COMMAND uses pinned on-device Java, Gradle, SDK and ARM64 aapt2 paths
+ok 110 - Termux RUN_COMMAND uses pinned on-device Java, Gradle, SDK and ARM64 aapt2 paths
+  ---
+  duration_ms: 0.327622
+  type: 'test'
+  ...
+# Subtest: ambient Termux Java 21 is replaced by installed pinned Java 17 for RUN_COMMAND
+ok 111 - ambient Termux Java 21 is replaced by installed pinned Java 17 for RUN_COMMAND
+  ---
+  duration_ms: 0.304106
+  type: 'test'
+  ...
+# Subtest: real Samsung JAVA_HOME with trailing slash selects pinned Java 17
+ok 112 - real Samsung JAVA_HOME with trailing slash selects pinned Java 17
+  ---
+  duration_ms: 0.220531
+  type: 'test'
+  ...
+# Subtest: extra trailing separators do not prevent known Termux Java 21 normalization
+ok 113 - extra trailing separators do not prevent known Termux Java 21 normalization
+  ---
+  duration_ms: 0.191387
+  type: 'test'
+  ...
+# Subtest: Termux Java 21 remains a visible doctor failure if pinned Java 17 is absent
+ok 114 - Termux Java 21 remains a visible doctor failure if pinned Java 17 is absent
+  ---
+  duration_ms: 0.156605
+  type: 'test'
+  ...
+# Subtest: owner Java 17 is always first in PATH even if it appears after Java 21
+ok 115 - owner Java 17 is always first in PATH even if it appears after Java 21
+  ---
+  duration_ms: 0.203025
+  type: 'test'
+  ...
+# Subtest: missing Termux tools remain unavailable; never synthesize nonexistent binaries
+ok 116 - missing Termux tools remain unavailable; never synthesize nonexistent binaries
+  ---
+  duration_ms: 0.175523
+  type: 'test'
+  ...
+# Subtest: explicit owner toolchain settings are preserved, even when defaults exist
+ok 117 - explicit owner toolchain settings are preserved, even when defaults exist
+  ---
+  duration_ms: 0.236265
+  type: 'test'
+  ...
+# Subtest: non-Termux and non-ARM64 environments do not receive Android paths
+ok 118 - non-Termux and non-ARM64 environments do not receive Android paths
+  ---
+  duration_ms: 0.216175
+  type: 'test'
+  ...
+# Subtest: mobile build forwards resolved environment to doctor and Gradle without a shell
+ok 119 - mobile build forwards resolved environment to doctor and Gradle without a shell
+  ---
+  duration_ms: 8.755999
+  type: 'test'
+  ...
+# Subtest: status CLI returns successful query exit for historical failed or blocked build reports
+ok 120 - status CLI returns successful query exit for historical failed or blocked build reports
+  ---
+  duration_ms: 583.909595
+  type: 'test'
+  ...
+# Subtest: status CLI fails closed for corrupt report schema; missing report is a successful query
+ok 121 - status CLI fails closed for corrupt report schema; missing report is a successful query
+  ---
+  duration_ms: 207.016123
+  type: 'test'
+  ...
+# Subtest: a live ANSK or teamleader lease blocks the mobile APK builder before invoking tools
+ok 122 - a live ANSK or teamleader lease blocks the mobile APK builder before invoking tools
+  ---
+  duration_ms: 1.110197
+  type: 'test'
+  ...
+# Subtest: a correctly signed APK for the wrong package cannot be published as a Continuum preview
+ok 123 - a correctly signed APK for the wrong package cannot be published as a Continuum preview
+  ---
+  duration_ms: 0.944208
+  type: 'test'
+  ...
+# Subtest: malformed or failed package inspection cannot publish an APK
+ok 124 - malformed or failed package inspection cannot publish an APK
+  ---
+  duration_ms: 1.343417
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects missing version before setup or downloads
+ok 125 - ordinary QA rejects missing version before setup or downloads
+  ---
+  duration_ms: 62.298399
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects empty version before setup or downloads
+ok 126 - ordinary QA rejects empty version before setup or downloads
+  ---
+  duration_ms: 58.60977
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects below the supported range version before setup or downloads
+ok 127 - ordinary QA rejects below the supported range version before setup or downloads
+  ---
+  duration_ms: 50.412708
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects above the supported range version before setup or downloads
+ok 128 - ordinary QA rejects above the supported range version before setup or downloads
+  ---
+  duration_ms: 41.516018
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects fractional version before setup or downloads
+ok 129 - ordinary QA rejects fractional version before setup or downloads
+  ---
+  duration_ms: 53.70244
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects negative version before setup or downloads
+ok 130 - ordinary QA rejects negative version before setup or downloads
+  ---
+  duration_ms: 40.923402
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects leading zero version before setup or downloads
+ok 131 - ordinary QA rejects leading zero version before setup or downloads
+  ---
+  duration_ms: 25.480877
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects whitespace version before setup or downloads
+ok 132 - ordinary QA rejects whitespace version before setup or downloads
+  ---
+  duration_ms: 22.471322
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects non-numeric version before setup or downloads
+ok 133 - ordinary QA rejects non-numeric version before setup or downloads
+  ---
+  duration_ms: 36.066473
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects overflowing shell integer version before setup or downloads
+ok 134 - ordinary QA rejects overflowing shell integer version before setup or downloads
+  ---
+  duration_ms: 42.563331
+  type: 'test'
+  ...
+# Subtest: ordinary QA still admits canonical version 39 to setup
+ok 135 - ordinary QA still admits canonical version 39 to setup
+  ---
+  duration_ms: 109.248767
+  type: 'test'
+  ...
+# Subtest: ordinary QA still admits canonical version 42 to setup
+ok 136 - ordinary QA still admits canonical version 42 to setup
+  ---
+  duration_ms: 76.066736
+  type: 'test'
+  ...
+# Subtest: ordinary QA still admits canonical version 9999 to setup
+ok 137 - ordinary QA still admits canonical version 9999 to setup
+  ---
+  duration_ms: 75.911543
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+ok 138 - ordinary QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 50.719579
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+ok 139 - ordinary QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 94.298876
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+ok 140 - ordinary QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 51.966173
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+ok 141 - ordinary QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 59.065823
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+ok 142 - ordinary QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 67.02759
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+ok 143 - ordinary QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 59.32975
+  type: 'test'
+  ...
+# Subtest: owner QA rejects missing version before setup or downloads
+ok 144 - owner QA rejects missing version before setup or downloads
+  ---
+  duration_ms: 32.233708
+  type: 'test'
+  ...
+# Subtest: owner QA rejects empty version before setup or downloads
+ok 145 - owner QA rejects empty version before setup or downloads
+  ---
+  duration_ms: 34.333261
+  type: 'test'
+  ...
+# Subtest: owner QA rejects below the supported range version before setup or downloads
+ok 146 - owner QA rejects below the supported range version before setup or downloads
+  ---
+  duration_ms: 43.338455
+  type: 'test'
+  ...
+# Subtest: owner QA rejects above the supported range version before setup or downloads
+ok 147 - owner QA rejects above the supported range version before setup or downloads
+  ---
+  duration_ms: 33.234286
+  type: 'test'
+  ...
+# Subtest: owner QA rejects fractional version before setup or downloads
+ok 148 - owner QA rejects fractional version before setup or downloads
+  ---
+  duration_ms: 25.38318
+  type: 'test'
+  ...
+# Subtest: owner QA rejects negative version before setup or downloads
+ok 149 - owner QA rejects negative version before setup or downloads
+  ---
+  duration_ms: 31.100696
+  type: 'test'
+  ...
+# Subtest: owner QA rejects leading zero version before setup or downloads
+ok 150 - owner QA rejects leading zero version before setup or downloads
+  ---
+  duration_ms: 41.901972
+  type: 'test'
+  ...
+# Subtest: owner QA rejects whitespace version before setup or downloads
+ok 151 - owner QA rejects whitespace version before setup or downloads
+  ---
+  duration_ms: 25.070085
+  type: 'test'
+  ...
+# Subtest: owner QA rejects non-numeric version before setup or downloads
+ok 152 - owner QA rejects non-numeric version before setup or downloads
+  ---
+  duration_ms: 20.919482
+  type: 'test'
+  ...
+# Subtest: owner QA rejects overflowing shell integer version before setup or downloads
+ok 153 - owner QA rejects overflowing shell integer version before setup or downloads
+  ---
+  duration_ms: 26.481169
+  type: 'test'
+  ...
+# Subtest: owner QA still admits canonical version 39 to setup
+ok 154 - owner QA still admits canonical version 39 to setup
+  ---
+  duration_ms: 51.11871
+  type: 'test'
+  ...
+# Subtest: owner QA still admits canonical version 42 to setup
+ok 155 - owner QA still admits canonical version 42 to setup
+  ---
+  duration_ms: 51.144022
+  type: 'test'
+  ...
+# Subtest: owner QA still admits canonical version 9999 to setup
+ok 156 - owner QA still admits canonical version 9999 to setup
+  ---
+  duration_ms: 49.903494
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+ok 157 - owner QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 29.940399
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+ok 158 - owner QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 35.250058
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+ok 159 - owner QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 39.923852
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+ok 160 - owner QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 36.436774
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+ok 161 - owner QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 48.47566
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+ok 162 - owner QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 42.851564
+  type: 'test'
+  ...
+# Subtest: owner source approval gate remains enforced for a valid version
+ok 163 - owner source approval gate remains enforced for a valid version
+  ---
+  duration_ms: 30.184506
+  type: 'test'
+  ...
+# Subtest: owner publisher gate remains enforced for a valid version
+ok 164 - owner publisher gate remains enforced for a valid version
+  ---
+  duration_ms: 25.389034
+  type: 'test'
+  ...
+# Subtest: owner pinned host gate remains enforced for a valid version
+ok 165 - owner pinned host gate remains enforced for a valid version
+  ---
+  duration_ms: 22.965429
+  type: 'test'
+  ...
+# Subtest: ordinary isolated service gate remains enforced for a valid version
+ok 166 - ordinary isolated service gate remains enforced for a valid version
+  ---
+  duration_ms: 22.806771
+  type: 'test'
+  ...
+# Subtest: QA mode gate remains enforced for a valid version
+ok 167 - QA mode gate remains enforced for a valid version
+  ---
+  duration_ms: 31.249906
+  type: 'test'
+  ...
+# Subtest: valid sources grant only permission to attempt the QA build
+ok 168 - valid sources grant only permission to attempt the QA build
+  ---
+  duration_ms: 2.424591
+  type: 'test'
+  ...
+# Subtest: wrong exact source HEAD fails
+ok 169 - wrong exact source HEAD fails
+  ---
+  duration_ms: 0.34665
+  type: 'test'
+  ...
+# Subtest: dirty checkout fails
+ok 170 - dirty checkout fails
+  ---
+  duration_ms: 0.165508
+  type: 'test'
+  ...
+# Subtest: main, production and release branch variants fail
+ok 171 - main, production and release branch variants fail
+  ---
+  duration_ms: 0.233641
+  type: 'test'
+  ...
+# Subtest: untrusted or missing remote fails
+ok 172 - untrusted or missing remote fails
+  ---
+  duration_ms: 0.177346
+  type: 'test'
+  ...
+# Subtest: old app package fails
+ok 173 - old app package fails
+  ---
+  duration_ms: 0.152189
+  type: 'test'
+  ...
+# Subtest: QA without sign exclusion fails
+ok 174 - QA without sign exclusion fails
+  ---
+  duration_ms: 0.171788
+  type: 'test'
+  ...
+# Subtest: runner without actual QA flag fails
+ok 175 - runner without actual QA flag fails
+  ---
+  duration_ms: 0.133841
+  type: 'test'
+  ...
+# Subtest: wrong signing release lane fails
+ok 176 - wrong signing release lane fails
+  ---
+  duration_ms: 0.222885
+  type: 'test'
+  ...
+# Subtest: host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads
+ok 177 - host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads
+  ---
+  duration_ms: 0.432109
+  type: 'test'
+  ...
+# Subtest: host with existing incompatible Java detects JDK17 requirement
+ok 178 - host with existing incompatible Java detects JDK17 requirement
+  ---
+  duration_ms: 0.190606
+  type: 'test'
+  ...
+# Subtest: host probes receive the explicit environment without mutating process.env
+ok 179 - host probes receive the explicit environment without mutating process.env
+  ---
+  duration_ms: 12.016637
+  type: 'test'
+  ...
+# Subtest: read-only admission accepts a clean synthetic Git checkout with exact SHA
+ok 180 - read-only admission accepts a clean synthetic Git checkout with exact SHA
+  ---
+  duration_ms: 49.854235
+  type: 'test'
+  ...
+# Subtest: read-only admission reports dirty synthetic checkout
+ok 181 - read-only admission reports dirty synthetic checkout
+  ---
+  duration_ms: 58.675363
+  type: 'test'
+  ...
+# Subtest: refuses symlinked release source
+ok 182 - refuses symlinked release source
+  ---
+  duration_ms: 35.162692
+  type: 'test'
+  ...
+# Subtest: refuses parent directory rather than exact repository root
+ok 183 - refuses parent directory rather than exact repository root
+  ---
+  duration_ms: 41.292447
+  type: 'test'
+  ...
+1..183
+# tests 183
+# suites 0
+# pass 183
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6024.791251
