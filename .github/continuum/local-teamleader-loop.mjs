@@ -100,6 +100,10 @@ async function sourceIdentity(root,sourcePreflight){
   if(result.error||result.status!==0)throw Error('Cannot validate local loop source');
   return result.stdout;
  };
+ // A nested -C path still resolves Git HEAD, but would shrink the safety boundary
+ // for state files inside the surrounding checkout.
+ const top=fs.realpathSync(git(['rev-parse','--show-toplevel']).trim());
+ if(top!==canonical)throw Error('Local loop requires repository root');
  const head=git(['rev-parse','HEAD']).trim();
  if(!/^[0-9a-f]{40}$/.test(head))throw Error('Local loop requires a full source HEAD');
  if(git(['status','--porcelain=v1','--untracked-files=all','-z']))
@@ -165,6 +169,22 @@ async function openCheckpoint(stateFile,sourceRoot,settings,sourcePreflight){
   throw Error('Durable local loop needs stateFile and sourceRoot');
  const source=await sourceIdentity(sourceRoot,sourcePreflight);
  const requested=path.resolve(stateFile);
+ // Check the literal path AND the nearest existing real ancestor before
+ // mkdir. Otherwise a rejected checkpoint creates directories in the source.
+ const forbidden=file=>file===source.root||file.startsWith(source.root+path.sep);
+ const missing=[];let ancestor=path.dirname(requested),prospective;
+ for(;;){
+  try{
+   prospective=path.join(fs.realpathSync(ancestor),...missing.reverse(),path.basename(requested));break;
+  }catch(error){
+   if(error.code!=='ENOENT')throw error;
+   const parent=path.dirname(ancestor);
+   if(parent===ancestor)throw error;
+   missing.push(path.basename(ancestor));ancestor=parent;
+  }
+ }
+ if(forbidden(requested)||forbidden(prospective))
+  throw Error('Local loop checkpoint must remain outside source checkout');
  fs.mkdirSync(path.dirname(requested),{recursive:true,mode:0o700});
  const file=path.join(fs.realpathSync(path.dirname(requested)),path.basename(requested));
  if(file===source.root||file.startsWith(source.root+path.sep))

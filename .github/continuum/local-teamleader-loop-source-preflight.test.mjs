@@ -159,3 +159,41 @@ test('local loop refuses dirty intended checkout even when inherited foreign Git
  assert.equal(fs.existsSync(f.stateFile),false);
  assert.equal(fs.existsSync(f.stateFile+'.lock'),false);
 });
+
+test('durable scheduler rejects a nested Git source path before writing a checkpoint',async t=>{
+ const f=fixture(t),nested=path.join(f.sourceRoot,'nested-checkout-root');
+ fs.mkdirSync(nested);
+ const stateFile=path.join(path.dirname(f.sourceRoot),'nested-state','loop.json');
+ let calls=0;
+ await assert.rejects(()=>runTeamleaderLoop({sourceRoot:nested,stateFile,maxCycles:1,
+  work:()=>{calls++;return {outcome:'IDLE'};}}),/requires repository root/);
+ assert.equal(calls,0);
+ assert.equal(fs.existsSync(stateFile),false);
+});
+
+test('refused in-checkout checkpoint does not create a previously absent parent',async t=>{
+ const f=fixture(t),parent=path.join(f.sourceRoot,'no-checkpoint-created'),stateFile=path.join(parent,'loop.json');
+ let calls=0;
+ await assert.rejects(()=>runTeamleaderLoop({sourceRoot:f.sourceRoot,stateFile,maxCycles:1,
+  work:()=>{calls++;return {outcome:'IDLE'};}}),/outside source checkout/);
+ assert.equal(calls,0);assert.equal(fs.existsSync(parent),false);
+});
+
+test('in-checkout checkpoint through an external symlink is refused before mkdir',async t=>{
+ const f=fixture(t),alias=path.join(path.dirname(f.sourceRoot),'external-checkpoint-alias');
+ fs.symlinkSync(f.sourceRoot,alias,'dir');
+ const parent=path.join(f.sourceRoot,'no-symlink-checkpoint-created');
+ let calls=0;
+ await assert.rejects(()=>runTeamleaderLoop({sourceRoot:f.sourceRoot,
+  stateFile:path.join(alias,path.basename(parent),'loop.json'),maxCycles:1,
+  work:()=>{calls++;return {outcome:'IDLE'};}}),/outside source checkout/);
+ assert.equal(calls,0);assert.equal(fs.existsSync(parent),false);
+});
+
+test('outside-source checkpoint still completes one bounded cycle',async t=>{
+ const f=fixture(t),summary=await runTeamleaderLoop({
+  sourceRoot:f.sourceRoot,stateFile:f.stateFile,maxCycles:1,
+  work:()=>({outcome:'IDLE'})});
+ assert.equal(summary.lastOutcome,'IDLE');assert.equal(summary.state,'LIMIT_REACHED');
+ assert.equal(fs.existsSync(f.stateFile),true);
+});
