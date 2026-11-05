@@ -34,6 +34,17 @@ class AvatarBlinkEasingTest {
         assertTrue("no secondary blink outside every fifth group", lid(8.825f) < .001f)
     }
 
+    @Test fun originalMapperBlinkContractRemainsFullyClosedAtFourPointFiveTwoFive() {
+        // Existing Avatar3dContractTest expects an exact 1f at 4.525 s.
+        assertEquals(1f, lid(4.505f), 0f)
+        assertEquals(1f, lid(4.525f), 0f)
+        assertEquals(1f, lid(13.405f), 0f)
+        assertEquals(1f, lid(13.425f), 0f)
+        for (join in listOf(4.525f, 13.425f)) {
+            assertTrue("sharp plateau exit at $join", velocityJump(join) < 1f)
+        }
+    }
+
     @Test fun invalidClockAndNegativeWrapStayNeutralAndDeterministic() {
         for (seconds in listOf(0f, -0f, -460f, -920f, 460f)) {
             val s = sample(seconds)
