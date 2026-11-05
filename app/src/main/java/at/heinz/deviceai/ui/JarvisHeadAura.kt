@@ -34,6 +34,41 @@ object JarvisHeadAura {
         p.setAdditive(false)
     }
 
+    /** Share of the head stage height over which the bust dissolves at the bottom (alpha mask, not an overlay). */
+    const val BOTTOM_FADE = .26f
+    /** Share of the head stage width over which the cut shoulders dissolve at each side. */
+    const val SIDE_FADE = .09f
+
+    /**
+     * Alpha (0..1) the native head layer keeps at head-local ([x], [y]) inside a [w]×[h] stage. The Android view
+     * applies the same mask with DST_IN gradients; previews multiply their head image with it.
+     */
+    fun fadeAlpha(x: Float, y: Float, w: Float, h: Float): Float {
+        if (w <= 0f || h <= 0f) return 1f
+        fun smooth(t: Float) = t.coerceIn(0f, 1f).let { it * it * (3f - 2f * it) }
+        val bottom = smooth((h - y) / (h * BOTTOM_FADE))
+        val side = smooth(minOf(x, w - x) / (w * SIDE_FADE))
+        return bottom * side
+    }
+
+    /**
+     * Drawn ABOVE the native head surface, in head-local dp (0..[w], 0..[h]): two thin light streams cross the
+     * dissolved chest, as in 59509. Additive light only, so no rectangular darkening. Static; no state.
+     */
+    fun drawLightStreams(p: ContinuumPainter, w: Float, h: Float) {
+        if (w <= 8f || h <= 8f) return
+        p.setAdditive(true)
+        val stream = Fill.Linear(0f, 0f, w, 0f, intArrayOf(Argb.withAlpha(Colors.violet, 0f), Colors.violetRim, Colors.cyan,
+            Argb.withAlpha(Colors.cyan, 0f)))
+        val a = VectorPath().moveTo(-w * .05f, h * .93f).cubicTo(w * .30f, h * .80f, w * .62f, h * .99f, w * 1.05f, h * .84f)
+        val b = VectorPath().moveTo(-w * .05f, h * .86f).cubicTo(w * .36f, h * .97f, w * .70f, h * .78f, w * 1.05f, h * .92f)
+        for (path in listOf(a, b)) {
+            p.strokePath(path, 6f, stream, .10f)
+            p.strokePath(path, 1.2f, stream, .85f)
+        }
+        p.setAdditive(false)
+    }
+
     private fun ring(p: ContinuumPainter, cx: Float, cy: Float, rx: Float, ry: Float, degrees: Float,
                      from: Int, to: Int, width: Float) {
         val fill = Fill.Linear(cx - rx, cy, cx + rx, cy, intArrayOf(from, to, Argb.mix(to, Colors.cyan, .4f)))

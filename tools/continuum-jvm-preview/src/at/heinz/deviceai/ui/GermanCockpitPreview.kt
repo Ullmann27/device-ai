@@ -28,6 +28,18 @@ object GermanCockpitPreview {
         return if (maxX < 0) src else src.getSubimage(minX, minY, maxX - minX + 1, maxY - minY + 1)
     }
 
+    /** Same alpha mask as the Android head layer ([JarvisHeadAura.fadeAlpha], DST_IN), applied to the render. */
+    fun masked(src: BufferedImage, dx: Float, dy: Float, dw: Float, dh: Float, stage: JarvisShellLayout.Box): BufferedImage {
+        val out = BufferedImage(src.width, src.height, BufferedImage.TYPE_INT_ARGB)
+        for (y in 0 until src.height) for (x in 0 until src.width) {
+            val argb = src.getRGB(x, y)
+            val sx = dx + (x + .5f) / src.width * dw; val sy = dy + (y + .5f) / src.height * dh
+            val a = ((argb ushr 24) * JarvisHeadAura.fadeAlpha(sx, sy, stage.width, stage.height)).toInt().coerceIn(0, 255)
+            out.setRGB(x, y, (a shl 24) or (argb and 0xFFFFFF))
+        }
+        return out
+    }
+
     data class Window(val name: String, val w: Float, val h: Float, val density: Float)
 
     val windows = listOf(
@@ -64,7 +76,10 @@ object GermanCockpitPreview {
                     // [g] already maps dp to pixels; this transform is concatenated in user (dp) space.
                     val t = java.awt.geom.AffineTransform()
                     t.translate(left.toDouble(), top.toDouble()); t.scale((dw / head.width).toDouble(), (dh / head.height).toDouble())
-                    g.drawImage(head, t, null)
+                    g.drawImage(masked(head, left - headBox.left, top - headBox.top, dw, dh, headBox), t, null)
+                    painter.save(); painter.translate(headBox.left, headBox.top)
+                    JarvisHeadAura.drawLightStreams(painter, headBox.width, headBox.height)
+                    painter.restore()
                 }
                 if (orbBox != null) {
                     val r = ContinuumBrainOrbRenderer.radiusFor(orbBox.width, orbBox.height)

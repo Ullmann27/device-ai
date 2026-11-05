@@ -658,8 +658,21 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     /** Above child TextureView composition; driven by the same visible-view invalidation clock. */
     override fun dispatchDraw(canvas: Canvas) {
+        // Cockpit: the native bust dissolves at its cut lower and side edges (true alpha mask on the child layer,
+        // never a dark overlay). One offscreen layer of the head stage only; static, no extra frames.
         super.dispatchDraw(canvas)
-        if (!canAnimateFrame() || width<=0 || height<=0) return
+        if (width <= 0 || height <= 0) return
+        if (headFadeActive()) {
+            val density = resources.displayMetrics.density
+            val streams = canvas.save()
+            canvas.translate(headDrawBounds.left, headDrawBounds.top)
+            canvas.scale(density, density)
+            painter.begin(canvas)
+            at.heinz.deviceai.ui.JarvisHeadAura.drawLightStreams(painter, headDrawBounds.width() / density,
+                headDrawBounds.height() / density)
+            canvas.restoreToCount(streams)
+        }
+        if (!canAnimateFrame()) return
         val density=resources.displayMetrics.density
         val saved=canvas.save()
         canvas.scale(density,density)
@@ -674,6 +687,40 @@ class ContinuumHologramView @JvmOverloads constructor(
             canvas.restoreToCount(head)
         }
         canvas.restoreToCount(saved)
+    }
+
+    private val headFadePaint = android.graphics.Paint().apply {
+        xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.DST_IN)
+    }
+
+    private fun headFadeActive() = headEnabled && native3dDrawn && cockpitHeadBounds != null && width > 0 && height > 0
+
+    /** Only the native head surface is masked; full-view effect children keep their own unclipped drawing. */
+    override fun drawChild(canvas: Canvas, child: android.view.View, drawingTime: Long): Boolean {
+        if (child !== nativeTexture || !headFadeActive()) return super.drawChild(canvas, child, drawingTime)
+        val layer = canvas.saveLayer(headDrawBounds, null)
+        val drawn = super.drawChild(canvas, child, drawingTime)
+        applyHeadFade(canvas)
+        canvas.restoreToCount(layer)
+        return drawn
+    }
+
+    /** DST_IN gradients matching [at.heinz.deviceai.ui.JarvisHeadAura.fadeAlpha] (bottom and both sides). */
+    private fun applyHeadFade(canvas: Canvas) {
+        val b = headDrawBounds
+        val opaque = android.graphics.Color.BLACK; val clear = android.graphics.Color.TRANSPARENT
+        val bottomTop = b.bottom - b.height() * at.heinz.deviceai.ui.JarvisHeadAura.BOTTOM_FADE
+        headFadePaint.shader = android.graphics.LinearGradient(0f, bottomTop, 0f, b.bottom, opaque, clear,
+            android.graphics.Shader.TileMode.CLAMP)
+        canvas.drawRect(b.left, bottomTop, b.right, b.bottom, headFadePaint)
+        val side = b.width() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE
+        headFadePaint.shader = android.graphics.LinearGradient(b.left, 0f, b.left + side, 0f, clear, opaque,
+            android.graphics.Shader.TileMode.CLAMP)
+        canvas.drawRect(b.left, b.top, b.left + side, b.bottom, headFadePaint)
+        headFadePaint.shader = android.graphics.LinearGradient(b.right - side, 0f, b.right, 0f, opaque, clear,
+            android.graphics.Shader.TileMode.CLAMP)
+        canvas.drawRect(b.right - side, b.top, b.right, b.bottom, headFadePaint)
+        headFadePaint.shader = null
     }
 
     private fun advanceFrame() {
