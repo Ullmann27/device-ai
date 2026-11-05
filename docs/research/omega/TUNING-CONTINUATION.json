@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "IN_PROGRESS",
-  "owner": "tuning-sequential-r11-20261105T0134Z",
-  "leaseExpiresAtUtc": "2026-11-05T01:55:00Z",
-  "updatedAtUtc": "2026-11-05T01:34:00Z",
+  "status": "READY_FOR_NEXT_RUN",
+  "owner": null,
+  "leaseExpiresAtUtc": null,
+  "updatedAtUtc": "2026-11-05T01:40:29Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -58,7 +58,7 @@
       "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "R10 audit correction published; original R8/R9 .tar.xz source/CSV archives are still LOCAL_ONLY/NOT_PUSHED, so transfer with a SHA-verifying blob route if available. Before any new candidate, run a source-complete Kotlin LM1 module and actual per-request caller-frequency profiling, or mark BLOCKED when unavailable. Do not reinterpret isolated R8/R9 benchmarks as measured device gain.",
+  "next": "R8/R9 original data preserved on GitHub with 2/2 remote Git blob matches. Optionally independently reconstruct downloaded .b64 into .tar.xz and rerun tools/tuning-r10/verify_archives.py. For any new candidate first measure actual LM1 call frequencies on source-complete Kotlin graph (current container lacked authenticated checkout); preserve R8/R9 rejection. No Gemma/LiteRT Android claims.",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -67,8 +67,8 @@
     "no other-team branch mutation",
     "no repeated favorable-sample search"
   ],
-  "lastOwner": "tuning-sequential-r10-20261105T0125Z",
-  "completedRound": "R10",
+  "lastOwner": "tuning-sequential-r11-20261105T0134Z",
+  "completedRound": "R11",
   "lastPublishedProductionCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
   "completedMilestones": 4,
   "verification": {
@@ -104,16 +104,7 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": {
-    "id": "R11",
-    "status": "ARCHIVE_PUBLICATION_ONLY",
-    "baselineHead": "24b81586fc076e1c12f89fa4ffd00a30a312b907",
-    "expectedArchiveGitBlobs": {
-      "R8.b64": "3c30c5a15643f5a3f765e86ab49699ae00a4876d",
-      "R9.b64": "98b2bdedded1a8092e0d8fa2cc31701b9dfa8181"
-    },
-    "noProductionPatch": true
-  },
+  "activeRound": null,
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
@@ -209,7 +200,7 @@
       "archivePublished": true
     }
   },
-  "lastResearchHead": "17595f93e8b590566cb49fff6bc3f4ca60e473d1",
+  "lastResearchHead": "89a73cd45f993838d5c31319d6d391db32cd2536",
   "lastRejectedCandidateCount": 6,
   "archive": {
     "name": "R4-R6-evidence.tar.xz",
@@ -303,8 +294,12 @@
     },
     "rawArchive": {
       "sha256": "464c8c1e676d12640c5b737c6a34f06d3837307e274e8adb5035dbf4d22a02ac",
-      "repo": "NOT_PUSHED",
-      "localPath": "/mnt/data/continuum-r8/experiments/R8-evidence.tar.xz"
+      "repo": "PUSHED_BASE64_GIT_BLOB_VERIFIED",
+      "localPath": "/mnt/data/continuum-r8/experiments/R8-evidence.tar.xz",
+      "remotePath": "docs/evidence/tuning-r11-20261105/R8-evidence.tar.xz.b64",
+      "remoteGitBlobSha": "3c30c5a15643f5a3f765e86ab49699ae00a4876d",
+      "remoteBlobCheck": "MATCHED_LOCAL_GIT_HASH",
+      "remoteReassembly": "NOT_RUN"
     },
     "report": "docs/research/omega/TUNING-R8-R9-20261105.md",
     "archiveAudit": {
@@ -334,8 +329,12 @@
     },
     "rawArchive": {
       "sha256": "cefa10199763df4033abf0b221e35837a3eb161052a4d3e734d60c5645f0738c",
-      "repo": "NOT_PUSHED",
-      "localPath": "/mnt/data/continuum-r8/experiments/R9-evidence.tar.xz"
+      "repo": "PUSHED_BASE64_GIT_BLOB_VERIFIED",
+      "localPath": "/mnt/data/continuum-r8/experiments/R9-evidence.tar.xz",
+      "remotePath": "docs/evidence/tuning-r11-20261105/R9-evidence.tar.xz.b64",
+      "remoteGitBlobSha": "98b2bdedded1a8092e0d8fa2cc31701b9dfa8181",
+      "remoteBlobCheck": "MATCHED_LOCAL_GIT_HASH",
+      "remoteReassembly": "NOT_RUN"
     },
     "report": "docs/research/omega/TUNING-R8-R9-20261105.md",
     "archiveAudit": {
@@ -365,5 +364,33 @@
     "androidAndGemma": "NOT_RUN",
     "productionSourceChanged": false,
     "archiveLocalChecksumsVerified": true
+  },
+  "r11": {
+    "status": "TWO_ORIGINAL_ARCHIVES_GITHUB_PUBLISHED_HASH_VERIFIED",
+    "registrationCommit": "a3ee6d3c564507b2326b5c62058c6eb8e73910ce",
+    "sourceHeadAtStart": "24b81586fc076e1c12f89fa4ffd00a30a312b907",
+    "report": "docs/research/omega/TUNING-R11-20261105.md",
+    "archiveFiles": [
+      {
+        "round": "R8",
+        "path": "docs/evidence/tuning-r11-20261105/R8-evidence.tar.xz.b64",
+        "blobGitSha": "3c30c5a15643f5a3f765e86ab49699ae00a4876d",
+        "archiveSha256": "464c8c1e676d12640c5b737c6a34f06d3837307e274e8adb5035dbf4d22a02ac"
+      },
+      {
+        "round": "R9",
+        "path": "docs/evidence/tuning-r11-20261105/R9-evidence.tar.xz.b64",
+        "blobGitSha": "98b2bdedded1a8092e0d8fa2cc31701b9dfa8181",
+        "archiveSha256": "cefa10199763df4033abf0b221e35837a3eb161052a4d3e734d60c5645f0738c"
+      }
+    ],
+    "remoteGitBlobMatchedLocal": 2,
+    "remoteFilesChecked": 2,
+    "originalLocalTarAudit": "R10 PASS 624 rows",
+    "freshRemoteDecompression": "NOT_RUN",
+    "newCpuBenchmark": "NOT_RUN",
+    "candidateAccepted": false,
+    "productionSourceChanged": false,
+    "androidAndGemma": "NOT_RUN"
   }
 }
