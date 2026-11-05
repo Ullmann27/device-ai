@@ -135,4 +135,33 @@ class ContinuumLongReplySpeechUiTest {
         }
         assertTrue(spoken(tts).count { it.startsWith("Antwort") } == 5)
     }
+
+    private fun directorUtterance(a: AgentActivity): Any? = field(a, "avatarDirector")!!.let { d ->
+        d.javaClass.getDeclaredField("utterance").apply { isAccessible = true }.get(d)
+    }
+
+    /** Gitar review on #565: STOP after one piece finished but before the next started must not leave the avatar speaking. */
+    @Test fun stopBetweenPiecesLeavesNoStaleAvatarUtterance() = withSpeakingActivity { a, _, listener ->
+        call(a, "speakBootstrap", longReply)
+        val first = field(a, "voiceUtteranceId") as String
+        listener.onStart(first)
+        listener.onDone(first)
+        val second = field(a, "voiceUtteranceId") as String
+        assertTrue(second != first)
+        listener.onStop(second, true) // STOP before the engine started the second piece
+        assertNull("avatar no longer bound to the finished piece", directorUtterance(a))
+        assertNull(field(a, "voiceUtteranceId"))
+        assertEquals(false, field(a, "voiceSpeaking"))
+    }
+
+    @Test fun replyBeyondTheQueueCapacityAnnouncesTheRest() = withSpeakingActivity { a, tts, listener ->
+        val huge = (1..400).joinToString(" ") { "Abschnitt $it enthält einen weiteren ausführlichen Erklärungssatz." }
+        call(a, "speakBootstrap", huge)
+        while (true) {
+            val id = field(a, "voiceUtteranceId") as String? ?: break
+            listener.onStart(id); listener.onDone(id)
+        }
+        assertEquals(16, spoken(tts).size)
+        assertEquals("Der Rest der Antwort steht im Chat.", spoken(tts).last())
+    }
 }

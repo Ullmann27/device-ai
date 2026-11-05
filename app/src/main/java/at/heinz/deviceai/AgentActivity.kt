@@ -132,6 +132,8 @@ class AgentActivity : Activity() {
     )
 
     companion object {
+        /** Last spoken piece when a reply exceeds the speech queue capacity (#566 review). */
+        private const val SPOKEN_REST_IN_CHAT = "Der Rest der Antwort steht im Chat."
         @Volatile private var crashHandlerInstalled = false
         private const val SPEECH_REQUEST = 2207
         private const val CONVERSATION_RESUME_DELAY_MS = 450L
@@ -7094,11 +7096,13 @@ class AgentActivity : Activity() {
                 microphoneActive = voiceListening)) return
         stopVoiceAnimation()
         // #566: the whole visible reply is read, as ordered sentence-bounded pieces (formerly only 480 characters).
-        val chunks = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(message)
+        val chunks = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(message, maxChunks = 15)
         if (chunks.pieces.isEmpty()) return
+        // Beyond the queue capacity the cut is announced instead of ending silently.
+        val pieces = if (chunks.truncated) chunks.pieces + SPOKEN_REST_IN_CHAT else chunks.pieces
         val turn = "reply-" + UUID.randomUUID()
         if (!speechChunks.beginTurn(turn)) return
-        chunks.pieces.forEachIndexed { index, piece ->
+        pieces.forEachIndexed { index, piece ->
             speechChunks.appendApproved(turn, "$turn-$index", piece, approvalEvidenceId = "visible-final-reply")
         }
         speechChunks.markLastChunkSubmitted(turn)
@@ -7130,6 +7134,8 @@ class AgentActivity : Activity() {
         val chunk = speechChunkId ?: return false
         if (speechChunks.onChunkFinished(turn, chunk) !=
             at.heinz.deviceai.cognitive.ApprovedSpeechChunkQueue.Completion.MORE_CHUNKS) return false
+        // End the finished piece in the avatar now; a STOP before the next onStart then leaves no stale utterance.
+        voiceUtteranceId?.let { avatarDirector.speechEnded(it, interrupted = false) }
         return speakNextChunk(turn, TextToSpeech.QUEUE_ADD)
     }
 
