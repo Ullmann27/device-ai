@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "READY_FOR_NEXT_RUN",
-  "owner": null,
-  "leaseExpiresAtUtc": null,
-  "updatedAtUtc": "2026-11-05T00:32:07.505Z",
+  "status": "IN_PROGRESS",
+  "owner": "tuning-sequential-r10-20261105T0125Z",
+  "leaseExpiresAtUtc": "2026-11-05T01:55:00Z",
+  "updatedAtUtc": "2026-11-05T01:25:24Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -104,7 +104,18 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": null,
+  "activeRound": {
+    "id": "R10",
+    "status": "EVIDENCE_PUBLISH_AND_CALLPATH_AUDIT",
+    "baselineHead": "10041c4c817229d04b16f1b1498634c14ef608b7",
+    "productionChangesAllowed": false,
+    "steps": [
+      "verify R8/R9 tar archives",
+      "publish source-faithful raw data to same repository",
+      "inspect complete LM1 call graph for evidence-grounded next candidate"
+    ],
+    "publicationDecision": "No unmeasured production source changes"
+  },
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
