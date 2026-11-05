@@ -50,4 +50,18 @@ class LocalChatTranscriptStoreTest {
         assertFalse(store.delete("../x"))
         assertEquals(listOf("zwei"), store.load(c, limit = 1).map { it.text })
     }
+
+    @Test fun modelContextTurnsAreKeptApartFromBubbles() {
+        val store = LocalChatTranscriptStore(tmp.newFolder("chat-history"))
+        val c = store.activeConversation { id() }
+        store.append(c, true, "Erfinde einen Mond.", 1)
+        store.append(c, false, "Der Mond heißt Aetheria.", 2)
+        store.appendContextTurn(c, "Erfinde einen Mond.", "Der Mond heißt Aetheria.", 2)
+        assertEquals("bubbles only", 2, store.load(c).size)
+        assertEquals(listOf(LocalChatTranscriptStore.ContextTurn("Erfinde einen Mond.", "Der Mond heißt Aetheria.")),
+            store.loadContextTurns(c))
+        repeat(6) { store.appendContextTurn(c, "Frage $it", "Antwort $it", 3L + it) }
+        assertEquals("bounded like the model context", listOf("Frage 2", "Frage 3", "Frage 4", "Frage 5"),
+            store.loadContextTurns(c).map { it.request })
+    }
 }

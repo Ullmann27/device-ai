@@ -33,7 +33,11 @@ class LocalChatTranscriptStore(private val dir: File) {
         require(ID.matches(id)) { "Conversation id" }
         if (text.isBlank()) return
         dir.mkdirs()
-        val line = JSONObject().put("u", user).put("t", text.take(MAX_TEXT)).put("at", atMillis).toString()
+        appendLine(id, JSONObject().put("u", user).put("t", text.take(MAX_TEXT)).put("at", atMillis).toString())
+    }
+
+    private fun appendLine(id: String, line: String) {
+        dir.mkdirs()
         val file = File(dir, "$id$SUFFIX")
         // A line torn by process death has no newline; start on a fresh line so this entry is not lost with it.
         val needsBreak = file.isFile && file.length() > 0 &&
@@ -41,23 +45,48 @@ class LocalChatTranscriptStore(private val dir: File) {
         file.appendText((if (needsBreak) "\n" else "") + line + "\n")
     }
 
+    /**
+     * A turn the app had admitted to the model's LocalConversationContext (successful local model answer), kept so
+     * the same chat can continue with context after an app exit or process death. Unverified dialogue data only:
+     * never a memory, fact proof or tool grant. Bubbles and context turns are separate line kinds.
+     */
+    data class ContextTurn(val request: String, val response: String)
+
+    @Synchronized fun appendContextTurn(id: String, request: String, response: String, atMillis: Long) {
+        require(ID.matches(id)) { "Conversation id" }
+        if (request.isBlank() || response.isBlank()) return
+        appendLine(id, JSONObject().put("k", "ctx").put("q", request.take(MAX_CONTEXT_REQUEST))
+            .put("r", response.take(MAX_CONTEXT_RESPONSE)).put("at", atMillis).toString())
+    }
+
+    /** The last [limit] context turns in order (the model context itself keeps at most four). */
+    @Synchronized fun loadContextTurns(id: String, limit: Int = 4): List<ContextTurn> = lines(id).mapNotNull { line ->
+        runCatching { JSONObject(line).takeIf { it.optString("k") == "ctx" }?.let { ContextTurn(it.getString("q"), it.getString("r")) } }
+            .getOrNull()
+    }.toList().takeLast(maxOf(0, limit))
+
     /** The last [limit] readable entries in order; a torn last line (process death mid-write) is skipped. */
     @Synchronized fun load(id: String, limit: Int = 200): List<Entry> {
-        if (!ID.matches(id) || limit <= 0) return emptyList()
+        if (limit <= 0) return emptyList()
+        return lines(id).mapNotNull { line ->
+            runCatching {
+                val o = JSONObject(line)
+                if (o.has("k")) null else Entry(o.getBoolean("u"), o.getString("t"), o.optLong("at"))
+            }.getOrNull()
+        }.toList().takeLast(limit)
+    }
+
+    private fun lines(id: String): Sequence<String> {
+        if (!ID.matches(id)) return emptySequence()
         val file = File(dir, "$id$SUFFIX")
-        if (!file.isFile) return emptyList()
+        if (!file.isFile) return emptySequence()
         val text = RandomAccessFile(file, "r").use { raf ->
             val start = maxOf(0L, raf.length() - MAX_READ_BYTES)
             raf.seek(start)
             ByteArray((raf.length() - start).toInt()).also { raf.readFully(it) }.toString(Charsets.UTF_8)
                 .let { if (start > 0) it.substringAfter('\n') else it }
         }
-        return text.lineSequence().mapNotNull { line ->
-            runCatching {
-                val o = JSONObject(line)
-                Entry(o.getBoolean("u"), o.getString("t"), o.optLong("at"))
-            }.getOrNull()
-        }.toList().takeLast(limit)
+        return text.lineSequence()
     }
 
     @Synchronized fun conversations(): List<String> =
@@ -80,6 +109,8 @@ class LocalChatTranscriptStore(private val dir: File) {
         private const val ACTIVE = "active-conversation"
         private const val SUFFIX = ".jsonl"
         private const val MAX_TEXT = 32_000
+        private const val MAX_CONTEXT_REQUEST = 1_000
+        private const val MAX_CONTEXT_RESPONSE = 2_000
         private const val MAX_READ_BYTES = 4L * 1024 * 1024
     }
 }

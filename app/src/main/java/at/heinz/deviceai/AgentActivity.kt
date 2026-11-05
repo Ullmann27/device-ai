@@ -657,6 +657,7 @@ class AgentActivity : Activity() {
         restoreOriginalGemmaOnOpen()
         showPendingReceiptReview()
         restoreChatTranscript()
+        restoreModelContext()
         addHomeGreeting(persist = false, value =
             "Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. " +
                 "Sprich oder schreibe mit mir. Mit „Merke dir: ...“ kannst du mein lokales Wissen ausdrücklich erweitern. " +
@@ -8605,6 +8606,7 @@ class AgentActivity : Activity() {
                         if (successful) {
                             lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
                             localConversationContext.record(localSessionId, text, run.response)
+                            rememberContextTurn(localSessionId, text, run.response)
                         } else localConversationContext.recordUnanswered(localSessionId, text)
                     }
                     checkpointContinuumAsync()
@@ -10541,6 +10543,26 @@ class AgentActivity : Activity() {
     private fun addHomeGreeting(value: String, persist: Boolean = true) {
         addBubble(value, user = false, persist = persist)
         speakBootstrap(value)
+    }
+
+    /** Stores a turn the model context just admitted, so the same chat keeps its context after an exit (#568). */
+    private fun rememberContextTurn(session: String, request: String, response: String) {
+        val at = System.currentTimeMillis()
+        chatTranscriptIo.execute { runCatching { chatTranscripts.appendContextTurn(session, request, response, at) } }
+    }
+
+    /**
+     * After an app exit or process death the model context of this chat is empty; refill it with the turns it had
+     * admitted before (unverified dialogue data, same bounds). A recreated Activity keeps its RAM context untouched.
+     */
+    private fun restoreModelContext() {
+        val id = sessionId
+        if (localConversationContext.render(id).isNotEmpty()) return
+        val turns = runCatching {
+            chatTranscriptIo.submit(java.util.concurrent.Callable { chatTranscripts.loadContextTurns(id) })
+                .get(2, java.util.concurrent.TimeUnit.SECONDS)
+        }.getOrDefault(emptyList())
+        turns.forEach { localConversationContext.record(id, it.request, it.response) }
     }
 
     /** Re-renders the stored central conversation as text only; nothing is re-run or re-stored (#568). */

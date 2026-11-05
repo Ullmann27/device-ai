@@ -98,4 +98,37 @@ class ContinuumChatPersistenceUiTest {
         val dir = File(RuntimeEnvironment.getApplication().filesDir, "chat-history")
         assertFalse(dir.listFiles().orEmpty().any { it.name.endsWith(".jsonl") && it.readText().contains("Ich bin Device AI") })
     }
+
+    /** Owner review on #565: after a real exit the same chat must also keep the model's dialogue context. */
+    @Test fun reopenedAppRestoresTheModelDialogueContextOfThatChat() {
+        val request = "Erfinde einen Namen für einen Mond."
+        val answer = "Der erfundene Mond heißt Aetheria."
+        val session = withActivity { a ->
+            val id = field(a, "sessionId") as String
+            // The successful local-model path admits the turn to the context and stores it (Gemma itself is not run here).
+            val context = field(a, "localConversationContext") as at.heinz.deviceai.cognitive.LocalConversationContext
+            context.record(id, request, answer)
+            AgentActivity::class.java.getDeclaredMethod("rememberContextTurn", String::class.java, String::class.java,
+                String::class.java).apply { isAccessible = true }.invoke(a, id, request, answer)
+            id
+        }
+        waitForContextTurn(request)
+        withActivity { a ->
+            val context = field(a, "localConversationContext") as at.heinz.deviceai.cognitive.LocalConversationContext
+            assertEquals(session, field(a, "sessionId"))
+            assertEquals("the owner turn is back in the model context", listOf(request), context.priorUserTurns(session))
+            assertTrue("the earlier answer is available as dialogue data", context.render(session).contains("Aetheria"))
+            assertEquals("restoring never starts work", false, field(a, "busy"))
+        }
+    }
+
+    private fun waitForContextTurn(text: String): Boolean {
+        val dir = File(RuntimeEnvironment.getApplication().filesDir, "chat-history")
+        repeat(60) {
+            if (dir.listFiles().orEmpty().any { it.name.endsWith(".jsonl") && it.readText().contains("\"k\":\"ctx\"") &&
+                    it.readText().contains(text) }) return true
+            Thread.sleep(50)
+        }
+        return false
+    }
 }
