@@ -174,6 +174,18 @@ object JarvisShellRenderer {
         p.drawText(fit(p, text, style, b.width - 24f), b.left + 12f, y, style, Fill.Solid(Colors.text))
     }
 
+    /**
+     * German labels are longer than the reference's English ones. Before a label is shortened with "…", its own
+     * style may shrink down to [minScale]; below that the text is ellipsized exactly like [fit].
+     */
+    fun shrinkToFit(p: ContinuumPainter, text: String, style: TextStyle, maxWidth: Float,
+                    minScale: Float = .82f): TextStyle {
+        if (maxWidth <= 0f) return style
+        val width = p.measureText(text, style)
+        if (width <= maxWidth || width <= 0f) return style
+        return style.copy(size = style.size * maxOf(minScale, maxWidth / width))
+    }
+
     fun fit(p: ContinuumPainter, text: String, style: TextStyle, maxWidth: Float): String {
         if (maxWidth <= 0f) return ""
         if (p.measureText(text, style) <= maxWidth) return text

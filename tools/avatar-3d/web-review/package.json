@@ -1,0 +1,6 @@
+{
+  "name": "continuum-avatar-web-review",
+  "private": true,
+  "description": "Host-only multi-view renders of the packaged avatar GLB with three.js in headless Chromium (review evidence, not Filament).",
+  "dependencies": { "three": "0.170.0" }
+}

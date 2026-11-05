@@ -44,18 +44,21 @@ object JarvisTiles {
         }
     }
 
-    /** The ten destinations in the exact row-major order of the current owner reference. */
+    /**
+     * The ten destinations in the exact row-major order of the owner reference. Labels follow the owner's binding
+     * German terminology (2026-11-05); stable [JarvisTile.target] IDs carry routing, never the visible text.
+     */
     val reference = listOf(
-        JarvisTile("chat", "Chat", Icon.CHAT),
-        JarvisTile("memory", "Memory", Icon.DATABASE),
-        JarvisTile("logic", "Logic", Icon.ATOM),
-        JarvisTile("research", "Research", Icon.SEARCH),
-        JarvisTile("agents", "Agents", Icon.CUBE),
-        JarvisTile("tasks", "Tasks", Icon.CHECK_CIRCLE),
-        JarvisTile("web", "Web", Icon.GLOBE),
-        JarvisTile("learning", "Learning", Icon.BOOK),
-        JarvisTile("device", "Device Control", Icon.CPU),
-        JarvisTile("system", "System Status", Icon.PULSE),
+        JarvisTile("chat", "Gespräch", Icon.CHAT),
+        JarvisTile("memory", "Gedächtnis", Icon.DATABASE),
+        JarvisTile("logic", "Denken und Planen", Icon.ATOM),
+        JarvisTile("research", "Forschung", Icon.SEARCH),
+        JarvisTile("agents", "Assistenten", Icon.CUBE),
+        JarvisTile("tasks", "Aufgaben", Icon.CHECK_CIRCLE),
+        JarvisTile("web", "Internet", Icon.GLOBE),
+        JarvisTile("learning", "Lernen", Icon.BOOK),
+        JarvisTile("device", "Gerätesteuerung", Icon.CPU),
+        JarvisTile("system", "Systemstatus", Icon.PULSE),
     )
 
     /** Draws tile content inside an already drawn glass card. */
@@ -88,14 +91,14 @@ object JarvisTiles {
         tile.displayText?.let { p.drawText(JarvisShellRenderer.fit(p, it, JarvisDesign.Type.caption, b.width - 12f), cx, b.top + 12f, JarvisDesign.Type.caption, Fill.Solid(Colors.cyanSoft), TextAlign.CENTER) }
     }
 
-    /** Navigation entries read from ref5 (rail) and ref4 (bottom nav). Presentation only. */
+    /** Navigation entries read from ref5 (rail) and ref4 (bottom nav), German owner terms. Presentation only. */
     data class NavItem(val target: String, val label: String, val icon: Icon)
-    val railNav = listOf(NavItem("home", "Home", Icon.HOME), NavItem("chat", "Chat", Icon.CHAT),
-        NavItem("memory", "Memory", Icon.DATABASE), NavItem("logic", "Logic", Icon.ATOM),
-        NavItem("research", "Research", Icon.SEARCH), NavItem("agents", "Agents", Icon.CUBE),
-        NavItem("tasks", "Tasks", Icon.CHECK_CIRCLE), NavItem("web", "Web", Icon.GLOBE),
-        NavItem("learning", "Learning", Icon.BOOK), NavItem("device", "Device Control", Icon.CPU),
-        NavItem("system", "System Status", Icon.PULSE))
+    val railNav = listOf(NavItem("home", "Start", Icon.HOME), NavItem("chat", "Gespräch", Icon.CHAT),
+        NavItem("memory", "Gedächtnis", Icon.DATABASE), NavItem("logic", "Denken und Planen", Icon.ATOM),
+        NavItem("research", "Forschung", Icon.SEARCH), NavItem("agents", "Assistenten", Icon.CUBE),
+        NavItem("tasks", "Aufgaben", Icon.CHECK_CIRCLE), NavItem("web", "Internet", Icon.GLOBE),
+        NavItem("learning", "Lernen", Icon.BOOK), NavItem("device", "Gerätesteuerung", Icon.CPU),
+        NavItem("system", "Systemstatus", Icon.PULSE))
     // The Activity supplies its grouped phone bar. Retained for standalone shell previews / embedding.
     val bottomNav = listOf(railNav[0], railNav[1], railNav[2], railNav[5], railNav[10])
 
@@ -135,9 +138,7 @@ object JarvisTiles {
             if (labelled) {
                 val tx = ix + icon / 2f + 9f
                 val room = row.right - tx - 5f
-                val words = it.label.split(' ')
-                val lines = if (p.measureText(it.label, style) <= room || words.size == 1) listOf(it.label)
-                    else listOf(words.dropLast(1).joinToString(" "), words.last())
+                val lines = railLines(p, it.label, style, room)
                 val lineH = maxOf(p.capHeight(style) + 4f, style.size * 1.1f)
                 lines.forEachIndexed { j, line ->
                     val y = row.centerY + p.capHeight(style) / 2f + (j - (lines.size - 1) / 2f) * lineH
@@ -147,6 +148,20 @@ object JarvisTiles {
             }
         }
         p.restore()
+    }
+
+    /** German compounds that may break over two rail lines (hyphenated at the compound boundary). */
+    val compoundBreaks: Map<String, Pair<String, String>> = mapOf(
+        "Gerätesteuerung" to ("Geräte-" to "steuerung"),
+        "Systemstatus" to ("System-" to "status"),
+    )
+
+    /** One line if it fits; else the last word moves down, or a known compound breaks at its boundary. */
+    fun railLines(p: ContinuumPainter, label: String, style: TextStyle, room: Float): List<String> {
+        if (p.measureText(label, style) <= room) return listOf(label)
+        val words = label.split(' ')
+        if (words.size > 1) return listOf(words.dropLast(1).joinToString(" "), words.last())
+        return compoundBreaks[label]?.toList() ?: listOf(label)
     }
 
     fun drawBottomNav(p: ContinuumPainter, b: Box, items: List<NavItem> = bottomNav, selected: Int = 0) {

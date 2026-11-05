@@ -40,8 +40,17 @@ object JarvisShellLayout {
         val profile: JarvisWindowProfile = JarvisWindowProfile.resolve(width, viewportHeight),
         val tileGap: Float = 8f,
         val headBounds: Box? = null,
-        val orbBounds: Box? = null
+        val orbBounds: Box? = null,
+        /**
+         * Reference cockpit only: the native head surface. It reaches behind the dialogue so neck and shoulders
+         * flow under it, while the camera anchors the head inside [headBounds] (the face zone nothing covers).
+         */
+        val headStage: Box? = null
     ) {
+        /** Horizontal head-centre position inside [headStage] (or the centre of [headBounds]). */
+        val headAnchorX: Float get() = if (headStage != null) JarvisCockpitGrid.HEAD_ANCHOR_X else .5f
+        /** Share of the bust height the native camera keeps (1 = whole bust). */
+        val headCloseUp: Float get() = if (headStage != null) JarvisCockpitGrid.HEAD_CLOSE_UP else 1f
         /** Compatibility name: now the latest owner reference, not the superseded eight-tile ref5. */
         val ref5Grid: Boolean get() = grid != null
         val requiresVerticalScroll: Boolean get() = height > viewportHeight + .5f
@@ -64,11 +73,17 @@ object JarvisShellLayout {
         /** The camera, microphone and appearance controls share these bounds with their native hit targets. */
         fun dialogControlBoxes(): List<Box> {
             val b = boxes[Slot.DIALOG] ?: return emptyList()
-            val size = minOf(48f, b.width * .23f)
+            val size = minOf(48f, b.width / 3f - 2f)
             val y = b.bottom - size - 3f
-            return listOf(.26f, .50f, .74f).map { fraction ->
+            // Wide dialogues keep the reference spacing; narrower ones (free-head layout) distribute evenly.
+            if (b.width * .24f >= size + 2f) return listOf(.26f, .50f, .74f).map { fraction ->
                 val cx = b.left + b.width * fraction
                 Box(cx - size / 2f, y, cx + size / 2f, y + size)
+            }
+            val gap = (b.width - 3f * size) / 4f
+            return List(3) { i ->
+                val left = b.left + gap + i * (size + gap)
+                Box(left, y, left + size, y + size)
             }
         }
 
@@ -116,7 +131,8 @@ object JarvisShellLayout {
             original.copy(width = widthDp, areas = areas)
         }
         return full.copy(width = widthDp, boxes = boxes, grid = grid,
-            headBounds = full.headBounds?.let(::shift), orbBounds = full.orbBounds?.let(::shift))
+            headBounds = full.headBounds?.let(::shift), orbBounds = full.orbBounds?.let(::shift),
+            headStage = full.headStage?.let(::shift))
     }
 
     fun create(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,
@@ -131,9 +147,10 @@ object JarvisShellLayout {
         val gr = JarvisCockpitGrid.create(w, h, profile.fontScale)
         val head = gr[Area.HEAD]
         val orb = gr[Area.ORB]
+        val stage = Box(gr[Area.DIALOG].left, head.top, head.right, head.bottom)
         val b = linkedMapOf(
             Slot.TOP_BAR to gr[Area.HEADER], Slot.NAV_RAIL to gr[Area.RAIL],
-            Slot.AVATAR to Box(head.left, minOf(head.top, orb.top), orb.right, maxOf(head.bottom, orb.bottom)),
+            Slot.AVATAR to Box(stage.left, minOf(head.top, orb.top), orb.right, maxOf(head.bottom, orb.bottom)),
             Slot.DIALOG to gr[Area.DIALOG], Slot.CONTINUUM_HEADER to gr[Area.CONTINUUM_HEADER],
             Slot.CAMERA_STATUS to gr[Area.CAMERA_STATUS], Slot.COCKPIT_SECONDARY to gr[Area.MODULES],
             Slot.TILES to gr[Area.TILES], Slot.ROW_AGENTS to gr[Area.ROW_AGENTS],
@@ -144,7 +161,7 @@ object JarvisShellLayout {
             setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER,
                 Slot.AVATAR to Slot.TOP_BAR, Slot.AVATAR to Slot.CAMERA_STATUS,
                 Slot.TOP_BAR to Slot.CONTINUUM_HEADER, Slot.TOP_BAR to Slot.CAMERA_STATUS),
-            gr, h, profile, 12f * gr.unit, head, orb)
+            gr, h, profile, 12f * gr.unit, head, orb, headStage = stage)
     }
 
     /** Readable vertical composition; there is no aspect-ratio container and nothing is squeezed to fit height. */

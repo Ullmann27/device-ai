@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script></head>
+<body><script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const W=+(new URLSearchParams(location.search).get('w')||512),H=+(new URLSearchParams(location.search).get('h')||640);
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,alpha:true});
+renderer.setSize(W,H); renderer.setPixelRatio(1); renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.0;
+document.body.appendChild(renderer.domElement);
+const scene=new THREE.Scene(); scene.background=null; renderer.setClearColor(0x000000,0);
+scene.add(new THREE.AmbientLight(0x8899ff,0.6));
+const key=new THREE.DirectionalLight(0xffffff,1.2); key.position.set(0.4,0.6,1.0); scene.add(key);
+const rim=new THREE.DirectionalLight(0x88aaff,0.8); rim.position.set(-0.6,0.3,-1.0); scene.add(rim);
+const cam=new THREE.PerspectiveCamera(28,W/H,0.01,10);
+window.state={ready:false};
+new GLTFLoader().load('model.glb',g=>{
+  window.root=g.scene; scene.add(g.scene);
+  const meshes=[]; g.scene.traverse(o=>{if(o.isMesh){meshes.push(o.name); if(o.morphTargetDictionary) window.morphMesh=(window.morphMesh||[]).concat([o]);}});
+  window.meshNames=meshes;
+  const box=new THREE.Box3().setFromObject(g.scene); window.bbox=[box.min.toArray(),box.max.toArray()];
+  window.state.ready=true;
+},undefined,e=>{window.state.error=String(e)});
+const ocam=new THREE.OrthographicCamera(-1,1,1,-1,.05,10);
+window.shot=(az,el,dist,ty,hidden,morph,fov,ortho)=>{
+  let c=cam;
+  if(ortho){ c=ocam; const a=W/H; const full=Math.max(ortho.half, ortho.halfW/a)*1.08; const v=full*(ortho.close||1); const hh=v*a; const an=(ortho.anchor===undefined)?.5:ortho.anchor;
+    ocam.left=-2*hh*an; ocam.right=2*hh*(1-an); ocam.top=v; ocam.bottom=-v; ocam.updateProjectionMatrix();
+    const ccy=ortho.cy+(full-v);
+    const ang=ortho.az*Math.PI/180; ocam.position.set(ortho.cx+Math.sin(ang)*2, ccy, ortho.cz+Math.cos(ang)*2); ocam.lookAt(ortho.cx,ccy,ortho.cz);
+    window.root.traverse(o=>{ if(o.isMesh){ o.visible=!(hidden||[]).includes(o.name); }});
+    (window.morphMesh||[]).forEach(m=>{ m.morphTargetInfluences.fill(0); for(const k in (morph||{})){ const i=m.morphTargetDictionary[k]; if(i!==undefined) m.morphTargetInfluences[i]=morph[k]; }});
+    renderer.render(scene,ocam); return renderer.domElement.toDataURL('image/png'); }
+  cam.fov=fov||28; cam.updateProjectionMatrix();
+  const t=new THREE.Vector3(0,ty,0.03);
+  const a=az*Math.PI/180, e=el*Math.PI/180;
+  cam.position.set(t.x+dist*Math.sin(a)*Math.cos(e), t.y+dist*Math.sin(e), t.z+dist*Math.cos(a)*Math.cos(e));
+  cam.lookAt(t);
+  window.root.traverse(o=>{ if(o.isMesh){ o.visible=!(hidden||[]).includes(o.name); }});
+  (window.morphMesh||[]).forEach(m=>{ m.morphTargetInfluences.fill(0); for(const k in (morph||{})){ const i=m.morphTargetDictionary[k]; if(i!==undefined) m.morphTargetInfluences[i]=morph[k]; }});
+  renderer.render(scene,cam); return renderer.domElement.toDataURL('image/png');
+};
+</script></body></html>

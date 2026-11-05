@@ -29,6 +29,18 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private lateinit var focus: AvatarGlbContract.Focus
     private var viewportWidth = 0
     private var viewportHeight = 0
+    /** Cockpit hero framing: head centre at [anchorX] of the viewport width, [closeUp] share of the bust height. */
+    @Volatile private var anchorX = .5
+    @Volatile private var closeUp = 1.0
+    @Volatile private var framingVersion = 0
+    private var appliedFraming = -1
+
+    /** Same rig, morphs and asset; only the orthographic window moves (asymmetric frustum) and tightens. */
+    fun setFraming(anchorX: Float, closeUp: Float) {
+        require(anchorX.isFinite() && anchorX in .2f..1f && closeUp.isFinite() && closeUp in .4f..1f)
+        if (this.anchorX == anchorX.toDouble() && this.closeUp == closeUp.toDouble()) return
+        this.anchorX = anchorX.toDouble(); this.closeUp = closeUp.toDouble(); framingVersion++
+    }
     private var bloomSettings: com.google.android.filament.View.BloomOptions? = null
     private var reducedQuality = false
 
@@ -89,6 +101,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             focus.centerZ + kotlin.math.cos(cameraAngle) * 2.0,
             focus.centerX, focus.centerY, focus.centerZ, 0.0, 1.0, 0.0)
         scene!!.addEntities(a.entities)
+        // Owner decision 2026-11-05: the visible tooth rows read as uneven in the hologram. They stay in the
+        // packaged GLB (bytes, pin and rig unchanged) but are not rendered; the dark mouth interior remains.
+        a.getEntitiesByPrefix(HIDDEN_NODE_PREFIX).forEach { scene!!.removeEntity(it) }
         // Filament supports one directional key. Bounded point fills add real
         // cyan/violet facial volume without an IBL download or a new render pass.
         addLight(LightManager.Builder(LightManager.Type.DIRECTIONAL)
@@ -142,26 +157,31 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     fun render(pose: AvatarPose, seconds: Float, motion: Boolean, width: Int, height: Int): Boolean {
         val e = engine ?: return false
         if (width <= 0 || height <= 0 || !surface.isValid) return false
-        if (viewportWidth != width || viewportHeight != height) {
-            viewportWidth = width; viewportHeight = height
+        if (viewportWidth != width || viewportHeight != height || appliedFraming != framingVersion) {
+            viewportWidth = width; viewportHeight = height; appliedFraming = framingVersion
             view!!.viewport = Viewport(0, 0, width, height)
             val aspect = width.toDouble() / height
-            val vertical = focus.verticalHalfSpan(aspect)
-            camera!!.setProjection(Camera.Projection.ORTHO, -vertical * aspect, vertical * aspect, -vertical, vertical, .05, 10.0)
+            val vertical = focus.verticalHalfSpan(aspect) * closeUp
+            val horizontal = vertical * aspect
+            camera!!.setProjection(Camera.Projection.ORTHO, -2.0 * horizontal * anchorX, 2.0 * horizontal * (1.0 - anchorX),
+                -vertical, vertical, .05, 10.0)
         }
         mapper.update(pose, seconds, motion)
         applyGlow(if (motion) pose.speakEnergy else 0f)
         // Cosmetic view drift uses the existing clock. Reduced motion restores
         // the same rest camera immediately; it does not change the actual pose.
-        val vertical = focus.verticalHalfSpan(width.toDouble() / height)
+        val full = focus.verticalHalfSpan(width.toDouble() / height)
+        val vertical = full * closeUp
+        // A close-up keeps the crown margin and crops from below (neck and shoulders dissolve in the view mask).
+        val centerY = focus.centerY + (full - vertical)
         val px = 2.0 * vertical / height
         val moving = motion && seconds.isFinite()
         val dy = if (moving) kotlin.math.sin(seconds * (2.0 * Math.PI / 4.0)) * 2.5 * 2.6 * px else 0.0
         val distance = 2.0 + if (moving) kotlin.math.sin(seconds * .21) * .06 else 0.0
         val cameraAngle = Math.toRadians(focus.azimuthDegrees)
-        camera!!.lookAt(focus.centerX + kotlin.math.sin(cameraAngle) * distance, focus.centerY - dy,
+        camera!!.lookAt(focus.centerX + kotlin.math.sin(cameraAngle) * distance, centerY - dy,
             focus.centerZ + kotlin.math.cos(cameraAngle) * distance,
-            focus.centerX, focus.centerY - dy, focus.centerZ, 0.0, 1.0, 0.0)
+            focus.centerX, centerY - dy, focus.centerZ, 0.0, 1.0, 0.0)
         for (instance in morphInstances) e.renderableManager.setMorphWeights(instance, mapper.weights, 0)
         rotate("Head", mapper.headPitch, mapper.headYaw)
         rotate("EyeLeft", mapper.eyePitch, mapper.eyeYaw); rotate("EyeRight", mapper.eyePitch, mapper.eyeYaw)
@@ -202,6 +222,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     }
 
     companion object {
+        /** GLB nodes kept in the asset but not rendered (ToothUpper0..7, ToothLower0..7). */
+        const val HIDDEN_NODE_PREFIX = "Tooth"
         fun create(surface: Surface, bytes: ByteArray, metadata: AvatarGlbContract.Metadata): FilamentAvatarRenderer {
             val candidate = FilamentAvatarRenderer(surface)
             try { candidate.initialize(bytes, metadata); return candidate }

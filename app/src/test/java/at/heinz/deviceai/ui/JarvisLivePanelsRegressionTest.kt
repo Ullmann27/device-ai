@@ -31,7 +31,7 @@ class JarvisLivePanelsRegressionTest {
         JarvisCockpitGridContent.draw(p, JarvisShellLayout.Slot.ROW_MODEL,
             grid[JarvisCockpitGrid.Area.ROW_MODEL], grid,
             ContinuumDashboardState(model = ContinuumDashboardState.ModelStatus(name = "Testmodell", online = true, stateLabel = "Bereit")), 0L)
-        assertTrue("The rich local-model card must be the production grid content", "Mode:" in p.texts)
+        assertTrue("The rich local-model card must be the production grid content", "Modus:" in p.texts)
         assertTrue("Online" in p.texts)
         assertTrue("Missing routing details remain unknown", "—" in p.texts)
     }

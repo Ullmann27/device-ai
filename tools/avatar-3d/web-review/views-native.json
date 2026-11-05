@@ -1,0 +1,2 @@
+[{"name":"hero-native-cockpit","az":0,"el":0,"dist":1,"ty":0.25,"ortho":{"cx":0.0,"cy":0.247,"cz":0.054,"half":0.162,"halfW":0.09,"az":-22}},
+ {"name":"hero-native-speaking","az":0,"el":0,"dist":1,"ty":0.25,"ortho":{"cx":0.0,"cy":0.247,"cz":0.054,"half":0.162,"halfW":0.09,"az":-22},"morph":{"AA":0.7,"JawOpen":0.35,"BrowUp":0.2}}]

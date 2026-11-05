@@ -57,7 +57,7 @@ class ContinuumCoreMirrorTest {
     }
 
     @Test fun actionTextUsesReadableDestinationNamesOnBothSides() {
-        val labels = mapOf(Slot.LABEL_THINKING to "Chat", Slot.ACTION_MEMORY to "Gedächtnis",
+        val labels = mapOf(Slot.LABEL_THINKING to "Gespräch", Slot.ACTION_MEMORY to "Gedächtnis",
             Slot.LABEL_ANALYSING to "Forschung", Slot.LABEL_DEVELOPING to "Entwicklung",
             Slot.ACTION_AGENTS to "Agenten", Slot.LABEL_LEARNING to "Lernen",
             Slot.ACTION_DEVICE to "Gerät", Slot.LABEL_CONNECTED to "Internet")

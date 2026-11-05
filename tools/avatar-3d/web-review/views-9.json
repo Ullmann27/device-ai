@@ -1,0 +1,11 @@
+[{"name":"01-front","az":0,"el":4,"dist":1.15,"ty":0.24},
+ {"name":"02-quarter-left","az":-38,"el":4,"dist":1.15,"ty":0.24},
+ {"name":"03-quarter-right","az":38,"el":4,"dist":1.15,"ty":0.24},
+ {"name":"04-profile-left","az":-90,"el":2,"dist":1.15,"ty":0.24},
+ {"name":"05-back","az":180,"el":4,"dist":1.15,"ty":0.24},
+ {"name":"06-profile-right","az":90,"el":2,"dist":1.15,"ty":0.24},
+ {"name":"07-top","az":20,"el":55,"dist":1.15,"ty":0.26},
+ {"name":"08-bottom","az":-25,"el":-30,"dist":1.15,"ty":0.24},
+ {"name":"09-nape-close","az":-150,"el":0,"dist":0.55,"ty":0.20},
+ {"name":"10-nape-faceonly","az":-150,"el":0,"dist":0.55,"ty":0.20,"hide":["NeuralThreads"]},
+ {"name":"11-back-noface","az":180,"el":0,"dist":0.8,"ty":0.22,"hide":["Face"]}]
