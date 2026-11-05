@@ -1,13 +1,13 @@
 {
   "schema": "continuum-branch-bots-development-continuation",
   "version": 1,
-  "status": "ACTIVE",
+  "status": "READY_FOR_NEXT_ITERATION",
   "repository": "Ullmann27/device-ai",
   "branch": "codex/continuum-branch-integration-bots-20261104",
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
   "ownerSession": "scheduled-20261105-0209-source-env-isolation",
   "sourceSnapshot": "SELECTED_104_PREVIOUS_FULL_NODE_PLUS_CURRENT_4_TRACE_PATHS",
-  "phase": "M10_REAL_GIT_ENV_RED_FIRST",
+  "phase": "M10_M11_PATCHED_REALGIT_EXCERPT_VERIFIED_FULL_PROJECT_NODE_PENDING",
   "milestones": [
     {
       "id": "M1",
@@ -134,6 +134,33 @@
       },
       "commit": "ef48e63713fa966710647dc4eadd4da671df39a8",
       "integratedNode": "NOT_RUN"
+    },
+    {
+      "id": "M10",
+      "status": "TARGETED_REAL_GIT_EXCERPT_RED_GREEN",
+      "change": "Prevent foreign inherited Git selectors from redirecting scheduler source identity or hiding dirty checkout",
+      "red": {
+        "tests": 2,
+        "pass": 0,
+        "fail": 2
+      },
+      "green": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0
+      },
+      "commit": "a03224f68a1e9f44bdbcbde6cd04b2808a75e4ec",
+      "integratedNode": "NOT_RUN",
+      "evidence": "docs/evidence/branch-bots-night-20261104/m10-source-identity-git-env-20261105.json"
+    },
+    {
+      "id": "M11",
+      "status": "PINNED_SOURCE_REVIEWED",
+      "change": "Current #527 contains the original exact preimages for all 8 changed paths; no shared branch changes",
+      "files": 8,
+      "testsExecuted": 0,
+      "commit": "a03224f68a1e9f44bdbcbde6cd04b2808a75e4ec",
+      "evidence": "docs/evidence/branch-bots-night-20261104/m10-source-identity-git-env-20261105.json"
     }
   ],
   "androidCompilation": "NOT_RUN",
@@ -188,12 +215,30 @@
       "completeImportedNode": "NOT_RUN",
       "android": "NOT_RUN",
       "apk": "NOT_RUN"
+    },
+    "m10m11": {
+      "excerptRed": {
+        "total": 2,
+        "fail": 2,
+        "exit": 1
+      },
+      "excerptGreen": {
+        "total": 2,
+        "pass": 2,
+        "exit": 0
+      },
+      "projectSyntaxParsed": 2,
+      "exactTargetPreimages": 8,
+      "actualFullNode": "NOT_RUN",
+      "android": "NOT_RUN",
+      "apk": "NOT_RUN"
     }
   },
   "nextTasks": [
-    "Reproduce inherited GIT_DIR/GIT_WORK_TREE source-identity misbinding with real Git on isolated fixtures",
-    "Repair minimum sourceIdentity Git environment without changing scheduler authority, sourcePreflight, model/release configuration",
-    "Run exact tests and preserve RED/GREEN evidence; if complete checkout unavailable report bounded tests only"
+    "Re-run actual .github/continuum/local-teamleader-loop-source-preflight.test.mjs and branch-discovery.test.mjs against all imported modules at the new published source commit (full checkout required).",
+    "Re-run the historical 202-case selected Git/Node suite after source-freeze; do not reuse historical 202 PASS for M10.",
+    "Have C1-owned integrator independently review and selectively import eight changed files after checking fresh C1/#527 heads; do not blanket-merge older base.",
+    "Execute source-frozen combined Android/Node/backend gates before any new APK request; device/owner package remains separate."
   ],
   "scheduledContinuation": {
     "enabled": true,
@@ -207,9 +252,11 @@
     "integration": "19039e5b822310cd5ab1ce5cc5cb854822a1bcd3",
     "nightDeltaAdopted": false,
     "traceFixAdopted": false,
-    "gateOn19039": "ANDROID3032_PASS_0_FAIL_19_SKIP;NODE2362_PASS_0_FAIL_31_SKIP;BACKEND64_PASS;LINT_NEWAPI0"
+    "gateOn19039": "ANDROID3032_PASS_0_FAIL_19_SKIP;NODE2362_PASS_0_FAIL_31_SKIP;BACKEND64_PASS;LINT_NEWAPI0",
+    "m10FixAdopted": false,
+    "eightPathPreimagesMatched": 8
   },
-  "latestTargetedCodeCommit": "ef48e63713fa966710647dc4eadd4da671df39a8",
+  "latestTargetedCodeCommit": "a03224f68a1e9f44bdbcbde6cd04b2808a75e4ec",
   "additionalChangedPaths": [
     ".github/continuum/local-teamleader-loop-source-preflight.test.mjs"
   ]
