@@ -196,7 +196,8 @@ object BootstrapBrain {
         )
         if (ownerRecall.containsMatchIn(low) && !low.contains("was hast du dir gemerkt")) {
             val wanted = recallTokens(text)
-            val matching = facts.filter { fact -> recallTokens(fact).any { it in wanted } }
+            // Without a topic word („Was habe ich dir gerade gesagt?“) every confirmed fact is relevant.
+            val matching = if (wanted.isEmpty()) facts else facts.filter { fact -> recallTokens(fact).any { it in wanted } }
             return BootstrapDecision(BootstrapKind.REPLY, if (matching.isEmpty())
                 "Dazu habe ich keine ausdrücklich gespeicherte Erinnerung gefunden. Ich habe nichts im Internet gesucht. " +
                     "Mit „Merke dir: …“ kannst du es mir sagen."

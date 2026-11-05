@@ -49,4 +49,13 @@ class OwnerRecallRoutingFold7Test {
             assertTrue("must stay blocked: $q", BootstrapBrain.decide(q, emptyList()).message.startsWith(blocked))
         }
     }
+
+    /** Gitar review on #565: a generic recall question without a topic word lists the confirmed facts. */
+    @Test fun genericRecallWithoutTopicWordListsTheConfirmedFacts() {
+        for (q in listOf("Was habe ich dir gerade gesagt?", "Was habe ich dir erzählt?")) {
+            assertTrue(BootstrapBrain.requiresOwnerFacts(q))
+            val message = BootstrapBrain.decide(q, listOf(fact, "Meine Lieblingsfarbe ist Blau.")).message
+            assertTrue("no false negative: $message", message.contains("Nebel 731") && message.contains("Lieblingsfarbe"))
+        }
+    }
 }
