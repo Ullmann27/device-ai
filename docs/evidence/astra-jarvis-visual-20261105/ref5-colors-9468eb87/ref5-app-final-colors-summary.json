@@ -1,0 +1,152 @@
+{
+  "status": "HOST_NATIVE_PIXEL_SAMPLES_ONLY",
+  "raw_report_sha256": "0f015f1b9efbe4cf130f72cd828c49e3dacf6cbeb15ac72cf4aaa68ca1ef3b4b",
+  "image_sha256": {
+    "reference": "05fe60aa19e297fdf7bb4a0a286cebafa72c7a023a26e65e65adc38a7077892f",
+    "baseline": "057dde500c57bdff75c0d77ddba6eeb7782346285933ffd333fdb985b9765b31",
+    "current": "dcafb2da871c0184f7fcbb2a76e0452247fd77196669ba20c13c2574925f3e1e"
+  },
+  "colors": [
+    {
+      "role": "tile.fill",
+      "reference": "#051B30",
+      "baseline": "#08132D",
+      "current": "#08132D",
+      "current_minus_reference_rgb": [
+        3,
+        -8,
+        -3
+      ],
+      "current_minus_baseline_rgb": [
+        0,
+        0,
+        0
+      ],
+      "contrast_ref_base_current": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "role": "tile.rim",
+      "reference": "#17687F",
+      "baseline": "#31C5FD",
+      "current": "#31C5FD",
+      "current_minus_reference_rgb": [
+        26,
+        93,
+        126
+      ],
+      "current_minus_baseline_rgb": [
+        0,
+        0,
+        0
+      ],
+      "contrast_ref_base_current": [
+        2.756,
+        9.231,
+        9.231
+      ]
+    },
+    {
+      "role": "tile.icon",
+      "reference": "#C9FFFF",
+      "baseline": "#C9FFFF",
+      "current": "#C9FFFF",
+      "current_minus_reference_rgb": [
+        0,
+        0,
+        0
+      ],
+      "current_minus_baseline_rgb": [
+        0,
+        0,
+        0
+      ],
+      "contrast_ref_base_current": [
+        15.948,
+        16.85,
+        16.85
+      ]
+    },
+    {
+      "role": "text.primary",
+      "reference": "#FFFFFF",
+      "baseline": "#FDFDFD",
+      "current": "#FDFDFD",
+      "current_minus_reference_rgb": [
+        -2,
+        -2,
+        -2
+      ],
+      "current_minus_baseline_rgb": [
+        0,
+        0,
+        0
+      ],
+      "contrast_ref_base_current": [
+        17.414,
+        18.088,
+        18.088
+      ]
+    }
+  ],
+  "glow_outward_luma_0_to_12_px": {
+    "reference": [
+      88.218,
+      14.397,
+      6.446,
+      10.813,
+      8.953,
+      9.668,
+      9.456,
+      10.243,
+      10.243,
+      10.315,
+      11.89,
+      12.677,
+      14.397
+    ],
+    "baseline": [
+      162.686,
+      153.747,
+      97.54,
+      60.481,
+      64.553,
+      73.711,
+      104.119,
+      135.09,
+      40.092,
+      32.789,
+      32.717,
+      31.93,
+      32.002
+    ],
+    "current": [
+      162.686,
+      153.747,
+      97.54,
+      60.481,
+      64.553,
+      73.711,
+      104.119,
+      135.09,
+      40.092,
+      32.789,
+      32.717,
+      31.93,
+      32.002
+    ]
+  },
+  "baseline_roi_source": "explicit_manual_box",
+  "current_roi_source": "native_view_dump",
+  "limits": [
+    "No image scaling, warping, whole-image fidelity score, or device measurement.",
+    "Host screenshot uses native Android Canvas and a 2D head fallback; no Filament/GPU verdict.",
+    "API28 host captures do not validate device API31 blur or API33 AGSL output.",
+    "RGB distance is not perceptual DeltaE; local sample contrast is not a text accessibility audit.",
+    "Ambient neon phase and dynamic scene background are not synchronized across captures.",
+    "Four semantic color roles plus one local glow profile; no product-color edit follows automatically."
+  ]
+}

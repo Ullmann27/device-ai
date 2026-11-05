@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumWorkWindowScrollUiTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:44:52" hostname="6e2f8005d77e" time="16.429">
+  <properties/>
+  <testcase name="innerStatusScrollKeepsTheWorkAreaAndBackgroundStill" classname="at.heinz.deviceai.ContinuumWorkWindowScrollUiTest" time="13.744"/>
+  <testcase name="backgroundScrollClosesTheRealWorkAreaAndGlance" classname="at.heinz.deviceai.ContinuumWorkWindowScrollUiTest" time="2.685"/>
+  <system-out><![CDATA[SCROLL_WINDOW inner=0->48 workShown=true
+SCROLL_WINDOW background=0->32 workShown=false
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,5 +1,18 @@
 # Weiterbearbeitungsauftrag an ChatGPT 6 – Continuum JARVIS Visual (05.11.2026)
 
+## Aktuelle Fortsetzung
+
+Produktstand `7c3523cde9dae302a52d69818867a9abe8cf0fb7`: ein unveränderter
+Originalkopf, transparente Originalkugel, gebundene Gesten und tatsächlicher
+Systemstatus-Ablauf im START-Cockpit. Abschließender betroffener Hostlauf:
+**39/39, 0 Fehler/Skips; NewApi-Lint erfolgreich**. Der frühere breite Lauf
+bleibt mit 274/275 separat dokumentiert. Keine physische Fold7-Abnahme.
+
+Zuerst [aktuelle Übergabe](ASTRA-JARVIS-VISUAL-CONTINUATION-20261105.md) und
+[Belegindex](../../evidence/astra-jarvis-visual-20261105/README.md) lesen.
+Der ursprüngliche Auftrag und seine historischen Zahlen folgen unverändert.
+Die passive Frame-Diagnose liefert Canvas-Draws, keine Filament-/GPU-FPS.
+
 Repository: `Ullmann27/device-ai` · Branch: `claude/continuum-jarvis-cockpit-z7bo60` (Draft-PR, offen lassen)
 Basis: PR #564 HEAD `c4cd3b58627713d839563046822521aac9caf0f1`. Paket bleibt `at.heinz.deviceai.continuumlocal`.
 Kein Main-Merge, kein Signaturwechsel, keine Veröffentlichung, kein Löschen von Nutzerdateien, keine kostenpflichtigen Dienste.

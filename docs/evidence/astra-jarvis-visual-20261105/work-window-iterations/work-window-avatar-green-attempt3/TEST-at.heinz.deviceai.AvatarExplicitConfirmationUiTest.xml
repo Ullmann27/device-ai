@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AvatarExplicitConfirmationUiTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-05T16:49:19" hostname="6e2f8005d77e" time="4.989">
+  <properties/>
+  <testcase name="destructiveApprovalNodsOnlyAfterTheLastExplicitPositiveButton" classname="at.heinz.deviceai.AvatarExplicitConfirmationUiTest" time="4.67"/>
+  <testcase name="ordinaryApprovalNodsOnlyForExplicitExecute" classname="at.heinz.deviceai.AvatarExplicitConfirmationUiTest" time="0.319"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumAvatarFallbackUiTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:04:34" hostname="6e2f8005d77e" time="0.489">
+  <properties/>
+  <testcase name="failed3dRendererStillKeepsThePortrait" classname="at.heinz.deviceai.ContinuumAvatarFallbackUiTest" time="0.36"/>
+  <testcase name="first3dFrameNotReadyKeepsTheExistingPortrait" classname="at.heinz.deviceai.ContinuumAvatarFallbackUiTest" time="0.129"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

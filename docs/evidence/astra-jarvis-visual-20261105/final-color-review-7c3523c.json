@@ -1,0 +1,133 @@
+{
+  "source": "7c3523cde9dae302a52d69818867a9abe8cf0fb7",
+  "raw_report": "/workspace/scratch/76b7222771d5/neon-flow/work-window/ref5-app-colors-7c3523c.json",
+  "raw_report_sha256": "54032c896836d0f0c821cec6ad442a117fb762b24d42b389a31b41db76b44501",
+  "status": "INDEPENDENT_RAW_RECHECK_PASS",
+  "verified_input_png_hashes": 3,
+  "verified_geometry_dump_hashes": 1,
+  "verified_script_hashes": 2,
+  "native_color_roi_checks": 12,
+  "native_glow_strip_checks": 39,
+  "matches_previous_9468_values": true,
+  "current_png_sha256": "e701d50e4fab09a25ab03e338c903eb4d056aabc4e475c8a672799aa3dda4771",
+  "current_dump_sha256": "c102f81183dd037bb027c3be83cdb218240c53b7157c281dbbcbefc66b27a8ff",
+  "colors": [
+    {
+      "role": "tile.fill",
+      "input": "reference",
+      "rgb": [
+        5,
+        27,
+        48
+      ]
+    },
+    {
+      "role": "tile.fill",
+      "input": "baseline",
+      "rgb": [
+        8,
+        19,
+        45
+      ]
+    },
+    {
+      "role": "tile.fill",
+      "input": "current",
+      "rgb": [
+        8,
+        19,
+        45
+      ]
+    },
+    {
+      "role": "tile.rim",
+      "input": "reference",
+      "rgb": [
+        23,
+        104,
+        127
+      ]
+    },
+    {
+      "role": "tile.rim",
+      "input": "baseline",
+      "rgb": [
+        49,
+        197,
+        253
+      ]
+    },
+    {
+      "role": "tile.rim",
+      "input": "current",
+      "rgb": [
+        49,
+        197,
+        253
+      ]
+    },
+    {
+      "role": "tile.icon",
+      "input": "reference",
+      "rgb": [
+        201,
+        255,
+        255
+      ]
+    },
+    {
+      "role": "tile.icon",
+      "input": "baseline",
+      "rgb": [
+        201,
+        255,
+        255
+      ]
+    },
+    {
+      "role": "tile.icon",
+      "input": "current",
+      "rgb": [
+        201,
+        255,
+        255
+      ]
+    },
+    {
+      "role": "text.primary",
+      "input": "reference",
+      "rgb": [
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "role": "text.primary",
+      "input": "baseline",
+      "rgb": [
+        253,
+        253,
+        253
+      ]
+    },
+    {
+      "role": "text.primary",
+      "input": "current",
+      "rgb": [
+        253,
+        253,
+        253
+      ]
+    }
+  ],
+  "limitations": [
+    "No image scaling, warping, whole-image fidelity score, or device measurement.",
+    "Host screenshot uses native Android Canvas and a 2D head fallback; no Filament/GPU verdict.",
+    "API28 host captures do not validate device API31 blur or API33 AGSL output.",
+    "RGB distance is not perceptual DeltaE; local sample contrast is not a text accessibility audit.",
+    "Ambient neon phase and dynamic scene background are not synchronized across captures.",
+    "Four semantic color roles plus one local glow profile; no product-color edit follows automatically."
+  ],
+  "not_a_product_test_run": true
+}

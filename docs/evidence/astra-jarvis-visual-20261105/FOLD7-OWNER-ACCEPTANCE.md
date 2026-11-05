@@ -20,7 +20,7 @@ Belegarten getrennt ablegen und entsprechend beschriften.
 
 | Schritt | Tatsächliche Bedienung | Erwartung | Gerät |
 |---|---|---|---|
-| 1 | App geöffnet und geschlossen auf START zeigen | Ein Originalkopf; separate Originalkugel mit Kern, Partikeln und gegenläufigen Ringen. Krone vollständig, Kinn oberhalb der Dialogkarte. | NOT_RUN |
+| 1 | Fold7 aufgeklappt und zugeklappt auf START zeigen | Ein Originalkopf; separate Originalkugel mit Kern, Partikeln und gegenläufigen Ringen. Krone vollständig, Kinn oberhalb der Dialogkarte. | NOT_RUN |
 | 2 | Im Leerlauf mehrere Sekunden aufnehmen | Ruhige Bewegungen, Blinzeln, unabhängige Ringphasen; Mund geschlossen. | NOT_RUN |
 | 3 | Freisprechen bewusst aktivieren, echte Frage stellen | Zuhören und Denken folgen realen Zuständen; START bleibt sichtbar. | NOT_RUN |
 | 4 | Tatsächliche TTS-Antwort aufnehmen | Lippen folgen ausgegebener Sprache; nach Ende geschlossen. PCM und Wortbereich-Fallback im Beleg unterscheiden. | NOT_RUN |
@@ -33,6 +33,8 @@ Belegarten getrennt ablegen und entsprechend beschriften.
 | 11 | Reduzierte Bewegung und Energiesparen testen | Keine fortlaufenden dekorativen Übergänge; Bedienung, STOP und statische Darstellung funktionieren. | NOT_RUN |
 | 12 | Echte Freigabefrage, zunächst ablehnen | Kein Bestätigungsnicken. Zwischenstufe „Weiter prüfen“ löst ebenfalls keine Freigabegeste aus. | NOT_RUN |
 | 13 | Nur eine tatsächlich gewollte Aktion endgültig freigeben | Genau ein zurückhaltendes Nicken; es bedeutet Zustimmung, keinen behaupteten Werkzeugerfolg. | NOT_RUN |
+| 14 | 100 %, 130 % und 200 % Schriftgröße prüfen | Beide Identitäten bleiben über der Dialogkarte; Bedienelemente bleiben erreichbar. | NOT_RUN |
+| 15 | Sehr kurzes Multiwindow mit großer Schrift prüfen | Falls neben geschützten Bereichen keine Fläche von 200 × 160 dp verbleibt, bleibt der vorhandene native Systemstatus-Dialog erreichbar. Dieser Fall ist keine holografische Fensterabnahme. | NOT_RUN |
 
 Keine destruktive Aktion allein für diese Abnahme freigeben. Die Host-Tests der
 Bestätigung verwenden lediglich einen Boolean-Aufzeichner und führen kein

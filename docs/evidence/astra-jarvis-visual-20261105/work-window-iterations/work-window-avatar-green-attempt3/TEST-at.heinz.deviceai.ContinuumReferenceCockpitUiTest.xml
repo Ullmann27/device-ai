@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" tests="12" skipped="0" failures="5" errors="0" timestamp="2026-11-05T16:49:30" hostname="6e2f8005d77e" time="245.241">
+  <properties/>
+  <testcase name="shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="30.883">
+    <failure message="java.lang.NullPointerException: Cannot read field &quot;mViewFlags&quot; because &quot;child&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot read field &quot;mViewFlags&quot; because &quot;child&quot; is null
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4111)
+	at android.view.View.draw(View.java:20075)
+	at android.view.ViewGroup.drawChild(ViewGroup.java:4333)
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4112)
+	at android.view.View.draw(View.java:20075)
+	at android.view.ViewGroup.drawChild(ViewGroup.java:4333)
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4112)
+	at android.view.View.draw(View.java:20210)
+	at jdk.internal.reflect.GeneratedMethodAccessor90.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.robolectric.shadows.ShadowView$_View_$$Reflector85.draw(Unknown Source)
+	at org.robolectric.shadows.ShadowView.draw(ShadowView.java:250)
+	at android.view.View.draw(View.java)
+	at com.android.internal.policy.DecorView.draw(DecorView.java:780)
+	at at.heinz.deviceai.CockpitHostFramePump.drawRequestedFrame(CockpitHostFramePump.kt:24)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.advanceFrames(ContinuumReferenceCockpitUiTest.kt:69)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.closeSystemWorkWindow(ContinuumReferenceCockpitUiTest.kt:469)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable$lambda$0(ContinuumReferenceCockpitUiTest.kt:978)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.withActivity(ContinuumReferenceCockpitUiTest.kt:148)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable(ContinuumReferenceCockpitUiTest.kt:961)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="1.094"/>
+  <testcase name="composerDraftSurvivesActualWindowReflowAndActivityRecreation" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="1.568"/>
+  <testcase name="foldLandscapeHasRealDestinationsAndReadableLargeType" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="39.816">
+    <failure message="java.lang.NullPointerException: Cannot read field &quot;mViewFlags&quot; because &quot;child&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot read field &quot;mViewFlags&quot; because &quot;child&quot; is null
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4111)
+	at android.view.View.draw(View.java:20075)
+	at android.view.ViewGroup.drawChild(ViewGroup.java:4333)
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4112)
+	at android.view.View.draw(View.java:20075)
+	at android.view.ViewGroup.drawChild(ViewGroup.java:4333)
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4112)
+	at android.view.View.draw(View.java:20210)
+	at jdk.internal.reflect.GeneratedMethodAccessor90.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.robolectric.shadows.ShadowView$_View_$$Reflector85.draw(Unknown Source)
+	at org.robolectric.shadows.ShadowView.draw(ShadowView.java:250)
+	at android.view.View.draw(View.java)
+	at com.android.internal.policy.DecorView.draw(DecorView.java:780)
+	at at.heinz.deviceai.CockpitHostFramePump.drawRequestedFrame(CockpitHostFramePump.kt:24)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.advanceFrames(ContinuumReferenceCockpitUiTest.kt:69)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.closeSystemWorkWindow(ContinuumReferenceCockpitUiTest.kt:469)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.checkProfile$lambda$0(ContinuumReferenceCockpitUiTest.kt:669)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.withActivity(ContinuumReferenceCockpitUiTest.kt:148)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.checkProfile(ContinuumReferenceCockpitUiTest.kt:652)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.foldLandscapeHasRealDestinationsAndReadableLargeType(ContinuumReferenceCockpitUiTest.kt:919)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="foldPortraitCompactChooserRestoresExact2dGeometry" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="39.44"/>
+  <testcase name="foldLandscapeCompactChooserRestoresExact2dGeometry" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="27.658"/>
+  <testcase name="narrowPhoneHasRealDestinationsAndReadableLargeType" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="13.946">
+    <failure message="java.lang.NullPointerException: Cannot read field &quot;mViewFlags&quot; because &quot;child&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot read field &quot;mViewFlags&quot; because &quot;child&quot; is null
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4111)
+	at android.view.View.draw(View.java:20075)
+	at android.view.ViewGroup.drawChild(ViewGroup.java:4333)
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4112)
+	at android.view.View.draw(View.java:20075)
+	at android.view.ViewGroup.drawChild(ViewGroup.java:4333)
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4112)
+	at android.view.View.draw(View.java:20210)
+	at jdk.internal.reflect.GeneratedMethodAccessor90.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.robolectric.shadows.ShadowView$_View_$$Reflector85.draw(Unknown Source)
+	at org.robolectric.shadows.ShadowView.draw(ShadowView.java:250)
+	at android.view.View.draw(View.java)
+	at com.android.internal.policy.DecorView.draw(DecorView.java:780)
+	at at.heinz.deviceai.CockpitHostFramePump.drawRequestedFrame(CockpitHostFramePump.kt:24)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.advanceFrames(ContinuumReferenceCockpitUiTest.kt:69)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.closeSystemWorkWindow(ContinuumReferenceCockpitUiTest.kt:469)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.checkProfile$lambda$0(ContinuumReferenceCockpitUiTest.kt:669)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.withActivity(ContinuumReferenceCockpitUiTest.kt:148)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.checkProfile(ContinuumReferenceCockpitUiTest.kt:652)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.narrowPhoneHasRealDestinationsAndReadableLargeType(ContinuumReferenceCockpitUiTest.kt:913)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="shellAppearanceChooserReusesTheLiveAvatarAndPersistsTheChoice" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="3.979"/>
+  <testcase name="presentationControlsReuseTheLiveAvatarAndPersistCompactChoice" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="16.748"/>
+  <testcase name="legacyReferencePresentationControlsReuseTheLiveAvatarAndPersistCompactChoice" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="1.093"/>
+  <testcase name="phoneHasRealDestinationsAndReadableLargeType" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="21.093">
+    <failure message="java.lang.NullPointerException: Cannot read field &quot;mViewFlags&quot; because &quot;child&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot read field &quot;mViewFlags&quot; because &quot;child&quot; is null
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4111)
+	at android.view.View.draw(View.java:20075)
+	at android.view.ViewGroup.drawChild(ViewGroup.java:4333)
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4112)
+	at android.view.View.draw(View.java:20075)
+	at android.view.ViewGroup.drawChild(ViewGroup.java:4333)
+	at android.view.ViewGroup.dispatchDraw(ViewGroup.java:4112)
+	at android.view.View.draw(View.java:20210)
+	at jdk.internal.reflect.GeneratedMethodAccessor90.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.robolectric.shadows.ShadowView$_View_$$Reflector85.draw(Unknown Source)
+	at org.robolectric.shadows.ShadowView.draw(ShadowView.java:250)
+	at android.view.View.draw(View.java)
+	at com.android.internal.policy.DecorView.draw(DecorView.java:780)
+	at at.heinz.deviceai.CockpitHostFramePump.drawRequestedFrame(CockpitHostFramePump.kt:24)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.advanceFrames(ContinuumReferenceCockpitUiTest.kt:69)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.closeSystemWorkWindow(ContinuumReferenceCockpitUiTest.kt:469)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.checkProfile$lambda$0(ContinuumReferenceCockpitUiTest.kt:669)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.withActivity(ContinuumReferenceCockpitUiTest.kt:148)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.checkProfile(ContinuumReferenceCockpitUiTest.kt:652)
+	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.phoneHasRealDestinationsAndReadableLargeType(ContinuumReferenceCockpitUiTest.kt:916)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="foldPortraitHasRealDestinationsAndReadableLargeType" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="47.922">
+    <failure message="java.lang.NullPointerException" type="java.lang.NullPointerException">java.lang.NullPointerException
+</failure>
+  </testcase>
+  <system-out><![CDATA[REFERENCE_CAPTURE narrow-280x720-font200-stop 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFLOW_OBSERVATION old=280 current=280 measured=280.0
+REFERENCE_CAPTURE fold-landscape-840x649-font100-home 840x649 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE narrow-280x720-font100-home 280x720 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-original-orb 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-compact 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE legacy-phone-412x915-original-orb 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE legacy-phone-412x915-compact 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE phone-412x915-font100-home 412x915 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+REFERENCE_CAPTURE fold-portrait-840x1050-font100-home 840x1050 NATIVE_HOST_CANVAS_2D_FALLBACK_NOT_FILAMENT
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
