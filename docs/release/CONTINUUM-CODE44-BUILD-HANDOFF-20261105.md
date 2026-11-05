@@ -32,3 +32,15 @@ Nach Reparatur: lokale betroffene Tests, dann vollständiger originaler Publishe
 - Vollständiger grüner QA-/Signierlauf des finalen SHA.
 - Unabhängiger HTTPS-Download: zwölf Manifestfelder, Quelle/Code/Paket, Dateilänge, SHA-256, v2-Signatur und Originalzertifikat mittels apksigner, Paket/Version mittels aapt2.
 - Reale Fold7-Installation, GPU, Audio, Temperatur und Updateknopf: NOT_RUN.
+
+## Reparatur-Checkpoint
+
+Die elf Fehler wurden gegen unveränderten App-Code e9b3922d reproduziert. Sie betreffen alte Quelltextverträge nach der bereits vorhandenen WorkWindow-, AvatarFraming-/Neck- und Sprach-Chunk-Integration. Ausschließlich sieben Node-Testdateien wurden angepasst; Produktionscode und Publisher-Gates bleiben unverändert.
+
+| Teilbereich | RED | GREEN | Negative Anschlusskontrollen |
+| --- | --- | --- | --- |
+| Navigation / Center-Buttons | 11 PASS / 4 FAIL | 15 PASS / 0 FAIL / 0 SKIP | 10/10 Defekte erkannt |
+| Framing / Hals / Freisprechen | 7 PASS / 5 FAIL | 12 PASS / 0 FAIL / 0 SKIP | 6/6 Defekte erkannt |
+| Sprachabschluss / nächste Abschnitte | 6 PASS / 2 FAIL | 8 PASS / 0 FAIL / 0 SKIP | ID-, STOP-, Reihenfolge- und MORE_CHUNKS-Grenzen ausdrücklich geprüft |
+
+Node-Version: 24.22.1. Alle 35 bestehenden Testfälle bleiben erhalten. Die vollständige Full-Node-Suite muss nach diesem Commit auf dessen exakter SHA erneut laufen. Der erste Renderlauf e9b3922d bleibt wegen des nachgewiesenen Full-Node-Fehlers für eine Veröffentlichung gesperrt.

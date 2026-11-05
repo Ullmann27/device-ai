@@ -52,8 +52,18 @@ test('owner decision: a microphone tap starts hands-free talk; long press keeps 
 });
 
 test('listening resumes only after the bound reply and never over dialogs or approvals', () => {
-  assert.match(body('private fun speakBootstrap('), /else continuousConversation\.assistantSpeechQueued\(id\)/);
+  const bootstrap = body('private fun speakBootstrap(');
+  assert.match(bootstrap, /speakableChunks\(message, maxChunks = 15\)/);
+  assert.match(bootstrap, /if \(chunks\.truncated\) chunks\.pieces \+ SPOKEN_REST_IN_CHAT else chunks\.pieces/);
+  assert.match(bootstrap, /if \(!speechChunks\.beginTurn\(turn\)\) return\s*pieces\.forEachIndexed \{ index, piece ->\s*speechChunks\.appendApproved\(turn, "\$turn-\$index", piece, approvalEvidenceId = "visible-final-reply"\)\s*\}\s*speechChunks\.markLastChunkSubmitted\(turn\)\s*speechTurnId = turn\s*if \(!speakNextChunk\(turn, TextToSpeech\.QUEUE_FLUSH\)\) stopVoiceAnimation\(\)/);
+  assert.doesNotMatch(bootstrap, /assistantSpeechQueued\(/);
+  const next = body('private fun speakNextChunk(').replace(/\/\/[^\n]*/g, '');
+  assert.match(next, /val chunk = speechChunks\.takeNextReady\(turn\) \?: return false\s*val id = "device-ai-" \+ UUID\.randomUUID\(\)\s*voiceUtteranceId = id\s*speechChunkId = chunk\.chunkId/);
+  assert.match(next, /voiceSignal\.activate\(id\)\s*voiceAvatarText = chunk\.approvedText\s*if \(voiceEngine\?\.speak\(chunk\.approvedText, queueMode, null, id\) != TextToSpeech\.SUCCESS\) return false\s*continuousConversation\.assistantSpeechQueued\(id\)\s*return true/);
+  const finish = body('private fun finish(id: String?, interrupted: Boolean = false, failed: Boolean = false)').replace(/\/\/[^\n]*/g, '');
+  assert.match(finish, /if\s*\(id != null && id == voiceUtteranceId\)\s*\{\s*if \(!interrupted && !failed && continueSpokenReply\(\)\) return@runOnUiThread\s*stopVoiceAnimation\(interrupted \|\| failed\)\s*\}\s*if \(id != null\) onConversationSpeechFinished\(id, interrupted\)/);
   assert.match(body('private fun installVoiceProgressListener('), /if \(id != null\) onConversationSpeechFinished\(id, interrupted\)/);
+  assert.match(policy, /if \(state != State\.SPEAKING \|\| utteranceId != replyUtterance\) return Decision\.IGNORE/);
   const resume = body('private fun resumeConversationAfterReply(');
   for (const guard of ['foregroundLearningActive', 'hasWindowFocus()', '!avatarAwaitingApproval', '!voiceListening', 'input.text.isNullOrBlank()'])
     assert.ok(resume.includes(guard), 'resume guard missing: ' + guard);
