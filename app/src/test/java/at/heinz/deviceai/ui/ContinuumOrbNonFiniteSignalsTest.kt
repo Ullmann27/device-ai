@@ -15,7 +15,11 @@ class ContinuumOrbNonFiniteSignalsTest {
                 pulse = Float.POSITIVE_INFINITY, recall = Float.NEGATIVE_INFINITY,
                 phase = Float.POSITIVE_INFINITY
             ),
-            ContinuumBrainOrbRenderer.Signals(pulse = -9f, recall = 10f, phase = -20f)
+            ContinuumBrainOrbRenderer.Signals(pulse = -9f, recall = 10f, phase = -20f),
+            ContinuumBrainOrbRenderer.Signals(pulse = .7f, recall = .9f,
+                phase = Float.MAX_VALUE, processing = true),
+            ContinuumBrainOrbRenderer.Signals(pulse = 1f, phase = -Float.MAX_VALUE),
+            ContinuumBrainOrbRenderer.Signals(phase = 1_000_000f)
         )
         for (signals in inputs) {
             var primitives = 0

@@ -26,7 +26,7 @@ class ContinuumBrainOrbRenderer {
         // Keep invalid signals out of draw primitives.
         val pulse = if (s.pulse.isFinite()) s.pulse.coerceIn(0f, 1f) else 0f
         val recall = if (s.recall.isFinite()) s.recall.coerceIn(0f, 1f) else 0f
-        val phase = if (s.phase.isFinite()) s.phase else 0f
+        val phase = if (s.phase.isFinite() && s.phase in -1_000_000f..1_000_000f) s.phase else 0f
         val stable = if (pulse == s.pulse && recall == s.recall && phase == s.phase) s
             else s.copy(pulse = pulse, recall = recall, phase = phase)
         val C = JarvisDesign.Colors
