@@ -27,4 +27,11 @@ class MemoryFallbackModelNotReadyTest {
         assertEquals(recall, ContinuumUiCopy.memoryFallbackAnswer(recall, grounded = true, modelReady = false))
         assertEquals("Andere Antwort", ContinuumUiCopy.memoryFallbackAnswer("Andere Antwort", grounded = false, modelReady = false))
     }
+
+    /** Gitar review on #565: a personal question or a revoked memory keeps the „Merke dir“ guidance. */
+    @Test fun theOriginalMemoryAnswerAndItsGuidanceStay() {
+        val text = ContinuumUiCopy.memoryFallbackAnswer(gap, grounded = false, modelReady = false)
+        assertTrue("original reply first: $text", text.startsWith(gap))
+        assertTrue(text.contains("Merke dir"))
+    }
 }

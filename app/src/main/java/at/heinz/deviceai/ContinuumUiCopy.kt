@@ -51,14 +51,15 @@ object ContinuumUiCopy {
 
     /**
      * #567 P0-12: a general question without a matching memory and without a loaded local model is not a memory
-     * gap. Say what is really missing instead of suggesting the owner must teach it. Exact recalls stay unchanged;
+     * gap. Add what is really missing; the original memory reply and its guidance stay. Exact recalls stay unchanged;
      * with a ready model this path is not reached for general questions (LocalFirstPolicy routes them to the model).
      */
     fun memoryFallbackAnswer(answer: String, grounded: Boolean, modelReady: Boolean): String =
         if (grounded || modelReady || answer != at.heinz.deviceai.learning.ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER) answer
-        else "Dazu habe ich keine gespeicherte Erinnerung, und das lokale Sprachmodell ist gerade nicht geladen. " +
-            "Deshalb kann ich diese allgemeine Frage jetzt nicht beantworten. Lade das Modell in der Modellverwaltung " +
-            "und frag mich dann noch einmal. Ich habe dafür nicht im Internet gesucht."
+        // The memory reply stays first (personal questions and revoked memories keep the „Merke dir“ guidance);
+        // the missing model is added as the real reason a general question cannot be answered now.
+        else answer + "\n\nHinweis: Das lokale Sprachmodell ist gerade nicht geladen. Allgemeine Wissensfragen kann ich " +
+            "erst beantworten, wenn du es in der Modellverwaltung lädst. Ich habe dafür nicht im Internet gesucht."
 
     fun researchFailure(reason: String?): String = when {
         reason?.contains("too large", ignoreCase = true) == true -> emptyResearch(reason)
