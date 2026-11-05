@@ -86,6 +86,15 @@ export function inspectHostEnvironment(env=process.env) {
   }
   const aapt2=env.CONTINUUM_AAPT2_PATH || (sdk?path.join(sdk,'build-tools','35.0.0','aapt2'):null);
   if(!aapt2||!fs.existsSync(aapt2))blockers.push('NATIVE_AAPT2_NOT_FOUND');
+  else {
+    const probe=spawnSync(aapt2,['version'],{
+      env,encoding:'utf8',timeout:5000,maxBuffer:8192,shell:false
+    });
+    const output=(probe.stdout??'')+'\n'+(probe.stderr??'');
+    if(probe.error||probe.status!==0||
+       !/Android Asset Packaging Tool\s*\(aapt\)\s*2(?:\.|\s|$)/i.test(output))
+      blockers.push('NATIVE_AAPT2_INVALID');
+  }
   return Object.freeze({hostReadyToAttemptQa:!blockers.length,blockers,
     androidCompilationExecuted:false,androidTestExecuted:false,apkSigned:false});
 }
