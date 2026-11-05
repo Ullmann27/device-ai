@@ -1,0 +1,73 @@
+{
+  "task_id": "MEMORY-R13-TEMPORAL-LEXICAL-20261105",
+  "date": "2026-11-05",
+  "status": "ISOLATED_DRAFT_HOST_TARGETED_GREEN_ANDROID_NOT_RUN",
+  "repository": "Ullmann27/device-ai",
+  "branch": "fix/continuum-memory-r13-temporal-lexical-20261105",
+  "base_pr": 548,
+  "base_commit": "e8102654a34d435eee115643b414158cd34c6f1d",
+  "frozen_tests": [
+    {
+      "commit": "fbfbd26712bbcda5df61426107fe3a5b2c4cbfca",
+      "path": "app/src/test/java/at/heinz/deviceai/learning/MemoryTemporalLexicalR13Test.kt",
+      "methods": 8
+    },
+    {
+      "commit": "e5956a58c4e297bd5ed155025f9e4b057ab3ea82",
+      "path": "app/src/test/java/at/heinz/deviceai/learning/MemoryTemporalWordBoundariesR13Test.kt",
+      "methods": 4
+    }
+  ],
+  "production_commit": "33a0dacdaf454a787358127a0d775788857ccf8f",
+  "source_path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+  "source_blob_before": "dcaeed0b13eb3f4f88128e45c250d6d84a319c72",
+  "source_blob_after": "8f595df9783b74e10d6b702e12b5078184a91856",
+  "diff_scope": "Four expression replacements in TemporalCue; all other production bytes exactly unchanged",
+  "architecture": "GermanText numericEvidenceTerms -> TemporalCue.window -> BM25 and CharNgramHashRetriever temporal weight; C1 only common Activity, voice, factory and worker entries",
+  "findings": [
+    "Relative-day cues failed with tabs/newlines and repeated spaces despite numericEvidenceTerms stripping number.",
+    "'vor 2 tagen' matched inside zuvor/bevor and in word tagenlos.",
+    "Standalone gestern/vorgestern cues matched unrelated word fragments."
+  ],
+  "host": {
+    "kind": "EXTRACTED_BYTE_IDENTICAL_TEMPORALCUE_WITH_LIMITED_GERMANTEXT_HELPERS",
+    "toolchain": "kotlinc-jvm 1.9.0 / OpenJDK 21.0.12.1",
+    "baseline": {
+      "pass": 13,
+      "fail": 7,
+      "exit": 1,
+      "log_sha256": "31b7a28066c7530e862d70b280545c4c7e3993526b8848f0b31c91e8876ecb9e"
+    },
+    "patched": {
+      "pass": 20,
+      "fail": 0,
+      "exit": 0,
+      "log_sha256": "1390c7fce519fd116b8baf23d52ab173d4f7dc73b4dbe862501b7f62543aab05"
+    },
+    "source_fragment_old_fvn32": "d7bf1612",
+    "source_fragment_new_fnv32": "cc26bf5b",
+    "repeated_source_comparison": true
+  },
+  "pending": [
+    "Run 12 frozen Android project JUnit methods",
+    "Run full temporal suite and existing 44-question M2.9 official holdout on combined C1 SHA",
+    "Measure behavior of compound time-words and avoid unexpected recall loss",
+    "C1 serial integration after R6-R12 and #522/#529 preservation",
+    "Node/backend/UI/Android full gates; signed original apk and Fold7 (later)"
+  ],
+  "ownership": {
+    "shared_entrypoints": "C1 PR519 only",
+    "privacy_mapper": "PR522 and already-integrated C1 patches kept untouched",
+    "no_competing_R13_branch_observed": true,
+    "invisible_other_processes": "NOT_VERIFIABLE"
+  },
+  "constraints": {
+    "no_main_merge": true,
+    "no_actions": true,
+    "no_apk": true,
+    "no_paid_service": true,
+    "no_build_lock_acquired": true,
+    "model_weights_package_signature_offline_owner_data_untouched": true,
+    "github_network_from_container": "DNS_FAIL_getaddrinfo_github.com"
+  }
+}
