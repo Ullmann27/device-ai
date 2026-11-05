@@ -101,3 +101,61 @@ test('durable loop source verification ignores ambient Git trace destinations',a
  assert.equal(summary.state,'LIMIT_REACHED');
  for(const marker of markers)assert.equal(fs.existsSync(marker),false,'Git must not write '+marker);
 });
+
+function foreignGitFixture(f){
+ const foreignRoot=path.join(path.dirname(f.sourceRoot),'foreign-git-dir');
+ fs.mkdirSync(foreignRoot);
+ const run=args=>{
+  const result=spawnSync('git',['-C',foreignRoot,...args],{encoding:'utf8',timeout:5000,shell:false});
+  assert.equal(result.status,0,result.stderr);
+  return result.stdout.trim();
+ };
+ run(['init','-q','-b','foreign-source']);
+ fs.writeFileSync(path.join(foreignRoot,'other.txt'),'foreign source\n');
+ run(['add','.']);
+ run(['-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','foreign']);
+ return {foreignRoot,foreignHead:run(['rev-parse','HEAD'])};
+}
+
+async function withForeignGitEnvironment(foreignRoot,callback){
+ const entries=[['GIT_DIR',path.join(foreignRoot,'.git')],['GIT_WORK_TREE',foreignRoot]];
+ const prior=new Map(entries.map(([key])=>[key,process.env[key]]));
+ try{
+  for(const [key,value] of entries)process.env[key]=value;
+  return await callback();
+ }finally{
+  for(const [key,value] of prior)
+   if(value===undefined)delete process.env[key];else process.env[key]=value;
+ }
+}
+
+test('local loop binds the intended source despite inherited foreign Git repository selectors',async t=>{
+ const f=fixture(t),foreign=foreignGitFixture(f);
+ const sourceHead=spawnSync('git',['-C',f.sourceRoot,'rev-parse','HEAD'],{encoding:'utf8'}).stdout.trim();
+ assert.match(sourceHead,/^[0-9a-f]{40}$/);
+ assert.notEqual(sourceHead,foreign.foreignHead);
+ let observedHead=null;
+ const result=await withForeignGitEnvironment(foreign.foreignRoot,()=>runTeamleaderLoop({
+  sourceRoot:f.sourceRoot,stateFile:f.stateFile,maxCycles:1,
+  work:({sourceHead:boundHead})=>{observedHead=boundHead;return {outcome:'IDLE'};}
+ }));
+ assert.equal(result.lastOutcome,'IDLE');
+ assert.equal(observedHead,sourceHead,'checkpoint cannot identify a foreign repository');
+ const recorded=JSON.parse(fs.readFileSync(f.stateFile,'utf8'));
+ assert.equal(recorded.source.head,sourceHead);
+});
+
+test('local loop refuses dirty intended checkout even when inherited foreign Git repository is clean',async t=>{
+ const f=fixture(t),foreign=foreignGitFixture(f);
+ fs.appendFileSync(path.join(f.sourceRoot,'source.txt'),'dirty after commit\n');
+ let workCalls=0;
+ await assert.rejects(
+  ()=>withForeignGitEnvironment(foreign.foreignRoot,()=>runTeamleaderLoop({
+   sourceRoot:f.sourceRoot,stateFile:f.stateFile,maxCycles:1,
+   work:()=>{workCalls++;return {outcome:'IDLE'};}
+  })),/Local loop refuses a dirty source checkout/
+ );
+ assert.equal(workCalls,0);
+ assert.equal(fs.existsSync(f.stateFile),false);
+ assert.equal(fs.existsSync(f.stateFile+'.lock'),false);
+});

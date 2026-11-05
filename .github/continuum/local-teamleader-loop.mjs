@@ -84,6 +84,13 @@ async function sourceIdentity(root,sourcePreflight){
  if(sourcePreflight!==null)await sourcePreflight(canonical);
  // The scheduler must not let inherited Git trace destinations write files.
  const gitEnv={...process.env,GIT_TERMINAL_PROMPT:'0',GIT_OPTIONAL_LOCKS:'0'};
+ // Git -C does not override inherited repository/index selectors. Without this,
+ // a clean foreign GIT_DIR/GIT_WORK_TREE can mask a dirty intended checkout and
+ // bind the scheduler checkpoint to an unrelated commit. Match the existing
+ // guarded branch-discovery reader's structural Git environment boundary.
+ for(const key of ['GIT_DIR','GIT_WORK_TREE','GIT_INDEX_FILE','GIT_COMMON_DIR',
+  'GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES','GIT_SHALLOW_FILE',
+  'GIT_NAMESPACE','GIT_CONFIG'])delete gitEnv[key];
  for(const key of Object.keys(gitEnv))if(key.startsWith('GIT_TRACE'))delete gitEnv[key];
  const git=args=>{
   const result=spawnSync('git',['-C',canonical,...args],{
