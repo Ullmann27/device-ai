@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "taskId": "MEMORY-R8-NEGATION-K-20261105",
+  "type": "SOURCE_PATTERN_AND_DIFF_REVIEW__NO_KOTLIN_COMPILE_OR_RUNTIME",
+  "testedPublishedCommit": "48bd147f30a68cd7c6c902cd9a7d42cb0b1c29ad",
+  "productionFile": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+  "productionBlob": "b0200e5246130d056ce02eb570f69dbcfa641ae5",
+  "frozenTestFile": "app/src/test/java/at/heinz/deviceai/learning/MemoryRetrieverPolarityAndLimitR8Test.kt",
+  "frozenTestBlob": "a2c62141b9b1c2d9a4557e983c1433a1ac28438c",
+  "sourceBaselineBlob": "a0849ac148164fb94e7f0725182ce831546519d4",
+  "red": {
+    "checks": 3,
+    "pass": 0,
+    "fail": 3,
+    "evidence": "source-red.json"
+  },
+  "green": {
+    "checks": 7,
+    "pass": 7,
+    "fail": 0,
+    "checked": [
+      "GermanText STOP no longer removes nicht",
+      "BM25 search returns empty when k<=0 before taking",
+      "CharNgram scoredParts returns empty when k<=0 before taking",
+      "both R7 @Volatile atomic IndexState references unchanged",
+      "both R6 caller document list snapshots retained",
+      "R8 test blob unchanged from test-freeze commit",
+      "R7 BM25 and n-gram score expressions unchanged"
+    ]
+  },
+  "codeDiff": {
+    "productionPaths": 1,
+    "logicalEdits": 3,
+    "semantics": "1 polarity/token rule and 2 top-k early guards"
+  },
+  "unrun": {
+    "androidProjectJUnit": 5,
+    "hostFullSourceJUnit": 11,
+    "fullAndroidGradle": true,
+    "holdout44": true
+  },
+  "limits": [
+    "Static source matches are not JVM program execution or assurance of ranking quality.",
+    "The R8 Kotlin/JUnit host runner is committed and ready, but no runtime succeeded in this execution context.",
+    "Changing negation tokenization may change corpus ranks; 1000-doc/44-question retrieval gate must compare before integration."
+  ]
+}
