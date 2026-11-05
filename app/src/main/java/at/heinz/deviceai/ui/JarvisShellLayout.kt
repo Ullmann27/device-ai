@@ -64,11 +64,17 @@ object JarvisShellLayout {
         /** The camera, microphone and appearance controls share these bounds with their native hit targets. */
         fun dialogControlBoxes(): List<Box> {
             val b = boxes[Slot.DIALOG] ?: return emptyList()
-            val size = minOf(48f, b.width * .23f)
+            val size = minOf(48f, b.width / 3f - 2f)
             val y = b.bottom - size - 3f
-            return listOf(.26f, .50f, .74f).map { fraction ->
+            // Wide dialogues keep the reference spacing; narrower ones (free-head layout) distribute evenly.
+            if (b.width * .24f >= size + 2f) return listOf(.26f, .50f, .74f).map { fraction ->
                 val cx = b.left + b.width * fraction
                 Box(cx - size / 2f, y, cx + size / 2f, y + size)
+            }
+            val gap = (b.width - 3f * size) / 4f
+            return List(3) { i ->
+                val left = b.left + gap + i * (size + gap)
+                Box(left, y, left + size, y + size)
             }
         }
 

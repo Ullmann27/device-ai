@@ -8,5 +8,5 @@ const srv=http.createServer((q,r)=>{const p=path.join(dir,decodeURIComponent(q.u
  const err=await pg.evaluate(()=>window.state.error); if(err){console.log('ERR',err);process.exit(1);}
  console.log('meshes',JSON.stringify(await pg.evaluate(()=>window.meshNames)).slice(0,300)); console.log('bbox',JSON.stringify(await pg.evaluate(()=>window.bbox)));
  fs.mkdirSync(out,{recursive:true});
- for(const v of views){ const d=await pg.evaluate(a=>window.shot(...a),[v.az,v.el,v.dist,v.ty,v.hide||[],v.morph||{},v.fov]); fs.writeFileSync(path.join(out,v.name+'.png'),Buffer.from(d.split(',')[1],'base64')); }
+ for(const v of views){ const d=await pg.evaluate(a=>window.shot(...a),[v.az,v.el,v.dist,v.ty,v.hide||[],v.morph||{},v.fov,v.ortho||null]); fs.writeFileSync(path.join(out,v.name+'.png'),Buffer.from(d.split(',')[1],'base64')); }
  await b.close(); srv.close(); });

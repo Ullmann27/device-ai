@@ -38,7 +38,8 @@ object GermanCockpitPreview {
 
     @JvmStatic fun main(args: Array<String>) {
         val root = File(args[0]); val out = File(args[1]).also { it.mkdirs() }
-        val head = args.getOrNull(2)?.let { ImageIO.read(File(it)) }?.let(::cropToAlpha)
+        // Pass a render made with the native orthographic bust framing (tools/avatar-3d/web-review, views-native.json).
+        val head = args.getOrNull(2)?.let { ImageIO.read(File(it)) }
         for (win in windows) {
             val shell = JarvisShellLayout.create(win.w, win.h)
             // Scrolling compact layouts are captured over their full content height (viewport line drawn below).
@@ -54,11 +55,12 @@ object GermanCockpitPreview {
                 // Grid windows name HEAD/ORB areas; compact windows stack head over a chest orb inside one stage.
                 val headBox = areas?.get(JarvisCockpitGrid.Area.HEAD) ?: shell.headBounds ?: box
                 val orbBox = areas?.get(JarvisCockpitGrid.Area.ORB) ?: shell.orbBounds
+                JarvisHeadAura.draw(painter, headBox)
                 if (head != null) {
-                    // Keep the render's aspect; anchor the bust to the bottom of the HEAD area like the native stage.
+                    // Keep the render's aspect; the bust is centred and height-fitted like the orthographic native camera.
                     val scale = minOf(headBox.width / head.width, headBox.height / head.height)
                     val dw = head.width * scale; val dh = head.height * scale
-                    val left = headBox.centerX - dw / 2f; val top = headBox.bottom - dh
+                    val left = headBox.centerX - dw / 2f; val top = headBox.centerY - dh / 2f
                     // [g] already maps dp to pixels; this transform is concatenated in user (dp) space.
                     val t = java.awt.geom.AffineTransform()
                     t.translate(left.toDouble(), top.toDouble()); t.scale((dw / head.width).toDouble(), (dh / head.height).toDouble())

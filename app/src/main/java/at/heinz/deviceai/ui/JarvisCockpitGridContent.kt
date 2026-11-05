@@ -22,6 +22,8 @@ object JarvisCockpitGridContent {
     private val clockFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
     private val dateFormat = SimpleDateFormat("EEE, d. MMM", Locale.GERMANY)
     const val MODE_LABEL = "JARVIS-Modus"
+    const val COMPANION = "Dein KI-Begleiter auf dem Gerät"
+    const val COMPANION_SHORT = "Dein KI-Begleiter"
 
     val tileSubtitles: Map<String, List<String>> = mapOf(
         "chat" to listOf("Natürlich sprechen", "und nachfragen"),
@@ -230,8 +232,11 @@ object JarvisCockpitGridContent {
         val badge = if (live) "Live" else "Ruhe"
         p.drawText(badge, b.right - 12f, titleY, Type.caption,
             Fill.Solid(if (live) Colors.ok else Colors.textMuted), TextAlign.RIGHT)
-        p.drawText(fit(p, "Dein KI-Begleiter auf dem Gerät", Type.caption, b.width - 45f), b.left + 39f,
-            titleY + 4f + p.capHeight(Type.caption), Type.caption, Fill.Solid(Colors.textSecondary))
+        val companionRoom = b.width - 45f
+        val companion = if (p.measureText(COMPANION, Type.caption) * .88f <= companionRoom) COMPANION else COMPANION_SHORT
+        val companionStyle = JarvisShellRenderer.shrinkToFit(p, companion, Type.caption, companionRoom, minScale = .88f)
+        p.drawText(fit(p, companion, companionStyle, companionRoom), b.left + 39f,
+            titleY + 4f + p.capHeight(Type.caption), companionStyle, Fill.Solid(Colors.textSecondary))
         val controls = shell?.dialogControlBoxes().orEmpty()
         val controlTop = controls.minOfOrNull { it.top } ?: (b.bottom - 6f)
         val bubble = Box(b.left + 10f, titleY + p.capHeight(Type.caption) + 12f, b.right - 10f, controlTop - 4f)

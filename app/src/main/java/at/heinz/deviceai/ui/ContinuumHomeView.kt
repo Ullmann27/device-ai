@@ -308,7 +308,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         jarvisShell.content = JarvisShellContent.forState({ state }, grid = { jarvisShell.shell?.grid },
             shell = { jarvisShell.shell }) + mapOf(
                 JarvisShellLayout.Slot.NAV_RAIL to JarvisShellRenderer.SlotContent { _, _ -> },
-                JarvisShellLayout.Slot.AVATAR to JarvisShellRenderer.SlotContent { _, _ -> })
+                // Rings and HUD arcs of the reference sit beneath the transparent live head surface.
+                JarvisShellLayout.Slot.AVATAR to JarvisShellRenderer.SlotContent { p, _ ->
+                    jarvisShell.shell?.headBounds?.let { JarvisHeadAura.draw(p, it) }
+                })
         jarvisShell.onFrameDrawn = { shellForeground.invalidate() }
         jarvisShell.tiles = shellTiles(state)
         // Drawing and hit targets are separate. Real Views own DOWN/MOVE/CANCEL/UP, keyboard focus and TalkBack.
