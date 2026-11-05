@@ -1,0 +1,33 @@
+{
+  "task": "MEMORY-R13",
+  "pr": 553,
+  "branch": "fix/continuum-memory-r13-relative-cues-20261105",
+  "base_commit": "e8102654a34d435eee115643b414158cd34c6f1d",
+  "frozen_tests_commit": "fce2c2a41ed7b8979b345ac72e07ca4b9087907d",
+  "tested_production_commit": "7f6a57c0b870af82a5a06d12d270b61e80901770",
+  "production_blob": "d7639be8691d939f9aaa89c52bb85635ebe60f53",
+  "final_driver_blob": "99199b8a2564b11adbd1d63a1bf1540c5e795940",
+  "status": "HOST_VERIFIED_C1_INTAKE_PENDING",
+  "architecture": "GermanText numeric guard -> existing BM25/Ngram -> TemporalCue; existing index states unchanged",
+  "c1_observed_head": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+  "gate": {
+    "baseline": {"tests": 52, "pass": 43, "fail": 9, "exit": 1},
+    "candidate": {"tests": 52, "pass": 52, "fail": 0, "exit": 0},
+    "exact_query_variant_readouts": 220,
+    "readout_sha256": "f1d0f9c7a1714b329fd6c50e56b2805f95d65c2caa98aed373fec3283a06c6c6",
+    "default_recall_at_1": [39, 44],
+    "default_recall_at_3": [42, 44],
+    "complete_final_driver_exit": 0,
+    "source_unchanged": true,
+    "existing_output_sentinel_preserved": true,
+    "overlapping_counts_must_not_be_added": true
+  },
+  "host": {"kotlin": "1.9.0", "jdk": "21.0.12.1", "assertions": "explicit host adapter, not JUnit4", "event_adapter": "fail-fast, not entered"},
+  "not_run": ["full Android/Gradle suite", "project JUnit4", "NewApi lint", "event delivery/Activity", "model/GPU/audio", "Fold7", "APK", "git-show baseline acquisition variant"],
+  "open": ["C1 R6-R12 prerequisite intake then R13 delta", "context-aware leading-zero dates", "spelled factual numbers", "unsupported relative-time windows", "parked-car and theater recall misses", "independent common-source Android validation"],
+  "next": "C1 inspect R13 two-hunk production delta and frozen test; preserve newer work; run pinned host replay then actual common project gates",
+  "background_processes": 0,
+  "main_merge": false,
+  "release": false,
+  "installation": false
+}
