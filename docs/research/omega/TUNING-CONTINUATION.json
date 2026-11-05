@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "IN_PROGRESS",
-  "owner": "tuning-sequential-r12-20261105T022848Z",
-  "leaseExpiresAtUtc": "2026-11-05T02:58:48.794Z",
-  "updatedAtUtc": "2026-11-05T02:28:48.794Z",
+  "status": "READY_FOR_NEXT_RUN",
+  "owner": null,
+  "leaseExpiresAtUtc": null,
+  "updatedAtUtc": "2026-11-05T02:37:57.472Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -58,7 +58,7 @@
       "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "R8/R9 original data preserved on GitHub with 2/2 remote Git blob matches. Optionally independently reconstruct downloaded .b64 into .tar.xz and rerun tools/tuning-r10/verify_archives.py. For any new candidate first measure actual LM1 call frequencies on source-complete Kotlin graph (current container lacked authenticated checkout); preserve R8/R9 rejection. No Gemma/LiteRT Android claims.",
+  "next": "R12: GitHub Base64 archive contents re-read, decoded, directly SHA256 verified 2/2; local Kotlin fixture parity 1,403,522 checks for each of R8/R9; independent 624-row audit. R8/R9 rejected and preserved. Next task: source-complete Kotlin LM1 compile and actual caller-frequency profiling in authorized checkout; until then no new performance candidate or Android/Gemma claim.",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -67,8 +67,8 @@
     "no other-team branch mutation",
     "no repeated favorable-sample search"
   ],
-  "lastOwner": "tuning-sequential-r11-20261105T0134Z",
-  "completedRound": "R11",
+  "lastOwner": "tuning-sequential-r12-20261105T022848Z",
+  "completedRound": "R12",
   "lastPublishedProductionCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
   "completedMilestones": 4,
   "verification": {
@@ -83,13 +83,13 @@
   "queue": [
     {
       "target": "Complete raw archive transfer to official repo",
-      "status": "PENDING_LOCAL_ONLY",
-      "gate": "Two tar.xz SHA256 hashes in R8-R9 handoff; require actual transfer and roundtrip before remote publication claim"
+      "status": "COMPLETE_REMOTE_BASE64_SHA256_VERIFIED",
+      "gate": "Original R8/R9 archived as .b64 in official repo and freshly decoded via GitHub connector, direct archive SHA256 matches originals 2/2; equivalent local archive tar+CSV inspected. Reproducible tools/tuning-r12/verify-remote-archives.mjs checks checkout tar/CSV. No new training or timing."
     },
     {
       "target": "Real source LM1 on-host caller profile and full-graph Kotlin compile",
-      "status": "NOT_RUN",
-      "gate": "No synthetic-only adoption; identify actual caller and active Gemma boundary"
+      "status": "STATIC_CALLPATH_DONE_FULL_GRAPH_NOT_RUN",
+      "gate": "Source-bound LM1 call sites reviewed, actual runtime caller frequencies and full project Kotlin graph compilation NOT_RUN; authenticated checkout unavailable (github.com DNS); no adoption until measured."
     },
     {
       "target": "Android/Fold7 device measured A/B",
@@ -104,13 +104,7 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": {
-    "id": "R12",
-    "status": "SOURCE_AUDIT_AND_EVIDENCE_RECHECK",
-    "baselineHead": "63cd46f5ff6fd1f3b6d99a6789690659d61c6e4f",
-    "scope": "no production modifications",
-    "owner": "tuning-sequential-r12-20261105T022848Z"
-  },
+  "activeRound": null,
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
@@ -282,7 +276,7 @@
   },
   "r8": {
     "target": "LmRuntime.MinGruStepper.step six matrix-product scratch buffers",
-    "status": "REJECTED_LOCAL_EVIDENCE_RETAINED",
+    "status": "REJECTED_REMOTE_ARCHIVE_SHA256_VERIFIED",
     "baselineRuntimeGitBlob": "6de174dc400bfc5bd5bfb0facc56fc4820550b25",
     "baselineTensorGitBlob": "1ebd9b6803a3eb54a6a1baea25430b49e588665d",
     "method": "source-faithful isolated Kotlin/JDK21 fixture; exact original arithmetic; no module build",
@@ -305,7 +299,7 @@
       "remotePath": "docs/evidence/tuning-r11-20261105/R8-evidence.tar.xz.b64",
       "remoteGitBlobSha": "3c30c5a15643f5a3f765e86ab49699ae00a4876d",
       "remoteBlobCheck": "MATCHED_LOCAL_GIT_HASH",
-      "remoteReassembly": "NOT_RUN"
+      "remoteReassembly": "REMOTE_BASE64_DECODE_SHA256_MATCH; TAR_PARSED_LOCAL_IDENTITY_MATCH"
     },
     "report": "docs/research/omega/TUNING-R8-R9-20261105.md",
     "archiveAudit": {
@@ -318,7 +312,7 @@
     }
   },
   "r9": {
-    "status": "REJECTED_LOCAL_EVIDENCE_RETAINED",
+    "status": "REJECTED_REMOTE_ARCHIVE_SHA256_VERIFIED",
     "target": "LmRuntime.MinGruStepper final logits matrix projection",
     "baselineRuntimeGitBlob": "6de174dc400bfc5bd5bfb0facc56fc4820550b25",
     "baselineTensorGitBlob": "1ebd9b6803a3eb54a6a1baea25430b49e588665d",
@@ -340,7 +334,7 @@
       "remotePath": "docs/evidence/tuning-r11-20261105/R9-evidence.tar.xz.b64",
       "remoteGitBlobSha": "98b2bdedded1a8092e0d8fa2cc31701b9dfa8181",
       "remoteBlobCheck": "MATCHED_LOCAL_GIT_HASH",
-      "remoteReassembly": "NOT_RUN"
+      "remoteReassembly": "REMOTE_BASE64_DECODE_SHA256_MATCH; TAR_PARSED_LOCAL_IDENTITY_MATCH"
     },
     "report": "docs/research/omega/TUNING-R8-R9-20261105.md",
     "archiveAudit": {
@@ -398,5 +392,42 @@
     "candidateAccepted": false,
     "productionSourceChanged": false,
     "androidAndGemma": "NOT_RUN"
+  },
+  "r12": {
+    "status": "EVIDENCE_AUDIT_PASS_NO_PRODUCTION_CHANGE",
+    "registrationCommit": "b22602a37aa0dcec27cb33ee99b56e9d335e0525",
+    "reportCommit": "13bd81ebed2986581d6af9de4aa6966357646688",
+    "report": "docs/research/omega/TUNING-R12-20261105.md",
+    "auditScript": "tools/tuning-r12/verify-remote-archives.mjs",
+    "summary": "docs/evidence/tuning-r12-20261105/summary.json",
+    "archives": {
+      "githubFreshDecodeSha256Match": "2/2",
+      "bytes": [
+        4780,
+        4664
+      ],
+      "locallyInspectedCsvRows": 624,
+      "measured": 432,
+      "warmup": 192,
+      "paired": 312,
+      "mutationChecks": 4
+    },
+    "parity": {
+      "r8": 1403522,
+      "r9": 1403522,
+      "host": "OpenJDK 21.0.12.1 Kotlin 1.9.0",
+      "fullModule": "NOT_RUN"
+    },
+    "sourceCallPath": "STATIC_ONLY",
+    "actualCallerFrequencies": "NOT_RUN",
+    "otherPrsChecked": [
+      523,
+      527,
+      519,
+      522
+    ],
+    "newCandidate": false,
+    "productionFilesChanged": 0,
+    "android": "NOT_RUN"
   }
 }
