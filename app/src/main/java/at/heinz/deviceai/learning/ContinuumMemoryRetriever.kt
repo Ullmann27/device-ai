@@ -37,7 +37,7 @@ object GermanText {
     private val NEGATION_STEMS=setOf("nicht","nichts","kein","keine","keinen","nie","niemals","ohne").map(::stem).toSet()
     fun isNegationStem(stem:String)=stem in NEGATION_STEMS
     fun normalize(s:String)=s.lowercase(Locale.GERMAN).replace("ä","ae").replace("ö","oe").replace("ü","ue").replace("ß","ss")
-    fun rawTokens(s:String)=normalize(s).split(Regex("[^a-z0-9]+")).filter { it.length>=2 }
+    fun rawTokens(s:String)=normalize(s).split(Regex("[^a-z0-9]+")).filter { it.length>=2 || (it.length==1 && it[0] in '0'..'9') }
     fun stem(t:String):String { if(t.length<=4)return t; for(x in SUFFIXES) if(t.endsWith(x) && t.length-x.length>=4)return t.dropLast(x.length); return t }
     fun contentStems(s:String)=rawTokens(s).filter { it !in STOP }.map(::stem)
     fun editDistance(a:String,b:String,limit:Int):Int {
@@ -200,7 +200,7 @@ class CharNgramHashRetriever(private val temporal:TemporalCue?=null, private val
         if(k<=0)return emptyList()
         val index=state
         if(index.docs.isEmpty())return emptyList()
-        val soleNegation=GermanText.contentStems(query).singleOrNull()?.takeIf { GermanText.isNegationStem(it) }
+        val soleNegation=GermanText.contentStems(query).distinct().singleOrNull()?.takeIf { GermanText.isNegationStem(it) }
         val eligible=soleNegation?.let { index.negationDocIds[it] ?: return emptyList() }
         val (qk,qv)=vec(grams(query),index.idf); val w=temporal?.window(query,nowMillis)
         return index.vectors.mapIndexedNotNull { i,(dk,dv) ->

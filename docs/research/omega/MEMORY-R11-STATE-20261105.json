@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "task_id": "MEMORY-R11-20261105",
+  "status": "DRAFT_SPECIALIST_EXACT_KOTLIN_RED_7_FAIL_TO_GREEN_9_PASS_PARITY_112_GREEN_ANDROID_NOT_RUN",
+  "branch": "fix/continuum-memory-r11-single-digit-duplicate-negation-20261105",
+  "base_pr": 537,
+  "base_sha": "3e1e465bf425d3eafd7155da51aa7cb2fc59b808",
+  "observed_c1": {
+    "pr": 519,
+    "head": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "sole_integrator": true,
+    "r3_522_already_integrated": true,
+    "privacy_r4_under_separate_intake": true
+  },
+  "architecture": "GermanText German-normalized digits -> BM25 postings and char 3-5 gram corpus -> volatile atomic IndexState with per-generation negation BitSets -> RetrievalHit preserving confirmed and TemporalCue",
+  "source": {
+    "one_production_file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+    "before_blob": "c7c4d8d701e8fd1d2b886aa0a6b627c1b6a1bd99",
+    "after_blob": "b8c4930ce54b7dd6528beb9bee2a1fc84c122301",
+    "repair_commit": "20349fbd2a7c2ed86a4ad7903f3249bc1ee4c1e7",
+    "test_freeze_commits": [
+      "aca5d2f6cd6bb266468e882bb39a55faa3d17844",
+      "6ac97959b53e66c9ab325b0c9198be71f7095024"
+    ],
+    "test_blobs": [
+      "efeee016465f7eb4f1fca00801ba121b9cada180",
+      "6764f1af7a6c744bda7a009784f33174f88408c0"
+    ]
+  },
+  "fixes": [
+    "Keep exact 0-9 single-digit facts as searchable tokens in both retrievers without admitting single-letter noise",
+    "Repeated copies of the same bare negation cannot escape R10 exact-negation membership and pick up positive fuzzy-neighbors"
+  ],
+  "tests": {
+    "host_toolchain": "kotlinc-jvm 1.9.0 / OpenJDK 21.0.12.1, exact full production Kotlin, host-only JUnit+EventEmitting shims",
+    "baseline": "9 total / 2 PASS / 7 FAIL / compile exit0 / runner exit1",
+    "patched": "9 total / 9 PASS / 0 FAIL / compile exit0 / runner exit0",
+    "parity": "R10 fixture 112/112 exact document ID, confirmed and 12-decimal score parity, SHA256 643a9ac0a14626ce10874947591354e1a702f167c9dca5008664a5514e9f70ff",
+    "receipts": "docs/evidence/memory-r11-numeric-negation-20261105/RESULT.json",
+    "reproducer": "tools/memory-r11/run.sh",
+    "parity_script": "tools/memory-r11/parity.sh",
+    "reproducer_end_to_end": "TIMEOUT in mirror after RED; direct source-bound RED/GREEN separately completed"
+  },
+  "not_run": [
+    "actual Android Gradle JUnit",
+    "full TemporalCue/retriever suite",
+    "official 1,000-document/44-query M2.9 recall holdout",
+    "full Node/backend and lint",
+    "real model/voice/Fold7",
+    "APK/signing/release"
+  ],
+  "next": [
+    "C1 independent sequential R6-R11 intake with source blob checks",
+    "R11 actual project JUnit/Gradle run and existing R10 regressions",
+    "official M2.9 holdout and no quality/confirmation/privacy regressions",
+    "complete source-bound integration gates and independent C2 review"
+  ],
+  "safety": {
+    "main": false,
+    "actions": false,
+    "paid": false,
+    "additional_sub_bots": 0,
+    "original_package_modified": false,
+    "signing_modified": false,
+    "owner_data_modified": false,
+    "offline_modified": false,
+    "worker_or_activity_modified": false,
+    "release": false,
+    "apk": false
+  }
+}
