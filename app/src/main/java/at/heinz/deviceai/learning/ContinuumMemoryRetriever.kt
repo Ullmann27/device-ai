@@ -40,9 +40,13 @@ object GermanText {
     fun rawTokens(s:String)=normalize(s).split(Regex("[^a-z0-9]+")).filter { it.length>=2 || (it.length==1 && it[0] in '0'..'9') }
     fun stem(t:String):String { if(t.length<=4)return t; for(x in SUFFIXES) if(t.endsWith(x) && t.length-x.length>=4)return t.dropLast(x.length); return t }
     fun contentStems(s:String)=rawTokens(s).filter { it !in STOP }.map(::stem)
-    /** Explicit numeric facts require exact evidence; "vor N Tagen" is a time cue, not a fact. */
+    // Shared temporal phrase boundaries.
+    internal val relativeTimePhrase=Regex(
+        """\b(vor|seit|in|nach)[\s\p{Zs}]+([0-9]+|ein|einem|einen|eins|zwei|drei|vier|fuenf)[\s\p{Zs}]+(tag(?:e|en)?|woche(?:n)?|monat(?:e|en)?|jahr(?:e|en)?|stunde(?:n)?|minute(?:n)?)\b"""
+    )
+    // Durations are not factual numbers.
     fun numericEvidenceTerms(query:String):Set<String> =
-        rawTokens(normalize(query).replace(Regex("\\bvor\\s+\\d+\\s+tagen\\b"), " "))
+        rawTokens(normalize(query).replace(relativeTimePhrase, " "))
             .filter { token -> token.all { it in '0'..'9' } }.toSet()
     fun editDistance(a:String,b:String,limit:Int):Int {
         if(kotlin.math.abs(a.length-b.length)>limit)return limit+1
@@ -62,8 +66,11 @@ class TemporalCue(private val zone:ZoneId) {
         // Resolve each date separately: a midnight gap must not shift other day boundaries.
         fun days(from:Long,to:Long)=today.minusDays(from).atStartOfDay(zone).toInstant().toEpochMilli() until
             today.minusDays(to-1).atStartOfDay(zone).toInstant().toEpochMilli()
-        Regex("vor (\\d+|zwei|drei|vier|fuenf) tagen").find(q)?.let { m ->
-            val n=when(val count=m.groupValues[1]) {
+        GermanText.relativeTimePhrase.findAll(q).firstOrNull { m ->
+            m.groupValues[1]=="vor" && m.groupValues[3] in setOf("tag","tage","tagen")
+        }?.let { m ->
+            val n=when(val count=m.groupValues[2]) {
+                "ein", "einem", "einen", "eins" -> 1L
                 "zwei" -> 2L
                 "drei" -> 3L
                 "vier" -> 4L
