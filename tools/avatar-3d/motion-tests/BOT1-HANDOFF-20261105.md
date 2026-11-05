@@ -1,5 +1,7 @@
 # Bot 1 – Blinzelkinematik (05.11.2026)
 
+**Nachtrag – Q1-Regression des ursprünglichen App-Vertrags behoben (aktueller HEAD):** Die erste Fassung `4fc3914...` erfüllte bei `4.525f` die **unveränderte** exakte `Avatar3dContractTest`-Erwartung nicht (`0.9336765` statt `1.0`). Daher `c48bf7b7e1c3a6f690d7bf8727b5906e1df9912e` (Produktionsblob `5b89c17443ca8e362f479816f77cda862150f887`) mit 55 ms Schließen / 20 ms Vollschluss / 75 ms Öffnen. Separater Host-Regressionstest: RED Exit 1 → GREEN Exit 0; neue direkte JUnit-Stub-Hostprüfung **5/5 PASS**; publizierter Standalone-Hosttest ebenfalls RED→GREEN. **Android-Originaltest, Projekt-JUnit, Filament und Fold7 weiterhin NOT_RUN.** [Nachtrag mit exakten SHAs, Negativlog und Reproduktionskommando](BOT1-BLINK-CONTRACT-FIX-20261105.md). Der untenstehende historische Ablauf vor diesem Nachtrag bleibt als Provenienz erhalten, wird **nicht** als aktueller Quellstand ausgegeben.
+
 **Status: HOST_KOTLIN_RED_GREEN / FILAMENT_3D_NOT_RUN / FOLD7_NOT_RUN / NO_RELEASE.**
 
 ## Quelle, Umfang und Eigentum
