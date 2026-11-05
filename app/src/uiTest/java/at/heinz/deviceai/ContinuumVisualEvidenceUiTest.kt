@@ -342,6 +342,94 @@ class ContinuumVisualEvidenceUiTest {
         }
     }
 
+    /**
+     * Motion clip of the real cockpit as numbered frames (15 fps) for ffmpeg: idle orb/rim motion, listening,
+     * thinking, speaking (scripted TTS word ranges), a tile press and the Systemstatus window opening and closing.
+     * Host canvas with the 2D head preview, not Filament. Runs only with -PcontinuumUiEvidenceDir=… .
+     */
+    private fun motionClip(tag: String, w: Int, h: Int) {
+        val dir = System.getProperty("continuum.ui.evidenceDir")?.let { File(it, "motion-$tag").apply { mkdirs() } }
+        org.junit.Assume.assumeTrue("clip frames are evidence only", dir != null)
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        var index = 0
+        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        try {
+            controller.setup().visible()
+            advance(32)
+            controller.windowFocusChanged(true)
+            val a = controller.get()
+            val root = a.window.decorView
+            framePump = CockpitHostFramePump { controller.get().window.decorView }
+            val head = field(a, "hologramView") as ContinuumHologramView
+            val home = field(a, "homeView") as ContinuumHomeView
+            val director = field(a, "avatarDirector") as AvatarDirector
+            head.setAnimationsEnabled(true); head.setForegroundActive(true); home.setForegroundActive(true)
+            measure(root, w, h); advance(600); measure(root, w, h)
+            fun record(ms: Long, each: (Long) -> Unit = {}) {
+                var t = 0L
+                while (t < ms) {
+                    each(t); advance(66L); t += 66L; measure(root, w, h)
+                    bitmap.eraseColor(0); root.draw(Canvas(bitmap))
+                    File(dir, "frame-%04d.png".format(index++)).outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                }
+            }
+            val marks = StringBuilder()
+            fun mark(label: String) { marks.append("%.2f".format(java.util.Locale.ROOT, index / 15.0)).append(" s ").append(label).append('\n') }
+            mark("Ruhe: Kugel, Ringe, Kachel-Randlicht"); record(2_400)
+            director.onRuntime(AvatarRuntimeSignals(listening = true)); head.setState(ContinuumHologramView.State.LISTENING)
+            mark("Zuhören"); record(1_400)
+            director.onRuntime(AvatarRuntimeSignals(busy = true)); head.setState(ContinuumHologramView.State.THINKING)
+            mark("Denken"); record(1_800)
+            director.onRuntime(AvatarRuntimeSignals(speaking = true)); head.setState(ContinuumHologramView.State.SPEAKING)
+            val text = "Guten Abend Heinz, das Cockpit ist bereit und hört dir zu."
+            director.speechStarted("clip-1", text)
+            val words = Regex("\\S+").findAll(text).toList()
+            mark("Sprechen (geskriptete TTS-Wortbereiche)")
+            record(2_600) { t ->
+                val word = (t / 330).toInt()
+                if (t % 330 < 66 && word < words.size) director.wordRange("clip-1", words[word].range.first, words[word].range.last + 1)
+                director.audioLevel("clip-1", 0f, measuredPcmAvailable = false)
+                head.setAudioLevel(.45f + .4f * ((t / 66) % 3) / 2f)
+            }
+            director.speechEnded("clip-1", interrupted = false)
+            director.onRuntime(AvatarRuntimeSignals()); head.setState(ContinuumHologramView.State.READY)
+            mark("Ruhe nach dem Sprechen"); record(1_000)
+            val memory = shown(root, "jarvis-tile:memory")
+            if (touch(root, memory, release = false)) {
+                mark("Kachel berührt"); record(400)
+                val at = SystemClock.uptimeMillis()
+                val cancel = MotionEvent.obtain(at, at, MotionEvent.ACTION_CANCEL, 0f, 0f, 0)
+                try { root.dispatchTouchEvent(cancel) } finally { cancel.recycle() }
+                record(330)
+            }
+            if (touch(root, shown(root, "jarvis-tile:system"), true)) {
+                mark("Systemstatus öffnet (echte Statusabfrage)"); record(1_200)
+                (field(a, "learningIoExecutor") as ExecutorService).submit(Runnable {}).get(5L, TimeUnit.SECONDS)
+                record(900)
+                val work = descendants(root).firstOrNull { it.tag == "jarvis-work-window" && it.isShown }
+                val close = work?.let { w0 -> descendants(w0).firstOrNull { it.tag == "jarvis-work-window:close" && it.isShown } }
+                if (close != null && touch(root, close, true)) { mark("Systemstatus schließt"); record(1_300) }
+            }
+            mark("Ende"); File(dir, "marks.txt").writeText(marks.toString())
+            assertTrue("clip has frames", index > 100)
+        } finally {
+            bitmap.recycle()
+            framePump?.close()
+            framePump = null
+            runCatching { controller.close() }
+        }
+    }
+
+    @Test @Config(qualifiers = "w884dp-h760dp-land-mdpi")
+    fun fold7InnerMotionClip() = motionClip("fold7-inner-884x760", 884, 760)
+
     @Test @Config(qualifiers = "w884dp-h760dp-land-mdpi")
     fun fold7Inner() = scenes("fold7-inner-884x760", 884, 760, 1f)
 

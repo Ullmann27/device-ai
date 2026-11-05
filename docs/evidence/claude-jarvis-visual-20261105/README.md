@@ -13,7 +13,7 @@ TTS-Rückrufe und Besitzerposition sind über den echten `AvatarDirector` geskri
 | `after-fold7-inner-884x760-4-speaking.jpg`, `after-fold7-cover-phone-412x915-4-speaking.jpg` | Sprechen über Director-Wortbereiche |
 | `after-fold7-inner-884x760-6-window-systemstatus.jpg` | Geöffnetes Systemstatus-Fenster (echte Daten des Hosts) |
 | `after-fold7-inner-884x760-font130-1-start.jpg` | Fold7 innen, Schrift 130 % |
-| `avatar-motion-timeline.json` | 540 Frames (30 fps): Director → Reducer → Mapper, Ruhe/Zuhören/Denken/Sprechen/STOP; echte Kopf-Fenster je Bühne |
+| `avatar-motion-timeline.json` | 600 Frames (30 fps): Director → Reducer → Mapper, Ruhe/Zuhören/Denken/Fensterblick/Nicken/Sprechen/STOP; echte Kopf-Fenster je Bühne |
 
 ## Gemessene Werte (Host)
 - Neonanteil (Pixel mit Helligkeit > 0,55 und Sättigung > 0,45), gleiche Szene: Fold7 innen 17,47 % → 18,20 %;
@@ -29,3 +29,21 @@ TTS-Rückrufe und Besitzerposition sind über den echten `AvatarDirector` geskri
   (Kachel außerhalb des sichtbaren Bereichs) – korrigiert, Nachlauf `ContinuumVisualEvidenceUiTest` 4/4 + `AvatarMotionEvidenceTest` 1/1 grün.
 
 Reproduktion: `./gradlew -PcontinuumUiWidgetTests=true -PcontinuumUiEvidenceDir=<ordner> :app:testDebugUnitTest --tests 'at.heinz.deviceai.ContinuumVisualEvidenceUiTest' --tests 'at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest'`
+
+## Bewegungsnachweise (05.11.2026)
+
+Beide Clips sind **Host-Aufnahmen bzw. Host-Renderings**. Sie ersetzen keine native Abnahme auf dem Fold7.
+
+| Datei | Inhalt | Quelle |
+|---|---|---|
+| `jarvis-cockpit-fold7-motion-host.mp4` (14 s, 208 Bilder) | Fold7 innen 884×760: Ruhe → Zuhören → Denken → Sprechen → Ruhe → Kachel berührt → Systemstatus öffnet/schließt | echte `AgentActivity`, Robolectric-Canvas, `ContinuumVisualEvidenceUiTest.fold7InnerMotionClip`; Kopfbereich = 2D-Vorschaukopf, nicht Filament |
+| `jarvis-cockpit-fold7-motion-marks.txt` | Zeitmarken der Phasen | gleicher Testlauf |
+| `jarvis-cockpit-fold7-keyframes-host.jpg` | Einzelbilder je Phase | gleicher Testlauf |
+| `jarvis-original-head-motion-host.mp4` (20 s, 600 Bilder) | Original-GLB (SHA-256 `c8b88385…b9a`, 21 Morph-Ziele): Ruhe/Blinzeln, Zuhören, Denken, Fensterblick (Augen führen), Bestätigungsnicken, Sprechen mit Lippen, STOP schließt den Mund | `avatar-motion-timeline.json` (echter Director → Reducer → Mapper), gerendert mit three.js 0.170 in Chromium/SwiftShader (`tools/avatar-host-render/`), Filament-Licht und -Belichtung nachgebildet, ORTHO-Fenster aus `AvatarFraming` (Fold7 innen, Anker 0,66) |
+| `jarvis-original-head-keyframes-host.jpg` | Kontaktbogen des Kopf-Clips | gleiche Renderings |
+
+Messwerte Cockpit-Clip: in 100 % der Bilder ändern sich Pixel gegenüber dem Vorbild (Median 2,93 % der Pixel) – Kugel, Ringe
+und Kachel-Randlicht laufen dauerhaft. Kopf-Zeitreihe: Kopfgier −19,2° … +16,8°, Halsanteil 0,65, Mund nach STOP geschlossen.
+TTS-Wortbereiche und Besitzerposition sind geskriptet (kein Mikrofon, keine Kamera, kein Audio).
+
+Nicht belegt: Filament-Darstellung auf dem Gerät, Bildrate/Wärme auf dem Fold7, Lippensynchronität zu echter TTS-Ausgabe.
