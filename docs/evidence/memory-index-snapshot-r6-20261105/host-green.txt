@@ -1,0 +1,18 @@
+SOURCE=local method-bearing post-fix source; NOT full repository file; production index bodies independently FNV-bound
+INDEX Bm25GermanRetriever chars=553 FNV32=ee11dd94
+INDEX CharNgramHashRetriever chars=339 FNV32=fc6e1a8a
+KOTLIN_COMPILE_EXIT=0
+PASS Bm25GermanRetriever indexed original present
+PASS Bm25GermanRetriever caller replacement cannot relabel
+PASS Bm25GermanRetriever posting/vector remains indexed
+PASS Bm25GermanRetriever caller clear cannot erase indexed doc
+PASS Bm25GermanRetriever explicit reindex replaces document
+PASS Bm25GermanRetriever caller append cannot alter indexed doc count
+PASS CharNgramHashRetriever indexed original present
+PASS CharNgramHashRetriever caller replacement cannot relabel
+PASS CharNgramHashRetriever posting/vector remains indexed
+PASS CharNgramHashRetriever caller clear cannot erase indexed doc
+PASS CharNgramHashRetriever explicit reindex replaces document
+PASS CharNgramHashRetriever caller append cannot alter indexed doc count
+SUMMARY total=12 pass=12 fail=0
+KOTLIN_RUNTIME_EXIT=0
