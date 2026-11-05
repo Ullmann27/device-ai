@@ -23,8 +23,10 @@ fun main() {
     smoothAt(4.6f)
     // The pre-existing 150-ms blink interval and extra closures must remain bounded.
     listOf(4.449f, 4.601f, 4.149f + 9.2f, 4.301f + 9.2f).forEach { near(blink(it), 0f, .001f) }
-    check(blink(4.505f) > .99f) { "primary closure is no longer complete" }
-    check(blink(13.405f) > .99f) { "fifth-group secondary closure is no longer complete" }
+    check(blink(4.505f) == 1f && blink(4.525f) == 1f) { "legacy exact 4.525-s closure contract broken" }
+    check(blink(13.405f) == 1f && blink(13.425f) == 1f) { "secondary full closure was lost" }
+    smoothAt(4.525f)
+    smoothAt(13.425f)
     check(blink(8.825f) < .001f) { "secondary closure appears outside its designated group" }
     // The single 460-second source clock is stable on exact negative/positive wraps.
     for (wrap in listOf(0f, -0.0f, 460f, -460f, -920f)) {
