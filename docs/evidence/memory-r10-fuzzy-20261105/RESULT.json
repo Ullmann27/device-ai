@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "taskId": "MEMORY-R10-FUZZY-AMBIGUITY-NEGATION-INDEX-20261105",
+  "repository": "Ullmann27/device-ai",
+  "status": "BOUNDED_HOST_RED_GREEN_AND_PARITY_PASS__ANDROID_HOLDOUT_NOT_RUN",
+  "ownership": {
+    "c1Pr": 519,
+    "c1ObservedHead": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "c1SoleIntegrator": true,
+    "r3IntegratedInC1": true,
+    "r4IntakeActive": true,
+    "newBots": 0
+  },
+  "source": {
+    "basePr": 536,
+    "baseCommit": "386389e9aaaa44dadd3bbb919f2658dbaf43fa86",
+    "baseBlob": "12c1c716c57bc9656897a6428ed0ee1c4f443142",
+    "branch": "fix/continuum-memory-r10-fuzzy-ambiguity-20261105",
+    "testsBeforeProduction": [
+      "dbd15d42cb5ae42a6956aac5809ffffe36ae2647",
+      "e17bb7420fd5a2ba237de7f8cc7828bb4650ca3e"
+    ],
+    "productionCommit": "c9d122aa941e9994c56cce62fb808e76b5283e60",
+    "productionPath": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+    "productionBlob": "c7c4d8d701e8fd1d2b886aa0a6b627c1b6a1bd99",
+    "newTestBlobs": {
+      "MemoryRetrieverFuzzyAmbiguityR10Test.kt": "afa93dd899a04ac57e735510be66655fbba8e181",
+      "MemoryNegationIndexR10Test.kt": "69b13ff6a3098cca4b98180fed91d366b77acac2"
+    }
+  },
+  "architecture": "GermanText content stems -> BM25 exact / typo resolve with abstention on equal-best ambiguity; ngram atomic IndexState(doc,vectors,idf,BitSet negation index,bytes) -> score -> RetrievalHit with unchanged confirmed",
+  "changes": [
+    "BM25 now rejects equally-ranked candidate typo corrections instead of choosing an unrelated memory based on HashSet iteration.",
+    "Ngram caches exact negation membership with the atomic index generation and skips unrelated vectors on a sole-negation query.",
+    "Approximate index bytes includes per-negation membership bitsets; no change to saved user data or memory ledger."
+  ],
+  "evidence": {
+    "environment": "isolated byte-exact production mirror, kotlinc-jvm 1.9.0 / JRE21.0.12.1",
+    "stubbed": [
+      "EventEmittingRetriever",
+      "JUnit4 annotations/assertions; all 7 test method bodies are original project files"
+    ],
+    "runScript": "tools/memory-r10/run.sh",
+    "runScriptBlob": "5e242a1599a5116a8fd7935989806f0e5119746f",
+    "baseline": {
+      "passed": 6,
+      "failed": 1,
+      "exit": 1,
+      "raw": "docs/evidence/memory-r10-fuzzy-20261105/host-baseline-red.txt",
+      "rawSha256": "7e9c64373f49c322488a4e05ae9da70f7963fe75a35768f53cda0bbcf02899e1"
+    },
+    "patched": {
+      "passed": 7,
+      "failed": 0,
+      "exit": 0,
+      "raw": "docs/evidence/memory-r10-fuzzy-20261105/host-patched-green.txt",
+      "rawSha256": "d6e83c271c1addb14bcaa37b2a4d791316033f156b9acd1931c4100356369287"
+    },
+    "verifiedRunner": "published-runner identical local mirror; two compilations and proper expected fail then success; exit 0",
+    "parity": {
+      "script": "tools/memory-r10/parity.sh",
+      "scriptBlob": "3ad9dfd87b48a6a0c01a0df96fda53cef6f36221",
+      "localMirrorExit": 0,
+      "comparisons": 112,
+      "equal": 112,
+      "syntheticDocs": 40,
+      "queries": 56,
+      "models": [
+        "BM25",
+        "char 3-5-gram"
+      ],
+      "serializesScoresToDecimals": 12,
+      "sha256": "643a9ac0a14626ce10874947591354e1a702f167c9dca5008664a5514e9f70ff",
+      "baselineAndPatchedOutputEqual": true,
+      "excludedMemoryBudgetFromParity": true
+    },
+    "performance": {
+      "singleHostMeasurement": true,
+      "program": "tools/memory-r10/PerfR10.kt",
+      "docs": 240,
+      "repetitions": 75,
+      "rounds": 5,
+      "medianBaselineMs": 330.945146,
+      "medianPatchedMs": 10.397357,
+      "approxIndexBytesBaseline": 140816,
+      "approxIndexBytesPatched": 140896,
+      "notDeviceBenchmark": true
+    }
+  },
+  "requiredNext": [
+    "independent C1 R6→R7→R8→R9→R10 source/patch review",
+    "compile and execute actual Android JUnit method bodies and complete M2.9 TemporalCue suite",
+    "1,000-document / 44-query official holdout with regression gate vs historical Recall@3 42/44",
+    "C1 full Node/backend/Android Unit+UI, configured lint and physical Fold7",
+    "no APK until integration and owner approval"
+  ],
+  "notRun": [
+    "Gradle Android project",
+    "official 44-query corpus",
+    "full TemporalCue/retrieval suite",
+    "NewApi",
+    "local GGUF model runtime",
+    "Fold7 device",
+    "APK"
+  ],
+  "safety": {
+    "newAgents": 0,
+    "mainMerge": false,
+    "actions": false,
+    "paid": false,
+    "signing": false,
+    "apk": false,
+    "installation": false,
+    "ownerFilesChanged": false,
+    "offlineSettingChanged": false
+  }
+}
