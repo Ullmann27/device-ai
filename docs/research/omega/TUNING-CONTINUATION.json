@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "IN_PROGRESS",
-  "owner": "tuning-sequential-r10-20261105T0125Z",
-  "leaseExpiresAtUtc": "2026-11-05T01:55:00Z",
-  "updatedAtUtc": "2026-11-05T01:25:24Z",
+  "status": "READY_FOR_NEXT_RUN",
+  "owner": null,
+  "leaseExpiresAtUtc": null,
+  "updatedAtUtc": "2026-11-05T01:32:00Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -58,7 +58,7 @@
       "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "New candidate must be based on measured actual LM1 caller distribution and exact complete Kotlin graph. R8 and R9 are rejected; do not repeat. Gemma/LiteRT unchanged, Android not measured. Archive full R8/R9 raw data to GitHub only after SHA verification and supported file transfer; do not assert that happened.",
+  "next": "R10 audit correction published; original R8/R9 .tar.xz source/CSV archives are still LOCAL_ONLY/NOT_PUSHED, so transfer with a SHA-verifying blob route if available. Before any new candidate, run a source-complete Kotlin LM1 module and actual per-request caller-frequency profiling, or mark BLOCKED when unavailable. Do not reinterpret isolated R8/R9 benchmarks as measured device gain.",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -67,8 +67,8 @@
     "no other-team branch mutation",
     "no repeated favorable-sample search"
   ],
-  "lastOwner": "tuning-automation-r7-20261104T2328Z",
-  "completedRound": "R9",
+  "lastOwner": "tuning-sequential-r10-20261105T0125Z",
+  "completedRound": "R10",
   "lastPublishedProductionCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
   "completedMilestones": 4,
   "verification": {
@@ -104,18 +104,7 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": {
-    "id": "R10",
-    "status": "EVIDENCE_PUBLISH_AND_CALLPATH_AUDIT",
-    "baselineHead": "10041c4c817229d04b16f1b1498634c14ef608b7",
-    "productionChangesAllowed": false,
-    "steps": [
-      "verify R8/R9 tar archives",
-      "publish source-faithful raw data to same repository",
-      "inspect complete LM1 call graph for evidence-grounded next candidate"
-    ],
-    "publicationDecision": "No unmeasured production source changes"
-  },
+  "activeRound": null,
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
@@ -211,7 +200,7 @@
       "archivePublished": true
     }
   },
-  "lastResearchHead": "1c7027a7e8169b909c42a7acdd013fbcc591e64b",
+  "lastResearchHead": "17595f93e8b590566cb49fff6bc3f4ca60e473d1",
   "lastRejectedCandidateCount": 6,
   "archive": {
     "name": "R4-R6-evidence.tar.xz",
@@ -348,5 +337,24 @@
       "warmupRows": 96,
       "archiveSha256Confirmed": true
     }
+  },
+  "r10": {
+    "status": "INDEPENDENT_AUDIT_COMPLETE_NO_PRODUCTION_CHANGE",
+    "sourceHeadAtStart": "10041c4c817229d04b16f1b1498634c14ef608b7",
+    "leaseRegistrationCommit": "6126ab8272fda8db8833fffa43bceef04e1650e1",
+    "report": "docs/research/omega/TUNING-R10-20261105.md",
+    "auditScript": "tools/tuning-r10/verify_archives.py",
+    "auditScriptRemoteGitBlob": "e1dc1c9785362385610e451bfada2030f24efded",
+    "summary": "docs/evidence/tuning-r10-20261105/summary.json",
+    "tests": "PASS read-only Python3 624 R8/R9 CSV rows, 432 measured, 192 warmups; 312 A/B pairs; SHA256/fixture/controls/checksums verified; no new timing",
+    "correctedR8ReportBaseline": "vocab_32_1_1024 A/B A=453264 (previous text mistakenly copied A/A 523664), B=359824; AA->AB drift -13.44%",
+    "r9BaselineDrift": "wide_128_2_258 A/A 1510320 vs A/B 1314960 (-12.94%)",
+    "decision": "R8/R9 still REJECTED",
+    "archivesRepo": "NOT_PUSHED",
+    "fullLmModuleCompilation": "NOT_RUN",
+    "callpathInspection": "SOURCE_READ_ONLY",
+    "androidAndGemma": "NOT_RUN",
+    "productionSourceChanged": false,
+    "archiveLocalChecksumsVerified": true
   }
 }
