@@ -224,3 +224,23 @@ for(const kind of ['count','parameters']){
   }
  });
 }
+
+test('durable loop without caller preflight rejects configured fsmonitor before its own status',async t=>{
+ const f=fixture(t);f.armMonitor();let workCalls=0;
+ await assert.rejects(()=>runTeamleaderLoop({...f,sourcePreflight:null,maxCycles:1,
+  work:()=>{workCalls++;return {outcome:'IDLE'};}}),/DISCOVERY_FSMONITOR_UNSUPPORTED/);
+ assert.equal(workCalls,0);
+ assert.equal(fs.existsSync(f.marker),false,'unsafe monitor must never execute');
+ assert.equal(fs.existsSync(f.stateFile),false);
+ assert.equal(fs.existsSync(f.stateFile+'.lock'),false);
+});
+
+test('durable loop without caller preflight rejects clean filter before its own status',async t=>{
+ const f=fixture(t);f.armFilter();let workCalls=0;
+ await assert.rejects(()=>runTeamleaderLoop({...f,sourcePreflight:null,maxCycles:1,
+  work:()=>{workCalls++;return {outcome:'IDLE'};}}),/DISCOVERY_CLEAN_FILTER_UNSUPPORTED/);
+ assert.equal(workCalls,0);
+ assert.equal(fs.existsSync(f.marker),false,'unsafe clean filter must never execute');
+ assert.equal(fs.existsSync(f.stateFile),false);
+ assert.equal(fs.existsSync(f.stateFile+'.lock'),false);
+});

@@ -82,6 +82,11 @@ async function sourceIdentity(root,sourcePreflight){
  // Trusted caller policy runs before Git can invoke configured status helpers.
  // A thrown/rejected check vetoes this source boundary, including initial open.
  if(sourcePreflight!==null)await sourcePreflight(canonical);
+ else{
+  // No caller hook: reuse existing read-only Git safety policy.
+  const {assertBranchSourceSafe}=await import('./branch-discovery.mjs');
+  assertBranchSourceSafe(canonical);
+ }
  // The scheduler must not let inherited Git trace destinations write files.
  const gitEnv={...process.env,GIT_TERMINAL_PROMPT:'0',GIT_OPTIONAL_LOCKS:'0'};
  // Git -C does not override inherited repository/index selectors. Without this,
