@@ -18,7 +18,7 @@ Veröffentlichung. **Alle Belege sind Host-Tests (JVM/Robolectric); auf dem Fold
 
 ## Offene Schritte in Besitzer-Reihenfolge
 
-1. **#567 Rest (P0-12):** Allgemeine Wissensfrage bei **nicht geladenem** Modell liefert `ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER`
+1. **#567 Rest (P0-12) – Host-Fix erledigt** (`ContinuumUiCopy.memoryFallbackAnswer`, Test `MemoryFallbackModelNotReadyTest`); außerdem Sprechakzente des Avatars (`AvatarSpeechAccentTest`). Fold7-Gegenprobe offen. Ursprünglicher Befund: Allgemeine Wissensfrage bei **nicht geladenem** Modell liefert `ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER`
    („keine bestätigte Erinnerung …“). Erwartet: klarer Hinweis „lokales Modell nicht bereit“ statt Gedächtnisfehler.
    Ansatz: im Activity-Pfad `runContinuumDialogue` (Startkern ohne READY-Modell) bei NO_EVIDENCE + keiner Besitzer-Recall-Form
    den Modellstatus melden; RED zuerst. Fundstellen: `learning/ContinuumMemoryDialogue.kt:111,235`, `learning/ContinuumBrain.kt:256-308`.

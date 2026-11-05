@@ -4826,7 +4826,8 @@ class AgentActivity : Activity() {
                     }
                     turnTrace.event(if(grounded)TraceStage.MEMORY_EXACT else TraceStage.GATED_FALLBACK)
                     publishCognitiveTrace(turnTrace,if(grounded)TraceOutcome.MEMORY_EXACT else TraceOutcome.BLOCKED)
-                    addAssistantMessage(answer)
+                    addAssistantMessage(ContinuumUiCopy.memoryFallbackAnswer(answer,grounded,
+                        localRuntime.state==LocalModelState.READY && localRuntime.loadedModel!=null))
                     addToolActivity(evidence)
                 }.onFailure {
                     publishCognitiveTrace(turnTrace,TraceOutcome.FAILED)
