@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "R13_IN_PROGRESS",
-  "owner": "tuning-sequential-r13-20261105T0331Z",
-  "leaseExpiresAtUtc": "2026-11-05T03:51:00Z",
-  "updatedAtUtc": "2026-11-05T03:31:06.617Z",
+  "status": "READY_FOR_NEXT_RUN",
+  "owner": null,
+  "leaseExpiresAtUtc": null,
+  "updatedAtUtc": "2026-11-05T03:38:07.422Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -58,7 +58,7 @@
       "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "R12: GitHub Base64 archive contents re-read, decoded, directly SHA256 verified 2/2; local Kotlin fixture parity 1,403,522 checks for each of R8/R9; independent 624-row audit. R8/R9 rejected and preserved. Next task: source-complete Kotlin LM1 compile and actual caller-frequency profiling in authorized checkout; until then no new performance candidate or Android/Gemma claim.",
+  "next": "R13 produced a source-bound six-file LM1 Kotlin compile and synthetic call-path profiler stored in 4 hash-verified GitHub Base64 pieces (12/12 Node fail-closed tests PASS). Full six-source Kotlin compilation and synthetic execution NOT_RUN due missing authorized checkout. Next run: use official authenticated checkout or approved source transfer, verify exact commit-bound files, reconstruct archive, run full Kotlin graph + 8 fixture cases and independent trace parity before measuring representative real LM1 caller frequency. Only then preregister a new CPU/alloc candidate.",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -67,8 +67,8 @@
     "no other-team branch mutation",
     "no repeated favorable-sample search"
   ],
-  "lastOwner": "tuning-sequential-r12-20261105T022848Z",
-  "completedRound": "R12",
+  "lastOwner": "tuning-sequential-r13-20261105T0331Z",
+  "completedRound": "R13",
   "lastPublishedProductionCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
   "completedMilestones": 4,
   "verification": {
@@ -88,8 +88,8 @@
     },
     {
       "target": "Real source LM1 on-host caller profile and full-graph Kotlin compile",
-      "status": "STATIC_CALLPATH_DONE_FULL_GRAPH_NOT_RUN",
-      "gate": "Source-bound LM1 call sites reviewed, actual runtime caller frequencies and full project Kotlin graph compilation NOT_RUN; authenticated checkout unavailable (github.com DNS); no adoption until measured."
+      "status": "PROFILER_ARCHIVED_12_NODE_TESTS_PASS_FULL_GRAPH_NOT_RUN",
+      "gate": "Official R13 archived profiler source and negative gates available with verified per-blob SHA; authenticated checkout unavailable in current runtime. Need full original Kotlin compile and instrumented parity before actual workload profiling."
     },
     {
       "target": "Android/Fold7 device measured A/B",
@@ -104,13 +104,7 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": {
-    "id": "R13",
-    "target": "source-complete LM1 Kotlin compile & deterministic synthetic execution counters",
-    "candidate": "NONE",
-    "scope": "tooling / local checks only",
-    "sourceHead": "2aed82502e1921ed02be3453476ff93130683aec"
-  },
+  "activeRound": null,
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
@@ -206,7 +200,7 @@
       "archivePublished": true
     }
   },
-  "lastResearchHead": "89a73cd45f993838d5c31319d6d391db32cd2536",
+  "lastResearchHead": "145011086ba9275f8b41be8a61723e03a1b9e265",
   "lastRejectedCandidateCount": 6,
   "archive": {
     "name": "R4-R6-evidence.tar.xz",
@@ -435,5 +429,25 @@
     "newCandidate": false,
     "productionFilesChanged": 0,
     "android": "NOT_RUN"
+  },
+  "r13": {
+    "status": "SOURCE_BOUND_PROFILER_ARCHIVED_NODE_GATES_PASS_KOTLIN_GRAPH_NOT_RUN",
+    "sourceHeadAtAcquisition": "2aed82502e1921ed02be3453476ff93130683aec",
+    "sourceFilesVerified": 6,
+    "probeAnchorsVerified": 3,
+    "localNodeTestMethods": 12,
+    "localNodeResults": "12 PASS, 0 FAIL, 0 SKIP; repeated from freshly extracted gzip archive",
+    "remotePartsVerified": 4,
+    "originalArchiveSha256": "18613f6c765d7d499d318622d9650dabd97bd139d6030077e35dcb58894a9ddb",
+    "evidence": "docs/evidence/tuning-r13-20261105/README.md",
+    "report": "docs/research/omega/TUNING-R13-20261105.md",
+    "archiveCommit": "145011086ba9275f8b41be8a61723e03a1b9e265",
+    "toolFullKotlinModule": "NOT_RUN_NO_AUTHORIZED_LOCAL_CHECKOUT",
+    "syntheticLM1CallProfile": "NOT_RUN",
+    "realLM1CallerFrequency": "NOT_RUN",
+    "sourceProductionChange": false,
+    "android": "NOT_RUN",
+    "candidate": "NONE",
+    "otherPRs": "Other open PRs #523/#527 touch LmModel.kt; no integration performed"
   }
 }
