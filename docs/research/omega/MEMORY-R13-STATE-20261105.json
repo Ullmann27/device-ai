@@ -44,9 +44,9 @@
       "exit": 0,
       "log_sha256": "1390c7fce519fd116b8baf23d52ab173d4f7dc73b4dbe862501b7f62543aab05"
     },
-    "source_fragment_old_fvn32": "d7bf1612",
     "source_fragment_new_fnv32": "cc26bf5b",
-    "repeated_source_comparison": true
+    "repeated_source_comparison": true,
+    "source_fragment_old_fnv32": "d7bf1612"
   },
   "pending": [
     "Run 12 frozen Android project JUnit methods",
