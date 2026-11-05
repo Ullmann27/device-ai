@@ -55,7 +55,16 @@ object JarvisTiles {
                 intArrayOf(Argb.withAlpha(st.rim, .12f), 0)))
         JarvisNeon.halo(p, b.left + 16f, b.top + b.height / 2f, b.height * .42f, st.rim, .14f)
         if (!disabled && timeMs > 0L) {
-            // Existing shell clock only; no decorative runtime-status inference.
+            // Existing two rim strokes plus the moving rounded-corner highlight.
+            val wave = ambientPhase(tile.target, timeMs)
+            val colour = if (wave <= .5f) Argb.mix(Colors.cyan, Colors.violet, wave * 2f)
+                else Argb.mix(Colors.violet, Colors.magenta, (wave - .5f) * 2f)
+            p.setAdditive(true)
+            p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius,
+                3f, Fill.Solid(colour), .045f + .035f * wave)
+            p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius,
+                1.1f, Fill.Solid(colour), .12f + .10f * wave)
+            p.setAdditive(false)
             JarvisTileEnergy.sample(timeMs, b.width, b.height, tile.target, radius)?.let { bead ->
                 val color = edgeEnergyColors[(bead.phase * edgeEnergyColors.size).toInt()
                     .coerceIn(0, edgeEnergyColors.lastIndex)]
