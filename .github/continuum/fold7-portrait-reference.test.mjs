@@ -91,7 +91,8 @@ test('ten action controls share draw bounds while head and original orb retain s
  assert.match(view,/shellActions\[key\]\?\.layout\(\(box\.left \* density\)\.toInt\(\), \(box\.top \* density\)\.toInt\(\),/);
  assert.match(shell,/val head = gr\[Area\.HEAD\]/);
  assert.match(shell,/val orb = gr\[Area\.ORB\]/);
- assert.match(view,/val head = shell\?\.headBounds/);
+ assert.match(view,/val head = shell\?\.headStage \?: shell\?\.headBounds/);
+ assert.match(view,/hologram\.setHeadFraming\(shell\.headAnchorX, shell\.headCloseUp\)/);
  assert.match(view,/val orb = shell\?\.orbBounds/);
  assert.match(view,/hologram\.setCockpitRegions\(local\(head\), local\(orb\)\)/);
  assert.match(view,/originX = \(stage\.left \* density\)\.toInt\(\)/);
@@ -100,7 +101,7 @@ test('ten action controls share draw bounds while head and original orb retain s
 });
 
 test('Fold chat remains a real native action and both content and rail stay scrollable',()=>{
- assert.match(tiles,/NavItem\("chat", "Chat", Icon\.CHAT\)/);
+ assert.match(tiles,/NavItem\("chat", "Gespräch", Icon\.CHAT\)/);
  assert.match(content,/"chat" to ContinuumHomeLayout\.Slot\.LABEL_THINKING/);
  assert.match(view,/setOnClickListener \{ openJarvisTarget\(target\) \}/);
  assert.match(view,/if \(native != null\) native\(target\) else onSlot\(requireNotNull\(route\), 0f, 0f\)/);

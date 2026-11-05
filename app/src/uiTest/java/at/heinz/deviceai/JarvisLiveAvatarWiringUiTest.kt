@@ -126,7 +126,7 @@ class JarvisLiveAvatarWiringUiTest {
         assertEquals("Dashboard owns its rail; Activity must not reserve a second rail", 0, railInset)
         assertEquals("The dashboard must fill the available pane without an inset-scrollbar gutter", root.width, home.width)
         // The live scene uses the latest reference's independent head and orb regions in the actual pane.
-        assertEquals((home.width * 250f / 1536f).toInt(), slot.left)
+        assertEquals((home.width * 256f / 1536f).toInt(), slot.left)
         assertEquals("The orb keeps its own dedicated right boundary",
             (home.width * 1212f / 1536f).toInt(), slot.right)
         assertEquals(slot.left, live.left)
@@ -139,6 +139,8 @@ class JarvisLiveAvatarWiringUiTest {
         assertEquals((home.width * 805f / 1536f).toInt() - slot.left, orb.left)
         assertTrue("Head and orb have separate, positive viewports", head.width() > 0 && head.right < orb.left)
         assertEquals("The orb keeps its full dedicated width", live.width, orb.right)
+        assertEquals(.70f, field(live, "headAnchorX") as Float, .001f)
+        assertEquals(.92f, field(live, "headCloseUp") as Float, .001f)
     }
 
     @Test fun resizingTheSlotPreservesTheSurfaceAndCurrentSpeech() = withShell { activity, home, live ->

@@ -3,6 +3,8 @@ package at.heinz.deviceai
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Looper
 import android.os.PowerManager
 import android.provider.Settings
@@ -30,6 +32,7 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class JarvisShellMotionUiTest {
+    private var activeFixture: Fixture? = null
     @Before fun pauseVsync() {
         ShadowChoreographer.setPaused(true)
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
@@ -40,6 +43,7 @@ class JarvisShellMotionUiTest {
         while (left > 0L) {
             val step = minOf(16L, left)
             shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
+            activeFixture?.drawRequestedFrame()
             left -= step
         }
     }
@@ -47,6 +51,23 @@ class JarvisShellMotionUiTest {
     private class Fixture(val controller: ActivityController<Activity>, val parent: FrameLayout,
                           val shell: JarvisShellView) {
         var frames = 0
+        private var surface: Bitmap? = null
+
+        fun drawRequestedFrame() {
+            if (!shell.isAttachedToWindow || !shell.isShown || shell.width <= 0 || shell.height <= 0) return
+            val shadow = shadowOf(shell)
+            if (!shadow.wasInvalidated()) return
+            // Consume actual invalidations on host.
+            shadow.clearWasInvalidated()
+            val bitmap = surface?.takeIf { it.width == shell.width && it.height == shell.height }
+                ?: Bitmap.createBitmap(shell.width, shell.height, Bitmap.Config.ARGB_8888).also {
+                    surface?.recycle()
+                    surface = it
+                }
+            shell.draw(Canvas(bitmap))
+        }
+
+        fun close() { surface?.recycle(); surface = null }
     }
 
     private fun withShell(block: (Fixture) -> Unit) {
@@ -58,6 +79,7 @@ class JarvisShellMotionUiTest {
         val parent = FrameLayout(activity)
         val shell = JarvisShellView(activity)
         val fixture = Fixture(controller, parent, shell)
+        activeFixture = fixture
         shell.onFrameDrawn = { fixture.frames++ }
         parent.addView(shell, FrameLayout.LayoutParams(-1, -1))
         try {
@@ -70,6 +92,8 @@ class JarvisShellMotionUiTest {
             block(fixture)
         } finally {
             controller.pause().stop().destroy()
+            activeFixture = null
+            fixture.close()
             Settings.Global.putString(resolver, Settings.Global.ANIMATOR_DURATION_SCALE, scale)
         }
     }
