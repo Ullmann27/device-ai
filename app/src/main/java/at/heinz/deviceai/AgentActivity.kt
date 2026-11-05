@@ -2168,7 +2168,13 @@ class AgentActivity : Activity() {
     }
 
     private fun refreshConversationLayout() {
-        val chat = conversationActive || keyboardCompact
+        val chat = at.heinz.deviceai.cognitive.CockpitConversationPresentation.showChat(
+            explicitChatSelected = activeWorkArea == ContinuumWorkArea.CHAT,
+            conversationActive = conversationActive,
+            keyboardCompact = keyboardCompact,
+            handsFreeActive = continuousConversation.active,
+            pinHomeCockpit = keepCockpitDuringHandsFree
+        )
         conversationRail?.visibility = if (chat) View.VISIBLE else View.GONE
         dashboardSection?.visibility = if (chat) View.GONE else View.VISIBLE
         chatColumn?.visibility = if (chat) View.VISIBLE else View.GONE
@@ -2210,6 +2216,8 @@ class AgentActivity : Activity() {
 
     private fun showHomeDashboard() {
         activeWorkArea = ContinuumWorkArea.START
+        // Returning to START does not invalidate an already active spoken turn.
+        keepCockpitDuringHandsFree = continuousConversation.active
         refreshWorkAreaSelection()
         conversationActive = false
         input.clearFocus()
@@ -2687,12 +2695,27 @@ class AgentActivity : Activity() {
      * even when the shared native model is generating. Never describes an absent
      * external Grok bot as running and never starts arbitrary code or tools.
      */
-    private fun showChiefWorkerStatus() {
-        // Put the existing live surface in its result pane before actual work begins.
-        conversationActive = true
-        activeWorkArea = ContinuumWorkArea.CHAT
-        refreshWorkAreaSelection()
+    /**
+     * Non-navigational tool/status replies must not steal the spoken START stage.
+     * Explicit selection of CHAT still takes precedence via focusChatComposer().
+     */
+    private fun showActionResultWithoutForcingChat() {
+        val pinned = at.heinz.deviceai.cognitive.CockpitConversationPresentation.keepHomeForResult(
+            continuousConversation.active,
+            keepCockpitDuringHandsFree,
+            activeWorkArea == ContinuumWorkArea.START
+        )
+        if (!pinned) {
+            conversationActive = true
+            activeWorkArea = ContinuumWorkArea.CHAT
+            refreshWorkAreaSelection()
+        }
         refreshConversationLayout()
+    }
+
+    private fun showChiefWorkerStatus() {
+        // A spoken status request is presentation-only: keep the cockpit visible.
+        showActionResultWithoutForcingChat()
         val effectContext = if (busy) currentTaskEffectContext else beginTaskEffects()
         val pool = chiefStatusPool ?: at.heinz.deviceai.chief.ChiefWorkerPool(1, 2) { brief ->
             val workerContext = chiefTaskEffectContexts.remove(brief.id)
@@ -3943,9 +3966,7 @@ class AgentActivity : Activity() {
         val snapshot = at.heinz.deviceai.cognitive.OwnerCapabilityReply.withDashboard(live,
             capabilityDashboard, capabilityDashboardAtElapsedMs, android.os.SystemClock.elapsedRealtime())
         input.text.clear()
-        conversationActive = true
-        activeWorkArea = ContinuumWorkArea.CHAT
-        refreshWorkAreaSelection(); refreshConversationLayout()
+        showActionResultWithoutForcingChat()
         addBubble(request, user = true)
         addBubble("Continuum · Aktuelle App-Fähigkeiten\n\n" +
             at.heinz.deviceai.cognitive.OwnerCapabilityReply.describe(snapshot), user = false)
@@ -10615,6 +10636,9 @@ class AgentActivity : Activity() {
 
     /** Tap: start hands-free conversation, or speak now / resume while it is active. */
     private fun onChatMicrophoneTap() {
+        // A resumed conversation can return from a text chat to the home stage.
+        if (!conversationActive && activeWorkArea == ContinuumWorkArea.START)
+            keepCockpitDuringHandsFree = true
         if (!continuousConversation.active) {
             keepCockpitDuringHandsFree = !conversationActive && activeWorkArea == ContinuumWorkArea.START
             toggleContinuousConversation()
