@@ -90,6 +90,7 @@ class JarvisWorkWindowUiTest {
         }
         fun frame(time: Long, scale: Float = 1f): Boolean {
             val active = frames.at(time, scale)
+            shadowOf(Looper.getMainLooper()).idle()
             layout()
             return active
         }
