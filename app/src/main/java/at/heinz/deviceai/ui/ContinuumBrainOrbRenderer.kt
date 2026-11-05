@@ -19,7 +19,7 @@ class ContinuumBrainOrbRenderer {
                        val processing: Boolean = false, val particles: Int = 70, val orbitSegments: Int = 96)
 
     var label1 = "Continuum"
-    var label2 = "Brain"
+    var label2 = "Gehirn"
 
     /** Kugelmitte ([cx],[cy]) und Radius [r] in px; Sockel und Lichtbalken liegen unter der Kugel bis cy + 1.30 r. */
     fun draw(p: ContinuumPainter, cx: Float, cy: Float, r: Float, s: Signals = Signals()) {
@@ -30,11 +30,13 @@ class ContinuumBrainOrbRenderer {
         p.fillCircle(cx, cy, r, Fill.Radial(cx, cy - r * .25f, r * 1.05f,
             intArrayOf(C.cyanDeep, C.backgroundHaze, C.pillSurface, Argb.withAlpha(C.pillSurface, .9f)), floatArrayOf(0f, .45f, .8f, 1f)), .92f)
         drawNet(p, cx, cy, r, s)
+        drawCore(p, cx, cy, r, s)
         drawBrain(p, cx, cy - r * .33f, r, s)
         // Rand-Bloom: mehrere additive Ringe (violett oben/rechts, cyan unten/links), dann scharfe Kante.
         p.setAdditive(true)
-        val rimSweep = intArrayOf(C.cyan, C.violet, C.violetRim, C.violet, C.violetRim, C.cyan, C.violet, C.cyan)
-        for ((w, a) in listOf(.32f to .07f, .2f to .12f, .11f to .22f, .05f to .45f))
+        // 59509: a markedly stronger violet/magenta rim bloom around the glass sphere.
+        val rimSweep = intArrayOf(C.cyan, C.violet, C.magenta, C.violetRim, C.magenta, C.cyan, C.violet, C.cyan)
+        for ((w, a) in listOf(.36f to .10f, .22f to .17f, .12f to .30f, .05f to .58f))
             p.strokeCircle(cx, cy, r * (1f + w * .15f), r * w, Fill.Sweep(cx, cy, rimSweep), a)
         p.strokeCircle(cx, cy, r * .995f, r * .016f, Fill.Sweep(cx, cy, intArrayOf(C.glowCore, C.violetRim, C.violet, C.cyan, C.glowCore)), 1f)
         p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 200f, 110f, r * .012f, Fill.Solid(C.violetRim), .9f)
@@ -75,8 +77,11 @@ class ContinuumBrainOrbRenderer {
                 val behind = (a[2] + b[2]) < 0f
                 if (behind == back) {
                     val alpha = if (behind) .28f else .70f
-                    val color = if ((i + ring * 13) % segments < segments / 2) c.cyan else c.violetRim
-                    p.drawLine(a[0], a[1], b[0], b[1], r * .040f, Fill.Solid(color), alpha * .12f)
+                    val half = (i + ring * 13) % segments < segments / 2
+                    val color = when (ring) { 0 -> if (half) c.magenta else c.violetRim; 1 -> if (half) c.cyan else c.violet
+                        else -> if (half) c.violetRim else c.cyan }
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .060f, Fill.Solid(color), alpha * .10f)
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .030f, Fill.Solid(color), alpha * .18f)
                     p.drawLine(a[0], a[1], b[0], b[1], r * .012f, Fill.Solid(color), alpha)
                     p.drawLine(a[0], a[1], b[0], b[1], r * .004f, Fill.Solid(c.glowCore), alpha)
                 }
@@ -221,6 +226,38 @@ class ContinuumBrainOrbRenderer {
         p.drawText(label2, cx, cy + r * .72f, st, Fill.Solid(C.activeWhite), TextAlign.CENTER)
     }
 
+    /** Luminous inner source (59509): white-cyan centre, violet/magenta corona, slow sine breathing. */
+    private fun drawCore(p: ContinuumPainter, cx: Float, cy: Float, r: Float, s: Signals) {
+        val C = JarvisDesign.Colors
+        val breath = .5f + .5f * sin(s.phase * 2f * PI.toFloat() * .35f)
+        val k = .85f + .15f * breath + .25f * s.pulse.coerceIn(0f, 1f) + if (s.processing) .12f else 0f
+        val y = cy + r * .10f
+        p.setAdditive(true)
+        // Fills depend on geometry only (cached); breathing changes the paint alpha, so no shader per frame.
+        val g = listOf("core", cx.toInt(), cy.toInt(), r.toInt())
+        // The cached colours carry the maximum gain; alpha k / CORE_GAIN_MAX keeps real pulse and processing visible.
+        val corona = JarvisSceneFills.cached(g + 0) { Fill.Radial(cx, y, r * .78f,
+            intArrayOf(Argb.withAlpha(C.magenta, .20f * CORE_GAIN_MAX), Argb.withAlpha(C.violet, .14f * CORE_GAIN_MAX), 0)) }
+        val heart = JarvisSceneFills.cached(g + 1) { Fill.Radial(cx, y, r * .42f,
+            intArrayOf(Argb.withAlpha(C.glowCore, (.75f * CORE_GAIN_MAX).coerceAtMost(1f)),
+                Argb.withAlpha(C.cyan, .35f * CORE_GAIN_MAX), 0)) }
+        val shell = JarvisSceneFills.cached(g + 2) { Fill.Sweep(cx, cy, intArrayOf(C.violetRim, C.cyan, C.magenta, C.violetRim)) }
+        p.fillCircle(cx, y, r * .78f, corona, (k / CORE_GAIN_MAX).coerceIn(0f, 1f))
+        p.fillCircle(cx, y, r * .42f, heart, (k / CORE_GAIN_MAX).coerceIn(0f, 1f))
+        // Second, inner glass shell slightly offset in depth.
+        p.strokeCircle(cx, cy, r * .84f, r * .012f, shell, .35f)
+        // Light pillars from the pedestal into the sphere.
+        for (i in -2..2) {
+            val x = cx + i * r * .16f
+            val a = (.22f - kotlin.math.abs(i) * .05f) * (.7f + .3f * sin(s.phase * 2f * PI.toFloat() * .5f + i))
+            val pillar = JarvisSceneFills.cached(g + (10 + i)) {
+                Fill.Linear(x, cy + r * 1.02f, x, cy + r * .1f, intArrayOf(C.cyan, Argb.withAlpha(C.cyan, 0f)))
+            }
+            p.fillRect(x - r * .02f, cy + r * .1f, x + r * .02f, cy + r * 1.02f, pillar, a)
+        }
+        p.setAdditive(false)
+    }
+
     private fun drawPedestal(p: ContinuumPainter, cx: Float, top: Float, r: Float) {
         val C = JarvisDesign.Colors
         p.fillOval(cx - r * 1.45f, top - r * .05f, cx + r * 1.45f, top + r * .42f, Fill.Solid(C.glowHalo), .95f)
@@ -238,7 +275,9 @@ class ContinuumBrainOrbRenderer {
             }
         }
         p.fillOval(cx - r * .9f, top + r * .06f, cx + r * .9f, top + r * .28f, Fill.Radial(cx, top + r * .17f, r * .9f,
-            intArrayOf(Argb.withAlpha(C.cyan, .35f), Argb.withAlpha(C.cyanDeep, .12f), 0)), 1f)
+            intArrayOf(Argb.withAlpha(C.glowCore, .45f), Argb.withAlpha(C.cyan, .30f), Argb.withAlpha(C.magenta, .10f), 0)), 1f)
+        p.strokeOval(cx - r * 1.32f, top + r * .02f, cx + r * 1.32f, top + r * .40f, r * .012f,
+            Fill.Linear(cx - r * 1.32f, top, cx + r * 1.32f, top, intArrayOf(C.magenta, C.violetRim, C.cyan, C.violetRim, C.magenta)), .85f)
         // Lichtbalken unter dem Sockel
         val by = top + r * .40f; val bw = r * .16f; val gap = r * .06f
         for (k in -1..1) {
@@ -250,6 +289,8 @@ class ContinuumBrainOrbRenderer {
     }
 
     companion object {
+        /** Largest core gain: breath 1 + MemoryStored pulse .25 + processing .12. */
+        const val CORE_GAIN_MAX = 1.37f
         /** Ref5-Komposition (gemessen): Kugelradius ≈ 0.36 × Slotbreite, Mitte bei (0.63 w, 0.445 h) des Ausschnitts. */
         fun radiusFor(slotW: Float, slotH: Float) = minOf(slotW * .36f, slotH / 2.9f)
         @Suppress("unused") private fun len(x: Float, y: Float) = sqrt(x * x + y * y)

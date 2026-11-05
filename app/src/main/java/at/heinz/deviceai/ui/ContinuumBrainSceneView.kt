@@ -27,7 +27,7 @@ class ContinuumBrainSceneView(context: Context) : View(context), CockpitAnimatio
 
     init {
         setBackgroundColor(JarvisDesign.Colors.background)
-        contentDescription = "Continuum Brain. Lichtsignale stammen aus tatsächlichen Gedächtnis- und Arbeitsereignissen."
+        contentDescription = "Continuum-Gehirn. Lichtsignale stammen aus tatsächlichen Gedächtnis- und Arbeitsereignissen."
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
     }
 
