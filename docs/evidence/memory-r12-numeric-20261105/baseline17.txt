@@ -1,0 +1,18 @@
+FAIL MemoryNumericEvidenceR12Test.bm25DoesNotInventTwoChildrenFromThree: java.lang.AssertionError: expected true
+FAIL MemoryNumericEvidenceR12Test.bm25NeverReturnsWrongCountAlongsideCorrectCount: java.lang.AssertionError: expected [MemoryDoc(id=two, text=Ich habe 2 Kinder, atMillis=2, confirmed=false)] actual [MemoryDoc(id=two, text=Ich habe 2 Kinder, atMillis=2, confirmed=false), MemoryDoc(id=three, text=Ich habe 3 Kinder, atMillis=1, confirmed=true)]
+FAIL MemoryNumericEvidenceR12Test.bm25RequiresAllNumericTerms: java.lang.AssertionError: expected true
+FAIL MemoryNumericEvidenceR12Test.ngramDoesNotInventTwoChildrenFromThree: java.lang.AssertionError: expected true
+FAIL MemoryNumericEvidenceR12Test.ngramNeverReturnsWrongCountAlongsideCorrectCount: java.lang.AssertionError: expected [MemoryDoc(id=two, text=Ich habe 2 Kinder, atMillis=2, confirmed=false)] actual [MemoryDoc(id=two, text=Ich habe 2 Kinder, atMillis=2, confirmed=false), MemoryDoc(id=three, text=Ich habe 3 Kinder, atMillis=1, confirmed=true)]
+FAIL MemoryNumericEvidenceR12Test.ngramRequiresAllNumericTerms: java.lang.AssertionError: expected true
+PASS MemoryNumericEvidenceR12Test.temporalBeforeDaysIsNotAnExactFactFilterForBm25
+PASS MemoryNumericEvidenceR12Test.temporalBeforeDaysIsNotAnExactFactFilterForNgram
+PASS MemoryOneDigitEvidenceR11Test.bm25DisambiguatesOtherwiseIdenticalChildCounts
+PASS MemoryOneDigitEvidenceR11Test.bm25ExactOneDigitRetrievesOnlyMatchingRecord
+PASS MemoryOneDigitEvidenceR11Test.multiDigitTokensAndSingleLetterFilteringRemain
+PASS MemoryOneDigitEvidenceR11Test.ngramExactOneDigitRetrievesMatchingRecord
+PASS MemoryOneDigitEvidenceR11Test.singleDigitsRemainTokensWithoutAdmittingSingleLetters
+PASS MemoryRepeatedNegationR11Test.duplicatedNichtAfterReindexMustNotReusePriorMembership
+PASS MemoryRepeatedNegationR11Test.duplicatedNichtCannotRetrievePositiveLicht
+PASS MemoryRepeatedNegationR11Test.duplicatedOhneCannotRetrievePositiveBohnen
+PASS MemoryRepeatedNegationR11Test.oneNegationAndMixedContentRetainExistingBehavior
+TOTAL=17 PASS=11 FAIL=6
