@@ -1,0 +1,91 @@
+{
+  "schema": "continuum-apk-b6-aapt2-host-admission-v1",
+  "status": "SOURCE_PATCH_PUBLISHED_TARGETED_CHECKS_GREEN_FULL_PROJECT_NOT_RUN",
+  "project": "Ullmann27/device-ai",
+  "sourceBase": {
+    "pr": 544,
+    "commit": "6da09218472dc51b691bbe7996323fc84adb1dc8",
+    "preflightBlob": "c273b39943047b2b1e658eabe4c77646de9c77c8",
+    "testBlob": "783cbb7bd26fcd2bb1b56d9ff32869e4318d9d35"
+  },
+  "changed": {
+    "scripts/continuum-release-host-preflight.mjs": "e016ae6b91b377fbef6d0ff4698626ed15d3469c",
+    "scripts/continuum-release-host-preflight.test.mjs": "facbc36e01be5701f740d7c5671029f321409953"
+  },
+  "repro": {
+    "finding": "Base accepts any existing AAPT2 file without executing/version checking; synthetic other tool preflights admitted.",
+    "original": "file exists => hostReadyToAttemptQa: true",
+    "repaired": "spawnSync(aapt2, ['version']) with timeout/exit and version-signature check; false for invalid tool",
+    "baselineAgainstCandidateRealFunctionWithStubbedChildTransport": {
+      "cases": 4,
+      "pass": 4,
+      "fail": 0,
+      "baselineAdmittedInvalid": 3,
+      "candidateRejectedInvalid": 3,
+      "validProtocolAccepted": 1,
+      "sourceFunction": "EXACT_PINNED_GITHUB_EXCERPT_V8",
+      "osAndSpawn": "STUBBED"
+    },
+    "localNodeRealFilesystemAndSubprocess": {
+      "command": "node --test --test-reporter=tap /mnt/data/continuum_apk_b6_20261105/aapt2-probe.mjs",
+      "cases": 6,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "node": "v22.16.0",
+      "tapGitBlob": "7b4ce4168809a850818abf6f997730274da9e4f8",
+      "tapSha256": "9c7648577d69c4737cac9b424ff44ed50f5240a0ae7442e6c1e30b2011bf902f",
+      "localScriptSha256": "283f4e69e664146e559c9ea3eb6a04dd296649beb343c6f8729c515a56b20482"
+    },
+    "remoteSourceAndTestSyntax": {
+      "result": "PASS",
+      "method": "V8 function parse after hashbang, ESM import/export and import.meta normalization",
+      "realNodeImportedProject": "NOT_RUN"
+    },
+    "newRepositoryRegression": {
+      "status": "COMMITTED_NOT_EXECUTED",
+      "casesAdded": 1,
+      "negativeModes": 3,
+      "positiveProtocolCases": 1,
+      "environmentAndManifestMocks": true
+    }
+  },
+  "limitation": {
+    "nativeAbi": "NOT_VERIFIED: fake executable can print version; required real aapt2/Gradle/Android compile on target platform",
+    "fullCheckout": "UNAVAILABLE_THIS_EXECUTOR",
+    "localBuildPrerequisites": "JDK17, Gradle8.11.1, SDK36, AAPT2 not configured. JDK21 and Kotlin1.9 present.",
+    "combinedAndroid": "NOT_RUN",
+    "fullNode": "NOT_RUN",
+    "backend": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "ownerApk": "NOT_RUN",
+    "signedRelease": "NOT_RUN",
+    "fold7": "NOT_RUN"
+  },
+  "dependencies": {
+    "earlierGate": "PR #515 includes independent stricter file-shape checks; reconcile to avoid replacement",
+    "integration": "C1 #519 with current #544 integration; no C1 file modified",
+    "parallelQA": "#550 Orb numeric QA distinct scope",
+    "publisher": "existing original signer and original Render release only; blocked"
+  },
+  "next": [
+    "Run node --test scripts/continuum-release-host-preflight.test.mjs on this exact branch in complete checkout.",
+    "Rebase/selectively integrate the AAPT2 version check on top of the stronger PR #515 availableFile guard; preserve its Git source audit.",
+    "On pinned combined final candidate run critical/full Node, backend, complete Android unit/UI, configured lint and actual native aapt2 version/ABI.",
+    "Only after owner SHA freeze+signer/version/HTTPS gates use existing publisher; no autonomous deployment."
+  ],
+  "protect": [
+    "main",
+    "original package",
+    "original signature",
+    "owner data",
+    "offline toggle",
+    "model weights",
+    "existing download channel"
+  ],
+  "exp": [
+    "EXP-00",
+    "EXP-09",
+    "EXP-11"
+  ]
+}
