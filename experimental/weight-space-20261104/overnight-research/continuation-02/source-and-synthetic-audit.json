@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "kind": "SOURCE_BOUND_PLUS_SYNTHETIC_PROTOTYPE",
+  "status": "PROTOTYPE_ONLY_NOT_INTEGRATED",
+  "sourcePr": 508,
+  "sourceHead": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
+  "reviewPr": 492,
+  "reviewHead": "17dd3bfe0d808480e5978542b0e5b638681f4a35",
+  "combinedPatchGitBlob": "bd46d9b89b9f42674c86f949b84ee66f8a23a03a",
+  "targetSources": [
+    {
+      "path": "experimental/lm1-training-recovery-20261104/run_registered_study.py",
+      "gitBlob": "28908e07d6217f10882429047c853d1dd8667912",
+      "exactHunks": 4,
+      "locallyScopedExistingFinalGuard": false
+    },
+    {
+      "path": "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+      "gitBlob": "30119435feed1728c5d22fec40830654a7a19861",
+      "exactHunks": 6,
+      "locallyScopedExistingFinalGuard": true
+    },
+    {
+      "path": "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py",
+      "gitBlob": "417e4b3289bb692e72dc80398b51b67e106b8907",
+      "exactHunks": 6,
+      "locallyScopedExistingFinalGuard": true
+    }
+  ],
+  "staticAudit": {
+    "fullPatchContextMatching": 16,
+    "files": 3,
+    "mutationRejects": 3,
+    "crossStudySharedConsumptionLedgerPresent": false,
+    "authorizationPublicationAttested": false
+  },
+  "runtime": {
+    "containerCheckoutPresent": false,
+    "containerGithubDNS": false,
+    "python": "3.13.5",
+    "javaInstalled": true,
+    "modelStarts": 0,
+    "optimizerUpdates": 0
+  },
+  "syntheticPrototype": {
+    "scriptSha256": "416992f0d7fbcc9674b4462795f1a5c3348a90d63c8e13cc8a43ff905efc4f67",
+    "testSha256": "966cc012b84165ba5363d4521b308a87688e901ed676a1cefc355fb8655bc697",
+    "testsPassed": 12,
+    "testsTotal": 12,
+    "modelProcesses": 0
+  },
+  "fullPatchedRunnerTests": "NOT_RUN",
+  "corruptedRealCheckpointTests": "NOT_RUN",
+  "unauthorizedResumeAgainstFullRunner": "NOT_RUN",
+  "originalAcceptance": "FAIL",
+  "acceptedResearchState": "M5_UNCHANGED",
+  "limitations": [
+    "Local output scans do not attest prior external publication",
+    "Input paths are caller supplied and do not cover undisclosed output roots",
+    "No global atomic lease or lock; time-of-check/time-of-use remains",
+    "No permission to rerun consumed final test",
+    "No patch integrated into PR508"
+  ]
+}
