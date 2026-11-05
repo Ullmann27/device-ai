@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "kind": "SOURCE_PINNED_SYNTHETIC_INVENTORY_NEGATIVE_REGRESSIONS",
+  "status": "RESEARCH_SHADOW_NOT_INTEGRATED",
+  "ownBaseHead": "3bba7b6e3f1bd590827e09994952e377b7446ec1",
+  "externalPr508Head": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
+  "sourceGitBlobs": {
+    "priorGuard": "b322675b6c68798ff9cef83160bab436a77f8814",
+    "olderRegressionTests": "aa85775476cbb70e9d3e5852db860575f76cc932"
+  },
+  "publishedCandidate": {
+    "gitBlob": "16217bfb24daba244d17af5d4ea65810cd43ce99",
+    "sha256": "3b5b213522c22c83b821269e71372e57747bccc50813e3865169a11cb19eec50"
+  },
+  "publishedTest": {
+    "gitBlob": "3472ab6b804483a2f8253266b571c4a6f54db985",
+    "sha256": "3fb1565db92b9d0101ee53d71ecde378517679a50032523807fac4f7067c537e"
+  },
+  "testCommand": "python3 -B -m unittest -v test_pretest_exclusivity_expanded.py",
+  "python": "3.13.5",
+  "actualTests": {
+    "passed": 20,
+    "total": 20,
+    "newRedGreen": 7,
+    "cleanControl": 1,
+    "previousRegressionTests": 12
+  },
+  "newNegatives": [
+    "nested final result in logs",
+    "study-root test receipt",
+    "hidden root summary",
+    "nested start marker",
+    "symlinked nested output",
+    "overlapping output roots",
+    "file injected after first inventory sweep"
+  ],
+  "modelProcesses": 0,
+  "optimizerUpdates": 0,
+  "allModelInputArchives": "NOT_ACCESSED",
+  "fullPatchedRunner": "NOT_RUN",
+  "badRealCheckpointResume": "NOT_RUN",
+  "sourceRunnerPatchIntegratedInto508": false,
+  "acceptedResearchState": "M5_UNCHANGED",
+  "m6": "PARITY_FAIL_RESTORED",
+  "oldQuality": "FAIL",
+  "oldFinalTest": "CONSUMED",
+  "limitations": [
+    "Local read-only scanner cannot attest global prior use",
+    "Scanning twice cannot eliminate filesystem TOCTOU",
+    "No original runner/registered input checkout in current environment",
+    "No new final authorization or training permission"
+  ]
+}
