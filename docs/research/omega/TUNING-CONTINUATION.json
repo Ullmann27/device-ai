@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "READY_FOR_NEXT_RUN",
-  "owner": null,
-  "leaseExpiresAtUtc": null,
-  "updatedAtUtc": "2026-11-05T01:32:00Z",
+  "status": "IN_PROGRESS",
+  "owner": "tuning-sequential-r11-20261105T0134Z",
+  "leaseExpiresAtUtc": "2026-11-05T01:55:00Z",
+  "updatedAtUtc": "2026-11-05T01:34:00Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -104,7 +104,16 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": null,
+  "activeRound": {
+    "id": "R11",
+    "status": "ARCHIVE_PUBLICATION_ONLY",
+    "baselineHead": "24b81586fc076e1c12f89fa4ffd00a30a312b907",
+    "expectedArchiveGitBlobs": {
+      "R8.b64": "3c30c5a15643f5a3f765e86ab49699ae00a4876d",
+      "R9.b64": "98b2bdedded1a8092e0d8fa2cc31701b9dfa8181"
+    },
+    "noProductionPatch": true
+  },
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
