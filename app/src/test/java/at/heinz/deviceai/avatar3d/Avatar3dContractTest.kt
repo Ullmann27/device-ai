@@ -28,7 +28,10 @@ class Avatar3dContractTest {
     @Test fun gazeIsViewerRightAndUpAndNeverNaN() {
         val map = AvatarMorphMapper(AvatarGlbContract.TARGETS)
         map.update(pose(x=1f,y=1f), 0f, true)
-        assertEquals(25f, map.headYaw + map.eyeYaw, 0f); assertEquals(-15f, map.headPitch + map.eyePitch, 0f)
+        assertEquals(AvatarMorphMapper.HEAD_YAW_DEGREES + AvatarMorphMapper.EYE_YAW_DEGREES, map.headYaw + map.eyeYaw, 0f)
+        assertEquals(-(AvatarMorphMapper.HEAD_PITCH_DEGREES + AvatarMorphMapper.EYE_PITCH_DEGREES), map.headPitch + map.eyePitch, 0f)
+        // Owner request: a wide, human turning radius (was 25°/15° in total).
+        assertTrue(map.headYaw >= 20f && map.headYaw + map.eyeYaw >= 35f && map.headPitch <= -10f)
         map.update(pose(x=Float.NaN,y=Float.POSITIVE_INFINITY, jaw=Float.NaN), Float.NaN, true)
         assertTrue(map.weights.all { it.isFinite() && it in 0f..1f }); assertEquals(0f,map.headYaw,0f)
     }

@@ -100,10 +100,11 @@ class AvatarObservedGazeTest {
         val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
         for (seconds in listOf(0f, 1.7f, 10f, 60f)) {
             mapper.update(pose, seconds, true)
-            assertEquals(gaze.x * 8f, mapper.headYaw, 0f)
-            assertEquals(-gaze.y * 5f, mapper.headPitch, 0f)
-            assertEquals(gaze.x * 17f, mapper.eyeYaw, 0f)
-            assertEquals(-gaze.y * 10f, mapper.eyePitch, 0f)
+            // Observed gaze maps exactly onto the (owner-widened) head/eye radius, without idle sway.
+            assertEquals(gaze.x * AvatarMorphMapper.HEAD_YAW_DEGREES, mapper.headYaw, 0f)
+            assertEquals(-gaze.y * AvatarMorphMapper.HEAD_PITCH_DEGREES, mapper.headPitch, 0f)
+            assertEquals(gaze.x * AvatarMorphMapper.EYE_YAW_DEGREES, mapper.eyeYaw, 0f)
+            assertEquals(-gaze.y * AvatarMorphMapper.EYE_PITCH_DEGREES, mapper.eyePitch, 0f)
         }
     }
 

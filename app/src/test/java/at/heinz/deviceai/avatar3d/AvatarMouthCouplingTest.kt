@@ -39,7 +39,7 @@ class AvatarMouthCouplingTest {
         for (jaw in listOf(0f, .25f, .5f, 1f)) {
             map.update(pose(Viseme.SIL, jaw), 1f, true)
             assertEquals(jaw, weight(map, "JawOpen"), 0f)
-            assertEquals(jaw * 12f, map.jawPitch, .0001f)
+            assertEquals(jaw * AvatarMorphMapper.JAW_BONE_DEGREES, map.jawPitch, .0001f)
             for (v in Viseme.entries) assertEquals(0f, weight(map, v.name), 0f)
         }
     }
@@ -51,7 +51,7 @@ class AvatarMouthCouplingTest {
         reducer.apply(AvatarEvent.VisemeCue("synthetic", Viseme.AA, 1f, 300, 100))
         map.update(reducer.pose(101), 1f, true)
         assertTrue("Opening face cue must not leave inner jaw at neutral", map.jawPitch > 0f)
-        assertTrue(map.jawPitch <= 12f)
+        assertTrue(map.jawPitch <= AvatarMorphMapper.JAW_BONE_DEGREES)
         reducer.apply(AvatarEvent.SpeechEnded("synthetic", true, 102))
         map.update(reducer.pose(103), 1f, true)
         assertEquals(0f, map.jawPitch, 0f)
