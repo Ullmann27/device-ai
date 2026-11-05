@@ -49,7 +49,7 @@ class AvatarRangeFrameConnectionUiTest {
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
             .putBoolean("voice_enabled", false).commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
-            .putBoolean("introduced", true).commit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
         app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit()
             .clear().putBoolean("jarvis-shell", true).commit()
         app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()

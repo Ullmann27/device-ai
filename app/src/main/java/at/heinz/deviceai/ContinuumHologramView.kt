@@ -54,9 +54,10 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val avatarPose = AvatarPoseReducer()
     private val appearancePrefs = context.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
     private val hasSavedAppearance = appearancePrefs.contains("native-head") || appearancePrefs.contains("native-head-3d")
-    // New installations use the requested 3D cockpit. An existing explicit orb
-    // or 2D choice is preserved; this never requests camera/audio permissions.
-    private var head3dEnabled = appearancePrefs.getBoolean("native-head-3d", !hasSavedAppearance)
+    // Upgrade legacy enabled heads.
+    // Explicit 3D choices remain authoritative.
+    private var head3dEnabled = appearancePrefs.getBoolean("native-head-3d",
+        appearancePrefs.getBoolean("native-head", !hasSavedAppearance))
     private var headEnabled = head3dEnabled || appearancePrefs.getBoolean("native-head", !hasSavedAppearance)
     private var native3d: FilamentAvatarRenderer? = null
     private var nativeTexture: TextureView? = null
@@ -201,6 +202,17 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     /** Ref5 HEAD and ORB in local pixels. Null restores the existing phone/legacy composition. */
+    private var headAnchorX = .5f
+    private var headCloseUp = 1f
+
+    fun setHeadFraming(anchorX: Float, closeUp: Float) {
+        require(anchorX.isFinite() && anchorX in .2f..1f && closeUp.isFinite() && closeUp in .4f..1f)
+        if (headAnchorX == anchorX && headCloseUp == closeUp) return
+        headAnchorX = anchorX
+        headCloseUp = closeUp
+        invalidate()
+    }
+
     fun setCockpitRegions(head: Rect?, orb: Rect?) {
         require((head == null) == (orb == null)) { "Head and orb bounds must be supplied together" }
         if (head != null && orb != null) {
@@ -583,17 +595,25 @@ class ContinuumHologramView @JvmOverloads constructor(
         val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
         resolveHeadBounds(width, height)
         updateOrbTarget(width, height)
+        if (headEnabled && cockpitHeadBounds != null) {
+            val t = if (canAnimateFrame()) avatarSeconds else 0f
+            at.heinz.deviceai.ui.JarvisEnergyFlows.draw(painter, width / density, height / density, t, energy)
+            at.heinz.deviceai.ui.JarvisHeadAura.draw(painter, at.heinz.deviceai.ui.JarvisShellLayout.Box(
+                headDrawBounds.left / density, headDrawBounds.top / density, headDrawBounds.right / density,
+                headDrawBounds.bottom / density), headAnchorX, t)
+        }
         if (headEnabled) {
             val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
             if (canDisplay3d() && native3d != null) {
                 runCatching {
                     native3d!!.setQuality(renderBudget().reducedBloom)
+                    native3d!!.setFraming(headAnchorX, headCloseUp)
                     native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0)
                 }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
                     .onFailure { fail3d() }
             }
-            if (!native3dDrawn && (!head3dEnabled || native3dFailed)) {
+            if (!native3dDrawn && !head3dEnabled) {
                 val headCanvas = canvas.save()
                 canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
                 avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
@@ -630,8 +650,9 @@ class ContinuumHologramView @JvmOverloads constructor(
                 }
                 canvas.restoreToCount(orbCanvas)
             }
-            if (!native3dDrawn && head3dEnabled && !native3dFailed) {
-                painter.drawText("3D wird initialisiert …", headDrawBounds.centerX() / density,
+            if (!native3dDrawn && head3dEnabled) {
+                val status = if (native3dFailed) "3D derzeit nicht verfügbar" else "3D wird initialisiert …"
+                painter.drawText(status, headDrawBounds.centerX() / density,
                     headDrawBounds.centerY() / density, TextStyle(FontFamily.TEXT, 400, 12f), avatarBrandFill, TextAlign.CENTER)
             }
             if (cockpit && cockpitHeadBounds == null) painter.drawText("JARVIS", headDrawBounds.centerX() / density,
@@ -648,7 +669,18 @@ class ContinuumHologramView @JvmOverloads constructor(
     /** Above child TextureView composition; driven by the same visible-view invalidation clock. */
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
-        if (!canAnimateFrame() || width<=0 || height<=0) return
+        if (width <= 0 || height <= 0) return
+        if (headFadeActive()) {
+            val density = resources.displayMetrics.density
+            val streams = canvas.save()
+            canvas.translate(headDrawBounds.left, headDrawBounds.top)
+            canvas.scale(density, density)
+            painter.begin(canvas)
+            at.heinz.deviceai.ui.JarvisHeadAura.drawLightStreams(painter, headDrawBounds.width() / density,
+                headDrawBounds.height() / density)
+            canvas.restoreToCount(streams)
+        }
+        if (!canAnimateFrame()) return
         val density=resources.displayMetrics.density
         val saved=canvas.save()
         canvas.scale(density,density)
@@ -656,6 +688,55 @@ class ContinuumHologramView @JvmOverloads constructor(
         painter.begin(canvas)
         taskEffects.draw(painter,width/density,height/density,SystemClock.uptimeMillis())
         canvas.restoreToCount(saved)
+    }
+
+    private val headFadePaint = android.graphics.Paint().apply {
+        xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.DST_IN)
+    }
+
+    private fun headFadeActive() = headEnabled && native3dDrawn && cockpitHeadBounds != null && width > 0 && height > 0
+
+    /** Only the native head surface is masked; full-view effect children keep their own unclipped drawing. */
+    override fun drawChild(canvas: Canvas, child: android.view.View, drawingTime: Long): Boolean {
+        if (child !== nativeTexture || !headFadeActive()) return super.drawChild(canvas, child, drawingTime)
+        val layer = canvas.saveLayer(headDrawBounds, null)
+        val drawn = super.drawChild(canvas, child, drawingTime)
+        applyHeadFade(canvas)
+        canvas.restoreToCount(layer)
+        return drawn
+    }
+
+    /** DST_IN gradients matching [at.heinz.deviceai.ui.JarvisHeadAura.fadeAlpha] (bottom and both sides). */
+    private fun applyHeadFade(canvas: Canvas) {
+        val b = headDrawBounds
+        val (bottom, left, right) = headFadeShaders(b)
+        val bottomTop = b.bottom - b.height() * at.heinz.deviceai.ui.JarvisHeadAura.BOTTOM_FADE
+        val side = b.width() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE
+        val sideTop = b.top + b.height() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE_FROM
+        headFadePaint.shader = bottom
+        canvas.drawRect(b.left, bottomTop, b.right, b.bottom, headFadePaint)
+        headFadePaint.shader = left
+        canvas.drawRect(b.left, sideTop, b.left + side, b.bottom, headFadePaint)
+        headFadePaint.shader = right
+        canvas.drawRect(b.right - side, sideTop, b.right, b.bottom, headFadePaint)
+        headFadePaint.shader = null
+    }
+
+    private var headFadeShaders: Array<android.graphics.Shader>? = null
+    private val headFadeShaderBounds = RectF()
+
+    /** The three mask gradients depend only on the head bounds; they are rebuilt only when those change. */
+    private fun headFadeShaders(b: RectF): Array<android.graphics.Shader> {
+        headFadeShaders?.takeIf { headFadeShaderBounds == b }?.let { return it }
+        val opaque = android.graphics.Color.BLACK; val clear = android.graphics.Color.TRANSPARENT
+        val clamp = android.graphics.Shader.TileMode.CLAMP
+        val bottomTop = b.bottom - b.height() * at.heinz.deviceai.ui.JarvisHeadAura.BOTTOM_FADE
+        val side = b.width() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE
+        return arrayOf<android.graphics.Shader>(
+            android.graphics.LinearGradient(0f, bottomTop, 0f, b.bottom, opaque, clear, clamp),
+            android.graphics.LinearGradient(b.left, 0f, b.left + side, 0f, clear, opaque, clamp),
+            android.graphics.LinearGradient(b.right - side, 0f, b.right, 0f, opaque, clear, clamp)
+        ).also { headFadeShaders = it; headFadeShaderBounds.set(b) }
     }
 
     private fun advanceFrame() {

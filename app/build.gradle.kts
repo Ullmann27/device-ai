@@ -3,6 +3,26 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val ownerFaceOpenCvAar by configurations.creating {
+    isTransitive = false
+    isCanBeConsumed = false
+}
+val ownerFaceAssets = layout.buildDirectory.dir("generated/owner-face-model-assets")
+val prepareOwnerFaceModels = tasks.register<Exec>("prepareOwnerFaceModels") {
+    val manifest = project.file("owner-face-models.lock.json")
+    val downloader = rootProject.file("scripts/continuum-owner-face-models.mjs")
+    inputs.files(manifest, downloader, ownerFaceOpenCvAar)
+    outputs.dir(ownerFaceAssets)
+    workingDir(rootProject.projectDir)
+    doFirst {
+        commandLine("node", downloader, "--manifest", manifest,
+            "--out", ownerFaceAssets.get().asFile,
+            "--cache", gradle.gradleUserHomeDir.resolve("caches/continuum-owner-face-models"),
+            "--opencv-aar", ownerFaceOpenCvAar.singleFile)
+    }
+}
+tasks.matching { it.name == "preBuild" }.configureEach { dependsOn(prepareOwnerFaceModels) }
+
 // Optional desktop widget QA; ordinary Android/Termux unit/build tasks keep their existing dependencies.
 val continuumUiWidgetTests = providers.gradleProperty("continuumUiWidgetTests").orNull == "true"
 val uiTestAndroidSdk by configurations.creating { isTransitive = false }
@@ -36,6 +56,14 @@ require(listOf(continuumLocalStandalone, continuumLocalStandaloneQa, continuumLo
 }
 require(!(continuumLocalStandalone && continuumLocalStandaloneQa)) {
     "Standalone owner release and disposable QA cannot be enabled together."
+}
+val continuumOwnerArm64Text = providers.gradleProperty("continuumOwnerArm64").orNull
+require(continuumOwnerArm64Text == null || continuumOwnerArm64Text in setOf("true", "false")) {
+    "continuumOwnerArm64 must be true or false."
+}
+val continuumOwnerArm64 = continuumOwnerArm64Text == "true"
+require(!continuumOwnerArm64 || continuumLocalStandalone || continuumLocalStandaloneQa || continuumLocalRenderUnsigned) {
+    "continuumOwnerArm64 requires standalone owner, QA or unsigned local mode."
 }
 val continuumLocalSigningPath = providers.environmentVariable("CONTINUUM_LOCAL_SIGNING_FILE").orNull
 val continuumLocalSigningPassword = providers.environmentVariable("CONTINUUM_LOCAL_SIGNING_PASSWORD").orNull
@@ -155,6 +183,7 @@ android {
 
     defaultConfig {
         applicationId = if (continuumLocalStandalone || continuumLocalStandaloneQa || continuumLocalRenderUnsigned) "at.heinz.deviceai.continuumlocal" else "at.heinz.deviceai"
+        if (continuumOwnerArm64) ndk { abiFilters.add("arm64-v8a") }
         minSdk = 26
         targetSdk = 36
         // Preview variants only: ensure Samsung recognises the new artifact
@@ -222,6 +251,7 @@ android {
 
     sourceSets {
         getByName("main") {
+            assets.srcDir(ownerFaceAssets)
             if (deviceAiMobileAidlFallback) {
                 java.srcDir("src/termux/java")
             }
@@ -259,6 +289,8 @@ kotlin {
 }
 
 dependencies {
+    implementation("org.opencv:opencv:4.13.0")
+    ownerFaceOpenCvAar("org.opencv:opencv:4.13.0@aar")
     if (continuumUiWidgetTests) {
         // Runtime API 28 and Robolectric 4.14.1's API 35 resource platform, resolved via Gradle's proxy/cache.
         uiTestAndroidSdk("org.robolectric:android-all-instrumented:9-robolectric-4913185-2-i7")

@@ -12,6 +12,7 @@ import android.hardware.camera2.CaptureRequest
 import android.hardware.camera2.CaptureResult
 import android.hardware.camera2.TotalCaptureResult
 import android.media.ImageReader
+import android.media.Image
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
@@ -27,16 +28,16 @@ import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.abs
 
-/** Explicit, foreground-only front-camera face POSITION input. No downloaded
- * detector, identity recognition, image conversion, storage or network path.
- * Native image buffers are immediately closed; only bounded face metadata leaves
- * this adapter. The caller must stop or setForeground(false) on Activity pause.
- * Availability is hardware support, never a successful camera/device test. */
+/** Foreground camera, explicit session purposes.
+ * Default: ephemeral position metadata only.
+ * Templates require separate explicit opt-in.
+ * Pixel ownership transfers exactly once. */
 internal class AndroidAvatarCameraInput(
     context: Context,
     private val onObservation: (CameraGazeSample) -> Unit,
     private val onClear: () -> Unit,
-    private val onState: (CameraTrackingState) -> Unit
+    private val onState: (CameraTrackingState) -> Unit,
+    private val onFaceFrame: ((OwnerFaceFrame) -> Unit)? = null
 ) {
     private val app = context.applicationContext
     private val main = Handler(Looper.getMainLooper())
@@ -50,8 +51,8 @@ internal class AndroidAvatarCameraInput(
     val state: CameraTrackingState get() = policy.state
 
     private data class Plan(val id: String, val geometry: CameraFrameGeometry,
-                            val size: Size, val fps: Range<Int>)
-    private class Run(val token: Long, val delivery: Long, val plan: Plan) {
+                            val size: Size, val fps: Range<Int>, val faceMode: Int)
+    private class Run(val token: Long, val delivery: Long, val plan: Plan, val ownerFaceToken: Long) {
         val lock = Any()
         val thread = HandlerThread("continuum-camera-position")
         var reader: ImageReader? = null
@@ -59,23 +60,30 @@ internal class AndroidAvatarCameraInput(
         var session: CameraCaptureSession? = null
         var closed = false
         var lastFrameNumber = -1L
+        var lastFaceFrameAt = -1L
     }
 
     fun permissionGranted(): Boolean = app.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-    fun hardwareSupported(): Boolean = plan(0) != null
+    fun hardwareSupported(): Boolean = plan(0, false) != null
 
     /** This method never requests Android permission or sets owner opt-in itself. */
-    fun start(ownerOptIn: Boolean, isForeground: Boolean, displayRotationDegrees: Int): Boolean {
+    fun start(ownerOptIn: Boolean, isForeground: Boolean, displayRotationDegrees: Int,
+              analyzeOwnerFace: Boolean = false, ownerFaceSessionToken: Long = 0): Boolean {
         check(Looper.myLooper() == Looper.getMainLooper())
         stop()
         ownerEnabled = ownerOptIn; foreground = isForeground
-        val selected = plan(displayRotationDegrees)
+        if (analyzeOwnerFace && (onFaceFrame == null || ownerFaceSessionToken <= 0)) {
+            policy.stop(CameraTrackingState.ERROR)
+            publishState(deliveryGeneration.get())
+            return false
+        }
+        val selected = plan(displayRotationDegrees, analyzeOwnerFace)
         val token = policy.start(ownerOptIn, isForeground, permissionGranted(), selected != null)
         if (token == null || selected == null) { publishState(deliveryGeneration.get()); return false }
         if (!lease.compareAndSet(null, this)) {
             policy.stop(CameraTrackingState.IN_USE); publishState(deliveryGeneration.get()); return false
         }
-        val run = Run(token, deliveryGeneration.get(), selected)
+        val run = Run(token, deliveryGeneration.get(), selected, if (analyzeOwnerFace) ownerFaceSessionToken else 0)
         current.set(run)
         val worker = try { run.thread.start(); Handler(run.thread.looper) }
             catch (_: Exception) { finish(run, CameraTrackingState.ERROR); return false }
@@ -90,8 +98,13 @@ internal class AndroidAvatarCameraInput(
                     run.reader = reader
                 }
                 reader.setOnImageAvailableListener({ source ->
-                    // Acquiring/closing the latest image prevents queue stalls; no pixel is read.
-                    runCatching { source.acquireLatestImage()?.close() }
+                    var image: Image? = null
+                    try {
+                        image = source.acquireLatestImage()
+                        if (run.ownerFaceToken > 0) image?.let { deliverOwnerFaceFrame(run, it) }
+                    } catch (_: Exception) {
+                        if (run.ownerFaceToken > 0) finish(run, CameraTrackingState.ERROR)
+                    } finally { image?.close() }
                 }, worker)
                 val manager = app.getSystemService(CameraManager::class.java)
                     ?: throw IllegalStateException("CAMERA_SERVICE_UNAVAILABLE")
@@ -115,7 +128,7 @@ internal class AndroidAvatarCameraInput(
                                     try {
                                         val request = camera.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW).apply {
                                             addTarget(reader.surface)
-                                            set(CaptureRequest.STATISTICS_FACE_DETECT_MODE, CaptureRequest.STATISTICS_FACE_DETECT_MODE_SIMPLE)
+                                            set(CaptureRequest.STATISTICS_FACE_DETECT_MODE, selected.faceMode)
                                             set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, selected.fps)
                                         }.build()
                                         session.setRepeatingRequest(request, object : CameraCaptureSession.CaptureCallback() {
@@ -175,6 +188,30 @@ internal class AndroidAvatarCameraInput(
 
     private fun permitted(run: Run): Boolean = current.get() === run &&
         policy.updateGate(run.token, ownerEnabled, foreground, permissionGranted())
+
+    private fun deliverOwnerFaceFrame(run: Run, image: Image) {
+        if (!permitted(run)) return
+        val now = SystemClock.elapsedRealtime()
+        if (run.lastFaceFrameAt >= 0 && now - run.lastFaceFrameAt < 500) return
+        val observedAt = image.timestamp.takeIf { it >= 0 }?.div(1_000_000L) ?: return
+        if (observedAt > now || now - observedAt > OwnerFacePolicy.MAX_FRAME_AGE_MS) return
+        if (image.format != ImageFormat.YUV_420_888 || image.cropRect.left != 0 || image.cropRect.top != 0 ||
+            image.cropRect.width() != image.width || image.cropRect.height() != image.height) return
+        val pixels = OwnerFaceYuvCopy.copy(image.width, image.height,
+            image.planes.map { OwnerFaceYuvPlane(it.buffer, it.rowStride, it.pixelStride) }) ?: return
+        val frame = OwnerFaceFrame(image.width, image.height,
+            (run.plan.geometry.sensorOrientationDegrees + run.plan.geometry.displayRotationDegrees) % 360,
+            observedAt, run.ownerFaceToken, pixels)
+        run.lastFaceFrameAt = now
+        if (!permitted(run)) { frame.close(); return }
+        try {
+            val consumer = onFaceFrame
+            if (consumer == null) frame.close() else consumer(frame)
+        } catch (_: Exception) {
+            frame.close()
+            finish(run, CameraTrackingState.ERROR)
+        }
+    }
 
     private fun gateReason(): CameraTrackingState = when {
         !ownerEnabled -> CameraTrackingState.OFF
@@ -244,27 +281,30 @@ internal class AndroidAvatarCameraInput(
         }
     }
 
-    private fun plan(displayRotationDegrees: Int): Plan? = runCatching {
+    private fun plan(displayRotationDegrees: Int, analyzeOwnerFace: Boolean): Plan? = runCatching {
         if (displayRotationDegrees !in listOf(0, 90, 180, 270)) return null
         val manager = app.getSystemService(CameraManager::class.java) ?: return null
         for (id in manager.cameraIdList.sorted().take(8)) {
             val c = manager.getCameraCharacteristics(id)
             if (c.get(CameraCharacteristics.LENS_FACING) != CameraCharacteristics.LENS_FACING_FRONT) continue
-            if (c.get(CameraCharacteristics.STATISTICS_INFO_AVAILABLE_FACE_DETECT_MODES)
-                    ?.contains(CaptureRequest.STATISTICS_FACE_DETECT_MODE_SIMPLE) != true) continue
-            if ((c.get(CameraCharacteristics.STATISTICS_INFO_MAX_FACE_COUNT) ?: 0) < 1) continue
+            val hasFaceMetadata = c.get(CameraCharacteristics.STATISTICS_INFO_AVAILABLE_FACE_DETECT_MODES)
+                ?.contains(CaptureRequest.STATISTICS_FACE_DETECT_MODE_SIMPLE) == true &&
+                (c.get(CameraCharacteristics.STATISTICS_INFO_MAX_FACE_COUNT) ?: 0) >= 1
+            if (!analyzeOwnerFace && !hasFaceMetadata) continue
             if (c.get(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE) !=
                 CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE_REALTIME) continue
             val sensor = c.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE) ?: continue
             val orientation = c.get(CameraCharacteristics.SENSOR_ORIENTATION) ?: continue
             if (orientation !in listOf(0, 90, 180, 270)) continue
             val map = c.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) ?: continue
-            val size = map.getOutputSizes(ImageFormat.YUV_420_888)?.filter { it.width in 1..640 && it.height in 1..480 }
+            val size = map.getOutputSizes(ImageFormat.YUV_420_888)?.filter { it.width in 2..640 && it.height in 2..480 &&
+                it.width % 2 == 0 && it.height % 2 == 0 }
                 ?.minByOrNull { abs(it.width * it.height - 320 * 240) } ?: continue
             val fps = c.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES)
                 ?.filter { it.lower >= 1 && it.upper <= 30 }
                 ?.minByOrNull { abs(it.upper - 15) * 100 + abs(it.lower - 15) } ?: continue
-            return Plan(id, CameraFrameGeometry(sensor.left, sensor.top, sensor.right, sensor.bottom, orientation, displayRotationDegrees), size, fps)
+            return Plan(id, CameraFrameGeometry(sensor.left, sensor.top, sensor.right, sensor.bottom, orientation, displayRotationDegrees),
+                size, fps, if (hasFaceMetadata) CaptureRequest.STATISTICS_FACE_DETECT_MODE_SIMPLE else CaptureRequest.STATISTICS_FACE_DETECT_MODE_OFF)
         }
         null
     }.getOrNull()

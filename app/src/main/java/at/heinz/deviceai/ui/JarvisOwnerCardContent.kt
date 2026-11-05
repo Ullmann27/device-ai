@@ -19,7 +19,8 @@ object JarvisOwnerCardContent {
         val body = JarvisDesign.Type.caption.copy(size = 8.5f * scale)
         val recognized = owner.state == OwnerRecognitionState.RECOGNIZED
         val label = when (owner.state) {
-            OwnerRecognitionState.RECOGNIZED -> "Nutzer erkannt"
+            OwnerRecognitionState.RECOGNIZED -> if (owner.method == OwnerRecognition.METHOD_UNLOCK)
+                "Gerät entsperrt" else "Nutzer erkannt"
             OwnerRecognitionState.NOT_RECOGNIZED -> "Nicht erkannt"
             OwnerRecognitionState.UNKNOWN -> "—"
         }

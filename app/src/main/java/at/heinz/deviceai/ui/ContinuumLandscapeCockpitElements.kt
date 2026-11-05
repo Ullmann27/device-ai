@@ -95,7 +95,7 @@ class CockpitActionElement(private val slot: Slot, textScale: Float) : Continuum
             solid(if (active) C.cyan else C.text), TextAlign.CENTER)
     }
     override fun describe(s: ContinuumDashboardState) = when (slot) {
-        Slot.LABEL_THINKING -> "Denken: Chat öffnen. " + s.core.thinking
+        Slot.LABEL_THINKING -> "Denken: Gespräch öffnen. " + s.core.thinking
         Slot.LABEL_ANALYSING -> "Recherchieren: Recherchemodus wählen. " + s.core.analysing
         Slot.LABEL_LEARNING -> "Lernen: Lernzentrum öffnen. " + s.core.learning
         Slot.LABEL_DEVELOPING -> "Entwickeln: Entwicklungszentrum öffnen. " + s.core.developing
@@ -236,5 +236,5 @@ class CockpitComposerElement(textScale: Float) : ContinuumElement(textScale) {
         p.drawText(ContinuumSurfaces.fit(p, "JARVIS, was soll ich tun?", style, w - 90f), 44f, h / 2f + 4f, style, solid(C.textMuted))
         ContinuumSurfaces.iconGlow(p, Icon.ARROW_UP, w - 24f, h / 2f, 16f)
     }
-    override fun describe(s: ContinuumDashboardState) = "Nachricht an JARVIS schreiben oder sprechen. Öffnet den Chat."
+    override fun describe(s: ContinuumDashboardState) = "Nachricht an JARVIS schreiben oder sprechen. Öffnet das Gespräch."
 }

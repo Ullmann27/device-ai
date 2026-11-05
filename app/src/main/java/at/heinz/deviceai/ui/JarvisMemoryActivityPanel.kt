@@ -23,10 +23,10 @@ data class MemoryActivitySnapshot(
 
     /** Zeilen (Wert, Beschriftung) in ref5-Reihenfolge. */
     fun rows(): List<Pair<String, String>> = listOf(
-        fmt(newToday, plus = true) to "New memories (today)",
-        fmt(contextUpdates) to "Context updates",
-        fmt(hypotheses) to "Hypotheses",
-        fmt(total) to "Total memories",
+        fmt(newToday, plus = true) to "Neue Erinnerungen (heute)",
+        fmt(contextUpdates) to "Kontext-Aktualisierungen",
+        fmt(hypotheses) to "Hypothesen",
+        fmt(total) to "Erinnerungen gesamt",
     )
 
     override fun equals(other: Any?) = other is MemoryActivitySnapshot && newToday == other.newToday &&
@@ -79,7 +79,7 @@ class MemoryActivityTracker(private val clock: Clock = Clock.system(ZoneId.of("E
  * Referenzgröße 160 x 105 dp (ref5 254 x 167 px × 0,642); skaliert proportional zur Slotbreite.
  */
 object JarvisMemoryActivityPanel {
-    const val TITLE = "Memory Activity"
+    const val TITLE = "Gedächtnis-Aktivität"
     const val REF_W = 160f
     const val REF_H = 105f
 
