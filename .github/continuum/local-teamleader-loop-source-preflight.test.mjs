@@ -85,3 +85,19 @@ test('an invalid preflight option fails closed before a source status or work ca
  assert.match(failure?.message??'',/source preflight.*function/i);assert.equal(calls,0);
  assert.equal(fs.existsSync(f.stateFile),false);
 });
+
+test('durable loop source verification ignores ambient Git trace destinations',async t=>{
+ const f=fixture(t),keys=['GIT_TRACE','GIT_TRACE_PERFORMANCE','GIT_TRACE2_EVENT','GIT_TRACE2_PERF'];
+ const previous=new Map(keys.map(key=>[key,process.env[key]]));
+ const markers=keys.map((_,index)=>path.join(path.dirname(f.sourceRoot),'loop-trace-'+index+'.log'));
+ keys.forEach((key,index)=>{process.env[key]=markers[index];});
+ let summary;
+ try{
+  summary=await runTeamleaderLoop({sourceRoot:f.sourceRoot,stateFile:f.stateFile,maxCycles:1,
+   work:()=>({outcome:'IDLE'})});
+ }finally{
+  for(const [key,value] of previous)if(value===undefined)delete process.env[key];else process.env[key]=value;
+ }
+ assert.equal(summary.state,'LIMIT_REACHED');
+ for(const marker of markers)assert.equal(fs.existsSync(marker),false,'Git must not write '+marker);
+});

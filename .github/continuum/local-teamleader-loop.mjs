@@ -82,10 +82,13 @@ async function sourceIdentity(root,sourcePreflight){
  // Trusted caller policy runs before Git can invoke configured status helpers.
  // A thrown/rejected check vetoes this source boundary, including initial open.
  if(sourcePreflight!==null)await sourcePreflight(canonical);
+ // The scheduler must not let inherited Git trace destinations write files.
+ const gitEnv={...process.env,GIT_TERMINAL_PROMPT:'0',GIT_OPTIONAL_LOCKS:'0'};
+ for(const key of Object.keys(gitEnv))if(key.startsWith('GIT_TRACE'))delete gitEnv[key];
  const git=args=>{
   const result=spawnSync('git',['-C',canonical,...args],{
    encoding:'utf8',timeout:10_000,maxBuffer:2*1024*1024,shell:false,
-   env:{...process.env,GIT_TERMINAL_PROMPT:'0',GIT_OPTIONAL_LOCKS:'0'}
+   env:gitEnv
   });
   if(result.error||result.status!==0)throw Error('Cannot validate local loop source');
   return result.stdout;

@@ -32,6 +32,8 @@ function reader(root,deadline){
   const env={...process.env,GIT_TERMINAL_PROMPT:'0',GIT_OPTIONAL_LOCKS:'0',GIT_NO_LAZY_FETCH:'1'};
   for(const key of ['GIT_DIR','GIT_WORK_TREE','GIT_INDEX_FILE','GIT_COMMON_DIR','GIT_OBJECT_DIRECTORY',
    'GIT_ALTERNATE_OBJECT_DIRECTORIES','GIT_SHALLOW_FILE','GIT_NAMESPACE','GIT_CONFIG'])delete env[key];
+   // Git tracing writes to caller-chosen paths even for read-only commands.
+   for(const key of Object.keys(env))if(key.startsWith('GIT_TRACE'))delete env[key];
   // Config reads must see the effective caller config, including fsmonitor,
   // before the protected reader overrides it for repository operations.
   const overrides=args[0]==='config'?[]:['-c','core.fsmonitor=false','-c','core.hooksPath=/dev/null','-c','diff.external='];

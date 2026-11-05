@@ -259,3 +259,18 @@ test('current worktree gitlinks are rejected before nested worktree status',t=>{
  f.git('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','gitlink');
  assert.throws(()=>discoverBranches({root:f.root}),/DISCOVERY_SUBMODULE_WORKTREE_UNSUPPORTED/);
 });
+
+test('ambient Git trace destinations cannot write files during read-only discovery',t=>{
+ const f=fixture(t),source=feature(f,'trace-source');
+ const keys=['GIT_TRACE','GIT_TRACE_PERFORMANCE','GIT_TRACE2_EVENT','GIT_TRACE2_PERF'];
+ const previous=new Map(keys.map(key=>[key,process.env[key]]));
+ const markers=keys.map((_,index)=>path.join(path.dirname(f.root),'untrusted-trace-'+index+'.log'));
+ keys.forEach((key,index)=>{process.env[key]=markers[index];});
+ try{
+  const report=discoverBranches({root:f.root});
+  assert.ok(report.branches.some(branch=>branch.sourceCommit===source));
+ }finally{
+  for(const [key,value] of previous)if(value===undefined)delete process.env[key];else process.env[key]=value;
+ }
+ for(const marker of markers)assert.equal(fs.existsSync(marker),false,'Git must not write '+marker);
+});
