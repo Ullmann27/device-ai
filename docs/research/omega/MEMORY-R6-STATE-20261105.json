@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "taskId": "MEMORY-R6-INDEX-SNAPSHOT-20261105",
+  "status": "SPECIALIST_HOST_INDEX_METHOD_GREEN__ANDROID_NOT_RUN",
+  "repository": "Ullmann27/device-ai",
+  "branch": "fix/continuum-memory-retriever-snapshot-r6-20261105",
+  "base": {
+    "integratorPr": 519,
+    "commit": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "retrieverBlob": "857eb1fb8bbada8282a095956667bb521e44abe6"
+  },
+  "source": {
+    "productionCommit": "5c34d322da8d8325d33d6c2a1eb9d64d6f46ddd9",
+    "productionFile": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+    "publishedBlob": "b2d6ac9b078557f8c74fe0be9dc0032a15e52323",
+    "methodFNVBefore": {
+      "Bm25GermanRetriever": "8150ccb5",
+      "CharNgramHashRetriever": "f54404ba"
+    },
+    "methodFNVAfter": {
+      "Bm25GermanRetriever": "ee11dd94",
+      "CharNgramHashRetriever": "fc6e1a8a"
+    }
+  },
+  "frozenTests": {
+    "commit": "162da3662aaf3e59b4153823620d7897338a8168",
+    "file": "app/src/test/java/at/heinz/deviceai/learning/MemoryRetrieverIndexSnapshotR6Test.kt",
+    "methods": 4,
+    "status": "ANDROID_NOT_RUN"
+  },
+  "fixes": [
+    "BM25 indexes and retains one copied immutable document-list snapshot",
+    "3-5gram retriever indexes and retains one copied immutable document-list snapshot",
+    "caller edits cannot relabel confirmed versus unconfirmed hits; deliberate reindex refreshes correctly"
+  ],
+  "host": {
+    "environment": "JRE 21, kotlinc-jvm 1.9.0, offline isolated extracted production index methods with stub terms/grams/vec",
+    "before": {
+      "total": 12,
+      "pass": 6,
+      "fail": 6,
+      "compileExit": 0,
+      "runtimeExit": 1
+    },
+    "after": {
+      "total": 12,
+      "pass": 12,
+      "fail": 0,
+      "compileExit": 0,
+      "runtimeExit": 0
+    },
+    "runner": "python3 tools/memory-index-snapshot-r6/run.py",
+    "redLog": "docs/evidence/memory-index-snapshot-r6-20261105/host-red.txt",
+    "greenLog": "docs/evidence/memory-index-snapshot-r6-20261105/host-green.txt",
+    "limitations": "Index-method-specific only, not full retrieval/search/ranking or Android JUnit; the runner uses test-local helper implementations; raw local source files were method-bearing extracts, not entire repository trees"
+  },
+  "scope": {
+    "productionPaths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt"
+    ],
+    "untouched": [
+      "AgentActivity",
+      "AiContextCompiler",
+      "MemoryEcology",
+      "MemoryEventMapper",
+      "model weights",
+      "original package/signature",
+      "owner data",
+      "offline switch",
+      "update pipeline"
+    ]
+  },
+  "integrator": {
+    "pr": 519,
+    "soleOwner": "C1",
+    "pending": [
+      "C1 review and intake of this 1-file isolated patch after PRIVACY-024",
+      "actual project JUnit 4 new methods, retrieval 1000-memory/44-question experiment and temporal suite on same exact tree",
+      "mandatory full Node/Backend/Android/UILint gates",
+      "physical Fold7 QA and owner-authorized APK release"
+    ]
+  },
+  "safety": {
+    "mainMerge": false,
+    "androidBuildRun": false,
+    "deviceTestRun": false,
+    "paidServices": false,
+    "githubActions": false,
+    "release": false,
+    "install": false
+  },
+  "notes": [
+    "Prior R4/#529 and R5/#531 privacy work is separate and not overwritten",
+    "No thread safety is claimed for concurrent index() versus search()",
+    "The shallow snapshot is sufficient because MemoryDoc fields are immutable Strings/Long/Boolean"
+  ]
+}
