@@ -1,0 +1,27 @@
+{
+  "status": "RETURNED_TO_R1 / CANDIDATES_NOT_ADOPTED",
+  "activeProductionSha256": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d",
+  "productionDiffFromR2Base": false,
+  "archivedVariants": {
+    "binary": {
+      "candidateSourceSha256": "8f9103451cf24efad71f8531e82011a284ef82c48b1ede9c2dc75b91af4e95a0",
+      "measuredHarnessSha256": "1d0a5b30bcb0ee4a4f31353ac248507d3cd7ff5c7953e5815ef922bba5a467d8",
+      "rawResultsSha256": "8acccfa5b9ce821272ecc5e251d5167f3fe6f7642e9ee02f415939cb742c99c5",
+      "completeCases": 40,
+      "pairedRounds": 360
+    },
+    "exponential": {
+      "candidateSourceSha256": "7d807cbceb56ca56c12da2eca5466f0ad56aea1f1c0e86538e275d259c90b89d",
+      "measuredHarnessSha256": "94e7bffc3cbbaf9fcb1817018e021a8c5f4b81317ccc112c1364916b3f7f3b3c",
+      "rawResultsSha256": "84977993d4521e6914678b0e5fdb7db853e6a32a69d9d2e4bb4b2bd6e70c35e8",
+      "completeCases": 40,
+      "pairedRounds": 360
+    }
+  },
+  "reproductionHarnessSha256": "dee950cb8982433340d7f5b3a760d5fcb1c68c84f2bb8fb43a11901bed5d6820",
+  "explicitArchiveSelectionRequired": true,
+  "measurementTailUnchanged": true,
+  "environmentAbortCount": 1,
+  "authorizedSuccessfulRecoveryCount": 1,
+  "archiveRouteFunctionalCheck": "delegated to Root; bot performed source/hash/syntax/Git checks only after restore"
+}

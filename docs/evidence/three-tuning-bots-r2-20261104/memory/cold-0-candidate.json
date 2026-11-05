@@ -1,0 +1,1 @@
+{"variant":"candidate","scope":"first constructor plus compile in fresh JVM after fixture/counter setup","wallNs":10867047,"cpuNs":10207407,"allocatedBytes":265360,"outputBytes":451,"resultUtf16Sha256":"2cb5529eab3a3cbbf1377a67d88aeefc32f304bb4ac4caf2ac8bee2a6da39d31"}

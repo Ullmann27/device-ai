@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: requires explicit branch HEAD binding
+ok 1 - requires explicit branch HEAD binding
+  ---
+  duration_ms: 1.286088
+  type: 'test'
+  ...
+# Subtest: accepts exact sha and normalizes repository
+ok 2 - accepts exact sha and normalizes repository
+  ---
+  duration_ms: 0.226396
+  type: 'test'
+  ...
+# Subtest: six exact-source files are mandatory
+ok 3 - six exact-source files are mandatory
+  ---
+  duration_ms: 0.0875
+  type: 'test'
+  ...
+# Subtest: rejects unanchored injection
+ok 4 - rejects unanchored injection
+  ---
+  duration_ms: 0.159016
+  type: 'test'
+  ...
+# Subtest: injection is exactly anchored, no source removal
+ok 5 - injection is exactly anchored, no source removal
+  ---
+  duration_ms: 0.398882
+  type: 'test'
+  ...
+# Subtest: rejects empty or malformed trace
+ok 6 - rejects empty or malformed trace
+  ---
+  duration_ms: 1.015907
+  type: 'test'
+  ...
+# Subtest: rejects instrumented behavior change
+ok 7 - rejects instrumented behavior change
+  ---
+  duration_ms: 0.230552
+  type: 'test'
+  ...
+# Subtest: rejects corrupt counter invariants
+ok 8 - rejects corrupt counter invariants
+  ---
+  duration_ms: 0.10741
+  type: 'test'
+  ...
+# Subtest: rejects missing or drifted HEAD
+ok 9 - rejects missing or drifted HEAD
+  ---
+  duration_ms: 66.03684
+  type: 'test'
+  ...
+# Subtest: rejects dirty file even though HEAD is unchanged
+ok 10 - rejects dirty file even though HEAD is unchanged
+  ---
+  duration_ms: 46.849152
+  type: 'test'
+  ...
+# Subtest: rejects path missing from checkout
+ok 11 - rejects path missing from checkout
+  ---
+  duration_ms: 42.45947
+  type: 'test'
+  ...
+# Subtest: rejects symlink source
+ok 12 - rejects symlink source
+  ---
+  duration_ms: 41.612789
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 265.980371

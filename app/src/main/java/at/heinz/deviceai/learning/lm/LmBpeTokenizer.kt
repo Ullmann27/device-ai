@@ -24,9 +24,20 @@ class LmBpeTokenizer private constructor(private val merges: List<Pair<Int, Int>
     val sha256: String by lazy { hex(MessageDigest.getInstance("SHA-256").digest(serialize())) }
 
     fun encode(text: String): IntArray {
-        val out = ArrayList<Int>(text.length)
-        for (word in pretokenize(text)) out.addAll(encodeWord(word).asList())
-        return out.toIntArray()
+        var out = IntArray(text.length)
+        var size = 0
+        for (word in pretokenize(text)) {
+            val part = encodeWord(word)
+            val required = size + part.size
+            if (required < 0) throw OutOfMemoryError("Required array size too large")
+            if (required > out.size) {
+                val grown = out.size.toLong() + out.size / 2 + 1
+                out = out.copyOf(maxOf(required.toLong(), grown).coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
+            }
+            System.arraycopy(part, 0, out, size, part.size)
+            size = required
+        }
+        return if (size == out.size) out else out.copyOf(size)
     }
 
     fun decode(ids: IntArray): String {
@@ -133,6 +144,18 @@ class LmBpeTokenizer private constructor(private val merges: List<Pair<Int, Int>
             LmBpeTokenizer(merges)
         }
 
-        fun hex(bytes: ByteArray) = bytes.joinToString("") { "%02x".format(it) }
+        fun hex(bytes: ByteArray): String {
+            if (bytes.isEmpty()) return ""
+            val length = bytes.size.toLong() * 2
+            if (length > Int.MAX_VALUE) throw OutOfMemoryError("Required string size too large")
+            val digits = "0123456789abcdef"
+            val out = CharArray(length.toInt())
+            for (i in bytes.indices) {
+                val value = bytes[i].toInt() and 255
+                out[i * 2] = digits[value ushr 4]
+                out[i * 2 + 1] = digits[value and 15]
+            }
+            return String(out)
+        }
     }
 }

@@ -1,0 +1,158 @@
+{
+  "recordedAtUtc": "2026-11-04T19:19:47.521652+00:00",
+  "status": "HOST_FUNCTIONAL_VERIFICATION_PASS_WITH_DOCUMENTED_PERFORMANCE_LIMITS",
+  "baseCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "testedLocalCommit": "9c111c3dac8f655eb82071289c8294689b909e2d",
+  "equivalentPublishedCommit": "db88716f899953c0bdf0fdf8430972fd6addac0d",
+  "testedTree": "5d59380abc5339e2232fd84ddc3a5cc20eb0f12a",
+  "productionSha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt": "2100c6d1b4ecd0e2398ef4039266d9456cc33a69b4ea3700b5e4b79b9c7a5a13",
+    ".github/continuum/development-backlog.mjs": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d"
+  },
+  "independentCandidateTests": {
+    "node": 52,
+    "context": 21,
+    "lm": 5,
+    "uniqueTotal": 78,
+    "failed": 0,
+    "skipped": 0
+  },
+  "additionalBaselineContextTests": 21,
+  "parity": {
+    "worker": 40960,
+    "context": 462,
+    "contextSuccessful": 408,
+    "contextIdenticalExceptions": 54,
+    "lmSamplerEmbeddedInJUnit": 35624,
+    "lmForwardTokenChecksEmbeddedInJUnit": 50
+  },
+  "commands": [
+    {
+      "component": "worker",
+      "commands": [
+        [
+          [
+            "node",
+            "--test",
+            "--test-reporter=spec",
+            ".github/continuum/autonomous-teamleader.test.mjs",
+            ".github/continuum/development-backlog.test.mjs"
+          ],
+          "tests.txt"
+        ],
+        [
+          [
+            "node",
+            "tools/tuning-workers-20261104/benchmark-backlog-selection.mjs",
+            "--parity-only"
+          ],
+          "parity.json"
+        ]
+      ],
+      "exitCode": 0
+    },
+    {
+      "component": "context",
+      "command": [
+        "python3",
+        "tools/tuning-memory-20261104/run.py",
+        "check",
+        "/workspace/scratch/59ad19c6d3b7/coordinator-check/memory"
+      ],
+      "environmentInputs": [
+        "CONTINUUM_KOTLIN_COMPILER_CP",
+        "CONTINUUM_KOTLIN_DEPENDENCY_CP"
+      ],
+      "exactCompilerCommand": "context-compile-command.json",
+      "exitCode": 0
+    },
+    {
+      "component": "lm",
+      "command": [
+        "bash",
+        "docs/evidence/tuning-inference-20261104/run.sh",
+        "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib",
+        "/workspace/scratch/59ad19c6d3b7/coordinator-check/inference",
+        "after"
+      ],
+      "LM_SAMPLING_RUN_BENCHMARK": "unset; default disabled",
+      "exitCode": 0
+    }
+  ],
+  "sourceAndEvidenceChecks": {
+    "productionMatchesEachBenchmark": true,
+    "allThreeBaselinesMatchGitShow": true,
+    "lmArchivedRunHashesChecked": 3,
+    "lmArchivedSummaryValidatorExitCode": 0,
+    "contextCoordinatorSourceHashesChecked": 46,
+    "contextBenchmarkSourcesMatchCurrentFiles": 46,
+    "productionAndHarnessDiffAgainstTestedCommitExitCode": 0,
+    "sourceDocumentHarnessWhitespaceCheck": {
+      "base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "patterns": [
+        "*.kt",
+        "*.mjs",
+        "*.py",
+        "*.sh",
+        "*.md",
+        "*.json",
+        "*.jsonl"
+      ],
+      "exitCode": 0,
+      "rawArtifactsPreservedWithoutWhitespaceRewriting": true
+    }
+  },
+  "compatibilityDryRun": {
+    "pr": 506,
+    "head": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+    "inputBlob": "f42f526cefaa96295205f161241fbc8035f27c01",
+    "command": [
+      "git",
+      "apply",
+      "--check",
+      "context.patch"
+    ],
+    "exitCode": 0,
+    "patchFile": "context-pr506.patch",
+    "combinedIntegrationTest": false
+  },
+  "review": {
+    "independentReviewer": "tuning_runtime_workers",
+    "scope": [
+      "LmEval.sample production diff and tests",
+      "AiContextCompiler.appendSection production diff and tests"
+    ],
+    "confirmedBlockersInScope": 0,
+    "coordinatorReviewedAllThreeProductionDiffs": true,
+    "stochasticSamplerAllocationCostAcceptedForIsolatedDraftOnly": "+24 B per call; not a device or production acceptance"
+  },
+  "warnings": [
+    "Nonfatal Thread.currentThread().id deprecation in JVM benchmark harnesses.",
+    "LM JVM startup reported an existing shared perfdata file lock; all five tests passed."
+  ],
+  "timingBenchmarksRepeatedByCoordinator": false,
+  "notRun": [
+    "full Gradle Android build",
+    "Lint",
+    "APK build or installation",
+    "Fold7/ART",
+    "end-to-end model throughput",
+    "battery/thermal measurement",
+    "frontier model comparison"
+  ],
+  "rawCopiedFileSha256": {
+    "context-baseline-tests.txt": "d34220a6ffb1361ac091b6f0b1aae4563cca108e22aa4be12899921f7ec32c79",
+    "context-candidate-tests.txt": "88d520e584ccf361353ac9f9ff68ee94dbc9b9e7deb3126f1bc4511ce8967d35",
+    "context-compile-command.json": "0b67cc2f02c9e0cc5b4369110385cd2e5d00fecf2562a7c5e8e382670401dda2",
+    "context-compile.log": "e73734b50e9dd023605cfbdceb87dcb56ea157a97ab0d5b2b2a96ad7b36f014c",
+    "context-parity.json": "e440cb9bdc036002bc67673d8895690f82005ddc680d381e9ede359595b1b064",
+    "context-pr506.patch": "212acdb6825a3064d8807c0442b5a9fc1400c8d7d212849bfe7167681b39e7fa",
+    "context-source-manifest.json": "9f58f6ebdd14d097a2e8ed07226c68dbb5f16c00422e19c83e1f1f7361e1e7e0",
+    "lm-source.json": "ea74fe947ee1b47ff3e238a090f689bb875bb9933345ca65d0bad8c8ac1ed693",
+    "lm-tests.txt": "31cf96f9669e05d41ee0de58f36fa4b43ebe541a1a249dbcf9f7157f853560c3",
+    "worker-commands.json": "fc332710ea20d985bd4acf33bbc4472ee724fe66e50039f28f631dbc024ea44c",
+    "worker-parity.json": "553120339e689e99676b6746f43fe74c338dd8b6b639dd77fee5ea13b29a58bc",
+    "worker-tests.txt": "2c18ce3325406b2d0eec871b14b5b2730177b9c092ec624016743158eb0ff30d"
+  }
+}

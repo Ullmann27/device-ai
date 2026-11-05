@@ -1,0 +1,24 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt b/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt
+index a81eb02..1287f81 100644
+--- a/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt
++++ b/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt
+@@ -24,9 +24,16 @@ class LmBpeTokenizer private constructor(private val merges: List<Pair<Int, Int>
+     val sha256: String by lazy { hex(MessageDigest.getInstance("SHA-256").digest(serialize())) }
+ 
+     fun encode(text: String): IntArray {
+-        val out = ArrayList<Int>(text.length)
+-        for (word in pretokenize(text)) out.addAll(encodeWord(word).asList())
+-        return out.toIntArray()
++        val parts = pretokenize(text).map { encodeWord(it) }
++        val size = parts.sumOf { it.size.toLong() }
++        if (size > Int.MAX_VALUE) throw OutOfMemoryError("Required array size too large")
++        val out = IntArray(size.toInt())
++        var offset = 0
++        for (part in parts) {
++            part.copyInto(out, offset)
++            offset += part.size
++        }
++        return out
+     }
+ 
+     fun decode(ids: IntArray): String {

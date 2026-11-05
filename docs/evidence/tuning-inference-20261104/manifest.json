@@ -1,0 +1,85 @@
+{
+  "status": "HOST_JVM_SAMPLER_VERIFIED_DEVICE_UNAVAILABLE",
+  "experimentId": "EXP-05",
+  "baseCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "branch": "tuning/inference-59ad",
+  "baselineLmModelSha256": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+  "preliminaryCandidateALmModelSha256": "3b554b00e5119edc3e063c4310efc3d471b071a22fe61111ed283418ec84343d",
+  "finalCandidateBLmModelSha256": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+  "baselineSourceEvidence": "Original before run compiled the clean e101 production sources before modification. Frozen sample reference was checked byte-for-byte before that run; source-before reconstruction below is explicitly post-run.",
+  "sourceBeforeReconstructedAfterRun": true,
+  "sourceBeforeSha256": {
+    "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab"
+  },
+  "benchmarkSha256": "df44760762279951625d3f9029e7f1d94dc9bfb1935b84e1957e352febcfd05f",
+  "testSha256": "d3f5ea036aa9169cd187d0d46aecf2557e871509ef25754cc852539214302895",
+  "toolchain": {
+    "compiler": "kotlin-compiler-embeddable-2.0.20",
+    "stdlib": "2.0.20",
+    "junit": "4.13.2",
+    "jvmTarget": 17,
+    "runtime": "OpenJDK 21.0.13+9-1-deb13u2-Debian",
+    "heap": "-Xms256m -Xmx256m"
+  },
+  "host": {
+    "architecture": "amd64",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "availableProcessors": 9,
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "affinityPinned": false,
+    "externalLoadControlled": false
+  },
+  "quality": {
+    "junitMethodsBefore": 5,
+    "junitMethodsFinal": 5,
+    "samplerParityCases": 35624,
+    "unicodeModelTokenComparisons": 50,
+    "generationArchitectures": [
+      "TRANSFORMER",
+      "MINGRU"
+    ],
+    "benchmarkScenarios": 9,
+    "pairedBatchesPerScenario": 9,
+    "allArchivedChecksumsMatch": true
+  },
+  "scope": {
+    "androidBuild": "NOT_RUN",
+    "fold7": "UNAVAILABLE",
+    "endToEndModelLatency": "NOT_MEASURED",
+    "weightsAndTrainingChanged": false,
+    "tokenizerAndCheckpointFormatChanged": false,
+    "gemmaPerformanceClaim": false
+  },
+  "rawRunSha256": {
+    "before.jsonl": "da484fe9033ccb5ef046feceae8611ac0ecfd36a5bf9efffe514283ef4e8b789",
+    "candidate-a-after.jsonl": "79cc080e229ed03508b4a6b5f0e4ee0b0bb848144b56b54db92bda8fd7d1986c",
+    "after.jsonl": "b67bc11ea0cf4c3916b90f53381c83a27fee1b81f71093c679f76734c1f2f62d"
+  },
+  "classSha256": {
+    "before": {
+      "at/heinz/deviceai/learning/lm/LmEval.class": "06176db9e53824bed3d6aa3ad2bfca088ff362beec2bfa6ed0c499e27407b060",
+      "at/heinz/deviceai/learning/lm/LmSamplingBenchmark.class": "abfeef19c41eb27498b77b9cc2aa7ffde21c562c43657ecda44c94ca9534da61",
+      "at/heinz/deviceai/learning/lm/SortedSamplingReference.class": "32c34901474d63c0516f69f7d7e95eb0f8a33c6d0159ba8a8d9a60d37a9ee41e"
+    },
+    "after": {
+      "at/heinz/deviceai/learning/lm/LmEval.class": "9f681c8271f6e1cae32360e75815517fb6f6e495776cf844d40b7f9025a6940f",
+      "at/heinz/deviceai/learning/lm/LmSamplingBenchmark.class": "abfeef19c41eb27498b77b9cc2aa7ffde21c562c43657ecda44c94ca9534da61",
+      "at/heinz/deviceai/learning/lm/SortedSamplingReference.class": "32c34901474d63c0516f69f7d7e95eb0f8a33c6d0159ba8a8d9a60d37a9ee41e"
+    }
+  }
+}

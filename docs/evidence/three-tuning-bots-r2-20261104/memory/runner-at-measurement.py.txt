@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+"""Offline R2 checks and separately scheduled host measurements against published R1."""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+
+
+ROOT = Path(__file__).resolve().parents[2]
+PUBLIC_BASE = "04b46f125d1086e6ea540d3c68700407f340f607"
+LOCAL_BASE = "db3295d51c769afdaf809ac1dfae2ada84a3274f"
+EXPECTED_TREE = "d753188fe0e67f6c6f098db6b7073ea199e05530"
+TARGET = "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt"
+R1_TOOLS = ROOT / "tools/tuning-memory-20261104"
+R2_TOOLS = ROOT / "tools/tuning-memory-r2-20261104"
+TESTS = ["AiContextCompilerTest", "AiContextByteBudgetTest", "AiContextIntegrityTest",
+         "LocalPromptSizeAndStabilityTest", "AiContextRedactionReuseTest"]
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def command(args, destination):
+    with destination.open("w") as log:
+        result = subprocess.run(args, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)
+    print(f"{destination.name}: exit {result.returncode}", flush=True)
+    if result.returncode:
+        print(destination.read_text(), flush=True)
+        raise SystemExit(result.returncode)
+
+
+def resolve_baseline():
+    attempts = []
+    for ref in (PUBLIC_BASE, LOCAL_BASE):
+        result = subprocess.run(["git", "rev-parse", "--verify", f"{ref}^{{tree}}"],
+                                cwd=ROOT, capture_output=True, text=True)
+        attempts.append({"commit": ref, "available": result.returncode == 0})
+        if result.returncode:
+            continue
+        tree = result.stdout.strip()
+        if tree != EXPECTED_TREE:
+            raise RuntimeError(f"R1 baseline tree mismatch: {ref}: {tree}")
+        return ref, attempts
+    raise RuntimeError(f"Fetch the published baseline commit {PUBLIC_BASE}; no matching local fallback exists")
+
+
+def check(out):
+    compiler = os.environ["CONTINUUM_KOTLIN_COMPILER_CP"]
+    dependencies = os.environ["CONTINUUM_KOTLIN_DEPENDENCY_CP"]
+    baseline, attempts = resolve_baseline()
+    generated = out / "generated"
+    generated.mkdir(parents=True, exist_ok=True)
+    original = subprocess.check_output(["git", "show", f"{baseline}:{TARGET}"], cwd=ROOT).decode()
+    candidate = (ROOT / TARGET).read_text()
+    marker = "\nclass AiContextCompiler("
+    old_header, old_class = original.split(marker, 1)
+    candidate_header, candidate_class = candidate.split(marker, 1)
+    if old_header != candidate_header:
+        raise RuntimeError("Shared input/output/policy declarations changed")
+    literals = r'Regex\("((?:\\.|[^"\\])*)"\)'
+    old_patterns = re.findall(literals, old_class)
+    new_patterns = re.findall(literals, candidate_class)
+    if len(old_patterns) != 2 or old_patterns != new_patterns:
+        raise RuntimeError("The two original regex literals or their order changed")
+    (out / "r1-AiContextCompiler.kt").write_text(original)
+    imports = "\n".join(line for line in old_header.splitlines() if line.startswith(("package ", "import ")))
+    baseline_source = generated / "BaselineAiContextCompiler.kt"
+    baseline_source.write_text(imports + "\n\nclass BaselineAiContextCompiler(" + old_class)
+    sources = [ROOT / name for name in (R1_TOOLS / "sources.txt").read_text().splitlines()]
+    sources += [ROOT / "app/src/test/java/at/heinz/deviceai/cognitive/AiContextRedactionReuseTest.kt",
+                baseline_source, R1_TOOLS / "ContextCompilerParity.kt", R2_TOOLS / "RedactionReuseBenchmark.kt"]
+    for name in TESTS:
+        original_test = (ROOT / f"app/src/test/java/at/heinz/deviceai/cognitive/{name}.kt").read_text()
+        marker = f"class {name} {{"
+        if original_test.count(marker) != 1:
+            raise RuntimeError(f"Unexpected test declaration: {name}")
+        renamed = original_test.replace(marker, f"class Baseline{name} {{", 1)
+        renamed = renamed.replace("AiContextCompiler(", "BaselineAiContextCompiler(")
+        path = generated / f"Baseline{name}.kt"
+        path.write_text(renamed)
+        sources.append(path)
+    jars = [Path(path) for path in dict.fromkeys((dependencies + os.pathsep + compiler).split(os.pathsep))]
+    manifest = {
+        "requestedBaselineCommit": PUBLIC_BASE, "resolvedBaselineCommit": baseline,
+        "baselineTree": EXPECTED_TREE, "resolutionAttempts": attempts,
+        "worktreeHead": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip(),
+        "baselineCompilerSha256": sha(out / "r1-AiContextCompiler.kt"),
+        "candidateCompilerSha256": sha(ROOT / TARGET),
+        "regexLiteralsUnchanged": True, "sourceGraphUsesTestStubs": False,
+        "sources": {str(path): sha(path) for path in sources},
+        "harness": {str(path): sha(path) for path in [Path(__file__).resolve(), R1_TOOLS / "sources.txt"]},
+        "dependencies": {str(path): sha(path) for path in jars},
+        "runtimeClasspath": str(out / "classes") + os.pathsep + dependencies,
+        "baselineTransformation": "Only compiler/test class names changed; shared declarations verified identical",
+    }
+    (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    command(["java", "-version"], out / "java.txt")
+    command(["java", "-cp", compiler, "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+             "-no-stdlib", "-no-reflect", "-version"], out / "compiler.txt")
+    args = ["java", "-Xmx768m", "-cp", compiler, "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+            "-no-stdlib", "-no-reflect", "-jvm-target", "17", "-classpath", dependencies,
+            "-d", str(out / "classes"), *map(str, sources)]
+    (out / "compile-command.json").write_text(json.dumps(args, indent=2) + "\n")
+    command(args, out / "compile.txt")
+    junit = ["java", "-Xmx512m", "-cp", manifest["runtimeClasspath"], "org.junit.runner.JUnitCore"]
+    for prefix in ("Baseline", ""):
+        command(junit + [f"at.heinz.deviceai.cognitive.{prefix}{name}" for name in TESTS],
+                out / ("r1-junit.txt" if prefix else "r2-junit.txt"))
+    java = ["java", "-Xms256m", "-Xmx512m", "-cp", manifest["runtimeClasspath"]]
+    command(java + ["at.heinz.deviceai.cognitive.ContextCompilerParity", "parity"], out / "r1-parity.json")
+    command(java + ["at.heinz.deviceai.cognitive.RedactionReuseBenchmark", "functional"], out / "lifecycle-parity.json")
+    command(["java", "-m", "jdk.jdeps/com.sun.tools.javap.Main", "-classpath", manifest["runtimeClasspath"],
+             "-p", "-c", "at.heinz.deviceai.cognitive.AiContextCompiler"], out / "candidate-bytecode.txt")
+    print((out / "r1-parity.json").read_text(), flush=True)
+    print((out / "lifecycle-parity.json").read_text(), flush=True)
+
+
+def measure(out):
+    manifest = json.loads((out / "manifest.json").read_text())
+    for name in ("r1-parity.json", "lifecycle-parity.json"):
+        if json.loads((out / name).read_text())["status"] != "PASS":
+            raise RuntimeError("All parity gates must pass before measurement")
+    for group in ("sources", "harness", "dependencies"):
+        for path, expected in manifest[group].items():
+            if sha(Path(path)) != expected:
+                raise RuntimeError(f"Changed after correctness gate: {path}")
+    java = ["java", "-Xms256m", "-Xmx512m", "-cp", manifest["runtimeClasspath"],
+            "at.heinz.deviceai.cognitive.RedactionReuseBenchmark"]
+    (out / "load-before.txt").write_text(Path("/proc/loadavg").read_text())
+    command(java + ["hot"], out / "hot.json")
+    cold = []
+    for pair in range(3):
+        order = ("baseline", "candidate") if pair % 2 == 0 else ("candidate", "baseline")
+        results = {}
+        for variant in order:
+            path = out / f"cold-{pair}-{variant}.json"
+            command(java + ["cold", variant], path)
+            results[variant] = json.loads(path.read_text())
+        if results["baseline"]["resultUtf16Sha256"] != results["candidate"]["resultUtf16Sha256"]:
+            raise RuntimeError("Cold output parity failed")
+        cold.append({"pair": pair, "order": order, **results})
+    (out / "cold.json").write_text(json.dumps({"status": "PASS", "pairs": cold}, indent=2) + "\n")
+    (out / "load-after.txt").write_text(Path("/proc/loadavg").read_text())
+    if len(json.loads((out / "hot.json").read_text())["workloads"]) != 4:
+        raise RuntimeError("Incomplete hot lifecycle matrix")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("mode", choices=("check", "measure"))
+    parser.add_argument("output", type=Path)
+    args = parser.parse_args()
+    output = args.output.resolve()
+    if output == ROOT or ROOT in output.parents:
+        raise SystemExit("Use an external output directory for host classes and logs")
+    output.mkdir(parents=True, exist_ok=True)
+    if args.mode == "check":
+        check(output)
+    else:
+        measure(output)

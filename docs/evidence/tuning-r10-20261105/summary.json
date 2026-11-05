@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "round": "R10",
+  "date": "2026-11-05",
+  "status": "AUDIT_ONLY_NO_PRODUCTION_CHANGE",
+  "auditTool": "tools/tuning-r10/verify_archives.py",
+  "auditToolGitBlobSha": "e1dc1c9785362385610e451bfada2030f24efded",
+  "inputs": {
+    "R8": {
+      "sha256": "464c8c1e676d12640c5b737c6a34f06d3837307e274e8adb5035dbf4d22a02ac",
+      "sourceSha256": "f05adccac2da23451b1edcc1ef9d9837229486ed3b4505445582a0f62169c5c8",
+      "archiveGithubStatus": "NOT_PUSHED"
+    },
+    "R9": {
+      "sha256": "cefa10199763df4033abf0b221e35837a3eb161052a4d3e734d60c5645f0738c",
+      "sourceSha256": "3694fcce8f0cb7fd8c20e694f463173ba951b139744393829eac79558cc18800",
+      "archiveGithubStatus": "NOT_PUSHED"
+    }
+  },
+  "count": {
+    "csvFiles": 4,
+    "totalRows": 624,
+    "measuredRows": 432,
+    "warmupRows": 192,
+    "pairedRecords": 312,
+    "scenarioCountPerRound": 6
+  },
+  "checks": {
+    "archivesSha256": "PASS",
+    "fixtureSha256": "PASS",
+    "membersExactlyThreePerArchive": "PASS",
+    "duplicatePairArms": "NONE",
+    "checksumsAcrossArms": "MATCH",
+    "independentMedians": "RECOMPUTED"
+  },
+  "findings": [
+    {
+      "round": "R8",
+      "scenario": "vocab_32_1_1024",
+      "kind": "PUBLISHED_REPORT_MISMATCH",
+      "aaBaselineAllocationBytes": 523664,
+      "abBaselineAllocationBytes": 453264,
+      "abCandidateAllocationBytes": 359824,
+      "baselineDriftPercent": -13.44,
+      "abCandidateDeltaPercent": -20.62,
+      "decision": "REJECTED_UNCHANGED"
+    },
+    {
+      "round": "R9",
+      "scenario": "wide_128_2_258",
+      "kind": "BASELINE_DRIFT",
+      "aaBaselineAllocationBytes": 1510320,
+      "abBaselineAllocationBytes": 1314960,
+      "abCandidateAllocationBytes": 1403024,
+      "baselineDriftPercent": -12.94,
+      "decision": "REJECTED_UNCHANGED"
+    },
+    {
+      "round": "R8",
+      "scenario": "medium_64_2_258",
+      "kind": "CPU_REGRESSION",
+      "abCpuPercent": 6.37,
+      "candidateFasterPairs": 1,
+      "totalPairs": 9,
+      "decision": "REJECTED_UNCHANGED"
+    }
+  ],
+  "testScope": {
+    "host": "read-only Python3 verification of immutable R8/R9 CSV samples",
+    "newTimedRuns": 0,
+    "moduleCompilation": "NOT_RUN",
+    "androidFold7": "NOT_RUN",
+    "endToEndGemma": "NOT_RUN",
+    "modelQuality": "NOT_RUN"
+  },
+  "sourceBindings": {
+    "LmRuntime.kt": "6de174dc400bfc5bd5bfb0facc56fc4820550b25",
+    "LmModel.kt": "4d773e44a09324df77891d8c60460dd4143d0ec1",
+    "LmBpeTokenizer.kt": "39faa03f2c5dc9d86422e5bffa7a6c563274f35e",
+    "LmTensor.kt": "1ebd9b6803a3eb54a6a1baea25430b49e588665d"
+  },
+  "next": "Exact full Kotlin LM1 graph compile and actual caller-frequency profile before new candidate; preserve rejected R8/R9 controls"
+}

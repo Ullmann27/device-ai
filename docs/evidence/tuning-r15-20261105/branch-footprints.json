@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "round": "R15",
+  "observedAtUtc": "2026-11-05T05:35:16.801Z",
+  "source": "Authorized GitHub get_pr_info and fetch_file at immutable commit SHAs; no anonymous clone",
+  "snapshots": {
+    "511": {
+      "head": "c67d8538e879cf8a2188ec004e812c6de9e3848f",
+      "base": "codex/astra-jarvis-takeover-20261104",
+      "blobs": {
+        "model": "4d773e44a09324df77891d8c60460dd4143d0ec1",
+        "bpe": "39faa03f2c5dc9d86422e5bffa7a6c563274f35e",
+        "context": "a2d41ffb0cff834764e4ee6180929905f04784a6",
+        "worker": "dfa1f4b762a9e45c81d47b3431ca35d013d85d9c",
+        "runtime": "6de174dc400bfc5bd5bfb0facc56fc4820550b25"
+      },
+      "r1": {
+        "sampler": true,
+        "contextBudget": true,
+        "worker": true
+      },
+      "r3": {
+        "nll": true,
+        "nextDistribution": true,
+        "encode": true,
+        "hex": true
+      }
+    },
+    "519": {
+      "head": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+      "base": "integration/continuum-apk-connections-wave2-20261104",
+      "blobs": {
+        "model": "1df9dc9378a732e37e8e4568a2d46310442d15a8",
+        "bpe": "a81eb0256ad6c59584df78ee589d4c7490545e29",
+        "context": "beb0f37d8de8965984bf38846b6479e0137d2340",
+        "worker": "dfa1f4b762a9e45c81d47b3431ca35d013d85d9c",
+        "runtime": "6de174dc400bfc5bd5bfb0facc56fc4820550b25"
+      },
+      "r1": {
+        "sampler": false,
+        "contextBudget": false,
+        "worker": true
+      },
+      "r3": {
+        "nll": false,
+        "nextDistribution": false,
+        "encode": false,
+        "hex": false
+      }
+    },
+    "523": {
+      "head": "7c1642af96ccf626c91a40a602c7127e02fb9eea",
+      "base": "integration/continuum-c1-candidate-20261104",
+      "blobs": {
+        "model": "f583da534acc9e0e71ee0ead39256243a0e2894f",
+        "bpe": "a81eb0256ad6c59584df78ee589d4c7490545e29",
+        "context": "43cdb7190f4819a324158387d625b2c9e7ea6343",
+        "worker": "dfa1f4b762a9e45c81d47b3431ca35d013d85d9c",
+        "runtime": "6de174dc400bfc5bd5bfb0facc56fc4820550b25"
+      },
+      "r1": {
+        "sampler": true,
+        "contextBudget": true,
+        "worker": true
+      },
+      "r3": {
+        "nll": false,
+        "nextDistribution": false,
+        "encode": false,
+        "hex": false
+      }
+    },
+    "527": {
+      "head": "19039e5b822310cd5ab1ce5cc5cb854822a1bcd3",
+      "base": "integration/continuum-c1-candidate-20261104",
+      "blobs": {
+        "model": "f583da534acc9e0e71ee0ead39256243a0e2894f",
+        "bpe": "a81eb0256ad6c59584df78ee589d4c7490545e29",
+        "context": "f3d5290597952b42ff411816500865cab90e31d9",
+        "worker": "dfa1f4b762a9e45c81d47b3431ca35d013d85d9c",
+        "runtime": "6de174dc400bfc5bd5bfb0facc56fc4820550b25"
+      },
+      "r1": {
+        "sampler": true,
+        "contextBudget": true,
+        "worker": true
+      },
+      "r3": {
+        "nll": false,
+        "nextDistribution": false,
+        "encode": false,
+        "hex": false
+      }
+    }
+  },
+  "sourceFootprintGates": {
+    "r3": {
+      "nll": "val scratch = FloatArray(v); softmaxRow(..., scratch, 0)",
+      "nextDistribution": "FloatArray(v); softmaxRow(..., out, 0); return out without copyOfRange",
+      "encode": "primitive IntArray grow/copy via System.arraycopy",
+      "hex": "direct 0123456789abcdef digit encoding"
+    },
+    "r1": {
+      "sampler": "temperature<=0 linear selection before sortedByDescending",
+      "contextBudget": "usedBytes increment and maxBytes-usedBytes",
+      "worker": "single-pass best candidate instead of sorting"
+    }
+  },
+  "negativeControl": {
+    "description": "For each of seven checks on PR 511, remove its defining anchor and verify structural predicate changes from true to false",
+    "tested": 7,
+    "passed": 7,
+    "failed": 0,
+    "runner": "JavaScript V8 in connector orchestration (not Node/JVM/Kotlin)"
+  },
+  "conclusion": {
+    "r3InTuning": "4/4 SOURCE_PRESENT",
+    "r3InC1": "0/4 SOURCE_PRESENT",
+    "r3In523": "0/4 SOURCE_PRESENT",
+    "r3In527": "0/4 SOURCE_PRESENT",
+    "r1In527": "3/3 SOURCE_PRESENT",
+    "workerBlobIdentical": "4/4",
+    "runtimeBlobIdentical": "4/4",
+    "performanceDelta": "NOT_MEASURED",
+    "kotlinCompile": "NOT_RUN",
+    "android": "NOT_RUN",
+    "productionEdit": false
+  },
+  "limitations": [
+    "Static source-footprints do not replace semantic/parity or runtime tests",
+    "All statements apply only to pinned PR head SHAs; upstream may change later",
+    "R3 improvements were measured on host in PR 511; no proof of in-app Gemma/LiteRT effect",
+    "R13 full six-source Kotlin profile blocked locally due to unauthorized checkout/DNS, no new timing"
+  ],
+  "nextGate": "Real source-bound six-source Kotlin compile and eight-case LM1 probe, then representative caller counts and only then preregister candidate"
+}

@@ -1,0 +1,23 @@
+{
+  "source": "/workspace/scratch/59ad19c6d3b7/tuning-memory/tools/tuning-memory-20261104/ContextCompilerControlCheck.kt",
+  "sha256": "a31d0feeb31deb75cce95d145923cbe6ced261096596f02390ad68a57aa76566",
+  "compileCommand": [
+    "java",
+    "-Xmx768m",
+    "-cp",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.4.0/46429d5887df2d02f33fe11a0c8444c5be5fd8da/kotlin-build-tools-api-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.4.0/1ecabef3a8ba6a8e25654573d54edb7e4136e903/kotlin-daemon-embeddable-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlinx-coroutines-core-jvm-1.6.4.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+    "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+    "-no-stdlib",
+    "-no-reflect",
+    "-jvm-target",
+    "17",
+    "-classpath",
+    "/workspace/scratch/59ad19c6d3b7/memory-context-proof/final/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+    "-d",
+    "/workspace/scratch/59ad19c6d3b7/memory-context-proof/final/control-classes",
+    "/workspace/scratch/59ad19c6d3b7/tuning-memory/tools/tuning-memory-20261104/ContextCompilerControlCheck.kt"
+  ],
+  "baselineCompilerSha256": "60437408f411e7435825930a400b012f16decb79898d9d6743e4adfb651693c1",
+  "candidateCompilerSha256": "2100c6d1b4ecd0e2398ef4039266d9456cc33a69b4ea3700b5e4b79b9c7a5a13",
+  "reason": "One prespecified longer minimal-control diagnostic after noisy primary wall timings"
+}

@@ -1,0 +1,100 @@
+{
+  "status": [
+    "RETURNED_TO_R1",
+    "CANDIDATE_NOT_ADOPTED"
+  ],
+  "experimentId": "EXP-05",
+  "testLogFormatting": "The final empty line of each JUnit stdout receipt is trimmed; all result lines and all benchmark raw bytes are retained.",
+  "branch": "tuning/inference-r2-59ad",
+  "publicBaselineCommit": "04b46f125d1086e6ea540d3c68700407f340f607",
+  "localFallbackBaselineCommit": "db3295d51c769afdaf809ac1dfae2ada84a3274f",
+  "baselineCommit": "db3295d51c769afdaf809ac1dfae2ada84a3274f",
+  "baselineResolution": "local_fallback",
+  "expectedBaselineTree": "d753188fe0e67f6c6f098db6b7073ea199e05530",
+  "resolvedBaselineTree": "d753188fe0e67f6c6f098db6b7073ea199e05530",
+  "activeLmModelSha256": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+  "archivedCandidateLmModelSha256": "c329c9d78d28cbcccbd94671eed4f009a6c8c95a5ba69251c07c05bd845d4448",
+  "decision": "Root withheld adoption: lower allocations in every target case, but all positive/NaN CPU medians were higher in the final paired process, especially full top-k. No device regression or aggregate model benefit is established. No further candidate or timing run.",
+  "measurementSourceResolution": "Both measured builds used the exact local round-one commit db3295d and the frozen candidate. Original precompile source receipts are preserved. The final reproduction runner prefers the public round-one commit, validates its tree, and compiles the archived candidate explicitly for AFTER.",
+  "toolchain": {
+    "compiler": "Kotlin 2.0.20",
+    "stdlib": "2.0.20",
+    "junit": "4.13.2",
+    "jvmTarget": 17,
+    "runtime": "OpenJDK 21.0.13+9-1-deb13u2-Debian",
+    "heap": "-Xms256m -Xmx256m"
+  },
+  "host": {
+    "architecture": "amd64",
+    "availableProcessors": 9,
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "affinityPinned": false,
+    "externalLoadControlled": false
+  },
+  "quality": {
+    "junitMethodsPerVersion": 10,
+    "existingParityCases": 35624,
+    "roundTwoParityCases": 2720,
+    "unicodeModelTokenComparisonsPerVersion": 130,
+    "doubleSumBitComparisons": 70,
+    "randomCallbackCases": 2,
+    "allChecksumsMatchAcrossBothVersionsAndImplementations": true
+  },
+  "measurement": {
+    "processes": 2,
+    "candidateAttempts": 1,
+    "scenariosPerProcess": 18,
+    "pairedRepetitionsPerScenario": 9,
+    "dataRecordsPerProcess": 324,
+    "warmupBatchesPerImplementationPerScenario": 4,
+    "extraTimingRuns": 0,
+    "afterStartupWarnings": [
+      "[0.001s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/30 because it is locked by another process (errno = 11)"
+    ]
+  },
+  "parserNegativeChecks": [
+    "unknown_non_json_rejected",
+    "mid_run_warning_rejected",
+    "missing_measurement_rejected",
+    "checksum_mismatch_rejected"
+  ],
+  "scope": {
+    "activeProductionChanges": 0,
+    "androidBuild": "NOT_RUN",
+    "fold7": "UNAVAILABLE",
+    "modelEndToEndLatency": "NOT_MEASURED",
+    "trainingOrModelFormatChanges": false
+  },
+  "artifactSha256": {
+    "before.jsonl": "08e887693da6a713eab55c8a8d35b82219f6045e433b49cc20b7afa5026596f8",
+    "after.jsonl": "0171d4b0d52c34f5541a6df863f403e08df29d8bb4347ebcc234afa4749bf36e",
+    "source-before.json": "7d0f204fae80415be8598de4c6349260f7844f6d5cf8c2dcafe2e4c63dcc2fa5",
+    "source-after.json": "76b4350348fc9b48a62cee697f2bb30389561460328974c0dab3c8c17d0b416c",
+    "bytecode.json": "39c21716bea6bf76213f366ee1680cbafe47276bf5af661c90bafa7167c9b13b",
+    "candidate.patch": "dc360cc169e35cc5cdfdb44e3581ec6e8e8ef6a026eb26bf021548dd4d0ce648",
+    "LmSamplingRound2Benchmark.kt": "3b881ac8be6f6f174f811692eb5f08c2850ce65fa5fb39743dc81bdea006d029",
+    "PROTOCOL.md": "1a8779def01d600c82d0f07c3d04370ff49080c757e2f50e7b854bb45b60cf0c"
+  },
+  "classSha256": {
+    "before": {
+      "at/heinz/deviceai/learning/lm/LmEval.class": "9f681c8271f6e1cae32360e75815517fb6f6e495776cf844d40b7f9025a6940f",
+      "at/heinz/deviceai/learning/lm/LmSamplingRound2Benchmark.class": "402939b19ea40a3d0d698dfe0f998a81ee24723a3174ace521d26bbf0b8e4c86",
+      "at/heinz/deviceai/learning/lm/RoundOneSamplingReference.class": "9ecdd412ae23135c7225e04a8116d46c3bbc129e1e30af5fd898acfbb0f15901"
+    },
+    "after": {
+      "at/heinz/deviceai/learning/lm/LmEval.class": "fbb5e6191c8006a240c03925ddd95854b1b3aadf97a3b866254c2a7b93753b74",
+      "at/heinz/deviceai/learning/lm/LmSamplingRound2Benchmark.class": "402939b19ea40a3d0d698dfe0f998a81ee24723a3174ace521d26bbf0b8e4c86",
+      "at/heinz/deviceai/learning/lm/RoundOneSamplingReference.class": "9ecdd412ae23135c7225e04a8116d46c3bbc129e1e30af5fd898acfbb0f15901"
+    }
+  }
+}

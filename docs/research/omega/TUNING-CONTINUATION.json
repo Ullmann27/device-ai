@@ -1,0 +1,485 @@
+{
+  "schemaVersion": 1,
+  "scope": "existing-function tuning only",
+  "status": "READY_FOR_NEXT_RUN",
+  "owner": null,
+  "leaseExpiresAtUtc": null,
+  "updatedAtUtc": "2026-11-05T05:35:16.801Z",
+  "branch": "tuning/continuum-three-bots-20261104",
+  "pullRequest": 511,
+  "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
+  "localEquivalentBaseline": "2f20c19b7e37197a6accac0c226b5401e25f1f99",
+  "baselineTree": "f6297e08d03eae74283f43b1ce5abf80c5f7e666",
+  "baselineSourceSha256": {
+    "LmModel.kt": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+    "LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e"
+  },
+  "execution": "sequential; no new subagents",
+  "automation": "enabled; hourly continuation; actual future execution unverified",
+  "milestones": [
+    {
+      "id": "R3-M1",
+      "target": "LmModel.nll",
+      "hypothesis": "Replace sequence-sized output scratch with one vocabulary row; preserve floating-point expression order",
+      "status": "ADOPTED_IN_DRAFT",
+      "evidence": "docs/evidence/tuning-r3-20261104/m1/RESULTS.md",
+      "tests": "24/24 PASS",
+      "publishedCommit": "facc6aa2f809ef1094c27dcc693a1b0f22f7942d"
+    },
+    {
+      "id": "R3-M2",
+      "target": "LmModel.nextDistribution",
+      "hypothesis": "Write final probabilities directly to the result row; eliminate sequence-sized scratch and result copy",
+      "status": "ADOPTED_IN_DRAFT",
+      "evidence": "docs/evidence/tuning-r3-20261104/m2/RESULTS.md",
+      "tests": "24/24 PASS",
+      "publishedCommit": "7d9fbea5e7b02ca80abd037c4cfb3a0c6a0c4e02"
+    },
+    {
+      "id": "R3-M3",
+      "target": "LmBpeTokenizer.encode",
+      "hypothesis": "Assemble cached token arrays into one primitive output instead of boxing every token",
+      "status": "FOLLOWUP_ADOPTED_IN_DRAFT",
+      "rejectedEvidence": "docs/evidence/tuning-r3-20261104/m3a/RESULTS.md",
+      "evidence": "docs/evidence/tuning-r3-20261104/m3b/RESULTS.md",
+      "tests": "24/24 PASS",
+      "rejectedArchiveCommit": "2c80065b2239b04908b5c35962e3cd1e40b8e6b9",
+      "publishedCommit": "e5f05b92d71890a9c9ebb6c95649d5ef1e0edea0"
+    },
+    {
+      "id": "R3-M4",
+      "target": "LmBpeTokenizer.hex",
+      "hypothesis": "Replace per-byte Formatter calls with direct lowercase nibble encoding; preserve every byte and public string representation",
+      "status": "ADOPTED_IN_DRAFT",
+      "tests": "26/26 PASS",
+      "evidence": "docs/evidence/tuning-r3-20261104/m4/RESULTS.md",
+      "registrationCommit": "40ba0479717c91a206fd55f8134fd610b3c077b2",
+      "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
+    }
+  ],
+  "next": "R15 established at pinned heads that integration PR #527 includes R1 sampler/context/worker but not four R3 LM1/Tokenizer allocation optimizations. Keep the changes isolated; do not cherry-pick without separate source-bound parity and Android gates. R13 full six-source Kotlin compile and eight synthetic LM1 profile requests remain NOT_RUN until an authorized exact-head checkout is available; then collect representative real LM1 call counts before registering any new bounded A/A or A/B hypothesis.",
+  "limits": [
+    "no main merge",
+    "no APK/install",
+    "no model weights/training job",
+    "no redaction repair",
+    "no other-team branch mutation",
+    "no repeated favorable-sample search"
+  ],
+  "lastOwner": "tuning-sequential-r15-20261105T0531Z",
+  "completedRound": "R15",
+  "lastPublishedProductionCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
+  "completedMilestones": 4,
+  "verification": {
+    "distinctMethods": 31,
+    "runtime": "5 baseline + 5 candidate executions, 5 distinct methods",
+    "timingProcesses": 7,
+    "rawSamples": 1332,
+    "audit": "docs/evidence/tuning-r3-20261104/final/audit.json",
+    "rejectedCandidate": "M3A retained and reproduced; not active",
+    "android": "unmeasured"
+  },
+  "queue": [
+    {
+      "target": "Complete raw archive transfer to official repo",
+      "status": "COMPLETE_REMOTE_BASE64_SHA256_VERIFIED",
+      "gate": "Original R8/R9 archived as .b64 in official repo and freshly decoded via GitHub connector, direct archive SHA256 matches originals 2/2; equivalent local archive tar+CSV inspected. Reproducible tools/tuning-r12/verify-remote-archives.mjs checks checkout tar/CSV. No new training or timing."
+    },
+    {
+      "target": "Real source LM1 on-host caller profile and full-graph Kotlin compile",
+      "status": "REMOTE_PROFILER_REPLAY_12_TESTS_PASS_FULL_GRAPH_NOT_RUN",
+      "gate": "R15: Cross-branch source-identity audit confirms R3 four source footprints absent in integration PR #527 (exact head 19039e5), while R1 is present. Original LM1 six-source source-bound Kotlin compile and real caller counts remain NOT_RUN; don't confuse remote source inspection with a checkout."
+    },
+    {
+      "target": "Android/Fold7 device measured A/B",
+      "status": "DEVICE_NOT_RUN",
+      "gate": "No unapproved APK/build/install"
+    }
+  ],
+  "stopRules": [
+    "No overlapping active lease",
+    "No repeated old timings without a new hypothesis",
+    "No newly spawned subagents",
+    "A failed gate archives and rejects the candidate",
+    "Report concrete blockers without claiming completion"
+  ],
+  "activeRound": null,
+  "r4": {
+    "target": "LmBpeTokenizer.encodeWord",
+    "stage": "REJECTED_ARCHIVED",
+    "sourceHeadAtAcquisition": "2cee96fbe849d0fd79d055af56dcb7286c718377",
+    "sourceBlobSha": "2e773ac829a29f8c1567c5e5632960ae25b5a2d5",
+    "hypothesis": "Replace mutable boxed-Int lists and per-merge ArrayLists with a fixed primitive IntArray plus stable in-place left-to-right compaction, retaining rank/tie/UTF-8/cache and serialized vocabulary identity.",
+    "runPolicy": "One Kotlin/JDK host A/A before edit, one A/B after candidate, 9 alternating pairs after 4 warmup batches; no repeated timings solely for a better result; 6 cases including empty, bytes ASCII, bytes Unicode, learned repetition, learned unique, learned Unicode, plus long word. Abort on host load > available CPUs; one unchanged environment retry only.",
+    "acceptance": "Exact baseline tokens on cold/warm, decoded UTF-8 output, serialize/sha256, cache/output isolation, concurrent read-only and non-word/token-boundary cases; measured allocation lower in target workloads without unexplained material CPU regression or control loss. Kotlin-host only, no Android/Gradle claim.",
+    "relevantExperiments": [
+      "EXP-05",
+      "EXP-12"
+    ],
+    "constraints": [
+      "no training outside deterministic vocabulary fixture",
+      "no changed checkpoint or model weights",
+      "no third-party API",
+      "no other branches"
+    ],
+    "evidence": {
+      "host": "OpenJDK 21.0.12.1, kotlinc 1.9.0, Linux, 8 visible CPUs",
+      "sourceGitBlob": "39faa03f2c5dc9d86422e5bffa7a6c563274f35e",
+      "aaPairs": "8 scenarios x 9 pairs",
+      "abPairs": "8 scenarios x 9 pairs",
+      "parity": "2544 token checks PASS",
+      "allocationSavings": "6 of 8 scenarios, 2 controls unchanged; best -20.9%",
+      "rejectReason": "Material unexplained CPU regressions 0/9 faster pairs on learned-long, cache-hit and punctuation controls; reject despite allocation savings; no second timing allowed.",
+      "rawFilePaths": [
+        "/mnt/data/continuum-r4/aa.csv",
+        "/mnt/data/continuum-r4/ab.csv"
+      ],
+      "archivePublished": true,
+      "remoteEvidencePath": "docs/evidence/tuning-r4-r6-20261104",
+      "completeReport": "docs/research/omega/TUNING-R4-R6-20261104.md"
+    }
+  },
+  "r5": {
+    "target": "LmBpeTokenizer.decode",
+    "stage": "REJECTED_ARCHIVED",
+    "hypothesis": "Eliminate ByteArrayOutputStream intermediate growth and duplicate copy with a checked two-pass byte-length calculation and one exact ByteArray, preserving behavior of negative, BOS/EOS and out-of-bounds IDs.",
+    "comparison": "Current public tokenizer unchanged versus one candidate; Kotlin-host source-bound parity and A/A then one A/B; 4 warmup + 9 alternating pairs; no favorable timing retries.",
+    "scenarios": [
+      "empty-id-control",
+      "tiny-byte-control",
+      "single-word-cached",
+      "many-byte-ids",
+      "learned-multi-piece",
+      "unicode-pieces",
+      "mostly-ignored-special-ids",
+      "long-repetitive-byte-ids"
+    ],
+    "repetitions": "Each scenario fixed 120 decode calls per pair; no JVM heap change; same fixed inputs in both arms; serialization and cached vocabulary hash parity.",
+    "acceptance": "Exact decoded String including malformed UTF-8 replacements/invalid ids, same serialized bytes, unchanged encode; allocations decrease in major scenarios and no material CPU regression in control cases.",
+    "regressionLimits": "If controls materially regress or results cannot be attributed to exact source, reject and archive both arms; no Android claims.",
+    "results": {
+      "sourceGitBlob": "39faa03f2c5dc9d86422e5bffa7a6c563274f35e",
+      "parityCases": 3960,
+      "aa": "8 scenarios x 9 pairs",
+      "ab": "8 scenarios x 9 pairs",
+      "allocation": "All 8 cases lower in AB, -32.5% to -53.9%",
+      "rejection": "Material CPU regression in tiny byte +77.4% (0/9 wins), single word +141.4% (0/9 wins), mostly ignored +19.6% (1/9 win), despite improvements in large cases",
+      "timingRetry": false,
+      "archivePublished": true
+    }
+  },
+  "r6": {
+    "target": "LmBpeTokenizer.pretokenize",
+    "stage": "REJECTED_ARCHIVED",
+    "hypothesis": "Remove Kotlin sequence map/toList layers by collecting Regex.findAll matches directly in one ArrayList; preserve empty input singleton, full token order and exact Unicode output.",
+    "implementationScope": "One companion method; no regex or vocabulary/cache change",
+    "design": "No preallocated size, no regex precompile change, no training/weights",
+    "scenarios": [
+      "empty",
+      "single-latin",
+      "single-unicode",
+      "many-ascii-words",
+      "many-unicode-words",
+      "punctuation-and-digits",
+      "long-no-separators",
+      "mixed-whitespace-control"
+    ],
+    "batch": "For each scenario, 120 pretokenize calls, 4 alternating warmup pairs, exactly 9 alternating measure pairs; source-bound A/A before candidate and one A/B after; fixed fixtures and same Kotlin/JDK21 host",
+    "correctness": "Exact strings and boundaries against original for deterministic + seeded fuzz (>= 2000), no mutated return/cache or changed serialization, full source-compilation",
+    "adoption": "Require allocation reduction on meaningful many-token cases, no material regression on empty/single-token and no strong CPU regression on controls. Otherwise archive/reject.",
+    "otherPRs": "#527 touches LmModel but not tokenizer; no source edits to others.",
+    "results": {
+      "baselineFileBlob": "39faa03f2c5dc9d86422e5bffa7a6c563274f35e",
+      "sourceParity": "3960 PASS",
+      "aa": "8 scenarios x 9 pairs x 2 arms",
+      "ab": "8 scenarios x 9 pairs x 2 arms",
+      "allocation": "No observed allocation reduction across all eight controls",
+      "cpuRegressions": "Whitespace +14.4% CPU median, only 2/9 favorable pairs",
+      "decision": "REJECTED: candidate not adopted; no timing repetitions",
+      "archivePublished": true
+    }
+  },
+  "lastResearchHead": "145011086ba9275f8b41be8a61723e03a1b9e265",
+  "lastRejectedCandidateCount": 6,
+  "archive": {
+    "name": "R4-R6-evidence.tar.xz",
+    "githubDirectory": "docs/evidence/tuning-r4-r6-20261104",
+    "partNames": [
+      "evidence-part-00.b64",
+      "evidence-part-01.b64",
+      "evidence-part-02.b64",
+      "evidence-part-03.b64",
+      "evidence-part-04.b64",
+      "evidence-part-05.b64"
+    ],
+    "partGitBlobSha": [
+      "7cf1b371822caed5d0648e31c0827039de7758bf",
+      "fb174d3ab8f5dcfa901b43c2bd0df5c8bd9e6b77",
+      "b6815c82e849313a9989790e56daa0bcba5cea1e",
+      "8563beb2776982da4e96e028044537b9533b793a",
+      "342f05e1cbd62de50acc91125f66f40b3e5f7b01",
+      "1add813bdccfa9a203adfca951a50da9d3c41f78"
+    ],
+    "sha256": "ec96bfc54efc0262950dadf7bc7a388bc99db827e3b6b9f5cd8c69b5162b2f7e",
+    "allRemoteBlobHashesMatched": true,
+    "remoteAssembledTarVerification": "NOT_RUN",
+    "localArchiveVerified": true,
+    "measuredRows": 864,
+    "warmupRows": 384,
+    "sourceFileOnly": "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+    "productionSourceChanged": false
+  },
+  "r7": {
+    "target": "Tape.rmsnorm inference-only saved inverse norm vector",
+    "stage": "REJECTED_ARCHIVED",
+    "sourceHeadAtAcquisition": "f3823e726f8918117eb39e5dc43b63774ac3c808",
+    "sourcePath": "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+    "sourceBlobSha": "1ebd9b6803a3eb54a6a1baea25430b49e588665d",
+    "hypothesis": "Inference Tape(training=false) allocates inv FloatArray(rows) despite record() dropping backward closure; allocate only when training=true while preserving exact forward computation and training backward gradients.",
+    "affectedExperiments": [
+      "EXP-05",
+      "EXP-12"
+    ],
+    "testPlan": "Exact-source candidate review. Compile a standalone Kotlin JDK21 faithful-method fixture. Deterministic bit-parity across seeded shape/eps/finite-input cases, training gradient parity, shape and inference-backward negative cases. Fixed A/A before edit and one A/B; scenarios inference 1x64 8x64 64x64 128x32 64x256 and training 8x64 64x64 1x64; each 200 calls per batch, four warmup pairs + nine alternating pairs. No favorable retest. JVM host only; full Gradle/Android NOT_RUN until available.",
+    "acceptance": "All bitwise forward and backward parity and negative tests; inference allocation lower for multi-row scenarios, no material CPU regression in small controls or training; source hash bound. If gate fails, archive source and data, restore production source. Host-only evidence cannot prove device gain.",
+    "otherPrs": "#527 and #523 touch LmModel but not LmTensor; source isolation confirmed from changed-file lists.",
+    "testResult": "PASS 2104 source-faithful isolated forward/backward/negative Kotlin parity cases; full module and Gradle NOT_RUN",
+    "measurement": {
+      "aa": "8 scenarios x 9 paired measurement batches x 2 arms + warmups",
+      "ab": "8 scenarios x 9 paired measurement batches x 2 arms + warmups",
+      "rowsMeasured": 288,
+      "rowsWarmup": 128,
+      "host": "JDK21.0.12.1; Kotlin1.9.0; 5 visible CPUs",
+      "allocations": "Inference -0.4% to -5.6% on isolated method; training equal",
+      "adverseControls": "Inference 1x64 +12.5% CPU median (3/9 favorable); training 8x64 +442.1% (0/9; baseline drift); training 64x64 +5.8% (2/9)",
+      "timingRetest": false,
+      "decision": "REJECT; limited savings and adverse / unstable CPU controls; no source promotion"
+    },
+    "archive": {
+      "report": "docs/research/omega/TUNING-R7-20261105.md",
+      "rawParts": [
+        "docs/evidence/tuning-r7-20261105/raw-part-00.b64",
+        "docs/evidence/tuning-r7-20261105/raw-part-01.b64",
+        "docs/evidence/tuning-r7-20261105/raw-part-02.b64",
+        "docs/evidence/tuning-r7-20261105/raw-part-03.b64"
+      ],
+      "rawTarSha256": "7bd7fabad4807a512a062cb39474beb57d0c2af92a60bda6887174cc678d6bae",
+      "fixtureParts": [
+        "docs/evidence/tuning-r7-20261105/fixture-part-00.b64",
+        "docs/evidence/tuning-r7-20261105/fixture-part-01.b64"
+      ],
+      "remoteGitBlobMatches": "6/6",
+      "remoteReassembly": "NOT_RUN",
+      "sourceChanged": false
+    }
+  },
+  "r8": {
+    "target": "LmRuntime.MinGruStepper.step six matrix-product scratch buffers",
+    "status": "REJECTED_REMOTE_ARCHIVE_SHA256_VERIFIED",
+    "baselineRuntimeGitBlob": "6de174dc400bfc5bd5bfb0facc56fc4820550b25",
+    "baselineTensorGitBlob": "1ebd9b6803a3eb54a6a1baea25430b49e588665d",
+    "method": "source-faithful isolated Kotlin/JDK21 fixture; exact original arithmetic; no module build",
+    "parityBitChecks": 1403522,
+    "aaMeasuredRows": 108,
+    "abMeasuredRows": 108,
+    "warmupRows": 96,
+    "AAallocations": "identical all 6 controls",
+    "ABallocations": "-18.3% to -85.1%",
+    "ABadverse": "tiny CPU +6.9% with 3/9 favorable; medium CPU +6.4% with 1/9 favorable, where A/A CPU -0.2%; reject",
+    "outputHashes": {
+      "fixture": "f05adccac2da23451b1edcc1ef9d9837229486ed3b4505445582a0f62169c5c8",
+      "aa": "cc6a27136f49b3e60a64c705e3455ede1762816ea0f815158ee577d622e90e85",
+      "ab": "3fcaecc327c5bd5cdb89c93a4c74324a284263b36cc0b32515f88cac0eb1742f"
+    },
+    "rawArchive": {
+      "sha256": "464c8c1e676d12640c5b737c6a34f06d3837307e274e8adb5035dbf4d22a02ac",
+      "repo": "PUSHED_BASE64_GIT_BLOB_VERIFIED",
+      "localPath": "/mnt/data/continuum-r8/experiments/R8-evidence.tar.xz",
+      "remotePath": "docs/evidence/tuning-r11-20261105/R8-evidence.tar.xz.b64",
+      "remoteGitBlobSha": "3c30c5a15643f5a3f765e86ab49699ae00a4876d",
+      "remoteBlobCheck": "MATCHED_LOCAL_GIT_HASH",
+      "remoteReassembly": "REMOTE_BASE64_DECODE_SHA256_MATCH; TAR_PARSED_LOCAL_IDENTITY_MATCH"
+    },
+    "report": "docs/research/omega/TUNING-R8-R9-20261105.md",
+    "archiveAudit": {
+      "localTarReadable": true,
+      "files": 3,
+      "allCsvRows": 312,
+      "measuredRows": 216,
+      "warmupRows": 96,
+      "archiveSha256Confirmed": true
+    }
+  },
+  "r9": {
+    "status": "REJECTED_REMOTE_ARCHIVE_SHA256_VERIFIED",
+    "target": "LmRuntime.MinGruStepper final logits matrix projection",
+    "baselineRuntimeGitBlob": "6de174dc400bfc5bd5bfb0facc56fc4820550b25",
+    "baselineTensorGitBlob": "1ebd9b6803a3eb54a6a1baea25430b49e588665d",
+    "testScope": "source-faithful isolated Kotlin/JDK21 fixture; no full graph",
+    "parityBitChecks": 1403522,
+    "aaMeasuredRows": 108,
+    "abMeasuredRows": 108,
+    "warmupRows": 96,
+    "adverse": "Wide 128x2 allocation median 1,314,960 -> 1,403,024 B despite nominal array copy removal, A/A unstable; reject, no timing retest",
+    "fileHashes": {
+      "fixture": "3694fcce8f0cb7fd8c20e694f463173ba951b139744393829eac79558cc18800",
+      "aa": "fdc053fe4e8e6897877a9f2b0fc7cfedbdc8c89b8d312d2c58f1b04d08122671",
+      "ab": "e56c6708263b9705376e79fbff6ead29c2ba595c2b33197f366b6fe26b83bf9f"
+    },
+    "rawArchive": {
+      "sha256": "cefa10199763df4033abf0b221e35837a3eb161052a4d3e734d60c5645f0738c",
+      "repo": "PUSHED_BASE64_GIT_BLOB_VERIFIED",
+      "localPath": "/mnt/data/continuum-r8/experiments/R9-evidence.tar.xz",
+      "remotePath": "docs/evidence/tuning-r11-20261105/R9-evidence.tar.xz.b64",
+      "remoteGitBlobSha": "98b2bdedded1a8092e0d8fa2cc31701b9dfa8181",
+      "remoteBlobCheck": "MATCHED_LOCAL_GIT_HASH",
+      "remoteReassembly": "REMOTE_BASE64_DECODE_SHA256_MATCH; TAR_PARSED_LOCAL_IDENTITY_MATCH"
+    },
+    "report": "docs/research/omega/TUNING-R8-R9-20261105.md",
+    "archiveAudit": {
+      "localTarReadable": true,
+      "files": 3,
+      "allCsvRows": 312,
+      "measuredRows": 216,
+      "warmupRows": 96,
+      "archiveSha256Confirmed": true
+    }
+  },
+  "r10": {
+    "status": "INDEPENDENT_AUDIT_COMPLETE_NO_PRODUCTION_CHANGE",
+    "sourceHeadAtStart": "10041c4c817229d04b16f1b1498634c14ef608b7",
+    "leaseRegistrationCommit": "6126ab8272fda8db8833fffa43bceef04e1650e1",
+    "report": "docs/research/omega/TUNING-R10-20261105.md",
+    "auditScript": "tools/tuning-r10/verify_archives.py",
+    "auditScriptRemoteGitBlob": "e1dc1c9785362385610e451bfada2030f24efded",
+    "summary": "docs/evidence/tuning-r10-20261105/summary.json",
+    "tests": "PASS read-only Python3 624 R8/R9 CSV rows, 432 measured, 192 warmups; 312 A/B pairs; SHA256/fixture/controls/checksums verified; no new timing",
+    "correctedR8ReportBaseline": "vocab_32_1_1024 A/B A=453264 (previous text mistakenly copied A/A 523664), B=359824; AA->AB drift -13.44%",
+    "r9BaselineDrift": "wide_128_2_258 A/A 1510320 vs A/B 1314960 (-12.94%)",
+    "decision": "R8/R9 still REJECTED",
+    "archivesRepo": "NOT_PUSHED",
+    "fullLmModuleCompilation": "NOT_RUN",
+    "callpathInspection": "SOURCE_READ_ONLY",
+    "androidAndGemma": "NOT_RUN",
+    "productionSourceChanged": false,
+    "archiveLocalChecksumsVerified": true
+  },
+  "r11": {
+    "status": "TWO_ORIGINAL_ARCHIVES_GITHUB_PUBLISHED_HASH_VERIFIED",
+    "registrationCommit": "a3ee6d3c564507b2326b5c62058c6eb8e73910ce",
+    "sourceHeadAtStart": "24b81586fc076e1c12f89fa4ffd00a30a312b907",
+    "report": "docs/research/omega/TUNING-R11-20261105.md",
+    "archiveFiles": [
+      {
+        "round": "R8",
+        "path": "docs/evidence/tuning-r11-20261105/R8-evidence.tar.xz.b64",
+        "blobGitSha": "3c30c5a15643f5a3f765e86ab49699ae00a4876d",
+        "archiveSha256": "464c8c1e676d12640c5b737c6a34f06d3837307e274e8adb5035dbf4d22a02ac"
+      },
+      {
+        "round": "R9",
+        "path": "docs/evidence/tuning-r11-20261105/R9-evidence.tar.xz.b64",
+        "blobGitSha": "98b2bdedded1a8092e0d8fa2cc31701b9dfa8181",
+        "archiveSha256": "cefa10199763df4033abf0b221e35837a3eb161052a4d3e734d60c5645f0738c"
+      }
+    ],
+    "remoteGitBlobMatchedLocal": 2,
+    "remoteFilesChecked": 2,
+    "originalLocalTarAudit": "R10 PASS 624 rows",
+    "freshRemoteDecompression": "NOT_RUN",
+    "newCpuBenchmark": "NOT_RUN",
+    "candidateAccepted": false,
+    "productionSourceChanged": false,
+    "androidAndGemma": "NOT_RUN"
+  },
+  "r12": {
+    "status": "EVIDENCE_AUDIT_PASS_NO_PRODUCTION_CHANGE",
+    "registrationCommit": "b22602a37aa0dcec27cb33ee99b56e9d335e0525",
+    "reportCommit": "13bd81ebed2986581d6af9de4aa6966357646688",
+    "report": "docs/research/omega/TUNING-R12-20261105.md",
+    "auditScript": "tools/tuning-r12/verify-remote-archives.mjs",
+    "summary": "docs/evidence/tuning-r12-20261105/summary.json",
+    "archives": {
+      "githubFreshDecodeSha256Match": "2/2",
+      "bytes": [
+        4780,
+        4664
+      ],
+      "locallyInspectedCsvRows": 624,
+      "measured": 432,
+      "warmup": 192,
+      "paired": 312,
+      "mutationChecks": 4
+    },
+    "parity": {
+      "r8": 1403522,
+      "r9": 1403522,
+      "host": "OpenJDK 21.0.12.1 Kotlin 1.9.0",
+      "fullModule": "NOT_RUN"
+    },
+    "sourceCallPath": "STATIC_ONLY",
+    "actualCallerFrequencies": "NOT_RUN",
+    "otherPrsChecked": [
+      523,
+      527,
+      519,
+      522
+    ],
+    "newCandidate": false,
+    "productionFilesChanged": 0,
+    "android": "NOT_RUN"
+  },
+  "r13": {
+    "status": "SOURCE_BOUND_PROFILER_ARCHIVED_NODE_GATES_PASS_KOTLIN_GRAPH_NOT_RUN",
+    "sourceHeadAtAcquisition": "2aed82502e1921ed02be3453476ff93130683aec",
+    "sourceFilesVerified": 6,
+    "probeAnchorsVerified": 3,
+    "localNodeTestMethods": 12,
+    "localNodeResults": "12 PASS, 0 FAIL, 0 SKIP; repeated from freshly extracted gzip archive",
+    "remotePartsVerified": 4,
+    "originalArchiveSha256": "18613f6c765d7d499d318622d9650dabd97bd139d6030077e35dcb58894a9ddb",
+    "evidence": "docs/evidence/tuning-r13-20261105/README.md",
+    "report": "docs/research/omega/TUNING-R13-20261105.md",
+    "archiveCommit": "145011086ba9275f8b41be8a61723e03a1b9e265",
+    "toolFullKotlinModule": "NOT_RUN_NO_AUTHORIZED_LOCAL_CHECKOUT",
+    "syntheticLM1CallProfile": "NOT_RUN",
+    "realLM1CallerFrequency": "NOT_RUN",
+    "sourceProductionChange": false,
+    "android": "NOT_RUN",
+    "candidate": "NONE",
+    "otherPRs": "Other open PRs #523/#527 touch LmModel.kt; no integration performed"
+  },
+  "r14": {
+    "stage": "REMOTE_R13_ARCHIVE_VERIFIED_NODE_PASS",
+    "headAtAcquisition": "ce0619a5fbc4b3223777f5e8495aba49a744bdea",
+    "archiveSha256": "18613f6c765d7d499d318622d9650dabd97bd139d6030077e35dcb58894a9ddb",
+    "archiveBytes": 5007,
+    "remotePartsVerified": 4,
+    "archiveMembersExtracted": 3,
+    "nodeTests": "12/12 PASS",
+    "nodeTapSha256": "d1ad777199c57b00fe71b34ac8599e250697a81e2490642f4cd9bf1d2e78e3e8",
+    "kotlinSixSource": "NOT_RUN_NO_AUTHENTICATED_CHECKOUT",
+    "newProductionPatch": false,
+    "android": "NOT_RUN",
+    "report": "docs/research/omega/TUNING-R14-20261105.md"
+  },
+  "r15": {
+    "stage": "SOURCE_FOOTPRINT_GAP_CONFIRMED",
+    "sourceHeads": {
+      "511": "c67d8538e879cf8a2188ec004e812c6de9e3848f",
+      "519": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+      "523": "7c1642af96ccf626c91a40a602c7127e02fb9eea",
+      "527": "19039e5b822310cd5ab1ce5cc5cb854822a1bcd3"
+    },
+    "r3In511": 4,
+    "r3In527": 0,
+    "r1In527": 3,
+    "negativeControls": "7/7 source-footprint mutation checks PASS",
+    "report": "docs/research/omega/TUNING-R15-20261105.md",
+    "evidence": "docs/evidence/tuning-r15-20261105/branch-footprints.json",
+    "kotlin": "NOT_RUN",
+    "newProductionPatch": false,
+    "otherBranchesEdited": false
+  }
+}

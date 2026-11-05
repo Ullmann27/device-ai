@@ -1,0 +1,77 @@
+{
+  "status": "PASS",
+  "completedAtUtc": "2026-11-04T20:01:23.005535+00:00",
+  "testedCheckoutCommit": "827e97e7bd516b2d6757062b0ea63ea3a4d6b5de",
+  "publicRoundOneCommit": "04b46f125d1086e6ea540d3c68700407f340f607",
+  "resolvedLocalRoundOneCommit": "db3295d51c769afdaf809ac1dfae2ada84a3274f",
+  "roundOneTree": "d753188fe0e67f6c6f098db6b7073ea199e05530",
+  "decision": "ROUND_2_CANDIDATES_NOT_ADOPTED; ROUND_1_PRODUCTION_RETAINED",
+  "activeProductionSha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt": "2100c6d1b4ecd0e2398ef4039266d9456cc33a69b4ea3700b5e4b79b9c7a5a13",
+    ".github/continuum/development-backlog.mjs": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d"
+  },
+  "productionDiffFromRoundOne": false,
+  "uniqueActiveScopeTestMethods": 96,
+  "newRegressionMethods": 18,
+  "testMethodsByScope": {
+    "inference": 10,
+    "memory": 27,
+    "workers": 59
+  },
+  "inference": {
+    "independentBeforeAndArchiveAfterTests": "10/10 each",
+    "originalTimingProcesses": 2,
+    "scenariosPerProcess": 18,
+    "rawMeasurementRecordsPerProcess": 324,
+    "rawSummaryRecomputedIdentically": true,
+    "preservedAfterStartupWarnings": 1
+  },
+  "memory": {
+    "independentBaselineAndArchiveTests": "27/27 each",
+    "directParityCases": 462,
+    "lifecycleComparisons": 128,
+    "rawHotPairs": 48,
+    "allocationLowerPairs": 48,
+    "exploratoryColdPairs": 3,
+    "mediansRecomputedIdentically": true
+  },
+  "workers": {
+    "binary": {
+      "rawCases": 40,
+      "measurementPairs": 360,
+      "independentParityCases": 1225,
+      "sourceSha256": "8f9103451cf24efad71f8531e82011a284ef82c48b1ede9c2dc75b91af4e95a0"
+    },
+    "exponential": {
+      "rawCases": 40,
+      "measurementPairs": 360,
+      "independentParityCases": 1225,
+      "sourceSha256": "7d807cbceb56ca56c12da2eca5466f0ad56aea1f1c0e86538e275d259c90b89d"
+    }
+  },
+  "workerEnvironmentAbortCount": 1,
+  "workerUnchangedRecoveryCount": 1,
+  "newTimingRunsByRoot": 0,
+  "deviceOrWholeSystemPerformanceVerified": false,
+  "independentEvidenceSha256": {
+    "inference/baseline-after.json": "c86828998f3fdb1d594b5202da1630eea292806efd76be7e66422d277cc5ee56",
+    "inference/baseline-before.json": "c86828998f3fdb1d594b5202da1630eea292806efd76be7e66422d277cc5ee56",
+    "inference/source-after.json": "df5b2b26438c848ab5bdf7dae6ac7697fa12644962e859d075a0122c6fe46f48",
+    "inference/source-before.json": "b3d3574c90c3ae4f536a718a8a5784fee80b5009e2c80cf125b279b5768c467a",
+    "inference/tests-after.txt": "b34b74169be09154efd791bfa070410a3c33bd53f57bd0ed634d8c3a3c33a9c0",
+    "inference/tests-before.txt": "a120d28e765627d7b3bb6dcc738dd16a6c13eb021764af5d6b0cc1c0afe40ad3",
+    "memory/compile-command.json": "2dc618f5409a13615e8d0ce12a24aca51943e760af0628590cd6e169f178d792",
+    "memory/compile.txt": "e73734b50e9dd023605cfbdceb87dcb56ea157a97ab0d5b2b2a96ad7b36f014c",
+    "memory/compiler.txt": "fceb1de855ebc7f275d874ee6c1c54e670c03b3dc727d0ebf74ba852eb29307d",
+    "memory/java.txt": "0fc83381287ccbc8623d257bce2b0d03997ba0e85ff4492d38b409aea37a8aa9",
+    "memory/lifecycle-parity.json": "5a44f8212688ee075a64180faf8b3485c629cba2dc6275b9f9c898a74e69bc50",
+    "memory/manifest.json": "93313b36017bcbe7975555040286f60602f35b84c398715088a5b247eae699c9",
+    "memory/r1-junit.txt": "285a8e8641cfa0921b0a34489b50ab612894faaa170907b2d4a8c3b18c4a3992",
+    "memory/r1-parity.json": "e440cb9bdc036002bc67673d8895690f82005ddc680d381e9ede359595b1b064",
+    "memory/r2-junit.txt": "5fce8c2609976feb707b10c38d90d8c3c903a6665c9718e18291182c3782958c",
+    "workers/node-tests-active-r1.txt": "33706c26c483ddfc090f9d641951ee1f6d40e8997be3024d934272577b50eff1",
+    "workers/parity-binary.json": "fb1a88374224fe251f3afd37ce9f931f27c75f9e4eea6d70bc01f43048ad7099",
+    "workers/parity-exponential.json": "d17814e34f071f50f0ba15c356b825ee13d9863caf7490251d267e5db95428db"
+  }
+}

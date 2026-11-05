@@ -1,0 +1,52 @@
+private static final kotlin.text.Regex keyValueSecretPattern;
+  private static final kotlin.text.Regex bearerSecretPattern;
+  private final java.lang.String redactSecrets(java.lang.String);
+    Code:
+       0: aload_1
+       1: astore_2
+       2: aload_2
+       3: checkcast     #194                // class java/lang/CharSequence
+       6: astore_3
+       7: getstatic     #616                // Field keyValueSecretPattern:Lkotlin/text/Regex;
+      10: astore        4
+      12: invokedynamic #623,  0            // InvokeDynamic #4:invoke:()Lkotlin/jvm/functions/Function1;
+      17: astore        5
+      19: aload         4
+      21: aload_3
+      22: aload         5
+      24: invokevirtual #629                // Method kotlin/text/Regex.replace:(Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+      27: astore_2
+      28: aload_2
+      29: checkcast     #194                // class java/lang/CharSequence
+      32: astore_3
+      33: getstatic     #632                // Field bearerSecretPattern:Lkotlin/text/Regex;
+      36: astore        4
+      38: ldc_w         #634                // String Bearer [REDACTED]
+      41: astore        5
+      43: aload         4
+      45: aload_3
+      46: aload         5
+      48: invokevirtual #637                // Method kotlin/text/Regex.replace:(Ljava/lang/CharSequence;Ljava/lang/String;)Ljava/lang/String;
+      51: astore_2
+      52: aload_2
+      53: areturn
+
+  static {};
+    Code:
+       0: new           #759                // class at/heinz/deviceai/cognitive/AiContextCompiler$Companion
+       3: dup
+       4: aconst_null
+       5: invokespecial #762                // Method at/heinz/deviceai/cognitive/AiContextCompiler$Companion."<init>":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+       8: putstatic     #766                // Field Companion:Lat/heinz/deviceai/cognitive/AiContextCompiler$Companion;
+      11: new           #625                // class kotlin/text/Regex
+      14: dup
+      15: ldc_w         #768                // String (?i)\\b(password|passwd|token|secret|credential|authorization|api[_-]?key)\\b\\s*[:=]\\s*\\S+
+      18: invokespecial #769                // Method kotlin/text/Regex."<init>":(Ljava/lang/String;)V
+      21: putstatic     #616                // Field keyValueSecretPattern:Lkotlin/text/Regex;
+      24: new           #625                // class kotlin/text/Regex
+      27: dup
+      28: ldc_w         #771                // String (?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]{8,}
+      31: invokespecial #769                // Method kotlin/text/Regex."<init>":(Ljava/lang/String;)V
+      34: putstatic     #632                // Field bearerSecretPattern:Lkotlin/text/Regex;
+      37: return
+}

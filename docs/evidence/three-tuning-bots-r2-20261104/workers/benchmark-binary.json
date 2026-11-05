@@ -1,0 +1,4460 @@
+{
+  "logicalBase": "db3295d51c769afdaf809ac1dfae2ada84a3274f",
+  "publicBase": "04b46f125d1086e6ea540d3c68700407f340f607",
+  "resolvedCommit": "db3295d51c769afdaf809ac1dfae2ada84a3274f",
+  "baselineTree": "d753188fe0e67f6c6f098db6b7073ea199e05530",
+  "sourcePath": ".github/continuum/development-backlog.mjs",
+  "baselineSourceSha256": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d",
+  "candidateSourceSha256": "8f9103451cf24efad71f8531e82011a284ef82c48b1ede9c2dc75b91af4e95a0",
+  "harnessSha256": "1d0a5b30bcb0ee4a4f31353ac248507d3cd7ff5c7953e5815ef922bba5a467d8",
+  "fixturesSha256": "70b37c1439332a012bde48d7b126f6ecab58049f7167f8f2549ed453189408cc",
+  "node": "v24.22.1",
+  "v8": "13.6.233.17-node.58",
+  "platform": "linux",
+  "arch": "x64",
+  "cpuModel": "AMD EPYC 9V74 80-Core Processor",
+  "cpuCount": 9,
+  "availableParallelism": 9,
+  "parityCases": 960,
+  "mutationCases": 27,
+  "operationCases": 19,
+  "fixtureSizes": [
+    0,
+    1,
+    20,
+    100,
+    500
+  ],
+  "fixtureModes": [
+    "none",
+    "none-no-match",
+    "one-first",
+    "one-middle",
+    "one-last",
+    "sixteen-spread",
+    "sixteen-first-blocked",
+    "sixteen-last-blocked"
+  ],
+  "device": "host; Android/Fold7 not measured",
+  "status": "PASS",
+  "startedAt": "2026-11-04T19:40:25.011Z",
+  "finishedAt": "2026-11-04T19:40:33.982Z",
+  "rounds": 9,
+  "maxLoad": 9,
+  "loadStart": [
+    6.56,
+    5.8,
+    5.97
+  ],
+  "loadEnd": [
+    6.68,
+    5.83,
+    5.98
+  ],
+  "timingUnit": "ns/selection",
+  "sink": 1277821260,
+  "method": "identical validated inputs, alternating paired rounds; all work counting after timing",
+  "limitations": "synthetic host selector microbenchmark, no IO/validation in timed loop; shared host; no allocation/device/whole-worker claim",
+  "results": [
+    {
+      "size": 0,
+      "mode": "none",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 43.19039999995766,
+      "candidateMedianNs": 39.30155000002742,
+      "pairedMedianSpeedup": 1.106287865788284,
+      "baselineP25Ns": 40.484349999996994,
+      "baselineP75Ns": 46.708699999999226,
+      "candidateP25Ns": 38.80880000001525,
+      "candidateP75Ns": 40.768749999961074,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 81.40879999996287,
+          "candidate": 54.622550000021874
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 38.97855000000163,
+          "baseline": 73.2400499999585
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 40.626049999991665,
+          "candidate": 40.768749999961074
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 39.91894999999204,
+          "baseline": 44.16185000000041
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 40.484349999996994,
+          "candidate": 39.30155000002742
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 38.02209999998922,
+          "baseline": 37.928999999985535
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 46.708699999999226,
+          "candidate": 61.545950000027005
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 38.80880000001525,
+          "baseline": 43.19039999995766
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 40.41975000000093,
+          "candidate": 35.85989999996855
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 0,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 0,
+      "mode": "none-no-match",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 38.85184999999183,
+      "candidateMedianNs": 39.944999999988795,
+      "pairedMedianSpeedup": 0.9984903344764267,
+      "baselineP25Ns": 37.2865499999989,
+      "baselineP75Ns": 39.3215500000224,
+      "candidateP25Ns": 36.90594999998211,
+      "candidateP75Ns": 42.637050000030285,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 38.46929999999702,
+          "candidate": 39.944999999988795
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 40.37815000001501,
+          "baseline": 38.85184999999183
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 53.09075000000121,
+          "candidate": 33.09724999999162
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 37.188400000013644,
+          "baseline": 39.3215500000224
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 36.9155000000319,
+          "candidate": 36.90594999998211
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 36.82934999997087,
+          "baseline": 36.7737500000203
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 37.2865499999989,
+          "candidate": 42.641050000020186
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 64.09779999999046,
+          "baseline": 39.176850000012564
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 44.84990000000835,
+          "candidate": 42.637050000030285
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 0,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 0,
+      "mode": "one-first",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 38.35210000002007,
+      "candidateMedianNs": 39.07424999997602,
+      "pairedMedianSpeedup": 1.0038311675853033,
+      "baselineP25Ns": 37.362149999989924,
+      "baselineP75Ns": 39.483300000028976,
+      "candidateP25Ns": 37.094200000001365,
+      "candidateP75Ns": 43.185399999993024,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 42.94049999998606,
+          "candidate": 38.78930000000764
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 39.26249999999527,
+          "baseline": 37.362149999989924
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 36.84490000000551,
+          "candidate": 51.22344999999768
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 34.08369999997376,
+          "baseline": 36.007100000006176
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 37.68715000001066,
+          "candidate": 36.820799999986775
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 39.07424999997602,
+          "baseline": 39.223949999995966
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 39.483300000028976,
+          "candidate": 43.185399999993024
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 56.62810000003446,
+          "baseline": 38.35210000002007
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 39.775749999989785,
+          "candidate": 37.094200000001365
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 0,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 0,
+      "mode": "one-middle",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 35.67809999999554,
+      "candidateMedianNs": 36.85135000000628,
+      "pairedMedianSpeedup": 0.966587384180716,
+      "baselineP25Ns": 35.6200500000341,
+      "baselineP75Ns": 36.04514999997264,
+      "candidateP25Ns": 35.73464999999487,
+      "candidateP75Ns": 38.220400000000154,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 36.04514999997264,
+          "candidate": 34.54639999999927
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 36.85135000000628,
+          "baseline": 35.6200500000341
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 32.73369999997158,
+          "candidate": 43.646099999978105
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 49.87390000001142,
+          "baseline": 35.89345000000321
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 35.67809999999554,
+          "candidate": 34.76175000000694
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 36.44779999999628,
+          "baseline": 35.639549999996234
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 34.46979999998803,
+          "candidate": 35.73464999999487
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 36.99710000000778,
+          "baseline": 54.534949999970195
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 36.42820000000029,
+          "candidate": 38.220400000000154
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 0,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 0,
+      "mode": "one-last",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 36.56144999999924,
+      "candidateMedianNs": 35.9680500000195,
+      "pairedMedianSpeedup": 1.004792453721589,
+      "baselineP25Ns": 34.97505000000274,
+      "baselineP75Ns": 39.23644999999851,
+      "candidateP25Ns": 35.12024999999994,
+      "candidateP75Ns": 36.368650000031266,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 38.32610000004024,
+          "candidate": 38.143300000001545
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 35.12024999999994,
+          "baseline": 34.89945000001171
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 36.56144999999924,
+          "candidate": 35.9680500000195
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 36.368650000031266,
+          "baseline": 53.146849999984624
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 33.99410000001808,
+          "candidate": 34.932000000026164
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 40.67814999998518,
+          "baseline": 35.97955000000184
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 39.23644999999851,
+          "candidate": 34.94150000001355
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 35.173349999968195,
+          "baseline": 34.97505000000274
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 49.8609000000215,
+          "candidate": 36.146800000005896
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 0,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 0,
+      "mode": "sixteen-spread",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 36.34059999999408,
+      "candidateMedianNs": 37.16785000001437,
+      "pairedMedianSpeedup": 0.991272635026103,
+      "baselineP25Ns": 33.55840000003809,
+      "baselineP75Ns": 37.460749999991094,
+      "candidateP25Ns": 35.36209999997482,
+      "candidateP75Ns": 37.849850000020524,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 36.34059999999408,
+          "candidate": 36.66054999998778
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 46.78929999995489,
+          "baseline": 36.70865000003687
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 39.42119999996976,
+          "candidate": 37.849850000020524
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 35.36209999997482,
+          "baseline": 33.55840000003809
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 51.54845000001842,
+          "candidate": 37.56945000000087
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 37.16785000001437,
+          "baseline": 33.52890000001025
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 33.064199999989796,
+          "candidate": 33.264950000011595
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 33.20035000001553,
+          "baseline": 37.460749999991094
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 35.17990000000282,
+          "candidate": 49.15384999999333
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 0,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 0,
+      "mode": "sixteen-first-blocked",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 36.83984999997847,
+      "candidateMedianNs": 35.70865000001504,
+      "pairedMedianSpeedup": 1.0265593910723392,
+      "baselineP25Ns": 36.333600000034494,
+      "baselineP75Ns": 39.295050000009724,
+      "candidateP25Ns": 35.26044999998703,
+      "candidateP75Ns": 38.27400000000125,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 34.52234999999746,
+          "candidate": 34.438749999981155
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 35.26044999998703,
+          "baseline": 36.333600000034494
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 35.93949999999495,
+          "candidate": 34.19985000000452
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 38.45080000000962,
+          "baseline": 39.295050000009724
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 50.19794999998339,
+          "candidate": 36.80229999999938
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 35.469800000009855,
+          "baseline": 36.83984999997847
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 38.65809999997509,
+          "candidate": 38.27400000000125
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 35.70865000001504,
+          "baseline": 36.65705000003072
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 40.16434999998637,
+          "candidate": 39.30555000001732
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 0,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 0,
+      "mode": "sixteen-last-blocked",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 33.4532500000023,
+      "candidateMedianNs": 35.50235000002431,
+      "pairedMedianSpeedup": 0.9775334175678743,
+      "baselineP25Ns": 24.097699999992983,
+      "baselineP75Ns": 36.36664999999084,
+      "candidateP25Ns": 33.53390000002037,
+      "candidateP75Ns": 37.49384999996437,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 51.207449999992605,
+          "candidate": 33.53390000002037
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 35.387149999996836,
+          "baseline": 36.36664999999084
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 37.05465000002732,
+          "candidate": 37.49384999996437
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 36.48530000000392,
+          "baseline": 35.66559999999299
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 32.92394999998578,
+          "candidate": 57.461349999994134
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 35.50235000002431,
+          "baseline": 33.4532500000023
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 24.097699999992983,
+          "candidate": 19.78519999997843
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 21.201350000001185,
+          "baseline": 19.861349999973754
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 20.57239999999183,
+          "candidate": 320.09064999997463
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 0,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 1,
+      "mode": "none",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 66.81340000000091,
+      "candidateMedianNs": 88.35125000000517,
+      "pairedMedianSpeedup": 1.0937217940414519,
+      "baselineP25Ns": 59.480399999984,
+      "baselineP75Ns": 71.67770000000928,
+      "candidateP25Ns": 51.916499999970256,
+      "candidateP75Ns": 102.75139999998828,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 137.44699999997465,
+          "candidate": 102.75139999998828
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 91.55555000002096,
+          "baseline": 608.1638000000112
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 71.67770000000928,
+          "candidate": 125.66829999996116
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 115.61420000002727,
+          "baseline": 66.81340000000091
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 59.480399999984,
+          "candidate": 88.35125000000517
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 51.916499999970256,
+          "baseline": 68.28505000003133
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 44.26800000001094,
+          "candidate": 55.870899999990804
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 49.362650000011854,
+          "baseline": 66.4723999999751
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 48.894449999988865,
+          "candidate": 44.70464999999422
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 1,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 1,
+      "mode": "none-no-match",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 95.48800000002302,
+      "candidateMedianNs": 80.63765000001695,
+      "pairedMedianSpeedup": 1.184161492801476,
+      "baselineP25Ns": 80.67270000001372,
+      "baselineP75Ns": 98.09190000000854,
+      "candidateP25Ns": 79.81494999999086,
+      "candidateP75Ns": 81.31665000000794,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 451.1944500000027,
+          "candidate": 102.81645000000026
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 105.05334999998011,
+          "baseline": 89.94714999998905
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 104.45389999999861,
+          "candidate": 79.81494999999086
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 78.91504999997778,
+          "baseline": 80.67270000001372
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 98.09190000000854,
+          "candidate": 81.31665000000794
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 78.93709999998464,
+          "baseline": 97.11645000002136
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 78.81044999999176,
+          "candidate": 80.90855000000374
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 80.63765000001695,
+          "baseline": 95.48800000002302
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 79.60210000001098,
+          "candidate": 79.88854999998694
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 1,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 1,
+      "mode": "one-first",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 80.92859999997017,
+      "candidateMedianNs": 67.84039999997731,
+      "pairedMedianSpeedup": 1.1350370625008974,
+      "baselineP25Ns": 65.32314999999471,
+      "baselineP75Ns": 84.49445000001106,
+      "candidateP25Ns": 58.22499999999309,
+      "candidateP75Ns": 80.5800999999974,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 80.92859999997017,
+          "candidate": 93.49844999997003
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 81.82595000002948,
+          "baseline": 84.49445000001106
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 91.4614000000256,
+          "candidate": 80.5800999999974
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 75.59360000000197,
+          "baseline": 367.0787999999902
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 81.05929999996988,
+          "candidate": 53.16284999998971
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 58.22499999999309,
+          "baseline": 66.2400499999876
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 64.15090000000419,
+          "candidate": 67.55949999997028
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 67.84039999997731,
+          "baseline": 61.614049999980125
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 65.32314999999471,
+          "candidate": 54.61155000002692
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 1,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 1,
+      "mode": "one-middle",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 46.86595000002853,
+      "candidateMedianNs": 50.98714999999174,
+      "pairedMedianSpeedup": 1.024897131668396,
+      "baselineP25Ns": 44.51085000000603,
+      "baselineP75Ns": 51.12829999998212,
+      "candidateP25Ns": 42.361150000033376,
+      "candidateP75Ns": 53.41779999998835,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 44.51085000000603,
+          "candidate": 57.84745000000839
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 50.98714999999174,
+          "baseline": 43.751750000001266
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 48.60905000000457,
+          "candidate": 52.499349999970946
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 42.255500000010215,
+          "baseline": 46.86595000002853
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 54.7477500000241,
+          "candidate": 53.41779999998835
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 42.361150000033376,
+          "baseline": 46.46130000000994
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 51.12829999998212,
+          "candidate": 44.1488500000105
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 41.3135499999953,
+          "baseline": 43.02465000000666
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 65.00419999997575,
+          "candidate": 66.35070000002088
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 1,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 1,
+      "mode": "one-last",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 54.90249999998014,
+      "candidateMedianNs": 59.34820000002219,
+      "pairedMedianSpeedup": 0.9395654038156155,
+      "baselineP25Ns": 50.639600000022256,
+      "baselineP75Ns": 55.87749999999687,
+      "candidateP25Ns": 50.88694999999461,
+      "candidateP75Ns": 62.18489999996564,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 55.21994999999151,
+          "candidate": 58.77180000002227
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 63.01119999998263,
+          "baseline": 51.83940000001712
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 50.639600000022256,
+          "candidate": 99.48150000000169
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 59.34820000002219,
+          "baseline": 48.31659999999829
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 55.87749999999687,
+          "candidate": 50.545450000026904
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 42.7467500000148,
+          "baseline": 50.39070000002539
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 74.16339999999764,
+          "candidate": 61.30759999996371
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 50.88694999999461,
+          "baseline": 61.68714999998883
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 54.90249999998014,
+          "candidate": 62.18489999996564
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 1,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 1,
+      "mode": "sixteen-spread",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 66.85340000003634,
+      "candidateMedianNs": 63.92805000000408,
+      "pairedMedianSpeedup": 0.9608952867885804,
+      "baselineP25Ns": 63.79634999998416,
+      "baselineP75Ns": 76.72524999998132,
+      "candidateP25Ns": 61.79385000000366,
+      "candidateP75Ns": 86.41029999998864,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 63.95160000001851,
+          "candidate": 61.79385000000366
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 62.89099999999053,
+          "baseline": 66.85340000003634
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 73.55149999998503,
+          "candidate": 78.33070000001499
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 63.92805000000408,
+          "baseline": 43.05070000000342
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 63.79634999998416,
+          "candidate": 47.90749999997388
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 51.52094999998553,
+          "baseline": 56.11785000000964
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 83.02279999998063,
+          "candidate": 91.80495000000519
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 86.41029999998864,
+          "baseline": 83.03124999997635
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 76.72524999998132,
+          "candidate": 89.79190000000017
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 1,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 1,
+      "mode": "sixteen-first-blocked",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 62.11830000002009,
+      "candidateMedianNs": 61.62010000002738,
+      "pairedMedianSpeedup": 0.8902849881772212,
+      "baselineP25Ns": 53.587549999974726,
+      "baselineP75Ns": 77.54749999999149,
+      "candidateP25Ns": 52.638100000012855,
+      "candidateP75Ns": 86.33119999999508,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 89.71175000001494,
+          "candidate": 86.33119999999508
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 86.74034999999094,
+          "baseline": 86.56705000003058
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 62.11830000002009,
+          "candidate": 44.254000000000815
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 73.09629999999743,
+          "baseline": 53.587549999974726
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 44.8558999999932,
+          "candidate": 52.638100000012855
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 53.173900000001595,
+          "baseline": 43.56200000001991
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 54.85945000000356,
+          "candidate": 61.62010000002738
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 154.63184999998703,
+          "baseline": 77.54749999999149
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 76.41480000002048,
+          "candidate": 48.0777499999931
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 1,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 1,
+      "mode": "sixteen-last-blocked",
+      "iterations": 20000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 56.205450000015844,
+      "candidateMedianNs": 47.28504999998222,
+      "pairedMedianSpeedup": 1.2755699665148565,
+      "baselineP25Ns": 54.72125000001142,
+      "baselineP75Ns": 70.4278499999873,
+      "candidateP25Ns": 42.58450000002085,
+      "candidateP75Ns": 54.65159999998832,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 51.376200000004246,
+          "candidate": 54.65159999998832
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 49.897950000013225,
+          "baseline": 56.205450000015844
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 70.4278499999873,
+          "candidate": 41.79529999996703
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 42.899450000004435,
+          "baseline": 54.72125000001142
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 65.04825000001802,
+          "candidate": 47.28504999998222
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 42.38119999999981,
+          "baseline": 55.610550000028525
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 73.28034999995907,
+          "candidate": 42.58450000002085
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 133.28624999999192,
+          "baseline": 42.34010000000126
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 77.57204999998066,
+          "candidate": 82.52195000000029
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 1,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 20,
+      "mode": "none",
+      "iterations": 10000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 958.8587999999618,
+      "candidateMedianNs": 916.6353000000527,
+      "pairedMedianSpeedup": 1.0466038934472635,
+      "baselineP25Ns": 941.6369000000486,
+      "baselineP75Ns": 1011.8142999999691,
+      "candidateP25Ns": 828.0851999999868,
+      "candidateP75Ns": 974.3738999999551,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 941.6369000000486,
+          "candidate": 828.0851999999868
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 647.6059999999961,
+          "baseline": 650.0066000000515
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 680.4213999999774,
+          "candidate": 631.0312000000522
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 881.734299999971,
+          "baseline": 1032.0005999999921
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1165.4711000000134,
+          "candidate": 984.5051999999669
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 916.6353000000527,
+          "baseline": 944.8315999999978
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1011.8142999999691,
+          "candidate": 1075.9905999999319
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 974.3738999999551,
+          "baseline": 958.8587999999618
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 970.0444000000061,
+          "candidate": 926.8495999999687
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 20,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 20,
+      "mode": "none-no-match",
+      "iterations": 10000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 1021.9574000000648,
+      "candidateMedianNs": 976.0414999999739,
+      "pairedMedianSpeedup": 1.00287061117935,
+      "baselineP25Ns": 945.3624000000673,
+      "baselineP75Ns": 1134.7029000000475,
+      "candidateP25Ns": 935.2351000000452,
+      "candidateP75Ns": 1020.8198000000266,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1134.7029000000475,
+          "candidate": 890.458000000035
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 842.9744999999456,
+          "baseline": 1985.1421000000303
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1021.9574000000648,
+          "candidate": 1113.673900000049
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1020.8198000000266,
+          "baseline": 842.7312000000711
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1226.2284999999792,
+          "candidate": 1029.0179999999964
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 942.6563999999418,
+          "baseline": 945.3624000000673
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1026.9389999999476,
+          "candidate": 935.2351000000452
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1007.5748000000203,
+          "baseline": 985.6640000000879
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 906.4710000000558,
+          "candidate": 976.0414999999739
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 20,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 20,
+      "mode": "one-first",
+      "iterations": 5128,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 1558.8806552262663,
+      "candidateMedianNs": 2655.733619344864,
+      "pairedMedianSpeedup": 0.5942602545623047,
+      "baselineP25Ns": 1515.9886895475206,
+      "baselineP75Ns": 1679.9186817473465,
+      "candidateP25Ns": 2299.242394695727,
+      "candidateP75Ns": 3210.83853354137,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1924.6468408736164,
+          "candidate": 3238.727184087369
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 3210.83853354137,
+          "baseline": 1515.9886895475206
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1463.851404056135,
+          "candidate": 2655.733619344864
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 2477.31240249617,
+          "baseline": 1679.9186817473465
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 959.9307722308796,
+          "candidate": 1889.2776911075578
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 2128.9650936036305,
+          "baseline": 1558.8806552262663
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1672.874219968836,
+          "candidate": 3196.7548751951445
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 2299.242394695727,
+          "baseline": 1556.2168486739013
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 2046.895280811126,
+          "candidate": 3307.9007410296545
+        }
+      ],
+      "baselineTaskIdReads": 19,
+      "candidateTaskIdReads": 76,
+      "stateReads": 39,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 20,
+      "mode": "one-middle",
+      "iterations": 952,
+      "warmupIterations": 952,
+      "baselineMedianNs": 4583.378151259804,
+      "candidateMedianNs": 1477.7142857131084,
+      "pairedMedianSpeedup": 3.0331251329872426,
+      "baselineP25Ns": 4466.300420169907,
+      "baselineP75Ns": 4677.72058823548,
+      "candidateP25Ns": 1466.1102941165093,
+      "candidateP75Ns": 1544.893907563363,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4724.345588235391,
+          "candidate": 1866.3329831938695
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1463.1123949584435,
+          "baseline": 4677.72058823548
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4312.339285714937,
+          "candidate": 1421.7478991603066
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1851.4579831928527,
+          "baseline": 4590.889705883349
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4583.378151259804,
+          "candidate": 1477.7142857131084
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1466.1102941165093,
+          "baseline": 4937.292016805969
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4270.596638656296,
+          "candidate": 1484.3834033594508
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1544.893907563363,
+          "baseline": 4539.067226890155
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4466.300420169907,
+          "candidate": 1468.3508403368633
+        }
+      ],
+      "baselineTaskIdReads": 190,
+      "candidateTaskIdReads": 19,
+      "stateReads": 39,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 20,
+      "mode": "one-last",
+      "iterations": 500,
+      "warmupIterations": 500,
+      "baselineMedianNs": 7942.471999998816,
+      "candidateMedianNs": 3791.9780000011087,
+      "pairedMedianSpeedup": 2.1042665831901717,
+      "baselineP25Ns": 7870.345999999699,
+      "baselineP75Ns": 8513.82999999987,
+      "candidateP25Ns": 3782.3239999997895,
+      "candidateP75Ns": 3823.865999998816,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 8851.21799999979,
+          "candidate": 3786.4680000020603
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 3899.3780000018887,
+          "baseline": 8665.177999999287
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 7908.422000000429,
+          "candidate": 3813.829999999143
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 3823.865999998816,
+          "baseline": 7771.757999998954
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 7870.345999999699,
+          "candidate": 3739.5980000001146
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 3782.3239999997895,
+          "baseline": 7959.017999997741
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 8513.82999999987,
+          "candidate": 3739.940000003116
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 3925.6380000006175,
+          "baseline": 7942.471999998816
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 7829.824000000372,
+          "candidate": 3791.9780000011087
+        }
+      ],
+      "baselineTaskIdReads": 380,
+      "candidateTaskIdReads": 95,
+      "stateReads": 39,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 20,
+      "mode": "sixteen-spread",
+      "iterations": 295,
+      "warmupIterations": 295,
+      "baselineMedianNs": 13083.722033899008,
+      "candidateMedianNs": 7364.318644064597,
+      "pairedMedianSpeedup": 1.8008875453569582,
+      "baselineP25Ns": 12918.084745763472,
+      "baselineP75Ns": 13302.054237289467,
+      "candidateP25Ns": 7271.467796608241,
+      "candidateP75Ns": 7414.122033897311,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 12186.172881355544,
+          "candidate": 7251.233898303757
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 7364.318644064597,
+          "baseline": 13939.996610170672
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 12418.559322031797,
+          "candidate": 7441.1796610193205
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 8203.681355932484,
+          "baseline": 12918.084745763472
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 13083.722033899008,
+          "candidate": 7414.122033897311
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 7327.006779660685,
+          "baseline": 13195.115254236922
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 13302.054237289467,
+          "candidate": 7271.467796608241
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 7380.1389830512535,
+          "baseline": 14345.450847456776
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 13004.247457625383,
+          "candidate": 7168.498305080733
+        }
+      ],
+      "baselineTaskIdReads": 656,
+      "candidateTaskIdReads": 220,
+      "stateReads": 84,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 20,
+      "mode": "sixteen-first-blocked",
+      "iterations": 8333,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 605.5070202806928,
+      "candidateMedianNs": 936.1525261010618,
+      "pairedMedianSpeedup": 0.6468038096340357,
+      "baselineP25Ns": 587.8495139805456,
+      "baselineP75Ns": 621.8246729869275,
+      "candidateP25Ns": 909.4569782790705,
+      "candidateP75Ns": 956.1647665907707,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 644.8269530780385,
+          "candidate": 973.1614064562782
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 909.4569782790705,
+          "baseline": 621.8246729869275
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 603.4399375976519,
+          "candidate": 891.4557782309498
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 936.1525261010618,
+          "baseline": 605.5070202806928
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 587.8495139805456,
+          "candidate": 956.1647665907707
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 973.8991959676878,
+          "baseline": 613.6269050760619
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 631.8360734430316,
+          "candidate": 925.6941077644025
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 948.1880475220376,
+          "baseline": 439.50702028099073
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 483.65474618990504,
+          "candidate": 898.7401896076634
+        }
+      ],
+      "baselineTaskIdReads": 4,
+      "candidateTaskIdReads": 16,
+      "stateReads": 24,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 20,
+      "mode": "sixteen-last-blocked",
+      "iterations": 295,
+      "warmupIterations": 295,
+      "baselineMedianNs": 13987.694915254073,
+      "candidateMedianNs": 7200.04067796685,
+      "pairedMedianSpeedup": 1.9358873678671389,
+      "baselineP25Ns": 13799.037288136187,
+      "baselineP75Ns": 14823.220338982183,
+      "candidateP25Ns": 7149.488135590958,
+      "candidateP75Ns": 7283.484745765514,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 11781.93559322084,
+          "candidate": 6873.783050844903
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 6939.8508474570635,
+          "baseline": 15075.091525425907
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 13938.467796605575,
+          "candidate": 7200.04067796685
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 7283.484745765514,
+          "baseline": 14060.64745762274
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 14823.220338982183,
+          "candidate": 7467.183050847764
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 7376.301694917641,
+          "baseline": 13799.037288136187
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 13987.694915254073,
+          "candidate": 7149.488135590958
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 7244.745762709191,
+          "baseline": 15056.04406779408
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 13079.176271189759,
+          "candidate": 7152.711864410638
+        }
+      ],
+      "baselineTaskIdReads": 656,
+      "candidateTaskIdReads": 220,
+      "stateReads": 84,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 100,
+      "mode": "none",
+      "iterations": 2000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 4532.729999999901,
+      "candidateMedianNs": 4446.611000000303,
+      "pairedMedianSpeedup": 1.0236353033804064,
+      "baselineP25Ns": 4328.233000000183,
+      "baselineP75Ns": 4724.167500000476,
+      "candidateP25Ns": 4374.28650000038,
+      "candidateP75Ns": 4580.215999999382,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4328.233000000183,
+          "candidate": 4289.514500000224
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 4374.28650000038,
+          "baseline": 4532.729999999901
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4278.823500000726,
+          "candidate": 4398.954000000231
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 4707.092000000557,
+          "baseline": 4443.826499999886
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4551.707999999962,
+          "candidate": 4446.611000000303
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 4580.215999999382,
+          "baseline": 4831.248500000584
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4259.680000000117,
+          "candidate": 4510.501499999918
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 4589.966000000459,
+          "baseline": 4727.963499999532
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4724.167500000476,
+          "candidate": 4313.861499999803
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 100,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 100,
+      "mode": "none-no-match",
+      "iterations": 2000,
+      "warmupIterations": 2000,
+      "baselineMedianNs": 4782.300500000019,
+      "candidateMedianNs": 4721.959499999684,
+      "pairedMedianSpeedup": 1.011928494531703,
+      "baselineP25Ns": 4655.268999999862,
+      "baselineP75Ns": 4806.401499999993,
+      "candidateP25Ns": 4649.650500000462,
+      "candidateP75Ns": 4735.034500000438,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4655.268999999862,
+          "candidate": 4721.959499999684
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 4732.235000000401,
+          "baseline": 4874.613500000123
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4600.877500000024,
+          "candidate": 4649.650500000462
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 4756.575999999768,
+          "baseline": 4794.914499999322
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4851.168000000143,
+          "candidate": 4793.982999999571
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 4735.034500000438,
+          "baseline": 4594.172000000071
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4806.401499999993,
+          "candidate": 4652.925499999583
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 4546.385500000724,
+          "baseline": 4782.300500000019
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4729.505000000245,
+          "candidate": 4553.071000000273
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 100,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 100,
+      "mode": "one-first",
+      "iterations": 1005,
+      "warmupIterations": 1005,
+      "baselineMedianNs": 8434.034825871488,
+      "candidateMedianNs": 21414.491542287327,
+      "pairedMedianSpeedup": 0.39468772299890925,
+      "baselineP25Ns": 8212.169154229112,
+      "baselineP75Ns": 8780.883582089453,
+      "candidateP25Ns": 21368.880597015162,
+      "candidateP75Ns": 21688.396019900705,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 8243.907462687574,
+          "candidate": 21688.396019900705
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 21394.949253731487,
+          "baseline": 8780.883582089453
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 8212.169154229112,
+          "candidate": 21830.63880597118
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 22056.162189054798,
+          "baseline": 8850.182089551721
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 8565.925373133625,
+          "candidate": 20609.211940298075
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 21368.880597015162,
+          "baseline": 8434.034825871488
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 8989.415920398673,
+          "candidate": 21301.416915422073
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 21414.491542287327,
+          "baseline": 7899.958208955962
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 7845.977114427218,
+          "candidate": 21686.31243780985
+        }
+      ],
+      "baselineTaskIdReads": 99,
+      "candidateTaskIdReads": 594,
+      "stateReads": 199,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 100,
+      "mode": "one-middle",
+      "iterations": 39,
+      "warmupIterations": 39,
+      "baselineMedianNs": 86999.43589743224,
+      "candidateMedianNs": 7437.846153875282,
+      "pairedMedianSpeedup": 11.945780715910256,
+      "baselineP25Ns": 84130.23076923893,
+      "baselineP75Ns": 89332.6923077182,
+      "candidateP25Ns": 6991.282051249305,
+      "candidateP75Ns": 7899.8205128113905,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 81361.9743589814,
+          "candidate": 7437.846153875282
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 15249.33333334607,
+          "baseline": 84130.23076923893
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 89768.97435893942,
+          "candidate": 7077.794871759416
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 8206.435897404728,
+          "baseline": 83184.7179487317
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 86259.58974358256,
+          "candidate": 7899.8205128113905
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 6653.589743552565,
+          "baseline": 86999.43589743224
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 87174.05128206735,
+          "candidate": 6991.282051249305
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 6918.333333324438,
+          "baseline": 90358.07692308504
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 89332.6923077182,
+          "candidate": 7478.179487150509
+        }
+      ],
+      "baselineTaskIdReads": 4950,
+      "candidateTaskIdReads": 99,
+      "stateReads": 199,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 100,
+      "mode": "one-last",
+      "iterations": 20,
+      "warmupIterations": 20,
+      "baselineMedianNs": 183709.99999997366,
+      "candidateMedianNs": 25855.850000061764,
+      "pairedMedianSpeedup": 6.939815133444942,
+      "baselineP25Ns": 177195.69999999294,
+      "baselineP75Ns": 186534.2499999315,
+      "candidateP25Ns": 25359.600000047067,
+      "candidateP75Ns": 27619.49999994613,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 183908.25000005862,
+          "candidate": 25359.600000047067
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 27619.49999994613,
+          "baseline": 183709.99999997366
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 187495.6999999995,
+          "candidate": 28303.54999996416
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 26878.85000004826,
+          "baseline": 186534.2499999315
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 189374.50000003082,
+          "candidate": 25855.850000061764
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 45337.149999977555,
+          "baseline": 176252.24999992497
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 174710.44999992955,
+          "candidate": 24556.399999983114
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 25807.7499999672,
+          "baseline": 177273.80000005724
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 177195.69999999294,
+          "candidate": 23655.050000070332
+        }
+      ],
+      "baselineTaskIdReads": 9900,
+      "candidateTaskIdReads": 693,
+      "stateReads": 199,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 100,
+      "mode": "sixteen-spread",
+      "iterations": 8,
+      "warmupIterations": 8,
+      "baselineMedianNs": 1287235.125000052,
+      "candidateMedianNs": 166980.87500003568,
+      "pairedMedianSpeedup": 7.7822805269335085,
+      "baselineP25Ns": 1274594.9999998629,
+      "baselineP75Ns": 1301152.3749999015,
+      "candidateP25Ns": 162212.50000012334,
+      "candidateP75Ns": 167782.12500003065,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1278890.249999904,
+          "candidate": 162212.50000012334
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 166980.87500003568,
+          "baseline": 1266018.3750001579
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1266721.8750000303,
+          "candidate": 156630.37499984965
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 159618.49999985134,
+          "baseline": 2408866.499999931
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1296422.874999962,
+          "candidate": 166586.49999999398
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 173782.3749999734,
+          "baseline": 1274594.9999998629
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1287235.125000052,
+          "candidate": 172231.25000009532
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 166999.62500001676,
+          "baseline": 1366508.000000067
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1301152.3749999015,
+          "candidate": 167782.12500003065
+        }
+      ],
+      "baselineTaskIdReads": 70896,
+      "candidateTaskIdReads": 5292,
+      "stateReads": 1444,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 100,
+      "mode": "sixteen-first-blocked",
+      "iterations": 331,
+      "warmupIterations": 331,
+      "baselineMedianNs": 13678.737160122111,
+      "candidateMedianNs": 13142.948640483446,
+      "pairedMedianSpeedup": 1.0282126631721675,
+      "baselineP25Ns": 13420.012084591985,
+      "baselineP75Ns": 14631.196374625893,
+      "candidateP25Ns": 13107.66767371379,
+      "candidateP75Ns": 13268.12386707053,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 15378.601208459639,
+          "candidate": 13268.12386707053
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 13345.489425982674,
+          "baseline": 15305.836858003679
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 13420.012084591985,
+          "candidate": 13107.66767371379
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 12722.438066466731,
+          "baseline": 14631.196374625893
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 13513.746223566503,
+          "candidate": 13142.948640483446
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 13910.205438063098,
+          "baseline": 14165.993957702529
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 13251.41993957801,
+          "candidate": 13178.531722054591
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 13115.081570993212,
+          "baseline": 13201.435045316965
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 13678.737160122111,
+          "candidate": 12443.16314199437
+        }
+      ],
+      "baselineTaskIdReads": 504,
+      "candidateTaskIdReads": 336,
+      "stateReads": 184,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 100,
+      "mode": "sixteen-last-blocked",
+      "iterations": 8,
+      "warmupIterations": 8,
+      "baselineMedianNs": 1252212.5000000414,
+      "candidateMedianNs": 164126.6250001081,
+      "pairedMedianSpeedup": 7.765598222320433,
+      "baselineP25Ns": 1247177.6249999492,
+      "baselineP75Ns": 1286244.8749999658,
+      "candidateP25Ns": 152053.3749999231,
+      "candidateP75Ns": 167106.00000010344,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1286244.8749999658,
+          "candidate": 164041.49999993935
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 164126.6250001081,
+          "baseline": 1247838.6249999858
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1281983.6249998389,
+          "candidate": 166907.00000003743
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 167106.00000010344,
+          "baseline": 1292876.1250000207
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1321437.8749999013,
+          "candidate": 170165.62499998143
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 152053.3749999231,
+          "baseline": 1252212.5000000414
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 994001.0000000256,
+          "candidate": 117401.37499987213
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 147669.37499985035,
+          "baseline": 1175179.2499999283
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1247177.6249999492,
+          "candidate": 170592.5000001116
+        }
+      ],
+      "baselineTaskIdReads": 70896,
+      "candidateTaskIdReads": 5292,
+      "stateReads": 1444,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 500,
+      "mode": "none",
+      "iterations": 400,
+      "warmupIterations": 400,
+      "baselineMedianNs": 21523.312499998614,
+      "candidateMedianNs": 21536.182499999086,
+      "pairedMedianSpeedup": 0.9969742181476671,
+      "baselineP25Ns": 20643.740000000435,
+      "baselineP75Ns": 21909.042500001306,
+      "candidateP25Ns": 20785.502499998074,
+      "candidateP75Ns": 21779.14500000043,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 21593.417499998395,
+          "candidate": 21936.557499998344
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 21059.14000000212,
+          "baseline": 21909.042500001306
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 22151.754999999866,
+          "candidate": 20675.08749999888
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 21779.14500000043,
+          "baseline": 20542.06250000334
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 21523.312499998614,
+          "candidate": 21588.63499999825
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 20785.502499998074,
+          "baseline": 22471.537499995975
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 21413.324999998622,
+          "candidate": 20516.947500000242
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 21536.182499999086,
+          "baseline": 20643.740000000435
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 20587.955000000875,
+          "candidate": 21923.61500000061
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 500,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 500,
+      "mode": "none-no-match",
+      "iterations": 400,
+      "warmupIterations": 400,
+      "baselineMedianNs": 22687.6349999975,
+      "candidateMedianNs": 22589.215000002696,
+      "pairedMedianSpeedup": 0.9856193302296857,
+      "baselineP25Ns": 21960.642499998357,
+      "baselineP75Ns": 23221.939999998536,
+      "candidateP25Ns": 22085.632500002248,
+      "candidateP75Ns": 22914.902500001517,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 22996.102500001147,
+          "candidate": 22669.75750000256
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 15969.742500001305,
+          "baseline": 24014.08000000174
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 23447.977499999983,
+          "candidate": 23790.09499999938
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 22052.50750000232,
+          "baseline": 16325.000000001637
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 21369.032499997047,
+          "candidate": 22589.215000002696
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 22914.902500001517,
+          "baseline": 23221.939999998536
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 21960.642499998357,
+          "candidate": 22422.1875000012
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 23111.699999999473,
+          "baseline": 22687.6349999975
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 22663.19750000093,
+          "candidate": 22085.632500002248
+        }
+      ],
+      "baselineTaskIdReads": 0,
+      "candidateTaskIdReads": 0,
+      "stateReads": 500,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 500,
+      "mode": "one-first",
+      "iterations": 200,
+      "warmupIterations": 200,
+      "baselineMedianNs": 40577.21500000298,
+      "candidateMedianNs": 135214.05000000412,
+      "pairedMedianSpeedup": 0.30787423833571415,
+      "baselineP25Ns": 39535.945000006905,
+      "baselineP75Ns": 43384.380000006786,
+      "candidateP25Ns": 128035.45999999187,
+      "candidateP75Ns": 137407.03999999823,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 39809.41499999972,
+          "candidate": 135214.05000000412
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 137407.03999999823,
+          "baseline": 39535.945000006905
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 40577.21500000298,
+          "candidate": 128035.45999999187
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 130907.77499999604,
+          "baseline": 43754.790000002686
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 41878.114999999525,
+          "candidate": 136644.64500000578
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 140915.91500000504,
+          "baseline": 43384.380000006786
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 43796.849999998805,
+          "candidate": 86413.079999993
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 154306.58000000223,
+          "baseline": 32248.994999999923
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 36254.619999999704,
+          "candidate": 101426.63500000708
+        }
+      ],
+      "baselineTaskIdReads": 499,
+      "candidateTaskIdReads": 3992,
+      "stateReads": 999,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 500,
+      "mode": "one-middle",
+      "iterations": 8,
+      "warmupIterations": 8,
+      "baselineMedianNs": 1647497.6249999146,
+      "candidateMedianNs": 27927.00000009063,
+      "pairedMedianSpeedup": 60.415878178099355,
+      "baselineP25Ns": 1560260.375000098,
+      "baselineP75Ns": 2075987.7499999674,
+      "candidateP25Ns": 19699.49999988785,
+      "candidateP75Ns": 34193.87500002813,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1560260.375000098,
+          "candidate": 19466.749999992317
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 27487.50000000655,
+          "baseline": 1503581.5000001094
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1862619.7500000217,
+          "candidate": 27927.00000009063
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 19018.499999901906,
+          "baseline": 2309783.3750000517
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 2242881.12499994,
+          "candidate": 117188.6249999261
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 34193.87500002813,
+          "baseline": 1647497.6249999146
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 2075987.7499999674,
+          "candidate": 34361.62499997408
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 34067.499999991924,
+          "baseline": 1598138.6250000468
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 1217201.1249999742,
+          "candidate": 19699.49999988785
+        }
+      ],
+      "baselineTaskIdReads": 124750,
+      "candidateTaskIdReads": 499,
+      "stateReads": 999,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 500,
+      "mode": "one-last",
+      "iterations": 8,
+      "warmupIterations": 8,
+      "baselineMedianNs": 4115275.3750000102,
+      "candidateMedianNs": 159378.2499999179,
+      "pairedMedianSpeedup": 26.6091491555723,
+      "baselineP25Ns": 3593436.249999968,
+      "baselineP75Ns": 4289331.749999974,
+      "candidateP25Ns": 146338.6249999985,
+      "candidateP75Ns": 161395.0000000841,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 3067507.375000105,
+          "candidate": 146338.6249999985
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 159378.2499999179,
+          "baseline": 3240314.5000000675
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4115275.3750000102,
+          "candidate": 161395.0000000841
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 157565.49999991874,
+          "baseline": 4258886.12499989
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 3966826.1250001253,
+          "candidate": 88730.74999996788
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 82302.37500015392,
+          "baseline": 3593436.249999968
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4306208.4999999115,
+          "candidate": 161831.87499996164
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 159482.12500006775,
+          "baseline": 4289331.749999974
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 4300116.874999958,
+          "candidate": 164710.00000001368
+        }
+      ],
+      "baselineTaskIdReads": 249500,
+      "candidateTaskIdReads": 4491,
+      "stateReads": 999,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 500,
+      "mode": "sixteen-spread",
+      "iterations": 8,
+      "warmupIterations": 8,
+      "baselineMedianNs": 31840118.749999873,
+      "candidateMedianNs": 1040355.5000000324,
+      "pairedMedianSpeedup": 30.298853924429626,
+      "baselineP25Ns": 28418198.99999996,
+      "baselineP75Ns": 37179732.87500013,
+      "candidateP25Ns": 1034523.0000000356,
+      "candidateP75Ns": 1050868.7500000633,
+      "loadBefore": [
+        6.56,
+        5.8,
+        5.97
+      ],
+      "loadAfter": [
+        6.68,
+        5.83,
+        5.98
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 25525240.749999966,
+          "candidate": 1040355.5000000324
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1042904.2499999923,
+          "baseline": 37229285.00000012
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 37179732.87500013,
+          "candidate": 1036608.7500001413
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1034523.0000000356,
+          "baseline": 37474408.12499985
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 35836661.37499995,
+          "candidate": 1034232.4999999164
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1095890.2500001385,
+          "baseline": 29853793.99999988
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 31840118.749999873,
+          "candidate": 1050868.7500000633
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1019211.2499998985,
+          "baseline": 28418198.99999996
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 24582305.749999933,
+          "candidate": 1113211.3749999916
+        }
+      ],
+      "baselineTaskIdReads": 2054096,
+      "candidateTaskIdReads": 33396,
+      "stateReads": 8244,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 500,
+      "mode": "sixteen-first-blocked",
+      "iterations": 12,
+      "warmupIterations": 12,
+      "baselineMedianNs": 276843.41666660353,
+      "candidateMedianNs": 74483.58333325207,
+      "pairedMedianSpeedup": 3.7411511317890636,
+      "baselineP25Ns": 276427.8333334005,
+      "baselineP75Ns": 286476.25000000215,
+      "candidateP25Ns": 72471.41666675816,
+      "candidateP75Ns": 77173.49999999594,
+      "loadBefore": [
+        6.68,
+        5.83,
+        5.98
+      ],
+      "loadAfter": [
+        6.68,
+        5.83,
+        5.98
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 276740.7500000445,
+          "candidate": 70895.75000009063
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 129876.7499999182,
+          "baseline": 286476.25000000215
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 286972.83333334175,
+          "candidate": 72471.41666675816
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 76257.91666669102,
+          "baseline": 285839.5000001413
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 293334.91666663275,
+          "candidate": 69419.33333337147
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 74483.58333325207,
+          "baseline": 275837.74999993696
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 275170.08333340223,
+          "candidate": 73552.25000007219
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 77173.49999999594,
+          "baseline": 276843.41666660353
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 276427.8333334005,
+          "candidate": 124319.25000009868
+        }
+      ],
+      "baselineTaskIdReads": 15004,
+      "candidateTaskIdReads": 1936,
+      "stateReads": 984,
+      "stateReadSequenceEqual": true
+    },
+    {
+      "size": 500,
+      "mode": "sixteen-last-blocked",
+      "iterations": 8,
+      "warmupIterations": 8,
+      "baselineMedianNs": 29082189.749999996,
+      "candidateMedianNs": 875361.3750000113,
+      "pairedMedianSpeedup": 33.85736847824659,
+      "baselineP25Ns": 25497205.874999963,
+      "baselineP75Ns": 30390168.37500003,
+      "candidateP25Ns": 562811.8750000794,
+      "candidateP75Ns": 1030155.2500000071,
+      "loadBefore": [
+        6.68,
+        5.83,
+        5.98
+      ],
+      "loadAfter": [
+        6.68,
+        5.83,
+        5.98
+      ],
+      "samples": [
+        {
+          "round": 0,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 33528037.750000067,
+          "candidate": 1042297.2499998196
+        },
+        {
+          "round": 1,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1031091.5000000023,
+          "baseline": 29082189.749999996
+        },
+        {
+          "round": 2,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 34603006.62500004,
+          "candidate": 1030155.2500000071
+        },
+        {
+          "round": 3,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 1028037.1250000827,
+          "baseline": 30390168.37500003
+        },
+        {
+          "round": 4,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 26701510.374999996,
+          "candidate": 767196.500000182
+        },
+        {
+          "round": 5,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 875361.3750000113,
+          "baseline": 29637432.624999974
+        },
+        {
+          "round": 6,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 22146998.875000007,
+          "candidate": 556378.3749998948
+        },
+        {
+          "round": 7,
+          "order": [
+            "candidate",
+            "baseline"
+          ],
+          "candidate": 562811.8750000794,
+          "baseline": 21537345.375000086
+        },
+        {
+          "round": 8,
+          "order": [
+            "baseline",
+            "candidate"
+          ],
+          "baseline": 25497205.874999963,
+          "candidate": 549200.1249999703
+        }
+      ],
+      "baselineTaskIdReads": 2054096,
+      "candidateTaskIdReads": 33396,
+      "stateReads": 8244,
+      "stateReadSequenceEqual": true
+    }
+  ]
+}

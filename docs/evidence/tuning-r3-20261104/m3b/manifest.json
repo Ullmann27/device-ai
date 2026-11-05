@@ -1,0 +1,57 @@
+{
+  "publicBaseline": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
+  "resolvedBaseline": "2f20c19b7e37197a6accac0c226b5401e25f1f99",
+  "baselineTree": "f6297e08d03eae74283f43b1ce5abf80c5f7e666",
+  "resolutionAttempts": [
+    {
+      "commit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
+      "available": false
+    },
+    {
+      "commit": "2f20c19b7e37197a6accac0c226b5401e25f1f99",
+      "available": true
+    }
+  ],
+  "checkoutHead": "a20eaf838dc23a5b055a707342da805a6b4d8db3",
+  "candidateSelection": "checkout",
+  "candidateSourceLocations": {
+    "LmBpeTokenizer.kt": "/workspace/scratch/59ad19c6d3b7/continuum-tuning/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+    "LmCheckpointStore.kt": "/workspace/scratch/59ad19c6d3b7/continuum-tuning/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+    "LmCorpus.kt": "/workspace/scratch/59ad19c6d3b7/continuum-tuning/app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+    "LmModel.kt": "/workspace/scratch/59ad19c6d3b7/continuum-tuning/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+    "LmRuntime.kt": "/workspace/scratch/59ad19c6d3b7/continuum-tuning/app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+    "LmTensor.kt": "/workspace/scratch/59ad19c6d3b7/continuum-tuning/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt"
+  },
+  "sourceSha256": {
+    "baseline/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "baseline/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "baseline/LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "baseline/LmModel.kt": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+    "baseline/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "baseline/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "candidate/LmBpeTokenizer.kt": "94507ab2583c49f86535740bf3b2787dc7d46101965d2ebde1b514727bd7b6ea",
+    "candidate/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "candidate/LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "candidate/LmModel.kt": "845575c5757f9c41ea1f483fb2d490864533e5a08a0a2113d888d0ca4b7e66c5",
+    "candidate/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "candidate/LmTensor.kt": "2c1d375454331b814d1362af5506d87f34a24a1a16fd29cfaf7de371f5cd38d7"
+  },
+  "harnessSha256": {
+    "app/src/test/java/at/heinz/deviceai/learning/lm/LmCoreTest.kt": "8abd249b2fb46916fb3abd8041f5bc50979ec2a5a6c527025170b78c22f55539",
+    "app/src/test/java/at/heinz/deviceai/learning/lm/LmSamplingTest.kt": "d3f5ea036aa9169cd187d0d46aecf2557e871509ef25754cc852539214302895",
+    "app/src/test/java/at/heinz/deviceai/learning/lm/LmSamplingWeightsTest.kt": "8a7bbdfe942811a3b11141f6ea4cc315ff22f8c2b9a59a212f529dfa7e3a3539",
+    "tools/tuning-r3-20261104/LmTuningR3Checks.kt": "4ec5b200a085c87a0bdcefbef8e6123e9854b06ce4ecb7fb8219a46ab929a980",
+    "tools/tuning-r3-20261104/LmTuningR3Benchmark.kt": "3a8293a6225f3ee25e5282eade57ef248c1ab054867c9de249add24adf7dab57",
+    "tools/tuning-r3-20261104/run.py": "854ef1f4e09e785712c67815b99cce2e0a170fafc5bbc8f85dade7a2d83b6070"
+  },
+  "classpath": "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar",
+  "compilerDirectory": "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib",
+  "packageTransformation": "baseline package declaration only",
+  "dependencies": {
+    "kotlin-stdlib-2.0.20.jar": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006",
+    "junit-4.13.2.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "hamcrest-core-1.3.jar": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+  },
+  "jarSha256": "9bc1355a188c1783ec2737092500106cbf4cdfa084ceba8da84005d4943da9ee",
+  "status": "CHECKS_PASS"
+}

@@ -139,10 +139,10 @@ class LmModel(val params: LmParams) {
         val tape = Tape(training = false)
         val logits = logits(tape, frozenNodes(tape), ids).value
         val v = logits.cols
-        val scratch = FloatArray(logits.data.size)
+        val scratch = FloatArray(v)
         return DoubleArray(ids.size) { t ->
             val y = targets[t]
-            if (y < 0) Double.NaN else Kernels.softmaxRow(logits.data, t * v, v, scratch) - logits.data[t * v + y]
+            if (y < 0) Double.NaN else Kernels.softmaxRow(logits.data, t * v, v, scratch, 0) - logits.data[t * v + y]
         }
     }
 
@@ -151,9 +151,9 @@ class LmModel(val params: LmParams) {
         val tape = Tape(training = false)
         val logits = logits(tape, frozenNodes(tape), ids).value
         val v = logits.cols
-        val out = FloatArray(logits.data.size)
-        Kernels.softmaxRow(logits.data, (ids.size - 1) * v, v, out)
-        return out.copyOfRange((ids.size - 1) * v, ids.size * v)
+        val out = FloatArray(v)
+        Kernels.softmaxRow(logits.data, (ids.size - 1) * v, v, out, 0)
+        return out
     }
 }
 
@@ -283,8 +283,16 @@ object LmEval {
     }
 
     fun sample(p: FloatArray, temperature: Double, topK: Int, rnd: Random): Int {
+        if (temperature <= 0.0) {
+            topK.coerceIn(1, p.size)
+            var best = 0
+            for (i in 1 until p.size) {
+                // Match the stable sort's Float ordering, including NaN and signed zero.
+                if (p[i].compareTo(p[best]) > 0) best = i
+            }
+            return best
+        }
         val order = p.indices.sortedByDescending { p[it] }.take(topK.coerceIn(1, p.size))
-        if (temperature <= 0.0) return order.first()
         val w = order.map { exp(ln(p[it].toDouble().coerceAtLeast(1e-30)) / temperature) }
         var r = rnd.nextDouble() * w.sum()
         for ((i, id) in order.withIndex()) { r -= w[i]; if (r <= 0) return id }

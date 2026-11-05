@@ -1,0 +1,14 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: load 17.8 exceeds 9
+    at file:///workspace/scratch/59ad19c6d3b7/tuning-workers/tools/tuning-workers-r2-20261104/benchmark.mjs:146:40 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '=='
+}
+
+Node.js v24.22.1

@@ -399,12 +399,16 @@ internal object Kernels {
     }
 
     /** Writes softmax(row) into [out] at the same offset and returns log Σ exp(row) (so NLL = result − logit). */
-    fun softmaxRow(src: FloatArray, offset: Int, n: Int, out: FloatArray): Double {
+    fun softmaxRow(src: FloatArray, offset: Int, n: Int, out: FloatArray): Double =
+        softmaxRow(src, offset, n, out, offset)
+
+    /** Separate output offset. */
+    fun softmaxRow(src: FloatArray, offset: Int, n: Int, out: FloatArray, outOffset: Int): Double {
         var max = Float.NEGATIVE_INFINITY
         for (j in 0 until n) max = maxOf(max, src[offset + j])
         var sum = 0.0
-        for (j in 0 until n) { val e = exp((src[offset + j] - max).toDouble()); out[offset + j] = e.toFloat(); sum += e }
-        for (j in 0 until n) out[offset + j] = (out[offset + j] / sum).toFloat()
+        for (j in 0 until n) { val e = exp((src[offset + j] - max).toDouble()); out[outOffset + j] = e.toFloat(); sum += e }
+        for (j in 0 until n) out[outOffset + j] = (out[outOffset + j] / sum).toFloat()
         return max + ln(sum)
     }
 }

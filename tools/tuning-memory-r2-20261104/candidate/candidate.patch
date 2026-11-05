@@ -1,0 +1,17 @@
+--- a/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt
++++ b/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt
+@@ -241 +241 @@
+-            Regex("(?i)\\b(password|passwd|token|secret|credential|authorization|api[_-]?key)\\b\\s*[:=]\\s*\\S+")
++            keyValueSecretPattern
+@@ -246 +246 @@
+-        out = out.replace(Regex("(?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]{8,}"), "Bearer [REDACTED]")
++        out = out.replace(bearerSecretPattern, "Bearer [REDACTED]")
+@@ -252 +252,7 @@
+-}
++    private companion object {
++        val keyValueSecretPattern =
++            Regex("(?i)\\b(password|passwd|token|secret|credential|authorization|api[_-]?key)\\b\\s*[:=]\\s*\\S+")
++        val bearerSecretPattern = Regex("(?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]{8,}")
++    }
++
++}

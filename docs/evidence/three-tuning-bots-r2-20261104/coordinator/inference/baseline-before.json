@@ -1,0 +1,8 @@
+{
+  "publicBaselineCommit": "04b46f125d1086e6ea540d3c68700407f340f607",
+  "localFallbackBaselineCommit": "db3295d51c769afdaf809ac1dfae2ada84a3274f",
+  "baselineCommit": "db3295d51c769afdaf809ac1dfae2ada84a3274f",
+  "baselineResolution": "local_fallback",
+  "expectedBaselineTree": "d753188fe0e67f6c6f098db6b7073ea199e05530",
+  "resolvedBaselineTree": "d753188fe0e67f6c6f098db6b7073ea199e05530"
+}

@@ -1,0 +1,30 @@
+diff --git a/.github/continuum/development-backlog.mjs b/.github/continuum/development-backlog.mjs
+index dfa1f4b..9911698 100644
+--- a/.github/continuum/development-backlog.mjs
++++ b/.github/continuum/development-backlog.mjs
+@@ -407,7 +407,24 @@ function record(task,op,to,reason){
+ const requireReason=op=>{check(text(op.reason,LIMITS.text),'INVALID_FIELD','reason required (1..400 characters)');return op.reason;};
+ const requireToken=v=>{check(typeof v==='string'&&TOKEN_RE.test(v),'INVALID_FIELD','token must be 32 hex characters');return v;};
+ const requireLease=v=>{check(int(v,LIMITS.leaseMin,LIMITS.leaseMax),'INVALID_FIELD','leaseMs must be 60000..86400000');return v;};
+-const depsDone=(doc,t)=>t.dependsOn.every(d=>doc.tasks.find(x=>x.id===d)?.state==='DONE');
++const depsDone=(doc,t)=>t.dependsOn.every(d=>{
++  // Canonical task IDs stay sorted and unique, including between batch operations.
++  let low=0,high=0;
++  // Grow from the front so early dependencies do not require a full-range search.
++  while(high<doc.tasks.length){
++    const dependency=doc.tasks[high],id=dependency.id;
++    if(id===d)return dependency.state==='DONE';
++    if(id>d)break;
++    low=high+1;high=high===0?1:high*2;
++  }
++  high=Math.min(high-1,doc.tasks.length-1);
++  while(low<=high){
++    const mid=(low+high)>>>1,dependency=doc.tasks[mid],id=dependency.id;
++    if(id===d)return dependency.state==='DONE';
++    if(id<d)low=mid+1;else high=mid-1;
++  }
++  return false;
++});
+ const eligible=(doc,t)=>t.state==='READY'&&depsDone(doc,t)&&t.attempts<t.maxAttempts;
+ 
+ function claimTask(doc,t,op){

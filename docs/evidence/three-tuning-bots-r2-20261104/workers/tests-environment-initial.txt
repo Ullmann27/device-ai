@@ -1,0 +1,213 @@
+✔ zero-paid-service worker repairs/checks each immutable head once and then idles (12.496628ms)
+✔ teamleader refuses symlinked state directory pointing back into source checkout (1.333413ms)
+✔ owner-accepted repair runs before baseline and only records an independently verified patch (1.534305ms)
+✔ two distinct accepted owner repairs run in consecutive local cycles on one unchanged HEAD (1.345631ms)
+✔ accepted owner TEST is dispatched before baseline and a verified new contract is review-only (1.425921ms)
+✔ owner TEST cannot falsely claim DONE without increasing or independently checking tests (0.903067ms)
+✔ failed owner TEST also leaves the immutable HEAD eligible for one real baseline (1.29197ms)
+✔ owner REPAIR retains priority over TEST and both finish on the same HEAD (1.489417ms)
+✔ retry is bounded by caller and cannot preempt accepted Owner REPAIR or TEST (0.767302ms)
+✔ owner repair evidence cannot be faked by a driver claiming DONE (0.939581ms)
+✔ READY read-only INVESTIGATE is handled once; no write or deployment (1.291449ms)
+✔ Teamleader refuses fabricated DONE when no tests actually executed (1.055775ms)
+✔ verified repair is a PROPOSAL only; never described as applied (0.987173ms)
+✔ an internally passing repair without an independent proof is NOT verified (0.8853ms)
+✔ a failed second-worktree check vetoes an otherwise passing repair (0.460641ms)
+✔ failed or interrupted work is preserved, never marked successful (0.932ms)
+✔ tampered state, invalid accepted task, and an existing lock fail closed (1.13144ms)
+✔ unexpected stop remains INTERRUPTED and no duplicate patch attempt occurs (0.947623ms)
+✔ old lock of a definitively dead same-host process recovers automatically (1.073923ms)
+✔ repeat checking a proven head requires explicit manual retry (1.087443ms)
+✔ CLI budget, command and retry flags are validated before execution (0.611788ms)
+✔ idle unchanged source HEAD receives exactly one structural discovery, new HEAD re-enables scan (12.91788ms)
+✔ crashed discovery records a failure and never hot-loops on the same HEAD (1.192541ms)
+✔ Teamleader can read older version-1 states that lack discoveryHeads (1.149987ms)
+✔ measured progress distinguishes real completed tasks, proposed patch and failed checks (1.492752ms)
+✔ discovery heads counter counts analysis only, not hourly idle loops (3.893577ms)
+✔ state policy rejects malformed heads and never schedules unauthorised actions (0.241283ms)
+✔ unverified repair is redacted consistently without modifying the audit original (0.200882ms)
+✔ successful independent second-worktree result keeps verified proposal intact (0.076355ms)
+✔ legacy internal VERIFIED without independent observation cannot leak success (0.074302ms)
+✔ a running Android build blocks teamleader before any repair and releases local state lock (0.622204ms)
+✔ nextEligible retains task identity and priority, oldest-first and id tie breaks without mutation (6.662686ms)
+✔ nextEligible combines every optional scope and respects empty filters and null subjects (1.593614ms)
+✔ nextEligible checks eligibility before kinds and sources, retaining filter short circuit order (4.050323ms)
+✔ nextEligible releases dependent tasks only after matching completed-task evidence (3.641529ms)
+✖ conformance vectors: every step and final state as recorded (shared with Kotlin) (0.513181ms)
+✖ committed fixtures are exactly what the current rules produce (150.260688ms)
+✔ stability backlog completion rejects a backend profile with zero executed tests (0.695585ms)
+✖ documents round-trip byte-identically and unknown fields survive operations (0.200541ms)
+✖ invalid documents fail with the shared error codes (0.333621ms)
+✖ development-planner output (schema 1) migrates without losing data (0.2867ms)
+✔ a task is never DONE without matching executed-test evidence, also when forged in a file (1.546372ms)
+✔ canonical JSON escaping and ordering equal JSON.stringify for valid strings (0.51257ms)
+✔ store writes atomically, keeps a backup and does not rewrite unchanged content (3.38294ms)
+✔ a corrupt backlog is recovered from the backup and quarantined, never deleted (5.651012ms)
+✖ without a valid backup a corrupt backlog fails closed and nothing is touched (0.728244ms)
+✔ revision conflicts and rejected batches write nothing; lenient batches report every rejection (1.839843ms)
+✔ a fresh foreign lock times out, a stale one is broken; interrupted writes are cleaned (207.109229ms)
+✔ stale backlog lock is not stolen while same-host PID is still alive (147.454238ms)
+✔ concurrent writer processes lose no update (375.114391ms)
+✖ a planner v1 file is migrated on the first write and the original is kept (0.434853ms)
+✖ round-trip verifier accepts a correct Kotlin half and rejects a missing or wrong one (15.124245ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 44
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1142.571277
+
+✖ failing tests:
+
+test at .github/continuum/development-backlog.test.mjs:98:1
+✖ conformance vectors: every step and final state as recorded (shared with Kotlin) (0.513181ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/conformance.json'
+      at Object.openSync (node:fs:621:18)
+      at Object.readFileSync (node:fs:487:35)
+      at fixture (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:10:24)
+      at TestContext.<anonymous> (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:99:29)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/conformance.json'
+  }
+
+test at .github/continuum/development-backlog.test.mjs:110:1
+✖ committed fixtures are exactly what the current rules produce (150.260688ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/v1-planner.json'
+      at Object.readFileSync (node:fs:483:20)
+      at fixtureFiles (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/backlog-fixtures.mjs:179:26)
+      at TestContext.<anonymous> (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:111:44)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/v1-planner.json'
+  }
+
+test at .github/continuum/development-backlog.test.mjs:137:1
+✖ documents round-trip byte-identically and unknown fields survive operations (0.200541ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/valid-v2.json'
+      at Object.openSync (node:fs:621:18)
+      at Object.readFileSync (node:fs:487:35)
+      at fixture (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:10:24)
+      at TestContext.<anonymous> (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:139:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/valid-v2.json'
+  }
+
+test at .github/continuum/development-backlog.test.mjs:150:1
+✖ invalid documents fail with the shared error codes (0.333621ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/invalid.json'
+      at Object.openSync (node:fs:621:18)
+      at Object.readFileSync (node:fs:487:35)
+      at fixture (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:10:24)
+      at TestContext.<anonymous> (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:151:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/invalid.json'
+  }
+
+test at .github/continuum/development-backlog.test.mjs:156:1
+✖ development-planner output (schema 1) migrates without losing data (0.2867ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/v1-planner.json'
+      at Object.openSync (node:fs:621:18)
+      at Object.readFileSync (node:fs:487:35)
+      at fixture (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:10:24)
+      at TestContext.<anonymous> (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:157:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/v1-planner.json'
+  }
+
+test at .github/continuum/development-backlog.test.mjs:231:1
+✖ without a valid backup a corrupt backlog fails closed and nothing is touched (0.728244ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/invalid-future-version.json'
+      at Object.openSync (node:fs:621:18)
+      at Object.readFileSync (node:fs:487:35)
+      at fixture (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:10:24)
+      at file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:239:25
+      at withDir (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:12:96)
+      at TestContext.<anonymous> (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:231:89)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/invalid-future-version.json'
+  }
+
+test at .github/continuum/development-backlog.test.mjs:315:1
+✖ a planner v1 file is migrated on the first write and the original is kept (0.434853ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/v1-planner.json'
+      at Object.openSync (node:fs:621:18)
+      at Object.readFileSync (node:fs:487:35)
+      at fixture (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:10:24)
+      at file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:317:25
+      at withDir (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:12:96)
+      at TestContext.<anonymous> (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:315:86)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/v1-planner.json'
+  }
+
+test at .github/continuum/development-backlog.test.mjs:327:1
+✖ round-trip verifier accepts a correct Kotlin half and rejects a missing or wrong one (15.124245ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/roundtrip-node.json'
+      at Object.openSync (node:fs:621:18)
+      at Object.readFileSync (node:fs:487:35)
+      at fixture (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:10:24)
+      at file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:329:67
+      at withDir (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:12:96)
+      at TestContext.<anonymous> (file:///workspace/scratch/59ad19c6d3b7/tuning-workers/.github/continuum/development-backlog.test.mjs:327:97)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/59ad19c6d3b7/tuning-workers/app/src/test/resources/continuum/backlog/roundtrip-node.json'
+  }

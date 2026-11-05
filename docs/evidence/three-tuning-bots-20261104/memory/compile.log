@@ -1,0 +1,3 @@
+tools/tuning-memory-20261104/ContextCompilerParity.kt:232:45: warning: 'val id: Long' is deprecated. Deprecated in Java.
+        val thread = Thread.currentThread().id
+                                            ^^

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "round": "R12",
+  "dateUtc": "2026-11-05",
+  "baselineHead": "63cd46f5ff6fd1f3b6d99a6789690659d61c6e4f",
+  "registrationCommit": "b22602a37aa0dcec27cb33ee99b56e9d335e0525",
+  "status": "SOURCE_EVIDENCE_AUDIT_PASS_NO_NEW_PERFORMANCE",
+  "remoteArchives": [
+    {
+      "round": "R8",
+      "sha256": "464c8c1e676d12640c5b737c6a34f06d3837307e274e8adb5035dbf4d22a02ac",
+      "bytes": 4780,
+      "gitBlob": "3c30c5a15643f5a3f765e86ab49699ae00a4876d",
+      "match": true
+    },
+    {
+      "round": "R9",
+      "sha256": "cefa10199763df4033abf0b221e35837a3eb161052a4d3e734d60c5645f0738c",
+      "bytes": 4664,
+      "gitBlob": "98b2bdedded1a8092e0d8fa2cc31701b9dfa8181",
+      "match": true
+    }
+  ],
+  "archivedCsv": {
+    "rows": 624,
+    "measured": 432,
+    "warmup": 192,
+    "paired": 312,
+    "negativeArchiveHashControls": 2,
+    "negativeChecksumControl": 1
+  },
+  "fixtureKotlin": {
+    "jdk": "21.0.12.1",
+    "kotlinc": "1.9.0",
+    "r8BitChecksPassed": 1403522,
+    "r9BitChecksPassed": 1403522,
+    "fullGraph": "NOT_RUN"
+  },
+  "tool": {
+    "path": "tools/tuning-r12/verify-remote-archives.mjs",
+    "localToolSha256": "8d962a5a321c03757e9277d9daa2e6c530d4365f87d61bd3f279542cec21722f",
+    "test": "PASS locally on re-encoded original SHA-matched archives"
+  },
+  "source": {
+    "runtime": "6de174dc400bfc5bd5bfb0facc56fc4820550b25",
+    "model": "4d773e44a09324df77891d8c60460dd4143d0ec1",
+    "tensor": "1ebd9b6803a3eb54a6a1baea25430b49e588665d",
+    "tokenizer": "39faa03f2c5dc9d86422e5bffa7a6c563274f35e",
+    "agent": "7e3ffcf1542bc123b1e536ee99dfd3280e15ebbb"
+  },
+  "actualCallProfile": "NOT_RUN",
+  "productionSourceChanges": 0,
+  "newCandidate": false,
+  "android": "NOT_RUN"
+}

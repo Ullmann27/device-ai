@@ -1,0 +1,1542 @@
+{
+  "before": {
+    "environment": {
+      "phase": "before",
+      "java": "21.0.13+9-1-deb13u2-Debian",
+      "vm": "OpenJDK 64-Bit Server VM",
+      "arch": "amd64",
+      "processors": 9,
+      "load": 3.60498046875
+    },
+    "jvmStartupWarnings": [],
+    "scenarios": [
+      {
+        "vocab": 258,
+        "kind": "random",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 209.54296875,
+            "min": 182.6572265625,
+            "max": 306.1728515625
+          },
+          "cpuNsPerOp": {
+            "median": 210.5966796875,
+            "min": 183.2314453125,
+            "max": 313.5419921875
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.203125
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 206.86328125,
+            "min": 180.4267578125,
+            "max": 353.5966796875
+          },
+          "cpuNsPerOp": {
+            "median": 207.61328125,
+            "min": 181.0498046875,
+            "max": 356.9169921875
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        }
+      },
+      {
+        "vocab": 258,
+        "kind": "ties",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 559.560546875,
+            "min": 498.765625,
+            "max": 693.78515625
+          },
+          "cpuNsPerOp": {
+            "median": 561.8115234375,
+            "min": 499.9033203125,
+            "max": 697.0810546875
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 679.154296875,
+            "min": 481.1416015625,
+            "max": 973.1396484375
+          },
+          "cpuNsPerOp": {
+            "median": 681.404296875,
+            "min": 482.142578125,
+            "max": 870.708984375
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "random",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 589.87890625,
+            "min": 535.3056640625,
+            "max": 4731.4140625
+          },
+          "cpuNsPerOp": {
+            "median": 593.1767578125,
+            "min": 538.212890625,
+            "max": 4526.609375
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 569.7705078125,
+            "min": 414.83203125,
+            "max": 1099.8935546875
+          },
+          "cpuNsPerOp": {
+            "median": 553.13671875,
+            "min": 416.5966796875,
+            "max": 1104.5419921875
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "ties",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 1149.6748046875,
+            "min": 902.3896484375,
+            "max": 1550.5986328125
+          },
+          "cpuNsPerOp": {
+            "median": 1153.677734375,
+            "min": 905.9765625,
+            "max": 1563.8876953125
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 1109.1162109375,
+            "min": 861.0966796875,
+            "max": 2066.59765625
+          },
+          "cpuNsPerOp": {
+            "median": 1112.591796875,
+            "min": 863.12890625,
+            "max": 1479.2890625
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.2890625
+          }
+        }
+      },
+      {
+        "vocab": 2048,
+        "kind": "random",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 1766.3489583333333,
+            "min": 1161.5885416666667,
+            "max": 11299.903645833334
+          },
+          "cpuNsPerOp": {
+            "median": 1393.3463541666667,
+            "min": 1163.1614583333333,
+            "max": 2111.03125
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.14583333333333334,
+            "min": 0.14583333333333334,
+            "max": 0.14583333333333334
+          }
+        },
+        "production": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 1519.5989583333333,
+            "min": 1169.4635416666667,
+            "max": 4335.8828125
+          },
+          "cpuNsPerOp": {
+            "median": 1525.4192708333333,
+            "min": 1171.6119791666667,
+            "max": 2091.8619791666665
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.14583333333333334,
+            "min": 0.14583333333333334,
+            "max": 0.14583333333333334
+          }
+        }
+      },
+      {
+        "vocab": 2048,
+        "kind": "ties",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 3640.3359375,
+            "min": 3099.8854166666665,
+            "max": 5046.872395833333
+          },
+          "cpuNsPerOp": {
+            "median": 3593.78125,
+            "min": 3102.609375,
+            "max": 4656.533854166667
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.14583333333333334,
+            "min": 0.14583333333333334,
+            "max": 0.14583333333333334
+          }
+        },
+        "production": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 3855.7369791666665,
+            "min": 3306.6302083333335,
+            "max": 5826.111979166667
+          },
+          "cpuNsPerOp": {
+            "median": 3864.6510416666665,
+            "min": 3314.0416666666665,
+            "max": 5850.106770833333
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.14583333333333334,
+            "min": 0.14583333333333334,
+            "max": 0.14583333333333334
+          }
+        }
+      },
+      {
+        "vocab": 8192,
+        "kind": "random",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 6547.09375,
+            "min": 4767.0,
+            "max": 9877.7890625
+          },
+          "cpuNsPerOp": {
+            "median": 6304.6171875,
+            "min": 4776.3203125,
+            "max": 7372.0546875
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.4375,
+            "min": 0.4375,
+            "max": 0.4375
+          }
+        },
+        "production": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 5364.4609375,
+            "min": 4671.2265625,
+            "max": 7245.171875
+          },
+          "cpuNsPerOp": {
+            "median": 5374.7109375,
+            "min": 4677.578125,
+            "max": 6237.7890625
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.4375,
+            "min": 0.4375,
+            "max": 0.4375
+          }
+        }
+      },
+      {
+        "vocab": 8192,
+        "kind": "ties",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 21809.921875,
+            "min": 12569.5703125,
+            "max": 24099.453125
+          },
+          "cpuNsPerOp": {
+            "median": 21833.9453125,
+            "min": 12580.421875,
+            "max": 24131.2734375
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.4375,
+            "min": 0.4375,
+            "max": 0.4375
+          }
+        },
+        "production": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 21237.96875,
+            "min": 14372.6640625,
+            "max": 23624.5234375
+          },
+          "cpuNsPerOp": {
+            "median": 21271.1640625,
+            "min": 14383.1875,
+            "max": 23653.296875
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.4375,
+            "min": 0.4375,
+            "max": 0.4375
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 50,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 62035.328125,
+            "min": 54771.044921875,
+            "max": 74434.4453125
+          },
+          "cpuNsPerOp": {
+            "median": 62009.146484375,
+            "min": 54785.2109375,
+            "max": 71398.783203125
+          },
+          "allocatedBytesPerOp": {
+            "median": 15824.0546875,
+            "min": 15824.0546875,
+            "max": 15824.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 65724.91796875,
+            "min": 56745.326171875,
+            "max": 73094.3037109375
+          },
+          "cpuNsPerOp": {
+            "median": 63842.5791015625,
+            "min": 56507.94921875,
+            "max": 72775.765625
+          },
+          "allocatedBytesPerOp": {
+            "median": 15824.0546875,
+            "min": 15824.0546875,
+            "max": 15824.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 61394.115234375,
+            "min": 50821.1123046875,
+            "max": 92677.9775390625
+          },
+          "cpuNsPerOp": {
+            "median": 61221.626953125,
+            "min": 50771.94921875,
+            "max": 64967.490234375
+          },
+          "allocatedBytesPerOp": {
+            "median": 14264.0546875,
+            "min": 14264.0546875,
+            "max": 14264.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 55555.0498046875,
+            "min": 50108.6044921875,
+            "max": 60256.142578125
+          },
+          "cpuNsPerOp": {
+            "median": 55117.013671875,
+            "min": 49995.90234375,
+            "max": 60161.359375
+          },
+          "allocatedBytesPerOp": {
+            "median": 14264.0546875,
+            "min": 14264.0546875,
+            "max": 14264.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 512,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 79005.341796875,
+            "min": 66137.802734375,
+            "max": 102183.9658203125
+          },
+          "cpuNsPerOp": {
+            "median": 78025.5556640625,
+            "min": 65567.1513671875,
+            "max": 81712.3076171875
+          },
+          "allocatedBytesPerOp": {
+            "median": 30648.0546875,
+            "min": 30648.0546875,
+            "max": 30648.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 80266.720703125,
+            "min": 71983.9990234375,
+            "max": 116293.802734375
+          },
+          "cpuNsPerOp": {
+            "median": 79447.6142578125,
+            "min": 71693.0,
+            "max": 81263.263671875
+          },
+          "allocatedBytesPerOp": {
+            "median": 30648.0546875,
+            "min": 30648.0546875,
+            "max": 30648.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "ties",
+        "temperature": "1.0",
+        "topK": 50,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 6542.1259765625,
+            "min": 4652.212890625,
+            "max": 9621.708984375
+          },
+          "cpuNsPerOp": {
+            "median": 6546.9033203125,
+            "min": 4656.0830078125,
+            "max": 7766.4990234375
+          },
+          "allocatedBytesPerOp": {
+            "median": 15864.0546875,
+            "min": 15864.0546875,
+            "max": 15864.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 7290.87890625,
+            "min": 4712.6455078125,
+            "max": 11763.7001953125
+          },
+          "cpuNsPerOp": {
+            "median": 6135.6962890625,
+            "min": 4717.1015625,
+            "max": 7826.08984375
+          },
+          "allocatedBytesPerOp": {
+            "median": 15864.0546875,
+            "min": 15864.0546875,
+            "max": 15864.0546875
+          }
+        }
+      },
+      {
+        "vocab": 2048,
+        "kind": "random",
+        "temperature": "0.8",
+        "topK": 40,
+        "round_one_reference": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 314500.4322916667,
+            "min": 297231.40625,
+            "max": 343140.0104166667
+          },
+          "cpuNsPerOp": {
+            "median": 299689.5416666667,
+            "min": 296490.6223958333,
+            "max": 322824.2005208333
+          },
+          "allocatedBytesPerOp": {
+            "median": 73155.14583333333,
+            "min": 73155.14583333333,
+            "max": 73155.14583333333
+          }
+        },
+        "production": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 326816.2317708333,
+            "min": 309933.4401041667,
+            "max": 513685.8203125
+          },
+          "cpuNsPerOp": {
+            "median": 320011.9270833333,
+            "min": 306893.4140625,
+            "max": 497871.0286458333
+          },
+          "allocatedBytesPerOp": {
+            "median": 73155.14583333333,
+            "min": 73155.14583333333,
+            "max": 73155.14583333333
+          }
+        }
+      },
+      {
+        "vocab": 2048,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 2048,
+        "round_one_reference": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 351885.1067708333,
+            "min": 318729.5963541667,
+            "max": 405061.0859375
+          },
+          "cpuNsPerOp": {
+            "median": 350702.0390625,
+            "min": 315424.6614583333,
+            "max": 374375.2135416667
+          },
+          "allocatedBytesPerOp": {
+            "median": 137411.14583333334,
+            "min": 137411.14583333334,
+            "max": 137411.14583333334
+          }
+        },
+        "production": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 348167.0651041667,
+            "min": 307316.6770833333,
+            "max": 391063.4375
+          },
+          "cpuNsPerOp": {
+            "median": 347275.7421875,
+            "min": 307327.6223958333,
+            "max": 387051.375
+          },
+          "allocatedBytesPerOp": {
+            "median": 137411.14583333334,
+            "min": 137411.14583333334,
+            "max": 137411.14583333334
+          }
+        }
+      },
+      {
+        "vocab": 8192,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 50,
+        "round_one_reference": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 1449421.9140625,
+            "min": 1308588.6953125,
+            "max": 1534239.390625
+          },
+          "cpuNsPerOp": {
+            "median": 1420862.9609375,
+            "min": 1308012.875,
+            "max": 1528691.875
+          },
+          "allocatedBytesPerOp": {
+            "median": 273561.4375,
+            "min": 273561.4375,
+            "max": 273561.4375
+          }
+        },
+        "production": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 1434125.3203125,
+            "min": 1293965.6484375,
+            "max": 1623236.8125
+          },
+          "cpuNsPerOp": {
+            "median": 1421601.5859375,
+            "min": 1293196.3203125,
+            "max": 1535761.6640625
+          },
+          "allocatedBytesPerOp": {
+            "median": 273561.4375,
+            "min": 273561.4375,
+            "max": 273561.4375
+          }
+        }
+      },
+      {
+        "vocab": 8192,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 8192,
+        "round_one_reference": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 1633752.4921875,
+            "min": 1556063.3359375,
+            "max": 1932975.4453125
+          },
+          "cpuNsPerOp": {
+            "median": 1614937.2734375,
+            "min": 1465697.2109375,
+            "max": 1673227.8359375
+          },
+          "allocatedBytesPerOp": {
+            "median": 534105.4375,
+            "min": 534105.4375,
+            "max": 534105.4375
+          }
+        },
+        "production": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 1641364.2578125,
+            "min": 1426538.984375,
+            "max": 1755019.171875
+          },
+          "cpuNsPerOp": {
+            "median": 1621958.6796875,
+            "min": 1426168.5390625,
+            "max": 1739611.5625
+          },
+          "allocatedBytesPerOp": {
+            "median": 534105.4375,
+            "min": 534105.4375,
+            "max": 534105.4375
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "random",
+        "temperature": "NaN",
+        "topK": 50,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 61961.3544921875,
+            "min": 58182.275390625,
+            "max": 65807.4921875
+          },
+          "cpuNsPerOp": {
+            "median": 61038.396484375,
+            "min": 58186.455078125,
+            "max": 65802.2763671875
+          },
+          "allocatedBytesPerOp": {
+            "median": 15864.0546875,
+            "min": 15864.0546875,
+            "max": 15864.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 59326.0498046875,
+            "min": 50108.0927734375,
+            "max": 68235.0419921875
+          },
+          "cpuNsPerOp": {
+            "median": 59330.837890625,
+            "min": 50080.1591796875,
+            "max": 68215.5166015625
+          },
+          "allocatedBytesPerOp": {
+            "median": 15864.0546875,
+            "min": 15864.0546875,
+            "max": 15864.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "special",
+        "temperature": "1.0",
+        "topK": 50,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 61367.681640625,
+            "min": 57927.0625,
+            "max": 66261.73828125
+          },
+          "cpuNsPerOp": {
+            "median": 61245.0107421875,
+            "min": 57940.4404296875,
+            "max": 66268.68359375
+          },
+          "allocatedBytesPerOp": {
+            "median": 15864.0546875,
+            "min": 15864.0546875,
+            "max": 15864.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 64792.8994140625,
+            "min": 55814.794921875,
+            "max": 70266.3076171875
+          },
+          "cpuNsPerOp": {
+            "median": 64806.234375,
+            "min": 55836.55078125,
+            "max": 70271.5634765625
+          },
+          "allocatedBytesPerOp": {
+            "median": 15864.0546875,
+            "min": 15864.0546875,
+            "max": 15864.0546875
+          }
+        }
+      }
+    ]
+  },
+  "after": {
+    "environment": {
+      "phase": "after",
+      "java": "21.0.13+9-1-deb13u2-Debian",
+      "vm": "OpenJDK 64-Bit Server VM",
+      "arch": "amd64",
+      "processors": 9,
+      "load": 4.6123046875
+    },
+    "jvmStartupWarnings": [
+      "[0.001s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/30 because it is locked by another process (errno = 11)"
+    ],
+    "scenarios": [
+      {
+        "vocab": 258,
+        "kind": "random",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 209.15234375,
+            "min": 179.68359375,
+            "max": 617.8427734375
+          },
+          "cpuNsPerOp": {
+            "median": 210.21484375,
+            "min": 180.3076171875,
+            "max": 619.75
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.203125
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 195.341796875,
+            "min": 174.7255859375,
+            "max": 252.01953125
+          },
+          "cpuNsPerOp": {
+            "median": 196.0341796875,
+            "min": 179.4765625,
+            "max": 253.1982421875
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        }
+      },
+      {
+        "vocab": 258,
+        "kind": "ties",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 538.9443359375,
+            "min": 457.044921875,
+            "max": 844.658203125
+          },
+          "cpuNsPerOp": {
+            "median": 540.4521484375,
+            "min": 458.9638671875,
+            "max": 846.962890625
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 612.3076171875,
+            "min": 470.599609375,
+            "max": 3791.4111328125
+          },
+          "cpuNsPerOp": {
+            "median": 614.0869140625,
+            "min": 471.51171875,
+            "max": 3795.8193359375
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "random",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 385.4912109375,
+            "min": 348.0234375,
+            "max": 455.87109375
+          },
+          "cpuNsPerOp": {
+            "median": 386.677734375,
+            "min": 349.162109375,
+            "max": 457.888671875
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 384.9052734375,
+            "min": 314.33984375,
+            "max": 528.6171875
+          },
+          "cpuNsPerOp": {
+            "median": 385.876953125,
+            "min": 315.4013671875,
+            "max": 530.90625
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "ties",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 965.3671875,
+            "min": 789.0966796875,
+            "max": 2213.767578125
+          },
+          "cpuNsPerOp": {
+            "median": 968.060546875,
+            "min": 790.619140625,
+            "max": 2221.5068359375
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 920.2705078125,
+            "min": 787.619140625,
+            "max": 1051.287109375
+          },
+          "cpuNsPerOp": {
+            "median": 922.876953125,
+            "min": 789.0146484375,
+            "max": 1054.3408203125
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.0546875,
+            "min": 0.0546875,
+            "max": 0.2421875
+          }
+        }
+      },
+      {
+        "vocab": 2048,
+        "kind": "random",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 1573.484375,
+            "min": 1170.640625,
+            "max": 3625.8958333333335
+          },
+          "cpuNsPerOp": {
+            "median": 1578.2838541666667,
+            "min": 1172.3177083333333,
+            "max": 3634.7526041666665
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.14583333333333334,
+            "min": 0.14583333333333334,
+            "max": 0.14583333333333334
+          }
+        },
+        "production": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 1163.5442708333333,
+            "min": 875.9791666666666,
+            "max": 5907.2890625
+          },
+          "cpuNsPerOp": {
+            "median": 1167.8020833333333,
+            "min": 877.0859375,
+            "max": 5921.747395833333
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.14583333333333334,
+            "min": 0.14583333333333334,
+            "max": 0.14583333333333334
+          }
+        }
+      },
+      {
+        "vocab": 2048,
+        "kind": "ties",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 3675.6822916666665,
+            "min": 3130.3828125,
+            "max": 4841.052083333333
+          },
+          "cpuNsPerOp": {
+            "median": 3682.2734375,
+            "min": 3132.7317708333335,
+            "max": 4912.278645833333
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.14583333333333334,
+            "min": 0.14583333333333334,
+            "max": 0.14583333333333334
+          }
+        },
+        "production": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 3177.8515625,
+            "min": 2852.8307291666665,
+            "max": 3774.2161458333335
+          },
+          "cpuNsPerOp": {
+            "median": 3181.7890625,
+            "min": 2870.5703125,
+            "max": 3793.1640625
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.14583333333333334,
+            "min": 0.14583333333333334,
+            "max": 0.14583333333333334
+          }
+        }
+      },
+      {
+        "vocab": 8192,
+        "kind": "random",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 4756.453125,
+            "min": 4542.296875,
+            "max": 5425.8125
+          },
+          "cpuNsPerOp": {
+            "median": 4762.625,
+            "min": 4545.7421875,
+            "max": 5434.09375
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.4375,
+            "min": 0.4375,
+            "max": 0.4375
+          }
+        },
+        "production": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 3837.09375,
+            "min": 3448.78125,
+            "max": 5188.65625
+          },
+          "cpuNsPerOp": {
+            "median": 3844.546875,
+            "min": 3453.890625,
+            "max": 5205.0859375
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.4375,
+            "min": 0.4375,
+            "max": 0.4375
+          }
+        }
+      },
+      {
+        "vocab": 8192,
+        "kind": "ties",
+        "temperature": "0.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 14193.359375,
+            "min": 12507.0078125,
+            "max": 19167.40625
+          },
+          "cpuNsPerOp": {
+            "median": 14205.03125,
+            "min": 12551.1640625,
+            "max": 19187.671875
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.4375,
+            "min": 0.4375,
+            "max": 0.4375
+          }
+        },
+        "production": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 12759.9609375,
+            "min": 11249.40625,
+            "max": 14233.4296875
+          },
+          "cpuNsPerOp": {
+            "median": 12778.7734375,
+            "min": 11256.734375,
+            "max": 14243.3671875
+          },
+          "allocatedBytesPerOp": {
+            "median": 0.4375,
+            "min": 0.4375,
+            "max": 0.4375
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 50,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 63720.19921875,
+            "min": 55819.9208984375,
+            "max": 72518.6826171875
+          },
+          "cpuNsPerOp": {
+            "median": 62246.7705078125,
+            "min": 55787.2392578125,
+            "max": 70564.8251953125
+          },
+          "allocatedBytesPerOp": {
+            "median": 15824.0546875,
+            "min": 15824.0546875,
+            "max": 15824.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 63065.0927734375,
+            "min": 55254.3916015625,
+            "max": 76217.0390625
+          },
+          "cpuNsPerOp": {
+            "median": 63039.447265625,
+            "min": 54807.109375,
+            "max": 74492.751953125
+          },
+          "allocatedBytesPerOp": {
+            "median": 14800.0546875,
+            "min": 14800.0546875,
+            "max": 14800.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 1,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 58939.0908203125,
+            "min": 57070.0908203125,
+            "max": 67389.62890625
+          },
+          "cpuNsPerOp": {
+            "median": 58895.6396484375,
+            "min": 54965.8369140625,
+            "max": 61730.185546875
+          },
+          "allocatedBytesPerOp": {
+            "median": 14264.0546875,
+            "min": 14264.0546875,
+            "max": 14264.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 59046.83203125,
+            "min": 52502.724609375,
+            "max": 61268.3076171875
+          },
+          "cpuNsPerOp": {
+            "median": 59028.0048828125,
+            "min": 52487.41015625,
+            "max": 61255.2626953125
+          },
+          "allocatedBytesPerOp": {
+            "median": 14192.0546875,
+            "min": 14192.0546875,
+            "max": 14216.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 512,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 70601.177734375,
+            "min": 61052.6396484375,
+            "max": 81579.7236328125
+          },
+          "cpuNsPerOp": {
+            "median": 70388.5,
+            "min": 61013.1240234375,
+            "max": 81536.8623046875
+          },
+          "allocatedBytesPerOp": {
+            "median": 30648.0546875,
+            "min": 30648.0546875,
+            "max": 30648.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 76496.6611328125,
+            "min": 69207.24609375,
+            "max": 82604.173828125
+          },
+          "cpuNsPerOp": {
+            "median": 76460.341796875,
+            "min": 69122.2333984375,
+            "max": 80867.64453125
+          },
+          "allocatedBytesPerOp": {
+            "median": 20352.0546875,
+            "min": 20352.0546875,
+            "max": 20352.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "ties",
+        "temperature": "1.0",
+        "topK": 50,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 7298.70703125,
+            "min": 7235.9384765625,
+            "max": 11892.6259765625
+          },
+          "cpuNsPerOp": {
+            "median": 7305.3935546875,
+            "min": 7236.7275390625,
+            "max": 7410.431640625
+          },
+          "allocatedBytesPerOp": {
+            "median": 15864.0546875,
+            "min": 15864.0546875,
+            "max": 15864.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 7609.5263671875,
+            "min": 7441.78515625,
+            "max": 9656.8427734375
+          },
+          "cpuNsPerOp": {
+            "median": 7616.8232421875,
+            "min": 7448.99609375,
+            "max": 7825.12109375
+          },
+          "allocatedBytesPerOp": {
+            "median": 14808.0546875,
+            "min": 14808.0546875,
+            "max": 14808.0546875
+          }
+        }
+      },
+      {
+        "vocab": 2048,
+        "kind": "random",
+        "temperature": "0.8",
+        "topK": 40,
+        "round_one_reference": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 284629.9947916667,
+            "min": 242817.36458333334,
+            "max": 318686.171875
+          },
+          "cpuNsPerOp": {
+            "median": 284458.8307291667,
+            "min": 242727.29947916666,
+            "max": 318430.2786458333
+          },
+          "allocatedBytesPerOp": {
+            "median": 73155.14583333333,
+            "min": 73155.14583333333,
+            "max": 73155.14583333333
+          }
+        },
+        "production": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 293716.5182291667,
+            "min": 263175.1354166667,
+            "max": 311116.7942708333
+          },
+          "cpuNsPerOp": {
+            "median": 293546.4557291667,
+            "min": 263084.75,
+            "max": 309977.2109375
+          },
+          "allocatedBytesPerOp": {
+            "median": 72299.14583333333,
+            "min": 72299.14583333333,
+            "max": 72299.14583333333
+          }
+        }
+      },
+      {
+        "vocab": 2048,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 2048,
+        "round_one_reference": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 335475.609375,
+            "min": 297947.9973958333,
+            "max": 373467.5989583333
+          },
+          "cpuNsPerOp": {
+            "median": 328415.53125,
+            "min": 297776.4296875,
+            "max": 373253.1484375
+          },
+          "allocatedBytesPerOp": {
+            "median": 137411.14583333334,
+            "min": 137411.14583333334,
+            "max": 137411.14583333334
+          }
+        },
+        "production": {
+          "operationsPerBatch": 384,
+          "wallNsPerOp": {
+            "median": 372152.5208333333,
+            "min": 330503.3645833333,
+            "max": 422063.2890625
+          },
+          "cpuNsPerOp": {
+            "median": 366616.7447916667,
+            "min": 326922.1484375,
+            "max": 417919.8046875
+          },
+          "allocatedBytesPerOp": {
+            "median": 96395.14583333333,
+            "min": 96395.14583333333,
+            "max": 96395.14583333333
+          }
+        }
+      },
+      {
+        "vocab": 8192,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 50,
+        "round_one_reference": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 1366140.40625,
+            "min": 1318604.4140625,
+            "max": 1439410.8671875
+          },
+          "cpuNsPerOp": {
+            "median": 1365471.671875,
+            "min": 1317870.8984375,
+            "max": 1422283.375
+          },
+          "allocatedBytesPerOp": {
+            "median": 273561.4375,
+            "min": 273561.4375,
+            "max": 273561.4375
+          }
+        },
+        "production": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 1435379.8828125,
+            "min": 1241205.984375,
+            "max": 1535674.484375
+          },
+          "cpuNsPerOp": {
+            "median": 1434690.3125,
+            "min": 1240493.8515625,
+            "max": 1534788.578125
+          },
+          "allocatedBytesPerOp": {
+            "median": 272505.4375,
+            "min": 272505.4375,
+            "max": 272505.4375
+          }
+        }
+      },
+      {
+        "vocab": 8192,
+        "kind": "random",
+        "temperature": "1.0",
+        "topK": 8192,
+        "round_one_reference": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 1571828.7890625,
+            "min": 1359924.7265625,
+            "max": 2206269.359375
+          },
+          "cpuNsPerOp": {
+            "median": 1571241.5859375,
+            "min": 1359785.5703125,
+            "max": 2174812.75
+          },
+          "allocatedBytesPerOp": {
+            "median": 534105.4375,
+            "min": 534105.4375,
+            "max": 534105.4375
+          }
+        },
+        "production": {
+          "operationsPerBatch": 128,
+          "wallNsPerOp": {
+            "median": 1714769.421875,
+            "min": 1571778.8671875,
+            "max": 1752543.109375
+          },
+          "cpuNsPerOp": {
+            "median": 1712225.71875,
+            "min": 1560045.84375,
+            "max": 1740457.96875
+          },
+          "allocatedBytesPerOp": {
+            "median": 370209.4375,
+            "min": 370209.4375,
+            "max": 370209.4375
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "random",
+        "temperature": "NaN",
+        "topK": 50,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 49739.177734375,
+            "min": 48942.833984375,
+            "max": 61192.724609375
+          },
+          "cpuNsPerOp": {
+            "median": 49744.865234375,
+            "min": 48947.1845703125,
+            "max": 61198.9375
+          },
+          "allocatedBytesPerOp": {
+            "median": 15864.0546875,
+            "min": 15864.0546875,
+            "max": 15864.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 55148.3837890625,
+            "min": 48027.953125,
+            "max": 63915.0302734375
+          },
+          "cpuNsPerOp": {
+            "median": 52929.8154296875,
+            "min": 48034.1669921875,
+            "max": 63912.7294921875
+          },
+          "allocatedBytesPerOp": {
+            "median": 14808.0546875,
+            "min": 14808.0546875,
+            "max": 14808.0546875
+          }
+        }
+      },
+      {
+        "vocab": 512,
+        "kind": "special",
+        "temperature": "1.0",
+        "topK": 50,
+        "round_one_reference": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 62766.5166015625,
+            "min": 58736.7470703125,
+            "max": 64335.69140625
+          },
+          "cpuNsPerOp": {
+            "median": 62772.6259765625,
+            "min": 58776.0869140625,
+            "max": 64341.8525390625
+          },
+          "allocatedBytesPerOp": {
+            "median": 15864.0546875,
+            "min": 15864.0546875,
+            "max": 15864.0546875
+          }
+        },
+        "production": {
+          "operationsPerBatch": 1024,
+          "wallNsPerOp": {
+            "median": 64458.052734375,
+            "min": 58363.5439453125,
+            "max": 68033.26171875
+          },
+          "cpuNsPerOp": {
+            "median": 64452.5537109375,
+            "min": 58343.1630859375,
+            "max": 65588.099609375
+          },
+          "allocatedBytesPerOp": {
+            "median": 14808.0546875,
+            "min": 14808.0546875,
+            "max": 14808.0546875
+          }
+        }
+      }
+    ]
+  }
+}

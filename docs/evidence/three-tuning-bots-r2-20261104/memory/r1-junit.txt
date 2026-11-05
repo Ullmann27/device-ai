@@ -1,0 +1,6 @@
+JUnit version 4.13.2
+....................PROMPT-MESSUNG compiledContext FULL=2910 B, NATIVE=1267 B, Ersparnis=1643 B
+.......
+Time: 0.498
+
+OK (27 tests)

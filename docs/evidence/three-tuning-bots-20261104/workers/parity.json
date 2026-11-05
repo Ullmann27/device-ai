@@ -1,0 +1,28 @@
+{
+  "base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "sourcePath": ".github/continuum/development-backlog.mjs",
+  "baselineSourceSha256": "5db9cdc903d2926ba01f23571abe740a115a60bf12ba651fa3ba7cc30e84a0a0",
+  "candidateSourceSha256": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d",
+  "node": "v24.22.1",
+  "v8": "13.6.233.17-node.58",
+  "platform": "linux",
+  "arch": "x64",
+  "cpuModel": "AMD EPYC 9V74 80-Core Processor",
+  "cpuCount": 9,
+  "availableParallelism": 9,
+  "parityCases": 30720,
+  "fixtureSizes": [
+    0,
+    1,
+    20,
+    100,
+    500
+  ],
+  "fixtureModes": [
+    "mixed-priority",
+    "ties",
+    "scoped"
+  ],
+  "device": "host; Android/Fold7 not measured",
+  "status": "PARITY_PASS"
+}
