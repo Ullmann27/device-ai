@@ -3965,11 +3965,21 @@ class AgentActivity : Activity() {
         )
         val snapshot = at.heinz.deviceai.cognitive.OwnerCapabilityReply.withDashboard(live,
             capabilityDashboard, capabilityDashboardAtElapsedMs, android.os.SystemClock.elapsedRealtime())
+        val spokenHome = at.heinz.deviceai.cognitive.CockpitConversationPresentation.keepHomeForResult(
+            continuousConversation.active, keepCockpitDuringHandsFree,
+            activeWorkArea == ContinuumWorkArea.START
+        )
+        val reply = "Continuum · Aktuelle App-Fähigkeiten\n\n" +
+            at.heinz.deviceai.cognitive.OwnerCapabilityReply.describe(snapshot)
         input.text.clear()
         showActionResultWithoutForcingChat()
         addBubble(request, user = true)
-        addBubble("Continuum · Aktuelle App-Fähigkeiten\n\n" +
-            at.heinz.deviceai.cognitive.OwnerCapabilityReply.describe(snapshot), user = false)
+        addBubble(reply, user = false)
+        if (spokenHome) {
+            recordCockpitDialog(true, request)
+            recordCockpitDialog(false, reply)
+            speakBootstrap(reply)
+        }
         addToolActivity("GERÄTESTATUS · nur öffentliche Betriebsdaten · kein Modell- oder Werkzeugaufruf")
     }
 
