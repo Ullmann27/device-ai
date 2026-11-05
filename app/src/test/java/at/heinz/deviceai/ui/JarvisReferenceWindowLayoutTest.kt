@@ -45,9 +45,9 @@ class JarvisReferenceWindowLayoutTest {
         val g = requireNotNull(s.grid)
         assertEquals(1536f, s.width, 0f)
         assertEquals(1024f, s.height, 0f)
-        assertEquals(Box(250f, 70f, 800f, 497f), g[Area.HEAD])
+        assertEquals(Box(548f, 70f, 800f, 497f), g[Area.HEAD])
         assertEquals(Box(805f, 183f, 1212f, 497f), g[Area.ORB])
-        assertEquals(Box(256f, 298f, 640f, 492f), g[Area.DIALOG])
+        assertEquals(Box(256f, 298f, 540f, 492f), g[Area.DIALOG])
         assertEquals(Box(258f, 503f, 1520f, 685f), g[Area.TILES])
         assertEquals(Box(12f, 97f, 243f, 896f), g[Area.RAIL])
         assertEquals(Box(16f, 906f, 1520f, 978f), g[Area.STATUS])
@@ -63,7 +63,7 @@ class JarvisReferenceWindowLayoutTest {
         assertEquals(2, shell.tileRows)
         assertEquals(listOf("chat", "memory", "logic", "research", "agents", "tasks", "web", "learning", "device", "system"),
             JarvisTiles.reference.map { it.target })
-        assertEquals(listOf("Chat", "Memory", "Logic", "Research", "Agents", "Tasks", "Web", "Learning", "Device Control", "System Status"),
+        assertEquals(listOf("Gespräch", "Gedächtnis", "Denken und Planen", "Forschung", "Assistenten", "Aufgaben", "Internet", "Lernen", "Gerätesteuerung", "Systemstatus"),
             JarvisTiles.reference.map { it.label })
         assertTrue(shell.tileBoxes()[5].top > shell.tileBoxes()[4].bottom)
         assertEquals(shell.tileBoxes()[0].left, shell.tileBoxes()[5].left, .001f)
@@ -126,11 +126,23 @@ class JarvisReferenceWindowLayoutTest {
         sane(taller)
     }
 
+    @Test fun theDialogueNeverCoversTheHeadInAnyReferenceWindow() {
+        for ((w, h) in listOf(840f to 560f, 840f to 900f, 884f to 760f, 960f to 640f, 1536f to 1024f, 1536f to 1224f)) {
+            for (font in listOf(1f, 1.3f)) {
+                val shell = JarvisShellLayout.create(w, h, font)
+                if (!shell.ref5Grid) continue
+                val head = shell.headBounds!!; val dialog = shell[Slot.DIALOG]!!
+                assertTrue("$w×$h font$font: dialogue beside the head", dialog.right <= head.left)
+                shell.dialogControlBoxes().forEach { assertTrue(it.width >= 48f - .01f && it.height >= 48f - .01f) }
+            }
+        }
+    }
+
     @Test fun missingOwnerCardNoLongerShrinksThePortraitViewport() {
         val shell = JarvisShellLayout.create(884f, 760f)
         assertNull(shell[Slot.USER_CARD])
         assertFalse(Area.USER_CARD in shell.grid!!.areas)
-        assertEquals(550f / 1536f * 884f, shell.headBounds!!.width, .01f)
+        assertEquals(252f / 1536f * 884f, shell.headBounds!!.width, .01f)
     }
 
     @Test fun reservationsAreSubtractedOnceAndDoNotCreateASecondNavigationRail() {

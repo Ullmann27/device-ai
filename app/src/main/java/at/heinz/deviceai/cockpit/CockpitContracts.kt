@@ -141,7 +141,10 @@ enum class OwnerRecognitionState { RECOGNIZED, NOT_RECOGNIZED, UNKNOWN }
 
 /** Only real signals. [method] names the signal (e.g. "Geräte-Entsperrung"); null when nothing is known. */
 data class OwnerRecognition(val state: OwnerRecognitionState, val method: String?, val sinceMillis: Long?) {
-    companion object { val UNKNOWN = OwnerRecognition(OwnerRecognitionState.UNKNOWN, null, null) }
+    companion object {
+        const val METHOD_UNLOCK = "Geräte-Entsperrung"
+        val UNKNOWN = OwnerRecognition(OwnerRecognitionState.UNKNOWN, null, null)
+    }
 }
 
 interface OwnerRecognitionSource {

@@ -8,9 +8,9 @@ import at.heinz.deviceai.ui.ContinuumIcons.Icon
  * preview draws the same map, so both show the identical composition. The hero slot is the hologram view.
  */
 object ContinuumHomeScreen {
-    val phoneNavigation = listOf(Icon.HOME to "Start", Icon.CHAT to "Chat", Icon.BRAIN to "KI-System", Icon.GEAR to "Werkzeuge",
+    val phoneNavigation = listOf(Icon.HOME to "Start", Icon.CHAT to "Gespräch", Icon.BRAIN to "KI-System", Icon.GEAR to "Werkzeuge",
         Icon.DOTS_VERTICAL to "Mehr")
-    val railNavigation = listOf(Icon.HOME to "Start", Icon.CHAT to "Chat", Icon.BOOK to "Lernen", Icon.CODE to "Entwickeln",
+    val railNavigation = listOf(Icon.HOME to "Start", Icon.CHAT to "Gespräch", Icon.BOOK to "Lernen", Icon.CODE to "Entwickeln",
         Icon.CHART_UP to "Analysieren", Icon.DATABASE to "Speicher", Icon.GEAR to "System")
 
     fun elements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
@@ -107,7 +107,7 @@ object ContinuumHomeScreen {
             Slot.SEARCH to HeaderButtonElement(HeaderButtonElement.Kind.SEARCH, textScale),
             Slot.NOTIFICATIONS to HeaderButtonElement(HeaderButtonElement.Kind.NOTIFICATIONS, textScale),
             Slot.PROFILE to HeaderButtonElement(HeaderButtonElement.Kind.PROFILE, textScale),
-            Slot.LABEL_THINKING to CockpitActionTile(Icon.CHAT, "Chat", { it.core.thinking }, textScale),
+            Slot.LABEL_THINKING to CockpitActionTile(Icon.CHAT, "Gespräch", { it.core.thinking }, textScale),
             Slot.LABEL_ANALYSING to CockpitActionTile(Icon.GLOBE, "Forschung", { it.core.analysing }, textScale),
             Slot.LABEL_LEARNING to CockpitActionTile(Icon.BOOK, "Lernen", { it.core.learning }, textScale),
             Slot.LABEL_DEVELOPING to CockpitActionTile(Icon.CODE, "Entwicklung", { it.core.developing }, textScale),

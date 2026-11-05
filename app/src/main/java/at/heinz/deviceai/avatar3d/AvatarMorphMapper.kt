@@ -38,8 +38,6 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             AvatarExpression.CURIOUS -> weight("BrowUp", .32f)
             AvatarExpression.FOCUSED -> weight("BrowDown", .18f)
             AvatarExpression.CONCERNED -> weight("BrowDown", .28f)
-            AvatarExpression.WARM -> if (pose.state == AvatarState.IDLE && pose.viseme == Viseme.SIL &&
-                pose.jawOpen == 0f && pose.speakEnergy == 0f) weight("Smile", .18f)
             AvatarExpression.NEUTRAL -> Unit
         }
         if (!motion) { visemeBlend.fill(0f); lastSeconds = Float.NaN; return }

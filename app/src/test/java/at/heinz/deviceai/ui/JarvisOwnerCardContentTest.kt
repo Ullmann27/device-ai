@@ -16,12 +16,21 @@ class JarvisOwnerCardContentTest {
         assertFalse(painter.texts.any { it.contains("erkannt") || it.contains("Aktiv") || it.contains("Ruhig") })
     }
 
-    @Test fun actualRecognitionDoesNotInventOtherSensorValues() {
+    @Test fun unlockedDeviceDoesNotClaimPersonalRecognition() {
         val painter = JarvisPresentationRecordingPainter()
         JarvisOwnerCardContent.draw(painter, box,
-            OwnerRecognition(OwnerRecognitionState.RECOGNIZED, "Geräte-Entsperrung", 1L))
-        assertTrue(painter.texts.contains("Nutzer erkannt"))
+            OwnerRecognition(OwnerRecognitionState.RECOGNIZED, OwnerRecognition.METHOD_UNLOCK, 1L))
+        assertTrue(painter.texts.contains("Gerät entsperrt"))
+        assertFalse(painter.texts.any { it.contains("erkannt") })
         assertTrue(painter.texts.any { it.startsWith("Geräte") })
+        assertTrue(painter.texts.count { it == "—" } == 4)
+    }
+
+    @Test fun actualRecognitionKeepsItsOwnSource() {
+        val painter = JarvisPresentationRecordingPainter()
+        JarvisOwnerCardContent.draw(painter, box,
+            OwnerRecognition(OwnerRecognitionState.RECOGNIZED, "Identität bestätigt", 1L))
+        assertTrue(painter.texts.contains("Nutzer erkannt"))
         assertTrue(painter.texts.count { it == "—" } == 4)
     }
 
