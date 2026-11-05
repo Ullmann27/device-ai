@@ -223,7 +223,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun updateAuraFraming() {
         val focus = if (head3dEnabled && native3dDrawn) assetMetadata?.focus else null
         val w = headDrawBounds.width(); val h = headDrawBounds.height()
-        if (focus == null || w <= 0f || h <= 0f) { auraScale = 1f; auraAnchorEffective = headAnchorX; return }
+        if (focus == null || w <= 0f || h <= 0f) { auraFocus = null; auraScale = 1f; auraAnchorEffective = headAnchorX; return }
         if (focus !== auraFocus || w != auraWidth || h != auraHeight || headAnchorX != auraAnchor ||
             headCloseUp != auraCloseUp || headKeepOut != auraKeepOut) {
             auraFocus = focus; auraWidth = w; auraHeight = h; auraAnchor = headAnchorX; auraCloseUp = headCloseUp
