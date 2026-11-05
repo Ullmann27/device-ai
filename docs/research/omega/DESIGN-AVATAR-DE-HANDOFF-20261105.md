@@ -152,3 +152,16 @@ abschalten; das Ausblenden der Zähne über `FilamentAvatarRenderer.HIDDEN_NODE_
 Laufzeitkosten: Die Szenenebenen verwenden Fill-Instanzen erneut (`JarvisSceneFills`). Shader entstehen nur bei
 Geometrieänderung oder bei einem 1/128-Farbschritt (≈ 0,2 s). Die Kopfmaske hält ihre drei Gradienten pro Kopfrahmen;
 Kurvenpunkte schreiben in ein wiederverwendetes Array.
+
+## 8. Sitzungsende 05.11.2026 — Stand für C1
+
+Letzter Code-Commit: `c195d73` (Kugelkern-Verstärkung, Test `realPulseAndProcessingBrightenTheOrbCore`). Host-UI-Paket 184/184 PASSED;
+volle Suite zuletzt auf `c49248dc…` ohne neue Fehler gegenüber der Basis. Alle sechs gitar-Review-Befunde auf #535 behoben und
+geschlossen. Zähne werden nicht gerendert (`927d0c1`), GLB `c8b88385…` bytegleich.
+
+Nächste Schritte in dieser Reihenfolge:
+1. Gerätenachweis, sobald `dl.google.com` freigegeben oder ein Fold7 per ADB erreichbar ist: Filament-Kopf mit Rahmung und Maske,
+   Bildzeiten, Ton und Lippenbewegung.
+2. Avatar-Material: Linienhologramm, Randlicht, Atlas-Naht an Schädeldecke und Rückseite, heller Keil an der inneren Lippe.
+3. Gehirnkugel größer, mit feineren Windungen; Leuchtimpulse an den Menürändern.
+4. Kompaktlayout nach Hochformatvorlage; Bewegungsmodell (Minimum-Jerk, Blinzelstatistik, Sakkaden); Sprachauswahl DE/EN.
