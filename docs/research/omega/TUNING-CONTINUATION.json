@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "RUNNING",
-  "owner": "tuning-sequential-r8-20261105",
-  "leaseExpiresAtUtc": "2026-11-05T01:15:00Z",
-  "updatedAtUtc": "2026-11-05T00:22:33Z",
+  "status": "READY_FOR_NEXT_RUN",
+  "owner": null,
+  "leaseExpiresAtUtc": null,
+  "updatedAtUtc": "2026-11-05T00:55:00Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -58,7 +58,7 @@
       "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "Do not repeat R7 rmsnorm scratch: it failed CPU/control gate despite modest allocated bytes. Only source-grounded new candidate after measuring real LM1 caller profile and verifying Gemma/LiteRT boundary; no extrapolation from isolated fixture to production.",
+  "next": "New candidate must be based on measured actual LM1 caller distribution and exact complete Kotlin graph. R8 and R9 are rejected; do not repeat. Gemma/LiteRT unchanged, Android not measured. Archive full R8/R9 raw data to GitHub only after SHA verification and supported file transfer; do not assert that happened.",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -68,7 +68,7 @@
     "no repeated favorable-sample search"
   ],
   "lastOwner": "tuning-automation-r7-20261104T2328Z",
-  "completedRound": "R7",
+  "completedRound": "R9",
   "lastPublishedProductionCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
   "completedMilestones": 4,
   "verification": {
@@ -82,20 +82,19 @@
   },
   "queue": [
     {
-      "target": "Profile actual LM1 caller allocation and demand shape",
-      "status": "STATIC_CALL_MAP_DONE_LIVE_PROFILE_NOT_RUN",
-      "gate": "Profile actual use and determine whether component is on active Gemma/LiteRT inference path; no extrapolation from synthetic Kotlin-host microbenchmarks; coordinate with other PR owners.",
-      "note": "LM1 nextDistribution feeds Transformer and LmEval; minGRU interactive route uses stepper. LM1 nll is segmentBits evaluation. Gemma/LiteRT live reachability unverified; see R7 report."
+      "target": "Complete raw archive transfer to official repo",
+      "status": "PENDING_LOCAL_ONLY",
+      "gate": "Two tar.xz SHA256 hashes in R8-R9 handoff; require actual transfer and roundtrip before remote publication claim"
     },
     {
-      "target": "Find a new optimizer from measured actual caller profile",
-      "status": "AWAITING_DISTINCT_MEASURED_HYPOTHESIS",
-      "gate": "Preregister distinct source-bound hypothesis and controls with stop rule; do not retest R4-R6 alternatives opportunistically."
+      "target": "Real source LM1 on-host caller profile and full-graph Kotlin compile",
+      "status": "NOT_RUN",
+      "gate": "No synthetic-only adoption; identify actual caller and active Gemma boundary"
     },
     {
-      "target": "Android/Fold7 A/B component profile",
-      "status": "WAITING_FOR_AVAILABLE_TARGET",
-      "gate": "Require authorized target, no silent APK build, signing or install; use DEVICE_NOT_RUN otherwise."
+      "target": "Android/Fold7 device measured A/B",
+      "status": "DEVICE_NOT_RUN",
+      "gate": "No unapproved APK/build/install"
     }
   ],
   "stopRules": [
@@ -105,23 +104,7 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": {
-    "id": "R9",
-    "stage": "PREREGISTERED",
-    "target": "LmRuntime.MinGruStepper.step final mmBt logits output",
-    "hypothesis": "Direct final one-row projection into the caller-owned logits FloatArray avoids temporary Mat and System.arraycopy without changing float sum order; unlike R8 matrix scratch candidate, no per-layer clearing/refactoring.",
-    "baselineHead": "f1ca172636dc745a5365acde4ff194f75c651488",
-    "baselineFiles": [
-      "LmRuntime.kt git blob 6de174dc400bfc5bd5bfb0facc56fc4820550b25",
-      "LmTensor.kt git blob 1ebd9b6803a3eb54a6a1baea25430b49e588665d"
-    ],
-    "matrix": "Kotlin/JDK21 source-faithful exact method; bit-exact logits at 8,32,64,128 dim, 1..4 layers, vocab 258 and 1024, seeded multi-token; invalid IDs; 6 fixed scenarios tiny_8_1_258 small_32_1_258 multilayer_32_3_258 medium_64_2_258 wide_128_2_258 vocab_32_1_1024. Four warmup pairs + nine alternating measured pairs per case, one A/A and one A/B, same fixed fixtures, no favorable rerun.",
-    "adoptionGate": "No parity deviations; allocation reductions at all target scenarios; no material CPU regression in small controls; full module/Gradle Android NOT_RUN must be disclosed; do not merge to main.",
-    "experiments": [
-      "EXP-05",
-      "EXP-12"
-    ]
-  },
+  "activeRound": null,
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
@@ -217,8 +200,8 @@
       "archivePublished": true
     }
   },
-  "lastResearchHead": "97c5047c7af4a3929137a32e08f1e7acb151c889",
-  "lastRejectedCandidateCount": 4,
+  "lastResearchHead": "1c7027a7e8169b909c42a7acdd013fbcc591e64b",
+  "lastRejectedCandidateCount": 6,
   "archive": {
     "name": "R4-R6-evidence.tar.xz",
     "githubDirectory": "docs/evidence/tuning-r4-r6-20261104",
@@ -293,7 +276,7 @@
   },
   "r8": {
     "target": "LmRuntime.MinGruStepper.step six matrix-product scratch buffers",
-    "status": "REJECTED_ARCHIVE_PENDING",
+    "status": "REJECTED_LOCAL_EVIDENCE_RETAINED",
     "baselineRuntimeGitBlob": "6de174dc400bfc5bd5bfb0facc56fc4820550b25",
     "baselineTensorGitBlob": "1ebd9b6803a3eb54a6a1baea25430b49e588665d",
     "method": "source-faithful isolated Kotlin/JDK21 fixture; exact original arithmetic; no module build",
@@ -308,6 +291,35 @@
       "fixture": "f05adccac2da23451b1edcc1ef9d9837229486ed3b4505445582a0f62169c5c8",
       "aa": "cc6a27136f49b3e60a64c705e3455ede1762816ea0f815158ee577d622e90e85",
       "ab": "3fcaecc327c5bd5cdb89c93a4c74324a284263b36cc0b32515f88cac0eb1742f"
-    }
+    },
+    "rawArchive": {
+      "sha256": "464c8c1e676d12640c5b737c6a34f06d3837307e274e8adb5035dbf4d22a02ac",
+      "repo": "NOT_PUSHED",
+      "localPath": "/mnt/data/continuum-r8/experiments/R8-evidence.tar.xz"
+    },
+    "report": "docs/research/omega/TUNING-R8-R9-20261105.md"
+  },
+  "r9": {
+    "status": "REJECTED_LOCAL_EVIDENCE_RETAINED",
+    "target": "LmRuntime.MinGruStepper final logits matrix projection",
+    "baselineRuntimeGitBlob": "6de174dc400bfc5bd5bfb0facc56fc4820550b25",
+    "baselineTensorGitBlob": "1ebd9b6803a3eb54a6a1baea25430b49e588665d",
+    "testScope": "source-faithful isolated Kotlin/JDK21 fixture; no full graph",
+    "parityBitChecks": 1403522,
+    "aaMeasuredRows": 108,
+    "abMeasuredRows": 108,
+    "warmupRows": 96,
+    "adverse": "Wide 128x2 allocation median 1,314,960 -> 1,403,024 B despite nominal array copy removal, A/A unstable; reject, no timing retest",
+    "fileHashes": {
+      "fixture": "3694fcce8f0cb7fd8c20e694f463173ba951b139744393829eac79558cc18800",
+      "aa": "fdc053fe4e8e6897877a9f2b0fc7cfedbdc8c89b8d312d2c58f1b04d08122671",
+      "ab": "e56c6708263b9705376e79fbff6ead29c2ba595c2b33197f366b6fe26b83bf9f"
+    },
+    "rawArchive": {
+      "sha256": "cefa10199763df4033abf0b221e35837a3eb161052a4d3e734d60c5645f0738c",
+      "repo": "NOT_PUSHED",
+      "localPath": "/mnt/data/continuum-r8/experiments/R9-evidence.tar.xz"
+    },
+    "report": "docs/research/omega/TUNING-R8-R9-20261105.md"
   }
 }
