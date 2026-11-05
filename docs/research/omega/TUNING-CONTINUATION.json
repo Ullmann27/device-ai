@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "READY_FOR_NEXT_RUN",
-  "owner": null,
-  "leaseExpiresAtUtc": null,
-  "updatedAtUtc": "2026-11-05T04:30:16Z",
+  "status": "RUNNING",
+  "owner": "tuning-sequential-r15-20261105T0531Z",
+  "leaseExpiresAtUtc": "2026-11-05T06:00:00Z",
+  "updatedAtUtc": "2026-11-05T05:31:56.399Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -58,7 +58,7 @@
       "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "R14 independently validated the 4-piece R13 remote tar.gz SHA256, extracted all 3 tools and replayed 12/12 Node tests from the exact archive. Full original six-source Kotlin compile and synthetic 8-case probe still NOT_RUN without authenticated source checkout (git DNS unavailable). Next: authorized exact HEAD-bound checkout, compile/execute original vs instrumented Kotlin, measure representative LM1 real host calls; only then preregister new bounded A/A/A-B performance candidate.",
+  "next": "R15: point-in-time source-hash comparison of PR #511 versus C1 #519 and integration #527; no candidate until real LM1 full-graph Kotlin and representative caller profile.",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -104,7 +104,7 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": null,
+  "activeRound": "R15",
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
