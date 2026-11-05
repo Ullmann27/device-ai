@@ -1,13 +1,13 @@
 {
   "schema": "continuum-branch-bots-development-continuation",
   "version": 1,
-  "status": "ACTIVE",
+  "status": "READY_FOR_NEXT_ITERATION",
   "repository": "Ullmann27/device-ai",
   "branch": "codex/continuum-branch-integration-bots-20261104",
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
   "ownerSession": "scheduled-20261105-0406-integration-continuation",
-  "sourceSnapshot": "SELECTED_104_PREVIOUS_FULL_NODE_PLUS_CURRENT_4_TRACE_PATHS",
-  "phase": "M15_REVIEW_SOURCE_AND_TARGETED_GIT_TEST",
+  "sourceSnapshot": "SELECTED_HISTORICAL_104_PLUS_TARGETED_M15_M16_SOURCE_FUNCTION_AND_REAL_GIT_FIXTURE",
+  "phase": "M15_M16_COMPLETED_SOURCE_TARGETED_VERIFIED_INTEGRATED_GATES_PENDING",
   "milestones": [
     {
       "id": "M1",
@@ -200,6 +200,28 @@
         "passed": 1
       },
       "fullNode": "NOT_RUN"
+    },
+    {
+      "id": "M15",
+      "status": "TARGETED_REAL_GIT_AND_SOURCE_FUNCTION_PROVED",
+      "change": "Block ambient Git config count/key/value selectors from read-only scheduler Git children",
+      "commit": "aa5255ea00da8f4753cbd7de48c849783acbb45a",
+      "realGitOriginalMarkerWrites": 1,
+      "realGitPatchedMarkerWrites": 0,
+      "sourceFunctionOriginalSelectorsForwarded": 3,
+      "sourceFunctionPatchedSelectorsForwarded": 0,
+      "integratedNode": "NOT_RUN"
+    },
+    {
+      "id": "M16",
+      "status": "TARGETED_REAL_GIT_AND_SOURCE_FUNCTION_PROVED",
+      "change": "Block inherited GIT_CONFIG_PARAMETERS from read-only scheduler Git children",
+      "commit": "aa5255ea00da8f4753cbd7de48c849783acbb45a",
+      "realGitOriginalMarkerWrites": 1,
+      "realGitPatchedMarkerWrites": 0,
+      "sourceFunctionOriginalSelectorsForwarded": 1,
+      "sourceFunctionPatchedSelectorsForwarded": 0,
+      "integratedNode": "NOT_RUN"
     }
   ],
   "androidCompilation": "NOT_RUN",
@@ -301,13 +323,29 @@
         ".github/continuum/local-teamleader-loop.mjs": "577db114a3944b1130005d20ca074aac0c7b2f23",
         ".github/continuum/local-teamleader-loop-source-preflight.test.mjs": "2e5b1be4dd44c5806f6c3f763faababacda2a509"
       }
+    },
+    "m15m16": {
+      "baseline": "9ad392964f78f740c56e54617a9c1ae44d13ea1a",
+      "realGitCaseCount": 4,
+      "unwantedMarkerCasesBefore": 2,
+      "unwantedMarkerCasesAfter": 0,
+      "sourceFunctionCases": 4,
+      "allSourceChecksPassed": true,
+      "projectTestsAdded": 2,
+      "projectTestsRun": "NOT_RUN",
+      "fullNode": "NOT_RUN",
+      "android": "NOT_RUN",
+      "apk": "NOT_RUN",
+      "sourceBlob": "888e52cbbd1f8766625646f7ba0fe6fc8bf6c88c",
+      "testBlob": "835f7a7e158dec2c9598106b358f135009d6b5ec"
     }
   },
   "nextTasks": [
-    "In full pinned checkout, run node --test .github/continuum/local-teamleader-loop-source-preflight.test.mjs and existing .github/continuum/local-teamleader-loop.test.mjs on M12-M14 source (not yet executed).",
-    "Run original 202-case selected source-frozen Node suite; prior success does not transfer to M12-M14.",
-    "C1/#527 integrator: compare exact original scheduler module/test preimages and selectively apply accumulated local scheduler fixes only, preserving downstream changes; own combined gate required.",
-    "Verify no symlink race or unexpected repository mutation in complete-project host tests, then run full Node/backend/Android/lint gates before any APK consideration."
+    "In full clean pinned checkout execute actual project regressions: node --test .github/continuum/local-teamleader-loop-source-preflight.test.mjs .github/continuum/local-teamleader-loop.test.mjs; newly appended M15/M16 tests have not run there.",
+    "Run the existing selected 202-case Node suite again on current code; historical success does not certify M12-M16.",
+    "C1 owner: read latest #519 and #527 first; compare exact pinned preimages and selectively integrate this scheduler module/test only alongside the prior seven night files, preserving newer integration fixes. Never overwrite their complete branch.",
+    "Perform source-frozen critical/full Node, backend, complete Android unit/UI and lint before owner APK consideration. Real device and original-signature update gate remain NOT_RUN.",
+    "Security follow-up: investigate configuration files and source checkout race boundaries separately rather than claiming the inline-environment patch makes all Git invocation safe."
   ],
   "scheduledContinuation": {
     "enabled": true,
@@ -327,13 +365,16 @@
     "m12m14Adopted": false,
     "schedulerPreimagesBothSharedHeadsMatchOriginal": true,
     "schedulerPreimageOriginal": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
-    "schedulerTestPreimageOriginal": "13c5661432115c883fc2b64161757aad9d1128f4"
+    "schedulerTestPreimageOriginal": "13c5661432115c883fc2b64161757aad9d1128f4",
+    "m15m16Adopted": false,
+    "sourceSharedPreimage": "f83e6a1dcd40e7841734f893895766c6b3b1ed29",
+    "testSharedPreimage": "13c5661432115c883fc2b64161757aad9d1128f4"
   },
-  "latestTargetedCodeCommit": "f9bd4e2949ef2d09d9c45c4c93924390650a1f81",
+  "latestTargetedCodeCommit": "aa5255ea00da8f4753cbd7de48c849783acbb45a",
   "additionalChangedPaths": [
     ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
     ".github/continuum/local-teamleader-loop.mjs"
   ],
-  "lastCleanCheckpoint": "f20b71a0435a53aa924abe87c6d0a324395ec367",
-  "lastCompletedCheckpoint": "f9bd4e2949ef2d09d9c45c4c93924390650a1f81"
+  "lastCleanCheckpoint": "aa5255ea00da8f4753cbd7de48c849783acbb45a",
+  "lastCompletedCheckpoint": "aa5255ea00da8f4753cbd7de48c849783acbb45a"
 }

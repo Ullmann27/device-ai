@@ -43,5 +43,45 @@
     "bothSharedPreimageSource": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
     "bothSharedPreimageTest": "13c5661432115c883fc2b64161757aad9d1128f4",
     "sharedBranchesModified": false
+  },
+  "actualSourceIdentityFunction": {
+    "kind": "extract-and-execute exact sourceIdentity body with injected spawnSync/fs.realpathSync in V8 (not actual Node full import)",
+    "sourcePreimage": "577db114a3944b1130005d20ca074aac0c7b2f23",
+    "sourcePatched": "888e52cbbd1f8766625646f7ba0fe6fc8bf6c88c",
+    "cases": [
+      {
+        "source": "original",
+        "selector": "count",
+        "gitCalls": 3,
+        "selectorsForwarded": 3
+      },
+      {
+        "source": "original",
+        "selector": "parameters",
+        "gitCalls": 3,
+        "selectorsForwarded": 1
+      },
+      {
+        "source": "patched",
+        "selector": "count",
+        "gitCalls": 3,
+        "selectorsForwarded": 0
+      },
+      {
+        "source": "patched",
+        "selector": "parameters",
+        "gitCalls": 3,
+        "selectorsForwarded": 0
+      }
+    ],
+    "allCasesPassed": true,
+    "unrelatedEnvironmentPreserved": true,
+    "parentEnvironmentUnchanged": true,
+    "realGitFixtureSeparate": true
+  },
+  "publishedSourceReadback": {
+    "commit": "aa5255ea00da8f4753cbd7de48c849783acbb45a",
+    "sourceSha": "888e52cbbd1f8766625646f7ba0fe6fc8bf6c88c",
+    "testSha": "835f7a7e158dec2c9598106b358f135009d6b5ec"
   }
 }
