@@ -1,0 +1,1245 @@
+{
+  "schemaVersion": 1,
+  "task": "G1-INTEGRATE-WEIGHT-002",
+  "scope": "Independent synthetic control-flow and receipt-validation audit",
+  "finalDriverSha256": "9a68ddf27158692044738aed96892ad6476a520b7e30ab6651adfff2c4f38447",
+  "finalChecks": {
+    "core": 36,
+    "targetedFinalAndCreation": 6,
+    "directDispatch": 4,
+    "passed": 46,
+    "failed": 0
+  },
+  "harnesses": [
+    {
+      "path": "tests/adversarial_driver_gate.py",
+      "sha256": "27abd1f9c223cc9c40daa8d27e3a9b48805b37ee5a9a07827d000f49bc789020"
+    },
+    {
+      "path": "tests/targeted_final_creation_gate.py",
+      "sha256": "c7185a6edcf8a7f11a9684bf0c5febfc141fe32d7fd6a227aff5f7575f91921f"
+    },
+    {
+      "path": "tests/direct_dispatch_gate.py",
+      "sha256": "5dbab83c01eb95d87a102684964e9cd3d07ab40c5b611c76b17c062f10332281"
+    }
+  ],
+  "fixtureEvolution": {
+    "originalFrozenHarnessSha256": "8aecd657dfeda4c70dd018a38a6c6d13833d259369d7e5a63965892114d3b0a3",
+    "creationCompletedHarnessSha256": "522abc3c21fff2a8d1d465826675e81860b535cc6fda2b2e0d95151c5d4f888f",
+    "portableHarnessSha256": "27abd1f9c223cc9c40daa8d27e3a9b48805b37ee5a9a07827d000f49bc789020",
+    "changes": "Added synthetic creation receipts present in real runs; preserved all36 case names and assertions. Portable copy changes only main CLI/default output paths; non-main AST equality was checked."
+  },
+  "coreMatrix": {
+    "sourceOrder": [
+      "ee577",
+      "88d7",
+      "helper_06f071",
+      "final_9a68"
+    ],
+    "runs": [
+      {
+        "label": "ee577",
+        "gitCommit": "ee5779725690c573d3310c061c6e2e6faf5f0a8b",
+        "sourceSha256": "609215b0f2671e2407c8b81867255bd1ce60680626c081fd91b0a12d14f62deb",
+        "rawReportSha256": "8348095e1b885eda21986e86ed9c28e9e0d143d354ea6e34940a0595b32f7887",
+        "passed": 7,
+        "failed": 29,
+        "invalidStatesReachingTrain": 27,
+        "invalidFrozenResumesAccepted": 2,
+        "positiveControlsPassed": 3,
+        "realModelProcesses": 0,
+        "realTrainingRuns": 0,
+        "sourceUnchangedDuringRun": true
+      },
+      {
+        "label": "88d7",
+        "gitCommit": "88d7b05072bdec6250990efaa9914a1e6744c29b",
+        "sourceSha256": "6b14f23ef9b595008099b16d81f1121783fea0bb67e7f3d942e44eed6405e425",
+        "rawReportSha256": "c413d7b6b5622f116eabb2cfbeaba65a7e84533d2a1f1374c4e3318e0342ab8a",
+        "passed": 7,
+        "failed": 29,
+        "invalidStatesReachingTrain": 27,
+        "invalidFrozenResumesAccepted": 2,
+        "positiveControlsPassed": 3,
+        "realModelProcesses": 0,
+        "realTrainingRuns": 0,
+        "sourceUnchangedDuringRun": true
+      },
+      {
+        "label": "helper_06f071",
+        "gitCommit": "06f071e5850dd405f374bbb58d826f64740d83af",
+        "sourceSha256": "6bd9c00c635f100fdedc05e60a1d720565e43ba7e6722bdc7cf7188f4a87487d",
+        "rawReportSha256": "fba9afa9aa4f50f96b560eb7b83aab85f9cf700e236477da727061de0c474f1d",
+        "passed": 10,
+        "failed": 26,
+        "invalidStatesReachingTrain": 24,
+        "invalidFrozenResumesAccepted": 2,
+        "positiveControlsPassed": 3,
+        "realModelProcesses": 0,
+        "realTrainingRuns": 0,
+        "sourceUnchangedDuringRun": true
+      },
+      {
+        "label": "final_9a68",
+        "gitCommit": null,
+        "sourceSha256": "9a68ddf27158692044738aed96892ad6476a520b7e30ab6651adfff2c4f38447",
+        "rawReportSha256": "832374abcb754ca4657bdbe7e0efc683d2244a0aefa3d3349352238fe777821d",
+        "passed": 36,
+        "failed": 0,
+        "invalidStatesReachingTrain": 0,
+        "invalidFrozenResumesAccepted": 0,
+        "positiveControlsPassed": 3,
+        "realModelProcesses": 0,
+        "realTrainingRuns": 0,
+        "sourceUnchangedDuringRun": true
+      }
+    ],
+    "cases": [
+      {
+        "case": "valid_gate_positive_control",
+        "positiveControl": true,
+        "passed": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "valid_earlier_stage_after_later_failure",
+        "positiveControl": true,
+        "passed": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "valid_fully_legacy_capacity_positive_control",
+        "positiveControl": true,
+        "passed": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "original_fails_even_selected_calibration_passes",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "original_reordered_fails_even_selected_passes",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "original_missing_from_calibration",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "original_duplicated_in_calibration",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "baseline_failed_lastpassed_null",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          true,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "baseline_failed_receipt_but_eligible_flags_true",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "lastpassed_null_but_baseline_passes",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          true,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "baseline_gate_stop_but_stale_lastpassed",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          true,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "missing_baseline_capacity_receipt",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "missing_baseline_capacity_log",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "tampered_baseline_capacity_log",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "missing_baseline_capacity_result",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "baseline_capacity_process_failed",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "baseline_capacity_process_timed_out",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "capacity_wrong_checkpoint_in_log",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "capacity_stale_checkpoint_input_hash",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "capacity_wrong_compiled_program",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "capacity_wrong_orchestrator_source",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "capacity_missing_input_binding",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "capacity_first_token_over_limit_but_pass_claimed",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "capacity_generation_over_limit_but_pass_claimed",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "capacity_intermediate_memory_over_limit_but_terminal_pass",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "capacity_nonfinite_latency_but_pass_claimed",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "lastpassed_not_in_stages",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "missing_lastpassed_capacity_receipt",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "tampered_lastpassed_checkpoint",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "stale_lastpassed_parity_binding",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "frozen_resume_malformed_json",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          true,
+          true,
+          true,
+          false
+        ]
+      },
+      {
+        "case": "frozen_resume_stale_incomplete_record",
+        "positiveControl": false,
+        "passed": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          true,
+          true,
+          true,
+          false
+        ]
+      },
+      {
+        "case": "missing_ladder_negative_control",
+        "positiveControl": false,
+        "passed": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "malformed_ladder_negative_control",
+        "positiveControl": false,
+        "passed": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "missing_development_receipt_negative_control",
+        "positiveControl": false,
+        "passed": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "case": "changed_jar_negative_control",
+        "positiveControl": false,
+        "passed": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "trainAttemptsBlocked": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "returnedWithoutValidationError": [
+          false,
+          false,
+          false,
+          false
+        ]
+      }
+    ]
+  },
+  "targetedFinalAndCreation": {
+    "sourceOrder": [
+      "earlier_repair_e75",
+      "final_9a68"
+    ],
+    "runs": [
+      {
+        "sourceSha256": "e75bbafd7585bccaa3e9ccffb6be6b94bd09e42479331de7012335de8978a36e",
+        "rawReportSha256": "3dba7b5c26999e2958b0a41889829e31da6e90ce065aab614466806b4f227ce6",
+        "passed": 0,
+        "failed": 6,
+        "sourceUnchangedDuringRun": true,
+        "realModelProcesses": 0,
+        "realTrainingRuns": 0
+      },
+      {
+        "sourceSha256": "9a68ddf27158692044738aed96892ad6476a520b7e30ab6651adfff2c4f38447",
+        "rawReportSha256": "ef383170bc24e85a0922967e643471365ec3f3d832d03e5472cda5458c1aeb25",
+        "passed": 6,
+        "failed": 0,
+        "sourceUnchangedDuringRun": true,
+        "realModelProcesses": 0,
+        "realTrainingRuns": 0
+      }
+    ],
+    "cases": [
+      {
+        "case": "direct_final_fresh_baseline_failure",
+        "passed": [
+          false,
+          true
+        ],
+        "exceptions": [
+          {
+            "type": "HoldoutEvaluationBlocked",
+            "message": "holdout evaluation trapped before execution"
+          },
+          {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          }
+        ],
+        "trainingAttemptsBlocked": [
+          0,
+          0
+        ],
+        "holdoutAttemptsBlocked": [
+          1,
+          0
+        ]
+      },
+      {
+        "case": "direct_final_cached_baseline_failure",
+        "passed": [
+          false,
+          true
+        ],
+        "exceptions": [
+          null,
+          {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          }
+        ],
+        "trainingAttemptsBlocked": [
+          0,
+          0
+        ],
+        "holdoutAttemptsBlocked": [
+          0,
+          0
+        ]
+      },
+      {
+        "case": "missing_width_creation_receipt",
+        "passed": [
+          false,
+          true
+        ],
+        "exceptions": [
+          {
+            "type": "TrainingBlocked",
+            "message": "training trapped before dispatch"
+          },
+          {
+            "type": "RuntimeError",
+            "message": "required completed invocation is missing: width-4-create"
+          }
+        ],
+        "trainingAttemptsBlocked": [
+          1,
+          0
+        ],
+        "holdoutAttemptsBlocked": [
+          0,
+          0
+        ]
+      },
+      {
+        "case": "tampered_width_creation_parent",
+        "passed": [
+          false,
+          true
+        ],
+        "exceptions": [
+          {
+            "type": "TrainingBlocked",
+            "message": "training trapped before dispatch"
+          },
+          {
+            "type": "RuntimeError",
+            "message": "invocation identity or execution contract changed: width-4-create"
+          }
+        ],
+        "trainingAttemptsBlocked": [
+          1,
+          0
+        ],
+        "holdoutAttemptsBlocked": [
+          0,
+          0
+        ]
+      },
+      {
+        "case": "tampered_width_creation_noise",
+        "passed": [
+          false,
+          true
+        ],
+        "exceptions": [
+          {
+            "type": "TrainingBlocked",
+            "message": "training trapped before dispatch"
+          },
+          {
+            "type": "RuntimeError",
+            "message": "invocation identity or execution contract changed: width-4-create"
+          }
+        ],
+        "trainingAttemptsBlocked": [
+          1,
+          0
+        ],
+        "holdoutAttemptsBlocked": [
+          0,
+          0
+        ]
+      },
+      {
+        "case": "tampered_depth_creation_seed",
+        "passed": [
+          false,
+          true
+        ],
+        "exceptions": [
+          {
+            "type": "TrainingBlocked",
+            "message": "training trapped before dispatch"
+          },
+          {
+            "type": "RuntimeError",
+            "message": "invocation identity or execution contract changed: depth-3-create"
+          }
+        ],
+        "trainingAttemptsBlocked": [
+          1,
+          0
+        ],
+        "holdoutAttemptsBlocked": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "directDispatch": {
+    "sourceOrder": [
+      "earlier_repair_e75",
+      "final_9a68"
+    ],
+    "runs": [
+      {
+        "sourceSha256": "e75bbafd7585bccaa3e9ccffb6be6b94bd09e42479331de7012335de8978a36e",
+        "rawReportSha256": "1e853080509ea4aeb7bfa12dc88f378ea40473daabc35eb7b139893be93768d9",
+        "passed": 3,
+        "failed": 1,
+        "sourceUnchangedDuringRun": true,
+        "realModelProcesses": 0,
+        "realTrainingRuns": 0
+      },
+      {
+        "sourceSha256": "9a68ddf27158692044738aed96892ad6476a520b7e30ab6651adfff2c4f38447",
+        "rawReportSha256": "70bfc4c544bc44144edcfbd12a2a8a3c6fbf6fa45815dbddfe79f5adaf6950c4",
+        "passed": 4,
+        "failed": 0,
+        "sourceUnchangedDuringRun": true,
+        "realModelProcesses": 0,
+        "realTrainingRuns": 0
+      }
+    ],
+    "cases": [
+      {
+        "case": "valid_direct_call_reaches_process_boundary",
+        "passed": [
+          true,
+          true
+        ],
+        "exceptions": [
+          {
+            "type": "ProcessLaunchBlocked",
+            "message": "Popen intercepted; no process launched"
+          },
+          {
+            "type": "ProcessLaunchBlocked",
+            "message": "Popen intercepted; no process launched"
+          }
+        ],
+        "processAttemptsBlocked": [
+          1,
+          1
+        ],
+        "fixtureCheckpointMutated": [
+          false,
+          false
+        ]
+      },
+      {
+        "case": "failed_baseline_blocks_direct_call",
+        "passed": [
+          true,
+          true
+        ],
+        "exceptions": [
+          {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          },
+          {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          }
+        ],
+        "processAttemptsBlocked": [
+          0,
+          0
+        ],
+        "fixtureCheckpointMutated": [
+          false,
+          false
+        ]
+      },
+      {
+        "case": "failed_baseline_blocks_direct_cached_call",
+        "passed": [
+          true,
+          true
+        ],
+        "exceptions": [
+          {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          },
+          {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          }
+        ],
+        "processAttemptsBlocked": [
+          0,
+          0
+        ],
+        "fixtureCheckpointMutated": [
+          false,
+          false
+        ]
+      },
+      {
+        "case": "expanded_checkpoint_swap_after_authorization",
+        "passed": [
+          false,
+          true
+        ],
+        "exceptions": [
+          {
+            "type": "ProcessLaunchBlocked",
+            "message": "Popen intercepted; no process launched"
+          },
+          {
+            "type": "RuntimeError",
+            "message": "training inputs changed after source-bound authorization"
+          }
+        ],
+        "processAttemptsBlocked": [
+          1,
+          0
+        ],
+        "fixtureCheckpointMutated": [
+          true,
+          true
+        ]
+      }
+    ],
+    "dataMutationAtRealAuthorizationReturn": [
+      {
+        "sourceSha256": "e75bbafd7585bccaa3e9ccffb6be6b94bd09e42479331de7012335de8978a36e",
+        "beforeSha256": "98ced0261d04cac821c9c9d868b7ceab8977fe48e41cb59a1252c8197c2bda56",
+        "afterSha256": "4b649dad7f12f05e90b2e8931a815b15109edd1a01e981ffddb2860913906a89",
+        "byteLengthPreserved": true,
+        "authorizationReturnType": "NoneType"
+      },
+      {
+        "sourceSha256": "9a68ddf27158692044738aed96892ad6476a520b7e30ab6651adfff2c4f38447",
+        "beforeSha256": "98ced0261d04cac821c9c9d868b7ceab8977fe48e41cb59a1252c8197c2bda56",
+        "afterSha256": "4b649dad7f12f05e90b2e8931a815b15109edd1a01e981ffddb2860913906a89",
+        "byteLengthPreserved": true,
+        "authorizationReturnType": "tuple"
+      }
+    ]
+  },
+  "safety": {
+    "realModelProcesses": 0,
+    "realTrainingRuns": 0,
+    "realHoldoutEvaluations": 0,
+    "dataIdentityConstantsReboundOnlyInSyntheticModules": [
+      "BASE_SHA",
+      "TOKENIZER_SHA",
+      "HOLDOUT_SHA"
+    ],
+    "coreDecisionHelpersMocked": [],
+    "directDispatchMethodsMocked": [],
+    "directDispatchInstrumentation": "Only Popen is mocked; sys.settrace changes one byte of the synthetic expanded checkpoint on the real authorization return without changing any decision value."
+  },
+  "reproduction": {
+    "python": "3.11 or newer; standard library only",
+    "defaultSource": "Adjacent run_experiment.py",
+    "defaultOutput": "New system temporary directory; optional --workspace",
+    "coreCommand": "python3 experimental/weight-space-20261104/tests/adversarial_driver_gate.py",
+    "targetedCommand": "python3 experimental/weight-space-20261104/tests/targeted_final_creation_gate.py",
+    "directCommand": "python3 experimental/weight-space-20261104/tests/direct_dispatch_gate.py",
+    "defaultCommandsExecutedSuccessfully": true
+  },
+  "provenanceNotes": [
+    "The ee577 and88d7 source snapshots were extracted from their exact Git commits.",
+    "The helper source digest was independently verified against Git commit06f071e5850dd405f374bbb58d826f64740d83af. Its original tested snapshot was captured before that publication.",
+    "All comparative core runs here use the same portable harness digest and36 case names. Earlier reports remain separate and are not relabelled.",
+    "The earlier e75 repair passed the original36 matrix but failed the six later review-gap probes and the post-authorization swap probe; final9a68 passes all46."
+  ],
+  "limits": [
+    "These tests prove the recorded synthetic paths, not absence of every possible defect.",
+    "No model quality, device performance, real training or deployment result is implied.",
+    "Raw-report digests identify observed executions. Temporary paths and timestamps can differ on reproduction; fixture directories and model files are intentionally not included in Git."
+  ]
+}

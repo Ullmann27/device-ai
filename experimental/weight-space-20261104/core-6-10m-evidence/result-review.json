@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "task": "G1-INTEGRATE-WEIGHT-002-CORE-6-10M",
+  "reviewMode": "INDEPENDENT_COMPLETED_RAW_LOG_REVIEW",
+  "reviewedUtc": "2026-11-04T11:45:48Z",
+  "status": "PASS",
+  "driverSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+  "studyRoot": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m",
+  "sharedFreeze": {
+    "sha256": "7a98a360ba274b1d452237b7a69007691a687593f68092dff5a82a001cb45ac3",
+    "bothChildSelectionsBound": true,
+    "fileMtimeUtc": "2026-11-04T11:40:33.506Z",
+    "earliestConservativeHoldoutStartEstimateUtc": "2026-11-04T11:41:10.775Z",
+    "allEightHoldoutEvaluationsAfterFreeze": true,
+    "timingEvidenceScope": "Lokale Dateizeiten plus Prozessdauern und unveränderte Freeze-Hashes; kein externer Zeitstempeldienst."
+  },
+  "matchedTraining": {
+    "runs": 4,
+    "stepsPerRun": 16,
+    "tokensPerRun": 3255,
+    "identicalRawInputIdentity": {
+      "kind": "TRAIN_INPUT",
+      "datasetSha256": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+      "scheduleSha256": "346e93c510dafe5e12ee6a0e54ae94a0f0d099e7c0fc8c6f8973e5ff9a6b5066",
+      "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+      "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+    },
+    "identicalCumulativeTokenCounts": [
+      234,
+      429,
+      658,
+      844,
+      1046,
+      1249,
+      1501,
+      1753,
+      2005,
+      2201,
+      2451,
+      2651,
+      2769,
+      2943,
+      3146,
+      3255
+    ]
+  },
+  "holdout": {
+    "sha256": "a910f25ed4a54742e87c3e75c105472f0c882df2d4026e15a62ee3d48c90bbbd",
+    "fileBytes": 4997,
+    "evaluatedTextBytes": 4934,
+    "segments": 32,
+    "tokens": 2544,
+    "dataTextReadForThisReview": false
+  },
+  "profiles": [
+    {
+      "profileId": "core-6562304",
+      "targetParameters": 6562304,
+      "stop": "BUDGET_LIMIT",
+      "unallocatedNextParameters": 9712128,
+      "frozenSelectionSha256": "84892007baa8a15a0451eb2541e7b36d95d43819417990115047b49eab27ff89",
+      "finalSha256": "48ad9b63666ec400b321adf96ff4219cd67509da065807cf26b4158dbd6f9f73",
+      "training": [
+        {
+          "label": "continued-small",
+          "parameters": 132160,
+          "steps": 16,
+          "tokens": 3255,
+          "changedWeightsFromRawLog": 132159,
+          "checkpointSha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+          "trainingMillis": 811,
+          "processWallSeconds": 1.269427256003837,
+          "rawLogSha256": "c8af895cb59d175ec2c8273bba9ee18b7a41e42ff861b6c89df6cb9f89489513"
+        },
+        {
+          "label": "continued-expanded",
+          "parameters": 6562304,
+          "steps": 16,
+          "tokens": 3255,
+          "changedWeightsFromRawLog": 6562289,
+          "checkpointSha256": "8fd24c8fcc273bb46faa4a994c31dcd6d0cf7e6964942ef33aa1c4c782d42384",
+          "trainingMillis": 22904,
+          "processWallSeconds": 23.611543599996367,
+          "rawLogSha256": "545292e52ddda6d17213ed685fe189b6e4a091214b3d533fa29a0d68ff8dc5cd"
+        }
+      ],
+      "candidates": [
+        {
+          "label": "baseline",
+          "parameters": 132160,
+          "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+          "bytes": 529297,
+          "capacityEligible": true,
+          "devBpb": 2.3525414158359124,
+          "holdoutBpb": 3.307624861005332,
+          "capacity": {
+            "maxOneTokenCallMs": 8.259399,
+            "max32TokenCallMs": 15.738869,
+            "peakVmHwmKiB": 80824,
+            "peakVmHwmMiB": 78.9296875
+          }
+        },
+        {
+          "label": "width-8",
+          "parameters": 6562304,
+          "sha256": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+          "bytes": 26250085,
+          "capacityEligible": true,
+          "devBpb": 2.352541414133888,
+          "holdoutBpb": 3.3076248133644692,
+          "capacity": {
+            "maxOneTokenCallMs": 178.253705,
+            "max32TokenCallMs": 260.890111,
+            "peakVmHwmKiB": 164360,
+            "peakVmHwmMiB": 160.5078125
+          }
+        },
+        {
+          "label": "continued-small",
+          "parameters": 132160,
+          "sha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+          "bytes": 529659,
+          "capacityEligible": false,
+          "devBpb": 2.35250680129539,
+          "holdoutBpb": 3.3081175456618146,
+          "capacityRejection": "EOS_WITH_ZERO_NEW_TOKENS_IN_ALL_8_TRIALS"
+        },
+        {
+          "label": "continued-expanded",
+          "parameters": 6562304,
+          "sha256": "8fd24c8fcc273bb46faa4a994c31dcd6d0cf7e6964942ef33aa1c4c782d42384",
+          "bytes": 26250294,
+          "capacityEligible": false,
+          "devBpb": 2.436533181320585,
+          "holdoutBpb": 3.3693592558052456,
+          "capacityRejection": "EOS_WITH_ZERO_NEW_TOKENS_IN_ALL_8_TRIALS"
+        }
+      ],
+      "independentlyRecomputedDevelopmentPreferred": "baseline"
+    },
+    {
+      "profileId": "core-9712128",
+      "targetParameters": 9712128,
+      "stop": "BUDGET_LIMIT",
+      "unallocatedNextParameters": 12861952,
+      "frozenSelectionSha256": "f9395441c7aa3d7fd8301bff53f6df8d09c222584953a9c3bc2f3f45de555096",
+      "finalSha256": "8c636904ea7ca491142814ac5ad3c830fd57b2c284db4d1909f3b90f7305e678",
+      "training": [
+        {
+          "label": "continued-small",
+          "parameters": 132160,
+          "steps": 16,
+          "tokens": 3255,
+          "changedWeightsFromRawLog": 132159,
+          "checkpointSha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+          "trainingMillis": 742,
+          "processWallSeconds": 1.1768937509987154,
+          "rawLogSha256": "27e866d8f5a958c0e163884641641baad11678863905c809563e1011df8b606f"
+        },
+        {
+          "label": "continued-expanded",
+          "parameters": 9712128,
+          "steps": 16,
+          "tokens": 3255,
+          "changedWeightsFromRawLog": 9712110,
+          "checkpointSha256": "49a6ef6d9e710cd1fcc407e1aa9b4a72a5a7a205be5bd8ccf9e2d2093e9568f0",
+          "trainingMillis": 32453,
+          "processWallSeconds": 33.38139691899414,
+          "rawLogSha256": "d85bce3f6b6bad12907378dbc26a435d9009c36b21ae9a98b6b5abdbfdea9ce0"
+        }
+      ],
+      "candidates": [
+        {
+          "label": "baseline",
+          "parameters": 132160,
+          "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+          "bytes": 529297,
+          "capacityEligible": true,
+          "devBpb": 2.3525414158359124,
+          "holdoutBpb": 3.307624861005332,
+          "capacity": {
+            "maxOneTokenCallMs": 9.606424,
+            "max32TokenCallMs": 18.730917,
+            "peakVmHwmKiB": 84748,
+            "peakVmHwmMiB": 82.76171875
+          }
+        },
+        {
+          "label": "depth-3",
+          "parameters": 9712128,
+          "sha256": "5e2332b0c15646b574d9c3f8cf48378f13eed1daaed7e652328588eedae85950",
+          "bytes": 38849588,
+          "capacityEligible": true,
+          "devBpb": 2.352541414133888,
+          "holdoutBpb": 3.3076248133644692,
+          "capacity": {
+            "maxOneTokenCallMs": 248.655464,
+            "max32TokenCallMs": 367.842681,
+            "peakVmHwmKiB": 197908,
+            "peakVmHwmMiB": 193.26953125
+          }
+        },
+        {
+          "label": "continued-small",
+          "parameters": 132160,
+          "sha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+          "bytes": 529659,
+          "capacityEligible": false,
+          "devBpb": 2.35250680129539,
+          "holdoutBpb": 3.3081175456618146,
+          "capacityRejection": "EOS_WITH_ZERO_NEW_TOKENS_IN_ALL_8_TRIALS"
+        },
+        {
+          "label": "continued-expanded",
+          "parameters": 9712128,
+          "sha256": "49a6ef6d9e710cd1fcc407e1aa9b4a72a5a7a205be5bd8ccf9e2d2093e9568f0",
+          "bytes": 38849797,
+          "capacityEligible": false,
+          "devBpb": 2.4484119303320027,
+          "holdoutBpb": 3.380979222778692,
+          "capacityRejection": "EOS_WITH_ZERO_NEW_TOKENS_IN_ALL_8_TRIALS"
+        }
+      ],
+      "independentlyRecomputedDevelopmentPreferred": "baseline"
+    }
+  ],
+  "interpretation": {
+    "jointPreferred": "baseline",
+    "initialCapacityTargetsPassed": true,
+    "allFourContinuationsRejected": true,
+    "reason": "Alle vier Fortsetzungen beenden sämtliche acht Kapazitätsversuche mit EOS und null neuen Tokens. Die großen Fortsetzungen verschlechtern Entwicklungs- und Holdout-BPB. Die kleine Kontrolle verbessert Entwicklungs-BPB geringfügig, verschlechtert Holdout-BPB und verfehlt ebenfalls die Kapazitätsanforderung. Die unveränderte neutrale Regel bevorzugt die kleine Baseline gegenüber den numerisch praktisch gleichen großen Initialmodellen.",
+    "initialExpansionQualityClaim": "Funktionsnähe bestätigt; kein nachgewiesener Wissens- oder Intelligenzgewinn.",
+    "scope": "Host-Forschungsversuch; keine Android-Gerätevalidierung oder Produktionspromotion."
+  },
+  "reviewBoundary": {
+    "modelProcessesStarted": 0,
+    "testProgramsStarted": 0,
+    "driverOrAuditorImported": false,
+    "rawItemBitsSummedInOriginalSequentialDoubleOrder": true,
+    "floatBitChangesIndependentlyRecountedHere": false,
+    "weightChangeEvidence": "Hier wurden die Roh-TRAIN_RESULT-Zahlen, vollständigen Schrittfolgen und eingefrorenen Ein-/Ausgangsidentitäten abgeglichen. Die separate Prüfung der tatsächlichen Checkpoint-Floatbits erfolgt durch Roots unabhängigen abgeschlossenen Auditor."
+  }
+}

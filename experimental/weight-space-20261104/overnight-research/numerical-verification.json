@@ -1,0 +1,2787 @@
+{
+  "status": "INDEPENDENT_NUMERICAL_VERIFICATION_PASS",
+  "registrationSha256": "9dd0171df1e8bf1adb0ed64cc3fa8bea1436d78773003341d75aa896492dc70e",
+  "implementationSha256": "10d3ea37ecee7dfdfb44c4c3cc4f23a75f63b7a35c80a54f016a6161f6070175",
+  "verificationProtocolSha256": "7f2ab9ab5b7dc69fa79e0d401b411ee0246aa1efab6a2763a5e78af850145551",
+  "numpyVersion": "2.3.5",
+  "blasThreads": 1,
+  "elapsedSeconds": 3.0348316419986077,
+  "checkedForwardPasses": 240,
+  "checkedTraceRows": 1440,
+  "checkedGenerations": 48,
+  "initialProbabilityDelta": 1.1920928955078125e-06,
+  "independentMaximumDeltas": {
+    "maximumProbabilityDelta": 1.7285346984863281e-06,
+    "maximumEosLogitDelta": 1.52587890625e-05,
+    "maximumBestOtherLogitDelta": 7.62939453125e-06,
+    "maximumTraceValueRmsDelta": 9.920952481756729e-08,
+    "maximumTraceRelativeSpreadDelta": 4.7429868003876206e-07,
+    "maximumTraceRangeDelta": 6.67572021484375e-06
+  },
+  "arms": {
+    "S0": {
+      "receiver": "S0",
+      "donor": "S0",
+      "block": "native",
+      "meanEosProbability": 0.049744692783860955,
+      "eosTopCount": 2,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 286,
+          "eosProbability": 0.02367786504328251,
+          "eosMargin": -1.3406996726989746,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.1505347490310669,
+          "eosMargin": 0.06369400024414062,
+          "independentProbabilityDelta": 2.5331974029541016e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 10,
+          "eosProbability": 0.2605688273906708,
+          "eosMargin": -0.018876075744628906,
+          "independentProbabilityDelta": 4.76837158203125e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.16038458049297333,
+          "eosMargin": 0.3830604553222656,
+          "independentProbabilityDelta": 8.195638656616211e-08
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.00014757404278498143,
+          "eosMargin": -7.064930617809296,
+          "independentProbabilityDelta": 2.980232238769531e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.0001837076124502346,
+          "eosMargin": -6.623953342437744,
+          "independentProbabilityDelta": 1.341104507446289e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.00016780650184955448,
+          "eosMargin": -6.677340149879456,
+          "independentProbabilityDelta": 3.725290298461914e-08
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.00013457708701025695,
+          "eosMargin": -7.011638522148132,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0005193602410145104,
+          "eosMargin": -7.394994735717773,
+          "independentProbabilityDelta": 1.30385160446167e-08
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.00022184531553648412,
+          "eosMargin": -8.051262378692627,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0002605529152788222,
+          "eosMargin": -8.045935869216919,
+          "independentProbabilityDelta": 2.980232238769531e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.00013486773241311312,
+          "eosMargin": -8.853808879852295,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        }
+      ],
+      "generation": [
+        {
+          "probe": "general-next",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 22,
+          "text": " nachgewiesene APK-Build-Schritt.\n- `<hash>`: 202"
+        },
+        {
+          "probe": "general-note",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 2,
+          "text": ""
+        },
+        {
+          "probe": "general-tool",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 23,
+          "text": "\n- `<hash>`: 2026.10.10.10.2026-10."
+        },
+        {
+          "probe": "general-count",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 5,
+          "text": ""
+        },
+        {
+          "probe": "format-alpha",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 12,
+          "text": "- `<hash>`: 2026.10.10.10.2026-10.2"
+        },
+        {
+          "probe": "format-beta",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 9,
+          "text": "- `<hash>`: 2026.10.10.10.2026-10.2"
+        },
+        {
+          "probe": "format-gamma",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 9,
+          "text": "`repair-compiler` only are or only are or only are or"
+        },
+        {
+          "probe": "format-delta",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 9,
+          "text": "- `<hash>`: 2026.10.10.10.2026-10.2"
+        },
+        {
+          "probe": "after-zero",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 8,
+          "text": ".3.10.10.10.10.10.2026-10.2026-1"
+        },
+        {
+          "probe": "after-one",
+          "tokens": 1,
+          "stop": "EOS",
+          "millis": 2,
+          "text": "."
+        },
+        {
+          "probe": "after-two",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 9,
+          "text": ". Status, \u00fcberpr\u00fcfbare Status, \u00fcbersprungenen \u00fcbersprungenen"
+        },
+        {
+          "probe": "after-three",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 9,
+          "text": ". **Android-APK-Build-Schritt.\n- `<hash>`: 2026."
+        }
+      ],
+      "deltaMeanEosFromReceiver": 0.0,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.0,
+        "general-note": 0.0,
+        "general-tool": 0.0,
+        "general-count": 0.0,
+        "format-alpha": 0.0,
+        "format-beta": 0.0,
+        "format-gamma": 0.0,
+        "format-delta": 0.0,
+        "after-zero": 0.0,
+        "after-one": 0.0,
+        "after-two": 0.0,
+        "after-three": 0.0
+      }
+    },
+    "W0": {
+      "receiver": "W0",
+      "donor": "W0",
+      "block": "native",
+      "meanEosProbability": 0.04974469896236163,
+      "eosTopCount": 2,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 286,
+          "eosProbability": 0.02367786131799221,
+          "eosMargin": -1.3406963348388672,
+          "independentProbabilityDelta": 2.1606683731079102e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.15053431689739227,
+          "eosMargin": 0.06368827819824219,
+          "independentProbabilityDelta": 1.4901161193847656e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 10,
+          "eosProbability": 0.26056939363479614,
+          "eosMargin": -0.01887035369873047,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.16038452088832855,
+          "eosMargin": 0.3830561637878418,
+          "independentProbabilityDelta": 5.811452865600586e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.00014757421740796417,
+          "eosMargin": -7.06492805480957,
+          "independentProbabilityDelta": 3.5762786865234375e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.00018370796169620007,
+          "eosMargin": -6.6239513754844666,
+          "independentProbabilityDelta": 2.980232238769531e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.0001678067637840286,
+          "eosMargin": -6.677335679531097,
+          "independentProbabilityDelta": 4.023313522338867e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.00013457713066600263,
+          "eosMargin": -7.011636734008789,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0005193635588511825,
+          "eosMargin": -7.394987106323242,
+          "independentProbabilityDelta": 7.748603820800781e-07
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0002218446315964684,
+          "eosMargin": -8.05126702785492,
+          "independentProbabilityDelta": 1.4901161193847656e-06
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0002605528279673308,
+          "eosMargin": -8.045936226844788,
+          "independentProbabilityDelta": 5.960464477539062e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0001348677178611979,
+          "eosMargin": -8.853809714317322,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        }
+      ],
+      "generation": [
+        {
+          "probe": "general-next",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 152,
+          "text": " nachgewiesene APK-Build-Schritt.\n- `<hash>`: 202"
+        },
+        {
+          "probe": "general-note",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 26,
+          "text": ""
+        },
+        {
+          "probe": "general-tool",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 141,
+          "text": "\n- `<hash>`: 2026.10.10.10.2026-10."
+        },
+        {
+          "probe": "general-count",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 70,
+          "text": ""
+        },
+        {
+          "probe": "format-alpha",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 150,
+          "text": "- `<hash>`: 2026.10.10.10.2026-10.2"
+        },
+        {
+          "probe": "format-beta",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 139,
+          "text": "- `<hash>`: 2026.10.10.10.2026-10.2"
+        },
+        {
+          "probe": "format-gamma",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 136,
+          "text": "`repair-compiler` only are or only are or only are or"
+        },
+        {
+          "probe": "format-delta",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 157,
+          "text": "- `<hash>`: 2026.10.10.10.2026-10.2"
+        },
+        {
+          "probe": "after-zero",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 161,
+          "text": ".3.10.10.10.10.10.2026-10.2026-1"
+        },
+        {
+          "probe": "after-one",
+          "tokens": 1,
+          "stop": "EOS",
+          "millis": 52,
+          "text": "."
+        },
+        {
+          "probe": "after-two",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 147,
+          "text": ". Status, \u00fcberpr\u00fcfbare Status, \u00fcbersprungenen \u00fcbersprungenen"
+        },
+        {
+          "probe": "after-three",
+          "tokens": 32,
+          "stop": "MAX_TOKENS",
+          "millis": 126,
+          "text": ". **Android-APK-Build-Schritt.\n- `<hash>`: 2026."
+        }
+      ],
+      "deltaMeanEosFromReceiver": 0.0,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.0,
+        "general-note": 0.0,
+        "general-tool": 0.0,
+        "general-count": 0.0,
+        "format-alpha": 0.0,
+        "format-beta": 0.0,
+        "format-gamma": 0.0,
+        "format-delta": 0.0,
+        "after-zero": 0.0,
+        "after-one": 0.0,
+        "after-two": 0.0,
+        "after-three": 0.0
+      }
+    },
+    "S1": {
+      "receiver": "S1",
+      "donor": "S1",
+      "block": "native",
+      "meanEosProbability": 0.47024683635269565,
+      "eosTopCount": 7,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.398019403219223,
+          "eosMargin": 1.5903067588806152,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.5556378364562988,
+          "eosMargin": 2.3985910415649414,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 260,
+          "eosProbability": 0.13312478363513947,
+          "eosMargin": -0.14109134674072266,
+          "independentProbabilityDelta": 2.8312206268310547e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.5872414708137512,
+          "eosMargin": 2.3484530448913574,
+          "independentProbabilityDelta": 8.940696716308594e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.0001673281512921676,
+          "eosMargin": -8.401027381420135,
+          "independentProbabilityDelta": 3.5762786865234375e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.0004941827501170337,
+          "eosMargin": -6.82179319858551,
+          "independentProbabilityDelta": 1.564621925354004e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.0008370390860363841,
+          "eosMargin": -6.800329685211182,
+          "independentProbabilityDelta": 7.748603820800781e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 49,
+          "eosProbability": 6.888597272336483e-05,
+          "eosMargin": -8.469061613082886,
+          "independentProbabilityDelta": 4.470348358154297e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9928582310676575,
+          "eosMargin": 5.76492166519165,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9920521378517151,
+          "eosMargin": 5.793749809265137,
+          "independentProbabilityDelta": 1.3969838619232178e-09
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9894838333129883,
+          "eosMargin": 5.429079055786133,
+          "independentProbabilityDelta": 6.05359673500061e-09
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9929769039154053,
+          "eosMargin": 5.846202850341797,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        }
+      ],
+      "generation": [
+        {
+          "probe": "general-next",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 9,
+          "text": ""
+        },
+        {
+          "probe": "general-note",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 4,
+          "text": ""
+        },
+        {
+          "probe": "general-tool",
+          "tokens": 6,
+          "stop": "EOS",
+          "millis": 8,
+          "text": "tegrationss"
+        },
+        {
+          "probe": "general-count",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 5,
+          "text": ""
+        },
+        {
+          "probe": "format-alpha",
+          "tokens": 1,
+          "stop": "EOS",
+          "millis": 4,
+          "text": "3"
+        },
+        {
+          "probe": "format-beta",
+          "tokens": 1,
+          "stop": "EOS",
+          "millis": 4,
+          "text": "3"
+        },
+        {
+          "probe": "format-gamma",
+          "tokens": 1,
+          "stop": "EOS",
+          "millis": 3,
+          "text": "3"
+        },
+        {
+          "probe": "format-delta",
+          "tokens": 1,
+          "stop": "EOS",
+          "millis": 2,
+          "text": "1"
+        },
+        {
+          "probe": "after-zero",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 2,
+          "text": ""
+        },
+        {
+          "probe": "after-one",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 2,
+          "text": ""
+        },
+        {
+          "probe": "after-two",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 2,
+          "text": ""
+        },
+        {
+          "probe": "after-three",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 2,
+          "text": ""
+        }
+      ],
+      "deltaMeanEosFromReceiver": 0.0,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.0,
+        "general-note": 0.0,
+        "general-tool": 0.0,
+        "general-count": 0.0,
+        "format-alpha": 0.0,
+        "format-beta": 0.0,
+        "format-gamma": 0.0,
+        "format-delta": 0.0,
+        "after-zero": 0.0,
+        "after-one": 0.0,
+        "after-two": 0.0,
+        "after-three": 0.0
+      }
+    },
+    "W1": {
+      "receiver": "W1",
+      "donor": "W1",
+      "block": "native",
+      "meanEosProbability": 0.42840088940238275,
+      "eosTopCount": 7,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.6909220814704895,
+          "eosMargin": 1.7981572151184082,
+          "independentProbabilityDelta": 7.152557373046875e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.31605446338653564,
+          "eosMargin": 1.3480591773986816,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 49,
+          "eosProbability": 2.159201721951831e-05,
+          "eosMargin": -8.311988592147827,
+          "independentProbabilityDelta": 2.5331974029541016e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.20293395221233368,
+          "eosMargin": 0.596135139465332,
+          "independentProbabilityDelta": 2.8312206268310547e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 7.865820225561038e-05,
+          "eosMargin": -9.059748530387878,
+          "independentProbabilityDelta": 4.76837158203125e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 6.187863618833944e-05,
+          "eosMargin": -9.298033833503723,
+          "independentProbabilityDelta": 1.2218952178955078e-06
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.00013692525681108236,
+          "eosMargin": -8.728848218917847,
+          "independentProbabilityDelta": 1.0728836059570312e-06
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 4.744694888358936e-05,
+          "eosMargin": -9.642158150672913,
+          "independentProbabilityDelta": 7.152557373046875e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.982842206954956,
+          "eosMargin": 5.010286808013916,
+          "independentProbabilityDelta": 2.7474015951156616e-08
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9825373888015747,
+          "eosMargin": 5.07343053817749,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9824813008308411,
+          "eosMargin": 4.999755859375,
+          "independentProbabilityDelta": 2.980232238769531e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9826927781105042,
+          "eosMargin": 5.061491966247559,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        }
+      ],
+      "generation": [
+        {
+          "probe": "general-next",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 60,
+          "text": ""
+        },
+        {
+          "probe": "general-note",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 40,
+          "text": ""
+        },
+        {
+          "probe": "general-tool",
+          "tokens": 1,
+          "stop": "EOS",
+          "millis": 49,
+          "text": "1"
+        },
+        {
+          "probe": "general-count",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 66,
+          "text": ""
+        },
+        {
+          "probe": "format-alpha",
+          "tokens": 1,
+          "stop": "EOS",
+          "millis": 57,
+          "text": "3"
+        },
+        {
+          "probe": "format-beta",
+          "tokens": 1,
+          "stop": "EOS",
+          "millis": 41,
+          "text": "3"
+        },
+        {
+          "probe": "format-gamma",
+          "tokens": 1,
+          "stop": "EOS",
+          "millis": 46,
+          "text": "3"
+        },
+        {
+          "probe": "format-delta",
+          "tokens": 1,
+          "stop": "EOS",
+          "millis": 48,
+          "text": "3"
+        },
+        {
+          "probe": "after-zero",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 50,
+          "text": ""
+        },
+        {
+          "probe": "after-one",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 40,
+          "text": ""
+        },
+        {
+          "probe": "after-two",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 42,
+          "text": ""
+        },
+        {
+          "probe": "after-three",
+          "tokens": 0,
+          "stop": "EOS",
+          "millis": 53,
+          "text": ""
+        }
+      ],
+      "deltaMeanEosFromReceiver": 0.0,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.0,
+        "general-note": 0.0,
+        "general-tool": 0.0,
+        "general-count": 0.0,
+        "format-alpha": 0.0,
+        "format-beta": 0.0,
+        "format-gamma": 0.0,
+        "format-delta": 0.0,
+        "after-zero": 0.0,
+        "after-one": 0.0,
+        "after-two": 0.0,
+        "after-three": 0.0
+      }
+    },
+    "S1_from_S0_tok": {
+      "receiver": "S1",
+      "donor": "S0",
+      "block": "tok",
+      "meanEosProbability": 0.35218491221348813,
+      "eosTopCount": 7,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.1555655598640442,
+          "eosMargin": 0.7264275550842285,
+          "independentProbabilityDelta": 6.705522537231445e-08
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.20900925993919373,
+          "eosMargin": 0.8605585098266602,
+          "independentProbabilityDelta": 2.980232238769531e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 98,
+          "eosProbability": 0.09157636761665344,
+          "eosMargin": -0.11475706100463867,
+          "independentProbabilityDelta": 2.682209014892578e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.19543799757957458,
+          "eosMargin": 0.7587318420410156,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 9.534185664961115e-05,
+          "eosMargin": -8.448485344648361,
+          "independentProbabilityDelta": 1.0132789611816406e-06
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.00017316198500338942,
+          "eosMargin": -7.228155136108398,
+          "independentProbabilityDelta": 5.21540641784668e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.0005155709804967046,
+          "eosMargin": -6.647492676973343,
+          "independentProbabilityDelta": 3.2782554626464844e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 49,
+          "eosProbability": 4.148704465478659e-05,
+          "eosMargin": -8.807948350906372,
+          "independentProbabilityDelta": 3.5762786865234375e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.898427426815033,
+          "eosMargin": 3.55252742767334,
+          "independentProbabilityDelta": 3.725290298461914e-09
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.899085283279419,
+          "eosMargin": 3.6322574615478516,
+          "independentProbabilityDelta": 2.0489096641540527e-08
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.8742527365684509,
+          "eosMargin": 3.2971243858337402,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9020387530326843,
+          "eosMargin": 3.6178345680236816,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": -0.11806192413920752,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": -0.24245384335517883,
+        "general-note": -0.3466285765171051,
+        "general-tool": -0.04154841601848602,
+        "general-count": -0.39180347323417664,
+        "format-alpha": -7.198629464255646e-05,
+        "format-beta": -0.0003210207651136443,
+        "format-gamma": -0.00032146810553967953,
+        "format-delta": -2.7398928068578243e-05,
+        "after-zero": -0.09443080425262451,
+        "after-one": -0.09296685457229614,
+        "after-two": -0.11523109674453735,
+        "after-three": -0.09093815088272095
+      }
+    },
+    "S1_from_S0_nf": {
+      "receiver": "S1",
+      "donor": "S0",
+      "block": "nf",
+      "meanEosProbability": 0.467859875272552,
+      "eosTopCount": 7,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.3906972408294678,
+          "eosMargin": 1.5731902122497559,
+          "independentProbabilityDelta": 3.2782554626464844e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.5472003817558289,
+          "eosMargin": 2.374723434448242,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 260,
+          "eosProbability": 0.13126924633979797,
+          "eosMargin": -0.14313650131225586,
+          "independentProbabilityDelta": 2.8312206268310547e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.5783108472824097,
+          "eosMargin": 2.3238768577575684,
+          "independentProbabilityDelta": 7.152557373046875e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.00017518072854727507,
+          "eosMargin": -8.348641812801361,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.0005069355829618871,
+          "eosMargin": -6.781667649745941,
+          "independentProbabilityDelta": 4.470348358154297e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.0008632889366708696,
+          "eosMargin": -6.759153485298157,
+          "independentProbabilityDelta": 7.152557373046875e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 49,
+          "eosProbability": 7.171180914156139e-05,
+          "eosMargin": -8.418305277824402,
+          "independentProbabilityDelta": 1.6391277313232422e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9923804998397827,
+          "eosMargin": 5.715970993041992,
+          "independentProbabilityDelta": 2.9103830456733704e-10
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.991518497467041,
+          "eosMargin": 5.7450480461120605,
+          "independentProbabilityDelta": 3.026798367500305e-09
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.988818347454071,
+          "eosMargin": 5.383162498474121,
+          "independentProbabilityDelta": 2.3283064365386963e-09
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9925063252449036,
+          "eosMargin": 5.797419548034668,
+          "independentProbabilityDelta": 3.026798367500305e-09
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": -0.0023869610801436347,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": -0.007322162389755249,
+        "general-note": -0.00843745470046997,
+        "general-tool": -0.0018555372953414917,
+        "general-count": -0.008930623531341553,
+        "format-alpha": 7.852577255107462e-06,
+        "format-beta": 1.2752832844853401e-05,
+        "format-gamma": 2.6249850634485483e-05,
+        "format-delta": 2.825836418196559e-06,
+        "after-zero": -0.00047773122787475586,
+        "after-one": -0.0005336403846740723,
+        "after-two": -0.0006654858589172363,
+        "after-three": -0.000470578670501709
+      }
+    },
+    "S1_from_S0_l0": {
+      "receiver": "S1",
+      "donor": "S0",
+      "block": "l0",
+      "meanEosProbability": 0.24026092328858795,
+      "eosTopCount": 5,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.22707664966583252,
+          "eosMargin": 0.9768180847167969,
+          "independentProbabilityDelta": 4.842877388000488e-08
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.5109924077987671,
+          "eosMargin": 2.1850991249084473,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.44064298272132874,
+          "eosMargin": 1.3521771430969238,
+          "independentProbabilityDelta": 2.980232238769531e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.5244417786598206,
+          "eosMargin": 2.1878647804260254,
+          "independentProbabilityDelta": 6.556510925292969e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 50,
+          "eosProbability": 0.00022492374409921467,
+          "eosMargin": -6.769179105758667,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 50,
+          "eosProbability": 0.00022225597058422863,
+          "eosMargin": -6.514213800430298,
+          "independentProbabilityDelta": 1.6391277313232422e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.00024653677246533334,
+          "eosMargin": -6.258540630340576,
+          "independentProbabilityDelta": 9.313225746154785e-08
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 50,
+          "eosProbability": 0.00014593423111364245,
+          "eosMargin": -6.982731342315674,
+          "independentProbabilityDelta": 1.6391277313232422e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.47757604718208313,
+          "eosMargin": 0.21642684936523438,
+          "independentProbabilityDelta": 5.960464477539062e-07
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.11695795506238937,
+          "eosMargin": -1.631859302520752,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.31071770191192627,
+          "eosMargin": -0.44705820083618164,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.27388590574264526,
+          "eosMargin": -0.8219594955444336,
+          "independentProbabilityDelta": 9.5367431640625e-07
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": -0.2299859130641077,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": -0.1709427535533905,
+        "general-note": -0.04464542865753174,
+        "general-tool": 0.30751819908618927,
+        "general-count": -0.06279969215393066,
+        "format-alpha": 5.759559280704707e-05,
+        "format-beta": -0.0002719267795328051,
+        "format-gamma": -0.0005905023135710508,
+        "format-delta": 7.704825839027762e-05,
+        "after-zero": -0.5152821838855743,
+        "after-one": -0.8750941827893257,
+        "after-two": -0.678766131401062,
+        "after-three": -0.71909099817276
+      }
+    },
+    "S1_from_S0_l1": {
+      "receiver": "S1",
+      "donor": "S0",
+      "block": "l1",
+      "meanEosProbability": 0.3449523506060359,
+      "eosTopCount": 8,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.09826133400201797,
+          "eosMargin": 0.1414647102355957,
+          "independentProbabilityDelta": 5.21540641784668e-08
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.4466347098350525,
+          "eosMargin": 1.746232032775879,
+          "independentProbabilityDelta": 3.8743019104003906e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.23094938695430756,
+          "eosMargin": 0.830040454864502,
+          "independentProbabilityDelta": 2.905726432800293e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.5053092241287231,
+          "eosMargin": 2.1174254417419434,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.0016693829093128443,
+          "eosMargin": -5.217645168304443,
+          "independentProbabilityDelta": 1.7136335372924805e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 49,
+          "eosProbability": 0.003282418241724372,
+          "eosMargin": -4.13711941242218,
+          "independentProbabilityDelta": 2.8312206268310547e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.004491670988500118,
+          "eosMargin": -3.557706832885742,
+          "independentProbabilityDelta": 4.3213367462158203e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 49,
+          "eosProbability": 0.00035039204522036016,
+          "eosMargin": -6.59071546792984,
+          "independentProbabilityDelta": 5.364418029785156e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.6855966448783875,
+          "eosMargin": 1.5318527221679688,
+          "independentProbabilityDelta": 7.450580596923828e-08
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.807931661605835,
+          "eosMargin": 2.539945602416992,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.5615447759628296,
+          "eosMargin": 1.317934513092041,
+          "independentProbabilityDelta": 3.5762786865234375e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.79340660572052,
+          "eosMargin": 2.3522772789001465,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": -0.12529448574665975,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": -0.29975806921720505,
+        "general-note": -0.10900312662124634,
+        "general-tool": 0.09782460331916809,
+        "general-count": -0.08193224668502808,
+        "format-alpha": 0.0015020547580206767,
+        "format-beta": 0.002788235491607338,
+        "format-gamma": 0.003654631902463734,
+        "format-delta": 0.00028150607249699533,
+        "after-zero": -0.30726158618927,
+        "after-one": -0.18412047624588013,
+        "after-two": -0.4279390573501587,
+        "after-three": -0.19957029819488525
+      }
+    },
+    "S0_from_S1_tok": {
+      "receiver": "S0",
+      "donor": "S1",
+      "block": "tok",
+      "meanEosProbability": 0.12166890606992335,
+      "eosTopCount": 3,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 286,
+          "eosProbability": 0.056235089898109436,
+          "eosMargin": -0.5385684967041016,
+          "independentProbabilityDelta": 1.8998980522155762e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.4246053993701935,
+          "eosMargin": 1.4967269897460938,
+          "independentProbabilityDelta": 4.172325134277344e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.5055952072143555,
+          "eosMargin": 1.1612181663513184,
+          "independentProbabilityDelta": 1.9371509552001953e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.46863141655921936,
+          "eosMargin": 2.039877414703369,
+          "independentProbabilityDelta": 8.940696716308594e-08
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.0002812707098200917,
+          "eosMargin": -6.444854140281677,
+          "independentProbabilityDelta": 1.9371509552001953e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.00032974162604659796,
+          "eosMargin": -5.886872112751007,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.00029972611810080707,
+          "eosMargin": -6.078611195087433,
+          "independentProbabilityDelta": 5.21540641784668e-08
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.00023050661548040807,
+          "eosMargin": -6.333479225635529,
+          "independentProbabilityDelta": 1.043081283569336e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.002037281170487404,
+          "eosMargin": -6.051629543304443,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0004664145817514509,
+          "eosMargin": -7.365660309791565,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0006918816361576319,
+          "eosMargin": -7.081502437591553,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0006229373393580317,
+          "eosMargin": -7.326120376586914,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": 0.0719242132860624,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.03255722485482693,
+        "general-note": 0.2740706503391266,
+        "general-tool": 0.2450263798236847,
+        "general-count": 0.30824683606624603,
+        "format-alpha": 0.0001336966670351103,
+        "format-beta": 0.00014603401359636337,
+        "format-gamma": 0.0001319196162512526,
+        "format-delta": 9.592952847015113e-05,
+        "after-zero": 0.0015179209294728935,
+        "after-one": 0.0002445692662149668,
+        "after-two": 0.0004313287208788097,
+        "after-three": 0.00048806960694491863
+      }
+    },
+    "S0_from_S1_nf": {
+      "receiver": "S0",
+      "donor": "S1",
+      "block": "nf",
+      "meanEosProbability": 0.050491019329153154,
+      "eosTopCount": 2,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 286,
+          "eosProbability": 0.023868737742304802,
+          "eosMargin": -1.3439435958862305,
+          "independentProbabilityDelta": 8.568167686462402e-08
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.1528002768754959,
+          "eosMargin": 0.06475067138671875,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 10,
+          "eosProbability": 0.26445409655570984,
+          "eosMargin": -0.01347970962524414,
+          "independentProbabilityDelta": 5.066394805908203e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.16305327415466309,
+          "eosMargin": 0.38879871368408203,
+          "independentProbabilityDelta": 1.341104507446289e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.00014345273666549474,
+          "eosMargin": -7.104525446891785,
+          "independentProbabilityDelta": 1.6391277313232422e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.0001791858667274937,
+          "eosMargin": -6.6608381271362305,
+          "independentProbabilityDelta": 1.4156103134155273e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.0001634790824027732,
+          "eosMargin": -6.71552586555481,
+          "independentProbabilityDelta": 2.1606683731079102e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.0001311206433456391,
+          "eosMargin": -7.050707936286926,
+          "independentProbabilityDelta": 7.450580596923828e-08
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0005051459302194417,
+          "eosMargin": -7.426815509796143,
+          "independentProbabilityDelta": 4.172325134277344e-07
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0002137492410838604,
+          "eosMargin": -8.094902515411377,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.00025059960898943245,
+          "eosMargin": -8.090003371238708,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0001291135122301057,
+          "eosMargin": -8.899645447731018,
+          "independentProbabilityDelta": 5.587935447692871e-09
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": 0.0007463265452921988,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.0001908726990222931,
+        "general-note": 0.002265527844429016,
+        "general-tool": 0.0038852691650390625,
+        "general-count": 0.0026686936616897583,
+        "format-alpha": -4.1213061194866896e-06,
+        "format-beta": -4.521745722740889e-06,
+        "format-gamma": -4.327419446781278e-06,
+        "format-delta": -3.4564436646178365e-06,
+        "after-zero": -1.421431079506874e-05,
+        "after-one": -8.096074452623725e-06,
+        "after-two": -9.95330628938973e-06,
+        "after-three": -5.754220183007419e-06
+      }
+    },
+    "S0_from_S1_l0": {
+      "receiver": "S0",
+      "donor": "S1",
+      "block": "l0",
+      "meanEosProbability": 0.11371231434532092,
+      "eosTopCount": 5,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 286,
+          "eosProbability": 0.0392189584672451,
+          "eosMargin": -0.6855192184448242,
+          "independentProbabilityDelta": 4.470348358154297e-08
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.15382814407348633,
+          "eosMargin": 0.33893299102783203,
+          "independentProbabilityDelta": 9.685754776000977e-08
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.12798304855823517,
+          "eosMargin": 0.37212133407592773,
+          "independentProbabilityDelta": 2.5331974029541016e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.16564340889453888,
+          "eosMargin": 0.5334973335266113,
+          "independentProbabilityDelta": 1.564621925354004e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 49,
+          "eosProbability": 0.0005032559856772423,
+          "eosMargin": -5.565718650817871,
+          "independentProbabilityDelta": 2.0116567611694336e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 112,
+          "eosProbability": 0.0008365496760234237,
+          "eosMargin": -5.073236525058746,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.0012149923713877797,
+          "eosMargin": -4.254125654697418,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 112,
+          "eosProbability": 0.00015568015805911273,
+          "eosMargin": -6.680565178394318,
+          "independentProbabilityDelta": 1.9371509552001953e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.17563015222549438,
+          "eosMargin": -0.5176239013671875,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.30286768078804016,
+          "eosMargin": 0.4513068199157715,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.13311800360679626,
+          "eosMargin": -0.5153336524963379,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.2635478973388672,
+          "eosMargin": 0.13786745071411133,
+          "independentProbabilityDelta": 5.066394805908203e-07
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": 0.06396762156145996,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.015541093423962593,
+        "general-note": 0.0032933950424194336,
+        "general-tool": -0.1325857788324356,
+        "general-count": 0.005258828401565552,
+        "format-alpha": 0.00035568194289226085,
+        "format-beta": 0.0006528420635731891,
+        "format-gamma": 0.0010471858695382252,
+        "format-delta": 2.110307104885578e-05,
+        "after-zero": 0.17511079198447987,
+        "after-one": 0.3026458354725037,
+        "after-two": 0.13285745069151744,
+        "after-three": 0.2634130296064541
+      }
+    },
+    "S0_from_S1_l1": {
+      "receiver": "S0",
+      "donor": "S1",
+      "block": "l1",
+      "meanEosProbability": 0.07565266274044309,
+      "eosTopCount": 4,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.08640141785144806,
+          "eosMargin": 0.20547771453857422,
+          "independentProbabilityDelta": 8.940696716308594e-08
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.18744860589504242,
+          "eosMargin": 0.7472405433654785,
+          "independentProbabilityDelta": 1.341104507446289e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.2551683485507965,
+          "eosMargin": 0.19707250595092773,
+          "independentProbabilityDelta": 5.364418029785156e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.17325660586357117,
+          "eosMargin": 0.6483573913574219,
+          "independentProbabilityDelta": 9.685754776000977e-08
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.0001401592162437737,
+          "eosMargin": -6.961929202079773,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.0001540279045002535,
+          "eosMargin": -6.443985998630524,
+          "independentProbabilityDelta": 8.009374141693115e-08
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.0001570587483001873,
+          "eosMargin": -6.8118537068367,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.00010638629464665428,
+          "eosMargin": -7.005580544471741,
+          "independentProbabilityDelta": 5.587935447692871e-08
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.08813104033470154,
+          "eosMargin": -1.922750473022461,
+          "independentProbabilityDelta": 5.364418029785156e-07
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.026781268417835236,
+          "eosMargin": -3.116030216217041,
+          "independentProbabilityDelta": 2.980232238769531e-07
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.05500204488635063,
+          "eosMargin": -2.4220986366271973,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.03508498892188072,
+          "eosMargin": -3.143059253692627,
+          "independentProbabilityDelta": 5.960464477539062e-07
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": 0.025907969956582136,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.06272355280816555,
+        "general-note": 0.036913856863975525,
+        "general-tool": -0.005400478839874268,
+        "general-count": 0.01287202537059784,
+        "format-alpha": -7.414826541207731e-06,
+        "format-beta": -2.9679707949981093e-05,
+        "format-gamma": -1.074775354936719e-05,
+        "format-delta": -2.8190792363602668e-05,
+        "after-zero": 0.08761168009368703,
+        "after-one": 0.02655942310229875,
+        "after-two": 0.05474149197107181,
+        "after-three": 0.03495012118946761
+      }
+    },
+    "W1_from_W0_tok": {
+      "receiver": "W1",
+      "donor": "W0",
+      "block": "tok",
+      "meanEosProbability": 0.37611000903052627,
+      "eosTopCount": 6,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.5527647137641907,
+          "eosMargin": 1.2988252639770508,
+          "independentProbabilityDelta": 4.172325134277344e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.13625861704349518,
+          "eosMargin": 0.2113666534423828,
+          "independentProbabilityDelta": 1.7136335372924805e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 49,
+          "eosProbability": 2.9850667488062754e-05,
+          "eosMargin": -8.31956672668457,
+          "independentProbabilityDelta": 7.525086402893066e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 50,
+          "eosProbability": 0.09546897560358047,
+          "eosMargin": -0.4882345199584961,
+          "independentProbabilityDelta": 2.5331974029541016e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 9.066830534720793e-05,
+          "eosMargin": -8.809067487716675,
+          "independentProbabilityDelta": 1.4454126358032227e-06
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 7.257664401549846e-05,
+          "eosMargin": -8.973485469818115,
+          "independentProbabilityDelta": 1.1324882507324219e-06
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.00015794765204191208,
+          "eosMargin": -8.497041583061218,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 5.662032708642073e-05,
+          "eosMargin": -9.322339534759521,
+          "independentProbabilityDelta": 1.1622905731201172e-06
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9325736165046692,
+          "eosMargin": 3.8312292098999023,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9322550296783447,
+          "eosMargin": 3.893947124481201,
+          "independentProbabilityDelta": 3.5762786865234375e-07
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9317458868026733,
+          "eosMargin": 3.8232436180114746,
+          "independentProbabilityDelta": 5.029141902923584e-08
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9318456053733826,
+          "eosMargin": 3.8800716400146484,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": -0.052290880371856474,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": -0.13815736770629883,
+        "general-note": -0.17979584634304047,
+        "general-tool": 8.258650268544443e-06,
+        "general-count": -0.1074649766087532,
+        "format-alpha": 1.2010103091597557e-05,
+        "format-beta": 1.0698007827159017e-05,
+        "format-gamma": 2.1022395230829716e-05,
+        "format-delta": 9.173378202831373e-06,
+        "after-zero": -0.050268590450286865,
+        "after-one": -0.05028235912322998,
+        "after-two": -0.050735414028167725,
+        "after-three": -0.05084717273712158
+      }
+    },
+    "W1_from_W0_nf": {
+      "receiver": "W1",
+      "donor": "W0",
+      "block": "nf",
+      "meanEosProbability": 0.422715239614566,
+      "eosTopCount": 7,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.6668236255645752,
+          "eosMargin": 1.7385072708129883,
+          "independentProbabilityDelta": 5.960464477539062e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.2981307804584503,
+          "eosMargin": 1.3029298782348633,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 49,
+          "eosProbability": 2.5012221158249304e-05,
+          "eosMargin": -8.127382516860962,
+          "independentProbabilityDelta": 1.7136335372924805e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.190652534365654,
+          "eosMargin": 0.5516119003295898,
+          "independentProbabilityDelta": 4.172325134277344e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 9.013161616167054e-05,
+          "eosMargin": -8.910622000694275,
+          "independentProbabilityDelta": 1.5497207641601562e-06
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 7.117204222595319e-05,
+          "eosMargin": -9.144696235656738,
+          "independentProbabilityDelta": 7.450580596923828e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.0001562787074362859,
+          "eosMargin": -8.585728526115417,
+          "independentProbabilityDelta": 4.76837158203125e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 5.5166761740110815e-05,
+          "eosMargin": -9.477355003356934,
+          "independentProbabilityDelta": 2.4586915969848633e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9793956875801086,
+          "eosMargin": 4.8791913986206055,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9789987802505493,
+          "eosMargin": 4.940815448760986,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9789979457855225,
+          "eosMargin": 4.868666648864746,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9791857600212097,
+          "eosMargin": 4.92957067489624,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": -0.005685649787816771,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": -0.024098455905914307,
+        "general-note": -0.017923682928085327,
+        "general-tool": 3.4202039387309924e-06,
+        "general-count": -0.012281417846679688,
+        "format-alpha": 1.147341390606016e-05,
+        "format-beta": 9.29340603761375e-06,
+        "format-gamma": 1.935345062520355e-05,
+        "format-delta": 7.719812856521457e-06,
+        "after-zero": -0.003446519374847412,
+        "after-one": -0.0035386085510253906,
+        "after-two": -0.0034833550453186035,
+        "after-three": -0.0035070180892944336
+      }
+    },
+    "W1_from_W0_l0": {
+      "receiver": "W1",
+      "donor": "W0",
+      "block": "l0",
+      "meanEosProbability": 0.4367605888540614,
+      "eosTopCount": 8,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.508060097694397,
+          "eosMargin": 1.4303274154663086,
+          "independentProbabilityDelta": 3.725290298461914e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.42430704832077026,
+          "eosMargin": 1.5220332145690918,
+          "independentProbabilityDelta": 1.3709068298339844e-06
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.30530959367752075,
+          "eosMargin": 0.9547410011291504,
+          "independentProbabilityDelta": 2.3096799850463867e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.3487239480018616,
+          "eosMargin": 1.3958873748779297,
+          "independentProbabilityDelta": 3.8743019104003906e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 6.470111111411825e-05,
+          "eosMargin": -8.669540613889694,
+          "independentProbabilityDelta": 3.2782554626464844e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 6.270263838814571e-05,
+          "eosMargin": -9.133035510778427,
+          "independentProbabilityDelta": 7.152557373046875e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 9.778486128197983e-05,
+          "eosMargin": -7.946988612413406,
+          "independentProbabilityDelta": 5.066394805908203e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 4.6481844037771225e-05,
+          "eosMargin": -9.232963919639587,
+          "independentProbabilityDelta": 3.5762786865234375e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9344503283500671,
+          "eosMargin": 3.495204448699951,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.8753625750541687,
+          "eosMargin": 2.869297981262207,
+          "independentProbabilityDelta": 9.313225746154785e-08
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.9326534271240234,
+          "eosMargin": 3.339564323425293,
+          "independentProbabilityDelta": 3.5762786865234375e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.911988377571106,
+          "eosMargin": 3.187563896179199,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": 0.008359699451678637,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": -0.18286198377609253,
+        "general-note": 0.10825258493423462,
+        "general-tool": 0.30528800166030123,
+        "general-count": 0.1457899957895279,
+        "format-alpha": -1.3957091141492128e-05,
+        "format-beta": 8.24002199806273e-07,
+        "format-gamma": -3.9140395529102534e-05,
+        "format-delta": -9.651048458181322e-07,
+        "after-zero": -0.048391878604888916,
+        "after-one": -0.107174813747406,
+        "after-two": -0.04982787370681763,
+        "after-three": -0.0707044005393982
+      }
+    },
+    "W1_from_W0_l1": {
+      "receiver": "W1",
+      "donor": "W0",
+      "block": "l1",
+      "meanEosProbability": 0.30112267219343875,
+      "eosTopCount": 6,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 286,
+          "eosProbability": 0.061078593134880066,
+          "eosMargin": -0.02803945541381836,
+          "independentProbabilityDelta": 2.0116567611694336e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.14916934072971344,
+          "eosMargin": 0.3023357391357422,
+          "independentProbabilityDelta": 3.948807716369629e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 116,
+          "eosProbability": 3.986428419011645e-05,
+          "eosMargin": -9.039604187011719,
+          "independentProbabilityDelta": 1.2516975402832031e-06
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.14652694761753082,
+          "eosMargin": 0.5199322700500488,
+          "independentProbabilityDelta": 8.195638656616211e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.00010374475095886737,
+          "eosMargin": -8.134125590324402,
+          "independentProbabilityDelta": 4.470348358154297e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.00012099828745704144,
+          "eosMargin": -8.041516304016113,
+          "independentProbabilityDelta": 1.519918441772461e-06
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.0003079019079450518,
+          "eosMargin": -7.079013228416443,
+          "independentProbabilityDelta": 5.811452865600586e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.00010436806769575924,
+          "eosMargin": -8.127815663814545,
+          "independentProbabilityDelta": 3.129243850708008e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.7955470085144043,
+          "eosMargin": 3.094604969024658,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.8431651592254639,
+          "eosMargin": 3.739203929901123,
+          "independentProbabilityDelta": 5.960464477539062e-07
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.7890810966491699,
+          "eosMargin": 3.4821605682373047,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.8282270431518555,
+          "eosMargin": 3.719615936279297,
+          "independentProbabilityDelta": 3.5762786865234375e-07
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": -0.127278217208944,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": -0.6298434883356094,
+        "general-note": -0.1668851226568222,
+        "general-tool": 1.827226697059814e-05,
+        "general-count": -0.056407004594802856,
+        "format-alpha": 2.5086548703256994e-05,
+        "format-beta": 5.9119651268702e-05,
+        "format-gamma": 0.00017097665113396943,
+        "format-delta": 5.692111881216988e-05,
+        "after-zero": -0.18729519844055176,
+        "after-one": -0.13937222957611084,
+        "after-two": -0.19340020418167114,
+        "after-three": -0.15446573495864868
+      }
+    },
+    "W0_from_W1_tok": {
+      "receiver": "W0",
+      "donor": "W1",
+      "block": "tok",
+      "meanEosProbability": 0.07399901590057804,
+      "eosTopCount": 3,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 286,
+          "eosProbability": 0.033648788928985596,
+          "eosMargin": -1.0089693069458008,
+          "independentProbabilityDelta": 2.384185791015625e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.23082049190998077,
+          "eosMargin": 0.5593748092651367,
+          "independentProbabilityDelta": 1.1771917343139648e-06
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.3683072626590729,
+          "eosMargin": 0.5818033218383789,
+          "independentProbabilityDelta": 7.450580596923828e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.2527640163898468,
+          "eosMargin": 0.9854164123535156,
+          "independentProbabilityDelta": 8.046627044677734e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.0001803198829293251,
+          "eosMargin": -6.843077898025513,
+          "independentProbabilityDelta": 6.109476089477539e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.0002152017696062103,
+          "eosMargin": -6.464725852012634,
+          "independentProbabilityDelta": 1.1920928955078125e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.00019799005531240255,
+          "eosMargin": -6.4916128516197205,
+          "independentProbabilityDelta": 1.564621925354004e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.00015939510194584727,
+          "eosMargin": -6.846544504165649,
+          "independentProbabilityDelta": 7.897615432739258e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0008195176487788558,
+          "eosMargin": -6.949795961380005,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.00029830349376425147,
+          "eosMargin": -7.778535008430481,
+          "independentProbabilityDelta": 8.940696716308594e-07
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0003628140839282423,
+          "eosMargin": -7.716135025024414,
+          "independentProbabilityDelta": 8.940696716308594e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.00021408888278529048,
+          "eosMargin": -8.39539098739624,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": 0.024254316938216412,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.009970927610993385,
+        "general-note": 0.0802861750125885,
+        "general-tool": 0.10773786902427673,
+        "general-count": 0.09237949550151825,
+        "format-alpha": 3.2745665521360934e-05,
+        "format-beta": 3.149380791001022e-05,
+        "format-gamma": 3.0183291528373957e-05,
+        "format-delta": 2.481797127984464e-05,
+        "after-zero": 0.00030015408992767334,
+        "after-one": 7.645886216778308e-05,
+        "after-two": 0.00010226125596091151,
+        "after-three": 7.922116492409259e-05
+      }
+    },
+    "W0_from_W1_nf": {
+      "receiver": "W0",
+      "donor": "W1",
+      "block": "nf",
+      "meanEosProbability": 0.052338459629027057,
+      "eosTopCount": 3,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 286,
+          "eosProbability": 0.024304818361997604,
+          "eosMargin": -1.3505477905273438,
+          "independentProbabilityDelta": 1.2665987014770508e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.15808676183223724,
+          "eosMargin": 0.07469844818115234,
+          "independentProbabilityDelta": 7.301568984985352e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.2748240530490875,
+          "eosMargin": 0.015346527099609375,
+          "independentProbabilityDelta": 1.7285346984863281e-06
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.1692357361316681,
+          "eosMargin": 0.3977952003479004,
+          "independentProbabilityDelta": 1.0579824447631836e-06
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.0001356344437226653,
+          "eosMargin": -7.178951442241669,
+          "independentProbabilityDelta": 8.940696716308594e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.0001708071940811351,
+          "eosMargin": -6.728958487510681,
+          "independentProbabilityDelta": 3.8743019104003906e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 96,
+          "eosProbability": 0.00015493313549086452,
+          "eosMargin": -6.79733681678772,
+          "independentProbabilityDelta": 2.5331974029541016e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 45,
+          "eosProbability": 0.00012462846643757075,
+          "eosMargin": -7.1250962018966675,
+          "independentProbabilityDelta": 6.258487701416016e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.0004759565053973347,
+          "eosMargin": -7.494765996932983,
+          "independentProbabilityDelta": 9.5367431640625e-07
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.00019851488468702883,
+          "eosMargin": -8.183537006378174,
+          "independentProbabilityDelta": 8.344650268554688e-07
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.00023146382591221482,
+          "eosMargin": -8.180468797683716,
+          "independentProbabilityDelta": 3.5762786865234375e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 46,
+          "eosProbability": 0.00011820771760540083,
+          "eosMargin": -8.992111086845398,
+          "independentProbabilityDelta": 5.960464477539063e-08
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": 0.0025937606666654248,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.000626957044005394,
+        "general-note": 0.007552444934844971,
+        "general-tool": 0.014254659414291382,
+        "general-count": 0.008851215243339539,
+        "format-alpha": -1.193977368529886e-05,
+        "format-beta": -1.2900767615064979e-05,
+        "format-gamma": -1.2873628293164074e-05,
+        "format-delta": -9.94866422843188e-06,
+        "after-zero": -4.3407053453847766e-05,
+        "after-one": -2.3329746909439564e-05,
+        "after-two": -2.9089002055115998e-05,
+        "after-three": -1.666000025579706e-05
+      }
+    },
+    "W0_from_W1_l0": {
+      "receiver": "W0",
+      "donor": "W1",
+      "block": "l0",
+      "meanEosProbability": 0.20268008250028893,
+      "eosTopCount": 4,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 286,
+          "eosProbability": 0.04470478370785713,
+          "eosMargin": -0.21787071228027344,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 287,
+          "eosProbability": 0.07736756652593613,
+          "eosMargin": -0.3961982727050781,
+          "independentProbabilityDelta": 2.905726432800293e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 116,
+          "eosProbability": 6.078288788557984e-05,
+          "eosMargin": -8.639759063720703,
+          "independentProbabilityDelta": 1.601874828338623e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 287,
+          "eosProbability": 0.07897377014160156,
+          "eosMargin": -0.47005367279052734,
+          "independentProbabilityDelta": 3.2782554626464844e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.00011119967530248687,
+          "eosMargin": -7.756810426712036,
+          "independentProbabilityDelta": 8.940696716308594e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.00013294901873450726,
+          "eosMargin": -7.652074337005615,
+          "independentProbabilityDelta": 9.5367431640625e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.0003018827992491424,
+          "eosMargin": -6.755829095840454,
+          "independentProbabilityDelta": 6.854534149169922e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 0.00011416868073865771,
+          "eosMargin": -7.7425297498703,
+          "independentProbabilityDelta": 7.450580596923828e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.5277172327041626,
+          "eosMargin": 2.1539149284362793,
+          "independentProbabilityDelta": 1.0132789611816406e-06
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.6053838133811951,
+          "eosMargin": 2.693911075592041,
+          "independentProbabilityDelta": 1.3709068298339844e-06
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.5226576924324036,
+          "eosMargin": 2.3198790550231934,
+          "independentProbabilityDelta": 3.5762786865234375e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.5746351480484009,
+          "eosMargin": 2.688239574432373,
+          "independentProbabilityDelta": 1.2516975402832031e-06
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": 0.1529353835379273,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.02102692238986492,
+        "general-note": -0.07316675037145615,
+        "general-tool": -0.26050861074691056,
+        "general-count": -0.08141075074672699,
+        "format-alpha": -3.63745421054773e-05,
+        "format-beta": -5.075894296169281e-05,
+        "format-gamma": 0.00013407603546511382,
+        "format-delta": -2.0408449927344918e-05,
+        "after-zero": 0.5271978691453114,
+        "after-one": 0.6051619687495986,
+        "after-two": 0.5223971396044362,
+        "after-three": 0.5745002803305397
+      }
+    },
+    "W0_from_W1_l1": {
+      "receiver": "W0",
+      "donor": "W1",
+      "block": "l1",
+      "meanEosProbability": 0.3338612441963657,
+      "eosTopCount": 8,
+      "cases": [
+        {
+          "probe": "general-next",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.33400505781173706,
+          "eosMargin": 0.8695597648620605,
+          "independentProbabilityDelta": 1.5795230865478516e-06
+        },
+        {
+          "probe": "general-note",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.25256744027137756,
+          "eosMargin": 0.764984130859375,
+          "independentProbabilityDelta": 1.7881393432617188e-07
+        },
+        {
+          "probe": "general-tool",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.21859586238861084,
+          "eosMargin": 0.32018613815307617,
+          "independentProbabilityDelta": 2.980232238769531e-07
+        },
+        {
+          "probe": "general-count",
+          "group": "general",
+          "topId": 511,
+          "eosProbability": 0.19417552649974823,
+          "eosMargin": 0.6247668266296387,
+          "independentProbabilityDelta": 2.7567148208618164e-07
+        },
+        {
+          "probe": "format-alpha",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 7.097309571690857e-05,
+          "eosMargin": -8.370515536516905,
+          "independentProbabilityDelta": 9.238719940185547e-07
+        },
+        {
+          "probe": "format-beta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 7.465316593879834e-05,
+          "eosMargin": -8.721875578165054,
+          "independentProbabilityDelta": 4.470348358154297e-07
+        },
+        {
+          "probe": "format-gamma",
+          "group": "format",
+          "topId": 49,
+          "eosProbability": 0.00010205688158748671,
+          "eosMargin": -7.7553567588329315,
+          "independentProbabilityDelta": 6.854534149169922e-07
+        },
+        {
+          "probe": "format-delta",
+          "group": "format",
+          "topId": 51,
+          "eosProbability": 5.5003842135192826e-05,
+          "eosMargin": -8.812471508979797,
+          "independentProbabilityDelta": 1.7136335372924805e-07
+        },
+        {
+          "probe": "after-zero",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.7895086407661438,
+          "eosMargin": 2.3853354454040527,
+          "independentProbabilityDelta": 5.960464477539062e-07
+        },
+        {
+          "probe": "after-one",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.6828233599662781,
+          "eosMargin": 1.8848390579223633,
+          "independentProbabilityDelta": 1.1324882507324219e-06
+        },
+        {
+          "probe": "after-two",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.7885808944702148,
+          "eosMargin": 2.2250027656555176,
+          "independentProbabilityDelta": 8.940696716308594e-07
+        },
+        {
+          "probe": "after-three",
+          "group": "after-digit",
+          "topId": 511,
+          "eosProbability": 0.7457754611968994,
+          "eosMargin": 2.1244874000549316,
+          "independentProbabilityDelta": 5.960464477539062e-07
+        }
+      ],
+      "generation": [],
+      "deltaMeanEosFromReceiver": 0.2841165452340041,
+      "perProbeEosDeltaFromReceiver": {
+        "general-next": 0.31032719649374485,
+        "general-note": 0.10203312337398529,
+        "general-tool": -0.0419735312461853,
+        "general-count": 0.03379100561141968,
+        "format-alpha": -7.66011216910556e-05,
+        "format-beta": -0.00010905479575740173,
+        "format-gamma": -6.574988219654188e-05,
+        "format-delta": -7.95732885308098e-05,
+        "after-zero": 0.7889892772072926,
+        "after-one": 0.6826015153346816,
+        "after-two": 0.7883203416422475,
+        "after-three": 0.7456405934790382
+      }
+    }
+  },
+  "trainingUpdates": 0,
+  "newPrompts": 0,
+  "inputsUnchanged": true,
+  "qualityImprovementClaimed": false
+}

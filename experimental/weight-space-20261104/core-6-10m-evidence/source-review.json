@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "task": "G1-INTEGRATE-WEIGHT-002-CORE-6-10M",
+  "reviewer": "independent source review / weights_inventory",
+  "reviewedUtc": "2026-11-04T11:32:10Z",
+  "reviewMode": "READ_ONLY_SOURCE_REVIEW",
+  "verdict": "NO_REMAINING_BLOCKING_FINDING_IN_REVIEWED_SCOPE",
+  "source": {
+    "driver": "experimental/weight-space-20261104/run_experiment.py",
+    "driverSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+    "plan": "experimental/weight-space-20261104/CORE_6_10M_PLAN.md",
+    "planSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+    "integratedP0Commit": "8e2a2370a9392aeff6bb68a8e2b4b0c1caaa68b2"
+  },
+  "scope": [
+    "Feste Profile und exakte BUDGET_LIMIT-Endstufen; kein freier Budget- oder Gate-Override.",
+    "Originale Baseline, ausgewählte Kalibrierung und exaktes großes Ziel müssen vor beiden Trainingsarmen durch vorhandene Belege autorisiert sein.",
+    "Profil-, Plan-, Registrierungs-, Daten- und Runtimebindung einschließlich zentralem Trainingsaufruf und abgeschlossenen Cache-Resumes.",
+    "Beide vollständigen Kandidatenmengen und matched Trainingspaare müssen vor jeder Holdout-Auswertung gemeinsam eingefroren sein.",
+    "Globaler Freeze sperrt neues Training auch bei verlorenem Child; registrierte Child-Pfade dürfen nicht als historical neu eröffnet werden.",
+    "Historische Defaults behalten ihre bisherige Belegidentität und unveränderte Qualitätsauswahl."
+  ],
+  "closedFindings": [
+    {
+      "id": "PEER_SELECTION_CHANGE_DURING_FINAL",
+      "finding": "Nur der aktuelle Child-Hash und die globale Datei wurden am Ende geprüft; eine Änderung der zweiten Child-Auswahl konnte unbemerkt bleiben.",
+      "resolution": "Fresh final und cached final revalidieren die vollständige Studie mit verify_study_freeze(), einschließlich beider Child-Hashes und aller darin enthaltenen Kandidaten."
+    },
+    {
+      "id": "HISTORICAL_DOWNGRADE_AFTER_CHILD_LOSS",
+      "finding": "Ein verlorener registrierter Child-Ordner konnte mit historical ohne study-root neu verwendet werden und damit die ausschließlich profilabhängige Globalsperre umgehen.",
+      "resolution": "verify_output_scope() reserviert die Child-Namen anhand persistenter Eltern-Registrierung oder Globalfreeze; Prüfung vor mkdir, im Runtimepfad und vor zentraler Trainingsautorisierung."
+    },
+    {
+      "id": "DANGLING_FREEZE_MARKER",
+      "finding": "Path.exists() behandelte einen dangling Freeze-Symlink als abwesend.",
+      "resolution": "path_present() zählt auch Symlinks als vorhandene Marker; Global-, Child-, Finalfreeze und Registrierung öffnen dadurch keine bereits geschlossene Phase erneut."
+    },
+    {
+      "id": "REGISTERED_CHILD_SYMLINK_DOWNGRADE",
+      "finding": "Das vorherige resolve() konnte beim Child-Symlink auf einen frischen externen Ordner den registrierten Child-Namen verlieren.",
+      "resolution": "Der lexikalisch absolute requested_out-Pfad wird zusätzlich zum aufgelösten Pfad gegen die Elternmarker geprüft; historische Umdeutung des angeforderten Child-Pfads wird vor Schreibzugriff und zentralem Dispatch abgelehnt."
+    }
+  ],
+  "fixedProfiles": [
+    {
+      "profileId": "core-6562304",
+      "targetLabel": "width-8",
+      "targetParameters": 6562304,
+      "parameterBudget": 6562304,
+      "nextRejectedLabel": "depth-3",
+      "nextRejectedParameters": 9712128
+    },
+    {
+      "profileId": "core-9712128",
+      "targetLabel": "depth-3",
+      "targetParameters": 9712128,
+      "parameterBudget": 10000000,
+      "nextRejectedLabel": "depth-4",
+      "nextRejectedParameters": 12861952
+    }
+  ],
+  "unchangedGates": {
+    "checkpointBytesMaximum": 67108864,
+    "firstTokenCallMsMaximum": 1500,
+    "generation32MsMaximum": 5000,
+    "vmHwmKiBMaximum": 786432,
+    "benchmarkProcessSeconds": 120,
+    "trainingProcessSeconds": 600,
+    "benchmarkJavaHeap": "1g",
+    "trainingJavaHeap": "3g",
+    "parityMaximumLogitDelta": 0.001,
+    "parityMaximumProbabilityDelta": 1e-05,
+    "parityMaximumStepwiseLogitDelta": 0.001,
+    "parityIdenticalGenerations": 3,
+    "trainingStepsPerArm": 16,
+    "developmentBpbEquivalenceTolerance": 1e-05,
+    "selectionRule": "Unveränderte neutrale Entwicklungsqualität über alle kapazitätsgeeigneten Kandidaten; innerhalb der Toleranz weniger Parameter bevorzugen.",
+    "minimumCapacityPolicy": "Das feste Ziel ab 6 Millionen gilt für die große Trainingsquelle. Baseline oder Kleinkontrolle dürfen die Qualitätsauswahl gewinnen; ein kleineres Ersatztraining nach Zielversagen ist unzulässig."
+  },
+  "evidenceBoundary": {
+    "ownModelOrTestExecution": false,
+    "ownHoldoutContentAccessDuringReview": false,
+    "ownGitMutation": false,
+    "independentValidationReported": "Validator meldete für genau diese Driver- und Planfassung 29/29 Profilfälle bestanden; diese Review hat den Harness nicht selbst ausgeführt. Die unveränderten 46 Altregressionen werden separat belegt.",
+    "reportedProfileValidationReportSha256": "bd9774adf3f6cc264ee2cd195f4d22a2764e9a47dbc320c4f640889b59a1e700",
+    "historicalActualArtifactResume": "Separater Nachweis durch Root erforderlich; hier nur Quellprüfung der historischen Kompatibilität."
+  },
+  "boundedResidualLimitations": [
+    "Dateiidentitäten werden wiederholt vor und nach Ausführung geprüft. Der unveränderte JVM-Lader übernimmt keinen erwarteten Checkpoint-Digest; diese Prüfung behauptet keine atomare Sicherheit gegen beliebige gleichzeitige Dateiumleitungen.",
+    "Bei bereits abgeschlossenem final.json werden Auswahl-, Holdout- und Kandidatenidentitäten geprüft; die gespeicherten numerischen Holdout-Metriken werden nicht vollständig erneut gegen einzelne rohe Auswertungsbelege rekonstruiert. Dies autorisiert kein neues Training und ersetzt keinen Ergebnisaudit."
+  ]
+}

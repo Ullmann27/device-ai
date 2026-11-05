@@ -1,0 +1,201 @@
+{
+  "stages": [
+    {
+      "label": "baseline",
+      "path": "/workspace/scratch/0549bca61ccf/inputs/lm1-baseline.lm1",
+      "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "parameters": 132160,
+      "bytes": 529297,
+      "devBpb": 2.3525414158359124,
+      "capacity": {
+        "kind": "CAPACITY_RESULT",
+        "pass": "true",
+        "reasons": "NONE",
+        "checkpointSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+        "parameters": "132160",
+        "loadMs": "63.933356",
+        "measuredRepeats": "3",
+        "maxFirstTokenCallMs": "8.259399",
+        "maxGeneration32CallMs": "15.738869",
+        "firstTokenObservations": "3",
+        "full32TokenObservations": "3",
+        "vmHwmKiB": "80824",
+        "finalVmHwmKiB": "80824",
+        "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+        "failure": "UNAVAILABLE",
+        "processReturncode": 0,
+        "processTimedOut": false
+      },
+      "capacityEligible": true
+    },
+    {
+      "label": "width-2",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304/checkpoints/c56c96e9045544bc06fe9867baa38cf3cd840b228492eb8e7290ed703d92c1f8.lm1",
+      "sha256": "c56c96e9045544bc06fe9867baa38cf3cd840b228492eb8e7290ed703d92c1f8",
+      "parameters": 460928,
+      "bytes": 1844580,
+      "parity": [
+        {
+          "kind": "PARITY",
+          "maxLogitDelta": "1.33514404296875E-5",
+          "maxProbabilityDelta": "6.705522537231445E-7",
+          "maxStepwiseLogitDelta": "1.1444091796875E-5",
+          "identicalGenerations": "3",
+          "originalParameters": "132160",
+          "expandedParameters": "460928"
+        }
+      ],
+      "capacity": {
+        "kind": "CAPACITY_RESULT",
+        "pass": "true",
+        "reasons": "NONE",
+        "checkpointSha256": "c56c96e9045544bc06fe9867baa38cf3cd840b228492eb8e7290ed703d92c1f8",
+        "parameters": "460928",
+        "loadMs": "132.76785",
+        "measuredRepeats": "3",
+        "maxFirstTokenCallMs": "20.940241",
+        "maxGeneration32CallMs": "35.755749",
+        "firstTokenObservations": "3",
+        "full32TokenObservations": "3",
+        "vmHwmKiB": "97992",
+        "finalVmHwmKiB": "97992",
+        "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+        "failure": "UNAVAILABLE",
+        "processReturncode": 0,
+        "processTimedOut": false
+      },
+      "capacityEligible": true
+    },
+    {
+      "label": "width-4",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304/checkpoints/a653727a868e7382debfad948d09c711e96a02858941495c2e422d19959e5f18.lm1",
+      "sha256": "a653727a868e7382debfad948d09c711e96a02858941495c2e422d19959e5f18",
+      "parameters": 1708288,
+      "bytes": 6834021,
+      "parity": [
+        {
+          "kind": "PARITY",
+          "maxLogitDelta": "1.7642974853515625E-5",
+          "maxProbabilityDelta": "6.705522537231445E-7",
+          "maxStepwiseLogitDelta": "1.1444091796875E-5",
+          "identicalGenerations": "3",
+          "originalParameters": "132160",
+          "expandedParameters": "1708288"
+        }
+      ],
+      "capacity": {
+        "kind": "CAPACITY_RESULT",
+        "pass": "true",
+        "reasons": "NONE",
+        "checkpointSha256": "a653727a868e7382debfad948d09c711e96a02858941495c2e422d19959e5f18",
+        "parameters": "1708288",
+        "loadMs": "121.313545",
+        "measuredRepeats": "3",
+        "maxFirstTokenCallMs": "63.288102",
+        "maxGeneration32CallMs": "100.362773",
+        "firstTokenObservations": "3",
+        "full32TokenObservations": "3",
+        "vmHwmKiB": "117780",
+        "finalVmHwmKiB": "117780",
+        "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+        "failure": "UNAVAILABLE",
+        "processReturncode": 0,
+        "processTimedOut": false
+      },
+      "capacityEligible": true
+    },
+    {
+      "label": "width-8",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304/checkpoints/4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd.lm1",
+      "sha256": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+      "parameters": 6562304,
+      "bytes": 26250085,
+      "parity": [
+        {
+          "kind": "PARITY",
+          "maxLogitDelta": "2.47955322265625E-5",
+          "maxProbabilityDelta": "1.1622905731201172E-6",
+          "maxStepwiseLogitDelta": "1.52587890625E-5",
+          "identicalGenerations": "3",
+          "originalParameters": "132160",
+          "expandedParameters": "6562304"
+        }
+      ],
+      "capacity": {
+        "kind": "CAPACITY_RESULT",
+        "pass": "true",
+        "reasons": "NONE",
+        "checkpointSha256": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+        "parameters": "6562304",
+        "loadMs": "254.62447",
+        "measuredRepeats": "3",
+        "maxFirstTokenCallMs": "178.253705",
+        "maxGeneration32CallMs": "260.890111",
+        "firstTokenObservations": "3",
+        "full32TokenObservations": "3",
+        "vmHwmKiB": "164360",
+        "finalVmHwmKiB": "164360",
+        "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+        "failure": "UNAVAILABLE",
+        "processReturncode": 0,
+        "processTimedOut": false
+      },
+      "capacityEligible": true
+    },
+    {
+      "label": "depth-3",
+      "parameters": 9712128,
+      "parameterBytes": 38848512,
+      "status": "PREFLIGHT_REJECTED",
+      "reason": "BUDGET_LIMIT",
+      "parameterLimit": 6562304,
+      "profileId": "core-6562304",
+      "profileSha256": "437974f890b3805a6e5357f9bb44e71e4046645a5cc6bef8b3bda5d8915f5fba",
+      "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+      "studyRegistrationSha256": "b9785250d0795c445a68c8b2a3ddc315261a107727c9c1e8081eed6a5279f689"
+    }
+  ],
+  "lastPassed": {
+    "label": "width-8",
+    "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304/checkpoints/4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd.lm1",
+    "sha256": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+    "parameters": 6562304,
+    "bytes": 26250085,
+    "parity": [
+      {
+        "kind": "PARITY",
+        "maxLogitDelta": "2.47955322265625E-5",
+        "maxProbabilityDelta": "1.1622905731201172E-6",
+        "maxStepwiseLogitDelta": "1.52587890625E-5",
+        "identicalGenerations": "3",
+        "originalParameters": "132160",
+        "expandedParameters": "6562304"
+      }
+    ],
+    "capacity": {
+      "kind": "CAPACITY_RESULT",
+      "pass": "true",
+      "reasons": "NONE",
+      "checkpointSha256": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+      "parameters": "6562304",
+      "loadMs": "254.62447",
+      "measuredRepeats": "3",
+      "maxFirstTokenCallMs": "178.253705",
+      "maxGeneration32CallMs": "260.890111",
+      "firstTokenObservations": "3",
+      "full32TokenObservations": "3",
+      "vmHwmKiB": "164360",
+      "finalVmHwmKiB": "164360",
+      "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+      "failure": "UNAVAILABLE",
+      "processReturncode": 0,
+      "processTimedOut": false
+    },
+    "capacityEligible": true
+  },
+  "stop": "BUDGET_LIMIT",
+  "profileId": "core-6562304",
+  "profileSha256": "437974f890b3805a6e5357f9bb44e71e4046645a5cc6bef8b3bda5d8915f5fba",
+  "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+  "studyRegistrationSha256": "b9785250d0795c445a68c8b2a3ddc315261a107727c9c1e8081eed6a5279f689"
+}

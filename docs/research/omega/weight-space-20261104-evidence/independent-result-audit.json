@@ -1,0 +1,1392 @@
+{
+  "auditType": "Independent read-only file, receipt, binary-integrity and arithmetic audit; no neural execution or tuning",
+  "auditDateUtc": "2026-11-04",
+  "pass": false,
+  "checks": [
+    {
+      "name": "frozen_selection_hash_matches_final",
+      "pass": true
+    },
+    {
+      "name": "frozen_candidates_identical_to_final_before_added_holdout_fields",
+      "pass": true
+    },
+    {
+      "name": "source_hash_LmCapacityBenchmark.kt",
+      "pass": true
+    },
+    {
+      "name": "source_hash_LmWeightExperiment.kt",
+      "pass": true
+    },
+    {
+      "name": "source_hash_LmWeightSurgery.kt",
+      "pass": true
+    },
+    {
+      "name": "source_hash_LmWeightSurgeryTest.kt",
+      "pass": true
+    },
+    {
+      "name": "orchestrator_hash_matches_frozen",
+      "pass": true
+    },
+    {
+      "name": "compiled_jar_hash_matches_environment",
+      "pass": true
+    },
+    {
+      "name": "protocol_hash_matches_environment",
+      "pass": true
+    },
+    {
+      "name": "original_input_unchanged_lm1-baseline.lm1",
+      "pass": true
+    },
+    {
+      "name": "original_input_unchanged_lm1-tokenizer.lmbp",
+      "pass": true
+    },
+    {
+      "name": "original_input_unchanged_continuum-swb1-backup.bin",
+      "pass": true
+    },
+    {
+      "name": "development_hash_frozen",
+      "pass": true
+    },
+    {
+      "name": "training_hash_frozen",
+      "pass": true
+    },
+    {
+      "name": "holdout_hash_matches_original_seal_and_final",
+      "pass": true
+    },
+    {
+      "name": "holdout_paragraph_constraints",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_baseline",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_calibration-l0-n1-0.75",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_calibration-l0-n1-1.25",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_calibration-l1-n1-0.75",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_calibration-l1-n1-1.25",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_calibration-nf-0.75",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_calibration-nf-1.25",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_width-2",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_width-4",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_width-8",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_depth-3",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_depth-4",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_depth-5",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_continued-small",
+      "pass": true
+    },
+    {
+      "name": "checkpoint_integrity_continued-expanded",
+      "pass": true
+    },
+    {
+      "name": "all_receipt_log_and_input_hashes",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no_receipt_timeout_or_identity_failure",
+      "pass": true
+    },
+    {
+      "name": "only_expected_EOS_capacity_process_failures",
+      "pass": true,
+      "detail": [
+        "continued-expanded-capacity.receipt.json",
+        "continued-small-capacity.receipt.json"
+      ]
+    },
+    {
+      "name": "recomputed_capacity_gate_baseline-capacity",
+      "pass": true
+    },
+    {
+      "name": "recomputed_capacity_gate_continued-expanded-capacity",
+      "pass": true
+    },
+    {
+      "name": "recomputed_capacity_gate_continued-small-capacity",
+      "pass": true
+    },
+    {
+      "name": "recomputed_capacity_gate_depth-3-capacity",
+      "pass": true
+    },
+    {
+      "name": "recomputed_capacity_gate_depth-4-capacity",
+      "pass": true
+    },
+    {
+      "name": "capacity_summary_peak_matches_all_samples_depth-5",
+      "pass": false,
+      "severity": "NONBLOCKING_REPORTING_DISCREPANCY",
+      "detail": {
+        "parameters": 16011776,
+        "terminalReportedVmHwmKiB": 262548,
+        "maxObservedVmHwmKiB": 263388,
+        "maxObservedVmHwmMiB": 257.21484375,
+        "underreportKiB": 840,
+        "maxFirstTokenCallMs": 505.048452,
+        "maxGeneration32CallMs": 755.396291,
+        "threeResourceLimitsPass": true,
+        "requiredFullWorkloadsPass": true,
+        "recomputedCapacityPass": true,
+        "matchesRecordedGateOutcome": true
+      }
+    },
+    {
+      "name": "recomputed_capacity_gate_width-2-capacity",
+      "pass": true
+    },
+    {
+      "name": "recomputed_capacity_gate_width-4-capacity",
+      "pass": true
+    },
+    {
+      "name": "recomputed_capacity_gate_width-8-capacity",
+      "pass": true
+    },
+    {
+      "name": "evaluation_totals_baseline_dev",
+      "pass": true
+    },
+    {
+      "name": "evaluation_totals_baseline_holdout",
+      "pass": true
+    },
+    {
+      "name": "holdout_count_bytes_baseline",
+      "pass": true
+    },
+    {
+      "name": "evaluation_totals_depth-5_dev",
+      "pass": true
+    },
+    {
+      "name": "evaluation_totals_depth-5_holdout",
+      "pass": true
+    },
+    {
+      "name": "holdout_count_bytes_depth-5",
+      "pass": true
+    },
+    {
+      "name": "evaluation_totals_continued-small_dev",
+      "pass": true
+    },
+    {
+      "name": "evaluation_totals_continued-small_holdout",
+      "pass": true
+    },
+    {
+      "name": "holdout_count_bytes_continued-small",
+      "pass": true
+    },
+    {
+      "name": "evaluation_totals_continued-expanded_dev",
+      "pass": true
+    },
+    {
+      "name": "evaluation_totals_continued-expanded_holdout",
+      "pass": true
+    },
+    {
+      "name": "holdout_count_bytes_continued-expanded",
+      "pass": true
+    },
+    {
+      "name": "literal_probe_scores_baseline-probes",
+      "pass": true
+    },
+    {
+      "name": "literal_probe_scores_continued-expanded-probes",
+      "pass": true
+    },
+    {
+      "name": "literal_probe_scores_continued-small-probes",
+      "pass": true
+    },
+    {
+      "name": "literal_probe_scores_depth-5-probes",
+      "pass": true
+    },
+    {
+      "name": "matched_training_input_and_schedule",
+      "pass": true
+    },
+    {
+      "name": "matched_training_steps_tokens",
+      "pass": true
+    },
+    {
+      "name": "changed_weight_count_continued-small",
+      "pass": true,
+      "detail": {
+        "independentlyCounted": 132159
+      }
+    },
+    {
+      "name": "changed_weight_count_continued-expanded",
+      "pass": true,
+      "detail": {
+        "independentlyCounted": 16011740
+      }
+    },
+    {
+      "name": "frozen_selection_rule_recomputed",
+      "pass": true
+    },
+    {
+      "name": "ladder_stops_at_software_contract",
+      "pass": true
+    },
+    {
+      "name": "freeze_file_precedes_all_holdout_receipts",
+      "pass": true
+    },
+    {
+      "name": "all_capacity_gate_outcomes_recomputed_with_conservative_memory_maxima",
+      "pass": true
+    }
+  ],
+  "sourceEvidence": {
+    "finalSha256": "451cf71a99bebd08c08e2755f2e8f3c7a6a153291193d258110acc406b16cc3f",
+    "frozenSelectionSha256": "8c433e76c28ceafa5e5149c9b0469d37eb4e217f1887868bce2a2ed1330dc6f9",
+    "ladderSha256": "ec033e9734565f54a0750309b6d16a7027775229d8726766e4b66617ed191f73",
+    "orchestratorSha256": "609215b0f2671e2407c8b81867255bd1ce60680626c081fd91b0a12d14f62deb",
+    "compiledJarSha256": "39dc409962c799bad79c4addddecc1d1c9db96418d27ec541bdf03e67b298bb4"
+  },
+  "checkpointCount": 15,
+  "checkpoints": [
+    {
+      "label": "baseline",
+      "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "parameters": 132160,
+      "fileBytes": 529297,
+      "dim": 64,
+      "layers": 2,
+      "mlp": 256,
+      "matrixCount": 24,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "calibration-l0-n1-0.75",
+      "sha256": "723fd70c1ed0b0d502e4e0a32c28e8343cfe72eae5df44aa50f1c41288984059",
+      "parameters": 132160,
+      "fileBytes": 529507,
+      "dim": 64,
+      "layers": 2,
+      "mlp": 256,
+      "matrixCount": 24,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "calibration-l0-n1-1.25",
+      "sha256": "4cf9046eb43023cdbcabc47cd489f449722de39340891115d5c7be245bfdf7a3",
+      "parameters": 132160,
+      "fileBytes": 529507,
+      "dim": 64,
+      "layers": 2,
+      "mlp": 256,
+      "matrixCount": 24,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "calibration-l1-n1-0.75",
+      "sha256": "99642b24bf0978822f5fef40cba295e4cecc751dbabf1af1d2c1c006992efd81",
+      "parameters": 132160,
+      "fileBytes": 529507,
+      "dim": 64,
+      "layers": 2,
+      "mlp": 256,
+      "matrixCount": 24,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "calibration-l1-n1-1.25",
+      "sha256": "7f98d50fd06cb779baa48472c0baa5a5a446dde3c677febafeaf6f85fe56d298",
+      "parameters": 132160,
+      "fileBytes": 529507,
+      "dim": 64,
+      "layers": 2,
+      "mlp": 256,
+      "matrixCount": 24,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "calibration-nf-0.75",
+      "sha256": "f53a05ec0e51fe4b2147de9f504205902bbba8f6d54ce2a427588b22768bfb37",
+      "parameters": 132160,
+      "fileBytes": 529504,
+      "dim": 64,
+      "layers": 2,
+      "mlp": 256,
+      "matrixCount": 24,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "calibration-nf-1.25",
+      "sha256": "da9b1b9f5858853f31e44a05939ecc1c0fd7dee2a98e9c6e3a9b9fb57e694dd1",
+      "parameters": 132160,
+      "fileBytes": 529504,
+      "dim": 64,
+      "layers": 2,
+      "mlp": 256,
+      "matrixCount": 24,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "width-2",
+      "sha256": "c56c96e9045544bc06fe9867baa38cf3cd840b228492eb8e7290ed703d92c1f8",
+      "parameters": 460928,
+      "fileBytes": 1844580,
+      "dim": 128,
+      "layers": 2,
+      "mlp": 512,
+      "matrixCount": 24,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "width-4",
+      "sha256": "a653727a868e7382debfad948d09c711e96a02858941495c2e422d19959e5f18",
+      "parameters": 1708288,
+      "fileBytes": 6834021,
+      "dim": 256,
+      "layers": 2,
+      "mlp": 1024,
+      "matrixCount": 24,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "width-8",
+      "sha256": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+      "parameters": 6562304,
+      "fileBytes": 26250085,
+      "dim": 512,
+      "layers": 2,
+      "mlp": 2048,
+      "matrixCount": 24,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "depth-3",
+      "sha256": "5e2332b0c15646b574d9c3f8cf48378f13eed1daaed7e652328588eedae85950",
+      "parameters": 9712128,
+      "fileBytes": 38849588,
+      "dim": 512,
+      "layers": 3,
+      "mlp": 2048,
+      "matrixCount": 35,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "depth-4",
+      "sha256": "91bb39d2aba66769a87e9b68d7cefb14f478b0c6699cb00b4f75aca43081954a",
+      "parameters": 12861952,
+      "fileBytes": 51449050,
+      "dim": 512,
+      "layers": 4,
+      "mlp": 2048,
+      "matrixCount": 46,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "depth-5",
+      "sha256": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+      "parameters": 16011776,
+      "fileBytes": 64048511,
+      "dim": 512,
+      "layers": 5,
+      "mlp": 2048,
+      "matrixCount": 57,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "continued-small",
+      "sha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+      "parameters": 132160,
+      "fileBytes": 529659,
+      "dim": 64,
+      "layers": 2,
+      "mlp": 256,
+      "matrixCount": 24,
+      "finite": true,
+      "integrityPass": true
+    },
+    {
+      "label": "continued-expanded",
+      "sha256": "70479b077b634439085673217efa667040191db0eaac4138fe8165440dfba731",
+      "parameters": 16011776,
+      "fileBytes": 64048720,
+      "dim": 512,
+      "layers": 5,
+      "mlp": 2048,
+      "matrixCount": 57,
+      "finite": true,
+      "integrityPass": true
+    }
+  ],
+  "receiptCount": 49,
+  "receipts": [
+    {
+      "name": "baseline-capacity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "baseline-dev.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "baseline-holdout.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "baseline-inspect.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "baseline-probes.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-l0-n1-0.75-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-l0-n1-0.75-dev.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-l0-n1-1.25-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-l0-n1-1.25-dev.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-l1-n1-0.75-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-l1-n1-0.75-dev.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-l1-n1-1.25-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-l1-n1-1.25-dev.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-nf-0.75-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-nf-0.75-dev.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-nf-1.25-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "calibration-nf-1.25-dev.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "continued-expanded-capacity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 1,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "continued-expanded-dev.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "continued-expanded-holdout.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "continued-expanded-probes.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "continued-expanded-train.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "continued-small-capacity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 1,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "continued-small-dev.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "continued-small-holdout.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "continued-small-probes.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "continued-small-train.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-3-capacity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-3-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-3-parity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-4-capacity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-4-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-4-parity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-5-capacity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-5-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-5-dev.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-5-holdout.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-5-parity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "depth-5-probes.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "prepare-corpus.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": false,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "width-2-capacity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "width-2-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "width-2-parity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "width-4-capacity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "width-4-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "width-4-parity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "width-8-capacity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "width-8-create.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    },
+    {
+      "name": "width-8-parity.receipt.json",
+      "logHashPass": true,
+      "inputIdentityPass": true,
+      "hasExplicitInputHashes": true,
+      "returncode": 0,
+      "timeout": false,
+      "identityValidationFailure": null
+    }
+  ],
+  "legacyReceiptCount": 17,
+  "capacityMeasurements": [
+    {
+      "label": "baseline",
+      "parameters": 132160,
+      "pass": true,
+      "firstTokenObservations": 3,
+      "full32Observations": 3,
+      "maxFirstTokenCallMs": 6.144873,
+      "maxGeneration32CallMs": 13.537797,
+      "peakRssMiB": 80.7890625,
+      "loadMs": 60.965034,
+      "actual32TokenCounts": [
+        32,
+        32,
+        32
+      ],
+      "stops32": [
+        "MAX_TOKENS",
+        "MAX_TOKENS",
+        "MAX_TOKENS"
+      ],
+      "terminalReportedPeakRssMiB": 80.7890625,
+      "maxObservedVmHwmKiB": 82728,
+      "terminalReportedVmHwmKiB": 82728
+    },
+    {
+      "label": "continued-expanded",
+      "parameters": 16011776,
+      "pass": false,
+      "firstTokenObservations": 0,
+      "full32Observations": 0,
+      "maxFirstTokenCallMs": 394.334076,
+      "maxGeneration32CallMs": 421.087062,
+      "peakRssMiB": 267.6953125,
+      "loadMs": 507.972747,
+      "actual32TokenCounts": [
+        0,
+        0,
+        0
+      ],
+      "stops32": [
+        "EOS",
+        "EOS",
+        "EOS"
+      ],
+      "terminalReportedPeakRssMiB": 267.6953125,
+      "maxObservedVmHwmKiB": 274120,
+      "terminalReportedVmHwmKiB": 274120
+    },
+    {
+      "label": "continued-small",
+      "parameters": 132160,
+      "pass": false,
+      "firstTokenObservations": 0,
+      "full32Observations": 0,
+      "maxFirstTokenCallMs": 6.614223,
+      "maxGeneration32CallMs": 6.956777,
+      "peakRssMiB": 69.90234375,
+      "loadMs": 52.209904,
+      "actual32TokenCounts": [
+        0,
+        0,
+        0
+      ],
+      "stops32": [
+        "EOS",
+        "EOS",
+        "EOS"
+      ],
+      "terminalReportedPeakRssMiB": 69.90234375,
+      "maxObservedVmHwmKiB": 71580,
+      "terminalReportedVmHwmKiB": 71580
+    },
+    {
+      "label": "depth-3",
+      "parameters": 9712128,
+      "pass": true,
+      "firstTokenObservations": 3,
+      "full32Observations": 3,
+      "maxFirstTokenCallMs": 297.938758,
+      "maxGeneration32CallMs": 382.237779,
+      "peakRssMiB": 197.75,
+      "loadMs": 332.688168,
+      "actual32TokenCounts": [
+        32,
+        32,
+        32
+      ],
+      "stops32": [
+        "MAX_TOKENS",
+        "MAX_TOKENS",
+        "MAX_TOKENS"
+      ],
+      "terminalReportedPeakRssMiB": 197.75,
+      "maxObservedVmHwmKiB": 202496,
+      "terminalReportedVmHwmKiB": 202496
+    },
+    {
+      "label": "depth-4",
+      "parameters": 12861952,
+      "pass": true,
+      "firstTokenObservations": 3,
+      "full32Observations": 3,
+      "maxFirstTokenCallMs": 357.80746,
+      "maxGeneration32CallMs": 563.861441,
+      "peakRssMiB": 234.171875,
+      "loadMs": 416.617011,
+      "actual32TokenCounts": [
+        32,
+        32,
+        32
+      ],
+      "stops32": [
+        "MAX_TOKENS",
+        "MAX_TOKENS",
+        "MAX_TOKENS"
+      ],
+      "terminalReportedPeakRssMiB": 234.171875,
+      "maxObservedVmHwmKiB": 239792,
+      "terminalReportedVmHwmKiB": 239792
+    },
+    {
+      "label": "depth-5",
+      "parameters": 16011776,
+      "pass": true,
+      "firstTokenObservations": 3,
+      "full32Observations": 3,
+      "maxFirstTokenCallMs": 505.048452,
+      "maxGeneration32CallMs": 755.396291,
+      "peakRssMiB": 257.21484375,
+      "loadMs": 564.377548,
+      "actual32TokenCounts": [
+        32,
+        32,
+        32
+      ],
+      "stops32": [
+        "MAX_TOKENS",
+        "MAX_TOKENS",
+        "MAX_TOKENS"
+      ],
+      "terminalReportedPeakRssMiB": 256.39453125,
+      "maxObservedVmHwmKiB": 263388,
+      "terminalReportedVmHwmKiB": 262548
+    },
+    {
+      "label": "width-2",
+      "parameters": 460928,
+      "pass": true,
+      "firstTokenObservations": 3,
+      "full32Observations": 3,
+      "maxFirstTokenCallMs": 15.807079,
+      "maxGeneration32CallMs": 27.545821,
+      "peakRssMiB": 89.82421875,
+      "loadMs": 80.17902,
+      "actual32TokenCounts": [
+        32,
+        32,
+        32
+      ],
+      "stops32": [
+        "MAX_TOKENS",
+        "MAX_TOKENS",
+        "MAX_TOKENS"
+      ],
+      "terminalReportedPeakRssMiB": 89.82421875,
+      "maxObservedVmHwmKiB": 91980,
+      "terminalReportedVmHwmKiB": 91980
+    },
+    {
+      "label": "width-4",
+      "parameters": 1708288,
+      "pass": true,
+      "firstTokenObservations": 3,
+      "full32Observations": 3,
+      "maxFirstTokenCallMs": 61.892489,
+      "maxGeneration32CallMs": 107.19653,
+      "peakRssMiB": 126.30859375,
+      "loadMs": 134.249704,
+      "actual32TokenCounts": [
+        32,
+        32,
+        32
+      ],
+      "stops32": [
+        "MAX_TOKENS",
+        "MAX_TOKENS",
+        "MAX_TOKENS"
+      ],
+      "terminalReportedPeakRssMiB": 126.30859375,
+      "maxObservedVmHwmKiB": 129340,
+      "terminalReportedVmHwmKiB": 129340
+    },
+    {
+      "label": "width-8",
+      "parameters": 6562304,
+      "pass": true,
+      "firstTokenObservations": 3,
+      "full32Observations": 3,
+      "maxFirstTokenCallMs": 207.119902,
+      "maxGeneration32CallMs": 309.075345,
+      "peakRssMiB": 152.5703125,
+      "loadMs": 290.239048,
+      "actual32TokenCounts": [
+        32,
+        32,
+        32
+      ],
+      "stops32": [
+        "MAX_TOKENS",
+        "MAX_TOKENS",
+        "MAX_TOKENS"
+      ],
+      "terminalReportedPeakRssMiB": 152.5703125,
+      "maxObservedVmHwmKiB": 156232,
+      "terminalReportedVmHwmKiB": 156232
+    }
+  ],
+  "qualityDeltasFromOriginal": [
+    {
+      "label": "baseline",
+      "parameters": 132160,
+      "devBpb": 2.3525414158359124,
+      "devDelta": 0.0,
+      "devRelativePercent": 0.0,
+      "holdoutBpb": 3.1305153325891126,
+      "holdoutDelta": 0.0,
+      "holdoutRelativePercent": 0.0,
+      "capacityEligible": true
+    },
+    {
+      "label": "depth-5",
+      "parameters": 16011776,
+      "devBpb": 2.352541414133888,
+      "devDelta": -1.7020242992771273e-09,
+      "devRelativePercent": -7.234832732905261e-08,
+      "holdoutBpb": 3.130515321898561,
+      "holdoutDelta": -1.069055155511478e-08,
+      "holdoutRelativePercent": -3.414949434343839e-07,
+      "capacityEligible": true
+    },
+    {
+      "label": "continued-small",
+      "parameters": 132160,
+      "devBpb": 2.35250680129539,
+      "devDelta": -3.461454052233748e-05,
+      "devRelativePercent": -0.0014713679550637515,
+      "holdoutBpb": 3.127703803155492,
+      "holdoutDelta": -0.0028115294336208407,
+      "holdoutRelativePercent": -0.08981043486203655,
+      "capacityEligible": false
+    },
+    {
+      "label": "continued-expanded",
+      "parameters": 16011776,
+      "devBpb": 2.4633614382348035,
+      "devDelta": 0.1108200223988911,
+      "devRelativePercent": 4.710651283455269,
+      "holdoutBpb": 3.1892262256692696,
+      "holdoutDelta": 0.05871089308015698,
+      "holdoutRelativePercent": 1.8754386049149252,
+      "capacityEligible": false
+    }
+  ],
+  "generationProbes": [
+    {
+      "label": "baseline",
+      "correct": 0,
+      "total": 6
+    },
+    {
+      "label": "continued-expanded",
+      "correct": 0,
+      "total": 6
+    },
+    {
+      "label": "continued-small",
+      "correct": 0,
+      "total": 6
+    },
+    {
+      "label": "depth-5",
+      "correct": 0,
+      "total": 6
+    }
+  ],
+  "holdout": {
+    "paragraphs": 32,
+    "utf8FileBytes": 4005,
+    "scoredUtf8BytesExcludingLineSeparators": 3973,
+    "scoredTokens": 2082,
+    "sha256": "d5a5858f0eaff24495cd98c337fc662271c4a1b41027b1142764735c244942af"
+  },
+  "parameterExpansionFactor": 121.1544794188862,
+  "freezeEvidence": {
+    "frozenUtc": "2026-11-04T10:21:38Z",
+    "holdoutOpenedInFrozenRecord": false,
+    "currentSelectionHashMatchesFinal": true,
+    "preEvaluationHash": "8c433e76c28ceafa5e5149c9b0469d37eb4e217f1887868bce2a2ed1330dc6f9",
+    "preEvaluationHashEvidence": "Parent reports captured FROZEN_SELECTION stdout from completed continuation, then independently recomputed this same hash and printed holdoutOpened=false before sequentially launching final evaluation. Current independently computed file hash and all holdout receipt mtimes corroborate the identity/order.",
+    "limitation": "The current final() implementation itself hashes frozen-selection.json after scoring, without an explicit before/after digest equality check; its historical pre-evaluation hash anchor is the parent tool-history observation, not a separate persisted receipt."
+  },
+  "conclusions": [
+    "16,011,776 parameters is the last passing tested host capacity stage. The next 19,161,600-parameter stage was rejected before allocation by the 64 MiB checkpoint contract; no hardware slowdown/crash boundary was reached.",
+    "The expanded untrained model is numerically equivalent on these measured logits, generations and BPB sets; added capacity is not demonstrated new skill.",
+    "The continued expanded model worsens both development and holdout BPB. Both continued models fail the fixed capacity workload by generating zero tokens followed by EOS.",
+    "All four final candidates score 0/6 on the literal generation probes. The probes are small diagnostics, not a formal benchmark.",
+    "Original LM1, tokenizer and SWB1 hashes remain unchanged. Android validation and app integration were not performed."
+  ],
+  "limitations": [
+    "Synthetic development and 32-paragraph holdout, not an external benchmark; no broad generalization claim.",
+    "One warmup and three measured repeats on one 64-token prompt in fresh host JVMs; no Fold7 latency/thermal/memory test.",
+    "First-token timing is a separate one-token-call upper bound, not a streaming callback measurement.",
+    "Both continuations used identical input and token schedule but identical Adam settings do not isolate model-size effects.",
+    "Some early receipts lack explicit inputHashes; their immutable log hashes and SOURCE/EVALUATION/CAPACITY_MODEL/CORPUS records bind the relevant inputs. See individual receipt flags."
+  ],
+  "conservativeCapacityAudit": {
+    "baseline": {
+      "parameters": 132160,
+      "terminalReportedVmHwmKiB": 82728,
+      "maxObservedVmHwmKiB": 82728,
+      "maxObservedVmHwmMiB": 80.7890625,
+      "underreportKiB": 0,
+      "maxFirstTokenCallMs": 6.144873,
+      "maxGeneration32CallMs": 13.537797,
+      "threeResourceLimitsPass": true,
+      "requiredFullWorkloadsPass": true,
+      "recomputedCapacityPass": true,
+      "matchesRecordedGateOutcome": true
+    },
+    "continued-expanded": {
+      "parameters": 16011776,
+      "terminalReportedVmHwmKiB": 274120,
+      "maxObservedVmHwmKiB": 274120,
+      "maxObservedVmHwmMiB": 267.6953125,
+      "underreportKiB": 0,
+      "maxFirstTokenCallMs": 394.334076,
+      "maxGeneration32CallMs": 421.087062,
+      "threeResourceLimitsPass": true,
+      "requiredFullWorkloadsPass": false,
+      "recomputedCapacityPass": false,
+      "matchesRecordedGateOutcome": true
+    },
+    "continued-small": {
+      "parameters": 132160,
+      "terminalReportedVmHwmKiB": 71580,
+      "maxObservedVmHwmKiB": 71580,
+      "maxObservedVmHwmMiB": 69.90234375,
+      "underreportKiB": 0,
+      "maxFirstTokenCallMs": 6.614223,
+      "maxGeneration32CallMs": 6.956777,
+      "threeResourceLimitsPass": true,
+      "requiredFullWorkloadsPass": false,
+      "recomputedCapacityPass": false,
+      "matchesRecordedGateOutcome": true
+    },
+    "depth-3": {
+      "parameters": 9712128,
+      "terminalReportedVmHwmKiB": 202496,
+      "maxObservedVmHwmKiB": 202496,
+      "maxObservedVmHwmMiB": 197.75,
+      "underreportKiB": 0,
+      "maxFirstTokenCallMs": 297.938758,
+      "maxGeneration32CallMs": 382.237779,
+      "threeResourceLimitsPass": true,
+      "requiredFullWorkloadsPass": true,
+      "recomputedCapacityPass": true,
+      "matchesRecordedGateOutcome": true
+    },
+    "depth-4": {
+      "parameters": 12861952,
+      "terminalReportedVmHwmKiB": 239792,
+      "maxObservedVmHwmKiB": 239792,
+      "maxObservedVmHwmMiB": 234.171875,
+      "underreportKiB": 0,
+      "maxFirstTokenCallMs": 357.80746,
+      "maxGeneration32CallMs": 563.861441,
+      "threeResourceLimitsPass": true,
+      "requiredFullWorkloadsPass": true,
+      "recomputedCapacityPass": true,
+      "matchesRecordedGateOutcome": true
+    },
+    "depth-5": {
+      "parameters": 16011776,
+      "terminalReportedVmHwmKiB": 262548,
+      "maxObservedVmHwmKiB": 263388,
+      "maxObservedVmHwmMiB": 257.21484375,
+      "underreportKiB": 840,
+      "maxFirstTokenCallMs": 505.048452,
+      "maxGeneration32CallMs": 755.396291,
+      "threeResourceLimitsPass": true,
+      "requiredFullWorkloadsPass": true,
+      "recomputedCapacityPass": true,
+      "matchesRecordedGateOutcome": true
+    },
+    "width-2": {
+      "parameters": 460928,
+      "terminalReportedVmHwmKiB": 91980,
+      "maxObservedVmHwmKiB": 91980,
+      "maxObservedVmHwmMiB": 89.82421875,
+      "underreportKiB": 0,
+      "maxFirstTokenCallMs": 15.807079,
+      "maxGeneration32CallMs": 27.545821,
+      "threeResourceLimitsPass": true,
+      "requiredFullWorkloadsPass": true,
+      "recomputedCapacityPass": true,
+      "matchesRecordedGateOutcome": true
+    },
+    "width-4": {
+      "parameters": 1708288,
+      "terminalReportedVmHwmKiB": 129340,
+      "maxObservedVmHwmKiB": 129340,
+      "maxObservedVmHwmMiB": 126.30859375,
+      "underreportKiB": 0,
+      "maxFirstTokenCallMs": 61.892489,
+      "maxGeneration32CallMs": 107.19653,
+      "threeResourceLimitsPass": true,
+      "requiredFullWorkloadsPass": true,
+      "recomputedCapacityPass": true,
+      "matchesRecordedGateOutcome": true
+    },
+    "width-8": {
+      "parameters": 6562304,
+      "terminalReportedVmHwmKiB": 156232,
+      "maxObservedVmHwmKiB": 156232,
+      "maxObservedVmHwmMiB": 152.5703125,
+      "underreportKiB": 0,
+      "maxFirstTokenCallMs": 207.119902,
+      "maxGeneration32CallMs": 309.075345,
+      "threeResourceLimitsPass": true,
+      "requiredFullWorkloadsPass": true,
+      "recomputedCapacityPass": true,
+      "matchesRecordedGateOutcome": true
+    }
+  },
+  "experimentGateOutcomesVerified": true,
+  "status": "SUPPORTED_CONCLUSIONS_WITH_NONBLOCKING_RSS_SUMMARY_DISCREPANCY",
+  "allEvidenceChecksPass": false,
+  "nonblockingFindings": [
+    {
+      "finding": "depth-5 final VmHWM is lower than an earlier logged VmHWM sample; cause not established",
+      "terminalReportedKiB": 262548,
+      "maxObservedKiB": 263388,
+      "conservativeMaxMiB": 257.21484375,
+      "underreportKiB": 840,
+      "thresholdKiB": 786432,
+      "changesGateOutcome": false,
+      "disposition": "Report the conservative maximum of all available memory samples. Keep original raw execution logs unchanged. Any future benchmark accumulator fix has a new source/build identity and is not the executed program."
+    }
+  ],
+  "executedKotlinSourceHashes": {
+    "LmCapacityBenchmark.kt": "89b067df80edbb104712c31b382c6d84d142fff258bbf156989a06e40e63d209",
+    "LmWeightExperiment.kt": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+    "LmWeightSurgery.kt": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+    "LmWeightSurgeryTest.kt": "b850a4b5a14ec02b86e0209062ae52f4124f1a9943f1218f934e8c8f81540a98"
+  },
+  "sourceHashAuditTimingNote": "The executed Kotlin source hashes were verified at this audit before the parent announced a future accumulator fix; no claim that a future modified source produced these historical results."
+}

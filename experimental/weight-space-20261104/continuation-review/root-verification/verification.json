@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "status": "ROOT_REPEAT_PASS",
+  "reviewedCommit": "9ceffc26a2159c8dc726c1f13d2882119159c130",
+  "verifierSha256": "bf4921960d997cc9b6a61b737272e8a66c284106d810bb6870b69ddfc1a684bd",
+  "pinnedInputs": {
+    "source-audit/audit_current_sources.py": "2382bd3c6a1076c0e4d91d16979ab7bf2781bf12d98035962b69573c10b82332",
+    "results/audit_published_v3.py": "31af55ca4ce3c4d282a8269c9f9b0d287f92a295ce9493a0441903d633c63c1e",
+    "source-audit/build_choice_guard_patch.py": "a6d3d9f847dbc665b2491a916eaefd83e4ed9cf0e0246a3c6a0b904cff4ea303",
+    "independent-tests/probe_choice_binding.py": "5954cf5cfd6effe29738f9dae5213287b73430b85f9f076d5d6e3481670cd4a9",
+    "independent-tests/probe_prospective_registration.py": "03102af2856607b88d607c0c84caa6647b3fba445485242c625e4a6937ad183b",
+    "source-audit/pr508-capacity-and-choice-gates.patch": "87d54102113944c0884081b44cbb05eb6d253d56f8df0c84f9c31bc4f7039d05",
+    "source-audit/choice-guard-on-capacity-repair.patch": "7ad80b4bb76aaab3daef41bce585b913de4d0422a3679fb6aa1a86ee7c5a663f"
+  },
+  "auditRepeats": [
+    {
+      "auditor": "source-audit/audit_current_sources.py",
+      "output": "source-review.json",
+      "sha256": "0ea8d3714f942ea2e1cc4a468b22783c69f539ae3d7449d2704fdc0f3b38ed0d",
+      "byteIdenticalToHelperReport": true,
+      "status": "CURRENT_FREEZE_CONSISTENT_REPAIR_NOT_INTEGRATED"
+    },
+    {
+      "auditor": "results/audit_published_v3.py",
+      "output": "published-v3-results.json",
+      "sha256": "51342b48ac0288370df43f8b763873b878cbcfbdb702129eb246005ee4e7e5ac",
+      "byteIdenticalToHelperReport": true,
+      "status": "PUBLISHED_V3_AND_LEGACY_FREEZE_CONSISTENT_CAPACITY_FAIL_FINAL_TEST_NOT_PUBLISHED"
+    }
+  ],
+  "sourceBoundGeneratorResult": {
+    "status": "SOURCE_BOUND_ARTIFACTS_MATCH",
+    "sources": 3,
+    "outputs": 9,
+    "actualModelProcesses": 0,
+    "combinedPatchSha256": "87d54102113944c0884081b44cbb05eb6d253d56f8df0c84f9c31bc4f7039d05",
+    "incrementalPatchSha256": "7ad80b4bb76aaab3daef41bce585b913de4d0422a3679fb6aa1a86ee7c5a663f"
+  },
+  "independentAstReportByteIdentical": true,
+  "originalGitSourceBindings": {
+    "v1": {
+      "blob": "28908e07d6217f10882429047c853d1dd8667912",
+      "sha256": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "fixtureByteIdentical": true
+    },
+    "long": {
+      "blob": "30119435feed1728c5d22fec40830654a7a19861",
+      "sha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "fixtureByteIdentical": true
+    },
+    "suffix": {
+      "blob": "417e4b3289bb692e72dc80398b51b67e106b8907",
+      "sha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+      "fixtureByteIdentical": true
+    }
+  },
+  "patchApplications": [
+    {
+      "baseline": "original",
+      "patch": "pr508-capacity-and-choice-gates.patch",
+      "sha256": "87d54102113944c0884081b44cbb05eb6d253d56f8df0c84f9c31bc4f7039d05",
+      "appliedToFreshTemporaryTree": true,
+      "allThreeFinalFixturesByteIdentical": true
+    },
+    {
+      "baseline": "capacity-repair",
+      "patch": "choice-guard-on-capacity-repair.patch",
+      "sha256": "7ad80b4bb76aaab3daef41bce585b913de4d0422a3679fb6aa1a86ee7c5a663f",
+      "appliedToFreshTemporaryTree": true,
+      "allThreeFinalFixturesByteIdentical": true
+    }
+  ],
+  "gateProbeRepeats": [
+    {
+      "script": "probe_choice_binding.py",
+      "phase": "original",
+      "report": "original-choice-binding.json",
+      "passed": 3,
+      "failed": 28,
+      "exitCode": 1,
+      "expectedOutcomeMatched": true
+    },
+    {
+      "script": "probe_choice_binding.py",
+      "phase": "capacity-repair",
+      "report": "capacity-repair-choice-binding.json",
+      "passed": 3,
+      "failed": 28,
+      "exitCode": 1,
+      "expectedOutcomeMatched": true
+    },
+    {
+      "script": "probe_choice_binding.py",
+      "phase": "choice-repair",
+      "report": "choice-repair-choice-binding.json",
+      "passed": 31,
+      "failed": 0,
+      "exitCode": 0,
+      "expectedOutcomeMatched": true
+    },
+    {
+      "script": "probe_prospective_registration.py",
+      "phase": "choice-repair",
+      "report": "choice-repair-registration.json",
+      "passed": 6,
+      "failed": 0,
+      "exitCode": 0,
+      "expectedOutcomeMatched": true
+    }
+  ],
+  "cliChecks": [
+    {
+      "runner": "long",
+      "missingChoiceArgumentsRejectedByParser": true,
+      "exitCode": 2
+    },
+    {
+      "runner": "suffix",
+      "missingChoiceArgumentsRejectedByParser": true,
+      "exitCode": 2
+    }
+  ],
+  "newChoiceAndRegistrationCases": 37,
+  "newChoiceAndRegistrationPassed": 37,
+  "historical165CaseSuiteRepeated": false,
+  "actualModelProcesses": 0,
+  "realHoldoutRead": false,
+  "historicalRegistrationsOrReceiptsModified": false,
+  "activeForeignRunnersModified": false,
+  "modelPromotion": false
+}

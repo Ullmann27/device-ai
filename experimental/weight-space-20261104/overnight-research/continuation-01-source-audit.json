@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "reviewType": "SOURCE_ONLY_NO_MODEL_EXECUTION",
+  "dateLocal": "2026-11-05",
+  "ownPr": 492,
+  "ownHeadReviewed": "f82a658bc732122ee1920f51a5b26e80beb887cf",
+  "otherPr": 508,
+  "otherHeadReviewed": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
+  "scope": "experimental/weight-space-20261104 only",
+  "runtime": {
+    "previousCheckout": "/workspace/scratch/0549bca61ccf/device-ai-weight-audit",
+    "present": false,
+    "networkRawGithubResolvable": false,
+    "modelArchivesLoaded": false,
+    "modelStarts": 0,
+    "optimizerUpdates": 0,
+    "dynamicGateSuite": "NOT_RUN"
+  },
+  "m6": {
+    "protocolCommit": "8e0dadceef6a39cac86817b52340b79e185b160f",
+    "registrationSha256": "0b9b97874c42da9ee1f0c4f4f113790f6c50e960612a961dcac579b42d8daa78",
+    "gitBlobs": {
+      "kotlin": "cd2644e95572924f2a102151fad6f271947f6d91",
+      "log": "4dd9c2e732dc12efb0dd2317fb5702c4590c7f73",
+      "receipt": "956ad1d0bc9bb5ee3894b3541ade4bfe702a336b",
+      "registration": "3e8a605e7a8d5828509da82c843c7e1b9063ec0e",
+      "verification": "cb186374b7fa9aacae9810d363ed73f483ff4137"
+    },
+    "initialParityPassed": 12,
+    "observedOpenedChecks": [
+      {
+        "probe": "general-next",
+        "maximumDelta": 0.0000016093254089355469,
+        "passed": true
+      },
+      {
+        "probe": "general-note",
+        "maximumDelta": 0.00000928342342376709,
+        "passed": true
+      },
+      {
+        "probe": "general-tool",
+        "maximumDelta": 0.000013113021850585938,
+        "passed": false
+      }
+    ],
+    "firstFailure": "general-tool",
+    "threshold": 0.00001,
+    "absoluteExcess": 0.0000031130218505859367,
+    "excessPercentOfLimit": 31.130218505859364,
+    "ratioToLimit": 1.3113021850585938,
+    "unexecutedOpenedChecks": 9,
+    "backwardPasses": 0,
+    "restoreDigest": "d6d3d64b01a12fe8d0e8c81527aff276bfefb776f09c2ed37f7f6eb21fd24640",
+    "initialAndFinalDigestEqual": true,
+    "receiptExitCode": 1,
+    "originalArchiveRehashedThisRun": false,
+    "rawSha256RehashedThisRun": false
+  },
+  "patch": {
+    "path": "experimental/weight-space-20261104/continuation-review/source-audit/pr508-capacity-and-choice-gates.patch",
+    "patchGitBlobSha1": "bd46d9b89b9f42674c86f949b84ee66f8a23a03a",
+    "sections": 3,
+    "hunksMatched": 16,
+    "exactContextApply": true,
+    "files": [
+      {
+        "path": "experimental/lm1-training-recovery-20261104/run_registered_study.py",
+        "originalGitBlobSha1": "28908e07d6217f10882429047c853d1dd8667912",
+        "hunksMatched": 4,
+        "originalLength": 15810,
+        "patchedLength": 30981,
+        "originalHasPostCapacityGate": false,
+        "patchedHasPostCapacityGate": true,
+        "originalHasCrossStudyChoiceGate": false,
+        "patchedHasCrossStudyChoiceGate": false
+      },
+      {
+        "path": "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+        "originalGitBlobSha1": "30119435feed1728c5d22fec40830654a7a19861",
+        "hunksMatched": 6,
+        "originalLength": 13739,
+        "patchedLength": 40445,
+        "originalHasPostCapacityGate": false,
+        "patchedHasPostCapacityGate": true,
+        "originalHasCrossStudyChoiceGate": false,
+        "patchedHasCrossStudyChoiceGate": true
+      },
+      {
+        "path": "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py",
+        "originalGitBlobSha1": "417e4b3289bb692e72dc80398b51b67e106b8907",
+        "hunksMatched": 6,
+        "originalLength": 13745,
+        "patchedLength": 40451,
+        "originalHasPostCapacityGate": false,
+        "patchedHasPostCapacityGate": true,
+        "originalHasCrossStudyChoiceGate": false,
+        "patchedHasCrossStudyChoiceGate": true
+      }
+    ],
+    "patchIntegratedInOtherHead": false,
+    "previousDynamicEvidence": "historical 37/37 choice+registration and 165/165 capacity: NOT_RERUN",
+    "corruptCheckpointAndWrongResumeDynamic": "NOT_RUN_THIS_CONTINUATION",
+    "assertion": "Source congruence, not execution or acceptance"
+  },
+  "retentionDesign": "prospective only: new train/dev/locked independent evaluation, no reuse old final; track general retention and EOS; nf gradient scaling is not selected LR",
+  "acceptedState": "M5_UNCHANGED",
+  "trainingPermitted": false
+}

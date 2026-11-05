@@ -1,0 +1,72 @@
+{
+  "inputSha256": "5ba8ba7e22efc19a099148d224ab000dcd21953bb74b5d6504f49621fe56b2b6",
+  "format": "SWB1",
+  "updates": 335150,
+  "parameters": 4113,
+  "allFinite": true,
+  "roundtripExact": true,
+  "originalUnchanged": true,
+  "benchmarkKind": "EXISTING_AUTHORED_REGRESSION_FIXTURES_NOT_FRESH_HOLDOUT",
+  "suites": {
+    "TRAIN": {
+      "intent": {
+        "loss": 0.29499237737998996,
+        "correct": 35,
+        "total": 40
+      },
+      "semantic": {
+        "loss": 2.0015874661200206,
+        "correct": 19,
+        "total": 32
+      }
+    },
+    "VALIDATION": {
+      "intent": {
+        "loss": 0.37860985964031285,
+        "correct": 17,
+        "total": 20
+      },
+      "semantic": {
+        "loss": 2.3402497806523166,
+        "correct": 10,
+        "total": 20
+      }
+    },
+    "AUDIT": {
+      "intent": {
+        "loss": 0.3519918624161507,
+        "correct": 17,
+        "total": 20
+      },
+      "semantic": {
+        "loss": 2.5696651942861446,
+        "correct": 10,
+        "total": 20
+      }
+    },
+    "ANDROID_VALIDATION": {
+      "intent": {
+        "loss": 0.5409069243199497,
+        "correct": 6,
+        "total": 8
+      },
+      "semantic": {
+        "loss": 1.880392525109422,
+        "correct": 3,
+        "total": 6
+      }
+    },
+    "TRANSFER_SUITE_V1": {
+      "intent": {
+        "loss": 0.4048652923026229,
+        "correct": 17,
+        "total": 20
+      },
+      "semantic": {
+        "loss": 2.904101877077505,
+        "correct": 16,
+        "total": 32
+      }
+    }
+  }
+}

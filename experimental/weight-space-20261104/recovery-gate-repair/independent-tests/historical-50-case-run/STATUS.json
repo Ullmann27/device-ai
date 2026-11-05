@@ -1,0 +1,11 @@
+{
+  "status": "SUPERSEDED_INDEPENDENT_TEST_RUN",
+  "casesPerRunner": 50,
+  "originalPassed": 9,
+  "originalFailed": 41,
+  "patchedPassed": 50,
+  "patchedFailed": 0,
+  "patchSha256": "51c1f21c7ce401b9363312464d8b68e7e9448e728ca891cd0e5330e5417a414e",
+  "reason": "Additional concrete latency-FAIL compatibility and impossible elapsed-time evidence cases added; final repair tightens time consistency.",
+  "notFinalAcceptance": true
+}

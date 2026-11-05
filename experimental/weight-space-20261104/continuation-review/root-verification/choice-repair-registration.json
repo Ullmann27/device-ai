@@ -1,0 +1,84 @@
+{
+  "actualModelProcesses": 0,
+  "cases": [
+    {
+      "actualModelProcesses": 0,
+      "case": "old_registration",
+      "error": "RuntimeError: SOURCE_OR_DATA_CHANGED: experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+      "existingFixtureBytesUnchangedBySubject": true,
+      "freezeCreated": false,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "runner": "long",
+      "testedSourceSha256": "e1fa9104ec41c926423b8b7d011c05b9e6a298ee794972bc8ff7d0013bfa27b4"
+    },
+    {
+      "actualModelProcesses": 0,
+      "case": "new_registration_old_receipts",
+      "error": "RuntimeError: INVALID_TRAINING_RECEIPT",
+      "existingFixtureBytesUnchangedBySubject": true,
+      "freezeCreated": false,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "runner": "long",
+      "testedSourceSha256": "e1fa9104ec41c926423b8b7d011c05b9e6a298ee794972bc8ff7d0013bfa27b4"
+    },
+    {
+      "actualModelProcesses": 0,
+      "case": "fresh_registration_and_receipts",
+      "error": null,
+      "existingFixtureBytesUnchangedBySubject": true,
+      "freezeCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "runner": "long",
+      "testedSourceSha256": "e1fa9104ec41c926423b8b7d011c05b9e6a298ee794972bc8ff7d0013bfa27b4"
+    },
+    {
+      "actualModelProcesses": 0,
+      "case": "old_registration",
+      "error": "RuntimeError: SOURCE_OR_DATA_CHANGED: experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py",
+      "existingFixtureBytesUnchangedBySubject": true,
+      "freezeCreated": false,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "runner": "suffix",
+      "testedSourceSha256": "67da16654388d322f3735a67f3fbf1d42635ffccf6ac62668ff46b80b47f1942"
+    },
+    {
+      "actualModelProcesses": 0,
+      "case": "new_registration_old_receipts",
+      "error": "RuntimeError: INVALID_TRAINING_RECEIPT",
+      "existingFixtureBytesUnchangedBySubject": true,
+      "freezeCreated": false,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "runner": "suffix",
+      "testedSourceSha256": "67da16654388d322f3735a67f3fbf1d42635ffccf6ac62668ff46b80b47f1942"
+    },
+    {
+      "actualModelProcesses": 0,
+      "case": "fresh_registration_and_receipts",
+      "error": null,
+      "existingFixtureBytesUnchangedBySubject": true,
+      "freezeCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "runner": "suffix",
+      "testedSourceSha256": "67da16654388d322f3735a67f3fbf1d42635ffccf6ac62668ff46b80b47f1942"
+    }
+  ],
+  "exitCode": 0,
+  "failed": 0,
+  "fixtureOrchestratorSha256": "5954cf5cfd6effe29738f9dae5213287b73430b85f9f076d5d6e3481670cd4a9",
+  "historicalRegistrationOrReceiptsModified": false,
+  "observedUtc": "2026-11-04T20:06:01.110984+00:00",
+  "passed": 6,
+  "phase": "choice-repair",
+  "probeSha256": "03102af2856607b88d607c0c84caa6647b3fba445485242c625e4a6937ad183b",
+  "realHoldoutRead": false,
+  "reviewedOriginalCommit": "9ceffc26a2159c8dc726c1f13d2882119159c130",
+  "schemaVersion": 1,
+  "scope": "SYNTHETIC_PROSPECTIVE_REGISTRATION_AND_OLD_RECEIPT_REJECTION",
+  "status": "GREEN"
+}

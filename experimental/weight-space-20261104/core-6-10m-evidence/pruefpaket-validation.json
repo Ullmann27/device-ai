@@ -1,0 +1,17 @@
+{
+  "archive": "/workspace/scratch/0549bca61ccf/deliverables/Continuum-LM1-6M-10M-Pruefpaket-20261104.zip",
+  "archiveSha256": "becdfa561ce069c67086ad700d643c9eb9a8e9e7470808050e6e02c2ae424f10",
+  "archiveBytes": 59366373,
+  "archiveMiB": 56.61618518829346,
+  "crcCheck": "PASS",
+  "manifestPayloadChecks": "PASS",
+  "sha256SumsChecks": "PASS",
+  "archiveFileCount": 8,
+  "packagedInitialModels": 3,
+  "rejectedModelsIncluded": false,
+  "sourceFilesUnchanged": true,
+  "modelProcessesRun": 0,
+  "sourceCodeFilesDuplicated": 0,
+  "readme": "/workspace/scratch/0549bca61ccf/deliverables/Continuum-LM1-6M-10M-Pruefpaket-20261104/README.md",
+  "manifest": "/workspace/scratch/0549bca61ccf/deliverables/Continuum-LM1-6M-10M-Pruefpaket-20261104/manifest.json"
+}

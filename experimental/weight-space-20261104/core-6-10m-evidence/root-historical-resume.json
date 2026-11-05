@@ -1,0 +1,21 @@
+{
+  "task": "G1-INTEGRATE-WEIGHT-002",
+  "driverSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "planSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+  "result": "PASS",
+  "independentRootVerification": true,
+  "historicalContinuation": "PASS",
+  "historicalFinalResume": "PASS",
+  "historicalRuntimeIdentityKeys": [
+    "jarSha256",
+    "protocolSha256"
+  ],
+  "forbiddenAttempts": {
+    "process": 0,
+    "write": 0,
+    "holdout": 0
+  },
+  "historicalFilesUnchanged": 122,
+  "wallSeconds": 4.139608299003157,
+  "frozenSelectionSha256": "8c433e76c28ceafa5e5149c9b0469d37eb4e217f1887868bce2a2ed1330dc6f9"
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "status": "REVIEWABLE_REPAIR_ARTIFACT_NOT_APPLIED_TO_FOREIGN_BRANCH",
+  "reviewedRepository": "Ullmann27/device-ai",
+  "reviewedPullRequest": 508,
+  "reviewedCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "benchmarkSourcePath": "experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+  "benchmarkSourceSha256": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+  "sources": {
+    "v1": {
+      "sourcePath": "experimental/lm1-training-recovery-20261104/run_registered_study.py",
+      "sourceGitBlob": "28908e07d6217f10882429047c853d1dd8667912",
+      "sourceSha256": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "originalFixture": "fixtures/v1/original_run_registered_study.py.txt",
+      "patchedFixture": "fixtures/v1/run_registered_study.py.txt",
+      "patchedSourceSha256": "b1bed4338bb187ae6d835a46368cc05773ae96143559af368361103b64a7b327"
+    },
+    "long": {
+      "sourcePath": "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+      "sourceGitBlob": "30119435feed1728c5d22fec40830654a7a19861",
+      "sourceSha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "originalFixture": "fixtures/long/original_run_registered_study.py.txt",
+      "patchedFixture": "fixtures/long/run_registered_study.py.txt",
+      "patchedSourceSha256": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387"
+    },
+    "suffix": {
+      "sourcePath": "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py",
+      "sourceGitBlob": "417e4b3289bb692e72dc80398b51b67e106b8907",
+      "sourceSha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+      "originalFixture": "fixtures/suffix/original_run_registered_study.py.txt",
+      "patchedFixture": "fixtures/suffix/run_registered_study.py.txt",
+      "patchedSourceSha256": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067"
+    }
+  },
+  "fragmentSha256": "53dd12a42522c3f72edb852ecddebc1b65719dcb9a8b78e5ea6e557bc383e9f1",
+  "generatorSha256": "c9f2262a424fa2710711e5779835fa6a86a206fe91ef3e109cdf80485f7ae3fb",
+  "patchSha256": "c69cb427e4ba0624720380edef9f7f0ce3e418591c10bd0a35f56590ad67e38f",
+  "historicalRegistrationsModified": false,
+  "historicalReceiptsModified": false,
+  "actualModelProcesses": 0,
+  "realHoldoutRead": false,
+  "newExecutionRequiresProspectiveRegistration": true
+}

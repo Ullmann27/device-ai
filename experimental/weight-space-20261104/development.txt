@@ -1,0 +1,12 @@
+Der kleine Roboter prüft zuerst den Auftrag und vergleicht das Ergebnis danach mit dem vereinbarten Ziel. Bei einem Fehler hält er an.
+Ein gespeicherter Hinweis enthält seine Herkunft und sein Datum. Eine spätere Korrektur ersetzt die frühere Behauptung nachvollziehbar.
+Die Werkstatt bleibt heute geschlossen. Morgen werden die Werkzeuge gereinigt, geordnet und vor dem nächsten Einsatz sorgfältig geprüft.
+Wenn die Verbindung abbricht, bleibt der letzte bestätigte Stand erhalten. Nach dem Neustart beginnt keine unbestätigte Aktion von selbst.
+Im Garten stehen drei leere Kisten. Zwei weitere Kisten kommen hinzu. Anschließend zählt die Helferin alle Kisten noch einmal nach.
+Ein guter Bericht nennt sowohl bestandene Prüfungen als auch offene Fehler. Aus einer Vermutung wird erst durch einen passenden Beleg Wissen.
+Die Reisenden erreichen den Bahnhof am Nachmittag. Sie lesen die Anzeige und warten auf das Gleis, das für ihren Zug angegeben ist.
+Eine Nachricht wird zunächst als Entwurf gespeichert. Erst nach der Freigabe durch die zuständige Person wird sie an den Empfänger verschickt.
+Die Maschine besitzt einen begrenzten Speicher. Deshalb wird vor einer großen Berechnung geprüft, ob genügend Platz für die Arbeit vorhanden ist.
+Nach dem Regen trocknet der Weg langsam. Die Kinder warten im Haus, bis sie mit ihren Eltern sicher zum Spielplatz gehen können.
+Eine Rechnung kann richtig aussehen und trotzdem einen Fehler enthalten. Eine zweite unabhängige Prüfung hilft, solche Fehler zu erkennen.
+Der Assistent beantwortet eine Frage mit den verfügbaren Informationen. Fehlt eine notwendige Angabe, benennt er diese Lücke verständlich.

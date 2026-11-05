@@ -1,0 +1,518 @@
+#!/usr/bin/env python3
+"""Independent, source-bound control-flow tests for PR508's post-capacity gate.
+
+All inputs, checkpoints, process outputs and metrics below are synthetic fixtures.
+No model is loaded and no real train/dev/test examples are accessed. The reviewed
+Study constructor, verify, selection, freeze_evidence, freeze, run and test execute
+unaltered. Only subprocess.Popen is intercepted. Source hashes are checked before
+compile. This suite is deliberately separate from the repaired implementation.
+"""
+from __future__ import annotations
+
+import argparse
+from contextlib import redirect_stdout
+from datetime import datetime, timezone
+import hashlib
+import io
+import json
+from pathlib import Path
+import tempfile
+import types
+from unittest.mock import patch
+
+
+HERE = Path(__file__).resolve().parent
+REVIEWED_COMMIT = "be4e49600fed1db4c697230bb8e42c150dbfbdaf"
+BASE = "experimental/lm1-training-recovery-20261104"
+SOURCE_PATHS = {"v1": BASE + "/run_registered_study.py",
+                "long": BASE + "/long-study/run_registered_study.py",
+                "suffix": BASE + "/suffix-study/run_registered_study.py"}
+ORIGINAL_HASHES = {
+    "v1": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+    "long": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+    "suffix": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68"}
+ORIGINAL_BLOBS = {"v1": "28908e07d6217f10882429047c853d1dd8667912",
+                  "long": "30119435feed1728c5d22fec40830654a7a19861",
+                  "suffix": "417e4b3289bb692e72dc80398b51b67e106b8907"}
+PROMPT = ("Ein kurzer Bericht beschreibt den Ablauf einer Prüfung. "
+          "Zuerst wird die Aufgabe gelesen, danach wird das Ergebnis geprüft.")
+PROTOCOL_PATH = "experimental/weight-space-20261104/LmCapacityBenchmark.kt"
+PROTOCOL_SHA256 = "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c"
+
+
+def digest(raw: bytes) -> str:
+    return hashlib.sha256(raw).hexdigest()
+
+
+def file_hash(path: Path) -> str:
+    return digest(path.read_bytes())
+
+
+def put(path: Path, raw: bytes) -> str:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(raw)
+    return digest(raw)
+
+
+def put_json(path: Path, value: dict) -> None:
+    put(path, (json.dumps(value, sort_keys=True, indent=2) + "\n").encode())
+
+
+def row(kind: str, **fields: object) -> str:
+    return "\t".join([kind, *(f"{key}={value}" for key, value in fields.items())]) + "\n"
+
+
+def load_reviewed(path: Path, expected_sha: str) -> types.ModuleType:
+    raw = path.read_bytes()
+    if digest(raw) != expected_sha:
+        raise RuntimeError("UNREVIEWED_SOURCE_REJECTED_BEFORE_COMPILE")
+    module = types.ModuleType("source_bound_post_capacity_subject")
+    module.__file__ = str(path)
+    exec(compile(raw, str(path), "exec"), module.__dict__)
+    return module
+
+
+def capacity_log(checkpoint: Path, tokenizer: Path, variant: str, outcome: str) -> str:
+    """Emit the raw format directly from the original Kotlin benchmark contract.
+
+    One warmup plus three measured repeats each have 1-token and 32-token calls.
+    EOS-FAIL is a complete observation, unlike an interrupted/missing measurement.
+    The dummy checkpoint is an identity sentinel, never executable model evidence.
+    """
+    parameters = 132160 if variant == "small" else 6562304
+    is_eos = outcome == "eos-fail"
+    is_rss = outcome == "rss-fail"
+    is_latency = outcome == "latency-fail"
+    checkpoint_sha = file_hash(checkpoint)
+    memory_samples = []
+    result = row("CAPACITY_PROTOCOL", firstTokenLimitMs=1500.0,
+                 generation32LimitMs=5000.0, vmHwmLimitKiB=786432,
+                 requestMaxMillis=30000, warmups=1, measuredRepeats=3,
+                 ttftMethod="SEPARATE_ONE_TOKEN_CALL_UPPER_BOUND",
+                 processTimeoutRequired="true", promptSha256=digest(PROMPT.encode()))
+
+    def memory(phase: str) -> str:
+        hwm = (800000 if is_rss else 120000) + 10 * len(memory_samples)
+        memory_samples.append(hwm)
+        return row("CAPACITY_MEMORY", phase=phase, vmHwmKiB=hwm, vmRssKiB=hwm,
+                   heapUsedBytes=1000000, heapCommittedBytes=67108864, heapMaxBytes=1073741824)
+
+    result += memory("before_load")
+    result += row("CAPACITY_MODEL", checkpointPath=checkpoint, checkpointSha256=checkpoint_sha,
+                  checkpointBytes=checkpoint.stat().st_size, tokenizerPath=tokenizer,
+                  tokenizerSha256=file_hash(tokenizer), tokenizerBytes=tokenizer.stat().st_size,
+                  parameters=parameters, parameterBytes=4 * parameters, arch="MINGRU", vocab=512,
+                  dim=64 if variant == "small" else 512, layers=2, heads=4,
+                  context=256, mlp=256 if variant == "small" else 2048,
+                  loadMs=5.0, promptTokens=64, promptIncludesBos="false",
+                  fullLayoutLoaded="true", finiteWeights="true")
+    result += memory("after_load")
+    for phase, trial in [("warmup", 1), ("measured", 1), ("measured", 2), ("measured", 3)]:
+        for requested, label in [(1, "first"), (32, "generation")]:
+            base_time = (1600 if requested == 1 else 5100) if is_latency else (100 if requested == 1 else 200)
+            elapsed = float(base_time + trial)
+            actual = 0 if is_eos else requested
+            result += row("CAPACITY_TRIAL", phase=phase, trial=trial, requestedNewTokens=requested,
+                          actualNewTokens=actual, promptTokens=64, promptTruncated="false",
+                          stop="EOS" if is_eos else "MAX_TOKENS", elapsedMs=elapsed,
+                          runtimeMillis=int(elapsed), ttftUpperBoundMs=elapsed if actual == 1 else "UNAVAILABLE",
+                          textSha256=digest(b"" if is_eos else b"SYNTHETIC GENERATED TEXT"))
+            result += memory(f"{phase}_{trial}_{label}")
+    result += memory("final")
+    reasons = ("NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD" if is_eos else
+               "PROCESS_RSS_LIMIT" if is_rss else
+               "FIRST_TOKEN_LIMIT,GENERATION_32_LIMIT" if is_latency else "NONE")
+    result += row("CAPACITY_RESULT", **{"pass": "true" if outcome == "pass" else "false"},
+                  reasons=reasons, checkpointSha256=checkpoint_sha, parameters=parameters, loadMs=5.0,
+                  measuredRepeats=3, maxFirstTokenCallMs=1603.0 if is_latency else 103.0,
+                  maxGeneration32CallMs=5103.0 if is_latency else 203.0,
+                  firstTokenObservations=0 if is_eos else 3, full32TokenObservations=0 if is_eos else 3,
+                  vmHwmKiB=max(memory_samples), finalVmHwmKiB=memory_samples[-1],
+                  rssMethod="MAXIMUM_OBSERVED_VMHWM", failure="UNAVAILABLE")
+    return result
+
+
+def fixture(module: types.ModuleType, root: Path, source: Path, kind: str,
+            outcome: str = "pass", earlier_tie: bool = False, no_signal: bool = False) -> object:
+    module.ROOT = root
+    module.EXPERIMENT = root / Path(SOURCE_PATHS[kind]).parent
+    module.DATA = root / BASE / "intent-data"
+    inputs, output = root / "inputs", root / "output"
+    jar, stdlib = root / "dummy.jar", root / "dummy-stdlib.jar"
+    jar_hash = put(jar, b"SYNTHETIC NONEXECUTABLE JAR")
+    stdlib_hash = put(stdlib, b"SYNTHETIC NONEXECUTABLE STDLIB")
+    input_hashes = {name: put(inputs / name, ("SYNTHETIC " + name).encode())
+                    for name in ("lm1-baseline.lm1", "lm1-tokenizer.lmbp", "train.txt")}
+    source_hash = put(root / SOURCE_PATHS[kind], source.read_bytes())
+    sealed_path = BASE + "/intent-data/test.sealed.tsv"
+    sealed_hash = put(root / sealed_path, b"SYNTHETIC TEST SENTINEL. NO REAL EXAMPLES.\n")
+    registration = {"schemaVersion": 1, "files": {SOURCE_PATHS[kind]: source_hash, sealed_path: sealed_hash},
+                    "inputs": input_hashes, "jarSha256": jar_hash, "stdlibSha256": stdlib_hash}
+    put_json(module.EXPERIMENT / "registration.json", registration)
+    args = argparse.Namespace(output=output, jar=jar, stdlib=stdlib, inputs=inputs,
+                              source_commit=REVIEWED_COMMIT)
+    study = module.Study(args)
+    main = {"v1": "LmIntentStudy", "long": "LmIntentLongStudy", "suffix": "LmIntentSuffixStudy"}[kind]
+    steps = (0, 32, 64, 128) if kind == "v1" else (0, 128, 256, 512)
+    for variant in ("small", "wide"):
+        directory = output / ("intent-" + variant)
+        checkpoints = []
+        for step in steps:
+            raw = f"SYNTHETIC IDENTITY SENTINEL; NOT LM1. {variant} {step}\n".encode()
+            checkpoint_sha = digest(raw)
+            path = directory / "checkpoints" / (checkpoint_sha + ".lm1")
+            put(path, raw)
+            checkpoints.append({"step": step, "sha256": checkpoint_sha, "path": str(path)})
+        successes = (0, 4, 10, 14) if variant == "small" else (0, 5, 11, 16)
+        nlls = (3.0, 2.0, 1.5, 1.0)
+        chosen = 3
+        if earlier_tie:
+            successes, nlls, chosen = (0, 16, 16, 15), (3.0, 1.0, 1.0, 1.5), 1
+        if no_signal and variant == "wide":
+            successes = (0, 3, 4, 5)
+        before = capacity_log(Path(checkpoints[0]["path"]), inputs / "lm1-tokenizer.lmbp", variant, "pass")
+        before_hash = put(directory / "capacity-before.tsv", before.encode())
+        log = row("MANIFEST", variant=variant, parameters=132160 if variant == "small" else 6562304,
+                  steps=steps[-1], batch=4, learningRate=0.0001, seed=20261104, workers=2,
+                  tokenScheduleSha256=digest(b"MATCHED SYNTHETIC TOKEN SCHEDULE"),
+                  objective="ANSWER_AND_EOS_ONLY", testReadDuringTraining="false")
+        log += "".join(row("CHECKPOINT", **checkpoint) for checkpoint in checkpoints)
+        log += "".join(row("SCORE", split="dev", step=step, correct=correct, total=24, answerNll=nll)
+                       for step, correct, nll in zip(steps, successes, nlls))
+        log += row("INITIAL_CAPACITY_GATE", checkpointSha256=checkpoints[0]["sha256"],
+                   logSha256=before_hash, **{"pass": "true"})
+        selected = checkpoints[chosen]
+        log += row("SELECTION", checkpointSha256=selected["sha256"], step=selected["step"],
+                   devCorrect=successes[chosen], devTotal=24, devAnswerNll=nlls[chosen],
+                   testRead="false", inputsUnchanged="true")
+        label = "intent-" + variant
+        log_hash = put(study.logs / (label + ".tsv"), log.encode())
+        command = ["java", "-Xms64m", "-Xmx3g", "-cp", str(jar) + module.os.pathsep + str(stdlib),
+                   module.PACKAGE + main, "train", str(inputs / "lm1-baseline.lm1"),
+                   str(inputs / "lm1-tokenizer.lmbp"), str(module.DATA), str(directory), variant]
+        receipt = {"label": label, "command": command, "startedUtc": "2026-11-04T00:00:00+00:00",
+                   "returncode": 0, "timeout": False, "timeoutSeconds": 600 if kind == "v1" else 900,
+                   "wallSeconds": 10.0, "registeredBytesUnchanged": True, "logSha256": log_hash,
+                   "registrationSha256": study.registration_sha, "sourceCommit": REVIEWED_COMMIT,
+                   "jarSha256": jar_hash}
+        put_json(study.logs / (label + ".receipt.json"), receipt)
+        after_label = label + "-capacity-after"
+        variant_outcome = outcome if variant == "wide" else "pass"
+        raw = capacity_log(Path(selected["path"]), inputs / "lm1-tokenizer.lmbp", variant, variant_outcome)
+        after_hash = put(study.logs / (after_label + ".tsv"), raw.encode())
+        after_command = ["java", "-Xms64m", "-Xmx1g", "-cp", str(jar) + module.os.pathsep + str(stdlib),
+                         module.PACKAGE + "LmCapacityBenchmark", selected["path"], str(inputs / "lm1-tokenizer.lmbp")]
+        put_json(study.logs / (after_label + ".receipt.json"), dict(receipt, label=after_label,
+                 command=after_command, returncode=0 if variant_outcome == "pass" else 1,
+                 timeoutSeconds=120, wallSeconds=40.0 if variant_outcome == "latency-fail" else 10.0,
+                 logSha256=after_hash))
+    return study
+
+
+def after_path(study: object, extension: str, variant: str = "wide") -> Path:
+    return study.logs / ("intent-" + variant + "-capacity-after." + extension)
+
+
+def update_receipt(study: object, key: str, value: object, variant: str = "wide") -> None:
+    path = after_path(study, "receipt.json", variant)
+    receipt = json.loads(path.read_text())
+    receipt[key] = value
+    put_json(path, receipt)
+
+
+def change_log(study: object, kind: str, field: str, value: str, *, first_only: bool = False) -> None:
+    path = after_path(study, "tsv")
+    modified = []
+    found = False
+    for line in path.read_text().splitlines():
+        if line.startswith(kind + "\t") and not (first_only and found):
+            fields = line.split("\t")
+            line = "\t".join(f"{field}={value}" if part.startswith(field + "=") else part for part in fields)
+            found = True
+        modified.append(line)
+    if not found:
+        raise AssertionError("fixture mutation had no target: " + kind)
+    path.write_text("\n".join(modified) + "\n")
+    update_receipt(study, "logSha256", file_hash(path))
+
+
+def mutate(study: object, name: str, source_kind: str) -> None:
+    receipt_fields = {
+        "receipt_source_mismatch": ("sourceCommit", "f" * 40),
+        "receipt_registration_mismatch": ("registrationSha256", "0" * 64),
+        "receipt_jar_mismatch": ("jarSha256", "0" * 64),
+        "receipt_log_mismatch": ("logSha256", "0" * 64),
+        "receipt_label_mismatch": ("label", "intent-small-capacity-after"),
+        "receipt_registered_bytes_changed": ("registeredBytesUnchanged", False),
+        "receipt_timeout": ("timeout", True),
+        "receipt_wrong_budget": ("timeoutSeconds", 121),
+        "receipt_over_budget": ("wallSeconds", 120.01),
+        "receipt_nan_wall": ("wallSeconds", float("nan")),
+        "receipt_negative_wall": ("wallSeconds", -0.1),
+        "measurements_exceed_process_wall_time": ("wallSeconds", 0.001),
+        "receipt_rc_mismatch": ("returncode", 1),
+        "receipt_unexpected_rc": ("returncode", 2),
+    }
+    log_fields = {
+        "model_checkpoint_mismatch": ("CAPACITY_MODEL", "checkpointSha256", "0" * 64),
+        "result_checkpoint_mismatch": ("CAPACITY_RESULT", "checkpointSha256", "0" * 64),
+        "model_tokenizer_mismatch": ("CAPACITY_MODEL", "tokenizerSha256", "0" * 64),
+        "model_size_mismatch": ("CAPACITY_MODEL", "checkpointBytes", "999"),
+        "model_parameter_mismatch": ("CAPACITY_MODEL", "parameters", "132160"),
+        "protocol_threshold_changed": ("CAPACITY_PROTOCOL", "firstTokenLimitMs", "15000.0"),
+        "nonfinite_trial": ("CAPACITY_TRIAL", "elapsedMs", "NaN"),
+        "forged_memory_pass": ("CAPACITY_MEMORY", "vmHwmKiB", "999999"),
+        "forged_trial_pass": ("CAPACITY_TRIAL", "actualNewTokens", "0"),
+        "summary_max_mismatch": ("CAPACITY_RESULT", "maxFirstTokenCallMs", "10.0"),
+        "unknown_failure_reason": ("CAPACITY_RESULT", "reasons", "SYNTHETIC_UNKNOWN_REASON"),
+    }
+    if name in receipt_fields:
+        update_receipt(study, *receipt_fields[name])
+    elif name in log_fields:
+        change_log(study, *log_fields[name])
+    elif name == "missing_receipt":
+        after_path(study, "receipt.json").unlink()
+    elif name == "missing_small_receipt":
+        after_path(study, "receipt.json", "small").unlink()
+    elif name == "missing_log":
+        after_path(study, "tsv").unlink()
+    elif name == "malformed_receipt":
+        after_path(study, "receipt.json").write_text('{"returncode":')
+    elif name == "malformed_receipt_structure":
+        after_path(study, "receipt.json").write_text("[]\n")
+    elif name == "receipt_command_mismatch":
+        path = after_path(study, "receipt.json")
+        value = json.loads(path.read_text())
+        value["command"][-2] = str(study.inputs / "lm1-baseline.lm1")
+        put_json(path, value)
+    elif name in {"missing_trial", "duplicate_trial", "truncated_log", "duplicate_result_field"}:
+        path = after_path(study, "tsv")
+        lines = path.read_text().splitlines()
+        if name == "missing_trial":
+            lines.pop(next(i for i, line in enumerate(lines) if line.startswith("CAPACITY_TRIAL\t")))
+        elif name == "duplicate_trial":
+            indices = [i for i, line in enumerate(lines) if line.startswith("CAPACITY_TRIAL\t")]
+            lines[indices[-1]] = lines[indices[-2]]
+        elif name == "truncated_log":
+            lines.pop()
+        else:
+            lines[-1] += "\tpass=true"
+        path.write_text("\n".join(lines) + "\n")
+        update_receipt(study, "logSha256", file_hash(path))
+    elif name == "selected_checkpoint_mutated":
+        checkpoint = Path(study.selection("wide")["path"])
+        checkpoint.write_bytes(checkpoint.read_bytes() + b"MUTATION")
+    elif name == "registered_source_mutated":
+        source = study.registration_path.parents[2 if source_kind == "v1" else 3] / SOURCE_PATHS[source_kind]
+        source.write_bytes(source.read_bytes() + b"\n# mutation\n")
+    elif name == "training_receipt_log_mismatch":
+        path = study.logs / "intent-wide.receipt.json"
+        receipt = json.loads(path.read_text())
+        receipt["logSha256"] = "0" * 64
+        put_json(path, receipt)
+    elif name == "changed_valid_receipt":
+        update_receipt(study, "wallSeconds", 11.0)
+    else:
+        raise AssertionError("unknown mutation: " + name)
+
+
+class ProcessBoundaryReached(RuntimeError):
+    pass
+
+
+def cases() -> list[dict]:
+    result = [{"name": "valid_pass_authorizes", "expected": "boundary"},
+              {"name": "valid_eos_fail_authorizes", "expected": "boundary", "outcome": "eos-fail"},
+              {"name": "valid_resource_fail_authorizes", "expected": "boundary", "outcome": "rss-fail"},
+              {"name": "valid_latency_fail_authorizes", "expected": "boundary", "outcome": "latency-fail"},
+              {"name": "earlier_dev_tie_winner_authorizes", "expected": "boundary", "earlier_tie": True},
+              {"name": "pass_preserved_in_real_method_summary", "expected": "summary"},
+              {"name": "eos_fail_preserved_in_real_method_summary", "expected": "summary", "outcome": "eos-fail"},
+              {"name": "no_development_signal_stays_blocked", "expected": "no-signal", "no_signal": True},
+              {"name": "missing_receipt_can_resume_after_exact_completion", "expected": "resume"}]
+    mutations = ["missing_receipt", "missing_small_receipt", "missing_log", "malformed_receipt", "malformed_receipt_structure",
+                 "truncated_log", "receipt_log_mismatch", "receipt_source_mismatch",
+                 "receipt_registration_mismatch", "receipt_jar_mismatch", "receipt_label_mismatch",
+                 "receipt_registered_bytes_changed", "receipt_command_mismatch", "receipt_timeout",
+                 "receipt_wrong_budget", "receipt_over_budget", "receipt_nan_wall", "receipt_negative_wall",
+                 "measurements_exceed_process_wall_time",
+                 "receipt_rc_mismatch", "receipt_unexpected_rc", "model_checkpoint_mismatch",
+                 "result_checkpoint_mismatch", "model_tokenizer_mismatch", "model_size_mismatch",
+                 "model_parameter_mismatch", "protocol_threshold_changed", "missing_trial", "duplicate_trial",
+                 "duplicate_result_field", "nonfinite_trial", "forged_memory_pass", "forged_trial_pass",
+                 "summary_max_mismatch", "unknown_failure_reason", "selected_checkpoint_mutated",
+                 "registered_source_mutated", "training_receipt_log_mismatch"]
+    result += [{"name": name, "expected": "reject", "mutate": name} for name in mutations]
+    result += [{"name": "frozen_receipt_removed_before_test", "expected": "reject-after-freeze",
+                "after_freeze": "missing_receipt"},
+               {"name": "frozen_valid_receipt_changed_before_test", "expected": "reject-after-freeze",
+                "after_freeze": "changed_valid_receipt"},
+               {"name": "evidence_removed_after_first_arm", "expected": "reject-during-test", "after_call": 1},
+               {"name": "evidence_removed_before_summary", "expected": "reject-during-test", "after_call": 4}]
+    return result
+
+
+def exercise(source: Path, expected_sha: str, kind: str, spec: dict) -> dict:
+    module = load_reviewed(source, expected_sha)
+    attempts = []
+    outcome = spec.get("outcome", "pass")
+    with tempfile.TemporaryDirectory(prefix="synthetic-", dir=HERE) as temporary:
+        root = Path(temporary)
+        study = fixture(module, root, source, kind, outcome, spec.get("earlier_tie", False), spec.get("no_signal", False))
+        frozen = study.out / "selection-freeze.json"
+        summary_path = study.out / "intent-summary.json"
+        training_before = {p.name: file_hash(p) for p in study.logs.glob("intent-*.receipt.json")
+                           if "capacity-after" not in p.name}
+        if spec.get("mutate"):
+            mutate(study, spec["mutate"], kind)
+        if spec["name"] == "training_receipt_log_mismatch":
+            training_before["intent-wide.receipt.json"] = file_hash(study.logs / "intent-wide.receipt.json")
+        checkpoint_before = {str(p.relative_to(root)): file_hash(p) for p in root.rglob("*.lm1")}
+        source_before = file_hash(root / SOURCE_PATHS[kind])
+        error = None
+        first_resume_rejection = False
+        freeze_before_test_sha = None
+
+        def fake_process(command: list[str], *unused: object, **kwargs: object) -> object:
+            attempts.append(command)
+            if command[6] != "test" or command[5] not in [module.PACKAGE + value for value in
+                    ("LmIntentStudy", "LmIntentLongStudy", "LmIntentSuffixStudy")]:
+                raise AssertionError("UNEXPECTED_PROCESS_COMMAND")
+            if spec["expected"] not in {"summary", "reject-during-test"}:
+                raise ProcessBoundaryReached("MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST")
+            arm = ["S0", "W0", "S1", "W1"][len(attempts) - 1]
+            checkpoint = Path(command[7])
+            test_sentinel = Path(command[9])
+            correct = {"S0": 8, "W0": 8, "S1": 32, "W1": 40}[arm]
+            synthetic_log = row("TEST_INPUT", checkpointSha256=file_hash(checkpoint), testSha256=file_hash(test_sentinel))
+            synthetic_log += row("SCORE", split="test", step=0, correct=correct, total=48,
+                                 classCorrect=",".join([str(correct // 4)] * 4), classTotal="12,12,12,12",
+                                 answerNll=1.0, eosNll=1.0, prematureEos=0, missingEos=0, generatedTokens=48)
+            kwargs["stdout"].write(synthetic_log.encode())
+
+            def wait(timeout: int) -> int:
+                expected_timeout = 600 if kind == "v1" else 900
+                if timeout != expected_timeout:
+                    raise AssertionError("TEST_PROCESS_BUDGET_CHANGED")
+                if len(attempts) == spec.get("after_call"):
+                    after_path(study, "receipt.json").unlink()
+                return 0
+
+            return types.SimpleNamespace(wait=wait)
+
+        captured = io.StringIO()
+        with patch.object(module.subprocess, "Popen", side_effect=fake_process), redirect_stdout(captured):
+            try:
+                if spec["expected"] == "resume":
+                    path = after_path(study, "receipt.json")
+                    raw = path.read_bytes()
+                    path.unlink()
+                    try:
+                        study.freeze()
+                    except (OSError, RuntimeError, ValueError, KeyError, TypeError):
+                        first_resume_rejection = not frozen.exists()
+                    put(path, raw)
+                study.freeze()
+                if frozen.exists():
+                    freeze_before_test_sha = file_hash(frozen)
+                if spec.get("after_freeze"):
+                    mutate(study, spec["after_freeze"], kind)
+                if spec["expected"] != "no-signal":
+                    study.test()
+            except (ProcessBoundaryReached, OSError, RuntimeError, ValueError, KeyError, TypeError, AssertionError) as exc:
+                error = type(exc).__name__ + ": " + str(exc)
+
+        expected = spec["expected"]
+        if expected in {"boundary", "resume"}:
+            passed = frozen.exists() and len(attempts) == 1 and error is not None and error.startswith("ProcessBoundaryReached:")
+            if expected == "resume":
+                passed = passed and first_resume_rejection
+        elif expected == "reject":
+            passed = not frozen.exists() and not attempts and error is not None
+        elif expected == "reject-after-freeze":
+            passed = frozen.exists() and not attempts and error is not None
+        elif expected == "reject-during-test":
+            passed = len(attempts) == spec["after_call"] and error is not None and not summary_path.exists()
+        elif expected == "no-signal":
+            path = study.out / "no-development-signal.json"
+            passed = not frozen.exists() and not attempts and path.exists() and error is None
+            passed = passed and json.loads(path.read_text()).get("testEvaluated") is False
+        elif expected == "summary":
+            passed = len(attempts) == 4 and error is None and summary_path.exists()
+            if passed:
+                summary = json.loads(summary_path.read_text())
+                selection = json.loads(frozen.read_text())
+                evidence = summary.get("postTrainingCapacity")
+                passed = isinstance(evidence, dict) and evidence == selection.get("postTrainingCapacity")
+                if passed:
+                    passed = set(evidence) == {"S1", "W1"}
+                    for arm, variant in (("S1", "small"), ("W1", "wide")):
+                        value = evidence.get(arm, {})
+                        status = "FAIL" if variant == "wide" and outcome != "pass" else "PASS"
+                        passed = passed and value.get("status") == status
+                        passed = passed and value.get("logSha256") == file_hash(after_path(study, "tsv", variant))
+                        passed = passed and value.get("receiptSha256") == file_hash(after_path(study, "receipt.json", variant))
+                        passed = passed and value.get("result", {}).get("pass") == ("true" if status == "PASS" else "false")
+                    passed = passed and summary.get("modelPromotion") is False and summary.get("generalIntelligenceClaim") is False
+                    passed = passed and summary.get("limitedBenchmarkLearningCriterionPassed") is True
+        else:
+            raise AssertionError(expected)
+        unchanged = (all(file_hash(study.logs / n) == value for n, value in training_before.items())
+                     and all(file_hash(root / n) == value for n, value in checkpoint_before.items())
+                     and file_hash(root / SOURCE_PATHS[kind]) == source_before)
+        freeze_unchanged = freeze_before_test_sha is None or file_hash(frozen) == freeze_before_test_sha
+        passed = bool(passed and unchanged and freeze_unchanged)
+        return {"case": spec["name"], "expected": expected, "passed": passed,
+                "freezeCreated": frozen.exists(), "summaryCreated": summary_path.exists(),
+                "processBoundaryCalls": len(attempts), "actualProcessesStarted": 0,
+                "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": unchanged,
+                "freezeBytesUnchangedByTest": freeze_unchanged,
+                "firstAttemptedMainAndMode": attempts[0][5:7] if attempts else [],
+                "errorOrBoundary": error.replace(str(root), "<SYNTHETIC_ROOT>") if error else None,
+                "stdout": captured.getvalue().replace(str(root), "<SYNTHETIC_ROOT>")}
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--variant", choices=sorted(SOURCE_PATHS), required=True)
+    parser.add_argument("--runner", type=Path)
+    parser.add_argument("--expected-sha256")
+    parser.add_argument("--report", type=Path, required=True)
+    args = parser.parse_args()
+    source = args.runner or HERE / "fixtures" / ("original-" + args.variant + "-run_registered_study.py.txt")
+    expected_sha = args.expected_sha256 or ORIGINAL_HASHES[args.variant]
+    load_reviewed(source, expected_sha)
+    if file_hash(HERE.parents[3] / PROTOCOL_PATH) != PROTOCOL_SHA256:
+        raise RuntimeError("UNREVIEWED_BENCHMARK_CONTRACT")
+    results = [exercise(source, expected_sha, args.variant, spec) for spec in cases()]
+    with tempfile.TemporaryDirectory(prefix="unknown-source-", dir=HERE) as temporary:
+        changed = Path(temporary) / "unreviewed.py"
+        put(changed, source.read_bytes() + b"\n")
+        try:
+            load_reviewed(changed, expected_sha)
+        except RuntimeError as exc:
+            source_guard = str(exc) == "UNREVIEWED_SOURCE_REJECTED_BEFORE_COMPILE"
+        else:
+            source_guard = False
+    results.append({"case": "changed_source_rejected_before_compile", "passed": source_guard})
+    failed = sum(not value["passed"] for value in results)
+    report = {"schemaVersion": 1, "observedUtc": datetime.now(timezone.utc).isoformat(),
+              "reviewedCommit": REVIEWED_COMMIT, "variant": args.variant,
+              "originalSourcePath": SOURCE_PATHS[args.variant], "originalGitBlob": ORIGINAL_BLOBS[args.variant],
+              "originalSourceSha256": ORIGINAL_HASHES[args.variant], "testedSourceSha256": file_hash(source),
+              "probeSha256": file_hash(Path(__file__)), "status": "RED_REPRODUCED" if failed else "GREEN",
+              "scope": "SYNTHETIC_SOURCE_BOUND_POST_CAPACITY_CONTROL_FLOW_ONLY",
+              "mockedBoundary": "subprocess.Popen only; path constants relocated to synthetic fixture",
+              "fixtureContractSource": PROTOCOL_PATH,
+              "fixtureContractSha256": PROTOCOL_SHA256,
+              "capacityFixture": "1 protocol, 1 model, 8 trials (1 warmup + 3 measured x 1/32 tokens), 11 memory, 1 result",
+              "syntheticReceiptsAreModelEvidence": False, "actualModelProcesses": 0, "realHoldoutRead": False,
+              "publishedPr508Changed": False, "passed": len(results) - failed, "failed": failed,
+              "exitCode": int(bool(failed)), "cases": results}
+    put_json(args.report, report)
+    print(json.dumps({key: report[key] for key in ("variant", "testedSourceSha256", "status", "passed", "failed", "exitCode")}))
+    return int(bool(failed))
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

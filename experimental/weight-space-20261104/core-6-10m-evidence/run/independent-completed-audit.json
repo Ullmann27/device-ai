@@ -1,0 +1,363 @@
+{
+  "task": "G1-INTEGRATE-WEIGHT-002",
+  "status": "PASS",
+  "driverSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "auditorSha256": "eabb75eace76a54ffcbe5ae40c879d674c6a381ed93c08f38322edab18d051f8",
+  "driverImported": false,
+  "modelProcessesStarted": 0,
+  "profiles": [
+    {
+      "profile": "core-6562304",
+      "registeredParameters": 6562304,
+      "receiptCount": 40,
+      "checkpointsChecked": 11,
+      "preferredCandidate": "baseline",
+      "candidates": [
+        {
+          "label": "baseline",
+          "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+          "parameters": 132160,
+          "bytes": 529297,
+          "development": {
+            "bpb": 2.3525414158359124,
+            "bytes": 1664,
+            "segments": 12,
+            "tokens": 839
+          },
+          "holdout": {
+            "bpb": 3.307624861005332,
+            "bytes": 4934,
+            "segments": 32,
+            "tokens": 2544
+          },
+          "capacity": {
+            "eligible": true,
+            "peakVmHwmKiB": 80824,
+            "reasons": "NONE",
+            "maxFirstTokenCallMs": 8.259399,
+            "maxGeneration32CallMs": 15.738869,
+            "actualMeasuredTokenCounts": [
+              1,
+              32,
+              1,
+              32,
+              1,
+              32
+            ]
+          }
+        },
+        {
+          "label": "width-8",
+          "sha256": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+          "parameters": 6562304,
+          "bytes": 26250085,
+          "development": {
+            "bpb": 2.352541414133888,
+            "bytes": 1664,
+            "segments": 12,
+            "tokens": 839
+          },
+          "holdout": {
+            "bpb": 3.3076248133644692,
+            "bytes": 4934,
+            "segments": 32,
+            "tokens": 2544
+          },
+          "capacity": {
+            "eligible": true,
+            "peakVmHwmKiB": 164360,
+            "reasons": "NONE",
+            "maxFirstTokenCallMs": 178.253705,
+            "maxGeneration32CallMs": 260.890111,
+            "actualMeasuredTokenCounts": [
+              1,
+              32,
+              1,
+              32,
+              1,
+              32
+            ]
+          }
+        },
+        {
+          "label": "continued-small",
+          "sha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+          "parameters": 132160,
+          "bytes": 529659,
+          "development": {
+            "bpb": 2.35250680129539,
+            "bytes": 1664,
+            "segments": 12,
+            "tokens": 839
+          },
+          "holdout": {
+            "bpb": 3.3081175456618146,
+            "bytes": 4934,
+            "segments": 32,
+            "tokens": 2544
+          },
+          "capacity": {
+            "eligible": false,
+            "peakVmHwmKiB": 69884,
+            "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+            "maxFirstTokenCallMs": 15.310146,
+            "maxGeneration32CallMs": 14.380978,
+            "actualMeasuredTokenCounts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "label": "continued-expanded",
+          "sha256": "8fd24c8fcc273bb46faa4a994c31dcd6d0cf7e6964942ef33aa1c4c782d42384",
+          "parameters": 6562304,
+          "bytes": 26250294,
+          "development": {
+            "bpb": 2.436533181320585,
+            "bytes": 1664,
+            "segments": 12,
+            "tokens": 839
+          },
+          "holdout": {
+            "bpb": 3.3693592558052456,
+            "bytes": 4934,
+            "segments": 32,
+            "tokens": 2544
+          },
+          "capacity": {
+            "eligible": false,
+            "peakVmHwmKiB": 173040,
+            "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+            "maxFirstTokenCallMs": 209.328765,
+            "maxGeneration32CallMs": 184.436909,
+            "actualMeasuredTokenCounts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "training": [
+        {
+          "label": "continued-small",
+          "parameters": 132160,
+          "changedWeights": 132159,
+          "checkpointSha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+          "steps": 16,
+          "tokens": 3255,
+          "millis": 811,
+          "wallSeconds": 1.269427256003837,
+          "inputIdentity": {
+            "datasetSha256": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+            "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+            "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+          }
+        },
+        {
+          "label": "continued-expanded",
+          "parameters": 6562304,
+          "changedWeights": 6562289,
+          "checkpointSha256": "8fd24c8fcc273bb46faa4a994c31dcd6d0cf7e6964942ef33aa1c4c782d42384",
+          "steps": 16,
+          "tokens": 3255,
+          "millis": 22904,
+          "wallSeconds": 23.611543599996367,
+          "inputIdentity": {
+            "datasetSha256": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+            "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+            "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+          }
+        }
+      ],
+      "frozenSelectionSha256": "84892007baa8a15a0451eb2541e7b36d95d43819417990115047b49eab27ff89",
+      "finalSha256": "48ad9b63666ec400b321adf96ff4219cd67509da065807cf26b4158dbd6f9f73"
+    },
+    {
+      "profile": "core-9712128",
+      "registeredParameters": 9712128,
+      "receiptCount": 43,
+      "checkpointsChecked": 12,
+      "preferredCandidate": "baseline",
+      "candidates": [
+        {
+          "label": "baseline",
+          "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+          "parameters": 132160,
+          "bytes": 529297,
+          "development": {
+            "bpb": 2.3525414158359124,
+            "bytes": 1664,
+            "segments": 12,
+            "tokens": 839
+          },
+          "holdout": {
+            "bpb": 3.307624861005332,
+            "bytes": 4934,
+            "segments": 32,
+            "tokens": 2544
+          },
+          "capacity": {
+            "eligible": true,
+            "peakVmHwmKiB": 84748,
+            "reasons": "NONE",
+            "maxFirstTokenCallMs": 9.606424,
+            "maxGeneration32CallMs": 18.730917,
+            "actualMeasuredTokenCounts": [
+              1,
+              32,
+              1,
+              32,
+              1,
+              32
+            ]
+          }
+        },
+        {
+          "label": "depth-3",
+          "sha256": "5e2332b0c15646b574d9c3f8cf48378f13eed1daaed7e652328588eedae85950",
+          "parameters": 9712128,
+          "bytes": 38849588,
+          "development": {
+            "bpb": 2.352541414133888,
+            "bytes": 1664,
+            "segments": 12,
+            "tokens": 839
+          },
+          "holdout": {
+            "bpb": 3.3076248133644692,
+            "bytes": 4934,
+            "segments": 32,
+            "tokens": 2544
+          },
+          "capacity": {
+            "eligible": true,
+            "peakVmHwmKiB": 197908,
+            "reasons": "NONE",
+            "maxFirstTokenCallMs": 248.655464,
+            "maxGeneration32CallMs": 367.842681,
+            "actualMeasuredTokenCounts": [
+              1,
+              32,
+              1,
+              32,
+              1,
+              32
+            ]
+          }
+        },
+        {
+          "label": "continued-small",
+          "sha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+          "parameters": 132160,
+          "bytes": 529659,
+          "development": {
+            "bpb": 2.35250680129539,
+            "bytes": 1664,
+            "segments": 12,
+            "tokens": 839
+          },
+          "holdout": {
+            "bpb": 3.3081175456618146,
+            "bytes": 4934,
+            "segments": 32,
+            "tokens": 2544
+          },
+          "capacity": {
+            "eligible": false,
+            "peakVmHwmKiB": 70116,
+            "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+            "maxFirstTokenCallMs": 12.068509,
+            "maxGeneration32CallMs": 8.598477,
+            "actualMeasuredTokenCounts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "label": "continued-expanded",
+          "sha256": "49a6ef6d9e710cd1fcc407e1aa9b4a72a5a7a205be5bd8ccf9e2d2093e9568f0",
+          "parameters": 9712128,
+          "bytes": 38849797,
+          "development": {
+            "bpb": 2.4484119303320027,
+            "bytes": 1664,
+            "segments": 12,
+            "tokens": 839
+          },
+          "holdout": {
+            "bpb": 3.380979222778692,
+            "bytes": 4934,
+            "segments": 32,
+            "tokens": 2544
+          },
+          "capacity": {
+            "eligible": false,
+            "peakVmHwmKiB": 187552,
+            "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+            "maxFirstTokenCallMs": 276.777142,
+            "maxGeneration32CallMs": 269.355293,
+            "actualMeasuredTokenCounts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "training": [
+        {
+          "label": "continued-small",
+          "parameters": 132160,
+          "changedWeights": 132159,
+          "checkpointSha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+          "steps": 16,
+          "tokens": 3255,
+          "millis": 742,
+          "wallSeconds": 1.1768937509987154,
+          "inputIdentity": {
+            "datasetSha256": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+            "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+            "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+          }
+        },
+        {
+          "label": "continued-expanded",
+          "parameters": 9712128,
+          "changedWeights": 9712110,
+          "checkpointSha256": "49a6ef6d9e710cd1fcc407e1aa9b4a72a5a7a205be5bd8ccf9e2d2093e9568f0",
+          "steps": 16,
+          "tokens": 3255,
+          "millis": 32453,
+          "wallSeconds": 33.38139691899414,
+          "inputIdentity": {
+            "datasetSha256": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+            "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+            "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+          }
+        }
+      ],
+      "frozenSelectionSha256": "f9395441c7aa3d7fd8301bff53f6df8d09c222584953a9c3bc2f3f45de555096",
+      "finalSha256": "8c636904ea7ca491142814ac5ad3c830fd57b2c284db4d1909f3b90f7305e678"
+    }
+  ],
+  "historicalFilesUnchanged": 122,
+  "originalSourceHashesUnchanged": 7,
+  "studyFreezeSha256": "7a98a360ba274b1d452237b7a69007691a687593f68092dff5a82a001cb45ac3"
+}

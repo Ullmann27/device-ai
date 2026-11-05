@@ -1,0 +1,49 @@
+{
+  "sourceSha256": "9a68ddf27158692044738aed96892ad6476a520b7e30ab6651adfff2c4f38447",
+  "historicalPreflight": "PASS",
+  "historicalFrozenResume": "PASS",
+  "historicalDirectFinalResume": "PASS",
+  "originalBaseline": "baseline",
+  "selectedSource": "baseline",
+  "lastCapacityPassed": {
+    "label": "depth-5",
+    "parameters": 16011776,
+    "recordedVmHwmKiB": 262548,
+    "effectiveMaxObservedVmHwmKiB": 263388
+  },
+  "developmentPreferred": "baseline",
+  "candidates": [
+    {
+      "label": "baseline",
+      "capacityEligible": true,
+      "parameters": 132160,
+      "devBpb": 2.3525414158359124
+    },
+    {
+      "label": "depth-5",
+      "capacityEligible": true,
+      "parameters": 16011776,
+      "devBpb": 2.352541414133888
+    },
+    {
+      "label": "continued-small",
+      "capacityEligible": false,
+      "parameters": 132160,
+      "devBpb": 2.35250680129539
+    },
+    {
+      "label": "continued-expanded",
+      "capacityEligible": false,
+      "parameters": 16011776,
+      "devBpb": 2.4633614382348035
+    }
+  ],
+  "frozenSelectionSha256": "8c433e76c28ceafa5e5149c9b0469d37eb4e217f1887868bce2a2ed1330dc6f9",
+  "forbiddenCalls": {
+    "process": 0,
+    "holdout": 0,
+    "write": 0
+  },
+  "artifactsUnchanged": true,
+  "artifactCount": 119
+}

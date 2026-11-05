@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Fixed synthetic engineering probes, no semantic labels or quality scoring",
+  "probes": [
+    {"id": "general-next", "group": "general", "text": "Der nächste Schritt ist"},
+    {"id": "general-note", "group": "general", "text": "Eine kurze Notiz:"},
+    {"id": "general-tool", "group": "general", "text": "Erkläre einen Schraubstock."},
+    {"id": "general-count", "group": "general", "text": "Zähle langsam von eins bis fünf:"},
+    {"id": "format-alpha", "group": "format", "text": "Auftrag: Testfolge alpha\n"},
+    {"id": "format-beta", "group": "format", "text": "Auftrag: Testfolge beta\n"},
+    {"id": "format-gamma", "group": "format", "text": "Auftrag: Testfolge gamma\n"},
+    {"id": "format-delta", "group": "format", "text": "Auftrag: Testfolge delta\n"},
+    {"id": "after-zero", "group": "after-digit", "text": "Auftrag: Testfolge alpha\n0"},
+    {"id": "after-one", "group": "after-digit", "text": "Auftrag: Testfolge beta\n1"},
+    {"id": "after-two", "group": "after-digit", "text": "Auftrag: Testfolge gamma\n2"},
+    {"id": "after-three", "group": "after-digit", "text": "Auftrag: Testfolge delta\n3"}
+  ]
+}

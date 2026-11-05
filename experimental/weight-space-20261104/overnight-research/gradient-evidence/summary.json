@@ -1,0 +1,127 @@
+{
+  "maximumProcessRssKiB": 474728,
+  "modelPromotion": false,
+  "optimizerUpdates": 0,
+  "profiles": {
+    "D0": {
+      "cases": [
+        {
+          "meanNll": 2.4797741868682386,
+          "nonzeroGradientCoordinates": 7873536,
+          "probe": "general-next",
+          "tensorCount": 35,
+          "totalGradientL2": 13.620134010034949
+        },
+        {
+          "meanNll": 4.036144526482889,
+          "nonzeroGradientCoordinates": 7873536,
+          "probe": "general-note",
+          "tensorCount": 35,
+          "totalGradientL2": 24.73717417639419
+        },
+        {
+          "meanNll": 3.786460546376214,
+          "nonzeroGradientCoordinates": 7873536,
+          "probe": "general-tool",
+          "tensorCount": 35,
+          "totalGradientL2": 23.390325409831807
+        },
+        {
+          "meanNll": 4.155581745450156,
+          "nonzeroGradientCoordinates": 7873536,
+          "probe": "general-count",
+          "tensorCount": 35,
+          "totalGradientL2": 17.596321744102145
+        }
+      ],
+      "directionChecks": 12,
+      "initialParameterIdentity": "d6d3d64b01a12fe8d0e8c81527aff276bfefb776f09c2ed37f7f6eb21fd24640",
+      "parameterBytes": 38848512,
+      "parameters": 9712128,
+      "profile": "D0"
+    },
+    "S0": {
+      "cases": [
+        {
+          "meanNll": 2.479774807124175,
+          "nonzeroGradientCoordinates": 132160,
+          "probe": "general-next",
+          "tensorCount": 24,
+          "totalGradientL2": 14.383474931708825
+        },
+        {
+          "meanNll": 4.036143959820518,
+          "nonzeroGradientCoordinates": 132160,
+          "probe": "general-note",
+          "tensorCount": 24,
+          "totalGradientL2": 26.886572494348385
+        },
+        {
+          "meanNll": 3.786460073990444,
+          "nonzeroGradientCoordinates": 132160,
+          "probe": "general-tool",
+          "tensorCount": 24,
+          "totalGradientL2": 24.555637184681373
+        },
+        {
+          "meanNll": 4.1555823586748675,
+          "nonzeroGradientCoordinates": 132160,
+          "probe": "general-count",
+          "tensorCount": 24,
+          "totalGradientL2": 19.23363146399361
+        }
+      ],
+      "directionChecks": 4,
+      "initialParameterIdentity": "b3662995f7b75d6df4d418587a34807191f5c2d68feecfe4a9e8dc8edcd8ddae",
+      "parameterBytes": 528640,
+      "parameters": 132160,
+      "profile": "S0"
+    },
+    "W0": {
+      "cases": [
+        {
+          "meanNll": 2.4797741868682386,
+          "nonzeroGradientCoordinates": 6562304,
+          "probe": "general-next",
+          "tensorCount": 24,
+          "totalGradientL2": 12.66364686329508
+        },
+        {
+          "meanNll": 4.036144526482889,
+          "nonzeroGradientCoordinates": 6562304,
+          "probe": "general-note",
+          "tensorCount": 24,
+          "totalGradientL2": 23.54088697058506
+        },
+        {
+          "meanNll": 3.786460546376214,
+          "nonzeroGradientCoordinates": 6562304,
+          "probe": "general-tool",
+          "tensorCount": 24,
+          "totalGradientL2": 22.359868276432387
+        },
+        {
+          "meanNll": 4.155581745450156,
+          "nonzeroGradientCoordinates": 6562304,
+          "probe": "general-count",
+          "tensorCount": 24,
+          "totalGradientL2": 16.774090327741305
+        }
+      ],
+      "directionChecks": 4,
+      "initialParameterIdentity": "a3223bffe569787c6ec18f039263123f138a49c1b3043e1b2feee279d3e81eae",
+      "parameterBytes": 26249216,
+      "parameters": 6562304,
+      "profile": "W0"
+    }
+  },
+  "receiptHashes": {
+    "D0": "6fdee3f87344df53b9723106b4b3971275927e41b34a9807d1d5d90da84cd331",
+    "S0": "40dccfbca407155d4e87ee4f57a8d61992cb4867d1096cb8002e7dc3521b2c90",
+    "W0": "2809109b18a8a8c1d69e9ea4266efcbac74ad99bf44b38bef7efacf9bd0070d9"
+  },
+  "registrationSha256": "3ee5dc40b67fad6c86c0c0b8487740834526530637e5ee9a9f992691d26f4f88",
+  "serializedCheckpoints": 0,
+  "status": "GRADIENT_ACCESS_DIAGNOSTIC_PASS_NO_OPTIMIZER",
+  "totalProcessSeconds": 10.977830325999093
+}

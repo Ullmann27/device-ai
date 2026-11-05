@@ -1,0 +1,175 @@
+{
+  "actualModelProcesses": 0,
+  "cases": [
+    {
+      "actualProcessesStarted": 0,
+      "case": "complete_pass_tie_retains_v2_with_capacity",
+      "choiceReceiptWritten": true,
+      "controllerSourceSha256": {
+        "long": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+        "suffix": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067"
+      },
+      "error": null,
+      "existingEvidenceBytesUnchanged": true,
+      "noTestOutputsCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "selectedStudy": "v2",
+      "status": "DEVELOPMENT_CHOICE_BEFORE_TEST",
+      "stdout": "DEVELOPMENT_CHOICE_BEFORE_TEST v2\n"
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "complete_eos_fail_stays_eligible_and_disclosed",
+      "choiceReceiptWritten": true,
+      "controllerSourceSha256": {
+        "long": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+        "suffix": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067"
+      },
+      "error": null,
+      "existingEvidenceBytesUnchanged": true,
+      "noTestOutputsCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "selectedStudy": "v2",
+      "status": "DEVELOPMENT_CHOICE_BEFORE_TEST",
+      "stdout": "DEVELOPMENT_CHOICE_BEFORE_TEST v2\n"
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "higher_dev_exact_chooses_v3",
+      "choiceReceiptWritten": true,
+      "controllerSourceSha256": {
+        "long": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+        "suffix": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067"
+      },
+      "error": null,
+      "existingEvidenceBytesUnchanged": true,
+      "noTestOutputsCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "selectedStudy": "v3",
+      "status": "DEVELOPMENT_CHOICE_BEFORE_TEST",
+      "stdout": "DEVELOPMENT_CHOICE_BEFORE_TEST v3\n"
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "no_development_signal_produces_no_eligible_choice",
+      "choiceReceiptWritten": true,
+      "controllerSourceSha256": {
+        "long": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+        "suffix": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067"
+      },
+      "error": null,
+      "existingEvidenceBytesUnchanged": true,
+      "noTestOutputsCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "selectedStudy": null,
+      "status": "NO_ELIGIBLE_STUDY",
+      "stdout": "NO_ELIGIBLE_STUDY none\n"
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "missing_post_capacity_blocks_choice",
+      "choiceReceiptWritten": false,
+      "controllerSourceSha256": {
+        "long": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+        "suffix": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067"
+      },
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '<SYNTHETIC_ROOT>/v3/output/logs/intent-wide-capacity-after.receipt.json'",
+      "existingEvidenceBytesUnchanged": true,
+      "noTestOutputsCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "selectedStudy": null,
+      "status": null,
+      "stdout": ""
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "missing_raw_trial_blocks_choice",
+      "choiceReceiptWritten": false,
+      "controllerSourceSha256": {
+        "long": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+        "suffix": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067"
+      },
+      "error": "RuntimeError: INVALID_POST_CAPACITY_EVIDENCE: intent-wide-capacity-after: missing, duplicate or reordered capacity trials",
+      "existingEvidenceBytesUnchanged": true,
+      "noTestOutputsCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "selectedStudy": null,
+      "status": null,
+      "stdout": ""
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "process_budget_mismatch_blocks_choice",
+      "choiceReceiptWritten": false,
+      "controllerSourceSha256": {
+        "long": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+        "suffix": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067"
+      },
+      "error": "RuntimeError: INVALID_POST_CAPACITY_EVIDENCE: intent-wide-capacity-after: capacity process did not complete under the registered budget",
+      "existingEvidenceBytesUnchanged": true,
+      "noTestOutputsCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "selectedStudy": null,
+      "status": null,
+      "stdout": ""
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "source_receipt_mismatch_blocks_choice",
+      "choiceReceiptWritten": false,
+      "controllerSourceSha256": {
+        "long": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+        "suffix": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067"
+      },
+      "error": "RuntimeError: POST_CAPACITY_RECEIPT_INVALID",
+      "existingEvidenceBytesUnchanged": true,
+      "noTestOutputsCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "selectedStudy": null,
+      "status": null,
+      "stdout": ""
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "invalid_evidence_is_not_relabelled_no_development_signal",
+      "choiceReceiptWritten": false,
+      "controllerSourceSha256": {
+        "long": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+        "suffix": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067"
+      },
+      "error": "RuntimeError: INVALID_POST_CAPACITY_EVIDENCE: intent-wide-capacity-after: missing, duplicate or reordered capacity trials",
+      "existingEvidenceBytesUnchanged": true,
+      "noTestOutputsCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "selectedStudy": null,
+      "status": null,
+      "stdout": ""
+    }
+  ],
+  "controllerPhase": "repaired",
+  "exitCode": 0,
+  "failed": 0,
+  "fixtureBuilderSha256": "4dddb6459c578c1feefbaee0bbff72eaad7a469eb799a01e078b8b4d33d51aec",
+  "mockedBoundary": "subprocess.Popen only; selector BASE and CLI paths relocated",
+  "observedUtc": "2026-11-04T19:32:01.609636+00:00",
+  "passed": 9,
+  "probeSha256": "9a359c885823407abc211300eb5103a57d6f9c73aeddd8187763f0ae5209614d",
+  "publishedPr508Changed": false,
+  "realHoldoutRead": false,
+  "reviewedCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "schemaVersion": 1,
+  "scope": "SYNTHETIC_REAL_SELECTOR_MAIN_AND_REAL_CONTROLLER_METHODS",
+  "selectorSourcePath": "experimental/lm1-training-recovery-20261104/suffix-study/choose_development_study.py",
+  "selectorSourceSha256": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520",
+  "status": "GREEN",
+  "syntheticReceiptsAreModelEvidence": false
+}

@@ -1,0 +1,386 @@
+--- a/experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py
++++ b/experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py
+@@ -423,6 +423,147 @@
+         write_new(self.out / "selection-freeze.json", evidence)
+         print("FROZEN_BEFORE_TEST", sha(self.out / "selection-freeze.json"), flush=True)
+ 
++    def study_choice_authorization(self, frozen: Path, frozen_sha: str, selection: dict) -> dict:
++        """Validate the coordinator's explicitly pinned choice before a test arm.
++
++        The expected receipt hash is supplied by the caller. It binds local
++        bytes; it does not attest when or where those bytes were published.
++        """
++        def require(condition: bool, message: str) -> None:
++            if not condition:
++                raise ValueError(message)
++
++        def unique(pairs: list[tuple[str, object]]) -> dict:
++            result = {}
++            for key, value in pairs:
++                require(key not in result, "duplicate authorization field: " + key)
++                result[key] = value
++            return result
++
++        def invalid_constant(value: str) -> None:
++            raise ValueError("non-finite authorization constant: " + value)
++
++        def read_object(raw: bytes) -> dict:
++            value = json.loads(raw, object_pairs_hook=unique, parse_constant=invalid_constant)
++            require(type(value) is dict, "authorization must be a JSON object")
++            return value
++
++        def is_hash(value: object, length: int = 64) -> bool:
++            return isinstance(value, str) and re.fullmatch(r"[a-f0-9]{" + str(length) + "}", value) is not None
++
++        def development_score(selected: dict) -> tuple[int, float]:
++            require(type(selected) is dict and selected["devTotal"] == "24", "invalid development denominator")
++            correct = selected["devCorrect"]
++            require(isinstance(correct, str) and re.fullmatch(r"0|[1-9][0-9]*", correct) is not None
++                    and 0 <= int(correct) <= 24, "invalid development numerator")
++            nll = selected["devAnswerNll"]
++            require(type(nll) in (str, int, float), "invalid development NLL type")
++            nll = float(nll)
++            require(math.isfinite(nll) and nll >= 0, "invalid development NLL")
++            return int(correct), nll
++
++        try:
++            expected_version = {"long-study": "v2", "suffix-study": "v3"}.get(EXPERIMENT.name)
++            require(expected_version is not None, "study choice is only defined for v2/v3")
++            choice_argument = getattr(self.args, "development_choice", None)
++            verification_argument = getattr(self.args, "before_test_verification", None)
++            expected_verification_sha = getattr(self.args, "before_test_verification_sha256", None)
++            require(choice_argument is not None and verification_argument is not None
++                    and is_hash(expected_verification_sha), "explicit study choice and pretest hash required")
++            require(type(selection) is dict and is_hash(frozen_sha), "invalid frozen selection identity")
++            choice_path, verification_path = Path(choice_argument).resolve(), Path(verification_argument).resolve()
++            verification_raw = verification_path.read_bytes()
++            verification_sha = hashlib.sha256(verification_raw).hexdigest()
++            require(verification_sha == expected_verification_sha, "pretest verification bytes differ from pinned hash")
++            verification = read_object(verification_raw)
++            require(set(verification) == {"choiceSha256", "freezeSha256", "selectedStudy", "selectedSourceCommit",
++                                           "allFinalTestLogsAbsent", "choiceMatchesFreezeExactly"},
++                    "incomplete or unexpected pretest verification fields")
++            require(verification["selectedStudy"] == expected_version
++                    and verification["selectedSourceCommit"] == self.args.source_commit
++                    and verification["allFinalTestLogsAbsent"] is True
++                    and verification["choiceMatchesFreezeExactly"] is True,
++                    "pretest verification does not authorize this study")
++            require(is_hash(verification["choiceSha256"]) and verification["freezeSha256"] == frozen_sha
++                    and sha(frozen) == frozen_sha, "pretest verification does not bind this freeze")
++            choice_raw = choice_path.read_bytes()
++            choice_sha = hashlib.sha256(choice_raw).hexdigest()
++            require(choice_sha == verification["choiceSha256"], "development choice bytes changed")
++            choice = read_object(choice_raw)
++            require(set(choice) == {"status", "testEvaluated", "rule", "candidates", "schedules", "testSha256",
++                                    "selectedStudy", "selectedFreezePayload"}, "incomplete or unexpected choice fields")
++            require(choice["status"] == "DEVELOPMENT_CHOICE_BEFORE_TEST" and choice["testEvaluated"] is False
++                    and choice["selectedStudy"] == expected_version
++                    and choice["rule"] == "Wide Dev exact descending, answer NLL ascending, then retain v2",
++                    "choice does not authorize this runner or selection rule")
++            test_sha = self.registration["files"][
++                "experimental/lm1-training-recovery-20261104/intent-data/test.sealed.tsv"]
++            require(is_hash(test_sha) and choice["testSha256"] == selection["testSha256"] == test_sha
++                    and selection["sourceCommit"] == self.args.source_commit
++                    and selection["registrationSha256"] == self.registration_sha
++                    and choice["selectedFreezePayload"] == selection,
++                    "choice/runner/freeze identity mismatch")
++            schedules = choice["schedules"]
++            candidates = choice["candidates"]
++            require(type(schedules) is dict and set(schedules) == {"v2", "v3"}
++                    and type(candidates) is dict and set(candidates) == {"v2", "v3"},
++                    "incomplete v2/v3 comparison")
++            for schedule in schedules.values():
++                require(type(schedule) is dict and set(schedule) == {"scheduleSha256", "tokenScheduleSha256"}
++                        and all(is_hash(value) for value in schedule.values()), "invalid study schedule identity")
++            require(schedules["v2"]["scheduleSha256"] == schedules["v3"]["scheduleSha256"]
++                    and schedules["v2"]["tokenScheduleSha256"] != schedules["v3"]["tokenScheduleSha256"],
++                    "wrapper comparison schedule mismatch")
++            eligible = {}
++            for version in ("v2", "v3"):
++                candidate = candidates[version]
++                require(type(candidate) is dict, "invalid study candidate")
++                if candidate.get("status") == "NO_DEVELOPMENT_SIGNAL":
++                    require(set(candidate) == {"status", "selected", "sourceCommit", "registrationSha256"}
++                            and is_hash(candidate["sourceCommit"], 40) and is_hash(candidate["registrationSha256"])
++                            and type(candidate["selected"]) is dict
++                            and set(candidate["selected"]) == {"small", "wide"},
++                            "invalid ineligible candidate evidence")
++                    for selected in candidate["selected"].values():
++                        development_score(selected)
++                    continue
++                require(candidate.get("status") == "ELIGIBLE" and set(candidate) == {"status", "freezePayload"},
++                        "invalid eligible candidate evidence")
++                payload = candidate["freezePayload"]
++                require(type(payload) is dict and payload["status"] == "FROZEN_BEFORE_TEST"
++                        and payload["testSha256"] == test_sha
++                        and is_hash(payload["sourceCommit"], 40) and is_hash(payload["registrationSha256"])
++                        and payload["tokenScheduleSha256"] == schedules[version]["tokenScheduleSha256"]
++                        and type(payload["arms"]) is dict and set(payload["arms"]) == {"S0", "W0", "S1", "W1"},
++                        "candidate freeze identity mismatch")
++                capacity = payload["postTrainingCapacity"]
++                require(type(capacity) is dict and set(capacity) == {"S1", "W1"}, "candidate capacity binding missing")
++                for arm in ("S1", "W1"):
++                    arm_sha = payload["arms"][arm]["checkpointSha256"]
++                    proof = capacity[arm]
++                    require(is_hash(arm_sha) and type(proof) is dict and proof["status"] in {"PASS", "FAIL"}
++                            and is_hash(proof["logSha256"]) and is_hash(proof["receiptSha256"])
++                            and proof["model"]["checkpointSha256"] == proof["result"]["checkpointSha256"] == arm_sha
++                            and proof["receipt"]["sourceCommit"] == payload["sourceCommit"]
++                            and proof["receipt"]["registrationSha256"] == payload["registrationSha256"]
++                            and proof["result"]["pass"] == ("true" if proof["status"] == "PASS" else "false"),
++                            "candidate capacity identity mismatch")
++                correct, nll = development_score(payload["arms"]["W1"])
++                require(correct >= 12, "eligible candidate misses development threshold")
++                eligible[version] = (-correct, nll, 0 if version == "v2" else 1)
++            require(expected_version in eligible and candidates[expected_version]["freezePayload"] == selection,
++                    "selected payload does not equal its candidate")
++            require(min(eligible, key=eligible.get) == expected_version, "choice contradicts registered development ranking")
++            require(sha(choice_path) == choice_sha and sha(verification_path) == expected_verification_sha
++                    and sha(frozen) == frozen_sha, "authorization bytes changed while verifying")
++            return {"selectedStudy": expected_version, "developmentChoiceSha256": choice_sha,
++                    "beforeTestVerificationSha256": expected_verification_sha, "selectionSha256": frozen_sha,
++                    "sourceCommit": self.args.source_commit, "registrationSha256": self.registration_sha,
++                    "developmentChoicePath": str(choice_path), "beforeTestVerificationPath": str(verification_path),
++                    "publicationAttestation": "NOT_ESTABLISHED_BY_THIS_LOCAL_HASH_CHECK"}
++        except (OSError, ValueError, KeyError, TypeError, OverflowError) as exc:
++            raise RuntimeError("INVALID_STUDY_CHOICE_AUTHORIZATION: " + str(exc)) from exc
++
+     def test(self) -> None:
+         self.verify()
+         frozen = self.out / "selection-freeze.json"
+@@ -430,8 +571,13 @@
+         selection = json.loads(frozen.read_text())
+         if selection != self.freeze_evidence():
+             raise RuntimeError("INVALID_TEST_AUTHORIZATION")
++        test_authorization = self.study_choice_authorization(frozen, frozen_sha, selection)
++        if any(self.logs.glob("test-*.tsv")) or any(self.logs.glob("test-*.receipt.json")):
++            raise RuntimeError("FINAL_TEST_ALREADY_STARTED")
+         outputs = {}
+         for arm in ["S0", "W0", "S1", "W1"]:
++            if test_authorization != self.study_choice_authorization(frozen, frozen_sha, selection):
++                raise RuntimeError("STUDY_CHOICE_AUTHORIZATION_CHANGED")
+             if selection != self.freeze_evidence():
+                 raise RuntimeError("INVALID_TEST_AUTHORIZATION")
+             value = selection["arms"][arm]
+@@ -450,10 +596,13 @@
+             outputs[arm] = score[0]
+         if sha(frozen) != frozen_sha or selection != self.freeze_evidence():
+             raise RuntimeError("FREEZE_CHANGED_DURING_TEST")
++        if test_authorization != self.study_choice_authorization(frozen, frozen_sha, selection):
++            raise RuntimeError("STUDY_CHOICE_AUTHORIZATION_CHANGED")
+         w = outputs["W1"]
+         limited = int(w["correct"]) >= 36 and min(map(int, w["classCorrect"].split(","))) >= 8
+         limited = limited and all(int(w["correct"]) >= int(outputs[a]["correct"]) + 8 for a in ["S0", "W0"])
+         write_new(self.out / "intent-summary.json", {"selectionSha256": frozen_sha, "scores": outputs,
++                  "testAuthorization": test_authorization,
+                   "postTrainingCapacity": selection["postTrainingCapacity"],
+                   "limitedBenchmarkLearningCriterionPassed": limited,
+                   "widerSelectedCheckpointHasFourCaseAdvantage": int(w["correct"]) >= int(outputs["S1"]["correct"]) + 4,
+@@ -467,7 +616,14 @@
+     for name in ["jar", "stdlib", "inputs", "output"]:
+         parser.add_argument("--" + name, type=Path, required=True)
+     parser.add_argument("--source-commit", required=True)
++    parser.add_argument("--development-choice", type=Path)
++    parser.add_argument("--before-test-verification", type=Path)
++    parser.add_argument("--before-test-verification-sha256")
+     args = parser.parse_args()
++    if args.phase == "test" and any(getattr(args, name) is None for name in (
++            "development_choice", "before_test_verification", "before_test_verification_sha256")):
++        parser.error("test requires --development-choice, --before-test-verification, "
++                     "and --before-test-verification-sha256")
+     getattr(Study(args), args.phase)()
+ 
+ 
+--- a/experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py
++++ b/experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py
+@@ -423,6 +423,147 @@
+         write_new(self.out / "selection-freeze.json", evidence)
+         print("FROZEN_BEFORE_TEST", sha(self.out / "selection-freeze.json"), flush=True)
+ 
++    def study_choice_authorization(self, frozen: Path, frozen_sha: str, selection: dict) -> dict:
++        """Validate the coordinator's explicitly pinned choice before a test arm.
++
++        The expected receipt hash is supplied by the caller. It binds local
++        bytes; it does not attest when or where those bytes were published.
++        """
++        def require(condition: bool, message: str) -> None:
++            if not condition:
++                raise ValueError(message)
++
++        def unique(pairs: list[tuple[str, object]]) -> dict:
++            result = {}
++            for key, value in pairs:
++                require(key not in result, "duplicate authorization field: " + key)
++                result[key] = value
++            return result
++
++        def invalid_constant(value: str) -> None:
++            raise ValueError("non-finite authorization constant: " + value)
++
++        def read_object(raw: bytes) -> dict:
++            value = json.loads(raw, object_pairs_hook=unique, parse_constant=invalid_constant)
++            require(type(value) is dict, "authorization must be a JSON object")
++            return value
++
++        def is_hash(value: object, length: int = 64) -> bool:
++            return isinstance(value, str) and re.fullmatch(r"[a-f0-9]{" + str(length) + "}", value) is not None
++
++        def development_score(selected: dict) -> tuple[int, float]:
++            require(type(selected) is dict and selected["devTotal"] == "24", "invalid development denominator")
++            correct = selected["devCorrect"]
++            require(isinstance(correct, str) and re.fullmatch(r"0|[1-9][0-9]*", correct) is not None
++                    and 0 <= int(correct) <= 24, "invalid development numerator")
++            nll = selected["devAnswerNll"]
++            require(type(nll) in (str, int, float), "invalid development NLL type")
++            nll = float(nll)
++            require(math.isfinite(nll) and nll >= 0, "invalid development NLL")
++            return int(correct), nll
++
++        try:
++            expected_version = {"long-study": "v2", "suffix-study": "v3"}.get(EXPERIMENT.name)
++            require(expected_version is not None, "study choice is only defined for v2/v3")
++            choice_argument = getattr(self.args, "development_choice", None)
++            verification_argument = getattr(self.args, "before_test_verification", None)
++            expected_verification_sha = getattr(self.args, "before_test_verification_sha256", None)
++            require(choice_argument is not None and verification_argument is not None
++                    and is_hash(expected_verification_sha), "explicit study choice and pretest hash required")
++            require(type(selection) is dict and is_hash(frozen_sha), "invalid frozen selection identity")
++            choice_path, verification_path = Path(choice_argument).resolve(), Path(verification_argument).resolve()
++            verification_raw = verification_path.read_bytes()
++            verification_sha = hashlib.sha256(verification_raw).hexdigest()
++            require(verification_sha == expected_verification_sha, "pretest verification bytes differ from pinned hash")
++            verification = read_object(verification_raw)
++            require(set(verification) == {"choiceSha256", "freezeSha256", "selectedStudy", "selectedSourceCommit",
++                                           "allFinalTestLogsAbsent", "choiceMatchesFreezeExactly"},
++                    "incomplete or unexpected pretest verification fields")
++            require(verification["selectedStudy"] == expected_version
++                    and verification["selectedSourceCommit"] == self.args.source_commit
++                    and verification["allFinalTestLogsAbsent"] is True
++                    and verification["choiceMatchesFreezeExactly"] is True,
++                    "pretest verification does not authorize this study")
++            require(is_hash(verification["choiceSha256"]) and verification["freezeSha256"] == frozen_sha
++                    and sha(frozen) == frozen_sha, "pretest verification does not bind this freeze")
++            choice_raw = choice_path.read_bytes()
++            choice_sha = hashlib.sha256(choice_raw).hexdigest()
++            require(choice_sha == verification["choiceSha256"], "development choice bytes changed")
++            choice = read_object(choice_raw)
++            require(set(choice) == {"status", "testEvaluated", "rule", "candidates", "schedules", "testSha256",
++                                    "selectedStudy", "selectedFreezePayload"}, "incomplete or unexpected choice fields")
++            require(choice["status"] == "DEVELOPMENT_CHOICE_BEFORE_TEST" and choice["testEvaluated"] is False
++                    and choice["selectedStudy"] == expected_version
++                    and choice["rule"] == "Wide Dev exact descending, answer NLL ascending, then retain v2",
++                    "choice does not authorize this runner or selection rule")
++            test_sha = self.registration["files"][
++                "experimental/lm1-training-recovery-20261104/intent-data/test.sealed.tsv"]
++            require(is_hash(test_sha) and choice["testSha256"] == selection["testSha256"] == test_sha
++                    and selection["sourceCommit"] == self.args.source_commit
++                    and selection["registrationSha256"] == self.registration_sha
++                    and choice["selectedFreezePayload"] == selection,
++                    "choice/runner/freeze identity mismatch")
++            schedules = choice["schedules"]
++            candidates = choice["candidates"]
++            require(type(schedules) is dict and set(schedules) == {"v2", "v3"}
++                    and type(candidates) is dict and set(candidates) == {"v2", "v3"},
++                    "incomplete v2/v3 comparison")
++            for schedule in schedules.values():
++                require(type(schedule) is dict and set(schedule) == {"scheduleSha256", "tokenScheduleSha256"}
++                        and all(is_hash(value) for value in schedule.values()), "invalid study schedule identity")
++            require(schedules["v2"]["scheduleSha256"] == schedules["v3"]["scheduleSha256"]
++                    and schedules["v2"]["tokenScheduleSha256"] != schedules["v3"]["tokenScheduleSha256"],
++                    "wrapper comparison schedule mismatch")
++            eligible = {}
++            for version in ("v2", "v3"):
++                candidate = candidates[version]
++                require(type(candidate) is dict, "invalid study candidate")
++                if candidate.get("status") == "NO_DEVELOPMENT_SIGNAL":
++                    require(set(candidate) == {"status", "selected", "sourceCommit", "registrationSha256"}
++                            and is_hash(candidate["sourceCommit"], 40) and is_hash(candidate["registrationSha256"])
++                            and type(candidate["selected"]) is dict
++                            and set(candidate["selected"]) == {"small", "wide"},
++                            "invalid ineligible candidate evidence")
++                    for selected in candidate["selected"].values():
++                        development_score(selected)
++                    continue
++                require(candidate.get("status") == "ELIGIBLE" and set(candidate) == {"status", "freezePayload"},
++                        "invalid eligible candidate evidence")
++                payload = candidate["freezePayload"]
++                require(type(payload) is dict and payload["status"] == "FROZEN_BEFORE_TEST"
++                        and payload["testSha256"] == test_sha
++                        and is_hash(payload["sourceCommit"], 40) and is_hash(payload["registrationSha256"])
++                        and payload["tokenScheduleSha256"] == schedules[version]["tokenScheduleSha256"]
++                        and type(payload["arms"]) is dict and set(payload["arms"]) == {"S0", "W0", "S1", "W1"},
++                        "candidate freeze identity mismatch")
++                capacity = payload["postTrainingCapacity"]
++                require(type(capacity) is dict and set(capacity) == {"S1", "W1"}, "candidate capacity binding missing")
++                for arm in ("S1", "W1"):
++                    arm_sha = payload["arms"][arm]["checkpointSha256"]
++                    proof = capacity[arm]
++                    require(is_hash(arm_sha) and type(proof) is dict and proof["status"] in {"PASS", "FAIL"}
++                            and is_hash(proof["logSha256"]) and is_hash(proof["receiptSha256"])
++                            and proof["model"]["checkpointSha256"] == proof["result"]["checkpointSha256"] == arm_sha
++                            and proof["receipt"]["sourceCommit"] == payload["sourceCommit"]
++                            and proof["receipt"]["registrationSha256"] == payload["registrationSha256"]
++                            and proof["result"]["pass"] == ("true" if proof["status"] == "PASS" else "false"),
++                            "candidate capacity identity mismatch")
++                correct, nll = development_score(payload["arms"]["W1"])
++                require(correct >= 12, "eligible candidate misses development threshold")
++                eligible[version] = (-correct, nll, 0 if version == "v2" else 1)
++            require(expected_version in eligible and candidates[expected_version]["freezePayload"] == selection,
++                    "selected payload does not equal its candidate")
++            require(min(eligible, key=eligible.get) == expected_version, "choice contradicts registered development ranking")
++            require(sha(choice_path) == choice_sha and sha(verification_path) == expected_verification_sha
++                    and sha(frozen) == frozen_sha, "authorization bytes changed while verifying")
++            return {"selectedStudy": expected_version, "developmentChoiceSha256": choice_sha,
++                    "beforeTestVerificationSha256": expected_verification_sha, "selectionSha256": frozen_sha,
++                    "sourceCommit": self.args.source_commit, "registrationSha256": self.registration_sha,
++                    "developmentChoicePath": str(choice_path), "beforeTestVerificationPath": str(verification_path),
++                    "publicationAttestation": "NOT_ESTABLISHED_BY_THIS_LOCAL_HASH_CHECK"}
++        except (OSError, ValueError, KeyError, TypeError, OverflowError) as exc:
++            raise RuntimeError("INVALID_STUDY_CHOICE_AUTHORIZATION: " + str(exc)) from exc
++
+     def test(self) -> None:
+         self.verify()
+         frozen = self.out / "selection-freeze.json"
+@@ -430,8 +571,13 @@
+         selection = json.loads(frozen.read_text())
+         if selection != self.freeze_evidence():
+             raise RuntimeError("INVALID_TEST_AUTHORIZATION")
++        test_authorization = self.study_choice_authorization(frozen, frozen_sha, selection)
++        if any(self.logs.glob("test-*.tsv")) or any(self.logs.glob("test-*.receipt.json")):
++            raise RuntimeError("FINAL_TEST_ALREADY_STARTED")
+         outputs = {}
+         for arm in ["S0", "W0", "S1", "W1"]:
++            if test_authorization != self.study_choice_authorization(frozen, frozen_sha, selection):
++                raise RuntimeError("STUDY_CHOICE_AUTHORIZATION_CHANGED")
+             if selection != self.freeze_evidence():
+                 raise RuntimeError("INVALID_TEST_AUTHORIZATION")
+             value = selection["arms"][arm]
+@@ -450,10 +596,13 @@
+             outputs[arm] = score[0]
+         if sha(frozen) != frozen_sha or selection != self.freeze_evidence():
+             raise RuntimeError("FREEZE_CHANGED_DURING_TEST")
++        if test_authorization != self.study_choice_authorization(frozen, frozen_sha, selection):
++            raise RuntimeError("STUDY_CHOICE_AUTHORIZATION_CHANGED")
+         w = outputs["W1"]
+         limited = int(w["correct"]) >= 36 and min(map(int, w["classCorrect"].split(","))) >= 8
+         limited = limited and all(int(w["correct"]) >= int(outputs[a]["correct"]) + 8 for a in ["S0", "W0"])
+         write_new(self.out / "intent-summary.json", {"selectionSha256": frozen_sha, "scores": outputs,
++                  "testAuthorization": test_authorization,
+                   "postTrainingCapacity": selection["postTrainingCapacity"],
+                   "limitedBenchmarkLearningCriterionPassed": limited,
+                   "widerSelectedCheckpointHasFourCaseAdvantage": int(w["correct"]) >= int(outputs["S1"]["correct"]) + 4,
+@@ -467,7 +616,14 @@
+     for name in ["jar", "stdlib", "inputs", "output"]:
+         parser.add_argument("--" + name, type=Path, required=True)
+     parser.add_argument("--source-commit", required=True)
++    parser.add_argument("--development-choice", type=Path)
++    parser.add_argument("--before-test-verification", type=Path)
++    parser.add_argument("--before-test-verification-sha256")
+     args = parser.parse_args()
++    if args.phase == "test" and any(getattr(args, name) is None for name in (
++            "development_choice", "before_test_verification", "before_test_verification_sha256")):
++        parser.error("test requires --development-choice, --before-test-verification, "
++                     "and --before-test-verification-sha256")
+     getattr(Study(args), args.phase)()
+ 
+ 

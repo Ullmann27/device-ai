@@ -1,0 +1,32 @@
+{
+  "task": "G1-INTEGRATE-WEIGHT-002",
+  "sourceSha256": "9a68ddf27158692044738aed96892ad6476a520b7e30ab6651adfff2c4f38447",
+  "independentRootVerification": true,
+  "result": "PASS",
+  "continuationResume": "PASS",
+  "directFinalResume": "PASS",
+  "forbiddenAttempts": {
+    "process": 0,
+    "write": 0,
+    "holdout": 0
+  },
+  "historicalFilesUnchanged": true,
+  "historicalFileCount": 122,
+  "sourceAndInputChecks": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": true,
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": true,
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": true,
+    "experimental/weight-space-20261104/PROTOCOL.md": true,
+    "experimental/weight-space-20261104/LmWeightExperiment.kt": true,
+    "experimental/weight-space-20261104/LmWeightSurgery.kt": true,
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt": true,
+    "lm1-baseline.lm1": true,
+    "lm1-tokenizer.lmbp": true,
+    "continuum-swb1-backup.bin": true,
+    "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd": true,
+    "5e2332b0c15646b574d9c3f8cf48378f13eed1daaed7e652328588eedae85950": true,
+    "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312": true
+  },
+  "wallSeconds": 4.069390217999171,
+  "finalSelectionSha256": "8c433e76c28ceafa5e5149c9b0469d37eb4e217f1887868bce2a2ed1330dc6f9"
+}

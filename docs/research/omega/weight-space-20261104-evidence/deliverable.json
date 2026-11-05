@@ -1,0 +1,9 @@
+{
+  "filename": "Continuum-LM1-16M-Pruefpaket-20261104.zip",
+  "bytes": 43894487,
+  "sha256": "2ec3783514c894136fd14fb99db029645a7b68dca81134c7246cb78c2e58a896",
+  "modelSha256": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+  "downloadUrl": "https://chatgpt.com/library?file_id=libfile_c9da9e1c022881919273b29ac4ef29ee&account_id=personal",
+  "scope": "LAST_PASSING_EXPANDED_CHECKPOINT_WITH_MATCHED_TOKENIZER_AND_RESULTS",
+  "rejectedContinuationWeightsIncluded": false
+}

@@ -1,0 +1,218 @@
+START	profile=W0	parameters=6562304	parameterBytes=26249216	initialParameterIdentity=a3223bffe569787c6ec18f039263123f138a49c1b3043e1b2feee279d3e81eae	smallCheckpointSha256=70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435	wideCheckpointSha256=af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d	tokenizerSha256=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f	probesSha256=0269d022a59a3408783e7541d81ed4950b61c099ebbb4f8c26706473eeba8e4f	optimizerConstructed=false
+INITIAL_PARITY	profile=W0	probe=general-next	maximumProbabilityDelta=3.203749656677246E-7	deepWideBitwiseParity=true	pass=true
+INITIAL_PARITY	profile=W0	probe=general-note	maximumProbabilityDelta=4.3213367462158203E-7	deepWideBitwiseParity=true	pass=true
+INITIAL_PARITY	profile=W0	probe=general-tool	maximumProbabilityDelta=9.238719940185547E-7	deepWideBitwiseParity=true	pass=true
+INITIAL_PARITY	profile=W0	probe=general-count	maximumProbabilityDelta=4.246830940246582E-7	deepWideBitwiseParity=true	pass=true
+INITIAL_PARITY	profile=W0	probe=format-alpha	maximumProbabilityDelta=1.9371509552001953E-7	deepWideBitwiseParity=true	pass=true
+INITIAL_PARITY	profile=W0	probe=format-beta	maximumProbabilityDelta=2.1606683731079102E-7	deepWideBitwiseParity=true	pass=true
+INITIAL_PARITY	profile=W0	probe=format-gamma	maximumProbabilityDelta=3.427267074584961E-7	deepWideBitwiseParity=true	pass=true
+INITIAL_PARITY	profile=W0	probe=format-delta	maximumProbabilityDelta=2.384185791015625E-7	deepWideBitwiseParity=true	pass=true
+INITIAL_PARITY	profile=W0	probe=after-zero	maximumProbabilityDelta=1.0132789611816406E-6	deepWideBitwiseParity=true	pass=true
+INITIAL_PARITY	profile=W0	probe=after-one	maximumProbabilityDelta=1.1920928955078125E-6	deepWideBitwiseParity=true	pass=true
+INITIAL_PARITY	profile=W0	probe=after-two	maximumProbabilityDelta=4.76837158203125E-7	deepWideBitwiseParity=true	pass=true
+INITIAL_PARITY	profile=W0	probe=after-three	maximumProbabilityDelta=5.960464477539063E-8	deepWideBitwiseParity=true	pass=true
+GRADIENT	profile=W0	probe=general-next	tensor=tok	parameters=262144	parameterL2=81.85033240114234	gradientL2=2.539693760155996	gradientMaxAbs=0.1362028	nonzeroGradients=262144	relativeGradientL2=0.031028508811780355	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l0.n1	parameters=512	parameterL2=23.0913912940442	gradientL2=0.21999477154391395	gradientMaxAbs=0.028686555	nonzeroGradients=512	relativeGradientL2=0.009527133672567216	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l0.wz	parameters=262144	parameterL2=7.989111148735579	gradientL2=1.022541330245957	gradientMaxAbs=0.012424964	nonzeroGradients=262144	relativeGradientL2=0.12799187684449634	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l0.bz	parameters=512	parameterL2=5.338139900311456	gradientL2=0.03164256951502633	gradientMaxAbs=0.0058891433	nonzeroGradients=512	relativeGradientL2=0.0059276396096663055	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l0.wc	parameters=262144	parameterL2=7.716988209498192	gradientL2=2.867114725020743	gradientMaxAbs=0.035444416	nonzeroGradients=262144	relativeGradientL2=0.3715328632343707	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l0.wg	parameters=262144	parameterL2=7.590389534534318	gradientL2=3.497038897313591	gradientMaxAbs=0.043956112	nonzeroGradients=262144	relativeGradientL2=0.4607192926532906	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l0.wo	parameters=262144	parameterL2=4.607750795192332	gradientL2=5.534124213997614	gradientMaxAbs=0.06406345	nonzeroGradients=262144	relativeGradientL2=1.2010467709694388	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l0.n2	parameters=512	parameterL2=22.55941600880372	gradientL2=0.1497116508546018	gradientMaxAbs=0.023830732	nonzeroGradients=512	relativeGradientL2=0.006636326525304443	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l0.w1	parameters=1048576	parameterL2=15.104608488079938	gradientL2=3.2976414241622845	gradientMaxAbs=0.027269911	nonzeroGradients=1048576	relativeGradientL2=0.2183202184131204	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l0.b1	parameters=2048	parameterL2=4.479792015794324	gradientL2=0.1497991761091402	gradientMaxAbs=0.014383639	nonzeroGradients=2048	relativeGradientL2=0.03343886849679536	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l0.w2	parameters=1048576	parameterL2=6.201633951871508	gradientL2=7.262338366925053	gradientMaxAbs=0.063588575	nonzeroGradients=1048576	relativeGradientL2=1.171036282258073	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l0.b2	parameters=512	parameterL2=0.2554903564433202	gradientL2=0.31764299865875567	gradientMaxAbs=0.040299255	nonzeroGradients=512	relativeGradientL2=1.2432680555174844	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l1.n1	parameters=512	parameterL2=23.709253017185016	gradientL2=0.0958289370520132	gradientMaxAbs=0.014316589	nonzeroGradients=512	relativeGradientL2=0.004041837040692685	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l1.wz	parameters=262144	parameterL2=8.484835796763768	gradientL2=0.7819723558568266	gradientMaxAbs=0.013026946	nonzeroGradients=262144	relativeGradientL2=0.09216116547064841	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l1.bz	parameters=512	parameterL2=2.4176553799975697	gradientL2=0.028784014909247514	gradientMaxAbs=0.0054894593	nonzeroGradients=512	relativeGradientL2=0.011905755943295957	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l1.wc	parameters=262144	parameterL2=7.803712846935342	gradientL2=1.5456556829434445	gradientMaxAbs=0.025330566	nonzeroGradients=262144	relativeGradientL2=0.1980667040497846	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l1.wg	parameters=262144	parameterL2=7.7484302176834285	gradientL2=1.6866723473867886	gradientMaxAbs=0.02391409	nonzeroGradients=262144	relativeGradientL2=0.21767923308355716	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l1.wo	parameters=262144	parameterL2=4.745499572231745	gradientL2=2.5939364648097336	gradientMaxAbs=0.043371595	nonzeroGradients=262144	relativeGradientL2=0.546609777395858	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l1.n2	parameters=512	parameterL2=25.69334194690129	gradientL2=0.09593865893008037	gradientMaxAbs=0.011874585	nonzeroGradients=512	relativeGradientL2=0.0037339891061408197	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l1.w1	parameters=1048576	parameterL2=16.490140946976336	gradientL2=2.333435126328613	gradientMaxAbs=0.017834887	nonzeroGradients=1048576	relativeGradientL2=0.14150486244063767	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l1.b1	parameters=2048	parameterL2=3.2741957946210722	gradientL2=0.08749463975481443	gradientMaxAbs=0.0054791765	nonzeroGradients=2048	relativeGradientL2=0.02672248247907249	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l1.w2	parameters=1048576	parameterL2=7.655061163282265	gradientL2=4.4352576093912175	gradientMaxAbs=0.026551314	nonzeroGradients=1048576	relativeGradientL2=0.5793889186235462	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=l1.b2	parameters=512	parameterL2=0.259513963943906	gradientL2=0.16617986525907452	gradientMaxAbs=0.016227588	nonzeroGradients=512	relativeGradientL2=0.6403503793537457	allFinite=true
+GRADIENT	profile=W0	probe=general-next	tensor=nf	parameters=512	parameterL2=5.597563498426963	gradientL2=0.4900941702304129	gradientMaxAbs=0.051243197	nonzeroGradients=512	relativeGradientL2=0.08755491034056873	allFinite=true
+LOSS	profile=W0	probe=general-next	inputIds=510,68,256,286,503,437,297,259,114,267,116,482	targets=68,256,286,503,437,297,259,114,267,116,482,511	targetCount=12	lossF32=2.4797742	meanNll=2.4797741868682386	totalGradientL2=12.66364686329508	nonzeroGradients=6562304
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=tok	coordinates=32768	maximumAbsoluteError=2.3692846298217773E-6
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l0.n1	coordinates=64	maximumAbsoluteError=4.246830940246582E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l0.wz	coordinates=4096	maximumAbsoluteError=4.926696419715881E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l0.bz	coordinates=64	maximumAbsoluteError=2.062879502773285E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l0.wc	coordinates=4096	maximumAbsoluteError=8.958159014582634E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l0.wg	coordinates=4096	maximumAbsoluteError=8.307397365570068E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l0.wo	coordinates=4096	maximumAbsoluteError=1.237727701663971E-6
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l0.n2	coordinates=64	maximumAbsoluteError=3.3155083656311035E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l0.w1	coordinates=16384	maximumAbsoluteError=2.952292561531067E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l0.b1	coordinates=256	maximumAbsoluteError=1.8067657947540283E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l0.w2	coordinates=16384	maximumAbsoluteError=7.078051567077637E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l0.b2	coordinates=64	maximumAbsoluteError=5.648471415042877E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l1.n1	coordinates=64	maximumAbsoluteError=2.7145142666995525E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l1.wz	coordinates=4096	maximumAbsoluteError=1.5320256352424622E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l1.bz	coordinates=64	maximumAbsoluteError=5.774199962615967E-8
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l1.wc	coordinates=4096	maximumAbsoluteError=2.9813963919878006E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l1.wg	coordinates=4096	maximumAbsoluteError=4.2316969484090805E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l1.wo	coordinates=4096	maximumAbsoluteError=6.807968020439148E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l1.n2	coordinates=64	maximumAbsoluteError=1.5739351511001587E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l1.w1	coordinates=16384	maximumAbsoluteError=2.748565748333931E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l1.b1	coordinates=256	maximumAbsoluteError=9.918585419654846E-8
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l1.w2	coordinates=16384	maximumAbsoluteError=4.514586180448532E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=l1.b2	coordinates=64	maximumAbsoluteError=2.682209014892578E-7
+CHAIN_TENSOR	profile=W0	probe=general-next	tensor=nf	coordinates=64	maximumAbsoluteError=1.2945383787155151E-7
+CHAIN	profile=W0	probe=general-next	coordinates=132160	maximumAbsoluteError=2.3692846298217773E-6	relativeL2Error=2.0592031598261704E-6	pass=true
+DIRECTION	profile=W0	probe=general-next	tensor=nf	epsilon=0.001	gradientL2=0.4900941702304129	analyticDerivative=0.4900824647174237	positiveNll=2.4802638549418976	negativeNll=2.479285539764454	numericalDerivative=0.4891575654880737	absoluteError=9.24899229350018E-4	limit=0.010301649294348476	restored=true	pass=true
+GRADIENT	profile=W0	probe=general-note	tensor=tok	parameters=262144	parameterL2=81.85033240114234	gradientL2=4.803638048013604	gradientMaxAbs=0.28413287	nonzeroGradients=262144	relativeGradientL2=0.05868807012867504	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l0.n1	parameters=512	parameterL2=23.0913912940442	gradientL2=0.484710657399495	gradientMaxAbs=0.06520216	nonzeroGradients=512	relativeGradientL2=0.020990968072353136	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l0.wz	parameters=262144	parameterL2=7.989111148735579	gradientL2=3.124226467679422	gradientMaxAbs=0.064839765	nonzeroGradients=262144	relativeGradientL2=0.39106058352610196	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l0.bz	parameters=512	parameterL2=5.338139900311456	gradientL2=0.10854228937771454	gradientMaxAbs=0.018754024	nonzeroGradients=512	relativeGradientL2=0.02033335420290907	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l0.wc	parameters=262144	parameterL2=7.716988209498192	gradientL2=6.539940480239831	gradientMaxAbs=0.075551055	nonzeroGradients=262144	relativeGradientL2=0.8474731725247899	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l0.wg	parameters=262144	parameterL2=7.590389534534318	gradientL2=7.388012886539444	gradientMaxAbs=0.11006763	nonzeroGradients=262144	relativeGradientL2=0.9733377783743361	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l0.wo	parameters=262144	parameterL2=4.607750795192332	gradientL2=10.173004492751735	gradientMaxAbs=0.14357121	nonzeroGradients=262144	relativeGradientL2=2.2078026666212325	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l0.n2	parameters=512	parameterL2=22.55941600880372	gradientL2=0.30639667014896477	gradientMaxAbs=0.041067768	nonzeroGradients=512	relativeGradientL2=0.01358176426328566	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l0.w1	parameters=1048576	parameterL2=15.104608488079938	gradientL2=6.620265829747229	gradientMaxAbs=0.052672833	nonzeroGradients=1048576	relativeGradientL2=0.4382944341107369	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l0.b1	parameters=2048	parameterL2=4.479792015794324	gradientL2=0.29421454316036555	gradientMaxAbs=0.03100452	nonzeroGradients=2048	relativeGradientL2=0.06567593810673766	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l0.w2	parameters=1048576	parameterL2=6.201633951871508	gradientL2=13.426957014900385	gradientMaxAbs=0.11336345	nonzeroGradients=1048576	relativeGradientL2=2.1650676449306467	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l0.b2	parameters=512	parameterL2=0.2554903564433202	gradientL2=0.7769101569131319	gradientMaxAbs=0.123035766	nonzeroGradients=512	relativeGradientL2=3.040859027825918	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l1.n1	parameters=512	parameterL2=23.709253017185016	gradientL2=0.21192599727750333	gradientMaxAbs=0.028826492	nonzeroGradients=512	relativeGradientL2=0.008938535394763152	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l1.wz	parameters=262144	parameterL2=8.484835796763768	gradientL2=1.5109432535636171	gradientMaxAbs=0.02842707	nonzeroGradients=262144	relativeGradientL2=0.17807572117540701	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l1.bz	parameters=512	parameterL2=2.4176553799975697	gradientL2=0.045433467328337696	gradientMaxAbs=0.007319049	nonzeroGradients=512	relativeGradientL2=0.018792367061174518	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l1.wc	parameters=262144	parameterL2=7.803712846935342	gradientL2=2.61930449825584	gradientMaxAbs=0.038442846	nonzeroGradients=262144	relativeGradientL2=0.33564849830225213	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l1.wg	parameters=262144	parameterL2=7.7484302176834285	gradientL2=3.3624893146145287	gradientMaxAbs=0.072769046	nonzeroGradients=262144	relativeGradientL2=0.43395748818137025	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l1.wo	parameters=262144	parameterL2=4.745499572231745	gradientL2=4.845330266151479	gradientMaxAbs=0.083409674	nonzeroGradients=262144	relativeGradientL2=1.0210369198016354	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l1.n2	parameters=512	parameterL2=25.69334194690129	gradientL2=0.1450025586961969	gradientMaxAbs=0.028156068	nonzeroGradients=512	relativeGradientL2=0.005643584979947879	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l1.w1	parameters=1048576	parameterL2=16.490140946976336	gradientL2=3.5964818102031932	gradientMaxAbs=0.032989204	nonzeroGradients=1048576	relativeGradientL2=0.21809891266348763	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l1.b1	parameters=2048	parameterL2=3.2741957946210722	gradientL2=0.13430979293646475	gradientMaxAbs=0.013591558	nonzeroGradients=2048	relativeGradientL2=0.041020696794343246	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l1.w2	parameters=1048576	parameterL2=7.655061163282265	gradientL2=6.155697843770178	gradientMaxAbs=0.049155273	nonzeroGradients=1048576	relativeGradientL2=0.8041343775665923	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=l1.b2	parameters=512	parameterL2=0.259513963943906	gradientL2=0.22890036495567892	gradientMaxAbs=0.020874465	nonzeroGradients=512	relativeGradientL2=0.8820348680934786	allFinite=true
+GRADIENT	profile=W0	probe=general-note	tensor=nf	parameters=512	parameterL2=5.597563498426963	gradientL2=0.6776452396172613	gradientMaxAbs=0.10161129	nonzeroGradients=512	relativeGradientL2=0.12106075077266999	allFinite=true
+LOSS	profile=W0	probe=general-note	inputIds=510,69,316,328,309,436,376,111,266,122,58	targets=69,316,328,309,436,376,111,266,122,58,511	targetCount=11	lossF32=4.0361447	meanNll=4.036144526482889	totalGradientL2=23.540886970585063	nonzeroGradients=6562304
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=tok	coordinates=32768	maximumAbsoluteError=3.0994415283203125E-6
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l0.n1	coordinates=64	maximumAbsoluteError=5.774199962615967E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l0.wz	coordinates=4096	maximumAbsoluteError=7.860362529754639E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l0.bz	coordinates=64	maximumAbsoluteError=1.7811544239521027E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l0.wc	coordinates=4096	maximumAbsoluteError=1.3485550880432129E-6
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l0.wg	coordinates=4096	maximumAbsoluteError=1.2293457984924316E-6
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l0.wo	coordinates=4096	maximumAbsoluteError=1.8496066331863403E-6
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l0.n2	coordinates=64	maximumAbsoluteError=2.998858690261841E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l0.w1	coordinates=16384	maximumAbsoluteError=5.707261152565479E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l0.b1	coordinates=256	maximumAbsoluteError=2.8312206268310547E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l0.w2	coordinates=16384	maximumAbsoluteError=1.2479722499847412E-6
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l0.b2	coordinates=64	maximumAbsoluteError=8.773058652877808E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l1.n1	coordinates=64	maximumAbsoluteError=2.9313378036022186E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l1.wz	coordinates=4096	maximumAbsoluteError=5.145557224750519E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l1.bz	coordinates=64	maximumAbsoluteError=1.30385160446167E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l1.wc	coordinates=4096	maximumAbsoluteError=6.281770765781403E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l1.wg	coordinates=4096	maximumAbsoluteError=7.450580596923828E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l1.wo	coordinates=4096	maximumAbsoluteError=8.535571396350861E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l1.n2	coordinates=64	maximumAbsoluteError=2.3748725652694702E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l1.w1	coordinates=16384	maximumAbsoluteError=2.669912646524608E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l1.b1	coordinates=256	maximumAbsoluteError=9.604264050722122E-8
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l1.w2	coordinates=16384	maximumAbsoluteError=5.601905286312103E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=l1.b2	coordinates=64	maximumAbsoluteError=1.9231811165809631E-7
+CHAIN_TENSOR	profile=W0	probe=general-note	tensor=nf	coordinates=64	maximumAbsoluteError=1.0477378964424133E-7
+CHAIN	profile=W0	probe=general-note	coordinates=132160	maximumAbsoluteError=3.0994415283203125E-6	relativeL2Error=1.3758465613394873E-6	pass=true
+DIRECTION	profile=W0	probe=general-note	tensor=nf	epsilon=0.001	gradientL2=0.6776452396172613	analyticDerivative=0.6776453331861775	positiveNll=4.036822682890681	negativeNll=4.035466219661523	numericalDerivative=0.6782315823645343	absoluteError=5.862491783568125E-4	limit=0.01405290666372355	restored=true	pass=true
+GRADIENT	profile=W0	probe=general-tool	tensor=tok	parameters=262144	parameterL2=81.85033240114234	gradientL2=3.7207948721412425	gradientMaxAbs=0.19181637	nonzeroGradients=262144	relativeGradientL2=0.04545851877431488	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l0.n1	parameters=512	parameterL2=23.0913912940442	gradientL2=0.41241742199938464	gradientMaxAbs=0.063470155	nonzeroGradients=512	relativeGradientL2=0.017860224044003642	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l0.wz	parameters=262144	parameterL2=7.989111148735579	gradientL2=3.4473956140674282	gradientMaxAbs=0.07021341	nonzeroGradients=262144	relativeGradientL2=0.4315117852144341	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l0.bz	parameters=512	parameterL2=5.338139900311456	gradientL2=0.11229247622063832	gradientMaxAbs=0.01816562	nonzeroGradients=512	relativeGradientL2=0.02103588109672558	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l0.wc	parameters=262144	parameterL2=7.716988209498192	gradientL2=6.126532965127867	gradientMaxAbs=0.08920566	nonzeroGradients=262144	relativeGradientL2=0.7939020766660279	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l0.wg	parameters=262144	parameterL2=7.590389534534318	gradientL2=6.889430143314995	gradientMaxAbs=0.07636081	nonzeroGradients=262144	relativeGradientL2=0.907651723534064	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l0.wo	parameters=262144	parameterL2=4.607750795192332	gradientL2=9.622446269462744	gradientMaxAbs=0.12702791	nonzeroGradients=262144	relativeGradientL2=2.0883174236555244	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l0.n2	parameters=512	parameterL2=22.55941600880372	gradientL2=0.25849189119441207	gradientMaxAbs=0.034560256	nonzeroGradients=512	relativeGradientL2=0.011458270510794104	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l0.w1	parameters=1048576	parameterL2=15.104608488079938	gradientL2=6.267634454794188	gradientMaxAbs=0.042245727	nonzeroGradients=1048576	relativeGradientL2=0.41494848805517864	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l0.b1	parameters=2048	parameterL2=4.479792015794324	gradientL2=0.29163573159340883	gradientMaxAbs=0.02817637	nonzeroGradients=2048	relativeGradientL2=0.06510028380005006	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l0.w2	parameters=1048576	parameterL2=6.201633951871508	gradientL2=12.748107428410275	gradientMaxAbs=0.09355696	nonzeroGradients=1048576	relativeGradientL2=2.055604624094783	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l0.b2	parameters=512	parameterL2=0.2554903564433202	gradientL2=0.730720543084679	gradientMaxAbs=0.08884797	nonzeroGradients=512	relativeGradientL2=2.8600709367548567	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l1.n1	parameters=512	parameterL2=23.709253017185016	gradientL2=0.18508547839710007	gradientMaxAbs=0.022402242	nonzeroGradients=512	relativeGradientL2=0.00780646603513598	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l1.wz	parameters=262144	parameterL2=8.484835796763768	gradientL2=1.4034194520054075	gradientMaxAbs=0.018967235	nonzeroGradients=262144	relativeGradientL2=0.16540325418444643	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l1.bz	parameters=512	parameterL2=2.4176553799975697	gradientL2=0.04423110735426493	gradientMaxAbs=0.0052170833	nonzeroGradients=512	relativeGradientL2=0.018295042262933846	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l1.wc	parameters=262144	parameterL2=7.803712846935342	gradientL2=3.382154559895859	gradientMaxAbs=0.055408202	nonzeroGradients=262144	relativeGradientL2=0.43340325640301997	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l1.wg	parameters=262144	parameterL2=7.7484302176834285	gradientL2=3.029013881238787	gradientMaxAbs=0.032892726	nonzeroGradients=262144	relativeGradientL2=0.39091968258628523	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l1.wo	parameters=262144	parameterL2=4.745499572231745	gradientL2=4.901941456072612	gradientMaxAbs=0.084964246	nonzeroGradients=262144	relativeGradientL2=1.0329663677047376	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l1.n2	parameters=512	parameterL2=25.69334194690129	gradientL2=0.12486798862841113	gradientMaxAbs=0.016745042	nonzeroGradients=512	relativeGradientL2=0.004859935655177417	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l1.w1	parameters=1048576	parameterL2=16.490140946976336	gradientL2=3.5701353577979207	gradientMaxAbs=0.022203771	nonzeroGradients=1048576	relativeGradientL2=0.21650120331157918	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l1.b1	parameters=2048	parameterL2=3.2741957946210722	gradientL2=0.13993348097349578	gradientMaxAbs=0.010561529	nonzeroGradients=2048	relativeGradientL2=0.042738275213529346	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l1.w2	parameters=1048576	parameterL2=7.655061163282265	gradientL2=5.852970569434691	gradientMaxAbs=0.041006103	nonzeroGradients=1048576	relativeGradientL2=0.7645883480995088	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=l1.b2	parameters=512	parameterL2=0.259513963943906	gradientL2=0.2076261544217103	gradientMaxAbs=0.020362873	nonzeroGradients=512	relativeGradientL2=0.8000577358780923	allFinite=true
+GRADIENT	profile=W0	probe=general-tool	tensor=nf	parameters=512	parameterL2=5.597563498426963	gradientL2=0.49858914679315935	gradientMaxAbs=0.05490795	nonzeroGradients=512	relativeGradientL2=0.08907253074186183	allFinite=true
+LOSS	profile=W0	probe=general-tool	inputIds=510,69,114,107,108,284,265,389,257,297,259,283,433,262,111,310,46	targets=69,114,107,108,284,265,389,257,297,259,283,433,262,111,310,46,511	targetCount=17	lossF32=3.7864606	meanNll=3.786460546376214	totalGradientL2=22.359868276432387	nonzeroGradients=6562304
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=tok	coordinates=32768	maximumAbsoluteError=3.5017728805541992E-6
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l0.n1	coordinates=64	maximumAbsoluteError=6.668269634246826E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l0.wz	coordinates=4096	maximumAbsoluteError=8.419156074523926E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l0.bz	coordinates=64	maximumAbsoluteError=2.5867484509944916E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l0.wc	coordinates=4096	maximumAbsoluteError=1.2970995157957077E-6
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l0.wg	coordinates=4096	maximumAbsoluteError=9.872019290924072E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l0.wo	coordinates=4096	maximumAbsoluteError=1.5767291188240051E-6
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l0.n2	coordinates=64	maximumAbsoluteError=3.922032192349434E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l0.w1	coordinates=16384	maximumAbsoluteError=5.010515451431274E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l0.b1	coordinates=256	maximumAbsoluteError=3.4552067518234253E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l0.w2	coordinates=16384	maximumAbsoluteError=1.1539086699485779E-6
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l0.b2	coordinates=64	maximumAbsoluteError=7.096678018569946E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l1.n1	coordinates=64	maximumAbsoluteError=3.133900463581085E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l1.wz	coordinates=4096	maximumAbsoluteError=2.1109008230268955E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l1.bz	coordinates=64	maximumAbsoluteError=1.4284159988164902E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l1.wc	coordinates=4096	maximumAbsoluteError=5.236361175775528E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l1.wg	coordinates=4096	maximumAbsoluteError=5.257315933704376E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l1.wo	coordinates=4096	maximumAbsoluteError=8.279457688331604E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l1.n2	coordinates=64	maximumAbsoluteError=2.5168992578983307E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l1.w1	coordinates=16384	maximumAbsoluteError=2.6973430067300797E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l1.b1	coordinates=256	maximumAbsoluteError=1.3026874512434006E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l1.w2	coordinates=16384	maximumAbsoluteError=5.185138434171677E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=l1.b2	coordinates=64	maximumAbsoluteError=2.330634742975235E-7
+CHAIN_TENSOR	profile=W0	probe=general-tool	tensor=nf	coordinates=64	maximumAbsoluteError=1.9953586161136627E-7
+CHAIN	profile=W0	probe=general-tool	coordinates=132160	maximumAbsoluteError=3.5017728805541992E-6	relativeL2Error=1.6173442538611376E-6	pass=true
+DIRECTION	profile=W0	probe=general-tool	tensor=nf	epsilon=0.001	gradientL2=0.49858914679315935	analyticDerivative=0.4985817682604248	positiveNll=3.7869580381416768	negativeNll=3.7859628775704732	numericalDerivative=0.4975802619679677	absoluteError=0.0010015062924570994	limit=0.010471635365208495	restored=true	pass=true
+GRADIENT	profile=W0	probe=general-count	tensor=tok	parameters=262144	parameterL2=81.85033240114234	gradientL2=3.501923448275542	gradientMaxAbs=0.19142365	nonzeroGradients=262144	relativeGradientL2=0.04278447436368221	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l0.n1	parameters=512	parameterL2=23.0913912940442	gradientL2=0.3579613572256282	gradientMaxAbs=0.044324785	nonzeroGradients=512	relativeGradientL2=0.015501939777788732	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l0.wz	parameters=262144	parameterL2=7.989111148735579	gradientL2=1.8625181573398784	gradientMaxAbs=0.025455128	nonzeroGradients=262144	relativeGradientL2=0.23313208724535714	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l0.bz	parameters=512	parameterL2=5.338139900311456	gradientL2=0.07096557023082996	gradientMaxAbs=0.008961803	nonzeroGradients=512	relativeGradientL2=0.013294063392135798	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l0.wc	parameters=262144	parameterL2=7.716988209498192	gradientL2=4.979798141468592	gradientMaxAbs=0.052500043	nonzeroGradients=262144	relativeGradientL2=0.6453033238199557	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l0.wg	parameters=262144	parameterL2=7.590389534534318	gradientL2=5.708797001875187	gradientMaxAbs=0.10435623	nonzeroGradients=262144	relativeGradientL2=0.7521085678016431	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l0.wo	parameters=262144	parameterL2=4.607750795192332	gradientL2=8.429428503247092	gradientMaxAbs=0.121440776	nonzeroGradients=262144	relativeGradientL2=1.8294019963150459	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l0.n2	parameters=512	parameterL2=22.55941600880372	gradientL2=0.1827305547650578	gradientMaxAbs=0.01867637	nonzeroGradients=512	relativeGradientL2=0.00809996831007274	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l0.w1	parameters=1048576	parameterL2=15.104608488079938	gradientL2=4.545898989064962	gradientMaxAbs=0.03502612	nonzeroGradients=1048576	relativeGradientL2=0.30096106050364935	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l0.b1	parameters=2048	parameterL2=4.479792015794324	gradientL2=0.19280722054644656	gradientMaxAbs=0.015286083	nonzeroGradients=2048	relativeGradientL2=0.0430393241174299	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l0.w2	parameters=1048576	parameterL2=6.201633951871508	gradientL2=8.22451834130037	gradientMaxAbs=0.059015796	nonzeroGradients=1048576	relativeGradientL2=1.3261857125279708	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l0.b2	parameters=512	parameterL2=0.2554903564433202	gradientL2=0.42038797514271725	gradientMaxAbs=0.046520814	nonzeroGradients=512	relativeGradientL2=1.6454162145097604	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l1.n1	parameters=512	parameterL2=23.709253017185016	gradientL2=0.15170858932373654	gradientMaxAbs=0.027834164	nonzeroGradients=512	relativeGradientL2=0.00639870809990406	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l1.wz	parameters=262144	parameterL2=8.484835796763768	gradientL2=0.9697961734077469	gradientMaxAbs=0.019331954	nonzeroGradients=262144	relativeGradientL2=0.11429757707009962	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l1.bz	parameters=512	parameterL2=2.4176553799975697	gradientL2=0.031666594352243733	gradientMaxAbs=0.0053550294	nonzeroGradients=512	relativeGradientL2=0.013098059638373922	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l1.wc	parameters=262144	parameterL2=7.803712846935342	gradientL2=2.0741835972352045	gradientMaxAbs=0.03652557	nonzeroGradients=262144	relativeGradientL2=0.26579445424491416	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l1.wg	parameters=262144	parameterL2=7.7484302176834285	gradientL2=2.341744043530051	gradientMaxAbs=0.031916697	nonzeroGradients=262144	relativeGradientL2=0.30222173753152404	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l1.wo	parameters=262144	parameterL2=4.745499572231745	gradientL2=3.4061207051642697	gradientMaxAbs=0.045177776	nonzeroGradients=262144	relativeGradientL2=0.7177580891788842	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l1.n2	parameters=512	parameterL2=25.69334194690129	gradientL2=0.10938110557043626	gradientMaxAbs=0.01295245	nonzeroGradients=512	relativeGradientL2=0.0042571770459633815	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l1.w1	parameters=1048576	parameterL2=16.490140946976336	gradientL2=2.6271110203098296	gradientMaxAbs=0.018202778	nonzeroGradients=1048576	relativeGradientL2=0.1593140427821232	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l1.b1	parameters=2048	parameterL2=3.2741957946210722	gradientL2=0.11073634771276145	gradientMaxAbs=0.010116731	nonzeroGradients=2048	relativeGradientL2=0.033820930286051244	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l1.w2	parameters=1048576	parameterL2=7.655061163282265	gradientL2=4.351202567542327	gradientMaxAbs=0.027078219	nonzeroGradients=1048576	relativeGradientL2=0.5684085959251381	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=l1.b2	parameters=512	parameterL2=0.259513963943906	gradientL2=0.1882894731852157	gradientMaxAbs=0.019249337	nonzeroGradients=512	relativeGradientL2=0.7255465961204095	allFinite=true
+GRADIENT	profile=W0	probe=general-count	tensor=nf	parameters=512	parameterL2=5.597563498426963	gradientL2=0.5086689846825123	gradientMaxAbs=0.05405466	nonzeroGradients=512	relativeGradientL2=0.0908732852830449	allFinite=true
+LOSS	profile=W0	probe=general-count	inputIds=510,90,284,104,270,32,108,308,103,115,363,306,264,389,115,280,290,304,281,110,102,58	targets=90,284,104,270,32,108,308,103,115,363,306,264,389,115,280,290,304,281,110,102,58,511	targetCount=22	lossF32=4.155582	meanNll=4.155581745450156	totalGradientL2=16.774090327741305	nonzeroGradients=6562304
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=tok	coordinates=32768	maximumAbsoluteError=2.535991370677948E-6
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l0.n1	coordinates=64	maximumAbsoluteError=4.824250936508179E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l0.wz	coordinates=4096	maximumAbsoluteError=3.605382516980171E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l0.bz	coordinates=64	maximumAbsoluteError=1.4621764421463013E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l0.wc	coordinates=4096	maximumAbsoluteError=8.344650268554688E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l0.wg	coordinates=4096	maximumAbsoluteError=1.3597309589385986E-6
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l0.wo	coordinates=4096	maximumAbsoluteError=1.3648532330989838E-6
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l0.n2	coordinates=64	maximumAbsoluteError=2.367887645959854E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l0.w1	coordinates=16384	maximumAbsoluteError=6.016343832015991E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l0.b1	coordinates=256	maximumAbsoluteError=3.1478703022003174E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l0.w2	coordinates=16384	maximumAbsoluteError=1.3294629752635956E-6
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l0.b2	coordinates=64	maximumAbsoluteError=9.443610906600952E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l1.n1	coordinates=64	maximumAbsoluteError=2.766028046607971E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l1.wz	coordinates=4096	maximumAbsoluteError=2.4726614356040955E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l1.bz	coordinates=64	maximumAbsoluteError=6.51925802230835E-8
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l1.wc	coordinates=4096	maximumAbsoluteError=5.502952262759209E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l1.wg	coordinates=4096	maximumAbsoluteError=4.473840817809105E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l1.wo	coordinates=4096	maximumAbsoluteError=5.904585123062134E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l1.n2	coordinates=64	maximumAbsoluteError=1.5005934983491898E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l1.w1	coordinates=16384	maximumAbsoluteError=2.8290378395467997E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l1.b1	coordinates=256	maximumAbsoluteError=1.2526288628578186E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l1.w2	coordinates=16384	maximumAbsoluteError=3.23285348713398E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=l1.b2	coordinates=64	maximumAbsoluteError=1.7508864402770996E-7
+CHAIN_TENSOR	profile=W0	probe=general-count	tensor=nf	coordinates=64	maximumAbsoluteError=9.022187441587448E-8
+CHAIN	profile=W0	probe=general-count	coordinates=132160	maximumAbsoluteError=2.535991370677948E-6	relativeL2Error=1.6697253539558113E-6	pass=true
+DIRECTION	profile=W0	probe=general-count	tensor=nf	epsilon=0.001	gradientL2=0.5086689846825123	analyticDerivative=0.5086748073801441	positiveNll=4.156091438774599	negativeNll=4.155073104260191	numericalDerivative=0.5091672330195894	absoluteError=4.92425639445293E-4	limit=0.010673496147602884	restored=true	pass=true
+DONE	profile=W0	lossProbes=4	directionChecks=4	allArraysRestored=true	inputsUnchanged=true	optimizerUpdates=0	serializedCheckpoints=0	finalParameterIdentity=a3223bffe569787c6ec18f039263123f138a49c1b3043e1b2feee279d3e81eae

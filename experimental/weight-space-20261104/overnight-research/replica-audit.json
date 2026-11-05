@@ -1,0 +1,964 @@
+{
+  "schemaVersion": 1,
+  "status": "MEASURED_NOT_A_QUALITY_GATE",
+  "sourceCommit": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
+  "sourceHashes": {
+    "experimental/weight-space-20261104/LmWeightSurgery.kt": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+    "experimental/lm1-training-recovery-20261104/suffix-study/LmIntentSuffixStudy.kt": "2ca026da5ecebb79f9fcbb0d49d39cc6c1485b0d31b19fe10118cb4ff711ef89",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+  },
+  "implementationSha256": "a0fae197d267d710120b44945c8517b6aa39d5ddd7f52ac291a25710cae5db71",
+  "readerSha256": "dca91cb311ac022a3f8f257f8ca61fffc9de41e33fae35a73b8412786b4fbc86",
+  "protocolSha256": "1acf9d75cc14640e790c451ad782f3700e4c48c9c09dafda6fe60c7bf617f68e",
+  "probesSha256": "f6a50735084412ee0dd0fb948d8cd968bd270a51b924f880a7d4b932d6c7101a",
+  "archiveSha256": "428d62b308e308afd9c971ff4974981e96b9dc8a783d80e3653c226983dcc016",
+  "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+  "pythonVersion": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "numpyVersion": "2.3.5",
+  "models": {
+    "S0": {
+      "sha256": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+      "bytes": 529671,
+      "parameterCountRecomputed": 132160,
+      "parameterBytes": 528640,
+      "config": {
+        "arch": 1,
+        "vocab": 512,
+        "dim": 64,
+        "layers": 2,
+        "heads": 4,
+        "context": 256,
+        "mlp": 256
+      },
+      "allParametersFinite": true,
+      "bodyChecksumVerified": true
+    },
+    "S1": {
+      "sha256": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+      "bytes": 529673,
+      "parameterCountRecomputed": 132160,
+      "parameterBytes": 528640,
+      "config": {
+        "arch": 1,
+        "vocab": 512,
+        "dim": 64,
+        "layers": 2,
+        "heads": 4,
+        "context": 256,
+        "mlp": 256
+      },
+      "allParametersFinite": true,
+      "bodyChecksumVerified": true
+    },
+    "W0": {
+      "sha256": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d",
+      "bytes": 26250247,
+      "parameterCountRecomputed": 6562304,
+      "parameterBytes": 26249216,
+      "config": {
+        "arch": 1,
+        "vocab": 512,
+        "dim": 512,
+        "layers": 2,
+        "heads": 4,
+        "context": 256,
+        "mlp": 2048
+      },
+      "allParametersFinite": true,
+      "bodyChecksumVerified": true
+    },
+    "W1": {
+      "sha256": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c",
+      "bytes": 26250249,
+      "parameterCountRecomputed": 6562304,
+      "parameterBytes": 26249216,
+      "config": {
+        "arch": 1,
+        "vocab": 512,
+        "dim": 512,
+        "layers": 2,
+        "heads": 4,
+        "context": 256,
+        "mlp": 2048
+      },
+      "allParametersFinite": true,
+      "bodyChecksumVerified": true
+    }
+  },
+  "measurements": {
+    "W0": {
+      "tok": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 32768,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 0.15986393047096203,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      },
+      "l0.n1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 64,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 1.0205049606906686,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      },
+      "l0.wz": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009334475232744005,
+          "valueRms": 0.01560373271237332,
+          "relativeSpreadRms": 0.05982206568651377,
+          "maximumReplicaRange": 0.006652265787124634
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 1682,
+          "groupsWithDifferentBits": 2414,
+          "spreadRms": 3.940279940682366e-10,
+          "valueRms": 0.12457370059059475,
+          "relativeSpreadRms": 3.1630110705564566e-09,
+          "maximumReplicaRange": 1.1175870895385742e-08
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 5.587935447692871e-09
+      },
+      "l0.bz": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 64,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 0.2359146826520445,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      },
+      "l0.wc": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009369561926502895,
+          "valueRms": 0.015072242596675148,
+          "relativeSpreadRms": 0.062164351896576875,
+          "maximumReplicaRange": 0.0067047495394945145
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 1650,
+          "groupsWithDifferentBits": 2446,
+          "spreadRms": 3.8283665551602425e-10,
+          "valueRms": 0.12031184149264669,
+          "relativeSpreadRms": 3.182036371203102e-09,
+          "maximumReplicaRange": 1.1175870895385742e-08
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 5.587935447692871e-09
+      },
+      "l0.wg": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009384771513275544,
+          "valueRms": 0.014824979559636664,
+          "relativeSpreadRms": 0.06330377371195209,
+          "maximumReplicaRange": 0.006758621660992503
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 1628,
+          "groupsWithDifferentBits": 2468,
+          "spreadRms": 3.9024944605054257e-10,
+          "valueRms": 0.11832764260231678,
+          "relativeSpreadRms": 3.2980412477422394e-09,
+          "maximumReplicaRange": 1.1175870895385742e-08
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 7.450580596923828e-09
+      },
+      "l0.wo": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009336439993569122,
+          "valueRms": 0.008999513271859489,
+          "relativeSpreadRms": 0.10374383271107745,
+          "maximumReplicaRange": 0.006577519467100501
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 960,
+          "groupsWithDifferentBits": 3136,
+          "spreadRms": 2.881504788416916e-10,
+          "valueRms": 0.07155166316528434,
+          "relativeSpreadRms": 4.0271667504927735e-09,
+          "maximumReplicaRange": 7.450580596923828e-09
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 3.725290298461914e-09
+      },
+      "l0.n2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 64,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 0.9969947524645929,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      },
+      "l0.w1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 131072,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 131072,
+          "spreadRms": 0.0009363484984889806,
+          "valueRms": 0.014750594226638603,
+          "relativeSpreadRms": 0.06347869679704136,
+          "maximumReplicaRange": 0.006963186897337437
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 16384,
+          "exactlyTiedGroups": 6337,
+          "groupsWithDifferentBits": 10047,
+          "spreadRms": 3.7658489598239805e-10,
+          "valueRms": 0.11773268388140024,
+          "relativeSpreadRms": 3.1986436014807616e-09,
+          "maximumReplicaRange": 1.1175870895385742e-08
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 7.450580596923828e-09
+      },
+      "l0.b1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 256,
+          "exactlyTiedGroups": 256,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 0.09899035352104722,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      },
+      "l0.w2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 131072,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 131072,
+          "spreadRms": 0.0009345129017131531,
+          "valueRms": 0.006056283156123584,
+          "relativeSpreadRms": 0.15430469111541711,
+          "maximumReplicaRange": 0.007343616336584091
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 16384,
+          "exactlyTiedGroups": 1975,
+          "groupsWithDifferentBits": 14409,
+          "spreadRms": 2.2895281320998358e-10,
+          "valueRms": 0.04778631203872491,
+          "relativeSpreadRms": 4.7911798053058706e-09,
+          "maximumReplicaRange": 6.51925802230835e-09
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 3.725290298461914e-09
+      },
+      "l0.b2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 64,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 0.011291185223052497,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      },
+      "l1.n1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 64,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 1.0478108490824485,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      },
+      "l1.wz": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009356711888589765,
+          "valueRms": 0.016571944915553256,
+          "relativeSpreadRms": 0.05646115731297306,
+          "maximumReplicaRange": 0.006381777347996831
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 1697,
+          "groupsWithDifferentBits": 2399,
+          "spreadRms": 4.058703224196723e-10,
+          "valueRms": 0.13233373180825464,
+          "relativeSpreadRms": 3.06702090898305e-09,
+          "maximumReplicaRange": 1.1175870895385742e-08
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 7.450580596923828e-09
+      },
+      "l1.bz": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 64,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 0.10684628211052635,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      },
+      "l1.wc": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009362986852183968,
+          "valueRms": 0.015241626654169874,
+          "relativeSpreadRms": 0.0614303647807985,
+          "maximumReplicaRange": 0.006935447454452515
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 1689,
+          "groupsWithDifferentBits": 2407,
+          "spreadRms": 3.970695860785453e-10,
+          "valueRms": 0.12166884087132271,
+          "relativeSpreadRms": 3.263527319196598e-09,
+          "maximumReplicaRange": 1.1175870895385742e-08
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 7.450580596923828e-09
+      },
+      "l1.wg": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009361634858243654,
+          "valueRms": 0.015133652768912174,
+          "relativeSpreadRms": 0.06185971755262216,
+          "maximumReplicaRange": 0.006994005758315325
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 1597,
+          "groupsWithDifferentBits": 2499,
+          "spreadRms": 4.0502193587622115e-10,
+          "valueRms": 0.1208046786744798,
+          "relativeSpreadRms": 3.3527007423908884e-09,
+          "maximumReplicaRange": 1.30385160446167e-08
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 7.450580596923828e-09
+      },
+      "l1.wo": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009354613001534907,
+          "valueRms": 0.009268553852014505,
+          "relativeSpreadRms": 0.10092850676485736,
+          "maximumReplicaRange": 0.006688643246889114
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 1017,
+          "groupsWithDifferentBits": 3079,
+          "spreadRms": 2.8829640225521464e-10,
+          "valueRms": 0.07371569985668489,
+          "relativeSpreadRms": 3.910922677471813e-09,
+          "maximumReplicaRange": 7.450580596923828e-09
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 5.587935447692871e-09
+      },
+      "l1.n2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 64,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 1.1354960201249191,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      },
+      "l1.w1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 131072,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 131072,
+          "spreadRms": 0.0009349897665853809,
+          "valueRms": 0.016103653268529895,
+          "relativeSpreadRms": 0.05806072392359304,
+          "maximumReplicaRange": 0.007489238865673542
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 16384,
+          "exactlyTiedGroups": 6777,
+          "groupsWithDifferentBits": 9607,
+          "spreadRms": 4.0646348080857577e-10,
+          "valueRms": 0.12858093364455384,
+          "relativeSpreadRms": 3.1611489299976156e-09,
+          "maximumReplicaRange": 1.1175870895385742e-08
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 7.450580596923828e-09
+      },
+      "l1.b1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 256,
+          "exactlyTiedGroups": 256,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 0.07235018904090741,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      },
+      "l1.w2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 131072,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 131072,
+          "spreadRms": 0.0009360777257500564,
+          "valueRms": 0.007475645667266952,
+          "relativeSpreadRms": 0.12521697354501293,
+          "maximumReplicaRange": 0.007033065892755985
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 16384,
+          "exactlyTiedGroups": 2844,
+          "groupsWithDifferentBits": 13540,
+          "spreadRms": 2.6183054771332897e-10,
+          "valueRms": 0.0592670576745977,
+          "relativeSpreadRms": 4.417809116674801e-09,
+          "maximumReplicaRange": 5.587935447692871e-09
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 3.725290298461914e-09
+      },
+      "l1.b2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 64,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 0.011469005232333572,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      },
+      "nf": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 64,
+          "groupsWithDifferentBits": 0,
+          "spreadRms": 0.0,
+          "valueRms": 0.24737969424125014,
+          "relativeSpreadRms": 0.0,
+          "maximumReplicaRange": 0.0
+        },
+        "tiledS0DeltaMaxAbs": 0.0
+      }
+    },
+    "W1": {
+      "tok": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 3.418299241289525e-05,
+          "valueRms": 0.15995306094860362,
+          "relativeSpreadRms": 0.0002137063974279241,
+          "maximumReplicaRange": 0.001576138660311699
+        },
+        "tiledS0DeltaMaxAbs": 0.012143373489379883
+      },
+      "l0.n1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 64,
+          "spreadRms": 2.7948740346653826e-05,
+          "valueRms": 1.0202862243541508,
+          "relativeSpreadRms": 2.7393039011524043e-05,
+          "maximumReplicaRange": 0.0001723766326904297
+        },
+        "tiledS0DeltaMaxAbs": 0.0030035972595214844
+      },
+      "l0.wz": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009356905668848674,
+          "valueRms": 0.01563513228629474,
+          "relativeSpreadRms": 0.05984538856157066,
+          "maximumReplicaRange": 0.00684455712325871
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 4096,
+          "spreadRms": 0.0005308921366162952,
+          "valueRms": 0.12482547181496177,
+          "relativeSpreadRms": 0.004253075345096846,
+          "maximumReplicaRange": 0.006309812888503075
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.04590621031820774
+      },
+      "l0.bz": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 64,
+          "spreadRms": 6.633479552200534e-05,
+          "valueRms": 0.23565769540397,
+          "relativeSpreadRms": 0.0002814879242890527,
+          "maximumReplicaRange": 0.0004884600639343262
+        },
+        "tiledS0DeltaMaxAbs": 0.0038115978240966797
+      },
+      "l0.wc": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009384568560372492,
+          "valueRms": 0.015109324515588388,
+          "relativeSpreadRms": 0.06211110596433594,
+          "maximumReplicaRange": 0.006859359331429005
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 4096,
+          "spreadRms": 0.00044016196412390344,
+          "valueRms": 0.12060920783426655,
+          "relativeSpreadRms": 0.0036494888908378026,
+          "maximumReplicaRange": 0.0058687066193670034
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.04022028669714928
+      },
+      "l0.wg": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009400766162245339,
+          "valueRms": 0.014848887696222873,
+          "relativeSpreadRms": 0.06330956469309565,
+          "maximumReplicaRange": 0.006796228000894189
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 4096,
+          "spreadRms": 0.00045383422268887544,
+          "valueRms": 0.11851940817313066,
+          "relativeSpreadRms": 0.0038291975102164194,
+          "maximumReplicaRange": 0.005712723359465599
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.04523542709648609
+      },
+      "l0.wo": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009341943159628915,
+          "valueRms": 0.009070710710313812,
+          "relativeSpreadRms": 0.10299020063562053,
+          "maximumReplicaRange": 0.006584671849850565
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 4096,
+          "spreadRms": 0.00028069110134644286,
+          "valueRms": 0.07212447964420168,
+          "relativeSpreadRms": 0.0038917591188334976,
+          "maximumReplicaRange": 0.004401557816891
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.037848386788937205
+      },
+      "l0.n2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 64,
+          "spreadRms": 2.356240945483371e-05,
+          "valueRms": 0.9964440639463913,
+          "relativeSpreadRms": 2.364649487851369e-05,
+          "maximumReplicaRange": 0.00014960765838623047
+        },
+        "tiledS0DeltaMaxAbs": 0.002823948860168457
+      },
+      "l0.w1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 131072,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 131072,
+          "spreadRms": 0.0009398675678296526,
+          "valueRms": 0.014761259669237237,
+          "relativeSpreadRms": 0.06367123056498732,
+          "maximumReplicaRange": 0.0070224214578047395
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 16384,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 16384,
+          "spreadRms": 0.0006603944483497093,
+          "valueRms": 0.11781824998281983,
+          "relativeSpreadRms": 0.005605196550161011,
+          "maximumReplicaRange": 0.009785378351807594
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.04422484617680311
+      },
+      "l0.b1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 256,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 256,
+          "spreadRms": 6.84374761697773e-05,
+          "valueRms": 0.09929840660972424,
+          "relativeSpreadRms": 0.0006892102150113983,
+          "maximumReplicaRange": 0.000688210129737854
+        },
+        "tiledS0DeltaMaxAbs": 0.003218039870262146
+      },
+      "l0.w2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 131072,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 131072,
+          "spreadRms": 0.0009348470310690483,
+          "valueRms": 0.006156183340406078,
+          "relativeSpreadRms": 0.15185496912237564,
+          "maximumReplicaRange": 0.007405070122331381
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 16384,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 16384,
+          "spreadRms": 0.0002314792111403788,
+          "valueRms": 0.04859643192053423,
+          "relativeSpreadRms": 0.004763296439518396,
+          "maximumReplicaRange": 0.0034231701865792274
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.042060920502990484
+      },
+      "l0.b2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 64,
+          "spreadRms": 1.7734695319124096e-05,
+          "valueRms": 0.011202202080591922,
+          "relativeSpreadRms": 0.0015831436704618882,
+          "maximumReplicaRange": 0.00016758101992309093
+        },
+        "tiledS0DeltaMaxAbs": 0.0021470498759299517
+      },
+      "l1.n1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 64,
+          "spreadRms": 3.3028650772939005e-05,
+          "valueRms": 1.0480453645292624,
+          "relativeSpreadRms": 3.151452398033751e-05,
+          "maximumReplicaRange": 0.0002779960632324219
+        },
+        "tiledS0DeltaMaxAbs": 0.0033164024353027344
+      },
+      "l1.wz": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009381991563472076,
+          "valueRms": 0.016639715441512565,
+          "relativeSpreadRms": 0.05638312503870105,
+          "maximumReplicaRange": 0.006595055689103901
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 4096,
+          "spreadRms": 0.0005627019749775025,
+          "valueRms": 0.13287686667995469,
+          "relativeSpreadRms": 0.004234762521401249,
+          "maximumReplicaRange": 0.012646084651350975
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.04647534992545843
+      },
+      "l1.bz": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 64,
+          "spreadRms": 6.699278954577387e-05,
+          "valueRms": 0.10684353917158147,
+          "relativeSpreadRms": 0.0006270176939589136,
+          "maximumReplicaRange": 0.0006683319807052612
+        },
+        "tiledS0DeltaMaxAbs": 0.00356205552816391
+      },
+      "l1.wc": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009381643399457463,
+          "valueRms": 0.015266602075523496,
+          "relativeSpreadRms": 0.06145207265537353,
+          "maximumReplicaRange": 0.0069672223180532455
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 4096,
+          "spreadRms": 0.00048720220898301487,
+          "valueRms": 0.12186907171315138,
+          "relativeSpreadRms": 0.003997751046547431,
+          "maximumReplicaRange": 0.01165363861946389
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.04406738025136292
+      },
+      "l1.wg": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.0009382752458288703,
+          "valueRms": 0.015143427233009862,
+          "relativeSpreadRms": 0.061959240229556775,
+          "maximumReplicaRange": 0.006996316369622946
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 4096,
+          "spreadRms": 0.0005159222899252933,
+          "valueRms": 0.12088304865873217,
+          "relativeSpreadRms": 0.004267945718194169,
+          "maximumReplicaRange": 0.007003886625170708
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.04024007171392441
+      },
+      "l1.wo": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 32768,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 32768,
+          "spreadRms": 0.000935587235307567,
+          "valueRms": 0.009327095461553872,
+          "relativeSpreadRms": 0.10030853004175219,
+          "maximumReplicaRange": 0.006735634058713913
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 4096,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 4096,
+          "spreadRms": 0.00016889627298386121,
+          "valueRms": 0.07418639395140107,
+          "relativeSpreadRms": 0.0022766475628199943,
+          "maximumReplicaRange": 0.0030935204413253814
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.052019618917256594
+      },
+      "l1.n2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 64,
+          "spreadRms": 3.664352938685017e-05,
+          "valueRms": 1.1360233784441078,
+          "relativeSpreadRms": 3.225596416601652e-05,
+          "maximumReplicaRange": 0.00021958351135253906
+        },
+        "tiledS0DeltaMaxAbs": 0.003690361976623535
+      },
+      "l1.w1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 131072,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 131072,
+          "spreadRms": 0.0009411867107317108,
+          "valueRms": 0.016168523480841922,
+          "relativeSpreadRms": 0.05821104888439087,
+          "maximumReplicaRange": 0.007494098972529173
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 16384,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 16384,
+          "spreadRms": 0.0008703455474549211,
+          "valueRms": 0.12910090348434464,
+          "relativeSpreadRms": 0.006741591452614917,
+          "maximumReplicaRange": 0.025823935284279287
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.04695140034891665
+      },
+      "l1.b1": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 256,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 256,
+          "spreadRms": 0.00010370528018548957,
+          "valueRms": 0.07217985245692828,
+          "relativeSpreadRms": 0.0014367621525324312,
+          "maximumReplicaRange": 0.001787140965461731
+        },
+        "tiledS0DeltaMaxAbs": 0.004067983478307724
+      },
+      "l1.w2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 131072,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 131072,
+          "spreadRms": 0.0009360152915998761,
+          "valueRms": 0.007628180027061397,
+          "relativeSpreadRms": 0.12270492939066845,
+          "maximumReplicaRange": 0.00703964289277792
+        },
+        "equalInputReplicaAction": {
+          "replicas": 8,
+          "groups": 16384,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 16384,
+          "spreadRms": 7.91170728457723e-05,
+          "valueRms": 0.06049727244520491,
+          "relativeSpreadRms": 0.0013077791716549234,
+          "maximumReplicaRange": 0.0019456729787634686
+        },
+        "equalInputActionDeltaFromS0MaxAbs": 0.052065410651266575
+      },
+      "l1.b2": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 64,
+          "spreadRms": 9.896523056596294e-06,
+          "valueRms": 0.011181696736650358,
+          "relativeSpreadRms": 0.0008850645201419532,
+          "maximumReplicaRange": 9.166169911623001e-05
+        },
+        "tiledS0DeltaMaxAbs": 0.002750030078459531
+      },
+      "nf": {
+        "ordinaryReplicaSpread": {
+          "replicas": 8,
+          "groups": 64,
+          "exactlyTiedGroups": 0,
+          "groupsWithDifferentBits": 64,
+          "spreadRms": 1.0652339406299577e-05,
+          "valueRms": 0.2520433719807761,
+          "relativeSpreadRms": 4.226391403425619e-05,
+          "maximumReplicaRange": 0.00012345612049102783
+        },
+        "tiledS0DeltaMaxAbs": 0.009800851345062256
+      }
+    }
+  },
+  "inputsUnchanged": true,
+  "trainingUpdates": 0,
+  "datasetReads": 0,
+  "effectiveParameterCountClaimed": false,
+  "qualityImprovementClaimed": false
+}

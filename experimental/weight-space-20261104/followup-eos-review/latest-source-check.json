@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "checkedCommit": "fc2eb797210bee25091caf734aacbfd694a3372e",
+  "kind": "STATIC_FOLLOWUP_SOURCE_COMPARISON",
+  "newModelOrTestExecution": false,
+  "originalRunnerMatchesDynamicallyReviewedFixture": true,
+  "originalRunnerGitBlob": "28908e07d6217f10882429047c853d1dd8667912",
+  "originalRunnerSha256": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+  "longRunnerGitBlob": "30119435feed1728c5d22fec40830654a7a19861",
+  "longRunnerSha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+  "longControllerTestsGitBlob": "10e1e6939280e7c7d205e7d21c14a99c89a92104",
+  "longControllerTestsSha256": "9948d55f3aaf9fbcc2f3a0b9c02badebb6d8605b91581569ef688d6c118d9d95",
+  "unchangedRelevantFunctions": {
+    "freeze_evidence": true,
+    "freeze": true
+  },
+  "postCapacityLabelReferencesByMethod": {
+    "intent": [
+      "-capacity-after"
+    ]
+  },
+  "controllerHasBeforeCapacityFixture": true,
+  "controllerHasAfterCapacityFixture": false,
+  "publishedV1Status": "NO_DEVELOPMENT_SIGNAL",
+  "publishedV1TestEvaluated": false,
+  "qualification": "v1 defect is dynamically reproduced. The long-study conclusion is a static source comparison, not a new test run or a model result.",
+  "publishedV1StatusSource": {
+    "path": "docs/evidence/lm1-training-recovery-20261104/study-v1/no-development-signal.json",
+    "gitBlob": "b6ccaf2edcc5a43c5a59c9e519890574d619a2d9"
+  }
+}

@@ -1,0 +1,3142 @@
+{
+  "status": "PUBLISHED_V2_RAW_EVIDENCE_CONSISTENT_DEV_GATE_PASS_CAPACITY_FAIL_TEST_DEFERRED",
+  "reviewedCommit": "e3c5aeadd6336f843bd625d56431208d3a03b5ad",
+  "previousReviewedCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "sourceCommitReported": "fc2eb797210bee25091caf734aacbfd694a3372e",
+  "addendumChanges": [
+    "A\tdocs/evidence/lm1-training-recovery-20261104/REPRODUCE.md",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/intent-epoch-losses.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/capacity-before.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/selection.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/capacity-before.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/selection.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.tsv",
+    "M\tdocs/research/omega/LM1-TRAINING-RECOVERY-HANDOFF-20261104.md"
+  ],
+  "executableSourcesChangedByAddendum": false,
+  "registrationSha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+  "jarSha256Reported": "d92acf410494bba98ad5299b0abfe13bdac3bb508dd9dd7bbf25f96a3ba5a20d",
+  "sourceInventory": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": {
+      "sha256": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+      "bytes": 6695,
+      "gitBlobSha1": "a81eb0256ad6c59584df78ee589d4c7490545e29"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": {
+      "sha256": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+      "bytes": 5547,
+      "gitBlobSha1": "7bc91176ea240bd287fcc214a8204d93298a9f17"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt": {
+      "sha256": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+      "bytes": 4496,
+      "gitBlobSha1": "5c5705d614f8bb457cfb10bd497e646577667005"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": {
+      "sha256": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+      "bytes": 13794,
+      "gitBlobSha1": "1df9dc9378a732e37e8e4568a2d46310442d15a8"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": {
+      "sha256": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+      "bytes": 9364,
+      "gitBlobSha1": "6de174dc400bfc5bd5bfb0facc56fc4820550b25"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": {
+      "sha256": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+      "bytes": 17044,
+      "gitBlobSha1": "bc1176e2b230439c3fa36d6be996444eaab8efbd"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/REPRODUCE.md": {
+      "sha256": "7edf2243afa44501909d0855331a1f6640f2bee81aac10e8ec7d72ea66aa1b32",
+      "bytes": 6795,
+      "gitBlobSha1": "12a1e7adff6a37c98f1791fe890e8921ebdb44db"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/intent-epoch-losses.json": {
+      "sha256": "8f3c21aaeedb9758ecbe618d3f5a45798647c1bc55a2f1e47e8f3c603ac95b4f",
+      "bytes": 21405,
+      "gitBlobSha1": "8ae887676da6f4fc27628125158a6d1b99a25b01"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/capacity-before.tsv": {
+      "sha256": "1663bf55b1f8903fe183a1423b6e245c2f58c52ca6014a811fc4d2cf0912d553",
+      "bytes": 5098,
+      "gitBlobSha1": "cb102fa10528c81f5c86800c3c9645b61f5e47af"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/selection.tsv": {
+      "sha256": "18098f8160f757c86c1c7a9f2d3725b60699ae5096b46494b15d0706e26896a7",
+      "bytes": 241,
+      "gitBlobSha1": "c917515bf3ebb3f723987be4687ff54fdb136f76"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-summary.json": {
+      "sha256": "5d9936e8a1ca6952249d627d360fb958f57584748d855ca2cb1ab6acf71558ae",
+      "bytes": 5917,
+      "gitBlobSha1": "d3c984aef8aa91942e25f928bbd14e30adbcdd18"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/capacity-before.tsv": {
+      "sha256": "de6e44608ed09ea99a97c2af6aadfce09114e94aa1a35607ed8340ec6904b08a",
+      "bytes": 5171,
+      "gitBlobSha1": "a5afe7d3a31ae01458178d6b8033ba3da79acaad"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/selection.tsv": {
+      "sha256": "ad504999e4f62d00565d2db365438b26c11aa818b070b32dfe3a47d41d646b71",
+      "bytes": 241,
+      "gitBlobSha1": "8e095582b0537654c553381ffde6097586a697bf"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.receipt.json": {
+      "sha256": "34f2b265bc28982804c50cb87e9956f0060b7f2d906b4af15a00b5e0a9602f3d",
+      "bytes": 1100,
+      "gitBlobSha1": "8a1f2f2b582109be8bea067cae4dc49fd1892ecc"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.tsv": {
+      "sha256": "9fbd48e66b7993ceaf3b82bcae5e32ed934ac1b2e2baf4d7f6faf7ee7c9d7eaf",
+      "bytes": 5095,
+      "gitBlobSha1": "c1b85b56a3ef10c27cb18693d6ad63399403b63b"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.receipt.json": {
+      "sha256": "6cace1fab93046698844c53dd87dc688c6f199e74bdef33bdee07dc1fb976f05",
+      "bytes": 1231,
+      "gitBlobSha1": "e1fd827d2e18e2caf0df7e996c34db4098820a94"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.tsv": {
+      "sha256": "a6ce3a1c31b2faa398abf2a0d5ba1c80015c9bb01ad52a0a4faeca5ab075f154",
+      "bytes": 87330,
+      "gitBlobSha1": "4fdc8a4da95445905fe22e11f5dd3616db3d1ace"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.receipt.json": {
+      "sha256": "bd5774c59a5cd061e51ac68d68b2e54a1f31f03637fce3bbca9f869619332fe7",
+      "bytes": 1096,
+      "gitBlobSha1": "23dff1bb7c12f4597eb0ca3c1a217949171789c7"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.tsv": {
+      "sha256": "d5a178857895f3aa46792b70049899fcff5752271b270dee76fd1aea8e6d65a7",
+      "bytes": 5162,
+      "gitBlobSha1": "156924be718e186328ab928d1d0d2c1e16be6d3e"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.receipt.json": {
+      "sha256": "1560ff0f106352d2ba3338298046e53ed780b7caa330639b3e49fe9716b0c303",
+      "bytes": 1227,
+      "gitBlobSha1": "336f6d1755e793dc0794bb38098da06ad082e1d5"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.tsv": {
+      "sha256": "3538ebc9857a8f2d10f184b6c03ab4179e9b17dffb54959c3fd84deb8318ac57",
+      "bytes": 89436,
+      "gitBlobSha1": "193a6dc84fbb17e687c12ad09934c389049049f0"
+    },
+    "experimental/lm1-training-recovery-20261104/DIAGNOSTIC_PROTOCOL.md": {
+      "sha256": "e8027ce981be5b27a20542353c5aa2803ce09589c230041b2d2bc1c3ab584614",
+      "bytes": 5301,
+      "gitBlobSha1": "ee4ba5439a7d59beaa38fc2fa7d4a49c82afcad7"
+    },
+    "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md": {
+      "sha256": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5",
+      "bytes": 13627,
+      "gitBlobSha1": "2bf761f7c6bea28a3d1f0b99e63fafa995cf1a7f"
+    },
+    "experimental/lm1-training-recovery-20261104/LmIntentStudy.kt": {
+      "sha256": "0fb9552ad0d8cc4d2f6cc43ad8700374da27ae9ca2e794f1765fca45c11c2e9d",
+      "bytes": 16459,
+      "gitBlobSha1": "337fa9c582579c3239ec81cad8295d7cf61c5b42"
+    },
+    "experimental/lm1-training-recovery-20261104/LmIntentStudyChecks.kt": {
+      "sha256": "6275790deb920139ff3eb627200a7dc502b427dee357576ba9d471341dc71aa4",
+      "bytes": 3910,
+      "gitBlobSha1": "c5f1dea8d29ac78fdf2088aed32e663cc6b30e16"
+    },
+    "experimental/lm1-training-recovery-20261104/LmRecoveryDiagnostic.kt": {
+      "sha256": "4eb3eb594f03a30ad00b750a31ea899c8a937f0783473b71f70a576648f7f4e3",
+      "bytes": 15636,
+      "gitBlobSha1": "8644cf774168403a52158e0790744bce94ec8e2e"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/INTENT_LONG_PROTOCOL.md": {
+      "sha256": "150ce71af4239563ce8142163e5e456f0554cf1263f4e6c2ad61bb842cc87800",
+      "bytes": 6447,
+      "gitBlobSha1": "01c1f0508877a353924a3f35a4d7129f28f33e64"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudy.kt": {
+      "sha256": "e1d469e0d702041a12cf250ac86bd5fcde18351347ba05a4824566c79b846fe4",
+      "bytes": 16470,
+      "gitBlobSha1": "3e8efe053de3a3736f535e156115cb0c3ea65c6a"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudyChecks.kt": {
+      "sha256": "2316beddd404f311a866191b749e9d8ae4825a44ea519a0d858e208abafc23e6",
+      "bytes": 3950,
+      "gitBlobSha1": "7eeab71ec2c1a5cf39fdbadfc911c7f6193c0117"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/registration.json": {
+      "sha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+      "bytes": 4772,
+      "gitBlobSha1": "aa9f4a75a72674f6bb62ab48b0dc0cab43027457"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py": {
+      "sha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "bytes": 13739,
+      "gitBlobSha1": "30119435feed1728c5d22fec40830654a7a19861"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/test_study_controller.py": {
+      "sha256": "9948d55f3aaf9fbcc2f3a0b9c02badebb6d8605b91581569ef688d6c118d9d95",
+      "bytes": 11043,
+      "gitBlobSha1": "10e1e6939280e7c7d205e7d21c14a99c89a92104"
+    },
+    "experimental/lm1-training-recovery-20261104/registration.json": {
+      "sha256": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+      "bytes": 3716,
+      "gitBlobSha1": "7e5c6f92ff1ab96c520d5b5d9bb5294fb05065d4"
+    },
+    "experimental/lm1-training-recovery-20261104/run_registered_study.py": {
+      "sha256": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "bytes": 15810,
+      "gitBlobSha1": "28908e07d6217f10882429047c853d1dd8667912"
+    },
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt": {
+      "sha256": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+      "bytes": 12149,
+      "gitBlobSha1": "c7d20d2f85b5fdc9af7b6a7079eb9c4d60e9fd79"
+    },
+    "experimental/weight-space-20261104/LmWeightExperiment.kt": {
+      "sha256": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+      "bytes": 15243,
+      "gitBlobSha1": "ea2541c10536956afb39167536c4476ec9650081"
+    },
+    "experimental/weight-space-20261104/LmWeightSurgery.kt": {
+      "sha256": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+      "bytes": 8378,
+      "gitBlobSha1": "42840f62b22f21b3418fe79269a32e95237b6ce5"
+    },
+    "experimental/weight-space-20261104/development.txt": {
+      "sha256": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111",
+      "bytes": 1676,
+      "gitBlobSha1": "e994704b7f28d638ac68b7b1331d5b048225029a"
+    }
+  },
+  "registeredSourcesRehashed": [
+    "experimental/lm1-training-recovery-20261104/run_registered_study.py",
+    "experimental/lm1-training-recovery-20261104/LmRecoveryDiagnostic.kt",
+    "experimental/lm1-training-recovery-20261104/DIAGNOSTIC_PROTOCOL.md",
+    "experimental/lm1-training-recovery-20261104/LmIntentStudy.kt",
+    "experimental/lm1-training-recovery-20261104/LmIntentStudyChecks.kt",
+    "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+    "experimental/weight-space-20261104/LmWeightExperiment.kt",
+    "experimental/weight-space-20261104/LmWeightSurgery.kt",
+    "experimental/weight-space-20261104/development.txt",
+    "experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudy.kt",
+    "experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudyChecks.kt",
+    "experimental/lm1-training-recovery-20261104/registration.json",
+    "experimental/lm1-training-recovery-20261104/long-study/INTENT_LONG_PROTOCOL.md",
+    "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+    "experimental/lm1-training-recovery-20261104/long-study/test_study_controller.py"
+  ],
+  "registeredFilesIntentionallyNotRead": [
+    "experimental/lm1-training-recovery-20261104/make_intent_data.py",
+    "experimental/lm1-training-recovery-20261104/intent-data/dev.tsv",
+    "experimental/lm1-training-recovery-20261104/intent-data/test.sealed.tsv",
+    "experimental/lm1-training-recovery-20261104/intent-data/train.tsv",
+    "experimental/lm1-training-recovery-20261104/intent-data/manifest.json"
+  ],
+  "frozenPreviousFiles": {
+    "audit_published_results.py": "def7392d9afbe3fa4e7086b42e1e4168d2b1b124c25d3f90f815a1bb633dab6b",
+    "published-results.json": "6f6cd60b94a5b3191b60d284eb0eb676d921379bd26c3c0e36083e9eb237384d",
+    "README.md": "b639ba726a0712e5f4dacb04b1a15626cf88169ef6491f8fd87cf65bc2bc5ff8"
+  },
+  "modelProcessesStarted": 0,
+  "modelAndIntentDatasetBytesRead": 0,
+  "casesRescored": 192,
+  "receiptsChecked": 4,
+  "updatesChecked": 1024,
+  "arms": {
+    "small": {
+      "manifest": {
+        "variant": "small",
+        "scope": "RESEARCH_SHADOW",
+        "parameters": "132160",
+        "steps": "512",
+        "batch": "4",
+        "learningRate": "1.0E-4",
+        "warmup": "4",
+        "weightDecay": "0.01",
+        "seed": "20261104",
+        "workers": "2",
+        "scheduleSha256": "0c977d357e9a3c19496890faf9f3f593169064380475a171a3553ba30364ff48",
+        "tokenScheduleSha256": "56fe2778eaccc2e29e13e629295452199ba19f94211c10fbae07cd4b6f3f375c",
+        "objective": "ANSWER_AND_EOS_ONLY",
+        "testReadDuringTraining": "false"
+      },
+      "inputHashesReported": {
+        "lm1-baseline.lm1": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+        "lm1-tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+        "train.tsv": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b",
+        "dev.tsv": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe"
+      },
+      "updates": 512,
+      "supervisedTargets": 4096,
+      "initialParity": [
+        {
+          "id": "dev-0001",
+          "probabilityDelta": "0.0"
+        },
+        {
+          "id": "dev-0002",
+          "probabilityDelta": "0.0"
+        },
+        {
+          "id": "dev-0003",
+          "probabilityDelta": "0.0"
+        }
+      ],
+      "trainingReceipt": {
+        "label": "intent-small",
+        "command": [
+          "java",
+          "-Xms64m",
+          "-Xmx3g",
+          "-cp",
+          "/workspace/scratch/3112c86b5191/training-recovery-long-build/experiment.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+          "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+          "train",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-baseline.lm1",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "/workspace/scratch/3112c86b5191/device-ai-training-research/experimental/lm1-training-recovery-20261104/intent-data",
+          "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-small",
+          "small"
+        ],
+        "startedUtc": "2026-11-04T19:02:57.173161+00:00",
+        "wallSeconds": 14.775973357000112,
+        "returncode": 0,
+        "timeout": false,
+        "timeoutSeconds": 900,
+        "sourceCommit": "fc2eb797210bee25091caf734aacbfd694a3372e",
+        "registrationSha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+        "jarSha256": "d92acf410494bba98ad5299b0abfe13bdac3bb508dd9dd7bbf25f96a3ba5a20d",
+        "logSha256": "a6ce3a1c31b2faa398abf2a0d5ba1c80015c9bb01ad52a0a4faeca5ab075f154",
+        "registeredBytesUnchanged": true
+      },
+      "capacityReceipt": {
+        "label": "intent-small-capacity-after",
+        "command": [
+          "java",
+          "-Xms64m",
+          "-Xmx1g",
+          "-cp",
+          "/workspace/scratch/3112c86b5191/training-recovery-long-build/experiment.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+          "at.heinz.deviceai.learning.lm.LmCapacityBenchmark",
+          "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-small/checkpoints/c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309.lm1",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp"
+        ],
+        "startedUtc": "2026-11-04T19:03:11.955360+00:00",
+        "wallSeconds": 0.42278510899996036,
+        "returncode": 1,
+        "timeout": false,
+        "timeoutSeconds": 120,
+        "sourceCommit": "fc2eb797210bee25091caf734aacbfd694a3372e",
+        "registrationSha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+        "jarSha256": "d92acf410494bba98ad5299b0abfe13bdac3bb508dd9dd7bbf25f96a3ba5a20d",
+        "logSha256": "9fbd48e66b7993ceaf3b82bcae5e32ed934ac1b2e2baf4d7f6faf7ee7c9d7eaf",
+        "registeredBytesUnchanged": true
+      },
+      "lastLoggedTrainingMillis": 13043,
+      "snapshots": [
+        {
+          "step": 0,
+          "score": {
+            "split": "dev",
+            "step": "0",
+            "correct": "0",
+            "total": "24",
+            "answerNll": "8.842064727366754",
+            "eosNll": "6.472776359654485",
+            "prematureEos": "0",
+            "classCorrect": "0,0,0,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "0.14750363864004612",
+            "missingEos": "24",
+            "generatedTokens": "96"
+          },
+          "validDigitEos": 0,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": false,
+            "dev-0002": false,
+            "dev-0003": false,
+            "dev-0004": false,
+            "dev-0005": false,
+            "dev-0006": false,
+            "dev-0007": false,
+            "dev-0008": false,
+            "dev-0009": false,
+            "dev-0010": false,
+            "dev-0011": false,
+            "dev-0012": false,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": false,
+            "dev-0016": false,
+            "dev-0017": false,
+            "dev-0018": false,
+            "dev-0019": false,
+            "dev-0020": false,
+            "dev-0021": false,
+            "dev-0022": false,
+            "dev-0023": false,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            }
+          }
+        },
+        {
+          "step": 128,
+          "score": {
+            "split": "dev",
+            "step": "128",
+            "correct": "12",
+            "total": "24",
+            "answerNll": "1.3038244527311702",
+            "eosNll": "0.03630752016274341",
+            "prematureEos": "0",
+            "classCorrect": "4,6,0,2",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "5.95919289480662E-4",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              4,
+              2,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              6,
+              0,
+              0,
+              0
+            ],
+            [
+              3,
+              0,
+              0,
+              3,
+              0
+            ],
+            [
+              4,
+              0,
+              0,
+              2,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": false,
+            "dev-0002": false,
+            "dev-0003": false,
+            "dev-0004": true,
+            "dev-0005": true,
+            "dev-0006": false,
+            "dev-0007": false,
+            "dev-0008": false,
+            "dev-0009": true,
+            "dev-0010": true,
+            "dev-0011": false,
+            "dev-0012": true,
+            "dev-0013": true,
+            "dev-0014": false,
+            "dev-0015": true,
+            "dev-0016": true,
+            "dev-0017": false,
+            "dev-0018": false,
+            "dev-0019": false,
+            "dev-0020": true,
+            "dev-0021": true,
+            "dev-0022": true,
+            "dev-0023": true,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            }
+          }
+        },
+        {
+          "step": 256,
+          "score": {
+            "split": "dev",
+            "step": "256",
+            "correct": "13",
+            "total": "24",
+            "answerNll": "1.353088923177873",
+            "eosNll": "0.014163899910088004",
+            "prematureEos": "0",
+            "classCorrect": "2,6,5,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "8.727782066368188E-5",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              2,
+              2,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              6,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              5,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              6,
+              0,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": true,
+            "dev-0002": true,
+            "dev-0003": false,
+            "dev-0004": true,
+            "dev-0005": true,
+            "dev-0006": false,
+            "dev-0007": false,
+            "dev-0008": false,
+            "dev-0009": true,
+            "dev-0010": false,
+            "dev-0011": true,
+            "dev-0012": true,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": false,
+            "dev-0016": true,
+            "dev-0017": true,
+            "dev-0018": false,
+            "dev-0019": true,
+            "dev-0020": false,
+            "dev-0021": true,
+            "dev-0022": true,
+            "dev-0023": true,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            }
+          }
+        },
+        {
+          "step": 512,
+          "score": {
+            "split": "dev",
+            "step": "512",
+            "correct": "12",
+            "total": "24",
+            "answerNll": "1.7544272247620238",
+            "eosNll": "0.005881279594185385",
+            "prematureEos": "0",
+            "classCorrect": "2,6,4,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "2.9864347993679985E-5",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              2,
+              2,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              6,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              6,
+              0,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": true,
+            "dev-0002": true,
+            "dev-0003": false,
+            "dev-0004": true,
+            "dev-0005": true,
+            "dev-0006": false,
+            "dev-0007": false,
+            "dev-0008": false,
+            "dev-0009": true,
+            "dev-0010": false,
+            "dev-0011": true,
+            "dev-0012": true,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": false,
+            "dev-0016": true,
+            "dev-0017": false,
+            "dev-0018": false,
+            "dev-0019": true,
+            "dev-0020": false,
+            "dev-0021": true,
+            "dev-0022": true,
+            "dev-0023": true,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            }
+          }
+        }
+      ],
+      "selection": {
+        "checkpointSha256": "c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309",
+        "step": "256",
+        "devCorrect": "13",
+        "devTotal": "24",
+        "devAnswerNll": "1.353088923177873",
+        "testRead": "false",
+        "inputsUnchanged": "true",
+        "generalModelPromotion": "NOT_PERMITTED",
+        "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK"
+      },
+      "checkpointHashesReported": {
+        "0": "6ad41c9c11003d8e9724e67d342d3a5e957ecea3c272f88b35594cb262fa3ba1",
+        "128": "c4d60f49c8d6568ce76abcd3e46536f429cdf85f2452cc03891d9c7707e489c2",
+        "256": "c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309",
+        "512": "cc0ca1db24dc08f3b7727f242b5b200ffbdee6a6923762c314b21cccffef93de"
+      },
+      "onlineEpochLosses": [
+        {
+          "epoch": 1,
+          "first_step": 1,
+          "last_step": 32,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 256,
+          "mean_online_nll": 2.901693088468164,
+          "minimum_minibatch_nll": 0.9512661248445511,
+          "maximum_minibatch_nll": 7.815855860710144
+        },
+        {
+          "epoch": 2,
+          "first_step": 33,
+          "last_step": 64,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 512,
+          "mean_online_nll": 0.930811065249145,
+          "minimum_minibatch_nll": 0.7018011659383774,
+          "maximum_minibatch_nll": 1.2589188814163208
+        },
+        {
+          "epoch": 3,
+          "first_step": 65,
+          "last_step": 96,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 768,
+          "mean_online_nll": 0.7620484926737845,
+          "minimum_minibatch_nll": 0.6906845420598984,
+          "maximum_minibatch_nll": 0.8213369399309158
+        },
+        {
+          "epoch": 4,
+          "first_step": 97,
+          "last_step": 128,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1024,
+          "mean_online_nll": 0.6738925722893327,
+          "minimum_minibatch_nll": 0.426674522459507,
+          "maximum_minibatch_nll": 0.8759578466415405
+        },
+        {
+          "epoch": 5,
+          "first_step": 129,
+          "last_step": 160,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1280,
+          "mean_online_nll": 0.48741400393191725,
+          "minimum_minibatch_nll": 0.2469773180782795,
+          "maximum_minibatch_nll": 0.8110405281186104
+        },
+        {
+          "epoch": 6,
+          "first_step": 161,
+          "last_step": 192,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1536,
+          "mean_online_nll": 0.4102515026170295,
+          "minimum_minibatch_nll": 0.11656585149466991,
+          "maximum_minibatch_nll": 1.0595032423734665
+        },
+        {
+          "epoch": 7,
+          "first_step": 193,
+          "last_step": 224,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1792,
+          "mean_online_nll": 0.33346901735058054,
+          "minimum_minibatch_nll": 0.10560155566781759,
+          "maximum_minibatch_nll": 0.747251957654953
+        },
+        {
+          "epoch": 8,
+          "first_step": 225,
+          "last_step": 256,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2048,
+          "mean_online_nll": 0.28426479958579876,
+          "minimum_minibatch_nll": 0.07658362668007612,
+          "maximum_minibatch_nll": 0.7662518918514252
+        },
+        {
+          "epoch": 9,
+          "first_step": 257,
+          "last_step": 288,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2304,
+          "mean_online_nll": 0.25448068212426733,
+          "minimum_minibatch_nll": 0.03583206469193101,
+          "maximum_minibatch_nll": 1.0561960879713297
+        },
+        {
+          "epoch": 10,
+          "first_step": 289,
+          "last_step": 320,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2560,
+          "mean_online_nll": 0.2220144453458488,
+          "minimum_minibatch_nll": 0.03314610291272402,
+          "maximum_minibatch_nll": 0.8288252633064985
+        },
+        {
+          "epoch": 11,
+          "first_step": 321,
+          "last_step": 352,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2816,
+          "mean_online_nll": 0.21299069006636273,
+          "minimum_minibatch_nll": 0.03049423359334469,
+          "maximum_minibatch_nll": 1.1420157863758504
+        },
+        {
+          "epoch": 12,
+          "first_step": 353,
+          "last_step": 384,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3072,
+          "mean_online_nll": 0.21116678744874662,
+          "minimum_minibatch_nll": 0.02262626215815544,
+          "maximum_minibatch_nll": 0.9705859804525971
+        },
+        {
+          "epoch": 13,
+          "first_step": 385,
+          "last_step": 416,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3328,
+          "mean_online_nll": 0.20585101086180657,
+          "minimum_minibatch_nll": 0.016665196977555752,
+          "maximum_minibatch_nll": 1.1967460219748318
+        },
+        {
+          "epoch": 14,
+          "first_step": 417,
+          "last_step": 448,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3584,
+          "mean_online_nll": 0.19554947491997154,
+          "minimum_minibatch_nll": 0.01623678021132946,
+          "maximum_minibatch_nll": 1.2959923995658755
+        },
+        {
+          "epoch": 15,
+          "first_step": 449,
+          "last_step": 480,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3840,
+          "mean_online_nll": 0.18158934413077077,
+          "minimum_minibatch_nll": 0.01495296647772193,
+          "maximum_minibatch_nll": 0.7287604082375765
+        },
+        {
+          "epoch": 16,
+          "first_step": 481,
+          "last_step": 512,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 4096,
+          "mean_online_nll": 0.1767951859656023,
+          "minimum_minibatch_nll": 0.013781080255284905,
+          "maximum_minibatch_nll": 0.93827501591295
+        }
+      ],
+      "capacityBefore": {
+        "result": {
+          "pass": "true",
+          "reasons": "NONE",
+          "checkpointSha256": "6ad41c9c11003d8e9724e67d342d3a5e957ecea3c272f88b35594cb262fa3ba1",
+          "parameters": "132160",
+          "loadMs": "65.277895",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "9.611214",
+          "maxGeneration32CallMs": "18.168686",
+          "firstTokenObservations": "3",
+          "full32TokenObservations": "3",
+          "vmHwmKiB": "80300",
+          "finalVmHwmKiB": "80300",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-small/checkpoints/6ad41c9c11003d8e9724e67d342d3a5e957ecea3c272f88b35594cb262fa3ba1.lm1",
+          "checkpointSha256": "6ad41c9c11003d8e9724e67d342d3a5e957ecea3c272f88b35594cb262fa3ba1",
+          "checkpointBytes": "529669",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "132160",
+          "parameterBytes": "528640",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "64",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "256",
+          "loadMs": "65.277895",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": false
+      },
+      "capacityAfter": {
+        "result": {
+          "pass": "false",
+          "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+          "checkpointSha256": "c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309",
+          "parameters": "132160",
+          "loadMs": "83.588139",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "8.803361",
+          "maxGeneration32CallMs": "8.867207",
+          "firstTokenObservations": "0",
+          "full32TokenObservations": "0",
+          "vmHwmKiB": "72380",
+          "finalVmHwmKiB": "72380",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-small/checkpoints/c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309.lm1",
+          "checkpointSha256": "c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309",
+          "checkpointBytes": "529671",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "132160",
+          "parameterBytes": "528640",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "64",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "256",
+          "loadMs": "83.588139",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": true
+      },
+      "capacityAfterMeasuredTrials": [
+        {
+          "phase": "measured",
+          "trial": "1",
+          "requestedNewTokens": "1",
+          "actualNewTokens": "0",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "EOS",
+          "elapsedMs": "8.803361",
+          "runtimeMillis": "8",
+          "ttftUpperBoundMs": "UNAVAILABLE",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "phase": "measured",
+          "trial": "1",
+          "requestedNewTokens": "32",
+          "actualNewTokens": "0",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "EOS",
+          "elapsedMs": "8.867207",
+          "runtimeMillis": "8",
+          "ttftUpperBoundMs": "UNAVAILABLE",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "phase": "measured",
+          "trial": "2",
+          "requestedNewTokens": "1",
+          "actualNewTokens": "0",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "EOS",
+          "elapsedMs": "8.661248",
+          "runtimeMillis": "8",
+          "ttftUpperBoundMs": "UNAVAILABLE",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "phase": "measured",
+          "trial": "2",
+          "requestedNewTokens": "32",
+          "actualNewTokens": "0",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "EOS",
+          "elapsedMs": "6.894065",
+          "runtimeMillis": "6",
+          "ttftUpperBoundMs": "UNAVAILABLE",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "phase": "measured",
+          "trial": "3",
+          "requestedNewTokens": "1",
+          "actualNewTokens": "0",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "EOS",
+          "elapsedMs": "7.795117",
+          "runtimeMillis": "7",
+          "ttftUpperBoundMs": "UNAVAILABLE",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "phase": "measured",
+          "trial": "3",
+          "requestedNewTokens": "32",
+          "actualNewTokens": "0",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "EOS",
+          "elapsedMs": "8.465434",
+          "runtimeMillis": "8",
+          "ttftUpperBoundMs": "UNAVAILABLE",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "wide": {
+      "manifest": {
+        "variant": "wide",
+        "scope": "RESEARCH_SHADOW",
+        "parameters": "6562304",
+        "steps": "512",
+        "batch": "4",
+        "learningRate": "1.0E-4",
+        "warmup": "4",
+        "weightDecay": "0.01",
+        "seed": "20261104",
+        "workers": "2",
+        "scheduleSha256": "0c977d357e9a3c19496890faf9f3f593169064380475a171a3553ba30364ff48",
+        "tokenScheduleSha256": "56fe2778eaccc2e29e13e629295452199ba19f94211c10fbae07cd4b6f3f375c",
+        "objective": "ANSWER_AND_EOS_ONLY",
+        "testReadDuringTraining": "false"
+      },
+      "inputHashesReported": {
+        "lm1-baseline.lm1": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+        "lm1-tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+        "train.tsv": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b",
+        "dev.tsv": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe"
+      },
+      "updates": 512,
+      "supervisedTargets": 4096,
+      "initialParity": [
+        {
+          "id": "dev-0001",
+          "probabilityDelta": "1.341104507446289E-6"
+        },
+        {
+          "id": "dev-0002",
+          "probabilityDelta": "2.0712614059448242E-6"
+        },
+        {
+          "id": "dev-0003",
+          "probabilityDelta": "1.1026859283447266E-6"
+        }
+      ],
+      "trainingReceipt": {
+        "label": "intent-wide",
+        "command": [
+          "java",
+          "-Xms64m",
+          "-Xmx3g",
+          "-cp",
+          "/workspace/scratch/3112c86b5191/training-recovery-long-build/experiment.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+          "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+          "train",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-baseline.lm1",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "/workspace/scratch/3112c86b5191/device-ai-training-research/experimental/lm1-training-recovery-20261104/intent-data",
+          "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-wide",
+          "wide"
+        ],
+        "startedUtc": "2026-11-04T19:03:12.381773+00:00",
+        "wallSeconds": 653.7896026090002,
+        "returncode": 0,
+        "timeout": false,
+        "timeoutSeconds": 900,
+        "sourceCommit": "fc2eb797210bee25091caf734aacbfd694a3372e",
+        "registrationSha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+        "jarSha256": "d92acf410494bba98ad5299b0abfe13bdac3bb508dd9dd7bbf25f96a3ba5a20d",
+        "logSha256": "3538ebc9857a8f2d10f184b6c03ab4179e9b17dffb54959c3fd84deb8318ac57",
+        "registeredBytesUnchanged": true
+      },
+      "capacityReceipt": {
+        "label": "intent-wide-capacity-after",
+        "command": [
+          "java",
+          "-Xms64m",
+          "-Xmx1g",
+          "-cp",
+          "/workspace/scratch/3112c86b5191/training-recovery-long-build/experiment.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+          "at.heinz.deviceai.learning.lm.LmCapacityBenchmark",
+          "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-wide/checkpoints/7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2.lm1",
+          "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp"
+        ],
+        "startedUtc": "2026-11-04T19:14:06.220500+00:00",
+        "wallSeconds": 2.027707081999324,
+        "returncode": 1,
+        "timeout": false,
+        "timeoutSeconds": 120,
+        "sourceCommit": "fc2eb797210bee25091caf734aacbfd694a3372e",
+        "registrationSha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+        "jarSha256": "d92acf410494bba98ad5299b0abfe13bdac3bb508dd9dd7bbf25f96a3ba5a20d",
+        "logSha256": "d5a178857895f3aa46792b70049899fcff5752271b270dee76fd1aea8e6d65a7",
+        "registeredBytesUnchanged": true
+      },
+      "lastLoggedTrainingMillis": 628021,
+      "snapshots": [
+        {
+          "step": 0,
+          "score": {
+            "split": "dev",
+            "step": "0",
+            "correct": "0",
+            "total": "24",
+            "answerNll": "8.84206392326258",
+            "eosNll": "6.47277743563133",
+            "prematureEos": "0",
+            "classCorrect": "0,0,0,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "0.14750359704097113",
+            "missingEos": "24",
+            "generatedTokens": "96"
+          },
+          "validDigitEos": 0,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              6
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": false,
+            "dev-0002": false,
+            "dev-0003": false,
+            "dev-0004": false,
+            "dev-0005": false,
+            "dev-0006": false,
+            "dev-0007": false,
+            "dev-0008": false,
+            "dev-0009": false,
+            "dev-0010": false,
+            "dev-0011": false,
+            "dev-0012": false,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": false,
+            "dev-0016": false,
+            "dev-0017": false,
+            "dev-0018": false,
+            "dev-0019": false,
+            "dev-0020": false,
+            "dev-0021": false,
+            "dev-0022": false,
+            "dev-0023": false,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "** `<h",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "** Dies",
+              "tokens": 4,
+              "stop": "MAX_TOKENS",
+              "correct": false
+            }
+          }
+        },
+        {
+          "step": 128,
+          "score": {
+            "split": "dev",
+            "step": "128",
+            "correct": "13",
+            "total": "24",
+            "answerNll": "1.7133914955007874",
+            "eosNll": "0.01520302341314069",
+            "prematureEos": "0",
+            "classCorrect": "2,6,4,1",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "1.3129762834296343E-5",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              2,
+              2,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              6,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4,
+              2,
+              0
+            ],
+            [
+              3,
+              0,
+              2,
+              1,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": true,
+            "dev-0002": false,
+            "dev-0003": false,
+            "dev-0004": true,
+            "dev-0005": true,
+            "dev-0006": false,
+            "dev-0007": true,
+            "dev-0008": false,
+            "dev-0009": true,
+            "dev-0010": false,
+            "dev-0011": true,
+            "dev-0012": true,
+            "dev-0013": false,
+            "dev-0014": false,
+            "dev-0015": false,
+            "dev-0016": true,
+            "dev-0017": false,
+            "dev-0018": true,
+            "dev-0019": true,
+            "dev-0020": false,
+            "dev-0021": true,
+            "dev-0022": true,
+            "dev-0023": true,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            }
+          }
+        },
+        {
+          "step": 256,
+          "score": {
+            "split": "dev",
+            "step": "256",
+            "correct": "11",
+            "total": "24",
+            "answerNll": "2.084923759357262",
+            "eosNll": "0.004671863392407512",
+            "prematureEos": "0",
+            "classCorrect": "2,6,1,2",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "7.277918276334579E-6",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              2,
+              2,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              6,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1,
+              3,
+              0
+            ],
+            [
+              2,
+              0,
+              2,
+              2,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": false,
+            "dev-0002": false,
+            "dev-0003": false,
+            "dev-0004": true,
+            "dev-0005": true,
+            "dev-0006": false,
+            "dev-0007": true,
+            "dev-0008": false,
+            "dev-0009": true,
+            "dev-0010": false,
+            "dev-0011": false,
+            "dev-0012": true,
+            "dev-0013": false,
+            "dev-0014": true,
+            "dev-0015": false,
+            "dev-0016": true,
+            "dev-0017": false,
+            "dev-0018": true,
+            "dev-0019": false,
+            "dev-0020": false,
+            "dev-0021": true,
+            "dev-0022": true,
+            "dev-0023": true,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            }
+          }
+        },
+        {
+          "step": 512,
+          "score": {
+            "split": "dev",
+            "step": "512",
+            "correct": "11",
+            "total": "24",
+            "answerNll": "2.6535228169841227",
+            "eosNll": "0.0017632604922298196",
+            "prematureEos": "0",
+            "classCorrect": "2,6,1,2",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "8.559865058543892E-6",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          "validDigitEos": 24,
+          "confusionMatrixWithInvalidLastColumn": [
+            [
+              2,
+              2,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              6,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              3,
+              1,
+              1,
+              0
+            ],
+            [
+              2,
+              0,
+              2,
+              2,
+              0
+            ]
+          ],
+          "caseDecisions": {
+            "dev-0001": false,
+            "dev-0002": false,
+            "dev-0003": false,
+            "dev-0004": true,
+            "dev-0005": true,
+            "dev-0006": false,
+            "dev-0007": true,
+            "dev-0008": false,
+            "dev-0009": true,
+            "dev-0010": false,
+            "dev-0011": false,
+            "dev-0012": true,
+            "dev-0013": false,
+            "dev-0014": true,
+            "dev-0015": false,
+            "dev-0016": true,
+            "dev-0017": false,
+            "dev-0018": true,
+            "dev-0019": false,
+            "dev-0020": false,
+            "dev-0021": true,
+            "dev-0022": true,
+            "dev-0023": true,
+            "dev-0024": false
+          },
+          "publishedOutputs": {
+            "dev-0001": {
+              "expected": "2",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0002": {
+              "expected": "2",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0003": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0004": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0005": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0006": {
+              "expected": "0",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0007": {
+              "expected": "2",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0008": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0009": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0010": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0011": {
+              "expected": "2",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0012": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0013": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0014": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0015": {
+              "expected": "3",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0016": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0017": {
+              "expected": "2",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0018": {
+              "expected": "3",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0019": {
+              "expected": "2",
+              "output": "3",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0020": {
+              "expected": "0",
+              "output": "2",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            },
+            "dev-0021": {
+              "expected": "1",
+              "output": "1",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0022": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0023": {
+              "expected": "0",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": true
+            },
+            "dev-0024": {
+              "expected": "3",
+              "output": "0",
+              "tokens": 1,
+              "stop": "EOS",
+              "correct": false
+            }
+          }
+        }
+      ],
+      "selection": {
+        "checkpointSha256": "7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2",
+        "step": "128",
+        "devCorrect": "13",
+        "devTotal": "24",
+        "devAnswerNll": "1.7133914955007874",
+        "testRead": "false",
+        "inputsUnchanged": "true",
+        "generalModelPromotion": "NOT_PERMITTED",
+        "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK"
+      },
+      "checkpointHashesReported": {
+        "0": "61ac5a3fad0523d5ad5df8e6b87df5dec893230c30b87b72324e1b970794947e",
+        "128": "7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2",
+        "256": "c93d2a1c0669666ba38a31461077fe45abdac0680cdaee1d7ee8a1ad12d0dbc3",
+        "512": "834abbcd66d4c966e0aff31e73ba98f8c7c5a8f830a57705dfbc857ea370b7b2"
+      },
+      "onlineEpochLosses": [
+        {
+          "epoch": 1,
+          "first_step": 1,
+          "last_step": 32,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 256,
+          "mean_online_nll": 1.4522977371234447,
+          "minimum_minibatch_nll": 0.6493197381496429,
+          "maximum_minibatch_nll": 7.815855264663696
+        },
+        {
+          "epoch": 2,
+          "first_step": 33,
+          "last_step": 64,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 512,
+          "mean_online_nll": 0.775301312096417,
+          "minimum_minibatch_nll": 0.4305862784385681,
+          "maximum_minibatch_nll": 1.2523243427276611
+        },
+        {
+          "epoch": 3,
+          "first_step": 65,
+          "last_step": 96,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 768,
+          "mean_online_nll": 0.3798819837975316,
+          "minimum_minibatch_nll": 0.08378091547638178,
+          "maximum_minibatch_nll": 0.9047005102038383
+        },
+        {
+          "epoch": 4,
+          "first_step": 97,
+          "last_step": 128,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1024,
+          "mean_online_nll": 0.1721902195349685,
+          "minimum_minibatch_nll": 0.013749581994488835,
+          "maximum_minibatch_nll": 0.761537451762706
+        },
+        {
+          "epoch": 5,
+          "first_step": 129,
+          "last_step": 160,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1280,
+          "mean_online_nll": 0.12383673914155224,
+          "minimum_minibatch_nll": 0.01159569201990962,
+          "maximum_minibatch_nll": 0.7104881079867482
+        },
+        {
+          "epoch": 6,
+          "first_step": 161,
+          "last_step": 192,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1536,
+          "mean_online_nll": 0.09668578059427091,
+          "minimum_minibatch_nll": 0.007579426630400121,
+          "maximum_minibatch_nll": 0.8817320689558983
+        },
+        {
+          "epoch": 7,
+          "first_step": 193,
+          "last_step": 224,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1792,
+          "mean_online_nll": 0.07441136390116299,
+          "minimum_minibatch_nll": 0.005475715617649257,
+          "maximum_minibatch_nll": 0.520042747608386
+        },
+        {
+          "epoch": 8,
+          "first_step": 225,
+          "last_step": 256,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2048,
+          "mean_online_nll": 0.06688001689326484,
+          "minimum_minibatch_nll": 0.004083710955455899,
+          "maximum_minibatch_nll": 0.4819896979024634
+        },
+        {
+          "epoch": 9,
+          "first_step": 257,
+          "last_step": 288,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2304,
+          "mean_online_nll": 0.03511189813070814,
+          "minimum_minibatch_nll": 0.0030024595907889307,
+          "maximum_minibatch_nll": 0.476814791909419
+        },
+        {
+          "epoch": 10,
+          "first_step": 289,
+          "last_step": 320,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2560,
+          "mean_online_nll": 0.00717349201295292,
+          "minimum_minibatch_nll": 0.003178368031512946,
+          "maximum_minibatch_nll": 0.014386720256879926
+        },
+        {
+          "epoch": 11,
+          "first_step": 321,
+          "last_step": 352,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2816,
+          "mean_online_nll": 0.005576932591793593,
+          "minimum_minibatch_nll": 0.0026312241388950497,
+          "maximum_minibatch_nll": 0.008487357175908983
+        },
+        {
+          "epoch": 12,
+          "first_step": 353,
+          "last_step": 384,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3072,
+          "mean_online_nll": 0.0049169397871082765,
+          "minimum_minibatch_nll": 0.001955839601578191,
+          "maximum_minibatch_nll": 0.009816937730647624
+        },
+        {
+          "epoch": 13,
+          "first_step": 385,
+          "last_step": 416,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3328,
+          "mean_online_nll": 0.004472630988857418,
+          "minimum_minibatch_nll": 0.0018376607331447303,
+          "maximum_minibatch_nll": 0.00832165649626404
+        },
+        {
+          "epoch": 14,
+          "first_step": 417,
+          "last_step": 448,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3584,
+          "mean_online_nll": 0.004155189863922715,
+          "minimum_minibatch_nll": 0.002265548100695014,
+          "maximum_minibatch_nll": 0.006433811970055103
+        },
+        {
+          "epoch": 15,
+          "first_step": 449,
+          "last_step": 480,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3840,
+          "mean_online_nll": 0.0039061002298694802,
+          "minimum_minibatch_nll": 0.001733875833451748,
+          "maximum_minibatch_nll": 0.005566575942793861
+        },
+        {
+          "epoch": 16,
+          "first_step": 481,
+          "last_step": 512,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 4096,
+          "mean_online_nll": 0.0037078357381687965,
+          "minimum_minibatch_nll": 0.0013516241451725364,
+          "maximum_minibatch_nll": 0.006900553125888109
+        }
+      ],
+      "capacityBefore": {
+        "result": {
+          "pass": "true",
+          "reasons": "NONE",
+          "checkpointSha256": "61ac5a3fad0523d5ad5df8e6b87df5dec893230c30b87b72324e1b970794947e",
+          "parameters": "6562304",
+          "loadMs": "304.990806",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "257.419595",
+          "maxGeneration32CallMs": "386.784118",
+          "firstTokenObservations": "3",
+          "full32TokenObservations": "3",
+          "vmHwmKiB": "154156",
+          "finalVmHwmKiB": "154156",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-wide/checkpoints/61ac5a3fad0523d5ad5df8e6b87df5dec893230c30b87b72324e1b970794947e.lm1",
+          "checkpointSha256": "61ac5a3fad0523d5ad5df8e6b87df5dec893230c30b87b72324e1b970794947e",
+          "checkpointBytes": "26250245",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "6562304",
+          "parameterBytes": "26249216",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "512",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "2048",
+          "loadMs": "304.990806",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": false
+      },
+      "capacityAfter": {
+        "result": {
+          "pass": "false",
+          "reasons": "INCOMPLETE_32_TOKEN_WORKLOAD",
+          "checkpointSha256": "7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2",
+          "parameters": "6562304",
+          "loadMs": "283.16535",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "188.225062",
+          "maxGeneration32CallMs": "202.460422",
+          "firstTokenObservations": "3",
+          "full32TokenObservations": "0",
+          "vmHwmKiB": "175512",
+          "finalVmHwmKiB": "175512",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-wide/checkpoints/7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2.lm1",
+          "checkpointSha256": "7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2",
+          "checkpointBytes": "26250247",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "6562304",
+          "parameterBytes": "26249216",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "512",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "2048",
+          "loadMs": "283.16535",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": false
+      },
+      "capacityAfterMeasuredTrials": [
+        {
+          "phase": "measured",
+          "trial": "1",
+          "requestedNewTokens": "1",
+          "actualNewTokens": "1",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "MAX_TOKENS",
+          "elapsedMs": "188.225062",
+          "runtimeMillis": "188",
+          "ttftUpperBoundMs": "188.225062",
+          "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+        },
+        {
+          "phase": "measured",
+          "trial": "1",
+          "requestedNewTokens": "32",
+          "actualNewTokens": "1",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "EOS",
+          "elapsedMs": "202.460422",
+          "runtimeMillis": "202",
+          "ttftUpperBoundMs": "UNAVAILABLE",
+          "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+        },
+        {
+          "phase": "measured",
+          "trial": "2",
+          "requestedNewTokens": "1",
+          "actualNewTokens": "1",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "MAX_TOKENS",
+          "elapsedMs": "157.446815",
+          "runtimeMillis": "157",
+          "ttftUpperBoundMs": "157.446815",
+          "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+        },
+        {
+          "phase": "measured",
+          "trial": "2",
+          "requestedNewTokens": "32",
+          "actualNewTokens": "1",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "EOS",
+          "elapsedMs": "169.44418",
+          "runtimeMillis": "169",
+          "ttftUpperBoundMs": "UNAVAILABLE",
+          "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+        },
+        {
+          "phase": "measured",
+          "trial": "3",
+          "requestedNewTokens": "1",
+          "actualNewTokens": "1",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "MAX_TOKENS",
+          "elapsedMs": "184.223534",
+          "runtimeMillis": "184",
+          "ttftUpperBoundMs": "184.223534",
+          "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+        },
+        {
+          "phase": "measured",
+          "trial": "3",
+          "requestedNewTokens": "32",
+          "actualNewTokens": "1",
+          "promptTokens": "64",
+          "promptTruncated": "false",
+          "stop": "EOS",
+          "elapsedMs": "187.064828",
+          "runtimeMillis": "187",
+          "ttftUpperBoundMs": "UNAVAILABLE",
+          "textSha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+        }
+      ]
+    }
+  },
+  "selectedPairedDevResults": {
+    "bothCorrect": 11,
+    "onlySmallCorrect": 2,
+    "onlyWideCorrect": 2,
+    "bothWrong": 9
+  },
+  "developmentEligible": true,
+  "publishedStatus": "ELIGIBLE_DEVELOPMENT_CANDIDATE_TEST_DEFERRED_FOR_REGISTERED_SUFFIX_COMPARISON",
+  "testEvaluatedReported": false,
+  "publishedTestOrFreezeArtifacts": [],
+  "v3StudyEvidencePaths": [],
+  "interpretation": {
+    "previousSummaryOnlyGapResolvedAtThisCommit": true,
+    "independentModelTrainingReplication": false,
+    "checkpointBinaryIntegrityIndependentlyRechecked": false,
+    "wholeStudyTrainingBudgetTargetsPerArm": 4096,
+    "selectedCheckpointTargets": {
+      "small": 2048,
+      "wide": 1024
+    },
+    "sameV1V2StepNumberDoesNotMeanSameLearningRatePrefix": true,
+    "onlineEpochMeansAreNotFixedCheckpointOrGeneralizationLosses": true,
+    "capacityFailureDoesNotBecomePassBecauseOneDigitWasGenerated": true,
+    "modelPromotion": false
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "arguments": [
+    "corpus",
+    "/workspace/scratch/0549bca61ccf/inputs/original-train-docs",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/train.txt"
+  ],
+  "command": [
+    "java",
+    "-Xms64m",
+    "-Xmx3g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment.jar",
+    "at.heinz.deviceai.learning.lm.LmWeightExperiment",
+    "corpus",
+    "/workspace/scratch/0549bca61ccf/inputs/original-train-docs",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/train.txt"
+  ],
+  "returncode": 0,
+  "timeout": false,
+  "timeoutSeconds": 180,
+  "wallSeconds": 0.46522953000385314,
+  "logSha256": "e0ee66a021803a9ed74338aa3f0d036d916c40b5386933ef09ef7a92395e191c"
+}

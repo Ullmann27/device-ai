@@ -1,0 +1,193 @@
+{
+  "archiveSha256": "428d62b308e308afd9c971ff4974981e96b9dc8a783d80e3653c226983dcc016",
+  "arms": [
+    {
+      "block": "native",
+      "donor": "S0",
+      "id": "S0",
+      "receiver": "S0"
+    },
+    {
+      "block": "native",
+      "donor": "W0",
+      "id": "W0",
+      "receiver": "W0"
+    },
+    {
+      "block": "native",
+      "donor": "S1",
+      "id": "S1",
+      "receiver": "S1"
+    },
+    {
+      "block": "native",
+      "donor": "W1",
+      "id": "W1",
+      "receiver": "W1"
+    },
+    {
+      "block": "tok",
+      "donor": "S0",
+      "id": "S1_from_S0_tok",
+      "receiver": "S1"
+    },
+    {
+      "block": "nf",
+      "donor": "S0",
+      "id": "S1_from_S0_nf",
+      "receiver": "S1"
+    },
+    {
+      "block": "l0",
+      "donor": "S0",
+      "id": "S1_from_S0_l0",
+      "receiver": "S1"
+    },
+    {
+      "block": "l1",
+      "donor": "S0",
+      "id": "S1_from_S0_l1",
+      "receiver": "S1"
+    },
+    {
+      "block": "tok",
+      "donor": "S1",
+      "id": "S0_from_S1_tok",
+      "receiver": "S0"
+    },
+    {
+      "block": "nf",
+      "donor": "S1",
+      "id": "S0_from_S1_nf",
+      "receiver": "S0"
+    },
+    {
+      "block": "l0",
+      "donor": "S1",
+      "id": "S0_from_S1_l0",
+      "receiver": "S0"
+    },
+    {
+      "block": "l1",
+      "donor": "S1",
+      "id": "S0_from_S1_l1",
+      "receiver": "S0"
+    },
+    {
+      "block": "tok",
+      "donor": "W0",
+      "id": "W1_from_W0_tok",
+      "receiver": "W1"
+    },
+    {
+      "block": "nf",
+      "donor": "W0",
+      "id": "W1_from_W0_nf",
+      "receiver": "W1"
+    },
+    {
+      "block": "l0",
+      "donor": "W0",
+      "id": "W1_from_W0_l0",
+      "receiver": "W1"
+    },
+    {
+      "block": "l1",
+      "donor": "W0",
+      "id": "W1_from_W0_l1",
+      "receiver": "W1"
+    },
+    {
+      "block": "tok",
+      "donor": "W1",
+      "id": "W0_from_W1_tok",
+      "receiver": "W0"
+    },
+    {
+      "block": "nf",
+      "donor": "W1",
+      "id": "W0_from_W1_nf",
+      "receiver": "W0"
+    },
+    {
+      "block": "l0",
+      "donor": "W1",
+      "id": "W0_from_W1_l0",
+      "receiver": "W0"
+    },
+    {
+      "block": "l1",
+      "donor": "W1",
+      "id": "W0_from_W1_l1",
+      "receiver": "W0"
+    }
+  ],
+  "buildReceipt": {
+    "command": [
+      "java",
+      "-Xmx768m",
+      "-cp",
+      "/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-stdlib-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-reflect-1.6.10.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/annotations-13.0.jar",
+      "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+      "-no-stdlib",
+      "-no-reflect",
+      "-jvm-target",
+      "17",
+      "-classpath",
+      "/workspace/scratch/3112c86b5191/LM1_Training_Research_20261104/runtime/v3-experiment.jar:/workspace/scratch/3112c86b5191/LM1_Training_Research_20261104/runtime/kotlin-stdlib-2.0.20.jar",
+      "-d",
+      "/workspace/scratch/0549bca61ccf/night-diagnostic-build/diagnostic.jar",
+      "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/overnight-research/LmChannelDiagnostic.kt"
+    ],
+    "compilerFiles": {
+      "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+      "kotlin-compiler-embeddable-2.4.0.jar": "c2b25e8c1c93ec416ba4327f5e31eaec0f0c8847241b9353e294b8db9dce564f",
+      "kotlin-daemon-embeddable-2.4.0.jar": "383093af5e078435b60043d19bfa83eb6191be0f4d13a28fb1c8a0f3ab24fe66",
+      "kotlin-reflect-1.6.10.jar": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203",
+      "kotlin-script-runtime-2.4.0.jar": "196e8ecbf63daf477e34e67c2f871ee232ae7bf8b377432d876d1bbf9d273de3",
+      "kotlin-stdlib-2.4.0.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+      "kotlinx-coroutines-core-jvm-1.8.0.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+    },
+    "exitCode": 0,
+    "jarSha256": "26aabef28874dc5d69eb54f76da5d6b4c7fd0267c45378e23269a89a9b627dca",
+    "sourceSha256": "df8266d07c6ce587d8f0f6fa41a81696448273330fddaca968289b9094acff90",
+    "stderr": "",
+    "stdout": ""
+  },
+  "buildReceiptSha256": "185617e3a60efcf11540af2d962a25570be3038429fdfaf784679c0a9c2122f0",
+  "harnessJarSha256": "26aabef28874dc5d69eb54f76da5d6b4c7fd0267c45378e23269a89a9b627dca",
+  "java": {
+    "path": "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "sha256": "1a7e0b17c39003c75b457d686775ccb032e56fa9c8afe3c492d8eb3715e8951a",
+    "version": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)\n"
+  },
+  "limits": {
+    "generationMillis": 5000,
+    "generationTokens": 32,
+    "heap": "1g",
+    "maxRssKiB": 786432,
+    "processSeconds": 120,
+    "totalProcessSeconds": 1800
+  },
+  "modelSourceCommit": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
+  "models": {
+    "S0": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+    "S1": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+    "W0": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d",
+    "W1": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c"
+  },
+  "probesTsvSha256": "0269d022a59a3408783e7541d81ed4950b61c099ebbb4f8c26706473eeba8e4f",
+  "protocolCommit": "062256befb0bafc3da5adbf18d7f2e27182e5b48",
+  "purpose": "CHANNEL_AND_EOS_DIAGNOSTICS_ONLY",
+  "runtimeJarSha256": "8075d799b42f3b4f23f2f154af09685f52074503b0a4103ba336a618a3be1950",
+  "schemaVersion": 1,
+  "sourceHashes": {
+    "LmChannelDiagnostic.kt": "df8266d07c6ce587d8f0f6fa41a81696448273330fddaca968289b9094acff90",
+    "PROTOCOL.md": "1acf9d75cc14640e790c451ad782f3700e4c48c9c09dafda6fe60c7bf617f68e",
+    "probes.json": "f6a50735084412ee0dd0fb948d8cd968bd270a51b924f880a7d4b932d6c7101a",
+    "run_diagnostics.py": "a8930d6d081404b7c92621e0bfa790f0e40466a38fd54a8d41688f19797697c2"
+  },
+  "stdlibSha256": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006",
+  "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+  "trainingPermitted": false
+}

@@ -1,0 +1,87 @@
+{
+  "task": "G1-INTEGRATE-WEIGHT-002",
+  "type": "AUTHENTIC_FULL_RAW_DEV_LOG_AND_RECEIPT_AUDIT",
+  "sourcePr508Head": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
+  "ownParent": "e42be960a1bef2576fa07a1dda69eded4205e639",
+  "checked": "six full logs + six receipts from exactly pinned PR508; independent JS SHA256 UTF-8 computation and 3 known reference vectors; six reports independently passed stored source-gate blob",
+  "sourceGateGitBlob": "724d54e45470eca8fe22e50d005e612c17d7c336",
+  "testsGitBlob": "584e36cdc5ca22295d7c540bd032821f79039ddf",
+  "results": {
+    "v1": {
+      "status": "NO_DEVELOPMENT_SIGNAL",
+      "small": {
+        "logGitBlob": "0f80d783875b8380404cc5b40de8a22cfb0cde2d",
+        "receiptGitBlob": "6e89420c3b5b299840ca6fabff3e0960dd9a5421",
+        "sha256": "7853830f25752e9b959ea190d242be987b1a605bd091ba8f35bd4a1d6da6f2ef",
+        "initial": 0,
+        "selected": 8,
+        "step": 128
+      },
+      "wide": {
+        "logGitBlob": "98885fa105396140913efb17eb57a5f623f5e711",
+        "receiptGitBlob": "3c05e26b1a9bdd36a7e7593635e371212fd5a36c",
+        "sha256": "27737b8fdb7f2cff4d2d8cb990b897c4a3e34a081a07c97f9b6f10d95646f0e9",
+        "initial": 0,
+        "selected": 10,
+        "step": 128
+      }
+    },
+    "v2": {
+      "status": "ELIGIBLE",
+      "small": {
+        "logGitBlob": "4fdc8a4da95445905fe22e11f5dd3616db3d1ace",
+        "receiptGitBlob": "e1fd827d2e18e2caf0df7e996c34db4098820a94",
+        "sha256": "a6ce3a1c31b2faa398abf2a0d5ba1c80015c9bb01ad52a0a4faeca5ab075f154",
+        "initial": 0,
+        "selected": 13,
+        "step": 256
+      },
+      "wide": {
+        "logGitBlob": "193a6dc84fbb17e687c12ad09934c389049049f0",
+        "receiptGitBlob": "336f6d1755e793dc0794bb38098da06ad082e1d5",
+        "sha256": "3538ebc9857a8f2d10f184b6c03ab4179e9b17dffb54959c3fd84deb8318ac57",
+        "initial": 0,
+        "selected": 13,
+        "step": 128
+      }
+    },
+    "v3": {
+      "status": "ELIGIBLE",
+      "small": {
+        "logGitBlob": "e8edb62ddeb042e4a6150c60baa3a6bfd9ff3096",
+        "receiptGitBlob": "a9960aa17b75d6c1257f96f867cdbc0155c8e479",
+        "sha256": "7d73888a10cde861154aa42d54a9d1eb340fc1e1e2af17891106186b5e1fc1d6",
+        "initial": 0,
+        "selected": 13,
+        "step": 512
+      },
+      "wide": {
+        "logGitBlob": "0a51d3f8fcb64a49f860cf5f70f2d784f2a5f3e3",
+        "receiptGitBlob": "7ab54c7f091e85d857c288a8cbe6502168dbffaf",
+        "sha256": "aa44e7cf82dd5717b48e4eae3617fac7800ad96cb8392de3ea758f1b0ad31523",
+        "initial": 0,
+        "selected": 16,
+        "step": 128
+      }
+    }
+  },
+  "checks": {
+    "originalFullLogReceiptSha256": "6/6_PASS",
+    "sourceGateRealLogChecks": "6/6_PASS_V8",
+    "syntheticSourceGateChecks": "17/17_PASS_V8",
+    "sha256KnownVectors": "3/3_PASS",
+    "fullOriginalPythonControllers": "NOT_RUN",
+    "localAuthenticCheckout": "ABSENT",
+    "currentNewModelProcesses": 0,
+    "currentBackwardPasses": 0,
+    "currentOptimizerUpdates": 0
+  },
+  "constraints": {
+    "accepted": "M5_UNCHANGED",
+    "M6": "PARITY_FAIL_RESTORED",
+    "quality": "FAIL",
+    "oldFinalTest": "CONSUMED",
+    "newModelResearch": "PROHIBITED_THIS_ROUND",
+    "PR508Integrated": false
+  }
+}

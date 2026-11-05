@@ -1,0 +1,72 @@
+{
+  "status": "LATER_HEAD_SOURCE_IDENTITIES_UNCHANGED_EVIDENCE_NOT_REAUDITED",
+  "reviewedEvidenceCommit": "9ceffc26a2159c8dc726c1f13d2882119159c130",
+  "laterObservedBranchHead": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
+  "sourceComparisons": {
+    "experimental/lm1-training-recovery-20261104/run_registered_study.py": {
+      "atReviewedPin": "28908e07d6217f10882429047c853d1dd8667912",
+      "atLaterHead": "28908e07d6217f10882429047c853d1dd8667912",
+      "byteIdenticalGitBlob": true
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py": {
+      "atReviewedPin": "30119435feed1728c5d22fec40830654a7a19861",
+      "atLaterHead": "30119435feed1728c5d22fec40830654a7a19861",
+      "byteIdenticalGitBlob": true
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py": {
+      "atReviewedPin": "417e4b3289bb692e72dc80398b51b67e106b8907",
+      "atLaterHead": "417e4b3289bb692e72dc80398b51b67e106b8907",
+      "byteIdenticalGitBlob": true
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/choose_development_study.py": {
+      "atReviewedPin": "77133d843d7fc03a8a87b595c75a948387c55464",
+      "atLaterHead": "77133d843d7fc03a8a87b595c75a948387c55464",
+      "byteIdenticalGitBlob": true
+    },
+    "experimental/lm1-training-recovery-20261104/registration.json": {
+      "atReviewedPin": "7e5c6f92ff1ab96c520d5b5d9bb5294fb05065d4",
+      "atLaterHead": "7e5c6f92ff1ab96c520d5b5d9bb5294fb05065d4",
+      "byteIdenticalGitBlob": true
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/registration.json": {
+      "atReviewedPin": "aa9f4a75a72674f6bb62ab48b0dc0cab43027457",
+      "atLaterHead": "aa9f4a75a72674f6bb62ab48b0dc0cab43027457",
+      "byteIdenticalGitBlob": true
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/registration.json": {
+      "atReviewedPin": "0c9fef1a06cfc890e3caa4d2d6c71f1d38c6e5fb",
+      "atLaterHead": "0c9fef1a06cfc890e3caa4d2d6c71f1d38c6e5fb",
+      "byteIdenticalGitBlob": true
+    }
+  },
+  "changedPathsOnly": [
+    "M\tdocs/evidence/lm1-training-recovery-20261104/REPRODUCE.md",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/RESULTS.md",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/archive-manifest.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/final-case-audit.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/final-independent-review.md",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/final-selection/publication-metadata.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/intent-long-independent-review.md",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/publication-integrity.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/intent-summary.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S0.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S0.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S1.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-S1.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W0.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W0.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W1.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/test-W1.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/train-fit-S1.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/train-fit-S1.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/train-fit-W1.receipt.json",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/logs/train-fit-W1.tsv",
+    "A\tdocs/evidence/lm1-training-recovery-20261104/study-v3/training-fit-summary.json",
+    "M\tdocs/research/omega/LM1-TRAINING-RECOVERY-HANDOFF-20261104.md"
+  ],
+  "laterEvidenceContentsRead": false,
+  "laterFinalTestResultsAssessed": false,
+  "actualModelProcesses": 0,
+  "historicalEvidenceAuditStillPinned": true,
+  "scope": "Git object identities and changed path names only; not a new final-test audit."
+}

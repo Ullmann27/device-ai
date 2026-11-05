@@ -1,0 +1,36 @@
+{
+  "sourceCommit": "3e571d6390c672ab86f5961d50700f56084ff6ef",
+  "verifiedUtcBeforeAnyHoldoutEvaluation": "2026-11-04T11:40:35Z",
+  "command": [
+    "python3",
+    "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/run_experiment.py",
+    "study-freeze",
+    "--profile",
+    "core-6562304",
+    "--inputs",
+    "/workspace/scratch/0549bca61ccf/inputs",
+    "--jar",
+    "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment-final.jar",
+    "--holdout",
+    "/workspace/scratch/0549bca61ccf/holdout-g1-6to10m-private/final.txt",
+    "--study-root",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m",
+    "--output",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304"
+  ],
+  "studySelectionSha256": "7a98a360ba274b1d452237b7a69007691a687593f68092dff5a82a001cb45ac3",
+  "childSelectionSha256": {
+    "core-6562304": "84892007baa8a15a0451eb2541e7b36d95d43819417990115047b49eab27ff89",
+    "core-9712128": "f9395441c7aa3d7fd8301bff53f6df8d09c222584953a9c3bc2f3f45de555096"
+  },
+  "existingHoldoutEvaluationFiles": [],
+  "preferred": {
+    "studyProfileId": "core-6562304",
+    "label": "baseline",
+    "path": "/workspace/scratch/0549bca61ccf/inputs/lm1-baseline.lm1",
+    "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "parameters": 132160,
+    "bytes": 529297,
+    "devBpb": 2.3525414158359124
+  }
+}

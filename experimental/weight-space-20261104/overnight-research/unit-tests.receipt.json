@@ -1,0 +1,11 @@
+{
+  "exitCode": 0,
+  "logSha256": "f54213128beb11b03e2c4fe7e1a5c13631710148ea7a8c7889a9aec3d8443724",
+  "sourceHashes": {
+    "audit_replicas.py": "a0fae197d267d710120b44945c8517b6aa39d5ddd7f52ac291a25710cae5db71",
+    "run_diagnostics.py": "a8930d6d081404b7c92621e0bfa790f0e40466a38fd54a8d41688f19797697c2",
+    "test_diagnostic_gate.py": "3c59634a9d5908cea1585672d4189018665baa53ae7ab5a70539d590c1dabd4a",
+    "test_replica_metrics.py": "8828f101c13ce9e8f050743fb9553f385b45527d016d0cc0dc52c2acf755d086"
+  },
+  "testMethods": 20
+}

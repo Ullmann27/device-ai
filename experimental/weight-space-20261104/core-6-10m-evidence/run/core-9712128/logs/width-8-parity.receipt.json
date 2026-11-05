@@ -1,0 +1,40 @@
+{
+  "arguments": [
+    "parity",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-baseline.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128/checkpoints/4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd.lm1"
+  ],
+  "command": [
+    "java",
+    "-Xms64m",
+    "-Xmx3g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment-final.jar",
+    "at.heinz.deviceai.learning.lm.LmWeightExperiment",
+    "parity",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-baseline.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128/checkpoints/4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd.lm1"
+  ],
+  "returncode": 0,
+  "timeout": false,
+  "timeoutSeconds": 180,
+  "wallSeconds": 1.9763010070018936,
+  "logSha256": "566cdfca4754c792ae0073fd59a10f6616cd49b2d8bf5d04cf51c8dd0407139d",
+  "inputHashes": {
+    "checkpointSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "comparisonCheckpointSha256": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd"
+  },
+  "orchestratorSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "runtimeIdentity": {
+    "jarSha256": "1b6d22ee57977a6e27ec2d0b72e57fab3a35fb8e694905c1270a4ffe87a2f9ba",
+    "protocolSha256": "f6830becc381fb638b63917763546d178838d32a8e4ba569cf31af66d32d8ee2",
+    "profileId": "core-9712128",
+    "profileSha256": "a41eb45d485f9d0fd4bc78bb91f156a922243bb0fb5c0ca52697c9edfef573f5",
+    "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+    "studyRegistrationSha256": "b9785250d0795c445a68c8b2a3ddc315261a107727c9c1e8081eed6a5279f689"
+  },
+  "identityValidationFailure": null
+}

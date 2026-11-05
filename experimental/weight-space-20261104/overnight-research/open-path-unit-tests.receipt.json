@@ -1,0 +1,11 @@
+{
+  "exitCode": 0,
+  "testMethods": 4,
+  "logSha256": "77fb2577eb33ca957d36732a045dc9d3fe4faa9c77b2c0dfbe606808bf0d4bad",
+  "sourceHashes": {
+    "test_open_path_gate.py": "abe2236e822aeb6cb4694d1d110e9d226ae42438e8a7c599de6a1fca0d7ac7f9",
+    "run_open_path.py": "9e0731fda7e685cb8048a3fdb4fd320b0132b68cb5824098f2c9f1103d260b7b",
+    "run_gradient_access.py": "b95e2d071be0b111791246868313a99b6fad432f983fc537b62247fe08d2297d",
+    "run_diagnostics.py": "a8930d6d081404b7c92621e0bfa790f0e40466a38fd54a8d41688f19797697c2"
+  }
+}

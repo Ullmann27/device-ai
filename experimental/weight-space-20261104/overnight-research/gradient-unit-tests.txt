@@ -1,0 +1,12 @@
+test_all_three_complete_profiles (test_gradient_gate.GradientGateTest.test_all_three_complete_profiles) ... ok
+test_bad_registration_never_launches (test_gradient_gate.GradientGateTest.test_bad_registration_never_launches) ... ok
+test_chain_gate_not_just_pass_flag (test_gradient_gate.GradientGateTest.test_chain_gate_not_just_pass_flag) ... ok
+test_counts_derived_from_layout (test_gradient_gate.GradientGateTest.test_counts_derived_from_layout) ... ok
+test_depth_flags_must_match_actual_gradients (test_gradient_gate.GradientGateTest.test_depth_flags_must_match_actual_gradients) ... ok
+test_mutated_gates_rejected (test_gradient_gate.GradientGateTest.test_mutated_gates_rejected) ... ok
+test_partial_reordered_or_extra_output_rejected (test_gradient_gate.GradientGateTest.test_partial_reordered_or_extra_output_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.073s
+
+OK

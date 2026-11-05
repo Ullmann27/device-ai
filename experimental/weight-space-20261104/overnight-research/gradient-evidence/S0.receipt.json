@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx3g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/night-gradient-build/gradient.jar:/workspace/scratch/3112c86b5191/LM1_Training_Research_20261104/runtime/v3-experiment.jar:/workspace/scratch/3112c86b5191/LM1_Training_Research_20261104/runtime/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmGradientAccess",
+    "/workspace/scratch/0549bca61ccf/night-diagnostic-run/inputs",
+    "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/0549bca61ccf/night-diagnostic-run/inputs/probes.tsv",
+    "S0"
+  ],
+  "elapsedSeconds": 0.8621593649986607,
+  "exitCode": 0,
+  "maxRssKiB": 231032,
+  "profile": "S0",
+  "registrationSha256": "3ee5dc40b67fad6c86c0c0b8487740834526530637e5ee9a9f992691d26f4f88",
+  "status": "PASS",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdoutSha256": "389df0f607c6a179ab3f43c804075c2b349b463d8194b1b12d844953e03277bb",
+  "systemSeconds": 0.181843,
+  "timedOut": false,
+  "userSeconds": 1.556037
+}

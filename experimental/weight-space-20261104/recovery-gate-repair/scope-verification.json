@@ -1,0 +1,14 @@
+{
+  "observedUtc": "2026-11-04T19:38:19.401609+00:00",
+  "comparisonBase": "f9a594641f4f2101e84d46baa8dd87e85b5364cd",
+  "publishedRepairCommit": "86f51e38622bf46a72d95a5f76683e7d9637cb81",
+  "allowedPrefix": "experimental/weight-space-20261104/recovery-gate-repair/",
+  "allChangesInsideAllowedPrefix": true,
+  "trackedPathsOutsideAllowedPrefixChanged": [],
+  "productiveRuntimeModified": false,
+  "previousG1TrainingGatesModified": false,
+  "modelPromotion": false,
+  "newModelProcesses": 0,
+  "realHoldoutRead": false,
+  "verificationScope": "Source-bound synthetic control-flow tests and read-only published text evidence review; actual model binaries were not rehashed."
+}

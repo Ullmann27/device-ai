@@ -1,0 +1,52 @@
+{
+  "task": "G1-INTEGRATE-WEIGHT-002",
+  "continuation": 6,
+  "date": "2026-11-05",
+  "sourcePr492HeadBefore": "f8b2ac35e144dc95cba4941904c26f6b91c48c39",
+  "reviewedPr508Head": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
+  "localRuntime": {
+    "python": "3.13.5",
+    "java": "21.0.12.1",
+    "git": "2.47.3",
+    "originalCheckout": "MISSING",
+    "remoteClone": "DNS_BLOCKED"
+  },
+  "privateArchives": {
+    "count": 2,
+    "wholeArchiveSha256": "2/2_MATCH_PRIVATE_REGISTRATION",
+    "zipCrc": "2/2_PASS",
+    "diagnosticPayloads": "3/3_SHA256_AND_SIZE_PASS",
+    "researchPayloads": "9/9_SHA256_AND_SIZE_PASS",
+    "modelMetadata": "4/4_MATCH",
+    "crossBundleRuntimeDependency": "2/2_MATCH",
+    "privateDigestsPublished": false
+  },
+  "sourceTest": {
+    "cmd": "python3 -B -m unittest -v test_verify_archive.py",
+    "runner": "Python 3.13.5",
+    "result": "13/13_PASS",
+    "positiveCases": 1,
+    "negativeCases": 12,
+    "codeBlob": "cfcc5bcd892675b076cf42feadf04c5b13dccd7a",
+    "testBlob": "a39e162a83c35cbeb682c9aeb99063a605368260"
+  },
+  "modelState": {
+    "accepted": "M5_UNCHANGED",
+    "M6": "PARITY_FAIL_RESTORED",
+    "newModelRuns": 0,
+    "optimizerUpdates": 0,
+    "quality": "FAIL",
+    "oldFinalTest": "CONSUMED",
+    "continuationTraining": false
+  },
+  "limitations": {
+    "originalControllerTests": "NOT_RUN",
+    "invalidResumeOriginalController": "NOT_RUN",
+    "baselineOriginalController": "NOT_RUN",
+    "pr508Modified": false,
+    "patchIntegratedInto508": false,
+    "originalModelExecuted": false,
+    "sourcePatchMatchedHunks": "16/16_PREVIOUS_REVIEW_NOT_RERUN"
+  },
+  "publication": "RESEARCH_ONLY_NO_PRODUCTION_OR_RELEASE"
+}

@@ -1,0 +1,2244 @@
+{
+  "status": "PUBLISHED_V1_EVIDENCE_CONSISTENT_V2_RAW_EVIDENCE_MISSING",
+  "reviewedCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "executedSourceCommitReported": "def5acf9cbba82ee51a53cc06fecc52e9cd0324d",
+  "modelProcessesStarted": 0,
+  "modelAndIntentDatasetBytesRead": 0,
+  "scope": "TEXT_ONLY_INDEPENDENT_RECALCULATION_OF_PUBLISHED_EVIDENCE_NOT_TRAINING_REPLICATION",
+  "diagnostic": {
+    "small-standard": {
+      "parameters": 132160,
+      "steps": 16,
+      "targetTokens": 3255,
+      "eosTargets": 26,
+      "manifest": {
+        "scope": "RESEARCH_SHADOW",
+        "baseSourceCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+        "variant": "small-standard",
+        "parameters": "132160",
+        "learningRate": "1.0E-4",
+        "nfPostUpdateScale": "1.0",
+        "nfOptimizerMoments": "UNCHANGED_ORIGINAL_TRAINER",
+        "steps": "16",
+        "batch": "4",
+        "seed": "20261104",
+        "weightDecay": "0.01",
+        "warmup": "2",
+        "clip": "1",
+        "workers": "2",
+        "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+        "scheduleSha256": "346e93c510dafe5e12ee6a0e54ae94a0f0d099e7c0fc8c6f8973e5ff9a6b5066",
+        "targetTokens": "3255",
+        "eosTargets": "26",
+        "eosId": "511",
+        "bosId": "510",
+        "javaVersion": "21.0.13",
+        "osArch": "amd64"
+      },
+      "checkpointSha256Reported": "262c55082b8b28c8424fd7fe02d9a1d3ab16961db7caace934cbd6318ef9bf82",
+      "changedWeightsReported": 132159,
+      "processWallSeconds": 8.459738263999498,
+      "beforeBpb": 2.3525414158359124,
+      "afterBpb": 2.35250680129539,
+      "bpbDelta": -3.461454052233748e-05,
+      "fixedFirstBatch": [
+        {
+          "step": "0",
+          "nll": "2.6286349747483997",
+          "targets": "234"
+        },
+        {
+          "step": "1",
+          "nll": "2.582362670384284",
+          "targets": "234"
+        },
+        {
+          "step": "4",
+          "nll": "2.4842431683612363",
+          "targets": "234"
+        },
+        {
+          "step": "16",
+          "nll": "2.430477747267991",
+          "targets": "234"
+        }
+      ],
+      "nfAppliedToProposedRatioRange": [
+        1.0,
+        1.0
+      ],
+      "capacityProbes": [
+        {
+          "step": "0",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.2197577",
+          "eosLogit": "8.758981",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.841682",
+          "eosMargin": "-0.08270168"
+        },
+        {
+          "step": "1",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.22164904",
+          "eosLogit": "8.782503",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.850264",
+          "eosMargin": "-0.06776047"
+        },
+        {
+          "step": "4",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.22275129",
+          "eosLogit": "8.81026",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.821347",
+          "eosMargin": "-0.011087418"
+        },
+        {
+          "step": "16",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.22654149",
+          "eosLogit": "8.872135",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.774999",
+          "eosMargin": "0.0971365"
+        }
+      ],
+      "prefixLargestEosMargin": -6.6284957,
+      "prefixLargestEosProbability": 0.00015281726,
+      "capacityBefore": {
+        "result": {
+          "pass": "true",
+          "reasons": "NONE",
+          "checkpointSha256": "770b43b882771de5d9ad984a7f88288ae092efcdaf231ad15d66c8d2c90941cd",
+          "parameters": "132160",
+          "loadMs": "251.046608",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "27.441984",
+          "maxGeneration32CallMs": "68.908001",
+          "firstTokenObservations": "3",
+          "full32TokenObservations": "3",
+          "vmHwmKiB": "79884",
+          "finalVmHwmKiB": "79884",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/diagnostic-small-standard/checkpoints/770b43b882771de5d9ad984a7f88288ae092efcdaf231ad15d66c8d2c90941cd.lm1",
+          "checkpointSha256": "770b43b882771de5d9ad984a7f88288ae092efcdaf231ad15d66c8d2c90941cd",
+          "checkpointBytes": "529455",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "132160",
+          "parameterBytes": "528640",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "64",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "256",
+          "loadMs": "251.046608",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": false
+      },
+      "capacityAfter": {
+        "result": {
+          "pass": "false",
+          "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+          "checkpointSha256": "262c55082b8b28c8424fd7fe02d9a1d3ab16961db7caace934cbd6318ef9bf82",
+          "parameters": "132160",
+          "loadMs": "272.963119",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "47.891203",
+          "maxGeneration32CallMs": "61.041811",
+          "firstTokenObservations": "0",
+          "full32TokenObservations": "0",
+          "vmHwmKiB": "67736",
+          "finalVmHwmKiB": "67736",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/diagnostic-small-standard/checkpoints/262c55082b8b28c8424fd7fe02d9a1d3ab16961db7caace934cbd6318ef9bf82.lm1",
+          "checkpointSha256": "262c55082b8b28c8424fd7fe02d9a1d3ab16961db7caace934cbd6318ef9bf82",
+          "checkpointBytes": "529672",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "132160",
+          "parameterBytes": "528640",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "64",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "256",
+          "loadMs": "272.963119",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": true
+      },
+      "limitedContinuationSuccess": false
+    },
+    "wide-standard": {
+      "parameters": 6562304,
+      "steps": 16,
+      "targetTokens": 3255,
+      "eosTargets": 26,
+      "manifest": {
+        "scope": "RESEARCH_SHADOW",
+        "baseSourceCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+        "variant": "wide-standard",
+        "parameters": "6562304",
+        "learningRate": "1.0E-4",
+        "nfPostUpdateScale": "1.0",
+        "nfOptimizerMoments": "UNCHANGED_ORIGINAL_TRAINER",
+        "steps": "16",
+        "batch": "4",
+        "seed": "20261104",
+        "weightDecay": "0.01",
+        "warmup": "2",
+        "clip": "1",
+        "workers": "2",
+        "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+        "scheduleSha256": "346e93c510dafe5e12ee6a0e54ae94a0f0d099e7c0fc8c6f8973e5ff9a6b5066",
+        "targetTokens": "3255",
+        "eosTargets": "26",
+        "eosId": "511",
+        "bosId": "510",
+        "javaVersion": "21.0.13",
+        "osArch": "amd64"
+      },
+      "checkpointSha256Reported": "70ba0c38062d5ed879acaa4b8e130315724887aa02d8e6a9412c6c4b4e53a225",
+      "changedWeightsReported": 6562289,
+      "processWallSeconds": 61.93677576000027,
+      "beforeBpb": 2.352541414133888,
+      "afterBpb": 2.4365331813205846,
+      "bpbDelta": 0.08399176718669654,
+      "fixedFirstBatch": [
+        {
+          "step": "0",
+          "nll": "2.6286351083582358",
+          "targets": "234"
+        },
+        {
+          "step": "1",
+          "nll": "2.342063966296452",
+          "targets": "234"
+        },
+        {
+          "step": "4",
+          "nll": "1.9621537232451167",
+          "targets": "234"
+        },
+        {
+          "step": "16",
+          "nll": "1.9173111603193118",
+          "targets": "234"
+        }
+      ],
+      "nfAppliedToProposedRatioRange": [
+        1.0,
+        1.0
+      ],
+      "capacityProbes": [
+        {
+          "step": "0",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.21975711",
+          "eosLogit": "8.758974",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.841673",
+          "eosMargin": "-0.08269882"
+        },
+        {
+          "step": "1",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.22932251",
+          "eosLogit": "8.907785",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.912621",
+          "eosMargin": "-0.004835129"
+        },
+        {
+          "step": "4",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.21955326",
+          "eosLogit": "8.917363",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.7015",
+          "eosMargin": "0.21586323"
+        },
+        {
+          "step": "16",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.21847048",
+          "eosLogit": "8.804445",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.257801",
+          "eosMargin": "0.5466442"
+        }
+      ],
+      "prefixLargestEosMargin": -6.3744006,
+      "prefixLargestEosProbability": 0.00021614876,
+      "capacityBefore": {
+        "result": {
+          "pass": "true",
+          "reasons": "NONE",
+          "checkpointSha256": "0e1e0a4f6c6f3607c51deb4602c6ed70660edf1a1caf38d5d1d8e92ca3daf289",
+          "parameters": "6562304",
+          "loadMs": "549.700975",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "316.81654",
+          "maxGeneration32CallMs": "381.350218",
+          "firstTokenObservations": "3",
+          "full32TokenObservations": "3",
+          "vmHwmKiB": "184528",
+          "finalVmHwmKiB": "184528",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/diagnostic-wide-standard/checkpoints/0e1e0a4f6c6f3607c51deb4602c6ed70660edf1a1caf38d5d1d8e92ca3daf289.lm1",
+          "checkpointSha256": "0e1e0a4f6c6f3607c51deb4602c6ed70660edf1a1caf38d5d1d8e92ca3daf289",
+          "checkpointBytes": "26250031",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "6562304",
+          "parameterBytes": "26249216",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "512",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "2048",
+          "loadMs": "549.700975",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": false
+      },
+      "capacityAfter": {
+        "result": {
+          "pass": "false",
+          "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+          "checkpointSha256": "70ba0c38062d5ed879acaa4b8e130315724887aa02d8e6a9412c6c4b4e53a225",
+          "parameters": "6562304",
+          "loadMs": "423.462401",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "227.602719",
+          "maxGeneration32CallMs": "254.564125",
+          "firstTokenObservations": "0",
+          "full32TokenObservations": "0",
+          "vmHwmKiB": "195024",
+          "finalVmHwmKiB": "195024",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/diagnostic-wide-standard/checkpoints/70ba0c38062d5ed879acaa4b8e130315724887aa02d8e6a9412c6c4b4e53a225.lm1",
+          "checkpointSha256": "70ba0c38062d5ed879acaa4b8e130315724887aa02d8e6a9412c6c4b4e53a225",
+          "checkpointBytes": "26250248",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "6562304",
+          "parameterBytes": "26249216",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "512",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "2048",
+          "loadMs": "423.462401",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": true
+      },
+      "limitedContinuationSuccess": false
+    },
+    "wide-nf-scaled": {
+      "parameters": 6562304,
+      "steps": 16,
+      "targetTokens": 3255,
+      "eosTargets": 26,
+      "manifest": {
+        "scope": "RESEARCH_SHADOW",
+        "baseSourceCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+        "variant": "wide-nf-scaled",
+        "parameters": "6562304",
+        "learningRate": "1.0E-4",
+        "nfPostUpdateScale": "0.125",
+        "nfOptimizerMoments": "UNCHANGED_ORIGINAL_TRAINER",
+        "steps": "16",
+        "batch": "4",
+        "seed": "20261104",
+        "weightDecay": "0.01",
+        "warmup": "2",
+        "clip": "1",
+        "workers": "2",
+        "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+        "scheduleSha256": "346e93c510dafe5e12ee6a0e54ae94a0f0d099e7c0fc8c6f8973e5ff9a6b5066",
+        "targetTokens": "3255",
+        "eosTargets": "26",
+        "eosId": "511",
+        "bosId": "510",
+        "javaVersion": "21.0.13",
+        "osArch": "amd64"
+      },
+      "checkpointSha256Reported": "182b0e20bf74f1e8ea45caacde88b94d472cc7d03d77635f3779afd4f17816d7",
+      "changedWeightsReported": 6562293,
+      "processWallSeconds": 52.6030326049995,
+      "beforeBpb": 2.352541414133888,
+      "afterBpb": 2.436379135799533,
+      "bpbDelta": 0.08383772166564496,
+      "fixedFirstBatch": [
+        {
+          "step": "0",
+          "nll": "2.6286351083582358",
+          "targets": "234"
+        },
+        {
+          "step": "1",
+          "nll": "2.3421656034542826",
+          "targets": "234"
+        },
+        {
+          "step": "4",
+          "nll": "1.9625145193679903",
+          "targets": "234"
+        },
+        {
+          "step": "16",
+          "nll": "1.9179713515880672",
+          "targets": "234"
+        }
+      ],
+      "nfAppliedToProposedRatioRange": [
+        0.12479461710795264,
+        0.12504608760894592
+      ],
+      "capacityProbes": [
+        {
+          "step": "0",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.21975711",
+          "eosLogit": "8.758974",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.841673",
+          "eosMargin": "-0.08269882"
+        },
+        {
+          "step": "1",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.22934996",
+          "eosLogit": "8.907737",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.912572",
+          "eosMargin": "-0.004835129"
+        },
+        {
+          "step": "4",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.21960855",
+          "eosLogit": "8.915588",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.699284",
+          "eosMargin": "0.21630478"
+        },
+        {
+          "step": "16",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.21834815",
+          "eosLogit": "8.7981615",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.2514105",
+          "eosMargin": "0.546751"
+        }
+      ],
+      "prefixLargestEosMargin": -6.374255,
+      "prefixLargestEosProbability": 0.00021617622,
+      "capacityBefore": {
+        "result": {
+          "pass": "true",
+          "reasons": "NONE",
+          "checkpointSha256": "863974ac7b7e929f8006317ea66e30a6c38883151e775cb27e0de6ccbb01e0db",
+          "parameters": "6562304",
+          "loadMs": "312.247655",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "215.636648",
+          "maxGeneration32CallMs": "367.172992",
+          "firstTokenObservations": "3",
+          "full32TokenObservations": "3",
+          "vmHwmKiB": "167552",
+          "finalVmHwmKiB": "167552",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/diagnostic-wide-nf-scaled/checkpoints/863974ac7b7e929f8006317ea66e30a6c38883151e775cb27e0de6ccbb01e0db.lm1",
+          "checkpointSha256": "863974ac7b7e929f8006317ea66e30a6c38883151e775cb27e0de6ccbb01e0db",
+          "checkpointBytes": "26250032",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "6562304",
+          "parameterBytes": "26249216",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "512",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "2048",
+          "loadMs": "312.247655",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": false
+      },
+      "capacityAfter": {
+        "result": {
+          "pass": "false",
+          "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+          "checkpointSha256": "182b0e20bf74f1e8ea45caacde88b94d472cc7d03d77635f3779afd4f17816d7",
+          "parameters": "6562304",
+          "loadMs": "341.14971",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "278.335232",
+          "maxGeneration32CallMs": "228.634394",
+          "firstTokenObservations": "0",
+          "full32TokenObservations": "0",
+          "vmHwmKiB": "194428",
+          "finalVmHwmKiB": "194428",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/diagnostic-wide-nf-scaled/checkpoints/182b0e20bf74f1e8ea45caacde88b94d472cc7d03d77635f3779afd4f17816d7.lm1",
+          "checkpointSha256": "182b0e20bf74f1e8ea45caacde88b94d472cc7d03d77635f3779afd4f17816d7",
+          "checkpointBytes": "26250249",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "6562304",
+          "parameterBytes": "26249216",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "512",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "2048",
+          "loadMs": "341.14971",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": true
+      },
+      "limitedContinuationSuccess": false
+    },
+    "wide-rate-scaled": {
+      "parameters": 6562304,
+      "steps": 16,
+      "targetTokens": 3255,
+      "eosTargets": 26,
+      "manifest": {
+        "scope": "RESEARCH_SHADOW",
+        "baseSourceCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+        "variant": "wide-rate-scaled",
+        "parameters": "6562304",
+        "learningRate": "1.25E-5",
+        "nfPostUpdateScale": "1.0",
+        "nfOptimizerMoments": "UNCHANGED_ORIGINAL_TRAINER",
+        "steps": "16",
+        "batch": "4",
+        "seed": "20261104",
+        "weightDecay": "0.01",
+        "warmup": "2",
+        "clip": "1",
+        "workers": "2",
+        "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+        "scheduleSha256": "346e93c510dafe5e12ee6a0e54ae94a0f0d099e7c0fc8c6f8973e5ff9a6b5066",
+        "targetTokens": "3255",
+        "eosTargets": "26",
+        "eosId": "511",
+        "bosId": "510",
+        "javaVersion": "21.0.13",
+        "osArch": "amd64"
+      },
+      "checkpointSha256Reported": "66a322c9f8784a8ca9f5226bee12a9096af49cd229eb0d2253826c4b5da6b4c2",
+      "changedWeightsReported": 6562198,
+      "processWallSeconds": 46.4013841269998,
+      "beforeBpb": 2.352541414133888,
+      "afterBpb": 2.3518676225797335,
+      "bpbDelta": -0.0006737915541545902,
+      "fixedFirstBatch": [
+        {
+          "step": "0",
+          "nll": "2.6286351083582358",
+          "targets": "234"
+        },
+        {
+          "step": "1",
+          "nll": "2.5890131113700487",
+          "targets": "234"
+        },
+        {
+          "step": "4",
+          "nll": "2.506550890168829",
+          "targets": "234"
+        },
+        {
+          "step": "16",
+          "nll": "2.4618600556006007",
+          "targets": "234"
+        }
+      ],
+      "nfAppliedToProposedRatioRange": [
+        1.0,
+        1.0
+      ],
+      "capacityProbes": [
+        {
+          "step": "0",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.21975711",
+          "eosLogit": "8.758974",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.841673",
+          "eosMargin": "-0.08269882"
+        },
+        {
+          "step": "1",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.22103105",
+          "eosLogit": "8.77971",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.852592",
+          "eosMargin": "-0.07288265"
+        },
+        {
+          "step": "4",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.22036926",
+          "eosLogit": "8.802934",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.84375",
+          "eosMargin": "-0.040816307"
+        },
+        {
+          "step": "16",
+          "probe": "0",
+          "position": "capacity",
+          "sourceTextSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495",
+          "inputTokenSha256": "cce55944b8fe047be0438f7c79999c1dde5e3114dc416f4d8ff644e51f2c15f6",
+          "promptTokens": "64",
+          "eosProbability": "0.2230479",
+          "eosLogit": "8.871048",
+          "bestNonEosId": "10",
+          "bestNonEosLogit": "8.842416",
+          "eosMargin": "0.028632164"
+        }
+      ],
+      "prefixLargestEosMargin": -6.6477504,
+      "prefixLargestEosProbability": 0.00015392543,
+      "capacityBefore": {
+        "result": {
+          "pass": "true",
+          "reasons": "NONE",
+          "checkpointSha256": "78f28a9ec656d0288143c52aa0ded1acde033f041e8f3fb578aa52c9ac171d08",
+          "parameters": "6562304",
+          "loadMs": "437.991119",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "266.720418",
+          "maxGeneration32CallMs": "302.191337",
+          "firstTokenObservations": "3",
+          "full32TokenObservations": "3",
+          "vmHwmKiB": "158784",
+          "finalVmHwmKiB": "158784",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/diagnostic-wide-rate-scaled/checkpoints/78f28a9ec656d0288143c52aa0ded1acde033f041e8f3fb578aa52c9ac171d08.lm1",
+          "checkpointSha256": "78f28a9ec656d0288143c52aa0ded1acde033f041e8f3fb578aa52c9ac171d08",
+          "checkpointBytes": "26250034",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "6562304",
+          "parameterBytes": "26249216",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "512",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "2048",
+          "loadMs": "437.991119",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": false
+      },
+      "capacityAfter": {
+        "result": {
+          "pass": "false",
+          "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+          "checkpointSha256": "66a322c9f8784a8ca9f5226bee12a9096af49cd229eb0d2253826c4b5da6b4c2",
+          "parameters": "6562304",
+          "loadMs": "287.350045",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "204.656426",
+          "maxGeneration32CallMs": "192.634433",
+          "firstTokenObservations": "0",
+          "full32TokenObservations": "0",
+          "vmHwmKiB": "175520",
+          "finalVmHwmKiB": "175520",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        },
+        "model": {
+          "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/diagnostic-wide-rate-scaled/checkpoints/66a322c9f8784a8ca9f5226bee12a9096af49cd229eb0d2253826c4b5da6b4c2.lm1",
+          "checkpointSha256": "66a322c9f8784a8ca9f5226bee12a9096af49cd229eb0d2253826c4b5da6b4c2",
+          "checkpointBytes": "26250251",
+          "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+          "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+          "tokenizerBytes": "2040",
+          "parameters": "6562304",
+          "parameterBytes": "26249216",
+          "arch": "MINGRU",
+          "vocab": "512",
+          "dim": "512",
+          "layers": "2",
+          "heads": "4",
+          "context": "256",
+          "mlp": "2048",
+          "loadMs": "287.350045",
+          "promptTokens": "64",
+          "promptIncludesBos": "false",
+          "fullLayoutLoaded": "true",
+          "finiteWeights": "true"
+        },
+        "measuredTrials": 6,
+        "allTrialsImmediateEos": true
+      },
+      "limitedContinuationSuccess": false
+    }
+  },
+  "intentV1": {
+    "arms": {
+      "small": {
+        "manifest": {
+          "variant": "small",
+          "scope": "RESEARCH_SHADOW",
+          "parameters": "132160",
+          "steps": "128",
+          "batch": "4",
+          "learningRate": "1.0E-4",
+          "warmup": "4",
+          "weightDecay": "0.01",
+          "seed": "20261104",
+          "workers": "2",
+          "scheduleSha256": "653f41488a28238eddd4d65a38168b4ed0879b65641108bb0ad96e5447d87d2b",
+          "tokenScheduleSha256": "169f1e1e0338393f9100e5719c4d2cd75d72e90b4942a875b6de36574b732aad",
+          "objective": "ANSWER_AND_EOS_ONLY",
+          "testReadDuringTraining": "false"
+        },
+        "updates": 128,
+        "supervisedTargets": 1024,
+        "processWallSeconds": 7.361384626000472,
+        "snapshots": [
+          {
+            "step": 0,
+            "score": {
+              "split": "dev",
+              "step": "0",
+              "correct": "0",
+              "total": "24",
+              "answerNll": "8.842064727366754",
+              "eosNll": "6.472776359654485",
+              "prematureEos": "0",
+              "classCorrect": "0,0,0,0",
+              "classTotal": "6,6,6,6",
+              "meanFirstEosProbability": "0.14750363864004612",
+              "missingEos": "24",
+              "generatedTokens": "96"
+            },
+            "confusionMatrixWithInvalidLastColumn": [
+              [
+                0,
+                0,
+                0,
+                0,
+                6
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                6
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                6
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                6
+              ]
+            ],
+            "validDigitEos": 0,
+            "caseDecisions": {
+              "dev-0001": false,
+              "dev-0002": false,
+              "dev-0003": false,
+              "dev-0004": false,
+              "dev-0005": false,
+              "dev-0006": false,
+              "dev-0007": false,
+              "dev-0008": false,
+              "dev-0009": false,
+              "dev-0010": false,
+              "dev-0011": false,
+              "dev-0012": false,
+              "dev-0013": false,
+              "dev-0014": false,
+              "dev-0015": false,
+              "dev-0016": false,
+              "dev-0017": false,
+              "dev-0018": false,
+              "dev-0019": false,
+              "dev-0020": false,
+              "dev-0021": false,
+              "dev-0022": false,
+              "dev-0023": false,
+              "dev-0024": false
+            }
+          },
+          {
+            "step": 32,
+            "score": {
+              "split": "dev",
+              "step": "32",
+              "correct": "6",
+              "total": "24",
+              "answerNll": "1.7004102771644083",
+              "eosNll": "0.5660867477516089",
+              "prematureEos": "0",
+              "classCorrect": "0,6,0,0",
+              "classTotal": "6,6,6,6",
+              "meanFirstEosProbability": "4.093022568364783E-4",
+              "missingEos": "0",
+              "generatedTokens": "24"
+            },
+            "confusionMatrixWithInvalidLastColumn": [
+              [
+                0,
+                6,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                6,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                6,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                6,
+                0,
+                0,
+                0
+              ]
+            ],
+            "validDigitEos": 24,
+            "caseDecisions": {
+              "dev-0001": false,
+              "dev-0002": false,
+              "dev-0003": false,
+              "dev-0004": true,
+              "dev-0005": true,
+              "dev-0006": false,
+              "dev-0007": false,
+              "dev-0008": false,
+              "dev-0009": true,
+              "dev-0010": false,
+              "dev-0011": false,
+              "dev-0012": true,
+              "dev-0013": false,
+              "dev-0014": false,
+              "dev-0015": false,
+              "dev-0016": true,
+              "dev-0017": false,
+              "dev-0018": false,
+              "dev-0019": false,
+              "dev-0020": false,
+              "dev-0021": true,
+              "dev-0022": false,
+              "dev-0023": false,
+              "dev-0024": false
+            }
+          },
+          {
+            "step": 64,
+            "score": {
+              "split": "dev",
+              "step": "64",
+              "correct": "6",
+              "total": "24",
+              "answerNll": "1.484160220407719",
+              "eosNll": "0.15093832134895946",
+              "prematureEos": "0",
+              "classCorrect": "0,0,6,0",
+              "classTotal": "6,6,6,6",
+              "meanFirstEosProbability": "0.0011767837956237297",
+              "missingEos": "0",
+              "generatedTokens": "24"
+            },
+            "confusionMatrixWithInvalidLastColumn": [
+              [
+                0,
+                0,
+                6,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                6,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                6,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                6,
+                0,
+                0
+              ]
+            ],
+            "validDigitEos": 24,
+            "caseDecisions": {
+              "dev-0001": true,
+              "dev-0002": true,
+              "dev-0003": false,
+              "dev-0004": false,
+              "dev-0005": false,
+              "dev-0006": false,
+              "dev-0007": true,
+              "dev-0008": false,
+              "dev-0009": false,
+              "dev-0010": false,
+              "dev-0011": true,
+              "dev-0012": false,
+              "dev-0013": false,
+              "dev-0014": false,
+              "dev-0015": false,
+              "dev-0016": false,
+              "dev-0017": true,
+              "dev-0018": false,
+              "dev-0019": true,
+              "dev-0020": false,
+              "dev-0021": false,
+              "dev-0022": false,
+              "dev-0023": false,
+              "dev-0024": false
+            }
+          },
+          {
+            "step": 128,
+            "score": {
+              "split": "dev",
+              "step": "128",
+              "correct": "8",
+              "total": "24",
+              "answerNll": "1.4439758398249918",
+              "eosNll": "0.07973429667637293",
+              "prematureEos": "0",
+              "classCorrect": "0,4,4,0",
+              "classTotal": "6,6,6,6",
+              "meanFirstEosProbability": "5.893543687610266E-4",
+              "missingEos": "0",
+              "generatedTokens": "24"
+            },
+            "confusionMatrixWithInvalidLastColumn": [
+              [
+                0,
+                3,
+                3,
+                0,
+                0
+              ],
+              [
+                1,
+                4,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                4,
+                0,
+                0
+              ],
+              [
+                2,
+                2,
+                2,
+                0,
+                0
+              ]
+            ],
+            "validDigitEos": 24,
+            "caseDecisions": {
+              "dev-0001": true,
+              "dev-0002": true,
+              "dev-0003": false,
+              "dev-0004": true,
+              "dev-0005": true,
+              "dev-0006": false,
+              "dev-0007": false,
+              "dev-0008": false,
+              "dev-0009": false,
+              "dev-0010": false,
+              "dev-0011": false,
+              "dev-0012": true,
+              "dev-0013": false,
+              "dev-0014": false,
+              "dev-0015": false,
+              "dev-0016": false,
+              "dev-0017": true,
+              "dev-0018": false,
+              "dev-0019": true,
+              "dev-0020": false,
+              "dev-0021": true,
+              "dev-0022": false,
+              "dev-0023": false,
+              "dev-0024": false
+            }
+          }
+        ],
+        "selection": {
+          "checkpointSha256": "cc17532290695f4559ad1ed26dcbdb8dd968bea0df0ede852404a19b5aa98820",
+          "step": "128",
+          "devCorrect": "8",
+          "devTotal": "24",
+          "devAnswerNll": "1.4439758398249918",
+          "testRead": "false",
+          "inputsUnchanged": "true",
+          "generalModelPromotion": "NOT_PERMITTED",
+          "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK"
+        },
+        "capacityBefore": {
+          "result": {
+            "pass": "true",
+            "reasons": "NONE",
+            "checkpointSha256": "51488ecca0ac481727ccf269d8a94925c4e7ce2a0372815a92917651cad8224c",
+            "parameters": "132160",
+            "loadMs": "113.848969",
+            "measuredRepeats": "3",
+            "maxFirstTokenCallMs": "9.223068",
+            "maxGeneration32CallMs": "18.489491",
+            "firstTokenObservations": "3",
+            "full32TokenObservations": "3",
+            "vmHwmKiB": "79300",
+            "finalVmHwmKiB": "79300",
+            "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+            "failure": "UNAVAILABLE"
+          },
+          "model": {
+            "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/intent-small/checkpoints/51488ecca0ac481727ccf269d8a94925c4e7ce2a0372815a92917651cad8224c.lm1",
+            "checkpointSha256": "51488ecca0ac481727ccf269d8a94925c4e7ce2a0372815a92917651cad8224c",
+            "checkpointBytes": "529664",
+            "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+            "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+            "tokenizerBytes": "2040",
+            "parameters": "132160",
+            "parameterBytes": "528640",
+            "arch": "MINGRU",
+            "vocab": "512",
+            "dim": "64",
+            "layers": "2",
+            "heads": "4",
+            "context": "256",
+            "mlp": "256",
+            "loadMs": "113.848969",
+            "promptTokens": "64",
+            "promptIncludesBos": "false",
+            "fullLayoutLoaded": "true",
+            "finiteWeights": "true"
+          },
+          "measuredTrials": 6,
+          "allTrialsImmediateEos": false
+        },
+        "capacityAfter": {
+          "result": {
+            "pass": "false",
+            "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+            "checkpointSha256": "cc17532290695f4559ad1ed26dcbdb8dd968bea0df0ede852404a19b5aa98820",
+            "parameters": "132160",
+            "loadMs": "64.60116",
+            "measuredRepeats": "3",
+            "maxFirstTokenCallMs": "15.363453",
+            "maxGeneration32CallMs": "11.157779",
+            "firstTokenObservations": "0",
+            "full32TokenObservations": "0",
+            "vmHwmKiB": "68556",
+            "finalVmHwmKiB": "68556",
+            "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+            "failure": "UNAVAILABLE"
+          },
+          "model": {
+            "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/intent-small/checkpoints/cc17532290695f4559ad1ed26dcbdb8dd968bea0df0ede852404a19b5aa98820.lm1",
+            "checkpointSha256": "cc17532290695f4559ad1ed26dcbdb8dd968bea0df0ede852404a19b5aa98820",
+            "checkpointBytes": "529666",
+            "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+            "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+            "tokenizerBytes": "2040",
+            "parameters": "132160",
+            "parameterBytes": "528640",
+            "arch": "MINGRU",
+            "vocab": "512",
+            "dim": "64",
+            "layers": "2",
+            "heads": "4",
+            "context": "256",
+            "mlp": "256",
+            "loadMs": "64.60116",
+            "promptTokens": "64",
+            "promptIncludesBos": "false",
+            "fullLayoutLoaded": "true",
+            "finiteWeights": "true"
+          },
+          "measuredTrials": 6,
+          "allTrialsImmediateEos": true
+        }
+      },
+      "wide": {
+        "manifest": {
+          "variant": "wide",
+          "scope": "RESEARCH_SHADOW",
+          "parameters": "6562304",
+          "steps": "128",
+          "batch": "4",
+          "learningRate": "1.0E-4",
+          "warmup": "4",
+          "weightDecay": "0.01",
+          "seed": "20261104",
+          "workers": "2",
+          "scheduleSha256": "653f41488a28238eddd4d65a38168b4ed0879b65641108bb0ad96e5447d87d2b",
+          "tokenScheduleSha256": "169f1e1e0338393f9100e5719c4d2cd75d72e90b4942a875b6de36574b732aad",
+          "objective": "ANSWER_AND_EOS_ONLY",
+          "testReadDuringTraining": "false"
+        },
+        "updates": 128,
+        "supervisedTargets": 1024,
+        "processWallSeconds": 200.0754812690002,
+        "snapshots": [
+          {
+            "step": 0,
+            "score": {
+              "split": "dev",
+              "step": "0",
+              "correct": "0",
+              "total": "24",
+              "answerNll": "8.84206392326258",
+              "eosNll": "6.47277743563133",
+              "prematureEos": "0",
+              "classCorrect": "0,0,0,0",
+              "classTotal": "6,6,6,6",
+              "meanFirstEosProbability": "0.14750359704097113",
+              "missingEos": "24",
+              "generatedTokens": "96"
+            },
+            "confusionMatrixWithInvalidLastColumn": [
+              [
+                0,
+                0,
+                0,
+                0,
+                6
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                6
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                6
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                6
+              ]
+            ],
+            "validDigitEos": 0,
+            "caseDecisions": {
+              "dev-0001": false,
+              "dev-0002": false,
+              "dev-0003": false,
+              "dev-0004": false,
+              "dev-0005": false,
+              "dev-0006": false,
+              "dev-0007": false,
+              "dev-0008": false,
+              "dev-0009": false,
+              "dev-0010": false,
+              "dev-0011": false,
+              "dev-0012": false,
+              "dev-0013": false,
+              "dev-0014": false,
+              "dev-0015": false,
+              "dev-0016": false,
+              "dev-0017": false,
+              "dev-0018": false,
+              "dev-0019": false,
+              "dev-0020": false,
+              "dev-0021": false,
+              "dev-0022": false,
+              "dev-0023": false,
+              "dev-0024": false
+            }
+          },
+          {
+            "step": 32,
+            "score": {
+              "split": "dev",
+              "step": "32",
+              "correct": "6",
+              "total": "24",
+              "answerNll": "1.7749860612648842",
+              "eosNll": "0.05956326828822678",
+              "prematureEos": "0",
+              "classCorrect": "6,0,0,0",
+              "classTotal": "6,6,6,6",
+              "meanFirstEosProbability": "1.774608881532913E-4",
+              "missingEos": "0",
+              "generatedTokens": "24"
+            },
+            "confusionMatrixWithInvalidLastColumn": [
+              [
+                6,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                6,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                6,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                6,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "validDigitEos": 24,
+            "caseDecisions": {
+              "dev-0001": false,
+              "dev-0002": false,
+              "dev-0003": true,
+              "dev-0004": false,
+              "dev-0005": false,
+              "dev-0006": true,
+              "dev-0007": false,
+              "dev-0008": false,
+              "dev-0009": false,
+              "dev-0010": false,
+              "dev-0011": false,
+              "dev-0012": false,
+              "dev-0013": true,
+              "dev-0014": false,
+              "dev-0015": false,
+              "dev-0016": false,
+              "dev-0017": false,
+              "dev-0018": false,
+              "dev-0019": false,
+              "dev-0020": true,
+              "dev-0021": false,
+              "dev-0022": true,
+              "dev-0023": true,
+              "dev-0024": false
+            }
+          },
+          {
+            "step": 64,
+            "score": {
+              "split": "dev",
+              "step": "64",
+              "correct": "8",
+              "total": "24",
+              "answerNll": "1.387846219880166",
+              "eosNll": "0.04067173789212227",
+              "prematureEos": "0",
+              "classCorrect": "4,4,0,0",
+              "classTotal": "6,6,6,6",
+              "meanFirstEosProbability": "0.001022210771528383",
+              "missingEos": "0",
+              "generatedTokens": "24"
+            },
+            "confusionMatrixWithInvalidLastColumn": [
+              [
+                4,
+                2,
+                0,
+                0,
+                0
+              ],
+              [
+                2,
+                4,
+                0,
+                0,
+                0
+              ],
+              [
+                6,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                6,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "validDigitEos": 24,
+            "caseDecisions": {
+              "dev-0001": false,
+              "dev-0002": false,
+              "dev-0003": false,
+              "dev-0004": false,
+              "dev-0005": false,
+              "dev-0006": false,
+              "dev-0007": false,
+              "dev-0008": false,
+              "dev-0009": true,
+              "dev-0010": false,
+              "dev-0011": false,
+              "dev-0012": true,
+              "dev-0013": true,
+              "dev-0014": false,
+              "dev-0015": false,
+              "dev-0016": true,
+              "dev-0017": false,
+              "dev-0018": false,
+              "dev-0019": false,
+              "dev-0020": true,
+              "dev-0021": true,
+              "dev-0022": true,
+              "dev-0023": true,
+              "dev-0024": false
+            }
+          },
+          {
+            "step": 128,
+            "score": {
+              "split": "dev",
+              "step": "128",
+              "correct": "10",
+              "total": "24",
+              "answerNll": "1.2483727727174918",
+              "eosNll": "0.031382666556082274",
+              "prematureEos": "0",
+              "classCorrect": "2,6,2,0",
+              "classTotal": "6,6,6,6",
+              "meanFirstEosProbability": "1.2864684337425084E-4",
+              "missingEos": "0",
+              "generatedTokens": "24"
+            },
+            "confusionMatrixWithInvalidLastColumn": [
+              [
+                2,
+                2,
+                0,
+                2,
+                0
+              ],
+              [
+                0,
+                6,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                2,
+                4,
+                0
+              ],
+              [
+                2,
+                0,
+                4,
+                0,
+                0
+              ]
+            ],
+            "validDigitEos": 24,
+            "caseDecisions": {
+              "dev-0001": true,
+              "dev-0002": false,
+              "dev-0003": false,
+              "dev-0004": true,
+              "dev-0005": true,
+              "dev-0006": false,
+              "dev-0007": false,
+              "dev-0008": false,
+              "dev-0009": true,
+              "dev-0010": false,
+              "dev-0011": false,
+              "dev-0012": true,
+              "dev-0013": false,
+              "dev-0014": false,
+              "dev-0015": false,
+              "dev-0016": true,
+              "dev-0017": false,
+              "dev-0018": false,
+              "dev-0019": true,
+              "dev-0020": false,
+              "dev-0021": true,
+              "dev-0022": true,
+              "dev-0023": true,
+              "dev-0024": false
+            }
+          }
+        ],
+        "selection": {
+          "checkpointSha256": "bfe65614d7d2891b23276cd2bdd21b797772e08fd75aee742b4dd714b96944b1",
+          "step": "128",
+          "devCorrect": "10",
+          "devTotal": "24",
+          "devAnswerNll": "1.2483727727174918",
+          "testRead": "false",
+          "inputsUnchanged": "true",
+          "generalModelPromotion": "NOT_PERMITTED",
+          "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK"
+        },
+        "capacityBefore": {
+          "result": {
+            "pass": "true",
+            "reasons": "NONE",
+            "checkpointSha256": "5d2cbcbc993cd1a6268bca92ba686f9a9df2d43493a8ecd9507e761c9b24edd3",
+            "parameters": "6562304",
+            "loadMs": "294.192111",
+            "measuredRepeats": "3",
+            "maxFirstTokenCallMs": "210.399016",
+            "maxGeneration32CallMs": "356.836929",
+            "firstTokenObservations": "3",
+            "full32TokenObservations": "3",
+            "vmHwmKiB": "185336",
+            "finalVmHwmKiB": "185336",
+            "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+            "failure": "UNAVAILABLE"
+          },
+          "model": {
+            "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/intent-wide/checkpoints/5d2cbcbc993cd1a6268bca92ba686f9a9df2d43493a8ecd9507e761c9b24edd3.lm1",
+            "checkpointSha256": "5d2cbcbc993cd1a6268bca92ba686f9a9df2d43493a8ecd9507e761c9b24edd3",
+            "checkpointBytes": "26250240",
+            "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+            "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+            "tokenizerBytes": "2040",
+            "parameters": "6562304",
+            "parameterBytes": "26249216",
+            "arch": "MINGRU",
+            "vocab": "512",
+            "dim": "512",
+            "layers": "2",
+            "heads": "4",
+            "context": "256",
+            "mlp": "2048",
+            "loadMs": "294.192111",
+            "promptTokens": "64",
+            "promptIncludesBos": "false",
+            "fullLayoutLoaded": "true",
+            "finiteWeights": "true"
+          },
+          "measuredTrials": 6,
+          "allTrialsImmediateEos": false
+        },
+        "capacityAfter": {
+          "result": {
+            "pass": "false",
+            "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+            "checkpointSha256": "bfe65614d7d2891b23276cd2bdd21b797772e08fd75aee742b4dd714b96944b1",
+            "parameters": "6562304",
+            "loadMs": "323.877618",
+            "measuredRepeats": "3",
+            "maxFirstTokenCallMs": "259.947155",
+            "maxGeneration32CallMs": "263.534053",
+            "firstTokenObservations": "0",
+            "full32TokenObservations": "0",
+            "vmHwmKiB": "193976",
+            "finalVmHwmKiB": "193976",
+            "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+            "failure": "UNAVAILABLE"
+          },
+          "model": {
+            "checkpointPath": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/intent-wide/checkpoints/bfe65614d7d2891b23276cd2bdd21b797772e08fd75aee742b4dd714b96944b1.lm1",
+            "checkpointSha256": "bfe65614d7d2891b23276cd2bdd21b797772e08fd75aee742b4dd714b96944b1",
+            "checkpointBytes": "26250242",
+            "tokenizerPath": "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp",
+            "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+            "tokenizerBytes": "2040",
+            "parameters": "6562304",
+            "parameterBytes": "26249216",
+            "arch": "MINGRU",
+            "vocab": "512",
+            "dim": "512",
+            "layers": "2",
+            "heads": "4",
+            "context": "256",
+            "mlp": "2048",
+            "loadMs": "323.877618",
+            "promptTokens": "64",
+            "promptIncludesBos": "false",
+            "fullLayoutLoaded": "true",
+            "finiteWeights": "true"
+          },
+          "measuredTrials": 6,
+          "allTrialsImmediateEos": true
+        }
+      }
+    },
+    "developmentEligible": false,
+    "noSignal": {
+      "status": "NO_DEVELOPMENT_SIGNAL",
+      "testEvaluated": false,
+      "registrationSha256": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992"
+    }
+  },
+  "intentV2": {
+    "evidenceLevel": "PUBLISHED_SUMMARY_ONLY",
+    "publishedPaths": [
+      "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-summary.json"
+    ],
+    "status": "ELIGIBLE_DEVELOPMENT_CANDIDATE_TEST_DEFERRED_FOR_REGISTERED_SUFFIX_COMPARISON",
+    "testEvaluatedReported": false,
+    "arms": {
+      "small": {
+        "selected": {
+          "checkpointSha256": "c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309",
+          "step": "256",
+          "devCorrect": "13",
+          "devTotal": "24",
+          "devAnswerNll": "1.353088923177873",
+          "testRead": "false",
+          "inputsUnchanged": "true",
+          "generalModelPromotion": "NOT_PERMITTED",
+          "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK"
+        },
+        "scores": [
+          {
+            "split": "dev",
+            "step": "0",
+            "correct": "0",
+            "total": "24",
+            "answerNll": "8.842064727366754",
+            "eosNll": "6.472776359654485",
+            "prematureEos": "0",
+            "classCorrect": "0,0,0,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "0.14750363864004612",
+            "missingEos": "24",
+            "generatedTokens": "96"
+          },
+          {
+            "split": "dev",
+            "step": "128",
+            "correct": "12",
+            "total": "24",
+            "answerNll": "1.3038244527311702",
+            "eosNll": "0.03630752016274341",
+            "prematureEos": "0",
+            "classCorrect": "4,6,0,2",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "5.95919289480662E-4",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          {
+            "split": "dev",
+            "step": "256",
+            "correct": "13",
+            "total": "24",
+            "answerNll": "1.353088923177873",
+            "eosNll": "0.014163899910088004",
+            "prematureEos": "0",
+            "classCorrect": "2,6,5,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "8.727782066368188E-5",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          {
+            "split": "dev",
+            "step": "512",
+            "correct": "12",
+            "total": "24",
+            "answerNll": "1.7544272247620238",
+            "eosNll": "0.005881279594185385",
+            "prematureEos": "0",
+            "classCorrect": "2,6,4,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "2.9864347993679985E-5",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          }
+        ],
+        "capacityReported": {
+          "pass": "false",
+          "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+          "checkpointSha256": "c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309",
+          "parameters": "132160",
+          "loadMs": "83.588139",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "8.803361",
+          "maxGeneration32CallMs": "8.867207",
+          "firstTokenObservations": "0",
+          "full32TokenObservations": "0",
+          "vmHwmKiB": "72380",
+          "finalVmHwmKiB": "72380",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        }
+      },
+      "wide": {
+        "selected": {
+          "checkpointSha256": "7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2",
+          "step": "128",
+          "devCorrect": "13",
+          "devTotal": "24",
+          "devAnswerNll": "1.7133914955007874",
+          "testRead": "false",
+          "inputsUnchanged": "true",
+          "generalModelPromotion": "NOT_PERMITTED",
+          "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK"
+        },
+        "scores": [
+          {
+            "split": "dev",
+            "step": "0",
+            "correct": "0",
+            "total": "24",
+            "answerNll": "8.84206392326258",
+            "eosNll": "6.47277743563133",
+            "prematureEos": "0",
+            "classCorrect": "0,0,0,0",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "0.14750359704097113",
+            "missingEos": "24",
+            "generatedTokens": "96"
+          },
+          {
+            "split": "dev",
+            "step": "128",
+            "correct": "13",
+            "total": "24",
+            "answerNll": "1.7133914955007874",
+            "eosNll": "0.01520302341314069",
+            "prematureEos": "0",
+            "classCorrect": "2,6,4,1",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "1.3129762834296343E-5",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          {
+            "split": "dev",
+            "step": "256",
+            "correct": "11",
+            "total": "24",
+            "answerNll": "2.084923759357262",
+            "eosNll": "0.004671863392407512",
+            "prematureEos": "0",
+            "classCorrect": "2,6,1,2",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "7.277918276334579E-6",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          },
+          {
+            "split": "dev",
+            "step": "512",
+            "correct": "11",
+            "total": "24",
+            "answerNll": "2.6535228169841227",
+            "eosNll": "0.0017632604922298196",
+            "prematureEos": "0",
+            "classCorrect": "2,6,1,2",
+            "classTotal": "6,6,6,6",
+            "meanFirstEosProbability": "8.559865058543892E-6",
+            "missingEos": "0",
+            "generatedTokens": "24"
+          }
+        ],
+        "capacityReported": {
+          "pass": "false",
+          "reasons": "INCOMPLETE_32_TOKEN_WORKLOAD",
+          "checkpointSha256": "7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2",
+          "parameters": "6562304",
+          "loadMs": "283.16535",
+          "measuredRepeats": "3",
+          "maxFirstTokenCallMs": "188.225062",
+          "maxGeneration32CallMs": "202.460422",
+          "firstTokenObservations": "3",
+          "full32TokenObservations": "0",
+          "vmHwmKiB": "175512",
+          "finalVmHwmKiB": "175512",
+          "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+          "failure": "UNAVAILABLE"
+        }
+      }
+    },
+    "missing": [
+      "TRAIN_STEP and CASE raw logs",
+      "training and capacity process receipts",
+      "initial and post capacity raw logs",
+      "selection artifact",
+      "freeze/choice receipts"
+    ]
+  },
+  "intentV3": {
+    "status": "REGISTERED_NO_PUBLISHED_STUDY_RESULTS_AT_REVIEWED_COMMIT",
+    "publishedStudyPaths": []
+  },
+  "registrations": {
+    "v1": {
+      "sha256": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+      "jarSha256": "901b94e4c4d9b54c5ba422a5fa3b00bd9f28f187b68ab0b79f7f9b8fc6b62911",
+      "trainingProcessSeconds": 600,
+      "capacityProcessSeconds": 120,
+      "testSha256ReportedOnly": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a"
+    },
+    "v2": {
+      "sha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+      "jarSha256": "d92acf410494bba98ad5299b0abfe13bdac3bb508dd9dd7bbf25f96a3ba5a20d",
+      "trainingProcessSeconds": 900,
+      "capacityProcessSeconds": 120,
+      "testSha256ReportedOnly": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a"
+    },
+    "v3": {
+      "sha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+      "jarSha256": "8075d799b42f3b4f23f2f154af09685f52074503b0a4103ba336a618a3be1950",
+      "trainingProcessSeconds": 900,
+      "capacityProcessSeconds": 120,
+      "testSha256ReportedOnly": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a"
+    }
+  },
+  "registeredSourcesRehashed": [
+    "experimental/lm1-training-recovery-20261104/run_registered_study.py",
+    "experimental/lm1-training-recovery-20261104/LmRecoveryDiagnostic.kt",
+    "experimental/lm1-training-recovery-20261104/DIAGNOSTIC_PROTOCOL.md",
+    "experimental/lm1-training-recovery-20261104/LmIntentStudy.kt",
+    "experimental/lm1-training-recovery-20261104/LmIntentStudyChecks.kt",
+    "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+    "experimental/weight-space-20261104/LmWeightExperiment.kt",
+    "experimental/weight-space-20261104/LmWeightSurgery.kt",
+    "experimental/weight-space-20261104/development.txt"
+  ],
+  "registeredFilesIntentionallyNotRead": [
+    "experimental/lm1-training-recovery-20261104/make_intent_data.py",
+    "experimental/lm1-training-recovery-20261104/intent-data/dev.tsv",
+    "experimental/lm1-training-recovery-20261104/intent-data/test.sealed.tsv",
+    "experimental/lm1-training-recovery-20261104/intent-data/train.tsv",
+    "experimental/lm1-training-recovery-20261104/intent-data/manifest.json"
+  ],
+  "sourceComparison": {
+    "v1ToV2ExactDiff": [
+      "class name",
+      "128 to 512 updates",
+      "experiment name",
+      "540 to 840 internal seconds",
+      "32/64/128 to 128/256/512 snapshots"
+    ],
+    "v2ToV3ExactDiff": [
+      "class name",
+      "experiment name",
+      "prompt suffix from newline plus Aktion: to newline alone"
+    ],
+    "cosineDenominator": "STEPS - 4",
+    "sameStep128DoesNotMeanSameLearningRatePrefix": true,
+    "responseMaskAndFreeGenerationCodeUnchangedAcrossThreeHarnesses": true
+  },
+  "publishedFreezeOrTestPaths": [],
+  "checkpointIntegrityLimit": "Identifiers and logged decoder validation cross-checked; checkpoint/JAR/tokenizer binary bytes not independently read or hashed.",
+  "sourceInventory": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": {
+      "sha256": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+      "bytes": 6695,
+      "gitBlobSha1": "a81eb0256ad6c59584df78ee589d4c7490545e29"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": {
+      "sha256": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+      "bytes": 5547,
+      "gitBlobSha1": "7bc91176ea240bd287fcc214a8204d93298a9f17"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt": {
+      "sha256": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+      "bytes": 4496,
+      "gitBlobSha1": "5c5705d614f8bb457cfb10bd497e646577667005"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": {
+      "sha256": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+      "bytes": 13794,
+      "gitBlobSha1": "1df9dc9378a732e37e8e4568a2d46310442d15a8"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": {
+      "sha256": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+      "bytes": 9364,
+      "gitBlobSha1": "6de174dc400bfc5bd5bfb0facc56fc4820550b25"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": {
+      "sha256": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+      "bytes": 17044,
+      "gitBlobSha1": "bc1176e2b230439c3fa36d6be996444eaab8efbd"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/diagnostic-small-standard/capacity-before.tsv": {
+      "sha256": "e828393760ef71835ce08d15a9e6ab58246427f6c25197e8e2c99dc4b5655482",
+      "bytes": 5255,
+      "gitBlobSha1": "09c1bc4a312bb6e54e23ce062fa81da21f4125fd"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/diagnostic-small-standard/diagnostic.tsv": {
+      "sha256": "1c3b25d1b49e7cfbf4c643d146474459900632937739026caa3e375d01014134",
+      "bytes": 17477,
+      "gitBlobSha1": "13dd3ec53ffbc12aa7232d7c9085ae577e871e00"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/diagnostic-summary.json": {
+      "sha256": "6039245783c17119dc26f74d0b953e4f89eedd3a8a07a3a3ccb625d5ba52bea6",
+      "bytes": 65266,
+      "gitBlobSha1": "c93ea57e1eb0043314ecb7ed8b5d093d8600306f"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/diagnostic-wide-nf-scaled/capacity-before.tsv": {
+      "sha256": "002cfc1c93807332cead43ab16d0eaad3571546a98af606c8aa5924fe7162fb2",
+      "bytes": 5188,
+      "gitBlobSha1": "2f0b21ea12283f65a19148dd082e812d15d89d9b"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/diagnostic-wide-nf-scaled/diagnostic.tsv": {
+      "sha256": "d05a326d6669ee18556c93b1148ac276a2464bf2c4b135f41066e6aa15a48da4",
+      "bytes": 17713,
+      "gitBlobSha1": "98ac75f6ad9610fe84685b7592201a78ef2aa4f2"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/diagnostic-wide-rate-scaled/capacity-before.tsv": {
+      "sha256": "64b84d141513ba04d71a8ea7156431182506f9a4c881d120cfedf6e04f37ae2b",
+      "bytes": 5187,
+      "gitBlobSha1": "8a7dd3c6c24361d1f8d49c95b858367b1a626cea"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/diagnostic-wide-rate-scaled/diagnostic.tsv": {
+      "sha256": "46d26ca3edf2735c607319f01a6fe1ffba6d984c161cbd24e2482a62a1f0230b",
+      "bytes": 17749,
+      "gitBlobSha1": "750eb8a7874e80a5bd34f89d5376c99720d7c7bb"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/diagnostic-wide-standard/capacity-before.tsv": {
+      "sha256": "661ecd3d7ff3da8f127b95d239977b4025213fd7c927cdf0ee3a3856bfdfec69",
+      "bytes": 5184,
+      "gitBlobSha1": "c3346876dc1d79a77abbb3416e3ca92aac3b448d"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/diagnostic-wide-standard/diagnostic.tsv": {
+      "sha256": "0ab9e9dae50de6375c93218b238fcbb505604ffe8e640ce8c2e7c35f9753abc6",
+      "bytes": 17700,
+      "gitBlobSha1": "5e35421672fec30e97d018ba83792bd1f49650e9"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/intent-small/capacity-before.tsv": {
+      "sha256": "2a159f50d3adcfce08dcf04927ef6647e9fe41129378dd750edb0454c410d674",
+      "bytes": 5101,
+      "gitBlobSha1": "816f6e6689a1cfc8d9fba490b7bde6f0bcb330f4"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/intent-small/selection.tsv": {
+      "sha256": "f7f03905cc4b3a302407a7ab8c50c7452b15f210068d412949e75a71c5958de0",
+      "bytes": 241,
+      "gitBlobSha1": "4eead2a0d347e357cf55959153290b471f5ea054"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/intent-summary.json": {
+      "sha256": "5e0fcd7589a8f3249794f7b847430aa5ea3ceaecf65823b12988558dcecc09bf",
+      "bytes": 5877,
+      "gitBlobSha1": "397f9a454bf96d4a89c2612c5fa6ca4a3f88a4a6"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/intent-wide/capacity-before.tsv": {
+      "sha256": "5f463ca8eeecd5445dcb6264d822f3be3479d94cf99fd4152b7e972ff35d65e7",
+      "bytes": 5174,
+      "gitBlobSha1": "9ca80e28730fc4a2db90fdb8696414cd27b2609a"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/intent-wide/selection.tsv": {
+      "sha256": "ac88f9028c3b9cfcb71403bc679d4521fd63c4a42cbd957b3ad1340fee72c507",
+      "bytes": 241,
+      "gitBlobSha1": "f89617335e1a611fea1a692a8652c0b0ffa6760f"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-small-standard-capacity-after.receipt.json": {
+      "sha256": "478daf9154f8c49494ab1bcb56232708a93519b56daf79691d44de9f182b822c",
+      "bytes": 1119,
+      "gitBlobSha1": "f0913942b009b66777f54b77958b462fe9418393"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-small-standard-capacity-after.tsv": {
+      "sha256": "5af4bff52196f12c9aa81cc09b5f8897125afebae8cfd417d2a01477af117a1c",
+      "bytes": 5125,
+      "gitBlobSha1": "dfdacb7448dd18bdd2295dfaf7001fadd002300d"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-small-standard.receipt.json": {
+      "sha256": "3a25aa81dec42db40926445ec546786118edf21e83206cdb72f7483c32c3c0d6",
+      "bytes": 1319,
+      "gitBlobSha1": "a20edc53212f8d06c7867942bbf8c67a4e0dfd46"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-small-standard.tsv": {
+      "sha256": "a44bc39dff7f9e6be1250458847d1c8ecb7fb0e704f307f1fe2109bbd6dce9f4",
+      "bytes": 17601,
+      "gitBlobSha1": "8375b47a84e076c0323ab7f2ee6548afbd705b7d"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-nf-scaled-capacity-after.receipt.json": {
+      "sha256": "9a90c8fa155e34570400f4235b8288c223d75019114a933309419f7f55b5f1b6",
+      "bytes": 1119,
+      "gitBlobSha1": "31fc622bf83718d8c3e8ddeaeb390ab4b1c095c3"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-nf-scaled-capacity-after.tsv": {
+      "sha256": "335fa007fc3bf265b6a2359b18c7a367c55cbcc26af3fc44748174ebea253acb",
+      "bytes": 5182,
+      "gitBlobSha1": "a99c82b9bd6e19813b1d67892ba89e9caa35cd9b"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-nf-scaled.receipt.json": {
+      "sha256": "e5398914ad3bd77f78458d434869cd5f9a5f6c820d02122c8bd8253305cfb654",
+      "bytes": 1318,
+      "gitBlobSha1": "354353b310f5ca8aa34952df259c2e1bf53e5cf2"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-nf-scaled.tsv": {
+      "sha256": "d05a326d6669ee18556c93b1148ac276a2464bf2c4b135f41066e6aa15a48da4",
+      "bytes": 17713,
+      "gitBlobSha1": "98ac75f6ad9610fe84685b7592201a78ef2aa4f2"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-rate-scaled-capacity-after.receipt.json": {
+      "sha256": "ca1ec301372143c2e0b4dfa90d6c6463281500b16eda6acb99f883b24e905675",
+      "bytes": 1123,
+      "gitBlobSha1": "5bdfc8a10614f1d3bb4c6e513c4a6ba31fb6212f"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-rate-scaled-capacity-after.tsv": {
+      "sha256": "c96532a1e3ca1bfd43e9bd2a4687ac2a208005d5747c969fe7d49a0b0740fc2e",
+      "bytes": 5184,
+      "gitBlobSha1": "cab8da0d8f02f29390f53166ea920e4d8b59789a"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-rate-scaled.receipt.json": {
+      "sha256": "1cbb8c0ea7d51099412889ee48d0d583e1d993119581a79c815d82e9fb526620",
+      "bytes": 1324,
+      "gitBlobSha1": "bbc3056516648945b9e8e2bbf8e41dbbc550b0ef"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-rate-scaled.tsv": {
+      "sha256": "46d26ca3edf2735c607319f01a6fe1ffba6d984c161cbd24e2482a62a1f0230b",
+      "bytes": 17749,
+      "gitBlobSha1": "750eb8a7874e80a5bd34f89d5376c99720d7c7bb"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-standard-capacity-after.receipt.json": {
+      "sha256": "41de8bb0e6d6b00fdf2d18b52eb9478e41d6abcab7d0d3759b044a89d68b0e9d",
+      "bytes": 1118,
+      "gitBlobSha1": "f99456fa074b4373626263c1b546f3f654153cdf"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-standard-capacity-after.tsv": {
+      "sha256": "8a260b07ae24d05877bb238584a5d00a5274924c68b69bd67b2aa73cb9709eb7",
+      "bytes": 5182,
+      "gitBlobSha1": "a37a444dc895dfbc54cd2ff780f4ab92aea49638"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-standard.receipt.json": {
+      "sha256": "a7aee65d100291cdbdf75331f98d633321dd6c71703a6feceede0362906626fa",
+      "bytes": 1316,
+      "gitBlobSha1": "e3fcaad5053b63a7ed59d7f30db09d89f30dd85d"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/diagnostic-wide-standard.tsv": {
+      "sha256": "0ab9e9dae50de6375c93218b238fcbb505604ffe8e640ce8c2e7c35f9753abc6",
+      "bytes": 17700,
+      "gitBlobSha1": "5e35421672fec30e97d018ba83792bd1f49650e9"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/intent-small-capacity-after.receipt.json": {
+      "sha256": "26615f72541433ae9ecaa5c605889fdbdd17d15953d5887ffe494012d8cab603",
+      "bytes": 1094,
+      "gitBlobSha1": "4db34311c4e3d44fb3d2fbadf0b54d41505a1534"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/intent-small-capacity-after.tsv": {
+      "sha256": "efb099101574715ed4976fc060a49b52e4fe129f2f1aca4f349936042aaeacfc",
+      "bytes": 5100,
+      "gitBlobSha1": "be330341d6b2ae051a94330211d1696cf33f2da9"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/intent-small.receipt.json": {
+      "sha256": "238e52ee40562f5e9e545e9c4113518f40187aa46abbbb8326302f3199309247",
+      "bytes": 1221,
+      "gitBlobSha1": "6e89420c3b5b299840ca6fabff3e0960dd9a5421"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/intent-small.tsv": {
+      "sha256": "7853830f25752e9b959ea190d242be987b1a605bd091ba8f35bd4a1d6da6f2ef",
+      "bytes": 37418,
+      "gitBlobSha1": "0f80d783875b8380404cc5b40de8a22cfb0cde2d"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/intent-wide-capacity-after.receipt.json": {
+      "sha256": "aa896ed03df4c8cab48a8cd25e34a26e481d1265ee22d89166a38b1c8ff880c9",
+      "bytes": 1092,
+      "gitBlobSha1": "47ab050273c9c6c26c6e2a17abdf68a0f36bfe3b"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/intent-wide-capacity-after.tsv": {
+      "sha256": "01967e7108ec8b7b35bd12496abacfd80ae11819d435d432a06394a6b0fd5469",
+      "bytes": 5169,
+      "gitBlobSha1": "b0406a78161e7bbc128bf6df2753cfd71ffa19d6"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/intent-wide.receipt.json": {
+      "sha256": "63a5bb8757fd3df3433998ce99b99e674d06fa5cffe721a979f05263b3104d85",
+      "bytes": 1218,
+      "gitBlobSha1": "3c05e26b1a9bdd36a7e7593635e371212fd5a36c"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/logs/intent-wide.tsv": {
+      "sha256": "27737b8fdb7f2cff4d2d8cb990b897c4a3e34a081a07c97f9b6f10d95646f0e9",
+      "bytes": 37784,
+      "gitBlobSha1": "98885fa105396140913efb17eb57a5f623f5e711"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v1/no-development-signal.json": {
+      "sha256": "07c8d161e389447f21d4f2236b56f8f1a692081c2cea6ceb042730f9aeb204a6",
+      "bytes": 158,
+      "gitBlobSha1": "b6ccaf2edcc5a43c5a59c9e519890574d619a2d9"
+    },
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-summary.json": {
+      "sha256": "5d9936e8a1ca6952249d627d360fb958f57584748d855ca2cb1ab6acf71558ae",
+      "bytes": 5917,
+      "gitBlobSha1": "d3c984aef8aa91942e25f928bbd14e30adbcdd18"
+    },
+    "experimental/lm1-training-recovery-20261104/DIAGNOSTIC_PROTOCOL.md": {
+      "sha256": "e8027ce981be5b27a20542353c5aa2803ce09589c230041b2d2bc1c3ab584614",
+      "bytes": 5301,
+      "gitBlobSha1": "ee4ba5439a7d59beaa38fc2fa7d4a49c82afcad7"
+    },
+    "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md": {
+      "sha256": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5",
+      "bytes": 13627,
+      "gitBlobSha1": "2bf761f7c6bea28a3d1f0b99e63fafa995cf1a7f"
+    },
+    "experimental/lm1-training-recovery-20261104/LmIntentStudy.kt": {
+      "sha256": "0fb9552ad0d8cc4d2f6cc43ad8700374da27ae9ca2e794f1765fca45c11c2e9d",
+      "bytes": 16459,
+      "gitBlobSha1": "337fa9c582579c3239ec81cad8295d7cf61c5b42"
+    },
+    "experimental/lm1-training-recovery-20261104/LmIntentStudyChecks.kt": {
+      "sha256": "6275790deb920139ff3eb627200a7dc502b427dee357576ba9d471341dc71aa4",
+      "bytes": 3910,
+      "gitBlobSha1": "c5f1dea8d29ac78fdf2088aed32e663cc6b30e16"
+    },
+    "experimental/lm1-training-recovery-20261104/LmRecoveryDiagnostic.kt": {
+      "sha256": "4eb3eb594f03a30ad00b750a31ea899c8a937f0783473b71f70a576648f7f4e3",
+      "bytes": 15636,
+      "gitBlobSha1": "8644cf774168403a52158e0790744bce94ec8e2e"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/INTENT_LONG_PROTOCOL.md": {
+      "sha256": "150ce71af4239563ce8142163e5e456f0554cf1263f4e6c2ad61bb842cc87800",
+      "bytes": 6447,
+      "gitBlobSha1": "01c1f0508877a353924a3f35a4d7129f28f33e64"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudy.kt": {
+      "sha256": "e1d469e0d702041a12cf250ac86bd5fcde18351347ba05a4824566c79b846fe4",
+      "bytes": 16470,
+      "gitBlobSha1": "3e8efe053de3a3736f535e156115cb0c3ea65c6a"
+    },
+    "experimental/lm1-training-recovery-20261104/long-study/registration.json": {
+      "sha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+      "bytes": 4772,
+      "gitBlobSha1": "aa9f4a75a72674f6bb62ab48b0dc0cab43027457"
+    },
+    "experimental/lm1-training-recovery-20261104/registration.json": {
+      "sha256": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+      "bytes": 3716,
+      "gitBlobSha1": "7e5c6f92ff1ab96c520d5b5d9bb5294fb05065d4"
+    },
+    "experimental/lm1-training-recovery-20261104/run_registered_study.py": {
+      "sha256": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "bytes": 15810,
+      "gitBlobSha1": "28908e07d6217f10882429047c853d1dd8667912"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/LmIntentSuffixStudy.kt": {
+      "sha256": "2ca026da5ecebb79f9fcbb0d49d39cc6c1485b0d31b19fe10118cb4ff711ef89",
+      "bytes": 16467,
+      "gitBlobSha1": "05b764ba26c38948bd79aec77d07f882274a9245"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/SUFFIX_PROTOCOL.md": {
+      "sha256": "176cd8a63462822b67bde234f60c57d90c8fe4066c6461eee18c0474b98359d4",
+      "bytes": 5856,
+      "gitBlobSha1": "bff3f2bfc4742c77b9d6ab03a017a393d2f6ccfc"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/choose_development_study.py": {
+      "sha256": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520",
+      "bytes": 5922,
+      "gitBlobSha1": "77133d843d7fc03a8a87b595c75a948387c55464"
+    },
+    "experimental/lm1-training-recovery-20261104/suffix-study/registration.json": {
+      "sha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+      "bytes": 6080,
+      "gitBlobSha1": "0c9fef1a06cfc890e3caa4d2d6c71f1d38c6e5fb"
+    },
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt": {
+      "sha256": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+      "bytes": 12149,
+      "gitBlobSha1": "c7d20d2f85b5fdc9af7b6a7079eb9c4d60e9fd79"
+    },
+    "experimental/weight-space-20261104/LmWeightExperiment.kt": {
+      "sha256": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+      "bytes": 15243,
+      "gitBlobSha1": "ea2541c10536956afb39167536c4476ec9650081"
+    },
+    "experimental/weight-space-20261104/LmWeightSurgery.kt": {
+      "sha256": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+      "bytes": 8378,
+      "gitBlobSha1": "42840f62b22f21b3418fe79269a32e95237b6ce5"
+    },
+    "experimental/weight-space-20261104/development.txt": {
+      "sha256": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111",
+      "bytes": 1676,
+      "gitBlobSha1": "e994704b7f28d638ac68b7b1331d5b048225029a"
+    }
+  }
+}

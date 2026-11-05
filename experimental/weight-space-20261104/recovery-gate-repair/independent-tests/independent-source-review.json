@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "observedUtc": "2026-11-04T19:33:53.720709+00:00",
+  "status": "INDEPENDENT_SOURCE_AND_RESULT_BINDING_PASS",
+  "reviewedCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "patchSha256": "c69cb427e4ba0624720380edef9f7f0ce3e418591c10bd0a35f56590ad67e38f",
+  "sourceManifestSha256": "2b1e704bfe80f7e362a959e1e13790ec12471cddaa60720c3d2ed9146f78229c",
+  "controllerProbeSha256": "4dddb6459c578c1feefbaee0bbff72eaad7a469eb799a01e078b8b4d33d51aec",
+  "selectorProbeSha256": "9a359c885823407abc211300eb5103a57d6f9c73aeddd8187763f0ae5209614d",
+  "benchmarkSourceSha256": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+  "selectorSourceSha256": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520",
+  "sources": {
+    "v1": {
+      "publishedGitSourceMatchesIndependentFixture": true,
+      "sourcePath": "experimental/lm1-training-recovery-20261104/run_registered_study.py",
+      "originalSourceSha256": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "patchedSourceSha256": "b1bed4338bb187ae6d835a46368cc05773ae96143559af368361103b64a7b327",
+      "changedExistingStudyMethods": [
+        "freeze_evidence",
+        "test"
+      ],
+      "addedStudyMethods": [
+        "post_capacity_evidence"
+      ],
+      "unchangedStudyMethods": [
+        "__init__",
+        "benchmark",
+        "diagnostic_variant",
+        "diagnostics",
+        "freeze",
+        "intent",
+        "run",
+        "selection",
+        "verify"
+      ]
+    },
+    "long": {
+      "publishedGitSourceMatchesIndependentFixture": true,
+      "sourcePath": "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+      "originalSourceSha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "patchedSourceSha256": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+      "changedExistingStudyMethods": [
+        "freeze_evidence",
+        "test"
+      ],
+      "addedStudyMethods": [
+        "post_capacity_evidence"
+      ],
+      "unchangedStudyMethods": [
+        "__init__",
+        "benchmark",
+        "freeze",
+        "intent",
+        "run",
+        "selection",
+        "verify"
+      ]
+    },
+    "suffix": {
+      "publishedGitSourceMatchesIndependentFixture": true,
+      "sourcePath": "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py",
+      "originalSourceSha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+      "patchedSourceSha256": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067",
+      "changedExistingStudyMethods": [
+        "freeze_evidence",
+        "test"
+      ],
+      "addedStudyMethods": [
+        "post_capacity_evidence"
+      ],
+      "unchangedStudyMethods": [
+        "__init__",
+        "benchmark",
+        "freeze",
+        "intent",
+        "run",
+        "selection",
+        "verify"
+      ]
+    }
+  },
+  "reportSha256": {
+    "red-v1.json": "69dad708bd9fae0d9f16cef7fb97a70863df66e1f717ce94dc50f18177e3121c",
+    "red-long.json": "50e380e03eb2d44b0eb2374683aa8c7eee06439b6fa13691762da9a2976234cb",
+    "red-suffix.json": "87b0b70a0a4f7fbc3ed7d2f6c949db95f7dd67707fd1ccb0d62d9e8035025a45",
+    "green-v1.json": "8559668964af3ea4ccb20a27274a55212f2574bb60f26859a73229e1db857887",
+    "green-long.json": "f155aa618c2fa4cd20b39df11e26ec11fe983784df0b11c5939998f1c9be99ab",
+    "green-suffix.json": "b0145ad93c2f6260777b3abb04e3bb62aa93a4aada4cc4147c97a1e46a6091c3",
+    "selector-original.json": "b494bde890e36d7fb8eb356191fa808567a7ea6f91cef55c3aee031dbacd3396",
+    "selector-repaired.json": "75550196050a3c309776c1a586079f6d552ec35d774d06e09a8afbeb9b1dcba8"
+  },
+  "historical50CaseProbeSha256": "9d161d926e0c8a137e2d645dedb58d9cb8e3e5043f0e2c0ccf2e9a0bfa8d6123",
+  "original": {
+    "passed": 33,
+    "failed": 132,
+    "total": 165
+  },
+  "repaired": {
+    "passed": 165,
+    "failed": 0,
+    "total": 165
+  },
+  "actualModelProcesses": 0,
+  "realHoldoutRead": false,
+  "publishedPr508Changed": false,
+  "newModelQualityClaim": false,
+  "scope": "Source comparison, AST comparison, actual saved independent test reports; no new model execution"
+}
