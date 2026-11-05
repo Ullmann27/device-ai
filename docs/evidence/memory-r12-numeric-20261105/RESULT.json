@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "task_id": "MEMORY-R12-20261105",
+  "source_kind": "exact production Kotlin/GitHub connector mirror",
+  "tested_locally": true,
+  "ownership": {
+    "c1_pr": 519,
+    "c1_observed_head": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+    "r3_522_preserved": true,
+    "shared_entrypoint_writes": false,
+    "branch": "fix/continuum-memory-r12-numeric-evidence-20261105"
+  },
+  "source": {
+    "base_commit": "915dba534eb7c79b6343636cc6646226a044998f",
+    "test_freeze_commit": "7a44d1ef5761713810999d07f46069af009cc17d",
+    "fix_commit": "c0113a8c85a01121384e4a68574d9a461516230d",
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+    "before_blob": "b8c4930ce54b7dd6528beb9bee2a1fc84c122301",
+    "after_blob": "dcaeed0b13eb3f4f88128e45c250d6d84a319c72",
+    "frozen_test_blob": "c6fc1b7ed6a8cbbbaf87c46a2e3e685a5878ed8e",
+    "r11_frozen_test_blobs": [
+      "efeee016465f7eb4f1fca00801ba121b9cada180",
+      "6764f1af7a6c744bda7a009784f33174f88408c0"
+    ]
+  },
+  "tests": {
+    "toolchain": "OpenJDK 21.0.12.1 / kotlinc-jvm 1.9.0, exact full Kotlin production source, host-only JUnit API + EventEmittingRetriever stub",
+    "baseline": {
+      "compiled": 0,
+      "runner_exit": 1,
+      "total": 17,
+      "pass": 11,
+      "fail": 6,
+      "note": "Only helper-only R12 method excluded at baseline because the new helper does not exist; all eight remaining R12 assertions intact and all nine R11 methods retained.",
+      "raw": "baseline17.txt",
+      "sha256": "082db2e3aca11e4b2039d1aad07fd3049dfef65cb1a2daf2bb31d8e339118758"
+    },
+    "patched": {
+      "compiled": 0,
+      "runner_exit": 0,
+      "total": 18,
+      "pass": 18,
+      "fail": 0,
+      "raw": "patched18.txt",
+      "sha256": "551ed0c5f5cc999c9bb040c3fb51a8ee6282750622f643bb273ed37ee598995d"
+    },
+    "unchanged_query_parity": {
+      "cases": 112,
+      "equal": 112,
+      "original_sha256": "643a9ac0a14626ce10874947591354e1a702f167c9dca5008664a5514e9f70ff",
+      "patched_sha256": "643a9ac0a14626ce10874947591354e1a702f167c9dca5008664a5514e9f70ff",
+      "fixture_blob": "982dfc1597a9530e2a3a0323b084b69e09f11a6c",
+      "note": "No numeric queries in this pre-existing fixture. Intentional numeric-ranking changes are covered by frozen R12 tests."
+    },
+    "published_runner": "tools/memory-r12/run.sh",
+    "published_runner_end_to_end": "TIMEOUT twice in isolated mirror after RED and GREEN; the parity portion was executed separately and passed on the same pinned production files; do not claim full-run exit0"
+  },
+  "fixes": [
+    "BM25 intersects exact numeric postings before selecting candidates, preventing evidence with conflicting factual numbers from being returned solely through shared nouns.",
+    "CharNgram preserves exact per-generation numeric BitSets and requires each explicit numeric token for candidate eligibility, preserving R7 atomic snapshot and R10 negation membership.",
+    "Temporal phrase 'vor N Tagen' is excluded from required factual numbers; all other factual numerals remain exact."
+  ],
+  "not_run": [
+    "real Android Gradle/JUnit/Robolectric",
+    "full TemporalCue and memory suite",
+    "official 1,000-document/44-question M2.9 holdout",
+    "full Node/backend and NewApi lint",
+    "real on-device model/voice/Fold7",
+    "APK/sign/release/install"
+  ],
+  "caveats": [
+    "Stricter numeric filtering may reduce recall if docs express numbers in words or other formats; do not promote before official holdout.",
+    "Numbers elsewhere in a document may match without proving the requested fact; this is a retrieval gate, not semantic entailment.",
+    "The test mirror uses only host stub for EventEmittingRetriever and JUnit, never the actual Android integration."
+  ],
+  "safeguards": {
+    "main_merged": false,
+    "original_package_modified": false,
+    "signer_modified": false,
+    "owner_data_modified": false,
+    "offline_switch_modified": false,
+    "models_modified": false,
+    "paid_runner": false,
+    "actions": false,
+    "sub_bots_created": 0,
+    "apk": false
+  }
+}
