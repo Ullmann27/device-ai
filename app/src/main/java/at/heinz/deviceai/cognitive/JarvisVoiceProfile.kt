@@ -15,9 +15,8 @@ internal object JarvisVoiceProfile {
     private val punctuation = Regex("[*_#`>]")
     private val whitespace = Regex("\\s+")
 
-    fun speakable(text: String, maxCharacters: Int = 480): String? {
-        require(maxCharacters in 80..800)
-        val cleaned = text
+    /** Spoken form of [text]: code, links and markup are replaced, control characters removed. */
+    private fun clean(text: String): String = text
             .replace(codeFence, " Codebeispiel ausgelassen. ")
             .replace(unfinishedFence, " Nicht abgeschlossenen Codeblock ausgelassen. ")
             .replace(inlineCode, " Codebeispiel ausgelassen. ")
@@ -29,13 +28,41 @@ internal object JarvisVoiceProfile {
             .joinToString("")
             .replace(whitespace, " ")
             .trim()
-        if (cleaned.isEmpty()) return null
-        if (cleaned.length <= maxCharacters) return cleaned
+
+    /** Length of the first spoken piece of [cleaned]: sentence end, else word end, else hard cut. */
+    private fun boundary(cleaned: String, maxCharacters: Int): Int {
+        if (cleaned.length <= maxCharacters) return cleaned.length
         val prefix = cleaned.take(maxCharacters)
         val lastSentence = listOf(prefix.lastIndexOf(". "), prefix.lastIndexOf("! "), prefix.lastIndexOf("? "))
             .maxOrNull() ?: -1
-        val boundary = if (lastSentence >= maxCharacters / 3) lastSentence + 1
+        return if (lastSentence >= maxCharacters / 3) lastSentence + 1
             else prefix.lastIndexOf(' ').takeIf { it >= maxCharacters / 2 } ?: maxCharacters
-        return prefix.take(boundary).trim().takeIf { it.isNotEmpty() }
+    }
+
+    /** First speakable piece only (kept for callers that want a short preview). */
+    fun speakable(text: String, maxCharacters: Int = 480): String? {
+        require(maxCharacters in 80..800)
+        val cleaned = clean(text)
+        if (cleaned.isEmpty()) return null
+        return cleaned.take(boundary(cleaned, maxCharacters)).trim().takeIf { it.isNotEmpty() }
+    }
+
+    /**
+     * The whole reply as ordered TTS pieces of at most [chunkCharacters], split at sentence (else word) ends, so a
+     * long answer is read completely (Fold7 report #566: speech stopped after the first 480 characters). Bounded by
+     * [maxChunks] (the approved speech queue's capacity); text beyond it is not spoken and [Chunks.truncated] says so.
+     */
+    data class Chunks(val pieces: List<String>, val truncated: Boolean)
+
+    fun speakableChunks(text: String, chunkCharacters: Int = 480, maxChunks: Int = 16): Chunks {
+        require(chunkCharacters in 80..800 && maxChunks in 1..64)
+        var rest = clean(text)
+        val pieces = ArrayList<String>()
+        while (rest.isNotEmpty() && pieces.size < maxChunks) {
+            val end = boundary(rest, chunkCharacters)
+            rest.take(end).trim().takeIf { it.isNotEmpty() }?.let(pieces::add)
+            rest = rest.drop(end).trim()
+        }
+        return Chunks(pieces, rest.isNotEmpty())
     }
 }

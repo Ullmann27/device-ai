@@ -251,6 +251,10 @@ class AgentActivity : Activity() {
     private var voiceSpeaking = false
     private var voiceListening = false
     @Volatile private var voiceUtteranceId: String? = null
+    /** Ordered pieces of the reply being read aloud (#566); only the UI thread touches the turn/chunk ids. */
+    private val speechChunks = at.heinz.deviceai.cognitive.ApprovedSpeechChunkQueue()
+    private var speechTurnId: String? = null
+    private var speechChunkId: String? = null
     private val voiceSignal = TtsHologramSignal()
     private val voiceFrame = object : Runnable {
         override fun run() {
@@ -7013,6 +7017,10 @@ class AgentActivity : Activity() {
     private fun stopVoiceAnimation() = stopVoiceAnimation(true)
 
     private fun stopVoiceAnimation(interrupted: Boolean) {
+        // Any end of speech (STOP, error, new reply, pause) discards the unspoken rest of the reply.
+        speechTurnId?.let { speechChunks.stop(it) }
+        speechTurnId = null
+        speechChunkId = null
         if (ownerFaceGreetingUtteranceId == voiceUtteranceId) ownerFaceGreetingUtteranceId = null
         voiceUtteranceId?.let { avatarDirector.speechEnded(it, interrupted = interrupted) }
         voiceUtteranceId = null
@@ -7068,6 +7076,8 @@ class AgentActivity : Activity() {
                         refreshReadinessGuide()
                     }
                     if(id != null && id == voiceUtteranceId) {
+                        // Next piece of the same reply: no mouth reset, no microphone restart (#566).
+                        if (!interrupted && !failed && continueSpokenReply()) return@runOnUiThread
                         stopVoiceAnimation(interrupted || failed)
                     }
                     // Hands-free mode listens again only after its bound reply ends; a failed but
@@ -7083,15 +7093,44 @@ class AgentActivity : Activity() {
             !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired,
                 microphoneActive = voiceListening)) return
         stopVoiceAnimation()
+        // #566: the whole visible reply is read, as ordered sentence-bounded pieces (formerly only 480 characters).
+        val chunks = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(message)
+        if (chunks.pieces.isEmpty()) return
+        val turn = "reply-" + UUID.randomUUID()
+        if (!speechChunks.beginTurn(turn)) return
+        chunks.pieces.forEachIndexed { index, piece ->
+            speechChunks.appendApproved(turn, "$turn-$index", piece, approvalEvidenceId = "visible-final-reply")
+        }
+        speechChunks.markLastChunkSubmitted(turn)
+        speechTurnId = turn
+        if (!speakNextChunk(turn, TextToSpeech.QUEUE_FLUSH)) stopVoiceAnimation()
+    }
+
+    /**
+     * Sends the next piece of [turn] to TTS under its own utterance id; the avatar, PCM signal and hands-free
+     * binding follow that id. False when nothing could be queued.
+     */
+    private fun speakNextChunk(turn: String, queueMode: Int): Boolean {
+        val chunk = speechChunks.takeNextReady(turn) ?: return false
         val id = "device-ai-" + UUID.randomUUID()
         voiceUtteranceId = id
+        speechChunkId = chunk.chunkId
         updateUiFeedbackPolicy() // Pending synthesis already owns the voice channel.
         voiceSignal.activate(id)
-        val spoken = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakable(message)
-        voiceAvatarText = spoken.orEmpty()
-        if (spoken == null || voiceEngine?.speak(spoken, TextToSpeech.QUEUE_FLUSH, null, id) != TextToSpeech.SUCCESS)
-            stopVoiceAnimation()
-        else continuousConversation.assistantSpeechQueued(id)
+        voiceAvatarText = chunk.approvedText
+        if (voiceEngine?.speak(chunk.approvedText, queueMode, null, id) != TextToSpeech.SUCCESS) return false
+        // Rebinding keeps hands-free listening closed until the last piece of this reply has finished.
+        continuousConversation.assistantSpeechQueued(id)
+        return true
+    }
+
+    /** After a piece finished normally: true when the next piece of the same reply was queued. */
+    private fun continueSpokenReply(): Boolean {
+        val turn = speechTurnId ?: return false
+        val chunk = speechChunkId ?: return false
+        if (speechChunks.onChunkFinished(turn, chunk) !=
+            at.heinz.deviceai.cognitive.ApprovedSpeechChunkQueue.Completion.MORE_CHUNKS) return false
+        return speakNextChunk(turn, TextToSpeech.QUEUE_ADD)
     }
 
     private fun showWebLearningInbox() {
