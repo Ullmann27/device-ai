@@ -14,7 +14,7 @@ from pathlib import Path
 import sys
 s=Path(sys.argv[1]).read_text()
 classes=s[s.index("/** Variant A:"):].replace("class Bm25GermanRetriever(","class BaselineBm25GermanRetriever(").replace("class CharNgramHashRetriever(","class BaselineCharNgramHashRetriever(")
-Path(sys.argv[2]).write_text("package at.heinz.deviceai.learning\\nimport kotlin.math.ln\\nimport kotlin.math.sqrt\\n"+classes)
+Path(sys.argv[2]).write_text("package at.heinz.deviceai.learning\nimport kotlin.math.ln\nimport kotlin.math.sqrt\n"+classes)
 PY
 kotlinc "$source_path" "$tmp/BaselineRetriever.kt" \
   tools/memory-index-atomic-r7/EventEmittingCompileStub.kt \
