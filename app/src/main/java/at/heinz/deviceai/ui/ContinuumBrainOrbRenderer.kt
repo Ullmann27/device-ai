@@ -23,15 +23,21 @@ class ContinuumBrainOrbRenderer {
 
     /** Kugelmitte ([cx],[cy]) und Radius [r] in px; Sockel und Lichtbalken liegen unter der Kugel bis cy + 1.30 r. */
     fun draw(p: ContinuumPainter, cx: Float, cy: Float, r: Float, s: Signals = Signals()) {
+        // Keep invalid signals out of draw primitives.
+        val pulse = if (s.pulse.isFinite()) s.pulse.coerceIn(0f, 1f) else 0f
+        val recall = if (s.recall.isFinite()) s.recall.coerceIn(0f, 1f) else 0f
+        val phase = if (s.phase.isFinite()) s.phase else 0f
+        val stable = if (pulse == s.pulse && recall == s.recall && phase == s.phase) s
+            else s.copy(pulse = pulse, recall = recall, phase = phase)
         val C = JarvisDesign.Colors
         drawPedestal(p, cx, cy + r * 1.0f, r)
-        drawOrbits(p, cx, cy, r, s, back = true)
+        drawOrbits(p, cx, cy, r, stable, back = true)
         // Glaskörper
         p.fillCircle(cx, cy, r, Fill.Radial(cx, cy - r * .25f, r * 1.05f,
             intArrayOf(C.cyanDeep, C.backgroundHaze, C.pillSurface, Argb.withAlpha(C.pillSurface, .9f)), floatArrayOf(0f, .45f, .8f, 1f)), .92f)
-        drawNet(p, cx, cy, r, s)
-        drawCore(p, cx, cy, r, s)
-        drawBrain(p, cx, cy - r * .33f, r, s)
+        drawNet(p, cx, cy, r, stable)
+        drawCore(p, cx, cy, r, stable)
+        drawBrain(p, cx, cy - r * .33f, r, stable)
         // Rand-Bloom: mehrere additive Ringe (violett oben/rechts, cyan unten/links), dann scharfe Kante.
         p.setAdditive(true)
         // 59509: a markedly stronger violet/magenta rim bloom around the glass sphere.
@@ -47,7 +53,7 @@ class ContinuumBrainOrbRenderer {
         p.fillCircle(cx - r * .55f, cy - r * .58f, r * .05f, Fill.Radial(cx - r * .55f, cy - r * .58f, r * .05f, intArrayOf(Argb.withAlpha(C.activeWhite, .8f), 0)))
         p.setAdditive(false)
         drawDust(p, cx, cy, r, s.particles)
-        drawOrbits(p, cx, cy, r, s, back = false)
+        drawOrbits(p, cx, cy, r, stable, back = false)
         drawLabel(p, cx, cy, r)
     }
 
