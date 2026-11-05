@@ -60,6 +60,22 @@ class ContinuumCockpitHandsFreeUiTest {
             assertEquals(false, field(a, "conversationActive"))
             assertEquals(View.VISIBLE, (field(a, "dashboardSection") as View).visibility)
             assertSame(home, head.parent)
+            // A non-navigational status result keeps START visible.
+            val statusRoute = AgentActivity::class.java.getDeclaredMethod("showActionResultWithoutForcingChat")
+                .apply { isAccessible = true }
+            statusRoute.invoke(a)
+            assertEquals(false, field(a, "conversationActive"))
+            assertEquals(View.VISIBLE, (field(a, "dashboardSection") as View).visibility)
+            // Re-entering START after a spoken turn must rearm presentation.
+            set(a, "keepCockpitDuringHandsFree", false)
+            AgentActivity::class.java.getDeclaredMethod("showHomeDashboard")
+                .apply { isAccessible = true }.invoke(a)
+            assertEquals(true, field(a, "keepCockpitDuringHandsFree"))
+            set(a, "keyboardCompact", true)
+            AgentActivity::class.java.getDeclaredMethod("refreshConversationLayout")
+                .apply { isAccessible = true }.invoke(a)
+            assertEquals(View.VISIBLE, (field(a, "dashboardSection") as View).visibility)
+            set(a, "keyboardCompact", false)
             mode.stop()
             call(a, "addUserMessage", "Expliziter Chat")
             assertEquals(true, field(a, "conversationActive"))
