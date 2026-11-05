@@ -78,3 +78,39 @@ test('CLI uses nonzero exit on mismatches, succeeds when bound', async t => {
   const no = spawnSync(process.execPath, [cmd, bad.image, bad.manifest], {encoding:'utf8'});
   assert.equal(no.status, 1); assert.match(no.stderr, /REFERENCE_GEOMETRY_MISMATCH/);
 });
+
+test('validly pinned PNG with damaged IEND CRC is rejected', async t => {
+  const bytes = Buffer.from(PNG); bytes[bytes.length - 1] ^= 1;
+  const f = await fixture(t, {sha256:createHash('sha256').update(bytes).digest('hex')}, bytes);
+  await assert.rejects(verifyReference(f.image, f.manifest), /INVALID_PNG_STRUCTURE/);
+});
+
+test('validly pinned PNG without final IEND is rejected', async t => {
+  const bytes = PNG.subarray(0, PNG.length - 12);
+  const f = await fixture(t, {sha256:createHash('sha256').update(bytes).digest('hex')}, bytes);
+  await assert.rejects(verifyReference(f.image, f.manifest), /INVALID_PNG_STRUCTURE/);
+});
+
+test('validly pinned PNG with appended data is rejected', async t => {
+  const bytes = Buffer.concat([PNG, Buffer.from('EXTRA')]);
+  const f = await fixture(t, {sha256:createHash('sha256').update(bytes).digest('hex')}, bytes);
+  await assert.rejects(verifyReference(f.image, f.manifest), /INVALID_PNG_STRUCTURE/);
+});
+
+test('validly pinned PNG with corrupted IDAT CRC is rejected', async t => {
+  const bytes = Buffer.from(PNG); bytes[61] ^= 1;
+  const f = await fixture(t, {sha256:createHash('sha256').update(bytes).digest('hex')}, bytes);
+  await assert.rejects(verifyReference(f.image, f.manifest), /INVALID_PNG_STRUCTURE/);
+});
+
+test('validly pinned PNG without IDAT is rejected', async t => {
+  const bytes = Buffer.concat([PNG.subarray(0, 33), PNG.subarray(PNG.length-12)]);
+  const f = await fixture(t, {sha256:createHash('sha256').update(bytes).digest('hex')}, bytes);
+  await assert.rejects(verifyReference(f.image, f.manifest), /INVALID_PNG_STRUCTURE/);
+});
+
+test('validly pinned PNG with oversized chunk length is rejected', async t => {
+  const bytes = Buffer.from(PNG); bytes.writeUInt32BE(2147483647, 33);
+  const f = await fixture(t, {sha256:createHash('sha256').update(bytes).digest('hex')}, bytes);
+  await assert.rejects(verifyReference(f.image, f.manifest), /INVALID_PNG_STRUCTURE/);
+});
