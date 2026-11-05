@@ -41,8 +41,8 @@ internal class AvatarIdleMotion {
 
         val group = (t / BLINK_PERIOD).toInt().coerceIn(0, 99)
         val local = (t - group * BLINK_PERIOD).toFloat()
-        // Preserve the authored 150-ms closure windows and counts. The lids close in 55 ms
-        // and reopen in 95 ms with zero velocity and acceleration at the three joins.
+        // Preserve 150-ms windows and the existing full-closure contract at 4.525 s.
+        // Close in 55 ms, hold for 20 ms, reopen in 75 ms; all joins are smooth.
         // Every fifth group adds a second, earlier blink (100 + 20 per 460-second cycle).
         val extra = if (group % 5 == 2) pulse(local, 4.205f) else 0f
         blinkWeight = maxOf(pulse(local, 4.505f), extra)
@@ -50,10 +50,14 @@ internal class AvatarIdleMotion {
 
     private fun pulse(t: Float, apex: Float): Float {
         val offset = t - apex
-        val progress = if (offset <= 0f) (offset + .055f) / .055f else (.095f - offset) / .095f
+        val progress = when {
+            offset <= 0f -> (offset + .055f) / .055f
+            offset <= .020f -> 1f
+            else -> (.095f - offset) / .075f
+        }
         val u = progress.coerceIn(0f, 1f)
         // Minimum-jerk eyelid easing: no triangular cusp at start, apex or finish.
-        return u * u * u * (u * (u * 6f - 15f) + 10f)
+        return (u * u * u * (u * (u * 6f - 15f) + 10f)).coerceIn(0f, 1f)
     }
     private fun interpolate(a: Float, b: Float, amount: Float) = a + (b - a) * amount
 
