@@ -39,7 +39,9 @@ test('owner decision: a microphone tap starts hands-free talk; long press keeps 
   assert.match(activity, /setOnLongClickListener \{ onChatMicrophoneLongPress\(\); true \}/);
   assert.match(activity, /"voice-input" -> onChatMicrophoneTap\(\)/);
   const tap = body('private fun onChatMicrophoneTap(');
-  assert.match(tap, /if \(!continuousConversation\.active\) \{ toggleContinuousConversation\(\); return \}/);
+  // #564 keeps the cockpit visible during hands-free talk; the inactive tap must still start the mode.
+  assert.match(tap, /if \(!continuousConversation\.active\) \{[\s\S]*?toggleContinuousConversation\(\)[\s\S]*?return\s*\}/);
+  assert.doesNotMatch(tap.slice(0, tap.indexOf('toggleContinuousConversation()')), /startVoiceInput\(\)/);
   const longPress = body('private fun onChatMicrophoneLongPress(');
   assert.match(longPress, /if \(continuousConversation\.active\) endContinuousConversation\(/);
   assert.match(longPress, /else startVoiceInput\(\)/);
