@@ -1,0 +1,47 @@
+{
+  "task": "G1-INTEGRATE-WEIGHT-002",
+  "dateUtc": "2026-11-05T03:32:55.504Z",
+  "status": "SOURCE_PINNED_SYNTHETIC_ORACLE_ONLY",
+  "ownPr": 492,
+  "ownHeadBefore": "b8dba7ef9abdf126958e13e08612fa591b4dd3b8",
+  "comparisonPr": 508,
+  "comparisonHead": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
+  "patchBlob": "bd46d9b89b9f42674c86f949b84ee66f8a23a03a",
+  "patchHunksMatched": 16,
+  "patchHunksTotal": 16,
+  "runnerBlobs": {
+    "base": "28908e07d6217f10882429047c853d1dd8667912",
+    "v2": "30119435feed1728c5d22fec40830654a7a19861",
+    "v3": "417e4b3289bb692e72dc80398b51b67e106b8907"
+  },
+  "finding": {
+    "type": "MISSING_INDEPENDENT_BASELINE_FOR_CANDIDATE_STATUS",
+    "registeredRule": "wide selected dev >=12 AND >= initial dev+4",
+    "patchedIneligible": "selected development scores validated but initial baseline omitted",
+    "patchedEligible": "selected correct>=12 but initial+4 omitted",
+    "proofStrength": "STATIC_SOURCE_CONTROL_FLOW_PLUS_SYNTHETIC_ORACLE; NOT ORIGINAL RUNNER EXECUTION"
+  },
+  "syntheticTests": {
+    "runtime": "V8-JavaScript-isolate",
+    "passed": 20,
+    "failed": 0,
+    "accepted": 7,
+    "blocked": 13,
+    "scope": "standalone model-free choice_signal_oracle.cjs, no Node/Python/JVM"
+  },
+  "archiveRecovery": {
+    "libraryMaterialized": true,
+    "shaVerified": false,
+    "reason": "container and Python both returned redis.exceptions.ResponseError"
+  },
+  "modelRuns": 0,
+  "optimizerUpdates": 0,
+  "originalControllerTests": "NOT_RUN",
+  "originalArchiveSha256Check": "NOT_RUN",
+  "patchIntegratedInto508": false,
+  "leaseReleased": true,
+  "acceptedModel": "M5_UNCHANGED",
+  "M6": "PARITY_FAIL_RESTORED",
+  "quality": "FAIL",
+  "oldFinal": "CONSUMED"
+}

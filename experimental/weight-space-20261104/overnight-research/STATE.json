@@ -17,10 +17,11 @@
     "6.56M/9.71M gradient access, chain-rule and twenty finite-difference checks"
   ],
   "next": [
-    "Keep M5_UNCHANGED, immutable M6 parity FAIL, quality FAIL and consumed old final dataset; no model starts or S1/W1 training",
-    "Verify a genuine authorized original #508 runner checkout, registered original model inputs and their hashes before any controller tests",
-    "Run independently source-pinned full patched controller synthetic negative gates: baseline FAIL, manipulated capacity receipt, checkpoint corruption, unauthorized resume and cross-study final consumption; no model processes",
-    "Prospective independent split/retention/LR preregistration and externally authoritative atomic final consumption ledger still mandatory before any newly approved study"
+    "Keep M5_UNCHANGED, M6 parity FAIL, old quality FAIL and consumed old final test; no model starts, optimizer or S1/W1 training",
+    "Restore exact original environment, verify previously materialized private archives by SHA before using any JAR or checkpoint; container currently blocked",
+    "Source/receipt/hash-pin original initial wide dev SCORE for v2/v3; reject fabricated NO_DEVELOPMENT_SIGNAL and unjustified ELIGIBLE status independent of choice self-assertion",
+    "Then independently test combined patched full controllers for failed baselines, malicious candidate relabeling, corrupt checkpoint and unauthorized resume using synthetic original-compatible fixtures without model launch",
+    "New preregistered independent split/retention/LR plus external atomic final-consumption ledger mandatory before any future study"
   ],
   "acceptedResearchState": "M5_UNCHANGED",
   "newModelExperimentsPermittedThisRound": false,
@@ -36,33 +37,35 @@
     "exactRestorationVerified": true
   },
   "continuation": {
-    "status": "FOURTH_SOURCE_PINNED_INVENTORY_NEGATIVE_GATES_PUBLISHED",
+    "status": "FIFTH_SOURCE_PINNED_CHOICE_SIGNAL_ORACLE_PUBLISHED",
     "scope": "source audit, gate repair and prospective study design only",
     "iterations": 8,
     "frequency": "HOURLY",
     "timezone": "Europe/Vienna",
     "startLocal": "2026-11-05T00:30:00+01:00",
     "timingMode": "flexible_schedule",
-    "executionEnvironmentConfirmed": true,
+    "executionEnvironmentConfirmed": false,
     "nextRunTimestampReturned": false,
-    "executionEnvironmentStatus": "ORIGINAL_CHECKOUT_MISSING; PYTHON_3_13_5_AVAILABLE; GIT_GITHUB_DNS_BLOCKED; CONNECTOR_READ_AND_PUBLISH_AVAILABLE",
-    "latestReviewedHead": "f79dbb4b5b81918c11d14ec4c0fd3def64c06969",
-    "latestEvidenceCommit": "f79dbb4b5b81918c11d14ec4c0fd3def64c06969",
+    "executionEnvironmentStatus": "ORIGINAL_CHECKOUT_MISSING; LIBRARY_ARCHIVES_MATERIALIZED_NOT_HASH_VERIFIED; CONTAINER_AND_PYTHON_REDIS_RESPONSEERROR; GITHUB_CONNECTOR_AVAILABLE; V8_SYNTHETIC_EXECUTION_AVAILABLE",
+    "latestReviewedHead": "b8dba7ef9abdf126958e13e08612fa591b4dd3b8",
+    "latestEvidenceCommit": null,
     "modelProcessesThisRun": 0,
     "optimizerUpdatesThisRun": 0,
-    "newTestsRunThisContinuation": "20/20 local Python 3.13.5 PASS: 7 new RED->GREEN, 1 clean, 12 pinned prior regressions",
+    "newTestsRunThisContinuation": "20/20 executed in JS V8 pure synthetic oracle (7 accept / 13 block); Python Node JVM runner NOT_RUN",
     "sourcePatchMatchedHunks": 16,
     "sourcePatchMatchedFiles": 3,
     "patchIntegratedInto508": false,
     "leaseStatus": "RELEASED",
-    "prototypePath": "experimental/weight-space-20261104/overnight-research/continuation-04/",
-    "prototypeCodeGitBlob": "16217bfb24daba244d17af5d4ea65810cd43ce99",
+    "prototypePath": "experimental/weight-space-20261104/overnight-research/continuation-05/",
+    "prototypeCodeGitBlob": "98eff6703a5aa680f8c5ef34244658150b44a008",
     "prototypeTestGitBlob": "3472ab6b804483a2f8253266b571c4a6f54db985",
-    "scopeLimit": "SYNTHETIC_LOCAL_READ_ONLY_NO_ATOMICITY_NO_GLOBAL_ATTESTATION",
+    "scopeLimit": "STATIC_SOURCE_AND_SYNTHETIC_ORACLE_ONLY_NO_ARCHIVE_INTEGRITY_NO_ORIGINAL_CONTROLLER_RUNTIME",
     "fullRunnerDynamic": "NOT_RUN",
     "corruptCheckpointDynamic": "NOT_RUN",
-    "badBaselineResumeDynamic": "NOT_RUN"
+    "badBaselineResumeDynamic": "NOT_RUN",
+    "archivesMaterialized": true,
+    "archivesHashVerified": false
   },
-  "leaseReleasedAtUtc": "2026-11-04T22:30:38.987172+00:00",
+  "leaseReleasedAtUtc": "2026-11-05T03:32:55.504Z",
   "evidenceCommit": "f79dbb4b5b81918c11d14ec4c0fd3def64c06969"
 }
