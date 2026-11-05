@@ -32,6 +32,7 @@ val prepareUiTestSdk = tasks.register<Sync>("prepareUiTestSdk") {
     into(layout.buildDirectory.dir("ui-test-sdk"))
 }
 if (continuumUiWidgetTests) tasks.withType<org.gradle.api.tasks.testing.Test>().configureEach {
+    maxHeapSize = "1024m"
     dependsOn(prepareUiTestSdk)
     doFirst {
         systemProperty("robolectric.offline", "true")

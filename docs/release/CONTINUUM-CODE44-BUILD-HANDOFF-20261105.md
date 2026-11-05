@@ -1,6 +1,6 @@
 # Continuum Code44 – Build-Handoff (05.11.2026)
 
-Status: Lokale Reparaturprüfungen grün; vollständiger neuer Publisherlauf noch erforderlich. Noch keine Code44-APK signiert oder veröffentlicht.
+Status: Zwei vollständige Publisherläufe haben belegte Fehler gesperrt. Die letzten beiden QA-Reparaturen sind lokal grün; vollständiger neuer Publisherlauf noch erforderlich. Noch keine Code44-APK signiert oder veröffentlicht.
 
 ## Quellen und vorhandener Kanal
 
@@ -80,3 +80,17 @@ JUnit-SHA256 des lokalen RED-Nachweises: Cockpit `844f8131a84f1b2ccfcbcbae5ab901
 - Gezielter Android-Nachlauf: **19 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, `BUILD SUCCESSFUL in 2m 56s`. Enthalten: zwei neue Coding-Regressionen, sieben WorkWindow-, drei Lifecycle-, zwei Density-, drei System-/Werkzeugszenen- und zwei Scroll-Fälle. Quellinhalt während des Laufs unverändert.
 - Zusätzlich fünf Node-Navigationsverträge PASS / 0 FAIL / 0 SKIP; unabhängige read-only Prüfung des Produktionsdiffs ohne verbleibenden Befund.
 - Dieser fokussierte Lauf ist keine Behauptung eines vollständigen Android-Nachlaufs. Der Publisher führt vor Signierung die gesamte Suite auf der endgültigen Remote-SHA aus.
+
+## Zweiter Publisherlauf und letzte QA-Reparaturen
+
+- Quelle: `70f08a0af37ac58f1739f1208263598a89053dc5`, Quellbaum `da302d828a378055079d09ffe6ec4aae18d27f23`.
+- Lauf `dep-dbmfmvjbc2fs7385cg4g`: 21:56:14 bis 22:32:19 UTC, Ergebnis `build_failed`. Backend grün; Android: **3.383 Fälle, 3.361 PASS / 2 FAIL / 20 SKIP**, Gradle 29m13s. Die vorherigen Layout-, Dialog- und Reflexionsfehler sind in diesem vollständigen Lauf beseitigt.
+- Restfehler: `ContinuumVisualEvidenceUiTest.fold7InnerLargerFont` verlangte trotz gemessenem Platzmangel ein Arbeitsfenster; `PersonalLearningTransferTest.documentReaderBoundsEmptyReadsSizeAndInterruption` traf im vollständigen Testprozess auf `OutOfMemoryError`.
+- Drei fehlgeschlagene Gates sperrten Signierung und Veröffentlichung unverändert. Öffentlicher Kanal weiterhin Code43.
+- Der Visualtest prüft jetzt den vorhandenen nativen Fallback anhand sämtlicher exakter Kandidaten und real gemessener Mindesthöhen. Ein testlokaler Beobachter delegiert den echten Navigationscallback unverändert genau einmal und erfasst den Messnachweis vor nachfolgenden Animationsframes. Der ursprüngliche Callback wird im `finally` wiederhergestellt. Keine Zeitannahme, Pixeltoleranz oder übersprungene Prüfung.
+- Der native Fallback muss echte Statusdaten und Version anzeigen, den ursprünglichen Avatar und START-Zustand bewahren und über einen vollständig sichtbaren, zugänglichen Schließen-Knopf mit echtem DOWN/UP schließen. Der bisherige Arbeitsfensterzweig bleibt bytegleich mit 61 Prüfaufrufen; alle fünf Visualtestmethoden bleiben erhalten.
+- Ausschließlich für `continuumUiWidgetTests` erhält der Gradle-Testworker `maxHeapSize = "1024m"`. Der tatsächliche JVM-Start bestätigt `-Xmx1024m` statt des zuvor belegten `-Xmx512m`. Backup-Größenlimits, Produktionsverhalten, Release-Gates und Parallelität bleiben unverändert; kein kostenpflichtiger Planwechsel. Der genaue Speicherzustand am früheren OOM ist aus Render nicht verfügbar; ein Speicherleck wird nicht behauptet.
+- Lokaler abschließender Nachlauf: **12 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, 1m18s. Enthalten sind der korrigierte Fold-Visualtest und sämtliche elf `PersonalLearningTransferTest`-Fälle. Der Quellinhalt blieb während des Laufs unverändert. Vorher liefen zusätzlich die drei anderen Visualprofile erfolgreich; der optionale Videoexport war ohne Evidence-Verzeichnis erwartungsgemäß übersprungen.
+- GREEN-JUnit-SHA256: Visualtest `d5a2319ad78e31af8bd0d7a030b4f9e1faaa42bb9c285f6e06ecbe6aab570391`, Backupklasse `a58b723eff247447bf9d642a11aaaa0e773f3489b276b3d4a31e3b27de298d1b`. Zusammenfassungs-SHA256: `451878d15d12613e48f4545dbefe9764e8dce19010e7d07a672348bef1005372`.
+
+Die OOM-Beseitigung im gesamten Testprozess muss der nächste vollständige Publisherlauf auf exakt neuer Remote-SHA bestätigen. Lokale Teilprüfungen ersetzen weder diesen Lauf noch die unabhängige Prüfung der signierten APK und die reale Fold7-Abnahme.

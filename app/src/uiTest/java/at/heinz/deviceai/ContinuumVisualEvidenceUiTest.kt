@@ -1,9 +1,11 @@
 package at.heinz.deviceai
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Looper
 import android.os.SystemClock
 import android.view.MotionEvent
@@ -15,6 +17,9 @@ import at.heinz.deviceai.avatar.AvatarDirector
 import at.heinz.deviceai.avatar.AvatarPoseReducer
 import at.heinz.deviceai.avatar.AvatarRuntimeSignals
 import at.heinz.deviceai.ui.ContinuumHomeView
+import at.heinz.deviceai.ui.JarvisShellLayout
+import at.heinz.deviceai.ui.JarvisWorkWindowGeometry
+import at.heinz.deviceai.ui.JarvisWorkWindowHost
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertSame
@@ -35,6 +40,8 @@ import java.io.File
 import java.time.Duration
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
+import kotlin.math.ceil
+import kotlin.math.floor
 
 /**
  * Visual evidence of the real AgentActivity cockpit on the host (Robolectric NATIVE canvas). The live 3D head
@@ -104,11 +111,14 @@ class ContinuumVisualEvidenceUiTest {
             measure(root, root.width, root.height)
         }
         if (!target.getGlobalVisibleRect(r) || r.width() < target.width - 1 || r.height() < target.height - 1) return false
+        val rootPosition = IntArray(2).also { root.getLocationOnScreen(it) }
+        val x = r.exactCenterX() - rootPosition[0]
+        val y = r.exactCenterY() - rootPosition[1]
         val at = SystemClock.uptimeMillis()
-        val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN, r.exactCenterX(), r.exactCenterY(), 0)
+        val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN, x, y, 0)
         try { root.dispatchTouchEvent(down) } finally { down.recycle() }
         if (release) {
-            val up = MotionEvent.obtain(at, at + 16, MotionEvent.ACTION_UP, r.exactCenterX(), r.exactCenterY(), 0)
+            val up = MotionEvent.obtain(at, at + 16, MotionEvent.ACTION_UP, x, y, 0)
             try { root.dispatchTouchEvent(up) } finally { up.recycle() }
         }
         return true
@@ -150,14 +160,118 @@ class ContinuumVisualEvidenceUiTest {
         } finally { bitmap.recycle() }
     }
 
+    private fun assertMeasuredSystemFallback(a: AgentActivity) {
+        val home = field(a, "homeView") as ContinuumHomeView
+        assertEquals(ContinuumWorkArea.START, field(a, "activeWorkArea"))
+        assertTrue("Fallback belongs to the current cockpit", home.jarvisShellStage && home.isAttachedToWindow && home.isShown)
+        val shell = requireNotNull(home.jarvisShell.shell)
+        val container = a.findViewById<ViewGroup>(android.R.id.content)
+        val containerPosition = IntArray(2).also { container.getLocationInWindow(it) }
+        val shellPosition = IntArray(2).also { home.jarvisShell.getLocationInWindow(it) }
+        val left = (shellPosition[0] - containerPosition[0]).toFloat()
+        val top = (shellPosition[1] - containerPosition[1]).toFloat()
+        val density = container.resources.displayMetrics.density
+        fun local(box: JarvisShellLayout.Box) = RectF(left + box.left * density, top + box.top * density,
+            left + box.right * density, top + box.bottom * density)
+        val protected = listOfNotNull(
+            (shell.headStage ?: shell.headBounds)?.let(::local),
+            shell[JarvisShellLayout.Slot.DIALOG]?.let(::local),
+            shell.orbBounds?.let(::local))
+        val viewport = RectF(0f, 0f, container.width.toFloat(),
+            minOf(container.height.toFloat(), top + shell.viewportHeight * density))
+        val candidates = JarvisWorkWindowGeometry.candidates(viewport, protected, density)
+        val host = (field(a, "workWindowHost\$delegate") as Lazy<*>).value as JarvisWorkWindowHost
+        val checks = host.lastLayoutChecks
+        assertEquals("Systemstatus fallback measures every protected-space candidate", candidates.size, checks.size)
+        for ((candidate, check) in candidates.zip(checks)) {
+            assertEquals("Candidate measurement keeps its actual bounds", candidate, check.bounds)
+            assertTrue("Fallback requires a real measured content height", check.requiredHeightPx > 0)
+            val available = floor(candidate.bottom) - ceil(candidate.top)
+            assertTrue("Fallback requires insufficient measured height: " +
+                "$candidate, available=$available, required=${check.requiredHeightPx}",
+                available < check.requiredHeightPx)
+        }
+    }
+
     private fun systemStatusScenes(a: AgentActivity, root: View, head: ContinuumHologramView,
                                    tag: String, w: Int, h: Int) {
         val originalHead = avatarRegion(head, "cockpitHeadBounds")
         val originalOrb = avatarRegion(head, "cockpitOrbBounds")
         val beforeDialog = ShadowAlertDialog.getLatestAlertDialog()
         val beforeMotion = head.sampleMotion()
-        assertTrue("System tile receives a real touch", touch(root, shown(root, "jarvis-tile:system"), true))
-        advance(80L); measure(root, w, h)
+        val home = field(a, "homeView") as ContinuumHomeView
+        val originalNavigate = requireNotNull(home.onNavigateTarget)
+        var systemNavigations = 0
+        var measuredNativeDialog: AlertDialog? = null
+        home.onNavigateTarget = { target ->
+            originalNavigate(target)
+            if (target == "system") {
+                systemNavigations++
+                assertEquals("System tile navigates exactly once", 1, systemNavigations)
+                val dialog = ShadowAlertDialog.getLatestAlertDialog()
+                if (dialog !== beforeDialog && dialog?.isShowing == true) {
+                    assertMeasuredSystemFallback(a)
+                    measuredNativeDialog = dialog
+                }
+            }
+        }
+        try {
+            assertTrue("System tile receives a real touch", touch(root, shown(root, "jarvis-tile:system"), true))
+            advance(80L); measure(root, w, h)
+        } finally {
+            home.onNavigateTarget = originalNavigate
+        }
+        assertEquals("System tile delivers its real navigation", 1, systemNavigations)
+        val windows = descendants(root).filter { it.tag == "jarvis-work-window" && it.isShown }
+        assertTrue("At most one cockpit work area", windows.size <= 1)
+        if (windows.isEmpty()) {
+            assertTrue("Fallback was measured by the real navigation", measuredNativeDialog != null)
+            val dialog = requireNotNull(measuredNativeDialog) { "Native Systemstatus fallback is required" }
+            assertSame("Fallback retains its measured native dialog", dialog, ShadowAlertDialog.getLatestAlertDialog())
+            assertTrue("Fallback opens a new native dialog", dialog !== beforeDialog && dialog.isShowing)
+            advance(960L)
+            val io = field(a, "learningIoExecutor") as ExecutorService
+            io.submit(Runnable {}).get(5L, TimeUnit.SECONDS)
+            advance(64L); measure(root, w, h)
+            val decor = requireNotNull(dialog.window).decorView
+            assertTrue("Native fallback is attached and visible", decor.isAttachedToWindow && decor.isShown)
+            assertTrue("Native fallback has real window bounds", decor.width > 0 && decor.height > 0)
+            val labels = descendants(decor).filterIsInstance<TextView>().map { it.text.toString() }
+            assertTrue("Real title is present", labels.any { it.equals("Systemstatus", true) })
+            assertFalse("Real status callback must complete", labels.any { it.contains("Status wird gelesen") })
+            val status = labels.joinToString("\n")
+            assertTrue("Actual build version must be displayed",
+                status.contains("Device AI ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"))
+            for (label in listOf("Shizuku", "Internetzugang", "Sprachmodell", "Werkzeugquittungen")) {
+                assertTrue("Real status includes $label", status.contains(label))
+            }
+            assertFalse("Status inspection starts no model task", field(a, "busy") as Boolean)
+            assertSame("Native fallback preserves the original Hologram", head, field(a, "hologramView"))
+            assertEquals(1, descendants(root).count { it is ContinuumHologramView })
+            assertTrue(head.isAttachedToWindow && head.isShown)
+            assertEquals(originalHead, avatarRegion(head, "cockpitHeadBounds"))
+            assertEquals(originalOrb, avatarRegion(head, "cockpitOrbBounds"))
+            capture(decor, "$tag-6b-systemstatus-native-fallback-open", decor.width, decor.height)
+            val close = descendants(decor).filterIsInstance<TextView>().single {
+                it.isShown && it.isClickable && it.text.toString().equals("SCHLIESSEN", true)
+            }
+            assertTrue("Native close remains accessible", close.isFocusable && !close.contentDescription.isNullOrBlank())
+            assertTrue("Native close retains its minimum target", close.width / close.resources.displayMetrics.density >= 48f &&
+                close.height / close.resources.displayMetrics.density >= 48f)
+            assertTrue("Native close receives a real touch", touch(decor, close, true))
+            advance(64L); measure(root, w, h)
+            assertFalse("The actual native close dismisses Systemstatus", dialog.isShowing)
+            assertTrue("Fallback leaves no cockpit work window", descendants(root).none { it.tag == "jarvis-work-window" })
+            assertSame("Original Hologram survives native close", head, field(a, "hologramView"))
+            assertTrue(head.isAttachedToWindow && head.isShown)
+            assertEquals(originalHead, avatarRegion(head, "cockpitHeadBounds"))
+            assertEquals(originalOrb, avatarRegion(head, "cockpitOrbBounds"))
+            assertEquals(ContinuumWorkArea.START, field(a, "activeWorkArea"))
+            assertFalse("Native close starts no model task", field(a, "busy") as Boolean)
+            assertTrue(shown(root, "jarvis-tile:system").isClickable)
+            capture(root, "$tag-6d-systemstatus-native-fallback-closed", w, h)
+            return
+        }
         val work = shown(root, "jarvis-work-window")
         val panel = shown(work, "jarvis-work-window:panel")
         assertSame("Work area uses the original window", root, work.rootView)
