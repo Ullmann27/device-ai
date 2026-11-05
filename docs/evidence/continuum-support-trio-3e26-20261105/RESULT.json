@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "status": "NODE_BASELINE_PASS_WITH_SKIPS_BACKEND_RUNTIME_PASS_WITH_LOCK_DRIFT",
+  "sourceCommit": "89ae402d88b80ca5c48ab241e20c0369b7db517d",
+  "sourceTree": "70c3d700a36e4e88850843fa9b392db92d99a388",
+  "trackedSourceUnchanged": true,
+  "node": {
+    "version": "v24.22.1",
+    "testFiles": 327,
+    "tests": 2397,
+    "passed": 2360,
+    "failed": 0,
+    "skipped": 37,
+    "cancelled": 0,
+    "exitCode": 0,
+    "elapsedSeconds": 154.79546461599966,
+    "startedUtc": "2026-11-05T07:04:36.062675+00:00",
+    "rawTapSha256": "52a55be5b07852e983dbfd1d762a5dc8da8cd36c27e006dc1895d044f154f625",
+    "rawTapBytes": 519854,
+    "gzipBytes": 102860,
+    "gzipGitBlob": "11bb802c707db0b699715a2e4d619504e2a44be2",
+    "command": "env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 --test-reporter=tap .github/continuum/*.test.mjs scripts/*.test.mjs"
+  },
+  "backendInitial": {
+    "tests": 64,
+    "passed": 57,
+    "failed": 7,
+    "skipped": 0,
+    "exitCode": 1,
+    "cause": "ERR_MODULE_NOT_FOUND: express, integration test setup",
+    "rawTapSha256": "650012419196778634a19d6ca73c15ac3bac1f4bc5d0f91f11499791007fe784",
+    "rawLogArchived": false
+  },
+  "backendRuntime": {
+    "tests": 64,
+    "passed": 64,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "durationMs": 1014.86184,
+    "rawTapSha256": "234449adfe9e2c59b996ba369ba1fc1a0806e8b4f80f9dfdd9f80972cc55d6f5",
+    "rawLogArchived": false,
+    "exactLockInstall": false,
+    "dependencyVersions": {
+      "express": {
+        "locked": "5.3.0",
+        "runtime": "5.3.0"
+      },
+      "express-rate-limit": {
+        "locked": "8.7.1",
+        "runtime": "8.7.3"
+      },
+      "helmet": {
+        "locked": "8.3.0",
+        "runtime": "8.3.0"
+      }
+    },
+    "command": "env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 --test-reporter=tap backend/test/*.test.js"
+  },
+  "sharedLocksHeldForExecutions": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+    "/workspace/scratch/d663e8444310/qa/gradle.lock"
+  ],
+  "executionStorageIncident": "After completed tests, the previously accessible /workspace/scratch/3e26ebea9174 and /tmp source/evidence directories were observed absent. Node gzip had already been uploaded. Backend logs and local launcher were not uploaded before disappearance; those backend results are tool-observed outcomes with recorded hashes, not archived raw-log evidence.",
+  "android": "NOT_RUN_BY_THIS_TEAM",
+  "apk": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "originalSigning": "NOT_RUN"
+}
