@@ -31,6 +31,9 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
     private var followedYaw = 0f
     private var followedPitch = 0f
     private var followSeconds = Float.NaN
+    /** Smoothed real mouth opening while speaking; drives the speech accents. */
+    private var speechAccent = 0f
+    private var speechSeconds = Float.NaN
 
     init {
         require(targetNames.toSet().size == targetNames.size && indices.keys == AvatarGlbContract.TARGETS.toSet())
@@ -89,6 +92,21 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
             headYaw += (.40 * kotlin.math.sin(cycle / 7.7)).toFloat()
             eyeYaw += (.65 * kotlin.math.sin(cycle / 2.9)).toFloat()
         }
+        // Speech accents (owner brief 05.11.): while the avatar really speaks, the head accents what it says – a small
+        // nod following the smoothed real mouth opening (TTS word ranges via the director), a slow sway and a brow lift
+        // on open syllables – so the face is not frozen around a moving jaw. It uses the reach the framing reserves for
+        // idle motion (idle and speech never overlap); an observed or directed gaze wins.
+        if (pose.state == AvatarState.SPEAKING && !pose.gazeObserved && !pose.gazeDirected && seconds.isFinite()) {
+            val open = finite(pose.jawOpen, 0f, 1f)
+            val dt = if (speechSeconds.isFinite()) seconds - speechSeconds else Float.NaN
+            speechAccent = if (!dt.isFinite() || dt < 0f || dt > 1f) open
+                else speechAccent + (open - speechAccent) * (1f - kotlin.math.exp(-dt / SPEECH_ACCENT_TAU_S))
+            speechSeconds = seconds
+            headPitch += SPEECH_NOD_DEGREES * speechAccent
+            headYaw += SPEECH_SWAY_DEGREES * kotlin.math.sin(2.0 * Math.PI * seconds / SPEECH_SWAY_PERIOD_S).toFloat()
+            val brow = indices.getValue("BrowUp")
+            weights[brow] = maxOf(weights[brow], finite(SPEECH_BROW * speechAccent, 0f, 1f))
+        } else { speechAccent = 0f; speechSeconds = Float.NaN }
         val progress = pose.confirmationProgress
         if (progress.isFinite() && progress in 0f..1f) {
             val wave = kotlin.math.sin(Math.PI * progress).toFloat()
@@ -169,6 +187,12 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         const val MAX_HEAD_YAW_DEGREES = HEAD_YAW_DEGREES + IDLE_HEAD_GAIN * AvatarIdleMotion.HEAD_YAW_AMPLITUDE
         const val MAX_HEAD_PITCH_DEGREES = HEAD_PITCH_DEGREES + IDLE_HEAD_GAIN * AvatarIdleMotion.HEAD_PITCH_AMPLITUDE +
             BREATH_PITCH_DEGREES
+        /** Speech accents stay inside the idle reach reserved above (speech and idle motion never overlap). */
+        const val SPEECH_NOD_DEGREES = .6f * (MAX_HEAD_PITCH_DEGREES - HEAD_PITCH_DEGREES)
+        const val SPEECH_SWAY_DEGREES = .5f * (MAX_HEAD_YAW_DEGREES - HEAD_YAW_DEGREES)
+        const val SPEECH_SWAY_PERIOD_S = 4.1
+        const val SPEECH_ACCENT_TAU_S = .12f
+        const val SPEECH_BROW = .14f
     }
 
     private fun finite(value: Float, min: Float, max: Float) = if (value.isFinite()) value.coerceIn(min, max) else 0f
