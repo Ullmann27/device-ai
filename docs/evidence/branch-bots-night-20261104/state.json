@@ -1,13 +1,13 @@
 {
   "schema": "continuum-branch-bots-development-continuation",
   "version": 1,
-  "status": "ACTIVE",
+  "status": "READY_FOR_NEXT_ITERATION",
   "repository": "Ullmann27/device-ai",
   "branch": "codex/continuum-branch-integration-bots-20261104",
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
   "ownerSession": "scheduled-20261105-0320-security-review",
   "sourceSnapshot": "SELECTED_104_PREVIOUS_FULL_NODE_PLUS_CURRENT_4_TRACE_PATHS",
-  "phase": "REVIEW_SOURCE_AND_REPRODUCE",
+  "phase": "M12_M14_PREWRITE_CHECKPOINT_SECURITY_SOURCE_PATCH_TARGETED_GIT_PROBE",
   "milestones": [
     {
       "id": "M1",
@@ -161,6 +161,45 @@
       "testsExecuted": 0,
       "commit": "a03224f68a1e9f44bdbcbde6cd04b2808a75e4ec",
       "evidence": "docs/evidence/branch-bots-night-20261104/m10-source-identity-git-env-20261105.json"
+    },
+    {
+      "id": "M12",
+      "status": "REAL_GIT_BOUNDARY_EXCERPT_RED_GREEN",
+      "change": "Reject nested repository source roots before durable scheduler state can be created",
+      "commit": "f9bd4e2949ef2d09d9c45c4c93924390650a1f81",
+      "red": {
+        "failed": 1
+      },
+      "green": {
+        "passed": 1
+      },
+      "fullNode": "NOT_RUN"
+    },
+    {
+      "id": "M13",
+      "status": "FILESYSTEM_EXCERPT_RED_GREEN",
+      "change": "Reject direct in-checkout state path before mkdir creates a new untracked directory",
+      "commit": "f9bd4e2949ef2d09d9c45c4c93924390650a1f81",
+      "red": {
+        "failed": 1
+      },
+      "green": {
+        "passed": 1
+      },
+      "fullNode": "NOT_RUN"
+    },
+    {
+      "id": "M14",
+      "status": "REAL_SYMLINK_EXCERPT_RED_GREEN",
+      "change": "Resolve nearest existing checkpoint ancestor before mkdir, preventing creation via external symlink back into checkout",
+      "commit": "f9bd4e2949ef2d09d9c45c4c93924390650a1f81",
+      "red": {
+        "failed": 1
+      },
+      "green": {
+        "passed": 1
+      },
+      "fullNode": "NOT_RUN"
     }
   ],
   "androidCompilation": "NOT_RUN",
@@ -232,13 +271,43 @@
       "actualFullNode": "NOT_RUN",
       "android": "NOT_RUN",
       "apk": "NOT_RUN"
+    },
+    "m12m14": {
+      "standaloneSourceMatchedControlFlow": {
+        "baseline": {
+          "tests": 4,
+          "pass": 1,
+          "fail": 3
+        },
+        "candidate": {
+          "tests": 4,
+          "pass": 4,
+          "fail": 0
+        },
+        "execution": "ACTUAL_LOCAL_NODE_AND_GIT_EXCERPT_NOT_FULL_IMPORTED_PROJECT",
+        "node": "v22.16.0",
+        "git": "2.47.3",
+        "scriptSha256": "a614ad6881e46f76428afbcba3e0d6cb65d9951b42b2072c7d374614951936b6",
+        "outputSha256": "22843897463d81a80343273c3c859e20c0c4fcc801507f9519f86e5494194f11"
+      },
+      "sourceSyntax": "V8_FUNCTION_PARSE_PASS_AFTER_ESM_IMPORT_EXPORT_STRIP",
+      "testSyntax": "V8_FUNCTION_PARSE_PASS_AFTER_ESM_IMPORT_STRIP",
+      "projectTestFileAddedCases": 4,
+      "projectTestFileRun": "NOT_RUN",
+      "previous202": "HISTORICAL_ONLY",
+      "android": "NOT_RUN",
+      "apk": "NOT_RUN",
+      "changedSourceBlobs": {
+        ".github/continuum/local-teamleader-loop.mjs": "577db114a3944b1130005d20ca074aac0c7b2f23",
+        ".github/continuum/local-teamleader-loop-source-preflight.test.mjs": "2e5b1be4dd44c5806f6c3f763faababacda2a509"
+      }
     }
   },
   "nextTasks": [
-    "Re-run actual .github/continuum/local-teamleader-loop-source-preflight.test.mjs and branch-discovery.test.mjs against all imported modules at the new published source commit (full checkout required).",
-    "Re-run the historical 202-case selected Git/Node suite after source-freeze; do not reuse historical 202 PASS for M10.",
-    "Have C1-owned integrator independently review and selectively import eight changed files after checking fresh C1/#527 heads; do not blanket-merge older base.",
-    "Execute source-frozen combined Android/Node/backend gates before any new APK request; device/owner package remains separate."
+    "In full pinned checkout, run node --test .github/continuum/local-teamleader-loop-source-preflight.test.mjs and existing .github/continuum/local-teamleader-loop.test.mjs on M12-M14 source (not yet executed).",
+    "Run original 202-case selected source-frozen Node suite; prior success does not transfer to M12-M14.",
+    "C1/#527 integrator: compare exact original scheduler module/test preimages and selectively apply accumulated local scheduler fixes only, preserving downstream changes; own combined gate required.",
+    "Verify no symlink race or unexpected repository mutation in complete-project host tests, then run full Node/backend/Android/lint gates before any APK consideration."
   ],
   "scheduledContinuation": {
     "enabled": true,
@@ -254,11 +323,17 @@
     "traceFixAdopted": false,
     "gateOn19039": "ANDROID3032_PASS_0_FAIL_19_SKIP;NODE2362_PASS_0_FAIL_31_SKIP;BACKEND64_PASS;LINT_NEWAPI0",
     "m10FixAdopted": false,
-    "eightPathPreimagesMatched": 8
+    "eightPathPreimagesMatched": 8,
+    "m12m14Adopted": false,
+    "schedulerPreimagesBothSharedHeadsMatchOriginal": true,
+    "schedulerPreimageOriginal": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+    "schedulerTestPreimageOriginal": "13c5661432115c883fc2b64161757aad9d1128f4"
   },
-  "latestTargetedCodeCommit": "a03224f68a1e9f44bdbcbde6cd04b2808a75e4ec",
+  "latestTargetedCodeCommit": "f9bd4e2949ef2d09d9c45c4c93924390650a1f81",
   "additionalChangedPaths": [
-    ".github/continuum/local-teamleader-loop-source-preflight.test.mjs"
+    ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+    ".github/continuum/local-teamleader-loop.mjs"
   ],
-  "lastCleanCheckpoint": "b221e33d3a78af3ac48683020e8ffb20d8fbefb7"
+  "lastCleanCheckpoint": "b221e33d3a78af3ac48683020e8ffb20d8fbefb7",
+  "lastCompletedCheckpoint": "f9bd4e2949ef2d09d9c45c4c93924390650a1f81"
 }

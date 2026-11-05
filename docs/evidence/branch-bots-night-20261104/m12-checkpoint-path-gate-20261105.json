@@ -1,0 +1,103 @@
+{
+  "schema": "continuum-branch-bots-m12-m14-evidence",
+  "version": 1,
+  "date": "2026-11-05",
+  "repository": "Ullmann27/device-ai",
+  "branch": "codex/continuum-branch-integration-bots-20261104",
+  "parent": "ccf3b48482ae108c94c5ffe7306e6a65563b7367",
+  "sourceCommit": "f9bd4e2949ef2d09d9c45c4c93924390650a1f81",
+  "scope": [
+    ".github/continuum/local-teamleader-loop.mjs",
+    ".github/continuum/local-teamleader-loop-source-preflight.test.mjs"
+  ],
+  "experiments": [
+    "EXP-00",
+    "EXP-01",
+    "EXP-11",
+    "EXP-12"
+  ],
+  "findings": [
+    {
+      "id": "M12",
+      "prior": "-C nested Git directory accepted as source root",
+      "fix": "Compare real Git --show-toplevel against canonical requested root before HEAD/status",
+      "negative": "nested fixture child accepted by original",
+      "positive": "repaired excerpt rejects before write"
+    },
+    {
+      "id": "M13",
+      "prior": "requested in-repo checkpoint directory created by mkdir before rejection",
+      "fix": "Check literal checkpoint path before mkdir",
+      "negative": "original created previously absent source directory",
+      "positive": "repaired excerpt leaves directory absent"
+    },
+    {
+      "id": "M14",
+      "prior": "external symlink alias to checkout defeats literal path check and mkdir creates source directory",
+      "fix": "Resolve nearest existing ancestor and planned target before mkdir; keep post-mkdir canonical check",
+      "negative": "original created directory through alias",
+      "positive": "repaired excerpt leaves directory absent"
+    }
+  ],
+  "checks": {
+    "actualLocalExcerpt": {
+      "source": "source-matched extracted control flow, independently reconstructed Node harness, not full repository module import",
+      "node": "v22.16.0",
+      "git": "2.47.3",
+      "baseline": {
+        "passed": 1,
+        "failed": 3,
+        "total": 4
+      },
+      "candidate": {
+        "passed": 4,
+        "failed": 0,
+        "total": 4
+      },
+      "shellExit": 0,
+      "scriptSha256": "a614ad6881e46f76428afbcba3e0d6cb65d9951b42b2072c7d374614951936b6",
+      "logSha256": "22843897463d81a80343273c3c859e20c0c4fcc801507f9519f86e5494194f11"
+    },
+    "publishedV8Syntax": {
+      "source": "PASS",
+      "test": "PASS",
+      "method": "Strip ESM import/export, compile text with Function; not Node execution"
+    },
+    "githubProjectRegressions": {
+      "added": 4,
+      "executed": "NOT_RUN"
+    },
+    "integratedNode": "NOT_RUN",
+    "android": "NOT_RUN",
+    "apk": "NOT_RUN"
+  },
+  "publishedBlobs": {
+    "source": "577db114a3944b1130005d20ca074aac0c7b2f23",
+    "test": "2e5b1be4dd44c5806f6c3f763faababacda2a509"
+  },
+  "integrationReadback": {
+    "c1": {
+      "head": "13c37f55789bf67b07beeb37cc1a5035526e623e",
+      "sourceBlob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+      "testBlob": "13c5661432115c883fc2b64161757aad9d1128f4"
+    },
+    "combined": {
+      "head": "19039e5b822310cd5ab1ce5cc5cb854822a1bcd3",
+      "sourceBlob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+      "testBlob": "13c5661432115c883fc2b64161757aad9d1128f4"
+    },
+    "note": "Both shared heads contain original scheduler preimage; none of this branch's night/M10/M12 corrections is accepted there. Do not copy entire older branch or misrepresent historical 3032 Android PASS as new gate."
+  },
+  "unresolved": [
+    "Full project imports, regressions, 202 selected Node cases and Android suite NOT_RUN in this executor: complete authenticated working checkout unavailable",
+    "Existing path-swap/TOCTOU risks require separate sandbox boundary; this check prevents ordinary unsafe prewrite paths, not arbitrary concurrent filesystem mutation"
+  ],
+  "authority": {
+    "mainMerge": false,
+    "release": false,
+    "sign": false,
+    "install": false,
+    "device": false,
+    "signingAndPackageUnchanged": true
+  }
+}
