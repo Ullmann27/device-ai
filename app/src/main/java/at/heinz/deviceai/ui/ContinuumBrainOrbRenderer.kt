@@ -34,8 +34,9 @@ class ContinuumBrainOrbRenderer {
         drawBrain(p, cx, cy - r * .33f, r, s)
         // Rand-Bloom: mehrere additive Ringe (violett oben/rechts, cyan unten/links), dann scharfe Kante.
         p.setAdditive(true)
-        val rimSweep = intArrayOf(C.cyan, C.violet, C.violetRim, C.violet, C.violetRim, C.cyan, C.violet, C.cyan)
-        for ((w, a) in listOf(.32f to .07f, .2f to .12f, .11f to .22f, .05f to .45f))
+        // 59509: a markedly stronger violet/magenta rim bloom around the glass sphere.
+        val rimSweep = intArrayOf(C.cyan, C.violet, C.magenta, C.violetRim, C.magenta, C.cyan, C.violet, C.cyan)
+        for ((w, a) in listOf(.36f to .10f, .22f to .17f, .12f to .30f, .05f to .58f))
             p.strokeCircle(cx, cy, r * (1f + w * .15f), r * w, Fill.Sweep(cx, cy, rimSweep), a)
         p.strokeCircle(cx, cy, r * .995f, r * .016f, Fill.Sweep(cx, cy, intArrayOf(C.glowCore, C.violetRim, C.violet, C.cyan, C.glowCore)), 1f)
         p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 200f, 110f, r * .012f, Fill.Solid(C.violetRim), .9f)
