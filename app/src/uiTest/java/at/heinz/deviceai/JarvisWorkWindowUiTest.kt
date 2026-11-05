@@ -76,9 +76,9 @@ class JarvisWorkWindowUiTest {
         }
         fun open(body: View): Boolean = window.javaClass.getMethod("open", View::class.java,
             RectF::class.java, RectF::class.java, String::class.java, List::class.java,
-            Function0::class.java, Function0::class.java)
+            Function0::class.java, Function0::class.java, Int::class.javaPrimitiveType)
             .invoke(window, body, origin, target, "Systemstatus", protectedBounds,
-                { opened++ }, { closed++ }) as Boolean
+                { opened++ }, { closed++ }, at.heinz.deviceai.ui.JarvisDesign.Colors.cyan) as Boolean
         fun close(immediate: Boolean = false) {
             window.javaClass.getMethod("close", Boolean::class.javaPrimitiveType).invoke(window, immediate)
         }
