@@ -62,7 +62,7 @@ class TemporalCue(private val zone:ZoneId) {
         // Resolve each date separately: a midnight gap must not shift other day boundaries.
         fun days(from:Long,to:Long)=today.minusDays(from).atStartOfDay(zone).toInstant().toEpochMilli() until
             today.minusDays(to-1).atStartOfDay(zone).toInstant().toEpochMilli()
-        Regex("vor (\\d+|zwei|drei|vier|fuenf) tagen").find(q)?.let { m ->
+        Regex("\\bvor\\s+(\\d+|zwei|drei|vier|fuenf)\\s+tagen\\b").find(q)?.let { m ->
             val n=when(val count=m.groupValues[1]) {
                 "zwei" -> 2L
                 "drei" -> 3L
@@ -76,9 +76,9 @@ class TemporalCue(private val zone:ZoneId) {
             catch (_:ArithmeticException) { null }
         }
         return when {
-            "vorgestern" in q -> days(2,2)
-            "gestern" in q -> days(1,1)
-            "heute" in q -> days(0,0)
+            Regex("\\bvorgestern\\b").containsMatchIn(q) -> days(2,2)
+            Regex("\\bgestern\\b").containsMatchIn(q) -> days(1,1)
+            Regex("\\bheute\\b").containsMatchIn(q) -> days(0,0)
             Regex("letzte[nr]? woche|vorige[nr]? woche").containsMatchIn(q) -> {
                 val thisWeek=today.minusDays(today.dayOfWeek.value.toLong()-1)
                 thisWeek.minusWeeks(1).atStartOfDay(zone).toInstant().toEpochMilli() until
