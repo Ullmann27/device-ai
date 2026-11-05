@@ -1790,6 +1790,16 @@ class AgentActivity : Activity() {
     /** All responsive presentations enter the existing owner-gated routes through this one adapter. */
     private fun navigateDashboardTarget(target: String) {
         if (target !in setOf("system", "device", "voice-input", "camera-settings")) workWindowHost.close(immediate = true)
+        touchedCockpitTarget = target
+        try { navigateDashboardTargetNow(target) } finally { touchedCockpitTarget = null }
+        if (target in setOf("avatar-appearance", "notifications", "settings", "more",
+                "model-management", "privacy", "brain")) avatarDirector.onWindowPresented()
+    }
+
+    /** The control the owner just touched; a work window emerges from it (read only while that navigation runs). */
+    private var touchedCockpitTarget: String? = null
+
+    private fun navigateDashboardTargetNow(target: String) {
         when (target) {
             "voice-input" -> onChatMicrophoneTap()
             "camera-settings" -> toggleConversationCamera()
@@ -1803,8 +1813,6 @@ class AgentActivity : Activity() {
             "brain" -> showBrainScene()
             else -> menuNavigator.navigate(target)
         }
-        if (target in setOf("avatar-appearance", "notifications", "settings", "more",
-                "model-management", "privacy", "brain")) avatarDirector.onWindowPresented()
     }
 
     private fun showBrainScene() {
@@ -2422,8 +2430,11 @@ class AgentActivity : Activity() {
             cockpit.grid(this, box, experimental.map(::makeAction),
                 if (resources.configuration.screenWidthDp >= 600) 3 else 2)
         }
-        val home = homeView?.takeIf { title == "Systemstatus" && activeWorkArea == ContinuumWorkArea.START && it.isShown }
-        val workWindow = home?.let { workWindowHost.show(it, box, title) { liveHardwareGauges = null } }
+        // Every centre with a cockpit scene unfolds as the same holographic work window from its tile (#565).
+        val scene = at.heinz.deviceai.ui.JarvisActionScenes.forCentre(title, touchedCockpitTarget)
+        val home = homeView?.takeIf { scene != null && activeWorkArea == ContinuumWorkArea.START && it.isShown }
+        val workWindow = if (home != null && scene != null)
+            workWindowHost.show(home, box, title, scene) { liveHardwareGauges = null } else null
         if (workWindow != null) {
             dismissCenter = { immediate -> workWindow.close(immediate) }
             centerShowing = { workWindow.isShowing }

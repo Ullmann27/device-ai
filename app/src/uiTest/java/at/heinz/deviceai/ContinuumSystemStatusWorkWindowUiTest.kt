@@ -170,4 +170,69 @@ class ContinuumSystemStatusWorkWindowUiTest {
             runCatching { controller.close() }
         }
     }
+
+    /** Owner brief 05.11.2026: the same holographic window for every cockpit centre, from the tile really touched. */
+    @Test fun everyCentreTileUnfoldsTheSameWorkWindowAndTheAvatarLooksAtIt() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
+            .putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible()
+            advance(32L)
+            controller.windowFocusChanged(true)
+            val activity = controller.get()
+            val root = activity.window.decorView
+            framePump = CockpitHostFramePump { controller.get().window.decorView }
+            val avatar = field(activity, "hologramView") as ContinuumHologramView
+            val home = field(activity, "homeView") as ContinuumHomeView
+            val director = field(activity, "avatarDirector")!!
+            fun windowIntent() = director.javaClass.getDeclaredField("windowIntent").apply { isAccessible = true }.get(director)
+            avatar.setAnimationsEnabled(true); avatar.setForegroundActive(true); home.setForegroundActive(true)
+            measure(root); advance(320L); measure(root); draw(root)
+            val headBounds = Rect(field(avatar, "cockpitHeadBounds") as Rect)
+            val beforeDialog = ShadowAlertDialog.getLatestAlertDialog()
+            val expected = mapOf("memory" to "Gedächtniszentrum", "web" to "Web und Quellen",
+                "learning" to "Lernzentrum", "device" to "Systemstatus")
+            for ((tileTarget, title) in expected) {
+                val tile = shown(root, "jarvis-tile:$tileTarget")
+                val tileBox = Rect().also { tile.getGlobalVisibleRect(it) }
+                tap(root, tile)
+                advance(640L); measure(root); draw(root)
+                val work = shown(root, "jarvis-work-window")
+                val labels = descendants(work).filterIsInstance<TextView>().map { it.text.toString() }
+                assertTrue("$tileTarget opens $title: $labels", labels.any { it.equals(title, true) })
+                assertSame("$title creates no AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
+                val origin = field(work, "origin") as android.graphics.RectF
+                assertEquals("$title emerges from the touched tile", tileBox.exactCenterX(), origin.centerX(), 1.5f)
+                assertEquals(tileBox.exactCenterY(), origin.centerY(), 1.5f)
+                assertTrue("the avatar glances at the window", windowIntent() != null)
+                assertEquals("head stays in place", headBounds, field(avatar, "cockpitHeadBounds"))
+                tap(root, shown(work, "jarvis-work-window:close"))
+                advance(640L); measure(root); draw(root)
+                assertTrue("$title closes", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+                assertEquals("gaze returns to the owner", null, windowIntent())
+                assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
+            }
+            // A centre without a tile (voice, rail) emerges beside the face, clear of it.
+            AgentActivity::class.java.getDeclaredMethod("showDevelopmentCenter").apply { isAccessible = true }.invoke(activity)
+            advance(640L); measure(root); draw(root)
+            val work = shown(root, "jarvis-work-window")
+            val origin = field(work, "origin") as android.graphics.RectF
+            assertFalse("seed beside, not inside the face", android.graphics.RectF(headBounds).let { face ->
+                val local = IntArray(2).also { avatar.getLocationInWindow(it) }
+                face.offset(local[0].toFloat(), local[1].toFloat()); android.graphics.RectF.intersects(face, origin) })
+            assertSame(beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
+        } finally {
+            framePump?.close()
+            framePump = null
+            ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
+            runCatching { controller.close() }
+        }
+    }
 }

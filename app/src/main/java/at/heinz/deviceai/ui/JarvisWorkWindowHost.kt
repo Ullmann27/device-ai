@@ -21,15 +21,18 @@ class JarvisWorkWindowHost(
 
     fun close(immediate: Boolean = false) { current?.close(immediate) }
 
+    /**
+     * Unfolds [body] as the cockpit work window of [scene]: from the tile the owner touched, or – without that
+     * tile – from the point beside the face Jarvis glances at first. Null when the START cockpit cannot host it.
+     */
     fun show(home: ContinuumHomeView, body: View, title: String,
-             onClosed: () -> Unit): JarvisWorkWindow? {
+             scene: JarvisActionScenes.Scene = STATUS_SCENE, onClosed: () -> Unit): JarvisWorkWindow? {
         if (!home.jarvisShellStage || !home.isShown) return null
         val container = activity.findViewById<ViewGroup>(android.R.id.content) ?: return null
         val shell = home.jarvisShell
         val geometry = shell.shell ?: return null
         val density = activity.resources.displayMetrics.density
-        val source = home.findViewWithTag<View>("jarvis-tile:system") ?: return null
-        val origin = localBounds(source, container)
+        val tile = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let { home.findViewWithTag<View>("jarvis-tile:${it.target}") }
         var parent = home.parent
         var background: ScrollView? = null
         while (parent is View) {
@@ -47,6 +50,8 @@ class JarvisWorkWindowHost(
             offset.top + box.top * density, offset.left + box.right * density,
             offset.top + box.bottom * density)
         val face = (geometry.headStage ?: geometry.headBounds)?.let(::local)
+        val origin = tile?.let { localBounds(it, container) }?.takeIf(JarvisWorkWindowGeometry::valid)
+            ?: besideFace(face, viewport, density)
         val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
         val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))
         val destination = JarvisWorkWindowGeometry.destination(viewport, withOrb, density)
@@ -56,7 +61,7 @@ class JarvisWorkWindowHost(
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
         var releaseGeometry: () -> Unit = {}
         container.addView(window, ViewGroup.LayoutParams(-1, -1))
-        val accepted = window.open(body, origin, destination, title, withOrb, onClosed = {
+        val accepted = window.open(body, origin, destination, title, withOrb, accent = scene.accent, onClosed = {
             releaseGeometry()
             (window.parent as? ViewGroup)?.removeView(window)
             director.windowClosed(id)
@@ -88,9 +93,28 @@ class JarvisWorkWindowHost(
         return window
     }
 
+    /**
+     * A small seed beside the face, on the side towards the viewport centre, where the energy pulse forms. It stays
+     * clear of the face plus the window's 8 dp route clearance, so the light trail can start there.
+     */
+    private fun besideFace(face: RectF?, viewport: RectF, density: Float): RectF {
+        val size = 40f * density
+        val gap = 12f * density
+        val x = face?.let { if (it.centerX() > viewport.centerX()) it.left - gap - size else it.right + gap }
+            ?: viewport.centerX() - size / 2f
+        val y = (face?.centerY() ?: viewport.centerY()) - size / 2f
+        val left = x.coerceIn(viewport.left, viewport.right - size)
+        val top = y.coerceIn(viewport.top, viewport.bottom - size)
+        return RectF(left, top, left + size, top + size)
+    }
+
     private fun unregisterBack() {
         if (Build.VERSION.SDK_INT >= 33) back?.let(activity.onBackInvokedDispatcher::unregisterOnBackInvokedCallback)
         back = null
+    }
+
+    private companion object {
+        val STATUS_SCENE = requireNotNull(JarvisActionScenes.forCentre("Systemstatus"))
     }
 
     private fun localBounds(view: View, root: View): RectF {

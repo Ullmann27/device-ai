@@ -115,7 +115,7 @@ class JarvisWorkWindow(
     /** Rectangles use local overlay pixels. */
     fun open(body: View, origin: RectF, destination: RectF, title: String,
              protectedBounds: List<RectF> = emptyList(),
-             onOpened: () -> Unit = {}, onClosed: () -> Unit = {}): Boolean {
+             onOpened: () -> Unit = {}, onClosed: () -> Unit = {}, accent: Int = Colors.cyan): Boolean {
         if (disposed || deliveringFrame || isInLayout || !JarvisWorkWindowGeometry.valid(origin) ||
             !JarvisWorkWindowGeometry.valid(destination)) return false
         val pixels = RectF(ceil(destination.left), ceil(destination.top), floor(destination.right), floor(destination.bottom))
@@ -144,7 +144,7 @@ class JarvisWorkWindow(
         }
         edge = Fill.Linear(origin.centerX() / density, origin.centerY() / density,
             pixels.centerX() / density, pixels.centerY() / density,
-            intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.violet, Colors.magenta))
+            intArrayOf(accent, Colors.cardRimEnd, Colors.violet, Colors.magenta))
         phase = Phase.OPENING
         startedAt = null
         lastFrameTime = null
