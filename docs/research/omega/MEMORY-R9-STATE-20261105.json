@@ -33,7 +33,12 @@
     "runtime": "JVM21 / kotlinc1.9, exact production and test blobs, host-only JUnit/EventEmitting stub",
     "receipt": "docs/evidence/memory-r9-negation-20261105/RESULT.json",
     "hostRunner": "tools/memory-r9-exact-negation/run.sh",
-    "scriptExecutedFromGitHubCheckout": false
+    "scriptExecutedFromGitHubCheckout": false,
+    "publishedRunnerExecutedOnExactLocalMirror": true,
+    "publishedRunnerExit": 0,
+    "publishedRunnerPass": 20,
+    "publishedRunnerFail": 0,
+    "fullAndroidProjectStillNotRun": true
   },
   "pending": [
     "C1 independent R6-R7-R8-R9 source integration",
