@@ -157,3 +157,7 @@ HTML download page; the final direct APK link must be taken from the verified li
 
 This documentation checkpoint does not advance the frozen publisher branch or restart its build.
 A later release receipt must record the actual deployment outcome and downloaded APK verification.
+
+## Full publisher Android regression 2026-11-06
+
+Render Code45 source `48251610d9c9519678e9fc5ef652ad8286675b7f` failed full Android: **3556 total, five `JarvisWorkWindowDepthTest` failures, 20 skips**, three QA_RED gates. Signing and download were blocked as designed. Existing Code46 pin `756bc68d0fb7f8522da8900fd889fd2eae2e8caf` still contains the plain-JVM `android.graphics.RectF` tests. Migrate the **complete unchanged assertions** into `src/uiTest` using Robolectric SDK28, matching the publisher's existing `-PcontinuumUiWidgetTests=true` full test path; keep production code, original signer, package and gates untouched. See `docs/evidence/codex-owner-apk-20261106/render-code45-android-regression-20261106.md`. This is a source correction, not a green build or release. The corrected exact publisher source requires a new full QA and signed readback.
