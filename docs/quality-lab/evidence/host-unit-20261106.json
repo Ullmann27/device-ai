@@ -1,0 +1,14 @@
+{
+  "schema": "continuum.lab.unit.v1",
+  "provenance": "host_python_unittest",
+  "source_sha": "LOCAL_UNCOMMITTED",
+  "timestamp_utc": "2026-11-06T13:40:04.734854+00:00",
+  "total": 31,
+  "passed": 31,
+  "failed": 0,
+  "skipped": 0,
+  "expected_failures": 0,
+  "status": "PASS",
+  "test_log_sha256": "75d98f99e4b5c4b8aa7e2d305f00042e79cc4ecfdc7462fc77930acbc99c279a",
+  "test_category": "HOST_SOFTWARE_ONLY"
+}
