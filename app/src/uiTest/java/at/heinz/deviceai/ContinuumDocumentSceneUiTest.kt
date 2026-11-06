@@ -188,8 +188,8 @@ class ContinuumDocumentSceneUiTest {
 
     private fun draftTurn(prompt: at.heinz.deviceai.cognitive.DocumentDraftPrompt, name: String): Any =
         AgentActivity::class.java.declaredClasses.single { it.simpleName == "DocumentDraftTurn" }
-            .getDeclaredConstructor(at.heinz.deviceai.cognitive.DocumentDraftPrompt::class.java, String::class.java)
-            .apply { isAccessible = true }.newInstance(prompt, name)
+            .getDeclaredConstructor(at.heinz.deviceai.cognitive.DocumentDraftPrompt::class.java, String::class.java, String::class.java)
+            .apply { isAccessible = true }.newInstance(prompt, name, null)
 
     /**
      * Result surface (owner flow): the draft text a local model returned (SIMULATED_MODEL_REPLY – no model on the host)
@@ -252,5 +252,51 @@ class ContinuumDocumentSceneUiTest {
             (descendants(window).single { it.tag == "jarvis-document-draft" } as TextView).text.toString())
         assertEquals("no model turn", false, field(activity, "busy"))
         assertEquals(null, field(activity, "documentDraftTurn"))
+    }
+
+    /**
+     * Owner brief 06.11.2026 (memory × cockpit), HOST + SIMULATED_DOCUMENT_INPUT: the state a document task really
+     * reached survives an app restart and answers „Wo waren wir heute?“ in a later conversation – from the work record,
+     * shown as the VERLAUF surface and labelled as remembering (not model learning). No model is loaded on the host, so
+     * the honest state is „kein lokales Modell“ with that as the open step.
+     */
+    @Test fun theWorkRecordSurvivesARestartAndAnswersWhereWeWere() {
+        val request = "Lies diese PDF und erstelle mir eine Zusammenfassung als Entwurf."
+        withCockpit { activity, root ->
+            fun set(name: String, value: Any?) = AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }.set(activity, value)
+            set("pendingDocumentDraft", true)
+            set("pendingDocumentRequest", request)
+            val doc = PdfDocumentIntake.Document("Projektübersicht.pdf", 12_288L, 3, examplePage(200, 280),
+                "Projektübersicht Continuum.", PdfDocumentIntake.TextState.EXTRACTED, 3)
+            AgentActivity::class.java.getDeclaredMethod("presentDocumentScene", PdfDocumentIntake.Document::class.java)
+                .apply { isAccessible = true }.invoke(activity, doc)
+            val journal = java.io.File(activity.filesDir, "cockpit-work/journal-v1.jsonl")
+            val deadline = System.currentTimeMillis() + 5_000
+            while (!(journal.exists() && journal.readText().contains("NO_MODEL")) && System.currentTimeMillis() < deadline) {
+                Thread.sleep(20); advance(16L)
+            }
+            assertTrue("the reached state is written: ${journal.takeIf { it.exists() }?.readText()}", journal.readText().contains("NO_MODEL"))
+        }
+        // A new Activity instance – the app was closed in between – and a later conversation.
+        withCockpit { activity, root ->
+            (field(activity, "input") as EditText).setText("Wo waren wir heute?")
+            AgentActivity::class.java.getDeclaredMethod("sendCurrentInput", Boolean::class.javaPrimitiveType)
+                .apply { isAccessible = true }.invoke(activity, false)
+            advance(760L); measure(root); draw(root)
+            val answer = chatTexts(activity).lastOrNull { it.startsWith("Heute:") }
+            assertNotNull("answered from the record: ${chatTexts(activity)}", answer)
+            assertTrue(answer!!, answer.contains("„$request“ – Quelle: Projektübersicht.pdf, 3 Seiten – " +
+                "Stand: Entwurf nicht erstellt – kein lokales Modell geladen – offen: lokales Modell laden, dann den Entwurf erstellen"))
+            assertTrue(answer, answer.endsWith("(Aus dem Arbeitsverlauf dieses Geräts – Erinnerung, kein Modelllernen.)"))
+            val window = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
+            val texts = descendants(window).filterIsInstance<TextView>().map { it.text.toString() }
+            assertTrue("the VERLAUF surface: $texts", texts.contains("VERLAUF"))
+            assertTrue(texts.toString(), texts.containsAll(listOf("Quelle: Projektübersicht.pdf, 3 Seiten",
+                "Stand: Entwurf nicht erstellt – kein lokales Modell geladen",
+                "Offen: lokales Modell laden, dann den Entwurf erstellen")))
+            assertEquals("the cockpit stays for the scene", "START", field(activity, "activeWorkArea").toString())
+            advance(900L); measure(root); draw(root)
+            capture(root, "memory-1-verlauf-after-restart")
+        }
     }
 }
