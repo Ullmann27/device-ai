@@ -1,6 +1,6 @@
 # Continuum owner APK integration — 2026-11-06
 
-Status: complete local Android regression, compilation, NewApi lint and original-package APK/AAB
+Status: complete local Android/Node regression, compilation, NewApi lint and original-package APK/AAB
 assembly GREEN. Original publisher full QA, original signing and HTTPS release readback remain
 pending. Frozen candidate: `577f0931e7937ffcac02dc855a540f093facdb3b`, code46 /0.3.45.
 This is not a release receipt.
@@ -85,9 +85,9 @@ Relevant interfaces: `WorkDecisionRecall`, `WorkRecall`, `LocalConversationFollo
 | Android debug compilation | PASS on that source |
 | Android lint | PASS, existing **NewApi-only** configuration; not an all-rules lint claim |
 | Final conversation pure-JVM package | **41/41 PASS**, six real production classes; three final regression REDs reproduced before the one-line fix; no model response execution |
-| Full Node integration regression | **2396 PASS, 0 FAIL, 31 SKIP /2427**, unchanged local source `80b7443da40da447c667a8ac402b9026dbcd2f8d`; later review repairs require the final publisher rerun |
+| Full final-source Node integration regression | **2396 PASS, 0 FAIL, 31 SKIP /2427**, exact unchanged GitHub source `577f0931e7937ffcac02dc855a540f093facdb3b`; real Kotlin compiler cases included; no placeholders |
 | Backend | npm ci/check/test PASS, **64/64**, unchanged backend tree `f4bc00c1ba8afb0f115b26450757fd322843fd0c` |
-| Quality-lab bound integration | **44/44 PASS**, source verified and unchanged at final GitHub source `756bc68d0fb7f8522da8900fd889fd2eae2e8caf` |
+| Quality-lab bound integration | **44/44 PASS**, source verified and unchanged at final GitHub source `577f0931e7937ffcac02dc855a540f093facdb3b` |
 | Local full Android intermediate run | **CANCELLED**, exit130, because later review fixes superseded its source; no complete JUnit success claimed |
 | Original-package APK/AAB | PASS, code46 /0.3.45, ARM64, original package; APK/AAB archive integrity verified; unsigned and not published locally |
 | Final publisher full gates/signing/readback | PENDING |
@@ -203,9 +203,9 @@ checkout of that exact GitHub commit subsequently passed; the final evidence is 
 
 On `577f0931e7937ffcac02dc855a540f093facdb3b`, the full Node run completed with
 **2390 PASS, 0 FAIL, 37 SKIP /2427**, unchanged source and confirmed process termination.
-Six extra skips compared with the earlier 31 are real-Kotlin compiler checks: `kotlinc` was
-not on this invocation’s PATH. The compiler is already installed; those checks remain to be
-completed after Android, without concurrent compiler workloads.
+Six extra skips compared with the earlier 31 were real-Kotlin compiler checks: `kotlinc` was
+not on that invocation’s PATH. Those six checks subsequently passed in the final full Node
+run below, after Android completed and without concurrent compiler workloads.
 
 The first additional complete local Android attempt ended with exit 1 because its Gradle daemon
 disappeared. No complete JUnit result or concrete assertion failure was emitted. No JVM crash
@@ -238,3 +238,18 @@ at 18:12:43.485742Z. Both existing source-authorization variables were bound to 
 authorized exact candidate, preserving signing credentials and all QA gates. The resulting
 corrected run is `dep-dbn1htjncjis73c9vlng`, started at **18:14:14.342126Z**. Its backend gate
 passed at **18:17:53.384462019Z**; signing and live-download verification remain pending here.
+
+## Complete corrected-source Node GREEN
+
+The final full Node run on the same frozen source started at **18:32:37.773Z** and completed
+at **18:35:58.032Z**: **2396 passed, 0 failed, 31 skipped /2427**, zero placeholders,
+exit0, confirmed process termination, and unchanged source. `kotlinc-jvm 2.4.0` and JDK17
+were available on PATH. All six earlier compiler-related skips now executed and passed:
+real generated Kotlin RED/GREEN compilation, independent output oracles, rejection of wrong
+expected outputs and an unrelated RED baseline, and creation/rejection of owner Kotlin previews.
+
+The remaining 31 skips require additional Docker/kernel isolation, SDK/JVM dependency or
+fixture configuration. Their exact original messages are preserved in `node-full-code46-green.json`.
+`node-full-code46-evidence.zip` contains the complete source-bound report, JUnit and runner log.
+The report generator's historical `generatedBy` label is metadata, not a claim that another
+agent ran this session. Android, signing and device evidence remain separate scopes.

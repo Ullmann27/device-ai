@@ -1,0 +1,171 @@
+{
+  "status": "PASS_WITH_EXPLICIT_SKIPS",
+  "profile": "full-node",
+  "sourceSha": "577f0931e7937ffcac02dc855a540f093facdb3b",
+  "sourceTreeDigest": "ee67123b9a40a2a70f5f20449b6265b8964c10fdd20fb902267537484f62c544",
+  "sourceUnchanged": true,
+  "startedAt": "2026-11-06T18:32:37.773Z",
+  "finishedAt": "2026-11-06T18:35:58.032Z",
+  "environment": {
+    "node": "24.22.1",
+    "platform": "linux",
+    "arch": "x64",
+    "release": "6.18.57"
+  },
+  "exitCode": 0,
+  "terminationConfirmed": true,
+  "tests": {
+    "total": 2427,
+    "passed": 2396,
+    "executed": 2396,
+    "failed": 0,
+    "skipped": 31,
+    "placeholders": 0
+  },
+  "previousCompilerSkipsNowPassed": [
+    "an arbitrary red baseline is never accepted as proof of the requested missing method",
+    "false owner output cannot create a verified Kotlin preview",
+    "generated Kotlin code must compile RED before and GREEN after, then compute two expected outputs",
+    "new method compiles and computes a nontrivial result with real kotlinc",
+    "owner Kotlin IMPLEMENT generates real reviewable Git patch with two independent JVM oracles",
+    "wrong independent expected output rejects a compiling patch"
+  ],
+  "skippedCases": [
+    {
+      "name": "HOST SOFTWARE CONTRACT: real persisted Forge/Lint profiles receive distinct observed containers for builder and both verifier sites",
+      "reason": "true"
+    },
+    {
+      "name": "HOST_INTEGRATION: two canonical worker jobs run in separate confined Docker workspaces",
+      "reason": "true"
+    },
+    {
+      "name": "HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs",
+      "reason": "true"
+    },
+    {
+      "name": "HOST_INTEGRATION: live canonical lease clamps the real Docker timeout",
+      "reason": "true"
+    },
+    {
+      "name": "HOST_INTEGRATION: in-flight owner revocation suppresses the completed profile result at checkpoint",
+      "reason": "true"
+    },
+    {
+      "name": "actual Android shell adapters compile against official APIs and the unchanged Binder contract",
+      "reason": "NOT_RUN: configure official Kotlin and Shizuku/annotation jars"
+    },
+    {
+      "name": "native natural request → actual tool → receipt → persisted episode, with negative regressions",
+      "reason": "NOT_RUN: set CONTINUUM_FABRIC_JVM_DEPS to run the real Kotlin graph"
+    },
+    {
+      "name": "actual memory, CRE1 and CTX3 graph preserves provenance and emits content-free traces",
+      "reason": "NOT_RUN: configure official Kotlin/JUnit jars"
+    },
+    {
+      "name": "native JVM export feeds Node byte-for-byte when cross-language runner is configured",
+      "reason": "Run scripts/continuum-fabric-jvm-check.sh for the actual JVM→Node test"
+    },
+    {
+      "name": "real Harness service preserves the existing strict wire schema without mounting tools",
+      "reason": "NOT_RUN: configure actual reviewed Harness SDK"
+    },
+    {
+      "name": "authority smuggling, no-op and HTTP failure remain rejected without hidden retries",
+      "reason": "NOT_RUN: actual SDK required"
+    },
+    {
+      "name": "fixed isolated Android runner rejects 401 reports instead of returning a green subset",
+      "reason": "Requires explicitly configured Docker; synthetic Gradle reports, not an Android build"
+    },
+    {
+      "name": "HOST_INTEGRATION: typed dispatch binds actual canonical repair containers and refuses replay",
+      "reason": "true"
+    },
+    {
+      "name": "fixed Docker CLI transport rejects mismatched weights before native launch, with no observation",
+      "reason": "HOST_DOCKER_PROOF_NOT_RUN: fixed Docker client unavailable"
+    },
+    {
+      "name": "actual launcher gives exact private 7B profile two CPU seconds per remaining wall second",
+      "reason": "HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"
+    },
+    {
+      "name": "two-thread CPU allowance leaves the existing wall cancellation deadline unchanged",
+      "reason": "HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"
+    },
+    {
+      "name": "actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit",
+      "reason": "HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"
+    },
+    {
+      "name": "actual namespace binds admitted descriptors and fixture output; never inference evidence",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "deadline cancels actual isolated process with bounded return",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "STOP cancels actual isolated process and leaves no trusted observation",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "malformed/oversized output and missing generation counters are rejected",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "actual FD mount retains selected inode across model path replacement",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "prompt evaluation counter alone cannot masquerade as output generation",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "inference sandbox denies host files, external interfaces, secrets and writable model",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "seccomp denies fork and rlimits bound native memory/descriptor budgets",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "changing model during actual execution invalidates otherwise valid output",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "production provider rejects synthetic fixture receipt even when transport MAC is valid",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "native worker threads remain permitted while process creation stays denied",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "invalid model JSON retains authenticated process observation without a candidate",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    },
+    {
+      "name": "provider retains authenticated rejected-response observation and consumed durable budget",
+      "reason": "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"
+    }
+  ],
+  "junitSha256": "f15da1e86ce49e388a130eda4f00d3bdde664e4ae708219f5e8a87c825fd4704",
+  "reportSha256": "992ab862df9429faefdfda4e9d129fb003ab41ec8d32594b299a15877517989a",
+  "archive": {
+    "path": "node-full-code46-evidence.zip",
+    "bytes": 811832,
+    "sha256": "c3f9fa1e9f74477ba24e3c00b9b80161f822f7f54675c514be4cf5556f7cb6cc"
+  },
+  "limits": [
+    "Node host scope; Android and publisher receipts are separate",
+    "31 skipped prerequisites are not counted as passed",
+    "No physical Fold7, actual model-answer or audio-quality evidence"
+  ]
+}
