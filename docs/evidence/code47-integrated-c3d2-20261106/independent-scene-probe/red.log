@@ -1,0 +1,5 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=34955 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=34955 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+staleSameMillisecondAccepted=true currentCall=old
+Exception in thread "main" java.lang.IllegalStateException: Completed old call replaced the current scene
+	at at.heinz.deviceai.ui.ProbeKt.main(Probe.kt:12)
+	at at.heinz.deviceai.ui.ProbeKt.main(Probe.kt)
