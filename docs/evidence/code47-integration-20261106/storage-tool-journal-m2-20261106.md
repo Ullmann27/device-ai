@@ -27,8 +27,9 @@ This is an engineering checkpoint, not a signed Code47 APK.
   episodes from claims of owner decisions. `WorkRecall` can show their
   truthful status and any open verification step.
 - Recovering an interrupted app process changes EXECUTING tool episodes
-  to UNKNOWN, **never SUCCEEDED**. Up to ten recent tool episodes are retained
-  within the same existing bounded journal to protect PDF history.
+  to UNKNOWN, **never SUCCEEDED**. Forty original document episode slots
+  are retained alongside up to ten small tool slots in the same journal,
+  subject to the unchanged 256 KB overall file budget.
 - The original `ToolGate` policy, OFF/ASK/ALWAYS_ON gates, STOP mechanism,
   package, original signer, model/runtime and Render release scripts were
   not replaced or relaxed.
