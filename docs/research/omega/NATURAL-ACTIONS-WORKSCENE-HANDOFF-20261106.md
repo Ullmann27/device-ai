@@ -30,3 +30,14 @@ Source audit completed on immutable Code46/47. New repair tests: NOT_RUN; centra
 
 ## Ownership, next step, rollback
 This branch owns AgentActivity, OwnerAppLookupIntent and nearby action/work-window helpers only. Other agents own separate context/runtime cores; their Activity hooks are integrated centrally. Next: add RED cases and implement the narrow continuation. Rollback is reverting this branch's additive commits to the base; no data migration or release change.
+
+## Parser checkpoint
+
+- Real baseline source: 5572edf, OwnerAppLookupIntent.kt SHA256
+  `145d8dbad68fb19dae0cf4366701302d7478f8d75a1d8b87c63b38db34468d4c`.
+- Kotlin 2.4.0 / JDK17 / JUnit4.13.2, maximum256MiB compiler heap.
+- RED: 3 new tests,2 failures. Addressed and polite requests return null.
+- GREEN: same3 plus existing3 parser tests,6/6 pass.
+- Compound requests retain their original text for planning. No execution permission
+  derives from recognition; Activity continuation is still in progress.
+- No Android/GPU/device verification has run for this checkpoint.
