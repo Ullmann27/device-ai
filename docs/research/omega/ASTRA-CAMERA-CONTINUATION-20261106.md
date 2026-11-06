@@ -38,3 +38,13 @@ Keine Änderung an EXP-00…12, Modell-/Gedächtnis-/ToolGate-Verträgen.
 Keine APK, Installation, Signierung, Veröffentlichung oder Main-Integration.
 Sequentielle Arbeit ohne weitere Bots. Rückfall: Kamerafahrt-Delta revertieren,
 Ausgangsstand und bestehende Arbeitsfenster behalten.
+
+## Erster Implementierungsnachweis
+
+Hostlauf `camera-green`: **19/19, 0 Fehler, 0 Skips**, Exit 0, Quellen während
+des Laufs unverändert. Der zuvor rote Activity-Test ist grün. Enthalten sind
+acht Uhr-/Abbruchtests, neun Framing-/Original-GLB-Geometrietests sowie
+je ein Activity- und Aura-Lifecycle-Test. Prüfquellen und XML-Hashes stehen
+in `first-green-receipt.json`. Weiter offen: vollständige betroffene Regression,
+STOP/Pause/Reduktionsanbindung in der Activity, bestehendes Schweben, NewApi
+und physische Fold7-/Filament-Abnahme.

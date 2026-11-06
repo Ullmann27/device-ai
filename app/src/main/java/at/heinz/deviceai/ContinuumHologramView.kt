@@ -28,6 +28,9 @@ import android.view.Surface
 import android.graphics.SurfaceTexture
 import android.widget.FrameLayout
 import at.heinz.deviceai.avatar3d.AvatarGlbContract
+import at.heinz.deviceai.avatar3d.AvatarCameraFraming
+import at.heinz.deviceai.avatar3d.AvatarCameraMotion
+import at.heinz.deviceai.avatar3d.AvatarFraming
 import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer
 import at.heinz.deviceai.ui.AndroidContinuumPainter
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
@@ -213,24 +216,55 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var auraKeepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null
     private var auraScale = 1f
     private var auraAnchorEffective = .5f
+    private val cameraMotion = AvatarCameraMotion()
+    private var cameraFraming: AvatarCameraFraming? = null
+    private var cameraWindow: AvatarFraming.Window? = null
+    private var cameraDirection = 0f
+
+    /** Actual accepted work-window presentation only. */
+    fun setWorkWindowCamera(active: Boolean, direction: Float = 0f, immediate: Boolean = false) {
+        require(direction.isFinite() && direction in -1f..1f)
+        if (immediate || !canAnimateFrame() || !headEnabled || cockpitHeadBounds == null) {
+            resetCamera()
+        } else {
+            if (active) cameraDirection = direction
+            cameraMotion.setWorkActive(active, SystemClock.uptimeMillis())
+        }
+        invalidate()
+    }
+
+    private fun resetCamera() {
+        cameraMotion.reset()
+        cameraDirection = 0f
+        cameraWindow = cameraFraming?.rest
+        cameraWindow?.let { auraScale = it.headScale.toFloat(); auraAnchorEffective = it.anchorX.toFloat() }
+    }
+
+    internal fun cameraProgress(): Float = cameraMotion.progress
 
     /**
      * Head size and effective anchor of the live 3D window (the calibrated values for the 2D head), so the aura
      * rings stay around the fitted head. Same [at.heinz.deviceai.avatar3d.AvatarFraming] window as the renderer;
-     * recomputed only when the stage, the framing or the asset changes, never allocated per frame.
+     * Geometry is cached between layout changes.
      */
     private fun updateAuraFraming() {
         val focus = if (head3dEnabled && native3dDrawn) assetMetadata?.focus else null
         val w = headDrawBounds.width(); val h = headDrawBounds.height()
-        if (focus == null || w <= 0f || h <= 0f) { auraFocus = null; auraScale = 1f; auraAnchorEffective = headAnchorX; return }
+        if (focus == null || w <= 0f || h <= 0f) {
+            auraFocus = null; auraScale = 1f; auraAnchorEffective = headAnchorX
+            cameraFraming = null; cameraWindow = null
+            return
+        }
         if (focus !== auraFocus || w != auraWidth || h != auraHeight || headAnchorX != auraAnchor ||
             headCloseUp != auraCloseUp || headKeepOut != auraKeepOut) {
             auraFocus = focus; auraWidth = w; auraHeight = h; auraAnchor = headAnchorX; auraCloseUp = headCloseUp
             auraKeepOut = headKeepOut
-            val window = at.heinz.deviceai.avatar3d.AvatarFraming.window(focus, (w / h).toDouble(),
+            cameraFraming = AvatarCameraFraming(focus, w.toDouble() / h,
                 headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut)
-            auraScale = window.headScale.toFloat(); auraAnchorEffective = window.anchorX.toFloat()
         }
+        cameraWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection)
+        val window = requireNotNull(cameraWindow)
+        auraScale = window.headScale.toFloat(); auraAnchorEffective = window.anchorX.toFloat()
     }
 
     /**
@@ -243,6 +277,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         headAnchorX = anchorX
         headCloseUp = closeUp
         headKeepOut = keepOut
+        resetCamera()
         invalidate()
     }
 
@@ -253,6 +288,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             require(!Rect.intersects(head, orb)) { "Head and orb drawing regions must not overlap" }
         }
         if (cockpitHeadBounds == head && cockpitOrbBounds == orb) return
+        resetCamera()
         cockpitHeadBounds = head?.let(::Rect)
         cockpitOrbBounds = orb?.let(::Rect)
         updateOrbTarget(width, height)
@@ -491,6 +527,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        resetCamera()
         cockpitSequence?.setMotionAllowed(false)
         clearTaskEffects()
         // A fold/navigation reparent destroys the surface, but retains validated immutable asset bytes.
@@ -568,6 +605,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         framePending = false
         lastFrameMs = 0L
         if (!canAnimateFrame()) {
+            resetCamera()
             clearTaskEffects()
             synchronized(avatarPose) { avatarPose.clearObservedGaze(System.currentTimeMillis()) }
             settleState()
@@ -643,7 +681,8 @@ class ContinuumHologramView @JvmOverloads constructor(
                 runCatching {
                     native3d!!.setQuality(renderBudget().reducedBloom)
                     native3d!!.setFraming(headAnchorX, headCloseUp, headKeepOut)
-                    native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0)
+                    native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0,
+                        nativeTexture?.height ?: 0, if (cockpitHeadBounds != null) cameraWindow else null)
                 }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
                     .onFailure { fail3d() }
@@ -772,6 +811,8 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun advanceFrame() {
         if (!canAnimateFrame()) return
         val now = SystemClock.uptimeMillis()
+        cameraMotion.advance(now, true, Settings.Global.getFloat(context.contentResolver,
+            Settings.Global.ANIMATOR_DURATION_SCALE, 1f))
         val delta = if (lastFrameMs == 0L) 0f else ((now - lastFrameMs) / 1000f).coerceIn(0f, .1f)
         lastFrameMs = now
         avatarSeconds = (avatarSeconds + delta) % 460f

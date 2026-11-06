@@ -15,11 +15,15 @@ class JarvisWorkWindowHost(
     private val director: AvatarDirector
 ) {
     private var current: JarvisWorkWindow? = null
+    private var cameraHome: ContinuumHomeView? = null
     private var serial = 0L
     private var back: android.window.OnBackInvokedCallback? = null
     val isShowing: Boolean get() = current?.isShowing == true
 
-    fun close(immediate: Boolean = false) { current?.close(immediate) }
+    fun close(immediate: Boolean = false) {
+        if (immediate) cameraHome?.hologram?.setWorkWindowCamera(false, immediate = true)
+        current?.close(immediate)
+    }
 
     /**
      * Unfolds [body] as the cockpit work window of [scene]: from the tile the owner touched, or – without that
@@ -68,6 +72,8 @@ class JarvisWorkWindowHost(
             director.windowClosed(id)
             if (current === window) {
                 current = null
+                home.hologram.setWorkWindowCamera(false)
+                cameraHome = null
                 home.setDeckCleared(false)
                 unregisterBack()
                 onClosed()
@@ -85,6 +91,9 @@ class JarvisWorkWindowHost(
         releaseGeometry = { if (current === window) background?.setOnScrollChangeListener(null) }
         val headX = face?.centerX() ?: viewport.centerX()
         val headY = face?.centerY() ?: viewport.centerY()
+        cameraHome = home
+        home.hologram.setWorkWindowCamera(true,
+            ((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-1f, 1f))
         director.windowOpened(id, GazeTarget(
             ((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.6f, .6f),
             ((headY - destination.centerY()) / viewport.height()).coerceIn(-.4f, .4f)))
