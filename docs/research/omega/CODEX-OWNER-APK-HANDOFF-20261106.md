@@ -142,7 +142,7 @@ The successful publisher log exposes gate markers, not full Node/Android totals.
 relabel local totals as Render totals. Final delivery requires the actual Code46 manifest,
 BUILD-INFO, downloaded bytes and independent original-certificate verification.
 
-## Original publisher candidate
+## Original publisher candidate before the depth-test harness correction
 
 Frozen Code46 source: `756bc68d0fb7f8522da8900fd889fd2eae2e8caf`; exact tree
 `2161fc5f7dd2b45bba1ac42a59c00746d7611746` matches the locally verified preflight tree.
@@ -158,6 +158,40 @@ HTML download page; the final direct APK link must be taken from the verified li
 This documentation checkpoint does not advance the frozen publisher branch or restart its build.
 A later release receipt must record the actual deployment outcome and downloaded APK verification.
 
-## Full publisher Android regression 2026-11-06
+## Full publisher RED and depth-test harness repair
 
-Render Code45 source `48251610d9c9519678e9fc5ef652ad8286675b7f` failed full Android: **3556 total, five `JarvisWorkWindowDepthTest` failures, 20 skips**, three QA_RED gates. Signing and download were blocked as designed. Existing Code46 pin `756bc68d0fb7f8522da8900fd889fd2eae2e8caf` still contains the plain-JVM `android.graphics.RectF` tests. Migrate the **complete unchanged assertions** into `src/uiTest` using Robolectric SDK28, matching the publisher's existing `-PcontinuumUiWidgetTests=true` full test path; keep production code, original signer, package and gates untouched. See `docs/evidence/codex-owner-apk-20261106/render-code45-android-regression-20261106.md`. This is a source correction, not a green build or release. The corrected exact publisher source requires a new full QA and signed readback.
+Code45 deploy `dep-dbn06r8u01pc73fpcgt0` failed at 2026-11-06T17:27:26.425591Z.
+The full Android run reported **3556 total, 5 failed, 20 skipped**; all five failures came from
+`JarvisWorkWindowDepthTest` calling `RectF.width()` in a plain AGP JVM test. The independent
+local reproduction also produced exactly 5 FAIL /1 PASS and “Method width ... not mocked”.
+The publisher recorded three red gates and blocked original signing and publication.
+
+This does not invalidate Fable’s specifically described non-Gradle host result: that runner
+provided the Java framework implementation through `android-all-15.jar`. The real SDK runner
+uses a mockable Android JAR. The test class now belongs to the existing `src/uiTest` source set
+and uses the existing Robolectric runner with SDK28. All six test methods and58 assertion calls
+are unchanged; production code and rendering are unchanged. Class-body SHA256:
+`31638559191dd4ac00e458733a28c8c24acd9e589b81c6a1e5cfa2a05b1985cc`.
+
+Targeted SDK GREEN: **6/6 PASS, 0 FAIL, 0 SKIP**, local commit
+`7ce9eacee3ef2ac46fce995a2455a7a4d3c4d031`. The earlier83-case and unsigned Code46 preflight
+production trees remain unchanged by this harness-only fix. Complete source-bound regression
+and a new corrected publisher candidate are still required. The old Code46 deploy
+`dep-dbn0gj5s25qs73a1vrv0` started on the superseded source at17:27:26.791398Z and does not
+contain the harness repair. It must not be reported as the corrected final release.
+
+## Corrected Code46 source and full regression
+
+The publisher and integration branches received the same unchanged Robolectric class through
+GitHub commits `72b508b7b`, `a7775d9b2`, `3b63cc7f4`, and final corrected candidate
+`577f0931e7937ffcac02dc855a540f093facdb3b`. Its production and test files match the locally
+verified6/6 harness fix. The concurrent documentation is preserved in
+`render-code45-android-regression-20261106.md` and this merge history.
+
+Corrected deploy: `dep-dbn0u78gs6ms73a7m54g`, queued at2026-11-06T17:32:14.5897Z.
+The prior running deploy `dep-dbn0gj5s25qs73a1vrv0` is superseded and lacks this fix.
+No second trigger was issued for the already queued corrected candidate.
+
+Source-bound quality-lab rerun on577f0931e7937ffcac02dc855a540f093facdb3b:44/44 PASS,
+source verified and unchanged. A complete local SDK/Robolectric/lint run was started on an
+isolated clean checkout of that exact GitHub commit. Its final result remains pending here.
