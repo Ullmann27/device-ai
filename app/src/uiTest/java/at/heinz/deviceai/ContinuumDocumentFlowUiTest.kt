@@ -203,6 +203,29 @@ class ContinuumDocumentFlowUiTest {
         return Scene(doc, episode, journal)
     }
 
+    /**
+     * Owner addendum 06.11.: no sequence card may lie over the avatar's eyes, face, neck or the orb while a work window
+     * is open – the cards dock into the window's status strip. Checks the cards really drawn in the last frame.
+     */
+    private fun assertAvatarFree(activity: AgentActivity, root: View, moment: String) {
+        measure(root); draw(root)
+        val hologram = field(activity, "hologramView") as ContinuumHologramView
+        val sequence = field(hologram, "cockpitSequence") as at.heinz.deviceai.ui.JarvisSequenceView
+        val density = activity.resources.displayMetrics.density
+        val protectedAreas = listOfNotNull(field(hologram, "cockpitHeadBounds") as? android.graphics.Rect,
+            field(hologram, "cockpitOrbBounds") as? android.graphics.Rect)
+        assertTrue("head and orb regions are known", protectedAreas.isNotEmpty())
+        assertTrue("the turn's steps exist (they are docked, not lost)", sequence.effects.cardCount > 0)
+        for (i in 0 until sequence.effects.drawnCardCount) {
+            val b = sequence.effects.drawnCardBox(i)
+            val card = android.graphics.Rect((b[0] * density).toInt(), (b[1] * density).toInt(),
+                (b[2] * density).toInt(), (b[3] * density).toInt())
+            protectedAreas.forEach { area ->
+                assertFalse("$moment: a status card $card lies over the avatar/orb $area", android.graphics.Rect.intersects(card, area))
+            }
+        }
+    }
+
     private fun windowIntent(activity: AgentActivity): Any? = field(field(activity, "avatarDirector")!!, "windowIntent")
     private fun reading(activity: AgentActivity): Boolean = windowIntent(activity)?.let { field(it, "reading") as Boolean } ?: false
     private fun status(root: View) = (descendants(root).single { it.tag == "jarvis-document-draft" && it.isShown } as TextView).text.toString()
@@ -218,6 +241,9 @@ class ContinuumDocumentFlowUiTest {
         assertTrue("JARVIS reads the document while the model works", reading(activity))
         assertEquals(at.heinz.deviceai.avatar.AvatarState.THINKING,
             (field(activity, "avatarDirector") as at.heinz.deviceai.avatar.AvatarDirector).state)
+        val strip = descendants(root).single { it.tag == "jarvis-work-window:status" } as TextView
+        assertTrue("the status strip shows the real running steps", strip.isShown)
+        assertEquals("Auftrag angenommen · Bearbeitung läuft", strip.text.toString())
         val again = descendants(root).single { it.tag == "jarvis-document-start-draft" }
         assertFalse("ENTWURF ERSTELLEN is off while the draft runs", again.isEnabled)
         call(activity, "startDocumentDraft", scene.doc)
@@ -226,6 +252,7 @@ class ContinuumDocumentFlowUiTest {
         assertEquals("the window keeps saying what really happens", "Entwurf wird lokal erstellt …", status(root))
         advance(4_000L); measure(root); draw(root)
         assertTrue("4 s later – far past a glance – he still reads", reading(activity))
+        assertAvatarFree(activity, root, "4 s into the work, all cards flown in")
         capture(root, "flow-1-reading-while-the-model-works")
 
         val documentWindow = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
@@ -277,6 +304,8 @@ class ContinuumDocumentFlowUiTest {
         advance(400L); measure(root); draw(root)
         assertFalse("STOP folds the window away at once", descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
         assertEquals("the cockpit stays the stage after STOP", ContinuumWorkArea.START, field(activity, "activeWorkArea"))
+        val sequence = field(field(activity, "hologramView")!!, "cockpitSequence") as at.heinz.deviceai.ui.JarvisSequenceView
+        assertFalse("with the window gone the cards are back at their cockpit place", sequence.effects.docked)
         val chat = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>().map { it.text.toString() }
         assertTrue("STOP is named as the owner's STOP: $chat", chat.any { it == "Entwurf mit STOP abgebrochen – nichts gespeichert." })
         assertTrue("never an undetermined model error: $chat", chat.none { it.startsWith("Lokaler Modellfehler") })

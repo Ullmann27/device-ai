@@ -1456,6 +1456,8 @@ class AgentActivity : Activity() {
         if (isFinishing || isDestroyed) return
         home.state = home.state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
             memoryActivity = memoryActivitySnapshot(home.state.memory))
+        // The running turn's steps dock into the open work window instead of covering the avatar and the orb.
+        workWindowHost.showStatus(cockpitTriggers.activeTimeline())
     }
 
     private fun presentationStatus() = at.heinz.deviceai.ui.ContinuumDashboardState.PresentationStatus(

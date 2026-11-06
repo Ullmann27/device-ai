@@ -198,6 +198,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         cockpitSequence = sequence
         sequence?.let {
             it.setMotionAllowed(canAnimateFrame())
+            it.setCardsDocked(workWindowActive)
             addView(it, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
             updateOrbTarget(width, height)
         }
@@ -217,6 +218,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var auraScale = 1f
     private var auraAnchorEffective = .5f
     private val cameraMotion = AvatarCameraMotion()
+    private var workWindowActive = false
     private var cameraFraming: AvatarCameraFraming? = null
     private var cameraWindow: AvatarFraming.Window? = null
     private var cameraDirection = 0f
@@ -224,6 +226,9 @@ class ContinuumHologramView @JvmOverloads constructor(
     /** Actual accepted work-window presentation only. */
     fun setWorkWindowCamera(active: Boolean, direction: Float = 0f, immediate: Boolean = false) {
         require(direction.isFinite() && direction in -1f..1f)
+        // The face and the orb stay free while a window works: the sequence cards dock into its status strip.
+        workWindowActive = active
+        cockpitSequence?.setCardsDocked(active)
         if (immediate || !canAnimateFrame() || !hasWindowFocus() || !headEnabled || cockpitHeadBounds == null) {
             resetCamera()
         } else {

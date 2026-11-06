@@ -36,6 +36,14 @@ class JarvisWorkWindowHost(
         return admitted
     }
 
+    /**
+     * Steps of the turn that really runs (CockpitAnimationTriggers.activeTimeline) as the window's status strip – the
+     * cards that would cover the avatar's face and the orb dock here. Empty steps hide it; never „fertig“ while running.
+     */
+    fun showStatus(steps: List<at.heinz.deviceai.cockpit.ProcessStep>) {
+        current?.setStatus(statusLine(steps))
+    }
+
     /** The real work ended (result, failure, STOP): the reading gaze ends with it. */
     fun workEnded() {
         workingId?.let(director::windowWorkEnded)
@@ -197,8 +205,22 @@ class JarvisWorkWindowHost(
         back = null
     }
 
-    private companion object {
-        val STATUS_SCENE = requireNotNull(JarvisActionScenes.forCentre("Systemstatus"))
+    internal companion object {
+        private val STATUS_SCENE = requireNotNull(JarvisActionScenes.forCentre("Systemstatus"))
+        /** „Auftrag angenommen · Bearbeitung läuft“ – the last steps, each label once, with its real state. */
+        fun statusLine(steps: List<at.heinz.deviceai.cockpit.ProcessStep>): String? {
+            if (steps.isEmpty()) return null
+            return steps.distinctBy { it.key }.takeLast(3).joinToString(" · ") { step ->
+                when (step.state) {
+                    at.heinz.deviceai.cockpit.StepState.ACTIVE -> "${step.label} läuft"
+                    at.heinz.deviceai.cockpit.StepState.WAITING -> "${step.label} wartet auf Freigabe"
+                    at.heinz.deviceai.cockpit.StepState.DONE -> step.label
+                    at.heinz.deviceai.cockpit.StepState.FAILED -> "${step.label} fehlgeschlagen"
+                    at.heinz.deviceai.cockpit.StepState.BLOCKED -> "${step.label} blockiert"
+                }
+            }
+        }
+
     }
 
     private fun localBounds(view: View, root: View): RectF {

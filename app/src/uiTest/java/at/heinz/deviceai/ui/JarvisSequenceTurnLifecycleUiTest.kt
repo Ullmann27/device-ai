@@ -370,4 +370,17 @@ class JarvisSequenceTurnLifecycleUiTest {
 
         assertEquals("Completion bookkeeping does not acquire a work slot", 1, view.effects.cardCount)
     }
+
+    /**
+     * Owner addendum 06.11.: „Auftrag angenommen“ appeared twice. The triggers announce one fact twice – as the action
+     * that started and as its timeline step. The card follows the fact's identity (step key), so each step shows once;
+     * no valid event is lost (the following tool step still appears).
+     */
+    @Test fun anAcknowledgedCommandShowsEachStepOnce() {
+        val triggers = at.heinz.deviceai.cockpit.CockpitAnimationTriggers(bus) { 1_000L }
+        triggers.commandAcknowledged("turn-1", "Prüfe den Auftrag")
+        assertEquals("„Auftrag angenommen“ once plus „Bearbeitung“", 2, view.effects.cardCount)
+        triggers.toolStarted("turn-1", "call-1", "launch_app")
+        assertEquals("the real tool step is added once", 3, view.effects.cardCount)
+    }
 }

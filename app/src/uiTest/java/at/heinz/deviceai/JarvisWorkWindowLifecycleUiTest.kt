@@ -280,4 +280,55 @@ class JarvisWorkWindowLifecycleUiTest {
             }
         } finally { org.robolectric.RuntimeEnvironment.setFontScale(previousFont) }
     }
+
+    /**
+     * Owner addendum 06.11.: the docked status strip at 200 % font. In a roomy window (inner Fold7) it is shown under the
+     * header; in a tight one (outer display, short window) the controls win – the strip steps aside instead of covering
+     * content, SCHLIESSEN or an action. The strip is a polite live region for TalkBack.
+     */
+    @Test fun theStatusStripNeverCoversControlsAtLargeType() {
+        val previousFont = org.robolectric.RuntimeEnvironment.getFontScale()
+        org.robolectric.RuntimeEnvironment.setFontScale(2f)
+        try {
+            fun open(f: Fixture, destination: RectF, actionHeight: Int = 128): Pair<TextView, View> {
+                val action = TextView(f.activity).apply { text = "ENTWURF ERSTELLEN"; isClickable = true }
+                val body = android.widget.LinearLayout(f.activity).apply {
+                    orientation = android.widget.LinearLayout.VERTICAL
+                    addView(action, -1, actionHeight)
+                    addView(TextView(f.activity).apply { text = "Dokument" }, -1, 400)
+                }
+                assertTrue(f.window.open(body, RectF(30f, 540f, 190f, 600f), destination, "DOKUMENT · Bericht.pdf"))
+                f.window.setStatus("Auftrag angenommen · Bearbeitung läuft")
+                f.draw(1_000); f.draw(2_000)
+                return f.window.findViewWithTag<TextView>("jarvis-work-window:status") to action
+            }
+            withWindow { f ->
+                val (strip, _) = open(f, RectF(220f, 300f, 820f, 740f))
+                assertTrue("roomy window: the strip is shown", strip.isShown)
+                assertEquals("Auftrag angenommen · Bearbeitung läuft", strip.text.toString())
+                assertEquals(View.ACCESSIBILITY_LIVE_REGION_POLITE, strip.accessibilityLiveRegion)
+                f.window.setStatus(null)
+                f.layout()
+                assertFalse("nothing runs: no strip", strip.isShown)
+            }
+            withWindow { f ->
+                // Fold short window of PR #572 (279 × 270 px): one-line title, strip and the 128 px action all fit.
+                val (strip, action) = open(f, RectF(561f, 20f, 840f, 290f))
+                val scroll = f.window.findViewWithTag<ScrollView>("jarvis-work-window:scroll")
+                assertTrue("medium window: the strip fits beside the controls", strip.isShown)
+                assertTrue("the action fits whole", scroll.height - scroll.paddingTop - scroll.paddingBottom >= action.height)
+            }
+            withWindow { f ->
+                // Phone window of PR #572 (≈ 380 × 165 px, 95 px action): no room for the strip as well.
+                val (strip, action) = open(f, RectF(16f, 560f, 396f, 725f), actionHeight = 95)
+                val scroll = f.window.findViewWithTag<ScrollView>("jarvis-work-window:scroll")
+                assertFalse("tight window: the strip steps aside", strip.isShown)
+                assertTrue("the action still fits whole", scroll.height - scroll.paddingTop - scroll.paddingBottom >= action.height)
+                val close = f.window.findViewWithTag<View>("jarvis-work-window:close")
+                val visible = Rect()
+                assertTrue(close.getGlobalVisibleRect(visible))
+                assertEquals("SCHLIESSEN stays whole", close.height, visible.height())
+            }
+        } finally { org.robolectric.RuntimeEnvironment.setFontScale(previousFont) }
+    }
 }

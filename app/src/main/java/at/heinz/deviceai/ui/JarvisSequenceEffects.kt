@@ -240,13 +240,21 @@ class JarvisSequenceEffects {
 
     val cardCount: Int get() = cards.count { it.leavingAt < 0 }
 
+    /** Cards and command chip docked into an open work window (not drawn here; orb signals stay). */
+    var docked = false
+    /** Boxes (dp: l, t, r, b) of the cards drawn in the last frame – reused buffer, no per-frame allocation. */
+    private val drawnBoxes = FloatArray(4 * (MAX_CARDS + 4))
+    var drawnCardCount = 0; private set
+    fun drawnCardBox(i: Int): FloatArray = drawnBoxes.copyOfRange(4 * i, 4 * i + 4)
+
     fun draw(p: ContinuumPainter, width: Float, height: Float, nowMillis: Long) {
         if (width <= 0f || height <= 0f) return
         val now = maxOf(nowMillis, 0L)
         cards.removeAll { it.leavingAt >= 0 && now - it.leavingAt > LEAVE_MS }
         if (command != null && now - command!!.at > COMMAND_MS) command = null
         val hubX = width / 2f; val hubY = height * .30f
-        drawCommand(p, width, height, hubX, hubY, now)
+        drawnCardCount = 0
+        if (!docked) drawCommand(p, width, height, hubX, hubY, now)
         drawFlight(p, width, height, now)
         drawOrbSignals(p, width, height, now)
         drawAlarm(p, width, height, now)
@@ -255,6 +263,7 @@ class JarvisSequenceEffects {
         drawPills(p, width, height, now)
         p.restore()
         val cw = min(width - 32f, 340f); val ch = 58f; val gap = 10f
+        if (docked) return
         var slot = 0
         for (c in cards) {
             val targetY = height * .44f + slot * (ch + gap)
@@ -323,6 +332,10 @@ class JarvisSequenceEffects {
         // perspective: card turns in edge-first, then faces the viewer
         val sx = (.25f + .75f * ein.coerceIn(0f, 1.1f)) * (1f - outT * .5f)
         val l = cx - cw / 2f; val r = cx + cw / 2f; val t = cy - ch / 2f; val b = cy + ch / 2f
+        if (drawnCardCount < drawnBoxes.size / 4) {
+            val o = 4 * drawnCardCount++
+            drawnBoxes[o] = l; drawnBoxes[o + 1] = t; drawnBoxes[o + 2] = r; drawnBoxes[o + 3] = b
+        }
         if (inT < 1f) {
             p.setAdditive(true)
             JarvisNeon.line(p, cx - side * cw * .5f, cy, cx - side * (cw * .5f + 90f * (1f - inT)), cy,

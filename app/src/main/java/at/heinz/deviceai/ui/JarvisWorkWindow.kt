@@ -123,6 +123,22 @@ class JarvisWorkWindow(
         isFocusable = true
         setOnClickListener { close() }
     }
+    /**
+     * Holographic status strip of the running work (owner addendum 06.11.): the steps of the turn that really runs –
+     * docked here instead of over the avatar's face and the orb. One line; hidden when nothing runs or when the window is
+     * too small to show it without hiding a control. A polite live region for TalkBack.
+     */
+    private val statusView = TextView(context).apply {
+        tag = "jarvis-work-window:status"
+        setTextColor(Colors.cyanSoft)
+        setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f)
+        maxLines = 1
+        ellipsize = TextUtils.TruncateAt.END
+        setPadding(dp(8f), dp(2f), dp(8f), dp(4f))
+        visibility = GONE
+        if (Build.VERSION.SDK_INT >= 19) accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE
+    }
+    private var statusText: String? = null
     private val scroll = ScrollView(context).apply {
         tag = "jarvis-work-window:scroll"
         isFillViewport = false
@@ -140,12 +156,24 @@ class JarvisWorkWindow(
             addView(closeView, LinearLayout.LayoutParams(-2, -2))
         }
         addView(header, LinearLayout.LayoutParams(-1, -2))
+        addView(statusView, LinearLayout.LayoutParams(-1, -2))
         addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         pivotX = 0f
         pivotY = 0f
     }
 
     val isShowing: Boolean get() = phase != Phase.CLOSED
+
+    /** The running work's steps for the status strip; null or blank hides it. Only real, current steps. */
+    fun setStatus(text: String?) {
+        val value = text?.takeIf { it.isNotBlank() }
+        if (value == statusText) return
+        statusText = value
+        statusView.text = value.orEmpty()
+        val params = panel.layoutParams as? LayoutParams
+        if (params != null && params.width > 0 && params.height > 0) fitTitle(params.width, params.height)
+        else statusView.visibility = if (value == null) GONE else VISIBLE
+    }
 
     /** Where the window stands (overlay pixels) while it is shown; null when closed. */
     fun shownBounds(): RectF? = if (isShowing && JarvisWorkWindowGeometry.valid(destination)) RectF(destination) else null
@@ -175,6 +203,9 @@ class JarvisWorkWindow(
         this.onClosed = {}
         close(immediate = true)
         scroll.removeAllViews()
+        statusText = null
+        statusView.text = ""
+        statusView.visibility = GONE
         this.onOpened = onOpened
         this.onClosed = onClosed
         this.emblem = emblem?.mutate()
@@ -234,13 +265,18 @@ class JarvisWorkWindow(
     private fun fitTitle(widthPx: Int, heightPx: Int) {
         titleView.maxLines = Int.MAX_VALUE
         titleView.ellipsize = null
+        statusView.visibility = if (statusText == null) GONE else VISIBLE
         val body = scroll.getChildAt(0) ?: return
-        panel.measure(MeasureSpec.makeMeasureSpec(widthPx, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(heightPx, MeasureSpec.EXACTLY))
-        if (tallestControl(body) > scroll.measuredHeight - scroll.paddingTop - scroll.paddingBottom) {
-            titleView.maxLines = 1
-            titleView.ellipsize = TextUtils.TruncateAt.END
+        fun fits(): Boolean {
+            panel.measure(MeasureSpec.makeMeasureSpec(widthPx, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(heightPx, MeasureSpec.EXACTLY))
+            return tallestControl(body) <= scroll.measuredHeight - scroll.paddingTop - scroll.paddingBottom
         }
+        if (fits()) return
+        titleView.maxLines = 1
+        titleView.ellipsize = TextUtils.TruncateAt.END
+        // Too small even then (200 % font, outer display): the controls win, the status strip steps aside.
+        if (!fits() && statusView.visibility == VISIBLE) statusView.visibility = GONE
     }
 
     /** Measured height of the tallest clickable leaf (a clickable group without clickable children counts as one). */

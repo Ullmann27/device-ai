@@ -21,7 +21,9 @@ sealed class CockpitAnimationEvent {
 
     /** (b) Work really started: immediate visible feedback on the matching control. */
     data class ActionStarted(override val turnId: String, override val atMillis: Long, val action: CockpitAction,
-                             val detail: String) : CockpitAnimationEvent()
+                             val detail: String,
+                             /** Key of the ProcessTimeline step that is the same fact (null: no timeline step). */
+                             val stepKey: String? = null) : CockpitAnimationEvent()
 
     /** (c) The complete, current step list of the turn (oldest first); renderers animate the difference. */
     data class ProcessTimeline(override val turnId: String, override val atMillis: Long, val steps: List<ProcessStep>) :

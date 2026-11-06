@@ -47,6 +47,16 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         invalidate()
     }
 
+    /**
+     * While a work window is open, the step cards and the command chip dock into the window's status strip: they are
+     * not drawn over the avatar's face or the orb. Their state is kept; on undocking they return to their place.
+     */
+    fun setCardsDocked(docked: Boolean) {
+        if (effects.docked == docked) return
+        effects.docked = docked
+        kick()
+    }
+
     /** The containing live surface supplies its foreground, visibility, thermal and reduced-motion policy. */
     fun setMotionAllowed(allowed: Boolean) {
         if (motionAllowed == allowed) return
@@ -116,9 +126,9 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         if (event.turnId != turn) return
         val key = { k: String -> safeId("${event.turnId}.$k") }
         when (event) {
-            is CockpitAnimationEvent.ActionStarted -> {
-                step(key("a.${event.action.name}"), event.detail)
-            }
+            // One fact, one card: an action that is also a timeline step uses that step's identity (no duplicate).
+            is CockpitAnimationEvent.ActionStarted -> step(event.stepKey?.let { key("s.$it") }
+                ?: key("a.${event.action.name}"), event.detail)
             is CockpitAnimationEvent.ProcessTimeline -> for (s in event.steps) {
                 val id = key("s.${s.key}")
                 val old = stepStates[id]
