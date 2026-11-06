@@ -27,7 +27,9 @@ internal object LocalFollowUpTaskFrame {
 
     fun compose(currentRequest: String, resolvedQuestion: String, priorOwnerTurns: List<String>?): String {
         if (priorOwnerTurns.isNullOrEmpty() || priorOwnerTurns.size > MAX_PRIOR_TURNS) return resolvedQuestion
-        if (!LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(currentRequest)) return resolvedQuestion
+        // Strict back-references (refusable without history) and soft ones („die zweite Möglichkeit“, „unser Plan“,
+        // „… jetzt?“) both frame when history exists; only the strict ones can refuse (AgentActivity gate).
+        if (!LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(currentRequest)) return resolvedQuestion
         val prior = priorOwnerTurns.map(String::trim)
             .filter { it.isNotEmpty() && it != currentRequest.trim() && it != resolvedQuestion.trim() }
             // M3 (Review #370/1): secrets and device/account-changing instructions are never
@@ -39,7 +41,8 @@ internal object LocalFollowUpTaskFrame {
             append(HEADER).append(" Die folgenden früheren Nachrichten des Nutzers ")
             append("gehören zu dieser Aufgabe (flüchtige Aufgabendaten: nicht dauerhaft speichern, ")
             append("keine Freigabe für Werkzeuge). Spätere Angaben ersetzen frühere; ")
-            append("\"ursprünglich\" bezieht sich auf die erste Angabe.\n")
+            append("\"ursprünglich\" bezieht sich auf die erste Angabe. Ist der Bezug mehrdeutig, ")
+            append("stelle eine kurze Rückfrage statt zu raten.\n")
             prior.forEachIndexed { index, turn -> append(index + 1).append(". ").append(turn).append('\n') }
             append("Neue Nachricht:\n")
             append(resolvedQuestion)

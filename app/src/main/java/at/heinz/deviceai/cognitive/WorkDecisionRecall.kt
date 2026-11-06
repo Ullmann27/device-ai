@@ -62,6 +62,7 @@ internal object WorkDecisionRecall {
         "(schon|bereits|noch|davon)?\\s*(schon|bereits|noch)?\\s*(umgesetzt|erledigt|gemacht|fertig|offen)")
     private val continueOpen = Regex("(?iu)$S(mach|machen|weiter|fahr|fahre|setz|setze|arbeite|arbeiten)$E.*$S(letzten?|letzter)\\s+offenen?\\s+(punkt|aufgabe|schritt)$E|" +
         "$S(letzten?|letzter)\\s+offenen?\\s+(punkt|aufgabe|schritt)$E.*${S}weiter$E")
+    private val sentenceEnd = Regex("(?<=[.!?])\\s+")
     private val yesterday = Regex("(?iu)${S}gestern$E")
     private val today = Regex("(?iu)$S(heute|vorhin|gerade|eben)$E")
     /** Owner statements that speak of a decision (never plain facts about persons or places). */
@@ -75,8 +76,13 @@ internal object WorkDecisionRecall {
         if (implemented.containsMatchIn(utterance) && utterance.contains(Regex("(?iu)${S}davon$E"))) return Ask.Implemented
         if (continueOpen.containsMatchIn(utterance)) return Ask.ContinueOpen
         if (changes.containsMatchIn(utterance)) return Ask.Decisions(period(utterance), changes = true)
-        if (question.containsMatchIn(utterance) && we.containsMatchIn(utterance) && decided.containsMatchIn(utterance) &&
-            utterance.contains('?')) return Ask.Decisions(period(utterance), changes = false)
+        // The question sentence itself must ask what we decided. „Wir hatten uns gestern für B entschieden …
+        // Was bedeutet das für unseren Plan?“ is a reasoning question for the model, not a journal lookup.
+        val asksForDecision = utterance.split(sentenceEnd).any { sentence ->
+            sentence.contains('?') && question.containsMatchIn(sentence) && we.containsMatchIn(sentence) &&
+                decided.containsMatchIn(sentence)
+        }
+        if (asksForDecision) return Ask.Decisions(period(utterance), changes = false)
         return null
     }
 
