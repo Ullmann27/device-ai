@@ -13,6 +13,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import at.heinz.deviceai.ui.JarvisWorkWindow
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -74,11 +75,8 @@ class JarvisWorkWindowUiTest {
                 minHeight = 36
             }) }
         }
-        fun open(body: View): Boolean = window.javaClass.getMethod("open", View::class.java,
-            RectF::class.java, RectF::class.java, String::class.java, List::class.java,
-            Function0::class.java, Function0::class.java)
-            .invoke(window, body, origin, target, "Systemstatus", protectedBounds,
-                { opened++ }, { closed++ }) as Boolean
+        fun open(body: View): Boolean = (window as JarvisWorkWindow).open(body, origin, target,
+            "Systemstatus", protectedBounds, onOpened = { opened++ }, onClosed = { closed++ })
         fun close(immediate: Boolean = false) {
             window.javaClass.getMethod("close", Boolean::class.javaPrimitiveType).invoke(window, immediate)
         }
