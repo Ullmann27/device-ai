@@ -234,6 +234,8 @@ class ContinuumDocumentFlowUiTest {
     private fun reading(activity: AgentActivity): Boolean = windowIntent(activity)?.let { field(it, "reading") as Boolean } ?: false
     private fun status(root: View) = (descendants(root).single { it.tag == "jarvis-document-draft" && it.isShown } as TextView).text.toString()
     private fun state(scene: Scene) = scene.journal.all().single { it.id == scene.episode }.state
+    private fun stopReplies(activity: AgentActivity) = descendants(field(activity, "chatContainer") as View)
+        .filterIsInstance<TextView>().count { it.text.toString() == "Entwurf mit STOP abgebrochen – nichts gespeichert." }
 
     @Test fun jarvisReadsTheDocumentWhileTheModelWorksAndThenShowsTheDraft() = withFlow { activity, root, runtime ->
         val text = "Projektübersicht Continuum. Ziel: ein lokales Cockpit auf dem Fold7. Offen: Gerätetest."
@@ -302,6 +304,9 @@ class ContinuumDocumentFlowUiTest {
         until(root, "the journal records the running draft") { state(scene) == CockpitWorkJournal.State.DRAFTING }
         assertTrue(reading(activity))
         call(activity, "cancelLocalRequest")
+        assertEquals("STOP confirms before queued delivery", 1, stopReplies(activity))
+        call(activity, "cancelLocalRequest")
+        assertEquals("repeated STOP adds no duplicate", 1, stopReplies(activity))
         until(root, "STOP is recorded") { state(scene) == CockpitWorkJournal.State.ABORTED }
         assertFalse("STOP ends the reading", reading(activity))
         until(root, "the stopped run has ended") { !(field(activity, "busy") as Boolean) }
@@ -327,12 +332,14 @@ class ContinuumDocumentFlowUiTest {
         val scene = startDraft(activity, root, runtime, "Protokoll.pdf", "Protokoll der Besprechung.")
         until(root, "the journal records the running draft") { state(scene) == CockpitWorkJournal.State.DRAFTING }
         call(activity, "cancelLocalRequest")
+        assertEquals("STOP confirms before native completion", 1, stopReplies(activity))
         until(root, "STOP is recorded") { state(scene) == CockpitWorkJournal.State.ABORTED }
         runtime.answer("Späte Antwort, die erst nach STOP kam.")
         until(root, "the late run has ended") { !(field(activity, "busy") as Boolean) && !runtime.running }
         advance(800L); measure(root); draw(root)
         fun chat() = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>().map { it.text.toString() }
         assertTrue("no late text: ${chat()}", chat().none { it.contains("Späte Antwort") })
+        assertEquals("late completion adds no STOP reply", 1, stopReplies(activity))
         assertFalse("no late draft window", descendants(root).any { it.tag == "jarvis-draft" && it.isShown })
         assertEquals(CockpitWorkJournal.State.ABORTED, state(scene))
         assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
@@ -347,6 +354,7 @@ class ContinuumDocumentFlowUiTest {
         assertFalse("a real failure is not reported as the old STOP: $last", last == "Entwurf mit STOP abgebrochen – nichts gespeichert.")
         assertEquals(at.heinz.deviceai.localmodel.LocalModelThermalGuard.ownerMessage(
             at.heinz.deviceai.localmodel.LocalModelThermalGuard.STOPPED_THERMAL), last)
+        assertEquals("new failure keeps one earlier STOP", 1, stopReplies(activity))
     }
 
     /**
@@ -361,10 +369,12 @@ class ContinuumDocumentFlowUiTest {
         // Let the model lane finish and queue its delivery on the (paused) main looper – without running it.
         Thread.sleep(400)
         call(activity, "cancelLocalRequest")
+        assertEquals("queued result cannot delay STOP", 1, stopReplies(activity))
         until(root, "the queued delivery has run") { !(field(activity, "busy") as Boolean) }
         advance(800L); measure(root); draw(root)
         fun chat() = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>().map { it.text.toString() }
         assertTrue("the finished draft does not come back after STOP: ${chat()}", chat().none { it.contains("Fertiger Entwurf") })
+        assertEquals("discarded delivery adds no STOP", 1, stopReplies(activity))
         assertFalse(descendants(root).any { it.tag == "jarvis-draft" && it.isShown })
         assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
         until(root, "STOP is recorded") { state(scene) == CockpitWorkJournal.State.ABORTED }
