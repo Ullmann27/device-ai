@@ -22,6 +22,11 @@ import kotlin.math.hypot
 import kotlin.math.roundToInt
 
 private const val EMBLEM_DP = 18f
+// Per-frame fills of the trail and emblem: allocated once, never while an animation runs (Android custom-view guidance).
+private val TRAIL_HEAD_FILL = Fill.Solid(Colors.glowCore)
+private val EMBLEM_DISC_FILL = Fill.Solid(Colors.background)
+private val EMBLEM_HALO_FILL = Fill.Solid(Colors.cyan)
+private val EDGE_FLASH_FILL = Fill.Solid(Colors.cyanSoft)
 
 /** In-cockpit content, shell frames only. */
 class JarvisWorkWindow(
@@ -351,13 +356,15 @@ class JarvisWorkWindow(
         val save = canvas.save()
         canvas.scale(density, density)
         painter.begin(canvas)
-        val points = if (phase == Phase.CLOSING) route.asReversed() else route
+        // Closing runs the same route backwards; indices instead of a reversed view keep the frame allocation-free.
+        val reversed = phase == Phase.CLOSING
+        val last = route.lastIndex
         var remaining = routeLength * trailProgress
         var headX = Float.NaN
         var headY = Float.NaN
-        for (i in 0 until points.lastIndex) {
-            val a = points[i]
-            val b = points[i + 1]
+        for (i in 0 until last) {
+            val a = route[if (reversed) last - i else i]
+            val b = route[if (reversed) last - i - 1 else i + 1]
             val length = hypot(b.x - a.x, b.y - a.y)
             if (length <= 0f) continue
             val progress = (remaining / length).coerceIn(0f, 1f)
@@ -368,7 +375,7 @@ class JarvisWorkWindow(
             headX = x; headY = y
             remaining -= length
             if (remaining <= 0f) {
-                painter.fillCircle(x, y, 1.5f, Fill.Solid(Colors.glowCore), trailAlpha)
+                painter.fillCircle(x, y, 1.5f, TRAIL_HEAD_FILL, trailAlpha)
                 break
             }
         }
@@ -385,8 +392,8 @@ class JarvisWorkWindow(
         if (!x.isFinite() || !y.isFinite()) return
         val a = (trailAlpha * (1f - .85f * openness)).coerceIn(0f, 1f)
         if (a <= .02f) return
-        painter.fillCircle(x, y, EMBLEM_DP * .95f, Fill.Solid(Colors.background), .72f * a)
-        painter.fillCircle(x, y, EMBLEM_DP * 1.35f, Fill.Solid(Colors.cyan), .07f * a)
+        painter.fillCircle(x, y, EMBLEM_DP * .95f, EMBLEM_DISC_FILL, .72f * a)
+        painter.fillCircle(x, y, EMBLEM_DP * 1.35f, EMBLEM_HALO_FILL, .07f * a)
         painter.strokeCircle(x, y, EMBLEM_DP * .95f, 1f, edge, .9f * a)
         val half = (EMBLEM_DP * .62f).roundToInt()
         icon.setBounds(x.roundToInt() - half, y.roundToInt() - half, x.roundToInt() + half, y.roundToInt() + half)
@@ -418,7 +425,7 @@ class JarvisWorkWindow(
             JarvisReferenceHud.surface(glass, JarvisShellLayout.Box(1f, 1f, right, bottom), 14f,
                 Colors.panelRim, Colors.violetSoft)
             if (edgeFlash > 0f) glass.strokeRoundRect(1f, 1f, right, bottom, 14f, 1f,
-                Fill.Solid(Colors.cyanSoft), .35f * edgeFlash)
+                EDGE_FLASH_FILL, .35f * edgeFlash)
             canvas.restoreToCount(save)
         }
     }
