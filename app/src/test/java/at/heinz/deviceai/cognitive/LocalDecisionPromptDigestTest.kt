@@ -37,6 +37,21 @@ class LocalDecisionPromptDigestTest {
         assertEquals("", result)
     }
 
+    @Test fun confidentialRevocationStillSuppressesEarlierMatchingDecision() {
+        val result = LocalDecisionPromptDigest.render("Was ist mit Code47?",
+            listOf(owner("Code47 wird früher veröffentlicht.", 5),
+                owner("Code47 Passwort geheim, Veröffentlichung zurückgezogen.", 6, revoked = 7)))
+        assertEquals("", result)
+    }
+
+    @Test fun explicitlyReconfirmedDecisionAfterRevocationIsEligible() {
+        val result = LocalDecisionPromptDigest.render("Was ist mit Code47?",
+            listOf(owner("Code47 bleibt ausgesetzt.", 5, revoked = 7),
+                owner("Code47 wird nach Prüfung freigegeben.", 9)))
+        assertTrue(result, result.contains("nach Prüfung freigegeben"))
+        assertFalse(result, result.contains("bleibt ausgesetzt"))
+    }
+
     @Test fun conflictingActiveOwnerDecisionsAreNotSilentlyRanked() {
         val result = LocalDecisionPromptDigest.render("Was ist mit Code47?",
             listOf(owner("Code47 wird am Montag veröffentlicht.", 5),
