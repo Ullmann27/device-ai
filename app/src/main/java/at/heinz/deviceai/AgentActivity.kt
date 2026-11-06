@@ -2156,7 +2156,8 @@ class AgentActivity : Activity() {
     private class DocumentDraftTurn @JvmOverloads constructor(val prompt: at.heinz.deviceai.cognitive.DocumentDraftPrompt,
                                     val name: String, val episodeId: String? = null,
                                     /** The document's own first page, carried into the result as its source card. */
-                                    val page: android.graphics.Bitmap? = null)
+                                    val page: android.graphics.Bitmap? = null,
+                                    val sessionId: String? = null)
     /** Journal episode of the document task currently on screen. */
     private var workEpisodeId: String? = null
     /** The draft line of the open document window: always the state really reached, never „läuft“ after a failure. */
@@ -2172,8 +2173,6 @@ class AgentActivity : Activity() {
         documentDraftAction?.apply { isEnabled = enabled; alpha = if (enabled) 1f else .45f }
     }
     private var documentDraftTurn: DocumentDraftTurn? = null
-    /** Request of a draft the owner stopped: its cancelled run is reported as STOP, not as a model error. */
-    private var stoppedDraftRequest: String? = null
     /** Save target frozen before picker. */
     private data class PendingDraftSave(val text: String, val episodeId: String?)
     private var pendingDraftSave: PendingDraftSave? = null
@@ -2206,9 +2205,7 @@ class AgentActivity : Activity() {
             else -> {
                 recordWork(workEpisodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING) }
                 showDocumentDraftStatus("Entwurf wird lokal erstellt …")
-                documentDraftTurn = DocumentDraftTurn(prompt, doc.name, workEpisodeId, doc.firstPage)
-                // A new run of the same request is not the stopped one (#565 review): its failure keeps its own cause.
-                stoppedDraftRequest = null
+                documentDraftTurn = DocumentDraftTurn(prompt, doc.name, workEpisodeId, doc.firstPage, sessionId)
                 runLocal(prompt.request, resolvedQuestion = prompt.question)
                 // While the model really works on the document, JARVIS reads it in its window (ends with the work).
                 if (documentDraftTurn != null) {
@@ -9630,6 +9627,11 @@ class AgentActivity : Activity() {
                 activeLocalRequest = false
                 planCard.visibility = View.GONE
                 if (!ownerDeliveryCurrent) {
+                    if (botTask == null && codingPlanning == null && sessionId == localSessionId &&
+                        !ephemeralScreenRun.get()) {
+                        lastLocalReply = null
+                        localConversationContext.recordUnanswered(localSessionId, text)
+                    }
                     setBusy(false)
                     refreshLocalModelUi()
                     return
@@ -9715,7 +9717,6 @@ class AgentActivity : Activity() {
                     // Owner flow: a document draft opens its result surface in the cockpit; the chat records it too.
                     val draftTurn = documentDraftTurn?.takeIf { it.prompt.request == text }
                     if (draftTurn != null) documentDraftTurn = null
-                    if (stoppedDraftRequest == text) stoppedDraftRequest = null
                     val draftWindow = if (draftTurn != null) onDocumentDraftReply(draftTurn,
                         if (successful) run.response else "") else null
                     addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession, keepCockpit = draftWindow != null)
@@ -9769,11 +9770,7 @@ class AgentActivity : Activity() {
                     // A document draft whose model run failed is FAILED – the window may not keep saying „wird erstellt“.
                     val failedDraft = documentDraftTurn?.takeIf { it.prompt.request == text }
                     if (failedDraft != null) onDocumentDraftFailed(failedDraft, error.message)
-                    // The owner's STOP of a cockpit draft ended this run: say so and keep the cockpit as the stage.
-                    val stoppedDraft = stoppedDraftRequest != null && stoppedDraftRequest == text
-                    if (stoppedDraft) stoppedDraftRequest = null
-                    addAssistantMessage(if (stoppedDraft) "Entwurf mit STOP abgebrochen – nichts gespeichert."
-                    else if (requiredContextOverflow)
+                    addAssistantMessage(if (requiredContextOverflow)
                         "Für diesen Auftrag passen wichtige Korrekturen oder Belege nicht vollständig in das lokale Kontextfenster. Bitte teile die Aufgabe in kleinere Schritte auf; ich verwende keine abgeschnittenen Informationen."
                     else if (error.message == "LOCAL_CONTINUATION_UNAVAILABLE")
                         "Der letzte vollständige Antwortabschnitt ist nicht verfügbar. Bitte gib den Schluss der Antwort erneut an; ich setze keinen unbekannten Text fort."
@@ -9787,8 +9784,7 @@ class AgentActivity : Activity() {
                         at.heinz.deviceai.localmodel.LocalModelThermalGuard.ownerMessage(error.message)
                     else groundedRecall?.failureAnswer() ?:
                         "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn,
-                        keepCockpit = (failedDraft != null && workWindowHost.isShowing) ||
-                            (stoppedDraft && activeWorkArea == ContinuumWorkArea.START))
+                        keepCockpit = failedDraft != null && workWindowHost.isShowing)
                     if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)
                     addToolActivity(if (requiredContextOverflow)
                         "KONTEXT · vollständig erforderliche Belege passen nicht; keine Modellaktion"
@@ -10348,20 +10344,23 @@ class AgentActivity : Activity() {
         pendingDocumentDraft = false
         pendingDocumentRequest = ""
         // STOP: a running document draft is recorded as aborted – never as done.
-        documentDraftTurn?.let { turn ->
-            stoppedDraftRequest = turn.prompt.request
+        val stoppedDraft = documentDraftTurn
+        documentDraftTurn = null
+        stoppedDraft?.let { turn ->
             recordWork(turn.episodeId) {
                 if (it.state == at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING)
                     it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.ABORTED) else it
             }
         }
-        documentDraftTurn = null
         workWindowHost.workEnded()
         workWindowHost.close(immediate = true)
         avatarDirector.clearAnimationIntents()
         voiceEngine?.stop()
         stopVoiceAnimation()
         clearTaskEffects()
+        if (stoppedDraft?.sessionId == sessionId) addAssistantMessage(
+            "Entwurf mit STOP abgebrochen – nichts gespeichert.", preserveLocalContext = true,
+            keepCockpit = activeWorkArea == ContinuumWorkArea.START)
         activeBotTask?.let { task ->
             task.cancel()
             botTaskTimeout?.let(mainHandler::removeCallbacks)
