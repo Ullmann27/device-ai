@@ -1,0 +1,61 @@
+{
+  "recorded_at": "2026-11-06T20:48:32.682593+00:00",
+  "branch": "codex/continuum47-context-identity-20261106",
+  "worktree_parent": "ef086debe3cdf473b47947f317a1be27d3b28b5e",
+  "base": "5572edfbb02570ae479a8f0f72179f5ca33027c5",
+  "sdk_baseline_source": "24547da95790ca43b0293ed06b4f2bd6e5a7814c",
+  "sdk_baseline_class_directory": "/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug",
+  "sdk_baseline_class_count": 2494,
+  "sdk_baseline_class_manifest_sha256": "5f7a87dedd14f51076f28736f589aae7beee5df2fd6996b6af34ec3ab89f1171",
+  "regression_baseline_sources_unchanged_from_branch_base": true,
+  "baseline_source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt": "db9864193361fb2ceeda7110df269e7bd9bdd9ef2970dea168e679f65c0e2606",
+    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt": "636bc35f13cb3d7a8ada0674545cc755fec9109c1c4296c04c28b05ea19c25a1",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "7b162441a996cf60cb7987aacc2bcc28c879f81af8d28585c861c0a925ab2bee",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalChatTranscriptStore.kt": "fdbd9a43704d73f2efd96216602198d88395c0270157337edf2a7c436a67333f",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt": "94926985b74cf5964eebb0665d3233d3f3700eed3170eb9fd44e4004fd5ea781"
+  },
+  "toolchain": {
+    "jdk": "Temurin17.0.20.1+1",
+    "kotlin": "2.4.0",
+    "junit": "4.13.2",
+    "hamcrest": "1.3",
+    "json": "20240303",
+    "android": "36"
+  },
+  "focused": {
+    "real_production_sources": 12,
+    "test_classes": 28,
+    "tests": 160,
+    "failures": 0,
+    "compiler_exit": 0,
+    "junit_exit": 0,
+    "production_stubs": false
+  },
+  "red": {
+    "transcript": {
+      "tests": 2,
+      "expected_failures": 2,
+      "source": "5572edfbb02570ae479a8f0f72179f5ca33027c5"
+    },
+    "continuation_intent": {
+      "tests": 2,
+      "expected_failures": 1
+    },
+    "bootstrap_long_dialogue": {
+      "tests": 3,
+      "expected_failures": 1
+    },
+    "identity_and_actual_answer_end": {
+      "tests": 4,
+      "expected_failures": 3,
+      "private_bot_control": "PASS"
+    }
+  },
+  "boundaries": [
+    "Activity integration owned by Bot1; combined Android compilation and complete Gradle suite remain Root work.",
+    "No actual model inference, Fold7 device test, signed APK, deployment or new release claim.",
+    "Task cap7900 characters and UTF8 bytes, total prompt15500 and runtime16000 are unchanged.",
+    "Continuation is bounded unverified dialogue, not evidence or tool authority."
+  ]
+}
