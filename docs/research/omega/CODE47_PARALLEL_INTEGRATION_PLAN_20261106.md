@@ -99,3 +99,24 @@ Record exact APK source, Build-Info SHA, step, expected vs actual, timestamp, vi
   clipped-advisory boundary; both repaired, replied to and resolved in Draft PR #576.
 - **M2/M3/M4/M5 remain open.** Do not confuse a checked-in JUnit test with a completed
   Android test run or this source with an installed Code47 APK. Code46 source/publisher untouched.
+
+## Progress receipt — M2 (2026-11-06)
+
+**Source implemented (not yet full Android accepted).** The existing
+`BoundedAgentOrchestrator` now provides an actual `ToolGate` execution-start
+callback, consumed by both owner storage-tool routes in `AgentActivity`.
+`CockpitWorkJournal.Kind.TOOL` persists only call ID, trusted tool name,
+status and optional fresh-result fingerprint on the same serial document
+journal lane. A bounded `ToolWorkJournalBridge` classifies real receipts:
+STOP/session change/replay/unknown remain UNKNOWN, rejected is not
+executed, and success is labeled a fresh tool report, not independently verified.
+Process restart recovers running tool entries as unknown. Routine checks have
+at most ten recent tool entries and cannot crowd out saved PDF work.
+
+A focused local Kotlin/JVM classification smoke using dependency substitutes
+passed **11/11**; the new source JUnit classes are checked in but **NOT_RUN**.
+Full Gradle compile, exact-SHA Android regressions, real LiteRT responses,
+real Fold7 storage read, system audio and Filament GPU remain unverified.
+Evidence: `docs/evidence/code47-integration-20261106/storage-tool-journal-m2-20261106.md`.
+M3 camera/window scene, M4 voice and actual model quality, and M5 bounded bot
+workspace stay open. Code46 original publisher was not modified.

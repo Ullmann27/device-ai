@@ -163,6 +163,16 @@ class ToolGate(
         userConfirmed: Boolean = false,
         destructiveConfirmed: Boolean = false,
         onExecutionStarted: (() -> Unit)? = null
+    ): ToolExecutionResult = execute(invocation, userConfirmed, destructiveConfirmed,
+        onExecutionStarted, onDispatchStarted = null)
+
+    /** Dispatch observer follows durable commitment. */
+    fun execute(
+        invocation: ToolInvocation,
+        userConfirmed: Boolean,
+        destructiveConfirmed: Boolean,
+        onExecutionStarted: (() -> Unit)?,
+        onDispatchStarted: (() -> Unit)?
     ): ToolExecutionResult {
         val request = invocation.request
         val spec = ToolRegistry.get(request.name)
@@ -347,6 +357,7 @@ class ToolGate(
                             "Durable dispatch commitment failed; backend was not invoked.")
                     }
                 }
+                runCatching { onDispatchStarted?.invoke() }
                 runner.execute(request)
             })
             activeFutures += future

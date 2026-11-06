@@ -1,6 +1,6 @@
 # Code46 / Code47 support handoff — 2026-11-06
 
-Status: CODE46_DELIVERED_AND_INDEPENDENTLY_VERIFIED / CODE47_ACTIVE.
+Status: CODE46_DELIVERED_AND_INDEPENDENTLY_VERIFIED / CODE47_REVIEWED_CORRECTIONS_AND_RUNTIME_WIRING_AUDIT.
 
 ## Ownership
 
@@ -64,3 +64,19 @@ Original package: `at.heinz.deviceai.continuumlocal`.
 Original certificate: `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`.
 
 No main merge, paid services, GitHub Actions, user-data deletion or signing-key retrieval. Original head/orb, offline policy and foreign worktrees remain protected. Physical Fold7 installation, actual LiteRT answers, audio and GPU acceptance remain NOT_RUN.
+
+## Consolidated candidate after independent reviews
+
+A new isolated branch `codex/continuum-code47-qa-candidate-20261106` combines the verified support history through ee9697caff3a4dd716f0e38e87d54132ae1710d6 with primary source9ee7535bb131504cc85419afd30f446089a40171. The nine primary paths and earlier support paths do not overlap. PR577's later concurrent automation commits remain preserved on their own branch; no rollback or overwrite occurred.
+
+Three corrections are included: the earlier decision-conflict fix (19 targeted tests), committed-dispatch journal-start fix (RED7/4 failures, GREEN43/43), and restored time-anchor contract (RED8/1 failure, GREEN8/8; five defective source controls each rejected). These are separate focused runs and must not be summed as unique full-suite coverage. All three received independent diff/evidence review. Standard ToolGate callbacks/STOP semantics and the trusted-clock requirement remain intact. Raw new evidence is in `m2-dispatch/` and `time-anchor/` under the support evidence directory.
+
+Full combined SDK/lint/APK verification remains NOT_RUN. The previous local source/toolchain workspaces disappeared during the ongoing session; verified source contents and raw evidence were recovered from retained tool results and are preserved in this commit. The published Code46 artifact and GitHub histories are unaffected. Re-materialize this exact candidate and a supported toolchain before claiming new execution.
+
+## Owner's new device feedback and acceptance scope
+
+After actually trying Code46, Heinz reports weak head movement, absent turn-away/workscreen animation, natural app-opening requests failing, inconsistent assistant self-description, context loss and interrupted/overlong answers. He specifically requires flexible phrasing with a configurable assistant name, app-independent intent handling, compound requests such as opening an app and preparing a message, and contextual follow-ups. These are acceptance scenarios; they are not authorization to send the example message to a real recipient.
+
+The same three helpers audited the actual frozen Code46/Code47 call chains. Primary Avatar PR565 and PR574 are ancestors of Code46; the visual code is present but key input/presentation links are gated or missing. Before any Code47 release, address the concrete verified causes: opening intents diverted into search-only flow; CHAT hiding work windows; missing sustained tool-work gaze; incomplete turn/presentation-generation binding; bounded context/persistence integrity; inconsistent identity routing; and incompatible capture/output limits. An embedded live screen of an arbitrary external app is not implemented by the current status window and must not be claimed.
+
+Audits are source-based. Actual Fold7/GPU/model measurements and the exact cause of each reported device event remain unverified. Existing permissions, cancellation, source completeness, negative-intent and tool-output boundaries must be preserved.

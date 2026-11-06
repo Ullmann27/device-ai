@@ -4,6 +4,7 @@ import org.json.JSONObject
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.security.MessageDigest
 
 /**
  * What the owner asked JARVIS to do in the cockpit and what really happened (owner brief 06.11.2026): the request in the
@@ -16,8 +17,9 @@ import java.nio.file.StandardCopyOption
  * rewritten, survives restarts.
  */
 class CockpitWorkJournal(directory: File, private val clock: () -> Long = System::currentTimeMillis) {
-    enum class Kind { DOCUMENT }
+    enum class Kind { DOCUMENT, TOOL }
     enum class State { READ, DRAFTING, DRAFTED, SAVED, ABORTED, NO_MODEL, FAILED, INTERRUPTED }
+    enum class ToolState { EXECUTING, SUCCEEDED, REJECTED, FAILED, CANCELLED, UNKNOWN }
 
     data class Episode(
         val id: String,
@@ -40,7 +42,12 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         /** The owner's last correction of this task in their own words („Nein, ich meinte …“). */
         val correction: String? = null,
         /** When [correction] was spoken (journal clock); null without a correction or for rows written before it existed. */
-        val correctedAt: Long? = null
+        val correctedAt: Long? = null,
+        /** Actual tool receipts only; no arguments, output, secrets or permissions. */
+        val toolCallId: String? = null,
+        val toolName: String? = null,
+        val toolState: ToolState? = null,
+        val toolOutputSha256: String? = null
     )
 
     private val folder = File(directory, "cockpit-work")
@@ -57,8 +64,58 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
             chars.coerceAtLeast(0), documentUri = documentUri?.take(MAX_URI))
     }
 
+    private fun toolEpisodeId(callId: String): String =
+        "t-" + MessageDigest.getInstance("SHA-256").digest(callId.toByteArray(Charsets.UTF_8))
+            .take(12).joinToString("") { "%02x".format(it) }
+
+    /** A real tool dispatch is recorded under its trusted call ID, never from model text. */
+    fun beginTool(callId: String, toolName: String): Episode {
+        require(CALL_ID.matches(callId) && TOOL_NAME.matches(toolName))
+        all().firstOrNull { it.kind == Kind.TOOL && it.toolCallId == callId }?.let {
+            require(it.toolName == toolName) { "Tool call ID belongs to a different tool." }
+            return it
+        }
+        val now = clock()
+        val episode = Episode(toolEpisodeId(callId), Kind.TOOL, "Werkzeugabfrage: $toolName", now, now,
+            State.READ, source = toolName, toolCallId = callId, toolName = toolName,
+            toolState = ToolState.EXECUTING)
+        append(episode)
+        return episode
+    }
+
+    /** A terminal tool outcome may only come from actual gate evidence. */
+    fun finishTool(callId: String, toolName: String, outcome: ToolState, outputSha256: String? = null): Episode? {
+        require(CALL_ID.matches(callId) && TOOL_NAME.matches(toolName))
+        require(outcome != ToolState.EXECUTING)
+        val current = all().firstOrNull { it.kind == Kind.TOOL && it.toolCallId == callId }
+        if (current == null) {
+            // A rejected proposal never dispatched. A missing start receipt cannot prove success.
+            val safeOutcome = if (outcome == ToolState.REJECTED) ToolState.REJECTED else ToolState.UNKNOWN
+            val now = clock()
+            return Episode(toolEpisodeId(callId), Kind.TOOL, "Werkzeugabfrage: $toolName", now, now,
+                State.READ, source = toolName, toolCallId = callId, toolName = toolName,
+                toolState = safeOutcome).also(::append)
+        }
+        require(current.toolName == toolName) { "Tool call ID belongs to a different tool." }
+        if (current.toolState != ToolState.EXECUTING) return current
+        return update(current.id) {
+            it.copy(toolState = outcome,
+                toolOutputSha256 = outputSha256?.takeIf { hash ->
+                    outcome == ToolState.SUCCEEDED && HASH.matches(hash)
+                })
+        }
+    }
+
     fun append(episode: Episode) = synchronized(LOCK) {
-        write((read().filterNot { it.id == episode.id } + sanitize(episode)).takeLast(MAX_EPISODES))
+        val rows = read().filterNot { it.id == episode.id } + sanitize(episode)
+        // Keep the original 40 document slots, plus ten small tool entries.
+        val documentIds = rows.filter { it.kind == Kind.DOCUMENT }.takeLast(MAX_EPISODES)
+            .map { it.id }.toSet()
+        val toolIds = rows.filter { it.kind == Kind.TOOL }.takeLast(MAX_TOOL_EPISODES)
+            .map { it.id }.toSet()
+        write(rows.filter { e ->
+            if (e.kind == Kind.DOCUMENT) e.id in documentIds else e.id in toolIds
+        })
     }
 
     fun begin(kind: Kind, request: String, state: State, source: String? = null, pages: Int = 0, chars: Int = 0,
@@ -90,11 +147,17 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
      */
     fun recoverInterrupted(processStartedAt: Long): Int = synchronized(LOCK) {
         val rows = read()
-        fun cutOff(e: Episode) = e.state == State.DRAFTING && e.updatedAt < processStartedAt
+        fun cutOff(e: Episode) = e.updatedAt < processStartedAt &&
+            (e.kind == Kind.DOCUMENT && e.state == State.DRAFTING ||
+                e.kind == Kind.TOOL && e.toolState == ToolState.EXECUTING)
         val count = rows.count(::cutOff)
         if (count == 0) return@synchronized 0
         val now = clock()
-        write(rows.map { if (cutOff(it)) it.copy(state = State.INTERRUPTED, updatedAt = now) else it })
+        write(rows.map { e ->
+            if (!cutOff(e)) e else if (e.kind == Kind.TOOL)
+                e.copy(toolState = ToolState.UNKNOWN, updatedAt = now)
+            else e.copy(state = State.INTERRUPTED, updatedAt = now)
+        })
         count
     }
 
@@ -106,14 +169,18 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         request = e.request.take(MAX_REQUEST), source = e.source?.take(MAX_NAME), draft = e.draft?.take(MAX_DRAFT),
         documentUri = e.documentUri?.take(MAX_URI), draftUri = e.draftUri?.take(MAX_URI),
         correction = e.correction?.trim()?.take(MAX_REQUEST), ownerEdits = e.ownerEdits.coerceIn(0, 999),
-        correctedAt = e.correctedAt?.takeIf { !e.correction.isNullOrBlank() })
+        correctedAt = e.correctedAt?.takeIf { !e.correction.isNullOrBlank() },
+        toolCallId = e.toolCallId?.takeIf(CALL_ID::matches),
+        toolName = e.toolName?.takeIf(TOOL_NAME::matches),
+        toolOutputSha256 = e.toolOutputSha256?.takeIf(HASH::matches)
+    )
 
     private fun read(): List<Episode> {
         if (!file.exists()) return emptyList()
         require(!Files.isSymbolicLink(file.toPath()) && file.length() <= MAX_BYTES) { "Ungültiges Arbeitsjournal" }
         return file.readLines(Charsets.UTF_8).filter(String::isNotBlank).mapNotNull { line ->
             runCatching { decode(JSONObject(line)) }.getOrNull()
-        }.takeLast(MAX_EPISODES)
+        }.takeLast(MAX_EPISODES + MAX_TOOL_EPISODES)
     }
 
     private fun write(rows: List<Episode>) {
@@ -143,6 +210,10 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         e.documentUri?.let { put("documentUri", it) }; e.draft?.let { put("draft", it) }
         e.draftUri?.let { put("draftUri", it) }; put("ownerEdits", e.ownerEdits); e.correction?.let { put("correction", it) }
         e.correctedAt?.let { put("correctedAt", it) }
+        e.toolCallId?.let { put("toolCallId", it) }
+        e.toolName?.let { put("toolName", it) }
+        e.toolState?.let { put("toolState", it.name) }
+        e.toolOutputSha256?.let { put("toolOutputSha256", it) }
     }
 
     private fun decode(o: JSONObject) = Episode(
@@ -151,22 +222,38 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         o.optInt("sourcePages"), o.optInt("sourceChars"), o.optInt("coveredChars"),
         o.optString("documentUri").ifEmpty { null }, o.optString("draft").ifEmpty { null },
         o.optString("draftUri").ifEmpty { null }, o.optInt("ownerEdits"), o.optString("correction").ifEmpty { null },
-        if (o.has("correctedAt")) o.getLong("correctedAt") else null)
+        if (o.has("correctedAt")) o.getLong("correctedAt") else null,
+        o.optString("toolCallId").ifEmpty { null },
+        o.optString("toolName").ifEmpty { null },
+        o.optString("toolState").takeIf(String::isNotEmpty)?.let(ToolState::valueOf),
+        o.optString("toolOutputSha256").ifEmpty { null })
 
     companion object {
         const val MAX_EPISODES = 40
+        const val MAX_TOOL_EPISODES = 10
         const val MAX_BYTES = 256_000L
         const val MAX_REQUEST = 240
         const val MAX_NAME = 120
         const val MAX_URI = 500
         const val MAX_DRAFT = 6_000
         private val LOCK = Any()
+        private val CALL_ID = Regex("[A-Za-z0-9._:-]{1,64}")
+        private val TOOL_NAME = Regex("[A-Za-z0-9._:-]{1,80}")
+        private val HASH = Regex("[a-f0-9]{64}")
 
         /** A run that was still DRAFTING when the app went away (e.g. process killed) did not finish. */
         const val STALE_DRAFTING_MS = 10 * 60_000L
 
         /** Honest German state of an episode at [now]; a cut-off run is „unterbrochen“, never „erledigt“. */
-        fun stateText(e: Episode, now: Long): String = when (e.state) {
+        fun stateText(e: Episode, now: Long): String = if (e.kind == Kind.TOOL) when (e.toolState) {
+            ToolState.EXECUTING -> if (now - e.updatedAt > STALE_DRAFTING_MS)
+                "Werkzeuglauf möglicherweise unterbrochen; Ausgang prüfen" else "Werkzeug läuft"
+            ToolState.SUCCEEDED -> "Werkzeug meldet frischen Erfolg; nicht unabhängig bestätigt"
+            ToolState.REJECTED -> "Werkzeug abgelehnt; nichts ausgeführt"
+            ToolState.FAILED -> "Werkzeug fehlgeschlagen"
+            ToolState.CANCELLED -> "Werkzeug abgebrochen; Wirkung nicht behauptet"
+            ToolState.UNKNOWN, null -> "Werkzeugausgang unklar; Wirkung prüfen"
+        } else when (e.state) {
             State.READ -> "Dokument gelesen, kein Entwurf beauftragt"
             State.DRAFTING -> if (now - e.updatedAt > STALE_DRAFTING_MS) "Entwurf unterbrochen, nicht fertig" else "Entwurf in Arbeit"
             State.DRAFTED -> if (e.ownerEdits > 0) "Entwurf erstellt und von dir bearbeitet, noch nicht gespeichert"
@@ -179,7 +266,13 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         }
 
         /** The open next step, or null when the task is complete. */
-        fun nextStep(e: Episode, now: Long): String? = when (e.state) {
+        fun nextStep(e: Episode, now: Long): String? = if (e.kind == Kind.TOOL) when (e.toolState) {
+            ToolState.EXECUTING -> if (now - e.updatedAt > STALE_DRAFTING_MS)
+                "Ausgang prüfen; nicht automatisch wiederholen" else null
+            ToolState.UNKNOWN, null -> "Wirkung prüfen; nicht automatisch wiederholen"
+            ToolState.FAILED -> "Fehler prüfen, bei Bedarf neu beauftragen"
+            ToolState.SUCCEEDED, ToolState.REJECTED, ToolState.CANCELLED -> null
+        } else when (e.state) {
             State.READ -> null
             State.DRAFTING -> if (now - e.updatedAt > STALE_DRAFTING_MS) "Entwurf neu starten" else null
             State.DRAFTED -> "Entwurf prüfen und speichern"
