@@ -417,6 +417,42 @@ class ContinuumVisualEvidenceUiTest {
                 val close = work?.let { w0 -> descendants(w0).firstOrNull { it.tag == "jarvis-work-window:close" && it.isShown } }
                 if (close != null && touch(root, close, true)) { mark("Systemstatus schließt"); record(1_300) }
             }
+            // V1 scene (SIMULATED_TOOL_INPUT): an installed app fixture in Robolectric's PackageManager; the scene is
+            // invoked with the ToolGate runner's argument shape, no real tool runs and no app opens on the host.
+            val pkg = "org.example.notes"
+            val pm = org.robolectric.Shadows.shadowOf(app.packageManager)
+            pm.installPackage(android.content.pm.PackageInfo().apply {
+                packageName = pkg
+                applicationInfo = android.content.pm.ApplicationInfo().apply { packageName = pkg; nonLocalizedLabel = "Notizen Beispiel" }
+            })
+            val main = android.content.ComponentName(pkg, "$pkg.Main")
+            pm.addActivityIfNotPresent(main)
+            pm.addIntentFilterForActivity(main, android.content.IntentFilter(android.content.Intent.ACTION_MAIN)
+                .apply { addCategory(android.content.Intent.CATEGORY_LAUNCHER) })
+            pm.setApplicationIcon(pkg, android.graphics.drawable.GradientDrawable().apply {
+                shape = android.graphics.drawable.GradientDrawable.OVAL
+                colors = intArrayOf(0xFF2AEAFC.toInt(), 0xFF3D7BFF.toInt(), 0xFFC46BFF.toInt())
+            })
+            fun scene(name: String, vararg args: Any) = AgentActivity::class.java.declaredMethods.single { it.name == name }
+                .apply { isAccessible = true }.invoke(a, *args)
+            mark("App-Auftrag: echtes Symbol fliegt ein, Deck räumt (SIMULATED_TOOL_INPUT)")
+            scene("presentToolScene", "clip-app", "launch_app", mapOf<String, Any?>("packageOrName" to pkg))
+            record(1_500)
+            director.onRuntime(AvatarRuntimeSignals(speaking = true)); head.setState(ContinuumHologramView.State.SPEAKING)
+            val say = "Ich öffne Notizen Beispiel für dich."
+            director.speechStarted("clip-2", say)
+            val sayWords = Regex("\\S+").findAll(say).toList()
+            mark("JARVIS spricht während der Arbeit")
+            record(1_700) { t ->
+                val word = (t / 330).toInt()
+                if (t % 330 < 66 && word < sayWords.size) director.wordRange("clip-2", sayWords[word].range.first, sayWords[word].range.last + 1)
+                director.audioLevel("clip-2", 0f, measuredPcmAvailable = false)
+                head.setAudioLevel(.45f + .4f * ((t / 66) % 3) / 2f)
+            }
+            director.speechEnded("clip-2", interrupted = false)
+            director.onRuntime(AvatarRuntimeSignals()); head.setState(ContinuumHologramView.State.READY)
+            scene("finishToolScene", "clip-app", true)
+            mark("Werkzeug hat geantwortet · Fenster faltet zurück, Deck kehrt zurück"); record(3_000)
             mark("Ende"); File(dir, "marks.txt").writeText(marks.toString())
             assertTrue("clip has frames", index > 100)
         } finally {
