@@ -15,7 +15,7 @@ internal object LocalConversationFollowUpPolicy {
     private val definition = Regex("""(?iu)^(?:was\s+(?:bedeutet|heißt)\s+(?!(?:das|dies|dieses|es|daraus|davon|dann)(?!\p{L}))|erkläre\s+(?:das\s+)?wort)\b""")
     private val namedDefinition = Regex("""(?iu)^was\s+(?:bedeutet|heißt)\s+das\s+(?:wort|akronym|symbol|kürzel|zeichen)\s+""" +
         """(?!(?:im|in|auf|für|hier|dort|jetzt|nun|eigentlich|genau)(?!\p{L}))[„"«']?[\p{L}\p{N}]+""")
-    private const val consequenceReferent = """(?:das(?=\s*(?:[.!?]|$)|\s+(?:für|jetzt|nun|dann|konkret|genau|eigentlich|also|denn|überhaupt|hier|praktisch)(?!\p{L})|\s*,\s*was(?!\p{L})|""" +
+    private const val consequenceReferent = """(?:das(?=\s*(?:[.!?]|$)|\s+hier(?:\s*(?:[.!?]|$)|\s*,\s*was(?!\p{L})|\s+(?:für|jetzt|nun|dann|konkret|genau|eigentlich|also|denn|überhaupt|praktisch)(?!\p{L})(?![^.!?\n]{0,120}:\s*\S))|\s+(?:für|jetzt|nun|dann|konkret|genau|eigentlich|also|denn|überhaupt|praktisch)(?!\p{L})|\s*,\s*was(?!\p{L})|""" +
         """\s+(?:wort|akronym|symbol|kürzel|zeichen)\s*[.!?]?\s*$)|dies|dieses|daraus|davon|dadurch|dann)(?!\p{L})"""
     // A consequence question that opens the message has nothing in it to draw the consequence from:
     // „Was bedeutet das für unseren Plan?“, „Was folgt daraus?“, „Was heißt das jetzt?“.

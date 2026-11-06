@@ -187,7 +187,9 @@ class BoundedAgentOrchestrator(
     private val turnTrace: CognitiveTurnTrace? = null,
     // OFF by default: original runtime and tool-policy behavior are unchanged.
     private val recallPriorExperiences: Boolean = false,
-    private val eventObserver: (AgentCognitiveEvent) -> Unit = {}
+    private val eventObserver: (AgentCognitiveEvent) -> Unit = {},
+    /** Actual dispatch callback only; never called for model proposals. */
+    private val onToolStarted: (String, String) -> Unit = { _, _ -> }
 ) {
     init {
         require(callIdPrefix.matches(Regex("[A-Za-z0-9._:-]{1,64}")))
@@ -387,7 +389,10 @@ class BoundedAgentOrchestrator(
                                 invocation,
                                 approval.userConfirmed,
                                 approval.destructiveConfirmed,
-                                onExecutionStarted = { emit(CognitiveWorkState.EXECUTING, invocation.id) }
+                                onExecutionStarted = {
+                                    emit(CognitiveWorkState.EXECUTING, invocation.id)
+                                    runCatching { onToolStarted(invocation.id, proposal.toolName) }
+                                }
                             )
                             lastRecord = execution.record
                             turnTrace?.reference(TraceStage.CALL_REF, lastRecord.callId)

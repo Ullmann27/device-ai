@@ -110,6 +110,7 @@ internal object WorkDecisionRecall {
      * otherwise the outcome the journal recorded. Reading alone decides nothing.
      */
     private fun episodeItems(e: CockpitWorkJournal.Episode, now: Long): List<Item> {
+        if (e.kind != CockpitWorkJournal.Kind.DOCUMENT) return emptyList()
         val name = e.source ?: "Auftrag"
         val next = CockpitWorkJournal.nextStep(e, now)
         e.correction?.takeIf { it.isNotBlank() }?.let {

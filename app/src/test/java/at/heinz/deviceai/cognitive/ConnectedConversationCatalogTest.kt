@@ -94,6 +94,38 @@ class ConnectedConversationCatalogTest {
         assertEquals("NOT_RUN (kein LiteRT-Modell auf dem Host; Antwortqualität ungeprüft)", LAYER_3_STATUS)
     }
 
+    @Test fun inlineHerePointsForwardRatherThanDemandingEarlierHistory() {
+        val inline = listOf(
+            "Was bedeutet das hier: „Carpe diem“?",
+            "Was bedeutet das hier: \"Carpe diem\"?",
+            "Was heißt das hier auf Englisch: Guten Morgen?",
+            "Was bedeutet das hier konkret: „Carpe diem“?"
+        )
+        inline.forEach { text ->
+            assertFalse("An inline quote is self-contained: $text",
+                LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(text))
+            assertFalse("No history is needed for: $text",
+                LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(text))
+            assertEquals(text, framed(emptyList(), text))
+        }
+        listOf(
+            "Was bedeutet das hier?",
+            "Was bedeutet das hier eigentlich?",
+            "Was bedeutet das hier für unseren Plan?",
+            "Was bedeutet das hier jetzt?",
+            "Was heißt das hier konkret?",
+            "Was folgt das hier dann?",
+            "Was bedeutet das hier also?",
+            "Was bedeutet das hier eigentlich für uns?",
+            "Was bedeutet das hier, was du gesagt hast?"
+        ).forEach { text ->
+            assertTrue("Unresolved demonstrative needs context: $text",
+                LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(text))
+            assertTrue("Context rendering needs previous owner turn: $text",
+                LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(text))
+        }
+    }
+
     private companion object {
         const val LAYER_3_STATUS = "NOT_RUN (kein LiteRT-Modell auf dem Host; Antwortqualität ungeprüft)"
     }
