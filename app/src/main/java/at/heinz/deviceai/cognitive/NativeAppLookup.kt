@@ -22,7 +22,9 @@ internal object NativeAppLookup {
         .lowercase(Locale.ROOT).trim().replace(Regex("\\s+"), " ")
 
     fun search(query: String, available: List<NativeAppCandidate>, limit: Int = 12): NativeAppMatches {
-        require(query.length in 1..80 && query.isNotBlank() && query.none { it.isISOControl() }) { "INVALID_APP_QUERY" }
+        require(query.length in 1..80 && query.isNotBlank() && query.codePoints().noneMatch {
+            Character.isISOControl(it) || Character.getType(it) == Character.FORMAT.toInt()
+        }) { "INVALID_APP_QUERY" }
         require(limit in 1..20) { "INVALID_RESULT_LIMIT" }
         val normalizedQuery = normalized(query)
         // This is a read-only lookup, never an instruction interpreter.
