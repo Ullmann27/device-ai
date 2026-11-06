@@ -112,7 +112,7 @@ object ToolRegistry {
         val spec = byName[call.name] ?: return "Unbekanntes Tool: ${call.name}"
         if (call.name == "find_app") {
             val query = call.arguments["query"]
-            if (query !is String || query.length !in 2..80 || query.any { it.isISOControl() })
+            if (query !is String || query.length !in 1..80 || query.isBlank() || query.any { it.isISOControl() })
                 return "Die Appsuche benötigt einen kurzen, lesbaren Text ohne Steuerzeichen."
         }
         if(call.name in setOf("launch_app","read_app_screen") && !isExplicitAppTarget(call.arguments["packageOrName"]))

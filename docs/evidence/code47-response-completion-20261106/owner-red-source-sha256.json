@@ -1,0 +1,7 @@
+{
+  "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt": "8c978de0a8d4d523493f9e750df4ca81d22ab7d93879d9d4e4bad4f4f99cf621",
+  "app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationDeadlinePolicy.kt": "0d450f05d7dcd3d8531365b02af3d2b9bc103e481dfc1e7c238bd5903cec1aec",
+  "app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationCapture.kt": "ab252d75f20e8ede011a759347f730503558052a030756e247d3f9d1a8485a68",
+  "app/src/test/java/at/heinz/deviceai/cognitive/AgentModelOutputBoundaryTest.kt": "33c0e72a1bb6178e72b0137091bca073fae7c7c8c26a4f3f8885f658dc753271",
+  "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDialogueOutputTest.kt": "ecaf7070c799b83b3f4be97f8aa008803d50ae4369a04a69636549c148dd6aa6"
+}

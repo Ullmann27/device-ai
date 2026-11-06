@@ -40,7 +40,7 @@ class SessionEvidenceIntegrityTest {
     @Test fun oversizedOwnerTurnInvalidatesProofInsteadOfKeepingATruncatedOrOldClaim() {
         val context = LocalConversationContext()
         context.record("s", "Emma ist in Berg.", "Modelltext.")
-        context.record("s", "Beilage. ".repeat(130) + "Emma ist nicht in Berg.", "Modelltext.")
+        context.record("s", "Beilage. ".repeat(1_000) + "Emma ist nicht in Berg.", "Modelltext.")
         assertTrue(context.priorUserTurns("s").isEmpty())
     }
 

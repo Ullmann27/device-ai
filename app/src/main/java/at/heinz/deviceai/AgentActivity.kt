@@ -28,6 +28,10 @@ import android.app.Activity
 import android.app.AlertDialog
 import at.heinz.deviceai.cognitive.ContinuumReadinessGuide
 import at.heinz.deviceai.cognitive.CameraTrackingState
+import at.heinz.deviceai.cognitive.OwnerAppLookupIntent
+import at.heinz.deviceai.cognitive.OwnerAppActionFlow
+import at.heinz.deviceai.cognitive.NativeAppCandidate
+import at.heinz.deviceai.ui.ToolWorkSceneLease
 import android.content.Intent
 import android.content.ActivityNotFoundException
 import android.graphics.Color
@@ -60,6 +64,7 @@ import at.heinz.deviceai.cognitive.AgentEvaluator
 import at.heinz.deviceai.cognitive.LocalDialogueQualityGate
 import at.heinz.deviceai.cognitive.AgentModel
 import at.heinz.deviceai.cognitive.AgentModelOutput
+import at.heinz.deviceai.cognitive.LocalGenerationCompletion
 import at.heinz.deviceai.cognitive.AgentToolApproval
 import at.heinz.deviceai.cognitive.AgentToolApprovalProvider
 import at.heinz.deviceai.cognitive.AiContextCompiler
@@ -128,7 +133,9 @@ class AgentActivity : Activity() {
         val response: String,
         val proposal: ToolProposal?,
         val rejectedToolResponses: List<LocalToolResponse>,
-        val failure: String?
+        val failure: String?,
+        val completion: LocalGenerationCompletion = if (failure == null)
+            LocalGenerationCompletion.COMPLETE else LocalGenerationCompletion.FAILED
     )
 
     companion object {
@@ -289,8 +296,13 @@ class AgentActivity : Activity() {
     private var avatarAwaitingApproval = false
     private var avatarBlocked = false
     private var onDeviceSpeech: AndroidOnDeviceSpeechInput? = null
-    private var appLookupGeneration: Long = 0L
+    @Volatile private var appLookupGeneration: Long = 0L
     private var appLookupActive: Boolean = false
+    @Volatile private var activeOwnerAppFlow: OwnerAppActionFlow? = null
+    @Volatile private var activeOwnerAppGate: ToolGate? = null
+    private var appLookupContext: Pair<String, List<NativeAppCandidate>>? = null
+    private data class AppActionReply(val session: String, val generation: Long, val request: String, val message: String)
+    private var pendingAppActionReply: AppActionReply? = null
     private var pendingLocalSpeechRequest: Int? = null
     private var pendingLocalSpeechSession: String? = null
     private var pendingLocalSpeechGeneration: Long = -1L
@@ -710,6 +722,10 @@ class AgentActivity : Activity() {
                 .edit().putBoolean("introduced", true).apply()
         }
         maybePlayReadinessWelcome()
+        pendingAppActionReply?.let { reply ->
+            pendingAppActionReply = null
+            deliverAppActionReply(reply)
+        }
         mainHandler.post { maybeAskForConversationCamera() }
     }
 
@@ -722,8 +738,14 @@ class AgentActivity : Activity() {
         codingPlanningEpoch++
         botLookupRevision++
         // A delayed read-only lookup must not render into a background/other app state.
-        appLookupGeneration++
-        if (appLookupActive) {
+        if (activeOwnerAppFlow?.launching != true) {
+            appLookupGeneration++
+            activeOwnerAppGate?.cancel()
+            activeOwnerAppGate = null
+            activeOwnerAppFlow?.cancel()
+            activeOwnerAppFlow = null
+        }
+        if (appLookupActive && activeOwnerAppFlow == null) {
             appLookupActive = false
             activeLocalRequest = false
             setBusy(false)
@@ -2865,7 +2887,7 @@ class AgentActivity : Activity() {
             continuousConversation.active, keepCockpitDuringHandsFree, activeWorkArea == ContinuumWorkArea.START)
 
     private fun refreshConversationLayout() {
-        val chat = at.heinz.deviceai.cognitive.CockpitConversationPresentation.showChat(
+        val chat = !currentToolScene() && at.heinz.deviceai.cognitive.CockpitConversationPresentation.showChat(
             explicitChatSelected = activeWorkArea == ContinuumWorkArea.CHAT,
             conversationActive = conversationActive,
             keyboardCompact = keyboardCompact,
@@ -2927,6 +2949,9 @@ class AgentActivity : Activity() {
 
     private fun focusChatComposer() {
         if (!::input.isInitialized) return
+        toolSceneLease.active?.let(toolSceneLease::closed)
+        toolSceneDialog?.dismiss()
+        workWindowHost.close(immediate = true)
         // An explicit chat tap wins over the home-only voice presentation.
         keepCockpitDuringHandsFree = false
         activeWorkArea = ContinuumWorkArea.CHAT
@@ -2984,28 +3009,102 @@ class AgentActivity : Activity() {
      * the tool answered. Never a success claim of its own: the verified result stays in the dialog and receipts.
      */
     private var toolScene: Pair<String, TextView>? = null
+    private var toolSceneProgress: Pair<String, ProgressBar>? = null
+    private val toolSceneLease = ToolWorkSceneLease()
+    private var toolSceneReturnArea: ContinuumWorkArea? = null
+    private var toolSceneDialog: AlertDialog? = null
+
+    private fun currentToolScene(): Boolean = toolSceneLease.active?.let(::currentToolScene) == true
+
+    private fun currentToolScene(key: ToolWorkSceneLease.Key): Boolean =
+        !isFinishing && !isDestroyed && toolSceneLease.current(key, sessionId,
+            currentTaskEffectContext?.scope, workPresentationGeneration, foregroundLearningActive)
 
     private fun presentToolScene(callId: String, toolName: String, arguments: Map<String, Any?> = emptyMap()) {
-        val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown } ?: return
-        if (workWindowHost.isShowing || centerDialog?.isShowing == true) return
+        val key = toolSceneLease.active?.takeIf { it.callId == callId }
+        if (key != null && !currentToolScene(key)) return
+        if (centerDialog?.isShowing == true) {
+            recordCockpitDialog(false, "${ToolRegistry.label(toolName)} läuft · Ergebnis folgt.")
+            key?.let(toolSceneLease::closed)
+            return
+        }
+        if (toolSceneReturnArea == null) toolSceneReturnArea = activeWorkArea
+        toolScene = null
+        toolSceneProgress?.second?.isIndeterminate = false
+        toolSceneProgress = null
+        toolSceneDialog?.dismiss()
+        toolSceneDialog = null
+        workWindowHost.close(immediate = true)
+        showHomeDashboard()
+        val home = homeView ?: run { key?.let(toolSceneLease::closed); return }
         val label = ToolRegistry.label(toolName)
-        // Owner V1: the exact installed app the call names (same rule as the executor), never a guessed name or icon.
         val app = ToolAppIdentity.resolve(packageManager, toolName, arguments)
-        val status = textView(if (app != null && toolName == "launch_app") "Öffnet ${app.label} … das Ergebnis kommt vom Werkzeug."
-            else "Läuft … das Ergebnis kommt vom Werkzeug.", 13f, MUTED)
+        val status = textView(if (app != null && toolName == "launch_app") "Öffnet ${app.label} · Prüfung läuft."
+            else "$label läuft · Ergebnis wird abgewartet.", 13f, MUTED).apply { tag = "jarvis-tool-status:$callId" }
+        val progress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+            isIndeterminate = true
+            tag = "jarvis-tool-progress:$callId"
+            contentDescription = "$label wird ausgeführt"
+        }
+        toolSceneProgress = callId to progress
         val body = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             if (app != null) addView(appIdentityRow(app))
             addView(textView(label, 15f, TEXT, bold = true))
-            addView(textView("Werkzeug $toolName · gestartet über die Werkzeugfreigabe", 11f, MUTED))
+            addView(textView("App-Status · lokale Werkzeugrückmeldung", 11f, MUTED))
             addView(status)
+            addView(progress, matchWidth(top = 8))
+            addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this@AgentActivity, "STOP") {
+                cancelLocalRequest()
+            })
         }
         val title = if (app != null) "APP · ${app.label}" else "WERKZEUG · $label"
-        workWindowHost.show(home, body, title, at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName),
-            emblem = app?.icon?.let(::drawableCopy), crystal = app != null) {
-            if (toolScene?.first == callId) toolScene = null
-        } ?: return
         toolScene = callId to status
+        fun closed() {
+            if (toolScene?.first != callId) return
+            toolScene = null
+            if (toolSceneProgress?.first == callId) {
+                toolSceneProgress?.second?.isIndeterminate = false
+                toolSceneProgress = null
+            }
+            key?.let(toolSceneLease::closed)
+            workWindowHost.workEnded()
+            toolSceneDialog = null
+            val returnArea = toolSceneReturnArea
+            toolSceneReturnArea = null
+            if (returnArea == ContinuumWorkArea.CHAT && activeWorkArea == ContinuumWorkArea.START &&
+                !isFinishing && !isDestroyed) {
+                activeWorkArea = ContinuumWorkArea.CHAT
+                conversationActive = true
+                refreshWorkAreaSelection()
+                refreshConversationLayout()
+            }
+        }
+        fun show(retry: Boolean) {
+            if (toolScene?.first != callId || (key != null && !currentToolScene(key))) return
+            if (key != null && !toolSceneLease.running && avatarAwaitingApproval) {
+                closed()
+                return
+            }
+            val window = workWindowHost.show(home, body, title,
+                at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName),
+                emblem = app?.icon?.let(::drawableCopy), crystal = app != null, onClosed = ::closed)
+            if (window != null) {
+                if (key == null || toolSceneLease.running) workWindowHost.workStarted(emphasize = true)
+            } else if (!retry) {
+                home.post { show(true) }
+            } else {
+                (body.parent as? android.view.ViewGroup)?.removeView(body)
+                body.addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this, "SCHLIESSEN") {
+                    toolSceneDialog?.dismiss()
+                })
+                toolSceneDialog = at.heinz.deviceai.ui.ContinuumBentoCockpit.show(this, body).also {
+                    it.setOnDismissListener { closed() }
+                }
+                recordCockpitDialog(false, "$label läuft · Werkzeugstatus im Arbeitsfenster.")
+            }
+        }
+        show(false)
     }
 
     /** Real icon, label and package of the app the tool names; the icon is its own copy (bounds are per instance). */
@@ -3033,11 +3132,33 @@ class AgentActivity : Activity() {
     private fun finishToolScene(callId: String, answered: Boolean) {
         val (id, status) = toolScene ?: return
         if (id != callId) return
-        status.text = if (answered) "Das Werkzeug hat geantwortet · Ergebnis und Prüfung im Dialog."
-            else "Werkzeug nicht abgeschlossen · Rückmeldung im Dialog."
+        toolSceneProgress?.takeIf { it.first == callId }?.second?.let {
+            it.isIndeterminate = false
+            it.visibility = View.GONE
+        }
+        toolSceneLease.active?.let { if (!toolSceneLease.ended(it)) return }
+        workWindowHost.workEnded()
+        status.text = if (answered) "Werkzeugantwort eingetroffen · Abschlussprüfung folgt."
+            else "Werkzeug nicht abgeschlossen · Rückmeldung wird geprüft."
         status.setTextColor(if (answered) CYAN else AMBER)
-        // A short hold so the real end state is readable, then the window folds back and the gaze returns.
-        homeView?.postDelayed({ if (toolScene?.first == callId) workWindowHost.close() }, 1_600L)
+        homeView?.postDelayed({
+            if (toolScene?.first == callId) {
+                if (toolSceneDialog != null) toolSceneDialog?.dismiss() else workWindowHost.close()
+            }
+        }, 1_600L)
+    }
+
+    private fun settleToolScene(result: ToolExecutionResult) {
+        val (id, status) = toolScene ?: return
+        if (id != result.record.callId || !currentToolScene()) return
+        val record = result.record
+        status.text = when {
+            record.outcomeUncertain -> "Ausgang unklar · bereits gestartete Wirkungen prüfen."
+            result.replayed -> "Bereits vorhandene Rückmeldung · keine neue Ausführung."
+            record.status == ToolExecutionStatus.SUCCEEDED -> "Werkzeug hat geantwortet · Rückmeldung im Dialog."
+            else -> "Werkzeugstatus: ${record.status} · kein bestätigter Erfolg."
+        }
+        status.setTextColor(if (record.status == ToolExecutionStatus.SUCCEEDED && !record.outcomeUncertain) CYAN else AMBER)
     }
     private var quickActionsDialog: AlertDialog? = null
 
@@ -4755,36 +4876,77 @@ class AgentActivity : Activity() {
         return shell
     }
 
-    private fun runExplicitAppLookup(query: String) {
+    private fun runExplicitAppLookup(request: String, intake: OwnerAppLookupIntent.Intake.Lookup) {
         val ownerSession = sessionId
+        val contextual = appLookupContext?.takeIf { it.first == ownerSession }?.second.orEmpty()
+        val query = OwnerAppLookupIntent.contextualTarget(intake.query, contextual)
+        if (query == null) {
+            clarifyAppRequest(request, "Welche App meinst du genau? Bitte nenne den Namen oder wähle einen angezeigten Treffer.")
+            return
+        }
         val generation = ++appLookupGeneration
+        val flow = OwnerAppActionFlow(intake.opening)
+        activeOwnerAppFlow = flow
         appLookupActive = true
         activeLocalRequest = true
         setBusy(true)
-        val invocation = ToolCallRequest("explicit-lookup-" + UUID.randomUUID(), "find_app", mapOf("query" to query))
-        executeTool(invocation, false, false) { raw ->
-            if (isFinishing || isDestroyed || sessionId != ownerSession || appLookupGeneration != generation) return@executeTool
-            appLookupActive = false
-            activeLocalRequest = false
-            setBusy(false)
-            val response = runCatching {
-                val obj = org.json.JSONObject(raw)
-                check(obj.optString("schema") == "CONTINUUM_APP_DISCOVERY_V1") { "UNVERIFIED_APP_LOOKUP" }
-                val count = obj.optInt("totalMatches", -1)
-                check(count >= 0) { "INVALID_APP_COUNT" }
-                val items = obj.getJSONArray("candidates")
-                check(items.length() <= 12) { "UNBOUNDED_APP_RESULT" }
-                if (count == 0) "Ich habe keine passende startbare App gefunden. Das beweist nicht, dass sie nicht installiert ist."
-                else {
-                    val suggestions = (0 until items.length()).map { i ->
-                        val candidate = items.getJSONObject(i)
-                        candidate.getString("label").take(100) + " (" + candidate.getString("packageName").take(200) + ")"
-                    }.joinToString("; ")
-                    "Gefundene Apps: $suggestions. Zum tatsächlichen Öffnen brauche ich deinen separaten bestätigten Auftrag."
+        fun current() = !isFinishing && !isDestroyed && sessionId == ownerSession &&
+            appLookupGeneration == generation && activeOwnerAppFlow === flow
+        fun advance(step: OwnerAppActionFlow.Step?) {
+            if (!current() || step == null) return
+            when (step) {
+                is OwnerAppActionFlow.Step.Run -> {
+                    val gate = createToolGate(ownerTurn = request)
+                    activeOwnerAppGate = gate
+                    executeToolResult(step.call, step.confirmed, false, gate) { result ->
+                        if (!current()) return@executeToolResult
+                        activeOwnerAppGate = null
+                        advance(flow.returned(result))
+                    }
                 }
-            }.getOrElse { "Appsuche konnte nicht bestätigt werden. Es wurde keine App gestartet." }
-            addAssistantMessage(response)
+                is OwnerAppActionFlow.Step.Choose -> {
+                    appLookupContext = ownerSession to flow.candidates
+                    AlertDialog.Builder(this).setTitle("Welche App möchtest du öffnen?")
+                        .setItems(step.candidates.map { "${it.label} (${it.packageName})" }.toTypedArray()) { _, index ->
+                            if (current() && foregroundLearningActive) advance(flow.choose(step.candidates[index]))
+                        }
+                        .setNegativeButton("Abbrechen") { _, _ -> advance(flow.choose(null)) }
+                        .setOnCancelListener { advance(flow.choose(null)) }.show()
+                }
+                is OwnerAppActionFlow.Step.Confirm -> {
+                    appLookupContext = ownerSession to flow.candidates
+                    showToolConfirmation(step.call, false) { approved ->
+                        if (current() && foregroundLearningActive) advance(flow.confirm(approved))
+                    }
+                }
+                is OwnerAppActionFlow.Step.Done -> {
+                    if (flow.candidates.isNotEmpty()) appLookupContext = ownerSession to flow.candidates
+                    activeOwnerAppFlow = null
+                    activeOwnerAppGate = null
+                    appLookupActive = false
+                    activeLocalRequest = false
+                    setBusy(false)
+                    val reply = AppActionReply(ownerSession, generation, request, step.message)
+                    if (foregroundLearningActive) deliverAppActionReply(reply)
+                    else pendingAppActionReply = reply
+                }
+            }
         }
+        advance(flow.start(query))
+    }
+
+    private fun deliverAppActionReply(reply: AppActionReply) {
+        if (isFinishing || isDestroyed || !foregroundLearningActive || sessionId != reply.session ||
+            appLookupGeneration != reply.generation) return
+        localConversationContext.recordNonModel(reply.session, reply.request, "App-Auftrag · Werkzeugrückmeldung im Dialog")
+        addAssistantMessage(reply.message, preserveLocalContext = true,
+            keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+    }
+
+    private fun clarifyAppRequest(request: String, question: String) {
+        localConversationContext.recordUnanswered(sessionId, request)
+        addAssistantMessage(question, preserveLocalContext = true,
+            keepCockpit = activeWorkArea == ContinuumWorkArea.START)
     }
 
     /** Public status only: no collector invocation, disk scan, model call, bot seed, grant,
@@ -4873,16 +5035,6 @@ class AgentActivity : Activity() {
             return
         }
         if (!botRoutingChecked && routeBotInput(input.text.toString())) return
-        // A narrow deterministic, owner-initiated app search runs through the existing ToolGate.
-        // It ONLY returns bounded candidates; opening any app requires a separate consented tool call.
-        at.heinz.deviceai.cognitive.OwnerAppLookupIntent.parse(request)?.let { lookup ->
-            webToolGate.cancel()
-            approvedModelWebSession.getAndSet(null)?.cancel()
-            input.text.clear()
-            addUserMessage(request)
-            runExplicitAppLookup(lookup)
-            return
-        }
         // „Was haben wir gestern entschieden?“ / „die Entscheidung davor“ / „was davon ist umgesetzt“ / „beim letzten offenen
         // Punkt weitermachen“ – answered from the work journal and the owner's confirmed statements, never by the model.
         at.heinz.deviceai.cognitive.WorkDecisionRecall.parse(request)?.let { ask ->
@@ -5096,6 +5248,40 @@ class AgentActivity : Activity() {
                 return
             }
             null -> Unit
+        }
+        // Recognition grants no execution.
+        OwnerAppLookupIntent.inspect(request, at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+            continuumState?.archive?.identityState?.chosenName))?.let { intake ->
+            webToolGate.cancel()
+            approvedModelWebSession.getAndSet(null)?.cancel()
+            input.text.clear()
+            addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            when (intake) {
+                is OwnerAppLookupIntent.Intake.Lookup -> {
+                    val localArea: (() -> Unit)? = if (intake.opening) when (intake.query.lowercase(Locale.GERMAN)) {
+                        "lernzentrum" -> ::showLearningCenter
+                        "entwicklungszentrum" -> ::showDevelopmentCenter
+                        "gedächtnis", "gedächtniszentrum" -> ::showMemoryCenter
+                        "systemstatus" -> ::showSystemCenter
+                        "modelle", "modellverwaltung" -> ::showModelCenter
+                        else -> null
+                    } else null
+                    if (localArea != null) localArea() else runExplicitAppLookup(request, intake)
+                }
+                is OwnerAppLookupIntent.Intake.Clarify -> clarifyAppRequest(request,
+                    "Was brauchst du aus ${intake.subject}: die App öffnen, etwas nachsehen oder einen Inhalt vorbereiten?")
+                is OwnerAppLookupIntent.Intake.Planning -> {
+                    localConversationContext.recordUnanswered(sessionId, intake.original)
+                    if (intake.clarification != null) clarifyAppRequest(request, intake.clarification)
+                    else if (::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY)
+                        runLocal(intake.original)
+                    else clarifyAppRequest(request, "Dein vollständiger Auftrag bleibt erhalten. " +
+                        "Welche App und welchen nächsten Schritt meinst du genau? " +
+                        "Für eine Nachricht brauche ich den konkreten Empfänger und den Inhalt; " +
+                        "Senden ist ein eigener freizugebender Schritt.")
+                }
+            }
+            return
         }
         if (request.equals("Entwicklungsaufgaben", true) || request.equals("Backlog", true)) {
             input.text.clear()
@@ -5311,7 +5497,9 @@ class AgentActivity : Activity() {
             runReviewedBootstrapDecision(request)
             return
         }
-        presentBootstrapDecision(request, BootstrapBrain.decide(request, emptyList(), bootstrapMemory.learnedCommands()))
+        presentBootstrapDecision(request, BootstrapBrain.decide(request, emptyList(), bootstrapMemory.learnedCommands(),
+            identityDescription = at.heinz.deviceai.cognitive.LocalAssistantIdentity.selfDescription(
+                continuumState?.archive?.identityState?.chosenName, localRuntime.loadedModel, localRuntime.state)))
     }
 
     private fun presentBootstrapDecision(request: String, decision: BootstrapDecision, requestRecorded: Boolean = false) {
@@ -5593,7 +5781,7 @@ class AgentActivity : Activity() {
                                 // throw from the UI callback or synthesize on incomplete facts.
                                 turnTrace.event(TraceStage.GATED_FALLBACK)
                                 publishCognitiveTrace(turnTrace,TraceOutcome.MEMORY_EXACT)
-                                addAssistantMessage(answer)
+                                addNonModelReply(request, answer, at.heinz.deviceai.cognitive.NonModelReplyKind.MEMORY_RECALL)
                                 addToolActivity(evidence.take(2_000)+
                                     " · Zusatzanalyse nicht gestartet: Abruf überschreitet sichere Modellgrenzen.")
                             } else {
@@ -5609,8 +5797,9 @@ class AgentActivity : Activity() {
                     }
                     turnTrace.event(if(grounded)TraceStage.MEMORY_EXACT else TraceStage.GATED_FALLBACK)
                     publishCognitiveTrace(turnTrace,if(grounded)TraceOutcome.MEMORY_EXACT else TraceOutcome.BLOCKED)
-                    addAssistantMessage(ContinuumUiCopy.memoryFallbackAnswer(answer,grounded,
-                        localRuntime.state==LocalModelState.READY && localRuntime.loadedModel!=null))
+                    addNonModelReply(request, ContinuumUiCopy.memoryFallbackAnswer(answer,grounded,
+                        localRuntime.state==LocalModelState.READY && localRuntime.loadedModel!=null),
+                        at.heinz.deviceai.cognitive.NonModelReplyKind.MEMORY_RECALL)
                     addToolActivity(evidence)
                 }.onFailure {
                     publishCognitiveTrace(turnTrace,TraceOutcome.FAILED)
@@ -8688,17 +8877,30 @@ class AgentActivity : Activity() {
         destructiveConfirmed: Boolean,
         done: (String) -> Unit
     ) {
+        executeToolResult(call, userConfirmed, destructiveConfirmed) { execution ->
+            done(execution.output ?: "TOOL_${execution.record.status}: ${execution.record.decisionReason}")
+        }
+    }
+
+    private fun executeToolResult(
+        call: ToolCallRequest,
+        userConfirmed: Boolean,
+        destructiveConfirmed: Boolean,
+        gate: ToolGate = createToolGate(),
+        done: (ToolExecutionResult) -> Unit
+    ) {
         val label = ToolRegistry.label(call.name)
         addToolActivity("⏳ $label")
         Thread({
-            val execution = createToolGate().execute(
+            val execution = gate.execute(
                 ToolInvocation(call.callId, call), userConfirmed, destructiveConfirmed
             )
             val result = execution.output ?: "TOOL_${execution.record.status}: ${execution.record.decisionReason}"
             runOnUiThread {
                 val preview = result.replace("\n", " ").take(120)
                 addToolActivity("${execution.record.status} · $label · $preview")
-                done(result)
+                settleToolScene(execution)
+                done(execution)
             }
         }, "device-ai-cloud-tool").apply { isDaemon = true; start() }
     }
@@ -8708,24 +8910,33 @@ class AgentActivity : Activity() {
                                botTask: ChiefBotTaskTicket? = null): ToolGate {
         // Capture at gate creation: a late old runner cannot borrow a subsequent turn's scope.
         val effectContext = currentTaskEffectContext
+        val presentationGeneration = workPresentationGeneration
+        val cockpitTurn = activeChiefTurn?.takeIf { it.phase != at.heinz.deviceai.chief.TurnPhase.ENDED }?.turnId
         return ToolGate(
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
             var effectStarted = false
             var toolFailed = false
-            val cockpitTurn = activeChiefTurn?.takeIf { it.phase != at.heinz.deviceai.chief.TurnPhase.ENDED }?.turnId
+            val sceneKey = effectContext?.let {
+                ToolWorkSceneLease.Key(it.session, it.scope, presentationGeneration, request.callId)
+            }
             fun actualStart() {
                 effectStarted = true
                 cockpitTurn?.let { cockpitTriggers.toolStarted(it, request.callId, request.name) }
-                runOnUiThread { presentToolScene(request.callId, request.name, request.arguments) }
+                val startedAt = android.os.SystemClock.uptimeMillis()
+                runOnUiThread {
+                    if (sceneKey != null && !isFinishing && !isDestroyed && toolSceneLease.offer(sceneKey,
+                            sessionId, currentTaskEffectContext?.scope, workPresentationGeneration,
+                            foregroundLearningActive, startedAt))
+                        presentToolScene(request.callId, request.name, request.arguments)
+                }
                 postTaskEffect(effectContext,
                     at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Started(request.callId,
                         at.heinz.deviceai.ui.ContinuumTaskEffects.Kind.TOOL), android.os.SystemClock.uptimeMillis())
             }
-            val presentationSession = sessionId
-            val presentationStart = workStarted
             runOnUiThread {
-                if(sessionId == presentationSession && workStarted == presentationStart && busy) {
+                if (effectContext != null && effectContext == currentTaskEffectContext &&
+                    sessionId == effectContext.session && workPresentationGeneration == presentationGeneration && busy) {
                     workTool=request.name; workToolCall=request.callId; refreshWorkPresentation()
                 }
             }
@@ -8773,8 +8984,10 @@ class AgentActivity : Activity() {
                     at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Finished(request.callId), android.os.SystemClock.uptimeMillis())
                 val toolAnswered = !toolFailed
                 runOnUiThread {
-                    finishToolScene(request.callId, toolAnswered)
-                    if(workToolCall == request.callId) {
+                    if (sceneKey != null && currentToolScene(sceneKey))
+                        finishToolScene(request.callId, toolAnswered)
+                    if (effectContext == currentTaskEffectContext && workPresentationGeneration == presentationGeneration &&
+                        workToolCall == request.callId) {
                         workTool=null; workToolCall=null; refreshWorkPresentation()
                     }
                 }
@@ -9030,9 +9243,10 @@ class AgentActivity : Activity() {
         // Dossier 4.2: a same-session follow-up ("Nun ... statt 4", "ursprünglich")
         // becomes one self-contained task from the owner's own earlier turns of this
         // session. Owner-write/tool authorization still uses only 'text'.
-        val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?:
-            at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.compose(
-                text, resolvedQuestion, localConversationContext.sessionEvidence(localSessionId))
+        val followUpFrame = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.composeFrame(
+            text, resolvedQuestion, if (botTask == null && codingPlanning == null)
+                localConversationContext.sessionEvidence(localSessionId) else null)
+        val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task
         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
         var submittedToolObservationCount = 0
@@ -9166,6 +9380,7 @@ class AgentActivity : Activity() {
                         // failed, the fallback may use the owner's task but MUST NOT
                         // bypass privacy, revocation, STALE or CONTRADICTED gates by
                         // rendering the unfiltered memories directly.
+                        if (botTask == null) append(at.heinz.deviceai.cognitive.LocalAssistantIdentity.renderPrompt(null, imported))
                         append(at.heinz.deviceai.cognitive.AgentContextFallback.render(reflection))
                     }
                     if (observations.isNotEmpty()) {
@@ -9194,8 +9409,23 @@ class AgentActivity : Activity() {
                 // cut a negation to fit optional history or advisory text.
                 val promptEnd = promptTail + briefInstruction + "\n" +
                     at.heinz.deviceai.cognitive.LocalClockIntent.promptAnchor(java.time.ZonedDateTime.now())
+                val continuingAnswer = botTask == null &&
+                    at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicy.requestsContinuation(text)
+                if (continuingAnswer && !localConversationContext.hasContinuation(localSessionId))
+                    error("LOCAL_CONTINUATION_UNAVAILABLE")
+                val boundedConversationContext = if (botTask != null) "" else
+                    at.heinz.deviceai.cognitive.LocalConversationPromptFirewall.safeHistory(
+                        localConversationContext.render(localSessionId,
+                            internetMode = boundedInternetMode,
+                            ownerForbidsExternalNetwork = ownerForbidsExternalNetwork,
+                            onlineApprovalActive = modelWebSessions.any { it.isAuthorized() },
+                            maxBytes = at.heinz.deviceai.cognitive.LocalPromptFrame.historyBudget(
+                                promptBody, promptEnd, promptCap),
+                            requireCompleteOwnerHistory = requiresPriorDialogue,
+                            continuation = continuingAnswer,
+                            ownerTurnsInTask = followUpFrame.ownerTurnsIn(promptBody)))
                 val prompt = at.heinz.deviceai.cognitive.LocalDecisionPromptFrame.assemble(
-                    requiredBody=promptBody, safeHistory=conversationContext,
+                    requiredBody=promptBody, safeHistory=boundedConversationContext,
                     decisionDigest=decisionDigest, advisory=advisory,
                     requiredTail=promptEnd, maxCharacters=promptCap,
                     requireHistory=requiresPriorDialogue
@@ -9206,7 +9436,7 @@ class AgentActivity : Activity() {
                     val receipt = at.heinz.deviceai.cognitive.LocalContextIntegrityProbe.inspect(
                         requiresHistory = true,
                         previousOwnerTurns = priorOwnerEvidence,
-                        safeRenderedHistory = conversationContext,
+                        safeRenderedHistory = boundedConversationContext,
                         finalPrompt = prompt
                     )
                     check(receipt.requiredHistoryAdmitted) { "LOCAL_FOLLOWUP_HISTORY_DROPPED" }
@@ -9224,6 +9454,14 @@ class AgentActivity : Activity() {
                 val newObservations = observations.drop(submittedToolObservationCount)
                 if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
+                val ownerDialogueOutput = botTask == null && codingPlanning == null
+                fun requireUsableGeneration(value: LocalGeneration) {
+                    if (value.completion == LocalGenerationCompletion.COMPLETE) value.failure?.let { error(it) }
+                    else check(ownerDialogueOutput && value.response.isNotBlank() &&
+                        value.completion != LocalGenerationCompletion.CANCELLED) {
+                        value.failure ?: "LOCAL_GENERATION_INCOMPLETE"
+                    }
+                }
                 var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
                     internetRevisionAtTurnStart, internetConsent::revision) {
                     val taskRemaining = botTask?.reserveModelCall(sessionId)
@@ -9239,10 +9477,11 @@ class AgentActivity : Activity() {
                             }, callback = callback)
                     }
                 }
-                generation.failure?.let { error(it) }
+                requireUsableGeneration(generation)
                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
                 var rejectionRecoveries = 0
-                while (generation.rejectedToolResponses.isNotEmpty()) {
+                while (generation.completion == LocalGenerationCompletion.COMPLETE &&
+                    generation.rejectedToolResponses.isNotEmpty()) {
                     check(!hasScreen) {"SCREEN_TOOL_REJECTION_REQUIRES_NEW_TURN"}
                     if (++rejectionRecoveries > 1) {
                         error("The model repeated a rejected tool request; no tool was executed.")
@@ -9255,14 +9494,15 @@ class AgentActivity : Activity() {
                             callback -> localRuntime.respondToTools(rejected, callback)
                         }
                     }
-                    generation.failure?.let { error(it) }
+                    requireUsableGeneration(generation)
                 }
                 check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
-                AgentModelOutput(
-                    "litertlm:${imported.id}@${imported.version}",
-                    generation.response,
-                    generation.proposal
-                )
+                if (ownerDialogueOutput && generation.proposal == null) AgentModelOutput.ownerDialogue(
+                    "litertlm:${imported.id}@${imported.version}", generation.response, generation.completion)
+                else {
+                    check(generation.completion == LocalGenerationCompletion.COMPLETE) { "LOCAL_GENERATION_INCOMPLETE" }
+                    AgentModelOutput("litertlm:${imported.id}@${imported.version}", generation.response, generation.proposal)
+                }
             },
             // the same confirmed owner facts the chat answers from, plus the agent's own memories
             memories = { if(codingPlanning == null && botTask == null) memoryStore.all() + ownerFactMemories() else emptyList() },
@@ -9380,11 +9620,20 @@ class AgentActivity : Activity() {
                     (sessionId == localSessionId && foregroundLearningActive && codingPlanningEpoch == planningEpoch &&
                         runCatching { cancellation.throwIfCancelled() }.isSuccess &&
                         LocalTurnModelBinding.stillBound(imported,localRuntime.loadedModel))
+                val ownerDeliveryCurrent = botTask != null || codingPlanning != null ||
+                    at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuard(
+                        cancellation, localSessionId, imported).isCurrent(
+                        activeChatCancellation, this@AgentActivity.sessionId, localRuntime.loadedModel)
                 cockpitTriggers.turnEnded(chiefTurn.turnId, chiefTurn.deliver())
                 activeChatCancellation = null
                 activeOrchestrator = null
                 activeLocalRequest = false
                 planCard.visibility = View.GONE
+                if (!ownerDeliveryCurrent) {
+                    setBusy(false)
+                    refreshLocalModelUi()
+                    return
+                }
                 if (botTask != null && (activeBotTask !== botTask || !botTask.isCurrent(sessionId) ||
                         sessionId != localSessionId ||
                         runCatching { cancellation.throwIfCancelled() }.isFailure ||
@@ -9426,7 +9675,8 @@ class AgentActivity : Activity() {
                         botTask?.let { finishBotTask(it, "Bildschirmfreigabe geändert · Antwort verworfen") }
                         setBusy(false);return@onSuccess
                     }
-                    val successful=run.blocker==null && run.response.isNotBlank()
+                    val hasPartialResponse = !run.responseComplete && run.response.isNotBlank()
+                    val successful = run.responseComplete && run.blocker == null && run.response.isNotBlank()
                     publishCognitiveTrace(turnTrace,if(successful)TraceOutcome.MODEL_INTERPRETATION else TraceOutcome.FAILED)
                     if (botTask != null) {
                         val calls = run.taskEvidence?.calls.orEmpty()
@@ -9455,8 +9705,12 @@ class AgentActivity : Activity() {
                         if(audit.isFailure)addToolActivity("CONTINUUM · Laufprotokoll nicht gespeichert")
                     }
                     if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
-                    val visibleAnswer=if(!successful && groundedRecall!=null)groundedRecall.failureAnswer()
-                        else run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." }
+                    val visibleAnswer = when {
+                        hasPartialResponse -> (run.blocker ?: "Antwort unvollständig.") + "\n\n" + run.response
+                        !run.responseComplete -> run.blocker ?: "Keine vollständige Antwort erhalten."
+                        !successful && groundedRecall != null -> groundedRecall.failureAnswer()
+                        else -> run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." }
+                    }
                     val keepOwnerSession = !ephemeralScreenRun.get() && sessionId == localSessionId
                     // Owner flow: a document draft opens its result surface in the cockpit; the chat records it too.
                     val draftTurn = documentDraftTurn?.takeIf { it.prompt.request == text }
@@ -9470,10 +9724,10 @@ class AgentActivity : Activity() {
                             "SHA-256 ${imported.sha256.take(16)} · nicht unabhängig bestätigt")
                     if (ephemeralScreenRun.get()) lastLocalReply=null
                     if (keepOwnerSession) {
-                        if (successful) {
+                        if (successful || hasPartialResponse) {
                             lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
-                            localConversationContext.record(localSessionId, text, run.response)
-                            rememberContextTurn(localSessionId, text, run.response)
+                            localConversationContext.record(localSessionId, text, run.response,
+                                responseComplete = run.responseComplete)
                         } else localConversationContext.recordUnanswered(localSessionId, text)
                     }
                     checkpointContinuumAsync()
@@ -9521,6 +9775,8 @@ class AgentActivity : Activity() {
                     addAssistantMessage(if (stoppedDraft) "Entwurf mit STOP abgebrochen – nichts gespeichert."
                     else if (requiredContextOverflow)
                         "Für diesen Auftrag passen wichtige Korrekturen oder Belege nicht vollständig in das lokale Kontextfenster. Bitte teile die Aufgabe in kleinere Schritte auf; ich verwende keine abgeschnittenen Informationen."
+                    else if (error.message == "LOCAL_CONTINUATION_UNAVAILABLE")
+                        "Der letzte vollständige Antwortabschnitt ist nicht verfügbar. Bitte gib den Schluss der Antwort erneut an; ich setze keinen unbekannten Text fort."
                     else if (error.message == "LOCAL_FOLLOWUP_HISTORY_UNAVAILABLE")
                         "Der frühere Gesprächskontext ist für diese Anschlussfrage nicht verfügbar. " +
                             "Ich rate nicht über die alten Angaben. Bitte wiederhole die Ausgangsdaten " +
@@ -10124,10 +10380,16 @@ class AgentActivity : Activity() {
         }
         appLookupGeneration++
         if (appLookupActive) {
+            activeOwnerAppGate?.cancel()
+            activeOwnerAppGate = null
+            activeOwnerAppFlow?.cancel()
+            activeOwnerAppFlow = null
+            pendingAppActionReply = null
+            if (::executor.isInitialized) executor.cancelPendingActions()
             appLookupActive = false
             activeLocalRequest = false
             setBusy(false)
-            addToolActivity("Appsuche abgebrochen; spätes Ergebnis wird ignoriert")
+            addToolActivity("App-Auftrag abgebrochen; spätes Ergebnis wird ignoriert")
             return
         }
         cancelSpeechInputScope()
@@ -10184,19 +10446,31 @@ class AgentActivity : Activity() {
         require(maxOutputBytes == null || maxOutputBytes in 1..64_000)
         cancellation?.throwIfCancelled()
         val completed = CountDownLatch(1)
-        val response = StringBuilder()
+        val capture = at.heinz.deviceai.cognitive.LocalGenerationCapture()
         val rejectedResponses = mutableListOf<LocalToolResponse>()
         val proposalGuard = ToolProposalTurnGuard()
         val eventLock = Any()
-        var terminalEventReceived = false
-        var outputBudgetExceeded = false
-        var failure: String? = null
+        var cancelNative = false
         val generationStartedNanos = System.nanoTime()
-        var streamedChunks = 0
-        var firstTextNanos: Long? = null
-        var lastTextNanos: Long? = null
         var lastPreviewNanos = generationStartedNanos
         val previewToken = Any()
+        fun elapsedMillis() = (System.nanoTime() - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+        fun capturedGeneration(
+            overrideCompletion: at.heinz.deviceai.cognitive.LocalGenerationCompletion? = null,
+            overrideFailure: String? = null
+        ): LocalGeneration = synchronized(eventLock) {
+            val snapshot = capture.snapshot()
+            val completion = overrideCompletion ?: snapshot.completion ?: LocalGenerationCompletion.FAILED
+            val accepted = if (completion == LocalGenerationCompletion.COMPLETE) proposalGuard.acceptedProposal() else null
+            if (completion == LocalGenerationCompletion.COMPLETE &&
+                (proposalGuard.isAmbiguous() || (accepted != null && rejectedResponses.isNotEmpty()))) {
+                LocalGeneration("", null, emptyList(),
+                    "Local model emitted multiple or conflicting tool proposals; none were submitted.",
+                    LocalGenerationCompletion.FAILED)
+            } else LocalGeneration(snapshot.response, accepted,
+                if (completion == LocalGenerationCompletion.COMPLETE) rejectedResponses.toList() else emptyList(),
+                overrideFailure ?: snapshot.failure, completion)
+        }
         runOnUiThread {
             if (!isFinishing && !isDestroyed && activeChatCancellation === cancellation) {
                 val stillActive = try {
@@ -10213,146 +10487,123 @@ class AgentActivity : Activity() {
             }
         }
         try {
-        runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
-        val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
-            synchronized(eventLock) {
-                if (!terminalEventReceived) {
+            runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
+            val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
+                synchronized(eventLock) {
+                    val before = capture.snapshot()
+                    if (before.terminal) return@LocalInferenceCallback
                     if (event is LocalInferenceEvent.TextDelta && maxOutputBytes != null &&
-                        (response.length.toLong() + event.text.length > maxOutputBytes ||
-                            (response.toString() + event.text).toByteArray(Charsets.UTF_8).size > maxOutputBytes)) {
-                        outputBudgetExceeded = true
-                        failure = "BOT_OUTPUT_BUDGET_EXCEEDED"
-                        terminalEventReceived = true
+                        (before.response.length.toLong() + event.text.length > maxOutputBytes ||
+                            (before.response + event.text).toByteArray(Charsets.UTF_8).size > maxOutputBytes)) {
+                        capture.fail("BOT_OUTPUT_BUDGET_EXCEEDED")
+                        cancelNative = true
                         completed.countDown()
                         return@LocalInferenceCallback
                     }
                     when (event) {
-                        is LocalInferenceEvent.TextDelta -> if (
-                            event.text.isNotEmpty() &&
-                            response.length < at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS
-                        ) {
+                        is LocalInferenceEvent.TextDelta -> {
                             val now = System.nanoTime()
-                            if (firstTextNanos == null) firstTextNanos = now
-                            lastTextNanos = now
-                            streamedChunks++
-                            response.append(event.text.take(
-                                at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS - response.length))
-                            // One UI refresh per second is enough for natural reading
-                            // without repeatedly remeasuring an expanding TextView.
-                            if (streamedChunks == 1 ||
-                                now - lastPreviewNanos >= TimeUnit.MILLISECONDS.toNanos(1_000)) {
+                            val snapshot = capture.append(event.text,
+                                (now - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L)
+                            if (event.text.isNotEmpty() && (snapshot.streamedChunks == 1 ||
+                                    now - lastPreviewNanos >= TimeUnit.MILLISECONDS.toNanos(1_000))) {
                                 lastPreviewNanos = now
-                                val draft = response.toString()
-                                val chunks = streamedChunks
-                                val elapsed = (now - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
-                                val first = firstTextNanos?.let {
-                                    (it - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L }
+                                val elapsed = elapsedMillis()
                                 runOnUiThread {
                                     updateLocalStreamPreview(previewToken, cancellation,
-                                        draft, chunks, elapsed, first)
+                                        snapshot.response, snapshot.streamedChunks, elapsed, snapshot.firstTextMillis)
                                 }
+                            }
+                            if (snapshot.terminal) {
+                                turnTrace?.event(TraceStage.MODEL_FAILED)
+                                cancelNative = true
+                                completed.countDown()
                             }
                         }
                         is LocalInferenceEvent.ToolProposal -> proposalGuard.observe(event.proposal)
                         is LocalInferenceEvent.ToolProposalRejected -> rejectedResponses += LocalToolResponse(
                             event.name,
-                            org.json.JSONObject()
-                                .put("status", "REJECTED")
-                                .put("reason", event.reason.take(512))
-                                .toString()
+                            org.json.JSONObject().put("status", "REJECTED")
+                                .put("reason", event.reason.take(512)).toString()
                         )
                         is LocalInferenceEvent.ToolBatchRejected -> rejectedResponses += event.responses
                         is LocalInferenceEvent.Failed -> {
                             turnTrace?.event(TraceStage.MODEL_FAILED)
-                            failure = event.message
-                            terminalEventReceived = true
+                            capture.fail(event.message)
                             completed.countDown()
                         }
                         LocalInferenceEvent.Cancelled -> {
                             turnTrace?.event(TraceStage.MODEL_FAILED)
-                            // A native cancellation alone does not prove a timeout,
-                            // a thinking-template problem or an OOM. Do not guess.
-                            val elapsedMillis = (System.nanoTime() -
-                                generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
-                            failure = "Local generation cancelled. " +
-                                "Diagnose: ${elapsedMillis} ms, " +
-                                "${streamedChunks} Textblöcke, " +
-                                "${response.length} Zeichen. Ursache nicht bestimmt."
-                            terminalEventReceived = true
+                            capture.cancel("Local generation cancelled. Diagnose: ${elapsedMillis()} ms, " +
+                                "${before.streamedChunks} Textblöcke, ${before.response.length} Zeichen. Ursache nicht bestimmt.")
                             completed.countDown()
                         }
                         is LocalInferenceEvent.Completed -> {
                             turnTrace?.event(TraceStage.MODEL_COMPLETED)
-                            terminalEventReceived = true
+                            capture.complete()
                             completed.countDown()
                         }
                     }
                 }
             }
-        }
-        val started = runCatching { cancellation?.throwIfCancelled(); turnTrace?.event(TraceStage.MODEL_PRIMARY_INVOKED); localRuntime.loadedModel?.let { turnTrace?.reference(TraceStage.MODEL_REF,it.sha256) }; start(callback) }
-        if (started.isFailure) return LocalGeneration("", null, emptyList(), started.exceptionOrNull()?.message)
-        while (true) {
-            cancellation?.throwIfCancelled()
-            if (completed.await(250, TimeUnit.MILLISECONDS)) {
-                if (synchronized(eventLock) { outputBudgetExceeded }) localRuntime.cancel()
-                break
+            val started = runCatching {
+                cancellation?.throwIfCancelled()
+                turnTrace?.event(TraceStage.MODEL_PRIMARY_INVOKED)
+                localRuntime.loadedModel?.let { turnTrace?.reference(TraceStage.MODEL_REF, it.sha256) }
+                start(callback)
             }
-            if (hardDeadlineMillis != null &&
-                System.nanoTime() - generationStartedNanos >= TimeUnit.MILLISECONDS.toNanos(hardDeadlineMillis)) {
-                synchronized(eventLock) { terminalEventReceived = true }
-                localRuntime.cancel()
-                return LocalGeneration("", null, emptyList(), "BOT_DEADLINE_EXCEEDED")
+            started.exceptionOrNull()?.let { error ->
+                if (error is java.util.concurrent.CancellationException) throw error
+                synchronized(eventLock) { capture.fail(error.message ?: error.javaClass.simpleName) }
+                return capturedGeneration(overrideCompletion = LocalGenerationCompletion.FAILED,
+                    overrideFailure = error.message ?: error.javaClass.simpleName)
             }
-            val diagnostic = synchronized(eventLock) {
-                val elapsedMillis = (System.nanoTime() - generationStartedNanos)
-                    .coerceAtLeast(0L) / 1_000_000L
-                val lastTextMillis = lastTextNanos?.let {
-                    (it - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+            while (true) {
+                cancellation?.throwIfCancelled()
+                if (completed.await(250, TimeUnit.MILLISECONDS)) {
+                    if (synchronized(eventLock) { cancelNative }) localRuntime.cancel()
+                    break
                 }
-                val reason = if (terminalEventReceived) null else
-                    at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.stalled(
-                        elapsedMillis, lastTextMillis, response.length)
-                if (reason == null) null else {
-                    terminalEventReceived = true
-                    val firstTextMillis = firstTextNanos?.let {
-                        (it - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
-                    }
-                    "Local generation stopped after stalled native progress (${reason.name}). " +
+                if (hardDeadlineMillis != null && elapsedMillis() >= hardDeadlineMillis) {
+                    synchronized(eventLock) { capture.fail("BOT_DEADLINE_EXCEEDED") }
+                    localRuntime.cancel()
+                    return capturedGeneration(overrideCompletion = LocalGenerationCompletion.FAILED,
+                        overrideFailure = "BOT_DEADLINE_EXCEEDED")
+                }
+                val snapshot = synchronized(eventLock) { capture.poll(elapsedMillis()) }
+                if (snapshot.completion in setOf(LocalGenerationCompletion.STALLED, LocalGenerationCompletion.OUTPUT_LIMIT)) {
+                    val diagnostic = "Local generation stopped (${snapshot.completion}; ${snapshot.failure}). " +
                         "Keine feste Gesamtdauer, solange weiter Text entsteht. " +
                         "Diagnose: Eingabezeichen=" + (promptCharacters?.toString() ?: "unbekannt") +
-                        ", Textblöcke=$streamedChunks, Ausgabezeichen=${response.length}, " +
-                        "erster Text nach=" + (firstTextMillis?.toString() ?: "keinem") + " ms." +
+                        ", Textblöcke=${snapshot.streamedChunks}, Ausgabezeichen=${snapshot.response.length}, " +
+                        "erster Text nach=" + (snapshot.firstTextMillis?.toString() ?: "keinem") + " ms." +
                         "\nLetztes numerisches Laufzeitprofil:\n" +
                         (localRuntime.inferenceProfiles.lastOrNull()?.safeSummary() ?: "Nicht verfügbar.")
+                    localRuntime.cancel()
+                    localRuntimeError = diagnostic
+                    runOnUiThread { refreshLocalModelUi() }
+                    return capturedGeneration(overrideFailure = diagnostic)
                 }
             }
-            if (diagnostic != null) {
-                localRuntime.cancel()
-                localRuntimeError = diagnostic
-                runOnUiThread { refreshLocalModelUi() }
-                return LocalGeneration("", null, emptyList(), diagnostic)
-            }
-        }
-        cancellation?.throwIfCancelled()
-        val readyDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(2)
-        while (localRuntime.state == LocalModelState.GENERATING && System.nanoTime() < readyDeadline) {
             cancellation?.throwIfCancelled()
-            Thread.sleep(10)
-        }
-        if (localRuntime.state == LocalModelState.GENERATING) {
-            localRuntime.cancel()
-            localRuntimeError = "Local runtime did not finish generation."
-            runOnUiThread { refreshLocalModelUi() }
-            return LocalGeneration("", null, emptyList(), "Local runtime did not finish generation.")
-        }
-        val accepted = proposalGuard.acceptedProposal()
-        if (proposalGuard.isAmbiguous() || (accepted != null && rejectedResponses.isNotEmpty())) {
-            return LocalGeneration(
-                "", null, emptyList(), "Local model emitted multiple or conflicting tool proposals; none were submitted."
-            )
-        }
-        return LocalGeneration(response.toString(), accepted, rejectedResponses.toList(), failure)
+            val readyDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(2)
+            while (localRuntime.state == LocalModelState.GENERATING && System.nanoTime() < readyDeadline) {
+                cancellation?.throwIfCancelled()
+                Thread.sleep(10)
+            }
+            if (localRuntime.state == LocalModelState.GENERATING) {
+                localRuntime.cancel()
+                localRuntimeError = "Local runtime did not finish generation."
+                runOnUiThread { refreshLocalModelUi() }
+                return capturedGeneration(
+                    overrideCompletion = LocalGenerationCompletion.FAILED.takeIf { capture.snapshot().responseComplete },
+                    overrideFailure = "Local runtime did not finish generation.")
+            }
+            return capturedGeneration()
+        } catch (cancelled: java.util.concurrent.CancellationException) {
+            synchronized(eventLock) { capture.cancel(cancelled.message) }
+            runCatching { localRuntime.cancel() }
+            throw cancelled
         } finally {
             runOnUiThread { clearLocalStreamPreview(previewToken) }
         }
@@ -11367,7 +11618,7 @@ class AgentActivity : Activity() {
             }
         }
         requestStartedAt = android.os.SystemClock.elapsedRealtime()
-        if (!keepCockpit && !handsFreeKeepsHome()) {
+        if (!keepCockpit && !handsFreeKeepsHome() && !currentToolScene()) {
             conversationActive = true
             activeWorkArea = ContinuumWorkArea.CHAT
             refreshWorkAreaSelection()
@@ -11426,7 +11677,7 @@ class AgentActivity : Activity() {
             while (responseTimesMs.size > 20) responseTimesMs.removeFirst()
             requestStartedAt = 0L
         }
-        if (!keepCockpit && !handsFreeKeepsHome()) {
+        if (!keepCockpit && !handsFreeKeepsHome() && !currentToolScene()) {
             conversationActive = true
             activeWorkArea = ContinuumWorkArea.CHAT
             refreshWorkAreaSelection()
@@ -11450,18 +11701,19 @@ class AgentActivity : Activity() {
      */
     private fun persistContextInvalidations() {
         val store = chatTranscripts
+        val writer = chatTranscriptIo
+        localConversationContext.onTurnRecorded = { id, turn ->
+            if (at.heinz.deviceai.cognitive.LocalChatTranscriptStore.ID.matches(id)) {
+                val at = System.currentTimeMillis()
+                writer.execute { runCatching { store.appendContextTurn(id, turn, at) } }
+            }
+        }
         localConversationContext.onTurnsInvalidated = { id ->
             if (at.heinz.deviceai.cognitive.LocalChatTranscriptStore.ID.matches(id)) {
                 val at = System.currentTimeMillis()
-                chatTranscriptIo.execute { runCatching { store.appendContextReset(id, at) } }
+                writer.execute { runCatching { store.appendContextReset(id, at) } }
             }
         }
-    }
-
-    /** Stores a turn the model context just admitted, so the same chat keeps its context after an exit (#568). */
-    private fun rememberContextTurn(session: String, request: String, response: String) {
-        val at = System.currentTimeMillis()
-        chatTranscriptIo.execute { runCatching { chatTranscripts.appendContextTurn(session, request, response, at) } }
     }
 
     /**
@@ -11475,7 +11727,7 @@ class AgentActivity : Activity() {
             chatTranscriptIo.submit(java.util.concurrent.Callable { chatTranscripts.loadContextTurns(id) })
                 .get(2, java.util.concurrent.TimeUnit.SECONDS)
         }.getOrDefault(emptyList())
-        turns.forEach { localConversationContext.record(id, it.request, it.response) }
+        turns.forEach { localConversationContext.restore(id, it) }
     }
 
     /** Re-renders the stored central conversation as text only; nothing is re-run or re-stored (#568). */
@@ -11605,6 +11857,15 @@ class AgentActivity : Activity() {
     }
 
     private fun clearTaskEffects() {
+        toolSceneProgress?.second?.isIndeterminate = false
+        toolSceneProgress = null
+        toolSceneDialog?.dismiss()
+        toolSceneDialog = null
+        workWindowHost.workEnded()
+        workWindowHost.close(immediate = true)
+        toolSceneLease.clear()
+        toolScene = null
+        toolSceneReturnArea = null
         currentTaskEffectContext = null
         chiefTaskEffectContexts.clear()
         hologramView?.setTaskEffectScope(null)

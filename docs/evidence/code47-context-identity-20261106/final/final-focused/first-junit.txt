@@ -1,0 +1,21 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=45979 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45979 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+JUnit version 4.13.2
+....E..................................................E..........................................................................................................
+Time: 0.427
+There were 2 failures:
+1) startsWithUsefulHonestOfflineDialogue(at.heinz.deviceai.BootstrapBrainTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.BootstrapBrainTest.startsWithUsefulHonestOfflineDialogue(BootstrapBrainTest.kt:10)
+2) mandatoryIdentityIsAtomicAtItsActualByteBoundary(at.heinz.deviceai.cognitive.AiContextIdentityRegressionTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.AiContextIdentityRegressionTest.mandatoryIdentityIsAtomicAtItsActualByteBoundary(AiContextIdentityRegressionTest.kt:34)
+
+FAILURES!!!
+Tests run: 160,  Failures: 2
+

@@ -22,7 +22,7 @@ internal object NativeAppLookup {
         .lowercase(Locale.ROOT).trim().replace(Regex("\\s+"), " ")
 
     fun search(query: String, available: List<NativeAppCandidate>, limit: Int = 12): NativeAppMatches {
-        require(query.length in 2..80 && query.none { it.isISOControl() }) { "INVALID_APP_QUERY" }
+        require(query.length in 1..80 && query.isNotBlank() && query.none { it.isISOControl() }) { "INVALID_APP_QUERY" }
         require(limit in 1..20) { "INVALID_RESULT_LIMIT" }
         val normalizedQuery = normalized(query)
         // This is a read-only lookup, never an instruction interpreter.
@@ -33,7 +33,7 @@ internal object NativeAppLookup {
             .replace(Regex("(?iu)^(?:bitte\\s+)?(?:öffne|starte|zeige(?: mir)?|suche|finde|öffnen|starten)\\s+(?:mir\\s+)?(?:(?:die|das|den)\\s+)?(?:app\\s+)?"), "")
             .replace(Regex("(?iu)\\s+bitte$"), "")
             .replace(Regex("(?iu)\\s+app$"), "").trim()
-        require(needle.length >= 2) { "INVALID_APP_QUERY" }
+        require(needle.isNotEmpty()) { "INVALID_APP_QUERY" }
         val apps = available.asSequence()
             .filter { app ->
                 packagePattern.matches(app.packageName) && app.label.isNotBlank() &&

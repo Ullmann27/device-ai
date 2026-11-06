@@ -1,0 +1,33 @@
+JUnit version 4.13.2
+.E...E.E.E
+Time: 0.026
+There were 4 failures:
+1) changedWeightsBeforeQueuedDeliverySuppressesPresentation(at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuardTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuardTest.changedWeightsBeforeQueuedDeliverySuppressesPresentation(LocalGenerationDeliveryGuardTest.kt:34)
+2) changedSessionBeforeQueuedDeliverySuppressesPresentation(at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuardTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuardTest.changedSessionBeforeQueuedDeliverySuppressesPresentation(LocalGenerationDeliveryGuardTest.kt:27)
+3) stopAfterGenerationButBeforeQueuedDeliverySuppressesPresentation(at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuardTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuardTest.stopAfterGenerationButBeforeQueuedDeliverySuppressesPresentation(LocalGenerationDeliveryGuardTest.kt:20)
+4) unloadedModelBeforeQueuedDeliverySuppressesPresentation(at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuardTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuardTest.unloadedModelBeforeQueuedDeliverySuppressesPresentation(LocalGenerationDeliveryGuardTest.kt:41)
+
+FAILURES!!!
+Tests run: 6,  Failures: 4
+
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=34697 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=34697 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts

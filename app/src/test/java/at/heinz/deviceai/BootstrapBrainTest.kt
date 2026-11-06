@@ -7,7 +7,8 @@ class BootstrapBrainTest {
     @Test fun startsWithUsefulHonestOfflineDialogue() {
         val reply = BootstrapBrain.decide("Hallo", emptyList())
         assertEquals(BootstrapKind.REPLY, reply.kind)
-        assertTrue(reply.message.contains("lokaler Startkern"))
+        assertTrue(reply.message.contains("lokale Startkern"))
+        assertTrue(reply.message.contains("Device AI Continuum"))
         assertTrue(BootstrapBrain.decide("Was kannst du?", emptyList()).message.contains("Forschungsziele"))
         assertTrue(BootstrapBrain.decide("Erkläre Quantenmechanik", emptyList()).message.contains("noch nicht"))
     }
