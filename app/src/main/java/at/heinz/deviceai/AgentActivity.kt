@@ -9140,22 +9140,13 @@ class AgentActivity : Activity() {
                 // cut a negation to fit optional history or advisory text.
                 val promptEnd = promptTail + briefInstruction + "\n" +
                     at.heinz.deviceai.cognitive.LocalClockIntent.promptAnchor(java.time.ZonedDateTime.now())
-                val essentialPrompt = at.heinz.deviceai.cognitive.LocalPromptFrame.assemble(
-                    requiredBody=promptBody, optionalHistory=conversationContext,
-                    advisory=advisory, requiredTail=promptEnd,
-                    maxCharacters=promptCap, requireHistory=requiresPriorDialogue
+                val prompt = at.heinz.deviceai.cognitive.LocalDecisionPromptFrame.assemble(
+                    requiredBody=promptBody, safeHistory=conversationContext,
+                    decisionDigest=decisionDigest, advisory=advisory,
+                    requiredTail=promptEnd, maxCharacters=promptCap,
+                    requireHistory=requiresPriorDialogue
                 ) ?: error(if (requiresPriorDialogue) "LOCAL_FOLLOWUP_HISTORY_EXCEEDS_BUDGET"
                     else "LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET")
-                // Keep complete owner-history first. The decision digest is optional and
-                // atomic: if it cannot fit, use the already-validated original prompt.
-                val prompt = if (decisionDigest.isEmpty()) essentialPrompt else {
-                    at.heinz.deviceai.cognitive.LocalPromptFrame.assemble(
-                        requiredBody=promptBody,
-                        optionalHistory=conversationContext + "\n" + decisionDigest,
-                        advisory=advisory, requiredTail=promptEnd, maxCharacters=promptCap,
-                        requireHistory=requiresPriorDialogue
-                    )?.takeIf { it.contains(decisionDigest) } ?: essentialPrompt
-                }
                 compiledContext?.requireCompleteIn(prompt)
                 if (requiresPriorDialogue) {
                     val receipt = at.heinz.deviceai.cognitive.LocalContextIntegrityProbe.inspect(
