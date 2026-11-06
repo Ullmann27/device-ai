@@ -24,3 +24,11 @@ The fixed STOP confirmation moves synchronously to cancelLocalRequest for its ca
 ## Next / boundaries
 
 Compile the exact changed Activity and real UI test sources using the SDK classpath and bounded heap, then run STOP/late-answer/context isolation cases in a separate Robolectric temp directory. Root owns final combined SDK/UI/lint and release. No renderer, gate, app-query, package, signing or model-weight changes. EXP-05/EXP-12 contracts preserved. Rollback: revert this isolated patch; no data migration.
+
+## Follow-up checkpoint
+
+The changed Activity compiled against the real SDK dependency/classpath with the original DeviceAI_app_debug module name (512 MiB heap). Revised UI tests compiled with their real CockpitHostFramePump source (256 MiB heap). Six actual Robolectric cases passed: BotRouting, synchronous/repeated document STOP, late native answer, already queued answer, unchanged owner correction retained once, and different-session exclusion. The tag-bound SystemStatus WorkWindow case also passed with indeterminate progress running before and after stale completion, then stopped/hidden on actual completion; gaze/return assertions remain.
+
+The first screen-data negative fixture used a dotted package name in its natural request and entered the existing deterministic research route; its timeout is recorded, not treated as a STOP implementation failure. The revised input explicitly requests local/offline screen description; it still uses actual confirmation, ToolGate, AndroidDeviceAppActions, AccessibilityService shadow and ScreenObservationBus. That focused check is running.
+
+Additional owner-authorized PR578 reviews are pending their independent RED proofs: remove pre-recording of a ready Intake.Planning turn; use the latest verified owner identity in the mandatory fallback prompt. Root also owns the polite PDF parser and will supply the two existing Activity call-site updates after its RED/GREEN. No helper edits Activity concurrently.
