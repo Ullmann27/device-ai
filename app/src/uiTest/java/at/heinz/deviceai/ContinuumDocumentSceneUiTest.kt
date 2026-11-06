@@ -159,4 +159,71 @@ class ContinuumDocumentSceneUiTest {
             (descendants(window).single { it.tag == "jarvis-document-draft" } as TextView).text.toString())
         assertFalse("a missing size is not invented", (descendants(window).single { it.tag == "jarvis-document-meta" } as TextView).text.contains("B"))
     }
+
+    private fun draftTurn(prompt: at.heinz.deviceai.cognitive.DocumentDraftPrompt, name: String): Any =
+        AgentActivity::class.java.declaredClasses.single { it.simpleName == "DocumentDraftTurn" }
+            .getDeclaredConstructor(at.heinz.deviceai.cognitive.DocumentDraftPrompt::class.java, String::class.java)
+            .apply { isAccessible = true }.newInstance(prompt, name)
+
+    /**
+     * Result surface (owner flow): the draft text a local model returned (SIMULATED_MODEL_REPLY – no model on the host)
+     * appears as its own labelled window, is edited in a dialog and written through Android's save dialog.
+     */
+    @Test fun theDraftIsItsOwnSurfaceIsEditedAndSavedThroughAndroid() = withCockpit { activity, root ->
+        val text = "Projektübersicht Continuum. Ziel: ein lokales Cockpit auf dem Fold7."
+        val prompt = requireNotNull(at.heinz.deviceai.cognitive.DocumentDraftPrompt.build("Projektübersicht.pdf", text))
+        val reply = "Kernaussagen:\n- Ziel ist ein lokales Cockpit auf dem Fold7."
+        val turnClass = AgentActivity::class.java.declaredClasses.single { it.simpleName == "DocumentDraftTurn" }
+        val window = AgentActivity::class.java.getDeclaredMethod("presentDraftScene", turnClass, String::class.java)
+            .apply { isAccessible = true }.invoke(activity, draftTurn(prompt, "Projektübersicht.pdf"), reply)
+        assertNotNull("the draft opens as a cockpit surface", window)
+        advance(760L); measure(root); draw(root)
+        val shown = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
+        val texts = descendants(shown).filterIsInstance<TextView>().map { it.text.toString() }
+        assertTrue(texts.toString(), texts.contains("ENTWURF · Projektübersicht.pdf"))
+        val draft = descendants(shown).single { it.tag == "jarvis-draft-text" } as TextView
+        assertEquals(reply, draft.text.toString())
+        assertTrue("labelled as a local draft", texts.any { it.startsWith("Lokal erzeugter Entwurf aus „Projektübersicht.pdf“") })
+        assertEquals("Grundlage: der vollständige gelesene Text (${text.length} Zeichen).",
+            (descendants(shown).single { it.tag == "jarvis-draft-basis" } as TextView).text.toString())
+        descendants(shown).single { it.tag == "jarvis-draft-edit" }.performClick()
+        advance(32L)
+        val dialog = ShadowAlertDialog.getLatestAlertDialog() as android.app.AlertDialog
+        val editor = descendants(dialog.window!!.decorView).single { it.tag == "jarvis-draft-editor" } as EditText
+        assertEquals(reply, editor.text.toString())
+        editor.setText("$reply\n- Ergänzt vom Besitzer.")
+        dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE).performClick()
+        advance(32L)
+        assertEquals("$reply\n- Ergänzt vom Besitzer.", draft.text.toString())
+        descendants(shown).single { it.tag == "jarvis-draft-save" }.performClick()
+        val started = shadowOf(activity).nextStartedActivityForResult
+        assertEquals(Intent.ACTION_CREATE_DOCUMENT, started.intent.action)
+        assertEquals("text/markdown", started.intent.type)
+        assertEquals("Entwurf – Projektübersicht.md", started.intent.getStringExtra(Intent.EXTRA_TITLE))
+        val target = android.net.Uri.parse("content://test.documents/entwurf.md")
+        val written = java.io.ByteArrayOutputStream()
+        shadowOf(activity.contentResolver).registerOutputStream(target, written)
+        shadowOf(activity).receiveResult(started.intent, Activity.RESULT_OK, Intent().setData(target))
+        val deadline = System.currentTimeMillis() + 5_000
+        while (chatTexts(activity).none { it.startsWith("Entwurf gespeichert") || it.startsWith("Entwurf nicht gespeichert") } &&
+            System.currentTimeMillis() < deadline) { Thread.sleep(20); advance(16L) }
+        val expected = "$reply\n- Ergänzt vom Besitzer."
+        assertTrue(chatTexts(activity).toString(), chatTexts(activity).any { it == "Entwurf gespeichert (${expected.length} Zeichen)." })
+        assertEquals("exactly the edited draft is written", expected, written.toString(Charsets.UTF_8.name()))
+    }
+
+    @Test fun aDraftRequestWithoutALoadedModelSaysSoAndStartsNoModelTurn() = withCockpit { activity, root ->
+        AgentActivity::class.java.getDeclaredField("pendingDocumentDraft").apply { isAccessible = true }.set(activity, true)
+        val page = Bitmap.createBitmap(200, 280, Bitmap.Config.ARGB_8888).apply { eraseColor(Color.WHITE) }
+        val doc = PdfDocumentIntake.Document("Bericht.pdf", 2_048L, 2, page, "Ein kurzer Bericht.",
+            PdfDocumentIntake.TextState.EXTRACTED, 2)
+        AgentActivity::class.java.getDeclaredMethod("presentDocumentScene", PdfDocumentIntake.Document::class.java)
+            .apply { isAccessible = true }.invoke(activity, doc)
+        advance(760L); measure(root); draw(root)
+        val window = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
+        assertEquals("Entwurf: Lokales Modell nicht geladen · in der Modellverwaltung laden.",
+            (descendants(window).single { it.tag == "jarvis-document-draft" } as TextView).text.toString())
+        assertEquals("no model turn", false, field(activity, "busy"))
+        assertEquals(null, field(activity, "documentDraftTurn"))
+    }
 }

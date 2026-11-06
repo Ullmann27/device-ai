@@ -163,6 +163,7 @@ class AgentActivity : Activity() {
         private const val PERSONAL_LEARNING_EXPORT_REQUEST = 2231
         private const val PERSONAL_LEARNING_PREVIEW_REQUEST = 2232
         private const val PDF_DOCUMENT_REQUEST = 2245
+        private const val DRAFT_SAVE_REQUEST = 2246
         /** Characters of the document's own text shown in its work window; the full bounded text stays for drafting. */
         private const val DOCUMENT_EXCERPT_CHARS = 700
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
@@ -501,6 +502,11 @@ class AgentActivity : Activity() {
     // learning radar, file imports): never on the UI thread (a training round can
     // hold the learning-core lock for seconds), in order, and allowed to finish
     // when the activity closes.
+    // Owner documents (PDF intake, draft save) have their own queue: a training round on the learning core
+    // cannot delay reading or saving them.
+    private val documentIoExecutor = Executors.newSingleThreadExecutor { runnable ->
+        Thread(runnable, "device-ai-document-io").apply { isDaemon = true }
+    }
     private val learningIoExecutor = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "device-ai-learning-io").apply { isDaemon = true }
     }
@@ -828,6 +834,7 @@ class AgentActivity : Activity() {
         // let a running backlog write finish (atomic rename); queued UI refreshes are dropped
         backlogExecutor.shutdown()
         learningIoExecutor.shutdown()
+        documentIoExecutor.shutdown()
         backlogDialog?.dismiss()
         devDialog?.dismiss()
         modelCenterDialog?.dismiss()
@@ -1805,6 +1812,85 @@ class AgentActivity : Activity() {
     /** The owner asked for a summary draft together with the PDF request (consumed when the document scene opens). */
     private var pendingDocumentDraft = false
 
+    /** A running local-model draft for a read document; matched by its exact request when the reply arrives. */
+    private class DocumentDraftTurn(val prompt: at.heinz.deviceai.cognitive.DocumentDraftPrompt, val name: String)
+    private var documentDraftTurn: DocumentDraftTurn? = null
+    /** Draft text waiting for Android's save dialog (ACTION_CREATE_DOCUMENT). */
+    private var pendingDraftSave: String? = null
+
+    private fun localModelReady() = localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null
+
+    /** Starts the local model on the document's own text only (DocumentDraftPrompt); honest when it cannot run. */
+    private fun startDocumentDraft(doc: PdfDocumentIntake.Document) {
+        val inCockpit = workWindowHost.isShowing
+        val prompt = at.heinz.deviceai.cognitive.DocumentDraftPrompt.build(doc.name, doc.text)
+        when {
+            prompt == null -> addAssistantMessage("Für einen Entwurf fehlt der Dokumenttext.", false, keepCockpit = inCockpit)
+            busy -> addAssistantMessage("JARVIS arbeitet gerade an einem anderen Auftrag – der Entwurf startet nicht nebenher.",
+                false, keepCockpit = inCockpit)
+            !localModelReady() -> addAssistantMessage("Entwurf: Lokales Modell nicht geladen · in der Modellverwaltung laden.",
+                false, keepCockpit = inCockpit)
+            else -> {
+                documentDraftTurn = DocumentDraftTurn(prompt, doc.name)
+                runLocal(prompt.request, resolvedQuestion = prompt.question)
+            }
+        }
+    }
+
+    /**
+     * Result surface of the owner flow: the local model's draft, labelled as such, with the share of the document it is
+     * based on; BEARBEITEN opens an editor dialog (the keyboard would resize the work window), ALS DATEI SPEICHERN opens
+     * Android's save dialog. Null when the START cockpit cannot host it – the chat then carries the draft alone.
+     */
+    private fun presentDraftScene(turn: DocumentDraftTurn, response: String): at.heinz.deviceai.ui.JarvisWorkWindow? {
+        val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown } ?: return null
+        val basis = if (turn.prompt.complete) "Grundlage: der vollständige gelesene Text (${turn.prompt.totalChars} Zeichen)."
+            else "Grundlage: die ersten ${turn.prompt.coveredChars} von ${turn.prompt.totalChars} gelesenen Zeichen – der Rest ist nicht enthalten."
+        val body = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; tag = "jarvis-draft" }
+        body.addView(textView("Lokal erzeugter Entwurf aus „${turn.name}“ · vor der Verwendung prüfen.", 11f, MUTED)
+            .apply { tag = "jarvis-draft-origin" }, matchWidth())
+        body.addView(textView(basis, 11f, MUTED).apply { tag = "jarvis-draft-basis" }, matchWidth(top = 2))
+        val draft = textView(response.trim(), 13f, TEXT).apply { tag = "jarvis-draft-text"; setTextIsSelectable(true) }
+        body.addView(draft, matchWidth(top = 8))
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        body.addView(cockpit.action(this, "BEARBEITEN") { editDraft(draft) }.apply { tag = "jarvis-draft-edit" }, matchWidth(top = 10))
+        body.addView(cockpit.action(this, "ALS DATEI SPEICHERN", primary = true) { saveDraft(draft.text.toString(), turn.name) }
+            .apply { tag = "jarvis-draft-save" }, matchWidth(top = 6))
+        return workWindowHost.show(home, body, "ENTWURF · ${turn.name.take(40)}",
+            at.heinz.deviceai.ui.JarvisActionScenes.forDocument()) {}
+    }
+
+    private fun editDraft(target: TextView) {
+        val editor = EditText(this).apply {
+            tag = "jarvis-draft-editor"
+            setText(target.text)
+            minLines = 8
+            gravity = Gravity.TOP or Gravity.START
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE or
+                android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+        }
+        AlertDialog.Builder(this).setTitle("Entwurf bearbeiten").setView(editor)
+            .setPositiveButton("ÜBERNEHMEN") { _, _ -> target.text = editor.text.toString() }
+            .setNegativeButton("ABBRECHEN", null)
+            .show()
+    }
+
+    private fun saveDraft(text: String, documentName: String) {
+        if (text.isBlank()) return
+        pendingDraftSave = text
+        val base = documentName.removeSuffix(".pdf").removeSuffix(".PDF").trim().ifEmpty { "Dokument" }.take(60)
+        val picker = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "text/markdown"
+            putExtra(Intent.EXTRA_TITLE, "Entwurf – $base.md")
+        }
+        runCatching { startActivityForResult(picker, DRAFT_SAVE_REQUEST) }.onFailure {
+            pendingDraftSave = null
+            addAssistantMessage("Der Android-Speicherdialog ist nicht verfügbar – der Entwurf wurde nicht gespeichert.",
+                false, keepCockpit = workWindowHost.isShowing)
+        }
+    }
+
     private fun openPdfDocumentPicker(wantsDraft: Boolean) {
         pendingDocumentDraft = wantsDraft
         val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -1819,7 +1905,7 @@ class AgentActivity : Activity() {
 
     private fun readPdfDocument(uri: android.net.Uri) {
         val pageWidthPx = (resources.displayMetrics.density * 360f).toInt()
-        learningIoExecutor.execute {
+        documentIoExecutor.execute {
             val result = runCatching { PdfDocumentIntake(contentResolver).read(uri, pageWidthPx) }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
@@ -1849,10 +1935,13 @@ class AgentActivity : Activity() {
             PdfDocumentIntake.TextState.NEEDS_ANDROID_15 ->
                 "Der Textauszug braucht Android 15 oder neuer. Das Seitenbild ist echt."
         }
+        val wantsDraft = pendingDocumentDraft
+        val hasText = doc.textState == PdfDocumentIntake.TextState.EXTRACTED
         val draftLine = when {
-            !pendingDocumentDraft -> null
-            doc.textState != PdfDocumentIntake.TextState.EXTRACTED -> "Für einen Entwurf fehlt der Dokumenttext."
-            else -> "Zusammenfassung als Entwurf: in dieser Version noch nicht angeschlossen."
+            !hasText -> if (wantsDraft) "Für einen Entwurf fehlt der Dokumenttext." else null
+            !localModelReady() -> if (wantsDraft) "Entwurf: Lokales Modell nicht geladen · in der Modellverwaltung laden." else null
+            wantsDraft -> "Entwurf wird lokal erstellt …"
+            else -> null
         }
         pendingDocumentDraft = false
         val report = "PDF gelesen: $meta. $textLine" + (draftLine?.let { " $it" } ?: "")
@@ -1874,6 +1963,9 @@ class AgentActivity : Activity() {
             body.addView(textView(excerpt, 12f, TEXT).apply { tag = "jarvis-document-excerpt" }, matchWidth(top = 8))
         }
         draftLine?.let { body.addView(textView(it, 11f, MUTED).apply { tag = "jarvis-document-draft" }, matchWidth(top = 6)) }
+        if (hasText && !wantsDraft) body.addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this, "ENTWURF ERSTELLEN") {
+            startDocumentDraft(doc)
+        }.apply { tag = "jarvis-document-start-draft" }, matchWidth(top = 10))
         val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown }
         val emblem = doc.firstPage?.let { android.graphics.drawable.BitmapDrawable(resources, it) }
         val window = home?.let {
@@ -1882,6 +1974,7 @@ class AgentActivity : Activity() {
         }
         // The same facts in the conversation; with an open window the cockpit stays (no switch to the chat area).
         addAssistantMessage(report, preserveLocalContext = false, keepCockpit = window != null)
+        if (wantsDraft && hasText && localModelReady()) startDocumentDraft(doc)
     }
 
     private fun navigateDashboardTargetNow(target: String) {
@@ -8760,7 +8853,12 @@ class AgentActivity : Activity() {
                     val visibleAnswer=if(!successful && groundedRecall!=null)groundedRecall.failureAnswer()
                         else run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." }
                     val keepOwnerSession = !ephemeralScreenRun.get() && sessionId == localSessionId
-                    addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession)
+                    // Owner flow: a document draft opens its result surface in the cockpit; the chat records it too.
+                    val draftTurn = documentDraftTurn?.takeIf { it.prompt.request == text }
+                    if (draftTurn != null) documentDraftTurn = null
+                    val draftWindow = if (successful && draftTurn != null && run.response.isNotBlank())
+                        presentDraftScene(draftTurn, run.response) else null
+                    addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession, keepCockpit = draftWindow != null)
                     if(successful && groundedRecall!=null)addToolActivity(
                         "LOKALE MODELLSCHLUSSFOLGERUNG · ${imported.id}@${imported.version} · " +
                             "SHA-256 ${imported.sha256.take(16)} · nicht unabhängig bestätigt")
@@ -9375,6 +9473,7 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        documentDraftTurn = null
         workWindowHost.close(immediate = true)
         avatarDirector.clearAnimationIntents()
         voiceEngine?.stop()
@@ -11255,6 +11354,26 @@ class AgentActivity : Activity() {
                         }, { e ->
                             addAssistantMessage("Öffentliches Modellpaket: Modelldatei nicht lesbar (${failureName(e)}).")
                         })
+                    }
+                }
+            }
+            DRAFT_SAVE_REQUEST -> {
+                val text = pendingDraftSave
+                pendingDraftSave = null
+                val uri = data?.data
+                val inCockpit = workWindowHost.isShowing
+                if (resultCode != RESULT_OK || uri == null || text == null) {
+                    addAssistantMessage("Nicht gespeichert – kein Speicherort gewählt.", false, keepCockpit = inCockpit)
+                } else documentIoExecutor.execute {
+                    val written = runCatching {
+                        requireNotNull(contentResolver.openOutputStream(uri, "wt")) { "Ziel nicht beschreibbar" }
+                            .use { it.write(text.toByteArray(Charsets.UTF_8)) }
+                    }
+                    runOnUiThread {
+                        if (isFinishing || isDestroyed) return@runOnUiThread
+                        addAssistantMessage(written.fold({ "Entwurf gespeichert (${text.length} Zeichen)." }) {
+                            "Entwurf nicht gespeichert (${it.message ?: it.javaClass.simpleName})."
+                        }, false, keepCockpit = workWindowHost.isShowing)
                     }
                 }
             }
