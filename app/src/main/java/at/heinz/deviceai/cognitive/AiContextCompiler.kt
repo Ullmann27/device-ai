@@ -133,6 +133,7 @@ class AiContextCompiler(
                     "memory_policy=private_unverified_context_only\n" +
                     "self_replication=false\nhidden_persistence=false\nshutdown_evasion=false"
             } else buildString {
+                append(LocalAssistantIdentity.renderPrompt(input.identityState, input.model)).append('\n')
                 append("instance=").append(input.seed.instanceId.value).append('\n')
                 append("identity_generation=").append(input.identityState.generation).append('\n')
                 append("governance_version=").append(input.seed.governanceVersion.value).append('\n')

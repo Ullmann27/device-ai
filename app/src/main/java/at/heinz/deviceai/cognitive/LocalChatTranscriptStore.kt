@@ -67,8 +67,11 @@ class LocalChatTranscriptStore(private val dir: File) {
         }
     }
 
+    @Synchronized fun appendContextTurn(id: String, request: String, response: String, atMillis: Long) =
+        appendContextTurn(id, request, response, atMillis, true)
+
     @Synchronized fun appendContextTurn(id: String, request: String, response: String, atMillis: Long,
-                                        responseComplete: Boolean = true) {
+                                        responseComplete: Boolean) {
         require(ID.matches(id)) { "Conversation id" }
         if (request.isBlank() || response.isBlank()) return
         appendContextTurn(id, ContextTurn(request, response, responseComplete = responseComplete), atMillis)

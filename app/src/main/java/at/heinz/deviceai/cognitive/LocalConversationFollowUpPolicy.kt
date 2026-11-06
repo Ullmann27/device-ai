@@ -6,6 +6,12 @@ package at.heinz.deviceai.cognitive
  * A false positive can only require context or a clarifying question.
  */
 internal object LocalConversationFollowUpPolicy {
+    private val continuation = Regex(
+        """(?iu)^(?:bitte\s+|und\s+)?(?:weiter|fortsetzen|(?:mach|mache|schreib|schreibe)\s+(?:bitte\s+)?weiter|(?:fahr|fahre)\s+(?:bitte\s+)?fort|(?:setz|setze)\s+(?:(?:die|deine)\s+antwort\s+)?(?:bitte\s+)?fort|kannst\s+du\s+(?:bitte\s+)?(?:weiterschreiben|fortsetzen))(?:\s+bitte)?[.!?]*$""")
+
+    fun requestsContinuation(request: String): Boolean =
+        request.length <= 160 && !request.any { it.isISOControl() } && continuation.matches(request.trim())
+
     private val correction = Regex("""(?iu)^(?:korrektur|berichtigung|richtigstellung|änderung)\s*:""")
     private val previous = Regex("""(?iu)\b(?:ursprünglich|vorher|vorherigen|zuvor|davor|anfangs|vorhin|damals)\b""")
     private val replacement = Regex("""(?iu)\b(?:nun|jetzt|mittlerweile)\b[^.!?\n]{0,160}\b(?:statt|anstelle)\b""")
@@ -39,7 +45,7 @@ internal object LocalConversationFollowUpPolicy {
         val text = request.trim()
         if (text.isEmpty() || text.length > 1_000 || text.any { it.isISOControl() }) return false
         if (definition.containsMatchIn(text) || namedDefinition.containsMatchIn(text)) return false
-        return correction.containsMatchIn(text) || previous.containsMatchIn(text) ||
+        return requestsContinuation(text) || correction.containsMatchIn(text) || previous.containsMatchIn(text) ||
             replacement.containsMatchIn(text) || elliptical.containsMatchIn(text) ||
             contrastive.containsMatchIn(text) || anaphoric.containsMatchIn(text) || again.containsMatchIn(text) ||
             consequence.containsMatchIn(text)

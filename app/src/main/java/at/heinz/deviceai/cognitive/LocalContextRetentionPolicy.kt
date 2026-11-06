@@ -1,7 +1,7 @@
 package at.heinz.deviceai.cognitive
 
 /** Kind of a visible reply that did NOT come from the local language model. */
-enum class NonModelReplyKind { READ_ONLY_TOOL, DEVICE_CLOCK, STARTKERN_INFO, SAFETY_REFUSAL, MEMORY_CHANGE }
+enum class NonModelReplyKind { READ_ONLY_TOOL, DEVICE_CLOCK, STARTKERN_INFO, SAFETY_REFUSAL, MEMORY_CHANGE, MEMORY_RECALL }
 
 /**
  * M2: which non-model replies keep the same-session short-term context.
@@ -27,7 +27,8 @@ internal object LocalContextRetentionPolicy {
     }
 
     fun recordsRequest(kind: NonModelReplyKind): Boolean = when (kind) {
-        NonModelReplyKind.READ_ONLY_TOOL, NonModelReplyKind.DEVICE_CLOCK, NonModelReplyKind.STARTKERN_INFO -> true
+        NonModelReplyKind.READ_ONLY_TOOL, NonModelReplyKind.DEVICE_CLOCK, NonModelReplyKind.STARTKERN_INFO,
+        NonModelReplyKind.MEMORY_RECALL -> true
         NonModelReplyKind.SAFETY_REFUSAL, NonModelReplyKind.MEMORY_CHANGE -> false
     }
 
@@ -37,5 +38,6 @@ internal object LocalContextRetentionPolicy {
         NonModelReplyKind.STARTKERN_INFO -> "(feste Startkern-Antwort; kein Modelltext)"
         NonModelReplyKind.SAFETY_REFUSAL -> "(Sicherheitsprüfung: nichts ausgeführt)"
         NonModelReplyKind.MEMORY_CHANGE -> "(Erinnerung geändert)"
+        NonModelReplyKind.MEMORY_RECALL -> "(gespeicherte Erinnerung gelesen; keine Gedächtnisänderung)"
     }
 }
