@@ -50,13 +50,38 @@ class LocalChatTranscriptStore(private val dir: File) {
      * the same chat can continue with context after an app exit or process death. Unverified dialogue data only:
      * never a memory, fact proof or tool grant. Bubbles and context turns are separate line kinds.
      */
-    data class ContextTurn(val request: String, val response: String)
+    data class ContextTurn(
+        val request: String,
+        val response: String,
+        val requestComplete: Boolean = true,
+        val responseComplete: Boolean = true,
+        val modelResponse: Boolean = true,
+        val responseHasEnd: Boolean = true
+    ) {
+        internal fun bounded(): ContextTurn {
+            val ownerComplete = requestComplete && LocalDialogueContextLimits.completeOwner(request)
+            val retainedResponse = LocalDialogueContextLimits.responseTail(response)
+            return copy(request = if (ownerComplete) request else "", response = retainedResponse,
+                requestComplete = ownerComplete,
+                responseComplete = responseComplete && responseHasEnd && retainedResponse == response)
+        }
+    }
 
-    @Synchronized fun appendContextTurn(id: String, request: String, response: String, atMillis: Long) {
+    @Synchronized fun appendContextTurn(id: String, request: String, response: String, atMillis: Long,
+                                        responseComplete: Boolean = true) {
         require(ID.matches(id)) { "Conversation id" }
         if (request.isBlank() || response.isBlank()) return
-        appendLine(id, JSONObject().put("k", CONTEXT).put("q", request.take(MAX_CONTEXT_REQUEST))
-            .put("r", response.take(MAX_CONTEXT_RESPONSE)).put("at", atMillis).toString())
+        appendContextTurn(id, ContextTurn(request, response, responseComplete = responseComplete), atMillis)
+    }
+
+    @Synchronized fun appendContextTurn(id: String, turn: ContextTurn, atMillis: Long) {
+        require(ID.matches(id)) { "Conversation id" }
+        val bounded = turn.bounded()
+        appendLine(id, JSONObject().put("k", CONTEXT).put("v", CONTEXT_VERSION)
+            .put("q", bounded.request).put("r", bounded.response)
+            .put("qc", bounded.requestComplete).put("rc", bounded.responseComplete)
+            .put("model", bounded.modelResponse).put("end", bounded.responseHasEnd)
+            .put("at", atMillis).toString())
     }
 
     /**
@@ -70,16 +95,42 @@ class LocalChatTranscriptStore(private val dir: File) {
     }
 
     /** The last [limit] context turns after the last reset marker, in order (the model context keeps at most four). */
-    @Synchronized fun loadContextTurns(id: String, limit: Int = 4): List<ContextTurn> {
+    @Synchronized fun loadContextTurns(id: String, limit: Int = LocalDialogueContextLimits.MAX_TURNS): List<ContextTurn> {
+        if (limit <= 0) return emptyList()
         val out = ArrayList<ContextTurn>()
+        fun invalidate() {
+            out.clear()
+            out += ContextTurn("", "(Gesprächskontext unvollständig)",
+                requestComplete = false, responseComplete = false, modelResponse = false,
+                responseHasEnd = false)
+        }
         lines(id).forEach { line ->
-            val o = runCatching { JSONObject(line) }.getOrNull() ?: return@forEach
+            if (line.isBlank()) return@forEach
+            val o = runCatching { JSONObject(line) }.getOrNull()
+            if (o == null) { invalidate(); return@forEach }
             when (o.optString("k")) {
                 CONTEXT_RESET -> out.clear()
-                CONTEXT -> runCatching { out += ContextTurn(o.getString("q"), o.getString("r")) }
+                CONTEXT -> {
+                    val turn = runCatching { readContextTurn(o) }.getOrNull()
+                    if (turn == null) invalidate() else out += turn
+                }
+                else -> if (o.has("k")) invalidate()
             }
+            while (out.size > LocalDialogueContextLimits.MAX_TURNS) out.removeAt(0)
         }
-        return out.takeLast(maxOf(0, limit))
+        return out.takeLast(limit)
+    }
+
+    private fun readContextTurn(o: JSONObject): ContextTurn {
+        val request = o.getString("q")
+        val response = o.getString("r")
+        if (!o.has("v")) return ContextTurn(request, response,
+            requestComplete = request.length < LEGACY_CONTEXT_REQUEST,
+            responseComplete = response.length < LEGACY_CONTEXT_RESPONSE,
+            responseHasEnd = response.length < LEGACY_CONTEXT_RESPONSE).bounded()
+        require(o.get("v") == CONTEXT_VERSION)
+        fun flag(key: String): Boolean = (o.get(key) as? Boolean) ?: error("Context completeness")
+        return ContextTurn(request, response, flag("qc"), flag("rc"), flag("model"), flag("end")).bounded()
     }
 
     /** The last [limit] readable entries in order; a torn last line (process death mid-write) is skipped. */
@@ -128,8 +179,9 @@ class LocalChatTranscriptStore(private val dir: File) {
         private const val CONTEXT_RESET = "ctx-reset"
         private const val SUFFIX = ".jsonl"
         private const val MAX_TEXT = 32_000
-        private const val MAX_CONTEXT_REQUEST = 1_000
-        private const val MAX_CONTEXT_RESPONSE = 2_000
+        private const val CONTEXT_VERSION = 2
+        private const val LEGACY_CONTEXT_REQUEST = 1_000
+        private const val LEGACY_CONTEXT_RESPONSE = 2_000
         private const val MAX_READ_BYTES = 4L * 1024 * 1024
     }
 }

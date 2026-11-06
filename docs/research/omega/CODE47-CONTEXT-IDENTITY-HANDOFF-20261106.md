@@ -32,3 +32,11 @@ Target controls: late negation beyond 1,000 characters, legacy clipped rows, mal
 ## Resume and rollback
 
 Read this branch's real remote HEAD and diffs first. Next: regression tests for transcript completeness, then implement the minimal format/restore repair. Revert this branch's commits before integration to return to the candidate; do not delete or rewrite existing transcripts.
+
+## Checkpoint 1 — transcript completeness
+
+Real Kotlin2.4.0/JDK17/JUnit4.13.2 regression: original Store source from candidate5572edf fails both new long-request roundtrip tests; repaired Store passes both plus its five existing tests (7/7). Synthetic late negations and multilingual tails are preserved. This is a Store-only proof, not yet the Activity/retained-context integration.
+
+Implemented WIP: version2 context records carry requestComplete, responseComplete, modelResponse and responseHasEnd. Full admitted owner requests share the existing7900-character/UTF-8-byte task bound. Legacy records at the old1000/2000 clipping boundaries remain explicitly incomplete; malformed/unknown context rows invalidate older context. New per-turn callback includes failed/unanswered owner turns so later Activity integration can persist them. RAM restore consumes metadata rather than treating prefixes as originals.
+
+Still NOT_RUN: new metadata/corruption/restore integration regressions, context rendering and compiler/identity tests. Follow-up rendering currently awaits budget-aware implementation. Do not release or merge this intermediate checkpoint.
