@@ -15,12 +15,15 @@ internal object LocalConversationFollowUpPolicy {
     // a correction without a label („Nicht vier, sondern fünf.“, „Das stimmt nicht, …“, „Ich habe mich vertan …“),
     private val contrastive = Regex(
         """(?iu)(?:^|[.!?]\s*)(?:nein[,!]?\s+)?nicht\s+[^,.!?\n]{1,40},?\s+sondern\s+|(?<!\p{L})(?:das\s+stimmt\s+nicht|das\s+war\s+falsch|ich\s+habe\s+mich\s+(?:vertan|geirrt|versprochen))(?!\p{L})""")
-    // a question or request that points back with a pronoun („Wo arbeitet er?“, „Fass sie mir zusammen.“) – „es“ is
-    // left out on purpose („Wie spät ist es?“, „Was kostet es?“),
+    // a question or request that points back with a pronoun („Wo arbeitet er?“, „Fass sie mir zusammen.“). Pronouns
+    // match lowercase only: the formal „Sie/Ihnen“ addresses JARVIS („Was können Sie für mich tun?“) and must not be
+    // refused as a follow-up without history (#565 review); „es“ is left out („Wie spät ist es?“, „Was kostet es?“),
     private val anaphoric = Regex(
-        """(?iu)^(?:(?:wo|wie|wann|was|wer|warum|wohin|woher|welche\p{L}*)\s+\p{L}+\s+(?:er|sie|ihn|ihm|ihnen|dort|dorthin)|(?:fass|lies|zeig|zeige|erklär|erkläre|vergleich|vergleiche|übersetz|übersetze)\s+(?:sie|ihn|ihm|ihnen))(?!\p{L})""")
-    // and asking again for something said before („Wie hieß der Handwerker nochmal?“).
-    private val again = Regex("""(?iu)(?<!\p{L})(?:nochmal|noch\s+einmal)(?!\p{L})[^.!?\n]{0,40}\?""")
+        """(?u)^(?:(?i:wo|wie|wann|was|wer|warum|wohin|woher|welche\p{L}*)\s+\p{L}+\s+(?:er|sie|ihn|ihm|ihnen|dort|dorthin)|(?i:fass|lies|zeig|zeige|erklär|erkläre|vergleich|vergleiche|übersetz|übersetze)\s+(?:sie|ihn|ihm|ihnen))(?!\p{L})""")
+    // and asking again for something said before – only after a recall verb („Wie hieß der Handwerker nochmal?“), not
+    // a polite repeat („Kannst du mir nochmal erklären …“) or a general question („Was war nochmal die Hauptstadt …“).
+    private val again = Regex(
+        """(?iu)(?<!\p{L})(?:hieß|hiess|heißt|sagtest|sagte|meintest|erwähnt\p{L}*)(?!\p{L})[^.!?\n]{0,40}(?<!\p{L})(?:nochmal|noch\s+einmal)(?!\p{L})[^.!?\n]{0,40}\?""")
 
     fun requiresPreviousOwnerTurn(request: String): Boolean {
         val text = request.trim()

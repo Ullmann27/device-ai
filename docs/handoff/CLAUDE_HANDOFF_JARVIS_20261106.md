@@ -51,6 +51,9 @@ keine Signatur-/Paketänderung, kein Main-Merge. PR #571 bleibt als Draft offen 
   JA für alle Katalogfälle, Kontrollfälle unberührt, keine Werkzeug-/Geheimnis-Wiederholung; (3) Modellantwort korrekt:
   **NOT_RUN** (kein Modell auf dem Host) – keine Intelligenzverbesserung behauptet; (4) Werkzeuge: keine ausgeführt.
   Mehrstufige Aufträge (`ChatReasoningRouter`/`BoundedAgentOrchestrator`) brauchen das Modell → NOT_RUN.
+  Review-Korrektur (Gitar ⚠️): höfliches „Sie/Ihnen“ und „nochmal“ ohne Erinnerungsverb lösten den Anschluss aus –
+  als erste Nachricht ohne Vorgeschichte hätte JARVIS dann mit LOCAL_FOLLOWUP_HISTORY_UNAVAILABLE abgelehnt.
+  Behoben (Pronomen nur kleingeschrieben, „nochmal“ nur nach hieß/sagtest/meintest/erwähnt), RED→GREEN, 50/50.
 
 ## Offen (nächste Schritte)
 

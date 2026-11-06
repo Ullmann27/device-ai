@@ -57,4 +57,16 @@ class ConversationUnderstandingCatalogTest {
     @Test fun theDeterministicTimelineDoesNotGuessNumberWords() {
         assertNull(OwnerStatementTimeline.project(listOf("Für die Feier brauchen wir vier Stühle."), "Nicht vier, sondern fünf."))
     }
+
+    /**
+     * #565 review (Gitar): a first message is refused when the policy calls it a follow-up and no history exists
+     * (LOCAL_FOLLOWUP_HISTORY_UNAVAILABLE). Formal „Sie“ and a polite „nochmal“ request are standalone questions.
+     */
+    @Test fun formalAddressAndPoliteRepeatsAreNoFollowUps() {
+        listOf("Was können Sie für mich tun?", "Wann haben Sie geöffnet?", "Wie können Sie mir helfen?",
+            "Kannst du mir nochmal erklären, wie Photosynthese funktioniert?", "Was war nochmal die Hauptstadt von Kanada?")
+            .forEach { assertFalse("„$it“ must be answered on its own", LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(it)) }
+        listOf("Wo arbeitet er?", "Fass sie mir kurz zusammen.", "Wie hieß der Handwerker nochmal?", "Nicht vier, sondern fünf.")
+            .forEach { assertTrue("„$it“ points back", LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(it)) }
+    }
 }
