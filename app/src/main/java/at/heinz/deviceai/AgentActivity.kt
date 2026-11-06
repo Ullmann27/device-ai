@@ -1830,6 +1830,54 @@ class AgentActivity : Activity() {
         if (documentIoExecutor.isShutdown) apply.run() else documentIoExecutor.execute(apply)
     }
 
+    /** The existing document I/O lane serializes tool records too. No second store. */
+    private fun recordStorageToolStarted(started: MutableSet<String>, callId: String, toolName: String) {
+        if (toolName != at.heinz.deviceai.cognitive.ToolWorkJournalBridge.FIRST_TOOL ||
+            !started.add(callId) || documentIoExecutor.isShutdown) return
+        documentIoExecutor.execute {
+            runCatching { workJournal.beginTool(callId, toolName) }.onFailure {
+                runOnUiThread { if (!isFinishing && !isDestroyed)
+                    addToolActivity("Werkzeugjournal nicht verfügbar · kein Nachweis gespeichert") }
+            }
+            publishOpenWork()
+        }
+    }
+
+    /** Only real ToolGate receipts may turn a started storage probe into a result. */
+    private fun settleStorageToolRun(started: Set<String>,
+                                     result: Result<at.heinz.deviceai.cognitive.AgentRunResult>,
+                                     startedSession: String,
+                                     cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation) {
+        if (documentIoExecutor.isShutdown) return
+        val receipts = result.getOrNull()?.taskEvidence?.calls.orEmpty().filter {
+            it.toolName == at.heinz.deviceai.cognitive.ToolWorkJournalBridge.FIRST_TOOL
+        }
+        val ids = (started.toList() + receipts.map { it.callId }).distinct()
+        if (ids.isEmpty()) return
+        val currentAtReturn = sessionId == startedSession &&
+            runCatching { cancellation.throwIfCancelled() }.isSuccess
+        documentIoExecutor.execute {
+            ids.forEach { callId ->
+                runCatching {
+                    val proof = receipts.firstOrNull { it.callId == callId }
+                    if (proof == null) {
+                        workJournal.finishTool(callId,
+                            at.heinz.deviceai.cognitive.ToolWorkJournalBridge.FIRST_TOOL,
+                            at.heinz.deviceai.cognitive.CockpitWorkJournal.ToolState.UNKNOWN)
+                    } else {
+                        at.heinz.deviceai.cognitive.ToolWorkJournalBridge.settle(
+                            workJournal, proof, currentAtReturn && sessionId == startedSession &&
+                                runCatching { cancellation.throwIfCancelled() }.isSuccess)
+                    }
+                }.onFailure {
+                    runOnUiThread { if (!isFinishing && !isDestroyed)
+                        addToolActivity("Werkzeugquittung nicht im Arbeitsjournal gespeichert") }
+                }
+            }
+            publishOpenWork()
+        }
+    }
+
     /** Open next steps of the work journal for the cockpit's process panel; read off the UI thread, after each write. */
     @Volatile private var openWork: List<String> = emptyList()
 
@@ -5931,6 +5979,7 @@ class AgentActivity : Activity() {
         val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
         val plan = at.heinz.deviceai.cognitive.ReadOnlyToolPlan.forRequest(request, ToolProposal(name, decision.arguments))
         val gate = createToolGate()
+        val startedStorageCalls = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
         val orchestrator = BoundedAgentOrchestrator(
             model = plan,
             memories = { memoryStore.all() + ownerFactMemories() },
@@ -5944,13 +5993,17 @@ class AgentActivity : Activity() {
             checkpointStore = FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")),
             callIdPrefix = "bootstrap-" + UUID.randomUUID().toString(),
             cancellation = cancellation,
-            turnTrace = turnTrace
+            turnTrace = turnTrace,
+            onToolStarted = { callId, toolName ->
+                recordStorageToolStarted(startedStorageCalls, callId, toolName)
+            }
         )
         activeBootstrapGate = gate
         activeChatCancellation = cancellation
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
             val result = runCatching { orchestrator.run(request) }
+            settleStorageToolRun(startedStorageCalls, result, actionSessionId, cancellation)
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 if (activeBootstrapGate !== gate || activeChatCancellation !== cancellation) return@runOnUiThread
