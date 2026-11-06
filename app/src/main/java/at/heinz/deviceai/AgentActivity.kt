@@ -9035,6 +9035,22 @@ class AgentActivity : Activity() {
                     at.heinz.deviceai.cognitive.TurnScopedInternetMode.effective(
                         internetModeAtTurnStart, internetConsent.mode,
                         internetConsent.revision() == internetRevisionAtTurnStart)
+                // Optional read-only decision context; refresh after queued document writes.
+                // Never supply owner records to assigned bots or coding-only planning.
+                val decisionDigest = if (botTask == null && codingPlanning == null &&
+                    sessionId == localSessionId && !documentIoExecutor.isShutdown) {
+                    runCatching {
+                        val episodes = documentIoExecutor
+                            .submit<List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>> {
+                                workJournal.all()
+                            }.get(400L, TimeUnit.MILLISECONDS)
+                        cancellation.throwIfCancelled()
+                        if (sessionId != localSessionId) "" else
+                            at.heinz.deviceai.cognitive.LocalDecisionPromptDigest.render(
+                                text, at.heinz.deviceai.cognitive.WorkDecisionRecall.items(
+                                    episodes, ownerDecisionStatements(), System.currentTimeMillis()))
+                    }.getOrDefault("")
+                } else ""
                 // Rebuild per model call/retry: a consent revocation must not reuse a
                 // research frame rendered before the current bounded access state.
                 val conversationContext = if (botTask != null) "" else at.heinz.deviceai.cognitive.LocalConversationPromptFirewall.safeHistory(
@@ -9121,15 +9137,24 @@ class AgentActivity : Activity() {
                 else ""
                 // Required owner request and selected evidence are atomic. Do not
                 // cut a negation to fit optional history or advisory text.
-                val prompt = at.heinz.deviceai.cognitive.LocalPromptFrame.assemble(
+                val promptEnd = promptTail + briefInstruction + "\n" +
+                    at.heinz.deviceai.cognitive.LocalClockIntent.promptAnchor(java.time.ZonedDateTime.now())
+                val essentialPrompt = at.heinz.deviceai.cognitive.LocalPromptFrame.assemble(
                     requiredBody=promptBody, optionalHistory=conversationContext,
-                    // M2: the per-minute time anchor is the LAST line, so the static
-                    // instruction prefix stays byte-identical between turns.
-                    advisory=advisory, requiredTail=promptTail + briefInstruction + "\n" +
-                        at.heinz.deviceai.cognitive.LocalClockIntent.promptAnchor(java.time.ZonedDateTime.now()),
+                    advisory=advisory, requiredTail=promptEnd,
                     maxCharacters=promptCap, requireHistory=requiresPriorDialogue
                 ) ?: error(if (requiresPriorDialogue) "LOCAL_FOLLOWUP_HISTORY_EXCEEDS_BUDGET"
                     else "LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET")
+                // Keep complete owner-history first. The decision digest is optional and
+                // atomic: if it cannot fit, use the already-validated original prompt.
+                val prompt = if (decisionDigest.isEmpty()) essentialPrompt else {
+                    at.heinz.deviceai.cognitive.LocalPromptFrame.assemble(
+                        requiredBody=promptBody,
+                        optionalHistory=conversationContext + "\n" + decisionDigest,
+                        advisory=advisory, requiredTail=promptEnd, maxCharacters=promptCap,
+                        requireHistory=requiresPriorDialogue
+                    )?.takeIf { it.contains(decisionDigest) } ?: essentialPrompt
+                }
                 compiledContext?.requireCompleteIn(prompt)
                 if (requiresPriorDialogue) {
                     val receipt = at.heinz.deviceai.cognitive.LocalContextIntegrityProbe.inspect(
