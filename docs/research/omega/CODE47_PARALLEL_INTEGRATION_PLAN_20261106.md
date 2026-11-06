@@ -81,3 +81,21 @@ Fold7 acceptance. Never merge to main without explicit approval.
 6. Listen to offline voice and observe real lip synchronization; capture latency, heat and drops.
 
 Record exact APK source, Build-Info SHA, step, expected vs actual, timestamp, video/image/log when available.
+
+## Progress receipt — M0/M1 (2026-11-06)
+
+- **M0 source corrected:** the `das hier` forward-inline/follow-up split now protects
+  self-contained inline quotations and translation text without losing genuine
+  `das hier jetzt/konkret/dann/eigentlich für …` references.
+- **M1 source integrated, not device-accepted:** `LocalDecisionPromptDigest` selects
+  a topical, optional and provenance-labelled context from the existing ledger and
+  `CockpitWorkJournal`; `AgentActivity.runLocal` reads it on the existing owner model path.
+  `LocalDecisionPromptFrame` does not sacrifice required dialogue, the owner request,
+  prompt tail or previously included internal advisory. Ledger `confirmable` is respected.
+- Isolated Kotlin smoke 19 selector/frame checks + 13 regex cases = **32 PASS**,
+  using dependency substitutes; real Gradle/JUnit, actual LiteRT responses and Fold7 remain
+  **NOT_RUN**. Evidence: `docs/evidence/code47-integration-20261106/decision-digest-host-20261106.md`.
+- Review threads identified the false-negative `das hier` adverb family and the
+  clipped-advisory boundary; both repaired, replied to and resolved in Draft PR #576.
+- **M2/M3/M4/M5 remain open.** Do not confuse a checked-in JUnit test with a completed
+  Android test run or this source with an installed Code47 APK. Code46 source/publisher untouched.
