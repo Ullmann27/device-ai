@@ -34,15 +34,15 @@ internal object LocalDecisionPromptDigest {
         if (question.isBlank() || question.length > 1_000 || question.any { it.isISOControl() }) return ""
         val query = tokens(question)
         if (query.isEmpty()) return ""
-        fun matches(item: WorkDecisionRecall.Item): Boolean {
-            if (!acceptable(item.text)) return false
-            return tokens(item.text).any { it in query }
-        }
+        fun relates(item: WorkDecisionRecall.Item): Boolean =
+            tokens(item.text).any { it in query }
+        fun matches(item: WorkDecisionRecall.Item): Boolean =
+            acceptable(item.text) && relates(item)
 
-        // Revoked subject? Do not resurface earlier owner statements about that topic.
+        // Even a confidential revoked row blocks resurrecting an older decision.
         val revokedTopic = items.any {
             it.origin == WorkDecisionRecall.Origin.OWNER_STATEMENT &&
-                it.revokedAt != null && matches(it)
+                it.revokedAt != null && relates(it)
         }
         val liveOwners = if (revokedTopic) emptyList() else items.filter {
             it.origin == WorkDecisionRecall.Origin.OWNER_STATEMENT &&
