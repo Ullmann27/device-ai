@@ -78,7 +78,7 @@ internal object OwnerAppLookupIntent {
         return candidates.getOrNull(index)?.packageName
     }
 
-    private fun stripAddress(text: String, configured: String?): String {
+    fun stripAddress(text: String, configured: String?): String {
         val names = (listOf("Jarvis", "Continuum") + listOfNotNull(configured))
             .filter { it.length in 2..80 && it.none(Char::isISOControl) }.distinct()
             .sortedByDescending(String::length).joinToString("|", transform = Regex::escape)
