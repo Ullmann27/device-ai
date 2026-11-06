@@ -78,7 +78,10 @@ class ContinuumDocumentFlowUiTest {
             state = LocalModelState.READY
             callback.onEvent(LocalInferenceEvent.Failed(message))
         }
+        /** Like a native runtime whose cancel returns before its stream ended: the answer can still arrive late. */
+        @Volatile var holdOnCancel = false
         override fun cancel() {
+            if (holdOnCancel) return
             val callback = pending.getAndSet(null) ?: return
             state = LocalModelState.READY
             callback.onEvent(LocalInferenceEvent.Cancelled)
@@ -279,5 +282,66 @@ class ContinuumDocumentFlowUiTest {
         assertTrue("never an undetermined model error: $chat", chat.none { it.startsWith("Lokaler Modellfehler") })
         advance(1_200L); measure(root); draw(root)
         capture(root, "flow-5-after-stop-cockpit-restored")
+    }
+
+    /**
+     * Owner: „Spätantwort-Prüfung“ – STOP while the native stream has not ended yet; the model's answer still arrives
+     * afterwards. Nothing may come back: no draft window, no late text, the journal stays ABORTED, START stays. A later
+     * real failure of the same draft is reported with its real cause, never as the old STOP (#565 review, Gitar).
+     */
+    @Test fun aLateAnswerAfterStopChangesNothingAndALaterFailureKeepsItsCause() = withFlow { activity, root, runtime ->
+        runtime.holdOnCancel = true
+        val scene = startDraft(activity, root, runtime, "Protokoll.pdf", "Protokoll der Besprechung.")
+        until(root, "the journal records the running draft") { state(scene) == CockpitWorkJournal.State.DRAFTING }
+        call(activity, "cancelLocalRequest")
+        until(root, "STOP is recorded") { state(scene) == CockpitWorkJournal.State.ABORTED }
+        runtime.answer("Späte Antwort, die erst nach STOP kam.")
+        until(root, "the late run has ended") { !(field(activity, "busy") as Boolean) && !runtime.running }
+        advance(800L); measure(root); draw(root)
+        fun chat() = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>().map { it.text.toString() }
+        assertTrue("no late text: ${chat()}", chat().none { it.contains("Späte Antwort") })
+        assertFalse("no late draft window", descendants(root).any { it.tag == "jarvis-draft" && it.isShown })
+        assertEquals(CockpitWorkJournal.State.ABORTED, state(scene))
+        assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
+
+        runtime.holdOnCancel = false
+        call(activity, "startDocumentDraft", scene.doc)
+        until(root, "the restarted draft reaches the model") { runtime.running }
+        runtime.fail(at.heinz.deviceai.localmodel.LocalModelThermalGuard.STOPPED_THERMAL)
+        until(root, "the restarted run is over") { !(field(activity, "busy") as Boolean) }
+        advance(200L)
+        val last = chat().last()
+        assertFalse("a real failure is not reported as the old STOP: $last", last == "Entwurf mit STOP abgebrochen – nichts gespeichert.")
+        assertEquals(at.heinz.deviceai.localmodel.LocalModelThermalGuard.ownerMessage(
+            at.heinz.deviceai.localmodel.LocalModelThermalGuard.STOPPED_THERMAL), last)
+    }
+
+    /**
+     * The race Gitar named (#565 review): the model has finished, its delivery to the UI is already queued, then the
+     * owner presses STOP. The finished draft may not appear after STOP (no late text, no window, no CHAT switch, not
+     * kept as conversation context); the STOP marker is used up, so a later real failure keeps its real cause.
+     */
+    @Test fun aReplyQueuedBeforeStopIsDiscardedAfterIt() = withFlow { activity, root, runtime ->
+        val scene = startDraft(activity, root, runtime, "Angebot.pdf", "Angebot für das Projekt.")
+        until(root, "the journal records the running draft") { state(scene) == CockpitWorkJournal.State.DRAFTING }
+        runtime.answer("Fertiger Entwurf, der vor STOP fertig wurde.")
+        // Let the model lane finish and queue its delivery on the (paused) main looper – without running it.
+        Thread.sleep(400)
+        call(activity, "cancelLocalRequest")
+        until(root, "the queued delivery has run") { !(field(activity, "busy") as Boolean) }
+        advance(800L); measure(root); draw(root)
+        fun chat() = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>().map { it.text.toString() }
+        assertTrue("the finished draft does not come back after STOP: ${chat()}", chat().none { it.contains("Fertiger Entwurf") })
+        assertFalse(descendants(root).any { it.tag == "jarvis-draft" && it.isShown })
+        assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
+        until(root, "STOP is recorded") { state(scene) == CockpitWorkJournal.State.ABORTED }
+        // The owner restarts the same draft (same request text) and it fails for a real reason.
+        call(activity, "startDocumentDraft", scene.doc)
+        until(root, "the restarted draft reaches the model") { runtime.running }
+        runtime.fail(at.heinz.deviceai.localmodel.LocalModelThermalGuard.STOPPED_THERMAL)
+        until(root, "the restarted run is over") { !(field(activity, "busy") as Boolean) }
+        advance(200L)
+        assertEquals("a real failure keeps its real cause, not the old STOP", at.heinz.deviceai.localmodel.LocalModelThermalGuard
+            .ownerMessage(at.heinz.deviceai.localmodel.LocalModelThermalGuard.STOPPED_THERMAL), chat().last())
     }
 }

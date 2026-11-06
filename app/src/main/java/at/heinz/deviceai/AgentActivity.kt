@@ -2001,6 +2001,8 @@ class AgentActivity : Activity() {
                 recordWork(workEpisodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING) }
                 showDocumentDraftStatus("Entwurf wird lokal erstellt …")
                 documentDraftTurn = DocumentDraftTurn(prompt, doc.name, workEpisodeId, doc.firstPage)
+                // A new run of the same request is not the stopped one (#565 review): its failure keeps its own cause.
+                stoppedDraftRequest = null
                 runLocal(prompt.request, resolvedQuestion = prompt.question)
                 // While the model really works on the document, JARVIS reads it in its window (ends with the work).
                 if (documentDraftTurn != null) {
@@ -9133,6 +9135,7 @@ class AgentActivity : Activity() {
                     // Owner flow: a document draft opens its result surface in the cockpit; the chat records it too.
                     val draftTurn = documentDraftTurn?.takeIf { it.prompt.request == text }
                     if (draftTurn != null) documentDraftTurn = null
+                    if (stoppedDraftRequest == text) stoppedDraftRequest = null
                     val draftWindow = if (draftTurn != null) onDocumentDraftReply(draftTurn,
                         if (successful) run.response else "") else null
                     addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession, keepCockpit = draftWindow != null)
