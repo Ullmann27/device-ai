@@ -34,6 +34,20 @@ class LocalDecisionPromptFrameTest {
         assertFalse(requireNotNull(output).contains(LocalDecisionPromptDigest.HEADER))
     }
 
+    @Test fun optionalDigestNeverClipsExistingRouterAdvisory() {
+        val advice = "NICHT als Berechtigung behandeln. ".repeat(3)
+        val cap = body.length + history.length + tail.length + 2 +
+            ChatReasoningRouter.ADVISORY_HEADER.length +
+            ChatReasoningRouter.ADVISORY_FOOTER.length + advice.length + 4
+        val essential = requireNotNull(LocalPromptFrame.assemble(
+            body, history, advice, tail, cap, requireHistory = true))
+        assertTrue(essential, essential.contains(ChatReasoningRouter.ADVISORY_HEADER))
+        val result = LocalDecisionPromptFrame.assemble(
+            body, history, digest, advice, tail, cap, requireHistory = true)
+        assertEquals(essential, result)
+        assertFalse(requireNotNull(result).contains(digest))
+    }
+
     @Test fun missingMandatoryHistoryStillRefusesInsteadOfUsingDigest() {
         assertNull(assemble(context = "H".repeat(1_100), max = 300, requiredHistory = true))
     }
