@@ -260,7 +260,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             fun call(name: String, vararg args: Any) = AgentActivity::class.java.declaredMethods.single { it.name == name }
                 .apply { isAccessible = true }.invoke(activity, *args)
             for ((answered, expected) in listOf(true to "Das Werkzeug hat geantwortet", false to "Werkzeug nicht abgeschlossen")) {
-                call("presentToolScene", "call-$answered", "get_storage_info")
+                call("presentToolScene", "call-$answered", "get_storage_info", emptyMap<String, Any?>())
                 advance(640L); measure(root); draw(root)
                 val work = shown(root, "jarvis-work-window")
                 val labels = { descendants(work).filterIsInstance<TextView>().map { it.text.toString() } }
@@ -318,6 +318,83 @@ class ContinuumSystemStatusWorkWindowUiTest {
         } finally {
             framePump?.close(); framePump = null
             ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
+            runCatching { controller.close() }
+        }
+    }
+
+    /**
+     * Owner V1 (06.11.2026), HOST + SIMULATED_TOOL_INPUT, REAL_DEVICE_NOT_RUN: a tool that names an installed app shows
+     * that app's real label and icon (Robolectric PackageManager fixture), the icon rides the light trail, the deck
+     * makes room and the avatar glances; unknown packages, free-text names and non-app tools stay neutral.
+     */
+    @Test fun appToolShowsTheRealInstalledAppIdentityAndNeverAnInventedOne() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        val pkg = "org.example.notes"
+        val pm = shadowOf(app.packageManager)
+        pm.installPackage(android.content.pm.PackageInfo().apply {
+            packageName = pkg
+            applicationInfo = android.content.pm.ApplicationInfo().apply { packageName = pkg; nonLocalizedLabel = "Notizen Beispiel" }
+        })
+        val main = android.content.ComponentName(pkg, "$pkg.Main")
+        pm.addActivityIfNotPresent(main)
+        pm.addIntentFilterForActivity(main, android.content.IntentFilter(android.content.Intent.ACTION_MAIN)
+            .apply { addCategory(android.content.Intent.CATEGORY_LAUNCHER) })
+        pm.setApplicationIcon(pkg, android.graphics.drawable.ColorDrawable(0xFF2AEAFC.toInt()))
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible(); advance(32L); controller.windowFocusChanged(true)
+            val activity = controller.get()
+            val root = activity.window.decorView
+            framePump = CockpitHostFramePump { controller.get().window.decorView }
+            val avatar = field(activity, "hologramView") as ContinuumHologramView
+            val home = field(activity, "homeView") as ContinuumHomeView
+            val director = field(activity, "avatarDirector")!!
+            fun windowIntent() = director.javaClass.getDeclaredField("windowIntent").apply { isAccessible = true }.get(director)
+            avatar.setAnimationsEnabled(true); avatar.setForegroundActive(true); home.setForegroundActive(true)
+            measure(root); advance(320L); measure(root); draw(root)
+            fun call(name: String, vararg args: Any) = AgentActivity::class.java.declaredMethods.single { it.name == name }
+                .apply { isAccessible = true }.invoke(activity, *args)
+            fun deck() = descendants(root).count { v -> v.isShown && v.tag?.toString()?.startsWith("jarvis-tile:") == true }
+            fun labels(v: View) = descendants(v).filterIsInstance<TextView>().map { it.text.toString() }
+
+            call("presentToolScene", "call-app", "launch_app", mapOf<String, Any?>("packageOrName" to pkg))
+            advance(200L); measure(root); draw(root)
+            val work = shown(root, "jarvis-work-window")
+            assertTrue("emblem rides the trail while the window unfolds", field(work, "emblem") != null)
+            advance(640L); measure(root); draw(root)
+            assertTrue(labels(work).toString(), labels(work).contains("APP · Notizen Beispiel"))
+            val row = shown(work, "jarvis-tool-app:$pkg")
+            assertTrue("the real icon is shown", descendants(row).any { it is android.widget.ImageView && it.drawable != null })
+            assertTrue(labels(row).containsAll(listOf("Notizen Beispiel", pkg)))
+            assertTrue(labels(work).any { it.startsWith("Öffnet Notizen Beispiel") })
+            assertEquals("the deck made room", 0, deck())
+            assertTrue("the avatar glances at the app", windowIntent() != null)
+            call("finishToolScene", "call-app", false)
+            assertTrue(labels(work).any { it.startsWith("Werkzeug nicht abgeschlossen") })
+            advance(1_600L + 640L + 480L); measure(root); draw(root)
+            assertTrue(descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+            assertEquals(null, windowIntent())
+            assertTrue("the deck is back", deck() >= 8)
+
+            for ((tool, target) in listOf("launch_app" to "org.example.missing", "launch_app" to "Notizen",
+                    "get_storage_info" to pkg)) {
+                call("presentToolScene", "call-$target-$tool", tool, mapOf<String, Any?>("packageOrName" to target))
+                advance(640L); measure(root); draw(root)
+                val neutral = shown(root, "jarvis-work-window")
+                assertTrue("$tool/$target stays neutral", descendants(neutral).none { it.tag?.toString()?.startsWith("jarvis-tool-app:") == true })
+                assertTrue(labels(neutral).any { it.startsWith("WERKZEUG · ") })
+                assertEquals("no invented icon", null, field(neutral, "emblem"))
+                call("finishToolScene", "call-$target-$tool", true)
+                advance(1_600L + 640L + 480L); measure(root); draw(root)
+            }
+        } finally {
+            framePump?.close(); framePump = null
             runCatching { controller.close() }
         }
     }

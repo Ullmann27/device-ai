@@ -2325,22 +2325,50 @@ class AgentActivity : Activity() {
      */
     private var toolScene: Pair<String, TextView>? = null
 
-    private fun presentToolScene(callId: String, toolName: String) {
+    private fun presentToolScene(callId: String, toolName: String, arguments: Map<String, Any?> = emptyMap()) {
         val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown } ?: return
         if (workWindowHost.isShowing || centerDialog?.isShowing == true) return
         val label = ToolRegistry.label(toolName)
-        val status = textView("Läuft … das Ergebnis kommt vom Werkzeug.", 13f, MUTED)
+        // Owner V1: the exact installed app the call names (same rule as the executor), never a guessed name or icon.
+        val app = ToolAppIdentity.resolve(packageManager, toolName, arguments)
+        val status = textView(if (app != null && toolName == "launch_app") "Öffnet ${app.label} … das Ergebnis kommt vom Werkzeug."
+            else "Läuft … das Ergebnis kommt vom Werkzeug.", 13f, MUTED)
         val body = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
+            if (app != null) addView(appIdentityRow(app))
             addView(textView(label, 15f, TEXT, bold = true))
             addView(textView("Werkzeug $toolName · gestartet über die Werkzeugfreigabe", 11f, MUTED))
             addView(status)
         }
-        workWindowHost.show(home, body, "WERKZEUG · $label", at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName)) {
+        val title = if (app != null) "APP · ${app.label}" else "WERKZEUG · $label"
+        workWindowHost.show(home, body, title, at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName),
+            emblem = app?.icon?.let(::drawableCopy)) {
             if (toolScene?.first == callId) toolScene = null
         } ?: return
         toolScene = callId to status
     }
+
+    /** Real icon, label and package of the app the tool names; the icon is its own copy (bounds are per instance). */
+    private fun appIdentityRow(app: ToolAppIdentity): View = LinearLayout(this).apply {
+        orientation = LinearLayout.HORIZONTAL
+        gravity = Gravity.CENTER_VERTICAL
+        tag = "jarvis-tool-app:${app.packageName}"
+        setPadding(0, 0, 0, dp(10))
+        app.icon?.let { icon ->
+            addView(android.widget.ImageView(context).apply {
+                setImageDrawable(drawableCopy(icon))
+                contentDescription = app.label
+            }, LinearLayout.LayoutParams(dp(40), dp(40)).apply { marginEnd = dp(12) })
+        }
+        addView(LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(textView(app.label, 17f, TEXT, bold = true))
+            addView(textView(app.packageName, 11f, MUTED))
+        })
+    }
+
+    private fun drawableCopy(icon: android.graphics.drawable.Drawable): android.graphics.drawable.Drawable =
+        icon.constantState?.newDrawable(resources)?.mutate() ?: icon
 
     private fun finishToolScene(callId: String, answered: Boolean) {
         val (id, status) = toolScene ?: return
@@ -7922,7 +7950,7 @@ class AgentActivity : Activity() {
             fun actualStart() {
                 effectStarted = true
                 cockpitTurn?.let { cockpitTriggers.toolStarted(it, request.callId, request.name) }
-                runOnUiThread { presentToolScene(request.callId, request.name) }
+                runOnUiThread { presentToolScene(request.callId, request.name, request.arguments) }
                 postTaskEffect(effectContext,
                     at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Started(request.callId,
                         at.heinz.deviceai.ui.ContinuumTaskEffects.Kind.TOOL), android.os.SystemClock.uptimeMillis())

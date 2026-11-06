@@ -26,7 +26,8 @@ class JarvisWorkWindowHost(
      * tile – from the point beside the face Jarvis glances at first. Null when the START cockpit cannot host it.
      */
     fun show(home: ContinuumHomeView, body: View, title: String,
-             scene: JarvisActionScenes.Scene = STATUS_SCENE, onClosed: () -> Unit): JarvisWorkWindow? {
+             scene: JarvisActionScenes.Scene = STATUS_SCENE, emblem: android.graphics.drawable.Drawable? = null,
+             onClosed: () -> Unit): JarvisWorkWindow? {
         if (!home.jarvisShellStage || !home.isShown) return null
         val container = activity.findViewById<ViewGroup>(android.R.id.content) ?: return null
         val shell = home.jarvisShell
@@ -61,7 +62,7 @@ class JarvisWorkWindowHost(
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
         var releaseGeometry: () -> Unit = {}
         container.addView(window, ViewGroup.LayoutParams(-1, -1))
-        val accepted = window.open(body, origin, destination, title, withOrb, accent = scene.accent, onClosed = {
+        val accepted = window.open(body, origin, destination, title, withOrb, accent = scene.accent, emblem = emblem, onClosed = {
             releaseGeometry()
             (window.parent as? ViewGroup)?.removeView(window)
             director.windowClosed(id)

@@ -21,6 +21,8 @@ import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.math.roundToInt
 
+private const val EMBLEM_DP = 18f
+
 /** In-cockpit content, shell frames only. */
 class JarvisWorkWindow(
     context: Context,
@@ -50,6 +52,8 @@ class JarvisWorkWindow(
     private var routeLength = 0f
     private var edge = Fill.Linear(0f, 0f, 1f, 1f,
         intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.violet, Colors.magenta))
+    /** Real app icon of the scene (owner V1): rides the head of the light trail while the window unfolds/folds. */
+    private var emblem: android.graphics.drawable.Drawable? = null
     private var onOpened: () -> Unit = {}
     private var onClosed: () -> Unit = {}
     private val painter = AndroidContinuumPainter(context.assets)
@@ -115,7 +119,8 @@ class JarvisWorkWindow(
     /** Rectangles use local overlay pixels. */
     fun open(body: View, origin: RectF, destination: RectF, title: String,
              protectedBounds: List<RectF> = emptyList(),
-             onOpened: () -> Unit = {}, onClosed: () -> Unit = {}, accent: Int = Colors.cyan): Boolean {
+             onOpened: () -> Unit = {}, onClosed: () -> Unit = {}, accent: Int = Colors.cyan,
+             emblem: android.graphics.drawable.Drawable? = null): Boolean {
         if (disposed || deliveringFrame || isInLayout || !JarvisWorkWindowGeometry.valid(origin) ||
             !JarvisWorkWindowGeometry.valid(destination)) return false
         val pixels = RectF(ceil(destination.left), ceil(destination.top), floor(destination.right), floor(destination.bottom))
@@ -135,6 +140,7 @@ class JarvisWorkWindow(
         this.protectedBounds = protectedBounds.filter(JarvisWorkWindowGeometry::valid).map(::RectF)
         this.onOpened = onOpened
         this.onClosed = onClosed
+        this.emblem = emblem?.mutate()
         titleView.text = title
         scroll.addView(body, FrameLayout.LayoutParams(-1, -2))
         scroll.scrollTo(0, 0)
@@ -303,6 +309,8 @@ class JarvisWorkWindow(
         painter.begin(canvas)
         val points = if (phase == Phase.CLOSING) route.asReversed() else route
         var remaining = routeLength * trailProgress
+        var headX = Float.NaN
+        var headY = Float.NaN
         for (i in 0 until points.lastIndex) {
             val a = points[i]
             val b = points[i + 1]
@@ -313,13 +321,33 @@ class JarvisWorkWindow(
             val y = (a.y + (b.y - a.y) * progress) / density
             painter.drawLine(a.x / density, a.y / density, x, y, 6f, edge, .08f * trailAlpha)
             painter.drawLine(a.x / density, a.y / density, x, y, 1f, edge, .85f * trailAlpha)
+            headX = x; headY = y
             remaining -= length
             if (remaining <= 0f) {
                 painter.fillCircle(x, y, 1.5f, Fill.Solid(Colors.glowCore), trailAlpha)
                 break
             }
         }
+        drawEmblem(canvas, headX, headY)
         canvas.restoreToCount(save)
+    }
+
+    /**
+     * The real app icon at the head of the trail (dp canvas): a small glass disc with a fine rim. It is strongest
+     * while the window is still small and fades as the window unfolds; on closing it returns along the same route.
+     */
+    private fun drawEmblem(canvas: Canvas, x: Float, y: Float) {
+        val icon = emblem ?: return
+        if (!x.isFinite() || !y.isFinite()) return
+        val a = (trailAlpha * (1f - .85f * openness)).coerceIn(0f, 1f)
+        if (a <= .02f) return
+        painter.fillCircle(x, y, EMBLEM_DP * .95f, Fill.Solid(Colors.background), .72f * a)
+        painter.fillCircle(x, y, EMBLEM_DP * 1.35f, Fill.Solid(Colors.cyan), .07f * a)
+        painter.strokeCircle(x, y, EMBLEM_DP * .95f, 1f, edge, .9f * a)
+        val half = (EMBLEM_DP * .62f).roundToInt()
+        icon.setBounds(x.roundToInt() - half, y.roundToInt() - half, x.roundToInt() + half, y.roundToInt() + half)
+        icon.alpha = (a * 255f).roundToInt().coerceIn(0, 255)
+        icon.draw(canvas)
     }
 
     private fun dp(value: Float) = (value * density).roundToInt()
