@@ -714,6 +714,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        workPresentationGeneration++
         workWindowHost.close(immediate = true)
         avatarDirector.clearAnimationIntents()
         ownerRecoveryReview?.close()
@@ -1863,9 +1864,13 @@ class AgentActivity : Activity() {
      */
     private fun withWorkJournal(block: (List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>) -> Unit) {
         val session = sessionId
+        val generation = workPresentationGeneration
         val read = Runnable {
             val episodes = runCatching { workJournal.all() }.getOrDefault(emptyList())
-            runOnUiThread { if (!isFinishing && !isDestroyed && sessionId == session) block(episodes) }
+            runOnUiThread {
+                if (!isFinishing && !isDestroyed && sessionId == session && workPresentationGeneration == generation)
+                    block(episodes)
+            }
         }
         if (documentIoExecutor.isShutdown) read.run() else documentIoExecutor.execute(read)
     }
@@ -1903,6 +1908,7 @@ class AgentActivity : Activity() {
 
     /** The decisions shown in this conversation (session-bound): „die Entscheidung davor“ / „was davon“ refer to them. */
     private var decisionFocus: Pair<String, at.heinz.deviceai.cognitive.WorkDecisionRecall.Focus>? = null
+    private var workPresentationGeneration = 0L
 
     /**
      * Reads both records off the UI thread – the work journal on its serial lane (after every queued write) and the
@@ -1912,11 +1918,13 @@ class AgentActivity : Activity() {
     private fun presentDecisionRecall(ask: at.heinz.deviceai.cognitive.WorkDecisionRecall.Ask) {
         val inCockpit = activeWorkArea == ContinuumWorkArea.START
         val session = sessionId
+        val generation = workPresentationGeneration
         val read = Runnable {
             val episodes = runCatching { workJournal.all() }.getOrDefault(emptyList())
             val statements = runCatching { ownerDecisionStatements() }.getOrDefault(emptyList())
             runOnUiThread {
-                if (!isFinishing && !isDestroyed && sessionId == session) presentDecisionRecall(ask, inCockpit, episodes, statements)
+                if (!isFinishing && !isDestroyed && sessionId == session && workPresentationGeneration == generation)
+                    presentDecisionRecall(ask, inCockpit, episodes, statements)
             }
         }
         if (documentIoExecutor.isShutdown) read.run() else documentIoExecutor.execute(read)
@@ -1941,7 +1949,7 @@ class AgentActivity : Activity() {
         val zone = java.util.TimeZone.getDefault()
         val focus = decisionFocus?.takeIf { it.first == sessionId }?.second
         val reply = at.heinz.deviceai.cognitive.WorkDecisionRecall.answer(ask, focus, episodes, statements, now, zone)
-        reply.focus?.let { decisionFocus = sessionId to it }
+        decisionFocus = reply.focus?.let { sessionId to it }
         val kind = ask::class.simpleName ?: "ask"
         // Remembering is shown where the cockpit already shows recall: the real number of items found (0 = no light).
         cockpitBus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.RecallHits(at.heinz.deviceai.cockpit.MEMORY_TURN,
@@ -2277,10 +2285,15 @@ class AgentActivity : Activity() {
      */
     private fun readPdfDocument(uri: android.net.Uri, remembered: at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode?) {
         val pageWidthPx = (resources.displayMetrics.density * 360f).toInt()
+        val session = sessionId
+        val generation = workPresentationGeneration
         documentIoExecutor.execute {
             val result = runCatching { PdfDocumentIntake(contentResolver).read(uri, pageWidthPx) }
             runOnUiThread {
-                if (isFinishing || isDestroyed) return@runOnUiThread
+                if (isFinishing || isDestroyed || sessionId != session || workPresentationGeneration != generation) {
+                    result.getOrNull()?.firstPage?.recycle()
+                    return@runOnUiThread
+                }
                 result.fold({ presentDocumentScene(it, uri.toString()) }) { failure ->
                     val wantsDraft = pendingDocumentDraft
                     val request = pendingDocumentRequest
@@ -4124,12 +4137,14 @@ class AgentActivity : Activity() {
             val language = at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.fromTag(
                 if (::bootstrapMemory.isInitialized) bootstrapMemory.voiceLanguage else "de")
             val ownerName = if (::bootstrapMemory.isInitialized) bootstrapMemory.voiceName else null
-            val choice = at.heinz.deviceai.cognitive.JarvisVoiceSelection.choose(voiceCandidates(engine), language, ownerName)
-                ?: return@runCatching false
-            val voice = engine.voices?.firstOrNull { it.name == choice.voice.name } ?: return@runCatching false
-            voiceChoice = choice
-            engine.setVoice(voice) == TextToSpeech.SUCCESS &&
-                at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(engine.voice?.isNetworkConnectionRequired)
+            voiceChoice = at.heinz.deviceai.cognitive.JarvisVoiceSelection.chooseAndApply(
+                voiceCandidates(engine), language, ownerName) { candidate ->
+                val voice = engine.voices?.firstOrNull { it.name == candidate.name }
+                voice != null && engine.setVoice(voice) == TextToSpeech.SUCCESS &&
+                    engine.voice?.name == voice.name &&
+                    at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(engine.voice?.isNetworkConnectionRequired)
+            }
+            voiceChoice != null
         }.getOrDefault(false)
         if (!voiceReady) voiceChoice = null
         if (voiceReady) {
@@ -4163,10 +4178,14 @@ class AgentActivity : Activity() {
                 bootstrapMemory.voiceName = if (which == 0) null else voices[which - 1].name
                 refreshOfflineVoice()
                 dialog.dismiss()
-                if (voiceReady && voiceEnabled) speakBootstrap(
-                    if (language == at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.ENGLISH) "Hello. This is my voice now."
-                    else "Hallo. So klingt meine Stimme jetzt.")
-                else Toast.makeText(this, "Diese Stimme konnte nicht gesetzt werden.", Toast.LENGTH_LONG).show()
+                if (!voiceReady) Toast.makeText(this, "Diese Stimme konnte nicht gesetzt werden.", Toast.LENGTH_LONG).show()
+                else {
+                    if (voiceChoice?.ownerChoiceDropped == true) Toast.makeText(this,
+                        "Die gewählte Stimme ist nicht verfügbar. Eine andere Offline-Stimme ist aktiv.", Toast.LENGTH_LONG).show()
+                    if (voiceEnabled) speakBootstrap(
+                        if (language == at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.ENGLISH) "Hello. This is my voice now."
+                        else "Hallo. So klingt meine Stimme jetzt.")
+                }
             }
             .setNeutralButton("Sprache: ${otherLanguage.label}") { _, _ ->
                 bootstrapMemory.voiceLanguage = otherLanguage.tag
@@ -9992,6 +10011,9 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        workPresentationGeneration++
+        pendingDocumentDraft = false
+        pendingDocumentRequest = ""
         // STOP: a running document draft is recorded as aborted – never as done.
         documentDraftTurn?.let { turn ->
             stoppedDraftRequest = turn.prompt.request
@@ -11254,6 +11276,7 @@ class AgentActivity : Activity() {
 
     /** [keepCockpit]: a cockpit work scene answers this request on START – record it without switching to the chat. */
     private fun addUserMessage(value: String, keepCockpit: Boolean) {
+        workPresentationGeneration++
         recordCockpitDialog(true, value)
         if (avatarBlocked) { avatarBlocked = false; refreshHologramState() }
         // Store only public, scrubbed topic labels when the owner has enabled

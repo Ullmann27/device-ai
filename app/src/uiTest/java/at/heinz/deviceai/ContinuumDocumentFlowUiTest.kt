@@ -454,4 +454,59 @@ class ContinuumDocumentFlowUiTest {
         assertFalse("never „still running“ after STOP: $answer", answer.contains("Entwurf in Arbeit"))
         assertTrue("the state STOP recorded: $answer", answer.contains("mit STOP abgebrochen, nicht erledigt"))
     }
+
+    @Test fun stopRejectsAQueuedDecisionContinuation() = withFlow { activity, root, runtime ->
+        val journal = CockpitWorkJournal(activity.filesDir)
+        val episode = journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Entwurf fortsetzen",
+            CockpitWorkJournal.State.DRAFTED, "Beispiel.pdf")
+        journal.update(episode.id) { it.copy(draft = "Ungeprüfter Testentwurf") }
+        val items = at.heinz.deviceai.cognitive.WorkDecisionRecall.items(journal.all(), emptyList(), System.currentTimeMillis())
+        val focus = at.heinz.deviceai.cognitive.WorkDecisionRecall.Focus(items, items, 0)
+        AgentActivity::class.java.getDeclaredField("decisionFocus").apply { isAccessible = true }
+            .set(activity, field(activity, "sessionId") as String to focus)
+        val lane = field(activity, "documentIoExecutor") as java.util.concurrent.ExecutorService
+        val gate = java.util.concurrent.CountDownLatch(1)
+        lane.execute { gate.await(10, TimeUnit.SECONDS) }
+        try {
+            call(activity, "presentDecisionRecall", at.heinz.deviceai.cognitive.WorkDecisionRecall.Ask.ContinueOpen)
+            call(activity, "cancelLocalRequest")
+        } finally { gate.countDown() }
+        lane.submit {}.get(10, TimeUnit.SECONDS)
+        advance(128L); measure(root); draw(root)
+        assertFalse("STOP prevents a late draft window", descendants(root).any { it.tag == "jarvis-draft" && it.isShown })
+        assertTrue("no restarted inference", runtime.prompts.isEmpty())
+        assertEquals(CockpitWorkJournal.State.DRAFTED, journal.all().single { it.id == episode.id }.state)
+    }
+
+    @Test fun stopRejectsAQueuedPdfFailureAndItsPicker() = withFlow { activity, root, runtime ->
+        val journal = CockpitWorkJournal(activity.filesDir)
+        val episode = journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Letzte PDF öffnen",
+            CockpitWorkJournal.State.READ, "Verschoben.pdf", documentUri = "content://missing/document/test")
+        val lane = field(activity, "documentIoExecutor") as java.util.concurrent.ExecutorService
+        val gate = java.util.concurrent.CountDownLatch(1)
+        lane.execute { gate.await(10, TimeUnit.SECONDS) }
+        try {
+            call(activity, "readPdfDocument", android.net.Uri.parse(episode.documentUri), episode)
+            call(activity, "cancelLocalRequest")
+        } finally { gate.countDown() }
+        lane.submit {}.get(10, TimeUnit.SECONDS)
+        advance(128L); measure(root); draw(root)
+        assertEquals("no picker after STOP", null, shadowOf(activity).nextStartedActivityForResult)
+        assertTrue(runtime.prompts.isEmpty())
+        assertEquals("cancelled reads add no failed task", 1, journal.all().size)
+    }
+
+    @Test fun anEmptyDecisionQueryClearsThePreviousFocus() = withFlow { activity, _, _ ->
+        val journal = CockpitWorkJournal(activity.filesDir)
+        val episode = journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Testauftrag",
+            CockpitWorkJournal.State.DRAFTED, "Beispiel.pdf")
+        val items = at.heinz.deviceai.cognitive.WorkDecisionRecall.items(listOf(episode), emptyList(), System.currentTimeMillis())
+        val focus = at.heinz.deviceai.cognitive.WorkDecisionRecall.Focus(items, items, 0)
+        AgentActivity::class.java.getDeclaredField("decisionFocus").apply { isAccessible = true }
+            .set(activity, field(activity, "sessionId") as String to focus)
+        call(activity, "presentDecisionRecall", at.heinz.deviceai.cognitive.WorkDecisionRecall.Ask.Decisions(
+            at.heinz.deviceai.cognitive.WorkRecall.Period.TODAY, false), true,
+            emptyList<CockpitWorkJournal.Episode>(), emptyList<at.heinz.deviceai.cognitive.WorkDecisionRecall.OwnerStatement>())
+        assertEquals("no old focus after an empty answer", null, field(activity, "decisionFocus"))
+    }
 }
