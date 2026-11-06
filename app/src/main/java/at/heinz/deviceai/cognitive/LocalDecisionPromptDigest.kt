@@ -39,14 +39,16 @@ internal object LocalDecisionPromptDigest {
         fun matches(item: WorkDecisionRecall.Item): Boolean =
             acceptable(item.text) && relates(item)
 
-        // Even a confidential revoked row blocks resurrecting an older decision.
-        val revokedTopic = items.any {
+        // A revoked row blocks older decisions even when its text is confidential.
+        // A later explicitly confirmed replacement is permitted.
+        val lastRevocation = items.filter {
             it.origin == WorkDecisionRecall.Origin.OWNER_STATEMENT &&
                 it.revokedAt != null && relates(it)
-        }
-        val liveOwners = if (revokedTopic) emptyList() else items.filter {
+        }.mapNotNull { it.revokedAt }.maxOrNull()
+        val liveOwners = items.filter {
             it.origin == WorkDecisionRecall.Origin.OWNER_STATEMENT &&
-                it.revokedAt == null && it.done == null && matches(it)
+                it.revokedAt == null && it.done == null && matches(it) &&
+                (lastRevocation == null || it.at > lastRevocation)
         }.distinctBy { it.text }
         // Multiple distinct matching decisions may conflict. Abstain instead of guessing.
         val owner = liveOwners.singleOrNull()
