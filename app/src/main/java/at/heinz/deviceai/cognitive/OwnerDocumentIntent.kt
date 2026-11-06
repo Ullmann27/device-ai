@@ -15,6 +15,21 @@ internal object OwnerDocumentIntent {
     private val read = Regex(
         "(?iu)$START(lies|lese|öffne|zeige|analysiere|prüfe|fasse|nimm|verwende)$END[^.!?]{0,40}?$START(pdf|pdf-datei|pdf-dokument|dokument)$END"
     )
+    private const val COURTESY = "(?:(?:bitte|mir|mal|kurz|eben|für\\s+mich)\\s+)*"
+    private val politeRead = Regex(
+        "(?iu)^(?:(?:kannst|könntest|würdest|magst)\\s+du|ich\\s+(?:möchte|will|würde\\s+gern(?:e)?))\\s+" +
+            COURTESY + "(?:(?:die|das|ein|eine|mein|meine|diese|dieses)\\s+)?" +
+            "(?:(?:ausgewählte[nrs]?|letzte[nrs]?|gleiche[nrs]?|dieselbe|selbe[nrs]?|vorige[nrs]?|gestrige[nrs]?)\\s+)?" +
+            "(?:pdf(?:-datei|-dokument)?|dokument)\\s+" + COURTESY +
+            "(?:öffnen|anzeigen|zeigen|lesen|vorlesen|analysieren|prüfen|zusammenfassen)" +
+            "(?:\\s+(?:bitte|für\\s+mich))?[.!?]*$"
+    )
+    private val extraAction = Regex(
+        "(?iu)(?:[.!?]\\s*|\\s+(?:und|danach|anschließend|dann)\\s+)" +
+            "(?:(?:bitte|danach|anschließend|dann)\\s+)*" +
+            "(?:öffne|öffnen|starte|starten|zeige|zeigen|suche|suchen|finde|finden|" +
+            "schreib|schreibe|schreiben|tippe|installiere|kaufe|bezahle|überweise)$END"
+    )
     private val earlier = Regex(
         "(?iu)$START(ausgewählte|ausgewählten|letzte|letzten|gleiche|gleichen|dieselbe|selbe|selben|vorige|vorigen|gestrige|gestrigen)$END" +
             "\\s+$START(pdf|pdf-datei|pdf-dokument|dokument)$END"
@@ -24,9 +39,14 @@ internal object OwnerDocumentIntent {
         "(?iu)$START(nicht|niemals|kein|keine|keinen|lösche|löschen|sende|senden|schicke|teile|teilen|hochladen|drucke|signiere)$END"
     )
 
-    fun parse(utterance: String): Request? {
+    @JvmOverloads
+    fun parse(utterance: String, assistantName: String? = null): Request? {
         if (utterance.length !in 8..160 || utterance.any { it.isISOControl() }) return null
-        if (prohibited.containsMatchIn(utterance) || !read.containsMatchIn(utterance)) return null
-        return Request(wantsDraft = draft.containsMatchIn(utterance), reuse = earlier.containsMatchIn(utterance))
+        val text = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName)
+            .replace(Regex("(?iu)^bitte\\s+"), "")
+        val direct = read.find(text)
+        if (prohibited.containsMatchIn(text) || (direct == null && !politeRead.matches(text))) return null
+        if (direct != null && extraAction.containsMatchIn(text.substring(direct.range.last + 1))) return null
+        return Request(wantsDraft = draft.containsMatchIn(text), reuse = earlier.containsMatchIn(text))
     }
 }

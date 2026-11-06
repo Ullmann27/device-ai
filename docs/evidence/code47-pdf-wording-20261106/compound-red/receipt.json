@@ -1,0 +1,67 @@
+{
+  "phase": "compound-red",
+  "dependencySource": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+  "rootCommit": "1aed75bc29941594eea97d45f5be8aaba2937b57",
+  "sources": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDocumentIntent.kt",
+      "sha256": "af0c6fd0455aea94985bc05b56aa5bc8c2d59aff41cb19759bcb887ca0e79eb9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+      "sha256": "bed4280198fb19ebda35d31ac10760ee7896dbc5d7d516f37350dd6dfaf6ebc4"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentIntentTest.kt",
+      "sha256": "bab70441398ea2a9046acc070a4b36ade6d6096022957f0edc558f3823a14abd"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentPoliteIntentTest.kt",
+      "sha256": "c4fd74f51de5d7cca553f5a0c5d151108c1c550d4cc443d2663639c33b799a92"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentAddressTest.kt",
+      "sha256": "7874f4b68dc0c824b064f94e2bb0b1acdc47dcf18a24b6a1d384a04c755e07e2"
+    }
+  ],
+  "results": [
+    {
+      "step": "compile",
+      "command": [
+        "/workspace/scratch/b31a9d731016/build-env/kotlinc/bin/kotlinc",
+        "-J-Xmx256m",
+        "-jvm-target",
+        "17",
+        "-module-name",
+        "DeviceAI_app_debug",
+        "-Xfriend-paths=/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug",
+        "-classpath",
+        "/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug:/workspace/scratch/b31a9d731016/build-env/test-libs/junit-4.13.2.jar:/workspace/scratch/b31a9d731016/build-env/test-libs/hamcrest-core-1.3.jar:/workspace/scratch/b31a9d731016/build-env/test-libs/json-20240303.jar",
+        "-d",
+        "/workspace/scratch/b31a9d731016/pdf-word-order-evidence/compound-red/classes",
+        "/workspace/scratch/b31a9d731016/wiring-pdf-word-order/app/src/main/java/at/heinz/deviceai/cognitive/OwnerDocumentIntent.kt",
+        "/workspace/scratch/b31a9d731016/wiring-pdf-word-order/app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+        "/workspace/scratch/b31a9d731016/wiring-pdf-word-order/app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentIntentTest.kt",
+        "/workspace/scratch/b31a9d731016/wiring-pdf-word-order/app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentPoliteIntentTest.kt",
+        "/workspace/scratch/b31a9d731016/wiring-pdf-word-order/app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentAddressTest.kt"
+      ],
+      "exitCode": 0
+    },
+    {
+      "step": "junit",
+      "command": [
+        "/workspace/scratch/b31a9d731016/build-env/jdk17-pinned/bin/java",
+        "-Xmx256m",
+        "-cp",
+        "/workspace/scratch/b31a9d731016/pdf-word-order-evidence/compound-red/classes:/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug:/workspace/scratch/b31a9d731016/build-env/test-libs/junit-4.13.2.jar:/workspace/scratch/b31a9d731016/build-env/test-libs/hamcrest-core-1.3.jar:/workspace/scratch/b31a9d731016/build-env/test-libs/json-20240303.jar:/workspace/scratch/b31a9d731016/build-env/kotlinc/lib/kotlin-stdlib.jar",
+        "org.junit.runner.JUnitCore",
+        "at.heinz.deviceai.cognitive.OwnerDocumentIntentTest",
+        "at.heinz.deviceai.cognitive.OwnerDocumentPoliteIntentTest",
+        "at.heinz.deviceai.cognitive.OwnerDocumentAddressTest"
+      ],
+      "exitCode": 1
+    }
+  ],
+  "physicalFold7": "NOT_RUN",
+  "androidUiExecution": "NOT_RUN"
+}
