@@ -337,4 +337,51 @@ class ContinuumDocumentSceneUiTest {
         assertEquals("the owner's words stay with the corrected task", "Nein, ich meinte den letzten Entwurf", stored().correction)
         capture(root, "memory-2-correction-last-draft")
     }
+
+    /**
+     * Owner brief 06.11.2026 („Animationen sind fester Bestandteil“), HOST: remembering lights the cockpit's existing
+     * recall channel with the real number of tasks found, an understood correction gives the avatar's confirming nod,
+     * and a draft that failed never keeps reading as running.
+     */
+    @Test fun rememberingAndCorrectingAreVisibleAndAFailedDraftNeverReadsAsRunning() = withCockpit { activity, root ->
+        val bus = field(activity, "cockpitBus") as at.heinz.deviceai.cockpit.CockpitAnimationBus
+        val events = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cockpit.CockpitAnimationEvent>()
+        bus.subscribe { events += it }
+        val journal = at.heinz.deviceai.cognitive.CockpitWorkJournal(activity.filesDir)
+        val earlier = journal.begin(at.heinz.deviceai.cognitive.CockpitWorkJournal.Kind.DOCUMENT, "Fasse die Projektübersicht zusammen",
+            at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTED, "Projektübersicht.pdf", 3, 68)
+        journal.update(earlier.id) { it.copy(draft = "Kernaussagen: Cockpit auf dem Fold7.", coveredChars = 68) }
+        fun say(text: String) {
+            (field(activity, "input") as EditText).setText(text)
+            AgentActivity::class.java.getDeclaredMethod("sendCurrentInput", Boolean::class.javaPrimitiveType)
+                .apply { isAccessible = true }.invoke(activity, false)
+            advance(400L); measure(root); draw(root)
+        }
+        say("Wo waren wir heute?")
+        val recall = events.filterIsInstance<at.heinz.deviceai.cockpit.CockpitAnimationEvent.RecallHits>().single()
+        assertEquals("the real number of tasks found", 1, recall.count)
+        assertEquals(1f, recall.topScore)
+        val director = field(activity, "avatarDirector")!!
+        assertEquals(Long.MIN_VALUE, field(director, "lastConfirmationAtMillis"))
+        say("Nein, ich meinte den letzten Entwurf")
+        assertTrue("an understood correction nods", field(director, "lastConfirmationAtMillis") != Long.MIN_VALUE)
+
+        val doc = PdfDocumentIntake.Document("Bericht.pdf", 2_048L, 2, examplePage(200, 280), "Ein kurzer Bericht.",
+            PdfDocumentIntake.TextState.EXTRACTED, 2)
+        AgentActivity::class.java.getDeclaredMethod("presentDocumentScene", PdfDocumentIntake.Document::class.java)
+            .apply { isAccessible = true }.invoke(activity, doc)
+        advance(760L); measure(root); draw(root)
+        val prompt = requireNotNull(at.heinz.deviceai.cognitive.DocumentDraftPrompt.build("Bericht.pdf", "Ein kurzer Bericht."))
+        val episodeId = field(activity, "workEpisodeId") as String
+        val turnClass = AgentActivity::class.java.declaredClasses.single { it.simpleName == "DocumentDraftTurn" }
+        val window = AgentActivity::class.java.getDeclaredMethod("onDocumentDraftReply", turnClass, String::class.java)
+            .apply { isAccessible = true }.invoke(activity, draftTurn(prompt, "Bericht.pdf", episodeId), "")
+        assertEquals("no draft surface without a draft", null, window)
+        val status = descendants(root).single { it.tag == "jarvis-document-draft" && it.isShown } as TextView
+        assertEquals("Entwurf fehlgeschlagen – das lokale Modell hat keinen Entwurf geliefert. Nichts gespeichert.", status.text.toString())
+        val deadline = System.currentTimeMillis() + 5_000
+        while (journal.all().single { it.id == episodeId }.state != at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED &&
+            System.currentTimeMillis() < deadline) { Thread.sleep(20); advance(16L) }
+        assertEquals(at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED, journal.all().single { it.id == episodeId }.state)
+    }
 }

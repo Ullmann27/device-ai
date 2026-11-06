@@ -1833,6 +1833,9 @@ class AgentActivity : Activity() {
         val episodes = runCatching { workJournal.all() }.getOrDefault(emptyList())
         val answer = at.heinz.deviceai.cognitive.WorkRecall.answer(episodes, query, now, zone)
         val hits = at.heinz.deviceai.cognitive.WorkRecall.select(episodes, query, now, zone)
+        // Remembering is shown where the cockpit already shows recall: the real number of tasks found (0 = no light).
+        cockpitBus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.RecallHits(at.heinz.deviceai.cockpit.MEMORY_TURN,
+            now, "work-journal:${query.period}", hits.size, if (hits.isEmpty()) null else 1f))
         val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown }
         val window = if (keepWindow && hits.isNotEmpty() && home != null) {
             val body = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; tag = "jarvis-recall" }
@@ -1875,6 +1878,8 @@ class AgentActivity : Activity() {
             return
         }
         val whenText = at.heinz.deviceai.cognitive.WorkRecall.whenText(meant.startedAt, now, zone)
+        // Understood and acted on: the small confirming nod of the avatar contract (shared cooldown).
+        avatarDirector.confirmationAccepted("correction-${meant.id}-$now")
         val name = meant.source ?: "Dokument"
         if (draftTarget) {
             workEpisodeId = meant.id
@@ -1920,6 +1925,12 @@ class AgentActivity : Activity() {
                                     val episodeId: String? = null)
     /** Journal episode of the document task currently on screen. */
     private var workEpisodeId: String? = null
+    /** The draft line of the open document window: always the state really reached, never „läuft“ after a failure. */
+    private var documentDraftStatus: TextView? = null
+
+    private fun showDocumentDraftStatus(text: String) {
+        documentDraftStatus?.apply { this.text = text; visibility = View.VISIBLE }
+    }
     private var documentDraftTurn: DocumentDraftTurn? = null
     /** Draft text waiting for Android's save dialog (ACTION_CREATE_DOCUMENT). */
     private var pendingDraftSave: String? = null
@@ -1931,16 +1942,24 @@ class AgentActivity : Activity() {
         val inCockpit = workWindowHost.isShowing
         val prompt = at.heinz.deviceai.cognitive.DocumentDraftPrompt.build(doc.name, doc.text)
         when {
-            prompt == null -> addAssistantMessage("Für einen Entwurf fehlt der Dokumenttext.", false, keepCockpit = inCockpit)
-            busy -> addAssistantMessage("JARVIS arbeitet gerade an einem anderen Auftrag – der Entwurf startet nicht nebenher.",
-                false, keepCockpit = inCockpit)
+            prompt == null -> {
+                showDocumentDraftStatus("Für einen Entwurf fehlt der Dokumenttext.")
+                addAssistantMessage("Für einen Entwurf fehlt der Dokumenttext.", false, keepCockpit = inCockpit)
+            }
+            busy -> {
+                showDocumentDraftStatus("Entwurf nicht gestartet – JARVIS arbeitet an einem anderen Auftrag.")
+                addAssistantMessage("JARVIS arbeitet gerade an einem anderen Auftrag – der Entwurf startet nicht nebenher.",
+                    false, keepCockpit = inCockpit)
+            }
             !localModelReady() -> {
                 recordWork(workEpisodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.NO_MODEL) }
+                showDocumentDraftStatus("Entwurf: Lokales Modell nicht geladen · in der Modellverwaltung laden.")
                 addAssistantMessage("Entwurf: Lokales Modell nicht geladen · in der Modellverwaltung laden.",
                     false, keepCockpit = inCockpit)
             }
             else -> {
                 recordWork(workEpisodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING) }
+                showDocumentDraftStatus("Entwurf wird lokal erstellt …")
                 documentDraftTurn = DocumentDraftTurn(prompt, doc.name, workEpisodeId)
                 runLocal(prompt.request, resolvedQuestion = prompt.question)
             }
@@ -1974,6 +1993,8 @@ class AgentActivity : Activity() {
     private fun onDocumentDraftReply(turn: DocumentDraftTurn, response: String): at.heinz.deviceai.ui.JarvisWorkWindow? {
         if (response.isBlank()) {
             recordWork(turn.episodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED) }
+            // The window may never keep saying „wird erstellt“ for a run that failed.
+            showDocumentDraftStatus("Entwurf fehlgeschlagen – das lokale Modell hat keinen Entwurf geliefert. Nichts gespeichert.")
             return null
         }
         recordWork(turn.episodeId) {
@@ -2119,7 +2140,12 @@ class AgentActivity : Activity() {
             val excerpt = if (doc.text.length > DOCUMENT_EXCERPT_CHARS) doc.text.take(DOCUMENT_EXCERPT_CHARS).trimEnd() + " …" else doc.text
             facts.addView(textView(excerpt, 12f, TEXT).apply { tag = "jarvis-document-excerpt" }, matchWidth(top = 8))
         }
-        draftLine?.let { facts.addView(textView(it, 11f, MUTED).apply { tag = "jarvis-document-draft" }, matchWidth(top = 6)) }
+        val draftStatus = textView(draftLine.orEmpty(), 11f, MUTED).apply {
+            tag = "jarvis-document-draft"
+            visibility = if (draftLine == null) View.GONE else View.VISIBLE
+        }
+        facts.addView(draftStatus, matchWidth(top = 6))
+        documentDraftStatus = draftStatus
         if (hasText && !wantsDraft) facts.addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this, "ENTWURF ERSTELLEN") {
             startDocumentDraft(doc)
         }.apply { tag = "jarvis-document-start-draft" }, matchWidth(top = 10))
