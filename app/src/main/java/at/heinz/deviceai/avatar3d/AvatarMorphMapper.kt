@@ -103,6 +103,13 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         // owns the clock and stops it on pause/reduced motion. Actual task/observed gaze wins.
         // The eyes keep their saccades; the head part fades with the state and yields to the speech layer.
         if (idleEyes) { eyeYaw += idleMotion.eyeYaw; eyePitch += idleMotion.eyePitch }
+        // Reading (owner brief 06.11.: the avatar watches the document while the model really processes it): the eyes
+        // sweep the lines of the directed window – a slow pass to the right, a quick return, a little lower each line –
+        // while the head stays on the window. Only for a real held work gaze (Director windowWorkStarted).
+        if (pose.reading && seconds.isFinite()) {
+            eyeYaw += readingYaw(seconds)
+            eyePitch += READ_LINE_PITCH_DEGREES * (kotlin.math.floor(seconds / READ_LINE_S).toInt().mod(READ_LINES))
+        }
         val idleHead = minOf(idleLayer, 1f - speechLayer)
         if (idleHead > 0f) {
             headYaw += idleMotion.headYaw * IDLE_HEAD_GAIN * idleHead; headPitch += idleMotion.headPitch * IDLE_HEAD_GAIN * idleHead
@@ -270,6 +277,20 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
     }
 
     companion object {
+        /** One line read: [READ_LINE_S] long, of which [READ_RETURN_SHARE] is the quick return sweep. */
+        const val READ_LINE_S = 1.6f
+        const val READ_RETURN_SHARE = .18f
+        const val READ_SWEEP_DEGREES = 2.4f
+        const val READ_LINE_PITCH_DEGREES = .45f
+        const val READ_LINES = 4
+
+        /** Eye yaw offset of the reading sweep at [seconds]: −A → +A slowly, then back quickly. */
+        fun readingYaw(seconds: Float): Float {
+            val phase = (seconds / READ_LINE_S).let { it - kotlin.math.floor(it) }
+            val pass = 1f - READ_RETURN_SHARE
+            return if (phase < pass) -READ_SWEEP_DEGREES + 2f * READ_SWEEP_DEGREES * phase / pass
+                else READ_SWEEP_DEGREES - 2f * READ_SWEEP_DEGREES * (phase - pass) / READ_RETURN_SHARE
+        }
         private const val CROSSFADE_S = .07f
         const val CONFIRMATION_PITCH_DEGREES = 3f
         /** Full gaze deflection (|gaze| = 1) of the head bone and the eyes, in degrees. */

@@ -17,7 +17,8 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     // AgentActivity admits callbacks only for its current, unique TTS id. Keep a bounded
     // recent-terminal guard here as well, so replayed starts cannot reset that live speech.
     private val retiredUtterances = LinkedHashSet<String>()
-    private data class WindowIntent(val id: String, val gaze: GazeTarget, val atMillis: Long, val durationMs: Long, val yieldsToObservedGaze: Boolean)
+    private data class WindowIntent(val id: String, val gaze: GazeTarget, val atMillis: Long, val durationMs: Long,
+                                    val yieldsToObservedGaze: Boolean, val reading: Boolean = false)
     private var windowIntent: WindowIntent? = null
     private var confirmationAtMillis = Long.MIN_VALUE
     private var lastConfirmationAtMillis = Long.MIN_VALUE
@@ -135,6 +136,35 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     }
 
     /** Stale windows cannot clear successors. */
+    /**
+     * The local model really works on the content of the open window [windowId] (owner brief 06.11.: „der Avatar richtet
+     * seine Augen auf das Dokument“ while it is processed). Not a timed glance: the eyes stay on the window and read until
+     * [windowWorkEnded], STOP, listening or speech; [AvatarPoseReducer.MAX_WINDOW_WORK_MS] only bounds a lost end event.
+     * Admitted again for a window whose opening glance already expired – the work is a new real event.
+     */
+    @Synchronized fun windowWorkStarted(windowId: String, target: GazeTarget): Boolean {
+        val at = clock()
+        expireAnimationIntents(at)
+        if (windowId.isBlank() || state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) return false
+        windowIntent?.takeIf { it.id != windowId }?.let { remember(retiredWindows, it.id) }
+        windowIntent = WindowIntent(windowId, GazeTarget(
+            target.x.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
+            target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y)),
+            at, AvatarPoseReducer.MAX_WINDOW_WORK_MS, yieldsToObservedGaze = false, reading = true)
+        thinkingAtMillis = Long.MIN_VALUE
+        publishAnimationIntents(at)
+        return true
+    }
+
+    /** The real work on [windowId] ended (result, failure, STOP): the reading gaze is released at once. */
+    @Synchronized fun windowWorkEnded(windowId: String): Boolean {
+        val current = windowIntent?.takeIf { it.id == windowId && it.reading } ?: return false
+        remember(retiredWindows, current.id)
+        windowIntent = null
+        publishAnimationIntents(clock())
+        return true
+    }
+
     @Synchronized fun windowClosed(windowId: String): Boolean {
         if (windowIntent?.id != windowId) return false
         remember(retiredWindows, windowId)
@@ -190,7 +220,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         emit(AvatarEvent.AnimationIntentsChanged(animationRevision, windowIntent?.gaze,
             windowIntent?.atMillis ?: Long.MIN_VALUE, confirmationAtMillis, at,
             windowIntent?.durationMs ?: AvatarPoseReducer.WINDOW_GAZE_TTL_MS, thinkingAtMillis,
-            windowIntent?.yieldsToObservedGaze ?: false))
+            windowIntent?.yieldsToObservedGaze ?: false, windowIntent?.reading ?: false))
     }
 
     private fun remember(ids: LinkedHashSet<String>, id: String) {

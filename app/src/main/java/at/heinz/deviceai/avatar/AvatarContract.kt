@@ -45,7 +45,9 @@ sealed interface AvatarEvent {
     data class AnimationIntentsChanged(val revision: Long, val windowGaze: GazeTarget?,
         val windowAtMillis: Long, val confirmationAtMillis: Long,
         override val atMillis: Long, val windowDurationMs: Long = AvatarPoseReducer.WINDOW_GAZE_TTL_MS,
-        val thinkingAtMillis: Long = Long.MIN_VALUE, val windowYieldsToObservedGaze: Boolean = false) : AvatarEvent
+        val thinkingAtMillis: Long = Long.MIN_VALUE, val windowYieldsToObservedGaze: Boolean = false,
+        /** The model really works on the window's content: the gaze is held (reading) instead of a timed glance. */
+        val windowReading: Boolean = false) : AvatarEvent
     /** Legacy input; same reducer state. */
     data class Gesture(val intent: AvatarGestureIntent, val target: GazeTarget,
         override val atMillis: Long) : AvatarEvent
@@ -86,7 +88,9 @@ data class AvatarPose(val state: AvatarState, val expression: AvatarExpression, 
                       val gestureProgress: Float = 0f, val gazeDirected: Boolean = false,
                       val fallbackGazeX: Float = 0f, val fallbackGazeY: Float = 0f,
                       /** Sentence end reached in the spoken text and its gesture progress 0..1 (−1 = none). */
-                      val sentenceEnd: SpeechBoundary? = null, val sentenceEndProgress: Float = -1f) {
+                      val sentenceEnd: SpeechBoundary? = null, val sentenceEndProgress: Float = -1f,
+                      /** The eyes read the directed window while real work on its content runs (never without it). */
+                      val reading: Boolean = false) {
     val confirmationProgress: Float get() = if (gesture == AvatarGestureIntent.CONFIRM_NOD) gestureProgress else -1f
 }
 
@@ -110,6 +114,7 @@ class AvatarPoseReducer {
     private var confirmationAtMillis = Long.MIN_VALUE
     private var directedDurationMs = WINDOW_GAZE_TTL_MS
     private var directedYieldsToObservedGaze = false
+    private var directedReading = false
     private var thinkingAtMillis = Long.MIN_VALUE
     private var animationClearedAtMillis = Long.MIN_VALUE
     private var lastLegacyGestureAtMillis = Long.MIN_VALUE
@@ -165,7 +170,9 @@ class AvatarPoseReducer {
                 }
                 if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) directedGaze = null
                 directedAtMillis = event.windowAtMillis
-                directedDurationMs = event.windowDurationMs.coerceIn(1L, WINDOW_GAZE_TTL_MS)
+                directedReading = event.windowReading && directedGaze != null
+                directedDurationMs = event.windowDurationMs.coerceIn(1L,
+                    if (directedReading) MAX_WINDOW_WORK_MS else WINDOW_GAZE_TTL_MS)
                 directedYieldsToObservedGaze = event.windowYieldsToObservedGaze
                 confirmationAtMillis = event.confirmationAtMillis
                 thinkingAtMillis = if (state == AvatarState.THINKING) event.thinkingAtMillis else Long.MIN_VALUE
@@ -182,6 +189,7 @@ class AvatarPoseReducer {
                             directedAtMillis = event.atMillis
                             directedDurationMs = LEGACY_WINDOW_GAZE_TTL_MS
                             directedYieldsToObservedGaze = true
+                            directedReading = false
                             thinkingAtMillis = Long.MIN_VALUE
                         }
                     }
@@ -255,6 +263,7 @@ class AvatarPoseReducer {
 
     private fun clearAnimationIntents() {
         directedGaze = null
+        directedReading = false
         directedAtMillis = Long.MIN_VALUE
         confirmationAtMillis = Long.MIN_VALUE
         thinkingAtMillis = Long.MIN_VALUE
@@ -339,13 +348,16 @@ class AvatarPoseReducer {
         return AvatarPose(state, expression, shownGaze.x, shownGaze.y, jaw, viseme, visemeWeight, liveEnergy,
             gazeObserved = shownDirected == null && observedGaze != null, gesture = gesture, gestureProgress = progress,
             gazeDirected = shownDirected != null, fallbackGazeX = underlyingGaze.x, fallbackGazeY = underlyingGaze.y,
-            sentenceEnd = if (sentenceProgress >= 0f) sentenceEnd else null, sentenceEndProgress = sentenceProgress)
+            sentenceEnd = if (sentenceProgress >= 0f) sentenceEnd else null, sentenceEndProgress = sentenceProgress,
+            reading = shownDirected != null && directedReading)
     }
 
     companion object {
         /** Last word of the sentence (about 320 ms) plus the settle or brow release after it. */
         const val SENTENCE_END_DURATION_MS = 1_200L
         const val WINDOW_GAZE_TTL_MS = 2_500L
+        /** Safety bound of a held reading gaze; the real end of the work releases it earlier. */
+        const val MAX_WINDOW_WORK_MS = 10 * 60_000L
         const val LEGACY_WINDOW_GAZE_TTL_MS = 1_100L
         const val THINKING_DURATION_MS = 900L
         const val CONFIRMATION_DURATION_MS = 650L
