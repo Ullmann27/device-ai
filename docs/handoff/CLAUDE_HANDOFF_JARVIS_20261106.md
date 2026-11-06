@@ -38,7 +38,15 @@ keine Signatur-/Paketänderung, kein Main-Merge. PR #571 bleibt als Draft offen 
 - Kognitiver Nachweis (Besitzerauftrag 08:48 auf #565): Paraphrasen/Pronomen/Negationen/mehrstufige Fragen gegen den realen
   lokalen Modellpfad – **NOT_RUN** (kein LiteRT-Modell auf dem Host). `WorkRecall`/`OwnerCorrectionIntent` sind regelbasiert
   (Regex) und decken nur die getesteten Formulierungen ab; keine Aussage über allgemeine Semantik.
-- PR #572 (test-only, `ContinuumReferenceCockpitUiTest`): siehe nächster Commit/Bericht.
+- PR #572 (test-only, `ContinuumReferenceCockpitUiTest`, Kopf `7b814747`): gegen #565 `29962f3c` ausgeführt – Lauf 1
+  **Zeitlimit 595 s überschritten** (Klasse lief am Morgen in ~4 min) → vermutlich hängender Test; NICHT übernommen.
+  Lauf 2 mit Stack-Aufnahme des Test-JVMs gestartet (Ergebnis im nächsten Commit/Bericht). Datei nur zum Prüfen ausgecheckt,
+  Arbeitsbaum wieder sauber.
+- Besitzer-P0 09:2x: freies Sprachverstehen über die VORHANDENEN Pfade (`LocalConversationContext`, `LocalFollowUpTaskFrame`,
+  `AiContextCompiler`, `ChatReasoningRouter`, `LocalModelReasoningAdapter`, `BoundedAgentOrchestrator`) – keine zweite
+  Architektur. Prüfkatalog mit neuen deutschen Formulierungen: getrennt nach (1) deterministischer Treffer (Regel/Regex),
+  (2) Kontext tatsächlich im Modell-Prompt, (3) Modellantwort korrekt (Host: NOT_RUN, kein LiteRT-Modell),
+  (4) Werkzeug ausgeführt vs. nur geplant. Ergebnis im nächsten Commit.
 
 ## Offen (nächste Schritte)
 
