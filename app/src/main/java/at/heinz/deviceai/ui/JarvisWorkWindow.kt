@@ -55,6 +55,14 @@ private val CRYSTAL_RIM_FILL = Fill.Linear(-CRYSTAL_W, -CRYSTAL_H, CRYSTAL_W, CR
  */
 private val WINDOW_BACKING_FILL = Fill.Solid(Colors.background)
 private const val WINDOW_BACKING_ALPHA = .7f
+/** Rear sheets and the receding document plane (JarvisWorkWindowDepth): dark glass, a Fresnel rim, a top-edge glint. */
+private val DEPTH_GLASS_FILL = Fill.Solid(Colors.background)
+private val DEPTH_GLINT_FILL = Fill.Solid(Colors.cyanSoft)
+private const val DEPTH_RADIUS_DP = 14f
+private const val HANDOVER_SLOT_LEFT_DP = 16f
+private const val HANDOVER_SLOT_TOP_DP = 60f
+private const val HANDOVER_SLOT_W_DP = 44f
+private const val HANDOVER_SLOT_H_DP = 58f
 
 /** In-cockpit content, shell frames only. */
 class JarvisWorkWindow(
@@ -66,6 +74,13 @@ class JarvisWorkWindow(
 
     /** Where the window unfolds from and to, and what it must leave visible; local overlay pixels. */
     class Plan(val origin: RectF, val destination: RectF, val protectedBounds: List<RectF>)
+    /**
+     * The document that steps back behind this window while it unfolds (draft out of document, owner brief 06.11.):
+     * [document] is the window it had (overlay pixels), [page] where its real page stood, [pageImage] that page for the
+     * flight into the body's own page view [handover], which stays invisible until the flight has arrived.
+     */
+    class Recession(val document: RectF, val page: RectF?, val pageImage: android.graphics.drawable.Drawable?,
+                    val handover: View?)
     private val density = resources.displayMetrics.density
     private val origin = RectF()
     private val destination = RectF()
@@ -97,6 +112,17 @@ class JarvisWorkWindow(
     private var accent = Colors.cyan
     /** Host's fresh plan for the size the overlay really has (see onSizeChanged). */
     private var refit: (() -> Plan?)? = null
+    /** Rear sheets behind the front glass: the document's real further pages (JarvisWorkWindowDepth.layers). */
+    var depthLayers = 0
+        private set
+    private var recession: Recession? = null
+    private var handedOver = false
+    // Scratch rectangles of the depth drawing – owned by the window, never allocated in a frame.
+    private val frontRect = RectF()
+    private val depthRect = RectF()
+    private val planeRect = RectF()
+    private val slotRect = RectF()
+    private val pageRect = RectF()
     private val painter = AndroidContinuumPainter(context.assets)
     private val opening = JarvisMotion.Presets.widget(JarvisMotion.Direction.DEPTH)
         .copy(distanceDp = 0f, fromScale = 0f)
@@ -193,7 +219,7 @@ class JarvisWorkWindow(
              protectedBounds: List<RectF> = emptyList(),
              onOpened: () -> Unit = {}, onClosed: () -> Unit = {}, accent: Int = Colors.cyan,
              emblem: android.graphics.drawable.Drawable? = null, refit: (() -> Plan?)? = null,
-             crystal: Boolean = false): Boolean {
+             crystal: Boolean = false, depthLayers: Int = 0, recession: Recession? = null): Boolean {
         if (disposed || deliveringFrame || isInLayout) return false
         val pixels = usable(origin, destination, protectedBounds) ?: return false
         if (body.parent != null && body.parent !== scroll) return false
@@ -212,6 +238,11 @@ class JarvisWorkWindow(
         this.crystal = crystal && emblem != null
         this.accent = accent
         this.refit = refit
+        this.depthLayers = depthLayers.coerceIn(0, JarvisWorkWindowDepth.MAX_LAYERS)
+        this.recession = recession?.takeIf { JarvisWorkWindowGeometry.valid(it.document) }
+        // The body's own page view shows itself only once the real page has flown into its slot.
+        handedOver = this.recession?.let { it.page == null || it.pageImage == null || it.handover == null } ?: true
+        if (!handedOver) this.recession?.handover?.alpha = 0f
         titleView.text = title
         scroll.addView(body, FrameLayout.LayoutParams(-1, -2))
         scroll.scrollTo(0, 0)
@@ -356,8 +387,10 @@ class JarvisWorkWindow(
         trailAlpha = if (phase == Phase.CLOSING) openness else 1f - openness
         panel.edgeFlash = state.glow
         applyFrame()
+        if (!handedOver && JarvisWorkWindowDepth.handedOver(openness)) handOver()
         if (state.done && phase == Phase.OPENING) {
             phase = Phase.OPEN
+            handOver()
             val callback = onOpened
             onOpened = {}
             callback()
@@ -383,6 +416,13 @@ class JarvisWorkWindow(
         invalidate()
     }
 
+    /** The flight of the real page has arrived: the body's page view takes over, the drawn page ends. */
+    private fun handOver() {
+        if (handedOver) return
+        handedOver = true
+        recession?.handover?.alpha = 1f
+    }
+
     private fun finishClose() {
         phase = Phase.CLOSED
         val handle = subscription
@@ -390,6 +430,9 @@ class JarvisWorkWindow(
         handle?.close()
         visibility = GONE
         route = emptyList()
+        handOver()
+        recession = null
+        depthLayers = 0
         openness = 0f
         opacity = 0f
         trailAlpha = 0f
@@ -445,8 +488,102 @@ class JarvisWorkWindow(
         val save = canvas.save()
         protectedBounds.forEach { canvas.clipOutRect(it) }
         drawTrail(canvas)
+        drawDepth(canvas)
         super.dispatchDraw(canvas)
         canvas.restoreToCount(save)
+    }
+
+    /**
+     * What stands behind the front glass, deepest first: the document's further pages as narrow sheets, the document
+     * plane stepping back while a draft unfolds in front of it, and the real page on its flight into its slot in the
+     * body. Everything follows the same frame as the panel (openness) – no clock, no allocation of its own.
+     */
+    private fun drawDepth(canvas: Canvas) {
+        val recession = recession
+        if (depthLayers == 0 && recession == null) return
+        if (!JarvisWorkWindowGeometry.valid(destination)) return
+        val progress = openness.coerceIn(0f, 1f)
+        // The front glass as the panel shows it in this frame.
+        if (progress >= 1f) frontRect.set(destination)
+        else frontRect.set(origin.left + (destination.left - origin.left) * progress,
+            origin.top + (destination.top - origin.top) * progress,
+            origin.right + (destination.right - origin.right) * progress,
+            origin.bottom + (destination.bottom - origin.bottom) * progress)
+        val closing = phase == Phase.CLOSING
+        val glassAlpha = if (closing) opacity else 1f
+        val save = canvas.save()
+        canvas.scale(density, density)
+        painter.begin(canvas)
+        if (recession == null) {
+            for (index in depthLayers downTo 1) {
+                if (JarvisWorkWindowDepth.layer(frontRect, index, progress, density, depthRect))
+                    drawSheet(depthRect, JarvisWorkWindowDepth.layerAlpha(index, glassAlpha))
+            }
+        } else if (JarvisWorkWindowDepth.plane(recession.document, destination, progress, density, planeRect)) {
+            // The further pages of the document keep standing behind its plane while it steps back.
+            for (index in depthLayers downTo 2) {
+                if (JarvisWorkWindowDepth.layer(planeRect, index - 1, 1f, density, depthRect))
+                    drawSheet(depthRect, JarvisWorkWindowDepth.layerAlpha(index, glassAlpha))
+            }
+            drawSheet(planeRect, JarvisWorkWindowDepth.planeAlpha(progress) * glassAlpha)
+        }
+        canvas.restoreToCount(save)
+        if (recession != null && !handedOver && !closing) drawRecedingPage(canvas, recession, progress)
+    }
+
+    /** One glass sheet in dp: dark glass, Fresnel rim along the window's own light gradient, a glint on its top edge. */
+    private fun drawSheet(rect: RectF, alpha: Float) {
+        if (alpha <= .01f) return
+        val l = rect.left / density; val t = rect.top / density; val r = rect.right / density; val b = rect.bottom / density
+        painter.fillRoundRect(l, t, r, b, DEPTH_RADIUS_DP, DEPTH_GLASS_FILL, WINDOW_BACKING_ALPHA * alpha)
+        painter.strokeRoundRect(l, t, r, b, DEPTH_RADIUS_DP, 1f, edge, .9f * alpha)
+        painter.drawLine(l + DEPTH_RADIUS_DP, t, r - DEPTH_RADIUS_DP, t, 1.5f, DEPTH_GLINT_FILL, .35f * alpha)
+    }
+
+    /** The real page (pixel canvas) from its place in the document window into the body's page slot. */
+    private fun drawRecedingPage(canvas: Canvas, recession: Recession, progress: Float) {
+        val from = recession.page ?: return
+        val image = recession.pageImage ?: return
+        if (!handoverSlot(recession.handover, slotRect)) return
+        if (!JarvisWorkWindowDepth.recede(from, slotRect, progress, pageRect)) return
+        val alpha = JarvisWorkWindowDepth.recedeAlpha(progress)
+        if (alpha <= .01f) return
+        image.setBounds(pageRect.left.roundToInt(), pageRect.top.roundToInt(),
+            pageRect.right.roundToInt(), pageRect.bottom.roundToInt())
+        image.alpha = (alpha * 255f).roundToInt().coerceIn(0, 255)
+        image.draw(canvas)
+        painter.begin(canvas)
+        val save = canvas.save()
+        canvas.scale(density, density)
+        painter.strokeRoundRect(pageRect.left / density, pageRect.top / density, pageRect.right / density,
+            pageRect.bottom / density, 2f, 1f, edge, .8f * alpha)
+        canvas.restoreToCount(save)
+    }
+
+    /**
+     * Where the body's page view stands once the panel is open (destination pixels), walking its offsets up to the
+     * panel; before its first layout a slot in the panel's top-left corner, where the source card is laid out.
+     */
+    private fun handoverSlot(view: View?, out: RectF): Boolean {
+        if (view != null && view.width > 0 && view.height > 0 && view.isAttachedToWindow) {
+            var x = 0f; var y = 0f
+            var current: View = view
+            while (true) {
+                x += current.left; y += current.top
+                val parent = current.parent as? View ?: break
+                if (parent === panel) {
+                    out.set(destination.left + x, destination.top + y,
+                        destination.left + x + view.width, destination.top + y + view.height)
+                    return true
+                }
+                x -= parent.scrollX; y -= parent.scrollY
+                current = parent
+            }
+        }
+        val left = destination.left + HANDOVER_SLOT_LEFT_DP * density
+        val top = destination.top + HANDOVER_SLOT_TOP_DP * density
+        out.set(left, top, left + HANDOVER_SLOT_W_DP * density, top + HANDOVER_SLOT_H_DP * density)
+        return true
     }
 
     private fun drawTrail(canvas: Canvas) {

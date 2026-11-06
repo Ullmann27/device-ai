@@ -61,7 +61,8 @@ class JarvisWorkWindowHost(
      */
     fun show(home: ContinuumHomeView, body: View, title: String,
              scene: JarvisActionScenes.Scene = STATUS_SCENE, emblem: android.graphics.drawable.Drawable? = null,
-             crystal: Boolean = false, fromCurrent: Boolean = false, onClosed: () -> Unit): JarvisWorkWindow? {
+             crystal: Boolean = false, fromCurrent: Boolean = false, depthLayers: Int = 0,
+             handover: android.widget.ImageView? = null, onClosed: () -> Unit): JarvisWorkWindow? {
         if (!home.jarvisShellStage || !home.isShown) return null
         val container = activity.findViewById<ViewGroup>(android.R.id.content) ?: return null
         val shell = home.jarvisShell
@@ -81,6 +82,15 @@ class JarvisWorkWindowHost(
             val w = shown.width() * .3f; val h = shown.height() * .3f
             RectF(shown.centerX() - w / 2f, shown.centerY() - h / 2f, shown.centerX() + w / 2f, shown.centerY() + h / 2f)
         } else null
+        // Two layers (owner brief 06.11.): the window on screen steps back as the document plane behind the result, its
+        // real page flies into the result's own page view, its further pages keep standing behind the plane.
+        val recession = if (fromCurrent) current?.let { shown -> shown.shownBounds()?.let { bounds ->
+            val pageView = shown.findViewWithTag<View>(DOCUMENT_PAGE_TAG)?.takeIf { it.isShown && it.width > 0 && it.height > 0 }
+            val page = pageView?.let { localBounds(it, container) }?.takeIf(JarvisWorkWindowGeometry::valid)
+            val image = handover?.drawable?.constantState?.newDrawable(activity.resources)?.mutate()
+            JarvisWorkWindow.Recession(bounds, page, image, handover)
+        } } else null
+        val inheritedLayers = if (recession != null) maxOf(depthLayers, current?.depthLayers ?: 0) else depthLayers
         val planned = plan(home, container, scene, fresh = false) ?: return null
         val first = previous?.let { Planned(JarvisWorkWindow.Plan(it, planned.plan.destination, planned.plan.protectedBounds),
             planned.face, planned.viewport) } ?: planned
@@ -100,7 +110,8 @@ class JarvisWorkWindowHost(
             }?.plan else null
         }
         val accepted = window.open(body, first.plan.origin, first.plan.destination, title, first.plan.protectedBounds,
-            accent = scene.accent, emblem = emblem, refit = refit, crystal = crystal, onClosed = {
+            accent = scene.accent, emblem = emblem, refit = refit, crystal = crystal, depthLayers = inheritedLayers,
+            recession = recession, onClosed = {
             releaseGeometry()
             (window.parent as? ViewGroup)?.removeView(window)
             director.windowClosed(id)
@@ -207,6 +218,8 @@ class JarvisWorkWindowHost(
 
     internal companion object {
         private val STATUS_SCENE = requireNotNull(JarvisActionScenes.forCentre("Systemstatus"))
+        /** The real page view of the document window (AgentActivity.presentDocumentScene): where the page recedes from. */
+        const val DOCUMENT_PAGE_TAG = "jarvis-document-page"
         /** „Auftrag angenommen · Bearbeitung läuft“ – the last steps, each label once, with its real state. */
         fun statusLine(steps: List<at.heinz.deviceai.cockpit.ProcessStep>): String? {
             if (steps.isEmpty()) return null
