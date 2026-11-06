@@ -1931,10 +1931,11 @@ class AgentActivity : Activity() {
 
     /** The owner's confirmed statements with assertion time; a revoked one keeps its revocation time. Held ones are left out. */
     private fun ownerDecisionStatements(): List<at.heinz.deviceai.cognitive.WorkDecisionRecall.OwnerStatement> =
-        at.heinz.deviceai.learning.ContinuumLearningCore(filesDir).ownerStatementHistory().mapNotNull { (e, _) ->
+        at.heinz.deviceai.learning.ContinuumLearningCore(filesDir).ownerStatementHistory().mapNotNull { (e, confirmable) ->
             when (e.status) {
                 at.heinz.deviceai.learning.LearningStatus.CONFIRMED, at.heinz.deviceai.learning.LearningStatus.LEARNED ->
-                    at.heinz.deviceai.cognitive.WorkDecisionRecall.OwnerStatement(e.content, e.createdAt)
+                    if (confirmable) at.heinz.deviceai.cognitive.WorkDecisionRecall.OwnerStatement(e.content, e.createdAt)
+                    else null
                 at.heinz.deviceai.learning.LearningStatus.REVOKED ->
                     at.heinz.deviceai.cognitive.WorkDecisionRecall.OwnerStatement(e.content, e.createdAt, e.updatedAt)
                 else -> null
