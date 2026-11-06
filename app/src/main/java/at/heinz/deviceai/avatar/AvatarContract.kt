@@ -24,8 +24,9 @@ data class GazeTarget(val x: Float, val y: Float) {
 /** 15-class viseme set as used by common lip-sync pipelines (Oculus/Meta OVRLipSync naming). */
 enum class Viseme { SIL, PP, FF, TH, DD, KK, CH, SS, NN, RR, AA, E, I, O, U }
 
-/** PCM_ENVELOPE = measured synthesized audio; WORD_RANGE_FALLBACK = coarse motion when the TTS engine gives word ranges but no PCM. */
-enum class AudioLevelSource { PCM_ENVELOPE, WORD_RANGE_FALLBACK }
+/** PCM_ENVELOPE = measured synthesized audio; WORD_RANGE_FALLBACK = coarse motion when the TTS engine gives word ranges but
+ * no PCM; TEXT_PACE_FALLBACK = coarse motion paced from the spoken text when the engine gives neither (never measured audio). */
+enum class AudioLevelSource { PCM_ENVELOPE, WORD_RANGE_FALLBACK, TEXT_PACE_FALLBACK }
 
 /** Compatibility names for canonical intents. */
 enum class AvatarGestureIntent { WINDOW_FOCUS, CONFIRM_NOD, THINK_MICRO }

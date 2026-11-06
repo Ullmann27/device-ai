@@ -14,6 +14,12 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     private var lastRangeEnd = -1
     private var lastRangeAudioFrame = -1
     private var lastWordCues: List<AvatarEvent.VisemeCue> = emptyList()
+    // Text pace (engine reports neither word ranges nor PCM): when speech started, which word the pace has reached,
+    // and whether any real range ever arrived for this utterance (then the pace never starts or stops for good).
+    private var speechStartedAt = Long.MIN_VALUE
+    private var paceWordIndex = 0
+    private var paceWords: List<IntRange> = emptyList()
+    private var paceActive = false
     // AgentActivity admits callbacks only for its current, unique TTS id. Keep a bounded
     // recent-terminal guard here as well, so replayed starts cannot reset that live speech.
     private val retiredUtterances = LinkedHashSet<String>()
@@ -277,13 +283,23 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         lastRangeAudioFrame = -1
         lastWordCues = emptyList()
         this.text = text.take(MAX_TEXT)
-        emit(AvatarEvent.SpeechStarted(utteranceId, this.text, clock()))
+        val at = clock()
+        speechStartedAt = at
+        paceWordIndex = 0
+        paceActive = false
+        paceWords = WORD.findAll(this.text).map { it.range }.toList()
+        emit(AvatarEvent.SpeechStarted(utteranceId, this.text, at))
         return true
     }
 
     /** Android TTS text range; the optional audio frame orders callbacks, not phonemes. */
     @Synchronized fun wordRange(utteranceId: String, start: Int, end: Int, audioFrame: Int? = null): Boolean {
         if (utteranceId != utterance || start < 0 || end <= start || end > text.length) return false
+        if (paceActive) {
+            // The engine does report ranges after all: the paced cursor is an estimate, never a reason to reject them.
+            paceActive = false
+            lastRangeStart = -1; lastRangeEnd = -1; lastRangeAudioFrame = -1
+        }
         if (start < lastRangeStart || (start == lastRangeStart && end <= lastRangeEnd)) return false
         // Some engines assign one audio marker to adjacent text ranges. Text ordering
         // resolves those ties; only a genuinely backward audio marker is stale.
@@ -349,10 +365,46 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         // Avatar lab (#338): engines that report word ranges but no PCM get coarse word motion,
         // explicitly flagged so a renderer never mistakes it for measured audio.
         val sinceRange = at - lastRangeAt
-        if (!measuredPcmAvailable && measured == 0f && lastRangeAt != Long.MIN_VALUE && sinceRange in 0 until FALLBACK_MS) {
-            val motion = 0.10f + 0.18f * kotlin.math.abs(kotlin.math.sin(sinceRange / 75f))
-            emit(AvatarEvent.AudioLevel(utteranceId, motion, at, AudioLevelSource.WORD_RANGE_FALLBACK))
-        } else emit(AvatarEvent.AudioLevel(utteranceId, measured, at, AudioLevelSource.PCM_ENVELOPE))
+        val wordFallback = !measuredPcmAvailable && measured == 0f && lastRangeAt != Long.MIN_VALUE && sinceRange in 0 until FALLBACK_MS
+        val pace = if (!measuredPcmAvailable && measured == 0f && !wordFallback) textPaceLevel(utteranceId, at) else null
+        when {
+            wordFallback -> {
+                val motion = 0.10f + 0.18f * kotlin.math.abs(kotlin.math.sin(sinceRange / 75f))
+                emit(AvatarEvent.AudioLevel(utteranceId, motion, at, AudioLevelSource.WORD_RANGE_FALLBACK))
+            }
+            pace != null -> emit(AvatarEvent.AudioLevel(utteranceId, pace, at, AudioLevelSource.TEXT_PACE_FALLBACK))
+            else -> emit(AvatarEvent.AudioLevel(utteranceId, measured, at, AudioLevelSource.PCM_ENVELOPE))
+        }
+    }
+
+    /**
+     * Engines that deliver neither word ranges nor PCM (observed with some vendor TTS engines) left the mouth closed
+     * for the whole audible utterance. After [TEXT_PACE_GRACE_MS] without any range, the spoken text is paced at
+     * [TEXT_PACE_WORD_MS] per word: each word's visemes and sentence ends are emitted when its estimated time comes,
+     * and a coarse level is returned while the estimate lasts. Null = no pace (grace, ranges seen, estimate over).
+     */
+    private fun textPaceLevel(utteranceId: String, at: Long): Float? {
+        if (lastRangeAt != Long.MIN_VALUE || speechStartedAt == Long.MIN_VALUE || paceWords.isEmpty()) return null
+        val since = at - speechStartedAt
+        if (since < TEXT_PACE_GRACE_MS) return null
+        val end = TEXT_PACE_GRACE_MS + paceWords.size * TEXT_PACE_WORD_MS + TEXT_PACE_TAIL_MS
+        if (since >= end) { paceActive = false; return null }
+        paceActive = true
+        while (paceWordIndex < paceWords.size &&
+            since >= TEXT_PACE_GRACE_MS + paceWordIndex * TEXT_PACE_WORD_MS) {
+            val range = paceWords[paceWordIndex++]
+            val visemes = GermanVisemeApproximation.visemes(text.substring(range.first, range.last + 1))
+            if (visemes.isNotEmpty()) {
+                val per = (TEXT_PACE_WORD_MS / visemes.size).coerceAtLeast(MIN_VISEME_MS)
+                val wordCues = visemes.mapIndexed { i, v ->
+                    AvatarEvent.VisemeCue(utteranceId, v, if (v == Viseme.SIL) 0f else 1f, per, at + i * per)
+                }
+                lastWordCues = wordCues.takeLast(MAX_REATTACHED_CUES)
+                wordCues.forEach(::emit)
+            }
+            sentenceEndAfter(range.first, range.last + 1)?.let { emit(AvatarEvent.SentenceEnd(utteranceId, it, at)) }
+        }
+        return 0.10f + 0.18f * kotlin.math.abs(kotlin.math.sin(since / 75f))
     }
 
     @Synchronized fun speechEnded(utteranceId: String, interrupted: Boolean) {
@@ -361,6 +413,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         retireUtterance(utteranceId)
         utterance = null; text = ""
         lastWordCues = emptyList()
+        speechStartedAt = Long.MIN_VALUE; paceActive = false; paceWords = emptyList(); paceWordIndex = 0
         emit(AvatarEvent.SpeechEnded(utteranceId, interrupted, clock()))
         // A direct TTS start has no listening/speaking runtime transition: give the running work its eyes back here.
         if (resumeWork()) publishAnimationIntents(clock())
@@ -400,6 +453,12 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         const val WORD_MS = 320L
         const val MIN_VISEME_MS = 40L
         const val FALLBACK_MS = 500L
+        /** Text pace: wait this long for a first real range (Google TTS reports it within ~100 ms of onStart). */
+        const val TEXT_PACE_GRACE_MS = 250L
+        /** ~2.8 words/s, the order of German TTS at speechRate ≈ 1. An estimate, flagged as such to every renderer. */
+        const val TEXT_PACE_WORD_MS = 360L
+        const val TEXT_PACE_TAIL_MS = 300L
+        val WORD = Regex("[\\p{L}\\p{N}]+[\\p{L}\\p{N}'’-]*")
         const val SENTENCE_MARKS = ".!?…"
         const val CLOSERS = "\"'»«“”„‘’)]}"
     }
