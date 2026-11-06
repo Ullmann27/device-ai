@@ -25,11 +25,12 @@ internal object OwnerDocumentIntent {
             "(?:\\s+(?:bitte|für\\s+mich))?[.!?]*$"
     )
     private val extraAction = Regex(
-        "(?iu)(?:[.!?]\\s*|\\s+(?:und|danach|anschließend|dann)\\s+)" +
+        "(?iu)(?:^|[.!?,;]\\s*|\\s+(?:und|danach|anschließend|dann)\\s+)" +
             "(?:(?:bitte|danach|anschließend|dann)\\s+)*" +
-            "(?:öffne|öffnen|starte|starten|zeige|zeigen|suche|suchen|finde|finden|" +
+            "(öffne|öffnen|starte|starten|zeige|zeigen|suche|suchen|finde|finden|" +
             "schreib|schreibe|schreiben|tippe|installiere|kaufe|bezahle|überweise)$END"
     )
+    private val joinedObject = Regex("(?iu)\\s+(?:und|sowie|oder)\\s+")
     private val earlier = Regex(
         "(?iu)$START(ausgewählte|ausgewählten|letzte|letzten|gleiche|gleichen|dieselbe|selbe|selben|vorige|vorigen|gestrige|gestrigen)$END" +
             "\\s+$START(pdf|pdf-datei|pdf-dokument|dokument)$END"
@@ -46,7 +47,8 @@ internal object OwnerDocumentIntent {
             .replace(Regex("(?iu)^bitte\\s+"), "")
         val direct = read.find(text)
         if (prohibited.containsMatchIn(text) || (direct == null && !politeRead.matches(text))) return null
-        if (direct != null && extraAction.containsMatchIn(text.substring(direct.range.last + 1))) return null
+        if (direct != null && (joinedObject.containsMatchIn(direct.value) ||
+                extraAction.findAll(text).any { it.groups[1]!!.range.first != direct.range.first })) return null
         return Request(wantsDraft = draft.containsMatchIn(text), reuse = earlier.containsMatchIn(text))
     }
 }

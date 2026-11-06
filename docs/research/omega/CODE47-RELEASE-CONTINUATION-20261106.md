@@ -37,3 +37,18 @@ Use the existing real SDK/cache after inspecting its environment. Keep the
 combined source clean during QA; retain raw logs and exact exit codes.
 Rollback is retaining the verified Code46 publication and reverting only this
 isolated branch's changes. Never reset or overwrite another working tree.
+
+## Integration checkpoint
+
+PR582–586 exact heads are integrated. The existing uncommitted follow-up
+fragments were recovered without altering their original working trees:
+configured identity/PDF arguments and planning single-record wiring, transient
+research labels, current context limits/clock tests, and real UI fixture setup.
+These changes are WIP pending the full combined native run.
+
+PR584 additional-action defect was reproduced against its actual parser:
+9 JUnit tests / 1 failure. The same tests plus leading, inner, comma, semicolon
+and joined-object cases now pass 9/9 after the bounded guard correction.
+Raw compile/JUnit logs and exact source hashes are preserved under
+docs/evidence/code47-release-continuation-20261106/pdf-review/.
+The screen-read ephemerality case remains UNVERIFIED until combined QA.

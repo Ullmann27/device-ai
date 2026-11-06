@@ -17,11 +17,30 @@ class UnansweredOwnerTurnTest {
     }
 
     @Test fun longFailedOwnerInputForcesUncertainHistoryAndAbstention() {
-        val ctx = LocalConversationContext()
-        ctx.record("s", "Ich bin in Graz.", "Verstanden.")
-        ctx.recordUnanswered("s", "Langer Text ".repeat(110) + " NICHT MEHR!")
-        assertNull(ctx.sessionEvidence("s"))
-        assertTrue(ctx.render("s").contains("UNVOLLSTÄNDIG"))
+        val limit = LocalDialogueContextLimits.MAX_OWNER_CHARACTERS
+        for (request in listOf("x".repeat(limit) + " NICHT MEHR!", "ä".repeat(limit / 2 + 1) + " NICHT MEHR!")) {
+            assertTrue(request.toByteArray(Charsets.UTF_8).size > limit)
+            val ctx = LocalConversationContext()
+            ctx.record("s", "Ich bin in Graz.", "Verstanden.")
+            ctx.recordUnanswered("s", request)
+            assertNull(ctx.sessionEvidence("s"))
+            val rendered = ctx.render("s")
+            assertTrue(rendered.contains("UNVOLLSTÄNDIG"))
+            assertFalse("old assertion must not return", rendered.contains("Ich bin in Graz."))
+        }
+    }
+
+    @Test fun completeFailedOwnerInputPreservesLateNegationWithinTheBudget() {
+        val suffix = " NICHT MEHR!"
+        for (request in listOf("Langer Text ".repeat(110) + suffix,
+            "x".repeat(LocalDialogueContextLimits.MAX_OWNER_CHARACTERS - suffix.length) + suffix)) {
+            val ctx = LocalConversationContext()
+            ctx.record("s", "Ich bin in Graz.", "Verstanden.")
+            ctx.recordUnanswered("s", request)
+            assertEquals(listOf("Ich bin in Graz.", request), ctx.sessionEvidence("s"))
+            assertTrue(ctx.render("s").contains(request))
+            assertFalse(ctx.hasContinuation("s"))
+        }
     }
 
     @Test fun repeatedFailedCallbackKeepsPreviousDistinctOwnerEvidence() {

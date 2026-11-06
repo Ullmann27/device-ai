@@ -51,7 +51,12 @@ class OwnerDocumentPoliteIntentTest {
             "Öffne die PDF und starte WhatsApp.",
             "Lies die PDF. Danach öffne die Kamera.",
             "Zeige das Dokument und schreibe meinem Vater.",
-            "Öffne die PDF und zeige mir den Kalender."
+            "Öffne die PDF und zeige mir den Kalender.",
+            "Starte WhatsApp und öffne die PDF.",
+            "Zeige mir den Kalender und öffne die PDF.",
+            "Öffne die PDF, starte WhatsApp.",
+            "Öffne die PDF; starte WhatsApp.",
+            "Öffne den Kalender und die PDF."
         ).forEach { assertNull(it, OwnerDocumentIntent.parse(it)) }
         assertEquals(OwnerDocumentIntent.Request(true),
             OwnerDocumentIntent.parse("Lies diese PDF und erstelle mir eine Zusammenfassung als Entwurf."))

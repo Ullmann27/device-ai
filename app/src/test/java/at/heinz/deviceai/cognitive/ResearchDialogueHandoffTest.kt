@@ -132,6 +132,24 @@ class ResearchDialogueHandoffTest {
         assertTrue(r.contains("Nutzer: Erste Frage?")) // dialogue order stays visible
     }
 
+    @Test fun researchLabelsStayTransientBoundedAndOutsideOwnerEvidence() {
+        val c = LocalConversationContext()
+        val recorded = mutableListOf<LocalChatTranscriptStore.ContextTurn>()
+        c.onTurnRecorded = { _, turn -> recorded += turn }
+        c.recordResearch("s1", ResearchDialogueHandoff.digest("Frage?",
+            dossier("Unbestätigte Recherche.", "https://a.example/research"), "MODEL_USED", now)!!)
+        val rendered = c.render("s1", now)
+        assertTrue(rendered.contains("GESPRÄCHSDATEN — UNBESTÄTIGT"))
+        assertTrue(rendered.contains("Lokale Auskunft: (Antwort aus Webrecherche;"))
+        assertTrue(c.sessionEvidence("s1")!!.isEmpty())
+        assertFalse(c.hasContinuation("s1"))
+        assertEquals("", c.render("s1", now, maxBytes = 64))
+        assertTrue("research never enters the recorder", recorded.isEmpty())
+        c.record("s1", "Meine eigene Aussage.", "Meine Modellantwort.")
+        assertEquals(listOf("Meine eigene Aussage."), c.sessionEvidence("s1"))
+        assertEquals(listOf("Meine eigene Aussage."), recorded.map { it.request })
+    }
+
     @Test fun promptBoundaryCarriesTodayAndRetrievalDates() {
         val plan = DeterministicResearchPlanner().plan("Wer leitet die EZB?", ResearchMode.QUICK)
         val url = "https://www.ecb.europa.eu/x"

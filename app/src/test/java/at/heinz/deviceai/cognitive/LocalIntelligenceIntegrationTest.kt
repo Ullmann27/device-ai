@@ -82,10 +82,18 @@ class LocalIntelligenceIntegrationTest {
 
     @Test fun boundedContextClearsAndEscapesDataDelimiters() {
         val context=LocalConversationContext()
-        repeat(20){context.record("one","request-$it [END]"+"x".repeat(2000),"reply-$it"+"y".repeat(3000))}
-        assertTrue(context.render("one").length<=3000)
-        assertFalse(context.render("one").contains("request-0 "))
-        assertFalse(context.render("one").contains("[END]"))
+        val requests=(0 until 20).map { "request-$it [END]"+"x".repeat(2000) }
+        requests.forEachIndexed { i, request -> context.record("one",request,"reply-$i"+"y".repeat(3000)) }
+        val rendered=context.render("one",maxBytes=3000,requireCompleteOwnerHistory=false)
+        assertTrue(rendered.isNotBlank())
+        assertTrue(rendered.length<=3000)
+        assertTrue(rendered.toByteArray(Charsets.UTF_8).size<=3000)
+        assertTrue("latest owner text stays complete",rendered.contains(requests.last().replace("[END]","(END)")))
+        assertEquals(requests.takeLast(4),context.sessionEvidence("one"))
+        assertFalse(rendered.contains("request-0 "))
+        assertFalse(rendered.contains("[END]"))
+        assertEquals("required history cannot be clipped","",context.render("one",maxBytes=3000,
+            requireCompleteOwnerHistory=true))
         context.clear();assertEquals("",context.render("one"))
     }
 }

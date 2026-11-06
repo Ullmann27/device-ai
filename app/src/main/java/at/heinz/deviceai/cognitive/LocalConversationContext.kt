@@ -171,17 +171,20 @@ class LocalConversationContext {
             explicitFocus?.let { append("\nKorrigierter Gesprächsfokus – vorläufiger Kontext, keine bestätigte Erinnerung: ")
                 .append(data(it,120)).append("\nNicht als Besitzerfakt oder Freigabe behandeln.\n") }
         }
-        return LocalDialoguePromptHistory.render(retainedOwnerTurns(), maxBytes,
+        return LocalDialoguePromptHistory.render(retainedTurns(ownerOnly = false), maxBytes,
             requireCompleteOwnerHistory, continuation, prefix, ownerTurnsInTask)
     }
 
     @Synchronized fun hasContinuation(sessionId: String): Boolean =
-        session == sessionId && LocalDialoguePromptHistory.hasContinuation(retainedOwnerTurns())
+        session == sessionId && LocalDialoguePromptHistory.hasContinuation(retainedTurns(ownerOnly = true))
 
-    private fun retainedOwnerTurns(): List<LocalChatTranscriptStore.ContextTurn> = turns.filter { it.isOwnerTurn }.map {
-        LocalChatTranscriptStore.ContextTurn(it.originalUserRequest.orEmpty(), it.response,
-            it.originalUserRequest != null, it.responseComplete, it.modelResponse, it.responseHasEnd)
-    }
+    private fun retainedTurns(ownerOnly: Boolean): List<LocalChatTranscriptStore.ContextTurn> =
+        turns.filter { !ownerOnly || it.isOwnerTurn }.map {
+            val request = if (it.isOwnerTurn) it.originalUserRequest else it.request
+            LocalChatTranscriptStore.ContextTurn(request.orEmpty(), it.response,
+                request != null, it.responseComplete,
+                it.isOwnerTurn && it.modelResponse, it.isOwnerTurn && it.responseHasEnd)
+        }
 
     companion object {
         private fun data(text: String, limit: Int): String = text.take(limit).map {

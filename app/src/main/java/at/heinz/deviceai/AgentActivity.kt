@@ -2066,7 +2066,8 @@ class AgentActivity : Activity() {
         if (e.documentUri != null && e.documentUri in readable) {
             val wantsDraft = when (e.state) {
                 at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED ->
-                    at.heinz.deviceai.cognitive.OwnerDocumentIntent.parse(e.request)?.wantsDraft ?: false
+                    at.heinz.deviceai.cognitive.OwnerDocumentIntent.parse(e.request,
+                        continuumState?.archive?.identityState?.chosenName)?.wantsDraft ?: false
                 else -> true
             }
             addAssistantMessage("$intro\nIch öffne „$name“ von $whenText wieder und starte den Auftrag neu: „${e.request}“.",
@@ -5042,7 +5043,8 @@ class AgentActivity : Activity() {
         }
         // „Wo waren wir gestern …?“ – from the work journal; a document request in the same sentence follows.
         val recall = at.heinz.deviceai.cognitive.WorkRecall.parse(request)
-        val document = at.heinz.deviceai.cognitive.OwnerDocumentIntent.parse(request)
+        val document = at.heinz.deviceai.cognitive.OwnerDocumentIntent.parse(request,
+            continuumState?.archive?.identityState?.chosenName)
         if (recall != null || document != null) {
             input.text.clear()
             // A cockpit work scene answers on START; the request stays there instead of switching to the chat.
@@ -5268,7 +5270,6 @@ class AgentActivity : Activity() {
                 is OwnerAppLookupIntent.Intake.Clarify -> clarifyAppRequest(request,
                     "Was brauchst du aus ${intake.subject}: die App öffnen, etwas nachsehen oder einen Inhalt vorbereiten?")
                 is OwnerAppLookupIntent.Intake.Planning -> {
-                    localConversationContext.recordUnanswered(sessionId, intake.original)
                     if (intake.clarification != null) clarifyAppRequest(request, intake.clarification)
                     else if (::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY)
                         runLocal(intake.original)
@@ -9377,7 +9378,8 @@ class AgentActivity : Activity() {
                         // failed, the fallback may use the owner's task but MUST NOT
                         // bypass privacy, revocation, STALE or CONTRADICTED gates by
                         // rendering the unfiltered memories directly.
-                        if (botTask == null) append(at.heinz.deviceai.cognitive.LocalAssistantIdentity.renderPrompt(null, imported))
+                        if (botTask == null) append(at.heinz.deviceai.cognitive.LocalAssistantIdentity.renderPrompt(
+                            continuumState?.archive?.identityState, imported))
                         append(at.heinz.deviceai.cognitive.AgentContextFallback.render(reflection))
                     }
                     if (observations.isNotEmpty()) {

@@ -57,8 +57,20 @@ class ContinuumTaskEffectsCallerUiTest {
     private fun pulses(h:ContinuumHologramView)=field(field(h,"taskEffects")!!,"pulses") as List<*>
     private fun idle()=shadowOf(Looper.getMainLooper()).idle()
     private fun advance()=advanceFrames(20)
-    private fun withFixture(block:(AgentActivity,ContinuumHologramView)->Unit) {
-        val a=Robolectric.buildActivity(AgentActivity::class.java).get()
+    private fun withFixture(realUi: Boolean = false, block:(AgentActivity,ContinuumHologramView)->Unit) {
+        val controller=Robolectric.buildActivity(AgentActivity::class.java)
+        val a=controller.get()
+        if (realUi) {
+            a.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
+                .putBoolean("voice_enabled", false).commit()
+            a.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+                .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+            a.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+                .putBoolean("native-head", false).putBoolean("native-head-3d", false).commit()
+            controller.setup().visible()
+            advanceFrames(32L)
+            controller.windowFocusChanged(true)
+        }
         val host=Robolectric.buildActivity(Activity::class.java).setup().visible()
         val h=ContinuumHologramView(a).apply { setNativeHeadEnabled(false) }
         set(a,"hologramView",h);set(a,"foregroundLearningActive",true)
@@ -76,13 +88,14 @@ class ContinuumTaskEffectsCallerUiTest {
             AgentActivity::class.java.declaredFields.firstOrNull {it.name=="uiFeedback"}?.apply {isAccessible=true}
                 ?.get(a)?.let {(it as ContinuumUiFeedback).close()}
             h.setForegroundActive(false);host.pause().stop().destroy()
+            if (realUi) controller.close()
         }
     }
     @Test fun busyProposalAloneNeverAnimatesAnActualWorker() = withFixture {a,h ->
         call(a,"setBusy",true);advance()
         assertTrue(pulses(h).isEmpty())
     }
-    @Test fun authorizedRealRunnerEntryAndExitReachTheVisibleSurface() = withFixture {a,h ->
+    @Test fun authorizedRealRunnerEntryAndExitReachTheVisibleSurface() = withFixture(realUi = true) {a,h ->
         val started=CountDownLatch(1);val finish=AtomicReference<((Result<String>)->Unit)?>()
         set(a,"executor",DeviceToolExecutor(a,{true},{_,cb -> finish.set(cb);started.countDown()},null))
         call(a,"setBusy",true);advance()
