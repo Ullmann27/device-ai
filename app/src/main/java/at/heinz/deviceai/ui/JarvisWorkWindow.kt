@@ -6,10 +6,12 @@ import android.graphics.Outline
 import android.graphics.PointF
 import android.graphics.RectF
 import android.os.Build
+import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -191,9 +193,36 @@ class JarvisWorkWindow(
             leftMargin = pixels.left.toInt()
             topMargin = pixels.top.toInt()
         }
+        fitTitle(pixels.width().toInt(), pixels.height().toInt())
         edge = Fill.Linear(origin.centerX() / density, origin.centerY() / density,
             pixels.centerX() / density, pixels.centerY() / density,
             intArrayOf(accent, Colors.cardRimEnd, Colors.violet, Colors.magenta))
+    }
+
+    /**
+     * At a large font scale a long title wraps. It may never take so much of the panel that the scroll viewport can no
+     * longer show the body's tallest control whole (PR #572: 200 % font in an 840 × 320 window – a four-line title left
+     * 101 px for a 128 px action). Then the title keeps one line; the full title stays its text and accessibility heading.
+     */
+    private fun fitTitle(widthPx: Int, heightPx: Int) {
+        titleView.maxLines = Int.MAX_VALUE
+        titleView.ellipsize = null
+        val body = scroll.getChildAt(0) ?: return
+        panel.measure(MeasureSpec.makeMeasureSpec(widthPx, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(heightPx, MeasureSpec.EXACTLY))
+        if (tallestControl(body) > scroll.measuredHeight - scroll.paddingTop - scroll.paddingBottom) {
+            titleView.maxLines = 1
+            titleView.ellipsize = TextUtils.TruncateAt.END
+        }
+    }
+
+    /** Measured height of the tallest clickable leaf (a clickable group without clickable children counts as one). */
+    private fun tallestControl(view: View): Int {
+        if (view.visibility == GONE) return 0
+        val inner = (view as? ViewGroup)?.let { group ->
+            (0 until group.childCount).maxOfOrNull { tallestControl(group.getChildAt(it)) }
+        } ?: 0
+        return if (inner == 0 && view.isClickable) view.measuredHeight else inner
     }
 
     /**

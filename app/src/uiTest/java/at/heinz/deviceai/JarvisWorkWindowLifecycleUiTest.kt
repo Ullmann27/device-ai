@@ -192,4 +192,41 @@ class JarvisWorkWindowLifecycleUiTest {
             assertFalse("clear of the face: $box", RectF.intersects(box, face))
         } finally { late.dispose() }
     }
+
+    /**
+     * PR #572 (fold-short 840×320, 200 % font), HOST: the window title wrapped onto four lines, its header took 157 of
+     * 270 px and left a 101 px scroll viewport – less than one 128 px action, which therefore could never be shown or
+     * tapped whole. A long title may wrap, but never so far that the tallest control no longer fits the viewport.
+     */
+    @Test fun largeTypeTitleNeverStarvesTheScrollViewportOfItsTallestControl() {
+        val previousFont = org.robolectric.RuntimeEnvironment.getFontScale()
+        org.robolectric.RuntimeEnvironment.setFontScale(2f)
+        try {
+            withWindow { f ->
+                val action = TextView(f.activity).apply { text = "CODING-AUFTRAG ENTWERFEN"; isClickable = true }
+                val body = android.widget.LinearLayout(f.activity).apply {
+                    orientation = android.widget.LinearLayout.VERTICAL
+                    addView(TextView(f.activity).apply { text = "Entwicklungszentrum" }, -1, 120)
+                    addView(action, -1, 128)
+                    addView(TextView(f.activity).apply { text = "Weitere Werkzeuge" }, -1, 600)
+                }
+                assertTrue(f.window.open(body, RectF(30f, 540f, 190f, 600f), RectF(561f, 20f, 840f, 290f),
+                    "Entwicklungszentrum"))
+                f.draw(1_000)
+                f.draw(2_000)
+                val scroll = f.window.findViewWithTag<ScrollView>("jarvis-work-window:scroll")
+                val viewport = scroll.height - scroll.paddingTop - scroll.paddingBottom
+                assertTrue("scroll viewport $viewport px must hold the 128 px action", viewport >= action.height)
+                scroll.scrollTo(0, action.top + (action.parent as View).top)
+                f.draw(2_016)
+                val visible = Rect()
+                assertTrue(action.getGlobalVisibleRect(visible))
+                assertEquals("the whole action is reachable: $visible", action.height, visible.height())
+                val title = f.window.findViewWithTag<View>("jarvis-work-window:panel").let { panel ->
+                    (panel as ViewGroup).getChildAt(0).let { header -> ((header as ViewGroup).getChildAt(0) as TextView) }
+                }
+                assertEquals("the full title stays the window's text", "Entwicklungszentrum", title.text.toString())
+            }
+        } finally { org.robolectric.RuntimeEnvironment.setFontScale(previousFont) }
+    }
 }
