@@ -409,4 +409,24 @@ class ContinuumDocumentFlowUiTest {
         assertEquals("Bericht.pdf", failed.source)
         assertTrue("no model run", runtime.prompts.isEmpty())
     }
+
+    /**
+     * Owner review P0 (06.11.): also without a work window, a running turn's cards were laid out at a fixed position in
+     * the middle of the hologram – over the original head and the orb. Real events of the activity's own triggers; the
+     * cards may only be drawn where they leave the head and orb regions free, otherwise the steps stay in the cockpit's
+     * „Aktueller Ablauf“ panel (each step once).
+     */
+    @Test fun withoutAWindowTheStatusCardsLeaveTheAvatarFreeAndStayInTheProcessPanel() = withFlow { activity, root, _ ->
+        val triggers = field(activity, "cockpitTriggers") as at.heinz.deviceai.cockpit.CockpitAnimationTriggers
+        triggers.commandAcknowledged("owner-turn-1", "Was steht heute an?")
+        advance(4_000L)
+        assertFalse("no work window is open", descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+        measure(root); draw(root)
+        capture(root, System.getProperty("continuum.ui.evidenceName") ?: "statusbar-nowindow-after")
+        assertAvatarFree(activity, root, "a running turn without a window")
+        val home = field(activity, "homeView") as ContinuumHomeView
+        val rows = at.heinz.deviceai.ui.ContinuumCockpitPresentation.processRows(home.state.cockpit).map { it.label }
+        assertEquals("the steps stay visible in the process panel, each once",
+            listOf("Auftrag angenommen", "Bearbeitung"), rows)
+    }
 }

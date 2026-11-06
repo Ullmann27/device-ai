@@ -242,6 +242,26 @@ class JarvisSequenceEffects {
 
     /** Cards and command chip docked into an open work window (not drawn here; orb signals stay). */
     var docked = false
+    /** Protected regions (dp: l, t, r, b) – the original head and the orb. No card or command chip is drawn over them. */
+    private val protectedBoxes = FloatArray(8)
+    private var protectedCount = 0
+
+    /** The host's real head and orb regions in dp (null clears them, e.g. the legacy composition without regions). */
+    fun setProtectedAreas(head: FloatArray?, orb: FloatArray?) {
+        protectedCount = 0
+        for (box in listOfNotNull(head, orb)) {
+            if (box.size < 4) continue
+            System.arraycopy(box, 0, protectedBoxes, 4 * protectedCount++, 4)
+        }
+    }
+
+    private fun overlapsProtected(l: Float, t: Float, r: Float, b: Float): Boolean {
+        for (i in 0 until protectedCount) {
+            val o = 4 * i
+            if (l < protectedBoxes[o + 2] && r > protectedBoxes[o] && t < protectedBoxes[o + 3] && b > protectedBoxes[o + 1]) return true
+        }
+        return false
+    }
     /** Boxes (dp: l, t, r, b) of the cards drawn in the last frame – reused buffer, no per-frame allocation. */
     private val drawnBoxes = FloatArray(4 * (MAX_CARDS + 4))
     var drawnCardCount = 0; private set
@@ -254,7 +274,8 @@ class JarvisSequenceEffects {
         if (command != null && now - command!!.at > COMMAND_MS) command = null
         val hubX = width / 2f; val hubY = height * .30f
         drawnCardCount = 0
-        if (!docked) drawCommand(p, width, height, hubX, hubY, now)
+        // The command chip ends at the hub: never over the head or the orb.
+        if (!docked && !overlapsProtected(hubX - 1f, hubY - 1f, hubX + 1f, hubY + 1f)) drawCommand(p, width, height, hubX, hubY, now)
         drawFlight(p, width, height, now)
         drawOrbSignals(p, width, height, now)
         drawAlarm(p, width, height, now)
@@ -264,6 +285,13 @@ class JarvisSequenceEffects {
         p.restore()
         val cw = min(width - 32f, 340f); val ch = 58f; val gap = 10f
         if (docked) return
+        // Geometric check of the whole stack: where any card would cover the head or the orb, the cards stay off this
+        // surface – their steps are shown in the cockpit's process panel or the work window's status strip instead.
+        val active = cards.count { it.leavingAt < 0 }
+        for (i in 0 until active) {
+            val top = height * .44f + i * (ch + gap)
+            if (overlapsProtected(width / 2f - cw / 2f, top, width / 2f + cw / 2f, top + ch)) return
+        }
         var slot = 0
         for (c in cards) {
             val targetY = height * .44f + slot * (ch + gap)
