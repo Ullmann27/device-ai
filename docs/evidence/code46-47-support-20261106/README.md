@@ -29,3 +29,9 @@ Compilation: installed Kotlin2.4.0/JDK17, 256-MiB maximum compiler heap; only th
 Targeted fix verification is GREEN. Full Android/Node/backend/APK validation of the **final integrated Code47 source remains required**. The separate full SDK run on f26d is an unmodified baseline run and must never be relabeled as a run of this patch. No Fold7/LiteRT/audio/GPU or original-signed APK result is claimed.
 
 The author receipt intentionally preserves its historical LOCAL_PATCH_VERIFIED_NOT_PUSHED status; the enclosing GitHub commit supplies subsequent publication provenance. Revert only the two source/test changes to roll this repair back; no data/schema migration exists.
+
+## Subsequent verified checkpoints
+
+Code46 is delivered: original publisher LIVE at 2026-11-06T19:00:55Z, independent verification of actual APK bytes and original signature passed at 19:05:55Z. See `code46-release/`.
+
+The separate unchanged Code47 f26d full SDK run ended with 3577 total /3556 passed /1 failed /20 skipped. Its one failure is the outdated time-anchor source contract; lint was not reached. See `code47-baseline/`. This is not final integrated Code47 verification.
