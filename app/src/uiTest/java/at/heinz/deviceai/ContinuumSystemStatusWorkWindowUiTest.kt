@@ -1,6 +1,7 @@
 package at.heinz.deviceai
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
@@ -60,10 +61,10 @@ class ContinuumSystemStatusWorkWindowUiTest {
         }
     }
 
-    private fun measure(root: View) {
-        root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
-        root.layout(0, 0, 884, 760)
+    private fun measure(root: View, width: Int = 884, height: Int = 760) {
+        root.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
+        root.layout(0, 0, width, height)
     }
 
     private fun draw(root: View) {
@@ -469,6 +470,70 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 advance(160L); measure(root); draw(root)
             }
             assertEquals("the deck is complete again", before, deck())
+        } finally {
+            framePump?.close(); framePump = null
+            ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
+            runCatching { controller.close() }
+        }
+    }
+
+    /**
+     * Fold7 open item (06.11.2026), HOST, REAL_DEVICE_NOT_RUN: AgentActivity handles screen size and orientation
+     * itself (manifest configChanges), so a work window can be open while the owner rotates the inner screen or folds
+     * to the cover screen. Neither the window at its old geometry nor a cleared deck may survive the change: afterwards
+     * the window is gone, no tile or row is left hidden, TalkBack offers all of them and a tile opens again.
+     */
+    @Test fun rotatingOrFoldingWithAnOpenWindowAlwaysGivesTheDeckBack() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible(); advance(32L); controller.windowFocusChanged(true)
+            val activity = controller.get()
+            val root = activity.window.decorView
+            framePump = CockpitHostFramePump { controller.get().window.decorView }
+            fun home() = field(activity, "homeView") as ContinuumHomeView
+            home().setForegroundActive(true)
+            fun deckTag(v: View) = v.tag?.toString()?.let { it.startsWith("jarvis-tile:") || it.startsWith("jarvis-panel:ROW_") } == true
+            fun deck() = descendants(root).count { it.isShown && deckTag(it) }
+            fun hidden() = descendants(root).count { deckTag(it) && it.visibility == View.INVISIBLE }
+            fun a11y() = ArrayList<View>().also { home().addChildrenForAccessibility(it) }.count(::deckTag)
+            fun windowShown() = descendants(root).any { it.tag == "jarvis-work-window" && it.isShown }
+            var width = 884; var height = 760
+            measure(root, width, height); advance(320L); measure(root, width, height); draw(root)
+            val inner = deck()
+            assertTrue("tiles and rows are on the inner deck: $inner", inner >= 12)
+            // Inner landscape → inner portrait (rotation), → cover portrait (fold), → inner landscape (unfold).
+            for ((qualifiers, w, h) in listOf(Triple("w760dp-h884dp-port-mdpi", 760, 884),
+                Triple("w412dp-h915dp-port-mdpi", 412, 915), Triple("w884dp-h760dp-land-mdpi", 884, 760))) {
+                AgentActivity::class.java.getDeclaredMethod("navigateDashboardTarget", String::class.java)
+                    .apply { isAccessible = true }.invoke(activity, "memory")
+                advance(640L); measure(root, width, height); draw(root)
+                val opened = windowShown()
+                println("CONFIG_CHANGE_TO_${qualifiers}_WITH_OPEN_WINDOW=$opened")
+                if (opened) assertEquals("an open window cleared the deck before $qualifiers", 0, deck())
+                else ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
+                RuntimeEnvironment.setQualifiers(qualifiers)
+                controller.configurationChange(Configuration(app.resources.configuration))
+                assertSame("the manifest keeps the Activity across $qualifiers", activity, controller.get())
+                width = w; height = h
+                measure(root, width, height); advance(640L + 480L); measure(root, width, height); draw(root)
+                assertFalse("no window stays at the old geometry after $qualifiers", windowShown())
+                assertEquals("no tile or row stays hidden after $qualifiers", 0, hidden())
+                val shownDeck = deck()
+                assertTrue("the deck is there after $qualifiers: $shownDeck", shownDeck > 0)
+                assertEquals("TalkBack offers the whole deck after $qualifiers", shownDeck, a11y())
+            }
+            assertEquals("unfolded again: the complete inner deck", inner, deck())
+            tap(root, shown(root, "jarvis-tile:web"))
+            advance(640L); measure(root, width, height); draw(root)
+            val reopened = descendants(shown(root, "jarvis-work-window")).filterIsInstance<TextView>().map { it.text.toString() }
+            assertTrue("a tile opens its centre again after the round trip: $reopened", reopened.any { it.equals("Web und Quellen", true) })
         } finally {
             framePump?.close(); framePump = null
             ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
