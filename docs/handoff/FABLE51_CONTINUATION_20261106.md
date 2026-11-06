@@ -1,7 +1,7 @@
 # Fable 5.1 – Fortsetzungsprotokoll JARVIS-Gesamtentwicklung (06.11.2026, Sitzungsabschluss)
 
 Branch `claude/continuum-fable51-continuation-20261106`, Draft-PR #574, Basis = Opus' `claude/continuum-jarvis-cockpit-z7bo60`
-@ `4d84caa8` (PR #565). **Letzter gesicherter Commit: `6f1444d645999bb1af439c1e95ecf1a51ecf3f37`** (Remote = lokal, Arbeitsbaum sauber).
+@ `4d84caa8` (PR #565). **Letzter Code-Commit: `6f1444d645999bb1af439c1e95ecf1a51ecf3f37`; dieses Protokoll selbst ist der darauf folgende Commit `baf3ba5c27c1b81b287fc86470c1e0b9ca2ccad0`** (Remote = lokal, Arbeitsbaum sauber).
 
 Alles in diesem Dokument ist HOST-Stand (JDK 21, kotlinc 2.0.21, `scripts/android-kotlin-unit-check.sh` außerhalb Gradle).
 **Fold7 / One UI: REAL_DEVICE_NOT_RUN** für jede Zeile. Kein Main-Merge, keine Änderung an Signatur, Paket-ID
