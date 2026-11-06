@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit
 @LooperMode(LooperMode.Mode.PAUSED)
 class OwnerFallbackIdentityUiTest {
     private val task = "Bitte mache einen Vergleich mehrerer Konzepte mit Widerspruch und Bedingung. " +
-        "Prüfe die Begründung sorgfältig. ".repeat(25)
+        "Beschreibe die verschiedenen Möglichkeiten. ".repeat(20)
 
     private class Runtime : LocalModelRuntime {
         override val state = LocalModelState.READY
@@ -40,6 +40,7 @@ class OwnerFallbackIdentityUiTest {
         var onAdvisory: () -> Unit = {}
         override fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit) =
             error("No model load in fixture")
+        override fun unload(callback: (Result<Unit>) -> Unit) = error("No model unload in fixture")
         override fun streamThinking(prompt: String, callback: LocalInferenceCallback) {
             advisoryPrompts += prompt
             onAdvisory()
@@ -126,7 +127,8 @@ class OwnerFallbackIdentityUiTest {
             assertTrue(prompt.contains("Aktueller Auftrag:\n$task"))
             assertFalse("Fallback must really be selected", prompt.contains("## CONTINUUM IDENTITY / GOVERNANCE"))
             assertSame(available, get(a, "continuumState"))
-            assertTrue(prompt.contains("assistant_name=\"Jarvis\""))
+            assertEquals("assistant_name=\"Jarvis\"",
+                prompt.lineSequence().single { it.startsWith("assistant_name=") })
             assertTrue(prompt.contains("communication_style=kurz"))
             assertTrue(prompt.contains("communication_tone=freundlich"))
             assertTrue(prompt.contains("communication_language=de-at"))
@@ -171,6 +173,7 @@ class OwnerFallbackIdentityUiTest {
             ownerRun(a)
             assertTrue(runtime.advisoryPrompts.isEmpty())
             assertTrue(runtime.prompts.isEmpty())
+            assertEquals("MANDATORY_CONTEXT_EXCEEDS_BUDGET", get(a, "localRuntimeError"))
             assertFalse(get(a, "busy") as Boolean)
         }
 }
