@@ -472,13 +472,14 @@ class JarvisWorkWindow(
         painter.fillPath(CRYSTAL_OUTLINE, EMBLEM_DISC_FILL, .78f * a)
         painter.fillPath(CRYSTAL_LEFT, CRYSTAL_LEFT_FILL, .46f * a)
         painter.fillPath(CRYSTAL_RIGHT, CRYSTAL_RIGHT_FILL, .34f * a)
-        // Girdle facets above and below the icon: the prism reads as a cut crystal, not a flat badge.
-        val girdle = CRYSTAL_S * .55f
+        // Girdle facets above and below the icon: the prism reads as a cut crystal, not a flat badge. They and the ridge
+        // stay outside the icon's bounds – nothing is drawn over the real app symbol (#565 review).
+        val half = (CRYSTAL_W * .52f).roundToInt()
+        val girdle = maxOf(CRYSTAL_S * .55f, half + 1f)
         painter.drawLine(-CRYSTAL_W, -CRYSTAL_S, 0f, -girdle, .8f, CRYSTAL_RIM_FILL, .55f * a)
         painter.drawLine(0f, -girdle, CRYSTAL_W, -CRYSTAL_S, .8f, CRYSTAL_RIM_FILL, .55f * a)
         painter.drawLine(-CRYSTAL_W, CRYSTAL_S, 0f, girdle, .8f, CRYSTAL_RIM_FILL, .4f * a)
         painter.drawLine(0f, girdle, CRYSTAL_W, CRYSTAL_S, .8f, CRYSTAL_RIM_FILL, .4f * a)
-        val half = (CRYSTAL_W * .52f).roundToInt()
         icon.setBounds(-half, -half, half, half)
         icon.alpha = (a * 255f).roundToInt().coerceIn(0, 255)
         icon.draw(canvas)

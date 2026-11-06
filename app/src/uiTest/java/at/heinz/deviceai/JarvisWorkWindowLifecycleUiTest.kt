@@ -235,6 +235,13 @@ class JarvisWorkWindowLifecycleUiTest {
             changed && b(c) > g(c) + 15 && r(c) > g(c) + 5
         }
         assertTrue("the crystal adds violet/magenta facets around the icon: $facets px", facets > 30)
+        // Nothing is drawn over the real app symbol: inside its solid core the crystal frame stays pure icon colour.
+        val core = crystal.indices.filter { i -> g(crystal[i]) > r(crystal[i]) + 20 && g(crystal[i]) > b(crystal[i]) + 10 }
+        val xs = core.map { it % 884 }; val ys = core.map { it / 884 }
+        val cx = (xs.min() + xs.max()) / 2; val cy = (ys.min() + ys.max()) / 2
+        val column = (ys.min() + 1 until ys.max()).map { y -> crystal[y * 884 + cx] }
+        assertTrue("no ridge line through the icon's middle column", column.all { g(it) > r(it) + 20 && g(it) > b(it) + 10 })
+        assertTrue(cy > 0)
     }
 
     /**
