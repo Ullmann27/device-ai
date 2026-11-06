@@ -4,7 +4,7 @@ package at.heinz.deviceai.cognitive
 internal object OwnerAppLookupIntent {
     sealed interface Intake {
         data class Lookup(val query: String, val opening: Boolean) : Intake
-        data class Planning(val original: String) : Intake
+        data class Planning(val original: String, val clarification: String? = null) : Intake
         data class Clarify(val subject: String) : Intake
     }
 
@@ -14,13 +14,15 @@ internal object OwnerAppLookupIntent {
     private val polite = Regex("(?iu)^(?:kannst|könntest|würdest|magst)\\s+du\\s+(.+?)\\s+(öffnen|starten|suchen|finden|zeigen)(?:\\s+bitte)?[.!?]*$")
     private val desire = Regex("(?iu)^ich\\s+(?:möchte|will|würde\\s+gern(?:e)?)\\s+(.+?)\\s+(öffnen|starten)[.!?]*$")
     private val openUp = Regex("(?iu)^mach(?:e)?\\s+(.+?)\\s+auf[.!?]*$")
-    private val vague = Regex("(?iu)^(?:ich\\s+)?(?:bräuchte|brauche|hätte\\s+gern(?:e)?|möchte)\\s+(?:bitte\\s+)?(?:etwas|was)\\s+(?:von|aus|in)\\s+(.+?)[.!?]*$")
+    private val vague = Regex("(?iu)^(?:ich\\s+)?(?:bräuchte|brauche|hätte\\s+gern(?:e)?|möchte|will)\\s+(?:bitte\\s+)?(?:etwas|was)\\s+(?:von|aus|in)\\s+(.+?)[.!?]*$")
     private val action = Regex("(?iu)\\b(öffne|öffnen|starte|starten|suche|suchen|finde|finden|aufmachen)\\b")
     private val requestStart = Regex("(?iu)^(?:öffne|starte|suche|finde|zeige|mach(?:e)?|kannst|könntest|würdest|magst|ich)\\b")
     private val query = Regex("[\\p{L}\\p{N}][\\p{L}\\p{N} ._+-]{1,79}")
     private val courtesy = Regex("(?iu)^(?:(?:bitte|mir|mal|kurz|eben)|für\\s+mich)\\s+")
     private val trailingCourtesy = Regex("(?iu)\\s+(?:bitte|für\\s+mich)$")
     private val reference = Regex("(?iu)^(?:sie|es|diese|diese\\s+app|die\\s+app|die|erste|zweite|dritte|vierte|fünfte|letzte|[1-9]|[1-9]\\.)$")
+    private val fileTarget = Regex("(?iu)\\b(datei|dateien|ordner|verzeichnis|download-ordner|downloads|pdf|dokument|dokumente)\\b|[/\\\\]|\\.(?:pdf|txt|docx|csv|json|jpg|png)\\b")
+    private val messageAction = Regex("(?iu)\\b(schreib|schreibe|schreiben|sende|senden|schick|schicke|schicken|nachricht)\\b")
 
     fun parse(utterance: String): String? = (inspect(utterance) as? Intake.Lookup)?.query
 
@@ -39,18 +41,24 @@ internal object OwnerAppLookupIntent {
             d != null -> { opening = d.groupValues[1].lowercase() in setOf("öffne", "starte"); target = d.groupValues[2] }
             p != null -> { opening = p.groupValues[2].lowercase() in setOf("öffnen", "starten"); target = p.groupValues[1] }
             m != null -> { opening = true; target = m.groupValues[1] }
-            else -> return if (requestStart.containsMatchIn(text) && action.containsMatchIn(text)) Intake.Planning(utterance) else null
+            else -> return if (requestStart.containsMatchIn(text) && action.containsMatchIn(text)) planning(utterance) else null
         }
-        if (additional.containsMatchIn(target)) return Intake.Planning(utterance)
+        if (!Regex("(?iu)\\bapp\\b").containsMatchIn(target) && fileTarget.containsMatchIn(target)) return null
+        if (additional.containsMatchIn(target)) return planning(utterance)
         var name = target.trim().trimEnd('.', '!', '?').trim()
         repeat(4) { name = name.replace(courtesy, "").replace(trailingCourtesy, "").trim() }
         if (isReference(name)) return Intake.Lookup(name, opening)
         name = name.replace(Regex("(?iu)^(?:die|den|das|meine|meinen)\\s+"), "")
             .replace(Regex("(?iu)^app\\s+"), "").replace(Regex("(?iu)\\s+app$"), "").trim()
         if (!query.matches(name) || name.contains("..") || name.contains(Regex("(?iu)\\b(etwas|irgendwas|irgendetwas)\\b")))
-            return Intake.Planning(utterance)
+            return planning(utterance)
         return Intake.Lookup(name, opening)
     }
+
+    private fun planning(original: String) = Intake.Planning(original,
+        if (messageAction.containsMatchIn(original)) "Welche Nachricht soll ich für welchen konkreten Empfänger vorbereiten? " +
+            "Ich kann einen Entwurf vorbereiten und die App nach deiner Bestätigung öffnen. " +
+            "Direktes Eingeben oder Senden in fremden Apps ist hier noch nicht angebunden." else null)
 
     fun isReference(query: String): Boolean = reference.matches(query)
 

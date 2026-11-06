@@ -28,6 +28,10 @@ import android.app.Activity
 import android.app.AlertDialog
 import at.heinz.deviceai.cognitive.ContinuumReadinessGuide
 import at.heinz.deviceai.cognitive.CameraTrackingState
+import at.heinz.deviceai.cognitive.OwnerAppLookupIntent
+import at.heinz.deviceai.cognitive.OwnerAppActionFlow
+import at.heinz.deviceai.cognitive.NativeAppCandidate
+import at.heinz.deviceai.ui.ToolWorkSceneLease
 import android.content.Intent
 import android.content.ActivityNotFoundException
 import android.graphics.Color
@@ -289,8 +293,13 @@ class AgentActivity : Activity() {
     private var avatarAwaitingApproval = false
     private var avatarBlocked = false
     private var onDeviceSpeech: AndroidOnDeviceSpeechInput? = null
-    private var appLookupGeneration: Long = 0L
+    @Volatile private var appLookupGeneration: Long = 0L
     private var appLookupActive: Boolean = false
+    @Volatile private var activeOwnerAppFlow: OwnerAppActionFlow? = null
+    @Volatile private var activeOwnerAppGate: ToolGate? = null
+    private var appLookupContext: Pair<String, List<NativeAppCandidate>>? = null
+    private data class AppActionReply(val session: String, val generation: Long, val request: String, val message: String)
+    private var pendingAppActionReply: AppActionReply? = null
     private var pendingLocalSpeechRequest: Int? = null
     private var pendingLocalSpeechSession: String? = null
     private var pendingLocalSpeechGeneration: Long = -1L
@@ -710,6 +719,10 @@ class AgentActivity : Activity() {
                 .edit().putBoolean("introduced", true).apply()
         }
         maybePlayReadinessWelcome()
+        pendingAppActionReply?.let { reply ->
+            pendingAppActionReply = null
+            deliverAppActionReply(reply)
+        }
         mainHandler.post { maybeAskForConversationCamera() }
     }
 
@@ -722,8 +735,14 @@ class AgentActivity : Activity() {
         codingPlanningEpoch++
         botLookupRevision++
         // A delayed read-only lookup must not render into a background/other app state.
-        appLookupGeneration++
-        if (appLookupActive) {
+        if (activeOwnerAppFlow?.launching != true) {
+            appLookupGeneration++
+            activeOwnerAppGate?.cancel()
+            activeOwnerAppGate = null
+            activeOwnerAppFlow?.cancel()
+            activeOwnerAppFlow = null
+        }
+        if (appLookupActive && activeOwnerAppFlow == null) {
             appLookupActive = false
             activeLocalRequest = false
             setBusy(false)
@@ -2865,7 +2884,7 @@ class AgentActivity : Activity() {
             continuousConversation.active, keepCockpitDuringHandsFree, activeWorkArea == ContinuumWorkArea.START)
 
     private fun refreshConversationLayout() {
-        val chat = at.heinz.deviceai.cognitive.CockpitConversationPresentation.showChat(
+        val chat = !currentToolScene() && at.heinz.deviceai.cognitive.CockpitConversationPresentation.showChat(
             explicitChatSelected = activeWorkArea == ContinuumWorkArea.CHAT,
             conversationActive = conversationActive,
             keyboardCompact = keyboardCompact,
@@ -2927,6 +2946,9 @@ class AgentActivity : Activity() {
 
     private fun focusChatComposer() {
         if (!::input.isInitialized) return
+        toolSceneLease.active?.let(toolSceneLease::closed)
+        toolSceneDialog?.dismiss()
+        workWindowHost.close(immediate = true)
         // An explicit chat tap wins over the home-only voice presentation.
         keepCockpitDuringHandsFree = false
         activeWorkArea = ContinuumWorkArea.CHAT
@@ -2984,28 +3006,84 @@ class AgentActivity : Activity() {
      * the tool answered. Never a success claim of its own: the verified result stays in the dialog and receipts.
      */
     private var toolScene: Pair<String, TextView>? = null
+    private val toolSceneLease = ToolWorkSceneLease()
+    private var toolSceneReturnArea: ContinuumWorkArea? = null
+    private var toolSceneDialog: AlertDialog? = null
+
+    private fun currentToolScene(): Boolean = toolSceneLease.active?.let(::currentToolScene) == true
+
+    private fun currentToolScene(key: ToolWorkSceneLease.Key): Boolean =
+        !isFinishing && !isDestroyed && toolSceneLease.current(key, sessionId,
+            currentTaskEffectContext?.scope, workPresentationGeneration, foregroundLearningActive)
 
     private fun presentToolScene(callId: String, toolName: String, arguments: Map<String, Any?> = emptyMap()) {
-        val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown } ?: return
-        if (workWindowHost.isShowing || centerDialog?.isShowing == true) return
+        val key = toolSceneLease.active?.takeIf { it.callId == callId }
+        if (key != null && !currentToolScene(key)) return
+        if (centerDialog?.isShowing == true) {
+            recordCockpitDialog(false, "${ToolRegistry.label(toolName)} läuft · Ergebnis folgt.")
+            key?.let(toolSceneLease::closed)
+            return
+        }
+        if (toolSceneReturnArea == null) toolSceneReturnArea = activeWorkArea
+        toolScene = null
+        toolSceneDialog?.dismiss()
+        toolSceneDialog = null
+        workWindowHost.close(immediate = true)
+        showHomeDashboard()
+        val home = homeView ?: run { key?.let(toolSceneLease::closed); return }
         val label = ToolRegistry.label(toolName)
-        // Owner V1: the exact installed app the call names (same rule as the executor), never a guessed name or icon.
         val app = ToolAppIdentity.resolve(packageManager, toolName, arguments)
-        val status = textView(if (app != null && toolName == "launch_app") "Öffnet ${app.label} … das Ergebnis kommt vom Werkzeug."
-            else "Läuft … das Ergebnis kommt vom Werkzeug.", 13f, MUTED)
+        val status = textView(if (app != null && toolName == "launch_app") "Öffnet ${app.label} · Prüfung läuft."
+            else "$label läuft · Ergebnis wird abgewartet.", 13f, MUTED).apply { tag = "jarvis-tool-status:$callId" }
         val body = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             if (app != null) addView(appIdentityRow(app))
             addView(textView(label, 15f, TEXT, bold = true))
-            addView(textView("Werkzeug $toolName · gestartet über die Werkzeugfreigabe", 11f, MUTED))
+            addView(textView("App-Status · lokale Werkzeugrückmeldung", 11f, MUTED))
             addView(status)
+            addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this@AgentActivity, "STOP") {
+                cancelLocalRequest()
+            })
         }
         val title = if (app != null) "APP · ${app.label}" else "WERKZEUG · $label"
-        workWindowHost.show(home, body, title, at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName),
-            emblem = app?.icon?.let(::drawableCopy), crystal = app != null) {
-            if (toolScene?.first == callId) toolScene = null
-        } ?: return
         toolScene = callId to status
+        fun closed() {
+            if (toolScene?.first != callId) return
+            toolScene = null
+            key?.let(toolSceneLease::closed)
+            workWindowHost.workEnded()
+            toolSceneDialog = null
+            val returnArea = toolSceneReturnArea
+            toolSceneReturnArea = null
+            if (returnArea == ContinuumWorkArea.CHAT && activeWorkArea == ContinuumWorkArea.START &&
+                !isFinishing && !isDestroyed) {
+                activeWorkArea = ContinuumWorkArea.CHAT
+                conversationActive = true
+                refreshWorkAreaSelection()
+                refreshConversationLayout()
+            }
+        }
+        fun show(retry: Boolean) {
+            if (toolScene?.first != callId || (key != null && !currentToolScene(key))) return
+            val window = workWindowHost.show(home, body, title,
+                at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName),
+                emblem = app?.icon?.let(::drawableCopy), crystal = app != null, onClosed = ::closed)
+            if (window != null) {
+                if (key == null || toolSceneLease.running) workWindowHost.workStarted()
+            } else if (!retry) {
+                home.post { show(true) }
+            } else {
+                (body.parent as? android.view.ViewGroup)?.removeView(body)
+                body.addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this, "SCHLIESSEN") {
+                    toolSceneDialog?.dismiss()
+                })
+                toolSceneDialog = at.heinz.deviceai.ui.ContinuumBentoCockpit.show(this, body).also {
+                    it.setOnDismissListener { closed() }
+                }
+                recordCockpitDialog(false, "$label läuft · Werkzeugstatus im Arbeitsfenster.")
+            }
+        }
+        show(false)
     }
 
     /** Real icon, label and package of the app the tool names; the icon is its own copy (bounds are per instance). */
@@ -3033,11 +3111,29 @@ class AgentActivity : Activity() {
     private fun finishToolScene(callId: String, answered: Boolean) {
         val (id, status) = toolScene ?: return
         if (id != callId) return
-        status.text = if (answered) "Das Werkzeug hat geantwortet · Ergebnis und Prüfung im Dialog."
-            else "Werkzeug nicht abgeschlossen · Rückmeldung im Dialog."
+        toolSceneLease.active?.let { if (!toolSceneLease.ended(it)) return }
+        workWindowHost.workEnded()
+        status.text = if (answered) "Werkzeugantwort eingetroffen · Abschlussprüfung folgt."
+            else "Werkzeug nicht abgeschlossen · Rückmeldung wird geprüft."
         status.setTextColor(if (answered) CYAN else AMBER)
-        // A short hold so the real end state is readable, then the window folds back and the gaze returns.
-        homeView?.postDelayed({ if (toolScene?.first == callId) workWindowHost.close() }, 1_600L)
+        homeView?.postDelayed({
+            if (toolScene?.first == callId) {
+                if (toolSceneDialog != null) toolSceneDialog?.dismiss() else workWindowHost.close()
+            }
+        }, 1_600L)
+    }
+
+    private fun settleToolScene(result: ToolExecutionResult) {
+        val (id, status) = toolScene ?: return
+        if (id != result.record.callId || !currentToolScene()) return
+        val record = result.record
+        status.text = when {
+            record.outcomeUncertain -> "Ausgang unklar · bereits gestartete Wirkungen prüfen."
+            result.replayed -> "Bereits vorhandene Rückmeldung · keine neue Ausführung."
+            record.status == ToolExecutionStatus.SUCCEEDED -> "Werkzeug hat geantwortet · Rückmeldung im Dialog."
+            else -> "Werkzeugstatus: ${record.status} · kein bestätigter Erfolg."
+        }
+        status.setTextColor(if (record.status == ToolExecutionStatus.SUCCEEDED && !record.outcomeUncertain) CYAN else AMBER)
     }
     private var quickActionsDialog: AlertDialog? = null
 
@@ -4755,36 +4851,77 @@ class AgentActivity : Activity() {
         return shell
     }
 
-    private fun runExplicitAppLookup(query: String) {
+    private fun runExplicitAppLookup(request: String, intake: OwnerAppLookupIntent.Intake.Lookup) {
         val ownerSession = sessionId
+        val contextual = appLookupContext?.takeIf { it.first == ownerSession }?.second.orEmpty()
+        val query = OwnerAppLookupIntent.contextualTarget(intake.query, contextual)
+        if (query == null) {
+            clarifyAppRequest(request, "Welche App meinst du genau? Bitte nenne den Namen oder wähle einen angezeigten Treffer.")
+            return
+        }
         val generation = ++appLookupGeneration
+        val flow = OwnerAppActionFlow(intake.opening)
+        activeOwnerAppFlow = flow
         appLookupActive = true
         activeLocalRequest = true
         setBusy(true)
-        val invocation = ToolCallRequest("explicit-lookup-" + UUID.randomUUID(), "find_app", mapOf("query" to query))
-        executeTool(invocation, false, false) { raw ->
-            if (isFinishing || isDestroyed || sessionId != ownerSession || appLookupGeneration != generation) return@executeTool
-            appLookupActive = false
-            activeLocalRequest = false
-            setBusy(false)
-            val response = runCatching {
-                val obj = org.json.JSONObject(raw)
-                check(obj.optString("schema") == "CONTINUUM_APP_DISCOVERY_V1") { "UNVERIFIED_APP_LOOKUP" }
-                val count = obj.optInt("totalMatches", -1)
-                check(count >= 0) { "INVALID_APP_COUNT" }
-                val items = obj.getJSONArray("candidates")
-                check(items.length() <= 12) { "UNBOUNDED_APP_RESULT" }
-                if (count == 0) "Ich habe keine passende startbare App gefunden. Das beweist nicht, dass sie nicht installiert ist."
-                else {
-                    val suggestions = (0 until items.length()).map { i ->
-                        val candidate = items.getJSONObject(i)
-                        candidate.getString("label").take(100) + " (" + candidate.getString("packageName").take(200) + ")"
-                    }.joinToString("; ")
-                    "Gefundene Apps: $suggestions. Zum tatsächlichen Öffnen brauche ich deinen separaten bestätigten Auftrag."
+        fun current() = !isFinishing && !isDestroyed && sessionId == ownerSession &&
+            appLookupGeneration == generation && activeOwnerAppFlow === flow
+        fun advance(step: OwnerAppActionFlow.Step?) {
+            if (!current() || step == null) return
+            when (step) {
+                is OwnerAppActionFlow.Step.Run -> {
+                    val gate = createToolGate(ownerTurn = request)
+                    activeOwnerAppGate = gate
+                    executeToolResult(step.call, step.confirmed, false, gate) { result ->
+                        if (!current()) return@executeToolResult
+                        activeOwnerAppGate = null
+                        advance(flow.returned(result))
+                    }
                 }
-            }.getOrElse { "Appsuche konnte nicht bestätigt werden. Es wurde keine App gestartet." }
-            addAssistantMessage(response)
+                is OwnerAppActionFlow.Step.Choose -> {
+                    appLookupContext = ownerSession to flow.candidates
+                    AlertDialog.Builder(this).setTitle("Welche App möchtest du öffnen?")
+                        .setItems(step.candidates.map { "${it.label} (${it.packageName})" }.toTypedArray()) { _, index ->
+                            if (current() && foregroundLearningActive) advance(flow.choose(step.candidates[index]))
+                        }
+                        .setNegativeButton("Abbrechen") { _, _ -> advance(flow.choose(null)) }
+                        .setOnCancelListener { advance(flow.choose(null)) }.show()
+                }
+                is OwnerAppActionFlow.Step.Confirm -> {
+                    appLookupContext = ownerSession to flow.candidates
+                    showToolConfirmation(step.call, false) { approved ->
+                        if (current() && foregroundLearningActive) advance(flow.confirm(approved))
+                    }
+                }
+                is OwnerAppActionFlow.Step.Done -> {
+                    if (flow.candidates.isNotEmpty()) appLookupContext = ownerSession to flow.candidates
+                    activeOwnerAppFlow = null
+                    activeOwnerAppGate = null
+                    appLookupActive = false
+                    activeLocalRequest = false
+                    setBusy(false)
+                    val reply = AppActionReply(ownerSession, generation, request, step.message)
+                    if (foregroundLearningActive) deliverAppActionReply(reply)
+                    else pendingAppActionReply = reply
+                }
+            }
         }
+        advance(flow.start(query))
+    }
+
+    private fun deliverAppActionReply(reply: AppActionReply) {
+        if (isFinishing || isDestroyed || !foregroundLearningActive || sessionId != reply.session ||
+            appLookupGeneration != reply.generation) return
+        localConversationContext.recordNonModel(reply.session, reply.request, "App-Auftrag · Werkzeugrückmeldung im Dialog")
+        addAssistantMessage(reply.message, preserveLocalContext = true,
+            keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+    }
+
+    private fun clarifyAppRequest(request: String, question: String) {
+        localConversationContext.recordUnanswered(sessionId, request)
+        addAssistantMessage(question, preserveLocalContext = true,
+            keepCockpit = activeWorkArea == ContinuumWorkArea.START)
     }
 
     /** Public status only: no collector invocation, disk scan, model call, bot seed, grant,
@@ -4873,16 +5010,6 @@ class AgentActivity : Activity() {
             return
         }
         if (!botRoutingChecked && routeBotInput(input.text.toString())) return
-        // A narrow deterministic, owner-initiated app search runs through the existing ToolGate.
-        // It ONLY returns bounded candidates; opening any app requires a separate consented tool call.
-        at.heinz.deviceai.cognitive.OwnerAppLookupIntent.parse(request)?.let { lookup ->
-            webToolGate.cancel()
-            approvedModelWebSession.getAndSet(null)?.cancel()
-            input.text.clear()
-            addUserMessage(request)
-            runExplicitAppLookup(lookup)
-            return
-        }
         // „Was haben wir gestern entschieden?“ / „die Entscheidung davor“ / „was davon ist umgesetzt“ / „beim letzten offenen
         // Punkt weitermachen“ – answered from the work journal and the owner's confirmed statements, never by the model.
         at.heinz.deviceai.cognitive.WorkDecisionRecall.parse(request)?.let { ask ->
@@ -5096,6 +5223,39 @@ class AgentActivity : Activity() {
                 return
             }
             null -> Unit
+        }
+        // Recognition grants no execution.
+        OwnerAppLookupIntent.inspect(request, continuumState?.archive?.identityState?.chosenName)?.let { intake ->
+            webToolGate.cancel()
+            approvedModelWebSession.getAndSet(null)?.cancel()
+            input.text.clear()
+            addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            when (intake) {
+                is OwnerAppLookupIntent.Intake.Lookup -> {
+                    val localArea: (() -> Unit)? = if (intake.opening) when (intake.query.lowercase(Locale.GERMAN)) {
+                        "lernzentrum" -> ::showLearningCenter
+                        "entwicklungszentrum" -> ::showDevelopmentCenter
+                        "gedächtnis", "gedächtniszentrum" -> ::showMemoryCenter
+                        "systemstatus" -> ::showSystemCenter
+                        "modelle", "modellverwaltung" -> ::showModelCenter
+                        else -> null
+                    } else null
+                    if (localArea != null) localArea() else runExplicitAppLookup(request, intake)
+                }
+                is OwnerAppLookupIntent.Intake.Clarify -> clarifyAppRequest(request,
+                    "Was brauchst du aus ${intake.subject}: die App öffnen, etwas nachsehen oder einen Inhalt vorbereiten?")
+                is OwnerAppLookupIntent.Intake.Planning -> {
+                    localConversationContext.recordUnanswered(sessionId, intake.original)
+                    if (intake.clarification != null) clarifyAppRequest(request, intake.clarification)
+                    else if (::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY)
+                        runLocal(intake.original)
+                    else clarifyAppRequest(request, "Dein vollständiger Auftrag bleibt erhalten. " +
+                        "Welche App und welchen nächsten Schritt meinst du genau? " +
+                        "Für eine Nachricht brauche ich den konkreten Empfänger und den Inhalt; " +
+                        "Senden ist ein eigener freizugebender Schritt.")
+                }
+            }
+            return
         }
         if (request.equals("Entwicklungsaufgaben", true) || request.equals("Backlog", true)) {
             input.text.clear()
@@ -8688,17 +8848,30 @@ class AgentActivity : Activity() {
         destructiveConfirmed: Boolean,
         done: (String) -> Unit
     ) {
+        executeToolResult(call, userConfirmed, destructiveConfirmed) { execution ->
+            done(execution.output ?: "TOOL_${execution.record.status}: ${execution.record.decisionReason}")
+        }
+    }
+
+    private fun executeToolResult(
+        call: ToolCallRequest,
+        userConfirmed: Boolean,
+        destructiveConfirmed: Boolean,
+        gate: ToolGate = createToolGate(),
+        done: (ToolExecutionResult) -> Unit
+    ) {
         val label = ToolRegistry.label(call.name)
         addToolActivity("⏳ $label")
         Thread({
-            val execution = createToolGate().execute(
+            val execution = gate.execute(
                 ToolInvocation(call.callId, call), userConfirmed, destructiveConfirmed
             )
             val result = execution.output ?: "TOOL_${execution.record.status}: ${execution.record.decisionReason}"
             runOnUiThread {
                 val preview = result.replace("\n", " ").take(120)
                 addToolActivity("${execution.record.status} · $label · $preview")
-                done(result)
+                settleToolScene(execution)
+                done(execution)
             }
         }, "device-ai-cloud-tool").apply { isDaemon = true; start() }
     }
@@ -8708,16 +8881,26 @@ class AgentActivity : Activity() {
                                botTask: ChiefBotTaskTicket? = null): ToolGate {
         // Capture at gate creation: a late old runner cannot borrow a subsequent turn's scope.
         val effectContext = currentTaskEffectContext
+        val presentationGeneration = workPresentationGeneration
+        val cockpitTurn = activeChiefTurn?.takeIf { it.phase != at.heinz.deviceai.chief.TurnPhase.ENDED }?.turnId
         return ToolGate(
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
             var effectStarted = false
             var toolFailed = false
-            val cockpitTurn = activeChiefTurn?.takeIf { it.phase != at.heinz.deviceai.chief.TurnPhase.ENDED }?.turnId
+            val sceneKey = effectContext?.let {
+                ToolWorkSceneLease.Key(it.session, it.scope, presentationGeneration, request.callId)
+            }
             fun actualStart() {
                 effectStarted = true
                 cockpitTurn?.let { cockpitTriggers.toolStarted(it, request.callId, request.name) }
-                runOnUiThread { presentToolScene(request.callId, request.name, request.arguments) }
+                val startedAt = android.os.SystemClock.uptimeMillis()
+                runOnUiThread {
+                    if (sceneKey != null && !isFinishing && !isDestroyed && toolSceneLease.offer(sceneKey,
+                            sessionId, currentTaskEffectContext?.scope, workPresentationGeneration,
+                            foregroundLearningActive, startedAt))
+                        presentToolScene(request.callId, request.name, request.arguments)
+                }
                 postTaskEffect(effectContext,
                     at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Started(request.callId,
                         at.heinz.deviceai.ui.ContinuumTaskEffects.Kind.TOOL), android.os.SystemClock.uptimeMillis())
@@ -8773,7 +8956,8 @@ class AgentActivity : Activity() {
                     at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Finished(request.callId), android.os.SystemClock.uptimeMillis())
                 val toolAnswered = !toolFailed
                 runOnUiThread {
-                    finishToolScene(request.callId, toolAnswered)
+                    if (sceneKey != null && currentToolScene(sceneKey))
+                        finishToolScene(request.callId, toolAnswered)
                     if(workToolCall == request.callId) {
                         workTool=null; workToolCall=null; refreshWorkPresentation()
                     }
@@ -10124,10 +10308,16 @@ class AgentActivity : Activity() {
         }
         appLookupGeneration++
         if (appLookupActive) {
+            activeOwnerAppGate?.cancel()
+            activeOwnerAppGate = null
+            activeOwnerAppFlow?.cancel()
+            activeOwnerAppFlow = null
+            pendingAppActionReply = null
+            if (::executor.isInitialized) executor.cancelPendingActions()
             appLookupActive = false
             activeLocalRequest = false
             setBusy(false)
-            addToolActivity("Appsuche abgebrochen; spätes Ergebnis wird ignoriert")
+            addToolActivity("App-Auftrag abgebrochen; spätes Ergebnis wird ignoriert")
             return
         }
         cancelSpeechInputScope()
@@ -11367,7 +11557,7 @@ class AgentActivity : Activity() {
             }
         }
         requestStartedAt = android.os.SystemClock.elapsedRealtime()
-        if (!keepCockpit && !handsFreeKeepsHome()) {
+        if (!keepCockpit && !handsFreeKeepsHome() && !currentToolScene()) {
             conversationActive = true
             activeWorkArea = ContinuumWorkArea.CHAT
             refreshWorkAreaSelection()
@@ -11426,7 +11616,7 @@ class AgentActivity : Activity() {
             while (responseTimesMs.size > 20) responseTimesMs.removeFirst()
             requestStartedAt = 0L
         }
-        if (!keepCockpit && !handsFreeKeepsHome()) {
+        if (!keepCockpit && !handsFreeKeepsHome() && !currentToolScene()) {
             conversationActive = true
             activeWorkArea = ContinuumWorkArea.CHAT
             refreshWorkAreaSelection()
@@ -11605,6 +11795,12 @@ class AgentActivity : Activity() {
     }
 
     private fun clearTaskEffects() {
+        toolSceneDialog?.dismiss()
+        toolSceneDialog = null
+        workWindowHost.workEnded()
+        toolSceneLease.clear()
+        toolScene = null
+        toolSceneReturnArea = null
         currentTaskEffectContext = null
         chiefTaskEffectContexts.clear()
         hologramView?.setTaskEffectScope(null)

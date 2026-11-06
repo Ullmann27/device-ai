@@ -41,3 +41,41 @@ This branch owns AgentActivity, OwnerAppLookupIntent and nearby action/work-wind
 - Compound requests retain their original text for planning. No execution permission
   derives from recognition; Activity continuation is still in progress.
 - No Android/GPU/device verification has run for this checkpoint.
+
+## Action and visual checkpoint
+
+- Production parser/NativeAppLookup/ToolRegistry/ToolGate/receipt sources compiled
+  against real compileSdk36 android.jar: 18/18 targeted JUnit tests PASS.
+- Exact selected package receives a new explicit confirmation. Lookup alone,
+  declined approval, STOP, missing/ambiguous app, stale call and replay cannot
+  acquire launch authority. Missing permission cannot become verified success.
+- Whole compound requests remain in owner context. Message preparation asks for
+  recipient/content and states the current lack of a connected foreign-app
+  typing/sending tool. No synthetic example sends a real message.
+- Activity now uses this flow; launch results wait for foreground return when
+  opening another app pauses Continuum. Real confirmation remains ToolGate-owned.
+- Tool scenes capture existing session/scope/generation/callId, move accepted work
+  from CHAT to the existing START surface, hold workStarted until backend return,
+  and return to CHAT after the result hold. STOP invalidates queued starts.
+- Existing center dialog presentation is the fallback if protected geometry has
+  no safe work-window rectangle; no new renderer or embedded external app.
+- Activity changes and new real-input UI regressions: SDK compilation/UI runtime
+  still pending central integration. The 18 pure tests are NOT Activity E2E.
+
+## Code43 to Code46 source comparison
+
+- Code43 source ff8f6070bb3a6f4dfbb6215ce3e3e269974c1d53 is identified by
+  docs/research/omega/OPUS55_HANDOFF_VOICE_AVATAR_HUD_20261105.md lines4–5 and
+  docs/release/CONTINUUM-CODE44-BUILD-HANDOFF-20261105.md line8.
+- Compared to Code46 577f0931e7937ffcac02dc855a540f093facdb3b, Activity's
+  showCenter replaces its exclusive AlertDialog with JarvisWorkWindow when
+  eligible and retains AlertDialog as fallback. WorkWindow/Host/Depth/Geometry
+  are additions; this is not evidence that a previous working virtual app screen
+  was removed.
+- No removed progress/loading/work-surface line appears in the reviewed visual
+  UI/ContinuumHologram diffs; no Activity ProgressBar removal appears. The existing
+  neuralProgress visibility remains conditional on actual training.
+- Source-proven causes for missing tool work scenes are CHAT admission, the
+  START/geometry gates, lookup-only termination and the missing workStarted call.
+  This source comparison cannot establish what a physical Code43 screen looked
+  like; no Code43/Fold7/video comparison was performed.
