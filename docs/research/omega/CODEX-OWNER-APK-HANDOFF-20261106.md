@@ -1,7 +1,8 @@
 # Continuum owner APK integration — 2026-11-06
 
-Status: targeted preflight and original-package APK/AAB assembly GREEN. Original publisher full QA,
-original signing and HTTPS release readback remain pending. Final candidate: code46 /0.3.45.
+Status: complete local Android regression, compilation, NewApi lint and original-package APK/AAB
+assembly GREEN. Original publisher full QA, original signing and HTTPS release readback remain
+pending. Frozen candidate: `577f0931e7937ffcac02dc855a540f093facdb3b`, code46 /0.3.45.
 This is not a release receipt.
 
 ## Sources and preserved history
@@ -78,6 +79,8 @@ Relevant interfaces: `WorkDecisionRecall`, `WorkRecall`, `LocalConversationFollo
 
 | Check | Result and exact scope |
 |---|---|
+| Complete final-source Android/JVM regression | **3539 PASS, 0 FAIL, 20 SKIP /3559**, **626 suites**; exact GitHub source `577f0931e7937ffcac02dc855a540f093facdb3b`; all JUnit XML fresh; complete XML and log archived |
+| Final-source compilation and lint | PASS; existing **NewApi-only** lint, zero reported issues; complete Gradle invocation exit0 |
 | Final focused Android/JVM regression | **83 PASS, 0 FAIL, 0 SKIP**, real SDK/Gradle + Robolectric; clean local source `d57a8ce093efe4c37491116bb954abe0a0bfa434` |
 | Android debug compilation | PASS on that source |
 | Android lint | PASS, existing **NewApi-only** configuration; not an all-rules lint claim |
@@ -193,8 +196,8 @@ The prior running deploy `dep-dbn0gj5s25qs73a1vrv0` is superseded and lacks this
 No second trigger was issued for the already queued corrected candidate.
 
 Source-bound quality-lab rerun on 577f0931e7937ffcac02dc855a540f093facdb3b: 44/44 PASS,
-source verified and unchanged. A complete local SDK/Robolectric/lint run was started on an
-isolated clean checkout of that exact GitHub commit. Its final result remains pending here.
+source verified and unchanged. The complete local SDK/Robolectric/lint run on an isolated clean
+checkout of that exact GitHub commit subsequently passed; the final evidence is recorded below.
 
 ## Corrected-source host preflight checkpoint
 
@@ -208,5 +211,30 @@ The first additional complete local Android attempt ended with exit 1 because it
 disappeared. No complete JUnit result or concrete assertion failure was emitted. No JVM crash
 file or OutOfMemoryError was found; kernel memory counters were inaccessible. This is
 `INFRA_ABORT_CAUSE_UNDETERMINED`, never a PASS and not a proved OOM. The same unchanged
-source is now running sequentially with the existing 1-GiB test worker, one Gradle worker and
-a 1600-MiB Gradle heap. No product or publisher gate was changed.
+source subsequently passed sequentially with the existing 1-GiB test worker, one Gradle worker
+and a 1600-MiB Gradle heap. No product or publisher gate was changed.
+
+## Complete corrected-source Android GREEN
+
+The complete unfiltered invocation on `577f0931e7937ffcac02dc855a540f093facdb3b` finished
+successfully in 35m21s: **3539 passed, 0 failed, 20 skipped /3559**, across **626 JUnit suites**.
+All XML files were written after the saved run start, and the checkout remained clean.
+Compilation and the existing NewApi-only lint configuration passed; lint reported zero issues.
+The exact counts, toolchain, command properties, skipped names and hashes are in
+`docs/evidence/codex-owner-apk-20261106/android-full-code46-green.json`. The accompanying
+`android-full-code46-junit.zip` preserves all 626 XML files, lint XML and the complete Gradle log.
+
+The skips are explicit: twelve unfinished Chief E2E acceptance cases; two disabled-by-default
+Chief/Node/Docker host integrations; three unconfigured Node-to-Kotlin parity-data checks;
+one optional visual host export; and two LiteRT lifecycle tests requiring JDK21, while this
+Android build uses JDK17. Several historical Chief dependency comments are stale: these twelve
+skips prove missing E2E acceptance, not twelve entirely absent product components. Detailed
+classification: `docs/evidence/codex-owner-apk-20261106/android-full-code46-skips.md`.
+
+The earlier Code46 publisher `dep-dbn0gj5s25qs73a1vrv0` failed on the same five plain-JUnit
+RectF cases at 2026-11-06T18:12:20.408165Z. The first corrected-source queue entry
+`dep-dbn0u78gs6ms73a7m54g` then stopped at the source-specific release-freeze guard, before QA,
+at 18:12:43.485742Z. Both existing source-authorization variables were bound to the owner's
+authorized exact candidate, preserving signing credentials and all QA gates. The resulting
+corrected run is `dep-dbn1htjncjis73c9vlng`, started at **18:14:14.342126Z**. Its backend gate
+passed at **18:17:53.384462019Z**; signing and live-download verification remain pending here.

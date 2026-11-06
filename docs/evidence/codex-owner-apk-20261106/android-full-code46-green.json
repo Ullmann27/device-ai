@@ -1,0 +1,171 @@
+{
+  "status": "PASSED_WITH_EXPLICIT_SKIPS",
+  "sourceSha": "577f0931e7937ffcac02dc855a540f093facdb3b",
+  "sourceTree": "a17cdd8f54755f10302bebc46af703c4cabc8075",
+  "checkoutCleanAtReceipt": true,
+  "sourceCheckout": "/workspace/scratch/249ad98ddc15/code46-verify",
+  "startedAt": "2026-11-06T17:48:53.117018+00:00",
+  "finishedLogWrittenAt": "2026-11-06T18:24:15.578072+00:00",
+  "exitCode": 0,
+  "gradleResult": "BUILD SUCCESSFUL in 35m 21s",
+  "tasks": [
+    ":app:compileDebugKotlin",
+    ":app:testDebugUnitTest",
+    ":app:lintDebug"
+  ],
+  "properties": {
+    "deviceAiMentorPreview": true,
+    "continuumUiWidgetTests": true,
+    "continuumLocalStandaloneQa": true,
+    "continuumOwnerArm64": true,
+    "continuumStandaloneVersionCode": 46,
+    "kotlin.compiler.execution.strategy": "in-process"
+  },
+  "toolchain": {
+    "gradle": "8.11.1",
+    "java": "Temurin 17.0.20.1+1",
+    "androidPlatform": 36,
+    "buildTools": "35.0.0"
+  },
+  "execution": {
+    "offline": true,
+    "noDaemon": true,
+    "maxWorkers": 1,
+    "gradleHeapMiB": 1600,
+    "metaspaceMiB": 512,
+    "testWorkerHeapMiB": 1024,
+    "testFilter": null
+  },
+  "junit": {
+    "suites": 626,
+    "total": 3559,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 20,
+    "passed": 3539,
+    "allXmlWrittenAfterStart": true,
+    "staleXml": [],
+    "skippedCases": [
+      {
+        "class": "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+        "test": "fold7InnerMotionClip",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+        "test": "s7_pending_agentMessagesUrgentWakesInfoWaits",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+        "test": "s4b_pending_profileDiarySharedLayers",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+        "test": "s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+        "test": "s5b_pending_textFileSkillLibraryLoadedOnDemand",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+        "test": "s6_pending_routineReportsOnlyWhenSomethingIsNew",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+        "test": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+        "test": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+        "test": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+        "test": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+        "test": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+        "test": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+        "test": "schritt6b_lernen_hypotheseUndTagebuchEintrag",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+        "test": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+        "test": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+        "test": "actualNodeKotlinNodeTrainingParity",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+        "test": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+        "test": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest",
+        "test": "failureBeforeAnyModelWasLoadedCanRetryWithoutUnload",
+        "xmlReason": null
+      },
+      {
+        "class": "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest",
+        "test": "failedRuntimeWithRetainedModelRefusesReloadUntilExplicitUnload",
+        "xmlReason": null
+      }
+    ]
+  },
+  "lint": {
+    "status": "PASS",
+    "issues": 0,
+    "configuredChecks": [
+      "NewApi"
+    ],
+    "scope": "Existing NewApi-only configuration, not all lint rules",
+    "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809"
+  },
+  "gradleLogSha256": "9d87ff52534958d54acec995f6a39502704a0b11fcfb6ca50a25b0cd4ba78d40",
+  "archive": {
+    "path": "android-full-code46-junit.zip",
+    "bytes": 416433,
+    "sha256": "c39453147dd570dac6e07fe5ff85f8718ab95b9308c110800d1ac290e37ab171"
+  },
+  "limits": [
+    "Host JVM/Robolectric evidence, not physical Fold7/GPU acceptance",
+    "No actual free local-model answer or audio quality evidence",
+    "Skipped cases are not counted as passed"
+  ]
+}
