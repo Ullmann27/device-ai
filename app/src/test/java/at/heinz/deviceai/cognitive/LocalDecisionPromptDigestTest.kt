@@ -59,6 +59,34 @@ class LocalDecisionPromptDigestTest {
         assertEquals("", result)
     }
 
+    @Test fun confidentialActiveConflictStillSuppressesEarlierDecision() {
+        val items = WorkDecisionRecall.items(emptyList(), listOf(
+            WorkDecisionRecall.OwnerStatement(
+                "Wir haben entschieden: Code47 wird am Montag veröffentlicht.", 5),
+            WorkDecisionRecall.OwnerStatement(
+                "Wir haben entschieden: Code47 wird am Freitag veröffentlicht; das Passwort bleibt intern.", 6)
+        ), now = 10)
+        assertEquals(2, items.size)
+        assertTrue(LocalDecisionPromptDigest.render("Wie geht Code47 weiter?",
+            items.filter { it.at == 5L }).contains("Montag"))
+        assertEquals("", LocalDecisionPromptDigest.render("Wie geht Code47 weiter?", items))
+    }
+
+    @Test fun overlongActiveConflictStillSuppressesEarlierDecision() {
+        val items = WorkDecisionRecall.items(emptyList(), listOf(
+            WorkDecisionRecall.OwnerStatement(
+                "Wir haben entschieden: Code47 wird am Montag veröffentlicht.", 5),
+            WorkDecisionRecall.OwnerStatement(
+                "Wir haben entschieden: Code47 wird am Freitag veröffentlicht, " +
+                    "weil die Prüfung noch läuft. ".repeat(8), 6)
+        ), now = 10)
+        assertEquals(2, items.size)
+        assertTrue(items.first().text.length > 180)
+        assertTrue(LocalDecisionPromptDigest.render("Wie geht Code47 weiter?",
+            items.filter { it.at == 5L }).contains("Montag"))
+        assertEquals("", LocalDecisionPromptDigest.render("Wie geht Code47 weiter?", items))
+    }
+
     @Test fun unfinishedJournalIsExplicitlyNotCalledComplete() {
         val result = LocalDecisionPromptDigest.render("Wie weit ist der Bauplan?",
             listOf(work("Entwurf zu Bauplan erstellt, noch nicht gespeichert", done = false)))

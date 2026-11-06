@@ -1,0 +1,58 @@
+{
+  "status": "LIVE_CODE46_APK_BYTES_ORIGINAL_CERT_AND_PACKAGE_VERIFIED",
+  "verified_at_utc": "2026-11-06T19:05:55.335900+00:00",
+  "deploy_id": "dep-dbn1htjncjis73c9vlng",
+  "source_commit": "577f0931e7937ffcac02dc855a540f093facdb3b",
+  "versionCode": 46,
+  "versionName": "0.3.45",
+  "packageName": "at.heinz.deviceai.continuumlocal",
+  "apk_url": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/Continuum-Lokal-0930614bbcc8e53d75283dfe47a53a73e758430a99af3698f31b88446babc759.apk",
+  "apk_bytes": 101876503,
+  "apk_sha256": "0930614bbcc8e53d75283dfe47a53a73e758430a99af3698f31b88446babc759",
+  "signer_sha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+  "signer_count": 1,
+  "signature_v2_verified": true,
+  "manifest_sha256": "6b238e9ae2b326ae9d24ff9c10d9a49c71c62c2cfc997fc8612716cb69dd694c",
+  "build_info_exact_six_keys_verified": true,
+  "actual_apk_path": "/workspace/scratch/249ad98ddc15/final-code46-download/Continuum-Lokal-0.3.45-Code46.apk",
+  "download_reused_from_existing_https_receipt": "/workspace/scratch/249ad98ddc15/final-code46-download/https-receipt.json",
+  "fresh_live_catalog_matches_downloaded_catalog": true,
+  "commands": {
+    "apksigner": {
+      "command": [
+        "/workspace/scratch/19c84cfe59f9/build-env/toolchain/android-sdk/build-tools/35.0.0/apksigner",
+        "verify",
+        "--verbose",
+        "--print-certs",
+        "/workspace/scratch/249ad98ddc15/final-code46-download/Continuum-Lokal-0.3.45-Code46.apk"
+      ],
+      "exit_code": 0
+    },
+    "aapt2": {
+      "command": [
+        "/workspace/scratch/19c84cfe59f9/build-env/toolchain/android-sdk/build-tools/35.0.0/aapt2",
+        "dump",
+        "badging",
+        "/workspace/scratch/249ad98ddc15/final-code46-download/Continuum-Lokal-0.3.45-Code46.apk"
+      ],
+      "exit_code": 0
+    },
+    "catalog-contract": {
+      "command": [
+        "node",
+        "scripts/continuum-owner-catalog-contract.mjs",
+        "/workspace/scratch/249ad98ddc15/final-code46-download/latest.json"
+      ],
+      "exit_code": 0
+    },
+    "live-manifest": {
+      "command": [
+        "node",
+        "scripts/continuum-owner-render-readback.mjs",
+        "--manifest-only"
+      ],
+      "exit_code": 0
+    }
+  },
+  "physical_device_installation": "NOT_RUN"
+}
