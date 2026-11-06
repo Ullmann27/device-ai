@@ -7,6 +7,7 @@
 #   okhttp.jar okio.jar com.squareup.okhttp3:okhttp:4.12.0, com.squareup.okio:okio-jvm:3.6.0
 #   shizuku-*.jar       classes.jar of dev.rikka.shizuku:{api,aidl,shared,provider}:13.1.5
 #   filament-android-1.56.0.jar gltfio-android-1.56.0.jar (optional) classes.jar of com.google.android.filament:*:1.56.0
+#   opencv-4.13.0.jar   (optional) classes.jar of org.opencv:opencv:4.13.0 (Maven Central)
 # plus generated stubs: R (from app/src/main/res), BuildConfig, AIDL interfaces (from app/src/main/aidl) and
 # androidx.annotation.Keep. LiteRT-LM exists only on Google Maven; compile errors in the files that import it are
 # listed separately and do not fail the check. android-all carries strict android.annotation.Nullable where the SDK
@@ -93,6 +94,8 @@ cp="$deps/android-all-15.jar:$deps/okhttp.jar:$deps/okio.jar:$deps/shizuku-api.j
 # Optional: Filament/gltfio classes.jar (com.google.android.filament:{filament-android,gltfio-android}:1.56.0, Maven Central)
 # for app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt. Without them that file fails to resolve.
 for jar in filament-android-1.56.0.jar gltfio-android-1.56.0.jar; do [ -f "$deps/$jar" ] && cp="$cp:$deps/$jar"; done
+# Optional: OpenCV classes.jar (org.opencv:opencv:4.13.0 AAR, Maven Central) for OpenCvOwnerFaceEngine.kt.
+[ -f "$deps/opencv-4.13.0.jar" ] && cp="$cp:$deps/opencv-4.13.0.jar"
 mapfile -t sources < <(find "$root/app/src/main/java" -name '*.kt' -o -name '*.java' | sort)
 unavailable=$(grep -l 'com.google.ai.edge.litertlm' "${sources[@]}" | sed "s#^$root/##" || true)
 set +e
