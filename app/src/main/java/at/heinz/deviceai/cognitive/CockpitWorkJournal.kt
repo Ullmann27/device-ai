@@ -64,14 +64,19 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
             chars.coerceAtLeast(0), documentUri = documentUri?.take(MAX_URI))
     }
 
+    private fun toolEpisodeId(callId: String): String =
+        "t-" + MessageDigest.getInstance("SHA-256").digest(callId.toByteArray(Charsets.UTF_8))
+            .take(12).joinToString("") { "%02x".format(it) }
+
     /** A real tool dispatch is recorded under its trusted call ID, never from model text. */
     fun beginTool(callId: String, toolName: String): Episode {
         require(CALL_ID.matches(callId) && TOOL_NAME.matches(toolName))
-        all().firstOrNull { it.kind == Kind.TOOL && it.toolCallId == callId }?.let { return it }
+        all().firstOrNull { it.kind == Kind.TOOL && it.toolCallId == callId }?.let {
+            require(it.toolName == toolName) { "Tool call ID belongs to a different tool." }
+            return it
+        }
         val now = clock()
-        val suffix = MessageDigest.getInstance("SHA-256").digest(callId.toByteArray(Charsets.UTF_8))
-            .take(12).joinToString("") { "%02x".format(it) }
-        val episode = Episode("t-$suffix", Kind.TOOL, "Werkzeugabfrage: $toolName", now, now,
+        val episode = Episode(toolEpisodeId(callId), Kind.TOOL, "Werkzeugabfrage: $toolName", now, now,
             State.READ, source = toolName, toolCallId = callId, toolName = toolName,
             toolState = ToolState.EXECUTING)
         append(episode)
@@ -83,10 +88,18 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         require(CALL_ID.matches(callId) && TOOL_NAME.matches(toolName))
         require(outcome != ToolState.EXECUTING)
         val current = all().firstOrNull { it.kind == Kind.TOOL && it.toolCallId == callId }
-            ?: beginTool(callId, toolName)
+        if (current == null) {
+            // A rejected proposal never dispatched. A missing start receipt cannot prove success.
+            val safeOutcome = if (outcome == ToolState.REJECTED) ToolState.REJECTED else ToolState.UNKNOWN
+            val now = clock()
+            return Episode(toolEpisodeId(callId), Kind.TOOL, "Werkzeugabfrage: $toolName", now, now,
+                State.READ, source = toolName, toolCallId = callId, toolName = toolName,
+                toolState = safeOutcome).also(::append)
+        }
+        require(current.toolName == toolName) { "Tool call ID belongs to a different tool." }
         if (current.toolState != ToolState.EXECUTING) return current
         return update(current.id) {
-            it.copy(source = toolName, toolName = toolName, toolState = outcome,
+            it.copy(toolState = outcome,
                 toolOutputSha256 = outputSha256?.takeIf { hash ->
                     outcome == ToolState.SUCCEEDED && HASH.matches(hash)
                 })
