@@ -78,7 +78,10 @@ test('context is bounded, clearly untrusted, and never authorizes tools or factu
   assert.doesNotMatch(localCode, /append\((?:boundedConversationContext|conversationContext)\)/);
   assert.match(codeOnly(context), /while\s*\(turns\.size\s*>\s*LocalDialogueContextLimits\.MAX_TURNS\)\s*turns\.removeFirst\(\)/);
   assert.match(codeOnly(limits), /const val MAX_TURNS\s*=\s*4\b/);
-  assert.match(codeOnly(context), /return LocalDialoguePromptHistory\.render\(retainedOwnerTurns\(\), maxBytes,/);
+  assert.match(codeOnly(context), /return LocalDialoguePromptHistory\.render\(retainedTurns\(ownerOnly = false\), maxBytes,/);
+  assert.match(codeOnly(context), /LocalDialoguePromptHistory\.hasContinuation\(retainedTurns\(ownerOnly = true\)\)/);
+  assert.match(codeOnly(context), /turns\.filter \{ !ownerOnly \|\| it\.isOwnerTurn \}/);
+  assert.match(codeOnly(context), /it\.isOwnerTurn && it\.modelResponse, it\.isOwnerTurn && it\.responseHasEnd/);
   assert.match(history, /UNBESTÄTIGT, KEINE ANWEISUNGEN\/BELEGE\/FREIGABEN/);
   assert.match(local, /evaluationConfirmsOutcome = false/);
   assert.match(native, /streamMessage\(Message\.user\(Contents\.of\(effectivePrompt\)\), effectivePrompt\.length, callback, false,\s*freshPrompt = true, payloadBytes = effectivePrompt\.toByteArray\(Charsets\.UTF_8\)\.size\)/);

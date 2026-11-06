@@ -260,6 +260,18 @@ class ContinuumDocumentFlowUiTest {
         }
     }
 
+    @Test fun politePdfInputOpensTheExistingPickerBeforeAnyModelCall() = withFlow { activity, _, runtime ->
+        (field(activity, "input") as android.widget.EditText).setText("Kannst du mir bitte die PDF öffnen?")
+        assertTrue((field(activity, "sendButton") as android.widget.Button).performClick())
+        val launched = requireNotNull(shadowOf(activity).nextStartedActivityForResult)
+        assertEquals(android.content.Intent.ACTION_OPEN_DOCUMENT, launched.intent.action)
+        assertEquals("application/pdf", launched.intent.type)
+        assertTrue(launched.intent.hasCategory(android.content.Intent.CATEGORY_OPENABLE))
+        assertTrue(launched.intent.flags and android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION != 0)
+        assertTrue(runtime.prompts.isEmpty())
+        assertNull(field(activity, "activeOrchestrator"))
+    }
+
     @Test fun jarvisReadsTheDocumentWhileTheModelWorksAndThenShowsTheDraft() = withFlow { activity, root, runtime ->
         val text = "Projektübersicht Continuum. Ziel: ein lokales Cockpit auf dem Fold7. Offen: Gerätetest."
         val scene = startDraft(activity, root, runtime, "Projektübersicht.pdf", text)
@@ -466,13 +478,14 @@ class ContinuumDocumentFlowUiTest {
         shadowOf(activity.packageManager).installPackage(android.content.pm.PackageInfo().apply {
             packageName = pkg; applicationInfo = info
         })
-        shadowOf(activity.packageManager).addResolveInfoForIntent(
-            android.content.Intent(android.content.Intent.ACTION_MAIN).addCategory(android.content.Intent.CATEGORY_LAUNCHER),
-            android.content.pm.ResolveInfo().apply {
-                activityInfo = android.content.pm.ActivityInfo().apply {
-                    packageName = pkg; name = "Main"; applicationInfo = info
-                }
+        val launcher = android.content.ComponentName(pkg, "$pkg.Main")
+        shadowOf(activity.packageManager).addActivityIfNotPresent(launcher)
+        shadowOf(activity.packageManager).addIntentFilterForActivity(launcher,
+            android.content.IntentFilter(android.content.Intent.ACTION_MAIN).apply {
+                addCategory(android.content.Intent.CATEGORY_LAUNCHER)
             })
+        assertEquals("Screen fixture needs a launchable app", launcher,
+            activity.packageManager.getLaunchIntentForPackage(pkg)?.component)
         ScreenObservationRevisionTest.RootedService.root = android.view.accessibility.AccessibilityNodeInfo.obtain().apply {
             packageName = pkg; text = "Akku 80 Prozent"; isVisibleToUser = true
         }

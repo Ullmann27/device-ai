@@ -1,0 +1,17 @@
+{
+  "UiMethods.java": "64b7f2f667dd985923ca98f7f93619325bb0432e6e4f8e49e876d59bcb405fac",
+  "context-contract-green.log": "71faba45d599237369bd747c587c223001daa33135c6f40d6b048f22052a61be",
+  "effects-diagnosis/compile.log": "5d3726ff20258f191105517bf2b2881d67bcc2f3283d992780150958832df57a",
+  "effects-diagnosis/junit.log": "f1a9a411464c6edf3b8d4da9181d7cef9aad51bb470cc0a81c29ad0f9b917f01",
+  "effects-diagnosis/receipt.json": "a89c8d7a16172c598a1b8974b5d1947a2099d915121d33c824944bbbe0af7fee",
+  "effects-pump/compile.log": "1eec6d53366c3144fa24a44c99650609e04cf858560972589054a39b81fe46a7",
+  "effects-pump/junit.log": "099fbd61177683e45747b3a9934f35b57f62b5c1807c1cae25f6bb00095ee9ca",
+  "effects-pump/receipt.json": "d2a6b8ae822f6ac7338b270e58534b5897f8f4077fdae601da0ff77e9c12acec",
+  "fixtures-first/compile.log": "fdd9942ece835730ac97033935fe0805989a28f6c0ce1661978063546018280e",
+  "fixtures-first/junit.log": "ba7ddf35be76a8a71b236c7a7ace52f979151918b0d8ef7032141cf5c99f6269",
+  "fixtures-first/receipt.json": "7aff8ea4d120a29a8822e3a53cf292b2f8890521a144f035f1a21445396a889c",
+  "fixtures-green/compile.log": "a4e0eb21ee4f16b2e34dca9a877918f4dd9ecfa6204fddaa300421b3847d0378",
+  "fixtures-green/junit.log": "2c079dc6a2474d39cc8b270345297f4d7397ff4e7d69c1e932d65fc73ea225ca",
+  "fixtures-green/receipt.json": "cf9a2d66204eb8b5f2c65ae1247a3bb2c840a0c0cba9844b4d1238754249258d",
+  "run.py": "23dcc63ce623a371bfdff10e08f7e218aaa21c536c63dd17a50ca89240ed8519"
+}

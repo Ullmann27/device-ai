@@ -34,6 +34,7 @@ import java.util.concurrent.atomic.AtomicReference
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumTaskEffectsCallerUiTest {
+    private var framePump: CockpitHostFramePump? = null
     @Before fun configureVirtualVsyncClock() {
         // Activity setup can start the real avatar loop before fixture code can pause it.
         ShadowChoreographer.setPaused(true)
@@ -45,6 +46,7 @@ class ContinuumTaskEffectsCallerUiTest {
         while (remaining > 0) {
             val step = minOf(16L, remaining)
             shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
+            framePump?.drawRequestedFrame()
             remaining -= step
         }
     }
@@ -55,11 +57,16 @@ class ContinuumTaskEffectsCallerUiTest {
         .single {it.name==n && it.parameterCount==args.size}.apply {isAccessible=true}.invoke(a,*args)
     private fun field(o:Any,n:String)=o.javaClass.getDeclaredField(n).apply {isAccessible=true}.get(o)
     private fun pulses(h:ContinuumHologramView)=field(field(h,"taskEffects")!!,"pulses") as List<*>
-    private fun idle()=shadowOf(Looper.getMainLooper()).idle()
+    private fun idle() {
+        shadowOf(Looper.getMainLooper()).idle()
+        framePump?.drawRequestedFrame()
+    }
     private fun advance()=advanceFrames(20)
     private fun withFixture(realUi: Boolean = false, block:(AgentActivity,ContinuumHologramView)->Unit) {
         val controller=Robolectric.buildActivity(AgentActivity::class.java)
         val a=controller.get()
+        val host = if (realUi) null else Robolectric.buildActivity(Activity::class.java).setup().visible()
+        val h: ContinuumHologramView
         if (realUi) {
             a.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
                 .putBoolean("voice_enabled", false).commit()
@@ -68,18 +75,25 @@ class ContinuumTaskEffectsCallerUiTest {
             a.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
                 .putBoolean("native-head", false).putBoolean("native-head-3d", false).commit()
             controller.setup().visible()
+            val root = a.window.decorView
+            framePump = CockpitHostFramePump { root }
+            root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
+            root.layout(0, 0, 884, 760)
             advanceFrames(32L)
             controller.windowFocusChanged(true)
+            h = get(a, "hologramView") as ContinuumHologramView
+        } else {
+            h = ContinuumHologramView(a).apply { setNativeHeadEnabled(false) }
+            set(a,"hologramView",h);set(a,"foregroundLearningActive",true)
+            set(a,"chatContainer",android.widget.LinearLayout(a))
+            host!!.get().setContentView(h,ViewGroup.LayoutParams(412,307));advance()
+            assertEquals(412,h.width);assertEquals(307,h.height)
         }
-        val host=Robolectric.buildActivity(Activity::class.java).setup().visible()
-        val h=ContinuumHologramView(a).apply { setNativeHeadEnabled(false) }
-        set(a,"hologramView",h);set(a,"foregroundLearningActive",true)
-        set(a,"chatContainer",android.widget.LinearLayout(a))
         set(a,"receiptStore",FileToolExecutionReceiptStore(java.io.File(a.filesDir,"effects-"+UUID.randomUUID())))
-        host.get().setContentView(h,ViewGroup.LayoutParams(412,307));advance()
         assertTrue("Caller fixture must be attached to its real host window",h.isAttachedToWindow)
         assertTrue("Caller fixture must be shown",h.isShown)
-        assertEquals(412,h.width);assertEquals(307,h.height)
+        assertTrue("Caller surface must be measured", h.width > 0 && h.height > 0)
         h.setForegroundActive(true);advance()
         assertTrue("Caller events require a live foreground clock",h.motionDiagnostics().contains("LIVE"))
         assertEquals("Positive control: the actual host window must be visible",View.VISIBLE,h.windowVisibility)
@@ -87,7 +101,8 @@ class ContinuumTaskEffectsCallerUiTest {
             (get(a,"chiefStatusPool") as? at.heinz.deviceai.chief.ChiefWorkerPool)?.shutdown()
             AgentActivity::class.java.declaredFields.firstOrNull {it.name=="uiFeedback"}?.apply {isAccessible=true}
                 ?.get(a)?.let {(it as ContinuumUiFeedback).close()}
-            h.setForegroundActive(false);host.pause().stop().destroy()
+            framePump?.close(); framePump = null
+            h.setForegroundActive(false);host?.pause()?.stop()?.destroy()
             if (realUi) controller.close()
         }
     }
@@ -104,9 +119,9 @@ class ContinuumTaskEffectsCallerUiTest {
         val t=Thread {result.set(gate.execute(ToolProposal("get_device_info",emptyMap()).invocation("actual-device-read")))}
         t.start()
         try {
-            assertTrue(started.await(2,TimeUnit.SECONDS));idle()
+            assertTrue(started.await(2,TimeUnit.SECONDS));advanceFrames(16)
             assertTrue("A real authorized backend entry has no arrival",pulses(h).any {field(it!!,"type")==0})
-            finish.get()!!(Result.success("synthetic injected device result"));t.join(2000);idle()
+            finish.get()!!(Result.success("synthetic injected device result"));t.join(2000);advanceFrames(16)
             assertFalse(t.isAlive);assertEquals(ToolExecutionStatus.SUCCEEDED,result.get().record.status)
             assertTrue("Actual runner exit has no departure",pulses(h).any {field(it!!,"type")==2})
             assertFalse("Device diagnostics are not a document read",pulses(h).any {field(it!!,"type")==1})

@@ -52,3 +52,31 @@ and joined-object cases now pass 9/9 after the bounded guard correction.
 Raw compile/JUnit logs and exact source hashes are preserved under
 docs/evidence/code47-release-continuation-20261106/pdf-review/.
 The screen-read ephemerality case remains UNVERIFIED until combined QA.
+
+## Final gate repairs (06 November, continuation)
+
+The integrated production source is frozen at 6a6f885f952784c79b209ad39b20d14ccf014df8;
+68155c3eaaa44b6164e2ad425f490e1a54143ae5 has the identical tree and adds original
+Code46 release ancestry. The first original publisher run is blocked by its
+mandatory Node contract check. No QA or signing protection has been changed.
+
+- Node special: 23/23; critical: 135/135; backend: 64/64, source unchanged.
+- Full Node: 2429 total, 2391 passed, 1 failed, 37 skipped. The single obsolete
+  retainedOwnerTurns contract is updated to check actual owner/research bounds;
+  focused contract suite passes 3/3. Full final-source rerun is still required.
+- Screen STOP failed because the synthetic installed package had no resolvable
+  launcher. Register the activity and launcher filter and assert its component
+  before traversing the real confirmation, ToolGate and screen observation.
+- Tool-effects caller uses the real Activity surface for the full UI path and
+  pumps one host frame after each asynchronous actual runner boundary. Retain
+  all arrival/departure/no-document assertions and all negative controls.
+- All seven affected host UI cases pass together against the actual frozen
+  production classes, Android resources and Robolectric. Controlled model and
+  device port only; no physical device or model-quality claim. The polite PDF
+  picker regression also passes without any model invocation.
+
+Raw focused diagnostics, compile/JUnit logs, commands, test source hashes and
+exit codes are in final-fixtures/. The previously ignored raw PDF RED/GREEN logs
+are explicitly included now. The complete frozen native run and final publisher
+QA, unsigned build, original signing and served-binary verification remain the
+release gates. Current status remains NOT_RELEASED.
