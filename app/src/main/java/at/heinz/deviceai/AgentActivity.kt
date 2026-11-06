@@ -1945,25 +1945,33 @@ class AgentActivity : Activity() {
         }
         pendingDocumentDraft = false
         val report = "PDF gelesen: $meta. $textLine" + (draftLine?.let { " $it" } ?: "")
-        val body = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; tag = "jarvis-document" }
+        // Wide windows (inner Fold7): page left, facts right – meta, status and excerpt visible without scrolling.
+        // Narrow windows (cover, phone): one column. Host capture 06.11.: in one column the facts lay below the fold.
+        val wide = resources.configuration.screenWidthDp >= 600
+        val body = LinearLayout(this).apply {
+            orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
+            tag = "jarvis-document"
+        }
+        val facts = if (wide) LinearLayout(this).apply { orientation = LinearLayout.VERTICAL } else body
         doc.firstPage?.let { page ->
             body.addView(android.widget.ImageView(this).apply {
                 tag = "jarvis-document-page"
                 setImageBitmap(page)
                 adjustViewBounds = true
                 scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
-                maxHeight = dp(240)
+                maxHeight = dp(if (wide) 260 else 200)
                 contentDescription = "Seite 1 von ${doc.pageCount}: ${doc.name}"
-            }, LinearLayout.LayoutParams(-1, -2))
+            }, if (wide) LinearLayout.LayoutParams(0, -2, .38f) else LinearLayout.LayoutParams(-1, -2))
         }
-        body.addView(textView(meta, 12f, TEXT).apply { tag = "jarvis-document-meta" }, matchWidth(top = 8))
-        body.addView(textView(textLine, 11f, MUTED).apply { tag = "jarvis-document-status" }, matchWidth(top = 4))
+        if (wide) body.addView(facts, LinearLayout.LayoutParams(0, -2, .62f).apply { leftMargin = dp(14) })
+        facts.addView(textView(meta, 12f, TEXT).apply { tag = "jarvis-document-meta" }, matchWidth(top = if (wide) 0 else 8))
+        facts.addView(textView(textLine, 11f, MUTED).apply { tag = "jarvis-document-status" }, matchWidth(top = 4))
         if (doc.textState == PdfDocumentIntake.TextState.EXTRACTED) {
             val excerpt = if (doc.text.length > DOCUMENT_EXCERPT_CHARS) doc.text.take(DOCUMENT_EXCERPT_CHARS).trimEnd() + " …" else doc.text
-            body.addView(textView(excerpt, 12f, TEXT).apply { tag = "jarvis-document-excerpt" }, matchWidth(top = 8))
+            facts.addView(textView(excerpt, 12f, TEXT).apply { tag = "jarvis-document-excerpt" }, matchWidth(top = 8))
         }
-        draftLine?.let { body.addView(textView(it, 11f, MUTED).apply { tag = "jarvis-document-draft" }, matchWidth(top = 6)) }
-        if (hasText && !wantsDraft) body.addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this, "ENTWURF ERSTELLEN") {
+        draftLine?.let { facts.addView(textView(it, 11f, MUTED).apply { tag = "jarvis-document-draft" }, matchWidth(top = 6)) }
+        if (hasText && !wantsDraft) facts.addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this, "ENTWURF ERSTELLEN") {
             startDocumentDraft(doc)
         }.apply { tag = "jarvis-document-start-draft" }, matchWidth(top = 10))
         val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown }

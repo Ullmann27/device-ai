@@ -73,6 +73,15 @@ object JarvisCockpitGridContent {
     private fun fit(p: ContinuumPainter, text: String, style: TextStyle, width: Float) =
         JarvisShellRenderer.fit(p, text, style, width)
 
+    private val CLOCK_STYLE = Type.title.copy(size = 26f)
+
+    /** [style] scaled down (to at most 55 %) so [text] fits [width] in full; unchanged when it already fits. */
+    private fun fitting(p: ContinuumPainter, text: String, style: TextStyle, width: Float): TextStyle {
+        val natural = p.measureText(text, style)
+        if (natural <= width || natural <= 0f || width <= 0f) return style
+        return style.copy(size = style.size * (width / natural).coerceAtLeast(.55f))
+    }
+
     /** Breathing room of the brand block inside its box (dp), above and below. */
     const val BRAND_BREATHING_DP = 6f
 
@@ -129,7 +138,6 @@ object JarvisCockpitGridContent {
         p.restore()
         g?.areas?.get(Area.DEVICE_STATUS)?.let { clock ->
             JarvisReferenceHud.surface(p, clock, 14f, Colors.cyanDeep, Colors.cyanDeep)
-            val style = Type.title.copy(size = 26f)
             val date = Date(now)
             val timeText: String
             val dateText: String
@@ -139,10 +147,13 @@ object JarvisCockpitGridContent {
                 dateFormat.timeZone = clockFormat.timeZone
                 timeText = clockFormat.format(date); dateText = dateFormat.format(date)
             }
-            p.drawText(fit(p, timeText, style, clock.width - 18f), clock.left + 9f,
-                clock.top + 8f + p.capHeight(style), style, Fill.Solid(Colors.text))
-            p.drawText(fit(p, dateText, Type.caption, clock.width - 18f), clock.left + 9f,
-                clock.bottom - 7f, Type.caption, Fill.Solid(Colors.textSecondary))
+            // Host capture 06.11.: proportional digits made „07:44“ wider than the box and it read „07:…“. Time and
+            // date are never shortened – the type shrinks to fit; the baseline stays where the full size puts it.
+            val room = clock.width - 18f
+            p.drawText(timeText, clock.left + 9f, clock.top + 8f + p.capHeight(CLOCK_STYLE),
+                fitting(p, timeText, CLOCK_STYLE, room), Fill.Solid(Colors.text))
+            p.drawText(dateText, clock.left + 9f, clock.bottom - 7f,
+                fitting(p, dateText, Type.caption, room), Fill.Solid(Colors.textSecondary))
         }
         g?.areas?.get(Area.TAGLINE)?.let { tag ->
             p.drawLine(tag.left, tag.top + 3f, tag.left, tag.bottom - 5f, 1f, Fill.Solid(Colors.cyan), .7f)

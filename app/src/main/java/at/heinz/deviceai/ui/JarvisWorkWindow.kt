@@ -27,6 +27,12 @@ private val TRAIL_HEAD_FILL = Fill.Solid(Colors.glowCore)
 private val EMBLEM_DISC_FILL = Fill.Solid(Colors.background)
 private val EMBLEM_HALO_FILL = Fill.Solid(Colors.cyan)
 private val EDGE_FLASH_FILL = Fill.Solid(Colors.cyanSoft)
+/**
+ * The work window is a layer ABOVE the cockpit (the cockpit cards sit on the background): a dark backing under its glass
+ * keeps rail labels and tiles from showing through text (host capture 06.11.: ~6–9 % leakage of bright labels).
+ */
+private val WINDOW_BACKING_FILL = Fill.Solid(Colors.background)
+private const val WINDOW_BACKING_ALPHA = .7f
 
 /** In-cockpit content, shell frames only. */
 class JarvisWorkWindow(
@@ -422,6 +428,7 @@ class JarvisWorkWindow(
             glass.begin(canvas)
             val right = width / density - 1f
             val bottom = height / density - 1f
+            glass.fillRoundRect(1f, 1f, right, bottom, 14f, WINDOW_BACKING_FILL, WINDOW_BACKING_ALPHA)
             JarvisReferenceHud.surface(glass, JarvisShellLayout.Box(1f, 1f, right, bottom), 14f,
                 Colors.panelRim, Colors.violetSoft)
             if (edgeFlash > 0f) glass.strokeRoundRect(1f, 1f, right, bottom, 14f, 1f,

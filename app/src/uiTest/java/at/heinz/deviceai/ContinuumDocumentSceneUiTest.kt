@@ -71,6 +71,29 @@ class ContinuumDocumentSceneUiTest {
         try { root.draw(Canvas(bitmap)) } finally { bitmap.recycle() }
     }
 
+    /** Labelled host evidence (HOST + SIMULATED inputs) when -PcontinuumUiEvidenceDir is set; never a device claim. */
+    private fun capture(root: View, name: String) {
+        val dir = System.getProperty("continuum.ui.evidenceDir") ?: return
+        val bitmap = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
+        try {
+            root.draw(Canvas(bitmap))
+            java.io.File(dir).apply { mkdirs() }.resolve("$name.png").outputStream()
+                .use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
+        } finally { bitmap.recycle() }
+    }
+
+    /** A fixture page that says what it is: no owner document, no invented content. */
+    private fun examplePage(w: Int, h: Int) = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).apply {
+        eraseColor(Color.WHITE)
+        val c = Canvas(this)
+        val ink = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(20, 28, 44); textSize = w / 14f }
+        c.drawText("Beispiel · Host-Testseite", w * .08f, h * .12f, ink)
+        ink.textSize = w / 22f
+        listOf("Projektübersicht Continuum.", "Ziel: ein lokales Cockpit", "auf dem Fold7.").forEachIndexed { i, line ->
+            c.drawText(line, w * .08f, h * (.24f + i * .07f), ink)
+        }
+    }
+
     private fun <T> withCockpit(block: (AgentActivity, View) -> T): T {
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
@@ -117,11 +140,9 @@ class ContinuumDocumentSceneUiTest {
     }
 
     @Test fun theDocumentArrivesAsItsOwnPageOnTheTrailAndJarvisLooksAtIt() = withCockpit { activity, root ->
-        val page = Bitmap.createBitmap(360, 480, Bitmap.Config.ARGB_8888).apply {
-            eraseColor(Color.WHITE)
-            Canvas(this).drawRect(40f, 60f, 320f, 90f, android.graphics.Paint().apply { color = Color.BLACK })
-        }
+        val page = examplePage(360, 480)
         val text = "Projektübersicht Continuum. Ziel: ein lokales Cockpit auf dem Fold7."
+        capture(root, "document-0-ready")
         val doc = PdfDocumentIntake.Document("Projektübersicht.pdf", 12_288L, 3, page, text,
             PdfDocumentIntake.TextState.EXTRACTED, 3)
         val director = field(activity, "avatarDirector")!!
@@ -129,10 +150,15 @@ class ContinuumDocumentSceneUiTest {
             .apply { isAccessible = true }.invoke(activity, doc)
         assertNotNull("JARVIS looks at the arriving document", field(director, "windowIntent"))
         advance(120L); measure(root); draw(root)
+        capture(root, "document-1-page-on-trail")
         val window = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
         val emblem = field(window, "emblem") as? BitmapDrawable
         assertSame("the trail carries the document's own first page", page, emblem?.bitmap)
         advance(640L); measure(root); draw(root)
+        println("PANEL_ALPHA_AT_760MS=${(field(window, "panel") as View).alpha} PHASE=${field(window, "phase")}")
+        advance(900L); measure(root); draw(root)
+        println("PANEL_ALPHA_SETTLED=${(field(window, "panel") as View).alpha} PHASE=${field(window, "phase")}")
+        capture(root, "document-2-window")
         val texts = descendants(window).filterIsInstance<TextView>().map { it.text.toString() }
         assertTrue("titled with the file: $texts", texts.contains("DOKUMENT · Projektübersicht.pdf"))
         val image = descendants(window).filterIsInstance<ImageView>().single { it.tag == "jarvis-document-page" }
@@ -177,7 +203,8 @@ class ContinuumDocumentSceneUiTest {
         val window = AgentActivity::class.java.getDeclaredMethod("presentDraftScene", turnClass, String::class.java)
             .apply { isAccessible = true }.invoke(activity, draftTurn(prompt, "Projektübersicht.pdf"), reply)
         assertNotNull("the draft opens as a cockpit surface", window)
-        advance(760L); measure(root); draw(root)
+        advance(1_660L); measure(root); draw(root)
+        capture(root, "document-3-draft")
         val shown = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
         val texts = descendants(shown).filterIsInstance<TextView>().map { it.text.toString() }
         assertTrue(texts.toString(), texts.contains("ENTWURF · Projektübersicht.pdf"))
