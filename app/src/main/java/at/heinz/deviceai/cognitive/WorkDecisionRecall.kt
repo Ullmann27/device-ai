@@ -53,15 +53,19 @@ internal object WorkDecisionRecall {
     private const val S = "(?<![\\p{L}\\p{N}_])"
     private const val E = "(?![\\p{L}\\p{N}_])"
     private val we = Regex("(?iu)$S(wir|uns|unser|unserem|unseren|unsere)$E")
-    private val question = Regex("(?iu)$S(was|welche|welchen|welcher|wie)$E")
+    private val question = Regex("(?iu)^\\s*(?:jarvis[,!:]?\\s+)?(?:und\\s+)?" +
+        "(?:(?:was|wie)\\s+(?:haben|hatten)\\s+wir|welche[nr]?\\s+(?:entscheidungen?|beschl(u|ü)sse?))$E")
     private val decided = Regex("(?iu)$S(entschieden|beschlossen|festgelegt|ausgemacht|vereinbart|entscheidungen?|beschl(u|ü)sse?)$E")
-    private val changes = Regex("(?iu)${S}was\\s+hat\\s+sich(\\s+(seitdem|seither|inzwischen|seit\\s+gestern|seit\\s+heute|daran|dabei))?\\s+(ge|ver)ändert$E")
+    private val changes = Regex("(?iu)${S}was\\s+hat\\s+sich(\\s+(heute|gestern|seitdem|seither|inzwischen|seit\\s+gestern|seit\\s+heute|daran|dabei))?\\s+(ge|ver)ändert$E")
     private val previous = Regex("(?iu)^\\s*(nein[,!.]?\\s+|nicht\\s+(die|den|das)[,!.]?\\s+)?(ich\\s+meinte|ich\\s+meine|gemeint\\s+war|gemeint\\s+ist)?\\s*" +
         "(die|den|das|der)?\\s*(entscheidung|beschluss|punkt)\\s+(davor|vorher|zuvor|vorige|vorherige)\\b")
     private val implemented = Regex("(?iu)^\\s*(und\\s+)?was\\s+(davon\\s+)?(haben|hatten|ist|sind)\\s+(wir\\s+)?(davon\\s+)?" +
         "(schon|bereits|noch|davon)?\\s*(schon|bereits|noch)?\\s*(umgesetzt|erledigt|gemacht|fertig|offen)")
-    private val continueOpen = Regex("(?iu)$S(mach|machen|weiter|fahr|fahre|setz|setze|arbeite|arbeiten)$E.*$S(letzten?|letzter)\\s+offenen?\\s+(punkt|aufgabe|schritt)$E|" +
-        "$S(letzten?|letzter)\\s+offenen?\\s+(punkt|aufgabe|schritt)$E.*${S}weiter$E")
+    private const val openPoint = """(?:(?:beim|am|mit\s+dem|an\s+dem)\s+letzten\s+offenen\s+(?:punkt|schritt)|(?:bei|an|mit)\s+der\s+letzten\s+offenen\s+aufgabe)"""
+    private val continueOpen = Regex("""(?iu)^\s*(?:jarvis[,!:]?\s+)?(?:dann\s+)?(?:bitte\s+)?(?:""" +
+        """(?:mach(?:e)?|fahr(?:e)?|arbeit(?:e)?|setz(?:e)?)\s+(?:bitte\s+)?$openPoint\s+(?:weiter|fort)|""" +
+        """setz(?:e)?\s+(?:bitte\s+)?(?:den\s+letzten\s+offenen\s+(?:punkt|schritt)|die\s+letzte\s+offene\s+aufgabe)\s+fort|""" +
+        """weiter\s+$openPoint)(?:\s+bitte)?[.!]?\s*$""")
     private val sentenceEnd = Regex("(?<=[.!?])\\s+")
     private val yesterday = Regex("(?iu)${S}gestern$E")
     private val today = Regex("(?iu)$S(heute|vorhin|gerade|eben)$E")
@@ -74,13 +78,12 @@ internal object WorkDecisionRecall {
         if (utterance.length !in 8..300 || utterance.any { it.isISOControl() }) return null
         if (previous.containsMatchIn(utterance)) return Ask.Previous
         if (implemented.containsMatchIn(utterance) && utterance.contains(Regex("(?iu)${S}davon$E"))) return Ask.Implemented
-        if (continueOpen.containsMatchIn(utterance)) return Ask.ContinueOpen
+        if (continueOpen.matches(utterance)) return Ask.ContinueOpen
         if (changes.containsMatchIn(utterance)) return Ask.Decisions(period(utterance), changes = true)
         // The question sentence itself must ask what we decided. „Wir hatten uns gestern für B entschieden …
         // Was bedeutet das für unseren Plan?“ is a reasoning question for the model, not a journal lookup.
         val asksForDecision = utterance.split(sentenceEnd).any { sentence ->
-            sentence.contains('?') && question.containsMatchIn(sentence) && we.containsMatchIn(sentence) &&
-                decided.containsMatchIn(sentence)
+            question.containsMatchIn(sentence) && we.containsMatchIn(sentence) && decided.containsMatchIn(sentence)
         }
         if (asksForDecision) return Ask.Decisions(period(utterance), changes = false)
         return null
@@ -111,7 +114,7 @@ internal object WorkDecisionRecall {
         val next = CockpitWorkJournal.nextStep(e, now)
         e.correction?.takeIf { it.isNotBlank() }?.let {
             return listOf(Item(e.correctedAt ?: e.updatedAt, "Deine Korrektur zu „${e.request}“: „$it“", Origin.JOURNAL, e.id,
-                done = next == null, next = next, change = true))
+                done = e.state == CockpitWorkJournal.State.SAVED, next = next, change = true))
         }
         val unfinished = "Auftrag „${e.request}“ zu „$name“: ${CockpitWorkJournal.stateText(e, now)}"
         val outcome = when (e.state) {
@@ -131,23 +134,42 @@ internal object WorkDecisionRecall {
     }
 
     fun answer(ask: Ask, focus: Focus?, episodes: List<CockpitWorkJournal.Episode>, statements: List<OwnerStatement>,
-               now: Long, zone: TimeZone, limit: Int = 6): Reply = when (ask) {
-        is Ask.Decisions -> decisions(ask, episodes, statements, now, zone, limit)
-        Ask.Previous -> previous(focus, now, zone)
-        Ask.Implemented -> implemented(focus, now, zone)
-        Ask.ContinueOpen -> {
-            val resume = resolveContinue(focus, episodes, now)
-            if (resume == null) Reply(if (focus == null) "Im Arbeitsverlauf ist kein Punkt offen."
-                else "Von den genannten Punkten ist keiner mehr offen – im Arbeitsverlauf ist kein Punkt offen.", focus, 0)
-            else Reply("Weiter beim letzten offenen Punkt: ${line(resume.item, now, zone)}", focus, 1, understood = true)
+               now: Long, zone: TimeZone, limit: Int = 6): Reply {
+        val currentFocus = focus?.let { refreshFocus(it, episodes, statements, now) }
+        return when (ask) {
+            is Ask.Decisions -> decisions(ask, episodes, statements, now, zone, limit)
+            Ask.Previous -> previous(currentFocus, now, zone)
+            Ask.Implemented -> implemented(currentFocus, now, zone)
+            Ask.ContinueOpen -> {
+                val resume = resolveContinue(currentFocus, episodes, now)
+                if (resume == null) Reply(if (currentFocus == null) "Im Arbeitsverlauf ist kein Punkt offen."
+                    else "Von den genannten Punkten ist keiner mehr offen.", currentFocus, 0)
+                else Reply("Weiter beim letzten offenen Punkt: ${line(resume.item, now, zone)}", currentFocus, 1, understood = true)
+            }
         }
+    }
+
+    private fun refreshFocus(focus: Focus, episodes: List<CockpitWorkJournal.Episode>, statements: List<OwnerStatement>,
+                             now: Long): Focus {
+        val current = items(episodes, statements, now)
+        val journalItems = current.filter { it.origin == Origin.JOURNAL }.associateBy { it.episodeId }
+        val statementItems = current.filter { it.origin == Origin.OWNER_STATEMENT }.associateBy { it.at to it.text }
+        fun refreshed(item: Item): Item? = when (item.origin) {
+            Origin.JOURNAL -> journalItems[item.episodeId]
+            Origin.OWNER_STATEMENT -> statementItems[item.at to item.text]
+        }
+        val refreshedItems = focus.items.mapNotNull(::refreshed)
+        val anchor = focus.items.getOrNull(focus.index)?.let(::refreshed)
+        return Focus(refreshedItems, focus.shown.mapNotNull(::refreshed), refreshedItems.indexOf(anchor))
     }
 
     private fun decisions(ask: Ask.Decisions, episodes: List<CockpitWorkJournal.Episode>, statements: List<OwnerStatement>,
                           now: Long, zone: TimeZone, limit: Int): Reply {
         val all = items(episodes, statements, now)
         val (from, to) = WorkRecall.window(ask.period, now, zone)
-        val shown = all.filter { it.at in from until to }.filter { !ask.changes || it.change }.take(limit)
+        val dated = all.filter { !ask.changes || it.change }
+            .filter { (if (ask.changes) it.revokedAt ?: it.at else it.at) in from until to }
+        val shown = (if (ask.changes) dated.sortedByDescending { it.revokedAt ?: it.at } else dated).take(limit)
         if (shown.isEmpty()) {
             val what = if (ask.changes) "keine Änderung" else "keine Entscheidung"
             val text = when (ask.period) {
@@ -170,6 +192,8 @@ internal object WorkDecisionRecall {
     private fun previous(focus: Focus?, now: Long, zone: TimeZone): Reply {
         if (focus == null) return Reply("Davor – von welcher aus? Ich habe in diesem Gespräch noch keine Entscheidung genannt. " +
             "Frag mich zum Beispiel: „Was haben wir gestern entschieden?“", null, 0)
+        if (focus.index !in focus.items.indices) return Reply("Die zuvor genannte Entscheidung ist nicht mehr verfügbar. " +
+            "Welche Entscheidung meinst du?", null, 0)
         val index = focus.index + 1
         val item = focus.items.getOrNull(index)
             ?: return Reply("Davor finde ich keine weitere Entscheidung – weder im Arbeitsverlauf noch in deinen bestätigten Aussagen.",
@@ -181,6 +205,8 @@ internal object WorkDecisionRecall {
     private fun implemented(focus: Focus?, now: Long, zone: TimeZone): Reply {
         if (focus == null) return Reply("Wovon? Ich habe in diesem Gespräch noch keine Entscheidungen genannt. " +
             "Frag mich zum Beispiel: „Was haben wir gestern entschieden?“", null, 0)
+        if (focus.shown.isEmpty()) return Reply("Die zuvor genannten Punkte sind nicht mehr verfügbar. " +
+            "Soll ich die letzten Entscheidungen zeigen?", null, 0)
         val revoked = focus.shown.filter { it.revokedAt != null }
         val done = focus.shown.filter { it.done == true && it.revokedAt == null }
         val open = focus.shown.filter { it.done == false && it.revokedAt == null }
@@ -201,9 +227,11 @@ internal object WorkDecisionRecall {
      * cannot be continued by the device; done tasks are done. Null when nothing is open.
      */
     fun resolveContinue(focus: Focus?, episodes: List<CockpitWorkJournal.Episode>, now: Long): Resume? {
-        val candidates = focus?.shown ?: items(episodes, emptyList(), now)
-        return candidates.filter { it.done == false && it.episodeId != null && it.next != null }
-            .sortedByDescending { it.at }.firstNotNullOfOrNull { item ->
+        val shownIds = focus?.shown?.mapNotNull { it.episodeId }?.toSet()
+        return items(episodes, emptyList(), now)
+            .filter { shownIds == null || it.episodeId in shownIds }
+            .filter { it.done == false && it.episodeId != null && it.next != null }
+            .firstNotNullOfOrNull { item ->
                 episodes.firstOrNull { it.id == item.episodeId }?.let { e -> Resume(item, e, item.next!!) }
             }
     }

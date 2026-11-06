@@ -92,7 +92,8 @@ test('ten action controls share draw bounds while head and original orb retain s
  assert.match(shell,/val head = gr\[Area\.HEAD\]/);
  assert.match(shell,/val orb = gr\[Area\.ORB\]/);
  assert.match(view,/val head = shell\?\.headStage \?: shell\?\.headBounds/);
- assert.match(view,/hologram\.setHeadFraming\(shell\.headAnchorX, shell\.headCloseUp\)/);
+ assert.match(view,/hologram\.setHeadFraming\(shell\.headAnchorX, shell\.headCloseUp, dialogKeepOut\(shell, head\)\)/);
+ assert.match(view,/val dialog = shell\[JarvisShellLayout\.Slot\.DIALOG\] \?: return null/);
  assert.match(view,/val orb = shell\?\.orbBounds/);
  assert.match(view,/hologram\.setCockpitRegions\(local\(head\), local\(orb\)\)/);
  assert.match(view,/originX = \(stage\.left \* density\)\.toInt\(\)/);
@@ -106,7 +107,9 @@ test('Fold chat remains a real native action and both content and rail stay scro
  assert.match(view,/setOnClickListener \{ openJarvisTarget\(target\) \}/);
  assert.match(view,/if \(native != null\) native\(target\) else onSlot\(requireNotNull\(route\), 0f, 0f\)/);
  assert.match(activity,/home\.onNavigateTarget = ::navigateDashboardTarget/);
- assert.match(activityMember('private fun navigateDashboardTarget('),/else -> menuNavigator\.navigate\(target\)/);
+ assert.match(activityMember('private fun navigateDashboardTarget('),
+  /touchedCockpitTarget = target\s*try \{ navigateDashboardTargetNow\(target\) \} finally \{ touchedCockpitTarget = null \}/);
+ assert.match(activityMember('private fun navigateDashboardTargetNow('),/else -> menuNavigator\.navigate\(target\)/);
  assert.match(menu,/if \(openTarget\?\.invoke\(target\) != true\) open\(slot\)/);
  assert.match(activityMember('private fun openHomeSlot('),/Slot\.LABEL_THINKING -> navigateWorkArea\(ContinuumWorkArea\.CHAT\)/);
  assert.match(activityMember('private fun navigateWorkArea('),/ContinuumWorkArea\.CHAT -> focusChatComposer\(\)/);

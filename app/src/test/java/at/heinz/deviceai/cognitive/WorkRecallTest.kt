@@ -64,4 +64,16 @@ class WorkRecallTest {
         }
         org.junit.Assert.assertNull("an unrelated sentence stays unrelated", WorkRecall.parse("Ich bin gerade beim Kochen."))
     }
+
+    @Test fun aCurrentStatusIncludesOpenWorkFromEarlierDays() {
+        val old = Episode("old", Kind.DOCUMENT, "Fasse den Bericht zusammen", at(5, 15, 0), at(5, 15, 1),
+            State.DRAFTED, "Bericht.pdf", draft = "Entwurf")
+        listOf("Was ist gerade offen?", "Was ist noch offen, gerade?", "Wie ist der Stand gerade?").forEach {
+            val query = WorkRecall.parse(it)
+            org.junit.Assert.assertNotNull(it, query)
+            assertEquals(it, WorkRecall.Period.RECENT, query!!.period)
+            assertEquals(it, listOf(old), WorkRecall.select(listOf(old), query, now, vienna))
+        }
+        assertEquals(WorkRecall.Query(WorkRecall.Period.TODAY, true), WorkRecall.parse("Was ist heute noch offen?"))
+    }
 }

@@ -18,7 +18,8 @@ const KEYS = Object.freeze(['schema','channel','packageName','versionCode','vers
 const HASH = /^[a-f0-9]{64}$/;
 const COMMIT = /^[a-f0-9]{40}$/;
 const MAX_MANIFEST_BYTES = 8192;
-const MAX_PUBLISHED_APK_BYTES = 90_000_000;
+// Match the Android update policy.
+const MAX_PUBLISHED_APK_BYTES = 2_000_000_000;
 
 function fail(message) { throw new Error('CONTINUUM_RENDER_READBACK_FAILED: ' + message); }
 function isExactKeys(record, keys) {

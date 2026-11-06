@@ -13,10 +13,14 @@ internal object LocalConversationFollowUpPolicy {
     // A word definition stands alone – unless the thing to be explained is a demonstrative („Was bedeutet das für …?“),
     // which points back at what was said (owner brief 06.11.2026, Priorität 2).
     private val definition = Regex("""(?iu)^(?:was\s+(?:bedeutet|heißt)\s+(?!(?:das|dies|dieses|es|daraus|davon|dann)(?!\p{L}))|erkläre\s+(?:das\s+)?wort)\b""")
+    private val namedDefinition = Regex("""(?iu)^was\s+(?:bedeutet|heißt)\s+das\s+(?:wort|akronym|symbol|kürzel|zeichen)\s+""" +
+        """(?!(?:im|in|auf|für|hier|dort|jetzt|nun|eigentlich|genau)(?!\p{L}))[„"«']?[\p{L}\p{N}]+""")
+    private const val consequenceReferent = """(?:das(?=\s*(?:[.!?]|$)|\s+(?:für|jetzt|nun|dann|konkret)(?!\p{L})|""" +
+        """\s+(?:wort|akronym|symbol|kürzel|zeichen)\s*[.!?]?\s*$)|dies|dieses|daraus|davon|dadurch|dann)(?!\p{L})"""
     // A consequence question that opens the message has nothing in it to draw the consequence from:
     // „Was bedeutet das für unseren Plan?“, „Was folgt daraus?“, „Was heißt das jetzt?“.
     private val consequence = Regex(
-        """(?iu)^(?:und\s+|aber\s+|also\s+)?was\s+(?:bedeutet|heißt|folgt|ergibt\s+sich|ändert)\s+(?:das|dies|dieses|daraus|davon|dadurch|dann)(?!\p{L})""")
+        """(?iu)^(?:und\s+|aber\s+|also\s+)?was\s+(?:bedeutet|heißt|folgt|ergibt\s+sich|ändert)\s+$consequenceReferent""")
     // Owner P0 06.11.2026 – natural follow-ups that only make sense with the earlier turns (Unicode word edges):
     // a correction without a label („Nicht vier, sondern fünf.“, „Das stimmt nicht, …“, „Ich habe mich vertan …“),
     private val contrastive = Regex(
@@ -34,7 +38,7 @@ internal object LocalConversationFollowUpPolicy {
     fun requiresPreviousOwnerTurn(request: String): Boolean {
         val text = request.trim()
         if (text.isEmpty() || text.length > 1_000 || text.any { it.isISOControl() }) return false
-        if (definition.containsMatchIn(text)) return false
+        if (definition.containsMatchIn(text) || namedDefinition.containsMatchIn(text)) return false
         return correction.containsMatchIn(text) || previous.containsMatchIn(text) ||
             replacement.containsMatchIn(text) || elliptical.containsMatchIn(text) ||
             contrastive.containsMatchIn(text) || anaphoric.containsMatchIn(text) || again.containsMatchIn(text) ||
@@ -54,12 +58,13 @@ internal object LocalConversationFollowUpPolicy {
     private val current = Regex("""(?iu)(?<!\p{L})(?:jetzt|inzwischen|mittlerweile|aktuell|nun|noch)(?!\p{L})[^.!?\n]{0,40}\?\s*$""")
     // or a consequence question anywhere in the message („…. Was bedeutet das für unseren Plan?“).
     private val consequenceAnywhere = Regex(
-        """(?iu)(?:^|[.!?]\s+)(?:und\s+|aber\s+|also\s+)?was\s+(?:bedeutet|heißt|folgt|ergibt\s+sich|ändert)\s+(?:das|dies|dieses|daraus|davon|dadurch|dann)(?!\p{L})""")
+        """(?iu)(?:^|[.!?]\s+)(?:und\s+|aber\s+|also\s+)?was\s+(?:bedeutet|heißt|folgt|ergibt\s+sich|ändert)\s+$consequenceReferent""")
 
     /** True when earlier owner turns, if any exist, should travel with this request; never a reason to refuse it. */
     fun benefitsFromPreviousOwnerTurn(request: String): Boolean {
         val text = request.trim()
         if (text.isEmpty() || text.length > 1_000 || text.any { it.isISOControl() }) return false
+        if (definition.containsMatchIn(text) || namedDefinition.containsMatchIn(text)) return false
         if (requiresPreviousOwnerTurn(text)) return true
         return enumerated.containsMatchIn(text) || shared.containsMatchIn(text) || current.containsMatchIn(text) ||
             consequenceAnywhere.containsMatchIn(text)

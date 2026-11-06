@@ -263,8 +263,12 @@ test('learning-core and research store I/O stays off the UI thread in dialogs an
   const first=body.search(heavy);
   ensure(name+' does its I/O inside onLearningIo',first<0||(io>=0&&io<first));
  }
- const input=bodyOf(activity,'private fun addUserMessage(');
- ensure('learning radar scores off the UI thread',input.indexOf('onLearningIo(')>=0&&input.indexOf('onLearningIo(')<input.search(heavy));
+ assert.match(bodyOf(activity,'private fun addUserMessage('),/addUserMessage\(value, keepCockpit = false\)/);
+ const inputStart=codeOnly(activity).indexOf('private fun addUserMessage(value: String, keepCockpit: Boolean)');
+ assert.ok(inputStart>=0,'chat input implementation not found');
+ const input=bodyOf(activity.slice(inputStart),'addUserMessage');
+ ensure('learning radar scores off the UI thread',input.includes('onLearningIo(')&&
+  input.includes('ContinuumLearningCore(')&&input.includes('.neuralSnapshot()')&&!heavy.test(withoutIo(input)));
  const result=bodyOf(activity,'override fun onActivityResult(');
  const pkg=result.slice(result.indexOf('CONTINUUM_PACKAGE_MODEL_REQUEST ->'),result.indexOf('CONTINUUM_PACKAGE_MANIFEST_REQUEST ->'));
  ensure('package model read off the UI thread',pkg.indexOf('onLearningIo(')>=0&&pkg.indexOf('onLearningIo(')<pkg.indexOf('openInputStream('));

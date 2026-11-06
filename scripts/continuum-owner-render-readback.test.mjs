@@ -46,10 +46,42 @@ test('manifest-only explicitly does not fetch or verify an APK',async()=>{
   assert.equal(out.status,'MANIFEST_ONLY_APK_NOT_VERIFIED');
   assert.deepEqual(t.requested,[CHANNEL_URL]);
 });
+test('stream an approved APK larger than the historical 90 MB cap',async()=>{
+  const size=101_794_583;
+  const chunk=Buffer.alloc(64*1024,77);
+  function* chunks() {
+    for(let remaining=size;remaining>0;remaining-=chunk.length)
+      yield chunk.subarray(0,Math.min(remaining,chunk.length));
+  }
+  const hash=createHash('sha256');
+  for(const part of chunks())hash.update(part);
+  const largeDigest=hash.digest('hex');
+  const largeUrl='https://'+CHANNEL_HOST+'/continuum-local/Continuum-Lokal-'+largeDigest+'.apk';
+  const manifest={...doc(),byteLength:size,apkSha256:largeDigest,apkUrl:largeUrl};
+  const requested=[];
+  const transport=async target=>{
+    requested.push(target);
+    if(target===CHANNEL_URL)return reply(JSON.stringify(manifest));
+    assert.equal(target,largeUrl);
+    return {statusCode:200,headers:{'content-length':String(size)},body:Readable.from(chunks())};
+  };
+  const out=await verifyPublishedRelease({transport});
+  assert.equal(out.status,'APK_HASH_VERIFIED_CERT_NOT_VERIFIED');
+  assert.equal(out.apkBytes,size);
+  assert.equal(out.apkSha256,largeDigest);
+  assert.deepEqual(requested,[CHANNEL_URL,largeUrl]);
+});
+test('manifest-only accepts the existing Android 2 GB policy boundary',async()=>{
+  const t=mock({...doc(),byteLength:2_000_000_000});
+  const out=await verifyPublishedRelease({transport:t.transport,verifyApk:false});
+  assert.equal(out.status,'MANIFEST_ONLY_APK_NOT_VERIFIED');
+  assert.equal(out.apkVerified,false);
+  assert.deepEqual(t.requested,[CHANNEL_URL]);
+});
 test('reject wrong signer, approval, schema, version and size before APK requests',async()=>{
   for (const patch of [{approved:false},{signerSha256:'b'.repeat(64)},
     {schema:'1'},{versionCode:30.5},{versionName:'0.3.30'},
-    {byteLength:100},{byteLength:100_000_000},{sourceCommit:'not-a-commit'},
+    {byteLength:100},{byteLength:2_000_000_001},{sourceCommit:'not-a-commit'},
     {notes:42},{extra:'field'}]) {
     const t=mock({...doc(),...patch});
     await assert.rejects(verifyPublishedRelease({transport:t.transport}),/INVALID_RELEASE_METADATA/);
@@ -82,6 +114,10 @@ test('reject wrong APK bytes, response status, gzip and truncated HTTP length',a
   ];
   for(const t of cases)await assert.rejects(verifyPublishedRelease({transport:t.transport}),
     /PUBLISHED_APK_BYTES_OR_SHA256_MISMATCH|HTTP_NOT_200|UNEXPECTED_CONTENT_ENCODING|TRUNCATED_OR_WRONG_CONTENT_LENGTH/);
+});
+test('reject an APK response above the Android policy byte limit',async()=>{
+  const t=mock(doc(),apk,{apkHeaders:{'content-length':'2000000001'}});
+  await assert.rejects(verifyPublishedRelease({transport:t.transport}),/INVALID_CONTENT_LENGTH/);
 });
 test('reject redirect and oversize manifest response',async()=>{
   for (const t of [mock(doc(),apk,{manifestCode:301}),

@@ -20,7 +20,9 @@ const sections = new Map([
   ["navigateWorkArea", "private fun navigateWorkArea("],
   ["showDashboardCategory", "private fun showDashboardCategory("],
   ["navigateDashboardTarget", "private fun navigateDashboardTarget("],
+  ["navigateDashboardTargetNow", "private fun navigateDashboardTargetNow("],
   ["openHomeSlot", "private fun openHomeSlot("],
+  ["showCenter", "private fun showCenter("],
   ["showLearningCenter", "private fun showLearningCenter()"],
   ["showDevelopmentCenter", "private fun showDevelopmentCenter()"],
   ["showMemoryCenter", "private fun showMemoryCenter()"],
@@ -34,6 +36,12 @@ function section(name) {
 }
 function has(source, expression, label) {
   assert.match(source, expression, label);
+}
+function dashboardTargets() {
+  has(section("navigateDashboardTarget"),
+    /touchedCockpitTarget = target\s+try \{\s*navigateDashboardTargetNow\(target\)\s*\} finally \{\s*touchedCockpitTarget = null\s*\}/,
+    "Scene adapter must delegate and clear the touched target");
+  return section("navigateDashboardTargetNow");
 }
 
 test("all five bottom destinations open their own category", () => {
@@ -56,7 +64,7 @@ test("all five bottom destinations open their own category", () => {
   has(category, /navigateDashboardTarget\(entries\[index\]\.target\)/);
   has(nav, /CategoryEntry\("Lernen", "learning"\)/);
   has(nav, /CategoryEntry\("Entwicklerwerkzeuge", "development"\)/);
-  has(section("navigateDashboardTarget"), /else -> menuNavigator\.navigate\(target\)/);
+  has(dashboardTargets(), /else -> menuNavigator\.navigate\(target\)/);
   has(shellContent, /"learning" to ContinuumHomeLayout\.Slot\.LABEL_LEARNING/);
   has(menu, /"development" to Slot\.LABEL_DEVELOPING/);
   has(section("openHomeSlot"), /Slot\.LEARNING -> showLearningCenter\(\)/);
@@ -127,8 +135,19 @@ test("category center buttons invoke real handlers and CCC1 has a direct develop
   const development = section("showDevelopmentCenter");
   assert.ok(development.includes('CenterAction("CCC1 · REPARATUR-AGENT (TERMUX)") { openMobileBuilder() }'),
     "Coding agent is not reachable from its category");
-  has(activity, /dialog\.dismiss\(\)\s*\n\s*action\.run\(\)/,
-    "Center UI does not dispatch to its action");
+  const center = section("showCenter");
+  has(center, /fun makeAction\(action: CenterAction\): View =\s*cockpit\.action\(this, action\.label, primary = action\.accent,\s*critical = action\.label\.contains\("LÖSCHEN", ignoreCase = true\)\) \{\s*dismissCenter\(true\)\s+action\.run\(\)\s*\}/,
+    "Center button must close its presentation before dispatching its action");
+  has(center, /cockpit\.grid\(this, box, actions\.map\(::makeAction\)/,
+    "Center actions must use the live button callback");
+  has(center, /cockpit\.grid\(this, box, experimental\.map\(::makeAction\)/,
+    "Experimental actions must use the same callback");
+  has(center, /val workWindow = if \(home != null && scene != null\)\s*workWindowHost\.show\(home, box, title, scene\)/,
+    "Work window must present the actual center content");
+  has(center, /if \(workWindow != null\) \{\s*dismissCenter = \{ immediate -> workWindow\.close\(immediate\) \}/,
+    "Work-window actions must close their own window");
+  has(center, /val dialog = cockpit\.show\(this, box\)\s*dismissCenter = \{ _ -> dialog\.dismiss\(\) \}/,
+    "Dialog fallback actions must dismiss their own dialog");
 });
 
 test("signed owner package uses its own builder Activity, not a missing external preview", () => {
