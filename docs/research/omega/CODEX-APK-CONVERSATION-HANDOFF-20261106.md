@@ -94,3 +94,15 @@ Die Folgeprüfung reproduzierte zwei weitere Mehrsatzfälle auf dem obigen Zwisc
 `benefitsFromPreviousOwnerTurn` prüft die Definitionsausnahme jetzt für jeden Satz einzeln; anschließend gelten dessen bestehende harten und weichen Kontextregeln. Die begrenzte Erkennung nutzt Satzzeichen mit folgendem Leerraum. Der harte Filter `requiresPreviousOwnerTurn` bleibt unverändert. Die zusätzlichen Kontrollen prüfen isolierte Definitionen mit `unser Plan` oder `die zweite Möglichkeit` sowie mehrere aufeinanderfolgende reine Definitionsfragen: Alle bleiben ohne frühere Kontextpflicht. Keine neue Gedächtnis-, Reasoning- oder Modellarchitektur.
 
 Reale Compiler-/JUnit-Ausgänge wie zuvor: RED 0/1, GREEN 0/0. Belege: `sentences-red-compile.txt`, `sentences-red-junit.txt`, `sentences-green-compile.txt`, `sentences-green-junit.txt`, `sentences-source-sha256.txt`. Der vorherige 36er-Lauf bleibt als Zwischenstand erhalten; der finale gezielte Umfang ist **38 Tests**. Modell-, Audio-, Geräte- und APK-Aussagen bleiben von diesen JVM-Belegen ausgeschlossen.
+
+### Schlussnachtrag: drei verbleibende Review-Varianten
+
+Der lesende Abgleich von PR #575 mit Kandidat `48251610d9c9519678e9fc5ef652ad8286675b7f` bestätigte drei im alten Review-Vorschlag enthaltene Restfälle: `Was bedeutet das überhaupt?`, `Was bedeutet das hier?`, `Was heißt das praktisch?`. Auf ausdrücklichen Integrationsauftrag wurden ausschließlich diese drei Varianten ergänzt.
+
+- Drei getrennte RED-Regressionen: Testcommit `353b871f9947af8721d697ac0445796d1548b92e`, **41 Tests: 3 Fehler, 38 bestanden**.
+- Produktionsfix `a98869c3158736ac556a9a85693febc3069b9838`: nur `überhaupt|hier|praktisch` im vorhandenen `consequenceReferent` ergänzt, keine weiteren Regeländerungen.
+- Echter GREEN: **41/41 bestanden**, keine Fehler oder Skips. WorkDecisionRecall 18, WorkRecall 5, FollowUpPolicy 18. Die bestehenden Definitions-, Artikel-, Mehrsatz- und Journalregressionen bleiben grün.
+
+Compiler jeweils Exit 0; RED JUnit Exit 1, GREEN JUnit Exit 0. Dieselben sechs realen Produktionsklassen, dieselbe Toolchain, keine Stubs. Belege im bisherigen Verzeichnis: `review-rest-red-compile.txt`, `review-rest-red-junit.txt`, `review-rest-green-compile.txt`, `review-rest-green-junit.txt`, `review-rest-source-sha256.txt`. Der Hashkatalog enthält beide Quellstände und sämtliche neun kompilierten Produktions-/Testdateien. Die älteren Läufe bleiben als Zwischenstände erhalten; letzter gezielter Umfang jetzt **41 Tests**.
+
+Keine explorativen Varianten, Architektur-, Root- oder Publisheränderung. Echte Modellantworten, Audio, Fold7 und APK-Abnahme bleiben außerhalb dieses Nachweises; die abschließende Kandidatenintegration führt Root aus.

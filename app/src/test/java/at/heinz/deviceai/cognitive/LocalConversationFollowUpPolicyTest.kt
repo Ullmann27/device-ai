@@ -93,6 +93,18 @@ class LocalConversationFollowUpPolicyTest {
         assertFollowUp("Was heißt das denn?")
     }
 
+    @Test fun generalMeaningParticleKeepsPriorContext() {
+        assertFollowUp("Was bedeutet das überhaupt?")
+    }
+
+    @Test fun situationalMeaningParticleKeepsPriorContext() {
+        assertFollowUp("Was bedeutet das hier?")
+    }
+
+    @Test fun practicalMeaningParticleKeepsPriorContext() {
+        assertFollowUp("Was heißt das praktisch?")
+    }
+
     @Test fun relativeMeaningQuestionKeepsPriorContext() {
         assertFollowUp("Was bedeutet das, was du gesagt hast?")
     }

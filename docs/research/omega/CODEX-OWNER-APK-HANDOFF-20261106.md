@@ -1,7 +1,8 @@
 # Continuum owner APK integration — 2026-11-06
 
 Status: targeted preflight and original-package APK/AAB assembly GREEN. Original publisher full QA,
-original signing and HTTPS release readback remain pending. This is not a release receipt.
+original signing and HTTPS release readback remain pending. Final candidate: code46 /0.3.45.
+This is not a release receipt.
 
 ## Sources and preserved history
 
@@ -13,7 +14,9 @@ original signing and HTTPS release readback remain pending. This is not a releas
 - Saved GitHub checkpoints: `705d35b10377e8d2ef7940f31606e180fe33882c` (combined inputs),
   `24e1a9b77e7796575abf2c71262dc3fc9c984e86` (conversation/release repairs),
   `f06ce83c026be056eca4022dfd5492f06051a2e4` (initial STOP/voice repair),
-  `1a2f7b61c1aa7b1f23c7ec0b0f353d6274cba8af` (save/visual repairs and Code44 ancestry).
+  `1a2f7b61c1aa7b1f23c7ec0b0f353d6274cba8af` (save/visual repairs and Code44 ancestry),
+  `48251610d9c9519678e9fc5ef652ad8286675b7f` (review repairs and Code45 preflight;
+  superseded by the three final reviewed follow-up variants in Code46).
 
 Both original handoffs survive. Fable's final record remains
 `docs/handoff/FABLE51_CONTINUATION_20261106.md`; Opus's earlier handoff is archived as
@@ -37,7 +40,7 @@ Existing publisher: `srv-dbf1tr2vcj2c73ehpfog`, host
 Original certificate SHA-256:
 `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`.
 Signing credentials stay on that service. Release must use a version greater than the live catalog;
-the local candidate is code45 / version0.3.44. Re-read live metadata before deployment.
+the final local candidate is code46 / version0.3.45. Re-read live metadata before deployment.
 
 ## Completed implementation work
 
@@ -46,7 +49,8 @@ the local candidate is code45 / version0.3.44. Re-read live metadata before depl
    revoked owner statements; an edited unsaved draft is not called completed. Open work is not
    wrongly restricted to today. Standalone definitions remain standalone. Natural consequence
    questions and later references after a definition retain previous owner context. The definition
-   exception is evaluated per sentence. No second memory/reasoning store was introduced.
+   exception is evaluated per sentence. The reviewed particles “überhaupt”, “hier” and
+   “praktisch” also retain expanded previous-owner context. No second memory/reasoning store was introduced.
 2. **STOP and lifecycle.** Queued journal/decision/PDF callbacks are rejected after actual STOP or
    session/lifetime invalidation. STOP clears pending document intent before early returns. Ordinary
    pause/resume and additional messages do not silently cancel previously requested work. Empty
@@ -74,15 +78,15 @@ Relevant interfaces: `WorkDecisionRecall`, `WorkRecall`, `LocalConversationFollo
 
 | Check | Result and exact scope |
 |---|---|
-| Final focused Android/JVM regression | **80 PASS, 0 FAIL, 0 SKIP**, real SDK/Gradle + Robolectric; local source `132fbd97f3225174e8d076898cc47669909af712` |
+| Final focused Android/JVM regression | **83 PASS, 0 FAIL, 0 SKIP**, real SDK/Gradle + Robolectric; clean local source `d57a8ce093efe4c37491116bb954abe0a0bfa434` |
 | Android debug compilation | PASS on that source |
 | Android lint | PASS, existing **NewApi-only** configuration; not an all-rules lint claim |
-| Final conversation pure-JVM package | **38/38 PASS**, six real production classes, no model response execution |
+| Final conversation pure-JVM package | **41/41 PASS**, six real production classes; three final regression REDs reproduced before the one-line fix; no model response execution |
 | Full Node integration regression | **2396 PASS, 0 FAIL, 31 SKIP /2427**, unchanged local source `80b7443da40da447c667a8ac402b9026dbcd2f8d`; later review repairs require the final publisher rerun |
 | Backend | npm ci/check/test PASS, **64/64**, unchanged backend tree `f4bc00c1ba8afb0f115b26450757fd322843fd0c` |
 | Quality-lab bound integration | **44/44 PASS**, source verified and unchanged at `132fbd97f3225174e8d076898cc47669909af712` |
 | Local full Android intermediate run | **CANCELLED**, exit130, because later review fixes superseded its source; no complete JUnit success claimed |
-| Original-package APK/AAB | PASS, code45 /0.3.44, ARM64, original package; unsigned and not published locally |
+| Original-package APK/AAB | PASS, code46 /0.3.45, ARM64, original package; APK/AAB archive integrity verified; unsigned and not published locally |
 | Final publisher full gates/signing/readback | PENDING |
 | Actual model responses, real audio, Fold7/GPU | NOT_RUN |
 
@@ -123,3 +127,17 @@ work/document windows, light paths, reflective glass and gradual light transitio
 the actual work window before the original head follows naturally; the original orb responds to
 real work and memory events. No replacement avatar, static substitute, invented tool action or
 palette change. Host screenshots are layout evidence, not a Fold7 or Filament GPU acceptance.
+
+## Final Code46 preflight
+
+The final three review cases were reproduced as 3 FAIL /38 PASS, then passed as 41/41
+pure-JVM cases. The integrated SDK run passed 83/83 on the clean local source
+`d57a8ce093efe4c37491116bb954abe0a0bfa434`; compile and NewApi lint also passed.
+Unsigned APK and AAB assembly completed on that same clean source. Their concrete hashes,
+package, version, ARM64 ABI and CRC results are in `code46-unsigned-build.json`.
+
+Code45 publisher deploy `dep-dbn06r8u01pc73fpcgt0` was started from the earlier checkpoint.
+Code46 supersedes it and must complete its own exact-source gates before final delivery.
+The successful publisher log exposes gate markers, not full Node/Android totals. Do not
+relabel local totals as Render totals. Final delivery requires the actual Code46 manifest,
+BUILD-INFO, downloaded bytes and independent original-certificate verification.
