@@ -74,6 +74,11 @@ class ContinuumCockpitPresentationTest {
 
     @Test fun processesAndDialogShowRealStepsOrHonestEmptyState() {
         assertEquals("Keine laufenden Prozesse", ContinuumCockpitPresentation.processRows(CockpitStatus()).single().label)
+        // Open work from the journal stays visible while nothing runs – as open, never as running (owner brief 06.11.).
+        val open = ContinuumCockpitPresentation.processRows(CockpitStatus(openWork = listOf("Bericht.pdf: Entwurf neu starten")))
+        assertEquals("Offen · Bericht.pdf: Entwurf neu starten", open.single().label)
+        assertEquals("offen", open.single().value)
+        assertTrue(open.none { it.state == ContinuumCockpitPresentation.Tone.ACTIVE })
         val steps = (1..6).map { ProcessStep("s$it", "Schritt $it", if (it == 6) StepState.WAITING else StepState.DONE) }
         val rows = ContinuumCockpitPresentation.processRows(CockpitStatus(steps = steps))
         assertEquals(4, rows.size)

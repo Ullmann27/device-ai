@@ -54,4 +54,31 @@ class CockpitWorkJournalTest {
         assertEquals("a damaged line is skipped, the others stay", CockpitWorkJournal.MAX_EPISODES, journal.all().size)
         assertTrue(journal.all().last().request == "Auftrag 44")
     }
+
+    /**
+     * Temporal honesty after a restart (owner brief 06.11.2026): a draft that was still running when the app went away
+     * did not finish – in the new process it is INTERRUPTED at once, not „in Arbeit“ for another ten minutes.
+     */
+    @Test fun aDraftOfAnEarlierProcessIsInterruptedNotRunning() {
+        var now = 1_000L
+        val before = CockpitWorkJournal(dir.root) { now }
+        val running = before.begin(Kind.DOCUMENT, "Fasse den Bericht zusammen", State.DRAFTING, "Bericht.pdf", 2, 40)
+        now = 2_000L
+        val drafted = before.begin(Kind.DOCUMENT, "Fasse die Notizen zusammen", State.DRAFTED, "Notizen.pdf", 1, 20)
+        now = 61_000L
+        val restarted = CockpitWorkJournal(dir.root) { now }
+        assertEquals("Entwurf in Arbeit", CockpitWorkJournal.stateText(restarted.all().first { it.id == running.id }, now))
+        val ownDraft = restarted.begin(Kind.DOCUMENT, "Fasse das Protokoll zusammen", State.DRAFTING, "Protokoll.pdf", 1, 10)
+        assertEquals(1, restarted.recoverInterrupted(processStartedAt = 60_000L))
+        assertEquals("a draft of this process keeps running", State.DRAFTING, restarted.all().first { it.id == ownDraft.id }.state)
+        restarted.update(ownDraft.id) { it.copy(state = State.DRAFTED, draft = "x") }
+        val cut = restarted.all().first { it.id == running.id }
+        assertEquals(State.INTERRUPTED, cut.state)
+        assertEquals("Entwurf unterbrochen (App wurde beendet), nicht fertig", CockpitWorkJournal.stateText(cut, now))
+        assertEquals("Entwurf neu starten", CockpitWorkJournal.nextStep(cut, now))
+        assertEquals("other episodes keep their state", State.DRAFTED, restarted.all().first { it.id == drafted.id }.state)
+        assertEquals("nothing left to recover", 0, restarted.recoverInterrupted(processStartedAt = 60_000L))
+        assertEquals("open steps, newest first", listOf("Protokoll.pdf: Entwurf prüfen und speichern",
+            "Notizen.pdf: Entwurf prüfen und speichern", "Bericht.pdf: Entwurf neu starten"), restarted.openSteps(now))
+    }
 }

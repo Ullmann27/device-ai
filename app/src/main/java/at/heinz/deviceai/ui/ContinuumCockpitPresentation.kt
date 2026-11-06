@@ -21,7 +21,9 @@ data class CockpitStatus(
     /** Real step list of the latest turn/worker (CockpitAnimationTriggers). */
     val steps: List<ProcessStep> = emptyList(),
     /** Last owner / Jarvis lines of the visible chat (already shown there). */
-    val dialog: List<DialogLine> = emptyList()
+    val dialog: List<DialogLine> = emptyList(),
+    /** Open next steps of real cockpit work (CockpitWorkJournal, „source: step“); shown while nothing runs. */
+    val openWork: List<String> = emptyList()
 ) {
     data class DialogLine(val fromOwner: Boolean, val text: String)
 
@@ -141,6 +143,8 @@ object ContinuumCockpitPresentation {
     }
 
     fun processRows(c: CockpitStatus): List<Row> {
+        // Nothing runs: the work still open from the journal stays visible (never as running – it waits for the owner).
+        if (c.steps.isEmpty() && c.openWork.isNotEmpty()) return c.openWork.take(4).map { Row("Offen · $it", "offen", null, Tone.WARN) }
         if (c.steps.isEmpty()) return listOf(Row("Keine laufenden Prozesse", "", null))
         return c.steps.takeLast(4).map { step ->
             Row(step.label, stepLabel(step.state), null, when (step.state) {

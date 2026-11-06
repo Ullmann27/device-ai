@@ -17,7 +17,7 @@ import java.nio.file.StandardCopyOption
  */
 class CockpitWorkJournal(directory: File, private val clock: () -> Long = System::currentTimeMillis) {
     enum class Kind { DOCUMENT }
-    enum class State { READ, DRAFTING, DRAFTED, SAVED, ABORTED, NO_MODEL, FAILED }
+    enum class State { READ, DRAFTING, DRAFTED, SAVED, ABORTED, NO_MODEL, FAILED, INTERRUPTED }
 
     data class Episode(
         val id: String,
@@ -71,6 +71,25 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         write(rows.map { if (it.id == id) new else it })
         new
     }
+
+    /**
+     * A new app process runs no draft of an earlier one: every episode still DRAFTING whose last change is older than
+     * this process ([processStartedAt]) was cut off (app closed or killed) and becomes INTERRUPTED – never „in Arbeit“
+     * after a restart. Drafts of this process are left alone. Returns the number of episodes changed.
+     */
+    fun recoverInterrupted(processStartedAt: Long): Int = synchronized(LOCK) {
+        val rows = read()
+        fun cutOff(e: Episode) = e.state == State.DRAFTING && e.updatedAt < processStartedAt
+        val count = rows.count(::cutOff)
+        if (count == 0) return@synchronized 0
+        val now = clock()
+        write(rows.map { if (cutOff(it)) it.copy(state = State.INTERRUPTED, updatedAt = now) else it })
+        count
+    }
+
+    /** The open next steps, newest first: „source: step“ (for the cockpit's process panel). */
+    fun openSteps(now: Long, limit: Int = 3): List<String> = all().sortedByDescending { it.startedAt }
+        .mapNotNull { e -> nextStep(e, now)?.let { "${e.source ?: "Auftrag"}: $it" } }.take(limit)
 
     private fun sanitize(e: Episode) = e.copy(
         request = e.request.take(MAX_REQUEST), source = e.source?.take(MAX_NAME), draft = e.draft?.take(MAX_DRAFT),
@@ -142,6 +161,7 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
             State.ABORTED -> "mit STOP abgebrochen, nicht erledigt"
             State.NO_MODEL -> "Entwurf nicht erstellt – kein lokales Modell geladen"
             State.FAILED -> "fehlgeschlagen"
+            State.INTERRUPTED -> "Entwurf unterbrochen (App wurde beendet), nicht fertig"
         }
 
         /** The open next step, or null when the task is complete. */
@@ -153,6 +173,7 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
             State.ABORTED -> "neu starten oder verwerfen"
             State.NO_MODEL -> "lokales Modell laden, dann den Entwurf erstellen"
             State.FAILED -> "Datei prüfen und erneut versuchen"
+            State.INTERRUPTED -> "Entwurf neu starten"
         }
     }
 }
