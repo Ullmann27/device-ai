@@ -305,16 +305,46 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 it.startsWith("jarvis-tile:") || it.startsWith("jarvis-panel:ROW_") } == true }
             val before = deck()
             assertTrue("tiles and rows are on the deck: $before", before >= 12)
+            // Owner review 06.11.: prove it with real touches and the accessibility tree, not only isShown.
+            val tileCenters = descendants(root).filter { it.isShown && it.tag?.toString()?.startsWith("jarvis-tile:") == true }
+                .map { v -> Rect().also { v.getGlobalVisibleRect(it) }.let { it.exactCenterX() to it.exactCenterY() } }
+            // The framework's own selection of children offered to accessibility services (TalkBack).
+            fun a11yChildren() = ArrayList<View>().also { home.addChildrenForAccessibility(it) }
+                .count { v -> v.tag?.toString()?.let { it.startsWith("jarvis-tile:") || it.startsWith("jarvis-panel:ROW_") } == true }
+            val a11yBefore = a11yChildren()
             tap(root, shown(root, "jarvis-tile:memory"))
             advance(640L); measure(root); draw(root)
-            shown(root, "jarvis-work-window")
+            val work = shown(root, "jarvis-work-window")
             assertEquals("no tile or row stays under the open window", 0, deck())
+            assertEquals("all tiles and rows were offered before", before, a11yBefore)
+            assertEquals("TalkBack no longer offers the cleared tiles and rows", 0, a11yChildren())
+            val panel = field(work, "panel") as View
+            val panelBox = Rect().also { panel.getGlobalVisibleRect(it) }
+            var probed = 0
+            for ((x, y) in tileCenters) {
+                if (panelBox.contains(x.toInt(), y.toInt())) continue
+                val at = SystemClock.uptimeMillis()
+                val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN, x, y, 0)
+                val up = MotionEvent.obtain(at, at + 16L, MotionEvent.ACTION_UP, x, y, 0)
+                try { root.dispatchTouchEvent(down); root.dispatchTouchEvent(up) } finally { down.recycle(); up.recycle() }
+                advance(64L); probed++
+            }
+            measure(root); draw(root)
+            assertTrue("a cleared tile position was probed by a real touch", probed > 0)
+            val titles = descendants(shown(root, "jarvis-work-window")).filterIsInstance<TextView>().map { it.text.toString() }
+            assertTrue("a touch where a cleared tile was opens nothing else: $titles", titles.any { it.equals("Gedächtniszentrum", true) })
+            assertSame("the same window stays open", work, shown(root, "jarvis-work-window"))
             assertTrue("avatar stays", avatar.isShown)
             assertTrue("dialog stays", shown(root, "jarvis-dialog:conversation").isShown)
             tap(root, shown(shown(root, "jarvis-work-window"), "jarvis-work-window:close"))
             advance(640L + 480L); measure(root); draw(root)
             assertTrue(descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
             assertEquals("the deck returns after the window folded back", before, deck())
+            assertEquals("TalkBack offers them again", a11yBefore, a11yChildren())
+            tap(root, shown(root, "jarvis-tile:web"))
+            advance(640L); measure(root); draw(root)
+            val reopened = descendants(shown(root, "jarvis-work-window")).filterIsInstance<TextView>().map { it.text.toString() }
+            assertTrue("a returned tile is really clickable again: $reopened", reopened.any { it.equals("Web und Quellen", true) })
         } finally {
             framePump?.close(); framePump = null
             ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
@@ -395,6 +425,53 @@ class ContinuumSystemStatusWorkWindowUiTest {
             }
         } finally {
             framePump?.close(); framePump = null
+            runCatching { controller.close() }
+        }
+    }
+
+    /** Owner review 06.11.: at 200 % font the deck clears only when a window is really accepted; otherwise it stays usable. */
+    @Test @Config(fontScale = 2.0f)
+    fun largeFontDeckClearsOnlyForAnAcceptedWindowAndAlwaysReturns() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible(); advance(32L); controller.windowFocusChanged(true)
+            val activity = controller.get()
+            val root = activity.window.decorView
+            framePump = CockpitHostFramePump { controller.get().window.decorView }
+            val home = field(activity, "homeView") as ContinuumHomeView
+            home.setForegroundActive(true)
+            measure(root); advance(320L); measure(root); draw(root)
+            fun deck() = descendants(root).count { v -> v.isShown && v.tag?.toString()?.let {
+                it.startsWith("jarvis-tile:") || it.startsWith("jarvis-panel:ROW_") } == true }
+            val before = deck()
+            assertTrue("tiles are on the deck at 200 %: $before", before > 0)
+            // The same route a tile click takes (ShellActionView → onNavigateTarget); the tile may lie below the fold.
+            AgentActivity::class.java.getDeclaredMethod("navigateDashboardTarget", String::class.java)
+                .apply { isAccessible = true }.invoke(activity, "memory")
+            advance(640L); measure(root); draw(root)
+            val windowShown = descendants(root).any { it.tag == "jarvis-work-window" && it.isShown }
+            println("LARGE_FONT_200_WORK_WINDOW_ACCEPTED=$windowShown")
+            if (windowShown) {
+                assertEquals("accepted window: the deck made room", 0, deck())
+                tap(root, shown(shown(root, "jarvis-work-window"), "jarvis-work-window:close"))
+                advance(640L + 480L); measure(root); draw(root)
+            } else {
+                assertEquals("no accepted window: no empty stage, the deck stays", before, deck())
+                ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
+                (field(activity, "centerDialog") as? android.app.Dialog)?.dismiss()
+                advance(160L); measure(root); draw(root)
+            }
+            assertEquals("the deck is complete again", before, deck())
+        } finally {
+            framePump?.close(); framePump = null
+            ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
             runCatching { controller.close() }
         }
     }
