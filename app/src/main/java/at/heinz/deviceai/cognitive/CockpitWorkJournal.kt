@@ -94,7 +94,11 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
     }
 
     fun append(episode: Episode) = synchronized(LOCK) {
-        write((read().filterNot { it.id == episode.id } + sanitize(episode)).takeLast(MAX_EPISODES))
+        val rows = read().filterNot { it.id == episode.id } + sanitize(episode)
+        // Routine storage checks must not evict the owner's PDF history.
+        val recentToolIds = rows.filter { it.kind == Kind.TOOL }.takeLast(MAX_TOOL_EPISODES)
+            .map { it.id }.toSet()
+        write(rows.filter { it.kind != Kind.TOOL || it.id in recentToolIds }.takeLast(MAX_EPISODES))
     }
 
     fun begin(kind: Kind, request: String, state: State, source: String? = null, pages: Int = 0, chars: Int = 0,
@@ -208,6 +212,7 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
 
     companion object {
         const val MAX_EPISODES = 40
+        const val MAX_TOOL_EPISODES = 10
         const val MAX_BYTES = 256_000L
         const val MAX_REQUEST = 240
         const val MAX_NAME = 120
