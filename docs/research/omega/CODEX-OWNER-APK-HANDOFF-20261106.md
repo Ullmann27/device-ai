@@ -84,7 +84,7 @@ Relevant interfaces: `WorkDecisionRecall`, `WorkRecall`, `LocalConversationFollo
 | Final conversation pure-JVM package | **41/41 PASS**, six real production classes; three final regression REDs reproduced before the one-line fix; no model response execution |
 | Full Node integration regression | **2396 PASS, 0 FAIL, 31 SKIP /2427**, unchanged local source `80b7443da40da447c667a8ac402b9026dbcd2f8d`; later review repairs require the final publisher rerun |
 | Backend | npm ci/check/test PASS, **64/64**, unchanged backend tree `f4bc00c1ba8afb0f115b26450757fd322843fd0c` |
-| Quality-lab bound integration | **44/44 PASS**, source verified and unchanged at `132fbd97f3225174e8d076898cc47669909af712` |
+| Quality-lab bound integration | **44/44 PASS**, source verified and unchanged at final GitHub source `756bc68d0fb7f8522da8900fd889fd2eae2e8caf` |
 | Local full Android intermediate run | **CANCELLED**, exit130, because later review fixes superseded its source; no complete JUnit success claimed |
 | Original-package APK/AAB | PASS, code46 /0.3.45, ARM64, original package; APK/AAB archive integrity verified; unsigned and not published locally |
 | Final publisher full gates/signing/readback | PENDING |
@@ -141,3 +141,19 @@ Code46 supersedes it and must complete its own exact-source gates before final d
 The successful publisher log exposes gate markers, not full Node/Android totals. Do not
 relabel local totals as Render totals. Final delivery requires the actual Code46 manifest,
 BUILD-INFO, downloaded bytes and independent original-certificate verification.
+
+## Original publisher candidate
+
+Frozen Code46 source: `756bc68d0fb7f8522da8900fd889fd2eae2e8caf`; exact tree
+`2161fc5f7dd2b45bba1ac42a59c00746d7611746` matches the locally verified preflight tree.
+Both integration and publisher branches were fast-forwarded to that source before scheduling.
+Deploy `dep-dbn0gj5s25qs73a1vrv0` was queued at 2026-11-06T17:03:09.783024Z through
+the existing service configuration update. The original signing credentials and host remain.
+The final-source quality-lab rerun passed 44/44 with source verification and an unchanged checkout.
+
+The existing in-app “Updates prüfen und laden” button reads the fixed `continuum-local/latest.json`
+and downloads its hash-bound APK URL. No button change is needed. The public root URL is not an
+HTML download page; the final direct APK link must be taken from the verified live catalog.
+
+This documentation checkpoint does not advance the frozen publisher branch or restart its build.
+A later release receipt must record the actual deployment outcome and downloaded APK verification.
