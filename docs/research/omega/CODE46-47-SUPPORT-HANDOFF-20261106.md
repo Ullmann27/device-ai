@@ -64,3 +64,10 @@ Original package: `at.heinz.deviceai.continuumlocal`.
 Original certificate: `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`.
 
 No main merge, paid services, GitHub Actions, user-data deletion or signing-key retrieval. Original head/orb, offline policy and foreign worktrees remain protected. Physical Fold7 installation, actual LiteRT answers, audio and GPU acceptance remain NOT_RUN.
+
+## Rollback and noninterference
+
+- Code46 remains the verified owner release at source `577f0931e7937ffcac02dc855a540f093facdb3b`; do not rebuild or redeploy it for a Code47 fault. The original publisher is unchanged.
+- Code47's pre-support base is `6bd0e172b5615854e021e43aa0ed04a1978eb733`; the primary later advanced independently to `9ee7535bb131504cc85419afd30f446089a40171`. Revert the isolated support patches from PR #577 if any regressions surface; preserve primary M0/M1/M2 and saved work. No persistence migration is part of the decision-conflict or test-contract corrections.
+- The time-anchor source test update in support commit `492f1ad2bd5091351c1090080663d6f4201d905f` checks `promptEnd` flowing via `LocalDecisionPromptFrame(requiredTail=promptEnd)` to both underlying `LocalPromptFrame` branches. It has a positive and three deliberately broken negative source probes. This is structural verification only: full Gradle/JUnit on the final integrated source remains pending.
+- Never force-update primary integration branches or the publisher. If final-source Android/Node/lint/APK QA is RED, preserve the exact failure report, fix the isolated defect and rerun before any signing. No duplicate deploy jobs or new signing channel.
