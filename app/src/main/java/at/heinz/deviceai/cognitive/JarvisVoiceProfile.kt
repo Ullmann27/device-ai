@@ -1,10 +1,12 @@
 package at.heinz.deviceai.cognitive
 
-/** Acoustic styling for an installed offline German Android TTS voice.
- * This does not clone, impersonate, synthesize or ship an actor's voice. */
+/** Acoustic styling for an installed offline Android TTS voice.
+ * This does not clone, impersonate, synthesize or ship an actor's voice.
+ * Pitch stays at the engine's natural 1.0: Android's setPitch resamples the engine output, so any shift makes the
+ * owner-chosen (female) voice sound processed. Natural sound comes from the chosen voice, not from post-processing. */
 internal object JarvisVoiceProfile {
-    const val pitch = 0.86f
-    const val speechRate = 0.93f
+    const val pitch = 1.0f
+    const val speechRate = 0.96f
 
     private val codeFence = Regex("(?s)(?:```|~~~)[^\n]*\n.*?(?:```|~~~)")
     private val unfinishedFence = Regex("(?s)(?:```|~~~).*$")
