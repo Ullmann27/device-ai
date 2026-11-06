@@ -1,4 +1,4 @@
-# Code47 Planning context regression — RED checkpoint
+# Code47 Planning context regression — RED → GREEN
 
 Production baseline: `c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e`.
 Test continuation parent: `ee0c2e28bcb4aae30bc94f6b44c81c0903cbf3b3`.
@@ -24,7 +24,14 @@ Remove only the pre-run `recordUnanswered(sessionId, intake.original)` in the
 which records the original. Model success/failure/partial delivery owns recording;
 the separately reviewed STOP guard also preserves the unanswered original.
 
-GREEN has not run at this checkpoint. Bot1 is the sole Activity writer.
+GREEN: the same compiled six tests pass against Bot1's actual compiled Activity
+correction. All test bytecode is unchanged from RED. Source SHA-256:
+`b3551528e76061191a29d2cbaf9be7ff9d183dea9d3757e3c22ab7091bd25e38`.
+All 69 overlay classes and that source remain unchanged before/after the run.
+`green-receipt.json` includes the real SDK compile manifest, class hashes and exact
+run command. `green.txt`: 6/6 PASS, 6.512 seconds. Bot1 is the sole Activity writer.
+His overlay also contains the separately reviewed STOP/identity/PDF integration;
+this receipt is a focused host connection test, not the final full-source SDK gate.
 
 ## Reproduction and boundaries
 

@@ -30,7 +30,7 @@
   "runtime_jar_sha256": "b3b775c634fd5ecf7482c005fe9da0515980b6461cd7046f0dd341a7626b355e",
   "compile_exit": 0,
   "red_exit": 1,
-  "status": "RED_REPRODUCED_GREEN_PENDING",
+  "status": "RED_TO_GREEN",
   "red_tests": {
     "run": 6,
     "failed": 2,
@@ -55,5 +55,12 @@
     }
   ],
   "root_checkout_head": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
-  "root_activity_source_sha256": "3cc35d1b991af864d1cc3c8b18b764562a7373bf811cdd5fc4619ed97a01318c"
+  "root_activity_source_sha256": "3cc35d1b991af864d1cc3c8b18b764562a7373bf811cdd5fc4619ed97a01318c",
+  "green_tests": {
+    "run": 6,
+    "failed": 0,
+    "passed": 6,
+    "duration_seconds": 6.512
+  },
+  "green_receipt": "green-receipt.json"
 }
