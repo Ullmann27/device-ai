@@ -1871,14 +1871,7 @@ class AgentActivity : Activity() {
         val model = if (::localRuntime.isInitialized) localRuntime.loadedModel else null
         val state = if (::localRuntime.isInitialized) localRuntime.state else LocalModelState.EMPTY
         val active = activeBotId == profile.agentId || activeBotTask?.profile?.agentId == profile.agentId
-        val availability = when {
-            model == null -> "Lokales Modell nicht geladen"
-            active && state == LocalModelState.GENERATING -> "Lokales Modell arbeitet"
-            active && busy -> "Lokaler Auftrag läuft"
-            busy || state == LocalModelState.GENERATING -> "Gemeinsame Ausführung belegt"
-            state == LocalModelState.READY -> "Für einen Auftrag erreichbar"
-            else -> "Lokales Modell derzeit nicht bereit"
-        }
+        val availability = at.heinz.deviceai.chief.BotRuntimeAvailability.text(model != null, state, active, busy)
         return availability +
             "\n" + (botTaskStatuses[profile.agentId] ?: "Noch kein Auftrag in dieser Sitzung") +
             "\nPrivater Dialog · Werkzeugaufträge über JARVIS und bestehende Freigaben"
