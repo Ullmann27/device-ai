@@ -15,6 +15,9 @@ keine Signatur-/Paketänderung, kein Main-Merge. PR #571 bleibt als Draft offen 
 | 597603e7 | Entwurf über den vorhandenen lokalen Modellpfad (nur Dokumenttext, Budget 7 900), Ergebnisfläche, Bearbeiten-Dialog, Speichern über Android; ehrliche Zustände ohne Modell/Text; eigener Dokument-Executor |
 | 7433100a | Dokumentfenster zweispaltig, dunkle Unterlage unter dem Fensterglas, Uhr/Datum nie gekürzt; Host-Belege `docs/evidence/claude-jarvis-document-20261106/` |
 | c8044585 | Arbeitsjournal (`CockpitWorkJournal`): Auftrag in deinen Worten, Quelle, tatsächlich erreichter Stand (gelesen / Entwurf in Arbeit / erstellt / gespeichert / abgebrochen / kein Modell / fehlgeschlagen), Bearbeitungen, nächster offener Schritt – überlebt den Neustart. „Wo waren wir gestern/heute …“, „Was ist noch offen“ → Antwort + VERLAUF-Fläche, Herkunft „Erinnerung, kein Modelllernen“. „Nimm die ausgewählte PDF …“ nutzt die zuvor gewählte Datei (dauerhafte Android-Lesefreigabe). Cockpit-Szenen bleiben auf START. |
+| 4059f076 | Erinnern sichtbar: Rückbezug sendet `RecallHits` (echte Trefferzahl) auf den Cockpit-Bus; verstandene Korrektur → Bestätigungsnicken (`confirmationAccepted`); Entwurfszeile im Dokumentfenster zeigt immer den erreichten Stand (nie „läuft“ nach Fehler) |
+| b2c88773 | Technische Karte `docs/research/omega/JARVIS_ARCHITECTURE_MAP_20261106.md` + geprüfte KI-Aussagen (Summarization ohne Deutsch, Fold7/Prompt API nur Vordergrund bestätigt; Samsung-SDK-Partnerpflicht nicht belegt) |
+| 29962f3c | #565-Review (Gitar): Blick folgt dem neu geplanten Fenster – `AvatarDirector.windowMoved` (RED→GREEN 2/2); alle 11 Review-Threads erledigt |
 | d5c2d7f2 | „Nein, ich meinte den letzten Entwurf“ (auch: vorige PDF, Entwurf von gestern): Auflösung im Arbeitsjournal; ein laufender falscher Entwurf endet nach STOP-Regeln (ABGEBROCHEN), der gemeinte Entwurf erscheint, deine Korrektur bleibt am korrigierten Auftrag. |
 
 ## Bekannte, vorbestehende Fehler (nicht von heute, belegt)
@@ -24,6 +27,18 @@ keine Signatur-/Paketänderung, kein Main-Merge. PR #571 bleibt als Draft offen 
 - Node-Quellverträge `.github/continuum/*.test.mjs`: 1498 pass / 53 fail / 23 skip – identische Fehlermenge auf `25256632`.
 - Robolectric meldet nach `setQualifiers` + `configurationChange` den alten Fensterrahmen bis zur Größenmeldung
   (`ShadowViewRootImpl.callDispatchResized`); Sync-Barrieren blockieren `post {}` bis zum nächsten Frame – in Tests `advance()` statt `idle()`.
+
+## Stand 06.11.2026, 09:00 UTC (HEAD `29962f3c` + diese Übergabe)
+
+- Zuletzt gezielt grün (HOST, Robolectric/JVM): avatar.* (16 Klassen) inkl. `AvatarWindowMovedTest` 2/2,
+  `ContinuumSystemStatusWorkWindowUiTest` 10/10, `JarvisWorkWindowLifecycleUiTest` 4/4, `ContinuumDocumentSceneUiTest` 8/8,
+  `ContinuumCockpitHandsFreeUiTest` 2/2, `JarvisLiveAvatarWiringUiTest` 10/10, `ContinuumLongReplySpeechUiTest` 5/5,
+  Journal/Recall/Korrektur/Intent-JVM-Tests. Volle Suite NICHT ausgeführt.
+- DEVICE (Fold7/One UI 9): nichts ausgeführt – kein adb-Gerät in dieser Umgebung.
+- Kognitiver Nachweis (Besitzerauftrag 08:48 auf #565): Paraphrasen/Pronomen/Negationen/mehrstufige Fragen gegen den realen
+  lokalen Modellpfad – **NOT_RUN** (kein LiteRT-Modell auf dem Host). `WorkRecall`/`OwnerCorrectionIntent` sind regelbasiert
+  (Regex) und decken nur die getesteten Formulierungen ab; keine Aussage über allgemeine Semantik.
+- PR #572 (test-only, `ContinuumReferenceCockpitUiTest`): siehe nächster Commit/Bericht.
 
 ## Offen (nächste Schritte)
 
