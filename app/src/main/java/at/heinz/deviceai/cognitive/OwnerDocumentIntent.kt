@@ -15,6 +15,18 @@ internal object OwnerDocumentIntent {
     private val read = Regex(
         "(?iu)$START(lies|lese|öffne|zeige|analysiere|prüfe|fasse|nimm|verwende)$END[^.!?]{0,40}?$START(pdf|pdf-datei|pdf-dokument|dokument)$END"
     )
+    // A standalone voice instruction often names the document before the verb.
+    private val reverseRead = Regex(
+        "(?iu)^(?:jarvis[,!:]?\\s*)?(?:bitte\\s+|ich\\s+(?:will|möchte)\\s+|kannst\\s+du\\s+(?:bitte\\s+)?)?" +
+            "(?:(?:die|das|meine|eine|ein)\\s+)?" +
+            "(?:pdf|pdfs|pdf-datei|pdf-dokument|dokument)" +
+            "(?:\\s+(?:aus|in|im)\\s+(?:dem\\s+)?downloads?(?:-ordner)?)?" +
+            "\\s+(?:öffnen|anzeigen|lesen|analysieren|zusammenfassen)(?:\\s+bitte)?[.!?]?$"
+    )
+    // „Öffne die PDF-App“ selects an app, not the owner's document.
+    private val explicitPdfApp = Regex(
+        "(?iu)$START(?:pdf[- ]?app|app[- ]?pdf|pdf[- ]?reader|pdf[- ]?viewer)$END"
+    )
     private val earlier = Regex(
         "(?iu)$START(ausgewählte|ausgewählten|letzte|letzten|gleiche|gleichen|dieselbe|selbe|selben|vorige|vorigen|gestrige|gestrigen)$END" +
             "\\s+$START(pdf|pdf-datei|pdf-dokument|dokument)$END"
@@ -26,7 +38,8 @@ internal object OwnerDocumentIntent {
 
     fun parse(utterance: String): Request? {
         if (utterance.length !in 8..160 || utterance.any { it.isISOControl() }) return null
-        if (prohibited.containsMatchIn(utterance) || !read.containsMatchIn(utterance)) return null
+        if (prohibited.containsMatchIn(utterance) || explicitPdfApp.containsMatchIn(utterance) ||
+            !(read.containsMatchIn(utterance) || reverseRead.matches(utterance.trim()))) return null
         return Request(wantsDraft = draft.containsMatchIn(utterance), reuse = earlier.containsMatchIn(utterance))
     }
 }
