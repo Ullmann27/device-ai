@@ -1,0 +1,85 @@
+{
+  "category": "HOST_ANDROID_TARGETED_REGRESSION",
+  "source_local_commit": "132fbd97f3225174e8d076898cc47669909af712",
+  "tests": 80,
+  "failed": 0,
+  "skipped": 0,
+  "suites": [
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDraftSaveBindingUiTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOfflineVoiceRecoveryUiTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ConnectedConversationCatalogTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.JarvisVoiceSelectionTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.WorkDecisionRecallTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.WorkRecallTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "compileDebugKotlin": "PASS",
+  "lintDebug": {
+    "status": "PASS",
+    "scope": [
+      "NewApi"
+    ],
+    "issues": 0
+  },
+  "real_device": "NOT_RUN",
+  "real_model": "NOT_RUN",
+  "real_audio": "NOT_RUN",
+  "full_android_suite": "PENDING_FINAL_PUBLISHER",
+  "passed": 80
+}

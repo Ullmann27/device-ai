@@ -1863,9 +1863,13 @@ class AgentActivity : Activity() {
      */
     private fun withWorkJournal(block: (List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>) -> Unit) {
         val session = sessionId
+        val generation = workPresentationGeneration
         val read = Runnable {
             val episodes = runCatching { workJournal.all() }.getOrDefault(emptyList())
-            runOnUiThread { if (!isFinishing && !isDestroyed && sessionId == session) block(episodes) }
+            runOnUiThread {
+                if (!isFinishing && !isDestroyed && sessionId == session && workPresentationGeneration == generation)
+                    block(episodes)
+            }
         }
         if (documentIoExecutor.isShutdown) read.run() else documentIoExecutor.execute(read)
     }
@@ -1903,6 +1907,7 @@ class AgentActivity : Activity() {
 
     /** The decisions shown in this conversation (session-bound): „die Entscheidung davor“ / „was davon“ refer to them. */
     private var decisionFocus: Pair<String, at.heinz.deviceai.cognitive.WorkDecisionRecall.Focus>? = null
+    private var workPresentationGeneration = 0L
 
     /**
      * Reads both records off the UI thread – the work journal on its serial lane (after every queued write) and the
@@ -1912,11 +1917,13 @@ class AgentActivity : Activity() {
     private fun presentDecisionRecall(ask: at.heinz.deviceai.cognitive.WorkDecisionRecall.Ask) {
         val inCockpit = activeWorkArea == ContinuumWorkArea.START
         val session = sessionId
+        val generation = workPresentationGeneration
         val read = Runnable {
             val episodes = runCatching { workJournal.all() }.getOrDefault(emptyList())
             val statements = runCatching { ownerDecisionStatements() }.getOrDefault(emptyList())
             runOnUiThread {
-                if (!isFinishing && !isDestroyed && sessionId == session) presentDecisionRecall(ask, inCockpit, episodes, statements)
+                if (!isFinishing && !isDestroyed && sessionId == session && workPresentationGeneration == generation)
+                    presentDecisionRecall(ask, inCockpit, episodes, statements)
             }
         }
         if (documentIoExecutor.isShutdown) read.run() else documentIoExecutor.execute(read)
@@ -1941,7 +1948,7 @@ class AgentActivity : Activity() {
         val zone = java.util.TimeZone.getDefault()
         val focus = decisionFocus?.takeIf { it.first == sessionId }?.second
         val reply = at.heinz.deviceai.cognitive.WorkDecisionRecall.answer(ask, focus, episodes, statements, now, zone)
-        reply.focus?.let { decisionFocus = sessionId to it }
+        decisionFocus = reply.focus?.let { sessionId to it }
         val kind = ask::class.simpleName ?: "ask"
         // Remembering is shown where the cockpit already shows recall: the real number of items found (0 = no light).
         cockpitBus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.RecallHits(at.heinz.deviceai.cockpit.MEMORY_TURN,
@@ -2096,8 +2103,9 @@ class AgentActivity : Activity() {
     private var documentDraftTurn: DocumentDraftTurn? = null
     /** Request of a draft the owner stopped: its cancelled run is reported as STOP, not as a model error. */
     private var stoppedDraftRequest: String? = null
-    /** Draft text waiting for Android's save dialog (ACTION_CREATE_DOCUMENT). */
-    private var pendingDraftSave: String? = null
+    /** Save target frozen before picker. */
+    private data class PendingDraftSave(val text: String, val episodeId: String?)
+    private var pendingDraftSave: PendingDraftSave? = null
 
     private fun localModelReady() = localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null
 
@@ -2239,7 +2247,7 @@ class AgentActivity : Activity() {
 
     private fun saveDraft(text: String, documentName: String) {
         if (text.isBlank()) return
-        pendingDraftSave = text
+        pendingDraftSave = PendingDraftSave(text, workEpisodeId)
         val base = documentName.removeSuffix(".pdf").removeSuffix(".PDF").trim().ifEmpty { "Dokument" }.take(60)
         val picker = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -2277,10 +2285,15 @@ class AgentActivity : Activity() {
      */
     private fun readPdfDocument(uri: android.net.Uri, remembered: at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode?) {
         val pageWidthPx = (resources.displayMetrics.density * 360f).toInt()
+        val session = sessionId
+        val generation = workPresentationGeneration
         documentIoExecutor.execute {
             val result = runCatching { PdfDocumentIntake(contentResolver).read(uri, pageWidthPx) }
             runOnUiThread {
-                if (isFinishing || isDestroyed) return@runOnUiThread
+                if (isFinishing || isDestroyed || sessionId != session || workPresentationGeneration != generation) {
+                    result.getOrNull()?.firstPage?.recycle()
+                    return@runOnUiThread
+                }
                 result.fold({ presentDocumentScene(it, uri.toString()) }) { failure ->
                     val wantsDraft = pendingDocumentDraft
                     val request = pendingDocumentRequest
@@ -4124,12 +4137,14 @@ class AgentActivity : Activity() {
             val language = at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.fromTag(
                 if (::bootstrapMemory.isInitialized) bootstrapMemory.voiceLanguage else "de")
             val ownerName = if (::bootstrapMemory.isInitialized) bootstrapMemory.voiceName else null
-            val choice = at.heinz.deviceai.cognitive.JarvisVoiceSelection.choose(voiceCandidates(engine), language, ownerName)
-                ?: return@runCatching false
-            val voice = engine.voices?.firstOrNull { it.name == choice.voice.name } ?: return@runCatching false
-            voiceChoice = choice
-            engine.setVoice(voice) == TextToSpeech.SUCCESS &&
-                at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(engine.voice?.isNetworkConnectionRequired)
+            voiceChoice = at.heinz.deviceai.cognitive.JarvisVoiceSelection.chooseAndApply(
+                voiceCandidates(engine), language, ownerName) { candidate ->
+                val voice = engine.voices?.firstOrNull { it.name == candidate.name }
+                voice != null && engine.setVoice(voice) == TextToSpeech.SUCCESS &&
+                    engine.voice?.name == voice.name &&
+                    at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(engine.voice?.isNetworkConnectionRequired)
+            }
+            voiceChoice != null
         }.getOrDefault(false)
         if (!voiceReady) voiceChoice = null
         if (voiceReady) {
@@ -4163,10 +4178,14 @@ class AgentActivity : Activity() {
                 bootstrapMemory.voiceName = if (which == 0) null else voices[which - 1].name
                 refreshOfflineVoice()
                 dialog.dismiss()
-                if (voiceReady && voiceEnabled) speakBootstrap(
-                    if (language == at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.ENGLISH) "Hello. This is my voice now."
-                    else "Hallo. So klingt meine Stimme jetzt.")
-                else Toast.makeText(this, "Diese Stimme konnte nicht gesetzt werden.", Toast.LENGTH_LONG).show()
+                if (!voiceReady) Toast.makeText(this, "Diese Stimme konnte nicht gesetzt werden.", Toast.LENGTH_LONG).show()
+                else {
+                    if (voiceChoice?.ownerChoiceDropped == true) Toast.makeText(this,
+                        "Die gewählte Stimme ist nicht verfügbar. Eine andere Offline-Stimme ist aktiv.", Toast.LENGTH_LONG).show()
+                    if (voiceEnabled) speakBootstrap(
+                        if (language == at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.ENGLISH) "Hello. This is my voice now."
+                        else "Hallo. So klingt meine Stimme jetzt.")
+                }
             }
             .setNeutralButton("Sprache: ${otherLanguage.label}") { _, _ ->
                 bootstrapMemory.voiceLanguage = otherLanguage.tag
@@ -9992,6 +10011,9 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        workPresentationGeneration++
+        pendingDocumentDraft = false
+        pendingDocumentRequest = ""
         // STOP: a running document draft is recorded as aborted – never as done.
         documentDraftTurn?.let { turn ->
             stoppedDraftRequest = turn.prompt.request
@@ -11889,13 +11911,14 @@ class AgentActivity : Activity() {
                 }
             }
             DRAFT_SAVE_REQUEST -> {
-                val text = pendingDraftSave
+                val save = pendingDraftSave
                 pendingDraftSave = null
                 val uri = data?.data
                 val inCockpit = workWindowHost.isShowing
-                if (resultCode != RESULT_OK || uri == null || text == null) {
+                if (resultCode != RESULT_OK || uri == null || save == null) {
                     addAssistantMessage("Nicht gespeichert – kein Speicherort gewählt.", false, keepCockpit = inCockpit)
                 } else documentIoExecutor.execute {
+                    val text = save.text
                     val written = runCatching {
                         requireNotNull(contentResolver.openOutputStream(uri, "wt")) { "Ziel nicht beschreibbar" }
                             .use { it.write(text.toByteArray(Charsets.UTF_8)) }
@@ -11905,7 +11928,7 @@ class AgentActivity : Activity() {
                         if (written.isSuccess) {
                             runCatching { contentResolver.takePersistableUriPermission(uri,
                                 Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION) }
-                            recordWork(workEpisodeId) {
+                            recordWork(save.episodeId) {
                                 it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.SAVED,
                                     draft = text.trim(), draftUri = uri.toString())
                             }

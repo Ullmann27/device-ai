@@ -49,6 +49,19 @@ internal object JarvisVoiceSelection {
         return Choice(best, Origin.AUTOMATIC, ownerChoiceDropped = owner != null)
     }
 
+    /** Try loadable offline voices. */
+    fun chooseAndApply(candidates: Collection<Candidate>, language: Language, ownerVoiceName: String?,
+                       apply: (Candidate) -> Boolean): Choice? {
+        val first = choose(candidates, language, ownerVoiceName) ?: return null
+        val attempts = (listOf(first.voice) + selectable(candidates, language)).distinctBy { it.name }
+        for (candidate in attempts) {
+            if (!runCatching { apply(candidate) }.getOrDefault(false)) continue
+            return if (candidate.name == first.voice.name) first
+                else Choice(candidate, Origin.AUTOMATIC, ownerChoiceDropped = !ownerVoiceName.isNullOrBlank())
+        }
+        return null
+    }
+
     /** Human-readable row for the picker: language, region, engine quality tier, network/offline. */
     fun describe(c: Candidate): String {
         val region = when (c.country.uppercase()) {

@@ -28,9 +28,15 @@ test('system center opens a visible connection screen and Activity forwards live
 });
 
 test('rendering a conversation updates the selected navigation destination', () => {
-  for (const name of ['addUserMessage', 'addAssistantMessage']) {
-    const method = activity.split(`private fun ${name}(`)[1].split('\n    private fun ')[0];
-    assert.match(method, /conversationActive = true\s+activeWorkArea = ContinuumWorkArea.CHAT\s+refreshWorkAreaSelection\(\)/);
+  assert.match(activity, /private fun addUserMessage\(value: String\) = addUserMessage\(value, keepCockpit = false\)/);
+  assert.match(activity, /private fun addAssistantMessage\(value: String, preserveLocalContext: Boolean = false\) =\s*addAssistantMessage\(value, preserveLocalContext, keepCockpit = false\)/);
+  for (const signature of [
+    'private fun addUserMessage(value: String, keepCockpit: Boolean)',
+    'private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean)',
+  ]) {
+    assert.ok(activity.includes(signature), 'Missing message implementation ' + signature);
+    const method = activity.split(signature)[1].split('\n    private fun ')[0];
+    assert.match(method, /if \(!keepCockpit && !handsFreeKeepsHome\(\)\) \{\s+conversationActive = true\s+activeWorkArea = ContinuumWorkArea\.CHAT\s+refreshWorkAreaSelection\(\)/);
   }
 });
 

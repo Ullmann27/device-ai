@@ -1,0 +1,34 @@
+{
+  "observedAt": "2026-11-06 17:28:15 UTC",
+  "serviceId": "srv-dbf1tr2vcj2c73ehpfog",
+  "deploy": {
+    "commit": {
+      "createdAt": "2026-11-06T16:41:10Z",
+      "id": "48251610d9c9519678e9fc5ef652ad8286675b7f",
+      "message": "fix(continuum): close review gaps and prepare original Code45 owner build\n\nPreserve normal lifecycle work, natural multi-sentence context and source-bound quality evidence. Local preflight: 80 targeted Android/JVM tests, NewApi lint, 44 quality-lab tests and original-package ARM64 APK/AAB assembly pass. Complete exact-source publisher gates and original signing remain required before delivery."
+    },
+    "createdAt": "2026-11-06T16:42:21.320012Z",
+    "finishedAt": "2026-11-06T17:27:26.425591Z",
+    "id": "dep-dbn06r8u01pc73fpcgt0",
+    "startedAt": "2026-11-06T16:42:21.31768Z",
+    "status": "build_failed",
+    "trigger": "api",
+    "updatedAt": "2026-11-06T17:27:26.426801Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2026-11-06T17:27:24.644850977Z",
+      "message": "QA_SUMMARY failed_gates=3 SHA=48251610d9c9519678e9fc5ef652ad8286675b7f Original signing and download remain BLOCKED"
+    },
+    {
+      "timestamp": "2026-11-06T17:27:24.644887536Z",
+      "message": "CONTINUUM_QA_BLOCKED: At least one genuine QA gate is red; no owner APK is published"
+    },
+    {
+      "timestamp": "2026-11-06T17:27:24.645189259Z",
+      "message": "CONTINUUM_OWNER_RENDER_RELEASE_BLOCKED: Node, Android unit tests, lint or unsigned QA build failed"
+    }
+  ],
+  "signing": "BLOCKED_BEFORE_SIGNING",
+  "source": "Exact deployed source 48251610d9c9519678e9fc5ef652ad8286675b7f runs QA before P12 decode and exits on this nonzero QA result."
+}

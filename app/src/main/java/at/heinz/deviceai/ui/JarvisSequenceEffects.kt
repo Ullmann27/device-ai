@@ -1,6 +1,7 @@
 package at.heinz.deviceai.ui
 
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -262,6 +263,47 @@ class JarvisSequenceEffects {
         }
         return false
     }
+
+    private fun circleOverlapsProtected(cx: Float, cy: Float, outer: Float, inner: Float = 0f): Boolean {
+        for (i in 0 until protectedCount) {
+            val o = 4 * i
+            val l = protectedBoxes[o]; val t = protectedBoxes[o + 1]
+            val r = protectedBoxes[o + 2]; val b = protectedBoxes[o + 3]
+            val nearX = maxOf(l - cx, 0f, cx - r)
+            val nearY = maxOf(t - cy, 0f, cy - b)
+            val farX = maxOf(abs(l - cx), abs(r - cx))
+            val farY = maxOf(abs(t - cy), abs(b - cy))
+            if (nearX * nearX + nearY * nearY <= outer * outer &&
+                farX * farX + farY * farY >= inner * inner) return true
+        }
+        return false
+    }
+
+    private fun lineOverlapsProtected(x0: Float, y0: Float, x1: Float, y1: Float, pad: Float): Boolean {
+        val dx = x1 - x0; val dy = y1 - y0
+        for (i in 0 until protectedCount) {
+            val o = 4 * i
+            val l = protectedBoxes[o] - pad; val t = protectedBoxes[o + 1] - pad
+            val r = protectedBoxes[o + 2] + pad; val b = protectedBoxes[o + 3] + pad
+            var start = 0f; var end = 1f
+            if (dx == 0f) {
+                if (x0 < l || x0 > r) continue
+            } else {
+                val a = (l - x0) / dx; val z = (r - x0) / dx
+                start = maxOf(start, minOf(a, z)); end = minOf(end, maxOf(a, z))
+                if (start > end) continue
+            }
+            if (dy == 0f) {
+                if (y0 < t || y0 > b) continue
+            } else {
+                val a = (t - y0) / dy; val z = (b - y0) / dy
+                start = maxOf(start, minOf(a, z)); end = minOf(end, maxOf(a, z))
+                if (start > end) continue
+            }
+            return true
+        }
+        return false
+    }
     /** Boxes (dp: l, t, r, b) of the cards drawn in the last frame – reused buffer, no per-frame allocation. */
     private val drawnBoxes = FloatArray(4 * (MAX_CARDS + 4))
     var drawnCardCount = 0; private set
@@ -287,10 +329,11 @@ class JarvisSequenceEffects {
         if (docked) return
         // Geometric check of the whole stack: where any card would cover the head or the orb, the cards stay off this
         // surface – their steps are shown in the cockpit's process panel or the work window's status strip instead.
-        val active = cards.count { it.leavingAt < 0 }
-        for (i in 0 until active) {
-            val top = height * .44f + i * (ch + gap)
+        var protectedSlot = 0
+        for (c in cards) {
+            val top = height * .44f + protectedSlot * (ch + gap)
             if (overlapsProtected(width / 2f - cw / 2f, top, width / 2f + cw / 2f, top + ch)) return
+            if (c.leavingAt < 0) protectedSlot++
         }
         var slot = 0
         for (c in cards) {
@@ -314,12 +357,18 @@ class JarvisSequenceEffects {
                 val te = (e - k * .05f).coerceAtLeast(0f)
                 val tx = sx + (hubX - sx) * te + sin(te * PI.toFloat()) * w * .08f
                 val ty = sy + (hubY - sy) * te
+                val pad = ((7 - k) * .5f + JarvisDesign.Glow.SUBTLE.haloWidth) / 2f
+                if (lineOverlapsProtected(tx, ty, x, y, pad)) continue
                 JarvisNeon.line(p, tx, ty, x, y, if (k % 2 == 0) JarvisDesign.Colors.violet else JarvisDesign.Colors.cyan,
                     (7 - k) * .5f, JarvisDesign.Glow.SUBTLE)
             }
             val style = JarvisDesign.Type.caption
             val tw = min(p.measureText(c.text, style) + 28f, w - 24f)
             val s = .6f + .4f * (1f - e)
+            // Include the material's outer rim.
+            val halfWidth = (tw / 2f + 14f) * s
+            val halfHeight = (16f + 14f) * s
+            if (overlapsProtected(x - halfWidth, y - halfHeight, x + halfWidth, y + halfHeight)) return
             p.save(); p.scale(s, s, x, y)
             JarvisNeon.glassCard(p, x - tw / 2f, y - 16f, x + tw / 2f, y + 16f, 16f, JarvisDesign.Glow.STRONG, active = true)
             p.save(); p.clipRect(x - tw / 2f + 8f, y - 16f, x + tw / 2f - 8f, y + 16f)
@@ -330,16 +379,26 @@ class JarvisSequenceEffects {
             val k = ((t - .45f) / .55f).coerceIn(0f, 1f)
             val fade = 1f - k
             p.setAdditive(true)
-            JarvisNeon.halo(p, hubX, hubY, 30f + k * 60f, JarvisDesign.Colors.cyan, .45f * fade)
+            val haloRadius = 30f + k * 60f
+            if (!circleOverlapsProtected(hubX, hubY, haloRadius)) {
+                JarvisNeon.halo(p, hubX, hubY, haloRadius, JarvisDesign.Colors.cyan, .45f * fade)
+            }
             for (ring in 0..1) {
                 val rk = (k - ring * .18f).coerceIn(0f, 1f)
-                p.strokeCircle(hubX, hubY, 12f + rk * min(w, h) * .32f, 2.2f * (1f - rk) + .4f,
+                val radius = 12f + rk * min(w, h) * .32f
+                val stroke = 2.2f * (1f - rk) + .4f
+                if (circleOverlapsProtected(hubX, hubY, radius + stroke / 2f,
+                        (radius - stroke / 2f).coerceAtLeast(0f))) continue
+                p.strokeCircle(hubX, hubY, radius, stroke,
                     Fill.Solid(if (ring == 0) JarvisDesign.Colors.cyan else JarvisDesign.Colors.violet), (1f - rk) * .9f)
             }
             for (i in 0 until 12) {
                 val a = i * (2f * PI.toFloat() / 12f)
                 val r0 = 10f + k * 40f; val r1 = r0 + 14f * fade
-                p.drawLine(hubX + cos(a) * r0, hubY + sin(a) * r0, hubX + cos(a) * r1, hubY + sin(a) * r1, 1.2f,
+                val x0 = hubX + cos(a) * r0; val y0 = hubY + sin(a) * r0
+                val x1 = hubX + cos(a) * r1; val y1 = hubY + sin(a) * r1
+                if (lineOverlapsProtected(x0, y0, x1, y1, .6f)) continue
+                p.drawLine(x0, y0, x1, y1, 1.2f,
                     Fill.Solid(if (i % 2 == 0) JarvisDesign.Colors.cyan else JarvisDesign.Colors.violet), fade)
             }
             p.setAdditive(false)
@@ -360,23 +419,34 @@ class JarvisSequenceEffects {
         // perspective: card turns in edge-first, then faces the viewer
         val sx = (.25f + .75f * ein.coerceIn(0f, 1.1f)) * (1f - outT * .5f)
         val l = cx - cw / 2f; val r = cx + cw / 2f; val t = cy - ch / 2f; val b = cy + ch / 2f
+        val halfWidth = maxOf(cw / 2f, (cw / 2f + 14f) * sx)
+        if (overlapsProtected(cx - halfWidth, t - 14f, cx + halfWidth, b + 14f)) return
         if (drawnCardCount < drawnBoxes.size / 4) {
             val o = 4 * drawnCardCount++
             drawnBoxes[o] = l; drawnBoxes[o + 1] = t; drawnBoxes[o + 2] = r; drawnBoxes[o + 3] = b
         }
         if (inT < 1f) {
-            p.setAdditive(true)
-            JarvisNeon.line(p, cx - side * cw * .5f, cy, cx - side * (cw * .5f + 90f * (1f - inT)), cy,
-                JarvisDesign.Colors.cyan, 3f * (1f - inT), JarvisDesign.Glow.STRONG)
-            p.setAdditive(false)
+            val x0 = cx - side * cw * .5f
+            val x1 = cx - side * (cw * .5f + 90f * (1f - inT))
+            val stroke = 3f * (1f - inT)
+            val pad = (stroke + JarvisDesign.Glow.STRONG.haloWidth) / 2f
+            if (!lineOverlapsProtected(x0, cy, x1, cy, pad)) {
+                p.setAdditive(true)
+                JarvisNeon.line(p, x0, cy, x1, cy, JarvisDesign.Colors.cyan, stroke, JarvisDesign.Glow.STRONG)
+                p.setAdditive(false)
+            }
         }
         // link to the hub while the step runs (live process line)
         if (c.live && c.leavingAt < 0 && inT >= 1f) {
             val dash = ((now - c.at) % 900L) / 900f
             p.setAdditive(true)
-            p.drawLine(hubX, hubY, cx, t, .8f, Fill.Solid(JarvisDesign.Colors.violet), .25f)
+            if (!lineOverlapsProtected(hubX, hubY, cx, t, .4f)) {
+                p.drawLine(hubX, hubY, cx, t, .8f, Fill.Solid(JarvisDesign.Colors.violet), .25f)
+            }
             val px = hubX + (cx - hubX) * dash; val py = hubY + (t - hubY) * dash
-            p.fillCircle(px, py, 2.2f, Fill.Solid(JarvisDesign.Colors.cyan), .9f)
+            if (!circleOverlapsProtected(px, py, 2.2f)) {
+                p.fillCircle(px, py, 2.2f, Fill.Solid(JarvisDesign.Colors.cyan), .9f)
+            }
             p.setAdditive(false)
         }
         p.save(); p.scale(sx, 1f, cx, cy)

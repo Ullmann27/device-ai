@@ -21,11 +21,13 @@ internal object WorkRecall {
     private val ask = Regex(
         "(?iu)$S(wo\\s+waren\\s+wir|wo\\s+sind\\s+wir(\\s+stehen)?\\s+geblieben|woran\\s+(haben|hatten)\\s+wir\\s+gearbeitet|" +
             "was\\s+(haben|hatten)\\s+wir\\s+(gestern|heute|zuletzt|vorhin|gerade|eben)\\s+gemacht|" +
-            "woran\\s+(haben|hatten)\\s+wir\\s+(gerade|eben)\\s+gearbeitet|was\\s+ist\\s+(noch\\s+)?offen|" +
+            "woran\\s+(haben|hatten)\\s+wir\\s+(gerade|eben)\\s+gearbeitet|was\\s+ist\\s+(?:(?:heute|gerade|aktuell|jetzt)\\s+)?(noch\\s+)?offen|" +
             "wie\\s+ist\\s+der\\s+(aktuelle\\s+)?stand)$E"
     )
     private val yesterday = Regex("(?iu)${S}gestern$E")
-    private val today = Regex("(?iu)$S(heute|vorhin|gerade|eben)$E")
+    private val today = Regex("(?iu)$S(heute|vorhin)$E")
+    private val recentAction = Regex("(?iu)$S(?:was\\s+(?:haben|hatten)\\s+wir\\s+(?:gerade|eben)\\s+gemacht|" +
+        "woran\\s+(?:haben|hatten)\\s+wir\\s+(?:gerade|eben)\\s+gearbeitet)$E")
     private val open = Regex("(?iu)${S}offen$E")
 
     fun parse(utterance: String): Query? {
@@ -33,7 +35,7 @@ internal object WorkRecall {
         if (!ask.containsMatchIn(utterance)) return null
         val period = when {
             yesterday.containsMatchIn(utterance) -> Period.YESTERDAY
-            today.containsMatchIn(utterance) -> Period.TODAY
+            today.containsMatchIn(utterance) || recentAction.containsMatchIn(utterance) -> Period.TODAY
             else -> Period.RECENT
         }
         return Query(period, openOnly = open.containsMatchIn(utterance))

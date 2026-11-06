@@ -19,14 +19,21 @@ test('avatar director is wired to hologram state, TTS start/range/end and the TT
  const stopEnd=activity.indexOf('private fun installVoiceProgressListener()',stopStart);
  assert.ok(stopStart>=0 && stopEnd>stopStart);
  const stop=activity.slice(stopStart,stopEnd);
+ assert.match(stop,/speechTurnId\?\.let \{ speechChunks\.stop\(it\) \}\s*speechTurnId = null\s*speechChunkId = null/);
  assert.match(stop,/voiceUtteranceId\?\.let \{ avatarDirector\.speechEnded\(it, interrupted = interrupted\) \}/);
  assert.match(stop,/voiceUtteranceId = null/);
  const finishStart=activity.indexOf('private fun finish(id: String?, interrupted: Boolean = false, failed: Boolean = false)');
  const finishEnd=activity.indexOf('private fun speakBootstrap(',finishStart);
  assert.ok(finishStart>=0 && finishEnd>finishStart);
- const finish=activity.slice(finishStart,finishEnd);
+ const finish=activity.slice(finishStart,finishEnd).replace(/\/\/[^\n]*/g,'');
  assert.match(finish,/runOnUiThread\s*\{/);
- assert.match(finish,/if\s*\(id != null && id == voiceUtteranceId\)\s*\{\s*stopVoiceAnimation\(interrupted \|\| failed\)/);
+ assert.match(finish,/if\s*\(id != null && id == voiceUtteranceId\)\s*\{\s*if \(!interrupted && !failed && continueSpokenReply\(\)\) return@runOnUiThread\s*stopVoiceAnimation\(interrupted \|\| failed\)\s*\}\s*if \(id != null\) onConversationSpeechFinished\(id, interrupted\)/);
+ const continuationStart=activity.indexOf('private fun continueSpokenReply(): Boolean');
+ const continuationEnd=activity.indexOf('private fun showWebLearningInbox()',continuationStart);
+ assert.ok(continuationStart>=0 && continuationEnd>continuationStart);
+ const continuation=activity.slice(continuationStart,continuationEnd).replace(/\/\/[^\n]*/g,'');
+ assert.match(continuation,/val turn = speechTurnId \?: return false\s*val chunk = speechChunkId \?: return false\s*if \(speechChunks\.onChunkFinished\(turn, chunk\) !=\s*at\.heinz\.deviceai\.cognitive\.ApprovedSpeechChunkQueue\.Completion\.MORE_CHUNKS\) return false\s*voiceUtteranceId\?\.let \{ avatarDirector\.speechEnded\(it, interrupted = false\) \}\s*return speakNextChunk\(turn, TextToSpeech\.QUEUE_ADD\)/);
+ assert.doesNotMatch(continuation,/stopVoiceAnimation\(|onConversationSpeechFinished\(/);
 });
 
 test('contract stays rendering-free and defaults to the no-op placeholder',()=>{

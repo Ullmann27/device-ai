@@ -1,0 +1,48 @@
+{
+  "category": "HOST_ROBOLECTRIC_CONTROLLED_DOCUMENT",
+  "source_local_commit": "c3de5319db6814fe0bc48d833c025b90976dec03",
+  "tests": 6,
+  "passed": 2,
+  "failed": 4,
+  "skipped": 0,
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "aNormalPauseKeepsQueuedPdfFailureVisible",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: PDF failure offers the requested recovery"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "stopRejectsAQueuedPdfFailureAndItsPicker",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "aNewOwnerMessageKeepsQueuedDecisionRecall",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: requested recall remains deliverable"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "aNormalPauseKeepsQueuedDecisionRecall",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: requested recall remains deliverable"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "aNewOwnerMessageKeepsQueuedPdfFailureVisible",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: PDF failure offers the requested recovery"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "stopRejectsAQueuedDecisionContinuation",
+      "status": "PASS",
+      "failure": null
+    }
+  ],
+  "real_device": "NOT_RUN",
+  "real_model": "NOT_RUN"
+}

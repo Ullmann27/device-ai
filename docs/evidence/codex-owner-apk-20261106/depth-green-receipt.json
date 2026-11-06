@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "source_local_commit": "7ce9eacee3ef2ac46fce995a2455a7a4d3c4d031",
+  "category": "HOST_ANDROID_ROBOLECTRIC",
+  "tests": 6,
+  "passed": 6,
+  "failed": 0,
+  "skipped": 0,
+  "red": {
+    "tests": 6,
+    "passed": 1,
+    "failed": 5,
+    "reason": "android.graphics.RectF.width not mocked under plain AGP JUnit"
+  },
+  "fix": "Move unchanged class body to existing uiTest source set; add RobolectricTestRunner and SDK28 config",
+  "assertion_calls_unchanged": 58,
+  "production_changes": false,
+  "xml_sha256": "ae06e2bbc043a85eb078b2210264b6dea2fa898ac519744aa289a93d881aee04",
+  "real_device": "NOT_RUN",
+  "filament_gpu": "NOT_RUN"
+}

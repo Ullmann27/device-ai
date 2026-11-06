@@ -5,6 +5,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * Owner brief 06.11.2026, open item „Dokument tritt hinter den Entwurf zurück (zwei Ebenen)“: behind a document window
@@ -12,6 +15,8 @@ import org.junit.Test
  * document window, the document plane steps back into the first rear layer and the real page recedes from its place in
  * the document window into the source-card slot of the draft. Pure geometry on the shell's frame clock, no allocation.
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28])
 class JarvisWorkWindowDepthTest {
     private val density = 2.5f
     private val front = RectF(100f, 300f, 900f, 1100f)

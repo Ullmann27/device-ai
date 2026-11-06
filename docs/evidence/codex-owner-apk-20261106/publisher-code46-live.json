@@ -1,0 +1,49 @@
+{
+  "status": "LIVE_ORIGINAL_PUBLISHER_QA_AND_SIGNING_PASSED",
+  "serviceId": "srv-dbf1tr2vcj2c73ehpfog",
+  "workspaceId": "tea-d7qe6dosfn5c73e2rnag",
+  "sourceSha": "577f0931e7937ffcac02dc855a540f093facdb3b",
+  "versionCode": 46,
+  "versionName": "0.3.45",
+  "deploy": {
+    "commit": {
+      "createdAt": "2026-11-06T17:31:13Z",
+      "id": "577f0931e7937ffcac02dc855a540f093facdb3b",
+      "message": "docs(release): document Code45 Android RED and Code46 Robolectric correction"
+    },
+    "createdAt": "2026-11-06T18:14:14.344855Z",
+    "finishedAt": "2026-11-06T19:00:55.5398Z",
+    "id": "dep-dbn1htjncjis73c9vlng",
+    "startedAt": "2026-11-06T18:14:14.342126Z",
+    "status": "live",
+    "trigger": "api",
+    "updatedAt": "2026-11-06T19:00:55.539993Z"
+  },
+  "markers": [
+    {
+      "timestamp": "2026-11-06T18:17:53.384462019Z",
+      "message": "QA_GREEN backend-lockfile-check-and-tests"
+    },
+    {
+      "timestamp": "2026-11-06T18:55:50.992173346Z",
+      "message": "CONTINUUM_CONTINUOUS_OWNER_REQUIRED_ANDROID_GREEN {'at.heinz.deviceai.ShizukuBridgeLifecycleTest': 14, 'at.heinz.deviceai.ShizukuConnectionDialogTest': 2, 'at.heinz.deviceai.ui.ContinuumControlsTest': 10, 'at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest': 5, 'at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest': 6}"
+    },
+    {
+      "timestamp": "2026-11-06T18:58:52.360489958Z",
+      "message": "CONTINUUM_OWNER_PRESIGN_QA_PASS SHA=577f0931e7937ffcac02dc855a540f093facdb3b PACKAGE=at.heinz.deviceai.continuumlocal CODE=46 UNSIGNED_NOT_PUBLISHED"
+    },
+    {
+      "timestamp": "2026-11-06T19:00:52.811001149Z",
+      "message": "CONTINUUM_OWNER_CATALOG_ANDROID_COMPATIBLE source=577f0931e7937ffcac02dc855a540f093facdb3b versionCode=46 apkSha256=0930614bbcc8e53d75283dfe47a53a73e758430a99af3698f31b88446babc759"
+    },
+    {
+      "timestamp": "2026-11-06T19:00:52.814270424Z",
+      "message": "CONTINUUM_OWNER_RENDER_SIGNED_STAGED_FOR_PINNED_HOST"
+    },
+    {
+      "timestamp": "2026-11-06T19:00:54.996742716Z",
+      "message": "==> Your site is live 🎉"
+    }
+  ],
+  "scope": "Original publisher gate markers; detailed local exact-source JUnit/Node totals are separate evidence. Downloaded APK certificate readback is recorded separately."
+}

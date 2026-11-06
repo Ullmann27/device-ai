@@ -187,4 +187,133 @@ class WorkDecisionRecallTest {
         // An episode without a correction has no correction time; legacy rows decode without one.
         assertNull(journal.begin(Kind.DOCUMENT, "x", State.READ).correctedAt)
     }
+
+    @Test fun negatedQuotedAndConditionalContinuationNeverStartsWork() {
+        listOf(
+            "Mach bitte nicht beim letzten offenen Punkt weiter.",
+            "Mach beim letzten offenen Punkt nicht weiter.",
+            "Nicht beim letzten offenen Punkt weitermachen.",
+            "Was bedeutet: Mach beim letzten offenen Punkt weiter?",
+            "Er sagte: Mach beim letzten offenen Punkt weiter.",
+            "„Mach beim letzten offenen Punkt weiter.“",
+            "Wenn ich später sage: Mach beim letzten offenen Punkt weiter, frag nach.",
+            "Mach beim letzten offenen Punkt weiter, aber erst nach meiner Bestätigung.",
+            "Mach beim letzten offenen Punkt weiter?"
+        ).forEach { assertNull(it, WorkDecisionRecall.parse(it)) }
+        listOf(
+            "Dann mach bitte beim letzten offenen Punkt weiter.",
+            "JARVIS, arbeite beim letzten offenen Schritt weiter.",
+            "Setze die letzte offene Aufgabe fort.",
+            "Weiter beim letzten offenen Punkt."
+        ).forEach { assertEquals(it, Ask.ContinueOpen, WorkDecisionRecall.parse(it)) }
+    }
+
+    @Test fun aSavedDraftCannotBeRestartedFromAnOlderFocus() {
+        val draft = episodes[2].copy(correction = null, correctedAt = null)
+        val focus = WorkDecisionRecall.answer(Ask.Decisions(WorkRecall.Period.RECENT, false), null,
+            listOf(draft), emptyList(), now, vienna).focus
+        val saved = draft.copy(state = State.SAVED, updatedAt = now, draftUri = "content://saved/c")
+        assertNull(WorkDecisionRecall.resolveContinue(focus, listOf(saved), now))
+        val reply = WorkDecisionRecall.answer(Ask.ContinueOpen, focus, listOf(saved), emptyList(), now, vienna)
+        assertEquals(0, reply.hits)
+        assertFalse(reply.understood)
+    }
+
+    @Test fun implementationStatusUsesCurrentRecordsAndRevocations() {
+        val draft = episodes[2].copy(correction = null, correctedAt = null)
+        val statement = statements[0]
+        val focus = WorkDecisionRecall.answer(Ask.Decisions(WorkRecall.Period.RECENT, false), null,
+            listOf(draft), listOf(statement), now, vienna).focus
+        val saved = draft.copy(state = State.SAVED, updatedAt = now)
+        val revoked = statement.copy(revokedAt = now)
+        val reply = WorkDecisionRecall.answer(Ask.Implemented, focus, listOf(saved), listOf(revoked), now, vienna)
+        assertTrue(reply.text, reply.text.contains("Umgesetzt:"))
+        assertTrue(reply.text, reply.text.contains("Widerrufen:"))
+        assertFalse(reply.text, reply.text.contains("Noch offen:"))
+        assertFalse(reply.text, reply.text.contains("Nicht prüfbar"))
+    }
+
+    @Test fun continuationUsesTheCurrentNextStepWithinTheShownScope() {
+        val draft = episodes[2]
+        val focus = WorkDecisionRecall.answer(Ask.Decisions(WorkRecall.Period.RECENT, false), null,
+            listOf(draft), emptyList(), now, vienna).focus
+        val interrupted = draft.copy(state = State.INTERRUPTED, updatedAt = now)
+        val unrelated = episodes[1].copy(updatedAt = now + 1_000)
+        val resume = WorkDecisionRecall.resolveContinue(focus, listOf(interrupted, unrelated), now)
+        assertEquals(draft.id, resume?.episode?.id)
+        assertEquals("Entwurf neu starten", resume?.step)
+        assertNull(WorkDecisionRecall.resolveContinue(focus, listOf(unrelated), now))
+    }
+
+    @Test fun anActiveCorrectedDraftIsNeverReportedAsImplemented() {
+        val running = episodes[2].copy(state = State.DRAFTING, updatedAt = now)
+        val item = WorkDecisionRecall.items(listOf(running), emptyList(), now).single()
+        assertEquals(false, item.done)
+        assertNull(item.next)
+        assertFalse(WorkDecisionRecall.line(item, now, vienna).contains("umgesetzt"))
+    }
+
+    @Test fun disappearedRecordsAreNotRepeatedAsCurrentFacts() {
+        val focus = WorkDecisionRecall.answer(Ask.Decisions(WorkRecall.Period.RECENT, false), null,
+            listOf(episodes[0]), emptyList(), now, vienna).focus
+        val reply = WorkDecisionRecall.answer(Ask.Implemented, focus, emptyList(), emptyList(), now, vienna)
+        assertEquals(0, reply.hits)
+        assertFalse(reply.understood)
+        assertFalse(reply.text, reply.text.contains("Umgesetzt:"))
+        assertTrue(reply.text, reply.text.contains("nicht mehr verfügbar"))
+    }
+
+    @Test fun spokenDecisionQuestionsNeedNoPunctuationButQuotedQuestionsStayData() {
+        listOf("Was haben wir gestern entschieden", "JARVIS, was haben wir gestern entschieden",
+            "Wie haben wir uns gestern entschieden").forEach {
+            assertEquals(it, Ask.Decisions(WorkRecall.Period.YESTERDAY, false), WorkDecisionRecall.parse(it))
+        }
+        assertEquals(Ask.Decisions(WorkRecall.Period.TODAY, false),
+            WorkDecisionRecall.parse("JARVIS, welche Entscheidungen haben wir heute getroffen"))
+        listOf(
+            "Er fragte: Was haben wir gestern entschieden?",
+            "Was bedeutet „wir haben uns gestern entschieden“?",
+            "Die Frage lautet „Was haben wir gestern entschieden?“.",
+            "Wir haben gestern entschieden, was wir ändern. Wie wirkt das?",
+            "Wir haben uns gestern entschieden? Was bedeutet das für unseren Plan?"
+        ).forEach { assertNull(it, WorkDecisionRecall.parse(it)) }
+    }
+
+    @Test fun previousKeepsTheSpokenOrderAndShowsNewRevocations() {
+        val older = statements[0]
+        val newer = statements[2].copy(revokedAt = null)
+        val focus = WorkDecisionRecall.answer(Ask.Decisions(WorkRecall.Period.RECENT, false), null,
+            emptyList(), listOf(older, newer), now, vienna, limit = 1).focus
+        val revoked = older.copy(revokedAt = now)
+        val reply = WorkDecisionRecall.answer(Ask.Previous, focus, emptyList(), listOf(revoked, newer), now, vienna)
+        assertTrue(reply.text, reply.text.contains("widerrufen"))
+        assertEquals(older.assertedAt, reply.focus?.shown?.single()?.at)
+        val missingAnchor = WorkDecisionRecall.answer(Ask.Previous, focus, emptyList(), listOf(revoked), now, vienna)
+        assertEquals(0, missingAnchor.hits)
+        assertFalse(missingAnchor.understood)
+    }
+
+    @Test fun changesUseTheRevocationDayAndDecisionsKeepTheirAssertionDay() {
+        val revoked = statements[0].copy(revokedAt = at(6, 9, 0))
+        val changedToday = WorkDecisionRecall.answer(Ask.Decisions(WorkRecall.Period.TODAY, true), null,
+            emptyList(), listOf(revoked), now, vienna)
+        assertEquals(1, changedToday.hits)
+        assertTrue(changedToday.text, changedToday.text.contains("gestern 16:00"))
+        assertTrue(changedToday.text, changedToday.text.contains("widerrufen heute 09:00"))
+        assertEquals(0, WorkDecisionRecall.answer(Ask.Decisions(WorkRecall.Period.YESTERDAY, true), null,
+            emptyList(), listOf(revoked), now, vienna).hits)
+        assertEquals(0, WorkDecisionRecall.answer(Ask.Decisions(WorkRecall.Period.TODAY, false), null,
+            emptyList(), listOf(revoked), now, vienna).hits)
+        assertEquals(1, WorkDecisionRecall.answer(Ask.Decisions(WorkRecall.Period.YESTERDAY, false), null,
+            emptyList(), listOf(revoked), now, vienna).hits)
+        val implemented = WorkDecisionRecall.answer(Ask.Implemented, changedToday.focus,
+            emptyList(), listOf(revoked), now, vienna)
+        assertEquals(1, implemented.hits)
+        assertTrue(implemented.text, implemented.text.contains("Widerrufen:"))
+    }
+
+    @Test fun aChangesQuestionCanNameTodayOrYesterdayDirectly() {
+        assertEquals(Ask.Decisions(WorkRecall.Period.TODAY, true), WorkDecisionRecall.parse("Was hat sich heute geändert?"))
+        assertEquals(Ask.Decisions(WorkRecall.Period.YESTERDAY, true), WorkDecisionRecall.parse("Was hat sich gestern geändert"))
+    }
 }

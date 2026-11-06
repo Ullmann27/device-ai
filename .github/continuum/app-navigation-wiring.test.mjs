@@ -18,6 +18,12 @@ const member = signature => {
   const next = activity.indexOf('\n    private fun ', start + signature.length);
   return activity.slice(start, next < 0 ? undefined : next);
 };
+const dashboardTargets = () => {
+  const adapter = member('private fun navigateDashboardTarget(');
+  assert.match(adapter, /touchedCockpitTarget = target\s+try \{\s*navigateDashboardTargetNow\(target\)\s*\} finally \{\s*touchedCockpitTarget = null\s*\}/,
+    'scene adapter must delegate and clear the touched target');
+  return member('private fun navigateDashboardTargetNow(');
+};
 
 test('exactly five owner-visible work areas remain in fixed order', () => {
   for (const name of ['START', 'CHAT', 'LERNEN', 'ENTWICKELN', 'MEHR']) {
@@ -50,7 +56,7 @@ test('all navigation taps route to existing trusted screens', () => {
   const category = member('private fun showDashboardCategory(');
   assert.match(category, /setItems\(entries\.map \{ it\.title \}\.toTypedArray\(\)\)/);
   assert.match(category, /navigateDashboardTarget\(entries\[index\]\.target\)/);
-  const target = member('private fun navigateDashboardTarget(');
+  const target = dashboardTargets();
   assert.match(target, /"model-management" -> showModelCenter\(\)/);
   assert.match(target, /else -> menuNavigator\.navigate\(target\)/);
   assert.match(spec, /CategoryEntry\("Lernen", "learning"\)/);
@@ -100,7 +106,7 @@ test('existing chat, learning monitoring and owner permission boundaries remain'
   assert.match(activity, /startActivity\(Intent\(this@AgentActivity, ContinuumTrainingMonitorActivity::class\.java\)\)/);
   assert.match(member('private fun showMoreWorkAreas()'), /ContinuumWorkAreaNavigationSpec\.moreEntries/);
   assert.match(spec, /CategoryEntry\("Handy-Builder · Termux", "mobile-builder"\)/);
-  assert.match(member('private fun navigateDashboardTarget('), /"mobile-builder" -> openMobileBuilder\(\)/);
+  assert.match(dashboardTargets(), /"mobile-builder" -> openMobileBuilder\(\)/);
   assert.match(manifest, /android:name="\.AgentActivity"/);
   assert.doesNotMatch(spec, /Runtime\.getRuntime|ProcessBuilder|FileOutputStream|train\(|startActivity|deleteRecursively/);
 });
