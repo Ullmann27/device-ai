@@ -116,4 +116,39 @@ class AvatarWindowWorkReadingTest {
         assertTrue(AvatarMorphMapper.readingYaw(turn * .5f) in -.2f..2f)
         assertEquals(-a, AvatarMorphMapper.readingYaw(AvatarMorphMapper.READ_LINE_S - 1e-4f), 2e-2f)
     }
+
+    /**
+     * Owner brief A (06.11.): an interruption during real work. The owner speaks while JARVIS reads the document: he
+     * turns to the owner (listening, eyes on the owner); when the owner is done and the model still works, he goes back
+     * to reading – not to an idle stare – until the work really ends. STOP during the interruption ends it for good.
+     */
+    @Test fun afterAnInterruptionJarvisGoesBackToReadingWhileTheWorkStillRuns() {
+        busy()
+        assertTrue(director.windowWorkStarted("doc-1", window))
+        now += 3_000
+        director.onRuntime(AvatarRuntimeSignals(listening = true, busy = true))
+        val listening = reducer.pose(now)
+        assertEquals(AvatarState.LISTENING, listening.state)
+        assertFalse("while the owner speaks JARVIS looks at the owner", listening.gazeDirected)
+        now += 2_000
+        director.onRuntime(AvatarRuntimeSignals(busy = true))
+        val back = reducer.pose(now)
+        assertEquals(AvatarState.THINKING, back.state)
+        assertTrue("the work still runs: back to reading", back.reading)
+        assertEquals(window.x, back.gazeX, 1e-6f)
+        assertTrue(director.windowWorkEnded("doc-1"))
+        assertFalse(reducer.pose(now).reading)
+
+        assertTrue(director.windowWorkStarted("doc-2", window))
+        director.onRuntime(AvatarRuntimeSignals(listening = true, busy = true))
+        director.clearAnimationIntents()
+        director.onRuntime(AvatarRuntimeSignals(busy = true))
+        assertFalse("STOP during the interruption ends the reading for good", reducer.pose(now).reading)
+        director.onRuntime(AvatarRuntimeSignals())
+        assertTrue(director.windowWorkStarted("doc-3", window))
+        director.onRuntime(AvatarRuntimeSignals(speaking = true))
+        assertTrue("ending the work during speech is accepted", director.windowWorkEnded("doc-3"))
+        director.onRuntime(AvatarRuntimeSignals(busy = true))
+        assertFalse("ended work never comes back", reducer.pose(now).reading)
+    }
 }

@@ -20,6 +20,8 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     private data class WindowIntent(val id: String, val gaze: GazeTarget, val atMillis: Long, val durationMs: Long,
                                     val yieldsToObservedGaze: Boolean, val reading: Boolean = false)
     private var windowIntent: WindowIntent? = null
+    /** The window whose content real work is on (windowWorkStarted); outlives an interruption by listening/speech. */
+    private var workIntent: WindowIntent? = null
     private var confirmationAtMillis = Long.MIN_VALUE
     private var lastConfirmationAtMillis = Long.MIN_VALUE
     private var animationRevision = 0L
@@ -70,7 +72,22 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         state = next
         thinkingAtMillis = if (next == AvatarState.THINKING) clock() else Long.MIN_VALUE
         emit(stateEvent(next))
-        if (next == AvatarState.THINKING || hadThinking) publishAnimationIntents(clock())
+        val resumed = resumeWork()
+        if (next == AvatarState.THINKING || hadThinking || resumed) publishAnimationIntents(clock())
+    }
+
+    /**
+     * After an interruption (the owner spoke, JARVIS answered in between) the work that still runs gets his eyes back:
+     * reading resumes on the same window. Never while listening or speaking, never after the work ended or expired.
+     */
+    private fun resumeWork(): Boolean {
+        val work = workIntent ?: return false
+        if (windowIntent != null || utterance != null || state == AvatarState.LISTENING || state == AvatarState.SPEAKING) return false
+        val age = clock().toDouble() - work.atMillis.toDouble()
+        if (age < 0 || age >= work.durationMs) { workIntent = null; return false }
+        windowIntent = work
+        thinkingAtMillis = Long.MIN_VALUE
+        return true
     }
 
     /** Adapter computes age using elapsedRealtime; do not mix its timestamp with this clock.
@@ -127,10 +144,12 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     @Synchronized fun windowMoved(windowId: String, target: GazeTarget): Boolean {
         val at = clock()
         expireAnimationIntents(at)
+        val clamped = GazeTarget(target.x.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
+            target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y))
+        // A window moved during an interruption: the resumed reading looks at its new place.
+        workIntent = workIntent?.takeIf { it.id == windowId }?.copy(gaze = clamped) ?: workIntent
         val current = windowIntent?.takeIf { it.id == windowId } ?: return false
-        windowIntent = current.copy(gaze = GazeTarget(
-            target.x.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
-            target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y)))
+        windowIntent = current.copy(gaze = clamped)
         publishAnimationIntents(at)
         return true
     }
@@ -151,6 +170,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
             target.x.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
             target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y)),
             at, AvatarPoseReducer.MAX_WINDOW_WORK_MS, yieldsToObservedGaze = false, reading = true)
+        workIntent = windowIntent
         thinkingAtMillis = Long.MIN_VALUE
         publishAnimationIntents(at)
         return true
@@ -158,14 +178,20 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     /** The real work on [windowId] ended (result, failure, STOP): the reading gaze is released at once. */
     @Synchronized fun windowWorkEnded(windowId: String): Boolean {
-        val current = windowIntent?.takeIf { it.id == windowId && it.reading } ?: return false
-        remember(retiredWindows, current.id)
-        windowIntent = null
-        publishAnimationIntents(clock())
+        val work = workIntent?.takeIf { it.id == windowId }
+        val current = windowIntent?.takeIf { it.id == windowId && it.reading }
+        if (work == null && current == null) return false
+        workIntent = null
+        remember(retiredWindows, windowId)
+        if (current != null) {
+            windowIntent = null
+            publishAnimationIntents(clock())
+        }
         return true
     }
 
     @Synchronized fun windowClosed(windowId: String): Boolean {
+        if (workIntent?.id == windowId) workIntent = null
         if (windowIntent?.id != windowId) return false
         remember(retiredWindows, windowId)
         windowIntent = null
@@ -192,6 +218,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     @Synchronized fun clearAnimationIntents() {
         windowIntent?.let { remember(retiredWindows, it.id) }
         windowIntent = null
+        workIntent = null
         confirmationAtMillis = Long.MIN_VALUE
         thinkingAtMillis = Long.MIN_VALUE
         publishAnimationIntents(clock())
