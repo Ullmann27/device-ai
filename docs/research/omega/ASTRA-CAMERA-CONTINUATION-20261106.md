@@ -3,11 +3,15 @@
 ## Ausgangspunkt
 
 Repository `Ullmann27/device-ai`, Branch
-`claude/continuum-jarvis-cockpit-z7bo60`, offener Draft-PR #565.
+`codex/jarvis-camera-flight-20261106`, offener Draft-PR #571 nach #565.
+Gemeinsamer Zielbranch: `claude/continuum-jarvis-cockpit-z7bo60`.
 Geprüfter Ausgangsstand: `2546cb4ac4f1cf5ef8f2e5632c57d0d68caab422`.
 Der Bericht in Kommentar `6675257713` ist nachgelesen.
 
-Status dieses Start-Checkpoints: **WIP / UNVERIFIED**.
+Status: **WIP / RED_EXPECTED**. Der Host-Activity-Test öffnet das echte
+Arbeitsfenster und scheitert an der unveränderten Kopfprojektion: 1 Test,
+1 erwarteter Assertion-Fehler, keine Skips. Die GLB-Projektionsfixture ersetzt
+keine Filament-Ausführung. Beleg: `docs/evidence/astra-camera-flight-20261106/red-receipt.json`.
 
 ## Kleinster Prüfgegenstand
 
