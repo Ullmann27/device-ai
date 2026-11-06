@@ -98,7 +98,8 @@ class ConnectedConversationCatalogTest {
         val inline = listOf(
             "Was bedeutet das hier: „Carpe diem“?",
             "Was bedeutet das hier: \"Carpe diem\"?",
-            "Was heißt das hier auf Englisch: Guten Morgen?"
+            "Was heißt das hier auf Englisch: Guten Morgen?",
+            "Was bedeutet das hier konkret: „Carpe diem“?"
         )
         inline.forEach { text ->
             assertFalse("An inline quote is self-contained: $text",
@@ -110,10 +111,18 @@ class ConnectedConversationCatalogTest {
         listOf(
             "Was bedeutet das hier?",
             "Was bedeutet das hier eigentlich?",
-            "Was bedeutet das hier für unseren Plan?"
+            "Was bedeutet das hier für unseren Plan?",
+            "Was bedeutet das hier jetzt?",
+            "Was heißt das hier konkret?",
+            "Was folgt das hier dann?",
+            "Was bedeutet das hier also?",
+            "Was bedeutet das hier eigentlich für uns?",
+            "Was bedeutet das hier, was du gesagt hast?"
         ).forEach { text ->
             assertTrue("Unresolved demonstrative needs context: $text",
                 LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(text))
+            assertTrue("Context rendering needs previous owner turn: $text",
+                LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(text))
         }
     }
 
