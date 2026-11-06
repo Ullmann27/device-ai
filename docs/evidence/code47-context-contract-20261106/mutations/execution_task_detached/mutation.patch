@@ -1,0 +1,11 @@
+--- app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -9600,7 +9600,7 @@
+             val result = runCatching {
+                 at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                     internetRevisionAtTurnStart, internetConsent::revision) {
+-                    orchestrator.run(agentTask).also {
++                    orchestrator.run(text).also {
+                         modelWebSessions.forEach { session -> session.checkAuthorized() }
+                         botTask?.let(::requireBotTaskCurrent)
+                     }
