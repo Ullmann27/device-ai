@@ -106,8 +106,9 @@ class LocalGenerationCaptureTest {
     @Test fun stopRejectsLateTextAndCompletion() {
         val capture = LocalGenerationCapture()
         capture.append("Vor STOP", 10)
-        val cancelled = capture.cancel()
+        val cancelled = capture.cancel("Owner STOP")
         assertEquals(LocalGenerationCompletion.CANCELLED, cancelled.completion)
+        assertEquals("Owner STOP", cancelled.failure)
         assertFalse(cancelled.responseComplete)
         assertEquals(cancelled, capture.append(" darf nicht erscheinen", 11))
         assertEquals(cancelled, capture.complete())

@@ -41,7 +41,7 @@ internal class LocalGenerationCapture {
 
     @Synchronized fun fail(message: String): Snapshot = finish(LocalGenerationCompletion.FAILED, message)
 
-    @Synchronized fun cancel(): Snapshot = finish(LocalGenerationCompletion.CANCELLED)
+    @Synchronized fun cancel(message: String? = null): Snapshot = finish(LocalGenerationCompletion.CANCELLED, message)
 
     @Synchronized fun poll(elapsedMillis: Long): Snapshot {
         require(elapsedMillis >= 0)

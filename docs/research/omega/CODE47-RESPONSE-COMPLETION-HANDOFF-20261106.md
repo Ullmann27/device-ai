@@ -36,7 +36,11 @@ Initial checkpoint: `3c336a44692125b63b156e902a13a5703f922d8e`, Draft PR581.
 
 Pure capture checkpoint: Kotlin 2.4.0 / JDK17 / JUnit4.13.2, 256MiB compiler heap. The unchanged production deadline policy first failed its exact-cap assertion (4 tests / 1 failure). A pure extraction retaining the original capture `take`, `clear` and `>=` behavior then failed 6 of 17 cases. After correction the same 17 cases pass. Raw commands, baseline extraction and results: `docs/evidence/code47-response-completion-20261106/`.
 
-The helper is not yet connected to AgentActivity. Agent output/quality-gate integration and Android compilation are **NOT_RUN** at this checkpoint. This is not device/model evidence.
+Owner output checkpoint: real stable SDK dependencies from source `24547da`, freshly compiled `BoundedAgent` and test classes first on the classpath. API-only baseline retained the old 8,000 limit and old partial-result handling: 11 tests / 4 expected failures. The repaired core passed 48 tests across 9 classes, including the unchanged 8,001-with-proposal refusal and M2 dispatch/journal regressions. Exact compile/source manifests and raw JUnit output are versioned alongside the capture evidence.
+
+The latest optional cancellation diagnostic argument and queued-delivery regression still require the final focused rerun. The helper is not yet connected to AgentActivity in this branch. Its exact integration patch is `docs/research/omega/CODE47-RESPONSE-COMPLETION-ACTIVITY-20261106.patch`; `git apply --check` passed on the unchanged base Activity. Only the coordinated wiring agent applies it. Context persistence must use `record(..., responseComplete=run.responseComplete)` for a successful response or accepted partial (`!responseComplete && response.isNotBlank()`); rejected partials use `recordUnanswered`. Remove the old duplicate `rememberContextTurn` write when connecting the context agent's callback.
+
+Integrated Android compilation, APK and device/model validation remain **NOT_RUN** for this repair.
 
 Prepare real Kotlin/JUnit RED -> GREEN for complete 8,000/8,001-character owner responses; 8,001 plus proposal still refuses all tool calls; 20,000 with both callback orders; 20,001 overflow; partial text followed by stall; late deltas/terminal events after completion and STOP; incomplete replies passing through quality evaluation but producing no success episode.
 
