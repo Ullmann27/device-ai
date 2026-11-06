@@ -156,6 +156,7 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         toolCallId = e.toolCallId?.takeIf(CALL_ID::matches),
         toolName = e.toolName?.takeIf(TOOL_NAME::matches),
         toolOutputSha256 = e.toolOutputSha256?.takeIf(HASH::matches)
+    )
 
     private fun read(): List<Episode> {
         if (!file.exists()) return emptyList()
