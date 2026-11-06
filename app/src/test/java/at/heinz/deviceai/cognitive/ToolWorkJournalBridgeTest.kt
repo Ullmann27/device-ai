@@ -55,6 +55,33 @@ class ToolWorkJournalBridgeTest {
         assertEquals(CockpitWorkJournal.ToolState.SUCCEEDED, journal.all().single().toolState)
     }
 
+    @Test fun freshSuccessWithoutDurableDispatchCannotBecomeCompleted() {
+        val journal = CockpitWorkJournal(dir.root)
+        ToolWorkJournalBridge.settle(journal, proof(), current = true)
+        val recorded = CockpitWorkJournal(dir.root).all().single()
+        assertEquals(CockpitWorkJournal.ToolState.UNKNOWN, recorded.toolState)
+        assertNull("No trusted start; no successful output fingerprint", recorded.toolOutputSha256)
+        assertTrue(CockpitWorkJournal.nextStep(recorded, recorded.updatedAt)!!.contains("prüfen"))
+    }
+
+    @Test fun reusedCallIdCannotChangeTheToolIdentity() {
+        val journal = CockpitWorkJournal(dir.root)
+        journal.beginTool(callId, name)
+        var blocked = false
+        try {
+            journal.beginTool(callId, "get_device_info")
+        } catch (_: IllegalArgumentException) { blocked = true }
+        assertTrue("A call ID cannot belong to two tools", blocked)
+        blocked = false
+        try {
+            journal.finishTool(callId, "get_device_info", CockpitWorkJournal.ToolState.SUCCEEDED, hash)
+        } catch (_: IllegalArgumentException) { blocked = true }
+        assertTrue("A mismatched result cannot complete another tool", blocked)
+        val recorded = journal.all().single()
+        assertEquals(name, recorded.toolName)
+        assertEquals(CockpitWorkJournal.ToolState.EXECUTING, recorded.toolState)
+    }
+
     @Test fun rejectedCallMayBeJournalledWithoutAnyExecutionStartedEvent() {
         val journal = CockpitWorkJournal(dir.root)
         ToolWorkJournalBridge.settle(journal,
