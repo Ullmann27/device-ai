@@ -2104,8 +2104,9 @@ class AgentActivity : Activity() {
     private var documentDraftTurn: DocumentDraftTurn? = null
     /** Request of a draft the owner stopped: its cancelled run is reported as STOP, not as a model error. */
     private var stoppedDraftRequest: String? = null
-    /** Draft text waiting for Android's save dialog (ACTION_CREATE_DOCUMENT). */
-    private var pendingDraftSave: String? = null
+    /** Save target frozen before picker. */
+    private data class PendingDraftSave(val text: String, val episodeId: String?)
+    private var pendingDraftSave: PendingDraftSave? = null
 
     private fun localModelReady() = localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null
 
@@ -2247,7 +2248,7 @@ class AgentActivity : Activity() {
 
     private fun saveDraft(text: String, documentName: String) {
         if (text.isBlank()) return
-        pendingDraftSave = text
+        pendingDraftSave = PendingDraftSave(text, workEpisodeId)
         val base = documentName.removeSuffix(".pdf").removeSuffix(".PDF").trim().ifEmpty { "Dokument" }.take(60)
         val picker = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -11912,13 +11913,14 @@ class AgentActivity : Activity() {
                 }
             }
             DRAFT_SAVE_REQUEST -> {
-                val text = pendingDraftSave
+                val save = pendingDraftSave
                 pendingDraftSave = null
                 val uri = data?.data
                 val inCockpit = workWindowHost.isShowing
-                if (resultCode != RESULT_OK || uri == null || text == null) {
+                if (resultCode != RESULT_OK || uri == null || save == null) {
                     addAssistantMessage("Nicht gespeichert – kein Speicherort gewählt.", false, keepCockpit = inCockpit)
                 } else documentIoExecutor.execute {
+                    val text = save.text
                     val written = runCatching {
                         requireNotNull(contentResolver.openOutputStream(uri, "wt")) { "Ziel nicht beschreibbar" }
                             .use { it.write(text.toByteArray(Charsets.UTF_8)) }
@@ -11928,7 +11930,7 @@ class AgentActivity : Activity() {
                         if (written.isSuccess) {
                             runCatching { contentResolver.takePersistableUriPermission(uri,
                                 Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION) }
-                            recordWork(workEpisodeId) {
+                            recordWork(save.episodeId) {
                                 it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.SAVED,
                                     draft = text.trim(), draftUri = uri.toString())
                             }

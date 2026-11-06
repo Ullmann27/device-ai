@@ -1,0 +1,121 @@
+{
+  "category": "HOST_JVM_AND_ROBOLECTRIC",
+  "local_head": "1860d3c6b7c96d1ee4b90df369da701d10c0b516",
+  "working_tree_delta": "Save snapshot fix a2c20f8c1 reversed only for RED; corrected frame-pump fixture active. Card material/live-path guard not yet applied.",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "15a5c3f5875f8d28f62615da913d984b36f9f897b96eece8d04ce262edabc90f",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt": "d5a1f5c3a3b3b91f4790995c00b915cbfc617a82dc15e92a72edd45d31894594",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumDraftSaveBindingUiTest.kt": "c373ea572778513d3ea25a012ea352c37f5a09c8c5c8a353adc2b68ad3c1b677",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisSequenceProtectionTest.kt": "14d04657a144935ce0fb5912fba8696392376f4d39878933894bed1c5c4fd638"
+  },
+  "tests": 17,
+  "passed": 10,
+  "failed": 7,
+  "skipped": 0,
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.ContinuumDraftSaveBindingUiTest",
+      "name": "anUnboundDraftCannotAdoptALaterEpisode",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: expected:<Episode(id=w-1793981790661-ebl3lm, kind=DOCUMENT, request=Entwurf B, startedAt=1793981790661, updatedAt=1793981790667, state=DRAFTED, source=B.pdf, sourcePages=0, sourceChars=0, coveredChars=0, documentUri=null, draft=Unver\u00e4ndert B, draftUri=null, ownerEdits=0, correction=null, correctedAt=null)> but was:<Episode(id=w-1793981790661-ebl3lm, kind=DOCUMENT, request=Entwurf B, startedAt=1793981790661, updatedAt=1793981791020, state=SAVED, source=B.pdf, sourcePages=0, sourceChars=0, coveredChars=0, documentUri=null, draft=Testentwurf ohne Journaleintrag, draftUri=content://test.documents/unbound-draft.md, ownerEdits=0, correction=null, correctedAt=null)>"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDraftSaveBindingUiTest",
+      "name": "cancellingThePickerPreservesBothJournalEntries",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDraftSaveBindingUiTest",
+      "name": "aDelayedWriteCannotMarkANewerEpisodeSaved",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: expected:<SAVED> but was:<DRAFTED>"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDraftSaveBindingUiTest",
+      "name": "pickerResultKeepsTheEpisodeSelectedBeforeThePicker",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: expected:<SAVED> but was:<DRAFTED>"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "exitingCardCannotSlideIntoProtectedRegion",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "ringsRemainVisibleAroundAProtectedInterior",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "movingPointCannotReachAProtectedRegionBesideItsLine",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: Moving point avoids head"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "diagonalSparksRemainVisibleBesideAProtectedRegion",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "commandTrailCannotCrossTheOrbWhenChipAndHubAreClear",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "leavingLastCardIsCheckedBeyondTheActiveStack",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "flyingCommandChipCannotCoverTheHeadWhenHubIsClear",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "liveCardConnectionCannotCrossAProtectedRegion",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: Live connection avoids head"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "dismissingTheOnlyCardKeepsTheHeadProtected",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "unobstructedCommandsAndCardsStillAnimate",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "expandingCommandRingsCannotReachAProtectedHead",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "enteringCardTrailCannotCrossAProtectedRegion",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: Entrance trail avoids head"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "cardNeonRimCannotReachAProtectedHead",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: Outer neon rim avoids head"
+    }
+  ],
+  "real_device": "NOT_RUN",
+  "real_gpu_output": "NOT_RUN"
+}
