@@ -79,6 +79,10 @@ keine Signatur-/Paketänderung, kein Main-Merge. PR #571 bleibt als Draft offen 
 
 ## Fold7-Abnahme (vorbereitet, NOT_RUN)
 
+Ausführliche, direkt ausführbare Prüfanleitung mit 14 Schritten, Messbefehlen und Ergebnisvorlage:
+[`FOLD7_ABNAHME_JARVIS_20261106.md`](FOLD7_ABNAHME_JARVIS_20261106.md). Blocker: eine APK aus genau diesem Branch-Stand
+über den Render-QA-Host (laut `CLAUDE.md`), ohne Signatur-/Paketänderung.
+
 | # | Schritt | Erwartung | Messung |
 |---|---|---|---|
 | 1 | Innen, Hochformat: „JARVIS, öffne meine letzte PDF und fasse sie zusammen“ (Datei vorher einmal gewählt) | Deck räumt, Seite fliegt auf der Lichtbahn ein, Fenster, Kopf/Augen zum Fenster, Kamera lehnt sich | Bildschirmvideo |
