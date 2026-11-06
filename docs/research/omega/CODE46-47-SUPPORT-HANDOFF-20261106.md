@@ -50,7 +50,7 @@ Author probe: RED2/2 -> GREEN2/2. Root used the same two compiled JUnit test cla
 
 Latest inspected primary PR #576 source `9ee7535bb131504cc85419afd30f446089a40171` has M0/M1/M2 integrated but does not contain this correction. Its M2 smoke evidence uses substitutes; actual full SDK/JUnit validation remains required. Original relevant tests are preserved. The fix remains semantically compatible. Mergeability metadata was stale/inconsistent; no overlapping changed paths or actual merge conflict was established.
 
-## Active continuation
+## Completed support correction stream
 
 The same three helpers were reassigned after verified Code46 delivery:
 
@@ -80,3 +80,9 @@ After actually trying Code46, Heinz reports weak head movement, absent turn-away
 The same three helpers audited the actual frozen Code46/Code47 call chains. Primary Avatar PR565 and PR574 are ancestors of Code46; the visual code is present but key input/presentation links are gated or missing. Before any Code47 release, address the concrete verified causes: opening intents diverted into search-only flow; CHAT hiding work windows; missing sustained tool-work gaze; incomplete turn/presentation-generation binding; bounded context/persistence integrity; inconsistent identity routing; and incompatible capture/output limits. An embedded live screen of an arbitrary external app is not implemented by the current status window and must not be claimed.
 
 Audits are source-based. Actual Fold7/GPU/model measurements and the exact cause of each reported device event remain unverified. Existing permissions, cancellation, source completeness, negative-intent and tool-output boundaries must be preserved.
+
+## Current active repair
+
+The verified call-chain audit, three bounded repair branches and acceptance cases are now recorded in [Code47 live wiring audit](CODE47-LIVE-WIRING-AUDIT-20261106.md). PR578 is the isolated integration candidate. Natural app actions and visual work episodes are in PR579; context/identity repair is in PR580; output/capture repair is in its own named branch. The same three helpers are active. Only the visual helper writes AgentActivity; other helpers provide exact integration fragments. A single restored native build toolchain is shared for validation.
+
+Current status remains REPAIRS_IN_PROGRESS / FINAL_QA_NOT_RUN. The transition automation is paused to avoid concurrent writes observed on PR577; active helper work is not presented as a permanent background service.
