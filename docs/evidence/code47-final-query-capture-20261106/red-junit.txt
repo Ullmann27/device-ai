@@ -1,0 +1,30 @@
+JUnit version 4.13.2
+.E....E..E.E................
+Time: 0.168
+There were 4 failures:
+1) malformedModelQueriesAreRejectedBeforeNativePackageManager(at.heinz.deviceai.AppLookupToolPolicyTest)
+java.lang.AssertionError: query: ‮
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at at.heinz.deviceai.AppLookupToolPolicyTest.malformedModelQueriesAreRejectedBeforeNativePackageManager(AppLookupToolPolicyTest.kt:16)
+2) nativeLookupRejectsTheSameFormatCharactersBeforeSearching(at.heinz.deviceai.AppLookupReadableQueryTest)
+java.lang.AssertionError: U+00AD: expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown
+	at org.junit.Assert.assertThrows(Assert.java:1028)
+	at at.heinz.deviceai.AppLookupReadableQueryTest.nativeLookupRejectsTheSameFormatCharactersBeforeSearching(AppLookupReadableQueryTest.kt:35)
+3) malformedQueriesNeverReachTheRealGateRunner(at.heinz.deviceai.AppLookupReadableQueryTest)
+java.lang.AssertionError: U+00AD expected:<REJECTED> but was:<SUCCEEDED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.AppLookupReadableQueryTest.malformedQueriesNeverReachTheRealGateRunner(AppLookupReadableQueryTest.kt:49)
+4) registryRejectsStandaloneEmbeddedAndSupplementaryFormatCharacters(at.heinz.deviceai.AppLookupReadableQueryTest)
+java.lang.AssertionError: U+00AD
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at at.heinz.deviceai.AppLookupReadableQueryTest.registryRejectsStandaloneEmbeddedAndSupplementaryFormatCharacters(AppLookupReadableQueryTest.kt:29)
+
+FAILURES!!!
+Tests run: 24,  Failures: 4
+

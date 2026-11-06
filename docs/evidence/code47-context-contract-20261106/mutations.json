@@ -1,0 +1,111 @@
+{
+  "base": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+  "original_activity_sha256": "3cc35d1b991af864d1cc3c8b18b764562a7373bf811cdd5fc4619ed97a01318c",
+  "test_sha256": "893365331c60263bbb85d2404c17822ae2e823e397632306f0714631be31fe04",
+  "mutations": [
+    {
+      "name": "owner_text_clipped",
+      "exit": 1,
+      "expected_assertion_failed": true,
+      "source_sha256": "219f32f63940b3d994ee321c13e166e5596a76f8cefd269e3021cbd1e8f7205a",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^cognitive runtime owns the single chat path, privacy boundaries and background diagnostics$",
+        "/workspace/scratch/b31a9d731016/wiring-context-contract/.github/continuum/android-integration-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "prior_owner_detached",
+      "exit": 1,
+      "expected_assertion_failed": true,
+      "source_sha256": "e0f288a817c5aee0ef852eeb5170492ea948c2310642e477e3d131209618ffec",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^cognitive runtime owns the single chat path, privacy boundaries and background diagnostics$",
+        "/workspace/scratch/b31a9d731016/wiring-context-contract/.github/continuum/android-integration-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "private_boundary_reversed",
+      "exit": 1,
+      "expected_assertion_failed": true,
+      "source_sha256": "9b437c3473fb660a94eff9fd944d7303d848866c3f884327b4191c6e7231fae9",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^cognitive runtime owns the single chat path, privacy boundaries and background diagnostics$",
+        "/workspace/scratch/b31a9d731016/wiring-context-contract/.github/continuum/android-integration-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "frame_result_detached",
+      "exit": 1,
+      "expected_assertion_failed": true,
+      "source_sha256": "869e2d6c0c9a31e4b9a15b79993a861a6b79b6f26d9f2fe6c5c62ec2670b32b2",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^cognitive runtime owns the single chat path, privacy boundaries and background diagnostics$",
+        "/workspace/scratch/b31a9d731016/wiring-context-contract/.github/continuum/android-integration-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "execution_task_detached",
+      "exit": 1,
+      "expected_assertion_failed": true,
+      "source_sha256": "aaed24312afb32c8b0d60ee6881abc45ac20d7df0dc6cb60c18e0171e9f4a8bc",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^cognitive runtime owns the single chat path, privacy boundaries and background diagnostics$",
+        "/workspace/scratch/b31a9d731016/wiring-context-contract/.github/continuum/android-integration-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "compiler_task_detached",
+      "exit": 1,
+      "expected_assertion_failed": true,
+      "source_sha256": "12c3c554def425d4e3918d72a4ce2f0d7a3207df302c29953b252cf81b0b16b6",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^cognitive runtime owns the single chat path, privacy boundaries and background diagnostics$",
+        "/workspace/scratch/b31a9d731016/wiring-context-contract/.github/continuum/android-integration-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "dedup_proof_detached",
+      "exit": 1,
+      "expected_assertion_failed": true,
+      "source_sha256": "eeaf07d63c90133a78ee42303f87098fc3402e223deb2150aa1a7c5d62c56ba2",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^cognitive runtime owns the single chat path, privacy boundaries and background diagnostics$",
+        "/workspace/scratch/b31a9d731016/wiring-context-contract/.github/continuum/android-integration-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "comment_decoy_only",
+      "exit": 1,
+      "expected_assertion_failed": true,
+      "source_sha256": "ee3646943e7e9f55c695f1db1e62e1dc1bbdb3b8520df105447093b1c8ffa48f",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^cognitive runtime owns the single chat path, privacy boundaries and background diagnostics$",
+        "/workspace/scratch/b31a9d731016/wiring-context-contract/.github/continuum/android-integration-wiring.test.mjs"
+      ]
+    }
+  ]
+}

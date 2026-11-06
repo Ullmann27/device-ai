@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+ok 1 - learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+  ---
+  duration_ms: 345.891091
+  type: 'test'
+  ...
+# Subtest: cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+ok 2 - cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+  ---
+  duration_ms: 714.599585
+  type: 'test'
+  ...
+# Subtest: background consolidation records failure without losing interrupted source trials
+ok 3 - background consolidation records failure without losing interrupted source trials
+  ---
+  duration_ms: 0.276337
+  type: 'test'
+  ...
+# Subtest: experimental module is inspectable and not on any automatic model promotion path
+ok 4 - experimental module is inspectable and not on any automatic model promotion path
+  ---
+  duration_ms: 0.228164
+  type: 'test'
+  ...
+# Subtest: activity request codes are unique and every one has a result handler
+ok 5 - activity request codes are unique and every one has a result handler
+  ---
+  duration_ms: 274.606086
+  type: 'test'
+  ...
+# Subtest: scheduled offline job names the JobService declared in the manifest
+ok 6 - scheduled offline job names the JobService declared in the manifest
+  ---
+  duration_ms: 0.449367
+  type: 'test'
+  ...
+# Subtest: user-visible texts contain line breaks, not a literal backslash-n
+ok 7 - user-visible texts contain line breaks, not a literal backslash-n
+  ---
+  duration_ms: 6.018925
+  type: 'test'
+  ...
+# Subtest: learning-core and research store I/O stays off the UI thread in dialogs and chat input
+ok 8 - learning-core and research store I/O stays off the UI thread in dialogs and chat input
+  ---
+  duration_ms: 1059.558104
+  type: 'test'
+  ...
+# Subtest: neural weights are saved by compare-and-swap and foreground practice can be stopped
+ok 9 - neural weights are saved by compare-and-swap and foreground practice can be stopped
+  ---
+  duration_ms: 78.237073
+  type: 'test'
+  ...
+# Subtest: startup bootstrap training stops with the activity and is retried later
+ok 10 - startup bootstrap training stops with the activity and is retried later
+  ---
+  duration_ms: 135.414694
+  type: 'test'
+  ...
+# Subtest: startup I/O off the UI thread and shell commands stop with their activity
+ok 11 - startup I/O off the UI thread and shell commands stop with their activity
+  ---
+  duration_ms: 271.237892
+  type: 'test'
+  ...
+# Subtest: local language model path is reachable: model center, loading, chat escalation and reasoning chain
+ok 12 - local language model path is reachable: model center, loading, chat escalation and reasoning chain
+  ---
+  duration_ms: 436.886751
+  type: 'test'
+  ...
+# Subtest: every area has a center reachable from the start screen; no demo buttons; experiments marked
+ok 13 - every area has a center reachable from the start screen; no demo buttons; experiments marked
+  ---
+  duration_ms: 208.265204
+  type: 'test'
+  ...
+# Subtest: Teamleader Android UI reports status without false success
+ok 14 - Teamleader Android UI reports status without false success
+  ---
+  duration_ms: 56.087607
+  type: 'test'
+  ...
+# Subtest: live model status does not revert the beginner cockpit to English
+ok 15 - live model status does not revert the beginner cockpit to English
+  ---
+  duration_ms: 63.469497
+  type: 'test'
+  ...
+# Subtest: model setup stays usable for beginners while preserving SHA-256 integrity
+ok 16 - model setup stays usable for beginners while preserving SHA-256 integrity
+  ---
+  duration_ms: 152.327693
+  type: 'test'
+  ...
+# Subtest: new visual start screen is local, accessible and honest about capabilities
+ok 17 - new visual start screen is local, accessible and honest about capabilities
+  ---
+  duration_ms: 104.673232
+  type: 'test'
+  ...
+# Subtest: neural training failures expose bounded diagnostics without claiming saved weights
+ok 18 - neural training failures expose bounded diagnostics without claiming saved weights
+  ---
+  duration_ms: 52.651245
+  type: 'test'
+  ...
+# Subtest: Wikipedia article research uses bounded authentic extracts and original citations
+ok 19 - Wikipedia article research uses bounded authentic extracts and original citations
+  ---
+  duration_ms: 0.398961
+  type: 'test'
+  ...
+# Subtest: Android-first Teamleader is scheduled, observable and serialized across background and chat
+ok 20 - Android-first Teamleader is scheduled, observable and serialized across background and chat
+  ---
+  duration_ms: 0.552003
+  type: 'test'
+  ...
+# Subtest: explicit M5 project planning command reaches reviewed builder without bypassing approval
+ok 21 - explicit M5 project planning command reaches reviewed builder without bypassing approval
+  ---
+  duration_ms: 0.631272
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4070.967213

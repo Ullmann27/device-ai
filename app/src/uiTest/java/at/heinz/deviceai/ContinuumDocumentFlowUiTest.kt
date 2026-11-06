@@ -21,6 +21,7 @@ import at.heinz.deviceai.localmodel.LocalToolResponse
 import at.heinz.deviceai.ui.ContinuumHomeView
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -77,6 +78,13 @@ class ContinuumDocumentFlowUiTest {
             val callback = pending.getAndSet(null) ?: return
             state = LocalModelState.READY
             callback.onEvent(LocalInferenceEvent.Failed(message))
+        }
+        fun proposeScreenRead() {
+            val callback = checkNotNull(pending.getAndSet(null))
+            state = LocalModelState.READY
+            callback.onEvent(LocalInferenceEvent.ToolProposal(ToolProposal(
+                "read_app_screen", mapOf("packageOrName" to "com.android.settings"))))
+            callback.onEvent(LocalInferenceEvent.Completed(LocalInferenceMetrics(0, 0, 0, null, null, null, 1)))
         }
         /** Like a native runtime whose cancel returns before its stream ended: the answer can still arrive late. */
         @Volatile var holdOnCancel = false
@@ -234,6 +242,23 @@ class ContinuumDocumentFlowUiTest {
     private fun reading(activity: AgentActivity): Boolean = windowIntent(activity)?.let { field(it, "reading") as Boolean } ?: false
     private fun status(root: View) = (descendants(root).single { it.tag == "jarvis-document-draft" && it.isShown } as TextView).text.toString()
     private fun state(scene: Scene) = scene.journal.all().single { it.id == scene.episode }.state
+    private fun stopReplies(activity: AgentActivity) = descendants(field(activity, "chatContainer") as View)
+        .filterIsInstance<TextView>().count { it.text.toString() == "Entwurf mit STOP abgebrochen – nichts gespeichert." }
+    private fun context(activity: AgentActivity) = field(activity, "localConversationContext") as
+        at.heinz.deviceai.cognitive.LocalConversationContext
+    private fun experiences(activity: AgentActivity) =
+        (field(activity, "experienceStore") as at.heinz.deviceai.cognitive.ExperienceStore).all()
+    private fun ownerRequest(activity: AgentActivity, root: View, runtime: Runtime, request: String) {
+        (field(activity, "input") as android.widget.EditText).setText(request)
+        assertTrue((field(activity, "sendButton") as android.widget.Button).performClick())
+        try {
+            until(root, "the owner request reaches the model") { runtime.running }
+        } catch (failure: AssertionError) {
+            val replies = descendants(field(activity, "chatContainer") as View)
+                .filterIsInstance<TextView>().map { it.text.toString() }
+            throw AssertionError("Owner route: $replies; state=${runtime.state}; busy=${field(activity, "busy")}", failure)
+        }
+    }
 
     @Test fun jarvisReadsTheDocumentWhileTheModelWorksAndThenShowsTheDraft() = withFlow { activity, root, runtime ->
         val text = "Projektübersicht Continuum. Ziel: ein lokales Cockpit auf dem Fold7. Offen: Gerätetest."
@@ -302,9 +327,14 @@ class ContinuumDocumentFlowUiTest {
         until(root, "the journal records the running draft") { state(scene) == CockpitWorkJournal.State.DRAFTING }
         assertTrue(reading(activity))
         call(activity, "cancelLocalRequest")
+        assertEquals("STOP confirms before queued delivery", 1, stopReplies(activity))
+        call(activity, "cancelLocalRequest")
+        assertEquals("repeated STOP adds no duplicate", 1, stopReplies(activity))
         until(root, "STOP is recorded") { state(scene) == CockpitWorkJournal.State.ABORTED }
         assertFalse("STOP ends the reading", reading(activity))
         until(root, "the stopped run has ended") { !(field(activity, "busy") as Boolean) }
+        assertEquals(1, context(activity).sessionEvidence(field(activity, "sessionId") as String)
+            .orEmpty().count { it == "Entwurf: Zusammenfassung von „Notizen.pdf“" })
         advance(400L); measure(root); draw(root)
         assertFalse("STOP folds the window away at once", descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
         assertEquals("the cockpit stays the stage after STOP", ContinuumWorkArea.START, field(activity, "activeWorkArea"))
@@ -325,14 +355,22 @@ class ContinuumDocumentFlowUiTest {
     @Test fun aLateAnswerAfterStopChangesNothingAndALaterFailureKeepsItsCause() = withFlow { activity, root, runtime ->
         runtime.holdOnCancel = true
         val scene = startDraft(activity, root, runtime, "Protokoll.pdf", "Protokoll der Besprechung.")
+        val previousExperiences = experiences(activity)
         until(root, "the journal records the running draft") { state(scene) == CockpitWorkJournal.State.DRAFTING }
         call(activity, "cancelLocalRequest")
+        assertEquals("STOP confirms before native completion", 1, stopReplies(activity))
         until(root, "STOP is recorded") { state(scene) == CockpitWorkJournal.State.ABORTED }
         runtime.answer("Späte Antwort, die erst nach STOP kam.")
         until(root, "the late run has ended") { !(field(activity, "busy") as Boolean) && !runtime.running }
         advance(800L); measure(root); draw(root)
         fun chat() = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>().map { it.text.toString() }
         assertTrue("no late text: ${chat()}", chat().none { it.contains("Späte Antwort") })
+        assertEquals("late completion adds no STOP reply", 1, stopReplies(activity))
+        val session = field(activity, "sessionId") as String
+        assertEquals(1, context(activity).sessionEvidence(session).orEmpty()
+            .count { it == "Entwurf: Zusammenfassung von „Protokoll.pdf“" })
+        assertFalse(context(activity).render(session).contains("Späte Antwort"))
+        assertEquals(previousExperiences, experiences(activity))
         assertFalse("no late draft window", descendants(root).any { it.tag == "jarvis-draft" && it.isShown })
         assertEquals(CockpitWorkJournal.State.ABORTED, state(scene))
         assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
@@ -347,6 +385,7 @@ class ContinuumDocumentFlowUiTest {
         assertFalse("a real failure is not reported as the old STOP: $last", last == "Entwurf mit STOP abgebrochen – nichts gespeichert.")
         assertEquals(at.heinz.deviceai.localmodel.LocalModelThermalGuard.ownerMessage(
             at.heinz.deviceai.localmodel.LocalModelThermalGuard.STOPPED_THERMAL), last)
+        assertEquals("new failure keeps one earlier STOP", 1, stopReplies(activity))
     }
 
     /**
@@ -361,10 +400,16 @@ class ContinuumDocumentFlowUiTest {
         // Let the model lane finish and queue its delivery on the (paused) main looper – without running it.
         Thread.sleep(400)
         call(activity, "cancelLocalRequest")
+        assertEquals("queued result cannot delay STOP", 1, stopReplies(activity))
         until(root, "the queued delivery has run") { !(field(activity, "busy") as Boolean) }
         advance(800L); measure(root); draw(root)
         fun chat() = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>().map { it.text.toString() }
         assertTrue("the finished draft does not come back after STOP: ${chat()}", chat().none { it.contains("Fertiger Entwurf") })
+        assertEquals("discarded delivery adds no STOP", 1, stopReplies(activity))
+        val session = field(activity, "sessionId") as String
+        assertEquals(1, context(activity).sessionEvidence(session).orEmpty()
+            .count { it == "Entwurf: Zusammenfassung von „Angebot.pdf“" })
+        assertFalse(context(activity).render(session).contains("Fertiger Entwurf"))
         assertFalse(descendants(root).any { it.tag == "jarvis-draft" && it.isShown })
         assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
         until(root, "STOP is recorded") { state(scene) == CockpitWorkJournal.State.ABORTED }
@@ -376,6 +421,91 @@ class ContinuumDocumentFlowUiTest {
         advance(200L)
         assertEquals("a real failure keeps its real cause, not the old STOP", at.heinz.deviceai.localmodel.LocalModelThermalGuard
             .ownerMessage(at.heinz.deviceai.localmodel.LocalModelThermalGuard.STOPPED_THERMAL), chat().last())
+    }
+
+    @Test fun ownerStopRetainsTheUnchangedCorrectionOnceWithoutTheLateAnswer() = withFlow { activity, root, runtime ->
+        val session = field(activity, "sessionId") as String
+        val previous = "Die drei Markierungen sind blau."
+        val correction = "Korrektur: Die drei Markierungen sollen orange werden, nicht blau."
+        context(activity).clear()
+        context(activity).record(session, previous, "Der bisherige Plan verwendet Blau.")
+        runtime.holdOnCancel = true
+        ownerRequest(activity, root, runtime, correction)
+        val previousExperiences = experiences(activity)
+        assertTrue((field(activity, "sendButton") as android.widget.Button).performClick())
+        runtime.answer("Diese späte Modellantwort darf nicht übernommen werden.")
+        until(root, "the stopped owner turn ends") { !(field(activity, "busy") as Boolean) && !runtime.running }
+        assertEquals(listOf(previous, correction), context(activity).sessionEvidence(session))
+        assertFalse(context(activity).render(session).contains("späte Modellantwort"))
+        assertNull(field(activity, "lastLocalReply"))
+        assertEquals(previousExperiences, experiences(activity))
+    }
+
+    @Test fun oldSessionStopDoesNotAddItsRequestToTheNewSession() = withFlow { activity, root, runtime ->
+        context(activity).clear()
+        runtime.holdOnCancel = true
+        ownerRequest(activity, root, runtime, "Bitte beschreibe den ursprünglichen orangefarbenen Plan.")
+        val previousExperiences = experiences(activity)
+        val nextSession = java.util.UUID.randomUUID().toString()
+        AgentActivity::class.java.getDeclaredField("sessionId").apply { isAccessible = true }.set(activity, nextSession)
+        context(activity).record(nextSession, "Neue Sitzung mit grünem Plan.", "Der neue Plan ist grün.")
+        assertTrue((field(activity, "sendButton") as android.widget.Button).performClick())
+        runtime.answer("Verspäteter orangefarbener Altplan.")
+        until(root, "the old turn ends") { !(field(activity, "busy") as Boolean) && !runtime.running }
+        assertEquals(listOf("Neue Sitzung mit grünem Plan."), context(activity).sessionEvidence(nextSession))
+        assertFalse(context(activity).render(nextSession).contains("Altplan"))
+        assertEquals(previousExperiences, experiences(activity))
+    }
+
+    @Test
+    @Config(shadows = [ScreenObservationRevisionTest.RootedService::class])
+    fun stoppedScreenReadRemainsEphemeral() = withFlow { activity, root, runtime ->
+        val service = ContinuumScreenObservationService()
+        val pkg = "com.android.settings"
+        val info = android.content.pm.ApplicationInfo().apply { packageName = pkg; nonLocalizedLabel = "Settings" }
+        shadowOf(activity.packageManager).installPackage(android.content.pm.PackageInfo().apply {
+            packageName = pkg; applicationInfo = info
+        })
+        shadowOf(activity.packageManager).addResolveInfoForIntent(
+            android.content.Intent(android.content.Intent.ACTION_MAIN).addCategory(android.content.Intent.CATEGORY_LAUNCHER),
+            android.content.pm.ResolveInfo().apply {
+                activityInfo = android.content.pm.ActivityInfo().apply {
+                    packageName = pkg; name = "Main"; applicationInfo = info
+                }
+            })
+        ScreenObservationRevisionTest.RootedService.root = android.view.accessibility.AccessibilityNodeInfo.obtain().apply {
+            packageName = pkg; text = "Akku 80 Prozent"; isVisibleToUser = true
+        }
+        ScreenObservationBus.connect(service)
+        ScreenObservationBus.observed(service, pkg)
+        try {
+            val session = field(activity, "sessionId") as String
+            context(activity).clear()
+            context(activity).record(session, "Vorheriger eigener Plan.", "Der Plan bleibt vorläufig.")
+            runtime.holdOnCancel = true
+            ownerRequest(activity, root, runtime, "Ohne Internet: Beschreibe die sichtbare Android-Einstellungsseite.")
+            runtime.proposeScreenRead()
+            until(root, "the real screen-read confirmation") {
+                ShadowAlertDialog.getLatestAlertDialog()?.let {
+                    it.isShowing && it.getButton(android.app.AlertDialog.BUTTON_POSITIVE) != null
+                } == true
+            }
+            ShadowAlertDialog.getLatestAlertDialog().getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick()
+            until(root, "the real screen observation reaches the fresh model prompt") {
+                runtime.prompts.size == 2 && runtime.running
+            }
+            assertTrue(runtime.prompts.last().contains("Akku 80 Prozent"))
+            val previousExperiences = experiences(activity)
+            assertTrue((field(activity, "sendButton") as android.widget.Button).performClick())
+            runtime.answer("Späte Bildschirmantwort: Akku 80 Prozent.")
+            until(root, "the screen turn ends") { !(field(activity, "busy") as Boolean) && !runtime.running }
+            assertEquals(listOf("Vorheriger eigener Plan."), context(activity).sessionEvidence(session))
+            assertFalse(context(activity).render(session).contains("Akku 80 Prozent"))
+            assertEquals(previousExperiences, experiences(activity))
+        } finally {
+            ScreenObservationBus.disconnect(service)
+            ScreenObservationRevisionTest.RootedService.root = null
+        }
     }
 
     /**

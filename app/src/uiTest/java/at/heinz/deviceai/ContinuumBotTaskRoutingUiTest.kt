@@ -14,6 +14,8 @@ import at.heinz.deviceai.chief.ChiefBotConversationHistory
 import at.heinz.deviceai.chief.ChiefBotPractice
 import at.heinz.deviceai.chief.ChiefBotTaskMode
 import at.heinz.deviceai.chief.ChiefBotTaskRequest
+import at.heinz.deviceai.localmodel.LocalModelHost
+import at.heinz.deviceai.localmodel.LocalModelState
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -96,6 +98,11 @@ class ContinuumBotTaskRoutingUiTest {
 
     @Test fun unknownNaturalSelectionsReachTheOrdinaryInputPath() {
         for (request in listOf("wechsle zu dunklem Modus", "sprich mit mir über den Plan")) withActivity { a, store ->
+            val runtime = LocalModelHost.get(a).runtime
+            assertEquals(LocalModelState.EMPTY, runtime.state)
+            assertNull(runtime.loadedModel)
+            assertTrue(runtime.inferenceProfiles.isEmpty())
+            set(a, "localRuntime", runtime)
             // Observe intake only; the normal model lane is deliberately unavailable.
             (get(a, "localAgentExecutor") as ExecutorService).shutdownNow()
             val before = store.page(limit = 100).items
@@ -108,7 +115,10 @@ class ContinuumBotTaskRoutingUiTest {
                 .count { it.text.toString() == request })
             assertNull(get(a, "selectedBot"))
             assertNull(get(a, "activeOrchestrator"))
-            assertNull(get(a, "localRuntime"))
+            assertSame(runtime, get(a, "localRuntime"))
+            assertEquals(LocalModelState.EMPTY, runtime.state)
+            assertNull(runtime.loadedModel)
+            assertTrue(runtime.inferenceProfiles.isEmpty())
             assertEquals(before, store.page(limit = 100).items)
         }
     }

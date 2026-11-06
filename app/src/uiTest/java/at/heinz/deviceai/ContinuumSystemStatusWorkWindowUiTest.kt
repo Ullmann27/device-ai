@@ -374,18 +374,26 @@ class ContinuumSystemStatusWorkWindowUiTest {
             measure(root); advance(320L); measure(root); draw(root)
             fun call(name: String, vararg args: Any) = AgentActivity::class.java.declaredMethods.single { it.name == name }
                 .apply { isAccessible = true }.invoke(activity, *args)
-            for ((answered, expected) in listOf(true to "Das Werkzeug hat geantwortet", false to "Werkzeug nicht abgeschlossen")) {
+            for ((answered, expected) in listOf(
+                true to "Werkzeugantwort eingetroffen · Abschlussprüfung folgt.",
+                false to "Werkzeug nicht abgeschlossen · Rückmeldung wird geprüft.")) {
                 call("presentToolScene", "call-$answered", "get_storage_info", emptyMap<String, Any?>())
                 advance(640L); measure(root); draw(root)
                 val work = shown(root, "jarvis-work-window")
                 val labels = { descendants(work).filterIsInstance<TextView>().map { it.text.toString() } }
+                val status = descendants(work).single { it.tag == "jarvis-tool-status:call-$answered" } as TextView
+                val progress = descendants(work).single { it.tag == "jarvis-tool-progress:call-$answered" } as android.widget.ProgressBar
                 assertTrue(labels().toString(), labels().any { it.startsWith("WERKZEUG · ") })
-                assertTrue("only the runner state, no result claim", labels().any { it.startsWith("Läuft") })
+                assertEquals("Speicher prüfen läuft · Ergebnis wird abgewartet.", status.text.toString())
+                assertTrue("running call has visible progress", progress.isShown && progress.isIndeterminate)
                 assertTrue("the avatar glances at it", windowIntent() != null)
                 call("finishToolScene", "stale-call", true)
-                assertTrue("a stale call changes nothing", labels().any { it.startsWith("Läuft") })
+                assertEquals("Speicher prüfen läuft · Ergebnis wird abgewartet.", status.text.toString())
+                assertTrue("stale finish leaves progress running", progress.isShown && progress.isIndeterminate)
                 call("finishToolScene", "call-$answered", answered)
-                assertTrue(labels().toString(), labels().any { it.startsWith(expected) })
+                assertEquals(expected, status.text.toString())
+                assertFalse("completion stops progress", progress.isIndeterminate)
+                assertEquals(View.GONE, progress.visibility)
                 advance(1_600L + 640L); measure(root); draw(root)
                 assertTrue("folds back after the hold", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
                 assertEquals("gaze returns to the owner", null, windowIntent())
