@@ -10,11 +10,12 @@ import org.junit.Test
  * was centred with almost no room above it. Every brand line keeps visible breathing room inside the brand box.
  */
 class JarvisHeaderBrandFitTest {
-    private class Tracking : ContinuumPainter {
+    private class Tracking(private val measureFactor: Float = .5f) : ContinuumPainter {
         private data class T(val sx: Float, val sy: Float, val tx: Float, val ty: Float)
         private var cur = T(1f, 1f, 0f, 0f)
         private val stack = ArrayDeque<T>()
         val lines = mutableListOf<Triple<String, Float, Float>>() // text, top, baseline (screen dp)
+        val rights = mutableMapOf<String, Float>() // text -> right edge (screen dp)
         override fun save() { stack.addLast(cur) }
         override fun restore() { cur = stack.removeLast() }
         override fun translate(dx: Float, dy: Float) { cur = cur.copy(tx = cur.tx + cur.sx * dx, ty = cur.ty + cur.sy * dy) }
@@ -35,8 +36,9 @@ class JarvisHeaderBrandFitTest {
         override fun strokePath(path: VectorPath, width: Float, fill: Fill, alpha: Float, roundCap: Boolean) {}
         override fun drawText(text: String, x: Float, y: Float, style: TextStyle, fill: Fill, align: TextAlign, alpha: Float) {
             lines += Triple(text, cur.sy * (y - capHeight(style)) + cur.ty, cur.sy * y + cur.ty)
+            rights[text] = cur.sx * (x + measureText(text, style)) + cur.tx
         }
-        override fun measureText(text: String, style: TextStyle) = text.length * style.size * .5f
+        override fun measureText(text: String, style: TextStyle) = text.length * style.size * measureFactor
         override fun capHeight(style: TextStyle) = style.size * .7f
     }
 
@@ -52,6 +54,20 @@ class JarvisHeaderBrandFitTest {
                 assertTrue("$text top $top needs breathing room below ${brand.top} at ${w}x$h", top >= brand.top + 5f)
                 assertTrue("$text baseline $baseline below the brand box ${brand.bottom} at ${w}x$h", baseline <= brand.bottom)
             }
+        }
+    }
+
+    /** Gitar review on #565: the text room must be measured from the scale pivot, or fitting text gets an ellipsis. */
+    @Test fun scaledBrandKeepsTextThatFitsAndStaysInsideTheBox() {
+        val grid = JarvisCockpitGrid.create(600f, 480f)
+        val brand = grid.areas.getValue(JarvisCockpitGrid.Area.BRAND)
+        val p = Tracking(measureFactor = .62f)
+        JarvisCockpitGridContent.draw(p, Slot.TOP_BAR, grid.areas.getValue(JarvisCockpitGrid.Area.HEADER), grid,
+            ContinuumDashboardState(), 0L)
+        val texts = p.lines.map { it.first }
+        for (full in listOf("Device AI", "Continuum", "Deine KI-Steuerzentrale")) {
+            assertTrue("$full must not be shortened: $texts", full in texts)
+            assertTrue("$full ends inside the brand box", p.rights.getValue(full) <= brand.right + .5f)
         }
     }
 }

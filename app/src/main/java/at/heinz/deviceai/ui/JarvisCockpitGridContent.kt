@@ -119,7 +119,8 @@ object JarvisCockpitGridContent {
         val logo = minOf(brand.height * .73f, 48f)
         JarvisReferenceHud.brandMark(p, brand.left, cy - logo / 2f, logo)
         val tx = brand.left + logo + 8f
-        val room = (brand.right - tx) / fitScale
+        // Local coordinates: the box's right edge lies at brand.left + width / fitScale (scaled around brand.left).
+        val room = brand.left + (brand.right - brand.left) / fitScale - tx
         val top = cy - block / 2f
         p.drawText(fit(p, "Device AI", brandStyle, room), tx, top + cap, brandStyle, Fill.Solid(Colors.text))
         p.drawText(fit(p, "Continuum", brandStyle, room), tx, top + 2f * cap + 3f, brandStyle, Fill.Solid(Colors.text))
