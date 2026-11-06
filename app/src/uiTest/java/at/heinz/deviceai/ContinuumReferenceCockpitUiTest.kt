@@ -500,7 +500,9 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun openCodingDraftThroughDecor(activity: AgentActivity): AlertDialog {
         tapDialogItem(openMoreThroughDecor(activity), "Entwicklerwerkzeuge")
-        tapDialogItem(assertDialog("Entwicklungszentrum"), "CODING-AUFTRAG ENTWERFEN")
+        if (field(activity, "activeWorkArea") == ContinuumWorkArea.START)
+            tapCentreActionThroughDecor(activity, "Entwicklungszentrum", "CODING-AUFTRAG ENTWERFEN")
+        else tapDialogItem(assertDialog("Entwicklungszentrum"), "CODING-AUFTRAG ENTWERFEN")
         assertFalse("Navigation to a draft grants no execution authority", field(activity, "busy") as Boolean)
         return assertDialog("CODING-AUFTRAG ENTWERFEN")
     }
@@ -625,6 +627,70 @@ class ContinuumReferenceCockpitUiTest {
         return dialog
     }
 
+
+    /** START centres use their actual holographic surface; small viewports may use a dialog. */
+    private fun assertCentreSurface(activity: AgentActivity, title: String): View {
+        val root = activity.window.decorView
+        assertEquals("Centres must keep the cockpit active", ContinuumWorkArea.START, field(activity, "activeWorkArea"))
+        val home = currentHome(activity)
+        home.setForegroundActive(true)
+        advanceFrames(1_040L)
+        measure(root, root.width, root.height)
+        val workWindows = descendants(root).filter { it.tag == "jarvis-work-window" && it.isShown }
+        assertTrue("One cockpit action must not create multiple windows", workWindows.size <= 1)
+        val work = workWindows.singleOrNull()
+        if (work == null) {
+            assertFalse("A native fallback requires insufficient protected space", systemWindowFits(activity))
+            return requireNotNull(assertDialog(title).window).decorView
+        }
+        assertSame("The work window belongs to the active Activity", root, work.rootView)
+        assertFalse("The same centre must not open an AlertDialog behind the work window",
+            ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
+        val titles = descendants(work).filterIsInstance<TextView>().map { it.text.toString() }
+        assertTrue("Wrong work-window destination for $title: $titles",
+            titles.any { it.equals(title, ignoreCase = true) })
+        assertTrue("The original avatar stays present",
+            (field(activity, "hologramView") as ContinuumHologramView).isShown)
+        val deck = descendants(home).filter {
+            val tag = it.tag as? String ?: return@filter false
+            tag.startsWith("jarvis-tile:") || tag.startsWith("jarvis-panel:ROW_")
+        }
+        assertTrue("Cleared deck items must not receive touches", deck.none { it.isShown && it.isClickable })
+        return work
+    }
+
+    private fun closeCentreThroughDecor(activity: AgentActivity, title: String) {
+        val root = activity.window.decorView
+        val surface = assertCentreSurface(activity, title)
+        if (surface.tag == "jarvis-work-window") {
+            tap(root, tagged(surface, "jarvis-work-window:close"))
+            advanceFrames(640L)
+            assertTrue("Closing $title removes the work window",
+                descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+            val deck = descendants(currentHome(activity)).filter {
+                val tag = it.tag as? String ?: return@filter false
+                tag.startsWith("jarvis-tile:") || tag.startsWith("jarvis-panel:ROW_")
+            }
+            assertTrue("Closing $title restores the entire deck", deck.none { it.visibility == View.INVISIBLE })
+        } else closeDialogThroughDecor(assertDialog(title))
+        currentHome(activity).setForegroundActive(false)
+    }
+
+    private fun tapCentreActionThroughDecor(activity: AgentActivity, title: String, label: String) {
+        val surface = assertCentreSurface(activity, title)
+        if (surface.tag == "jarvis-work-window") {
+            val action = descendants(surface).filterIsInstance<TextView>().filter {
+                it.isShown && it.isClickable && it.text.toString() == label
+            }
+            assertEquals("Exactly one real '$label' action in $title", 1, action.size)
+            tap(activity.window.decorView, action.single())
+            advanceFrames(64L)
+            assertTrue("Following an action releases the previous work window",
+                descendants(activity.window.decorView).none { it.tag == "jarvis-work-window" && it.isShown })
+            currentHome(activity).setForegroundActive(false)
+        } else tapDialogItem(assertDialog(title), label)
+    }
+
     private fun capture(root: View, label: String, width: Int, height: Int) {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         try {
@@ -666,8 +732,11 @@ class ContinuumReferenceCockpitUiTest {
                 "jarvis-tile:device" to "Systemstatus"
             )) {
                 tap(activity.window.decorView, shellControl(activity, target))
-                if (title == "Systemstatus") closeSystemWorkWindow(activity)
-                else closeDialogThroughDecor(assertDialog(title))
+                when (title) {
+                    "Systemstatus" -> closeSystemWorkWindow(activity)
+                    "Gedächtniszentrum" -> closeCentreThroughDecor(activity, title)
+                    else -> closeDialogThroughDecor(assertDialog(title))
+                }
                 assertFalse("Opening a destination must not start a model task", field(activity, "busy") as Boolean)
             }
             // Preserve the old development/draft requirement independently of today's Tasks backlog destination.
@@ -675,12 +744,12 @@ class ContinuumReferenceCockpitUiTest {
             tap(root, shellControl(activity, "jarvis-header:settings"))
             closeDialogThroughDecor(assertDialog("Deine KI personalisieren"))
             tap(root, shellControl(activity, "jarvis-tile:learning"))
-            val learning = assertDialog("Lernzentrum")
-            val details = descendants(requireNotNull(learning.window).decorView).filterIsInstance<TextView>()
+            val learning = assertCentreSurface(activity, "Lernzentrum")
+            val details = descendants(learning).filterIsInstance<TextView>()
                 .single { it.isClickable && it.text.toString() == "LERNKERN · DETAILS" }
             assertTrue("The previous evolving destination remains a real focusable action", details.isFocusable)
             assertMinimumTarget(details, "LERNKERN · DETAILS")
-            tapDialogItem(learning, "WISSENSARCHIV · QUELLEN SUCHEN")
+            tapCentreActionThroughDecor(activity, "Lernzentrum", "WISSENSARCHIV · QUELLEN SUCHEN")
             closeDialogThroughDecor(assertDialog("Continuum · lokales Wissensarchiv"))
             assertFalse(field(activity, "busy") as Boolean)
             capture(root, "$tag-actions", width, height)
@@ -944,9 +1013,7 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun assertRailDestination(target: String): AlertDialog {
         if (target != "research") return assertDialog(requireNotNull(mapOf(
-            "memory" to "Gedächtniszentrum", "logic" to "Logik und Planung", "agents" to "Team · Bots",
-            "tasks" to "Entwicklungsaufgaben", "web" to "Web und Quellen", "learning" to "Lernzentrum",
-            "device" to "Systemstatus", "system" to "Systemstatus"
+            "agents" to "Team · Bots", "tasks" to "Entwicklungsaufgaben"
         )[target]))
         val dialog = ShadowAlertDialog.getLatestAlertDialog()
         assertNotNull("Research must open the existing gated destination", dialog)
@@ -976,6 +1043,10 @@ class ContinuumReferenceCockpitUiTest {
                     returnHomeThroughDecor(activity)
                 }
                 "device", "system" -> closeSystemWorkWindow(activity)
+                "memory", "logic", "web", "learning" -> closeCentreThroughDecor(activity, mapOf(
+                    "memory" to "Gedächtniszentrum", "logic" to "Logik und Planung",
+                    "web" to "Web und Quellen", "learning" to "Lernzentrum"
+                ).getValue(target))
                 else -> closeDialogThroughDecor(assertRailDestination(target))
             }
             assertFalse("A rail destination must not submit a task", field(activity, "busy") as Boolean)
