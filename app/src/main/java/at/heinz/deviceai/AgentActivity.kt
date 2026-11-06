@@ -1938,7 +1938,7 @@ class AgentActivity : Activity() {
             if (last != null) {
                 pendingDocumentDraft = document.wantsDraft
                 pendingDocumentRequest = request
-                readPdfDocument(android.net.Uri.parse(last.documentUri))
+                readPdfDocument(android.net.Uri.parse(last.documentUri), remembered = last)
                 return
             }
             addAssistantMessage("Welche PDF meinst du? Eine zuvor gewählte darf ich nicht mehr öffnen – ich zeige dir die Auswahl.",
@@ -2138,16 +2138,39 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun readPdfDocument(uri: android.net.Uri) {
+    private fun readPdfDocument(uri: android.net.Uri) = readPdfDocument(uri, null)
+
+    /**
+     * Reads [uri] off the UI thread. When it was the [remembered] file of an earlier task („die letzte PDF“) and it is gone
+     * (moved, deleted, access revoked), JARVIS names it, changes nothing, records the failed attempt in the work journal,
+     * offers Android's picker and keeps the cockpit – never a silent switch to the chat.
+     */
+    private fun readPdfDocument(uri: android.net.Uri, remembered: at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode?) {
         val pageWidthPx = (resources.displayMetrics.density * 360f).toInt()
         documentIoExecutor.execute {
             val result = runCatching { PdfDocumentIntake(contentResolver).read(uri, pageWidthPx) }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 result.fold({ presentDocumentScene(it, uri.toString()) }) { failure ->
+                    val wantsDraft = pendingDocumentDraft
+                    val request = pendingDocumentRequest
                     pendingDocumentDraft = false
-                    addAssistantMessage("Die PDF ließ sich nicht lesen (${failure.message ?: failure.javaClass.simpleName}). " +
-                        "An der Datei wurde nichts verändert.")
+                    val stay = activeWorkArea == ContinuumWorkArea.START
+                    if (remembered == null) {
+                        addAssistantMessage("Die PDF ließ sich nicht lesen (${failure.message ?: failure.javaClass.simpleName}). " +
+                            "An der Datei wurde nichts verändert.", false, keepCockpit = stay)
+                        return@fold
+                    }
+                    val name = remembered.source ?: "die zuletzt verwendete PDF"
+                    addAssistantMessage("Die zuletzt verwendete PDF „$name“ lässt sich nicht mehr lesen – vermutlich " +
+                        "verschoben oder gelöscht. An der Datei wurde nichts verändert. Ich zeige dir die Auswahl.",
+                        false, keepCockpit = stay)
+                    val attempt = workJournal.newEpisode(at.heinz.deviceai.cognitive.CockpitWorkJournal.Kind.DOCUMENT,
+                        request.ifBlank { "Letzte PDF öffnen" }, at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED,
+                        name, documentUri = uri.toString())
+                    val record = Runnable { runCatching { workJournal.append(attempt) }; publishOpenWork() }
+                    if (documentIoExecutor.isShutdown) record.run() else documentIoExecutor.execute(record)
+                    openPdfDocumentPicker(wantsDraft, request)
                 }
             }
         }

@@ -344,4 +344,40 @@ class ContinuumDocumentFlowUiTest {
         assertEquals("a real failure keeps its real cause, not the old STOP", at.heinz.deviceai.localmodel.LocalModelThermalGuard
             .ownerMessage(at.heinz.deviceai.localmodel.LocalModelThermalGuard.STOPPED_THERMAL), chat().last())
     }
+
+    /**
+     * Owner brief E, counter path „fehlende Datei“: „Wo waren wir gestern? Nimm die letzte PDF und fasse sie zusammen.“
+     * The record answers with the real hit (the orb gets the real count), the remembered file is gone. JARVIS names it,
+     * changes nothing, records the failed attempt, offers Android's picker and stays on the cockpit – no model run.
+     */
+    @Test fun aRememberedPdfThatIsGoneIsNamedRecordedAndThePickerOffered() = withFlow { activity, root, runtime ->
+        val uri = android.net.Uri.parse("content://at.heinz.test.missing/document/bericht")
+        activity.contentResolver.takePersistableUriPermission(uri, android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        val yesterday = java.util.Calendar.getInstance().apply { add(java.util.Calendar.DAY_OF_YEAR, -1); set(java.util.Calendar.HOUR_OF_DAY, 12) }.timeInMillis
+        val journal = CockpitWorkJournal(activity.filesDir) { yesterday }
+        journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Fasse den Bericht zusammen", CockpitWorkJournal.State.DRAFTED,
+            "Bericht.pdf", 2, 40, uri.toString())
+        val bus = field(activity, "cockpitBus") as at.heinz.deviceai.cockpit.CockpitAnimationBus
+        val events = CopyOnWriteArrayList<at.heinz.deviceai.cockpit.CockpitAnimationEvent>()
+        bus.subscribe { events += it }
+        val sentence = "Wo waren wir gestern? Nimm die letzte PDF und fasse sie zusammen."
+        (field(activity, "input") as android.widget.EditText).setText(sentence)
+        call(activity, "sendCurrentInput", false)
+        fun chat() = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>().map { it.text.toString() }
+        until(root, "the read attempt has answered") { chat().any { it.contains("PDF") && it.contains("nichts verändert") } }
+        val recall = events.filterIsInstance<at.heinz.deviceai.cockpit.CockpitAnimationEvent.RecallHits>().single()
+        assertEquals("the orb gets the real number of hits", 1, recall.count)
+        assertTrue("answered from the record: ${chat()}", chat().any { it.startsWith("Gestern:") && it.contains("Bericht.pdf") })
+        val gone = chat().single { it.contains("nichts verändert") }
+        assertTrue("the remembered file is named: $gone", gone.contains("„Bericht.pdf“") && gone.contains("nicht mehr lesen"))
+        assertEquals("the cockpit stays", ContinuumWorkArea.START, field(activity, "activeWorkArea"))
+        val picker = shadowOf(activity).nextStartedActivityForResult
+        assertEquals("Android's picker is offered", android.content.Intent.ACTION_OPEN_DOCUMENT, picker?.intent?.action)
+        until(root, "the failed attempt is recorded") {
+            CockpitWorkJournal(activity.filesDir).all().any { it.request == sentence && it.state == CockpitWorkJournal.State.FAILED }
+        }
+        val failed = CockpitWorkJournal(activity.filesDir).all().single { it.request == sentence }
+        assertEquals("Bericht.pdf", failed.source)
+        assertTrue("no model run", runtime.prompts.isEmpty())
+    }
 }
