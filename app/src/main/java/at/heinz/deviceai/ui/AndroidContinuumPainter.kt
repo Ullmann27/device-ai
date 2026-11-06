@@ -54,6 +54,9 @@ class AndroidContinuumPainter(private val assets: AssetManager) : ContinuumPaint
     override fun setAdditive(on: Boolean) { paint.xfermode = if (on) additiveMode else null }
 
     override fun save() { canvas.save() }
+    override fun saveAlpha(alpha: Float) {
+        canvas.saveLayerAlpha(null, (alpha.coerceIn(0f, 1f) * 255f + .5f).toInt())
+    }
     override fun restore() { canvas.restore() }
     override fun translate(dx: Float, dy: Float) = canvas.translate(dx, dy)
     override fun scale(sx: Float, sy: Float, px: Float, py: Float) = canvas.scale(sx, sy, px, py)

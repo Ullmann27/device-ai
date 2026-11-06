@@ -16,6 +16,15 @@ data class JarvisTile(val target: String, val label: String, val icon: Icon, val
                       val controlState: JarvisControlState = JarvisControlState.NORMAL)
 
 object JarvisTiles {
+    private val edgePalette = intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.violet, Colors.magenta)
+    private val edgeEnergyColors = IntArray(64) { step ->
+        val pos = step * edgePalette.size / 64f
+        val i = pos.toInt()
+        val t = pos - i
+        val smooth = t * t * (3f - 2f * t)
+        Argb.mix(edgePalette[i], edgePalette[(i + 1) % edgePalette.size], smooth)
+    }
+    private val edgeCoreFill = Fill.Solid(Colors.glowCore)
     /** ref5 uses two violet cards among the cyan cards. Colour describes the destination, never live status. */
     fun style(target: String): JarvisDesign.ComponentStyle = when (target) {
         "memory" -> JarvisDesign.Styles.memoryTile
@@ -46,14 +55,34 @@ object JarvisTiles {
                 intArrayOf(Argb.withAlpha(st.rim, .12f), 0)))
         JarvisNeon.halo(p, b.left + 16f, b.top + b.height / 2f, b.height * .42f, st.rim, .14f)
         if (!disabled && timeMs > 0L) {
+            // Existing two rim strokes plus the moving rounded-corner highlight.
             val wave = ambientPhase(tile.target, timeMs)
-            val color = if (wave <= .5f) Argb.mix(Colors.cyan, Colors.violet, wave * 2f)
+            val colour = if (wave <= .5f) Argb.mix(Colors.cyan, Colors.violet, wave * 2f)
                 else Argb.mix(Colors.violet, Colors.magenta, (wave - .5f) * 2f)
-            val edge = Fill.Solid(color)
             p.setAdditive(true)
-            p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius, 3f, edge, .045f + .035f * wave)
-            p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius, 1.1f, edge, .12f + .10f * wave)
+            p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius,
+                3f, Fill.Solid(colour), .045f + .035f * wave)
+            p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius,
+                1.1f, Fill.Solid(colour), .12f + .10f * wave)
             p.setAdditive(false)
+            JarvisTileEnergy.sample(timeMs, b.width, b.height, tile.target, radius)?.let { bead ->
+                val color = edgeEnergyColors[(bead.phase * edgeEnergyColors.size).toInt()
+                    .coerceIn(0, edgeEnergyColors.lastIndex)]
+                val x = b.left + bead.x
+                val y = b.top + bead.y
+                val tail = JarvisTileEnergy.sample(timeMs - 140L, b.width, b.height, tile.target, radius)
+                p.save()
+                p.clipRoundRect(b.left, b.top, b.right, b.bottom, radius)
+                tail?.let {
+                    JarvisSceneFills.halo(p, b.left + it.x, b.top + it.y, if (active) 7f else 5f,
+                        color, if (active) .18f else .10f)
+                }
+                JarvisSceneFills.halo(p, x, y, if (active) 10f else 7f, color,
+                    if (active) .32f else .20f)
+                p.fillCircle(x, y, if (active) 1.5f else 1f, edgeCoreFill,
+                    if (active) .9f else .67f)
+                p.restore()
+            }
         }
         // LOADING is explicit caller state. Never infer work from a destination's decorative animation.
         if (tile.controlState == JarvisControlState.LOADING) {

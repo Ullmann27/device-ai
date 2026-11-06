@@ -1,0 +1,62 @@
+{
+  "checkedAtUtc": "2026-11-05T17:45:20.710611+00:00",
+  "evidenceClass": "HOST_BLENDER_NOT_FILAMENT_DEVICE",
+  "replaySourceCommit": "8c851a09d7c641bdfc02d5e2d2c432cd3fda0e8c",
+  "finalProductCommit": "7c3523cde9dae302a52d69818867a9abe8cf0fb7",
+  "scope": "Existing Blender CPU replay from 8c851a09; all eight bound dependencies and original GLB are byte-identical in 7c3523cd. No new rendering, tests, Filament or Fold7 evidence.",
+  "replayManifestSha256": "8cf3cf6fc9b5ea577323b0be86735a2692740ac1ad0a49b7555409df1b77b335",
+  "originalSourceBindingSha256": "b47f9872536534a737486defad61616fb4feda6a74d8ad740fe044abfd243ecb",
+  "boundSourceCount": 8,
+  "allBoundSourcesMatchFinalCommitAndWorkingTree": true,
+  "sourceFileSha256": {
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "da5a4f4259a7070b9ee05bee5abf4c6dfaec454f260a45f1271f7cc54a1dc86d",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "8d1aa4231c0e68f2d2362c18b70ef4e901e835cfd3d1b35550168ca870e76122",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "014182901958ba57d80c73cbc1778a658a23c1161ce87cbba88adbf11b657842",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "dbe2f23b9f07732ae5c799bafa972f0cf116f496d1b45188cd5ed68bc6caf462",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarFraming.kt": "2a7f52251729e3cf0359997806b15e3d971eadd54e02a5a44de57865eda55ed2",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "fd9a803053f2b6ca4e9aa4e045d71ea95c363b6c006a7c8817684edc8edd850f",
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "a00c36a5d3e1ad1bb83f8732153c7daa7ca7792498fceb4c6074992bba0580e9",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt": "41fe6fc9ac47cf5d3f373da042753e5c3f1edd2732e8e1e0256b94689946d67c"
+  },
+  "assetPath": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+  "assetSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "assetMatchesReplayAndFinalCommit": true,
+  "morphTargetCount": 21,
+  "morphTargetNames": [
+    "SIL",
+    "PP",
+    "FF",
+    "TH",
+    "DD",
+    "KK",
+    "CH",
+    "SS",
+    "NN",
+    "RR",
+    "AA",
+    "E",
+    "I",
+    "O",
+    "U",
+    "BlinkLeft",
+    "BlinkRight",
+    "BrowUp",
+    "BrowDown",
+    "Smile",
+    "JawOpen"
+  ],
+  "morphTargetsPerPrimitive": {
+    "FaceMesh": [
+      21
+    ],
+    "NeuralThreadsMesh": [
+      21,
+      21
+    ]
+  },
+  "pngCount": 9,
+  "allPngHashesMatchUnmodifiedReplayManifest": true,
+  "replayManifestUnchanged": true,
+  "originalSourceBindingUnchanged": true,
+  "newRenderOrTestRuns": 0
+}

@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<title>Device AI Continuum · Designkonzept</title>
+<style>
+@font-face{font-family:Mont;src:url(fonts/Montserrat-Light.ttf);font-weight:300}
+@font-face{font-family:Mont;src:url(fonts/Montserrat-Regular.ttf);font-weight:400}
+@font-face{font-family:Mont;src:url(fonts/Montserrat-Medium.ttf);font-weight:500}
+@font-face{font-family:Mont;src:url(fonts/Montserrat-SemiBold.ttf);font-weight:600}
+@font-face{font-family:Rob;src:url(fonts/Roboto-Light.ttf);font-weight:300}
+@font-face{font-family:Rob;src:url(fonts/Roboto-Regular.ttf);font-weight:400}
+@font-face{font-family:Rob;src:url(fonts/Roboto-Medium.ttf);font-weight:500}
+@font-face{font-family:Rob;src:url(fonts/Roboto-Bold.ttf);font-weight:700}
+:root{
+  --bg0:#02040A;--bg1:#050B16;--bg2:#0B0D20;
+  --cyan:#00E5FF;--cyanSoft:#78F6FB;--blue:#3D7BFF;--electric:#2F5BFF;--violet:#A43BFF;--violetSoft:#916DC9;--magenta:#F04DFF;
+  --text:#EEF4FF;--muted:#93A3C2;--hair:rgba(120,246,251,.34);--hairV:rgba(196,140,255,.30);
+  --glass:rgba(14,30,58,.16);--glassStrong:rgba(10,24,52,.34);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1190px;height:1322px;overflow:hidden;background:var(--bg0)}
+body{position:relative;font-family:Rob,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+.abs{position:absolute}
+/* ---------- deep space ---------- */
+.space{position:absolute;inset:0;background:
+  radial-gradient(ellipse 420px 360px at 38% 30%,rgba(96,48,210,.20),transparent 70%),
+  radial-gradient(ellipse 380px 330px at 68% 34%,rgba(28,92,255,.17),transparent 72%),
+  radial-gradient(ellipse 900px 380px at 50% 104%,rgba(32,36,120,.32),transparent 70%),
+  linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 46%,var(--bg2) 100%)}
+.grid{position:absolute;inset:0;opacity:.55;background-image:
+  linear-gradient(rgba(0,229,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.028) 1px,transparent 1px);
+  background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 70% at 50% 45%,#000 30%,transparent 90%)}
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse 75% 70% at 50% 45%,transparent 55%,rgba(0,0,0,.55) 100%);pointer-events:none}
+svg.flow{position:absolute;inset:0;width:1190px;height:1322px}
+.dust{position:absolute;width:2px;height:2px;border-radius:50%;background:#cfe9ff;box-shadow:0 0 6px 1px rgba(120,200,255,.7)}
+/* ---------- glass ---------- */
+.glass{position:absolute;border-radius:14px;background:linear-gradient(160deg,rgba(120,180,255,.075),rgba(20,40,80,.06) 40%,rgba(8,16,40,.12));
+  border:1px solid var(--hair);box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 22px rgba(0,180,255,.035),0 10px 30px rgba(0,0,0,.35);
+  backdrop-filter:blur(3px) saturate(120%)}
+.glass.v{border-color:var(--hairV)}
+.glass::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 18%,rgba(255,255,255,0) 82%,rgba(160,120,255,.18) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;padding:1px}
+.spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 6px 2px rgba(140,240,255,.9),0 0 18px 4px rgba(0,229,255,.35)}
+.br{position:absolute;width:16px;height:16px;border-color:var(--cyanSoft);border-style:solid;opacity:.85}
+.br.tl{left:-1px;top:-1px;border-width:1.5px 0 0 1.5px;border-radius:6px 0 0 0}
+.br.tr{right:-1px;top:-1px;border-width:1.5px 1.5px 0 0;border-radius:0 6px 0 0}
+.br.bl{left:-1px;bottom:-1px;border-width:0 0 1.5px 1.5px;border-radius:0 0 0 6px}
+.br.brr{right:-1px;bottom:-1px;border-width:0 1.5px 1.5px 0;border-radius:0 0 6px 0}
+svg.i{width:24px;height:24px;stroke:var(--cyan);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px rgba(0,229,255,.55))}
+svg.i.v{stroke:#C98CFF;filter:drop-shadow(0 0 3px rgba(200,120,255,.55))}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--hairV);border-radius:999px;padding:3px 10px;font:500 12px Rob;color:#d7c8ff;background:rgba(80,40,160,.14)}
+/* ---------- header ---------- */
+.brand{left:118px;top:44px;display:flex;align-items:center;gap:14px}
+.brand .name{font:600 26px/1.02 Mont;letter-spacing:.2px}
+.brand .cap{font:400 13px Rob;color:var(--cyanSoft);margin-top:5px;letter-spacing:.2px}
+.divider{left:368px;top:52px;width:1px;height:56px;background:linear-gradient(transparent,var(--hair),transparent)}
+.tag{left:388px;top:58px;font:400 15px/1.35 Rob;color:#b9c7e2}
+.pill{top:62px;height:40px;border-radius:999px;display:flex;align-items:center;gap:9px;padding:0 18px;font:600 15px Mont;letter-spacing:.6px}
+.pill.j{left:624px;border:1px solid rgba(0,229,255,.55);color:var(--text);background:linear-gradient(90deg,rgba(0,229,255,.10),rgba(164,59,255,.10));box-shadow:0 0 14px rgba(0,229,255,.18),inset 0 0 10px rgba(0,229,255,.08)}
+.pill.o{left:798px;border:1px solid var(--hair);font:500 14px Rob;letter-spacing:.2px;color:#cfe2ff}
+.dot{width:8px;height:8px;border-radius:50%;background:#2CF5B0;box-shadow:0 0 8px #2CF5B0}
+.round{top:61px;width:44px;height:44px;border-radius:50%;border:1px solid var(--hair);display:flex;align-items:center;justify-content:center}
+.headline{left:24px;right:24px;top:132px;height:1px;background:linear-gradient(90deg,transparent,rgba(120,246,251,.25) 20%,rgba(164,59,255,.22) 70%,transparent)}
+/* ---------- rail ---------- */
+.rail{left:30px;top:160px;width:182px;height:700px;transform:perspective(1300px) rotateY(9deg);transform-origin:left center;padding:10px 8px}
+.ri{display:flex;align-items:center;gap:14px;height:61px;padding:0 12px;border-radius:10px;font:400 16px/1.15 Rob;color:#dce6fb;position:relative}
+.ri+.ri{border-top:1px solid rgba(120,246,251,.07)}
+.ri.on{background:linear-gradient(90deg,rgba(0,229,255,.13),rgba(0,229,255,.02));border:1px solid rgba(0,229,255,.38)}
+.ri.on::before{content:"";position:absolute;left:-1px;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+/* ---------- avatar & orb ---------- */
+.head{left:214px;top:120px;width:512px;height:647px;object-fit:contain;
+  -webkit-mask-image:radial-gradient(ellipse 52% 62% at 50% 40%,#000 62%,transparent 100%),linear-gradient(#000 70%,transparent 97%);
+  -webkit-mask-composite:source-in;mask-composite:intersect;filter:saturate(108%) contrast(104%)}
+.headglow{left:300px;top:140px;width:340px;height:420px;border-radius:50%;background:radial-gradient(ellipse at 50% 45%,rgba(120,60,255,.20),transparent 70%);filter:blur(20px)}
+.orb{left:618px;top:252px;width:376px;height:412px;-webkit-mask-image:radial-gradient(ellipse 55% 53% at 50% 49%,#000 74%,transparent 100%);mask-image:radial-gradient(ellipse 55% 53% at 50% 49%,#000 74%,transparent 100%)}
+.orbglow{left:650px;top:278px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,rgba(40,120,255,.28),transparent 68%);filter:blur(18px)}
+.orblabel{left:706px;top:632px;width:200px;text-align:center}
+.orblabel .a{font:500 17px Mont;letter-spacing:.42em;color:#dfe9ff}
+.orblabel .b{font:400 11px Mont;letter-spacing:.62em;color:#8ea6cf;margin-top:6px}
+/* continuum card */
+.ccard{left:612px;top:154px;width:384px;height:110px;padding:14px 18px}
+.ccard .t{font:300 40px/1 Mont;letter-spacing:.5px}
+.ccard .s{font:400 15px Rob;color:var(--cyanSoft);margin-top:4px}
+.ccard .row{margin-top:12px;display:inline-block;white-space:nowrap;border:1px solid var(--hair);border-radius:7px;padding:5px 11px;font:400 12.5px Rob;color:#c9d6f0;background:rgba(10,30,60,.25)}
+.inf{width:52px;height:52px;border-radius:50%;border:1.5px solid var(--cyan);display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(0,229,255,.35),inset 0 0 10px rgba(0,229,255,.15)}
+/* right modules */
+.mods{left:1004px;top:192px;width:160px;height:254px;transform:perspective(1100px) rotateY(-11deg);transform-origin:right center;padding:6px 10px}
+.mi{display:flex;align-items:center;gap:11px;height:80px;font:400 15px Rob;color:#dce6fb}
+.mi+.mi{border-top:1px solid rgba(120,246,251,.10)}
+.mi .d{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+/* jarvis chip */
+.jchip{left:236px;top:576px;padding:12px 18px 12px 16px;min-width:196px;display:flex;gap:14px;align-items:flex-start}
+.jchip .n{font:600 19px Mont;letter-spacing:.8px;color:var(--cyan);text-shadow:0 0 10px rgba(0,229,255,.45)}
+.jchip .st{font:400 15px Rob;color:var(--text);margin-top:4px}
+.jchip .q{font:italic 300 14px Rob;color:#c8d6f5;margin-top:7px;max-width:300px}
+/* input */
+.input{left:318px;top:694px;width:792px;height:78px;transform:skewX(-11deg);border-radius:14px}
+.input .in{transform:skewX(11deg);display:flex;align-items:center;height:100%;padding:0 30px 0 34px;gap:18px}
+.mic{width:46px;height:46px;border-radius:50%;border:1px solid rgba(0,229,255,.55);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 12px rgba(0,229,255,.12)}
+.caret{width:1.5px;height:30px;background:var(--hair)}
+.input .txt{font:400 21px Rob;color:#e6eeff;flex:1;white-space:nowrap}
+.input .txt.ph{color:#b9c6e2}
+.under{left:0;width:1190px;top:796px;display:flex;justify-content:center}
+.strip{display:flex;align-items:center;gap:14px;padding:9px 12px 9px 20px;border-radius:12px;font:400 16px Rob;color:#dfe8ff}
+.stop{display:flex;align-items:center;gap:8px;border:1px solid var(--hair);border-radius:9px;padding:6px 14px;font:500 14px Rob;color:#dce6fb;background:rgba(0,0,0,.18)}
+.spin{width:18px;height:18px;border-radius:50%;border:2px solid rgba(0,229,255,.22);border-top-color:var(--cyan);box-shadow:0 0 8px rgba(0,229,255,.4)}
+/* tiles */
+.tiles{left:150px;top:880px;width:1012px;display:grid;grid-template-columns:repeat(5,1fr);gap:16px 14px;transition:none}
+.tile{position:relative;height:132px;transform:perspective(900px) rotateX(10deg) skewX(-7deg);padding:15px 10px 10px 18px;border-radius:12px}
+.tile .tin{transform:skewX(7deg)}
+.tile .tt{font:500 17px/1.15 Rob;margin-top:9px;color:#eef4ff;white-space:nowrap;letter-spacing:-.1px}
+.tile .ts{font:400 13px/1.3 Rob;color:#9fb0cf;margin-top:5px}
+.tile.hot{border-color:rgba(0,229,255,.85);background:linear-gradient(160deg,rgba(0,229,255,.16),rgba(20,40,80,.06) 55%,rgba(164,59,255,.08));box-shadow:0 0 34px rgba(0,229,255,.28),inset 0 0 26px rgba(0,229,255,.10)}
+/* status bar */
+.sbar{left:30px;top:1206px;width:1130px;height:50px;border-radius:12px;display:flex;align-items:center;gap:22px;padding:0 22px;font:400 14px Rob;color:#cfdcf5}
+.sbar .sep{width:1px;height:22px;background:rgba(120,246,251,.22)}
+.sbar .ok{color:#3CF2B0;display:flex;align-items:center;gap:8px}
+.foot{right:44px;top:1282px;font:500 13px Mont;letter-spacing:.32em;color:#8fa2c6}
+.footL{left:34px;top:1284px;font:400 11.5px Rob;color:#6e7fa3;letter-spacing:.2px}
+/* work surfaces */
+.panel{border-radius:16px;padding:22px 26px}
+.ph{display:flex;align-items:center;gap:14px}
+.ph .t{font:500 24px Mont;letter-spacing:.2px}
+.rowx{display:flex;align-items:flex-start;gap:16px;padding:15px 16px;border-radius:10px;position:relative}
+.rowx+.rowx{border-top:1px solid rgba(120,246,251,.09)}
+.rowx .k{font:500 19px Rob;color:#eef4ff}
+.rowx .v{font:400 16px Rob;color:#aebdde;margin-top:3px}
+.rowx.hl{background:linear-gradient(90deg,rgba(0,229,255,.14),rgba(0,229,255,.03));border:1px solid rgba(0,229,255,.42);box-shadow:0 0 20px rgba(0,229,255,.12)}
+.rowx.hl::before{content:"";position:absolute;left:-1px;top:10px;bottom:10px;width:3px;border-radius:2px;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.btn{display:flex;align-items:center;gap:10px;border:1px solid var(--hair);border-radius:10px;padding:10px 18px;font:500 16px Rob;color:#e6eeff;background:rgba(6,18,40,.32)}
+.cursor{display:inline-block;width:2px;height:22px;background:#fff;vertical-align:-4px;margin-left:4px;box-shadow:0 0 8px #fff}
+.page{position:absolute;border-radius:16px;border:1px solid rgba(120,246,251,.16);background:rgba(8,20,44,.10)}
+.hidden{display:none!important}
+</style></head>
+<body>
+<div class="space"></div><div class="grid"></div>
+<svg class="flow" viewBox="0 0 1190 1322">
+  <defs>
+    <linearGradient id="gc" x1="0" x2="1"><stop offset="0" stop-color="#00E5FF" stop-opacity="0"/><stop offset=".35" stop-color="#00E5FF"/><stop offset=".7" stop-color="#A43BFF"/><stop offset="1" stop-color="#F04DFF" stop-opacity="0"/></linearGradient>
+    <linearGradient id="gv" x1="0" x2="1"><stop offset="0" stop-color="#A43BFF" stop-opacity="0"/><stop offset=".5" stop-color="#C46BFF"/><stop offset="1" stop-color="#2F5BFF" stop-opacity="0"/></linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="2.2"/></filter>
+    <filter id="wide"><feGaussianBlur stdDeviation="7"/></filter>
+  </defs>
+  <g opacity=".55">
+    <path d="M-20 640 C 220 590, 420 700, 640 640 S 1010 560, 1220 610" stroke="url(#gc)" stroke-width="10" fill="none" filter="url(#wide)" opacity=".35"/>
+    <path d="M-20 640 C 220 590, 420 700, 640 640 S 1010 560, 1220 610" stroke="url(#gc)" stroke-width="1.2" fill="none"/>
+    <path d="M-20 668 C 260 640, 470 730, 700 676 S 1040 600, 1220 650" stroke="url(#gv)" stroke-width="1" fill="none" opacity=".8"/>
+    <path d="M-30 1110 C 120 1010, 260 1130, 420 1060" stroke="url(#gv)" stroke-width="8" fill="none" filter="url(#wide)" opacity=".45"/>
+    <path d="M-30 1110 C 120 1010, 260 1130, 420 1060" stroke="url(#gv)" stroke-width="1.2" fill="none"/>
+    <path d="M820 1190 C 960 1120, 1080 1170, 1230 1080" stroke="url(#gc)" stroke-width="1" fill="none" opacity=".7"/>
+  </g>
+</svg>
+<div id="dust"></div>
+
+<!-- header -->
+<div class="abs brand">
+  <svg width="52" height="48" viewBox="0 0 52 48"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2AEAFC"/><stop offset=".55" stop-color="#3D7BFF"/><stop offset="1" stop-color="#C46BFF"/></linearGradient></defs>
+    <path d="M26 3 L49 44 L35 44 L26 27 L17 44 L3 44 Z" fill="none" stroke="url(#lg)" stroke-width="3" stroke-linejoin="round" style="filter:drop-shadow(0 0 5px rgba(42,234,252,.55))"/>
+    <path d="M26 30 L31 40 L21 40 Z" fill="url(#lg)" opacity=".85"/></svg>
+  <div><div class="name">Device AI<br>Continuum</div><div class="cap">Deine KI-Steuerzentrale</div></div>
+</div>
+<div class="abs divider"></div>
+<div class="abs tag">Deine persönliche KI<br>auf deinem Gerät</div>
+<div class="abs pill j"><svg class="i" viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>JARVIS</div>
+<div class="abs pill o"><span class="dot"></span>Online nach Freigabe</div>
+<div class="abs round" style="left:1044px"><svg class="i" viewBox="0 0 24 24" style="width:21px;height:21px"><path d="M6 16V11a6 6 0 0112 0v5l2 2H4z"/><path d="M10 20a2 2 0 004 0"/></svg></div>
+<div class="abs round" style="left:1104px"><svg class="i" viewBox="0 0 24 24" style="width:21px;height:21px"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></div>
+<div class="abs headline"></div>
+
+<!-- rail -->
+<div class="glass rail" id="rail"></div>
+
+<!-- avatar + orb -->
+<div class="abs headglow"></div>
+<img class="abs head" id="head" src="heads/h0000.png">
+<div class="abs orbglow" id="orbglow"></div>
+<img class="abs orb" id="orb" src="orb/orb-ready.png">
+<div class="abs orblabel"><div class="a">KI-KERN</div><div class="b">CONTINUUM</div></div>
+<div class="glass ccard" style="background:transparent;border-color:transparent;box-shadow:none;backdrop-filter:none">
+  <span class="br tl"></span><span class="br brr"></span>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div class="inf"><svg viewBox="0 0 40 20" width="30" height="16" style="stroke:#00E5FF;fill:none;stroke-width:2.2;filter:drop-shadow(0 0 3px #00E5FF)"><path d="M20 10c-4-6-9-7-12-7a7 7 0 000 14c3 0 8-1 12-7s9-7 12-7a7 7 0 010 14c-3 0-8-1-12-7z"/></svg></div>
+    <div><div class="t">Continuum</div><div class="s">Ein Gedächtnis für alle deine Geräte</div></div>
+  </div>
+  <div class="row">Reden · Denken · Forschen · Handeln · Lernen · Wachsen</div>
+</div>
+<div class="glass v mods">
+  <div class="mi"><svg class="i" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg>Gedächtnis<span class="d"></span></div>
+  <div class="mi"><svg class="i" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/></svg>Lokale KI<span class="d"></span></div>
+  <div class="mi"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2.5"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/></svg>Kamera aus</div>
+</div>
+
+<!-- jarvis chip -->
+<div class="glass jchip" id="jchip">
+  <span class="br tl"></span><span class="br brr"></span>
+  <svg class="i" viewBox="0 0 24 24" style="margin-top:3px"><path d="M2 12h4l2.5-6 4 13 3-9 2 2h4.5"/></svg>
+  <div><div class="n">JARVIS</div><div class="st" id="jst">Bereit</div><div class="q hidden" id="jq"></div></div>
+</div>
+
+<!-- input -->
+<div class="glass input" id="input"><div class="in">
+  <div class="mic"><svg class="i" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></div>
+  <div class="caret"></div>
+  <div class="txt ph" id="itxt">Was soll ich für dich erledigen?</div>
+  <svg class="i" viewBox="0 0 24 24" style="width:28px;height:28px"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"/></svg>
+</div></div>
+<div class="abs under" id="under"></div>
+
+<!-- tiles -->
+<div class="abs tiles" id="tiles"></div>
+
+<!-- work surfaces (filled per phase) -->
+<div id="work"></div>
+
+<!-- status bar -->
+<div class="glass sbar" id="sbar">
+  <span class="ok"><span class="dot"></span>Systemstatus: Offen</span><span class="sep"></span>
+  <span style="display:flex;gap:9px;align-items:center"><svg class="i" viewBox="0 0 24 24" style="width:19px;height:19px"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>Lokale KI: Aktiv</span><span class="sep"></span>
+  <span style="display:flex;gap:9px;align-items:center"><svg class="i" viewBox="0 0 24 24" style="width:19px;height:19px"><rect x="3" y="7" width="18" height="13" rx="2.5"/><circle cx="12" cy="13.5" r="3.5"/></svg>Kamera aus</span><span class="sep"></span>
+  <span style="display:flex;gap:9px;align-items:center"><svg class="i" viewBox="0 0 24 24" style="width:19px;height:19px"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Online nach Freigabe</span>
+</div>
+<div class="abs footL">Designkonzept · Originalkopf (GLB) und Originalkugel aus der App · Inhalte sind Beispiele</div>
+<div class="abs foot" id="foot"></div>
+<div class="vignette"></div>
+
+<script>
+const ICON={
+ home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/>',
+ chat:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8"/>',
+ layers:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/><path d="M3 17.5l9 5 9-5" opacity=".6"/>',
+ graph:'<circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M11 7.3L6.2 15.8M13 7.3l4.8 8.5M7.5 18h9"/>',
+ search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>',
+ cube:'<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>',
+ task:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M8.5 13.5l2.5 2.5 4.5-5"/>',
+ globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+ cap:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v6"/>',
+ phone:'<rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/>',
+ pulse:'<path d="M2 12h4l2.5-6 4 13 3-9 2 2h4.5"/>',
+ pdf:'<path d="M6 2.5h8l4.5 4.5v14.5H6z"/><path d="M14 2.5V7h4.5"/><path d="M9 15.5c1.5-3 2.6-6 2.2-7.2-.4-1-1.6-.3-1.2 1 .6 2.1 3.4 5.6 5.3 6 1.4.3 1.6-1.2.2-1.3-2-.2-5.3.7-6.5 1.5"/>',
+ doc:'<path d="M6 2.5h8l4.5 4.5v14.5H6z"/><path d="M14 2.5V7h4.5M9 12h6M9 15.5h6M9 9h3"/>',
+ target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>',
+ check:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
+ edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/><path d="M14 20h6"/>',
+ ext:'<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/>',
+ save:'<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/>',
+ pen:'<path d="M15 4l5 5L9 20H4v-5z"/>',
+ spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',
+ stop:'<rect x="6" y="6" width="12" height="12" rx="2"/>',
+ okc:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5 5-5.5"/>',
+ expand:'<path d="M14 4h6v6M10 20H4v-6"/>',
+ steps:'<circle cx="12" cy="12" r="8" stroke-dasharray="4 3"/><path d="M12 8v4l3 2"/>'
+};
+const ic=(n,cls='',st='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" style="${st}">${ICON[n]}</svg>`;
+const NAV=[['home','Start'],['chat','Gespräch'],['layers','Gedächtnis'],['graph','Denken und<br>Planen'],['search','Forschung'],['cube','Assistenten'],['task','Aufgaben'],['globe','Internet'],['cap','Lernen'],['phone','Geräte-<br>steuerung'],['pulse','System-<br>status']];
+const TILES=[['chat','Gespräch','Natürlich sprechen<br>und nachfragen'],['layers','Gedächtnis','Persönlicher Kontext<br>und Erinnerungen'],['graph','Denken und Planen','Überlegen, planen<br>und Probleme lösen'],['search','Forschung','Recherchieren<br>mit Quellen'],['cube','Assistenten','Spezialisierte<br>KI-Helfer'],
+ ['task','Aufgaben','Planen, verfolgen<br>und erledigen'],['globe','Internet','Suchen und<br>zusammenfassen'],['cap','Lernen','Anpassen, verbessern<br>und dazulernen'],['phone','Gerätesteuerung','Android und Apps<br>nach Freigabe steuern'],['pulse','Systemstatus','Zustand, Leistung<br>und Modellstatus']];
+const P=+(new URLSearchParams(location.search).get('p')||1);
+const active=(P>=2&&P<=4)?'Aufgaben':'Start';
+document.getElementById('rail').innerHTML='<span class="br tl"></span>'+NAV.map(([k,l])=>`<div class="ri ${l.replace('<br>',' ').startsWith(active)?'on':''}">${ic(k)}<span>${l}</span></div>`).join('');
+document.getElementById('tiles').innerHTML=TILES.map(([k,t,s],i)=>`<div class="glass tile ${P===5&&k==='task'?'hot':''}"><div class="tin">${ic(k,'', 'width:28px;height:28px')}<div class="tt">${t}</div><div class="ts">${s}</div></div></div>`).join('');
+// deterministic dust
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+let dust='';for(let i=0;i<46;i++){const x=rnd()*1190,y=140+rnd()*1050,a=.25+rnd()*.6,s=1+rnd()*1.6;dust+=`<span class="dust" style="left:${x}px;top:${y}px;opacity:${a};transform:scale(${s})"></span>`}
+document.getElementById('dust').innerHTML=dust;
+const $=id=>document.getElementById(id);
+const STEP={1:'01 · BEREIT',2:'02 · AUFTRAG ÖFFNEN',3:'03 · ANALYSIEREN',4:'04 · ENTWURF',5:'05 · ZURÜCK IM COCKPIT'};
+$('foot').textContent=STEP[P]+' · DESIGNKONZEPT';
+$('head').src=`heads/h000${P-1}.png`;
+$('orb').src='orb/orb-'+({1:'ready',2:'thinking',3:'research',4:'speaking',5:'ready'}[P])+'.png';
+$('orbglow').style.opacity=({1:.7,2:1,3:1.25,4:1.05,5:.7}[P]);
+const cmd='Lies die PDF und erstelle eine Zusammenfassung als Entwurf.';
+const quote=(t)=>{$('jq').textContent='„'+t+'“';$('jq').classList.remove('hidden')};
+const W=$('work');
+const tiles=$('tiles');
+if(P===1){
+  $('under').innerHTML=`<div class="glass strip" style="position:relative;padding:8px 18px">${ic('spark','v','width:18px;height:18px')}<span>PDF zusammenfassen</span><span class="chip">Beispiel</span></div>`;
+}
+if(P===2){
+  $('jst').textContent='Öffnet Dokument'; quote('Ich öffne die Projektübersicht und lese sie für dich.');
+  $('itxt').textContent=cmd;$('itxt').classList.remove('ph');
+  $('under').innerHTML=`<div class="glass strip" style="position:relative"><span class="spin"></span><span>Auftrag angenommen – Dokument wird geöffnet.</span><span class="stop">${ic('stop','', 'width:16px;height:16px')}Stopp</span></div>`;
+  tiles.style.cssText+='opacity:.13;transform:translateY(128px) scale(.88);filter:blur(1.4px)';
+  W.innerHTML=`
+  <svg class="abs" style="left:0;top:0;width:1190px;height:1322px;pointer-events:none" viewBox="0 0 1190 1322">
+    <defs><linearGradient id="tr" x1="0" x2="1"><stop offset="0" stop-color="#00E5FF" stop-opacity=".1"/><stop offset="1" stop-color="#A9F6FF"/></linearGradient></defs>
+    <path d="M506 902 C 572 900, 598 878, 646 866" stroke="#00E5FF" stroke-width="9" fill="none" opacity=".18" filter="url(#wide)"/>
+    <path d="M506 902 C 572 900, 598 878, 646 866" stroke="url(#tr)" stroke-width="1.6" fill="none"/>
+  </svg>
+  <span class="spark" style="left:644px;top:864px"></span>
+  <div class="glass panel" style="left:150px;top:948px;width:170px;height:150px;opacity:.38;filter:blur(1.6px);transform:perspective(900px) rotateY(24deg)">
+     <div class="ph">${ic('doc','', 'width:20px;height:20px')}<span style="font:500 16px Rob">Entwurf</span></div>
+     <div style="margin-top:16px;height:6px;width:90px;border-radius:3px;background:rgba(120,246,251,.25)"></div><div style="margin-top:10px;height:6px;width:70px;border-radius:3px;background:rgba(120,246,251,.18)"></div></div>
+  <div class="glass panel" style="left:300px;top:930px;width:250px;height:196px;opacity:.62;filter:blur(.8px);transform:perspective(900px) rotateY(18deg)">
+     <div class="ph">${ic('steps','', 'width:20px;height:20px')}<span style="font:500 17px Rob">Arbeitsschritte</span></div>
+     ${[1,1,0,0].map((d,i)=>`<div style="display:flex;gap:10px;align-items:center;margin-top:${i?10:18}px"><span style="width:12px;height:12px;border-radius:50%;border:1.5px solid ${d?'#00E5FF':'rgba(120,246,251,.4)'};${d?'background:rgba(0,229,255,.35)':''}"></span><span style="height:6px;width:${120-i*18}px;border-radius:3px;background:rgba(150,180,230,.22)"></span></div>`).join('')}</div>
+  <div class="abs" style="left:640px;top:856px;width:466px;height:306px;transform:perspective(1100px) rotateY(-14deg) rotateX(6deg);transform-origin:left center">
+    <svg style="position:absolute;left:-2px;top:-2px;width:470px;height:310px;overflow:visible" viewBox="0 0 470 310">
+      <rect x="2" y="2" width="466" height="306" rx="16" fill="none" stroke="#9FF8FF" stroke-width="1.6" stroke-dasharray="1010 600" style="filter:drop-shadow(0 0 4px #00E5FF)"/></svg>
+    <span class="spark" style="left:-3px;top:150px;transform:scale(.9)"></span>
+    <div class="glass panel" style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(80,160,255,.06),rgba(10,24,52,.10));opacity:.95;border-color:rgba(120,246,251,.16)">
+      <div class="ph">${ic('pdf','', 'width:30px;height:30px')}<span class="t" style="font-size:22px">Projektübersicht.pdf</span><span class="chip">Beispiel</span></div>
+      <div style="display:flex;gap:22px;margin-top:22px">
+        <div style="width:118px;height:150px;border-radius:8px;border:1px solid rgba(120,246,251,.30);background:linear-gradient(180deg,rgba(120,200,255,.10),rgba(120,200,255,.02));padding:12px;opacity:.75">
+          ${[70,86,60,80,52].map(w=>`<div style="height:5px;width:${w}%;border-radius:3px;background:rgba(190,215,255,.30);margin-bottom:9px"></div>`).join('')}</div>
+        <div style="flex:1">
+          <div style="display:flex;gap:12px;align-items:center;font:400 18px Rob">${ic('okc','', 'width:24px;height:24px')}Auftrag angenommen</div>
+          <div style="display:flex;gap:12px;align-items:center;font:400 18px Rob;margin-top:16px"><span class="spin" style="width:22px;height:22px"></span>Dokument wird geöffnet</div>
+          <div style="margin-top:26px;height:4px;border-radius:2px;background:rgba(120,246,251,.14)"><div style="height:100%;width:46%;border-radius:2px;background:linear-gradient(90deg,#00E5FF,#A43BFF);box-shadow:0 0 8px #00E5FF"></div></div>
+        </div></div></div></div>
+  <div class="glass" style="left:270px;top:880px;width:236px;height:46px;border-radius:10px;display:flex;align-items:center;gap:10px;padding:0 12px;transform:rotate(-2deg)">
+    ${ic('pdf','', 'width:22px;height:22px')}<span style="font:500 15px Rob">Projektübersicht.pdf</span><span class="chip" style="font-size:11px;padding:2px 8px">Beispiel</span></div>`;
+}
+if(P===3){
+  $('jst').textContent='Analysiert …'; quote('Ich lese gerade den Abschnitt ‚Vorgehen‘.');
+  $('itxt').textContent=cmd;$('itxt').classList.remove('ph');$('itxt').style.color='#9fb0cf';
+  $('under').innerHTML=`<div class="glass strip" style="position:relative">${ic('search','', 'width:20px;height:20px')}<span>Dokument wird analysiert.</span><span class="stop">${ic('stop','', 'width:16px;height:16px')}Stopp</span></div>`;
+  tiles.classList.add('hidden');
+  W.innerHTML=`
+  <div class="page" style="left:266px;top:872px;width:560px;height:322px;transform:translate(-14px,-12px);opacity:.55"></div>
+  <div class="page" style="left:266px;top:872px;width:560px;height:322px;transform:translate(-7px,-6px);opacity:.75"></div>
+  <div class="glass panel" style="left:266px;top:872px;width:560px;height:322px">
+    <span class="br tl"></span><span class="br brr"></span>
+    <div class="ph">${ic('pdf','', 'width:30px;height:30px')}<span class="t" style="font-size:22px">Projektübersicht.pdf</span><span class="chip">Beispiel</span><span style="margin-left:auto">${ic('expand','', 'width:20px;height:20px')}</span></div>
+    <div style="margin-top:14px">
+      <div class="rowx">${ic('target','', 'width:26px;height:26px')}<div><div class="k">Ziel</div><div class="v">Arbeitsabläufe vereinfachen.</div></div></div>
+      <div class="rowx hl">${ic('graph','', 'width:26px;height:26px')}<div><div class="k">Vorgehen</div><div class="v" style="color:#d8f8ff">Schritte klar gliedern.</div></div></div>
+      <div class="rowx">${ic('check','', 'width:26px;height:26px')}<div><div class="k">Offene Punkte</div><div class="v">Prioritäten abstimmen.</div></div></div>
+    </div></div>
+  <div class="glass v panel" style="left:866px;top:858px;width:294px;height:300px;padding:20px 22px">
+    <div class="ph">${ic('layers','', 'width:26px;height:26px')}<span class="t" style="font-size:20px">Kernaussagen</span></div>
+    ${[['Ziel','Arbeitsabläufe vereinfachen.',0],['Vorgehen','Schritte klar gliedern.',1],['Offene Punkte','Prioritäten abstimmen.',0]].map(([k,v,h])=>`
+      <div style="display:flex;gap:12px;margin-top:16px;align-items:flex-start"><span style="margin-top:7px;width:8px;height:8px;border-radius:50%;background:${h?'#00E5FF':'rgba(120,246,251,.45)'};box-shadow:${h?'0 0 10px #00E5FF':'none'}"></span>
+      <div><div style="font:500 17px Rob;color:${h?'#E9FDFF':'#e6eeff'}">${k}</div><div style="font:400 14px Rob;color:#a9b8d8;margin-top:2px">${v}</div></div></div>`).join('')}</div>
+  <svg class="abs" style="left:0;top:0;width:1190px;height:1322px;pointer-events:none" viewBox="0 0 1190 1322">
+    <path d="M826 1034 C 850 1034, 850 984, 884 984" stroke="#00E5FF" stroke-width="8" fill="none" opacity=".18" filter="url(#wide)"/>
+    <path d="M826 1034 C 850 1034, 850 984, 884 984" stroke="#7FF7FF" stroke-width="1.4" fill="none"/>
+    <path d="M1108 858 C 1150 800, 1146 650, 1068 560 S 1000 500, 984 486" stroke="#A43BFF" stroke-width="1.2" fill="none" opacity=".85" stroke-dasharray="3 5"/>
+    <circle cx="884" cy="984" r="3.5" fill="#E9FDFF" style="filter:drop-shadow(0 0 5px #00E5FF)"/>
+    <circle cx="826" cy="1034" r="3" fill="#E9FDFF" style="filter:drop-shadow(0 0 5px #00E5FF)"/>
+    <circle cx="984" cy="486" r="3" fill="#E6D2FF" style="filter:drop-shadow(0 0 5px #A43BFF)"/>
+  </svg>`;
+}
+if(P===4){
+  $('jst').textContent='Entwurf erstellt'; quote('Der Entwurf ist fertig. Soll ich ihn öffnen?');
+  $('itxt').textContent=cmd;$('itxt').classList.remove('ph');$('itxt').style.color='#9fb0cf';
+  tiles.classList.add('hidden');
+  W.innerHTML=`
+  <div class="abs" style="left:136px;top:884px;width:300px;height:250px;transform:perspective(1000px) rotateY(22deg);transform-origin:right center;opacity:.72;filter:blur(.5px)">
+    <div class="glass panel" style="position:absolute;inset:0;padding:18px 20px">
+      <div class="ph">${ic('pdf','', 'width:26px;height:26px')}<span style="font:500 17px Rob">Projektübersicht.pdf</span></div>
+      <span class="chip" style="margin-top:8px;margin-left:40px">Beispiel</span>
+      <div style="display:flex;gap:14px;margin-top:14px"><div style="width:84px;height:110px;border-radius:7px;border:1px solid rgba(120,246,251,.28);padding:10px;background:rgba(120,200,255,.05)">${[80,64,88,56].map(w=>`<div style="height:4px;width:${w}%;border-radius:2px;background:rgba(190,215,255,.30);margin-bottom:8px"></div>`).join('')}</div>
+      <div style="font:400 13.5px/1.45 Rob;color:#a2b2d4">PDF-Dokument<br>Projektübersicht<br>(Beispiel)</div></div></div></div>
+  <svg class="abs" style="left:0;top:0;width:1190px;height:1322px;pointer-events:none" viewBox="0 0 1190 1322">
+    <path d="M436 1000 C 470 1000, 470 1050, 504 1050" stroke="#00E5FF" stroke-width="8" fill="none" opacity=".18" filter="url(#wide)"/>
+    <path d="M436 1000 C 470 1000, 470 1050, 504 1050" stroke="#7FF7FF" stroke-width="1.4" fill="none"/>
+    <circle cx="504" cy="1050" r="3.5" fill="#E9FDFF" style="filter:drop-shadow(0 0 5px #00E5FF)"/>
+  </svg>
+  <div class="glass panel" style="left:504px;top:820px;width:656px;height:344px;border-color:rgba(0,229,255,.48);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 34px rgba(0,229,255,.10),0 16px 40px rgba(0,0,0,.45)">
+    <span class="br tl"></span><span class="br brr"></span>
+    <div class="ph">${ic('doc','', 'width:30px;height:30px')}<span class="t" style="font-size:25px">Zusammenfassung – Entwurf</span><span class="chip" style="margin-left:auto">${ic('spark','v','width:13px;height:13px;stroke-width:1.8')}Beispiel</span></div>
+    <div style="margin-top:14px;font:400 21px/1.25 Rob;color:#e9f0ff">
+      <div style="padding:9px 2px;border-bottom:1px solid rgba(120,246,251,.10)"><b style="font-weight:700">Ziel:</b> Arbeitsabläufe vereinfachen.</div>
+      <div style="padding:9px 2px;border-bottom:1px solid rgba(120,246,251,.10)"><b style="font-weight:700">Vorgehen:</b> Schritte klar gliedern.</div>
+      <div style="padding:9px 2px;display:flex;align-items:center"><span><b style="font-weight:700">Offen:</b> Prioritäten abstimmen.<span class="cursor"></span></span><span style="margin-left:auto">${ic('edit','', 'width:26px;height:26px')}</span></div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:10px"><span style="display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(60,242,176,.55);border-radius:999px;padding:6px 18px;font:500 16px Rob;color:#d9fff1;box-shadow:0 0 14px rgba(60,242,176,.18)">${ic('okc','', 'width:20px;height:20px;stroke:#3CF2B0;filter:drop-shadow(0 0 3px rgba(60,242,176,.6))')}Entwurf erstellt</span></div>
+    <div style="display:flex;gap:14px;margin-top:16px">
+      <span class="btn">${ic('ext','', 'width:20px;height:20px')}Entwurf öffnen</span><span class="btn">${ic('pen','', 'width:20px;height:20px')}Weiterbearbeiten</span><span class="btn">${ic('save','', 'width:20px;height:20px')}Speichern</span></div>
+  </div>`;
+}
+if(P===5){
+  $('jst').textContent='Bereit';
+  $('under').innerHTML=`<div class="glass strip" style="position:relative;padding:8px 10px 8px 18px">${ic('doc','', 'width:20px;height:20px')}<span>Zusammenfassung bereit</span><span class="chip">Beispiel</span><span class="stop" style="border-color:rgba(0,229,255,.5)">${ic('ext','', 'width:16px;height:16px')}Entwurf öffnen</span></div>`;
+  W.innerHTML=`
+  <svg class="abs" style="left:0;top:0;width:1190px;height:1322px;pointer-events:none" viewBox="0 0 1190 1322">
+    <path d="M760 842 C 560 846, 330 910, 246 1030" stroke="#A43BFF" stroke-width="10" fill="none" opacity=".16" filter="url(#wide)"/>
+    <path d="M760 842 C 560 846, 330 910, 246 1030" stroke="url(#gc)" stroke-width="1.4" fill="none" opacity=".75"/>
+    <rect x="128" y="1012" width="232" height="160" rx="16" fill="none" stroke="#78F6FB" stroke-width=".8" opacity=".16" transform="skewX(-7) translate(130 0)"/>
+    <rect x="146" y="1022" width="196" height="140" rx="14" fill="none" stroke="#78F6FB" stroke-width="1" opacity=".32" transform="skewX(-7) translate(130 0)"/>
+  </svg>
+  <span class="spark" style="left:244px;top:1028px"></span>`;
+}
+</script>
+</body></html>

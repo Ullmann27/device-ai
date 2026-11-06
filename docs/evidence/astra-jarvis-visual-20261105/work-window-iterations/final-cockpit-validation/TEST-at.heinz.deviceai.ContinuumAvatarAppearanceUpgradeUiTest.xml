@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumAvatarAppearanceUpgradeUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:15:08" hostname="6e2f8005d77e" time="0.233">
+  <properties/>
+  <testcase name="explicit2dChoiceSurvivesUpgrade" classname="at.heinz.deviceai.ContinuumAvatarAppearanceUpgradeUiTest" time="0.032"/>
+  <testcase name="changingUpgradedHeadTo2dSurvivesRecreation" classname="at.heinz.deviceai.ContinuumAvatarAppearanceUpgradeUiTest" time="0.027"/>
+  <testcase name="explicitOrbWith3dKeyRemainsOrb" classname="at.heinz.deviceai.ContinuumAvatarAppearanceUpgradeUiTest" time="0.028"/>
+  <testcase name="legacyExplicitOrbRemainsOrb" classname="at.heinz.deviceai.ContinuumAvatarAppearanceUpgradeUiTest" time="0.026"/>
+  <testcase name="explicit3dOffWithoutLegacyKeyStaysOff" classname="at.heinz.deviceai.ContinuumAvatarAppearanceUpgradeUiTest" time="0.029"/>
+  <testcase name="explicit3dChoiceRemains3d" classname="at.heinz.deviceai.ContinuumAvatarAppearanceUpgradeUiTest" time="0.033"/>
+  <testcase name="freshInstallUsesRequested3dHeadWithoutCameraPermission" classname="at.heinz.deviceai.ContinuumAvatarAppearanceUpgradeUiTest" time="0.025"/>
+  <testcase name="legacyEnabledHeadUses3dAfterUpgrade" classname="at.heinz.deviceai.ContinuumAvatarAppearanceUpgradeUiTest" time="0.033"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

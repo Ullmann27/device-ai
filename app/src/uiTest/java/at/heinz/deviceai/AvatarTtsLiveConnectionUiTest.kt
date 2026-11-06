@@ -9,6 +9,7 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import at.heinz.deviceai.avatar.AvatarDirector
 import at.heinz.deviceai.avatar.AvatarPose
 import at.heinz.deviceai.avatar.AvatarPoseReducer
@@ -23,6 +24,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -33,6 +35,10 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowSystem
+import org.robolectric.shadows.ShadowChoreographer
+import java.time.Duration
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
 /**
@@ -47,6 +53,11 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.LEGACY)
 @LooperMode(LooperMode.Mode.PAUSED)
 class AvatarTtsLiveConnectionUiTest {
+    private var framePump: CockpitHostFramePump? = null
+    @Before fun pauseVsync() {
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+    }
     private data class SpeechFixture(
         val activity: AgentActivity,
         val home: ContinuumHomeView,
@@ -70,8 +81,15 @@ class AvatarTtsLiveConnectionUiTest {
         (0 until view.childCount).flatMap { descendants(view.getChildAt(it)) }
     } else emptyList()
 
-    private fun advance(millis: Long) = shadowOf(Looper.getMainLooper())
-        .idleFor(millis, TimeUnit.MILLISECONDS)
+    private fun advance(millis: Long) {
+        var remaining = millis
+        while (remaining > 0L) {
+            val step = minOf(16L, remaining)
+            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
+            framePump?.drawRequestedFrame()
+            remaining -= step
+        }
+    }
 
     private fun measure(root: View) {
         root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
@@ -97,8 +115,11 @@ class AvatarTtsLiveConnectionUiTest {
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         var paused = false
         try {
-            controller.setup().visible().windowFocusChanged(true)
+            controller.setup().visible()
+            advance(32L)
+            controller.windowFocusChanged(true)
             val activity = controller.get()
+            framePump = CockpitHostFramePump { controller.get().window.decorView }
             measure(activity.window.decorView)
             measure(activity.window.decorView)
             val home = field(activity, "homeView") as ContinuumHomeView
@@ -136,6 +157,8 @@ class AvatarTtsLiveConnectionUiTest {
                 paused = true
             })
         } finally {
+            framePump?.close()
+            framePump = null
             try {
                 if (!paused) controller.pause()
                 controller.stop()
@@ -290,4 +313,86 @@ class AvatarTtsLiveConnectionUiTest {
         assertEquals(0f, (field(f.activity, "voiceSignal") as TtsHologramSignal)
             .level(SystemClock.elapsedRealtime()), 0f)
     }
+
+    @Test fun appLookupCancellationStopsSpeechBeforeReturning() = withSpeechShell { f ->
+        startPendingSpeech(f, "cancel-lookup", "A")
+        assertTrue("Real listener drives speech", field(f.activity, "voiceSpeaking") as Boolean)
+        assertTrue("Scheduled PCM opens the mouth", pose(f).jawOpen > 0f)
+        val generation = field(f.activity, "appLookupGeneration") as Long
+        set(f.activity, "appLookupActive", true)
+        set(f.activity, "activeLocalRequest", true)
+        set(f.activity, "busy", true)
+
+        invoke(f.activity, "cancelLocalRequest")
+        assertFalse("Early lookup return must silence TTS immediately", field(f.activity, "voiceSpeaking") as Boolean)
+        assertNull(field(f.activity, "voiceUtteranceId"))
+        assertFalse(field(f.activity, "appLookupActive") as Boolean)
+        assertFalse(field(f.activity, "activeLocalRequest") as Boolean)
+        assertEquals(generation + 1L, field(f.activity, "appLookupGeneration"))
+        shadowOf(Looper.getMainLooper()).idle()
+        assertSilent(f)
+        assertEquals(0f, (field(f.activity, "voiceSignal") as TtsHologramSignal)
+            .level(SystemClock.elapsedRealtime()), 0f)
+
+        f.listener.onStart("cancel-lookup")
+        f.listener.onAudioAvailable("cancel-lookup", pcm16())
+        f.listener.onRangeStart("cancel-lookup", 0, 1, 0)
+        (field(f.activity, "voiceFrame") as Runnable).run()
+        advance(170L)
+        assertSilent(f)
+        assertSame(f.live, field(f.activity, "hologramView"))
+    }
+
+    @Test fun lookupCancellationClosesWorkWindowAndLateStatusCannotReopenIt() = withSpeechShell { f ->
+        val root = f.activity.window.decorView
+        val io = field(f.activity, "learningIoExecutor") as ExecutorService
+        val entered = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        val held = io.submit(Runnable {
+            entered.countDown()
+            check(release.await(10L, TimeUnit.SECONDS)) { "Test status gate timed out" }
+        })
+        try {
+            assertTrue("Hold the actual status worker", entered.await(5L, TimeUnit.SECONDS))
+            f.home.setForegroundActive(true)
+            assertEquals(ContinuumWorkArea.START, field(f.activity, "activeWorkArea"))
+            assertNotNull("Real initial draw creates shell geometry", f.home.jarvisShell.shell)
+            invoke(f.activity, "showSystemCenter")
+            measure(root)
+            val work = descendants(root).singleOrNull { it.tag == "jarvis-work-window" && it.isShown }
+            assertNotNull("Systemstatus is a visible cockpit work area", work)
+            val labels = descendants(requireNotNull(work)).filterIsInstance<TextView>().map { it.text.toString() }
+            assertTrue("Real status is still pending", labels.any { it.contains("Status wird gelesen") })
+            startPendingSpeech(f, "cancel-window", "A")
+            assertTrue(pose(f).jawOpen > 0f)
+            set(f.activity, "appLookupActive", true)
+            set(f.activity, "activeLocalRequest", true)
+            set(f.activity, "busy", true)
+
+            invoke(f.activity, "cancelLocalRequest")
+            assertFalse("Cancel closes immediately without animation", work.isShown)
+            assertFalse("Cancel silences before the lookup return", field(f.activity, "voiceSpeaking") as Boolean)
+            shadowOf(Looper.getMainLooper()).idle()
+            assertSilent(f)
+            assertSame(f.live, field(f.activity, "hologramView"))
+
+            release.countDown()
+            held.get(5L, TimeUnit.SECONDS)
+            io.submit(Runnable {}).get(5L, TimeUnit.SECONDS)
+            advance(80L)
+            assertTrue("Late actual status cannot reopen cancelled work",
+                descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+            f.listener.onStart("cancel-window")
+            f.listener.onRangeStart("cancel-window", 0, 1, 0)
+            f.listener.onAudioAvailable("cancel-window", pcm16())
+            advance(170L)
+            assertSilent(f)
+            assertSame(f.live, field(f.activity, "hologramView"))
+            assertTrue(f.live.isShown)
+        } finally {
+            release.countDown()
+            held.get(5L, TimeUnit.SECONDS)
+        }
+    }
+
 }

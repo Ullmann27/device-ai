@@ -1,0 +1,45 @@
+{
+  "label": "phone-density-green",
+  "head": "8c851a09d7c641bdfc02d5e2d2c432cd3fda0e8c",
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-I",
+    "/workspace/scratch/76b7222771d5/build-env/observe-tests.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest",
+    "--tests",
+    "at.heinz.deviceai.ui.JarvisReferenceWindowLayoutTest",
+    "--tests",
+    "at.heinz.deviceai.avatar3d.AvatarFramingTest"
+  ],
+  "started": 1793898737.6560566,
+  "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+  "statusBefore": " M app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt\n M docs/evidence/astra-jarvis-visual-20261105/FOLD7-OWNER-ACCEPTANCE.md\n?? app/src/uiTest/java/at/heinz/deviceai/JarvisPhoneWorkWindowDensityUiTest.kt\n?? docs/evidence/astra-jarvis-visual-20261105/work-window-iterations/\n?? tools/__pycache__/\n",
+  "sourcePatchSha256": "583831e55f8401a2007b6b8ee0474d3a485a72ca1682b2e2e66a244dfa14246c",
+  "exitCode": 0,
+  "ended": 1793898774.5125487,
+  "sourceUnchanged": true,
+  "statusAfter": " M app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt\n M docs/evidence/astra-jarvis-visual-20261105/FOLD7-OWNER-ACCEPTANCE.md\n?? app/src/uiTest/java/at/heinz/deviceai/JarvisPhoneWorkWindowDensityUiTest.kt\n?? docs/evidence/astra-jarvis-visual-20261105/work-window-iterations/\n?? tools/__pycache__/\n",
+  "log": "/workspace/scratch/76b7222771d5/build-env/logs/phone-density-green.log",
+  "sourceBeforeManifestSha256": "2260803bd47ec21ab3ac88b924bc9ba90c2c901aed4e61773eab60db94740e68",
+  "sourceAfterManifestSha256": "2260803bd47ec21ab3ac88b924bc9ba90c2c901aed4e61773eab60db94740e68",
+  "changedSourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt": "33e9267088aa50f30d97f16f2dba781d69ec23b40898bb4863b3295c9f0c7018",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisPhoneWorkWindowDensityUiTest.kt": "d2e3dd493a5c046cc38d482e2c5c0f8137a0c68bd47a9685491f28311ca8c409"
+  },
+  "observedCounts": {
+    "tests": 23,
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0
+  },
+  "countBasis": "AUDIT_TESTS and fresh JUnit XML"
+}

@@ -13,7 +13,6 @@ import android.os.SystemClock
 import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
-import android.view.Choreographer
 import android.view.View
 
 /**
@@ -27,6 +26,14 @@ class JarvisShellView(context: Context) : View(context) {
     private val glass = JarvisGlassRenderer(painter)
     /** The separate foreground layer follows this layer's invalidation without owning an animation clock. */
     var onFrameDrawn: (() -> Unit)? = null
+    private val motionFrames = linkedSetOf<(Long, Float) -> Boolean>()
+
+    /** Shares the existing draw clock. */
+    fun observeMotionFrames(listener: (Long, Float) -> Boolean): AutoCloseable {
+        motionFrames.add(listener)
+        invalidate()
+        return AutoCloseable { motionFrames.remove(listener) }
+    }
     var content: Map<JarvisShellLayout.Slot, JarvisShellRenderer.SlotContent> = emptyMap()
         set(value) { field = value; invalidate() }
     /** Presentation model of the action tiles (label/icon/target, optional display text from Kern). */
@@ -86,6 +93,7 @@ class JarvisShellView(context: Context) : View(context) {
 
     private fun refreshMotion() {
         removeCallbacks(ambientFrame)
+        lastFrameStartNanos = 0L
         invalidate()
     }
 
@@ -142,22 +150,48 @@ class JarvisShellView(context: Context) : View(context) {
     var shell: JarvisShellLayout.Shell? = null
         private set
 
+    /** Airbus deck: 0 = tiles and rows in place, 1 = cleared for an open work window (see JarvisDeckClearance). */
+    var deckClearance = 0f
+        private set
+    private var deckCleared = false
+    private var deckFrameMs = -1L
+
+    fun setDeckCleared(cleared: Boolean) {
+        if (deckCleared == cleared) return
+        deckCleared = cleared
+        deckFrameMs = -1L
+        invalidate()
+    }
+
+    /**
+     * Geometry for the size the view has now (dp), from the same cache onDraw uses – so a work window can be planned
+     * after a layout even before the next draw. Null while the view is too small for the shell.
+     */
+    fun currentShell(): JarvisShellLayout.Shell? {
+        val d = resources.displayMetrics.density
+        val w = width / d; val h = height / d
+        if (w < 240f || h < 160f) return null
+        val font = resources.configuration.fontScale
+        val viewport = viewportHeightDp.takeIf { it >= 160f } ?: h
+        return shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp && layoutCompact == compactPresentation }
+            ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp,
+                compactPresentation = compactPresentation).also {
+                shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp; layoutViewport = viewport; layoutCompact = compactPresentation
+            }
+    }
+
     fun playEntrance() { startMs = SystemClock.uptimeMillis(); postInvalidateOnAnimation() }
 
     private fun animatorScale(): Float =
         Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)
 
     override fun onDraw(canvas: Canvas) {
+        val drawStartedNanos = if (frameLogging) System.nanoTime() else 0L
         val d = resources.displayMetrics.density
         val w = width / d; val h = height / d
         if (w < 240f || h < 160f) return
         val font = resources.configuration.fontScale
-        val viewport = viewportHeightDp.takeIf { it >= 160f } ?: h
-        val s = shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp && layoutCompact == compactPresentation }
-            ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp,
-                compactPresentation = compactPresentation).also {
-                shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp; layoutViewport = viewport; layoutCompact = compactPresentation
-            }
+        val s = currentShell() ?: return
         val scale = animatorScale()
         val now = SystemClock.uptimeMillis()
         val elapsed = if (startMs < 0) Long.MAX_VALUE / 4 else now - startMs
@@ -165,15 +199,29 @@ class JarvisShellView(context: Context) : View(context) {
         textPainter.fontScale = font
         canvas.save(); canvas.scale(d, d)
         val sceneTime = if (ambientMotion(scale)) now else 0L
-        JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true)
+        val deckMoving = (deckCleared && deckClearance < 1f) || (!deckCleared && deckClearance > 0f)
+        if (deckMoving) {
+            val frame = if (deckFrameMs < 0L) 0L else now - deckFrameMs
+            deckClearance = JarvisDeckClearance.step(deckClearance, deckCleared, (frame / scale.coerceAtLeast(.05f)).toLong(),
+                motionAllowed(scale))
+        }
+        deckFrameMs = now
+        JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true,
+            deckClearance = deckClearance)
         canvas.restore()
+        var workWindowMoving = false
+        val effectiveScale = if (motionAllowed(scale)) scale else 0f
+        motionFrames.toList().forEach { listener ->
+            if (listener(now, effectiveScale)) workWindowMoving = true
+        }
         onFrameDrawn?.invoke()
         val total = JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, s.boxes.size + s.tileBoxes().size, animatorScale = scale)
         // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
         removeCallbacks(ambientFrame)
-        if (motionAllowed(scale) && startMs >= 0 && elapsed < total) postInvalidateOnAnimation()
+        val deckStillMoving = (deckCleared && deckClearance < 1f) || (!deckCleared && deckClearance > 0f)
+        if (motionAllowed(scale) && (workWindowMoving || deckStillMoving || startMs >= 0 && elapsed < total)) postInvalidateOnAnimation()
         else if (ambientMotion(scale)) postDelayed(ambientFrame, 66L)
-        if (frameLogging) frames.onDrawn(SystemClock.elapsedRealtimeNanos() - drawStart(now))
+        if (frameLogging) recordFrame(drawStartedNanos, System.nanoTime())
     }
 
     /** Same geometry and text metrics, rendered above the transparent native avatar but below its hit targets. */
@@ -188,28 +236,41 @@ class JarvisShellView(context: Context) : View(context) {
         canvas.restoreToCount(save)
     }
 
-    // --- Debug: frame-time measurement (Fold7 measurement still pending on device) ---
-    /** Logs frame interval stats every 120 frames under tag "JarvisFrames" while true. Debug only. */
+    /** Observes draws without scheduling frames. */
     var frameLogging = false
         set(value) {
+            if (field == value) return
             field = value
-            if (value) Choreographer.getInstance().postFrameCallback(frames) else frames.reset()
+            lastFrameStartNanos = 0L
+            if (value) frameSample = FrameSample()
         }
-    private fun drawStart(nowUptime: Long) = SystemClock.elapsedRealtimeNanos() - (SystemClock.uptimeMillis() - nowUptime) * 1_000_000L
 
-    private val frames = object : Choreographer.FrameCallback {
-        private var last = 0L; private var n = 0; private var sum = 0L; private var max = 0L; private var drawSum = 0L
-        fun reset() { last = 0L; n = 0; sum = 0L; max = 0L; drawSum = 0L }
-        fun onDrawn(ns: Long) { drawSum += ns }
-        override fun doFrame(frameTimeNanos: Long) {
-            if (last != 0L) { val dt = frameTimeNanos - last; sum += dt; if (dt > max) max = dt; n++ }
-            last = frameTimeNanos
-            if (n >= 120) {
-                Log.d("JarvisFrames", "avg=%.2fms max=%.2fms onDraw=%.2fms (n=%d)".format(sum / n / 1e6, max / 1e6, drawSum / n / 1e6, n))
-                n = 0; sum = 0L; max = 0L; drawSum = 0L
-            }
-            invalidate()
-            if (frameLogging) Choreographer.getInstance().postFrameCallback(this)
+    data class FrameSample(
+        val draws: Long = 0L,
+        val intervals: Long = 0L,
+        val intervalNanos: Long = 0L,
+        val maxIntervalNanos: Long = 0L,
+        val drawNanos: Long = 0L
+    ) {
+        val averageIntervalMs: Double? get() = if (intervals > 0) intervalNanos / intervals / 1e6 else null
+        val averageDrawMs: Double? get() = if (draws > 0) drawNanos / draws / 1e6 else null
+    }
+
+    private var lastFrameStartNanos = 0L
+    private var frameSample = FrameSample()
+    fun sampleFrames(): FrameSample = frameSample
+
+    private fun recordFrame(start: Long, end: Long) {
+        val interval = if (lastFrameStartNanos > 0L) (start - lastFrameStartNanos).coerceAtLeast(0L) else 0L
+        val before = frameSample
+        frameSample = FrameSample(before.draws + 1, before.intervals + if (lastFrameStartNanos > 0L) 1 else 0,
+            before.intervalNanos + interval, maxOf(before.maxIntervalNanos, interval),
+            before.drawNanos + (end - start).coerceAtLeast(0L))
+        lastFrameStartNanos = start
+        if (frameSample.draws % 120L == 0L) {
+            Log.d("JarvisFrames", "draws=%d avg=%.2fms max=%.2fms onDraw=%.2fms".format(
+                java.util.Locale.ROOT, frameSample.draws, frameSample.averageIntervalMs ?: 0.0,
+                frameSample.maxIntervalNanos / 1e6, frameSample.averageDrawMs ?: 0.0))
         }
     }
 }

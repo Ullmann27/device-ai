@@ -46,6 +46,7 @@ AvatarSinkRegistry.sink = MeinAvatarRenderer()
 | `SpeechStarted(utteranceId, text)` | einmal pro Äußerung; `text` = der hörbar vorgelesene Text | TTS `onStart` |
 | `VisemeCue(utteranceId, viseme, weight, durationMs)` | pro Wort, ca. 320 ms gleichmäßig verteilt, ≥ 40 ms je Visem | TTS `onRangeStart` |
 | `AudioLevel(utteranceId, level 0..1, source)` | ca. 30 Hz (33-ms-Frame) | `TtsHologramSignal.level()` |
+| `SentenceEnd(utteranceId, boundary)` | beim letzten Wort eines Satzes im gesprochenen Text (`STATEMENT` bei `.`/`!`, `QUESTION` bei `?`); keine Zahl-, Datei- oder Abkürzungspunkte; ohne Text | TTS `onRangeStart` + `SpeechStarted.text` |
 | `SpeechEnded(utteranceId, interrupted)` | einmal; auch bei Fehler oder Abbruch | `onDone/onError/onStop` |
 
 `source = PCM_ENVELOPE` ist die gemessene Audiohüllkurve. `WORD_RANGE_FALLBACK` (übernommen aus dem Avatar-Labor) ist eine **grobe**

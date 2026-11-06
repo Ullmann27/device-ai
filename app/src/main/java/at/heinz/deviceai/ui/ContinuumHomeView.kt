@@ -226,6 +226,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         shellForeground.visibility = jarvisShell.visibility
         views.values.forEach { it.visibility = if (jarvisShellStage) View.GONE else View.VISIBLE }
         shellActions.values.forEach { it.visibility = if (jarvisShellStage) View.VISIBLE else View.GONE }
+        if (jarvisShellStage) applyDeckToActions()
         shellRailScroll.visibility = if (jarvisShellStage && shellRailScroll.width > 0) View.VISIBLE else View.GONE
         applyAvatarSlot()
     }
@@ -544,7 +545,22 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
         // The latest reference has no owner card reserving half the face viewport.
         hologram.setCockpitRegions(local(head), local(orb))
-        hologram.setHeadFraming(shell.headAnchorX, shell.headCloseUp)
+        hologram.setHeadFraming(shell.headAnchorX, shell.headCloseUp, dialogKeepOut(shell, head))
+    }
+
+    /**
+     * The dialogue card inside the transparent head stage, normalized to that stage, plus a small gap. The live 3D
+     * head is drawn above the shell; when a narrow stage (open Fold7) re-solves the head window, the resting face
+     * (chin to crown) stays out of the card while the dissolving neck may pass behind it, as in the reference.
+     * Null outside the reference cockpit.
+     */
+    private fun dialogKeepOut(shell: JarvisShellLayout.Shell, stage: JarvisShellLayout.Box): at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? {
+        val dialog = shell[JarvisShellLayout.Slot.DIALOG] ?: return null
+        if (shell.headStage == null || stage.width <= 0f || stage.height <= 0f) return null
+        val gap = 6f
+        return at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut(
+            ((dialog.right + gap - stage.left) / stage.width).toDouble(),
+            ((dialog.top - gap - stage.top) / stage.height).toDouble())
     }
 
     private fun shellGeometry(widthPx: Int, heightPx: Int): JarvisShellLayout.Shell? {
@@ -623,7 +639,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             val view = shellActions.getOrPut(spec.key) {
                 ShellActionView(context, spec.key, spec.target, spec.label).also { addView(it) }
             }
-            view.visibility = View.VISIBLE
+            view.visibility = if (deckCleared && (spec.key.startsWith("tile:") || spec.key.startsWith("panel:ROW_")))
+                View.INVISIBLE else View.VISIBLE
             view.refresh()
             val px = spec.box.width * density
             val py = spec.box.height * density
@@ -648,6 +665,25 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         shellRailBounds?.let { box ->
             shellRailScroll.layout((box.left * density).toInt(), (box.top * density).toInt(),
                 (box.right * density).toInt(), (box.bottom * density).toInt())
+        }
+    }
+
+    /**
+     * Airbus deck (owner brief 06.11.2026): while a work window is open the tiles and lower rows make room. Their hit
+     * targets leave with them, so nothing invisible can be touched or focused; they return when the window has closed.
+     */
+    fun setDeckCleared(cleared: Boolean) {
+        deckCleared = cleared
+        jarvisShell.setDeckCleared(cleared)
+        applyDeckToActions()
+    }
+
+    private var deckCleared = false
+
+    private fun applyDeckToActions() {
+        shellActions.forEach { (key, view) ->
+            if (key.startsWith("tile:") || key.startsWith("panel:ROW_"))
+                view.visibility = if (deckCleared) View.INVISIBLE else View.VISIBLE
         }
     }
 

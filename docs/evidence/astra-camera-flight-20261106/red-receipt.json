@@ -1,0 +1,16 @@
+{
+  "status": "RED_EXPECTED",
+  "sourceCommit": "8600dce16b8d09e999b758608fd0560439c3c120",
+  "appSourceUnchangedDuringRun": true,
+  "environment": "HOST_ROBOLECTRIC_PROJECTION_FIXTURE_NOT_FILAMENT_NOT_DEVICE",
+  "exitCode": 1,
+  "tests": 1,
+  "failures": 1,
+  "errors": 0,
+  "skipped": 0,
+  "assertion": "java.lang.AssertionError: Open work window must pull back the original head projection",
+  "rawXmlSha256": "ae6a7d67f46038106254e7f960aacc9e55c4b151e68f8327f4eb4c4fc5b1b237",
+  "testSourceSha256": "35fff049675e76a42c289df80be72a9fa1ae3170fc9b3bff6cdeb1885b95215c",
+  "command": "./gradlew -PcontinuumUiWidgetTests=true :app:testDebugUnitTest --tests 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.workWindowMovesTheOriginalHeadProjectionAndReturns'",
+  "earlierAttempt": "camera-red: own test cast syntax error, fixed before this executed regression; not counted as app failure"
+}

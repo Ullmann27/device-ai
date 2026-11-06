@@ -102,8 +102,34 @@ object BootstrapBrain {
     fun requiresOwnerFacts(utterance: String): Boolean {
         val low = utterance.trim().lowercase(Locale.ROOT)
         return low.startsWith("korrigiere:") || low.startsWith("widerrufe:") || low.startsWith("prüfe wissen:") ||
-            low.contains("was weißt du") || low.contains("was hast du dir gemerkt") || low == "erinnerungen"
+            low.contains("was weißt du") || low.contains("was hast du dir gemerkt") || low == "erinnerungen" ||
+            ownerRecall.containsMatchIn(low)
     }
+
+    /**
+     * #567 (Fold7 Code43 test 04): „Welches Testwort habe ich dir gerade genannt?“ and „Was hast du dir über mein
+     * Testwort gemerkt?“ ask for the owner's own earlier statements; they are answered from the checked ledger.
+     */
+    private val ownerRecall = Regex(
+        "(?u)\\b(was|welche[nmrs]?|wie)\\b.*\\b(habe|hab|hatte)\\s+ich\\s+(dir|dich)\\b|" +
+            "\\b(was|welche[nmrs]?)\\b.*\\bhast\\s+du\\s+dir\\b.*\\bgemerkt\\b"
+    )
+    private val recallStopWords = setOf("mein", "meine", "meinen", "meiner", "meinem", "habe", "hast", "dich", "welche",
+        "welches", "welcher", "welchen", "gerade", "vorhin", "genannt", "gesagt", "gemerkt", "erzählt", "über", "deinem",
+        "lokalen", "gedächtnis", "antworte", "ausschließlich", "starte", "keine", "internetrecherche", "recherche",
+        "lautet", "heißt", "ist", "sind", "nicht")
+    private fun recallTokens(text: String) = Regex("[\\p{L}\\p{N}]{4,}").findAll(text.lowercase(Locale.ROOT))
+        .map { it.value }.filter { it !in recallStopWords }.toSet()
+
+    /**
+     * A mutating verb that is itself negated („starte keine Internetrecherche“) is not a device order. Only the
+     * explicit kein/keine/nichts forms count, and never in a contrast („…, sondern lösche …“), so a real order stays
+     * blocked; „nicht“ is not exempted („Lösche nicht nur den Cache …“).
+     */
+    private val negatedMutation = Regex(
+        "(?iu)\\b(lösch\\w*|entfern\\w*|deinstallier\\w*|installier\\w*|verschieb\\w*|starte\\w*|stoppe?\\w*|überweis\\w*|bezahl\\w*)\\s+(keine|keinen|kein|keinerlei|nichts)\\b"
+    )
+    private val contrast = Regex("(?iu)\\b(sondern|stattdessen|außer|aber)\\b")
 
     fun decide(utterance: String, facts: List<String>,
                learnedCommands: Map<String, String> = emptyMap()): BootstrapDecision {
@@ -116,8 +142,9 @@ object BootstrapBrain {
             return BootstrapDecision(BootstrapKind.FORGET)
         // The deterministic intent recognizer must not mistake a dangerous mixed
         // request or forged role header for permission to run a harmless-looking tool.
+        val safetyText = if (contrast.containsMatchIn(text)) text else text.replace(negatedMutation, " ")
         if (Regex("""(?i)^(system|developer|assistant|tool)\s*:""").containsMatchIn(text) ||
-            Regex("""(?i)\b(lösch\w*|entfern\w*|deinstallier(?:e|en|st)?\b|installier(?:e|en|st)?\b|verschieb\w*|starte\w*|stoppe?\w*|überweis\w*|bezahl\w*)\b""").containsMatchIn(text)
+            Regex("""(?i)\b(lösch\w*|entfern\w*|deinstallier(?:e|en|st)?\b|installier(?:e|en|st)?\b|verschieb\w*|starte\w*|stoppe?\w*|überweis\w*|bezahl\w*)\b""").containsMatchIn(safetyText)
         ) return BootstrapDecision(
             BootstrapKind.REPLY,
             "Dieser Satz enthält eine nachgeahmte Rolle oder einen verändernden Geräteauftrag. " +
@@ -167,6 +194,16 @@ object BootstrapBrain {
         if (low == "das war nicht hilfreich" || low == "das ist falsch") return BootstrapDecision(
             BootstrapKind.FEEDBACK_NEGATIVE
         )
+        if (ownerRecall.containsMatchIn(low) && !low.contains("was hast du dir gemerkt")) {
+            val wanted = recallTokens(text)
+            // Without a topic word („Was habe ich dir gerade gesagt?“) every confirmed fact is relevant.
+            val matching = if (wanted.isEmpty()) facts else facts.filter { fact -> recallTokens(fact).any { it in wanted } }
+            return BootstrapDecision(BootstrapKind.REPLY, if (matching.isEmpty())
+                "Dazu habe ich keine ausdrücklich gespeicherte Erinnerung gefunden. Ich habe nichts im Internet gesucht. " +
+                    "Mit „Merke dir: …“ kannst du es mir sagen."
+            else "Dazu habe ich mir gemerkt:\n" + matching.take(8).joinToString("\n") { "• $it" } +
+                "\n(Bestätigte Nutzererinnerung · nur lokal, keine Internetrecherche)")
+        }
         if (low.contains("was weißt du") || low.contains("was hast du dir gemerkt") ||
             low == "erinnerungen") return BootstrapDecision(BootstrapKind.REPLY,
                 if (facts.isEmpty()) "Ich habe noch keine ausdrücklich bestätigten Fakten gespeichert." else

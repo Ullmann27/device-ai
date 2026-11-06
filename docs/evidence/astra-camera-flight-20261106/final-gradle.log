@@ -1,0 +1,189 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+TEST_DONE at.heinz.deviceai.ContinuumAuraLifecycleUiTest.cached3dFitIsRecomputedAfterFallbackAndResume SUCCESS 1961ms
+TEST_DONE at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest.defaultOrbAndPausedOptional3dNeverStartAssetOrNativeWork SUCCESS 2847ms
+TEST_DONE at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest.actualFailureReportsUnavailabilityAndRetainsSingleLifecycleClock SUCCESS 117ms
+TEST_DONE at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest.pauseAndReducedMotionClearObservedGazeAndRejectLateCameraSamples SUCCESS 86ms
+TEST_DONE at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest.legacyEnabledHeadUpgradesButExplicitOrbAnd2dStayChosen SUCCESS 66ms
+TEST_DONE at.heinz.deviceai.ContinuumHologramMotionUiTest.deviceMotionDiagnosticNeverReportsLiveBeforeForegroundActivation SUCCESS 50ms
+TEST_DONE at.heinz.deviceai.ContinuumHologramMotionUiTest.realFrameClockChangesPhoneAndFoldPixelsWithoutInjectingPhase SUCCESS 526ms
+TEST_DONE at.heinz.deviceai.ContinuumHologramMotionUiTest.renderingAtRestDoesNotByItselfAdvanceTheOrbitClock SUCCESS 76ms
+TEST_DONE at.heinz.deviceai.ContinuumHologramMotionUiTest.thermalPressureStopsAndRecoversTheSameClock SUCCESS 74ms
+TEST_DONE at.heinz.deviceai.ContinuumHologramMotionUiTest.foregroundAndReducedMotionHaveOneBoundedLifecycleClock SUCCESS 44ms
+TEST_DONE at.heinz.deviceai.ContinuumHologramMotionUiTest.differentOrbitalPhasesActuallyChangeRenderedPixels SUCCESS 71ms
+TEST_DONE at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.toolRunUnfoldsBesideTheFaceShowsRealStateAndReturnsTheGaze SUCCESS 42788ms
+TEST_DONE at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.workWindowMovesTheOriginalHeadProjectionAndReturns SUCCESS 18095ms
+TEST_DONE at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.everyCentreTileUnfoldsTheSameWorkWindowAndTheAvatarLooksAtIt SUCCESS 45149ms
+TEST_DONE at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.appToolShowsTheRealInstalledAppIdentityAndNeverAnInventedOne SUCCESS 97098ms
+TEST_DONE at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.systemTileOpensInsideCockpitWithRealStatusAndSameAvatar SUCCESS 12079ms
+TEST_DONE at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.cameraStopsImmediatelyAndDoesNotReplayAfterLifecycleBoundaries SUCCESS 83419ms
+TEST_DONE at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.openWindowClearsTheDeckAndItReturnsAfterClosing SUCCESS 20879ms
+TEST_DONE at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.largeFontDeckClearsOnlyForAnAcceptedWindowAndAlwaysReturns SUCCESS 11063ms
+TEST_DONE at.heinz.deviceai.ContinuumWorkWindowScrollUiTest.innerStatusScrollKeepsTheWorkAreaAndBackgroundStill SUCCESS 6126ms
+TEST_DONE at.heinz.deviceai.ContinuumWorkWindowScrollUiTest.backgroundScrollClosesTheRealWorkAreaAndGlance SUCCESS 2092ms
+TEST_DONE at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest.reopeningBeforeCleanupCannotRemoveNewBodyOrRunStaleClose SUCCESS 44ms
+TEST_DONE at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest.finalDrawClosesLogicallyBeforeReleasingViewsAndCallingHost SUCCESS 42ms
+TEST_DONE at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest.fractionalDestinationSettlesExactlyInsideSafePixelBounds SUCCESS 36ms
+TEST_DONE at.heinz.deviceai.JarvisWorkWindowUiTest.detachingReleasesFrameSubscription SUCCESS 48ms
+TEST_DONE at.heinz.deviceai.JarvisWorkWindowUiTest.geometryFindsPhoneAndFoldSpaceWithoutCoveringHeadOrDialog SUCCESS 21ms
+TEST_DONE at.heinz.deviceai.JarvisWorkWindowUiTest.reducedMotionSettlesBothDirectionsOnNextSuppliedFrame SUCCESS 36ms
+TEST_DONE at.heinz.deviceai.JarvisWorkWindowUiTest.protectedAreaRemainsTransparentDuringOpening SUCCESS 63ms
+TEST_DONE at.heinz.deviceai.JarvisWorkWindowUiTest.outsideAndProtectedTouchesReachCockpit SUCCESS 54ms
+TEST_DONE at.heinz.deviceai.JarvisWorkWindowUiTest.immediateCloseReleasesBodyAndCallbackExactlyOnce SUCCESS 38ms
+TEST_DONE at.heinz.deviceai.JarvisWorkWindowUiTest.suppliedFramesOpenExistingBodyAndKeepCloseOutsideScroll SUCCESS 40ms
+TEST_DONE at.heinz.deviceai.avatar3d.Avatar3dContractTest.interruptionAndOldUtteranceUseExistingReducer SUCCESS 8ms
+TEST_DONE at.heinz.deviceai.avatar3d.Avatar3dContractTest.allVisemesUseNamesEvenWhenAssetOrderChanges SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.Avatar3dContractTest.validBinaryMetadataAndMissingTruncatedInvalidAssets SUCCESS 19ms
+TEST_DONE at.heinz.deviceai.avatar3d.Avatar3dContractTest.focusPreservesHeadAcrossNarrowPhoneAndWideFold SUCCESS 2ms
+TEST_DONE at.heinz.deviceai.avatar3d.Avatar3dContractTest.malformedSkinIndicesMorphAliasingAndEmptyShapeAreRejected SUCCESS 9ms
+TEST_DONE at.heinz.deviceai.avatar3d.Avatar3dContractTest.gazeIsViewerRightAndUpAndNeverNaN SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.Avatar3dContractTest.packagedHolographicBustRetainsRigAndFramesActualNeck SUCCESS 1010ms
+TEST_DONE at.heinz.deviceai.avatar3d.Avatar3dContractTest.reducedMotionClosesSpeechAndBlink SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.Avatar3dContractTest.binaryNonFiniteAndNegativeScaleRejected SUCCESS 2ms
+TEST_DONE at.heinz.deviceai.avatar3d.Avatar3dContractTest.visemesCrossfadeOverSeventyMillisecondsAndBlinkLastsFifteenHundredths SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest.vowelTransitionAtTheSameElapsedTimeDoesNotDependOnFrameCount SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest.bilabialOnsetClosesOutgoingVowelsAndMeasuredJawTogether SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest.bilabialClosureAlsoWinsAtAnUnchangedRenderTimestamp SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest.renderingTheSameInstantTwiceDoesNotAdvanceAVowelTransition SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarAssetProvenanceTest.packagedAssetHashAndLengthMatchRuntimeAndNotice SUCCESS 33ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarBlinkEasingTest.existingClosureContractAndWindowAreKept SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarBlinkEasingTest.everyBlinkStartsClosesAndReopensWithoutAVelocityKink SUCCESS 73ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraFramingTest.roomyStagePermitsTheBoundedPan SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraFramingTest.unreachableKeepOutCannotIntroduceCameraTravel SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraFramingTest.safeEndpointsCannotHideAnUnsafeCornerCrossing SUCCESS 3ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraFramingTest.invalidProgressAndDirectionAreRejected SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraMotionTest.cancelledMotionCannotReplayAfterResume SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraMotionTest.reversalStartsAtTheCurrentProjection SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraMotionTest.systemDurationScaleIsHonoured SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraMotionTest.opensAndClosesWithoutOvershoot SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraMotionTest.repeatedRequestsDoNotRestartTheFlight SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraMotionTest.resetImmediatelyRestoresTheRestProjection SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraMotionTest.disabledAndInvalidDurationScalesCancel SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarCameraMotionTest.backwardsDuplicateAndDelayedFramesStayBounded SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarFramingTest.withoutAKeepOutTheHeadNeverMovesSidewaysAndStillFitsAnyAspect SUCCESS 713ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarFramingTest.turningChinNeverEntersTheDialogueCard SUCCESS 712ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarFramingTest.contractReachAndSilhouetteCoverTheSkinnedFace SUCCESS 906ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarFramingTest.fold7CameraPullsBackAndReturnsToTheExactOriginalWindow SUCCESS 615ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarFramingTest.cockpitHeadStaysInsideEveryStageInEveryPose SUCCESS 604ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarFramingTest.formerCentredFitCutTheFold7FaceAndCoveredTheDialogue SUCCESS 585ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarFramingTest.cameraFlightKeepsEveryPosedFaceClearThroughoutThePath SUCCESS 918ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarFramingTest.cameraFlightWithTheExistingIdleDriftClearsTheDialogue SUCCESS 705ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarFramingTest.unconstrainedRoomyStageKeepsCompositionAndCrownMarginNeverMoves SUCCESS 580ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarFramingTest.fold7KeepsALargerHeadByMovingItBeforeShrinkingIt SUCCESS 617ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarHeadFollowTest.breathingIsSmallAndOnlyAtRest SUCCESS 5ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarHeadFollowTest.eyesReachTheTargetAtOnceWhileTheHeadStillTurns SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarHeadFollowTest.firstFrameClockJumpsAndReducedMotionSnapExactly SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarHeadFollowTest.largeJumpsSaturateTheEyesAtTheHumanLimitWhileTheHeadCatchesUp SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarHeadFollowTest.headConvergesSmoothlyWithoutOvershoot SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarIdleMotionBoundaryTest.negativeSubnormalPhaseIsBoundedAtTheCycleBoundary SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarIdleMotionBoundaryTest.signedZeroAndWholeCycleOffsetsShareTheNeutralPhase SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest.missingPcmKeepsTheExistingWordRangeFallback SUCCESS 6ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest.exhaustedPcmRemainsKnownSilenceDuringAWordCallbackWindow SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest.staleUtteranceCannotClaimCurrentPcmAvailability SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest.measuredSilenceCanResumeTheStillCurrentWordCue SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest.silentPcmClosesAnActiveVowelWithoutFallbackMotion SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest.expiredMeasuredAudioCannotLeaveAQueuedVowelOpen SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.silenceOrZeroWeightClosesAnInProgressBlendImmediately SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.vowelTransitionCompensatesBothVisibleOpeningComponents SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.clockRollbackReinitializesTheBlendForANewAnimationEpoch SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.bilabialSealRejectsSustainedMeasuredJawAfterAVowel SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.incomingVowelDoesNotPrematurelyRemoveMeasuredJawOpening SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.reducedMotionClearsTheBlendAndResumesWithoutAnOldVowel SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.bilabialSealClosesCueOnlyOpeningWithoutMeasuredAudio SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest.listeningSpeechAndStopClearWindowIntentWithoutInventingAudio SUCCESS 4ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest.conversationSceneDrivesEyesHeadMouthAndStopsCleanly SUCCESS 20ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest.windowIntentExpiresAndClearRejectsQueuedReplay SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest.windowIntentLeadsWithEyesAndRestoresCurrentCameraGaze SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest.explicitConfirmationMakesOneBoundedNodWithCooldown SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest.thinkingHasSubtleMotionWithoutOpeningMouth SUCCESS 3ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest.confirmationRespectsFramingBoundsAndReducedMotion SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest.measuredJawAloneKeepsItsFullRangeWithoutInventingVisemes SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest.roundedVowelPreservesPursingWithoutAddingSharedOpeningTwice SUCCESS 36ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest.aaCannotAddSharedOpeningTwiceWhileItsLateralShapeIsPreserved SUCCESS 3ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest.activeOpeningCueMovesInnerJawAndActualStopClosesBoth SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarNaturalBlinkTimingTest.blinkTimingVariesWithoutInvalidOrStuckWeights SUCCESS 34ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarNaturalBlinkTimingTest.sameTimestampReplaysExactlyAfterManyFrames SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarNaturalBlinkTimingTest.initialBlinkAndClockWrapRemainUnchanged SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarNeckSplitTest.splittingTheTurnRemovesTheJawTear SUCCESS 341ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarNeckSplitTest.mapperSplitsTheSameTotalTurnInMotionAndAtRest SUCCESS 16ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarPortraitFramingTest.theRealNeutralHeadFitsCompactMediumAndExpandedPortraitViewports SUCCESS 667ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarPortraitFramingTest.narrowCockpitUsesHeadWidthInsteadOfFittingTheWholeShoulderStage SUCCESS 603ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarSpeechAccentTest.speakingHeadAccentsTheRealMouthOpeningWithinTheReservedReach SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarSpeechAccentTest.reducedMotionAndDirectedGazeKeepTheHeadStill SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.AvatarSpeechPipelineTest.playbackPcmAndWordRangesDriveTheMouthAndStopRejectsLateCallbacks SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.OrthographicCockpitProbeTest.actualProjectedMeshBoundsAreRequiredToDeclareNoClipping SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.avatar3d.OrthographicCockpitProbeTest.rejectZeroSizeViewport SUCCESS 2ms
+TEST_DONE at.heinz.deviceai.avatar3d.OrthographicCockpitProbeTest.symmetricAnchorAloneDoesNotProveTheHeadFits SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.avatar3d.OrthographicCockpitProbeTest.seventyPercentAnchorLeavesOnlyThirtyPercentOnRight SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.ui.JarvisDeckClearanceTest.progressFollowsTheFrameClockAndReducedMotionSnaps SUCCESS 1ms
+TEST_DONE at.heinz.deviceai.ui.JarvisDeckClearanceTest.centreTilesLeaveFirstAndEveryCardIsGoneAtTheEnd SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.ui.JarvisDeckClearanceTest.onlyTilesAndLowerRowsMakeRoom SUCCESS 0ms
+TEST_DONE at.heinz.deviceai.ui.JarvisHeaderBrandFitTest.scaledBrandKeepsTextThatFitsAndStaysInsideTheBox SUCCESS 10ms
+TEST_DONE at.heinz.deviceai.ui.JarvisHeaderBrandFitTest.brandLinesStayInsideTheBrandBox SUCCESS 1ms
+AUDIT_TESTS tests=120 passed=120 failed=0 skipped=0
+
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :app:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :app:generateDebugLintReportModel UP-TO-DATE
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebug UP-TO-DATE
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintReportDebug
+> Task :app:lintDebug
+[Incubating] Problems report is available at: file:///workspace/scratch/faf5b489dd1c/device-ai/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 6m 21s
+41 actionable tasks: 6 executed, 35 up-to-date

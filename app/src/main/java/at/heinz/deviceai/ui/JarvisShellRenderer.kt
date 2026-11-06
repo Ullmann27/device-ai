@@ -53,7 +53,7 @@ object JarvisShellRenderer {
     fun draw(p: ContinuumPainter, shell: Shell, content: Map<Slot, SlotContent> = emptyMap(),
              elapsedMs: Long = Long.MAX_VALUE / 4, animatorScale: Float = 1f,
              tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L,
-             deferForeground: Boolean = false) {
+             deferForeground: Boolean = false, deckClearance: Float = 0f) {
         background(p, shell.width, shell.height)
         JarvisReferenceHud.backdrop(p, shell.width, shell.height)
         val dolly = 1f
@@ -76,9 +76,14 @@ object JarvisShellRenderer {
             val tileIndex = i - cardSlots.size
             if (f.alpha <= 0f || f.scale <= 0f) return@forEachIndexed
             val depth = JarvisMotion.Depth.FLAT
-            p.save()
-            p.translate(f.dx + depth.dx, f.dy + depth.dy)
-            val k = f.scale * depth.scale
+            // Airbus deck: while a work window is open, tiles and lower rows make room instead of being covered.
+            val clear = if (deckClearance > 0f && JarvisDeckClearance.clears(slot))
+                JarvisDeckClearance.local(deckClearance, JarvisDeckClearance.order(slot, box.centerX, shell.width)) else 0f
+            if (clear >= .999f) return@forEachIndexed
+            if (clear > 0f) p.saveAlpha(JarvisDeckClearance.alpha(clear)) else p.save()
+            p.translate(f.dx + depth.dx + JarvisDeckClearance.dx(clear, box.centerX, shell.width),
+                f.dy + depth.dy + JarvisDeckClearance.dy(clear))
+            val k = f.scale * depth.scale * JarvisDeckClearance.scale(clear)
             p.scale(k, k, box.centerX, box.centerY())
             val depthNative = false
             val tile = if (slot == null) tiles.getOrNull(tileIndex) else null

@@ -17,6 +17,18 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     // AgentActivity admits callbacks only for its current, unique TTS id. Keep a bounded
     // recent-terminal guard here as well, so replayed starts cannot reset that live speech.
     private val retiredUtterances = LinkedHashSet<String>()
+    private data class WindowIntent(val id: String, val gaze: GazeTarget, val atMillis: Long, val durationMs: Long,
+                                    val yieldsToObservedGaze: Boolean, val reading: Boolean = false)
+    private var windowIntent: WindowIntent? = null
+    /** The window whose content real work is on (windowWorkStarted); outlives an interruption by listening/speech. */
+    private var workIntent: WindowIntent? = null
+    private var confirmationAtMillis = Long.MIN_VALUE
+    private var lastConfirmationAtMillis = Long.MIN_VALUE
+    private var animationRevision = 0L
+    private var legacyIntentSerial = 0L
+    private var thinkingAtMillis = Long.MIN_VALUE
+    private val retiredWindows = LinkedHashSet<String>()
+    private val seenConfirmations = LinkedHashSet<String>()
 
     @Synchronized fun attach(newSink: AvatarSink) {
         sink = newSink
@@ -32,9 +44,19 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
             }
             lastWordCues.forEach(::emit)
         }
+        if (animationRevision > 0) {
+            val at = clock()
+            expireAnimationIntents(at)
+            publishAnimationIntents(at)
+        }
     }
 
     @Synchronized fun onRuntime(signals: AvatarRuntimeSignals) {
+        if ((signals.listening || signals.speaking) && windowIntent != null) {
+            windowIntent?.let { remember(retiredWindows, it.id) }
+            windowIntent = null
+            publishAnimationIntents(clock())
+        }
         val next = when {
             signals.awaitingApproval -> AvatarState.WAITING_FOR_APPROVAL
             signals.listening -> AvatarState.LISTENING
@@ -46,8 +68,26 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
             else -> AvatarState.IDLE
         }
         if (next == state) return
+        val hadThinking = thinkingAtMillis != Long.MIN_VALUE
         state = next
+        thinkingAtMillis = if (next == AvatarState.THINKING) clock() else Long.MIN_VALUE
         emit(stateEvent(next))
+        val resumed = resumeWork()
+        if (next == AvatarState.THINKING || hadThinking || resumed) publishAnimationIntents(clock())
+    }
+
+    /**
+     * After an interruption (the owner spoke, JARVIS answered in between) the work that still runs gets his eyes back:
+     * reading resumes on the same window. Never while listening or speaking, never after the work ended or expired.
+     */
+    private fun resumeWork(): Boolean {
+        val work = workIntent ?: return false
+        if (windowIntent != null || utterance != null || state == AvatarState.LISTENING || state == AvatarState.SPEAKING) return false
+        val age = clock().toDouble() - work.atMillis.toDouble()
+        if (age < 0 || age >= work.durationMs) { workIntent = null; return false }
+        windowIntent = work
+        thinkingAtMillis = Long.MIN_VALUE
+        return true
     }
 
     /** Adapter computes age using elapsedRealtime; do not mix its timestamp with this clock.
@@ -65,9 +105,170 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     @Synchronized fun clearObservedGaze() = emit(AvatarEvent.GazeCleared(clock()))
 
+    /** One glance per unique window. */
+    @Synchronized fun windowOpened(windowId: String, target: GazeTarget = GazeTarget.WORK_WINDOW): Boolean =
+        requestWindow(windowId, target, AvatarPoseReducer.WINDOW_GAZE_TTL_MS)
+
+    private fun requestWindow(windowId: String, target: GazeTarget, durationMs: Long, yieldsToObservedGaze: Boolean = false): Boolean {
+        val at = clock()
+        expireAnimationIntents(at)
+        if (windowId.isBlank() || windowId == windowIntent?.id || windowId in retiredWindows) return false
+        if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) {
+            remember(retiredWindows, windowId)
+            return false
+        }
+        windowIntent?.let { remember(retiredWindows, it.id) }
+        windowIntent = WindowIntent(windowId, GazeTarget(
+            target.x.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
+            target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y)), at, durationMs, yieldsToObservedGaze)
+        thinkingAtMillis = Long.MIN_VALUE
+        publishAnimationIntents(at)
+        return true
+    }
+
+    /** Legacy presentation adapter, shared admission. */
+    @Synchronized fun onWindowPresented() {
+        requestWindow("legacy-window-${++legacyIntentSerial}", GazeTarget(.42f, -.18f),
+            AvatarPoseReducer.LEGACY_WINDOW_GAZE_TTL_MS, yieldsToObservedGaze = true)
+    }
+
+    /** Legacy explicit acceptance, shared cooldown. */
+    @Synchronized fun onActionConfirmed() {
+        confirmationAccepted("legacy-confirmation-${++legacyIntentSerial}")
+    }
+
+    /**
+     * The open window [windowId] was replanned on the real size (rotation, fold, keyboard): the gaze follows it to its
+     * new place. Same intent – its start and lifetime stay; a closed, expired or other window changes nothing.
+     */
+    @Synchronized fun windowMoved(windowId: String, target: GazeTarget): Boolean {
+        val at = clock()
+        expireAnimationIntents(at)
+        val clamped = GazeTarget(target.x.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
+            target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y))
+        // A window moved during an interruption: the resumed reading looks at its new place.
+        workIntent = workIntent?.takeIf { it.id == windowId }?.copy(gaze = clamped) ?: workIntent
+        val current = windowIntent?.takeIf { it.id == windowId } ?: return false
+        windowIntent = current.copy(gaze = clamped)
+        publishAnimationIntents(at)
+        return true
+    }
+
+    /** Stale windows cannot clear successors. */
+    /**
+     * The local model really works on the content of the open window [windowId] (owner brief 06.11.: „der Avatar richtet
+     * seine Augen auf das Dokument“ while it is processed). Not a timed glance: the eyes stay on the window and read until
+     * [windowWorkEnded], STOP, listening or speech; [AvatarPoseReducer.MAX_WINDOW_WORK_MS] only bounds a lost end event.
+     * Admitted again for a window whose opening glance already expired – the work is a new real event.
+     */
+    @Synchronized fun windowWorkStarted(windowId: String, target: GazeTarget): Boolean {
+        val at = clock()
+        expireAnimationIntents(at)
+        if (windowId.isBlank() || state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) return false
+        windowIntent?.takeIf { it.id != windowId }?.let { remember(retiredWindows, it.id) }
+        windowIntent = WindowIntent(windowId, GazeTarget(
+            target.x.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
+            target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y)),
+            at, AvatarPoseReducer.MAX_WINDOW_WORK_MS, yieldsToObservedGaze = false, reading = true)
+        workIntent = windowIntent
+        thinkingAtMillis = Long.MIN_VALUE
+        publishAnimationIntents(at)
+        return true
+    }
+
+    /** The real work on [windowId] ended (result, failure, STOP): the reading gaze is released at once. */
+    @Synchronized fun windowWorkEnded(windowId: String): Boolean {
+        val work = workIntent?.takeIf { it.id == windowId }
+        val current = windowIntent?.takeIf { it.id == windowId && it.reading }
+        if (work == null && current == null) return false
+        workIntent = null
+        remember(retiredWindows, windowId)
+        if (current != null) {
+            windowIntent = null
+            publishAnimationIntents(clock())
+        }
+        return true
+    }
+
+    @Synchronized fun windowClosed(windowId: String): Boolean {
+        if (workIntent?.id == windowId) workIntent = null
+        if (windowIntent?.id != windowId) return false
+        remember(retiredWindows, windowId)
+        windowIntent = null
+        publishAnimationIntents(clock())
+        return true
+    }
+
+    /** Call only after explicit acceptance. */
+    @Synchronized fun confirmationAccepted(confirmationId: String): Boolean {
+        if (confirmationId.isBlank() || confirmationId in seenConfirmations) return false
+        remember(seenConfirmations, confirmationId)
+        val at = clock()
+        val elapsed = at.toDouble() - lastConfirmationAtMillis.toDouble()
+        if (lastConfirmationAtMillis != Long.MIN_VALUE && elapsed < CONFIRMATION_COOLDOWN_MS) return false
+        expireAnimationIntents(at)
+        confirmationAtMillis = at
+        thinkingAtMillis = Long.MIN_VALUE
+        lastConfirmationAtMillis = at
+        publishAnimationIntents(at)
+        return true
+    }
+
+    /** STOP/pause cancel presentation intents. */
+    @Synchronized fun clearAnimationIntents() {
+        workIntent = null
+        clearTransientIntents()
+    }
+
+    /** Glance, confirmation and thinking cue end; the claim of real work that still runs (workIntent) stays. */
+    private fun clearTransientIntents() {
+        windowIntent?.let { remember(retiredWindows, it.id) }
+        windowIntent = null
+        confirmationAtMillis = Long.MIN_VALUE
+        thinkingAtMillis = Long.MIN_VALUE
+        publishAnimationIntents(clock())
+    }
+
+    private fun expireAnimationIntents(at: Long) {
+        windowIntent?.let {
+            val age = at.toDouble() - it.atMillis.toDouble()
+            if (age < 0 || age >= it.durationMs) {
+                remember(retiredWindows, it.id)
+                windowIntent = null
+            }
+        }
+        val confirmationAge = at.toDouble() - confirmationAtMillis.toDouble()
+        if (confirmationAge < 0 || confirmationAge >= AvatarPoseReducer.CONFIRMATION_DURATION_MS) {
+            confirmationAtMillis = Long.MIN_VALUE
+        }
+        val thinkingAge = at.toDouble() - thinkingAtMillis.toDouble()
+        if (state != AvatarState.THINKING || thinkingAge < 0 || thinkingAge >= AvatarPoseReducer.THINKING_DURATION_MS) {
+            thinkingAtMillis = Long.MIN_VALUE
+        }
+    }
+
+    private fun publishAnimationIntents(at: Long) {
+        animationRevision++
+        emit(AvatarEvent.AnimationIntentsChanged(animationRevision, windowIntent?.gaze,
+            windowIntent?.atMillis ?: Long.MIN_VALUE, confirmationAtMillis, at,
+            windowIntent?.durationMs ?: AvatarPoseReducer.WINDOW_GAZE_TTL_MS, thinkingAtMillis,
+            windowIntent?.yieldsToObservedGaze ?: false, windowIntent?.reading ?: false))
+    }
+
+    private fun remember(ids: LinkedHashSet<String>, id: String) {
+        ids += id
+        if (ids.size > MAX_RECENT_INTENTS) {
+            val oldest = ids.iterator()
+            oldest.next()
+            oldest.remove()
+        }
+    }
+
     /** Returns admission independently of rendering, so the caller can share it with PCM state. */
     @Synchronized fun speechStarted(utteranceId: String, text: String): Boolean {
         if (utteranceId.isBlank() || utteranceId == utterance || utteranceId in retiredUtterances) return false
+        // Speech takes the eyes for its own duration only; real work that still runs keeps its claim (workIntent).
+        if (windowIntent != null || confirmationAtMillis != Long.MIN_VALUE || thinkingAtMillis != Long.MIN_VALUE) clearTransientIntents()
         utterance?.let(::retireUtterance)
         utterance = utteranceId
         lastRangeAt = Long.MIN_VALUE
@@ -92,9 +293,13 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         if (audioFrame != null) lastRangeAudioFrame = audioFrame
         lastWordCues = emptyList()
         val visemes = GermanVisemeApproximation.visemes(text.substring(start, end))
+        val sentenceEnd = sentenceEndAfter(start, end)
         // Punctuation still advances the engine's admitted text/frame markers. It must
         // not invent mouth cues or extend the previous word's no-PCM fallback interval.
-        if (visemes.isEmpty()) return true
+        if (visemes.isEmpty()) {
+            sentenceEnd?.let { emit(AvatarEvent.SentenceEnd(utteranceId, it, clock())) }
+            return true
+        }
         val per = (WORD_MS / visemes.size).coerceAtLeast(MIN_VISEME_MS)
         val at = clock()
         lastRangeAt = at
@@ -103,7 +308,38 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         }
         lastWordCues = wordCues.takeLast(MAX_REATTACHED_CUES)
         wordCues.forEach(::emit)
+        sentenceEnd?.let { emit(AvatarEvent.SentenceEnd(utteranceId, it, at)) }
         return true
+    }
+
+    /**
+     * Whether the word in [start, end) of the spoken text closes a sentence: its letters are followed (optionally
+     * after closing quotes or brackets, inside or just outside the range) by `.`, `!`, `?` or `…` and then a space or
+     * the end of the text. Not a sentence end: a range without letters or digits (its word was already reported),
+     * decimals and names ("3.5", "Datei.txt"), a period before a lowercase word ("ca. drei"), and a period after a
+     * number inside the text ("am 6. November"). Reads only the text this Director already holds; emits no text.
+     */
+    private fun sentenceEndAfter(start: Int, end: Int): SpeechBoundary? {
+        var last = end - 1
+        while (last >= start && !text[last].isLetterOrDigit()) last--
+        if (last < start) return null
+        var i = last + 1
+        while (i < text.length && text[i] in CLOSERS) i++
+        var question = false
+        val marks = i
+        while (i < text.length && text[i] in SENTENCE_MARKS) { if (text[i] == '?') question = true; i++ }
+        if (i == marks) return null
+        while (i < text.length && text[i] in CLOSERS) i++
+        if (i < text.length && !text[i].isWhitespace()) return null
+        if (question) return SpeechBoundary.QUESTION
+        var next = i
+        while (next < text.length && text[next].isWhitespace()) next++
+        if (next == text.length) return SpeechBoundary.STATEMENT
+        if (text[next].isLowerCase()) return null
+        var first = last
+        while (first > 0 && text[first - 1].isLetterOrDigit()) first--
+        for (k in first..last) if (!text[k].isDigit()) return SpeechBoundary.STATEMENT
+        return null
     }
 
     @Synchronized fun audioLevel(utteranceId: String, level: Float, measuredPcmAvailable: Boolean = false) {
@@ -121,10 +357,13 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     @Synchronized fun speechEnded(utteranceId: String, interrupted: Boolean) {
         if (utteranceId != utterance) return
+        if (windowIntent != null || confirmationAtMillis != Long.MIN_VALUE || thinkingAtMillis != Long.MIN_VALUE) clearTransientIntents()
         retireUtterance(utteranceId)
         utterance = null; text = ""
         lastWordCues = emptyList()
         emit(AvatarEvent.SpeechEnded(utteranceId, interrupted, clock()))
+        // A direct TTS start has no listening/speaking runtime transition: give the running work its eyes back here.
+        if (resumeWork()) publishAnimationIntents(clock())
     }
 
     private fun retireUtterance(utteranceId: String) {
@@ -153,12 +392,16 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     private fun emit(event: AvatarEvent) { runCatching { sink.onAvatarEvent(event) } }
 
     private companion object {
+        const val MAX_RECENT_INTENTS = 128
+        const val CONFIRMATION_COOLDOWN_MS = 4_000L
         const val MAX_TEXT = 4_000
         const val MAX_RETIRED_UTTERANCES = 128
         const val MAX_REATTACHED_CUES = 64
         const val WORD_MS = 320L
         const val MIN_VISEME_MS = 40L
         const val FALLBACK_MS = 500L
+        const val SENTENCE_MARKS = ".!?…"
+        const val CLOSERS = "\"'»«“”„‘’)]}"
     }
 }
 

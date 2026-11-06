@@ -1,0 +1,89 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:compileDebugKotlin
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:533:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:534:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:536:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:987:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1396:67 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2300:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2848:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3167:40 Condition is always 'true'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3167:56 Condition is always 'true'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5002:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5017:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5046:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7582:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:8158:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:8158:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9296:59 Unnecessary safe call on a non-null receiver of type 'Long'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:533:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:534:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:536:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:987:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1396:67 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2300:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2848:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3167:40 Condition is always 'true'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3167:56 Condition is always 'true'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5002:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5017:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5046:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7582:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:8158:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:8158:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/scratch/76b7222771d5/continuum/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9296:59 Unnecessary safe call on a non-null receiver of type 'Long'.
+
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:testDebugUnitTest
+AUDIT_TESTS tests=196 passed=196 failed=0 skipped=0
+[Incubating] Problems report is available at: file:///workspace/scratch/76b7222771d5/continuum/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 2m 25s
+31 actionable tasks: 5 executed, 26 up-to-date

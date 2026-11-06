@@ -1,0 +1,2578 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+index dd8ca0e3..4dcc736c 100644
+--- a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -680,6 +680,8 @@ class AgentActivity : Activity() {
+     }
+ 
+     override fun onPause() {
++        workWindowHost.close(immediate = true)
++        avatarDirector.clearAnimationIntents()
+         ownerRecoveryReview?.close()
+         ownerRecoveryReview = null
+         clearTaskEffects()
+@@ -823,6 +825,7 @@ class AgentActivity : Activity() {
+     }
+ 
+     private fun buildUi(): View {
++        workWindowHost.close(immediate = true)
+         val windowWidthDp = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
+         // Navigation ownership follows the same width classes as the shared HUD.
+         // A short medium window scrolls its content; it must not acquire a second phone navigation.
+@@ -1355,7 +1358,7 @@ class AgentActivity : Activity() {
+                 capabilityDashboardAtElapsedMs = dashboardSnapshotAtElapsedMs
+                 homeView?.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
+                     memoryActivity = memoryActivitySnapshot(state.memory))
+-                if (centerDialog?.isShowing == true) liveHardwareGauges?.updateTelemetry(state.system)
++                if (centerDialog?.isShowing == true || workWindowHost.isShowing) liveHardwareGauges?.updateTelemetry(state.system)
+                 navigationView?.state = state
+                 railView?.state = state
+                 announceNewIssues(open)
+@@ -1765,6 +1768,7 @@ class AgentActivity : Activity() {
+ 
+     /** All responsive presentations enter the existing owner-gated routes through this one adapter. */
+     private fun navigateDashboardTarget(target: String) {
++        if (target !in setOf("system", "device", "voice-input", "camera-settings")) workWindowHost.close(immediate = true)
+         when (target) {
+             "voice-input" -> onChatMicrophoneTap()
+             "camera-settings" -> toggleConversationCamera()
+@@ -2183,6 +2187,7 @@ class AgentActivity : Activity() {
+             handsFreeActive = continuousConversation.active,
+             pinHomeCockpit = keepCockpitDuringHandsFree
+         )
++        if (chat) workWindowHost.close(immediate = true)
+         conversationRail?.visibility = if (chat) View.VISIBLE else View.GONE
+         dashboardSection?.visibility = if (chat) View.GONE else View.VISIBLE
+         chatColumn?.visibility = if (chat) View.VISIBLE else View.GONE
+@@ -2286,8 +2291,14 @@ class AgentActivity : Activity() {
+     private class CenterAction(val label: String, val accent: Boolean = false, val run: () -> Unit)
+ 
+     private var centerDialog: AlertDialog? = null
++    private val workWindowHost by lazy { at.heinz.deviceai.ui.JarvisWorkWindowHost(this, avatarDirector) }
+     private var quickActionsDialog: AlertDialog? = null
+ 
++    @Suppress("DEPRECATION")
++    override fun onBackPressed() {
++        if (workWindowHost.isShowing) workWindowHost.close() else super.onBackPressed()
++    }
++
+     private fun learningIoStatus(read: () -> String): ((String) -> Unit) -> Unit = { done ->
+         onLearningIo(read) { result ->
+             done(result.getOrElse { "Status nicht lesbar (${failureName(it)}); es wurde nichts verändert." })
+@@ -2349,6 +2360,7 @@ class AgentActivity : Activity() {
+         experimental: List<CenterAction> = emptyList()
+     ) {
+         centerDialog?.dismiss()
++        workWindowHost.close(immediate = true)
+         liveHardwareGauges = null
+         val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+         val box = cockpit.panel(this, "DEVICE AI · DEIN BEREICH", title, intro)
+@@ -2369,11 +2381,12 @@ class AgentActivity : Activity() {
+                 "App-CPU statt Gesamt-CPU. GPU ist auf diesem Android-Gerät derzeit nicht zuverlässig messbar.",
+                 10f, MUTED), matchWidth(top = 1))
+         }
+-        lateinit var dialog: AlertDialog
++        lateinit var dismissCenter: (Boolean) -> Unit
++        lateinit var centerShowing: () -> Boolean
+         fun makeAction(action: CenterAction): View =
+             cockpit.action(this, action.label, primary = action.accent,
+                 critical = action.label.contains("LÖSCHEN", ignoreCase = true)) {
+-                dialog.dismiss()
++                dismissCenter(true)
+                 action.run()
+             }
+         box.addView(cockpit.section(this, "FUNKTIONEN · WÄHLE EIN WERKZEUG"), matchWidth(top = 9))
+@@ -2385,17 +2398,26 @@ class AgentActivity : Activity() {
+             cockpit.grid(this, box, experimental.map(::makeAction),
+                 if (resources.configuration.screenWidthDp >= 600) 3 else 2)
+         }
+-        box.addView(cockpit.action(this, "SCHLIESSEN") { dialog.dismiss() }, matchWidth(top = 14))
+-        dialog = cockpit.show(this, box)
+-        dialog.setOnDismissListener {
+-            if (centerDialog === dialog) {
+-                centerDialog = null
+-                liveHardwareGauges = null
++        val home = homeView?.takeIf { title == "Systemstatus" && activeWorkArea == ContinuumWorkArea.START && it.isShown }
++        val workWindow = home?.let { workWindowHost.show(it, box, title) { liveHardwareGauges = null } }
++        if (workWindow != null) {
++            dismissCenter = { immediate -> workWindow.close(immediate) }
++            centerShowing = { workWindow.isShowing }
++        } else {
++            box.addView(cockpit.action(this, "SCHLIESSEN") { dismissCenter(false) }, matchWidth(top = 14))
++            val dialog = cockpit.show(this, box)
++            dismissCenter = { _ -> dialog.dismiss() }
++            centerShowing = { dialog.isShowing }
++            dialog.setOnDismissListener {
++                if (centerDialog === dialog) {
++                    centerDialog = null
++                    liveHardwareGauges = null
++                }
+             }
++            centerDialog = dialog
+         }
+-        centerDialog = dialog
+         status { value ->
+-            if (dialog.isShowing) cockpit.updateStatus(statusGrid, value)
++            if (centerShowing()) cockpit.updateStatus(statusGrid, value)
+         }
+     }
+ 
+@@ -3161,7 +3183,7 @@ class AgentActivity : Activity() {
+         if (!foregroundLearningActive || isFinishing || isDestroyed || readinessCameraEnabled ||
+             readinessDialog?.isShowing == true || cameraConsentDialog?.isShowing == true ||
+             ownerFaceDialogs?.isShowing == true ||
+-            modelCenterDialog?.isShowing == true || centerDialog?.isShowing == true) return
++            modelCenterDialog?.isShowing == true || centerDialog?.isShowing == true || workWindowHost.isShowing) return
+         if (!getSharedPreferences("continuum-readiness", MODE_PRIVATE)
+                 .getBoolean("camera-question-shown-v1", false)) showConversationCameraConsent()
+     }
+@@ -7930,19 +7952,24 @@ class AgentActivity : Activity() {
+         val message = "${spec?.label ?: proposal.toolName}\nRisk: ${spec?.risk?.name ?: "UNKNOWN"}\n\n" +
+             "Reason: ${spec?.description ?: "Tool is not registered."}\n\n" +
+             "Arguments:\n${safeArgumentSummary(proposal.arguments)}"
++        val explicitApproval = {
++            callback(true)
++            avatarDirector.confirmationAccepted("approval-${java.util.UUID.randomUUID()}")
++            Unit
++        }
+         AlertDialog.Builder(this)
+             .setTitle(if (destructive) "Kritische Aktion bestätigen" else "Aktion freigeben")
+             .setMessage(message)
+             .setNegativeButton("Ablehnen") { _, _ -> callback(false) }
+             .setPositiveButton(if (destructive) "Weiter prüfen" else "Ausführen") { _, _ ->
+                 if (!destructive) {
+-                    callback(true)
++                    explicitApproval()
+                 } else {
+                     AlertDialog.Builder(this)
+                         .setTitle("Starke Bestätigung erforderlich")
+                         .setMessage("Diese Aktion kann Daten verändern oder löschen.\n\n$message")
+                         .setNegativeButton("Abbrechen") { _, _ -> callback(false) }
+-                        .setPositiveButton("Destruktiv ausführen") { _, _ -> callback(true) }
++                        .setPositiveButton("Destruktiv ausführen") { _, _ -> explicitApproval() }
+                         .setOnCancelListener { callback(false) }
+                         .show()
+                 }
+@@ -9120,6 +9147,10 @@ class AgentActivity : Activity() {
+     }
+ 
+     private fun cancelLocalRequest() {
++        workWindowHost.close(immediate = true)
++        avatarDirector.clearAnimationIntents()
++        voiceEngine?.stop()
++        stopVoiceAnimation()
+         clearTaskEffects()
+         activeBotTask?.let { task ->
+             task.cancel()
+@@ -9129,7 +9160,6 @@ class AgentActivity : Activity() {
+         }
+         if (activeBotId != null) {
+             // Stop this utterance/model turn only. An independent CCC1 job is not a speech turn.
+-            voiceEngine?.stop(); stopVoiceAnimation()
+             activeBotTurn?.let(botConversation::cancel)
+             botConversation.invalidate()
+             activeChatCancellation?.cancel()
+diff --git a/app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt b/app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt
+index 4cbda853..fca79cf2 100644
+--- a/app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt
++++ b/app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt
+@@ -17,6 +17,7 @@ data class GazeTarget(val x: Float, val y: Float) {
+         val OWNER = GazeTarget(0f, 0f)
+         val THINKING_AWAY = GazeTarget(0.35f, 0.25f)
+         val READING_DOWN = GazeTarget(0f, -0.4f)
++        val WORK_WINDOW = GazeTarget(.55f, -.18f)
+     }
+ }
+ 
+@@ -34,6 +35,10 @@ sealed interface AvatarEvent {
+      * atMillis is observation time in the Director's existing clock domain. */
+     data class GazeObserved(val gaze: GazeTarget, val confidence: Int, override val atMillis: Long) : AvatarEvent
+     data class GazeCleared(override val atMillis: Long) : AvatarEvent
++    /** Director-owned intent, never camera evidence. */
++    data class AnimationIntentsChanged(val revision: Long, val windowGaze: GazeTarget?,
++        val windowAtMillis: Long, val confirmationAtMillis: Long,
++        override val atMillis: Long) : AvatarEvent
+     data class SpeechStarted(val utteranceId: String, val text: String, override val atMillis: Long) : AvatarEvent
+     /** Approximate mouth shape for the word the TTS engine is speaking now (not phoneme-accurate). */
+     data class VisemeCue(val utteranceId: String, val viseme: Viseme, val weight: Float, val durationMs: Long,
+@@ -65,7 +70,8 @@ object AvatarSinkRegistry { @Volatile var sink: AvatarSink = NoOpAvatarSink }
+ /** Renderer-facing snapshot (subset of the PR #350 AvatarPose plan). Blink, head motion and idle are renderer-owned. */
+ data class AvatarPose(val state: AvatarState, val expression: AvatarExpression, val gazeX: Float, val gazeY: Float,
+                       val jawOpen: Float, val viseme: Viseme, val visemeWeight: Float, val speakEnergy: Float,
+-                      val gazeObserved: Boolean = false)
++                      val gazeObserved: Boolean = false, val gazeDirected: Boolean = false,
++                      val confirmationProgress: Float = -1f)
+ 
+ /**
+  * Reference reducer: folds [AvatarEvent]s into one bounded [AvatarPose] so every renderer maps mouth/gaze
+@@ -81,6 +87,10 @@ class AvatarPoseReducer {
+     private var observedAtMillis = Long.MIN_VALUE
+     private var newestFreshGazeAtMillis = Long.MIN_VALUE
+     private var gazeClearedAtMillis = Long.MIN_VALUE
++    private var animationRevision = 0L
++    private var directedGaze: GazeTarget? = null
++    private var directedAtMillis = Long.MIN_VALUE
++    private var confirmationAtMillis = Long.MIN_VALUE
+     private var energy = 0f
+     private var viseme = Viseme.SIL
+     private var visemeWeight = 0f
+@@ -103,11 +113,13 @@ class AvatarPoseReducer {
+         if (event is AvatarEvent.VisemeCue && event in cues) return
+         if (event is AvatarEvent.SpeechEnded && event.utteranceId != utterance) return
+         if (event is AvatarEvent.SpeechStarted && (event.utteranceId.isBlank() || event.utteranceId == utterance)) return
++        if (event is AvatarEvent.AnimationIntentsChanged && event.revision <= animationRevision) return
+         lastEventMillis = event.atMillis
+         when (event) {
+             is AvatarEvent.StateChanged -> {
+                 state = event.state; expression = event.expression; gaze = event.gaze
+                 if (!permitsObservedGaze(state)) clearObservedGaze(event.atMillis)
++                if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING) clearAnimationIntents()
+             }
+             is AvatarEvent.GazeObserved -> {
+                 if (permitsObservedGaze(state) && event.confidence in MIN_GAZE_CONFIDENCE..100 &&
+@@ -116,7 +128,18 @@ class AvatarPoseReducer {
+                 }
+             }
+             is AvatarEvent.GazeCleared -> clearObservedGaze(event.atMillis)
++            is AvatarEvent.AnimationIntentsChanged -> {
++                animationRevision = event.revision
++                directedGaze = event.windowGaze?.let {
++                    GazeTarget(it.x.coerceIn(-MAX_DIRECTED_GAZE_X, MAX_DIRECTED_GAZE_X),
++                        it.y.coerceIn(-MAX_DIRECTED_GAZE_Y, MAX_DIRECTED_GAZE_Y))
++                }
++                if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) directedGaze = null
++                directedAtMillis = event.windowAtMillis
++                confirmationAtMillis = event.confirmationAtMillis
++            }
+             is AvatarEvent.SpeechStarted -> {
++                clearAnimationIntents()
+                 clearSpeech()
+                 utterance = event.utteranceId
+             }
+@@ -165,6 +188,12 @@ class AvatarPoseReducer {
+         gazeClearedAtMillis = maxOf(gazeClearedAtMillis, atMillis)
+     }
+ 
++    private fun clearAnimationIntents() {
++        directedGaze = null
++        directedAtMillis = Long.MIN_VALUE
++        confirmationAtMillis = Long.MIN_VALUE
++    }
++
+     /** Supply the event clock at render time; future word cues must never play immediately. */
+     fun pose(atMillis: Long = lastEventMillis): AvatarPose {
+         if (lastAudioMillis > atMillis) {
+@@ -197,12 +226,27 @@ class AvatarPoseReducer {
+         } else if (observedGaze != null) {
+             newestFreshGazeAtMillis = maxOf(newestFreshGazeAtMillis, observedAtMillis)
+         }
+-        val shownGaze = observedGaze ?: gaze
++        val directedAge = atMillis.toDouble() - directedAtMillis.toDouble()
++        if (directedAtMillis == Long.MIN_VALUE || directedAge < 0 || directedAge >= WINDOW_GAZE_TTL_MS) directedGaze = null
++        val confirmationAge = atMillis.toDouble() - confirmationAtMillis.toDouble()
++        val confirmationProgress = if (confirmationAtMillis != Long.MIN_VALUE &&
++            confirmationAge >= 0 && confirmationAge < CONFIRMATION_DURATION_MS) {
++            (confirmationAge / CONFIRMATION_DURATION_MS).toFloat()
++        } else {
++            confirmationAtMillis = Long.MIN_VALUE
++            -1f
++        }
++        val shownGaze = directedGaze ?: observedGaze ?: gaze
+         return AvatarPose(state, expression, shownGaze.x, shownGaze.y, jaw, viseme, visemeWeight, liveEnergy,
+-            gazeObserved = observedGaze != null)
++            gazeObserved = directedGaze == null && observedGaze != null, gazeDirected = directedGaze != null,
++            confirmationProgress = confirmationProgress)
+     }
+ 
+     companion object {
++        const val WINDOW_GAZE_TTL_MS = 2_500L
++        const val CONFIRMATION_DURATION_MS = 650L
++        const val MAX_DIRECTED_GAZE_X = .65f
++        const val MAX_DIRECTED_GAZE_Y = .35f
+         const val OBSERVED_GAZE_TTL_MS = 750L
+         const val MIN_GAZE_CONFIDENCE = 60
+         fun permitsObservedGaze(state: AvatarState) = state == AvatarState.IDLE ||
+diff --git a/app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt b/app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt
+index d96b79d7..9fb09777 100644
+--- a/app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt
++++ b/app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt
+@@ -17,6 +17,13 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val
+     // AgentActivity admits callbacks only for its current, unique TTS id. Keep a bounded
+     // recent-terminal guard here as well, so replayed starts cannot reset that live speech.
+     private val retiredUtterances = LinkedHashSet<String>()
++    private data class WindowIntent(val id: String, val gaze: GazeTarget, val atMillis: Long)
++    private var windowIntent: WindowIntent? = null
++    private var confirmationAtMillis = Long.MIN_VALUE
++    private var lastConfirmationAtMillis = Long.MIN_VALUE
++    private var animationRevision = 0L
++    private val retiredWindows = LinkedHashSet<String>()
++    private val seenConfirmations = LinkedHashSet<String>()
+ 
+     @Synchronized fun attach(newSink: AvatarSink) {
+         sink = newSink
+@@ -32,9 +39,16 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val
+             }
+             lastWordCues.forEach(::emit)
+         }
++        if (animationRevision > 0) {
++            val at = clock()
++            expireAnimationIntents(at)
++            publishAnimationIntents(at)
++        }
+     }
+ 
+     @Synchronized fun onRuntime(signals: AvatarRuntimeSignals) {
++        if ((signals.listening || signals.speaking) &&
++            (windowIntent != null || confirmationAtMillis != Long.MIN_VALUE)) clearAnimationIntents()
+         val next = when {
+             signals.awaitingApproval -> AvatarState.WAITING_FOR_APPROVAL
+             signals.listening -> AvatarState.LISTENING
+@@ -65,9 +79,87 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val
+ 
+     @Synchronized fun clearObservedGaze() = emit(AvatarEvent.GazeCleared(clock()))
+ 
++    /** One glance per unique window. */
++    @Synchronized fun windowOpened(windowId: String, target: GazeTarget = GazeTarget.WORK_WINDOW): Boolean {
++        val at = clock()
++        expireAnimationIntents(at)
++        if (windowId.isBlank() || windowId == windowIntent?.id || windowId in retiredWindows) return false
++        if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) {
++            remember(retiredWindows, windowId)
++            return false
++        }
++        windowIntent?.let { remember(retiredWindows, it.id) }
++        windowIntent = WindowIntent(windowId, GazeTarget(
++            target.x.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
++            target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y)), at)
++        publishAnimationIntents(at)
++        return true
++    }
++
++    /** Stale windows cannot clear successors. */
++    @Synchronized fun windowClosed(windowId: String): Boolean {
++        if (windowIntent?.id != windowId) return false
++        remember(retiredWindows, windowId)
++        windowIntent = null
++        publishAnimationIntents(clock())
++        return true
++    }
++
++    /** Call only after explicit acceptance. */
++    @Synchronized fun confirmationAccepted(confirmationId: String): Boolean {
++        if (confirmationId.isBlank() || confirmationId in seenConfirmations) return false
++        remember(seenConfirmations, confirmationId)
++        val at = clock()
++        val elapsed = at.toDouble() - lastConfirmationAtMillis.toDouble()
++        if (lastConfirmationAtMillis != Long.MIN_VALUE && elapsed < CONFIRMATION_COOLDOWN_MS) return false
++        expireAnimationIntents(at)
++        confirmationAtMillis = at
++        lastConfirmationAtMillis = at
++        publishAnimationIntents(at)
++        return true
++    }
++
++    /** STOP/pause cancel presentation intents. */
++    @Synchronized fun clearAnimationIntents() {
++        windowIntent?.let { remember(retiredWindows, it.id) }
++        windowIntent = null
++        confirmationAtMillis = Long.MIN_VALUE
++        publishAnimationIntents(clock())
++    }
++
++    private fun expireAnimationIntents(at: Long) {
++        windowIntent?.let {
++            val age = at.toDouble() - it.atMillis.toDouble()
++            if (age < 0 || age >= AvatarPoseReducer.WINDOW_GAZE_TTL_MS) {
++                remember(retiredWindows, it.id)
++                windowIntent = null
++            }
++        }
++        val confirmationAge = at.toDouble() - confirmationAtMillis.toDouble()
++        if (confirmationAge < 0 || confirmationAge >= AvatarPoseReducer.CONFIRMATION_DURATION_MS) {
++            confirmationAtMillis = Long.MIN_VALUE
++        }
++    }
++
++    private fun publishAnimationIntents(at: Long) {
++        animationRevision++
++        emit(AvatarEvent.AnimationIntentsChanged(animationRevision, windowIntent?.gaze,
++            windowIntent?.atMillis ?: Long.MIN_VALUE, confirmationAtMillis, at))
++    }
++
++    private fun remember(ids: LinkedHashSet<String>, id: String) {
++        ids += id
++        if (ids.size > MAX_RECENT_INTENTS) {
++            val oldest = ids.iterator()
++            oldest.next()
++            oldest.remove()
++        }
++    }
++
+     /** Returns admission independently of rendering, so the caller can share it with PCM state. */
+     @Synchronized fun speechStarted(utteranceId: String, text: String): Boolean {
+         if (utteranceId.isBlank() || utteranceId == utterance || utteranceId in retiredUtterances) return false
++        if (windowIntent != null || confirmationAtMillis != Long.MIN_VALUE) clearAnimationIntents()
+         utterance?.let(::retireUtterance)
+         utterance = utteranceId
+         lastRangeAt = Long.MIN_VALUE
+@@ -153,6 +245,8 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val
+     private fun emit(event: AvatarEvent) { runCatching { sink.onAvatarEvent(event) } }
+ 
+     private companion object {
++        const val MAX_RECENT_INTENTS = 128
++        const val CONFIRMATION_COOLDOWN_MS = 4_000L
+         const val MAX_TEXT = 4_000
+         const val MAX_RETIRED_UTTERANCES = 128
+         const val MAX_REATTACHED_CUES = 64
+diff --git a/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt b/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt
+index acb52cfd..ad7cd8ba 100644
+--- a/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt
++++ b/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt
+@@ -72,13 +72,26 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
+         idleMotion.update(seconds)
+         // Cosmetic idle motion, not observed gaze or invented speech/work. The existing view
+         // owns the clock and stops it on pause/reduced motion. Actual task/observed gaze wins.
+-        if (pose.state == AvatarState.IDLE && !pose.gazeObserved) {
++        if (pose.state == AvatarState.IDLE && !pose.gazeObserved && !pose.gazeDirected &&
++            pose.confirmationProgress < 0f) {
+             headYaw += idleMotion.headYaw * IDLE_HEAD_GAIN; headPitch += idleMotion.headPitch * IDLE_HEAD_GAIN
+             eyeYaw += idleMotion.eyeYaw; eyePitch += idleMotion.eyePitch
+             // Calm breathing: a slow, small nod (idle only; never during observed gaze or speech).
+             if (seconds.isFinite()) headPitch += BREATH_PITCH_DEGREES *
+                 kotlin.math.sin(2.0 * Math.PI * seconds / BREATH_PERIOD_S).toFloat()
+         }
++        if (!pose.gazeDirected && seconds.isFinite() &&
++            (pose.state == AvatarState.THINKING || pose.state == AvatarState.RESEARCHING || pose.state == AvatarState.LEARNING)) {
++            headYaw += .35f * kotlin.math.sin(seconds * 1.7f)
++            headPitch += .18f * kotlin.math.sin(seconds * 2.1f)
++        }
++        val progress = pose.confirmationProgress
++        if (progress.isFinite() && progress in 0f..1f) {
++            val wave = kotlin.math.sin(Math.PI * progress).toFloat()
++            val nod = CONFIRMATION_PITCH_DEGREES * wave * wave
++            headPitch += nod
++            eyePitch = (eyePitch - nod).coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
++        }
+         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
+         val bilabialClosure = pose.viseme == Viseme.PP && cueWeight > 0f
+         // M/B/P require a closed lip seal even while the measured audio remains loud.
+@@ -117,12 +130,15 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
+     }
+ 
+     private fun splitNeck() {
++        headYaw = finite(headYaw, -MAX_HEAD_YAW_DEGREES, MAX_HEAD_YAW_DEGREES)
++        headPitch = finite(headPitch, -MAX_HEAD_PITCH_DEGREES, MAX_HEAD_PITCH_DEGREES)
+         neckYaw = headYaw * NECK_SHARE
+         neckPitch = headPitch * NECK_SHARE
+     }
+ 
+     companion object {
+         private const val CROSSFADE_S = .07f
++        const val CONFIRMATION_PITCH_DEGREES = 3f
+         /** Full gaze deflection (|gaze| = 1) of the head bone and the eyes, in degrees. */
+         const val HEAD_YAW_DEGREES = 24f
+         const val HEAD_PITCH_DEGREES = 12f
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt b/app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt
+index 785e2498..837dda6b 100644
+--- a/app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt
++++ b/app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt
+@@ -215,15 +215,16 @@ object JarvisShellLayout {
+             b[Slot.CONTINUUM_HEADER] = Box(left, y, right, y + 70f * font)
+             y += 70f * font + gap
+         } else if (compact) {
+-            val headH = maxOf(300f, minOf(room * 1.08f, 440f))
+-            head = Box(left, y, right, y + headH)
+-            y = head.bottom + gap
++            val minimumHero = maxOf(220f, 74f * font + 112f)
++            val heroH = minOf(320f, maxOf(minimumHero,
++                viewport - y - 128f * font - gap - 176f))
++            val split = left + room * .55f
++            head = Box(left, y, split - gap / 2f, y + heroH)
++            b[Slot.CONTINUUM_HEADER] = Box(split + gap / 2f, y, right, y + 74f * font)
++            orb = Box(split + gap / 2f, y + 74f * font, right, y + heroH)
++            y += heroH + gap
+             b[Slot.DIALOG] = Box(left, y, right, y + 128f * font)
+             y = b.getValue(Slot.DIALOG).bottom + gap
+-            b[Slot.CONTINUUM_HEADER] = Box(left, y, right, y + 70f * font)
+-            y += 70f * font
+-            orb = Box(left, y, right, y + minOf(room * .82f, 320f))
+-            y = orb.bottom + gap
+         } else {
+             val heroH = maxOf(280f, minOf(room * .54f, 400f))
+             val split = left + room * .55f
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt b/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt
+index 2f3c1fa4..b8d9924c 100644
+--- a/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt
++++ b/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt
+@@ -26,6 +26,14 @@ class JarvisShellView(context: Context) : View(context) {
+     private val glass = JarvisGlassRenderer(painter)
+     /** The separate foreground layer follows this layer's invalidation without owning an animation clock. */
+     var onFrameDrawn: (() -> Unit)? = null
++    private val motionFrames = linkedSetOf<(Long, Float) -> Boolean>()
++
++    /** Shares the existing draw clock. */
++    fun observeMotionFrames(listener: (Long, Float) -> Boolean): AutoCloseable {
++        motionFrames.add(listener)
++        invalidate()
++        return AutoCloseable { motionFrames.remove(listener) }
++    }
+     var content: Map<JarvisShellLayout.Slot, JarvisShellRenderer.SlotContent> = emptyMap()
+         set(value) { field = value; invalidate() }
+     /** Presentation model of the action tiles (label/icon/target, optional display text from Kern). */
+@@ -168,11 +176,16 @@ class JarvisShellView(context: Context) : View(context) {
+         val sceneTime = if (ambientMotion(scale)) now else 0L
+         JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true)
+         canvas.restore()
++        var workWindowMoving = false
++        val effectiveScale = if (motionAllowed(scale)) scale else 0f
++        motionFrames.toList().forEach { listener ->
++            if (listener(now, effectiveScale)) workWindowMoving = true
++        }
+         onFrameDrawn?.invoke()
+         val total = JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, s.boxes.size + s.tileBoxes().size, animatorScale = scale)
+         // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
+         removeCallbacks(ambientFrame)
+-        if (motionAllowed(scale) && startMs >= 0 && elapsed < total) postInvalidateOnAnimation()
++        if (motionAllowed(scale) && (workWindowMoving || startMs >= 0 && elapsed < total)) postInvalidateOnAnimation()
+         else if (ambientMotion(scale)) postDelayed(ambientFrame, 66L)
+         if (frameLogging) recordFrame(drawStartedNanos, System.nanoTime())
+     }
+diff --git a/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt b/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt
+index 07b3c261..2b2c7254 100644
+--- a/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt
++++ b/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt
+@@ -1,6 +1,7 @@
+ package at.heinz.deviceai.avatar3d
+ 
+ import at.heinz.deviceai.avatar.AvatarDirector
++import at.heinz.deviceai.avatar.AvatarEvent
+ import at.heinz.deviceai.avatar.AvatarPoseReducer
+ import at.heinz.deviceai.avatar.AvatarRuntimeSignals
+ import at.heinz.deviceai.avatar.AvatarState
+@@ -25,7 +26,8 @@ class AvatarMotionEvidenceTest {
+     private class Scene {
+         var now = 0L
+         val reducer = AvatarPoseReducer()
+-        val director = AvatarDirector(at.heinz.deviceai.avatar.AvatarSink { reducer.apply(it) }, { now })
++        val events = mutableListOf<AvatarEvent>()
++        val director = AvatarDirector(at.heinz.deviceai.avatar.AvatarSink { events += it; reducer.apply(it) }, { now })
+         val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
+         val frames = JSONArray()
+         val marks = JSONArray()
+@@ -33,8 +35,16 @@ class AvatarMotionEvidenceTest {
+         fun frame(phase: String) {
+             val pose = reducer.pose(now)
+             mapper.update(pose, now / 1000f, true)
++            val directed = pose.javaClass.methods.firstOrNull { it.name == "getGazeDirected" }?.invoke(pose) == true
++            val nod = (pose.javaClass.methods.firstOrNull { it.name == "getConfirmationProgress" }?.invoke(pose) as? Float) ?: -1f
++            val intent = listOfNotNull(if (directed) "WINDOW_GAZE" else null,
++                if (nod >= 0f) "EXPLICIT_CONFIRMATION" else null).joinToString("+").ifEmpty { "NONE" }
+             frames.put(JSONObject().put("t", now / 1000.0).put("phase", phase).put("state", pose.state.name)
+-                .put("viseme", pose.viseme.name)
++                .put("viseme", pose.viseme.name).put("intent", intent)
++                .put("inputSource", "HOST_SCRIPTED_DIRECTOR_EVENTS")
++                .put("headYaw", mapper.headYaw.toDouble()).put("headPitch", mapper.headPitch.toDouble())
++                .put("eyeYaw", mapper.eyeYaw.toDouble()).put("eyePitch", mapper.eyePitch.toDouble())
++                .put("jawPitch", mapper.jawPitch.toDouble()).put("gazeObserved", pose.gazeObserved)
+                 .put("w", JSONArray(mapper.weights.map { it.toDouble() }))
+                 .put("headTotal", JSONArray(listOf(mapper.headPitch.toDouble(), mapper.headYaw.toDouble())))
+                 .put("neck", JSONArray(listOf(mapper.neckPitch.toDouble(), mapper.neckYaw.toDouble())))
+@@ -68,6 +78,158 @@ class AvatarMotionEvidenceTest {
+         }
+     }
+ 
++    // Reflection enables baseline RED.
++    private fun invoke(director: AvatarDirector, name: String, vararg args: Any): Any? {
++        val method = director.javaClass.methods.firstOrNull { candidate ->
++            candidate.name == name && candidate.parameterCount == args.size &&
++                candidate.parameterTypes.indices.all { candidate.parameterTypes[it].isInstance(args[it]) }
++        }
++        assertTrue("Missing Director intent API: $name", method != null)
++        return method!!.invoke(director, *args)
++    }
++
++    private fun open(s: Scene, id: String, target: GazeTarget = GazeTarget(.55f, -.18f)) =
++        invoke(s.director, "windowOpened", id, target) == true
++    private fun close(s: Scene, id: String) = invoke(s.director, "windowClosed", id) == true
++    private fun confirm(s: Scene, id: String) = invoke(s.director, "confirmationAccepted", id) == true
++    private fun clear(s: Scene) { invoke(s.director, "clearAnimationIntents") }
++
++    @Test fun windowIntentLeadsWithEyesAndRestoresCurrentCameraGaze() {
++        val s = Scene()
++        s.director.onObservedGaze(GazeTarget(-.25f, 0f), 90, 0)
++        s.frame("owner")
++        val beforeHead = s.mapper.headYaw
++        val beforeEyes = s.mapper.eyeYaw
++        s.now = 33
++        assertTrue(open(s, "system-status-1"))
++        s.frame("window")
++        assertTrue("eyes lead immediately", s.mapper.eyeYaw - beforeEyes > 8f)
++        assertTrue("head follows gradually", s.mapper.headYaw - beforeHead < 6f)
++        assertEquals("intent is not camera data", false, s.reducer.pose(s.now).gazeObserved)
++        s.now = 330
++        s.director.onObservedGaze(GazeTarget(-.65f, .1f), 95, 0)
++        assertEquals(.55f, s.reducer.pose(s.now).gazeX, 1e-6f)
++        assertTrue(open(s, "system-status-2", GazeTarget(.4f, -.2f)))
++        assertTrue("stale close is ignored", !close(s, "system-status-1"))
++        assertEquals(.4f, s.reducer.pose(s.now).gazeX, 1e-6f)
++        assertTrue(close(s, "system-status-2"))
++        val restored = s.reducer.pose(s.now)
++        assertTrue("fresh camera survives the override", restored.gazeObserved)
++        assertEquals(-.65f, restored.gazeX, 1e-6f)
++        s.frame("owner")
++        assertEquals(0f, mouth(s), 1e-6f)
++        assertTrue("retired window cannot reopen", !open(s, "system-status-1"))
++    }
++
++    @Test fun windowIntentExpiresAndClearRejectsQueuedReplay() {
++        val s = Scene()
++        assertTrue(open(s, "window-expiry", GazeTarget(1f, -1f)))
++        val first = s.reducer.pose(0)
++        assertTrue("bounded window target", first.gazeX <= .65f && first.gazeY >= -.35f)
++        s.now = 2_400
++        s.director.onObservedGaze(GazeTarget(-.3f, .2f), 95, 0)
++        s.now = 2_500
++        assertEquals("expires without a close callback", -.3f, s.reducer.pose(s.now).gazeX, 1e-6f)
++        assertTrue(open(s, "window-clear"))
++        val delayed = s.events.last()
++        clear(s)
++        s.reducer.apply(delayed)
++        assertEquals("queued intent cannot undo clear", -.3f, s.reducer.pose(s.now).gazeX, 1e-6f)
++        assertTrue("cleared window stays retired", !open(s, "window-clear"))
++        assertTrue(open(s, "window-reattach"))
++        s.now += 1_000
++        val replacement = AvatarPoseReducer()
++        s.director.attach(at.heinz.deviceai.avatar.AvatarSink { replacement.apply(it) })
++        assertEquals(.55f, replacement.pose(s.now).gazeX, 1e-6f)
++        assertEquals("reattach cannot renew lifetime", 0f, replacement.pose(s.now + 1_500).gazeX, 1e-6f)
++    }
++
++    @Test fun listeningSpeechAndStopClearWindowIntentWithoutInventingAudio() {
++        val s = Scene()
++        assertTrue(open(s, "listen-window"))
++        s.director.onRuntime(AvatarRuntimeSignals(listening = true))
++        assertEquals(0f, s.reducer.pose(s.now).gazeX, 1e-6f)
++        assertTrue("listening keeps attention", !open(s, "during-listening"))
++        s.director.onRuntime(AvatarRuntimeSignals())
++        assertTrue(open(s, "speech-window"))
++        assertTrue(s.director.speechStarted("actual-callback", "Abend"))
++        assertEquals(0f, s.reducer.pose(s.now).gazeX, 1e-6f)
++        s.frame("tts-start")
++        assertEquals("no mouth without audio/cues", 0f, mouth(s), 1e-6f)
++        assertTrue(!open(s, "during-speech"))
++        s.now = 33
++        s.director.audioLevel("actual-callback", .9f, measuredPcmAvailable = true)
++        s.frame("tts-audio")
++        assertTrue("real callback admits mouth", mouth(s) > .1f)
++        s.director.speechEnded("actual-callback", interrupted = true)
++        clear(s)
++        s.frame("stop")
++        assertEquals("STOP closes in the same frame", 0f, mouth(s), 1e-6f)
++        assertTrue(!s.director.wordRange("actual-callback", 0, 5))
++        s.director.audioLevel("actual-callback", 1f, measuredPcmAvailable = true)
++        s.now += 33
++        s.frame("late-callback")
++        assertEquals(0f, mouth(s), 1e-6f)
++    }
++
++    @Test fun explicitConfirmationMakesOneBoundedNodWithCooldown() {
++        val s = Scene()
++        s.director.onRuntime(AvatarRuntimeSignals(listening = true))
++        s.run(330, "listening")
++        assertEquals("runtime does not imply confirmation", 0f, s.mapper.headPitch, 1e-6f)
++        assertTrue(confirm(s, "owner-accept-1"))
++        val start = s.now
++        var peak = 0f
++        s.run(start + 700, "explicit-confirmation") {
++            s.frame("confirmation-sample")
++            peak = maxOf(peak, s.mapper.headPitch)
++            assertEquals("confirmation never speaks", 0f, mouth(s), 1e-6f)
++        }
++        assertTrue("one visible dip", peak in 2.8f..3.01f)
++        assertEquals("finite gesture returns to neutral", 0f, s.mapper.headPitch, 1e-6f)
++        assertTrue(!confirm(s, "owner-accept-1"))
++        assertTrue("no repeated nodding", !confirm(s, "owner-accept-2"))
++        s.now = start + 4_000
++        assertTrue(confirm(s, "owner-accept-3"))
++        val delayed = s.events.last()
++        clear(s)
++        s.reducer.apply(delayed)
++        s.now += 325
++        s.frame("cancelled-confirmation")
++        assertEquals(0f, s.mapper.headPitch, 1e-6f)
++    }
++
++    @Test fun confirmationRespectsFramingBoundsAndReducedMotion() {
++        val s = Scene()
++        s.director.onObservedGaze(GazeTarget(1f, -1f), 95, 0)
++        assertTrue(confirm(s, "bounds-confirmation"))
++        s.now = 325
++        s.frame("maximum-pose")
++        assertTrue(kotlin.math.abs(s.mapper.headYaw) <= AvatarMorphMapper.MAX_HEAD_YAW_DEGREES)
++        assertTrue(kotlin.math.abs(s.mapper.headPitch) <= AvatarMorphMapper.MAX_HEAD_PITCH_DEGREES)
++        assertEquals(s.mapper.headPitch * AvatarMorphMapper.NECK_SHARE, s.mapper.neckPitch, 1e-6f)
++        s.mapper.update(s.reducer.pose(s.now), s.now / 1000f, false)
++        assertEquals("reduced motion skips nod", AvatarMorphMapper.HEAD_PITCH_DEGREES, s.mapper.headPitch, 1e-6f)
++        assertEquals(0f, mouth(s), 1e-6f)
++    }
++
++    @Test fun thinkingHasSubtleMotionWithoutOpeningMouth() {
++        val s = Scene()
++        s.director.onRuntime(AvatarRuntimeSignals(busy = true))
++        val pitches = mutableListOf<Float>()
++        val yaws = mutableListOf<Float>()
++        s.run(3_000, "thinking") {
++            s.frame("thinking-sample")
++            pitches += s.mapper.headPitch
++            yaws += s.mapper.headYaw
++            assertEquals(0f, mouth(s), 1e-6f)
++        }
++        assertTrue("thought has a small changing pitch", pitches.max() - pitches.min() in .1f..1f)
++        assertTrue("thought has a small changing yaw", yaws.max() - yaws.min() in .1f..1.2f)
++        s.mapper.update(s.reducer.pose(s.now), 3f, false)
++        assertEquals(-GazeTarget.THINKING_AWAY.y * AvatarMorphMapper.HEAD_PITCH_DEGREES, s.mapper.headPitch, 1e-6f)
++    }
++
+     @Test fun conversationSceneDrivesEyesHeadMouthAndStopsCleanly() {
+         val s = Scene()
+         s.mark("Ruhe · Blinzeln, Sakkaden, Atmung")
+@@ -87,6 +249,13 @@ class AvatarMotionEvidenceTest {
+         s.director.clearObservedGaze()
+         s.director.onRuntime(AvatarRuntimeSignals(busy = true)); s.mark("Verarbeiten (Denken)")
+         s.run(7_800, "denken")
++        s.director.onRuntime(AvatarRuntimeSignals())
++        assertTrue(open(s, "scene-system-status")); s.mark("Arbeitsfenster · geskripteter Director-Intent")
++        s.run(s.now + 700, "fensterblick")
++        assertTrue(confirm(s, "scene-owner-accept")); s.mark("Explizite Bestätigung · geskripteter UI-Aufruf")
++        s.run(s.now + 800, "bestaetigung")
++        assertTrue(close(s, "scene-system-status")); s.mark("Arbeitsfenster schließen · Intent clear")
++        s.run(s.now + 400, "rueckkehr")
+         s.director.onRuntime(AvatarRuntimeSignals(speaking = true)); s.mark("Sprechen (TTS-Wortbereiche)")
+         var opened = 0f; var closedPp = false
+         val before = s.frames.length()
+@@ -142,7 +311,8 @@ class AvatarMotionEvidenceTest {
+                 .put("fitted", window(AvatarFraming.window(focus, aspect, a, shell.headCloseUp.toDouble(), keep))))
+         }
+         val out = JSONObject().put("source", "AvatarDirector → AvatarPoseReducer → AvatarMorphMapper (host JVM, 30 fps)")
+-            .put("simulated", "Kamera-Blickposition und TTS-Worttakt sind im Host-Szenario geskriptet; kein Gerät, kein PCM")
++            .put("renderScope", "HOST_RENDER_NOT_FILAMENT/DEVICE")
++            .put("simulated", "Kamera, Fenster, Bestätigung und TTS-Worttakt sind geskriptete Host-Eingaben; kein Gerät, kein PCM")
+             .put("targets", JSONArray(AvatarGlbContract.TARGETS)).put("neckShare", AvatarMorphMapper.NECK_SHARE.toDouble())
+             .put("focus", JSONObject().put("centerX", focus.centerX).put("centerY", focus.centerY).put("centerZ", focus.centerZ)
+                 .put("reachLeft", focus.reachLeft).put("reachRight", focus.reachRight))
+diff --git a/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt b/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt
+index dfd11b89..61668c9f 100644
+--- a/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt
++++ b/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt
+@@ -92,19 +92,45 @@ class JarvisReferenceWindowLayoutTest {
+         assertFalse(JarvisShellLayout.create(915f, 412f).ref5Grid)
+     }
+ 
+-    @Test fun compactPhoneStacksTheHeadDialogueAndSphereAndShowsEveryTile() {
++    @Test fun compactPhoneKeepsHeadAndSphereBesideEachOtherAboveDialogue() {
+         val shell = JarvisShellLayout.create(412f, 915f)
+         assertEquals(2, shell.tileColumns)
+         assertEquals(5, shell.tileRows)
+         assertNull(shell[Slot.NAV_RAIL])
+         assertNull("Activity owns its five-category phone bar", shell[Slot.BOTTOM_NAV])
+         assertTrue(shell.headBounds!!.bottom <= shell[Slot.DIALOG]!!.top)
+-        assertTrue(shell[Slot.DIALOG]!!.bottom <= shell.orbBounds!!.top)
++        assertTrue(shell.headBounds!!.right < shell.orbBounds!!.left)
++        assertTrue(shell.orbBounds!!.bottom <= shell[Slot.DIALOG]!!.top)
+         assertTrue(shell.orbBounds!!.bottom < shell[Slot.TILES]!!.top)
+         assertTrue(shell.requiresVerticalScroll)
+         sane(shell)
+     }
+ 
++    @Test fun coverKeepsBothIdentitiesAndARealWorkAreaAtLargeFonts() {
++        for (font in listOf(1f, 1.3f, 1.5f, 2f)) {
++            val shell = JarvisShellLayout.forContent(412f, 915f, font,
++                externalBottomBarHeightDp = ContinuumHomeLayout.PHONE_NAV_HEIGHT)
++            val head = requireNotNull(shell.headBounds)
++            val orb = requireNotNull(shell.orbBounds)
++            val dialog = requireNotNull(shell[Slot.DIALOG])
++            assertTrue("font$font: head and original orb share the hero", head.right < orb.left &&
++                maxOf(head.top, orb.top) < minOf(head.bottom, orb.bottom))
++            assertTrue("font$font: head keeps a usable viewport", head.height >= 220f)
++            assertTrue("font$font: original orb keeps a usable viewport", orb.height >= 112f)
++            assertTrue("font$font: dialogue stays below both identities",
++                head.bottom <= dialog.top && orb.bottom <= dialog.top)
++            val protected = listOf(head, orb, dialog)
++            val workspace = Box(8f, protected.maxOf { it.bottom } + 8f,
++                shell.width - 8f, shell.viewportHeight - 8f)
++            assertTrue("font$font: actual free width supports the work area", workspace.width >= 200f)
++            assertTrue("font$font: actual free height supports the work area: $workspace", workspace.height >= 160f - .01f)
++            protected.forEach { assertFalse("font$font: workspace cannot cover $it", intersects(workspace, it)) }
++            assertTrue("font$font: both identities stay visible", protected.all { it.bottom < shell.viewportHeight })
++            assertEquals(10, shell.tileBoxes().size)
++            sane(shell)
++        }
++    }
++
+     @Test fun expandedWindowsUseFourInformationColumnsMediumWindowsUseTwoRows() {
+         val expanded = JarvisShellLayout.create(884f, 760f)
+         val medium = JarvisShellLayout.create(760f, 884f)
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt
+index 4d1467f7..0a7d4ba6 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt
+@@ -9,6 +9,7 @@ import android.speech.tts.TextToSpeech
+ import android.speech.tts.UtteranceProgressListener
+ import android.view.View
+ import android.view.ViewGroup
++import android.widget.TextView
+ import at.heinz.deviceai.avatar.AvatarDirector
+ import at.heinz.deviceai.avatar.AvatarPose
+ import at.heinz.deviceai.avatar.AvatarPoseReducer
+@@ -33,6 +34,8 @@ import org.robolectric.annotation.Config
+ import org.robolectric.annotation.GraphicsMode
+ import org.robolectric.annotation.LooperMode
+ import org.robolectric.shadows.ShadowSystem
++import java.util.concurrent.CountDownLatch
++import java.util.concurrent.ExecutorService
+ import java.util.concurrent.TimeUnit
+ 
+ /**
+@@ -47,6 +50,7 @@ import java.util.concurrent.TimeUnit
+ @GraphicsMode(GraphicsMode.Mode.LEGACY)
+ @LooperMode(LooperMode.Mode.PAUSED)
+ class AvatarTtsLiveConnectionUiTest {
++    private var framePump: CockpitHostFramePump? = null
+     private data class SpeechFixture(
+         val activity: AgentActivity,
+         val home: ContinuumHomeView,
+@@ -70,8 +74,15 @@ class AvatarTtsLiveConnectionUiTest {
+         (0 until view.childCount).flatMap { descendants(view.getChildAt(it)) }
+     } else emptyList()
+ 
+-    private fun advance(millis: Long) = shadowOf(Looper.getMainLooper())
+-        .idleFor(millis, TimeUnit.MILLISECONDS)
++    private fun advance(millis: Long) {
++        var remaining = millis
++        while (remaining > 0L) {
++            val step = minOf(16L, remaining)
++            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
++            framePump?.drawRequestedFrame()
++            remaining -= step
++        }
++    }
+ 
+     private fun measure(root: View) {
+         root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
+@@ -99,6 +110,7 @@ class AvatarTtsLiveConnectionUiTest {
+         try {
+             controller.setup().visible().windowFocusChanged(true)
+             val activity = controller.get()
++            framePump = CockpitHostFramePump { controller.get().window.decorView }
+             measure(activity.window.decorView)
+             measure(activity.window.decorView)
+             val home = field(activity, "homeView") as ContinuumHomeView
+@@ -136,6 +148,8 @@ class AvatarTtsLiveConnectionUiTest {
+                 paused = true
+             })
+         } finally {
++            framePump?.close()
++            framePump = null
+             try {
+                 if (!paused) controller.pause()
+                 controller.stop()
+@@ -290,4 +304,86 @@ class AvatarTtsLiveConnectionUiTest {
+         assertEquals(0f, (field(f.activity, "voiceSignal") as TtsHologramSignal)
+             .level(SystemClock.elapsedRealtime()), 0f)
+     }
++
++    @Test fun appLookupCancellationStopsSpeechBeforeReturning() = withSpeechShell { f ->
++        startPendingSpeech(f, "cancel-lookup", "A")
++        assertTrue("Real listener drives speech", field(f.activity, "voiceSpeaking") as Boolean)
++        assertTrue("Scheduled PCM opens the mouth", pose(f).jawOpen > 0f)
++        val generation = field(f.activity, "appLookupGeneration") as Long
++        set(f.activity, "appLookupActive", true)
++        set(f.activity, "activeLocalRequest", true)
++        set(f.activity, "busy", true)
++
++        invoke(f.activity, "cancelLocalRequest")
++        assertFalse("Early lookup return must silence TTS immediately", field(f.activity, "voiceSpeaking") as Boolean)
++        assertNull(field(f.activity, "voiceUtteranceId"))
++        assertFalse(field(f.activity, "appLookupActive") as Boolean)
++        assertFalse(field(f.activity, "activeLocalRequest") as Boolean)
++        assertEquals(generation + 1L, field(f.activity, "appLookupGeneration"))
++        shadowOf(Looper.getMainLooper()).idle()
++        assertSilent(f)
++        assertEquals(0f, (field(f.activity, "voiceSignal") as TtsHologramSignal)
++            .level(SystemClock.elapsedRealtime()), 0f)
++
++        f.listener.onStart("cancel-lookup")
++        f.listener.onAudioAvailable("cancel-lookup", pcm16())
++        f.listener.onRangeStart("cancel-lookup", 0, 1, 0)
++        (field(f.activity, "voiceFrame") as Runnable).run()
++        advance(170L)
++        assertSilent(f)
++        assertSame(f.live, field(f.activity, "hologramView"))
++    }
++
++    @Test fun lookupCancellationClosesWorkWindowAndLateStatusCannotReopenIt() = withSpeechShell { f ->
++        val root = f.activity.window.decorView
++        val io = field(f.activity, "learningIoExecutor") as ExecutorService
++        val entered = CountDownLatch(1)
++        val release = CountDownLatch(1)
++        val held = io.submit(Runnable {
++            entered.countDown()
++            check(release.await(10L, TimeUnit.SECONDS)) { "Test status gate timed out" }
++        })
++        try {
++            assertTrue("Hold the actual status worker", entered.await(5L, TimeUnit.SECONDS))
++            f.home.setForegroundActive(true)
++            assertEquals(ContinuumWorkArea.START, field(f.activity, "activeWorkArea"))
++            assertNotNull("Real initial draw creates shell geometry", f.home.jarvisShell.shell)
++            invoke(f.activity, "showSystemCenter")
++            measure(root)
++            val work = descendants(root).singleOrNull { it.tag == "jarvis-work-window" && it.isShown }
++            assertNotNull("Systemstatus is a visible cockpit work area", work)
++            val labels = descendants(requireNotNull(work)).filterIsInstance<TextView>().map { it.text.toString() }
++            assertTrue("Real status is still pending", labels.any { it.contains("Status wird gelesen") })
++            startPendingSpeech(f, "cancel-window", "A")
++            assertTrue(pose(f).jawOpen > 0f)
++            set(f.activity, "appLookupActive", true)
++            set(f.activity, "activeLocalRequest", true)
++            set(f.activity, "busy", true)
++
++            invoke(f.activity, "cancelLocalRequest")
++            assertFalse("Cancel closes immediately without animation", work.isShown)
++            assertFalse("Cancel silences before the lookup return", field(f.activity, "voiceSpeaking") as Boolean)
++            shadowOf(Looper.getMainLooper()).idle()
++            assertSilent(f)
++            assertSame(f.live, field(f.activity, "hologramView"))
++
++            release.countDown()
++            held.get(5L, TimeUnit.SECONDS)
++            io.submit(Runnable {}).get(5L, TimeUnit.SECONDS)
++            advance(80L)
++            assertTrue("Late actual status cannot reopen cancelled work",
++                descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
++            f.listener.onStart("cancel-window")
++            f.listener.onRangeStart("cancel-window", 0, 1, 0)
++            f.listener.onAudioAvailable("cancel-window", pcm16())
++            advance(170L)
++            assertSilent(f)
++            assertSame(f.live, field(f.activity, "hologramView"))
++            assertTrue(f.live.isShown)
++        } finally {
++            release.countDown()
++            held.get(5L, TimeUnit.SECONDS)
++        }
++    }
++
+ }
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
+index 42960008..7d225987 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
+@@ -21,6 +21,7 @@ import android.widget.ScrollView
+ import android.widget.TextView
+ import at.heinz.deviceai.ui.ContinuumHomeView
+ import at.heinz.deviceai.ui.JarvisMotion
++import at.heinz.deviceai.ui.JarvisWorkWindowGeometry
+ import org.junit.Assert.assertEquals
+ import org.junit.Assert.assertFalse
+ import org.junit.Assert.assertNotNull
+@@ -42,6 +43,7 @@ import org.robolectric.shadows.ShadowChoreographer
+ import org.robolectric.shadows.ShadowSystemClock
+ import java.io.File
+ import java.time.Duration
++import java.util.concurrent.ExecutorService
+ import java.util.concurrent.TimeUnit
+ 
+ /** Independent real-Activity navigation and native host-Canvas captures.
+@@ -52,6 +54,7 @@ import java.util.concurrent.TimeUnit
+ @GraphicsMode(GraphicsMode.Mode.NATIVE)
+ @LooperMode(LooperMode.Mode.PAUSED)
+ class ContinuumReferenceCockpitUiTest {
++    private var framePump: CockpitHostFramePump? = null
+     @Before fun configureVirtualVsyncClock() {
+         // Activity setup can start the real avatar loop before fixture code can pause it.
+         ShadowChoreographer.setPaused(true)
+@@ -63,6 +66,7 @@ class ContinuumReferenceCockpitUiTest {
+         while (remaining > 0) {
+             val step = minOf(16L, remaining)
+             shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
++            framePump?.drawRequestedFrame()
+             remaining -= step
+         }
+     }
+@@ -130,6 +134,7 @@ class ContinuumReferenceCockpitUiTest {
+             controller.windowFocusChanged(true)
+             val activity = controller.get()
+             val root = activity.window.decorView
++            framePump = CockpitHostFramePump { controller.get().window.decorView }
+             val avatar = field(activity, "hologramView") as ContinuumHologramView
+             avatar.setNativeHeadEnabled(true)
+             avatar.setAnimationsEnabled(false)
+@@ -142,6 +147,8 @@ class ContinuumReferenceCockpitUiTest {
+             assertTrue("The Activity must expose its current shell", (field(activity, "homeView") as ContinuumHomeView).jarvisShellStage)
+             body(activity, root, controller)
+         } finally {
++            framePump?.close()
++            framePump = null
+             ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
+             runCatching { controller.close() }
+             RuntimeEnvironment.setFontScale(previousFont)
+@@ -400,6 +407,84 @@ class ContinuumReferenceCockpitUiTest {
+         assertFalse("The real close control must dismiss its dialog", dialog.isShowing)
+     }
+ 
++    private fun systemWindowFits(activity: AgentActivity): Boolean {
++        val home = currentHome(activity)
++        val shell = requireNotNull(home.jarvisShell.shell)
++        val container = activity.findViewById<ViewGroup>(android.R.id.content)
++        val rootPosition = IntArray(2).also { container.getLocationInWindow(it) }
++        fun bounds(view: View): RectF {
++            val p = IntArray(2).also { view.getLocationInWindow(it) }
++            return RectF((p[0] - rootPosition[0]).toFloat(), (p[1] - rootPosition[1]).toFloat(),
++                (p[0] - rootPosition[0] + view.width).toFloat(), (p[1] - rootPosition[1] + view.height).toFloat())
++        }
++        val avatar = field(activity, "hologramView") as ContinuumHologramView
++        val avatarBounds = bounds(avatar)
++        val protected = listOf("cockpitHeadBounds", "cockpitOrbBounds").mapNotNull { name ->
++            val region = ContinuumHologramView::class.java.getDeclaredField(name)
++                .apply { isAccessible = true }.get(avatar) as? Rect
++            region?.let { RectF(it).apply { offset(avatarBounds.left, avatarBounds.top) } }
++        } + bounds(tagged(home, "jarvis-dialog:conversation"))
++        val density = container.resources.displayMetrics.density
++        val viewport = RectF(0f, 0f, container.width.toFloat(),
++            minOf(container.height.toFloat(), bounds(home.jarvisShell).top + shell.viewportHeight * density))
++        return JarvisWorkWindowGeometry.destination(viewport, protected, density) != null
++    }
++
++    private fun assertStartSystemDestination(activity: AgentActivity): View {
++        val root = activity.window.decorView
++        val home = currentHome(activity)
++        assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
++        home.setForegroundActive(true)
++        advanceFrames(1_040L)
++        measure(root, root.width, root.height)
++        val windows = descendants(root).filter { it.tag == "jarvis-work-window" && it.isShown }
++        assertTrue("At most one cockpit work area", windows.size <= 1)
++        val work = windows.singleOrNull() ?: run {
++            assertFalse("Native fallback requires insufficient protected space", systemWindowFits(activity))
++            requireNotNull(assertDialog("Systemstatus").window).decorView
++        }
++        if (work.tag == "jarvis-work-window") {
++            assertSame("Work area belongs to the Activity", root, work.rootView)
++            assertFalse("Cockpit Systemstatus must not open a native dialog",
++                ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
++        }
++        val io = field(activity, "learningIoExecutor") as ExecutorService
++        io.submit(Runnable {}).get(5L, TimeUnit.SECONDS)
++        advanceFrames(64L)
++        measure(root, root.width, root.height)
++        val labels = descendants(work).filterIsInstance<TextView>().map { it.text.toString() }
++        assertTrue("Systemstatus title must be visible", labels.any { it.equals("Systemstatus", true) })
++        assertFalse("Actual status replaces loading", labels.any { it.contains("Status wird gelesen") })
++        assertTrue("Real build version must be present",
++            labels.any { it == "Device AI ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})" })
++        assertTrue("Original avatar remains visible", (field(activity, "hologramView") as View).isShown)
++        return work
++    }
++
++    private fun closeSystemWorkWindow(activity: AgentActivity) {
++        val root = activity.window.decorView
++        val work = assertStartSystemDestination(activity)
++        if (work.tag == "jarvis-work-window") {
++            tap(root, tagged(work, "jarvis-work-window:close"))
++            advanceFrames(640L)
++        } else closeDialogThroughDecor(assertDialog("Systemstatus"))
++        assertTrue("Close dismisses the cockpit work area",
++            descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
++        currentHome(activity).setForegroundActive(false)
++    }
++
++    private fun tapSystemWorkItem(activity: AgentActivity, label: String) {
++        val work = assertStartSystemDestination(activity)
++        val actions = descendants(work).filterIsInstance<TextView>()
++            .filter { it.isShown && it.isClickable && it.text.toString() == label }
++        assertEquals("Exactly one real $label action", 1, actions.size)
++        if (work.tag == "jarvis-work-window") tap(activity.window.decorView, actions.single())
++        else tapDialogItem(assertDialog("Systemstatus"), label)
++        assertTrue("Navigation releases the cockpit work area",
++            descendants(activity.window.decorView).none { it.tag == "jarvis-work-window" && it.isShown })
++        currentHome(activity).setForegroundActive(false)
++    }
++
+     private fun openMoreThroughDecor(activity: AgentActivity): AlertDialog {
+         val root = activity.window.decorView
+         val direct = descendants(root).firstOrNull {
+@@ -408,7 +493,7 @@ class ContinuumReferenceCockpitUiTest {
+         if (direct != null) tap(root, direct) else {
+             // Wide reflow has no category dock or spare header cell; reuse the existing System centre.
+             tap(root, shellControl(activity, "jarvis-tile:system"))
+-            tapDialogItem(assertDialog("Systemstatus"), "MEHR · ARBEITSBEREICHE")
++            tapSystemWorkItem(activity, "MEHR · ARBEITSBEREICHE")
+         }
+         return assertDialog("Mehr")
+     }
+@@ -581,7 +666,8 @@ class ContinuumReferenceCockpitUiTest {
+                 "jarvis-tile:device" to "Systemstatus"
+             )) {
+                 tap(activity.window.decorView, shellControl(activity, target))
+-                closeDialogThroughDecor(assertDialog(title))
++                if (title == "Systemstatus") closeSystemWorkWindow(activity)
++                else closeDialogThroughDecor(assertDialog(title))
+                 assertFalse("Opening a destination must not start a model task", field(activity, "busy") as Boolean)
+             }
+             // Preserve the old development/draft requirement independently of today's Tasks backlog destination.
+@@ -889,6 +975,7 @@ class ContinuumReferenceCockpitUiTest {
+                     assertEquals(ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
+                     returnHomeThroughDecor(activity)
+                 }
++                "device", "system" -> closeSystemWorkWindow(activity)
+                 else -> closeDialogThroughDecor(assertRailDestination(target))
+             }
+             assertFalse("A rail destination must not submit a task", field(activity, "busy") as Boolean)
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/ContinuumVisualEvidenceUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/ContinuumVisualEvidenceUiTest.kt
+index dde9e4b2..baa6107a 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/ContinuumVisualEvidenceUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/ContinuumVisualEvidenceUiTest.kt
+@@ -1,6 +1,5 @@
+ package at.heinz.deviceai
+ 
+-import android.app.AlertDialog
+ import android.content.Context
+ import android.graphics.Bitmap
+ import android.graphics.Canvas
+@@ -10,9 +9,15 @@ import android.os.SystemClock
+ import android.view.MotionEvent
+ import android.view.View
+ import android.view.ViewGroup
++import android.widget.TextView
++import android.widget.ScrollView
+ import at.heinz.deviceai.avatar.AvatarDirector
++import at.heinz.deviceai.avatar.AvatarPoseReducer
+ import at.heinz.deviceai.avatar.AvatarRuntimeSignals
+ import at.heinz.deviceai.ui.ContinuumHomeView
++import org.junit.Assert.assertEquals
++import org.junit.Assert.assertFalse
++import org.junit.Assert.assertSame
+ import org.junit.Assert.assertTrue
+ import org.junit.Before
+ import org.junit.Test
+@@ -28,6 +33,7 @@ import org.robolectric.shadows.ShadowAlertDialog
+ import org.robolectric.shadows.ShadowChoreographer
+ import java.io.File
+ import java.time.Duration
++import java.util.concurrent.ExecutorService
+ import java.util.concurrent.TimeUnit
+ 
+ /**
+@@ -41,6 +47,7 @@ import java.util.concurrent.TimeUnit
+ @LooperMode(LooperMode.Mode.PAUSED)
+ @GraphicsMode(GraphicsMode.Mode.NATIVE)
+ class ContinuumVisualEvidenceUiTest {
++    private var framePump: CockpitHostFramePump? = null
+     @Before fun configureVirtualVsyncClock() {
+         ShadowChoreographer.setPaused(true)
+         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+@@ -48,7 +55,12 @@ class ContinuumVisualEvidenceUiTest {
+ 
+     private fun advance(ms: Long) {
+         var left = ms
+-        while (left > 0) { val step = minOf(16L, left); shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS); left -= step }
++        while (left > 0) {
++            val step = minOf(16L, left)
++            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
++            framePump?.drawRequestedFrame()
++            left -= step
++        }
+     }
+ 
+     private fun field(a: AgentActivity, name: String): Any? =
+@@ -68,7 +80,16 @@ class ContinuumVisualEvidenceUiTest {
+             view.draw(Canvas(bitmap))
+             assertTrue("$label must not be blank", (0 until 200).any { bitmap.getPixel(w * it / 200, h / 3) != bitmap.getPixel(0, 0) })
+             System.getProperty("continuum.ui.evidenceDir")?.let { dir ->
+-                File(dir).apply { mkdirs() }.resolve("$label.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
++                val directory = File(dir).apply { mkdirs() }
++                directory.resolve("$label.png").outputStream().use {
++                    assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it))
++                }
++                directory.resolve("$label.views.txt").writeText(descendants(view).joinToString("\n") { node ->
++                    val bounds = Rect().also { node.getGlobalVisibleRect(it) }
++                    val value = (node as? TextView)?.text ?: node.contentDescription
++                    "${node.javaClass.simpleName} tag=${node.tag} shown=${node.isShown} bounds=$bounds " +
++                        "alpha=${node.alpha} scale=${node.scaleX}/${node.scaleY} text=${value?.toString().orEmpty().replace('\n', ' ').take(240)}"
++                })
+             }
+             println("EVIDENCE_CAPTURE $label ${w}x$h HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT")
+         } finally { bitmap.recycle() }
+@@ -77,6 +98,11 @@ class ContinuumVisualEvidenceUiTest {
+     /** Real DOWN (and optional UP) through the decor at the control centre; false if it is off screen. */
+     private fun touch(root: View, target: View, release: Boolean): Boolean {
+         val r = Rect()
++        if (!target.getGlobalVisibleRect(r) || r.width() < target.width - 1 || r.height() < target.height - 1) {
++            target.requestRectangleOnScreen(Rect(0, 0, target.width, target.height), true)
++            advance(32L)
++            measure(root, root.width, root.height)
++        }
+         if (!target.getGlobalVisibleRect(r) || r.width() < target.width - 1 || r.height() < target.height - 1) return false
+         val at = SystemClock.uptimeMillis()
+         val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN, r.exactCenterX(), r.exactCenterY(), 0)
+@@ -88,6 +114,139 @@ class ContinuumVisualEvidenceUiTest {
+         return true
+     }
+ 
++    private fun shown(root: View, tag: String): View {
++        val matches = descendants(root).filter { it.tag == tag && it.isShown }
++        assertEquals("Exactly one visible $tag", 1, matches.size)
++        return matches.single()
++    }
++
++    private fun avatarRegion(head: ContinuumHologramView, name: String): Rect =
++        Rect(ContinuumHologramView::class.java.getDeclaredField(name)
++            .apply { isAccessible = true }.get(head) as Rect)
++
++    private fun avatarPose(head: ContinuumHologramView) =
++        (ContinuumHologramView::class.java.getDeclaredField("avatarPose")
++            .apply { isAccessible = true }.get(head) as AvatarPoseReducer).pose()
++
++    private fun assertProtectedRegions(work: View, head: ContinuumHologramView) {
++        val headPosition = IntArray(2).also { head.getLocationOnScreen(it) }
++        val workPosition = IntArray(2).also { work.getLocationOnScreen(it) }
++        val bitmap = Bitmap.createBitmap(work.width, work.height, Bitmap.Config.ARGB_8888)
++        try {
++            work.draw(Canvas(bitmap))
++            for (name in listOf("cockpitHeadBounds", "cockpitOrbBounds")) {
++                val region = avatarRegion(head, name)
++                region.offset(headPosition[0] - workPosition[0], headPosition[1] - workPosition[1])
++                assertFalse("Protected region exists: $name", region.isEmpty)
++                assertTrue("Protected region stays within the cockpit: $name $region",
++                    Rect(0, 0, work.width, work.height).contains(region))
++                for (y in region.top + 1 until region.bottom - 1 step 7) {
++                    for (x in region.left + 1 until region.right - 1 step 7) {
++                        assertEquals("Work surface must leave $name transparent at $x/$y",
++                            0, bitmap.getPixel(x, y).ushr(24))
++                    }
++                }
++            }
++        } finally { bitmap.recycle() }
++    }
++
++    private fun systemStatusScenes(a: AgentActivity, root: View, head: ContinuumHologramView,
++                                   tag: String, w: Int, h: Int) {
++        val originalHead = avatarRegion(head, "cockpitHeadBounds")
++        val originalOrb = avatarRegion(head, "cockpitOrbBounds")
++        val beforeDialog = ShadowAlertDialog.getLatestAlertDialog()
++        val beforeMotion = head.sampleMotion()
++        assertTrue("System tile receives a real touch", touch(root, shown(root, "jarvis-tile:system"), true))
++        advance(80L); measure(root, w, h)
++        val work = shown(root, "jarvis-work-window")
++        val panel = shown(work, "jarvis-work-window:panel")
++        assertSame("Work area uses the original window", root, work.rootView)
++        assertSame("Systemstatus must not create AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
++        assertTrue("Opening has an intermediate scale", panel.scaleX > 0f && panel.scaleX < 1f)
++        assertTrue("Opening has visible content", panel.alpha > 0f && panel.alpha <= 1f)
++        assertProtectedRegions(work, head)
++        assertTrue("Opening reaches the existing avatar gaze", avatarPose(head).gazeDirected)
++        assertFalse("Directed glance is not camera tracking", avatarPose(head).gazeObserved)
++        capture(root, "$tag-6a-systemstatus-opening", w, h)
++
++        advance(960L)
++        val io = field(a, "learningIoExecutor") as ExecutorService
++        io.submit(Runnable {}).get(5L, TimeUnit.SECONDS)
++        advance(64L); measure(root, w, h)
++        assertTrue("Work area remains visible after opening", work.isShown)
++        assertEquals(1f, panel.alpha, .001f)
++        assertEquals(1f, panel.scaleX, .001f)
++        assertEquals(1f, panel.scaleY, .001f)
++        val panelBounds = Rect()
++        assertTrue(panel.getGlobalVisibleRect(panelBounds))
++        assertEquals("Open panel width is visible", panel.width, panelBounds.width())
++        assertEquals("Open panel height is visible", panel.height, panelBounds.height())
++        val labels = descendants(work).filterIsInstance<TextView>().map { it.text.toString() }
++        assertTrue("Real title is present", labels.any { it.equals("Systemstatus", true) })
++        assertFalse("Real status callback must complete", labels.any { it.contains("Status wird gelesen") })
++        val status = labels.joinToString("\n")
++        assertTrue("Actual build version must be displayed",
++            status.contains("Device AI ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"))
++        for (label in listOf("Shizuku", "Internetzugang", "Sprachmodell", "Werkzeugquittungen")) {
++            assertTrue("Real status includes $label", status.contains(label))
++        }
++        assertFalse("Status inspection starts no model task", field(a, "busy") as Boolean)
++        assertSame("Original Hologram instance survives opening", head, field(a, "hologramView"))
++        assertEquals(1, descendants(root).count { it is ContinuumHologramView })
++        assertTrue(head.isAttachedToWindow && head.isShown)
++        assertTrue("Cockpit retains window focus", a.hasWindowFocus())
++        assertTrue("Avatar keeps advancing", head.sampleMotion().callbackCount > beforeMotion.callbackCount)
++        assertEquals(originalHead, avatarRegion(head, "cockpitHeadBounds"))
++        assertEquals(originalOrb, avatarRegion(head, "cockpitOrbBounds"))
++        assertProtectedRegions(work, head)
++        capture(root, "$tag-6b-systemstatus-open", w, h)
++
++        val close = shown(work, "jarvis-work-window:close")
++        assertTrue("Close remains accessible", close.isClickable && close.isFocusable && !close.contentDescription.isNullOrBlank())
++        assertTrue("Close retains its minimum target", close.width / close.resources.displayMetrics.density >= 48f &&
++            close.height / close.resources.displayMetrics.density >= 48f)
++        assertTrue("Close receives a real touch", touch(root, close, true))
++        advance(80L); measure(root, w, h)
++        assertTrue("Closing remains visible between frames", work.isShown)
++        assertTrue("Closing has an intermediate scale", panel.scaleX > 0f && panel.scaleX < 1f)
++        assertProtectedRegions(work, head)
++        capture(root, "$tag-6c-systemstatus-closing", w, h)
++
++        advance(640L); measure(root, w, h)
++        assertTrue("Close removes the shown work area", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
++        assertSame("Original Hologram instance survives closing", head, field(a, "hologramView"))
++        assertTrue(head.isShown)
++        assertEquals(originalHead, avatarRegion(head, "cockpitHeadBounds"))
++        assertEquals(originalOrb, avatarRegion(head, "cockpitOrbBounds"))
++        assertTrue(shown(root, "jarvis-tile:system").isClickable)
++        assertEquals(ContinuumWorkArea.START, field(a, "activeWorkArea"))
++        assertFalse("Closing clears the window glance", avatarPose(head).gazeDirected)
++        capture(root, "$tag-6d-systemstatus-closed", w, h)
++
++        if (w < 600) {
++            assertTrue("Phone reopens through its real tile", touch(root, shown(root, "jarvis-tile:system"), true))
++            advance(1_040L); measure(root, w, h)
++            val reopened = shown(root, "jarvis-work-window")
++            assertEquals("Closed work areas do not accumulate", 1,
++                descendants(root).count { it.tag == "jarvis-work-window" })
++            val home = field(a, "homeView") as ContinuumHomeView
++            val viewport = generateSequence(home.parent as? View) { it.parent as? View }
++                .filterIsInstance<ScrollView>().firstOrNull {
++                    it.childCount > 0 && it.getChildAt(0).height > it.height
++                }
++            assertTrue("Phone retains a real scrolling cockpit", viewport != null)
++            val scrolling = requireNotNull(viewport)
++            val beforeScroll = scrolling.scrollY
++            scrolling.scrollTo(scrolling.scrollX, beforeScroll + 32)
++            assertTrue("The actual background scroll changed", scrolling.scrollY != beforeScroll)
++            advance(32L)
++            assertFalse("A moved background invalidates protected work bounds", reopened.isShown)
++            assertTrue("Scroll closes the work area", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
++            assertFalse("Scroll clears the window glance", avatarPose(head).gazeDirected)
++            assertSame(head, field(a, "hologramView"))
++        }
++    }
++
+     private fun scenes(tag: String, w: Int, h: Int, font: Float) {
+         val previousFont = RuntimeEnvironment.getFontScale()
+         RuntimeEnvironment.setFontScale(font)
+@@ -105,6 +264,7 @@ class ContinuumVisualEvidenceUiTest {
+             controller.windowFocusChanged(true)
+             val a = controller.get()
+             val root = a.window.decorView
++            framePump = CockpitHostFramePump { controller.get().window.decorView }
+             val head = field(a, "hologramView") as ContinuumHologramView
+             val home = field(a, "homeView") as ContinuumHomeView
+             val director = field(a, "avatarDirector") as AvatarDirector
+@@ -134,27 +294,18 @@ class ContinuumVisualEvidenceUiTest {
+             director.onRuntime(AvatarRuntimeSignals()); head.setState(ContinuumHologramView.State.READY)
+             advance(900)
+ 
+-            val memory = descendants(root).firstOrNull { it.tag == "jarvis-tile:memory" && it.isShown }
+-            if (memory != null && touch(root, memory, release = false)) {
+-                advance(120)
+-                capture(root, "$tag-5-tile-pressed", w, h)
+-                val at = SystemClock.uptimeMillis()
+-                val cancel = MotionEvent.obtain(at, at, MotionEvent.ACTION_CANCEL, 0f, 0f, 0)
+-                try { root.dispatchTouchEvent(cancel) } finally { cancel.recycle() }
+-                advance(300)
+-            }
+-            val system = descendants(root).firstOrNull { (it.tag == "jarvis-tile:device" || it.tag == "jarvis-tile:system") && it.isShown }
+-            if (system != null && touch(root, system, release = true)) {
+-                advance(600)
+-                val dialog: AlertDialog? = ShadowAlertDialog.getLatestAlertDialog()
+-                if (dialog != null && dialog.isShowing) {
+-                    val decor = requireNotNull(dialog.window).decorView
+-                    capture(root, "$tag-6-window-behind", w, h)
+-                    capture(decor, "$tag-6-window-systemstatus", decor.width.coerceAtLeast(1), decor.height.coerceAtLeast(1))
+-                    dialog.dismiss(); advance(300)
+-                }
+-            }
++            val memory = shown(root, "jarvis-tile:memory")
++            assertTrue("Memory tile receives a real press", touch(root, memory, release = false))
++            advance(120)
++            capture(root, "$tag-5-tile-pressed", w, h)
++            val at = SystemClock.uptimeMillis()
++            val cancel = MotionEvent.obtain(at, at, MotionEvent.ACTION_CANCEL, 0f, 0f, 0)
++            try { root.dispatchTouchEvent(cancel) } finally { cancel.recycle() }
++            advance(300)
++            systemStatusScenes(a, root, head, tag, w, h)
+         } finally {
++            framePump?.close()
++            framePump = null
+             ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
+             runCatching { controller.close() }
+             RuntimeEnvironment.setFontScale(previousFont)
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt
+index 6de9037d..ea3d87ca 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt
+@@ -174,4 +174,37 @@ class JarvisShellMotionUiTest {
+             assertStopped(f)
+         } finally { f.shell.frameLogging = false }
+     }
++
++    @Test fun workWindowSharesShellFramesThenSettles() = withShell { f ->
++        f.shell.ambientMotionEnabled = false
++        assertStopped(f)
++        var callbacks = 0
++        val until = android.os.SystemClock.uptimeMillis() + 96L
++        val subscription = f.shell.observeMotionFrames { now, scale ->
++            assertTrue(scale > 0f)
++            callbacks++
++            now < until
++        }
++        try {
++            advance()
++            assertTrue("Window uses supplied frames", callbacks > 1)
++            val settled = callbacks
++            advance()
++            assertEquals("Completed window schedules nothing", settled, callbacks)
++        } finally { subscription.close() }
++    }
++
++    @Test fun workWindowReceivesReducedMotionWithoutLoop() = withShell { f ->
++        f.shell.ambientMotionEnabled = false
++        var latestScale = -1f
++        val subscription = f.shell.observeMotionFrames { _, scale -> latestScale = scale; true }
++        try {
++            advance(32L)
++            val resolver = f.controller.get().contentResolver
++            Settings.Global.putFloat(resolver, Settings.Global.ANIMATOR_DURATION_SCALE, 0f)
++            resolver.notifyChange(Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE), null)
++            assertStopped(f)
++            assertEquals("Reduced motion settles windows", 0f, latestScale, 0f)
++        } finally { subscription.close() }
++    }
+ }
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt b/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt
+new file mode 100644
+index 00000000..2d4cd5a6
+--- /dev/null
++++ b/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt
+@@ -0,0 +1,316 @@
++package at.heinz.deviceai.ui
++
++import android.content.Context
++import android.graphics.Canvas
++import android.graphics.Outline
++import android.graphics.PointF
++import android.graphics.RectF
++import android.os.Build
++import android.util.TypedValue
++import android.view.Gravity
++import android.view.MotionEvent
++import android.view.View
++import android.view.ViewOutlineProvider
++import android.widget.FrameLayout
++import android.widget.LinearLayout
++import android.widget.ScrollView
++import android.widget.TextView
++import at.heinz.deviceai.ui.JarvisDesign.Colors
++import kotlin.math.hypot
++import kotlin.math.roundToInt
++
++/** In-cockpit content, shell frames only. */
++class JarvisWorkWindow(
++    context: Context,
++    private val frameSource: (((Long, Float) -> Boolean) -> AutoCloseable),
++    private val requestFrame: () -> Unit
++) : FrameLayout(context) {
++    private enum class Phase { CLOSED, OPENING, OPEN, CLOSING }
++    private val density = resources.displayMetrics.density
++    private val origin = RectF()
++    private val destination = RectF()
++    private var protectedBounds = emptyList<RectF>()
++    private var phase = Phase.CLOSED
++    private var disposed = false
++    private var subscription: AutoCloseable? = null
++    private var startedAt: Long? = null
++    private var lastFrameTime: Long? = null
++    private var openness = 0f
++    private var opacity = 0f
++    private var closeFrom = 0f
++    private var closeAlpha = 0f
++    private var trailProgress = 0f
++    private var trailAlpha = 0f
++    private var route = emptyList<PointF>()
++    private var routeLength = 0f
++    private var edge = Fill.Linear(0f, 0f, 1f, 1f,
++        intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.violet, Colors.magenta))
++    private var onOpened: () -> Unit = {}
++    private var onClosed: () -> Unit = {}
++    private val painter = AndroidContinuumPainter(context.assets)
++    private val opening = JarvisMotion.Presets.widget(JarvisMotion.Direction.DEPTH)
++        .copy(distanceDp = 0f, fromScale = 0f)
++    private val closing = JarvisMotion.FlyIn(JarvisMotion.Direction.DEPTH, 0f, 0f,
++        durationMs = JarvisMotion.Durations.LASER, edgeFlashMs = 0L,
++        easing = JarvisMotion.Easing.easeInOutCubic)
++
++    private val titleView = TextView(context).apply {
++        setTextColor(Colors.text)
++        setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
++        setTypeface(typeface, android.graphics.Typeface.BOLD)
++        if (Build.VERSION.SDK_INT >= 28) isAccessibilityHeading = true
++    }
++    private val closeView = TextView(context).apply {
++        tag = "jarvis-work-window:close"
++        text = "SCHLIESSEN"
++        contentDescription = "Arbeitsfenster schließen"
++        setTextColor(Colors.cyanSoft)
++        setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
++        gravity = Gravity.CENTER
++        minHeight = dp(48f)
++        minWidth = dp(104f)
++        setPadding(dp(8f), 0, dp(8f), 0)
++        isFocusable = true
++        setOnClickListener { close() }
++    }
++    private val scroll = ScrollView(context).apply {
++        tag = "jarvis-work-window:scroll"
++        isFillViewport = false
++        clipToPadding = true
++    }
++    private val panel = GlassPanel(context).apply {
++        tag = "jarvis-work-window:panel"
++        orientation = LinearLayout.VERTICAL
++        isClickable = true
++        setPadding(dp(8f), dp(4f), dp(8f), dp(8f))
++        val header = LinearLayout(context).apply {
++            gravity = Gravity.CENTER_VERTICAL
++            minimumHeight = dp(48f)
++            addView(titleView, LinearLayout.LayoutParams(0, -2, 1f))
++            addView(closeView, LinearLayout.LayoutParams(-2, -2))
++        }
++        addView(header, LinearLayout.LayoutParams(-1, -2))
++        addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
++        pivotX = 0f
++        pivotY = 0f
++    }
++
++    val isShowing: Boolean get() = phase != Phase.CLOSED
++
++    init {
++        tag = "jarvis-work-window"
++        isClickable = false
++        isFocusable = false
++        clipChildren = false
++        clipToPadding = false
++        visibility = GONE
++        addView(panel)
++    }
++
++    /** Rectangles use local overlay pixels. */
++    fun open(body: View, origin: RectF, destination: RectF, title: String,
++             protectedBounds: List<RectF> = emptyList(),
++             onOpened: () -> Unit = {}, onClosed: () -> Unit = {}): Boolean {
++        if (disposed || !JarvisWorkWindowGeometry.valid(origin) || !JarvisWorkWindowGeometry.valid(destination) ||
++            destination.width() < 200f * density || destination.height() < 160f * density ||
++            protectedBounds.any { !JarvisWorkWindowGeometry.finite(it) ||
++                (JarvisWorkWindowGeometry.valid(it) && RectF.intersects(it, destination)) } ||
++            (body.parent != null && body.parent !== scroll) ||
++            (width > 0 && height > 0 && !RectF(0f, 0f, width.toFloat(), height.toFloat()).contains(destination))) return false
++        close(immediate = true)
++        this.origin.set(origin)
++        this.destination.set(destination)
++        this.protectedBounds = protectedBounds.filter(JarvisWorkWindowGeometry::valid).map(::RectF)
++        this.onOpened = onOpened
++        this.onClosed = onClosed
++        titleView.text = title
++        scroll.addView(body, FrameLayout.LayoutParams(-1, -2))
++        scroll.scrollTo(0, 0)
++        panel.layoutParams = LayoutParams(destination.width().roundToInt().coerceAtLeast(1),
++            destination.height().roundToInt().coerceAtLeast(1)).apply {
++            leftMargin = destination.left.roundToInt()
++            topMargin = destination.top.roundToInt()
++        }
++        edge = Fill.Linear(origin.centerX() / density, origin.centerY() / density,
++            destination.centerX() / density, destination.centerY() / density,
++            intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.violet, Colors.magenta))
++        phase = Phase.OPENING
++        startedAt = null
++        lastFrameTime = null
++        openness = 0f
++        opacity = 0f
++        trailProgress = 0f
++        trailAlpha = 0f
++        visibility = VISIBLE
++        applyFrame()
++        updateRoute()
++        val handle = frameSource(::onFrame)
++        if (isShowing && !disposed) subscription = handle else handle.close()
++        requestFrame()
++        return true
++    }
++
++    fun close(immediate: Boolean = false) {
++        if (!isShowing) return
++        if (immediate || openness <= 0f) { finishClose(); return }
++        if (phase == Phase.CLOSING) return
++        phase = Phase.CLOSING
++        closeFrom = openness
++        closeAlpha = opacity
++        startedAt = lastFrameTime
++        onOpened = {}
++        requestFrame()
++    }
++
++    fun dispose() {
++        disposed = true
++        close(immediate = true)
++    }
++
++    private fun onFrame(nowMs: Long, animatorScale: Float): Boolean {
++        if (!isShowing) return false
++        lastFrameTime = nowMs
++        if (phase == Phase.OPEN) return false
++        val start = startedAt ?: nowMs.also { startedAt = it }
++        val elapsed = (nowMs - start).coerceAtLeast(0L)
++        val state = JarvisMotion.frame(if (phase == Phase.CLOSING) closing else opening, elapsed, animatorScale)
++        if (phase == Phase.CLOSING) {
++            openness = closeFrom * (1f - state.scale)
++            opacity = closeAlpha * (1f - state.alpha)
++            if (state.done) { finishClose(); return false }
++        } else {
++            openness = state.scale
++            opacity = state.alpha
++        }
++        trailProgress = JarvisMotion.laser(elapsed, animatorScale)
++        trailAlpha = if (phase == Phase.CLOSING) openness else 1f - openness
++        panel.edgeFlash = state.glow
++        applyFrame()
++        if (state.done && phase == Phase.OPENING) {
++            phase = Phase.OPEN
++            val callback = onOpened
++            onOpened = {}
++            callback()
++        }
++        return phase == Phase.OPENING || phase == Phase.CLOSING
++    }
++
++    private fun applyFrame() {
++        val params = panel.layoutParams as LayoutParams
++        panel.translationX = origin.left + (destination.left - origin.left) * openness - params.leftMargin
++        panel.translationY = origin.top + (destination.top - origin.top) * openness - params.topMargin
++        panel.scaleX = (origin.width() + (destination.width() - origin.width()) * openness) / params.width
++        panel.scaleY = (origin.height() + (destination.height() - origin.height()) * openness) / params.height
++        panel.alpha = opacity
++        panel.invalidate()
++        invalidate()
++    }
++
++    private fun finishClose() {
++        phase = Phase.CLOSED
++        val handle = subscription
++        subscription = null
++        handle?.close()
++        scroll.removeAllViews()
++        visibility = GONE
++        route = emptyList()
++        openness = 0f
++        opacity = 0f
++        trailAlpha = 0f
++        startedAt = null
++        lastFrameTime = null
++        onOpened = {}
++        val callback = onClosed
++        onClosed = {}
++        callback()
++    }
++
++    private fun updateRoute() {
++        route = JarvisWorkWindowGeometry.route(origin, destination,
++            RectF(0f, 0f, width.toFloat(), height.toFloat()), protectedBounds, 8f * density)
++        routeLength = route.zipWithNext { a, b -> hypot(b.x - a.x, b.y - a.y) }.sum()
++    }
++
++    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
++        super.onSizeChanged(w, h, oldw, oldh)
++        if (!isShowing) return
++        if ((oldw > 0 && oldh > 0 && (w != oldw || h != oldh)) ||
++            !RectF(0f, 0f, w.toFloat(), h.toFloat()).contains(destination)) close(immediate = true)
++        else updateRoute()
++    }
++
++    override fun onDetachedFromWindow() {
++        close(immediate = true)
++        super.onDetachedFromWindow()
++    }
++
++    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
++        if (!isShowing || (event.actionMasked == MotionEvent.ACTION_DOWN &&
++                protectedBounds.any { it.contains(event.x, event.y) })) return false
++        return super.dispatchTouchEvent(event)
++    }
++
++    override fun dispatchDraw(canvas: Canvas) {
++        if (!isShowing) return
++        val save = canvas.save()
++        protectedBounds.forEach { canvas.clipOutRect(it) }
++        drawTrail(canvas)
++        super.dispatchDraw(canvas)
++        canvas.restoreToCount(save)
++    }
++
++    private fun drawTrail(canvas: Canvas) {
++        if (trailAlpha <= 0f || trailProgress <= 0f || routeLength <= 0f) return
++        val save = canvas.save()
++        canvas.scale(density, density)
++        painter.begin(canvas)
++        val points = if (phase == Phase.CLOSING) route.asReversed() else route
++        var remaining = routeLength * trailProgress
++        for (i in 0 until points.lastIndex) {
++            val a = points[i]
++            val b = points[i + 1]
++            val length = hypot(b.x - a.x, b.y - a.y)
++            if (length <= 0f) continue
++            val progress = (remaining / length).coerceIn(0f, 1f)
++            val x = (a.x + (b.x - a.x) * progress) / density
++            val y = (a.y + (b.y - a.y) * progress) / density
++            painter.drawLine(a.x / density, a.y / density, x, y, 6f, edge, .08f * trailAlpha)
++            painter.drawLine(a.x / density, a.y / density, x, y, 1f, edge, .85f * trailAlpha)
++            remaining -= length
++            if (remaining <= 0f) {
++                painter.fillCircle(x, y, 1.5f, Fill.Solid(Colors.glowCore), trailAlpha)
++                break
++            }
++        }
++        canvas.restoreToCount(save)
++    }
++
++    private fun dp(value: Float) = (value * density).roundToInt()
++
++    private inner class GlassPanel(context: Context) : LinearLayout(context) {
++        private val glass = AndroidContinuumPainter(context.assets)
++        var edgeFlash = 0f
++        init {
++            setWillNotDraw(false)
++            clipToOutline = true
++            outlineProvider = object : ViewOutlineProvider() {
++                override fun getOutline(view: View, outline: Outline) {
++                    outline.setRoundRect(0, 0, view.width, view.height, 14f * density)
++                }
++            }
++        }
++        override fun onDraw(canvas: Canvas) {
++            super.onDraw(canvas)
++            val save = canvas.save()
++            canvas.scale(density, density)
++            glass.begin(canvas)
++            val right = width / density - 1f
++            val bottom = height / density - 1f
++            JarvisReferenceHud.surface(glass, JarvisShellLayout.Box(1f, 1f, right, bottom), 14f,
++                Colors.panelRim, Colors.violetSoft)
++            if (edgeFlash > 0f) glass.strokeRoundRect(1f, 1f, right, bottom, 14f, 1f,
++                Fill.Solid(Colors.cyanSoft), .35f * edgeFlash)
++            canvas.restoreToCount(save)
++        }
++    }
++}
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowGeometry.kt b/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowGeometry.kt
+new file mode 100644
+index 00000000..ccf51b08
+--- /dev/null
++++ b/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowGeometry.kt
+@@ -0,0 +1,105 @@
++package at.heinz.deviceai.ui
++
++import android.graphics.PointF
++import android.graphics.RectF
++import kotlin.math.abs
++import kotlin.math.hypot
++
++/** Free space in overlay pixels. */
++object JarvisWorkWindowGeometry {
++    fun destination(viewport: RectF, protectedBounds: List<RectF>, density: Float = 1f): RectF? {
++        if (!valid(viewport) || !density.isFinite() || density <= 0f ||
++            protectedBounds.any { !finite(it) }) return null
++        val gap = 8f * density
++        val area = RectF(viewport).apply { inset(gap, gap) }
++        if (area.width() < 200f * density || area.height() < 160f * density) return null
++        val blocked = protectedBounds.filter(::valid).map { RectF(it).apply { inset(-gap, -gap) } }
++            .filter { it.intersect(area) }
++        val xs = (listOf(area.left, area.right) + blocked.flatMap { listOf(it.left, it.right) }).distinct().sorted()
++        val ys = (listOf(area.top, area.bottom) + blocked.flatMap { listOf(it.top, it.bottom) }).distinct().sorted()
++        var best: RectF? = null
++        var bestArea = 0f
++        for (left in xs.indices) for (right in left + 1 until xs.size) {
++            if (xs[right] - xs[left] < 200f * density) continue
++            for (top in ys.indices) for (bottom in top + 1 until ys.size) {
++                val candidate = RectF(xs[left], ys[top], xs[right], ys[bottom])
++                if (candidate.height() < 160f * density || blocked.any { RectF.intersects(candidate, it) }) continue
++                val width = minOf(candidate.width(), 640f * density)
++                val score = width * candidate.height()
++                if (score <= bestArea) continue
++                val inset = (candidate.width() - width) * .5f
++                candidate.inset(inset, 0f)
++                best = candidate
++                bestArea = score
++            }
++        }
++        return best
++    }
++
++    internal fun finite(box: RectF) = box.left.isFinite() && box.top.isFinite() &&
++        box.right.isFinite() && box.bottom.isFinite()
++
++    internal fun valid(box: RectF) = finite(box) && box.width() > 0f && box.height() > 0f
++
++    /** Shortest visible corner route. */
++    internal fun route(origin: RectF, destination: RectF, viewport: RectF,
++                       protectedBounds: List<RectF>, clearance: Float): List<PointF> {
++        if (!valid(viewport)) return emptyList()
++        val blocked = protectedBounds.filter(::valid).map { RectF(it).apply { inset(-clearance, -clearance) } }
++        val start = PointF(origin.centerX(), origin.centerY())
++        val end = PointF(destination.centerX(), destination.centerY())
++        fun allowed(p: PointF) = p.x in viewport.left..viewport.right && p.y in viewport.top..viewport.bottom &&
++            blocked.none { inside(p, it) }
++        if (!allowed(start) || !allowed(end)) return emptyList()
++        val points = mutableListOf(start, end)
++        blocked.forEach { b ->
++            listOf(PointF(b.left, b.top), PointF(b.right, b.top),
++                PointF(b.right, b.bottom), PointF(b.left, b.bottom)).filterTo(points, ::allowed)
++        }
++        val distances = FloatArray(points.size) { Float.POSITIVE_INFINITY }
++        val previous = IntArray(points.size) { -1 }
++        val visited = BooleanArray(points.size)
++        distances[0] = 0f
++        repeat(points.size) {
++            val current = points.indices.filter { !visited[it] }.minByOrNull { distances[it] }
++                ?: return@repeat
++            if (!distances[current].isFinite()) return@repeat
++            visited[current] = true
++            for (next in points.indices) {
++                if (visited[next] || blocked.any { crosses(points[current], points[next], it) }) continue
++                val distance = distances[current] + hypot(points[next].x - points[current].x, points[next].y - points[current].y)
++                if (distance < distances[next]) {
++                    distances[next] = distance
++                    previous[next] = current
++                }
++            }
++        }
++        if (!distances[1].isFinite()) return emptyList()
++        val result = mutableListOf<PointF>()
++        var index = 1
++        while (index >= 0) {
++            result.add(points[index])
++            index = previous[index]
++        }
++        return result.asReversed()
++    }
++
++    private fun inside(p: PointF, b: RectF) =
++        p.x > b.left + .01f && p.x < b.right - .01f && p.y > b.top + .01f && p.y < b.bottom - .01f
++
++    private fun crosses(a: PointF, b: PointF, obstacle: RectF): Boolean {
++        val rect = RectF(obstacle).apply { inset(.01f, .01f) }
++        var enter = 0f
++        var exit = 1f
++        fun slab(position: Float, delta: Float, low: Float, high: Float): Boolean {
++            if (abs(delta) < .0001f) return position in low..high
++            val first = (low - position) / delta
++            val last = (high - position) / delta
++            enter = maxOf(enter, minOf(first, last))
++            exit = minOf(exit, maxOf(first, last))
++            return enter <= exit
++        }
++        return slab(a.x, b.x - a.x, rect.left, rect.right) &&
++            slab(a.y, b.y - a.y, rect.top, rect.bottom)
++    }
++}
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt b/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt
+new file mode 100644
+index 00000000..5b5d14e7
+--- /dev/null
++++ b/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt
+@@ -0,0 +1,98 @@
++package at.heinz.deviceai.ui
++
++import android.app.Activity
++import android.graphics.RectF
++import android.os.Build
++import android.view.View
++import android.view.ViewGroup
++import android.view.ViewTreeObserver
++import android.widget.ScrollView
++import at.heinz.deviceai.avatar.AvatarDirector
++import at.heinz.deviceai.avatar.GazeTarget
++
++/** Owns presentation, never tool access. */
++class JarvisWorkWindowHost(
++    private val activity: Activity,
++    private val director: AvatarDirector
++) {
++    private var current: JarvisWorkWindow? = null
++    private var serial = 0L
++    private var back: android.window.OnBackInvokedCallback? = null
++    val isShowing: Boolean get() = current?.isShowing == true
++
++    fun close(immediate: Boolean = false) { current?.close(immediate) }
++
++    fun show(home: ContinuumHomeView, body: View, title: String,
++             onClosed: () -> Unit): JarvisWorkWindow? {
++        if (!home.jarvisShellStage || !home.isShown) return null
++        val container = activity.findViewById<ViewGroup>(android.R.id.content) ?: return null
++        val shell = home.jarvisShell
++        val geometry = shell.shell ?: return null
++        val density = activity.resources.displayMetrics.density
++        val source = home.findViewWithTag<View>("jarvis-tile:system") ?: return null
++        val origin = localBounds(source, container)
++        var parent = home.parent
++        while (parent is View) {
++            if (parent is ScrollView) { parent.scrollTo(0, 0); break }
++            parent = parent.parent
++        }
++        val offset = localBounds(shell, container)
++        val viewport = RectF(0f, 0f, container.width.toFloat(),
++            minOf(container.height.toFloat(), offset.top + geometry.viewportHeight * density))
++        fun local(box: JarvisShellLayout.Box) = RectF(offset.left + box.left * density,
++            offset.top + box.top * density, offset.left + box.right * density,
++            offset.top + box.bottom * density)
++        val face = (geometry.headStage ?: geometry.headBounds)?.let(::local)
++        val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
++        val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))
++        val destination = JarvisWorkWindowGeometry.destination(viewport, withOrb, density)
++            ?: return null
++        close(immediate = true)
++        val id = "work-window-${++serial}"
++        val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
++        var releaseGeometry: () -> Unit = {}
++        container.addView(window, ViewGroup.LayoutParams(-1, -1))
++        val accepted = window.open(body, origin, destination, title, withOrb, onClosed = {
++            releaseGeometry()
++            (window.parent as? ViewGroup)?.removeView(window)
++            director.windowClosed(id)
++            if (current === window) {
++                current = null
++                unregisterBack()
++                onClosed()
++            }
++        })
++        if (!accepted) { window.dispose(); container.removeView(window); return null }
++        current = window
++        val observer = home.viewTreeObserver
++        val scroll = ViewTreeObserver.OnScrollChangedListener {
++            if (current === window && localBounds(shell, container) != offset) window.close(immediate = true)
++        }
++        observer.addOnScrollChangedListener(scroll)
++        releaseGeometry = { if (observer.isAlive) observer.removeOnScrollChangedListener(scroll) }
++        val headX = face?.centerX() ?: viewport.centerX()
++        val headY = face?.centerY() ?: viewport.centerY()
++        director.windowOpened(id, GazeTarget(
++            ((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.6f, .6f),
++            ((headY - destination.centerY()) / viewport.height()).coerceIn(-.4f, .4f)))
++        if (Build.VERSION.SDK_INT >= 33) {
++            val callback = android.window.OnBackInvokedCallback { close() }
++            back = callback
++            activity.onBackInvokedDispatcher.registerOnBackInvokedCallback(
++                android.window.OnBackInvokedDispatcher.PRIORITY_OVERLAY, callback)
++        }
++        return window
++    }
++
++    private fun unregisterBack() {
++        if (Build.VERSION.SDK_INT >= 33) back?.let(activity.onBackInvokedDispatcher::unregisterOnBackInvokedCallback)
++        back = null
++    }
++
++    private fun localBounds(view: View, root: View): RectF {
++        val point = IntArray(2); val rootPoint = IntArray(2)
++        view.getLocationInWindow(point); root.getLocationInWindow(rootPoint)
++        val x = (point[0] - rootPoint[0]).toFloat(); val y = (point[1] - rootPoint[1]).toFloat()
++        return RectF(x, y, x + view.width, y + view.height)
++    }
++}
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/AvatarExplicitConfirmationUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/AvatarExplicitConfirmationUiTest.kt
+new file mode 100644
+index 00000000..d752678d
+--- /dev/null
++++ b/app/src/uiTest/java/at/heinz/deviceai/AvatarExplicitConfirmationUiTest.kt
+@@ -0,0 +1,133 @@
++package at.heinz.deviceai
++
++import android.app.AlertDialog
++import android.content.Context
++import android.os.Looper
++import android.provider.Settings
++import at.heinz.deviceai.avatar.AvatarDirector
++import at.heinz.deviceai.avatar.AvatarEvent
++import at.heinz.deviceai.avatar.AvatarSink
++import at.heinz.deviceai.cockpit.JarvisAvatarSlot
++import org.junit.Assert.assertEquals
++import org.junit.Assert.assertNotSame
++import org.junit.Assert.assertTrue
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.Robolectric
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.Shadows.shadowOf
++import org.robolectric.annotation.Config
++import org.robolectric.annotation.GraphicsMode
++import org.robolectric.annotation.LooperMode
++import org.robolectric.shadows.ShadowAlertDialog
++
++/** Actual dialogs; recording-only decision callbacks. */
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [28], qualifiers = "w884dp-h760dp-land-mdpi", instrumentedPackages = [
++    "at.heinz.deviceai.avatar.AvatarDirector",
++    "at.heinz.deviceai.ContinuumHologramView"
++])
++@GraphicsMode(GraphicsMode.Mode.LEGACY)
++@LooperMode(LooperMode.Mode.PAUSED)
++class AvatarExplicitConfirmationUiTest {
++    private data class Fixture(val activity: AgentActivity, val events: MutableList<AvatarEvent>) {
++        fun confirmations() = events.filterIsInstance<AvatarEvent.AnimationIntentsChanged>()
++            .filter { it.confirmationAtMillis != Long.MIN_VALUE }
++    }
++
++    private fun field(target: Any, name: String): Any? = target.javaClass.getDeclaredField(name)
++        .apply { isAccessible = true }.get(target)
++
++    private fun withActivity(check: (Fixture) -> Unit) {
++        val app = RuntimeEnvironment.getApplication()
++        val previousScale = Settings.Global.getFloat(app.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)
++        Settings.Global.putFloat(app.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 0f)
++        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
++            .putBoolean("voice_enabled", false).commit()
++        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
++            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
++        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit()
++            .clear().putBoolean("jarvis-shell", true).commit()
++        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
++            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
++        val controller = Robolectric.buildActivity(AgentActivity::class.java)
++        try {
++            controller.setup().visible().windowFocusChanged(true)
++            val activity = controller.get()
++            val director = field(activity, "avatarDirector") as AvatarDirector
++            val originalSink = field(director, "sink") as AvatarSink
++            val events = mutableListOf<AvatarEvent>()
++            director.attach(AvatarSink { event -> events += event; originalSink.onAvatarEvent(event) })
++            shadowOf(Looper.getMainLooper()).idle()
++            events.clear()
++            check(Fixture(activity, events))
++        } finally {
++            ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
++            try {
++                controller.pause().stop().destroy()
++            } finally {
++                JarvisAvatarSlot.register(null)
++                Settings.Global.putFloat(app.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, previousScale)
++                app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
++            }
++        }
++    }
++
++    private fun open(fixture: Fixture, destructive: Boolean, decisions: MutableList<Boolean>): AlertDialog {
++        val proposal = if (destructive) ToolProposal("delete_file", mapOf("path" to "/synthetic-confirmation-only.txt"))
++            else ToolProposal("get_device_info", emptyMap())
++        val recordOnly: (Boolean) -> Unit = { decisions += it }
++        AgentActivity::class.java.declaredMethods.single {
++            it.name == "showStructuredToolConfirmation" && it.parameterCount == 3
++        }.apply { isAccessible = true }.invoke(fixture.activity, proposal, destructive, recordOnly)
++        shadowOf(Looper.getMainLooper()).idle()
++        return requireNotNull(ShadowAlertDialog.getLatestAlertDialog()).also { assertTrue(it.isShowing) }
++    }
++
++    private fun click(dialog: AlertDialog, button: Int, label: String) {
++        assertEquals(label, dialog.getButton(button).text.toString())
++        assertTrue(dialog.getButton(button).performClick())
++        shadowOf(Looper.getMainLooper()).idle()
++    }
++
++    @Test fun destructiveApprovalNodsOnlyAfterTheLastExplicitPositiveButton() = withActivity { f ->
++        val decisions = mutableListOf<Boolean>()
++        click(open(f, true, decisions), AlertDialog.BUTTON_NEGATIVE, "Ablehnen")
++        assertEquals(listOf(false), decisions)
++        assertTrue("Rejection must not nod", f.confirmations().isEmpty())
++        decisions.clear()
++        f.events.clear()
++
++        val initial = open(f, true, decisions)
++        click(initial, AlertDialog.BUTTON_POSITIVE, "Weiter prüfen")
++        assertTrue("Review is not approval", decisions.isEmpty())
++        assertTrue("First review step must not nod", f.confirmations().isEmpty())
++        val finalReview = requireNotNull(ShadowAlertDialog.getLatestAlertDialog())
++        assertNotSame(initial, finalReview)
++        assertTrue(finalReview.isShowing)
++        click(finalReview, AlertDialog.BUTTON_POSITIVE, "Destruktiv ausführen")
++        assertEquals("Only the supplied callback runs", listOf(true), decisions)
++        assertEquals("Exactly one explicit confirmation intent", 1, f.confirmations().size)
++        assertTrue(f.confirmations().single().confirmationAtMillis >= 0L)
++        assertTrue("Confirmation cannot invent speech", f.events.none {
++            it is AvatarEvent.SpeechStarted || it is AvatarEvent.AudioLevel || it is AvatarEvent.VisemeCue
++        })
++    }
++
++    @Test fun ordinaryApprovalNodsOnlyForExplicitExecute() = withActivity { f ->
++        val decisions = mutableListOf<Boolean>()
++        click(open(f, false, decisions), AlertDialog.BUTTON_NEGATIVE, "Ablehnen")
++        assertEquals(listOf(false), decisions)
++        assertTrue(f.confirmations().isEmpty())
++        decisions.clear()
++        f.events.clear()
++
++        click(open(f, false, decisions), AlertDialog.BUTTON_POSITIVE, "Ausführen")
++        assertEquals(listOf(true), decisions)
++        assertEquals("Exactly one explicit confirmation intent", 1, f.confirmations().size)
++        assertTrue("Confirmation cannot invent speech", f.events.none {
++            it is AvatarEvent.SpeechStarted || it is AvatarEvent.AudioLevel || it is AvatarEvent.VisemeCue
++        })
++    }
++}
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt b/app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt
+new file mode 100644
+index 00000000..440fee20
+--- /dev/null
++++ b/app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt
+@@ -0,0 +1,34 @@
++package at.heinz.deviceai
++
++import android.graphics.Bitmap
++import android.graphics.Canvas
++import android.view.View
++import android.view.ViewGroup
++import org.robolectric.Shadows.shadowOf
++
++/** Consumes real host View invalidations. */
++internal class CockpitHostFramePump(private val rootProvider: () -> View) : AutoCloseable {
++    private var surface: Bitmap? = null
++
++    fun drawRequestedFrame() {
++        val root = rootProvider()
++        if (!root.isAttachedToWindow || !root.isShown || root.width <= 0 || root.height <= 0) return
++        val views = descendants(root)
++        if (views.none { it.isShown && shadowOf(it).wasInvalidated() }) return
++        views.forEach { shadowOf(it).clearWasInvalidated() }
++        val bitmap = surface?.takeIf { it.width == root.width && it.height == root.height }
++            ?: Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888).also {
++                surface?.recycle()
++                surface = it
++            }
++        root.draw(Canvas(bitmap))
++    }
++
++    private fun descendants(view: View): List<View> = listOf(view) + if (view is ViewGroup)
++        (0 until view.childCount).flatMap { descendants(view.getChildAt(it)) } else emptyList()
++
++    override fun close() {
++        surface?.recycle()
++        surface = null
++    }
++}
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt
+new file mode 100644
+index 00000000..06fec405
+--- /dev/null
++++ b/app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt
+@@ -0,0 +1,173 @@
++package at.heinz.deviceai
++
++import android.content.Context
++import android.graphics.Bitmap
++import android.graphics.Canvas
++import android.graphics.Rect
++import android.os.Looper
++import android.os.SystemClock
++import android.view.MotionEvent
++import android.view.View
++import android.view.ViewGroup
++import android.widget.TextView
++import at.heinz.deviceai.ui.ContinuumHomeView
++import org.junit.Assert.assertEquals
++import org.junit.Assert.assertFalse
++import org.junit.Assert.assertNotNull
++import org.junit.Assert.assertSame
++import org.junit.Assert.assertTrue
++import org.junit.Before
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.Robolectric
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.Shadows.shadowOf
++import org.robolectric.annotation.Config
++import org.robolectric.annotation.GraphicsMode
++import org.robolectric.annotation.LooperMode
++import org.robolectric.shadows.ShadowAlertDialog
++import org.robolectric.shadows.ShadowChoreographer
++import java.time.Duration
++import java.util.concurrent.ExecutorService
++import java.util.concurrent.TimeUnit
++
++/** Host Canvas; no Filament acceptance. */
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [28], qualifiers = "w884dp-h760dp-land-mdpi")
++@GraphicsMode(GraphicsMode.Mode.NATIVE)
++@LooperMode(LooperMode.Mode.PAUSED)
++class ContinuumSystemStatusWorkWindowUiTest {
++    private var framePump: CockpitHostFramePump? = null
++    @Before fun pauseVsync() {
++        ShadowChoreographer.setPaused(true)
++        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
++    }
++
++    private fun field(owner: Any, name: String): Any? = owner.javaClass
++        .getDeclaredField(name).apply { isAccessible = true }.get(owner)
++
++    private fun descendants(view: View): List<View> = listOf(view) + if (view is ViewGroup)
++        (0 until view.childCount).flatMap { descendants(view.getChildAt(it)) } else emptyList()
++
++    private fun advance(ms: Long) {
++        var remaining = ms
++        while (remaining > 0L) {
++            val step = minOf(16L, remaining)
++            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
++            framePump?.drawRequestedFrame()
++            remaining -= step
++        }
++    }
++
++    private fun measure(root: View) {
++        root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
++            View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
++        root.layout(0, 0, 884, 760)
++    }
++
++    private fun draw(root: View) {
++        val bitmap = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
++        try { root.draw(Canvas(bitmap)) } finally { bitmap.recycle() }
++    }
++
++    private fun shown(root: View, tag: String): View {
++        val matches = descendants(root).filter { it.tag == tag && it.isShown }
++        assertEquals("One visible $tag belongs to the Activity", 1, matches.size)
++        return matches.single()
++    }
++
++    private fun tap(root: View, view: View) {
++        val bounds = Rect()
++        assertTrue("Tap target is visible: ${view.tag}", view.getGlobalVisibleRect(bounds))
++        assertEquals("Tap target is not vertically clipped", view.height, bounds.height())
++        assertEquals("Tap target is not horizontally clipped", view.width, bounds.width())
++        val at = SystemClock.uptimeMillis()
++        val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN,
++            bounds.exactCenterX(), bounds.exactCenterY(), 0)
++        val up = MotionEvent.obtain(at, at + 16L, MotionEvent.ACTION_UP,
++            bounds.exactCenterX(), bounds.exactCenterY(), 0)
++        try {
++            assertTrue(root.dispatchTouchEvent(down))
++            assertTrue(root.dispatchTouchEvent(up))
++        } finally { down.recycle(); up.recycle() }
++    }
++
++    @Test fun systemTileOpensInsideCockpitWithRealStatusAndSameAvatar() {
++        val app = RuntimeEnvironment.getApplication()
++        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
++            .putBoolean("voice_enabled", false).commit()
++        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
++            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
++        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
++            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
++        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
++        val controller = Robolectric.buildActivity(AgentActivity::class.java)
++        try {
++            controller.setup().visible()
++            advance(32L)
++            controller.windowFocusChanged(true)
++            val activity = controller.get()
++            val root = activity.window.decorView
++            framePump = CockpitHostFramePump { controller.get().window.decorView }
++            val avatar = field(activity, "hologramView") as ContinuumHologramView
++            val home = field(activity, "homeView") as ContinuumHomeView
++            avatar.setAnimationsEnabled(true)
++            avatar.setForegroundActive(true)
++            home.setForegroundActive(true)
++            measure(root); advance(320L); measure(root); draw(root)
++            assertTrue(home.jarvisShellStage)
++            assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
++            val headBounds = Rect(field(avatar, "cockpitHeadBounds") as Rect)
++            val orbBounds = Rect(field(avatar, "cockpitOrbBounds") as Rect)
++            assertFalse(headBounds.isEmpty)
++            assertFalse(orbBounds.isEmpty)
++            val beforeDialog = ShadowAlertDialog.getLatestAlertDialog()
++            val beforeMotion = avatar.sampleMotion()
++
++            tap(root, shown(root, "jarvis-tile:system"))
++            advance(640L); measure(root); draw(root)
++            val work = shown(root, "jarvis-work-window")
++            assertSame("Opening uses the existing Activity window", root, work.rootView)
++            assertSame("Systemstatus creates no AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
++            assertSame("Opening retains the original avatar", avatar, field(activity, "hologramView"))
++            assertEquals(1, descendants(root).count { it is ContinuumHologramView })
++            assertTrue("Avatar stays attached and visible", avatar.isAttachedToWindow && avatar.isShown)
++            assertTrue("Cockpit retains window focus", activity.hasWindowFocus())
++            assertEquals(headBounds, field(avatar, "cockpitHeadBounds"))
++            assertEquals(orbBounds, field(avatar, "cockpitOrbBounds"))
++            assertTrue("Head and orb continue advancing", avatar.sampleMotion().callbackCount > beforeMotion.callbackCount)
++
++            val io = field(activity, "learningIoExecutor") as ExecutorService
++            io.submit {}.get(5L, TimeUnit.SECONDS)
++            advance(64L); measure(root); draw(root)
++            val labels = descendants(work).filterIsInstance<TextView>().map { it.text.toString() }
++            assertTrue("Visible title identifies the work area", labels.any { it.equals("Systemstatus", true) })
++            assertFalse("Status callback must replace loading", labels.any { it.contains("Status wird gelesen") })
++            val status = labels.joinToString("\n")
++            assertTrue("Real build version is present", status.contains("Device AI ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"))
++            for (label in listOf("Shizuku", "Internetzugang", "Sprachmodell", "Werkzeugquittungen")) {
++                assertTrue("Actual status includes $label", status.contains(label))
++            }
++            assertTrue("Offline model state remains truthful", status.contains("keines geladen"))
++            assertFalse("Inspection starts no model task", field(activity, "busy") as Boolean)
++            val close = shown(work, "jarvis-work-window:close")
++            assertTrue(close.isClickable && close.isFocusable)
++            assertNotNull(close.contentDescription)
++            tap(root, close)
++            advance(640L); measure(root); draw(root)
++            assertTrue("Close removes the visible work area", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
++            assertSame(avatar, field(activity, "hologramView"))
++            assertTrue(avatar.isShown)
++            assertEquals(headBounds, field(avatar, "cockpitHeadBounds"))
++            assertEquals(orbBounds, field(avatar, "cockpitOrbBounds"))
++            assertTrue("System tile is reachable again", shown(root, "jarvis-tile:system").isClickable)
++            assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
++        } finally {
++            framePump?.close()
++            framePump = null
++            ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
++            runCatching { controller.close() }
++        }
++    }
++}
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt
+new file mode 100644
+index 00000000..fbfdd863
+--- /dev/null
++++ b/app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt
+@@ -0,0 +1,231 @@
++package at.heinz.deviceai
++
++import android.app.Activity
++import android.content.Context
++import android.graphics.Bitmap
++import android.graphics.Canvas
++import android.graphics.Color
++import android.graphics.RectF
++import android.os.Looper
++import android.view.MotionEvent
++import android.view.View
++import android.widget.FrameLayout
++import android.widget.LinearLayout
++import android.widget.ScrollView
++import android.widget.TextView
++import org.junit.Assert.*
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.Robolectric
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.Shadows.shadowOf
++import org.robolectric.annotation.Config
++import org.robolectric.annotation.GraphicsMode
++import org.robolectric.annotation.LooperMode
++
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [28], qualifiers = "w884dp-h760dp-mdpi")
++@GraphicsMode(GraphicsMode.Mode.NATIVE)
++@LooperMode(LooperMode.Mode.PAUSED)
++class JarvisWorkWindowUiTest {
++    private class Frames {
++        val listeners = linkedSetOf<(Long, Float) -> Boolean>()
++        var requests = 0
++        val source: ((Long, Float) -> Boolean) -> AutoCloseable = { listener ->
++            listeners.add(listener)
++            AutoCloseable { listeners.remove(listener) }
++        }
++        fun at(time: Long, scale: Float = 1f): Boolean =
++            listeners.toList().map { it(time, scale) }.any { it }
++    }
++
++    private fun implementation(name: String): Class<*> = try {
++        Class.forName("at.heinz.deviceai.ui.$name")
++    } catch (missing: ClassNotFoundException) {
++        throw AssertionError("Missing in-cockpit $name implementation", missing)
++    }
++
++    private inner class Fixture {
++        val controller = Robolectric.buildActivity(Activity::class.java).setup()
++        val activity = controller.get()
++        val frames = Frames()
++        val root = FrameLayout(activity)
++        var cockpitClicks = 0
++        val cockpit = View(activity).apply { setOnClickListener { cockpitClicks++ } }
++        val window = implementation("JarvisWorkWindow")
++            .getConstructor(Context::class.java, Function1::class.java, Function0::class.java)
++            .newInstance(activity, frames.source, { frames.requests++ }) as FrameLayout
++        val origin = RectF(80f, 530f, 220f, 600f)
++        val target = RectF(240f, 440f, 824f, 700f)
++        val protectedBounds = listOf(RectF(250f, 30f, 820f, 420f))
++        var opened = 0
++        var closed = 0
++        init {
++            root.addView(cockpit, FrameLayout.LayoutParams(-1, -1))
++            root.addView(window, FrameLayout.LayoutParams(-1, -1))
++            activity.setContentView(root)
++            controller.visible()
++            layout()
++        }
++        fun body(value: String = "Echte Statusdaten") = LinearLayout(activity).apply {
++            orientation = LinearLayout.VERTICAL
++            repeat(24) { addView(TextView(activity).apply {
++                text = "$value $it"
++                minHeight = 36
++            }) }
++        }
++        fun open(body: View): Boolean = window.javaClass.getMethod("open", View::class.java,
++            RectF::class.java, RectF::class.java, String::class.java, List::class.java,
++            Function0::class.java, Function0::class.java)
++            .invoke(window, body, origin, target, "Systemstatus", protectedBounds,
++                { opened++ }, { closed++ }) as Boolean
++        fun close(immediate: Boolean = false) {
++            window.javaClass.getMethod("close", Boolean::class.javaPrimitiveType).invoke(window, immediate)
++        }
++        fun showing() = window.javaClass.getMethod("isShowing").invoke(window) as Boolean
++        fun layout() {
++            root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
++                View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
++            root.layout(0, 0, 884, 760)
++        }
++        fun frame(time: Long, scale: Float = 1f): Boolean {
++            val active = frames.at(time, scale)
++            layout()
++            return active
++        }
++        fun tap(x: Float, y: Float) {
++            for (action in listOf(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_UP)) {
++                val event = MotionEvent.obtain(0, 1, action, x, y, 0)
++                root.dispatchTouchEvent(event)
++                event.recycle()
++            }
++            shadowOf(Looper.getMainLooper()).idle()
++        }
++        fun dispose() {
++            window.javaClass.getMethod("dispose").invoke(window)
++            controller.pause().stop().destroy()
++        }
++    }
++
++    private fun withWindow(block: (Fixture) -> Unit) {
++        val fixture = Fixture()
++        try { block(fixture) } finally { fixture.dispose() }
++    }
++
++    @Test fun suppliedFramesOpenExistingBodyAndKeepCloseOutsideScroll() = withWindow { f ->
++        val body = f.body()
++        assertTrue(f.open(body))
++        assertEquals(1, f.frames.listeners.size)
++        assertTrue(f.frames.requests > 0)
++        assertTrue(f.frame(1_000))
++        assertTrue(f.frame(1_250))
++        val panel = f.window.findViewWithTag<View>("jarvis-work-window:panel")
++        assertTrue(panel.scaleX > f.origin.width() / f.target.width())
++        assertTrue(panel.scaleX < 1f)
++        assertFalse(f.frame(2_500))
++        assertEquals(1, f.opened)
++        assertTrue(f.showing())
++        assertEquals(1f, panel.scaleX, .001f)
++        val scroll = f.window.findViewWithTag<ScrollView>("jarvis-work-window:scroll")
++        assertSame(body, scroll.getChildAt(0))
++        val close = f.window.findViewWithTag<TextView>("jarvis-work-window:close")
++        assertEquals("SCHLIESSEN", close.text.toString())
++        assertTrue(close.height >= 48)
++        assertNotSame(scroll, close.parent)
++        val headerTop = close.top
++        scroll.scrollTo(0, 300)
++        assertEquals(headerTop, close.top)
++        close.performClick()
++        assertTrue(f.showing())
++        assertTrue(f.frame(2_600))
++        assertFalse(f.frame(4_000))
++        assertFalse(f.showing())
++        assertNull(body.parent)
++        assertEquals(1, f.closed)
++        assertEquals(0, f.frames.listeners.size)
++    }
++
++    @Test fun reducedMotionSettlesBothDirectionsOnNextSuppliedFrame() = withWindow { f ->
++        assertTrue(f.open(f.body()))
++        assertFalse(f.frame(40, 0f))
++        assertEquals(1, f.opened)
++        assertTrue(f.showing())
++        f.close()
++        assertFalse(f.frame(41, 0f))
++        assertFalse(f.showing())
++        assertEquals(1, f.closed)
++        assertTrue(f.frames.listeners.isEmpty())
++    }
++
++    @Test fun immediateCloseReleasesBodyAndCallbackExactlyOnce() = withWindow { f ->
++        val body = f.body()
++        assertTrue(f.open(body))
++        f.frame(1_000)
++        val stale = f.frames.listeners.single()
++        f.close(immediate = true)
++        f.close(immediate = true)
++        assertFalse(f.showing())
++        assertNull(body.parent)
++        assertEquals(1, f.closed)
++        assertEquals(0, f.opened)
++        assertFalse(stale(9_000, 1f))
++        assertTrue(f.frames.listeners.isEmpty())
++    }
++
++    @Test fun outsideAndProtectedTouchesReachCockpit() = withWindow { f ->
++        assertTrue(f.open(f.body()))
++        f.frame(1_000, 0f)
++        f.tap(20f, 730f)
++        f.tap(500f, 250f)
++        assertEquals(2, f.cockpitClicks)
++        assertTrue(f.showing())
++    }
++
++    @Test fun protectedAreaRemainsTransparentDuringOpening() = withWindow { f ->
++        f.origin.set(20f, 50f, 180f, 100f)
++        assertTrue(f.open(f.body()))
++        f.frame(1_000)
++        for (time in listOf(1_080L, 1_180L, 1_360L, 1_650L)) {
++            f.frame(time)
++            val bitmap = Bitmap.createBitmap(884, 760, Bitmap.Config.ARGB_8888)
++            try {
++                f.window.draw(Canvas(bitmap))
++                for (y in 40 until 410 step 11) for (x in 260 until 810 step 11) {
++                    assertEquals("protected pixel $x,$y at $time", Color.TRANSPARENT, bitmap.getPixel(x, y))
++                }
++            } finally { bitmap.recycle() }
++        }
++    }
++
++    @Test fun detachingReleasesFrameSubscription() = withWindow { f ->
++        val body = f.body()
++        assertTrue(f.open(body))
++        f.frame(1_000)
++        f.root.removeView(f.window)
++        assertTrue(f.frames.listeners.isEmpty())
++        assertNull(body.parent)
++        assertFalse(f.showing())
++        assertEquals(1, f.closed)
++    }
++
++    @Test fun geometryFindsPhoneAndFoldSpaceWithoutCoveringHeadOrDialog() {
++        val geometry = implementation("JarvisWorkWindowGeometry")
++        val instance = geometry.getField("INSTANCE").get(null)
++        val destination = geometry.getMethod("destination", RectF::class.java, List::class.java,
++            Float::class.javaPrimitiveType)
++        for ((viewport, protectedBounds) in listOf(
++            RectF(0f, 0f, 884f, 710f) to listOf(RectF(210f, 70f, 850f, 420f)),
++            RectF(0f, 0f, 412f, 853f) to listOf(RectF(8f, 74f, 404f, 493f), RectF(8f, 503f, 404f, 633f))
++        )) {
++            val result = destination.invoke(instance, viewport, protectedBounds, 1f) as RectF?
++            assertNotNull(result)
++            result!!
++            assertTrue(viewport.contains(result))
++            assertTrue(result.width() >= 200f)
++            assertTrue(result.height() >= 160f)
++            protectedBounds.forEach { assertFalse(RectF.intersects(it, result)) }
++        }
++        val blocked = RectF(0f, 0f, 412f, 853f)
++        assertNull(destination.invoke(instance, blocked, listOf(blocked), 1f))
++    }
++}

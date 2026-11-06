@@ -1,0 +1,415 @@
+{
+  "kind": "HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT",
+  "sourceCommit": "7c3523cde9dae302a52d69818867a9abe8cf0fb7",
+  "run": "final-scroll-cockpit-validation",
+  "sourceUnchanged": true,
+  "tests": 39,
+  "passed": 39,
+  "failed": 0,
+  "skipped": 0,
+  "captured": 40,
+  "included": 26,
+  "selection": "All20 workflow phase frames,5 normal inner state frames,1 cover START. Four scripts: real Activity status reader plus scripted listening/thinking/TTS inputs. No device audio/GPU proof.",
+  "files": [
+    {
+      "name": "fold7-cover-phone-412x915-1-start.png",
+      "sizePx": [
+        412,
+        915
+      ],
+      "sha256": "e8d998f9eb8c3891d049f66be9c3bd4c1cfbc67dfc582df608a94099055a1e66",
+      "viewDumpSha256": "c055b1f0a45372e711ca32850e534f1743419b7b259643a3dbdceec52d31fdd0",
+      "included": true
+    },
+    {
+      "name": "fold7-cover-phone-412x915-2-listening.png",
+      "sizePx": [
+        412,
+        915
+      ],
+      "sha256": "6c317df5ac678218a70adc5c77e2c858b8c922a175c3906ce358b6403e29ba14",
+      "viewDumpSha256": "c055b1f0a45372e711ca32850e534f1743419b7b259643a3dbdceec52d31fdd0",
+      "included": false
+    },
+    {
+      "name": "fold7-cover-phone-412x915-3-thinking.png",
+      "sizePx": [
+        412,
+        915
+      ],
+      "sha256": "fdf1ec0aa283a4b0807ca0aadb9d17a548e94aa88c700bdc43c0ff4a4bb6342e",
+      "viewDumpSha256": "c055b1f0a45372e711ca32850e534f1743419b7b259643a3dbdceec52d31fdd0",
+      "included": false
+    },
+    {
+      "name": "fold7-cover-phone-412x915-4-speaking.png",
+      "sizePx": [
+        412,
+        915
+      ],
+      "sha256": "4e1ce8ac208358a820bf7831cb7d2cd63e677652ac5ad36645f68c227920eadd",
+      "viewDumpSha256": "c055b1f0a45372e711ca32850e534f1743419b7b259643a3dbdceec52d31fdd0",
+      "included": false
+    },
+    {
+      "name": "fold7-cover-phone-412x915-5-tile-pressed.png",
+      "sizePx": [
+        412,
+        915
+      ],
+      "sha256": "1c2ef54772ac5fa4034382631a15bca77c400cf3671278a77de254fd10566de6",
+      "viewDumpSha256": "d205789a4d9391e2b284fb42b902f9454ed8c4c09245f72e400ad5cbc92e323e",
+      "included": false
+    },
+    {
+      "name": "fold7-cover-phone-412x915-6a-systemstatus-opening.png",
+      "sizePx": [
+        412,
+        915
+      ],
+      "sha256": "85e2c19343616486f393b8e535b4a1cfc1051ea9c489c35317be38e55b249cba",
+      "viewDumpSha256": "d0e9018abff9d4d109d709b2be5c39d8e48689926d0b006fd192b766b4bd7772",
+      "included": true
+    },
+    {
+      "name": "fold7-cover-phone-412x915-6b-data-systemstatus-scrolled.png",
+      "sizePx": [
+        412,
+        915
+      ],
+      "sha256": "a1aa1f55b7027fc6bcd1795c397c482cfecf0f8debcfe44c111f089cfbdc205e",
+      "viewDumpSha256": "3e34152e5b1b747333eac39926ac1975634215ce45154a5b6a536743a65ba210",
+      "included": true
+    },
+    {
+      "name": "fold7-cover-phone-412x915-6b-systemstatus-open.png",
+      "sizePx": [
+        412,
+        915
+      ],
+      "sha256": "a363f462e35cb0fa735c64a104ac874ff1d6beaf5f38a5b313190ae5da965682",
+      "viewDumpSha256": "2e36d0c46d268d7330aad9beb246f093e06fe766674c1f9a7b0c87ca9322904f",
+      "included": true
+    },
+    {
+      "name": "fold7-cover-phone-412x915-6c-systemstatus-closing.png",
+      "sizePx": [
+        412,
+        915
+      ],
+      "sha256": "4cff99e4aa722130b62bf33b2bdef6487881aad783d6c64732206ff28117fa74",
+      "viewDumpSha256": "14b04a104b66c67d2c00308704fc5185d5678e365d520c0a3c5ccdab7f2830a3",
+      "included": true
+    },
+    {
+      "name": "fold7-cover-phone-412x915-6d-systemstatus-closed.png",
+      "sizePx": [
+        412,
+        915
+      ],
+      "sha256": "aca15e76e55a06318409d2f87ecf2b6863cdc50706494c1f30e32805dbd31acf",
+      "viewDumpSha256": "d205789a4d9391e2b284fb42b902f9454ed8c4c09245f72e400ad5cbc92e323e",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-1-start.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "e701d50e4fab09a25ab03e338c903eb4d056aabc4e475c8a672799aa3dda4771",
+      "viewDumpSha256": "c102f81183dd037bb027c3be83cdb218240c53b7157c281dbbcbefc66b27a8ff",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-2-listening.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "1ae426dbfd47a102e3d16f29492cdcc9cce3df1a85490c18469054123cdb2093",
+      "viewDumpSha256": "c102f81183dd037bb027c3be83cdb218240c53b7157c281dbbcbefc66b27a8ff",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-3-thinking.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "25bbdb2bf0610a00cc5daf01d056d053f8de604d9cd0a484ec2dc5ac35cac495",
+      "viewDumpSha256": "c102f81183dd037bb027c3be83cdb218240c53b7157c281dbbcbefc66b27a8ff",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-4-speaking.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "e482dda04e411f7d8b2bfda8217c8c3792a1dc7929b32f941d2c4735a3281e56",
+      "viewDumpSha256": "c102f81183dd037bb027c3be83cdb218240c53b7157c281dbbcbefc66b27a8ff",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-5-tile-pressed.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "e0af1499270000ec7f04a1c4aaf9f877ff46decab6b4542e7988319cf0348834",
+      "viewDumpSha256": "8429167dc0846f7bb17d18719e2002dafa234172bbb2b3bbe7cc0bf650c7c7e0",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-6a-systemstatus-opening.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "9615a1093c4459cd04fa0d596cbbb4c845ce64bdcaf4402cb0c09fe26887a668",
+      "viewDumpSha256": "09f769625f6e03e6d4171685e4c8b63ae89e2da6ebe717df7fd3ff97dabc5d32",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-6b-data-systemstatus-scrolled.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "8bc1de5a5a86e5640ff6452481096d85286628907d1f814626358764ba8df424",
+      "viewDumpSha256": "dc91205642fafc5cfd72f3f194ad900b98b8515744f5643d114539e3c57870fa",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-6b-systemstatus-open.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "9063500b803a38bf7d44991d821801734d44b79925191171cf7469f9dbbe4aec",
+      "viewDumpSha256": "0bc7ad5af0528342787dcb44b175b17728d31f585fd9328d182ef2dfd6487587",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-6c-systemstatus-closing.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "cda9ed7cf19296e58a84ffab11dd6d4aea236304393fdce626f178006f125325",
+      "viewDumpSha256": "29be0839efdb96d17d766eec549e1393a966a195055d874ff777241c1a489444",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-6d-systemstatus-closed.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "3b79a2dab5b73c101adc93d3b4cd394622081a8439e1f39bffc71c031e80085b",
+      "viewDumpSha256": "8429167dc0846f7bb17d18719e2002dafa234172bbb2b3bbe7cc0bf650c7c7e0",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-font130-1-start.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "39851f9bfb0f9e4285164d3fd5c3a95fa9cdc6afe2b25ba99171df496696e1ad",
+      "viewDumpSha256": "add484a96a355d6c740ce7c7b6ad764809488e537b8b2e77816e60a2a3913dff",
+      "included": false
+    },
+    {
+      "name": "fold7-inner-884x760-font130-2-listening.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "2fb5f5a398b4a6f1af9ed84eab2d98da233dad61252195b048decc05734f2d3b",
+      "viewDumpSha256": "add484a96a355d6c740ce7c7b6ad764809488e537b8b2e77816e60a2a3913dff",
+      "included": false
+    },
+    {
+      "name": "fold7-inner-884x760-font130-3-thinking.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "fa31e95c3883c3d3c2d4fe8a79d10c62b8d36c5cac7398858e2eab0b13ba7b8a",
+      "viewDumpSha256": "add484a96a355d6c740ce7c7b6ad764809488e537b8b2e77816e60a2a3913dff",
+      "included": false
+    },
+    {
+      "name": "fold7-inner-884x760-font130-4-speaking.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "ca9c8433a4d8e11b6755fb94eb8123f73fa142c7a6ae48d82dd9dcb49d2d1ca6",
+      "viewDumpSha256": "add484a96a355d6c740ce7c7b6ad764809488e537b8b2e77816e60a2a3913dff",
+      "included": false
+    },
+    {
+      "name": "fold7-inner-884x760-font130-5-tile-pressed.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "fb75364cf9d0d0ce30268f4efc68c150ec89d32ea1ef4cc58c73fd8306dc7f27",
+      "viewDumpSha256": "bde3f32d61d06f6f69861aa4adf58e1ae8f0fe4885aae8cd0ef47fc32a3df4e2",
+      "included": false
+    },
+    {
+      "name": "fold7-inner-884x760-font130-6a-systemstatus-opening.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "9f60840a8be1bcfefca0c0ecbc2ce690d7b6889dc21899d280be23c4fd81a69f",
+      "viewDumpSha256": "dc347064ab81763f6eb1d926cee002fa39bb0b6aba6ba92e00ed20e866dc9e0e",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-font130-6b-data-systemstatus-scrolled.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "70432a467dcbe7a2853101cca10fb362825681e0c9245cad2d006028dba74125",
+      "viewDumpSha256": "867ec0b570926ab243ece606282523d8b04e204068167009ddee76fd1974498b",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-font130-6b-systemstatus-open.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "e0eb8308725bc6be7c5a1f43ebe8796e83170a116522b9e8c88273497cde09b1",
+      "viewDumpSha256": "3ca053d7cfc57aa6e0aa12d5359e56fd4160a93aeeffebaeca46b093decb41e9",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-font130-6c-systemstatus-closing.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "8803e3f58568d6074e7ed778d7a843d2f3d969e505488a5ede91dc3a529adaab",
+      "viewDumpSha256": "57ff329f642d4c2b4d2e86f34aea7772f05276d5c14f6381dab3d7b6968e3693",
+      "included": true
+    },
+    {
+      "name": "fold7-inner-884x760-font130-6d-systemstatus-closed.png",
+      "sizePx": [
+        884,
+        760
+      ],
+      "sha256": "e311d076082bfb4dcfa17a6bda41d3b0055e890b560a7773c91c3c13cbd278dc",
+      "viewDumpSha256": "c2bbb0c1365645376d708ebdf202313817478ff44e39930233a7778082d8a0c6",
+      "included": true
+    },
+    {
+      "name": "reference-1536x1024-1-start.png",
+      "sizePx": [
+        1536,
+        1024
+      ],
+      "sha256": "7a98a08c0bf8e485e93e4408858382a7f2d3aba5c660834bf1a381eec8c7a966",
+      "viewDumpSha256": "6d715212ed2836cfd7748ae9d2d60c35c8f3fccade63a134cf53bb167bd44e83",
+      "included": false
+    },
+    {
+      "name": "reference-1536x1024-2-listening.png",
+      "sizePx": [
+        1536,
+        1024
+      ],
+      "sha256": "ebedc44ae25f49c27d6c1ac83919e0c702403109c45673607314218eccfd164f",
+      "viewDumpSha256": "6d715212ed2836cfd7748ae9d2d60c35c8f3fccade63a134cf53bb167bd44e83",
+      "included": false
+    },
+    {
+      "name": "reference-1536x1024-3-thinking.png",
+      "sizePx": [
+        1536,
+        1024
+      ],
+      "sha256": "d8c77ac653cf94b13ede2ab4f60a84a89b18a350d1a57f524c902e8325049289",
+      "viewDumpSha256": "6d715212ed2836cfd7748ae9d2d60c35c8f3fccade63a134cf53bb167bd44e83",
+      "included": false
+    },
+    {
+      "name": "reference-1536x1024-4-speaking.png",
+      "sizePx": [
+        1536,
+        1024
+      ],
+      "sha256": "74bdc14e64746d7af74c76a08cd0c37844b07ce9eb0d7c53d23462905448e232",
+      "viewDumpSha256": "6d715212ed2836cfd7748ae9d2d60c35c8f3fccade63a134cf53bb167bd44e83",
+      "included": false
+    },
+    {
+      "name": "reference-1536x1024-5-tile-pressed.png",
+      "sizePx": [
+        1536,
+        1024
+      ],
+      "sha256": "16eb809f5f5980131682b356d57f24132ae5eba35c0ffd28770ba3c0ac3874f7",
+      "viewDumpSha256": "841a9e14b76450c4e19fee6bb8968362e6be3dc520dd47381b4e9f9adc4a2fde",
+      "included": false
+    },
+    {
+      "name": "reference-1536x1024-6a-systemstatus-opening.png",
+      "sizePx": [
+        1536,
+        1024
+      ],
+      "sha256": "01ac8c9733098a3f36234aadbea7a12e5dd28571b5873aae6c9327b4119430b3",
+      "viewDumpSha256": "acb57a811a3bf884002b8da926d0599741183559f1fcf5a07889246a2c773382",
+      "included": true
+    },
+    {
+      "name": "reference-1536x1024-6b-data-systemstatus-scrolled.png",
+      "sizePx": [
+        1536,
+        1024
+      ],
+      "sha256": "668fffe9f115495962b15b5c9a13a6582b2a9f33a260d2d347e82b336490d32e",
+      "viewDumpSha256": "4d45e2b71d5fe9ef0bc68dc81a99c485a54d61e6e08e8f651583355fd32794d1",
+      "included": true
+    },
+    {
+      "name": "reference-1536x1024-6b-systemstatus-open.png",
+      "sizePx": [
+        1536,
+        1024
+      ],
+      "sha256": "e97eb1223687a55aa12450f81d5df78d64a3ba2ff814dfc2bdced6481a2ce2c5",
+      "viewDumpSha256": "a067bda4a23900031805bba4c9293caca362c9224ed77573e3c6c2c5f5540cf7",
+      "included": true
+    },
+    {
+      "name": "reference-1536x1024-6c-systemstatus-closing.png",
+      "sizePx": [
+        1536,
+        1024
+      ],
+      "sha256": "47a0b33bad4a260287757cce9b380ff66b2356aaad122fb6accdff08b617fcbf",
+      "viewDumpSha256": "680aeb0aa9917259417c5b885bd52466166699314fac99935b3b1d0817bb62d0",
+      "included": true
+    },
+    {
+      "name": "reference-1536x1024-6d-systemstatus-closed.png",
+      "sizePx": [
+        1536,
+        1024
+      ],
+      "sha256": "9428e3bfa34d1de96ee0cafc4de60cd71c9c3a42099a8b96b9547a43af41e9e1",
+      "viewDumpSha256": "841a9e14b76450c4e19fee6bb8968362e6be3dc520dd47381b4e9f9adc4a2fde",
+      "included": true
+    }
+  ]
+}

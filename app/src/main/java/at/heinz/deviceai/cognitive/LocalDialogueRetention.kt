@@ -31,6 +31,6 @@ object LocalDialogueRetention {
     fun activityDestroyed(changingConfigurations: Boolean) {
         if (changingConfigurations) return
         reply = null
-        context.clear()
+        context.forgetForExit()
     }
 }

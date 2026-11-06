@@ -1,0 +1,43 @@
+{
+  "label": "work-window-avatar-red",
+  "head": "2859f18d94cb56e2b1f280db73ca785cb58d2459",
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-I",
+    "/workspace/scratch/76b7222771d5/build-env/observe-tests.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest",
+    "--tests",
+    "at.heinz.deviceai.JarvisWorkWindowUiTest"
+  ],
+  "started": 1793896346.2550888,
+  "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+  "statusBefore": " M app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt\n?? app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt\n?? app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt\n",
+  "exitCode": 1,
+  "ended": 1793896372.2375398,
+  "sourceUnchanged": true,
+  "statusAfter": " M app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt\n?? app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt\n?? app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt\n",
+  "log": "/workspace/scratch/76b7222771d5/build-env/logs/work-window-avatar-red.log",
+  "sourceBeforeManifestSha256": "8392eb871f27afe122278b20816d5660daa656078b65c53db1c236f652aca962",
+  "sourceAfterManifestSha256": "8392eb871f27afe122278b20816d5660daa656078b65c53db1c236f652aca962",
+  "changedSourceSha256": {
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt": "41fe6fc9ac47cf5d3f373da042753e5c3f1edd2732e8e1e0256b94689946d67c",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt": "e27aed522cf5d60a9f6a0c3ff05502ebb8ac041363ffb0fad8efeb2143218841",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt": "2f25432f45d55f3555e1b99c7542a5ee73aec9adcc21b002e72040c497ccb236"
+  },
+  "observedCounts": {
+    "tests": 14,
+    "passed": 0,
+    "failed": 14,
+    "skipped": 0
+  },
+  "countBasis": "AUDIT_TESTS plus fresh JUnit XML"
+}

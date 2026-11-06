@@ -28,6 +28,9 @@ import android.view.Surface
 import android.graphics.SurfaceTexture
 import android.widget.FrameLayout
 import at.heinz.deviceai.avatar3d.AvatarGlbContract
+import at.heinz.deviceai.avatar3d.AvatarCameraFraming
+import at.heinz.deviceai.avatar3d.AvatarCameraMotion
+import at.heinz.deviceai.avatar3d.AvatarFraming
 import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer
 import at.heinz.deviceai.ui.AndroidContinuumPainter
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
@@ -75,7 +78,6 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (isAttachedToWindow && foregroundActive && isShown) invalidate()
     }
     private val renderer = ContinuumHologramRenderer()
-    private val referenceBrain = at.heinz.deviceai.ui.ContinuumBrainOrbRenderer()
     private val avatarBrandFill = Fill.Solid(0xff9aefff.toInt())
     private val avatarBrandStyle = TextStyle(FontFamily.DISPLAY, 700, 14f, letterSpacing = 2f)
     private val painter = AndroidContinuumPainter(context.assets)
@@ -196,6 +198,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         cockpitSequence = sequence
         sequence?.let {
             it.setMotionAllowed(canAnimateFrame())
+            it.setCardsDocked(workWindowActive)
             addView(it, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
             updateOrbTarget(width, height)
         }
@@ -205,11 +208,81 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var headAnchorX = .5f
     private var headCloseUp = 1f
 
-    fun setHeadFraming(anchorX: Float, closeUp: Float) {
+    private var headKeepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null
+    private var auraFocus: AvatarGlbContract.Focus? = null
+    private var auraWidth = -1f
+    private var auraHeight = -1f
+    private var auraAnchor = Float.NaN
+    private var auraCloseUp = Float.NaN
+    private var auraKeepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null
+    private var auraScale = 1f
+    private var auraAnchorEffective = .5f
+    private val cameraMotion = AvatarCameraMotion()
+    private var workWindowActive = false
+    private var cameraFraming: AvatarCameraFraming? = null
+    private var cameraWindow: AvatarFraming.Window? = null
+    private var cameraDirection = 0f
+
+    /** Actual accepted work-window presentation only. */
+    fun setWorkWindowCamera(active: Boolean, direction: Float = 0f, immediate: Boolean = false) {
+        require(direction.isFinite() && direction in -1f..1f)
+        // The face and the orb stay free while a window works: the sequence cards dock into its status strip.
+        workWindowActive = active
+        cockpitSequence?.setCardsDocked(active)
+        if (immediate || !canAnimateFrame() || !hasWindowFocus() || !headEnabled || cockpitHeadBounds == null) {
+            resetCamera()
+        } else {
+            if (active) cameraDirection = direction
+            cameraMotion.setWorkActive(active, SystemClock.uptimeMillis())
+        }
+        invalidate()
+    }
+
+    private fun resetCamera() {
+        cameraMotion.reset()
+        cameraDirection = 0f
+        cameraWindow = cameraFraming?.rest
+        cameraWindow?.let { auraScale = it.headScale.toFloat(); auraAnchorEffective = it.anchorX.toFloat() }
+    }
+
+    internal fun cameraProgress(): Float = cameraMotion.progress
+
+    /**
+     * Head size and effective anchor of the live 3D window (the calibrated values for the 2D head), so the aura
+     * rings stay around the fitted head. Same [at.heinz.deviceai.avatar3d.AvatarFraming] window as the renderer;
+     * Geometry is cached between layout changes.
+     */
+    private fun updateAuraFraming() {
+        val focus = if (head3dEnabled && (native3dDrawn || native3d != null)) assetMetadata?.focus else null
+        val w = headDrawBounds.width(); val h = headDrawBounds.height()
+        if (focus == null || w <= 0f || h <= 0f) {
+            auraFocus = null; auraScale = 1f; auraAnchorEffective = headAnchorX
+            cameraFraming = null; cameraWindow = null
+            return
+        }
+        if (focus !== auraFocus || w != auraWidth || h != auraHeight || headAnchorX != auraAnchor ||
+            headCloseUp != auraCloseUp || headKeepOut != auraKeepOut) {
+            auraFocus = focus; auraWidth = w; auraHeight = h; auraAnchor = headAnchorX; auraCloseUp = headCloseUp
+            auraKeepOut = headKeepOut
+            cameraFraming = AvatarCameraFraming(focus, w.toDouble() / h,
+                headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut)
+        }
+        cameraWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection)
+        val window = requireNotNull(cameraWindow)
+        auraScale = window.headScale.toFloat(); auraAnchorEffective = window.anchorX.toFloat()
+    }
+
+    /**
+     * Cockpit framing of the live head. [keepOut]: stage-normalized area (the dialogue card) the posed face must not
+     * enter; the 3D window may then move the head towards the stage centre before it shrinks it.
+     */
+    fun setHeadFraming(anchorX: Float, closeUp: Float, keepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null) {
         require(anchorX.isFinite() && anchorX in .2f..1f && closeUp.isFinite() && closeUp in .4f..1f)
-        if (headAnchorX == anchorX && headCloseUp == closeUp) return
+        if (headAnchorX == anchorX && headCloseUp == closeUp && headKeepOut == keepOut) return
         headAnchorX = anchorX
         headCloseUp = closeUp
+        headKeepOut = keepOut
+        resetCamera()
         invalidate()
     }
 
@@ -220,6 +293,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             require(!Rect.intersects(head, orb)) { "Head and orb drawing regions must not overlap" }
         }
         if (cockpitHeadBounds == head && cockpitOrbBounds == orb) return
+        resetCamera()
         cockpitHeadBounds = head?.let(::Rect)
         cockpitOrbBounds = orb?.let(::Rect)
         updateOrbTarget(width, height)
@@ -253,6 +327,10 @@ class ContinuumHologramView @JvmOverloads constructor(
         val sequence = cockpitSequence ?: return
         if (widthPx <= 0 || heightPx <= 0) return
         resolveOrbBounds(widthPx, heightPx)
+        // The sequence keeps the real head and orb free (owner review P0); without explicit regions nothing is protected.
+        val d = resources.displayMetrics.density
+        sequence.effects.setProtectedAreas(cockpitHeadBounds?.let { floatArrayOf(it.left / d, it.top / d, it.right / d, it.bottom / d) },
+            cockpitOrbBounds?.let { floatArrayOf(it.left / d, it.top / d, it.right / d, it.bottom / d) })
         sequence.effects.orbTargetX = (orbDrawBounds.centerX() / widthPx).coerceIn(0f, 1f)
         sequence.effects.orbTargetY = ((orbDrawBounds.top + orbDrawBounds.height() * renderer.geometry.centerY) / heightPx).coerceIn(0f, 1f)
     }
@@ -320,7 +398,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (nativeTexture == null) {
             val texture = TextureView(context).apply {
                 isOpaque = false
-                alpha = 1f
+                alpha = 0f
                 importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
             }
             nativeTexture = texture
@@ -458,6 +536,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        resetCamera()
         cockpitSequence?.setMotionAllowed(false)
         clearTaskEffects()
         // A fold/navigation reparent destroys the surface, but retains validated immutable asset bytes.
@@ -498,6 +577,7 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
         super.onWindowFocusChanged(hasWindowFocus)
+        if (!hasWindowFocus) resetCamera()
         // Re-evaluate scheduling after Samsung Fold window/cover transitions.
         if (isAttachedToWindow) updateMotionPolicy()
     }
@@ -535,6 +615,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         framePending = false
         lastFrameMs = 0L
         if (!canAnimateFrame()) {
+            resetCamera()
             clearTaskEffects()
             synchronized(avatarPose) { avatarPose.clearObservedGaze(System.currentTimeMillis()) }
             settleState()
@@ -598,22 +679,25 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (headEnabled && cockpitHeadBounds != null) {
             val t = if (canAnimateFrame()) avatarSeconds else 0f
             at.heinz.deviceai.ui.JarvisEnergyFlows.draw(painter, width / density, height / density, t, energy)
+            updateAuraFraming()
             at.heinz.deviceai.ui.JarvisHeadAura.draw(painter, at.heinz.deviceai.ui.JarvisShellLayout.Box(
                 headDrawBounds.left / density, headDrawBounds.top / density, headDrawBounds.right / density,
-                headDrawBounds.bottom / density), headAnchorX, t)
+                headDrawBounds.bottom / density), auraAnchorEffective, t,
+                headScale = auraScale, activityEnergy = energy, speechLevel = audioEnergy)
         }
         if (headEnabled) {
-            val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
+            val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis(), canAnimateFrame()) }
             if (canDisplay3d() && native3d != null) {
                 runCatching {
                     native3d!!.setQuality(renderBudget().reducedBloom)
-                    native3d!!.setFraming(headAnchorX, headCloseUp)
-                    native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0)
+                    native3d!!.setFraming(headAnchorX, headCloseUp, headKeepOut)
+                    native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0,
+                        nativeTexture?.height ?: 0, if (cockpitHeadBounds != null) cameraWindow else null)
                 }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
                     .onFailure { fail3d() }
             }
-            if (!native3dDrawn && !head3dEnabled) {
+            if (!native3dDrawn) {
                 val headCanvas = canvas.save()
                 canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
                 avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
@@ -647,7 +731,8 @@ class ContinuumHologramView @JvmOverloads constructor(
             if (!native3dDrawn && head3dEnabled) {
                 val status = if (native3dFailed) "3D derzeit nicht verfügbar" else "3D wird initialisiert …"
                 painter.drawText(status, headDrawBounds.centerX() / density,
-                    headDrawBounds.centerY() / density, TextStyle(FontFamily.TEXT, 400, 12f), avatarBrandFill, TextAlign.CENTER)
+                    (headDrawBounds.top + headDrawBounds.height() * .94f) / density,
+                    TextStyle(FontFamily.TEXT, 400, 11f), avatarBrandFill, TextAlign.CENTER)
             }
             if (cockpit && cockpitHeadBounds == null) painter.drawText("JARVIS", headDrawBounds.centerX() / density,
                 if (cockpitHeadBounds != null) (headDrawBounds.top + headDrawBounds.height() * .96f) / density else height / density * .96f,
@@ -736,6 +821,8 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun advanceFrame() {
         if (!canAnimateFrame()) return
         val now = SystemClock.uptimeMillis()
+        cameraMotion.advance(now, hasWindowFocus(), Settings.Global.getFloat(context.contentResolver,
+            Settings.Global.ANIMATOR_DURATION_SCALE, 1f))
         val delta = if (lastFrameMs == 0L) 0f else ((now - lastFrameMs) / 1000f).coerceIn(0f, .1f)
         lastFrameMs = now
         avatarSeconds = (avatarSeconds + delta) % 460f

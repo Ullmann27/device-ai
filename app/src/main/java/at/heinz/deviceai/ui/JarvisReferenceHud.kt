@@ -87,19 +87,23 @@ object JarvisReferenceHud {
         val selected = interaction == Interaction.SELECTED || interaction == Interaction.PRESSED
         val opacity = if (enabled) 1f else .42f
         // Owner correction 2026-11-05: 59509 is clearly more luminous than the earlier ref5 calibration.
-        val glow = if (selected) 1.15f else .86f
+        // Owner request (evening, 05.11.): deeper glass and stronger neon rims as in ref5/59509. The earlier host
+        // measurement put the cockpit's neon share at 9.6 % against 12.0 % in 59509: rims +16 % (selected +15 %)
+        // plus one wide, faint depth halo. Host-calibrated only; the Fold7 comparison is still open.
+        val glow = if (selected) 1.32f else 1f
         val r = radius.coerceIn(1f, minOf(b.width, b.height) * .5f)
         val edge = Fill.Linear(b.left, b.top, b.right, b.bottom,
             intArrayOf(Argb.mix(accent, Colors.activeWhite, .22f), accent,
                 Argb.mix(endAccent, Colors.activeWhite, .18f), endAccent), floatArrayOf(0f, .28f, .73f, 1f))
         p.setAdditive(true)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 28f, edge, .022f * opacity * glow)
         p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 16f, edge, .05f * opacity * glow)
         p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 7f, edge, .14f * opacity * glow)
         p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 3.5f, edge, .30f * opacity * glow)
         p.setAdditive(false)
         p.fillRoundRect(b.left, b.top, b.right, b.bottom, r,
             Fill.Linear(b.left, b.top, b.right, b.bottom,
-                intArrayOf(Argb.mix(Argb.of(232, 4, 30, 52), accent, .20f), Argb.of(236, 5, 16, 40),
+                intArrayOf(Argb.mix(Argb.of(232, 4, 30, 52), accent, .20f), Argb.of(240, 3, 11, 30),
                     Argb.mix(Argb.of(232, 10, 20, 52), endAccent, .20f))), opacity)
         p.save(); p.clipRoundRect(b.left, b.top, b.right, b.bottom, r)
         p.fillRect(b.left, b.top, b.right, b.top + b.height * .24f,

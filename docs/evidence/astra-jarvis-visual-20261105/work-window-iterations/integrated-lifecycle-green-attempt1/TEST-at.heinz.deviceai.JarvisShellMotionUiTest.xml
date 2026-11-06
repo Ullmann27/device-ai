@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.JarvisShellMotionUiTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:04:51" hostname="6e2f8005d77e" time="3.79">
+  <properties/>
+  <testcase name="restoredAnimatorScaleRestartsAmbientFrames" classname="at.heinz.deviceai.JarvisShellMotionUiTest" time="0.487"/>
+  <testcase name="reattachmentRestartsWithoutRetainedCallbacks" classname="at.heinz.deviceai.JarvisShellMotionUiTest" time="0.497"/>
+  <testcase name="powerSaveExitRestartsAmbientFrames" classname="at.heinz.deviceai.JarvisShellMotionUiTest" time="0.503"/>
+  <testcase name="workWindowSharesShellFramesThenSettles" classname="at.heinz.deviceai.JarvisShellMotionUiTest" time="0.437"/>
+  <testcase name="workWindowReceivesReducedMotionWithoutLoop" classname="at.heinz.deviceai.JarvisShellMotionUiTest" time="0.311"/>
+  <testcase name="frameLoggingHonoursReducedMotion" classname="at.heinz.deviceai.JarvisShellMotionUiTest" time="0.273"/>
+  <testcase name="frameLoggingDoesNotKeepUnfocusedShellDrawing" classname="at.heinz.deviceai.JarvisShellMotionUiTest" time="0.421"/>
+  <testcase name="focusReturnRestartsAmbientFrames" classname="at.heinz.deviceai.JarvisShellMotionUiTest" time="0.422"/>
+  <testcase name="visibilityReturnRestartsAmbientFrames" classname="at.heinz.deviceai.JarvisShellMotionUiTest" time="0.438"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Intent = Intent { act=android.os.action.POWER_SAVE_MODE_CHANGED }; Matching wrappers: [Wrapper[receiver=[at.heinz.deviceai.ui.JarvisShellView$powerReceiver$1@51d11cc6], context=[android.app.ContextImpl@6afcd7fe], intentFilter=[android.content.IntentFilter@39dee143]]]
+Intent = Intent { act=android.os.action.POWER_SAVE_MODE_CHANGED }; Matching wrappers: [Wrapper[receiver=[at.heinz.deviceai.ui.JarvisShellView$powerReceiver$1@51d11cc6], context=[android.app.ContextImpl@6afcd7fe], intentFilter=[android.content.IntentFilter@39dee143]]]
+]]></system-err>
+</testsuite>

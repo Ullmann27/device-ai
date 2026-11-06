@@ -13,19 +13,35 @@ import kotlin.math.sin
  * with reduced motion the caller passes a constant time and nothing moves.
  */
 object JarvisHeadAura {
-    /** Approximate face centre of the anchored close-up framing inside the head stage. */
-    fun faceCenter(stage: Box, anchorX: Float = .5f): Pair<Float, Float> =
-        stage.left + stage.width * anchorX to stage.top + stage.height * .45f
+    /**
+     * Approximate face centre of the anchored close-up framing inside the head stage. [headScale] is the live 3D
+     * window's head size relative to the calibrated close-up (AvatarFraming); the crown margin is fixed, so the face
+     * centre moves towards the top by the same factor.
+     */
+    fun faceCenter(stage: Box, anchorX: Float = .5f, headScale: Float = 1f): Pair<Float, Float> =
+        stage.left + stage.width * anchorX to stage.top + stage.height * .45f * validScale(headScale)
+
+    private fun validScale(scale: Float) = if (scale.isFinite() && scale > 0f) scale.coerceAtMost(1f) else 1f
 
     private fun wave(t: Float, period: Float, phase: Float = 0f) = sin(2f * Math.PI.toFloat() * t / period + phase)
 
-    fun draw(p: ContinuumPainter, stage: Box, anchorX: Float = .5f, t: Float = 0f, enabled: Boolean = true) {
+    /** Actual runtime energy only. */
+    internal fun activityBoost(energy: Float, speech: Float): Float {
+        val e = if (energy.isFinite()) energy.coerceIn(0f, 1f) else .18f
+        val s = if (speech.isFinite()) speech.coerceIn(0f, 1f) else 0f
+        return (((e - .18f).coerceAtLeast(0f) * .16f) + s * .15f).coerceIn(0f, .27f)
+    }
+
+    fun draw(p: ContinuumPainter, stage: Box, anchorX: Float = .5f, t: Float = 0f, enabled: Boolean = true,
+             headScale: Float = 1f, activityEnergy: Float = .18f, speechLevel: Float = 0f) {
         if (!enabled || stage.width <= 8f || stage.height <= 8f || !t.isFinite()) return
-        val (cx, cy) = faceCenter(stage, anchorX)
-        val h = stage.height
-        // Soft back light: violet left/top, cyan right – the reference's two-tone hologram.
-        JarvisSceneFills.halo(p, cx - h * .08f, cy - h * .06f, h * .62f, Colors.violet, .26f)
-        JarvisSceneFills.halo(p, cx + h * .12f, cy + h * .04f, h * .46f, Colors.cyan, .14f)
+        val (cx, cy) = faceCenter(stage, anchorX, headScale)
+        val h = stage.height * validScale(headScale)
+        val signal = activityBoost(activityEnergy, speechLevel)
+        JarvisSceneFills.halo(p, cx - h * .08f, cy - h * .06f, h * .62f, Colors.violet, .26f + signal)
+        JarvisSceneFills.halo(p, cx + h * .12f, cy + h * .04f, h * .46f, Colors.cyan, .14f + signal * .65f)
+        if (signal > .015f) JarvisSceneFills.halo(p, cx + h * .03f,
+            cy - h * .04f, h * .24f, Colors.glowCore, signal * .34f)
         p.setAdditive(true)
         ring(p, cx, cy - h * .12f, h * .62f, h * .13f, -14f + 3f * wave(t, 9f), Colors.magenta, Colors.violet, 1.5f,
             bead = t / 14f)

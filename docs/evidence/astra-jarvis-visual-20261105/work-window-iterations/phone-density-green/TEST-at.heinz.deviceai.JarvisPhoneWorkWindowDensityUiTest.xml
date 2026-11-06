@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:12:43" hostname="6e2f8005d77e" time="5.072">
+  <properties/>
+  <testcase name="largeTextPhoneOpensInsideSafePixelsAtHdpi" classname="at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest" time="4.957"/>
+  <testcase name="largeTextPhoneOpensInsideSafePixelsAt420Dpi" classname="at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest" time="0.115"/>
+  <system-out><![CDATA[DENSITY_WINDOW native=618x1372px density=1.5 font=2.0 viewport=RectF(0.0, 0.0, 618.0, 1261.0) target=RectF(12.0, 1008.0, 606.0, 1249.0) protected=[RectF(18.0, 207.0, 330.6, 597.0), RectF(345.6, 429.0, 600.0, 597.0), RectF(18.0, 612.0, 600.0, 996.0)]
+DENSITY_WINDOW native=1081x2401px density=2.625 font=2.0 viewport=RectF(0.0, 0.0, 1081.0, 2206.75) target=RectF(21.0, 1764.0, 1060.0, 2185.75) protected=[RectF(31.5, 362.25, 578.275, 1044.75), RectF(604.525, 750.75, 1049.5, 1044.75), RectF(31.5, 1071.0, 1049.5, 1743.0)]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -26,7 +26,7 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
         }
         val now = clock()
         bus.emit(CockpitAnimationEvent.CommandFlyIn(turnId, now, clean(command, 60)))
-        bus.emit(CockpitAnimationEvent.ActionStarted(turnId, now, CockpitAction.THINK, "Auftrag angenommen"))
+        bus.emit(CockpitAnimationEvent.ActionStarted(turnId, now, CockpitAction.THINK, "Auftrag angenommen", stepKey = "ack"))
         bus.emit(CockpitAnimationEvent.ProcessTimeline(turnId, now, steps))
     }
 
@@ -46,8 +46,9 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
     fun toolStarted(turnId: String, callId: String, toolName: String) {
         val action = if (toolName in RESEARCH_TOOLS) CockpitAction.RESEARCH else CockpitAction.TOOL
         val label = (if (action == CockpitAction.RESEARCH) "Recherche: " else "Werkzeug: ") + clean(toolName, 32)
-        if (!update(turnId) { it += ProcessStep("tool:" + clean(callId, 40), label, StepState.ACTIVE) }) return
-        bus.emit(CockpitAnimationEvent.ActionStarted(turnId, clock(), action, clean(toolName, 32)))
+        val key = "tool:" + clean(callId, 40)
+        if (!update(turnId) { it += ProcessStep(key, label, StepState.ACTIVE) }) return
+        bus.emit(CockpitAnimationEvent.ActionStarted(turnId, clock(), action, clean(toolName, 32), stepKey = key))
     }
 
     fun toolFinished(turnId: String, callId: String, toolName: String, succeeded: Boolean) {
@@ -64,7 +65,7 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
             open(workerId).also { it += ProcessStep("worker", "Hintergrund: " + clean(goal, 40), StepState.ACTIVE) }.toList()
         }
         val now = clock()
-        bus.emit(CockpitAnimationEvent.ActionStarted(workerId, now, CockpitAction.WORKER, clean(goal, 40)))
+        bus.emit(CockpitAnimationEvent.ActionStarted(workerId, now, CockpitAction.WORKER, clean(goal, 40), stepKey = "worker"))
         bus.emit(CockpitAnimationEvent.ProcessTimeline(workerId, now, steps))
     }
 
@@ -99,6 +100,10 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
     }
 
     @Synchronized fun timeline(turnId: String): List<ProcessStep> = timelines[turnId]?.toList().orEmpty()
+
+    /** Steps of the most recent turn that has not ended yet – what a work window's status strip shows; empty when none runs. */
+    @Synchronized fun activeTimeline(): List<ProcessStep> =
+        timelines.entries.lastOrNull { it.key !in ended }?.value?.toList().orEmpty()
 
     /** Most recent turn/worker timeline – what the "Aktuelle Prozesse" card shows. */
     @Synchronized fun latestTimeline(): List<ProcessStep> = timelines.values.lastOrNull()?.toList().orEmpty()

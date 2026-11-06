@@ -39,6 +39,31 @@ class JarvisTileAmbientNeonTest {
         return strokes
     }
 
+    private fun circleCount(tile: JarvisTile, timeMs: Long): Int {
+        var circles = 0
+        val painter = Proxy.newProxyInstance(ContinuumPainter::class.java.classLoader,
+            arrayOf(ContinuumPainter::class.java)) { _, method, _ ->
+            when (method.name) {
+                "fillCircle" -> { circles++; null }
+                "measureText", "capHeight" -> 0f
+                "drawRaster" -> false
+                else -> null
+            }
+        } as ContinuumPainter
+        JarvisTiles.drawSurface(painter, JarvisShellLayout.Box(0f, 0f, 166f, 51f),
+            tile, highlighted = false, timeMs = timeMs)
+        return circles
+    }
+
+    @Test fun movingGlowBeadAddsExactlyThreeBoundedLightSamples() {
+        val normal = JarvisTile("memory", "Gedächtnis", Icon.DATABASE)
+        val disabled = normal.copy(controlState = JarvisControlState.DISABLED)
+        assertEquals("Tail, light halo and core must use existing frame time",
+            circleCount(normal, 0L) + 3, circleCount(normal, 1_000L))
+        assertEquals("Disabled tile must stay still", circleCount(disabled, 0L),
+            circleCount(disabled, 1_000L))
+    }
+
     @Test fun livingRimAddsTwoBoundedDrawsAndDisabledTileHasNoAmbientEffect() {
         val normal = JarvisTile("memory", "Gedächtnis", Icon.DATABASE)
         val disabled = normal.copy(controlState = JarvisControlState.DISABLED)

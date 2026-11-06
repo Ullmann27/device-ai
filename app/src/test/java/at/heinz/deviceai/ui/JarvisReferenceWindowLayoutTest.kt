@@ -92,17 +92,43 @@ class JarvisReferenceWindowLayoutTest {
         assertFalse(JarvisShellLayout.create(915f, 412f).ref5Grid)
     }
 
-    @Test fun compactPhoneStacksTheHeadDialogueAndSphereAndShowsEveryTile() {
+    @Test fun compactPhoneKeepsHeadAndSphereBesideEachOtherAboveDialogue() {
         val shell = JarvisShellLayout.create(412f, 915f)
         assertEquals(2, shell.tileColumns)
         assertEquals(5, shell.tileRows)
         assertNull(shell[Slot.NAV_RAIL])
         assertNull("Activity owns its five-category phone bar", shell[Slot.BOTTOM_NAV])
         assertTrue(shell.headBounds!!.bottom <= shell[Slot.DIALOG]!!.top)
-        assertTrue(shell[Slot.DIALOG]!!.bottom <= shell.orbBounds!!.top)
+        assertTrue(shell.headBounds!!.right < shell.orbBounds!!.left)
+        assertTrue(shell.orbBounds!!.bottom <= shell[Slot.DIALOG]!!.top)
         assertTrue(shell.orbBounds!!.bottom < shell[Slot.TILES]!!.top)
         assertTrue(shell.requiresVerticalScroll)
         sane(shell)
+    }
+
+    @Test fun coverKeepsBothIdentitiesAndARealWorkAreaAtLargeFonts() {
+        for (font in listOf(1f, 1.3f, 1.5f, 2f)) {
+            val shell = JarvisShellLayout.forContent(412f, 915f, font,
+                externalBottomBarHeightDp = ContinuumHomeLayout.PHONE_NAV_HEIGHT)
+            val head = requireNotNull(shell.headBounds)
+            val orb = requireNotNull(shell.orbBounds)
+            val dialog = requireNotNull(shell[Slot.DIALOG])
+            assertTrue("font$font: head and original orb share the hero", head.right < orb.left &&
+                maxOf(head.top, orb.top) < minOf(head.bottom, orb.bottom))
+            assertTrue("font$font: head keeps a usable viewport", head.height >= 220f)
+            assertTrue("font$font: original orb keeps a usable viewport", orb.height >= 112f)
+            assertTrue("font$font: dialogue stays below both identities",
+                head.bottom <= dialog.top && orb.bottom <= dialog.top)
+            val protected = listOf(head, orb, dialog)
+            val workspace = Box(8f, protected.maxOf { it.bottom } + 8f,
+                shell.width - 8f, shell.viewportHeight - 8f)
+            assertTrue("font$font: actual free width supports the work area", workspace.width >= 200f)
+            assertTrue("font$font: actual free height supports the work area: $workspace", workspace.height >= 160f - .01f)
+            protected.forEach { assertFalse("font$font: workspace cannot cover $it", intersects(workspace, it)) }
+            assertTrue("font$font: both identities stay visible", protected.all { it.bottom < shell.viewportHeight })
+            assertEquals(10, shell.tileBoxes().size)
+            sane(shell)
+        }
     }
 
     @Test fun expandedWindowsUseFourInformationColumnsMediumWindowsUseTwoRows() {

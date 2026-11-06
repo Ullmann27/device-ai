@@ -1,0 +1,43 @@
+{
+  "label": "intent-window-lifecycle-red",
+  "head": "cc2848bb952e6568bcc627718691f41a65fb32c9",
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-I",
+    "/workspace/scratch/76b7222771d5/build-env/observe-tests.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.avatar.AvatarIntentLifecycleTest",
+    "--tests",
+    "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest"
+  ],
+  "started": 1793897897.873437,
+  "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+  "statusBefore": "?? app/src/test/java/at/heinz/deviceai/avatar/AvatarIntentLifecycleTest.kt\n?? app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowLifecycleUiTest.kt\n?? docs/evidence/astra-jarvis-visual-20261105/FOLD7-OWNER-ACCEPTANCE.md\n?? docs/evidence/astra-jarvis-visual-20261105/work-window-iterations/\n?? tools/__pycache__/\n",
+  "sourcePatchSha256": "07f2c9b7b1a56d0021451d4921ea6e773d4e931dc84f63cdf57cba145d9dc9b5",
+  "exitCode": 1,
+  "ended": 1793897924.2056866,
+  "sourceUnchanged": true,
+  "statusAfter": "?? app/src/test/java/at/heinz/deviceai/avatar/AvatarIntentLifecycleTest.kt\n?? app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowLifecycleUiTest.kt\n?? docs/evidence/astra-jarvis-visual-20261105/FOLD7-OWNER-ACCEPTANCE.md\n?? docs/evidence/astra-jarvis-visual-20261105/work-window-iterations/\n?? tools/__pycache__/\n",
+  "log": "/workspace/scratch/76b7222771d5/build-env/logs/intent-window-lifecycle-red.log",
+  "sourceBeforeManifestSha256": "11888035be6f485a1bb2554fb4747aec5e16ecd1da5c62be9759abe30e770327",
+  "sourceAfterManifestSha256": "11888035be6f485a1bb2554fb4747aec5e16ecd1da5c62be9759abe30e770327",
+  "changedSourceSha256": {
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarIntentLifecycleTest.kt": "64496cc0600ba9b2855ad301be55c1f2cda69070f3e188f44fdc0b0a79230ebf",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowLifecycleUiTest.kt": "0c3adf5e0646f63eb4ec0018fe5374620c5af85a27feca5b604601e6f7f5814e"
+  },
+  "observedCounts": {
+    "tests": 6,
+    "passed": 0,
+    "failed": 6,
+    "skipped": 0
+  },
+  "countBasis": "AUDIT_TESTS and fresh JUnit XML"
+}
