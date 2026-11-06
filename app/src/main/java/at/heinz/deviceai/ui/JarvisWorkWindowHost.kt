@@ -18,7 +18,29 @@ class JarvisWorkWindowHost(
     private var cameraHome: ContinuumHomeView? = null
     private var serial = 0L
     private var back: android.window.OnBackInvokedCallback? = null
+    private var currentId: String? = null
+    private var currentGaze: GazeTarget? = null
+    /** Window whose content the local model is really working on (JARVIS reads it until the work ends). */
+    private var workingId: String? = null
     val isShowing: Boolean get() = current?.isShowing == true
+
+    /**
+     * The local model starts real work on the content of the window on screen (a document draft): JARVIS keeps his
+     * eyes on it and reads – the director holds the gaze until [workEnded], STOP, speech or the window closes.
+     */
+    fun workStarted(): Boolean {
+        val id = currentId ?: return false
+        if (current?.isShowing != true) return false
+        val admitted = director.windowWorkStarted(id, currentGaze ?: GazeTarget.WORK_WINDOW)
+        workingId = if (admitted) id else null
+        return admitted
+    }
+
+    /** The real work ended (result, failure, STOP): the reading gaze ends with it. */
+    fun workEnded() {
+        workingId?.let(director::windowWorkEnded)
+        workingId = null
+    }
 
     fun close(immediate: Boolean = false) {
         if (immediate) cameraHome?.hologram?.setWorkWindowCamera(false, immediate = true)
@@ -31,7 +53,7 @@ class JarvisWorkWindowHost(
      */
     fun show(home: ContinuumHomeView, body: View, title: String,
              scene: JarvisActionScenes.Scene = STATUS_SCENE, emblem: android.graphics.drawable.Drawable? = null,
-             onClosed: () -> Unit): JarvisWorkWindow? {
+             crystal: Boolean = false, fromCurrent: Boolean = false, onClosed: () -> Unit): JarvisWorkWindow? {
         if (!home.jarvisShellStage || !home.isShown) return null
         val container = activity.findViewById<ViewGroup>(android.R.id.content) ?: return null
         val shell = home.jarvisShell
@@ -45,7 +67,15 @@ class JarvisWorkWindowHost(
             }
             parent = parent.parent
         }
-        val first = plan(home, container, scene, fresh = false) ?: return null
+        // A result that comes out of the window on screen (document → draft) unfolds from where that window is.
+        val previous = if (fromCurrent) current?.shownBounds()?.let { shown ->
+            // The result grows out of the middle of that window (its document), not from a tile across the cockpit.
+            val w = shown.width() * .3f; val h = shown.height() * .3f
+            RectF(shown.centerX() - w / 2f, shown.centerY() - h / 2f, shown.centerX() + w / 2f, shown.centerY() + h / 2f)
+        } else null
+        val planned = plan(home, container, scene, fresh = false) ?: return null
+        val first = previous?.let { Planned(JarvisWorkWindow.Plan(it, planned.plan.destination, planned.plan.protectedBounds),
+            planned.face, planned.viewport) } ?: planned
         close(immediate = true)
         val id = "work-window-${++serial}"
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
@@ -56,17 +86,21 @@ class JarvisWorkWindowHost(
             if (current === window) plan(home, container, scene, fresh = true)?.also {
                 // The window moved to the real size: JARVIS looks where it is now (#565 review) and the camera leans
                 // towards its new side (progress is still ~0).
+                currentGaze = gaze(it)
                 director.windowMoved(id, gaze(it))
                 home.hologram.setWorkWindowCamera(true, cameraSide(it))
             }?.plan else null
         }
         val accepted = window.open(body, first.plan.origin, first.plan.destination, title, first.plan.protectedBounds,
-            accent = scene.accent, emblem = emblem, refit = refit, onClosed = {
+            accent = scene.accent, emblem = emblem, refit = refit, crystal = crystal, onClosed = {
             releaseGeometry()
             (window.parent as? ViewGroup)?.removeView(window)
             director.windowClosed(id)
+            if (workingId == id) workingId = null
             if (current === window) {
                 current = null
+                currentId = null
+                currentGaze = null
                 home.hologram.setWorkWindowCamera(false)
                 cameraHome = null
                 home.setDeckCleared(false)
@@ -76,6 +110,8 @@ class JarvisWorkWindowHost(
         })
         if (!accepted) { window.dispose(); container.removeView(window); return null }
         current = window
+        currentId = id
+        currentGaze = gaze(first)
         // Airbus deck: the cockpit makes room for the window and gets it back after the window has folded away.
         home.setDeckCleared(true)
         val initialX = background?.scrollX ?: 0

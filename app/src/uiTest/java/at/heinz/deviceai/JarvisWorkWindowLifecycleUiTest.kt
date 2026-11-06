@@ -194,6 +194,45 @@ class JarvisWorkWindowLifecycleUiTest {
     }
 
     /**
+     * App crystal (owner brief 06.11.2026), HOST: an installed app's real icon rides the light trail inside a prism of
+     * the cockpit colours (violet/magenta and cyan facets); a document page keeps its plain glass disc. Same frame,
+     * same route – only the crystal flag differs.
+     */
+    @Test fun anInstalledAppRidesTheTrailInsideItsCrystal() {
+        fun frame(crystal: Boolean): IntArray {
+            val pixels = IntArray(884 * 760)
+            withWindow { f ->
+                val icon = android.graphics.drawable.BitmapDrawable(f.activity.resources,
+                    Bitmap.createBitmap(48, 48, Bitmap.Config.ARGB_8888).apply { eraseColor(0xFF00C853.toInt()) })
+                assertTrue(f.window.open(f.body("App"), RectF(30f, 540f, 190f, 600f), RectF(220f, 440f, 820f, 700f),
+                    "APP · Test", listOf(RectF(250f, 30f, 820f, 420f)), emblem = icon, crystal = crystal))
+                f.draw(1_000)
+                f.clock.time = 1_060
+                f.layout()
+                val bitmap = Bitmap.createBitmap(884, 760, Bitmap.Config.ARGB_8888)
+                try {
+                    f.root.draw(Canvas(bitmap))
+                    bitmap.getPixels(pixels, 0, 884, 0, 0, 884, 760)
+                } finally { bitmap.recycle() }
+            }
+            return pixels
+        }
+        fun r(c: Int) = (c shr 16) and 255
+        fun g(c: Int) = (c shr 8) and 255
+        fun b(c: Int) = c and 255
+        fun green(px: IntArray) = px.count { g(it) > r(it) + 20 && g(it) > b(it) + 10 }
+        val disc = frame(crystal = false)
+        val crystal = frame(crystal = true)
+        assertTrue("the real icon is drawn in both: ${green(disc)} / ${green(crystal)}", green(disc) > 10 && green(crystal) > 10)
+        val facets = disc.indices.count { i ->
+            val c = crystal[i]; val d = disc[i]
+            val changed = kotlin.math.abs(r(c) - r(d)) + kotlin.math.abs(g(c) - g(d)) + kotlin.math.abs(b(c) - b(d)) > 12
+            changed && b(c) > g(c) + 15 && r(c) > g(c) + 5
+        }
+        assertTrue("the crystal adds violet/magenta facets around the icon: $facets px", facets > 30)
+    }
+
+    /**
      * PR #572 (fold-short 840×320, 200 % font), HOST: the window title wrapped onto four lines, its header took 157 of
      * 270 px and left a 101 px scroll viewport – less than one 128 px action, which therefore could never be shown or
      * tapped whole. A long title may wrap, but never so far that the tallest control no longer fits the viewport.

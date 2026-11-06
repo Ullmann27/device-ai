@@ -163,6 +163,10 @@ class AgentActivity : Activity() {
         private const val PERSONAL_LEARNING_EXPORT_REQUEST = 2231
         private const val PERSONAL_LEARNING_PREVIEW_REQUEST = 2232
         private const val PDF_DOCUMENT_REQUEST = 2245
+        /** The work journal's cut-off drafts of an earlier process are recovered once per process. */
+        private val WORK_JOURNAL_RECOVERED = java.util.concurrent.atomic.AtomicBoolean(false)
+        /** Drafts changed before this moment belong to an earlier app process. */
+        private val PROCESS_STARTED_AT = System.currentTimeMillis()
         private const val DRAFT_SAVE_REQUEST = 2246
         /** Characters of the document's own text shown in its work window; the full bounded text stays for drafting. */
         private const val DOCUMENT_EXCERPT_CHARS = 700
@@ -1106,6 +1110,7 @@ class AgentActivity : Activity() {
         )
         subscribeMemoryEvents()
         subscribeRealSignals()
+        recoverWorkJournal()
         // Scene 1: the real first cockpit start of this process.
         cockpitTriggers.bootOnce()
         dashboard.addView(home, matchWidth())
@@ -1442,7 +1447,7 @@ class AgentActivity : Activity() {
 
     private fun cockpitStatus(): at.heinz.deviceai.ui.CockpitStatus {
         return at.heinz.deviceai.ui.CockpitStatus.live(activeChiefTurn, chiefStatusPool, lastChiefWorkerReport,
-            cockpitTriggers, cockpitDialog.toList())
+            cockpitTriggers, cockpitDialog.toList()).copy(openWork = openWork)
     }
 
     /** Updates only the cockpit part of the shown state; measured dashboard values stay from the last collection. */
@@ -1819,8 +1824,30 @@ class AgentActivity : Activity() {
     private fun recordWork(id: String?, change: (at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode) ->
         at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode) {
         if (id == null) return
-        val apply = Runnable { runCatching { workJournal.update(id, change) } }
+        val apply = Runnable { runCatching { workJournal.update(id, change) }; publishOpenWork() }
         if (documentIoExecutor.isShutdown) apply.run() else documentIoExecutor.execute(apply)
+    }
+
+    /** Open next steps of the work journal for the cockpit's process panel; read off the UI thread, after each write. */
+    @Volatile private var openWork: List<String> = emptyList()
+
+    private fun publishOpenWork() {
+        val open = runCatching { workJournal.openSteps(System.currentTimeMillis()) }.getOrDefault(emptyList())
+        runOnUiThread {
+            if (isFinishing || isDestroyed || open == openWork) return@runOnUiThread
+            openWork = open
+            pushCockpitState()
+        }
+    }
+
+    /** Once per process: drafts of an earlier process are cut off (INTERRUPTED), then the open work is shown. */
+    private fun recoverWorkJournal() {
+        val recover = Runnable {
+            if (WORK_JOURNAL_RECOVERED.compareAndSet(false, true))
+                runCatching { workJournal.recoverInterrupted(PROCESS_STARTED_AT) }
+            publishOpenWork()
+        }
+        if (documentIoExecutor.isShutdown) recover.run() else documentIoExecutor.execute(recover)
     }
 
     /**
@@ -1921,8 +1948,10 @@ class AgentActivity : Activity() {
     }
 
     /** A running local-model draft for a read document; matched by its exact request when the reply arrives. */
-    private class DocumentDraftTurn(val prompt: at.heinz.deviceai.cognitive.DocumentDraftPrompt, val name: String,
-                                    val episodeId: String? = null)
+    private class DocumentDraftTurn @JvmOverloads constructor(val prompt: at.heinz.deviceai.cognitive.DocumentDraftPrompt,
+                                    val name: String, val episodeId: String? = null,
+                                    /** The document's own first page, carried into the result as its source card. */
+                                    val page: android.graphics.Bitmap? = null)
     /** Journal episode of the document task currently on screen. */
     private var workEpisodeId: String? = null
     /** The draft line of the open document window: always the state really reached, never „läuft“ after a failure. */
@@ -1932,6 +1961,8 @@ class AgentActivity : Activity() {
         documentDraftStatus?.apply { this.text = text; visibility = View.VISIBLE }
     }
     private var documentDraftTurn: DocumentDraftTurn? = null
+    /** Request of a draft the owner stopped: its cancelled run is reported as STOP, not as a model error. */
+    private var stoppedDraftRequest: String? = null
     /** Draft text waiting for Android's save dialog (ACTION_CREATE_DOCUMENT). */
     private var pendingDraftSave: String? = null
 
@@ -1960,8 +1991,10 @@ class AgentActivity : Activity() {
             else -> {
                 recordWork(workEpisodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING) }
                 showDocumentDraftStatus("Entwurf wird lokal erstellt …")
-                documentDraftTurn = DocumentDraftTurn(prompt, doc.name, workEpisodeId)
+                documentDraftTurn = DocumentDraftTurn(prompt, doc.name, workEpisodeId, doc.firstPage)
                 runLocal(prompt.request, resolvedQuestion = prompt.question)
+                // While the model really works on the document, JARVIS reads it in its window (ends with the work).
+                if (documentDraftTurn != null) workWindowHost.workStarted()
             }
         }
     }
@@ -1976,8 +2009,27 @@ class AgentActivity : Activity() {
         val basis = if (turn.prompt.complete) "Grundlage: der vollständige gelesene Text (${turn.prompt.totalChars} Zeichen)."
             else "Grundlage: die ersten ${turn.prompt.coveredChars} von ${turn.prompt.totalChars} gelesenen Zeichen – der Rest ist nicht enthalten."
         val body = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; tag = "jarvis-draft" }
+        // Two layers (owner brief 06.11.): the document steps back behind the result – its own first page stays as the
+        // source card above the draft, the draft unfolds out of the document window.
+        turn.page?.let { page ->
+            val source = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL; tag = "jarvis-draft-source"
+                alpha = .78f
+            }
+            source.addView(android.widget.ImageView(this).apply {
+                tag = "jarvis-draft-source-page"
+                setImageBitmap(page)
+                adjustViewBounds = true
+                scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+                contentDescription = "Erste Seite von ${turn.name}"
+            }, LinearLayout.LayoutParams(dp(44), dp(58)))
+            source.addView(textView("Quelle: ${turn.name}", 11f, MUTED), LinearLayout.LayoutParams(0, -2, 1f).apply {
+                leftMargin = dp(8)
+            })
+            body.addView(source, matchWidth())
+        }
         body.addView(textView("Lokal erzeugter Entwurf aus „${turn.name}“ · vor der Verwendung prüfen.", 11f, MUTED)
-            .apply { tag = "jarvis-draft-origin" }, matchWidth())
+            .apply { tag = "jarvis-draft-origin" }, matchWidth(top = if (turn.page != null) 6 else 0))
         body.addView(textView(basis, 11f, MUTED).apply { tag = "jarvis-draft-basis" }, matchWidth(top = 2))
         val draft = textView(response.trim(), 13f, TEXT).apply { tag = "jarvis-draft-text"; setTextIsSelectable(true) }
         body.addView(draft, matchWidth(top = 8))
@@ -1986,11 +2038,12 @@ class AgentActivity : Activity() {
         body.addView(cockpit.action(this, "ALS DATEI SPEICHERN", primary = true) { saveDraft(draft.text.toString(), turn.name) }
             .apply { tag = "jarvis-draft-save" }, matchWidth(top = 6))
         return workWindowHost.show(home, body, "ENTWURF · ${turn.name.take(40)}",
-            at.heinz.deviceai.ui.JarvisActionScenes.forDocument()) {}
+            at.heinz.deviceai.ui.JarvisActionScenes.forDocument(), fromCurrent = true) {}
     }
 
     /** The local model's reply to a document draft: journal state, then the result surface (null without a draft). */
     private fun onDocumentDraftReply(turn: DocumentDraftTurn, response: String): at.heinz.deviceai.ui.JarvisWorkWindow? {
+        workWindowHost.workEnded()
         if (response.isBlank()) {
             recordWork(turn.episodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED) }
             // The window may never keep saying „wird erstellt“ for a run that failed.
@@ -2003,6 +2056,19 @@ class AgentActivity : Activity() {
         }
         workEpisodeId = turn.episodeId
         return presentDraftScene(turn, response)
+    }
+
+    /** The model run of [turn] failed (error, heat stop, context): journal FAILED, the window says so, reading ends. */
+    private fun onDocumentDraftFailed(turn: DocumentDraftTurn, reason: String?) {
+        if (documentDraftTurn === turn) documentDraftTurn = null
+        workWindowHost.workEnded()
+        recordWork(turn.episodeId) {
+            if (it.state == at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING)
+                it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED) else it
+        }
+        val why = if (at.heinz.deviceai.localmodel.LocalModelThermalGuard.isThermal(reason)) "wegen Gerätewärme gestoppt"
+            else "das lokale Modell meldete einen Fehler"
+        showDocumentDraftStatus("Entwurf fehlgeschlagen – $why. Nichts gespeichert.")
     }
 
     private fun editDraft(target: TextView) {
@@ -2112,7 +2178,7 @@ class AgentActivity : Activity() {
             startState, doc.name, doc.pageCount, doc.text.length, documentUri)
         workEpisodeId = episode.id
         // Written on the document queue, before any later state change of this episode (same single thread).
-        val append = Runnable { runCatching { workJournal.append(episode) } }
+        val append = Runnable { runCatching { workJournal.append(episode) }; publishOpenWork() }
         if (documentIoExecutor.isShutdown) append.run() else documentIoExecutor.execute(append)
         val report = "PDF gelesen: $meta. $textLine" + (draftLine?.let { " $it" } ?: "")
         // Wide windows (inner Fold7): page left, facts right – meta, status and excerpt visible without scrolling.
@@ -2703,7 +2769,7 @@ class AgentActivity : Activity() {
         }
         val title = if (app != null) "APP · ${app.label}" else "WERKZEUG · $label"
         workWindowHost.show(home, body, title, at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName),
-            emblem = app?.icon?.let(::drawableCopy)) {
+            emblem = app?.icon?.let(::drawableCopy), crystal = app != null) {
             if (toolScene?.first == callId) toolScene = null
         } ?: return
         toolScene = callId to status
@@ -9103,7 +9169,14 @@ class AgentActivity : Activity() {
                     }
                     localRuntimeError = error.message ?: "Local inference failed."
                     val keepFailedOwnerTurn = !ephemeralScreenRun.get() && sessionId == localSessionId
-                    addAssistantMessage(if (requiredContextOverflow)
+                    // A document draft whose model run failed is FAILED – the window may not keep saying „wird erstellt“.
+                    val failedDraft = documentDraftTurn?.takeIf { it.prompt.request == text }
+                    if (failedDraft != null) onDocumentDraftFailed(failedDraft, error.message)
+                    // The owner's STOP of a cockpit draft ended this run: say so and keep the cockpit as the stage.
+                    val stoppedDraft = stoppedDraftRequest != null && stoppedDraftRequest == text
+                    if (stoppedDraft) stoppedDraftRequest = null
+                    addAssistantMessage(if (stoppedDraft) "Entwurf mit STOP abgebrochen – nichts gespeichert."
+                    else if (requiredContextOverflow)
                         "Für diesen Auftrag passen wichtige Korrekturen oder Belege nicht vollständig in das lokale Kontextfenster. Bitte teile die Aufgabe in kleinere Schritte auf; ich verwende keine abgeschnittenen Informationen."
                     else if (error.message == "LOCAL_FOLLOWUP_HISTORY_UNAVAILABLE")
                         "Der frühere Gesprächskontext ist für diese Anschlussfrage nicht verfügbar. " +
@@ -9114,7 +9187,9 @@ class AgentActivity : Activity() {
                     else if (at.heinz.deviceai.localmodel.LocalModelThermalGuard.isThermal(error.message))
                         at.heinz.deviceai.localmodel.LocalModelThermalGuard.ownerMessage(error.message)
                     else groundedRecall?.failureAnswer() ?:
-                        "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn)
+                        "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn,
+                        keepCockpit = (failedDraft != null && workWindowHost.isShowing) ||
+                            (stoppedDraft && activeWorkArea == ContinuumWorkArea.START))
                     if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)
                     addToolActivity(if (requiredContextOverflow)
                         "KONTEXT · vollständig erforderliche Belege passen nicht; keine Modellaktion"
@@ -9672,12 +9747,14 @@ class AgentActivity : Activity() {
     private fun cancelLocalRequest() {
         // STOP: a running document draft is recorded as aborted – never as done.
         documentDraftTurn?.let { turn ->
+            stoppedDraftRequest = turn.prompt.request
             recordWork(turn.episodeId) {
                 if (it.state == at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING)
                     it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.ABORTED) else it
             }
         }
         documentDraftTurn = null
+        workWindowHost.workEnded()
         workWindowHost.close(immediate = true)
         avatarDirector.clearAnimationIntents()
         voiceEngine?.stop()

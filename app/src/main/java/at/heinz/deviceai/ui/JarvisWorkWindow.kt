@@ -29,6 +29,26 @@ private val TRAIL_HEAD_FILL = Fill.Solid(Colors.glowCore)
 private val EMBLEM_DISC_FILL = Fill.Solid(Colors.background)
 private val EMBLEM_HALO_FILL = Fill.Solid(Colors.cyan)
 private val EDGE_FLASH_FILL = Fill.Solid(Colors.cyanSoft)
+/*
+ * App crystal (owner brief 06.11.: the real installed app symbol as a spatial crystal/prism on the light trail): a tall
+ * hexagonal prism in dp around its centre – a violet/magenta and a cyan facet, a dark glass core under the real icon, a
+ * central ridge and a glint that sweeps across while the window unfolds. Paths and fills are built once (no per-frame
+ * allocation); the painter caches their Android paths and shaders.
+ */
+private const val CRYSTAL_H = EMBLEM_DP * 1.25f
+private const val CRYSTAL_W = CRYSTAL_H * .64f
+private const val CRYSTAL_S = CRYSTAL_H * .46f
+private val CRYSTAL_OUTLINE = VectorPath().moveTo(0f, -CRYSTAL_H).lineTo(CRYSTAL_W, -CRYSTAL_S).lineTo(CRYSTAL_W, CRYSTAL_S)
+    .lineTo(0f, CRYSTAL_H).lineTo(-CRYSTAL_W, CRYSTAL_S).lineTo(-CRYSTAL_W, -CRYSTAL_S).close()
+private val CRYSTAL_LEFT = VectorPath().moveTo(0f, -CRYSTAL_H).lineTo(-CRYSTAL_W, -CRYSTAL_S).lineTo(-CRYSTAL_W, CRYSTAL_S)
+    .lineTo(0f, CRYSTAL_H).close()
+private val CRYSTAL_RIGHT = VectorPath().moveTo(0f, -CRYSTAL_H).lineTo(CRYSTAL_W, -CRYSTAL_S).lineTo(CRYSTAL_W, CRYSTAL_S)
+    .lineTo(0f, CRYSTAL_H).close()
+private val CRYSTAL_LEFT_FILL = Fill.Linear(-CRYSTAL_W, -CRYSTAL_H, 0f, CRYSTAL_H, intArrayOf(Colors.violet, Colors.magenta))
+private val CRYSTAL_RIGHT_FILL = Fill.Linear(0f, -CRYSTAL_H, CRYSTAL_W, CRYSTAL_H, intArrayOf(Colors.cyan, Colors.violet))
+private val CRYSTAL_RIM_FILL = Fill.Linear(-CRYSTAL_W, -CRYSTAL_H, CRYSTAL_W, CRYSTAL_H,
+    intArrayOf(Colors.cyan, Colors.violet, Colors.magenta))
+
 /**
  * The work window is a layer ABOVE the cockpit (the cockpit cards sit on the background): a dark backing under its glass
  * keeps rail labels and tiles from showing through text (host capture 06.11.: ~6–9 % leakage of bright labels).
@@ -70,6 +90,8 @@ class JarvisWorkWindow(
         intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.violet, Colors.magenta))
     /** Real app icon of the scene (owner V1): rides the head of the light trail while the window unfolds/folds. */
     private var emblem: android.graphics.drawable.Drawable? = null
+    /** The emblem is an installed app's real icon: it rides the trail inside the app crystal (a document page does not). */
+    private var crystal = false
     private var onOpened: () -> Unit = {}
     private var onClosed: () -> Unit = {}
     private var accent = Colors.cyan
@@ -125,6 +147,9 @@ class JarvisWorkWindow(
 
     val isShowing: Boolean get() = phase != Phase.CLOSED
 
+    /** Where the window stands (overlay pixels) while it is shown; null when closed. */
+    fun shownBounds(): RectF? = if (isShowing && JarvisWorkWindowGeometry.valid(destination)) RectF(destination) else null
+
     init {
         tag = "jarvis-work-window"
         isClickable = false
@@ -139,7 +164,8 @@ class JarvisWorkWindow(
     fun open(body: View, origin: RectF, destination: RectF, title: String,
              protectedBounds: List<RectF> = emptyList(),
              onOpened: () -> Unit = {}, onClosed: () -> Unit = {}, accent: Int = Colors.cyan,
-             emblem: android.graphics.drawable.Drawable? = null, refit: (() -> Plan?)? = null): Boolean {
+             emblem: android.graphics.drawable.Drawable? = null, refit: (() -> Plan?)? = null,
+             crystal: Boolean = false): Boolean {
         if (disposed || deliveringFrame || isInLayout) return false
         val pixels = usable(origin, destination, protectedBounds) ?: return false
         if (body.parent != null && body.parent !== scroll) return false
@@ -152,6 +178,7 @@ class JarvisWorkWindow(
         this.onOpened = onOpened
         this.onClosed = onClosed
         this.emblem = emblem?.mutate()
+        this.crystal = crystal && emblem != null
         this.accent = accent
         this.refit = refit
         titleView.text = title
@@ -427,6 +454,7 @@ class JarvisWorkWindow(
         if (!x.isFinite() || !y.isFinite()) return
         val a = (trailAlpha * (1f - .85f * openness)).coerceIn(0f, 1f)
         if (a <= .02f) return
+        if (crystal) { drawCrystal(canvas, icon, x, y, a); return }
         painter.fillCircle(x, y, EMBLEM_DP * .95f, EMBLEM_DISC_FILL, .72f * a)
         painter.fillCircle(x, y, EMBLEM_DP * 1.35f, EMBLEM_HALO_FILL, .07f * a)
         painter.strokeCircle(x, y, EMBLEM_DP * .95f, 1f, edge, .9f * a)
@@ -434,6 +462,32 @@ class JarvisWorkWindow(
         icon.setBounds(x.roundToInt() - half, y.roundToInt() - half, x.roundToInt() + half, y.roundToInt() + half)
         icon.alpha = (a * 255f).roundToInt().coerceIn(0, 255)
         icon.draw(canvas)
+    }
+
+    /** The app crystal around the real [icon] at the trail head (dp canvas), see CRYSTAL_*. */
+    private fun drawCrystal(canvas: Canvas, icon: android.graphics.drawable.Drawable, x: Float, y: Float, a: Float) {
+        val save = canvas.save()
+        canvas.translate(x, y)
+        painter.fillCircle(0f, 0f, CRYSTAL_H * 1.2f, EMBLEM_HALO_FILL, .06f * a)
+        painter.fillPath(CRYSTAL_OUTLINE, EMBLEM_DISC_FILL, .78f * a)
+        painter.fillPath(CRYSTAL_LEFT, CRYSTAL_LEFT_FILL, .30f * a)
+        painter.fillPath(CRYSTAL_RIGHT, CRYSTAL_RIGHT_FILL, .22f * a)
+        val half = (CRYSTAL_W * .74f).roundToInt()
+        icon.setBounds(-half, -half, half, half)
+        icon.alpha = (a * 255f).roundToInt().coerceIn(0, 255)
+        icon.draw(canvas)
+        painter.drawLine(0f, -CRYSTAL_H, 0f, -half.toFloat(), .7f, CRYSTAL_RIM_FILL, .5f * a)
+        painter.drawLine(0f, half.toFloat(), 0f, CRYSTAL_H, .7f, CRYSTAL_RIM_FILL, .5f * a)
+        // A glint sweeps once across the prism while the window unfolds (its height follows the silhouette).
+        val sweep = (trailProgress * 1.4f).coerceIn(0f, 1f)
+        if (sweep in .02f..0.98f) {
+            val gx = -CRYSTAL_W + 2f * CRYSTAL_W * sweep
+            val top = -CRYSTAL_H + (CRYSTAL_H - CRYSTAL_S) * kotlin.math.abs(gx) / CRYSTAL_W
+            painter.drawLine(gx, top, gx, -top, 1.2f, TRAIL_HEAD_FILL,
+                .55f * a * kotlin.math.sin(Math.PI.toFloat() * sweep))
+        }
+        painter.strokePath(CRYSTAL_OUTLINE, 1f, CRYSTAL_RIM_FILL, .9f * a)
+        canvas.restoreToCount(save)
     }
 
     private fun dp(value: Float) = (value * density).roundToInt()
