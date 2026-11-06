@@ -4873,9 +4873,11 @@ class AgentActivity : Activity() {
             return
         }
         if (!botRoutingChecked && routeBotInput(input.text.toString())) return
+        // Document intent wins over app-name discovery: "Öffne PDF" is a file request.
+        val documentIntent = at.heinz.deviceai.cognitive.OwnerDocumentIntent.parse(request)
         // A narrow deterministic, owner-initiated app search runs through the existing ToolGate.
         // It ONLY returns bounded candidates; opening any app requires a separate consented tool call.
-        at.heinz.deviceai.cognitive.OwnerAppLookupIntent.parse(request)?.let { lookup ->
+        at.heinz.deviceai.cognitive.OwnerAppLookupIntent.parse(request)?.takeIf { documentIntent == null }?.let { lookup ->
             webToolGate.cancel()
             approvedModelWebSession.getAndSet(null)?.cancel()
             input.text.clear()
@@ -4893,7 +4895,7 @@ class AgentActivity : Activity() {
         }
         // „Wo waren wir gestern …?“ – from the work journal; a document request in the same sentence follows.
         val recall = at.heinz.deviceai.cognitive.WorkRecall.parse(request)
-        val document = at.heinz.deviceai.cognitive.OwnerDocumentIntent.parse(request)
+        val document = documentIntent
         if (recall != null || document != null) {
             input.text.clear()
             // A cockpit work scene answers on START; the request stays there instead of switching to the chat.
