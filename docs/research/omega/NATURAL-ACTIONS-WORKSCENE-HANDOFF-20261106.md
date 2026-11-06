@@ -79,3 +79,34 @@ This branch owns AgentActivity, OwnerAppLookupIntent and nearby action/work-wind
   START/geometry gates, lookup-only termination and the missing workStarted call.
   This source comparison cannot establish what a physical Code43 screen looked
   like; no Code43/Fold7/video comparison was performed.
+
+## Integration handoff
+
+- Root's same-millisecond old/current/old scope holdout reproduced as actual
+  JUnit RED (8 tests/1 failure), then fixed with historyScope independent of
+  active; GREEN8/8. Retired call ids survive close/new-start within one scope.
+- Final targeted combined suite:30 tests/0 failures. Real production sources,
+  real SDK36 android.jar and stable SDK-compiled AvatarDirector/AvatarPoseReducer
+  from Root's24547da baseline; compiler256MiB, JUnit128MiB. No production stubs.
+- One-character installed labels (synthetic X) now pass all three lookup gates;
+  blank/control input still fails and exact-package launch still needs approval.
+- Indeterminate Android ProgressBar covers the real backend interval only.
+  End/STOP/close remove its running state. No percentage was introduced.
+- Only tool work-window gaze is emphasized (x1.35/y1.25), still capped by existing
+  AvatarPoseReducer limits .65/.35; layout refits retain it. Documents keep their
+  existing default and all renderer/head/orb/material files are unchanged.
+- Bot3's exact Activity patch was applied; Bot2's finalized six-section contract
+  was integrated, including complete metadata restore, one writer callback,
+  memory-read retention, current assistant identity, actual history budget,
+  verified frame deduplication and accepted partial retention. Private bot/coding
+  paths do not read owner history while constructing followUpFrame.
+- Activity now requires the matching core files from PR580 and PR581; PR579 alone
+  is not claimed to compile without that integration.
+- Four real-Activity tests submit actual composer text/Send, traverse Android
+  app lookup and explicit confirmation into the real ToolGate/native adapter
+  boundary, and cover CHAT/START, a3.2s held gaze, progress end, queued STOP,
+  background pause/result return, missing app and missing permission. Device
+  boundary is controlled test input; no real app or message is sent.
+- Those UI tests are NOT_RUN: Robolectric artifacts are not yet present in the
+  restored toolchain. Full combined SDK compilation, UI tests, APK and physical
+  Fold7/Filament/model checks remain Root's central validation gates.

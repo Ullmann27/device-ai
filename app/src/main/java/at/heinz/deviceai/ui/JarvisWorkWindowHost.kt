@@ -22,16 +22,22 @@ class JarvisWorkWindowHost(
     private var currentGaze: GazeTarget? = null
     /** Window whose content the local model is really working on (JARVIS reads it until the work ends). */
     private var workingId: String? = null
+    private var emphasizedWork = false
     val isShowing: Boolean get() = current?.isShowing == true
 
     /**
      * The local model starts real work on the content of the window on screen (a document draft): JARVIS keeps his
      * eyes on it and reads – the director holds the gaze until [workEnded], STOP, speech or the window closes.
      */
-    fun workStarted(): Boolean {
+    fun workStarted(): Boolean = workStarted(emphasize = false)
+
+    fun workStarted(emphasize: Boolean): Boolean {
         val id = currentId ?: return false
         if (current?.isShowing != true) return false
-        val admitted = director.windowWorkStarted(id, currentGaze ?: GazeTarget.WORK_WINDOW)
+        val target = currentGaze ?: GazeTarget.WORK_WINDOW
+        val admitted = director.windowWorkStarted(id,
+            if (emphasize) ToolWorkSceneLease.workingGaze(target) else target)
+        emphasizedWork = admitted && emphasize
         workingId = if (admitted) id else null
         return admitted
     }
@@ -48,6 +54,7 @@ class JarvisWorkWindowHost(
     fun workEnded() {
         workingId?.let(director::windowWorkEnded)
         workingId = null
+        emphasizedWork = false
     }
 
     fun close(immediate: Boolean = false) {
@@ -105,7 +112,8 @@ class JarvisWorkWindowHost(
                 // The window moved to the real size: JARVIS looks where it is now (#565 review) and the camera leans
                 // towards its new side (progress is still ~0).
                 currentGaze = gaze(it)
-                director.windowMoved(id, gaze(it))
+                director.windowMoved(id, if (workingId == id && emphasizedWork)
+                    ToolWorkSceneLease.workingGaze(gaze(it)) else gaze(it))
                 home.hologram.setWorkWindowCamera(true, cameraSide(it))
             }?.plan else null
         }
@@ -115,7 +123,7 @@ class JarvisWorkWindowHost(
             releaseGeometry()
             (window.parent as? ViewGroup)?.removeView(window)
             director.windowClosed(id)
-            if (workingId == id) workingId = null
+            if (workingId == id) { workingId = null; emphasizedWork = false }
             if (current === window) {
                 current = null
                 currentId = null

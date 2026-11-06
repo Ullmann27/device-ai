@@ -17,7 +17,7 @@ internal object OwnerAppLookupIntent {
     private val vague = Regex("(?iu)^(?:ich\\s+)?(?:bräuchte|brauche|hätte\\s+gern(?:e)?|möchte|will)\\s+(?:bitte\\s+)?(?:etwas|was)\\s+(?:von|aus|in)\\s+(.+?)[.!?]*$")
     private val action = Regex("(?iu)\\b(öffne|öffnen|starte|starten|suche|suchen|finde|finden|aufmachen)\\b")
     private val requestStart = Regex("(?iu)^(?:öffne|starte|suche|finde|zeige|mach(?:e)?|kannst|könntest|würdest|magst|ich)\\b")
-    private val query = Regex("[\\p{L}\\p{N}][\\p{L}\\p{N} ._+-]{1,79}")
+    private val query = Regex("[\\p{L}\\p{N}][\\p{L}\\p{N} ._+-]{0,79}")
     private val courtesy = Regex("(?iu)^(?:(?:bitte|mir|mal|kurz|eben)|für\\s+mich)\\s+")
     private val trailingCourtesy = Regex("(?iu)\\s+(?:bitte|für\\s+mich)$")
     private val reference = Regex("(?iu)^(?:sie|es|diese|diese\\s+app|die\\s+app|die|erste|zweite|dritte|vierte|fünfte|letzte|[1-9]|[1-9]\\.)$")

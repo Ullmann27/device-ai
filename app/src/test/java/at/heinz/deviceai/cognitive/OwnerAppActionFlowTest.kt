@@ -45,6 +45,25 @@ class OwnerAppActionFlowTest {
         }
     }
 
+    @Test fun singleCharacterAppLabelStillRequiresConcreteApproval() {
+        val intake = OwnerAppLookupIntent.inspect("Öffne X") as OwnerAppLookupIntent.Intake.Lookup
+        val app = NativeAppCandidate("org.example.single", "X")
+        var launches = 0
+        val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner {
+            if (it.name == "launch_app") launches++
+            lookup(it, listOf(app))
+        })
+        val flow = OwnerAppActionFlow(intake.opening)
+        val confirmation = flow.returned(invoke(gate, flow.start(intake.query))) as OwnerAppActionFlow.Step.Confirm
+        assertEquals(app.packageName, confirmation.call.arguments["packageOrName"])
+        assertEquals(0, launches)
+        assertEquals(ToolExecutionStatus.REJECTED, invoke(gate, checkNotNull(flow.confirm(false))).record.status)
+        for (blank in listOf("", " ", "\n")) {
+            assertNotNull(ToolRegistry.validate(ToolCallRequest("invalid", "find_app", mapOf("query" to blank))))
+            assertThrows(IllegalArgumentException::class.java) { NativeAppLookup.search(blank, listOf(app)) }
+        }
+    }
+
     @Test fun declinedConfirmationAndStoppedApprovalNeverCallLaunchBackend() {
         for (stopped in listOf(false, true)) {
             var launches = 0
