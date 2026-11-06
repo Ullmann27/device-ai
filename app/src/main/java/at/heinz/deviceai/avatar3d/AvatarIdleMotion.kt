@@ -48,6 +48,10 @@ internal class AvatarIdleMotion {
         blinkWeight = maxOf(pulse(local, primary), extra)
     }
 
+    /** Lid weight [sinceOnset] seconds after a blink began, same shape as the scheduled blink; 0 outside [0, BLINK_S]. */
+    fun blinkAfterOnset(sinceOnset: Float): Float =
+        if (sinceOnset.isFinite() && sinceOnset >= 0f && sinceOnset <= BLINK_S) pulse(sinceOnset, BLINK_HALF_S) else 0f
+
     private fun blinkLead(group: Int): Float {
         if (group == 0 || group == 99) return 0f
         var bits = group + 13579
@@ -89,6 +93,8 @@ internal class AvatarIdleMotion {
         /** Upper bounds of the cosmetic head harmonics above (degrees, before the mapper's idle gain). */
         const val HEAD_YAW_AMPLITUDE = 1.20f + .35f
         const val HEAD_PITCH_AMPLITUDE = .62f + .20f
+        /** Duration of one blink, closing to reopened. */
+        const val BLINK_S = .150f
         private const val BLINK_HALF_S = .075f
         private const val BLINK_HOLD_S = .020f
         private const val BLINK_CLOSE_S = BLINK_HALF_S - BLINK_HOLD_S

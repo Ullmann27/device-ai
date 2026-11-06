@@ -215,9 +215,13 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         if (audioFrame != null) lastRangeAudioFrame = audioFrame
         lastWordCues = emptyList()
         val visemes = GermanVisemeApproximation.visemes(text.substring(start, end))
+        val sentenceEnd = sentenceEndAfter(start, end)
         // Punctuation still advances the engine's admitted text/frame markers. It must
         // not invent mouth cues or extend the previous word's no-PCM fallback interval.
-        if (visemes.isEmpty()) return true
+        if (visemes.isEmpty()) {
+            sentenceEnd?.let { emit(AvatarEvent.SentenceEnd(utteranceId, it, clock())) }
+            return true
+        }
         val per = (WORD_MS / visemes.size).coerceAtLeast(MIN_VISEME_MS)
         val at = clock()
         lastRangeAt = at
@@ -226,7 +230,38 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         }
         lastWordCues = wordCues.takeLast(MAX_REATTACHED_CUES)
         wordCues.forEach(::emit)
+        sentenceEnd?.let { emit(AvatarEvent.SentenceEnd(utteranceId, it, at)) }
         return true
+    }
+
+    /**
+     * Whether the word in [start, end) of the spoken text closes a sentence: its letters are followed (optionally
+     * after closing quotes or brackets, inside or just outside the range) by `.`, `!`, `?` or `…` and then a space or
+     * the end of the text. Not a sentence end: a range without letters or digits (its word was already reported),
+     * decimals and names ("3.5", "Datei.txt"), a period before a lowercase word ("ca. drei"), and a period after a
+     * number inside the text ("am 6. November"). Reads only the text this Director already holds; emits no text.
+     */
+    private fun sentenceEndAfter(start: Int, end: Int): SpeechBoundary? {
+        var last = end - 1
+        while (last >= start && !text[last].isLetterOrDigit()) last--
+        if (last < start) return null
+        var i = last + 1
+        while (i < text.length && text[i] in CLOSERS) i++
+        var question = false
+        val marks = i
+        while (i < text.length && text[i] in SENTENCE_MARKS) { if (text[i] == '?') question = true; i++ }
+        if (i == marks) return null
+        while (i < text.length && text[i] in CLOSERS) i++
+        if (i < text.length && !text[i].isWhitespace()) return null
+        if (question) return SpeechBoundary.QUESTION
+        var next = i
+        while (next < text.length && text[next].isWhitespace()) next++
+        if (next == text.length) return SpeechBoundary.STATEMENT
+        if (text[next].isLowerCase()) return null
+        var first = last
+        while (first > 0 && text[first - 1].isLetterOrDigit()) first--
+        for (k in first..last) if (!text[k].isDigit()) return SpeechBoundary.STATEMENT
+        return null
     }
 
     @Synchronized fun audioLevel(utteranceId: String, level: Float, measuredPcmAvailable: Boolean = false) {
@@ -285,6 +320,8 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         const val WORD_MS = 320L
         const val MIN_VISEME_MS = 40L
         const val FALLBACK_MS = 500L
+        const val SENTENCE_MARKS = ".!?…"
+        const val CLOSERS = "\"'»«“”„‘’)]}"
     }
 }
 

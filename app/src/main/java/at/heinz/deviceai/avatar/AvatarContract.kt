@@ -30,6 +30,9 @@ enum class AudioLevelSource { PCM_ENVELOPE, WORD_RANGE_FALLBACK }
 /** Compatibility names for canonical intents. */
 enum class AvatarGestureIntent { WINDOW_FOCUS, CONFIRM_NOD, THINK_MICRO }
 
+/** How a sentence of the spoken text ends: `.`/`!` closes a statement, `?` a question. */
+enum class SpeechBoundary { STATEMENT, QUESTION }
+
 sealed interface AvatarEvent {
     val atMillis: Long
     data class StateChanged(val state: AvatarState, val expression: AvatarExpression, val gaze: GazeTarget,
@@ -53,6 +56,8 @@ sealed interface AvatarEvent {
     /** Real synthesized-audio envelope 0..1 (from the existing TTS signal), ~30 Hz. */
     data class AudioLevel(val utteranceId: String, val level: Float, override val atMillis: Long,
                           val source: AudioLevelSource = AudioLevelSource.PCM_ENVELOPE) : AvatarEvent
+    /** The word the TTS engine has just started is the last one of a sentence in the spoken text (no text attached). */
+    data class SentenceEnd(val utteranceId: String, val boundary: SpeechBoundary, override val atMillis: Long) : AvatarEvent
     data class SpeechEnded(val utteranceId: String, val interrupted: Boolean, override val atMillis: Long) : AvatarEvent
 }
 
@@ -79,7 +84,9 @@ data class AvatarPose(val state: AvatarState, val expression: AvatarExpression, 
                       val jawOpen: Float, val viseme: Viseme, val visemeWeight: Float, val speakEnergy: Float,
                       val gazeObserved: Boolean = false, val gesture: AvatarGestureIntent? = null,
                       val gestureProgress: Float = 0f, val gazeDirected: Boolean = false,
-                      val fallbackGazeX: Float = 0f, val fallbackGazeY: Float = 0f) {
+                      val fallbackGazeX: Float = 0f, val fallbackGazeY: Float = 0f,
+                      /** Sentence end reached in the spoken text and its gesture progress 0..1 (−1 = none). */
+                      val sentenceEnd: SpeechBoundary? = null, val sentenceEndProgress: Float = -1f) {
     val confirmationProgress: Float get() = if (gesture == AvatarGestureIntent.CONFIRM_NOD) gestureProgress else -1f
 }
 
@@ -116,6 +123,8 @@ class AvatarPoseReducer {
     private var lastAudioSource: AudioLevelSource? = null
     private var lastMeasuredLevel = 0f
     private val cues = ArrayList<AvatarEvent.VisemeCue>()
+    private var sentenceEnd: SpeechBoundary? = null
+    private var sentenceEndAtMillis = Long.MIN_VALUE
 
     fun apply(event: AvatarEvent) {
         // Rejected/replayed audio must not resmooth the envelope or change the default pose clock.
@@ -127,6 +136,7 @@ class AvatarPoseReducer {
         // cues neither multiply the bounded queue nor change the default pose clock.
         if (event is AvatarEvent.VisemeCue && event in cues) return
         if (event is AvatarEvent.SpeechEnded && event.utteranceId != utterance) return
+        if (event is AvatarEvent.SentenceEnd && (event.utteranceId != utterance || event.atMillis < sentenceEndAtMillis)) return
         if (event is AvatarEvent.SpeechStarted && (event.utteranceId.isBlank() || event.utteranceId == utterance)) return
         if (event is AvatarEvent.AnimationIntentsChanged && event.revision <= animationRevision) return
         if (event is AvatarEvent.Gesture && (event.atMillis <= animationClearedAtMillis ||
@@ -183,8 +193,8 @@ class AvatarPoseReducer {
                 }
             }
             is AvatarEvent.SpeechStarted -> {
-                clearAnimationIntents()
-                clearSpeech()
+                // The next piece of a reply may begin while the previous sentence still settles.
+                clearUtterance()
                 utterance = event.utteranceId
             }
             is AvatarEvent.AudioLevel -> {
@@ -208,12 +218,22 @@ class AvatarPoseReducer {
                 cues.sortBy { it.atMillis }
                 while (cues.size > 64) cues.removeAt(0)
             }
-            is AvatarEvent.SpeechEnded -> if (event.utteranceId == utterance) clearSpeech()
+            is AvatarEvent.SentenceEnd -> { sentenceEnd = event.boundary; sentenceEndAtMillis = event.atMillis }
+            // A sentence that ends with the utterance still settles; STOP/errors cancel its gesture with the speech.
+            is AvatarEvent.SpeechEnded -> if (event.utteranceId == utterance) {
+                if (event.interrupted) clearSpeech() else clearUtterance()
+            }
         }
     }
 
     /** Drop transient mouth state on pause/detach; never retain spoken text in a renderer. */
     fun clearSpeech() {
+        clearUtterance()
+        sentenceEnd = null
+        sentenceEndAtMillis = Long.MIN_VALUE
+    }
+
+    private fun clearUtterance() {
         clearAnimationIntents()
         utterance = null
         energy = 0f
@@ -291,6 +311,14 @@ class AvatarPoseReducer {
             thinkingAtMillis = Long.MIN_VALUE
             -1f
         }
+        val sentenceAge = atMillis.toDouble() - sentenceEndAtMillis.toDouble()
+        if (sentenceEnd != null && sentenceAge >= SENTENCE_END_DURATION_MS) {
+            sentenceEnd = null
+            sentenceEndAtMillis = Long.MIN_VALUE
+        }
+        val sentenceProgress = if (motion && sentenceEnd != null && sentenceAge >= 0) {
+            (sentenceAge / SENTENCE_END_DURATION_MS).toFloat()
+        } else -1f
         val activeWindow = directedGaze.takeIf { motion }
         val shownDirected = activeWindow.takeUnless { directedYieldsToObservedGaze && observedGaze != null }
         val underlyingGaze = observedGaze ?: gaze
@@ -310,10 +338,13 @@ class AvatarPoseReducer {
         }
         return AvatarPose(state, expression, shownGaze.x, shownGaze.y, jaw, viseme, visemeWeight, liveEnergy,
             gazeObserved = shownDirected == null && observedGaze != null, gesture = gesture, gestureProgress = progress,
-            gazeDirected = shownDirected != null, fallbackGazeX = underlyingGaze.x, fallbackGazeY = underlyingGaze.y)
+            gazeDirected = shownDirected != null, fallbackGazeX = underlyingGaze.x, fallbackGazeY = underlyingGaze.y,
+            sentenceEnd = if (sentenceProgress >= 0f) sentenceEnd else null, sentenceEndProgress = sentenceProgress)
     }
 
     companion object {
+        /** Last word of the sentence (about 320 ms) plus the settle or brow release after it. */
+        const val SENTENCE_END_DURATION_MS = 1_200L
         const val WINDOW_GAZE_TTL_MS = 2_500L
         const val LEGACY_WINDOW_GAZE_TTL_MS = 1_100L
         const val THINKING_DURATION_MS = 900L
