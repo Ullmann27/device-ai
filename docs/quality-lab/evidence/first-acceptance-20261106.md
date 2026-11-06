@@ -1,12 +1,19 @@
 # Continuum Fold7 – unabhängiger Abnahmebericht
 
-Quellstand: `2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a`
+Quellzuordnung: **NOT_VERIFIED / UNBOUND_HISTORICAL_EVIDENCE**.
+
+Historisch deklarierter Quellstand: `2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a`.
+Die zugehörige unveränderte Quittung `host-unit-20261106.json` nennt jedoch
+`source_sha: LOCAL_UNCOMMITTED`. Die Laborprogramme existieren nicht im Git-Tree
+des deklarierten Commits. Die gemeldeten 31 bestandenen Tests belegen daher
+keinen Test dieses Commits. Die Messzahlen bleiben als ungebundene historische
+Host-Angabe erhalten; eine nachträgliche SHA-Bindung wird nicht behauptet.
 
 **Freigabestatus: NOT_READY**
 
 ## Nachweiskategorien
 
-- Softwaretests (Host): **PASS**
+- Softwaretests (Host): **NOT_VERIFIED** (Quellzuordnung fehlt)
 - Simulierte Android-/Robolectric-Tests: **NOT_RUN**
 - Echte Gerätetelemetrie: **NOT_RUN**
 - Originalpaket installiert: **NOT_VERIFIED**

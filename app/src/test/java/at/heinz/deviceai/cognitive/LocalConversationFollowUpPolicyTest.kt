@@ -70,4 +70,75 @@ class LocalConversationFollowUpPolicyTest {
             assertTrue(it, LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(it))
         }
     }
+
+    private fun assertFollowUp(text: String) {
+        assertTrue(text, LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(text))
+        assertTrue(text, LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(text))
+    }
+
+    @Test fun exactMeaningQuestionKeepsPriorContext() {
+        assertFollowUp("Was heißt das genau?")
+        assertFollowUp("Was heißt das genau")
+    }
+
+    @Test fun incidentalMeaningQuestionKeepsPriorContext() {
+        assertFollowUp("Was bedeutet das eigentlich?")
+    }
+
+    @Test fun conclusiveMeaningQuestionKeepsPriorContext() {
+        assertFollowUp("Was bedeutet das also?")
+    }
+
+    @Test fun conversationalParticleKeepsPriorContext() {
+        assertFollowUp("Was heißt das denn?")
+    }
+
+    @Test fun relativeMeaningQuestionKeepsPriorContext() {
+        assertFollowUp("Was bedeutet das, was du gesagt hast?")
+    }
+
+    @Test fun definitionBeforeAPlanQuestionKeepsOptionalPriorContext() {
+        val text = "Was bedeutet Inflation? Was bedeutet das für unseren Plan?"
+        assertFalse(LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(text))
+        assertTrue(LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(text))
+    }
+
+    @Test fun namedDefinitionBeforeAConsequenceKeepsOptionalPriorContext() {
+        val text = "Was bedeutet das Wort Inflation? Was heißt das genau?"
+        assertFalse(LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(text))
+        assertTrue(LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(text))
+    }
+
+    @Test fun definitionBeforeASharedPlanReferenceKeepsOptionalPriorContext() {
+        val text = "Was bedeutet Inflation? Wie passt das zu unserem Plan?"
+        assertFalse(LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(text))
+        assertTrue(LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(text))
+    }
+
+    @Test fun definitionBeforeAnEnumeratedReferenceKeepsOptionalPriorContext() {
+        val text = "Was bedeutet Inflation? Und die zweite Möglichkeit?"
+        assertFalse(LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(text))
+        assertTrue(LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(text))
+    }
+
+    @Test fun definitionsOfParticlesAndMultipleStandaloneQuestionsStayIndependent() {
+        listOf(
+            "Was bedeutet genau?",
+            "Was bedeutet eigentlich?",
+            "Was heißt denn?",
+            "Was bedeutet also?",
+            "Was bedeutet jetzt?",
+            "Was bedeutet das genaue Wort Inflation?",
+            "Was bedeutet das Wort „genau“?",
+            "Was bedeutet Inflation? Was heißt das Haus auf Englisch?",
+            "Was bedeutet unser Plan?",
+            "Was bedeutet das Wort „unser Plan“?",
+            "Was bedeutet die zweite Möglichkeit?",
+            "Was bedeutet Inflation? Was bedeutet unser Plan?",
+            "Was bedeutet Inflation? Was bedeutet die zweite Möglichkeit?"
+        ).forEach {
+            assertFalse(it, LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(it))
+            assertFalse(it, LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(it))
+        }
+    }
 }

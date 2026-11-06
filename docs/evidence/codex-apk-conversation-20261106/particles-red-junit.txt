@@ -1,0 +1,52 @@
+JUnit version 4.13.2
+..........................E.E.E.E.E.....E.E
+Time: 0.233
+There were 7 failures:
+1) definitionBeforeAPlanQuestionKeepsOptionalPriorContext(at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.definitionBeforeAPlanQuestionKeepsOptionalPriorContext(LocalConversationFollowUpPolicyTest.kt:103)
+2) incidentalMeaningQuestionKeepsPriorContext(at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest)
+java.lang.AssertionError: Was bedeutet das eigentlich?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.assertFollowUp(LocalConversationFollowUpPolicyTest.kt:75)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.incidentalMeaningQuestionKeepsPriorContext(LocalConversationFollowUpPolicyTest.kt:85)
+3) namedDefinitionBeforeAConsequenceKeepsOptionalPriorContext(at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.namedDefinitionBeforeAConsequenceKeepsOptionalPriorContext(LocalConversationFollowUpPolicyTest.kt:109)
+4) conclusiveMeaningQuestionKeepsPriorContext(at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest)
+java.lang.AssertionError: Was bedeutet das also?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.assertFollowUp(LocalConversationFollowUpPolicyTest.kt:75)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.conclusiveMeaningQuestionKeepsPriorContext(LocalConversationFollowUpPolicyTest.kt:89)
+5) relativeMeaningQuestionKeepsPriorContext(at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest)
+java.lang.AssertionError: Was bedeutet das, was du gesagt hast?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.assertFollowUp(LocalConversationFollowUpPolicyTest.kt:75)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.relativeMeaningQuestionKeepsPriorContext(LocalConversationFollowUpPolicyTest.kt:97)
+6) exactMeaningQuestionKeepsPriorContext(at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest)
+java.lang.AssertionError: Was heißt das genau?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.assertFollowUp(LocalConversationFollowUpPolicyTest.kt:75)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.exactMeaningQuestionKeepsPriorContext(LocalConversationFollowUpPolicyTest.kt:80)
+7) conversationalParticleKeepsPriorContext(at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest)
+java.lang.AssertionError: Was heißt das denn?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.assertFollowUp(LocalConversationFollowUpPolicyTest.kt:75)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.conversationalParticleKeepsPriorContext(LocalConversationFollowUpPolicyTest.kt:93)
+
+FAILURES!!!
+Tests run: 36,  Failures: 7
+
+
+JUNIT_EXIT=1

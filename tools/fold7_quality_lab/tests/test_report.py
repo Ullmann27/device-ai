@@ -37,15 +37,59 @@ class AcceptanceReportTest(unittest.TestCase):
         self.assertIn("Verifizierte Modellinferenz", text)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 class UnitEvidenceTest(unittest.TestCase):
-    def test_report_shows_measured_software_tests(self):
-        unit = {"schema": "continuum.lab.unit.v1", "provenance": "host_python_unittest",
+    SHA = "a" * 40
+
+    def unit(self):
+        return {"schema": "continuum.lab.unit.v1", "provenance": "host_python_unittest",
+                "source_sha": self.SHA, "source_verified": True, "source_unchanged": True,
                 "total": 29, "passed": 29, "failed": 0, "skipped": 0, "status": "PASS"}
-        self.assertEqual(report.build(unit=unit)["gates"]["software_unit_tests"], "PASS")
+
+    def test_report_shows_measured_software_tests(self):
+        r = report.build(source_sha=self.SHA, unit=self.unit())
+        self.assertEqual(r["gates"]["software_unit_tests"], "PASS")
+
+    def test_report_cannot_relabel_missing_or_foreign_source(self):
+        for sha in (None, "", "a" * 7, "LOCAL_UNCOMMITTED", "b" * 40):
+            with self.subTest(source_sha=sha):
+                r = report.build(source_sha=sha, unit=self.unit())
+                self.assertEqual(r["gates"]["software_unit_tests"], "NOT_VERIFIED")
+
+    def test_unit_source_must_be_committed_and_match(self):
+        for sha in (None, "", "a" * 7, "LOCAL_UNCOMMITTED", "b" * 40):
+            with self.subTest(unit_source_sha=sha):
+                unit = self.unit()
+                unit["source_sha"] = sha
+                r = report.build(source_sha=self.SHA, unit=unit)
+                self.assertEqual(r["gates"]["software_unit_tests"], "NOT_VERIFIED")
+
+    def test_legacy_or_changed_checkout_cannot_attest_pass(self):
+        for field in ("source_verified", "source_unchanged"):
+            for value in (None, False, "true"):
+                with self.subTest(field=field, value=value):
+                    unit = self.unit()
+                    unit[field] = value
+                    r = report.build(source_sha=self.SHA, unit=unit)
+                    self.assertEqual(r["gates"]["software_unit_tests"], "NOT_VERIFIED")
+
+    def test_unbound_counts_remain_visible_without_pass(self):
+        unit = self.unit()
+        unit["source_sha"] = "LOCAL_UNCOMMITTED"
+        r = report.build(source_sha=self.SHA, unit=unit)
+        self.assertEqual(r["software_test_counts"]["passed"], 29)
+        self.assertIn("LOCAL_UNCOMMITTED", report.markdown(r))
+        self.assertIn("Softwaretests (Host): **NOT_VERIFIED**", report.markdown(r))
+
+    def test_bound_failure_remains_failure(self):
+        unit = self.unit()
+        unit.update(status="FAIL", failed=1, passed=28)
+        r = report.build(source_sha=self.SHA, unit=unit)
+        self.assertEqual(r["gates"]["software_unit_tests"], "FAIL")
 
     def test_report_rejects_fake_unit_schema(self):
         with self.assertRaises(ValueError):
             report.build(unit={"schema": "fake", "provenance": "host_python_unittest"})
+
+
+if __name__ == "__main__":
+    unittest.main()

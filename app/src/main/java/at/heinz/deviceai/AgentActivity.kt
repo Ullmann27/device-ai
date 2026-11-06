@@ -714,7 +714,6 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
-        workPresentationGeneration++
         workWindowHost.close(immediate = true)
         avatarDirector.clearAnimationIntents()
         ownerRecoveryReview?.close()
@@ -11277,7 +11276,6 @@ class AgentActivity : Activity() {
 
     /** [keepCockpit]: a cockpit work scene answers this request on START – record it without switching to the chat. */
     private fun addUserMessage(value: String, keepCockpit: Boolean) {
-        workPresentationGeneration++
         recordCockpitDialog(true, value)
         if (avatarBlocked) { avatarBlocked = false; refreshHologramState() }
         // Store only public, scrubbed topic labels when the owner has enabled

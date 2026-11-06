@@ -161,7 +161,11 @@ class ContinuumDocumentFlowUiTest {
         measure(root); draw(root)
     }
 
-    private fun <T> withFlow(block: (AgentActivity, View, Runtime) -> T): T {
+    private fun <T> withFlow(block: (AgentActivity, View, Runtime) -> T): T =
+        withFlowLifecycle { activity, root, runtime, _ -> block(activity, root, runtime) }
+
+    private fun <T> withFlowLifecycle(block: (AgentActivity, View, Runtime,
+        org.robolectric.android.controller.ActivityController<AgentActivity>) -> T): T {
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
@@ -179,7 +183,7 @@ class ContinuumDocumentFlowUiTest {
             framePump = CockpitHostFramePump { root }
             (field(activity, "homeView") as ContinuumHomeView).setForegroundActive(true)
             measure(root); advance(320L); measure(root); draw(root)
-            return block(activity, root, runtime)
+            return block(activity, root, runtime, controller)
         } finally {
             runtime.cancel()
             framePump?.close(); framePump = null
@@ -509,4 +513,62 @@ class ContinuumDocumentFlowUiTest {
             emptyList<CockpitWorkJournal.Episode>(), emptyList<at.heinz.deviceai.cognitive.WorkDecisionRecall.OwnerStatement>())
         assertEquals("no old focus after an empty answer", null, field(activity, "decisionFocus"))
     }
+
+    @Test fun aNormalPauseKeepsQueuedDecisionRecall() = assertQueuedDecisionDelivered { _, controller ->
+        controller.pause().resume()
+    }
+
+    @Test fun aNewOwnerMessageKeepsQueuedDecisionRecall() = assertQueuedDecisionDelivered { activity, _ ->
+        call(activity, "addUserMessage", "Danach besprechen wir den Kalender.", true)
+    }
+
+    private fun assertQueuedDecisionDelivered(interrupt: (AgentActivity,
+        org.robolectric.android.controller.ActivityController<AgentActivity>) -> Unit) =
+        withFlowLifecycle { activity, root, runtime, controller ->
+            val journal = CockpitWorkJournal(activity.filesDir)
+            journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Geprüfter Testauftrag",
+                CockpitWorkJournal.State.DRAFTED, "Beispiel.pdf")
+            val lane = field(activity, "documentIoExecutor") as java.util.concurrent.ExecutorService
+            val gate = java.util.concurrent.CountDownLatch(1)
+            lane.execute { gate.await(10, TimeUnit.SECONDS) }
+            try {
+                call(activity, "presentDecisionRecall", at.heinz.deviceai.cognitive.WorkDecisionRecall.Ask.Decisions(
+                    at.heinz.deviceai.cognitive.WorkRecall.Period.TODAY, false))
+                interrupt(activity, controller)
+            } finally { gate.countDown() }
+            lane.submit {}.get(10, TimeUnit.SECONDS)
+            advance(128L); measure(root); draw(root)
+            assertTrue("requested recall remains deliverable", field(activity, "decisionFocus") != null)
+            assertTrue("recall performs no inference", runtime.prompts.isEmpty())
+        }
+
+    @Test fun aNormalPauseKeepsQueuedPdfFailureVisible() = assertQueuedPdfFailureDelivered { _, controller ->
+        controller.pause().resume()
+    }
+
+    @Test fun aNewOwnerMessageKeepsQueuedPdfFailureVisible() = assertQueuedPdfFailureDelivered { activity, _ ->
+        call(activity, "addUserMessage", "Danach besprechen wir den Kalender.", true)
+    }
+
+    private fun assertQueuedPdfFailureDelivered(interrupt: (AgentActivity,
+        org.robolectric.android.controller.ActivityController<AgentActivity>) -> Unit) =
+        withFlowLifecycle { activity, root, runtime, controller ->
+            val journal = CockpitWorkJournal(activity.filesDir)
+            val episode = journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Letzte PDF öffnen",
+                CockpitWorkJournal.State.READ, "Verschoben.pdf", documentUri = "content://missing/document/test")
+            val lane = field(activity, "documentIoExecutor") as java.util.concurrent.ExecutorService
+            val gate = java.util.concurrent.CountDownLatch(1)
+            lane.execute { gate.await(10, TimeUnit.SECONDS) }
+            try {
+                call(activity, "readPdfDocument", android.net.Uri.parse(episode.documentUri), episode)
+                interrupt(activity, controller)
+            } finally { gate.countDown() }
+            lane.submit {}.get(10, TimeUnit.SECONDS)
+            advance(128L); measure(root); draw(root)
+            lane.submit {}.get(10, TimeUnit.SECONDS)
+            advance(128L)
+            assertTrue("PDF failure offers the requested recovery", shadowOf(activity).nextStartedActivityForResult != null)
+            assertTrue("missing PDF performs no inference", runtime.prompts.isEmpty())
+            assertEquals("failure remains in the journal", 2, journal.all().size)
+        }
 }

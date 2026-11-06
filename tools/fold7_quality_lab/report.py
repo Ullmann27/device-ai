@@ -2,6 +2,7 @@
 """German acceptance report; never promotes simulations to device proof."""
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -38,12 +39,20 @@ def build(telemetry=None, baseline=None, score=None, baseline_score=None,
              "original_apk_signature": "VERIFIED" if signature else "NOT_VERIFIED",
              "model_inference": "NOT_VERIFIED" if not score or not score.get("inference_execution_verified") else "RECEIPT_REPORTED",
              "android_host_tests": "NOT_RUN", "software_unit_tests": "NOT_RUN"}
+    unit_source_bound = False
     if unit:
         if unit.get("schema") != "continuum.lab.unit.v1" or unit.get("provenance") != "host_python_unittest":
             raise ValueError("Invalid host unittest evidence")
-        gates["software_unit_tests"] = ("PASS" if unit.get("status") == "PASS" and
-                                          unit.get("total", 0) > 0 and unit.get("failed") == 0
-                                          else "FAIL")
+        unit_source_bound = bool(isinstance(source_sha, str) and
+                                 re.fullmatch(r"[0-9a-f]{40}", source_sha) and
+                                 unit.get("source_sha") == source_sha and
+                                 unit.get("source_verified") is True and
+                                 unit.get("source_unchanged") is True)
+        gates["software_unit_tests"] = "NOT_VERIFIED"
+        if unit_source_bound:
+            gates["software_unit_tests"] = ("PASS" if unit.get("status") == "PASS" and
+                                              unit.get("total", 0) > 0 and unit.get("failed") == 0
+                                              else "FAIL")
     comparison = compare_device(baseline, telemetry) if baseline and telemetry else None
     model_comparison = compare_scores(baseline_score, score) if baseline_score and score else None
     failed = [k for k, v in checklist.items() if v == "FAIL"]
@@ -53,6 +62,8 @@ def build(telemetry=None, baseline=None, score=None, baseline_score=None,
     report_status = "REQUIRES_INDEPENDENT_SIGNOFF" if release_ready else "NOT_READY"
     return {"source_sha": source_sha, "overall": report_status, "gates": gates,
             "software_test_counts": {k: unit.get(k) for k in ("total", "passed", "failed", "skipped")} if unit else None,
+            "software_test_source": {"source_sha": unit.get("source_sha"),
+                                     "bound_to_report": unit_source_bound} if unit else None,
             "manual_self_declared": checklist, "manual_fail": failed, "manual_missing": missing,
             "telemetry_comparison": comparison, "benchmark": {
                 "provenance": score.get("provenance") if score else None,
@@ -74,6 +85,7 @@ def markdown(r):
         lines.append(f"- {label}: **{r['gates'][key]}**")
     if r["software_test_counts"]:
         lines.append("- Host-Software-Testzahlen: " + json.dumps(r["software_test_counts"], ensure_ascii=False))
+        lines.append("- Host-Quellzuordnung: " + json.dumps(r["software_test_source"], ensure_ascii=False))
     lines += ["", "## Manuelle Fold7-Abnahme (Selbstauskunft)", ""]
     for key, value in r["manual_self_declared"].items():
         lines.append(f"- {key}: {value}")

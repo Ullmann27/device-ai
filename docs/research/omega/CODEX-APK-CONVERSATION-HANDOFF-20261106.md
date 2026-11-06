@@ -70,3 +70,27 @@ Architekturverträge: EXP-05 lokaler Modellpfad, EXP-06 Provenienz und EXP-11 be
 Die Root-Review reproduzierte eine weitere eigenständige Frage: `Was bedeutet das Leben?` wurde wegen des Artikels `das` noch als zwingende Anschlussfrage behandelt. Code-Nachtrag `1d47b181659dcb24df8b7733a330773555493ff1` begrenzt das demonstrative `das` auf Frageende oder eine konkrete Folgephrase (`für`, `jetzt`, `nun`, `dann`, `konkret`); benannte Nomen bleiben eigenständige Fragen. Nicht benannte Begriffe (`das Wort?`) und echte Bezüge (`Was folgt daraus logisch?`) bleiben auf früheren Kontext angewiesen. Derselbe Referenzausdruck wird am Nachrichtenanfang und innerhalb einer Nachricht verwendet.
 
 Mit dem zusätzlichen Gegenbeispiel: **RED 28 Tests, 1 Fehler** auf unverändertem Code `805b0b694714d3ec15c88b8068f93228a9488b25`; **GREEN 28/28** auf `1d47b181659dcb24df8b7733a330773555493ff1` (WorkDecisionRecall 18, WorkRecall 5, FollowUpPolicy 5). Belege: `red-article-definition.txt`, `green-article-definition.txt`, `source-article-sha256.txt` im obigen Belegverzeichnis. Die ursprünglichen RED/GREEN-Belege bleiben unverändert erhalten. Keine weiteren Produktionsdateien geändert.
+
+## Nachtrag: PR #575, natürliche Anschlussfragen
+
+Die Review benannte zwei reproduzierte Lücken der begrenzten Folgefrageerkennung: Die Formen `Was heißt das genau?`, `Was bedeutet das eigentlich/also?`, `Was heißt das denn?` und `Was bedeutet das, was du gesagt hast?` verloren ihren Kontextbezug. Außerdem unterdrückte eine Definitionsfrage am Nachrichtenanfang die folgende Konsequenzfrage, etwa `Was bedeutet Inflation? Was bedeutet das für unseren Plan?`.
+
+- RED-Testcommit: `0ae9c11c7eb51086658ebf6799eb1277c611be63`; unveränderte Produktion, **36 Tests: 7 Fehler, 29 bestanden**.
+- GREEN-Codecommit: `8f340ddcec28aaf7e2cafa83861ee0bfb93b206c`; **36/36 bestanden**, keine Fehler oder Skips. WorkDecisionRecall 18, WorkRecall 5, FollowUpPolicy 13.
+- Nur `LocalConversationFollowUpPolicy.kt` wurde produktiv verändert: vier explizite Fragepartikeln und der Relativsatz `das, was …` ergänzen den vorhandenen Referenzausdruck. Im weichen Kontextpfad prüft eine anfängliche Definition weiterhin auf eine spätere Konsequenzfrage.
+- Der harte Ohne-Kontext-Filter für Nachrichten mit anfänglicher Definition bleibt unverändert. Eigenständige Definitionen von `genau`, `eigentlich`, `denn`, `also`, `jetzt`, Artikel mit Nomen und mehrere eigenständige Fragen bleiben ohne Kontextpflicht.
+
+Echter lokaler Kotlin/JVM-Lauf derselben sechs Produktionsklassen mit den drei Testklassen; keine Stubs. Compiler jeweils Exit 0, RED JUnit Exit 1, GREEN JUnit Exit 0. Toolchain wie oben. Belege im bestehenden Verzeichnis: `particles-red-compile.txt`, `particles-red-junit.txt`, `particles-green-compile.txt`, `particles-green-junit.txt`, `particles-source-sha256.txt`. Die Hashliste bindet beide Quellstände einschließlich der Tests.
+
+Der Nachweis betrifft die Kontextentscheidung der vorhandenen Policy. Es wurde keine Modellantwort erzeugt und kein reales Sprach-, Geräte- oder Werkzeugergebnis behauptet. `LocalFollowUpTaskFrame` und die weitere Modellanbindung wurden in diesem Zusatz nicht verändert; Android-/APK-Regression führt Root auf dem integrierten Stand aus.
+
+### Abschluss desselben Reviews: Definitionsausnahme je Satz
+
+Die Folgeprüfung reproduzierte zwei weitere Mehrsatzfälle auf dem obigen Zwischenstand: `Was bedeutet Inflation? Wie passt das zu unserem Plan?` und `Was bedeutet Inflation? Und die zweite Möglichkeit?`. Die erste Reparatur hatte spätere Rückbezüge noch auf Konsequenzfragen begrenzt.
+
+- RED-Testcommit `ed479954cdf6a54554f07e3adc89298e1ae3da6a`: **38 Tests, 2 Fehler, 36 bestanden**.
+- Finaler Codecommit `58fbeaca2b18b87f96e06fa85163b953228d18eb`: **38/38 bestanden**, keine Fehler oder Skips (WorkDecisionRecall 18, WorkRecall 5, FollowUpPolicy 15).
+
+`benefitsFromPreviousOwnerTurn` prüft die Definitionsausnahme jetzt für jeden Satz einzeln; anschließend gelten dessen bestehende harten und weichen Kontextregeln. Die begrenzte Erkennung nutzt Satzzeichen mit folgendem Leerraum. Der harte Filter `requiresPreviousOwnerTurn` bleibt unverändert. Die zusätzlichen Kontrollen prüfen isolierte Definitionen mit `unser Plan` oder `die zweite Möglichkeit` sowie mehrere aufeinanderfolgende reine Definitionsfragen: Alle bleiben ohne frühere Kontextpflicht. Keine neue Gedächtnis-, Reasoning- oder Modellarchitektur.
+
+Reale Compiler-/JUnit-Ausgänge wie zuvor: RED 0/1, GREEN 0/0. Belege: `sentences-red-compile.txt`, `sentences-red-junit.txt`, `sentences-green-compile.txt`, `sentences-green-junit.txt`, `sentences-source-sha256.txt`. Der vorherige 36er-Lauf bleibt als Zwischenstand erhalten; der finale gezielte Umfang ist **38 Tests**. Modell-, Audio-, Geräte- und APK-Aussagen bleiben von diesen JVM-Belegen ausgeschlossen.

@@ -17,11 +17,17 @@ Alle Befehle von der Repository-Wurzel aus:
 
 ```bash
 python3 tools/fold7_quality_lab/fold7.py host
-python3 tools/fold7_quality_lab/run_unit.py --output ./local-evidence/host-tests.json
-python3 tools/fold7_quality_lab/report.py --unit-results ./local-evidence/host-tests.json --output ./local-evidence/abnahme.md
+lab_evidence="$(mktemp -d)"
+lab_source_sha="$(git rev-parse HEAD)"
+python3 tools/fold7_quality_lab/run_unit.py --source-sha "$lab_source_sha" --output "$lab_evidence/host-tests.json"
+python3 tools/fold7_quality_lab/report.py --source-sha "$lab_source_sha" --unit-results "$lab_evidence/host-tests.json" --output "$lab_evidence/abnahme.md"
 ```
 
-Die erste hostseitige Ausführung ergab **31/31 PASS, 0 FAIL, 0 SKIP** (Python 3.13.5, 06.11.2026). Das sind ausschließlich Softwaretests der unabhängigen Werkzeuge, **keine Android- oder Inferenztests**. Die Werkzeuge überschreiben keine bestehenden Ergebnisse; neue Dateinamen pro Sitzung verwenden. `local-evidence` nicht hochladen, wenn Geräteinformationen oder Benchmark-Kontrollen enthalten sind.
+Die historische Host-Quittung meldet **31/31 PASS, 0 FAIL, 0 SKIP** (Python 3.13.5, 06.11.2026), aber `source_sha: LOCAL_UNCOMMITTED`. Sie ist **nicht an einen Commit gebunden**; die frühere Zuordnung zu `2949893a…` im Erstbericht ist als `NOT_VERIFIED` korrigiert. Die Zahlen betreffen ausschließlich Softwaretests der unabhängigen Werkzeuge, **keine Android- oder Inferenztests**.
+
+`run_unit.py` ermittelt den tatsächlichen Git-HEAD und kontrolliert vor und nach den Tests den sauberen Checkout sowie die Labor-Python-Dateien gegen die committed Git-Blobs. `--source-sha` ist nur eine Erwartung und kann den beobachteten SHA nicht ersetzen. Ohne Git, bei uncommittierten oder während des Laufs geänderten Quellen bleibt das Ergebnis `NOT_VERIFIED` mit Exitcode 1, auch wenn die Testzahlen erfolgreich sind. Die Ausgaben gehören außerhalb des Checkouts. Ein Bericht attestiert Host-PASS nur bei identischem vollständigem SHA und bestätigter Quellenbindung; ältere Quittungen ohne diese Prüfung bleiben ungebunden. Dies ist lokale Host-Provenienz, keine kryptographisch signierte Ausführungsquittung.
+
+Die Werkzeuge überschreiben keine bestehenden Ergebnisse; neue Dateinamen pro Sitzung verwenden. `local-evidence` nicht hochladen, wenn Geräteinformationen oder Benchmark-Kontrollen enthalten sind.
 
 ## Echte Gerätediagnose: ausschließlich nach Einwilligung
 
