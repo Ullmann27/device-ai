@@ -31,3 +31,11 @@ Danach Falten, Drehen, Schriftgröße 200 %.
    jeweils als „NATIVE ANDROID / FILAMENT“ gekennzeichnet; Host-Aufnahmen bleiben „HOST“.
 
 Ziel: gleichmäßige 60 fps unter geeigneten Gerätebedingungen (Budget ≈ 16,7 ms); höhere Bildraten nur mit Messung.
+
+## One UI 9 / Galaxy AI – Anschlussmöglichkeiten (Recherche 06.11.2026, nicht umgesetzt)
+
+| Quelle | Erkenntnis | Möglicher Anschluss in Continuum | Status / Voraussetzung |
+|---|---|---|---|
+| [Samsung Newsroom: Rollout One UI 9](https://news.samsung.com/global/samsung-begins-official-rollout-of-one-ui-9-bringing-the-latest-galaxy-experiences-to-more-devices), [PhoneArena](https://www.phonearena.com/one-ui-9-release-date-features-news-compatible-phones), [Digit](https://www.digit.in/features/general/one-ui-9-with-new-galaxy-ai-features-unveiled-at-unpacked-2026-now-nudge-gemini-notebook-and-more.html) | One UI 9 (Android 17) rollt seit Juli/September 2026 aus; Galaxy AI baut auf Gemini auf | – | **Kein offizielles Galaxy-AI-SDK für Drittanbieter-Apps gefunden**; Berichte über „agentische“ Funktionen für 9.5 sind unbestätigt ([NPowerUser](https://nokiapoweruser.com/samsung-one-ui-9-5-agentic-ai-features-leak/)) |
+| [Google: ML Kit GenAI APIs](https://developers.google.com/ml-kit/genai) | Zusammenfassen/Umschreiben/Korrektur/Bildbeschreibung on-device über Gemini Nano (AICore); Galaxy Z Fold7 in der Geräteliste (Listen ändern sich); nur im Vordergrund, BUSY bei zu vielen Anfragen | zweiter, kostenloser On-Device-Weg für „Zusammenfassung als Entwurf“, wenn kein LiteRT-Modell geladen ist | **Gerät prüfen:** Verfügbarkeit (`checkFeatureStatus`), unterstützte Sprachen (Deutsch?) und Bibliotheksversion verifizieren, bevor eine Abhängigkeit aufgenommen wird |
+| [Android: AppFunctions](https://developer.android.com/ai/appfunctions?hl=de) | Android 16+; Apps stellen Funktionen als Werkzeuge für Agenten (z. B. Gemini) bereit; experimentell, Gemini-Anbindung private Vorschau (Mai 2026); Aufrufer brauchen `EXECUTE_APP_FUNCTIONS` | Continuum-Funktionen („Arbeitsstand abrufen“, „PDF zusammenfassen“) für den System-Assistenten anbieten | nur mit freigegebener Gemini-Anbindung auf dem Gerät nutzbar; Freigaben/Signatur unverändert lassen |

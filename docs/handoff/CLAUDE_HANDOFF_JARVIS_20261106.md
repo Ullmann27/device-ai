@@ -15,6 +15,9 @@ keine Signatur-/Paketänderung, kein Main-Merge. PR #571 bleibt als Draft offen 
 | 597603e7 | Entwurf über den vorhandenen lokalen Modellpfad (nur Dokumenttext, Budget 7 900), Ergebnisfläche, Bearbeiten-Dialog, Speichern über Android; ehrliche Zustände ohne Modell/Text; eigener Dokument-Executor |
 | (dieser Commit) | Dokumentfenster zweispaltig, dunkle Unterlage unter dem Fensterglas, Uhr/Datum nie gekürzt; Host-Belege `docs/evidence/claude-jarvis-document-20261106/` |
 
+| c8044585 | Arbeitsjournal (`CockpitWorkJournal`): Auftrag in deinen Worten, Quelle, tatsächlich erreichter Stand (gelesen / Entwurf in Arbeit / erstellt / gespeichert / abgebrochen / kein Modell / fehlgeschlagen), Bearbeitungen, nächster offener Schritt – überlebt den Neustart. „Wo waren wir gestern/heute …“, „Was ist noch offen“ → Antwort + VERLAUF-Fläche, Herkunft „Erinnerung, kein Modelllernen“. „Nimm die ausgewählte PDF …“ nutzt die zuvor gewählte Datei (dauerhafte Android-Lesefreigabe). Cockpit-Szenen bleiben auf START. |
+| d5c2d7f2 | „Nein, ich meinte den letzten Entwurf“ (auch: vorige PDF, Entwurf von gestern): Auflösung im Arbeitsjournal; ein laufender falscher Entwurf endet nach STOP-Regeln (ABGEBROCHEN), der gemeinte Entwurf erscheint, deine Korrektur bleibt am korrigierten Auftrag. |
+
 ## Bekannte, vorbestehende Fehler (nicht von heute, belegt)
 
 - `ContinuumReferenceCockpitUiTest`: 5/12 rot („Tap must open Gedächtniszentrum“) – identisch auf `61ab95e1` (Tagesbeginn).
@@ -30,4 +33,8 @@ keine Signatur-/Paketänderung, kein Main-Merge. PR #571 bleibt als Draft offen 
 2. App-Kristall/Prisma für das echte App-Symbol (noch nicht begonnen).
 3. Avatar-Bot: Paket 2 (Zuhören/Denken-Blick) gestoppt am Nutzungslimit; Arbeitsstand in seiner Worktree, fortsetzbar.
 4. E-Mail-Antwortentwurf auf derselben Grundlage (Dokument → Analyse → Entwurf → Speichern) – noch nicht angeschlossen.
+6. Gedächtnis: Projekte/Entscheidungen/überholte Angaben über den Arbeitsverlauf hinaus (vorhandene `ContinuumTemporalMemory`
+   anbinden), gelernte Handlungsregeln aus Korrekturen mit Herkunft, offene Aufgaben dezent in Kugel/Status, Hervorheben
+   erst verarbeiteter Passagen, Dokument tritt hinter den Entwurf zurück (zwei Ebenen) – nicht begonnen.
+7. One UI 9: ML Kit GenAI (Gemini Nano) als On-Device-Zusammenfassung prüfen; AppFunctions erst mit Gemini-Freigabe – siehe Recherche-Dokument.
 5. Lasseter-Quelle als Textfassung beschaffen (Scan ohne Textebene); ADPF-Details (Headroom/PerformanceHint) aus der Referenz belegen.
