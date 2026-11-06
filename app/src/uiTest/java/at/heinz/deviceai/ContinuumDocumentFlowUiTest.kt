@@ -124,7 +124,28 @@ class ContinuumDocumentFlowUiTest {
         val bitmap = Bitmap.createBitmap(884, 760, Bitmap.Config.ARGB_8888)
         try { root.draw(Canvas(bitmap)) } finally { bitmap.recycle() }
     }
-    private fun page() = Bitmap.createBitmap(200, 280, Bitmap.Config.ARGB_8888).apply { eraseColor(Color.WHITE) }
+    /** A fixture page that says what it is: no owner document, no invented content. */
+    private fun page() = Bitmap.createBitmap(200, 280, Bitmap.Config.ARGB_8888).apply {
+        eraseColor(Color.WHITE)
+        val c = Canvas(this)
+        val ink = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(20, 28, 44); textSize = 14f }
+        c.drawText("Beispiel · Host-Testseite", 16f, 34f, ink)
+        ink.textSize = 9f
+        listOf("Projektübersicht Continuum.", "Ziel: ein lokales Cockpit", "auf dem Fold7.").forEachIndexed { i, line ->
+            c.drawText(line, 16f, 68f + i * 18f, ink)
+        }
+    }
+
+    /** HOST evidence (-PcontinuumUiEvidenceDir): Robolectric software drawing, not a device or Filament frame. */
+    private fun capture(root: View, name: String) {
+        val dir = System.getProperty("continuum.ui.evidenceDir") ?: return
+        val bitmap = Bitmap.createBitmap(884, 760, Bitmap.Config.ARGB_8888)
+        try {
+            root.draw(Canvas(bitmap))
+            java.io.File(dir).apply { mkdirs() }.resolve("$name.png").outputStream()
+                .use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
+        } finally { bitmap.recycle() }
+    }
 
     /** Lets the real background lanes (model executor, journal I/O) finish while the main looper keeps turning. */
     private fun until(root: View, what: String, condition: () -> Boolean) {
@@ -194,13 +215,21 @@ class ContinuumDocumentFlowUiTest {
         assertTrue("JARVIS reads the document while the model works", reading(activity))
         assertEquals(at.heinz.deviceai.avatar.AvatarState.THINKING,
             (field(activity, "avatarDirector") as at.heinz.deviceai.avatar.AvatarDirector).state)
+        val again = descendants(root).single { it.tag == "jarvis-document-start-draft" }
+        assertFalse("ENTWURF ERSTELLEN is off while the draft runs", again.isEnabled)
+        call(activity, "startDocumentDraft", scene.doc)
+        advance(64L)
+        assertEquals("a second start changes nothing", 1, runtime.prompts.size)
+        assertEquals("the window keeps saying what really happens", "Entwurf wird lokal erstellt …", status(root))
         advance(4_000L); measure(root); draw(root)
         assertTrue("4 s later – far past a glance – he still reads", reading(activity))
+        capture(root, "flow-1-reading-while-the-model-works")
 
         val documentWindow = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
         val documentBox = field(documentWindow, "destination") as android.graphics.RectF
         runtime.answer("Kernaussagen: lokales Cockpit auf dem Fold7. Offen: Gerätetest.")
         until(root, "the draft surface") { descendants(root).any { it.tag == "jarvis-draft" && it.isShown } }
+        capture(root, "flow-2-draft-unfolds-out-of-the-document")
         assertFalse("the reading ends with the work", reading(activity))
         val draftWindow = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
         val from = field(draftWindow, "origin") as android.graphics.RectF
@@ -215,6 +244,8 @@ class ContinuumDocumentFlowUiTest {
         until(root, "the journal records the draft") { state(scene) == CockpitWorkJournal.State.DRAFTED }
         assertEquals("the cockpit stays the stage", ContinuumWorkArea.START, field(activity, "activeWorkArea"))
         assertFalse(field(activity, "busy") as Boolean)
+        advance(1_200L); measure(root); draw(root)
+        capture(root, "flow-3-draft-with-source-card")
     }
 
     @Test fun aFailedModelRunReadsAsFailedNeverAsRunning() = withFlow { activity, root, runtime ->
@@ -228,6 +259,8 @@ class ContinuumDocumentFlowUiTest {
         assertEquals("the document window stays with its honest state", ContinuumWorkArea.START, field(activity, "activeWorkArea"))
         assertTrue(descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
         assertEquals("no stale draft turn is left", null, field(activity, "documentDraftTurn"))
+        assertTrue("the owner can start it again", descendants(root).single { it.tag == "jarvis-document-start-draft" }.isEnabled)
+        capture(root, "flow-4-failed-draft-says-so")
     }
 
     @Test fun stopDuringTheDraftEndsReadingWindowAndRunAsAborted() = withFlow { activity, root, runtime ->
@@ -244,5 +277,7 @@ class ContinuumDocumentFlowUiTest {
         val chat = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>().map { it.text.toString() }
         assertTrue("STOP is named as the owner's STOP: $chat", chat.any { it == "Entwurf mit STOP abgebrochen – nichts gespeichert." })
         assertTrue("never an undetermined model error: $chat", chat.none { it.startsWith("Lokaler Modellfehler") })
+        advance(1_200L); measure(root); draw(root)
+        capture(root, "flow-5-after-stop-cockpit-restored")
     }
 }

@@ -35,7 +35,7 @@ private val EDGE_FLASH_FILL = Fill.Solid(Colors.cyanSoft)
  * central ridge and a glint that sweeps across while the window unfolds. Paths and fills are built once (no per-frame
  * allocation); the painter caches their Android paths and shaders.
  */
-private const val CRYSTAL_H = EMBLEM_DP * 1.25f
+private const val CRYSTAL_H = EMBLEM_DP * 1.5f
 private const val CRYSTAL_W = CRYSTAL_H * .64f
 private const val CRYSTAL_S = CRYSTAL_H * .46f
 private val CRYSTAL_OUTLINE = VectorPath().moveTo(0f, -CRYSTAL_H).lineTo(CRYSTAL_W, -CRYSTAL_S).lineTo(CRYSTAL_W, CRYSTAL_S)
@@ -470,14 +470,20 @@ class JarvisWorkWindow(
         canvas.translate(x, y)
         painter.fillCircle(0f, 0f, CRYSTAL_H * 1.2f, EMBLEM_HALO_FILL, .06f * a)
         painter.fillPath(CRYSTAL_OUTLINE, EMBLEM_DISC_FILL, .78f * a)
-        painter.fillPath(CRYSTAL_LEFT, CRYSTAL_LEFT_FILL, .30f * a)
-        painter.fillPath(CRYSTAL_RIGHT, CRYSTAL_RIGHT_FILL, .22f * a)
-        val half = (CRYSTAL_W * .74f).roundToInt()
+        painter.fillPath(CRYSTAL_LEFT, CRYSTAL_LEFT_FILL, .46f * a)
+        painter.fillPath(CRYSTAL_RIGHT, CRYSTAL_RIGHT_FILL, .34f * a)
+        // Girdle facets above and below the icon: the prism reads as a cut crystal, not a flat badge.
+        val girdle = CRYSTAL_S * .55f
+        painter.drawLine(-CRYSTAL_W, -CRYSTAL_S, 0f, -girdle, .8f, CRYSTAL_RIM_FILL, .55f * a)
+        painter.drawLine(0f, -girdle, CRYSTAL_W, -CRYSTAL_S, .8f, CRYSTAL_RIM_FILL, .55f * a)
+        painter.drawLine(-CRYSTAL_W, CRYSTAL_S, 0f, girdle, .8f, CRYSTAL_RIM_FILL, .4f * a)
+        painter.drawLine(0f, girdle, CRYSTAL_W, CRYSTAL_S, .8f, CRYSTAL_RIM_FILL, .4f * a)
+        val half = (CRYSTAL_W * .52f).roundToInt()
         icon.setBounds(-half, -half, half, half)
         icon.alpha = (a * 255f).roundToInt().coerceIn(0, 255)
         icon.draw(canvas)
-        painter.drawLine(0f, -CRYSTAL_H, 0f, -half.toFloat(), .7f, CRYSTAL_RIM_FILL, .5f * a)
-        painter.drawLine(0f, half.toFloat(), 0f, CRYSTAL_H, .7f, CRYSTAL_RIM_FILL, .5f * a)
+        painter.drawLine(0f, -CRYSTAL_H, 0f, -girdle, .7f, CRYSTAL_RIM_FILL, .6f * a)
+        painter.drawLine(0f, girdle, 0f, CRYSTAL_H, .7f, CRYSTAL_RIM_FILL, .6f * a)
         // A glint sweeps once across the prism while the window unfolds (its height follows the silhouette).
         val sweep = (trailProgress * 1.4f).coerceIn(0f, 1f)
         if (sweep in .02f..0.98f) {
@@ -486,7 +492,7 @@ class JarvisWorkWindow(
             painter.drawLine(gx, top, gx, -top, 1.2f, TRAIL_HEAD_FILL,
                 .55f * a * kotlin.math.sin(Math.PI.toFloat() * sweep))
         }
-        painter.strokePath(CRYSTAL_OUTLINE, 1f, CRYSTAL_RIM_FILL, .9f * a)
+        painter.strokePath(CRYSTAL_OUTLINE, 1.2f, CRYSTAL_RIM_FILL, a)
         canvas.restoreToCount(save)
     }
 

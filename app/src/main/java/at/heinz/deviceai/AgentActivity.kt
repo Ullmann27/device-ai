@@ -1960,6 +1960,12 @@ class AgentActivity : Activity() {
     private fun showDocumentDraftStatus(text: String) {
         documentDraftStatus?.apply { this.text = text; visibility = View.VISIBLE }
     }
+    /** ENTWURF ERSTELLEN of the open document window: off while its draft runs, on again after a failure or STOP. */
+    private var documentDraftAction: View? = null
+
+    private fun showDocumentDraftAction(enabled: Boolean) {
+        documentDraftAction?.apply { isEnabled = enabled; alpha = if (enabled) 1f else .45f }
+    }
     private var documentDraftTurn: DocumentDraftTurn? = null
     /** Request of a draft the owner stopped: its cancelled run is reported as STOP, not as a model error. */
     private var stoppedDraftRequest: String? = null
@@ -1973,6 +1979,9 @@ class AgentActivity : Activity() {
         val inCockpit = workWindowHost.isShowing
         val prompt = at.heinz.deviceai.cognitive.DocumentDraftPrompt.build(doc.name, doc.text)
         when {
+            // A second tap while this draft runs changes nothing: the window keeps saying what really happens.
+            documentDraftTurn != null -> addAssistantMessage("Der Entwurf läuft bereits – mit STOP brichst du ihn ab.",
+                false, keepCockpit = inCockpit)
             prompt == null -> {
                 showDocumentDraftStatus("Für einen Entwurf fehlt der Dokumenttext.")
                 addAssistantMessage("Für einen Entwurf fehlt der Dokumenttext.", false, keepCockpit = inCockpit)
@@ -1994,7 +2003,10 @@ class AgentActivity : Activity() {
                 documentDraftTurn = DocumentDraftTurn(prompt, doc.name, workEpisodeId, doc.firstPage)
                 runLocal(prompt.request, resolvedQuestion = prompt.question)
                 // While the model really works on the document, JARVIS reads it in its window (ends with the work).
-                if (documentDraftTurn != null) workWindowHost.workStarted()
+                if (documentDraftTurn != null) {
+                    workWindowHost.workStarted()
+                    showDocumentDraftAction(enabled = false)
+                }
             }
         }
     }
@@ -2069,6 +2081,7 @@ class AgentActivity : Activity() {
         val why = if (at.heinz.deviceai.localmodel.LocalModelThermalGuard.isThermal(reason)) "wegen Gerätewärme gestoppt"
             else "das lokale Modell meldete einen Fehler"
         showDocumentDraftStatus("Entwurf fehlgeschlagen – $why. Nichts gespeichert.")
+        showDocumentDraftAction(enabled = true)
     }
 
     private fun editDraft(target: TextView) {
@@ -2212,9 +2225,10 @@ class AgentActivity : Activity() {
         }
         facts.addView(draftStatus, matchWidth(top = 6))
         documentDraftStatus = draftStatus
+        documentDraftAction = null
         if (hasText && !wantsDraft) facts.addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this, "ENTWURF ERSTELLEN") {
             startDocumentDraft(doc)
-        }.apply { tag = "jarvis-document-start-draft" }, matchWidth(top = 10))
+        }.apply { tag = "jarvis-document-start-draft"; documentDraftAction = this }, matchWidth(top = 10))
         val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown }
         val emblem = doc.firstPage?.let { android.graphics.drawable.BitmapDrawable(resources, it) }
         val window = home?.let {

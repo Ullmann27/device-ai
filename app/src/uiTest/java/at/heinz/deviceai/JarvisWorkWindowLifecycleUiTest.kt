@@ -213,6 +213,11 @@ class JarvisWorkWindowLifecycleUiTest {
                 try {
                     f.root.draw(Canvas(bitmap))
                     bitmap.getPixels(pixels, 0, 884, 0, 0, 884, 760)
+                    // HOST evidence: before (glass disc) / after (crystal), same frame and route.
+                    System.getProperty("continuum.ui.evidenceDir")?.let { dir ->
+                        java.io.File(dir).apply { mkdirs() }.resolve(if (crystal) "crystal-after.png" else "crystal-before-disc.png")
+                            .outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                    }
                 } finally { bitmap.recycle() }
             }
             return pixels
