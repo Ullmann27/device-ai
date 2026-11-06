@@ -29,6 +29,8 @@ import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowAlertDialog
 import org.robolectric.shadows.ShadowChoreographer
+import org.robolectric.shadows.ShadowViewRootImpl
+import org.robolectric.shadow.api.Shadow
 import java.time.Duration
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
@@ -481,7 +483,8 @@ class ContinuumSystemStatusWorkWindowUiTest {
      * Fold7 open item (06.11.2026), HOST, REAL_DEVICE_NOT_RUN: AgentActivity handles screen size and orientation
      * itself (manifest configChanges), so a work window can be open while the owner rotates the inner screen or folds
      * to the cover screen. Neither the window at its old geometry nor a cleared deck may survive the change: afterwards
-     * the window is gone, no tile or row is left hidden, TalkBack offers all of them and a tile opens again.
+     * the window is gone, no tile or row is left hidden, TalkBack offers all of them, and the same centre opens again
+     * as a work window on the new screen (inner portrait and cover included).
      */
     @Test fun rotatingOrFoldingWithAnOpenWindowAlwaysGivesTheDeckBack() {
         val app = RuntimeEnvironment.getApplication()
@@ -514,13 +517,13 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 AgentActivity::class.java.getDeclaredMethod("navigateDashboardTarget", String::class.java)
                     .apply { isAccessible = true }.invoke(activity, "memory")
                 advance(640L); measure(root, width, height); draw(root)
-                val opened = windowShown()
-                println("CONFIG_CHANGE_TO_${qualifiers}_WITH_OPEN_WINDOW=$opened")
-                if (opened) assertEquals("an open window cleared the deck before $qualifiers", 0, deck())
-                else ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
+                assertTrue("a work window is open before $qualifiers", windowShown())
+                assertEquals("the open window cleared the deck before $qualifiers", 0, deck())
                 RuntimeEnvironment.setQualifiers(qualifiers)
                 controller.configurationChange(Configuration(app.resources.configuration))
                 assertSame("the manifest keeps the Activity across $qualifiers", activity, controller.get())
+                // As on the device: the window manager reports the new window frame to the view hierarchy.
+                Shadow.extract<ShadowViewRootImpl>(root.parent).callDispatchResized()
                 width = w; height = h
                 measure(root, width, height); advance(640L + 480L); measure(root, width, height); draw(root)
                 assertFalse("no window stays at the old geometry after $qualifiers", windowShown())
@@ -540,4 +543,5 @@ class ContinuumSystemStatusWorkWindowUiTest {
             runCatching { controller.close() }
         }
     }
+
 }

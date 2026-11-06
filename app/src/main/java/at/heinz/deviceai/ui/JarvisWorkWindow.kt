@@ -30,6 +30,9 @@ class JarvisWorkWindow(
     private val requestFrame: () -> Unit
 ) : FrameLayout(context) {
     private enum class Phase { CLOSED, OPENING, OPEN, CLOSING }
+
+    /** Where the window unfolds from and to, and what it must leave visible; local overlay pixels. */
+    class Plan(val origin: RectF, val destination: RectF, val protectedBounds: List<RectF>)
     private val density = resources.displayMetrics.density
     private val origin = RectF()
     private val destination = RectF()
@@ -56,6 +59,9 @@ class JarvisWorkWindow(
     private var emblem: android.graphics.drawable.Drawable? = null
     private var onOpened: () -> Unit = {}
     private var onClosed: () -> Unit = {}
+    private var accent = Colors.cyan
+    /** Host's fresh plan for the size the overlay really has (see onSizeChanged). */
+    private var refit: (() -> Plan?)? = null
     private val painter = AndroidContinuumPainter(context.assets)
     private val opening = JarvisMotion.Presets.widget(JarvisMotion.Direction.DEPTH)
         .copy(distanceDp = 0f, fromScale = 0f)
@@ -120,37 +126,25 @@ class JarvisWorkWindow(
     fun open(body: View, origin: RectF, destination: RectF, title: String,
              protectedBounds: List<RectF> = emptyList(),
              onOpened: () -> Unit = {}, onClosed: () -> Unit = {}, accent: Int = Colors.cyan,
-             emblem: android.graphics.drawable.Drawable? = null): Boolean {
-        if (disposed || deliveringFrame || isInLayout || !JarvisWorkWindowGeometry.valid(origin) ||
-            !JarvisWorkWindowGeometry.valid(destination)) return false
-        val pixels = RectF(ceil(destination.left), ceil(destination.top), floor(destination.right), floor(destination.bottom))
-        if (pixels.width() < 200f * density || pixels.height() < 160f * density ||
-            protectedBounds.any { !JarvisWorkWindowGeometry.finite(it) ||
-                (JarvisWorkWindowGeometry.valid(it) && RectF.intersects(it, pixels)) } ||
-            (body.parent != null && body.parent !== scroll) ||
-            (width > 0 && height > 0 && !RectF(0f, 0f, width.toFloat(), height.toFloat()).contains(pixels))) return false
+             emblem: android.graphics.drawable.Drawable? = null, refit: (() -> Plan?)? = null): Boolean {
+        if (disposed || deliveringFrame || isInLayout) return false
+        val pixels = usable(origin, destination, protectedBounds) ?: return false
+        if (body.parent != null && body.parent !== scroll) return false
         generation++
         pendingCleanup?.let { removeCallbacks(it) }
         pendingCleanup = null
         this.onClosed = {}
         close(immediate = true)
         scroll.removeAllViews()
-        this.origin.set(origin)
-        this.destination.set(pixels)
-        this.protectedBounds = protectedBounds.filter(JarvisWorkWindowGeometry::valid).map(::RectF)
         this.onOpened = onOpened
         this.onClosed = onClosed
         this.emblem = emblem?.mutate()
+        this.accent = accent
+        this.refit = refit
         titleView.text = title
         scroll.addView(body, FrameLayout.LayoutParams(-1, -2))
         scroll.scrollTo(0, 0)
-        panel.layoutParams = LayoutParams(pixels.width().toInt(), pixels.height().toInt()).apply {
-            leftMargin = pixels.left.toInt()
-            topMargin = pixels.top.toInt()
-        }
-        edge = Fill.Linear(origin.centerX() / density, origin.centerY() / density,
-            pixels.centerX() / density, pixels.centerY() / density,
-            intArrayOf(accent, Colors.cardRimEnd, Colors.violet, Colors.magenta))
+        place(origin, pixels, protectedBounds)
         phase = Phase.OPENING
         startedAt = null
         lastFrameTime = null
@@ -166,6 +160,53 @@ class JarvisWorkWindow(
         requestFrame()
         return true
     }
+
+    /** Pixel destination if it is a usable window that leaves the protected areas free and fits the overlay. */
+    private fun usable(origin: RectF, destination: RectF, protectedBounds: List<RectF>): RectF? {
+        if (!JarvisWorkWindowGeometry.valid(origin) || !JarvisWorkWindowGeometry.valid(destination)) return null
+        val pixels = RectF(ceil(destination.left), ceil(destination.top), floor(destination.right), floor(destination.bottom))
+        if (pixels.width() < 200f * density || pixels.height() < 160f * density ||
+            protectedBounds.any { !JarvisWorkWindowGeometry.finite(it) ||
+                (JarvisWorkWindowGeometry.valid(it) && RectF.intersects(it, pixels)) } ||
+            (width > 0 && height > 0 && !RectF(0f, 0f, width.toFloat(), height.toFloat()).contains(pixels))) return null
+        return pixels
+    }
+
+    private fun place(origin: RectF, pixels: RectF, protectedBounds: List<RectF>) {
+        this.origin.set(origin)
+        this.destination.set(pixels)
+        this.protectedBounds = protectedBounds.filter(JarvisWorkWindowGeometry::valid).map(::RectF)
+        panel.layoutParams = LayoutParams(pixels.width().toInt(), pixels.height().toInt()).apply {
+            leftMargin = pixels.left.toInt()
+            topMargin = pixels.top.toInt()
+        }
+        edge = Fill.Linear(origin.centerX() / density, origin.centerY() / density,
+            pixels.centerX() / density, pixels.centerY() / density,
+            intArrayOf(accent, Colors.cardRimEnd, Colors.violet, Colors.magenta))
+    }
+
+    /**
+     * The first layout came at another size than the one the window was planned for (a rotation, fold or keyboard
+     * resize was still pending when the owner touched). Instead of vanishing without a trace, the window asks its host
+     * for a plan on the real size once the layout has settled; only without a usable plan does it close.
+     */
+    private fun refitAfterLayout() {
+        val token = generation
+        post {
+            if (token != generation || !isShowing) return@post
+            // The host plans on its fresh geometry; without a host plan the window refits within its own protected areas.
+            val plan = refit.let { host -> if (host != null) host() else selfPlan() }
+            val pixels = plan?.let { usable(it.origin, it.destination, it.protectedBounds) }
+            if (plan == null || pixels == null) { close(immediate = true); return@post }
+            place(plan.origin, pixels, plan.protectedBounds)
+            applyFrame()
+            updateRoute()
+            requestFrame()
+        }
+    }
+
+    private fun selfPlan(): Plan? = JarvisWorkWindowGeometry.destination(
+        RectF(0f, 0f, width.toFloat(), height.toFloat()), protectedBounds, density)?.let { Plan(RectF(origin), it, protectedBounds) }
 
     fun close(immediate: Boolean = false) {
         if (!isShowing) {
@@ -277,9 +318,12 @@ class JarvisWorkWindow(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (!isShowing) return
-        if ((oldw > 0 && oldh > 0 && (w != oldw || h != oldh)) ||
-            !RectF(0f, 0f, w.toFloat(), h.toFloat()).contains(destination)) close(immediate = true)
-        else updateRoute()
+        when {
+            // A live resize of an open window (rotation, fold): its geometry is gone, it folds away.
+            oldw > 0 && oldh > 0 && (w != oldw || h != oldh) -> close(immediate = true)
+            RectF(0f, 0f, w.toFloat(), h.toFloat()).contains(destination) -> updateRoute()
+            else -> refitAfterLayout()
+        }
     }
 
     override fun onDetachedFromWindow() {

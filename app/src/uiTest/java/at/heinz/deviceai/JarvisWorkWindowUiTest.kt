@@ -74,11 +74,9 @@ class JarvisWorkWindowUiTest {
                 minHeight = 36
             }) }
         }
-        fun open(body: View): Boolean = window.javaClass.getMethod("open", View::class.java,
-            RectF::class.java, RectF::class.java, String::class.java, List::class.java,
-            Function0::class.java, Function0::class.java)
-            .invoke(window, body, origin, target, "Systemstatus", protectedBounds,
-                { opened++ }, { closed++ }) as Boolean
+        // Direct call: the reflective 7-parameter lookup broke when open() gained its optional scene parameters.
+        fun open(body: View): Boolean = (window as at.heinz.deviceai.ui.JarvisWorkWindow).open(body, origin, target,
+            "Systemstatus", protectedBounds, onOpened = { opened++ }, onClosed = { closed++ })
         fun close(immediate: Boolean = false) {
             window.javaClass.getMethod("close", Boolean::class.javaPrimitiveType).invoke(window, immediate)
         }

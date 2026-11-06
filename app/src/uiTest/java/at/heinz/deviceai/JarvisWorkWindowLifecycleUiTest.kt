@@ -166,4 +166,30 @@ class JarvisWorkWindowLifecycleUiTest {
         assertEquals(48, close.height)
         assertEquals("Close target stays unscaled", close.height, visible.height())
     }
+
+    /**
+     * Rotation/fold follow-up (06.11.2026), HOST: the first layout of a window can come at another size than the one it
+     * was planned for (a rotation, fold or keyboard resize was still pending when the owner touched). The window may
+     * not vanish without a trace: it is placed again inside the real size, clear of the protected area, with its body.
+     */
+    @Test fun firstLayoutAtAnotherSizePlansAgainInsteadOfVanishing() = withWindow { f ->
+        val late = JarvisWorkWindow(f.activity, f.clock.source) {}
+        f.root.addView(late, FrameLayout.LayoutParams(-1, -1))
+        try {
+            val face = RectF(250f, 30f, 820f, 420f)
+            val body = f.body("Gedächtniszentrum")
+            // Planned while the screen was still 760 × 884: its bottom (876) lies below the 760 px of the real layout.
+            assertTrue(late.open(body, RectF(30f, 540f, 190f, 600f), RectF(60f, 554f, 700f, 876f),
+                "Gedächtniszentrum", listOf(face)))
+            f.layout()
+            shadowOf(Looper.getMainLooper()).idleFor(32, java.util.concurrent.TimeUnit.MILLISECONDS)
+            f.draw(32L)
+            assertTrue("the window survives its first layout on another size", late.isShowing)
+            assertTrue("with its body", generateSequence(body.parent) { it.parent }.any { it === late })
+            val panel = late.javaClass.getDeclaredField("panel").apply { isAccessible = true }.get(late) as View
+            val box = RectF(panel.left.toFloat(), panel.top.toFloat(), panel.right.toFloat(), panel.bottom.toFloat())
+            assertTrue("inside the real size: $box", RectF(0f, 0f, 884f, 760f).contains(box))
+            assertFalse("clear of the face: $box", RectF.intersects(box, face))
+        } finally { late.dispose() }
+    }
 }

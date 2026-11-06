@@ -163,6 +163,23 @@ class JarvisShellView(context: Context) : View(context) {
         invalidate()
     }
 
+    /**
+     * Geometry for the size the view has now (dp), from the same cache onDraw uses – so a work window can be planned
+     * after a layout even before the next draw. Null while the view is too small for the shell.
+     */
+    fun currentShell(): JarvisShellLayout.Shell? {
+        val d = resources.displayMetrics.density
+        val w = width / d; val h = height / d
+        if (w < 240f || h < 160f) return null
+        val font = resources.configuration.fontScale
+        val viewport = viewportHeightDp.takeIf { it >= 160f } ?: h
+        return shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp && layoutCompact == compactPresentation }
+            ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp,
+                compactPresentation = compactPresentation).also {
+                shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp; layoutViewport = viewport; layoutCompact = compactPresentation
+            }
+    }
+
     fun playEntrance() { startMs = SystemClock.uptimeMillis(); postInvalidateOnAnimation() }
 
     private fun animatorScale(): Float =
@@ -174,12 +191,7 @@ class JarvisShellView(context: Context) : View(context) {
         val w = width / d; val h = height / d
         if (w < 240f || h < 160f) return
         val font = resources.configuration.fontScale
-        val viewport = viewportHeightDp.takeIf { it >= 160f } ?: h
-        val s = shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp && layoutCompact == compactPresentation }
-            ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp,
-                compactPresentation = compactPresentation).also {
-                shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp; layoutViewport = viewport; layoutCompact = compactPresentation
-            }
+        val s = currentShell() ?: return
         val scale = animatorScale()
         val now = SystemClock.uptimeMillis()
         val elapsed = if (startMs < 0) Long.MAX_VALUE / 4 else now - startMs

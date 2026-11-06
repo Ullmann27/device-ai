@@ -31,9 +31,6 @@ class JarvisWorkWindowHost(
         if (!home.jarvisShellStage || !home.isShown) return null
         val container = activity.findViewById<ViewGroup>(android.R.id.content) ?: return null
         val shell = home.jarvisShell
-        val geometry = shell.shell ?: return null
-        val density = activity.resources.displayMetrics.density
-        val tile = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let { home.findViewWithTag<View>("jarvis-tile:${it.target}") }
         var parent = home.parent
         var background: ScrollView? = null
         while (parent is View) {
@@ -44,25 +41,16 @@ class JarvisWorkWindowHost(
             }
             parent = parent.parent
         }
-        val offset = localBounds(shell, container)
-        val viewport = RectF(0f, 0f, container.width.toFloat(),
-            minOf(container.height.toFloat(), offset.top + geometry.viewportHeight * density))
-        fun local(box: JarvisShellLayout.Box) = RectF(offset.left + box.left * density,
-            offset.top + box.top * density, offset.left + box.right * density,
-            offset.top + box.bottom * density)
-        val face = (geometry.headStage ?: geometry.headBounds)?.let(::local)
-        val origin = tile?.let { localBounds(it, container) }?.takeIf(JarvisWorkWindowGeometry::valid)
-            ?: besideFace(face, viewport, density)
-        val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
-        val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))
-        val destination = JarvisWorkWindowGeometry.destination(viewport, withOrb, density)
-            ?: return null
+        val first = plan(home, container, scene) ?: return null
         close(immediate = true)
         val id = "work-window-${++serial}"
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
         var releaseGeometry: () -> Unit = {}
         container.addView(window, ViewGroup.LayoutParams(-1, -1))
-        val accepted = window.open(body, origin, destination, title, withOrb, accent = scene.accent, emblem = emblem, onClosed = {
+        // A first layout at another size (rotation/fold/keyboard still pending) plans again on the real size.
+        val refit = { if (current === window) plan(home, container, scene)?.plan else null }
+        val accepted = window.open(body, first.plan.origin, first.plan.destination, title, first.plan.protectedBounds,
+            accent = scene.accent, emblem = emblem, refit = refit, onClosed = {
             releaseGeometry()
             (window.parent as? ViewGroup)?.removeView(window)
             director.windowClosed(id)
@@ -83,8 +71,10 @@ class JarvisWorkWindowHost(
             if (current === window && (x != initialX || y != initialY)) window.close(immediate = true)
         }
         releaseGeometry = { if (current === window) background?.setOnScrollChangeListener(null) }
-        val headX = face?.centerX() ?: viewport.centerX()
-        val headY = face?.centerY() ?: viewport.centerY()
+        val destination = first.plan.destination
+        val viewport = first.viewport
+        val headX = first.face?.centerX() ?: viewport.centerX()
+        val headY = first.face?.centerY() ?: viewport.centerY()
         director.windowOpened(id, GazeTarget(
             ((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.6f, .6f),
             ((headY - destination.centerY()) / viewport.height()).coerceIn(-.4f, .4f)))
@@ -95,6 +85,32 @@ class JarvisWorkWindowHost(
                 android.window.OnBackInvokedDispatcher.PRIORITY_OVERLAY, callback)
         }
         return window
+    }
+
+    private class Planned(val plan: JarvisWorkWindow.Plan, val face: RectF?, val viewport: RectF)
+
+    /**
+     * Origin, destination and protected areas (face, dialog, orb) of [scene] in [container] pixels, from the shell's
+     * geometry for its current size. Null when the START cockpit has no room for a window.
+     */
+    private fun plan(home: ContinuumHomeView, container: ViewGroup, scene: JarvisActionScenes.Scene): Planned? {
+        val shell = home.jarvisShell
+        val geometry = shell.currentShell() ?: return null
+        val density = activity.resources.displayMetrics.density
+        val offset = localBounds(shell, container)
+        val viewport = RectF(0f, 0f, container.width.toFloat(),
+            minOf(container.height.toFloat(), offset.top + geometry.viewportHeight * density))
+        fun local(box: JarvisShellLayout.Box) = RectF(offset.left + box.left * density,
+            offset.top + box.top * density, offset.left + box.right * density,
+            offset.top + box.bottom * density)
+        val face = (geometry.headStage ?: geometry.headBounds)?.let(::local)
+        val tile = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let { home.findViewWithTag<View>("jarvis-tile:${it.target}") }
+        val origin = tile?.let { localBounds(it, container) }?.takeIf(JarvisWorkWindowGeometry::valid)
+            ?: besideFace(face, viewport, density)
+        val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
+        val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))
+        val destination = JarvisWorkWindowGeometry.destination(viewport, withOrb, density) ?: return null
+        return Planned(JarvisWorkWindow.Plan(origin, destination, withOrb), face, viewport)
     }
 
     /**
