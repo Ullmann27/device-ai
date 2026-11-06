@@ -9038,6 +9038,7 @@ class AgentActivity : Activity() {
         var submittedToolObservationCount = 0
         var modelWebCalls = 0
         val modelWebSessions = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cognitive.ApprovedWebResearchSession>()
+        val startedStorageCalls = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
         val orchestrator = BoundedAgentOrchestrator(
             model = codingPlanning?.model(localRuntime,cancellation) ?: AgentModel { task, memories, reflection, rawObservations ->
                 cancellation.throwIfCancelled()
@@ -9348,7 +9349,11 @@ class AgentActivity : Activity() {
                         addToolActivity("CHIEF · " + line)
                     }
                 }
-            })
+            }),
+            onToolStarted = { callId, toolName ->
+                if (botTask == null && codingPlanning == null)
+                    recordStorageToolStarted(startedStorageCalls, callId, toolName)
+            }
         )
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
@@ -9361,6 +9366,8 @@ class AgentActivity : Activity() {
                     }
                 }
             }
+            if (botTask == null && codingPlanning == null)
+                settleStorageToolRun(startedStorageCalls, result, localSessionId, cancellation)
             fun deliverResult() {
                 if (isFinishing || isDestroyed || activeChatCancellation !== cancellation) return
                 // Cancellation may return before native inference has terminated. The bot
