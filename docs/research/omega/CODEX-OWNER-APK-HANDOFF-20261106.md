@@ -1,9 +1,14 @@
 # Continuum owner APK integration — 2026-11-06
 
-Status: complete local Android/Node regression, compilation, NewApi lint and original-package APK/AAB
-assembly GREEN. Original publisher full QA, original signing and HTTPS release readback remain
-pending. Frozen candidate: `577f0931e7937ffcac02dc855a540f093facdb3b`, code46 /0.3.45.
-This is not a release receipt.
+Status: **DELIVERED — original-signed Code46 /0.3.45 is live and independently verified.**
+Release source: `577f0931e7937ffcac02dc855a540f093facdb3b`. Publisher QA, signing, HTTPS
+readback and actual APK certificate/package/version/hash verification passed. Final verification:
+**2026-11-06T19:03:21.720300Z**. The release receipt is `code46-release-verified.json` below.
+
+[Download the verified APK](https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/Continuum-Lokal-0930614bbcc8e53d75283dfe47a53a73e758430a99af3698f31b88446babc759.apk)
+
+The existing in-app “Updates prüfen und laden” button reads the live catalog containing this APK.
+No device installation or real-model/audio acceptance is implied by this delivery.
 
 ## Sources and preserved history
 
@@ -40,8 +45,8 @@ Existing publisher: `srv-dbf1tr2vcj2c73ehpfog`, host
 `research/continuum-m8-render-signed-release-20261031`, auto-deploy disabled.
 Original certificate SHA-256:
 `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`.
-Signing credentials stay on that service. Release must use a version greater than the live catalog;
-the final local candidate is code46 / version0.3.45. Re-read live metadata before deployment.
+Signing credentials stay on that service. The delivered live release is code46 / version0.3.45.
+Any future release must re-read the live catalog and use a greater version code.
 
 ## Completed implementation work
 
@@ -90,7 +95,7 @@ Relevant interfaces: `WorkDecisionRecall`, `WorkRecall`, `LocalConversationFollo
 | Quality-lab bound integration | **44/44 PASS**, source verified and unchanged at final GitHub source `577f0931e7937ffcac02dc855a540f093facdb3b` |
 | Local full Android intermediate run | **CANCELLED**, exit130, because later review fixes superseded its source; no complete JUnit success claimed |
 | Original-package APK/AAB | PASS, code46 /0.3.45, ARM64, original package; APK/AAB archive integrity verified; unsigned and not published locally |
-| Final publisher full gates/signing/readback | PENDING |
+| Final publisher full gates/signing/readback | **PASS** on exact source `577f0931e7937ffcac02dc855a540f093facdb3b`; live deployment, downloaded bytes and original certificate independently verified |
 | Actual model responses, real audio, Fold7/GPU | NOT_RUN |
 
 The31 Node skips concern Docker/kernel isolation or additional host test prerequisites. They are
@@ -120,7 +125,7 @@ now explicitly marks its LOCAL_UNCOMMITTED results as unbound; its original JSON
   remain. The guards above repair overlays; they do not claim completion of the outstanding
   AppCrystal light-path expansion or a new camera-return choreography.
 
-After final publisher verification and delivery: accept that exact APK on Fold7, then tackle the
+Next: accept this exact delivered APK on Fold7, then tackle the
 next confirmed gap using one RED→fix→GREEN milestone. Prioritize remaining AppCrystal/work-step
 coupling and camera return; tool journal evidence; decision digest into the existing model prompt;
 actual offline voice/lip synchronization measurements. Preserve OFF/ASK/ALWAYS_ON tool policies.
@@ -131,7 +136,10 @@ the actual work window before the original head follows naturally; the original 
 real work and memory events. No replacement avatar, static substitute, invented tool action or
 palette change. Host screenshots are layout evidence, not a Fold7 or Filament GPU acceptance.
 
-## Final Code46 preflight
+## Historical preflight and release checkpoints
+
+The following checkpoints preserve the progression and failed attempts. Their then-pending
+release steps are superseded by the final verified delivery section at the end of this document.
 
 The final three review cases were reproduced as 3 FAIL /38 PASS, then passed as 41/41
 pure-JVM cases. The integrated SDK run passed 83/83 on the clean local source
@@ -253,3 +261,38 @@ fixture configuration. Their exact original messages are preserved in `node-full
 `node-full-code46-evidence.zip` contains the complete source-bound report, JUnit and runner log.
 The report generator's historical `generatedBy` label is metadata, not a claim that another
 agent ran this session. Android, signing and device evidence remain separate scopes.
+
+## Final verified delivery
+
+Original publisher deploy **`dep-dbn1htjncjis73c9vlng`** reached **live** at
+**2026-11-06T19:00:55.5398Z**. Its exact-source presign QA gate passed at **18:58:52.360489958Z**;
+the signed catalog/staging checks passed at **19:00:52.811001149Z**. All signing credentials,
+the original host and package identity were preserved.
+
+The published APK was downloaded over pinned HTTPS. Two catalog reads agreed; actual file size
+and SHA256 matched the catalog and BUILD-INFO. Independent Android SDK `apksigner` and `aapt2`
+both exited zero and verified the APK bytes, not only metadata.
+
+| Item | Verified value |
+|---|---|
+| Release source | `577f0931e7937ffcac02dc855a540f093facdb3b` |
+| Version | `0.3.45`, versionCode `46` |
+| Package | `at.heinz.deviceai.continuumlocal` |
+| ABI | `arm64-v8a` only |
+| Downloaded size | `101876503` bytes |
+| APK SHA256 | `0930614bbcc8e53d75283dfe47a53a73e758430a99af3698f31b88446babc759` |
+| Original certificate SHA256 | `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23` |
+| Signature | APK Signature Scheme v2 verified, one signer |
+| Catalog SHA256 | `6b238e9ae2b326ae9d24ff9c10d9a49c71c62c2cfc997fc8612716cb69dd694c` |
+| Original head inside the actual APK | `assets/avatar3d/continuum-avatar.glb`, SHA256 `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`; matches preserved Fable/Opus asset |
+
+Complete evidence lives in `docs/evidence/codex-owner-apk-20261106/`:
+`code46-release-verified.json`, `publisher-code46-live.json`, live catalog, BUILD-INFO,
+HTTPS readback and actual apksigner/aapt2 outputs, plus the complete Android/Node archives.
+The evidence checkpoint preceding this final record is
+`761f2f0d88c757d8b0f88abedcc1d9034fbf8f9c`; the release source stays frozen separately.
+The final documentation commit is reported in PR #575 and the delivery message.
+
+Delivery covers the repaired current code baseline. The explicitly skipped host tests, actual
+Fold7/model/audio acceptance and the remaining visual/autonomous milestones listed above stay
+open. No main merge, replacement key, package/publisher change or extra paid service was used.
