@@ -26,6 +26,7 @@ class LocalGenerationDeadlinePolicyTest {
 
     @Test fun outputBufferIsExplicitlyBounded() {
         assertNull(policy.stalled(120_000, 120_000, 19_999))
-        assertEquals(LocalGenerationDeadlinePolicy.StallReason.OUTPUT_LIMIT, policy.stalled(120_000, 120_000, 20_000))
+        assertNull(policy.stalled(120_000, 120_000, 20_000))
+        assertEquals(LocalGenerationDeadlinePolicy.StallReason.OUTPUT_LIMIT, policy.stalled(120_000, 120_000, 20_001))
     }
 }

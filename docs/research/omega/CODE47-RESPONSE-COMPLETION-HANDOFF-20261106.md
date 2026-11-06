@@ -32,7 +32,11 @@ These are source-level findings on code46 `577f0931e7937ffcac02dc855a540f093facd
 
 ## Tests and acceptance
 
-Current checkpoint: **NOT_RUN**; restored toolchain is being prepared centrally.
+Initial checkpoint: `3c336a44692125b63b156e902a13a5703f922d8e`, Draft PR581.
+
+Pure capture checkpoint: Kotlin 2.4.0 / JDK17 / JUnit4.13.2, 256MiB compiler heap. The unchanged production deadline policy first failed its exact-cap assertion (4 tests / 1 failure). A pure extraction retaining the original capture `take`, `clear` and `>=` behavior then failed 6 of 17 cases. After correction the same 17 cases pass. Raw commands, baseline extraction and results: `docs/evidence/code47-response-completion-20261106/`.
+
+The helper is not yet connected to AgentActivity. Agent output/quality-gate integration and Android compilation are **NOT_RUN** at this checkpoint. This is not device/model evidence.
 
 Prepare real Kotlin/JUnit RED -> GREEN for complete 8,000/8,001-character owner responses; 8,001 plus proposal still refuses all tool calls; 20,000 with both callback orders; 20,001 overflow; partial text followed by stall; late deltas/terminal events after completion and STOP; incomplete replies passing through quality evaluation but producing no success episode.
 
