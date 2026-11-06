@@ -114,8 +114,11 @@ class ToolWorkJournalBridgeTest {
     @Test fun repeatedStorageChecksKeepTenRecentToolRowsWithoutErasingPdf() {
         var now = 1_000L
         val journal = CockpitWorkJournal(dir.root) { now }
-        val document = journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Wichtiger PDF-Entwurf",
-            CockpitWorkJournal.State.DRAFTED, "Wichtig.pdf")
+        val documents = (1..CockpitWorkJournal.MAX_EPISODES).map { number ->
+            now += 1_000
+            journal.begin(CockpitWorkJournal.Kind.DOCUMENT, "Wichtiger PDF-Entwurf $number",
+                CockpitWorkJournal.State.DRAFTED, "Wichtig-$number.pdf")
+        }
         repeat(20) { index ->
             now += 1_000
             val id = "storage-check-$index"
@@ -123,9 +126,13 @@ class ToolWorkJournalBridgeTest {
             journal.finishTool(id, name, CockpitWorkJournal.ToolState.REJECTED)
         }
         val records = journal.all()
-        assertTrue(records.any { it.id == document.id })
+        assertEquals(documents.map { it.id }.toSet(),
+            records.filter { it.kind == CockpitWorkJournal.Kind.DOCUMENT }.map { it.id }.toSet())
+        assertEquals(CockpitWorkJournal.MAX_EPISODES,
+            records.count { it.kind == CockpitWorkJournal.Kind.DOCUMENT })
         assertEquals(CockpitWorkJournal.MAX_TOOL_EPISODES,
             records.count { it.kind == CockpitWorkJournal.Kind.TOOL })
+        assertEquals(CockpitWorkJournal.MAX_EPISODES + CockpitWorkJournal.MAX_TOOL_EPISODES, records.size)
     }
 
     @Test fun invalidToolIDsAndOutputHashesAreNotPersisted() {
