@@ -42,6 +42,9 @@ object JarvisActionScenes {
     /** Scene of a tool the runner actually started; unknown or future tools get the neutral scene. */
     fun forTool(toolName: String): Scene = toolKind(toolName).let { Scene(it, Origin.BesideFace, accent(it)) }
 
+    /** A document the owner picked: it arrives beside the face (no tile), in the files colour. */
+    fun forDocument(): Scene = Scene(Kind.FILES, Origin.BesideFace, accent(Kind.FILES))
+
     /** Every entry of the real ToolRegistry has a kind; GENERIC only for names outside it. */
     fun toolKind(name: String): Kind = when (name) {
         "launch_app", "find_app", "get_app_info", "list_installed_apps", "restart_app", "stop_app",

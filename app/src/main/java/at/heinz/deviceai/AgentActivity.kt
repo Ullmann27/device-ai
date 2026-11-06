@@ -162,6 +162,9 @@ class AgentActivity : Activity() {
         private const val CONTINUUM_ARCHIVE_IMPORT_REQUEST = 2220
         private const val PERSONAL_LEARNING_EXPORT_REQUEST = 2231
         private const val PERSONAL_LEARNING_PREVIEW_REQUEST = 2232
+        private const val PDF_DOCUMENT_REQUEST = 2245
+        /** Characters of the document's own text shown in its work window; the full bounded text stays for drafting. */
+        private const val DOCUMENT_EXCERPT_CHARS = 700
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
         private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
@@ -1798,6 +1801,88 @@ class AgentActivity : Activity() {
 
     /** The control the owner just touched; a work window emerges from it (read only while that navigation runs). */
     private var touchedCockpitTarget: String? = null
+
+    /** The owner asked for a summary draft together with the PDF request (consumed when the document scene opens). */
+    private var pendingDocumentDraft = false
+
+    private fun openPdfDocumentPicker(wantsDraft: Boolean) {
+        pendingDocumentDraft = wantsDraft
+        val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/pdf"
+        }
+        runCatching { startActivityForResult(picker, PDF_DOCUMENT_REQUEST) }.onFailure {
+            pendingDocumentDraft = false
+            addAssistantMessage("Die Android-Dateiauswahl ist auf diesem Gerät nicht verfügbar – es wurde nichts gelesen.")
+        }
+    }
+
+    private fun readPdfDocument(uri: android.net.Uri) {
+        val pageWidthPx = (resources.displayMetrics.density * 360f).toInt()
+        learningIoExecutor.execute {
+            val result = runCatching { PdfDocumentIntake(contentResolver).read(uri, pageWidthPx) }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                result.fold(::presentDocumentScene) { failure ->
+                    pendingDocumentDraft = false
+                    addAssistantMessage("Die PDF ließ sich nicht lesen (${failure.message ?: failure.javaClass.simpleName}). " +
+                        "An der Datei wurde nichts verändert.")
+                }
+            }
+        }
+    }
+
+    /**
+     * Document scene (owner flow 06.11.2026): the real first page rides the light trail in, the work window forms beside
+     * the face, the deck makes room and JARVIS looks at it. Shown are only facts of this file – name, size, pages, the
+     * page image and, where Android provides it, an excerpt of the document's own text.
+     */
+    private fun presentDocumentScene(doc: PdfDocumentIntake.Document) {
+        val pages = if (doc.pageCount == 1) "1 Seite" else "${doc.pageCount} Seiten"
+        val size = doc.sizeBytes?.let { android.text.format.Formatter.formatShortFileSize(this, it) }
+        val meta = listOfNotNull(pages, size, doc.name).joinToString(" · ")
+        val textLine = when (doc.textState) {
+            PdfDocumentIntake.TextState.EXTRACTED ->
+                "Text des Dokuments gelesen: ${doc.text.length} Zeichen von Seite 1–${doc.textPages}."
+            PdfDocumentIntake.TextState.NO_TEXT_LAYER ->
+                "Kein auslesbarer Text (z. B. ein Scan). Das Seitenbild ist echt; eine Texterkennung ist nicht angeschlossen."
+            PdfDocumentIntake.TextState.NEEDS_ANDROID_15 ->
+                "Der Textauszug braucht Android 15 oder neuer. Das Seitenbild ist echt."
+        }
+        val draftLine = when {
+            !pendingDocumentDraft -> null
+            doc.textState != PdfDocumentIntake.TextState.EXTRACTED -> "Für einen Entwurf fehlt der Dokumenttext."
+            else -> "Zusammenfassung als Entwurf: in dieser Version noch nicht angeschlossen."
+        }
+        pendingDocumentDraft = false
+        val report = "PDF gelesen: $meta. $textLine" + (draftLine?.let { " $it" } ?: "")
+        val body = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; tag = "jarvis-document" }
+        doc.firstPage?.let { page ->
+            body.addView(android.widget.ImageView(this).apply {
+                tag = "jarvis-document-page"
+                setImageBitmap(page)
+                adjustViewBounds = true
+                scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+                maxHeight = dp(240)
+                contentDescription = "Seite 1 von ${doc.pageCount}: ${doc.name}"
+            }, LinearLayout.LayoutParams(-1, -2))
+        }
+        body.addView(textView(meta, 12f, TEXT).apply { tag = "jarvis-document-meta" }, matchWidth(top = 8))
+        body.addView(textView(textLine, 11f, MUTED).apply { tag = "jarvis-document-status" }, matchWidth(top = 4))
+        if (doc.textState == PdfDocumentIntake.TextState.EXTRACTED) {
+            val excerpt = if (doc.text.length > DOCUMENT_EXCERPT_CHARS) doc.text.take(DOCUMENT_EXCERPT_CHARS).trimEnd() + " …" else doc.text
+            body.addView(textView(excerpt, 12f, TEXT).apply { tag = "jarvis-document-excerpt" }, matchWidth(top = 8))
+        }
+        draftLine?.let { body.addView(textView(it, 11f, MUTED).apply { tag = "jarvis-document-draft" }, matchWidth(top = 6)) }
+        val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown }
+        val emblem = doc.firstPage?.let { android.graphics.drawable.BitmapDrawable(resources, it) }
+        val window = home?.let {
+            workWindowHost.show(it, body, "DOKUMENT · ${doc.name.take(40)}",
+                at.heinz.deviceai.ui.JarvisActionScenes.forDocument(), emblem) {}
+        }
+        // The same facts in the conversation; with an open window the cockpit stays (no switch to the chat area).
+        addAssistantMessage(report, preserveLocalContext = false, keepCockpit = window != null)
+    }
 
     private fun navigateDashboardTargetNow(target: String) {
         when (target) {
@@ -4139,6 +4224,13 @@ class AgentActivity : Activity() {
             input.text.clear()
             addUserMessage(request)
             runExplicitAppLookup(lookup)
+            return
+        }
+        // „Lies diese PDF …“: only Android's document picker opens; JARVIS reads nothing the owner did not choose there.
+        at.heinz.deviceai.cognitive.OwnerDocumentIntent.parse(request)?.let { document ->
+            input.text.clear()
+            addUserMessage(request)
+            openPdfDocumentPicker(document.wantsDraft)
             return
         }
         // Revoke previously granted ephemeral network capabilities for this offline turn.
@@ -10590,7 +10682,11 @@ class AgentActivity : Activity() {
         addAssistantMessage(value, preserveLocalContext = keep)
     }
 
-    private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = false) {
+    private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = false) =
+        addAssistantMessage(value, preserveLocalContext, keepCockpit = false)
+
+    /** [keepCockpit]: the result is already shown in an open cockpit work window – record it without leaving START. */
+    private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean) {
         recordCockpitDialog(false, value)
         // A non-model answer becomes the latest turn and invalidates any older
         // local-model prompt context. Successful local model runs set it after rendering.
@@ -10601,7 +10697,7 @@ class AgentActivity : Activity() {
             while (responseTimesMs.size > 20) responseTimesMs.removeFirst()
             requestStartedAt = 0L
         }
-        if (!handsFreeKeepsHome()) {
+        if (!keepCockpit && !handsFreeKeepsHome()) {
             conversationActive = true
             activeWorkArea = ContinuumWorkArea.CHAT
             refreshWorkAreaSelection()
@@ -11160,6 +11256,14 @@ class AgentActivity : Activity() {
                             addAssistantMessage("Öffentliches Modellpaket: Modelldatei nicht lesbar (${failureName(e)}).")
                         })
                     }
+                }
+            }
+            PDF_DOCUMENT_REQUEST -> {
+                val uri = data?.data
+                if (resultCode == RESULT_OK && uri != null) readPdfDocument(uri)
+                else {
+                    pendingDocumentDraft = false
+                    addAssistantMessage("Keine PDF gewählt – es wurde nichts gelesen.")
                 }
             }
             CONTINUUM_PACKAGE_MANIFEST_REQUEST -> {
