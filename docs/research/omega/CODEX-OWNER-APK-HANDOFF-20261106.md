@@ -169,15 +169,15 @@ The publisher recorded three red gates and blocked original signing and publicat
 This does not invalidate Fable’s specifically described non-Gradle host result: that runner
 provided the Java framework implementation through `android-all-15.jar`. The real SDK runner
 uses a mockable Android JAR. The test class now belongs to the existing `src/uiTest` source set
-and uses the existing Robolectric runner with SDK28. All six test methods and58 assertion calls
+and uses the existing Robolectric runner with SDK28. All six test methods and 58 assertion calls
 are unchanged; production code and rendering are unchanged. Class-body SHA256:
 `31638559191dd4ac00e458733a28c8c24acd9e589b81c6a1e5cfa2a05b1985cc`.
 
 Targeted SDK GREEN: **6/6 PASS, 0 FAIL, 0 SKIP**, local commit
-`7ce9eacee3ef2ac46fce995a2455a7a4d3c4d031`. The earlier83-case and unsigned Code46 preflight
+`7ce9eacee3ef2ac46fce995a2455a7a4d3c4d031`. The earlier 83-case and unsigned Code46 preflight
 production trees remain unchanged by this harness-only fix. Complete source-bound regression
 and a new corrected publisher candidate are still required. The old Code46 deploy
-`dep-dbn0gj5s25qs73a1vrv0` started on the superseded source at17:27:26.791398Z and does not
+`dep-dbn0gj5s25qs73a1vrv0` started on the superseded source at 17:27:26.791398Z and does not
 contain the harness repair. It must not be reported as the corrected final release.
 
 ## Corrected Code46 source and full regression
@@ -185,13 +185,28 @@ contain the harness repair. It must not be reported as the corrected final relea
 The publisher and integration branches received the same unchanged Robolectric class through
 GitHub commits `72b508b7b`, `a7775d9b2`, `3b63cc7f4`, and final corrected candidate
 `577f0931e7937ffcac02dc855a540f093facdb3b`. Its production and test files match the locally
-verified6/6 harness fix. The concurrent documentation is preserved in
+verified 6/6 harness fix. The concurrent documentation is preserved in
 `render-code45-android-regression-20261106.md` and this merge history.
 
-Corrected deploy: `dep-dbn0u78gs6ms73a7m54g`, queued at2026-11-06T17:32:14.5897Z.
+Corrected deploy: `dep-dbn0u78gs6ms73a7m54g`, queued at 2026-11-06T17:32:14.5897Z.
 The prior running deploy `dep-dbn0gj5s25qs73a1vrv0` is superseded and lacks this fix.
 No second trigger was issued for the already queued corrected candidate.
 
-Source-bound quality-lab rerun on577f0931e7937ffcac02dc855a540f093facdb3b:44/44 PASS,
+Source-bound quality-lab rerun on 577f0931e7937ffcac02dc855a540f093facdb3b: 44/44 PASS,
 source verified and unchanged. A complete local SDK/Robolectric/lint run was started on an
 isolated clean checkout of that exact GitHub commit. Its final result remains pending here.
+
+## Corrected-source host preflight checkpoint
+
+On `577f0931e7937ffcac02dc855a540f093facdb3b`, the full Node run completed with
+**2390 PASS, 0 FAIL, 37 SKIP /2427**, unchanged source and confirmed process termination.
+Six extra skips compared with the earlier 31 are real-Kotlin compiler checks: `kotlinc` was
+not on this invocation’s PATH. The compiler is already installed; those checks remain to be
+completed after Android, without concurrent compiler workloads.
+
+The first additional complete local Android attempt ended with exit 1 because its Gradle daemon
+disappeared. No complete JUnit result or concrete assertion failure was emitted. No JVM crash
+file or OutOfMemoryError was found; kernel memory counters were inaccessible. This is
+`INFRA_ABORT_CAUSE_UNDETERMINED`, never a PASS and not a proved OOM. The same unchanged
+source is now running sequentially with the existing 1-GiB test worker, one Gradle worker and
+a 1600-MiB Gradle heap. No product or publisher gate was changed.

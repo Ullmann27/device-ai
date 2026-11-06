@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "category": "HOST_FULL_NODE_REGRESSION",
+  "source_commit": "577f0931e7937ffcac02dc855a540f093facdb3b",
+  "source_unchanged": true,
+  "started_at": "2026-11-06T17:44:10.960Z",
+  "finished_at": "2026-11-06T17:46:48.015Z",
+  "counts": {
+    "total": 2427,
+    "executed": 2390,
+    "passed": 2390,
+    "failed": 0,
+    "skipped": 37,
+    "placeholders": 0
+  },
+  "exit_code": 0,
+  "termination_confirmed": true,
+  "junit_sha256": "4c83e353a0d41a557a65c7887a5ea595bd75e6c27e11c9173ed58c5751f1bf2d",
+  "full_report_sha256": "ebc4acd3dd32513f070e239fd4c9c842fa1ca43ae11076016420cca5922609a0",
+  "node_version": "24.22.1"
+}
