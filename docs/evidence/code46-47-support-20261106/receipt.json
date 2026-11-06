@@ -1,0 +1,60 @@
+{
+  "baseline_sha": "f26d1063b25c65c22b8d411789d1733c92e3ad72",
+  "status": "LOCAL_PATCH_VERIFIED_NOT_PUSHED",
+  "experiments_preserved": [
+    "EXP-05",
+    "EXP-06",
+    "EXP-07"
+  ],
+  "changed_files": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigest.kt": "61ee9fa01482bdc56de5049c180592c83f929e06b1f18c726981c68173472a62",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigestTest.kt": "d7dfb7b6ec9dcd4f1c33497b14a7f0e74332171adfd2587b5b592166e233045e"
+  },
+  "patch_sha256": "571ca090211a405c55342eaab25e83a48c784617a2004a416f7270198058c074",
+  "baseline_sdk_classes": {
+    "LocalDecisionPromptDigest.class": "3e9417f1b76f12380191ecf5f3a81937433f4902fe0cfa4bd45c94861c8d8ca9",
+    "WorkDecisionRecall.class": "0ac3b4461aed50d94a1f15827bff0533abd5cc09da6ed0118cb594caea0f33d2"
+  },
+  "red": {
+    "cases": 2,
+    "failed": 2,
+    "exit_code": 1,
+    "production_stubs": false
+  },
+  "green": {
+    "cases": 2,
+    "failed": 0,
+    "exit_code": 0,
+    "production_stubs": false
+  },
+  "junit": {
+    "tests": 19,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "classes": [
+      "LocalDecisionPromptDigestTest",
+      "LocalDecisionPromptFrameTest"
+    ]
+  },
+  "compile": {
+    "kotlin": "2.4.0",
+    "java": "17.0.20.1",
+    "max_heap_mib": 256,
+    "files_compiled": [
+      "app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigest.kt",
+      "app/src/test/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigestTest.kt"
+    ],
+    "gradle_started": false
+  },
+  "remaining": [
+    "Full QA on final integrated source",
+    "Physical Fold7 and actual LiteRT acceptance"
+  ],
+  "rollback": "Revert only this two-file patch; no persistence/schema changes",
+  "independent_review": {
+    "reviewer": "/root/build_kontrolle",
+    "status": "PASS_NO_BLOCKER",
+    "scope": "Two-file diff, actual items-path regressions, RED/GREEN/JUnit outputs and real dependency classpath"
+  }
+}

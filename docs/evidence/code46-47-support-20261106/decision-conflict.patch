@@ -1,0 +1,57 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigest.kt b/app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigest.kt
+index 13ff84427..cf6947799 100644
+--- a/app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigest.kt
++++ b/app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigest.kt
+@@ -47,11 +47,11 @@ internal object LocalDecisionPromptDigest {
+         }.mapNotNull { it.revokedAt }.maxOrNull()
+         val liveOwners = items.filter {
+             it.origin == WorkDecisionRecall.Origin.OWNER_STATEMENT &&
+-                it.revokedAt == null && it.done == null && matches(it) &&
++                it.revokedAt == null && it.done == null && relates(it) &&
+                 (lastRevocation == null || it.at > lastRevocation)
+         }.distinctBy { it.text }
+         // Multiple distinct matching decisions may conflict. Abstain instead of guessing.
+-        val owner = liveOwners.singleOrNull()
++        val owner = liveOwners.singleOrNull()?.takeIf { acceptable(it.text) }
+         val journal = items.filter {
+             it.origin == WorkDecisionRecall.Origin.JOURNAL && it.revokedAt == null &&
+                 it.done != null && matches(it)
+diff --git a/app/src/test/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigestTest.kt b/app/src/test/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigestTest.kt
+index bad03320c..1376b5bc7 100644
+--- a/app/src/test/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigestTest.kt
++++ b/app/src/test/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigestTest.kt
+@@ -59,6 +59,34 @@ class LocalDecisionPromptDigestTest {
+         assertEquals("", result)
+     }
+ 
++    @Test fun confidentialActiveConflictStillSuppressesEarlierDecision() {
++        val items = WorkDecisionRecall.items(emptyList(), listOf(
++            WorkDecisionRecall.OwnerStatement(
++                "Wir haben entschieden: Code47 wird am Montag veröffentlicht.", 5),
++            WorkDecisionRecall.OwnerStatement(
++                "Wir haben entschieden: Code47 wird am Freitag veröffentlicht; das Passwort bleibt intern.", 6)
++        ), now = 10)
++        assertEquals(2, items.size)
++        assertTrue(LocalDecisionPromptDigest.render("Wie geht Code47 weiter?",
++            items.filter { it.at == 5L }).contains("Montag"))
++        assertEquals("", LocalDecisionPromptDigest.render("Wie geht Code47 weiter?", items))
++    }
++
++    @Test fun overlongActiveConflictStillSuppressesEarlierDecision() {
++        val items = WorkDecisionRecall.items(emptyList(), listOf(
++            WorkDecisionRecall.OwnerStatement(
++                "Wir haben entschieden: Code47 wird am Montag veröffentlicht.", 5),
++            WorkDecisionRecall.OwnerStatement(
++                "Wir haben entschieden: Code47 wird am Freitag veröffentlicht, " +
++                    "weil die Prüfung noch läuft. ".repeat(8), 6)
++        ), now = 10)
++        assertEquals(2, items.size)
++        assertTrue(items.first().text.length > 180)
++        assertTrue(LocalDecisionPromptDigest.render("Wie geht Code47 weiter?",
++            items.filter { it.at == 5L }).contains("Montag"))
++        assertEquals("", LocalDecisionPromptDigest.render("Wie geht Code47 weiter?", items))
++    }
++
+     @Test fun unfinishedJournalIsExplicitlyNotCalledComplete() {
+         val result = LocalDecisionPromptDigest.render("Wie weit ist der Bauplan?",
+             listOf(work("Entwurf zu Bauplan erstellt, noch nicht gespeichert", done = false)))

@@ -46,3 +46,11 @@ Package: `at.heinz.deviceai.continuumlocal`. Original certificate:
 `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`.
 
 Main, original signing keys, active foreign worktrees, user data, original head/orb and offline policy remain protected. No paid services or GitHub Actions. No Fold7, actual LiteRT, audio or GPU acceptance is claimed. No APK has been created by this support round yet.
+
+## Targeted Code47 repair checkpoint
+
+A real additional M1 defect was reproduced: display filtering removed confidential/overlong active conflicts before uniqueness selection. The support fix changes two production lines and adds two regression methods using actual owner statements and the existing item mapper.
+
+Independent author Java probe: RED2/2 -> GREEN2/2. Root reran the **same 19 JUnit test-class bytes**: original SDK digest 17 PASS /2 expected FAIL, corrected digest 19 PASS /0 FAIL. Independent second-agent diff/evidence review found no blocker. Raw evidence, source hashes and commands: `docs/evidence/code46-47-support-20261106/`.
+
+This patch has not been applied to the active primary Code47 branch here. The ongoing full SDK run remains on unmodified f26d and is baseline evidence only. Full final-source regression and APK construction remain pending; no Code46 or publisher mutation was made.
