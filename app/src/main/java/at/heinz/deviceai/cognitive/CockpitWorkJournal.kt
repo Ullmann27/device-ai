@@ -38,7 +38,9 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         val draftUri: String? = null,
         val ownerEdits: Int = 0,
         /** The owner's last correction of this task in their own words („Nein, ich meinte …“). */
-        val correction: String? = null
+        val correction: String? = null,
+        /** When [correction] was spoken (journal clock); null without a correction or for rows written before it existed. */
+        val correctedAt: Long? = null
     )
 
     private val folder = File(directory, "cockpit-work")
@@ -67,7 +69,16 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
     fun update(id: String, change: (Episode) -> Episode): Episode? = synchronized(LOCK) {
         val rows = read()
         val old = rows.firstOrNull { it.id == id } ?: return@synchronized null
-        val new = sanitize(change(old).copy(id = old.id, kind = old.kind, startedAt = old.startedAt, updatedAt = clock()))
+        val now = clock()
+        val changed = change(old)
+        // A new or changed correction keeps its own time: later edits of the episode must not move it.
+        val correctedAt = when {
+            changed.correction.isNullOrBlank() -> null
+            changed.correction != old.correction -> now
+            else -> old.correctedAt
+        }
+        val new = sanitize(changed.copy(id = old.id, kind = old.kind, startedAt = old.startedAt, updatedAt = now,
+            correctedAt = correctedAt))
         write(rows.map { if (it.id == id) new else it })
         new
     }
@@ -94,7 +105,8 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
     private fun sanitize(e: Episode) = e.copy(
         request = e.request.take(MAX_REQUEST), source = e.source?.take(MAX_NAME), draft = e.draft?.take(MAX_DRAFT),
         documentUri = e.documentUri?.take(MAX_URI), draftUri = e.draftUri?.take(MAX_URI),
-        correction = e.correction?.trim()?.take(MAX_REQUEST), ownerEdits = e.ownerEdits.coerceIn(0, 999))
+        correction = e.correction?.trim()?.take(MAX_REQUEST), ownerEdits = e.ownerEdits.coerceIn(0, 999),
+        correctedAt = e.correctedAt?.takeIf { !e.correction.isNullOrBlank() })
 
     private fun read(): List<Episode> {
         if (!file.exists()) return emptyList()
@@ -130,6 +142,7 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         put("sourcePages", e.sourcePages); put("sourceChars", e.sourceChars); put("coveredChars", e.coveredChars)
         e.documentUri?.let { put("documentUri", it) }; e.draft?.let { put("draft", it) }
         e.draftUri?.let { put("draftUri", it) }; put("ownerEdits", e.ownerEdits); e.correction?.let { put("correction", it) }
+        e.correctedAt?.let { put("correctedAt", it) }
     }
 
     private fun decode(o: JSONObject) = Episode(
@@ -137,7 +150,8 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         o.getLong("updatedAt"), State.valueOf(o.getString("state")), o.optString("source").ifEmpty { null },
         o.optInt("sourcePages"), o.optInt("sourceChars"), o.optInt("coveredChars"),
         o.optString("documentUri").ifEmpty { null }, o.optString("draft").ifEmpty { null },
-        o.optString("draftUri").ifEmpty { null }, o.optInt("ownerEdits"), o.optString("correction").ifEmpty { null })
+        o.optString("draftUri").ifEmpty { null }, o.optInt("ownerEdits"), o.optString("correction").ifEmpty { null },
+        if (o.has("correctedAt")) o.getLong("correctedAt") else null)
 
     companion object {
         const val MAX_EPISODES = 40

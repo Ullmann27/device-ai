@@ -1901,6 +1901,107 @@ class AgentActivity : Activity() {
         addAssistantMessage(answer, preserveLocalContext = true, keepCockpit = window != null || !keepWindow)
     }
 
+    /** The decisions shown in this conversation (session-bound): „die Entscheidung davor“ / „was davon“ refer to them. */
+    private var decisionFocus: Pair<String, at.heinz.deviceai.cognitive.WorkDecisionRecall.Focus>? = null
+
+    /**
+     * Reads both records off the UI thread – the work journal on its serial lane (after every queued write) and the
+     * owner's confirmed statements of the learning ledger (read-only) – and answers only while activity and session are
+     * unchanged. Journal episodes are never written to the ledger, statements never to the journal.
+     */
+    private fun presentDecisionRecall(ask: at.heinz.deviceai.cognitive.WorkDecisionRecall.Ask) {
+        val inCockpit = activeWorkArea == ContinuumWorkArea.START
+        val session = sessionId
+        val read = Runnable {
+            val episodes = runCatching { workJournal.all() }.getOrDefault(emptyList())
+            val statements = runCatching { ownerDecisionStatements() }.getOrDefault(emptyList())
+            runOnUiThread {
+                if (!isFinishing && !isDestroyed && sessionId == session) presentDecisionRecall(ask, inCockpit, episodes, statements)
+            }
+        }
+        if (documentIoExecutor.isShutdown) read.run() else documentIoExecutor.execute(read)
+    }
+
+    /** The owner's confirmed statements with assertion time; a revoked one keeps its revocation time. Held ones are left out. */
+    private fun ownerDecisionStatements(): List<at.heinz.deviceai.cognitive.WorkDecisionRecall.OwnerStatement> =
+        at.heinz.deviceai.learning.ContinuumLearningCore(filesDir).ownerStatementHistory().mapNotNull { (e, _) ->
+            when (e.status) {
+                at.heinz.deviceai.learning.LearningStatus.CONFIRMED, at.heinz.deviceai.learning.LearningStatus.LEARNED ->
+                    at.heinz.deviceai.cognitive.WorkDecisionRecall.OwnerStatement(e.content, e.createdAt)
+                at.heinz.deviceai.learning.LearningStatus.REVOKED ->
+                    at.heinz.deviceai.cognitive.WorkDecisionRecall.OwnerStatement(e.content, e.createdAt, e.updatedAt)
+                else -> null
+            }
+        }
+
+    private fun presentDecisionRecall(ask: at.heinz.deviceai.cognitive.WorkDecisionRecall.Ask, inCockpit: Boolean,
+                                      episodes: List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>,
+                                      statements: List<at.heinz.deviceai.cognitive.WorkDecisionRecall.OwnerStatement>) {
+        val now = System.currentTimeMillis()
+        val zone = java.util.TimeZone.getDefault()
+        val focus = decisionFocus?.takeIf { it.first == sessionId }?.second
+        val reply = at.heinz.deviceai.cognitive.WorkDecisionRecall.answer(ask, focus, episodes, statements, now, zone)
+        reply.focus?.let { decisionFocus = sessionId to it }
+        val kind = ask::class.simpleName ?: "ask"
+        // Remembering is shown where the cockpit already shows recall: the real number of items found (0 = no light).
+        cockpitBus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.RecallHits(at.heinz.deviceai.cockpit.MEMORY_TURN,
+            now, "work-decisions:$kind", reply.hits, if (reply.hits == 0) null else 1f))
+        // A correction („die davor“) or a continuation that resolved to a record: the small confirming nod.
+        if (reply.understood && (ask == at.heinz.deviceai.cognitive.WorkDecisionRecall.Ask.Previous ||
+                ask == at.heinz.deviceai.cognitive.WorkDecisionRecall.Ask.ContinueOpen))
+            avatarDirector.confirmationAccepted("decision-$kind-$now")
+        if (ask == at.heinz.deviceai.cognitive.WorkDecisionRecall.Ask.ContinueOpen) {
+            at.heinz.deviceai.cognitive.WorkDecisionRecall.resolveContinue(focus, episodes, now)?.let { resume ->
+                resumeWorkEpisode(resume, reply.text, inCockpit, now, zone)
+                return
+            }
+        }
+        addAssistantMessage(reply.text, preserveLocalContext = true, keepCockpit = inCockpit)
+    }
+
+    /**
+     * „Dann mach bitte beim letzten offenen Punkt weiter.“ – continues on the existing paths only: an unsaved draft is
+     * shown again for checking and saving; an unfinished document task is really re-read and re-run (its new state is
+     * recorded by that run – never marked done here); a missing model or a revoked read grant is said as it is.
+     */
+    private fun resumeWorkEpisode(resume: at.heinz.deviceai.cognitive.WorkDecisionRecall.Resume, intro: String,
+                                  inCockpit: Boolean, now: Long, zone: java.util.TimeZone) {
+        val e = resume.episode
+        val name = e.source ?: "Dokument"
+        val whenText = at.heinz.deviceai.cognitive.WorkRecall.whenText(e.startedAt, now, zone)
+        if (e.state == at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTED && !e.draft.isNullOrBlank()) {
+            workEpisodeId = e.id
+            val basis = at.heinz.deviceai.cognitive.DocumentDraftPrompt(e.request, "", e.coveredChars, e.sourceChars)
+            val window = presentDraftScene(DocumentDraftTurn(basis, name, e.id), e.draft)
+            addAssistantMessage("$intro\nHier ist der Entwurf von $whenText zu „$name“ – zum Prüfen und Speichern.",
+                preserveLocalContext = true, keepCockpit = window != null || inCockpit)
+            return
+        }
+        if (e.state == at.heinz.deviceai.cognitive.CockpitWorkJournal.State.NO_MODEL && !localModelReady()) {
+            addAssistantMessage("$intro\nDas lokale Modell ist weiterhin nicht geladen – lade es in der Modellverwaltung, dann " +
+                "erstelle ich den Entwurf zu „$name“.", preserveLocalContext = true, keepCockpit = inCockpit)
+            return
+        }
+        val readable = runCatching {
+            contentResolver.persistedUriPermissions.filter { it.isReadPermission }.map { it.uri.toString() }.toSet()
+        }.getOrDefault(emptySet())
+        if (e.documentUri != null && e.documentUri in readable) {
+            val wantsDraft = when (e.state) {
+                at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED ->
+                    at.heinz.deviceai.cognitive.OwnerDocumentIntent.parse(e.request)?.wantsDraft ?: false
+                else -> true
+            }
+            addAssistantMessage("$intro\nIch öffne „$name“ von $whenText wieder und starte den Auftrag neu: „${e.request}“.",
+                preserveLocalContext = true, keepCockpit = inCockpit)
+            pendingDocumentDraft = wantsDraft
+            pendingDocumentRequest = e.request
+            readPdfDocument(android.net.Uri.parse(e.documentUri), remembered = e)
+            return
+        }
+        addAssistantMessage("$intro\n„$name“ darf ich nicht mehr öffnen – wähle die Datei bitte neu aus, dann mache ich dort weiter.",
+            preserveLocalContext = true, keepCockpit = inCockpit)
+    }
+
     /**
      * The owner corrected what the task refers to. A running draft for the wrong source ends under the STOP rules (its
      * late reply cannot reopen anything); the meant draft or PDF is taken from the work journal; the correction is kept
@@ -4707,6 +4808,14 @@ class AgentActivity : Activity() {
             input.text.clear()
             addUserMessage(request)
             runExplicitAppLookup(lookup)
+            return
+        }
+        // „Was haben wir gestern entschieden?“ / „die Entscheidung davor“ / „was davon ist umgesetzt“ / „beim letzten offenen
+        // Punkt weitermachen“ – answered from the work journal and the owner's confirmed statements, never by the model.
+        at.heinz.deviceai.cognitive.WorkDecisionRecall.parse(request)?.let { ask ->
+            input.text.clear()
+            addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            presentDecisionRecall(ask)
             return
         }
         // „Wo waren wir gestern …?“ – from the work journal; a document request in the same sentence follows.

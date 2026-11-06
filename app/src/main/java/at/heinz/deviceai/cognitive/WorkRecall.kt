@@ -101,7 +101,8 @@ internal object WorkRecall {
         }
     }
 
-    private fun window(period: Period, now: Long, zone: TimeZone): Pair<Long, Long> {
+    /** [from, to) of a period in local time; shared with [WorkDecisionRecall]. */
+    fun window(period: Period, now: Long, zone: TimeZone): Pair<Long, Long> {
         val day = dayStart(now, zone)
         return when (period) {
             Period.TODAY -> day to Long.MAX_VALUE
