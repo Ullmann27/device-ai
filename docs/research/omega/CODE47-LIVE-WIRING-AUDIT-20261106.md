@@ -69,3 +69,11 @@ Calling private scene methods by reflection in a 2D preview alone does not prove
 Relevant contracts: EXP-05 (real local inference), EXP-12 (identity/context continuity), EXP-02/07 (repair and independent negative checks), EXP-00 (actual APK/toolchain evidence). No research flags or model weights are promoted by these repairs.
 
 Rollback: each stream remains an isolated branch; revert a reviewed integration commit if a regression is established. Keep Code46's verified hosted artifact available. Do not force-push another writer, merge main, retrieve the original signer or install on the owner's device.
+
+## Restored SDK baseline — 20:25 UTC
+
+Exact source `24547da95790ca43b0293ed06b4f2bd6e5a7814c` compiled with the real Android36 SDK, pinned Temurin17.0.20.1+1, Kotlin2.4.0 and Gradle8.11.1: `:app:compileDebugKotlin`, exit0 after4m29s, source unchanged. This run restores real dependency classes for focused repair tests; it ran no unit tests and built no APK. It is not verification of the pending new repair branches. Receipt, full log and toolchain checksums: `docs/evidence/code47-live-wiring-20261106/toolchain/`.
+
+The first configuration attempts failed because an inherited Gradle proxy setting named an unreachable endpoint. The successful attempt uses the session's current inherited HTTP(S) proxy and CA with TLS verification intact. No repository build guard or network access policy was relaxed.
+
+All three repair streams now have visible drafts: PR579, PR580 and PR581. Their latest targeted results and actual source commitments must be read from their own handoffs before integration; none is yet a complete final-source release gate.

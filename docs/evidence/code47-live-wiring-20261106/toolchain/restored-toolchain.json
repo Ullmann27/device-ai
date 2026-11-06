@@ -1,0 +1,28 @@
+{
+  "status": "SDK_PRODUCTION_COMPILE_PASS_ONLY",
+  "testedSource": "24547da95790ca43b0293ed06b4f2bd6e5a7814c",
+  "testsRun": false,
+  "apkBuilt": false,
+  "jdk": "Temurin17.0.20.1+1",
+  "kotlin": "2.4.0",
+  "gradle": "8.11.1",
+  "node": "24.22.1",
+  "packages": {
+    "platforms/android-36": "Pkg.Desc=Android SDK Platform 16\nPkg.UserSrc=false\nPlatform.Version=16\nPlatform.CodeName=\nPkg.Revision=2\nAndroidVersion.ApiLevel=36\nAndroidVersion.ExtensionLevel=17\nAndroidVersion.IsBaseSdk=true\nLayoutlib.Api=15\nLayoutlib.Revision=1\nPlatform.MinToolsRev=22\n",
+    "build-tools/35.0.0": "Pkg.UserSrc=false\nPkg.Revision=35.0.0\n#Pkg.Revision=35.0.0 rc4\n"
+  },
+  "archives": {
+    "android-cli.zip": "7ec965280a073311c339e571cd5de778b9975026cfcbe79f2b1cdcb1e15317ee",
+    "gradle.zip": "f397b287023acdba1e9f6fc5ea72d22dd63669d59ed4a289a29b1a76eee151c6",
+    "kotlin.zip": "ba1b9e6eb6ddc3275079224f2e9ea4a2b02eef7d59ce2d38404f04b22613c20a",
+    "jdk17-pinned.tar.gz": "3808d1d15e3ec6bd5b84057fb5d84c33d8a1536a258146bcea2e603fc726e08e"
+  },
+  "network": "Initial Gradle attempts failed because its inherited GRADLE_OPTS pointed to an unreachable browser-proxy. Java/Gradle were bound to the current inherited HTTP(S)_PROXY with inherited CA added to JVM trust. TLS verification retained. No destination-policy denial was bypassed.",
+  "fullLog": {
+    "path": "sdk-production-compile.log.gz",
+    "rawBytes": 618402,
+    "rawSha256": "6cdb0acc92923c15b6661e9ea65fce17345cf289c97c3ed49f8181898d5c8be1",
+    "gzipBytes": 60397,
+    "gzipSha256": "7ecd6c0353a1442a2610512aa52312aecd34bf892b4eb951a0e96795f6f53f2d"
+  }
+}
