@@ -87,6 +87,9 @@ internal object WorkRecall {
 
     private fun pages(n: Int) = if (n == 1) "1 Seite" else "$n Seiten"
 
+    /** „heute 08:12“, „gestern 14:12“ or „5. Nov., 09:30“ – the same wording as the recall lines. */
+    fun whenText(at: Long, now: Long, zone: TimeZone): String = time(at, now, zone)
+
     private fun time(at: Long, now: Long, zone: TimeZone): String {
         val day = dayStart(now, zone)
         val clock = SimpleDateFormat("HH:mm", Locale.GERMANY).apply { timeZone = zone }.format(Date(at))

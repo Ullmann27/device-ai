@@ -186,10 +186,10 @@ class ContinuumDocumentSceneUiTest {
         assertFalse("a missing size is not invented", (descendants(window).single { it.tag == "jarvis-document-meta" } as TextView).text.contains("B"))
     }
 
-    private fun draftTurn(prompt: at.heinz.deviceai.cognitive.DocumentDraftPrompt, name: String): Any =
+    private fun draftTurn(prompt: at.heinz.deviceai.cognitive.DocumentDraftPrompt, name: String, episodeId: String? = null): Any =
         AgentActivity::class.java.declaredClasses.single { it.simpleName == "DocumentDraftTurn" }
             .getDeclaredConstructor(at.heinz.deviceai.cognitive.DocumentDraftPrompt::class.java, String::class.java, String::class.java)
-            .apply { isAccessible = true }.newInstance(prompt, name, null)
+            .apply { isAccessible = true }.newInstance(prompt, name, episodeId)
 
     /**
      * Result surface (owner flow): the draft text a local model returned (SIMULATED_MODEL_REPLY – no model on the host)
@@ -298,5 +298,43 @@ class ContinuumDocumentSceneUiTest {
             advance(900L); measure(root); draw(root)
             capture(root, "memory-1-verlauf-after-restart")
         }
+    }
+
+    /**
+     * „Nein, ich meinte den letzten Entwurf.“ (owner brief 06.11.2026), HOST: while a draft for the wrong PDF is running,
+     * the correction ends it under the STOP rules (recorded as aborted, not done), shows the draft the owner meant from
+     * the work journal and keeps the correction on the corrected task.
+     */
+    @Test fun aCorrectionEndsTheWrongDraftAndShowsTheMeantOne() = withCockpit { activity, root ->
+        val journal = at.heinz.deviceai.cognitive.CockpitWorkJournal(activity.filesDir)
+        val meant = journal.begin(at.heinz.deviceai.cognitive.CockpitWorkJournal.Kind.DOCUMENT,
+            "Fasse die Projektübersicht zusammen", at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTED,
+            "Projektübersicht.pdf", 3, 68)
+        journal.update(meant.id) { it.copy(draft = "Kernaussagen:\n- Ziel ist ein lokales Cockpit auf dem Fold7.", coveredChars = 68) }
+        val wrong = journal.begin(at.heinz.deviceai.cognitive.CockpitWorkJournal.Kind.DOCUMENT,
+            "Lies diese PDF und erstelle mir eine Zusammenfassung als Entwurf.",
+            at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING, "Rechnung.pdf", 1, 400)
+        val prompt = requireNotNull(at.heinz.deviceai.cognitive.DocumentDraftPrompt.build("Rechnung.pdf", "Rechnung 42"))
+        AgentActivity::class.java.getDeclaredField("documentDraftTurn").apply { isAccessible = true }
+            .set(activity, draftTurn(prompt, "Rechnung.pdf", wrong.id))
+        AgentActivity::class.java.getDeclaredField("workEpisodeId").apply { isAccessible = true }.set(activity, wrong.id)
+        (field(activity, "input") as EditText).setText("Nein, ich meinte den letzten Entwurf")
+        AgentActivity::class.java.getDeclaredMethod("sendCurrentInput", Boolean::class.javaPrimitiveType)
+            .apply { isAccessible = true }.invoke(activity, false)
+        assertEquals("the wrong draft no longer waits for a reply", null, field(activity, "documentDraftTurn"))
+        advance(760L); measure(root); draw(root)
+        val window = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
+        val texts = descendants(window).filterIsInstance<TextView>().map { it.text.toString() }
+        assertTrue(texts.toString(), texts.contains("ENTWURF · Projektübersicht.pdf"))
+        assertEquals("Kernaussagen:\n- Ziel ist ein lokales Cockpit auf dem Fold7.",
+            (descendants(window).single { it.tag == "jarvis-draft-text" } as TextView).text.toString())
+        assertTrue(chatTexts(activity).toString(), chatTexts(activity).any { it.startsWith("Verstanden – du meinst den Entwurf von heute") &&
+            it.endsWith("zu „Projektübersicht.pdf“. Hier ist er.") })
+        val deadline = System.currentTimeMillis() + 5_000
+        fun stored() = journal.all().single { it.id == wrong.id }
+        while (stored().correction == null && System.currentTimeMillis() < deadline) { Thread.sleep(20); advance(16L) }
+        assertEquals("aborted, not done", at.heinz.deviceai.cognitive.CockpitWorkJournal.State.ABORTED, stored().state)
+        assertEquals("the owner's words stay with the corrected task", "Nein, ich meinte den letzten Entwurf", stored().correction)
+        capture(root, "memory-2-correction-last-draft")
     }
 }

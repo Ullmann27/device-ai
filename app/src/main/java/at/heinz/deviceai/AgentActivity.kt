@@ -1852,6 +1852,49 @@ class AgentActivity : Activity() {
         addAssistantMessage(answer, preserveLocalContext = true, keepCockpit = window != null || !keepWindow)
     }
 
+    /**
+     * The owner corrected what the task refers to. A running draft for the wrong source ends under the STOP rules (its
+     * late reply cannot reopen anything); the meant draft or PDF is taken from the work journal; the correction is kept
+     * on the corrected task in the owner's words. Nothing matching: one short question.
+     */
+    private fun applyOwnerCorrection(correction: at.heinz.deviceai.cognitive.OwnerCorrectionIntent.Correction, spoken: String) {
+        val inCockpit = activeWorkArea == ContinuumWorkArea.START
+        val corrected = documentDraftTurn?.episodeId ?: workEpisodeId
+        if (documentDraftTurn != null) cancelLocalRequest()
+        val now = System.currentTimeMillis()
+        val zone = java.util.TimeZone.getDefault()
+        val episodes = runCatching { workJournal.all() }.getOrDefault(emptyList())
+        val meant = at.heinz.deviceai.cognitive.OwnerCorrectionIntent.resolve(episodes, correction, corrected, now, zone)
+        recordWork(corrected) { it.copy(correction = spoken) }
+        val draftTarget = correction.target == at.heinz.deviceai.cognitive.OwnerCorrectionIntent.Target.DRAFT
+        if (meant == null) {
+            addAssistantMessage(if (draftTarget)
+                "Einen früheren Entwurf finde ich im Arbeitsverlauf nicht. Welchen meinst du – oder soll ich einen neuen erstellen?"
+                else "Eine frühere PDF, die ich noch öffnen darf, finde ich nicht. Welche meinst du? Ich kann die Auswahl öffnen.",
+                false, keepCockpit = inCockpit)
+            return
+        }
+        val whenText = at.heinz.deviceai.cognitive.WorkRecall.whenText(meant.startedAt, now, zone)
+        val name = meant.source ?: "Dokument"
+        if (draftTarget) {
+            workEpisodeId = meant.id
+            val basis = at.heinz.deviceai.cognitive.DocumentDraftPrompt(meant.request, "", meant.coveredChars, meant.sourceChars)
+            val window = presentDraftScene(DocumentDraftTurn(basis, name, meant.id), meant.draft.orEmpty())
+            addAssistantMessage("Verstanden – du meinst den Entwurf von $whenText zu „$name“. Hier ist er.",
+                false, keepCockpit = window != null || inCockpit)
+            return
+        }
+        val readable = runCatching {
+            contentResolver.persistedUriPermissions.filter { it.isReadPermission }.map { it.uri.toString() }.toSet()
+        }.getOrDefault(emptySet())
+        if (meant.documentUri in readable) {
+            addAssistantMessage("Verstanden – du meinst „$name“ von $whenText. Ich öffne sie.", false, keepCockpit = inCockpit)
+            pendingDocumentRequest = spoken
+            readPdfDocument(android.net.Uri.parse(meant.documentUri))
+        } else addAssistantMessage("Du meinst „$name“ von $whenText – die darf ich nicht mehr öffnen. Wähle sie bitte neu aus.",
+            false, keepCockpit = inCockpit)
+    }
+
     /** „die ausgewählte PDF“: the PDF chosen before, if Android still lets JARVIS read it; otherwise one short question. */
     private fun openOrReuseDocument(document: at.heinz.deviceai.cognitive.OwnerDocumentIntent.Request, request: String) {
         if (document.reuse) {
@@ -4404,6 +4447,15 @@ class AgentActivity : Activity() {
         // It must never cancel or queue behind the current model generation.
         val chiefStatusRequest = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
             ContinuumWorkerChatCommand.ChiefStatus
+        // „Nein, ich meinte den letzten Entwurf“ may interrupt a running draft: it starts no model turn of its own.
+        val correction = at.heinz.deviceai.cognitive.OwnerCorrectionIntent.parse(input.text.toString().trim())
+        if (correction != null && !botLookupPending) {
+            val spoken = input.text.toString().trim()
+            input.text.clear()
+            addUserMessage(spoken, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            applyOwnerCorrection(correction, spoken)
+            return
+        }
         if (botLookupPending && !chiefStatusRequest) return
         if (busy && !chiefStatusRequest) return
         // Barge-in: the user takes precedence over any previous spoken answer.
