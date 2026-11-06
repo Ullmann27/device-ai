@@ -95,10 +95,14 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
 
     fun append(episode: Episode) = synchronized(LOCK) {
         val rows = read().filterNot { it.id == episode.id } + sanitize(episode)
-        // Routine storage checks must not evict the owner's PDF history.
-        val recentToolIds = rows.filter { it.kind == Kind.TOOL }.takeLast(MAX_TOOL_EPISODES)
+        // Keep the original 40 document slots, plus ten small tool entries.
+        val documentIds = rows.filter { it.kind == Kind.DOCUMENT }.takeLast(MAX_EPISODES)
             .map { it.id }.toSet()
-        write(rows.filter { it.kind != Kind.TOOL || it.id in recentToolIds }.takeLast(MAX_EPISODES))
+        val toolIds = rows.filter { it.kind == Kind.TOOL }.takeLast(MAX_TOOL_EPISODES)
+            .map { it.id }.toSet()
+        write(rows.filter { e ->
+            if (e.kind == Kind.DOCUMENT) e.id in documentIds else e.id in toolIds
+        })
     }
 
     fun begin(kind: Kind, request: String, state: State, source: String? = null, pages: Int = 0, chars: Int = 0,
@@ -163,7 +167,7 @@ class CockpitWorkJournal(directory: File, private val clock: () -> Long = System
         require(!Files.isSymbolicLink(file.toPath()) && file.length() <= MAX_BYTES) { "Ungültiges Arbeitsjournal" }
         return file.readLines(Charsets.UTF_8).filter(String::isNotBlank).mapNotNull { line ->
             runCatching { decode(JSONObject(line)) }.getOrNull()
-        }.takeLast(MAX_EPISODES)
+        }.takeLast(MAX_EPISODES + MAX_TOOL_EPISODES)
     }
 
     private fun write(rows: List<Episode>) {
