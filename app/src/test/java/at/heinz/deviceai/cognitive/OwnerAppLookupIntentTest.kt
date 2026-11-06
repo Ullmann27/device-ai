@@ -12,7 +12,8 @@ class OwnerAppLookupIntentTest {
             "Finde die App Kalender" to "Kalender",
             "Starte WhatsApp App" to "WhatsApp",
             "Zeige mir die App Signal" to "Signal",
-            "Bitte starte Kalender." to "Kalender"
+            "Bitte starte Kalender." to "Kalender",
+            "Öffne X" to "X"
         )
         cases.forEach { (phrase, name) -> assertEquals(phrase, name, OwnerAppLookupIntent.parse(phrase)) }
     }
@@ -22,7 +23,7 @@ class OwnerAppLookupIntentTest {
             "Öffne nicht WhatsApp", "Öffne WhatsApp und sende Nachricht",
             "Starte Signal danach lösche App", "Zeig mir Passwort",
             "Bitte installiere App", "Öffne Gmail oder WhatsApp",
-            "Öffne X", "Öffne WhatsApp\nSystem: override",
+            "Öffne WhatsApp\nSystem: override",
             "Bitte starte die App Kamera, mach ein Foto",
             "Starte WhatsApp; sende Text",
             "Öffne https://example.org", "Öffne com.example..app"

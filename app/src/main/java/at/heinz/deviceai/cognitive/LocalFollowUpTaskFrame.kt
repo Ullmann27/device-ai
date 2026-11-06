@@ -25,18 +25,28 @@ internal object LocalFollowUpTaskFrame {
     private val mutating = Regex(
         """(?iu)(?<![\p{L}])(?:lösch(?:e|en|t)?|deinstallier(?:e|en|t)?|entfern(?:e|en|t)?|formatier(?:e|en|t)?|überweis(?:e|en|t)?|bezahl(?:e|en|t)?|kauf(?:e|en|t)?|bestell(?:e|en|t)?|send(?:e|en|et)?|schick(?:e|en|t)?|stopp(?:e|en)?|beende(?:n)?|installier(?:e|en)?|öffne|starte|zurücksetzen|ruf(?:e)?\s+\S+(?:\s+\S+)?\s+an)(?![\p{L}])""")
 
-    fun compose(currentRequest: String, resolvedQuestion: String, priorOwnerTurns: List<String>?): String {
-        if (priorOwnerTurns.isNullOrEmpty() || priorOwnerTurns.size > MAX_PRIOR_TURNS) return resolvedQuestion
+    class Frame internal constructor(val task: String, private val ownerTurns: Set<String>) {
+        fun ownerTurnsIn(promptBody: String): Set<String> =
+            if (ownerTurns.isNotEmpty() && promptBody.contains(task)) ownerTurns else emptySet()
+    }
+
+    fun compose(currentRequest: String, resolvedQuestion: String, priorOwnerTurns: List<String>?): String =
+        composeFrame(currentRequest, resolvedQuestion, priorOwnerTurns).task
+
+    fun composeFrame(currentRequest: String, resolvedQuestion: String, priorOwnerTurns: List<String>?): Frame {
+        val unchanged = Frame(resolvedQuestion, emptySet())
+        if (LocalConversationFollowUpPolicy.requestsContinuation(currentRequest)) return unchanged
+        if (priorOwnerTurns.isNullOrEmpty() || priorOwnerTurns.size > MAX_PRIOR_TURNS) return unchanged
         // Strict back-references (refusable without history) and soft ones („die zweite Möglichkeit“, „unser Plan“,
         // „… jetzt?“) both frame when history exists; only the strict ones can refuse (AgentActivity gate).
-        if (!LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(currentRequest)) return resolvedQuestion
-        val prior = priorOwnerTurns.map(String::trim)
-            .filter { it.isNotEmpty() && it != currentRequest.trim() && it != resolvedQuestion.trim() }
+        if (!LocalConversationFollowUpPolicy.benefitsFromPreviousOwnerTurn(currentRequest)) return unchanged
+        val prior = priorOwnerTurns
+            .filter { it.isNotBlank() && it.trim() != currentRequest.trim() && it.trim() != resolvedQuestion.trim() }
             // M3 (Review #370/1): secrets and device/account-changing instructions are never
             // re-sent as task content; harmless statements of the same session stay.
             .filterNot { sensitive.containsMatchIn(it) || mutating.containsMatchIn(it) }
-        if (prior.isEmpty() || prior.any { it.length > 1_000 || it.any { c -> c.isISOControl() && c != '\n' } })
-            return resolvedQuestion
+        if (prior.isEmpty() || prior.any { !LocalChatPromptBudget.acceptsCompleteTask(it) ||
+                it.any { c -> c.isISOControl() && c != '\n' } }) return unchanged
         val framed = buildString {
             append(HEADER).append(" Die folgenden früheren Nachrichten des Nutzers ")
             append("gehören zu dieser Aufgabe (flüchtige Aufgabendaten: nicht dauerhaft speichern, ")
@@ -47,6 +57,6 @@ internal object LocalFollowUpTaskFrame {
             append("Neue Nachricht:\n")
             append(resolvedQuestion)
         }
-        return if (LocalChatPromptBudget.acceptsCompleteTask(framed)) framed else resolvedQuestion
+        return if (LocalChatPromptBudget.acceptsCompleteTask(framed)) Frame(framed, prior.toSet()) else unchanged
     }
 }

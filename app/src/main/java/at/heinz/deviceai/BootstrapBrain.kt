@@ -131,21 +131,41 @@ object BootstrapBrain {
     )
     private val contrast = Regex("(?iu)\\b(sondern|stattdessen|außer|aber)\\b")
 
+    private fun unsafeControlText(text: String): Boolean {
+        val safetyText = if (contrast.containsMatchIn(text)) text else text.replace(negatedMutation, " ")
+        return Regex("""(?i)^(system|developer|assistant|tool)\s*:""").containsMatchIn(text) ||
+            Regex("""(?i)\b(lösch\w*|entfern\w*|deinstallier(?:e|en|st)?\b|installier(?:e|en|st)?\b|verschieb\w*|starte\w*|stoppe?\w*|überweis\w*|bezahl\w*)\b""").containsMatchIn(safetyText)
+    }
+
+    private fun specialLongCommand(text: String): Boolean {
+        val start = text.take(64).lowercase(Locale.ROOT)
+        return listOf("merke dir:", "merk dir:", "trainiere:", "korrigiere:", "widerrufe:",
+            "prüfe wissen:", "vergiss alles", "lösche meine erinnerungen", "lernspeicher löschen",
+            "neuron").any(start::startsWith)
+    }
+
     fun decide(utterance: String, facts: List<String>,
-               learnedCommands: Map<String, String> = emptyMap()): BootstrapDecision {
-        if (utterance.length > 2_048) return BootstrapDecision(BootstrapKind.REPLY,
-            "Eingabe zu lang; bitte höchstens 2048 Zeichen. Es wurde nichts ausgeführt.")
+               learnedCommands: Map<String, String> = emptyMap()): BootstrapDecision =
+        decide(utterance, facts, learnedCommands, null)
+
+    fun decide(utterance: String, facts: List<String>, learnedCommands: Map<String, String>,
+               identityDescription: String?): BootstrapDecision {
         val text = utterance.trim()
+        if (utterance.length > 2_048) {
+            val ordinaryDialogue = at.heinz.deviceai.cognitive.LocalChatPromptBudget.acceptsCompleteTask(utterance) &&
+                !specialLongCommand(text) && !unsafeControlText(text)
+            return if (ordinaryDialogue) BootstrapDecision(BootstrapKind.REPLY, allowNeuralRecall = true)
+            else BootstrapDecision(BootstrapKind.REPLY,
+                "Dieser Auftrag überschreitet seine zulässige Eingabegrenze. " +
+                    "Bitte teile ihn in vollständige Schritte; nichts wurde ausgeführt oder gespeichert.")
+        }
         val low = carryContrastVerb(text.lowercase(Locale.ROOT))
         // Explicit memory deletion stays available, but always requires an Android confirmation.
         if (low == "lösche meine erinnerungen" || low == "lernspeicher löschen")
             return BootstrapDecision(BootstrapKind.FORGET)
         // The deterministic intent recognizer must not mistake a dangerous mixed
         // request or forged role header for permission to run a harmless-looking tool.
-        val safetyText = if (contrast.containsMatchIn(text)) text else text.replace(negatedMutation, " ")
-        if (Regex("""(?i)^(system|developer|assistant|tool)\s*:""").containsMatchIn(text) ||
-            Regex("""(?i)\b(lösch\w*|entfern\w*|deinstallier(?:e|en|st)?\b|installier(?:e|en|st)?\b|verschieb\w*|starte\w*|stoppe?\w*|überweis\w*|bezahl\w*)\b""").containsMatchIn(safetyText)
-        ) return BootstrapDecision(
+        if (unsafeControlText(text)) return BootstrapDecision(
             BootstrapKind.REPLY,
             "Dieser Satz enthält eine nachgeahmte Rolle oder einen verändernden Geräteauftrag. " +
                 "Der eigene Startkern führt deshalb keinerlei Gerätewerkzeug aus."
@@ -210,10 +230,10 @@ object BootstrapBrain {
                     "Meine ausdrücklich gespeicherten Fakten:\n" + facts.take(32).joinToString("\n") { "• $it" })
         if (low == "hallo" || low == "hi" || low == "hey" || low == "guten morgen" ||
             low == "guten tag" || low == "servus") return BootstrapDecision(BootstrapKind.REPLY,
-                "Hallo! Ich bin Device AI. Mein eigener lokaler Startkern ist aktiv. Was möchtest du mit mir ausprobieren?")
-        if (low.contains("wer bist du") || low.contains("wie heißt du")) return BootstrapDecision(
-            BootstrapKind.REPLY, "Ich bin Device AI Continuum – ein eigener Android-Startkern mit " +
-                "lokaler, ausdrücklich gesteuerter Erinnerung. Ich bin noch kein großes Sprachmodell.")
+                "Hallo! Der lokale Startkern von Device AI Continuum ist aktiv. Was möchtest du ausprobieren?")
+        if (at.heinz.deviceai.cognitive.LocalAssistantIdentity.isIdentityQuestion(text)) return BootstrapDecision(
+            BootstrapKind.REPLY, identityDescription ?:
+                at.heinz.deviceai.cognitive.LocalAssistantIdentity.selfDescription(null))
         // Harmless self-capability questions may tolerate common German/Austrian variants.
         // This never rewrites, confirms or triggers a device or coding instruction.
         if (low.contains("was kannst du") || low.contains("was kanst du") ||

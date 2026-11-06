@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/workspace/scratch/b31a9d731016/build-env/jdk17-pinned/bin/java",
+    "-Xmx256m",
+    "-cp",
+    "/workspace/scratch/b31a9d731016/output-completion-evidence/final-tests.jar:/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug:/workspace/scratch/b31a9d731016/build-env/test-libs/hamcrest-core-1.3.jar:/workspace/scratch/b31a9d731016/build-env/test-libs/json-20240303.jar:/workspace/scratch/b31a9d731016/build-env/test-libs/junit-4.13.2.jar:/workspace/scratch/b31a9d731016/build-env/kotlinc/lib/kotlin-stdlib-jdk7-sources.jar:/workspace/scratch/b31a9d731016/build-env/kotlinc/lib/kotlin-stdlib-jdk7.jar:/workspace/scratch/b31a9d731016/build-env/kotlinc/lib/kotlin-stdlib-jdk8-sources.jar:/workspace/scratch/b31a9d731016/build-env/kotlinc/lib/kotlin-stdlib-jdk8.jar:/workspace/scratch/b31a9d731016/build-env/kotlinc/lib/kotlin-stdlib-js-sources.jar:/workspace/scratch/b31a9d731016/build-env/kotlinc/lib/kotlin-stdlib-sources.jar:/workspace/scratch/b31a9d731016/build-env/kotlinc/lib/kotlin-stdlib.jar",
+    "org.junit.runner.JUnitCore",
+    "at.heinz.deviceai.cognitive.AgentModelOutputBoundaryTest",
+    "at.heinz.deviceai.cognitive.OwnerDialogueOutputTest",
+    "at.heinz.deviceai.cognitive.BoundedAgentTest",
+    "at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest",
+    "at.heinz.deviceai.cognitive.AgentCancellationRegressionTest",
+    "at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest",
+    "at.heinz.deviceai.cognitive.ToolWorkJournalIntegrationTest",
+    "at.heinz.deviceai.cognitive.LocalGenerationCaptureTest",
+    "at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicyTest",
+    "at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuardTest"
+  ],
+  "exit": 0,
+  "sdk_base": "24547da95790ca43b0293ed06b4f2bd6e5a7814c"
+}

@@ -1,0 +1,39 @@
+{
+  "gate": "node-critical",
+  "startedAt": "2026-11-06T20:50:49.527629+00:00",
+  "startedEpochMillis": 1793998249527,
+  "finishedAt": "2026-11-06T20:51:24.802103+00:00",
+  "sourceBefore": {
+    "commit": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+    "tree": "57027b6d4cfceda3bbd8241e77341ec67632370c",
+    "branch": "codex/continuum-code47-qa-candidate-20261106",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceAfter": {
+    "commit": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+    "tree": "57027b6d4cfceda3bbd8241e77341ec67632370c",
+    "branch": "codex/continuum-code47-qa-candidate-20261106",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceUnchanged": true,
+  "commands": [
+    {
+      "command": [
+        "node",
+        "scripts/continuum-reliability-qa.mjs",
+        "critical",
+        "--out",
+        "/workspace/scratch/b31a9d731016/build-evidence/final-c3d2cdc5d847/critical"
+      ],
+      "cwd": "/workspace/scratch/b31a9d731016/device-ai-wiring",
+      "exitCode": 1
+    }
+  ],
+  "logSha256": "92b7835d9fd04b2e72341b5ffba1b4fa49cdf42da54f2e234f835a73e2262eda",
+  "logBytes": 249,
+  "localUnsignedQaOnly": true,
+  "deviceAcceptance": "NOT_RUN",
+  "status": "FAIL"
+}

@@ -9,7 +9,7 @@ package at.heinz.deviceai.cognitive
  * the original request or the native model identity checks.
  */
 internal object LocalChatPromptBudget {
-    const val MAX_TASK_CHARACTERS = 7_900
+    const val MAX_TASK_CHARACTERS = LocalDialogueContextLimits.MAX_OWNER_CHARACTERS
     // Reject a complete request early if it exceeds either conservative model
     // budget. A multilingual suffix must never be clipped later by LocalPromptFrame.
     fun acceptsCompleteTask(task: String): Boolean = task.isNotBlank() &&

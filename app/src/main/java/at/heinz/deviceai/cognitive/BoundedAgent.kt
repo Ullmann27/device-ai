@@ -30,14 +30,32 @@ data class AgentReflection(val failure: String, val evidence: String, val correc
     }
 }
 
-data class AgentModelOutput(
+@ConsistentCopyVisibility
+data class AgentModelOutput private constructor(
     val modelId: String,
     val response: String,
-    val proposal: ToolProposal? = null
+    val proposal: ToolProposal?,
+    val responseCompletion: LocalGenerationCompletion,
+    private val ownerDialogue: Boolean
 ) {
+    constructor(modelId: String, response: String, proposal: ToolProposal? = null) :
+        this(modelId, response, proposal, LocalGenerationCompletion.COMPLETE, false)
+
+    val responseComplete: Boolean get() = responseCompletion == LocalGenerationCompletion.COMPLETE
+
     init {
         require(modelId.isNotBlank())
-        require(response.length <= 8_000) { "LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT" }
+        val limit = if (ownerDialogue) LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS else 8_000
+        require(response.length <= limit) { "LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT" }
+        require(!ownerDialogue || proposal == null)
+        require(ownerDialogue || responseComplete)
+        require(responseCompletion != LocalGenerationCompletion.CANCELLED)
+    }
+
+    companion object {
+        fun ownerDialogue(modelId: String, response: String,
+            completion: LocalGenerationCompletion = LocalGenerationCompletion.COMPLETE): AgentModelOutput =
+            AgentModelOutput(modelId, response, null, completion, true)
     }
 }
 
@@ -163,8 +181,11 @@ data class AgentRunResult(
     val auditTrail: List<AgentAuditEvent>,
     val experience: Experience?,
     val blocker: String? = null,
-    val taskEvidence: AgentTaskEvidence? = null
-)
+    val taskEvidence: AgentTaskEvidence? = null,
+    val responseCompletion: LocalGenerationCompletion = LocalGenerationCompletion.COMPLETE
+) {
+    val responseComplete: Boolean get() = responseCompletion == LocalGenerationCompletion.COMPLETE
+}
 
 class BoundedAgentOrchestrator(
     private val model: AgentModel,
@@ -391,6 +412,8 @@ class BoundedAgentOrchestrator(
                                 approval.destructiveConfirmed,
                                 onExecutionStarted = {
                                     emit(CognitiveWorkState.EXECUTING, invocation.id)
+                                },
+                                onDispatchStarted = {
                                     runCatching { onToolStarted(invocation.id, proposal.toolName) }
                                 }
                             )
@@ -445,6 +468,24 @@ class BoundedAgentOrchestrator(
                 emit(CognitiveWorkState.VERIFYING)
                 lastEvaluation = evaluator.evaluate(lastOutput, lastRecord)
                 cancellation.throwIfCancelled()
+                if (!chosen.responseComplete) {
+                    val acceptedText = if (lastEvaluation.success) lastOutput else ""
+                    val reason = if (!lastEvaluation.success)
+                        "Unvollständige Antwort zurückgehalten: Die lokale Qualitätsprüfung wurde nicht bestanden."
+                    else when (chosen.responseCompletion) {
+                        LocalGenerationCompletion.OUTPUT_LIMIT ->
+                            "Antwort unvollständig: Das lokale Ausgabelimit wurde erreicht."
+                        LocalGenerationCompletion.STALLED ->
+                            "Antwort unvollständig: Die lokale Textausgabe ist zum Stillstand gekommen."
+                        else -> "Antwort unvollständig: Die lokale Generierung ist fehlgeschlagen."
+                    }
+                    lastEvaluation = Evaluation(false, 0.0, reason)
+                    transition(AgentState.RESPOND, "Incomplete response; no outcome or learning.")
+                    emit(CognitiveWorkState.BLOCKED)
+                    checkpointStore?.clear()
+                    return AgentRunResult(acceptedText, AgentState.RESPOND, audit.toList(), null,
+                        reason, proof(), chosen.responseCompletion)
+                }
                 modelReputation?.takeIf { evaluationConfirmsOutcome && hasFreshToolOutcomes() }?.updateAfterEvaluation(
                     chosen.modelId,
                     ModelCapability.TOOL_USE,

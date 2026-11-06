@@ -7,6 +7,11 @@ package at.heinz.deviceai.cognitive
  * optional as one indivisible block. No tool or memory authorization lives here.
  */
 internal object LocalPromptFrame {
+    fun historyBudget(requiredBody: String, requiredTail: String, maxCharacters: Int): Int =
+        minOf(maxCharacters - requiredBody.length - requiredTail.length,
+            maxCharacters - requiredBody.toByteArray(Charsets.UTF_8).size -
+                requiredTail.toByteArray(Charsets.UTF_8).size).coerceAtLeast(0)
+
     fun assemble(
         requiredBody: String,
         optionalHistory: String,

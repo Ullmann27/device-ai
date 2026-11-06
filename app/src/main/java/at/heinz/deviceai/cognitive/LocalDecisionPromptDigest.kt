@@ -47,11 +47,11 @@ internal object LocalDecisionPromptDigest {
         }.mapNotNull { it.revokedAt }.maxOrNull()
         val liveOwners = items.filter {
             it.origin == WorkDecisionRecall.Origin.OWNER_STATEMENT &&
-                it.revokedAt == null && it.done == null && matches(it) &&
+                it.revokedAt == null && it.done == null && relates(it) &&
                 (lastRevocation == null || it.at > lastRevocation)
         }.distinctBy { it.text }
         // Multiple distinct matching decisions may conflict. Abstain instead of guessing.
-        val owner = liveOwners.singleOrNull()
+        val owner = liveOwners.singleOrNull()?.takeIf { acceptable(it.text) }
         val journal = items.filter {
             it.origin == WorkDecisionRecall.Origin.JOURNAL && it.revokedAt == null &&
                 it.done != null && matches(it)

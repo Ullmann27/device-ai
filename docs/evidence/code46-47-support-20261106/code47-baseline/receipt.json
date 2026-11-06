@@ -1,0 +1,23 @@
+{
+  "status": "FAILED_ONE_SOURCE_CONTRACT_ASSERTION",
+  "recorded_at_utc": "2026-11-06T19:14:43.988956+00:00",
+  "source_commit": "f26d1063b25c65c22b8d411789d1733c92e3ad72",
+  "tracked_source_clean": true,
+  "exit_code": 1,
+  "duration": "36m14s",
+  "xml_suites": 628,
+  "tests": {
+    "tests": 3577,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 20
+  },
+  "passed": 3556,
+  "failed_test": "at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest.timeAnchorIsInTheRequiredTailNotInTheStaticPrefix",
+  "assertion": "time anchor must be part of requiredTail",
+  "production_and_test_sdk_compilation": "PASS",
+  "lintDebug": "NOT_REACHED",
+  "full_pass": false,
+  "scope": "unchanged f26d baseline; excludes later M2 and support fixes",
+  "physical_device": "NOT_RUN"
+}

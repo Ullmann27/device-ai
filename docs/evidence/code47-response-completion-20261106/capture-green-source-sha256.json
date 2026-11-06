@@ -1,0 +1,6 @@
+{
+  "app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationCapture.kt": "ab252d75f20e8ede011a759347f730503558052a030756e247d3f9d1a8485a68",
+  "app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationDeadlinePolicy.kt": "0d450f05d7dcd3d8531365b02af3d2b9bc103e481dfc1e7c238bd5903cec1aec",
+  "app/src/test/java/at/heinz/deviceai/cognitive/LocalGenerationCaptureTest.kt": "e5ae899a2c92df1cb7abd1ca5881fdc573faf6c898b1a665fa1c7f64554748f9",
+  "app/src/test/java/at/heinz/deviceai/cognitive/LocalGenerationDeadlinePolicyTest.kt": "501a5dca9b52f2dc6daddcf83ee1a3cd19b7d75940361712917b5424ea12a2cf"
+}

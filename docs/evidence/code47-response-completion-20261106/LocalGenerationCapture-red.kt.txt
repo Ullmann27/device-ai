@@ -1,0 +1,63 @@
+package at.heinz.deviceai.cognitive
+
+enum class LocalGenerationCompletion { COMPLETE, OUTPUT_LIMIT, STALLED, FAILED, CANCELLED }
+
+internal class LocalGenerationCapture {
+    data class Snapshot(
+        val response: String,
+        val completion: LocalGenerationCompletion?,
+        val failure: String?,
+        val streamedChunks: Int,
+        val firstTextMillis: Long?,
+        val lastTextMillis: Long?
+    ) {
+        val terminal: Boolean get() = completion != null
+        val responseComplete: Boolean get() = completion == LocalGenerationCompletion.COMPLETE
+    }
+
+    private val response = StringBuilder()
+    private var completion: LocalGenerationCompletion? = null
+    private var failure: String? = null
+    private var streamedChunks = 0
+    private var firstTextMillis: Long? = null
+    private var lastTextMillis: Long? = null
+
+    @Synchronized fun append(text: String, elapsedMillis: Long): Snapshot {
+        require(elapsedMillis >= 0)
+        if (completion != null || text.isEmpty()) return snapshot()
+        if (response.length < LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS) {
+            if (firstTextMillis == null) firstTextMillis = elapsedMillis
+            lastTextMillis = elapsedMillis
+            streamedChunks++
+            response.append(text.take(LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS - response.length))
+        }
+        return snapshot()
+    }
+
+    @Synchronized fun complete(): Snapshot = finish(LocalGenerationCompletion.COMPLETE)
+
+    @Synchronized fun fail(message: String): Snapshot = finish(LocalGenerationCompletion.FAILED, message)
+
+    @Synchronized fun cancel(): Snapshot = finish(LocalGenerationCompletion.CANCELLED)
+
+    @Synchronized fun poll(elapsedMillis: Long): Snapshot {
+        require(elapsedMillis >= 0)
+        if (completion != null) return snapshot()
+        val reason = LocalGenerationDeadlinePolicy.stalled(elapsedMillis, lastTextMillis, response.length)
+            ?: return snapshot()
+        response.clear()
+        return finish(if (reason == LocalGenerationDeadlinePolicy.StallReason.OUTPUT_LIMIT)
+            LocalGenerationCompletion.OUTPUT_LIMIT else LocalGenerationCompletion.STALLED, reason.name)
+    }
+
+    @Synchronized fun snapshot(): Snapshot = Snapshot(response.toString(), completion, failure,
+        streamedChunks, firstTextMillis, lastTextMillis)
+
+    private fun finish(value: LocalGenerationCompletion, message: String? = null): Snapshot {
+        if (completion == null) {
+            completion = value
+            failure = message
+        }
+        return snapshot()
+    }
+}

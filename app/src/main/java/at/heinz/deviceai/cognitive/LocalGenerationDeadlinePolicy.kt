@@ -20,7 +20,7 @@ internal object LocalGenerationDeadlinePolicy {
         lastTextMillis: Long?,
         capturedCharacters: Int
     ): StallReason? {
-        if (capturedCharacters >= MAX_CAPTURED_CHARACTERS) return StallReason.OUTPUT_LIMIT
+        if (capturedCharacters > MAX_CAPTURED_CHARACTERS) return StallReason.OUTPUT_LIMIT
         if (lastTextMillis == null) {
             return if (elapsedMillis >= STARTUP_STALL_MILLIS) StallReason.NO_FIRST_TEXT else null
         }
