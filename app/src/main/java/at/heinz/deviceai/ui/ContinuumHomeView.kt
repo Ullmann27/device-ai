@@ -226,6 +226,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         shellForeground.visibility = jarvisShell.visibility
         views.values.forEach { it.visibility = if (jarvisShellStage) View.GONE else View.VISIBLE }
         shellActions.values.forEach { it.visibility = if (jarvisShellStage) View.VISIBLE else View.GONE }
+        if (jarvisShellStage) applyDeckToActions()
         shellRailScroll.visibility = if (jarvisShellStage && shellRailScroll.width > 0) View.VISIBLE else View.GONE
         applyAvatarSlot()
     }
@@ -638,7 +639,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             val view = shellActions.getOrPut(spec.key) {
                 ShellActionView(context, spec.key, spec.target, spec.label).also { addView(it) }
             }
-            view.visibility = View.VISIBLE
+            view.visibility = if (deckCleared && (spec.key.startsWith("tile:") || spec.key.startsWith("panel:ROW_")))
+                View.INVISIBLE else View.VISIBLE
             view.refresh()
             val px = spec.box.width * density
             val py = spec.box.height * density
@@ -663,6 +665,25 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         shellRailBounds?.let { box ->
             shellRailScroll.layout((box.left * density).toInt(), (box.top * density).toInt(),
                 (box.right * density).toInt(), (box.bottom * density).toInt())
+        }
+    }
+
+    /**
+     * Airbus deck (owner brief 06.11.2026): while a work window is open the tiles and lower rows make room. Their hit
+     * targets leave with them, so nothing invisible can be touched or focused; they return when the window has closed.
+     */
+    fun setDeckCleared(cleared: Boolean) {
+        deckCleared = cleared
+        jarvisShell.setDeckCleared(cleared)
+        applyDeckToActions()
+    }
+
+    private var deckCleared = false
+
+    private fun applyDeckToActions() {
+        shellActions.forEach { (key, view) ->
+            if (key.startsWith("tile:") || key.startsWith("panel:ROW_"))
+                view.visibility = if (deckCleared) View.INVISIBLE else View.VISIBLE
         }
     }
 

@@ -67,12 +67,15 @@ class JarvisWorkWindowHost(
             director.windowClosed(id)
             if (current === window) {
                 current = null
+                home.setDeckCleared(false)
                 unregisterBack()
                 onClosed()
             }
         })
         if (!accepted) { window.dispose(); container.removeView(window); return null }
         current = window
+        // Airbus deck: the cockpit makes room for the window and gets it back after the window has folded away.
+        home.setDeckCleared(true)
         val initialX = background?.scrollX ?: 0
         val initialY = background?.scrollY ?: 0
         background?.setOnScrollChangeListener { _, x, y, _, _ ->

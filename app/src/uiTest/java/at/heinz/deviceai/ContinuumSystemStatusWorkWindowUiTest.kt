@@ -281,4 +281,44 @@ class ContinuumSystemStatusWorkWindowUiTest {
             runCatching { controller.close() }
         }
     }
+
+    /** Owner brief 06.11.2026 (Airbus flight deck): the deck makes room for the work window instead of being covered. */
+    @Test fun openWindowClearsTheDeckAndItReturnsAfterClosing() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible(); advance(32L); controller.windowFocusChanged(true)
+            val activity = controller.get()
+            val root = activity.window.decorView
+            framePump = CockpitHostFramePump { controller.get().window.decorView }
+            val avatar = field(activity, "hologramView") as ContinuumHologramView
+            val home = field(activity, "homeView") as ContinuumHomeView
+            avatar.setAnimationsEnabled(true); avatar.setForegroundActive(true); home.setForegroundActive(true)
+            measure(root); advance(320L); measure(root); draw(root)
+            fun deck() = descendants(root).count { v -> v.isShown && v.tag?.toString()?.let {
+                it.startsWith("jarvis-tile:") || it.startsWith("jarvis-panel:ROW_") } == true }
+            val before = deck()
+            assertTrue("tiles and rows are on the deck: $before", before >= 12)
+            tap(root, shown(root, "jarvis-tile:memory"))
+            advance(640L); measure(root); draw(root)
+            shown(root, "jarvis-work-window")
+            assertEquals("no tile or row stays under the open window", 0, deck())
+            assertTrue("avatar stays", avatar.isShown)
+            assertTrue("dialog stays", shown(root, "jarvis-dialog:conversation").isShown)
+            tap(root, shown(shown(root, "jarvis-work-window"), "jarvis-work-window:close"))
+            advance(640L + 480L); measure(root); draw(root)
+            assertTrue(descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+            assertEquals("the deck returns after the window folded back", before, deck())
+        } finally {
+            framePump?.close(); framePump = null
+            ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
+            runCatching { controller.close() }
+        }
+    }
 }

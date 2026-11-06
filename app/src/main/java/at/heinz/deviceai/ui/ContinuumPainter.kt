@@ -17,6 +17,8 @@ interface ContinuumPainter {
         for (i in 0 until count step 4) drawLine(points[i], points[i + 1], points[i + 2], points[i + 3], width, fill, alpha, roundCap = false)
     }
     fun save()
+    /** save() with a group opacity; balanced by restore(). Portable fallback: plain save (no group fade). */
+    fun saveAlpha(alpha: Float) = save()
     fun restore()
     fun translate(dx: Float, dy: Float)
     fun scale(sx: Float, sy: Float, px: Float = 0f, py: Float = 0f)

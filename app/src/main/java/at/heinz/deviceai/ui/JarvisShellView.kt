@@ -150,6 +150,19 @@ class JarvisShellView(context: Context) : View(context) {
     var shell: JarvisShellLayout.Shell? = null
         private set
 
+    /** Airbus deck: 0 = tiles and rows in place, 1 = cleared for an open work window (see JarvisDeckClearance). */
+    var deckClearance = 0f
+        private set
+    private var deckCleared = false
+    private var deckFrameMs = -1L
+
+    fun setDeckCleared(cleared: Boolean) {
+        if (deckCleared == cleared) return
+        deckCleared = cleared
+        deckFrameMs = -1L
+        invalidate()
+    }
+
     fun playEntrance() { startMs = SystemClock.uptimeMillis(); postInvalidateOnAnimation() }
 
     private fun animatorScale(): Float =
@@ -174,7 +187,15 @@ class JarvisShellView(context: Context) : View(context) {
         textPainter.fontScale = font
         canvas.save(); canvas.scale(d, d)
         val sceneTime = if (ambientMotion(scale)) now else 0L
-        JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true)
+        val deckMoving = (deckCleared && deckClearance < 1f) || (!deckCleared && deckClearance > 0f)
+        if (deckMoving) {
+            val frame = if (deckFrameMs < 0L) 0L else now - deckFrameMs
+            deckClearance = JarvisDeckClearance.step(deckClearance, deckCleared, (frame / scale.coerceAtLeast(.05f)).toLong(),
+                motionAllowed(scale))
+        }
+        deckFrameMs = now
+        JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true,
+            deckClearance = deckClearance)
         canvas.restore()
         var workWindowMoving = false
         val effectiveScale = if (motionAllowed(scale)) scale else 0f
@@ -185,7 +206,8 @@ class JarvisShellView(context: Context) : View(context) {
         val total = JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, s.boxes.size + s.tileBoxes().size, animatorScale = scale)
         // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
         removeCallbacks(ambientFrame)
-        if (motionAllowed(scale) && (workWindowMoving || startMs >= 0 && elapsed < total)) postInvalidateOnAnimation()
+        val deckStillMoving = (deckCleared && deckClearance < 1f) || (!deckCleared && deckClearance > 0f)
+        if (motionAllowed(scale) && (workWindowMoving || deckStillMoving || startMs >= 0 && elapsed < total)) postInvalidateOnAnimation()
         else if (ambientMotion(scale)) postDelayed(ambientFrame, 66L)
         if (frameLogging) recordFrame(drawStartedNanos, System.nanoTime())
     }
