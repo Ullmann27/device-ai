@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "status": "RED_REPRODUCED_GREEN_PENDING",
+  "test_commit": "dbdcc8fdc695ab40a8eabe194bf4660465b3e7c0",
+  "actual_activity_source": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+  "red": {
+    "tests": 4,
+    "failures": 1,
+    "exit": 1,
+    "failure": "expected assistant_name=Jarvis, actual Continuum"
+  },
+  "controls_passed": [
+    "default identity when state remains absent",
+    "assigned-bot owner identity/profile exclusion",
+    "real compiler budget failure with zero inference calls"
+  ],
+  "raw_sha256": {
+    "red-compile-command.json": "ec8416de815a2639b45187a5b64fa98a26e0149a124b971674ca87e0642c2070",
+    "red-compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "red-junit-command.json": "5f5c8f3a916ffcbcff5e5a959761cc0e664b28f52cc9ae38c315c2c2a8c5a418",
+    "red-junit.txt": "38c4c934a564f9fb16ec76631af799cb502e2312ab235ec3acae8beebe7bca4a",
+    "red-source-sha256.json": "6a85f1c086706f5906b5796a2161827adc7c1be7849a15e9d0db983a24e0bee4",
+    "red-activity-class-sha256.json": "42f8c25fe3194728e0a390b6742035c687d65629c45c5577bd41b92bf3255f5d",
+    "run-ui.py": "95b436100177e035d3b3a57b690b945d6c293bf10711569dce625d95e3dd6971"
+  }
+}
