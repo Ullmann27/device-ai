@@ -28,7 +28,7 @@ keine Signatur-/Paketänderung, kein Main-Merge. PR #571 bleibt als Draft offen 
 - Robolectric meldet nach `setQualifiers` + `configurationChange` den alten Fensterrahmen bis zur Größenmeldung
   (`ShadowViewRootImpl.callDispatchResized`); Sync-Barrieren blockieren `post {}` bis zum nächsten Frame – in Tests `advance()` statt `idle()`.
 
-## Stand 06.11.2026, 09:00 UTC (HEAD `29962f3c` + diese Übergabe)
+## Stand 06.11.2026, 09:40 UTC (HEAD `e23b92fb` + diese Übergabe)
 
 - Zuletzt gezielt grün (HOST, Robolectric/JVM): avatar.* (16 Klassen) inkl. `AvatarWindowMovedTest` 2/2,
   `ContinuumSystemStatusWorkWindowUiTest` 10/10, `JarvisWorkWindowLifecycleUiTest` 4/4, `ContinuumDocumentSceneUiTest` 8/8,
@@ -38,15 +38,19 @@ keine Signatur-/Paketänderung, kein Main-Merge. PR #571 bleibt als Draft offen 
 - Kognitiver Nachweis (Besitzerauftrag 08:48 auf #565): Paraphrasen/Pronomen/Negationen/mehrstufige Fragen gegen den realen
   lokalen Modellpfad – **NOT_RUN** (kein LiteRT-Modell auf dem Host). `WorkRecall`/`OwnerCorrectionIntent` sind regelbasiert
   (Regex) und decken nur die getesteten Formulierungen ab; keine Aussage über allgemeine Semantik.
-- PR #572 (test-only, `ContinuumReferenceCockpitUiTest`, Kopf `7b814747`): gegen #565 `29962f3c` ausgeführt – Lauf 1
-  **Zeitlimit 595 s überschritten** (Klasse lief am Morgen in ~4 min) → vermutlich hängender Test; NICHT übernommen.
-  Lauf 2 mit Stack-Aufnahme des Test-JVMs gestartet (Ergebnis im nächsten Commit/Bericht). Datei nur zum Prüfen ausgecheckt,
-  Arbeitsbaum wieder sauber.
-- Besitzer-P0 09:2x: freies Sprachverstehen über die VORHANDENEN Pfade (`LocalConversationContext`, `LocalFollowUpTaskFrame`,
-  `AiContextCompiler`, `ChatReasoningRouter`, `LocalModelReasoningAdapter`, `BoundedAgentOrchestrator`) – keine zweite
-  Architektur. Prüfkatalog mit neuen deutschen Formulierungen: getrennt nach (1) deterministischer Treffer (Regel/Regex),
-  (2) Kontext tatsächlich im Modell-Prompt, (3) Modellantwort korrekt (Host: NOT_RUN, kein LiteRT-Modell),
-  (4) Werkzeug ausgeführt vs. nur geplant. Ergebnis im nächsten Commit.
+- PR #572 (test-only, `ContinuumReferenceCockpitUiTest`, Kopf `7b814747`) gegen #565 `29962f3c`: 12 Tests, **3 rot**
+  (vorher 5), Laufzeit 853 s (darum Lauf 1 mit 595-s-Limit abgebrochen; Stack-Aufnahme: kein Hänger, nur langsam).
+  Alle 3: „Target must not be a clipped sliver: CODING-AUFTRAG ENTWERFEN“ bei 200 % Schrift (Breit, Fold-quer, Telefon) –
+  Knopf im scrollbaren Fensterinhalt teilweise verdeckt; vermutete Ursache: Tipp-Helfer scrollt das Cockpit, nicht den
+  Fensterinhalt (unbewiesen). **NICHT übernommen.** Nächster Schritt: im Test den Fenster-ScrollView zum Ziel scrollen
+  (`requestRectangleOnScreen`) oder Produktursache belegen.
+- Kognitiver Nachweis (e23b92fb): `LocalConversationFollowUpPolicy` erkennt jetzt natürliche Anschlüsse („Nicht vier,
+  sondern fünf.“, „Wo arbeitet er?“, „Fass sie mir zusammen.“, „Das stimmt nicht, …“, „… nochmal?“), damit
+  `LocalFollowUpTaskFrame` deine früheren Aussagen in die Modellaufgabe legt. Katalog `ConversationUnderstandingCatalogTest`
+  nach Schichten: (1) deterministisch: Zeitleiste bleibt bei verneinten Zahlwörtern fail-closed; (2) Kontext im Prompt:
+  JA für alle Katalogfälle, Kontrollfälle unberührt, keine Werkzeug-/Geheimnis-Wiederholung; (3) Modellantwort korrekt:
+  **NOT_RUN** (kein Modell auf dem Host) – keine Intelligenzverbesserung behauptet; (4) Werkzeuge: keine ausgeführt.
+  Mehrstufige Aufträge (`ChatReasoningRouter`/`BoundedAgentOrchestrator`) brauchen das Modell → NOT_RUN.
 
 ## Offen (nächste Schritte)
 
@@ -60,3 +64,7 @@ keine Signatur-/Paketänderung, kein Main-Merge. PR #571 bleibt als Draft offen 
    anbinden), gelernte Handlungsregeln aus Korrekturen mit Herkunft, offene Aufgaben dezent in Kugel/Status, Hervorheben
    erst verarbeiteter Passagen, Dokument tritt hinter den Entwurf zurück (zwei Ebenen) – nicht begonnen.
 7. One UI 9: ML Kit GenAI (Gemini Nano) als On-Device-Zusammenfassung prüfen; AppFunctions erst mit Gemini-Freigabe – siehe Recherche-Dokument.
+8. Kognition auf dem Fold7 (Modell geladen): Katalogfälle aus `ConversationUnderstandingCatalogTest` als echte Gespräche
+   führen und die Modellantworten bewerten (richtig/falsch/Rückfrage); mehrstufige Aufträge mit Werkzeugen: geplant vs.
+   tatsächlich ausgeführt (ToolGate-Belege). Danach Avatar-Anbindung: Nachdenken/Erinnern/Korrektur sichtbar machen.
+9. PR #572: 3 rote Fälle ursächlich klären (siehe oben), erst dann übernehmen.
