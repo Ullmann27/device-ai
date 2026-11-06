@@ -170,6 +170,22 @@ class AvatarFramingTest {
         }
     }
 
+    @Test fun cameraFlightWithTheExistingIdleDriftClearsTheDialogue() {
+        for (stage in stages()) {
+            val path = AvatarCameraFraming(focus, stage.aspect, stage.shell.headAnchorX.toDouble(),
+                stage.shell.headCloseUp.toDouble(), stage.keepOut)
+            for (progress in listOf(0f, .25f, .5f, .75f, 1f)) for (direction in listOf(-1f, 1f)) {
+                val window = path.sample(progress, direction)
+                for (pixels in listOf(-6.5, 6.5)) {
+                    val dy = pixels * 2.0 * window.halfHeight / stage.box.height
+                    val fit = stage.fit(window.copy(cameraCenterY = window.cameraCenterY - dy))
+                    assertEquals("${stage.label} p=$progress drift=$pixels crown", 0.0, fit.crownDp, .000001)
+                    assertEquals("${stage.label} p=$progress drift=$pixels dialogue", 0.0, fit.dialogDp, .000001)
+                }
+            }
+        }
+    }
+
     @Test fun fold7CameraPullsBackAndReturnsToTheExactOriginalWindow() {
         val stage = stages().first { it.label == "884x760" }
         val path = AvatarCameraFraming(focus, stage.aspect, stage.shell.headAnchorX.toDouble(),

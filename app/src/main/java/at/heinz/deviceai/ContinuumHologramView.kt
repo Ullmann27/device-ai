@@ -224,7 +224,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     /** Actual accepted work-window presentation only. */
     fun setWorkWindowCamera(active: Boolean, direction: Float = 0f, immediate: Boolean = false) {
         require(direction.isFinite() && direction in -1f..1f)
-        if (immediate || !canAnimateFrame() || !headEnabled || cockpitHeadBounds == null) {
+        if (immediate || !canAnimateFrame() || !hasWindowFocus() || !headEnabled || cockpitHeadBounds == null) {
             resetCamera()
         } else {
             if (active) cameraDirection = direction
@@ -248,7 +248,7 @@ class ContinuumHologramView @JvmOverloads constructor(
      * Geometry is cached between layout changes.
      */
     private fun updateAuraFraming() {
-        val focus = if (head3dEnabled && native3dDrawn) assetMetadata?.focus else null
+        val focus = if (head3dEnabled && (native3dDrawn || native3d != null)) assetMetadata?.focus else null
         val w = headDrawBounds.width(); val h = headDrawBounds.height()
         if (focus == null || w <= 0f || h <= 0f) {
             auraFocus = null; auraScale = 1f; auraAnchorEffective = headAnchorX
@@ -568,6 +568,7 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
         super.onWindowFocusChanged(hasWindowFocus)
+        if (!hasWindowFocus) resetCamera()
         // Re-evaluate scheduling after Samsung Fold window/cover transitions.
         if (isAttachedToWindow) updateMotionPolicy()
     }
@@ -811,7 +812,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun advanceFrame() {
         if (!canAnimateFrame()) return
         val now = SystemClock.uptimeMillis()
-        cameraMotion.advance(now, true, Settings.Global.getFloat(context.contentResolver,
+        cameraMotion.advance(now, hasWindowFocus(), Settings.Global.getFloat(context.contentResolver,
             Settings.Global.ANIMATOR_DURATION_SCALE, 1f))
         val delta = if (lastFrameMs == 0L) 0f else ((now - lastFrameMs) / 1000f).coerceIn(0f, .1f)
         lastFrameMs = now

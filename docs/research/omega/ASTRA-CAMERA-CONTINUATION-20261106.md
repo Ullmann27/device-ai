@@ -8,10 +8,12 @@ Gemeinsamer Zielbranch: `claude/continuum-jarvis-cockpit-z7bo60`.
 Geprüfter Ausgangsstand: `2546cb4ac4f1cf5ef8f2e5632c57d0d68caab422`.
 Der Bericht in Kommentar `6675257713` ist nachgelesen.
 
-Status: **WIP / RED_EXPECTED**. Der Host-Activity-Test öffnet das echte
-Arbeitsfenster und scheitert an der unveränderten Kopfprojektion: 1 Test,
-1 erwarteter Assertion-Fehler, keine Skips. Die GLB-Projektionsfixture ersetzt
-keine Filament-Ausführung. Beleg: `docs/evidence/astra-camera-flight-20261106/red-receipt.json`.
+Status: **WIP / HOST_TARGETED_PASS**. Kamerafahrt implementiert; vollständiger
+Abschlusslauf und NewApi noch offen. Ausgangsnachweis: Der Host-Activity-Test
+öffnete das echte Arbeitsfenster und scheiterte an der unveränderten
+Kopfprojektion: 1 Test, 1 erwarteter Assertion-Fehler, keine Skips. Die
+GLB-Projektionsfixture ersetzt keine Filament-Ausführung.
+Beleg: `docs/evidence/astra-camera-flight-20261106/red-receipt.json`.
 
 ## Kleinster Prüfgegenstand
 
@@ -48,3 +50,21 @@ je ein Activity- und Aura-Lifecycle-Test. Prüfquellen und XML-Hashes stehen
 in `first-green-receipt.json`. Weiter offen: vollständige betroffene Regression,
 STOP/Pause/Reduktionsanbindung in der Activity, bestehendes Schweben, NewApi
 und physische Fold7-/Filament-Abnahme.
+
+## Erweiterte Prüfung und Testadapter
+
+Der Stand von #565 bis `61ab95e1263c57cb3f68daef2766ef5e2c1e94a9` ist
+konfliktfrei integriert; neue Header-, Touch- und TalkBack-Tests bleiben erhalten.
+Original-GLB mit bestehendem Schweben und ein synthetischer Fall mit sicheren
+Endpunkten, aber gefährlicher Zwischenstrecke: **5/5 grün**.
+
+Erster vollständiger Lauf: **113/120 bestanden, 7 Fehler, 0 Skips**.
+Sechs Fehler stammen vom alten reflektierten `open`-Testaufruf mit überholter
+Signatur. Er nutzt jetzt den typisierten Aufruf; seine Prüfungen bleiben gleich.
+Der neue Fokusverlust-Test benötigte zusätzlich den echten View-Dispatch in
+der pausierten Robolectric-Fixture. Die Activity-Steuerung allein lieferte
+dort den View-Callback nicht rechtzeitig. Nach diesen Fixture-Korrekturen:
+**8/8 grün**, einschließlich STOP, reduzierter Bewegung, Fokus und Pause/Resume.
+NewApi ist durch den abgebrochenen Gesamtlauf noch nicht belegt.
+
+Quellbindung, Fehler und Ergebnisse: `checkpoint-receipt.json` im Belegordner.
