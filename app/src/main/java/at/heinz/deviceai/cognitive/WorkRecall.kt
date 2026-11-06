@@ -20,11 +20,12 @@ internal object WorkRecall {
     private const val E = "(?![\\p{L}\\p{N}_])"
     private val ask = Regex(
         "(?iu)$S(wo\\s+waren\\s+wir|wo\\s+sind\\s+wir(\\s+stehen)?\\s+geblieben|woran\\s+(haben|hatten)\\s+wir\\s+gearbeitet|" +
-            "was\\s+(haben|hatten)\\s+wir\\s+(gestern|heute|zuletzt|vorhin)\\s+gemacht|was\\s+ist\\s+(noch\\s+)?offen|" +
+            "was\\s+(haben|hatten)\\s+wir\\s+(gestern|heute|zuletzt|vorhin|gerade|eben)\\s+gemacht|" +
+            "woran\\s+(haben|hatten)\\s+wir\\s+(gerade|eben)\\s+gearbeitet|was\\s+ist\\s+(noch\\s+)?offen|" +
             "wie\\s+ist\\s+der\\s+(aktuelle\\s+)?stand)$E"
     )
     private val yesterday = Regex("(?iu)${S}gestern$E")
-    private val today = Regex("(?iu)$S(heute|vorhin)$E")
+    private val today = Regex("(?iu)$S(heute|vorhin|gerade|eben)$E")
     private val open = Regex("(?iu)${S}offen$E")
 
     fun parse(utterance: String): Query? {

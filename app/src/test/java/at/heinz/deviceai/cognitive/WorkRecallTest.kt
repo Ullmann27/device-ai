@@ -54,4 +54,14 @@ class WorkRecallTest {
         assertEquals("Im Arbeitsverlauf ist nichts mehr offen.",
             WorkRecall.answer(listOf(saved), WorkRecall.Query(WorkRecall.Period.RECENT, true), now, vienna))
     }
+
+    /** Owner example (06.11.): „Was haben wir gerade gemacht?“ / „Was haben wir eben gemacht?“ – today's work. */
+    @Test fun justNowAsksForTodaysWork() {
+        for (q in listOf("Was haben wir gerade gemacht?", "JARVIS, was haben wir eben gemacht?", "Woran haben wir gerade gearbeitet?")) {
+            val query = WorkRecall.parse(q)
+            org.junit.Assert.assertNotNull(q, query)
+            org.junit.Assert.assertEquals(q, WorkRecall.Period.TODAY, query!!.period)
+        }
+        org.junit.Assert.assertNull("an unrelated sentence stays unrelated", WorkRecall.parse("Ich bin gerade beim Kochen."))
+    }
 }

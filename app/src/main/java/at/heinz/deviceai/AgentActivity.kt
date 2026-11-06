@@ -1856,10 +1856,27 @@ class AgentActivity : Activity() {
      * Answer of „Wo waren wir …?“ from the work journal (remembering, not model learning), and – unless a document
      * request in the same sentence follows – the VERLAUF surface in the cockpit with the same lines; JARVIS glances at it.
      */
-    private fun presentWorkRecall(query: at.heinz.deviceai.cognitive.WorkRecall.Query, keepWindow: Boolean) {
+    /**
+     * Reads the work journal on the serial document lane – after every write queued before it (a STOP recorded a moment
+     * ago is seen) – and continues on the UI thread only while the activity and the conversation session are unchanged.
+     * Never file/JSON I/O on the UI thread, never a blocking wait for it.
+     */
+    private fun withWorkJournal(block: (List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>) -> Unit) {
+        val session = sessionId
+        val read = Runnable {
+            val episodes = runCatching { workJournal.all() }.getOrDefault(emptyList())
+            runOnUiThread { if (!isFinishing && !isDestroyed && sessionId == session) block(episodes) }
+        }
+        if (documentIoExecutor.isShutdown) read.run() else documentIoExecutor.execute(read)
+    }
+
+    private fun presentWorkRecall(query: at.heinz.deviceai.cognitive.WorkRecall.Query, keepWindow: Boolean) =
+        withWorkJournal { episodes -> presentWorkRecall(query, keepWindow, episodes) }
+
+    private fun presentWorkRecall(query: at.heinz.deviceai.cognitive.WorkRecall.Query, keepWindow: Boolean,
+                                  episodes: List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>) {
         val now = System.currentTimeMillis()
         val zone = java.util.TimeZone.getDefault()
-        val episodes = runCatching { workJournal.all() }.getOrDefault(emptyList())
         val answer = at.heinz.deviceai.cognitive.WorkRecall.answer(episodes, query, now, zone)
         val hits = at.heinz.deviceai.cognitive.WorkRecall.select(episodes, query, now, zone)
         // Remembering is shown where the cockpit already shows recall: the real number of tasks found (0 = no light).
@@ -1893,11 +1910,17 @@ class AgentActivity : Activity() {
         val inCockpit = activeWorkArea == ContinuumWorkArea.START
         val corrected = documentDraftTurn?.episodeId ?: workEpisodeId
         if (documentDraftTurn != null) cancelLocalRequest()
+        recordWork(corrected) { it.copy(correction = spoken) }
+        // Resolved on the journal lane, after the STOP and correction writes above.
+        withWorkJournal { episodes -> applyOwnerCorrection(correction, spoken, inCockpit, corrected, episodes) }
+    }
+
+    private fun applyOwnerCorrection(correction: at.heinz.deviceai.cognitive.OwnerCorrectionIntent.Correction, spoken: String,
+                                     inCockpit: Boolean, corrected: String?,
+                                     episodes: List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>) {
         val now = System.currentTimeMillis()
         val zone = java.util.TimeZone.getDefault()
-        val episodes = runCatching { workJournal.all() }.getOrDefault(emptyList())
         val meant = at.heinz.deviceai.cognitive.OwnerCorrectionIntent.resolve(episodes, correction, corrected, now, zone)
-        recordWork(corrected) { it.copy(correction = spoken) }
         val draftTarget = correction.target == at.heinz.deviceai.cognitive.OwnerCorrectionIntent.Target.DRAFT
         if (meant == null) {
             addAssistantMessage(if (draftTarget)
@@ -1931,22 +1954,23 @@ class AgentActivity : Activity() {
 
     /** „die ausgewählte PDF“: the PDF chosen before, if Android still lets JARVIS read it; otherwise one short question. */
     private fun openOrReuseDocument(document: at.heinz.deviceai.cognitive.OwnerDocumentIntent.Request, request: String) {
-        if (document.reuse) {
+        if (!document.reuse) { openPdfDocumentPicker(document.wantsDraft, request); return }
+        withWorkJournal { episodes ->
+            // Read grants are checked now, on the UI thread: a revoked grant means asking, never reading.
             val readable = runCatching {
                 contentResolver.persistedUriPermissions.filter { it.isReadPermission }.map { it.uri.toString() }.toSet()
             }.getOrDefault(emptySet())
-            val last = runCatching { workJournal.all() }.getOrDefault(emptyList())
-                .lastOrNull { it.documentUri != null && it.documentUri in readable }
+            val last = episodes.lastOrNull { it.documentUri != null && it.documentUri in readable }
             if (last != null) {
                 pendingDocumentDraft = document.wantsDraft
                 pendingDocumentRequest = request
                 readPdfDocument(android.net.Uri.parse(last.documentUri), remembered = last)
-                return
+            } else {
+                addAssistantMessage("Welche PDF meinst du? Eine zuvor gewählte darf ich nicht mehr öffnen – ich zeige dir die Auswahl.",
+                    false, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+                openPdfDocumentPicker(document.wantsDraft, request)
             }
-            addAssistantMessage("Welche PDF meinst du? Eine zuvor gewählte darf ich nicht mehr öffnen – ich zeige dir die Auswahl.",
-                false, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
         }
-        openPdfDocumentPicker(document.wantsDraft, request)
     }
 
     /** A running local-model draft for a read document; matched by its exact request when the reply arrives. */

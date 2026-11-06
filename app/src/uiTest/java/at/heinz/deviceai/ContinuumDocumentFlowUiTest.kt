@@ -429,4 +429,29 @@ class ContinuumDocumentFlowUiTest {
         assertEquals("the steps stay visible in the process panel, each once",
             listOf("Auftrag angenommen", "Bearbeitung"), rows)
     }
+
+    /**
+     * Owner review P1 (06.11.): the work journal was read on the UI thread while writes run on the serial document lane.
+     * A recall right after STOP could therefore read the old state and claim the draft was still running. The STOP write
+     * is held back here (the lane is busy); the answer may only come from the state STOP really recorded.
+     */
+    @Test fun aRecallRightAfterStopReadsTheStateStopRecorded() = withFlow { activity, root, runtime ->
+        val scene = startDraft(activity, root, runtime, "Bericht.pdf", "Ein kurzer Bericht über den Stand.")
+        until(root, "the journal records the running draft") { state(scene) == CockpitWorkJournal.State.DRAFTING }
+        val lane = field(activity, "documentIoExecutor") as java.util.concurrent.ExecutorService
+        val gate = java.util.concurrent.CountDownLatch(1)
+        lane.execute { gate.await(10, TimeUnit.SECONDS) }
+        call(activity, "cancelLocalRequest")
+        until(root, "the stopped run has ended (the journal lane is still held)") { !(field(activity, "busy") as Boolean) }
+        assertEquals("the STOP write is still queued", CockpitWorkJournal.State.DRAFTING, state(scene))
+        (field(activity, "input") as android.widget.EditText).setText("Was haben wir heute gemacht?")
+        call(activity, "sendCurrentInput", false)
+        advance(64L)
+        gate.countDown()
+        fun chat() = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>().map { it.text.toString() }
+        until(root, "the recall answer") { chat().any { it.startsWith("Heute:") } }
+        val answer = chat().last { it.startsWith("Heute:") }
+        assertFalse("never „still running“ after STOP: $answer", answer.contains("Entwurf in Arbeit"))
+        assertTrue("the state STOP recorded: $answer", answer.contains("mit STOP abgebrochen, nicht erledigt"))
+    }
 }
