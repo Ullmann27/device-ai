@@ -73,6 +73,8 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
 test('cognitive runtime owns the single chat path, privacy boundaries and background diagnostics',()=>{
  const dialogue=bodyOf(activity,'private fun runContinuumDialogue(');
  const local=bodyOf(activity,'runLocal');
+ ensure('local model entry body exists',local!=null);
+ const localCode=codeOnly(local);
  ensure('single shared runtime is called from chat with scoped session-only context',
    dialogue?.includes('ContinuumCognitiveRuntime(filesDir,core,') &&
    dialogue.includes('conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic') &&
@@ -82,7 +84,12 @@ test('cognitive runtime owns the single chat path, privacy boundaries and backgr
    dialogue?.includes('runLocal(request,modelQuestion,turnTrace=turnTrace)') &&
    dialogue.includes('runLocal(request,modelQuestion,recall,turnTrace)') &&
    activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text,') &&
-   /val\s+agentTask\s*=\s*if\s*\(botTask\s*!=\s*null\)\s*text\s*else\s*codingPlanning\?\.ownerGoal\s*\?:\s*at\.heinz\.deviceai\.cognitive\.LocalFollowUpTaskFrame\.compose\(\s*text,\s*resolvedQuestion,\s*localConversationContext\.sessionEvidence\(localSessionId\)\)/.test(codeOnly(local)) &&
+   /val\s+followUpFrame\s*=\s*at\.heinz\.deviceai\.cognitive\.LocalFollowUpTaskFrame\.composeFrame\(\s*text,\s*resolvedQuestion,\s*if\s*\(botTask\s*==\s*null\s*&&\s*codingPlanning\s*==\s*null\)\s*localConversationContext\.sessionEvidence\(localSessionId\)\s*else\s*null\)/.test(localCode) &&
+   /val\s+agentTask\s*=\s*if\s*\(botTask\s*!=\s*null\)\s*text\s*else\s*codingPlanning\?\.ownerGoal\s*\?:\s*followUpFrame\.task\b/.test(localCode) &&
+   /orchestrator\.run\(agentTask\)/.test(localCode) &&
+   /AgentModel\s*\{\s*task,\s*memories,\s*reflection,\s*rawObservations\s*->/.test(localCode) &&
+   /userRequest\s*=\s*task\s*,/.test(localCode) &&
+   /ownerTurnsInTask\s*=\s*followUpFrame\.ownerTurnsIn\(promptBody\)/.test(localCode) &&
    !bodyOf(activity,'private fun runLocal(text:').includes('resolvedQuestion.take(') &&
    bodyOf(activity,'private fun runLocal(text:').includes('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') &&
    bodyOf(activity,'private fun runLocal(text:').indexOf('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') <

@@ -1,0 +1,137 @@
+{
+  "base": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+  "test_sha256": {
+    ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs": "283ee64afb5d5bb466f728636b6485ccc84a89016713a53317d9c11f0c70dd4c",
+    ".github/continuum/grounded-recall-android-wiring.test.mjs": "2a3f12b1cd4c0a2da7092ffbbd7581519c63f0486ad06cb0a87c6e0703b81ef6"
+  },
+  "mutations": [
+    {
+      "name": "decision_history_detached",
+      "source_file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "test_file": ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+      "test_name": "context is bounded, clearly untrusted, and never authorizes tools or factual memories",
+      "exit": 1,
+      "intended_assertion_failed": true,
+      "source_sha256": "81a6ddd0d870d66109df6dfdce9ea9c883f2df0ab60fa3f24183461c8ad85b8f",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^context is bounded, clearly untrusted, and never authorizes tools or factual memories$",
+        "/workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/decision_history_detached/source/.github/continuum/continuum-local-dialogue-quality-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "essential_history_detached",
+      "source_file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptFrame.kt",
+      "test_file": ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+      "test_name": "context is bounded, clearly untrusted, and never authorizes tools or factual memories",
+      "exit": 1,
+      "intended_assertion_failed": true,
+      "source_sha256": "99ccbedeb7c8ceb27bc67ed0a0047b34615833fef7877bab21a9370a66fca44f",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^context is bounded, clearly untrusted, and never authorizes tools or factual memories$",
+        "/workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/essential_history_detached/source/.github/continuum/continuum-local-dialogue-quality-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "essential_tail_detached",
+      "source_file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptFrame.kt",
+      "test_file": ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+      "test_name": "context is bounded, clearly untrusted, and never authorizes tools or factual memories",
+      "exit": 1,
+      "intended_assertion_failed": true,
+      "source_sha256": "8a44946eaaf3d5d3bc0960aab4d689fa42b57d4fca9691cf1f50c8eb55fe582c",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^context is bounded, clearly untrusted, and never authorizes tools or factual memories$",
+        "/workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/essential_tail_detached/source/.github/continuum/continuum-local-dialogue-quality-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "essential_history_gate_disabled",
+      "source_file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptFrame.kt",
+      "test_file": ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+      "test_name": "context is bounded, clearly untrusted, and never authorizes tools or factual memories",
+      "exit": 1,
+      "intended_assertion_failed": true,
+      "source_sha256": "d009d94fcf8a16c3e6f66d7bd4a121d4a96710f86486876578f54b72712ee811",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^context is bounded, clearly untrusted, and never authorizes tools or factual memories$",
+        "/workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/essential_history_gate_disabled/source/.github/continuum/continuum-local-dialogue-quality-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "turn_limit_changed",
+      "source_file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalDialogueContextLimits.kt",
+      "test_file": ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+      "test_name": "context is bounded, clearly untrusted, and never authorizes tools or factual memories",
+      "exit": 1,
+      "intended_assertion_failed": true,
+      "source_sha256": "9a45df95fce199de6743e70c3a3a2611e1ee00db05aec95795c08b5c714f1e03",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^context is bounded, clearly untrusted, and never authorizes tools or factual memories$",
+        "/workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/turn_limit_changed/source/.github/continuum/continuum-local-dialogue-quality-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "partial_metadata_detached",
+      "source_file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "test_file": ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+      "test_name": "context is bounded, clearly untrusted, and never authorizes tools or factual memories",
+      "exit": 1,
+      "intended_assertion_failed": true,
+      "source_sha256": "187bd110d9a41d950062b79b2b343b220ae90298382be5a81fd382ff8c9d5b8a",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^context is bounded, clearly untrusted, and never authorizes tools or factual memories$",
+        "/workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/partial_metadata_detached/source/.github/continuum/continuum-local-dialogue-quality-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "recall_kind_changes_memory",
+      "source_file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "test_file": ".github/continuum/grounded-recall-android-wiring.test.mjs",
+      "test_name": "confirmed recall remains exact when supplementary model context is not representable",
+      "exit": 1,
+      "intended_assertion_failed": true,
+      "source_sha256": "9d9fc9cdb2cad77e9fd2ca508f638cf179e57ba4d356e05575275386db40ae16",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^confirmed recall remains exact when supplementary model context is not representable$",
+        "/workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/recall_kind_changes_memory/source/.github/continuum/grounded-recall-android-wiring.test.mjs"
+      ]
+    },
+    {
+      "name": "recall_answer_clipped",
+      "source_file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "test_file": ".github/continuum/grounded-recall-android-wiring.test.mjs",
+      "test_name": "confirmed recall remains exact when supplementary model context is not representable",
+      "exit": 1,
+      "intended_assertion_failed": true,
+      "source_sha256": "415c0186e8f992bffb39cb23bc27f427e217b46fcb4ba8274ec963a7beff9043",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^confirmed recall remains exact when supplementary model context is not representable$",
+        "/workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/recall_answer_clipped/source/.github/continuum/grounded-recall-android-wiring.test.mjs"
+      ]
+    }
+  ]
+}

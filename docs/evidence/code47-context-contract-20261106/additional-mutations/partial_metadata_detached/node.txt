@@ -1,0 +1,790 @@
+TAP version 13
+# Subtest: context is bounded, clearly untrusted, and never authorizes tools or factual memories
+not ok 1 - context is bounded, clearly untrusted, and never authorizes tools or factual memories
+  ---
+  duration_ms: 86.549982
+  type: 'test'
+  location: '/workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/partial_metadata_detached/source/.github/continuum/continuum-local-dialogue-quality-wiring.test.mjs:63:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /localConversationContext\.record\(localSessionId, text, run\.response,\s*responseComplete\s*=\s*run\.responseComplete\)/. Input:
+    
+    '{\n' +
+      '        val localSessionId = sessionId\n' +
+      '        val planningEpoch = codingPlanningEpoch\n' +
+      '        val internetModeAtTurnStart = internetConsent.mode\n' +
+      '        val internetRevisionAtTurnStart = internetConsent.revision()\n' +
+      '        val previousLocalReply = lastLocalReply?.takeIf { botTask == null && it.sessionId == localSessionId }\n' +
+      '        val ownerForbidsExternalNetwork =\n' +
+      '            at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalResearch(text)\n' +
+      '        if (!at.heinz.deviceai.cognitive.LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)) {\n' +
+      '            turnTrace.event(TraceStage.CLARIFICATION)\n' +
+      '            publishCognitiveTrace(turnTrace,TraceOutcome.CLARIFY)\n' +
+      '            setBusy(false)\n' +
+      '            addAssistantMessage(                                                                     +\n' +
+      '                                                                                                        )\n' +
+      '            botTask?.let { finishBotTask(it,                                    ) }\n' +
+      '            return\n' +
+      '        }\n' +
+      '        val imported = localRuntime.loadedModel\n' +
+      '        if (imported == null || localRuntime.state != LocalModelState.READY) {\n' +
+      '            turnTrace.event(TraceStage.MODEL_NOT_READY)\n' +
+      '            publishCognitiveTrace(turnTrace,TraceOutcome.BLOCKED)\n' +
+      '            setBusy(false)\n' +
+      '                                                                              \n' +
+      '                                                                                \n' +
+      '            val retainUnanswered = sessionId == localSessionId\n' +
+      '            addAssistantMessage(groundedRecall?.failureAnswer() ?:\n' +
+      '                                                                                                             ,\n' +
+      '                preserveLocalContext = retainUnanswered)\n' +
+      '            if (retainUnanswered) localConversationContext.recordUnanswered(localSessionId, text)\n' +
+      '            botTask?.let {\n' +
+      '                input.setText(text)\n' +
+      '                finishBotTask(it,                                                        )\n' +
+      '            }\n' +
+      '            refreshLocalModelUi()\n' +
+      '            return\n' +
+      '        }\n' +
+      '        turnTrace.event(TraceStage.LOCAL_MODEL_SYNTHESIS)\n' +
+      '        activeLocalRequest = true\n' +
+      '        localRuntimeError = null\n' +
+      '        val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()\n' +
+      '        activeChatCancellation = cancellation\n' +
+      '        setBusy(true)\n' +
+      '        addToolActivity(if (botTask == null)                          else                                                        )\n' +
+      '        planCard.visibility = View.GONE\n' +
+      '        val turnId = UUID.randomUUID().toString().replace(   ,   ).take(16)\n' +
+      '        val chiefTurn = at.heinz.deviceai.chief.TurnLifecycle(         + turnId)\n' +
+      '        activeChiefTurn = chiefTurn\n' +
+      '        chiefTurn.acknowledge()?.let {\n' +
+      '            addToolActivity(           + it)\n' +
+      '            cockpitTriggers.commandAcknowledged(chiefTurn.turnId, text)\n' +
+      '        }\n' +
+      '                                                                             \n' +
+      '                                                             \n' +
+      '                                                                                    \n' +
+      '                                                                                     \n' +
+      '                                                                          \n' +
+      '        val followUpFrame = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.composeFrame(\n' +
+      '            text, resolvedQuestion, if (botTask == null && codingPlanning == null)\n' +
+      '                localConversationContext.sessionEvidence(localSessionId) else null)\n' +
+      '        val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task\n' +
+      '        val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)\n' +
+      '        val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)\n' +
+      '        var submittedToolObservationCount = 0\n' +
+      '        var modelWebCalls = 0\n' +
+      '        val modelWebSessions = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cognitive.ApprovedWebResearchSession>()\n' +
+      '        val startedStorageCalls = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()\n' +
+      '        val orchestrator = BoundedAgentOrchestrator(\n' +
+      '            model = codingPlanning?.model(localRuntime,cancellation) ?: AgentModel { task, memories, reflection, rawObservations ->\n' +
+      '                cancellation.throwIfCancelled()\n' +
+      '                botTask?.let(::requireBotTaskCurrent)\n' +
+      '                                                                                                                         \n' +
+      '                check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }\n' +
+      '                check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {                           }\n' +
+      '                val hasScreen=rawObservations.any { it.toolName==                  }\n' +
+      '                if(hasScreen)ephemeralScreenRun.set(true)\n' +
+      '                val screenFrames=mutableListOf<String>()\n' +
+      '                val observations=rawObservations.map { observation ->\n' +
+      '                    if(observation.toolName!=                 )observation else {\n' +
+      '                        val grant=ScreenObservationBus.grantEpoch()\n' +
+      '                        val frame=at.heinz.deviceai.cognitive.ScreenObservationPrompt.frame(observation.output,\n' +
+      '                            System.currentTimeMillis(),grant)\n' +
+      '                        frame?.let {screenFrames.add(it);screenGrant.compareAndSet(null,grant)}\n' +
+      '                        observation.copy(output=frame?:                                                                                      )\n' +
+      '                    }\n' +
+      '                }\n' +
+      '                                                                                         \n' +
+      '                                                                                         \n' +
+      '                val state = if (botTask == null) continuumState else null\n' +
+      '                val compiledContext = state?.let { runtimeState ->\n' +
+      '                    contextCompiler.compile(\n' +
+      '                        AiContextInput(\n' +
+      '                            seed = runtimeState.seed,\n' +
+      '                            genome = runtimeState.archive.genome,\n' +
+      '                            identityState = runtimeState.archive.identityState,\n' +
+      '                            userRequest = task,\n' +
+      '                            memories = memories,\n' +
+      '                            activeTaskSummary = reflection?.correction?.take(1_024),\n' +
+      '                            unresolvedContradictions = memories\n' +
+      '                                .filter { memory -> memory.validationState.name ==                }\n' +
+      '                                .map { memory -> memory.content },\n' +
+      '                            model = imported\n' +
+      '                        )\n' +
+      '                    )\n' +
+      '                }\n' +
+      '                val advisory = if (botTask == null && observations.isEmpty() && reflection == null && submittedToolObservationCount == 0) {\n' +
+      '                    ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace), { localRuntime.cancel() })\n' +
+      '                        .also { activeReasoningRouter = it }\n' +
+      '                        .advise(              , task, compiledContext?.text ?: task,\n' +
+      '                            groundedRecall = groundedRecall)\n' +
+      '                        .also { activeReasoningRouter = null; if(it!=null)turnTrace.event(TraceStage.ROUTER_ADVISORY) }\n' +
+      '                } else null\n' +
+      '                cancellation.throwIfCancelled()\n' +
+      '                val boundedInternetMode = if (ownerForbidsExternalNetwork)\n' +
+      '                    at.heinz.deviceai.cognitive.InternetAccessMode.OFF else\n' +
+      '                    at.heinz.deviceai.cognitive.TurnScopedInternetMode.effective(\n' +
+      '                        internetModeAtTurnStart, internetConsent.mode,\n' +
+      '                        internetConsent.revision() == internetRevisionAtTurnStart)\n' +
+      '                                                                                             \n' +
+      '                                                                                       \n' +
+      '                val decisionDigest = if (botTask == null && codingPlanning == null &&\n' +
+      '                    sessionId == localSessionId && !documentIoExecutor.isShutdown) {\n' +
+      '                    runCatching {\n' +
+      '                        val episodes = documentIoExecutor\n' +
+      '                            .submit<List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>> {\n' +
+      '                                workJournal.all()\n' +
+      '                            }.get(400L, TimeUnit.MILLISECONDS)\n' +
+      '                        cancellation.throwIfCancelled()\n' +
+      '                        if (sessionId != localSessionId)    else\n' +
+      '                            at.heinz.deviceai.cognitive.LocalDecisionPromptDigest.render(\n' +
+      '                                text, at.heinz.deviceai.cognitive.WorkDecisionRecall.items(\n' +
+      '                                    episodes, ownerDecisionStatements(), System.currentTimeMillis()))\n' +
+      '                    }.getOrDefault(  )\n' +
+      '                } else   \n' +
+      '                                                                                      \n' +
+      '                                                                                   \n' +
+      '                val conversationContext = if (botTask != null)    else at.heinz.deviceai.cognitive.LocalConversationPromptFirewall.safeHistory(\n' +
+      '                    localConversationContext.render(localSessionId, internetMode = boundedInternetMode,\n' +
+      '                        ownerForbidsExternalNetwork = ownerForbidsExternalNetwork,\n' +
+      '                        onlineApprovalActive = modelWebSessions.any { it.isAuthorized() }))\n' +
+      '                val requiresPriorDialogue = botTask == null && at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicy\n' +
+      '                    .requiresPreviousOwnerTurn(text)\n' +
+      '                val priorOwnerEvidence = if (botTask == null) localConversationContext.sessionEvidence(localSessionId) else null\n' +
+      '                if (requiresPriorDialogue && (priorOwnerEvidence.isNullOrEmpty() ||\n' +
+      '        '... 34462 more characters
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    {
+            val localSessionId = sessionId
+            val planningEpoch = codingPlanningEpoch
+            val internetModeAtTurnStart = internetConsent.mode
+            val internetRevisionAtTurnStart = internetConsent.revision()
+            val previousLocalReply = lastLocalReply?.takeIf { botTask == null && it.sessionId == localSessionId }
+            val ownerForbidsExternalNetwork =
+                at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalResearch(text)
+            if (!at.heinz.deviceai.cognitive.LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)) {
+                turnTrace.event(TraceStage.CLARIFICATION)
+                publishCognitiveTrace(turnTrace,TraceOutcome.CLARIFY)
+                setBusy(false)
+                addAssistantMessage(                                                                     +
+                                                                                                            )
+                botTask?.let { finishBotTask(it,                                    ) }
+                return
+            }
+            val imported = localRuntime.loadedModel
+            if (imported == null || localRuntime.state != LocalModelState.READY) {
+                turnTrace.event(TraceStage.MODEL_NOT_READY)
+                publishCognitiveTrace(turnTrace,TraceOutcome.BLOCKED)
+                setBusy(false)
+                                                                                  
+                                                                                    
+                val retainUnanswered = sessionId == localSessionId
+                addAssistantMessage(groundedRecall?.failureAnswer() ?:
+                                                                                                                 ,
+                    preserveLocalContext = retainUnanswered)
+                if (retainUnanswered) localConversationContext.recordUnanswered(localSessionId, text)
+                botTask?.let {
+                    input.setText(text)
+                    finishBotTask(it,                                                        )
+                }
+                refreshLocalModelUi()
+                return
+            }
+            turnTrace.event(TraceStage.LOCAL_MODEL_SYNTHESIS)
+            activeLocalRequest = true
+            localRuntimeError = null
+            val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
+            activeChatCancellation = cancellation
+            setBusy(true)
+            addToolActivity(if (botTask == null)                          else                                                        )
+            planCard.visibility = View.GONE
+            val turnId = UUID.randomUUID().toString().replace(   ,   ).take(16)
+            val chiefTurn = at.heinz.deviceai.chief.TurnLifecycle(         + turnId)
+            activeChiefTurn = chiefTurn
+            chiefTurn.acknowledge()?.let {
+                addToolActivity(           + it)
+                cockpitTriggers.commandAcknowledged(chiefTurn.turnId, text)
+            }
+                                                                                 
+                                                                 
+                                                                                        
+                                                                                         
+                                                                              
+            val followUpFrame = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.composeFrame(
+                text, resolvedQuestion, if (botTask == null && codingPlanning == null)
+                    localConversationContext.sessionEvidence(localSessionId) else null)
+            val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task
+            val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
+            val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
+            var submittedToolObservationCount = 0
+            var modelWebCalls = 0
+            val modelWebSessions = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cognitive.ApprovedWebResearchSession>()
+            val startedStorageCalls = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
+            val orchestrator = BoundedAgentOrchestrator(
+                model = codingPlanning?.model(localRuntime,cancellation) ?: AgentModel { task, memories, reflection, rawObservations ->
+                    cancellation.throwIfCancelled()
+                    botTask?.let(::requireBotTaskCurrent)
+                                                                                                                             
+                    check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
+                    check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {                           }
+                    val hasScreen=rawObservations.any { it.toolName==                  }
+                    if(hasScreen)ephemeralScreenRun.set(true)
+                    val screenFrames=mutableListOf<String>()
+                    val observations=rawObservations.map { observation ->
+                        if(observation.toolName!=                 )observation else {
+                            val grant=ScreenObservationBus.grantEpoch()
+                            val frame=at.heinz.deviceai.cognitive.ScreenObservationPrompt.frame(observation.output,
+                                System.currentTimeMillis(),grant)
+                            frame?.let {screenFrames.add(it);screenGrant.compareAndSet(null,grant)}
+                            observation.copy(output=frame?:                                                                                      )
+                        }
+                    }
+                                                                                             
+                                                                                             
+                    val state = if (botTask == null) continuumState else null
+                    val compiledContext = state?.let { runtimeState ->
+                        contextCompiler.compile(
+                            AiContextInput(
+                                seed = runtimeState.seed,
+                                genome = runtimeState.archive.genome,
+                                identityState = runtimeState.archive.identityState,
+                                userRequest = task,
+                                memories = memories,
+                                activeTaskSummary = reflection?.correction?.take(1_024),
+                                unresolvedContradictions = memories
+                                    .filter { memory -> memory.validationState.name ==                }
+                                    .map { memory -> memory.content },
+                                model = imported
+                            )
+                        )
+                    }
+                    val advisory = if (botTask == null && observations.isEmpty() && reflection == null && submittedToolObservationCount == 0) {
+                        ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace), { localRuntime.cancel() })
+                            .also { activeReasoningRouter = it }
+                            .advise(              , task, compiledContext?.text ?: task,
+                                groundedRecall = groundedRecall)
+                            .also { activeReasoningRouter = null; if(it!=null)turnTrace.event(TraceStage.ROUTER_ADVISORY) }
+                    } else null
+                    cancellation.throwIfCancelled()
+                    val boundedInternetMode = if (ownerForbidsExternalNetwork)
+                        at.heinz.deviceai.cognitive.InternetAccessMode.OFF else
+                        at.heinz.deviceai.cognitive.TurnScopedInternetMode.effective(
+                            internetModeAtTurnStart, internetConsent.mode,
+                            internetConsent.revision() == internetRevisionAtTurnStart)
+                                                                                                 
+                                                                                           
+                    val decisionDigest = if (botTask == null && codingPlanning == null &&
+                        sessionId == localSessionId && !documentIoExecutor.isShutdown) {
+                        runCatching {
+                            val episodes = documentIoExecutor
+                                .submit<List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>> {
+                                    workJournal.all()
+                                }.get(400L, TimeUnit.MILLISECONDS)
+                            cancellation.throwIfCancelled()
+                            if (sessionId != localSessionId)    else
+                                at.heinz.deviceai.cognitive.LocalDecisionPromptDigest.render(
+                                    text, at.heinz.deviceai.cognitive.WorkDecisionRecall.items(
+                                        episodes, ownerDecisionStatements(), System.currentTimeMillis()))
+                        }.getOrDefault(  )
+                    } else   
+                                                                                          
+                                                                                       
+                    val conversationContext = if (botTask != null)    else at.heinz.deviceai.cognitive.LocalConversationPromptFirewall.safeHistory(
+                        localConversationContext.render(localSessionId, internetMode = boundedInternetMode,
+                            ownerForbidsExternalNetwork = ownerForbidsExternalNetwork,
+                            onlineApprovalActive = modelWebSessions.any { it.isAuthorized() }))
+                    val requiresPriorDialogue = botTask == null && at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicy
+                        .requiresPreviousOwnerTurn(text)
+                    val priorOwnerEvidence = if (botTask == null) localConversationContext.sessionEvidence(localSessionId) else null
+                    if (requiresPriorDialogue && (priorOwnerEvidence.isNullOrEmpty() ||
+                            conversationContext.isBlank())) {
+                        error(                                    )
+                    }
+                    val promptTail =                                                                           +
+                                                                       + when(boundedInternetMode) {
+                            at.heinz.deviceai.cognitive.InternetAccessMode.OFF ->                                                                          
+                            at.heinz.deviceai.cognitive.InternetAccessMode.ASK ->                                                                    
+                            at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON ->                                                                                                                                                        
+                        } +                                                                                                               +
+                                                                                                                                       
+                    val promptBody = buildString {
+                        append(                                                                                                             )
+                        botTask?.let {
+                            append(                                                                                                         )
+                            append(                                                                                                  )
+                            append(                                                                                      )
+                            append(                                                                      )
+                            append(                                                          )
+                            append(ChiefBotPersonas.promptData(it.profile)).append(    )
+                        }
+                        append(                                                                     +
+                                                                                           +
+                                                                                                       +
+                                                                                                           +
+                                                                                                 +
+                                                                                             +
+                                                                                            +
+                                                                                                             )
+                        append(                                                                     +
+                                                                                                          +
+                                                                                                                     )
+                                                                                       
+                                                                                         
+                                                                                                 
+                        if (requiresPriorDialogue && priorOwnerEvidence != null) {
+                                                                                            
+                            at.heinz.deviceai.cognitive.OwnerStatementTimeline
+                                .project(priorOwnerEvidence, text)?.let { append(it.render()) }
+                        }
+                                                                                             
+                                                                                                
+                        if (compiledContext == null) append(                      ).append(task).append(    )
+                        groundedRecall?.let { append(it.render()) }
+                        if (compiledContext != null) {
+                            append(compiledContext.text)
+                        } else {
+                                                                                            
+                                                                                         
+                                                                                         
+                                                                          
+                            if (botTask == null) append(at.heinz.deviceai.cognitive.LocalAssistantIdentity.renderPrompt(null, imported))
+                            append(at.heinz.deviceai.cognitive.AgentContextFallback.render(reflection))
+                        }
+                        if (observations.isNotEmpty()) {
+                            append(                                                                                                                 )
+                            observations.take(4).forEach {
+                                append(at.heinz.deviceai.localmodel.LocalToolContinuation.observationData(
+                                    it.toolName,it.status.name,it.output)).append(    )
+                            }
+                        }
+                                                                                               
+                    }
+                    val promptCap = at.heinz.deviceai.cognitive.LocalChatPromptBudget.limit(
+                        task = task,
+                        hasMemories = memories.isNotEmpty(),
+                        hasConversationContext = conversationContext.isNotBlank(),
+                        hasGroundedEvidence = groundedRecall != null,
+                        hasObservations = observations.isNotEmpty(),
+                        hasReflection = reflection != null
+                    )
+                    val briefInstruction = if (promptCap ==
+                        at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS)
+                                                                                                              +
+                                                                                 
+                    else   
+                                                                                      
+                                                                               
+                    val promptEnd = promptTail + briefInstruction +      +
+                        at.heinz.deviceai.cognitive.LocalClockIntent.promptAnchor(java.time.ZonedDateTime.now())
+                    val continuingAnswer = botTask == null &&
+                        at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicy.requestsContinuation(text)
+                    if (continuingAnswer && !localConversationContext.hasContinuation(localSessionId))
+                        error(                                )
+                    val boundedConversationContext = if (botTask != null)    else
+                        at.heinz.deviceai.cognitive.LocalConversationPromptFirewall.safeHistory(
+                            localConversationContext.render(localSessionId,
+                                internetMode = boundedInternetMode,
+                                ownerForbidsExternalNetwork = ownerForbidsExternalNetwork,
+                                onlineApprovalActive = modelWebSessions.any { it.isAuthorized() },
+                                maxBytes = at.heinz.deviceai.cognitive.LocalPromptFrame.historyBudget(
+                                    promptBody, promptEnd, promptCap),
+                                requireCompleteOwnerHistory = requiresPriorDialogue,
+                                continuation = continuingAnswer,
+                                ownerTurnsInTask = followUpFrame.ownerTurnsIn(promptBody)))
+                    val prompt = at.heinz.deviceai.cognitive.LocalDecisionPromptFrame.assemble(
+                        requiredBody=promptBody, safeHistory=boundedConversationContext,
+                        decisionDigest=decisionDigest, advisory=advisory,
+                        requiredTail=promptEnd, maxCharacters=promptCap,
+                        requireHistory=requiresPriorDialogue
+                    ) ?: error(if (requiresPriorDialogue)                                        
+                        else                                        )
+                    compiledContext?.requireCompleteIn(prompt)
+                    if (requiresPriorDialogue) {
+                        val receipt = at.heinz.deviceai.cognitive.LocalContextIntegrityProbe.inspect(
+                            requiresHistory = true,
+                            previousOwnerTurns = priorOwnerEvidence,
+                            safeRenderedHistory = boundedConversationContext,
+                            finalPrompt = prompt
+                        )
+                        check(receipt.requiredHistoryAdmitted) {                                  }
+                        runOnUiThread {
+                            if (sessionId == localSessionId && activeChatCancellation === cancellation)
+                                addToolActivity(receipt.diagnosticLine())
+                        }
+                    }
+                                                                                            
+                    screenFrames.forEach {
+                        check(at.heinz.deviceai.localmodel.LocalToolContinuation.containsCompleteOutput(prompt, it)) {
+                                                                 
+                        }
+                    }
+                    val newObservations = observations.drop(submittedToolObservationCount)
+                    if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
+                    check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {                           }
+                    val ownerDialogueOutput = botTask == null && codingPlanning == null
+                    fun requireUsableGeneration(value: LocalGeneration) {
+                        if (value.completion == LocalGenerationCompletion.COMPLETE) value.failure?.let { error(it) }
+                        else check(ownerDialogueOutput && value.response.isNotBlank() &&
+                            value.completion != LocalGenerationCompletion.CANCELLED) {
+                            value.failure ?:                              
+                        }
+                    }
+                    var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                        internetRevisionAtTurnStart, internetConsent::revision) {
+                        val taskRemaining = botTask?.reserveModelCall(sessionId)
+                        generateLocal(cancellation,turnTrace,prompt.length, hardDeadlineMillis = taskRemaining) { callback ->
+                            at.heinz.deviceai.localmodel.LocalToolContinuation.submit(
+                                localRuntime, prompt, forceFresh = hasScreen || (botTask != null && observations.isEmpty()),
+                                responses = {
+                                    newObservations.take(4).map {
+                                        at.heinz.deviceai.localmodel.LocalToolContinuation.encode(
+                                            it.toolName, it.status.name, it.output
+                                        ) ?: error(                                   )
+                                    }
+                                }, callback = callback)
+                        }
+                    }
+                    requireUsableGeneration(generation)
+                    check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {                           }
+                    var rejectionRecoveries = 0
+                    while (generation.completion == LocalGenerationCompletion.COMPLETE &&
+                        generation.rejectedToolResponses.isNotEmpty()) {
+                        check(!hasScreen) {                                         }
+                        if (++rejectionRecoveries > 1) {
+                            error(                                                                   )
+                        }
+                        val rejected = generation.rejectedToolResponses
+                        generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                            internetRevisionAtTurnStart, internetConsent::revision) {
+                            botTask?.let(::requireBotTaskCurrent)
+                            generateLocal(cancellation,turnTrace, hardDeadlineMillis = botTask?.reserveModelCall(sessionId)) {
+                                callback -> localRuntime.respondToTools(rejected, callback)
+                            }
+                        }
+                        requireUsableGeneration(generation)
+                    }
+                    check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
+                    if (ownerDialogueOutput && generation.proposal == null) AgentModelOutput.ownerDialogue(
+                                                                     , generation.response, generation.completion)
+                    else {
+                        check(generation.completion == LocalGenerationCompletion.COMPLETE) {                               }
+                        AgentModelOutput(                                             , generation.response, generation.proposal)
+                    }
+                },
+                                                                                                      
+                memories = { if(codingPlanning == null && botTask == null) memoryStore.all() + ownerFactMemories() else emptyList() },
+                toolGate = createToolGate(ownerTurn = text, consentRevisionAtTurnStart = internetRevisionAtTurnStart,
+                    ephemeralScreenContext = ephemeralScreenRun::get, botTask = botTask),
+                evaluator = AgentEvaluator { response, _ ->
+                    if(codingPlanning != null) Evaluation(codingPlanning.decode(response) != null,0.0,
+                                                                                            )
+                    else LocalDialogueQualityGate.evaluate(
+                        request = text,
+                        response = response,
+                        previousRequest = previousLocalReply?.request,
+                        previousResponse = previousLocalReply?.response,
+                                                                                                                 
+                        priorOwnerContextSupplied = agentTask.startsWith(
+                            at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.HEADER)
+                    )
+                },
+                experienceStore = if(codingPlanning == null && botTask == null) experienceStore else InMemoryExperienceStore(),
+                limits = if(codingPlanning != null) at.heinz.deviceai.cognitive.AgentLimits(maxToolCalls=0,maxRetries=0)
+                    else at.heinz.deviceai.cognitive.AgentLimits(maxToolCalls = botTask?.maxToolCalls ?: 4,
+                        maxRetries = if (botTask == null) 1 else 0),
+                evaluationConfirmsOutcome = false,
+                turnTrace = turnTrace,
+                approvalProvider = AgentToolApprovalProvider { proposal, risk ->
+                    cancellation.throwIfCancelled()
+                    botTask?.let(::requireBotTaskCurrent)
+                    if (risk == Risk.READ_ONLY) return@AgentToolApprovalProvider AgentToolApproval(false)
+                    val isWeb = proposal.toolName in setOf(            ,           )
+                    if (isWeb && (ownerForbidsExternalNetwork ||
+                        internetConsent.revision() != internetRevisionAtTurnStart ||
+                        internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF))
+                        return@AgentToolApprovalProvider AgentToolApproval(false)
+                    if (isWeb && modelWebCalls >= 2) return@AgentToolApprovalProvider AgentToolApproval(false)
+                    if (isWeb) modelWebCalls++
+                    val latch = CountDownLatch(1)
+                    var approval = AgentToolApproval(false)
+                    runOnUiThread {
+                        if (isFinishing || isDestroyed || runCatching { cancellation.throwIfCancelled() }.isFailure) {
+                            latch.countDown()
+                            return@runOnUiThread
+                        }
+                        showStructuredToolConfirmation(proposal, risk == Risk.DESTRUCTIVE) { approved ->
+                            approval = AgentToolApproval(approved, approved && risk == Risk.DESTRUCTIVE)
+                            if (isWeb && approved) approvedModelWebSession.get()?.let(modelWebSessions::add)
+                            latch.countDown()
+                        }
+                    }
+                    val approvalDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(120)
+                    while (!latch.await(10, TimeUnit.MILLISECONDS)) {
+                        cancellation.throwIfCancelled()
+                        if (botTask != null && !botTask.isCurrent(sessionId)) return@AgentToolApprovalProvider AgentToolApproval(false)
+                        if (System.nanoTime() >= approvalDeadline) return@AgentToolApprovalProvider AgentToolApproval(false)
+                    }
+                    cancellation.throwIfCancelled()
+                    botTask?.let(::requireBotTaskCurrent)
+                    approval
+                },
+                checkpointStore = if(codingPlanning == null && botTask == null) FileAgentCheckpointStore(java.io.File(filesDir,                    )) else null,
+                callIdPrefix =                ,
+                cancellation = cancellation,
+                eventObserver = at.heinz.deviceai.chief.ChiefTurnBridge.observer(chiefTurn, delegate = { event ->
+                    botTask?.let { assigned -> runOnUiThread {
+                        if (activeBotTask === assigned && assigned.isCurrent(sessionId)) {
+                            val phase = when (event.state) {
+                                at.heinz.deviceai.cognitive.CognitiveWorkState.WAITING_FOR_APPROVAL ->                            
+                                at.heinz.deviceai.cognitive.CognitiveWorkState.EXECUTING ->                           
+                                at.heinz.deviceai.cognitive.CognitiveWorkState.VERIFYING ->                           
+                                at.heinz.deviceai.cognitive.CognitiveWorkState.BLOCKED ->                    
+                                at.heinz.deviceai.cognitive.CognitiveWorkState.COMPLETED ->                         
+                                else ->                       
+                            }
+                            rememberBotTaskStatus(assigned.profile.agentId, phase)
+                        }
+                    } }
+                    at.heinz.deviceai.chief.TurnLifecycle.milestoneOf(event.state)?.let { kind ->
+                        if (chiefTurn.phase != at.heinz.deviceai.chief.TurnPhase.ENDED)
+                            cockpitTriggers.milestone(chiefTurn.turnId, kind)
+                    }
+                }, show = { line ->
+                    runOnUiThread {
+                        if (!isFinishing && !isDestroyed && sessionId == localSessionId &&
+                            chiefTurn.phase != at.heinz.deviceai.chief.TurnPhase.ENDED) {
+                            addToolActivity(           + line)
+                        }
+                    }
+                }),
+                onToolStarted = { callId, toolName ->
+                    if (botTask == null && codingPlanning == null)
+                        recordStorageToolStarted(startedStorageCalls, callId, toolName)
+                }
+            )
+            activeOrchestrator = orchestrator
+            localAgentExecutor.execute {
+                val result = runCatching {
+                    at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                        internetRevisionAtTurnStart, internetConsent::revision) {
+                        orchestrator.run(agentTask).also {
+                            modelWebSessions.forEach { session -> session.checkAuthorized() }
+                            botTask?.let(::requireBotTaskCurrent)
+                        }
+                    }
+                }
+                if (botTask == null && codingPlanning == null)
+                    settleStorageToolRun(startedStorageCalls, result, localSessionId, cancellation)
+                fun deliverResult() {
+                    if (isFinishing || isDestroyed || activeChatCancellation !== cancellation) return
+                                                                                              
+                                                                                            
+                    if (botTask != null && localRuntime.state == LocalModelState.GENERATING) {
+                        mainHandler.postDelayed({ deliverResult() }, 250L)
+                        return
+                    }
+                    val planningDeliveryCurrent = codingPlanning == null ||
+                        (sessionId == localSessionId && foregroundLearningActive && codingPlanningEpoch == planningEpoch &&
+                            runCatching { cancellation.throwIfCancelled() }.isSuccess &&
+                            LocalTurnModelBinding.stillBound(imported,localRuntime.loadedModel))
+                    val ownerDeliveryCurrent = botTask != null || codingPlanning != null ||
+                        at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuard(
+                            cancellation, localSessionId, imported).isCurrent(
+                            activeChatCancellation, this@AgentActivity.sessionId, localRuntime.loadedModel)
+                    cockpitTriggers.turnEnded(chiefTurn.turnId, chiefTurn.deliver())
+                    activeChatCancellation = null
+                    activeOrchestrator = null
+                    activeLocalRequest = false
+                    planCard.visibility = View.GONE
+                    if (!ownerDeliveryCurrent) {
+                        setBusy(false)
+                        refreshLocalModelUi()
+                        return
+                    }
+                    if (botTask != null && (activeBotTask !== botTask || !botTask.isCurrent(sessionId) ||
+                            sessionId != localSessionId ||
+                            runCatching { cancellation.throwIfCancelled() }.isFailure ||
+                            !LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel))) {
+                        finishBotTask(botTask,                                                              )
+                        addToolActivity(                                                                                                 )
+                        setBusy(false)
+                        refreshLocalModelUi()
+                        return
+                    }
+                    result.onSuccess { run ->
+                        if(codingPlanning != null) {
+                            val draft = if(planningDeliveryCurrent && run.blocker == null)
+                                codingPlanning.decode(run.response) else null
+                            if(draft != null) showCodingTaskDraftDialog(draft)
+                            addToolActivity(if(draft != null)                                                                              
+                                else                                                                  )
+                            return@onSuccess
+                        }
+                        if (internetConsent.revision() != internetRevisionAtTurnStart) {
+                            lastLocalReply = null                                                            
+                            if (botTask == null && sessionId == localSessionId && !ephemeralScreenRun.get())
+                                localConversationContext.recordUnanswered(localSessionId, text)
+                            botTask?.let { finishBotTask(it,                                                ) }
+                            addToolActivity(                                                                                   )
+                            return@onSuccess
+                        }
+                        if (modelWebSessions.any { !it.isAuthorized() }) {
+                            lastLocalReply = null
+                            if (botTask == null && sessionId == localSessionId && !ephemeralScreenRun.get())
+                                localConversationContext.recordUnanswered(localSessionId, text)
+                            botTask?.let { finishBotTask(it,                                          ) }
+                            addToolActivity(                                                     )
+                            return@onSuccess
+                        }
+                        if(!at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {
+                            lastLocalReply = null
+                            addToolActivity(                                                 )
+                            botTask?.let { finishBotTask(it,                                                  ) }
+                            setBusy(false);return@onSuccess
+                        }
+                        val hasPartialResponse = !run.responseComplete && run.response.isNotBlank()
+                        val successful = run.responseComplete && run.blocker == null && run.response.isNotBlank()
+                        publishCognitiveTrace(turnTrace,if(successful)TraceOutcome.MODEL_INTERPRETATION else TraceOutcome.FAILED)
+                        if (botTask != null) {
+                            val calls = run.taskEvidence?.calls.orEmpty()
+                            val status = when {
+                                calls.any { it.outcomeUncertain } ->                                          
+                                run.blocker != null ->                                  
+                                calls.any { it.status == ToolExecutionStatus.SUCCEEDED && it.freshOutput } ->
+                                                                                                        
+                                successful ->                                                     
+                                else ->                                      
+                            }
+                            addAssistantMessage(                                    + run.response.ifBlank {
+                                                                                           
+                            })
+                            finishBotTask(botTask, status)
+                            avatarBlocked = run.blocker != null
+                            avatarAwaitingApproval = false
+                            refreshHologramState()
+                            addToolActivity(                                          )
+                            return@onSuccess
+                        }
+                        onLearningIo({
+                            at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
+                                .recordLocalOutcome(successful)
+                        }) { audit ->
+                            if(audit.isFailure)addToolActivity(                                             )
+                        }
+                        if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
+                        val visibleAnswer = when {
+                            hasPartialResponse -> (run.blocker ?:                         ) +        + run.response
+                            !run.responseComplete -> run.blocker ?:                                       
+                            !successful && groundedRecall != null -> groundedRecall.failureAnswer()
+                            else -> run.response.ifBlank {                                                }
+                        }
+                        val keepOwnerSession = !ephemeralScreenRun.get() && sessionId == localSessionId
+                                                                                                                         
+                        val draftTurn = documentDraftTurn?.takeIf { it.prompt.request == text }
+                        if (draftTurn != null) documentDraftTurn = null
+                        if (stoppedDraftRequest == text) stoppedDraftRequest = null
+                        val draftWindow = if (draftTurn != null) onDocumentDraftReply(draftTurn,
+                            if (successful) run.response else   ) else null
+                        addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession, keepCockpit = draftWindow != null)
+                        if(successful && groundedRecall!=null)addToolActivity(
+                                                                                                    +
+                                                                                                  )
+                        if (ephemeralScreenRun.get()) lastLocalReply=null
+                        if (keepOwnerSession) {
+                            if (successful || hasPartialResponse) {
+                                lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
+                                localConversationContext.record(localSessionId, text, run.response,
+                                    responseComplete = true)
+                            } else localConversationContext.recordUnanswered(localSessionId, text)
+                        }
+                        checkpointContinuumAsync()
+                        avatarBlocked = run.blocker != null
+                        avatarAwaitingApproval = false
+                        refreshHologramState()
+                        addToolActivity(if (run.blocker == null)                                       else                                 )
+                    }.onFailure { error ->
+                        if(codingPlanning != null) {
+                            addToolActivity(                                                                 )
+                            return@onFailure
+                        }
+                        if (botTask != null) {
+                            publishCognitiveTrace(turnTrace, TraceOutcome.FAILED)
+                            finishBotTask(botTask,                                                           )
+                            addAssistantMessage(                                                                                       +
+                                                                                                                                    )
+                            addToolActivity(                                                                      )
+                            return@onFailure
+                        }
+                        val requiredContextOverflow = error.message in setOf(
+                                                              ,
+                                                                   ,
+                                                               ,
+                                                                    ,
+                                                                   ,
+                                                            
+                        )
+                        publishCognitiveTrace(turnTrace,
+                            if (requiredContextOverflow) TraceOutcome.CLARIFY else TraceOutcome.FAILED)
+                        onLearningIo({
+                            at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
+                                .recordLocalOutcome(false)
+                        }) { audit ->
+                            if(audit.isFailure)addToolActivity(                                             )
+                        }
+                        localRuntimeError = error.message ?:                          
+                        val keepFailedOwnerTurn = !ephemeralScreenRun.get() && sessionId == localSessionId
+                                                                                                                              
+                        val failedDraft = documentDraftTurn?.takeIf { it.prompt.request == text }
+                        if (failedDraft != null) onDocumentDraftFailed(failedDraft, error.message)
+                                                                                                                        
+                        val stoppedDraft = stoppedDraftRequest != null && stoppedDraftRequest == text
+                        if (stoppedDraft) stoppedDraftRequest = null
+                        addAssistantMessage(if (stoppedDraft)                                                     
+                        else if (requiredContextOverflow)
+                                                                                                                                                                                                                                            
+                        else if (error.message ==                                 )
+                                                                                                                                                                                
+                        else if (error.message ==                                     )
+                                                                                                          +
+                                                                                                             +
+                                                                                                         
+                        else if (error.message ==                                           )
+                            ContinuumUiCopy.modelFailure(error.message)
+                        else if (at.heinz.deviceai.localmodel.LocalModelThermalGuard.isThermal(error.message))
+                            at.heinz.deviceai.localmodel.LocalModelThermalGuard.ownerMessage(error.message)
+                        else groundedRecall?.failureAnswer() ?:
+                                                                                                  , preserveLocalContext = keepFailedOwnerTurn,
+                            keepCockpit = (failedDraft != null && workWindowHost.isShowing) ||
+                                (stoppedDraft && activeWorkArea == ContinuumWorkArea.START))
+                        if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)
+                        addToolActivity(if (requiredContextOverflow)
+                                                                                                         
+                        else                          )
+                    }
+                    setBusy(false)
+                    refreshLocalModelUi()
+                }
+                runOnUiThread { deliverResult() }
+            }
+        }
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/partial_metadata_detached/source/.github/continuum/continuum-local-dialogue-quality-wiring.test.mjs:99:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 188.760084

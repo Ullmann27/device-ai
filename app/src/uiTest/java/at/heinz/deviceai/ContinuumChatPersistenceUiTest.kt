@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -107,12 +108,15 @@ class ContinuumChatPersistenceUiTest {
             val id = field(a, "sessionId") as String
             // The successful local-model path admits the turn to the context and stores it (Gemma itself is not run here).
             val context = field(a, "localConversationContext") as at.heinz.deviceai.cognitive.LocalConversationContext
+            assertNotNull("Activity recorder is connected", context.onTurnRecorded)
             context.record(id, request, answer)
-            AgentActivity::class.java.getDeclaredMethod("rememberContextTurn", String::class.java, String::class.java,
-                String::class.java).apply { isAccessible = true }.invoke(a, id, request, answer)
             id
         }
-        waitForContextTurn(request)
+        assertTrue("Activity recorder persisted the turn", waitForContextTurn(request))
+        val stored = storedContextTurns(session)
+        assertEquals("recorded exactly once", 1, stored.size)
+        assertTrue(stored.single().requestComplete)
+        assertTrue(stored.single().responseComplete)
         withActivity { a ->
             val context = field(a, "localConversationContext") as at.heinz.deviceai.cognitive.LocalConversationContext
             assertEquals(session, field(a, "sessionId"))
@@ -120,6 +124,8 @@ class ContinuumChatPersistenceUiTest {
             assertTrue("the earlier answer is available as dialogue data", context.render(session).contains("Aetheria"))
             assertEquals("restoring never starts work", false, field(a, "busy"))
         }
+        AgentActivity.chatTranscriptIo.submit {}.get(2, TimeUnit.SECONDS)
+        assertEquals("restore does not write duplicates", stored, storedContextTurns(session))
     }
 
     /** Gitar review on #565: context the app dropped on purpose (non-model answer) must stay dropped after a restart. */
@@ -129,9 +135,9 @@ class ContinuumChatPersistenceUiTest {
         val session = withActivity { a ->
             val id = field(a, "sessionId") as String
             val context = field(a, "localConversationContext") as at.heinz.deviceai.cognitive.LocalConversationContext
+            assertNotNull("Activity recorder is connected", context.onTurnRecorded)
             context.record(id, request, "Der erfundene Mond heißt Aetheria.")
-            AgentActivity::class.java.getDeclaredMethod("rememberContextTurn", String::class.java, String::class.java,
-                String::class.java).apply { isAccessible = true }.invoke(a, id, request, "Der erfundene Mond heißt Aetheria.")
+            assertTrue("turn exists before invalidation", waitForContextTurn(request))
             // A non-model answer (tool result, memory reply, error) invalidates the model context in RAM.
             AgentActivity::class.java.getDeclaredMethod("addAssistantMessage", String::class.java, Boolean::class.javaPrimitiveType)
                 .apply { isAccessible = true }.invoke(a, toolAnswer, false)
@@ -139,6 +145,7 @@ class ContinuumChatPersistenceUiTest {
             id
         }
         assertTrue(waitForTranscript(toolAnswer))
+        assertTrue("reset invalidates persisted context", storedContextTurns(session).isEmpty())
         withActivity { a ->
             val context = field(a, "localConversationContext") as at.heinz.deviceai.cognitive.LocalConversationContext
             assertEquals(session, field(a, "sessionId"))
@@ -146,6 +153,9 @@ class ContinuumChatPersistenceUiTest {
             assertTrue("the visible chat is unaffected", texts(field(a, "chatContainer") as LinearLayout).contains(toolAnswer))
         }
     }
+
+    private fun storedContextTurns(id: String) = at.heinz.deviceai.cognitive.LocalChatTranscriptStore(
+        File(RuntimeEnvironment.getApplication().filesDir, "chat-history")).loadContextTurns(id)
 
     private fun waitForContextTurn(text: String): Boolean {
         val dir = File(RuntimeEnvironment.getApplication().filesDir, "chat-history")

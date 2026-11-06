@@ -109,10 +109,11 @@ class OwnerAppActionWorkSceneUiTest {
         val port = Port()
         try {
             controller.setup().visible()
-            controller.windowFocusChanged(true)
             val a = controller.get()
             val root = a.window.decorView
             pump = CockpitHostFramePump { root }
+            measure(root); advance(32)
+            controller.windowFocusChanged(true)
             set(a, "executor", DeviceToolExecutor(a, { false }, { _, callback ->
                 callback(Result.failure(IllegalStateException("No bridge in this fixture")))
             }, port))

@@ -59,7 +59,7 @@ class LocalPromptSizeAndStabilityTest {
         }
         val body = section("val promptBody = buildString {", "val promptCap =")
         assertFalse("time anchor must not be inside promptBody", body.contains("LocalClockIntent.promptAnchor"))
-        val tail = section("val promptEnd =", "val prompt =")
+        val tail = section("val promptEnd =", "val continuingAnswer =")
         assertTrue("promptEnd must retain the required tail and trusted clock", Regex(
             """\s*promptTail\s*\+\s*briefInstruction\s*\+\s*"\\n"\s*\+\s*""" +
                 """at\.heinz\.deviceai\.cognitive\.LocalClockIntent\.promptAnchor\(""" +

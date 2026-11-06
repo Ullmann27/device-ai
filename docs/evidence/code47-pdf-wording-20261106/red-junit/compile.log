@@ -1,0 +1,2 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=41301 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=41301 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+[0.000s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/32 because it is locked by another process (errno = 11)
