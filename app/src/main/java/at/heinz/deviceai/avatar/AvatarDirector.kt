@@ -216,9 +216,14 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     /** STOP/pause cancel presentation intents. */
     @Synchronized fun clearAnimationIntents() {
+        workIntent = null
+        clearTransientIntents()
+    }
+
+    /** Glance, confirmation and thinking cue end; the claim of real work that still runs (workIntent) stays. */
+    private fun clearTransientIntents() {
         windowIntent?.let { remember(retiredWindows, it.id) }
         windowIntent = null
-        workIntent = null
         confirmationAtMillis = Long.MIN_VALUE
         thinkingAtMillis = Long.MIN_VALUE
         publishAnimationIntents(clock())
@@ -262,7 +267,8 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     /** Returns admission independently of rendering, so the caller can share it with PCM state. */
     @Synchronized fun speechStarted(utteranceId: String, text: String): Boolean {
         if (utteranceId.isBlank() || utteranceId == utterance || utteranceId in retiredUtterances) return false
-        if (windowIntent != null || confirmationAtMillis != Long.MIN_VALUE || thinkingAtMillis != Long.MIN_VALUE) clearAnimationIntents()
+        // Speech takes the eyes for its own duration only; real work that still runs keeps its claim (workIntent).
+        if (windowIntent != null || confirmationAtMillis != Long.MIN_VALUE || thinkingAtMillis != Long.MIN_VALUE) clearTransientIntents()
         utterance?.let(::retireUtterance)
         utterance = utteranceId
         lastRangeAt = Long.MIN_VALUE
@@ -351,11 +357,13 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     @Synchronized fun speechEnded(utteranceId: String, interrupted: Boolean) {
         if (utteranceId != utterance) return
-        if (windowIntent != null || confirmationAtMillis != Long.MIN_VALUE || thinkingAtMillis != Long.MIN_VALUE) clearAnimationIntents()
+        if (windowIntent != null || confirmationAtMillis != Long.MIN_VALUE || thinkingAtMillis != Long.MIN_VALUE) clearTransientIntents()
         retireUtterance(utteranceId)
         utterance = null; text = ""
         lastWordCues = emptyList()
         emit(AvatarEvent.SpeechEnded(utteranceId, interrupted, clock()))
+        // A direct TTS start has no listening/speaking runtime transition: give the running work its eyes back here.
+        if (resumeWork()) publishAnimationIntents(clock())
     }
 
     private fun retireUtterance(utteranceId: String) {

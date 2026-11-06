@@ -151,4 +151,46 @@ class AvatarWindowWorkReadingTest {
         director.onRuntime(AvatarRuntimeSignals(busy = true))
         assertFalse("ended work never comes back", reducer.pose(now).reading)
     }
+
+    /**
+     * Owner review (P0, 06.11.): a direct TTS start during real work – no listening event before it. speechStarted used
+     * to clear every animation intent, the work intent included, so the reading was lost for good although the model
+     * kept working. Speech takes the eyes only for its own duration; afterwards the running work gets them back.
+     * STOP, the end of the work, a closed window and late speech events never bring the reading back.
+     */
+    @Test fun aDirectSpeechDuringWorkGivesTheEyesBackAfterwards() {
+        busy()
+        assertTrue(director.windowWorkStarted("doc-1", window))
+        assertTrue(director.speechStarted("u-1", "Ich lese gerade das Dokument."))
+        assertFalse("while speaking JARVIS looks at the owner", reducer.pose(now).reading)
+        now += 1_500
+        director.speechEnded("u-1", interrupted = false)
+        val after = reducer.pose(now)
+        assertTrue("the work still runs: the eyes go back to the document", after.reading)
+        assertEquals(window.x, after.gazeX, 1e-6f)
+
+        // A late end of an already finished utterance changes nothing.
+        director.speechEnded("u-1", interrupted = false)
+        assertTrue(reducer.pose(now).reading)
+
+        // STOP during speech: no comeback after the speech ends.
+        assertTrue(director.speechStarted("u-2", "Moment."))
+        director.clearAnimationIntents()
+        director.speechEnded("u-2", interrupted = true)
+        assertFalse("STOP ends it for good", reducer.pose(now).reading)
+
+        // The work ended during speech: no comeback.
+        assertTrue(director.windowWorkStarted("doc-2", window))
+        assertTrue(director.speechStarted("u-3", "Fast fertig."))
+        assertTrue(director.windowWorkEnded("doc-2"))
+        director.speechEnded("u-3", interrupted = false)
+        assertFalse("ended work never comes back", reducer.pose(now).reading)
+
+        // The window closed during speech: no comeback.
+        assertTrue(director.windowWorkStarted("doc-3", window))
+        assertTrue(director.speechStarted("u-4", "Einen Augenblick."))
+        director.windowClosed("doc-3")
+        director.speechEnded("u-4", interrupted = false)
+        assertFalse("a closed window is not read", reducer.pose(now).reading)
+    }
 }
