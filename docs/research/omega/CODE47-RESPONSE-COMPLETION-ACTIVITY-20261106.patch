@@ -75,9 +75,9 @@
                          runCatching { cancellation.throwIfCancelled() }.isSuccess &&
                          LocalTurnModelBinding.stillBound(imported,localRuntime.loadedModel))
 +                val ownerDeliveryCurrent = botTask != null || codingPlanning != null ||
-+                    (activeChatCancellation === cancellation && sessionId == localSessionId &&
-+                        runCatching { cancellation.throwIfCancelled() }.isSuccess &&
-+                        LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel))
++                    at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuard(
++                        cancellation, sessionId, imported).isCurrent(
++                        activeChatCancellation, localSessionId, localRuntime.loadedModel)
                  cockpitTriggers.turnEnded(chiefTurn.turnId, chiefTurn.deliver())
                  activeChatCancellation = null
                  activeOrchestrator = null

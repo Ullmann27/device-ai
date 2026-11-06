@@ -1,6 +1,6 @@
 # Code47 response completion repair
 
-Status: **WIP / UNVERIFIED**. No device/model/APK verification claimed.
+Status: capture/agent repair ready for coordinated integration; **54/54 focused host tests PASS**. Integrated Android/APK/device/model acceptance remains **NOT_RUN** for this support branch.
 
 ## Source and ownership
 
@@ -38,11 +38,15 @@ Pure capture checkpoint: Kotlin 2.4.0 / JDK17 / JUnit4.13.2, 256MiB compiler hea
 
 Owner output checkpoint: real stable SDK dependencies from source `24547da`, freshly compiled `BoundedAgent` and test classes first on the classpath. API-only baseline retained the old 8,000 limit and old partial-result handling: 11 tests / 4 expected failures. The repaired core passed 48 tests across 9 classes, including the unchanged 8,001-with-proposal refusal and M2 dispatch/journal regressions. Exact compile/source manifests and raw JUnit output are versioned alongside the capture evidence.
 
-The latest optional cancellation diagnostic argument and queued-delivery regression still require the final focused rerun. The helper is not yet connected to AgentActivity in this branch. Its exact integration patch is `docs/research/omega/CODE47-RESPONSE-COMPLETION-ACTIVITY-20261106.patch`; `git apply --check` passed on the unchanged base Activity. Only the coordinated wiring agent applies it. Context persistence must use `record(..., responseComplete=run.responseComplete)` for a successful response or accepted partial (`!responseComplete && response.isNotBlank()`); rejected partials use `recordUnanswered`. Remove the old duplicate `rememberContextTurn` write when connecting the context agent's callback.
+Final focused rerun: **54/54 PASS**, 10 freshly compiled test classes, Kotlin 2.4.0 / JDK17 / JUnit4.13.2, real stable SDK dependencies, 256MiB heap. The current cancellation diagnostic API is included. Production/test SHA-256 hashes, exact dependency-source SHA, commands, exit codes and raw output are in `final-receipt.json` and adjacent files. The compiler emitted one pre-existing unnecessary-`!!` warning in `BoundedAgentOutcomeEvidenceTest`; no compilation or test failures.
+
+Queued-delivery regression: the old owner gate checked active request identity only. Six real JVM tests exercise a queued Runnable and the production `LocalGenerationDeliveryGuard` with real cancellation/model types. Baseline: 6 tests / 4 failures (STOP, changed session, changed weights, unloaded model). Final: all six pass, including the current-response and newer-request controls. This is a delivery-gate unit test, not an Android UI/device test. The Activity patch invokes the same guard inside `deliverResult`, before clearing `activeChatCancellation`: constructor gets captured turn `sessionId`; `isCurrent` gets current Activity `localSessionId`.
+
+The helper is not connected to AgentActivity in this support branch. Its exact integration patch is `docs/research/omega/CODE47-RESPONSE-COMPLETION-ACTIVITY-20261106.patch`; `git apply --check` passed on the unchanged base Activity. Only the coordinated wiring agent applies it. Context persistence must use `record(..., responseComplete=run.responseComplete)` for a successful response or accepted partial (`!responseComplete && response.isNotBlank()`); rejected partials use `recordUnanswered`. Remove the old duplicate `rememberContextTurn` write when connecting the context agent's callback.
 
 Integrated Android compilation, APK and device/model validation remain **NOT_RUN** for this repair.
 
-Prepare real Kotlin/JUnit RED -> GREEN for complete 8,000/8,001-character owner responses; 8,001 plus proposal still refuses all tool calls; 20,000 with both callback orders; 20,001 overflow; partial text followed by stall; late deltas/terminal events after completion and STOP; incomplete replies passing through quality evaluation but producing no success episode.
+Verified cases: complete 8,000/8,001/20,000-character owner responses retain their ending through the real dialogue quality gate; 8,001 plus proposal still refuses all tool calls; 20,000 with both callback orders; 20,001 overflow; Unicode boundary; partial text followed by stall; late deltas/terminal events after completion and STOP; incomplete replies are evaluated but create no success episode/reputation/outcome. Existing bounded-agent cancellation, outcome and M2 dispatch/journal tests remain green.
 
 No parallel heavy Gradle. Full current-source Android verification is coordinated centrally. Do not promote focused host checks to device/model verification.
 
@@ -50,4 +54,4 @@ No parallel heavy Gradle. Full current-source Android verification is coordinate
 
 EXP-05 (local generation), EXP-07 (independent negative tests), EXP-11 (same bounded orchestration) and EXP-12 (context continuity) are affected. No new model authority, job framework, memory promotion or external service. Existing package/signature/version remain unchanged.
 
-Rollback: revert this support branch's repair/integration commits together; never reset or force-push an active shared branch. Next step: commit tests, record actual RED, implement the smallest matching helper/output contract, supply exact Activity integration and re-run focused tests.
+Rollback: revert this support branch's repair/integration commits together; never reset or force-push an active shared branch. Next step: complete the coordinated Activity/context wiring, then run one full current-source SDK/Android QA build. Only that integrated result can support APK publication; this focused host result is not a model-quality or Fold7 claim.
