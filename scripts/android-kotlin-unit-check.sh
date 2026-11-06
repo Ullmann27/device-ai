@@ -23,6 +23,7 @@ mkdir -p "$out"
 "$root/scripts/android-kotlin-compile-check.sh" "$out/compile-check" >"$out/compile-check.txt"   # generated stubs
 cp="$deps/android-all-15.jar"
 for jar in okhttp.jar okio.jar shizuku-api.jar shizuku-aidl.jar shizuku-shared.jar shizuku-provider.jar; do cp="$cp:$deps/$jar"; done
+for jar in filament-android-1.56.0.jar gltfio-android-1.56.0.jar opencv-4.13.0.jar; do [ -f "$deps/$jar" ] && cp="$cp:$deps/$jar"; done
 mkdir -p "$out/stubclasses" "$out/main" "$out/test"
 mapfile -t stubs < <(find "$out/compile-check/stubs" -name '*.java' | sort)
 javac -nowarn -d "$out/stubclasses" -cp "$cp" "${stubs[@]}"
@@ -41,7 +42,12 @@ run_cp="$out/test:$out/main:$out/stubclasses:$stdlib:$junit:$cp:src/test/resourc
 cd "$root/app"
 status=0
 java -Xmx2g -cp "$run_cp" org.junit.runner.JUnitCore "${classes[@]}" >"$out/junit.txt" 2>&1 || status=1
-for check in "${checks[@]}"; do java -cp "$run_cp" "$check" >>"$out/checks.txt" 2>&1 || { echo "check failed: $check" >>"$out/checks.txt"; status=1; }; done
+for check in "${checks[@]}"; do
+  # *Checks helpers without a main method (e.g. ContinuumLandscapeTargetPrecisionChecks, used by a JUnit class) are not programs.
+  javap -cp "$run_cp" "$check" 2>/dev/null | grep -Eq 'static .*void main\(' \
+    || { echo "skipped (no main): $check" >>"$out/checks.txt"; continue; }
+  java -cp "$run_cp" "$check" >>"$out/checks.txt" 2>&1 || { echo "check failed: $check" >>"$out/checks.txt"; status=1; }
+done
 summary=$(grep -E '^(OK \(|Tests run:)' "$out/junit.txt" | tail -1)
 echo "classes=${#classes[@]} checks=${#checks[@]} junit: $summary"
 if [ "$status" -ne 0 ]; then

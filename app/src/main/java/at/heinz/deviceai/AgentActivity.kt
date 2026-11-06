@@ -3995,20 +3995,86 @@ class AgentActivity : Activity() {
         refreshReadinessGuide()
     }
 
+    /** Installed engine voices as the pure selection rule sees them (no Android types leave this method). */
+    private fun voiceCandidates(engine: TextToSpeech): List<at.heinz.deviceai.cognitive.JarvisVoiceSelection.Candidate> =
+        runCatching { engine.voices }.getOrNull().orEmpty().mapNotNull { voice ->
+            val name = voice.name ?: return@mapNotNull null
+            at.heinz.deviceai.cognitive.JarvisVoiceSelection.Candidate(
+                name = name,
+                language = voice.locale?.language.orEmpty(),
+                country = voice.locale?.country.orEmpty(),
+                quality = voice.quality,
+                latency = voice.latency,
+                networkRequired = voice.isNetworkConnectionRequired,
+                notInstalled = voice.features?.contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED) == true)
+        }
+
+    private var voiceChoice: at.heinz.deviceai.cognitive.JarvisVoiceSelection.Choice? = null
+
     private fun refreshOfflineVoice() {
         if (!voiceInitialized) return
         voiceReady = runCatching {
             val engine = voiceEngine ?: return@runCatching false
-            val offline = engine.voices?.filter { !it.isNetworkConnectionRequired && it.locale.language == "de" &&
-                it.features?.contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED) != true }
-                ?.maxByOrNull { it.quality } ?: return@runCatching false
-            engine.setVoice(offline) == TextToSpeech.SUCCESS &&
+            val language = at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.fromTag(
+                if (::bootstrapMemory.isInitialized) bootstrapMemory.voiceLanguage else "de")
+            val ownerName = if (::bootstrapMemory.isInitialized) bootstrapMemory.voiceName else null
+            val choice = at.heinz.deviceai.cognitive.JarvisVoiceSelection.choose(voiceCandidates(engine), language, ownerName)
+                ?: return@runCatching false
+            val voice = engine.voices?.firstOrNull { it.name == choice.voice.name } ?: return@runCatching false
+            voiceChoice = choice
+            engine.setVoice(voice) == TextToSpeech.SUCCESS &&
                 at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(engine.voice?.isNetworkConnectionRequired)
         }.getOrDefault(false)
+        if (!voiceReady) voiceChoice = null
         if (voiceReady) {
             voiceEngine?.setPitch(at.heinz.deviceai.cognitive.JarvisVoiceProfile.pitch)
             voiceEngine?.setSpeechRate(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speechRate)
         }
+    }
+
+    /**
+     * Voice picker (long press on TON): offline + installed voices of the chosen language, best first; the owner's
+     * pick is remembered by engine voice name. Android exposes no gender, so the owner hears and decides.
+     */
+    private fun showVoicePicker() {
+        val engine = voiceEngine
+        if (engine == null || !voiceInitialized) {
+            Toast.makeText(this, "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show(); return
+        }
+        val selection = at.heinz.deviceai.cognitive.JarvisVoiceSelection
+        val language = at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.fromTag(bootstrapMemory.voiceLanguage)
+        val voices = selection.selectable(voiceCandidates(engine), language)
+        val current = voiceChoice?.voice?.name
+        val rows = ArrayList<String>()
+        rows += "Automatisch (${language.label}, Österreich zuerst)"
+        voices.forEach { rows += (if (it.name == current) "● " else "") + selection.describe(it) }
+        val checked = if (bootstrapMemory.voiceName == null) 0
+            else voices.indexOfFirst { it.name == bootstrapMemory.voiceName }.let { if (it < 0) 0 else it + 1 }
+        val otherLanguage = if (language == at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.GERMAN) at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.ENGLISH else at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.GERMAN
+        AlertDialog.Builder(this)
+            .setTitle("Stimme · ${language.label} · ${voices.size} offline installiert")
+            .setSingleChoiceItems(rows.toTypedArray(), checked) { dialog, which ->
+                bootstrapMemory.voiceName = if (which == 0) null else voices[which - 1].name
+                refreshOfflineVoice()
+                dialog.dismiss()
+                if (voiceReady && voiceEnabled) speakBootstrap(
+                    if (language == at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.ENGLISH) "Hello. This is my voice now."
+                    else "Hallo. So klingt meine Stimme jetzt.")
+                else Toast.makeText(this, "Diese Stimme konnte nicht gesetzt werden.", Toast.LENGTH_LONG).show()
+            }
+            .setNeutralButton("Sprache: ${otherLanguage.label}") { _, _ ->
+                bootstrapMemory.voiceLanguage = otherLanguage.tag
+                bootstrapMemory.voiceName = null
+                refreshOfflineVoice()
+                if (!voiceReady) Toast.makeText(this,
+                    "Keine Offline-Stimme für ${otherLanguage.label} installiert. In den Android-Einstellungen unter Text-in-Sprache laden.",
+                    Toast.LENGTH_LONG).show()
+                else if (voiceEnabled) speakBootstrap(
+                    if (otherLanguage == at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.ENGLISH) "Hello. I will speak English now."
+                    else "Hallo. Ich spreche jetzt wieder Deutsch.")
+            }
+            .setNegativeButton("Schließen", null)
+            .show()
     }
 
     /**
@@ -4469,6 +4535,7 @@ class AgentActivity : Activity() {
                     "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show()
             } else { voiceEngine?.stop(); stopVoiceAnimation() }
         }
+        voiceButton?.setOnLongClickListener { showVoicePicker(); true }
         actions.addView(voiceButton,
             LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .94f).apply { marginStart = dp(4) }
         )
