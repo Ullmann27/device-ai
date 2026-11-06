@@ -2152,18 +2152,21 @@ class AgentActivity : Activity() {
         val body = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; tag = "jarvis-draft" }
         // Two layers (owner brief 06.11.): the document steps back behind the result – its own first page stays as the
         // source card above the draft, the draft unfolds out of the document window.
+        var sourcePage: android.widget.ImageView? = null
         turn.page?.let { page ->
             val source = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL; tag = "jarvis-draft-source"
                 alpha = .78f
             }
-            source.addView(android.widget.ImageView(this).apply {
+            // The window flies the real page from the document window into this view and shows it on arrival.
+            sourcePage = android.widget.ImageView(this).apply {
                 tag = "jarvis-draft-source-page"
                 setImageBitmap(page)
                 adjustViewBounds = true
                 scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
                 contentDescription = "Erste Seite von ${turn.name}"
-            }, LinearLayout.LayoutParams(dp(44), dp(58)))
+            }
+            source.addView(sourcePage, LinearLayout.LayoutParams(dp(44), dp(58)))
             source.addView(textView("Quelle: ${turn.name}", 11f, MUTED), LinearLayout.LayoutParams(0, -2, 1f).apply {
                 leftMargin = dp(8)
             })
@@ -2179,7 +2182,7 @@ class AgentActivity : Activity() {
         body.addView(cockpit.action(this, "ALS DATEI SPEICHERN", primary = true) { saveDraft(draft.text.toString(), turn.name) }
             .apply { tag = "jarvis-draft-save" }, matchWidth(top = 6))
         return workWindowHost.show(home, body, "ENTWURF · ${turn.name.take(40)}",
-            at.heinz.deviceai.ui.JarvisActionScenes.forDocument(), fromCurrent = true) {}
+            at.heinz.deviceai.ui.JarvisActionScenes.forDocument(), fromCurrent = true, handover = sourcePage) {}
     }
 
     /** The local model's reply to a document draft: journal state, then the result surface (null without a draft). */
@@ -2384,8 +2387,10 @@ class AgentActivity : Activity() {
         val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown }
         val emblem = doc.firstPage?.let { android.graphics.drawable.BitmapDrawable(resources, it) }
         val window = home?.let {
+            // Narrow glass sheets behind the window: the document's real further pages (at most three), never invented.
             workWindowHost.show(it, body, "DOKUMENT · ${doc.name.take(40)}",
-                at.heinz.deviceai.ui.JarvisActionScenes.forDocument(), emblem) {}
+                at.heinz.deviceai.ui.JarvisActionScenes.forDocument(), emblem,
+                depthLayers = at.heinz.deviceai.ui.JarvisWorkWindowDepth.layers(doc.pageCount)) {}
         }
         // The same facts in the conversation; with an open window the cockpit stays (no switch to the chat area).
         addAssistantMessage(report, preserveLocalContext = false, keepCockpit = window != null)
