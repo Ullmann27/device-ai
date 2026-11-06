@@ -54,7 +54,9 @@ class JarvisWorkWindowHost(
         // A first layout at another size (rotation/fold/keyboard still pending) plans again on the real size.
         val refit = {
             if (current === window) plan(home, container, scene, fresh = true)?.also {
-                // The window moved to the real size: the camera leans towards its new side (progress is still ~0).
+                // The window moved to the real size: JARVIS looks where it is now (#565 review) and the camera leans
+                // towards its new side (progress is still ~0).
+                director.windowMoved(id, gaze(it))
                 home.hologram.setWorkWindowCamera(true, cameraSide(it))
             }?.plan else null
         }
@@ -82,16 +84,10 @@ class JarvisWorkWindowHost(
             if (current === window && (x != initialX || y != initialY)) window.close(immediate = true)
         }
         releaseGeometry = { if (current === window) background?.setOnScrollChangeListener(null) }
-        val destination = first.plan.destination
-        val viewport = first.viewport
-        val headX = first.face?.centerX() ?: viewport.centerX()
-        val headY = first.face?.centerY() ?: viewport.centerY()
         // #571: the bounded camera move follows the accepted window (towards its side, at most 2.5 % stage travel).
         cameraHome = home
         home.hologram.setWorkWindowCamera(true, cameraSide(first))
-        director.windowOpened(id, GazeTarget(
-            ((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.6f, .6f),
-            ((headY - destination.centerY()) / viewport.height()).coerceIn(-.4f, .4f)))
+        director.windowOpened(id, gaze(first))
         if (Build.VERSION.SDK_INT >= 33) {
             val callback = android.window.OnBackInvokedCallback { close() }
             back = callback
@@ -102,6 +98,16 @@ class JarvisWorkWindowHost(
     }
 
     private class Planned(val plan: JarvisWorkWindow.Plan, val face: RectF?, val viewport: RectF)
+
+    /** Where JARVIS looks for the window of [planned]: its centre relative to the face, in the gaze range. */
+    private fun gaze(planned: Planned): GazeTarget {
+        val viewport = planned.viewport
+        val destination = planned.plan.destination
+        val headX = planned.face?.centerX() ?: viewport.centerX()
+        val headY = planned.face?.centerY() ?: viewport.centerY()
+        return GazeTarget(((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.6f, .6f),
+            ((headY - destination.centerY()) / viewport.height()).coerceIn(-.4f, .4f))
+    }
 
     /** Camera lean of #571: the window's horizontal offset from the face, in viewport half-widths. */
     private fun cameraSide(planned: Planned): Float {

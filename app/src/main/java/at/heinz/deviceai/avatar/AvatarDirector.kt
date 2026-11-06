@@ -119,6 +119,21 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         confirmationAccepted("legacy-confirmation-${++legacyIntentSerial}")
     }
 
+    /**
+     * The open window [windowId] was replanned on the real size (rotation, fold, keyboard): the gaze follows it to its
+     * new place. Same intent – its start and lifetime stay; a closed, expired or other window changes nothing.
+     */
+    @Synchronized fun windowMoved(windowId: String, target: GazeTarget): Boolean {
+        val at = clock()
+        expireAnimationIntents(at)
+        val current = windowIntent?.takeIf { it.id == windowId } ?: return false
+        windowIntent = current.copy(gaze = GazeTarget(
+            target.x.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
+            target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y)))
+        publishAnimationIntents(at)
+        return true
+    }
+
     /** Stale windows cannot clear successors. */
     @Synchronized fun windowClosed(windowId: String): Boolean {
         if (windowIntent?.id != windowId) return false
