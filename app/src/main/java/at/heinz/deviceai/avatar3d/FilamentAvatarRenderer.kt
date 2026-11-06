@@ -36,6 +36,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private var appliedFraming = -1
     /** Projection window of the current viewport/framing; recomputed only when either changes. */
     private var window: AvatarFraming.Window? = null
+    private var restWindow: AvatarFraming.Window? = null
 
     @Volatile private var keepOut: AvatarFraming.KeepOut? = null
 
@@ -161,14 +162,18 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     }
 
     /** Called by the existing View frame clock; never posts a callback of its own. */
-    fun render(pose: AvatarPose, seconds: Float, motion: Boolean, width: Int, height: Int): Boolean {
+    fun render(pose: AvatarPose, seconds: Float, motion: Boolean, width: Int, height: Int,
+               framing: AvatarFraming.Window? = null): Boolean {
         val e = engine ?: return false
         if (width <= 0 || height <= 0 || !surface.isValid) return false
         if (viewportWidth != width || viewportHeight != height || appliedFraming != framingVersion) {
             viewportWidth = width; viewportHeight = height; appliedFraming = framingVersion
             view!!.viewport = Viewport(0, 0, width, height)
             // Same window as the 2D head aura and the probe; it keeps the full pose reach inside the stage.
-            val fitted = AvatarFraming.window(focus, width.toDouble() / height, anchorX, closeUp, keepOut)
+            restWindow = AvatarFraming.window(focus, width.toDouble() / height, anchorX, closeUp, keepOut)
+        }
+        val fitted = framing ?: requireNotNull(restWindow)
+        if (window != fitted) {
             window = fitted
             camera!!.setProjection(Camera.Projection.ORTHO, fitted.left, fitted.right,
                 -fitted.halfHeight, fitted.halfHeight, .05, 10.0)
@@ -177,7 +182,6 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         applyGlow(if (motion) pose.speakEnergy else 0f)
         // Cosmetic view drift uses the existing clock. Reduced motion restores
         // the same rest camera immediately; it does not change the actual pose.
-        val fitted = window!!
         // A close-up keeps the crown margin and crops from below (neck and shoulders dissolve in the view mask).
         val centerY = fitted.cameraCenterY
         val px = 2.0 * fitted.halfHeight / height

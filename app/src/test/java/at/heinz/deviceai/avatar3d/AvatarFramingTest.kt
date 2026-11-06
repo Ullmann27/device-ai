@@ -148,6 +148,57 @@ class AvatarFramingTest {
         assertEquals(focus.centerY + focus.verticalHalfSpan(fold.aspect), f.cameraCenterY + f.halfHeight, 1e-12)
     }
 
+    @Test fun cameraFlightKeepsEveryPosedFaceClearThroughoutThePath() {
+        val sizes = listOf(884f to 760f, 840f to 649f, 412f to 915f, 915f to 412f,
+            760f to 884f, 1536f to 1024f)
+        for ((width, height) in sizes) for (font in listOf(1f, 2f)) {
+            val shell = JarvisShellLayout.create(width, height, font)
+            val box = shell.headStage ?: shell.headBounds ?: continue
+            val stage = Stage("${width}x$height font=$font", shell, box)
+            val path = AvatarCameraFraming(focus, stage.aspect, shell.headAnchorX.toDouble(),
+                shell.headCloseUp.toDouble(), if (shell.headStage != null) stage.keepOut else null)
+            for (direction in listOf(-1f, 0f, 1f)) for (progress in listOf(0f, .1f, .25f, .5f, .75f, .9f, 1f)) {
+                val window = path.sample(progress, direction)
+                val fit = stage.fit(window)
+                assertEquals("${stage.label} p=$progress dir=$direction left", 0.0, fit.leftDp, .000001)
+                assertEquals("${stage.label} p=$progress dir=$direction right", 0.0, fit.rightDp, .000001)
+                assertEquals("${stage.label} p=$progress crown", 0.0, fit.crownDp, .000001)
+                assertEquals("${stage.label} p=$progress dialogue", 0.0, fit.dialogDp, .000001)
+                assertEquals(path.rest.cameraCenterY + path.rest.halfHeight,
+                    window.cameraCenterY + window.halfHeight, 1e-12)
+            }
+        }
+    }
+
+    @Test fun cameraFlightWithTheExistingIdleDriftClearsTheDialogue() {
+        for (stage in stages()) {
+            val path = AvatarCameraFraming(focus, stage.aspect, stage.shell.headAnchorX.toDouble(),
+                stage.shell.headCloseUp.toDouble(), stage.keepOut)
+            for (progress in listOf(0f, .25f, .5f, .75f, 1f)) for (direction in listOf(-1f, 1f)) {
+                val window = path.sample(progress, direction)
+                for (pixels in listOf(-6.5, 6.5)) {
+                    val dy = pixels * 2.0 * window.halfHeight / stage.box.height
+                    val fit = stage.fit(window.copy(cameraCenterY = window.cameraCenterY - dy))
+                    assertEquals("${stage.label} p=$progress drift=$pixels crown", 0.0, fit.crownDp, .000001)
+                    assertEquals("${stage.label} p=$progress drift=$pixels dialogue", 0.0, fit.dialogDp, .000001)
+                }
+            }
+        }
+    }
+
+    @Test fun fold7CameraPullsBackAndReturnsToTheExactOriginalWindow() {
+        val stage = stages().first { it.label == "884x760" }
+        val path = AvatarCameraFraming(focus, stage.aspect, stage.shell.headAnchorX.toDouble(),
+            stage.shell.headCloseUp.toDouble(), stage.keepOut)
+        for (direction in listOf(-1f, 0f, 1f)) {
+            assertEquals(stage.window(true), path.sample(0f, direction))
+            val far = path.sample(1f, direction)
+            assertEquals("Eight percent retreat", path.rest.headScale * .92, far.headScale, 1e-10)
+            assertTrue(kotlin.math.abs(far.anchorX - path.rest.anchorX) <= .025001)
+            assertTrue(far.halfHeight > path.rest.halfHeight)
+        }
+    }
+
     @Test fun contractReachAndSilhouetteCoverTheSkinnedFace() {
         assertTrue("reach ${focus.reachRight} must exceed the rest half width", focus.reachRight > .089 && focus.reachLeft > .089)
         assertTrue("reach stays a head, not a shoulder", focus.reachRight < .13 && focus.reachLeft < .13)

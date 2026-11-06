@@ -96,6 +96,118 @@ class ContinuumSystemStatusWorkWindowUiTest {
         } finally { down.recycle(); up.recycle() }
     }
 
+    @Test fun workWindowMovesTheOriginalHeadProjectionAndReturns() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
+            .putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible()
+            advance(32L)
+            controller.windowFocusChanged(true)
+            val activity = controller.get()
+            val root = activity.window.decorView
+            framePump = CockpitHostFramePump { root }
+            val avatar = field(activity, "hologramView") as ContinuumHologramView
+            avatar.setAnimationsEnabled(true)
+            avatar.setForegroundActive(true)
+            measure(root); advance(320L); measure(root)
+            fun set(name: String, value: Any?) {
+                avatar.javaClass.getDeclaredField(name).apply { isAccessible = true }.set(avatar, value)
+            }
+            // Projection fixture; no native GPU.
+            val bytes = app.assets.open(at.heinz.deviceai.avatar3d.AvatarGlbContract.ASSET_PATH).use { it.readBytes() }
+            set("assetMetadata", at.heinz.deviceai.avatar3d.AvatarGlbContract.validate(bytes))
+            set("head3dEnabled", true)
+            set("native3dDrawn", true)
+            draw(root)
+            val restScale = field(avatar, "auraScale") as Float
+            val restAnchor = field(avatar, "auraAnchorEffective") as Float
+            val headBounds = Rect(field(avatar, "cockpitHeadBounds") as Rect)
+            val orbBounds = Rect(field(avatar, "cockpitOrbBounds") as Rect)
+
+            tap(root, shown(root, "jarvis-tile:system"))
+            advance(800L); draw(root)
+            assertTrue("Open work window must pull back the original head projection",
+                (field(avatar, "auraScale") as Float) < restScale - .02f)
+            assertEquals("Head viewport stays fixed", headBounds, field(avatar, "cockpitHeadBounds"))
+            assertEquals("Original orb stays fixed", orbBounds, field(avatar, "cockpitOrbBounds"))
+
+            tap(root, shown(root, "jarvis-work-window:close"))
+            advance(1_400L); draw(root)
+            assertEquals("Closing restores the projection", restScale, field(avatar, "auraScale") as Float, .00001f)
+            assertEquals("Closing restores the anchor", restAnchor, field(avatar, "auraAnchorEffective") as Float, .00001f)
+        } finally {
+            framePump?.close(); framePump = null
+            runCatching { controller.close() }
+        }
+    }
+
+    @Test fun cameraStopsImmediatelyAndDoesNotReplayAfterLifecycleBoundaries() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
+            .putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible(); advance(32L); controller.windowFocusChanged(true)
+            val activity = controller.get()
+            val root = activity.window.decorView
+            framePump = CockpitHostFramePump { root }
+            val avatar = field(activity, "hologramView") as ContinuumHologramView
+            avatar.setAnimationsEnabled(true); avatar.setForegroundActive(true)
+            measure(root); advance(320L); measure(root); draw(root)
+            fun open() {
+                tap(root, shown(root, "jarvis-tile:system"))
+                advance(800L); draw(root)
+                assertEquals("Accepted window drives camera", 1f, avatar.cameraProgress(), .00001f)
+            }
+            fun cancel() {
+                AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest")
+                    .apply { isAccessible = true }.invoke(activity)
+                assertEquals("STOP resets before next frame", 0f, avatar.cameraProgress(), 0f)
+                advance(1_200L); measure(root); draw(root)
+                assertTrue(descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+            }
+            open(); cancel()
+            open()
+            avatar.setAnimationsEnabled(false)
+            assertEquals("Reduced motion resets immediately", 0f, avatar.cameraProgress(), 0f)
+            avatar.setAnimationsEnabled(true)
+            advance(800L)
+            assertEquals("Re-enabling cannot replay", 0f, avatar.cameraProgress(), 0f)
+            cancel()
+            open()
+            controller.windowFocusChanged(false)
+            // Dispatch actual View focus callback.
+            root.dispatchWindowFocusChanged(false)
+            assertEquals("Lost focus resets immediately", 0f, avatar.cameraProgress(), 0f)
+            controller.windowFocusChanged(true); root.dispatchWindowFocusChanged(true); advance(800L)
+            assertEquals("Regaining focus cannot replay", 0f, avatar.cameraProgress(), 0f)
+            cancel()
+            open()
+            controller.pause()
+            assertEquals("Pause resets immediately", 0f, avatar.cameraProgress(), 0f)
+            controller.resume().visible(); controller.windowFocusChanged(true)
+            advance(800L); measure(root); draw(root)
+            assertEquals("Resume cannot replay", 0f, avatar.cameraProgress(), 0f)
+            assertTrue(descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+            open(); cancel()
+        } finally {
+            framePump?.close(); framePump = null
+            runCatching { controller.close() }
+        }
+    }
+
     @Test fun systemTileOpensInsideCockpitWithRealStatusAndSameAvatar() {
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
@@ -544,4 +656,63 @@ class ContinuumSystemStatusWorkWindowUiTest {
         }
     }
 
+    /**
+     * #565 × #571 interplay (06.11.2026), HOST + SIMULATED_TTS_CALLBACKS, REAL_DEVICE_NOT_RUN: while a work window holds
+     * the bounded camera move, JARVIS speaks a question (the TTS start and word callbacks the Activity receives from
+     * Android are fed to the same Director). Speaking does not reset the camera; STOP ends camera, speech and window
+     * at once, and nothing replays afterwards.
+     */
+    @Test fun speakingInsideAnOpenWindowKeepsTheCameraAndStopEndsBothAtOnce() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
+            .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible(); advance(32L); controller.windowFocusChanged(true)
+            val activity = controller.get()
+            val root = activity.window.decorView
+            framePump = CockpitHostFramePump { root }
+            val avatar = field(activity, "hologramView") as ContinuumHologramView
+            avatar.setAnimationsEnabled(true); avatar.setForegroundActive(true)
+            measure(root); advance(320L); measure(root); draw(root)
+            val director = field(activity, "avatarDirector") as at.heinz.deviceai.avatar.AvatarDirector
+            tap(root, shown(root, "jarvis-tile:system"))
+            advance(800L); draw(root)
+            assertEquals("the accepted window drives the camera", 1f, avatar.cameraProgress(), .00001f)
+            // Android's TTS callbacks, as the Activity forwards them: start, then one word range per spoken word.
+            val id = "interplay-1"
+            val text = "Soll ich den Entwurf speichern?"
+            fun setField(name: String, value: Any?) =
+                AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }.set(activity, value)
+            // Same steps as the Activity's UtteranceProgressListener.onStart (no TTS engine on the host).
+            setField("voiceUtteranceId", id); setField("voiceAvatarText", text)
+            assertTrue(director.speechStarted(id, text))
+            setField("voiceSpeaking", true)
+            AgentActivity::class.java.getDeclaredMethod("refreshHologramState").apply { isAccessible = true }.invoke(activity)
+            Regex("\\p{L}+").findAll(text).forEach { word ->
+                assertTrue("word ${word.value}", director.wordRange(id, word.range.first, word.range.last + 1))
+                advance(160L); draw(root)
+            }
+            assertEquals("JARVIS speaks", at.heinz.deviceai.avatar.AvatarState.SPEAKING, director.state)
+            assertEquals("speaking keeps the camera move", 1f, avatar.cameraProgress(), .00001f)
+            assertTrue("the window stays while JARVIS speaks", descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+            // STOP: the owner's button routes to cancelLocalRequest.
+            AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest").apply { isAccessible = true }.invoke(activity)
+            assertEquals("STOP resets the camera before the next frame", 0f, avatar.cameraProgress(), 0f)
+            assertEquals("STOP ends the utterance in the Director", null, field(director, "utterance"))
+            assertTrue("STOP leaves the speaking state", director.state != at.heinz.deviceai.avatar.AvatarState.SPEAKING)
+            assertFalse("a late word of the stopped utterance is refused", director.wordRange(id, 0, 4))
+            advance(1_200L); measure(root); draw(root)
+            assertTrue("the window has folded away", descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
+            assertEquals("nothing replays the camera afterwards", 0f, avatar.cameraProgress(), 0f)
+        } finally {
+            framePump?.close(); framePump = null
+            ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
+            runCatching { controller.close() }
+        }
+    }
 }

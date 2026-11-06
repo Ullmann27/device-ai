@@ -13,6 +13,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import at.heinz.deviceai.ui.JarvisWorkWindow
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -75,7 +76,7 @@ class JarvisWorkWindowUiTest {
             }) }
         }
         // Direct call: the reflective 7-parameter lookup broke when open() gained its optional scene parameters.
-        fun open(body: View): Boolean = (window as at.heinz.deviceai.ui.JarvisWorkWindow).open(body, origin, target,
+        fun open(body: View): Boolean = (window as JarvisWorkWindow).open(body, origin, target,
             "Systemstatus", protectedBounds, onOpened = { opened++ }, onClosed = { closed++ })
         fun close(immediate: Boolean = false) {
             window.javaClass.getMethod("close", Boolean::class.javaPrimitiveType).invoke(window, immediate)

@@ -15,11 +15,15 @@ class JarvisWorkWindowHost(
     private val director: AvatarDirector
 ) {
     private var current: JarvisWorkWindow? = null
+    private var cameraHome: ContinuumHomeView? = null
     private var serial = 0L
     private var back: android.window.OnBackInvokedCallback? = null
     val isShowing: Boolean get() = current?.isShowing == true
 
-    fun close(immediate: Boolean = false) { current?.close(immediate) }
+    fun close(immediate: Boolean = false) {
+        if (immediate) cameraHome?.hologram?.setWorkWindowCamera(false, immediate = true)
+        current?.close(immediate)
+    }
 
     /**
      * Unfolds [body] as the cockpit work window of [scene]: from the tile the owner touched, or – without that
@@ -41,14 +45,19 @@ class JarvisWorkWindowHost(
             }
             parent = parent.parent
         }
-        val first = plan(home, container, scene) ?: return null
+        val first = plan(home, container, scene, fresh = false) ?: return null
         close(immediate = true)
         val id = "work-window-${++serial}"
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
         var releaseGeometry: () -> Unit = {}
         container.addView(window, ViewGroup.LayoutParams(-1, -1))
         // A first layout at another size (rotation/fold/keyboard still pending) plans again on the real size.
-        val refit = { if (current === window) plan(home, container, scene)?.plan else null }
+        val refit = {
+            if (current === window) plan(home, container, scene, fresh = true)?.also {
+                // The window moved to the real size: the camera leans towards its new side (progress is still ~0).
+                home.hologram.setWorkWindowCamera(true, cameraSide(it))
+            }?.plan else null
+        }
         val accepted = window.open(body, first.plan.origin, first.plan.destination, title, first.plan.protectedBounds,
             accent = scene.accent, emblem = emblem, refit = refit, onClosed = {
             releaseGeometry()
@@ -56,6 +65,8 @@ class JarvisWorkWindowHost(
             director.windowClosed(id)
             if (current === window) {
                 current = null
+                home.hologram.setWorkWindowCamera(false)
+                cameraHome = null
                 home.setDeckCleared(false)
                 unregisterBack()
                 onClosed()
@@ -75,6 +86,9 @@ class JarvisWorkWindowHost(
         val viewport = first.viewport
         val headX = first.face?.centerX() ?: viewport.centerX()
         val headY = first.face?.centerY() ?: viewport.centerY()
+        // #571: the bounded camera move follows the accepted window (towards its side, at most 2.5 % stage travel).
+        cameraHome = home
+        home.hologram.setWorkWindowCamera(true, cameraSide(first))
         director.windowOpened(id, GazeTarget(
             ((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.6f, .6f),
             ((headY - destination.centerY()) / viewport.height()).coerceIn(-.4f, .4f)))
@@ -89,13 +103,21 @@ class JarvisWorkWindowHost(
 
     private class Planned(val plan: JarvisWorkWindow.Plan, val face: RectF?, val viewport: RectF)
 
+    /** Camera lean of #571: the window's horizontal offset from the face, in viewport half-widths. */
+    private fun cameraSide(planned: Planned): Float {
+        val headX = planned.face?.centerX() ?: planned.viewport.centerX()
+        return ((planned.plan.destination.centerX() - headX) / planned.viewport.width() * 2f).coerceIn(-1f, 1f)
+    }
+
     /**
-     * Origin, destination and protected areas (face, dialog, orb) of [scene] in [container] pixels, from the shell's
+     * Origin, destination and protected areas (face, dialog, orb) of [scene] in [container] pixels. A first plan uses
+     * the geometry the owner sees (last drawn shell, none before the first draw); a [fresh] replan uses the shell's
      * geometry for its current size. Null when the START cockpit has no room for a window.
      */
-    private fun plan(home: ContinuumHomeView, container: ViewGroup, scene: JarvisActionScenes.Scene): Planned? {
+    private fun plan(home: ContinuumHomeView, container: ViewGroup, scene: JarvisActionScenes.Scene,
+                     fresh: Boolean): Planned? {
         val shell = home.jarvisShell
-        val geometry = shell.currentShell() ?: return null
+        val geometry = (if (fresh) shell.currentShell() else shell.shell) ?: return null
         val density = activity.resources.displayMetrics.density
         val offset = localBounds(shell, container)
         val viewport = RectF(0f, 0f, container.width.toFloat(),
