@@ -33,6 +33,10 @@ internal class Ctx3DiscourseState(private val maxFrames: Int = 8) {
                 selectedAlternativeId = null
             }
             ids.single() in alternatives -> selectedAlternativeId = ids.single()
+            else -> {
+                alternatives = emptyList()
+                selectedAlternativeId = null
+            }
         }
         remember(ids)
     }
@@ -64,16 +68,11 @@ internal class Ctx3DiscourseState(private val maxFrames: Int = 8) {
         if (!previousCue && !returnCue) return null
 
         val currentIds = currentFocus.mapTo(hashSetOf()) { it.id }
-        val candidateIds = frames.asReversed().asSequence()
-            .filter { it.entityIds.size == 1 }
-            .map { it.entityIds.single() }
-            .filter { it !in currentIds }
-            .distinct()
-            .take(2)
-            .toList()
-
-        if (candidateIds.size != 1) return null
-        val target = entities.firstOrNull { it.id == candidateIds.single() } ?: return null
+        val previous = frames.toList().asReversed().firstOrNull { frame ->
+            frame.entityIds.isNotEmpty() && frame.entityIds.toSet() != currentIds
+        } ?: return null
+        if (previous.entityIds.size != 1) return null
+        val target = entities.firstOrNull { it.id == previous.entityIds.single() } ?: return null
         return Binding(target, if (returnCue) Cue.RETURN_PREVIOUS else Cue.PREVIOUS)
     }
 
