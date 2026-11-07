@@ -329,6 +329,9 @@ class ContinuumHologramView @JvmOverloads constructor(
         resolveOrbBounds(widthPx, heightPx)
         // The sequence keeps the real head and orb free (owner review P0); without explicit regions nothing is protected.
         val d = resources.displayMetrics.density
+        resolveHeadBounds(widthPx, heightPx)
+        sequence.setHeadRegion(headDrawBounds.left / d, headDrawBounds.top / d,
+            headDrawBounds.right / d, headDrawBounds.bottom / d)
         sequence.effects.setProtectedAreas(cockpitHeadBounds?.let { floatArrayOf(it.left / d, it.top / d, it.right / d, it.bottom / d) },
             cockpitOrbBounds?.let { floatArrayOf(it.left / d, it.top / d, it.right / d, it.bottom / d) })
         sequence.effects.orbTargetX = (orbDrawBounds.centerX() / widthPx).coerceIn(0f, 1f)

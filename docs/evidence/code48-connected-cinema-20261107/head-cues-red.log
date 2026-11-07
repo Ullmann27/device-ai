@@ -1,0 +1,17 @@
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#actualPresenterMakesHeadIconsVisibleAboveTheLiveSurface
+.E
+Time: 3.979
+There was 1 failure:
+1) actualPresenterMakesHeadIconsVisibleAboveTheLiveSurface(at.heinz.deviceai.ui.CockpitCinematicCueUiTest)
+java.lang.AssertionError: Cockpit entry must draw the recovered head icons
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.actualPresenterMakesHeadIconsVisibleAboveTheLiveSurface$lambda$0(CockpitCinematicCueUiTest.kt:81)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.withCockpit(CockpitCinematicCueUiTest.kt:57)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.actualPresenterMakesHeadIconsVisibleAboveTheLiveSurface(CockpitCinematicCueUiTest.kt:74)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=1 failures=1

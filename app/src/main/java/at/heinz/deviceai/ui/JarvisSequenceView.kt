@@ -31,6 +31,22 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
     @Volatile private var deliveryGeneration = 0L
     @Volatile private var detached = false
     @Volatile private var motionAllowed = true
+    private val headIcons = at.heinz.deviceai.avatar.AvatarIconBurst()
+    private val headRegion = android.graphics.RectF()
+
+    fun setHeadRegion(left: Float, top: Float, right: Float, bottom: Float) {
+        headRegion.set(left, top, right, bottom)
+    }
+
+    fun playCue(step: at.heinz.deviceai.cockpit.TimelineStep): Boolean {
+        if (step.cue != at.heinz.deviceai.cockpit.Cue.HEAD_ICON_BURST &&
+            step.cue != at.heinz.deviceai.cockpit.Cue.FILE_ICONS_FROM_HEAD) return false
+        if (!detached && motionAllowed && isAttachedToWindow && isShown && step.event.turnId !in retiredTurns) {
+            headIcons.start(clock())
+            kick()
+        }
+        return true
+    }
 
     init { isClickable = false; isFocusable = false; importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO }
 
@@ -44,6 +60,7 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
     fun clear() {
         deliveryGeneration++
         effects.clear(); stepStates.clear(); turn = null
+        headIcons.clear()
         invalidate()
     }
 
@@ -89,6 +106,7 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
 
     internal fun apply(event: CockpitAnimationEvent) {
         if (event is CockpitAnimationEvent.TurnEnded) {
+            headIcons.clear()
             // Remember completion even if another command already replaced this turn on screen.
             retireTurn(event.turnId)
             if (turn == event.turnId) {
@@ -173,8 +191,19 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         val saved = canvas.save()
         canvas.scale(d, d)
         effects.draw(painter, width / d, height / d, now)
+        if (headIcons.active(now)) {
+            val w = if (headRegion.isEmpty) width / d * .66f else headRegion.width()
+            val h = if (headRegion.isEmpty) height / d else headRegion.height()
+            val scale = minOf(w / 300f, h / 345f)
+            painter.save()
+            painter.translate(headRegion.left + w * .5f, headRegion.top + h * .385f)
+            painter.scale(scale, scale)
+            headIcons.draw(painter, now)
+            painter.restore()
+        }
         canvas.restoreToCount(saved)
-        if (motionAllowed && isAttachedToWindow && isShown && effects.isAnimating(now)) postInvalidateOnAnimation()
+        if (motionAllowed && isAttachedToWindow && isShown &&
+            (effects.isAnimating(now) || headIcons.active(now))) postInvalidateOnAnimation()
     }
 
     private companion object { const val MAX_RETIRED_TURNS = 24 }

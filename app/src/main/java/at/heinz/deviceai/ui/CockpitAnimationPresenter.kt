@@ -100,6 +100,8 @@ class CockpitAnimationPresenter(
     }
 
     private fun execute(step: at.heinz.deviceai.cockpit.TimelineStep) {
+        if (home.ownsAvatarSlot &&
+            runCatching { home.avatarRenderer?.onCockpitCue(step) == true }.getOrDefault(false)) return
         val renderer = at.heinz.deviceai.cockpit.CockpitCues.rendererFor(step.cue.owner)
         if (renderer != null && runCatching { renderer.play(step) }.getOrDefault(false)) return
         when (step.cue) {

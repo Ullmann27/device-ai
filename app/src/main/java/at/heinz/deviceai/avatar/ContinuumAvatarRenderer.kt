@@ -342,51 +342,12 @@ class ContinuumAvatarRenderer {
     }
 
     // ---- scene 2 (video 1, 3–5 s): glowing 3-D file/folder icons burst out of the head towards camera + right ----
-    private var burstAt = Float.NaN
-    /**
-     * Starts the icon burst at [seconds] (same clock as [draw]'s `seconds`). Trigger is Kern's (cockpit fly-in);
-     * cosmetic only, never a work state. ~1.5 s ease-out, then gone.
-     */
-    fun headIconBurst(seconds: Float) { burstAt = seconds }
-    fun isBursting(seconds: Float) = burstAt.isFinite() && seconds - burstAt in 0f..BURST_S + BURST_STAGGER * BURST_ICONS
-    // unit icons, centred, ~1 unit tall (allocated once)
-    private val fileIcon = VectorPath().moveTo(-.38f, -.5f).lineTo(.18f, -.5f).lineTo(.38f, -.3f).lineTo(.38f, .5f)
-        .lineTo(-.38f, .5f).close()
-    private val fileFold = VectorPath().moveTo(.18f, -.5f).lineTo(.18f, -.3f).lineTo(.38f, -.3f)
-    private val folderIcon = VectorPath().moveTo(-.5f, -.32f).lineTo(-.12f, -.32f).lineTo(-.02f, -.2f).lineTo(.5f, -.2f)
-        .lineTo(.5f, .36f).lineTo(-.5f, .36f).close()
-    private val iconGlass = Fill.Solid(0xff0a2a5c.toInt())
-    private val iconBack = Fill.Solid(0xff0088ff.toInt())
+    private val iconBurst = AvatarIconBurst()
+    fun headIconBurst(seconds: Float) { iconBurst.start((seconds * 1000f).toLong()) }
+    fun isBursting(seconds: Float) = iconBurst.active((seconds * 1000f).toLong())
 
     private fun drawBurst(p: ContinuumPainter, seconds: Float) {
-        if (!isBursting(seconds)) return
-        for (i in 0 until BURST_ICONS) {
-            val t = ((seconds - burstAt - i * BURST_STAGGER) / BURST_S)
-            if (t <= 0f || t >= 1f) continue
-            val e = 1f - (1f - t) * (1f - t) * (1f - t)   // cubic ease-out
-            // deterministic fan towards the right and the camera
-            val ang = (-.95f + 1.9f * ((i * 7) % BURST_ICONS) / (BURST_ICONS - 1f))
-            val dist = 150f + (i * 37 % 70)
-            val x = 6f + cos(ang) * dist * e
-            val y = -40f + sin(ang) * dist * .85f * e
-            val size = 8f + 42f * e * e                      // grows as it nears the camera
-            val a = (if (t < .12f) t / .12f else 1f) * (1f - ((t - .7f) / .3f).coerceIn(0f, 1f))
-            val folder = i % 3 == 0
-            val col = if (i % 2 == 0) JarvisDesign.Colors.cyan else JarvisDesign.Colors.violet
-            JarvisNeon.bloom(p, x, y, size * .22f, col, a * (.25f + .2f * bloom))
-            p.save(); p.translate(x, y); p.rotate(ang * 18f + (1f - e) * 25f); p.scale(size, size)
-            val path = if (folder) folderIcon else fileIcon
-            // 3-D: a darker back face offset towards the vanishing point, then the glowing front face
-            p.save(); p.translate(-.07f, -.05f); p.fillPath(path, iconBack, .25f * a); p.restore()
-            p.fillPath(path, iconGlass, .45f * a)
-            p.setAdditive(true); p.fillPath(path, iconBack, .18f * a); p.setAdditive(false)
-            p.setAdditive(true)
-            p.strokePath(path, .1f, if (i % 2 == 0) speakCyan else violet, .25f * a)
-            p.strokePath(path, .035f, orbitCore, .95f * a)
-            if (!folder) p.strokePath(fileFold, .035f, orbitCore, .8f * a)
-            p.setAdditive(false)
-            p.restore()
-        }
+        iconBurst.draw(p, (seconds * 1000f).toLong(), bloom)
     }
 
     // ---- ref5 light/particle hair: violet filaments streaming from the back-left of the cranium -------------------

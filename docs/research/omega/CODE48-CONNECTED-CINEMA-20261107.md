@@ -42,3 +42,15 @@ Any release needs versionCode greater than 47 and the existing original signer.
 Contracts: EXP-02/07 regression and independent evidence, EXP-11 existing
 event/tool routing, EXP-12 lifecycle and rollback. No memory/model promotion.
 Rollback: revert only this branch's presentation and bounded-load commits.
+
+## Head-icon connection checkpoint
+
+The real presenter/visible overlay test failed on the unchanged production
+baseline because CockpitEntered drew no icons. The same test now passes,
+along with background-discard and reduced-motion/no-replay controls (3/3).
+The existing nine-icon renderer is shared by fallback and native-overlay paths;
+it has a finite monotonic lifetime and no extra animation thread.
+The one current avatar receives timeline cues directly, without global
+renderer registration. Original head/orb assets are unchanged.
+Evidence: docs/evidence/code48-connected-cinema-20261107/.
+These are focused SDK-compiled host tests, not complete-source APK/device QA.
