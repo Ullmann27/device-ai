@@ -52,7 +52,7 @@ class Ctx3Context {
    selectedFocusIndex=selectedId?.let { id->focus.indexOfFirst { it.id==id } } ?: -1
   }
   val covered=hits.flatMap { (it.start until it.end).toList() }.toSet()
-  val ordinary=setOf("wer","was","wie","wo","und","ich","nicht","nein","erzähl","erzähle","kannst","kann","bitte","servus","hallo","farbe","alter","name","jahre","hilfe","text","app","gerät","projekt","datei","notizen","zähler","montag","dienstag","mittwoch","donnerstag","freitag","samstag","sonntag","sie","er","es")
+  val ordinary=setOf("wer","was","wie","wo","und","ich","nicht","nein","erzähl","erzähle","kannst","kann","bitte","servus","hallo","farbe","alter","name","jahre","hilfe","text","app","gerät","projekt","datei","notizen","zähler","montag","dienstag","mittwoch","donnerstag","freitag","samstag","sonntag","sie","er","es","nimm","meine","meinte","gemeint","der","die","das","davor","andere","anderen","anderes","anderer","erste","ersten","erstes","erster","zweite","zweiten","zweites","zweiter","variante","option")
   val unknown=Regex("[\\p{L}\\p{N}]+").findAll(input).map { it.value }.withIndex().any {
    it.index !in covered&&it.value.first().isUpperCase()&&it.value.lowercase(Locale.ROOT) !in ordinary
   }
