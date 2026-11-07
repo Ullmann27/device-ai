@@ -62,7 +62,7 @@ internal class ConversationSituationModel(
         require(ID.matches(id))
         require(label.isNotBlank() && label.length <= 120)
         require(atTurn >= 0)
-        val normalizedCues = cues.asSequence().map(::cue).filter(String::isNotBlank)
+        val normalizedCues = cues.asSequence().flatMap { tokens(it).asSequence() }
             .distinct().take(maxCuesPerThread).toSet()
         require(normalizedCues.isNotEmpty())
 
