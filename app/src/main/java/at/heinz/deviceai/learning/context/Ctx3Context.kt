@@ -3,7 +3,10 @@ package at.heinz.deviceai.learning.context
 import java.util.Locale
 
 /** Explicit evidence identities. Not personal memory, tool authority or a trained model. */
-data class Ctx3Entity(val id:String,val label:String,val aliases:Set<String>,val pronouns:Set<String>,val sourceIds:Set<String>)
+data class Ctx3Entity(
+ val id:String,val label:String,val aliases:Set<String>,val pronouns:Set<String>,val sourceIds:Set<String>,
+ val gender:Ctx3Gender=Ctx3Gender.UNKNOWN,val ownerRoles:Set<Ctx3OwnerRole> = emptySet()
+)
 sealed interface Ctx3Decision {
  data class Query(val query:String,val sourceIds:Set<String> = emptySet(),val resolution:String=""):Ctx3Decision
  data class Clarify(val reason:String):Ctx3Decision
@@ -49,6 +52,13 @@ class Ctx3Context {
   val rejected=mentions.filter { negative(it.start) }.map { it.e.id }.toSet()
   val positive=mentions.filterNot { negative(it.start) }.map { it.e }.distinctBy { it.id }
   if(rejected.isNotEmpty())focus=focus.filterNot { it.id in rejected }
+  if(positive.isEmpty() && Ctx3RoleResolver.hasCue(input)) {
+   val binding=Ctx3RoleResolver.resolve(input,focus,entities)
+    ?: return Ctx3Decision.Clarify("NO_UNIQUE_ROLE_REFERENT")
+   focus=listOf(binding.entity);age=0
+   discourse.observeResolved(binding.entity)
+   return Ctx3Decision.Query(input+" "+binding.entity.label,binding.entity.sourceIds,binding.reason)
+  }
   val covered=hits.flatMap { (it.start until it.end).toList() }.toSet()
   val ordinary=setOf("wer","was","wie","wo","und","ich","nicht","nein","erzähl","erzähle","kannst","kann","bitte","servus","hallo","farbe","alter","name","jahre","hilfe","text","app","gerät","projekt","datei","notizen","zähler","montag","dienstag","mittwoch","donnerstag","freitag","samstag","sonntag","sie","er","es")
   val unknown=Regex("[\\p{L}\\p{N}]+").findAll(input).map { it.value }.withIndex().any {
@@ -120,6 +130,9 @@ object Ctx3EntityIndex {
     if(name !in genders)genders[name]=g.toMutableSet() else genders.getValue(name).retainAll(g)
    }
   }
-  return names.entries.take(128).map { (name,ids)->Ctx3Entity(name.lowercase(Locale.ROOT),name,setOf(name),genders.getValue(name),ids.toSet()) }
+  val base=names.entries.take(128).map { (name,ids)->
+   Ctx3Entity(name.lowercase(Locale.ROOT),name,setOf(name),genders.getValue(name),ids.toSet())
+  }
+  return Ctx3RoleIndex.enrich(facts,base)
  }
 }
