@@ -61,7 +61,7 @@ internal object ProvenancePreservingConsolidation {
         return Resolution(summary, hard, missing, unverified)
     }
 
-    private val HARD_STATES = setOf(ValidationState.CORROBORATED, ValidationState.VERIFIED)
+    private val HARD_STATES = setOf(ValidationState.VERIFIED)
     private val NON_HARD_PROVENANCE = setOf(
         ProvenanceType.MODEL_GENERATED, ProvenanceType.INFERENCE, ProvenanceType.UNVERIFIED
     )
