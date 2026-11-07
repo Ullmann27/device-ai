@@ -123,7 +123,16 @@ internal class ApprovedStreamingSpeechAssembler(
         if (index > 0 && index + 1 < buffer.length &&
             buffer[index - 1].isDigit() && buffer[index + 1].isDigit()) return true
         val prefix = buffer.substring(0, index + 1)
-        return ABBREVIATIONS.any { prefix.endsWith(it, ignoreCase = true) }
+        if (ABBREVIATIONS.any { prefix.endsWith(it, ignoreCase = true) }) return true
+        // First dot of forms like "z. B.": one-letter token + whitespace + one-letter token + dot.
+        var tokenStart = index - 1
+        while (tokenStart > 0 && buffer[tokenStart - 1].isLetter()) tokenStart--
+        if (index - tokenStart == 1) {
+            var next = index + 1
+            while (next < buffer.length && buffer[next].isWhitespace()) next++
+            if (next + 1 < buffer.length && buffer[next].isLetter() && buffer[next + 1] == '.') return true
+        }
+        return false
     }
 
     private fun candidate(raw: String): Candidate? {
