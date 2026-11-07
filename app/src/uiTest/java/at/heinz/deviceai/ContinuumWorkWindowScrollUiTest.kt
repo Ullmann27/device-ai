@@ -114,7 +114,7 @@ class ContinuumWorkWindowScrollUiTest {
             assertTrue(home.jarvisShellStage)
             assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
             val beforeDialog = ShadowAlertDialog.getLatestAlertDialog()
-            touch(root, shown(root, "jarvis-tile:system"))
+            touch(root, JarvisHomeTestRoutes.destination(root, "system"))
             advance(80L); measure(root)
             val work = shown(root, "jarvis-work-window")
             assertSame(beforeDialog, ShadowAlertDialog.getLatestAlertDialog())

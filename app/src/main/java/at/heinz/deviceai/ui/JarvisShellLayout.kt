@@ -48,10 +48,11 @@ object JarvisShellLayout {
         val headCloseUp: Float get() = if (headStage != null) JarvisCockpitGrid.HEAD_CLOSE_UP else 1f
         /** Compatibility name: now the latest owner reference, not the superseded eight-tile ref5. */
         val ref5Grid: Boolean get() = grid != null
+        val hasFeatureTiles: Boolean get() = Slot.TILES in boxes
         val requiresVerticalScroll: Boolean get() = height > viewportHeight + .5f
         operator fun get(slot: Slot) = boxes[slot]
 
-        /** Exactly ten independently reachable tiles, including an incomplete last row when reflowed. */
+        /** Phone destinations; rails avoid duplication. */
         fun tileBoxes(gap: Float = tileGap): List<Box> {
             val t = boxes[Slot.TILES] ?: return emptyList()
             if (tileColumns <= 0 || tileRows <= 0) return emptyList()
@@ -164,13 +165,13 @@ object JarvisShellLayout {
             Slot.DIALOG to gr[Area.DIALOG], Slot.INPUT to gr[Area.INPUT],
             Slot.CONTINUUM_HEADER to gr[Area.CONTINUUM_HEADER],
             Slot.CAMERA_STATUS to gr[Area.CAMERA_STATUS], Slot.COCKPIT_SECONDARY to gr[Area.MODULES],
-            Slot.TILES to gr[Area.TILES], Slot.ROW_AGENTS to gr[Area.ROW_AGENTS],
+            Slot.ROW_AGENTS to gr[Area.ROW_AGENTS],
             Slot.ROW_TASKS to gr[Area.ROW_TASKS], Slot.ROW_MEMORY to gr[Area.ROW_MEMORY],
             Slot.ROW_MODEL to gr[Area.ROW_MODEL], Slot.STATUS to gr[Area.STATUS]
         )
-        return Shell(formFactor(w, h), w, gr.height, b, 5, 2, rail,
+        return Shell(formFactor(w, h), w, gr.height, b, 0, 0, rail,
             setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER),
-            gr, h, profile, JarvisCockpitGrid.TILE_GAP_DP, head, orb, headStage = stage)
+            gr, h, profile, 8f, head, orb, headStage = stage)
     }
 
     /** Reflow preserves readable labels. */
@@ -211,25 +212,35 @@ object JarvisShellLayout {
         y += 56f * font + gap
         b[Slot.INPUT] = Box(left, y, right, y + 56f * font)
         y += 56f * font + gap
-        val rows = (10 + p.tileColumns - 1) / p.tileColumns
-        val tileH = JarvisCockpitGrid.MIN_TILE_DP * font
-        b[Slot.TILES] = Box(left, y, right, y + rows * tileH + (rows - 1) * gap)
-        y = b.getValue(Slot.TILES).bottom + gap
+        val rows = if (compact) (10 + p.tileColumns - 1) / p.tileColumns else 0
         val statusH = if (compact) 90f * font else 56f * font
-        b[Slot.STATUS] = Box(margin, y, right, y + statusH)
-        if (!compact) b[Slot.NAV_RAIL] = Box(margin, top + gap, p.railWidthDp, y - gap)
-        y += statusH + 24f
-
-        val infos = listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL)
-        val infoH = 164f * font
-        val infoW = (room - (p.informationColumns - 1) * gap) / p.informationColumns
-        infos.forEachIndexed { i, slot ->
-            val x = left + (i % p.informationColumns) * (infoW + gap)
-            val t = y + (i / p.informationColumns) * (infoH + gap)
-            b[slot] = Box(x, t, x + infoW, t + infoH)
-        }
-        y += ((infos.size + p.informationColumns - 1) / p.informationColumns) * (infoH + gap)
         if (compact) {
+            val tileH = JarvisCockpitGrid.MIN_TILE_DP * font
+            b[Slot.TILES] = Box(left, y, right, y + rows * tileH + (rows - 1) * gap)
+            y = b.getValue(Slot.TILES).bottom + gap
+            b[Slot.STATUS] = Box(margin, y, right, y + statusH)
+            y += statusH + 24f
+        }
+
+        val infoW = (room - (p.informationColumns - 1) * gap) / p.informationColumns
+        fun informationRow(slots: List<Slot>, cardHeight: Float) {
+            slots.forEachIndexed { i, slot ->
+                val x = left + (i % p.informationColumns) * (infoW + gap)
+                val t = y + (i / p.informationColumns) * (cardHeight + gap)
+                b[slot] = Box(x, t, x + infoW, t + cardHeight)
+            }
+            y += ((slots.size + p.informationColumns - 1) / p.informationColumns) * (cardHeight + gap)
+        }
+        if (compact) {
+            informationRow(listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL), 164f * font)
+        } else {
+            informationRow(listOf(Slot.ROW_MEMORY, Slot.ROW_MODEL), 190f * font)
+            informationRow(listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS), 132f * font)
+            b[Slot.STATUS] = Box(margin, y, right, y + statusH)
+            b[Slot.NAV_RAIL] = Box(margin, top + gap, p.railWidthDp, y - gap)
+            y += statusH + 24f
+        }
+        if (compact || p.informationColumns == 1) {
             b[Slot.CAMERA_STATUS] = Box(left, y, right, y + 56f * font)
             y += 56f * font + gap
             b[Slot.COCKPIT_SECONDARY] = Box(left, y, right, y + 164f * font)
@@ -245,7 +256,7 @@ object JarvisShellLayout {
             b[Slot.BOTTOM_NAV] = Box(0f, y, w, y + navH)
             y += navH
         }
-        return Shell(formFactor(w, viewport), w, maxOf(viewport, y), b, p.tileColumns, rows,
+        return Shell(formFactor(w, viewport), w, maxOf(viewport, y), b, if (compact) p.tileColumns else 0, rows,
             if (compact) null else rail, setOf(Slot.AVATAR to Slot.CONTINUUM_HEADER),
             viewportHeight = viewport, profile = p, tileGap = gap,
             headBounds = if (compactPresentation) null else head, orbBounds = orb)

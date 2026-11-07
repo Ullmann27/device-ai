@@ -35,16 +35,26 @@ class JarvisShellContentTest {
         for (item in JarvisTiles.railNav + JarvisTiles.bottomNav) assertTrue(item.target in JarvisShellContent.routes)
     }
 
-    @Test fun hitTestFindsTileRailAndBottomNavTargets() {
+    @Test fun hitTestRoutesWideRailAndPhoneTilesWithoutDuplicatingWideTiles() {
         val tiles = JarvisTiles.reference
         val fold = JarvisShellLayout.create(884f, 760f)
-        val first = fold.tileBoxes().first()
-        assertEquals("chat", JarvisShellContent.hitTarget(fold, tiles, first.centerX, first.top + first.height / 2f))
+        assertFalse(fold.hasFeatureTiles)
+        assertTrue(fold.tileBoxes().isEmpty())
         val rail = fold[JarvisShellLayout.Slot.NAV_RAIL]!!
-        val firstRailRow = JarvisTiles.railItemBoxes(rail).first()
-        assertEquals("home", JarvisShellContent.hitTarget(fold, tiles, firstRailRow.centerX, firstRailRow.centerY))
+        val railRows = JarvisTiles.railItemBoxes(rail)
+        assertEquals(11, railRows.size)
+        railRows.forEachIndexed { index, row ->
+            assertEquals(JarvisTiles.railNav[index].target,
+                JarvisShellContent.hitTarget(fold, tiles, row.centerX, row.centerY))
+        }
         assertEquals(null, JarvisShellContent.hitTarget(fold, tiles, rail.left, rail.top))
         val phone = JarvisShellLayout.create(412f, 915f, includeBottomNavigation = true)
+        assertTrue(phone.hasFeatureTiles)
+        assertEquals(10, phone.tileBoxes().size)
+        phone.tileBoxes().forEachIndexed { index, tile ->
+            assertEquals(tiles[index].target,
+                JarvisShellContent.hitTarget(phone, tiles, tile.centerX, tile.centerY))
+        }
         val nav = phone[JarvisShellLayout.Slot.BOTTOM_NAV]!!
         assertEquals(JarvisTiles.bottomNav.last().target, JarvisShellContent.hitTarget(phone, tiles, nav.right - 4f, nav.top + 10f))
     }

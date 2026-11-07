@@ -24,13 +24,15 @@ class JarvisExternalRailLayoutTest {
         shell.boxes.forEach { (slot, box) ->
             assertTrue("$slot remains inside the actual pane", box.left >= 0f && box.right <= 754f && box.width > 0f)
         }
-        assertEquals(10, shell.tileBoxes().size)
+        assertFalse(shell.hasFeatureTiles)
+        assertTrue(shell.tileBoxes().isEmpty())
+        assertNull(shell[Slot.TILES])
     }
 
     @Test fun contentCoordinatesStillMatchTheFullWindowReferenceAfterTheSingleOffset() {
         val full = JarvisShellLayout.create(884f, 760f)
         val content = JarvisShellLayout.forContent(754f, 760f, externalRailWidthDp = 130f)
-        for (slot in listOf(Slot.AVATAR, Slot.DIALOG, Slot.TILES, Slot.ROW_MEMORY, Slot.ROW_MODEL)) {
+        for (slot in listOf(Slot.AVATAR, Slot.DIALOG, Slot.INPUT, Slot.ROW_MEMORY, Slot.ROW_MODEL)) {
             val before = requireNotNull(full[slot])
             val after = requireNotNull(content[slot])
             assertEquals(before.left, after.left + 130f, .001f)
@@ -38,6 +40,7 @@ class JarvisExternalRailLayoutTest {
             assertEquals(before.top, after.top, .001f)
             assertEquals(before.bottom, after.bottom, .001f)
         }
+        assertNull(content[Slot.TILES])
     }
 
     @Test fun aStandaloneShellRetainsItsOwnNavigation() {

@@ -25,56 +25,13 @@ object JarvisTiles {
         Argb.mix(edgePalette[i], edgePalette[(i + 1) % edgePalette.size], smooth)
     }
     private val edgeCoreFill = Fill.Solid(Colors.glowCore)
-    private val pedestalEdge = Fill.Linear(-.78f, .57f, .78f, .57f,
-        intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.magenta))
-    private val pedestalFloor = Fill.Radial(0f, .57f, .82f,
-        intArrayOf(Argb.withAlpha(Colors.cyan, .42f), Argb.withAlpha(Colors.violet, .28f), 0),
-        floatArrayOf(0f, .6f, 1f))
-    private val pedestalSide = Fill.Linear(-.74f, .48f, .74f, .70f,
-        intArrayOf(Colors.cyanDeep, Colors.backgroundHaze, Colors.violet))
-    private val pedestalBeam = Fill.Linear(0f, .04f, 0f, .60f,
-        intArrayOf(0, Argb.withAlpha(Colors.cyan, .24f)))
-    private val pedestalBeamPath = VectorPath().moveTo(-.18f, .04f)
-        .lineTo(-.46f, .57f).lineTo(.46f, .57f).lineTo(.18f, .04f).close()
-    private val glyphEdge = Fill.Linear(-.45f, -.45f, .5f, .5f,
-        intArrayOf(Colors.cyan, Colors.cyan, Colors.violetRim), floatArrayOf(0f, .42f, 1f))
-    private val glyphCore = Fill.Linear(-.45f, -.45f, .5f, .5f,
-        intArrayOf(Colors.iconCore, Colors.cyanSoft, Colors.violetRim))
-    private var featurePainter: FeatureGlyphPainter? = null
+    private val featureInk = Argb.mix(Colors.cyan, Colors.cyanSoft, .22f)
+    private val featureDetail = Argb.mix(Colors.violetSoft, Colors.violetRim, .40f)
+    private val featureFallback = Fill.Solid(featureInk)
+    private val disabledFeatureFallback = Fill.Solid(Colors.textMuted)
+    private val featureGround = Fill.Linear(-.48f, .54f, .48f, .54f,
+        intArrayOf(0, Colors.cyan, featureDetail, 0), floatArrayOf(0f, .26f, .74f, 1f))
 
-    /** Reuses the canonical icon geometry. */
-    private class FeatureGlyphPainter(val painter: ContinuumPainter) : ContinuumPainter by painter {
-        override fun strokePath(path: VectorPath, width: Float, fill: Fill, alpha: Float, roundCap: Boolean) {
-            painter.strokePath(path, width * 2.4f, glyphEdge, alpha * .14f, roundCap)
-            painter.strokePath(path, width * 1.5f, glyphEdge, alpha * .34f, roundCap)
-            painter.strokePath(path, width * .84f, glyphEdge, alpha, roundCap)
-            painter.strokePath(path, width * .28f, glyphCore, alpha * .96f, roundCap)
-        }
-
-        override fun drawLine(x0: Float, y0: Float, x1: Float, y1: Float, width: Float,
-                              fill: Fill, alpha: Float, roundCap: Boolean) {
-            painter.drawLine(x0, y0, x1, y1, width * 2.4f, glyphEdge, alpha * .14f, roundCap)
-            painter.drawLine(x0, y0, x1, y1, width * 1.5f, glyphEdge, alpha * .34f, roundCap)
-            painter.drawLine(x0, y0, x1, y1, width * .84f, glyphEdge, alpha, roundCap)
-            painter.drawLine(x0, y0, x1, y1, width * .28f, glyphCore, alpha * .96f, roundCap)
-        }
-
-        override fun strokeOval(left: Float, top: Float, right: Float, bottom: Float,
-                                width: Float, fill: Fill, alpha: Float) {
-            painter.strokeOval(left, top, right, bottom, width * 2.4f, glyphEdge, alpha * .14f)
-            painter.strokeOval(left, top, right, bottom, width * 1.5f, glyphEdge, alpha * .34f)
-            painter.strokeOval(left, top, right, bottom, width * .84f, glyphEdge, alpha)
-            painter.strokeOval(left, top, right, bottom, width * .28f, glyphCore, alpha * .96f)
-        }
-
-        override fun strokeRoundRect(left: Float, top: Float, right: Float, bottom: Float, radius: Float,
-                                     width: Float, fill: Fill, alpha: Float) {
-            painter.strokeRoundRect(left, top, right, bottom, radius, width * 2.4f, glyphEdge, alpha * .14f)
-            painter.strokeRoundRect(left, top, right, bottom, radius, width * 1.5f, glyphEdge, alpha * .34f)
-            painter.strokeRoundRect(left, top, right, bottom, radius, width * .84f, glyphEdge, alpha)
-            painter.strokeRoundRect(left, top, right, bottom, radius, width * .28f, glyphCore, alpha * .96f)
-        }
-    }
     /** ref5 uses two violet cards among the cyan cards. Colour describes the destination, never live status. */
     fun style(target: String): JarvisDesign.ComponentStyle = when (target) {
         "memory" -> JarvisDesign.Styles.memoryTile
@@ -144,31 +101,20 @@ object JarvisTiles {
         }
     }
 
-    /** Static glyph over light pedestal. */
+    /** Clean glyph, restrained local light. */
     fun drawFeatureIcon(p: ContinuumPainter, tile: JarvisTile, cx: Float, cy: Float, size: Float) {
         if (!cx.isFinite() || !cy.isFinite() || !size.isFinite() || size <= 0f) return
         val disabled = tile.controlState == JarvisControlState.DISABLED
         val opacity = if (disabled) .42f else 1f
-        val accent = if (tile.target == "memory" || tile.target == "agents") Colors.violetRim else Colors.cyan
+        val color = if (disabled) Colors.textMuted else featureInk
+        val detail = if (disabled) Colors.textMuted else featureDetail
         p.save(); p.translate(cx, cy); p.scale(size, size)
         p.clipRect(-.78f, -.5f, .78f, .72f)
-        JarvisSceneFills.halo(p, 0f, .08f, .66f, accent, .25f * opacity)
-        p.fillPath(pedestalBeamPath, pedestalBeam, opacity)
-        p.fillOval(-.74f, .48f, .74f, .70f, pedestalSide, .76f * opacity)
-        p.fillOval(-.76f, .40f, .76f, .66f, pedestalFloor, opacity)
-        p.setAdditive(true)
-        p.strokeOval(-.72f, .48f, .72f, .69f, .022f, pedestalEdge, .64f * opacity)
-        p.strokeOval(-.74f, .40f, .74f, .66f, .12f, pedestalEdge, .20f * opacity)
-        p.strokeOval(-.74f, .40f, .74f, .66f, .055f, pedestalEdge, .46f * opacity)
-        p.strokeOval(-.74f, .40f, .74f, .66f, .025f, pedestalEdge, opacity)
-        p.strokeOval(-.55f, .44f, .55f, .62f, .018f, pedestalEdge, .84f * opacity)
-        p.strokeArc(-.66f, .43f, .66f, .65f, 8f, 164f, .014f, edgeCoreFill, .90f * opacity)
-        p.setAdditive(false)
-        val color = if (disabled) Colors.textMuted else Colors.cyanSoft
-        val glyphPainter = if (disabled) p else featurePainter?.takeIf { it.painter === p }
-            ?: FeatureGlyphPainter(p).also { featurePainter = it }
-        if (!JarvisRailIcons.draw(glyphPainter, tile.target, -.5f, -.5f, 1f, color))
-            ContinuumIcons.draw(glyphPainter, tile.icon, 0f, 0f, 1f, Fill.Solid(color))
+        if (!disabled) JarvisSceneFills.halo(p, 0f, .02f, .52f, Colors.cyan, .14f)
+        p.strokeArc(-.48f, .46f, .48f, .60f, 14f, 152f, .018f, featureGround, .40f * opacity)
+        if (!JarvisRailIcons.drawFeature(p, tile.target, -.5f, -.5f, 1f, color, detail, opacity))
+            ContinuumIcons.draw(p, tile.icon, 0f, 0f, 1f,
+                if (disabled) disabledFeatureFallback else featureFallback, .0625f, opacity)
         p.restore()
     }
 
@@ -261,6 +207,7 @@ object JarvisTiles {
             val icon = minOf(22f * font, row.width * .21f, row.height * .48f)
             val ix = if (labelled) row.left + 5f + icon / 2f else row.centerX
             val color = if (it.target == "system") Colors.violetSoft else if (active) Colors.cyan else Colors.cyanSoft
+            JarvisSceneFills.halo(p, ix, row.centerY, icon * .54f, color, if (active) .12f else .07f)
             if (!JarvisRailIcons.draw(p, it.target, ix - icon / 2f, row.centerY - icon / 2f, icon, color))
                 ContinuumIcons.draw(p, it.icon, ix, row.centerY, icon, Fill.Solid(color))
             if (labelled) {

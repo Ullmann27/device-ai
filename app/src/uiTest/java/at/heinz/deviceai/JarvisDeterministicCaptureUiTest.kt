@@ -119,7 +119,7 @@ class JarvisDeterministicCaptureUiTest {
                 JarvisShellLayout.Slot.ROW_MEMORY, JarvisShellLayout.Slot.ROW_MODEL)
             fun slotBounds() = JSONObject().also { result ->
                 for (slot in listOf(JarvisShellLayout.Slot.TILES, JarvisShellLayout.Slot.STATUS) + detailSlots) {
-                    val box = requireNotNull(shell[slot])
+                    val box = shell[slot] ?: continue
                     result.put(slot.name, JSONObject().put("left", box.left.toDouble()).put("top", box.top.toDouble())
                         .put("right", box.right.toDouble()).put("bottom", box.bottom.toDouble()))
                 }
@@ -151,6 +151,7 @@ class JarvisDeterministicCaptureUiTest {
                             .put("viewport_width_dp", (width / density).toDouble())
                             .put("viewport_height_dp", (height / density).toDouble())
                             .put("density", density.toDouble()).put("font_scale", fontScale.toDouble())
+                            .put("has_feature_tiles", shell.hasFeatureTiles)
                             .put("animation_duration_scale", 0)
                             .put("head_mode", "existing_2d_renderer_explicitly_selected")
                             .put("native_filament_verified", false).put("physical_device_verified", false)
@@ -175,12 +176,24 @@ class JarvisDeterministicCaptureUiTest {
             }
             render(label, "home")
             if (captureScrollDetails) {
-                assertTrue("Main cards precede their status strip",
-                    requireNotNull(shell[JarvisShellLayout.Slot.TILES]).bottom <= status.top)
-                detailSlots.forEach { slot ->
-                    assertTrue("$slot belongs below the home status", requireNotNull(shell[slot]).top > status.bottom)
+                if (shell.hasFeatureTiles) {
+                    assertTrue("Phone cards precede their status strip",
+                        requireNotNull(shell[JarvisShellLayout.Slot.TILES]).bottom <= status.top)
+                    detailSlots.forEach { slot ->
+                        assertTrue("$slot follows the phone status", requireNotNull(shell[slot]).top > status.bottom)
+                    }
+                } else {
+                    assertTrue("Wide functions remain in the rail", shell[JarvisShellLayout.Slot.NAV_RAIL] != null)
+                    assertEquals("Wide navigation is not duplicated", null, shell[JarvisShellLayout.Slot.TILES])
+                    val input = requireNotNull(shell[JarvisShellLayout.Slot.INPUT])
+                    detailSlots.forEach { slot ->
+                        val box = requireNotNull(shell[slot])
+                        assertTrue("$slot follows the conversation input", box.top > input.bottom)
+                        assertTrue("$slot uses the former feature area", box.bottom < status.top)
+                    }
                 }
-                viewport.scrollTo(0, (contentRect(status).top - 12f * density).toInt().coerceAtLeast(0))
+                val firstDetail = detailSlots.map { requireNotNull(shell[it]) }.minBy { it.top }
+                viewport.scrollTo(0, (contentRect(firstDetail).top - 12f * density).toInt().coerceAtLeast(0))
                 shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
                 assertTrue("Real dashboard scrolling must reveal the diagnostics", viewport.scrollY > 0)
                 detailSlots.forEach { slot ->

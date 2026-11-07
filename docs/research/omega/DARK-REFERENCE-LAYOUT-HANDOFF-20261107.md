@@ -1,9 +1,9 @@
-# Dark reference home layout — completed source and host QA
+# Dark reference home — single navigation and useful diagrams
 
 ## Current status
 
-**IMPLEMENTED / PUSHED / HOST_QA_PASS.** Review: [PR #597](https://github.com/Ullmann27/device-ai/pull/597).
-Verified application/test source: [`3b0e4dd2f40575561b87bd84327caea0a8e63eb9`](https://github.com/Ullmann27/device-ai/commit/3b0e4dd2f40575561b87bd84327caea0a8e63eb9). The final evidence commit changes documentation only.
+**WIP / SOURCE_CHECKPOINT / HOST_QA_PENDING.** Review: [PR #597](https://github.com/Ullmann27/device-ai/pull/597).
+This revision follows the owner's request for subtler modern icons, retained glow, and useful diagrams instead of duplicate wide-screen navigation. The earlier completed source [`3b0e4dd2f40575561b87bd84327caea0a8e63eb9`](https://github.com/Ullmann27/device-ai/commit/3b0e4dd2f40575561b87bd84327caea0a8e63eb9) and its 239-test receipt remain historical evidence, not validation of this revision.
 
 - Base: PR #594 at `88dfd45139471463618673a1f827ee062e9bf6d5`.
 - Own branch: `codex/continuum-dark-reference-layout-20261107`.
@@ -12,21 +12,23 @@ Verified application/test source: [`3b0e4dd2f40575561b87bd84327caea0a8e63eb9`](h
 
 ## Delivered design and connections
 
-Near-black glass interiors now separate clearly from saturated cyan/violet borders. Static corner lighting, narrow bright cores and dimensional vector-icon pedestals retain the project identity without another rendering clock, dependency or generated artwork. Decorative fine waves stay under the face and stop with the hero/input area.
+Near-black glass interiors separate clearly from saturated cyan/violet borders. Shared vector icons now use thinner optical contours, restrained violet details and a soft local halo. Heavy icon pedestals and repeated outline passes are removed; component edge lighting remains. Cached paths introduce no animation clock, dependency or generated artwork. Decorative fine waves stay under the face and stop with the hero/input area.
 
-The hero uses the original avatar/orb. A compact JARVIS status badge and restored conversation strip precede ten tall feature cards. Normal open-Fold profiles use five columns and two rows; narrow windows and large fonts reflow and scroll. Card titles/descriptions and rail names are complete in the tested font matrix. The duplicate in-app system clock is removed.
+The hero uses the original avatar/orb. A compact JARVIS status badge and conversation strip precede the information area. Wide layouts keep the eleven left-rail destinations and omit the duplicated ten feature cards, including their native hit targets. Narrow phone layouts without a rail retain ten feature cards. Large fonts and narrow content reflow and scroll. The duplicate in-app system clock remains removed.
 
-The primary status strip closes the home composition. Active agents, current process, memory activity, model/device and camera/module details follow below it. Native hit bounds derive from the same geometry as the visible microphone, camera, appearance and conversation controls. The existing route IDs, permission gates, disabled-control behavior, avatar lifetime and real state sources remain connected.
+On wide layouts, memory activity and model/device charts follow the conversation input; active agents and the current process follow those charts. The status strip closes that area; camera/module details remain below it. The compact phone ordering is preserved. The memory chart shows observed events since Activity startup; the device card shows existing app-CPU samples, RAM usage and battery temperature. Missing measurements stay unknown. Native hit bounds derive from the same geometry as the visible controls. Existing routes, permission gates, disabled controls and avatar lifetime remain connected.
 
 ## Verification
 
-**239/239 focused tests passed** at the exact source above; no errors or skips. Gradle `:app:testDebugUnitTest` succeeded in 1m29s with actual Android SDK compilation. Native font checks exercise 90 card cases and 9 rail profiles. The independent real-source geometry harness passed 150 window/font/compact cases.
+Current geometry-only check: **150/150 production-source Kotlin cases passed**, covering bounds, overlap, one wide navigation surface, ten compact routes, diagnostic ordering, chart heights and 48-dp input targets. Current Android compilation, native font/touch/scroll checks and captures: **PENDING** at this checkpoint.
+
+Historical source `3b0e4dd2f40575561b87bd84327caea0a8e63eb9`: **239/239 focused tests passed** with no errors or skips. Gradle `:app:testDebugUnitTest` succeeded in 1m29s with actual Android SDK compilation. Native font checks exercised 90 card cases and 9 rail profiles. Its separate geometry harness passed 150 cases.
 
 Evidence, exact commands, complete test-name receipt, source hashes and image metadata: [`docs/evidence/dark-reference-layout-20261107/README.md`](../../evidence/dark-reference-layout-20261107/README.md).
 
 The first integrated run at `b12acea2d4fb2dcea5c100b12fed4c6c09436864` ran 247 tests with two failures: full header caption did not fit, and an old test assumed the face still sat right of the previous large dialog. The caption now fits the real available width; the structural test follows the new centered-head/compact-badge contract while real posed-face/camera assertions are retained. All targeted assertions pass in the final run. The later saturated-material checkpoint `c318e2d0ada64e8f95aef463ab72d1f45366e5d0` also passed 239/239 before the final fine-wave placement adjustment.
 
-Three helpers covered geometry/typography, surfaces/icons, and independent native routing/capture review. The primary integrator reviewed actual code-rendered images and reran the final source after the visual adjustment.
+Three helpers cover geometry/typography, surfaces/icons, and independent native routing review. Next: run the focused local Android suite at the published source SHA, inspect actual Activity captures, and publish a new receipt without overwriting the earlier evidence.
 
 ## Explicit remaining boundaries
 

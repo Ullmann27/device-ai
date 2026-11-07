@@ -228,7 +228,7 @@ class FullStageMemoryReviewUiTest {
 
     @Test fun actualWindowCloseAndSystemTapRemainUsableAboveTheScene() = withActivity { f ->
         pump = CockpitHostFramePump { f.root }
-        fun system() = descendants(f.root).single { it.tag == "jarvis-tile:system" && it.isShown }
+        fun system() = JarvisHomeTestRoutes.destination(f.root, "system")
         tap(f.root, system())
         advance(1_800L)
         val window = descendants(f.root).single { it.tag == "jarvis-work-window" && it.isShown }

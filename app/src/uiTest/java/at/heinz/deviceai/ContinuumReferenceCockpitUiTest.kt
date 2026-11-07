@@ -269,6 +269,11 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun shellControl(activity: AgentActivity, tag: String): View = tagged(currentHome(activity), tag)
 
+    private fun destination(activity: AgentActivity, target: String): View =
+        JarvisHomeTestRoutes.destination(currentHome(activity), target).also {
+            assertTrue("$target belongs to the current visible Home", it.isAttachedToWindow && it.isShown)
+        }
+
     private fun shellControls(root: View): List<View> = descendants(root).filter { view ->
         val tag = view.tag as? String ?: return@filter false
         listOf("jarvis-tile:", "jarvis-dialog:", "jarvis-input:", "jarvis-camera:", "jarvis-panel:",
@@ -345,15 +350,17 @@ class ContinuumReferenceCockpitUiTest {
     private fun assertRealTargets(activity: AgentActivity) {
         val home = currentHome(activity)
         val targets = shellControls(home)
-        assertEquals("All ten current destinations must exist", tileTargets.toSet(),
-            targets.mapNotNull { (it.tag as? String)?.takeIf { tag -> tag.startsWith("jarvis-tile:") }
-                ?.removePrefix("jarvis-tile:") }.toSet())
+        val navigation = JarvisHomeTestRoutes.controls(home)
+        val expected = if (requireNotNull(home.jarvisShell.currentShell()).hasFeatureTiles) tileTargets
+            else listOf("home") + tileTargets
+        assertEquals("Every destination has exactly one navigation control", expected,
+            navigation.map { it.tag.toString().substringAfter(':') })
         for (tag in listOf("jarvis-dialog:conversation", "jarvis-dialog:voice-input", "jarvis-dialog:camera-settings",
             "jarvis-dialog:avatar-appearance", "jarvis-header:notifications", "jarvis-header:settings",
             "jarvis-panel:ROW_AGENTS", "jarvis-panel:ROW_TASKS", "jarvis-panel:ROW_MEMORY", "jarvis-panel:ROW_MODEL")) {
             tagged(home, tag)
         }
-        for (target in tileTargets) tagged(home, "jarvis-tile:$target")
+        for (target in tileTargets) destination(activity, target)
         targets.forEach { view ->
             val name = view.tag.toString()
             assertTrue("$name must be a real clickable, focusable control", view.isClickable && view.isFocusable)
@@ -492,7 +499,7 @@ class ContinuumReferenceCockpitUiTest {
         }
         if (direct != null) tap(root, direct) else {
             // Wide reflow has no category dock or spare header cell; reuse the existing System centre.
-            tap(root, shellControl(activity, "jarvis-tile:system"))
+            tap(root, destination(activity, "system"))
             tapSystemWorkItem(activity, "MEHR · ARBEITSBEREICHE")
         }
         return assertDialog("Mehr")
@@ -651,10 +658,7 @@ class ContinuumReferenceCockpitUiTest {
             titles.any { it.equals(title, ignoreCase = true) })
         assertTrue("The original avatar stays present",
             (field(activity, "hologramView") as ContinuumHologramView).isShown)
-        val deck = descendants(home).filter {
-            val tag = it.tag as? String ?: return@filter false
-            tag.startsWith("jarvis-tile:") || tag.startsWith("jarvis-panel:ROW_")
-        }
+        val deck = JarvisHomeTestRoutes.deck(home)
         assertTrue("Cleared deck items must not receive touches", deck.none { it.isShown && it.isClickable })
         return work
     }
@@ -667,10 +671,7 @@ class ContinuumReferenceCockpitUiTest {
             advanceFrames(640L)
             assertTrue("Closing $title removes the work window",
                 descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
-            val deck = descendants(currentHome(activity)).filter {
-                val tag = it.tag as? String ?: return@filter false
-                tag.startsWith("jarvis-tile:") || tag.startsWith("jarvis-panel:ROW_")
-            }
+            val deck = JarvisHomeTestRoutes.deck(currentHome(activity))
             assertTrue("Closing $title restores the entire deck", deck.none { it.visibility == View.INVISIBLE })
         } else closeDialogThroughDecor(assertDialog(title))
         currentHome(activity).setForegroundActive(false)
@@ -725,13 +726,15 @@ class ContinuumReferenceCockpitUiTest {
             capture(root, "$tag-home", width, height)
 
             for ((target, title) in listOf(
-                "jarvis-tile:memory" to "Gedächtniszentrum",
-                "jarvis-tile:agents" to "Team · Bots",
-                "jarvis-panel:ROW_AGENTS" to "Team · Bots",
-                "jarvis-tile:tasks" to "Entwicklungsaufgaben",
-                "jarvis-tile:device" to "Systemstatus"
+                "memory" to "Gedächtniszentrum",
+                "agents" to "Team · Bots",
+                "agents-panel" to "Team · Bots",
+                "tasks" to "Entwicklungsaufgaben",
+                "device" to "Systemstatus"
             )) {
-                tap(activity.window.decorView, shellControl(activity, target))
+                val control = if (target == "agents-panel") shellControl(activity, "jarvis-panel:ROW_AGENTS")
+                    else destination(activity, target)
+                tap(activity.window.decorView, control)
                 when (title) {
                     "Systemstatus" -> closeSystemWorkWindow(activity)
                     "Gedächtniszentrum" -> closeCentreThroughDecor(activity, title)
@@ -743,7 +746,7 @@ class ContinuumReferenceCockpitUiTest {
             closeDialogThroughDecor(openCodingDraftThroughDecor(activity))
             tap(root, shellControl(activity, "jarvis-header:settings"))
             closeDialogThroughDecor(assertDialog("Deine KI personalisieren"))
-            tap(root, shellControl(activity, "jarvis-tile:learning"))
+            tap(root, destination(activity, "learning"))
             val learning = assertCentreSurface(activity, "Lernzentrum")
             val details = descendants(learning).filterIsInstance<TextView>()
                 .single { it.isClickable && it.text.toString() == "LERNKERN · DETAILS" }

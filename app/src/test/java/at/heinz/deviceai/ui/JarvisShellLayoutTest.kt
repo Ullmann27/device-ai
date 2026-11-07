@@ -39,7 +39,7 @@ class JarvisShellLayoutTest {
     }
 
     @Test fun fold7OpenKeepsTheDarkReferenceStructure() {
-        // Latest canonical composition when five columns remain readable.
+        // One navigation surface per destination.
         val s = JarvisShellLayout.create(884f, 760f)
         assertEquals(FormFactor.FOLD_OPEN, s.formFactor)
         assertEquals(Rail.LABELLED, s.rail)
@@ -47,10 +47,13 @@ class JarvisShellLayoutTest {
         assertTrue("compact badge belongs to hero", s.headBounds!!.contains(s[Slot.DIALOG]!!))
         assertEquals(56f, s[Slot.DIALOG]!!.height, .01f)
         assertNull("The obsolete owner card cannot cover the face", s[Slot.USER_CARD])
-        assertEquals(5, s.tileColumns); assertEquals(2, s.tileRows)
-        assertEquals(10, s.tileBoxes().size)
+        assertEquals(0, s.tileColumns); assertEquals(0, s.tileRows)
+        assertNull(s[Slot.TILES])
+        assertTrue(s.tileBoxes().isEmpty())
         listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL).forEach { assertNotNull(s[it]) }
         val st = s[Slot.STATUS]!!
+        assertTrue(s[Slot.ROW_MEMORY]!!.top > s[Slot.INPUT]!!.bottom)
+        assertTrue(st.top > s[Slot.ROW_TASKS]!!.bottom)
         assertTrue("status full width", st.left <= 12f && st.right >= 884f - 12f)
         assertTrue(s[Slot.NAV_RAIL]!!.right < s[Slot.AVATAR]!!.left)
         assertTrue(s[Slot.COCKPIT_SECONDARY]!!.top > st.bottom)
@@ -62,10 +65,12 @@ class JarvisShellLayoutTest {
         val large = JarvisShellLayout.create(884f, 760f, 1.5f)
         assertTrue(!large.ref5Grid)
         assertTrue(large[Slot.NAV_RAIL]!!.width > regular[Slot.NAV_RAIL]!!.width)
-        assertTrue(large.tileColumns < 5)
-        assertEquals(10, large.tileBoxes().size)
+        assertEquals(0, large.tileColumns)
+        assertNull(large[Slot.TILES])
+        assertTrue(large.tileBoxes().isEmpty())
         assertTrue(large.requiresVerticalScroll)
-        assertTrue(large.tileBoxes().all { it.height >= 96f })
+        assertTrue(large[Slot.ROW_MEMORY]!!.height >= 190f * 1.5f)
+        assertTrue(large[Slot.ROW_MODEL]!!.height >= 190f * 1.5f)
         assertSane(large)
     }
 
@@ -73,7 +78,8 @@ class JarvisShellLayoutTest {
         val s = JarvisShellLayout.create(884f, 760f, foldRail = Rail.ICONS)
         assertEquals(64f, s.profile.railWidthDp, .01f)
         assertTrue(s[Slot.NAV_RAIL]!!.width >= 48f)
-        assertEquals(10, s.tileBoxes().size)
+        assertTrue(s.tileBoxes().isEmpty())
+        assertNull(s[Slot.TILES])
         assertSane(s)
     }
 
@@ -85,20 +91,21 @@ class JarvisShellLayoutTest {
         assertTrue(s.headBounds!!.left > s[Slot.NAV_RAIL]!!.right)
         assertEquals(.5f, s.headAnchorX, .001f)
         assertEquals(s.width - 12f, s.orbBounds!!.right, .001f)
-        assertEquals(5, s.tileColumns)
+        assertEquals(0, s.tileColumns)
         assertSane(s)
     }
 
     @Test fun largeFontStaysSane() {
         assertSane(JarvisShellLayout.create(360f, 780f, 1.5f))
-        val f = JarvisShellLayout.create(884f, 760f, 1.5f); assertEquals(3, f.tileColumns); assertSane(f)
+        val f = JarvisShellLayout.create(884f, 760f, 1.5f); assertEquals(0, f.tileColumns); assertSane(f)
     }
 
     @Test fun referenceTilesFromRef5() {
         assertEquals(listOf("Gespräch", "Gedächtnis", "Denken und Planen", "Forschung", "Assistenten", "Aufgaben", "Internet", "Lernen", "Gerätesteuerung", "Systemstatus"),
             JarvisTiles.reference.map { it.label })
         assertTrue(JarvisTiles.reference.all { it.displayText == null })
-        assertEquals(JarvisTiles.reference.size, JarvisShellLayout.create(884f, 760f).tileBoxes().size)
+        assertEquals(JarvisTiles.reference.size, JarvisShellLayout.create(412f, 915f).tileBoxes().size)
+        assertTrue(JarvisShellLayout.create(884f, 760f).tileBoxes().isEmpty())
     }
 
     @Test fun glowLevelsAreOrdered() {

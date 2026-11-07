@@ -31,18 +31,12 @@ data class JarvisWindowProfile(
                 else -> (widthDp * 243f / 1536f).coerceIn(112f, 244f) * maxOf(1f, font)
             }
             val bodyWidth = (widthDp - railWidth - 28f).coerceAtLeast(1f)
-            val maxColumns = when (size) {
-                WidthClass.COMPACT -> 2
-                WidthClass.MEDIUM -> 5
-                WidthClass.EXPANDED -> 5
-            }
             val readableColumns = ((bodyWidth + 8f) / (104f * maxOf(1f, font) + 8f)).toInt()
-                .coerceIn(1, maxColumns)
+                .coerceIn(1, 2)
             val reference = size != WidthClass.COMPACT && heightDp >= REFERENCE_MIN_HEIGHT_DP &&
-                font <= 1.3f && readableColumns == 5 && rail == JarvisShellLayout.Rail.LABELLED
-            return JarvisWindowProfile(size, font, if (reference) 5 else readableColumns,
-                if (bodyWidth >= 1000f * maxOf(1f, font)) 4
-                else if (bodyWidth >= 352f * maxOf(1f, font)) 2 else 1,
+                font <= 1.3f && rail == JarvisShellLayout.Rail.LABELLED
+            return JarvisWindowProfile(size, font, if (size == WidthClass.COMPACT) readableColumns else 0,
+                if (bodyWidth >= 352f * maxOf(1f, font)) 2 else 1,
                 railWidth, reference)
         }
     }

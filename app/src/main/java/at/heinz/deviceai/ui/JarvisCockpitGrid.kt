@@ -24,12 +24,9 @@ object JarvisCockpitGrid {
 
     const val REF_W = 1536f
     const val REF_H = 1024f
-    const val TILE_COLUMNS = 5
-    const val TILE_ROWS = 2
     const val MIN_TOUCH_DP = 48f
     const val MIN_DIALOG_DP = 56f
     const val MIN_TILE_DP = 158f
-    const val TILE_GAP_DP = 8f
     const val HEAD_ANCHOR_X = .50f
     const val HEAD_CLOSE_UP = .92f
 
@@ -67,12 +64,14 @@ object JarvisCockpitGrid {
             a[Area.TAGLINE] = Box(brandRight + gap, 14f, modeLeft - gap, headerBottom - 6f)
 
         val heroTop = headerBottom + gap
-        val tileWidth = (room - (TILE_COLUMNS - 1) * TILE_GAP_DP) / TILE_COLUMNS
-        val tileHeight = maxOf(MIN_TILE_DP, minOf(176f, tileWidth * 1.30f)) * font
-        val tilesHeight = TILE_ROWS * tileHeight + TILE_GAP_DP
+        val informationColumns = profile.informationColumns
+        val rowsPerGroup = (2 + informationColumns - 1) / informationColumns
+        val chartHeight = 190f * font
+        val activityHeight = 132f * font
+        val informationHeight = rowsPerGroup * (chartHeight + activityHeight) + (2 * rowsPerGroup - 1) * gap
         val inputHeight = 56f * font
         val statusHeight = 56f * font
-        val fixedHeight = heroTop + inputHeight + tilesHeight + statusHeight + 4f * gap + margin
+        val fixedHeight = heroTop + inputHeight + informationHeight + statusHeight + 3f * gap + margin
         val heroHeight = (heightDp - fixedHeight).coerceIn(260f, 480f)
         val heroBottom = heroTop + heroHeight
         val split = left + room * .54f
@@ -86,24 +85,29 @@ object JarvisCockpitGrid {
         var y = heroBottom + gap
         a[Area.INPUT] = Box(left, y, right, y + inputHeight)
         y += inputHeight + gap
-        a[Area.TILES] = Box(left, y, right, y + tilesHeight)
-        y += tilesHeight + gap
+        val infoWidth = (room - (informationColumns - 1) * gap) / informationColumns
+        fun informationRow(areas: List<Area>, cardHeight: Float) {
+            areas.forEachIndexed { i, area ->
+                val x = left + (i % informationColumns) * (infoWidth + gap)
+                val top = y + (i / informationColumns) * (cardHeight + gap)
+                a[area] = Box(x, top, x + infoWidth, top + cardHeight)
+            }
+            y += ((areas.size + informationColumns - 1) / informationColumns) * (cardHeight + gap)
+        }
+        informationRow(listOf(Area.ROW_MEMORY, Area.ROW_MODEL), chartHeight)
+        informationRow(listOf(Area.ROW_AGENTS, Area.ROW_TASKS), activityHeight)
         a[Area.STATUS] = Box(margin, y, right, y + statusHeight)
         a[Area.RAIL] = Box(margin, heroTop, profile.railWidthDp, y - gap)
         y += statusHeight + 24f
-
-        val informationColumns = profile.informationColumns
-        val infoWidth = (room - (informationColumns - 1) * gap) / informationColumns
-        val infoHeight = 164f * font
-        listOf(Area.ROW_AGENTS, Area.ROW_TASKS, Area.ROW_MEMORY, Area.ROW_MODEL).forEachIndexed { i, area ->
-            val x = left + (i % informationColumns) * (infoWidth + gap)
-            val top = y + (i / informationColumns) * (infoHeight + gap)
-            a[area] = Box(x, top, x + infoWidth, top + infoHeight)
+        if (informationColumns == 1) {
+            a[Area.CAMERA_STATUS] = Box(left, y, right, y + 56f * font)
+            y += 56f * font + gap
+            a[Area.MODULES] = Box(left, y, right, y + 164f * font)
+        } else {
+            val detailWidth = (room - gap) / 2f
+            a[Area.CAMERA_STATUS] = Box(left, y, left + detailWidth, y + 56f * font)
+            a[Area.MODULES] = Box(left + detailWidth + gap, y, right, y + 164f * font)
         }
-        y += ((4 + informationColumns - 1) / informationColumns) * (infoHeight + gap)
-        val detailWidth = (room - gap) / 2f
-        a[Area.CAMERA_STATUS] = Box(left, y, left + detailWidth, y + 56f * font)
-        a[Area.MODULES] = Box(left + detailWidth + gap, y, right, y + 164f * font)
         val contentHeight = maxOf(heightDp, a.getValue(Area.MODULES).bottom + margin)
         return Grid(widthDp, contentHeight, unit(widthDp, heightDp), a)
     }

@@ -94,7 +94,8 @@ object JarvisMemoryActivityPanel {
         p.drawText(JarvisShellRenderer.fit(p, TITLE, type.heading, box.width - 46f), l + 33f,
             titleY, type.heading, Fill.Solid(c.text))
         val barsTop = titleY + 10f
-        val barHeight = minOf(24f, box.height * .17f)
+        val barHeight = if (box.height >= 180f) (box.height * .28f).coerceIn(24f, 64f)
+            else minOf(24f, box.height * .17f)
         val baseline = barsTop + barHeight
         val bars = snap.hourly
         val n = bars?.size?.takeIf { it > 0 } ?: 24

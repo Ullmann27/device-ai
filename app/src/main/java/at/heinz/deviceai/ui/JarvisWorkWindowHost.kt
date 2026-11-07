@@ -190,8 +190,11 @@ class JarvisWorkWindowHost(
             offset.top + box.top * density, offset.left + box.right * density,
             offset.top + box.bottom * density)
         val face = (geometry.headStage ?: geometry.headBounds)?.let(::local)
-        val tile = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let { home.findViewWithTag<View>("jarvis-tile:${it.target}") }
-        val origin = tile?.let { localBounds(it, container) }?.takeIf(JarvisWorkWindowGeometry::valid)
+        val navigation = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let {
+            val prefix = if (geometry.hasFeatureTiles) "jarvis-tile:" else "jarvis-rail:"
+            home.findViewWithTag<View>("$prefix${it.target}")
+        }
+        val origin = navigation?.let { localBounds(it, container) }?.takeIf(JarvisWorkWindowGeometry::valid)
             ?: besideFace(face, viewport, density)
         val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
         val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))

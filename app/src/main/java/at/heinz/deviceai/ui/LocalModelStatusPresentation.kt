@@ -63,11 +63,7 @@ object LocalModelStatusPresentation {
     private fun gb(b: Long) = b / 1_073_741_824.0
 }
 
-/**
- * ref5 "Local Model Status" tile (Fold7 open): CPU icon + title + chevron; headline = answering core
- * ([ContinuumDashboardState.ModelStatus.name]) with the Online/Offline pill on the right; isometric chip emblem left;
- * label/value column right (Model, Mode, Status, RAM) and the RAM usage bar below. Only #479 tokens are used.
- */
+/** Model availability and measured telemetry. */
 class CockpitLocalModelCard(textScale: Float) : CockpitCard(textScale, ContinuumIcons.Icon.CPU) {
     override fun title(s: ContinuumDashboardState) = "Modell und Gerät"
     override fun rows(s: ContinuumDashboardState) = LocalModelStatusPresentation.rows(s)
@@ -95,6 +91,10 @@ class CockpitLocalModelCard(textScale: Float) : CockpitCard(textScale, Continuum
             Fill.Solid(if (ok) c.ok else c.textSecondary), TextAlign.CENTER)
         p.drawText(ContinuumSurfaces.fit(p, s.model.name, type.tileLabel, w - 3f * pad - pw), pad,
             pillTop + (ph + p.capHeight(type.tileLabel)) / 2f, type.tileLabel, Fill.Solid(c.text))
+        if (h >= 180f) {
+            drawTelemetry(p, w, h, s, pillTop + ph + pad * .6f, pad)
+            return
+        }
         // Body: emblem left, label/value rows right, RAM bar below.
         val all = rows(s)
         val shown = listOf("Modell", "Modus", "Status", "RAM").mapNotNull { l -> all.firstOrNull { it.label == l } }
@@ -124,6 +124,45 @@ class CockpitLocalModelCard(textScale: Float) : CockpitCard(textScale, Continuum
             JarvisNeon.bloomRoundRect(p, colX, barTop, r, barTop + barH, barH / 2f, c.cyan, .3f)
             p.fillRoundRect(colX, barTop, r, barTop + barH, barH / 2f, Fill.Linear(colX, 0f, r, 0f, intArrayOf(c.cyanDeep, c.cyan)))
         }
+    }
+
+    private fun drawTelemetry(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState,
+                              top: Float, pad: Float) {
+        val c = JarvisDesign.Colors
+        val type = JarvisDesign.Type
+        val caption = type.caption
+        val cap = p.capHeight(caption)
+        val metricTop = h - pad - 3f * cap - 23f
+        val chartTop = top + cap + 6f
+        val chartBottom = maxOf(chartTop + 18f, metricTop - 12f)
+        fun percent(v: Int?) = v?.takeIf { it in 0..100 }?.let { "$it %" }
+            ?: LocalModelStatusPresentation.MISSING
+        p.drawText("App-CPU", pad, top + cap, caption, Fill.Solid(c.textSecondary))
+        p.drawText(percent(s.system.appCpuPercent), w - pad, top + cap, caption,
+            Fill.Solid(c.cyanSoft), TextAlign.RIGHT)
+        WaveChart.draw(p, pad, chartTop, w - pad, chartBottom, s.system.activity, layers = 1)
+        if (s.system.activity.size < 2) {
+            p.drawText(ContinuumSurfaces.fit(p, "Verlauf noch nicht verfügbar", type.status, w - 2f * pad), w / 2f,
+                chartTop + (chartBottom - chartTop + p.capHeight(type.status)) / 2f,
+                type.status, Fill.Solid(c.textMuted), TextAlign.CENTER)
+        }
+        val ramY = metricTop + cap
+        p.drawText("Geräte-RAM", pad, ramY, caption, Fill.Solid(c.textSecondary))
+        p.drawText(percent(s.system.memoryPercent), w - pad, ramY, caption,
+            Fill.Solid(c.text), TextAlign.RIGHT)
+        val barTop = ramY + 5f
+        p.fillRoundRect(pad, barTop, w - pad, barTop + 4f, 2f, Fill.Solid(c.pillSurface))
+        p.strokeRoundRect(pad, barTop, w - pad, barTop + 4f, 2f, .7f, Fill.Solid(c.cyanDeep), .65f)
+        s.system.memoryPercent?.takeIf { it in 1..100 }?.let { value ->
+            val right = pad + (w - 2f * pad) * value / 100f
+            p.fillRoundRect(pad, barTop, right, barTop + 4f, 2f, Fill.Solid(c.cyan), .8f)
+        }
+        val temp = s.system.temperatureC?.takeIf { it.isFinite() }
+            ?.let { String.format(java.util.Locale.GERMANY, "%.1f °C", it) }
+            ?: LocalModelStatusPresentation.MISSING
+        val bottom = h - pad
+        p.drawText("Akku-Temperatur", pad, bottom, caption, Fill.Solid(c.textSecondary))
+        p.drawText(temp, w - pad, bottom, caption, Fill.Solid(c.text), TextAlign.RIGHT)
     }
 
     /** Isometric chip emblem of ref5: stacked glowing plates with a bright core, cyan to violet edge light. */
