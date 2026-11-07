@@ -25,6 +25,6 @@ class EvidenceBackedRelationGraphTest {
                 "a","related_to","b",setOf("s2"),true)
         ))
         assertEquals(1,admitted.size)
-        assertTrue(admitted.single().sourceIds.isNotEmpty())
+        assertEquals(setOf("s1","s2"),admitted.single().sourceIds)
     }
 }
