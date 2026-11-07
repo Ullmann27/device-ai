@@ -26,6 +26,7 @@ class JarvisShellView(context: Context) : View(context) {
     private val glass = JarvisGlassRenderer(painter)
     /** The separate foreground layer follows this layer's invalidation without owning an animation clock. */
     var onFrameDrawn: (() -> Unit)? = null
+    internal var motionBudgetProvider: (() -> JarvisRenderQuality.Budget)? = null
     private val motionFrames = linkedSetOf<(Long, Float) -> Boolean>()
 
     /** Shares the existing draw clock. */
@@ -77,10 +78,11 @@ class JarvisShellView(context: Context) : View(context) {
 
     private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
     private fun motionAllowed(scale: Float) = isAttachedToWindow && scale > 0f && isShown &&
-        windowVisibility == VISIBLE && hasWindowFocus() && !powerManager.isPowerSaveMode
+        windowVisibility == VISIBLE && hasWindowFocus() && !powerManager.isPowerSaveMode &&
+        motionBudgetProvider?.invoke()?.animate != false
     private fun ambientMotion(scale: Float) = ambientMotionEnabled && motionAllowed(scale)
     private val ambientFrame = Runnable {
-        if (ambientMotion(animatorScale())) invalidate()
+        if (motionAllowed(animatorScale())) invalidate()
     }
     private val motionObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
         override fun onChange(selfChange: Boolean) = refreshMotion()
@@ -96,6 +98,8 @@ class JarvisShellView(context: Context) : View(context) {
         lastFrameStartNanos = 0L
         invalidate()
     }
+
+    internal fun refreshMotionPolicy() = refreshMotion()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -219,8 +223,10 @@ class JarvisShellView(context: Context) : View(context) {
         // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
         removeCallbacks(ambientFrame)
         val deckStillMoving = (deckCleared && deckClearance < 1f) || (!deckCleared && deckClearance > 0f)
-        if (motionAllowed(scale) && (workWindowMoving || deckStillMoving || startMs >= 0 && elapsed < total)) postInvalidateOnAnimation()
-        else if (ambientMotion(scale)) postDelayed(ambientFrame, 66L)
+        val frameDelay = motionBudgetProvider?.invoke()?.frameDelayMillis ?: 16L
+        if (motionAllowed(scale) && (workWindowMoving || deckStillMoving || startMs >= 0 && elapsed < total)) {
+            if (frameDelay <= 16L) postInvalidateOnAnimation() else postDelayed(ambientFrame, frameDelay)
+        } else if (ambientMotion(scale)) postDelayed(ambientFrame, maxOf(66L, frameDelay))
         if (frameLogging) recordFrame(drawStartedNanos, System.nanoTime())
     }
 

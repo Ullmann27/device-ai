@@ -2,7 +2,6 @@ package at.heinz.deviceai
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Rect
 import android.os.Looper
 import android.os.SystemClock
 import android.provider.Settings
@@ -61,30 +60,7 @@ class JarvisReferenceHitTargetsUiTest {
         val viewport = home.parent as ScrollView
         assertTrue("The target belongs to this Home", descendants(home).contains(target))
         assertEquals(View.VISIBLE, target.visibility)
-        var parent = target.parent
-        while (parent is View) {
-            if (parent is ScrollView) {
-                val bounds = Rect(0, 0, target.width, target.height)
-                parent.offsetDescendantRectToMyCoords(target, bounds)
-                parent.scrollTo(0, (bounds.centerY() - parent.height / 2).coerceAtLeast(0))
-            }
-            if (parent === viewport) break
-            parent = parent.parent
-        }
-        val bounds = Rect(0, 0, target.width, target.height)
-        viewport.offsetDescendantRectToMyCoords(target, bounds)
-        val x = bounds.exactCenterX() - viewport.scrollX
-        val y = bounds.exactCenterY() - viewport.scrollY
-        assertTrue("Touch must be inside the viewport: $x/$y", x >= 0f && x < viewport.width && y >= 0f && y < viewport.height)
-        val downTime = SystemClock.uptimeMillis()
-        for ((action, elapsed) in listOf(MotionEvent.ACTION_DOWN to 0L, MotionEvent.ACTION_UP to 24L)) {
-            val event = MotionEvent.obtain(downTime, downTime + elapsed, action, x, y, 0)
-            try {
-                assertTrue("The actual viewport must consume ${target.tag}", viewport.dispatchTouchEvent(event))
-            } finally {
-                event.recycle()
-            }
-        }
+        JarvisHomeTestRoutes.touch(viewport, target)
         shadowOf(Looper.getMainLooper()).idleFor(50, TimeUnit.MILLISECONDS)
     }
 
@@ -141,29 +117,28 @@ class JarvisReferenceHitTargetsUiTest {
         assertEquals(10, descendants(home).count { it.tag?.toString()?.startsWith("jarvis-tile:") == true })
     }
 
-    @Test fun elevenRailDestinationsAndDialogHeaderActionsHaveSeparateNativeControls() = withHome { home, calls ->
-        assertEquals(11, JarvisHomeTestRoutes.controls(home).size)
-        for (item in JarvisTiles.railNav) {
-            val button = control(home, "rail:${item.target}")
+    @Test fun wideCardsAndInputHeaderActionsHaveSeparateNativeControls() = withHome { home, calls ->
+        assertEquals(10, JarvisHomeTestRoutes.controls(home).size)
+        for (item in JarvisTiles.reference) {
+            val button = control(home, "tile:${item.target}")
             assertTrue(button.width >= 48 && button.height >= 48)
             tapThroughViewport(home, button)
             assertTrue(button.isSelected)
         }
-        assertEquals(JarvisTiles.railNav.map { it.target }, calls)
+        assertEquals(JarvisTiles.reference.map { it.target }, calls)
         calls.clear()
-        val actions = listOf("voice-input", "camera-settings", "avatar-appearance")
-        actions.forEach { action ->
-            val button = control(home, "dialog:$action")
+        val actions = linkedMapOf("dialog:voice-input" to "voice-input", "dialog:send" to "chat",
+            "header:mode" to "avatar-appearance", "header:notifications" to "notifications",
+            "header:settings" to "settings", "camera:settings" to "camera-settings")
+        actions.forEach { (action, _) ->
+            val button = control(home, action)
             assertTrue("$action size ${button.width} × ${button.height}", button.width >= 48 && button.height >= 48)
-            button.performClick()
+            tapThroughViewport(home, button)
         }
-        control(home, "header:notifications").performClick()
-        control(home, "header:settings").performClick()
-        control(home, "camera:settings").performClick()
         val modelPanel = control(home, "panel:ROW_MODEL")
         assertEquals("Lokales Modell und Gerät", modelPanel.contentDescription)
-        modelPanel.performClick()
-        assertEquals(actions + listOf("notifications", "settings", "camera-settings", "model-management"), calls)
+        tapThroughViewport(home, modelPanel)
+        assertEquals(actions.values.toList() + "model-management", calls)
         val foreground = control(home, "foreground")
         assertFalse(foreground.isClickable)
         assertEquals(View.IMPORTANT_FOR_ACCESSIBILITY_NO, foreground.importantForAccessibility)
@@ -173,8 +148,7 @@ class JarvisReferenceHitTargetsUiTest {
 
     @Test fun inputActionsAndConversationRouteRealTouchesAcrossWindowReflow() = withHome { home, calls ->
         val routes = linkedMapOf(
-            "dialog:voice-input" to "voice-input", "dialog:camera-settings" to "camera-settings",
-            "dialog:avatar-appearance" to "avatar-appearance", "input:conversation" to "chat"
+            "dialog:voice-input" to "voice-input", "dialog:send" to "chat", "input:conversation" to "chat"
         )
         val identities = routes.keys.associateWith { control(home, it).id }
         val live = home.hologram
@@ -211,6 +185,12 @@ class JarvisReferenceHitTargetsUiTest {
                 assertTrue("Companion badge stays usable", badge.width / density >= 48f && badge.height / density >= 48f)
                 tapThroughViewport(home, badge)
                 assertEquals("Companion badge opens the real conversation", listOf("chat"), calls)
+                calls.clear()
+                tapThroughViewport(home, control(home, "camera:settings"))
+                assertEquals("Camera settings remain reachable after scrolling", listOf("camera-settings"), calls)
+                assertTrue("Old input shortcuts are absent", descendants(home).none {
+                    it.tag == "jarvis-dialog:camera-settings" || it.tag == "jarvis-dialog:avatar-appearance"
+                })
                 assertSame("Input navigation preserves the live avatar", live, home.hologram)
             }
         } finally {
@@ -222,6 +202,8 @@ class JarvisReferenceHitTargetsUiTest {
         for ((width, height) in listOf(412 to 915, 884 to 760)) {
             size(home, width, height)
             val button = JarvisHomeTestRoutes.destination(home, "memory")
+            JarvisHomeTestRoutes.scrollIntoView(button)
+            JarvisHomeTestRoutes.visibleBounds(button)
             var time = SystemClock.uptimeMillis()
             val downTime = time
             fun event(action: Int, x: Float, y: Float) {
@@ -243,9 +225,8 @@ class JarvisReferenceHitTargetsUiTest {
 
     @Test fun responsiveRemeasureKeepsOneNavigationSurfaceAndEveryRealRoute() = withHome { home, calls ->
         val live = home.hologram
-        val railIds = JarvisHomeTestRoutes.controls(home).associate { it.tag.toString() to it.id }
+        val cardIds = JarvisHomeTestRoutes.controls(home).associate { it.tag.toString() to it.id }
         val previousFont = RuntimeEnvironment.getFontScale()
-        var previousCards = emptyList<View>()
         try {
             for ((w, h, font) in listOf(Triple(412, 915, 1f), Triple(692, 768, 1f),
                 Triple(884, 760, 1f), Triple(884, 420, 2f), Triple(412, 915, 1.5f))) {
@@ -261,17 +242,11 @@ class JarvisReferenceHitTargetsUiTest {
                 assertSame(live, home.hologram)
                 assertSame(home, live.parent)
                 assertSame(live, (home.avatarRenderer as JarvisHoloAvatar).hologram)
-                if (requireNotNull(home.jarvisShell.currentShell()).hasFeatureTiles) {
-                    previousCards = current
-                    assertTrue(home.measuredHeight > h)
-                    for (target in listOf("notifications", "settings")) {
-                        val header = control(home, "header:$target")
-                        assertEquals(48, header.width)
-                        assertEquals(48, header.height)
-                    }
-                } else {
-                    assertEquals("The same rail survives reflow", railIds, identities)
-                    assertTrue("Obsolete compact cards detach", previousCards.all { it.parent == null })
+                assertEquals("The same cards survive every reflow", cardIds, identities)
+                assertTrue("Cards and diagnostics remain scrollable", home.measuredHeight > h)
+                for (target in listOf("notifications", "settings")) {
+                    val header = control(home, "header:$target")
+                    assertTrue(header.width >= 48 && header.height >= 48)
                 }
                 calls.clear()
                 current.forEach { button ->
@@ -292,7 +267,7 @@ class JarvisReferenceHitTargetsUiTest {
         val renderer = home.avatarRenderer
         val originalSlot = home.avatarSlotRect
         val legacyViews = at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.values().mapNotNull { home.viewFor(it) }
-        val railIds = JarvisHomeTestRoutes.controls(home).associate { it.tag.toString() to it.id }
+        val cardIds = JarvisHomeTestRoutes.controls(home).associate { it.tag.toString() to it.id }
         home.updateAvailableViewport(420f)
         assertEquals(420f, home.jarvisShell.viewportHeightDp, 0f)
         assertEquals(legacyViews, at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.values().mapNotNull { home.viewFor(it) })
@@ -300,7 +275,7 @@ class JarvisReferenceHitTargetsUiTest {
         assertTrue("Short viewport reflows into usable scrolling content", home.measuredHeight > 420)
         assertSame(surface, home.hologram)
         assertSame(renderer, home.avatarRenderer)
-        assertEquals(railIds, JarvisHomeTestRoutes.controls(home).associate { it.tag.toString() to it.id })
+        assertEquals(cardIds, JarvisHomeTestRoutes.controls(home).associate { it.tag.toString() to it.id })
         assertFalse("A completed layout must settle", home.isLayoutRequested)
         home.updateAvailableViewport(420f)
         assertFalse("The same viewport must not request another layout", home.isLayoutRequested)
@@ -328,8 +303,8 @@ class JarvisReferenceHitTargetsUiTest {
 
     @Test fun unavailableSpecialActionsAreDisabledInsteadOfPretendingToStartCapture() = withHome { home, calls ->
         home.onNavigateTarget = null
-        for (target in listOf("voice-input", "camera-settings", "avatar-appearance")) {
-            val button = control(home, "dialog:$target")
+        for (target in listOf("dialog:voice-input", "camera:settings", "header:mode")) {
+            val button = control(home, target)
             assertFalse(button.isEnabled)
             assertTrue(button.contentDescription.toString().contains("nicht verfügbar"))
             tapThroughViewport(home, button)

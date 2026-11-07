@@ -20,7 +20,7 @@ class JarvisCockpitGridTest {
         for ((w, h) in sizes) {
             assertTrue("$w×$h is Fold7 open", JarvisCockpitGrid.applies(w, h, 1f))
             val g = JarvisCockpitGrid.create(w, h)
-            assertEquals(Area.values().toSet() - setOf(Area.USER_CARD, Area.DEVICE_STATUS, Area.TAGLINE, Area.TILES),
+            assertEquals(Area.values().toSet() - setOf(Area.USER_CARD, Area.DEVICE_STATUS, Area.TAGLINE, Area.RAIL),
                 g.areas.keys - Area.TAGLINE)
             val e = g.areas.entries.toList()
             e.forEach { (k, b) ->
@@ -35,23 +35,24 @@ class JarvisCockpitGridTest {
         }
     }
 
-    @Test fun referenceHeroLeadsIntoProminentDiagnosticsWithoutDuplicateNavigation() {
+    @Test fun largeReferenceHeroLeadsIntoInputCardsAndStatusWithoutAFixedRail() {
         val g = JarvisCockpitGrid.create(692f, 700f)
         val head = g[Area.HEAD]; val orb = g[Area.ORB]
-        assertTrue("rail left of content", g[Area.RAIL].right < head.left)
+        assertFalse(Area.RAIL in g.areas)
+        assertEquals(12f, head.left, .01f)
         assertTrue("orb right of head", orb.left > head.right)
         assertTrue("modules follow primary status", g[Area.MODULES].top > g[Area.STATUS].bottom)
         assertFalse(Area.USER_CARD in g.areas)
         assertTrue("badge stays inside its stage", head.contains(g[Area.DIALOG]))
         assertEquals(56f, g[Area.DIALOG].height, .01f)
         assertTrue("conversation beneath stage", g[Area.INPUT].top > head.bottom)
-        assertFalse(Area.TILES in g.areas)
-        assertTrue("charts beneath conversation", g[Area.ROW_MEMORY].top > g[Area.INPUT].bottom)
+        assertTrue("cards beneath conversation", g[Area.TILES].top > g[Area.INPUT].bottom)
+        assertTrue("status closes the home", g[Area.STATUS].top > g[Area.TILES].bottom)
         assertEquals(g[Area.ROW_MEMORY].top, g[Area.ROW_MODEL].top, .01f)
         assertTrue("activity follows charts", g[Area.ROW_AGENTS].top > g[Area.ROW_MEMORY].bottom)
         for (area in listOf(Area.ROW_AGENTS, Area.ROW_TASKS, Area.ROW_MEMORY, Area.ROW_MODEL))
-            assertTrue("$area precedes primary status", g[area].bottom < g[Area.STATUS].top)
-        assertTrue("head keeps useful height", head.height >= 260f)
+            assertTrue("$area follows primary status", g[area].top > g[Area.STATUS].bottom)
+        assertTrue("head keeps reference scale", head.height >= 480f)
         assertEquals(190f, g[Area.ROW_MEMORY].height, .01f)
         assertEquals(132f, g[Area.ROW_AGENTS].height, .01f)
     }
@@ -68,12 +69,13 @@ class JarvisCockpitGridTest {
         }
     }
 
-    @Test fun referenceCompositionRequiresAWideWindowAndReadableText() {
+    @Test fun referenceCompositionRequiresFiveReadableColumns() {
         assertTrue(JarvisShellLayout.create(884f, 760f).ref5Grid)
         assertTrue(!JarvisShellLayout.create(884f, 760f, 1.5f).ref5Grid)
         assertTrue(JarvisShellLayout.create(832f, 750f).ref5Grid)
         assertTrue(JarvisShellLayout.create(692f, 700f).ref5Grid)
         assertTrue(JarvisShellLayout.create(600f, 900f).ref5Grid)
+        assertTrue(!JarvisShellLayout.create(692f, 700f, 1.3f).ref5Grid)
         assertTrue(!JarvisShellLayout.create(412f, 915f).ref5Grid)
         assertTrue(JarvisShellLayout.create(1280f, 800f).ref5Grid)
         assertNull(JarvisShellLayout.create(412f, 915f)[JarvisShellLayout.Slot.USER_CARD])

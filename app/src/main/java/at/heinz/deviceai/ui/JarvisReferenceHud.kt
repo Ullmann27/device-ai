@@ -16,7 +16,7 @@ object JarvisReferenceHud {
     private val ribbonGradient = Fill.Linear(0f, 0f, 1f, 0f,
         intArrayOf(Colors.violet, Colors.magenta, Colors.cyan, Colors.violet))
     private data class MaterialKey(val box: Box, val accent: Int, val end: Int,
-                                   val selected: Boolean, val layer: Int)
+                                   val selected: Boolean, val layer: Int, val feature: Boolean)
     private data class CornerKey(val box: Box, val radius: Float, val accent: Int, val end: Int)
     private data class CornerMaterial(val upper: VectorPath, val lower: VectorPath,
                                       val upperLight: Fill, val lowerLight: Fill)
@@ -80,7 +80,7 @@ object JarvisReferenceHud {
         p.restore()
     }
 
-    /** Glass material for functional controls; glow can overlap visually without overlapping hitboxes. */
+    /** Dark glass with localized light. */
     fun surface(p: ContinuumPainter, b: Box, radius: Float, accent: Int = Colors.cyan,
                 endAccent: Int = Colors.violet, interaction: Interaction = Interaction.NORMAL,
                 decorativeRibbons: Boolean = false) {
@@ -88,57 +88,78 @@ object JarvisReferenceHud {
         val enabled = interaction != Interaction.DISABLED
         val selected = interaction == Interaction.SELECTED || interaction == Interaction.PRESSED
         val opacity = if (enabled) 1f else .42f
-        // Dark glass, localized edge light.
-        val glow = if (selected) 1.38f else 1f
+        val glow = if (!enabled) .25f else if (selected) 1.25f else 1f
+        val feature = decorativeRibbons
         val r = radius.coerceIn(1f, minOf(b.width, b.height) * .5f)
-        val edge = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 0)) {
-            Fill.Linear(b.left, b.top, b.right, b.bottom,
-                intArrayOf(Argb.mix(accent, Colors.activeWhite, .22f), accent,
-                    Argb.mix(endAccent, Colors.activeWhite, .12f), endAccent),
-                floatArrayOf(0f, .28f, .73f, 1f))
+        val depth = minOf(if (feature) 22f else 14f, b.width * .16f, b.height * .21f)
+        val inset = minOf(1.2f, b.width * .15f, b.height * .15f)
+        val edge = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 0, feature)) {
+            Fill.Linear(b.left, b.top, b.right, b.top,
+                intArrayOf(accent, Argb.mix(accent, Colors.cyanDeep, .72f),
+                    Argb.mix(endAccent, Colors.violet, .35f), endAccent),
+                floatArrayOf(0f, .32f, .74f, 1f))
         }
-        val body = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 1)) {
-            Fill.Linear(b.left, b.top, b.right, b.bottom,
-                intArrayOf(Argb.mix(Argb.rgb(6, 15, 31), accent, if (selected) .08f else .025f),
-                    Argb.rgb(2, 6, 17), Argb.rgb(3, 8, 21),
-                    Argb.mix(Argb.rgb(7, 12, 30), endAccent, if (selected) .07f else .025f)),
-                floatArrayOf(0f, .34f, .72f, 1f))
+        val body = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 1, feature)) {
+            val top = if (feature) Colors.tileFillStart else Argb.rgb(5, 16, 33)
+            val middle = if (feature) Colors.tileFillMiddle else Argb.rgb(3, 11, 26)
+            val bottom = if (feature) Colors.tileFillEnd else Argb.rgb(6, 14, 31)
+            Fill.Linear(b.left, b.top, b.left, b.bottom,
+                intArrayOf(Argb.mix(top, accent, if (selected) .07f else .02f), middle,
+                    middle, Argb.mix(bottom, endAccent, .025f)),
+                floatArrayOf(0f, .28f, .74f, 1f))
         }
-        val sheen = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 2)) {
-            Fill.Linear(b.left, b.top, b.left, b.top + b.height * .16f,
-                intArrayOf(Argb.withAlpha(Colors.glowCore, if (selected) .10f else .045f), 0))
+        val sheen = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 2, feature)) {
+            Fill.Linear(b.left, b.top, b.left, b.top + depth,
+                intArrayOf(Argb.withAlpha(Colors.glowCore, if (selected) .11f else .065f), 0))
+        }
+        val bevel = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 3, feature)) {
+            Fill.Linear(b.left, b.top, b.right, b.bottom,
+                intArrayOf(Argb.withAlpha(Colors.glowCore, .28f), 0,
+                    Argb.withAlpha(endAccent, .22f)), floatArrayOf(0f, .35f, 1f))
         }
         p.setAdditive(true)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 10f, edge, .055f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 5f, edge, .17f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 3f, edge, .40f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 12f, edge, .035f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 6f, edge, .07f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 2.8f, edge, .17f * opacity * glow)
         p.setAdditive(false)
         p.fillRoundRect(b.left, b.top, b.right, b.bottom, r, body, opacity)
         p.save(); p.clipRoundRect(b.left, b.top, b.right, b.bottom, r)
-        p.fillRect(b.left, b.top, b.right, b.top + b.height * .16f, sheen, opacity)
-        // Light stays inside the bevel.
-        p.setAdditive(true)
-        p.strokeRoundRect(b.left + 1.2f, b.top + 1.2f, b.right - 1.2f, b.bottom - 1.2f,
-            (r - 1.2f).coerceAtLeast(1f), 3.2f, edge, .18f * opacity * glow)
-        p.setAdditive(false)
-        if (decorativeRibbons) {
-            // Keep text centers free.
-            p.setAdditive(true)
-            p.drawLine(b.left + r, b.top + .8f, b.left + b.width * .42f, b.top + .8f,
-                .8f, white, .68f * opacity)
-            p.drawLine(b.right - b.width * .32f, b.bottom - .8f, b.right - r, b.bottom - .8f,
-                .8f, white, .52f * opacity)
-            p.setAdditive(false)
+        p.fillRect(b.left, b.top, b.right, b.top + depth, sheen, opacity)
+        if (feature) {
+            val side = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 4, true)) {
+                Fill.Linear(b.left, b.top, b.left + depth, b.top,
+                    intArrayOf(Argb.withAlpha(Colors.bloomHalo, .18f), 0))
+            }
+            val foot = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 5, true)) {
+                val color = Argb.mix(Colors.bloomHalo, endAccent, .18f)
+                Fill.Linear(b.left, b.bottom - depth, b.left, b.bottom,
+                    intArrayOf(0, Argb.withAlpha(color, .24f), Argb.withAlpha(color, .45f)),
+                    floatArrayOf(0f, .52f, 1f))
+            }
+            p.fillRect(b.left, b.top, b.left + depth, b.bottom, side, opacity)
+            p.fillRect(b.left, b.bottom - depth, b.right, b.bottom, foot, opacity)
+            JarvisSceneFills.ellipseHalo(p, b.left + depth * .65f, b.bottom - depth * .2f,
+                depth * 2.2f, depth, Colors.cyan, .16f * opacity * glow)
         }
+        JarvisSceneFills.ellipseHalo(p, b.left + r * .35f, b.top + r * .25f,
+            depth * 1.5f, depth * 1.1f, accent, .20f * opacity * glow)
+        JarvisSceneFills.ellipseHalo(p, b.right - r * .35f, b.bottom - r * .2f,
+            depth * 1.7f, depth * 1.1f, endAccent, .20f * opacity * glow)
         p.restore()
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, if (selected) 1.9f else 1.4f, edge, opacity)
-        val inner = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 3)) {
-            Fill.Linear(b.left, b.top, b.right, b.bottom,
-                intArrayOf(Colors.glowCore, 0, Argb.withAlpha(endAccent, .65f)))
-        }
-        p.strokeRoundRect(b.left + 1.2f, b.top + 1.2f, b.right - 1.2f, b.bottom - 1.2f,
-            (r - 1f).coerceAtLeast(1f), .75f, inner, .65f * opacity)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r,
+            if (selected) 1.3f else 1.05f, edge, (if (selected) .94f else .76f) * opacity)
+        p.strokeRoundRect(b.left + inset, b.top + inset, b.right - inset, b.bottom - inset,
+            (r - inset).coerceAtLeast(1f), .55f, bevel, opacity)
         cornerLight(p, b, r, accent, endAccent, opacity, glow)
+        if (feature) {
+            val glint = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 6, true)) {
+                Fill.Linear(b.left + r, b.top, b.left + minOf(b.width * .48f, r + 40f), b.top,
+                    intArrayOf(0, Argb.withAlpha(Colors.glowCore, .78f), 0),
+                    floatArrayOf(0f, .42f, 1f))
+            }
+            p.drawLine(b.left + r, b.top + .45f, b.left + minOf(b.width * .48f, r + 40f),
+                b.top + .45f, .65f, glint, .72f * opacity)
+        }
     }
 
     private fun cornerLight(p: ContinuumPainter, b: Box, r: Float, accent: Int,
@@ -150,7 +171,7 @@ object JarvisReferenceHud {
             val k = r * .552285f
             fun light(x0: Float, y0: Float, x1: Float, y1: Float, color: Int) =
                 Fill.Linear(x0, y0, x1, y1, intArrayOf(Argb.withAlpha(color, 0f), color,
-                    Argb.mix(color, Colors.activeWhite, .68f), color, Argb.withAlpha(color, 0f)),
+                    Argb.mix(color, Colors.activeWhite, .22f), color, Argb.withAlpha(color, 0f)),
                     floatArrayOf(0f, .28f, .5f, .72f, 1f))
             CornerMaterial(
                 VectorPath().moveTo(b.left, b.top + span).lineTo(b.left, b.top + r)
@@ -166,10 +187,10 @@ object JarvisReferenceHud {
         p.setAdditive(true)
         p.strokePath(material.upper, 7f, material.upperLight, .10f * opacity * glow)
         p.strokePath(material.lower, 7f, material.lowerLight, .10f * opacity * glow)
-        p.strokePath(material.upper, 4f, material.upperLight, .38f * opacity * glow)
-        p.strokePath(material.lower, 4f, material.lowerLight, .38f * opacity * glow)
-        p.strokePath(material.upper, 1.3f, material.upperLight, .95f * opacity)
-        p.strokePath(material.lower, 1.3f, material.lowerLight, .95f * opacity)
+        p.strokePath(material.upper, 3.5f, material.upperLight, .20f * opacity * glow)
+        p.strokePath(material.lower, 3.5f, material.lowerLight, .20f * opacity * glow)
+        p.strokePath(material.upper, 1.1f, material.upperLight, .85f * opacity)
+        p.strokePath(material.lower, 1.1f, material.lowerLight, .85f * opacity)
         p.setAdditive(false)
     }
 

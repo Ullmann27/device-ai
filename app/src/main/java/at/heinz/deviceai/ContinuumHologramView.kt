@@ -72,6 +72,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var assetGeneration = 0
     private var native3dFailed = false
     private var native3dDrawn = false
+    private val presentationBudgetObservers = linkedSetOf<() -> Unit>()
     private var avatarSeconds = 0f
     private val avatarInvalidationPending = java.util.concurrent.atomic.AtomicBoolean(false)
     private val avatarInvalidation = Runnable {
@@ -715,6 +716,13 @@ class ContinuumHologramView @JvmOverloads constructor(
         !animationsEnabled || !ValueAnimator.areAnimatorsEnabled(),
         currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING)
 
+    internal fun presentationRenderBudget() = renderBudget()
+
+    internal fun observePresentationBudget(listener: () -> Unit): AutoCloseable {
+        presentationBudgetObservers.add(listener)
+        return AutoCloseable { presentationBudgetObservers.remove(listener) }
+    }
+
     /** No private content. Owner can inspect this by long-pressing the hologram. */
     /** Read only on the Android UI thread. Compares scheduled callbacks and real View draws. */
     data class MotionSample(val callbackCount: Long, val drawCount: Long, val phase: Float, val reason: String)
@@ -752,6 +760,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         renderBudget().let { cockpitSequence?.setFrameBudget(it.frameDelayMillis, it.reducedBloom) }
         update3d()
         native3d?.setQuality(renderBudget().reducedBloom)
+        presentationBudgetObservers.toList().forEach { it() }
         invalidate()
         scheduleFrame()
     }

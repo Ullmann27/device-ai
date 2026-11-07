@@ -176,21 +176,12 @@ class JarvisDeterministicCaptureUiTest {
             }
             render(label, "home")
             if (captureScrollDetails) {
-                if (shell.hasFeatureTiles) {
-                    assertTrue("Phone cards precede their status strip",
-                        requireNotNull(shell[JarvisShellLayout.Slot.TILES]).bottom <= status.top)
-                    detailSlots.forEach { slot ->
-                        assertTrue("$slot follows the phone status", requireNotNull(shell[slot]).top > status.bottom)
-                    }
-                } else {
-                    assertTrue("Wide functions remain in the rail", shell[JarvisShellLayout.Slot.NAV_RAIL] != null)
-                    assertEquals("Wide navigation is not duplicated", null, shell[JarvisShellLayout.Slot.TILES])
-                    val input = requireNotNull(shell[JarvisShellLayout.Slot.INPUT])
-                    detailSlots.forEach { slot ->
-                        val box = requireNotNull(shell[slot])
-                        assertTrue("$slot follows the conversation input", box.top > input.bottom)
-                        assertTrue("$slot uses the former feature area", box.bottom < status.top)
-                    }
+                assertTrue("All profiles keep their reference cards", shell.hasFeatureTiles)
+                assertEquals("The fixed Home rail is removed", null, shell[JarvisShellLayout.Slot.NAV_RAIL])
+                assertTrue("Cards precede their status strip",
+                    requireNotNull(shell[JarvisShellLayout.Slot.TILES]).bottom <= status.top)
+                detailSlots.forEach { slot ->
+                    assertTrue("$slot follows the complete home", requireNotNull(shell[slot]).top > status.bottom)
                 }
                 val firstDetail = detailSlots.map { requireNotNull(shell[it]) }.minBy { it.top }
                 viewport.scrollTo(0, (contentRect(firstDetail).top - 12f * density).toInt().coerceAtLeast(0))

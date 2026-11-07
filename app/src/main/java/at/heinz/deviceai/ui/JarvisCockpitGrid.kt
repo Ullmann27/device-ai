@@ -27,6 +27,12 @@ object JarvisCockpitGrid {
     const val MIN_TOUCH_DP = 48f
     const val MIN_DIALOG_DP = 56f
     const val MIN_TILE_DP = 158f
+    const val TILE_COLUMNS = 5
+    const val TILE_ROWS = 2
+    const val TILE_GAP_DP = 12f
+    const val TILE_ASPECT = .74f
+    const val HERO_HEIGHT_RATIO = .72f
+    const val MAX_HERO_DP = 640f
     const val HEAD_ANCHOR_X = .50f
     const val HEAD_CLOSE_UP = .92f
 
@@ -43,12 +49,12 @@ object JarvisCockpitGrid {
         val font = maxOf(1f, profile.fontScale)
         val margin = 12f
         val gap = 12f
-        val left = profile.railWidthDp + gap
+        val left = margin
         val right = widthDp - margin
         val room = right - left
         val a = linkedMapOf<Area, Box>()
 
-        val headerBottom = 8f + 64f * font
+        val headerBottom = 8f + (widthDp * .1065f).coerceIn(64f, 96f) * font
         a[Area.HEADER] = Box(margin, 8f, right, headerBottom)
         val iconsLeft = right - 96f
         val privacyRight = iconsLeft - gap
@@ -65,14 +71,11 @@ object JarvisCockpitGrid {
 
         val heroTop = headerBottom + gap
         val informationColumns = profile.informationColumns
-        val rowsPerGroup = (2 + informationColumns - 1) / informationColumns
         val chartHeight = 190f * font
         val activityHeight = 132f * font
-        val informationHeight = rowsPerGroup * (chartHeight + activityHeight) + (2 * rowsPerGroup - 1) * gap
-        val inputHeight = 56f * font
+        val inputHeight = (room * .10f).coerceIn(56f, 88f) * font
         val statusHeight = 56f * font
-        val fixedHeight = heroTop + inputHeight + informationHeight + statusHeight + 3f * gap + margin
-        val heroHeight = (heightDp - fixedHeight).coerceIn(260f, 480f)
+        val heroHeight = (room * HERO_HEIGHT_RATIO).coerceAtMost(MAX_HERO_DP)
         val heroBottom = heroTop + heroHeight
         val split = left + room * .54f
         a[Area.HEAD] = Box(left, heroTop, split - gap / 2f, heroBottom)
@@ -85,6 +88,12 @@ object JarvisCockpitGrid {
         var y = heroBottom + gap
         a[Area.INPUT] = Box(left, y, right, y + inputHeight)
         y += inputHeight + gap
+        val tileWidth = (room - (TILE_COLUMNS - 1) * TILE_GAP_DP) / TILE_COLUMNS
+        val tileHeight = maxOf(MIN_TILE_DP * font, tileWidth / TILE_ASPECT)
+        a[Area.TILES] = Box(left, y, right, y + TILE_ROWS * tileHeight + (TILE_ROWS - 1) * TILE_GAP_DP)
+        y = a.getValue(Area.TILES).bottom + gap
+        a[Area.STATUS] = Box(margin, y, right, y + statusHeight)
+        y += statusHeight + 24f
         val infoWidth = (room - (informationColumns - 1) * gap) / informationColumns
         fun informationRow(areas: List<Area>, cardHeight: Float) {
             areas.forEachIndexed { i, area ->
@@ -96,9 +105,6 @@ object JarvisCockpitGrid {
         }
         informationRow(listOf(Area.ROW_MEMORY, Area.ROW_MODEL), chartHeight)
         informationRow(listOf(Area.ROW_AGENTS, Area.ROW_TASKS), activityHeight)
-        a[Area.STATUS] = Box(margin, y, right, y + statusHeight)
-        a[Area.RAIL] = Box(margin, heroTop, profile.railWidthDp, y - gap)
-        y += statusHeight + 24f
         if (informationColumns == 1) {
             a[Area.CAMERA_STATUS] = Box(left, y, right, y + 56f * font)
             y += 56f * font + gap

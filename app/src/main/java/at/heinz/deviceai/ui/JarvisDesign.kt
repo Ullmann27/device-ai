@@ -24,8 +24,9 @@ object JarvisDesign {
         val navSurface = Argb.rgb(0x03, 0x0A, 0x18)
         val navSurfaceActive = Argb.rgb(0x02, 0x20, 0x2D)
         val navRimActive = Argb.rgb(0x32, 0xD6, 0xED)       // button.rim.active #32D6ED
-        val tileFillStart = Argb.of(250, 0x05, 0x10, 0x22)
-        val tileFillEnd = Argb.of(250, 0x04, 0x0A, 0x1A)
+        val tileFillStart = Argb.rgb(0x05, 0x18, 0x30)
+        val tileFillMiddle = Argb.rgb(0x01, 0x13, 0x27)
+        val tileFillEnd = Argb.rgb(0x06, 0x17, 0x31)
         val tileRimStart = Argb.rgb(0x01, 0xDA, 0xE8)       // tile.rim.left #01DAE8
         val tileRimEnd = Argb.rgb(0xC7, 0x4D, 0xFF)
         // Decorative destination colors only.
@@ -94,11 +95,11 @@ object JarvisDesign {
     )
 
     object Styles {
-        /** Tile 258 x 79 px → 166 x 51 dp, corner 12 px, icon 39 px, inset 25 px, icon→text 26 px. */
-        val tile = ComponentStyle(51f, 8f, 1f, Colors.tileFillStart, Colors.tileRimStart, 16f, 24f, 16f, Glow.SUBTLE,
+        /** Tall reference cards, rounded glass. */
+        val tile = ComponentStyle(51f, 14f, 1f, Colors.tileFillStart, Colors.tileRimStart, 16f, 24f, 16f, Glow.SUBTLE,
             fillEnd = Colors.tileFillEnd, rimEnd = Colors.tileRimEnd)
         val memoryTile = tile.copy(fill = Colors.memoryTileStart, fillEnd = Colors.memoryTileEnd,
-            rim = Colors.violetRim, rimEnd = Colors.tileRimEnd)
+            rim = Colors.cyan, rimEnd = Colors.magenta)
         val agentsTile = tile.copy(fill = Colors.agentsTileStart, fillEnd = Colors.agentsTileEnd,
             rim = Colors.violetRim, rimEnd = Colors.magenta)
         val systemTile = tile.copy(rimEnd = Colors.violetRim)

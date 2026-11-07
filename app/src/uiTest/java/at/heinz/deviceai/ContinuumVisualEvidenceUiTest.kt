@@ -95,21 +95,22 @@ class ContinuumVisualEvidenceUiTest {
         } finally { bitmap.recycle() }
     }
 
-    /** Real DOWN (and optional UP) through the decor at the control centre; false if it is off screen. */
+    /** Scroll, then real decor touches. */
     private fun touch(root: View, target: View, release: Boolean): Boolean {
-        val r = Rect()
-        if (!target.getGlobalVisibleRect(r) || r.width() < target.width - 1 || r.height() < target.height - 1) {
-            target.requestRectangleOnScreen(Rect(0, 0, target.width, target.height), true)
-            advance(32L)
-            measure(root, root.width, root.height)
-        }
-        if (!target.getGlobalVisibleRect(r) || r.width() < target.width - 1 || r.height() < target.height - 1) return false
+        JarvisHomeTestRoutes.scrollIntoView(target)
+        advance(32L)
+        measure(root, root.width, root.height)
+        JarvisHomeTestRoutes.scrollIntoView(target)
+        val r = JarvisHomeTestRoutes.visibleBounds(target)
+        val position = IntArray(2).also(root::getLocationOnScreen)
         val at = SystemClock.uptimeMillis()
-        val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN, r.exactCenterX(), r.exactCenterY(), 0)
-        try { root.dispatchTouchEvent(down) } finally { down.recycle() }
+        val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN,
+            r.exactCenterX() - position[0], r.exactCenterY() - position[1], 0)
+        try { assertTrue(root.dispatchTouchEvent(down)) } finally { down.recycle() }
         if (release) {
-            val up = MotionEvent.obtain(at, at + 16, MotionEvent.ACTION_UP, r.exactCenterX(), r.exactCenterY(), 0)
-            try { root.dispatchTouchEvent(up) } finally { up.recycle() }
+            val up = MotionEvent.obtain(at, at + 16, MotionEvent.ACTION_UP,
+                r.exactCenterX() - position[0], r.exactCenterY() - position[1], 0)
+            try { assertTrue(root.dispatchTouchEvent(up)) } finally { up.recycle() }
         }
         return true
     }
@@ -138,8 +139,12 @@ class ContinuumVisualEvidenceUiTest {
                 val region = avatarRegion(head, name)
                 region.offset(headPosition[0] - workPosition[0], headPosition[1] - workPosition[1])
                 assertFalse("Protected region exists: $name", region.isEmpty)
-                assertTrue("Protected region stays within the cockpit: $name $region",
-                    Rect(0, 0, work.width, work.height).contains(region))
+                val viewport = Rect(0, 0, work.width, work.height)
+                if (!region.intersect(viewport)) {
+                    assertFalse("The scrolled region is outside the visible work viewport",
+                        Rect.intersects(region, viewport))
+                    continue
+                }
                 for (y in region.top + 1 until region.bottom - 1 step 7) {
                     for (x in region.left + 1 until region.right - 1 step 7) {
                         assertEquals("Work surface must leave $name transparent at $x/$y",

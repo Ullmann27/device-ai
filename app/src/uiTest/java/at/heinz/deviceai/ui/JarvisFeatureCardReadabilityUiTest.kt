@@ -8,7 +8,6 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -34,12 +33,8 @@ class JarvisFeatureCardReadabilityUiTest {
                 for (font in listOf(1f, 1.5f, 2f)) {
                     val shell = JarvisShellLayout.create(width, height, font)
                     val cards = shell.tileBoxes()
-                    if (!shell.hasFeatureTiles) {
-                        assertNull("Wide Home has no duplicate card area", shell[JarvisShellLayout.Slot.TILES])
-                        assertTrue("Wide navigation is supplied by its rail", cards.isEmpty())
-                        assertNotNull(shell[JarvisShellLayout.Slot.NAV_RAIL])
-                        continue
-                    }
+                    assertTrue("Every Home retains readable cards", shell.hasFeatureTiles)
+                    assertNull("Home has no fixed side rail", shell[JarvisShellLayout.Slot.NAV_RAIL])
                     assertEquals(10, cards.size)
                     JarvisTiles.reference.forEachIndexed { index, tile ->
                         val card = cards[index]

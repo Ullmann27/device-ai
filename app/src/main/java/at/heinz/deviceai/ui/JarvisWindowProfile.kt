@@ -25,19 +25,16 @@ data class JarvisWindowProfile(
                 widthDp < EXPANDED_MIN_DP -> WidthClass.MEDIUM
                 else -> WidthClass.EXPANDED
             }
-            val railWidth = when {
-                size == WidthClass.COMPACT -> 0f
-                rail == JarvisShellLayout.Rail.ICONS -> 64f
-                else -> (widthDp * 243f / 1536f).coerceIn(112f, 244f) * maxOf(1f, font)
-            }
-            val bodyWidth = (widthDp - railWidth - 28f).coerceAtLeast(1f)
-            val readableColumns = ((bodyWidth + 8f) / (104f * maxOf(1f, font) + 8f)).toInt()
-                .coerceIn(1, 2)
+            val bodyWidth = (widthDp - 24f).coerceAtLeast(1f)
+            val gap = JarvisCockpitGrid.TILE_GAP_DP
+            val maxColumns = if (size == WidthClass.COMPACT) 2 else JarvisCockpitGrid.TILE_COLUMNS
+            val readableColumns = ((bodyWidth + gap) / (104f * maxOf(1f, font) + gap)).toInt()
+                .coerceIn(1, maxColumns)
             val reference = size != WidthClass.COMPACT && heightDp >= REFERENCE_MIN_HEIGHT_DP &&
-                font <= 1.3f && rail == JarvisShellLayout.Rail.LABELLED
-            return JarvisWindowProfile(size, font, if (size == WidthClass.COMPACT) readableColumns else 0,
+                font <= 1.3f && readableColumns == JarvisCockpitGrid.TILE_COLUMNS
+            return JarvisWindowProfile(size, font, readableColumns,
                 if (bodyWidth >= 352f * maxOf(1f, font)) 2 else 1,
-                railWidth, reference)
+                0f, reference)
         }
     }
 }

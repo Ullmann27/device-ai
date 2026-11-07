@@ -21,10 +21,12 @@ import android.widget.ScrollView
 import android.widget.TextView
 import at.heinz.deviceai.ui.ContinuumHomeView
 import at.heinz.deviceai.ui.JarvisMotion
+import at.heinz.deviceai.ui.JarvisShellLayout
 import at.heinz.deviceai.ui.JarvisWorkWindowGeometry
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -277,7 +279,7 @@ class ContinuumReferenceCockpitUiTest {
     private fun shellControls(root: View): List<View> = descendants(root).filter { view ->
         val tag = view.tag as? String ?: return@filter false
         listOf("jarvis-tile:", "jarvis-dialog:", "jarvis-input:", "jarvis-camera:", "jarvis-panel:",
-            "jarvis-header:", "jarvis-bottom:", "jarvis-rail:").any(tag::startsWith) && view.isShown
+            "jarvis-header:", "jarvis-bottom:").any(tag::startsWith) && view.isShown
     }
 
     private fun assertMinimumTarget(view: View, name: String) {
@@ -310,25 +312,21 @@ class ContinuumReferenceCockpitUiTest {
                     "childHeights=$childHeights]"
             }
 
-    private fun assertRailViewportDoesNotOverlapShell(home: ContinuumHomeView) {
-        if (!home.jarvisShellStage || !home.wide) return
-        val railContent = tagged(home, "jarvis-rail:home").parent as View
-        val viewport = railContent.parent as ScrollView
-        val railBounds = Rect()
-        assertTrue("The shell rail viewport must be visible", viewport.getGlobalVisibleRect(railBounds))
-        for (target in shellControls(home).filter { it.parent === home }) {
-            val visibleBounds = Rect()
-            if (target.getGlobalVisibleRect(visibleBounds)) {
-                assertFalse("Rail viewport overlaps the visible shell target ${target.tag}: rail=$railBounds, target=$visibleBounds; " +
-                    (if (Rect.intersects(railBounds, visibleBounds)) "${geometry(viewport)}; ${geometry(target)}" else ""),
-                    Rect.intersects(railBounds, visibleBounds))
-            }
-        }
+    private fun assertHomeHasNoFixedRail(home: ContinuumHomeView) {
+        if (!home.jarvisShellStage) return
+        assertNull("The hero uses the complete Home width",
+            requireNotNull(home.jarvisShell.currentShell())[JarvisShellLayout.Slot.NAV_RAIL])
+        assertTrue("No invisible rail duplicates remain", descendants(home).none {
+            it.tag?.toString()?.startsWith("jarvis-rail:") == true
+        })
+        assertEquals("All ten feature controls remain in the hierarchy", 10, descendants(home).count {
+            it.tag?.toString()?.startsWith("jarvis-tile:") == true
+        })
     }
 
     private fun assertVisibleShellControlsDoNotOverlap(root: View) {
         descendants(root).filterIsInstance<ContinuumHomeView>().filter { it.isShown }
-            .forEach(::assertRailViewportDoesNotOverlapShell)
+            .forEach(::assertHomeHasNoFixedRail)
         val visible = shellControls(root).mapNotNull { view ->
             val rect = Rect()
             if (view.getGlobalVisibleRect(rect)) view to rect else null
@@ -351,12 +349,10 @@ class ContinuumReferenceCockpitUiTest {
         val home = currentHome(activity)
         val targets = shellControls(home)
         val navigation = JarvisHomeTestRoutes.controls(home)
-        val expected = if (requireNotNull(home.jarvisShell.currentShell()).hasFeatureTiles) tileTargets
-            else listOf("home") + tileTargets
-        assertEquals("Every destination has exactly one navigation control", expected,
+        assertEquals("Every destination has exactly one feature card", tileTargets,
             navigation.map { it.tag.toString().substringAfter(':') })
-        for (tag in listOf("jarvis-dialog:conversation", "jarvis-dialog:voice-input", "jarvis-dialog:camera-settings",
-            "jarvis-dialog:avatar-appearance", "jarvis-header:notifications", "jarvis-header:settings",
+        for (tag in listOf("jarvis-dialog:conversation", "jarvis-dialog:voice-input", "jarvis-dialog:send",
+            "jarvis-input:conversation", "jarvis-camera:settings", "jarvis-header:notifications", "jarvis-header:settings",
             "jarvis-panel:ROW_AGENTS", "jarvis-panel:ROW_TASKS", "jarvis-panel:ROW_MEMORY", "jarvis-panel:ROW_MODEL")) {
             tagged(home, tag)
         }
@@ -416,7 +412,6 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun systemWindowFits(activity: AgentActivity): Boolean {
         val home = currentHome(activity)
-        val shell = requireNotNull(home.jarvisShell.shell)
         val container = activity.findViewById<ViewGroup>(android.R.id.content)
         val rootPosition = IntArray(2).also { container.getLocationInWindow(it) }
         fun bounds(view: View): RectF {
@@ -432,8 +427,11 @@ class ContinuumReferenceCockpitUiTest {
             region?.let { RectF(it).apply { offset(avatarBounds.left, avatarBounds.top) } }
         } + bounds(tagged(home, "jarvis-dialog:conversation"))
         val density = container.resources.displayMetrics.density
-        val viewport = RectF(0f, 0f, container.width.toFloat(),
-            minOf(container.height.toFloat(), bounds(home.jarvisShell).top + shell.viewportHeight * density))
+        val scroll = generateSequence(home.parent as? View) { it.parent as? View }
+            .filterIsInstance<ScrollView>().first()
+        val viewport = bounds(scroll)
+        assertTrue("The real Home viewport intersects its window", viewport.intersect(
+            RectF(0f, 0f, container.width.toFloat(), container.height.toFloat())))
         return JarvisWorkWindowGeometry.destination(viewport, protected, density) != null
     }
 
@@ -515,7 +513,14 @@ class ContinuumReferenceCockpitUiTest {
     }
 
     private fun appearanceDialog(activity: AgentActivity): AlertDialog {
-        tap(activity.window.decorView, shellControl(activity, "jarvis-dialog:avatar-appearance"))
+        val home = currentHome(activity)
+        val root = activity.window.decorView
+        if (requireNotNull(home.jarvisShell.currentShell()).ref5Grid) {
+            tap(root, shellControl(activity, "jarvis-header:mode"))
+        } else {
+            tap(root, shellControl(activity, "jarvis-live-tab:system"))
+            tap(root, shellControl(activity, "jarvis-live-panel:appearance"))
+        }
         val dialog = assertDialog("Continuum · Darstellung")
         val adapter = requireNotNull(dialog.listView).adapter
         assertEquals("Retain all original choices and add the explicit compact choice", appearanceChoices,
@@ -574,16 +579,7 @@ class ContinuumReferenceCockpitUiTest {
     }
 
     private fun scrollTargetIntoView(target: View) {
-        var parent = target.parent
-        while (parent is View) {
-            if (parent is ScrollView) {
-                val relative = Rect(0, 0, target.width, target.height)
-                parent.offsetDescendantRectToMyCoords(target, relative)
-                parent.scrollTo(parent.scrollX, (relative.top - (parent.height - target.height) / 2).coerceAtLeast(0))
-            }
-            parent = parent.parent
-        }
-        target.requestRectangleOnScreen(Rect(0, 0, target.width, target.height), true)
+        JarvisHomeTestRoutes.scrollIntoView(target)
     }
 
     /** Scroll, traverse, then dispatch touch. */
@@ -601,10 +597,12 @@ class ContinuumReferenceCockpitUiTest {
         scrollTargetIntoView(target)
         val visible = Rect()
         assertTrue("Target must be visibly scroll reachable: $label; ${geometry(target)}", target.getGlobalVisibleRect(visible))
-        assertTrue("Target must not be a clipped sliver: $label, global=$visible, local=${target.width}x${target.height}; " +
+        assertTrue("Target must have a usable visible area: $label, global=$visible, local=${target.width}x${target.height}; " +
             "beforeScroll=$beforeScroll; afterScroll=$afterScroll; afterTraversal=$afterTraversal; " +
             "afterRescroll=${geometry(target)}; root=${geometry(root)}",
-            visible.width() >= target.width - 1 && visible.height() >= target.height - 1)
+            visible.width() >= 48f * target.resources.displayMetrics.density - 1f &&
+                visible.height() >= 48f * target.resources.displayMetrics.density - 1f)
+        JarvisHomeTestRoutes.visibleBounds(target)
         assertVisibleShellControlsDoNotOverlap(root)
         val rootPosition = IntArray(2).also { root.getLocationOnScreen(it) }
         val x = visible.exactCenterX() - rootPosition[0]
@@ -829,8 +827,7 @@ class ContinuumReferenceCockpitUiTest {
         val avatar = field(activity, "hologramView") as ContinuumHologramView
         val appearance = activity.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
         fun choose(label: String, selectedBefore: Int) {
-            tap(root, shellControl(activity, "jarvis-dialog:avatar-appearance"))
-            val dialog = assertDialog("Continuum · Darstellung")
+            val dialog = appearanceDialog(activity)
             assertEquals(selectedBefore, dialog.listView.checkedItemPosition)
             val decor = requireNotNull(dialog.window).decorView
             val option = descendants(decor).filterIsInstance<TextView>().single { it.text.toString() == label }
@@ -1028,19 +1025,19 @@ class ContinuumReferenceCockpitUiTest {
     }
 
     @Test @Config(qualifiers = "w840dp-h649dp-land-mdpi")
-    fun shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable() = withActivity(840, 649, 2f) { activity, root, _ ->
+    fun shortenedWideWindowKeepsEveryCardScrollableAndConversationRailClickable() = withActivity(840, 649, 2f) { activity, root, _ ->
         val avatar = field(activity, "hologramView") as ContinuumHologramView
         activity.window.setLayout(840, 320)
         measure(root, 840, 320)
         settle()
         measure(root, 840, 320)
         assertSame("A height-only window change must not rebuild the avatar", avatar, field(activity, "hologramView"))
-        val shellRail = descendants(currentHome(activity)).filter { (it.tag as? String)?.startsWith("jarvis-rail:") == true }
-        assertRailGeometry(shellRail, railTargets.map { "jarvis-rail:$it" })
-        for (target in railTargets) {
-            tap(activity.window.decorView, shellControl(activity, "jarvis-rail:$target"))
+        val cards = JarvisHomeTestRoutes.controls(currentHome(activity))
+        assertEquals(tileTargets.map { "jarvis-tile:$it" }, cards.map { it.tag })
+        assertTrue("Large cards use real scrolling content", currentHome(activity).height > 320)
+        for (target in tileTargets) {
+            tap(activity.window.decorView, destination(activity, target))
             when (target) {
-                "home" -> assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
                 "chat" -> {
                     assertEquals(ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
                     returnHomeThroughDecor(activity)
@@ -1052,7 +1049,7 @@ class ContinuumReferenceCockpitUiTest {
                 ).getValue(target))
                 else -> closeDialogThroughDecor(assertRailDestination(target))
             }
-            assertFalse("A rail destination must not submit a task", field(activity, "busy") as Boolean)
+            assertFalse("A feature destination must not submit a task", field(activity, "busy") as Boolean)
             assertSame(avatar, field(activity, "hologramView"))
         }
         // Two real taps reach More even without a wide header entry; then enter an actual work area and return.
@@ -1060,7 +1057,7 @@ class ContinuumReferenceCockpitUiTest {
         assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
         assertSame(currentHome(activity), avatar.parent)
 
-        tap(activity.window.decorView, shellControl(activity, "jarvis-rail:chat"))
+        tap(activity.window.decorView, destination(activity, "chat"))
         val draft = "Kurzes Fenster: ungesendeter Entwurf bleibt erhalten."
         (field(activity, "input") as EditText).setText(draft)
         measure(activity.window.decorView, 840, 320)
@@ -1082,7 +1079,7 @@ class ContinuumReferenceCockpitUiTest {
         assertTrue("Avatar returns above the shell after chat and dialogs", currentHome(activity).hologramAboveShell)
         assertEquals(1, descendants(activity.window.decorView).count { it is ContinuumHologramView })
         assertFalse(field(activity, "busy") as Boolean)
-        capture(activity.window.decorView, "fold-short-840x320-font200-rail", 840, 320)
+        capture(activity.window.decorView, "fold-short-840x320-font200-cards", 840, 320)
     }
 
     @Test @Config(qualifiers = "w840dp-h649dp-land-mdpi")

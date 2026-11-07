@@ -1,8 +1,20 @@
-# Dark reference home — single navigation and useful diagrams
+# Dark reference home — exact-reference correction
 
-## Current status
+## Current correction — owner clarification 07.11.2026
 
-**IMPLEMENTED / PUSHED / HOST_QA_PASS.** Review: [PR #597](https://github.com/Ullmann27/device-ai/pull/597).
+**WIP / NATIVE VERIFICATION PENDING.** The owner explicitly rejected the prior interpretation below: remove the fixed LEFT Home rail, keep the TEN large reference feature cards, preserve the dark saturated cyan/magenta reference composition, and place diagrams after the complete homepage. Small animated live drawers may replace the rail; they must use actual current data.
+
+The current correction restores ten scrollable cards on all profiles, removes Home-rail nodes, enlarges the reference hero, restores the two-line brand and microphone/send input, and refines glass/card corners against the supplied reference. Three small native live tabs expose existing system, memory and worker data. Their finite slide/measurement highlights share the shell frame clock; system animator scale, power, thermal, foreground and own reduced-motion gates apply. Missing measurements remain unknown. No timer fabricates data.
+
+The existing original 3D asset is retained. A Blender render of that actual GLB verifies its realistic portrait texture only; this is not a Filament/device screenshot. Native Canvas captures explicitly select the existing 2D fallback. Production geometry passed 150 standalone Kotlin cases; Android compilation and native touch/scroll/motion verification for this correction are pending. The earlier 252-test result certifies only the superseded rail-layout source, never this correction.
+
+Experiment scope remains EXP-05/EXP-11. All existing feature routes and permission/model gates remain. Work-window origins and visible viewport clipping are being updated for the restored scrollable cards. Next: freeze source, compile and exercise real native controls/typography/motion, capture the actual Activity, review the result, then record source-bound evidence. Rollback only this branch's correction commits; preserve the PR #594 base and older evidence.
+
+## Superseded interpretation — historical evidence
+
+### Historical status
+
+**SUPERSEDED BY OWNER CORRECTION.** Review: [PR #597](https://github.com/Ullmann27/device-ai/pull/597).
 Verified application/test source: [`101c0810334a347001a7b50da3faff378987ff00`](https://github.com/Ullmann27/device-ai/commit/101c0810334a347001a7b50da3faff378987ff00). This revision follows the owner's request for subtler modern icons, retained glow, and useful diagrams instead of duplicate wide-screen navigation. The earlier source `3b0e4dd2f40575561b87bd84327caea0a8e63eb9` and its 239-test receipt remain historical evidence. The new final evidence commit changes documentation only.
 
 - Base: PR #594 at `88dfd45139471463618673a1f827ee062e9bf6d5`.

@@ -5,7 +5,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Owner Fold7 report 06.11.2026: the white „Device AI“ brand sat right at the top screen edge. The three brand lines
+ * Owner Fold7 report 06.11.2026: the white „Device AI“ brand sat right at the top screen edge. The two brand lines
  * have a fixed type size while the brand box scales with the screen, so on the Fold7 inner screen the centred block
  * was centred with almost no room above it. Every brand line keeps visible breathing room inside the brand box.
  */
@@ -49,7 +49,7 @@ class JarvisHeaderBrandFitTest {
             val p = Tracking()
             JarvisCockpitGridContent.draw(p, Slot.TOP_BAR, grid.areas.getValue(JarvisCockpitGrid.Area.HEADER), grid,
                 ContinuumDashboardState(), 0L)
-            for (prefix in listOf("Device", "Contin", "Deine")) {
+            for (prefix in listOf("Device", "Contin")) {
                 val (text, top, baseline) = p.lines.first { it.first.startsWith(prefix) }
                 assertTrue("$text top $top needs breathing room below ${brand.top} at ${w}x$h", top >= brand.top + 5f)
                 assertTrue("$text baseline $baseline below the brand box ${brand.bottom} at ${w}x$h", baseline <= brand.bottom)
@@ -65,10 +65,11 @@ class JarvisHeaderBrandFitTest {
         JarvisCockpitGridContent.draw(p, Slot.TOP_BAR, grid.areas.getValue(JarvisCockpitGrid.Area.HEADER), grid,
             ContinuumDashboardState(), 0L)
         val texts = p.lines.map { it.first }
-        for (full in listOf("Device AI", "Continuum", "Deine KI-Steuerzentrale")) {
+        for (full in listOf("Device AI", "Continuum")) {
             assertTrue("$full must not be shortened: $texts", full in texts)
             assertTrue("$full ends inside the brand box", p.rights.getValue(full) <= brand.right + .5f)
         }
+        assertTrue("Reference has two brand lines", "Deine KI-Steuerzentrale" !in texts)
     }
 
     @Test fun systemClockIsNotDuplicatedInTheReferenceHeader() {

@@ -80,20 +80,22 @@ class ContinuumSystemStatusWorkWindowUiTest {
         return matches.single()
     }
 
-    private fun tap(root: View, view: View) {
-        val bounds = Rect()
-        assertTrue("Tap target is visible: ${view.tag}", view.getGlobalVisibleRect(bounds))
-        assertEquals("Tap target is not vertically clipped", view.height, bounds.height())
-        assertEquals("Tap target is not horizontally clipped", view.width, bounds.width())
+    private fun tap(root: View, view: View): Rect {
+        JarvisHomeTestRoutes.scrollIntoView(view)
+        advance(32L)
+        JarvisHomeTestRoutes.scrollIntoView(view)
+        val bounds = JarvisHomeTestRoutes.visibleBounds(view)
+        val position = IntArray(2).also(root::getLocationOnScreen)
         val at = SystemClock.uptimeMillis()
         val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN,
-            bounds.exactCenterX(), bounds.exactCenterY(), 0)
+            bounds.exactCenterX() - position[0], bounds.exactCenterY() - position[1], 0)
         val up = MotionEvent.obtain(at, at + 16L, MotionEvent.ACTION_UP,
-            bounds.exactCenterX(), bounds.exactCenterY(), 0)
+            bounds.exactCenterX() - position[0], bounds.exactCenterY() - position[1], 0)
         try {
             assertTrue(root.dispatchTouchEvent(down))
             assertTrue(root.dispatchTouchEvent(up))
         } finally { down.recycle(); up.recycle() }
+        return bounds
     }
 
     @Test fun workWindowMovesTheOriginalHeadProjectionAndReturns() {
@@ -316,16 +318,16 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 "learning" to "Lernzentrum", "device" to "Systemstatus")
             for ((target, title) in expected) {
                 val control = JarvisHomeTestRoutes.destination(root, target)
-                val controlBox = Rect().also { control.getGlobalVisibleRect(it) }
-                tap(root, control)
+                val controlBox = tap(root, control)
                 advance(640L); measure(root); draw(root)
                 val work = shown(root, "jarvis-work-window")
                 val labels = descendants(work).filterIsInstance<TextView>().map { it.text.toString() }
                 assertTrue("$target opens $title: $labels", labels.any { it.equals(title, true) })
                 assertSame("$title creates no AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
                 val origin = field(work, "origin") as android.graphics.RectF
-                assertEquals("$title emerges from the touched navigation", controlBox.exactCenterX(), origin.centerX(), 1.5f)
-                assertEquals(controlBox.exactCenterY(), origin.centerY(), 1.5f)
+                val workPosition = IntArray(2).also(work::getLocationOnScreen)
+                assertEquals("$title emerges from the touched card", controlBox.exactCenterX() - workPosition[0], origin.centerX(), 1.5f)
+                assertEquals(controlBox.exactCenterY() - workPosition[1], origin.centerY(), 1.5f)
                 assertTrue("the avatar glances at the window", windowIntent() != null)
                 assertEquals("head stays in place", headBounds, field(avatar, "cockpitHeadBounds"))
                 tap(root, shown(work, "jarvis-work-window:close"))
@@ -426,7 +428,10 @@ class ContinuumSystemStatusWorkWindowUiTest {
             measure(root); advance(320L); measure(root); draw(root)
             fun deck() = JarvisHomeTestRoutes.deck(root).count { it.isShown }
             val before = deck()
-            assertEquals("Four real diagnostic actions occupy the wide deck", 4, before)
+            assertEquals("Ten cards and four diagnostics occupy the deck", 14, before)
+            val memory = JarvisHomeTestRoutes.destination(root, "memory")
+            JarvisHomeTestRoutes.scrollIntoView(memory)
+            advance(32L); measure(root); draw(root)
             // Owner review 06.11.: prove it with real touches and the accessibility tree, not only isShown.
             val deckPoints = JarvisHomeTestRoutes.deck(root).flatMap { view ->
                 val bounds = Rect()
@@ -436,12 +441,12 @@ class ContinuumSystemStatusWorkWindowUiTest {
                     bounds.left + 2f to bounds.bottom - 2f,
                     bounds.right - 2f to bounds.bottom - 2f)
             }
-            assertTrue("Actual diagnostics are visible before opening", deckPoints.isNotEmpty())
+            assertTrue("Actual deck controls are visible before opening", deckPoints.isNotEmpty())
             // The framework's own selection of children offered to accessibility services (TalkBack).
             fun a11yChildren() = ArrayList<View>().also { home.addChildrenForAccessibility(it) }
                 .count { v -> v.tag?.toString()?.let { it.startsWith("jarvis-tile:") || it.startsWith("jarvis-panel:ROW_") } == true }
             val a11yBefore = a11yChildren()
-            tap(root, JarvisHomeTestRoutes.destination(root, "memory"))
+            tap(root, memory)
             advance(640L); measure(root); draw(root)
             val work = shown(root, "jarvis-work-window")
             assertEquals("no tile or row stays under the open window", 0, deck())
@@ -460,7 +465,8 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 break
             }
             measure(root); draw(root)
-            assertTrue("a cleared diagnostic position was probed by a real touch", probed > 0)
+            if (probed == 0) assertTrue("The window covers every previously visible deck point",
+                deckPoints.all { (x, y) -> panelBox.contains(x.toInt(), y.toInt()) })
             val titles = descendants(shown(root, "jarvis-work-window")).filterIsInstance<TextView>().map { it.text.toString() }
             assertTrue("a cleared diagnostic touch opens nothing else: $titles", titles.any { it.equals("Gedächtniszentrum", true) })
             assertSame("the same window stays open", work, shown(root, "jarvis-work-window"))
@@ -522,7 +528,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 .apply { isAccessible = true }.invoke(activity, *args)
             fun deck() = JarvisHomeTestRoutes.deck(root).count { it.isShown }
             val beforeDeck = deck()
-            assertEquals("The wide deck contains real diagnostics", 4, beforeDeck)
+            assertEquals("The deck contains ten cards and four diagnostics", 14, beforeDeck)
             fun labels(v: View) = descendants(v).filterIsInstance<TextView>().map { it.text.toString() }
 
             call("presentToolScene", "call-app", "launch_app", mapOf<String, Any?>("packageOrName" to pkg))
@@ -582,10 +588,8 @@ class ContinuumSystemStatusWorkWindowUiTest {
             measure(root); advance(320L); measure(root); draw(root)
             fun deck() = JarvisHomeTestRoutes.deck(root).count { it.isShown }
             val before = deck()
-            assertEquals("Four diagnostics remain at 200 percent", 4, before)
-            // The same route a tile click takes (ShellActionView → onNavigateTarget); the tile may lie below the fold.
-            AgentActivity::class.java.getDeclaredMethod("navigateDashboardTarget", String::class.java)
-                .apply { isAccessible = true }.invoke(activity, "memory")
+            assertEquals("All cards and diagnostics remain at 200 percent", 14, before)
+            tap(root, JarvisHomeTestRoutes.destination(root, "memory"))
             advance(640L); measure(root); draw(root)
             val windowShown = descendants(root).any { it.tag == "jarvis-work-window" && it.isShown }
             println("LARGE_FONT_200_WORK_WINDOW_ACCEPTED=$windowShown")
@@ -638,12 +642,11 @@ class ContinuumSystemStatusWorkWindowUiTest {
             var width = 884; var height = 760
             measure(root, width, height); advance(320L); measure(root, width, height); draw(root)
             val inner = deck()
-            assertEquals("The inner deck has four diagnostics", 4, inner)
+            assertEquals("The inner deck has ten cards and four diagnostics", 14, inner)
             // Inner landscape → inner portrait (rotation), → cover portrait (fold), → inner landscape (unfold).
             for ((qualifiers, w, h) in listOf(Triple("w760dp-h884dp-port-mdpi", 760, 884),
                 Triple("w412dp-h915dp-port-mdpi", 412, 915), Triple("w884dp-h760dp-land-mdpi", 884, 760))) {
-                AgentActivity::class.java.getDeclaredMethod("navigateDashboardTarget", String::class.java)
-                    .apply { isAccessible = true }.invoke(activity, "memory")
+                tap(root, JarvisHomeTestRoutes.destination(root, "memory"))
                 advance(640L); measure(root, width, height); draw(root)
                 assertTrue("a work window is open before $qualifiers", windowShown())
                 assertEquals("the open window cleared the deck before $qualifiers", 0, deck())
@@ -657,8 +660,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 assertFalse("no window stays at the old geometry after $qualifiers", windowShown())
                 assertEquals("no tile or row stays hidden after $qualifiers", 0, hidden())
                 val shownDeck = deck()
-                val expected = if (requireNotNull(home().jarvisShell.currentShell()).hasFeatureTiles) 14 else 4
-                assertEquals("All current deck actions return after $qualifiers", expected, shownDeck)
+                assertEquals("All current deck actions return after $qualifiers", 14, shownDeck)
                 assertEquals("TalkBack offers the whole deck after $qualifiers", shownDeck, a11y())
             }
             assertEquals("unfolded again: the complete inner deck", inner, deck())

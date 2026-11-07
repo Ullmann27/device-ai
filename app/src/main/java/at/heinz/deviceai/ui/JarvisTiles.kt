@@ -29,8 +29,15 @@ object JarvisTiles {
     private val featureDetail = Argb.mix(Colors.violetSoft, Colors.violetRim, .40f)
     private val featureFallback = Fill.Solid(featureInk)
     private val disabledFeatureFallback = Fill.Solid(Colors.textMuted)
-    private val featureGround = Fill.Linear(-.48f, .54f, .48f, .54f,
-        intArrayOf(0, Colors.cyan, featureDetail, 0), floatArrayOf(0f, .26f, .74f, 1f))
+    private val featureGround = Fill.Linear(-.70f, .56f, .70f, .56f,
+        intArrayOf(Colors.cyan, Colors.cyanSoft, Colors.violetRim, Colors.magenta),
+        floatArrayOf(0f, .30f, .72f, 1f))
+    private val featureFloor = Fill.Linear(-.70f, .56f, .70f, .56f,
+        intArrayOf(Argb.withAlpha(Colors.cyan, .20f), Argb.withAlpha(Colors.bloomHalo, .10f),
+            Argb.withAlpha(Colors.magenta, .20f)))
+    private val featureGlint = Fill.Linear(-.54f, .60f, .54f, .60f,
+        intArrayOf(0, Argb.withAlpha(Colors.iconCore, .80f), Colors.violetRim, 0),
+        floatArrayOf(0f, .28f, .72f, 1f))
 
     /** ref5 uses two violet cards among the cyan cards. Colour describes the destination, never live status. */
     fun style(target: String): JarvisDesign.ComponentStyle = when (target) {
@@ -65,15 +72,15 @@ object JarvisTiles {
             interaction, decorativeRibbons = true)
         val radius = minOf(st.radius, b.height / 2f)
         if (!disabled && timeMs > 0L) {
-            // Existing two rim strokes plus the moving rounded-corner highlight.
+            // Existing clock, quiet edge energy.
             val wave = ambientPhase(tile.target, timeMs)
             val colour = if (wave <= .5f) Argb.mix(Colors.cyan, Colors.violet, wave * 2f)
                 else Argb.mix(Colors.violet, Colors.magenta, (wave - .5f) * 2f)
             p.setAdditive(true)
             p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius,
-                3f, Fill.Solid(colour), .045f + .035f * wave)
+                3f, Fill.Solid(colour), .025f + .020f * wave)
             p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius,
-                1.1f, Fill.Solid(colour), .12f + .10f * wave)
+                .85f, Fill.Solid(colour), .065f + .055f * wave)
             p.setAdditive(false)
             JarvisTileEnergy.sample(timeMs, b.width, b.height, tile.target, radius)?.let { bead ->
                 val color = edgeEnergyColors[(bead.phase * edgeEnergyColors.size).toInt()
@@ -108,10 +115,20 @@ object JarvisTiles {
         val opacity = if (disabled) .42f else 1f
         val color = if (disabled) Colors.textMuted else featureInk
         val detail = if (disabled) Colors.textMuted else featureDetail
+        val ground = if (disabled) disabledFeatureFallback else featureGround
+        val glint = if (disabled) disabledFeatureFallback else featureGlint
         p.save(); p.translate(cx, cy); p.scale(size, size)
         p.clipRect(-.78f, -.5f, .78f, .72f)
-        if (!disabled) JarvisSceneFills.halo(p, 0f, .02f, .52f, Colors.cyan, .14f)
-        p.strokeArc(-.48f, .46f, .48f, .60f, 14f, 152f, .018f, featureGround, .40f * opacity)
+        if (!disabled) {
+            JarvisSceneFills.halo(p, 0f, .02f, .52f, Colors.cyan, .14f)
+            JarvisSceneFills.ellipseHalo(p, 0f, .56f, .77f, .15f, Colors.cyan, .13f)
+        }
+        if (!disabled) p.fillOval(-.70f, .45f, .70f, .65f, featureFloor)
+        p.setAdditive(true)
+        p.strokeOval(-.70f, .45f, .70f, .65f, .07f, ground, .12f * opacity)
+        p.strokeOval(-.70f, .45f, .70f, .65f, .022f, ground, .82f * opacity)
+        p.strokeArc(-.54f, .47f, .54f, .64f, 16f, 148f, .012f, glint, .70f * opacity)
+        p.setAdditive(false)
         if (!JarvisRailIcons.drawFeature(p, tile.target, -.5f, -.5f, 1f, color, detail, opacity))
             ContinuumIcons.draw(p, tile.icon, 0f, 0f, 1f,
                 if (disabled) disabledFeatureFallback else featureFallback, .0625f, opacity)

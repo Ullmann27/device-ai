@@ -144,8 +144,8 @@ class ContinuumDocumentSceneUiTest {
 
     @Test fun theDocumentArrivesAsItsOwnPageOnTheTrailAndJarvisLooksAtIt() = withCockpit { activity, root ->
         val originalDeck = JarvisHomeTestRoutes.deck(root)
-        assertEquals("The wide document fixture starts with diagnostics", 4, originalDeck.size)
-        assertTrue("The original diagnostics are shown", originalDeck.all { it.isShown })
+        assertEquals("The document fixture starts with the full deck", 14, originalDeck.size)
+        assertTrue("The original deck is shown", originalDeck.all { it.isShown })
         val page = examplePage(360, 480)
         val text = "Projektübersicht Continuum. Ziel: ein lokales Cockpit auf dem Fold7."
         capture(root, "document-0-ready")
@@ -173,7 +173,7 @@ class ContinuumDocumentSceneUiTest {
         assertTrue(meta.text.toString(), meta.text.startsWith("3 Seiten · ") && meta.text.endsWith(" · Projektübersicht.pdf"))
         assertEquals("the excerpt is the document's text", text, (descendants(window).single { it.tag == "jarvis-document-excerpt" } as TextView).text.toString())
         val clearedDeck = JarvisHomeTestRoutes.deck(root)
-        assertEquals("The same diagnostics yield their space", originalDeck.map { it.id }, clearedDeck.map { it.id })
+        assertEquals("The same deck yields its space", originalDeck.map { it.id }, clearedDeck.map { it.id })
         assertTrue("The real diagnostic deck made room", clearedDeck.none { it.isShown })
         assertTrue("chat names the same facts", chatTexts(activity).any { it.startsWith("PDF gelesen: 3 Seiten") && it.contains("${text.length} Zeichen von Seite 1–3") })
     }

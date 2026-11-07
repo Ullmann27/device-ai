@@ -21,7 +21,7 @@ object JarvisCockpitGridContent {
     /** The owner's interface is German regardless of the system language (e.g. "Mi., 29. Jan."). */
     private val clockFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
     private val dateFormat = SimpleDateFormat("EEE, d. MMM", Locale.GERMANY)
-    const val MODE_LABEL = "JARVIS-Modus"
+    const val MODE_LABEL = "JARVIS"
     const val COMPANION = "Dein KI-Begleiter auf dem Gerät"
     const val COMPANION_SHORT = "Dein KI-Begleiter"
 
@@ -74,6 +74,9 @@ object JarvisCockpitGridContent {
         JarvisShellRenderer.fit(p, text, style, width)
 
     private val CLOCK_STYLE = Type.title.copy(size = 26f)
+    private val sendPath = VectorPath().moveTo(2f, 10f).lineTo(22f, 2f)
+        .lineTo(14f, 22f).lineTo(10f, 14f).close()
+        .moveTo(10f, 14f).lineTo(22f, 2f)
 
     /** [style] scaled down (to at most 55 %) so [text] fits [width] in full; unchanged when it already fits. */
     private fun fitting(p: ContinuumPainter, text: String, style: TextStyle, width: Float): TextStyle {
@@ -119,11 +122,9 @@ object JarvisCockpitGridContent {
         val brand = g?.areas?.get(Area.BRAND) ?: Box(b.left + 9f, b.top + 4f, b.right - 104f, b.bottom - 4f)
         val brandStyle = Type.brand
         val cap = p.capHeight(brandStyle)
-        val caption = Type.caption
         val cy = brand.centerY
-        // Owner Fold7 report 06.11.2026: the brand sat at the top edge. The type size is fixed while the brand box
-        // scales with the screen; keep breathing room above and below by fitting the whole block (mark included).
-        val block = cap * 2f + p.capHeight(caption) + 9f
+        // Reference uses two brand lines.
+        val block = cap * 2f + 3f
         val fitScale = ((brand.height - 2f * BRAND_BREATHING_DP) / block).coerceIn(.6f, 1f)
         p.save(); p.scale(fitScale, fitScale, brand.left, cy)
         val logo = minOf(brand.height * .73f, 48f)
@@ -134,11 +135,6 @@ object JarvisCockpitGridContent {
         val top = cy - block / 2f
         p.drawText(fit(p, "Device AI", brandStyle, room), tx, top + cap, brandStyle, Fill.Solid(Colors.text))
         p.drawText(fit(p, "Continuum", brandStyle, room), tx, top + 2f * cap + 3f, brandStyle, Fill.Solid(Colors.text))
-        val captionText = "Deine KI-Steuerzentrale"
-        val captionStyle = JarvisShellRenderer.shrinkToFit(p, captionText, caption,
-            (room - 1f).coerceAtLeast(0f), minScale = .85f)
-        p.drawText(fit(p, captionText, captionStyle, room), tx,
-            top + 2f * cap + 9f + p.capHeight(caption), captionStyle, Fill.Solid(Colors.cyanSoft))
         p.restore()
         g?.areas?.get(Area.DEVICE_STATUS)?.let { clock ->
             JarvisReferenceHud.surface(p, clock, 14f, Colors.cyanDeep, Colors.cyanDeep)
@@ -173,8 +169,7 @@ object JarvisCockpitGridContent {
             JarvisReferenceHud.crown(p, Box(box.left + 9f, box.centerY - 7f, box.left + 25f, box.centerY + 7f))
             val room = box.width - 35f
             val modeStyle = JarvisShellRenderer.shrinkToFit(p, MODE_LABEL, Type.heading, room)
-            val mode = if (p.measureText(MODE_LABEL, modeStyle) <= room) MODE_LABEL else "JARVIS"
-            p.drawText(fit(p, mode, modeStyle, room), box.left + 31f,
+            p.drawText(fit(p, MODE_LABEL, modeStyle, room), box.left + 31f,
                 box.centerY + p.capHeight(modeStyle) / 2f, modeStyle, Fill.Solid(Colors.text))
         }
         g?.areas?.get(Area.PRIVACY_PILL)?.let { priv ->
@@ -198,17 +193,23 @@ object JarvisCockpitGridContent {
     }
 
     private fun brainHeader(p: ContinuumPainter, b: Box) {
-        val radius = minOf(18f, b.height * .26f)
-        val cx = b.left + radius + 5f
-        val cy = b.top + radius + 3f
+        val radius = minOf(19f, b.height * .25f)
+        val cx = b.left + radius + 6f
+        val cy = b.top + radius + 10f
         JarvisNeon.halo(p, cx, cy, radius * 1.8f, Colors.cyan, .2f)
         p.strokeCircle(cx, cy, radius, 1.2f, Fill.Solid(Colors.cyanSoft))
         p.drawText("∞", cx, cy + p.capHeight(Type.title) / 2f, Type.title, Fill.Solid(Colors.cyan), TextAlign.CENTER)
         val x = cx + radius + 11f
-        p.drawText(fit(p, "Continuum", Type.title, b.right - x), x, cy + 1f,
-            Type.title, Fill.Solid(Colors.text))
+        val titleStyle = JarvisShellRenderer.shrinkToFit(p, "Continuum",
+            Type.title.copy(size = (b.width * .10f).coerceIn(24f, 36f)), b.right - x)
+        val titleBaseline = b.top + 6f + p.capHeight(titleStyle)
+        p.drawText("Continuum", x, titleBaseline, titleStyle, Fill.Solid(Colors.text))
         p.drawText(fit(p, "Ein Gedächtnis für alle deine Geräte", Type.caption, b.right - x),
-            x, cy + p.capHeight(Type.caption) + 7f, Type.caption, Fill.Solid(Colors.textSecondary))
+            x, titleBaseline + p.capHeight(Type.caption) + 7f, Type.caption, Fill.Solid(Colors.textSecondary))
+        p.drawLine(b.left, b.top + 9f, b.left, b.top + 1f, 1f, Fill.Solid(Colors.cyan), .7f)
+        p.drawLine(b.left, b.top + 1f, b.left + 12f, b.top + 1f, 1f, Fill.Solid(Colors.cyan), .7f)
+        p.drawLine(b.right, b.bottom - 9f, b.right, b.bottom - 1f, 1f, Fill.Solid(Colors.cyan), .7f)
+        p.drawLine(b.right, b.bottom - 1f, b.right - 12f, b.bottom - 1f, 1f, Fill.Solid(Colors.cyan), .7f)
         val stripTop = maxOf(cy + 20f, b.bottom - 20f)
         val strip = Box(b.left, stripTop, b.right, b.bottom)
         if (strip.height >= 12f) {
@@ -272,21 +273,25 @@ object JarvisCockpitGridContent {
         val textBox = shell?.inputConversationBox() ?: Box(b.left + 12f, b.top, b.right - 12f, b.bottom)
         val controls = shell?.dialogControlBoxes().orEmpty()
         controls.forEachIndexed { i, box ->
-            val active = (i == 0 && s.presentation.listening) || (i == 1 && s.presentation.cameraSessionActive)
-            val color = if (active) Colors.ok else if (i == 2) Colors.violetRim else Colors.cyan
+            val active = i == 0 && s.presentation.listening
+            val color = if (active) Colors.ok else Colors.cyan
             val radius = minOf(15f, box.width * .36f)
             JarvisNeon.halo(p, box.centerX, box.centerY, radius * 1.5f, color, if (active) .20f else .07f)
-            p.strokeCircle(box.centerX, box.centerY, radius, 1f, Fill.Solid(color))
-            when (i) {
-                0 -> microphoneGlyph(p, box.centerX, box.centerY, 17f, color)
-                1 -> cameraGlyph(p, box.centerX, box.centerY, 17f, color)
-                else -> ContinuumIcons.draw(p, Icon.ATOM, box.centerX, box.centerY, 19f, Fill.Solid(color))
+            if (i == 0) {
+                p.strokeCircle(box.centerX, box.centerY, radius, 1f, Fill.Solid(color))
+                microphoneGlyph(p, box.centerX, box.centerY, 17f, color)
+            } else {
+                p.save(); p.translate(box.centerX - 14f, box.centerY - 14f)
+                p.scale(28f / 24f, 28f / 24f)
+                p.strokePath(sendPath, 1.5f, Fill.Solid(color))
+                p.restore()
             }
         }
         p.drawLine(textBox.left, b.centerY - 14f, textBox.left, b.centerY + 14f,
             .8f, Fill.Solid(Colors.cyanSoft), .55f)
         val room = textBox.width - 18f
-        val latest = s.cockpit.dialog.lastOrNull { !it.fromOwner }?.text?.takeIf { it.isNotBlank() }
+        val latest = s.cockpit.dialog.lastOrNull { !it.fromOwner }?.text
+            ?.takeIf { it.isNotBlank() && (s.presentation.processing || s.presentation.speaking) }
         val prompt = when {
             room >= 235f -> "Was soll ich für dich erledigen?"
             room >= 140f -> "Was möchtest du tun?"

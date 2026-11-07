@@ -11,11 +11,18 @@ object JarvisSceneFills {
 
     /** Same look as [JarvisNeon.halo] with [strength] as paint alpha; no new Fill or shader per frame. */
     fun halo(p: ContinuumPainter, cx: Float, cy: Float, radius: Float, color: Int, strength: Float) {
-        if (radius <= 0f) return  // alpha 0 still draws: constant, predictable work per frame
+        ellipseHalo(p, cx, cy, radius, radius, color, strength)
+    }
+
+    /** Cached elliptical surface light. */
+    fun ellipseHalo(p: ContinuumPainter, cx: Float, cy: Float, rx: Float, ry: Float,
+                    color: Int, strength: Float) {
+        if (!cx.isFinite() || !cy.isFinite() || !rx.isFinite() || !ry.isFinite() || rx <= 0f || ry <= 0f) return
+        if (unitHalos.size >= 256 && !unitHalos.containsKey(color or (0xFF shl 24))) unitHalos.clear()
         val fill = unitHalos.getOrPut(color or (0xFF shl 24)) {
             Fill.Radial(0f, 0f, 1f, intArrayOf(Argb.withAlpha(color, 1f), Argb.withAlpha(color, 0f)))
         }
-        p.save(); p.translate(cx, cy); p.scale(radius, radius)
+        p.save(); p.translate(cx, cy); p.scale(rx, ry)
         p.fillCircle(0f, 0f, 1f, fill, strength.coerceIn(0f, 1f))
         p.restore()
     }

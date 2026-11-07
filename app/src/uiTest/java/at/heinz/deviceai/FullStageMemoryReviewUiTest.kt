@@ -119,11 +119,16 @@ class FullStageMemoryReviewUiTest {
     }
 
     private fun tap(root: View, view: View) {
-        val bounds = Rect()
-        assertTrue("Visible control: ${view.tag}", view.getGlobalVisibleRect(bounds))
+        JarvisHomeTestRoutes.scrollIntoView(view)
+        advance(32L)
+        JarvisHomeTestRoutes.scrollIntoView(view)
+        val bounds = JarvisHomeTestRoutes.visibleBounds(view)
+        val position = IntArray(2).also(root::getLocationOnScreen)
         val now = SystemClock.uptimeMillis()
-        val down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN, bounds.exactCenterX(), bounds.exactCenterY(), 0)
-        val up = MotionEvent.obtain(now, now + 16L, MotionEvent.ACTION_UP, bounds.exactCenterX(), bounds.exactCenterY(), 0)
+        val down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN,
+            bounds.exactCenterX() - position[0], bounds.exactCenterY() - position[1], 0)
+        val up = MotionEvent.obtain(now, now + 16L, MotionEvent.ACTION_UP,
+            bounds.exactCenterX() - position[0], bounds.exactCenterY() - position[1], 0)
         try { assertTrue(root.dispatchTouchEvent(down)); assertTrue(root.dispatchTouchEvent(up)) }
         finally { down.recycle(); up.recycle() }
     }

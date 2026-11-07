@@ -136,7 +136,7 @@ class OwnerAppActionWorkSceneUiTest {
         if (chat) {
             val target = JarvisHomeTestRoutes.destination(a.window.decorView, "chat")
             assertNotNull(target)
-            assertTrue(target.performClick())
+            JarvisHomeTestRoutes.touch(a.window.decorView, target)
         }
         (get(a, "input") as EditText).setText(request)
         assertTrue((get(a, "sendButton") as Button).performClick())
