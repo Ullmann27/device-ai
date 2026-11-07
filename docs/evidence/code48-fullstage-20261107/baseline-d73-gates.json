@@ -119,7 +119,15 @@
       }
     }
   },
-  "android": "RUNNING at checkpoint; main and test Kotlin compiled, no final gate claim",
+  "android": {
+    "status": "INTERRUPTED_SUPERSEDED",
+    "sourceCommit": "d73fc46b5a14ea5fc3b82a3bd3b96cacebe7d4de",
+    "exitCode": 130,
+    "reason": "Superseded after the requested full-stage reference transition was implemented and independently reviewed. Main/test compilation completed, but the baseline Android unit/UI/lint gate did not complete. Final integrated source must receive a fresh complete gate.",
+    "finishedAt": "2026-11-07T05:35:57.099912+00:00",
+    "logSha256": "e19a67b6479962f31d83e365a0744d14c10fbbe9b8fff9cec69f75585f8491dd",
+    "logBytes": 44135
+  },
   "apk": "NOT_BUILT",
   "device": "NOT_RUN",
   "fullstage": "New implementation must receive fresh combined source gates",

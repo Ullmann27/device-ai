@@ -204,6 +204,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             if (!hologram.memoryScene.isActive) return
             if (!getLocalVisibleRect(visibleViewport)) { hologram.clearMemoryScene(); return }
             val save = canvas.save()
+            try {
             shellActions.values.forEach { view ->
                 if (view.isShown) canvas.clipOutRect(view.left, view.top, view.right, view.bottom)
             }
@@ -215,7 +216,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             canvas.clipRect(0, top, width, top + h)
             canvas.translate(0f, top.toFloat())
             hologram.drawMemoryScene(canvas, width, h, top)
-            canvas.restoreToCount(save)
+            } finally { canvas.restoreToCount(save) }
         }
     }
     var jarvisShellStage = presentationPrefs.getBoolean("jarvis-shell", false)
