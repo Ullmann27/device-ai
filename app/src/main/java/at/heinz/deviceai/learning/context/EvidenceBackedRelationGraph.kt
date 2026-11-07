@@ -22,13 +22,16 @@ internal object EvidenceBackedRelationGraph {
     fun admitted(edges: Collection<EvidenceEdge>): List<EntityRoleResolutionEngine.RelationEdge> =
         edges.asSequence()
             .filter { it.verified }
-            .distinctBy { Triple(it.fromEntityId, it.relation.uppercase(), it.toEntityId) }
-            .map {
+            .groupBy { Triple(it.fromEntityId, it.relation.uppercase(), it.toEntityId) }
+            .entries
+            .asSequence()
+            .sortedWith(compareBy({ it.key.first }, { it.key.second }, { it.key.third }))
+            .map { (key, group) ->
                 EntityRoleResolutionEngine.RelationEdge(
-                    fromId = it.fromEntityId,
-                    relation = it.relation.uppercase(),
-                    toId = it.toEntityId,
-                    sourceIds = it.sourceIds.toSet()
+                    fromId = key.first,
+                    relation = key.second,
+                    toId = key.third,
+                    sourceIds = group.flatMap { it.sourceIds }.toSortedSet()
                 )
             }
             .take(256)
