@@ -38,6 +38,28 @@ class Ctx3ShadowTest {
    assertFalse(java.io.File(dir,"dialogue-v1.bin").exists())
   } finally {dir.deleteRecursively()}
  }
+ @Test fun revokingSameTextInvalidatesPronounAndDiscourseFocusInShadow() {
+  val dir=Files.createTempDirectory("ctx3-revocation-focus").toFile()
+  try {
+   val bytes=Base64.getDecoder().decode(javaClass.getResourceAsStream("/continuum-neural-swb1.base64")!!.bufferedReader().readText().trim())
+   val fact=LearningExperienceFactory.create(
+    LearningExperienceType.USER_FACT,LearningProvenance.USER_CONFIRMED,LearningTrustClass.OWNER_CONFIRMED,
+    LearningStatus.CONFIRMED,"Max wohnt in Wels.",now=100L)
+   Ctx3Shadow.configure(dir,true)
+   Ctx3Shadow.evaluate(dir,bytes,listOf(fact),"Wo wohnt Max?",emptyList(),"revoke-chat")
+   assertEquals("QUERY",Ctx3Shadow.events(dir,"revoke-chat").last().decision)
+   val revoked=fact.copy(status=LearningStatus.REVOKED,updatedAt=200L)
+   Ctx3Shadow.evaluate(dir,bytes,listOf(revoked),"Wo wohnt er?",emptyList(),"revoke-chat")
+   val pronoun=Ctx3Shadow.events(dir,"revoke-chat").last()
+   assertEquals("CLARIFY",pronoun.decision)
+   assertEquals("NO_UNIQUE_REFERENT",pronoun.reason)
+   Ctx3Shadow.evaluate(dir,bytes,listOf(revoked),"Und davor?",emptyList(),"revoke-chat")
+   val discourse=Ctx3Shadow.events(dir,"revoke-chat").last()
+   assertEquals("CLARIFY",discourse.decision)
+   assertTrue(discourse.proposedIds.isEmpty())
+  } finally {dir.deleteRecursively()}
+ }
+
  @Test fun independentCoreConversationsCannotBorrowOneAnothersPronouns() {
   val dir=Files.createTempDirectory("ctx3-core-isolation").toFile()
   try {
