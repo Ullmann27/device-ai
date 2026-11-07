@@ -1,0 +1,8 @@
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType(Test).configureEach {
+            beforeTest { d -> println("CASE ${d.className}.${d.name}") }
+            filter { includeTestsMatching 'at.heinz.deviceai.ui.JarvisCockpitGridTest' }
+        }
+    }
+}
