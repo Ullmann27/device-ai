@@ -8,7 +8,7 @@ import org.junit.Test
 class HypothesisWorkspaceTest {
     @Test fun bucketLimitForcesStructuralDiversity() {
         val w = HypothesisWorkspace(maxHypotheses = 6, maxPerBucket = 1)
-        assertTrue(w.add(HypothesisWorkspace.Hypothesis("config","CONFIG".let(HypothesisWorkspace.Bucket::valueOf),"Flag falsch",1f)))
+        assertTrue(w.add(HypothesisWorkspace.Hypothesis("config",HypothesisWorkspace.Bucket.CONFIG,"Flag falsch",1f)))
         assertTrue(!w.add(HypothesisWorkspace.Hypothesis("config2",HypothesisWorkspace.Bucket.CONFIG,"Noch ein Flag",1f)))
         assertTrue(w.add(HypothesisWorkspace.Hypothesis("surface",HypothesisWorkspace.Bucket.UI,"Surface verdeckt",1f)))
         assertEquals(2, w.snapshot().size)
