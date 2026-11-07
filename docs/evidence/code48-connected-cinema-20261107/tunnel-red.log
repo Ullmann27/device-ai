@@ -1,0 +1,23 @@
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#realRecallStartsRecoveredDocumentTunnel
+.E
+Time: 4.761
+There was 1 failure:
+1) realRecallStartsRecoveredDocumentTunnel(at.heinz.deviceai.ui.CockpitCinematicCueUiTest)
+java.lang.AssertionError: Real recall must reach the recovered document tunnel
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.realRecallStartsRecoveredDocumentTunnel$lambda$0(CockpitCinematicCueUiTest.kt:158)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.withCockpit(CockpitCinematicCueUiTest.kt:61)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.realRecallStartsRecoveredDocumentTunnel(CockpitCinematicCueUiTest.kt:150)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#actualTaskStopClearsRecoveredTunnel
+.
+Time: 0.159
+
+OK (1 test)
+
+TOTAL tests=2 failures=1

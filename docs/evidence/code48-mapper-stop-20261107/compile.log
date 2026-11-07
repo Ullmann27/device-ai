@@ -1,0 +1,3 @@
+/workspace/scratch/3d1967be6193/mapper/app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventSourceTest.kt:74:39: warning: 'val production: MemoryEventSource?' is deprecated. Use forApp(appDirectory) to bind the existing per-application event hub.
+        assertNull(MemoryEventSources.production)
+                                      ^^^^^^^^^^

@@ -94,7 +94,7 @@ class ContinuumDocumentSceneUiTest {
         }
     }
 
-    private fun <T> withCockpit(block: (AgentActivity, View) -> T): T {
+    private fun <T> withCockpit(startInChat: Boolean = false, block: (AgentActivity, View) -> T): T {
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
@@ -104,7 +104,10 @@ class ContinuumDocumentSceneUiTest {
         app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         try {
-            controller.setup().visible(); advance(32L); controller.windowFocusChanged(true)
+            if (startInChat) controller.setup(android.os.Bundle().apply {
+                putString("continuum_work_area_state", "CHAT")
+            }) else controller.setup()
+            controller.visible(); advance(32L); controller.windowFocusChanged(true)
             val activity = controller.get()
             val root = activity.window.decorView
             framePump = CockpitHostFramePump { root }
@@ -199,6 +202,23 @@ class ContinuumDocumentSceneUiTest {
         capture(root, "code48-pdf-chat-open")
     }
 
+    @Test fun restoredChatOpensPdfBeforeTheCockpitsFirstLayout() = withCockpit(startInChat = true) { activity, root ->
+        val home = field(activity, "homeView") as ContinuumHomeView
+        assertFalse(home.isShown)
+        assertEquals("The restored CHAT has never laid out its cockpit", 0, home.jarvisShell.width)
+        val page = examplePage(200, 280)
+        val doc = PdfDocumentIntake.Document("Wiederaufnahme.pdf", 4096L, 1, page,
+            "Synthetischer PDF-Inhalt.", PdfDocumentIntake.TextState.EXTRACTED, 1)
+        AgentActivity::class.java.getDeclaredMethod("presentDocumentScene", PdfDocumentIntake.Document::class.java)
+            .apply { isAccessible = true }.invoke(activity, doc)
+        measure(root); advance(1900L); measure(root); draw(root)
+        val window = descendants(root).firstOrNull { it.tag == "jarvis-work-window" && it.isShown }
+        assertNotNull("A newly visible cockpit must retain the pending document scene", window)
+        val image = descendants(window!!).filterIsInstance<ImageView>().single { it.tag == "jarvis-document-page" }
+        assertSame(page, (image.drawable as BitmapDrawable).bitmap)
+        assertTrue(chatTexts(activity).any { it.contains("Wiederaufnahme.pdf") })
+    }
+
     @Test fun documentWorkWaitsForFreshShellGeometry() = withCockpit { activity, root ->
         val home = field(activity, "homeView") as ContinuumHomeView
         home.jarvisShell.compactPresentation = !home.jarvisShell.compactPresentation
@@ -209,6 +229,20 @@ class ContinuumDocumentSceneUiTest {
         measure(root); advance(80L); draw(root)
         assertTrue("A pending layout must not discard the document scene",
             descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+    }
+
+    @Test fun stopBeforeFirstCockpitLayoutDiscardsThePendingDocument() = withCockpit(startInChat = true) { activity, root ->
+        val page = examplePage(200, 280)
+        val doc = PdfDocumentIntake.Document("Verworfene-PDF.pdf", 4096L, 1, page,
+            "Synthetischer PDF-Inhalt.", PdfDocumentIntake.TextState.EXTRACTED, 1)
+        AgentActivity::class.java.getDeclaredMethod("presentDocumentScene", PdfDocumentIntake.Document::class.java)
+            .apply { isAccessible = true }.invoke(activity, doc)
+        AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest")
+            .apply { isAccessible = true }.invoke(activity)
+        measure(root); advance(160L); draw(root)
+        assertTrue(page.isRecycled)
+        assertFalse(descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+        assertFalse(chatTexts(activity).any { it.contains("Verworfene-PDF.pdf") })
     }
 
     @Test fun withoutTextTheSceneSaysWhyAndShowsNoInventedExcerpt() = withCockpit { activity, root ->

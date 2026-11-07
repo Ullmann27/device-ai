@@ -1,0 +1,20 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=46549 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=46549 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.ContinuumDocumentSceneUiTest#restoredChatOpensPdfBeforeTheCockpitsFirstLayout
+.
+Time: 20.135
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumDocumentSceneUiTest#stopBeforeFirstCockpitLayoutDiscardsThePendingDocument
+.
+Time: 2.074
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumDocumentSceneUiTest#documentWorkWaitsForFreshShellGeometry
+.
+Time: 3.311
+
+OK (1 test)
+
+TOTAL tests=3 failures=0

@@ -1,0 +1,58 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=45665 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45665 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.ContinuumDashboardVisibilityUiTest#hiddenCockpitDoesNotQueueTelemetryReads
+.E
+Time: 3.468
+There was 1 failure:
+1) hiddenCockpitDoesNotQueueTelemetryReads(at.heinz.deviceai.ContinuumDashboardVisibilityUiTest)
+java.lang.AssertionError: Hidden cockpit must not scan learning, storage or diagnostics expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.hiddenCockpitDoesNotQueueTelemetryReads$lambda$0(ContinuumDashboardVisibilityUiTest.kt:91)
+	at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.withPane(ContinuumDashboardVisibilityUiTest.kt:70)
+	at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.hiddenCockpitDoesNotQueueTelemetryReads(ContinuumDashboardVisibilityUiTest.kt:85)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+CASE at.heinz.deviceai.ContinuumDashboardVisibilityUiTest#returningToCockpitRefreshesImmediatelyAndCoalesces
+.E
+Time: 0.256
+There was 1 failure:
+1) returningToCockpitRefreshesImmediatelyAndCoalesces(at.heinz.deviceai.ContinuumDashboardVisibilityUiTest)
+java.lang.AssertionError: Returning home must not wait for the next five-second tick expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.returningToCockpitRefreshesImmediatelyAndCoalesces$lambda$0(ContinuumDashboardVisibilityUiTest.kt:100)
+	at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.withPane(ContinuumDashboardVisibilityUiTest.kt:70)
+	at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.returningToCockpitRefreshesImmediatelyAndCoalesces(ContinuumDashboardVisibilityUiTest.kt:95)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+CASE at.heinz.deviceai.ContinuumDashboardVisibilityUiTest#visibleSystemDialogStillRefreshesFromChat
+.
+Time: 0.258
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumDashboardVisibilityUiTest#detachedOrPausedDashboardDoesNotQueueTelemetryReads
+.E
+Time: 0.287
+There was 1 failure:
+1) detachedOrPausedDashboardDoesNotQueueTelemetryReads(at.heinz.deviceai.ContinuumDashboardVisibilityUiTest)
+java.lang.AssertionError: Detached surfaces cannot consume telemetry expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.detachedOrPausedDashboardDoesNotQueueTelemetryReads$lambda$0(ContinuumDashboardVisibilityUiTest.kt:126)
+	at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.withPane(ContinuumDashboardVisibilityUiTest.kt:70)
+	at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.detachedOrPausedDashboardDoesNotQueueTelemetryReads(ContinuumDashboardVisibilityUiTest.kt:119)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=4 failures=3

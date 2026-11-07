@@ -20,6 +20,8 @@ interface JarvisAvatarRenderer {
     fun attach(host: ViewGroup, slot: Rect)
     fun onAvatarState(state: AvatarState)
     fun onAnimationEvent(event: CockpitAnimationEvent)
+    fun onCockpitCue(step: TimelineStep): Boolean = false
+    val cueGeneration: Long get() = 0L
     fun detach()
     /** Optional: slot moved/resized (rotation, fold, font scale). */
     fun onSlotChanged(slot: Rect) = Unit

@@ -437,6 +437,7 @@ class AgentActivity : Activity() {
     private var knownOpenIssues: Set<String>? = null
     private val dashboardRefresh = object : Runnable {
         override fun run() {
+            if (!foregroundLearningActive || isFinishing || isDestroyed) return
             refreshDashboard()
             botRosterDialog?.refreshRuntimeStatus()
             mainHandler.postDelayed(this, 5_000L)
@@ -825,6 +826,7 @@ class AgentActivity : Activity() {
         sessionResetLifetime.set(false)
         foregroundLearningActive = false
         mainHandler.removeCallbacks(foregroundLearningCheck)
+        mainHandler.removeCallbacks(dashboardRefresh)
         clearLifecycleTimeout()
         if (::localRuntime.isInitialized) {
             activeOrchestrator?.cancel()
@@ -1385,9 +1387,10 @@ class AgentActivity : Activity() {
         }
     }
 
-    /** Collects the real start-screen values off the UI thread (every 5 s while the activity is visible). */
+    /** Visible telemetry consumers only. */
     private fun refreshDashboard() {
-        if (homeView == null || dashboardCollecting || !foregroundLearningActive) return
+        if (dashboardCollecting || !foregroundLearningActive || isFinishing || isDestroyed) return
+        if (homeView?.isShown != true && liveHardwareGauges?.isShown != true) return
         dashboardCollecting = true
         val dashboardSnapshotAtElapsedMs = android.os.SystemClock.elapsedRealtime()
         val modelReady = ::localRuntime.isInitialized && localRuntime.loadedModel != null &&
@@ -1414,11 +1417,14 @@ class AgentActivity : Activity() {
             result.onSuccess { (state, open) ->
                 capabilityDashboard = state
                 capabilityDashboardAtElapsedMs = dashboardSnapshotAtElapsedMs
-                homeView?.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
-                    memoryActivity = memoryActivitySnapshot(state.memory))
-                if (centerDialog?.isShowing == true || workWindowHost.isShowing) liveHardwareGauges?.updateTelemetry(state.system)
-                navigationView?.state = state
-                railView?.state = state
+                if (!foregroundLearningActive) return@onSuccess
+                homeView?.takeIf { it.isShown }?.let { home ->
+                    home.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
+                        memoryActivity = memoryActivitySnapshot(state.memory))
+                }
+                if (liveHardwareGauges?.isShown == true) liveHardwareGauges?.updateTelemetry(state.system)
+                navigationView?.takeIf { it.isShown }?.state = state
+                railView?.takeIf { it.isShown }?.state = state
                 announceNewIssues(open)
             }
         }
@@ -1460,7 +1466,8 @@ class AgentActivity : Activity() {
     private fun subscribeMemoryEvents() {
         val source = at.heinz.deviceai.cockpit.MemoryEventSources.forApp(filesDir)
         val main = android.os.Handler(mainLooper)
-        val mapper = at.heinz.deviceai.cockpit.MemoryEventMapper(cockpitBus) { d, r -> main.postDelayed(r, d) }
+        val mapper = at.heinz.deviceai.cockpit.MemoryEventMapper(cockpitBus,
+            generationProvider = { homeView?.avatarRenderer?.cueGeneration ?: -1L }) { d, r -> main.postDelayed(r, d) }
         val subscription = source.subscribe(mapper)
         val activity = at.heinz.deviceai.learning.ContinuumMemoryEvents.forApp(filesDir)
             .addListener(memoryActivityTracker)
@@ -2396,6 +2403,8 @@ class AgentActivity : Activity() {
     private fun presentDocumentScene(doc: PdfDocumentIntake.Document) = presentDocumentScene(doc, null)
 
     private fun presentDocumentScene(doc: PdfDocumentIntake.Document, documentUri: String?) {
+        if (activeWorkArea == ContinuumWorkArea.CHAT) showHomeDashboard()
+        if (awaitDocumentCockpitLayout(doc, documentUri)) return
         val pages = if (doc.pageCount == 1) "1 Seite" else "${doc.pageCount} Seiten"
         val size = doc.sizeBytes?.let { android.text.format.Formatter.formatShortFileSize(this, it) }
         val meta = listOfNotNull(pages, size, doc.name).joinToString(" · ")
@@ -2477,6 +2486,46 @@ class AgentActivity : Activity() {
         // The same facts in the conversation; with an open window the cockpit stays (no switch to the chat area).
         addAssistantMessage(report, preserveLocalContext = false, keepCockpit = window != null)
         if (wantsDraft && hasText && localModelReady()) startDocumentDraft(doc)
+    }
+
+    /** Wait for real first geometry. */
+    private fun awaitDocumentCockpitLayout(doc: PdfDocumentIntake.Document, documentUri: String?): Boolean {
+        val home = homeView ?: return false
+        if (activeWorkArea != ContinuumWorkArea.START || !home.isShown || !home.isAttachedToWindow ||
+            home.jarvisShell.width > 0 && home.jarvisShell.height > 0) return false
+        val session = sessionId
+        val generation = workPresentationGeneration
+        var released = false
+        lateinit var layout: View.OnLayoutChangeListener
+        lateinit var attachment: View.OnAttachStateChangeListener
+        fun release() {
+            released = true
+            home.removeOnLayoutChangeListener(layout)
+            home.removeOnAttachStateChangeListener(attachment)
+        }
+        fun discard() {
+            if (released) return
+            release()
+            doc.firstPage?.recycle()
+        }
+        layout = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            if (released) return@OnLayoutChangeListener
+            if (isFinishing || isDestroyed || sessionId != session || workPresentationGeneration != generation ||
+                homeView !== home || activeWorkArea != ContinuumWorkArea.START) {
+                discard()
+            } else if (home.jarvisShell.width > 0 && home.jarvisShell.height > 0) {
+                release()
+                presentDocumentScene(doc, documentUri)
+            }
+        }
+        attachment = object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) = Unit
+            override fun onViewDetachedFromWindow(v: View) = discard()
+        }
+        home.addOnLayoutChangeListener(layout)
+        home.addOnAttachStateChangeListener(attachment)
+        home.requestLayout()
+        return true
     }
 
     private fun navigateDashboardTargetNow(target: String) {
@@ -2885,6 +2934,7 @@ class AgentActivity : Activity() {
             continuousConversation.active, keepCockpitDuringHandsFree, activeWorkArea == ContinuumWorkArea.START)
 
     private fun refreshConversationLayout() {
+        val dashboardWasVisible = dashboardSection?.visibility == View.VISIBLE
         val chat = !currentToolScene() && at.heinz.deviceai.cognitive.CockpitConversationPresentation.showChat(
             explicitChatSelected = activeWorkArea == ContinuumWorkArea.CHAT,
             conversationActive = conversationActive,
@@ -2903,6 +2953,7 @@ class AgentActivity : Activity() {
         val training = learningVisualActive || activeNeuralCancellation != null
         if (::neuralMonitor.isInitialized) neuralMonitor.visibility = if (chat || training) View.VISIBLE else View.GONE
         if (::neuralProgress.isInitialized) neuralProgress.visibility = if (training) View.VISIBLE else View.GONE
+        if (!chat && !dashboardWasVisible) refreshDashboard()
     }
 
     /** Move the existing live surface; there is still only one renderer, clock and Director. */
@@ -3285,6 +3336,7 @@ class AgentActivity : Activity() {
             }
             centerDialog = dialog
         }
+        if (liveHardwareGauges?.isShown == true) refreshDashboard()
         status { value ->
             if (centerShowing()) cockpit.updateStatus(statusGrid, value)
         }

@@ -4,6 +4,7 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.util.Locale
+import java.util.concurrent.CancellationException
 
 /**
  * Explicit owner-triggered, bounded CDX1 curriculum runner.
@@ -62,7 +63,7 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
         curriculum.validate()
         val index=readStage()
         if(index==curriculum.STAGES)return@synchronized null
-        check(!cancelled()) { "CDX1-Runde vor Beginn abgebrochen" }
+        if(cancelled())throw CancellationException("CDX1-Runde vor Beginn abgebrochen")
         val core=ContinuumLearningCore(filesDir).apply {
             observeTraining(phaseObserver)
         }

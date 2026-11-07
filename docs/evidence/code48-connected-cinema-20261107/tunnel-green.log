@@ -1,0 +1,55 @@
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#actualPresenterMakesHeadIconsVisibleAboveTheLiveSurface
+.
+Time: 3.95
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#backgroundDropsHeadIconsWithoutResumeReplay
+.
+Time: 0.135
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#reducedMotionNeverQueuesAHeadBurst
+.
+Time: 0.136
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#delayedBootDoesNotReplayAfterBackground
+.
+Time: 0.117
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#queuedBootDoesNotReplayAfterPauseResume
+.
+Time: 0.099
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#realRecallStartsRecoveredDocumentTunnel
+.
+Time: 0.157
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#actualTaskStopClearsRecoveredTunnel
+.
+Time: 0.106
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#emptyRecallDoesNotInventAFileFlight
+.
+Time: 0.163
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#repeatRecallCannotExtendTheActiveTunnel
+.
+Time: 0.109
+
+OK (1 test)
+
+TOTAL tests=9 failures=0

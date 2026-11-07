@@ -1,0 +1,21 @@
+{
+  "baseline": "3a7b7bad35873009358ccb14057e5a0cbc3cfec9",
+  "cachedDependencies": "6a6f885f952784c79b209ad39b20d14ccf014df8",
+  "currentChangedProductionCompiledAgainstCache": true,
+  "evidenceClass": "HOST_ANDROID_ROBOLECTRIC_NATIVE_CANVAS_SIMULATED_PDF_INPUT",
+  "red": {
+    "tests": 1,
+    "failures": 1
+  },
+  "green": {
+    "tests": 3,
+    "failures": 0
+  },
+  "androidSdkCompile": "PASS",
+  "fullGradle": "NOT_RUN_IN_THIS_SUBTASK",
+  "physicalDevicePdf": "NOT_RUN",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "fe04999fc88c98cedd476c434f9ab149e5842dcfde94ce9d0efea20d3d471bd3",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentSceneUiTest.kt": "07cf0ff1c7a70c0b2cbe7a53db4ee4b4141026cef926025be6cf107faa58043d"
+  }
+}

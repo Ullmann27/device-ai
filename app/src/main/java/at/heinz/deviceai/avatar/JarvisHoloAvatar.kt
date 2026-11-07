@@ -64,7 +64,13 @@ class JarvisHoloAvatar(private val liveSurface: ContinuumHologramView? = null) :
     /** Cockpit bus events → sequence animations (Kern may also subscribe [sequence] to the bus directly). */
     override fun onAnimationEvent(event: CockpitAnimationEvent) { sequence?.render(event) }
 
+    override fun onCockpitCue(step: at.heinz.deviceai.cockpit.TimelineStep): Boolean =
+        if (hologram?.playAvatarEntrance(step) == true) true else sequence?.playCue(step) ?: false
+
+    override val cueGeneration: Long get() = sequence?.cueGeneration ?: -1L
+
     override fun detach() {
+        hologram?.resetAvatarEntrance()
         hologram?.setCockpitSequence(null)
         if (liveSurface == null) hologram?.setForegroundActive(false)
         stage?.let { host?.removeView(it) }

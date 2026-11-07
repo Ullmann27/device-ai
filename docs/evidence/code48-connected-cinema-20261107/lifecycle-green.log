@@ -1,0 +1,31 @@
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#actualPresenterMakesHeadIconsVisibleAboveTheLiveSurface
+.
+Time: 4.272
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#backgroundDropsHeadIconsWithoutResumeReplay
+.
+Time: 0.136
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#reducedMotionNeverQueuesAHeadBurst
+.
+Time: 0.108
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#delayedBootDoesNotReplayAfterBackground
+.
+Time: 0.094
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#queuedBootDoesNotReplayAfterPauseResume
+.
+Time: 0.094
+
+OK (1 test)
+
+TOTAL tests=5 failures=0

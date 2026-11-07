@@ -39,13 +39,19 @@ object MemoryEventSources {
 class MemoryEventMapper(
     private val bus: CockpitAnimationBus,
     private val minIntervalMs: Long = 100L,
+    private val generationProvider: () -> Long = { 0L },
     private val postDelayed: (Long, Runnable) -> Unit,
 ) : MemoryEventSink {
-    private val document = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.DocumentLearned?>()
+    /** Preserve positional constructor calls. */
+    constructor(bus: CockpitAnimationBus, minIntervalMs: Long, postDelayed: (Long, Runnable) -> Unit) :
+        this(bus, minIntervalMs, { 0L }, postDelayed)
+
+    private data class Pending<out E : CockpitAnimationEvent>(val event: E, val generation: Long)
+    private val document = java.util.concurrent.atomic.AtomicReference<Pending<CockpitAnimationEvent.DocumentLearned>?>()
     // The latest write and its coalesced count must be replaced/consumed together. Separate
     // atomics let a producer place the next write between the flush's two reads and lose a count.
-    private val stored = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.MemoryStored?>()
-    private val recall = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.RecallHits?>()
+    private val stored = java.util.concurrent.atomic.AtomicReference<Pending<CockpitAnimationEvent.MemoryStored>?>()
+    private val recall = java.util.concurrent.atomic.AtomicReference<Pending<CockpitAnimationEvent.RecallHits>?>()
     private val scheduled = java.util.concurrent.atomic.AtomicBoolean()
     private val detached = java.util.concurrent.atomic.AtomicBoolean()
 
@@ -53,27 +59,44 @@ class MemoryEventMapper(
     fun detach() = detached.set(true)
 
     override fun documentLearned(docId: String, kind: String, entriesAdded: Int, atEpochMs: Long) {
+        val generation = generationProvider()
         if (docId.isBlank()) return
-        document.set(CockpitAnimationEvent.DocumentLearned(MEMORY_TURN, atEpochMs, docId, kind, entriesAdded.coerceAtLeast(0)))
-        schedule()
+        replaceLatest(document, CockpitAnimationEvent.DocumentLearned(MEMORY_TURN, atEpochMs, docId, kind,
+            entriesAdded.coerceAtLeast(0)), generation)
     }
 
     override fun memoryStored(entryId: String, status: String, atEpochMs: Long) {
+        val generation = generationProvider()
         if (entryId.isBlank()) return
         while (true) {
             val previous = stored.get()
-            val count = previous?.count ?: 0
-            val next = CockpitAnimationEvent.MemoryStored(MEMORY_TURN, atEpochMs, entryId, status,
-                count = if (count == Int.MAX_VALUE) count else count + 1)
+            if (detached.get() || generation != generationProvider()) return
+            val count = previous?.takeIf { it.generation == generation }?.event?.count ?: 0
+            val next = Pending(CockpitAnimationEvent.MemoryStored(MEMORY_TURN, atEpochMs, entryId, status,
+                count = if (count == Int.MAX_VALUE) count else count + 1), generation)
             if (stored.compareAndSet(previous, next)) break
         }
         schedule()
     }
 
     override fun recallHits(queryHash: String, count: Int, topScore: Float?, atEpochMs: Long) {
-        recall.set(CockpitAnimationEvent.RecallHits(MEMORY_TURN, atEpochMs, queryHash, count.coerceAtLeast(0),
-            topScore.takeIf { count > 0 }))
-        schedule()
+        val generation = generationProvider()
+        replaceLatest(recall, CockpitAnimationEvent.RecallHits(MEMORY_TURN, atEpochMs, queryHash,
+            count.coerceAtLeast(0), topScore.takeIf { count > 0 }), generation)
+    }
+
+    private fun <E : CockpitAnimationEvent> replaceLatest(
+        target: java.util.concurrent.atomic.AtomicReference<Pending<E>?>, event: E, generation: Long,
+    ) {
+        val next = Pending(event, generation)
+        while (true) {
+            val previous = target.get()
+            if (detached.get() || generation != generationProvider()) return
+            if (target.compareAndSet(previous, next)) {
+                schedule()
+                return
+            }
+        }
     }
 
     private fun schedule() {
@@ -90,9 +113,9 @@ class MemoryEventMapper(
         emitIfAttached(recall.getAndSet(null))
     }
 
-    private fun emitIfAttached(event: CockpitAnimationEvent?) {
+    private fun emitIfAttached(pending: Pending<*>?) {
         // A renderer can synchronously detach this mapper while handling the preceding kind.
         // Never hold a mapper lock across bus callbacks: cleanup may wait for a hub producer.
-        if (event != null && !detached.get()) bus.emit(event)
+        if (pending != null && !detached.get() && pending.generation == generationProvider()) bus.emit(pending.event)
     }
 }

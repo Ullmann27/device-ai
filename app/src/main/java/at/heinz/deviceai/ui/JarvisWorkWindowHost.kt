@@ -98,7 +98,7 @@ class JarvisWorkWindowHost(
             JarvisWorkWindow.Recession(bounds, page, image, handover)
         } } else null
         val inheritedLayers = if (recession != null) maxOf(depthLayers, current?.depthLayers ?: 0) else depthLayers
-        val planned = plan(home, container, scene, fresh = false) ?: return null
+        val planned = plan(home, container, scene) ?: return null
         val first = previous?.let { Planned(JarvisWorkWindow.Plan(it, planned.plan.destination, planned.plan.protectedBounds),
             planned.face, planned.viewport) } ?: planned
         close(immediate = true)
@@ -108,7 +108,7 @@ class JarvisWorkWindowHost(
         container.addView(window, ViewGroup.LayoutParams(-1, -1))
         // A first layout at another size (rotation/fold/keyboard still pending) plans again on the real size.
         val refit = {
-            if (current === window) plan(home, container, scene, fresh = true)?.also {
+            if (current === window) plan(home, container, scene)?.also {
                 // The window moved to the real size: JARVIS looks where it is now (#565 review) and the camera leans
                 // towards its new side (progress is still ~0).
                 currentGaze = gaze(it)
@@ -178,15 +178,10 @@ class JarvisWorkWindowHost(
         return ((planned.plan.destination.centerX() - headX) / planned.viewport.width() * 2f).coerceIn(-1f, 1f)
     }
 
-    /**
-     * Origin, destination and protected areas (face, dialog, orb) of [scene] in [container] pixels. A first plan uses
-     * the geometry the owner sees (last drawn shell, none before the first draw); a [fresh] replan uses the shell's
-     * geometry for its current size. Null when the START cockpit has no room for a window.
-     */
-    private fun plan(home: ContinuumHomeView, container: ViewGroup, scene: JarvisActionScenes.Scene,
-                     fresh: Boolean): Planned? {
+    /** Current geometry, including undrawn layouts. */
+    private fun plan(home: ContinuumHomeView, container: ViewGroup, scene: JarvisActionScenes.Scene): Planned? {
         val shell = home.jarvisShell
-        val geometry = (if (fresh) shell.currentShell() else shell.shell) ?: return null
+        val geometry = shell.currentShell() ?: return null
         val density = activity.resources.displayMetrics.density
         val offset = localBounds(shell, container)
         val viewport = RectF(0f, 0f, container.width.toFloat(),
