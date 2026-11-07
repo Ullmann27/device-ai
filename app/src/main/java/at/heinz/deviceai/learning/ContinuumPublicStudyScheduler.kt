@@ -370,7 +370,7 @@ class ContinuumPublicStudyJobService:JobService() {
                 val acquisition=ContinuumOpenWebStudyFetch.acquire(
                     researchTitle,cancelled,completedHashes
                 )
-                val source=acquisition.source
+                val acquiredSource=acquisition.source
                 check(!cancelled())
                 // Reuse already discovered candidate titles: no second network search.
                 if(SystemClock.elapsedRealtime()-start <
@@ -383,10 +383,17 @@ class ContinuumPublicStudyJobService:JobService() {
                 }
                 operation="READ_SOURCE_EVIDENCE"
                 val notebook=MentorSourceNotebook(this)
-                val pending=ContinuumSourceNovelty.pending(listOf(source),completedHashes)
+                val pending=checkNotNull(ContinuumLearningCore.prepareSourceBatch(
+                    ContinuumSourceNovelty.pending(listOf(acquiredSource),completedHashes))) {
+                    "Source batch exceeds 17 records"
+                }
                 if(pending.isEmpty()) {
                     phase="SOURCE_UNCHANGED"
                 } else {
+                    val source=pending.single()
+                    check(!cancelled())
+                    operation="START_SOURCE_ROUND"
+                    ContinuumSourceNovelty.markStarted(filesDir,pending)
                     operation="ARCHIVE_SOURCE"
                     ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                         ContinuumTrainingMonitor.PUBLIC,"ARCHIVE_SOURCE")
@@ -411,6 +418,7 @@ class ContinuumPublicStudyJobService:JobService() {
                     operation="PREPARE_TRAINING"
                     val core=ContinuumLearningCore(filesDir).apply {
                         observeTraining { trainingPhase ->
+                            operation=trainingPhase
                             ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                                 ContinuumTrainingMonitor.PUBLIC,trainingPhase,
                                 "Quellenbezogenes SWB1 · Gradienten/Audit")
@@ -425,8 +433,6 @@ class ContinuumPublicStudyJobService:JobService() {
                     ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                         ContinuumTrainingMonitor.PUBLIC,"AUDIT","Qualitätsgate für Kandidatengewichte")
                     if(outcome?.completedEvaluation==true && !cancelled()) {
-                        operation="SAVE_EVIDENCE"
-                        ContinuumSourceNovelty.markCompleted(filesDir,pending)
                         accepted=outcome.accepted
                         phase=if(accepted)"TRAINING_ACCEPTED" else "TRAINING_REJECTED"
 
@@ -436,7 +442,9 @@ class ContinuumPublicStudyJobService:JobService() {
                 }
             } catch(e:Exception) {
                 if(e is WikimediaRateLimited)scheduler.postponeDueToProvider(e.waitSeconds)
-                phase=ContinuumPublicStudyCycleResult.failurePhase(operation,e,cancelled())
+                phase=if(e is ContinuumSourceEvidenceNotPersisted)
+                    "FAILED_SAVE_EVIDENCE_"+e.cause!!.javaClass.simpleName
+                    else ContinuumPublicStudyCycleResult.failurePhase(operation,e,cancelled())
                 reschedule=!stopping.get() && e !is WikimediaRateLimited &&
                     e !is WikimediaSourceUnavailable && e !is WikimediaFetchCancelled && !cancelled()
                 Log.w("ContinuumPublicStudy","Research cycle result: "+phase)

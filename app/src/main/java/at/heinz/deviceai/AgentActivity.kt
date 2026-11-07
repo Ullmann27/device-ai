@@ -8727,15 +8727,29 @@ class AgentActivity : Activity() {
                 session.checkAuthorized()
                 if(mentorArea!=null&&!cancellation.isCancelled() && session.isAuthorized()) {
                     val notebook=MentorSourceNotebook(this)
-                    val found=at.heinz.deviceai.learning.MentorResearchCycle().sources(mentorArea,dossier)
+                    val found=checkNotNull(ContinuumLearningCore.prepareSourceBatch(
+                        at.heinz.deviceai.learning.MentorResearchCycle().sources(mentorArea,dossier))) {
+                        "Source batch exceeds 17 records"
+                    }
+                    session.checkAuthorized()
+                    check(!cancellation.isCancelled())
+                    at.heinz.deviceai.learning.ContinuumSourceNovelty.markStarted(filesDir,found)
                     val count=notebook.add(found)
+                    var trainingPhase="PREPARING"
                     val training=if(found.isEmpty())null else runCatching {
-                        at.heinz.deviceai.learning.ContinuumLearningCore(filesDir).learnFromSources(found) { cancellation.isCancelled() || !session.isAuthorized() }
+                        at.heinz.deviceai.learning.ContinuumLearningCore(filesDir).apply {
+                            observeTraining { trainingPhase=it }
+                        }.learnFromSources(found) { cancellation.isCancelled() || !session.isAuthorized() }
                     }
                     val report=training?.getOrNull()
                     // a failure is not a rejected candidate: name it
                     notebook.record(mentorArea,count,"Einmal bestätigte Recherche: $count Quellenbeobachtungen; "+when {
-                        training?.isFailure==true -> "Lernlauf fehlgeschlagen ("+training.exceptionOrNull()!!.javaClass.simpleName+"); kein neuer Modellstand"
+                        training?.isFailure==true -> "Lernlauf fehlgeschlagen in "+trainingPhase+" ("+
+                            training.exceptionOrNull()!!.javaClass.simpleName+"); "+
+                            if((training.exceptionOrNull() as? at.heinz.deviceai.learning.ContinuumSourceEvidenceNotPersisted)
+                                    ?.modelCommitted==true) "Modell gespeichert; Abschlussbeleg fehlt"
+                            else "Modellstand nicht bestätigt"
+                        report?.accepted==true && !report.completedEvaluation -> "Modell gespeichert; Abschluss unterbrochen"
                         report?.accepted==true -> "lokaler Lernkandidat angenommen"
                         report!=null && !report.completedEvaluation -> "Lernlauf unterbrochen; kein neuer Modellstand"
                         else -> "kein neuer Modellstand übernommen"

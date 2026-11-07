@@ -237,15 +237,11 @@ class ContinuumAutonomousJobService:JobService() {
                             ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
                                 ContinuumTrainingMonitor.OFFLINE,"PREPARING",
                                 "Gespeicherte Quellen: Kandidatenrunde vorbereiten")
-                            val report=core.learnFromSources(fresh,cancelled)
+                            core.learnFromSources(fresh,cancelled)
                             ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
                                 ContinuumTrainingMonitor.OFFLINE,"AUDIT",
                                 "Quellenbezogene Holdouts und Checkpointentscheidung")
-                            // A stopped or timed-out training round is NOT a completed
-                            // source evaluation: the same source needs another chance.
-                            if(report?.completedEvaluation==true && !cancelled()) {
-                                ContinuumSourceNovelty.markCompleted(filesDir,fresh)
-                            }
+                            // Completion is persisted by core.
                         }
                     }
                 }

@@ -323,22 +323,30 @@ class AiContextCompiler(
 
     private fun redactSecrets(text: String): String {
         val assignments = if ('=' in text || ':' in text) Regex(
-            """(?i)\b(password|passwd|token|secret|credential|(?:proxy-)?authorization|api[_-]?key)\b["']?[ \t]*[:=][ \t]*"""
+            """(?i)\b(password|passwd|(?:access|refresh|session|auth)[_-]token|(?:client|app)[_-]secret|token|secret|credential|(?:proxy-)?authorization|api[_-]?key)\b["']?[ \t]*[:=][ \t]*"""
         ).findAll(text) else emptySequence()
         var out: StringBuilder? = null
         var copiedUntil = 0
         for (match in assignments) {
             if (match.range.first < copiedUntil) continue
             val valueStart = match.range.last + 1
-            if (valueStart == text.length || text[valueStart].isWhitespace()) continue
+            if (valueStart == text.length) continue
+            val authorization = match.groupValues[1].endsWith("authorization", ignoreCase = true)
+            if (text[valueStart].isWhitespace()) {
+                check(!authorization) { "UNTERMINATED_CREDENTIAL_VALUE" }
+                continue
+            }
             var valueEnd = valueStart
-            if (match.groupValues[1].endsWith("authorization", ignoreCase = true)) {
+            if (authorization) {
                 var schemeEnd = valueStart
                 while (schemeEnd < text.length && !text[schemeEnd].isWhitespace()) schemeEnd++
                 val scheme = text.substring(valueStart, schemeEnd)
                 if (scheme.equals("Bearer", true) || scheme.equals("Basic", true)) {
                     valueEnd = schemeEnd
                     while (valueEnd < text.length && (text[valueEnd] == ' ' || text[valueEnd] == '\t')) valueEnd++
+                    check(valueEnd == text.length || !text[valueEnd].isWhitespace()) {
+                        "UNTERMINATED_CREDENTIAL_VALUE"
+                    }
                 }
             }
             val quote = text.getOrNull(valueEnd)
@@ -362,7 +370,12 @@ class AiContextCompiler(
             copiedUntil = valueEnd
         }
         val assigned = out?.append(text, copiedUntil, text.length)?.toString() ?: text
-        return assigned.replace(Regex("(?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]{8,}"), "Bearer [REDACTED]")
+        if (assigned.contains("bearer", ignoreCase = true) &&
+            Regex("""(?i)\bbearer[ \t]*[\r\n\u000B\u000C]\s*[A-Za-z0-9._~+/=-]{8,}""")
+                .containsMatchIn(assigned)) {
+            error("UNTERMINATED_CREDENTIAL_VALUE")
+        }
+        return assigned.replace(Regex("(?i)\\bbearer[ \\t]+[A-Za-z0-9._~+/=-]{8,}"), "Bearer [REDACTED]")
     }
 
     private fun utf8Size(value: String): Int = value.toByteArray(Charsets.UTF_8).size
