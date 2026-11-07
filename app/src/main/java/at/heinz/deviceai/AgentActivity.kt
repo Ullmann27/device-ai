@@ -1422,7 +1422,7 @@ class AgentActivity : Activity() {
                     home.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
                         memoryActivity = memoryActivitySnapshot(state.memory))
                 }
-                liveHardwareGauges?.takeIf { it.isShown }?.updateTelemetry(state.system)
+                if (liveHardwareGauges?.isShown == true) liveHardwareGauges?.updateTelemetry(state.system)
                 navigationView?.takeIf { it.isShown }?.state = state
                 railView?.takeIf { it.isShown }?.state = state
                 announceNewIssues(open)
