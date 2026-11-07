@@ -109,17 +109,15 @@ object JarvisCockpitPanels {
 
     fun drawStatusBar(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
         JarvisReferenceHud.surface(p, b, minOf(18f, b.height / 3f), Colors.violetRim, Colors.cyan)
-        val segments = statusSegments(s)
-        val compact = b.width < 600f || p.measureText(segments.last().text, Type.status) > b.width * .3f
-        val columns = if (b.width < 480f) 2 else if (compact) 3 else 6
+        val segments = statusSegments(s).filter { it.kind in setOf(Seg.LOCAL_AI, Seg.PRIVACY, Seg.SYSTEM) }
+            .sortedBy { when (it.kind) { Seg.LOCAL_AI -> 0; Seg.PRIVACY -> 1; else -> 2 } }
+        val columns = if (b.width < 480f && p.capHeight(Type.status) > 11f) 1 else 3
         val rows = (segments.size + columns - 1) / columns
         val rowHeight = b.height / rows
         segments.forEachIndexed { i, segment ->
             val column = i % columns; val row = i / columns
-            val weights = floatArrayOf(1.1f, .8f, 1f, 1.2f, 1.1f, 1.8f)
-            val left = if (columns == 6) b.left + b.width * weights.take(i).sum() / weights.sum()
-                else b.left + column * b.width / columns
-            val width = if (columns == 6) b.width * weights[i] / weights.sum() else b.width / columns
+            val left = b.left + column * b.width / columns
+            val width = b.width / columns
             val cy = b.top + (row + .5f) * rowHeight
             if (column > 0) p.drawLine(left, cy - rowHeight * .32f, left, cy + rowHeight * .32f,
                 .8f, Fill.Solid(Colors.rim))

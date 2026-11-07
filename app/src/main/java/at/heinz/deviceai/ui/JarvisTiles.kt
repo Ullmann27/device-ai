@@ -25,6 +25,15 @@ object JarvisTiles {
         Argb.mix(edgePalette[i], edgePalette[(i + 1) % edgePalette.size], smooth)
     }
     private val edgeCoreFill = Fill.Solid(Colors.glowCore)
+    private val pedestalEdge = Fill.Linear(-.78f, .57f, .78f, .57f,
+        intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.violetRim))
+    private val pedestalFloor = Fill.Radial(0f, .57f, .82f,
+        intArrayOf(Argb.withAlpha(Colors.cyan, .28f), Argb.withAlpha(Colors.violet, .16f), 0),
+        floatArrayOf(0f, .6f, 1f))
+    private val pedestalBeam = Fill.Linear(0f, .04f, 0f, .60f,
+        intArrayOf(0, Argb.withAlpha(Colors.cyan, .13f)))
+    private val pedestalBeamPath = VectorPath().moveTo(-.18f, .04f)
+        .lineTo(-.46f, .57f).lineTo(.46f, .57f).lineTo(.18f, .04f).close()
     /** ref5 uses two violet cards among the cyan cards. Colour describes the destination, never live status. */
     fun style(target: String): JarvisDesign.ComponentStyle = when (target) {
         "memory" -> JarvisDesign.Styles.memoryTile
@@ -48,12 +57,15 @@ object JarvisTiles {
             rim = Argb.mix(source.rim, Colors.background, .65f)) else source
         val active = !disabled && (highlighted || tile.controlState == JarvisControlState.PRESSED ||
             tile.controlState == JarvisControlState.SELECTED)
-        JarvisNeon.component(p, b.left, b.top, b.right, b.bottom, st, active = active)
+        val interaction = when {
+            disabled -> JarvisReferenceHud.Interaction.DISABLED
+            active -> JarvisReferenceHud.Interaction.SELECTED
+            tile.controlState == JarvisControlState.LOADING -> JarvisReferenceHud.Interaction.LOADING
+            else -> JarvisReferenceHud.Interaction.NORMAL
+        }
+        JarvisReferenceHud.surface(p, b, st.radius, st.rim, st.rimEnd ?: st.rim,
+            interaction, decorativeRibbons = true)
         val radius = minOf(st.radius, b.height / 2f)
-        p.fillRoundRect(b.left + 1f, b.top + 1f, b.right - 1f, b.top + b.height * .30f, radius,
-            Fill.Linear(0f, b.top, 0f, b.top + b.height * .30f,
-                intArrayOf(Argb.withAlpha(st.rim, .12f), 0)))
-        JarvisNeon.halo(p, b.left + 16f, b.top + b.height / 2f, b.height * .42f, st.rim, .14f)
         if (!disabled && timeMs > 0L) {
             // Existing two rim strokes plus the moving rounded-corner highlight.
             val wave = ambientPhase(tile.target, timeMs)
@@ -89,6 +101,28 @@ object JarvisTiles {
             p.drawText("…", b.right - 9f, b.top + 15f, JarvisDesign.Type.caption,
                 Fill.Solid(Colors.cyanSoft), TextAlign.RIGHT)
         }
+    }
+
+    /** Static glyph over light pedestal. */
+    fun drawFeatureIcon(p: ContinuumPainter, tile: JarvisTile, cx: Float, cy: Float, size: Float) {
+        if (!cx.isFinite() || !cy.isFinite() || !size.isFinite() || size <= 0f) return
+        val disabled = tile.controlState == JarvisControlState.DISABLED
+        val opacity = if (disabled) .42f else 1f
+        val accent = if (tile.target == "memory" || tile.target == "agents") Colors.violetRim else Colors.cyan
+        p.save(); p.translate(cx, cy); p.scale(size, size)
+        JarvisSceneFills.halo(p, 0f, .08f, .72f, accent, .14f * opacity)
+        p.fillPath(pedestalBeamPath, pedestalBeam, opacity)
+        p.fillOval(-.78f, .42f, .78f, .72f, pedestalFloor, opacity)
+        p.setAdditive(true)
+        p.strokeOval(-.74f, .43f, .74f, .70f, .09f, pedestalEdge, .12f * opacity)
+        p.strokeOval(-.74f, .43f, .74f, .70f, .025f, pedestalEdge, .94f * opacity)
+        p.strokeOval(-.55f, .47f, .55f, .66f, .018f, pedestalEdge, .62f * opacity)
+        p.strokeArc(-.65f, .45f, .65f, .69f, 8f, 164f, .014f, edgeCoreFill, .72f * opacity)
+        p.setAdditive(false)
+        val color = if (disabled) Colors.textMuted else Colors.cyanSoft
+        if (!JarvisRailIcons.draw(p, tile.target, -.5f, -.5f, 1f, color))
+            ContinuumIcons.draw(p, tile.icon, 0f, 0f, 1f, Fill.Solid(color))
+        p.restore()
     }
 
     /**

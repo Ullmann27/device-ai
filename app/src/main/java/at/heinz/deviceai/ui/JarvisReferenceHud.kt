@@ -4,9 +4,9 @@ import at.heinz.deviceai.ui.JarvisDesign.Colors
 import at.heinz.deviceai.ui.JarvisShellLayout.Box
 
 /**
- * Decorative light layers reconstructed from the owner's 1536 × 1024 master reference.
- * These paths carry no activity, model, microphone or worker status. Text, hit targets and
- * the native avatar remain separate. Normalized curves are cached and transformed only at draw time.
+ * Shared owner-reference light layers.
+ * Decoration never represents system state.
+ * Geometry stays separate from controls.
  */
 object JarvisReferenceHud {
     enum class Interaction { NORMAL, PRESSED, SELECTED, DISABLED, LOADING }
@@ -15,11 +15,8 @@ object JarvisReferenceHud {
     private val white = Fill.Solid(Colors.glowCore)
     private val ribbonGradient = Fill.Linear(0f, 0f, 1f, 0f,
         intArrayOf(Colors.violet, Colors.magenta, Colors.cyan, Colors.violet))
-    private val tileRibbons = List(9) { i ->
-        val offset = i * .032f
-        VectorPath().moveTo(.58f - offset * .30f, 1.05f)
-            .cubicTo(.77f - offset, 1.06f - offset * .26f, .73f + offset * .2f, .26f + offset, 1.07f, .26f + offset)
-    }
+    private data class MaterialKey(val box: Box, val accent: Int, val end: Int,
+                                   val selected: Boolean, val layer: Int)
     private val heroRibbons = List(12) { i ->
         val o = i * .012f
         VectorPath().moveTo(.145f, .267f + o)
@@ -86,52 +83,56 @@ object JarvisReferenceHud {
         val enabled = interaction != Interaction.DISABLED
         val selected = interaction == Interaction.SELECTED || interaction == Interaction.PRESSED
         val opacity = if (enabled) 1f else .42f
-        // Owner correction 2026-11-05: 59509 is clearly more luminous than the earlier ref5 calibration.
-        // Owner request (evening, 05.11.): deeper glass and stronger neon rims as in ref5/59509. The earlier host
-        // measurement put the cockpit's neon share at 9.6 % against 12.0 % in 59509: rims +16 % (selected +15 %)
-        // plus one wide, faint depth halo. Host-calibrated only; the Fold7 comparison is still open.
-        val glow = if (selected) 1.32f else 1f
+        // Dark glass, localized edge light.
+        val glow = if (selected) 1.38f else 1f
         val r = radius.coerceIn(1f, minOf(b.width, b.height) * .5f)
-        val edge = Fill.Linear(b.left, b.top, b.right, b.bottom,
-            intArrayOf(Argb.mix(accent, Colors.activeWhite, .22f), accent,
-                Argb.mix(endAccent, Colors.activeWhite, .18f), endAccent), floatArrayOf(0f, .28f, .73f, 1f))
-        p.setAdditive(true)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 28f, edge, .022f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 16f, edge, .05f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 7f, edge, .14f * opacity * glow)
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 3.5f, edge, .30f * opacity * glow)
-        p.setAdditive(false)
-        p.fillRoundRect(b.left, b.top, b.right, b.bottom, r,
+        val edge = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 0)) {
             Fill.Linear(b.left, b.top, b.right, b.bottom,
-                intArrayOf(Argb.mix(Argb.of(232, 4, 30, 52), accent, .20f), Argb.of(240, 3, 11, 30),
-                    Argb.mix(Argb.of(232, 10, 20, 52), endAccent, .20f))), opacity)
+                intArrayOf(Argb.mix(accent, Colors.activeWhite, .38f), accent,
+                    Argb.mix(endAccent, Colors.activeWhite, .20f), endAccent),
+                floatArrayOf(0f, .28f, .73f, 1f))
+        }
+        val body = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 1)) {
+            Fill.Linear(b.left, b.top, b.right, b.bottom,
+                intArrayOf(Argb.mix(Argb.rgb(6, 15, 31), accent, if (selected) .08f else .025f),
+                    Argb.rgb(2, 6, 17), Argb.rgb(3, 8, 21),
+                    Argb.mix(Argb.rgb(7, 12, 30), endAccent, if (selected) .07f else .025f)),
+                floatArrayOf(0f, .34f, .72f, 1f))
+        }
+        val sheen = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 2)) {
+            Fill.Linear(b.left, b.top, b.left, b.top + b.height * .16f,
+                intArrayOf(Argb.withAlpha(Colors.glowCore, if (selected) .10f else .045f), 0))
+        }
+        p.setAdditive(true)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 16f, edge, .018f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 7f, edge, .065f * opacity * glow)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, 3f, edge, .25f * opacity * glow)
+        p.setAdditive(false)
+        p.fillRoundRect(b.left, b.top, b.right, b.bottom, r, body, opacity)
         p.save(); p.clipRoundRect(b.left, b.top, b.right, b.bottom, r)
-        p.fillRect(b.left, b.top, b.right, b.top + b.height * .24f,
-            Fill.Linear(b.left, b.top, b.left, b.top + b.height * .24f,
-                intArrayOf(Argb.withAlpha(accent, if (selected) .34f else .22f), 0)), opacity)
-        JarvisNeon.halo(p, b.left, b.bottom, minOf(b.width * .52f, b.height * 1.8f), accent, .30f * opacity)
-        JarvisNeon.halo(p, b.right, b.bottom, minOf(b.width * .44f, b.height * 1.5f), endAccent, .28f * opacity)
+        p.fillRect(b.left, b.top, b.right, b.top + b.height * .16f, sheen, opacity)
+        val reach = minOf(25f, b.width * .25f, b.height * .32f)
+        JarvisSceneFills.halo(p, b.left + r * .45f, b.top + r * .45f, reach,
+            accent, (if (selected) .44f else .30f) * opacity)
+        JarvisSceneFills.halo(p, b.right - r * .45f, b.bottom - r * .45f, reach,
+            endAccent, (if (selected) .40f else .28f) * opacity)
         if (decorativeRibbons) {
+            // Keep text centers free.
             p.setAdditive(true)
-            p.drawRaster("jarvis-reference/" +
-                (if (accent == Colors.violetRim || accent == Colors.violet) "tile-violet-energy.png" else "tile-cyan-energy.png"),
-                b.left, b.top, b.right, b.bottom, opacity)
+            p.drawLine(b.left + r, b.top + .8f, b.left + b.width * .42f, b.top + .8f,
+                .8f, white, .68f * opacity)
+            p.drawLine(b.right - b.width * .32f, b.bottom - .8f, b.right - r, b.bottom - .8f,
+                .8f, white, .52f * opacity)
             p.setAdditive(false)
-            p.save(); p.translate(b.left, b.top); p.scale(b.width, b.height)
-            val color = Fill.Linear(.48f, .85f, 1f, .5f,
-                intArrayOf(Argb.withAlpha(accent, 0f), accent, endAccent))
-            p.setAdditive(true)
-            tileRibbons.forEachIndexed { i, path ->
-                p.strokePath(path, .018f, color, .05f * opacity)
-                p.strokePath(path, if (i == 4) .006f else .0018f, color, (if (i == 4) .92f else .45f) * opacity)
-            }
-            p.setAdditive(false); p.restore()
         }
         p.restore()
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, if (selected) 1.9f else 1.25f, edge, opacity)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, r, if (selected) 1.7f else 1.05f, edge, opacity)
+        val inner = JarvisSceneFills.cached(MaterialKey(b, accent, endAccent, selected, 3)) {
+            Fill.Linear(b.left, b.top, b.right, b.bottom,
+                intArrayOf(Colors.glowCore, 0, Argb.withAlpha(endAccent, .65f)))
+        }
         p.strokeRoundRect(b.left + 1.2f, b.top + 1.2f, b.right - 1.2f, b.bottom - 1.2f,
-            (r - 1f).coerceAtLeast(1f), .5f, Fill.Linear(b.left, b.top, b.right, b.bottom,
-                intArrayOf(Colors.glowCore, 0, Argb.withAlpha(endAccent, .8f))), .62f * opacity)
+            (r - 1f).coerceAtLeast(1f), .45f, inner, .42f * opacity)
     }
 
     private val logoLeft = VectorPath().moveTo(46f, 3f).lineTo(46f, 25f).lineTo(17f, 66f)

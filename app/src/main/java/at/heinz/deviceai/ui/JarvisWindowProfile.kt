@@ -33,15 +33,16 @@ data class JarvisWindowProfile(
             val bodyWidth = (widthDp - railWidth - 28f).coerceAtLeast(1f)
             val maxColumns = when (size) {
                 WidthClass.COMPACT -> 2
-                WidthClass.MEDIUM -> 3
+                WidthClass.MEDIUM -> 5
                 WidthClass.EXPANDED -> 5
             }
-            val readableColumns = ((bodyWidth + 8f) / (120f * maxOf(1f, font) + 8f)).toInt()
+            val readableColumns = ((bodyWidth + 8f) / (104f * maxOf(1f, font) + 8f)).toInt()
                 .coerceIn(1, maxColumns)
-            val reference = size == WidthClass.EXPANDED && heightDp >= REFERENCE_MIN_HEIGHT_DP &&
+            val reference = size != WidthClass.COMPACT && heightDp >= REFERENCE_MIN_HEIGHT_DP &&
                 font <= 1.3f && readableColumns == 5 && rail == JarvisShellLayout.Rail.LABELLED
             return JarvisWindowProfile(size, font, if (reference) 5 else readableColumns,
-                if (reference) 4 else if (bodyWidth >= 352f * maxOf(1f, font)) 2 else 1,
+                if (bodyWidth >= 1000f * maxOf(1f, font)) 4
+                else if (bodyWidth >= 352f * maxOf(1f, font)) 2 else 1,
                 railWidth, reference)
         }
     }

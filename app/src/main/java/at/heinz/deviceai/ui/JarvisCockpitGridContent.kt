@@ -104,6 +104,7 @@ object JarvisCockpitGridContent {
             }
             Slot.STATUS -> JarvisCockpitPanels.drawStatusBar(p, b, s)
             Slot.DIALOG -> dialog(p, b, s, shell)
+            Slot.INPUT -> input(p, b, s, shell)
             Slot.USER_CARD -> {
                 if (at.heinz.deviceai.cockpit.JarvisUserCardSlot.renderer == null)
                     JarvisOwnerCardContent.draw(p, b, at.heinz.deviceai.cockpit.JarvisUserCardSlot.latest)
@@ -244,45 +245,61 @@ object JarvisCockpitGridContent {
     }
 
     private fun dialog(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, shell: Shell?) {
-        val heading = Type.heading.copy(size = 16f)
-        val cap = p.capHeight(heading)
-        val titleY = b.top + 8f + cap
-        ContinuumIcons.draw(p, Icon.PULSE, b.left + 21f, titleY - cap / 2f, 22f, Fill.Solid(Colors.cyan))
-        p.drawText("JARVIS", b.left + 39f, titleY, heading, Fill.Solid(Colors.cyan))
-        val live = s.presentation.live
-        val badge = if (live) "Live" else "Ruhe"
-        p.drawText(badge, b.right - 12f, titleY, Type.caption,
-            Fill.Solid(if (live) Colors.ok else Colors.textMuted), TextAlign.RIGHT)
-        val companionRoom = b.width - 45f
-        val companion = if (p.measureText(COMPANION, Type.caption) * .88f <= companionRoom) COMPANION else COMPANION_SHORT
-        val companionStyle = JarvisShellRenderer.shrinkToFit(p, companion, Type.caption, companionRoom, minScale = .88f)
-        p.drawText(fit(p, companion, companionStyle, companionRoom), b.left + 39f,
-            titleY + 4f + p.capHeight(Type.caption), companionStyle, Fill.Solid(Colors.textSecondary))
-        val controls = shell?.dialogControlBoxes().orEmpty()
-        val controlTop = controls.minOfOrNull { it.top } ?: (b.bottom - 6f)
-        val bubble = Box(b.left + 10f, titleY + p.capHeight(Type.caption) + 12f, b.right - 10f, controlTop - 4f)
-        if (bubble.height > 18f) {
-            JarvisReferenceHud.surface(p, bubble, 10f, Colors.cyan, Colors.cyanDeep)
-            val latest = s.cockpit.dialog.lastOrNull { !it.fromOwner }?.text
-                ?: s.cockpit.dialog.lastOrNull()?.text ?: "Noch kein Gespräch."
-            val lineHeight = p.capHeight(Type.caption) + 4f
-            val count = ((bubble.height - 12f) / lineHeight).toInt().coerceAtLeast(1)
-            wrap(p, latest, Type.caption, bubble.width - 18f).take(count).forEachIndexed { i, line ->
-                p.drawText(line, bubble.left + 9f, bubble.top + 6f + p.capHeight(Type.caption) + i * lineHeight,
-                    Type.caption, Fill.Solid(Colors.text))
-            }
+        val title = Type.heading.copy(size = 16f)
+        val detail = Type.caption.copy(size = 11f)
+        val badge = when {
+            s.presentation.listening -> "Hört zu"
+            s.presentation.speaking -> "Spricht"
+            s.presentation.processing -> "Denkt nach"
+            s.model.online -> "Bereit"
+            else -> s.model.stateLabel
         }
+        val height = p.capHeight(title) + p.capHeight(detail) + 7f
+        val top = b.centerY - height / 2f
+        val x = b.left + 42f
+        val room = b.right - x - 23f
+        ContinuumIcons.draw(p, Icon.PULSE, b.left + 23f, b.centerY, 23f, Fill.Solid(Colors.cyan))
+        p.drawText(fit(p, "JARVIS", title, room), x, top + p.capHeight(title), title, Fill.Solid(Colors.cyan))
+        p.drawText(fit(p, badge, detail, room), x, top + height, detail, Fill.Solid(Colors.textSecondary))
+        p.fillCircle(b.right - 14f, b.centerY + 8f, 3f,
+            Fill.Solid(if (s.presentation.live || s.model.online) Colors.ok else Colors.textMuted))
+    }
+
+    private fun input(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, shell: Shell?) {
+        val textBox = shell?.inputConversationBox() ?: Box(b.left + 12f, b.top, b.right - 12f, b.bottom)
+        val controls = shell?.dialogControlBoxes().orEmpty()
         controls.forEachIndexed { i, box ->
             val active = (i == 0 && s.presentation.listening) || (i == 1 && s.presentation.cameraSessionActive)
             val color = if (active) Colors.ok else if (i == 2) Colors.violetRim else Colors.cyan
             val radius = minOf(15f, box.width * .36f)
-            JarvisNeon.halo(p, box.centerX, box.centerY, radius * 1.7f, color, if (active) .30f else .14f)
+            JarvisNeon.halo(p, box.centerX, box.centerY, radius * 1.5f, color, if (active) .20f else .07f)
             p.strokeCircle(box.centerX, box.centerY, radius, 1f, Fill.Solid(color))
             when (i) {
                 0 -> microphoneGlyph(p, box.centerX, box.centerY, 17f, color)
                 1 -> cameraGlyph(p, box.centerX, box.centerY, 17f, color)
                 else -> ContinuumIcons.draw(p, Icon.ATOM, box.centerX, box.centerY, 19f, Fill.Solid(color))
             }
+        }
+        p.drawLine(textBox.left, b.centerY - 14f, textBox.left, b.centerY + 14f,
+            .8f, Fill.Solid(Colors.cyanSoft), .55f)
+        val room = textBox.width - 18f
+        val latest = s.cockpit.dialog.lastOrNull { !it.fromOwner }?.text?.takeIf { it.isNotBlank() }
+        val prompt = when {
+            room >= 235f -> "Was soll ich für dich erledigen?"
+            room >= 140f -> "Was möchtest du tun?"
+            else -> "Gespräch öffnen"
+        }
+        val style = if (latest != null) Type.body else Type.body.copy(size = 15f)
+        val lineHeight = p.capHeight(style) + 4f
+        val count = ((b.height - 16f) / lineHeight).toInt().coerceIn(1, 2)
+        val lines = wrap(p, latest ?: prompt, style, room)
+        val visible = lines.take(count).toMutableList()
+        if (lines.size > count && visible.isNotEmpty())
+            visible[visible.lastIndex] = fit(p, visible.last() + " …", style, room)
+        val top = b.centerY - (visible.size * lineHeight - 4f) / 2f
+        visible.forEachIndexed { i, line ->
+            p.drawText(line, textBox.left + 10f, top + p.capHeight(style) + i * lineHeight,
+                style, Fill.Solid(Colors.text))
         }
     }
 
@@ -312,23 +329,31 @@ object JarvisCockpitGridContent {
     }
 
     fun drawTile(p: ContinuumPainter, b: Box, tile: JarvisTile, subtitle: List<String>) {
-        val iconSize = minOf(26f, b.height * .5f)
-        val ix = b.left + 10f + iconSize / 2f; val cy = b.centerY
-        val accent = if (tile.target in setOf("memory", "agents")) Colors.violetRim else Colors.cyan
-        JarvisNeon.halo(p, ix, cy, iconSize * .85f, accent, .20f)
-        if (!JarvisRailIcons.draw(p, tile.target, ix - iconSize / 2f, cy - iconSize / 2f, iconSize, Colors.iconCore))
-            ContinuumIcons.draw(p, tile.icon, ix, cy, iconSize, Fill.Solid(Colors.iconCore))
-        val x = ix + iconSize / 2f + 10f; val room = b.right - 7f - x
-        val lines = subtitle.take(2)
-        val cap = p.capHeight(Type.tileLabel)
-        val pitch = p.capHeight(Type.subtitle) + 3f
-        var y = cy - (cap + lines.size * pitch) / 2f + cap
-        val labelStyle = JarvisShellRenderer.shrinkToFit(p, tile.label, Type.tileLabel, room)
-        p.drawText(fit(p, tile.label, labelStyle, room), x, y, labelStyle, Fill.Solid(Colors.text))
-        lines.forEach {
-            y += pitch
-            val style = JarvisShellRenderer.shrinkToFit(p, it, Type.subtitle, room, minScale = .88f)
-            p.drawText(fit(p, it, style, room), x, y, style, Fill.Solid(Colors.textSecondary))
+        val room = b.width - 16f
+        val labelStyle = Type.tileLabel.copy(size = if (b.width >= 132f) 15f else 13f)
+        val subtitleStyle = Type.subtitle.copy(size = 11f)
+        val labels = when (tile.target) {
+            "device" -> listOf("Geräte-", "steuerung")
+            "system" -> if (p.measureText(tile.label, labelStyle) > room) listOf("System-", "status") else listOf(tile.label)
+            else -> wrap(p, tile.label, labelStyle, room)
+        }
+        val lines = wrap(p, subtitle.joinToString(" "), subtitleStyle, room)
+        val labelPitch = p.capHeight(labelStyle) + 4f
+        val subtitlePitch = p.capHeight(subtitleStyle) + 3f
+        val textHeight = labels.size * labelPitch + 7f + lines.size * subtitlePitch
+        val iconSize = minOf(40f, b.width * .30f, maxOf(20f, (b.height - textHeight - 26f) / 1.3f))
+        val iconY = b.top + 12f + iconSize * .5f
+        JarvisTiles.drawFeatureIcon(p, tile, b.centerX, iconY, iconSize)
+        var y = iconY + iconSize * .72f + 10f + p.capHeight(labelStyle)
+        labels.forEach { line ->
+            p.drawText(line, b.centerX, y, labelStyle, Fill.Solid(Colors.text), TextAlign.CENTER)
+            y += labelPitch
+        }
+        y += 5f + p.capHeight(subtitleStyle) - labelPitch
+        lines.forEach { line ->
+            if (y <= b.bottom - 7f)
+                p.drawText(line, b.centerX, y, subtitleStyle, Fill.Solid(Colors.textSecondary), TextAlign.CENTER)
+            y += subtitlePitch
         }
     }
 }

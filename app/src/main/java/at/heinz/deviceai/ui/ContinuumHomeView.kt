@@ -640,14 +640,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
         shell[JarvisShellLayout.Slot.DIALOG]?.let { b ->
             add("dialog:conversation", "chat", "JARVIS: Konversation öffnen",
-                JarvisShellLayout.Box(b.left, b.top, b.right, b.bottom - 55f))
+                b)
             val controls = listOf("voice-input" to "Mikrofon starten",
                 "camera-settings" to "Kamera und Wahrnehmung: Einstellungen", "avatar-appearance" to "Avatar-Darstellung")
             shell.dialogControlBoxes().forEachIndexed { i, box ->
                 add("dialog:${controls[i].first}", controls[i].first, controls[i].second, box)
             }
         }
-        add("input:conversation", "chat", "Konversation öffnen", shell[JarvisShellLayout.Slot.INPUT])
+        add("input:conversation", "chat", "Konversation öffnen", shell.inputConversationBox())
         add("camera:settings", "camera-settings", "Kamera und Wahrnehmung: Einstellungen", shell[JarvisShellLayout.Slot.CAMERA_STATUS])
         val panelTargets = listOf(JarvisShellLayout.Slot.ROW_AGENTS to "agents", JarvisShellLayout.Slot.ROW_TASKS to "tasks",
             JarvisShellLayout.Slot.ROW_MEMORY to "memory", JarvisShellLayout.Slot.ROW_MODEL to "model-management",
