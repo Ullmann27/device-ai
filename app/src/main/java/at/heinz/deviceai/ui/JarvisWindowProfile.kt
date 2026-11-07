@@ -28,7 +28,7 @@ data class JarvisWindowProfile(
             val railWidth = when {
                 size == WidthClass.COMPACT -> 0f
                 rail == JarvisShellLayout.Rail.ICONS -> 64f
-                else -> (widthDp * 243f / 1536f).coerceIn(112f, 244f) * font.coerceIn(1f, 1.5f)
+                else -> (widthDp * 243f / 1536f).coerceIn(112f, 244f) * maxOf(1f, font)
             }
             val bodyWidth = (widthDp - railWidth - 28f).coerceAtLeast(1f)
             val maxColumns = when (size) {

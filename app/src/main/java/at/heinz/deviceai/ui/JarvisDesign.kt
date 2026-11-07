@@ -27,7 +27,7 @@ object JarvisDesign {
         val tileFillStart = Argb.of(250, 0x05, 0x10, 0x22)
         val tileFillEnd = Argb.of(250, 0x04, 0x0A, 0x1A)
         val tileRimStart = Argb.rgb(0x01, 0xDA, 0xE8)       // tile.rim.left #01DAE8
-        val tileRimEnd = Argb.rgb(0x2E, 0x52, 0x89)         // tile.rim.right #2E5289
+        val tileRimEnd = Argb.rgb(0xC7, 0x4D, 0xFF)
         // Decorative destination colors only.
         val memoryTileStart = Argb.rgb(0x0C, 0x0D, 0x24)
         val memoryTileEnd = Argb.rgb(0x04, 0x0A, 0x1B)
@@ -100,7 +100,7 @@ object JarvisDesign {
         val memoryTile = tile.copy(fill = Colors.memoryTileStart, fillEnd = Colors.memoryTileEnd,
             rim = Colors.violetRim, rimEnd = Colors.tileRimEnd)
         val agentsTile = tile.copy(fill = Colors.agentsTileStart, fillEnd = Colors.agentsTileEnd,
-            rim = Colors.violetRim, rimEnd = Colors.violetSoft)
+            rim = Colors.violetRim, rimEnd = Colors.magenta)
         val systemTile = tile.copy(rimEnd = Colors.violetRim)
         /** Tile chevron: glyph 8 px high, 22 px from the right edge → box 10 dp, inset 14 dp. */
         const val chevronSize = 10f

@@ -134,8 +134,11 @@ object JarvisCockpitGridContent {
         val top = cy - block / 2f
         p.drawText(fit(p, "Device AI", brandStyle, room), tx, top + cap, brandStyle, Fill.Solid(Colors.text))
         p.drawText(fit(p, "Continuum", brandStyle, room), tx, top + 2f * cap + 3f, brandStyle, Fill.Solid(Colors.text))
-        p.drawText(fit(p, "Deine KI-Steuerzentrale", caption, room), tx,
-            top + 2f * cap + 9f + p.capHeight(caption), caption, Fill.Solid(Colors.cyanSoft))
+        val captionText = "Deine KI-Steuerzentrale"
+        val captionStyle = JarvisShellRenderer.shrinkToFit(p, captionText, caption,
+            (room - 1f).coerceAtLeast(0f), minScale = .85f)
+        p.drawText(fit(p, captionText, captionStyle, room), tx,
+            top + 2f * cap + 9f + p.capHeight(caption), captionStyle, Fill.Solid(Colors.cyanSoft))
         p.restore()
         g?.areas?.get(Area.DEVICE_STATUS)?.let { clock ->
             JarvisReferenceHud.surface(p, clock, 14f, Colors.cyanDeep, Colors.cyanDeep)
@@ -330,29 +333,41 @@ object JarvisCockpitGridContent {
 
     fun drawTile(p: ContinuumPainter, b: Box, tile: JarvisTile, subtitle: List<String>) {
         val room = b.width - 16f
-        val labelStyle = Type.tileLabel.copy(size = if (b.width >= 132f) 15f else 13f)
-        val subtitleStyle = Type.subtitle.copy(size = 11f)
-        val labels = when (tile.target) {
-            "device" -> listOf("Geräte-", "steuerung")
-            "system" -> if (p.measureText(tile.label, labelStyle) > room) listOf("System-", "status") else listOf(tile.label)
-            else -> wrap(p, tile.label, labelStyle, room)
+        val titleBase = Type.tileLabel.copy(size = if (b.width >= 132f) 16f else 15f)
+        val labelText = if (p.measureText(tile.label, titleBase) > room)
+            JarvisTiles.compoundBreaks[tile.label]?.toList()?.joinToString(" ") ?: tile.label else tile.label
+        val subtitleText = subtitle.joinToString(" ")
+        fun fitted(text: String, style: TextStyle): TextStyle {
+            val widest = text.split(' ').maxByOrNull { p.measureText(it, style) }.orEmpty()
+            return JarvisShellRenderer.shrinkToFit(p, widest, style, room - 1f, minScale = .88f)
         }
-        val lines = wrap(p, subtitle.joinToString(" "), subtitleStyle, room)
-        val labelPitch = p.capHeight(labelStyle) + 4f
-        val subtitlePitch = p.capHeight(subtitleStyle) + 3f
-        val textHeight = labels.size * labelPitch + 7f + lines.size * subtitlePitch
-        val iconSize = minOf(40f, b.width * .30f, maxOf(20f, (b.height - textHeight - 26f) / 1.3f))
-        val iconY = b.top + 12f + iconSize * .5f
+        val labelStyle = fitted(labelText, titleBase)
+        val subtitleStyle = fitted(subtitleText, Type.subtitle.copy(size = 12f))
+        val labels = wrap(p, labelText, labelStyle, room)
+        val lines = wrap(p, subtitleText, subtitleStyle, room)
+        val labelCap = p.capHeight(labelStyle)
+        val subtitleCap = p.capHeight(subtitleStyle)
+        val labelPitch = labelCap + 4f
+        val subtitlePitch = subtitleCap + 3f
+        val labelHeight = labelCap + (labels.size - 1).coerceAtLeast(0) * labelPitch
+        val labelArea = maxOf(labelCap + labelPitch, labelHeight)
+        val subtitleHeight = subtitleCap + (lines.size - 1).coerceAtLeast(0) * subtitlePitch
+        val subtitleDescent = subtitleCap * .35f
+        val roomForIcon = (b.height - 16f - 18f - labelArea - subtitleHeight - subtitleDescent) / 1.22f
+        val iconSize = minOf(44f, maxOf(38f, b.width * .34f), roomForIcon.coerceAtLeast(28f))
+        val iconY = b.top + 8f + iconSize * .5f
         JarvisTiles.drawFeatureIcon(p, tile, b.centerX, iconY, iconSize)
-        var y = iconY + iconSize * .72f + 10f + p.capHeight(labelStyle)
+        val titleTop = iconY + iconSize * .72f + 10f
+        var y = titleTop + (labelArea - labelHeight) / 2f + labelCap
         labels.forEach { line ->
             p.drawText(line, b.centerX, y, labelStyle, Fill.Solid(Colors.text), TextAlign.CENTER)
             y += labelPitch
         }
-        y += 5f + p.capHeight(subtitleStyle) - labelPitch
+        val descriptionTop = titleTop + labelArea + 8f
+        val descriptionBottom = b.bottom - 8f - subtitleDescent
+        y = descriptionTop + ((descriptionBottom - descriptionTop - subtitleHeight) / 2f).coerceAtLeast(0f) + subtitleCap
         lines.forEach { line ->
-            if (y <= b.bottom - 7f)
-                p.drawText(line, b.centerX, y, subtitleStyle, Fill.Solid(Colors.textSecondary), TextAlign.CENTER)
+            p.drawText(line, b.centerX, y, subtitleStyle, Fill.Solid(Colors.textSecondary), TextAlign.CENTER)
             y += subtitlePitch
         }
     }

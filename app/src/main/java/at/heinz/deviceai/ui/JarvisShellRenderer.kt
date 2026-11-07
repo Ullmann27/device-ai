@@ -55,7 +55,8 @@ object JarvisShellRenderer {
              tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L,
              deferForeground: Boolean = false, deckClearance: Float = 0f) {
         background(p, shell.width, shell.height)
-        JarvisReferenceHud.backdrop(p, shell.width, shell.height)
+        val backdropHeight = shell[Slot.INPUT]?.bottom ?: shell[Slot.AVATAR]?.bottom ?: shell.height
+        JarvisReferenceHud.backdrop(p, shell.width, backdropHeight)
         val dolly = 1f
         p.save(); p.scale(dolly, dolly, shell.width / 2f, shell.height / 2f)
         val cardSlots = shell.boxes.keys.filter { it !in bare && it != Slot.TILES }

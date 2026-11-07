@@ -10,7 +10,7 @@
 
 ## Design
 
-Keep the original cyan/violet identity, live avatar and original orb. Use near-black card interiors, restrained edge illumination and larger, vertically arranged feature cards. Restore the home input bar. The hero owns the primary area; secondary diagnostics remain reachable without dominating the first screen. Preserve actual runtime status rather than copying the reference's illustrative green indicators.
+Keep the original cyan/violet identity, live avatar and original orb. Use near-black card interiors, saturated cyan/violet edge illumination against dark interiors and larger, vertically arranged feature cards. Restore the home input bar. The hero owns the primary area; secondary diagnostics follow all ten feature cards and the main status strip in the scrollable content. The owner explicitly confirmed scrolling and requested stronger color intensity/contrast on 2026-11-07. Preserve actual runtime status rather than copying the reference's illustrative green indicators.
 
 Portrait, open Fold and tablet retain all ten feature destinations. Native action bounds follow the drawn controls; microphone, camera, appearance, notifications, settings, model details and navigation stay reachable. No extra animation timer, render loop, remote model, asset dependency or permission is introduced.
 
@@ -19,7 +19,7 @@ Portrait, open Fold and tablet retain all ten feature destinations. Native actio
 - [x] Layout assistant: `JarvisCockpitGrid.kt`, `JarvisShellLayout.kt`, `JarvisWindowProfile.kt`; tall cards, shared input bounds and scrollable secondary details.
 - [x] Surface assistant: `JarvisReferenceHud.kt`, `JarvisTiles.kt`, palette in `JarvisDesign.kt`; dark glass, bounded rims and static dimensional icon pedestals.
 - [x] Integrator: `JarvisCockpitGridContent.kt`, `JarvisShellRenderer.kt`, `ContinuumHomeView.kt`; full card labels, compact companion badge, input controls and native action routing.
-- [ ] Reviewer: existing native UI routing, resize and accessibility tests; inspect the combined diff and actual rendered frames.
+- [x] Reviewer: inspect native routing, resize/accessibility tests and actual native Canvas frames; preserve unchanged avatar pose/camera assertions.
 - [ ] Run focused geometry/drawing tests and real Android host UI tests. Use `JarvisDeterministicCaptureUiTest` for code-rendered images, not generated mockups.
 - [ ] Commit and push source-bound results, exact commands and limitations.
 
@@ -38,3 +38,9 @@ Source checkpoint `ac6f363e07795d70341b19c719aae59b8cf37144`: real offline Andro
 ## Resume and rollback
 
 Read this file, fetch the exact branch HEAD and inspect its PR before continuing. Revert only this branch's layout commits to return to PR #594. Other active branches must remain untouched.
+
+### First integrated test checkpoint
+
+Frozen source `b12acea2d4fb2dcea5c100b12fed4c6c09436864`: real offline SDK/Gradle `:app:testDebugUnitTest` ran 247 tests: 245 passed, 2 failed. `JarvisHeaderBrandFitTest` exposed a truncated header caption; `JarvisLivingSceneTest` still asserted the old horizontal dialog/head relationship. The native routing, avatar framing, all 12 real Activity reference tests and deterministic captures passed. The failures are being corrected, with native font checks for complete rail/card labels and revised saturated surfaces pending a fresh source-bound run. This checkpoint does not claim those fixes passed.
+
+The initial CLI `--tests` invocation was rejected by the existing QA task allowlist. The subsequent run used a Gradle init-script test filter and the permitted `:app:testDebugUnitTest` task; no gate was disabled.

@@ -26,14 +26,55 @@ object JarvisTiles {
     }
     private val edgeCoreFill = Fill.Solid(Colors.glowCore)
     private val pedestalEdge = Fill.Linear(-.78f, .57f, .78f, .57f,
-        intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.violetRim))
+        intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.magenta))
     private val pedestalFloor = Fill.Radial(0f, .57f, .82f,
-        intArrayOf(Argb.withAlpha(Colors.cyan, .28f), Argb.withAlpha(Colors.violet, .16f), 0),
+        intArrayOf(Argb.withAlpha(Colors.cyan, .42f), Argb.withAlpha(Colors.violet, .28f), 0),
         floatArrayOf(0f, .6f, 1f))
+    private val pedestalSide = Fill.Linear(-.74f, .48f, .74f, .70f,
+        intArrayOf(Colors.cyanDeep, Colors.backgroundHaze, Colors.violet))
     private val pedestalBeam = Fill.Linear(0f, .04f, 0f, .60f,
-        intArrayOf(0, Argb.withAlpha(Colors.cyan, .13f)))
+        intArrayOf(0, Argb.withAlpha(Colors.cyan, .24f)))
     private val pedestalBeamPath = VectorPath().moveTo(-.18f, .04f)
         .lineTo(-.46f, .57f).lineTo(.46f, .57f).lineTo(.18f, .04f).close()
+    private val glyphEdge = Fill.Linear(-.45f, -.45f, .5f, .5f,
+        intArrayOf(Colors.cyan, Colors.cyan, Colors.violetRim), floatArrayOf(0f, .42f, 1f))
+    private val glyphCore = Fill.Linear(-.45f, -.45f, .5f, .5f,
+        intArrayOf(Colors.iconCore, Colors.cyanSoft, Colors.violetRim))
+    private var featurePainter: FeatureGlyphPainter? = null
+
+    /** Reuses the canonical icon geometry. */
+    private class FeatureGlyphPainter(val painter: ContinuumPainter) : ContinuumPainter by painter {
+        override fun strokePath(path: VectorPath, width: Float, fill: Fill, alpha: Float, roundCap: Boolean) {
+            painter.strokePath(path, width * 2.4f, glyphEdge, alpha * .14f, roundCap)
+            painter.strokePath(path, width * 1.5f, glyphEdge, alpha * .34f, roundCap)
+            painter.strokePath(path, width * .84f, glyphEdge, alpha, roundCap)
+            painter.strokePath(path, width * .28f, glyphCore, alpha * .96f, roundCap)
+        }
+
+        override fun drawLine(x0: Float, y0: Float, x1: Float, y1: Float, width: Float,
+                              fill: Fill, alpha: Float, roundCap: Boolean) {
+            painter.drawLine(x0, y0, x1, y1, width * 2.4f, glyphEdge, alpha * .14f, roundCap)
+            painter.drawLine(x0, y0, x1, y1, width * 1.5f, glyphEdge, alpha * .34f, roundCap)
+            painter.drawLine(x0, y0, x1, y1, width * .84f, glyphEdge, alpha, roundCap)
+            painter.drawLine(x0, y0, x1, y1, width * .28f, glyphCore, alpha * .96f, roundCap)
+        }
+
+        override fun strokeOval(left: Float, top: Float, right: Float, bottom: Float,
+                                width: Float, fill: Fill, alpha: Float) {
+            painter.strokeOval(left, top, right, bottom, width * 2.4f, glyphEdge, alpha * .14f)
+            painter.strokeOval(left, top, right, bottom, width * 1.5f, glyphEdge, alpha * .34f)
+            painter.strokeOval(left, top, right, bottom, width * .84f, glyphEdge, alpha)
+            painter.strokeOval(left, top, right, bottom, width * .28f, glyphCore, alpha * .96f)
+        }
+
+        override fun strokeRoundRect(left: Float, top: Float, right: Float, bottom: Float, radius: Float,
+                                     width: Float, fill: Fill, alpha: Float) {
+            painter.strokeRoundRect(left, top, right, bottom, radius, width * 2.4f, glyphEdge, alpha * .14f)
+            painter.strokeRoundRect(left, top, right, bottom, radius, width * 1.5f, glyphEdge, alpha * .34f)
+            painter.strokeRoundRect(left, top, right, bottom, radius, width * .84f, glyphEdge, alpha)
+            painter.strokeRoundRect(left, top, right, bottom, radius, width * .28f, glyphCore, alpha * .96f)
+        }
+    }
     /** ref5 uses two violet cards among the cyan cards. Colour describes the destination, never live status. */
     fun style(target: String): JarvisDesign.ComponentStyle = when (target) {
         "memory" -> JarvisDesign.Styles.memoryTile
@@ -110,18 +151,24 @@ object JarvisTiles {
         val opacity = if (disabled) .42f else 1f
         val accent = if (tile.target == "memory" || tile.target == "agents") Colors.violetRim else Colors.cyan
         p.save(); p.translate(cx, cy); p.scale(size, size)
-        JarvisSceneFills.halo(p, 0f, .08f, .72f, accent, .14f * opacity)
+        p.clipRect(-.78f, -.5f, .78f, .72f)
+        JarvisSceneFills.halo(p, 0f, .08f, .66f, accent, .25f * opacity)
         p.fillPath(pedestalBeamPath, pedestalBeam, opacity)
-        p.fillOval(-.78f, .42f, .78f, .72f, pedestalFloor, opacity)
+        p.fillOval(-.74f, .48f, .74f, .70f, pedestalSide, .76f * opacity)
+        p.fillOval(-.76f, .40f, .76f, .66f, pedestalFloor, opacity)
         p.setAdditive(true)
-        p.strokeOval(-.74f, .43f, .74f, .70f, .09f, pedestalEdge, .12f * opacity)
-        p.strokeOval(-.74f, .43f, .74f, .70f, .025f, pedestalEdge, .94f * opacity)
-        p.strokeOval(-.55f, .47f, .55f, .66f, .018f, pedestalEdge, .62f * opacity)
-        p.strokeArc(-.65f, .45f, .65f, .69f, 8f, 164f, .014f, edgeCoreFill, .72f * opacity)
+        p.strokeOval(-.72f, .48f, .72f, .69f, .022f, pedestalEdge, .64f * opacity)
+        p.strokeOval(-.74f, .40f, .74f, .66f, .12f, pedestalEdge, .20f * opacity)
+        p.strokeOval(-.74f, .40f, .74f, .66f, .055f, pedestalEdge, .46f * opacity)
+        p.strokeOval(-.74f, .40f, .74f, .66f, .025f, pedestalEdge, opacity)
+        p.strokeOval(-.55f, .44f, .55f, .62f, .018f, pedestalEdge, .84f * opacity)
+        p.strokeArc(-.66f, .43f, .66f, .65f, 8f, 164f, .014f, edgeCoreFill, .90f * opacity)
         p.setAdditive(false)
         val color = if (disabled) Colors.textMuted else Colors.cyanSoft
-        if (!JarvisRailIcons.draw(p, tile.target, -.5f, -.5f, 1f, color))
-            ContinuumIcons.draw(p, tile.icon, 0f, 0f, 1f, Fill.Solid(color))
+        val glyphPainter = if (disabled) p else featurePainter?.takeIf { it.painter === p }
+            ?: FeatureGlyphPainter(p).also { featurePainter = it }
+        if (!JarvisRailIcons.draw(glyphPainter, tile.target, -.5f, -.5f, 1f, color))
+            ContinuumIcons.draw(glyphPainter, tile.icon, 0f, 0f, 1f, Fill.Solid(color))
         p.restore()
     }
 
@@ -189,7 +236,7 @@ object JarvisTiles {
         val scale = (b.width / 231f).coerceIn(.45f, 1.5f)
         val font = if (fontScale.isFinite()) fontScale.coerceIn(.85f, 2f) else 1f
         val pitch = maxOf(48f * maxOf(1f, font), 56f * scale)
-        val inset = 12f * scale
+        val inset = 6f * scale
         return List(count) { i ->
             val top = b.top + 20f * scale + i * pitch
             Box(b.left + inset, top, b.right - inset, top + pitch)
@@ -211,19 +258,21 @@ object JarvisTiles {
             val active = i == selected || i == pressed
             val surface = if (active) JarvisDesign.Styles.buttonActive else JarvisDesign.Styles.button
             JarvisNeon.component(p, row.left, row.top, row.right, row.bottom, surface, active, centerLift = active)
-            val icon = minOf(24f * font, row.height * .52f)
-            val ix = if (labelled) row.left + 9f + icon / 2f else row.centerX
+            val icon = minOf(22f * font, row.width * .21f, row.height * .48f)
+            val ix = if (labelled) row.left + 5f + icon / 2f else row.centerX
             val color = if (it.target == "system") Colors.violetSoft else if (active) Colors.cyan else Colors.cyanSoft
             if (!JarvisRailIcons.draw(p, it.target, ix - icon / 2f, row.centerY - icon / 2f, icon, color))
                 ContinuumIcons.draw(p, it.icon, ix, row.centerY, icon, Fill.Solid(color))
             if (labelled) {
-                val tx = ix + icon / 2f + 9f
-                val room = row.right - tx - 5f
+                val tx = ix + icon / 2f + 5f
+                val room = row.right - tx - 3f
                 val lines = railLines(p, it.label, style, room)
-                val lineH = maxOf(p.capHeight(style) + 4f, style.size * 1.1f)
+                val widest = lines.maxByOrNull { line -> p.measureText(line, style) }.orEmpty()
+                val fitted = JarvisShellRenderer.shrinkToFit(p, widest, style, room - .5f, minScale = .88f)
+                val lineH = maxOf(p.capHeight(fitted) + 4f, fitted.size * 1.1f)
                 lines.forEachIndexed { j, line ->
-                    val y = row.centerY + p.capHeight(style) / 2f + (j - (lines.size - 1) / 2f) * lineH
-                    p.drawText(JarvisShellRenderer.fit(p, line, style, room), tx, y, style,
+                    val y = row.centerY + p.capHeight(fitted) / 2f + (j - (lines.size - 1) / 2f) * lineH
+                    p.drawText(JarvisShellRenderer.fit(p, line, fitted, room), tx, y, fitted,
                         Fill.Solid(Colors.text))
                 }
             }
