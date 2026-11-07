@@ -188,8 +188,8 @@ jobs:
           if [[ -n "$ORIGINAL_P12" && -n "$ORIGINAL_PASSWORD" ]]; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
           else
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Original signing secrets unavailable. Only unsigned QA may be delivered."
+            echo "::error::Original signing secrets unavailable. The unsigned QA APK is NOT installable."
+            exit 69
           fi
       - uses: actions/checkout@v4
         if: steps.signer.outputs.ready == 'true'
