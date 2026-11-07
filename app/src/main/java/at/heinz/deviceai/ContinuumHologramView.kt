@@ -33,6 +33,10 @@ import at.heinz.deviceai.avatar3d.AvatarCameraMotion
 import at.heinz.deviceai.avatar3d.AvatarEntranceMotion
 import at.heinz.deviceai.avatar3d.AvatarFraming
 import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer
+import at.heinz.deviceai.avatar3d.AvatarFrameReceipt
+import at.heinz.deviceai.avatar3d.AvatarTraceRingBuffer
+import at.heinz.deviceai.avatar3d.AvatarProofFrame
+import at.heinz.deviceai.avatar3d.DeterministicAvatarProofRunner
 import at.heinz.deviceai.ui.AndroidContinuumPainter
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
 import at.heinz.deviceai.ui.ContinuumTaskEffects
@@ -72,6 +76,9 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var assetGeneration = 0
     private var native3dFailed = false
     private var native3dDrawn = false
+    private val avatarTrace = AvatarTraceRingBuffer()
+    private val pendingAvatarTraceFlags = java.util.concurrent.atomic.AtomicInteger(0)
+    private var avatarProofStartedAt = Long.MIN_VALUE
     private val presentationBudgetObservers = linkedSetOf<() -> Unit>()
     private var avatarSeconds = 0f
     private val avatarInvalidationPending = java.util.concurrent.atomic.AtomicBoolean(false)
@@ -196,6 +203,7 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     /** Existing Director calls from TTS or UI; bounded reducer retains no spoken text. */
     override fun onAvatarEvent(event: AvatarEvent) {
+        pendingAvatarTraceFlags.updateAndGet { it or AvatarFrameReceipt.AVATAR_EVENT }
         // Continuous sensor-driven movement obeys the same visibility/reduced-motion policy.
         // Inactive views must not accept a late camera sample after their clear boundary.
         if (event is AvatarEvent.GazeObserved && !canAnimateFrame()) return
@@ -520,10 +528,34 @@ class ContinuumHologramView @JvmOverloads constructor(
                 choice.apply()
                 dialog.dismiss()
             }
+            .setPositiveButton("15s Animationstest") { _, _ -> startAvatarProof() }
             .setNeutralButton("Bewegung prüfen") { _, _ ->
                 Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
             }
             .setNegativeButton("Schließen", null).show()
+    }
+
+    private fun startAvatarProof() {
+        if (!canAnimateFrame()) {
+            Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
+            return
+        }
+        setNative3dEnabled(true)
+        avatarProofStartedAt = SystemClock.uptimeMillis()
+        Toast.makeText(context, "15s Avatar-Proof: Idle · Blink · Blick · Mund · Denken · Karte", Toast.LENGTH_LONG).show()
+        invalidate()
+        scheduleFrame()
+    }
+
+    private fun avatarProofFrame(nowMillis: Long): AvatarProofFrame? {
+        val started = avatarProofStartedAt
+        if (started == Long.MIN_VALUE) return null
+        val elapsed = nowMillis - started
+        if (elapsed < 0L || elapsed >= DeterministicAvatarProofRunner.DURATION_MS) {
+            avatarProofStartedAt = Long.MIN_VALUE
+            return null
+        }
+        return DeterministicAvatarProofRunner.frame(elapsed)
     }
 
     /** Call on the UI thread. State changes crossfade over the existing orb. */
@@ -737,7 +769,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         !foregroundActive -> "Avatar: Activity nicht im Vordergrund."
         !isAttachedToWindow -> "Avatar: View nicht am Fenster."
         !isShown || windowVisibility != VISIBLE -> "Avatar: View derzeit unsichtbar."
-        else -> "Avatar: LIVE · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)}"
+        else -> "Avatar: LIVE · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)} · ${avatarTrace.diagnose()}"
     }
 
     private fun updateMotionPolicy() {
@@ -800,13 +832,24 @@ class ContinuumHologramView @JvmOverloads constructor(
         super.onDraw(canvas)
         val density = resources.displayMetrics.density
         if (width <= 0 || height <= 0) return
+        val nowMillis = SystemClock.uptimeMillis()
+        val receipt = avatarTrace.beginFrame(System.nanoTime()).also {
+            it.stageFlags = AvatarFrameReceipt.FRAME_DRAW or pendingAvatarTraceFlags.getAndSet(0)
+            it.stateOrdinal = currentState.ordinal
+            if (head3dEnabled) it.stageFlags = it.stageFlags or AvatarFrameReceipt.HEAD_3D_SELECTED
+            if (nativeSurface?.isValid == true) it.stageFlags = it.stageFlags or AvatarFrameReceipt.SURFACE_VALID
+            val texture = nativeTexture
+            if (texture != null && texture.isShown && texture.width > 0 && texture.height > 0 && texture.alpha > .01f)
+                it.stageFlags = it.stageFlags or AvatarFrameReceipt.TEXTURE_VISIBLE
+        }
+        val proof = avatarProofFrame(nowMillis)
         painter.begin(canvas)
         val saved = canvas.save()
         canvas.scale(density, density)
         frameWeights.indices.forEach { frameWeights[it] = stateWeights[it] }
         renderFrame.phase = phase
-        renderFrame.energy = energy
-        renderFrame.audio = audioEnergy
+        renderFrame.energy = proof?.orbEnergy ?: energy
+        renderFrame.audio = if (proof != null) proof.pose.speakEnergy else audioEnergy
         val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
         if (memoryScene.isActive && (memorySceneHostReady?.invoke() != true ||
                 memoryScene.sample(memorySceneTime()) == null)) clearMemoryScene()
@@ -835,13 +878,24 @@ class ContinuumHologramView @JvmOverloads constructor(
             canvas.restoreToCount(auraCanvas)
         }
         if (headEnabled) {
-            val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis(), canAnimateFrame()) }
+            val pose = proof?.pose ?: synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis(), canAnimateFrame()) }
+            receipt.stageFlags = receipt.stageFlags or AvatarFrameReceipt.POSE_SAMPLED
+            receipt.jawOpen = pose.jawOpen
+            receipt.speakEnergy = pose.speakEnergy
+            receipt.gazeX = pose.gazeX
+            receipt.gazeY = pose.gazeY
+            receipt.visemeOrdinal = pose.viseme.ordinal
             if (canDisplay3d() && native3d != null) {
                 runCatching {
                     native3d!!.setQuality(renderBudget().reducedBloom)
                     native3d!!.setFraming(headAnchorX, headCloseUp, headKeepOut)
-                    native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0,
-                        nativeTexture?.height ?: 0, if (cockpitHeadBounds != null) cameraWindow else null)
+                    native3d!!.render(
+                        pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0,
+                        nativeTexture?.height ?: 0,
+                        framing = if (cockpitHeadBounds != null) cameraWindow else null,
+                        diagnosticBlink = proof?.blinkOverride,
+                        receipt = receipt
+                    )
                 }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
                     .onFailure { fail3d() }
@@ -917,6 +971,23 @@ class ContinuumHologramView @JvmOverloads constructor(
         canvas.clipRect(0f,0f,width/density,height/density)
         painter.begin(canvas)
         taskEffects.draw(painter,width/density,height/density,SystemClock.uptimeMillis())
+        avatarProofFrame(SystemClock.uptimeMillis())?.takeIf { it.cardProgress > 0f }?.let { proof ->
+            val w = width / density
+            val h = height / density
+            val p = proof.cardProgress.coerceIn(0f, 1f)
+            val cardW = minOf(220f, w * .38f)
+            val cardH = minOf(110f, h * .18f)
+            val l = w * .5f - cardW * .5f
+            val t = h * .70f - cardH * .5f
+            val frame = at.heinz.deviceai.ui.JarvisMotion.Frame(
+                dx = 0f, dy = 0f, scale = .58f + .42f * p, alpha = p,
+                glow = (1f - kotlin.math.abs(1f - 2f * p)).coerceIn(0f, 1f), done = p >= 1f
+            )
+            at.heinz.deviceai.ui.JarvisMotion.drawCard(painter, frame, l, t, l + cardW, t + cardH)
+            painter.drawText("ANIMATION PROOF · ${proof.label}", l + cardW / 2f, t + cardH / 2f,
+                TextStyle(FontFamily.DISPLAY, 700, 11f, letterSpacing = 1.2f),
+                Fill.Solid(at.heinz.deviceai.ui.JarvisDesign.Colors.cyanSoft), TextAlign.CENTER)
+        }
         canvas.restoreToCount(saved)
     }
 

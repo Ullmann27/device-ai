@@ -163,7 +163,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
 
     /** Called by the existing View frame clock; never posts a callback of its own. */
     fun render(pose: AvatarPose, seconds: Float, motion: Boolean, width: Int, height: Int,
-               framing: AvatarFraming.Window? = null): Boolean {
+               framing: AvatarFraming.Window? = null, diagnosticBlink: Float? = null,
+               receipt: AvatarFrameReceipt? = null): Boolean {
         val e = engine ?: return false
         if (width <= 0 || height <= 0 || !surface.isValid) return false
         if (viewportWidth != width || viewportHeight != height || appliedFraming != framingVersion) {
@@ -179,6 +180,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
                 -fitted.halfHeight, fitted.halfHeight, .05, 10.0)
         }
         mapper.update(pose, seconds, motion)
+        mapper.applyDiagnosticBlink(diagnosticBlink)
         applyGlow(if (motion) pose.speakEnergy else 0f)
         // Cosmetic view drift uses the existing clock. Reduced motion restores
         // the same rest camera immediately; it does not change the actual pose.
@@ -193,15 +195,21 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             focus.centerZ + kotlin.math.cos(cameraAngle) * distance,
             focus.centerX, centerY - dy, focus.centerZ, 0.0, 1.0, 0.0)
         for (instance in morphInstances) e.renderableManager.setMorphWeights(instance, mapper.weights, 0)
+        receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.MORPH_UPLOADED) ?: 0
         // The neck carries most of the turn, the head the rest: the skin blends Neck→Head inside the chin band.
         rotate("Neck", mapper.neckPitch, mapper.neckYaw)
         rotate("Head", mapper.headPitch - mapper.neckPitch, mapper.headYaw - mapper.neckYaw)
         rotate("EyeLeft", mapper.eyePitch, mapper.eyeYaw); rotate("EyeRight", mapper.eyePitch, mapper.eyeYaw)
         rotate("Jaw", mapper.jawPitch, 0f)
         asset!!.instance.animator.updateBoneMatrices()
+        receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.JOINTS_UPLOADED) ?: 0
         val r = renderer!!
         if (!r.beginFrame(swapChain!!, System.nanoTime())) return false
-        try { r.render(view!!) } finally { r.endFrame() }
+        receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_BEGIN) ?: 0
+        try {
+            r.render(view!!)
+            receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_RENDERED) ?: 0
+        } finally { r.endFrame() }
         return true
     }
 

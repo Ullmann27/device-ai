@@ -199,6 +199,14 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         splitNeck()
     }
 
+    /** Diagnostic-only override after normal mapping; null keeps production blink untouched. */
+    internal fun applyDiagnosticBlink(value: Float?) {
+        if (value == null) return
+        val blink = finite(value, 0f, 1f)
+        weights[indices.getValue("BlinkLeft")] = blink
+        weights[indices.getValue("BlinkRight")] = blink
+    }
+
     private fun fadeLayers(idle: Boolean, speech: Boolean, work: Boolean, seconds: Float) {
         val idleTarget = if (idle) 1f else 0f
         val speechTarget = if (speech) 1f else 0f
