@@ -45,9 +45,11 @@ object Ctx3Shadow {
   val s=sessions.remove(key)?:Session()
   s.touched=now;sessions[key]=s
   while(sessions.size>16)sessions.remove(sessions.keys.first())
-  val facts=experiences.filter { it.type==LearningExperienceType.USER_FACT&&
-   it.provenance==LearningProvenance.USER_CONFIRMED&&it.trust==LearningTrustClass.OWNER_CONFIRMED&&
-   it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING) }
+  val temporalRecords=experiences.filter { it.type==LearningExperienceType.USER_FACT&&
+   it.provenance==LearningProvenance.USER_CONFIRMED&&it.trust==LearningTrustClass.OWNER_CONFIRMED }
+  val facts=temporalRecords.filter {
+   it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING)
+  }
   val event=runCatching {
    require(facts.size<=256&&facts.all { it.content.length<=4096 })
    val pool=facts.associate { it.id to it.content }
@@ -61,7 +63,7 @@ object Ctx3Shadow {
      s.context.observe(hits.toSet(),entities)
      val telegram=if(hits.isEmpty())null else runCatching {
       Ctx3StateTelegram.compile(
-       ContinuumTemporalMemory.fromLedger(facts),hits.toSet(),System.currentTimeMillis())
+       ContinuumTemporalMemory.fromLedger(temporalRecords),hits.toSet(),System.currentTimeMillis())
      }.getOrNull()
      Event(
       ContinuumMemoryDialogue.hash(input.toByteArray()),"QUERY",
