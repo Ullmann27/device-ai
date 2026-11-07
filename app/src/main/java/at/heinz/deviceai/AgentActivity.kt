@@ -1859,10 +1859,14 @@ class AgentActivity : Activity() {
         if (documentIoExecutor.isShutdown) apply.run() else documentIoExecutor.execute(apply)
     }
 
-    /** The existing document I/O lane serializes tool records too. No second store. */
-    private fun recordStorageToolStarted(started: MutableSet<String>, callId: String, toolName: String) {
-        if (toolName != at.heinz.deviceai.cognitive.ToolWorkJournalBridge.FIRST_TOOL ||
-            !started.add(callId) || documentIoExecutor.isShutdown) return
+    /** The existing document I/O lane serializes trusted tool dispatch records too. No second store. */
+    private fun recordToolStarted(started: MutableMap<String, String>, callId: String, toolName: String) {
+        if (documentIoExecutor.isShutdown) return
+        val existing = started.putIfAbsent(callId, toolName)
+        if (existing != null) {
+            require(existing == toolName) { "Tool call ID changed tool identity." }
+            return
+        }
         documentIoExecutor.execute {
             runCatching { workJournal.beginTool(callId, toolName) }.onFailure {
                 runOnUiThread { if (!isFinishing && !isDestroyed)
@@ -1872,26 +1876,25 @@ class AgentActivity : Activity() {
         }
     }
 
-    /** Only real ToolGate receipts may turn a started storage probe into a result. */
-    private fun settleStorageToolRun(started: Set<String>,
-                                     result: Result<at.heinz.deviceai.cognitive.AgentRunResult>,
-                                     startedSession: String,
-                                     cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation) {
+    /** Only real ToolGate receipts may settle a started tool; missing receipts remain UNKNOWN. */
+    private fun settleToolRuns(started: Map<String, String>,
+                               result: Result<at.heinz.deviceai.cognitive.AgentRunResult>,
+                               startedSession: String,
+                               cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation) {
         if (documentIoExecutor.isShutdown) return
-        val receipts = result.getOrNull()?.taskEvidence?.calls.orEmpty().filter {
-            it.toolName == at.heinz.deviceai.cognitive.ToolWorkJournalBridge.FIRST_TOOL
-        }
-        val ids = (started.toList() + receipts.map { it.callId }).distinct()
+        val receipts = result.getOrNull()?.taskEvidence?.calls.orEmpty()
+        val proofById = receipts.associateBy { it.callId }
+        val ids = (started.keys + proofById.keys).distinct()
         if (ids.isEmpty()) return
         val currentAtReturn = sessionId == startedSession &&
             runCatching { cancellation.throwIfCancelled() }.isSuccess
         documentIoExecutor.execute {
             ids.forEach { callId ->
                 runCatching {
-                    val proof = receipts.firstOrNull { it.callId == callId }
+                    val proof = proofById[callId]
+                    val toolName = proof?.toolName ?: started[callId] ?: return@runCatching
                     if (proof == null) {
-                        workJournal.finishTool(callId,
-                            at.heinz.deviceai.cognitive.ToolWorkJournalBridge.FIRST_TOOL,
+                        workJournal.finishTool(callId, toolName,
                             at.heinz.deviceai.cognitive.CockpitWorkJournal.ToolState.UNKNOWN)
                     } else {
                         at.heinz.deviceai.cognitive.ToolWorkJournalBridge.settle(
@@ -6220,7 +6223,7 @@ class AgentActivity : Activity() {
         val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
         val plan = at.heinz.deviceai.cognitive.ReadOnlyToolPlan.forRequest(request, ToolProposal(name, decision.arguments))
         val gate = createToolGate()
-        val startedStorageCalls = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
+        val startedToolCalls = java.util.concurrent.ConcurrentHashMap<String, String>()
         val orchestrator = BoundedAgentOrchestrator(
             model = plan,
             memories = { memoryStore.all() + ownerFactMemories() },
@@ -6236,7 +6239,7 @@ class AgentActivity : Activity() {
             cancellation = cancellation,
             turnTrace = turnTrace,
             onToolStarted = { callId, toolName ->
-                recordStorageToolStarted(startedStorageCalls, callId, toolName)
+                recordToolStarted(startedToolCalls, callId, toolName)
             }
         )
         activeBootstrapGate = gate
@@ -6244,7 +6247,7 @@ class AgentActivity : Activity() {
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
             val result = runCatching { orchestrator.run(request) }
-            settleStorageToolRun(startedStorageCalls, result, actionSessionId, cancellation)
+            settleToolRuns(startedToolCalls, result, actionSessionId, cancellation)
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 if (activeBootstrapGate !== gate || activeChatCancellation !== cancellation) return@runOnUiThread
@@ -9325,7 +9328,7 @@ class AgentActivity : Activity() {
         var submittedToolObservationCount = 0
         var modelWebCalls = 0
         val modelWebSessions = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cognitive.ApprovedWebResearchSession>()
-        val startedStorageCalls = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
+        val startedToolCalls = java.util.concurrent.ConcurrentHashMap<String, String>()
         val orchestrator = BoundedAgentOrchestrator(
             model = codingPlanning?.model(localRuntime,cancellation) ?: AgentModel { task, memories, reflection, rawObservations ->
                 cancellation.throwIfCancelled()
@@ -9666,7 +9669,7 @@ class AgentActivity : Activity() {
             }),
             onToolStarted = { callId, toolName ->
                 if (botTask == null && codingPlanning == null)
-                    recordStorageToolStarted(startedStorageCalls, callId, toolName)
+                    recordToolStarted(startedToolCalls, callId, toolName)
             }
         )
         activeOrchestrator = orchestrator
@@ -9681,7 +9684,7 @@ class AgentActivity : Activity() {
                 }
             }
             if (botTask == null && codingPlanning == null)
-                settleStorageToolRun(startedStorageCalls, result, localSessionId, cancellation)
+                settleToolRuns(startedToolCalls, result, localSessionId, cancellation)
             fun deliverResult() {
                 if (isFinishing || isDestroyed || activeChatCancellation !== cancellation) return
                 // Cancellation may return before native inference has terminated. The bot
