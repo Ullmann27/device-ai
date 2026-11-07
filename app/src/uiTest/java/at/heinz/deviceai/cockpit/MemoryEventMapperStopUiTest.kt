@@ -32,7 +32,7 @@ class MemoryEventMapperStopUiTest {
     @Test fun bufferedRecallCannotSurviveTheActualSurfaceStop() = withCockpit { home, live, sequence ->
         var now = 1_000L
         sequence.clock = { now }
-        val empty = frame(sequence)
+        val empty = memoryFrame(home)
         try {
             withMapper(home) { mapper, seen ->
                 mapper.recallHits("synthetic-before-stop", 2, .9f, System.currentTimeMillis())
@@ -41,8 +41,9 @@ class MemoryEventMapperStopUiTest {
                 assertTrue(sequence.cueGeneration > generation)
                 shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(200))
                 assertTrue(seen.isEmpty())
+                assertFalse("STOP must leave fullstage inactive", live.memoryScene.isActive)
                 now = 2_200L
-                val after = frame(sequence)
+                val after = memoryFrame(home)
                 try { assertTrue("STOP must discard buffered visuals", empty.sameAs(after)) }
                 finally { after.recycle() }
             }
@@ -52,19 +53,22 @@ class MemoryEventMapperStopUiTest {
     @Test fun freshRecallAfterStopStillReachesTheVisibleSurface() = withCockpit { home, live, sequence ->
         var now = 1_000L
         sequence.clock = { now }
-        val empty = frame(sequence)
+        val empty = memoryFrame(home)
         try {
             withMapper(home) { mapper, seen ->
                 mapper.documentLearned("old-document", "PDF", 2, 100L)
                 mapper.memoryStored("old-entry", "CONFIRMED", 101L)
                 mapper.recallHits("old-query", 2, .8f, 102L)
                 live.setTaskEffectScope(null)
+                assertFalse("STOP must clear fullstage", live.memoryScene.isActive)
                 mapper.recallHits("fresh-query", 3, .9f, 1L)
                 shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(200))
                 assertEquals(listOf(CockpitAnimationEvent.RecallHits(MEMORY_TURN, 1L, "fresh-query", 3, .9f)), seen)
+                assertTrue("Fresh recall must start fullstage", live.memoryScene.isActive)
+                assertEquals(3, sequence.effects.recallCount)
                 sequence.effects.clear()
                 now = 2_200L
-                val fresh = frame(sequence)
+                val fresh = memoryFrame(home)
                 try { assertFalse("Fresh recall must animate", empty.sameAs(fresh)) }
                 finally { fresh.recycle() }
             }
@@ -85,8 +89,13 @@ class MemoryEventMapperStopUiTest {
         finally { mapper.detach(); presenter.close(); observer.close() }
     }
 
-    private fun frame(sequence: JarvisSequenceView): Bitmap =
-        Bitmap.createBitmap(sequence.width, sequence.height, Bitmap.Config.ARGB_8888).also { sequence.draw(Canvas(it)) }
+    private fun memoryFrame(home: ContinuumHomeView): Bitmap {
+        val surface = requireNotNull(home.findViewWithTag<View>("continuum-memory-fullstage"))
+        assertTrue(surface.isAttachedToWindow && surface.isShown)
+        assertTrue(surface.width > 0 && surface.height > 0)
+        return Bitmap.createBitmap(surface.width, surface.height, Bitmap.Config.ARGB_8888)
+            .also { surface.draw(Canvas(it)) }
+    }
 
     private fun withCockpit(check: (ContinuumHomeView, ContinuumHologramView, JarvisSequenceView) -> Unit) {
         ShadowChoreographer.setPaused(true)

@@ -9,24 +9,20 @@ Branch: `codex/continuum-code48-fullstage-cinema-20261107`.
 Spätere reine Beleg-/Dokumentationscommits sind nicht die APK-Buildquelle.
 
 <!-- FINAL-STATUS-START -->
-**Zwischenstand 07.11.2026: vier endgültige Host-Prüfgruppen PASS;
-vollständiger Androidlauf RUNNING; frische endgültige unsigned APK/AAB PENDING.**
-Keine vollständige Android-, Geräte-, Signatur- oder Veröffentlichungsabnahme.
+**5d-Gesamtabnahme: FAIL.** 3.776 Androidtests: 3.754 bestanden, 20
+übersprungen, 2 fehlgeschlagen; keine Errors. Beide Kotlin-Kompilierungen
+abgeschlossen. Lint wurde nach dem Unit-Test-Fehler nicht erreicht.
+Node vollständig (2.398 PASS / 31 SKIP), Critical (135/135), Backend (64/64)
+und Sonderfälle (23/23) waren auf unveränderter 5d-Quelle bestanden.
 
-| Prüfung auf exakt 5d | Ergebnis |
-| --- | --- |
-| Node vollständig | 2.398 bestanden, 31 ausdrücklich übersprungen, 0 fehlgeschlagen |
-| Kritische Verträge | 135/135 bestanden, keine Überspringungen |
-| Backend | Installation, Check und Test Exit 0; 64/64 bestanden |
-| Release-/Preflight-Sonderfälle | 23/23 bestanden |
-| Android-Kompilierung, gesamte Unit-/UI-Suite und Lint | RUNNING; beide Kotlin-Kompilierungen abgeschlossen, kein Gesamterfolg behauptet |
-| Endgültige unsigned APK/AAB | PENDING; folgt seriell nach Android |
-
-Die vier fertigen Receipts bestätigen dieselbe unveränderte saubere Quelle.
-Die 31 Node-Skips umfassen ausdrücklich begrenzte Docker-, Namespace-, Kernel-,
-SDK- und JVM-Hostvoraussetzungen. Sie werden weder als bestanden gezählt noch
-als Geräte-/Inferenznachweis ausgegeben. Die zusätzlichen NOT_RUN-Zeilen der
-Node-Profile benennen Prüfbereiche außerhalb dieses jeweiligen Profils.
+Die beiden roten Assertions wurden separat auf unveränderter 5d-Quelle
+reproduziert: drei selektierte Tests, zwei FAIL. Die aktuelle begrenzte
+Testanpassung ist WIP und noch nicht GREEN: Der Menütest muss tatsächliche
+Logic-/Web-Arbeitsfenster und den Tasks-Dialog prüfen; der Recalltest muss
+die tatsächliche Home-Vollfläche zeichnen. Kein Produktionscode wurde geändert.
+Vollständiger alter FAIL, XMLs, Skips, Selektorversuch und fokussiertes RED:
+[Suite-Anpassung](../../evidence/code48-suite-alignment-20261107/).
+Die endgültige APK, Signierung und Geräteabnahme bleiben offen.
 <!-- FINAL-STATUS-END -->
 
 ## Verbundene Produktpfade
@@ -134,10 +130,12 @@ die eingefrorene APK-Quelle hineinschieben oder alte Gates erneut öffnen.
 ## Nächster konkreter Einstieg und Veröffentlichung
 
 <!-- NEXT-STEP-START -->
-Den bereits laufenden vollständigen Android-Gatelauf zu Ende beobachten.
-Erst nach echtem PASS frische unsigned APK/AAB auf genau 5d bauen und unabhängig
-prüfen. Keine zweite Gradle-Ausführung parallel, keine Quelländerung während
-dieser Gates. Erst danach den exakten Stand für Originalsignierung vorlegen.
+Die ausschließlich zwei Testdateien betreffende Anpassung zuerst auf exakt
+veröffentlichtem Quellstand fokussiert prüfen. Echte Zielviews, Titel,
+Sichtbarkeit, Schließen, Event-/Generation-/Pixelassertions sowie unveränderte
+Request-/Chief-Turn-Grenzen erhalten. Erst nach GREEN den neuen Stand einfrieren
+und seine vollständigen Gates ausführen; 5d-FAIL nicht zu PASS umetikettieren.
+Android und anschließende unsigned APK/AAB weiterhin seriell ausführen.
 <!-- NEXT-STEP-END -->
 
 Der bestehende Originalpublisher und Code47-Livekatalog wurden nur gelesen.
