@@ -38,3 +38,27 @@ a separate gate.
 
 Rollback: revert only this branch's repair commits; retain previous release
 evidence and all owner data. Resume from this branch's actual remote HEAD.
+
+## Reproduced defects / checkpoint
+
+Actual SDK Kotlin test compilation exit 0. Two new tests against the
+unchanged live production baseline both fail for the intended assertions:
+- typedPdfRequestReturnsFromChatIntoAnimatedDocumentWork: no visible work window.
+- documentWorkWaitsForFreshShellGeometry: scene discarded before fresh geometry.
+
+Actual Activity/input routing, native host Canvas and work-window classes;
+only the parsed document/page is a synthetic boundary fixture. Raw logs,
+exact command and source hashes are in docs/evidence/code48-workscene-thermal-20261107/.
+Production has not yet changed. No Code48 APK has been built.
+
+The owner requested an immediate way to view the existing Code47 animation
+before the general repair. Verified source route: START -> Systemstatus
+tile -> existing work-window presentation. Hologram long press -> Bewegung
+pruefen reports motion blockers. This is a source/host route, not a newly
+observed Fold7 result.
+
+Follow-up: repair Chat-to-document presentation and first-layout handling;
+then remove proved redundant scene allocations with bounded RAM reuse.
+Inspection also found dashboard status/holdout work every five seconds,
+including while the dashboard is hidden; measure before choosing a cache.
+No thermal savings have been measured or claimed.
