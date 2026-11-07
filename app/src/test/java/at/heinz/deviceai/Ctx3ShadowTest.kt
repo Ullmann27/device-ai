@@ -18,6 +18,44 @@ class Ctx3ShadowTest {
    assertEquals(1,core.contextShadowEvents().size)
   } finally {dir.deleteRecursively()}
  }
+ @Test fun stateTelegramMetricsStayShadowOnlyAndUseSelectedEvidence() {
+  val dir=Files.createTempDirectory("ctx3-state-telegram").toFile()
+  try {
+   val bytes=Base64.getDecoder().decode(javaClass.getResourceAsStream("/continuum-neural-swb1.base64")!!.bufferedReader().readText().trim())
+   val fact=LearningExperienceFactory.create(
+    LearningExperienceType.USER_FACT,LearningProvenance.USER_CONFIRMED,LearningTrustClass.OWNER_CONFIRMED,
+    LearningStatus.CONFIRMED,"Ich wohne in Wien.",now=1)
+   Ctx3Shadow.configure(dir,true)
+   Ctx3Shadow.evaluate(dir,bytes,listOf(fact),"Wo wohne ich?",emptyList(),"state-chat")
+   val event=Ctx3Shadow.events(dir,"state-chat").single()
+   assertEquals("QUERY",event.decision)
+   assertEquals("OK",event.stateTelegramStatus)
+   assertTrue(event.stateTelegramBytes>0)
+   assertTrue(event.rawSelectedBytes>0)
+   assertEquals(1,event.stateKeyCount)
+   assertEquals(0,event.stateConflictCount)
+   assertTrue(event.stateTelegramSha256.matches(Regex("[a-f0-9]{64}")))
+   assertFalse(java.io.File(dir,"dialogue-v1.bin").exists())
+  } finally {dir.deleteRecursively()}
+ }
+ @Test fun revokingSameTextInvalidatesPronounFocusInShadow() {
+  val dir=Files.createTempDirectory("ctx3-revocation-focus").toFile()
+  try {
+   val bytes=Base64.getDecoder().decode(javaClass.getResourceAsStream("/continuum-neural-swb1.base64")!!.bufferedReader().readText().trim())
+   val fact=LearningExperienceFactory.create(
+    LearningExperienceType.USER_FACT,LearningProvenance.USER_CONFIRMED,LearningTrustClass.OWNER_CONFIRMED,
+    LearningStatus.CONFIRMED,"Max wohnt in Wels.",now=100L)
+   Ctx3Shadow.configure(dir,true)
+   Ctx3Shadow.evaluate(dir,bytes,listOf(fact),"Wo wohnt Max?",emptyList(),"revoke-chat")
+   assertEquals("QUERY",Ctx3Shadow.events(dir,"revoke-chat").last().decision)
+   val revoked=fact.copy(status=LearningStatus.REVOKED,updatedAt=200L)
+   Ctx3Shadow.evaluate(dir,bytes,listOf(revoked),"Wo wohnt er?",emptyList(),"revoke-chat")
+   val after=Ctx3Shadow.events(dir,"revoke-chat").last()
+   assertEquals("CLARIFY",after.decision)
+   assertEquals("NO_UNIQUE_REFERENT",after.reason)
+   assertTrue(after.proposedIds.isEmpty())
+  } finally {dir.deleteRecursively()}
+ }
  @Test fun independentCoreConversationsCannotBorrowOneAnothersPronouns() {
   val dir=Files.createTempDirectory("ctx3-core-isolation").toFile()
   try {
