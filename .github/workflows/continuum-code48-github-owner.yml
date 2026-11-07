@@ -172,6 +172,7 @@ jobs:
   original-sign-and-release:
     needs: [node-backend, android-unsigned]
     if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/codex/continuum-code48-github-owner-20261107'
+    environment: continuum-original-signing
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
