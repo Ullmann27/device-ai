@@ -1,6 +1,7 @@
 # Code48 — release completion
 
-Status: WIP / UNVERIFIED. Continuation 2026-11-07.
+Status: focused repair gate PASS (79/79); full release gates PENDING.
+Continuation 2026-11-07. Coordination point: PR593.
 Base: PR592 `4c198ec81462702e5b39b28a6ead2b42d084d4c4`, including
 PR591 `75d9a7b719915bf81b2fc5bd0eecebc48908ad46`.
 Branch: `codex/continuum-code48-release-completion-20261107`.
@@ -72,3 +73,68 @@ assertions remain unchanged. Repeat status: NOT_RUN at this checkpoint.
 
 Raw log, complete JUnit XMLs, receipt and summary:
 `docs/evidence/code48-release-completion-20261107/focused-red-6032/`.
+
+## Recovered review: 79/79 host tests
+
+The next frozen-source run on 6161132e passed 76/77: dialog attachment and
+native hypothesis pixels passed, while the close callback awaited the same
+real window traversal. The close fixture now also delivers two frames; all
+visibility, native-pixel, subscription-retirement and fresh-event assertions
+remain intact. Its raw failed run is retained under `focused-red-6161/`.
+
+Review found terminal source records could occupy unfinished-round capacity.
+Three unchanged-production regressions failed: revoked-source retry allocation,
+121 refused records, and a journal containing 120 stale revoked markers.
+`ContinuumSourceNovelty` now derives excluded hashes from the existing validated
+ledger, prevents pending markers overriding revocation/rejection, and retires
+only those terminal markers before checking retry capacity. Genuine incomplete
+work remains pending. Refused work is never labeled completed or learned.
+
+The resulting real Gradle/SDK run passed **79/79, zero failures/errors/skips**,
+including the three regression cases and the two native Brain dialog tests.
+The source overlay, source hashes, full XMLs, raw log and fixed test filter are
+under `recovered-review-green/`; the assertion-RED is under `journal-review-red/`.
+Final whole-app/release gates on the published frozen source remain PENDING.
+
+The separate suggestion to consume a token across an ambiguous credential
+line boundary is not applied: that token can be an owner prohibition, so
+redacting it can reverse meaning. The established fail-closed compiler contract
+and zero-recall-publication tests are retained. AgentActivity already handles
+model-run failure; this is a rejected ambiguous context, not an unhandled app
+crash. Malformed credential text may require the owner to clarify its framing.
+
+## Fresh branch inventory
+
+The fresh remote inventory contains 656 heads. Since the prior 653-head audit,
+the additional Code48 heads are all ancestors of this candidate. The two other
+changed heads modify state/checkpoint or scheduled-ledger data only; their changed
+paths contain no new APK production code. Only path/tree metadata was inspected
+for those data changes. Full inventory and comparisons: `branch-refresh.json`.
+This does not claim every historical feature is product-integrated or device-tested.
+
+Release source is frozen after these repairs. Use the original publisher's
+mandatory complete Node/backend/Android/UI/lint/unsigned gates before its original
+signer runs. No gate or signer is bypassed, and no duplicate publisher is created.
+
+## Shared release pipeline
+
+The owner requested coordination with the other Code48 conversation. Its seven
+production files and four regression files are already recovered here; the
+original worktree and PR592 remain intact. The live agent registry in this
+session exposes only its coordinator, so no direct cross-chat delivery or
+acknowledgement is claimed. Use PR593 and this existing handoff for shared state.
+
+1. Integration owner: PR593 continuation. Freeze one published source SHA after
+   the recovered changes and terminal-source repair. No competing source edits
+   are included after that freeze; new findings must identify their exact delta.
+2. QA owner: existing continuous owner-release script. Run its complete
+   Node/backend/Android/UI/lint and unsigned APK/AAB gates on that same SHA.
+3. Publication owner: the existing original signer on
+   `srv-dbf1tr2vcj2c73ehpfog`. Recheck branch/deploy state, update with an expected
+   SHA lease, preserve signing secrets, and start at most one deploy.
+4. Acceptance: independently fetch the published catalog and APK; verify source,
+   version48, package, bytes, digest and original signing certificate. Record
+   the actual deploy identifier and results in PR593. Fold7 acceptance stays open.
+
+This reuses the existing release pipeline; it creates no new paid agent service,
+runner, credential, worker protocol or competing receipt system.

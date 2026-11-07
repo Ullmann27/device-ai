@@ -42,16 +42,19 @@ object ContinuumSourceNovelty {
         val state=readJournal(base)
         val archived=runCatching { ContinuumKnowledgeArchive(base).archivedHashes() }
             .getOrDefault(emptySet())
-        val ledger=runCatching {
+        val records=runCatching {
             FileLearningExperienceStore(File(base,"learning-core-v2")).all()
-                .asSequence()
-                .filter { it.type==LearningExperienceType.SOURCE_TEXT && it.status!=LearningStatus.REVOKED }
-                .mapNotNull { it.sourceRef?.substringAfter("#sha256=","")?.lowercase() }
-                .filter(shaPattern::matches)
-                .toSet()
-        }.getOrDefault(emptySet())
-        (state.completed+archived+ledger)-state.started
+        }.getOrDefault(emptyList())
+        val excluded=sourceHashes(records.filter { it.status in terminalStatuses })
+        (state.completed+archived+sourceHashes(records))-state.started+excluded
     }
+
+    private val terminalStatuses=setOf(LearningStatus.REVOKED,LearningStatus.REJECTED)
+
+    private fun sourceHashes(records:List<LearningExperience>):Set<String> = records.asSequence()
+        .filter { it.type==LearningExperienceType.SOURCE_TEXT }
+        .mapNotNull { it.sourceRef?.substringAfter("#sha256=","")?.lowercase() }
+        .filter(shaPattern::matches).toSet()
 
     /** Persist before archive or ledger. */
     fun markStarted(base:File,sources:List<MentorSource>) {
@@ -59,7 +62,11 @@ object ContinuumSourceNovelty {
             if(sources.isEmpty())return@synchronized
             require(sources.all { shaPattern.matches(it.sha) }) { "Invalid source hash" }
             val old=readJournal(base)
-            val started=(old.started+sources.map { it.sha.lowercase() })-old.completed
+            val directory=File(base,"learning-core-v2")
+            val excluded=if(directory.isDirectory) sourceHashes(
+                FileLearningExperienceStore(directory).all().filter { it.status in terminalStatuses })
+                else emptySet()
+            val started=(old.started+sources.map { it.sha.lowercase() })-old.completed-excluded
             if(started!=old.started)writeJournal(base,Journal(old.completed,started))
         }
     }

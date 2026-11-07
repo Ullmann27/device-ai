@@ -108,7 +108,31 @@ class ContinuumSourceRoundRecoveryTest {
         assertNull(core.learnFromSources(listOf(source)) { true })
         assertEquals(revoked,store(dir).all().single())
         assertTrue(ContinuumSourceNovelty.completedHashes(dir).isEmpty())
+        assertFalse("Revocation must not reserve retry capacity",journal(dir).exists())
+        assertTrue(ContinuumSourceNovelty.pending(listOf(source),
+            ContinuumSourceNovelty.knownHashes(dir)).isEmpty())
         assertArrayEquals(before,core.modelSnapshot())
+    }
+
+    @Test fun refusedSourcesDoNotExhaustRetryCapacity() = withDirectory { dir ->
+        val refused=(1..121).map(::source)
+        store(dir).appendMissing(refused.mapIndexed { index,source ->
+            experience(source,1L).copy(status=if(index%2==0)
+                LearningStatus.REVOKED else LearningStatus.REJECTED)
+        })
+        val core=ContinuumLearningCore(dir) { 100L }
+        val before=core.modelSnapshot()
+        refused.forEach { source ->
+            assertNull(core.learnFromSources(listOf(source)) { true })
+            assertFalse(journal(dir).exists())
+        }
+        assertTrue(ContinuumSourceNovelty.pending(refused,
+            ContinuumSourceNovelty.knownHashes(dir)).isEmpty())
+        assertTrue(ContinuumSourceNovelty.completedHashes(dir).isEmpty())
+        assertArrayEquals(before,core.modelSnapshot())
+        val fresh=source(122)
+        assertFalse(core.learnFromSources(listOf(fresh)) { true }!!.completedEvaluation)
+        assertEquals(listOf("?"+fresh.sha),journal(dir).readLines())
     }
 
     @Test fun evidenceWriteFailureReportsTheActualModelCommit() = withDirectory { dir ->

@@ -1,0 +1,13 @@
+{
+  "sourceCommit": "6161132e2ed7263af83febc9fabce3f146cb9715",
+  "productionChanged": false,
+  "testOnlyWorkingTreeOverlay": true,
+  "status": "FAIL",
+  "tests": 3,
+  "failures": 3,
+  "errors": 0,
+  "skipped": 0,
+  "exitCode": 1,
+  "noveltySourceSha256": "35205791ea0129c26b4f5b73d72f82275963722b0bc0b64b9095755be96070e3",
+  "scope": "revoked/rejected retry capacity and pending selection; physical device NOT_RUN"
+}

@@ -133,7 +133,7 @@ class ContinuumBrainHypothesisUiTest {
         assertTrue(old.effects.hypothesisVisible(SystemClock.uptimeMillis()))
         Thread { f.bus.emit(event("HYPOTHETICAL")) }.apply { start(); join() }
         assertTrue(old.dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick())
-        idle()
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(32))
         assertFalse("The real close button dismisses", old.dialog.isShowing)
         assertNull(field(f.activity, "brainScene"))
         assertFalse("Close clears active and queued effects", old.effects.isAnimating(SystemClock.uptimeMillis()))

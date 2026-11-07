@@ -91,6 +91,25 @@ class ContinuumSourceRoundJournalTest {
         }
     }
 
+    @Test fun revokedMarkersAreRetiredBeforeRetryCapacityIsChecked() = withDirectory { dir ->
+        val revoked=(1..120).map(::source)
+        FileLearningExperienceStore(File(dir,"learning-core-v2")).appendMissing(revoked.map {
+            LearningExperienceFactory.create(LearningExperienceType.SOURCE_TEXT,
+                LearningProvenance.PUBLIC_WEB_SOURCE,LearningTrustClass.SOURCE_OBSERVATION,
+                LearningStatus.REVOKED,it.excerpt,annotation=it.subject,
+                sourceRef=it.url+"#sha256="+it.sha,now=1L)
+        })
+        journal(dir).writeText(revoked.joinToString("\n",postfix="\n") { "?"+it.sha })
+        assertTrue(ContinuumSourceNovelty.pending(revoked,
+            ContinuumSourceNovelty.knownHashes(dir)).isEmpty())
+        val fresh=source(121)
+        ContinuumSourceNovelty.markStarted(dir,listOf(fresh))
+        assertEquals(listOf("?"+fresh.sha),journal(dir).readLines())
+        assertTrue(ContinuumSourceNovelty.completedHashes(dir).isEmpty())
+        assertEquals(listOf(fresh),ContinuumSourceNovelty.pending(revoked+fresh,
+            ContinuumSourceNovelty.knownHashes(dir)))
+    }
+
     private fun source(id:Int)=MentorSource("Optik","https://example.org/source-$id",
         "%064x".format(id),"Licht wird an Oberflächen reflektiert und an Grenzflächen gebrochen.")
     private fun journal(dir:File)=File(dir,"learning-core-v2/source-attempts-v1.txt")
