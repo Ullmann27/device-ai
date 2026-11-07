@@ -62,11 +62,35 @@ object AnswerClaimVerifier {
 
         val expectedNumbers = numericTerms(expected)
         val candidateNumbers = numericTerms(candidate)
+        val forbiddenNumbers = forbidden.flatMap(::numericTerms).toSet()
+
+        if (candidateNumbers.intersect(forbiddenNumbers).isNotEmpty()) {
+            return Result(
+                Verdict.CONTRADICTION,
+                "FORBIDDEN_SUPERSEDED_NUMERIC_VALUE",
+                claim.sourceIds
+            )
+        }
+
         if (expectedNumbers.isNotEmpty() && candidateNumbers.isNotEmpty()) {
             if (candidateNumbers.intersect(expectedNumbers).isEmpty()) {
                 return Result(
                     Verdict.CONTRADICTION,
                     "NUMERIC_VALUE_MISMATCH",
+                    claim.sourceIds
+                )
+            }
+            if (hasNegatedExpectedNumber(candidate, expectedNumbers)) {
+                return Result(
+                    Verdict.CONTRADICTION,
+                    "EXPECTED_NUMERIC_VALUE_EXPLICITLY_NEGATED",
+                    claim.sourceIds
+                )
+            }
+            if ((candidateNumbers - expectedNumbers).isNotEmpty()) {
+                return Result(
+                    Verdict.INSUFFICIENT_EVIDENCE,
+                    "MULTIPLE_NUMERIC_VALUES_IN_FOCUSED_SENTENCE",
                     claim.sourceIds
                 )
             }
@@ -106,6 +130,17 @@ object AnswerClaimVerifier {
 
     private fun containsCausalAssertion(value: String): Boolean =
         CAUSAL.any { it.containsMatchIn(value) }
+
+    private fun hasNegatedExpectedNumber(candidate: String, expectedNumbers: Set<Long>): Boolean {
+        val words = candidate.split(' ').filter(String::isNotBlank)
+        words.forEachIndexed { index, word ->
+            val number = word.toLongOrNull() ?: NUMBER_WORDS[word]
+            if (number !in expectedNumbers) return@forEachIndexed
+            val from = maxOf(0, index - 3)
+            if (words.subList(from, index).any { it in NEGATIONS }) return true
+        }
+        return false
+    }
 
     private fun containsNegatedExpected(candidate: String, expected: String): Boolean {
         val words = candidate.split(' ').filter(String::isNotBlank)
