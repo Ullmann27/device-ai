@@ -134,8 +134,35 @@ object JarvisShellLayout {
         require(widthDp.isFinite() && widthDp >= 240f && heightDp.isFinite() && heightDp >= 160f)
         val profile = JarvisWindowProfile.resolve(widthDp, heightDp, fontScale, foldRail)
         return if (profile.referenceComposition) reference(widthDp, heightDp, profile, foldRail).let {
-            if (compactPresentation) compactReference(it) else it
+            withReferenceInput(if (compactPresentation) compactReference(it) else it)
         } else reflow(widthDp, heightDp, profile, foldRail, includeBottomNavigation, compactPresentation)
+    }
+
+    /** Restore input without shrinking existing content. */
+    private fun withReferenceInput(shell: Shell): Shell {
+        if (shell[Slot.INPUT] != null) return shell
+        val tiles = shell.boxes.getValue(Slot.TILES)
+        val inputHeight = 52f * maxOf(1f, shell.profile.fontScale)
+        val offset = inputHeight + maxOf(8f, shell.tileGap)
+        fun lower(b: Box) = b.copy(top = b.top + offset, bottom = b.bottom + offset)
+        val loweredSlots = setOf(Slot.TILES, Slot.ROW_AGENTS, Slot.ROW_TASKS,
+            Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS)
+        val boxes = shell.boxes.mapValues { (slot, box) -> when {
+            slot in loweredSlots -> lower(box)
+            slot == Slot.NAV_RAIL -> box.copy(bottom = box.bottom + offset)
+            else -> box
+        } } + (Slot.INPUT to Box(tiles.left, tiles.top, tiles.right, tiles.top + inputHeight))
+        val loweredAreas = setOf(Area.TILES, Area.ROW_AGENTS, Area.ROW_TASKS,
+            Area.ROW_MEMORY, Area.ROW_MODEL, Area.STATUS)
+        val grid = shell.grid?.let { original ->
+            original.copy(height = original.height + offset,
+                areas = original.areas.mapValues { (area, box) -> when {
+                    area in loweredAreas -> lower(box)
+                    area == Area.RAIL -> box.copy(bottom = box.bottom + offset)
+                    else -> box
+                } })
+        }
+        return shell.copy(height = shell.height + offset, boxes = boxes, grid = grid)
     }
 
     private fun compactReference(shell: Shell): Shell {
