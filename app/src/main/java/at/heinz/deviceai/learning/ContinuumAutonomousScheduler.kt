@@ -7,6 +7,7 @@ import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
 import android.os.SystemClock
+import java.util.concurrent.CancellationException
 import java.util.concurrent.atomic.AtomicBoolean
 import android.util.Log
 
@@ -212,7 +213,7 @@ class ContinuumAutonomousJobService:JobService() {
                                     channel,outcome,"Stufe "+(round?.stage ?: currentStage)+
                                         "/"+ContinuumCdxLargeCurriculum.STAGES)
                             } catch (error:Exception) {
-                                if(cancelled()) {
+                                if(error is CancellationException) {
                                     ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
                                         channel,if(deferredReason!=null)"DEFERRED" else "INTERRUPTED",
                                         deferredReason ?: "Lernlauf abgebrochen")
@@ -262,7 +263,7 @@ class ContinuumAutonomousJobService:JobService() {
                     }
                 }
             } catch (e: Exception) {
-                if(cancelled()) {
+                if(e is CancellationException) {
                     if(!stopped.get())finishCancelledOffline()
                 } else {
                     retryAfterFailure=true

@@ -47,8 +47,35 @@ class CockpitAnimationPresenter(
         home.post {
             if (event is CockpitAnimationEvent.TurnEnded ||
                 generation == home.presentationGeneration &&
-                (initialBoot || avatar === home.avatarRenderer && cueGeneration == avatar?.cueGeneration)) present(event)
+                (initialBoot || avatar === home.avatarRenderer && cueGeneration == avatar?.cueGeneration)) {
+                if (event is CockpitAnimationEvent.BootStarted) presentBootWhenReady(event, generation)
+                else present(event)
+            }
         }
+    }
+
+    private fun presentBootWhenReady(event: CockpitAnimationEvent.BootStarted, generation: Long) {
+        fun ready() = home.isPresentationActive() && home.width > 0 && home.height > 0 &&
+            (!home.ownsAvatarSlot || home.avatarRenderer != null)
+        if (generation != home.presentationGeneration) return
+        if (ready()) { present(event); return }
+        val observer = home.viewTreeObserver
+        val listener = object : android.view.ViewTreeObserver.OnPreDrawListener, View.OnAttachStateChangeListener {
+            private fun dispose() {
+                if (observer.isAlive) observer.removeOnPreDrawListener(this)
+                else home.viewTreeObserver.removeOnPreDrawListener(this)
+                home.removeOnAttachStateChangeListener(this)
+            }
+            override fun onPreDraw(): Boolean {
+                if (generation != home.presentationGeneration) dispose()
+                else if (ready()) { dispose(); present(event) }
+                return true
+            }
+            override fun onViewAttachedToWindow(view: View) = Unit
+            override fun onViewDetachedFromWindow(view: View) = dispose()
+        }
+        observer.addOnPreDrawListener(listener)
+        home.addOnAttachStateChangeListener(listener)
     }
 
     /**

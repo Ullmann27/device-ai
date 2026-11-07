@@ -30,6 +30,7 @@ import android.widget.FrameLayout
 import at.heinz.deviceai.avatar3d.AvatarGlbContract
 import at.heinz.deviceai.avatar3d.AvatarCameraFraming
 import at.heinz.deviceai.avatar3d.AvatarCameraMotion
+import at.heinz.deviceai.avatar3d.AvatarEntranceMotion
 import at.heinz.deviceai.avatar3d.AvatarFraming
 import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer
 import at.heinz.deviceai.ui.AndroidContinuumPainter
@@ -220,6 +221,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var auraScale = 1f
     private var auraAnchorEffective = .5f
     private val cameraMotion = AvatarCameraMotion()
+    private val entranceMotion = AvatarEntranceMotion()
     private var workWindowActive = false
     private var cameraFraming: AvatarCameraFraming? = null
     private var cameraWindow: AvatarFraming.Window? = null
@@ -248,6 +250,36 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     internal fun cameraProgress(): Float = cameraMotion.progress
+
+    internal fun playAvatarEntrance(step: at.heinz.deviceai.cockpit.TimelineStep): Boolean {
+        val cue = step.cue
+        if (cue != at.heinz.deviceai.cockpit.Cue.AVATAR_FROM_DEPTH &&
+            cue != at.heinz.deviceai.cockpit.Cue.AVATAR_SHRINK) return false
+        if (!headEnabled || !canAnimateFrame()) {
+            resetAvatarEntrance()
+            return true
+        }
+        val now = SystemClock.uptimeMillis()
+        if (cue == at.heinz.deviceai.cockpit.Cue.AVATAR_FROM_DEPTH) entranceMotion.start(now)
+        else entranceMotion.shrink(now)
+        invalidate()
+        return true
+    }
+
+    internal fun resetAvatarEntrance() {
+        entranceMotion.reset()
+        invalidate()
+    }
+
+    internal fun entranceScale(): Float = entranceMotion.scale
+
+    private fun transformHeadEntrance(canvas: Canvas, units: Float = 1f) {
+        val scale = entranceMotion.scale
+        if (scale == 1f) return
+        canvas.clipRect(headDrawBounds.left / units, headDrawBounds.top / units,
+            headDrawBounds.right / units, headDrawBounds.bottom / units)
+        canvas.scale(scale, scale, headDrawBounds.centerX() / units, headDrawBounds.centerY() / units)
+    }
 
     /**
      * Head size and effective anchor of the live 3D window (the calibrated values for the 2D head), so the aura
@@ -527,6 +559,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun clearTaskEffects() {
         taskEffects.clear()
         cockpitSequence?.clear()
+        resetAvatarEntrance()
         taskEffectsNotBeforeMs = SystemClock.uptimeMillis()
     }
 
@@ -544,6 +577,7 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         resetCamera()
+        resetAvatarEntrance()
         cockpitSequence?.setMotionAllowed(false)
         clearTaskEffects()
         // A fold/navigation reparent destroys the surface, but retains validated immutable asset bytes.
@@ -584,7 +618,7 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
         super.onWindowFocusChanged(hasWindowFocus)
-        if (!hasWindowFocus) resetCamera()
+        if (!hasWindowFocus) { resetCamera(); resetAvatarEntrance() }
         // Re-evaluate scheduling after Samsung Fold window/cover transitions.
         if (isAttachedToWindow) updateMotionPolicy()
     }
@@ -623,6 +657,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         lastFrameMs = 0L
         if (!canAnimateFrame()) {
             resetCamera()
+            resetAvatarEntrance()
             clearTaskEffects()
             synchronized(avatarPose) { avatarPose.clearObservedGaze(System.currentTimeMillis()) }
             settleState()
@@ -688,10 +723,13 @@ class ContinuumHologramView @JvmOverloads constructor(
             val t = if (canAnimateFrame()) avatarSeconds else 0f
             at.heinz.deviceai.ui.JarvisEnergyFlows.draw(painter, width / density, height / density, t, energy)
             updateAuraFraming()
+            val auraCanvas = canvas.save()
+            transformHeadEntrance(canvas, density)
             at.heinz.deviceai.ui.JarvisHeadAura.draw(painter, at.heinz.deviceai.ui.JarvisShellLayout.Box(
                 headDrawBounds.left / density, headDrawBounds.top / density, headDrawBounds.right / density,
                 headDrawBounds.bottom / density), auraAnchorEffective, t,
                 headScale = auraScale, activityEnergy = energy, speechLevel = audioEnergy)
+            canvas.restoreToCount(auraCanvas)
         }
         if (headEnabled) {
             val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis(), canAnimateFrame()) }
@@ -707,6 +745,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             }
             if (!native3dDrawn) {
                 val headCanvas = canvas.save()
+                transformHeadEntrance(canvas, density)
                 canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
                 avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
                     pose, avatarSeconds, canAnimateFrame())
@@ -760,6 +799,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (headFadeActive()) {
             val density = resources.displayMetrics.density
             val streams = canvas.save()
+            transformHeadEntrance(canvas)
             canvas.translate(headDrawBounds.left, headDrawBounds.top)
             canvas.scale(density, density)
             painter.begin(canvas)
@@ -785,11 +825,17 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     /** Only the native head surface is masked; full-view effect children keep their own unclipped drawing. */
     override fun drawChild(canvas: Canvas, child: android.view.View, drawingTime: Long): Boolean {
-        if (child !== nativeTexture || !headFadeActive()) return super.drawChild(canvas, child, drawingTime)
-        val layer = canvas.saveLayer(headDrawBounds, null)
-        val drawn = super.drawChild(canvas, child, drawingTime)
-        applyHeadFade(canvas)
-        canvas.restoreToCount(layer)
+        if (child !== nativeTexture) return super.drawChild(canvas, child, drawingTime)
+        val saved = canvas.save()
+        transformHeadEntrance(canvas)
+        val drawn = if (headFadeActive()) {
+            val layer = canvas.saveLayer(headDrawBounds, null)
+            val result = super.drawChild(canvas, child, drawingTime)
+            applyHeadFade(canvas)
+            canvas.restoreToCount(layer)
+            result
+        } else super.drawChild(canvas, child, drawingTime)
+        canvas.restoreToCount(saved)
         return drawn
     }
 
@@ -829,6 +875,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun advanceFrame() {
         if (!canAnimateFrame()) return
         val now = SystemClock.uptimeMillis()
+        entranceMotion.advance(now)
         cameraMotion.advance(now, hasWindowFocus(), Settings.Global.getFloat(context.contentResolver,
             Settings.Global.ANIMATOR_DURATION_SCALE, 1f))
         val delta = if (lastFrameMs == 0L) 0f else ((now - lastFrameMs) / 1000f).coerceIn(0f, .1f)

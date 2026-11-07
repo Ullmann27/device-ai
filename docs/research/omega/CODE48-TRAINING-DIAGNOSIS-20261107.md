@@ -7,7 +7,17 @@ EXP-02 / EXP-07 regression repair; EXP-04 / EXP-05 / EXP-12 checkpoints, holdout
 
 The actual `ContinuumAutonomousJobService` can wait for `ContinuumCdxLargeLab.status()` after calculating the remaining budget. A timeout or owner pause during this wait makes `lab.next(cancelled)` throw at its cancellation precondition. The existing CDX catch classified this as `FAILED`, causing a training-failure notification. The OFFLINE completion also reported an owner pause as `DEFERRED_TIME_BUDGET` even when no deadline expired.
 
-The repair consults the existing cancellation/resource reason: budget/resource stops end as `DEFERRED` with the original fixed reason; owner/Android cancellation ends as `INTERRUPTED`. Real exceptions while the job remains permitted still end as `FAILED` and retain the existing JobScheduler retry. No training step, thermal limit, timeout, model parameter, holdout threshold or signature was relaxed.
+The repair consults the existing cancellation/resource reason: budget/resource stops end as `DEFERRED` with the original fixed reason; owner/Android cancellation ends as `INTERRUPTED`. A typed `CancellationException` identifies the CDX start precondition. Independent exceptions remain failures even if the budget has expired by the time they are caught. No training step, thermal limit, timeout, model parameter, holdout threshold or signature was relaxed.
+
+## Review correction: overlapping I/O failure and deadline
+
+The initial broad cancellation check in the exception handlers could hide an independent storage failure after the 15 s deadline. A new regression holds the actual `ContinuumLearningCore.CORE_LOCK`, waits until the actual JobService reaches `bootstrapOfflineCurriculum`, creates a synthetic directory where the model file must be read, advances the Android clock by 16 s and releases the lock. The real model read throws `FileNotFoundException`.
+
+- RED with the initial repair: expected `FAILED`, actual `DEFERRED`; one test, one failure.
+- GREEN: the OFFLINE monitor and job status are `FAILED`, the detail retains `FileNotFoundException`, the original I/O throwable is logged, the synthetic obstruction is preserved and JobScheduler requests retry.
+- Both exception handlers now recognize only `CancellationException` as cancellation. The CDX precondition raises that explicit type. Other CDX errors retain their existing `FAILED` monitor/log behavior while the SWB1 job continues; other OFFLINE errors retain their existing failure/retry path.
+- All four JobService regression cases pass, including timeout, owner pause and the original storage control. The existing CDX cancellation contract test was updated to the specific exception type and verifies unchanged decoder/stage state.
+- Evidence: `docs/evidence/code48-training-error-classification-20261107/`. Focused SDK36 compile, actual JobService on Robolectric SDK28, synthetic filesystem only. This does not substitute for the coordinator's integrated Gradle/APK or a physical-device training run.
 
 ## Exact executed evidence
 

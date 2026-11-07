@@ -1466,7 +1466,8 @@ class AgentActivity : Activity() {
     private fun subscribeMemoryEvents() {
         val source = at.heinz.deviceai.cockpit.MemoryEventSources.forApp(filesDir)
         val main = android.os.Handler(mainLooper)
-        val mapper = at.heinz.deviceai.cockpit.MemoryEventMapper(cockpitBus) { d, r -> main.postDelayed(r, d) }
+        val mapper = at.heinz.deviceai.cockpit.MemoryEventMapper(cockpitBus,
+            generationProvider = { homeView?.avatarRenderer?.cueGeneration ?: -1L }) { d, r -> main.postDelayed(r, d) }
         val subscription = source.subscribe(mapper)
         val activity = at.heinz.deviceai.learning.ContinuumMemoryEvents.forApp(filesDir)
             .addListener(memoryActivityTracker)
@@ -2402,6 +2403,8 @@ class AgentActivity : Activity() {
     private fun presentDocumentScene(doc: PdfDocumentIntake.Document) = presentDocumentScene(doc, null)
 
     private fun presentDocumentScene(doc: PdfDocumentIntake.Document, documentUri: String?) {
+        if (activeWorkArea == ContinuumWorkArea.CHAT) showHomeDashboard()
+        if (awaitDocumentCockpitLayout(doc, documentUri)) return
         val pages = if (doc.pageCount == 1) "1 Seite" else "${doc.pageCount} Seiten"
         val size = doc.sizeBytes?.let { android.text.format.Formatter.formatShortFileSize(this, it) }
         val meta = listOfNotNull(pages, size, doc.name).joinToString(" · ")
@@ -2472,7 +2475,6 @@ class AgentActivity : Activity() {
         if (hasText && !wantsDraft) facts.addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this, "ENTWURF ERSTELLEN") {
             startDocumentDraft(doc)
         }.apply { tag = "jarvis-document-start-draft"; documentDraftAction = this }, matchWidth(top = 10))
-        if (activeWorkArea == ContinuumWorkArea.CHAT) showHomeDashboard()
         val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown }
         val emblem = doc.firstPage?.let { android.graphics.drawable.BitmapDrawable(resources, it) }
         val window = home?.let {
@@ -2484,6 +2486,46 @@ class AgentActivity : Activity() {
         // The same facts in the conversation; with an open window the cockpit stays (no switch to the chat area).
         addAssistantMessage(report, preserveLocalContext = false, keepCockpit = window != null)
         if (wantsDraft && hasText && localModelReady()) startDocumentDraft(doc)
+    }
+
+    /** Wait for real first geometry. */
+    private fun awaitDocumentCockpitLayout(doc: PdfDocumentIntake.Document, documentUri: String?): Boolean {
+        val home = homeView ?: return false
+        if (activeWorkArea != ContinuumWorkArea.START || !home.isShown || !home.isAttachedToWindow ||
+            home.jarvisShell.width > 0 && home.jarvisShell.height > 0) return false
+        val session = sessionId
+        val generation = workPresentationGeneration
+        var released = false
+        lateinit var layout: View.OnLayoutChangeListener
+        lateinit var attachment: View.OnAttachStateChangeListener
+        fun release() {
+            released = true
+            home.removeOnLayoutChangeListener(layout)
+            home.removeOnAttachStateChangeListener(attachment)
+        }
+        fun discard() {
+            if (released) return
+            release()
+            doc.firstPage?.recycle()
+        }
+        layout = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            if (released) return@OnLayoutChangeListener
+            if (isFinishing || isDestroyed || sessionId != session || workPresentationGeneration != generation ||
+                homeView !== home || activeWorkArea != ContinuumWorkArea.START) {
+                discard()
+            } else if (home.jarvisShell.width > 0 && home.jarvisShell.height > 0) {
+                release()
+                presentDocumentScene(doc, documentUri)
+            }
+        }
+        attachment = object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) = Unit
+            override fun onViewDetachedFromWindow(v: View) = discard()
+        }
+        home.addOnLayoutChangeListener(layout)
+        home.addOnAttachStateChangeListener(attachment)
+        home.requestLayout()
+        return true
     }
 
     private fun navigateDashboardTargetNow(target: String) {

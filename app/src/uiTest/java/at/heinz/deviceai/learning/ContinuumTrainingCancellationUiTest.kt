@@ -14,6 +14,7 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadow.api.Shadow
+import org.robolectric.shadows.ShadowLog
 import org.robolectric.shadows.ShadowStatFs
 import org.robolectric.shadows.ShadowSystemClock
 import java.util.concurrent.TimeUnit
@@ -114,5 +115,54 @@ class ContinuumTrainingCancellationUiTest {
             assertTrue(shadowOf(service).isJobFinished)
             assertTrue(shadowOf(service).isRescheduleNeeded)
         } finally { controller.destroy() }
+    }
+
+    @Test fun realStorageFailureAfterDeadlineRemainsFailedAndRetryable() {
+        val controller = Robolectric.buildService(ContinuumAutonomousJobService::class.java).create()
+        val service = controller.get()
+        ShadowStatFs.registerStats(service.filesDir, 1_000_000, 900_000, 900_000)
+        service.sendStickyBroadcast(Intent(Intent.ACTION_BATTERY_CHANGED)
+            .putExtra(BatteryManager.EXTRA_LEVEL, 100).putExtra(BatteryManager.EXTRA_SCALE, 100))
+        val lock = ContinuumLearningCore::class.java.getDeclaredField("CORE_LOCK")
+            .apply { isAccessible = true }.get(null)
+        val blockedModel = java.io.File(service.filesDir, "learning-core-v2/subword-v1.bin")
+        var worker: Thread? = null
+        try {
+            synchronized(lock) {
+                assertTrue(service.onStartJob(Shadow.newInstanceOf(JobParameters::class.java)))
+                worker = ContinuumAutonomousJobService::class.java.getDeclaredField("worker")
+                    .apply { isAccessible = true }.get(service) as Thread
+                val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5)
+                while (worker!!.isAlive && System.nanoTime() < deadline &&
+                    !(worker!!.state == Thread.State.BLOCKED && worker!!.stackTrace.any {
+                        it.className == ContinuumLearningCore::class.java.name &&
+                            it.methodName == "bootstrapOfflineCurriculum"
+                    })) Thread.sleep(2)
+                assertEquals(Thread.State.BLOCKED, worker!!.state)
+                assertTrue(worker!!.stackTrace.any {
+                    it.className == ContinuumLearningCore::class.java.name &&
+                        it.methodName == "bootstrapOfflineCurriculum"
+                })
+                assertTrue(blockedModel.mkdirs())
+                ShadowSystemClock.advanceBy(16, TimeUnit.SECONDS)
+            }
+            worker!!.join(5_000)
+            assertFalse(worker!!.isAlive)
+            val offline = ContinuumTrainingMonitor.read(service, ContinuumTrainingMonitor.OFFLINE)
+            assertEquals("An expired budget must not hide a real I/O failure", "FAILED", offline.outcome)
+            assertEquals("FileNotFoundException", offline.detail)
+            assertEquals("FAILED", ContinuumOfflineJobStatus.read(service).phase)
+            assertTrue(ShadowLog.getLogsForTag("ContinuumOfflineLearning")
+                .any { it.throwable is java.io.IOException })
+            assertTrue(blockedModel.isDirectory)
+            assertTrue(shadowOf(service).isJobFinished)
+            assertTrue(shadowOf(service).isRescheduleNeeded)
+        } finally {
+            if (worker?.isAlive == true) {
+                service.onStopJob(Shadow.newInstanceOf(JobParameters::class.java))
+                worker!!.join(5_000)
+            }
+            controller.destroy()
+        }
     }
 }

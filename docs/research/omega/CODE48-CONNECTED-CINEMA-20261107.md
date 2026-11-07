@@ -103,3 +103,35 @@ The complete branch/head list is saved beside the test evidence.
   are exact matches, others have later changes. No duplicate scanner added.
 - Inworld prototype: its own handoff marks it shelved after owner clarification.
   It is not enabled or deployed by this continuation.
+
+## Combined candidate before full gates
+
+The original head now receives finite depth/settle cues through its existing
+frame clock, including the native TextureView composition path. Boot waits
+for the first ready foreground/layout/avatar frame. Five actual host UI tests
+passed, including real Activity startup and STOP. Original assets, orb renderer
+and work-window camera source remain unchanged. GPU execution is not claimed.
+
+A restored CHAT Activity now retains an accepted PDF scene until its first
+actual layout. STOP/session changes discard the pending scene and recycle
+the unused page bitmap. The three targeted cases passed.
+
+The upstream memory mapper now stamps each buffered event with its original
+presentation generation, so the coalescing interval cannot replay an old
+flight after STOP. A fresh event after STOP remains usable. Thirteen unit
+cases and two native surface cases passed. Actual host composition was
+visually reviewed with and without a work window; recovered glyphs are
+visible and the work window stays in front. No full video-parity claim.
+
+Training: real JobService lock contention reproduced misleading failure
+classification. Typed cancellation now reports budget deferral or owner
+interruption, while independent I/O failure remains FAILED, logged and
+retryable even after the deadline. Four JobService controls and the CDX
+contract passed. The owner phone error itself is not identified without its
+current monitor details. Model/checkpoint/holdout/resource limits unchanged.
+
+Next gate: freeze the saved source, run combined Node critical/full/special,
+backend, Android unit/UI/lint and build unsigned ARM64 versionCode48 /0.3.47.
+No final-source full gate or Code48 APK result is asserted at this checkpoint.
+Original signing/publication remains governed by the exact-SHA owner release
+freeze in docs/release/CONTINUUM-OWNER-UPDATE-CHANNEL.md.
