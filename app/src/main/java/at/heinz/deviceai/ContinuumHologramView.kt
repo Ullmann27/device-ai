@@ -776,18 +776,25 @@ class ContinuumHologramView @JvmOverloads constructor(
         !foregroundActive -> "Avatar: Activity nicht im Vordergrund."
         !isAttachedToWindow -> "Avatar: View nicht am Fenster."
         !isShown || windowVisibility != VISIBLE -> "Avatar: View derzeit unsichtbar."
-        powerManager.isPowerSaveMode || thermalStatus >= 3 ->
-            "Avatar: ESSENTIAL · Dekoration gedrosselt · " + avatarTrace.diagnose()
+        thermalStatus >= 3 && headEnabled ->
+            "Avatar: ESSENTIAL · Temperatur hoch · Dekoration pausiert · " + avatarTrace.diagnose()
+        powerManager.isPowerSaveMode && headEnabled ->
+            "Avatar: ESSENTIAL · Energiesparmodus · Dekoration pausiert · " + avatarTrace.diagnose()
+        thermalStatus >= 3 -> "Hologramm: Temperatur hoch · Bewegung pausiert."
+        powerManager.isPowerSaveMode -> "Hologramm: Energiesparmodus · Bewegung pausiert."
         else -> "Avatar: LIVE · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)} · ${avatarTrace.diagnose()}"
     }
 
     private fun updateMotionPolicy() {
         // Reduced-motion remains authoritative. Power-save/thermal pressure no longer
         // kills mouth/eyes/head completely; JarvisRenderQuality suppresses decoration.
-        motionAllowed = at.heinz.deviceai.ui.AvatarEssentialMotionPolicy.essentialAllowed(
+        val policyBudget = renderBudget()
+        motionAllowed = at.heinz.deviceai.ui.AvatarEssentialMotionPolicy.frameLoopAllowed(
             foreground = foregroundActive,
             animationsEnabled = animationsEnabled,
-            systemAnimatorsEnabled = ValueAnimator.areAnimatorsEnabled()
+            systemAnimatorsEnabled = ValueAnimator.areAnimatorsEnabled(),
+            avatarEnabled = headEnabled,
+            budget = policyBudget
         )
         removeCallbacks(drawFrame)
         framePending = false
