@@ -1,0 +1,1716 @@
+{
+  "source": {
+    "sourceRoot": "/workspace/scratch/3d1967be6193/candidate",
+    "head": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+    "tree": "5206abd91b3740838661aa0e27e6702b3891591b",
+    "statusPorcelain": "",
+    "originalPaths": 19,
+    "uniquePathBlobVariants": 24,
+    "historicalCallerSnapshots": 18,
+    "testsRunForThisAudit": false,
+    "trainingRun": false,
+    "privateDataRead": false,
+    "candidateMutated": false
+  },
+  "scope": "19 missing paths in learning/localmodel/research-argon4 and six specified cognitive classes; all unique path/blob variants compared statically",
+  "constraints": {
+    "sourceChanges": false,
+    "gitRefChanges": false,
+    "testsOrTrainingRun": false,
+    "privateDataOrProvidersAccessed": false
+  },
+  "phoneTrainingFailure": "Unbekannt ohne tatsächlichen Monitorcode/Phase des Geräts; kein historischer Zweigbefund beweist die Ursache.",
+  "rows": [
+    {
+      "name": "Argon4SystemShadow",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/Argon4SystemShadow.kt",
+      "category": "RESEARCH_SHADOW",
+      "function": "Zählt flüchtige Gesprächsbezüge sowie aus höchstens drei autorisierten Treffern ableitbare Relationen/Widersprüche; keine Antwortänderung.",
+      "currentComparison": "AuthorizedConversationMemoryShadow ist tatsächlich in ContinuumCognitiveRuntime angeschlossen, vergleicht aber lexikalisches/CRE1-Ranking. Er ersetzt nicht die ARGON-Relationszählung. Ein fehlender ARGON-Bericht ist kein fehlender Hauptchat oder Trainingspfad.",
+      "necessaryIntegration": "Für reine Diagnostik DialogStateKernel + JustifiedRelationStore und die alten beobachtenden Hooks an die heutige Session-/Widerrufslogik anpassen. Für nutzbare Antworten wäre eine zusätzliche überprüfte Produktentscheidung nötig.",
+      "limits": "Die historische Brücke lässt Umschreibungen ausdrücklich intern; standardmäßig SHADOW, Sessionreset nach 64 Turns. Kein belegter Effekt auf den gemeldeten Trainingsfehler.",
+      "representativeSource": {
+        "branch": "integration/continuum-brain-system-20261029",
+        "sha": "7924ba0793963dd84eef61517359a743071829bf",
+        "pr": 242,
+        "blob": "99b96fe2663bec3d0831bfe5c4c207d1bd4a0ead",
+        "url": "https://github.com/Ullmann27/device-ai/blob/7924ba0793963dd84eef61517359a743071829bf/app/src/main/java/at/heinz/deviceai/cognitive/Argon4SystemShadow.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/242"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "99b96fe2663bec3d0831bfe5c4c207d1bd4a0ead",
+          "bytes": 5046,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "integration/continuum-brain-system-20261029",
+              "sha": "7924ba0793963dd84eef61517359a743071829bf",
+              "pr": 242
+            },
+            {
+              "branch": "opus/continuum-m1-m8-20261030",
+              "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+              "pr": 244
+            },
+            {
+              "branch": "opus/continuum-m9-m16-20261030",
+              "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+              "pr": 245
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-counterexample-acceptance-20261029",
+              "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+              "pr": 243
+            },
+            {
+              "branch": "research/continuum-mastercode-bounded-search-20261030",
+              "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+              "pr": 248
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/continuum-self-evolution-shadow-20261030",
+              "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+              "pr": 249
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            },
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "0e10beac455ca4418d513aa1a7ad57ee3db23452:cognitive/LocalConversationContext.kt:10,46-56",
+        "0e10beac455ca4418d513aa1a7ad57ee3db23452:learning/ContinuumCognitiveRuntime.kt:139-142"
+      ],
+      "currentEvidence": [
+        "learning/ContinuumCognitiveRuntime.kt:119-133",
+        "cognitive/AuthorizedConversationMemoryShadow.kt:7-11,39-123"
+      ]
+    },
+    {
+      "name": "AuthorizedWebLearningReviewInbox",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AuthorizedWebLearningReviewInbox.kt",
+      "category": "BOUNDED_PRODUCT_CANDIDATE",
+      "function": "Bewahrt bis zu acht Quellenkandidaten aus einer autorisierten Modell-Webrecherche nur im RAM; prüft Berechtigung bei Publish, Listenabruf und Review erneut.",
+      "currentComparison": "Echte Anschlusslücke: normaler Modell-Toolpfad liest runner.dossier derzeit nur für die Read-Animation. Lernstoffdialog liest ausschließlich FileResearchDossierStore. Explizite Web-Recherche und WebLearningJournal sind bereits vorhanden.",
+      "necessaryIntegration": "Vorhandenes runner.dossier nach erfolgreichem session.checkAuthorized in die flüchtige Inbox übernehmen; vorhandenen Lernstoffdialog anbinden; Widerruf/STOP/Background/Sessionwechsel auch vor finalem Speichern und Coach-Übergabe prüfen. Kein zweiter dauerhafter Store.",
+      "limits": "Alt bevorzugt Live-Kandidaten und fällt bei leerer Liste auf das gespeicherte Dossier zurück; keine Listenunion. Eine gespeicherte Quellnotiz ist weder Owner-Fakt noch Gewichtsupdate.",
+      "representativeSource": {
+        "branch": "feature/continuum-model-web-learning-review-20261029",
+        "sha": "30fbef96182ed83ee55a1e6ec732d1c533df4a51",
+        "pr": 239,
+        "blob": "2461af7c7c4e54246729662e494e4eb4beba34f5",
+        "url": "https://github.com/Ullmann27/device-ai/blob/30fbef96182ed83ee55a1e6ec732d1c533df4a51/app/src/main/java/at/heinz/deviceai/cognitive/AuthorizedWebLearningReviewInbox.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/239"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "2461af7c7c4e54246729662e494e4eb4beba34f5",
+          "bytes": 1825,
+          "sources": [
+            {
+              "branch": "feature/continuum-model-web-learning-review-20261029",
+              "sha": "30fbef96182ed83ee55a1e6ec732d1c533df4a51",
+              "pr": 239
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "30fbef96182ed83ee55a1e6ec732d1c533df4a51:AgentActivity.kt:321,530,5177-5217,5244-5268,5825-5827"
+      ],
+      "currentEvidence": [
+        "ApprovedWebResearchToolRunner.kt:8-33",
+        "AgentActivity.kt:8231-8249,8297-8318,9009-9021"
+      ]
+    },
+    {
+      "name": "ConversationResearchIntent",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ConversationResearchIntent.kt",
+      "category": "PARTIAL_REPLACEMENT_REMAINING_FORMS",
+      "function": "Remove-only Web-Veto für deutsche/englische Verbote; PR310 korrigiert den alten >2048-Zeichen-Fail-open-Fall zu >65536 fail-closed.",
+      "currentComparison": "NetworkTurnConstraint ersetzt das Konzept und ist an Eingabe und Originalturn-Toolgrenze angeschlossen. Aktuell >8192 fail-closed, zusätzlich lokale Owner-Intents und Revoke. Die aktuelle Regexliste enthält jedoch weder englische Formen wie do not browse the web/without internet noch medienloses bitte nicht recherchieren.",
+      "necessaryIntegration": "Falls weiterbearbeitet: ausschließlich fehlende explizite Verbotsformen in die aktuelle zentrale Policy übernehmen und ihre bestehenden Grenzen erhalten. Keine parallele zweite Klasse und kein Rücksetzen der Tool-/Consent-Grenzen.",
+      "limits": "Statischer Quellvergleich; keine neue Ausführung/Regression in diesem Audit. ResearchNegationSignals verarbeitet Polarität von Quellenbehauptungen und ersetzt diese Eigentümeranweisung nicht.",
+      "representativeSource": {
+        "branch": "fix/continuum-v35-offline-long-input-20261031",
+        "sha": "ccbf0431d446789234fe8d5f0583cf9b8d40b8ba",
+        "pr": 310,
+        "blob": "08d2ce3ff886fa7fa9e9c9ea1c6a1ecdb24157ec",
+        "url": "https://github.com/Ullmann27/device-ai/blob/ccbf0431d446789234fe8d5f0583cf9b8d40b8ba/app/src/main/java/at/heinz/deviceai/cognitive/ConversationResearchIntent.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/310"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "08d2ce3ff886fa7fa9e9c9ea1c6a1ecdb24157ec",
+          "bytes": 1663,
+          "sources": [
+            {
+              "branch": "fix/continuum-v35-offline-long-input-20261031",
+              "sha": "ccbf0431d446789234fe8d5f0583cf9b8d40b8ba",
+              "pr": 310
+            }
+          ]
+        },
+        {
+          "blob": "de7a53db5ea0d556238ca1468a5a5837adeaf8de",
+          "bytes": 1427,
+          "sources": [
+            {
+              "branch": "fix/continuum-v35-owner-qa-intent-20261031",
+              "sha": "4396d92454a85d195bd66b2aa2ff5ae9c55e3328",
+              "pr": 309
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "ccbf0431d446789234fe8d5f0583cf9b8d40b8ba:AgentActivity.kt:2681-2684"
+      ],
+      "currentEvidence": [
+        "cognitive/NetworkTurnConstraint.kt:16-70",
+        "cognitive/ResearchNegationSignals.kt:5-30",
+        "AgentActivity.kt:5109-5115,8998-9007"
+      ]
+    },
+    {
+      "name": "LocalModelClaimAudit",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelClaimAudit.kt",
+      "category": "DIAGNOSTIC_CANDIDATE",
+      "function": "Prüft eine fertige Modellantwort lexikalisch gegen exakt ihren Retrieval-Kontext: unbelegte Details, Satzpolarität, Rollenbindung, veraltete Werte, neue Aktionen und Konflikte. Liefert ausschließlich TraceStage.",
+      "currentComparison": "Kein gleichwertiger generativer Claim-Audit im aktuellen Traceenum. LocalDialogueQualityGate ist aktiv, prüft aber Form, Wiederholungen, Kontextleugnung und interne Platzhalter; bestätigt ausdrücklich keine Wahrheit.",
+      "necessaryIntegration": "Ewm1ClaimCheck/Ewm1Lexicon bereits vorhanden. Vier erlaubte TraceStage-Werte plus ein metadata-only Hook nach erfolgreicher Antwort mit demselben LocalGroundedRecall; keine automatische Antwortunterdrückung oder Faktpromotion.",
+      "limits": "PR244 enthält die kleinere Vorstufe, PR245 die erweiterten Checks. Ein PASS beweist kein Entailment. Zusätzliche Laufzeit- und Fehlalarmwirkung müsste separat gemessen werden; keine Trainingsreparatur.",
+      "representativeSource": {
+        "branch": "opus/continuum-m9-m16-20261030",
+        "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+        "pr": 245,
+        "blob": "ef43e9d429ea76ed09293d1388f36d7d7ed8560f",
+        "url": "https://github.com/Ullmann27/device-ai/blob/29c1e1e1bef289cddf1e0c7854f2511923b93c0f/app/src/main/java/at/heinz/deviceai/cognitive/LocalModelClaimAudit.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/245"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "ef43e9d429ea76ed09293d1388f36d7d7ed8560f",
+          "bytes": 9155,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "opus/continuum-m9-m16-20261030",
+              "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+              "pr": 245
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-mastercode-bounded-search-20261030",
+              "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+              "pr": 248
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/continuum-self-evolution-shadow-20261030",
+              "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+              "pr": 249
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            },
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            }
+          ]
+        },
+        {
+          "blob": "f3745350ad97f297ec15b135a72bb3ad4b048a77",
+          "bytes": 3021,
+          "sources": [
+            {
+              "branch": "opus/continuum-m1-m8-20261030",
+              "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+              "pr": 244
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "0e10beac455ca4418d513aa1a7ad57ee3db23452:AgentActivity.kt:6341-6344",
+        "0e10beac455ca4418d513aa1a7ad57ee3db23452:cognitive/CognitiveTurnTrace.kt:13-16"
+      ],
+      "currentEvidence": [
+        "cognitive/CognitiveTurnTrace.kt:7-15",
+        "cognitive/LocalDialogueQualityGate.kt:5-10,31-104",
+        "AgentActivity.kt:9565"
+      ]
+    },
+    {
+      "name": "MemoryQuestionResolver",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryQuestionResolver.kt",
+      "category": "RESEARCH_SHADOW",
+      "function": "Ersetzt eine enge Form wie der Bruder von Anna durch genau einen aus aktiven Fakten ableitbaren Geschwisterkandidaten; sonst null.",
+      "currentComparison": "Die alte reale Integration benutzt lediglich resolve(...) != null als SHADOW-Logsignal. Sie fragt den EWM-Brain nicht mit dem umgeschriebenen Text ab. Aktuelles EWM besitzt bereits belegbasierte Personen-/Relationsverknüpfungen, aber keinen identischen Resolver.",
+      "necessaryIntegration": "Als Diagnose nur JustifiedRelationStore und aktuellen aktiven Fakt-Snapshot anschließen. Produktiver Nutzen würde einen neuen beweisgebundenen Fragenpfad mit Mehrdeutigkeits-, Widerrufs- und Rollenprüfung verlangen.",
+      "limits": "Keine nachgewiesene fehlende sichtbare Antwortfähigkeit aus dem Dateinamen ableitbar. Der Resolver kennt Geschwisterrelationen, nicht zuverlässig das Geschlecht des gefundenen Gegenübers.",
+      "representativeSource": {
+        "branch": "opus/continuum-m9-m16-20261030",
+        "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+        "pr": 245,
+        "blob": "972f3ffcab835e01f36a83f30888fb7d742b4382",
+        "url": "https://github.com/Ullmann27/device-ai/blob/29c1e1e1bef289cddf1e0c7854f2511923b93c0f/app/src/main/java/at/heinz/deviceai/cognitive/MemoryQuestionResolver.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/245"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "972f3ffcab835e01f36a83f30888fb7d742b4382",
+          "bytes": 1965,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "opus/continuum-m9-m16-20261030",
+              "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+              "pr": 245
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-mastercode-bounded-search-20261030",
+              "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+              "pr": 248
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/continuum-self-evolution-shadow-20261030",
+              "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+              "pr": 249
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            },
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "0e10beac455ca4418d513aa1a7ad57ee3db23452:learning/ContinuumBrain.kt:194-204"
+      ],
+      "currentEvidence": [
+        "learning/ContinuumBrain.kt:182-201",
+        "intelligence/ewm/Ewm1EvidenceWorkspace.kt:73,206,228,269",
+        "learning/ContinuumLearningCore.kt:725-759"
+      ]
+    },
+    {
+      "name": "MemoryTimeline",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryTimeline.kt",
+      "category": "COVERED_WITH_BOUNDED_SCOPE",
+      "function": "Heuristischer Vergleich bis zu 200 aktiver Fakten über Namen, Vierzeichenstämme und Zeit-/Korrekturmarker; erkennt Widerspruch oder veraltetes erstes Zitat.",
+      "currentComparison": "Tatsächlich angeschlossene ContinuumTemporalMemory + Specialist leisten für Wohnort, Arbeit, Alter und Namensrollen mehr: zwei Zeitachsen, Modalität, Tombstones, Widerrufs-Nachprüfung, explizite Konflikte. OwnerStatementTimeline ergänzt nur flüchtige Mengenangaben im Gespräch. Der alte allgemeine Stammvergleich ist nicht identisch.",
+      "necessaryIntegration": "Kein Anschluss nötig, um die bereits vorhandene zeitliche Owner-Erinnerung zu nutzen. Außerhalb der aktuellen Grammatik müsste jede neue Fähigkeit separat begründet werden; den alten heuristischen Shadow nicht als breiten Ersatz einsetzen.",
+      "limits": "Alter Caller protokolliert nur SHADOW-Verdikt und verändert keine Antwort. Aktueller Specialist bleibt OFF/SHADOW-neutral und ersetzt nur im ausdrücklich aktivierten ON-Modus.",
+      "representativeSource": {
+        "branch": "opus/continuum-m9-m16-20261030",
+        "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+        "pr": 245,
+        "blob": "03ff0e4fa9f276bfd0fde1a32807b53195cb783c",
+        "url": "https://github.com/Ullmann27/device-ai/blob/29c1e1e1bef289cddf1e0c7854f2511923b93c0f/app/src/main/java/at/heinz/deviceai/cognitive/MemoryTimeline.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/245"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "03ff0e4fa9f276bfd0fde1a32807b53195cb783c",
+          "bytes": 5735,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "opus/continuum-m9-m16-20261030",
+              "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+              "pr": 245
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-mastercode-bounded-search-20261030",
+              "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+              "pr": 248
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/continuum-self-evolution-shadow-20261030",
+              "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+              "pr": 249
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            },
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "0e10beac455ca4418d513aa1a7ad57ee3db23452:learning/ContinuumBrain.kt:194-204"
+      ],
+      "currentEvidence": [
+        "learning/ContinuumTemporalMemory.kt:13-30",
+        "learning/ContinuumTemporalMemorySpecialist.kt:5-62",
+        "AgentActivity.kt:5797,9414-9420",
+        "cognitive/OwnerStatementTimeline.kt:3-21"
+      ]
+    },
+    {
+      "name": "ContinuumAnswerCorrection",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAnswerCorrection.kt",
+      "category": "LARGER_PRODUCT_CANDIDATE",
+      "function": "Besitzer bestätigt eine Antwort für exakt normalisierte Frage; SHA-256-Frageschlüssel, neueste bestätigte Revision, selektiver oder gesamter Widerruf ohne neuronales Training.",
+      "currentComparison": "Echte andere Fähigkeit: heutige Owner-Faktkorrekturen, Signaturjournal und Workcard-Korrektur ersetzen kein Frage→Antwort-Override. Aktuelles LearningExperienceType besitzt ANSWER_CORRECTION nicht; im produktiven Baum keine gleichnamige Lookup-/Widerrufsfunktion.",
+      "necessaryIntegration": "Benötigt bewusstes Schema/Codec-/LEX3-/Recovery-/Exportdesign, bestätigendes UI, atomare Revision/Widerruf und heutige Session-/Attributgrenzen. Nicht nur die 27-Zeilen-Hilfsklasse kopieren und keinesfalls alten Core/Store überschreiben.",
+      "limits": "Historischer Lookup übergeht beim Treffer normales Ranking. Dialog-/Core-/Store-/UI-Änderungen sind wesentlich; aktuelle Owner-Fakt-Schutzmaßnahmen müssen erhalten bleiben. Kein Gewichtslernen und keine belegte Gerätefehlerursache.",
+      "representativeSource": {
+        "branch": "copilot/continuum-selective-correction-revocation-20261015",
+        "sha": "c3b77c0093cfddbc7193f805730dd6ba2eae7823",
+        "pr": 27,
+        "blob": "44064174df8eb570df14f138d0b3a780a882860e",
+        "url": "https://github.com/Ullmann27/device-ai/blob/c3b77c0093cfddbc7193f805730dd6ba2eae7823/app/src/main/java/at/heinz/deviceai/learning/ContinuumAnswerCorrection.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/27"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "1a7c734f2995928c9bc8665602bf77a3fd0b3311",
+          "bytes": 1110,
+          "sources": [
+            {
+              "branch": "continuum-agent/repair-9e1412ed3f-2f132248",
+              "sha": "5c746823d7a5a90a77fb56fe49e904b8d7744416",
+              "pr": null
+            }
+          ]
+        },
+        {
+          "blob": "44064174df8eb570df14f138d0b3a780a882860e",
+          "bytes": 1234,
+          "sources": [
+            {
+              "branch": "copilot/continuum-argon-source-review-20261015",
+              "sha": "4678a98f62e9b339cc723497e58839e6216b1c8f",
+              "pr": null
+            },
+            {
+              "branch": "copilot/continuum-owner-answer-corrections-20261015",
+              "sha": "251518aabd6cec964252c0acb3812c1883e85fe0",
+              "pr": 26
+            },
+            {
+              "branch": "copilot/continuum-selective-correction-revocation-20261015",
+              "sha": "c3b77c0093cfddbc7193f805730dd6ba2eae7823",
+              "pr": 27
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "4678a98f62e9b339cc723497e58839e6216b1c8f:AgentActivity.kt:938-940,2171-2247",
+        "4678a98f62e9b339cc723497e58839e6216b1c8f:learning/ContinuumLearningCore.kt:420-460",
+        "4678a98f62e9b339cc723497e58839e6216b1c8f:learning/ContinuumMemoryDialogue.kt:42-43",
+        "4678a98f62e9b339cc723497e58839e6216b1c8f:learning/ContinuumLearningExperience.kt:150-184"
+      ],
+      "currentEvidence": [
+        "learning/ContinuumLearningExperience.kt:15-21,102-123",
+        "learning/ContinuumLearningCore.kt:697-731",
+        "AgentActivity.kt:2096-2121,7984"
+      ]
+    },
+    {
+      "name": "ContinuumCdx1ChatShadow",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdx1ChatShadow.kt",
+      "category": "DIAGNOSTIC_CANDIDATE",
+      "function": "Expliziter Forschungsbefehl führt einen vorhandenen CDX1-Paardecoder auf einem autorisierten Treffer desselben SWB1-Turns aus; prüft Checkpointhash vorher/nachher und zeigt unbestätigte Ausgabe.",
+      "currentComparison": "CDX1-Paarlabor, lesender Status und trainPairedExperiment existieren. Der zusätzliche Chatbefehl und same-turn Shadow-Report fehlen; keine fehlende Freigabe für allgemeine CDX-Chatantworten.",
+      "necessaryIntegration": "Nur optionalen Diagnosebefehl an den bestehenden Turn und Decoderstatus/infer-Callback binden. Vorhandene Autorisierungs-/Checkpoint-/Bytegrenzen übernehmen; Ausgabe isoliert anzeigen.",
+      "limits": "Kein Trainingsaufruf in diesem Adapter. 160 UTF-8-Byte-Evidenz/Frage, SHADOW, kein Weiterreichen an Gemma oder Gerätewerkzeuge, keine Chatpromotion.",
+      "representativeSource": {
+        "branch": "sol/continuum-experiment-bridge-20261027",
+        "sha": "fe7292685d4f4105d59eed297079484df2fc157d",
+        "pr": null,
+        "blob": "a05ff9d1667f95775c673411246a14358b881c50",
+        "url": "https://github.com/Ullmann27/device-ai/blob/fe7292685d4f4105d59eed297079484df2fc157d/app/src/main/java/at/heinz/deviceai/learning/ContinuumCdx1ChatShadow.kt",
+        "prUrl": null
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "a05ff9d1667f95775c673411246a14358b881c50",
+          "bytes": 4967,
+          "sources": [
+            {
+              "branch": "sol/continuum-experiment-bridge-20261027",
+              "sha": "fe7292685d4f4105d59eed297079484df2fc157d",
+              "pr": null
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "fe7292685d4f4105d59eed297079484df2fc157d:AgentActivity.kt:2304-2307,2758-2762"
+      ],
+      "currentEvidence": [
+        "learning/ContinuumDecoderBridge.kt:5-14,123-145,231-246",
+        "learning/ContinuumCognitiveRuntime.kt:90-137"
+      ]
+    },
+    {
+      "name": "NeuralTutorBatchHint",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralTutorBatchHint.kt",
+      "category": "BOUNDED_PRODUCT_CANDIDATE",
+      "function": "Erkennt außerhalb des Tutors einen explizit mit Frage:/Gruß: markierten Paste mit mindestens zwei deutschen Zitaten und zeigt nur einen Aktivierungshinweis.",
+      "currentComparison": "Aktiver NeuralLearningCoach unterstützt bereits bis zu zwölf getrennte Beispiele und einzeln bestätigte Trainingsschritte. Der Hinweis bei inaktivem Coach fehlt; das ist UX/Fehlleitung, kein fehlender Trainer.",
+      "necessaryIntegration": "Ein enges frühes remove-only Routing vor allgemeinem Chat/Device-Routing; ausschließlich Hinweis zum bestehenden Neuron Tutor. Keine automatische Aktivierung oder Übernahme.",
+      "limits": "Alte Integration verhindert, dass Trainingsbeispiele als Geräteanfrage behandelt werden. Erfasst keine beliebigen Batchformate und repariert keinen Scheduler-/Speicherfehler.",
+      "representativeSource": {
+        "branch": "feature/continuum-model-web-learning-review-20261029",
+        "sha": "30fbef96182ed83ee55a1e6ec732d1c533df4a51",
+        "pr": 239,
+        "blob": "0b9bff3cae34dfbb9812d6c92df97b5d90f0006a",
+        "url": "https://github.com/Ullmann27/device-ai/blob/30fbef96182ed83ee55a1e6ec732d1c533df4a51/app/src/main/java/at/heinz/deviceai/learning/NeuralTutorBatchHint.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/239"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "0b9bff3cae34dfbb9812d6c92df97b5d90f0006a",
+          "bytes": 713,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "feature/continuum-model-web-learning-review-20261029",
+              "sha": "30fbef96182ed83ee55a1e6ec732d1c533df4a51",
+              "pr": 239
+            },
+            {
+              "branch": "fix/continuum-self-awareness-neuron-command-20261029",
+              "sha": "316c55543f2e1e84a52c5ace437c572791e1936d",
+              "pr": 233
+            },
+            {
+              "branch": "integration/continuum-brain-system-20261029",
+              "sha": "7924ba0793963dd84eef61517359a743071829bf",
+              "pr": 242
+            },
+            {
+              "branch": "opus/argon4-research-20261029",
+              "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+              "pr": 240
+            },
+            {
+              "branch": "opus/continuum-m1-m8-20261030",
+              "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+              "pr": 244
+            },
+            {
+              "branch": "opus/continuum-m9-m16-20261030",
+              "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+              "pr": 245
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-counterexample-acceptance-20261029",
+              "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+              "pr": 243
+            },
+            {
+              "branch": "research/continuum-mastercode-bounded-search-20261030",
+              "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+              "pr": 248
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/continuum-self-evolution-shadow-20261030",
+              "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+              "pr": 249
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            },
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            },
+            {
+              "branch": "research/sol61-ccc1-skill-transfer",
+              "sha": "39772c9b544a9625c7c8ffc0e6aaaedb36cc5192",
+              "pr": 241
+            },
+            {
+              "branch": "sol/continuum-dan-evidence-loop-20261029",
+              "sha": "a3fdc17958d4e552bd3b74cf611c9fd40480f269",
+              "pr": 238
+            },
+            {
+              "branch": "sol/continuum-dialog-integration-20261029",
+              "sha": "f54327b906a67d4f40862b5dd25a6b72e6015bc7",
+              "pr": 237
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "0e10beac455ca4418d513aa1a7ad57ee3db23452:AgentActivity.kt:2608-2620"
+      ],
+      "currentEvidence": [
+        "learning/NeuralLearningCoach.kt:23-33,36-90",
+        "AgentActivity.kt:5203-5207,5348-5351",
+        "cognitive/OwnerChatIntentRouter.kt:18-30"
+      ]
+    },
+    {
+      "name": "PersonalLearningPreviewCopy",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/PersonalLearningPreviewCopy.kt",
+      "category": "BOUNDED_PRODUCT_CANDIDATE",
+      "function": "Präzisiert den read-only Importvorschau-Zähler: Forschungs-/Trainingsdatensätze sind im Backup enthalten, werden nicht als Owner-Fakten importiert; kein vollständiger Restore.",
+      "currentComparison": "Aktueller Dialog hat dieselbe previewDocument-Funktion und reviewOnlyCount, zeigt aber lediglich Weitere protokollierte Datensätze. Export erklärt Teile des Umfangs, die Importvorschau enthält diese ausführliche Erklärung nicht.",
+      "necessaryIntegration": "Kleinen Copy-Helper an bestehende Vorschauzeile hängen; kein Parser-, Import-, Recovery- oder Datenformatwechsel.",
+      "limits": "Reine Darstellungsverbesserung; belegt keinen Datenverlust und führt keine Wiederherstellung aus.",
+      "representativeSource": {
+        "branch": "fix/continuum-v35-learning-preview-clarity-20261101",
+        "sha": "6a153f1334d3762eaf2c103a3f5f1b637fe55325",
+        "pr": 311,
+        "blob": "f5acc1c98044c0d4b9596cff817ce30184429d19",
+        "url": "https://github.com/Ullmann27/device-ai/blob/6a153f1334d3762eaf2c103a3f5f1b637fe55325/app/src/main/java/at/heinz/deviceai/learning/PersonalLearningPreviewCopy.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/311"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "f5acc1c98044c0d4b9596cff817ce30184429d19",
+          "bytes": 1044,
+          "sources": [
+            {
+              "branch": "fix/continuum-v35-learning-preview-clarity-20261101",
+              "sha": "6a153f1334d3762eaf2c103a3f5f1b637fe55325",
+              "pr": 311
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "6a153f1334d3762eaf2c103a3f5f1b637fe55325:AgentActivity.kt:3529-3532"
+      ],
+      "currentEvidence": [
+        "AgentActivity.kt:6387-6428",
+        "learning/PersonalLearningTransfer.kt"
+      ]
+    },
+    {
+      "name": "InteractiveDialogueContext",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/interactive/InteractiveDialogueContext.kt",
+      "category": "RESEARCH_SHADOW",
+      "function": "Opt-in strukturierter Gesprächspuffer mit quellgebundener Entity-Registry, Revision-Hash, Fokus, negativen Bezügen, Konflikthinweis und bis zu 24 erhaltenen Anker-/Recent-Turns.",
+      "currentComparison": "Aktuelle LocalConversationContext/PromptHistory halten sessiongebundene Owner-Turns, Vollständigkeit, unbestätigte Modelltexte und typisierten Recherchekontext. CTX3-SHADOW ist bereits im Core angeschlossen. Kein identischer strukturierter 24-Turn-Ankerpuffer.",
+      "necessaryIntegration": "Vor Nutzung echte quellautorisierte Registry/Revision liefern und heutige Kontext-, Negations-, Größen- und Invalidierungsregeln integrieren. Anschließen verändert Kontextauswahl und benötigt eigenen Qualitätsnachweis.",
+      "limits": "Original bezeichnet sich ausdrücklich als Forschungsadapter ohne Produktionscaller. Ctx3Entity/ClaimGraph sind Voraussetzungen; keine Fakten- oder Freigabeautorität. Größerer Kontext ist kein Qualitätsbeweis.",
+      "representativeSource": {
+        "branch": "research/continuum-interactive-intelligence-lab-20261026",
+        "sha": "fe838399ce31f266594d331886f1b2fab0ea3925",
+        "pr": 174,
+        "blob": "db42c1c72f39cc3b7b130ea0aa10fa2e75bde611",
+        "url": "https://github.com/Ullmann27/device-ai/blob/fe838399ce31f266594d331886f1b2fab0ea3925/app/src/main/java/at/heinz/deviceai/learning/interactive/InteractiveDialogueContext.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/174"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "db42c1c72f39cc3b7b130ea0aa10fa2e75bde611",
+          "bytes": 7704,
+          "sources": [
+            {
+              "branch": "research/continuum-interactive-intelligence-lab-20261026",
+              "sha": "fe838399ce31f266594d331886f1b2fab0ea3925",
+              "pr": 174
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "Ursprungsblob db42c1c72f39cc3b7b130ea0aa10fa2e75bde611:10-17,30-50,53-98"
+      ],
+      "currentEvidence": [
+        "cognitive/LocalConversationContext.kt:21-48,65-72,99-125,149-175",
+        "learning/ContinuumLearningCore.kt:911-915,931,960",
+        "learning/context/Ctx3Context.kt"
+      ]
+    },
+    {
+      "name": "InteractiveResearchRouting",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/interactive/InteractiveResearchRouting.kt",
+      "category": "RESEARCH_SHADOW",
+      "function": "Reine Planinspektion: bei unklarer Entity Rückfrage; sonst vorhandenes ArchiveAnswerPolicy.select auf unveränderter Frage; danach Modellbedarf/fehlende Konfiguration melden.",
+      "currentComparison": "Aktuelle echte Chatkette hat bereits Archiv-/Gedächtnis-/Modell-Gates. Dieser Adapter ist ein Forschungs-Wrapper um dieselbe Archivpolicy und startet selbst keinen Modellaufruf.",
+      "necessaryIntegration": "Nur zusammen mit InteractiveDialogueContext und passender Registry sinnvoll; keine eigenständige Produktlücke. Hauptchat nicht auf den alten Wrapper umleiten.",
+      "limits": "höchstens 20 Archivtreffer; Archivbeobachtung bleibt ungeprüfte öffentliche Quelle. Keine Autorisierung, kein Training, kein Speicherzugriff im Wrapper.",
+      "representativeSource": {
+        "branch": "research/continuum-interactive-intelligence-lab-20261026",
+        "sha": "fe838399ce31f266594d331886f1b2fab0ea3925",
+        "pr": 174,
+        "blob": "4048215360cee68e5661fbce30aa7f1b7298858b",
+        "url": "https://github.com/Ullmann27/device-ai/blob/fe838399ce31f266594d331886f1b2fab0ea3925/app/src/main/java/at/heinz/deviceai/learning/interactive/InteractiveResearchRouting.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/174"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "4048215360cee68e5661fbce30aa7f1b7298858b",
+          "bytes": 1475,
+          "sources": [
+            {
+              "branch": "research/continuum-interactive-intelligence-lab-20261026",
+              "sha": "fe838399ce31f266594d331886f1b2fab0ea3925",
+              "pr": 174
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "Ursprungsblob 4048215360cee68e5661fbce30aa7f1b7298858b:7-23"
+      ],
+      "currentEvidence": [
+        "learning/ContinuumArchiveAnswerPolicy.kt",
+        "cognitive/CognitiveDecisionBridge.kt",
+        "AgentActivity.kt:5520-5526,5734-5830"
+      ]
+    },
+    {
+      "name": "ContinuumSynapseZeroShadow",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/synapse/ContinuumSynapseZeroShadow.kt",
+      "category": "RESEARCH_SHADOW",
+      "function": "Deterministischer Forschungsreader für explizite Roboter-/Modul-IDs: Standort, Modul, Kühlmittel/Schutzgas; direkte oder zweistufige Ketten mit Textspanne/Quellhash.",
+      "currentComparison": "Aktuelle CertifiedLocationReflex/Span-Verifier liefern bereits echte beleggebundene Ortsantworten, aber nicht dasselbe technische Roboterschema. Original erklärt sich als isolierter read-only Reasoner ohne SWB/CDX/Owner-Dateien.",
+      "necessaryIntegration": "Als Forschungsartefakt bewahren. Ein produktiver technischer Spezialist benötigte belegte Eingabeform, Qualitätsgrenze, aktuellen Autorisierungskontext und Aufrufvertrag.",
+      "limits": "Synthetisches engeres Schema ist keine allgemeine Denk-/Trainingsfähigkeit. Keine im Audit ausgeführte Messung.",
+      "representativeSource": {
+        "branch": "experiment/continuum-synapse-zero-20261022",
+        "sha": "2b58ed17861de986d97c756be4205993e1233f32",
+        "pr": 71,
+        "blob": "f17a590b3e3f520d623d6a3fd09a1dc5b3cea715",
+        "url": "https://github.com/Ullmann27/device-ai/blob/2b58ed17861de986d97c756be4205993e1233f32/app/src/main/java/at/heinz/deviceai/learning/synapse/ContinuumSynapseZeroShadow.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/71"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "f17a590b3e3f520d623d6a3fd09a1dc5b3cea715",
+          "bytes": 10214,
+          "sources": [
+            {
+              "branch": "experiment/continuum-synapse-zero-20261022",
+              "sha": "2b58ed17861de986d97c756be4205993e1233f32",
+              "pr": 71
+            },
+            {
+              "branch": "integration/continuum-all-current-20261023",
+              "sha": "4f712d61ef39bc9699472cd7483cceee6a637859",
+              "pr": null
+            },
+            {
+              "branch": "opus/continuum-synapse-v2-20261022",
+              "sha": "79a3079efb1de80e0fd648e2192882bc3d4c1ed4",
+              "pr": 73
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "Ursprungsblob f17a590b3e3f520d623d6a3fd09a1dc5b3cea715:7-28,79-129",
+        "docs/research/omega/CONTINUUM-INFRASTRUCTURE-AUDIT-20261025.md:59"
+      ],
+      "currentEvidence": [
+        "cognitive/CertifiedLocationReflex.kt:8-39,58-109",
+        "AgentActivity.kt:5455-5464",
+        "learning/ContinuumMemoryDialogue.kt:102"
+      ]
+    },
+    {
+      "name": "SynapseContrastiveRoleProbe",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/synapse/SynapseContrastiveRoleProbe.kt",
+      "category": "RESEARCH_SHADOW",
+      "function": "4096-Parameter-Zwei-Kandidaten-Rangexperiment mit getrennten Embeddings, Rollenbindung und analytischem InfoNCE-SGD.",
+      "currentComparison": "Kein Teil des realen SWB1/CDX1-Schedulerpfads. CRE1-Reranking ist bereits separat mit PromotionGate an autorisierte Kandidaten angeschlossen.",
+      "necessaryIntegration": "Nur Forschung. Vor irgendeiner Nutzung wären Trainingsartefakte, sichere Persistenz/Versionierung und unabhängige Transfer-/Abstentionsmessung nötig; kein kleiner fehlender Caller.",
+      "limits": "Die eigene Netzwerkbewertung kann ohne unabhängigen Beleg keine Antwort autorisieren. In diesem Audit ausdrücklich kein Training.",
+      "representativeSource": {
+        "branch": "experiment/continuum-synapse-zero-20261022",
+        "sha": "2b58ed17861de986d97c756be4205993e1233f32",
+        "pr": 71,
+        "blob": "7664baf884a1ed78845b59de43c070201f61a87d",
+        "url": "https://github.com/Ullmann27/device-ai/blob/2b58ed17861de986d97c756be4205993e1233f32/app/src/main/java/at/heinz/deviceai/learning/synapse/SynapseContrastiveRoleProbe.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/71"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "7664baf884a1ed78845b59de43c070201f61a87d",
+          "bytes": 4258,
+          "sources": [
+            {
+              "branch": "experiment/continuum-synapse-zero-20261022",
+              "sha": "2b58ed17861de986d97c756be4205993e1233f32",
+              "pr": 71
+            },
+            {
+              "branch": "integration/continuum-all-current-20261023",
+              "sha": "4f712d61ef39bc9699472cd7483cceee6a637859",
+              "pr": null
+            },
+            {
+              "branch": "opus/continuum-synapse-v2-20261022",
+              "sha": "79a3079efb1de80e0fd648e2192882bc3d4c1ed4",
+              "pr": 73
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "Ursprungsblob 7664baf884a1ed78845b59de43c070201f61a87d:9-18,33-75",
+        "docs/research/omega/CONTINUUM-INFRASTRUCTURE-AUDIT-20261025.md:59"
+      ],
+      "currentEvidence": [
+        "learning/ContinuumCognitiveRuntime.kt:93-115",
+        "learning/Cre1PromotionGate.kt"
+      ]
+    },
+    {
+      "name": "SynapseV2Reasoner",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/synapse/SynapseV2Reasoner.kt",
+      "category": "RESEARCH_SHADOW",
+      "function": "In-memory Lernreader mit HRR/BAG, Rollen-/Entity-Bindung, optionalen zwei Hops, Abstention und strukturellen Belegen an exakten UTF-16-Spannen.",
+      "currentComparison": "Original ausdrücklich JVM-Forschung ohne Chat- oder Owner-Datenanschluss. Aktuelle Quellen enthalten echte Span-/CRE1-Pfade; das v2-Modell ist nicht deren fehlender Speicher- oder Schedulerbaustein.",
+      "necessaryIntegration": "Forschung erhalten, keine automatische Aktivierung. Produktnutzung bräuchte Daten-/Checkpoint-/Budget-/Qualitätsvertrag, aktuelle Evidenzadmission und unabhängigen Transfernachweis.",
+      "limits": "Vorhandener Audit dokumentiert einen negativen Transferbefund; hier kein neuer Benchmark und keine Qualitätsbehauptung. Einen hohen Modellscoresatz nicht mit Belegwahrheit verwechseln.",
+      "representativeSource": {
+        "branch": "opus/continuum-synapse-v2-20261022",
+        "sha": "79a3079efb1de80e0fd648e2192882bc3d4c1ed4",
+        "pr": 73,
+        "blob": "a0a41763697fb2ff6b24b293669aa99880545012",
+        "url": "https://github.com/Ullmann27/device-ai/blob/79a3079efb1de80e0fd648e2192882bc3d4c1ed4/app/src/main/java/at/heinz/deviceai/learning/synapse/SynapseV2Reasoner.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/73"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "a0a41763697fb2ff6b24b293669aa99880545012",
+          "bytes": 29269,
+          "sources": [
+            {
+              "branch": "integration/continuum-all-current-20261023",
+              "sha": "4f712d61ef39bc9699472cd7483cceee6a637859",
+              "pr": null
+            },
+            {
+              "branch": "opus/continuum-synapse-v2-20261022",
+              "sha": "79a3079efb1de80e0fd648e2192882bc3d4c1ed4",
+              "pr": 73
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "Ursprungsblob a0a41763697fb2ff6b24b293669aa99880545012:11-26,385-426,487",
+        "docs/research/omega/CONTINUUM-INFRASTRUCTURE-AUDIT-20261025.md:60"
+      ],
+      "currentEvidence": [
+        "learning/span/EvidenceBoundNaturalLocationProbe.kt",
+        "learning/ContinuumCognitiveRuntime.kt:93-115"
+      ]
+    },
+    {
+      "name": "LocalModelImportPreset",
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportPreset.kt",
+      "category": "COVERED_WITH_BOUNDED_SCOPE",
+      "function": "Drei öffentliche Gemma-Katalogkonstanten für Model-ID, Version und SHA-256 als vorausgefülltes Importformular.",
+      "currentComparison": "Vollständig abgedeckt: ContinuumSelectedModels.LOCAL_ID/LOCAL_VERSION/LOCAL_SHA256 sind bytegleich zu den alten drei Werten. AgentActivity befüllt damit weiterhin den echten Importdialog; zusätzlich Statusprüfung über ID+Hash.",
+      "necessaryIntegration": "Kein Anschluss nötig. Alte Doppelkonstanten nicht wieder einführen.",
+      "limits": "Katalogmetadaten beweisen weder geladenes Modell noch Antwortqualität; keine privaten Modellbytes wurden gelesen.",
+      "representativeSource": {
+        "branch": "fix/continuum-local-model-quality-gemma-20261025",
+        "sha": "febffb293f12702df5714ee20c8fb66471b493b9",
+        "pr": 149,
+        "blob": "7db4cfa23e33684593bb1f725fc97b9651f9b06b",
+        "url": "https://github.com/Ullmann27/device-ai/blob/febffb293f12702df5714ee20c8fb66471b493b9/app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportPreset.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/149"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "7db4cfa23e33684593bb1f725fc97b9651f9b06b",
+          "bytes": 534,
+          "sources": [
+            {
+              "branch": "fix/continuum-local-model-quality-gemma-20261025",
+              "sha": "febffb293f12702df5714ee20c8fb66471b493b9",
+              "pr": 149
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "febffb293f12702df5714ee20c8fb66471b493b9:AgentActivity.kt:6255-6258"
+      ],
+      "currentEvidence": [
+        "ContinuumSelectedModels.kt:10-30",
+        "AgentActivity.kt:10746-10748,11035"
+      ]
+    },
+    {
+      "name": "ComputeAllocationPolicy",
+      "path": "app/src/main/java/at/heinz/deviceai/research/argon4/ComputeAllocationPolicy.kt",
+      "category": "RESEARCH_SHADOW",
+      "function": "Value-of-computation-Prototyp: wählt anhand Evidenz/Unsicherheit/Freshness/Modell/Web/Budget und Beta-Priors eine vorgeschlagene Aktion; modellierte Zeit-/Energiekosten.",
+      "currentComparison": "Aktueller ChatReasoningRouter ist tatsächlich angebunden, begrenzt auf vier Zusatzaufrufe/20 s und prüft vollständige Eingabe-/Kontextbudgets. Alte ARGON-Integration berechnet nur argonShadowChoice, beeinflusst keinen Aufruf und keine Deadline.",
+      "necessaryIntegration": "Produktiver Lastnutzen braucht reale Signale, gemessene Kosten/kalibrierte Ergebnisse und bewusstes Routingdesign. Bloßes Anschließen der alten SHADOW-Variable spart keinen Modellaufruf.",
+      "limits": "Historischer Caller setzt coverage=0, claimFlags=0, unresolvedReference=false und internetAllowed=false; keine vorhandene adaptive thermische Lösung. Zeit-/Joulewerte sind Annahmen des Prototyps, keine Fold-Messung.",
+      "representativeSource": {
+        "branch": "integration/continuum-brain-system-20261029",
+        "sha": "7924ba0793963dd84eef61517359a743071829bf",
+        "pr": 242,
+        "blob": "4628ba00cb98e4c6abdc3e637837dc4ca1fc8aa0",
+        "url": "https://github.com/Ullmann27/device-ai/blob/7924ba0793963dd84eef61517359a743071829bf/app/src/main/java/at/heinz/deviceai/research/argon4/ComputeAllocationPolicy.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/242"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "4628ba00cb98e4c6abdc3e637837dc4ca1fc8aa0",
+          "bytes": 10928,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "integration/continuum-brain-system-20261029",
+              "sha": "7924ba0793963dd84eef61517359a743071829bf",
+              "pr": 242
+            },
+            {
+              "branch": "opus/continuum-m1-m8-20261030",
+              "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+              "pr": 244
+            },
+            {
+              "branch": "opus/continuum-m9-m16-20261030",
+              "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+              "pr": 245
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-counterexample-acceptance-20261029",
+              "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+              "pr": 243
+            },
+            {
+              "branch": "research/continuum-mastercode-bounded-search-20261030",
+              "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+              "pr": 248
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/continuum-self-evolution-shadow-20261030",
+              "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+              "pr": 249
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            },
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "0e10beac455ca4418d513aa1a7ad57ee3db23452:cognitive/ChatReasoningRouter.kt:31-33,43-62"
+      ],
+      "currentEvidence": [
+        "cognitive/ChatReasoningRouter.kt:11-25,37-87",
+        "AgentActivity.kt:9345"
+      ]
+    },
+    {
+      "name": "DialogStateKernel",
+      "path": "app/src/main/java/at/heinz/deviceai/research/argon4/DialogStateKernel.kt",
+      "category": "RESEARCH_SHADOW",
+      "function": "Flüchtiger Entity-/Pronomen-/Zeitfensterkern: Erwähnungen, Korrekturausschlüsse, offene Fragen, Mehrdeutigkeitsrückfrage; spätere Variante hält ausdrücklich rollenbenannte Personen bis 32 Turns.",
+      "currentComparison": "Aktuelle LocalConversationContext, OwnerStatementTimeline und Follow-up-Policies decken Sitzungskontext, Korrekturen und begrenzte Größen ab. Kein identischer langer Pronomen-/Zeitfensterkernel. Historische Nutzung über Argon4ConversationShadow bleibt beobachtend.",
+      "necessaryIntegration": "Für Beobachtung den vorhandenen Session-Lebenszyklus nutzen; für Produktionsumschreibungen wäre neue überprüfte Semantik nötig. Keine alten Modellantwort-Erwähnungen als Owner-Fakten oder Freigaben übernehmen.",
+      "limits": "Prototyp kann Modellantwort-Erwähnungen als Diskurs aufnehmen, nicht als Wahrheit. Default maxEntities=12; heuristische Wort-/Gender-/Zeitregeln. Kein belegtes Allzweckgedächtnis.",
+      "representativeSource": {
+        "branch": "opus/continuum-m9-m16-20261030",
+        "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+        "pr": 245,
+        "blob": "85c816a7579af910f66d1c00cd5f0a51ecd55060",
+        "url": "https://github.com/Ullmann27/device-ai/blob/29c1e1e1bef289cddf1e0c7854f2511923b93c0f/app/src/main/java/at/heinz/deviceai/research/argon4/DialogStateKernel.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/245"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "85c816a7579af910f66d1c00cd5f0a51ecd55060",
+          "bytes": 23154,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "opus/continuum-m9-m16-20261030",
+              "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+              "pr": 245
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-mastercode-bounded-search-20261030",
+              "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+              "pr": 248
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/continuum-self-evolution-shadow-20261030",
+              "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+              "pr": 249
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            },
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            }
+          ]
+        },
+        {
+          "blob": "6d3ae8a680500fccafe41295bf6b7fd2742d045f",
+          "bytes": 21438,
+          "sources": [
+            {
+              "branch": "integration/continuum-brain-system-20261029",
+              "sha": "7924ba0793963dd84eef61517359a743071829bf",
+              "pr": 242
+            },
+            {
+              "branch": "opus/continuum-m1-m8-20261030",
+              "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+              "pr": 244
+            },
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-counterexample-acceptance-20261029",
+              "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+              "pr": 243
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "0e10beac455ca4418d513aa1a7ad57ee3db23452:cognitive/LocalConversationContext.kt:10-11,46-56",
+        "Ursprungsblob 99b96fe2663bec3d0831bfe5c4c207d1bd4a0ead:Argon4ConversationShadow"
+      ],
+      "currentEvidence": [
+        "cognitive/LocalConversationContext.kt:21-48,65-72,99-125",
+        "cognitive/LocalConversationFollowUpPolicy.kt",
+        "cognitive/OwnerStatementTimeline.kt:3-21"
+      ]
+    },
+    {
+      "name": "JustifiedRelationStore",
+      "path": "app/src/main/java/at/heinz/deviceai/research/argon4/JustifiedRelationStore.kt",
+      "category": "RESEARCH_SHADOW",
+      "function": "Begründungsgraph mit minimalen Mengen von Basisfakt-IDs, widerrufbaren Ableitungen, Widersprüchen und engem Familien-/Ortsregelwerk; abgeleitete Aussagen immer DERIVED_UNCONFIRMED.",
+      "currentComparison": "Aktuelle zeitliche Owner-Erinnerung und EWM-Belegverknüpfungen sind aktiv; kein identischer allgemeiner widerrufbarer Kinship-Graph. ReviewedEvidenceGraph existiert für Ortsrelationen, hat im aktuellen Produktionsbaum aber keinen externen Caller und ist daher kein belegter Produktersatz.",
+      "necessaryIntegration": "Nur aus aktuellen autorisierten Fakt-Snapshots projizieren; keine zweite kanonische Datenbank. Für Antworten wären sichere Subjekt-/Rollenadmission, Widerrufsnachprüfung, klare Ableitungskennzeichnung und harte Arbeitsbudgets nötig.",
+      "limits": "Alter Adapter begrenzt auf 3 Fakten/maxDerived32/depth2. Allgemeiner Store default2000/depth3 rechnet bei jedem assert neu; matches materialisiert Zwischenjoins ohne eigenes Arbeitslimit. Kein risikofreier Anschluss bei gemeldeter Hitze.",
+      "representativeSource": {
+        "branch": "opus/continuum-m9-m16-20261030",
+        "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+        "pr": 245,
+        "blob": "fd5799baaa3c91c91fba02a069ca9b6568581489",
+        "url": "https://github.com/Ullmann27/device-ai/blob/29c1e1e1bef289cddf1e0c7854f2511923b93c0f/app/src/main/java/at/heinz/deviceai/research/argon4/JustifiedRelationStore.kt",
+        "prUrl": "https://github.com/Ullmann27/device-ai/pull/245"
+      },
+      "allOriginalVariants": [
+        {
+          "blob": "fd5799baaa3c91c91fba02a069ca9b6568581489",
+          "bytes": 9294,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "opus/continuum-m9-m16-20261030",
+              "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+              "pr": 245
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-mastercode-bounded-search-20261030",
+              "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+              "pr": 248
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/continuum-self-evolution-shadow-20261030",
+              "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+              "pr": 249
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            },
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            }
+          ]
+        },
+        {
+          "blob": "7aadc83f163a1bdb64e049616554a702e721ad29",
+          "bytes": 8862,
+          "sources": [
+            {
+              "branch": "integration/continuum-brain-system-20261029",
+              "sha": "7924ba0793963dd84eef61517359a743071829bf",
+              "pr": 242
+            },
+            {
+              "branch": "opus/continuum-m1-m8-20261030",
+              "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+              "pr": 244
+            },
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-counterexample-acceptance-20261029",
+              "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+              "pr": 243
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            }
+          ]
+        }
+      ],
+      "originalCallers": [
+        "Ursprungsblob 99b96fe2663bec3d0831bfe5c4c207d1bd4a0ead:Argon4EvidenceShadow",
+        "Ursprungsblob fd5799baaa3c91c91fba02a069ca9b6568581489:15,35,58-95,112-143"
+      ],
+      "currentEvidence": [
+        "learning/ContinuumLearningCore.kt:725-759",
+        "learning/ContinuumTemporalMemory.kt:13-30",
+        "research/neuro/ReviewedEvidenceGraph.kt:11,87",
+        "intelligence/ewm/Ewm1EvidenceWorkspace.kt:269"
+      ]
+    }
+  ]
+}

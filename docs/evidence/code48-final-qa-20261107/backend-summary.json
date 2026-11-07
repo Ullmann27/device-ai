@@ -1,0 +1,67 @@
+{
+  "gate": "backend",
+  "status": "PASS",
+  "sourceCommit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "sourceTree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "sourceUnchanged": true,
+  "startedAt": "2026-11-07T06:26:46.264866+00:00",
+  "finishedAt": "2026-11-07T06:26:48.866940+00:00",
+  "commands": [
+    {
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/candidate/backend",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/candidate/backend",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/candidate/backend",
+      "exitCode": 0
+    }
+  ],
+  "deviceAcceptance": "NOT_RUN",
+  "signingAndPublication": "NOT_RUN",
+  "tests": {
+    "tests": 64,
+    "suites": 0,
+    "pass": 64,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "rawEvidence": {
+    "archive": "backend-evidence.zip",
+    "bytes": 3572,
+    "sha256": "34cd6110bb7be44a6edb30bbfcbc34545c0e41778f5f4c388af7bb881a84d78a",
+    "files": [
+      {
+        "path": "backend-receipt.json",
+        "bytes": 1469,
+        "sha256": "1eb6456d17535174e6d26f4ce9eacafca7cdd19d3c05e6a27bb3eb7f03ef0e8f"
+      },
+      {
+        "path": "backend.log",
+        "bytes": 6504,
+        "sha256": "dfdc23ec0d1ac4acb4a8f9b662db7ef2961938e095d9940316d882187c4f1338"
+      }
+    ]
+  }
+}

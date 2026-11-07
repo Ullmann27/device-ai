@@ -1,0 +1,328 @@
+COMMAND ["gradle", "--no-daemon", "--max-workers=2", "--console=plain", "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m", "-Pkotlin.compiler.execution.strategy=in-process", "-PdeviceAiMentorPreview=true", "-PcontinuumStandaloneVersionCode=48", "--rerun-tasks", "-PcontinuumUiWidgetTests=true", "-PcontinuumLocalStandaloneQa=true", ":app:compileDebugKotlin", ":app:testDebugUnitTest", ":app:lintDebug"]
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=46647 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=46647 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+
+> Task :app:prepareOwnerFaceModels
+CONTINUUM_OWNER_FACE_MODELS_VERIFIED {"models":[{"id":"yunet","asset":"faceid/face_detection_yunet_2023mar.onnx","sha256":"8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4","byteLength":232589},{"id":"sface","asset":"faceid/face_recognition_sface_2021dec.onnx","sha256":"0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79","byteLength":38696353}],"opencvSha256":"a8c9b0929d8d6367bb476320a1f36587db2b57ea18d8f7521ce509514903ca04"}
+
+> Task :app:preBuild
+> Task :app:preDebugBuild
+> Task :app:generateDebugBuildConfig
+> Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
+> Task :app:compileDebugAidl
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:mergeDebugResources
+> Task :app:packageDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:parseDebugLocalResources
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:javaPreCompileDebug
+> Task :app:processDebugManifestForPackage
+> Task :app:preDebugUnitTestBuild
+> Task :app:javaPreCompileDebugUnitTest
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:processDebugResources
+> Task :app:mergeDebugAssets
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:prepareUiTestSdk
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues
+> Task :app:extractProguardFiles
+> Task :app:compileDebugKotlin
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:577:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:578:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:580:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1046:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1460:67 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3215:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3767:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4086:40 Condition is always 'true'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4086:56 Condition is always 'true'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6092:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6107:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6136:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:8716:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9321:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9321:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9684:25 Condition is always 'true'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9684:44 Condition is always 'true'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt:462:24 'when' expression over a subject of type 'Any?' is not exhaustive. Add a 'null' or 'else' branch.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt:26:47 The corresponding parameter in the supertype 'DeviceAppActionPort' is named 'cancelled'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/AndroidNativeClick.kt:94:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AccessibilityNodeInfo'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumBotTaskDialog.kt:318:57 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt:46:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt:47:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt:31:24 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArrayList<String!>'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt:55:57 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt:80:45 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt:81:46 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:28:28 'fun <T : Parcelable!> getParcelableExtra(p0: String!): T?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:45:45 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:47:35 'field versionCode: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:50:33 'field signatures: Array<(out) Signature!>?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt:59:32 This class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:80:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:81:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:276:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:278:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:371:51 'field scaledDensity: Float' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:151:31 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:152:37 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:166:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/DeviceToolExecutorRunner.kt:32:17 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Result<String>?' does not have a consistent identity.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/DeviceToolExecutorRunner.kt:32:45 This call may have inconsistent results because the type of this argument, 'Result<String>', does not have a consistent identity.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/MainActivity.kt:68:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/MainActivity.kt:69:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/chief/ChiefBotPractice.kt:44:37 Non-public primary constructor is exposed via the generated 'copy()' method of the 'data' class.
+
+The generated 'copy()' will change its visibility in future releases.
+
+To suppress the warning do one of the following:
+- Annotate the data class with the '@ConsistentCopyVisibility' annotation.
+- Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
+- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+  (Discouraged, but can be used to keep binary compatibility).
+
+To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
+
+This will become an error in language version 2.5. See https://youtrack.jetbrains.com/issue/KT-11914.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/cockpit/RetrievalCalculationSource.kt:18:24 This class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/cognitive/Cdx1EvidenceSlotBinder.kt:23:23 Non-public primary constructor is exposed via the generated 'copy()' method of the 'data' class.
+
+The generated 'copy()' will change its visibility in future releases.
+
+To suppress the warning do one of the following:
+- Annotate the data class with the '@ConsistentCopyVisibility' annotation.
+- Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
+- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+  (Discouraged, but can be used to keep binary compatibility).
+
+To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
+
+This will become an error in language version 2.5. See https://youtrack.jetbrains.com/issue/KT-11914.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/cognitive/LegalRisDiscoveryProvider.kt:63:42 'when' expression over a subject of type 'Any?' is not exhaustive. Add a 'null' or 'else' branch.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:207:33 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:269:81 'field versionCode: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:276:33 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:282:21 'field signatures: Array<(out) Signature!>?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt:125:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt:125:32 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumDeviceTeamleaderScheduler.kt:41:61 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:296:31 Unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:406:37 Unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryEvents.kt:34:24 This class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt:86:25 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt:248:37 No cast needed.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:349:55 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:349:69 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:350:45 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:351:42 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/ContinuumThinkingMemory.kt:101:9 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/NeuralPracticeScheduler.kt:61:22 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/OwnerMemoryRecovery.kt:16:31 Non-public primary constructor is exposed via the generated 'copy()' method of the 'data' class.
+
+The generated 'copy()' will change its visibility in future releases.
+
+To suppress the warning do one of the following:
+- Annotate the data class with the '@ConsistentCopyVisibility' annotation.
+- Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
+- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+  (Discouraged, but can be used to keep binary compatibility).
+
+To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
+
+This will become an error in language version 2.5. See https://youtrack.jetbrains.com/issue/KT-11914.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt:263:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt:263:35 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt:535:86 No cast needed.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt:929:22 'var isChecked: Boolean' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt:196:13 'when' is exhaustive so 'else' is redundant here.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/main/java/at/heinz/deviceai/ui/JarvisShellContent.kt:98:39 This extension is shadowed by a member: 'fun contains(x: Float, y: Float): Boolean' defined in 'at.heinz.deviceai.ui.JarvisShellLayout.Box'.
+
+> Task :app:compileDebugJavaWithJavac
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:processDebugJavaRes
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:lintAnalyzeDebug
+
+> Task :app:compileDebugUnitTestKotlin
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:64:44 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:71:82 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:72:82 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:78:86 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:79:86 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:86:86 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/OwnerFacePolicyTest.kt:31:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'OwnerFaceProfile'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/OwnerFaceProfileStoreTest.kt:88:25 Unnecessary non-null assertion (!!) on a non-null receiver of type 'OwnerFaceProfile'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/OwnerFaceProfileStoreTest.kt:89:28 Unnecessary non-null assertion (!!) on a non-null receiver of type 'OwnerFaceProfile'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt:145:40 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventSourceTest.kt:74:39 'val production: MemoryEventSource?' is deprecated. Use forApp(appDirectory) to bind the existing per-application event hub.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentOutcomeEvidenceTest.kt:43:43 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/DeviceDevelopmentBacklogTest.kt:131:53 Unnecessary non-null assertion (!!) on a non-null receiver of type 'DevelopmentBacklogStore.Recovery'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:87:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:112:43 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/ResearchEngineTest.kt:163:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:41:100 Expression is unused.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:82:50 Expression is unused.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/UnknownOutcomeSafetyTest.kt:36:43 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/UnknownOutcomeSafetyTest.kt:37:72 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:47:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:48:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:49:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:50:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:51:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/WorkDecisionRecallTest.kt:90:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkDecisionRecall.Focus'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/WorkDecisionRecallTest.kt:90:62 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkDecisionRecall.Focus'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/cognitive/WorkDecisionRecallTest.kt:90:82 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkDecisionRecall.Focus'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdateCatalogTest.kt:85:47 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/intelligence/maxultra/Ctx1Experiment.kt:105:115 No cast needed.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:66:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:107:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:148:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/learning/Lex3LearningExperienceStoreTest.kt:237:46 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/learning/Lex3LearningExperienceStoreTest.kt:255:36 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/learning/NeuralLearningCoachTest.kt:15:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NeuralCommand'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/learning/NeuralLearningCoachTest.kt:16:66 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NeuralCommand'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/learning/lm/LmBaselines.kt:126:66 Redundant call of conversion method.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/learning/nf/NfExperiment.kt:89:33 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/learning/nf/NfStream.kt:91:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NfTrainer'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/ui/ContinuumTaskEffectsTest.kt:14:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/ui/JarvisMemoryActivityPanelTest.kt:34:66 Unnecessary non-null assertion (!!) on a non-null receiver of type 'IntArray'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:40:92 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:40:111 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:102:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:103:35 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt:104:35 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/ui/JarvisShellLayoutTest.kt:83:81 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/test/java/at/heinz/deviceai/ui/JarvisShellLayoutTest.kt:84:58 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JarvisShellLayout.Box'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentFlowUiTest.kt:109:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Class<*>'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentFlowUiTest.kt:489:109 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ContinuumOfflineVoiceRecoveryUiTest.kt:36:21 'constructor(p0: String!, p1: String!): Locale' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt:117:61 No cast needed.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt:134:61 No cast needed.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsUiTest.kt:55:13 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ContinuumUiFeedbackTest.kt:33:17 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ContinuumUiFeedbackTest.kt:49:24 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/JarvisPhoneWorkWindowDensityUiTest.kt:109:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Bitmap'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:28:101 'static fun obtain(p0: AccessibilityNodeInfo!): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:34:61 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:50:115 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:60:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:63:63 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:119:56 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:120:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:128:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:129:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:143:72 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:144:97 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:152:56 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:153:89 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:155:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:156:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:162:61 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:163:89 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:170:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:171:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:179:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:180:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:187:44 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:188:71 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:190:43 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:191:69 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt:107:38 'fun addResolveInfoForIntent(p0: Intent!, p1: ResolveInfo!): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:29:52 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:34:40 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:36:68 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:64:52 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:65:81 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:78:40 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:79:69 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:39:17 'fun sendStickyBroadcast(p0: Intent!): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:49:26 Java type mismatch: inferred type is 'Any?', but 'Any' was expected.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:53:30 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:54:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:54:71 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:57:100 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:58:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:64:56 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:82:23 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:99:17 'fun sendStickyBroadcast(p0: Intent!): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:124:17 'fun sendStickyBroadcast(p0: Intent!): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:131:26 Java type mismatch: inferred type is 'Any?', but 'Any' was expected.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:136:30 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:137:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:137:71 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:141:58 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:142:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:150:31 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:163:23 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+w: file:///workspace/scratch/3d1967be6193/candidate/app/src/uiTest/java/at/heinz/deviceai/ui/ContinuumControlsTest.kt:82:18 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes
+
+> Task :app:testDebugUnitTest
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=46647 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=46647 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+
+The message received from the daemon indicates that the daemon has disappeared.
+Build request sent: Build{id=5d160c61-828f-4b44-a5f8-bec1bac94587, currentDir=/workspace/scratch/3d1967be6193/candidate}
+Attempting to read last messages from the daemon log...
+Daemon pid: 75
+  log file: /workspace/scratch/b31a9d731016/build-env/gradle-cache/daemon/8.11.1/daemon-75.out.log
+----- Last 20 lines from daemon log file - daemon-75.out.log -----
+2026-11-07T06:47:15.961+0100 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire exclusive lock on daemon addresses registry.
+2026-11-07T06:47:15.962+0100 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Lock acquired on daemon addresses registry.
+2026-11-07T06:47:15.962+0100 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Releasing lock on daemon addresses registry.
+2026-11-07T06:47:15.962+0100 [DEBUG] [org.gradle.launcher.daemon.server.DaemonRegistryUpdater] Address removed from registry.
+2026-11-07T06:47:15.987+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.CleanUpVirtualFileSystemAfterBuild] Cleaning virtual file system after build finished
+2026-11-07T06:47:15.988+0100 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Creating new cache for file-access, path /workspace/scratch/b31a9d731016/build-env/gradle-cache/caches/journal-1/file-access.bin, access org.gradle.cache.internal.DefaultCacheCoordinator@70fca0ad
+2026-11-07T06:47:15.988+0100 [DEBUG] [org.gradle.cache.internal.LockOnDemandCrossProcessCacheAccess] Acquiring file lock for journal cache (/workspace/scratch/b31a9d731016/build-env/gradle-cache/caches/journal-1)
+2026-11-07T06:47:15.989+0100 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire exclusive lock on journal cache (/workspace/scratch/b31a9d731016/build-env/gradle-cache/caches/journal-1).
+2026-11-07T06:47:15.989+0100 [DEBUG] [org.gradle.launcher.daemon.server.DefaultIncomingConnectionHandler] Finishing executing command: Build{id=ba4fc333-fabb-4f0e-83f2-c68c33d5c2eb, currentDir=/workspace/scratch/3d1967be6193/unsigned-build}
+2026-11-07T06:47:16.019+0100 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 21: received class org.gradle.launcher.daemon.protocol.CloseInput
+2026-11-07T06:47:16.019+0100 [DEBUG] [org.gradle.launcher.daemon.server.DefaultDaemonConnection] thread 21: Received IO message from client: org.gradle.launcher.daemon.protocol.CloseInput@7bbde577
+2026-11-07T06:47:16.062+0100 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 21: received class org.gradle.launcher.daemon.protocol.Finished
+2026-11-07T06:47:16.063+0100 [DEBUG] [org.gradle.launcher.daemon.server.DefaultDaemonConnection] thread 21: Received non-IO message from client: org.gradle.launcher.daemon.protocol.Finished@76b8fd31
+2026-11-07T06:47:16.063+0100 [DEBUG] [org.gradle.launcher.daemon.server.DefaultIncomingConnectionHandler] Received finished message: org.gradle.launcher.daemon.protocol.Finished@76b8fd31
+2026-11-07T06:47:16.063+0100 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 20: stopping connection
+2026-11-07T06:47:16.064+0100 [DEBUG] [org.gradle.internal.remote.internal.inet.SocketConnection] Discarding EOFException: java.io.EOFException
+2026-11-07T06:47:16.065+0100 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 21: received null
+2026-11-07T06:47:16.065+0100 [DEBUG] [org.gradle.launcher.daemon.server.DefaultDaemonConnection] thread 21: Received end-of-input from client.
+2026-11-07T06:47:16.065+0100 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 20: stopping connection
+2026-11-07T06:47:16.066+0100 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Cache Generated Gradle JARs cache (/workspace/scratch/b31a9d731016/build-env/gradle-cache/caches/8.11.1/generated-gradle-jars) was closed 0 times.----- End of the daemon log -----
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Gradle build daemon disappeared unexpectedly (it may have been killed or may have crashed)
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.

@@ -1,0 +1,215 @@
+COMMAND ["gradle", "--no-daemon", "--max-workers=2", "--console=plain", "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m", "-Pkotlin.compiler.execution.strategy=in-process", "-PdeviceAiMentorPreview=true", "-PcontinuumStandaloneVersionCode=48", "-PcontinuumLocalRenderUnsigned=true", "-PcontinuumOwnerArm64=true", ":app:assembleRelease", ":app:bundleRelease"]
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=36565 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=36565 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+[0.006s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/32 because it is locked by another process (errno = 11)
+
+Welcome to Gradle 8.11.1!
+
+Here are the highlights of this release:
+ - Parallel load and store for Configuration Cache
+ - Java compilation errors at the end of the build output
+ - Consolidated report for warnings and deprecations
+
+For more details see https://docs.gradle.org/8.11.1/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:prepareOwnerFaceModels
+CONTINUUM_OWNER_FACE_MODELS_VERIFIED {"models":[{"id":"yunet","asset":"faceid/face_detection_yunet_2023mar.onnx","sha256":"8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4","byteLength":232589},{"id":"sface","asset":"faceid/face_recognition_sface_2021dec.onnx","sha256":"0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79","byteLength":38696353}],"opencvSha256":"a8c9b0929d8d6367bb476320a1f36587db2b57ea18d8f7521ce509514903ca04"}
+
+> Task :app:preBuild
+> Task :app:preReleaseBuild
+> Task :app:mergeReleaseJniLibFolders
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:buildKotlinToolingMetadata
+> Task :app:mergeReleaseNativeLibs
+> Task :app:compileReleaseAidl
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateReleaseBuildConfig
+> Task :app:checkReleaseAarMetadata
+> Task :app:generateReleaseResValues
+
+> Task :app:stripReleaseDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libc++_shared.so, libfilament-jni.so, libgltfio-jni.so, liblitertlm_jni.so, libopencv_java4.so. Run with --info option to learn more.
+
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:generateReleaseResources
+> Task :app:extractReleaseNativeSymbolTables
+> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:packageReleaseResources
+> Task :app:mergeReleaseResources
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
+> Task :app:parseReleaseLocalResources
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :app:javaPreCompileRelease
+> Task :app:processReleaseManifestForPackage
+> Task :app:desugarReleaseFileDependencies
+> Task :app:mergeReleaseStartupProfile
+> Task :app:processReleaseResources
+> Task :app:mergeExtDexRelease
+> Task :app:mergeReleaseArtProfile
+> Task :app:mergeReleaseShaders
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:compressReleaseAssets
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:optimizeReleaseResources
+> Task :app:collectReleaseDependencies
+> Task :app:sdkReleaseDependencyData
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:processApplicationManifestReleaseForBundle
+> Task :app:bundleReleaseResources
+> Task :app:configureReleaseDependencies
+> Task :app:parseReleaseIntegrityConfig
+> Task :app:compileReleaseKotlin
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:577:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:578:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:580:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1046:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1460:67 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3215:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3767:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4086:40 Condition is always 'true'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4086:56 Condition is always 'true'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6092:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6107:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6136:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:8716:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9321:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9321:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9684:25 Condition is always 'true'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9684:44 Condition is always 'true'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt:462:24 'when' expression over a subject of type 'Any?' is not exhaustive. Add a 'null' or 'else' branch.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt:26:47 The corresponding parameter in the supertype 'DeviceAppActionPort' is named 'cancelled'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/AndroidNativeClick.kt:94:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AccessibilityNodeInfo'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumBotTaskDialog.kt:318:57 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt:46:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt:47:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt:31:24 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArrayList<String!>'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt:55:57 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt:80:45 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt:81:46 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:28:28 'fun <T : Parcelable!> getParcelableExtra(p0: String!): T?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:45:45 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:47:35 'field versionCode: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt:50:33 'field signatures: Array<(out) Signature!>?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt:59:32 This class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:80:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:81:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:276:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:278:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:371:51 'field scaledDensity: Float' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:151:31 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:152:37 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:166:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/DeviceToolExecutorRunner.kt:32:17 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Result<String>?' does not have a consistent identity.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/DeviceToolExecutorRunner.kt:32:45 This call may have inconsistent results because the type of this argument, 'Result<String>', does not have a consistent identity.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/MainActivity.kt:68:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/MainActivity.kt:69:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/chief/ChiefBotPractice.kt:44:37 Non-public primary constructor is exposed via the generated 'copy()' method of the 'data' class.
+
+The generated 'copy()' will change its visibility in future releases.
+
+To suppress the warning do one of the following:
+- Annotate the data class with the '@ConsistentCopyVisibility' annotation.
+- Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
+- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+  (Discouraged, but can be used to keep binary compatibility).
+
+To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
+
+This will become an error in language version 2.5. See https://youtrack.jetbrains.com/issue/KT-11914.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/cockpit/RetrievalCalculationSource.kt:18:24 This class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/cognitive/Cdx1EvidenceSlotBinder.kt:23:23 Non-public primary constructor is exposed via the generated 'copy()' method of the 'data' class.
+
+The generated 'copy()' will change its visibility in future releases.
+
+To suppress the warning do one of the following:
+- Annotate the data class with the '@ConsistentCopyVisibility' annotation.
+- Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
+- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+  (Discouraged, but can be used to keep binary compatibility).
+
+To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
+
+This will become an error in language version 2.5. See https://youtrack.jetbrains.com/issue/KT-11914.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/cognitive/LegalRisDiscoveryProvider.kt:63:42 'when' expression over a subject of type 'Any?' is not exhaustive. Add a 'null' or 'else' branch.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:207:33 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:269:81 'field versionCode: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:276:33 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt:282:21 'field signatures: Array<(out) Signature!>?' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt:125:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt:125:32 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumDeviceTeamleaderScheduler.kt:41:61 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:296:31 Unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:406:37 Unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryEvents.kt:34:24 This class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt:86:25 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt:248:37 No cast needed.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:349:55 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:349:69 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:350:45 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:351:42 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/ContinuumThinkingMemory.kt:101:9 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/NeuralPracticeScheduler.kt:61:22 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/OwnerMemoryRecovery.kt:16:31 Non-public primary constructor is exposed via the generated 'copy()' method of the 'data' class.
+
+The generated 'copy()' will change its visibility in future releases.
+
+To suppress the warning do one of the following:
+- Annotate the data class with the '@ConsistentCopyVisibility' annotation.
+- Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
+- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+  (Discouraged, but can be used to keep binary compatibility).
+
+To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
+
+This will become an error in language version 2.5. See https://youtrack.jetbrains.com/issue/KT-11914.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt:263:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt:263:35 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt:535:86 No cast needed.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt:929:22 'var isChecked: Boolean' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt:196:13 'when' is exhaustive so 'else' is redundant here.
+w: file:///workspace/scratch/3d1967be6193/unsigned-build/app/src/main/java/at/heinz/deviceai/ui/JarvisShellContent.kt:98:39 This extension is shadowed by a member: 'fun contains(x: Float, y: Float): Boolean' defined in 'at.heinz.deviceai.ui.JarvisShellLayout.Box'.
+
+> Task :app:compileReleaseJavaWithJavac
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=36565 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=36565 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=36565 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=36565 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=36565 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=36565 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+
+
+> Task :app:dexBuilderRelease
+> Task :app:mergeReleaseGlobalSynthetics
+> Task :app:mergeDexRelease
+> Task :app:processReleaseJavaRes
+> Task :app:compileReleaseArtProfile
+> Task :app:mergeReleaseJavaResource
+> Task :app:buildReleasePreBundle
+> Task :app:packageRelease
+> Task :app:packageReleaseBundle
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease
+> Task :app:signReleaseBundle
+> Task :app:produceReleaseBundleIdeListingFile
+> Task :app:createReleaseBundleListingFileRedirect
+> Task :app:bundleRelease
+[Incubating] Problems report is available at: file:///workspace/scratch/3d1967be6193/unsigned-build/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 3m 59s
+55 actionable tasks: 55 executed

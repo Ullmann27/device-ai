@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-07T06:10:18.365334+00:00",
+  "sourceCommit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "inventoryCount": 56,
+  "groups": {
+    "animation": 15,
+    "learning": 19,
+    "core": 13,
+    "remaining": 9
+  },
+  "uniqueCovered": 56,
+  "missing": [],
+  "unexpected": [],
+  "duplicateMappings": 0,
+  "presentAt3ff": 1,
+  "status": "PASS",
+  "scope": "Exact inventory coverage only. Semantics reviewed by assigned agents; not a claim of all repository capabilities or Android execution."
+}

@@ -1,0 +1,29 @@
+{
+  "recordedAtUtc": "2026-11-07T06:06:32.848555+00:00",
+  "referencedSourceSha": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "referencedTree": "5206abd91b3740838661aa0e27e6702b3891591b",
+  "head": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "worktreeStatus": [
+    " M app/src/uiTest/java/at/heinz/deviceai/FullStageMemoryReviewUiTest.kt",
+    " M docs/research/omega/CODE48-FULLSTAGE-CINEMA-20261107.md",
+    " M docs/research/omega/CODE48-WORKSCENE-THERMAL-20261107.md"
+  ],
+  "worktreeClean": false,
+  "mainProductionDiffNames": [],
+  "currentMainCallerSearch": {
+    "command": [
+      "rg",
+      "-n",
+      "RemoteMentorProtocol|ChiefTaskGraph|ChiefProofGatedStrategyLedger|DevelopmentSourceStreamImport|DevelopmentSourceChunkIndex|CognitiveLoop",
+      "app/src/main/java"
+    ],
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "historicalCallerScope": "Exact original classes, existing prior reviews, own branch handoffs, and targeted original AgentBackendClient plus PR387 CLI. No exhaustive historical-tree caller search is claimed.",
+  "sourceMutationsByThisAudit": false,
+  "testsRun": false,
+  "buildsRun": false,
+  "networkOrProviderCalls": false
+}

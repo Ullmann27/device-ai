@@ -1,0 +1,352 @@
+[
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumDualControlPolicy.kt",
+    "blob": "68aff2d084e6ec5523b73fe5470884004c032cef",
+    "sources": [
+      {
+        "branch": "feature/continuum-dual-control-profiles-20261030",
+        "sha": "27f1861eab2f0fed3d251bdc0ef4e37cfa35b2ae",
+        "pr": null
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/68aff2d084-ContinuumDualControlPolicy.kt",
+    "lines": 41,
+    "local": true,
+    "sha256": "2a725b44f139b79b467430d625a4c2a8e870ba4fb607115a22355f984133b132"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumMicroAgentBridge.kt",
+    "blob": "2734513d826f6a1beaf04e88ab91783559a65932",
+    "sources": [
+      {
+        "branch": "research/continuum-local-microagents-20261028",
+        "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+        "pr": 208
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/2734513d82-ContinuumMicroAgentBridge.kt",
+    "lines": 86,
+    "local": true,
+    "sha256": "94a3defd888743c46f768928ca06d62d651d75b68db5ba69a449cab9098926db"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumSelfInspectionQuery.kt",
+    "blob": "301d6be6fdcae462626527aa9b5fe38ac1dd062e",
+    "sources": [
+      {
+        "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+        "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+        "pr": 258
+      },
+      {
+        "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+        "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+        "pr": 259
+      },
+      {
+        "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+        "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+        "pr": 259
+      },
+      {
+        "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+        "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+        "pr": 256
+      },
+      {
+        "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+        "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+        "pr": null
+      },
+      {
+        "branch": "claude/m8-coding-agent-loop-kxrxy2",
+        "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+        "pr": null
+      },
+      {
+        "branch": "claude/m8-gvisor-executor-kxrxy2",
+        "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+        "pr": 264
+      },
+      {
+        "branch": "feature/continuum-model-web-learning-review-20261029",
+        "sha": "30fbef96182ed83ee55a1e6ec732d1c533df4a51",
+        "pr": 239
+      },
+      {
+        "branch": "fix/continuum-self-awareness-neuron-command-20261029",
+        "sha": "316c55543f2e1e84a52c5ace437c572791e1936d",
+        "pr": 233
+      },
+      {
+        "branch": "integration/continuum-brain-system-20261029",
+        "sha": "7924ba0793963dd84eef61517359a743071829bf",
+        "pr": 242
+      },
+      {
+        "branch": "opus/argon4-research-20261029",
+        "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+        "pr": 240
+      },
+      {
+        "branch": "opus/continuum-m1-m8-20261030",
+        "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+        "pr": 244
+      },
+      {
+        "branch": "opus/continuum-m9-m16-20261030",
+        "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+        "pr": 245
+      },
+      {
+        "branch": "opus/jarvis-voice1-fix-20261030",
+        "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+        "pr": 252
+      },
+      {
+        "branch": "research/continuum-cloud-gpu-admission-20261030",
+        "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+        "pr": 268
+      },
+      {
+        "branch": "research/continuum-counterexample-acceptance-20261029",
+        "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+        "pr": 243
+      },
+      {
+        "branch": "research/continuum-mastercode-bounded-search-20261030",
+        "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+        "pr": 248
+      },
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      },
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      },
+      {
+        "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+        "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+        "pr": 251
+      },
+      {
+        "branch": "research/continuum-self-evolution-shadow-20261030",
+        "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+        "pr": 249
+      },
+      {
+        "branch": "research/exp20-p2-context-contract-20261030",
+        "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+        "pr": 255
+      },
+      {
+        "branch": "research/exp20-p2-opus-project-brief-20261030",
+        "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+        "pr": 254
+      },
+      {
+        "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+        "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+        "pr": 250
+      },
+      {
+        "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+        "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+        "pr": 253
+      },
+      {
+        "branch": "research/jpi1-presence-initiative-shadow-20261030",
+        "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+        "pr": 247
+      },
+      {
+        "branch": "research/jpi1-presence-shadow-20261030",
+        "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+        "pr": 246
+      },
+      {
+        "branch": "research/sol61-ccc1-skill-transfer",
+        "sha": "39772c9b544a9625c7c8ffc0e6aaaedb36cc5192",
+        "pr": 241
+      },
+      {
+        "branch": "sol/continuum-dan-evidence-loop-20261029",
+        "sha": "a3fdc17958d4e552bd3b74cf611c9fd40480f269",
+        "pr": 238
+      },
+      {
+        "branch": "sol/continuum-dialog-integration-20261029",
+        "sha": "f54327b906a67d4f40862b5dd25a6b72e6015bc7",
+        "pr": 237
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/301d6be6fd-ContinuumSelfInspectionQuery.kt",
+    "lines": 23,
+    "local": true,
+    "sha256": "b812428f203c5c9f50d96722988eb1003b03423e0afaace34333b39506a6a91c"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumTermuxFailureDiagnosis.kt",
+    "blob": "0d690672b3974df0d9949275e299b378f68fd55e",
+    "sources": [
+      {
+        "branch": "fix/continuum-v35-offline-long-input-20261031",
+        "sha": "ccbf0431d446789234fe8d5f0583cf9b8d40b8ba",
+        "pr": 310
+      },
+      {
+        "branch": "fix/continuum-v35-owner-qa-intent-20261031",
+        "sha": "4396d92454a85d195bd66b2aa2ff5ae9c55e3328",
+        "pr": 309
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/0d690672b3-ContinuumTermuxFailureDiagnosis.kt",
+    "lines": 28,
+    "local": true,
+    "sha256": "89f1d2bf60025cac400c86d79e9e18ff60771391bed4d248b6156f6e5cd5b153"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/TaskComplexityAnalyzer.kt",
+    "blob": "67c60057a44768622cfef92a721e0e08a95d7633",
+    "sources": [
+      {
+        "branch": "copilot/continuum-phase2-adaptive",
+        "sha": "3d7608023b3f7ebbdf09ecb29aef48816685b594",
+        "pr": null
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/67c60057a4-TaskComplexityAnalyzer.kt",
+    "lines": 126,
+    "local": true,
+    "sha256": "9f12d79fdb8a640ce9ac1e53b88c4e6a45c44248bec2d3d42d89b12096fbf029"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/continuum/AiContextCompiler.kt",
+    "blob": "c12f80972a9c3a3005dd509cfb02bb574faef98f",
+    "sources": [
+      {
+        "branch": "copilot/continuum-phase1-runtime",
+        "sha": "9eaa591239b54dc486ecc9d94457621963e34a91",
+        "pr": 8
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/c12f80972a-AiContextCompiler.kt",
+    "lines": 230,
+    "local": true,
+    "sha256": "b1a5951d3a68aaf0e32cc1cc9833a0954866b90da09ce5eb817768930444f3e4"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/continuum/BenchmarkHarness.kt",
+    "blob": "62ffc0baa4da6c32b279c2c78b0fcc9ec6873aff",
+    "sources": [
+      {
+        "branch": "copilot/continuum-phase1-runtime",
+        "sha": "9eaa591239b54dc486ecc9d94457621963e34a91",
+        "pr": 8
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/62ffc0baa4-BenchmarkHarness.kt",
+    "lines": 169,
+    "local": true,
+    "sha256": "7c5543413ae56470b732c7bd527f6708d74935b8728558c87f4cb3a002f6c715"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/continuum/CognitiveRaid.kt",
+    "blob": "c2ff4e4ba3e850a15b1a2a237e1d885ca83719fb",
+    "sources": [
+      {
+        "branch": "copilot/continuum-phase1-runtime",
+        "sha": "9eaa591239b54dc486ecc9d94457621963e34a91",
+        "pr": 8
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/c2ff4e4ba3-CognitiveRaid.kt",
+    "lines": 90,
+    "local": true,
+    "sha256": "2cfa6db93a7bc3c34e4020a9ac227d088457626f10f1f61eab4577e117df6ab6"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/continuum/ComputeFabric.kt",
+    "blob": "f4e1960dfff3d1779f8ea806c6109e21249b68ed",
+    "sources": [
+      {
+        "branch": "copilot/continuum-phase1-runtime",
+        "sha": "9eaa591239b54dc486ecc9d94457621963e34a91",
+        "pr": 8
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/f4e1960dff-ComputeFabric.kt",
+    "lines": 358,
+    "local": true,
+    "sha256": "9cc571f099bf8a4c61aa954b9bbc54a7b975bb734bbbaa36e367eefd24760855"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/continuum/ContinuumLocalContextAdapter.kt",
+    "blob": "c9317ee094d7931cb7992a62192964781be0e297",
+    "sources": [
+      {
+        "branch": "copilot/continuum-phase1-runtime",
+        "sha": "9eaa591239b54dc486ecc9d94457621963e34a91",
+        "pr": 8
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/c9317ee094-ContinuumLocalContextAdapter.kt",
+    "lines": 12,
+    "local": true,
+    "sha256": "045a466ce9a0d8ef8d1a777eaa05a3a522fd6d78f01fcd5504fdaa344b42b0dd"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/continuum/ContinuumObjectStore.kt",
+    "blob": "56573ef418d5891f93865cc59c8a075b5a0f10b2",
+    "sources": [
+      {
+        "branch": "copilot/continuum-phase1-runtime",
+        "sha": "9eaa591239b54dc486ecc9d94457621963e34a91",
+        "pr": 8
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/56573ef418-ContinuumObjectStore.kt",
+    "lines": 223,
+    "local": true,
+    "sha256": "faccde2a835a7c4eb678ef3f635ee383929eb2c308554ad71e9d73a8e527eb2b"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/continuum/ContinuumSeed.kt",
+    "blob": "3aebea1dce40a0a1c8d6643d3b03ec437da6fea0",
+    "sources": [
+      {
+        "branch": "copilot/continuum-phase1-runtime",
+        "sha": "9eaa591239b54dc486ecc9d94457621963e34a91",
+        "pr": 8
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/3aebea1dce-ContinuumSeed.kt",
+    "lines": 212,
+    "local": true,
+    "sha256": "13cadb493dfc34cd3e4c69261bd02a6b9dd5d2a1d2175bc91cf7a1d8ef8d754e"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/continuum/Deliberation.kt",
+    "blob": "5ed157c8917f1c2d007218ae5507f928d919b7af",
+    "sources": [
+      {
+        "branch": "copilot/continuum-phase1-runtime",
+        "sha": "9eaa591239b54dc486ecc9d94457621963e34a91",
+        "pr": 8
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/5ed157c891-Deliberation.kt",
+    "lines": 270,
+    "local": true,
+    "sha256": "c6ce7b9d8aaecea9c1b4fb9b9fe7da53dd6b997617ef1cefcaca38a1a31af41e"
+  }
+]

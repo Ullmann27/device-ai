@@ -1,0 +1,41 @@
+{
+  "baseInstalledChannelSource": "7732b8668f912419d7aac7a1609a97097d727cbf",
+  "candidateSource": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "scope": [
+    "app/src/main/assets",
+    "app/owner-face-models.lock.json"
+  ],
+  "changedProtectedPaths": [],
+  "sourceAssetsByteIdenticalToCode47": true,
+  "sourceAssetCount": 26,
+  "treeEntries": [
+    "100644 blob f3ede1fc3318f8d794e2cb51924186c62f02f71a\tapp/src/main/assets/avatar3d/LICENSE.ASSETS.md",
+    "100644 blob 91f05ac554172da5b5c79a9e6b845731d27fb801\tapp/src/main/assets/avatar3d/NOTICE.json",
+    "100644 blob 3498c003a8bf186a8abb47048e2d36be4810b88c\tapp/src/main/assets/avatar3d/continuum-avatar.glb",
+    "100644 blob d19297d5715821ac1073934adde07c64ddf25d5b\tapp/src/main/assets/continuum-owned-project-plans-v1.json",
+    "100644 blob fa8ac7b7367cfa570c21f2bb77c92f1f810e0bb2\tapp/src/main/assets/continuum-research/natural-location-v3.csx",
+    "100644 blob c0e4fc9a075ec88e3be572b29d15bc718a838fad\tapp/src/main/assets/continuum-training-studio-v1.json",
+    "100644 blob e159d283443f92ac78b964d2bccebe8f95d5d445\tapp/src/main/assets/faceid/LICENSE-LIBCXX.txt",
+    "100644 blob d645695673349e3947e8e5ae42332d0ac3164cd7\tapp/src/main/assets/faceid/LICENSE-OPENCV.txt",
+    "100644 blob d645695673349e3947e8e5ae42332d0ac3164cd7\tapp/src/main/assets/faceid/LICENSE-SFACE.txt",
+    "100644 blob 4cdf89a445b7e84d2352700309440f8428be5f71\tapp/src/main/assets/faceid/LICENSE-YUNET.txt",
+    "100644 blob e070d2186448ed48bc99e09a84185cc1caa18a85\tapp/src/main/assets/faceid/NOTICE.txt",
+    "100644 blob 261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64\tapp/src/main/assets/fonts/LICENSE-Roboto-Apache-2.0.txt",
+    "100644 blob b3c3fcee92e6f63aa86150cda571787d7407a4ae\tapp/src/main/assets/fonts/Montserrat-Light.ttf",
+    "100644 blob 62ebd66a36cd3534bd67228cd82e6917e0b05533\tapp/src/main/assets/fonts/Montserrat-Medium.ttf",
+    "100644 blob 3ef210ab1107142c0aa19cb916ae38a5f99e86ba\tapp/src/main/assets/fonts/Montserrat-Regular.ttf",
+    "100644 blob e36320fb70339b14a9077f637637d6a459301e20\tapp/src/main/assets/fonts/Montserrat-SemiBold.ttf",
+    "100644 blob fe576a2ee1f96353b05d030c0b7620d525cc53a8\tapp/src/main/assets/fonts/OFL-Montserrat.txt",
+    "100644 blob 8869666f245c6f474b98024327df7082e4c868b8\tapp/src/main/assets/fonts/Roboto-Bold.ttf",
+    "100644 blob e19094a8845f3d8db5deb9890059e51f4d21b37b\tapp/src/main/assets/fonts/Roboto-Light.ttf",
+    "100644 blob 6a9513371a957b50eae98c8725e89ddc4668ab52\tapp/src/main/assets/fonts/Roboto-Medium.ttf",
+    "100644 blob ddee473e02035bfce6244746d5d2a281616f7ff8\tapp/src/main/assets/fonts/Roboto-Regular.ttf",
+    "100644 blob 6bcea4539b5c5f4bc691d3d7dfa1fe1fc6e14314\tapp/src/main/assets/jarvis-reference/device-ai-mark.png",
+    "100644 blob c86f776f69ee36af923bc3571a7915e3c2cbc666\tapp/src/main/assets/jarvis-reference/provenance.json",
+    "100644 blob c2cb349359ccb9fd2e1e974007efe920f64d27e4\tapp/src/main/assets/jarvis-reference/rail-energy.png",
+    "100644 blob 4a0660fcaf998251b875ad6de7f7b52e0ebeeaec\tapp/src/main/assets/jarvis-reference/tile-cyan-energy.png",
+    "100644 blob 16520a48998052900623a20f83ff805fe3f5896e\tapp/src/main/assets/jarvis-reference/tile-violet-energy.png"
+  ],
+  "deviceDataRead": false,
+  "deviceWeightsRead": false
+}
