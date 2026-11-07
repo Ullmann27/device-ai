@@ -5,7 +5,7 @@ import java.util.Locale
 /** Explicit evidence identities. Not personal memory, tool authority or a trained model. */
 data class Ctx3Entity(val id:String,val label:String,val aliases:Set<String>,val pronouns:Set<String>,val sourceIds:Set<String>)
 sealed interface Ctx3Decision {
- data class Query(val query:String,val sourceIds:Set<String> = emptySet()):Ctx3Decision
+ data class Query(val query:String,val sourceIds:Set<String> = emptySet(),val resolution:String=""):Ctx3Decision
  data class Clarify(val reason:String):Ctx3Decision
  data class Abstain(val reason:String):Ctx3Decision
 }
@@ -62,7 +62,7 @@ class Ctx3Context {
     {focus=emptyList();return Ctx3Decision.Clarify("ALIAS_COLLISION")}
    focus=positive.takeLast(8);age=0
    discourse.observeExplicit(focus)
-   return Ctx3Decision.Query(input,positive.flatMap { it.sourceIds }.toSet())
+   return Ctx3Decision.Query(input,positive.flatMap { it.sourceIds }.toSet(),"EXPLICIT_REFERENT")
   }
   if(rejected.isNotEmpty()){focus=emptyList();return Ctx3Decision.Clarify("ONLY_NEGATED_ENTITIES")}
   if(discourse.hasDiscourseCue(input)) {
@@ -70,7 +70,7 @@ class Ctx3Context {
     ?: return Ctx3Decision.Clarify("NO_UNIQUE_DISCOURSE_REFERENT")
    focus=listOf(binding.entity);age=0
    discourse.observeResolved(binding.entity)
-   return Ctx3Decision.Query(input+" "+binding.entity.label,binding.entity.sourceIds)
+   return Ctx3Decision.Query(input+" "+binding.entity.label,binding.entity.sourceIds,"DISCOURSE_"+binding.cue.name)
   }
   val ref=words.withIndex().firstOrNull { it.value in setOf("er","ihn","ihm","sie","es","damit","dazu","darüber","davon","des") }
   if(ref!=null) {
@@ -81,7 +81,7 @@ class Ctx3Context {
    focus=listOf(target)
    discourse.observeResolved(target)
    val rewritten=input.replace(Regex("(?iu)(?<![\\p{L}\\p{N}])"+Regex.escape(ref.value)+"(?![\\p{L}\\p{N}])"),Regex.escapeReplacement(target.label))
-   return Ctx3Decision.Query(rewritten,target.sourceIds)
+   return Ctx3Decision.Query(rewritten,target.sourceIds,"PRONOUN_BINDING")
   }
   if(Regex("(?u)\\b(?:von|über|sondern|ist)\\s+(\\p{Lu}[\\p{L}-]+)").findAll(input).any { m->
     val word=m.groupValues[1].lowercase(Locale.ROOT)
