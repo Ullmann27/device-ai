@@ -115,6 +115,17 @@ class ContinuumAutonomousJobService:JobService() {
                     deferredReason!=null
                 }
             }
+            fun finishCancelledOffline() {
+                val reason=deferredReason
+                if(reason!=null)ContinuumOfflineJobStatus.deferred(this@ContinuumAutonomousJobService,reason)
+                else ContinuumOfflineJobStatus.stopped(this@ContinuumAutonomousJobService)
+                runCatching {
+                    ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
+                        ContinuumTrainingMonitor.OFFLINE,
+                        if(reason!=null)"DEFERRED" else "INTERRUPTED",
+                        reason ?: "Lernlauf abgebrochen")
+                }
+            }
             try {
                 ContinuumTrainingMonitor.begin(this@ContinuumAutonomousJobService,
                     ContinuumTrainingMonitor.OFFLINE,"Offline-Konsolidierung","SWB1")
@@ -201,9 +212,15 @@ class ContinuumAutonomousJobService:JobService() {
                                     channel,outcome,"Stufe "+(round?.stage ?: currentStage)+
                                         "/"+ContinuumCdxLargeCurriculum.STAGES)
                             } catch (error:Exception) {
-                                ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
-                                    channel,"FAILED",error.javaClass.simpleName)
-                                Log.e(TAG,"CDX1 research round failed; SWB1 job continues",error)
+                                if(cancelled()) {
+                                    ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
+                                        channel,if(deferredReason!=null)"DEFERRED" else "INTERRUPTED",
+                                        deferredReason ?: "Lernlauf abgebrochen")
+                                } else {
+                                    ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
+                                        channel,"FAILED",error.javaClass.simpleName)
+                                    Log.e(TAG,"CDX1 research round failed; SWB1 job continues",error)
+                                }
                             }
                         }
                     }
@@ -234,13 +251,7 @@ class ContinuumAutonomousJobService:JobService() {
                 if(!stopped.get()) {
                     // Learning is only FINISHED when no budget or safety limit was hit.
                     if(cancelled()) {
-                        ContinuumOfflineJobStatus.deferred(
-                            this@ContinuumAutonomousJobService,deferredReason?:"TIME_BUDGET")
-                        runCatching {
-                            ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
-                                ContinuumTrainingMonitor.OFFLINE,"DEFERRED",
-                                deferredReason?:"TIME_BUDGET")
-                        }
+                        finishCancelledOffline()
                     } else {
                         ContinuumOfflineJobStatus.finished(this@ContinuumAutonomousJobService)
                         runCatching {
@@ -251,15 +262,17 @@ class ContinuumAutonomousJobService:JobService() {
                     }
                 }
             } catch (e: Exception) {
-                // Never silently report success when the offline learning job fails.
-                // Preserve the durable model; JobScheduler may retry this job.
-                retryAfterFailure=!stopped.get()
-                ContinuumOfflineJobStatus.failed(this@ContinuumAutonomousJobService,e)
-                runCatching {
-                    ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
-                        ContinuumTrainingMonitor.OFFLINE,"FAILED",e.javaClass.simpleName)
+                if(cancelled()) {
+                    if(!stopped.get())finishCancelledOffline()
+                } else {
+                    retryAfterFailure=true
+                    ContinuumOfflineJobStatus.failed(this@ContinuumAutonomousJobService,e)
+                    runCatching {
+                        ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
+                            ContinuumTrainingMonitor.OFFLINE,"FAILED",e.javaClass.simpleName)
+                    }
+                    Log.e(TAG,"Offline learning consolidation failed",e)
                 }
-                Log.e(TAG,"Offline learning consolidation failed",e)
             } finally {
                 if(!stopped.get())jobFinished(params,retryAfterFailure)
             }

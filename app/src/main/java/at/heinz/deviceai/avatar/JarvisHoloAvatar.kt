@@ -67,6 +67,8 @@ class JarvisHoloAvatar(private val liveSurface: ContinuumHologramView? = null) :
     override fun onCockpitCue(step: at.heinz.deviceai.cockpit.TimelineStep): Boolean =
         sequence?.playCue(step) ?: false
 
+    override val cueGeneration: Long get() = sequence?.cueGeneration ?: -1L
+
     override fun detach() {
         hologram?.setCockpitSequence(null)
         if (liveSurface == null) hologram?.setForegroundActive(false)

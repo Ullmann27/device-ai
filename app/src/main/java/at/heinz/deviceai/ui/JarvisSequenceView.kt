@@ -29,10 +29,19 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
     // Unlike View.post, the main Handler does not defer delivery until this View attaches.
     private val completionHandler = Handler(android.os.Looper.getMainLooper())
     @Volatile private var deliveryGeneration = 0L
+    val cueGeneration: Long get() = deliveryGeneration
     @Volatile private var detached = false
     @Volatile private var motionAllowed = true
     private val headIcons = at.heinz.deviceai.avatar.AvatarIconBurst()
+    private val fileTunnel = at.heinz.deviceai.ui.video3.Video3FileTunnel()
     private val headRegion = android.graphics.RectF()
+    private var frameDelayMillis = 16L
+    private var reducedBloom = false
+
+    fun setFrameBudget(delayMillis: Long, reducedBloom: Boolean) {
+        frameDelayMillis = delayMillis.coerceIn(16L, 80L)
+        this.reducedBloom = reducedBloom
+    }
 
     fun setHeadRegion(left: Float, top: Float, right: Float, bottom: Float) {
         headRegion.set(left, top, right, bottom)
@@ -40,9 +49,12 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
 
     fun playCue(step: at.heinz.deviceai.cockpit.TimelineStep): Boolean {
         if (step.cue != at.heinz.deviceai.cockpit.Cue.HEAD_ICON_BURST &&
-            step.cue != at.heinz.deviceai.cockpit.Cue.FILE_ICONS_FROM_HEAD) return false
+            step.cue != at.heinz.deviceai.cockpit.Cue.FILE_ICONS_FROM_HEAD &&
+            step.cue != at.heinz.deviceai.cockpit.Cue.AREA_WARP) return false
+        if (step.event is CockpitAnimationEvent.DocumentLearned && step.event.entriesAdded <= 0) return true
         if (!detached && motionAllowed && isAttachedToWindow && isShown && step.event.turnId !in retiredTurns) {
-            headIcons.start(clock())
+            if (step.cue == at.heinz.deviceai.cockpit.Cue.AREA_WARP) fileTunnel.start(clock())
+            else headIcons.start(clock())
             kick()
         }
         return true
@@ -61,6 +73,7 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         deliveryGeneration++
         effects.clear(); stepStates.clear(); turn = null
         headIcons.clear()
+        fileTunnel.clear()
         invalidate()
     }
 
@@ -107,6 +120,7 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
     internal fun apply(event: CockpitAnimationEvent) {
         if (event is CockpitAnimationEvent.TurnEnded) {
             headIcons.clear()
+            fileTunnel.clear()
             // Remember completion even if another command already replaced this turn on screen.
             retireTurn(event.turnId)
             if (turn == event.turnId) {
@@ -119,7 +133,12 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         // Ledger/retrieval events have their own stream and must not be rejected by the current conversation id.
         if (event is CockpitAnimationEvent.DocumentLearned || event is CockpitAnimationEvent.MemoryStored ||
             event is CockpitAnimationEvent.RecallHits) {
-            if (event.turnId == MEMORY_TURN) { memoryRenderer.render(event); kick() }
+            if (event.turnId == MEMORY_TURN) {
+                if (event is CockpitAnimationEvent.DocumentLearned && event.entriesAdded > 0 ||
+                    event is CockpitAnimationEvent.RecallHits && event.count > 0) fileTunnel.start(clock())
+                memoryRenderer.render(event)
+                kick()
+            }
             return
         }
         if (event is CockpitAnimationEvent.Extension) {
@@ -177,7 +196,12 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
     private fun safeId(raw: String) = raw.map { if (it.isLetterOrDigit() && it.code < 128 || it in "._:-") it else '_' }
         .joinToString("").take(96)
 
-    private fun kick() { if (isAttachedToWindow && motionAllowed) postInvalidateOnAnimation() else invalidate() }
+    private fun requestFrame() {
+        if (frameDelayMillis <= 16L) postInvalidateOnAnimation()
+        else postInvalidateDelayed(frameDelayMillis - 16L)
+    }
+
+    private fun kick() { if (isAttachedToWindow && motionAllowed) requestFrame() else invalidate() }
 
     override fun onAttachedToWindow() { super.onAttachedToWindow(); deliveryGeneration++; detached = false }
 
@@ -190,6 +214,8 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         painter.begin(canvas)
         val saved = canvas.save()
         canvas.scale(d, d)
+        val tunnelActive = fileTunnel.draw(painter, width / d, height / d, now,
+            visible = motionAllowed && isAttachedToWindow && isShown, glow = !reducedBloom)
         effects.draw(painter, width / d, height / d, now)
         if (headIcons.active(now)) {
             val w = if (headRegion.isEmpty) width / d * .66f else headRegion.width()
@@ -203,7 +229,7 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         }
         canvas.restoreToCount(saved)
         if (motionAllowed && isAttachedToWindow && isShown &&
-            (effects.isAnimating(now) || headIcons.active(now))) postInvalidateOnAnimation()
+            (effects.isAnimating(now) || headIcons.active(now) || tunnelActive)) requestFrame()
     }
 
     private companion object { const val MAX_RETIRED_TURNS = 24 }

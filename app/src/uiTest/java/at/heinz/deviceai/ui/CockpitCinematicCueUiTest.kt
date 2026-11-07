@@ -10,7 +10,11 @@ import at.heinz.deviceai.ContinuumHologramView
 import at.heinz.deviceai.avatar.JarvisHoloAvatar
 import at.heinz.deviceai.cockpit.BOOT_TURN
 import at.heinz.deviceai.cockpit.CockpitAnimationEvent
+import at.heinz.deviceai.cockpit.CockpitCues
+import at.heinz.deviceai.cockpit.Cue
+import at.heinz.deviceai.cockpit.CueOwner
 import at.heinz.deviceai.cockpit.JarvisAvatarSlot
+import at.heinz.deviceai.cockpit.MEMORY_TURN
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -106,6 +110,101 @@ class CockpitCinematicCueUiTest {
         live.setAnimationsEnabled(true)
         now = 1_400L
         assertTrue("Reduced motion must not replay on enable", empty.sameAs(frame(sequence)))
+        empty.recycle()
+    }
+
+    @Test fun delayedBootDoesNotReplayAfterBackground() = withCockpit { home, live, _ ->
+        val cues = mutableListOf<Cue>()
+        CockpitCues.register(CueOwner.INTEGRATION) { cues += it.cue; true }
+        try {
+            CockpitAnimationPresenter(home).render(CockpitAnimationEvent.BootStarted(BOOT_TURN, 0L, "Bereit"))
+            shadowOf(Looper.getMainLooper()).idle()
+            home.setForegroundActive(false)
+            live.setForegroundActive(false)
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(400))
+            home.setForegroundActive(true)
+            live.setForegroundActive(true)
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(4_000))
+            assertFalse("A retired presentation must not fly in later", Cue.COCKPIT_FLY_IN in cues)
+        } finally { CockpitCues.register(CueOwner.INTEGRATION, null) }
+    }
+
+    @Test fun queuedBootDoesNotReplayAfterPauseResume() = withCockpit { home, live, _ ->
+        val greetings = mutableListOf<String>()
+        CockpitAnimationPresenter(home, onGreeting = { greetings += it })
+            .render(CockpitAnimationEvent.BootStarted(BOOT_TURN, 0L, "Bereit"))
+        home.setForegroundActive(false)
+        live.setForegroundActive(false)
+        home.setForegroundActive(true)
+        live.setForegroundActive(true)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertTrue("Queued presentation must belong to its foreground session", greetings.isEmpty())
+    }
+
+    private fun recall(home: ContinuumHomeView, count: Int = 2) {
+        CockpitAnimationPresenter(home).render(CockpitAnimationEvent.RecallHits(MEMORY_TURN, 1L,
+            "synthetic-recall", count, if (count > 0) .9f else null))
+        shadowOf(Looper.getMainLooper()).idle()
+    }
+
+    @Test fun realRecallStartsRecoveredDocumentTunnel() = withCockpit { home, _, sequence ->
+        var now = 1_000L
+        sequence.clock = { now }
+        val empty = frame(sequence)
+        recall(home)
+        sequence.effects.clear()
+        now = 2_200L
+        val flying = frame(sequence)
+        assertFalse("Real recall must reach the recovered document tunnel", empty.sameAs(flying))
+        now = 5_000L
+        assertTrue("The tunnel must finish", empty.sameAs(frame(sequence)))
+        empty.recycle(); flying.recycle()
+    }
+
+    @Test fun actualTaskStopClearsRecoveredTunnel() = withCockpit { home, live, sequence ->
+        var now = 1_000L
+        sequence.clock = { now }
+        val empty = frame(sequence)
+        recall(home)
+        live.setTaskEffectScope(null)
+        now = 2_200L
+        assertTrue("STOP clears every cinematic overlay", empty.sameAs(frame(sequence)))
+        empty.recycle()
+    }
+
+    @Test fun queuedRecallCannotSurviveAnActualStop() = withCockpit { home, live, sequence ->
+        var now = 1_000L
+        sequence.clock = { now }
+        val empty = frame(sequence)
+        CockpitAnimationPresenter(home).render(CockpitAnimationEvent.RecallHits(MEMORY_TURN, 1L,
+            "synthetic-recall", 2, .9f))
+        live.setTaskEffectScope(null)
+        shadowOf(Looper.getMainLooper()).idle()
+        now = 2_200L
+        assertTrue("A queued recall cannot cross STOP", empty.sameAs(frame(sequence)))
+        empty.recycle()
+    }
+
+    @Test fun emptyRecallDoesNotInventAFileFlight() = withCockpit { home, _, sequence ->
+        var now = 1_000L
+        sequence.clock = { now }
+        val empty = frame(sequence)
+        recall(home, 0)
+        now = 2_200L
+        assertTrue("No hits means no file flight", empty.sameAs(frame(sequence)))
+        empty.recycle()
+    }
+
+    @Test fun repeatRecallCannotExtendTheActiveTunnel() = withCockpit { home, _, sequence ->
+        var now = 1_000L
+        sequence.clock = { now }
+        val empty = frame(sequence)
+        recall(home)
+        now = 3_500L
+        recall(home)
+        sequence.effects.clear()
+        now = 4_100L
+        assertTrue("Repeated input cannot prolong this transition", empty.sameAs(frame(sequence)))
         empty.recycle()
     }
 }

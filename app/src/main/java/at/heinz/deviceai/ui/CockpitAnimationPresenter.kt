@@ -40,7 +40,15 @@ class CockpitAnimationPresenter(
     private val power = home.context.getSystemService(Context.POWER_SERVICE) as PowerManager
 
     override fun render(event: CockpitAnimationEvent) {
-        home.post { present(event) }
+        val generation = home.presentationGeneration
+        val avatar = home.avatarRenderer
+        val cueGeneration = avatar?.cueGeneration
+        val initialBoot = event is CockpitAnimationEvent.BootStarted && avatar == null && !home.isAttachedToWindow
+        home.post {
+            if (event is CockpitAnimationEvent.TurnEnded ||
+                generation == home.presentationGeneration &&
+                (initialBoot || avatar === home.avatarRenderer && cueGeneration == avatar?.cueGeneration)) present(event)
+        }
     }
 
     /**
@@ -78,7 +86,9 @@ class CockpitAnimationPresenter(
 
     private fun present(event: CockpitAnimationEvent) {
         if (!home.isAttachedToWindow) return
+        if (event !is CockpitAnimationEvent.TurnEnded && !home.isPresentationActive()) return
         if (home.ownsAvatarSlot) home.avatarRenderer?.let { r -> runCatching { r.onAnimationEvent(event) } }
+        if (!home.isPresentationActive()) return
         val hook = CockpitTransitions.hook
         if (hook != null && runCatching { hook.play(event, home) }.getOrDefault(false)) return
         runTimeline(event)
@@ -87,14 +97,20 @@ class CockpitAnimationPresenter(
     /** Executes CockpitTimeline: each cue goes to its owner's CockpitCueRenderer, else the minimal default. */
     private fun runTimeline(event: CockpitAnimationEvent) {
         val motion = motionAllowed()
+        val generation = home.presentationGeneration
+        val avatar = home.avatarRenderer
+        val cueGeneration = avatar?.cueGeneration
+        fun current() = home.isPresentationActive() && generation == home.presentationGeneration &&
+            avatar === home.avatarRenderer && cueGeneration == avatar?.cueGeneration
         for (step in at.heinz.deviceai.cockpit.CockpitTimeline.steps(event)) {
             val delay = if (motion) step.atMs else 0L
-            if (delay == 0L) execute(step) else home.postDelayed({ if (home.isAttachedToWindow) execute(step) }, delay)
+            if (delay == 0L) execute(step) else home.postDelayed({ if (current()) execute(step) }, delay)
         }
         if (event is CockpitAnimationEvent.BootStarted && bus != null) {
             val end = if (motion) at.heinz.deviceai.cockpit.CockpitTimeline.bootEndMs else 0L
             home.postDelayed({
-                at.heinz.deviceai.cockpit.CockpitTimeline.cockpitEntered(sessionId, System.currentTimeMillis())?.let(bus::emit)
+                if (current()) at.heinz.deviceai.cockpit.CockpitTimeline
+                    .cockpitEntered(sessionId, System.currentTimeMillis())?.let(bus::emit)
             }, end)
         }
     }

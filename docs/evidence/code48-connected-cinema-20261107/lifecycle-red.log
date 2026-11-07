@@ -1,0 +1,32 @@
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#delayedBootDoesNotReplayAfterBackground
+.E
+Time: 3.725
+There was 1 failure:
+1) delayedBootDoesNotReplayAfterBackground(at.heinz.deviceai.ui.CockpitCinematicCueUiTest)
+java.lang.AssertionError: A retired presentation must not fly in later
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.delayedBootDoesNotReplayAfterBackground$lambda$0(CockpitCinematicCueUiTest.kt:127)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.withCockpit(CockpitCinematicCueUiTest.kt:60)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.delayedBootDoesNotReplayAfterBackground(CockpitCinematicCueUiTest.kt:115)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#queuedBootDoesNotReplayAfterPauseResume
+.E
+Time: 0.117
+There was 1 failure:
+1) queuedBootDoesNotReplayAfterPauseResume(at.heinz.deviceai.ui.CockpitCinematicCueUiTest)
+java.lang.AssertionError: Queued presentation must belong to its foreground session
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.queuedBootDoesNotReplayAfterPauseResume$lambda$0(CockpitCinematicCueUiTest.kt:140)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.withCockpit(CockpitCinematicCueUiTest.kt:60)
+	at at.heinz.deviceai.ui.CockpitCinematicCueUiTest.queuedBootDoesNotReplayAfterPauseResume(CockpitCinematicCueUiTest.kt:131)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=2 failures=2

@@ -198,6 +198,8 @@ class ContinuumHologramView @JvmOverloads constructor(
         cockpitSequence = sequence
         sequence?.let {
             it.setMotionAllowed(canAnimateFrame())
+            val budget = renderBudget()
+            it.setFrameBudget(budget.frameDelayMillis, budget.reducedBloom)
             it.setCardsDocked(workWindowActive)
             addView(it, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
             updateOrbTarget(width, height)
@@ -479,6 +481,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         audio.reset()
         audioEnergy = 0f
         if (!canAnimateFrame()) settleState()
+        renderBudget().let { cockpitSequence?.setFrameBudget(it.frameDelayMillis, it.reducedBloom) }
         invalidate()
     }
 
@@ -523,6 +526,7 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     private fun clearTaskEffects() {
         taskEffects.clear()
+        cockpitSequence?.clear()
         taskEffectsNotBeforeMs = SystemClock.uptimeMillis()
     }
 
@@ -628,6 +632,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             consumedAudioMs = 0L
         }
         cockpitSequence?.setMotionAllowed(canAnimateFrame())
+        renderBudget().let { cockpitSequence?.setFrameBudget(it.frameDelayMillis, it.reducedBloom) }
         update3d()
         native3d?.setQuality(renderBudget().reducedBloom)
         invalidate()

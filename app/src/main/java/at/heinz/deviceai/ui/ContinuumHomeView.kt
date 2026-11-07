@@ -75,10 +75,15 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private var systemMotionUntil = 0L
     private fun now() = android.os.SystemClock.uptimeMillis()
     private var foregroundActive = false
+    @Volatile internal var presentationGeneration = 0L
+        private set
     fun setForegroundActive(active: Boolean) {
+        if (foregroundActive && !active) presentationGeneration++
         foregroundActive = active
         updateWaveAnimation()
     }
+    internal fun isPresentationActive() = foregroundActive && isAttachedToWindow &&
+        isShown && windowVisibility == View.VISIBLE
     private var waveFramePending = false
     private val waveFrame = object : Runnable {
         override fun run() {
@@ -129,6 +134,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     }
 
     override fun onDetachedFromWindow() {
+        presentationGeneration++
         presentationPrefs.unregisterOnSharedPreferenceChangeListener(presentationListener)
         removeCallbacks(presentationUpdate)
         slotRegistration?.close(); slotRegistration = null
@@ -142,11 +148,13 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onWindowVisibilityChanged(visibility: Int) {
         super.onWindowVisibilityChanged(visibility)
+        if (visibility != View.VISIBLE) presentationGeneration++
         updateWaveAnimation()
     }
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
+        if (!isShown) presentationGeneration++
         updateWaveAnimation()
     }
     var state: ContinuumDashboardState = ContinuumDashboardState()

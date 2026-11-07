@@ -32,7 +32,7 @@ The rejected Systemstatus card is not the reference's cinematic presentation.
 ## Verification and next steps
 
 The two existing PDF regressions are RED on the shipped production source.
-No new production repair or Code48 APK has yet been verified in this branch.
+Production repairs are being verified below. No Code48 APK is verified yet.
 Recover selected missing components without merging obsolete branch trees.
 Exercise actual Activity/View admission, task lifecycle, STOP, hidden state,
 reduced motion and teardown, then run required Node/backend/Android/lint gates.
@@ -54,3 +54,52 @@ The one current avatar receives timeline cues directly, without global
 renderer registration. Original head/orb assets are unchanged.
 Evidence: docs/evidence/code48-connected-cinema-20261107/.
 These are focused SDK-compiled host tests, not complete-source APK/device QA.
+
+## Presentation lifecycle checkpoint
+
+Two real presenter regressions reproduced delayed boot playback after a
+foreground boundary. Queued and delayed cues now retain the original view
+and avatar presentation generations. Background, detach and reduced-motion
+clears invalidate that generation. Completion still reaches the active avatar
+to retire its turn. Focused host run: five tests, zero failures.
+
+## Document-flight checkpoint
+
+Selected PR487 geometry now runs in the live overlay on actual positive
+document-import or recall events. Empty results produce no flight. Repeated
+events cannot extend an active three-second transition. Real work cards draw
+above it; the original head/orb stay owned by their existing renderers.
+Existing foreground/thermal/reduced-motion policy supplies the frame budget.
+STOP clears the overlay and invalidates already queued presenter delivery.
+Nine focused native-canvas tests passed; the independent reviewer found a
+queued-before-STOP race, reproduced it, and the corrective five-case run passed.
+Actual full composition remains under visual review; no Fold7 claim.
+
+## Expanded branch inventory
+
+All 653 fetched origin heads were compared with the snapshot commit:
+328 are ancestors, 321 diverge, and four state/checkpoint branches have no
+resolved common application history. Across divergent heads, 56 distinct
+Android source paths are absent from this snapshot. That is a path inventory,
+not proof that 56 useful features are missing; old and replaced designs count.
+The complete branch/head list is saved beside the test evidence.
+
+- PR487: selected missing document flight recovered and connected here.
+- PR490: absent CognitiveLoop contract/engine/bridge/gates. Its own handoff
+  still requires a local reasoning adapter, planner, Activity and memory wiring.
+  Not activated as a second competing task loop.
+- PR385/386: absent ChiefTaskGraph and ChiefProofGatedStrategyLedger. Source
+  provides dependency/file-conflict planning and externally attested strategy
+  records, not automatic permission or verified production learning.
+- PR316/318: absent disk-backed source-stream import and UTF-8 chunk index.
+  Candidate for bounded large-source access; not connected to a model here.
+- PR516: nine training/conversation production files are byte-identical to
+  current source, with the Activity using the shared ChiefBotConversation
+  path. The old branch is not a new missing training implementation.
+- PR511: tokenizer/LM1 scratch-allocation changes are genuinely absent, but
+  these laboratory classes have no current application caller. No claim
+  that copying them fixes the reported phone training failure.
+- PR515: discovery/orchestration primitives already exist; several files
+  are exact matches, others have later changes. No duplicate scanner added.
+- Inworld prototype: its own handoff marks it shelved after owner clarification.
+  It is not enabled or deployed by this continuation.

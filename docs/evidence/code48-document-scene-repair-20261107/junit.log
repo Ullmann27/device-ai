@@ -1,0 +1,32 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=42289 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42289 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.ContinuumDocumentSceneUiTest#typedPdfRequestReturnsFromChatIntoAnimatedDocumentWork
+.
+Time: 20.932
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumDocumentSceneUiTest#documentWorkWaitsForFreshShellGeometry
+.
+Time: 3.557
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumDocumentFlowUiTest#stopRejectsAQueuedPdfFailureAndItsPicker
+.
+Time: 3.435
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumDocumentFlowUiTest#aReplyQueuedBeforeStopIsDiscardedAfterIt
+.
+Time: 22.401
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumDocumentFlowUiTest#stopDuringTheDraftEndsReadingWindowAndRunAsAborted
+.
+Time: 26.859
+
+OK (1 test)
+
+TOTAL tests=5 failures=0

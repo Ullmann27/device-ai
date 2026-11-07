@@ -437,6 +437,7 @@ class AgentActivity : Activity() {
     private var knownOpenIssues: Set<String>? = null
     private val dashboardRefresh = object : Runnable {
         override fun run() {
+            if (!foregroundLearningActive || isFinishing || isDestroyed) return
             refreshDashboard()
             botRosterDialog?.refreshRuntimeStatus()
             mainHandler.postDelayed(this, 5_000L)
@@ -825,6 +826,7 @@ class AgentActivity : Activity() {
         sessionResetLifetime.set(false)
         foregroundLearningActive = false
         mainHandler.removeCallbacks(foregroundLearningCheck)
+        mainHandler.removeCallbacks(dashboardRefresh)
         clearLifecycleTimeout()
         if (::localRuntime.isInitialized) {
             activeOrchestrator?.cancel()
@@ -1385,9 +1387,10 @@ class AgentActivity : Activity() {
         }
     }
 
-    /** Collects the real start-screen values off the UI thread (every 5 s while the activity is visible). */
+    /** Visible telemetry consumers only. */
     private fun refreshDashboard() {
-        if (homeView == null || dashboardCollecting || !foregroundLearningActive) return
+        if (dashboardCollecting || !foregroundLearningActive || isFinishing || isDestroyed) return
+        if (homeView?.isShown != true && liveHardwareGauges?.isShown != true) return
         dashboardCollecting = true
         val dashboardSnapshotAtElapsedMs = android.os.SystemClock.elapsedRealtime()
         val modelReady = ::localRuntime.isInitialized && localRuntime.loadedModel != null &&
@@ -1414,11 +1417,14 @@ class AgentActivity : Activity() {
             result.onSuccess { (state, open) ->
                 capabilityDashboard = state
                 capabilityDashboardAtElapsedMs = dashboardSnapshotAtElapsedMs
-                homeView?.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
-                    memoryActivity = memoryActivitySnapshot(state.memory))
-                if (centerDialog?.isShowing == true || workWindowHost.isShowing) liveHardwareGauges?.updateTelemetry(state.system)
-                navigationView?.state = state
-                railView?.state = state
+                if (!foregroundLearningActive) return@onSuccess
+                homeView?.takeIf { it.isShown }?.let { home ->
+                    home.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
+                        memoryActivity = memoryActivitySnapshot(state.memory))
+                }
+                liveHardwareGauges?.takeIf { it.isShown }?.updateTelemetry(state.system)
+                navigationView?.takeIf { it.isShown }?.state = state
+                railView?.takeIf { it.isShown }?.state = state
                 announceNewIssues(open)
             }
         }
@@ -2466,6 +2472,7 @@ class AgentActivity : Activity() {
         if (hasText && !wantsDraft) facts.addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this, "ENTWURF ERSTELLEN") {
             startDocumentDraft(doc)
         }.apply { tag = "jarvis-document-start-draft"; documentDraftAction = this }, matchWidth(top = 10))
+        if (activeWorkArea == ContinuumWorkArea.CHAT) showHomeDashboard()
         val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown }
         val emblem = doc.firstPage?.let { android.graphics.drawable.BitmapDrawable(resources, it) }
         val window = home?.let {
@@ -2885,6 +2892,7 @@ class AgentActivity : Activity() {
             continuousConversation.active, keepCockpitDuringHandsFree, activeWorkArea == ContinuumWorkArea.START)
 
     private fun refreshConversationLayout() {
+        val dashboardWasVisible = dashboardSection?.visibility == View.VISIBLE
         val chat = !currentToolScene() && at.heinz.deviceai.cognitive.CockpitConversationPresentation.showChat(
             explicitChatSelected = activeWorkArea == ContinuumWorkArea.CHAT,
             conversationActive = conversationActive,
@@ -2903,6 +2911,7 @@ class AgentActivity : Activity() {
         val training = learningVisualActive || activeNeuralCancellation != null
         if (::neuralMonitor.isInitialized) neuralMonitor.visibility = if (chat || training) View.VISIBLE else View.GONE
         if (::neuralProgress.isInitialized) neuralProgress.visibility = if (training) View.VISIBLE else View.GONE
+        if (!chat && !dashboardWasVisible) refreshDashboard()
     }
 
     /** Move the existing live surface; there is still only one renderer, clock and Director. */
@@ -3285,6 +3294,7 @@ class AgentActivity : Activity() {
             }
             centerDialog = dialog
         }
+        if (liveHardwareGauges?.isShown == true) refreshDashboard()
         status { value ->
             if (centerShowing()) cockpit.updateStatus(statusGrid, value)
         }

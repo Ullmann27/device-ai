@@ -1,0 +1,26 @@
+{
+  "baseline": "79e614134b30113272c76d51db6363f15649c16f",
+  "cachedProduction": "6a6f885f952784c79b209ad39b20d14ccf014df8",
+  "schedulerSourceEqualBeforePatch": true,
+  "sameRedGreenTestSource": true,
+  "evidenceClass": "HOST_ANDROID_ROBOLECTRIC_REAL_JOB_SERVICE_SYNTHETIC_STORAGE",
+  "red": {
+    "tests": 3,
+    "failures": 2
+  },
+  "green": {
+    "tests": 3,
+    "failures": 0
+  },
+  "existingTrainingTests": {
+    "tests": 29,
+    "failures": 0
+  },
+  "androidSdkCompile": "PASS",
+  "fullGradle": "NOT_RUN_IN_THIS_SUBTASK",
+  "physicalDeviceTraining": "NOT_RUN",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt": "ab5d4b2824108da44a9fb5a2a3bd458d816476040d61f759faff6e7551a58350",
+    "app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt": "5cd2e765c9d25ba25f8a126a8658230ae9117e20aa3e34a29209eaa2ea212e3a"
+  }
+}
