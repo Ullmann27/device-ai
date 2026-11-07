@@ -42,6 +42,20 @@ object ContinuumIntelligenceAudit {
         val noResponses: Int,
         val rows: List<ResultRow>
     ) {
+        /**
+         * Diagnostic only: largest group of identical outputs to answerable probes.
+         * A low teacher-forcing loss cannot substitute for diverse free generation.
+         */
+        val dominantKnownResponseCount: Int get() =
+            rows.filter { it.expected != null }
+                .groupingBy { ContinuumIntelligenceAudit.normalized(it.generated) }
+                .eachCount().values.maxOrNull() ?: 0
+
+        val answerCollapseDetected: Boolean get() =
+            status == "MEASURED" && supportedQuestions >= 5 &&
+                dominantKnownResponseCount * 5 >= supportedQuestions * 4 &&
+                correctAnswers * 5 < supportedQuestions * 4
+
         val targetMet: Boolean get() =
             status == "MEASURED" && supportedQuestions == 20 &&
                 unsupportedQuestions == 5 && correctAnswers >= 16 &&
@@ -57,6 +71,12 @@ object ContinuumIntelligenceAudit {
                 append("\nAusdrücklich unbeantwortbar: ").append(validAbstentions)
                     .append("/").append(unsupportedQuestions)
                 append("\nLeere Antworten statt Enthaltung: ").append(noResponses)
+                if (answerCollapseDetected) {
+                    append("\nWARNUNG: Antwortkollaps – ")
+                        .append(dominantKnownResponseCount).append("/")
+                        .append(supportedQuestions)
+                        .append(" belegte Fragen mit derselben Ausgabe.")
+                }
                 append("\nForschungsziel 16/20 und 0/5: ")
                     .append(if (targetMet) "erreicht" else "nicht erreicht")
                 append("\nModell: ").append(checkpointSha256?.take(16) ?: "unbekannt")
