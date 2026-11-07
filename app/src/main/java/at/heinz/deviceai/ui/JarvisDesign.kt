@@ -8,39 +8,40 @@ package at.heinz.deviceai.ui
  */
 object JarvisDesign {
     /**
-     * Shared palette for the owner master reference (1536 × 1024, 2026-11-04).
-     * New core accents follow the explicit master tokens; unchanged secondary roles retain historical ref5
-     * samples. Final native image calibration remains a separate acceptance gate.
+     * Preserved cyan and violet accents.
+     * Dark surfaces follow current reference.
+     * Device calibration remains separate.
      */
     object Colors {
-        val background = Argb.rgb(0x02, 0x07, 0x13)
-        val backgroundBottom = Argb.rgb(0x03, 0x0B, 0x21)
-        val backgroundHaze = Argb.rgb(0x0D, 0x22, 0x50)    // bg.violetAmbient #0D2250 (lower edge light)
-        val surface = Argb.of(204, 0x01, 0x1D, 0x2F)        // glass.fill composite #011A2A @80 %
-        val surfaceLow = Argb.of(204, 0x06, 0x1F, 0x36)     // tile.fill composite #051B30 @80 %
+        val background = Argb.rgb(0x02, 0x05, 0x10)
+        val backgroundBottom = Argb.rgb(0x03, 0x07, 0x15)
+        val backgroundHaze = Argb.rgb(0x08, 0x10, 0x29)
+        val surface = Argb.of(250, 0x04, 0x0B, 0x1C)
+        val surfaceLow = Argb.of(250, 0x03, 0x08, 0x16)
         val rim = Argb.rgb(0x17, 0x68, 0x7F)                // tile.rim #17687F (1 px)
         val panelRim = Argb.rgb(0x32, 0x9E, 0xC0)           // glass.rim #329EC0
         val cyanDeep = Argb.rgb(0x01, 0x75, 0xAF)           // pill.rim #0175AF
-        val navSurface = Argb.rgb(0x04, 0x15, 0x21)         // button.fill #041521
-        val navSurfaceActive = Argb.rgb(0x01, 0x2C, 0x3C)   // button.fill.active #012C3C
+        val navSurface = Argb.rgb(0x03, 0x0A, 0x18)
+        val navSurfaceActive = Argb.rgb(0x02, 0x20, 0x2D)
         val navRimActive = Argb.rgb(0x32, 0xD6, 0xED)       // button.rim.active #32D6ED
-        val tileFillStart = Argb.of(204, 0x01, 0x4C, 0x60) // tile.fill.left composite #013F51 @80 %
-        val tileFillEnd = Argb.of(204, 0x0C, 0x23, 0x41)   // tile.fill.right composite #0A1E38 @80 %
+        val tileFillStart = Argb.rgb(0x05, 0x18, 0x30)
+        val tileFillMiddle = Argb.rgb(0x01, 0x13, 0x27)
+        val tileFillEnd = Argb.rgb(0x06, 0x17, 0x31)
         val tileRimStart = Argb.rgb(0x01, 0xDA, 0xE8)       // tile.rim.left #01DAE8
-        val tileRimEnd = Argb.rgb(0x2E, 0x52, 0x89)         // tile.rim.right #2E5289
-        // Dark fill samples from the left/right of the two violet ref5 tiles; no activity/state is implied.
-        val memoryTileStart = Argb.rgb(0x19, 0x21, 0x4E)
-        val memoryTileEnd = Argb.rgb(0x08, 0x1E, 0x36)
-        val agentsTileStart = Argb.rgb(0x21, 0x20, 0x58)
-        val agentsTileEnd = Argb.rgb(0x0D, 0x1E, 0x3E)
+        val tileRimEnd = Argb.rgb(0xC7, 0x4D, 0xFF)
+        // Decorative destination colors only.
+        val memoryTileStart = Argb.rgb(0x0C, 0x0D, 0x24)
+        val memoryTileEnd = Argb.rgb(0x04, 0x0A, 0x1B)
+        val agentsTileStart = Argb.rgb(0x0D, 0x0C, 0x25)
+        val agentsTileEnd = Argb.rgb(0x05, 0x09, 0x1C)
         val chevron = Argb.rgb(0x51, 0xAD, 0xC5)            // tile.chevron #51ADC5 (antialiased 1 px stroke, true colour brighter)
         val pillRimStart = Argb.rgb(0x2A, 0xEA, 0xFC)       // pill.rim.left #2AEAFC
         val pillRimEnd = Argb.rgb(0xCC, 0x94, 0xEF)         // pill.rim.right #CC94EF
         val cardRimStart = Argb.rgb(0x21, 0xD9, 0xF5)
         val cardRimEnd = Argb.rgb(0x67, 0xBA, 0xFF)
         val cardRimEndViolet = Argb.rgb(0xC9, 0x57, 0xFF)
-        val chipLocalSurface = Argb.rgb(0x02, 0x1E, 0x24)   // chip "Local · Private" fill #021E24
-        val pillSurface = Argb.rgb(0x07, 0x20, 0x4D)        // pill.fill #07204D
+        val chipLocalSurface = Argb.rgb(0x02, 0x12, 0x1A)
+        val pillSurface = Argb.rgb(0x05, 0x0F, 0x25)
         val cyan = Argb.rgb(0x00, 0xE5, 0xFF)
         val cyanSoft = Argb.rgb(0x78, 0xF6, 0xFB)           // cyan.icon #78F6FB
         val iconCore = Argb.rgb(0xC9, 0xFF, 0xFF)           // tile.icon #C9FFFF
@@ -94,13 +95,13 @@ object JarvisDesign {
     )
 
     object Styles {
-        /** Tile 258 x 79 px → 166 x 51 dp, corner 12 px, icon 39 px, inset 25 px, icon→text 26 px. */
-        val tile = ComponentStyle(51f, 8f, 1f, Colors.tileFillStart, Colors.tileRimStart, 16f, 24f, 16f, Glow.SUBTLE,
+        /** Tall reference cards, rounded glass. */
+        val tile = ComponentStyle(51f, 14f, 1f, Colors.tileFillStart, Colors.tileRimStart, 16f, 24f, 16f, Glow.SUBTLE,
             fillEnd = Colors.tileFillEnd, rimEnd = Colors.tileRimEnd)
         val memoryTile = tile.copy(fill = Colors.memoryTileStart, fillEnd = Colors.memoryTileEnd,
-            rim = Colors.violetRim, rimEnd = Colors.tileRimEnd)
+            rim = Colors.cyan, rimEnd = Colors.magenta)
         val agentsTile = tile.copy(fill = Colors.agentsTileStart, fillEnd = Colors.agentsTileEnd,
-            rim = Colors.violetRim, rimEnd = Colors.violetSoft)
+            rim = Colors.violetRim, rimEnd = Colors.magenta)
         val systemTile = tile.copy(rimEnd = Colors.violetRim)
         /** Tile chevron: glyph 8 px high, 22 px from the right edge → box 10 dp, inset 14 dp. */
         const val chevronSize = 10f

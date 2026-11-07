@@ -25,6 +25,20 @@ object JarvisTiles {
         Argb.mix(edgePalette[i], edgePalette[(i + 1) % edgePalette.size], smooth)
     }
     private val edgeCoreFill = Fill.Solid(Colors.glowCore)
+    private val featureInk = Argb.mix(Colors.cyan, Colors.cyanSoft, .22f)
+    private val featureDetail = Argb.mix(Colors.violetSoft, Colors.violetRim, .40f)
+    private val featureFallback = Fill.Solid(featureInk)
+    private val disabledFeatureFallback = Fill.Solid(Colors.textMuted)
+    private val featureGround = Fill.Linear(-.70f, .56f, .70f, .56f,
+        intArrayOf(Colors.cyan, Colors.cyanSoft, Colors.violetRim, Colors.magenta),
+        floatArrayOf(0f, .30f, .72f, 1f))
+    private val featureFloor = Fill.Linear(-.70f, .56f, .70f, .56f,
+        intArrayOf(Argb.withAlpha(Colors.cyan, .20f), Argb.withAlpha(Colors.bloomHalo, .10f),
+            Argb.withAlpha(Colors.magenta, .20f)))
+    private val featureGlint = Fill.Linear(-.54f, .60f, .54f, .60f,
+        intArrayOf(0, Argb.withAlpha(Colors.iconCore, .80f), Colors.violetRim, 0),
+        floatArrayOf(0f, .28f, .72f, 1f))
+
     /** ref5 uses two violet cards among the cyan cards. Colour describes the destination, never live status. */
     fun style(target: String): JarvisDesign.ComponentStyle = when (target) {
         "memory" -> JarvisDesign.Styles.memoryTile
@@ -48,22 +62,25 @@ object JarvisTiles {
             rim = Argb.mix(source.rim, Colors.background, .65f)) else source
         val active = !disabled && (highlighted || tile.controlState == JarvisControlState.PRESSED ||
             tile.controlState == JarvisControlState.SELECTED)
-        JarvisNeon.component(p, b.left, b.top, b.right, b.bottom, st, active = active)
+        val interaction = when {
+            disabled -> JarvisReferenceHud.Interaction.DISABLED
+            active -> JarvisReferenceHud.Interaction.SELECTED
+            tile.controlState == JarvisControlState.LOADING -> JarvisReferenceHud.Interaction.LOADING
+            else -> JarvisReferenceHud.Interaction.NORMAL
+        }
+        JarvisReferenceHud.surface(p, b, st.radius, st.rim, st.rimEnd ?: st.rim,
+            interaction, decorativeRibbons = true)
         val radius = minOf(st.radius, b.height / 2f)
-        p.fillRoundRect(b.left + 1f, b.top + 1f, b.right - 1f, b.top + b.height * .30f, radius,
-            Fill.Linear(0f, b.top, 0f, b.top + b.height * .30f,
-                intArrayOf(Argb.withAlpha(st.rim, .12f), 0)))
-        JarvisNeon.halo(p, b.left + 16f, b.top + b.height / 2f, b.height * .42f, st.rim, .14f)
         if (!disabled && timeMs > 0L) {
-            // Existing two rim strokes plus the moving rounded-corner highlight.
+            // Existing clock, quiet edge energy.
             val wave = ambientPhase(tile.target, timeMs)
             val colour = if (wave <= .5f) Argb.mix(Colors.cyan, Colors.violet, wave * 2f)
                 else Argb.mix(Colors.violet, Colors.magenta, (wave - .5f) * 2f)
             p.setAdditive(true)
             p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius,
-                3f, Fill.Solid(colour), .045f + .035f * wave)
+                3f, Fill.Solid(colour), .025f + .020f * wave)
             p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius,
-                1.1f, Fill.Solid(colour), .12f + .10f * wave)
+                .85f, Fill.Solid(colour), .065f + .055f * wave)
             p.setAdditive(false)
             JarvisTileEnergy.sample(timeMs, b.width, b.height, tile.target, radius)?.let { bead ->
                 val color = edgeEnergyColors[(bead.phase * edgeEnergyColors.size).toInt()
@@ -89,6 +106,33 @@ object JarvisTiles {
             p.drawText("…", b.right - 9f, b.top + 15f, JarvisDesign.Type.caption,
                 Fill.Solid(Colors.cyanSoft), TextAlign.RIGHT)
         }
+    }
+
+    /** Clean glyph, restrained local light. */
+    fun drawFeatureIcon(p: ContinuumPainter, tile: JarvisTile, cx: Float, cy: Float, size: Float) {
+        if (!cx.isFinite() || !cy.isFinite() || !size.isFinite() || size <= 0f) return
+        val disabled = tile.controlState == JarvisControlState.DISABLED
+        val opacity = if (disabled) .42f else 1f
+        val color = if (disabled) Colors.textMuted else featureInk
+        val detail = if (disabled) Colors.textMuted else featureDetail
+        val ground = if (disabled) disabledFeatureFallback else featureGround
+        val glint = if (disabled) disabledFeatureFallback else featureGlint
+        p.save(); p.translate(cx, cy); p.scale(size, size)
+        p.clipRect(-.78f, -.5f, .78f, .72f)
+        if (!disabled) {
+            JarvisSceneFills.halo(p, 0f, .02f, .52f, Colors.cyan, .14f)
+            JarvisSceneFills.ellipseHalo(p, 0f, .56f, .77f, .15f, Colors.cyan, .13f)
+        }
+        if (!disabled) p.fillOval(-.70f, .45f, .70f, .65f, featureFloor)
+        p.setAdditive(true)
+        p.strokeOval(-.70f, .45f, .70f, .65f, .07f, ground, .12f * opacity)
+        p.strokeOval(-.70f, .45f, .70f, .65f, .022f, ground, .82f * opacity)
+        p.strokeArc(-.54f, .47f, .54f, .64f, 16f, 148f, .012f, glint, .70f * opacity)
+        p.setAdditive(false)
+        if (!JarvisRailIcons.drawFeature(p, tile.target, -.5f, -.5f, 1f, color, detail, opacity))
+            ContinuumIcons.draw(p, tile.icon, 0f, 0f, 1f,
+                if (disabled) disabledFeatureFallback else featureFallback, .0625f, opacity)
+        p.restore()
     }
 
     /**
@@ -155,7 +199,7 @@ object JarvisTiles {
         val scale = (b.width / 231f).coerceIn(.45f, 1.5f)
         val font = if (fontScale.isFinite()) fontScale.coerceIn(.85f, 2f) else 1f
         val pitch = maxOf(48f * maxOf(1f, font), 56f * scale)
-        val inset = 12f * scale
+        val inset = 6f * scale
         return List(count) { i ->
             val top = b.top + 20f * scale + i * pitch
             Box(b.left + inset, top, b.right - inset, top + pitch)
@@ -177,19 +221,22 @@ object JarvisTiles {
             val active = i == selected || i == pressed
             val surface = if (active) JarvisDesign.Styles.buttonActive else JarvisDesign.Styles.button
             JarvisNeon.component(p, row.left, row.top, row.right, row.bottom, surface, active, centerLift = active)
-            val icon = minOf(24f * font, row.height * .52f)
-            val ix = if (labelled) row.left + 9f + icon / 2f else row.centerX
+            val icon = minOf(22f * font, row.width * .21f, row.height * .48f)
+            val ix = if (labelled) row.left + 5f + icon / 2f else row.centerX
             val color = if (it.target == "system") Colors.violetSoft else if (active) Colors.cyan else Colors.cyanSoft
+            JarvisSceneFills.halo(p, ix, row.centerY, icon * .54f, color, if (active) .12f else .07f)
             if (!JarvisRailIcons.draw(p, it.target, ix - icon / 2f, row.centerY - icon / 2f, icon, color))
                 ContinuumIcons.draw(p, it.icon, ix, row.centerY, icon, Fill.Solid(color))
             if (labelled) {
-                val tx = ix + icon / 2f + 9f
-                val room = row.right - tx - 5f
+                val tx = ix + icon / 2f + 5f
+                val room = row.right - tx - 3f
                 val lines = railLines(p, it.label, style, room)
-                val lineH = maxOf(p.capHeight(style) + 4f, style.size * 1.1f)
+                val widest = lines.maxByOrNull { line -> p.measureText(line, style) }.orEmpty()
+                val fitted = JarvisShellRenderer.shrinkToFit(p, widest, style, room - .5f, minScale = .88f)
+                val lineH = maxOf(p.capHeight(fitted) + 4f, fitted.size * 1.1f)
                 lines.forEachIndexed { j, line ->
-                    val y = row.centerY + p.capHeight(style) / 2f + (j - (lines.size - 1) / 2f) * lineH
-                    p.drawText(JarvisShellRenderer.fit(p, line, style, room), tx, y, style,
+                    val y = row.centerY + p.capHeight(fitted) / 2f + (j - (lines.size - 1) / 2f) * lineH
+                    p.drawText(JarvisShellRenderer.fit(p, line, fitted, room), tx, y, fitted,
                         Fill.Solid(Colors.text))
                 }
             }

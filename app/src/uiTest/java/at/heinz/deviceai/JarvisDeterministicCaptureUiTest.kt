@@ -4,12 +4,15 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.os.Looper
 import android.provider.Settings
 import android.view.View
+import android.widget.ScrollView
 import at.heinz.deviceai.avatar.JarvisHoloAvatar
 import at.heinz.deviceai.cockpit.JarvisAvatarSlot
 import at.heinz.deviceai.ui.ContinuumHomeView
+import at.heinz.deviceai.ui.JarvisShellLayout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertSame
@@ -51,7 +54,8 @@ class JarvisDeterministicCaptureUiTest {
             .invoke(null, value)
     }
 
-    private fun capture(label: String, width: Int, height: Int, fontScale: Float = 1f) {
+    private fun capture(label: String, width: Int, height: Int, fontScale: Float = 1f,
+                        captureScrollDetails: Boolean = false, captureLiveTab: Boolean = false) {
         val app = RuntimeEnvironment.getApplication()
         val resolver = app.contentResolver
         val previousScale = durationScale()
@@ -107,42 +111,99 @@ class JarvisDeterministicCaptureUiTest {
             assertEquals(0f, home.rotationX, 0f)
             assertEquals(0f, home.rotationY, 0f)
 
-            println("CAPTURE_PHASE draw")
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            try {
-                root.draw(Canvas(bitmap))
-                assertTrue("Native Canvas capture must contain rendered content",
-                    (0 until width step 64).flatMap { x -> (0 until height step 64).map { y -> bitmap.getPixel(x, y) } }
-                        .toSet().size > 8)
-                System.getProperty("continuum.ui.evidenceDir")?.let { directory ->
-                    val dir = File(directory).apply { mkdirs() }
-                    val image = File(dir, "$label.png")
-                    image.outputStream().use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
-                    val density = home.resources.displayMetrics.density
-                    fun bounds(view: View) = JSONObject().put("left", view.left).put("top", view.top)
-                        .put("right", view.right).put("bottom", view.bottom)
-                    val metadata = JSONObject()
-                        .put("schema_version", 1)
-                        .put("fidelity", "android_activity_host_native_canvas_api28_explicit_2d_head")
-                        .put("source_commit", System.getenv("CONTINUUM_CAPTURE_SOURCE_COMMIT") ?: JSONObject.NULL)
-                        .put("pixel_width", width).put("pixel_height", height)
-                        .put("viewport_width_dp", (width / density).toDouble())
-                        .put("viewport_height_dp", (height / density).toDouble())
-                        .put("density", density.toDouble()).put("font_scale", fontScale.toDouble())
-                        .put("animation_duration_scale", 0)
-                        .put("head_mode", "existing_2d_renderer_explicitly_selected")
-                        .put("native_filament_verified", false).put("physical_device_verified", false)
-                        .put("data_policy", "isolated empty test storage; real application startup; no invented status data")
-                        .put("bounds_coordinate_space", "each View relative to its real parent; no synthetic composition")
-                        .put("home_bounds", bounds(home)).put("avatar_bounds", bounds(avatar))
-                        .put("shell_bounds", bounds(home.jarvisShell))
-                        .put("png_sha256", MessageDigest.getInstance("SHA-256").digest(image.readBytes())
-                            .joinToString("") { "%02x".format(it) })
-                    File(dir, "$label.json").writeText(metadata.toString(2))
-                    println("CAPTURE_IMAGE ${image.absolutePath}")
+            val viewport = field(activity, "dashboardSection") as ScrollView
+            val density = home.resources.displayMetrics.density
+            val shell = requireNotNull(home.jarvisShell.currentShell())
+            val status = requireNotNull(shell[JarvisShellLayout.Slot.STATUS])
+            val detailSlots = listOf(JarvisShellLayout.Slot.ROW_AGENTS, JarvisShellLayout.Slot.ROW_TASKS,
+                JarvisShellLayout.Slot.ROW_MEMORY, JarvisShellLayout.Slot.ROW_MODEL)
+            fun slotBounds() = JSONObject().also { result ->
+                for (slot in listOf(JarvisShellLayout.Slot.TILES, JarvisShellLayout.Slot.STATUS) + detailSlots) {
+                    val box = shell[slot] ?: continue
+                    result.put(slot.name, JSONObject().put("left", box.left.toDouble()).put("top", box.top.toDouble())
+                        .put("right", box.right.toDouble()).put("bottom", box.bottom.toDouble()))
                 }
-            } finally {
-                bitmap.recycle()
+            }
+            fun contentRect(box: JarvisShellLayout.Box) = Rect((box.left * density).toInt(),
+                (box.top * density).toInt(), (box.right * density).toInt(), (box.bottom * density).toInt()).also {
+                viewport.offsetDescendantRectToMyCoords(home, it)
+            }
+            fun render(frameLabel: String, state: String) {
+                println("CAPTURE_PHASE draw $state")
+                val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                try {
+                    root.draw(Canvas(bitmap))
+                    assertTrue("Native Canvas capture must contain rendered content",
+                        (0 until width step 64).flatMap { x -> (0 until height step 64).map { y -> bitmap.getPixel(x, y) } }
+                            .toSet().size > 8)
+                    System.getProperty("continuum.ui.evidenceDir")?.let { directory ->
+                        val dir = File(directory).apply { mkdirs() }
+                        val image = File(dir, "$frameLabel.png")
+                        image.outputStream().use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
+                        fun bounds(view: View) = JSONObject().put("left", view.left).put("top", view.top)
+                            .put("right", view.right).put("bottom", view.bottom)
+                        val metadata = JSONObject()
+                            .put("schema_version", 1)
+                            .put("fidelity", "android_activity_host_native_canvas_api28_explicit_2d_head")
+                            .put("source_commit", System.getenv("CONTINUUM_CAPTURE_SOURCE_COMMIT") ?: JSONObject.NULL)
+                            .put("capture_state", state)
+                            .put("pixel_width", width).put("pixel_height", height)
+                            .put("viewport_width_dp", (width / density).toDouble())
+                            .put("viewport_height_dp", (height / density).toDouble())
+                            .put("density", density.toDouble()).put("font_scale", fontScale.toDouble())
+                            .put("has_feature_tiles", shell.hasFeatureTiles)
+                            .put("live_panel_expanded", home.findViewWithTag<View>("jarvis-live-panel")?.isShown == true)
+                            .put("animation_duration_scale", 0)
+                            .put("head_mode", "existing_2d_renderer_explicitly_selected")
+                            .put("native_filament_verified", false).put("physical_device_verified", false)
+                            .put("data_policy", "isolated empty test storage; real application startup; no invented status data")
+                            .put("bounds_coordinate_space", "each View relative to its real parent; no synthetic composition")
+                            .put("home_bounds", bounds(home)).put("avatar_bounds", bounds(avatar))
+                            .put("shell_bounds", bounds(home.jarvisShell))
+                            .put("scroll_viewport_bounds", bounds(viewport))
+                            .put("scroll_x_px", viewport.scrollX).put("scroll_y_px", viewport.scrollY)
+                            .put("scroll_y_dp", (viewport.scrollY / density).toDouble())
+                            .put("scroll_content_height_px", viewport.getChildAt(0).height)
+                            .put("slot_bounds_coordinate_space", "actual shell-local dp")
+                            .put("slot_bounds_dp", slotBounds())
+                            .put("png_sha256", MessageDigest.getInstance("SHA-256").digest(image.readBytes())
+                                .joinToString("") { "%02x".format(it) })
+                        File(dir, "$frameLabel.json").writeText(metadata.toString(2))
+                        println("CAPTURE_IMAGE ${image.absolutePath}")
+                    }
+                } finally {
+                    bitmap.recycle()
+                }
+            }
+            render(label, "home")
+            if (captureLiveTab) {
+                val tab = requireNotNull(home.findViewWithTag<View>("jarvis-live-tab:system"))
+                JarvisHomeTestRoutes.touch(root, tab)
+                shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+                render("$label-live-system", "live_system")
+                val panel = requireNotNull(home.findViewWithTag<View>("jarvis-live-panel"))
+                assertTrue("The capture shows the real expanded drawer", panel.isShown && panel.alpha == 1f)
+                JarvisHomeTestRoutes.touch(root, tab)
+                shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+            }
+            if (captureScrollDetails) {
+                assertTrue("All profiles keep their reference cards", shell.hasFeatureTiles)
+                assertEquals("The fixed Home rail is removed", null, shell[JarvisShellLayout.Slot.NAV_RAIL])
+                assertTrue("Cards precede their status strip",
+                    requireNotNull(shell[JarvisShellLayout.Slot.TILES]).bottom <= status.top)
+                detailSlots.forEach { slot ->
+                    assertTrue("$slot follows the complete home", requireNotNull(shell[slot]).top > status.bottom)
+                }
+                val firstDetail = detailSlots.map { requireNotNull(shell[it]) }.minBy { it.top }
+                viewport.scrollTo(0, (contentRect(firstDetail).top - 12f * density).toInt().coerceAtLeast(0))
+                shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+                assertTrue("Real dashboard scrolling must reveal the diagnostics", viewport.scrollY > 0)
+                detailSlots.forEach { slot ->
+                    val bounds = contentRect(requireNotNull(shell[slot]))
+                    assertTrue("$slot is visible in the scrolled dashboard",
+                        bounds.top >= viewport.scrollY && bounds.bottom <= viewport.scrollY + viewport.height)
+                }
+                render("$label-scrolled-diagnostics", "scrolled_diagnostics")
             }
         } finally {
             println("CAPTURE_PHASE cleanup")
@@ -167,6 +228,11 @@ class JarvisDeterministicCaptureUiTest {
     fun mediumMultiwindow() = capture("activity-medium-700x720", 700, 720)
     @Test @Config(qualifiers = "w832dp-h748dp-land-mdpi")
     fun mediumNearSquare() = capture("activity-medium-832x748", 832, 748)
+    @Test @Config(qualifiers = "w692dp-h768dp-port-xhdpi")
+    fun ownerFoldAspect() = capture("activity-fold-1384x1536", 1384, 1536,
+        captureScrollDetails = true, captureLiveTab = true)
+    @Test @Config(qualifiers = "w864dp-h1536dp-port-mdpi")
+    fun referenceTallAspect() = capture("activity-reference-864x1536", 864, 1536)
     @Test @Config(qualifiers = "w960dp-h640dp-land-mdpi")
     fun expandedCanonical() = capture("activity-expanded-960x640", 960, 640)
     @Test @Config(qualifiers = "w1280dp-h800dp-land-mdpi")

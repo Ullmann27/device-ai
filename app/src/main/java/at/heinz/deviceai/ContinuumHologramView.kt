@@ -72,6 +72,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var assetGeneration = 0
     private var native3dFailed = false
     private var native3dDrawn = false
+    private val presentationBudgetObservers = linkedSetOf<() -> Unit>()
     private var avatarSeconds = 0f
     private val avatarInvalidationPending = java.util.concurrent.atomic.AtomicBoolean(false)
     private val avatarInvalidation = Runnable {
@@ -715,6 +716,13 @@ class ContinuumHologramView @JvmOverloads constructor(
         !animationsEnabled || !ValueAnimator.areAnimatorsEnabled(),
         currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING)
 
+    internal fun presentationRenderBudget() = renderBudget()
+
+    internal fun observePresentationBudget(listener: () -> Unit): AutoCloseable {
+        presentationBudgetObservers.add(listener)
+        return AutoCloseable { presentationBudgetObservers.remove(listener) }
+    }
+
     /** No private content. Owner can inspect this by long-pressing the hologram. */
     /** Read only on the Android UI thread. Compares scheduled callbacks and real View draws. */
     data class MotionSample(val callbackCount: Long, val drawCount: Long, val phase: Float, val reason: String)
@@ -752,6 +760,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         renderBudget().let { cockpitSequence?.setFrameBudget(it.frameDelayMillis, it.reducedBloom) }
         update3d()
         native3d?.setQuality(renderBudget().reducedBloom)
+        presentationBudgetObservers.toList().forEach { it() }
         invalidate()
         scheduleFrame()
     }
@@ -805,14 +814,24 @@ class ContinuumHologramView @JvmOverloads constructor(
         updateOrbTarget(width, height)
         if (headEnabled && cockpitHeadBounds != null) {
             val t = if (canAnimateFrame()) avatarSeconds else 0f
-            at.heinz.deviceai.ui.JarvisEnergyFlows.draw(painter, width / density, height / density, t, energy)
+            val stageWidth = width / density
+            val stageHeight = height / density
+            val flowTop = if (cockpit) stageHeight * .62f else 0f
+            val flowCanvas = canvas.save()
+            if (cockpit) {
+                canvas.clipRect(0f, flowTop, stageWidth, stageHeight)
+                canvas.translate(0f, flowTop)
+            }
+            at.heinz.deviceai.ui.JarvisEnergyFlows.draw(painter, stageWidth, stageHeight - flowTop, t, energy)
+            canvas.restoreToCount(flowCanvas)
             updateAuraFraming()
             val auraCanvas = canvas.save()
             transformHeadEntrance(canvas, density)
             at.heinz.deviceai.ui.JarvisHeadAura.draw(painter, at.heinz.deviceai.ui.JarvisShellLayout.Box(
                 headDrawBounds.left / density, headDrawBounds.top / density, headDrawBounds.right / density,
                 headDrawBounds.bottom / density), auraAnchorEffective, t,
-                headScale = auraScale, activityEnergy = energy, speechLevel = audioEnergy)
+                headScale = auraScale, activityEnergy = energy, speechLevel = audioEnergy,
+                referenceMode = cockpit)
             canvas.restoreToCount(auraCanvas)
         }
         if (headEnabled) {

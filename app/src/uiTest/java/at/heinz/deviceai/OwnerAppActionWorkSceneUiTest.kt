@@ -134,9 +134,9 @@ class OwnerAppActionWorkSceneUiTest {
     }
     private fun submit(a: AgentActivity, request: String, chat: Boolean = true) {
         if (chat) {
-            val target = a.window.decorView.findViewWithTag<View>("jarvis-tile:chat")
+            val target = JarvisHomeTestRoutes.destination(a.window.decorView, "chat")
             assertNotNull(target)
-            assertTrue(target.performClick())
+            JarvisHomeTestRoutes.touch(a.window.decorView, target)
         }
         (get(a, "input") as EditText).setText(request)
         assertTrue((get(a, "sendButton") as Button).performClick())

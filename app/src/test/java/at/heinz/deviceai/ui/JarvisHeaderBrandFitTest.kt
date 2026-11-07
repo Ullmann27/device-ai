@@ -5,7 +5,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Owner Fold7 report 06.11.2026: the white „Device AI“ brand sat right at the top screen edge. The three brand lines
+ * Owner Fold7 report 06.11.2026: the white „Device AI“ brand sat right at the top screen edge. The two brand lines
  * have a fixed type size while the brand box scales with the screen, so on the Fold7 inner screen the centred block
  * was centred with almost no room above it. Every brand line keeps visible breathing room inside the brand box.
  */
@@ -49,7 +49,7 @@ class JarvisHeaderBrandFitTest {
             val p = Tracking()
             JarvisCockpitGridContent.draw(p, Slot.TOP_BAR, grid.areas.getValue(JarvisCockpitGrid.Area.HEADER), grid,
                 ContinuumDashboardState(), 0L)
-            for (prefix in listOf("Device", "Contin", "Deine")) {
+            for (prefix in listOf("Device", "Contin")) {
                 val (text, top, baseline) = p.lines.first { it.first.startsWith(prefix) }
                 assertTrue("$text top $top needs breathing room below ${brand.top} at ${w}x$h", top >= brand.top + 5f)
                 assertTrue("$text baseline $baseline below the brand box ${brand.bottom} at ${w}x$h", baseline <= brand.bottom)
@@ -65,32 +65,21 @@ class JarvisHeaderBrandFitTest {
         JarvisCockpitGridContent.draw(p, Slot.TOP_BAR, grid.areas.getValue(JarvisCockpitGrid.Area.HEADER), grid,
             ContinuumDashboardState(), 0L)
         val texts = p.lines.map { it.first }
-        for (full in listOf("Device AI", "Continuum", "Deine KI-Steuerzentrale")) {
+        for (full in listOf("Device AI", "Continuum")) {
             assertTrue("$full must not be shortened: $texts", full in texts)
             assertTrue("$full ends inside the brand box", p.rights.getValue(full) <= brand.right + .5f)
         }
+        assertTrue("Reference has two brand lines", "Deine KI-Steuerzentrale" !in texts)
     }
 
-    /**
-     * Host capture 06.11.2026: at 07:4x the header clock read „07:…“ – proportional Montserrat digits made the time
-     * wider than its box and the generic ellipsis cut the minutes. A time is never shortened: every time of day is
-     * drawn in full and stays inside the clock box.
-     */
-    @Test fun theClockShowsEveryTimeInFullAndStaysInItsBox() {
-        val grid = JarvisCockpitGrid.create(884f, 760f)
-        val clock = grid.areas.getValue(JarvisCockpitGrid.Area.DEVICE_STATUS)
-        for ((hour, minute) in listOf(7 to 44, 20 to 48, 0 to 0, 11 to 11)) {
-            val now = java.util.Calendar.getInstance().apply {
-                set(2026, java.util.Calendar.NOVEMBER, 6, hour, minute, 0); set(java.util.Calendar.MILLISECOND, 0)
-            }.timeInMillis
-            val expected = "%02d:%02d".format(hour, minute)
-            val p = Tracking(measureFactor = .62f)
-            JarvisCockpitGridContent.draw(p, Slot.TOP_BAR, grid.areas.getValue(JarvisCockpitGrid.Area.HEADER), grid,
-                ContinuumDashboardState(), now)
-            val texts = p.lines.map { it.first }
-            assertTrue("$expected must be drawn in full: $texts", expected in texts)
-            assertTrue("$expected ends inside the clock box", p.rights.getValue(expected) <= clock.right + .5f)
-            assertTrue("the date is not shortened either: $texts", texts.none { it.startsWith("Fr") && it.endsWith("…") })
+    @Test fun systemClockIsNotDuplicatedInTheReferenceHeader() {
+        for ((w, h) in listOf(692f to 700f, 832f to 748f, 884f to 760f, 1536f to 1024f)) {
+            val grid = JarvisCockpitGrid.create(w, h)
+            assertTrue(JarvisCockpitGrid.Area.DEVICE_STATUS !in grid.areas)
+            val p = Tracking()
+            JarvisCockpitGridContent.draw(p, Slot.TOP_BAR, grid[JarvisCockpitGrid.Area.HEADER], grid,
+                ContinuumDashboardState(), 0L)
+            assertTrue(p.lines.none { it.first.matches(Regex("[0-9]{2}:[0-9]{2}")) })
         }
     }
 }

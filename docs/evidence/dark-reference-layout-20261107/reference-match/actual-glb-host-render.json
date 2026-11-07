@@ -1,0 +1,41 @@
+{
+  "evidenceClass": "ACTUAL_GLB_HOST_RENDER_NOT_DEVICE",
+  "model": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+  "modelSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "backend": "Blender 4.3.2 Cycles CPU",
+  "samples": 12,
+  "resolution": [
+    512,
+    704
+  ],
+  "viewTransform": "Standard",
+  "exposure": 0,
+  "camera": {
+    "projection": "ORTHOGRAPHIC",
+    "orthoScaleMetres": 0.44,
+    "targetCanonicalMetres": [
+      0,
+      0.232,
+      0.06
+    ],
+    "quarterYawDegrees": -24,
+    "distanceMetres": 0.95,
+    "elevationVectorComponent": 0.018
+  },
+  "glow": "Blender compositor Fog Glow, threshold .80; Android bloom must be tested independently",
+  "portraitBackdrop": false,
+  "frames": [
+    {
+      "file": "front.png",
+      "pose": "front",
+      "shapeWeights": {},
+      "jawPitchDegrees": 0,
+      "jawControl": "object:Jaw",
+      "sha256": "4e011bc0c79903e3c084fce79285dd3499ae89024243d0aab0d76666ae5be9a9"
+    }
+  ],
+  "limitations": [
+    "Host render is not Android/Filament GPU output",
+    "Not owner likeness acceptance"
+  ]
+}

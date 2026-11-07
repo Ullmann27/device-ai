@@ -58,13 +58,14 @@ class JarvisLivingSceneTest {
         }
     }
 
-    @Test fun headStageAnchorsTheFaceRightOfTheDialogue() {
+    @Test fun headStageCentersTheFaceAboveTheCompactBadge() {
         for ((w, h) in listOf(840f to 560f, 884f to 760f, 960f to 640f, 1536f to 1024f)) {
             val shell = JarvisShellLayout.create(w, h)
             val stage = requireNotNull(shell.headStage); val dialog = requireNotNull(shell[JarvisShellLayout.Slot.DIALOG])
-            // Measured on the anchored GLB render: ear at ≈ anchor − 0.185 of the stage width.
-            val earX = stage.left + stage.width * (shell.headAnchorX - .185f)
-            assertTrue("$w×$h ear right of the dialogue", earX >= dialog.right - stage.width * .01f)
+            assertEquals("$w×$h centered head composition", .5f, shell.headAnchorX, 0f)
+            assertTrue("$w×$h badge stays inside the head stage", stage.contains(dialog))
+            assertTrue("$w×$h badge occupies the lower stage", dialog.top >= stage.top + stage.height * .65f)
+            assertTrue("$w×$h compact usable badge", dialog.height in 48f..56.01f)
             assertEquals(1f, JarvisHeadAura.fadeAlpha(stage.width * shell.headAnchorX, stage.height * .4f, stage.width, stage.height), 0f)
         }
     }

@@ -1,0 +1,40 @@
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType(Test).configureEach {
+            beforeTest { d -> println("CASE ${d.className}.${d.name}") }
+            filter {
+                includeTestsMatching 'at.heinz.deviceai.ui.Jarvis*'
+                includeTestsMatching 'at.heinz.deviceai.ui.LocalModelStatusPresentationTest'
+                includeTestsMatching 'at.heinz.deviceai.avatar3d.AvatarFramingTest'
+                includeTestsMatching 'at.heinz.deviceai.JarvisReferenceHitTargetsUiTest'
+                includeTestsMatching 'at.heinz.deviceai.JarvisLiveTabsUiTest'
+                includeTestsMatching 'at.heinz.deviceai.JarvisWorkWindowHostViewportUiTest'
+                includeTestsMatching 'at.heinz.deviceai.JarvisShellMotionUiTest'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumHologramMotionUiTest'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumTelemetryMotionUiTest'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.phoneHasRealDestinationsAndReadableLargeType'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.foldPortraitHasRealDestinationsAndReadableLargeType'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.shortenedWideWindowKeepsEveryCardScrollableAndConversationRailClickable'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.shellAppearanceChooserReusesTheLiveAvatarAndPersistsTheChoice'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.presentationControlsReuseTheLiveAvatarAndPersistCompactChoice'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.foldPortraitCompactChooserRestoresExact2dGeometry'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.foldLandscapeCompactChooserRestoresExact2dGeometry'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.wideLargeTypeSystemTabReachesAppearanceWithoutChangingPresentation'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.everyCentreNavigationUnfoldsTheSameWorkWindowAndTheAvatarLooksAtIt'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.openWindowClearsTheDeckAndItReturnsAfterClosing'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.rotatingOrFoldingWithAnOpenWindowAlwaysGivesTheDeckBack'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumWorkWindowScrollUiTest'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumDocumentSceneUiTest.theDocumentArrivesAsItsOwnPageOnTheTrailAndJarvisLooksAtIt'
+                includeTestsMatching 'at.heinz.deviceai.FullStageMemoryReviewUiTest.actualWindowCloseAndSystemTapRemainUsableAboveTheScene'
+                includeTestsMatching 'at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult'
+                includeTestsMatching 'at.heinz.deviceai.OwnerAppPlanningContextUiTest.planningPromptContainsCurrentRequestOnceAndOnlyEarlierTurnsAsHistory'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumVisualEvidenceUiTest.fold7Inner'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumVisualEvidenceUiTest.fold7CoverAndPhone'
+                includeTestsMatching 'at.heinz.deviceai.JarvisDeterministicCaptureUiTest.ownerFoldAspect'
+                includeTestsMatching 'at.heinz.deviceai.JarvisDeterministicCaptureUiTest.referenceTallAspect'
+                includeTestsMatching 'at.heinz.deviceai.JarvisDeterministicCaptureUiTest.compact412'
+                includeTestsMatching 'at.heinz.deviceai.JarvisDeterministicCaptureUiTest.mediumFont200'
+            }
+        }
+    }
+}
