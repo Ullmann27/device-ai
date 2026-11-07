@@ -146,7 +146,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$FROZEN_SOURCE_SHA"
           mkdir -p "$RUNNER_TEMP/code48-unsigned"
           cp "$apk" "$RUNNER_TEMP/code48-unsigned/Continuum-Lokal-Code48-UNSIGNED.apk"
-          sha256sum "$RUNNER_TEMP/code48-unsigned/Continuum-Lokal-Code48-UNSIGNED.apk" > "$RUNNER_TEMP/code48-unsigned/SHA256SUMS.txt"
+          (cd "$RUNNER_TEMP/code48-unsigned" && sha256sum Continuum-Lokal-Code48-UNSIGNED.apk > SHA256SUMS.txt)
           printf 'source_sha=%s\nversion_code=48\nversion_name=0.3.47\npackage=%s\nowner_signed=FALSE\nstatus=QA_UNSIGNED_NOT_INSTALLABLE\nfold7_test=NOT_RUN\n' \
             "$FROZEN_SOURCE_SHA" "$OWNER_PACKAGE" > "$RUNNER_TEMP/code48-unsigned/BUILD-INFO.txt"
       - name: Upload unsigned candidate for separate original signing
@@ -226,7 +226,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$FROZEN_SOURCE_SHA"
           unsigned="$RUNNER_TEMP/unsigned/Continuum-Lokal-Code48-UNSIGNED.apk"
           test -s "$unsigned"
-          (cd "$RUNNER_TEMP/unsigned" && sha256sum -c SHA256SUMS.txt)
+          (cd "$RUNNER_TEMP/unsigned" && grep -Eq "^[0-9a-f]{64}  Continuum-Lokal-Code48-UNSIGNED\\.apk$" SHA256SUMS.txt && sha256sum -c SHA256SUMS.txt)
           tools="$ANDROID_HOME/build-tools/35.0.0"
           "$tools/aapt2" dump badging "$unsigned" |
             grep -F "package: name='at.heinz.deviceai.continuumlocal' versionCode='48' versionName='0.3.47'"
