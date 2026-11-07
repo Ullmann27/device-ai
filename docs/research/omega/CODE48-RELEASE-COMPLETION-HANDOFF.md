@@ -57,3 +57,18 @@ Experiments: EXP-02/07 test evidence, EXP-04 learning quality, EXP-11 event path
 EXP-12 interruption/recovery. Existing consent, ToolGate, model/holdout and
 owner-memory boundaries remain intact. No PCM/signer format migration.
 Rollback: omit this continuation or revert its scoped commits; keep PR591/592.
+
+## First actual gate — 6032da0d
+
+The real SDK/Gradle focused run compiled production and all test sources and
+executed ten classes: 77 tests, 75 passed, two failed, zero skips. All source
+recovery, journal, credential and existing learning regressions passed. Both
+Brain tests failed before event assertions because the paused Choreographer had
+not delivered the new dialog's actual attachment traversal. The fixture now
+advances the real main looper by two frames after navigation, as the existing
+Activity fixtures do. No production method, event, clock, attachment or renderer
+is replaced. The attached/shown, exact-event, native-pixel, close and fresh-event
+assertions remain unchanged. Repeat status: NOT_RUN at this checkpoint.
+
+Raw log, complete JUnit XMLs, receipt and summary:
+`docs/evidence/code48-release-completion-20261107/focused-red-6032/`.

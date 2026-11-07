@@ -51,7 +51,8 @@ class ContinuumBrainHypothesisUiTest {
     private fun open(f: Fixture): Brain {
         AgentActivity::class.java.getDeclaredMethod("navigateDashboardTargetNow", String::class.java)
             .apply { isAccessible = true }.invoke(f.activity, "brain")
-        idle()
+        // Deliver actual dialog traversal.
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(32))
         val dialog = field(f.activity, "centerDialog") as AlertDialog
         val scene = field(f.activity, "brainScene") as ContinuumBrainSceneView
         val window = requireNotNull(dialog.window)
