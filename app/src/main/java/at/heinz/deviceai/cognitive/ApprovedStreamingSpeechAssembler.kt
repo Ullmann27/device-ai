@@ -38,6 +38,8 @@ internal class ApprovedStreamingSpeechAssembler(
         val raw = buffer.toString().trim()
         val insideCode = fenced != null || inlineCode
         resetBufferOnly()
+        fenced = null
+        inlineCode = false
         if (raw.isEmpty() || insideCode) return null
         return candidate(raw)
     }
