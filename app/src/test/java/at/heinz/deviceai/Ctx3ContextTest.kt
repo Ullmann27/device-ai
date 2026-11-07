@@ -32,6 +32,28 @@ class Ctx3ContextTest {
   c.decide("Fokus App",listOf(a,b),"v1")
   assertTrue(c.decide("Sie meine ich nicht",listOf(a,b),"v1") is Ctx3Decision.Clarify)
  }
+ @Test fun orderedAlternativesResolvePreviousAndOtherWithoutGuessing() {
+  val c=Ctx3Context()
+  assertTrue(c.decide("Fokus App und Liste App",listOf(a,b),"v1") is Ctx3Decision.Query)
+  c.observe(setOf("s2"),listOf(a,b))
+  val previous=c.decide("Nimm die davor",listOf(a,b),"v1") as Ctx3Decision.Query
+  assertEquals(setOf("s1"),previous.sourceIds)
+  assertTrue(previous.query.contains("Fokus App"))
+  val other=c.decide("Nimm das andere",listOf(a,b),"v1") as Ctx3Decision.Query
+  assertEquals(setOf("s2"),other.sourceIds)
+  assertTrue(other.query.contains("Liste App"))
+ }
+
+ @Test fun orderedSelectorsFailClosedWithoutEstablishedUniquePosition() {
+  val c=Ctx3Context()
+  c.decide("Fokus App und Liste App",listOf(a,b),"v1")
+  assertTrue(c.decide("Nimm die davor",listOf(a,b),"v1") is Ctx3Decision.Clarify)
+  assertTrue(c.decide("Nimm das andere",listOf(a,b),"v1") is Ctx3Decision.Clarify)
+  val first=c.decide("Nimm die erste Variante",listOf(a,b),"v1") as Ctx3Decision.Query
+  assertEquals(setOf("s1"),first.sourceIds)
+  val second=c.decide("Nimm die zweite Option",listOf(a,b),"v1") as Ctx3Decision.Query
+  assertEquals(setOf("s2"),second.sourceIds)
+ }
  @Test fun factualGenderIsNotWidenedByAnAttributeFact() {
   val e=Ctx3EntityIndex.fromFacts(mapOf("s1" to "Anna ist meine Schwester.","s2" to "Anna wohnt in Wels."))
   assertEquals(setOf("sie"),e.single().pronouns)
