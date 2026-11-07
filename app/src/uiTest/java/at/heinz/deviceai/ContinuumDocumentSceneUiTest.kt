@@ -170,6 +170,47 @@ class ContinuumDocumentSceneUiTest {
         assertTrue("chat names the same facts", chatTexts(activity).any { it.startsWith("PDF gelesen: 3 Seiten") && it.contains("${text.length} Zeichen von Seite 1–3") })
     }
 
+    @Test fun typedPdfRequestReturnsFromChatIntoAnimatedDocumentWork() = withCockpit { activity, root ->
+        AgentActivity::class.java.getDeclaredMethod("focusChatComposer")
+            .apply { isAccessible = true }.invoke(activity)
+        measure(root); advance(32L)
+        assertFalse((field(activity, "homeView") as ContinuumHomeView).isShown)
+        (field(activity, "input") as EditText).setText("Öffne bitte die PDF.")
+        AgentActivity::class.java.getDeclaredMethod("sendCurrentInput", Boolean::class.javaPrimitiveType)
+            .apply { isAccessible = true }.invoke(activity, false)
+        val picker = shadowOf(activity).nextStartedActivityForResult
+        assertEquals(Intent.ACTION_OPEN_DOCUMENT, picker.intent.action)
+        val page = examplePage(200, 280)
+        val doc = PdfDocumentIntake.Document("Chat-Auftrag.pdf", 4096L, 1, page,
+            "Der gelesene Inhalt bleibt gleich.", PdfDocumentIntake.TextState.EXTRACTED, 1)
+        AgentActivity::class.java.getDeclaredMethod("presentDocumentScene", PdfDocumentIntake.Document::class.java)
+            .apply { isAccessible = true }.invoke(activity, doc)
+        measure(root); advance(80L); draw(root)
+        val window = descendants(root).firstOrNull { it.tag == "jarvis-work-window" && it.isShown }
+        assertNotNull("A typed PDF task must open its animated work window", window)
+        assertEquals("OPENING", field(window!!, "phase").toString())
+        capture(root, "code48-pdf-chat-opening")
+        advance(1700L); measure(root); draw(root)
+        assertEquals("OPEN", field(window, "phase").toString())
+        val image = descendants(window).filterIsInstance<ImageView>().single { it.tag == "jarvis-document-page" }
+        assertSame(page, (image.drawable as BitmapDrawable).bitmap)
+        assertTrue(chatTexts(activity).any { it.contains("Chat-Auftrag.pdf") })
+        assertEquals(false, field(activity, "busy"))
+        capture(root, "code48-pdf-chat-open")
+    }
+
+    @Test fun documentWorkWaitsForFreshShellGeometry() = withCockpit { activity, root ->
+        val home = field(activity, "homeView") as ContinuumHomeView
+        home.jarvisShell.compactPresentation = !home.jarvisShell.compactPresentation
+        val doc = PdfDocumentIntake.Document("Neue-Ansicht.pdf", 4096L, 1, examplePage(200, 280),
+            "Geometrie vor dem ersten neuen Bild.", PdfDocumentIntake.TextState.EXTRACTED, 1)
+        AgentActivity::class.java.getDeclaredMethod("presentDocumentScene", PdfDocumentIntake.Document::class.java)
+            .apply { isAccessible = true }.invoke(activity, doc)
+        measure(root); advance(80L); draw(root)
+        assertTrue("A pending layout must not discard the document scene",
+            descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+    }
+
     @Test fun withoutTextTheSceneSaysWhyAndShowsNoInventedExcerpt() = withCockpit { activity, root ->
         val page = Bitmap.createBitmap(200, 280, Bitmap.Config.ARGB_8888).apply { eraseColor(Color.WHITE) }
         AgentActivity::class.java.getDeclaredField("pendingDocumentDraft").apply { isAccessible = true }.set(activity, true)
