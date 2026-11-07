@@ -1,0 +1,45 @@
+name: Continuum Code48 - trusted original signer retry
+
+on:
+  push:
+    branches:
+      - codex/continuum-code48-github-owner-20261107
+    paths:
+      - .github/workflows/continuum-code48-sign-retry.yml
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: continuum-code48-sign-only
+  cancel-in-progress: false
+
+jobs:
+  release-original-signed:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/codex/continuum-code48-github-owner-20261107'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    environment: continuum-original-signing
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Prepare official Android 35 signing tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"
+      - name: Validate previous green QA and release with original signature
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
+          ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}
+        run: |
+          set -euo pipefail
+          bash scripts/continuum-code48-github-signer.sh
