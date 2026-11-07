@@ -47,11 +47,9 @@ internal class Ctx3DiscourseState(private val maxFrames: Int = 8) {
     }
 
     fun resolve(input: String, currentFocus: List<Ctx3Entity>, entities: List<Ctx3Entity>): Binding? {
-        val normalized = input.lowercase()
-            .replace('ä', 'a').replace('ö', 'o').replace('ü', 'u').replace('ß', 's')
-            .replace(Regex("[^\p{L}\p{N}]+"), " ").trim()
+        val normalized = normalize(input)
 
-        val alternativeCue = Regex("\b(?:das andere|die andere|den anderen|dem anderen|das zweite|die zweite)\b")
+        val alternativeCue = Regex("""\b(?:das andere|die andere|den anderen|dem anderen|das zweite|die zweite)\b""")
             .containsMatchIn(normalized)
         if (alternativeCue) {
             val selected = selectedAlternativeId ?: currentFocus.singleOrNull()?.id ?: return null
@@ -62,8 +60,8 @@ internal class Ctx3DiscourseState(private val maxFrames: Int = 8) {
             return null
         }
 
-        val previousCue = Regex("\b(?:davor|vorhin|zuvor|vorher)\b").containsMatchIn(normalized)
-        val returnCue = Regex("\b(?:wieder zuruck|zuruck dazu|zuruck dorthin|nochmal dazu|noch einmal dazu)\b")
+        val previousCue = Regex("""\b(?:davor|vorhin|zuvor|vorher)\b""").containsMatchIn(normalized)
+        val returnCue = Regex("""\b(?:wieder zuruck|zuruck dazu|zuruck dorthin|nochmal dazu|noch einmal dazu)\b""")
             .containsMatchIn(normalized)
         if (!previousCue && !returnCue) return null
 
@@ -72,24 +70,31 @@ internal class Ctx3DiscourseState(private val maxFrames: Int = 8) {
             frame.entityIds.isNotEmpty() && frame.entityIds.toSet() != currentIds
         } ?: return null
         if (previous.entityIds.size != 1) return null
+
         val target = entities.firstOrNull { it.id == previous.entityIds.single() } ?: return null
         return Binding(target, if (returnCue) Cue.RETURN_PREVIOUS else Cue.PREVIOUS)
     }
 
     fun hasDiscourseCue(input: String): Boolean {
-        val normalized = input.lowercase()
-            .replace('ä', 'a').replace('ö', 'o').replace('ü', 'u').replace('ß', 's')
-            .replace(Regex("[^\p{L}\p{N}]+"), " ").trim()
-        return Regex("\b(?:davor|vorhin|zuvor|vorher|das andere|die andere|den anderen|dem anderen|das zweite|die zweite|wieder zuruck|zuruck dazu|zuruck dorthin|nochmal dazu|noch einmal dazu)\b")
-            .containsMatchIn(normalized)
+        val normalized = normalize(input)
+        return Regex(
+            """\b(?:davor|vorhin|zuvor|vorher|das andere|die andere|den anderen|dem anderen|das zweite|die zweite|wieder zuruck|zuruck dazu|zuruck dorthin|nochmal dazu|noch einmal dazu)\b"""
+        ).containsMatchIn(normalized)
     }
 
     internal fun frameCount(): Int = frames.size
 
+    private fun normalize(input: String): String =
+        input.lowercase()
+            .replace("ä", "a")
+            .replace("ö", "o")
+            .replace("ü", "u")
+            .replace("ß", "ss")
+            .replace(Regex("""[^\p{L}\p{N}]+"""), " ")
+            .trim()
+
     private fun remember(ids: List<String>) {
-        if (frames.lastOrNull()?.entityIds == ids) {
-            frames.removeLast()
-        }
+        if (frames.lastOrNull()?.entityIds == ids) frames.removeLast()
         frames.addLast(Frame(ids, turn))
         while (frames.size > maxFrames) frames.removeFirst()
     }
