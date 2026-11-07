@@ -34,6 +34,7 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
     @Volatile private var motionAllowed = true
     private val headIcons = at.heinz.deviceai.avatar.AvatarIconBurst()
     private val fileTunnel = at.heinz.deviceai.ui.video3.Video3FileTunnel()
+    internal var onMemoryScene: ((Long) -> Boolean)? = null
     private val headRegion = android.graphics.RectF()
     private var frameDelayMillis = 16L
     private var reducedBloom = false
@@ -135,7 +136,10 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
             event is CockpitAnimationEvent.RecallHits) {
             if (event.turnId == MEMORY_TURN) {
                 if (event is CockpitAnimationEvent.DocumentLearned && event.entriesAdded > 0 ||
-                    event is CockpitAnimationEvent.RecallHits && event.count > 0) fileTunnel.start(clock())
+                    event is CockpitAnimationEvent.RecallHits && event.count > 0) {
+                    val now = clock()
+                    if (onMemoryScene?.invoke(now) != true) fileTunnel.start(now)
+                }
                 memoryRenderer.render(event)
                 kick()
             }

@@ -15,7 +15,7 @@ import kotlin.math.sin
  * PR487@85a0562d document-flight geometry.
  * Transparent, bounded, caller-clocked overlay.
  */
-internal class Video3WarpScene(seed: Int = 12) {
+internal class Video3WarpScene(seed: Int = 12, private val paper: Boolean = false) {
     private val burstAngle = FloatArray(BURST_CARDS) { 2f * PI.toFloat() * (it + unit(seed + it)) / BURST_CARDS }
     private val burstX = FloatArray(BURST_CARDS) { cos(burstAngle[it]) }
     private val burstY = FloatArray(BURST_CARDS) { sin(burstAngle[it]) }
@@ -32,15 +32,18 @@ internal class Video3WarpScene(seed: Int = 12) {
     private val streakSegs = FloatArray(STREAKS * 4)
     private val docLineSegs = FloatArray(12)
     private val cyan = Fill.Solid(Colors.cyan)
-    private val folderFill = Fill.Solid(Argb.withAlpha(Colors.warn, .55f))
-    private val cardFill = Fill.Solid(Argb.withAlpha(Colors.backgroundBottom, .7f))
+    private val folderFill = Fill.Solid(Argb.withAlpha(Colors.warn, if (paper) 1f else .55f))
+    private val cardFill = Fill.Solid(if (paper) Colors.activeWhite else Argb.withAlpha(Colors.backgroundBottom, .7f))
+    private val ink = Fill.Solid(if (paper) Colors.backgroundBottom else Colors.cyan)
     private val rimFill = Fill.Solid(Colors.rim)
 
-    fun render(p: ContinuumPainter, width: Float, height: Float, seconds: Float, glow: Boolean): Boolean {
+    fun render(p: ContinuumPainter, width: Float, height: Float, seconds: Float, glow: Boolean,
+               opacity: Float = 1f): Boolean {
         if (!validDimension(width) || !validDimension(height) || !seconds.isFinite() ||
-            seconds < 0f || seconds >= DURATION_S
+            seconds < 0f || seconds >= DURATION_S || !opacity.isFinite()
         ) return false
-        val alpha = min(seconds / FADE_IN_S, (DURATION_S - seconds) / FADE_OUT_S).coerceIn(0f, 1f)
+        val alpha = min(seconds / FADE_IN_S, (DURATION_S - seconds) / FADE_OUT_S).coerceIn(0f, 1f) *
+            opacity.coerceIn(0f, 1f)
         if (alpha <= 0f) return true
         val cx = width / 2f
         val cy = height / 2f
@@ -109,7 +112,8 @@ internal class Video3WarpScene(seed: Int = 12) {
                     CARD_W * k * .5f, cyan, .06f * fadeIn)
                 p.setAdditive(false)
             }
-            drawCard(p, width, height, x, y, CARD_W * k, CARD_H * k, fadeIn, tunnelFolder[i], glow)
+            val size = if (paper) 2.4f else 1f
+            drawCard(p, width, height, x, y, CARD_W * k * size, CARD_H * k * size, fadeIn, tunnelFolder[i], glow)
         }
     }
 
@@ -135,7 +139,7 @@ internal class Video3WarpScene(seed: Int = 12) {
                 docLineSegs[n++] = r - w * (if (k == 2) .4f else .16f)
                 docLineSegs[n++] = ly
             }
-            p.strokeSegments(docLineSegs, n, max(1f, w * .025f), cyan, .6f * alpha)
+            p.strokeSegments(docLineSegs, n, max(1f, w * .025f), ink, .6f * alpha)
         }
         if (glow) {
             p.setAdditive(true)

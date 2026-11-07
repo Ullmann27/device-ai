@@ -84,6 +84,12 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val painter = AndroidContinuumPainter(context.assets)
     private val taskEffects = ContinuumTaskEffects()
     private var cockpitSequence: JarvisSequenceView? = null
+    internal val memoryScene = at.heinz.deviceai.ui.video3.Video3MemoryScene()
+    private val memoryTunnel = at.heinz.deviceai.ui.video3.Video3WarpScene(paper = true)
+    internal var memorySceneHostReady: (() -> Boolean)? = null
+    internal var memorySceneInvalidation: (() -> Unit)? = null
+    internal val memorySceneOrbBounds = RectF()
+    private val memoryBackdrop = at.heinz.deviceai.ui.Fill.Solid(at.heinz.deviceai.ui.JarvisDesign.Colors.background)
     private var cockpitHeadBounds: Rect? = null
     private var cockpitOrbBounds: Rect? = null
     private val headDrawBounds = RectF()
@@ -146,6 +152,13 @@ class ContinuumHologramView @JvmOverloads constructor(
             // The motion clock advances independently of a completed Canvas draw.
             // Invalidation requests only rendering, not the next state transition.
             advanceFrame()
+            if (memoryScene.isActive) {
+                if (memorySceneHostReady?.invoke() != true) clearMemoryScene()
+                else {
+                    if (memoryScene.sample(memorySceneTime()) == null) clearMemoryScene()
+                    memorySceneInvalidation?.invoke()
+                }
+            }
             postInvalidateOnAnimation()
             scheduleFrame()
         }
@@ -195,9 +208,18 @@ class ContinuumHologramView @JvmOverloads constructor(
     fun setCockpitSequence(sequence: JarvisSequenceView?) {
         if (cockpitSequence === sequence) return
         require(sequence?.parent == null) { "Cockpit sequence already belongs to a view" }
-        cockpitSequence?.let { old -> old.clear(); removeView(old) }
+        clearMemoryScene()
+        cockpitSequence?.let { old -> old.onMemoryScene = null; old.clear(); removeView(old) }
         cockpitSequence = sequence
         sequence?.let {
+            it.onMemoryScene = { now ->
+                if (canAnimateFrame() && memorySceneHostReady?.invoke() == true) {
+                    memoryScene.start(now)
+                    memorySceneInvalidation?.invoke()
+                    invalidate()
+                    true
+                } else false
+            }
             it.setMotionAllowed(canAnimateFrame())
             val budget = renderBudget()
             it.setFrameBudget(budget.frameDelayMillis, budget.reducedBloom)
@@ -558,9 +580,69 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     private fun clearTaskEffects() {
         taskEffects.clear()
+        clearMemoryScene()
         cockpitSequence?.clear()
         resetAvatarEntrance()
         taskEffectsNotBeforeMs = SystemClock.uptimeMillis()
+    }
+
+    private fun memorySceneTime() = cockpitSequence?.clock?.invoke() ?: SystemClock.uptimeMillis()
+
+    internal fun clearMemoryScene() {
+        val active = memoryScene.isActive
+        memoryScene.clear()
+        memorySceneOrbBounds.setEmpty()
+        if (active) { memorySceneInvalidation?.invoke(); invalidate() }
+    }
+
+    internal fun drawMemoryScene(canvas: Canvas, widthPx: Int, heightPx: Int, viewportTopPx: Int = 0) {
+        if (!canAnimateFrame() || memorySceneHostReady?.invoke() != true) {
+            clearMemoryScene(); return
+        }
+        val scene = memoryScene.sample(memorySceneTime()) ?: run { clearMemoryScene(); return }
+        val d = resources.displayMetrics.density
+        val w = widthPx / d; val h = heightPx / d
+        if (w <= 0f || h <= 0f) { clearMemoryScene(); return }
+        val saved = canvas.save()
+        try {
+        canvas.scale(d, d)
+        painter.begin(canvas)
+        painter.fillRect(0f, 0f, w, h, memoryBackdrop, scene.opacity)
+        if (scene.elapsedMs < 3_000L) {
+            memoryTunnel.render(painter, w, h, scene.elapsedMs / 1000f, !renderBudget().reducedBloom,
+                (1f - scene.orbProgress) * scene.opacity)
+        }
+        if (scene.orbProgress > 0f) {
+            resolveOrbBounds(width, height)
+            val grow = scene.orbProgress * scene.orbProgress * (3f - 2f * scene.orbProgress)
+            val back = scene.returnProgress * scene.returnProgress * (3f - 2f * scene.returnProgress)
+            val largeW = minOf(w * .86f, h * 1.15f) * (.12f + .88f * grow)
+            val largeH = minOf(h * .92f, w * 1.04f) * (.12f + .88f * grow)
+            val startL = w * .52f - largeW / 2f
+            val startT = h * .43f - largeH * renderer.geometry.centerY
+            fun mix(a: Float, b: Float) = a + (b - a) * back
+            val l = mix(startL, (left + orbDrawBounds.left) / d)
+            val t = mix(startT, (top + orbDrawBounds.top - viewportTopPx) / d)
+            val ow = mix(largeW, orbDrawBounds.width() / d)
+            val oh = mix(largeH, orbDrawBounds.height() / d)
+            memorySceneOrbBounds.set(l * d, t * d + viewportTopPx, (l + ow) * d, (t + oh) * d + viewportTopPx)
+            val orb = if (grow < 1f) canvas.saveLayerAlpha(l, t, l + ow, t + oh, (grow * 255f).toInt())
+                else canvas.save()
+            val originalEnergy = renderFrame.energy
+            try {
+            canvas.clipRect(l, t, l + ow, t + oh)
+            canvas.translate(l, t)
+            renderer.layout(ow, oh)
+            val now = memorySceneTime()
+            renderFrame.energy = maxOf(originalEnergy, cockpitSequence?.effects?.orbPulseLevel(now) ?: 0f,
+                cockpitSequence?.effects?.recallBrightness(now) ?: 0f)
+            renderer.draw(painter, renderFrame, transparentBackdrop = true)
+            } finally {
+                renderFrame.energy = originalEnergy
+                canvas.restoreToCount(orb)
+            }
+        }
+        } finally { canvas.restoreToCount(saved) }
     }
 
     override fun onAttachedToWindow() {
@@ -717,6 +799,8 @@ class ContinuumHologramView @JvmOverloads constructor(
         renderFrame.energy = energy
         renderFrame.audio = audioEnergy
         val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
+        if (memoryScene.isActive && (memorySceneHostReady?.invoke() != true ||
+                memoryScene.sample(memorySceneTime()) == null)) clearMemoryScene()
         resolveHeadBounds(width, height)
         updateOrbTarget(width, height)
         if (headEnabled && cockpitHeadBounds != null) {
@@ -751,7 +835,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                     pose, avatarSeconds, canAnimateFrame())
                 canvas.restoreToCount(headCanvas)
             }
-            if (native3dDrawn || cockpit || cockpitOrbBounds != null) {
+            if (!memoryScene.isActive && (native3dDrawn || cockpit || cockpitOrbBounds != null)) {
                 // Same original orb, same actual app state and speech frame; no second animation loop.
                 resolveOrbBounds(width, height)
                 val orbWidth = orbDrawBounds.width() / density
@@ -784,7 +868,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             if (cockpit && cockpitHeadBounds == null) painter.drawText("JARVIS", headDrawBounds.centerX() / density,
                 if (cockpitHeadBounds != null) (headDrawBounds.top + headDrawBounds.height() * .96f) / density else height / density * .96f,
                 avatarBrandStyle, avatarBrandFill, TextAlign.CENTER)
-        } else {
+        } else if (!memoryScene.isActive) {
             renderer.layout(width / density, height / density)
             renderer.draw(painter, renderFrame)
         }

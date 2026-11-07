@@ -80,6 +80,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     fun setForegroundActive(active: Boolean) {
         if (foregroundActive && !active) presentationGeneration++
         foregroundActive = active
+        if (!active) hologram.clearMemoryScene()
         updateWaveAnimation()
     }
     internal fun isPresentationActive() = foregroundActive && isAttachedToWindow &&
@@ -135,6 +136,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onDetachedFromWindow() {
         presentationGeneration++
+        hologram.clearMemoryScene()
         presentationPrefs.unregisterOnSharedPreferenceChangeListener(presentationListener)
         removeCallbacks(presentationUpdate)
         slotRegistration?.close(); slotRegistration = null
@@ -149,12 +151,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     override fun onWindowVisibilityChanged(visibility: Int) {
         super.onWindowVisibilityChanged(visibility)
         if (visibility != View.VISIBLE) presentationGeneration++
+        if (visibility != View.VISIBLE) hologram.clearMemoryScene()
         updateWaveAnimation()
     }
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
         if (!isShown) presentationGeneration++
+        if (!isShown) hologram.clearMemoryScene()
         updateWaveAnimation()
     }
     var state: ContinuumDashboardState = ContinuumDashboardState()
@@ -186,6 +190,33 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             translationZ = density * .5f
         }
         override fun onDraw(canvas: Canvas) { jarvisShell.drawForeground(canvas) }
+    }
+    private val memoryFullStage = object : View(context) {
+        private val visibleViewport = android.graphics.Rect()
+        init {
+            tag = "continuum-memory-fullstage"
+            isClickable = false
+            isFocusable = false
+            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+            translationZ = density * .25f
+        }
+        override fun onDraw(canvas: Canvas) {
+            if (!hologram.memoryScene.isActive) return
+            if (!getLocalVisibleRect(visibleViewport)) { hologram.clearMemoryScene(); return }
+            val save = canvas.save()
+            shellActions.values.forEach { view ->
+                if (view.isShown) canvas.clipOutRect(view.left, view.top, view.right, view.bottom)
+            }
+            if (shellRailScroll.isShown) {
+                canvas.clipOutRect(shellRailScroll.left, shellRailScroll.top, shellRailScroll.right, shellRailScroll.bottom)
+            }
+            val top = visibleViewport.top
+            val h = minOf(visibleViewport.height(), (jarvisShell.viewportHeightDp * density).toInt())
+            canvas.clipRect(0, top, width, top + h)
+            canvas.translate(0f, top.toFloat())
+            hologram.drawMemoryScene(canvas, width, h, top)
+            canvas.restoreToCount(save)
+        }
     }
     var jarvisShellStage = presentationPrefs.getBoolean("jarvis-shell", false)
         private set
@@ -277,7 +308,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     /** Children added by a docked renderer (attach): sized to the slot; the renderer positions them via x/y. */
     private fun isForeign(child: View) = child !== jarvisShell && child !== hologram && child !== avatarPlaceholder &&
-        child !== shellForeground && child !== transientCard && child !== shellRailScroll && child !in views.values && child !in shellActions.values
+        child !== shellForeground && child !== memoryFullStage && child !== transientCard && child !== shellRailScroll && child !in views.values && child !in shellActions.values
 
     private fun layoutForeign() {
         val w = avatarRect.width(); val h = avatarRect.height()
@@ -309,6 +340,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     override fun onViewRemoved(child: View?) {
         super.onViewRemoved(child)
         if (child === hologram) {
+            hologram.clearMemoryScene()
             child.visibility = View.VISIBLE
             hologram.setCockpitRegions(null, null)
             applyAvatarSlot()
@@ -368,8 +400,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         addView(jarvisShell, 0)
         addView(hologram)
         addView(avatarPlaceholder)
+        addView(memoryFullStage)
         addView(shellForeground)
         addView(shellRailScroll)
+        hologram.memorySceneHostReady = {
+            jarvisShellStage && hologram.parent === this && isPresentationActive() &&
+                memoryFullStage.isShown && width > 0 && height > 0
+        }
+        hologram.memorySceneInvalidation = { memoryFullStage.invalidate() }
         applyShellStage()
     }
 
@@ -503,6 +541,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             else maxOf(contentHeight, suggestedMinimumHeight)
         jarvisShell.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         shellForeground.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
+        memoryFullStage.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         if (jarvisShellStage) shellGeometry(width, h)?.let(::measureShellActions)
         updateCockpitRegions(width, h)
         if (jarvisShellStage && hologram.parent === this) shellAvatarBox(width, h)?.let { box ->
@@ -805,6 +844,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         jarvisShell.layout(0, 0, r - l, b - t)
         shellForeground.layout(0, 0, r - l, b - t)
+        memoryFullStage.layout(0, 0, r - l, b - t)
         updateCockpitRegions(r - l, b - t)
         if (jarvisShellStage) {
             publishUserCardBounds(r - l, b - t)
