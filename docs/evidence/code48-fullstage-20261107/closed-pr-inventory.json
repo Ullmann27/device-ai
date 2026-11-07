@@ -1,0 +1,866 @@
+[
+  {
+    "number": 581,
+    "title": "fix: preserve bounded owner responses and explicit generation completion",
+    "head": "bee3e6cc13ac93dc3f11ce31eeaa25c21a9d396d",
+    "ref": "codex/continuum47-response-completion-20261106",
+    "merged": true,
+    "closed_at": "2026-11-06T20:50:17Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/581"
+  },
+  {
+    "number": 580,
+    "title": "Code47: complete dialogue restore, bounded continuation and truthful identity",
+    "head": "0297839df939e4914162b36b7a649ae8b3ea319e",
+    "ref": "codex/continuum47-context-identity-20261106",
+    "merged": true,
+    "closed_at": "2026-11-06T20:50:17Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/580"
+  },
+  {
+    "number": 579,
+    "title": "[WIP] Code47: natural app actions and visible work episodes",
+    "head": "594a238d87118d41e565d3138d1edcb0262a98c8",
+    "ref": "codex/continuum47-natural-actions-20261106",
+    "merged": true,
+    "closed_at": "2026-11-06T20:50:17Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/579"
+  },
+  {
+    "number": 504,
+    "title": "[SHELVED] Inworld text mentor — avatar and memory need a different integration",
+    "head": "370871b3aa48fdf94ecc2eaa5b11e9ac1cc91959",
+    "ref": "feat/continuum-inworld-router-20261104",
+    "merged": false,
+    "closed_at": "2026-11-04T15:48:10Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/504"
+  },
+  {
+    "number": 480,
+    "title": "WIP (untested): M5 tool-output cap 3900 + B5 S4 fix, B5 tests re-enabled",
+    "head": "b49fb847cd3491c8b86fa45449a72a2b72847009",
+    "ref": "integration/continuum-grok1-m5-b5-untested-20261104",
+    "merged": true,
+    "closed_at": "2026-11-04T08:03:00Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/480"
+  },
+  {
+    "number": 468,
+    "title": "test(jarvis): seal idle replay and explicit hinge-region validation",
+    "head": "4cb7cfeab0326418e30272ec7d5b3df6b3da36cc",
+    "ref": "codex/jarvis-reference-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T22:26:00Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/468"
+  },
+  {
+    "number": 465,
+    "title": "MΩ-1: bounded work-event overlays and local UI feedback",
+    "head": "ca429fd81007473f1b0c0e66be6112f78f652613",
+    "ref": "codex/momega1-effects-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T22:11:08Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/465"
+  },
+  {
+    "number": 464,
+    "title": "test(jarvis): independently verify coupled mouth geometry and packaged rig",
+    "head": "0d53e401cc471f5e822362033d01e7a7d7b24cd9",
+    "ref": "codex/jarvis-reference-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T21:55:52Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/464"
+  },
+  {
+    "number": 463,
+    "title": "feat(independence): standalone local CCC1 coding service and owner inbox",
+    "head": "d84689868631466640893c9ee9a0374db857a8b8",
+    "ref": "codex/independence-service-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T22:11:45Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/463"
+  },
+  {
+    "number": 462,
+    "title": "test: independent final local coding service and MCP acceptance",
+    "head": "05469fb700613db0bd6c6c81c66e81b8ee04340f",
+    "ref": "codex/independence-final-qa-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T22:27:48Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/462"
+  },
+  {
+    "number": 461,
+    "title": "test: preserve failed single S01 native service attempt and independent audit",
+    "head": "3af0d308d5362ca0ff3dddd17717ebefb9c9eb6a",
+    "ref": "codex/independence-native-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T22:34:51Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/461"
+  },
+  {
+    "number": 460,
+    "title": "Independent MCP acceptance: 32 host checks and canonical read-path counterexamples",
+    "head": "e4c6213fbf31e33e929d1a4bf685a5c26b6a1424",
+    "ref": "codex/independence-mcp-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T22:11:45Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/460"
+  },
+  {
+    "number": 459,
+    "title": "feat: authenticated read-only observer for local Continuum coding service",
+    "head": "2424a35e2b6a3ed7198d6938c8e5b1b6303a7fc7",
+    "ref": "codex/independence-mcp-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T22:11:45Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/459"
+  },
+  {
+    "number": 458,
+    "title": "test(independence): prove lifecycle and repair orphan-descendant admission gap",
+    "head": "6407f8eafe1240cef9b55913c7a31d260e4a4d9b",
+    "ref": "codex/independence-service-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T22:19:04Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/458"
+  },
+  {
+    "number": 457,
+    "title": "JARVIS: connect actual worker and tool events to the live avatar",
+    "head": "ae221eccde625dc30200db1bc51290d98249a1ee",
+    "ref": "codex/momega1-effects-caller-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T22:11:08Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/457"
+  },
+  {
+    "number": 453,
+    "title": "JARVIS: keep the actual avatar visible during chat and work",
+    "head": "ab55e440860f5b8d04d9f44f714809e13292af76",
+    "ref": "codex/momega1-visible-avatar-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T21:59:15Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/453"
+  },
+  {
+    "number": 452,
+    "title": "MΩ-1: independent 7B runtime and resource challenge",
+    "head": "ea3bb013997d8f208c0995a7e440feba0370b450",
+    "ref": "codex/momega1-challenger-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T22:11:09Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/452"
+  },
+  {
+    "number": 451,
+    "title": "Genesis review continuation: verified handoff and reporter fixes",
+    "head": "f1e41a113cfd2d413e0f5d77be368c40aff0305e",
+    "ref": "codex/genesis-workspace-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T21:17:51Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/451"
+  },
+  {
+    "number": 450,
+    "title": "BOT GENESIS: independent caller review — source repair accepted",
+    "head": "d02a30971a266b4759280bfb2f6e684aa700872a",
+    "ref": "codex/genesis-caller-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T21:16:53Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/450"
+  },
+  {
+    "number": 449,
+    "title": "MΩ-1: bound exact 7B host model candidate before admission",
+    "head": "5333a10d796ab9bb386922f68d9bb7786279971d",
+    "ref": "codex/momega1-runtime-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T22:11:09Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/449"
+  },
+  {
+    "number": 448,
+    "title": "BOT GENESIS A: private bot conversation frames on the existing local runtime",
+    "head": "a9acd007bc7bd485b2bda3c2db2dc2e57791af73",
+    "ref": "codex/genesis-brain-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T21:09:02Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/448"
+  },
+  {
+    "number": 447,
+    "title": "JARVIS: connect spoken setup and camera gaze tests",
+    "head": "02cba4a3e6717669f7921990ec662dfcd7876a5c",
+    "ref": "codex/momega1-spoken-guide-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T21:25:47Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/447"
+  },
+  {
+    "number": 446,
+    "title": "Independent final QA: bot identity, speech boundaries and Android regression gate",
+    "head": "260c1cd6a3dff19aa2cf2f19213d676e3cf27bf7",
+    "ref": "codex/genesis-ui-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T21:31:55Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/446"
+  },
+  {
+    "number": 444,
+    "title": "Genesis: bind persisted bots to separate canonical builder/verifier execution and Echo reports",
+    "head": "8f08e261c59e8fe9ae19240b085326fec0f86b3d",
+    "ref": "codex/genesis-workspaces-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T21:17:51Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/444"
+  },
+  {
+    "number": 442,
+    "title": "MΩ-1: owner-pinned local model drafts through existing approvals",
+    "head": "393dd28584ef0055bb8e293320e8528ef1c81446",
+    "ref": "codex/momega1-android-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:53:06Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/442"
+  },
+  {
+    "number": 441,
+    "title": "Genesis: independent workspace, budget and reporter verification",
+    "head": "0e149355c85756e4d05ce61a6a120c37ef5fa38a",
+    "ref": "codex/genesis-workspace-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:52:00Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/441"
+  },
+  {
+    "number": 440,
+    "title": "BOT GENESIS: reproduce exact approved native runtime and restore verified paths",
+    "head": "a957380a8ab8052988eaba0875150a4246fc5abc",
+    "ref": "codex/genesis-native-runtime-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T21:09:02Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/440"
+  },
+  {
+    "number": 437,
+    "title": "[DRAFT] Bot Genesis: independent repaired roster and lifecycle acceptance",
+    "head": "38427adcfc04ed0748f7172725c0cece3d11586e",
+    "ref": "codex/genesis-ui-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:52:00Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/437"
+  },
+  {
+    "number": 436,
+    "title": "MΩ-1: honest voice readiness and foreground camera gaze",
+    "head": "c659f739ade8ffe93df7ee4266f1d5490946f4c8",
+    "ref": "codex/momega1-readiness-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T21:25:47Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/436"
+  },
+  {
+    "number": 434,
+    "title": "test(jarvis): freeze independent preserved-design and reference-motion acceptance",
+    "head": "f1d78c737de966fc6959b3d6b9ebd5b4b3583547",
+    "ref": "codex/jarvis-reference-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:53:06Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/434"
+  },
+  {
+    "number": 432,
+    "title": "Avatar: bounded live motion, verified mouth rig and reference-render evidence",
+    "head": "26555aa6c59fdd4dd2e190defcdf49b983305555",
+    "ref": "codex/jarvis-reference-ui-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:53:06Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/432"
+  },
+  {
+    "number": 430,
+    "title": "[DRAFT] MΩ-1 independent actual model host evidence and reviewed pair",
+    "head": "88a6e2fb1ce52ab090a8c6b13de7cd9bad4a7aaf",
+    "ref": "codex/momega1-challenger-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:21:18Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/430"
+  },
+  {
+    "number": 429,
+    "title": "Synapse sources: isolation constraints and equal-budget experiment protocol",
+    "head": "ad5a5d586230f3d658baaf486cfd15da40d20338",
+    "ref": "codex/synapse-sources-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:14:36Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/429"
+  },
+  {
+    "number": 427,
+    "title": "MΩ-1: admit exact independently reviewed Qwen CPU runtime pair",
+    "head": "c78cf8a551a4d12f5dbb27ec3641fd4ae9e6f76d",
+    "ref": "codex/momega1-runtime-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:21:17Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/427"
+  },
+  {
+    "number": 426,
+    "title": "Synapse S1: persistent Chief identities, private context and safe coordinator registration",
+    "head": "e12c28f51c0f91f2dfb37dd4bc34d372358c8ab5",
+    "ref": "codex/synapse-registry-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:18:00Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/426"
+  },
+  {
+    "number": 425,
+    "title": "fix(chief): deliver shutdown reports and bound cancelled worker retention",
+    "head": "bc5ae9950771c9d99f2c5e19ad9413db1b1836f2",
+    "ref": "codex/synapse-lifecycle-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:14:36Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/425"
+  },
+  {
+    "number": 424,
+    "title": "test(synapse): independent lifecycle and bounded queue repair accepted",
+    "head": "573525c9ff6bcb63ecefd22fa184070e0d1442ff",
+    "ref": "codex/synapse-lifecycle-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:16:14Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/424"
+  },
+  {
+    "number": 422,
+    "title": "Synapse: independent registry review accepted with persistence and storage measurements",
+    "head": "3c155aaee9e6bf4744ccf3d54fb7e8d2366fa1cb",
+    "ref": "codex/synapse-registry-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T20:20:33Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/422"
+  },
+  {
+    "number": 420,
+    "title": "MΩ-1 independent workspace review: canonical claim and mailbox slice accepted",
+    "head": "794e745d8afc28db0e190e2de8a4f18ca53f82d9",
+    "ref": "codex/momega1-workspace-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:52:36Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/420"
+  },
+  {
+    "number": 418,
+    "title": "MΩ1 independent reviews: memory, lineage, recall control and inference accounting",
+    "head": "7282bd8991b0a7b051f8035464b0e641b69db2c3",
+    "ref": "codex/momega1-memory-review-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:38:53Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/418"
+  },
+  {
+    "number": 417,
+    "title": "MΩ-1: bind isolated host workspaces to canonical CCC1 jobs",
+    "head": "29c3d24ff4c81aa618259d430a1189165c612f02",
+    "ref": "codex/momega1-workspaces-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:52:36Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/417"
+  },
+  {
+    "number": 416,
+    "title": "[DRAFT] MΩ-1 independent runtime and reliability challenger",
+    "head": "4ca4fdb7cc8ef82906d5ef8595984e0940ff2d9e",
+    "ref": "codex/momega1-challenger-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:31:56Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/416"
+  },
+  {
+    "number": 415,
+    "title": "WIP MΩ-1: proof-gated durable technical experience recall",
+    "head": "cf0f6a4276bfb9b4f61ab599f4ddbdf63e9f63bb",
+    "ref": "codex/momega1-memory-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:38:53Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/415"
+  },
+  {
+    "number": 414,
+    "title": "MΩ-1: full typed-task review and target-bound cancellation",
+    "head": "037370f0544d3ed2ee7686082c41c78046daa64d",
+    "ref": "codex/momega1-android-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:38:53Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/414"
+  },
+  {
+    "number": 412,
+    "title": "MΩ-1 ALPHA: bind local coding to pinned isolated runtime",
+    "head": "a4fc5450022e90d59ddec8fdeda68b1abe1b03fd",
+    "ref": "codex/momega1-runtime-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:31:56Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/412"
+  },
+  {
+    "number": 411,
+    "title": "MΩ-1 canonical CCC1 independent feedback and strict admission",
+    "head": "76f713b26b4b56b9cea26464f2a4a9d150eb4a1b",
+    "ref": "codex/momega1-loop-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:34:20Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/411"
+  },
+  {
+    "number": 409,
+    "title": "test(ui): independent ZETA responsive holdouts and native evidence",
+    "head": "aa81b281f9e3a754c04a603fcac95617574f900c",
+    "ref": "codex/zeta-challenger-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:14:22Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/409"
+  },
+  {
+    "number": 408,
+    "title": "ZETA: adaptives natives Cockpit mit lesbaren Live-Karten",
+    "head": "7a4cc6893df297d3a87882420e326a37a131be7f",
+    "ref": "codex/zeta-ui-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:14:22Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/408"
+  },
+  {
+    "number": 407,
+    "title": "test(delta): independent frozen CCC1 verifier challenges",
+    "head": "eb7804f7f57d18d85875282d2bf420f6151c5bc9",
+    "ref": "codex/delta-challenger-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T18:55:57Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/407"
+  },
+  {
+    "number": 406,
+    "title": "test(gamma): independent frozen replay challenger B",
+    "head": "7f7475bec89cea167168bac99322d8ade21255f3",
+    "ref": "codex/gamma-challenger-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T18:45:15Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/406"
+  },
+  {
+    "number": 405,
+    "title": "[DRAFT] EPSILON B: optional native 3D runtime and independent rig validation",
+    "head": "7caef9b624beebdb78c8c081a17f4978461ae496",
+    "ref": "codex/epsilon-android-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:14:22Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/405"
+  },
+  {
+    "number": 404,
+    "title": "Living JARVIS3D: preserve owner-derived reference and start mesh validation",
+    "head": "0862cfc864e6ad8657243c0717a6e0cb2ea3c051",
+    "ref": "codex/living-jarvis-3d-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T19:33:13Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/404"
+  },
+  {
+    "number": 403,
+    "title": "Quality: independent acceptance, final host gates and unsigned code40 APK",
+    "head": "ba4a5436c6fa80dce21b858e2850c7e6be554c1f",
+    "ref": "codex/team-05-quality-breakthrough-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T18:47:22Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/403"
+  },
+  {
+    "number": 401,
+    "title": "[DRAFT] Research: bind extractive claims to their supplying evidence",
+    "head": "e9bcdeb46afeb2f17fecd7959b222a999bd672cd",
+    "ref": "codex/breakthrough-research-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T18:52:47Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/401"
+  },
+  {
+    "number": 400,
+    "title": "fix(ccc1): retain executor coverage and reject contradictory receipt claims",
+    "head": "f487aed26a695d336e9a89bae98386fed5c449cb",
+    "ref": "codex/breakthrough-autonomy-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T18:55:56Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/400"
+  },
+  {
+    "number": 399,
+    "title": "[DRAFT] memory: reuse bounded replay selections after full integrity checks",
+    "head": "d1b39228922eb1be8d3a05e14618341aeb2ab2a5",
+    "ref": "codex/breakthrough-memory-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T18:45:15Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/399"
+  },
+  {
+    "number": 398,
+    "title": "fix(cognition): preserve owner quantity withdrawals in model context",
+    "head": "410320c6eeaa83943ecfff81578f568e2ecd84b1",
+    "ref": "codex/breakthrough-cognition-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T18:55:56Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/398"
+  },
+  {
+    "number": 388,
+    "title": "[DRAFT] Continuum Lokal Code40 candidate: Grok 1951 integration + B5, safe Chief workers and Android chat status",
+    "head": "c986aa5ac771b13c886bfb880cf906454775d898",
+    "ref": "fix/continuum-code40-chief-apk-gates-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T23:37:09Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/388"
+  },
+  {
+    "number": 376,
+    "title": "Chief-Muster 6/7: Routinen-Kern + Agent-Mailbox (RED→GREEN, JUnit 1861/0)",
+    "head": "b56bb1e347521ce8f00982c4116dd29e31c18cfe",
+    "ref": "continuum/grok1-routines-a2a-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T15:48:52Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/376"
+  },
+  {
+    "number": 365,
+    "title": "fix(fold7): do not mistake 'Speichere nicht' for device storage query",
+    "head": "3c5b7ffedc99cd562ec5d61eb7d3c0acb4fc747e",
+    "ref": "repair/continuum-fold7-storage-verb-routing-20261103",
+    "merged": true,
+    "closed_at": "2026-11-03T23:37:08Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/365"
+  },
+  {
+    "number": 332,
+    "title": "[V37][DRAFT] Fold7-Fix: Erklärungsrouting, Gemma-Antwortprüfung und saubere Webquellen",
+    "head": "27bdfccda95d870b70529f93716a861c054eebb5",
+    "ref": "research/continuum-live-dialog-routing-20261101",
+    "merged": true,
+    "closed_at": "2026-11-01T16:24:47Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/332"
+  },
+  {
+    "number": 317,
+    "title": "[Sol #314] CDX1-Qualitätsgate, Besitzer-/Zeitbelege und geprüfte Quellenzitate",
+    "head": "3d7cdaa4d2925c6578c67705135816663eb6ffcc",
+    "ref": "research/continuum-sol-cdx1-evidence-20261101",
+    "merged": true,
+    "closed_at": "2026-11-01T09:50:40Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/317"
+  },
+  {
+    "number": 304,
+    "title": "[M8 / Coding Agent] Fehlende Risikoanalyse-Werkzeuge in den realen Agentenlauf integrieren",
+    "head": "21fa973298f6abbb492a4796b483618d68795de0",
+    "ref": "feature/continuum-v35-agent-risk-tools-20261031",
+    "merged": true,
+    "closed_at": "2026-10-31T19:59:49Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/304"
+  },
+  {
+    "number": 303,
+    "title": "[M11 Research] Beweisgraph verwirft negierte Beziehungen und falsche Namens-Teilmatches",
+    "head": "f5d455178e9488385a3a8ece05a019e1c27e970a",
+    "ref": "research/continuum-m11-evidence-negation-gate-20261031",
+    "merged": true,
+    "closed_at": "2026-10-31T19:51:23Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/303"
+  },
+  {
+    "number": 302,
+    "title": "[P0] Continuum 0.3.34 / Code 35: Webfix, Forschungsdiagnostik und originalsignierbare Releasekette",
+    "head": "0dbc48bf1c8f622ea1cda09eaf7d998cfffd2e95",
+    "ref": "release/continuum-v35-integrated-20261031",
+    "merged": true,
+    "closed_at": "2026-10-31T20:08:26Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/302"
+  },
+  {
+    "number": 300,
+    "title": "[P0 / v34] Webforschung: Anbieter-Ausfall darf Themen nicht dauerhaft erledigen",
+    "head": "d76b5b34a8e4e2eb745bbdd3fc8184885decd6cc",
+    "ref": "fix/continuum-v34-web-discovery-retry-20261031",
+    "merged": true,
+    "closed_at": "2026-10-31T20:08:27Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/300"
+  },
+  {
+    "number": 298,
+    "title": "[DRAFT] GitLab !299 → GitHub: Web-Lernfortschritt, Quellen-Deduplizierung und M4/M5/M6/M8-Fixes",
+    "head": "bc54577cd2be1ad072a7bc3b258c73bfebcee5b7",
+    "ref": "integration/gitlab-mr299-web-study-20261031",
+    "merged": true,
+    "closed_at": "2026-10-31T19:02:36Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/298"
+  },
+  {
+    "number": 297,
+    "title": "Continuum Lokal 0.3.32: gesamtes Web, Autonomie, OpenRouter und originalsignierter APK-Release",
+    "head": "e91e704d502883277f7cbb2d43cc7cdcdaccdb19",
+    "ref": "release/continuum-v32-openrouter-fullweb-20261031",
+    "merged": true,
+    "closed_at": "2026-10-31T15:27:02Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/297"
+  },
+  {
+    "number": 293,
+    "title": "P0: vollständigen Continuum-Lokal-v31-Quellstand in bestehenden originalsignierten Render-Publisher übernehmen",
+    "head": "d2d13eab84d050d85b00f2df1bfd170282045984",
+    "ref": "release/continuum-local-complete-v31-20261031",
+    "merged": true,
+    "closed_at": "2026-10-31T13:49:11Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/293"
+  },
+  {
+    "number": 269,
+    "title": "ops(neuro): 10-Minuten NVIDIA-Forschungsplan nur für GitHub Actions",
+    "head": "5774b71e1275759cb8b7c780c6294e7c832c6c06",
+    "ref": "research/continuum-nvidia-automation-ledger-20261030",
+    "merged": true,
+    "closed_at": "2026-10-30T22:09:31Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/269"
+  },
+  {
+    "number": 192,
+    "title": "fix(m2): close Harness model bypass and bind real native proof to model lifecycle",
+    "head": "7665a3dcb02f9bd1fa79cb6d4b63e95b147eb9bb",
+    "ref": "chatgpt/continuum-m2-20-gates-20261027",
+    "merged": true,
+    "closed_at": "2026-10-27T16:35:20Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/192"
+  },
+  {
+    "number": 191,
+    "title": "feat(m2): original Gemma runtime gate, real native modeltest and 20-stage CCC1 readiness",
+    "head": "f66a83d3a0f90302bd3845d6db0210697f68731b",
+    "ref": "chatgpt/continuum-m2-20-gates-20261027",
+    "merged": true,
+    "closed_at": "2026-10-27T16:22:47Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/191"
+  },
+  {
+    "number": 190,
+    "title": "ui(fold7): preserve living neon cockpit, restore one-tap chat and accessible scrolling",
+    "head": "14ce3ed75c6f1c05b051dbcafe8d901f7a846187",
+    "ref": "chatgpt/continuum-fold7-usable-navigation-20261027",
+    "merged": true,
+    "closed_at": "2026-10-27T15:44:31Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/190"
+  },
+  {
+    "number": 119,
+    "title": "Diagnose: Fold7 zeigt trotz animierter Referenzframes eine statische Continuum-Kugel",
+    "head": "ccf2ea9884c98f9e45691294c7323e5b8d679bc9",
+    "ref": "chatgpt/continuum-0321-fold7-orb-runtime-diagnostics-20261024",
+    "merged": true,
+    "closed_at": "2026-10-24T18:19:12Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/119"
+  },
+  {
+    "number": 114,
+    "title": "Continuum 0.3.19: lebendige Kugel, sichtbare Frame-Diagnose, signiertes Besitzer-Update",
+    "head": "5859ec5dc72d77dca9bff1760e1f419883e864a0",
+    "ref": "chatgpt/continuum-owner-0.3.19-hologram-20261024",
+    "merged": true,
+    "closed_at": "2026-10-24T12:14:03Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/114"
+  },
+  {
+    "number": 106,
+    "title": "Draft: Continuum 0.3.18 / code19 – Opus CCC1+I1/I2, signierte Premium-UI, Kategoriebuttons und Release-Gates",
+    "head": "0afd4ca0e44d7222affb7ea89de2cf940376e4c3",
+    "ref": "gpt6/continuum-0.3.18-release-preflight-20261023",
+    "merged": true,
+    "closed_at": "2026-10-24T11:42:38Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/106"
+  },
+  {
+    "number": 105,
+    "title": "Diagnose modified tracked paths in signed Android build checkout",
+    "head": "c35b39a11cec00917598b81e42f9c5853668ae8a",
+    "ref": "fix/continuum-v18-render-dirty-audit-20261023",
+    "merged": false,
+    "closed_at": "2026-10-23T15:30:58Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/105"
+  },
+  {
+    "number": 104,
+    "title": "Permit Render build cache while keeping owner release source immutable",
+    "head": "c00e40a4e38751e8e05ec64ce6e8bd9c6d5f88a5",
+    "ref": "fix/continuum-v18-cache-safe-git-gate-20261023",
+    "merged": true,
+    "closed_at": "2026-10-23T15:26:55Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/104"
+  },
+  {
+    "number": 103,
+    "title": "Fix Render shallow checkout for verified owner build",
+    "head": "8902d8ce88c5a10905a60d11080f6da9c24ab2ea",
+    "ref": "fix/continuum-owner-v18-shallow-attestation-20261023",
+    "merged": true,
+    "closed_at": "2026-10-23T15:24:33Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/103"
+  },
+  {
+    "number": 102,
+    "title": "Fix: Owner-APK signieren trotz Render detached HEAD – SHA-Sperre bleibt bestehen",
+    "head": "f30f03e3a3e52be84b5b08b10b4c4ad6a8b4ae65",
+    "ref": "fix/continuum-v18-render-detached-head-20261023",
+    "merged": true,
+    "closed_at": "2026-10-23T15:19:44Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/102"
+  },
+  {
+    "number": 101,
+    "title": "Owner-Haupt-App 0.3.17: vollständige CCC1- und Premium-UI-Version mit vorhandener Signatur",
+    "head": "4c0b62beae6badc54794351d3012dc1a4dd477a3",
+    "ref": "integration/continuum-owner-apk-v18-candidate-20261023",
+    "merged": true,
+    "closed_at": "2026-10-23T15:17:01Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/101"
+  },
+  {
+    "number": 94,
+    "title": "Draft: Gemeinsame Continuum UI/KI/GGUF-Quellintegration zur vollständigen Validierung",
+    "head": "0499e2a0d95187edcb3f0b8736339154bc563edb",
+    "ref": "integration/continuum-ui-opus-gguf-20261023",
+    "merged": true,
+    "closed_at": "2026-10-23T15:17:03Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/94"
+  },
+  {
+    "number": 89,
+    "title": "Unblock signed Fold APK delivery when old Render APK URL is missing; explicitly record archival gap",
+    "head": "9fc4cd08e9299a6a9b737fc981ab8fa97ccb40b5",
+    "ref": "fix/continuum-signed-archive-missing-release-20261023",
+    "merged": true,
+    "closed_at": "2026-10-23T05:25:18Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/89"
+  },
+  {
+    "number": 88,
+    "title": "Preserve signed v0.3.15 rollback APK when static BUILD-INFO is unavailable",
+    "head": "08213b994b441e25ff8002ba2a0d5c28b0826923",
+    "ref": "fix/continuum-signed-rollback-metadata-20261023",
+    "merged": true,
+    "closed_at": "2026-10-23T05:16:56Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/88"
+  },
+  {
+    "number": 87,
+    "title": "Repair stale Fold UI source assertions for measured live window reflow",
+    "head": "ad995a0c05ee6ef8ea83894fc0930db9d10306e6",
+    "ref": "fix/continuum-fold-motion-regression-gates-20261023",
+    "merged": true,
+    "closed_at": "2026-10-23T05:08:45Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/87"
+  },
+  {
+    "number": 86,
+    "title": "Continuum 0.3.16: Fold live reflow, real-data motion and signed code17 owner update",
+    "head": "3dec7a86cf87bda8c200493143bc1bf64c4b9f30",
+    "ref": "fix/continuum-fold-live-responsive-20261023",
+    "merged": true,
+    "closed_at": "2026-10-23T05:05:25Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/86"
+  },
+  {
+    "number": 85,
+    "title": "Signed Mentor Pair owner update v0.3.15: integrate AAA UI + LM1/CCC1 source into existing signer branch",
+    "head": "f23934e2b38c3e473e06ce4421020e79d8b9158a",
+    "ref": "integration/continuum-aaa-lm1-ccc1-preview-20261023",
+    "merged": true,
+    "closed_at": "2026-10-23T04:33:46Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/85"
+  },
+  {
+    "number": 74,
+    "title": "Continuum Premium-UI nach Referenzbildern (Phone + Fold) mit echten Daten – Designphase abgeschlossen (Draft)",
+    "head": "a9882c6966e4b7aea884d703792d55a5da8e2e47",
+    "ref": "opus/continuum-premium-ui-20261022",
+    "merged": true,
+    "closed_at": "2026-10-23T04:33:48Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/74"
+  },
+  {
+    "number": 63,
+    "title": "App navigation: work areas always one tap away (draft)",
+    "head": "1a96ac1d908d7bd5778b687af5dc5bbf4792bc34",
+    "ref": "opus/continuum-app-navigation-20261022",
+    "merged": true,
+    "closed_at": "2026-10-22T10:05:40Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/63"
+  },
+  {
+    "number": 47,
+    "title": "Integration: SWB1/CDX1-Paar-Checkpoints in Astra-Forschungsreparaturen",
+    "head": "b85f9adccf440392473c37b20940b90bee8aca56",
+    "ref": "astra/continuum-atomic-paired-checkpoints-20261021",
+    "merged": true,
+    "closed_at": "2026-10-21T07:47:20Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/47"
+  },
+  {
+    "number": 43,
+    "title": "Continuum: überprüfbares Lernen, sichere Wiederaufnahme und Trainings-Monitor",
+    "head": "5dc7c1c09d2a68cb766689a4fa4f80d31952a140",
+    "ref": "sol/continuum-quality-20261021",
+    "merged": true,
+    "closed_at": "2026-10-21T02:34:34Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/43"
+  },
+  {
+    "number": 23,
+    "title": "Experimental cross-runtime contrastive retrieval and offline learning error recovery",
+    "head": "91d64be88886b956a5d22e34fa36018dffe9dbd1",
+    "ref": "copilot/continuum-contrastive-recovery-20261015",
+    "merged": true,
+    "closed_at": "2026-10-15T16:38:33Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/23"
+  },
+  {
+    "number": 19,
+    "title": "Device AI Continuum: Learning Core, Cognitive Runtime und Offline-Teamleiter (Draft)",
+    "head": "ec4b4caecd64835e56af924dae1f7ad825059bfc",
+    "ref": "copilot/pr-12-working-first-vertical-slice",
+    "merged": false,
+    "closed_at": "2026-11-02T07:42:20Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/19"
+  },
+  {
+    "number": 4,
+    "title": "Docs: Device AI open-source reference pack",
+    "head": "e068eb36247c727303eec384805caeb86d6501af",
+    "ref": "docs/device-ai-open-source-reference-pack",
+    "merged": false,
+    "closed_at": "2026-10-12T19:00:34Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/4"
+  },
+  {
+    "number": 2,
+    "title": "Device AI cognitive architecture: Parts 1–3",
+    "head": "7cea7553b2e50bcbf18fed0b8fe338264106e8ca",
+    "ref": "copilot/main-task-review",
+    "merged": true,
+    "closed_at": "2026-10-12T18:38:05Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/2"
+  },
+  {
+    "number": 1,
+    "title": "Device AI v0.3 – secure cloud agent, typed tools and Fold UI",
+    "head": "a56143ec9efc9da4aae5da87d032e768ede53efe",
+    "ref": "v0.3-agent",
+    "merged": true,
+    "closed_at": "2026-10-12T17:53:01Z",
+    "url": "https://github.com/Ullmann27/device-ai/pull/1"
+  }
+]

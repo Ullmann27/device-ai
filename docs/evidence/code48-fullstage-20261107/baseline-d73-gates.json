@@ -1,0 +1,127 @@
+{
+  "kind": "BASELINE_ONLY_NOT_FINAL_FULLSTAGE_PROOF",
+  "recordedAt": "2026-11-07T05:27:24.858650+00:00",
+  "repository": "Ullmann27/device-ai",
+  "source": "d73fc46b5a14ea5fc3b82a3bd3b96cacebe7d4de",
+  "gates": {
+    "node-full": {
+      "status": "PASS",
+      "sourceUnchanged": true,
+      "sourceCommit": "d73fc46b5a14ea5fc3b82a3bd3b96cacebe7d4de",
+      "sourceTree": "67ffc7a73a2905914a77fdedcb70b7115d183bef",
+      "logSha256": "e98ca8532ff2e12388a2fe959958e162cda2c9cee5aaf35f0e449a60a799b1c4",
+      "logBytes": 246,
+      "receiptSha256": "9f1f3500b2edd4f55923dd84da1fa4b898b94f8e69a871a6ded5b86309649910",
+      "finishedAt": "2026-11-07T05:12:38.415502+00:00",
+      "checks": [
+        {
+          "id": "full-node",
+          "status": "PASS",
+          "counts": {
+            "total": 2429,
+            "executed": 2398,
+            "passed": 2398,
+            "failed": 0,
+            "skipped": 31,
+            "placeholders": 0
+          }
+        }
+      ]
+    },
+    "node-critical": {
+      "status": "PASS",
+      "sourceUnchanged": true,
+      "sourceCommit": "d73fc46b5a14ea5fc3b82a3bd3b96cacebe7d4de",
+      "sourceTree": "67ffc7a73a2905914a77fdedcb70b7115d183bef",
+      "logSha256": "ed5b458efb0525b250e3a9c329b89d7dbb59c142d428d23fc66a1280a4ae09f2",
+      "logBytes": 243,
+      "receiptSha256": "0f29b8a06aaeed8cc4c3f490a967158d58464b0af271f2e97ba1e5a8451c1962",
+      "finishedAt": "2026-11-07T05:13:17.568899+00:00",
+      "checks": [
+        {
+          "id": "process",
+          "status": "PASS",
+          "counts": {
+            "total": 37,
+            "executed": 37,
+            "passed": 37,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0
+          }
+        },
+        {
+          "id": "storage-agent",
+          "status": "PASS",
+          "counts": {
+            "total": 32,
+            "executed": 32,
+            "passed": 32,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0
+          }
+        },
+        {
+          "id": "android-source-contracts",
+          "status": "PASS",
+          "counts": {
+            "total": 64,
+            "executed": 64,
+            "passed": 64,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0
+          }
+        },
+        {
+          "id": "host-checker",
+          "status": "PASS",
+          "counts": {
+            "total": 2,
+            "executed": 2,
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0
+          }
+        }
+      ]
+    },
+    "backend": {
+      "status": "PASS",
+      "sourceUnchanged": true,
+      "sourceCommit": "d73fc46b5a14ea5fc3b82a3bd3b96cacebe7d4de",
+      "sourceTree": "67ffc7a73a2905914a77fdedcb70b7115d183bef",
+      "logSha256": "49d0c5470da9070a3ea2afeb29c5253b8fcb391fc9da624a94eeea0b06268589",
+      "logBytes": 6493,
+      "receiptSha256": "497671976deb80bdc3da50d7859b919f8f0648fd5ef4afea2578e9dc4478b519",
+      "finishedAt": "2026-11-07T05:09:11.531198+00:00",
+      "counts": {
+        "passed": 64,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "node-special": {
+      "status": "PASS",
+      "sourceUnchanged": true,
+      "sourceCommit": "d73fc46b5a14ea5fc3b82a3bd3b96cacebe7d4de",
+      "sourceTree": "67ffc7a73a2905914a77fdedcb70b7115d183bef",
+      "logSha256": "153c3af21ddcd08412a50883ee56b774f13322ec25009b6f552178cdf30a7864",
+      "logBytes": 2506,
+      "receiptSha256": "27ef4e89a158e10ca9cfb72578c670eaee84567ebafa342f45feff73108ec3f0",
+      "finishedAt": "2026-11-07T05:09:24.237469+00:00",
+      "counts": {
+        "passed": 23,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "android": "RUNNING at checkpoint; main and test Kotlin compiled, no final gate claim",
+  "apk": "NOT_BUILT",
+  "device": "NOT_RUN",
+  "fullstage": "New implementation must receive fresh combined source gates",
+  "nodeSkipBoundary": "31 host integration/optional SDK/kernel isolation cases unavailable; no claim of those capabilities from this run"
+}
