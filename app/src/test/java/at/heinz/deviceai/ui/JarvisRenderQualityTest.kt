@@ -43,6 +43,21 @@ class JarvisRenderQualityTest {
         }
     }
 
+    @Test fun moderateHeatReducesFrameWorkBeforeSevereWithoutDroppingAnimation() {
+        for (inference in listOf(false, true)) {
+            val light = JarvisRenderQuality.resolve(true, false, 1, false, inference)
+            val moderate = JarvisRenderQuality.resolve(true, false, 2, false, inference)
+            val severe = JarvisRenderQuality.resolve(true, false, 3, false, inference)
+            assertEquals(JarvisRenderQuality.Tier.MEDIUM, moderate.tier)
+            assertTrue(moderate.animate)
+            assertTrue(moderate.frameDelayMillis > light.frameDelayMillis)
+            assertTrue(moderate.particleCount < light.particleCount)
+            assertTrue(moderate.orbitSegments < light.orbitSegments)
+            assertEquals(JarvisRenderQuality.Tier.LOW, severe.tier)
+            assertFalse(severe.animate)
+        }
+    }
+
     @Test fun activeInferenceReservesCapacityWhileNormalForegroundKeepsFullQuality() {
         val normal = JarvisRenderQuality.resolve(true, false, null, false, false)
         val inference = JarvisRenderQuality.resolve(true, false, null, false, true)
