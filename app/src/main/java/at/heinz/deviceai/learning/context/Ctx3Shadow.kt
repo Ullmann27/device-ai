@@ -53,7 +53,10 @@ object Ctx3Shadow {
   val event=runCatching {
    require(facts.size<=256&&facts.all { it.content.length<=4096 })
    val pool=facts.associate { it.id to it.content }
-   val version=ContinuumMemoryDialogue.hash(pool.entries.sortedBy { it.key }.joinToString("\u0000"){it.key+"\u0000"+it.value}.toByteArray())
+   // Source identity must change on revocation or confirmation, not only text edits.
+   val version=ContinuumMemoryDialogue.hash(temporalRecords.sortedBy { it.id }.joinToString("\u0000"){
+    it.id+"\u0000"+it.contentHash+"\u0000"+it.status.name+"\u0000"+it.updatedAt
+   }.toByteArray())
    val entities=Ctx3EntityIndex.fromFacts(pool)
    val decision=s.context.decide(input,entities,version)
    val result=when(decision) {
