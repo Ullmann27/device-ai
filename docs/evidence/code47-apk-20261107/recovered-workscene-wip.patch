@@ -1,0 +1,101 @@
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt
+index fe229c85a..338b647a0 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt
+@@ -16,6 +16,7 @@ import android.widget.ProgressBar
+ import android.widget.TextView
+ import at.heinz.deviceai.avatar.AvatarPoseReducer
+ import at.heinz.deviceai.cognitive.LocalDialogueRetention
++import at.heinz.deviceai.cognitive.OwnerAppActionFlow
+ import org.junit.Assert.*
+ import org.junit.Before
+ import org.junit.Test
+@@ -81,6 +82,10 @@ class OwnerAppActionWorkSceneUiTest {
+             View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
+         root.layout(0, 0, 884, 760)
+     }
++    private fun elapse(ms: Long) {
++        shadowOf(Looper.getMainLooper()).idleFor(ms, TimeUnit.MILLISECONDS)
++        pump?.drawRequestedFrame()
++    }
+     private fun await(condition: () -> Boolean) {
+         val end = System.nanoTime() + TimeUnit.SECONDS.toNanos(5)
+         while (!condition() && System.nanoTime() < end) { advance(16); Thread.sleep(5) }
+@@ -137,12 +142,19 @@ class OwnerAppActionWorkSceneUiTest {
+         (get(a, "input") as EditText).setText(request)
+         assertTrue((get(a, "sendButton") as Button).performClick())
+     }
+-    private fun approve(): AlertDialog {
++    private fun approve(a: AgentActivity): AlertDialog {
+         await { ShadowAlertDialog.getLatestAlertDialog()?.let {
+             it.isShowing && shadowOf(it).message.toString().contains("org.example.signal")
+         } == true }
+         return ShadowAlertDialog.getLatestAlertDialog().also {
+             it.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
++            val looper = shadowOf(Looper.getMainLooper())
++            val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5)
++            fun confirmed() = (get(a, "activeOwnerAppFlow") as? OwnerAppActionFlow)?.launching == true
++            while (!confirmed() && System.nanoTime() < deadline) looper.runOneTask()
++            assertTrue("Confirmation was not dispatched: busy=${get(a, "busy")}, " +
++                "foreground=${get(a, "foregroundLearningActive")}, flow=${get(a, "activeOwnerAppFlow")}, " +
++                "status=${(get(a, "activityText") as TextView).text}", confirmed())
+         }
+     }
+     private fun pose(a: AgentActivity) = (get(get(a, "hologramView")!!, "avatarPose") as AvatarPoseReducer)
+@@ -151,12 +163,13 @@ class OwnerAppActionWorkSceneUiTest {
+     @Test fun chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult() = withActivity { a, port, _ ->
+         submit(a, "Jarvis kannst du mir bitte Signal öffnen?")
+         assertEquals(0, port.calls.get())
+-        approve()
++        approve(a)
+         assertTrue(port.entered.await(5, TimeUnit.SECONDS))
+-        advance(80); measure(a.window.decorView); advance(3_200)
++        advance(80); measure(a.window.decorView); elapse(3_200)
+         val views = descendants(a.window.decorView)
+         assertTrue(views.any { it.tag == "jarvis-work-window" && it.isShown })
+-        assertTrue(views.filterIsInstance<ProgressBar>().any { it.isShown && it.isIndeterminate })
++        assertTrue("Running app keeps progress: ${(get(a, "activityText") as TextView).text}",
++            views.filterIsInstance<ProgressBar>().any { it.isShown && it.isIndeterminate })
+         assertTrue("Actual tool gaze outlives opening glance", pose(a).reading)
+         assertEquals(ContinuumWorkArea.START, get(a, "activeWorkArea"))
+         port.release.countDown()
+@@ -164,7 +177,7 @@ class OwnerAppActionWorkSceneUiTest {
+         assertFalse(pose(a).reading)
+         assertTrue(descendants(a.window.decorView).filterIsInstance<ProgressBar>()
+             .filter { it.tag?.toString()?.startsWith("jarvis-tool-progress:") == true }.none { it.isIndeterminate })
+-        advance(2_200)
++        elapse(2_200)
+         assertEquals(ContinuumWorkArea.CHAT, get(a, "activeWorkArea"))
+         assertTrue(descendants(a.window.decorView).filterIsInstance<TextView>()
+             .any { it.text.contains("neuen aktiven Fenster") })
+@@ -172,10 +185,10 @@ class OwnerAppActionWorkSceneUiTest {
+ 
+     @Test fun stopBeforePostedBackendStartCannotReopenScene() = withActivity { a, port, _ ->
+         submit(a, "Öffne Signal", chat = false)
+-        approve()
++        approve(a)
+         assertTrue(port.entered.await(5, TimeUnit.SECONDS))
+         (get(a, "sendButton") as Button).performClick()
+-        advance(3_000)
++        elapse(3_000)
+         assertFalse(pose(a).reading)
+         assertFalse(descendants(a.window.decorView).any { it.tag == "jarvis-work-window" && it.isShown })
+         assertNull(get(a, "activeOwnerAppFlow"))
+@@ -183,7 +196,7 @@ class OwnerAppActionWorkSceneUiTest {
+ 
+     @Test fun foregroundLaunchKeepsActualResultForReturn() = withActivity { a, port, controller ->
+         submit(a, "Mach mir Signal auf", chat = false)
+-        approve()
++        approve(a)
+         assertTrue(port.entered.await(5, TimeUnit.SECONDS))
+         advance(80)
+         controller.pause()
+@@ -203,7 +216,7 @@ class OwnerAppActionWorkSceneUiTest {
+         assertEquals(0, port.calls.get())
+         port.failure = "ACCESSIBILITY_OBSERVATION_NOT_GRANTED"
+         submit(a, "Öffne Signal", chat = false)
+-        approve()
++        approve(a)
+         port.release.countDown()
+         await { get(a, "busy") == false }
+         assertFalse(descendants(a.window.decorView).filterIsInstance<TextView>()

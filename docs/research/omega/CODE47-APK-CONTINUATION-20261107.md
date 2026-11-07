@@ -14,9 +14,15 @@ STOP, and the visible work window. Failure lines 187/176/155 wait for a
 backend while the confirmation callback remains on the paused main looper.
 Signing and publication correctly remained blocked. Code46 stays live.
 
-The previous uncommitted test-only follow-up is preserved before further edits.
-Its latest focused run still failed the return-to-chat and negative case.
-It is not a verified repair. The production tree is unchanged from PR587.
+The previous uncommitted follow-up was initially LOCAL_ONLY / NOT_PUSHED.
+Its exact recovered diff is now `docs/evidence/code47-apk-20261107/
+recovered-workscene-wip.patch`, relative to PR587 source 7b9c0380.
+The preceding actual focused run (`app-clock-green`) failed return-to-chat
+and the missing-permission case: 4 tests, 2 failures. Exact compile/JVM
+commands and test-source hashes are preserved in recovered-wip-receipt.json;
+raw output is recovered-wip-red.log. This historical patch is WIP/UNVERIFIED
+and superseded by verified repair 7732b8668f912419d7aac7a1609a97097d727cbf.
+Production is unchanged from PR587.
 
 ## Bounded next steps
 
@@ -45,3 +51,27 @@ All four cases pass individually and together in normal JUnit ordering.
 Production, original avatar/orb and mandatory release gates are unchanged.
 Raw compile/tests/receipts: docs/evidence/code47-apk-20261107/.
 The original publisher must still pass its complete exact-source gate.
+
+## Frozen build and independent reproduction
+
+Original publisher build dep-dbn8vhpsrm7s738np9jg runs source
+7732b8668f912419d7aac7a1609a97097d727cbf. This documentation follow-up
+does not change that source or restart the publisher.
+
+The completed tests used the actual SDK-compiled production classes and
+Robolectric, with commands recorded in methods-receipt.json and
+class-receipt.json. For a clean SDK/Gradle checkout of the frozen source,
+the equivalent complete-class integration command is:
+
+```sh
+gradle --no-daemon --max-workers=2 --console=plain \
+  -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' \
+  -Pkotlin.compiler.execution.strategy=in-process \
+  -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true \
+  -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=47 \
+  :app:testDebugUnitTest --tests at.heinz.deviceai.OwnerAppActionWorkSceneUiTest
+```
+
+This command is a reproduction instruction, not a claim of an additional
+completed Gradle run. The publisher independently runs the entire suite
+without a class filter, followed by lint and original-package assembly.
