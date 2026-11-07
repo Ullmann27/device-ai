@@ -750,9 +750,10 @@ class ContinuumHologramView @JvmOverloads constructor(
             currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING)
         // When speech is already playing the heavy LLM phase is normally over. Keep
         // essential lip/eye motion readable even in LOW, while decoration stays off.
-        return if (base.tier == at.heinz.deviceai.ui.JarvisRenderQuality.Tier.LOW &&
-            currentState == State.SPEAKING && foregroundActive)
-            base.copy(frameDelayMillis = minOf(base.frameDelayMillis, 50L), particleCount = 0)
+        val delay = at.heinz.deviceai.ui.AvatarEssentialMotionPolicy.frameDelayMillis(
+            base, currentState == State.SPEAKING && foregroundActive)
+        return if (delay != base.frameDelayMillis)
+            base.copy(frameDelayMillis = delay, particleCount = 0)
         else base
     }
 
@@ -783,7 +784,11 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun updateMotionPolicy() {
         // Reduced-motion remains authoritative. Power-save/thermal pressure no longer
         // kills mouth/eyes/head completely; JarvisRenderQuality suppresses decoration.
-        motionAllowed = animationsEnabled && ValueAnimator.areAnimatorsEnabled()
+        motionAllowed = at.heinz.deviceai.ui.AvatarEssentialMotionPolicy.essentialAllowed(
+            foreground = true,
+            animationsEnabled = animationsEnabled,
+            systemAnimatorsEnabled = ValueAnimator.areAnimatorsEnabled()
+        )
         removeCallbacks(drawFrame)
         framePending = false
         lastFrameMs = 0L
@@ -799,7 +804,9 @@ class ContinuumHologramView @JvmOverloads constructor(
             consumedAudioMs = 0L
         }
         val presentationBudget = renderBudget()
-        cockpitSequence?.setMotionAllowed(canAnimateFrame() && presentationBudget.animate)
+        cockpitSequence?.setMotionAllowed(
+            at.heinz.deviceai.ui.AvatarEssentialMotionPolicy.decorativeAllowed(
+                canAnimateFrame(), presentationBudget))
         presentationBudget.let { cockpitSequence?.setFrameBudget(it.frameDelayMillis, it.reducedBloom) }
         update3d()
         native3d?.setQuality(renderBudget().reducedBloom)
