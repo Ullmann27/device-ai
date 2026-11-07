@@ -19,6 +19,7 @@ class Ctx3ContextTest {
   c.decide("Erzähl von Liste App",listOf(a,b),"v1")
   val back=c.decide("Und was war davor?",listOf(a,b),"v1") as Ctx3Decision.Query
   assertEquals(setOf("s1"),back.sourceIds)
+  assertEquals("DISCOURSE_PREVIOUS",back.resolution)
   assertTrue(back.query.contains("Fokus App"))
  }
 
@@ -28,6 +29,7 @@ class Ctx3ContextTest {
   c.decide("Ich meine Fokus App",listOf(a,b),"v1")
   val other=c.decide("Nicht das, das andere",listOf(a,b),"v1") as Ctx3Decision.Query
   assertEquals(setOf("s2"),other.sourceIds)
+  assertEquals("DISCOURSE_ALTERNATIVE",other.resolution)
   assertTrue(other.query.contains("Liste App"))
 
   val third=Ctx3Entity("app-c","Dritte App",setOf("Dritte App"),setOf("sie"),setOf("s3"))
