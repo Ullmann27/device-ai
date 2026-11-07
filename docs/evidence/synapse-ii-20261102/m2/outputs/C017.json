@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C017:s1",
+    "decision": "SPAN",
+    "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+    "endExclusive": 88,
+    "start": 71,
+    "text": "Uvpetado Uvradeba",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "RULE": {
+    "sourceId": "bc:C017:s1",
+    "decision": "SPAN",
+    "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+    "endExclusive": 88,
+    "start": 71,
+    "text": "Uvpetado Uvradeba",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C017:s1",
+    "decision": "SPAN",
+    "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+    "endExclusive": 88,
+    "start": 71,
+    "text": "Uvpetado Uvradeba",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "rawMillis": 73.300641
+}

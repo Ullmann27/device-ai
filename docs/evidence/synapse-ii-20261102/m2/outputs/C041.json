@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C041:s1",
+    "decision": "SPAN",
+    "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+    "endExclusive": 59,
+    "start": 42,
+    "text": "Uvpovelu Uvjaluzu",
+    "offsetEncoding": "UTF-16",
+    "revision": 6
+  },
+  "RULE": {
+    "sourceId": "bc:C041:s1",
+    "decision": "SPAN",
+    "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+    "endExclusive": 59,
+    "start": 42,
+    "text": "Uvpovelu Uvjaluzu",
+    "offsetEncoding": "UTF-16",
+    "revision": 6
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C041:s1",
+    "decision": "SPAN",
+    "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+    "endExclusive": 59,
+    "start": 42,
+    "text": "Uvpovelu Uvjaluzu",
+    "offsetEncoding": "UTF-16",
+    "revision": 6
+  },
+  "rawMillis": 92.903862
+}

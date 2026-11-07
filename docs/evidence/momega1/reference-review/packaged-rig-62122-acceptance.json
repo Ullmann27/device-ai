@@ -1,0 +1,57 @@
+{
+  "schema": "independent-packaged-rig-source-acceptance",
+  "version": 1,
+  "source": "62122c55077644de5bb1993347b7749c7e53610b",
+  "evidenceClass": "CONTRACT_TEST_AND_IDENTICAL_REVIEWED_GEOMETRY_BINDING",
+  "testFreeze": "cd9758907ac1fe48aa14b2e002087da7ed6005aa",
+  "v2": {
+    "run": 27,
+    "pass": 27,
+    "fail": 0,
+    "skip": 0,
+    "exit": 0
+  },
+  "compiledPinAndActualAssetPreflight": {
+    "sha256": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+    "bytes": 8690616,
+    "evidenceClass": "CONTRACT_TEST_NOT_NATIVE_RENDER",
+    "targetCount": 21,
+    "status": "PASS_COMPILED_PIN_AND_PRODUCTION_PREFLIGHT"
+  },
+  "actualAssetValidatorExit": 0,
+  "sourceBinding": {
+    "mapperReducerAndPoseByteIdenticalTo": "9a23e5d6a9dc96d15525347c99ff682d632d7277",
+    "glbContractOnlyChange": "ASSET_SHA256 constant updated to the tested rig",
+    "assetByteIdenticalToPreviouslyTested": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+    "noticeHashAndSizeMatch": true
+  },
+  "commands": [
+    "bash tools/jarvis-reference-review/run-gaze-v2-challenge.sh /workspace/jarvis-reference-rig-freeze 62122c55077644de5bb1993347b7749c7e53610b /workspace/jarvis-reference-review-results/gaze-v2-final-62122",
+    "taskset -c 3 /workspace/momega1-build-env/jdk17/bin/java -XX:ActiveProcessorCount=1 -Xmx384m --class-path /workspace/jarvis-reference-review-results/gaze-v2-final-62122/challenge.jar:/workspace/momega1-build-env/jvm-deps/json-20240303.jar tools/jarvis-reference-review/ValidatePackagedAsset.java /workspace/jarvis-reference-rig-freeze/app/src/main/assets/avatar3d/continuum-avatar.glb"
+  ],
+  "decision": "ACCEPT_PACKAGED_MOUTH_COMPOSITION_AND_NEUTRAL_PRESERVING_RIG_FIX",
+  "geometryEvidence": "c7f5a9bc18295969d920ddcf77fcb9984df7b738: mouth-composition-v2-green-9a23-receipt.json; no new geometric measurement claimed for byte-identical inputs",
+  "limits": [
+    "Narrow anatomy correction only; H01 reference appearance remains NOT_ACCEPTED.",
+    "V1 exact-mouth assertion is transparently superseded; unchanged V1 result remains 25/26.",
+    "No actual TTS, camera, Filament/device rendering, full idle animation or Fold7 acceptance.",
+    "New styled assets must be checked again rather than inheriting this asset hash."
+  ],
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "ecac61c0dc53d7cbbcb6723f4374f8082e4fd446dbd9d838e6245f2c0d54996a",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "4a22ae65d02d2b7b339808e5a3ad8653f94dfef4643fe780f1a9b249c71bb5d9",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "befc14021999b27c2c534dbb02b2ffab36c9bb6ae68e2dc0640e394438e157cb",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "17680d8d641ec9baaa3eb68e7c5168f1d4dc08a6d68640d8c2e578e40b0f23ed"
+  },
+  "evidenceSha256": {
+    "docs/evidence/momega1/reference-review/gaze-v2-final-62122-junit.txt": "42ca1627f45ccdf7dca7ad65d5e361c7d9a611284925a8fae43b773d23a6068b",
+    "docs/evidence/momega1/reference-review/gaze-v2-final-62122-junit.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/evidence/momega1/reference-review/gaze-v2-final-62122-compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/evidence/momega1/reference-review/gaze-v2-final-62122-asset-pin.json": "d7d35e08c7925ed30b6d23e061d9ef2bb2982bcb14c9296109db8fd80baff6f9"
+  },
+  "reviewToolSha256": {
+    "tools/jarvis-reference-review/MapperMotionV2ChallengeTest.kt": "6225afb286d77c27fe3ffb0073e9b77997a270e55eeac35054615d8cd4aff3ea",
+    "tools/jarvis-reference-review/ObservedGazeChallengeTest.kt": "ac7f44ec7fd166fe6c30e9666702ea819455c549539c0bffb716f04923b4fa45",
+    "tools/jarvis-reference-review/ValidatePackagedAsset.java": "35d736b15f5548ede0a0da99e2a14efec95ca7fd3bb9cd916567ec9d893e1e0e"
+  }
+}

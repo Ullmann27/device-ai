@@ -1,0 +1,61 @@
+{
+  "integratedSource": "6baec1bcd6585d2d04688a7d15651c830b4886d7",
+  "integratedTree": "207742caaba857adcac413e454a65f6ca2b9b37a",
+  "qaRunnerSha256": "72e9d026e68760d2b3511f24baf8f5b1e8b91766ba3008d81a876938287d7467",
+  "fixture": {
+    "task": {
+      "schema": "continuum-coding-task",
+      "version": 1,
+      "id": "momega1-u02",
+      "sourceCommit": "eb9118d511281f3dac39a36b33b7253fd82f221c",
+      "kind": "BUGFIX",
+      "goal": "A lease is active only while now is strictly less than its deadline.",
+      "allowedPaths": [
+        "lib/subject.mjs"
+      ],
+      "acceptance": [
+        "A lease is active only while now is strictly less than its deadline."
+      ],
+      "chain": "node",
+      "limits": {
+        "maxModelCalls": 2,
+        "maxContextChars": 8192
+      }
+    },
+    "fixture": "u02",
+    "sourceSha256": "82069e925d6d1525a61c4eba6a0fe8ad986526a44d584f03bba59bb1c0771fd1",
+    "frozenTestSha256": "4ff062996dc48346cbebf6a498bbc29c161dca97ffbf9dd29d4f78ef62ec48db",
+    "materializedTestSha256": "dd8889a2cc477b94e7001f8605bfd3d1804a12961c3b058ff0d1f89fd139b8a3",
+    "transformation": "Only fixed relative import path changed; assertions and source bytes unchanged.",
+    "inferenceStatus": "NOT_RUN",
+    "ownerApproval": "NOT_GRANTED_BY_MATERIALIZER"
+  },
+  "taskFingerprint": "1ccd0b47e2a91d3f1792523a8dd66cd93329d4d2e4b329158c9965e9da20c7dd",
+  "fixtureTree": "dd710c387ce0b85787a70771c2150c71a65e802e",
+  "freezeManifestSha256": "1055d66300b0f4664978f103d1e5adb73a9619a337539ad41e898b7217a92407",
+  "configuration": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME": "llama.cpp",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT": "gguf",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_SHA256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL": "OWNER_APPROVED_ALTERNATE_GGUF",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": "/workspace/momega1-local-model/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST": "/workspace/momega1-local-model/qwen-owner-pin.json",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": "/workspace/momega1-local-model/build-cpu/bin/llama-completion",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND": "LLAMA_CPP",
+    "CONTINUUM_CODING_ISOLATION_CONFIG": "/workspace/momega1-build-env/isolation.json"
+  },
+  "fileHashes": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST": "85fcbad40a1b6f182331d4cc285d86c0d07dd785ce6db35fe530b0fced900d2b",
+    "CONTINUUM_CODING_ISOLATION_CONFIG": "7b9337ab8ab5d17950bbaa9ed7e864663fdadaa384f2d4deaa01120af2e0c251"
+  },
+  "technicalRecallEnabled": true,
+  "inheritedState": null,
+  "nodeVersion": "v24.19.0",
+  "startedAt": "2026-11-03T20:40:29.325Z",
+  "deviceStatus": "FOLD7_NOT_RUN",
+  "modelAnswersSupplied": false
+}

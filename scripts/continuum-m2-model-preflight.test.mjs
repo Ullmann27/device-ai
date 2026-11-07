@@ -74,7 +74,7 @@ test('a Qwen name NEVER enters absent explicit consent and remains only configur
   assert.equal(allowed.ownerGemmaExecuted,false);
 });
 
-test('production coding CLI fails closed before asking the unavailable model',()=>{
+test('production coding CLI blocks missing pinned runtime before legacy Gemma configuration',()=>{
   const cli=resolve(dirname(fileURLToPath(import.meta.url)),'continuum-local-brain-cli.mjs');
   const req={allowedTrackedPaths:['lib/foo.mjs'],timeoutMs:1500,userPrompt:'Fix broken foo'};
   const env={...process.env,CONTINUUM_LOCAL_BRAIN_API_KEY:'x'.repeat(40),
@@ -83,26 +83,30 @@ test('production coding CLI fails closed before asking the unavailable model',()
     CONTINUUM_LOCAL_BRAIN_MODEL_SHA256:'a'.repeat(64),
     CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL:OWNER_ALTERNATE_CONSENT
   };
+  for(const key of ['MODEL_PATH','RUNTIME_PATH','MODEL_MANIFEST','RUNTIME_SHA256','RUNTIME_KIND'])delete env['CONTINUUM_LOCAL_BRAIN_'+key];
   const child=spawnSync(process.execPath,[cli,'coding'],{input:JSON.stringify(req),
     encoding:'utf8',timeout:10000,env});
   assert.equal(child.status,1,child.stderr);
-  assert.match(child.stderr,/GEMMA_LITERTLM_NOT_GGUF/);
+  assert.equal(child.error,undefined);assert.equal(child.signal,null);
+  assert.equal(child.stderr,'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n');
   assert.equal(child.stdout,'');
   assert.doesNotMatch(child.stderr,/Fix broken foo|x{40}/);
 });
 
-test('production coding CLI refuses silent unspecified-model fallback even with otherwise valid credentials',()=>{
+test('production coding CLI blocks missing pinned runtime despite legacy unspecified-model credentials',()=>{
   const cli=resolve(dirname(fileURLToPath(import.meta.url)),'continuum-local-brain-cli.mjs');
   const env={...process.env,CONTINUUM_LOCAL_BRAIN_API_KEY:'x'.repeat(40),
     CONTINUUM_LOCAL_BRAIN_MODEL:'local',
     CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT:'gguf',
     CONTINUUM_LOCAL_BRAIN_MODEL_SHA256:'a'.repeat(64)};
   delete env.CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL;
+  for(const key of ['MODEL_PATH','RUNTIME_PATH','MODEL_MANIFEST','RUNTIME_SHA256','RUNTIME_KIND'])delete env['CONTINUUM_LOCAL_BRAIN_'+key];
   const child=spawnSync(process.execPath,[cli,'coding'],{
     input:JSON.stringify({userPrompt:'Fix',allowedTrackedPaths:['lib/foo.mjs'],timeoutMs:1500}),
     encoding:'utf8',timeout:10000,env});
   assert.equal(child.status,1,child.stderr);
-  assert.match(child.stderr,/MODEL_ID_UNSPECIFIED/);
+  assert.equal(child.error,undefined);assert.equal(child.signal,null);
+  assert.equal(child.stderr,'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n');
   assert.equal(child.stdout,'');
 });
 

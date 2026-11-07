@@ -1,0 +1,22 @@
+{
+  "source": "2558c029021af6ad399910478c56c0c75ec506c5",
+  "tree": "b581387a31c26a462e3219109b7293f040317cb2",
+  "dirty": "?? app/src/uiTest/java/at/heinz/deviceai/AvatarRangeFrameConnectionUiTest.kt\n?? docs/evidence/implementation-wave2-20261104/baseline-gradle.txt",
+  "checkout": "/workspace/scratch/d663e8444310/continuum-anschluss",
+  "args": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    ":app:testDebugUnitTest",
+    "-PcontinuumUiWidgetTests=true",
+    "--tests",
+    "*AvatarRangeFrameConnectionUiTest"
+  ],
+  "started_at": "2026-11-04T19:16:27.857610+00:00",
+  "exit_code": 1,
+  "source_unchanged": true,
+  "finished_at": "2026-11-04T19:16:57.484827+00:00"
+}

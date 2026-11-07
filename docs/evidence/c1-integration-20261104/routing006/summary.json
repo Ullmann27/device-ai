@@ -1,0 +1,261 @@
+{
+  "taskId": "C1-ROUTING-006",
+  "baseLocal": "ced43fbe26cfc97c5c8fbbc3f429cd0845047c4f",
+  "baseRemote": "9e84803cc1907d9618669ab039b1fd667ab5b207",
+  "baseTree": "18806a9172380187f7485eaa0e3490b27fb8a79a",
+  "author": "C1/source_audit; C1 sole Activity integrator",
+  "patchSha256": "c47ab9c0c70ca271f47f190ec475f9d6ce02ffdd60774679249de730356830ed",
+  "activityBeforeBlob": "c1482ed3be0cb91734e10947613ec62d1a3c38cb",
+  "activityAfterBlob": "bc1a08495f56696b2f0a6613260beb92bb3dbc62",
+  "paths": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "sha256": "c01049c44c18db04b8f1ccb71b3a8fef77c64353728c78ada17fc5bc1e3a32b7"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefBotAddressRouterTest.kt",
+      "sha256": "cf75e1245a34c284663055d2f1b00fdf9e1137d39bc51c0d15624d6d6fc3eb3f"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumBotTaskRoutingUiTest.kt",
+      "sha256": "8e8844d1af053dc8daec77f6892cccfaf8cb97d473054d9953a337823a53cc60"
+    }
+  ],
+  "red": {
+    "tests": 25,
+    "pass": 22,
+    "fail": 3,
+    "compileExit": 0,
+    "junitExit": 1,
+    "executedBy": "source_audit"
+  },
+  "green": {
+    "tests": 27,
+    "pass": 27,
+    "fail": 0,
+    "compileExit": 0,
+    "junitExit": 0,
+    "executedBy": "C1",
+    "twoExtraPostRedControls": "Router and caller explicit @-marked Select protections"
+  },
+  "greenInvocation": [
+    "flock",
+    "--exclusive",
+    "--wait",
+    "20",
+    "--conflict-exit-code",
+    "75",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+    "flock",
+    "--exclusive",
+    "--wait",
+    "20",
+    "--conflict-exit-code",
+    "75",
+    "/workspace/scratch/d663e8444310/qa/gradle.lock",
+    "python3",
+    "probe/run.py",
+    "candidate",
+    "green"
+  ],
+  "greenInvocationCwd": "/workspace/scratch/174c84456ee3/source-audit/routing006",
+  "independentReview": {
+    "agent": "/root/repair_review",
+    "status": "STATIC_APPROVED"
+  },
+  "archive": {
+    "name": "routing006-source-and-tests.tar.xz",
+    "bytes": 136576,
+    "sha256": "83786ea61207b37ac135d420ca082f7a455034c766b8751587c642c332baefa9",
+    "members": [
+      {
+        "path": "C1-ROUTING-006.patch",
+        "bytes": 10293,
+        "sha256": "c47ab9c0c70ca271f47f190ec475f9d6ce02ffdd60774679249de730356830ed"
+      },
+      {
+        "path": "HANDOFF.md",
+        "bytes": 7141,
+        "sha256": "527f692e91dae5e61bc12ac7390678139cb5023d3fd84b2d16b8ce4d8cc7aede"
+      },
+      {
+        "path": "base/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "bytes": 618692,
+        "sha256": "7a10cb4f0eabb5fb223bf329b7e26ac063cda8ca2a9c4ab11348917ebf529848"
+      },
+      {
+        "path": "base/app/src/main/java/at/heinz/deviceai/chief/ChiefBotAddressRouter.kt",
+        "bytes": 3083,
+        "sha256": "7b6c571ffc968197166387ffbd5fe4cbf1f4bd5c51f3b45a5a346ec74f754deb"
+      },
+      {
+        "path": "base/app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt",
+        "bytes": 27842,
+        "sha256": "00f9193cd3f8973f0fc409203be0b0f372818856214493c3c98e738e56fffa23"
+      },
+      {
+        "path": "base/app/src/test/java/at/heinz/deviceai/chief/ChiefBotAddressRouterTest.kt",
+        "bytes": 8304,
+        "sha256": "602737f2c95b7ae3b1cc19e4020a32b9858316b1854bb6f5c99e3b4de7842b1d"
+      },
+      {
+        "path": "base/app/src/uiTest/java/at/heinz/deviceai/ContinuumBotTaskRoutingUiTest.kt",
+        "bytes": 6958,
+        "sha256": "a09c8f71493f150b797a4845e41b26de2beb521391843960f48cdf2d547ff218"
+      },
+      {
+        "path": "base-manifest.json",
+        "bytes": 1273,
+        "sha256": "d4e1206dfcfab561f4017611270315ff1f815e8f33b83910fae69372837d1e01"
+      },
+      {
+        "path": "bundle-manifest.json",
+        "bytes": 4004,
+        "sha256": "829f8cfe572beb4baaba8b556748c12cb98fff82c9750ce825310f44117dbef5"
+      },
+      {
+        "path": "candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "bytes": 618819,
+        "sha256": "c01049c44c18db04b8f1ccb71b3a8fef77c64353728c78ada17fc5bc1e3a32b7"
+      },
+      {
+        "path": "candidate/app/src/main/java/at/heinz/deviceai/chief/ChiefBotAddressRouter.kt",
+        "bytes": 3083,
+        "sha256": "7b6c571ffc968197166387ffbd5fe4cbf1f4bd5c51f3b45a5a346ec74f754deb"
+      },
+      {
+        "path": "candidate/app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt",
+        "bytes": 27842,
+        "sha256": "00f9193cd3f8973f0fc409203be0b0f372818856214493c3c98e738e56fffa23"
+      },
+      {
+        "path": "candidate/app/src/test/java/at/heinz/deviceai/chief/ChiefBotAddressRouterTest.kt",
+        "bytes": 10809,
+        "sha256": "cf75e1245a34c284663055d2f1b00fdf9e1137d39bc51c0d15624d6d6fc3eb3f"
+      },
+      {
+        "path": "candidate/app/src/uiTest/java/at/heinz/deviceai/ContinuumBotTaskRoutingUiTest.kt",
+        "bytes": 11636,
+        "sha256": "8e8844d1af053dc8daec77f6892cccfaf8cb97d473054d9953a337823a53cc60"
+      },
+      {
+        "path": "evidence/base/RouteProbe.kt",
+        "bytes": 6163,
+        "sha256": "4fec17d0041b0f17403fe897e91fc2fc905cd7d317f00864e4b24fb355e31029"
+      },
+      {
+        "path": "evidence/base/compile.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "evidence/base/executed-sources/base/app/src/main/java/at/heinz/deviceai/chief/ChiefBotAddressRouter.kt",
+        "bytes": 3083,
+        "sha256": "7b6c571ffc968197166387ffbd5fe4cbf1f4bd5c51f3b45a5a346ec74f754deb"
+      },
+      {
+        "path": "evidence/base/executed-sources/base/app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt",
+        "bytes": 27842,
+        "sha256": "00f9193cd3f8973f0fc409203be0b0f372818856214493c3c98e738e56fffa23"
+      },
+      {
+        "path": "evidence/base/executed-sources/candidate/app/src/test/java/at/heinz/deviceai/chief/ChiefBotAddressRouterTest.kt",
+        "bytes": 10351,
+        "sha256": "6b9f418df439d3f6ee0f00467e0d3ecfb958f58f1c2cdf39d82d9fa770dc2592"
+      },
+      {
+        "path": "evidence/base/executed-sources/evidence/base/RouteProbe.kt",
+        "bytes": 6163,
+        "sha256": "4fec17d0041b0f17403fe897e91fc2fc905cd7d317f00864e4b24fb355e31029"
+      },
+      {
+        "path": "evidence/base/executed-sources/probe/ActivityRouteProbeTest.kt",
+        "bytes": 4374,
+        "sha256": "076e2ff7755a088c7c16237a90384debe23370740b4f3aa855c79bd7d4e436c6"
+      },
+      {
+        "path": "evidence/base/executed-sources/probe/UnusedConversationStorage.kt",
+        "bytes": 801,
+        "sha256": "01e3e0b7f3e5992ff9c5a9ef5a444f0b47fdacbb77941785fd640d34bebc9cee"
+      },
+      {
+        "path": "evidence/base/executed-sources/probe/UnusedObjectStorage.kt",
+        "bytes": 1077,
+        "sha256": "239035c8a18d452da5624043f96d0a28df3584bc5ad591ee5b4df6af7d9dc5cd"
+      },
+      {
+        "path": "evidence/base/junit.log",
+        "bytes": 2331,
+        "sha256": "aeff36b6e33eea8d1d3ed25d31a6fc37be3199294368573e3594163273e847a3"
+      },
+      {
+        "path": "evidence/base/result.json",
+        "bytes": 3203,
+        "sha256": "a238d436212d4116ea4ea0e656bdb16a0ae0bc8f068d13d1ac6c00487f7ac53b"
+      },
+      {
+        "path": "evidence/green/RouteProbe.kt",
+        "bytes": 6290,
+        "sha256": "8de93177bb79b52aa81d8cc86337bdb7b8cf8b59ab594ab1fc15839b3c468baa"
+      },
+      {
+        "path": "evidence/green/compile.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "evidence/green/junit.log",
+        "bytes": 77,
+        "sha256": "4ca5c01ac2a92304bc10adbb9563f42391b67f0b7c3649eac38c3078a23994ad"
+      },
+      {
+        "path": "evidence/green/result.json",
+        "bytes": 3232,
+        "sha256": "991e20ec23840c9c71d85dd891d0cb1c54e08290570c9cd0ba0bfcb83e5cf3fb"
+      },
+      {
+        "path": "evidence/lock-blockades.json",
+        "bytes": 486,
+        "sha256": "881b0d5025fbb861ef9104aac612dd67b32a51221341ed518d7f2449d79b463d"
+      },
+      {
+        "path": "evidence/patch-check.json",
+        "bytes": 265,
+        "sha256": "469a9f71aaa618a1fda9c711abd44195b38f2deba87811354748acfa2184dd9a"
+      },
+      {
+        "path": "patch-manifest.json",
+        "bytes": 1906,
+        "sha256": "efec93c1308350071319097c839ba7cf117776555eb610f153096b4f526a4480"
+      },
+      {
+        "path": "probe/ActivityRouteProbeTest.kt",
+        "bytes": 4663,
+        "sha256": "a5bedbfdecc9f2ce4fb1486be6cf0f02a6ea95e0aaf357f3c125738b981509d1"
+      },
+      {
+        "path": "probe/RouteProbePrefix.kt.txt",
+        "bytes": 2479,
+        "sha256": "4c4401d8e9cae71b8dde3c448e92924f4e73fb158197a0d4c2325f7fd10f26ba"
+      },
+      {
+        "path": "probe/UnusedConversationStorage.kt",
+        "bytes": 801,
+        "sha256": "01e3e0b7f3e5992ff9c5a9ef5a444f0b47fdacbb77941785fd640d34bebc9cee"
+      },
+      {
+        "path": "probe/UnusedObjectStorage.kt",
+        "bytes": 1077,
+        "sha256": "239035c8a18d452da5624043f96d0a28df3584bc5ad591ee5b4df6af7d9dc5cd"
+      },
+      {
+        "path": "probe/run.py",
+        "bytes": 3686,
+        "sha256": "6b8bd09f382b97c8e456195ec85d678b14d9787704f05b98646f021dad0c408e"
+      }
+    ]
+  },
+  "androidUi": "NOT_COMPILED_NOT_RUN; six new Activity methods require actual Gradle/Robolectric gate",
+  "limits": "Actual routeBotInput method body, real Router/ProfileStore metadata. UI queues, downstream endpoints and unused conversation object storage are doubles; no real model/thread/device proof.",
+  "rollback": "Revert only the small null-profile Activity branch and the two test additions; never replace a newer Activity wholesale."
+}

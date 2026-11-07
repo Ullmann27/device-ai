@@ -10,8 +10,8 @@ const call=main.slice(main.indexOf('if(LocalFirstPolicy.afterMemory('),main.inde
 test('confirmed recall remains exact when supplementary model context is not representable',()=>{
  assert.ok(call.length>250 && call.length<5000);
  assert.match(call,/LocalGroundedRecall\s*\n\s*\.boundedOrNull\(answer,evidence\)/);
- assert.match(call,/if\(recall==null\)\s*\{[\s\S]*addAssistantMessage\(answer\)/);
- assert.doesNotMatch(call,/addAssistantMessage\(answer\.take\(/);
+ assert.match(call,/if\(recall==null\)\s*\{[\s\S]*addNonModelReply\(request,\s*answer,\s*at\.heinz\.deviceai\.cognitive\.NonModelReplyKind\.MEMORY_RECALL\)/);
+ assert.doesNotMatch(call,/(?:addAssistantMessage\(answer|addNonModelReply\(request,\s*answer\.take\()/);
  assert.match(call,/runLocal\(request,modelQuestion,recall,turnTrace\)/);
  assert.doesNotMatch(call,/LocalGroundedRecall\(answer,evidence\)/);
  assert.match(recall,/fun boundedOrNull\(answer: String, provenance: String\): LocalGroundedRecall\?/);

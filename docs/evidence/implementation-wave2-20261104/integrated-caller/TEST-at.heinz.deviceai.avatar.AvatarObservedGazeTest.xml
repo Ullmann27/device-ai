@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar.AvatarObservedGazeTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:26:19" hostname="04c8b0ba7ea6" time="0.005">
+  <properties/>
+  <testcase name="listeningAndSpeakingCanUseFreshObservationWithoutCreatingSpeech" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.001"/>
+  <testcase name="directEventsCannotBypassConfidenceOrTaskPriority" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.0"/>
+  <testcase name="rejectedFutureTimestampCannotPoisonNewSamplesOrUndoPreviousOrdering" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.0"/>
+  <testcase name="clearDoesNotLetQueuedOlderObservationsReviveCameraGaze" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.0"/>
+  <testcase name="invalidConfidenceAndAgeClearAnEarlierObservation" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.0"/>
+  <testcase name="coordinatesRejectNaNInfinityAndOutOfBounds" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.0"/>
+  <testcase name="outOfOrderSamplesCannotReplaceTheLatestPosition" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.0"/>
+  <testcase name="taskApprovalAndBlockedGazeRemainAuthoritative" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.0"/>
+  <testcase name="observedPositionSuppressesCosmeticIdleWandering" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.003"/>
+  <testcase name="idleMotionIsContinuousAcrossTheExistingViewClockWrap" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.0"/>
+  <testcase name="freshHardwareObservationExpiresWithoutAnotherCallback" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.0"/>
+  <testcase name="sinkReplacementDoesNotReplayObservedOrOldCameraState" classname="at.heinz.deviceai.avatar.AvatarObservedGazeTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

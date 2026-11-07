@@ -1,0 +1,40 @@
+{
+  "label": "phone-density-check",
+  "head": "8c851a09d7c641bdfc02d5e2d2c432cd3fda0e8c",
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-I",
+    "/workspace/scratch/76b7222771d5/build-env/observe-tests.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest"
+  ],
+  "started": 1793898590.0135636,
+  "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+  "statusBefore": " M docs/evidence/astra-jarvis-visual-20261105/FOLD7-OWNER-ACCEPTANCE.md\n?? app/src/uiTest/java/at/heinz/deviceai/JarvisPhoneWorkWindowDensityUiTest.kt\n?? docs/evidence/astra-jarvis-visual-20261105/work-window-iterations/\n?? tools/__pycache__/\n",
+  "sourcePatchSha256": "9c34edce566111f51b8989f6e8c5de5ce6cac1f64bc2b3c993c3426d216090d7",
+  "exitCode": 1,
+  "ended": 1793898618.1485312,
+  "sourceUnchanged": true,
+  "statusAfter": " M docs/evidence/astra-jarvis-visual-20261105/FOLD7-OWNER-ACCEPTANCE.md\n?? app/src/uiTest/java/at/heinz/deviceai/JarvisPhoneWorkWindowDensityUiTest.kt\n?? docs/evidence/astra-jarvis-visual-20261105/work-window-iterations/\n?? tools/__pycache__/\n",
+  "log": "/workspace/scratch/76b7222771d5/build-env/logs/phone-density-check.log",
+  "sourceBeforeManifestSha256": "21a0dce61829a11f8f2337f090407c8a61a10e88916d67c7a2fcb12eb8bd4aed",
+  "sourceAfterManifestSha256": "21a0dce61829a11f8f2337f090407c8a61a10e88916d67c7a2fcb12eb8bd4aed",
+  "changedSourceSha256": {
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisPhoneWorkWindowDensityUiTest.kt": "10f233ad5a052bad9b5e63ff600bf7069212384c815f694e5b1dc47ea2ebfa7a"
+  },
+  "observedCounts": {
+    "tests": 2,
+    "passed": 0,
+    "failed": 2,
+    "skipped": 0
+  },
+  "countBasis": "AUDIT_TESTS and fresh JUnit XML"
+}

@@ -7,7 +7,8 @@ class BootstrapBrainTest {
     @Test fun startsWithUsefulHonestOfflineDialogue() {
         val reply = BootstrapBrain.decide("Hallo", emptyList())
         assertEquals(BootstrapKind.REPLY, reply.kind)
-        assertTrue(reply.message.contains("lokaler Startkern"))
+        assertTrue(reply.message.contains("lokale Startkern"))
+        assertTrue(reply.message.contains("Device AI Continuum"))
         assertTrue(BootstrapBrain.decide("Was kannst du?", emptyList()).message.contains("Forschungsziele"))
         assertTrue(BootstrapBrain.decide("Erkläre Quantenmechanik", emptyList()).message.contains("noch nicht"))
     }
@@ -51,6 +52,83 @@ class BootstrapBrainTest {
             "Meine ausdrücklich gespeicherten Fakten:\n• Ich mag Blau\n• Ich mag Tee", recall.message)
         assertEquals(BootstrapKind.FORGET, BootstrapBrain.decide("Vergiss alles", emptyList()).kind)
     }
+    @Test fun savingProhibitionIsConversationNotStorageInspection() {
+        val utterances = listOf(
+            "Für diese Testaufgabe gilt: In der roten Kiste liegen 4 Kupferringe und in der blauen Kiste 7 Kupferringe. Welche Kiste enthält mehr? Antworte kurz. Speichere diese Angaben nicht dauerhaft.",
+            "Speichere diese Angaben nicht dauerhaft.",
+            "Ich möchte die Zahlen nicht speichern, sondern vergleichen.",
+            "Bitte speichere die Kistenzahlen nicht.",
+            "Speicher das nicht.",
+            "Bitte speicher diese Angaben nicht dauerhaft.",
+            "Speicher die Bilder nicht, bitte zeige mir die Zahlen.",
+            "Speicher mir diese Zahlen nicht."
+        )
+        utterances.forEach { utterance ->
+            val decision = BootstrapBrain.decide(utterance, emptyList())
+            assertEquals(utterance, BootstrapKind.REPLY, decision.kind)
+            assertNull(utterance, decision.tool)
+            assertTrue(utterance, decision.allowNeuralRecall)
+        }
+        listOf(
+            "Speicher", "Prüfe Speicher", "Zeige Speicherplatz", "Speicherstatus",
+            "Speicherkapazität", "Prüfe freien Speicher", "Speicher prüfen",
+            "Wie viel Speicher ist frei?"
+        ).forEach { request ->
+            val decision = BootstrapBrain.decide(request, emptyList())
+            assertEquals(request, BootstrapKind.DEVICE_TOOL, decision.kind)
+            assertEquals(request, "get_storage_info", decision.tool)
+        }
+    }
+
+    @Test fun negatedStorageInspectionNeverSilentlyExecutesDeviceTool() {
+        val negatives = listOf(
+            "Prüfe nicht den Speicher.",
+            "Bitte den Speicher nicht prüfen!",
+            "Nicht Speicher prüfen.",
+            "Zeige mir nicht den Speicherstatus.",
+            "Ohne Speicherprüfung: sag einfach Hallo.",
+            "Prüfe keinesfalls die Speicherkapazität."
+        )
+        negatives.forEach { request ->
+            val result = BootstrapBrain.decide(request, emptyList())
+            assertEquals(request, BootstrapKind.REPLY, result.kind)
+            assertNull(request, result.tool)
+        }
+        val contrasting = listOf(
+            "Nutze nicht das Web, sondern prüfe den lokalen Speicher.",
+            "Prüfe nicht den Akku, sondern zeige den Speicherplatz.",
+            "Speichere das nicht. Prüfe Speicher."
+        )
+        contrasting.forEach { request ->
+            val result = BootstrapBrain.decide(request, emptyList())
+            assertEquals(request, BootstrapKind.DEVICE_TOOL, result.kind)
+            assertEquals(request, "get_storage_info", result.tool)
+        }
+    }
+
+    @Test fun batteryAndStorageContrastNeverExecutesNegatedOrAmbiguousTool() {
+        val negatives = listOf(
+            "Prüfe nicht den Akku.",
+            "Bitte die Batterie nicht prüfen!",
+            "Zeige keinesfalls den Ladezustand."
+        )
+        negatives.forEach { request ->
+            val decision = BootstrapBrain.decide(request, emptyList())
+            assertEquals(request, BootstrapKind.REPLY, decision.kind)
+            assertNull(request, decision.tool)
+        }
+        val storage = BootstrapBrain.decide(
+            "Prüfe nicht den Akku, sondern zeige den Speicherplatz.", emptyList())
+        assertEquals(BootstrapKind.DEVICE_TOOL, storage.kind)
+        assertEquals("get_storage_info", storage.tool)
+        val battery = BootstrapBrain.decide("Prüfe nicht den Speicher, sondern prüfe Akku.", emptyList())
+        assertEquals(BootstrapKind.DEVICE_TOOL, battery.kind)
+        assertEquals("get_battery_info", battery.tool)
+        val ambiguous = BootstrapBrain.decide("Prüfe Akku und Speicher.", emptyList())
+        assertEquals(BootstrapKind.REPLY, ambiguous.kind)
+        assertNull(ambiguous.tool)
+    }
+
     @Test fun deviceCallsAreReadOnlyAndUseRegisteredTools() {
         val phrases = listOf(
             "Prüfe Akku", "Speicher", "Zeig meine Downloads",

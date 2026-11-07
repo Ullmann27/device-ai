@@ -1,0 +1,58 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=43107 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=43107 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:39:17: warning: 'fun sendStickyBroadcast(p0: Intent!): Unit' is deprecated. Deprecated in Java.
+        service.sendStickyBroadcast(Intent(Intent.ACTION_BATTERY_CHANGED)
+                ^^^^^^^^^^^^^^^^^^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:49:26: warning: Java type mismatch: inferred type is 'Any?', but 'Any' was expected.
+            synchronized(lock) {
+                         ^^^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:53:30: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                while (worker!!.isAlive && System.nanoTime() < deadline &&
+                             ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:54:29: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                    !(worker!!.state == Thread.State.BLOCKED && worker!!.stackTrace.any {
+                            ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:54:71: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                    !(worker!!.state == Thread.State.BLOCKED && worker!!.stackTrace.any {
+                                                                      ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:57:100: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                assertEquals("The real job waits before entering CDX", Thread.State.BLOCKED, worker!!.state)
+                                                                                                   ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:58:34: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                assertTrue(worker!!.stackTrace.any {
+                                 ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:64:56: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+            assertFalse("Bounded job completes", worker!!.isAlive)
+                                                       ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:82:23: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                worker!!.join(5_000)
+                      ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:99:17: warning: 'fun sendStickyBroadcast(p0: Intent!): Unit' is deprecated. Deprecated in Java.
+        service.sendStickyBroadcast(Intent(Intent.ACTION_BATTERY_CHANGED)
+                ^^^^^^^^^^^^^^^^^^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:124:17: warning: 'fun sendStickyBroadcast(p0: Intent!): Unit' is deprecated. Deprecated in Java.
+        service.sendStickyBroadcast(Intent(Intent.ACTION_BATTERY_CHANGED)
+                ^^^^^^^^^^^^^^^^^^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:131:26: warning: Java type mismatch: inferred type is 'Any?', but 'Any' was expected.
+            synchronized(lock) {
+                         ^^^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:136:30: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                while (worker!!.isAlive && System.nanoTime() < deadline &&
+                             ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:137:29: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                    !(worker!!.state == Thread.State.BLOCKED && worker!!.stackTrace.any {
+                            ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:137:71: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                    !(worker!!.state == Thread.State.BLOCKED && worker!!.stackTrace.any {
+                                                                      ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:141:58: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                assertEquals(Thread.State.BLOCKED, worker!!.state)
+                                                         ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:142:34: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                assertTrue(worker!!.stackTrace.any {
+                                 ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:150:31: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+            assertFalse(worker!!.isAlive)
+                              ^^
+app/src/uiTest/java/at/heinz/deviceai/learning/ContinuumTrainingCancellationUiTest.kt:163:23: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Thread'.
+                worker!!.join(5_000)
+                      ^^

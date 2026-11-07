@@ -1,0 +1,8 @@
+java.txt: exit 0
+compiler.txt: exit 0
+compile.log: exit 0
+baseline-junit.txt: exit 0
+candidate-junit.txt: exit 0
+parity.json: exit 0
+{"status":"PASS","cases":462,"successfulContexts":408,"identicalExceptions":54,"truncatedContexts":300,"outcomesUtf16Sha256":"a3d389027eaf618170e352ca9d974ff31902695e228cb38e4e7db594d35fb854","fullDataClassEquality":true,"utf8ByteEquality":true,"clockCallEquality":true,"seed":"0x434F4E54455854"}
+

@@ -1,0 +1,6 @@
+{
+  "actualOutcome": "GRADLE_CONFIGURATION_REJECTED",
+  "testMethodsExecuted": 0,
+  "reason": "--tests CLI arguments appeared in Gradle taskNames and the existing disposable-QA task allowlist rejected them. This attempt is not the assertion RED proof.",
+  "followup": "red-filter-5d uses an external fixed Test.filter init script while requesting only the allowed testDebugUnitTest task. No build guard or source changed."
+}

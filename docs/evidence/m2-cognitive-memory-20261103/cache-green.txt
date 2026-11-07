@@ -1,0 +1,17 @@
+# M2.1 view cache — GREEN 2026-11-03 14:29:04 CET
+Change: ledger view cached per (canonical dir, zone), keyed by SHA-256 of experiences-v2.bin read under FILE_LOCK
+on every call (content, not mtime/length); working memory merged per call via withWorking(); hot regexes compiled once.
+Ledger format unchanged; MAX_RECORDS=256 unchanged.
+
+Targeted run (ContinuumTemporalMemory* + Owner*): 64 tests, 0 failures, BUILD SUCCESSFUL
+  PASS specialistLatencyBudgetOnTenYearHistory, anUnchangedLedgerIsReusedAcrossCoreInstances,
+  aRewriteWithTheSameMtimeAndLengthIsStillDetected, aStatusFlipBetweenViewsIsSeenByAnotherInstance,
+  workingMemoryNeverLeaksIntoTheCachedLedgerView, aRevocationRacingTheTurnStillFailsClosedWithTheCache
+
+Before (RED, ea7d08f1): warm n=819 p50=17.286 p95=30.056 ms; cold-loop specialist p50=18.19 p95=23.64 ms
+After  (3 runs):
+  run A: warm p50=0.464 p95=3.411 max=13.093 correct=819/819 | specialist p50=0.56 p95=1.95
+  run B: warm p50=0.474 p95=0.880 max=2.423  correct=819/819 | specialist p50=0.57 p95=0.98
+  run C: warm p50=0.451 p95=0.612 max=2.203  correct=819/819 | specialist p50=0.57 p95=1.76
+Baseline replyFromMemory for comparison: p50 5.3–8.2, p95 9.9–19.0 ms (noisy host).
+Accuracy unchanged: 273/273 specialist, 67/273 baseline, hypothetical leaks 0/25.

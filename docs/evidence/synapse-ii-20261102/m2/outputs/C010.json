@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C010:s1",
+    "decision": "SPAN",
+    "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+    "endExclusive": 63,
+    "start": 55,
+    "text": "Uvgemeta",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "RULE": {
+    "sourceId": "bc:C010:s1",
+    "decision": "SPAN",
+    "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+    "endExclusive": 63,
+    "start": 55,
+    "text": "Uvgemeta",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C010:s1",
+    "decision": "SPAN",
+    "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+    "endExclusive": 63,
+    "start": 55,
+    "text": "Uvgemeta",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "rawMillis": 78.830427
+}

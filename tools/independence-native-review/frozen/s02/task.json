@@ -1,0 +1,19 @@
+{
+  "id": "independence-s02",
+  "classification": "NEW_UNKNOWN_CONTROLLED_TASK",
+  "title": "Repair raw-text HTML escaping without double-escaping inserted entities",
+  "requirements": [
+    "escapeHtmlText(text) receives a JavaScript string and returns a string. Replace every original & with &amp;, < with &lt;, > with &gt;, double quote with &quot;, and single quote with &#39;. Use exactly these entity spellings.",
+    "Do not escape characters introduced by replacement. Treat preexisting entity-like input as raw text: its original ampersands must be escaped. Preserve every other character and its order, including Unicode and whitespace. Empty strings are valid.",
+    "Change only lib/subject.mjs. Owner tests and dependencies are fixed. No HTML parsing, entity decoding, normalization, or external packages are needed."
+  ],
+  "allowedPaths": ["lib/subject.mjs"],
+  "maxModelCalls": 1,
+  "requestedModelTimeoutMs": 120000,
+  "unchangedProfileDeadlineMillis": 120000,
+  "fixedOutputTokenCeiling": 1800,
+  "effectiveTimeoutRule": "min(requested120000, remainingAssignmentMs, remainingCanonicalDeadlineMs) minus500ms",
+  "nativeCpuSecondsCeiling": 120,
+  "externalAnswer": false,
+  "independentTestsExposedToBuilder": false
+}

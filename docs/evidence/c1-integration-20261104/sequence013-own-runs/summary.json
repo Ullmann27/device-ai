@@ -1,0 +1,268 @@
+{
+  "taskId": "C1-SEQUENCE-013-OWN-ACCEPTANCE",
+  "testedLocal": "38917560671b13795bf85d5a68d329658ba4eb7d",
+  "testedRemote": "6c34db7be4068b52de0cef20a0c9142a08db27c0",
+  "testedTree": "687fe9a8267cb0cd8546acc7818f66fdbf3a1891",
+  "androidResult": {
+    "taskId": "C1-COMBINED-GATES-001",
+    "label": "android-sequence-temporal-01",
+    "source": {
+      "commit": "38917560671b13795bf85d5a68d329658ba4eb7d",
+      "tree": "687fe9a8267cb0cd8546acc7818f66fdbf3a1891",
+      "dirty": ""
+    },
+    "command": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+      "--offline",
+      "--no-daemon",
+      "--no-build-cache",
+      "--max-workers=2",
+      "--console=plain",
+      "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-PdeviceAiMentorPreview=true",
+      "-PcontinuumUiWidgetTests=true",
+      "-PcontinuumLocalStandaloneQa=true",
+      "-PcontinuumStandaloneVersionCode=41",
+      "-PcontinuumAuditProgressFile=/workspace/scratch/174c84456ee3/qa/android-sequence-temporal-01-active-test.json",
+      "-PcontinuumAuditTestClasses=at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest,at.heinz.deviceai.learning.TemporalCueCalendarTest,at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest,at.heinz.deviceai.learning.ContinuumRetrievalExperimentTest",
+      "-I",
+      "/workspace/scratch/174c84456ee3/qa/observe-tests.init.gradle",
+      ":app:testDebugUnitTest"
+    ],
+    "requestedAt": "2026-11-04T21:01:37.811446+00:00",
+    "locks": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+      "/workspace/scratch/d663e8444310/qa/gradle.lock"
+    ],
+    "exitCode": 0,
+    "status": "PASS",
+    "freeBytesAtStart": 1019957248,
+    "startedAt": "2026-11-04T21:01:37.811615+00:00",
+    "finishedAt": "2026-11-04T21:02:05.976506+00:00",
+    "sourceUnchanged": true,
+    "recordedAt": "2026-11-04T21:02:06.032282+00:00"
+  },
+  "hostResult": {
+    "taskId": "C1-COMBINED-GATES-001",
+    "label": "sequence-host-01",
+    "source": {
+      "commit": "38917560671b13795bf85d5a68d329658ba4eb7d",
+      "tree": "687fe9a8267cb0cd8546acc7818f66fdbf3a1891",
+      "dirty": ""
+    },
+    "command": [
+      "env",
+      "CONTINUUM_KOTLIN_COMPILER_LIB=/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/lib",
+      "bash",
+      "tools/sequence-turn-check/run.sh",
+      "/workspace/scratch/174c84456ee3/qa/sequence-host-01-output"
+    ],
+    "requestedAt": "2026-11-04T21:00:44.143054+00:00",
+    "locks": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+      "/workspace/scratch/d663e8444310/qa/gradle.lock"
+    ],
+    "exitCode": 0,
+    "status": "PASS",
+    "freeBytesAtStart": 1034784768,
+    "startedAt": "2026-11-04T21:00:44.143453+00:00",
+    "finishedAt": "2026-11-04T21:00:57.170824+00:00",
+    "sourceUnchanged": true,
+    "recordedAt": "2026-11-04T21:00:57.219917+00:00"
+  },
+  "android": {
+    "tests": 54,
+    "passed": 54,
+    "failed": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "class": "at.heinz.deviceai.learning.ContinuumRetrievalExperimentTest",
+        "tests": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0,
+        "names": [
+          "compareVariantsOnGermanTestSet",
+          "hypothesesNeverComeBackConfirmedAndEmptyIndexIsEmpty"
+        ]
+      },
+      {
+        "class": "at.heinz.deviceai.learning.TemporalCueCalendarTest",
+        "tests": 15,
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0,
+        "names": [
+          "lastMonthRetrievalRanksItsFinalDayAboveAnOlderIdenticalMemoryWithoutPromotingTrust",
+          "previousWeekHasTheSameMondayToSundayBoundsThroughoutTheCurrentWeek",
+          "aDayCountBeyondTheCalendarRangeDoesNotCrashRetrieval",
+          "previousMonthCanCrossTheYearBoundary",
+          "aMidnightGapTodayDoesNotShiftPreviousMonthBoundaries",
+          "previousMonthUsesFebruarysActualLengthInLeapAndOrdinaryYears",
+          "existingDailyCuesAndApproximateOneMonthAgoWindowRemainUnchanged",
+          "previousWeekCanCrossTheYearBoundary",
+          "previousMonthKeepsLocalMidnightAcrossSpringDaylightSavingChange",
+          "previousMonthIncludesTheWholeCalendarMonth",
+          "aDateBeyondEpochMillisecondRangeDoesNotCrashRetrieval",
+          "previousWeekKeepsLocalMidnightAcrossBothDaylightSavingChanges",
+          "calendarBoundariesUseTheConfiguredZone",
+          "aMidnightGapTodayDoesNotShiftPreviousWeekBoundaries",
+          "aDayCountBeyondLongRangeDoesNotSilentlyMeanYesterday"
+        ]
+      },
+      {
+        "class": "at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest",
+        "tests": 12,
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0,
+        "names": [
+          "aTwentyFiveHourDayKeepsBothLocalMidnights",
+          "yesterdayKeepsItsFirstHourWhenTodayHasMissingMidnight",
+          "yesterdayRetrievalIncludesItsFirstHourWithoutPromotingTrust",
+          "aTargetDayWithMissingMidnightStillStartsAtItsFirstValidTime",
+          "spelledDayCountsKeepEachTargetsActualMidnights",
+          "aTwentyThreeHourDayKeepsBothLocalMidnights",
+          "approximateMonthAgoKeepsItsExistingDayOffsetsAndActualMidnights",
+          "todayRetrievalExcludesTheNextDaysFirstHourWithoutPromotingTrust",
+          "dayBeforeYesterdayKeepsBothMidnightsWhenTodayHasMissingMidnight",
+          "todayWithMissingMidnightEndsAtTheNextDaysActualStart",
+          "todaysDateUsesTheConfiguredZoneAtTheSameInstant",
+          "numericDayCountsIncludingZeroKeepEachTargetsActualMidnights"
+        ]
+      },
+      {
+        "class": "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest",
+        "tests": 25,
+        "passed": 25,
+        "failed": 0,
+        "skipped": 0,
+        "names": [
+          "memoryRecallRemainsIndependentOfCompletedTurns",
+          "unrelatedCompletionDuringPauseDoesNotRetireLiveWork",
+          "completionReceivedWhileMotionIsPausedRejectsLateTimeline",
+          "detachedSubscriberRetiresBackgroundCompletionsWithoutReattach",
+          "completionQueuedBeforeMotionPauseSurvivesGenerationChange",
+          "unseenCompletionReceivedDuringPauseRejectsDelayedCommand",
+          "completionQueuedBeforeDetachSurvivesReattach",
+          "delayedCommandCannotReopenACompletedTurn",
+          "bootEventDoesNotBlockTheFirstWorker",
+          "queuedVisualEventIsStillDiscardedAcrossDetach",
+          "completionReceivedWhileMotionIsPausedRejectsLateWorker",
+          "lateTimelineCannotReopenACompletedTurn",
+          "aNewWorkerCanStartAfterACompletedTurn",
+          "recentCompletionsRemainClosedAfterALongSession",
+          "motionPauseKeepsCompletedTurnsClosed",
+          "motionPauseDoesNotDeclareActiveWorkCompleted",
+          "delayedOldCommandCannotDisplaceTheCurrentTurn",
+          "backgroundCompletionBeforeFirstAttachDoesNotWaitForAttachment",
+          "directlySubscribedViewRetainsCompletionReceivedWhileDetached",
+          "directlySubscribedViewRetainsBackgroundCompletionReceivedWhileDetached",
+          "unfinishedWorkCanResumeAfterDetach",
+          "navigationEventDoesNotBlockTheFirstWorker",
+          "lateCallbackFromANonvisibleCompletedTurnIsDropped",
+          "newWorkStartsAfterCompletionReceivedDuringPause",
+          "queuedVisualEventIsStillDiscardedAcrossMotionPause"
+        ]
+      }
+    ]
+  },
+  "host": {
+    "tests": 25,
+    "passed": 25,
+    "failed": 0,
+    "compileExit": 0,
+    "junitExit": 0,
+    "scope": "Android and Painter fail-fast fixtures; not a real Handler queue"
+  },
+  "archive": {
+    "name": "sequence-3891756-own-runs.tar.xz",
+    "sha256": "ac6dfe06beadd62db25c8986cb08c3a5c353d8401fce98b17d5ce644c4f8608a",
+    "bytes": 9364,
+    "members": [
+      {
+        "path": "junit/TEST-at.heinz.deviceai.learning.ContinuumRetrievalExperimentTest.xml",
+        "bytes": 3146,
+        "sha256": "20433498dcfeaba5bbb7ac7ba6109d16ec158396ca81ea3eb08f02f3bfb2673d"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.learning.TemporalCueCalendarTest.xml",
+        "bytes": 2596,
+        "sha256": "68768f50eb24ff0e17414112156b23fd6f2cb9ff159569cab98de049faa7ebe4"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.xml",
+        "bytes": 2212,
+        "sha256": "15e48a0bf79d57106cfe97030eaef1642680ee2b22f883c2661d4cff4f3960b8"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.xml",
+        "bytes": 4088,
+        "sha256": "f521389bb0d0e8c029dab6ba4c381b7b16813844b2a55317233a252c8ef1f4f2"
+      },
+      {
+        "path": "runner/android-sequence-temporal-01.result.json",
+        "bytes": 1633,
+        "sha256": "d38cf09efc96cc313344068865b2c1c9ed85497fc20f77345bfa1c2f852175da"
+      },
+      {
+        "path": "runner/android-sequence-temporal-01.log",
+        "bytes": 17812,
+        "sha256": "b282258e85d1a5eb0c7d8984efd5e35e6089e3c991948d6273a5bc2c893caaa7"
+      },
+      {
+        "path": "runner/android-sequence-temporal-01-active-test.json",
+        "bytes": 198,
+        "sha256": "49baf8efcfe2a809c07978b45fbd8b9f8ae9a6693d954cfec6e1c051292e5df5"
+      },
+      {
+        "path": "runner/sequence-host-01.result.json",
+        "bytes": 909,
+        "sha256": "032a2b513b44ae58f6229d6ec35055f721ec0b1bf48cf38240a799369b27c770"
+      },
+      {
+        "path": "runner/sequence-host-01.log",
+        "bytes": 828,
+        "sha256": "ad2578cf621d68f433f1bf6157e99194037cdb470d16eb389361815086b9ccc0"
+      },
+      {
+        "path": "runner/run_c1_gate.py",
+        "bytes": 3945,
+        "sha256": "5299b2744e961f05f2a25c037c37481dab148c6d0baa5c8de697926e349c62e5"
+      },
+      {
+        "path": "runner/observe-tests.init.gradle",
+        "bytes": 1798,
+        "sha256": "5c2471c275872167f60a2ada33f018d01921bb1c563608de00014b568a66fdeb"
+      },
+      {
+        "path": "host-output/compile.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "host-output/input-integrity.log",
+        "bytes": 2241,
+        "sha256": "aaa094fe539db0d3bbd7c120c4c48608d67cc7aa9f38dc573b36e208296e9841"
+      },
+      {
+        "path": "host-output/input-sha256.txt",
+        "bytes": 4535,
+        "sha256": "6a3ed20872d2da0e69781cf8088664c28224f2a7746790714951aba13964e3fe"
+      },
+      {
+        "path": "host-output/junit.log",
+        "bytes": 75,
+        "sha256": "fa01aa4d75912e32bbfc05f391b9e0109bb9c21c945b4ad027e4733f532cec7d"
+      }
+    ]
+  },
+  "limits": [
+    "These scopes and prior Temporal29 overlap and are not added",
+    "Full Android suite and NewApi on final source still required",
+    "No local model inference, native Filament, real TTS or physical device",
+    "Host25 does not simulate a passing Handler queue; real queue covered by actual project Robolectric25subset"
+  ]
+}

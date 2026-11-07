@@ -10,11 +10,15 @@ package at.heinz.deviceai.ui
  * Coordinates are in the caller's current transform; colours are ARGB integers; [alpha] multiplies the paint.
  */
 interface ContinuumPainter {
+    /** Packaged decorative RGBA asset only. False allows vector fallback in unsupported test painters. */
+    fun drawRaster(assetPath: String, left: Float, top: Float, right: Float, bottom: Float, alpha: Float = 1f): Boolean = false
     /** Batched independent segments (x0,y0,x1,y1). Android submits one native draw call, without frame allocations. */
     fun strokeSegments(points: FloatArray, count: Int, width: Float, fill: Fill, alpha: Float) {
         for (i in 0 until count step 4) drawLine(points[i], points[i + 1], points[i + 2], points[i + 3], width, fill, alpha, roundCap = false)
     }
     fun save()
+    /** save() with a group opacity; balanced by restore(). Portable fallback: plain save (no group fade). */
+    fun saveAlpha(alpha: Float) = save()
     fun restore()
     fun translate(dx: Float, dy: Float)
     fun scale(sx: Float, sy: Float, px: Float = 0f, py: Float = 0f)

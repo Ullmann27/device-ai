@@ -1,0 +1,94 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:processDebugManifestForPackage
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugResources
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:compileDebugKotlin
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:457:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:458:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:460:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:793:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2049:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3841:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3856:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3885:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6376:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6925:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6925:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7945:59 Unnecessary safe call on a non-null receiver of type 'Long'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:457:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:458:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:460:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:793:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2049:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3841:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3856:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3885:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6376:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6925:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6925:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7945:59 Unnecessary safe call on a non-null receiver of type 'Long'.
+
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:processDebugJavaRes UP-TO-DATE
+
+> Task :app:compileDebugUnitTestKotlin
+e: file:///workspace/momega1-build-env/full-layout-independent/IndependentFullLayoutUiTest.kt:50:119 Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun String?.orEmpty(): String
+
+> Task :app:compileDebugUnitTestKotlin FAILED
+[Incubating] Problems report is available at: file:///workspace/momega1-build-env/guide-green-source-a39b614b/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugUnitTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1m 11s
+28 actionable tasks: 11 executed, 17 up-to-date

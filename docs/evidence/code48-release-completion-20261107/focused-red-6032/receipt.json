@@ -1,0 +1,48 @@
+{
+  "gate": "focused",
+  "startedAt": "2026-11-07T07:43:41.456698+00:00",
+  "startedEpochMillis": 1794037421456,
+  "finishedAt": "2026-11-07T07:45:44.603172+00:00",
+  "sourceBefore": {
+    "commit": "6032da0d42fc022f60ab70d82f3fb71c8486aa06",
+    "tree": "e2143662195f84ab19c04281811a1b1411909713",
+    "branch": "codex/continuum-code48-release-completion-20261107",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceAfter": {
+    "commit": "6032da0d42fc022f60ab70d82f3fb71c8486aa06",
+    "tree": "e2143662195f84ab19c04281811a1b1411909713",
+    "branch": "codex/continuum-code48-release-completion-20261107",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceUnchanged": true,
+  "commands": [
+    {
+      "command": [
+        "gradle",
+        "--offline",
+        "--no-daemon",
+        "--max-workers=2",
+        "--console=plain",
+        "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-PdeviceAiMentorPreview=true",
+        "-PcontinuumStandaloneVersionCode=48",
+        "-PcontinuumUiWidgetTests=true",
+        "-PcontinuumLocalStandaloneQa=true",
+        "--init-script",
+        "/workspace/scratch/607c5c51ce92/focused.init.gradle",
+        ":app:testDebugUnitTest"
+      ],
+      "cwd": "/workspace/scratch/607c5c51ce92/device-ai-build48",
+      "exitCode": 1
+    }
+  ],
+  "logSha256": "0650fe72f0e972792c75ed316dfc700d2b9f41e81216f17697c38d07c1e59807",
+  "logBytes": 46723,
+  "localUnsignedQaOnly": true,
+  "deviceAcceptance": "NOT_RUN",
+  "status": "FAIL"
+}

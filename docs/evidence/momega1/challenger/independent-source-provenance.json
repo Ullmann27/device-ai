@@ -1,0 +1,8 @@
+{
+  "origin": "https://github.com/ggml-org/llama.cpp.git",
+  "sourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+  "sourceTree": "42065e172024f95eb242763caa06812c09d363e7",
+  "working_tree_clean_including_untracked": true,
+  "git_fsck_connectivity_exit": 0,
+  "tree_inventory_sha256": "131226a28f8ebd5367634671917f34564b9755702462a09b530a436094480049"
+}

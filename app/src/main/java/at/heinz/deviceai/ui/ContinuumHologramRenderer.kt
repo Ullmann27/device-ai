@@ -60,6 +60,10 @@ class ContinuumHologramRenderer {
             val FOLD_PORTRAIT = Geometry(centerY = .42f, radiusOfWidth = .375f, radiusOfHeight = .37f,
                 pad = .99f, wall = .1f, brand = 1.27f, tagline = 1.42f, marks = null,
                 flat = .62f, sphere = 1.04f, haloNodes = 72, aura = .35f, bloom = 1f)
+            /** The preserved core shares a bounded stage with the native bust. */
+            val REFERENCE_COCKPIT = Geometry(centerY = .42f, radiusOfWidth = .32f, radiusOfHeight = .30f,
+                pad = .99f, wall = .1f, brand = 1.35f, tagline = 1.58f, marks = null,
+                flat = .62f, sphere = 1.04f, haloNodes = 48, aura = .33f, bloom = .88f)
         }
     }
 
@@ -227,9 +231,15 @@ class ContinuumHologramRenderer {
         taglineFill = Fill.Solid(Argb.rgb(178, 194, 222))
     }
 
-    fun draw(p: ContinuumPainter, f: Frame) {
+    fun draw(p: ContinuumPainter, f: Frame, transparentBackdrop: Boolean = false) {
         if (r <= 0f) return
-        p.fillRect(0f, 0f, w, h, backdrop)
+        if (!transparentBackdrop) {
+            if (geometry == Geometry.FOLD_PORTRAIT) {
+                val reach = r * 2.1f
+                val center = cy + r * .15f
+                p.fillRect(cx - reach, center - reach, cx + reach, center + reach, backdrop)
+            } else p.fillRect(0f, 0f, w, h, backdrop)
+        }
         drawRays(p, f)
         drawStars(p, f)
         p.fillCircle(cx - rs * .3f, cy, rs * 1.7f, aura, geometry.aura)
@@ -375,6 +385,7 @@ class ContinuumHologramRenderer {
         p.setAdditive(true)
         p.fillCircle(cx, cy, rs * .68f, coreHalo, .85f + f.energy * .15f)
         drawPlexus(p, f, front = false)
+        drawLightning(p, f)
         // fan of light rays rising from the projection pad
         for (i in 0 until 15) {
             val t = (i - 7) / 7f
@@ -411,6 +422,38 @@ class ContinuumHologramRenderer {
         p.fillOval(cx - rs * .82f, cy - rs * .9f, cx - rs * .05f, cy - rs * .32f, specular)
         p.setAdditive(false)
         p.restore()
+    }
+
+    // VIDEO-SPEC 6-7 s: "Gehirn-Kugel mit Blitz-Neuronen". Jagged discharges from the core towards the glass,
+    // re-seeded deterministically per phase epoch (no random state); stronger with the reported state energy.
+    private val bolts = FloatArray(BOLTS * BOLT_SEGMENTS * 4)
+    private fun hash(i: Int, j: Int): Float {
+        var h = i * 374761393 + j * 668265263
+        h = (h xor (h ushr 13)) * 1274126177
+        return ((h xor (h ushr 16)) and 0xffff) / 65535f
+    }
+    private fun drawLightning(p: ContinuumPainter, f: Frame) {
+        val clock = f.phase * 2.4f
+        val epoch = kotlin.math.floor(clock).toInt()
+        val flicker = sin((clock - epoch) * PI.toFloat()).coerceAtLeast(0f)
+        val k = flicker * (.35f + .65f * f.energy + .3f * f.weight(Mode.THINKING))
+        if (k <= .02f) return
+        var n = 0
+        for (b in 0 until BOLTS) {
+            val angle = hash(b, epoch) * 2f * PI.toFloat()
+            val ux = cos(angle); val uy = sin(angle)
+            var x = cx + ux * rs * .36f; var y = cy + uy * rs * .36f
+            for (s in 1..BOLT_SEGMENTS) {
+                val r = rs * (.36f + .6f * s / BOLT_SEGMENTS)
+                val j = (hash(b * 31 + s, epoch) - .5f) * rs * .16f
+                val nx = cx + ux * r - uy * j; val ny = cy + uy * r + ux * j
+                bolts[n] = x; bolts[n + 1] = y; bolts[n + 2] = nx; bolts[n + 3] = ny; n += 4
+                x = nx; y = ny
+            }
+        }
+        p.strokeSegments(bolts, n, 3.4f * sphereScale, stateViolet, .22f * k)
+        p.strokeSegments(bolts, n, 1.4f * sphereScale, stateCyan, .55f * k)
+        p.strokeSegments(bolts, n, .55f * sphereScale, pulseFill, .9f * k)
     }
 
     // Reuses the same bounded 3-D orbit buffers as the outer rings; no particle worker or random samples.
@@ -646,11 +689,16 @@ class ContinuumHologramRenderer {
     private val sparkCore = Fill.Solid(Argb.rgb(248, 253, 255))
 
     private fun drawBrand(p: ContinuumPainter) {
-        val brand = ContinuumTheme.display(400, 11.83f * scale, 11.83f * .456f * scale)
-        val tagline = ContinuumTheme.display(500, 7.76f * scale, 7.76f * .476f * scale)
+        val cockpit = geometry == Geometry.REFERENCE_COCKPIT
+        val brand = if (cockpit) ContinuumTheme.display(600, max(11.5f, 13f * scale), 1.5f)
+            else ContinuumTheme.display(400, 11.83f * scale, 11.83f * .456f * scale)
+        val tagline = if (cockpit) ContinuumTheme.display(500, max(9.5f, 10f * scale), .8f)
+            else ContinuumTheme.display(500, 7.76f * scale, 7.76f * .476f * scale)
         // letter spacing also trails the last glyph; shift by half a space to keep the word optically centred
-        p.drawText("CONTINUUM", cx + brand.letterSpacing / 2f, cy + r * geometry.brand, brand, brandFill, TextAlign.CENTER)
-        p.drawText("INTELLIGENCE  LIVES  ON", cx + tagline.letterSpacing / 2f, cy + r * geometry.tagline, tagline, taglineFill, TextAlign.CENTER)
+        p.drawText(if (cockpit) "KI-KERN" else "CONTINUUM", cx + brand.letterSpacing / 2f,
+            cy + r * geometry.brand, brand, brandFill, TextAlign.CENTER)
+        p.drawText(if (cockpit) "CONTINUUM" else "INTELLIGENCE  LIVES  ON", cx + tagline.letterSpacing / 2f,
+            cy + r * geometry.tagline, tagline, taglineFill, TextAlign.CENTER)
         val marks = geometry.marks
         if (pageCount > 1 && marks != null) {
             val y = cy + r * marks
@@ -682,5 +730,7 @@ class ContinuumHologramRenderer {
 
     private companion object {
         const val DEPTH_BUCKETS = 9
+        const val BOLTS = 7
+        const val BOLT_SEGMENTS = 6
     }
 }

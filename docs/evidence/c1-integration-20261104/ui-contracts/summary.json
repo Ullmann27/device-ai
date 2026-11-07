@@ -1,0 +1,93 @@
+{
+  "taskId": "C1-UI-CONTRACT-007",
+  "baseLocal": "0dac310728a84bd1adc296377ed7d124bc09692a",
+  "baseRemote": "a54583816df92bcd0cdf4e75f06cdefffb5dafcc",
+  "baseTree": "3e9373b19dc0b7b3751ebfbdd2ac09cd7455b667",
+  "source": "Completed local contribution of PR517 team; exact patch and archive persisted here",
+  "sourceBase": "20f888660a967aa1d6b5446e892540538372d319",
+  "patchSha256": "c78066e2a6f0b3f1ff42add03eabcb26361ad10f33e1e49352d44bba8da49b50",
+  "archive": {
+    "name": "upstream-ui-contracts.tar.xz",
+    "bytes": 373248,
+    "sha256": "e06963ef40418c41c59ac0ec8800c01def639fb65a3fcae0015aeea1d2ef8b3c"
+  },
+  "changedFiles": [
+    {
+      "path": ".github/continuum/app-navigation-wiring.test.mjs",
+      "beforeBlob": "7fe78027054e30bab5e0be6266583508b79ef207",
+      "afterBlob": "c3642c58fbf7c0dd2f168e7d46b92f07ece00d6f",
+      "afterSha256": "f12fcb784fd77e12ba217eeb6e42bb7c74b9fea83ffd58391ed0fe8ba3ec790f"
+    },
+    {
+      "path": ".github/continuum/android-holographic-home.test.mjs",
+      "beforeBlob": "0a8c39655618bad8bc85679dc3deff710081b053",
+      "afterBlob": "1e741671c8b43ed55d0b6de73ce85785411f81b0",
+      "afterSha256": "6540a85c19b65c360c419d5e91e872051301f1c089fde029d02f5cf71d1be93a"
+    },
+    {
+      "path": ".github/continuum/fold-responsive-reflow.test.mjs",
+      "beforeBlob": "0aec321d87dca2e894ed35358bade8b357382a39",
+      "afterBlob": "5505b76e067fb64fc81adbafd92f633288ca7f4e",
+      "afterSha256": "ae18f7d0bc6d8aa0e90cc9a22ccee309ed36dadc850ff4b3ad6958f68ad11f08"
+    },
+    {
+      "path": ".github/continuum/fold7-portrait-reference.test.mjs",
+      "beforeBlob": "9d055f5ebb3fd0517edd602799fcfa8a448f2612",
+      "afterBlob": "3ede10021aa77899e279d9b05e6e351339f9d291",
+      "afterSha256": "c0689de0c158666409d1cf2ef63e85aa38bbae8fad95070cebd38e4406cb67f2"
+    },
+    {
+      "path": ".github/continuum/continuum-fold7-hologram-live-diagnostics.test.mjs",
+      "beforeBlob": "e531b9e5159ceaf568351ec623ee1d905e4dbabe",
+      "afterBlob": "acd7a032b9da71e137e23db6141749e5c56af2cd",
+      "afterSha256": "2eee3fde1540993bd3d258a7450e460f8a199a30bd90cc8bdda87bed119cf1a4"
+    },
+    {
+      "path": ".github/continuum/mobile-builder-existing-integration.test.mjs",
+      "beforeBlob": "088f22e56ae215e188d6364a1e77a9c15e485084",
+      "afterBlob": "1ef6ec6e18e17620916355d1476101d511c697e3",
+      "afterSha256": "59c345806763ae0e79a45ad916533f75164e70d426e179880f5dca7e34fe942b"
+    },
+    {
+      "path": ".github/continuum/nexus-beginner-ui.test.mjs",
+      "beforeBlob": "4afacf7c7fc90038a68f0ca8ab70f6e7bd48c4c8",
+      "afterBlob": "a34b5651f2d66465dab1d5b60a1aaa969cebdf00",
+      "afterSha256": "0a32c200f7d071f5223a47951ca7b4c51ab5636d495397f8dfdf2eef5a1d032a"
+    },
+    {
+      "path": ".github/continuum/premium-phone-viewport-wiring.test.mjs",
+      "beforeBlob": "34105fa30430e023f3362a27e3be205868c9cf02",
+      "afterBlob": "476dfc28d786a70ddda05310b9fa15607c379d11",
+      "afterSha256": "1a79cc02d73139af9af3a84a1f3eae040c811ac56c6a1e93bf655f3f27ae8b89"
+    },
+    {
+      "path": "scripts/continuum-ui-routing.test.mjs",
+      "beforeBlob": "063ca093b2cd16413d20d5a6de9ecafeff40fc00",
+      "afterBlob": "5c6aa5536c1c7ac029c00fb76e11158774b1b7f3",
+      "afterSha256": "a1703e18ba0190bda230968652b511fa19d85a5d9a982b011a4b1d002184b0d1"
+    }
+  ],
+  "ownTest": {
+    "tests": 48,
+    "pass": 48,
+    "fail": 0,
+    "skip": 0,
+    "exitCode": 0
+  },
+  "upstreamNegativeControls": {
+    "count": 17,
+    "logsHashVerified": true,
+    "executionByC1": false
+  },
+  "independentReview": {
+    "agent": "/root/apk_readiness",
+    "status": "STATIC_APPROVED_WITH_VERIFIED_UPSTREAM_LOGS",
+    "ownTestRunByReviewer": false
+  },
+  "limits": [
+    "Source contracts are not visual/device/GPU acceptance.",
+    "Frame count does not prove successful 2D fallback.",
+    "Unresolved actual avatar UI failures stay separate."
+  ],
+  "rollback": "Revert only these nine test updates; keep raw incoming and own evidence."
+}

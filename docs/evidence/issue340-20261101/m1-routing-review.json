@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "review": "M1_ROUTING_AND_M6_DELTA_SOURCE_REVIEW",
+  "observed_at_utc": "2026-11-01T19:44:51.310068+00:00",
+  "worktree_head": "edfb0766b990771f7cd75291df5b445341ee1a88",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "33d55a374a3dfaa07543ba15bcebb6c9336841a61f62e1e642cc74c7cc806e6a",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "a43f1836932a472bb1b92627ce657180da8c198496c831eaa2d0d4d970910a14",
+    "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt": "9ccdf10f7a7137ca6771c6b4eab6a6fc2463de9c4d81db3b13c2eedbc5dbf13a",
+    "app/src/test/java/at/heinz/deviceai/cognitive/SessionEvidenceIntegrityTest.kt": "8a2fe0c11c07e25d1177b9228b59f68f3aba4d86c5ab53817f23a48edfd24146",
+    "app/src/test/java/at/heinz/deviceai/cognitive/SessionLocationRoutingTest.kt": "bc1ae17318243d15908b87d3da7a95cd4166cd7dd066b7674c8b41628c3e6cfc",
+    "scripts/continuum-session-evidence-routing.test.mjs": "8f01a75116bda94d3c9b726b1085bd54194b184d0003499f3d61b2ce9bb592df"
+  },
+  "verdict": "NO_BLOCKING_DEFECT_FOUND_WITHIN_DECLARED_BOUNDED_ROUTING_SCOPE",
+  "execution": {
+    "tests": "NOT_RUN_BY_REVIEWER; root reports70focused JVM and1Node pass",
+    "build": "NOT_RUN",
+    "device": "NOT_RUN",
+    "patch_mutation": "NONE; git apply --check only"
+  },
+  "findings": [
+    {
+      "id": "M1-CALLER",
+      "status": "VERIFIED_SOURCE",
+      "detail": "AgentActivity.sendCurrentInput computes routeExplicit ?: routeFromSession and both Proven and Withheld emit a reply and return unconditionally before public web routing and runContinuumDialogue/model. preserveLocalContext retains immutable evidence; proof questions are not appended as new source assertions."
+    },
+    {
+      "id": "M1-PROVENANCE",
+      "status": "VERIFIED_SOURCE",
+      "detail": "Answer.support uses the exact Found returned only after probe, independent verifier and ordered-role adapter agreement. It retains sourceId/revision/source hash/start/end; snapshot hash remains separate."
+    },
+    {
+      "id": "M1-R1-R2",
+      "status": "ADDRESSED_FOR_REVIEWED_SCENARIOS",
+      "detail": "Unscoped correction/pronominal-location patterns checked before subject filter. Direct helper rejects any oversized/control-bearing source in the4-turn window. Atomic sessionEvidence returns null for omitted oversized owner literal; routing treats null as terminal incomplete evidence. Named oversized confirmed fact also blocks helper."
+    },
+    {
+      "id": "M1-PRIVACY",
+      "status": "VERIFIED_SOURCE",
+      "detail": "Only original request literal reaches owner context; model response and research digest question excluded from proof. No new persistence, cookies, permissions, model promotion, network call or owner fact mutation."
+    },
+    {
+      "id": "M1-LIMIT-1",
+      "severity": "P2_SCOPE_LIMIT",
+      "detail": "routeExplicit recognition still requires complete bounded grammar: single-line Beleg<=2000, Frage<=160 and supported bare named location question. Malformed/multiline/oversized explicit evidence returns null and continues old routing. Do not describe this as universal explicit-evidence fail-closed behavior. A future narrow regression should pin intended oversized/malformed behavior if broadening that guarantee."
+    },
+    {
+      "id": "M1-LIMIT-2",
+      "severity": "INFO",
+      "detail": "sendCurrentInput already trims EditText text before routing; proof offsets bind accepted request/source strings, not raw UI buffer byte positions. Explicit answer also scopes offsets to extracted trimmed evidence. Session tests correctly prove exact offsets within the literal given to Context."
+    },
+    {
+      "id": "M1-LIMIT-3",
+      "severity": "INFO",
+      "detail": "Confirmed-fact no-in/unsupported invalidators remain separate pre-existing R3 scope. No general semantic, temporal or model accuracy claim follows from fixed regex cases."
+    }
+  ],
+  "test_source_assessment": {
+    "SessionEvidenceIntegrityTest": "9methods; source bounds, late negation/time, original source offsets/hash, research/model exclusion, session boundaries, direct oversize, unnamed retractions, confirmed literal whitespace.",
+    "SessionLocationRoutingTest": "5methods; terminal explicit unsupported evidence, exact support/negative verifier mutations, null/incomplete/retracted session, question exclusion, consent object unchanged and session boundary.",
+    "Node": "Structural actual Activity caller guard, not executable Android UI proof. Presence/absence checks are useful regression but Android build/device gate remains separate."
+  },
+  "m6": {
+    "reviewed_delta": "80062368a469ea858c3b7cc6e21c5947b1c67e6b..56e9a82fde0062db9a7daa8cfb16840a6615380d",
+    "recommendation": "Net delta now present from root integration. Preserve it; do not reapply. Initial forward check passed, later reverse check validates integrated patch. No release wrappers/version/main/avatar introduced by this patch.",
+    "source_scope": [
+      "AgentActivity streaming progress watchdog + touch scroll preservation",
+      "LocalGenerationDeadlinePolicy",
+      "LocalGenerationDeadlinePolicyTest",
+      "continuum-fold7-stream-scroll.test.mjs"
+    ],
+    "required_validation": [
+      "Run existing4watchdog JUnit and4streaming Node cases after import, plus complete combined host/real Android gate.",
+      "Pin empty TextDelta callbacks not resetting progress; late callback after cancellation/terminal signal cannot publish; these are callback integration concerns beyond pure timer tests.",
+      "Check output limit when Completed races with full20000 capture; pure policy test alone does not exercise Activity callback ordering.",
+      "Device: manual swipe while stream grows, STOP, stalled generation, active long stream, accessibility and lifecycle. No final-answer scroll-position promise is currently tested."
+    ],
+    "comment_clarity": "Policy has no fixed wall-clock limit while text advances; output remains capped at20000. Startup180s and inactivity120s. A resource/output cap can still stop active output; avoid literal unlimited-generation wording.",
+    "boundary": "Dry applicability is not runtime correctness. No M6 source build/test or Fold7 behavior executed by reviewer.",
+    "apply_check_exit_before_root_integration": 0,
+    "apply_check_exit_after_root_integration": 1,
+    "reverse_check_exit_after_root_integration": 0,
+    "timing_note": "First source-review call and verbose check passed on M1-only worktree. Root applied M6 between review and snapshot capture; repeated forward check correctly fails because delta already exists. Reverse dry-check verifies exact delta applicability in reverse; no mutation performed.",
+    "source_snapshot_note": "AgentActivity snapshot/hash captured after root applied M6; M1 routing files remain same review content. New QA-script edits observed later are outside this review."
+  }
+}

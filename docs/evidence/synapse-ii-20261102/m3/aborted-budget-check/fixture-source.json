@@ -1,0 +1,7 @@
+{
+  "good": "export function square(x){return x*x;}\nexport function quad(x){return square(square(x));}\n",
+  "bad": "export function square(x){return x*x;}\nexport function quad(x){return sqare(square(x));}\n",
+  "tests": "import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport {square,quad} from './math.mjs';\ntest('square positive control',()=>assert.equal(square(3),9));\ntest('quad positive regression',()=>assert.equal(quad(2),16));\ntest('quad zero regression',()=>assert.equal(quad(0),0));\ntest('quad negative regression',()=>assert.equal(quad(-3),81));\n",
+  "seedCommit": "c57c0b070c78a2d094c2e529add3638690eaffc4",
+  "fixtureSourceCommit": "6df2a5ff0251dd4c5cf77b97f0f5c0ec1f309f61"
+}

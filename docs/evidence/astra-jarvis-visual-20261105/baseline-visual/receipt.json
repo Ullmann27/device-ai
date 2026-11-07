@@ -1,0 +1,30 @@
+{
+  "label": "baseline-visual",
+  "head": "b294fc9139f1a458fccf815bb931eb61b2f7b0e8",
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-I",
+    "/workspace/scratch/76b7222771d5/build-env/observe-tests.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumUiEvidenceDir=/workspace/scratch/76b7222771d5/build-env/baseline-images",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+    "--tests",
+    "at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest"
+  ],
+  "started": 1793894312.940738,
+  "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+  "statusBefore": "",
+  "exitCode": 0,
+  "ended": 1793894517.44657,
+  "statusAfter": "",
+  "log": "/workspace/scratch/76b7222771d5/build-env/logs/baseline-visual.log",
+  "sourceNote": "Baseline source b294fc91. Subsequent a15624be differs only by the continuation document. Root frame-clock source delta is archived separately."
+}

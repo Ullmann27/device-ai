@@ -1,0 +1,12 @@
+app/src/main/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetch.kt:100:19: error: unresolved reference 'WikimediaSourceUnavailable'.
+            throw WikimediaSourceUnavailable("NO_PUBLIC_WEB_RESULTS")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetch.kt:100:19: error: type mismatch: inferred type is '??? (Unresolved name: WikimediaSourceUnavailable)', but 'Throwable' was expected.
+            throw WikimediaSourceUnavailable("NO_PUBLIC_WEB_RESULTS")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetch.kt:164:15: error: unresolved reference 'WikimediaSourceUnavailable'.
+        throw WikimediaSourceUnavailable("WEB_" + reason)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetch.kt:164:15: error: type mismatch: inferred type is '??? (Unresolved name: WikimediaSourceUnavailable)', but 'Throwable' was expected.
+        throw WikimediaSourceUnavailable("WEB_" + reason)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

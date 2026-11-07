@@ -6,6 +6,9 @@ import java.util.Locale
 internal object BoundedResearchTextSanitizer {
     private const val TRUNCATED = " [TRUNCATED]"
     private val roles = arrayOf("system", "developer", "assistant", "user")
+    // Harmless display escapes are stable on a second pass. These strings are
+    // formatting only, never authenticated source metadata or model control tokens.
+    private val displayMarkers = Regex("\\[(?:quoted (?:role|marker)|TRUNCATED|U\\+[0-9A-F]{4,6})]")
 
     fun sanitize(text: String, maxCharacters: Int): String {
         require(maxCharacters >= 0)
@@ -18,11 +21,16 @@ internal object BoundedResearchTextSanitizer {
         var cursor = 0
         while (cursor < end) {
             val roleEnd = roleEnd(text, cursor, end)
+            val displayMarker = if (text[cursor] == '[') displayMarkers.matchAt(text, cursor)
+                ?.takeIf { it.range.last < end } else null
             val next: Int
             val token: String
             if (roleEnd != null) {
                 token = "[quoted role]:"
                 next = roleEnd
+            } else if (displayMarker != null) {
+                token = displayMarker.value
+                next = displayMarker.range.last + 1
             } else if (cursor + 3 <= end && text.startsWith("<<<", cursor)) {
                 token = "[quoted marker]"
                 next = cursor + 3
@@ -37,6 +45,8 @@ internal object BoundedResearchTextSanitizer {
                         Character.getType(cp) == Character.PARAGRAPH_SEPARATOR.toInt() -> " "
                     cp == '<'.code -> "‹"
                     cp == '>'.code -> "›"
+                    cp == '['.code -> "［"
+                    cp == ']'.code -> "］"
                     else -> String(Character.toChars(cp))
                 }
             }

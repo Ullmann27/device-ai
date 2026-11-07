@@ -1,0 +1,33 @@
+JUnit version 4.13.2
+.E.E
+Time: 1.218
+There were 2 failures:
+1) laterFamilyNegationMustInvalidateEarlierAge(at.heinz.deviceai.learning.FamilyInvalidatorRegression)
+java.lang.AssertionError: Aus deiner bestätigten Altersangabe: 29 Jahre
+Beleg: Erinnerung lx-2760b3191cff400421776a0e (Stand der bestätigten Angabe, kein automatisch fortgeschriebenes Alter; SHA-256 2760b3191cff4004…)
+
+Dazu finde ich in meinem Gedächtnis:
+
+Deine Tochter Klara ist 29. (gespeichert: „Meine Tochter Klara ist 29.“)
+(Bestätigte Nutzererinnerung)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.learning.FamilyInvalidatorRegression.checkChange(FamilyInvalidatorRegression.kt:14)
+	at at.heinz.deviceai.learning.FamilyInvalidatorRegression.laterFamilyNegationMustInvalidateEarlierAge(FamilyInvalidatorRegression.kt:6)
+2) laterFamilyAgeWithUnitMustReplaceEarlierAge(at.heinz.deviceai.learning.FamilyInvalidatorRegression)
+java.lang.AssertionError: Aus deiner bestätigten Altersangabe: 29 Jahre
+Beleg: Erinnerung lx-2760b3191cff400421776a0e (Stand der bestätigten Angabe, kein automatisch fortgeschriebenes Alter; SHA-256 2760b3191cff4004…)
+
+Dazu finde ich in meinem Gedächtnis:
+
+Deine Tochter Klara ist 29. (gespeichert: „Meine Tochter Klara ist 29.“)
+(Bestätigte Nutzererinnerung)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.learning.FamilyInvalidatorRegression.checkChange(FamilyInvalidatorRegression.kt:15)
+	at at.heinz.deviceai.learning.FamilyInvalidatorRegression.laterFamilyAgeWithUnitMustReplaceEarlierAge(FamilyInvalidatorRegression.kt:7)
+
+FAILURES!!!
+Tests run: 2,  Failures: 2
+

@@ -1,0 +1,358 @@
+TAP version 13
+# Subtest: CONTRACT_TEST signed fixture survives a genuine fresh Node process restart
+ok 1 - CONTRACT_TEST signed fixture survives a genuine fresh Node process restart
+  ---
+  duration_ms: 177.485564
+  type: 'test'
+  ...
+# Subtest: unbranded observations and copied success flags cannot be admitted
+ok 2 - unbranded observations and copied success flags cannot be admitted
+  ---
+  duration_ms: 7.160342
+  type: 'test'
+  ...
+# Subtest: legacy successful terminal records do not become technical proof
+ok 3 - legacy successful terminal records do not become technical proof
+  ---
+  duration_ms: 16.784333
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted source SHA
+ok 4 - CONTRACT_TEST replay rejects substituted source SHA
+  ---
+  duration_ms: 3.638855
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/source
+ok 5 - CONTRACT_TEST replay rejects substituted model/source
+  ---
+  duration_ms: 41.446483
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/task
+ok 6 - CONTRACT_TEST replay rejects substituted model/task
+  ---
+  duration_ms: 13.626776
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/request
+ok 7 - CONTRACT_TEST replay rejects substituted model/request
+  ---
+  duration_ms: 14.6229
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/output
+ok 8 - CONTRACT_TEST replay rejects substituted model/output
+  ---
+  duration_ms: 6.427124
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/identity
+ok 9 - CONTRACT_TEST replay rejects substituted model/identity
+  ---
+  duration_ms: 12.295425
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/proposal
+ok 10 - CONTRACT_TEST replay rejects substituted model/proposal
+  ---
+  duration_ms: 30.293051
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted verifier/patch
+ok 11 - CONTRACT_TEST replay rejects substituted verifier/patch
+  ---
+  duration_ms: 3.84792
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted verifier/task
+ok 12 - CONTRACT_TEST replay rejects substituted verifier/task
+  ---
+  duration_ms: 8.970495
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted missing verification
+ok 13 - CONTRACT_TEST replay rejects substituted missing verification
+  ---
+  duration_ms: 4.043336
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted missing diagnostics
+ok 14 - CONTRACT_TEST replay rejects substituted missing diagnostics
+  ---
+  duration_ms: 3.008503
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted missing RED
+ok 15 - CONTRACT_TEST replay rejects substituted missing RED
+  ---
+  duration_ms: 5.115564
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted receipt
+ok 16 - CONTRACT_TEST replay rejects substituted receipt
+  ---
+  duration_ms: 6.601718
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted journal head
+ok 17 - CONTRACT_TEST replay rejects substituted journal head
+  ---
+  duration_ms: 3.519034
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted permission promotion
+ok 18 - CONTRACT_TEST replay rejects substituted permission promotion
+  ---
+  duration_ms: 14.026889
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted evidence class
+ok 19 - CONTRACT_TEST replay rejects substituted evidence class
+  ---
+  duration_ms: 3.537501
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted future time
+ok 20 - CONTRACT_TEST replay rejects substituted future time
+  ---
+  duration_ms: 3.215595
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted unbounded age
+ok 21 - CONTRACT_TEST replay rejects substituted unbounded age
+  ---
+  duration_ms: 10.012709
+  type: 'test'
+  ...
+# Subtest: hash-chain recomputation does not replace the runtime proof MAC
+ok 22 - hash-chain recomputation does not replace the runtime proof MAC
+  ---
+  duration_ms: 4.748279
+  type: 'test'
+  ...
+# Subtest: wrong runtime key cannot authenticate persisted proof or canonical journal
+ok 23 - wrong runtime key cannot authenticate persisted proof or canonical journal
+  ---
+  duration_ms: 3.256356
+  type: 'test'
+  ...
+# Subtest: revocation persists and is consulted by the next fresh recall
+ok 24 - revocation persists and is consulted by the next fresh recall
+  ---
+  duration_ms: 25.115382
+  type: 'test'
+  ...
+# Subtest: forged revocations block recall instead of being silently ignored
+ok 25 - forged revocations block recall instead of being silently ignored
+  ---
+  duration_ms: 3.574577
+  type: 'test'
+  ...
+# Subtest: deleted current canonical grant fails closed even with valid historical proof
+ok 26 - deleted current canonical grant fails closed even with valid historical proof
+  ---
+  duration_ms: 3.564753
+  type: 'test'
+  ...
+# Subtest: canonical journal corruption and torn experience tail fail closed
+ok 27 - canonical journal corruption and torn experience tail fail closed
+  ---
+  duration_ms: 2.905837
+  type: 'test'
+  ...
+# Subtest: freshness and exact repository/source/file scope are enforced
+ok 28 - freshness and exact repository/source/file scope are enforced
+  ---
+  duration_ms: 4.076565
+  type: 'test'
+  ...
+# Subtest: no partial historical proof is emitted when it exceeds context budget
+ok 29 - no partial historical proof is emitted when it exceeds context budget
+  ---
+  duration_ms: 6.904625
+  type: 'test'
+  ...
+# Subtest: real concurrent child writers preserve every task exactly once
+ok 30 - real concurrent child writers preserve every task exactly once
+  ---
+  duration_ms: 325.89174
+  type: 'test'
+  ...
+# Subtest: a terminated process leaves an uncertain writer lease, never automatic stale recovery
+ok 31 - a terminated process leaves an uncertain writer lease, never automatic stale recovery
+  ---
+  duration_ms: 2066.709534
+  type: 'test'
+  ...
+# Subtest: requesting task needs its own current canonical grant and authenticated owner GOAL
+not ok 32 - requesting task needs its own current canonical grant and authenticated owner GOAL
+  ---
+  duration_ms: 4.522599
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:141:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    task shape and overlapping source do not grant recall
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:143:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: a full 4096-record ledger cannot block durable withdrawal
+not ok 33 - a full 4096-record ledger cannot block durable withdrawal
+  ---
+  duration_ms: 70.781464
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:156:1'
+  failureType: 'testCodeFailure'
+  error: 'experience log record bound'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    ExperienceLog.append (file:///workspace/momega1-memory/.github/continuum/ccc1-experience.mjs:105:54)
+    revokeTechnicalExperience (file:///workspace/momega1-memory/.github/continuum/ccc1-technical-recall.mjs:120:67)
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:160:15)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: a full byte-budget ledger cannot block withdrawal or exceed the bound
+not ok 34 - a full byte-budget ledger cannot block withdrawal or exceed the bound
+  ---
+  duration_ms: 258.444355
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:164:1'
+  failureType: 'testCodeFailure'
+  error: 'experience log byte bound'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    ExperienceLog.append (file:///workspace/momega1-memory/.github/continuum/ccc1-experience.mjs:111:87)
+    revokeTechnicalExperience (file:///workspace/momega1-memory/.github/continuum/ccc1-technical-recall.mjs:120:67)
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:175:15)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: canonical withdrawal survives ledger-tail truncation and rehashed tombstone stripping
+not ok 35 - canonical withdrawal survives ledger-tail truncation and rehashed tombstone stripping
+  ---
+  duration_ms: 5.46416
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:178:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    canonical grant retains withdrawal when tombstone disappears
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:181:45)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: withdrawal reaches canonical grant even if experience ledger is already damaged
+not ok 36 - withdrawal reaches canonical grant even if experience ledger is already damaged
+  ---
+  duration_ms: 2.832497
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:187:1'
+  failureType: 'testCodeFailure'
+  error: 'experience log torn append; inspection required'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    ExperienceLog.entries (file:///workspace/momega1-memory/.github/continuum/ccc1-experience.mjs:76:33)
+    ExperienceLog.append (file:///workspace/momega1-memory/.github/continuum/ccc1-experience.mjs:103:19)
+    revokeTechnicalExperience (file:///workspace/momega1-memory/.github/continuum/ccc1-technical-recall.mjs:120:67)
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:190:15)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+  ...
+# Subtest: process-only or mutable observations cannot enter model-derived technical strategy tier
+not ok 37 - process-only or mutable observations cannot enter model-derived technical strategy tier
+  ---
+  duration_ms: 7.665534
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:193:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:206:10)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: signed process-only historical proof remains ineligible for technical strategy recall
+not ok 38 - signed process-only historical proof remains ineligible for technical strategy recall
+  ---
+  duration_ms: 3.697363
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:211:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-technical-recall.test.mjs:213:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..38
+# tests 38
+# suites 0
+# pass 31
+# fail 7
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3345.427059

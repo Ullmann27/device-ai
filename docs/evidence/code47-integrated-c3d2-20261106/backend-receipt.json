@@ -1,0 +1,56 @@
+{
+  "gate": "backend",
+  "startedAt": "2026-11-06T20:50:42.178038+00:00",
+  "startedEpochMillis": 1793998242178,
+  "finishedAt": "2026-11-06T20:50:50.560700+00:00",
+  "sourceBefore": {
+    "commit": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+    "tree": "57027b6d4cfceda3bbd8241e77341ec67632370c",
+    "branch": "codex/continuum-code47-qa-candidate-20261106",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceAfter": {
+    "commit": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+    "tree": "57027b6d4cfceda3bbd8241e77341ec67632370c",
+    "branch": "codex/continuum-code47-qa-candidate-20261106",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceUnchanged": true,
+  "commands": [
+    {
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "/workspace/scratch/b31a9d731016/device-ai-wiring/backend",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "/workspace/scratch/b31a9d731016/device-ai-wiring/backend",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "/workspace/scratch/b31a9d731016/device-ai-wiring/backend",
+      "exitCode": 0
+    }
+  ],
+  "logSha256": "be5ddb703cd5b090fb133827cb67a20e191fba923c62a1f8fd9316ca32b53d33",
+  "logBytes": 6707,
+  "localUnsignedQaOnly": true,
+  "deviceAcceptance": "NOT_RUN",
+  "status": "PASS"
+}

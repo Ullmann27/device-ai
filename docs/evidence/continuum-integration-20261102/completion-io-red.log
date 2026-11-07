@@ -1,0 +1,39 @@
+✖ a completion I/O failure preserves the owner abort receipt (112.732468ms)
+✖ an existing completion cannot be overwritten or turn a failed delivery into success (126.160277ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 381.558443
+
+✖ failing tests:
+
+test at .github/continuum/step-watchdog-reliability.test.mjs:27:1
+✖ a completion I/O failure preserves the owner abort receipt (112.732468ms)
+  Error: ENOENT: no such file or directory, open '/tmp/continuum-reliability-IHyXOx/receipt.json'
+      at Object.readFileSync (node:fs:483:20)
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog-reliability.test.mjs:39:30)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/tmp/continuum-reliability-IHyXOx/receipt.json'
+  }
+
+test at .github/continuum/step-watchdog-reliability.test.mjs:42:1
+✖ an existing completion cannot be overwritten or turn a failed delivery into success (126.160277ms)
+  SyntaxError: "undefined" is not valid JSON
+      at JSON.parse (<anonymous>)
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog-reliability.test.mjs:49:23)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

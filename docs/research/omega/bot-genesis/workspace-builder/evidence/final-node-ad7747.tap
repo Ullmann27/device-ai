@@ -1,0 +1,41 @@
+✔ owner independent evidence rejects silent test-count and skipped-test regressions (1.958064ms)
+✔ expired execution budget fails closed before launching fixed subprocesses (3.496608ms)
+✔ an unrelated automatic REPAIR task cannot starve an accepted owner task (2.389193ms)
+✔ eligible owner selection cannot be starved by stale HEAD or higher priority (1.514478ms)
+✔ owner task executes red -> isolated repair -> independent green -> reviewable PATCH and DONE (950.863207ms)
+✔ an owner cancel during the session stops at the next step boundary and is never DONE (327.246675ms)
+✔ an owner cancel during a running check step ends that step within seconds and is never DONE (1006.120781ms)
+✔ passing fixture is not reported as successful code development (749.117106ms)
+✔ stale owner claim is recovered after worker crash without faking success (254.887853ms)
+✔ unapproved task, incorrect HEAD, foreign source and unknown chain fail closed (23.542636ms)
+✔ corrupted backlog never executes repair, and original Git checkout remains intact (21.349177ms)
+✔ existing profile port selects distinct immutable identities without changing task budget (7.102199ms)
+✔ copied JSON and unregistered identities cannot acquire assignment origin (0.745171ms)
+✔ same builder/verifier and unsupported stage are rejected (0.742757ms)
+✔ prepared task fingerprint and canonical task cannot be exchanged (0.755707ms)
+✔ rename retains identity; removal and workspace change invalidate current association (1.326215ms)
+✔ replacing the external store method cannot substitute the admitted reader (0.51926ms)
+✔ profile model cap restricts task and a later budget reduction revokes the association (0.711701ms)
+✔ bot execution requires actual admitted isolation before reading journals or invoking provider (0.865111ms)
+✔ Echo executes deterministic canonical report without extra model call, journal mutation or owner text (1601.402231ms)
+✔ reporter must still exist; rename preserves stable identity (20.071905ms)
+✔ current prepared grant fingerprint cannot be replaced (0.794565ms)
+✔ changed source is blocked before a success report (5.312422ms)
+✔ tampered canonical journal MAC cannot be summarized (5.864477ms)
+✔ owner abort cannot be promoted to confirmed success (6.831607ms)
+✔ missing or modified execution receipt invalidates confirmed result (14.180753ms)
+✔ modified report artifact is rejected rather than silently overwritten (28.212351ms)
+✔ assignment expiry blocks reporter with no additional inference (0.572071ms)
+✔ workspace binding is bounded correlation, never a shell or grant (1.092013ms)
+✔ lookalike executors and self-named journals cannot bind a workspace (0.862708ms)
+✔ canonical recovery preserves pending identity and rejects corrupt/torn journal (53.861612ms)
+✔ bound workspace evidence requires observation and teardown for the exact resource policy (0.864991ms)
+✔ typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source (1637.571862ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3443.558452

@@ -1,0 +1,15 @@
+✔ Android source routes bootstrap actions through the existing cognitive agent (source wiring only) (6.54089ms)
+﹣ actual Android shell adapters compile against official APIs and the unchanged Binder contract (0.261892ms) # NOT_RUN: configure official Kotlin and Shizuku/annotation jars
+﹣ native natural request → actual tool → receipt → persisted episode, with negative regressions (0.55152ms) # NOT_RUN: set CONTINUUM_FABRIC_JVM_DEPS to run the real Kotlin graph
+﹣ actual memory, CRE1 and CTX3 graph preserves provenance and emits content-free traces (0.327209ms) # NOT_RUN: configure official Kotlin/JUnit jars
+✔ Qwen chat validates replies without unconditional 0.8 success (6.41913ms)
+✔ context is bounded, clearly untrusted, and never authorizes tools or factual memories (4.629792ms)
+✔ low cost evaluator refuses mechanical repeats but cannot claim truth (39.985818ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 3
+ℹ todo 0
+ℹ duration_ms 442.49251

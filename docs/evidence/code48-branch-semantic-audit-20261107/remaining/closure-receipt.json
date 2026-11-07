@@ -1,0 +1,27 @@
+{
+  "sourceSha": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "mappedPaths": [
+    "app/src/main/java/at/heinz/deviceai/RemoteMentorProtocol.kt",
+    "app/src/main/java/at/heinz/deviceai/chief/ChiefTaskGraph.kt",
+    "app/src/main/java/at/heinz/deviceai/chief/ChiefProofGatedStrategyLedger.kt",
+    "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentSourceStreamImport.kt",
+    "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentSourceChunkIndex.kt",
+    "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoop.kt",
+    "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoopContracts.kt",
+    "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoopCockpitBridge.kt",
+    "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoopGatePorts.kt"
+  ],
+  "mappedPathCount": 9,
+  "distinctPathBlobVariants": 11,
+  "allNinePathsInOriginal56Inventory": true,
+  "fullInventoryPathCount": 56,
+  "previous47MappingCountProvidedByParent": 47,
+  "currentRestCoverage": "9/9",
+  "summedMappingCount": 56,
+  "previous47IndependentlyReauditedHere": false,
+  "matrixSha256": "6cbf4b8b163e490dc82850015c245952f3a6a9e36b04dc54858896164d82d436",
+  "jsonSha256": "ef9f568ebbd5fea3b5ab2aca2363ae73a6529c45657572b8df4ad7f83ce31e59",
+  "sourceState": "source-state.json",
+  "noSourceRefMutation": true,
+  "noTestBuildProviderExecution": true
+}

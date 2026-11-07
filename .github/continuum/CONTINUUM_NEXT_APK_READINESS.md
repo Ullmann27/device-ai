@@ -81,3 +81,14 @@ hypotheses pending measurement.
    baseline and phased context on identical tasks; freeze model and corpus.
 5. Only after green device checks, build an owner-signed Continuum APK with a
    higher versionCode, verify certificate equality and test update/rollback.
+
+## 31.10.2026 — Mandatory Frontier/JARVIS checkpoint, not a release
+
+Read [canonical state](../../docs/CONTINUUM-CURRENT-STATE-20261031.md), [Frontier handoff](../../docs/handoff/CONTINUUM_FRONTIER_COMPUTE_20261031.md), [PR #287](https://github.com/Ullmann27/device-ai/pull/287) **before** release preparation.
+
+- Parent chain of PR #287 is #265 → #284 → #285; #286 is **parallel** signing research, #263 JARVIS owner-video evidence separate. Do not silently combine these branches.
+- Synthetic benchmark: 3,000 different output tasks share 30 immutable heavy stages; 43/43 isolated V8 compatibility checks. NOT a confirmed Node/Android/real-brain benchmark or new GPU capacity.
+- Preserve CRE1/EWM-v2/SWB, temporal/bio-neural research, actual `AgentActivity`/ToolGate, signed updater, owner memory and existing models.
+- Last device report: **0.3.28, versionCode 29**, `at.heinz.deviceai.continuumlocal`. Any proposed **code29** release (including parts of PR #286 scripts) is not a higher in-place update; verify installed PackageManager and build **code ≥30**, same original certificate and pinned update host. The existing Render static gates do **not** publish a correctly signed APK.
+- Release gating: native Node + full Gradle/Kotlin/lint on combined tree; real-model M8 RED→GREEN; Fold7 package/version/signing/update button, persistence, voice, thermal, memory and rollback acceptance. No signing credentials in GitHub or logs.
+

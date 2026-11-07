@@ -1,0 +1,27 @@
+{
+  "purpose": "Historical baseline evidence that the real Activity/native Canvas capture path runs. This is not the new design candidate.",
+  "application_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+  "production_equivalent_baseline": "8bb6d8b0424e5c991c866536fa5e73daa08161f6",
+  "test_source_commit": "d2240a442",
+  "selection": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest#expandedCanonical",
+  "result": {
+    "tests": 1,
+    "failures": 0,
+    "exit_code": 0
+  },
+  "renderer": "Robolectric API28 native Canvas, explicit existing 2D head",
+  "not_verified": [
+    "Android Filament GPU",
+    "physical Fold7",
+    "reference likeness",
+    "animation behavior",
+    "all 14 matrix cases"
+  ],
+  "fixture": "Animator scale0 before Activity setup; application sources unchanged",
+  "files": {
+    "activity-expanded-960x640.png": "f6eed4d949e5e0e740041c43dc589274f5d295b6c0a4c24fbbeb827d9fec744d",
+    "activity-expanded-960x640.json": "bdbf68dd65ed97f879e45019c0f67b4a62986a857ccda1a5dcc6263c2a18224e",
+    "comparison.json": "d3c5dbcb6e7b6ee5a1d0f98c0a70390430baf81bb803d101f64b9ed8c1e23593",
+    "native-capture.txt": "f5b9e5b64e7185c65036f9b23e3d8c7c63ccbd2604448e2f464b19e2109f4ba8"
+  }
+}

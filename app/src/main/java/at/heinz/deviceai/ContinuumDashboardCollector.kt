@@ -1,7 +1,9 @@
 package at.heinz.deviceai
 
 import android.app.ActivityManager
+import android.app.job.JobScheduler
 import android.os.BatteryManager
+import at.heinz.deviceai.ui.ContinuumCockpitPresentation
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -50,6 +52,10 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
     )
 
     private val files: File = context.filesDir
+    // The stats reader parses the whole ledger: at most every 15 s, always on this background collector.
+    private val memoryStats = at.heinz.deviceai.ui.ThrottledRead(15_000L) {
+        at.heinz.deviceai.learning.ContinuumMemoryStatsReader(files).read()
+    }
     private val history = ContinuumMetricHistory(File(files, "diagnostics/quality-history-v1.tsv"))
     private var lastCpuMs = -1L
     private var lastWallMs = -1L
@@ -117,7 +123,24 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 }
             }
         }
-        val publicStudy = runCatching { ContinuumPublicStudyScheduler(context).enabled }.getOrDefault(false)
+        // Consent does not prove Android has registered an executable research job.
+        val study = runCatching { ContinuumPublicStudyScheduler(context) }.getOrNull()
+        val publicStudy = study?.enabled == true
+        val publicJobRegistered = runCatching {
+            (context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as? JobScheduler)
+                ?.getPendingJob(ContinuumPublicStudyScheduler.JOB_ID) != null
+        }.getOrDefault(false)
+        val publicInternetGranted = runCatching { study?.internetAllowed() == true }.getOrDefault(false)
+        val publicProviderPaused = runCatching { study?.isRateLimited() == true }.getOrDefault(false)
+        val publicStudyScheduled = publicStudy && publicInternetGranted &&
+            publicJobRegistered && !publicProviderPaused
+        val publicStudyLabel = when {
+            !publicStudy -> "Öffentliche Forschung aus"
+            !publicInternetGranted -> "Webforschung: Internet gesperrt"
+            !publicJobRegistered -> "Webforschung: Job nicht registriert"
+            publicProviderPaused -> "Webforschung: Anbieterpause"
+            else -> "Webforschung eingeplant"
+        }
 
         val (cpu, memory, online) = systemSamples()
         val openIssues = runCatching { diagnostics.open().size }.getOrNull()
@@ -156,16 +179,20 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 segments = storage?.segments.orEmpty(),
                 activeSources = sources,
                 totalSources = sources,
-                syncLabel = if (publicStudy) "Öffentliches Lernen aktiv" else "Keine Synchronisation"
+                // A scheduled research job is not evidence of a synchronization service.
+                syncLabel = ContinuumDashboardState.UNKNOWN,
+                researchLabel = publicStudyLabel
             ),
             development = ContinuumDashboardState.DevelopmentStatus(
                 activeProjects = backlog?.let { active }, runningTasks = backlog?.let { running }, errors = backlog?.let { failed },
                 series = ContinuumDashboardMath.dailySeries(doneTimes, now), projects = projects
             ),
+            memory = memoryStats.get(SystemClock.elapsedRealtime()),
             system = ContinuumDashboardState.SystemStatus(
                 appCpuPercent = cpu, batteryPercent = batteryCapacity(), memoryPercent = memory, storagePercent = storage?.usedPercent,
                 networkOnline = online, networkLabel = when (online) { true -> "Verbunden"; false -> "Offline"; null -> "Unbekannt" },
-                activity = cpuSeries.toList(), openIssues = openIssues
+                activity = cpuSeries.toList(), temperatureC = batteryTemperatureC(), openIssues = openIssues,
+                freeRamBytes = freeRamBytes(), thermalStatus = thermalStatus(), charging = charging()
             ),
             core = ContinuumDashboardState.CoreStatus(
                 connected = when {
@@ -180,7 +207,8 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 developing = if (live.builderJobRunning || running > 0) "Aktiv" else "Bereit",
                 evolving = when {
                     live.autoStudyEnabled -> "CDX1-Autostudium an"
-                    publicStudy -> "Öffentliches Lernen an"
+                    publicStudyScheduled -> "Webforschung eingeplant"
+                    publicStudy -> "Webforschung wartet"
                     live.practiceEnabled -> "Auto-Üben an"
                     else -> "Aus"
                 }
@@ -222,9 +250,34 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
         if (file.isFile) file.length() else if (depth > 6) 0L else file.listFiles().orEmpty().sumOf { sizeOf(it, depth + 1) }
 
     /** Android's current battery level, or unknown if the platform does not provide one. */
+    private fun freeRamBytes(): Long? = runCatching {
+        val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+        android.app.ActivityManager.MemoryInfo().also { manager.getMemoryInfo(it) }.availMem.takeIf { it > 0L }
+    }.getOrNull()
+
+    private fun thermalStatus(): Int? = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+        runCatching {
+            (context.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager).currentThermalStatus
+        }.getOrNull()
+    } else null
+
+    private fun charging(): Boolean? = runCatching {
+        (context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager).isCharging
+    }.getOrNull()
+
     private fun batteryCapacity(): Int? = runCatching {
         val manager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
         manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY).takeIf { it in 0..100 }
+    }.getOrNull()
+
+    /**
+     * Battery temperature from the sticky ACTION_BATTERY_CHANGED broadcast (tenths of °C). Only plausible
+     * readings are shown; Android exposes no public CPU/SoC temperature to apps, so none is claimed.
+     */
+    private fun batteryTemperatureC(): Float? = runCatching {
+        val intent = context.registerReceiver(null, android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED))
+        val tenths = intent?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, Int.MIN_VALUE) ?: Int.MIN_VALUE
+        ContinuumCockpitPresentation.batteryTemperature(tenths)
     }.getOrNull()
 
     /** App CPU share since the previous sample, device RAM in use, validated internet connection. */

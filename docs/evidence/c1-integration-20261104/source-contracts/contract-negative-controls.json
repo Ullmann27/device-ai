@@ -1,0 +1,218 @@
+[
+  {
+    "case": "owner-input",
+    "sourceTest": ".github/continuum/android-integration-wiring.test.mjs",
+    "sourceTestSha256": "e88117f88181704fe5634a54f0576b828c53ecf43e6a1d618106fbd380e72c75",
+    "mutationOnlyInMemory": {
+      "variable": "activity",
+      "original": "createToolGate(ownerTurn = text,",
+      "replacement": "createToolGate(ownerTurn = resolvedQuestion,"
+    },
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=cognitive runtime owns",
+      "/workspace/scratch/174c84456ee3/qa/contract-controls/.github/continuum/owner-input.test.mjs"
+    ],
+    "startedAt": "2026-11-04T20:14:02.506268+00:00",
+    "finishedAt": "2026-11-04T20:14:03.181501+00:00",
+    "exitCode": 1,
+    "expectedFailureObserved": true,
+    "log": "contract-negative-owner-input.tap",
+    "logSha256": "5ca7cffd76a82972d7e42dc9674545c640c113c12b4f4fccd9b37cc60b99bd1b"
+  },
+  {
+    "case": "bot-memory",
+    "sourceTest": ".github/continuum/android-integration-wiring.test.mjs",
+    "sourceTestSha256": "e88117f88181704fe5634a54f0576b828c53ecf43e6a1d618106fbd380e72c75",
+    "mutationOnlyInMemory": {
+      "variable": "activity",
+      "original": "if(codingPlanning == null && botTask == null) memoryStore.all()",
+      "replacement": "if(codingPlanning == null) memoryStore.all()"
+    },
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=cognitive runtime owns",
+      "/workspace/scratch/174c84456ee3/qa/contract-controls/.github/continuum/bot-memory.test.mjs"
+    ],
+    "startedAt": "2026-11-04T20:14:03.181923+00:00",
+    "finishedAt": "2026-11-04T20:14:03.834784+00:00",
+    "exitCode": 1,
+    "expectedFailureObserved": true,
+    "log": "contract-negative-bot-memory.tap",
+    "logSha256": "7bda114c9e60827e0f6b3dfe5e30249fa26fbf6af55f4ea5e1d3dd575cc052b8"
+  },
+  {
+    "case": "planning-tool-budget",
+    "sourceTest": ".github/continuum/android-integration-wiring.test.mjs",
+    "sourceTestSha256": "e88117f88181704fe5634a54f0576b828c53ecf43e6a1d618106fbd380e72c75",
+    "mutationOnlyInMemory": {
+      "variable": "activity",
+      "original": "AgentLimits(maxToolCalls=0,maxRetries=0)",
+      "replacement": "AgentLimits(maxToolCalls=1,maxRetries=0)"
+    },
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=cognitive runtime owns",
+      "/workspace/scratch/174c84456ee3/qa/contract-controls/.github/continuum/planning-tool-budget.test.mjs"
+    ],
+    "startedAt": "2026-11-04T20:14:03.835175+00:00",
+    "finishedAt": "2026-11-04T20:14:04.450127+00:00",
+    "exitCode": 1,
+    "expectedFailureObserved": true,
+    "log": "contract-negative-planning-tool-budget.tap",
+    "logSha256": "5fd01833b5f1002ab801bfc2edb9ea5fdfa9cb1dc48a51fc25afbe150e3e51c5"
+  },
+  {
+    "case": "trace-drop",
+    "sourceTest": ".github/continuum/cognitive-trace-wiring.test.mjs",
+    "sourceTestSha256": "4a6a566738344df5963649bbe798be697e3e0acf0a075368309c5662aaf83a72",
+    "mutationOnlyInMemory": {
+      "variable": "activity",
+      "original": "generateLocal(cancellation,turnTrace,",
+      "replacement": "generateLocal(cancellation,null,"
+    },
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=one correlation follows",
+      "/workspace/scratch/174c84456ee3/qa/contract-controls/.github/continuum/trace-drop.test.mjs"
+    ],
+    "startedAt": "2026-11-04T20:14:04.450415+00:00",
+    "finishedAt": "2026-11-04T20:14:04.689739+00:00",
+    "exitCode": 1,
+    "expectedFailureObserved": true,
+    "log": "contract-negative-trace-drop.tap",
+    "logSha256": "8bb0b2adf6ee2ac438de604fbf44ff95f93f6d1931ef929d17ee5882ea74ed78"
+  },
+  {
+    "case": "speech-locale",
+    "sourceTest": ".github/continuum/coding-agent-speech-wiring.test.mjs",
+    "sourceTestSha256": "99ed0e0c9d6b1738b2816fe6eaca47220ec9c5538a12799cb4c463d8090ffd3e",
+    "mutationOnlyInMemory": {
+      "variable": "recognizer",
+      "original": "RecognizerIntent.EXTRA_LANGUAGE, \"de-AT\"",
+      "replacement": "RecognizerIntent.EXTRA_LANGUAGE, \"en-US\""
+    },
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=developer speech uses",
+      "/workspace/scratch/174c84456ee3/qa/contract-controls/.github/continuum/speech-locale.test.mjs"
+    ],
+    "startedAt": "2026-11-04T20:14:04.690786+00:00",
+    "finishedAt": "2026-11-04T20:14:04.857345+00:00",
+    "exitCode": 1,
+    "expectedFailureObserved": true,
+    "log": "contract-negative-speech-locale.tap",
+    "logSha256": "37ca19529a017a11830eff94bf9716db660c0cbc2f27947821fae9b52bbe61ad"
+  },
+  {
+    "case": "development-route",
+    "sourceTest": ".github/continuum/coding-agent-speech-wiring.test.mjs",
+    "sourceTestSha256": "99ed0e0c9d6b1738b2816fe6eaca47220ec9c5538a12799cb4c463d8090ffd3e",
+    "mutationOnlyInMemory": {
+      "variable": "menu",
+      "original": "\"development\" to Slot.LABEL_DEVELOPING",
+      "replacement": "\"disconnected-development\" to Slot.LABEL_DEVELOPING"
+    },
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=coding agent has one integrated entry",
+      "/workspace/scratch/174c84456ee3/qa/contract-controls/.github/continuum/development-route.test.mjs"
+    ],
+    "startedAt": "2026-11-04T20:14:04.857705+00:00",
+    "finishedAt": "2026-11-04T20:14:05.049589+00:00",
+    "exitCode": 1,
+    "expectedFailureObserved": true,
+    "log": "contract-negative-development-route.tap",
+    "logSha256": "dd4caaf62a6e58d245c427a61d54ec5ac70eb6a490f38b34d88a89b02568dab5"
+  },
+  {
+    "case": "avatar-audio-frame",
+    "sourceTest": ".github/continuum/android-avatar-wiring.test.mjs",
+    "sourceTestSha256": "18bc7809edefee8306556fc9371bc5e12c018f9cbd12aeb0db73d23604f267c9",
+    "mutationOnlyInMemory": {
+      "variable": "activity",
+      "original": "avatarDirector.wordRange(utteranceId, start, end, audioFrame = frame)",
+      "replacement": "avatarDirector.wordRange(utteranceId, start, end)"
+    },
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=avatar director is wired",
+      "/workspace/scratch/174c84456ee3/qa/contract-controls/.github/continuum/avatar-audio-frame.test.mjs"
+    ],
+    "startedAt": "2026-11-04T20:14:05.050078+00:00",
+    "finishedAt": "2026-11-04T20:14:05.284784+00:00",
+    "exitCode": 1,
+    "expectedFailureObserved": true,
+    "log": "contract-negative-avatar-audio-frame.tap",
+    "logSha256": "7aaea71cd7d3359ead2a56b48f1df80fc8b3f373678f1f0d65a620cf2213f482"
+  },
+  {
+    "case": "avatar-visible-sink",
+    "sourceTest": ".github/continuum/android-avatar-wiring.test.mjs",
+    "sourceTestSha256": "18bc7809edefee8306556fc9371bc5e12c018f9cbd12aeb0db73d23604f267c9",
+    "mutationOnlyInMemory": {
+      "variable": "activity",
+      "original": "avatarDirector.attach(it)",
+      "replacement": "avatarDirector.detach(it)"
+    },
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=avatar director is wired",
+      "/workspace/scratch/174c84456ee3/qa/contract-controls/.github/continuum/avatar-visible-sink.test.mjs"
+    ],
+    "startedAt": "2026-11-04T20:14:05.285726+00:00",
+    "finishedAt": "2026-11-04T20:14:05.478637+00:00",
+    "exitCode": 1,
+    "expectedFailureObserved": true,
+    "log": "contract-negative-avatar-visible-sink.tap",
+    "logSha256": "ceff86c02888f981f855e41b6234b1afbb83a56cab19ca2d40220b1fb15f8184"
+  },
+  {
+    "case": "reference-navigation",
+    "sourceTest": ".github/continuum/aaa-cockpit-and-effects.test.mjs",
+    "sourceTestSha256": "894509dd652514226126aa7debc76e22dec4f82b71269e81e0233b10fb42c611",
+    "mutationOnlyInMemory": {
+      "variable": "referenceLayout",
+      "original": "if (wide) boxes[Slot.RAIL]",
+      "replacement": "if (!wide) boxes[Slot.RAIL]"
+    },
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=no new Flutter dependency",
+      "/workspace/scratch/174c84456ee3/qa/contract-controls/.github/continuum/reference-navigation.test.mjs"
+    ],
+    "startedAt": "2026-11-04T20:14:05.480037+00:00",
+    "finishedAt": "2026-11-04T20:14:05.724367+00:00",
+    "exitCode": 1,
+    "expectedFailureObserved": true,
+    "log": "contract-negative-reference-navigation.tap",
+    "logSha256": "166429f680dac353820f486c6e74bee00082bf3dab5adf8bbab4ca782b52507d"
+  }
+]

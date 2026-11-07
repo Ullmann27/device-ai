@@ -91,8 +91,19 @@ class BootstrapMemoryStore(context: Context) {
 
 
     var voiceEnabled: Boolean
-        get() = prefs.getBoolean("voice_enabled", false)
+        // First-open companion voice is on; an explicitly saved mute choice always wins.
+        get() = prefs.getBoolean("voice_enabled", true)
         set(value) { prefs.edit().putBoolean("voice_enabled", value).apply() }
+
+    /** Engine voice name the owner picked in the voice picker; null = automatic rule (JarvisVoiceSelection). */
+    var voiceName: String?
+        get() = prefs.getString("voice_name", null)?.takeIf { it.isNotBlank() }
+        set(value) { prefs.edit().apply { if (value.isNullOrBlank()) remove("voice_name") else putString("voice_name", value) }.apply() }
+
+    /** Spoken language tag ("de" default, "en" selectable). */
+    var voiceLanguage: String
+        get() = prefs.getString("voice_language", "de") ?: "de"
+        set(value) { prefs.edit().putString("voice_language", value).apply() }
 
     val positiveCount: Int get() = prefs.getInt("positive", 0)
     val negativeCount: Int get() = prefs.getInt("negative", 0)

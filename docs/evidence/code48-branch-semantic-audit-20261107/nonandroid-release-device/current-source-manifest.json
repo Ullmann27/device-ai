@@ -1,0 +1,215 @@
+{
+  "source": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "files": [
+    {
+      "path": "scripts/render-continuum-m8-owner-release.sh",
+      "blob": "2fd86f973ecff06d912fdc27c897f9ba1bf84d39",
+      "sha256": "a734e840ba0d91d798c6bc9b7d8040c69da72ceb6373b945b120f94847b1c40e",
+      "bytes": 9291,
+      "lines": 176
+    },
+    {
+      "path": "scripts/render-continuum-owner-continuous-release.sh",
+      "blob": "204bb40b87346d0ca7f798ae66a40264731aed32",
+      "sha256": "bc52ce7858a503ac30c221bac16092ebf85da4a95d842b8734fc76b0af537954",
+      "bytes": 10229,
+      "lines": 185
+    },
+    {
+      "path": "scripts/render-continuum-owner-continuous-qa.sh",
+      "blob": "abc9b6938941a74d635963be98845d5b203fa839",
+      "sha256": "8fa137e2e5f4429bf1193dc6592ed86f7b1c6cd1f77fd531cc882a860f864664",
+      "bytes": 18492,
+      "lines": 275
+    },
+    {
+      "path": "scripts/continuum-owner-render-readback.mjs",
+      "blob": "2f926857a3e551ab437b5293997374f2f02affda",
+      "sha256": "d1b6955385090bef6c0881fccec11adab58a3265234ab7eeec0b12161d17aee8",
+      "bytes": 6481,
+      "lines": 127
+    },
+    {
+      "path": "scripts/continuum-owner-release-stage.mjs",
+      "blob": "19250191d9bd7969d91582d1b21e0766e08a9310",
+      "sha256": "dad293f452fc3b507f38b2f2281b8828482e8708e74d1368ed25512fe161c5f1",
+      "bytes": 5353,
+      "lines": 101
+    },
+    {
+      "path": "scripts/continuum-owner-update-manifest.mjs",
+      "blob": "7c75e26cca1b675ee0e119a9cf19d9b9d7abc31a",
+      "sha256": "0159e45a938e0854d3dcb0d21b596a814e97595e60f5006e4184cbbfb390218b",
+      "bytes": 4417,
+      "lines": 92
+    },
+    {
+      "path": "scripts/continuum-owner-catalog-contract.mjs",
+      "blob": "efb6e93857be5d42bee4ec336632476a17ee0a44",
+      "sha256": "9ad010e1d560d5f803270d56a30eb66b1fce904d66488ac93158d35dabf02618",
+      "bytes": 3825,
+      "lines": 60
+    },
+    {
+      "path": "scripts/continuum-atomic-acceptance.sh",
+      "blob": "b9889cf7bf764a45fbc2cd8425f3f7d2b06312bf",
+      "sha256": "698c00e2d7f5517996f53c55dffaf82ec1838422721185e73e36640027c6c98f",
+      "bytes": 6201,
+      "lines": 135
+    },
+    {
+      "path": "scripts/continuum-qa-evidence.mjs",
+      "blob": "81227a950b1162e37bc267d95767b6e6a75dbc78",
+      "sha256": "787804965d23df864b0a19baeb2c52c50e06b8f22e584383aaa9a7ff6815128f",
+      "bytes": 5944,
+      "lines": 104
+    },
+    {
+      "path": "scripts/continuum-reliability-qa.mjs",
+      "blob": "67b0f9ccb2b9e2777e5aa304934572d268d7bd48",
+      "sha256": "ed57537bd748481088372e76291afee541c1b52f47261f1f9efd71218404ceca",
+      "bytes": 8431,
+      "lines": 123
+    },
+    {
+      "path": "scripts/continuum-fusion-full-regression.sh",
+      "blob": "c747fe053cca7bdd436c1658ec89f2be84158e90",
+      "sha256": "cf32ede2960bf9a504f676ad8832cf6334cdc349a00c28ae078f9f199c4663d3",
+      "bytes": 7831,
+      "lines": 112
+    },
+    {
+      "path": "scripts/continuum-fusion-regression-report.mjs",
+      "blob": "1bfeecd6633906a6122d9a1909e5f418a9ec2383",
+      "sha256": "23b54be2534bb2d8681e97db49fd85f24927e59151c72277a543fd816c9fc868",
+      "bytes": 5247,
+      "lines": 105
+    },
+    {
+      "path": "scripts/continuum-fold7-standalone-apk.sh",
+      "blob": "18d07a5982591e4e2115f7f060a7df8f869d16d0",
+      "sha256": "77ab96cdec02f6eda1b4557495e81d29575e954a2994ac7871da77736243a48d",
+      "bytes": 7954,
+      "lines": 138
+    },
+    {
+      "path": "scripts/continuum-local-owner-apk.sh",
+      "blob": "5baff96e07e182fd856741a2136a8520a7dbb21d",
+      "sha256": "a5a8986db344a7074e3de228bf02088b5d7891c5317a700aa232630e83cf97cb",
+      "bytes": 8490,
+      "lines": 136
+    },
+    {
+      "path": "scripts/continuum-mobile-builder.mjs",
+      "blob": "b94013980ebef24d0dc3e3455a3a1131b91d04ab",
+      "sha256": "3d14fd26f228723ee38a52b86686addd3436f758a5dc0e6dc2e26746aac66572",
+      "bytes": 24839,
+      "lines": 400
+    },
+    {
+      "path": "scripts/continuum-one-tap-update.sh",
+      "blob": "bbc638cd96f814da3539d41f8a5b89deab352855",
+      "sha256": "d3603c0b457138e33c50728931625e4703b9bcc5f4509ae314936782031ecc34",
+      "bytes": 1865,
+      "lines": 43
+    },
+    {
+      "path": "scripts/continuum-local-mainapp-qa.sh",
+      "blob": "f2a28cb7376f304329896167bf1910c488f83a71",
+      "sha256": "fed5433d6b3662f854bd89adad588fccb7fa45aa4330d459dd72657f0acf9629",
+      "bytes": 5620,
+      "lines": 111
+    },
+    {
+      "path": "scripts/continuum-design-diff.py",
+      "blob": "dfc08d0c6cf08728540cfcf8d3868a5b387e6f0a",
+      "sha256": "84e698df33c3366b78d74afb07ccca32133b84b307140de8191dbd48b7038e37",
+      "bytes": 14961,
+      "lines": 291
+    },
+    {
+      "path": "scripts/continuum-fold7-portrait-compare.py",
+      "blob": "941a47300c5960bbdde713bd3fb0d338ac153db9",
+      "sha256": "6649c55113acba4944bb814236e3337315e371f48ea7841f87e64c1ec1457d13",
+      "bytes": 5222,
+      "lines": 112
+    },
+    {
+      "path": "scripts/fold7-diagnose.sh",
+      "blob": "8ee31d5a0e41530d80fcc6c6e76e7a511dc81d4a",
+      "sha256": "e99182909b63e3e0584bee1b045d40dd0a8bd0871b2447e58437f3c252b70eba",
+      "bytes": 2757,
+      "lines": 31
+    },
+    {
+      "path": ".github/continuum/teamleader-cli.mjs",
+      "blob": "1937f58b8cb8a4a123e1bd9c8ef1e712d0d0d13a",
+      "sha256": "410329c1f13e4b76eb1dbb8e242c4c3269313150de5577be698720a627a882d8",
+      "bytes": 7430,
+      "lines": 155
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
+      "blob": "58aa5e6c4d5da1db5134c5ce8069594261bb645f",
+      "sha256": "6b7f888df37491de793d225b6431d555e7995adacaba4da426d00048e9e4f92e",
+      "bytes": 9415,
+      "lines": 142
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt",
+      "blob": "24e142b9efbf7e6eda7331c17ba83f0485f4c3cf",
+      "sha256": "f6b00dcd5301a013cfff841bc6b0e869c7bf7efbbc3208b0ccba6391bcc26bf6",
+      "bytes": 14371,
+      "lines": 315
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "blob": "de358ac1f50614465144e5e9878acacb1f624dec",
+      "sha256": "73133db72a87dbf4aeb1311e7f64a15c4072c85f97db53531bd07686ee263602",
+      "bytes": 734002,
+      "lines": 12759
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt",
+      "blob": "bb818a37c799c202f5d791ea9663229289fb47d4",
+      "sha256": "4e5d78007d7d8b9811db74209c1ecfd5aa260b5ba242a9c6bb1b9eda03a70e92",
+      "bytes": 13142,
+      "lines": 287
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/LocalFirstPolicy.kt",
+      "blob": "a9f39b9c7b36246bf98f8cc621d6afa166bd4339",
+      "sha256": "31221f5a542da6a8529d1c2e2593368ffd73c069ca0e09f228cbc3763c0c4b3c",
+      "bytes": 4606,
+      "lines": 80
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/LocalFirstPolicyTest.kt",
+      "blob": "9ab38f8af90e7c5f0487f60685408e3439e70474",
+      "sha256": "6c85c2a95bdfb4338698a1142273d34e6980022c4d4fd500f3de76b7839d1a6c",
+      "bytes": 8749,
+      "lines": 174
+    },
+    {
+      "path": "docs/release/CONTINUUM-CODE44-BUILD-HANDOFF-20261105.md",
+      "blob": "d65ed7f9d9014637cbcc2f3a470355ce9ad0f9ed",
+      "sha256": "202bc59871b747c42f08bcf5dc02450e41258aa1d381b47a837119eb78d259d3",
+      "bytes": 11383,
+      "lines": 96
+    },
+    {
+      "path": "docs/research/omega/CODE48-WORKSCENE-THERMAL-20261107.md",
+      "blob": "0ece966804f92ba511556582336181a7ecf547d7",
+      "sha256": "89c8ac9c87f2417d702c43f16a780d0d225edec5b1b167dd83a07475038e9445",
+      "bytes": 6074,
+      "lines": 110
+    },
+    {
+      "path": "docs/research/omega/CODE48-CONNECTED-CINEMA-20261107.md",
+      "blob": "c3508aa700a52dbd19dc60423e5a2e48138eb38f",
+      "sha256": "1c066fc3e32c09168136f48c894895c869851441df50add39ed456f3d4e562e8",
+      "bytes": 7788,
+      "lines": 137
+    }
+  ]
+}

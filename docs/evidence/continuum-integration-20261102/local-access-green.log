@@ -1,0 +1,11 @@
+✔ HTTPS setup verifies access first, converts only official origin and redacts credential tool output (99.825731ms)
+✔ missing auth gives bounded device login instructions without changing remote (19.765053ms)
+✔ owner doctor rejects a JRE and uses complete JAVA_HOME ahead of system Java (78.532416ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 256.148521

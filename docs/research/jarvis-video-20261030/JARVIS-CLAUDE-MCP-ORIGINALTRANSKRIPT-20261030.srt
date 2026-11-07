@@ -1,0 +1,175 @@
+1
+00:00:00,586 --> 00:00:02,466
+Hey Jarvis, wake up, daddy's home.
+
+2
+00:00:02,506 --> 00:00:03,285
+How is the app doing?
+
+3
+00:00:03,445 --> 00:00:06,406
+Für so ein Dashboard nutz einfach
+Claude Design und er oneshottet dir das.
+
+4
+00:00:06,526 --> 00:00:08,306
+So ein Dashboard hier hat
+drei Minuten gedauert.
+
+5
+00:00:08,346 --> 00:00:09,946
+Viel wichtiger ist, was dahinter passiert.
+
+6
+00:00:10,126 --> 00:00:10,966
+Good evening, Sir.
+
+7
+00:00:11,006 --> 00:00:12,946
+Verbinde deinen Claude mit
+Eleven Labs, wenn du mit deinem
+
+8
+00:00:13,006 --> 00:00:14,086
+Jarvis sprechen möchtest.
+
+9
+00:00:14,226 --> 00:00:15,666
+Pulling up our app stats now.
+
+10
+00:00:15,706 --> 00:00:18,266
+Verbinde deinen Jarvis mit dem
+Playwright MCP, um ihm Zugriff zu
+
+11
+00:00:18,286 --> 00:00:19,726
+seinem eigenen Browser zu geben.
+
+12
+00:00:19,886 --> 00:00:22,326
+Over the last seven days, we had two
+thousand four hundred fifty nine new
+
+13
+00:00:22,366 --> 00:00:25,186
+downloads and generated four thousand two
+hundred eighty nine dollars in revenue.
+
+14
+00:00:25,226 --> 00:00:28,105
+Nimm all deine Tools und verbinde
+sie über MCPs mit deinem Jarvis,
+
+15
+00:00:28,146 --> 00:00:31,046
+damit er darin arbeiten und dir
+alle möglichen Daten ausgeben kann.
+
+16
+00:00:31,126 --> 00:00:33,826
+For organic content, I'm still
+posting three short form videos a day.
+
+17
+00:00:33,866 --> 00:00:36,326
+Für automatisiertes Posting
+nutze den Buffer MCP.
+
+18
+00:00:36,486 --> 00:00:38,766
+On ads, you spent four hundred
+seventy five dollars at a one
+
+19
+00:00:38,806 --> 00:00:40,086
+point five return on ad spend.
+
+20
+00:00:40,146 --> 00:00:43,006
+Meta hat mittlerweile eine offizielle
+Verbindung zu Claude, also verbinde
+
+21
+00:00:43,046 --> 00:00:45,566
+deinen Meta-Account mit deinem
+Jarvis, damit er dir automatisiert
+
+22
+00:00:45,586 --> 00:00:46,946
+deine Kampagnen optimieren kann.
+
+23
+00:00:47,086 --> 00:00:49,146
+Throughout the week, you
+received sixteen customer emails.
+
+24
+00:00:49,386 --> 00:00:50,626
+I resolved thirteen automatically.
+
+25
+00:00:50,686 --> 00:00:53,566
+Richte Routines ein, damit dir
+dein Jarvis wiederkehrende Aufgaben
+
+26
+00:00:53,646 --> 00:00:56,726
+automatisch erledigt, ohne dass du ihm
+sie jedes Mal wieder neu geben musst.
+
+27
+00:00:56,886 --> 00:00:58,646
+Since you had already approved
+that direction, I handed it
+
+28
+00:00:58,766 --> 00:00:59,926
+to Tom, the developer agent.
+
+29
+00:00:59,966 --> 00:01:03,226
+Bau dir in deinem Claude Subagents,
+damit dein Jarvis bestimmte Aufgaben
+
+30
+00:01:03,286 --> 00:01:05,105
+an spezialisierte Agents abgeben kann.
+
+31
+00:01:05,146 --> 00:01:07,746
+My recommendation today, review
+the back end PR, keep leaning into
+
+32
+00:01:07,786 --> 00:01:09,905
+the streets as your ad angle, and
+have Scout research the next set
+
+33
+00:01:09,926 --> 00:01:11,345
+of organic content angles to test.
+
+34
+00:01:11,386 --> 00:01:12,586
+What would you like me
+to handle first, Sir?
+
+35
+00:01:12,866 --> 00:01:16,265
+Nutze ein Daily Briefing System, um jeden
+Morgen deine offenen Termine und offenen
+
+36
+00:01:16,306 --> 00:01:17,706
+To-dos zusammengefasst zu bekommen.
+
+37
+00:01:17,746 --> 00:01:20,686
+Für den kompletten Bauplan und alle meine
+Prompts, die ich für mein Jarvis genutzt
+
+38
+00:01:20,746 --> 00:01:23,386
+habe, schreib Jarvis in die Kommentare
+und ich schick dir alles direkt zu.

@@ -1,0 +1,21 @@
+{
+  "schema": "continuum-coding-model-request",
+  "version": 1,
+  "taskId": "mob-468359ddce50f765",
+  "taskFingerprint": "50ef97430296346918596609ab3720925dcb02657e18766914e1b1aa784ca3e6",
+  "sourceCommit": "00f8364fd0770508f49c7d5d34963c0925d4476f",
+  "request": 2,
+  "startedAt": "2026-11-03T20:59:01.687Z",
+  "elapsedMs": 32361,
+  "configuredModel": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+  "verifiedModelExecution": false,
+  "contextSha256": "b94221041bbfec8d495c77def5635df5eb49567a02d8949e4415e4725b132b39",
+  "promptSha256": "ed90782c028c74ad608f669a08ec4753332d8b4e1b33983ba5883a5e7008d13b",
+  "modelTimeoutMs": 60000,
+  "exitCode": 1,
+  "status": "FAILED",
+  "failureKind": "CHILD_EXIT_NONZERO",
+  "responseSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "responseBytes": 0,
+  "rawContentStored": false
+}

@@ -1,0 +1,12 @@
+import subprocess,json,os,pathlib,uuid
+root='/workspace/momega1-challenger-7b-candidate';image='sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1';env={k:v for k,v in os.environ.items() if not k.startswith('DOCKER_')};pin=json.load(open('/workspace/momega1-local-model/qwen7b/runtime-env.json'))
+name='continuum-model-reviewdiag-'+uuid.uuid4().hex
+a=['/usr/local/bin/docker','--host=unix:///var/run/docker.sock','run','--name='+name,'--rm','--pull=never','--init','--network=none','--ipc=none','--memory=7g','--memory-swap=7g','--cpus=2','--pids-limit=64','--cap-drop=ALL','--security-opt=no-new-privileges:true','--security-opt=systempaths=unconfined','--security-opt=seccomp='+root+'/scripts/continuum-local-model-outer-seccomp.json','--user=1000:1000','--read-only','--tmpfs=/tmp:rw,nosuid,nodev,size=128m','--entrypoint=/node/bin/node']
+mounts=[('/workspace/momega1-local-model/challenger-7b-diagnostic','/diagnostic'),(os.path.realpath('/usr'),'/usr'),(os.path.realpath('/lib'),'/lib'),(os.path.realpath('/lib64'),'/lib64'),('/opt/codex/runtimes/codex-primary-runtime/dependencies/node','/node'),(root+'/scripts','/source/scripts'),(root+'/.github/continuum','/source/.github/continuum'),('/workspace/momega1-challenger/tools/momega1-challenger','/review')]
+for k in ['CONTINUUM_LOCAL_BRAIN_MODEL_PATH','CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST','CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH']:mounts.append((pin[k],pin[k]))
+for src,dst in mounts:a+=['--mount','type=bind,src='+src+',dst='+dst+('' if dst=='/diagnostic' else ',readonly')]
+for k,v in pin.items():a+=['--env',k+'='+v]
+a += [image,'/review/seven-b-raw-diagnostic.mjs']
+try:r=subprocess.run(a,env=env,text=True,capture_output=True,timeout=190)
+finally:subprocess.run(['/usr/local/bin/docker','--host=unix:///var/run/docker.sock','rm','--force',name],env=env,text=True,capture_output=True,timeout=5)
+pathlib.Path('docs/evidence/momega1/challenger/seven-b-raw-diagnostic-command.json').write_text(json.dumps({'exit':r.returncode,'stdout':r.stdout,'stderr':r.stderr},indent=2)+'\n');print(r.stdout);print(r.stderr);raise SystemExit(r.returncode)

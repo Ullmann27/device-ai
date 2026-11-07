@@ -88,7 +88,11 @@ object ContinuumBentoCockpit {
             return
         }
         val items = rows.map { line ->
-            val separator = line.indexOf(':')
+            // Labels use a colon followed by whitespace or an empty value.
+            // Clock times and standalone URLs must remain one readable value.
+            val separator = line.indexOf(':').takeIf {
+                it in 1..45 && (it == line.lastIndex || line[it + 1].isWhitespace())
+            } ?: -1
             column(ctx).apply {
                 background = Glass(VIOLET, ctx.resources.displayMetrics.density)
                 setPadding(dp(ctx, 10f), dp(ctx, 9f), dp(ctx, 10f), dp(ctx, 9f))
@@ -185,7 +189,9 @@ object ContinuumBentoCockpit {
      * model receipts. Non-matching data is preserved verbatim.
      */
     fun formattedStatus(raw: String): String {
-        val pattern = Regex("""(\d{13}):(RUNNING|FINISHED|FAILED|CANCELLED)""")
+        val phases = "RUNNING|FINISHED|FAILED|CANCELLED|INTERRUPTED|" +
+            "DEFERRED_(?:BATTERY_LOW|BATTERY_UNKNOWN|THERMAL_LIMIT|STORAGE_LOW|TIME_BUDGET)"
+        val pattern = Regex("""(?<!\d)(\d{13}):($phases)(?=$|[|\s])""")
         return pattern.replace(raw) { match ->
             val millis = match.groupValues[1].toLongOrNull()
             if (millis == null) match.value else {

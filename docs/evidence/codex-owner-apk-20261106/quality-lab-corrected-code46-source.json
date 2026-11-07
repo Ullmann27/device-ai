@@ -1,0 +1,17 @@
+{
+  "schema": "continuum.lab.unit.v1",
+  "provenance": "host_python_unittest",
+  "source_sha": "577f0931e7937ffcac02dc855a540f093facdb3b",
+  "checkout_sha": "577f0931e7937ffcac02dc855a540f093facdb3b",
+  "source_verified": true,
+  "source_unchanged": true,
+  "timestamp_utc": "2026-11-06T17:35:04.676488+00:00",
+  "total": 44,
+  "passed": 44,
+  "failed": 0,
+  "skipped": 0,
+  "expected_failures": 0,
+  "status": "PASS",
+  "test_log_sha256": "820f1a5de390c0344856f6c1cb1cfff822af2167ad1154a7ed750a5c6f61c732",
+  "test_category": "HOST_SOFTWARE_ONLY"
+}

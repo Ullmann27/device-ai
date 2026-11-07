@@ -1,0 +1,2 @@
+EVENTS_CANCEL=[TextDelta(text=first), Cancelled]
+EVENTS_UNLOAD=[TextDelta(text=first), Cancelled]

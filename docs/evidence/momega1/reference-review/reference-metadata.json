@@ -1,0 +1,135 @@
+{
+  "schema": "jarvis-reference-metadata",
+  "version": 1,
+  "mediaCommitted": false,
+  "primaryIndex": 0,
+  "videos": [
+    {
+      "index": 0,
+      "duration": 10.026667,
+      "sha256": "a9c525346b200c2aa062ff9d2c7495f8492fbaa9016a4cf125364dda77b35893",
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 1280,
+          "height": 720,
+          "r_frame_rate": "24/1",
+          "sample_rate": null,
+          "channels": null
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "48000",
+          "channels": 2
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "duration": 87.433333,
+      "sha256": "d9459cfebbb0cbb75f244e2db7147cc2fc1a2da47074df66872169b985645f20",
+      "streams": [
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2
+        },
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 576,
+          "height": 1024,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "duration": 47.066667,
+      "sha256": "270e4e149095c448c836b07b81aabe4c3e9376f9615708b65e8cc82aba365937",
+      "streams": [
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2
+        },
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 576,
+          "height": 1024,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "duration": 620.808707,
+      "sha256": "999757dea0c67e552f5ffe961ec9f10d5a20dd09094080e05618c60161f6b687",
+      "streams": [
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2
+        },
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 576,
+          "height": 1024,
+          "r_frame_rate": "24/1",
+          "sample_rate": null,
+          "channels": null
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "duration": 82.1,
+      "sha256": "37a8cabed4ebbcf96e5c9813585cea818b5a39af1f640cf17c90c58ada7100a6",
+      "streams": [
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2
+        },
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 576,
+          "height": 1024,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null
+        }
+      ]
+    }
+  ],
+  "inspection": "All five 3x3 time-spanning contact sheets viewed independently; sparse visual sampling, not full audiovisual playback.",
+  "audioListening": "NOT_RUN; audio decoding/stream presence does not establish auditory review."
+}

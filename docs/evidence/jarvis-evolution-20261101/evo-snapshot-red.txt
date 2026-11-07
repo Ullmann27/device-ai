@@ -1,0 +1,13 @@
+JUnit version 4.13.2
+.E...
+Time: 0.191
+There was 1 failure:
+1) validateExactlyTheCopiedEvidenceRatherThanAnEarlierCallerView(at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest)
+org.junit.ComparisonFailure: expected:<[ad1658212478da805276d60cc48103617a953b311dee95bf2bb20084575a4c18]> but was:<[4e692602e4c6cb64d5b3f03c183beb1c387c26c6c9678a7e3ca62f13e4a1851d]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest.validateExactlyTheCopiedEvidenceRatherThanAnEarlierCallerView(LocationEvidenceSnapshotTest.kt:41)
+
+FAILURES!!!
+Tests run: 4,  Failures: 1
+

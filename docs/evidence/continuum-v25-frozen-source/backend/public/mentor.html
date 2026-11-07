@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Device AI Continuum · KI-Mentor</title>
+  <link rel="stylesheet" href="/mentor/ui.css">
+  <script type="module" defer src="/mentor/ui.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <div class="mark" aria-hidden="true">⬡</div>
+    <div>
+      <h1>Device <em>AI</em> Continuum</h1>
+      <p>Eigener KI-Mentor · geschützter Verbindungstest</p>
+    </div>
+  </header>
+  <section>
+    <p class="eyebrow">VERBINDUNG ZU DEINEM SERVER</p>
+    <label for="device-token">Device-Token aus Render</label>
+    <input id="device-token" type="password" autocomplete="off" spellcheck="false" autocapitalize="off" placeholder="Nicht den Groq-API-Schlüssel eingeben" maxlength="2048">
+    <p class="note">Der Token wird nur für diese HTTPS-Anfragen verwendet, nicht im Browser gespeichert. Der Groq-Schlüssel bleibt ausschließlich auf Render.</p>
+    <button id="check" type="button">Verbindung prüfen</button>
+    <output id="status" role="status" aria-live="polite"></output>
+  </section>
+  <section>
+    <p class="eyebrow">EINMALIGER KI-TEST</p>
+    <label for="question">Deine Testfrage</label>
+    <textarea id="question" maxlength="1800" rows="3">Wie funktionieren Solarzellen?</textarea>
+    <label class="checkbox">
+      <input id="consent" type="checkbox">
+      Ich erlaube einmalig die Übermittlung nur dieser Frage an GroqCloud.
+    </label>
+    <button id="send" type="button">Externe KI einmalig testen</button>
+    <output id="answer" role="status" aria-live="polite"></output>
+    <p class="note">Antworten sind externe, unbestätigte Vorschläge. Kein Gerätezugriff, kein automatisches Lernen und keine Weitergabe persönlicher Erinnerungen.</p>
+  </section>
+  <footer>Nur Device AI Continuum · Lumo ist davon unabhängig.</footer>
+</main>
+</body>
+</html>

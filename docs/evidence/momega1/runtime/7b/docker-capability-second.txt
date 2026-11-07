@@ -1,0 +1,14 @@
+0::/
+ 8589934592
+ 0
+
+file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:28
+const fail=code=>{throw Error(code);};
+                        ^
+
+Error: BLOCKED_LOCAL_JOB_MEMORY_LIMIT
+    at fail (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:28:25)
+    at assertLocalModelJobMemoryLimit (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:127:9)
+    at file:///workspace/momega1-runtime/[eval1]:1:506
+
+Node.js v24.19.0

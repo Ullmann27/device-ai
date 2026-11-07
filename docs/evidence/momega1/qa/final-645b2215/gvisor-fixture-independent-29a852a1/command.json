@@ -1,0 +1,1 @@
+["taskset", "-c", "2", "node", "--test", ".github/continuum/isolated-executor-gvisor.test.mjs"]

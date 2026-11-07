@@ -1,5 +1,7 @@
 package at.heinz.deviceai.learning
 
+import at.heinz.deviceai.cognitive.CertifiedLocationReflex
+
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.file.Files
@@ -42,9 +44,13 @@ class ContinuumMemoryDialogue(private val directory:File) {
             emptyList()
         }
         val text=input.trim()
-        val followUp=Regex("(?i)\\b(darüber|dazu|damit|weiter|noch mehr|und warum|und wie)\\b").containsMatchIn(text)
         val previousTopic=history.lastOrNull()?.topic.orEmpty()
-        val resolved=if(followUp&&previousTopic.isNotBlank())(previousTopic+" "+text).take(512) else text
+        val possessiveFollowUp=resolvePossessiveFollowUp(text,previousTopic)
+        val unresolvedPossessive=possessiveFollowUp==null && (POSSESSIVE_FOLLOW_UP.matches(text) ||
+            OWNER_ATTRIBUTE.containsMatchIn(previousTopic) &&
+            Regex("(?u)^[Uu]nd\\s+\\p{Lu}[\\p{L}'’-]+(?:\\s|\\?)").containsMatchIn(text))
+        val followUp=possessiveFollowUp!=null || Regex("(?i)\\b(darüber|dazu|damit|weiter|noch mehr|und warum|und wie)\\b").containsMatchIn(text)
+        val resolved=possessiveFollowUp ?: if(followUp&&previousTopic.isNotBlank())(previousTopic+" "+text).take(512) else text
         // A single high-confidence typo may be retried for retrieval only.
         // Never alter the displayed user input, stored user facts, or tool text.
         val firstHits=rank(bytes,resolved,experiences)
@@ -62,7 +68,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
         // A mention of an entity as a value does not define that entity.
         // Preserve the existing rank/Node contract and filter only the
         // dialogue evidence presented for explicit subject-definition questions.
-        val hits=retrievedHits.filter {
+        val hits=if(unresolvedPossessive)emptyList() else retrievedHits.filter {
             it.kind!="Bestätigte Nutzererinnerung" ||
                 ownerMemoryAnswersDefinition(text,it.text)
         }
@@ -84,14 +90,29 @@ class ContinuumMemoryDialogue(private val directory:File) {
         val topic=when {
             greeting -> previousTopic
             selected.isEmpty() -> ""
+            possessiveFollowUp!=null -> resolved.take(320)
             followUp -> previousTopic
             else -> text.take(320)
         }
+        // E7 on EWM2: a location question gets a precise first line when the certified rule core
+        // proves exactly one supporting fact among ALL active confirmed owner facts (not only the
+        // ranked ones, so an unrevoked conflicting fact the ranker dropped still forces abstention),
+        // and only when memory retrieval itself is grounded. Read-only, zero model tokens, no new store.
+        val exactLocation=if(greeting || followUp || selected.isEmpty())null else
+            CertifiedLocationReflex.answerFromConfirmedFacts(text,
+                experiences.filter { eligible(it) && it.type==LearningExperienceType.USER_FACT &&
+                    it.trust==LearningTrustClass.OWNER_CONFIRMED }.map { it.id to it.content })
+        // Reuse the existing full-ledger attribute/revision scope. Only literal, precisely
+        // named age statements get a short value; original memory quotation stays below.
+        val exactAge=if(greeting || followUp || selected.isEmpty())null else
+            OwnerAttributeEvidenceScope.exactAgeReply(text,experiences,selected)
         val answer=when {
             greeting -> "Hallo Heinz. Worüber möchtest du sprechen? Ich kann an unsere gespeicherten Themen anknüpfen."
             selected.isEmpty() -> NO_EVIDENCE_ANSWER
-            else -> (if(followUp)"Ich knüpfe an unser Thema an." else "Dazu finde ich in meinem Gedächtnis:")+selected.joinToString("") {
-                "\n\n"+it.text.take(250)+"\n("+it.kind+(it.sourceRef?.let { ref -> "; "+ref.take(180) } ?: "")+")"
+            else -> ((exactLocation?.text ?: exactAge)?.let { it+"\n\n" } ?: "")+
+                (if(followUp)"Ich knüpfe an unser Thema an." else "Dazu finde ich in meinem Gedächtnis:")+selected.joinToString("") {
+                "\n\n"+(if(it.kind=="Bestätigte Nutzererinnerung")OwnerMemoryPerspective.display(it.text) else it.text.take(250))+
+                    "\n("+it.kind+(it.sourceRef?.let { ref -> "; "+ref.take(180) } ?: "")+")"
             }
         }.take(1000)
         val turn=ContinuumDialogueTurn(at,text.take(320),resolved,answer,topic,hash(bytes),selected.map { it.id },selected.isNotEmpty(),contextReset)
@@ -178,6 +199,19 @@ class ContinuumMemoryDialogue(private val directory:File) {
 
     companion object {
         const val MAX_QUARANTINED=3
+        // Narrow discourse grammar: replace an explicit genitive holder in the
+        // previous supported attribute question, never append two owners.
+        // Ambiguous/unsupported forms keep the existing abstention path.
+        private val OWNER_ATTRIBUTE=Regex("(?iu)^(?:welche\\s+farbe\\s+(?:hat|besitzt|trägt)|wo\\s+(?:wohnt|lebt)|wie\\s+alt\\s+ist|was\\s+arbeitet)\\s+")
+        private val POSSESSIVE_FOLLOW_UP=Regex("(?u)^[Uu]nd\\s+([\\p{Lu}][\\p{L}-]{1,40}(?:['’]s|s|['’]))\\s*\\?$" )
+        private val PREVIOUS_POSSESSOR=Regex("(?u)\\b([\\p{Lu}][\\p{L}-]{1,40}(?:['’]s|s|['’]))(?=\\s+\\p{Lu}[\\p{L}-]+\\s*\\?$)")
+        private fun resolvePossessiveFollowUp(input:String,previous:String):String? {
+            if(!OWNER_ATTRIBUTE.containsMatchIn(previous))return null
+            val replacement=POSSESSIVE_FOLLOW_UP.matchEntire(input)?.groupValues?.get(1) ?: return null
+            val holders=PREVIOUS_POSSESSOR.findAll(previous).toList()
+            if(holders.size!=1)return null
+            return previous.replaceRange(holders.single().range,replacement).takeIf { it.length<=512 }
+        }
         // A personal fact that merely contains "Orion" cannot answer
         // "Was ist Orion?". Only a claim whose subject is Orion qualifies.
         // Unsupported declarations fail closed; this is not general NLP.
@@ -267,7 +301,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
             e.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.OBSERVED,LearningStatus.REPLAY_PENDING) &&
             ((e.type==LearningExperienceType.USER_FACT && e.trust==LearningTrustClass.OWNER_CONFIRMED && e.provenance==LearningProvenance.USER_CONFIRMED && e.status!=LearningStatus.OBSERVED) ||
              (e.type==LearningExperienceType.SOURCE_TEXT && e.trust==LearningTrustClass.SOURCE_OBSERVATION &&
-              e.provenance in setOf(LearningProvenance.REVIEWED_WEB_SOURCE,LearningProvenance.MENTOR_WIKIPEDIA) &&
+              e.provenance in setOf(LearningProvenance.REVIEWED_WEB_SOURCE,LearningProvenance.MENTOR_WIKIPEDIA,LearningProvenance.PUBLIC_WEB_SOURCE) &&
               e.sourceRef?.startsWith("https://")==true))
 
         /**
@@ -347,7 +381,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
             val n=pool.size
             val idf={ g:String -> df[g]?.let { StrictMath.log((n+1.0)/(it+0.5)) } ?: StrictMath.log(n+1.0) }
             val qv=weigh(wordGrams(q),idf)
-            return pool.mapNotNull { e ->
+            val ranked=pool.mapNotNull { e ->
                 val text=e.content.take(1000)
                 if(!singleIdentifierEvidence(q,text))return@mapNotNull null
                 if(e.type==LearningExperienceType.SOURCE_TEXT &&
@@ -357,7 +391,13 @@ class ContinuumMemoryDialogue(private val directory:File) {
                 if(!(score>0.0))return@mapNotNull null
                 ContinuumMemoryHit(e.id,e.content,if(e.type==LearningExperienceType.USER_FACT)"Bestätigte Nutzererinnerung" else "Unbestätigte Quellenbeobachtung",e.sourceRef,
                     score,model.similarity(q,text))
-            }.sortedWith(compareByDescending<ContinuumMemoryHit>{it.score}.thenBy{it.id}).take(3)
+            }.sortedWith(compareByDescending<ContinuumMemoryHit>{it.score}.thenBy{it.id})
+            // Reuse the existing EWM entity/temporal reader for this bounded
+            // personal-attribute grammar. It may only REMOVE lexical candidates;
+            // it cannot invent evidence, elevate a source or change a fact.
+            // Chronology comes from ledger timestamps, never retrieval order.
+            val ownerScope=OwnerAttributeEvidenceScope.select(q,experiences,ranked)
+            return ranked.filter { ownerScope==null || it.id in ownerScope }.take(3)
         }
     }
 }

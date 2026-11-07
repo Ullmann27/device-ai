@@ -1,0 +1,65 @@
+{
+  "status": "DONE",
+  "head": "56efdcb5ed4cda4cc10c6ba705bb5254bc1c9c4a",
+  "taskId": "mob-ba07f15d903f2bd3",
+  "patchSha256": "e3e12896458ea1ddb870c6f675432d5f1a891570c49aec112158ea8c13a08e05",
+  "patch": "/workspace/momega1-build-env/real-model-benchmark/u12/task/private-synthetic-state/teamleader/reports/owner-repair/mob-ba07f15d903f2bd3-56efdcb5ed4c-1793738085386-a2c27eb6/repair.patch",
+  "profiles": [
+    {
+      "profile": "node-continuum",
+      "passed": true,
+      "executed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "isolation": {
+        "schema": "continuum-isolation-v1",
+        "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+        "network": "none",
+        "user": "1000:1000",
+        "readOnly": true,
+        "noNewPrivileges": true,
+        "capabilities": [],
+        "memoryMb": 256,
+        "pids": 64,
+        "cpus": 1,
+        "timeoutMs": 15000,
+        "runtime": "runc",
+        "sourceSha256": "b846cee93c824def70d857f7b43d84f901f95ee47b77236bd8097c64a0dd79c8",
+        "profile": "node-continuum",
+        "untrustedReports": true,
+        "workspaceId": "continuum-bbdc2251b8f17818502837cf",
+        "workspaceBinding": {
+          "workerId": "typed-coding-worker",
+          "taskId": "t-7704f822c84e7c4e",
+          "requestMessageId": "b2e23045-5656-415f-b11c-baae1391a67a",
+          "requestHash": "359e6a3c8f99ea267a481f7cb87ba3900ff26b6769cca2c255c2b3ad3b3a32ed",
+          "sourceCommit": "56efdcb5ed4cda4cc10c6ba705bb5254bc1c9c4a",
+          "jobId": "2078cd81-a0d1-4dc4-9ff7-608cdabed840"
+        },
+        "observed": {
+          "containerId": "132807b216a0ca33a82aae4c3d3f58587c988955ef0ea0b0bff7a344dfc9b4e9",
+          "runtime": "runc",
+          "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+          "user": "1000:1000",
+          "network": "none",
+          "readOnly": true,
+          "memoryBytes": 268435456,
+          "memorySwapBytes": 268435456,
+          "nanoCpus": 1000000000,
+          "pids": 64,
+          "capDrop": [
+            "ALL"
+          ],
+          "securityOpt": [
+            "no-new-privileges:true"
+          ],
+          "writableHostMounts": 0
+        },
+        "teardownConfirmed": true
+      }
+    }
+  ],
+  "independentReceipt": "/workspace/momega1-build-env/real-model-benchmark/u12/task/private-synthetic-state/teamleader/reports/owner-repair/mob-ba07f15d903f2bd3-56efdcb5ed4c-1793738085386-a2c27eb6/independent-check/verification.json",
+  "report": "/workspace/momega1-build-env/real-model-benchmark/u12/task/private-synthetic-state/teamleader/reports/owner-repair/mob-ba07f15d903f2bd3-56efdcb5ed4c-1793738085386-a2c27eb6/report.json",
+  "approvedForMerge": false
+}

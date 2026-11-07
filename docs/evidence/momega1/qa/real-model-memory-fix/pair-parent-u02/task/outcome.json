@@ -1,0 +1,9 @@
+{
+  "status": "OBSERVED_RESULT",
+  "resultStatus": "ABSTAINED",
+  "technicalExperienceStatus": "NOT_RECORDED",
+  "technicalRecallCount": 0,
+  "solved": "REQUIRES_INDEPENDENT_EVIDENCE_REVIEW",
+  "modelCallsReserved": 2,
+  "sourceIdentityStable": true
+}

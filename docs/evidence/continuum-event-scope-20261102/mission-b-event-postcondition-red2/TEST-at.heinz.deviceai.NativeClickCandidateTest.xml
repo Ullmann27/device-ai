@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.NativeClickCandidateTest" tests="20" skipped="0" failures="2" errors="0" timestamp="2026-11-02T12:30:33" hostname="64c62d88-b43" time="1.49">
+  <properties/>
+  <testcase name="unknownContentDuringClickInvalidatesBeforeDispatch" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.059"/>
+  <testcase name="targetNavigationToNewWindowCanBeVerifiedAfterRelevantEvent" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.036">
+    <failure message="java.lang.IllegalStateException: SCREEN_CHANGED_DURING_READ" type="java.lang.IllegalStateException">java.lang.IllegalStateException: SCREEN_CHANGED_DURING_READ
+	at at.heinz.deviceai.ScreenObservationBus.bindWindow(ContinuumScreenObservationService.kt:83)
+	at at.heinz.deviceai.ScreenObservationBus.access$bindWindow(ContinuumScreenObservationService.kt:58)
+	at at.heinz.deviceai.ScreenObservationBus$clickCandidate$port$1.awaitPostcondition$lambda$6(ContinuumScreenObservationService.kt:186)
+	at at.heinz.deviceai.AndroidNativeClickKt.snapshotForClick(AndroidNativeClick.kt:118)
+	at at.heinz.deviceai.ScreenObservationBus$clickCandidate$port$1.awaitPostcondition(ContinuumScreenObservationService.kt:186)
+	at at.heinz.deviceai.cognitive.VerifiedNodeClick.execute(VerifiedNodeClick.kt:46)
+	at at.heinz.deviceai.ScreenObservationBus.clickCandidate$DeviceAI_app_debug(ContinuumScreenObservationService.kt:191)
+	at at.heinz.deviceai.NativeClickCandidateTest.targetNavigationToNewWindowCanBeVerifiedAfterRelevantEvent(NativeClickCandidateTest.kt:181)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="unknownEventAfterDispatchCannotBecomeSuccessWithLaterTargetEvent" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.032">
+    <failure message="java.lang.AssertionError: expected java.lang.IllegalStateException to be thrown, but nothing was thrown" type="java.lang.AssertionError">java.lang.AssertionError: expected java.lang.IllegalStateException to be thrown, but nothing was thrown
+	at org.junit.Assert.assertThrows(Assert.java:1028)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at at.heinz.deviceai.NativeClickCandidateTest.unknownEventAfterDispatchCannotBecomeSuccessWithLaterTargetEvent(NativeClickCandidateTest.kt:192)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="revokedPermissionAfterClickIsNeverSuccess" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.036"/>
+  <testcase name="verifiedActionRequiresNewObservedScreen" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.028"/>
+  <testcase name="foreignContentAloneCannotProveClickSuccess" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.973"/>
+  <testcase name="foreignFocusChangeDuringClickStillInvalidates" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.022"/>
+  <testcase name="overlappingWindowChangeStillInvalidatesRead" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.028"/>
+  <testcase name="foreignFocusOrUnknownSenderOrKeyboardInvalidatesRead" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.019"/>
+  <testcase name="foreignContentBeforeClickWindowIsBoundFailsClosed" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.018"/>
+  <testcase name="duplicateVisibleTargetsNeverClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.019"/>
+  <testcase name="noApprovalOrOverlayNeverClicks" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.018"/>
+  <testcase name="acceptedClickWithoutNewEvidenceIsNotSuccess" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.069"/>
+  <testcase name="overlayAppearingImmediatelyBeforeDispatchDoesNotClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.022"/>
+  <testcase name="unrelatedNonOverlappingWindowDoesNotInvalidateActiveRead" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.018"/>
+  <testcase name="foreignContentDuringClickDoesNotInvalidateOrProveSuccess" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.019"/>
+  <testcase name="actualForegroundSwitchMissingRootAndUnknownWindowIdInvalidateRead" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.02"/>
+  <testcase name="wrongPackageSensitiveAndStaleNeverClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.017"/>
+  <testcase name="unrelatedNonOverlappingWindowDoesNotInvalidateClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.018"/>
+  <testcase name="revokedPermissionBeforeDispatchNeverClicks" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

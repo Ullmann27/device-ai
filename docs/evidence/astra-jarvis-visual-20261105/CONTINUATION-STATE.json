@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "repository": "Ullmann27/device-ai",
+  "branch": "claude/continuum-jarvis-cockpit-z7bo60",
+  "draftPr": 565,
+  "productCommit": "7c3523cde9dae302a52d69818867a9abe8cf0fb7",
+  "state": "HOST_VERIFIED_DEVICE_ACCEPTANCE_NOT_RUN",
+  "bots": {
+    "avatar_motion": "Original avatar / gestures / replay",
+    "neon_flow": "Original orb / work window / color measurement",
+    "original_orb": "Independent integration QA"
+  },
+  "originalAvatar": {
+    "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+    "morphTargets": 21,
+    "unchanged": true
+  },
+  "orbRenderer": "ContinuumHologramRenderer, transparentBackdrop=true",
+  "firstRealWorkflow": "START Systemstatus: existing reader, actual status, inner scrolling, close",
+  "finalTests": {
+    "tests": 39,
+    "passed": 39,
+    "failed": 0,
+    "skipped": 0,
+    "lintScope": "NewApi",
+    "lintIssues": 0,
+    "sourceUnchanged": true
+  },
+  "historicalBroadRun": {
+    "commit": "9468eb87cd875c5e07f689aeb53767880ccd6765",
+    "tests": 275,
+    "passed": 274,
+    "failed": 1,
+    "laterFixed": "actual background scroll"
+  },
+  "evidenceKinds": [
+    "HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT",
+    "HOST_BLENDER_NOT_FILAMENT_DEVICE"
+  ],
+  "next": [
+    "Owner Fold7/Filament/audio/frame timing acceptance",
+    "Each Gmail/PDF/coding scene needs actual authorized adapter/events/data"
+  ],
+  "limits": [
+    "Canvas fallback silhouette overlaps existing dialogue in wide layouts; not original3D framing proof",
+    "No physical device, camera or real audio measurement",
+    "No full277-test GREEN claim"
+  ],
+  "restrictions": [
+    "Keep PR565 open and draft",
+    "No main merge",
+    "No APK release/install/publication",
+    "No package/version/signature change",
+    "One original avatar only",
+    "Minimal C1 integration only"
+  ],
+  "readNext": [
+    "docs/research/omega/ASTRA-JARVIS-VISUAL-CONTINUATION-20261105.md",
+    "docs/evidence/astra-jarvis-visual-20261105/README.md"
+  ]
+}

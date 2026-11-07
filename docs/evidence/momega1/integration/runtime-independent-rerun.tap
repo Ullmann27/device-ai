@@ -1,0 +1,43 @@
+✔ IDENTITY/CORRELATION explicit forged execution receipt rejected: boolean-only (41.913256ms)
+✔ IDENTITY/CORRELATION explicit forged execution receipt rejected: hash-and-id (26.731678ms)
+✔ IDENTITY/CORRELATION explicit forged execution receipt rejected: wrong-request (25.951441ms)
+✔ AUTHORITY shadow result cannot become trusted or verified (25.873283ms)
+✔ REPLAY consumed failed call survives provider restart (34.801922ms)
+✔ TIMEOUT expired task invokes no child (11.535387ms)
+✔ BUDGET source mismatch invokes no child (12.110845ms)
+✔ AUTHORITY candidate cannot introduce tool authority (28.078703ms)
+✔ NETWORK child environment excludes ambient secret and proxy (41.533527ms)
+✔ native fixture mode 0: actual launch succeeds only as CONTRACT_TEST (78.052633ms)
+✔ native fixture mode 5: actual launch succeeds only as CONTRACT_TEST (58.325828ms)
+✔ native fixture mode 6: actual launch succeeds only as CONTRACT_TEST (56.045646ms)
+✔ native fixture mode 8: actual launch succeeds only as CONTRACT_TEST (65.209037ms)
+✔ native fixed reply with no decoding counter is rejected (53.997745ms)
+✔ native TERM-ignore / descendant mode 1 times out and joins (292.912ms)
+✔ native TERM-ignore / descendant mode 4 times out and joins (306.142079ms)
+✔ native overflow/nonzero mode 2 rejects (61.387919ms)
+✔ native overflow/nonzero mode 3 rejects (57.185674ms)
+✔ native abort joins TERM-ignoring fixture (251.179721ms)
+✔ native admission rejects model and runtime pin mismatch (53.828753ms)
+✔ native modelPath replacement during execution rejects (355.22273ms)
+✔ native runtimePath replacement during execution rejects (354.483901ms)
+✔ native child cannot read host synthetic sentinel or parent credentials (49.241641ms)
+✔ native provider rejects honestly labelled contract fixture receipt (148.066241ms)
+✔ A/B label-only change creates process brand, never proves inference; clone is untrusted (129.443004ms)
+✔ strict injected valid-shaped proposal without observation rejected (73.689672ms)
+✔ bounded recall is untrusted data and no raw hint is persisted (64.32824ms)
+✔ native helper duplicate request is not itself replay or revocation authority (64.955307ms)
+✔ native concurrent coding requests both run; no shared capacity gate established (311.641838ms)
+✔ native modelPath symlink/hardlink rejected before launch (52.766383ms)
+✔ native runtimePath symlink/hardlink rejected before launch (44.777658ms)
+✔ native pre-aborted request cannot return a process observation (43.723111ms)
+✔ native memory, CPU, FD and file limits apply inside process (61.523611ms)
+✔ native fork denial is kernel enforced (54.488017ms)
+✔ provider independent observation MAC forgery and nonce replay are rejected (74.776683ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3310.228175

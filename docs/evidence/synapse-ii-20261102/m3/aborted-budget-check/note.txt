@@ -1,0 +1,1 @@
+First harness attempt exited 1 before any repair execution: the goal deadline was 5 minutes while the existing reasoner requests a fixed 25-minute budget. The canonical budget gate correctly ABORTED with BUDGET. Harness deadline corrected to 30 minutes; worker code unchanged. This is a retained negative budget probe, not a successful repair.

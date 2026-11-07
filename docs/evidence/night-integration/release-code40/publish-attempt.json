@@ -1,0 +1,21 @@
+{
+  "serviceId": "srv-dbf1tr2vcj2c73ehpfog",
+  "workspaceId": "tea-d7qe6dosfn5c73e2rnag",
+  "deployId": "dep-dbl70arm8hqs73ch40pg",
+  "sourceCommit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+  "publisherBranch": "research/continuum-m8-render-signed-release-20261031",
+  "previousPublisherHead": "a9709854f48d2fd6589f9ce5ea97f6ec3be0d233",
+  "branchUpdate": "FAST_FORWARD_EXPECTED_HEAD_LEASE_NO_FORCE",
+  "versionCode": 40,
+  "versionName": "0.3.39",
+  "createdAt": "2026-11-03T23:37:15.565554Z",
+  "trigger": "EXISTING_SERVICE_NONSECRET_GUARD_ENVIRONMENT_UPDATE",
+  "duplicateManualTrigger": false,
+  "autoDeploy": "no",
+  "ownerAuthorization": "Current overnight owner request to provide original-signed APK through existing Download button without follow-up questions",
+  "mainChanged": false,
+  "S01RunStarted": false,
+  "S01BarrierChanged": false,
+  "originalSignerMaterialReadOrReplaced": false,
+  "statusAtRecord": "BUILD_IN_PROGRESS_NOT_PUBLISHED"
+}

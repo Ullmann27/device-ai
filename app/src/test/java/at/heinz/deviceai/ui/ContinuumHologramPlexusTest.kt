@@ -87,7 +87,8 @@ class ContinuumHologramPlexusTest {
     }
 
     @Test fun aFrameHasABoundedConstantWorkloadAndLeavesNoLightModeBehind() {
-        for (geometry in listOf(ContinuumHologramRenderer.Geometry.PHONE, ContinuumHologramRenderer.Geometry.FOLD)) {
+        for (geometry in listOf(ContinuumHologramRenderer.Geometry.PHONE, ContinuumHologramRenderer.Geometry.FOLD,
+            ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT)) {
             val renderer = ContinuumHologramRenderer()
             renderer.geometry = geometry
             renderer.layout(412f, 307f)

@@ -1,0 +1,87 @@
+{
+  "generatedBy": "CodeRabbit Agent",
+  "schemaVersion": 1,
+  "baseCommit": "057474de37d6e20d993bd64f166b6585bc4a357a",
+  "branch": "coderabbit/continuum-reliability-sprint-20261102",
+  "runtime": {
+    "node": "24.21.0",
+    "npm": "11.19.0",
+    "os": "Ubuntu26.04.1",
+    "fixtures": "synthetic local subprocesses and loopback replicas"
+  },
+  "workingTreeInputsSha256": {
+    ".github/continuum/repair-loop.mjs": "d40b4f8c62e273a5b4ab08f90a156cea139b79f47a2f6a73fabf81da113ef625",
+    ".github/continuum/step-watchdog.mjs": "78ce07073dd9dc3d1cbda8344e6a49aed96379f6de770e3ca4e75b16a522639f",
+    ".github/continuum/step-watchdog-reliability.test.mjs": "6b29cdbf4491d642a038d6a657ad352a892a6b95d9e960ea29916830b46e57d6",
+    ".github/continuum/step-watchdog.test.mjs": "3f95505e01bc38eb98513c3a1b0d1631eebca10a419663b39a25c8372885fb17",
+    ".github/continuum/storage-fabric.test.mjs": "7af2b367498bf29930e4a4febc975c64e147362d32d37fc73ccd868dd21303a6",
+    "scripts/continuum-owned-process.mjs": "0548ba638e76a71b41ce0ee6bc20a7aa14dc1c2fc0ffff6c7a6f1d2f77a1354a",
+    "scripts/continuum-owned-process.test.mjs": "a7b904add058cb21d7068dabf1a00c9bff179ec737c307e1729c78fda2e3afb2"
+  },
+  "checks": [
+    {
+      "name": "process-and-consumers",
+      "command": "node --test .github/continuum/step-watchdog-reliability.test.mjs .github/continuum/step-watchdog.test.mjs scripts/continuum-owned-process.test.mjs .github/continuum/research-verifier-integration.test.mjs .github/continuum/teamleader-end-to-end.test.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "storage-coding-architecture",
+      "command": "node --test .github/continuum/storage-fabric.test.mjs .github/continuum/coding-agent-loop.test.mjs scripts/continuum-architecture-proof.test.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "full",
+      "command": "node --test scripts/continuum-architecture-proof.test.mjs scripts/continuum-owned-process.test.mjs scripts/continuum-owned-app*.test.mjs .github/continuum/*test.mjs",
+      "status": "FAIL",
+      "exitCode": 1,
+      "passed": 1343,
+      "failed": 11,
+      "skipped": 13,
+      "failures": [
+        "persistent ALWAYS_ON is explicit, revocable and uses the existing web gate",
+        "activity request codes are unique and every one has a result handler",
+        "Wikipedia article research uses bounded authentic extracts and original citations",
+        "owner facts win, and retrieval is clearly labelled a non-verified excerpt",
+        "developer speech uses actual German Android recognizer and a unique callback",
+        "voice text is always previewed; neither recognition nor chat command executes code",
+        "original 3.66 GB model import remains separate and SHA-verified",
+        "Android only sends bounded question text to the private backend",
+        "a rejected import cannot relabel the independently loaded runtime as failed",
+        "Nexus keeps real hologram and voice entry tied to Android speech and system state",
+        "owner consent, cellular network and measured 20pct resource gates remain required"
+      ]
+    },
+    {
+      "name": "CodeRabbit review",
+      "command": "coderabbit review --agent -t uncommitted",
+      "status": "NOT_RUN",
+      "reason": "task review disabled; wrapper exit0 is not a review result"
+    },
+    {
+      "name": "Android/Gradle/Fold7/power-loss",
+      "status": "NOT_RUN",
+      "reason": "outside local Node verification; no device or SDK acceptance performed"
+    }
+  ],
+  "evidenceSha256": {
+    "watchdog-red.log": "2ce36e1d356502ccb5097920a366d7daf65e0f243457afce217f927e68df8640",
+    "pid-reuse-red.log": "46c6738d64c7dc78617f292896e0b9052b3e28d39ed57663ecf1c9f0e78c13ca",
+    "signal-red.log": "60190c57f4d0a785ed0080df80e44de430910eb2a2496b11e67bb3e89ea79e6f",
+    "scan-red.log": "5bc95ce37ae001593bd5901fedc3cc37064982039f030083f066f5e4ec0bbc62",
+    "process-consumers-green.log": "9248195fd84bc2a364f96e638555c00ee83d392856ddb946e30076a38abeee45",
+    "storage-coding-architecture.log": "8f3c25b1db0aa70eeb423d7999f5de6b4f2821d8a9913a73d0f4da8b48d84a0b",
+    "full-before-bounded-retries.log": "6ca9f48267e1a41af20352a6f57e9e3fbefff335f83c20e677ace432b1b685c3",
+    "diagnostic-full.log": "e630c4a3b5d96933b5f5e2d9b7d4cc640b97e697928ec02031ee042624b3984d",
+    "diagnostic-completions.jsonl": "608fcba085ff15d9b1257b21d55bbf0a0f5d6483cf859babfbbd425bd2ba3939",
+    "final-full.log": "1d2d822dba2aadadfad86c5789a812118779a1298857c991c746c38886aecdd7",
+    "isolated-consumers.log": "5de3e4b68a2e5e72e6e628b381ce1494b73f86cb441903754d4a9d00eff8e9ff"
+  }
+}

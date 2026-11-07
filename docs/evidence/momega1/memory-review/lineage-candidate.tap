@@ -1,0 +1,172 @@
+TAP version 13
+# Subtest: L01 no project retains legacy exact-source positive behavior
+ok 1 - L01 no project retains legacy exact-source positive behavior
+  ---
+  duration_ms: 283.82455
+  type: 'test'
+  ...
+# Subtest: L02 no project retains exact-source restriction for changed code
+ok 2 - L02 no project retains exact-source restriction for changed code
+  ---
+  duration_ms: 278.281564
+  type: 'test'
+  ...
+# Subtest: L03 direct Git ancestor after restart carries old/current source and lineage labels
+ok 3 - L03 direct Git ancestor after restart carries old/current source and lineage labels
+  ---
+  duration_ms: 423.06971
+  type: 'test'
+  ...
+# Subtest: L04 more distant actual ancestor is eligible but never grants permission
+ok 4 - L04 more distant actual ancestor is eligible but never grants permission
+  ---
+  duration_ms: 488.695116
+  type: 'test'
+  ...
+# Subtest: L05 supplied clean same-source project emits exact lineage labels
+ok 5 - L05 supplied clean same-source project emits exact lineage labels
+  ---
+  duration_ms: 275.864549
+  type: 'test'
+  ...
+# Subtest: L06 project current HEAD must equal currently approved commit
+ok 6 - L06 project current HEAD must equal currently approved commit
+  ---
+  duration_ms: 167.98817
+  type: 'test'
+  ...
+# Subtest: L07 unstaged dirty project refuses ancestor reuse
+ok 7 - L07 unstaged dirty project refuses ancestor reuse
+  ---
+  duration_ms: 270.17216
+  type: 'test'
+  ...
+# Subtest: L07 staged dirty project refuses ancestor reuse
+ok 8 - L07 staged dirty project refuses ancestor reuse
+  ---
+  duration_ms: 248.389065
+  type: 'test'
+  ...
+# Subtest: L07 untracked dirty project refuses ancestor reuse
+ok 9 - L07 untracked dirty project refuses ancestor reuse
+  ---
+  duration_ms: 211.32625
+  type: 'test'
+  ...
+# Subtest: L08 supplied same-source project must still reject dirt
+ok 10 - L08 supplied same-source project must still reject dirt
+  ---
+  duration_ms: 213.352459
+  type: 'test'
+  ...
+# Subtest: L09 same commit objects with changed origin identity are refused
+ok 11 - L09 same commit objects with changed origin identity are refused
+  ---
+  duration_ms: 295.12406
+  type: 'test'
+  ...
+# Subtest: L10 invalid project/non-repository cannot establish ancestry
+ok 12 - L10 invalid project/non-repository cannot establish ancestry
+  ---
+  duration_ms: 146.722415
+  type: 'test'
+  ...
+# Subtest: L11 nested directory is not the canonical project root
+ok 13 - L11 nested directory is not the canonical project root
+  ---
+  duration_ms: 173.739837
+  type: 'test'
+  ...
+# Subtest: L12 historical descendant cannot be reused by an earlier current task
+ok 14 - L12 historical descendant cannot be reused by an earlier current task
+  ---
+  duration_ms: 251.419026
+  type: 'test'
+  ...
+# Subtest: L13 unrelated real history cannot be admitted from matching remote/path
+ok 15 - L13 unrelated real history cannot be admitted from matching remote/path
+  ---
+  duration_ms: 194.548801
+  type: 'test'
+  ...
+# Subtest: L14 missing historical commit object refuses reuse
+ok 16 - L14 missing historical commit object refuses reuse
+  ---
+  duration_ms: 149.724144
+  type: 'test'
+  ...
+# Subtest: L15 Git replace refs cannot supply or alter trusted ancestry
+ok 17 - L15 Git replace refs cannot supply or alter trusted ancestry
+  ---
+  duration_ms: 151.545973
+  type: 'test'
+  ...
+# Subtest: L16 legacy graft file cannot supply trusted ancestry
+ok 18 - L16 legacy graft file cannot supply trusted ancestry
+  ---
+  duration_ms: 142.786759
+  type: 'test'
+  ...
+# Subtest: L17 incomplete shallow ancestry does not silently generalize
+ok 19 - L17 incomplete shallow ancestry does not silently generalize
+  ---
+  duration_ms: 133.978507
+  type: 'test'
+  ...
+# Subtest: L18 canonical local basename identity permits same repository ancestry
+ok 20 - L18 canonical local basename identity permits same repository ancestry
+  ---
+  duration_ms: 149.16522
+  type: 'test'
+  ...
+# Subtest: L19 descendant commits never widen allowed path overlap
+ok 21 - L19 descendant commits never widen allowed path overlap
+  ---
+  duration_ms: 129.495247
+  type: 'test'
+  ...
+# Subtest: L20 removed current grant blocks previously eligible ancestor context
+ok 22 - L20 removed current grant blocks previously eligible ancestor context
+  ---
+  duration_ms: 215.369131
+  type: 'test'
+  ...
+# Subtest: L21 expired current journal deadline blocks previously eligible ancestor context
+ok 23 - L21 expired current journal deadline blocks previously eligible ancestor context
+  ---
+  duration_ms: 219.738576
+  type: 'test'
+  ...
+# Subtest: L22 canonical historical revocation remains authoritative over ancestor recall
+ok 24 - L22 canonical historical revocation remains authoritative over ancestor recall
+  ---
+  duration_ms: 238.962752
+  type: 'test'
+  ...
+# Subtest: L23 MAC substitution on ancestor proof remains rejected
+ok 25 - L23 MAC substitution on ancestor proof remains rejected
+  ---
+  duration_ms: 226.779006
+  type: 'test'
+  ...
+# Subtest: L24 canonical current ABORT blocks previously eligible ancestor context
+ok 26 - L24 canonical current ABORT blocks previously eligible ancestor context
+  ---
+  duration_ms: 213.484803
+  type: 'test'
+  ...
+# Subtest: L25 linked clean worktree uses common real Git objects and exact same origin
+ok 27 - L25 linked clean worktree uses common real Git objects and exact same origin
+  ---
+  duration_ms: 156.892627
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6200.084652

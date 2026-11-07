@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.MemoryContextIdentityTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:33:16" hostname="04c8b0ba7ea6" time="0.009">
+  <properties/>
+  <testcase name="uniqueHistoricalRecordsDoNotConsumeCurrentContextSlots" classname="at.heinz.deviceai.cognitive.MemoryContextIdentityTest" time="0.002"/>
+  <testcase name="aPrivateHistoricalConflictCannotSurviveAsAPublicCurrentRecord" classname="at.heinz.deviceai.cognitive.MemoryContextIdentityTest" time="0.001"/>
+  <testcase name="aFilteredHistoricalAliasCannotHideAnAmbiguousCurrentIdentity" classname="at.heinz.deviceai.cognitive.MemoryContextIdentityTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

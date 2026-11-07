@@ -1,0 +1,179 @@
+{
+  "gate": "node-critical",
+  "status": "PASS",
+  "sourceCommit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "sourceTree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "sourceUnchanged": true,
+  "startedAt": "2026-11-07T06:26:46.311625+00:00",
+  "finishedAt": "2026-11-07T06:27:24.903338+00:00",
+  "commands": [
+    {
+      "command": [
+        "node",
+        "scripts/continuum-reliability-qa.mjs",
+        "critical",
+        "--out",
+        "/workspace/scratch/3d1967be6193/qa/combined/final-5d91442e98f7-notice-final/critical"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/candidate",
+      "exitCode": 0
+    }
+  ],
+  "deviceAcceptance": "NOT_RUN",
+  "signingAndPublication": "NOT_RUN",
+  "checks": [
+    {
+      "id": "process",
+      "status": "PASS",
+      "reason": null,
+      "tests": {
+        "total": 37,
+        "failed": 0,
+        "skipped": 0,
+        "placeholders": 0,
+        "executed": 37,
+        "passed": 37,
+        "evidenceComplete": true
+      }
+    },
+    {
+      "id": "storage-agent",
+      "status": "PASS",
+      "reason": null,
+      "tests": {
+        "total": 32,
+        "failed": 0,
+        "skipped": 0,
+        "placeholders": 0,
+        "executed": 32,
+        "passed": 32,
+        "evidenceComplete": true
+      }
+    },
+    {
+      "id": "android-source-contracts",
+      "status": "PASS",
+      "reason": null,
+      "tests": {
+        "total": 64,
+        "failed": 0,
+        "skipped": 0,
+        "placeholders": 0,
+        "executed": 64,
+        "passed": 64,
+        "evidenceComplete": true
+      }
+    },
+    {
+      "id": "host-checker",
+      "status": "PASS",
+      "reason": null,
+      "tests": {
+        "total": 2,
+        "failed": 0,
+        "skipped": 0,
+        "placeholders": 0,
+        "executed": 2,
+        "passed": 2,
+        "evidenceComplete": true
+      }
+    },
+    {
+      "id": "gradle",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+      "tests": {}
+    },
+    {
+      "id": "lint",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+      "tests": {}
+    },
+    {
+      "id": "apk",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+      "tests": {}
+    },
+    {
+      "id": "fold7",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+      "tests": {}
+    },
+    {
+      "id": "model-inference",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+      "tests": {}
+    }
+  ],
+  "rawEvidence": {
+    "archive": "node-critical-evidence.zip",
+    "bytes": 666876,
+    "sha256": "30bcf170e672b01bdfc651c823fcaf03813473ed82ee610c27277d5da40ea928",
+    "files": [
+      {
+        "path": "critical/android-source-contracts.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "critical/android-source-contracts.xml",
+        "bytes": 14805,
+        "sha256": "a6a4a42cf68a887c6303a9d5af76f0fbe8b351a64a7c38d77ea8c900bb597564"
+      },
+      {
+        "path": "critical/host-checker.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "critical/host-checker.xml",
+        "bytes": 688,
+        "sha256": "4fcef2d0eec70696d76d33dc67dbb14b9a38c43485cc2d4a75ca94187562a395"
+      },
+      {
+        "path": "critical/process.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "critical/process.xml",
+        "bytes": 8401,
+        "sha256": "269f7fbd54f4c786a9f5abedad290254d22a99b560b629bc3a20277db4be47db"
+      },
+      {
+        "path": "critical/report.json",
+        "bytes": 2340887,
+        "sha256": "4264da47c131d4d4825b0a23f75bd3d1feaf6fccc49c66f4b5d6689b5e332108"
+      },
+      {
+        "path": "critical/report.md",
+        "bytes": 1014,
+        "sha256": "c07ece8dc63391e769c1caa2cec22ee2d8ef9cdda1efe9c558c2cc7b7249ffb3"
+      },
+      {
+        "path": "critical/storage-agent.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "critical/storage-agent.xml",
+        "bytes": 7757,
+        "sha256": "472052647e6cb889b744102c39651428dfbb9c442c6de9f42584e0b435393253"
+      },
+      {
+        "path": "node-critical-receipt.json",
+        "bytes": 1233,
+        "sha256": "59f957c2870061bdb120cd67a33ffad52ef23c5471f2a7f8e1e477948a3aa488"
+      },
+      {
+        "path": "node-critical.log",
+        "bytes": 269,
+        "sha256": "61e3abe8fe27a1c42147e3b187c46c3d5f29d3ee77eea011d5f42a2fdc02f564"
+      }
+    ]
+  }
+}

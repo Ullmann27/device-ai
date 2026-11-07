@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ShizukuBridgeLifecycleTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:34:30" hostname="be4b77f2bd6b" time="2.375">
+  <properties/>
+  <testcase name="pendingPermissionDoesNotOpenRepeatedDialogs" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="1.905"/>
+  <testcase name="permissionCallbackCannotClaimARealPermissionThatIsNotGranted" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.042"/>
+  <testcase name="permissionGrantedAfterWatchdogTimeoutStillConnectsWhenActuallyGranted" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.042"/>
+  <testcase name="permissionGrantedWhileCallbackMissingCanBindOnRefresh" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.041"/>
+  <testcase name="destroyedBindingDoesNotLetLateShellCallbackResurrectAccess" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.025"/>
+  <testcase name="timedOutBindingCanRetryAndLateCallbackCannotReplaceNewSession" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.022"/>
+  <testcase name="repeatedRefreshAndTapKeepOnePendingBinding" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.046"/>
+  <testcase name="refreshKeepsAConnectingBindingAndShowsSpecificStatus" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.041"/>
+  <testcase name="callbackAfterStopCannotResurrectTheShell" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.08"/>
+  <testcase name="nullBindingIsVisibleAndAllowsRetry" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.029"/>
+  <testcase name="stoppedServerReportsMissingWithoutRequestingPermissionOrBinding" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.047"/>
+  <testcase name="permissionRequestTimeoutDoesNotLockOutFutureOwnerRetry" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.028"/>
+  <testcase name="serverDisappearingWithoutDeadCallbackNeverRemainsReady" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.023"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

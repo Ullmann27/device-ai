@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumTaskEffectsUiTest" tests="3" skipped="0" failures="3" errors="0" timestamp="2026-11-03T21:17:10" hostname="b354f2cb821b" time="3.985">
+  <properties/>
+  <testcase name="actualOverlayDrawsAboveAnOpaqueChildWithoutASecondClock" classname="at.heinz.deviceai.ContinuumTaskEffectsUiTest" time="3.845">
+    <failure message="java.lang.AssertionError: The actual visible View has no work-event route" type="java.lang.AssertionError">java.lang.AssertionError: The actual visible View has no work-event route
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.scope(ContinuumTaskEffectsUiTest.kt:26)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.scope$default(ContinuumTaskEffectsUiTest.kt:24)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.prepare(ContinuumTaskEffectsUiTest.kt:40)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.prepare$default(ContinuumTaskEffectsUiTest.kt:38)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.actualOverlayDrawsAboveAnOpaqueChildWithoutASecondClock(ContinuumTaskEffectsUiTest.kt:46)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="productionCanvasSequenceUsesExplicitSyntheticEventsOnly" classname="at.heinz.deviceai.ContinuumTaskEffectsUiTest" time="0.072">
+    <failure message="java.lang.AssertionError: The actual visible View has no work-event route" type="java.lang.AssertionError">java.lang.AssertionError: The actual visible View has no work-event route
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.scope(ContinuumTaskEffectsUiTest.kt:26)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.scope$default(ContinuumTaskEffectsUiTest.kt:24)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.prepare(ContinuumTaskEffectsUiTest.kt:40)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.productionCanvasSequenceUsesExplicitSyntheticEventsOnly(ContinuumTaskEffectsUiTest.kt:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="pauseReducedMotionAndHeatDiscardEventsInsteadOfReplayingOnResume" classname="at.heinz.deviceai.ContinuumTaskEffectsUiTest" time="0.068">
+    <failure message="java.lang.AssertionError: The actual visible View has no work-event route" type="java.lang.AssertionError">java.lang.AssertionError: The actual visible View has no work-event route
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.scope(ContinuumTaskEffectsUiTest.kt:26)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.scope$default(ContinuumTaskEffectsUiTest.kt:24)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.prepare(ContinuumTaskEffectsUiTest.kt:40)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.prepare$default(ContinuumTaskEffectsUiTest.kt:38)
+	at at.heinz.deviceai.ContinuumTaskEffectsUiTest.pauseReducedMotionAndHeatDiscardEventsInsteadOfReplayingOnResume(ContinuumTaskEffectsUiTest.kt:60)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

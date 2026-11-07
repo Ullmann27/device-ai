@@ -1,0 +1,29 @@
+{
+  "recordedAt": "2026-11-07 06:37:09 UTC",
+  "sourceForProposedRelease": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "workspaceId": "tea-d7qe6dosfn5c73e2rnag",
+  "workspaceProvenance": "Existing owner publisher mapping in docs/evidence/codex-owner-apk-20261106/code46-deployment-start.json, revalidated against sole connected workspace and exact service ID.",
+  "service": {
+    "id": "srv-dbf1tr2vcj2c73ehpfog",
+    "name": "continuum-owner-v23-release-preflight",
+    "type": "static_site",
+    "repo": "https://github.com/Ullmann27/device-ai",
+    "branch": "research/continuum-m8-render-signed-release-20261031",
+    "autoDeploy": "no",
+    "buildCommand": "bash scripts/render-continuum-m8-owner-release.sh",
+    "publishPath": "continuum-m8-owner-release",
+    "url": "https://continuum-owner-v23-release-preflight.onrender.com"
+  },
+  "latestDeploy": {
+    "id": "dep-dbn8vhpsrm7s738np9jg",
+    "status": "live",
+    "commit": "7732b8668f912419d7aac7a1609a97097d727cbf",
+    "finishedAt": "2026-11-07T03:26:55.784526Z"
+  },
+  "releaseBranchHead": "7732b8668f912419d7aac7a1609a97097d727cbf",
+  "ancestorOfCandidate": true,
+  "mutationPerformed": false,
+  "ownerSigningApproval": "PENDING",
+  "privateSigningMaterialRead": false,
+  "publicCatalogViaSearchTool": "UNAVAILABLE_FROM_TOOL"
+}

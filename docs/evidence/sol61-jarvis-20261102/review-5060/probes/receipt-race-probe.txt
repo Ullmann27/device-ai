@@ -1,0 +1,2 @@
+STALE_SNAPSHOT_RESULT status=REJECTED uncertain=false disk=DISPATCH_COMMITTED reason=Durable receipt state changed; execution was blocked for operator review.
+CANCELLED_GATE_RESULT status=CANCELLED uncertain=false disk=DISPATCH_COMMITTED reason=Task cancelled.

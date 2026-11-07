@@ -1,0 +1,1294 @@
+TAP version 13
+# Subtest: transparent native 3D hero has no network, model execution or fake status
+ok 1 - transparent native 3D hero has no network, model execution or fake status
+  ---
+  duration_ms: 1.669391
+  type: 'test'
+  ...
+# Subtest: reference start screen reaches all seven real Android feature paths
+ok 2 - reference start screen reaches all seven real Android feature paths
+  ---
+  duration_ms: 0.802908
+  type: 'test'
+  ...
+# Subtest: responsive dashboard retains chat composer, updates and keyboard visibility
+ok 3 - responsive dashboard retains chat composer, updates and keyboard visibility
+  ---
+  duration_ms: 0.240492
+  type: 'test'
+  ...
+# Subtest: reference-style composer keeps real model/web/file actions and truthful idle state
+ok 4 - reference-style composer keeps real model/web/file actions and truthful idle state
+  ---
+  duration_ms: 0.420763
+  type: 'test'
+  ...
+# Subtest: large text is bounded and propagated into adaptive layout without window shrinking
+not ok 5 - large text is bounded and propagated into adaptive layout without window shrinking
+  ---
+  duration_ms: 1.96722
+  type: 'test'
+  location: '/workspace/zeta-ui-node/.github/continuum/android-holographic-home.test.mjs:98:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /ContinuumHomeLayout\.phone\(windowWidthDp, textScale\)/. Input:
+    
+    'package at.heinz.deviceai.ui\n' +
+      '\n' +
+      'import android.annotation.SuppressLint\n' +
+      'import android.content.Context\n' +
+      'import android.graphics.Canvas\n' +
+      'import android.os.PowerManager\n' +
+      'import android.view.MotionEvent\n' +
+      'import android.view.View\n' +
+      'import android.view.ViewGroup\n' +
+      'import at.heinz.deviceai.ContinuumHologramView\n' +
+      'import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot\n' +
+      '\n' +
+      '/**\n' +
+      ' * The Continuum start screen as real Android views: one [ElementView] per layout slot plus the living core\n' +
+      ' * ([ContinuumHologramView]) in the hero slot. Positions come from [ContinuumHomeLayout] (measured from the reference\n' +
+      ' * images); every element is a focusable, clickable view with a TalkBack description of its real values.\n' +
+      ' * The phone navigation is not part of this view: the activity pins it to the bottom edge.\n' +
+      ' */\n' +
+      '@SuppressLint("ViewConstructor")\n' +
+      'class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :\n' +
+      '    ViewGroup(context) {\n' +
+      '    private val density = resources.displayMetrics.density\n' +
+      '    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)\n' +
+      '    private var layoutSpec: ContinuumHomeLayout.Layout? = null\n' +
+      '    private var offset = 0f\n' +
+      '    private val views = linkedMapOf<Slot, ElementView>()\n' +
+      '    private val backgroundPainter = AndroidContinuumPainter(context.assets)\n' +
+      '    private val sciFiEffects = ContinuumSciFiEffects(density)\n' +
+      '    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager\n' +
+      '    private var learningMotionUntil = 0L\n' +
+      '    private var modelMotionUntil = 0L\n' +
+      '    private var systemMotionUntil = 0L\n' +
+      '    private fun now() = android.os.SystemClock.uptimeMillis()\n' +
+      '    private var foregroundActive = false\n' +
+      '    fun setForegroundActive(active: Boolean) {\n' +
+      '        foregroundActive = active\n' +
+      '        updateWaveAnimation()\n' +
+      '    }\n' +
+      '    private var waveFramePending = false\n' +
+      '    private val waveFrame = object : Runnable {\n' +
+      '        override fun run() {\n' +
+      '            waveFramePending = false\n' +
+      '            if (!waveAnimationEnabled()) {\n' +
+      '                views[Slot.LEARNING]?.invalidate()\n' +
+      '                views[Slot.MODEL]?.invalidate()\n' +
+      '                views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n' +
+      '                return\n' +
+      '            }\n' +
+      '            // Moving light follows authentic measurements; data points never change here.\n' +
+      '            // One brief highlight per new measurement; no endless activity on unchanged history.\n' +
+      '            // No running light on an idle quality score or historical learning curve.\n' +
+      '            if (now() <= learningMotionUntil) views[Slot.LEARNING]?.invalidate()\n' +
+      '            if (now() <= modelMotionUntil) views[Slot.MODEL]?.invalidate()\n' +
+      '            if (now() <= systemMotionUntil) views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n' +
+      '            scheduleWaveFrame()\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    private fun waveAnimationEnabled(): Boolean = foregroundActive && isAttachedToWindow && windowVisibility == View.VISIBLE &&\n' +
+      '        visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&\n' +
+      '        !powerManager.isPowerSaveMode && now() < maxOf(learningMotionUntil, modelMotionUntil, systemMotionUntil)\n' +
+      '\n' +
+      '    private fun scheduleWaveFrame() {\n' +
+      '        if (!waveFramePending && waveAnimationEnabled()) {\n' +
+      '            waveFramePending = true\n' +
+      '            postOnAnimationDelayed(waveFrame, 66L)\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    private fun updateWaveAnimation() {\n' +
+      '        if (waveAnimationEnabled()) scheduleWaveFrame()\n' +
+      '        else {\n' +
+      '            removeCallbacks(waveFrame)\n' +
+      '            waveFramePending = false\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onAttachedToWindow() {\n' +
+      '        super.onAttachedToWindow()\n' +
+      '        updateWaveAnimation()\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onDetachedFromWindow() {\n' +
+      '        removeCallbacks(waveFrame)\n' +
+      '        waveFramePending = false\n' +
+      '        super.onDetachedFromWindow()\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onWindowVisibilityChanged(visibility: Int) {\n' +
+      '        super.onWindowVisibilityChanged(visibility)\n' +
+      '        updateWaveAnimation()\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onVisibilityChanged(changedView: View, visibility: Int) {\n' +
+      '        super.onVisibilityChanged(changedView, visibility)\n' +
+      '        updateWaveAnimation()\n' +
+      '    }\n' +
+      '    var state: ContinuumDashboardState = ContinuumDashboardState()\n' +
+      '        set(value) {\n' +
+      '            val until = now() + 900L\n' +
+      '            if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until\n' +
+      '            if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until\n' +
+      '            if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until\n' +
+      '            field = value\n' +
+      '            views.values.forEach { it.refresh() }\n' +
+      '            updateWaveAnimation()\n' +
+      '        }\n' +
+      '\n' +
+      '    init {\n' +
+      '        setWillNotDraw(false)\n' +
+      '        addView(hologram)\n' +
+      '    }\n' +
+      '\n' +
+      '    /**\n' +
+      '     * Builds the element views for a window [windowWidthDp] wide. In the wide composition the navigation rail is a\n' +
+      '     * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.\n' +
+      '     */\n' +
+      '    fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,\n' +
+      '                  windowHeightDp: Float = 0f) {\n' +
+      '        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, 1f)\n' +
+      '        if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return\n' +
+      '        layoutSpec = spec\n' +
+      '        offset = railOffset\n' +
+      '        views.values.forEach { removeView(it) }\n' +
+      '        views.clear()\n' +
+      '        hologram.setGeometry(when {\n' +
+      '            spec.wide -> ContinuumHologramRenderer.Geometry.FOLD\n' +
+      '            else -> ContinuumHologramRenderer.Geometry.PHONE\n' +
+      '        })\n' +
+      '        for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {\n' +
+      '            if (slot == Slot.NAV && !includeNavigation) continue\n' +
+      '            if (slot == Slot.RAIL) continue\n' +
+      '            val view = ElementView(context, element, slot)\n' +
+      '            views[slot] = view\n' +
+      '            addView(view)\n' +
+      '        }\n' +
+      '        requestLayout()\n' +
+      '        updateWaveAnimation()\n' +
+      '    }\n' +
+      '\n' +
+      '    val wide: Boolean get() = layoutSpec?.wide == true\n' +
+      '    /** Window dp per reference dp of the current composition (null before the first configure). */\n' +
+      '    val layoutScale: Float? get() = layoutSpec?.scale\n' +
+      '\n' +
+      '    /** Height of a slot in dp (for tap zones inside an element). */\n' +
+      '    fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f\n' +
+      '\n' +
+      '    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {\n' +
+      '        val width = MeasureSpec.getSize(widthMeasureSpec)\n' +
+      '        val spec = layoutSpec\n' +
+      '        val contentHeight = ((spec?.contentHeight ?: 0f) * density).toInt()\n' +
+      '        for (child in listOf<View>(hologram) + views.values) {\n' +
+      '            val box = boxOf(child) ?: continue\n' +
+      '            child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),\n' +
+      '                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))\n' +
+      '        }\n' +
+      '        setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {\n' +
+      '        for (child in listOf<View>(hologram) + views.values) {\n' +
+      '            val box = boxOf(child) ?: continue\n' +
+      '            child.layout((box.left * density).toInt(), (box.top * density).toInt(),\n' +
+      '                (box.right * density).toInt(), (box.bottom * density).toInt())\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    private fun boxOf(child: View): ContinuumHomeLayout.Box? {\n' +
+      '        val spec = layoutSpec ?: return null\n' +
+      '        val box = if (child === hologram) spec[Slot.HERO] else (child as? ElementView)?.slot?.let { spec[it] }\n' +
+      '        return box?.let { ContinuumHomeLayout.Box(it.left - offset, it.top, it.right - offset, it.bottom) }\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onDraw(canvas: Canvas) {\n' +
+      '        val spec = layoutSpec ?: return\n' +
+      '        backgroundPainter.begin(canvas)\n' +
+      '        val saved = canvas.save()\n' +
+      '        canvas.scale(density, density)\n' +
+      '        canvas.translate(-offset, 0f)\n' +
+      '        ContinuumHomeScreen.drawBackground(backgroundPainter, width / density + offset, height / density, spec)\n' +
+      '        canvas.restoreToCount(saved)\n' +
+      '        // Ambient radiance sits behind child cards and their real measurements.\n' +
+      '        sciFiEffects.drawAmbient(canvas, width.toFloat(), height.toFloat())\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun dispatchDraw(canvas: Canvas) {\n' +
+      '        super.dispatchDraw(canvas)\n' +
+      '        // No intercepting overlay and no full-screen blur over foreground text.\n' +
+      '        sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())\n' +
+      '    }\n' +
+      '\n' +
+      '    /** Selected navigation index (phone bar / rail); redraws the navigation element. */\n' +
+      '    fun selectNavigation(index: Int) {\n' +
+      '        (views[Slot.NAV]?.element as? BottomNavElement)?.selected = index\n' +
+      '        views[Slot.NAV]?.refresh()\n' +
+      '    }\n' +
+      '\n' +
+      '    /** A single drawn element; reports taps with the touch position in element dp coordinates. */\n' +
+      '    inner class ElementView(context: Context, val element: ContinuumElement, val slot: Slot) : View(context) {\n' +
+      '        private val painter = AndroidContinuumPainter(context.assets)\n' +
+      '        private var downX = 0f\n' +
+      '        private var downY = 0f\n' +
+      '\n' +
+      '        init {\n' +
+      '            isClickable = true\n' +
+      '            isFocusable = true\n' +
+      '            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES\n' +
+      '            ContinuumControls.feedback(this)\n' +
+      '            refresh()\n' +
+      '            setOnClickListener { onSlot(slot, downX / density, downY / density) }\n' +
+      '        }\n' +
+      '\n' +
+      '        fun refresh() {\n' +
+      '            contentDescription = element.describe(state)\n' +
+      '            invalidate()\n' +
+      '        }\n' +
+      '\n' +
+      '        @SuppressLint("ClickableViewAccessibility")\n' +
+      '        override fun onTouchEvent(event: MotionEvent): Boolean {\n' +
+      '            if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) {\n' +
+      '                downX = event.x; downY = event.y\n' +
+      '            }\n' +
+      '            return super.onTouch'... 2977 more characters
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    package at.heinz.deviceai.ui
+    
+    import android.annotation.SuppressLint
+    import android.content.Context
+    import android.graphics.Canvas
+    import android.os.PowerManager
+    import android.view.MotionEvent
+    import android.view.View
+    import android.view.ViewGroup
+    import at.heinz.deviceai.ContinuumHologramView
+    import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot
+    
+    /**
+     * The Continuum start screen as real Android views: one [ElementView] per layout slot plus the living core
+     * ([ContinuumHologramView]) in the hero slot. Positions come from [ContinuumHomeLayout] (measured from the reference
+     * images); every element is a focusable, clickable view with a TalkBack description of its real values.
+     * The phone navigation is not part of this view: the activity pins it to the bottom edge.
+     */
+    @SuppressLint("ViewConstructor")
+    class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :
+        ViewGroup(context) {
+        private val density = resources.displayMetrics.density
+        private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)
+        private var layoutSpec: ContinuumHomeLayout.Layout? = null
+        private var offset = 0f
+        private val views = linkedMapOf<Slot, ElementView>()
+        private val backgroundPainter = AndroidContinuumPainter(context.assets)
+        private val sciFiEffects = ContinuumSciFiEffects(density)
+        private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        private var learningMotionUntil = 0L
+        private var modelMotionUntil = 0L
+        private var systemMotionUntil = 0L
+        private fun now() = android.os.SystemClock.uptimeMillis()
+        private var foregroundActive = false
+        fun setForegroundActive(active: Boolean) {
+            foregroundActive = active
+            updateWaveAnimation()
+        }
+        private var waveFramePending = false
+        private val waveFrame = object : Runnable {
+            override fun run() {
+                waveFramePending = false
+                if (!waveAnimationEnabled()) {
+                    views[Slot.LEARNING]?.invalidate()
+                    views[Slot.MODEL]?.invalidate()
+                    views[Slot.SYSTEM_ACTIVITY]?.invalidate()
+                    return
+                }
+                // Moving light follows authentic measurements; data points never change here.
+                // One brief highlight per new measurement; no endless activity on unchanged history.
+                // No running light on an idle quality score or historical learning curve.
+                if (now() <= learningMotionUntil) views[Slot.LEARNING]?.invalidate()
+                if (now() <= modelMotionUntil) views[Slot.MODEL]?.invalidate()
+                if (now() <= systemMotionUntil) views[Slot.SYSTEM_ACTIVITY]?.invalidate()
+                scheduleWaveFrame()
+            }
+        }
+    
+        private fun waveAnimationEnabled(): Boolean = foregroundActive && isAttachedToWindow && windowVisibility == View.VISIBLE &&
+            visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&
+            !powerManager.isPowerSaveMode && now() < maxOf(learningMotionUntil, modelMotionUntil, systemMotionUntil)
+    
+        private fun scheduleWaveFrame() {
+            if (!waveFramePending && waveAnimationEnabled()) {
+                waveFramePending = true
+                postOnAnimationDelayed(waveFrame, 66L)
+            }
+        }
+    
+        private fun updateWaveAnimation() {
+            if (waveAnimationEnabled()) scheduleWaveFrame()
+            else {
+                removeCallbacks(waveFrame)
+                waveFramePending = false
+            }
+        }
+    
+        override fun onAttachedToWindow() {
+            super.onAttachedToWindow()
+            updateWaveAnimation()
+        }
+    
+        override fun onDetachedFromWindow() {
+            removeCallbacks(waveFrame)
+            waveFramePending = false
+            super.onDetachedFromWindow()
+        }
+    
+        override fun onWindowVisibilityChanged(visibility: Int) {
+            super.onWindowVisibilityChanged(visibility)
+            updateWaveAnimation()
+        }
+    
+        override fun onVisibilityChanged(changedView: View, visibility: Int) {
+            super.onVisibilityChanged(changedView, visibility)
+            updateWaveAnimation()
+        }
+        var state: ContinuumDashboardState = ContinuumDashboardState()
+            set(value) {
+                val until = now() + 900L
+                if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until
+                if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until
+                if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until
+                field = value
+                views.values.forEach { it.refresh() }
+                updateWaveAnimation()
+            }
+    
+        init {
+            setWillNotDraw(false)
+            addView(hologram)
+        }
+    
+        /**
+         * Builds the element views for a window [windowWidthDp] wide. In the wide composition the navigation rail is a
+         * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.
+         */
+        fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,
+                      windowHeightDp: Float = 0f) {
+            val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, 1f)
+            if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return
+            layoutSpec = spec
+            offset = railOffset
+            views.values.forEach { removeView(it) }
+            views.clear()
+            hologram.setGeometry(when {
+                spec.wide -> ContinuumHologramRenderer.Geometry.FOLD
+                else -> ContinuumHologramRenderer.Geometry.PHONE
+            })
+            for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {
+                if (slot == Slot.NAV && !includeNavigation) continue
+                if (slot == Slot.RAIL) continue
+                val view = ElementView(context, element, slot)
+                views[slot] = view
+                addView(view)
+            }
+            requestLayout()
+            updateWaveAnimation()
+        }
+    
+        val wide: Boolean get() = layoutSpec?.wide == true
+        /** Window dp per reference dp of the current composition (null before the first configure). */
+        val layoutScale: Float? get() = layoutSpec?.scale
+    
+        /** Height of a slot in dp (for tap zones inside an element). */
+        fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f
+    
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+            val width = MeasureSpec.getSize(widthMeasureSpec)
+            val spec = layoutSpec
+            val contentHeight = ((spec?.contentHeight ?: 0f) * density).toInt()
+            for (child in listOf<View>(hologram) + views.values) {
+                val box = boxOf(child) ?: continue
+                child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
+            }
+            setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))
+        }
+    
+        override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+            for (child in listOf<View>(hologram) + views.values) {
+                val box = boxOf(child) ?: continue
+                child.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                    (box.right * density).toInt(), (box.bottom * density).toInt())
+            }
+        }
+    
+        private fun boxOf(child: View): ContinuumHomeLayout.Box? {
+            val spec = layoutSpec ?: return null
+            val box = if (child === hologram) spec[Slot.HERO] else (child as? ElementView)?.slot?.let { spec[it] }
+            return box?.let { ContinuumHomeLayout.Box(it.left - offset, it.top, it.right - offset, it.bottom) }
+        }
+    
+        override fun onDraw(canvas: Canvas) {
+            val spec = layoutSpec ?: return
+            backgroundPainter.begin(canvas)
+            val saved = canvas.save()
+            canvas.scale(density, density)
+            canvas.translate(-offset, 0f)
+            ContinuumHomeScreen.drawBackground(backgroundPainter, width / density + offset, height / density, spec)
+            canvas.restoreToCount(saved)
+            // Ambient radiance sits behind child cards and their real measurements.
+            sciFiEffects.drawAmbient(canvas, width.toFloat(), height.toFloat())
+        }
+    
+        override fun dispatchDraw(canvas: Canvas) {
+            super.dispatchDraw(canvas)
+            // No intercepting overlay and no full-screen blur over foreground text.
+            sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())
+        }
+    
+        /** Selected navigation index (phone bar / rail); redraws the navigation element. */
+        fun selectNavigation(index: Int) {
+            (views[Slot.NAV]?.element as? BottomNavElement)?.selected = index
+            views[Slot.NAV]?.refresh()
+        }
+    
+        /** A single drawn element; reports taps with the touch position in element dp coordinates. */
+        inner class ElementView(context: Context, val element: ContinuumElement, val slot: Slot) : View(context) {
+            private val painter = AndroidContinuumPainter(context.assets)
+            private var downX = 0f
+            private var downY = 0f
+    
+            init {
+                isClickable = true
+                isFocusable = true
+                importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
+                ContinuumControls.feedback(this)
+                refresh()
+                setOnClickListener { onSlot(slot, downX / density, downY / density) }
+            }
+    
+            fun refresh() {
+                contentDescription = element.describe(state)
+                invalidate()
+            }
+    
+            @SuppressLint("ClickableViewAccessibility")
+            override fun onTouchEvent(event: MotionEvent): Boolean {
+                if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) {
+                    downX = event.x; downY = event.y
+                }
+                return super.onTouchEvent(event)
+            }
+    
+            override fun onDraw(canvas: Canvas) {
+                painter.begin(canvas)
+                val saved = canvas.save()
+                // Elements are drawn in reference dp; the slot box is the reference box times the layout scale, so the
+                // content must be scaled by the same factor or it overflows narrower windows (360 dp phones, Fold7).
+                val k = density * (layoutSpec?.scale ?: 1f)
+                canvas.scale(k, k)
+                // Decorative phase follows the uptime clock; historical sample coordinates remain unchanged.
+                val active = when (slot) {
+                    Slot.LEARNING -> now() < learningMotionUntil
+                    Slot.MODEL -> now() < modelMotionUntil
+                    Slot.SYSTEM_ACTIVITY -> now() < systemMotionUntil
+                    else -> false
+                }
+                element.motionPhase = if (active && waveAnimationEnabled()) {
+                    val until = when (slot) {
+                        Slot.LEARNING -> learningMotionUntil
+                        Slot.MODEL -> modelMotionUntil
+                        else -> systemMotionUntil
+                    }
+                    (1f - (until - now()) / 900f).coerceIn(0f, 1f)
+                } else null
+                element.draw(painter, width / k, height / k, state)
+                canvas.restoreToCount(saved)
+            }
+        }
+    }
+    
+    /** Standalone drawn element (phone navigation bar, Fold rail) used outside the scrolling start screen. */
+    @SuppressLint("ViewConstructor")
+    class ContinuumElementView(context: Context, val element: ContinuumElement, private val designScale: Float = 1f,
+                               private val onTap: (Float, Float) -> Unit) : View(context) {
+        private val density = resources.displayMetrics.density
+        private val painter = AndroidContinuumPainter(context.assets)
+        private var tapX = 0f
+        private var tapY = 0f
+        var state: ContinuumDashboardState = ContinuumDashboardState()
+            set(value) { field = value; contentDescription = element.describe(value); invalidate() }
+    
+        init {
+            isClickable = true
+            isFocusable = true
+            contentDescription = element.describe(state)
+            setOnClickListener { onTap(tapX / density, tapY / density) }
+        }
+    
+        @SuppressLint("ClickableViewAccessibility")
+        override fun onTouchEvent(event: MotionEvent): Boolean {
+            if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) { tapX = event.x; tapY = event.y }
+            return super.onTouchEvent(event)
+        }
+    
+        override fun onDraw(canvas: Canvas) {
+            painter.begin(canvas)
+            val saved = canvas.save()
+            // [designScale] = window width / reference width, like the start-screen slots
+            val k = density * designScale
+            canvas.scale(k, k)
+            element.motionPhase = null // Navigation selection is stable; real workload animates in its own card.
+            element.draw(painter, width / k, height / k, state)
+            canvas.restoreToCount(saved)
+        }
+    }
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/android-holographic-home.test.mjs:102:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: start screen never manufactures ready model or internet state
+ok 6 - start screen never manufactures ready model or internet state
+  ---
+  duration_ms: 1.290271
+  type: 'test'
+  ...
+# Subtest: exactly five owner-visible work areas remain in fixed order
+ok 7 - exactly five owner-visible work areas remain in fixed order
+  ---
+  duration_ms: 6.306248
+  type: 'test'
+  ...
+# Subtest: phone bottom navigation stays outside conversation pane and above system bar
+ok 8 - phone bottom navigation stays outside conversation pane and above system bar
+  ---
+  duration_ms: 0.407984
+  type: 'test'
+  ...
+# Subtest: all navigation taps route to existing trusted screens
+ok 9 - all navigation taps route to existing trusted screens
+  ---
+  duration_ms: 0.423518
+  type: 'test'
+  ...
+# Subtest: home work areas are reachable without expert-only controls
+ok 10 - home work areas are reachable without expert-only controls
+  ---
+  duration_ms: 0.587474
+  type: 'test'
+  ...
+# Subtest: Fold rail offers the five work areas without a second bottom bar
+ok 11 - Fold rail offers the five work areas without a second bottom bar
+  ---
+  duration_ms: 0.36522
+  type: 'test'
+  ...
+# Subtest: existing chat, learning monitoring and owner permission boundaries remain
+ok 12 - existing chat, learning monitoring and owner permission boundaries remain
+  ---
+  duration_ms: 0.322415
+  type: 'test'
+  ...
+# Subtest: Fold rail and start screen reach all actions at short heights
+ok 13 - Fold rail and start screen reach all actions at short heights
+  ---
+  duration_ms: 0.17296
+  type: 'test'
+  ...
+# Subtest: start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+not ok 14 - start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+  ---
+  duration_ms: 1.598916
+  type: 'test'
+  location: '/workspace/zeta-ui-node/.github/continuum/app-navigation-wiring.test.mjs:85:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /ContinuumHomeLayout\.phone\(windowWidthDp, textScale\)/. Input:
+    
+    'package at.heinz.deviceai.ui\n' +
+      '\n' +
+      'import android.annotation.SuppressLint\n' +
+      'import android.content.Context\n' +
+      'import android.graphics.Canvas\n' +
+      'import android.os.PowerManager\n' +
+      'import android.view.MotionEvent\n' +
+      'import android.view.View\n' +
+      'import android.view.ViewGroup\n' +
+      'import at.heinz.deviceai.ContinuumHologramView\n' +
+      'import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot\n' +
+      '\n' +
+      '/**\n' +
+      ' * The Continuum start screen as real Android views: one [ElementView] per layout slot plus the living core\n' +
+      ' * ([ContinuumHologramView]) in the hero slot. Positions come from [ContinuumHomeLayout] (measured from the reference\n' +
+      ' * images); every element is a focusable, clickable view with a TalkBack description of its real values.\n' +
+      ' * The phone navigation is not part of this view: the activity pins it to the bottom edge.\n' +
+      ' */\n' +
+      '@SuppressLint("ViewConstructor")\n' +
+      'class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :\n' +
+      '    ViewGroup(context) {\n' +
+      '    private val density = resources.displayMetrics.density\n' +
+      '    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)\n' +
+      '    private var layoutSpec: ContinuumHomeLayout.Layout? = null\n' +
+      '    private var offset = 0f\n' +
+      '    private val views = linkedMapOf<Slot, ElementView>()\n' +
+      '    private val backgroundPainter = AndroidContinuumPainter(context.assets)\n' +
+      '    private val sciFiEffects = ContinuumSciFiEffects(density)\n' +
+      '    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager\n' +
+      '    private var learningMotionUntil = 0L\n' +
+      '    private var modelMotionUntil = 0L\n' +
+      '    private var systemMotionUntil = 0L\n' +
+      '    private fun now() = android.os.SystemClock.uptimeMillis()\n' +
+      '    private var foregroundActive = false\n' +
+      '    fun setForegroundActive(active: Boolean) {\n' +
+      '        foregroundActive = active\n' +
+      '        updateWaveAnimation()\n' +
+      '    }\n' +
+      '    private var waveFramePending = false\n' +
+      '    private val waveFrame = object : Runnable {\n' +
+      '        override fun run() {\n' +
+      '            waveFramePending = false\n' +
+      '            if (!waveAnimationEnabled()) {\n' +
+      '                views[Slot.LEARNING]?.invalidate()\n' +
+      '                views[Slot.MODEL]?.invalidate()\n' +
+      '                views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n' +
+      '                return\n' +
+      '            }\n' +
+      '            // Moving light follows authentic measurements; data points never change here.\n' +
+      '            // One brief highlight per new measurement; no endless activity on unchanged history.\n' +
+      '            // No running light on an idle quality score or historical learning curve.\n' +
+      '            if (now() <= learningMotionUntil) views[Slot.LEARNING]?.invalidate()\n' +
+      '            if (now() <= modelMotionUntil) views[Slot.MODEL]?.invalidate()\n' +
+      '            if (now() <= systemMotionUntil) views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n' +
+      '            scheduleWaveFrame()\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    private fun waveAnimationEnabled(): Boolean = foregroundActive && isAttachedToWindow && windowVisibility == View.VISIBLE &&\n' +
+      '        visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&\n' +
+      '        !powerManager.isPowerSaveMode && now() < maxOf(learningMotionUntil, modelMotionUntil, systemMotionUntil)\n' +
+      '\n' +
+      '    private fun scheduleWaveFrame() {\n' +
+      '        if (!waveFramePending && waveAnimationEnabled()) {\n' +
+      '            waveFramePending = true\n' +
+      '            postOnAnimationDelayed(waveFrame, 66L)\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    private fun updateWaveAnimation() {\n' +
+      '        if (waveAnimationEnabled()) scheduleWaveFrame()\n' +
+      '        else {\n' +
+      '            removeCallbacks(waveFrame)\n' +
+      '            waveFramePending = false\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onAttachedToWindow() {\n' +
+      '        super.onAttachedToWindow()\n' +
+      '        updateWaveAnimation()\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onDetachedFromWindow() {\n' +
+      '        removeCallbacks(waveFrame)\n' +
+      '        waveFramePending = false\n' +
+      '        super.onDetachedFromWindow()\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onWindowVisibilityChanged(visibility: Int) {\n' +
+      '        super.onWindowVisibilityChanged(visibility)\n' +
+      '        updateWaveAnimation()\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onVisibilityChanged(changedView: View, visibility: Int) {\n' +
+      '        super.onVisibilityChanged(changedView, visibility)\n' +
+      '        updateWaveAnimation()\n' +
+      '    }\n' +
+      '    var state: ContinuumDashboardState = ContinuumDashboardState()\n' +
+      '        set(value) {\n' +
+      '            val until = now() + 900L\n' +
+      '            if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until\n' +
+      '            if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until\n' +
+      '            if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until\n' +
+      '            field = value\n' +
+      '            views.values.forEach { it.refresh() }\n' +
+      '            updateWaveAnimation()\n' +
+      '        }\n' +
+      '\n' +
+      '    init {\n' +
+      '        setWillNotDraw(false)\n' +
+      '        addView(hologram)\n' +
+      '    }\n' +
+      '\n' +
+      '    /**\n' +
+      '     * Builds the element views for a window [windowWidthDp] wide. In the wide composition the navigation rail is a\n' +
+      '     * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.\n' +
+      '     */\n' +
+      '    fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,\n' +
+      '                  windowHeightDp: Float = 0f) {\n' +
+      '        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, 1f)\n' +
+      '        if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return\n' +
+      '        layoutSpec = spec\n' +
+      '        offset = railOffset\n' +
+      '        views.values.forEach { removeView(it) }\n' +
+      '        views.clear()\n' +
+      '        hologram.setGeometry(when {\n' +
+      '            spec.wide -> ContinuumHologramRenderer.Geometry.FOLD\n' +
+      '            else -> ContinuumHologramRenderer.Geometry.PHONE\n' +
+      '        })\n' +
+      '        for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {\n' +
+      '            if (slot == Slot.NAV && !includeNavigation) continue\n' +
+      '            if (slot == Slot.RAIL) continue\n' +
+      '            val view = ElementView(context, element, slot)\n' +
+      '            views[slot] = view\n' +
+      '            addView(view)\n' +
+      '        }\n' +
+      '        requestLayout()\n' +
+      '        updateWaveAnimation()\n' +
+      '    }\n' +
+      '\n' +
+      '    val wide: Boolean get() = layoutSpec?.wide == true\n' +
+      '    /** Window dp per reference dp of the current composition (null before the first configure). */\n' +
+      '    val layoutScale: Float? get() = layoutSpec?.scale\n' +
+      '\n' +
+      '    /** Height of a slot in dp (for tap zones inside an element). */\n' +
+      '    fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f\n' +
+      '\n' +
+      '    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {\n' +
+      '        val width = MeasureSpec.getSize(widthMeasureSpec)\n' +
+      '        val spec = layoutSpec\n' +
+      '        val contentHeight = ((spec?.contentHeight ?: 0f) * density).toInt()\n' +
+      '        for (child in listOf<View>(hologram) + views.values) {\n' +
+      '            val box = boxOf(child) ?: continue\n' +
+      '            child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),\n' +
+      '                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))\n' +
+      '        }\n' +
+      '        setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {\n' +
+      '        for (child in listOf<View>(hologram) + views.values) {\n' +
+      '            val box = boxOf(child) ?: continue\n' +
+      '            child.layout((box.left * density).toInt(), (box.top * density).toInt(),\n' +
+      '                (box.right * density).toInt(), (box.bottom * density).toInt())\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    private fun boxOf(child: View): ContinuumHomeLayout.Box? {\n' +
+      '        val spec = layoutSpec ?: return null\n' +
+      '        val box = if (child === hologram) spec[Slot.HERO] else (child as? ElementView)?.slot?.let { spec[it] }\n' +
+      '        return box?.let { ContinuumHomeLayout.Box(it.left - offset, it.top, it.right - offset, it.bottom) }\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun onDraw(canvas: Canvas) {\n' +
+      '        val spec = layoutSpec ?: return\n' +
+      '        backgroundPainter.begin(canvas)\n' +
+      '        val saved = canvas.save()\n' +
+      '        canvas.scale(density, density)\n' +
+      '        canvas.translate(-offset, 0f)\n' +
+      '        ContinuumHomeScreen.drawBackground(backgroundPainter, width / density + offset, height / density, spec)\n' +
+      '        canvas.restoreToCount(saved)\n' +
+      '        // Ambient radiance sits behind child cards and their real measurements.\n' +
+      '        sciFiEffects.drawAmbient(canvas, width.toFloat(), height.toFloat())\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun dispatchDraw(canvas: Canvas) {\n' +
+      '        super.dispatchDraw(canvas)\n' +
+      '        // No intercepting overlay and no full-screen blur over foreground text.\n' +
+      '        sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())\n' +
+      '    }\n' +
+      '\n' +
+      '    /** Selected navigation index (phone bar / rail); redraws the navigation element. */\n' +
+      '    fun selectNavigation(index: Int) {\n' +
+      '        (views[Slot.NAV]?.element as? BottomNavElement)?.selected = index\n' +
+      '        views[Slot.NAV]?.refresh()\n' +
+      '    }\n' +
+      '\n' +
+      '    /** A single drawn element; reports taps with the touch position in element dp coordinates. */\n' +
+      '    inner class ElementView(context: Context, val element: ContinuumElement, val slot: Slot) : View(context) {\n' +
+      '        private val painter = AndroidContinuumPainter(context.assets)\n' +
+      '        private var downX = 0f\n' +
+      '        private var downY = 0f\n' +
+      '\n' +
+      '        init {\n' +
+      '            isClickable = true\n' +
+      '            isFocusable = true\n' +
+      '            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES\n' +
+      '            ContinuumControls.feedback(this)\n' +
+      '            refresh()\n' +
+      '            setOnClickListener { onSlot(slot, downX / density, downY / density) }\n' +
+      '        }\n' +
+      '\n' +
+      '        fun refresh() {\n' +
+      '            contentDescription = element.describe(state)\n' +
+      '            invalidate()\n' +
+      '        }\n' +
+      '\n' +
+      '        @SuppressLint("ClickableViewAccessibility")\n' +
+      '        override fun onTouchEvent(event: MotionEvent): Boolean {\n' +
+      '            if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) {\n' +
+      '                downX = event.x; downY = event.y\n' +
+      '            }\n' +
+      '            return super.onTouch'... 2977 more characters
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    package at.heinz.deviceai.ui
+    
+    import android.annotation.SuppressLint
+    import android.content.Context
+    import android.graphics.Canvas
+    import android.os.PowerManager
+    import android.view.MotionEvent
+    import android.view.View
+    import android.view.ViewGroup
+    import at.heinz.deviceai.ContinuumHologramView
+    import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot
+    
+    /**
+     * The Continuum start screen as real Android views: one [ElementView] per layout slot plus the living core
+     * ([ContinuumHologramView]) in the hero slot. Positions come from [ContinuumHomeLayout] (measured from the reference
+     * images); every element is a focusable, clickable view with a TalkBack description of its real values.
+     * The phone navigation is not part of this view: the activity pins it to the bottom edge.
+     */
+    @SuppressLint("ViewConstructor")
+    class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :
+        ViewGroup(context) {
+        private val density = resources.displayMetrics.density
+        private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)
+        private var layoutSpec: ContinuumHomeLayout.Layout? = null
+        private var offset = 0f
+        private val views = linkedMapOf<Slot, ElementView>()
+        private val backgroundPainter = AndroidContinuumPainter(context.assets)
+        private val sciFiEffects = ContinuumSciFiEffects(density)
+        private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        private var learningMotionUntil = 0L
+        private var modelMotionUntil = 0L
+        private var systemMotionUntil = 0L
+        private fun now() = android.os.SystemClock.uptimeMillis()
+        private var foregroundActive = false
+        fun setForegroundActive(active: Boolean) {
+            foregroundActive = active
+            updateWaveAnimation()
+        }
+        private var waveFramePending = false
+        private val waveFrame = object : Runnable {
+            override fun run() {
+                waveFramePending = false
+                if (!waveAnimationEnabled()) {
+                    views[Slot.LEARNING]?.invalidate()
+                    views[Slot.MODEL]?.invalidate()
+                    views[Slot.SYSTEM_ACTIVITY]?.invalidate()
+                    return
+                }
+                // Moving light follows authentic measurements; data points never change here.
+                // One brief highlight per new measurement; no endless activity on unchanged history.
+                // No running light on an idle quality score or historical learning curve.
+                if (now() <= learningMotionUntil) views[Slot.LEARNING]?.invalidate()
+                if (now() <= modelMotionUntil) views[Slot.MODEL]?.invalidate()
+                if (now() <= systemMotionUntil) views[Slot.SYSTEM_ACTIVITY]?.invalidate()
+                scheduleWaveFrame()
+            }
+        }
+    
+        private fun waveAnimationEnabled(): Boolean = foregroundActive && isAttachedToWindow && windowVisibility == View.VISIBLE &&
+            visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&
+            !powerManager.isPowerSaveMode && now() < maxOf(learningMotionUntil, modelMotionUntil, systemMotionUntil)
+    
+        private fun scheduleWaveFrame() {
+            if (!waveFramePending && waveAnimationEnabled()) {
+                waveFramePending = true
+                postOnAnimationDelayed(waveFrame, 66L)
+            }
+        }
+    
+        private fun updateWaveAnimation() {
+            if (waveAnimationEnabled()) scheduleWaveFrame()
+            else {
+                removeCallbacks(waveFrame)
+                waveFramePending = false
+            }
+        }
+    
+        override fun onAttachedToWindow() {
+            super.onAttachedToWindow()
+            updateWaveAnimation()
+        }
+    
+        override fun onDetachedFromWindow() {
+            removeCallbacks(waveFrame)
+            waveFramePending = false
+            super.onDetachedFromWindow()
+        }
+    
+        override fun onWindowVisibilityChanged(visibility: Int) {
+            super.onWindowVisibilityChanged(visibility)
+            updateWaveAnimation()
+        }
+    
+        override fun onVisibilityChanged(changedView: View, visibility: Int) {
+            super.onVisibilityChanged(changedView, visibility)
+            updateWaveAnimation()
+        }
+        var state: ContinuumDashboardState = ContinuumDashboardState()
+            set(value) {
+                val until = now() + 900L
+                if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until
+                if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until
+                if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until
+                field = value
+                views.values.forEach { it.refresh() }
+                updateWaveAnimation()
+            }
+    
+        init {
+            setWillNotDraw(false)
+            addView(hologram)
+        }
+    
+        /**
+         * Builds the element views for a window [windowWidthDp] wide. In the wide composition the navigation rail is a
+         * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.
+         */
+        fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,
+                      windowHeightDp: Float = 0f) {
+            val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, 1f)
+            if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return
+            layoutSpec = spec
+            offset = railOffset
+            views.values.forEach { removeView(it) }
+            views.clear()
+            hologram.setGeometry(when {
+                spec.wide -> ContinuumHologramRenderer.Geometry.FOLD
+                else -> ContinuumHologramRenderer.Geometry.PHONE
+            })
+            for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {
+                if (slot == Slot.NAV && !includeNavigation) continue
+                if (slot == Slot.RAIL) continue
+                val view = ElementView(context, element, slot)
+                views[slot] = view
+                addView(view)
+            }
+            requestLayout()
+            updateWaveAnimation()
+        }
+    
+        val wide: Boolean get() = layoutSpec?.wide == true
+        /** Window dp per reference dp of the current composition (null before the first configure). */
+        val layoutScale: Float? get() = layoutSpec?.scale
+    
+        /** Height of a slot in dp (for tap zones inside an element). */
+        fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f
+    
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+            val width = MeasureSpec.getSize(widthMeasureSpec)
+            val spec = layoutSpec
+            val contentHeight = ((spec?.contentHeight ?: 0f) * density).toInt()
+            for (child in listOf<View>(hologram) + views.values) {
+                val box = boxOf(child) ?: continue
+                child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
+            }
+            setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))
+        }
+    
+        override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+            for (child in listOf<View>(hologram) + views.values) {
+                val box = boxOf(child) ?: continue
+                child.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                    (box.right * density).toInt(), (box.bottom * density).toInt())
+            }
+        }
+    
+        private fun boxOf(child: View): ContinuumHomeLayout.Box? {
+            val spec = layoutSpec ?: return null
+            val box = if (child === hologram) spec[Slot.HERO] else (child as? ElementView)?.slot?.let { spec[it] }
+            return box?.let { ContinuumHomeLayout.Box(it.left - offset, it.top, it.right - offset, it.bottom) }
+        }
+    
+        override fun onDraw(canvas: Canvas) {
+            val spec = layoutSpec ?: return
+            backgroundPainter.begin(canvas)
+            val saved = canvas.save()
+            canvas.scale(density, density)
+            canvas.translate(-offset, 0f)
+            ContinuumHomeScreen.drawBackground(backgroundPainter, width / density + offset, height / density, spec)
+            canvas.restoreToCount(saved)
+            // Ambient radiance sits behind child cards and their real measurements.
+            sciFiEffects.drawAmbient(canvas, width.toFloat(), height.toFloat())
+        }
+    
+        override fun dispatchDraw(canvas: Canvas) {
+            super.dispatchDraw(canvas)
+            // No intercepting overlay and no full-screen blur over foreground text.
+            sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())
+        }
+    
+        /** Selected navigation index (phone bar / rail); redraws the navigation element. */
+        fun selectNavigation(index: Int) {
+            (views[Slot.NAV]?.element as? BottomNavElement)?.selected = index
+            views[Slot.NAV]?.refresh()
+        }
+    
+        /** A single drawn element; reports taps with the touch position in element dp coordinates. */
+        inner class ElementView(context: Context, val element: ContinuumElement, val slot: Slot) : View(context) {
+            private val painter = AndroidContinuumPainter(context.assets)
+            private var downX = 0f
+            private var downY = 0f
+    
+            init {
+                isClickable = true
+                isFocusable = true
+                importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
+                ContinuumControls.feedback(this)
+                refresh()
+                setOnClickListener { onSlot(slot, downX / density, downY / density) }
+            }
+    
+            fun refresh() {
+                contentDescription = element.describe(state)
+                invalidate()
+            }
+    
+            @SuppressLint("ClickableViewAccessibility")
+            override fun onTouchEvent(event: MotionEvent): Boolean {
+                if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) {
+                    downX = event.x; downY = event.y
+                }
+                return super.onTouchEvent(event)
+            }
+    
+            override fun onDraw(canvas: Canvas) {
+                painter.begin(canvas)
+                val saved = canvas.save()
+                // Elements are drawn in reference dp; the slot box is the reference box times the layout scale, so the
+                // content must be scaled by the same factor or it overflows narrower windows (360 dp phones, Fold7).
+                val k = density * (layoutSpec?.scale ?: 1f)
+                canvas.scale(k, k)
+                // Decorative phase follows the uptime clock; historical sample coordinates remain unchanged.
+                val active = when (slot) {
+                    Slot.LEARNING -> now() < learningMotionUntil
+                    Slot.MODEL -> now() < modelMotionUntil
+                    Slot.SYSTEM_ACTIVITY -> now() < systemMotionUntil
+                    else -> false
+                }
+                element.motionPhase = if (active && waveAnimationEnabled()) {
+                    val until = when (slot) {
+                        Slot.LEARNING -> learningMotionUntil
+                        Slot.MODEL -> modelMotionUntil
+                        else -> systemMotionUntil
+                    }
+                    (1f - (until - now()) / 900f).coerceIn(0f, 1f)
+                } else null
+                element.draw(painter, width / k, height / k, state)
+                canvas.restoreToCount(saved)
+            }
+        }
+    }
+    
+    /** Standalone drawn element (phone navigation bar, Fold rail) used outside the scrolling start screen. */
+    @SuppressLint("ViewConstructor")
+    class ContinuumElementView(context: Context, val element: ContinuumElement, private val designScale: Float = 1f,
+                               private val onTap: (Float, Float) -> Unit) : View(context) {
+        private val density = resources.displayMetrics.density
+        private val painter = AndroidContinuumPainter(context.assets)
+        private var tapX = 0f
+        private var tapY = 0f
+        var state: ContinuumDashboardState = ContinuumDashboardState()
+            set(value) { field = value; contentDescription = element.describe(value); invalidate() }
+    
+        init {
+            isClickable = true
+            isFocusable = true
+            contentDescription = element.describe(state)
+            setOnClickListener { onTap(tapX / density, tapY / density) }
+        }
+    
+        @SuppressLint("ClickableViewAccessibility")
+        override fun onTouchEvent(event: MotionEvent): Boolean {
+            if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) { tapX = event.x; tapY = event.y }
+            return super.onTouchEvent(event)
+        }
+    
+        override fun onDraw(canvas: Canvas) {
+            painter.begin(canvas)
+            val saved = canvas.save()
+            // [designScale] = window width / reference width, like the start-screen slots
+            val k = density * designScale
+            canvas.scale(k, k)
+            element.motionPhase = null // Navigation selection is stable; real workload animates in its own card.
+            element.draw(painter, width / k, height / k, state)
+            canvas.restoreToCount(saved)
+        }
+    }
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/app-navigation-wiring.test.mjs:100:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: recreated activity preserves chat selection and draft without persistent More selection
+ok 15 - recreated activity preserves chat selection and draft without persistent More selection
+  ---
+  duration_ms: 0.317087
+  type: 'test'
+  ...
+# Subtest: design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+ok 16 - design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+  ---
+  duration_ms: 0.423337
+  type: 'test'
+  ...
+# Subtest: living hologram schedules subsequent visible frames and stops callbacks on detach
+ok 17 - living hologram schedules subsequent visible frames and stops callbacks on detach
+  ---
+  duration_ms: 1.464924
+  type: 'test'
+  ...
+# Subtest: orbital rings use visible phase movement, not the old near-static factor
+ok 18 - orbital rings use visible phase movement, not the old near-static factor
+  ---
+  duration_ms: 0.291999
+  type: 'test'
+  ...
+# Subtest: header and six live action tiles fit their boxes while legacy orbital controls stay available
+ok 19 - header and six live action tiles fit their boxes while legacy orbital controls stay available
+  ---
+  duration_ms: 0.496197
+  type: 'test'
+  ...
+# Subtest: battery, app CPU, RAM and GPU measurements remain honestly distinguished
+ok 20 - battery, app CPU, RAM and GPU measurements remain honestly distinguished
+  ---
+  duration_ms: 0.18622
+  type: 'test'
+  ...
+# Subtest: CCC1 integrated in same owner-app source without changing private app identity
+ok 21 - CCC1 integrated in same owner-app source without changing private app identity
+  ---
+  duration_ms: 0.314142
+  type: 'test'
+  ...
+# Subtest: existing on-device learning state and protected independent training are never reset by launch
+ok 22 - existing on-device learning state and protected independent training are never reset by launch
+  ---
+  duration_ms: 0.227062
+  type: 'test'
+  ...
+# Subtest: portrait selection keeps actual Fold window threshold and separate landscape rail
+ok 23 - portrait selection keeps actual Fold window threshold and separate landscape rail
+  ---
+  duration_ms: 0.927996
+  type: 'test'
+  ...
+# Subtest: seven live cards reflow in shared columns and remain inside scrolling content
+ok 24 - seven live cards reflow in shared columns and remain inside scrolling content
+  ---
+  duration_ms: 0.638281
+  type: 'test'
+  ...
+# Subtest: six controls stay below the shared hero and all real card data remains connected
+ok 25 - six controls stay below the shared hero and all real card data remains connected
+  ---
+  duration_ms: 0.744981
+  type: 'test'
+  ...
+# Subtest: Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling
+ok 26 - Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling
+  ---
+  duration_ms: 0.360542
+  type: 'test'
+  ...
+# Subtest: phone and Fold preserve renderer lifecycle through the shared adaptive layout
+ok 27 - phone and Fold preserve renderer lifecycle through the shared adaptive layout
+  ---
+  duration_ms: 0.196907
+  type: 'test'
+  ...
+# Subtest: the five beginner destinations stay reachable from the reference start screen
+ok 28 - the five beginner destinations stay reachable from the reference start screen
+  ---
+  duration_ms: 0.914646
+  type: 'test'
+  ...
+# Subtest: start-screen routes use real existing Android screens, not placeholder success actions
+ok 29 - start-screen routes use real existing Android screens, not placeholder success actions
+  ---
+  duration_ms: 0.351328
+  type: 'test'
+  ...
+# Subtest: advanced routes remain available from the start screen, its rail and the More sheet
+ok 30 - advanced routes remain available from the start screen, its rail and the More sheet
+  ---
+  duration_ms: 0.51175
+  type: 'test'
+  ...
+# Subtest: Nexus keeps real hologram and voice entry tied to Android speech and system state
+ok 31 - Nexus keeps real hologram and voice entry tied to Android speech and system state
+  ---
+  duration_ms: 0.383657
+  type: 'test'
+  ...
+# Subtest: fold, small display and enlarged-font behaviour are expressed by a pure policy
+ok 32 - fold, small display and enlarged-font behaviour are expressed by a pure policy
+  ---
+  duration_ms: 0.251619
+  type: 'test'
+  ...
+# Subtest: personalisation is a real choice and cannot silently train models or install apps
+ok 33 - personalisation is a real choice and cannot silently train models or install apps
+  ---
+  duration_ms: 0.227492
+  type: 'test'
+  ...
+# Subtest: start screen and chat never overlap after leaving or returning from chat
+ok 34 - start screen and chat never overlap after leaving or returning from chat
+  ---
+  duration_ms: 0.474434
+  type: 'test'
+  ...
+# Subtest: phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+ok 35 - phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+  ---
+  duration_ms: 1.22325
+  type: 'test'
+  ...
+# Subtest: home dashboard remains in a scrolling viewport, not hidden behind the navigation
+ok 36 - home dashboard remains in a scrolling viewport, not hidden behind the navigation
+  ---
+  duration_ms: 2.383757
+  type: 'test'
+  ...
+# Subtest: keyboard hides phone navigation and frees the same reserved space
+ok 37 - keyboard hides phone navigation and frees the same reserved space
+  ---
+  duration_ms: 0.242385
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 35
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 162.122185

@@ -1,0 +1,13 @@
+Independent quotation-selector review v1
+
+Frozen before execution:12 cases, corpus SHA2843d83946c9e2fec2fbb42826c410667ef77d72455b5d400c6569fc8406e40b. First execution on parent-provided linear sol314-window-host snapshot:11/12 pass. Source remained stable before/after SHA84fca0adf6e4a30f4643b647967d5a8fb788eca0e3c0e7a13c8f4235aaef2498. The source was an uncommitted working-tree snapshot; PROVENANCE.json records binary identity. This set became consumed after its failure was disclosed for fixing.
+
+P2:window-09 supplies a131-character matched word and maxChars80. Every possible window has score0 because no complete anchor fits. select still returns an80-character fragment of the word. Require a positive selected-window score or a complete-anchor check before returning. The first-run frozen expected result was null; no oracle was changed.
+
+Other cases passed exact source substring, source+snippet SHA256, bounded length, non-split surrogate pairs, and byte slice reconstruction with NFC/NFD/astral text. Cases also reject modified hashes, no overlap, similar numeric identifiers, oversize source/question. These are lexical/integrity checks, not factual answer-quality measurements.
+
+Source review:readSource validates a64-hex identifier and uses the existing bounded40KB readFile/filename/content hash checks. The EWM path reloads a full record by ID and checks its source SHA against the indexed record, so a truncated380-character index text is not paired with full-text offsets. Existing title and owner-memory precedence gates remain upstream. The formatter explicitly retains unverified-source and lexical-quote labels. No new source store, owner-fact promotion, model generation, authority or network action is introduced by this diff.
+
+Remaining integration-test gap:ContinuumBrainBridgeTest.baseline still calls compatibility archiveAnswer and unconditionally attaches archiveId. AgentActivity now calls archiveAnswerForQuestion, accepts null, and conditionally attaches archiveId. Update the helper and exercise null quotation fallback before claiming those tests cover the current app path. New readSource/full-window bridge tests were present but Android/Gradle/Render execution was not independently available in this review.
+
+Selector resource bounds:source<=6000UTF16 chars; question<=512; at most24 distinct query terms; quote80..1000 chars. The reviewed scoring code uses monotonic ranges and two token pointers, so repeated anchors do not trigger anchors*tokens rescanning. linear-resources.txt contains synthetic host JVM timings with21 measurements after4 warmups. No Android timing, source factuality, model quality or full integration success is claimed.

@@ -1,0 +1,304 @@
+TAP version 13
+# (node:151508) [TECHNICAL_REVOCATION_MIRROR_UNAVAILABLE] Warning: Technical experience withdrawal committed; experience ledger mirror unavailable.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: R01 distinct authorized current task recalls genuinely eligible synthetic history
+ok 1 - R01 distinct authorized current task recalls genuinely eligible synthetic history
+  ---
+  duration_ms: 335.60663
+  type: 'test'
+  ...
+# Subtest: R02 full4096 records revoke original history while separate current request remains authorized
+ok 2 - R02 full4096 records revoke original history while separate current request remains authorized
+  ---
+  duration_ms: 914.738527
+  type: 'test'
+  ...
+# Subtest: R03 canonical anchor survives ledger revocation-tail deletion
+ok 3 - R03 canonical anchor survives ledger revocation-tail deletion
+  ---
+  duration_ms: 501.511851
+  type: 'test'
+  ...
+# Subtest: R04 canonical anchor survives harmless replacement and public ledger rehash
+ok 4 - R04 canonical anchor survives harmless replacement and public ledger rehash
+  ---
+  duration_ms: 533.986392
+  type: 'test'
+  ...
+# Subtest: R05 canonical anchor tampered MAC fails closed with optional mirror absent
+ok 5 - R05 canonical anchor tampered MAC fails closed with optional mirror absent
+  ---
+  duration_ms: 327.056689
+  type: 'test'
+  ...
+# Subtest: R06 canonical anchor null is invalid, not absent
+ok 6 - R06 canonical anchor null is invalid, not absent
+  ---
+  duration_ms: 528.449685
+  type: 'test'
+  ...
+# Subtest: R07 complete anchor fields preserve canonical grant and idempotent withdrawal
+ok 7 - R07 complete anchor fields preserve canonical grant and idempotent withdrawal
+  ---
+  duration_ms: 446.917237
+  type: 'test'
+  ...
+# Subtest: R08 actual concurrent revokers produce one new anchor and retain valid grant
+ok 8 - R08 actual concurrent revokers produce one new anchor and retain valid grant
+  ---
+  duration_ms: 690.57951
+  type: 'test'
+  ...
+# Subtest: R09 changed canonical grant during RMW is preserved and withdrawal refuses
+ok 9 - R09 changed canonical grant during RMW is preserved and withdrawal refuses
+  ---
+  duration_ms: 401.644857
+  type: 'test'
+  ...
+# Subtest: R10 post-rename fsync failure never acknowledges; committed anchor blocks and retry durably acknowledges
+ok 10 - R10 post-rename fsync failure never acknowledges; committed anchor blocks and retry durably acknowledges
+  ---
+  duration_ms: 428.284524
+  type: 'test'
+  ...
+# Subtest: R11 SIGKILL during grant temporary-file fsync leaves fail-closed canonical lease
+ok 11 - R11 SIGKILL during grant temporary-file fsync leaves fail-closed canonical lease
+  ---
+  duration_ms: 376.763855
+  type: 'test'
+  ...
+# Subtest: R12 removed current task grant blocks previously eligible context
+ok 12 - R12 removed current task grant blocks previously eligible context
+  ---
+  duration_ms: 315.163788
+  type: 'test'
+  ...
+# Subtest: R13 current request ABORT blocks previously eligible context
+not ok 13 - R13 current request ABORT blocks previously eligible context
+  ---
+  duration_ms: 136.133506
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/canonical-anchor.test.mjs:36:1'
+  failureType: 'testCodeFailure'
+  error: 'invalid envelope: ABORT: reason and code OWNER|DEADLINE|BUDGET|ROUND_LIMIT|STALE_BASE|APPROVAL_DENIED|CAPABILITY_DENIED|PROTOCOL_VIOLATION'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    DurableTaskJournal.append (file:///tmp/momega1-memory-candidate-cf0f6a42/.github/continuum/ccc1-journal.mjs:100:28)
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/canonical-anchor.test.mjs:36:119)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: R14 valid current changed-source journal still cannot transfer old history
+ok 14 - R14 valid current changed-source journal still cannot transfer old history
+  ---
+  duration_ms: 166.78818
+  type: 'test'
+  ...
+# Subtest: R15 process-only false tier remains ineligible even with a valid disposable MAC
+ok 15 - R15 process-only false tier remains ineligible even with a valid disposable MAC
+  ---
+  duration_ms: 141.434828
+  type: 'test'
+  ...
+# (node:151509) [TECHNICAL_REVOCATION_MIRROR_UNAVAILABLE] Warning: Technical experience withdrawal committed; experience ledger mirror unavailable.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: C01 CONTRACT_TEST original MAC proof survives a separate Node restart
+ok 16 - C01 CONTRACT_TEST original MAC proof survives a separate Node restart
+  ---
+  duration_ms: 234.206248
+  type: 'test'
+  ...
+# Subtest: C02 cloned success objects cannot acquire production private brands
+ok 17 - C02 cloned success objects cannot acquire production private brands
+  ---
+  duration_ms: 11.368548
+  type: 'test'
+  ...
+# Subtest: C03 exact frozen production has no positive admission exports
+ok 18 - C03 exact frozen production has no positive admission exports
+  ---
+  duration_ms: 0.930307
+  type: 'test'
+  ...
+# Subtest: C04 a ledger-only rehash cannot authenticate substituted output
+ok 19 - C04 a ledger-only rehash cannot authenticate substituted output
+  ---
+  duration_ms: 11.613206
+  type: 'test'
+  ...
+# Subtest: C05 a valid proof copy under another task identity is ineligible
+ok 20 - C05 a valid proof copy under another task identity is ineligible
+  ---
+  duration_ms: 24.595114
+  type: 'test'
+  ...
+# Subtest: C06 changing model identity without the MAC is rejected after restart
+ok 21 - C06 changing model identity without the MAC is rejected after restart
+  ---
+  duration_ms: 163.519098
+  type: 'test'
+  ...
+# Subtest: C07 a rotated runtime key rejects old evidence
+ok 22 - C07 a rotated runtime key rejects old evidence
+  ---
+  duration_ms: 10.23924
+  type: 'test'
+  ...
+# Subtest: C08 changed valid journal head invalidates old evidence
+ok 23 - C08 changed valid journal head invalidates old evidence
+  ---
+  duration_ms: 453.623918
+  type: 'test'
+  ...
+# Subtest: C09 removed historical grant rejects old evidence
+ok 24 - C09 removed historical grant rejects old evidence
+  ---
+  duration_ms: 233.557803
+  type: 'test'
+  ...
+# Subtest: C10 changed historical grant fingerprint rejects old evidence
+ok 25 - C10 changed historical grant fingerprint rejects old evidence
+  ---
+  duration_ms: 11.512344
+  type: 'test'
+  ...
+# Subtest: C11 REQUIREMENT new requesting task without a current grant must not recall
+ok 26 - C11 REQUIREMENT new requesting task without a current grant must not recall
+  ---
+  duration_ms: 189.52561
+  type: 'test'
+  ...
+# Subtest: C12 narrow boundary excludes related changed-source task after restart
+ok 27 - C12 narrow boundary excludes related changed-source task after restart
+  ---
+  duration_ms: 143.731379
+  type: 'test'
+  ...
+# Subtest: C13 authenticated revocation is enforced after restart
+ok 28 - C13 authenticated revocation is enforced after restart
+  ---
+  duration_ms: 166.651875
+  type: 'test'
+  ...
+# Subtest: C14 REQUIREMENT removing only a complete revocation tail must not resurrect
+ok 29 - C14 REQUIREMENT removing only a complete revocation tail must not resurrect
+  ---
+  duration_ms: 260.880439
+  type: 'test'
+  ...
+# Subtest: C15 REQUIREMENT rewriting revocation as harmless record and rehashing must not resurrect
+ok 30 - C15 REQUIREMENT rewriting revocation as harmless record and rehashing must not resurrect
+  ---
+  duration_ms: 265.134831
+  type: 'test'
+  ...
+# Subtest: C16 malformed revocation MAC blocks entire recall
+ok 31 - C16 malformed revocation MAC blocks entire recall
+  ---
+  duration_ms: 165.970194
+  type: 'test'
+  ...
+# Subtest: C17 REQUIREMENT full record capacity must preserve revocation capability
+ok 32 - C17 REQUIREMENT full record capacity must preserve revocation capability
+  ---
+  duration_ms: 265.656314
+  type: 'test'
+  ...
+# Subtest: C18 record overflow cannot partially append
+ok 33 - C18 record overflow cannot partially append
+  ---
+  duration_ms: 92.103277
+  type: 'test'
+  ...
+# Subtest: C19 record-size bound rejects without creating ledger
+ok 34 - C19 record-size bound rejects without creating ledger
+  ---
+  duration_ms: 7.999314
+  type: 'test'
+  ...
+# Subtest: C20 byte-size bound rejects oversized existing ledger
+ok 35 - C20 byte-size bound rejects oversized existing ledger
+  ---
+  duration_ms: 25.094647
+  type: 'test'
+  ...
+# Subtest: C21 ledger corruption torn-last-line blocks recall
+ok 36 - C21 ledger corruption torn-last-line blocks recall
+  ---
+  duration_ms: 6.104609
+  type: 'test'
+  ...
+# Subtest: C21 ledger corruption invalid-utf8 blocks recall
+ok 37 - C21 ledger corruption invalid-utf8 blocks recall
+  ---
+  duration_ms: 4.275444
+  type: 'test'
+  ...
+# Subtest: C21 ledger corruption interior-json blocks recall
+ok 38 - C21 ledger corruption interior-json blocks recall
+  ---
+  duration_ms: 4.642209
+  type: 'test'
+  ...
+# Subtest: C21 ledger corruption duplicate-task blocks recall
+ok 39 - C21 ledger corruption duplicate-task blocks recall
+  ---
+  duration_ms: 5.200683
+  type: 'test'
+  ...
+# Subtest: C22 injected partial write never acknowledges and next reader blocks torn bytes
+ok 40 - C22 injected partial write never acknowledges and next reader blocks torn bytes
+  ---
+  duration_ms: 24.907686
+  type: 'test'
+  ...
+# Subtest: C23 fsync failure yields uncertain complete record without false acknowledgment
+ok 41 - C23 fsync failure yields uncertain complete record without false acknowledgment
+  ---
+  duration_ms: 3.641084
+  type: 'test'
+  ...
+# Subtest: C24 real processes concurrently append unique records then restart reads all
+ok 42 - C24 real processes concurrently append unique records then restart reads all
+  ---
+  duration_ms: 415.82936
+  type: 'test'
+  ...
+# Subtest: C25 SIGKILL during actual append preserves lease and blocks next writer
+ok 43 - C25 SIGKILL during actual append preserves lease and blocks next writer
+  ---
+  duration_ms: 2131.456575
+  type: 'test'
+  ...
+# Subtest: C26 one whole record omitted at tight output bound; age expired after restart
+ok 44 - C26 one whole record omitted at tight output bound; age expired after restart
+  ---
+  duration_ms: 254.491489
+  type: 'test'
+  ...
+# Subtest: C27 MAC provenance is trust in signer, not evidence of model inference
+ok 45 - C27 MAC provenance is trust in signer, not evidence of model inference
+  ---
+  duration_ms: 215.309225
+  type: 'test'
+  ...
+# Subtest: C28 historical identity remains labelled; API has no current model identity gate
+ok 46 - C28 historical identity remains labelled; API has no current model identity gate
+  ---
+  duration_ms: 16.64487
+  type: 'test'
+  ...
+1..46
+# tests 46
+# suites 0
+# pass 45
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6479.556238

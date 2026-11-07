@@ -1,0 +1,43 @@
+✔ opt-in verifier rejects a test-passing constant and feeds the counterexample into the same repair loop (757.948278ms)
+✔ independent research veto blocks completion even after primary tests passed (1092.354018ms)
+✔ a throwing optional verifier exhausts the fixed proposal budget without publishing a patch (572.321936ms)
+✔ unreadable proc cannot turn a live detached child into watchdog success (1863.511217ms)
+✔ repair profile requires a valid completion: confirmed (138.12634ms)
+✔ repair profile requires a valid completion: denied proc (1908.919918ms)
+✔ repair profile requires a valid completion: missing completion (134.525127ms)
+✔ repair profile requires a valid completion: wrong task (148.013138ms)
+✔ a supervisor signal cannot become success when the command exits zero on SIGTERM (360.365605ms)
+✔ a watched step passes streams, exit code and ending signal through unchanged (259.312212ms)
+✔ a spawnSync timeout still reads as a timeout and also ends the detached grandchild (1811.752629ms)
+✔ an owner abort ends a running step and its detached grandchild within seconds (851.302674ms)
+✔ a task aborted before the step starts never runs the command (48.202462ms)
+✔ a watched step stops when the waiting parent is gone (859.859272ms)
+✔ the watchdog refuses incomplete or relative arguments (247.570838ms)
+✔ an abort watch ends a running check profile and the chain never uses its result (835.940469ms)
+✔ actual offline Teamleader repairs a broken Git fixture and retains only a reviewable patch (380.901715ms)
+✔ scheduled owner task completes full real Git repair and independent verification (557.166435ms)
+✔ actual passing Git fixture generates no fake repair, patch, or changed source (125.114975ms)
+✔ actual offline Teamleader completes a priority investigation with real Git checks and evidence (255.548615ms)
+✔ bounded process executes argv directly and reports its actual exit (33.936585ms)
+✔ timeout kills the process group and never reports success (430.06063ms)
+✔ owner cancellation is asynchronous and cannot become a successful exit (381.863602ms)
+✔ the signal that ended the direct child is reported, an exit code is not (51.103459ms)
+✔ oversized process logs are bounded and fail closed (302.895856ms)
+✔ cancellation also stops a child that detached like the Gradle daemon (630.90611ms)
+✔ inherited run identity catches a rapidly orphaned detached child on linux (315.090256ms)
+✔ inherited run identity catches a rapidly orphaned detached child on android (310.841222ms)
+✔ an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup (35.160389ms)
+✔ an unreadable process younger than the run blocks a confirmed cleanup (1807.995189ms)
+✔ unreadable proc stat is not confused with an exited process (1787.711789ms)
+✔ denied proc access still stops its direct child and returns a bounded unconfirmed timeout (1862.506149ms)
+✔ a reused root PID cannot hide an earlier detached descendant from cleanup (440.267491ms)
+✔ incomplete proc scans are retried within the cleanup bound: transient (301.158109ms)
+✔ incomplete proc scans are retried within the cleanup bound: persistent (1806.266293ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14464.708786

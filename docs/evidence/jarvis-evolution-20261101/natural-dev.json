@@ -1,0 +1,41 @@
+{
+  "naturalBinding": true,
+  "checkpointBytes": 32932,
+  "trainNllAfter": 0.009566268307629768,
+  "dev": [
+    {
+      "evidence": "Eva ist in Bern. Otto ist in Kiel.",
+      "question": "Wo ist Eva?",
+      "expected": "Bern",
+      "prediction": "Bern"
+    },
+    {
+      "evidence": "Eva ist in Bern. Otto ist in Kiel.",
+      "question": "Wo ist Otto?",
+      "expected": "Kiel",
+      "prediction": "Kiel"
+    },
+    {
+      "evidence": "Otto ist in Bern. Eva ist in Kiel.",
+      "question": "Wo ist Eva?",
+      "expected": "Kiel",
+      "prediction": "Kiel"
+    },
+    {
+      "evidence": "Eva ist nicht in Bern.",
+      "question": "Wo ist Eva?",
+      "expected": null,
+      "prediction": null
+    },
+    {
+      "evidence": "Eva ist in Bern.",
+      "question": "Wo ist Otto?",
+      "expected": null,
+      "prediction": null
+    }
+  ],
+  "trainingItems": 64,
+  "trainNllBefore": 1.4555404591981465,
+  "steps": 3200,
+  "elapsedMs": 2482.735393
+}

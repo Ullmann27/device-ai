@@ -1,0 +1,29 @@
+COMMAND ["gradle", "--no-daemon", "--max-workers=2", "--console=plain", "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m", "-Pkotlin.compiler.execution.strategy=in-process", "-PdeviceAiMentorPreview=true", "-PcontinuumStandaloneVersionCode=48", "-PcontinuumLocalRenderUnsigned=true", "-PcontinuumOwnerArm64=true", ":app:assembleRelease", ":app:bundleRelease"]
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=44449 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=44449 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+[0.002s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/32 because it is locked by another process (errno = 11)
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Gradle could not start your build.
+> Cannot create service of type BuildSessionActionExecutor using method LauncherServices$ToolingBuildSessionScopeServices.createActionExecutor() as there is a problem with parameter #21 of type BuildLifecycleAwareVirtualFileSystem.
+   > Cannot create service of type BuildLifecycleAwareVirtualFileSystem using method VirtualFileSystemServices$GradleUserHomeServices.createVirtualFileSystem() as there is a problem with parameter #1 of type FileWatchingFilter.
+      > Cannot create service of type FileWatchingFilter using method VirtualFileSystemServices$GradleUserHomeServices.createFileWatchingFilter() as there is a problem with parameter #1 of type GlobalCacheLocations.
+         > Cannot create service of type GlobalCacheLocations using method GradleUserHomeScopeServices.createGlobalCacheLocations() as there is a problem with parameter #1 of type List<GlobalCache>.
+            > Could not create service of type FileAccessTimeJournal using GradleUserHomeScopeServices.createFileAccessTimeJournal().
+               > Timeout waiting to lock journal cache (/workspace/scratch/b31a9d731016/build-env/gradle-cache/caches/journal-1). It is currently in use by another Gradle instance.
+                 Owner PID: 75
+                 Our PID: 75
+                 Owner Operation: 
+                 Our operation: 
+                 Lock file: /workspace/scratch/b31a9d731016/build-env/gradle-cache/caches/journal-1/journal-1.lock
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1m 4s

@@ -59,7 +59,7 @@ class DeviceTeamleaderStatusStore(private val base: File) {
         if (path.exists()) read()
         require(s.state in setOf("READY", "DEFERRED", "ERROR"))
         require(s.reason in setOf("OK", "CANCELLED", "BATTERY_LOW", "BATTERY_UNKNOWN", "THERMAL_LIMIT",
-            "STORAGE_LOW", "CHECK_FAILED", "TIME_BUDGET", "WORKER_BUSY"))
+            "STORAGE_LOW", "CHECK_FAILED", "TIME_BUDGET", "WORKER_BUSY", "OWNER_AUTONOMY_RESTRICTED"))
         require(s.checkedAt >= 0 && s.recoveredClaims >= 0 && s.readyTasks >= 0 &&
             s.failedTasks >= 0 && s.swb1Updates >= 0 && s.cre1Steps >= 0)
         require(s.nextTaskId == null || Regex("[a-z][a-z0-9-]{2,63}").matches(s.nextTaskId))
@@ -107,7 +107,7 @@ class DeviceTeamleaderStatusStore(private val base: File) {
             cells[7].toInt(), cells[8].takeUnless { it == "-" }, cells[9])
         require(snapshot.state in setOf("READY", "DEFERRED", "ERROR"))
         require(snapshot.reason in setOf("OK", "CANCELLED", "BATTERY_LOW", "BATTERY_UNKNOWN", "THERMAL_LIMIT",
-            "STORAGE_LOW", "CHECK_FAILED", "TIME_BUDGET", "WORKER_BUSY"))
+            "STORAGE_LOW", "CHECK_FAILED", "TIME_BUDGET", "WORKER_BUSY", "OWNER_AUTONOMY_RESTRICTED"))
         require(snapshot.checkedAt >= 0 && snapshot.recoveredClaims >= 0 &&
             snapshot.readyTasks >= 0 && snapshot.failedTasks >= 0 &&
             snapshot.swb1Updates >= 0 && snapshot.cre1Steps >= 0)
@@ -192,7 +192,7 @@ class DeviceTeamleader(
 
     fun defer(reason: String): DeviceTeamleaderSnapshot {
         require(reason in setOf("CANCELLED", "BATTERY_LOW", "BATTERY_UNKNOWN", "THERMAL_LIMIT",
-            "STORAGE_LOW", "TIME_BUDGET"))
+            "STORAGE_LOW", "TIME_BUDGET", "OWNER_AUTONOMY_RESTRICTED"))
         if (!CYCLE_LOCK.tryLock()) return DeviceTeamleaderSnapshot(now(), "DEFERRED",
             0, 0, 0, 0, 0, null, "WORKER_BUSY")
         try {

@@ -1,0 +1,151 @@
+{
+  "experiment_id": "COMPLETED-CONNECTIONS-822E-R3-AVATAR-LAYOUT",
+  "integration_base": "f4b0a403b4e51fc0b0df5d697345d6f94308af05",
+  "layout": {
+    "source_pr": 524,
+    "source_commit": "235d764f790dee7685c6590cf0a5d07d1fafdce2",
+    "source_tree": "d8e90f166206a966405c6c5fe6ed608a9980f0a3",
+    "fix_commit": "652e6e30e63a427546c6a30988906c351406be25",
+    "source_handoff": "https://github.com/Ullmann27/device-ai/blob/235d764f790dee7685c6590cf0a5d07d1fafdce2/docs/research/omega/G1-R6-LANDSCAPE-832-REPAIR-20261104.md",
+    "files": [
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+        "git_blob": "245c8c94abdadbe065138561d2c9a2901456b3c2"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeTargetPrecisionChecks.kt",
+        "git_blob": "5ca3700d084a3914fba23526ef9309b02cc3f0fc"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeTargetPrecisionTest.kt",
+        "git_blob": "cae7403e7291b61cf435679c03c4e6a0756a2503"
+      },
+      {
+        "path": "docs/evidence/g1-r6-landscape-20261104/ConstantsOnly.kt",
+        "git_blob": "0ef3b1cd1f7b7072d5f64eaf2682133d8ae70ed8"
+      },
+      {
+        "path": "docs/evidence/g1-r6-landscape-20261104/PrecisionRunner.kt",
+        "git_blob": "ec7f43aa31bd88e83560ae10dba6c21efb81716d"
+      },
+      {
+        "path": "docs/evidence/g1-r6-landscape-20261104/README.md",
+        "git_blob": "0e0fa849114e92069e19ee2ebef9d1a828af9c5a"
+      }
+    ],
+    "checks": {
+      "exact_git_blob_identity": "PASS",
+      "original_geometry_test_unchanged": "PASS",
+      "git_diff_check": "PASS",
+      "host_precision_replay": "NOT_RUN",
+      "android_junit": "NOT_RUN",
+      "android_lint": "NOT_RUN"
+    },
+    "rollback": "Revert this bounded integration commit."
+  },
+  "avatar": {
+    "source_pr": 521,
+    "source_commit": "2350866904cb82484148c0c8c63416fa51034269",
+    "source_tree": "c26e1f73d49901c7e9beb6f5fe8b639e5736702a",
+    "local_committed_tree_twin": "a6f0b09bf53229ef40f039e0418e811852d32a11",
+    "completed_package_commit": "653a885435d95a19f341a80a89be1e9fbeccf1f1",
+    "completed_package_tree": "7c77cd3bebcdf89b28993f18642ebb45f4ed03d8",
+    "remote_tree_verification_url": "https://api.github.com/repos/Ullmann27/device-ai/git/commits/2350866904cb82484148c0c8c63416fa51034269",
+    "source_handoff": "https://github.com/Ullmann27/device-ai/blob/2350866904cb82484148c0c8c63416fa51034269/docs/research/omega/REFERENCE-AVATAR-V2-HANDOFF-20261104.md",
+    "files": [
+      {
+        "path": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+        "git_blob": "0706c119b99021b81696153985b0a1b53e375c3e",
+        "bytes": 12552372,
+        "sha256": "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145"
+      },
+      {
+        "path": "app/src/main/assets/avatar3d/NOTICE.json",
+        "git_blob": "da8b96fb429087edd44ffc652e46ac89c92a10eb",
+        "bytes": 3281,
+        "sha256": "fb07b7b96aaebda7c223357150783ba7fb2fc4f83efad5cc4522191b6b9512f0"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt",
+        "git_blob": "8eeca53d1db0bb47577c5d0175ded69e159d4498",
+        "bytes": 17493,
+        "sha256": "1f416d4ba9c5865550a225e66deb86e893143a7ff5530d06d59772950a05d269"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarAssetProvenanceTest.kt",
+        "git_blob": "a3edaf4c426dd1ae67e9c6abd3fb2c31b753e9d0",
+        "bytes": 1306,
+        "sha256": "bb9a0256e64d091c6d448ea1e8dc0f2216ce552812113c703f65bd070a76adfb"
+      },
+      {
+        "path": "assets/avatar/reference/continuum-neural-front-20261104.png",
+        "git_blob": "ed9ca3a5b0e66682a915a514f66b338d715b325a",
+        "bytes": 1944527,
+        "sha256": "0ca742ef92bb9db1bd012df7677594c37b58e77c40e4fc92a946e8e0fb886b1e"
+      },
+      {
+        "path": "assets/avatar/reference/continuum-neural-front-20261104.provenance.json",
+        "git_blob": "0c38a8f4761e8322d4f915cadf1c52f2aeba927f",
+        "bytes": 1085,
+        "sha256": "72223a3e4f0c2e395f1ad15fa2eeaab7ea165c2d018e5d5ad0c74b7407288f1d"
+      },
+      {
+        "path": "tools/avatar-3d/reference-atlas/README.md",
+        "git_blob": "7842e24a2c649bf80682ff1e0493664dce7915ad",
+        "bytes": 10204,
+        "sha256": "98a0d7a4a5cb289ce230f55cdb9597deddcb097647efa7e8c20f25ff3b98a812"
+      },
+      {
+        "path": "tools/avatar-3d/reference-atlas/build_reference_avatar.py",
+        "git_blob": "ee1eb00852546c3e8b599d8c35322e10b0322203",
+        "bytes": 26462,
+        "sha256": "159a64f34c392170d738e55c917ab91415005ace1b4107063653e0ad59fb914e"
+      },
+      {
+        "path": "tools/avatar-3d/reference-atlas/verify-reference-candidate.py",
+        "git_blob": "f01dc28820309995b25c0b55d7fa0670b67a021a",
+        "bytes": 18824,
+        "sha256": "b70cb4b99835cbc171e9def8c4d15c63e3a2bc30e7f9cea6fe468e2c1528e434"
+      },
+      {
+        "path": "tools/avatar-3d/reference-atlas/render_reference_avatar.py",
+        "git_blob": "bd2ef0c1e560798fa16eaa903fe257618bea48f2",
+        "bytes": 7112,
+        "sha256": "d7b90d4997033279fb3c54078f220a5717735df10209d78d095a72bd60a0d66b"
+      },
+      {
+        "path": "tools/avatar-3d/reference-atlas/render-production-poses.py",
+        "git_blob": "33d07d8ccafddd903232021c2d39bcb485b121f5",
+        "bytes": 15207,
+        "sha256": "0bc1273ddf7104e28f611a17afa043de90ba4e92a8def4aeca39ee023cad42ee"
+      },
+      {
+        "path": "tools/avatar-3d/reference-atlas/ExportAvatarReviewPoses.kt",
+        "git_blob": "74eb3fd1eca06251737b20065d97d3731e9cd3c3",
+        "bytes": 6414,
+        "sha256": "bf40bfc73bc3718048fec520823f9b2a110948b2f45c3cbbd5f0d56b0b431892"
+      }
+    ],
+    "status": "COMPLETED_PACKAGED_REFERENCE_IMPORTED",
+    "excluded": [
+      "Unpackaged owner head-correction candidate added by pinned #521 commit",
+      "All #526 WIP avatar-alive changes",
+      "Historical large render and video artifacts"
+    ],
+    "checks": {
+      "exact_committed_git_blob_identity": "PASS",
+      "actual_bytes_runtime_notice": "PASS",
+      "geometry_and_all_21_morphs": "PASS",
+      "node_rig_inverse_bind_preservation": "PASS",
+      "embedded_atlas_hash": "PASS",
+      "runtime_contract_only_pin_changed": "PASS",
+      "current_callers_preserved": "PASS",
+      "full_rebuild_and_render": "NOT_RUN",
+      "android_junit": "NOT_RUN",
+      "android_lint": "NOT_RUN",
+      "native_device": "NOT_RUN"
+    },
+    "actual_check_receipt": "asset-checks.json",
+    "rollback": "Revert this avatar integration commit as a unit: GLB, hash, NOTICE, source texture and reproduction files."
+  }
+}

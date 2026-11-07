@@ -1,0 +1,10 @@
+{
+  "command": [
+    "/workspace/scratch/b31a9d731016/build-env/jdk17-pinned/bin/java",
+    "-cp",
+    "/workspace/scratch/b31a9d731016/output-completion-evidence/red-deadline/tests.jar:/workspace/scratch/b31a9d731016/build-env/test-libs/junit-4.13.2.jar:/workspace/scratch/b31a9d731016/build-env/test-libs/hamcrest-core-1.3.jar:/workspace/scratch/b31a9d731016/build-env/kotlinc/lib/kotlin-stdlib.jar",
+    "org.junit.runner.JUnitCore",
+    "at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicyTest"
+  ],
+  "exit": 1
+}

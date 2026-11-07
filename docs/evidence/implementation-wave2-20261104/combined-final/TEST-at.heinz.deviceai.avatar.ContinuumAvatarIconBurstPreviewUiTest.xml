@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar.ContinuumAvatarIconBurstPreviewUiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:36:34" hostname="04c8b0ba7ea6" time="0.114">
+  <properties/>
+  <testcase name="iconBurstFliesOutAndEnds" classname="at.heinz.deviceai.avatar.ContinuumAvatarIconBurstPreviewUiTest" time="0.114"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

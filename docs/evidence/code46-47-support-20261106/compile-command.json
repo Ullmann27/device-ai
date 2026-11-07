@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/jdk17/bin/java",
+    "-Xms32m",
+    "-Xmx256m",
+    "-XX:MaxMetaspaceSize=128m",
+    "-XX:ActiveProcessorCount=1",
+    "-XX:-UsePerfData",
+    "-cp",
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/kotlin-2.4.0/kotlinc/lib/*",
+    "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+    "-no-stdlib",
+    "-no-reflect",
+    "-jvm-target",
+    "17",
+    "-module-name",
+    "code47_decision_conflict_test",
+    "-classpath",
+    "/workspace/scratch/b31a9d731016/device-ai-build-help/app/build/tmp/kotlin-classes/debug:/workspace/scratch/19c84cfe59f9/build-env/toolchain/kotlin-2.4.0/kotlinc/lib/kotlin-stdlib.jar:/workspace/scratch/b31a9d731016/build-check/gradle-cache/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar",
+    "-Xfriend-paths=/workspace/scratch/b31a9d731016/device-ai-build-help/app/build/tmp/kotlin-classes/debug",
+    "-d",
+    "/workspace/scratch/b31a9d731016/decision-conflict-evidence/fixed-classes",
+    "/workspace/scratch/b31a9d731016/decision-conflict-fix/app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigest.kt",
+    "/workspace/scratch/b31a9d731016/decision-conflict-fix/app/src/test/java/at/heinz/deviceai/cognitive/LocalDecisionPromptDigestTest.kt"
+  ],
+  "exit_code": 0
+}

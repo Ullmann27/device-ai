@@ -1,0 +1,21 @@
+FAIL actual-v1-fixture-migrates-without-losing-identities-or-notes: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationStorageChecks.main$lambda$0(ConversationStorageChecks.kt:77)
+	at at.heinz.deviceai.chief.ConversationStorageChecks.test(ConversationStorageChecks.kt:24)
+	at at.heinz.deviceai.chief.ConversationStorageChecks.main(ConversationStorageChecks.kt:63)
+FAIL validly-hashed-foreign-conversation-object-cannot-be-rebound: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationStorageChecks.main$lambda$1(ConversationStorageChecks.kt:89)
+	at at.heinz.deviceai.chief.ConversationStorageChecks.test(ConversationStorageChecks.kt:24)
+	at at.heinz.deviceai.chief.ConversationStorageChecks.main(ConversationStorageChecks.kt:85)
+FAIL missing-conversation-object-does-not-silently-reset: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationStorageChecks.main$lambda$2(ConversationStorageChecks.kt:104)
+	at at.heinz.deviceai.chief.ConversationStorageChecks.test(ConversationStorageChecks.kt:24)
+	at at.heinz.deviceai.chief.ConversationStorageChecks.main(ConversationStorageChecks.kt:101)
+RESULT passed=0 failed=3; persistence software tests; actual model NOT_RUN
+Exception in thread "main" java.lang.IllegalStateException: Check failed.
+	at at.heinz.deviceai.chief.ConversationStorageChecks.main(ConversationStorageChecks.kt:112)

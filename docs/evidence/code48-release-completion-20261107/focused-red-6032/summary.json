@@ -1,0 +1,80 @@
+{
+  "status": "FAIL",
+  "tests": 77,
+  "passed": 75,
+  "failures": 2,
+  "errors": 0,
+  "skipped": 0,
+  "suites": [
+    {
+      "name": "at.heinz.deviceai.ContinuumBrainHypothesisUiTest",
+      "tests": "2",
+      "failures": "2",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumSourceRoundJournalTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumSourceNoveltyTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumLearningCoreTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.RecoveredContextCredentialBoundaryTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.BrainOrbSignalsTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContextCredentialFramingTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContextCredentialHoldoutTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumSourceRoundRecoveryTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ]
+}

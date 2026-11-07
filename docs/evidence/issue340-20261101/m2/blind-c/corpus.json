@@ -1,0 +1,1312 @@
+{
+  "cases": [
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 24,
+        "revision": 1,
+        "sha256": "4ae999a2d5f4394b67bfc41dee95fedfd2b8670e73eae28827b0c1b537cc1eb4",
+        "sourceId": "bc:C001:s1",
+        "start": 16,
+        "text": "Uvgegenu"
+      },
+      "id": "C001",
+      "question": "Wo ist Zybupeza?",
+      "sources": [
+        {
+          "revision": 1,
+          "sha256": "4ae999a2d5f4394b67bfc41dee95fedfd2b8670e73eae28827b0c1b537cc1eb4",
+          "sourceId": "bc:C001:s1",
+          "text": "Zybupeza ist in Uvgegenu."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 81,
+        "revision": 2,
+        "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+        "sourceId": "bc:C002:s1",
+        "start": 64,
+        "text": "Uvlafeci Uvvaputi"
+      },
+      "id": "C002",
+      "question": "Wo wohnt Zyfitoti?",
+      "sources": [
+        {
+          "revision": 2,
+          "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+          "sourceId": "bc:C002:s1",
+          "text": "Qeruvile wohnt in Uvnapulu Uvgusuci Uvvelara, Zyfitoti wohnt in Uvlafeci Uvvaputi."
+        },
+        {
+          "revision": 3,
+          "sha256": "cb2ccdca37929a4ee8c5a1730e4274a5cf88063ccfb9f048c8e97d46638b7237",
+          "sourceId": "bc:C002:s2",
+          "text": "Qedugoka wohnt in Uvsisaku. Qehelupu wohnt in Uvgocofi."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 43,
+        "revision": 4,
+        "sha256": "95cd8adf136b8c3a05ea0374341514e2620ac48237233a79eedc4bf73a4641c0",
+        "sourceId": "bc:C003:s2",
+        "start": 17,
+        "text": "Uvdakezu Uvjerazo Uvjujuce"
+      },
+      "id": "C003",
+      "question": "Wo lebt Zygasubu?",
+      "sources": [
+        {
+          "revision": 3,
+          "sha256": "75d795b5b2fc6dd89f1849c727c606b1f21245dc0f18c23d8954fb2143a89e52",
+          "sourceId": "bc:C003:s1",
+          "text": "Qegujonu lebt in Uvpebani. Qesativa lebt in Uvbifoke."
+        },
+        {
+          "revision": 4,
+          "sha256": "95cd8adf136b8c3a05ea0374341514e2620ac48237233a79eedc4bf73a4641c0",
+          "sourceId": "bc:C003:s2",
+          "text": "Zygasubu lebt in Uvdakezu Uvjerazo Uvjujuce und Qegugeci lebt in Uvlucure."
+        },
+        {
+          "revision": 5,
+          "sha256": "35d4650e4f8635d53a34ebe62d71b44f9d30cf17f7c722cc6d4b5776c9b6fb96",
+          "sourceId": "bc:C003:s3",
+          "text": "Qevelofe lebt in Uvkavepa. Qesativa lebt in Uvbifoke."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 63,
+        "revision": 6,
+        "sha256": "ee900245090806659aba9bf25e639da2980ffe6684a84e16cee099bf8b90ff48",
+        "sourceId": "bc:C004:s3",
+        "start": 55,
+        "text": "Uvvagaja"
+      },
+      "id": "C004",
+      "question": "Wo steht Zybupiso?",
+      "sources": [
+        {
+          "revision": 4,
+          "sha256": "270684b0c708ae1afee3c05f4674acc27d64985d7ec6c2085fe2dd9f1df7818a",
+          "sourceId": "bc:C004:s1",
+          "text": "Qemizopo steht in Uvtiburu. Qefofave steht in Uvvinamu."
+        },
+        {
+          "revision": 5,
+          "sha256": "25eebe791de7cac969ffb6d7a37f414b2e473e33956f68bb23577d90d16bbb5d",
+          "sourceId": "bc:C004:s2",
+          "text": "Qehulalo steht in Uvjetadu. Qefofave steht in Uvvinamu."
+        },
+        {
+          "revision": 6,
+          "sha256": "ee900245090806659aba9bf25e639da2980ffe6684a84e16cee099bf8b90ff48",
+          "sourceId": "bc:C004:s3",
+          "text": "Qecununu steht in Uvlavemu Uvgujifo; Zybupiso steht in Uvvagaja."
+        },
+        {
+          "revision": 7,
+          "sha256": "a4d77cc20c1e3e64914b79b1a84aedc4caa8c6b3e9ed5cf4b5959b1e8f840d7c",
+          "sourceId": "bc:C004:s4",
+          "text": "Qelilile steht in Uvzamuza. Qefofave steht in Uvvinamu."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 77,
+        "revision": 5,
+        "sha256": "e8680d24585d418bccf235e8e6783f2be5b2f3dcc9756abb7bf6cdf5eb2ffa14",
+        "sourceId": "bc:C005:s1",
+        "start": 60,
+        "text": "Uvvevohi Uvfokeza"
+      },
+      "id": "C005",
+      "question": "Wo ist Zynudeva?",
+      "sources": [
+        {
+          "revision": 5,
+          "sha256": "e8680d24585d418bccf235e8e6783f2be5b2f3dcc9756abb7bf6cdf5eb2ffa14",
+          "sourceId": "bc:C005:s1",
+          "text": "Qegagoni ist in Uvdujoge Uvvohema Uvmegabi. Zynudeva ist in Uvvevohi Uvfokeza."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 44,
+        "revision": 6,
+        "sha256": "9a78620c1d5be63ce0d206c58f612e59886923a23d195e9e2ce137e3f55f9ca7",
+        "sourceId": "bc:C006:s1",
+        "start": 18,
+        "text": "Uvbuguba Uvriledu Uvpafoha"
+      },
+      "id": "C006",
+      "question": "Wo wohnt Zylifuku?",
+      "sources": [
+        {
+          "revision": 6,
+          "sha256": "9a78620c1d5be63ce0d206c58f612e59886923a23d195e9e2ce137e3f55f9ca7",
+          "sourceId": "bc:C006:s1",
+          "text": "Zylifuku wohnt in Uvbuguba Uvriledu Uvpafoha."
+        },
+        {
+          "revision": 7,
+          "sha256": "4ed67f3a57a8f3463ff94eb2f647ae5de78ed3452d7f57bf8400a15043c94940",
+          "sourceId": "bc:C006:s2",
+          "text": "Qepahoka wohnt in Uvjanuza. Qedesuve wohnt in Uvgusura."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 61,
+        "revision": 1,
+        "sha256": "8ebf4cab494068d9ec4ae20e1e0bad9b33d59c47ea03a7218fb706feab0d4c57",
+        "sourceId": "bc:C007:s2",
+        "start": 53,
+        "text": "Uvtolasa"
+      },
+      "id": "C007",
+      "question": "Wo lebt Zyrufavo?",
+      "sources": [
+        {
+          "revision": 7,
+          "sha256": "f0fdeadf5cfa90a7c04f6892b5e45eacb7331b36ebbed08377a78ae16dcded15",
+          "sourceId": "bc:C007:s1",
+          "text": "Qejedobe lebt in Uvcobepo. Qepogiro lebt in Uvnejure."
+        },
+        {
+          "revision": 1,
+          "sha256": "8ebf4cab494068d9ec4ae20e1e0bad9b33d59c47ea03a7218fb706feab0d4c57",
+          "sourceId": "bc:C007:s2",
+          "text": "Qefopeci lebt in Uvpuzubi Uvcokujo, Zyrufavo lebt in Uvtolasa."
+        },
+        {
+          "revision": 2,
+          "sha256": "db789bbf75e76a0dbe392d96956dfc8863d15154e6a04dc5755c7f283a1198de",
+          "sourceId": "bc:C007:s3",
+          "text": "Qehovufi lebt in Uvjokede. Qepogiro lebt in Uvnejure."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 35,
+        "revision": 3,
+        "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+        "sourceId": "bc:C008:s3",
+        "start": 18,
+        "text": "Uvhiloza Uvjogeka"
+      },
+      "id": "C008",
+      "question": "Wo steht Zyvibaru?",
+      "sources": [
+        {
+          "revision": 1,
+          "sha256": "8e79ef8b6959d5d9566991e20555aedb03cf1d92139fce3b884972df33082764",
+          "sourceId": "bc:C008:s1",
+          "text": "Qetogate steht in Uvnogacu. Qecohucu steht in Uvgagica."
+        },
+        {
+          "revision": 2,
+          "sha256": "869457b1a4f129948e64b065f115b9ef81205b8dcb21e66db0dce15a243ac56e",
+          "sourceId": "bc:C008:s2",
+          "text": "Qegejunu steht in Uvrakico. Qecohucu steht in Uvgagica."
+        },
+        {
+          "revision": 3,
+          "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+          "sourceId": "bc:C008:s3",
+          "text": "Zyvibaru steht in Uvhiloza Uvjogeka und Qezonuca steht in Uvtubufi Uvnefobe Uvbohega."
+        },
+        {
+          "revision": 4,
+          "sha256": "2bedd37aab77d167e992f295d4dc98f0af48d01ba913aa378029f811b3df97ea",
+          "sourceId": "bc:C008:s4",
+          "text": "Qekujite steht in Uvmezore. Qecohucu steht in Uvgagica."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 68,
+        "revision": 2,
+        "sha256": "15c2af6eedf7206550a5514405bee4240fb1f151ba6522a87195fa5cb0fc3240",
+        "sourceId": "bc:C009:s1",
+        "start": 42,
+        "text": "Uvtobani Uvcomovu Uvzozima"
+      },
+      "id": "C009",
+      "question": "Wo ist Zyrobala?",
+      "sources": [
+        {
+          "revision": 2,
+          "sha256": "15c2af6eedf7206550a5514405bee4240fb1f151ba6522a87195fa5cb0fc3240",
+          "sourceId": "bc:C009:s1",
+          "text": "Qetihetu ist in Uvnoritu; Zyrobala ist in Uvtobani Uvcomovu Uvzozima."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 63,
+        "revision": 3,
+        "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+        "sourceId": "bc:C010:s1",
+        "start": 55,
+        "text": "Uvgemeta"
+      },
+      "id": "C010",
+      "question": "Wo wohnt Zymokaca?",
+      "sources": [
+        {
+          "revision": 3,
+          "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+          "sourceId": "bc:C010:s1",
+          "text": "Qedunanu wohnt in Uvbimuse Uvdacabi. Zymokaca wohnt in Uvgemeta."
+        },
+        {
+          "revision": 4,
+          "sha256": "07c1a6be7d81210bfbb9786dc2261b3f4e75c71d2911ed3ad7cf51170b2b0c28",
+          "sourceId": "bc:C010:s2",
+          "text": "Qevokifu wohnt in Uvcaduve. Qefobuhu wohnt in Uvjoceto."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 34,
+        "revision": 5,
+        "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+        "sourceId": "bc:C011:s2",
+        "start": 17,
+        "text": "Uvkunoji Uvrataba"
+      },
+      "id": "C011",
+      "question": "Wo lebt Zynavopi?",
+      "sources": [
+        {
+          "revision": 4,
+          "sha256": "169370189aec9a012e2fd13d840d001563546f156c16e857035c3f34396aecbe",
+          "sourceId": "bc:C011:s1",
+          "text": "Qeditika lebt in Uvmaromi. Qejakase lebt in Uvpikemu."
+        },
+        {
+          "revision": 5,
+          "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+          "sourceId": "bc:C011:s2",
+          "text": "Zynavopi lebt in Uvkunoji Uvrataba."
+        },
+        {
+          "revision": 6,
+          "sha256": "9200b70093c59956b146ded3d42701754effe8666b36772b1071d06e0da43c4b",
+          "sourceId": "bc:C011:s3",
+          "text": "Qekovufe lebt in Uvgopuri. Qejakase lebt in Uvpikemu."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 72,
+        "revision": 7,
+        "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+        "sourceId": "bc:C012:s3",
+        "start": 46,
+        "text": "Uvnebaka Uvjibile Uvlogase"
+      },
+      "id": "C012",
+      "question": "Wo steht Zysenodu?",
+      "sources": [
+        {
+          "revision": 5,
+          "sha256": "9683f06695ff654acba09f27bedeea45f559072b14bf4262a38ee0fa08df1cb3",
+          "sourceId": "bc:C012:s1",
+          "text": "Qerukaje steht in Uvzojatu. Qecemasa steht in Uvsabuli."
+        },
+        {
+          "revision": 6,
+          "sha256": "792a1fde4660f6a3e1448e611c8ad11cf713fac9b2522451fb9065832912d64b",
+          "sourceId": "bc:C012:s2",
+          "text": "Qebejude steht in Uvcitavu. Qecemasa steht in Uvsabuli."
+        },
+        {
+          "revision": 7,
+          "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+          "sourceId": "bc:C012:s3",
+          "text": "Qemonocu steht in Uvjaloti, Zysenodu steht in Uvnebaka Uvjibile Uvlogase."
+        },
+        {
+          "revision": 1,
+          "sha256": "4f95296d8656fc444e498733e3d82efe56a6b87a8767471a21f07e71d116d8d6",
+          "sourceId": "bc:C012:s4",
+          "text": "Qetidiga steht in Uvbucaca. Qecemasa steht in Uvsabuli."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 24,
+        "revision": 6,
+        "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+        "sourceId": "bc:C013:s1",
+        "start": 16,
+        "text": "Uvgedozu"
+      },
+      "id": "C013",
+      "question": "Wo ist Zydohedi?",
+      "sources": [
+        {
+          "revision": 6,
+          "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+          "sourceId": "bc:C013:s1",
+          "text": "Zydohedi ist in Uvgedozu und Qebulefu ist in Uvkevuza Uvruvege."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 81,
+        "revision": 7,
+        "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+        "sourceId": "bc:C014:s1",
+        "start": 64,
+        "text": "Uvpubuca Uvcomite"
+      },
+      "id": "C014",
+      "question": "Wo wohnt Zycihizo?",
+      "sources": [
+        {
+          "revision": 7,
+          "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+          "sourceId": "bc:C014:s1",
+          "text": "Qebumuri wohnt in Uvtahofo Uvrufegi Uvzoruji; Zycihizo wohnt in Uvpubuca Uvcomite."
+        },
+        {
+          "revision": 1,
+          "sha256": "76410c033cbb6c167077df128613b8fc8b7b87ddcb4f152d6cd7511eabbb1049",
+          "sourceId": "bc:C014:s2",
+          "text": "Qemusacu wohnt in Uvnijabo. Qebepuso wohnt in Uvsumuze."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 70,
+        "revision": 2,
+        "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+        "sourceId": "bc:C015:s2",
+        "start": 44,
+        "text": "Uvzisimu Uvnamuju Uvnanazi"
+      },
+      "id": "C015",
+      "question": "Wo lebt Zydohabo?",
+      "sources": [
+        {
+          "revision": 1,
+          "sha256": "1f352decdcd9dcd5a087131e2474f61963f5b5371bf97476a951cf3f76895e4f",
+          "sourceId": "bc:C015:s1",
+          "text": "Qetaseta lebt in Uvdazife. Qezuvaku lebt in Uvmoline."
+        },
+        {
+          "revision": 2,
+          "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+          "sourceId": "bc:C015:s2",
+          "text": "Qesarozi lebt in Uvzutiju. Zydohabo lebt in Uvzisimu Uvnamuju Uvnanazi."
+        },
+        {
+          "revision": 3,
+          "sha256": "eccf7a6c0db03164bc40f8ec24d789919ec5ad866ece5c0a1fe17f05462f1f04",
+          "sourceId": "bc:C015:s3",
+          "text": "Qefazeja lebt in Uvhikaso. Qezuvaku lebt in Uvmoline."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 26,
+        "revision": 4,
+        "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+        "sourceId": "bc:C016:s3",
+        "start": 18,
+        "text": "Uvpatema"
+      },
+      "id": "C016",
+      "question": "Wo steht Zyvojumu?",
+      "sources": [
+        {
+          "revision": 2,
+          "sha256": "0516060770625716121c9861ed052e58c45f640698982912307ecd0670fdfd77",
+          "sourceId": "bc:C016:s1",
+          "text": "Qejifela steht in Uvtedipi. Qemocoke steht in Uvmomomi."
+        },
+        {
+          "revision": 3,
+          "sha256": "fc8037384a2f47b558e2035f4212ce5bf6bf78400d9c63629c080bc81c6ddaa9",
+          "sourceId": "bc:C016:s2",
+          "text": "Qevizebi steht in Uvmafefu. Qemocoke steht in Uvmomomi."
+        },
+        {
+          "revision": 4,
+          "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+          "sourceId": "bc:C016:s3",
+          "text": "Zyvojumu steht in Uvpatema."
+        },
+        {
+          "revision": 5,
+          "sha256": "46322068212822e10e2dd4cc0cb67917c61ef6bab43e71276dbbd96bab59c5bc",
+          "sourceId": "bc:C016:s4",
+          "text": "Qesazeju steht in Uvrisado. Qemocoke steht in Uvmomomi."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 88,
+        "revision": 3,
+        "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+        "sourceId": "bc:C017:s1",
+        "start": 71,
+        "text": "Uvpetado Uvradeba"
+      },
+      "id": "C017",
+      "question": "Wo ist Zymudeco?",
+      "sources": [
+        {
+          "revision": 3,
+          "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+          "sourceId": "bc:C017:s1",
+          "text": "🔷 Archiv. Qehanucu ist in Uvdecuju Uvpubebu Uvkujiso, Zymudeco ist in Uvpetado Uvradeba."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 44,
+        "revision": 4,
+        "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+        "sourceId": "bc:C018:s1",
+        "start": 18,
+        "text": "Uvrosabo Uvsogosu Uvpaveza"
+      },
+      "id": "C018",
+      "question": "Wo wohnt Zykunote?",
+      "sources": [
+        {
+          "revision": 4,
+          "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+          "sourceId": "bc:C018:s1",
+          "text": "Zykunote wohnt in Uvrosabo Uvsogosu Uvpaveza und Qecarizi wohnt in Uvfonedi."
+        },
+        {
+          "revision": 5,
+          "sha256": "86d8ea8d3037cc64216394382b657c166eb35f5c03a93742a6d16b56d38fd2fc",
+          "sourceId": "bc:C018:s2",
+          "text": "Qevilece wohnt in Uvzohaje. Qepekabi wohnt in Uvlisili."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 61,
+        "revision": 6,
+        "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+        "sourceId": "bc:C019:s2",
+        "start": 53,
+        "text": "Uvdaniti"
+      },
+      "id": "C019",
+      "question": "Wo lebt Zyzefove?",
+      "sources": [
+        {
+          "revision": 5,
+          "sha256": "389753cadc493bca6304699e1eb514868995b46ed7eb248e09b7c73ed6b7a999",
+          "sourceId": "bc:C019:s1",
+          "text": "Qecibesi lebt in Uvcucama. Qefojalu lebt in Uvlimezo."
+        },
+        {
+          "revision": 6,
+          "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+          "sourceId": "bc:C019:s2",
+          "text": "Qefofuci lebt in Uvfugoco Uvgavonu; Zyzefove lebt in Uvdaniti."
+        },
+        {
+          "revision": 7,
+          "sha256": "3b6e01456207b352161431ad8d910793eca777ff1aa039b5b2157a3f00e127eb",
+          "sourceId": "bc:C019:s3",
+          "text": "Qesujutu lebt in Uvkolizu. Qefojalu lebt in Uvlimezo."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "SUPPORTED",
+      "expected": {
+        "endExclusive": 81,
+        "revision": 1,
+        "sha256": "db1f8b57b202fe06cc062be50d9f683419ec00b02e684f45074f7b639d051db6",
+        "sourceId": "bc:C020:s3",
+        "start": 64,
+        "text": "Uvhileta Uvjesucu"
+      },
+      "id": "C020",
+      "question": "Wo steht Zykafago?",
+      "sources": [
+        {
+          "revision": 6,
+          "sha256": "7066ab338a35e5e61c94bf7ca521fd0e71f43f279b5c9984bb6aee9263b7008d",
+          "sourceId": "bc:C020:s1",
+          "text": "Qefoboda steht in Uvnicefa. Qebaneji steht in Uvgecije."
+        },
+        {
+          "revision": 7,
+          "sha256": "3f89847d478e60ad4362911e8f881123147d7399f7d5da74ed20d8b0e1c77339",
+          "sourceId": "bc:C020:s2",
+          "text": "Qevahiro steht in Uvfitava. Qebaneji steht in Uvgecije."
+        },
+        {
+          "revision": 1,
+          "sha256": "db1f8b57b202fe06cc062be50d9f683419ec00b02e684f45074f7b639d051db6",
+          "sourceId": "bc:C020:s3",
+          "text": "Qenisaco steht in Uvdacelu Uvromuhu Uvhuceni. Zykafago steht in Uvhileta Uvjesucu."
+        },
+        {
+          "revision": 2,
+          "sha256": "aa4ae59064b6a42fee4937df80c7f3f8b6a6e2a5d9fa029291f6d345ba4380f1",
+          "sourceId": "bc:C020:s4",
+          "text": "Qenolohi steht in Uvtilito. Qebaneji steht in Uvgecije."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "MISSING",
+      "expected": null,
+      "id": "C021",
+      "question": "Wo ist Zymuliba?",
+      "sources": [
+        {
+          "revision": 7,
+          "sha256": "43b8eeee1fdce6d9a9262ea395b219d82f89e389b76116d90306457f9f4444bd",
+          "sourceId": "bc:C021:s1",
+          "text": "Qemasama ist in Uvposazi."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "MISSING",
+      "expected": null,
+      "id": "C022",
+      "question": "Wo wohnt Zycitaho?",
+      "sources": [
+        {
+          "revision": 1,
+          "sha256": "5b5e79312213757374d14c740cd73814da085e8b1cb1bbf218e2fe0808dba128",
+          "sourceId": "bc:C022:s1",
+          "text": "Qehutolo wohnt in Uvsizozi Uvhisane."
+        },
+        {
+          "revision": 2,
+          "sha256": "9103414e9566e73eeed5eb542675ed7d7a250caeda1a8ed3ff6c2846bc5a4a18",
+          "sourceId": "bc:C022:s2",
+          "text": "Zycitaho liest ein Buch."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "MISSING",
+      "expected": null,
+      "id": "C023",
+      "question": "Wo lebt Zyfaluda?",
+      "sources": [
+        {
+          "revision": 2,
+          "sha256": "292225813232afa839fc8842af0ca6e6eb76359e64086da87668b871973d0429",
+          "sourceId": "bc:C023:s1",
+          "text": "Qebigeno lebt in Uvtamicu Uvcefonu Uvbiculi."
+        },
+        {
+          "revision": 3,
+          "sha256": "ab26d0c7572f7d13f498dc35a99369bd17bac6d43c66e49584e0ac31d0217320",
+          "sourceId": "bc:C023:s2",
+          "text": "Zyfaluda spielt Schach."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "MISSING",
+      "expected": null,
+      "id": "C024",
+      "question": "Wo steht Zynegoko?",
+      "sources": [
+        {
+          "revision": 3,
+          "sha256": "0818cf360cc4e6c2f7e176ad52562061b37f7dd85ab432eabe1045d1a97f8bba",
+          "sourceId": "bc:C024:s1",
+          "text": "Qekuvufe steht in Uvnonobo."
+        },
+        {
+          "revision": 4,
+          "sha256": "cd3a0931c0200fda2990e5f756609100165e53d4fe708a69b7a22a3a5c46a3a0",
+          "sourceId": "bc:C024:s2",
+          "text": "Qefaviji ist in Uvbapodu."
+        },
+        {
+          "revision": 5,
+          "sha256": "6ac57f71d6b12409a5e652d731271f6d3e5874a1c6ba42fd1f6a359cc340a483",
+          "sourceId": "bc:C024:s3",
+          "text": "Qetetifu lebt in Uvnubefo."
+        },
+        {
+          "revision": 6,
+          "sha256": "283e25c5080f1b3902b6949f76906c005cdc26709208bb81883f643893cef151",
+          "sourceId": "bc:C024:s4",
+          "text": "Zynegoko singt."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "MISSING",
+      "expected": null,
+      "id": "C025",
+      "question": "Wo ist Zyjojuni?",
+      "sources": [
+        {
+          "revision": 4,
+          "sha256": "46d60496a0b4501f6097267f27bb266f3d04dda284e478d7b12de1f983f4adce",
+          "sourceId": "bc:C025:s1",
+          "text": "Qemolazo ist in Uvramufo Uvtisuru."
+        },
+        {
+          "revision": 5,
+          "sha256": "3715af8198412b600d0bd564905b671b2f971f3f4959906c71f1a80f13ac4c03",
+          "sourceId": "bc:C025:s2",
+          "text": "Zyjojuni zeichnet eine Karte."
+        }
+      ],
+      "split": "PRIMARY"
+    },
+    {
+      "category": "NEGATION",
+      "expected": null,
+      "id": "C026",
+      "question": "Wo ist Zynekoki?",
+      "sources": [
+        {
+          "revision": 5,
+          "sha256": "7239c7b44cb9b4a1245df581a7502a94c46b386ae92f918f3e8f4a800b833ad5",
+          "sourceId": "bc:C026:s1",
+          "text": "Zynekoki ist nicht in Uvhevata."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "NEGATION",
+      "expected": null,
+      "id": "C027",
+      "question": "Wo wohnt Zytubica?",
+      "sources": [
+        {
+          "revision": 6,
+          "sha256": "b930acf2a2ae60ef2f6bcae0754caa002d0176a82c403ae00d252bdb3db8d2e7",
+          "sourceId": "bc:C027:s1",
+          "text": "Zytubica wohnt in Uvdekoto Uvsipezu, aber nicht in Uvhukufe."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "NEGATION",
+      "expected": null,
+      "id": "C028",
+      "question": "Wo lebt Zyfakapa?",
+      "sources": [
+        {
+          "revision": 7,
+          "sha256": "36d490086f59f4e16af418c9fbdcd7ce946f3ef49aa79fb9b24378409c4cb9ea",
+          "sourceId": "bc:C028:s1",
+          "text": "Zyfakapa lebt nicht in Uvgafale Uvzatavi Uvfufogi, sondern in Uvbilizo."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "NEGATION",
+      "expected": null,
+      "id": "C029",
+      "question": "Wo steht Zysidaje?",
+      "sources": [
+        {
+          "revision": 1,
+          "sha256": "4fc4fa00dea2e49aa10723aadb6ac609d83902975f7551483fdc023636956d84",
+          "sourceId": "bc:C029:s1",
+          "text": "Zysidaje steht in Uvtacupe. Nein, falsch."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "NEGATION",
+      "expected": null,
+      "id": "C030",
+      "question": "Wo ist Zylovumi?",
+      "sources": [
+        {
+          "revision": 2,
+          "sha256": "52af78fd551f082d7165e6966a73936a126f11c29c8083bbdd11929b22fd3a61",
+          "sourceId": "bc:C030:s1",
+          "text": "Zylovumi ist in Uvnirini Uvpubova. Widerruf: Zylovumi ist nicht in Uvnirini Uvpubova."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "CONFLICT",
+      "expected": null,
+      "id": "C031",
+      "question": "Wo ist Zysacoze?",
+      "sources": [
+        {
+          "revision": 3,
+          "sha256": "300f4e01c75b2fba10665f6fcd5629a55535b24b0cdb043be59d4e913a149585",
+          "sourceId": "bc:C031:s1",
+          "text": "Zysacoze ist in Uvtebalo."
+        },
+        {
+          "revision": 4,
+          "sha256": "1abd263eb621f0fc176dde53bb21add30e7cf63abc5c06aef08b557b83d0add3",
+          "sourceId": "bc:C031:s2",
+          "text": "Zysacoze ist in Uvfipugi."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "CONFLICT",
+      "expected": null,
+      "id": "C032",
+      "question": "Wo wohnt Zybacake?",
+      "sources": [
+        {
+          "revision": 4,
+          "sha256": "3b7ff8176822ff52b61bffc8a0d7c61c535b4ed04943eb12f11de00a1911e0cb",
+          "sourceId": "bc:C032:s1",
+          "text": "Zybacake wohnt in Uvjikomi Uvpepada; Zybacake wohnt in Uvpegubu."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "CONFLICT",
+      "expected": null,
+      "id": "C033",
+      "question": "Wo lebt Zypusadu?",
+      "sources": [
+        {
+          "revision": 5,
+          "sha256": "3bff5d56a462f64efbdd67dbd0e21476332396a54712ba4a15ce9336def82c76",
+          "sourceId": "bc:C033:s1",
+          "text": "Zypusadu lebt in Uvsajaha Uvmejuji Uvrisoga."
+        },
+        {
+          "revision": 6,
+          "sha256": "1abb5c74e2a2d1ed8f74c31d5dd4ae00cd81888c4f5df84254692ba886838948",
+          "sourceId": "bc:C033:s2",
+          "text": "Zypusadu lebt in Uvgihufi."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "CONFLICT",
+      "expected": null,
+      "id": "C034",
+      "question": "Wo steht Zygipitu?",
+      "sources": [
+        {
+          "revision": 6,
+          "sha256": "908b28461c540524fff2ff06228c5c502c92ae6f837d68227b52fd66acf19040",
+          "sourceId": "bc:C034:s1",
+          "text": "Zygipitu steht in Uvdoraki; Zygipitu steht in Uvvusopi."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "CONFLICT",
+      "expected": null,
+      "id": "C035",
+      "question": "Wo ist Zygeriva?",
+      "sources": [
+        {
+          "revision": 7,
+          "sha256": "36e97085f6b54ad08bbb0db9916be234bc42f4fcbe7fe22fe6488ed92f04557d",
+          "sourceId": "bc:C035:s1",
+          "text": "Zygeriva ist in Uvpevija Uvgijemo."
+        },
+        {
+          "revision": 1,
+          "sha256": "4b631027842d143c1bcd65d336a8429fe8ef8b4fd3841ce791793dca563e0cae",
+          "sourceId": "bc:C035:s2",
+          "text": "Zygeriva ist in Uvjociki."
+        },
+        {
+          "revision": 2,
+          "sha256": "2002baa7776cd82a07f388802f80110e1d026bad639871c5c482472f844419d2",
+          "sourceId": "bc:C035:s3",
+          "text": "Qerepugi ist in Uvfehopo."
+        },
+        {
+          "revision": 3,
+          "sha256": "131c3a4065bbbb6a359a44f466abeca3f12915b41ff03aaa98377a1b94604a57",
+          "sourceId": "bc:C035:s4",
+          "text": "Qegidepu steht in Uvzigiju."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "TIME",
+      "expected": null,
+      "id": "C036",
+      "question": "Wo ist Zycahere?",
+      "sources": [
+        {
+          "revision": 1,
+          "sha256": "89cab25880a9f0b9616109666496dac0ef2a5ebe2d9539ff1e450b1527187888",
+          "sourceId": "bc:C036:s1",
+          "text": "Zycahere ist heute in Uvzorono."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "TIME",
+      "expected": null,
+      "id": "C037",
+      "question": "Wo wohnt Zyjimesa?",
+      "sources": [
+        {
+          "revision": 2,
+          "sha256": "53185803c4310d35d07a28cc1144868b40b40baf8cb3015a09e5909788d309dd",
+          "sourceId": "bc:C037:s1",
+          "text": "Gestern wohnt Zyjimesa in Uvranuja Uvnutuzo."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "TIME",
+      "expected": null,
+      "id": "C038",
+      "question": "Wo lebt Zylojozu?",
+      "sources": [
+        {
+          "revision": 3,
+          "sha256": "f22c145d837b6e87022dd1fa16354dc9d6d8b7b8f950777c4e9ae9ef7870a17d",
+          "sourceId": "bc:C038:s1",
+          "text": "Zylojozu lebt seit gestern in Uvcodava Uvzagepo Uvpagivu."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "TIME",
+      "expected": null,
+      "id": "C039",
+      "question": "Wo steht Zyfakazu?",
+      "sources": [
+        {
+          "revision": 4,
+          "sha256": "1f449143a1af0ce4405038065ea68b9cb15c4b6efc257774dbf0ef3d03cd1467",
+          "sourceId": "bc:C039:s1",
+          "text": "Zyfakazu steht in Uvbigodo. Morgen steht Zyfakazu in Uvrikode."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "TIME",
+      "expected": null,
+      "id": "C040",
+      "question": "Wo ist Zyzumuta?",
+      "sources": [
+        {
+          "revision": 5,
+          "sha256": "7942551df186923a03b0487aa392dd26544c875ac30ce100f6586fe608439ebe",
+          "sourceId": "bc:C040:s1",
+          "text": "Zyzumuta ist früher in Uvjosije Uvbicagu, heute in Uvvacazo."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "ROLE",
+      "expected": {
+        "endExclusive": 59,
+        "revision": 6,
+        "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+        "sourceId": "bc:C041:s1",
+        "start": 42,
+        "text": "Uvpovelu Uvjaluzu"
+      },
+      "id": "C041",
+      "question": "Wo ist Qegidabu?",
+      "sources": [
+        {
+          "revision": 6,
+          "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+          "sourceId": "bc:C041:s1",
+          "text": "Zykalopi ist in Uvlaturo, Qegidabu ist in Uvpovelu Uvjaluzu."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "ROLE",
+      "expected": {
+        "endExclusive": 44,
+        "revision": 7,
+        "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+        "sourceId": "bc:C042:s1",
+        "start": 18,
+        "text": "Uvjogiju Uvmukedo Uvcudumu"
+      },
+      "id": "C042",
+      "question": "Wo wohnt Qehefego?",
+      "sources": [
+        {
+          "revision": 7,
+          "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+          "sourceId": "bc:C042:s1",
+          "text": "Qehefego wohnt in Uvjogiju Uvmukedo Uvcudumu und Zyrebesa wohnt in Uvlozike Uvruzonu."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "ROLE",
+      "expected": {
+        "endExclusive": 25,
+        "revision": 2,
+        "sha256": "30b8b2c9298a09756034958604c615449f549e3e0fcf18f87e26198d832e889f",
+        "sourceId": "bc:C043:s2",
+        "start": 17,
+        "text": "Uvvomeki"
+      },
+      "id": "C043",
+      "question": "Wo lebt Qedaresi?",
+      "sources": [
+        {
+          "revision": 1,
+          "sha256": "665b69a834b5f9d06e69937aebb822e0b2997d44985ea07b06f609ded2ae0e6c",
+          "sourceId": "bc:C043:s1",
+          "text": "Zycovira lebt in Uvtocula Uvlidaca Uvlujoja."
+        },
+        {
+          "revision": 2,
+          "sha256": "30b8b2c9298a09756034958604c615449f549e3e0fcf18f87e26198d832e889f",
+          "sourceId": "bc:C043:s2",
+          "text": "Qedaresi lebt in Uvvomeki."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "ROLE",
+      "expected": {
+        "endExclusive": 35,
+        "revision": 2,
+        "sha256": "e16d4dc54cda3edecf7cdcb2d6b8c0908f43c764aeb670d47992caaaf518a695",
+        "sourceId": "bc:C044:s1",
+        "start": 18,
+        "text": "Uvfafoli Uvzimapu"
+      },
+      "id": "C044",
+      "question": "Wo steht Qecotela?",
+      "sources": [
+        {
+          "revision": 2,
+          "sha256": "e16d4dc54cda3edecf7cdcb2d6b8c0908f43c764aeb670d47992caaaf518a695",
+          "sourceId": "bc:C044:s1",
+          "text": "Qecotela steht in Uvfafoli Uvzimapu; Zyduhoci steht in Uvfanoro."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "ROLE",
+      "expected": {
+        "endExclusive": 90,
+        "revision": 3,
+        "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+        "sourceId": "bc:C045:s1",
+        "start": 64,
+        "text": "Uvjalicu Uvhetilu Uvhugoma"
+      },
+      "id": "C045",
+      "question": "Wo ist Qefijivo?",
+      "sources": [
+        {
+          "revision": 3,
+          "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+          "sourceId": "bc:C045:s1",
+          "text": "🟪 Register. Zyluzuso ist in Uvrugeza Uvtuvova. Qefijivo ist in Uvjalicu Uvhetilu Uvhugoma."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "RELATION",
+      "expected": null,
+      "id": "C046",
+      "question": "Wo ist Zydatama?",
+      "sources": [
+        {
+          "revision": 4,
+          "sha256": "989783c40c4399270dac42412d28599f62ca68517894beee03c649d700096556",
+          "sourceId": "bc:C046:s1",
+          "text": "Zydatama wohnt in Uvmejico."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "RELATION",
+      "expected": null,
+      "id": "C047",
+      "question": "Wo wohnt Zyzokaha?",
+      "sources": [
+        {
+          "revision": 5,
+          "sha256": "80a83460486f8d7b6830992b830f24e0d348e190e5b823bfa33f4eda89f21ea1",
+          "sourceId": "bc:C047:s1",
+          "text": "Zyzokaha lebt in Uvfecire Uvgojafe."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "RELATION",
+      "expected": null,
+      "id": "C048",
+      "question": "Wo lebt Zyduvegu?",
+      "sources": [
+        {
+          "revision": 6,
+          "sha256": "fc20cfb78947c74d8d918c191ba0532b53b56ef6fa93d54074f83683884a659b",
+          "sourceId": "bc:C048:s1",
+          "text": "Zyduvegu steht in Uvduguhe Uvpamame Uvlodovi."
+        },
+        {
+          "revision": 7,
+          "sha256": "f2bbd6919db2e0b65625456217330779b375b3a37b07c35283db18395a13087c",
+          "sourceId": "bc:C048:s2",
+          "text": "Zyduvegu lebt in Uvfafihi."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "RELATION",
+      "expected": null,
+      "id": "C049",
+      "question": "Wo steht Zygegato?",
+      "sources": [
+        {
+          "revision": 7,
+          "sha256": "9b77dbe5da923be169b9788b77f6f702427c445a68809a694988f6be5b9ab3d5",
+          "sourceId": "bc:C049:s1",
+          "text": "Zygegato steht in Uvzuriza, Zygegato ist in Uvsagobo."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "RELATION",
+      "expected": null,
+      "id": "C050",
+      "question": "Wo ist Zyrapepi?",
+      "sources": [
+        {
+          "revision": 1,
+          "sha256": "020cb0b71c567ae0982de81d122179a8b4aa5ce4caad554a09b45c9bcae1d3b6",
+          "sourceId": "bc:C050:s1",
+          "text": "Qepevoha ist in Uvzusoca."
+        },
+        {
+          "revision": 2,
+          "sha256": "af1570021ac7e7f5210747f85760a42a86899b0d5f0b9b218c4d91a21e924ac5",
+          "sourceId": "bc:C050:s2",
+          "text": "Zyrapepi wohnt in Uvlebilu Uvpeneke."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "SAME_NAME_SOURCE_BOUNDARY",
+      "expected": null,
+      "id": "C051",
+      "question": "Wo ist Zymiholo?",
+      "sources": [
+        {
+          "revision": 2,
+          "sha256": "60ed866391b1ddfdaa645fb73616932e644b4988661835273c2b63c5c520230d",
+          "sourceId": "bc:C051:s1",
+          "text": "Zymiholo ist in Uvlofeni."
+        },
+        {
+          "revision": 3,
+          "sha256": "60ed866391b1ddfdaa645fb73616932e644b4988661835273c2b63c5c520230d",
+          "sourceId": "bc:C051:s2",
+          "text": "Zymiholo ist in Uvlofeni."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "SAME_NAME_SOURCE_BOUNDARY",
+      "expected": null,
+      "id": "C052",
+      "question": "Wo wohnt Zydelucu?",
+      "sources": [
+        {
+          "revision": 3,
+          "sha256": "3d288d42c9930cbc7127c5dc4e84aad6f7a6c1241d64fb852f6cebada93c5970",
+          "sourceId": "bc:C052:s1",
+          "text": "Zydelucu wohnt in Uvzitalo Uvpubogu."
+        },
+        {
+          "revision": 4,
+          "sha256": "fbb84a1f295dd101b29bab6f5951f7764fde9b5203cef656127a6efdcb28e7ff",
+          "sourceId": "bc:C052:s2",
+          "text": "Zydelucu wohnt nicht in Uvvofoci."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "SAME_NAME_SOURCE_BOUNDARY",
+      "expected": null,
+      "id": "C053",
+      "question": "Wo lebt Zytimoca?",
+      "sources": [
+        {
+          "revision": 4,
+          "sha256": "6df6c5633b1d80d40e3ca3c28e7aade40c7161084fee0d533b99f59db2b318e9",
+          "sourceId": "bc:C053:s1",
+          "text": "Zytimoca lebt in Uvdadafa Uvvisozi Uvmasolo."
+        },
+        {
+          "revision": 5,
+          "sha256": "0b9cf4a8402c4fec065fe4029b46fd01b8f4c50a6f676997221d07c7c4187d72",
+          "sourceId": "bc:C053:s2",
+          "text": "Zytimoca lebt heute in Uvfumohi."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "SAME_NAME_SOURCE_BOUNDARY",
+      "expected": null,
+      "id": "C054",
+      "question": "Wo steht Zylonane?",
+      "sources": [
+        {
+          "revision": 5,
+          "sha256": "569cbae563d12bb5a54a358746c4d30fec03c5d0d8243b257a4a5bf7b21b9627",
+          "sourceId": "bc:C054:s1",
+          "text": "Zylonane steht in Uvgigene."
+        },
+        {
+          "revision": 6,
+          "sha256": "ad59c230aa382dd446d9383532c6ac9e4ea4bde8f79462ef0fd1a8ef19ab9281",
+          "sourceId": "bc:C054:s2",
+          "text": "Zylonane liest ein Buch."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    },
+    {
+      "category": "SAME_NAME_SOURCE_BOUNDARY",
+      "expected": null,
+      "id": "C055",
+      "question": "Wo ist Zypanatu?",
+      "sources": [
+        {
+          "revision": 6,
+          "sha256": "8ecd1b85e0b343ca21d33cf8b1c16876a668a85b26708ba92afb884bae8b31dd",
+          "sourceId": "bc:C055:s1",
+          "text": "Zypanatu ist in Uvnudake Uvzecuka."
+        },
+        {
+          "revision": 7,
+          "sha256": "8ecd1b85e0b343ca21d33cf8b1c16876a668a85b26708ba92afb884bae8b31dd",
+          "sourceId": "bc:C055:s2",
+          "text": "Zypanatu ist in Uvnudake Uvzecuka."
+        },
+        {
+          "revision": 1,
+          "sha256": "2516fc256a3f7acbd277e7995e77446fb59be4cb211a271ae37b31a5e515cc9b",
+          "sourceId": "bc:C055:s3",
+          "text": "Qelacaso ist in Uvfatezo."
+        },
+        {
+          "revision": 2,
+          "sha256": "ac9b6ecfbed4417d392ce2190dbe3e63a857b2657865d07470e6c57c34a98fcc",
+          "sourceId": "bc:C055:s4",
+          "text": "Qeridoha steht in Uvriduju."
+        }
+      ],
+      "split": "ADVERSARIAL"
+    }
+  ],
+  "schema": "ISSUE340_BLIND_C_V1",
+  "seed": 34020261101
+}

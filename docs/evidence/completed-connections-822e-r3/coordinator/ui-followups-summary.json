@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "runs": [
+    {
+      "directory": "android-reference-focus",
+      "status": "FAIL_OR_INCOMPLETE",
+      "exitCode": 1,
+      "sourceCommit": "f8951ad3e91c58cd0c02433522207151bebf26d3",
+      "sourceTree": "4811fc9381e5f433c0871e4ad808edc8284d706f",
+      "sourceUnchanged": true,
+      "totals": {
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 0
+      },
+      "lintRequested": false,
+      "classFilters": [
+        "at.heinz.deviceai.ContinuumReferenceCockpitUiTest"
+      ],
+      "canonicalQaMode": true
+    },
+    {
+      "directory": "android-reference-focus-02",
+      "status": "NOT_RUN",
+      "reason": "SOURCE_NOT_CLEAN",
+      "detail": "An untracked dependency directory symlink was rejected before invoking Gradle. Replaced with a real ignored node_modules directory containing read-only package links; no source or exclusion rule changed.",
+      "gradleStarted": false
+    },
+    {
+      "directory": "android-reference-focus-03",
+      "status": "NOT_RUN",
+      "reason": "LESS_THAN_1_GIB_FREE"
+    },
+    {
+      "directory": "android-reference-focus-04",
+      "status": "FAIL_OR_INCOMPLETE",
+      "exitCode": 75,
+      "sourceCommit": "add99a1c9d98c9154d0a58169628d07286f9a206",
+      "sourceTree": "739020ed88a08f0c64bb9e06de7636b47f908819",
+      "sourceUnchanged": true,
+      "totals": {
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 0
+      },
+      "lintRequested": false,
+      "classFilters": [
+        "at.heinz.deviceai.ContinuumReferenceCockpitUiTest"
+      ],
+      "canonicalQaMode": true
+    },
+    {
+      "directory": "android-reference-focus-05",
+      "status": "FAIL_OR_INCOMPLETE",
+      "exitCode": 1,
+      "sourceCommit": "add99a1c9d98c9154d0a58169628d07286f9a206",
+      "sourceTree": "739020ed88a08f0c64bb9e06de7636b47f908819",
+      "sourceUnchanged": true,
+      "totals": {
+        "tests": 9,
+        "failures": 3,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 6
+      },
+      "lintRequested": false,
+      "classFilters": [
+        "at.heinz.deviceai.ContinuumReferenceCockpitUiTest"
+      ],
+      "canonicalQaMode": true
+    },
+    {
+      "directory": "android-reference-focus-06",
+      "status": "FAIL_OR_INCOMPLETE",
+      "exitCode": 1,
+      "sourceCommit": "f274f7daf920cb34b0241881f343b85732f58ee1",
+      "sourceTree": "15453b1300864dd0cd0ea2505a7bf0b1e72aeaeb",
+      "sourceUnchanged": true,
+      "totals": {
+        "tests": 9,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 7
+      },
+      "lintRequested": false,
+      "classFilters": [
+        "at.heinz.deviceai.ContinuumReferenceCockpitUiTest"
+      ],
+      "canonicalQaMode": true
+    },
+    {
+      "directory": "android-reference-focus-07",
+      "status": "NOT_RUN",
+      "reason": "SOURCE_NOT_CLEAN",
+      "detail": "The prior cherry-pick had an unresolved diagnostic-message conflict. Source guard correctly rejected before Gradle. Conflict subsequently resolved retaining global bounds and diagnostic values.",
+      "gradleStarted": false
+    },
+    {
+      "directory": "android-reference-focus-08",
+      "status": "PASS",
+      "exitCode": 0,
+      "sourceCommit": "4223ffe3a4fb6c2906f244ec2475d22d150eefd4",
+      "sourceTree": "d820c7e0cd6cbd4bd1ce37efeab835550e05f5c0",
+      "sourceUnchanged": true,
+      "totals": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 9
+      },
+      "lintRequested": false,
+      "classFilters": [
+        "at.heinz.deviceai.ContinuumReferenceCockpitUiTest"
+      ],
+      "canonicalQaMode": true
+    },
+    {
+      "directory": "android-overlap-diagnostic",
+      "status": "FAIL_OR_INCOMPLETE",
+      "exitCode": 1,
+      "sourceCommit": "681b6f132cff3f44825d409a739acd9927b2c748",
+      "sourceTree": "acb13c5b1dddc724811396e6145c23870426e2fc",
+      "sourceUnchanged": true,
+      "totals": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 0
+      },
+      "lintRequested": false,
+      "classFilters": [
+        "at.heinz.deviceai.ContinuumReferenceCockpitUiTest.foldLandscapeHasRealDestinationsAndReadableLargeType"
+      ],
+      "canonicalQaMode": true
+    },
+    {
+      "directory": "backend-final",
+      "status": "PASS",
+      "exitCode": 0,
+      "sourceCommit": "add99a1c9d98c9154d0a58169628d07286f9a206",
+      "sourceTree": "739020ed88a08f0c64bb9e06de7636b47f908819",
+      "sourceUnchanged": true,
+      "totals": {
+        "tests": 64,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 64
+      }
+    }
+  ],
+  "countsOverlap": true,
+  "nineCasePassedSource": {
+    "local": "4223ffe3a4fb6c2906f244ec2475d22d150eefd4",
+    "remote": "a6b314d3e8fac796ce7059a336bf5e79eb622ede",
+    "tree": "d820c7e0cd6cbd4bd1ce37efeab835550e05f5c0"
+  },
+  "archive": {
+    "name": "ui-followups-evidence.tar.xz",
+    "sha256": "5a2ec9d30d34e1ad6a2de6a60349f27ea5772633d5622abd07d82e0dba329852",
+    "bytes": 112196,
+    "files": 76
+  },
+  "notes": [
+    "Original startup rejections, lock timeout and failing tests retained",
+    "Nine-case PASS does not accept subsequently expanded ten-case C1 candidate",
+    "Backend64PASS belongs only to recorded add99a1 source"
+  ]
+}

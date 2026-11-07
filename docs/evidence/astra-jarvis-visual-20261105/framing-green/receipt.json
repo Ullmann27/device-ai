@@ -1,0 +1,29 @@
+{
+  "label": "framing-green",
+  "head": "0bfa86db8b7364dc6129bd6b87e9f787f64e41b0",
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-I",
+    "/workspace/scratch/76b7222771d5/build-env/observe-tests.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.avatar3d.*"
+  ],
+  "started": 1793895502.9895318,
+  "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+  "statusBefore": " M app/src/main/java/at/heinz/deviceai/avatar3d/AvatarFraming.kt\n M app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt\n M app/src/test/java/at/heinz/deviceai/avatar3d/AvatarFramingTest.kt\n",
+  "exitCode": 0,
+  "ended": 1793895529.2874591,
+  "sourceUnchanged": true,
+  "statusAfter": " M app/src/main/java/at/heinz/deviceai/avatar3d/AvatarFraming.kt\n M app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt\n M app/src/test/java/at/heinz/deviceai/avatar3d/AvatarFramingTest.kt\n",
+  "log": "/workspace/scratch/76b7222771d5/build-env/logs/framing-green.log",
+  "sourceBeforeSha256": "e9ce964aecd146e860828375a79d07b8c1c0b8321de9d8e56cf8943fa3ddbf12",
+  "sourceAfterSha256": "e9ce964aecd146e860828375a79d07b8c1c0b8321de9d8e56cf8943fa3ddbf12"
+}

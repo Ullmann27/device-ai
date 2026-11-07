@@ -1,0 +1,7 @@
+allprojects {
+    tasks.withType(org.gradle.api.tasks.testing.Test).configureEach {
+        outputs.upToDateWhen { false }
+        systemProperty 'continuum.action.evidenceDir', '/workspace/jarvis-qa/48c0fb1f/task-evidence'
+        systemProperty 'continuum.sovereign.evidenceDir', '/workspace/jarvis-qa/48c0fb1f/task-evidence'
+    }
+}

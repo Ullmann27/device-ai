@@ -1,0 +1,7 @@
+JUnit version 4.13.2
+.......................................................
+Time: 1.483
+
+OK (55 tests)
+
+SOL314_HOST_KOTLIN_JUNIT_CHECKED_NOT_ANDROID_OR_DEVICE

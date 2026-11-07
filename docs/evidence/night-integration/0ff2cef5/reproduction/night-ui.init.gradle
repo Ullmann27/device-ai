@@ -1,0 +1,14 @@
+allprojects {
+ afterEvaluate { p ->
+  if (p.name == 'app') p.android.sourceSets.getByName('test').java.srcDir('/workspace/scratch/391c0f6de827/build-env/independent-tests')
+ }
+ tasks.withType(Test).configureEach {
+  executable = '/usr/bin/java'
+  if (providers.gradleProperty('nightForceTests').orNull == 'true') outputs.upToDateWhen { false }
+  def selected = providers.gradleProperty('nightTestFilter').orNull
+  if (selected != null) filter { selected.split(',').each { includeTestsMatching it } }
+  systemProperty('continuum.workspace.repo', rootProject.projectDir.absolutePath)
+  systemProperty('continuum.layout.evidenceDir', '/workspace/scratch/391c0f6de827/build-env/android-qa/layout-ui')
+  systemProperty('continuum.polish.evidenceDir', '/workspace/scratch/391c0f6de827/build-env/android-qa/polish-ui')
+ }
+}

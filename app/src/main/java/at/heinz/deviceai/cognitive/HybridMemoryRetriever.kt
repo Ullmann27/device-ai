@@ -1,6 +1,7 @@
 package at.heinz.deviceai.cognitive
 
 import java.util.Locale
+import java.util.PriorityQueue
 import kotlin.math.ln
 
 data class MemoryScoreBreakdown(
@@ -64,109 +65,146 @@ object HybridMemoryRetriever {
         require(nowMillis >= 0)
         if (limit == 0) return emptyList()
 
-        val queryTerms = tokens(query).toSet()
-        if (queryTerms.isEmpty()) return emptyList()
+        // Grammar words alone do not establish a topic match. Otherwise an
+        // unrelated private fact containing "ist"/"is" enters almost every
+        // knowledge prompt. This affects scoring only; evidence stays literal.
+        val rawQueryTerms = tokens(query).filterNot { it in QUERY_STOP_WORDS }.toSet()
+        if (rawQueryTerms.isEmpty()) return emptyList()
+        // M3: light German normalization (umlaut folding + conservative suffix stripping) so
+        // "Kind"/"Kinder", "Neffe"/"Neffen", "Großeltern"/"Grosseltern" meet. Scoring only.
+        val queryTerms = rawQueryTerms.map(::normalizeTerm).toSet()
 
-        val candidates = records.filter { it.privacyClass in allowedPrivacy }
+        // An evidence ID must identify one complete record. Check the whole input
+        // before privacy filtering: a visible alias must not hide a conflicting
+        // private version. Conflicts never reach tokenization or caller scorers.
+        val candidates = unambiguousRecords(records).filter { it.privacyClass in allowedPrivacy }
         if (candidates.isEmpty()) return emptyList()
 
-        val tokenized = candidates.associateWith { memory ->
-            tokens(memory.content + " " + memory.tags.joinToString(" "))
+        val documents = candidates.map { memory ->
+            val terms = tokens(memory.content + " " + memory.tags.joinToString(" ")).map(::normalizeTerm)
+            // Compound-aware matching: a long query term that is the head or tail of a
+            // document compound ("termin" in "zahnarzttermin") counts as that term.
+            val documentTerms = terms + queryTerms.filter { q -> q.length >= 5 && q !in terms &&
+                terms.any { t -> t.length >= q.length + 3 && (t.startsWith(q) || t.endsWith(q)) } }
+            PreparedDocument(memory, documentTerms.groupingBy { it }.eachCount(), documentTerms.size)
         }
-        val averageDocumentLength = tokenized.values.map { it.size }.average().coerceAtLeast(1.0)
+        val averageDocumentLength = documents.map { it.length }.average().coerceAtLeast(1.0)
         val documentFrequency = queryTerms.associateWith { term ->
-            tokenized.values.count { term in it }.coerceAtLeast(0)
+            documents.count { term in it.termFrequency }
         }
-        val temporalQuery = queryTerms.any { it in TEMPORAL_TERMS }
+        val temporalQuery = rawQueryTerms.any { it in TEMPORAL_TERMS }
+        // Keep the worst retained result at the root, but still score every
+        // candidate: a unique relevant memory can occur at the end of the input.
+        val best = PriorityQueue<ScoredMemory>(minOf(limit, 8), SCORE_ORDER.reversed())
 
-        return candidates.asSequence()
-            .map { memory ->
-                val documentTerms = tokenized.getValue(memory)
-                val lexical = bm25Like(
-                    queryTerms,
-                    documentTerms,
-                    documentFrequency,
-                    candidates.size,
-                    averageDocumentLength
-                )
-                val entity = entityScore(queryTerms, memory.tags)
-                val semantic = semanticScorer
-                    ?.invoke(query, memory)
-                    ?.takeIf(Double::isFinite)
-                    ?.coerceIn(0.0, 1.0)
-                    ?: 0.0
-
-                if (lexical <= 0.0 && entity <= 0.0 && semantic <= 0.0) {
-                    return@map null
-                }
-
-                val temporal = temporalScore(memory, nowMillis, temporalQuery)
-                val sourceTrust = sourceTrustScorer
-                    ?.invoke(memory)
-                    ?.takeIf(Double::isFinite)
-                    ?.coerceIn(0.0, 1.0)
-                    ?: 0.5
-                val validation = validationScore(memory.validationState)
-                val provenance = provenanceScore(memory.provenance)
-                val recency = recencyScore(memory.updatedAt, nowMillis)
-                val penalty = when (memory.validationState) {
-                    ValidationState.CONTRADICTED -> 0.35
-                    ValidationState.STALE -> 0.15
-                    else -> 0.0
-                }
-
-                val weighted =
-                    0.30 * lexical +
-                        0.25 * semantic +
-                        0.12 * entity +
-                        0.10 * temporal +
-                        0.08 * sourceTrust +
-                        0.07 * validation +
-                        0.03 * provenance +
-                        0.05 * recency
-
-                val total = (weighted - penalty).coerceIn(0.0, 1.0)
-                ScoredMemory(
-                    memory,
-                    MemoryScoreBreakdown(
-                        lexicalBm25 = lexical,
-                        semanticSimilarity = semantic,
-                        entityMatch = entity,
-                        temporalRelevance = temporal,
-                        sourceTrust = sourceTrust,
-                        validationQuality = validation,
-                        provenanceQuality = provenance,
-                        recency = recency,
-                        contradictionPenalty = penalty,
-                        total = total
-                    )
-                )
-            }
-            .filterNotNull()
-            // Relevant contradicted/stale memories remain visible with a low score so
-            // the agent can reason about conflicts instead of silently forgetting them.
-            .sortedWith(
-                compareByDescending<ScoredMemory> { it.score.total }
-                    .thenByDescending { it.memory.updatedAt }
-                    .thenBy { it.memory.id }
+        documents.forEach { document ->
+            val memory = document.memory
+            val lexical = bm25Like(
+                queryTerms,
+                document,
+                documentFrequency,
+                candidates.size,
+                averageDocumentLength
             )
-            .take(limit)
-            .toList()
+            val entity = entityScore(queryTerms, memory.tags)
+            val semantic = semanticScorer
+                ?.invoke(query, memory)
+                ?.takeIf(Double::isFinite)
+                ?.coerceIn(0.0, 1.0)
+                ?: 0.0
+
+            if (lexical <= 0.0 && entity <= 0.0 && semantic <= 0.0) {
+                return@forEach
+            }
+
+            val temporal = temporalScore(memory, nowMillis, temporalQuery)
+            val sourceTrust = sourceTrustScorer
+                ?.invoke(memory)
+                ?.takeIf(Double::isFinite)
+                ?.coerceIn(0.0, 1.0)
+                ?: 0.5
+            val validation = validationScore(memory.validationState)
+            val provenance = provenanceScore(memory.provenance)
+            val recency = recencyScore(memory.updatedAt, nowMillis)
+            val penalty = when (memory.validationState) {
+                ValidationState.CONTRADICTED -> 0.35
+                ValidationState.STALE -> 0.15
+                else -> 0.0
+            }
+
+            val weighted =
+                0.30 * lexical +
+                    0.25 * semantic +
+                    0.12 * entity +
+                    0.10 * temporal +
+                    0.08 * sourceTrust +
+                    0.07 * validation +
+                    0.03 * provenance +
+                    0.05 * recency
+
+            val total = (weighted - penalty).coerceIn(0.0, 1.0)
+            val scored = ScoredMemory(
+                memory,
+                MemoryScoreBreakdown(
+                    lexicalBm25 = lexical,
+                    semanticSimilarity = semantic,
+                    entityMatch = entity,
+                    temporalRelevance = temporal,
+                    sourceTrust = sourceTrust,
+                    validationQuality = validation,
+                    provenanceQuality = provenance,
+                    recency = recency,
+                    contradictionPenalty = penalty,
+                    total = total
+                )
+            )
+            if (best.size < limit) {
+                best.add(scored)
+            } else if (SCORE_ORDER.compare(scored, best.peek()) < 0) {
+                best.poll()
+                best.add(scored)
+            }
+        }
+        // Relevant contradicted/stale memories remain visible with a low score so
+        // the agent can reason about conflicts instead of silently forgetting them.
+        return best.sortedWith(SCORE_ORDER)
     }
+
+    /** Resolve identity before any caller-specific status or privacy projection. */
+    internal fun unambiguousRecords(records: Collection<MemoryRecord>): Collection<MemoryRecord> {
+        val identities = linkedMapOf<String, MemoryRecord>()
+        val conflictingIds = hashSetOf<String>()
+        records.forEach { memory ->
+            if (memory.id in conflictingIds) return@forEach
+            val existing = identities[memory.id]
+            if (existing == null) {
+                identities[memory.id] = memory
+            } else if (existing != memory) {
+                identities.remove(memory.id)
+                conflictingIds.add(memory.id)
+            }
+        }
+        return identities.values
+    }
+
+    private data class PreparedDocument(
+        val memory: MemoryRecord,
+        val termFrequency: Map<String, Int>,
+        val length: Int
+    )
 
     private fun bm25Like(
         queryTerms: Set<String>,
-        documentTerms: List<String>,
+        document: PreparedDocument,
         documentFrequency: Map<String, Int>,
         documentCount: Int,
         averageDocumentLength: Double
     ): Double {
-        if (documentTerms.isEmpty()) return 0.0
-        val termFrequency = documentTerms.groupingBy { it }.eachCount()
-        val length = documentTerms.size.toDouble()
+        if (document.length == 0) return 0.0
+        val length = document.length.toDouble()
         var raw = 0.0
         queryTerms.forEach { term ->
-            val tf = termFrequency[term]?.toDouble() ?: return@forEach
+            val tf = document.termFrequency[term]?.toDouble() ?: return@forEach
             val df = (documentFrequency[term] ?: 0).toDouble()
             val idf = ln(1.0 + ((documentCount - df + 0.5) / (df + 0.5)))
             val denominator = tf + K1 * (1.0 - B + B * length / averageDocumentLength)
@@ -177,7 +215,7 @@ object HybridMemoryRetriever {
 
     private fun entityScore(queryTerms: Set<String>, tags: List<String>): Double {
         if (tags.isEmpty()) return 0.0
-        val tagTerms = tags.flatMap(::tokens).toSet()
+        val tagTerms = tags.flatMap(::tokens).map(::normalizeTerm).toSet()
         if (tagTerms.isEmpty()) return 0.0
         return queryTerms.intersect(tagTerms).size.toDouble() / queryTerms.size.toDouble()
     }
@@ -222,15 +260,46 @@ object HybridMemoryRetriever {
         ProvenanceType.UNVERIFIED -> 0.20
     }
 
+    internal fun normalizeTerm(term: String): String {
+        val folded = term.replace("ä", "a").replace("ö", "o").replace("ü", "u").replace("ß", "ss")
+        if (folded.length < 5 || folded.any(Char::isDigit)) return folded
+        for (suffix in GERMAN_SUFFIXES) {
+            if (folded.endsWith(suffix) && folded.length - suffix.length >= 4) return folded.dropLast(suffix.length)
+        }
+        return folded
+    }
+
+    private val GERMAN_SUFFIXES = listOf("ern", "em", "en", "er", "es", "e", "n", "s")
+    private val TOKEN_SEPARATOR = Regex("[^\\p{L}\\p{N}]+")
+    private val SCORE_ORDER = compareByDescending<ScoredMemory> { it.score.total }
+        .thenByDescending { it.memory.updatedAt }
+        .thenBy { it.memory.id }
+
     private fun tokens(text: String): List<String> =
         text.lowercase(Locale.ROOT)
-            .split(Regex("[^\\p{L}\\p{N}]+"))
+            .split(TOKEN_SEPARATOR)
             .filter(String::isNotBlank)
             .take(MAX_TOKENS)
 
     private val TEMPORAL_TERMS = setOf(
         "today", "yesterday", "recent", "recently", "latest", "current", "now",
         "heute", "gestern", "kürzlich", "zuletzt", "aktuell", "jetzt"
+    )
+
+    private val QUERY_STOP_WORDS = setOf(
+        "a", "an", "and", "are", "as", "at", "be", "been", "by", "can", "could",
+        "do", "does", "for", "from", "has", "have", "how", "i", "in", "is", "it",
+        "me", "my", "of", "on", "or", "please", "that", "the", "their", "this", "to",
+        "was", "were", "what", "when", "where", "which", "who", "why", "with", "you", "your",
+        "aber", "als", "am", "auf", "aus", "bei", "bin", "bitte", "das", "dass", "dem",
+        "den", "der", "des", "die", "dir", "du", "ein", "eine", "einem", "einen", "einer",
+        "eines", "er", "es", "für", "hat", "haben", "ich", "ihm", "ihn", "ihr", "im", "ist",
+        "kann", "kannst", "mein", "meine", "meiner", "mir", "mit", "oder", "sein", "seine",
+        "sich", "sie", "sind", "und", "vom", "von", "war", "warum", "welche", "welcher",
+        "welches", "wer", "wie", "wir", "wird", "wo", "zu", "zum", "zur",
+        "über", "nicht", "auch", "noch", "wann", "wenn", "so", "man", "uns", "unser",
+        "dein", "deine", "weißt", "weiß", "etwas", "mich", "dich", "nach", "bis", "um",
+        "about", "tell", "know", "not", "any", "some", "there", "would", "will"
     )
 
     private const val K1 = 1.2

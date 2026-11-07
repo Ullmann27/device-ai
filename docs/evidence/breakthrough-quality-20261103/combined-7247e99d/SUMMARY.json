@@ -1,0 +1,71 @@
+{
+  "source_sha": "7247e99d0b93b62dfb2b5eee22486d22911cb722",
+  "source_tree": "fbf1201f56d529f3aff3f71a897c5e814565bbe2",
+  "node": {
+    "tests": 2193,
+    "pass": 2188,
+    "fail": 0,
+    "skip": 5
+  },
+  "backend": {
+    "tests": 64,
+    "pass": 64
+  },
+  "junit": {
+    "tests": 2161,
+    "pass": 2149,
+    "fail": 0,
+    "skip": 12,
+    "suites": 391
+  },
+  "configured_lint": "NewApi PASS",
+  "compile": "PASS",
+  "cre1_parity": "PASS",
+  "swb_parity": "PASS",
+  "m3_known_cases": {
+    "exact": 77,
+    "total": 81,
+    "harmful": 0,
+    "case_regressions": 0
+  },
+  "lme_known_cases": {
+    "correct": 35,
+    "abstain": 5,
+    "wrong": 0,
+    "forbidden": 0
+  },
+  "temporal_host_latency": {
+    "queries": 819,
+    "correct": 819,
+    "p50_ms": 0.963,
+    "p95_ms": 1.724,
+    "max_ms": 61.407,
+    "p95_limit_ms": 5
+  },
+  "artifact": {
+    "path": "/workspace/continuum-artifacts/breakthrough-7247e99d-code40-unsigned.apk",
+    "sha256": "e98e8177d069b474f43fdce82701aa2e20a178ee6118d5796f58359edd5a1b1b",
+    "bytes": 84178957,
+    "package": "at.heinz.deviceai.continuumlocal",
+    "versionCode": 40,
+    "versionName": "0.3.39",
+    "signed": false,
+    "zipalign_16k": true,
+    "all_packaged_elf_16k": true,
+    "native_library_count": 10,
+    "packaged_glb_sha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+    "original64_bytes": 54865941,
+    "increase_bytes_vs_original64": 29313016
+  },
+  "original64_artifact_unchanged": "dc201d6b674b458fd13bbf1404b74b87fd94fcfb4b289cab670dd3f707f1ba57",
+  "limits": [
+    "No Fold7/device/AndroidGPU runtime verification",
+    "Optional3D visual identity and phonetic quality not accepted",
+    "No actual Gemma inference or broad intelligence gain",
+    "Neural trained15 promotion rejected",
+    "Explicit known static UI test contract replacements, not unexplained test deletion",
+    "Host CLI receipt hardening has no active Android/job caller and retains embedded-field trust limitations",
+    "Pre-existing queued-runner shutdown/report gap not repaired",
+    "No signing, publishing, installing, workflow triggering or main merge"
+  ]
+}

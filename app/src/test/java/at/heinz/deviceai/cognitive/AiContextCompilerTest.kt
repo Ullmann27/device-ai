@@ -6,6 +6,31 @@ import org.junit.Test
 
 class AiContextCompilerTest {
     @Test
+    fun unrelatedOwnerFactDoesNotEnterPublicKnowledgePromptThroughFunctionWords() {
+        val now = 100_000L
+        val setup = setup(now)
+        val unrelated = memory(
+            id = "unrelated-owner-fact",
+            content = "Meine Schwester ist Ärztin in Wien.",
+            privacy = PrivacyClass.DEVICE_LOCAL_ONLY,
+            now = now
+        ).copy(tags = listOf("owner-confirmed"))
+
+        val compiled = AiContextCompiler(nowMillis = { now }).compile(
+            AiContextInput(
+                seed = setup.seed,
+                genome = setup.genome,
+                identityState = setup.identity,
+                userRequest = "Was ist Photosynthese?",
+                memories = listOf(unrelated)
+            )
+        )
+
+        assertTrue(compiled.includedMemoryIds.isEmpty())
+        assertFalse(compiled.text.contains("Meine Schwester"))
+    }
+
+    @Test
     fun identityAndGovernanceSurviveTruncationWhileSecretsAreRedacted() {
         val now = 100_000L
         val setup = setup(now)

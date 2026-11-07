@@ -57,8 +57,10 @@ class Ewm1SourceIndex(records: List<ContinuumKnowledgeArchive.SourceRecord>) {
         }
         // Redirect twins are one source. Wikipedia convention: the title without "(…)" is the primary topic;
         // several different articles that all carry a qualifier need a question back.
-        val distinct = articles.distinctBy { it.record.sha256 }.let { d ->
-            d.filter { !it.record.title.trimEnd().endsWith(")") }.ifEmpty { d } }
+        val distinct = articles.distinctBy { it.record.sha256 }
+            .sortedWith(compareByDescending<Source> { it.record.collectedAt }.thenBy { it.record.id })
+            .distinctBy { it.record.title.trim() }
+            .let { d -> d.filter { !it.record.title.trimEnd().endsWith(")") }.ifEmpty { d } }
         if (distinct.size > 1) return Pack("CLARIFY", "SEVERAL_ARTICLES", distinct.take(3))
         return Pack("QUERY", if (distinct.first().truncated) "SUPPORTED_TRUNCATED" else "SUPPORTED", listOf(distinct.first()))
     }

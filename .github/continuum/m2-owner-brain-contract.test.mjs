@@ -15,8 +15,45 @@ const harnessCli=read('scripts/continuum-harness-coding-cli.mjs');
 const guard=read('scripts/continuum-m2-model-preflight.mjs');
 const verifier=read('.github/continuum/ccc1-independent-verifier.mjs');
 const agent=read('.github/continuum/ccc1-worker.mjs');
-const statusEntry=app.split('private fun showM2MilestoneStatus()')[1]?.split('private fun showDeviceTeamleaderChatStatus()')[0];
-const smoke=app.split('private fun runLocalSmokeTest(')[1]?.split('private fun runLocal(')[0];
+// Match real function bodies, not the next declaration or braces in strings/comments.
+function codeOnly(source) {
+ const out=source.split('');
+ for(let i=0;i<source.length;) {
+  const start=i;
+  if(source.startsWith('//',i)) { i=source.indexOf('\n',i);if(i<0)i=source.length; }
+  else if(source.startsWith('/*',i)) {
+   i+=2;let depth=1;
+   while(i<source.length&&depth) { if(source.startsWith('/*',i)){depth++;i+=2;}else if(source.startsWith('*/',i)){depth--;i+=2;}else i++; }
+  } else if(source.startsWith('"""',i)) { const end=source.indexOf('"""',i+3);i=end<0?source.length:end+3; }
+  else if('"\'`'.includes(source[i])) {
+   const quote=source[i++];while(i<source.length) { if(source[i]==='\\'){i+=2;continue;}if(source[i++]===quote)break; }
+  } else { i++;continue; }
+  for(let j=start;j<i;j++)if(source[j]!=='\n')out[j]=' ';
+ }
+ return out.join('');
+}
+function bracedBody(source,open) {
+ const code=codeOnly(source);assert.equal(code[open],'{','missing body opening');let depth=0;
+ for(let i=open;i<code.length;i++){if(code[i]==='{')depth++;else if(code[i]==='}'&&--depth===0)return source.slice(open,i+1);}
+ assert.fail('unbalanced function body');
+}
+function bodyOf(source,signature) {
+ const name=signature.match(/\b(?:fun|function)\s+(\w+)\s*\(/)?.[1]??signature;
+ assert.match(name,/^[A-Za-z_]\w*$/);
+ const code=codeOnly(source),match=new RegExp('\\b(?:fun|function)\\s+'+name+'\\s*\\(').exec(code);
+ if(!match)return null;
+ let i=code.indexOf('(',match.index),depth=0;
+ for(;i<code.length;i++){if(code[i]==='(')depth++;else if(code[i]===')'&&--depth===0){i++;break;}}
+ const open=code.indexOf('{',i),equals=code.indexOf('=',i);
+ if(equals>=0&&(open<0||equals<open)) {
+  // The expression-bodied motion predicate ends before the next blank line/declaration.
+  const end=code.indexOf('\n\n',equals);return source.slice(equals,end<0?source.length:end);
+ }
+ return open<0?null:bracedBody(source,open);
+}
+const statusEntry=bodyOf(app,'showM2MilestoneStatus');
+const smoke=bodyOf(app,'runLocalSmokeTest');
+const observation=read('scripts/continuum-local-model-observation.mjs');
 const expectations=[
  ['01 pinned owner Gemma ID',()=>assert.match(selected,/LOCAL_ID = "gemma4-e4b-it"/)],
  ['02 pinned owner Gemma digest',()=>assert.match(selected,/LOCAL_SHA256 = "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0"/)],
@@ -39,10 +76,21 @@ const expectations=[
  ['19 command decoder remains pure and non-executing',()=>assert.doesNotMatch(route,/Runtime\.getRuntime|ProcessBuilder|startActivity\(|execFileSync|fetch\(/)],
  ['20 direct model test never accepts a broad arbitrary command',()=>assert.match(route,/"meilenstein modelltest", "continuum gemma test", "gemma modelltest"/)],
  ['21 production local coding CLI imports preflight gate',()=>assert.match(cli,/import \{requireCodingModelPreflight\} from '\.\/continuum-m2-model-preflight\.mjs'/)],
- ['22 coding CLI checks runtime before queryLocalCodingBrain',()=>{
+ ['22 coding and legacy patch routes enforce admission before generation',()=>{
     const g=cli.indexOf('requireCodingModelPreflight({');
-    const request=cli.indexOf("const result=await (command==='coding'?queryLocalCodingBrain:queryLocalBrain)");
-    assert.ok(g>0 && request>g);
+    const request=cli.indexOf('const result=await queryLocalBrain({',g);
+    assert.ok(g>0 && request>g,'legacy patch preflight precedes generation');
+    assert.match(cli,/import \{queryPinnedLocalCoding\} from '\.\/continuum-local-model-observation\.mjs'/);
+    assert.match(cli,/if\(command==='coding'\) \{\s*const result=await queryPinnedLocalCoding\(\{\.\.\.request,env:process\.env\}\)/);
+    const pinned=bodyOf(observation,'queryPinnedLocalCoding');
+    const preflight=pinned.indexOf('requireCodingModelPreflight({');
+    const manifest=pinned.indexOf('readPinnedGgufManifest(');
+    const admission=pinned.indexOf('admitGgufFile(');
+    const launch=pinned.indexOf('launchLocalModel(');
+    assert.ok(preflight>=0 && manifest>preflight && admission>manifest && launch>admission,
+      'pinned coding validates consent/provenance/model before any native generation');
+    assert.match(pinned,/actualRuntimeHash!==runtimeHash/);
+    assert.match(pinned,/admitted\.sha256!==pin\.sha256/);
  }],
  ['23 local original LiteRT is rejected on llama CPP boundary',()=>assert.match(guard,/GEMMA_LITERTLM_NOT_GGUF/)],
  ['24 alternative model always needs explicit owner consent',()=>assert.match(guard,/ALTERNATE_MODEL_CONSENT_REQUIRED/)],

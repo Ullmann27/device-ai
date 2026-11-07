@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "status": "INDEPENDENT_RUNTIME_GEOMETRY_PASS_VISUAL_PARTIAL",
+  "asset": "assets/avatar/jarvis-research-v1.glb",
+  "coordinateSystem": {
+    "up": "+Y",
+    "front": "+Z",
+    "viewerRight": "+X",
+    "units": "metres",
+    "anatomicalLeft": "+X"
+  },
+  "nodes": [
+    "AvatarRoot",
+    "Neck",
+    "Head",
+    "EyeLeft",
+    "EyeRight",
+    "Jaw"
+  ],
+  "skinNode": "Face",
+  "morphTargets": [
+    "SIL",
+    "PP",
+    "FF",
+    "TH",
+    "DD",
+    "KK",
+    "CH",
+    "SS",
+    "NN",
+    "RR",
+    "AA",
+    "E",
+    "I",
+    "O",
+    "U",
+    "BlinkLeft",
+    "BlinkRight",
+    "BrowUp",
+    "BrowDown",
+    "Smile",
+    "JawOpen"
+  ],
+  "neutral": "all morph weights zero; all control rotations identity",
+  "jawPolicy": "Face exterior via JawOpen morph, Jaw controls inner mouth only",
+  "budget": {
+    "headTriangles": 30000,
+    "totalTriangles": 60000,
+    "maxTextureEdge": 1024
+  },
+  "referenceSha256": "a850c508fc5b44700024de0248b799650d160198f0e6a2039550ea266198bb78",
+  "identityStatus": "REQUIRES_VISUAL_REVIEW",
+  "deviceStatus": "NOT_RUN",
+  "runtimeAsset": "assets/avatar/jarvis-runtime-v1.glb",
+  "runtimeAnimationPolicy": "No embedded clips; existing AvatarPose events only",
+  "researchAnimationPolicy": "Separate research GLB retains three authored demonstration clips"
+}

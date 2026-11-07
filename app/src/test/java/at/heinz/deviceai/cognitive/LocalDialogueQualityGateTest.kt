@@ -99,4 +99,20 @@ class LocalDialogueQualityGateTest {
         assertTrue(result.success)
         assertTrue(result.notes.contains("NICHT bestätigt"))
     }
+    @Test fun leakedInternalResearchInstructionsAreNotAcceptedAsChatAnswers() {
+        val prompt = "Erkläre mir den Unterschied zwischen Wissen speichern und logisch schlussfolgern."
+        val leaked = "Bitte stellen Sie mir die \"UNTRUSTED EVIDENCE DATA\" zur Verfügung, " +
+            "damit ich die Synthese durchführen kann."
+        val result = LocalDialogueQualityGate.evaluate(prompt, leaked)
+        assertFalse(result.success)
+        assertTrue(result.notes.contains("Recherche-Platzhalter"))
+    }
+
+    @Test fun ownerMayExplicitlyAskAboutResearchBoundaryTerminology() {
+        val result = LocalDialogueQualityGate.evaluate(
+            "Was bedeutet der interne Marker UNTRUSTED EVIDENCE DATA?",
+            "UNTRUSTED EVIDENCE DATA bezeichnet eine Kennzeichnung nicht vertrauenswürdiger Quellentexte.")
+        assertTrue(result.success)
+    }
+
 }

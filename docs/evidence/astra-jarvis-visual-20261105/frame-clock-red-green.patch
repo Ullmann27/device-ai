@@ -1,0 +1,126 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt b/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt
+index 9167d92e..2f3c1fa4 100644
+--- a/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt
++++ b/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt
+@@ -13,7 +13,6 @@ import android.os.SystemClock
+ import android.os.PowerManager
+ import android.provider.Settings
+ import android.util.Log
+-import android.view.Choreographer
+ import android.view.View
+ 
+ /**
+@@ -86,6 +85,7 @@ class JarvisShellView(context: Context) : View(context) {
+ 
+     private fun refreshMotion() {
+         removeCallbacks(ambientFrame)
++        lastFrameStartNanos = 0L
+         invalidate()
+     }
+ 
+@@ -148,6 +148,7 @@ class JarvisShellView(context: Context) : View(context) {
+         Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)
+ 
+     override fun onDraw(canvas: Canvas) {
++        val drawStartedNanos = if (frameLogging) System.nanoTime() else 0L
+         val d = resources.displayMetrics.density
+         val w = width / d; val h = height / d
+         if (w < 240f || h < 160f) return
+@@ -173,7 +174,7 @@ class JarvisShellView(context: Context) : View(context) {
+         removeCallbacks(ambientFrame)
+         if (motionAllowed(scale) && startMs >= 0 && elapsed < total) postInvalidateOnAnimation()
+         else if (ambientMotion(scale)) postDelayed(ambientFrame, 66L)
+-        if (frameLogging) frames.onDrawn(SystemClock.elapsedRealtimeNanos() - drawStart(now))
++        if (frameLogging) recordFrame(drawStartedNanos, System.nanoTime())
+     }
+ 
+     /** Same geometry and text metrics, rendered above the transparent native avatar but below its hit targets. */
+@@ -188,28 +189,41 @@ class JarvisShellView(context: Context) : View(context) {
+         canvas.restoreToCount(save)
+     }
+ 
+-    // --- Debug: frame-time measurement (Fold7 measurement still pending on device) ---
+-    /** Logs frame interval stats every 120 frames under tag "JarvisFrames" while true. Debug only. */
++    /** Observes draws without scheduling frames. */
+     var frameLogging = false
+         set(value) {
++            if (field == value) return
+             field = value
+-            if (value) Choreographer.getInstance().postFrameCallback(frames) else frames.reset()
++            lastFrameStartNanos = 0L
++            if (value) frameSample = FrameSample()
+         }
+-    private fun drawStart(nowUptime: Long) = SystemClock.elapsedRealtimeNanos() - (SystemClock.uptimeMillis() - nowUptime) * 1_000_000L
+-
+-    private val frames = object : Choreographer.FrameCallback {
+-        private var last = 0L; private var n = 0; private var sum = 0L; private var max = 0L; private var drawSum = 0L
+-        fun reset() { last = 0L; n = 0; sum = 0L; max = 0L; drawSum = 0L }
+-        fun onDrawn(ns: Long) { drawSum += ns }
+-        override fun doFrame(frameTimeNanos: Long) {
+-            if (last != 0L) { val dt = frameTimeNanos - last; sum += dt; if (dt > max) max = dt; n++ }
+-            last = frameTimeNanos
+-            if (n >= 120) {
+-                Log.d("JarvisFrames", "avg=%.2fms max=%.2fms onDraw=%.2fms (n=%d)".format(sum / n / 1e6, max / 1e6, drawSum / n / 1e6, n))
+-                n = 0; sum = 0L; max = 0L; drawSum = 0L
+-            }
+-            invalidate()
+-            if (frameLogging) Choreographer.getInstance().postFrameCallback(this)
++
++    data class FrameSample(
++        val draws: Long = 0L,
++        val intervals: Long = 0L,
++        val intervalNanos: Long = 0L,
++        val maxIntervalNanos: Long = 0L,
++        val drawNanos: Long = 0L
++    ) {
++        val averageIntervalMs: Double? get() = if (intervals > 0) intervalNanos / intervals / 1e6 else null
++        val averageDrawMs: Double? get() = if (draws > 0) drawNanos / draws / 1e6 else null
++    }
++
++    private var lastFrameStartNanos = 0L
++    private var frameSample = FrameSample()
++    fun sampleFrames(): FrameSample = frameSample
++
++    private fun recordFrame(start: Long, end: Long) {
++        val interval = if (lastFrameStartNanos > 0L) (start - lastFrameStartNanos).coerceAtLeast(0L) else 0L
++        val before = frameSample
++        frameSample = FrameSample(before.draws + 1, before.intervals + if (lastFrameStartNanos > 0L) 1 else 0,
++            before.intervalNanos + interval, maxOf(before.maxIntervalNanos, interval),
++            before.drawNanos + (end - start).coerceAtLeast(0L))
++        lastFrameStartNanos = start
++        if (frameSample.draws % 120L == 0L) {
++            Log.d("JarvisFrames", "draws=%d avg=%.2fms max=%.2fms onDraw=%.2fms".format(
++                java.util.Locale.ROOT, frameSample.draws, frameSample.averageIntervalMs ?: 0.0,
++                frameSample.maxIntervalNanos / 1e6, frameSample.averageDrawMs ?: 0.0))
+         }
+     }
+ }
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt
+index 71289521..6de9037d 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt
+@@ -154,4 +154,24 @@ class JarvisShellMotionUiTest {
+         f.parent.addView(f.shell, FrameLayout.LayoutParams(-1, -1))
+         assertRunning(f)
+     }
++
++    @Test fun frameLoggingDoesNotKeepUnfocusedShellDrawing() = withShell { f ->
++        f.shell.frameLogging = true
++        try {
++            f.controller.windowFocusChanged(false)
++            assertStopped(f)
++            f.controller.windowFocusChanged(true)
++            assertRunning(f)
++        } finally { f.shell.frameLogging = false }
++    }
++
++    @Test fun frameLoggingHonoursReducedMotion() = withShell { f ->
++        f.shell.frameLogging = true
++        try {
++            val resolver = f.controller.get().contentResolver
++            Settings.Global.putFloat(resolver, Settings.Global.ANIMATOR_DURATION_SCALE, 0f)
++            resolver.notifyChange(Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE), null)
++            assertStopped(f)
++        } finally { f.shell.frameLogging = false }
++    }
+ }

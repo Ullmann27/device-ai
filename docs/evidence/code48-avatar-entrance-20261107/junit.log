@@ -1,0 +1,32 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=34563 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=34563 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.ui.AvatarEntranceUiTest#realPresenterMovesOnlyTheHeadAndFinishesTheBoot
+.
+Time: 4.814
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.AvatarEntranceUiTest#shrinkCueReturnsTheHeadWithoutChangingTheWorkCamera
+.
+Time: 0.156
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.AvatarEntranceUiTest#lifecycleResetsImmediatelyWithoutReplayingTheEntrance
+.
+Time: 0.17
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.AvatarEntranceUiTest#actualOwnerStopImmediatelyCancelsTheEntranceAndItsDelayedCue
+.
+Time: 1.033
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.AvatarEntranceUiTest#actualActivityStartupDeliversEntranceAfterFirstLayout
+.
+Time: 0.31
+
+OK (1 test)
+
+TOTAL tests=5 failures=0

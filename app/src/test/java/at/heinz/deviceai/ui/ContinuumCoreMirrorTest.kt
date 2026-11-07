@@ -1,119 +1,109 @@
 package at.heinz.deviceai.ui
 
 import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 
-/** Geometric symmetry must survive a Fold reflow and the owner's larger display zoom. */
+/**
+ * The November owner images supersede the old six mirrored controls around the head.
+ * Their required balance now belongs to a complete action grid below an unobstructed stage.
+ */
 class ContinuumCoreMirrorTest {
-    private val pairs = listOf(
-        Slot.LABEL_CONNECTED to Slot.LABEL_THINKING,
-        Slot.LABEL_LEARNING to Slot.LABEL_ANALYSING,
-        Slot.LABEL_DEVELOPING to Slot.LABEL_EVOLVING
-    )
+    private val layouts = listOf(
+        ContinuumHomeLayout.phone(360f), ContinuumHomeLayout.phone(412f),
+        ContinuumHomeLayout.wide(840f, 649f), ContinuumHomeLayout.wide(832f, 708f),
+        ContinuumHomeLayout.wide(656f, 690f), ContinuumHomeLayout.wide(840f, 1050f)
+    // 2026-11-04: landscape windows now use the ref1/ref3 cockpit (ContinuumLandscapeCockpitLayoutTest);
+    // this mirror composition remains the phone/portrait/large-type layout.
+    ).filterNot { it.landscapeCockpit }
 
-    /** Original symmetry contract stays MANDATORY for phone and the old landscape geometry. */
-    @Test fun allSixControlsHaveEqualAndReflectedBounds() {
-        val layouts = listOf(
-            ContinuumHomeLayout.phone(360f),
-            ContinuumHomeLayout.phone(411f),
-            ContinuumHomeLayout.phone(412f),
-            ContinuumHomeLayout.wide(840f, 649f),
-            ContinuumHomeLayout.wide(832f, 708f),
-            ContinuumHomeLayout.wide(840f, 840f)
-        )
-        layouts.forEach { layout ->
+    @Test fun allEightControlsKeepEqualBoundsAndBalancedRows() {
+        for (layout in layouts) {
+            val actions = ContinuumReferenceLayout.actions.map { layout.boxes.getValue(it) }
+            val composer = layout.boxes.getValue(Slot.COMPOSER)
+            for (box in actions) {
+                assertEquals(actions.first().width, box.width, .002f)
+                assertEquals(actions.first().height, box.height, .002f)
+                assertTrue(box.width >= 48f && box.height >= 48f)
+            }
+            for ((_, row) in actions.groupBy { it.top }) {
+                assertEquals(composer.left, row.first().left, .002f)
+                assertEquals(composer.right, row.last().right, .002f)
+                for ((a, b) in row.zipWithNext()) assertTrue(a.right < b.left)
+            }
+        }
+    }
+
+    @Test fun avatarAndCoreDoNotUnderlayAnInteractiveActionOrComposer() {
+        for (layout in layouts) {
             val hero = layout.boxes.getValue(Slot.HERO)
-            val centerX = (hero.left + hero.right) / 2f
-            pairs.forEach { (leftSlot, rightSlot) ->
-                val left = layout.boxes.getValue(leftSlot)
-                val right = layout.boxes.getValue(rightSlot)
-                assertEquals("$leftSlot / $rightSlot width", left.width, right.width, .002f)
-                assertEquals("$leftSlot / $rightSlot top", left.top, right.top, .002f)
-                assertEquals("$leftSlot / $rightSlot bottom", left.bottom, right.bottom, .002f)
-                assertEquals("$leftSlot / $rightSlot outer reflection",
-                    2f * centerX, left.left + right.right, .002f)
-                assertEquals("$leftSlot / $rightSlot inner reflection",
-                    2f * centerX, left.right + right.left, .002f)
-                assertTrue(left.left >= 0f && right.right <= layout.width)
-                assertTrue(left.right < centerX && right.left > centerX)
+            for (slot in ContinuumReferenceLayout.actions + Slot.COMPOSER + Slot.LABEL_EVOLVING) {
+                val control = layout.boxes.getValue(slot)
+                assertTrue("$slot below the complete avatar/core stage", control.top > hero.bottom)
             }
         }
     }
 
-    @Test fun foldOrbDoesNotObscureMirroredLabelsWhenHeroGrows() {
-        val fold = ContinuumHologramRenderer.Geometry.FOLD
-        val layouts = listOf(
-            ContinuumHomeLayout.wide(840f, 649f),
-            ContinuumHomeLayout.wide(832f, 708f),
-            ContinuumHomeLayout.wide(840f, 840f),
-            ContinuumHomeLayout.wide(920f, 730f)
-        )
-        layouts.forEach { layout ->
-            val hero = layout.boxes.getValue(Slot.HERO)
-            val centerX = (hero.left + hero.right) / 2f
-            val sphereRadius = minOf(
-                hero.width * fold.radiusOfWidth,
-                hero.height * fold.radiusOfHeight
-            ) * fold.sphere
-            val clearance = 8f * layout.scale
-            pairs.forEach { (leftSlot, rightSlot) ->
-                val left = layout.boxes.getValue(leftSlot)
-                val right = layout.boxes.getValue(rightSlot)
-                assertTrue("$leftSlot sphere collision", left.right + clearance <= centerX - sphereRadius + .01f)
-                assertTrue("$rightSlot sphere collision", centerX + sphereRadius + clearance <= right.left + .01f)
-            }
-        }
-    }
-
-    /**
-     * The owner corrected the Fold portrait reference after device inspection:
-     * both action columns must now have exactly equal width and height, with
-     * the large animated orb visible between the columns. Keep actual geometry
-     * and chart alignment under test rather than relying on stale screenshot values.
-     */
-    @Test fun portraitFoldButtonsFollowMeasuredReferenceInsteadOfLegacyMirror() {
-        for ((w,h) in listOf(656f to 690f, 750f to 790f, 840f to 1010f)) {
-            val layout=ContinuumHomeLayout.wide(w,h)
-            val u=w/840f
-            val hero=layout.boxes.getValue(Slot.HERO)
-            val left=layout.boxes.getValue(Slot.LABEL_CONNECTED)
-            val right=layout.boxes.getValue(Slot.LABEL_THINKING)
-            assertEquals(216f*u,left.width,.002f)
-            assertEquals(216f*u,right.width,.002f)
-            assertEquals(82f*u,left.height,.002f)
-            assertEquals(left.width,right.width,.002f)
-            assertEquals(w-left.left,right.right,.002f)
-            assertEquals(left.top,right.top,.002f)
-            assertEquals(left.bottom,right.bottom,.002f)
-            assertTrue("both buttons outside the orb center",left.right<hero.left+hero.width/2f &&
-                right.left>hero.left+hero.width/2f)
-            assertTrue("new owner layout keeps an unobstructed orb gap",right.left-left.right>=370f*u)
-            assertTrue("left control does not overlap hero stage",left.right<hero.left)
-            assertTrue("right control does not overlap hero stage",right.left>hero.right)
-            assertTrue("full-width card grid must not use landscape rail",layout.boxes[Slot.RAIL]==null)
-            val upper=listOf(Slot.MODEL,Slot.LEARNING,Slot.STORAGE).map{layout.boxes.getValue(it)}
-            val lower=listOf(Slot.DEVELOPMENT,Slot.SYSTEM_ACTIVITY,Slot.WORKERS).map{layout.boxes.getValue(it)}
-            for(i in 0..2){
-                assertEquals(upper[i].left,lower[i].left,.002f)
-                assertEquals(upper[i].width,lower[i].width,.002f)
-                assertEquals(upper[i].height,lower[i].height,.002f)
-            }
-        }
-    }
-
-    @Test fun onlyRightHandCardsReverseElementOrderNotLetters() {
-        for (layout in listOf(ContinuumHomeLayout.phone(412f), ContinuumHomeLayout.wide(750f, 790f))) {
+    @Test fun portraitAndLandscapeBothKeepOneHeroAndTheSameDestinations() {
+        val destinations = ContinuumReferenceLayout.actions.toSet() + setOf(
+            Slot.COMPOSER, Slot.LABEL_EVOLVING, Slot.MODEL, Slot.LEARNING,
+            Slot.STORAGE, Slot.DEVELOPMENT, Slot.WORKERS, Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)
+        for (layout in layouts) {
+            assertNotNull(layout[Slot.HERO])
             val elements = ContinuumHomeScreen.elements(layout, 1f)
-            pairs.forEach { (left, right) ->
-                val l = elements.getValue(left) as CoreLabelElement
-                val r = elements.getValue(right) as CoreLabelElement
-                assertFalse(l.mirrored)
-                assertTrue(r.mirrored)
-                assertTrue(l.title.isNotBlank())
-                assertTrue(r.title.isNotBlank())
+            assertTrue(elements.keys.containsAll(destinations))
+            assertFalse("The native avatar owns the stage", elements.containsKey(Slot.HERO))
+        }
+    }
+
+    @Test fun actionTextUsesReadableDestinationNamesOnBothSides() {
+        val labels = mapOf(Slot.LABEL_THINKING to "Gespräch", Slot.ACTION_MEMORY to "Gedächtnis",
+            Slot.LABEL_ANALYSING to "Forschung", Slot.LABEL_DEVELOPING to "Entwicklung",
+            Slot.ACTION_AGENTS to "Agenten", Slot.LABEL_LEARNING to "Lernen",
+            Slot.ACTION_DEVICE to "Gerät", Slot.LABEL_CONNECTED to "Internet")
+        for (layout in layouts) {
+            val elements = ContinuumHomeScreen.elements(layout, 1f)
+            for ((slot, title) in labels) {
+                assertTrue(elements.getValue(slot) is ReferenceActionElement)
+                assertTrue(elements.getValue(slot).describe(ContinuumDashboardState()).startsWith("$title."))
+            }
+        }
+    }
+
+    // Security review #481 (4): the landscape cockpit gets the same strength of checks, adapted to its composition.
+    private val cockpits = listOf(ContinuumHomeLayout.wide(840f, 649f), ContinuumHomeLayout.wide(832f, 708f),
+        ContinuumHomeLayout.wide(1280f, 800f)).onEach { assertTrue(it.landscapeCockpit) }
+
+    @Test fun landscapeCockpitActionBarKeepsEqualBoundsInOneRowUnderTheStage() {
+        for (layout in cockpits) {
+            val bar = ContinuumLandscapeCockpitLayout.actionBar.map { layout.boxes.getValue(it) }
+            val hero = layout.boxes.getValue(Slot.HERO)
+            val composer = layout.boxes.getValue(Slot.COMPOSER)
+            for (box in bar) {
+                assertEquals(bar.first().width, box.width, .002f)
+                assertEquals(bar.first().height, box.height, .002f)
+                assertEquals(bar.first().top, box.top, .002f)
+                assertTrue(box.width >= 48f && box.height >= 48f)
+                assertTrue("$box below the avatar stage", box.top > hero.bottom)
+                assertTrue("$box below the composer", box.top > composer.bottom)
+            }
+            for ((a, b) in bar.zipWithNext()) assertTrue(a.right < b.left)
+            assertTrue("composer below the avatar stage", composer.top > hero.bottom)
+        }
+    }
+
+    @Test fun landscapeCockpitKeepsOneHeroAndRealDestinations() {
+        for (layout in cockpits) {
+            assertNotNull(layout[Slot.HERO])
+            val elements = ContinuumHomeScreen.elements(layout, 1f)
+            val needed = ContinuumLandscapeCockpitLayout.actionBar + ContinuumLandscapeCockpitLayout.topTabs +
+                ContinuumLandscapeCockpitLayout.cards + Slot.COMPOSER
+            assertTrue(elements.keys.containsAll(needed))
+            assertFalse("The native avatar owns the stage", elements.containsKey(Slot.HERO))
+            val hero = layout.boxes.getValue(Slot.HERO)
+            for (card in ContinuumLandscapeCockpitLayout.cards) {
+                val c = layout.boxes.getValue(card)
+                assertTrue("$card does not underlay the avatar", c.right <= hero.left || c.left >= hero.right)
             }
         }
     }

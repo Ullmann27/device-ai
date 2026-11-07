@@ -1,0 +1,58 @@
+{
+  "schema": "jarvis-independent-gaze-motion-review",
+  "version": 1,
+  "evidenceClass": "CONTRACT_TEST",
+  "testFreeze": "000c48b71f61eb0f9fa8725bc13911f7b45d1871",
+  "postInspectionChallengeFreeze": "12586912bc5ae930d6191ee775b3f820b9f2e3ee",
+  "baselineSource": "7caef9b624beebdb78c8c081a17f4978461ae496",
+  "candidateSource": "1649a04346631ca4389159c03e0ab6c7333f4e1c",
+  "baseline": {
+    "run": 26,
+    "pass": 12,
+    "fail": 14,
+    "skip": 0,
+    "exit": 1
+  },
+  "candidate": {
+    "run": 26,
+    "pass": 25,
+    "fail": 1,
+    "skip": 0,
+    "exit": 1,
+    "originalFrozen25": "PASS",
+    "failure": "discardedFutureObservationCannotLockOutNewCurrentObservations",
+    "reproducedCounterexample": "future observation at2000; pose1000 drops it; fresh observation1001 remains rejected atpose1002"
+  },
+  "commands": [
+    "bash tools/jarvis-reference-review/run-gaze-challenge.sh /workspace/jarvis-reference-3d-baseline 7caef9b624beebdb78c8c081a17f4978461ae496 /workspace/jarvis-reference-review-results/gaze-baseline",
+    "bash tools/jarvis-reference-review/run-gaze-challenge.sh /workspace/jarvis-reference-ui-candidate 1649a04346631ca4389159c03e0ab6c7333f4e1c /workspace/jarvis-reference-review-results/gaze-candidate-1649"
+  ],
+  "candidateSourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "24d7bbd9967b65d34e749cdd4a6c619cf5ca6fb417bc552b7a0438ccefed8ed0",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "4a22ae65d02d2b7b339808e5a3ad8653f94dfef4643fe780f1a9b249c71bb5d9",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "0846e856e54ec833b5e622e205baa9d9780a239844a921671adce3e6069d729d",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "0bd66be24c3763ab23aa0c2955ada4cffd736414e7620a8d20c9085b6524a03a",
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "06504f9ee5e7d0502bcb513060a492c28759c2cda02bdd333baad026c97cd6d9",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "d364c24de5550dfa566639c87f9572602385ddce00f1061a27021c28c5f832ec",
+    "app/src/main/assets/avatar3d/continuum-avatar.glb": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e"
+  },
+  "protectedDesignSourcesUnchanged": 34,
+  "protectedDesignSourcesTotal": 34,
+  "limits": [
+    "Real Kotlin production code with actual JUnit, not Filament execution or Android device test",
+    "Synthetic gaze does not prove camera hookup or person tracking",
+    "34 unchanged protected files are source evidence; same-backend visual comparison remains pending",
+    "Host GLB appearance remains NOT_ACCEPTED; voice, onboarding and Fold7 are not passed"
+  ],
+  "sha256": {
+    "docs/evidence/momega1/reference-review/gaze-baseline-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/evidence/momega1/reference-review/gaze-baseline-junit.txt": "aa393b7fdfa3edec4f56488df06738406cc56a541af727a2b61d76025158db4c",
+    "docs/evidence/momega1/reference-review/gaze-baseline-junit.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/evidence/momega1/reference-review/gaze-candidate-1649-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/evidence/momega1/reference-review/gaze-candidate-1649-junit.txt": "53508b9f51a73fb0628451a408fbcbd5bf7499a6533781b36d69f09845a5a658",
+    "docs/evidence/momega1/reference-review/gaze-candidate-1649-junit.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "tools/jarvis-reference-review/MapperMotionChallengeTest.kt": "144671f1b1705f5ba505edea75753a81ccbac8c9b1d3456a8c8ffcbab19fb7f3",
+    "tools/jarvis-reference-review/ObservedGazeChallengeTest.kt": "ac7f44ec7fd166fe6c30e9666702ea819455c549539c0bffb716f04923b4fa45",
+    "tools/jarvis-reference-review/run-gaze-challenge.sh": "3f8e9cf3d0207230939f1b0e2e37ed867fd4b0ad0a07062fcb13240942cd4941"
+  }
+}

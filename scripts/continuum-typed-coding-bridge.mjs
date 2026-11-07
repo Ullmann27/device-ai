@@ -25,7 +25,7 @@ const ERROR_CODES=new Set([
  'CODING_GRANT_CORRUPT','CODING_CHAIN_BINDING_MISMATCH',
  'CCC1_PREFLIGHT_FAILED','CCC1_SOURCE_NOT_CLEAN','CODING_MODEL_UNAVAILABLE',
  'CODING_ISOLATION_REQUIRED','CODING_ISOLATION_UNAVAILABLE',
- 'CODING_TASK_BINDING_MISMATCH'
+ 'BLOCKED_LOCAL_MODEL_UNAVAILABLE','CODING_TASK_BINDING_MISMATCH','CODING_LOCAL_MODEL_OBSERVATION_REQUIRED','CODING_ADMITTED_AGENT_UNAVAILABLE'
 ]);
 const DEFAULT_ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const DEFAULT_STATE=path.join(os.homedir(),'.local/state/device-ai-continuum/ccc1');
@@ -99,7 +99,8 @@ export function verifiedCodingReviewReceipt(result){
      !SHA.test(evidence?.verificationSha256??'')||evidence.evidenceSufficient!==true||
      !Number.isSafeInteger(evidence.baselineExecuted)||evidence.baselineExecuted<1||
      !Number.isSafeInteger(evidence.baselineFailed)||evidence.baselineFailed<1||
-     !Number.isSafeInteger(evidence.candidateExecuted)||evidence.candidateExecuted<1||
+     !Number.isSafeInteger(evidence.candidateExecuted)||
+     evidence.candidateExecuted<evidence.baselineExecuted||
      !Number.isSafeInteger(evidence.independentExecuted)||
      evidence.independentExecuted<evidence.candidateExecuted)continue;
   const phases=receipt.commands;
@@ -168,7 +169,7 @@ export async function executeTypedBridge(command,{
   catch{return blocked('run',id,'CODING_ISOLATION_UNAVAILABLE');}
   if(!executor)return blocked('run',id,'CODING_ISOLATION_UNAVAILABLE');
   const r=await run({project,stateDir,id,executor,
-    executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true,
+    executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true,requireLocalModelObservation:true,
     expectedTaskFingerprint:hash});
   if(r.id!==id||r.taskFingerprint!==hash||!SHA.test(r.taskFingerprint))
    return blocked('run',id,'RUN_BINDING_MISMATCH');

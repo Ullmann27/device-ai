@@ -1,0 +1,48 @@
+{
+  "gate": "android",
+  "startedAt": "2026-11-06T20:50:42.154396+00:00",
+  "startedEpochMillis": 1793998242154,
+  "finishedAt": "2026-11-06T21:25:45.474062+00:00",
+  "sourceBefore": {
+    "commit": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+    "tree": "57027b6d4cfceda3bbd8241e77341ec67632370c",
+    "branch": "codex/continuum-code47-qa-candidate-20261106",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceAfter": {
+    "commit": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+    "tree": "57027b6d4cfceda3bbd8241e77341ec67632370c",
+    "branch": "codex/continuum-code47-qa-candidate-20261106",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceUnchanged": true,
+  "commands": [
+    {
+      "command": [
+        "gradle",
+        "--no-daemon",
+        "--max-workers=1",
+        "--console=plain",
+        "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-PdeviceAiMentorPreview=true",
+        "-PcontinuumStandaloneVersionCode=47",
+        "--rerun-tasks",
+        "-PcontinuumUiWidgetTests=true",
+        "-PcontinuumLocalStandaloneQa=true",
+        ":app:compileDebugKotlin",
+        ":app:testDebugUnitTest",
+        ":app:lintDebug"
+      ],
+      "cwd": "/workspace/scratch/b31a9d731016/device-ai-wiring",
+      "exitCode": 1
+    }
+  ],
+  "logSha256": "530a8ea4733087bf2175d9498a49f9f3006cddba2bcf53497060d6fb28feb054",
+  "logBytes": 44118,
+  "localUnsignedQaOnly": true,
+  "deviceAcceptance": "NOT_RUN",
+  "status": "FAIL"
+}

@@ -1,0 +1,70 @@
+64ec06a73f50cae9ee49035c840710d87777d50f
+1da1535deb7ad7e8212b173a1f328fc55bd5b34810663754ae86bc5ed8130ff8  /workspace/gamma-challenger/docs/evidence/gamma-challenger-20261103/GammaChallenger.kt
+385b130f67e7c11564fc0b789f19182f42b4de0615665e424789ed9f2477163c  /workspace/continuum-build-env/gamma-challenger-b.1FvH5C/ContinuumLearningExperience.kt
+54f0ccaffa01f27541c0542004b32f846d96ece339f0616114d77f6e21884ffa  /workspace/continuum-build-env/gamma-challenger-b.1FvH5C/Lex3LearningExperienceStore.kt
+info: kotlinc-jvm 2.4.0 (JRE 17.0.20.1+1)
+ENV	java=17.0.20.1	vm=OpenJDK 64-Bit Server VM
+SAMPLE	cold-construction-replay	256	0	9504452	7346376
+SAMPLE	cold-construction-replay	256	1	8233149	7149720
+SAMPLE	cold-construction-replay	256	2	8089562	7149720
+SAMPLE	warm-same-type	256	0	9150048	6674944
+SAMPLE	warm-same-type	256	1	8198276	6672640
+SAMPLE	warm-same-type	256	2	8493822	6656512
+SAMPLE	warm-same-type	256	3	9431060	6656512
+SAMPLE	warm-same-type	256	4	5752436	6656512
+SAMPLE	warm-same-type	256	5	5324462	6656512
+SAMPLE	caller-source48-intent96	256	0	10847462	13303448
+SAMPLE	caller-source48-intent96	256	1	8952902	13303448
+SAMPLE	caller-source48-intent96	256	2	8723726	13303448
+SAMPLE	caller-source48-intent96	256	3	9848298	13303448
+SAMPLE	alternating-type-limit	256	0	4676137	6672616
+SAMPLE	alternating-type-limit	256	1	3980620	6626296
+SAMPLE	alternating-type-limit	256	2	3866648	6631440
+SAMPLE	alternating-type-limit	256	3	4398258	6611232
+SAMPLE	mutation-and-replay	256	0	16969686	21434080
+SAMPLE	mutation-and-replay	256	1	12345025	21140560
+SAMPLE	mutation-and-replay	256	2	19807024	21141144
+RETAINED	256	0
+SAMPLE	cold-construction-replay	1024	0	30301184	27018352
+SAMPLE	cold-construction-replay	1024	1	18046165	26976192
+SAMPLE	cold-construction-replay	1024	2	19723108	26975392
+SAMPLE	warm-same-type	1024	0	15165751	26776848
+SAMPLE	warm-same-type	1024	1	14612868	26776848
+SAMPLE	warm-same-type	1024	2	14775032	26767656
+SAMPLE	warm-same-type	1024	3	12770447	26767656
+SAMPLE	warm-same-type	1024	4	18838166	26767656
+SAMPLE	warm-same-type	1024	5	14402482	26770576
+SAMPLE	caller-source48-intent96	1024	0	27062252	53531392
+SAMPLE	caller-source48-intent96	1024	1	28755559	53495248
+SAMPLE	caller-source48-intent96	1024	2	30282037	53485208
+SAMPLE	caller-source48-intent96	1024	3	26250620	53485136
+SAMPLE	alternating-type-limit	1024	0	12361269	26768784
+SAMPLE	alternating-type-limit	1024	1	13444680	26710200
+SAMPLE	alternating-type-limit	1024	2	16541381	26732120
+SAMPLE	alternating-type-limit	1024	3	12990626	26710200
+SAMPLE	mutation-and-replay	1024	0	38335795	58752400
+SAMPLE	mutation-and-replay	1024	1	30853606	58751560
+SAMPLE	mutation-and-replay	1024	2	34941703	58751856
+RETAINED	1024	0
+SAMPLE	cold-construction-replay	4096	0	54314309	106870656
+SAMPLE	cold-construction-replay	4096	1	62892315	106868928
+SAMPLE	cold-construction-replay	4096	2	63467877	106865888
+SAMPLE	warm-same-type	4096	0	56263210	106834280
+SAMPLE	warm-same-type	4096	1	53263918	106828728
+SAMPLE	warm-same-type	4096	2	74374923	106828120
+SAMPLE	warm-same-type	4096	3	49397474	106828120
+SAMPLE	warm-same-type	4096	4	58774208	106828600
+SAMPLE	warm-same-type	4096	5	68348196	106828376
+SAMPLE	caller-source48-intent96	4096	0	118284225	213662992
+SAMPLE	caller-source48-intent96	4096	1	109440863	213659296
+SAMPLE	caller-source48-intent96	4096	2	115270800	213650080
+SAMPLE	caller-source48-intent96	4096	3	101202712	213650592
+SAMPLE	alternating-type-limit	4096	0	56684539	106851256
+SAMPLE	alternating-type-limit	4096	1	57762983	106792672
+SAMPLE	alternating-type-limit	4096	2	69094748	106851256
+SAMPLE	alternating-type-limit	4096	3	68610119	106792672
+SAMPLE	mutation-and-replay	4096	0	138638642	234873256
+SAMPLE	mutation-and-replay	4096	1	149846106	234872768
+SAMPLE	mutation-and-replay	4096	2	142122955	234873240
+RETAINED	4096	0
+SINK	6103

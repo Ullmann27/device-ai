@@ -1,0 +1,29 @@
+{
+  "sourceCommit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "discussionFetchedAt": "2026-11-07T06:54:06Z",
+  "reviewSummary": [
+    {
+      "id": 6703365998,
+      "url": "https://github.com/Ullmann27/device-ai/pull/591#issuecomment-6703365998",
+      "updatedAt": "2026-11-07T06:33:23Z",
+      "reviewer": "gitar-bot[bot]",
+      "observedSummary": "Approved; 2 closed / 2 findings; functional validation not enabled"
+    }
+  ],
+  "findings": [
+    {
+      "id": 4500256621,
+      "url": "https://github.com/Ullmann27/device-ai/pull/591#discussion_r4500256621",
+      "path": "docs/research/omega/CODE48-FULLSTAGE-CINEMA-20261107.md",
+      "observedResolution": "Marked fixed in 5d91442"
+    },
+    {
+      "id": 4500300174,
+      "url": "https://github.com/Ullmann27/device-ai/pull/591#discussion_r4500300174",
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+      "observedResolution": "Marked fixed in 5d91442"
+    }
+  ],
+  "claimLimit": "Automated textual review is not completed Android QA or device acceptance. The notice's actual legacy presenter reachability was separately corrected in project evidence.",
+  "externalInstructionsExecuted": false
+}

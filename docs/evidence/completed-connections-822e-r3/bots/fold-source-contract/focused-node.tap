@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: Fold portrait uses the shared width/font profile and one labelled rail
+ok 1 - Fold portrait uses the shared width/font profile and one labelled rail
+  ---
+  duration_ms: 1.482507
+  type: 'test'
+  ...
+# Subtest: current information panels and separate status keep real sources and complete scrollable rows
+ok 2 - current information panels and separate status keep real sources and complete scrollable rows
+  ---
+  duration_ms: 0.502465
+  type: 'test'
+  ...
+# Subtest: ten action controls share draw bounds while head and original orb retain separate regions
+ok 3 - ten action controls share draw bounds while head and original orb retain separate regions
+  ---
+  duration_ms: 1.257288
+  type: 'test'
+  ...
+# Subtest: Fold chat remains a real native action and both content and rail stay scrollable
+ok 4 - Fold chat remains a real native action and both content and rail stay scrollable
+  ---
+  duration_ms: 0.528834
+  type: 'test'
+  ...
+# Subtest: phone and Fold share the original live surface and preserve its lifecycle during reflow
+ok 5 - phone and Fold share the original live surface and preserve its lifecycle during reflow
+  ---
+  duration_ms: 0.374973
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 115.928906

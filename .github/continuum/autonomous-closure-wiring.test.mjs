@@ -33,7 +33,7 @@ test('local model keeps isolated thinking resource until close and rejects cross
  assert.match(runtime,/val closed = runCatching/);
  assert.match(runtime,/if \(activeConversation\.isAlive\) activeConversation\.close\(\)/);
  assert.match(runtime,/if \(inferenceConversation === activeConversation\) inferenceConversation = null/);
- assert.match(runtime,/Triple\(oldConversation, oldInference, oldEngine\)/);
+ assert.match(runtime,/Triple\(conversation, inferenceConversation, engine\)/);
 });
 
 test('mandatory Android parity and separate repair E2E gate remain enforced',()=>{

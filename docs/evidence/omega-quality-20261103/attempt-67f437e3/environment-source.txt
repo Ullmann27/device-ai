@@ -1,0 +1,28 @@
+2026-11-03T18:14:26Z
+67f437e35bfe32a343c1b89b7c60e49090a2f59a
+1612b17c29dfccc2ef37eab65311945ae228d2a6
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+openjdk version "21.0.12.1" 2026-08-18
+OpenJDK Runtime Environment (build 21.0.12.1+1-1-deb13u1-Debian)
+OpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-deb13u1-Debian, mixed mode, sharing)
+v24.19.0
+
+------------------------------------------------------------
+Gradle 8.11.1
+------------------------------------------------------------
+
+Build time:    2024-11-20 16:56:46 UTC
+Revision:      481cb05a490e0ef9f8620f7873b83bd8a72e7c39
+
+Kotlin:        2.0.20
+Groovy:        3.0.22
+Ant:           Apache Ant(TM) version 1.10.14 compiled on August 16 2023
+Launcher JVM:  17.0.20.1 (Eclipse Adoptium 17.0.20.1+1)
+Daemon JVM:    /workspace/continuum-build-env/jdk17 (no JDK specified, using current Java home)
+OS:            Linux 6.18.57 amd64
+
+737088540e3b25762bdc234185cbd90fbc683d9e2d80668d6510ef5d3eedec7b  /workspace/continuum-build-env/test-jvm21.init.gradle
+.github/continuum/cre-parity.mjs: OK
+.github/continuum/contrastive-parity.mjs: OK

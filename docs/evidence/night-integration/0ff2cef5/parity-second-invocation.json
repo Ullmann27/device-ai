@@ -1,0 +1,36 @@
+{
+  "sourceCommit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+  "checkedAt": "2026-11-03T23:33:28.731569+00:00",
+  "checks": [
+    {
+      "command": [
+        "node",
+        ".github/continuum/backlog-fixtures.mjs",
+        "roundtrip-verify",
+        "/workspace/scratch/391c0f6de827/build-env/final-parity/backlog"
+      ],
+      "exitCode": 1,
+      "output": "Round trip FAILED:\n- integrity differs from what Kotlin reported\n- revision 14, expected 8+4\n- rt-android should be PROPOSED\n- Kotlin op log results [\"INVALID_TRANSITION\",\"INVALID_TRANSITION\",\"ok\"]\n- op log revision\n"
+    },
+    {
+      "command": [
+        "node",
+        ".github/continuum/contrastive-parity.mjs",
+        "verify",
+        "/workspace/scratch/391c0f6de827/build-env/final-parity/contrastive"
+      ],
+      "exitCode": 0,
+      "output": "SWB2 cross-runtime parity verified: 350 rounds, 700 updates, 4113 weights within 1e-8\nCross-runtime parity verified: 4113 weights, max error 1.3877787807814457e-17\n"
+    },
+    {
+      "command": [
+        "node",
+        ".github/continuum/cre-parity.mjs",
+        "verify",
+        "/workspace/scratch/391c0f6de827/build-env/final-parity/cre1"
+      ],
+      "exitCode": 0,
+      "output": "CRE1 Kotlin/Node inference parity verified on 7 cases\nCRE1 Kotlin/Node SGD parity verified over 526336 weights (max error 3.469446951953614e-18)\n"
+    }
+  ]
+}

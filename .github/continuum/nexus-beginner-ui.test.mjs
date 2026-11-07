@@ -16,7 +16,7 @@ function section(start, end) {
 // The reference start screen: its drawn slots (routed in openHomeSlot), the work-area navigation and the chat composer.
 const home = section('private fun buildConversationPane(wide: Boolean): View', 'private fun refreshDashboard()') +
   section('private fun navigateWorkArea(', 'private fun refreshConversationLayout()') +
-  section('private fun buildComposer(): View', 'private fun sendCurrentInput()');
+  section('private fun buildComposer(): View', 'private fun sendCurrentInput(');
 
 test('the five beginner destinations stay reachable from the reference start screen', () => {
   for (const title of [
@@ -26,7 +26,9 @@ test('the five beginner destinations stay reachable from the reference start scr
     'KI personalisieren',
     'Meine Aufgaben'
   ]) assert.ok(spec.includes('"'+title+'"'), title);
-  for (const route of ['startVoiceInput()', 'showDevelopmentDialog()', 'showMemoryCenter()',
+  // Owner decision 05.11.: the voice destination starts hands-free talk (onChatMicrophoneTap →
+  // toggleContinuousConversation → startVoiceInput, guarded in continuous-conversation-wiring).
+  for (const route of ['onChatMicrophoneTap()', 'showDevelopmentDialog()', 'showMemoryCenter()',
     'showNexusPersonalization()', 'showDevelopmentBacklog()']) assert.ok(home.includes(route), 'Beginner destination lost: '+route);
 });
 
@@ -46,19 +48,30 @@ test('advanced routes remain available from the start screen, its rail and the M
 
 test('Nexus keeps real hologram and voice entry tied to Android speech and system state', () => {
   assert.match(home, /ContinuumHologramView\(this\)/);
-  assert.match(activity, /RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/);
-  assert.match(activity, /voiceListening = true/);
+  assert.match(activity, /AndroidOnDeviceSpeechInput\(this\)/);
+  const recognizer=fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt',import.meta.url),'utf8');
+  assert.match(recognizer, /SpeechRecognizer\.createOnDeviceSpeechRecognizer\(context\)/);
+  assert.match(recognizer, /RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/);
+  assert.match(activity, /onState=\{if\(speechScopeGeneration==scopeGeneration\)\{voiceListening=it;refreshHologramState\(\)/);
   assert.match(activity, /refreshHologramState\(\)/);
   assert.match(hologram, /setAudioLevel/);
 });
 
 test('fold, small display and enlarged-font behaviour are expressed by a pure policy', () => {
   assert.match(home, /resources\.configuration\.screenWidthDp/);
-  assert.match(homeView, /resources\.configuration\.fontScale\.coerceIn\(\.85f, 1\.3f\)/);
+  assert.match(homeView, /resources\.configuration\.fontScale\.coerceIn\(\.85f, 2f\)/);
   assert.match(layout, /fun isWide\(widthDp: Float, heightDp: Float\)/);
-  assert.match(layout, /fun phone\(widthDp: Float\): Layout/);
-  // still a pure function of the window: width, and since the upright-Fold fill also the height
-  assert.match(layout, /fun wide\(widthDp: Float, heightDp: Float = 0f\): Layout/);
+  assert.match(layout, /fun phone\(widthDp: Float, fontScale: Float = 1f\): Layout/);
+  // Pure window/font policy: no Android state or side effects in the geometry.
+  assert.match(layout, /fun wide\(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f\): Layout/);
+  assert.match(layout, /ContinuumReferenceLayout\.create\(widthDp, 0f, false, fontScale\)/);
+  assert.match(layout, /ContinuumReferenceLayout\.create\(widthDp, heightDp, true, fontScale\)/);
+  const reference=fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt',import.meta.url),'utf8');
+  const profile=fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt',import.meta.url),'utf8');
+  assert.match(reference, /require\(fontScale\.isFinite\(\) && fontScale > 0f\)/);
+  assert.match(profile, /if \(fontScale\.isFinite\(\)\) fontScale\.coerceIn\(\.85f, 2f\) else 1f/);
+  assert.doesNotMatch(layout, /import android\.|Runtime\.getRuntime|ProcessBuilder|FileOutputStream/);
+  assert.doesNotMatch(reference+profile, /import android\.|Runtime\.getRuntime|ProcessBuilder|FileOutputStream/);
   assert.match(spec, /usableWidthDp >= 320/);
   assert.match(spec, /fontScale\.isFinite\(\)/);
   assert.match(spec, /fontScale <= 1\.25f/);

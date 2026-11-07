@@ -1,0 +1,65 @@
+{
+  "status": "LOCAL_PATCH_VERIFIED_NOT_PUSHED",
+  "baseline_sha": "9ee7535bb131504cc85419afd30f446089a40171",
+  "branch": "support/code47-m2-dispatch-start-20261106",
+  "changed_files": {
+    "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f",
+    "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt": "743daa22515cc34b0d63a51fe2fc30c16e154e7076b010ebf3e31ddacd45f665",
+    "app/src/test/java/at/heinz/deviceai/ToolDispatchObserverTest.kt": "50dcaf1a90083a96801aa0c35cf61e6b70029f20a2285370d3f8312228ed3ab8",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ToolWorkJournalDispatchBoundaryTest.kt": "879a4553f060e3739fb9a52d8362d5c30ad5f17c7b88b878af336c14a0908be3"
+  },
+  "patch_sha256": "352dfca03b7662dc8748561924d2ab0515846175c771c663a88e0e61b948b218",
+  "red": {
+    "tests": 7,
+    "failed": 4,
+    "exit_code": 1,
+    "source": "Unmodified M2 sources at baseline SHA plus new regression class"
+  },
+  "green": {
+    "tests": 43,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "toolchain": {
+    "kotlin": "2.4.0",
+    "java": "17.0.20.1",
+    "compiler_heap_mib": 256,
+    "junit_heap_mib": 192,
+    "gradle_started": false
+  },
+  "dependency_provenance": "Actual SDK-compiled production dependencies from f26d1063b25c65c22b8d411789d1733c92e3ad72; changed M2 classes compiled from exact 9ee source; real org.json implementation; no substitute production classes",
+  "scope": "Separate post-commit observer, compatible original execute overload, M2 callback binding",
+  "preserved": [
+    "Existing early observer timing",
+    "Both pre-dispatch eligibility checks",
+    "Start commit lock",
+    "Existing four-argument JVM and Kotlin-default ABI",
+    "ToolGate authorization and receipts"
+  ],
+  "not_verified": [
+    "Full integrated Gradle suite",
+    "Actual Fold7 storage/backend operation",
+    "Code47 APK release"
+  ],
+  "rollback": "Revert only the two production changes and two added regression classes; no persisted schema or package changes",
+  "independent_review": {
+    "reviewer": "/root/build_kontrolle",
+    "status": "PASS_NO_BLOCKER",
+    "scope": [
+      "Production diff",
+      "Both new regression classes",
+      "RED raw result",
+      "GREEN raw result and seven-class invocation",
+      "Compiler and JUnit command manifests",
+      "Classpath ordering and actual dependency provenance"
+    ],
+    "independent_rerun": false
+  },
+  "experiments_preserved": [
+    "EXP-05",
+    "EXP-06",
+    "EXP-07",
+    "EXP-11"
+  ]
+}

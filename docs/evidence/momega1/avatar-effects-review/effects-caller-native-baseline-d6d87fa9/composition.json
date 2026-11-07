@@ -1,0 +1,8 @@
+{
+  "baselineProduction": "582dc785196d1376ee5953ce958c5ef59dc5775b",
+  "fixtureCommit": "ae221eccde625dc30200db1bc51290d98249a1ee",
+  "fixturePath": "app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt",
+  "fixtureBlob": "e7591367df95ade9859e632e18227260add6c668",
+  "composedSource": "d6d87fa91f9a3c0a40f7964a2a270efe4d36112a",
+  "productionTreeByteIdentical": true
+}

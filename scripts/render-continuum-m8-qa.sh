@@ -12,12 +12,38 @@ sha="$(git rev-parse --verify HEAD)"
 git -c core.fileMode=false diff --quiet HEAD -- || die 'Tracked source changed in Render checkout'
 untracked_sources="$(git ls-files --others --exclude-standard -- app/src scripts .github/continuum backend/src backend/test)"
 [[ -z "$untracked_sources" ]] || die 'Untracked source files present in Render checkout'
-[[ "$(git branch --show-current)" == "research/continuum-m8-operational-model-20261031" || -z "$(git branch --show-current)" ]] || die 'Unexpected branch'
+case "$(git branch --show-current)" in \
+  research/continuum-m8-operational-model-20261031|\
+  release/continuum-local-complete-v31-20261031|\
+  fix/continuum-v32-network-web-recovery-20261031|\
+  release/continuum-v32-openrouter-fullweb-20261031|\
+  research/continuum-m8-render-signed-release-20261031|\
+  research/continuum-m10-verified-brain-and-web-20261031|\
+  research/continuum-sol-cdx1-evidence-20261101|\
+  fix/continuum-ewm2-role-age-production-20261101|\
+  fix/continuum-ewm2-archive-plural-20261101|\
+  integration/continuum-ouroboros-ewm2-proof-20261101|\
+  release/continuum-local-0.3.35-20261101|\
+  research/continuum-evidence-span-natural-entities-20261101|\
+  research/continuum-superki-architecture-proof-20261101|\
+  research/continuum-jarvis-evolution-20261101|\
+  research/continuum-sol61-post-fable-20261101|\
+  research/continuum-340-evidence-routing-20261101|\
+  research/continuum-341-brain-wiring-qa-20261101|\
+  research/continuum-synapse-ii-20261102|\
+  research/continuum-synapse-iii-20261102|\
+  research/continuum-fusion-iv-20261102|\
+  research/continuum-grand-challenge-20261102|\
+  release/continuum-v35-integrated-20261031|"") ;; \
+  *) die "Unexpected branch" ;; \
+esac
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" &&
     -z "${CONTINUUM_LOCAL_SIGNING_FILE:-}" && -z "${CONTINUUM_LOCAL_SIGNING_PASSWORD:-}" ]] ||
     die 'QA must never receive private signing credentials'
+[[ ! -e continuum-m8-render-qa ]] || die 'Stale QA output directory; refusing reused reports'
+run_id="$(node -e 'process.stdout.write(require("node:crypto").randomUUID())')"
 mkdir -p continuum-m8-render-qa
-printf 'status=RUNNING_NOT_A_RELEASE\nsource_commit=%s\n' "$sha" > continuum-m8-render-qa/STATUS.txt
+printf 'status=RUNNING_NOT_A_RELEASE\nsource_commit=%s\nrun_id=%s\n' "$sha" "$run_id" > continuum-m8-render-qa/STATUS.txt
 workspace="$PWD/.continuum-render-build"
 mkdir -p "$workspace"
 export JAVA_HOME="$workspace/jdk17"
@@ -58,25 +84,82 @@ gradle --version
 node --version
 # Preserve frozen historical owner-release approval tests: they are not valid
 # acceptance criteria for changed source. Do not run them as false positives.
-node --test   .github/continuum/coding-task.test.mjs   .github/continuum/coding-task-android-extensions.test.mjs     > continuum-m8-render-qa/NODE-TESTS.txt 2>&1 || {
+# Integrated proof: local missing-file recovery is checked without overwriting owners' work.
+node --test --test-reporter=tap scripts/continuum-architecture-proof.test.mjs scripts/android-kotlin-compile-check.test.mjs scripts/continuum-session-evidence-routing.test.mjs scripts/continuum-fold7-stream-scroll.test.mjs scripts/cdx2-blind-score.test.mjs scripts/continuum-brain-connection-audit.test.mjs .github/continuum/ccc1-checkout-binding.test.mjs scripts/continuum-experiment-integration.test.mjs scripts/continuum-local-chat-streaming.test.mjs scripts/continuum-model-center.test.mjs scripts/continuum-standalone-qa-variant.test.mjs > continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt 2>&1 || {
+  cat continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt >&2
+  die 'Architecture-proof regression tests failed'
+}
+# Fail closed on missing main-chat edges and mutated frozen Blind-C source.
+node scripts/continuum-brain-connection-audit.mjs > continuum-m8-render-qa/BRAIN-CONNECTIONS.json ||
+  die 'Brain source connections are missing; no owner release claim'
+echo '3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c  docs/evidence/issue340-20261101/m2/blind-c/corpus.json' |
+  sha256sum --check --status || die 'Frozen CDX2 blind corpus changed'
+# No blind result is asserted without independent raw predictions.
+node --test --test-reporter=tap scripts/ensure-termux-checkout.test.mjs > continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt 2>&1 || {
+  cat continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt >&2
+  die 'Pinned Termux checkout recovery contract failed'
+}
+node --test --test-reporter=tap   .github/continuum/coding-task.test.mjs   .github/continuum/coding-task-android-extensions.test.mjs   .github/continuum/risk-file-ranker.test.mjs   .github/continuum/coding-agent-risk-tools.test.mjs     > continuum-m8-render-qa/NODE-TESTS.txt 2>&1 || {
     cat continuum-m8-render-qa/NODE-TESTS.txt
     die 'Node contract tests failed'
   }
 cat continuum-m8-render-qa/NODE-TESTS.txt | tail -n 30
+# All newest research checks, not just old M8 contract smoke tests.
+node --test --test-reporter=tap tools/continuum-virtual-fabric/*.test.mjs \
+  > continuum-m8-render-qa/FRONTIER-NODE-TESTS.txt 2>&1 || {
+  cat continuum-m8-render-qa/FRONTIER-NODE-TESTS.txt >&2
+  die 'Latest Frontier Node tests failed'
+}
+# Regression for release gates with a stubbed signing environment, not signing.
+node --test --test-reporter=tap scripts/render-continuum-m8-owner-release.test.mjs \
+  > continuum-m8-render-qa/RELEASE-CONTRACT-TESTS.txt 2>&1 || {
+  cat continuum-m8-render-qa/RELEASE-CONTRACT-TESTS.txt >&2
+  die 'Latest release contract tests failed'
+}
+# New independent branches integrated for this exact Android release candidate.
+node --test --test-reporter=tap   scripts/continuum-jarvis-mission-control-contract.test.mjs   scripts/continuum-owner-render-readback.test.mjs \
+  scripts/continuum-v31-feature-gate.test.mjs scripts/continuum-v32-autonomy-gate.test.mjs   > continuum-m8-render-qa/JARVIS-READBACK-TESTS.txt 2>&1 || {
+  cat continuum-m8-render-qa/JARVIS-READBACK-TESTS.txt >&2
+  die 'JARVIS cockpit or HTTPS published-APK readback tests failed'
+}
+# Independent backend OpenRouter mocks and endpoint security regression checks.
+(
+  cd backend
+  npm ci --ignore-scripts --no-audit --no-fund
+  npm run check
+  node --test --test-reporter=tap test/*.test.js
+) > continuum-m8-render-qa/BACKEND-TESTS.txt 2>&1 || {
+  tail -n 140 continuum-m8-render-qa/BACKEND-TESTS.txt
+  die 'Backend and OpenRouter tests failed'
+}
 # The isolated QA mode forbids APK assembly and enforces a distinct .qa package.
-gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalStandaloneQa=true   -PcontinuumStandaloneVersionCode=29   :app:testDebugUnitTest :app:lintDebug   > continuum-m8-render-qa/GRADLE-QA.txt 2>&1 || {
+gradle --rerun-tasks --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalStandaloneQa=true   -PcontinuumStandaloneVersionCode=36   :app:testDebugUnitTest :app:lintDebug   > continuum-m8-render-qa/GRADLE-QA.txt 2>&1 || {
     tail -n 180 continuum-m8-render-qa/GRADLE-QA.txt
+    # Failed Render builds do not publish their local JUnit XML artifacts.
+    # Emit ONLY failure type/message/test-id from the independently generated
+    # test report; never change, skip or weaken the frozen acceptance tests.
+    if [[ -d app/build/test-results/testDebugUnitTest ]]; then
+      echo 'CONTINUUM_ANDROID_JUNIT_FAILURE_DETAILS_START'
+      find app/build/test-results/testDebugUnitTest -maxdepth 1 -name 'TEST-*.xml' -type f -exec grep -H -B 2 -A 3 '<failure' {} + | head -n 85 || true
+      echo 'CONTINUUM_ANDROID_JUNIT_FAILURE_DETAILS_END'
+    fi
     die 'Android QA compilation, unit test or lint failed'
   }
 tail -n 60 continuum-m8-render-qa/GRADLE-QA.txt
 # As a separate task, verify the correct production package can actually be
 # assembled in release mode WITHOUT access to signing credentials.
-gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalRenderUnsigned=true   -PcontinuumStandaloneVersionCode=29   :app:assembleRelease > continuum-m8-render-qa/ASSEMBLY.txt 2>&1 || {
+gradle --rerun-tasks --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalRenderUnsigned=true   -PcontinuumStandaloneVersionCode=36   :app:assembleRelease :app:bundleRelease > continuum-m8-render-qa/ASSEMBLY.txt 2>&1 || {
     tail -n 140 continuum-m8-render-qa/ASSEMBLY.txt
     die 'Unsigned owner-package assembly failed'
   }
 test -s app/build/outputs/apk/release/app-release-unsigned.apk ||
   die 'No assembled unsigned candidate APK'
-printf 'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=29\napk_signed=FALSE\napk_published=FALSE\n' "$sha" > continuum-m8-render-qa/STATUS.txt
+test -s app/build/outputs/bundle/release/app-release.aab ||
+  die 'No assembled Android App Bundle candidate'
+# Read package and version from the built binary, independently of Gradle/STATUS labels.
+aapt2 dump badging app/build/outputs/apk/release/app-release-unsigned.apk \
+  > continuum-m8-render-qa/APK-BADGING.txt 2>&1 || die 'Unsigned APK binary readback failed'
+printf 'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=%s\nrun_id=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=36\napk_signed=FALSE\napk_published=FALSE\n' "$sha" "$run_id" > continuum-m8-render-qa/STATUS.txt
+CONTINUUM_PROOF_SHA="$sha" CONTINUUM_PROOF_RUN_ID="$run_id" CONTINUUM_PROOF_VERSION=36 node scripts/continuum-architecture-proof.mjs || die 'Architecture-proof receipt invalid'
 printf '<!doctype html><html lang="de"><meta charset="UTF-8"><title>Continuum M8 QA</title><body><h1>CONTINUUM M8 QA PASS</h1><p>Nur Build-Abnahme, keine signierte APK veröffentlicht.</p><pre>%s</pre></body></html>' "$sha" > continuum-m8-render-qa/index.html
 echo "CONTINUUM_M8_RENDER_QA=PASS SHA=$sha NO_OWNER_APK_PUBLISHED"

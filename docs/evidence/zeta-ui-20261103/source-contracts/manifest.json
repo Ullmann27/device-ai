@@ -1,0 +1,59 @@
+{
+  "baselineSourceCommit": "853a8ee08359ce41375ddb9334ac8ae9c2e2c59e",
+  "productionSourceChanged": false,
+  "weeklyQuota": "NOT_VISIBLE",
+  "nodeVersion": "v24.19.0",
+  "nodeBaseline": {
+    "tests": 37,
+    "pass": 28,
+    "fail": 9,
+    "skip": 0
+  },
+  "nodeCandidate": {
+    "tests": 37,
+    "pass": 37,
+    "fail": 0,
+    "skip": 0
+  },
+  "kotlinMirrorBaseline": {
+    "tests": 4,
+    "pass": 0,
+    "fail": 4
+  },
+  "kotlinMirrorCandidate": {
+    "tests": 4,
+    "pass": 4,
+    "fail": 0
+  },
+  "negativeMutationsDetected": 6,
+  "tests": {
+    ".github/continuum/android-holographic-home.test.mjs": {
+      "baselineSha256": "81023f4b93f012faecd91ff1d3d4e79969ad3adbc6047406bcdc90d84130dd3f",
+      "candidateSha256": "6106f1428cb06d3e2fdc52141a92c2e4ffb691ff93de43521a2888f7f8e0a0de"
+    },
+    ".github/continuum/app-navigation-wiring.test.mjs": {
+      "baselineSha256": "a9fc6588c4ed628ab22f0c39c42e74c322bce2fa45778cc616cfe0d0a39233fc",
+      "candidateSha256": "b7da3edaf359856416e198db67019717f03a2a257c0fd1fe3e8f1f9441284b53"
+    },
+    ".github/continuum/continuum-owner-mainapp-quality.test.mjs": {
+      "baselineSha256": "d3d62f4b0c7851a2fb9bb7d6d079a7cf25ded21e15fc509936a623f36ceac0ea",
+      "candidateSha256": "6f82fd8e090d52bac4f83de225a4c53eafb1ecb5b27d2cbc91d9d1b615e5d4b9"
+    },
+    ".github/continuum/fold7-portrait-reference.test.mjs": {
+      "baselineSha256": "dfefc84e966cf594d392b5004f1caa995232f19329380104b04a740c442effbb",
+      "candidateSha256": "b80b0b7de37cedb7e327adb169aa564f97bd5c17ed60c685f1bc9d175115a5e5"
+    },
+    ".github/continuum/nexus-beginner-ui.test.mjs": {
+      "baselineSha256": "c30d53a833f852b4c12911e19524b9fb8d24c257890d5d31c4edd2bb10efd477",
+      "candidateSha256": "3e3d97e12a6a4c0a5c272dfa5e7a9bacfdb86ed266418acb73a7d1ffcd34fbd2"
+    },
+    ".github/continuum/premium-phone-viewport-wiring.test.mjs": {
+      "baselineSha256": "9934e767c2d8cc8f9d414cc94031f2e75b3a853dd9cdec48731972f86315b498",
+      "candidateSha256": "5903cb57159527978f329d868b268c6888e37fbdb9f62eb537167fa464b1f9a6"
+    },
+    "app/src/test/java/at/heinz/deviceai/ui/ContinuumCoreMirrorTest.kt": {
+      "baselineSha256": "9c39b14ab1151caed7af3faf369f5f5707ee2f86936983bcd77b4a8d298c2b37",
+      "candidateSha256": "ae07a02d011cadbd0fc423ea6f8e5bf6a99edb552a4972e530b61f8e8dabbeda"
+    }
+  }
+}

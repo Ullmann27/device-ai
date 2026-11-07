@@ -1,0 +1,193 @@
+{
+  "taskId": "C1-CRITICAL-PREUI020",
+  "status": "PASS",
+  "sourceLocal": "681bdec2527c6a5ef4c773e8211cf62e4ac4ad06",
+  "sourceRemote": "11ed97e237f4f939b38e61b53d8942d6b3e22b49",
+  "tree": "1ab9ee719626c15a8510e10e478f5e7da4a41a2b",
+  "startedAt": "2026-11-04T21:42:08.055776+00:00",
+  "finishedAt": "2026-11-04T21:42:42.872363+00:00",
+  "exitCode": 0,
+  "sourceUnchanged": true,
+  "commands": [
+    {
+      "command": [
+        "node",
+        "scripts/continuum-reliability-qa.mjs",
+        "critical",
+        "--out",
+        "/workspace/scratch/174c84456ee3/qa/critical-preui020-01-output"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "scripts/continuum-qa-evidence.mjs",
+        "node",
+        "/workspace/scratch/174c84456ee3/qa/critical-preui020-01-output/report.json",
+        "681bdec2527c6a5ef4c773e8211cf62e4ac4ad06",
+        "critical",
+        "1793828528055"
+      ],
+      "exitCode": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"expectedHead\": \"681bdec2527c6a5ef4c773e8211cf62e4ac4ad06\",\n  \"profile\": \"critical\",\n  \"failures\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "counts": {
+    "total": 135,
+    "passed": 135,
+    "failed": 0,
+    "skipped": 0,
+    "executed": 135
+  },
+  "checks": [
+    {
+      "id": "process",
+      "counts": {
+        "total": 37,
+        "passed": 37,
+        "failed": 0,
+        "skipped": 0,
+        "executed": 37
+      },
+      "code": 0,
+      "junitSha256": "199c868a1b194e29a1285ea19a0c25cafa3eb638b1096fbb9ace8394784c1363",
+      "allCaseIdentitiesUniqueWithinCheck": true
+    },
+    {
+      "id": "storage-agent",
+      "counts": {
+        "total": 32,
+        "passed": 32,
+        "failed": 0,
+        "skipped": 0,
+        "executed": 32
+      },
+      "code": 0,
+      "junitSha256": "c9b988324471857758e1a2c7266a3003add1e2e27be577aa11063ddb478714ec",
+      "allCaseIdentitiesUniqueWithinCheck": true
+    },
+    {
+      "id": "android-source-contracts",
+      "counts": {
+        "total": 64,
+        "passed": 64,
+        "failed": 0,
+        "skipped": 0,
+        "executed": 64
+      },
+      "code": 0,
+      "junitSha256": "ebe56a59bd9b792d9d2587b0a37636bb32139272c85d09cbca4c348f98a56358",
+      "allCaseIdentitiesUniqueWithinCheck": true
+    },
+    {
+      "id": "host-checker",
+      "counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0,
+        "executed": 2
+      },
+      "code": 0,
+      "junitSha256": "568e5ba2bca513d44eac94b8246adbc20a41d283eafa40b33fe4fbb0e0960079",
+      "allCaseIdentitiesUniqueWithinCheck": true
+    }
+  ],
+  "notRunScopes": [
+    {
+      "id": "gradle",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "lint",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "apk",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "fold7",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "model-inference",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    }
+  ],
+  "scope": "Current critical baseline before UI020 product changes; not final full-node/Android/backend/APK/model/device acceptance",
+  "archivePreparationNotes": [
+    "Initial packaging script exited 1 on KeyError tests for NOT_RUN metadata. No test rerun. Corrected selection explicitly validates all four required critical checks and preserves all five NOT_RUN scopes."
+  ],
+  "archiveSha256": "703ba8bb3d84230a251830fd346931ed6315af67f26868e6d65664f225a6a857",
+  "members": [
+    {
+      "path": "output/android-source-contracts.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/android-source-contracts.xml",
+      "sha256": "ebe56a59bd9b792d9d2587b0a37636bb32139272c85d09cbca4c348f98a56358"
+    },
+    {
+      "path": "output/host-checker.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/host-checker.xml",
+      "sha256": "568e5ba2bca513d44eac94b8246adbc20a41d283eafa40b33fe4fbb0e0960079"
+    },
+    {
+      "path": "output/process.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/process.xml",
+      "sha256": "199c868a1b194e29a1285ea19a0c25cafa3eb638b1096fbb9ace8394784c1363"
+    },
+    {
+      "path": "output/report.json",
+      "sha256": "477ab921e9645eec5d8debfe1eb3ffa27fb71e55944ec9a939226c8ce63d0d1b"
+    },
+    {
+      "path": "output/report.md",
+      "sha256": "36e746a437fbe4097ee47070b7c28caa7a3682b80f5b6e03f9dc4f478f3f8fba"
+    },
+    {
+      "path": "output/storage-agent.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/storage-agent.xml",
+      "sha256": "c9b988324471857758e1a2c7266a3003add1e2e27be577aa11063ddb478714ec"
+    },
+    {
+      "path": "critical-preui020-01.result.json",
+      "sha256": "a5db8f23529a74fe436fa1b9b005e2c7e46007c9ef264cd7a95bdb270da9f280"
+    },
+    {
+      "path": "critical-preui020-01.log",
+      "sha256": "631ce3d8ffb2088fd3fc2c75d694a9d49dc841f53ae80eea1694b7d4bed2fcf8"
+    },
+    {
+      "path": "critical-preui020-01-validation.json",
+      "sha256": "cb040cbc668c98a91b09d5ed5b2f262519fda8a295a0dd5319857d10814b2467"
+    },
+    {
+      "path": "run_c1_gate_v3.py",
+      "sha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd"
+    }
+  ]
+}

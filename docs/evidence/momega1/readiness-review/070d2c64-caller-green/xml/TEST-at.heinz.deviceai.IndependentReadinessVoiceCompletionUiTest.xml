@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentReadinessVoiceCompletionUiTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:11:31" hostname="b354f2cb821b" time="0.376">
+  <properties/>
+  <testcase name="oldDialogButtonCannotConfirmANewGuideSample" classname="at.heinz.deviceai.IndependentReadinessVoiceCompletionUiTest" time="0.167"/>
+  <testcase name="successfulCompletedSampleRemainsConfirmableExactlyOnce" classname="at.heinz.deviceai.IndependentReadinessVoiceCompletionUiTest" time="0.119"/>
+  <testcase name="oldButtonCannotConfirmAReplacementEvenAfterItsStart" classname="at.heinz.deviceai.IndependentReadinessVoiceCompletionUiTest" time="0.089"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

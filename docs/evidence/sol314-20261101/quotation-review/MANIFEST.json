@@ -1,0 +1,15 @@
+{
+  "CORPUS.sha256": "ab093f310d6960f5dc4cc6d4c325611e0d63fd9cf9de68e3d1ec08bd787d17d6",
+  "FrozenWindowDataset.kt": "f93c34dd3b13751e8ba8df837fb8de26424651825ca72a67577d9956dd078c91",
+  "IndependentWindowReview.kt": "b72062e62406db7035014a715e77304a4e82acf7f37513166f12c864712ab9c4",
+  "PROVENANCE.json": "24a836a23b408b640a0c98f1a0122c2efed87ca74c632f71730ae41fcc42d220",
+  "README.md": "54b79564f981658371de59d0dce8f083f67816c5e62bf130cd9b0a7b8f968994",
+  "REVIEW.txt": "56751ec4181b9c56cee4044f7e9a496d38d58efaac143d1bbec96d99efafe65a",
+  "WindowResourceProbe.kt": "4d0c602a0fcecad5e6ed4ff9cb8936e3165cb80ce31a90e910e846f3eb955ff2",
+  "corpus.json": "2843d83946c9e2fec2fbb42826c410667ef77d72455b5d400c6569fc8406e40b",
+  "freeze_corpus.py": "b6806062d34472ab8ea42ed074a618e7ecdb425ff6f6d0347ae99763094482f0",
+  "linear-resources.txt": "f11312140c5232d3db34dc98eb18c12d4e7c2dfc032cb30f8529564495143093",
+  "results-first.summary.txt": "8cbbba5e2b3c57749d468a49b6c609e73b208441231a67a4c4158ec63bfb3eb8",
+  "results-first.tsv": "32a4690ff6d507e945b49b6a2802329cd34262141183145b1db28a0137793ff7",
+  "source-before.kt": "84fca0adf6e4a30f4643b647967d5a8fb788eca0e3c0e7a13c8f4235aaef2498"
+}

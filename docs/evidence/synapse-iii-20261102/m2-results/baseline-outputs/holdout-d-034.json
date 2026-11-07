@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-034:s1",
+    "decision": "SPAN",
+    "sha256": "e91ea42dec4bdb7c42dbe83f182c360ba0e25e7975b869998c7fbc2e423feff4",
+    "endExclusive": 54,
+    "start": 46,
+    "text": "Danosiva",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {
+    "sourceId": "holdout-d-034:s1",
+    "decision": "SPAN",
+    "sha256": "e91ea42dec4bdb7c42dbe83f182c360ba0e25e7975b869998c7fbc2e423feff4",
+    "endExclusive": 54,
+    "start": 46,
+    "text": "Danosiva",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "VERIFIED": {
+    "sourceId": "holdout-d-034:s1",
+    "decision": "SPAN",
+    "sha256": "e91ea42dec4bdb7c42dbe83f182c360ba0e25e7975b869998c7fbc2e423feff4",
+    "endExclusive": 54,
+    "start": 46,
+    "text": "Danosiva",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "rawMillis": 54.020394
+}

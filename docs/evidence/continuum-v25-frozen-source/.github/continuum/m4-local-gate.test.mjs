@@ -1,0 +1,365 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+import {gateSummary,nextGateStage,sha256ApkFile,parseGateArgs,runM4Gate,verifyGateReport,verifyReleaseProofFile} from './m4-local-gate.mjs';
+import {MANDATORY_REPAIR_CASES} from './m4-repair-e2e.mjs';
+
+function fixtureRepairRecord(base=null){
+ const testcases=MANDATORY_REPAIR_CASES.map(name=>'<testcase name="'+name+'" classname="test"/>').join('\n');
+ const xml='<?xml version="1.0"?>\n<testsuites>\n'+testcases+'\n<!-- tests 3 -->\n<!-- pass 3 -->\n<!-- fail 0 -->\n<!-- cancelled 0 -->\n<!-- skipped 0 -->\n<!-- todo 0 -->\n</testsuites>';
+ if(base!==null){
+  const dir=path.join(base,'repair-e2e');
+  fs.mkdirSync(dir,{recursive:true});
+  fs.writeFileSync(path.join(dir,'repair-e2e-junit.xml'),xml);
+ }
+ return {passed:true,executed:3,mandatoryRepairs:[...MANDATORY_REPAIR_CASES],
+  sha256:crypto.createHash('sha256').update(xml).digest('hex')};
+}
+
+function fixture(broken=false,omitRepair=false){
+ const base=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-gate-fixture-'));
+ const root=path.join(base,'repo'),out=path.join(base,'private-proof');
+ fs.mkdirSync(path.join(root,'.github/continuum'),{recursive:true});
+ const source=path.join(root,'.github/continuum','math.test.mjs');
+ fs.writeFileSync(source,[
+  "import test from 'node:test';",
+  "import assert from 'node:assert/strict';",
+  "test('real local gate fixture',()=>assert.equal(2*3,"+(broken?'7':'6')+"));",
+  ""
+ ].join('\n'));
+ if(!omitRepair){
+  const cases=MANDATORY_REPAIR_CASES.map(name=>'test('+JSON.stringify(name)+',()=>{});');
+  fs.writeFileSync(path.join(root,'.github/continuum/repair-loop.test.mjs'),
+   ["import test from 'node:test';",...cases,""].join('\n'));
+  fs.writeFileSync(path.join(root,'.github/continuum/repair-cycle-safety.integration.test.mjs'),
+   "import test from 'node:test';\ntest('receipt has an end timestamp',()=>{});\n");
+ }
+ fs.mkdirSync(path.join(root,'backend','test'),{recursive:true});
+ fs.writeFileSync(path.join(root,'backend','test','actual-backend.test.js'),
+  "const test=require('node:test');\ntest('backend is executed',()=>{});\n");
+ const git=(...args)=>{
+  const r=spawnSync('git',args,{cwd:root,encoding:'utf8',timeout:15000});
+  assert.equal(r.status,0,r.stderr);
+  return r.stdout.trim();
+ };
+ git('init','-q');
+ git('add','.');
+ git('-c','user.name=fixture','-c','user.email=fixture@example.invalid',
+  'commit','-qm','fixed fixture');
+ return {base,root,out,git,head:git('rev-parse','HEAD')};
+}
+const nested=Boolean(process.env.CONTINUUM_REPAIR_DEPTH);
+
+test('stabilization gate refuses downstream execution after incomplete or failed upstream tests',()=>{
+ const nodeNames=['node-continuum','node-backend'];
+ const androidNames=['android-compile','android-unit'];
+ const ok=(profile,executed,testProfile=true)=>({profile,passed:true,
+   exitCode:0,testProfile,tests:{executed,failed:0}});
+ const node={passed:true,results:[ok('node-continuum',12),ok('node-backend',4)]};
+ const android={passed:true,results:[
+   ok('android-compile',0,false),ok('android-unit',38)
+ ]};
+ assert.equal(nextGateStage(node,nodeNames),true);
+ assert.equal(nextGateStage(android,androidNames),true);
+ assert.equal(nextGateStage({...node,passed:false},nodeNames),false);
+ assert.equal(nextGateStage({...node,results:[node.results[0]]},nodeNames),false);
+ assert.equal(nextGateStage({...node,results:[...node.results,node.results[1]]},nodeNames),false);
+ assert.equal(nextGateStage({...node,results:[node.results[1],node.results[0]]},nodeNames),false);
+ assert.equal(nextGateStage({...node,results:[
+   node.results[0],{...node.results[1],exitCode:1}
+ ]},nodeNames),false);
+ assert.equal(nextGateStage({...node,results:[
+   node.results[0],{...node.results[1],tests:{executed:0,failed:0}}
+ ]},nodeNames),false);
+ assert.equal(nextGateStage({...android,results:[
+   android.results[0],{...android.results[1],passed:false}
+ ]},androidNames),false);
+ assert.equal(nextGateStage({...node,results:[
+   {...node.results[0],testProfile:false,tests:{executed:0,failed:0}},node.results[1]
+ ]},nodeNames),false,'fake success without a real test profile cannot unlock Gradle');
+ assert.equal(nextGateStage({...android,results:[
+   {...android.results[0],testProfile:true,tests:{executed:1,failed:0}},
+   android.results[1]
+ ]},androidNames),false,'Kotlin compiler must be the expected compile profile');
+ assert.equal(nextGateStage({...node,results:[
+  {...node.results[0],tests:{executed:12,failed:0,skipped:1}},
+  node.results[1]
+ ]},nodeNames),true,'nested Node repair tests may skip guarded recursion; repair E2E proof is mandatory separately');
+ assert.equal(nextGateStage({...android,results:[
+  android.results[0],{...android.results[1],tests:{executed:38,failed:0,skipped:3}}
+ ]},androidNames),false,'skipped Kotlin parity tests must not authorize a release');
+ assert.equal(nextGateStage(null,nodeNames),false);
+ assert.equal(nextGateStage(node,[]),false);
+});
+
+test('gate cannot certify zero tests or failed APK as successful',()=>{
+ const empty={passed:true,results:[{passed:true,testProfile:true,tests:{executed:0,failed:0}}]};
+ assert.equal(gateSummary(empty,null,null,false).passed,false);
+ const valid={passed:true,results:[{profile:'node-continuum',passed:true,exitCode:0,testProfile:true,tests:{executed:4,failed:0}}]};
+ const fullNode={passed:true,results:[
+  {profile:'node-continuum',passed:true,exitCode:0,testProfile:true,tests:{executed:4,failed:0}},
+  {profile:'node-backend',passed:true,exitCode:0,testProfile:true,tests:{executed:3,failed:0}}
+ ]};
+ const fullAndroid={passed:true,results:[
+  {profile:'android-compile',passed:true,exitCode:0,testProfile:false,tests:{executed:0,failed:0}},
+  {profile:'android-unit',passed:true,exitCode:0,testProfile:true,tests:{executed:3,failed:0}}
+ ]};
+ assert.equal(gateSummary(valid,null,null,false,fixtureRepairRecord()).passed,true);
+ assert.equal(gateSummary({...valid,results:[
+  {...valid.results[0],tests:{executed:4,failed:0,skipped:2}}
+ ]},null,null,false,fixtureRepairRecord()).passed,true,
+ 'Nested Node suite skips alone do not falsify a separately executed repair E2E proof');
+ assert.equal(gateSummary({...valid,results:[
+  {...valid.results[0],tests:{executed:4,failed:0,skipped:2}}
+ ]},null,null,false,null).passed,false,
+ 'Mandatory independent repair E2E evidence must still be present');
+
+ assert.equal(gateSummary(valid,null,null,true).passed,false);
+ assert.equal(gateSummary(valid,valid,{exitCode:1,timedOut:false},true).passed,false);
+ assert.equal(gateSummary(valid,valid,{exitCode:0,timedOut:false},true).passed,false,
+  'green Gradle exit without a retained APK is not a passing build');
+ assert.equal(gateSummary(valid,valid,{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true).passed,false,'backend verification is mandatory');
+ assert.equal(gateSummary(fullNode,valid,{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true).passed,false,'Android compile and unit reports are mandatory');
+ assert.equal(gateSummary(fullNode,fullAndroid,{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true,fixtureRepairRecord()).passed,true);
+ assert.equal(gateSummary(fullNode,{...fullAndroid,results:[
+  fullAndroid.results[0],
+  {...fullAndroid.results[1],tests:{executed:3,failed:0,skipped:1}}
+ ]},{exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096},
+ true,fixtureRepairRecord()).passed,false,
+ 'Green APK cannot override a skipped mandatory Android test');
+ assert.equal(gateSummary(fullNode,{
+  passed:true,results:[fullAndroid.results[1]]
+ },{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true).passed,false,'cannot silently omit compilation');
+ assert.equal(gateSummary(fullNode,{
+  passed:true,results:[fullAndroid.results[0]]
+ },{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true).passed,false,'cannot omit executed JVM tests');
+ assert.equal(gateSummary(fullNode,{
+  passed:true,results:[fullAndroid.results[0],fullAndroid.results[1],fullAndroid.results[1]]
+ },{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true).passed,false,'duplicate profiles are not full evidence');
+ assert.equal(gateSummary(valid,valid,{exitCode:0,timedOut:true},true).passed,false);
+});
+
+test('reloaded local gate proof rejects forged completion and never upgrades NODE_ONLY',()=>{
+ const successful={passed:true,results:[{profile:'node-continuum',passed:true,exitCode:0,testProfile:true,
+   tests:{executed:4,failed:0}}]};
+ const head='a'.repeat(40);
+ const document={
+  schema:'continuum-m4-local-gate',version:2,head,
+  startedAt:'2026-10-17T00:00:00Z',node:successful,repairE2e:fixtureRepairRecord(),android:null,apk:null,
+  errors:[],complete:true,summary:gateSummary(successful,null,null,false,fixtureRepairRecord()),
+  finishedAt:'2026-10-17T00:00:01Z'
+ };
+ const digest=o=>crypto.createHash('sha256').update(JSON.stringify(o)).digest('hex');
+ document.reportSha256=digest(document);
+ assert.deepEqual(verifyGateReport(document,{expectedHead:head}),
+  {valid:true,releaseReady:false,reason:'ANDROID_NOT_TESTED'});
+ assert.equal(verifyGateReport(document,{expectedHead:'b'.repeat(40)}).valid,false);
+ assert.equal(verifyGateReport({...document,complete:false}).valid,false);
+ const modified={...document,summary:{...document.summary,passed:false}};
+ assert.equal(verifyGateReport(modified).reason,'REPORT_HASH_MISMATCH');
+ const withRecomputedChecksum={...modified};
+ const {reportSha256,...payload}=withRecomputedChecksum;
+ withRecomputedChecksum.reportSha256=digest(payload);
+ assert.equal(verifyGateReport(withRecomputedChecksum).reason,'INCONSISTENT_PROOF');
+});
+
+test('APK hashing uses a bounded stream and rejects links or invalid source files',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-apk-stream-'));
+ try{
+  const file=path.join(dir,'source.apk');
+  const payload=Buffer.alloc(192*1024+41,0x5a);
+  fs.writeFileSync(file,payload);
+  const digest=crypto.createHash('sha256').update(payload).digest('hex');
+  assert.deepEqual(sha256ApkFile(file),{
+   bytes:payload.length,artifactSha256:digest
+  });
+  const link=path.join(dir,'linked.apk');
+  fs.symlinkSync(file,link);
+  assert.throws(()=>sha256ApkFile(link),/Invalid APK artifact/);
+  const empty=path.join(dir,'empty.apk');
+  fs.writeFileSync(empty,Buffer.alloc(0));
+  assert.throws(()=>sha256ApkFile(empty),/Invalid APK artifact/);
+  assert.throws(()=>sha256ApkFile(path.join(dir,'missing.apk')));
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('release proof verifies retained APK bytes, path and corruption without executing it',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-verify-proof-'));
+ try{
+  const head='a'.repeat(40),apkFile=path.join(dir,'app-debug.apk');
+  const artifact=Buffer.from([0x50,0x4b,0x03,0x04,0x01,0x02,0x03,0x04]);
+  fs.writeFileSync(apkFile,artifact);
+  const good={passed:true,results:[
+    {profile:'node-continuum',passed:true,exitCode:0,testProfile:true,tests:{executed:5,failed:0}},
+    {profile:'node-backend',passed:true,exitCode:0,testProfile:true,tests:{executed:2,failed:0}}
+  ]};
+  const android={passed:true,results:[
+    {profile:'android-compile',passed:true,exitCode:0,testProfile:false,
+     tests:{executed:0,failed:0}},
+    {profile:'android-unit',passed:true,exitCode:0,testProfile:true,
+     tests:{executed:5,failed:0}}
+  ]};
+  const apk={exitCode:0,timedOut:false,artifactSha256:
+    crypto.createHash('sha256').update(artifact).digest('hex'),
+    bytes:artifact.length,artifact:apkFile};
+  const repairE2e=fixtureRepairRecord(dir);
+  const document={schema:'continuum-m4-local-gate',version:2,head,
+    startedAt:'2026-10-17T00:00:00Z',node:good,repairE2e,android,apk,
+    errors:[],complete:true,summary:gateSummary(good,android,apk,true,repairE2e),
+    finishedAt:'2026-10-17T00:00:01Z'};
+  document.reportSha256=crypto.createHash('sha256')
+    .update(JSON.stringify(document)).digest('hex');
+  const report=path.join(dir,'gate-report.json');
+  fs.writeFileSync(report,JSON.stringify(document,null,2)+'\n');
+  assert.deepEqual(verifyReleaseProofFile(report,{expectedHead:head}),
+    {valid:true,releaseReady:true,reason:null});
+  const e2eProof=path.join(dir,'repair-e2e','repair-e2e-junit.xml');
+  fs.appendFileSync(e2eProof,'\n');
+  assert.equal(verifyReleaseProofFile(report).reason,'REPAIR_E2E_PROOF_MISSING_OR_CHANGED');
+  fixtureRepairRecord(dir);
+  assert.equal(verifyReleaseProofFile(report).releaseReady,true);
+  fs.unlinkSync(e2eProof);
+  assert.equal(verifyReleaseProofFile(report).reason,'REPAIR_E2E_PROOF_MISSING_OR_CHANGED');
+  fixtureRepairRecord(dir);
+  fs.appendFileSync(apkFile,Buffer.from([0x05]));
+  assert.equal(verifyReleaseProofFile(report).reason,'APK_MISSING_OR_CHANGED');
+  fs.writeFileSync(apkFile,artifact);
+  const unsafe={...document,apk:{...apk,artifact:path.join(dir,'other.apk')}};
+  delete unsafe.reportSha256;
+  unsafe.reportSha256=crypto.createHash('sha256')
+    .update(JSON.stringify(unsafe)).digest('hex');
+  fs.writeFileSync(report,JSON.stringify(unsafe));
+  assert.equal(verifyReleaseProofFile(report).reason,'UNSAFE_APK_PATH');
+  fs.writeFileSync(report,'not json');
+  assert.equal(verifyReleaseProofFile(report).reason,'INVALID_REPORT_FILE');
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('gate CLI rejects unknown arguments, duplicates, and invalid time budgets',()=>{
+ assert.deepEqual(parseGateArgs(['--android','--budget-minutes','40']),
+  {android:true,budgetMinutes:40});
+ assert.throws(()=>parseGateArgs(['--budget-minutes','0']),/budget/i);
+ assert.throws(()=>parseGateArgs(['--budget-minutes','hello']),/budget/i);
+ assert.throws(()=>parseGateArgs(['--android','--android']),/duplicate/);
+ assert.throws(()=>parseGateArgs(['--exec','rm']),/unknown/i);
+ assert.deepEqual(parseGateArgs(['--verify','/tmp/check.json']),{verify:'/tmp/check.json'});
+ assert.throws(()=>parseGateArgs(['--verify','/tmp/check.json','--android']),/cannot be combined/);
+ assert.throws(()=>parseGateArgs(['--verify']),/Missing value/);
+ assert.equal(verifyReleaseProofFile('/missing-continuum-qa-report.json').releaseReady,false);
+});
+
+test('real standalone Git fixture produces an immutable Node test proof',
+ {skip:nested,timeout:180000},()=>{
+ const f=fixture(false);
+ try{
+  const result=runM4Gate({root:f.root,out:f.out,budgetMinutes:2});
+  assert.equal(result.head,f.head);
+  assert.equal(result.summary.scope,'NODE_ONLY');
+  assert.equal(result.summary.nodePassed,true);
+  assert.equal(result.summary.repairE2ePassed,true);
+  assert.ok(result.repairE2e.executed>=MANDATORY_REPAIR_CASES.length);
+  assert.ok(result.summary.executedNodeTests>=1);
+  assert.equal(result.complete,true,JSON.stringify(result.errors));
+  assert.ok(fs.existsSync(result.path));
+  const report=JSON.parse(fs.readFileSync(result.path,'utf8'));
+  assert.equal(report.head,f.head);
+  assert.equal(report.reportSha256,result.reportSha256);
+  assert.equal(f.git('status','--porcelain'),'');
+  assert.equal(fs.existsSync(path.join(f.root,'gate-report.json')),false);
+ }finally{fs.rmSync(f.base,{recursive:true,force:true});}
+});
+
+test('broken Git fixture stays red and still preserves a failure proof',
+ {skip:nested,timeout:180000},()=>{
+ const f=fixture(true);
+ try{
+  const result=runM4Gate({root:f.root,out:f.out,budgetMinutes:2});
+  assert.equal(result.summary.scope,'NODE_ONLY');
+  assert.equal(result.summary.nodePassed,false);
+  assert.equal(result.complete,false);
+  assert.ok(fs.existsSync(result.path));
+  assert.equal(f.git('status','--porcelain'),'');
+ }finally{fs.rmSync(f.base,{recursive:true,force:true});}
+});
+
+test('broken actual Node fixture skips Android and APK before Gradle is invoked',
+ {skip:nested,timeout:180000},()=>{
+ const f=fixture(true);
+ try{
+  const report=runM4Gate({root:f.root,out:f.out,android:true,budgetMinutes:2});
+  assert.equal(report.complete,false);
+  assert.equal(report.summary.scope,'NODE_KOTLIN_APK');
+  assert.equal(report.node.passed,false);
+  assert.equal(report.android,null,'no Kotlin phase after broken Node tests');
+  assert.equal(report.apk,null,'no APK build after broken Node tests');
+  assert.ok(report.errors.some(e=>e.includes('ANDROID: skipped')));
+  assert.ok(report.errors.some(e=>e.includes('APK: skipped')));
+  assert.equal(f.git('status','--porcelain'),'');
+  assert.ok(fs.existsSync(report.path),'failed gate still retains its evidence');
+ } finally {fs.rmSync(f.base,{recursive:true,force:true});}
+});
+
+test('green Node/backend suites without repair files cannot authorize Android',
+ {skip:nested,timeout:180000},()=>{
+ const f=fixture(false,true);
+ try{
+  const report=runM4Gate({root:f.root,out:f.out,android:true,budgetMinutes:2});
+  assert.equal(report.summary.nodePassed,true);
+  assert.equal(report.summary.repairE2ePassed,false);
+  assert.equal(report.complete,false);
+  assert.equal(report.android,null,'Android must not run without mandatory repairs');
+  assert.equal(report.apk,null,'APK must not build without mandatory repairs');
+  assert.ok(report.errors.some(e=>e.startsWith('REPAIR_E2E:')));
+  assert.equal(f.git('status','--porcelain'),'');
+ }finally{fs.rmSync(f.base,{recursive:true,force:true});}
+});
+
+test('gate refuses dirty source and repository-contained proof output',
+ {skip:nested,timeout:60000},()=>{
+ const f=fixture(false);
+ try{
+  assert.throws(()=>runM4Gate({
+   root:f.root,out:path.join(f.root,'private-proof')
+  }),/outside/);
+  fs.writeFileSync(path.join(f.root,'untracked.txt'),'dirty');
+  assert.throws(()=>runM4Gate({root:f.root,out:f.out}),/dirty/);
+ }finally{fs.rmSync(f.base,{recursive:true,force:true});}
+});
+
+test('persisted release summary rejects forged green flags when commands failed',()=>{
+ const mk=(profile,executed,testProfile=true)=>({profile,passed:true,
+  exitCode:0,timedOut:false,testProfile,tests:{executed,failed:0}});
+ const node={passed:true,results:[mk('node-continuum',4),mk('node-backend',2)]};
+ const android={passed:true,results:[mk('android-compile',0,false),
+  mk('android-unit',6)]};
+ const apk={exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096};
+ assert.equal(gateSummary(node,android,apk,true,fixtureRepairRecord()).passed,true);
+ assert.equal(gateSummary({...node,results:[
+  node.results[0],{...node.results[1],exitCode:1}
+ ]},android,apk,true).passed,false,'status 1 cannot be masked by passed=true');
+ assert.equal(gateSummary(node,{...android,results:[
+  android.results[0],{...android.results[1],timedOut:true}
+ ]},apk,true).passed,false,'timed-out JVM tests cannot be marked green');
+ assert.equal(gateSummary({passed:true,results:[
+  {...node.results[0],profile:'untrusted-custom'}
+ ]},null,null,false).passed,false,'even NODE_ONLY uses the fixed profile');
+ assert.equal(nextGateStage({...node,results:[
+  node.results[0],{...node.results[1],tests:{executed:'2',failed:0}}
+ ]},['node-continuum','node-backend']),false,'test counts must be integers');
+});

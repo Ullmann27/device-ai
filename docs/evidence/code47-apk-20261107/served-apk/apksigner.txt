@@ -1,0 +1,18 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=Continuum Local Owner, O=Device AI, C=AT
+Signer #1 certificate SHA-256 digest: 6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23
+Signer #1 certificate SHA-1 digest: e7736c2da54af030d9c83baa80b2309ddb88f842
+Signer #1 certificate MD5 digest: 60514b58c6278ebdbeda141b6a1c0c9d
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 3072
+Signer #1 public key SHA-256 digest: 7bd083383b39b7ce5ca5f2f63d881e6a538b9e5f5d83e713afcb9a4c061b3df5
+Signer #1 public key SHA-1 digest: 2995389532e3cfd3b22651fdecb25b3df44c585e
+Signer #1 public key MD5 digest: 7da7c485b9ea680f674d0a23d75e3261
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=37527 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37527 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts

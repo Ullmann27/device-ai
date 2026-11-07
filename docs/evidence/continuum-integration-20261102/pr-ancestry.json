@@ -1,0 +1,137 @@
+[
+  {
+    "baseRefName": "coderabbit/continuum-reliability-sprint-20261102",
+    "headRefName": "coderabbit/continuum-brain-integration-20261102",
+    "headRefOid": "40915a079463aabf26db4ba48b7ffcf191835409",
+    "isDraft": true,
+    "number": 354,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-critical-qa-repair-20261102",
+    "headRefName": "coderabbit/continuum-reliability-sprint-20261102",
+    "headRefOid": "86032c31a36547888536446c765a719cd6ee5c5c",
+    "isDraft": true,
+    "number": 353,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-critical-qa-repair-20261102",
+    "headRefName": "coderabbit/get-device-ai-project-status/de3d7eb3",
+    "headRefOid": "f1973ce7944692d84e4182acc4b25dcb34068218",
+    "isDraft": true,
+    "number": 352,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": false
+  },
+  {
+    "baseRefName": "research/continuum-grand-challenge-20261102",
+    "headRefName": "research/continuum-critical-qa-repair-20261102",
+    "headRefOid": "057474de37d6e20d993bd64f166b6585bc4a357a",
+    "isDraft": true,
+    "number": 351,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-grand-challenge-20261102",
+    "headRefName": "research/continuum-quantumflow-upstreams-20261102",
+    "headRefOid": "8d2011f34fe5786d5e9d93a50eadb3102df9dc85",
+    "isDraft": true,
+    "number": 350,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": false
+  },
+  {
+    "baseRefName": "research/continuum-dialog-vii-repair-audit-20261102",
+    "headRefName": "research/continuum-grand-challenge-20261102",
+    "headRefOid": "df3b6930695abe6ddffc1388c941aaba6122be5e",
+    "isDraft": true,
+    "number": 349,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-dialog-vi-nine-gates-20261102",
+    "headRefName": "research/continuum-dialog-vii-repair-audit-20261102",
+    "headRefOid": "4d07bdf8c12a5cc3d93e6a29a2c23c8a03027460",
+    "isDraft": true,
+    "number": 348,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-autonomy-dialog-voice-20261102",
+    "headRefName": "research/continuum-dialog-vi-nine-gates-20261102",
+    "headRefOid": "15ccf8b1cb9ae386e7e9e32cb42aba05376ab64f",
+    "isDraft": true,
+    "number": 347,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-fusion-iv-20261102",
+    "headRefName": "research/continuum-autonomy-dialog-voice-20261102",
+    "headRefOid": "a69e88937361b01cd7ebb78baa588e4fbf330fcd",
+    "isDraft": true,
+    "number": 346,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-synapse-iii-20261102",
+    "headRefName": "research/continuum-fusion-iv-20261102",
+    "headRefOid": "66b648b523073fe866e51df5528b4639efef0359",
+    "isDraft": true,
+    "number": 345,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-synapse-ii-20261102",
+    "headRefName": "research/continuum-synapse-iii-20261102",
+    "headRefOid": "cee7d2c974ae9e01ec41edfc03ee41b2b582c7bb",
+    "isDraft": true,
+    "number": 344,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-341-brain-wiring-qa-20261101",
+    "headRefName": "research/continuum-synapse-ii-20261102",
+    "headRefOid": "2eb2095992641019a3af0dd62caab39239803ae4",
+    "isDraft": true,
+    "number": 343,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-340-evidence-routing-20261101",
+    "headRefName": "research/continuum-341-brain-wiring-qa-20261101",
+    "headRefOid": "7327367851df147fef6226233fc86a22efcfe2fc",
+    "isDraft": true,
+    "number": 342,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-fable51-genesis-20261101",
+    "headRefName": "research/continuum-sol61-post-fable-20261101",
+    "headRefOid": "b06889f586ed54f074d2b2d36535a0b5a820ed61",
+    "isDraft": true,
+    "number": 335,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  },
+  {
+    "baseRefName": "research/continuum-jarvis-04-architecture-implementation-20261101",
+    "headRefName": "research/continuum-fable51-genesis-20261101",
+    "headRefOid": "702b57ae5c2724a819048bcc3b7775272b48f2b3",
+    "isDraft": true,
+    "number": 334,
+    "state": "OPEN",
+    "ancestorOfCurrentHead": true
+  }
+]

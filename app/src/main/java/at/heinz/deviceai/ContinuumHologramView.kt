@@ -1,12 +1,19 @@
 package at.heinz.deviceai
 
 import android.animation.ValueAnimator
+import android.app.AlertDialog
+import at.heinz.deviceai.avatar.AvatarEvent
+import at.heinz.deviceai.avatar.AvatarSink
+import at.heinz.deviceai.avatar.AvatarPoseReducer
+import at.heinz.deviceai.avatar.ContinuumAvatarRenderer
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.database.ContentObserver
 import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -16,8 +23,24 @@ import android.provider.Settings
 import android.util.AttributeSet
 import android.widget.Toast
 import android.view.View
+import android.view.TextureView
+import android.view.Surface
+import android.graphics.SurfaceTexture
+import android.widget.FrameLayout
+import at.heinz.deviceai.avatar3d.AvatarGlbContract
+import at.heinz.deviceai.avatar3d.AvatarCameraFraming
+import at.heinz.deviceai.avatar3d.AvatarCameraMotion
+import at.heinz.deviceai.avatar3d.AvatarEntranceMotion
+import at.heinz.deviceai.avatar3d.AvatarFraming
+import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer
 import at.heinz.deviceai.ui.AndroidContinuumPainter
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
+import at.heinz.deviceai.ui.ContinuumTaskEffects
+import at.heinz.deviceai.ui.JarvisSequenceView
+import at.heinz.deviceai.ui.Fill
+import at.heinz.deviceai.ui.FontFamily
+import at.heinz.deviceai.ui.TextAlign
+import at.heinz.deviceai.ui.TextStyle
 import kotlin.math.exp
 import kotlin.math.sqrt
 
@@ -28,11 +51,50 @@ import kotlin.math.sqrt
 class ContinuumHologramView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
-) : View(context, attrs) {
+) : FrameLayout(context, attrs), AvatarSink {
     enum class State { READY, LISTENING, THINKING, SPEAKING, RESEARCH, LEARNING }
 
+    private val avatarRenderer = ContinuumAvatarRenderer()
+    private val avatarPose = AvatarPoseReducer()
+    private val appearancePrefs = context.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
+    private val hasSavedAppearance = appearancePrefs.contains("native-head") || appearancePrefs.contains("native-head-3d")
+    // Upgrade legacy enabled heads.
+    // Explicit 3D choices remain authoritative.
+    private var head3dEnabled = appearancePrefs.getBoolean("native-head-3d",
+        appearancePrefs.getBoolean("native-head", !hasSavedAppearance))
+    private var headEnabled = head3dEnabled || appearancePrefs.getBoolean("native-head", !hasSavedAppearance)
+    private var native3d: FilamentAvatarRenderer? = null
+    private var nativeTexture: TextureView? = null
+    private var nativeSurface: Surface? = null
+    private var assetBytes: ByteArray? = null
+    private var assetMetadata: AvatarGlbContract.Metadata? = null
+    private var assetLoading = false
+    private var assetGeneration = 0
+    private var native3dFailed = false
+    private var native3dDrawn = false
+    private var avatarSeconds = 0f
+    private val avatarInvalidationPending = java.util.concurrent.atomic.AtomicBoolean(false)
+    private val avatarInvalidation = Runnable {
+        avatarInvalidationPending.set(false)
+        if (isAttachedToWindow && foregroundActive && isShown) invalidate()
+    }
     private val renderer = ContinuumHologramRenderer()
+    private val avatarBrandFill = Fill.Solid(0xff9aefff.toInt())
+    private val avatarBrandStyle = TextStyle(FontFamily.DISPLAY, 700, 14f, letterSpacing = 2f)
     private val painter = AndroidContinuumPainter(context.assets)
+    private val taskEffects = ContinuumTaskEffects()
+    private var cockpitSequence: JarvisSequenceView? = null
+    internal val memoryScene = at.heinz.deviceai.ui.video3.Video3MemoryScene()
+    private val memoryTunnel = at.heinz.deviceai.ui.video3.Video3WarpScene(paper = true)
+    internal var memorySceneHostReady: (() -> Boolean)? = null
+    internal var memorySceneInvalidation: (() -> Unit)? = null
+    internal val memorySceneOrbBounds = RectF()
+    private val memoryBackdrop = at.heinz.deviceai.ui.Fill.Solid(at.heinz.deviceai.ui.JarvisDesign.Colors.background)
+    private var cockpitHeadBounds: Rect? = null
+    private var cockpitOrbBounds: Rect? = null
+    private val headDrawBounds = RectF()
+    private val orbDrawBounds = RectF()
+    private var taskEffectsNotBeforeMs = SystemClock.uptimeMillis()
     private val audio = HologramAudioEnvelope()
     // State order equals ContinuumHologramRenderer.Mode order (READY … LEARNING).
     private val stateWeights = FloatArray(State.entries.size).apply { this[0] = 1f }
@@ -85,11 +147,18 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     private val drawFrame = Runnable {
         framePending = false
-        if (canAnimate()) {
+        if (canAnimateFrame()) {
             visibleFrameCount++
             // The motion clock advances independently of a completed Canvas draw.
             // Invalidation requests only rendering, not the next state transition.
             advanceFrame()
+            if (memoryScene.isActive) {
+                if (memorySceneHostReady?.invoke() != true) clearMemoryScene()
+                else {
+                    if (memoryScene.sample(memorySceneTime()) == null) clearMemoryScene()
+                    memorySceneInvalidation?.invoke()
+                }
+            }
             postInvalidateOnAnimation()
             scheduleFrame()
         }
@@ -97,10 +166,11 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     /** Owns the single visible-view frame callback, even before the first draw. */
     private fun scheduleFrame() {
-        if (canAnimate() && !framePending) {
+        if (canAnimateFrame() && !framePending) {
             framePending = true
             // Vsync-paced with a positive delay; moderate heat reduces requests, severe heat stops them.
-            postOnAnimationDelayed(drawFrame, if (thermalStatus >= 2) 32L else 8L)
+            val delay = (renderBudget().frameDelayMillis - 16L).coerceAtLeast(0L)
+            postOnAnimationDelayed(drawFrame, delay)
         }
     }
     private val motionObserver = object : ContentObserver(mainHandler) {
@@ -111,15 +181,348 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     init {
+        setWillNotDraw(false)
         // State has an accessible text label beside the hero; avoid a duplicate announcement.
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
         isClickable = false
         isFocusable = false
         // A long-press gives the owner a concrete reason when animation looks frozen.
         setOnLongClickListener {
-            Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
+            showAppearanceChooser()
             true
         }
+    }
+
+    /** Existing Director calls from TTS or UI; bounded reducer retains no spoken text. */
+    override fun onAvatarEvent(event: AvatarEvent) {
+        // Continuous sensor-driven movement obeys the same visibility/reduced-motion policy.
+        // Inactive views must not accept a late camera sample after their clear boundary.
+        if (event is AvatarEvent.GazeObserved && !canAnimateFrame()) return
+        synchronized(avatarPose) { avatarPose.apply(event) }
+        // Speech levels are drawn by the existing loop. State/end events also refresh static views.
+        if (event !is AvatarEvent.AudioLevel && event !is AvatarEvent.VisemeCue &&
+            avatarInvalidationPending.compareAndSet(false, true)) mainHandler.post(avatarInvalidation)
+    }
+
+    /** The cockpit adapter adds effects to this existing surface; state, audio and 3D ownership remain here. */
+    fun setCockpitSequence(sequence: JarvisSequenceView?) {
+        if (cockpitSequence === sequence) return
+        require(sequence?.parent == null) { "Cockpit sequence already belongs to a view" }
+        clearMemoryScene()
+        cockpitSequence?.let { old -> old.onMemoryScene = null; old.clear(); removeView(old) }
+        cockpitSequence = sequence
+        sequence?.let {
+            it.onMemoryScene = { now ->
+                if (canAnimateFrame() && memorySceneHostReady?.invoke() == true) {
+                    memoryScene.start(now)
+                    memorySceneInvalidation?.invoke()
+                    invalidate()
+                    true
+                } else false
+            }
+            it.setMotionAllowed(canAnimateFrame())
+            val budget = renderBudget()
+            it.setFrameBudget(budget.frameDelayMillis, budget.reducedBloom)
+            it.setCardsDocked(workWindowActive)
+            addView(it, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+            updateOrbTarget(width, height)
+        }
+    }
+
+    /** Ref5 HEAD and ORB in local pixels. Null restores the existing phone/legacy composition. */
+    private var headAnchorX = .5f
+    private var headCloseUp = 1f
+
+    private var headKeepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null
+    private var auraFocus: AvatarGlbContract.Focus? = null
+    private var auraWidth = -1f
+    private var auraHeight = -1f
+    private var auraAnchor = Float.NaN
+    private var auraCloseUp = Float.NaN
+    private var auraKeepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null
+    private var auraScale = 1f
+    private var auraAnchorEffective = .5f
+    private val cameraMotion = AvatarCameraMotion()
+    private val entranceMotion = AvatarEntranceMotion()
+    private var workWindowActive = false
+    private var cameraFraming: AvatarCameraFraming? = null
+    private var cameraWindow: AvatarFraming.Window? = null
+    private var cameraDirection = 0f
+
+    /** Actual accepted work-window presentation only. */
+    fun setWorkWindowCamera(active: Boolean, direction: Float = 0f, immediate: Boolean = false) {
+        require(direction.isFinite() && direction in -1f..1f)
+        // The face and the orb stay free while a window works: the sequence cards dock into its status strip.
+        workWindowActive = active
+        cockpitSequence?.setCardsDocked(active)
+        if (immediate || !canAnimateFrame() || !hasWindowFocus() || !headEnabled || cockpitHeadBounds == null) {
+            resetCamera()
+        } else {
+            if (active) cameraDirection = direction
+            cameraMotion.setWorkActive(active, SystemClock.uptimeMillis())
+        }
+        invalidate()
+    }
+
+    private fun resetCamera() {
+        cameraMotion.reset()
+        cameraDirection = 0f
+        cameraWindow = cameraFraming?.rest
+        cameraWindow?.let { auraScale = it.headScale.toFloat(); auraAnchorEffective = it.anchorX.toFloat() }
+    }
+
+    internal fun cameraProgress(): Float = cameraMotion.progress
+
+    internal fun playAvatarEntrance(step: at.heinz.deviceai.cockpit.TimelineStep): Boolean {
+        val cue = step.cue
+        if (cue != at.heinz.deviceai.cockpit.Cue.AVATAR_FROM_DEPTH &&
+            cue != at.heinz.deviceai.cockpit.Cue.AVATAR_SHRINK) return false
+        if (!headEnabled || !canAnimateFrame()) {
+            resetAvatarEntrance()
+            return true
+        }
+        val now = SystemClock.uptimeMillis()
+        if (cue == at.heinz.deviceai.cockpit.Cue.AVATAR_FROM_DEPTH) entranceMotion.start(now)
+        else entranceMotion.shrink(now)
+        invalidate()
+        return true
+    }
+
+    internal fun resetAvatarEntrance() {
+        entranceMotion.reset()
+        invalidate()
+    }
+
+    internal fun entranceScale(): Float = entranceMotion.scale
+
+    private fun transformHeadEntrance(canvas: Canvas, units: Float = 1f) {
+        val scale = entranceMotion.scale
+        if (scale == 1f) return
+        canvas.clipRect(headDrawBounds.left / units, headDrawBounds.top / units,
+            headDrawBounds.right / units, headDrawBounds.bottom / units)
+        canvas.scale(scale, scale, headDrawBounds.centerX() / units, headDrawBounds.centerY() / units)
+    }
+
+    /**
+     * Head size and effective anchor of the live 3D window (the calibrated values for the 2D head), so the aura
+     * rings stay around the fitted head. Same [at.heinz.deviceai.avatar3d.AvatarFraming] window as the renderer;
+     * Geometry is cached between layout changes.
+     */
+    private fun updateAuraFraming() {
+        val focus = if (head3dEnabled && (native3dDrawn || native3d != null)) assetMetadata?.focus else null
+        val w = headDrawBounds.width(); val h = headDrawBounds.height()
+        if (focus == null || w <= 0f || h <= 0f) {
+            auraFocus = null; auraScale = 1f; auraAnchorEffective = headAnchorX
+            cameraFraming = null; cameraWindow = null
+            return
+        }
+        if (focus !== auraFocus || w != auraWidth || h != auraHeight || headAnchorX != auraAnchor ||
+            headCloseUp != auraCloseUp || headKeepOut != auraKeepOut) {
+            auraFocus = focus; auraWidth = w; auraHeight = h; auraAnchor = headAnchorX; auraCloseUp = headCloseUp
+            auraKeepOut = headKeepOut
+            cameraFraming = AvatarCameraFraming(focus, w.toDouble() / h,
+                headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut)
+        }
+        cameraWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection)
+        val window = requireNotNull(cameraWindow)
+        auraScale = window.headScale.toFloat(); auraAnchorEffective = window.anchorX.toFloat()
+    }
+
+    /**
+     * Cockpit framing of the live head. [keepOut]: stage-normalized area (the dialogue card) the posed face must not
+     * enter; the 3D window may then move the head towards the stage centre before it shrinks it.
+     */
+    fun setHeadFraming(anchorX: Float, closeUp: Float, keepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null) {
+        require(anchorX.isFinite() && anchorX in .2f..1f && closeUp.isFinite() && closeUp in .4f..1f)
+        if (headAnchorX == anchorX && headCloseUp == closeUp && headKeepOut == keepOut) return
+        headAnchorX = anchorX
+        headCloseUp = closeUp
+        headKeepOut = keepOut
+        resetCamera()
+        invalidate()
+    }
+
+    fun setCockpitRegions(head: Rect?, orb: Rect?) {
+        require((head == null) == (orb == null)) { "Head and orb bounds must be supplied together" }
+        if (head != null && orb != null) {
+            require(!head.isEmpty && !orb.isEmpty && head.left >= 0 && head.top >= 0 && orb.left >= 0 && orb.top >= 0)
+            require(!Rect.intersects(head, orb)) { "Head and orb drawing regions must not overlap" }
+        }
+        if (cockpitHeadBounds == head && cockpitOrbBounds == orb) return
+        resetCamera()
+        cockpitHeadBounds = head?.let(::Rect)
+        cockpitOrbBounds = orb?.let(::Rect)
+        updateOrbTarget(width, height)
+        requestLayout()
+        invalidate()
+    }
+
+    private fun resolveHeadBounds(widthPx: Int, heightPx: Int) {
+        val explicit = cockpitHeadBounds
+        if (explicit != null) headDrawBounds.set(explicit) else {
+            val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
+            headDrawBounds.set(0f, 0f, widthPx * if (cockpit) .66f else 1f,
+                heightPx * if (cockpit) .92f else 1f)
+        }
+    }
+
+    private fun resolveOrbBounds(widthPx: Int, heightPx: Int) {
+        val explicit = cockpitOrbBounds
+        if (!headEnabled) orbDrawBounds.set(0f, 0f, widthPx.toFloat(), heightPx.toFloat())
+        else if (explicit != null) orbDrawBounds.set(explicit)
+        else {
+            val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
+            val x = widthPx * if (cockpit) .57f else .72f
+            val y = heightPx * if (cockpit) .09f else .30f
+            orbDrawBounds.set(x, y, x + widthPx * if (cockpit) .43f else .28f,
+                y + heightPx * if (cockpit) .76f else .40f)
+        }
+    }
+
+    private fun updateOrbTarget(widthPx: Int, heightPx: Int) {
+        val sequence = cockpitSequence ?: return
+        if (widthPx <= 0 || heightPx <= 0) return
+        resolveOrbBounds(widthPx, heightPx)
+        // The sequence keeps the real head and orb free (owner review P0); without explicit regions nothing is protected.
+        val d = resources.displayMetrics.density
+        resolveHeadBounds(widthPx, heightPx)
+        sequence.setHeadRegion(headDrawBounds.left / d, headDrawBounds.top / d,
+            headDrawBounds.right / d, headDrawBounds.bottom / d)
+        sequence.effects.setProtectedAreas(cockpitHeadBounds?.let { floatArrayOf(it.left / d, it.top / d, it.right / d, it.bottom / d) },
+            cockpitOrbBounds?.let { floatArrayOf(it.left / d, it.top / d, it.right / d, it.bottom / d) })
+        sequence.effects.orbTargetX = (orbDrawBounds.centerX() / widthPx).coerceIn(0f, 1f)
+        sequence.effects.orbTargetY = ((orbDrawBounds.top + orbDrawBounds.height() * renderer.geometry.centerY) / heightPx).coerceIn(0f, 1f)
+    }
+
+    /** Explicit local appearance preference; the original orb remains selectable. */
+    fun setNativeHeadEnabled(enabled: Boolean) {
+        headEnabled = enabled
+        head3dEnabled = false
+        appearancePrefs.edit().putBoolean("native-head", enabled).putBoolean("native-head-3d", false).apply()
+        release3d(clearAsset = true)
+        updateMotionPolicy()
+    }
+
+    fun isNativeHeadEnabled(): Boolean = headEnabled
+
+    fun isNative3dEnabled(): Boolean = head3dEnabled
+
+    /** Appearance only; preserves the Director, brain, TTS, and shared pose reducer. */
+    fun setNative3dEnabled(enabled: Boolean) {
+        head3dEnabled = enabled
+        if (enabled) headEnabled = true
+        native3dFailed = false
+        appearancePrefs.edit().putBoolean("native-head", headEnabled).putBoolean("native-head-3d", enabled).apply()
+        if (!enabled) release3d(clearAsset = true)
+        updateMotionPolicy()
+    }
+
+    private fun canDisplay3d() = head3dEnabled && foregroundActive && isAttachedToWindow && isShown &&
+        windowVisibility == VISIBLE
+
+    private fun update3d() {
+        if (!canDisplay3d()) { release3d(clearAsset = !head3dEnabled); return }
+        if (native3dFailed) return
+        if (assetBytes == null) {
+            if (assetLoading) return
+            assetLoading = true
+            val generation = assetGeneration
+            // Packaged local bytes only; no model, owner data, permission or network access.
+            Thread({
+                val candidate = runCatching {
+                    val bytes = context.assets.open(AvatarGlbContract.ASSET_PATH).use { input ->
+                        val out = java.io.ByteArrayOutputStream()
+                        val chunk = ByteArray(8192)
+                        while (true) {
+                            val read = input.read(chunk); if (read < 0) break
+                            require(out.size() + read <= AvatarGlbContract.MAX_BYTES)
+                            out.write(chunk, 0, read)
+                        }
+                        out.toByteArray()
+                    }
+                    val digest = java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
+                        .joinToString("") { "%02x".format(it) }
+                    require(digest == AvatarGlbContract.ASSET_SHA256) { "Packaged avatar revision mismatch" }
+                    bytes to AvatarGlbContract.validate(bytes)
+                }
+                mainHandler.post {
+                    assetLoading = false
+                    if (generation != assetGeneration) { if (canDisplay3d()) update3d(); return@post }
+                    candidate.onSuccess { (bytes, metadata) -> assetBytes = bytes; assetMetadata = metadata; update3d(); invalidate() }
+                        .onFailure { fail3d() }
+                }
+            }, "continuum-avatar-asset").start()
+            return
+        }
+        if (nativeTexture == null) {
+            val texture = TextureView(context).apply {
+                isOpaque = false
+                alpha = 0f
+                importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+            }
+            nativeTexture = texture
+            texture.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+                override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+                    nativeSurface = Surface(surface)
+                    ensure3dRenderer(); invalidate()
+                }
+                override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) { invalidate() }
+                override fun onSurfaceTextureUpdated(surface: SurfaceTexture) = Unit
+                override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                    native3d?.close(); native3d = null
+                    nativeSurface?.release(); nativeSurface = null
+                    native3dDrawn = false
+                    return true
+                }
+            }
+            // The sequence is an overlay, so a newly created 3D surface must remain below it.
+            addView(texture, 0, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        }
+        ensure3dRenderer()
+    }
+
+    private fun ensure3dRenderer() {
+        if (native3d != null || native3dFailed || !canDisplay3d()) return
+        val surface = nativeSurface ?: return
+        if (!surface.isValid) return
+        val bytes = assetBytes ?: return
+        val metadata = assetMetadata ?: return
+        runCatching { FilamentAvatarRenderer.create(surface, bytes, metadata) }
+            .onSuccess { native3d = it; it.setQuality(renderBudget().reducedBloom) }.onFailure { fail3d() }
+    }
+
+    private fun fail3d() {
+        native3dFailed = true
+        release3d(clearAsset = true)
+        if (isAttachedToWindow && foregroundActive) Toast.makeText(context,
+            "3D-Kopf derzeit nicht verfügbar", Toast.LENGTH_LONG).show()
+        invalidate()
+    }
+
+    private fun release3d(clearAsset: Boolean) {
+        native3d?.close(); native3d = null; native3dDrawn = false
+        nativeTexture?.let { texture -> texture.surfaceTextureListener = null; removeView(texture) }
+        nativeTexture = null
+        nativeSurface?.release(); nativeSurface = null
+        if (clearAsset) { assetGeneration++; assetBytes = null; assetMetadata = null }
+    }
+
+    fun showAppearanceChooser() {
+        val presentation = context.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
+        val selected = if (presentation.getBoolean("compact", false)) 3 else if (head3dEnabled) 2 else if (headEnabled) 1 else 0
+        AlertDialog.Builder(context).setTitle("Continuum · Darstellung")
+            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau", "Kompakt · Kugel"), selected) { dialog, item ->
+                val choice = presentation.edit().putBoolean("compact", item == 3)
+                if (headEnabled) choice.putBoolean("avatar-3d", head3dEnabled)
+                if (item == 1 || item == 2) choice.putBoolean("avatar-3d", item == 2)
+                if (item == 2) setNative3dEnabled(true) else setNativeHeadEnabled(item == 1)
+                choice.apply()
+                dialog.dismiss()
+            }
+            .setNeutralButton("Bewegung prüfen") { _, _ ->
+                Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
+            }
+            .setNegativeButton("Schließen", null).show()
     }
 
     /** Call on the UI thread. State changes crossfade over the existing orb. */
@@ -131,7 +534,8 @@ class ContinuumHologramView @JvmOverloads constructor(
         consumedAudioMs = 0L
         audio.reset()
         audioEnergy = 0f
-        if (!canAnimate()) settleState()
+        if (!canAnimateFrame()) settleState()
+        renderBudget().let { cockpitSequence?.setFrameBudget(it.frameDelayMillis, it.reducedBloom) }
         invalidate()
     }
 
@@ -146,6 +550,10 @@ class ContinuumHologramView @JvmOverloads constructor(
     fun setForegroundActive(active: Boolean) {
         if (foregroundActive == active) return
         foregroundActive = active
+        if (!active) synchronized(avatarPose) {
+            avatarPose.clearSpeech()
+            avatarPose.clearObservedGaze(System.currentTimeMillis())
+        }
         updateMotionPolicy()
     }
 
@@ -153,6 +561,88 @@ class ContinuumHologramView @JvmOverloads constructor(
     fun setAnimationsEnabled(enabled: Boolean) {
         animationsEnabled = enabled
         updateMotionPolicy()
+    }
+
+    /** UI thread, explicit owner-work scope only. Hidden/inactive views cannot queue arrivals. */
+    fun setTaskEffectScope(scope: String?) {
+        if (scope != null && canAnimateFrame()) taskEffects.setScope(scope) else clearTaskEffects()
+        invalidate()
+    }
+
+    /** Capture uptime at the actual work boundary, before posting to the UI. No default timestamp. */
+    fun onTaskEffect(scope: String, event: ContinuumTaskEffects.Event, occurredAtMillis: Long): Boolean {
+        if (!canAnimateFrame()) { clearTaskEffects(); return false }
+        if (occurredAtMillis <= taskEffectsNotBeforeMs) return false
+        return taskEffects.accept(scope,event,occurredAtMillis,SystemClock.uptimeMillis()).also {
+            if(it) invalidate()
+        }
+    }
+
+    private fun clearTaskEffects() {
+        taskEffects.clear()
+        clearMemoryScene()
+        cockpitSequence?.clear()
+        resetAvatarEntrance()
+        taskEffectsNotBeforeMs = SystemClock.uptimeMillis()
+    }
+
+    private fun memorySceneTime() = cockpitSequence?.clock?.invoke() ?: SystemClock.uptimeMillis()
+
+    internal fun clearMemoryScene() {
+        val active = memoryScene.isActive
+        memoryScene.clear()
+        memorySceneOrbBounds.setEmpty()
+        if (active) { memorySceneInvalidation?.invoke(); invalidate() }
+    }
+
+    internal fun drawMemoryScene(canvas: Canvas, widthPx: Int, heightPx: Int, viewportTopPx: Int = 0) {
+        if (!canAnimateFrame() || memorySceneHostReady?.invoke() != true) {
+            clearMemoryScene(); return
+        }
+        val scene = memoryScene.sample(memorySceneTime()) ?: run { clearMemoryScene(); return }
+        val d = resources.displayMetrics.density
+        val w = widthPx / d; val h = heightPx / d
+        if (w <= 0f || h <= 0f) { clearMemoryScene(); return }
+        val saved = canvas.save()
+        try {
+        canvas.scale(d, d)
+        painter.begin(canvas)
+        painter.fillRect(0f, 0f, w, h, memoryBackdrop, scene.opacity)
+        if (scene.elapsedMs < 3_000L) {
+            memoryTunnel.render(painter, w, h, scene.elapsedMs / 1000f, !renderBudget().reducedBloom,
+                (1f - scene.orbProgress) * scene.opacity)
+        }
+        if (scene.orbProgress > 0f) {
+            resolveOrbBounds(width, height)
+            val grow = scene.orbProgress * scene.orbProgress * (3f - 2f * scene.orbProgress)
+            val back = scene.returnProgress * scene.returnProgress * (3f - 2f * scene.returnProgress)
+            val largeW = minOf(w * .86f, h * 1.15f) * (.12f + .88f * grow)
+            val largeH = minOf(h * .92f, w * 1.04f) * (.12f + .88f * grow)
+            val startL = w * .52f - largeW / 2f
+            val startT = h * .43f - largeH * renderer.geometry.centerY
+            fun mix(a: Float, b: Float) = a + (b - a) * back
+            val l = mix(startL, (left + orbDrawBounds.left) / d)
+            val t = mix(startT, (top + orbDrawBounds.top - viewportTopPx) / d)
+            val ow = mix(largeW, orbDrawBounds.width() / d)
+            val oh = mix(largeH, orbDrawBounds.height() / d)
+            memorySceneOrbBounds.set(l * d, t * d + viewportTopPx, (l + ow) * d, (t + oh) * d + viewportTopPx)
+            val orb = if (grow < 1f) canvas.saveLayerAlpha(l, t, l + ow, t + oh, (grow * 255f).toInt())
+                else canvas.save()
+            val originalEnergy = renderFrame.energy
+            try {
+            canvas.clipRect(l, t, l + ow, t + oh)
+            canvas.translate(l, t)
+            renderer.layout(ow, oh)
+            val now = memorySceneTime()
+            renderFrame.energy = maxOf(originalEnergy, cockpitSequence?.effects?.orbPulseLevel(now) ?: 0f,
+                cockpitSequence?.effects?.recallBrightness(now) ?: 0f)
+            renderer.draw(painter, renderFrame, transparentBackdrop = true)
+            } finally {
+                renderFrame.energy = originalEnergy
+                canvas.restoreToCount(orb)
+            }
+        }
+        } finally { canvas.restoreToCount(saved) }
     }
 
     override fun onAttachedToWindow() {
@@ -168,6 +658,18 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        resetCamera()
+        resetAvatarEntrance()
+        cockpitSequence?.setMotionAllowed(false)
+        clearTaskEffects()
+        // A fold/navigation reparent destroys the surface, but retains validated immutable asset bytes.
+        release3d(clearAsset = false)
+        mainHandler.removeCallbacks(avatarInvalidation)
+        avatarInvalidationPending.set(false)
+        synchronized(avatarPose) {
+            avatarPose.clearSpeech()
+            avatarPose.clearObservedGaze(System.currentTimeMillis())
+        }
         removeCallbacks(drawFrame)
         framePending = false
         lastFrameMs = 0L
@@ -198,13 +700,20 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
         super.onWindowFocusChanged(hasWindowFocus)
+        if (!hasWindowFocus) { resetCamera(); resetAvatarEntrance() }
         // Re-evaluate scheduling after Samsung Fold window/cover transitions.
         if (isAttachedToWindow) updateMotionPolicy()
     }
 
     /** Actual View visibility, not a callback-cached flag that can go stale. */
-    private fun canAnimate() =
+    private fun canAnimateFrame() =
         foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE
+
+    private fun renderBudget() = at.heinz.deviceai.ui.JarvisRenderQuality.resolve(
+        foregroundActive && isAttachedToWindow && isShown && windowVisibility == VISIBLE,
+        powerManager.isPowerSaveMode, thermalStatus,
+        !animationsEnabled || !ValueAnimator.areAnimatorsEnabled(),
+        currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING)
 
     /** No private content. Owner can inspect this by long-pressing the hologram. */
     /** Read only on the Android UI thread. Compares scheduled callbacks and real View draws. */
@@ -213,14 +722,14 @@ class ContinuumHologramView @JvmOverloads constructor(
     fun sampleMotion(): MotionSample = MotionSample(visibleFrameCount, drawnFrameCount, phase, motionDiagnostics())
 
     internal fun motionDiagnostics(): String = when {
-        !animationsEnabled -> "Kugel: In-App-Animation ausgeschaltet"
-        !ValueAnimator.areAnimatorsEnabled() -> "Kugel: Android-Animationen ausgeschaltet. Bedienungshilfen/Entwickleroptionen prüfen."
-        powerManager.isPowerSaveMode -> "Kugel: Energiesparmodus blockiert Bewegung."
-        thermalStatus >= 3 -> "Kugel: Temperatur hoch · Bewegung pausiert."
-        !foregroundActive -> "Kugel: Activity nicht im Vordergrund."
-        !isAttachedToWindow -> "Kugel: View nicht am Fenster."
-        !isShown || windowVisibility != VISIBLE -> "Kugel: View derzeit unsichtbar."
-        else -> "Kugel: LIVE · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)}"
+        !animationsEnabled -> "Avatar: In-App-Animation ausgeschaltet"
+        !ValueAnimator.areAnimatorsEnabled() -> "Avatar: Android-Animationen ausgeschaltet. Bedienungshilfen/Entwickleroptionen prüfen."
+        powerManager.isPowerSaveMode -> "Avatar: Energiesparmodus blockiert Bewegung."
+        thermalStatus >= 3 -> "Avatar: Temperatur hoch · Bewegung pausiert."
+        !foregroundActive -> "Avatar: Activity nicht im Vordergrund."
+        !isAttachedToWindow -> "Avatar: View nicht am Fenster."
+        !isShown || windowVisibility != VISIBLE -> "Avatar: View derzeit unsichtbar."
+        else -> "Avatar: LIVE · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)}"
     }
 
     private fun updateMotionPolicy() {
@@ -228,13 +737,21 @@ class ContinuumHologramView @JvmOverloads constructor(
         removeCallbacks(drawFrame)
         framePending = false
         lastFrameMs = 0L
-        if (!canAnimate()) {
+        if (!canAnimateFrame()) {
+            resetCamera()
+            resetAvatarEntrance()
+            clearTaskEffects()
+            synchronized(avatarPose) { avatarPose.clearObservedGaze(System.currentTimeMillis()) }
             settleState()
             audio.reset()
             audioEnergy = 0f
             pendingAudioMs = 0L
             consumedAudioMs = 0L
         }
+        cockpitSequence?.setMotionAllowed(canAnimateFrame())
+        renderBudget().let { cockpitSequence?.setFrameBudget(it.frameDelayMillis, it.reducedBloom) }
+        update3d()
+        native3d?.setQuality(renderBudget().reducedBloom)
         invalidate()
         scheduleFrame()
     }
@@ -246,15 +763,27 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        setMeasuredDimension(
-            resolveSize((412f * resources.displayMetrics.density).toInt(), widthMeasureSpec),
-            resolveSize((307f * resources.displayMetrics.density).toInt(), heightMeasureSpec)
-        )
+        val measuredWidth = resolveSize((412f * resources.displayMetrics.density).toInt(), widthMeasureSpec)
+        val measuredHeight = resolveSize((307f * resources.displayMetrics.density).toInt(), heightMeasureSpec)
+        // Keep the actual TextureView and Canvas composition on the same grid.
+        resolveHeadBounds(measuredWidth, measuredHeight)
+        val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
+        (nativeTexture?.layoutParams as? LayoutParams)?.let {
+            it.width = if (cockpitHeadBounds != null || cockpit) headDrawBounds.width().toInt() else (measuredWidth * .72f).toInt()
+            it.height = if (cockpitHeadBounds != null || cockpit) headDrawBounds.height().toInt() else LayoutParams.MATCH_PARENT
+            it.leftMargin = headDrawBounds.left.toInt(); it.topMargin = headDrawBounds.top.toInt()
+        }
+        updateOrbTarget(measuredWidth, measuredHeight)
+        super.onMeasure(MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY))
     }
 
     /** Phone or Fold composition of the reference images (see ContinuumHologramRenderer.Geometry). */
     fun setGeometry(geometry: ContinuumHologramRenderer.Geometry) {
+        val changed = renderer.geometry != geometry
         renderer.geometry = geometry
+        if (geometry != ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT) setCockpitRegions(null, null)
+        if (changed) requestLayout()
         invalidate()
     }
 
@@ -262,7 +791,6 @@ class ContinuumHologramView @JvmOverloads constructor(
         super.onDraw(canvas)
         val density = resources.displayMetrics.density
         if (width <= 0 || height <= 0) return
-        renderer.layout(width / density, height / density)
         painter.begin(canvas)
         val saved = canvas.save()
         canvas.scale(density, density)
@@ -270,16 +798,173 @@ class ContinuumHologramView @JvmOverloads constructor(
         renderFrame.phase = phase
         renderFrame.energy = energy
         renderFrame.audio = audioEnergy
-        renderer.draw(painter, renderFrame)
+        val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
+        if (memoryScene.isActive && (memorySceneHostReady?.invoke() != true ||
+                memoryScene.sample(memorySceneTime()) == null)) clearMemoryScene()
+        resolveHeadBounds(width, height)
+        updateOrbTarget(width, height)
+        if (headEnabled && cockpitHeadBounds != null) {
+            val t = if (canAnimateFrame()) avatarSeconds else 0f
+            at.heinz.deviceai.ui.JarvisEnergyFlows.draw(painter, width / density, height / density, t, energy)
+            updateAuraFraming()
+            val auraCanvas = canvas.save()
+            transformHeadEntrance(canvas, density)
+            at.heinz.deviceai.ui.JarvisHeadAura.draw(painter, at.heinz.deviceai.ui.JarvisShellLayout.Box(
+                headDrawBounds.left / density, headDrawBounds.top / density, headDrawBounds.right / density,
+                headDrawBounds.bottom / density), auraAnchorEffective, t,
+                headScale = auraScale, activityEnergy = energy, speechLevel = audioEnergy)
+            canvas.restoreToCount(auraCanvas)
+        }
+        if (headEnabled) {
+            val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis(), canAnimateFrame()) }
+            if (canDisplay3d() && native3d != null) {
+                runCatching {
+                    native3d!!.setQuality(renderBudget().reducedBloom)
+                    native3d!!.setFraming(headAnchorX, headCloseUp, headKeepOut)
+                    native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0,
+                        nativeTexture?.height ?: 0, if (cockpitHeadBounds != null) cameraWindow else null)
+                }
+                    .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
+                    .onFailure { fail3d() }
+            }
+            if (!native3dDrawn) {
+                val headCanvas = canvas.save()
+                transformHeadEntrance(canvas, density)
+                canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
+                avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
+                    pose, avatarSeconds, canAnimateFrame())
+                canvas.restoreToCount(headCanvas)
+            }
+            if (!memoryScene.isActive && (native3dDrawn || cockpit || cockpitOrbBounds != null)) {
+                // Same original orb, same actual app state and speech frame; no second animation loop.
+                resolveOrbBounds(width, height)
+                val orbWidth = orbDrawBounds.width() / density
+                val orbHeight = orbDrawBounds.height() / density
+                val orbCanvas = canvas.save()
+                canvas.translate(orbDrawBounds.left / density, orbDrawBounds.top / density)
+                canvas.clipRect(0f, 0f, orbWidth, orbHeight)
+                if (cockpitOrbBounds != null) {
+                    // Reuse the exact original animated sphere/rings with no opaque tile.
+                    val now = SystemClock.uptimeMillis()
+                    val effects = cockpitSequence?.effects
+                    val originalEnergy = renderFrame.energy
+                    renderFrame.energy = maxOf(originalEnergy, effects?.orbPulseLevel(now) ?: 0f,
+                        effects?.recallBrightness(now) ?: 0f)
+                    renderer.layout(orbWidth, orbHeight)
+                    renderer.draw(painter, renderFrame, transparentBackdrop = true)
+                    renderFrame.energy = originalEnergy
+                } else {
+                    renderer.layout(orbWidth, orbHeight)
+                    renderer.draw(painter, renderFrame)
+                }
+                canvas.restoreToCount(orbCanvas)
+            }
+            if (!native3dDrawn && head3dEnabled) {
+                val status = if (native3dFailed) "3D derzeit nicht verfügbar" else "3D wird initialisiert …"
+                painter.drawText(status, headDrawBounds.centerX() / density,
+                    (headDrawBounds.top + headDrawBounds.height() * .94f) / density,
+                    TextStyle(FontFamily.TEXT, 400, 11f), avatarBrandFill, TextAlign.CENTER)
+            }
+            if (cockpit && cockpitHeadBounds == null) painter.drawText("JARVIS", headDrawBounds.centerX() / density,
+                if (cockpitHeadBounds != null) (headDrawBounds.top + headDrawBounds.height() * .96f) / density else height / density * .96f,
+                avatarBrandStyle, avatarBrandFill, TextAlign.CENTER)
+        } else if (!memoryScene.isActive) {
+            renderer.layout(width / density, height / density)
+            renderer.draw(painter, renderFrame)
+        }
         drawnFrameCount++
         canvas.restoreToCount(saved)
     }
 
+    /** Above child TextureView composition; driven by the same visible-view invalidation clock. */
+    override fun dispatchDraw(canvas: Canvas) {
+        super.dispatchDraw(canvas)
+        if (width <= 0 || height <= 0) return
+        if (headFadeActive()) {
+            val density = resources.displayMetrics.density
+            val streams = canvas.save()
+            transformHeadEntrance(canvas)
+            canvas.translate(headDrawBounds.left, headDrawBounds.top)
+            canvas.scale(density, density)
+            painter.begin(canvas)
+            at.heinz.deviceai.ui.JarvisHeadAura.drawLightStreams(painter, headDrawBounds.width() / density,
+                headDrawBounds.height() / density)
+            canvas.restoreToCount(streams)
+        }
+        if (!canAnimateFrame()) return
+        val density=resources.displayMetrics.density
+        val saved=canvas.save()
+        canvas.scale(density,density)
+        canvas.clipRect(0f,0f,width/density,height/density)
+        painter.begin(canvas)
+        taskEffects.draw(painter,width/density,height/density,SystemClock.uptimeMillis())
+        canvas.restoreToCount(saved)
+    }
+
+    private val headFadePaint = android.graphics.Paint().apply {
+        xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.DST_IN)
+    }
+
+    private fun headFadeActive() = headEnabled && native3dDrawn && cockpitHeadBounds != null && width > 0 && height > 0
+
+    /** Only the native head surface is masked; full-view effect children keep their own unclipped drawing. */
+    override fun drawChild(canvas: Canvas, child: android.view.View, drawingTime: Long): Boolean {
+        if (child !== nativeTexture) return super.drawChild(canvas, child, drawingTime)
+        val saved = canvas.save()
+        transformHeadEntrance(canvas)
+        val drawn = if (headFadeActive()) {
+            val layer = canvas.saveLayer(headDrawBounds, null)
+            val result = super.drawChild(canvas, child, drawingTime)
+            applyHeadFade(canvas)
+            canvas.restoreToCount(layer)
+            result
+        } else super.drawChild(canvas, child, drawingTime)
+        canvas.restoreToCount(saved)
+        return drawn
+    }
+
+    /** DST_IN gradients matching [at.heinz.deviceai.ui.JarvisHeadAura.fadeAlpha] (bottom and both sides). */
+    private fun applyHeadFade(canvas: Canvas) {
+        val b = headDrawBounds
+        val (bottom, left, right) = headFadeShaders(b)
+        val bottomTop = b.bottom - b.height() * at.heinz.deviceai.ui.JarvisHeadAura.BOTTOM_FADE
+        val side = b.width() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE
+        val sideTop = b.top + b.height() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE_FROM
+        headFadePaint.shader = bottom
+        canvas.drawRect(b.left, bottomTop, b.right, b.bottom, headFadePaint)
+        headFadePaint.shader = left
+        canvas.drawRect(b.left, sideTop, b.left + side, b.bottom, headFadePaint)
+        headFadePaint.shader = right
+        canvas.drawRect(b.right - side, sideTop, b.right, b.bottom, headFadePaint)
+        headFadePaint.shader = null
+    }
+
+    private var headFadeShaders: Array<android.graphics.Shader>? = null
+    private val headFadeShaderBounds = RectF()
+
+    /** The three mask gradients depend only on the head bounds; they are rebuilt only when those change. */
+    private fun headFadeShaders(b: RectF): Array<android.graphics.Shader> {
+        headFadeShaders?.takeIf { headFadeShaderBounds == b }?.let { return it }
+        val opaque = android.graphics.Color.BLACK; val clear = android.graphics.Color.TRANSPARENT
+        val clamp = android.graphics.Shader.TileMode.CLAMP
+        val bottomTop = b.bottom - b.height() * at.heinz.deviceai.ui.JarvisHeadAura.BOTTOM_FADE
+        val side = b.width() * at.heinz.deviceai.ui.JarvisHeadAura.SIDE_FADE
+        return arrayOf<android.graphics.Shader>(
+            android.graphics.LinearGradient(0f, bottomTop, 0f, b.bottom, opaque, clear, clamp),
+            android.graphics.LinearGradient(b.left, 0f, b.left + side, 0f, clear, opaque, clamp),
+            android.graphics.LinearGradient(b.right - side, 0f, b.right, 0f, opaque, clear, clamp)
+        ).also { headFadeShaders = it; headFadeShaderBounds.set(b) }
+    }
+
     private fun advanceFrame() {
-        if (!canAnimate()) return
+        if (!canAnimateFrame()) return
         val now = SystemClock.uptimeMillis()
+        entranceMotion.advance(now)
+        cameraMotion.advance(now, hasWindowFocus(), Settings.Global.getFloat(context.contentResolver,
+            Settings.Global.ANIMATOR_DURATION_SCALE, 1f))
         val delta = if (lastFrameMs == 0L) 0f else ((now - lastFrameMs) / 1000f).coerceIn(0f, .1f)
         lastFrameMs = now
+        avatarSeconds = (avatarSeconds + delta) % 460f
         val blend = 1f - exp(-delta * 7f)
         for (i in stateWeights.indices) {
             stateWeights[i] += ((if (i == currentState.ordinal) 1f else 0f) - stateWeights[i]) * blend

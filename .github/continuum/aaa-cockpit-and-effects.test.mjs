@@ -10,6 +10,7 @@ const activity = kotlin('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
 const cockpit = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumBentoCockpit.kt');
 const effects = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumSciFiEffects.kt');
 const home = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt');
+const referenceLayout = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt');
 const system = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesView.kt');
 const collector = kotlin('app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt');
 const phone = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt');
@@ -18,8 +19,8 @@ const state = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumDashboardS
 
 test('no new Flutter dependency and existing native layout remains authoritative', () => {
   assert.match(home, /class ContinuumHomeView/);
-  assert.match(home, /ContinuumHomeLayout\.phone/);
-  assert.match(home, /ContinuumHomeLayout\.wide/);
+  assert.match(home, /ContinuumReferenceLayout\.create\(windowWidthDp,\s*if \(wide\) windowHeightDp else 0f,\s*wide, textScale, compactPresentation\)/);
+  assert.match(referenceLayout, /if \(wide\) boxes\[Slot\.RAIL\] = Box\(0f, 0f, rail, contentHeight\)\s*else boxes\[Slot\.NAV\] = Box\(0f, contentHeight, width, contentHeight \+ ContinuumHomeLayout\.PHONE_NAV_HEIGHT\)/);
   assert.doesNotMatch(effects, /BackdropFilter|RenderEffect\.createBlurEffect|BlurMaskFilter/);
   assert.doesNotMatch(cockpit, /Flutter|hardcoded.*98%/i);
 });

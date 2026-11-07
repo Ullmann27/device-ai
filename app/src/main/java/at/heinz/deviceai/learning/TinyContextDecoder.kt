@@ -230,12 +230,14 @@ class TinyContextDecoder private constructor(
     /** Greedy, reproducible, bounded continuation. Raw bytes are decoded as UTF-8;
      * malformed sequences may appear as replacement characters in an immature model.
      */
-    @Synchronized fun generate(prompt:String,maxBytes:Int=64,conditioning:DoubleArray=DoubleArray(CONDITION)):DecoderGeneration {
+    @Synchronized fun generate(prompt:String,maxBytes:Int=64,conditioning:DoubleArray=DoubleArray(CONDITION),
+        cancelled:()->Boolean={false}):DecoderGeneration {
         val prefix=prompt.toByteArray(Charsets.UTF_8)
         require(prefix.size<=512 && maxBytes in 1..128)
         val c=condition(conditioning);var tokens=context(prefix)
         val output=java.io.ByteArrayOutputStream();var ended=false
-        repeat(maxBytes) {
+        for(step in 0 until maxBytes) {
+            if(cancelled() || Thread.currentThread().isInterrupted)break
             if(!ended) {
                 val p=forward(tokens,c).p
                 var token=0;for(i in 1 until VOCAB)if(p[i]>p[token])token=i

@@ -1,0 +1,30 @@
+{
+  "id": "C020",
+  "question": "Wo steht Zykafago?",
+  "sources": [
+    {
+      "revision": 6,
+      "sha256": "7066ab338a35e5e61c94bf7ca521fd0e71f43f279b5c9984bb6aee9263b7008d",
+      "sourceId": "bc:C020:s1",
+      "text": "Qefoboda steht in Uvnicefa. Qebaneji steht in Uvgecije."
+    },
+    {
+      "revision": 7,
+      "sha256": "3f89847d478e60ad4362911e8f881123147d7399f7d5da74ed20d8b0e1c77339",
+      "sourceId": "bc:C020:s2",
+      "text": "Qevahiro steht in Uvfitava. Qebaneji steht in Uvgecije."
+    },
+    {
+      "revision": 1,
+      "sha256": "db1f8b57b202fe06cc062be50d9f683419ec00b02e684f45074f7b639d051db6",
+      "sourceId": "bc:C020:s3",
+      "text": "Qenisaco steht in Uvdacelu Uvromuhu Uvhuceni. Zykafago steht in Uvhileta Uvjesucu."
+    },
+    {
+      "revision": 2,
+      "sha256": "aa4ae59064b6a42fee4937df80c7f3f8b6a6e2a5d9fa029291f6d345ba4380f1",
+      "sourceId": "bc:C020:s4",
+      "text": "Qenolohi steht in Uvtilito. Qebaneji steht in Uvgecije."
+    }
+  ]
+}

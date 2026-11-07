@@ -1,0 +1,20 @@
+✔ exact-SHA local QA wrapper refuses false evidence and protects source (6908.694285ms)
+✔ fresh required suites prove actual execution and exact counts (396.365022ms)
+✔ required Android proof rejects missing (204.400339ms)
+✔ required Android proof rejects empty (292.17824ms)
+✔ required Android proof rejects skipped (374.00534ms)
+✔ required Android proof rejects wrong-class (313.999238ms)
+✔ required Android proof rejects wrong-count (122.574315ms)
+✔ required Android proof rejects malformed (336.913619ms)
+✔ required Android proof rejects stale (208.461243ms)
+✔ required Android proof rejects future (112.075664ms)
+✔ required Android proof rejects symlink (88.100031ms)
+✔ Node receipt requires exact current-source completed executed tests (1.69276ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9735.35131

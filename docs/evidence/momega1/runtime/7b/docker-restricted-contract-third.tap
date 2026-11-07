@@ -1,0 +1,457 @@
+TAP version 13
+# Subtest: 7B exact owner pin admits a bounded manifest without inference promotion
+ok 1 - 7B exact owner pin admits a bounded manifest without inference promotion
+  ---
+  duration_ms: 42.05124
+  type: 'test'
+  ...
+# Subtest: resource profile is frozen and restricted to every exact pin field plus runtime hash
+ok 2 - resource profile is frozen and restricted to every exact pin field plus runtime hash
+  ---
+  duration_ms: 0.465994
+  type: 'test'
+  ...
+# Subtest: 7B uses the fixed Qwen ChatML serialization, unknown model does not
+ok 3 - 7B uses the fixed Qwen ChatML serialization, unknown model does not
+  ---
+  duration_ms: 2.573931
+  type: 'test'
+  ...
+# Subtest: 7B total-job memory check is real and cannot accept the shared16GiB host group
+ok 4 - 7B total-job memory check is real and cannot accept the shared16GiB host group
+  ---
+  duration_ms: 0.945818
+  type: 'test'
+  ...
+# Subtest: large header requires exact complete provenance, no caller file-size bypass
+ok 5 - large header requires exact complete provenance, no caller file-size bypass
+  ---
+  duration_ms: 1.587537
+  type: 'test'
+  ...
+# Subtest: normal caller cannot certify a serialized runtime observation
+ok 6 - normal caller cannot certify a serialized runtime observation
+  ---
+  duration_ms: 1.599145
+  type: 'test'
+  ...
+# Subtest: coding CLI blocks endpoint-only configuration before any network/model call
+ok 7 - coding CLI blocks endpoint-only configuration before any network/model call
+  ---
+  duration_ms: 59.948616
+  type: 'test'
+  ...
+# Subtest: unapproved or absent local weights never produce runtime observations
+ok 8 - unapproved or absent local weights never produce runtime observations
+  ---
+  duration_ms: 1.799658
+  type: 'test'
+  ...
+# Subtest: actual namespace binds admitted descriptors and fixture output; never inference evidence
+not ok 9 - actual namespace binds admitted descriptors and fixture output; never inference evidence
+  ---
+  duration_ms: 74.762707
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:60:1'
+  failureType: 'testCodeFailure'
+  error: 'LOCAL_RUNTIME_PROCESS_FAILED'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    ChildProcess.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:159:30)
+    Object.onceWrapper (node:events:631:26)
+    ChildProcess.emit (node:events:509:28)
+    maybeClose (node:internal/child_process:1141:16)
+    ChildProcess._handle.onexit (node:internal/child_process:306:5)
+  ...
+# Subtest: altered model/runtime, unsafe executable and mismatched request cannot execute
+ok 10 - altered model/runtime, unsafe executable and mismatched request cannot execute
+  ---
+  duration_ms: 51.536264
+  type: 'test'
+  ...
+# Subtest: deadline cancels actual isolated process with bounded return
+not ok 11 - deadline cancels actual isolated process with bounded return
+  ---
+  duration_ms: 57.448049
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:78:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /CODING_TIMEOUT/. Input:
+    
+    'Error: LOCAL_RUNTIME_PROCESS_FAILED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'LOCAL_RUNTIME_PROCESS_FAILED'
+  stack: |-
+    ChildProcess.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:159:30)
+    Object.onceWrapper (node:events:631:26)
+    ChildProcess.emit (node:events:509:28)
+    maybeClose (node:internal/child_process:1141:16)
+    ChildProcess._handle.onexit (node:internal/child_process:306:5)
+  operator: 'rejects'
+  stack: |-
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:80:2)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: STOP cancels actual isolated process and leaves no trusted observation
+not ok 12 - STOP cancels actual isolated process and leaves no trusted observation
+  ---
+  duration_ms: 49.95094
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:83:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /CODING_CANCELLED/. Input:
+    
+    'Error: LOCAL_RUNTIME_PROCESS_FAILED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'LOCAL_RUNTIME_PROCESS_FAILED'
+  stack: |-
+    ChildProcess.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:159:30)
+    Object.onceWrapper (node:events:631:26)
+    ChildProcess.emit (node:events:509:28)
+    maybeClose (node:internal/child_process:1141:16)
+    ChildProcess._handle.onexit (node:internal/child_process:306:5)
+  operator: 'rejects'
+  stack: |-
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:86:6)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: malformed/oversized output and missing generation counters are rejected
+not ok 13 - malformed/oversized output and missing generation counters are rejected
+  ---
+  duration_ms: 55.28258
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:88:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /CODING_RESPONSE_INVALID|OUTPUT_LIMIT|GENERATION_UNOBSERVED/. Input:
+    
+    'Error: LOCAL_RUNTIME_PROCESS_FAILED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'LOCAL_RUNTIME_PROCESS_FAILED'
+  stack: |-
+    ChildProcess.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:159:30)
+    Object.onceWrapper (node:events:631:26)
+    ChildProcess.emit (node:events:509:28)
+    maybeClose (node:internal/child_process:1141:16)
+    ChildProcess._handle.onexit (node:internal/child_process:306:5)
+  operator: 'rejects'
+  stack: |-
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:93:34)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: sandbox exposes no checkout, HOME, network, secret or configurable shell
+ok 14 - sandbox exposes no checkout, HOME, network, secret or configurable shell
+  ---
+  duration_ms: 1.665274
+  type: 'test'
+  ...
+# Subtest: actual FD mount retains selected inode across model path replacement
+not ok 15 - actual FD mount retains selected inode across model path replacement
+  ---
+  duration_ms: 56.250542
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:102:1'
+  failureType: 'testCodeFailure'
+  error: 'LOCAL_RUNTIME_PROCESS_FAILED'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    ChildProcess.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:159:30)
+    Object.onceWrapper (node:events:631:26)
+    ChildProcess.emit (node:events:509:28)
+    maybeClose (node:internal/child_process:1141:16)
+    ChildProcess._handle.onexit (node:internal/child_process:306:5)
+  ...
+# Subtest: prompt evaluation counter alone cannot masquerade as output generation
+not ok 16 - prompt evaluation counter alone cannot masquerade as output generation
+  ---
+  duration_ms: 44.39221
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:112:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /GENERATION_UNOBSERVED/. Input:
+    
+    'Error: LOCAL_RUNTIME_PROCESS_FAILED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'LOCAL_RUNTIME_PROCESS_FAILED'
+  stack: |-
+    ChildProcess.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:159:30)
+    Object.onceWrapper (node:events:631:26)
+    ChildProcess.emit (node:events:509:28)
+    maybeClose (node:internal/child_process:1141:16)
+    ChildProcess._handle.onexit (node:internal/child_process:306:5)
+  operator: 'rejects'
+  stack: |-
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:114:2)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: inference sandbox denies host files, external interfaces, secrets and writable model
+not ok 17 - inference sandbox denies host files, external interfaces, secrets and writable model
+  ---
+  duration_ms: 46.299435
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:116:1'
+  failureType: 'testCodeFailure'
+  error: 'LOCAL_RUNTIME_PROCESS_FAILED'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    ChildProcess.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:159:30)
+    Object.onceWrapper (node:events:631:26)
+    ChildProcess.emit (node:events:509:28)
+    maybeClose (node:internal/child_process:1141:16)
+    Socket.<anonymous> (node:internal/child_process:498:11)
+    Socket.emit (node:events:509:28)
+    Pipe.<anonymous> (node:net:355:12)
+  ...
+# Subtest: seccomp denies fork and rlimits bound native memory/descriptor budgets
+not ok 18 - seccomp denies fork and rlimits bound native memory/descriptor budgets
+  ---
+  duration_ms: 64.038453
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:131:1'
+  failureType: 'testCodeFailure'
+  error: 'LOCAL_RUNTIME_PROCESS_FAILED'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    ChildProcess.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:159:30)
+    Object.onceWrapper (node:events:631:26)
+    ChildProcess.emit (node:events:509:28)
+    maybeClose (node:internal/child_process:1141:16)
+    ChildProcess._handle.onexit (node:internal/child_process:306:5)
+  ...
+# Subtest: changing model during actual execution invalidates otherwise valid output
+not ok 19 - changing model during actual execution invalidates otherwise valid output
+  ---
+  duration_ms: 46.502742
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:144:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /LOCAL_RUNTIME_FILE_CHANGED/. Input:
+    
+    'Error: LOCAL_RUNTIME_PROCESS_FAILED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'LOCAL_RUNTIME_PROCESS_FAILED'
+  stack: |-
+    ChildProcess.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:159:30)
+    Object.onceWrapper (node:events:631:26)
+    ChildProcess.emit (node:events:509:28)
+    maybeClose (node:internal/child_process:1141:16)
+    ChildProcess._handle.onexit (node:internal/child_process:306:5)
+  operator: 'rejects'
+  stack: |-
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:149:6)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: production provider rejects synthetic fixture receipt even when transport MAC is valid
+not ok 20 - production provider rejects synthetic fixture receipt even when transport MAC is valid
+  ---
+  duration_ms: 173.532856
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:161:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /CODING_MODEL_OBSERVATION_INVALID/. Input:
+    
+    'Error: CODING_MODEL_UNAVAILABLE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'CODING_MODEL_UNAVAILABLE'
+  stack: |-
+    rejectedModelOutput (file:///workspace/momega1-runtime/.github/continuum/coding-provider.mjs:17:14)
+    provider (file:///workspace/momega1-runtime/.github/continuum/coding-provider.mjs:271:10)
+    file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:163:20
+    getActual (node:assert:611:5)
+    strict.throws (node:assert:759:24)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:163:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:163:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: self-asserted inference flag is rejected instead of upgraded or accepted
+ok 21 - self-asserted inference flag is rejected instead of upgraded or accepted
+  ---
+  duration_ms: 72.793372
+  type: 'test'
+  ...
+# Subtest: native worker threads remain permitted while process creation stays denied
+not ok 22 - native worker threads remain permitted while process creation stays denied
+  ---
+  duration_ms: 68.408269
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:170:1'
+  failureType: 'testCodeFailure'
+  error: 'LOCAL_RUNTIME_PROCESS_FAILED'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    ChildProcess.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.mjs:159:30)
+    Object.onceWrapper (node:events:631:26)
+    ChildProcess.emit (node:events:509:28)
+    maybeClose (node:internal/child_process:1141:16)
+    ChildProcess._handle.onexit (node:internal/child_process:306:5)
+  ...
+# Subtest: unavailable isolation launcher fails closed and creates no observation
+ok 23 - unavailable isolation launcher fails closed and creates no observation
+  ---
+  duration_ms: 39.497617
+  type: 'test'
+  ...
+# Subtest: integration strict observation option rejects injected unobserved provider replies
+ok 24 - integration strict observation option rejects injected unobserved provider replies
+  ---
+  duration_ms: 80.981442
+  type: 'test'
+  ...
+# Subtest: integration technical recall enters prompt as bounded untrusted data within context budget
+ok 25 - integration technical recall enters prompt as bounded untrusted data within context budget
+  ---
+  duration_ms: 77.331056
+  type: 'test'
+  ...
+# Subtest: integration malformed recall and strict remote selection fail before transport
+ok 26 - integration malformed recall and strict remote selection fail before transport
+  ---
+  duration_ms: 58.760932
+  type: 'test'
+  ...
+# Subtest: process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+not ok 27 - process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+  ---
+  duration_ms: 134.339603
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:209:1'
+  failureType: 'testCodeFailure'
+  error: 'CODING_MODEL_UNAVAILABLE'
+  code: 'CODING_MODEL_UNAVAILABLE'
+  stack: |-
+    rejectedModelOutput (file:///workspace/momega1-runtime/.github/continuum/coding-provider.mjs:17:14)
+    provider (file:///workspace/momega1-runtime/.github/continuum/coding-provider.mjs:271:10)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:212:15)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: genuine admission registry rejects unknown model/runtime tuple and caller assertions
+ok 28 - genuine admission registry rejects unknown model/runtime tuple and caller assertions
+  ---
+  duration_ms: 0.609981
+  type: 'test'
+  ...
+# Subtest: invalid model JSON retains authenticated process observation without a candidate
+not ok 29 - invalid model JSON retains authenticated process observation without a candidate
+  ---
+  duration_ms: 60.203209
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:235:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + undefined
+    - 'LOCAL_CODING_INFERENCE_FAILURE_V1'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'LOCAL_CODING_INFERENCE_FAILURE_V1'
+  operator: 'strictEqual'
+  stack: |-
+    Object.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:239:10)
+    expectedException (node:assert:578:17)
+    expectsError (node:assert:703:21)
+    strict.rejects (node:assert:769:3)
+    async TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:237:2)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: provider retains authenticated rejected-response observation and consumed durable budget
+not ok 30 - provider retains authenticated rejected-response observation and consumed durable budget
+  ---
+  duration_ms: 155.867652
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:250:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CODING_MODEL_UNAVAILABLE'
+    - 'CODING_RESPONSE_INVALID'
+              ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'CODING_RESPONSE_INVALID'
+  actual: 'CODING_MODEL_UNAVAILABLE'
+  operator: 'strictEqual'
+  stack: |-
+    Object.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:255:10)
+    expectedException (node:assert:578:17)
+    expectsError (node:assert:703:21)
+    strict.throws (node:assert:759:3)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:254:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 16
+# fail 14
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1789.621621

@@ -1,0 +1,36 @@
+{
+  "base": "878393350db82e2b34738b09c20dbf655f1bad9d",
+  "candidate": "3b2e569f3e9b9a0fe80f0dd508d908ec33ae0dc5",
+  "red": {
+    "tests": 65,
+    "pass": 59,
+    "fail": 6
+  },
+  "green": {
+    "tests": 65,
+    "pass": 65,
+    "fail": 0
+  },
+  "node": "v24.19.0",
+  "productionUnchanged": true,
+  "testSourceSha256": {
+    ".github/continuum/android-integration-wiring.test.mjs": "9a18cfc7335cc0c5a8b9fdc490c429e3ce6358df8c5651da1fd2c75318f6809b",
+    ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs": "e3ce228fc4aeaebd7709c03f86537275108a5e4897796fb5b56e340f7027dc05",
+    ".github/continuum/m2-owner-brain-contract.test.mjs": "bc90d3c09a2b460b2ce6da33580e5a83e80fc043ea960c6b36c48d5be74f9ff4",
+    ".github/continuum/m5-voice-duplex-wiring.test.mjs": "aa9a5a200045562ce4d8b198d11739c441c81104f2493944739b966d75996ae9"
+  },
+  "productionTrees": {
+    "app": "63a431461f46f1975a9cf09cac9c824aff0be5b0",
+    "scripts": "2216b567d26ccc8c5d59ad2d5244c8f7bb71c7a4",
+    "backend": "f4bc00c1ba8afb0f115b26450757fd322843fd0c",
+    "tools": "c5fb2ad56209ea32798c7d451a130d78877f58b6"
+  },
+  "evidenceSha256": {
+    "green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "green.tap": "364b672ff22fc1e610fd579a6f493770c067c732c5217c02354f6e17cabe93b4",
+    "green-attempt.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "green-attempt.tap": "ed5a3c23aac01b4cd6fb0d1b67e2ec12d34748d9d07b39978ad73a3c9c20192b",
+    "red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "red.tap": "810d07b9d8977ac3cfe6c6fd4615ae787baf66bb06ecdc92edc8368e6b4f41c3"
+  }
+}

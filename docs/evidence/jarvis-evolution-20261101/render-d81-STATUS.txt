@@ -1,0 +1,7 @@
+status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE
+source_commit=d81be49e851a3c7f2196bcce288bc2fb40c7e22b
+run_id=4bf603ee-5b68-4ef5-8365-c122f578b029
+package=at.heinz.deviceai.continuumlocal
+version_code=36
+apk_signed=FALSE
+apk_published=FALSE

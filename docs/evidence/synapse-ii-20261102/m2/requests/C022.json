@@ -1,0 +1,18 @@
+{
+  "id": "C022",
+  "question": "Wo wohnt Zycitaho?",
+  "sources": [
+    {
+      "revision": 1,
+      "sha256": "5b5e79312213757374d14c740cd73814da085e8b1cb1bbf218e2fe0808dba128",
+      "sourceId": "bc:C022:s1",
+      "text": "Qehutolo wohnt in Uvsizozi Uvhisane."
+    },
+    {
+      "revision": 2,
+      "sha256": "9103414e9566e73eeed5eb542675ed7d7a250caeda1a8ed3ff6c2846bc5a4a18",
+      "sourceId": "bc:C022:s2",
+      "text": "Zycitaho liest ein Buch."
+    }
+  ]
+}

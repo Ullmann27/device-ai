@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AvatarRangeFrameConnectionUiTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:36:09" hostname="04c8b0ba7ea6" time="6.234">
+  <properties/>
+  <testcase name="invalidAudioMarkerCannotStartAVisibleWordThroughTheActualCallback" classname="at.heinz.deviceai.AvatarRangeFrameConnectionUiTest" time="4.757"/>
+  <testcase name="installedCallbackRejectsBackwardAudioMarkerAndAcceptsTheNextValidWord" classname="at.heinz.deviceai.AvatarRangeFrameConnectionUiTest" time="0.319"/>
+  <testcase name="orderedPunctuationAnchorsPcmWithoutInventingVisemesOrAdmittingOlderFrames" classname="at.heinz.deviceai.AvatarRangeFrameConnectionUiTest" time="0.274"/>
+  <testcase name="aDuplicateStartCannotRewindTheAcceptedPcmPosition" classname="at.heinz.deviceai.AvatarRangeFrameConnectionUiTest" time="0.316"/>
+  <testcase name="aRejectedRangeCannotRewindTheMeasuredPcmPlaybackPosition" classname="at.heinz.deviceai.AvatarRangeFrameConnectionUiTest" time="0.233"/>
+  <testcase name="tiedAudioMarkersKeepNewTextButDoNotReplayTheSameOrEarlierWord" classname="at.heinz.deviceai.AvatarRangeFrameConnectionUiTest" time="0.335"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

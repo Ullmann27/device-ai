@@ -1,0 +1,44 @@
+{
+  "kind": "SOURCE_PINNED_HOST_COLOR_EVIDENCE_NOT_DEVICE",
+  "sourceCommit": "9468eb87cd875c5e07f689aeb53767880ccd6765",
+  "capturesValid": true,
+  "overallTestRun": "274 PASS, 1 FAIL, 0 SKIP",
+  "files": [
+    {
+      "archive": "baseline-b294-start.png",
+      "sourcePath": "/workspace/scratch/76b7222771d5/build-env/baseline-images/fold7-inner-884x760-1-start.png",
+      "bytes": 1094848,
+      "sha256": "057dde500c57bdff75c0d77ddba6eeb7782346285933ffd333fdb985b9765b31"
+    },
+    {
+      "archive": "current-9468-start.png",
+      "sourcePath": "/workspace/scratch/76b7222771d5/build-env/final-visual/fold7-inner-884x760-1-start.png",
+      "bytes": 1095754,
+      "sha256": "dcafb2da871c0184f7fcbb2a76e0452247fd77196669ba20c13c2574925f3e1e"
+    },
+    {
+      "archive": "current-9468-start.views.txt",
+      "sourcePath": "/workspace/scratch/76b7222771d5/build-env/final-visual/fold7-inner-884x760-1-start.views.txt",
+      "bytes": 14698,
+      "sha256": "18a0894b21def175fd759b190dd17ef030a31010acecc2462d86358ac98606bd"
+    },
+    {
+      "archive": "ref5-app-final-colors.json",
+      "sourcePath": "/workspace/scratch/76b7222771d5/neon-flow/work-window/ref5-app-final-colors.json",
+      "bytes": 26637,
+      "sha256": "0f015f1b9efbe4cf130f72cd828c49e3dacf6cbeb15ac72cf4aaa68ca1ef3b4b"
+    },
+    {
+      "archive": "ref5-app-final-colors-summary.json",
+      "sourcePath": "/workspace/scratch/76b7222771d5/neon-flow/work-window/ref5-app-final-colors-summary.json",
+      "bytes": 3278,
+      "sha256": "53b7e173765b806b37141da73bcaae78d3942468e0eb80adc5b34aa4e64ddb2e"
+    },
+    {
+      "archive": "REF5-MEASUREMENT.md",
+      "sourcePath": "/workspace/scratch/76b7222771d5/neon-flow/work-window/REF5-MEASUREMENT.md",
+      "bytes": 5401,
+      "sha256": "6e04e4e3b208129cd3ad3bb45df35f060f7b07e507bbde7281f7de12b88460e3"
+    }
+  ]
+}

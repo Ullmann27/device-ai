@@ -8,12 +8,15 @@ import at.heinz.deviceai.ui.ContinuumIcons.Icon
  * preview draws the same map, so both show the identical composition. The hero slot is the hologram view.
  */
 object ContinuumHomeScreen {
-    val phoneNavigation = listOf(Icon.HOME to "Start", Icon.CHAT to "Chat", Icon.BOOK to "Lernen", Icon.CODE to "Entwickeln",
+    val phoneNavigation = listOf(Icon.HOME to "Start", Icon.CHAT to "Gespräch", Icon.BRAIN to "KI-System", Icon.GEAR to "Werkzeuge",
         Icon.DOTS_VERTICAL to "Mehr")
-    val railNavigation = listOf(Icon.HOME to "Start", Icon.CHAT to "Chat", Icon.BOOK to "Lernen", Icon.CODE to "Entwickeln",
+    val railNavigation = listOf(Icon.HOME to "Start", Icon.CHAT to "Gespräch", Icon.BOOK to "Lernen", Icon.CODE to "Entwickeln",
         Icon.CHART_UP to "Analysieren", Icon.DATABASE to "Speicher", Icon.GEAR to "System")
 
     fun elements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
+        if (layout.landscapeCockpit) return landscapeCockpitElements(layout, textScale)
+        if (layout.referenceCockpit) return referenceElements(layout, textScale)
+        if (layout.adaptive) return adaptiveElements(layout, textScale)
         val wide = layout.wide
         val portrait = wide && layout[Slot.WORKERS] != null
         val map = linkedMapOf<Slot, ContinuumElement>(
@@ -56,10 +59,74 @@ object ContinuumHomeScreen {
         return map
     }
 
+    private fun referenceElements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
+        val map = linkedMapOf<Slot, ContinuumElement>(
+            Slot.BRAND to ReferenceBrandElement(textScale),
+            Slot.SEARCH to HeaderButtonElement(HeaderButtonElement.Kind.SEARCH, textScale),
+            Slot.NOTIFICATIONS to HeaderButtonElement(HeaderButtonElement.Kind.NOTIFICATIONS, textScale),
+            Slot.PROFILE to HeaderButtonElement(HeaderButtonElement.Kind.PROFILE, textScale),
+            Slot.COMPOSER to ReferenceComposerElement(textScale)
+        )
+        for (slot in listOf(Slot.VIEW_AVATAR, Slot.VIEW_ORB, Slot.VIEW_COMPACT))
+            map[slot] = ReferenceViewModeElement(slot, textScale)
+        for (slot in ContinuumReferenceLayout.actions) map[slot] = ReferenceActionElement(slot, textScale)
+        for (slot in listOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT,
+            Slot.WORKERS, Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)) {
+            if (layout[slot] != null) map[slot] = ReferenceMetricCard(slot, textScale)
+        }
+        map[Slot.LABEL_EVOLVING] = ReferenceLearningStatusElement(textScale)
+        if (layout[Slot.RAIL] != null) map[Slot.RAIL] = RailElement(railNavigation, 0, textScale)
+        if (layout[Slot.NAV] != null) map[Slot.NAV] = BottomNavElement(phoneNavigation, 0, textScale)
+        return map
+    }
+
+    /** ref1/ref3 landscape cockpit; HERO stays the avatar slot (live hologram / Jarvis Avatar via avatar contract). */
+    private fun landscapeCockpitElements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
+        val map = linkedMapOf<Slot, ContinuumElement>(
+            Slot.BRAND to CockpitBrandElement(textScale),
+            Slot.SEARCH to HeaderButtonElement(HeaderButtonElement.Kind.SEARCH, textScale),
+            Slot.NOTIFICATIONS to HeaderButtonElement(HeaderButtonElement.Kind.NOTIFICATIONS, textScale),
+            Slot.PROFILE to HeaderButtonElement(HeaderButtonElement.Kind.PROFILE, textScale),
+            Slot.MODEL to CockpitBrainCard(textScale),
+            Slot.PROCESSES to CockpitProcessesCard(textScale),
+            Slot.LIVE_DIALOG to CockpitDialogCard(textScale),
+            Slot.SYSTEM_STATUS to CockpitSystemCard(textScale),
+            Slot.WORKERS to CockpitAgentsCard(textScale),
+            Slot.COMPOSER to CockpitComposerElement(textScale)
+        )
+        for (slot in ContinuumLandscapeCockpitLayout.topTabs) map[slot] = CockpitTabElement(slot, textScale)
+        for (slot in ContinuumLandscapeCockpitLayout.actionBar) map[slot] = CockpitActionElement(slot, textScale)
+        for (slot in listOf(Slot.VIEW_AVATAR, Slot.VIEW_ORB, Slot.VIEW_COMPACT)) map[slot] = ReferenceViewModeElement(slot, textScale)
+        if (layout[Slot.RAIL] != null) map[Slot.RAIL] = RailElement(railNavigation, 0, textScale)
+        return map
+    }
+
+    private fun adaptiveElements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
+        val map = linkedMapOf<Slot, ContinuumElement>(
+            Slot.BRAND to AdaptiveHeaderBrandElement(textScale),
+            Slot.SEARCH to HeaderButtonElement(HeaderButtonElement.Kind.SEARCH, textScale),
+            Slot.NOTIFICATIONS to HeaderButtonElement(HeaderButtonElement.Kind.NOTIFICATIONS, textScale),
+            Slot.PROFILE to HeaderButtonElement(HeaderButtonElement.Kind.PROFILE, textScale),
+            Slot.LABEL_THINKING to CockpitActionTile(Icon.CHAT, "Gespräch", { it.core.thinking }, textScale),
+            Slot.LABEL_ANALYSING to CockpitActionTile(Icon.GLOBE, "Forschung", { it.core.analysing }, textScale),
+            Slot.LABEL_LEARNING to CockpitActionTile(Icon.BOOK, "Lernen", { it.core.learning }, textScale),
+            Slot.LABEL_DEVELOPING to CockpitActionTile(Icon.CODE, "Entwicklung", { it.core.developing }, textScale),
+            Slot.LABEL_CONNECTED to CockpitActionTile(Icon.WIFI, "Verbindung", { it.core.connected }, textScale),
+            Slot.LABEL_EVOLVING to CockpitActionTile(Icon.ATOM, "Lernstatus", { it.core.evolving }, textScale)
+        )
+        for (slot in listOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT,
+            Slot.WORKERS, Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)) {
+            if (layout[slot] != null) map[slot] = CockpitMetricCard(slot, textScale, layout.wide)
+        }
+        if (layout[Slot.RAIL] != null) map[Slot.RAIL] = RailElement(railNavigation, 0, textScale)
+        if (layout[Slot.NAV] != null) map[Slot.NAV] = BottomNavElement(phoneNavigation, 0, textScale)
+        return map
+    }
+
     /** Page background: deep navy with the blue haze behind the core and faint star dust, as in the references. */
     fun drawBackground(p: ContinuumPainter, width: Float, height: Float, layout: ContinuumHomeLayout.Layout) {
         p.fillRect(0f, 0f, width, height, Fill.Linear(0f, 0f, 0f, height,
-            intArrayOf(Argb.rgb(3, 14, 36), ContinuumTheme.BACKGROUND, Argb.rgb(0, 8, 24))))
+            intArrayOf(Argb.rgb(2, 7, 20), ContinuumTheme.BACKGROUND, Argb.rgb(1, 5, 17))))
         val hero = layout[Slot.HERO] ?: return
         val cx = (hero.left + hero.right) / 2f
         val cy = hero.top + hero.height * .45f

@@ -23,6 +23,11 @@ data class ContinualLearningReport(
     val completedEvaluation:Boolean=true
 )
 
+internal class ContinuumSourceEvidenceNotPersisted(
+    val modelCommitted:Boolean,
+    cause:Exception
+):java.io.IOException("Source evaluation evidence not persisted",cause)
+
 data class PublicCurriculumReport(
     val accepted:Boolean,
     val completed:Boolean,
@@ -100,7 +105,7 @@ data class ExtendedCurriculumReport(
     }
 }
 
-enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE }
+enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE, HELD_UNCONFIRMED }
 
 data class ContinuumLearningStatus(
     val experiences:LearningExperienceStats,
@@ -118,12 +123,20 @@ data class ContinuumLearningStatus(
  * bounded prior experiences, measures frozen holdouts and commits candidate
  * weights only when regression gates pass. A rejected candidate is discarded.
  */
-class ContinuumLearningCore(
+class ContinuumLearningCore private constructor(
     baseDirectory:File,
-    private val nowMillis:()->Long=System::currentTimeMillis
+    /** M2.3: when set, every owner-fact mutation is also appended as a signed ProofCarryingMemory mutation to a
+     * sidecar journal (the LEX2 ledger format is unchanged). Null = previous behaviour. */
+    private val correctionSigner:at.heinz.deviceai.cognitive.IdentitySigner?,
+    private val nowMillis:()->Long,
+    automaticRecovery:Boolean
 ) {
+    constructor(baseDirectory:File, correctionSigner:at.heinz.deviceai.cognitive.IdentitySigner?,
+                nowMillis:()->Long):this(baseDirectory,correctionSigner,nowMillis,false)
+    constructor(baseDirectory:File, nowMillis:()->Long=System::currentTimeMillis):this(baseDirectory,null,nowMillis,false)
+
     private val directory=File(baseDirectory,"learning-core-v2")
-    private val store=FileLearningExperienceStore(directory)
+    private val store=FileLearningExperienceStore(directory,automaticRecovery)
     private val modelFile=File(directory,"subword-v1.bin")
     private val modelBackup=File(directory,"subword-v1.lkg")
     private val dialogue=ContinuumMemoryDialogue(directory)
@@ -475,31 +488,23 @@ class ContinuumLearningCore(
         cancelled:()->Boolean={false}
     ):ContinualLearningReport? = synchronized(CORE_LOCK) {
         if(sources.isEmpty())return@synchronized null
-        sources.forEach(MentorSourceValidation::checkSource)
-        val ids=mutableListOf<String>()
-        sources.forEach { source ->
-            val experience=LearningExperienceFactory.create(
-                type=LearningExperienceType.SOURCE_TEXT,
-                provenance=LearningProvenance.MENTOR_WIKIPEDIA,
-                trust=LearningTrustClass.SOURCE_OBSERVATION,
-                status=LearningStatus.OBSERVED,
-                content=source.excerpt,
-                annotation=source.subject,
-                sourceRef=source.url+"#sha256="+source.sha,
-                now=nowMillis()
-            )
-            store.append(experience)
-            ids+=experience.id
-        }
+        val batch=java.util.Collections.unmodifiableList(ArrayList(sources))
+        val requested=sourceExperiences(batch,nowMillis()) ?: return@synchronized null
+        ContinuumSourceNovelty.markStarted(directory.parentFile!!,batch)
+        store.appendMissing(requested)
+        val ids=requested.map { it.id }
+        val requestedIds=ids.toSet()
         // Capacity refusal or revocation must not turn into a claimed source
         // training round backed only by the unrelated public curriculum.
-        val activeIds=store.all().filter {
+        val active=store.all().filter {
             it.status!=LearningStatus.REVOKED && it.status!=LearningStatus.REJECTED
-        }.map { it.id }.toSet()
-        // Callers mark the whole source batch completed after this report.
-        if(ids.any { it !in activeIds })return@synchronized null
+        }.associateBy { it.id }
+        // Require the complete persisted batch.
+        if(ids.any { it !in active })return@synchronized null
 
-        val replay=store.replay(LearningExperienceType.SOURCE_TEXT,48)
+        val replay=(store.replay(LearningExperienceType.SOURCE_TEXT,48).filter {
+            it.id !in requestedIds && it.annotation.orEmpty().length>=3
+        }+ids.map(active::getValue)).takeLast(48)
         val positives=replay.mapNotNull { item ->
             val topic=item.annotation?.takeIf { it.length>=3 } ?: return@mapNotNull null
             SubwordSemanticExample(topic,item.content,true)
@@ -526,12 +531,15 @@ class ContinuumLearningCore(
             holdoutAfter.correct>=holdoutBefore.correct &&
             holdoutAfter.loss<=holdoutBefore.loss+0.045
         if(accepted)saveModel(candidate.save(),"semantic")
+        emitTrainingPhase("SAVE_EVIDENCE")
+        try {
         ids.forEach { id ->
             store.updateStatus(id,
                 if(accepted)LearningStatus.LEARNED else LearningStatus.REPLAY_PENDING,
                 nowMillis())
         }
         val reason=when {
+            accepted && cancelled() -> "Modell gespeichert; Abschluss unterbrochen"
             cancelled() || train.stoppedEarly -> "Abgebrochen; Snapshot unverändert"
             !otherRetained -> "Gemeinsame Gewichte würden Intent oder persönliche Lektionen verschlechtern"
             holdoutAfter.correct<holdoutBefore.correct -> "Semantik-Holdout würde Treffer verlieren"
@@ -540,11 +548,20 @@ class ContinuumLearningCore(
             else -> "Quellenkontexte verbessert; semantischer Holdout nicht verschlechtert"
         }
         appendAudit("semantic",accepted,train.steps,before,after,holdoutBefore,holdoutAfter,ids,reason)
-        ContinualLearningReport(
-            "semantic",accepted,train.steps,replay.size,before,after,
+        val report=ContinualLearningReport(
+            "semantic",accepted,train.steps,sourcePairs.size,before,after,
             holdoutBefore,holdoutAfter,ids,reason,
             completedEvaluation=!cancelled() && !train.stoppedEarly
         )
+        if(report.completedEvaluation &&
+            !ContinuumSourceNovelty.markCompleted(directory.parentFile!!,batch,cancelled))
+            report.copy(completedEvaluation=false,reason=if(accepted)
+                "Modell gespeichert; Abschluss unterbrochen" else
+                "Abschluss unterbrochen; Snapshot unverändert") else report
+        } catch(error:Exception) {
+            if(error is java.util.concurrent.CancellationException)throw error
+            throw ContinuumSourceEvidenceNotPersisted(accepted,error)
+        }
     }
 
     /** Already owner-reviewed notes join retrieval, never become truth labels. */
@@ -576,14 +593,76 @@ class ContinuumLearningCore(
         live.forEach { store.append(it);store.updateStatus(it.id,LearningStatus.OBSERVED,nowMillis()) }
     }
 
-    private fun ownerFact(content:String)=LearningExperienceFactory.create(
-        LearningExperienceType.USER_FACT,
-        LearningProvenance.USER_CONFIRMED,
-        LearningTrustClass.OWNER_CONFIRMED,
-        LearningStatus.CONFIRMED,
-        content.trim(),
-        now=nowMillis()
-    )
+    /**
+     * M2 hypothetical gate: only an assertion (or a negation, kept as a remove-only barrier) becomes a
+     * CONFIRMED owner fact. A conditional, hedged, planned, questioned or reported statement is kept visibly
+     * as an OBSERVED owner statement with an `unbestaetigt:<MODALITY>` annotation, which no answer path reads
+     * as a fact (all of them filter on CONFIRMED/LEARNED/REPLAY_PENDING). Same enum names, same file format.
+     */
+    private fun ownerFact(content:String):LearningExperience {
+        val held=OwnerStatementModality.heldAnnotation(content)
+        return LearningExperienceFactory.create(
+            LearningExperienceType.USER_FACT,
+            LearningProvenance.USER_CONFIRMED,
+            LearningTrustClass.OWNER_CONFIRMED,
+            if(held==null)LearningStatus.CONFIRMED else LearningStatus.OBSERVED,
+            content.trim(),
+            annotation=held,
+            now=nowMillis()
+        )
+    }
+
+    private fun confirmable(e:LearningExperience)=
+        e.annotation?.startsWith(OwnerStatementModality.HELD_PREFIX)!=true &&
+            OwnerStatementModality.mayBecomeConfirmedFact(OwnerStatementModality.classify(e.content))
+
+    /** Legacy ledgers (before the gate) may hold a CONFIRMED conditional sentence: demote it to OBSERVED. */
+    private fun quarantineUnconfirmableOwnerFacts():Int {
+        val legacy=store.all().filter { it.type==LearningExperienceType.USER_FACT &&
+            it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING) &&
+            !confirmable(it) }
+        if(legacy.isNotEmpty())dialogue.clear()
+        legacy.forEach { store.updateStatus(it.id,LearningStatus.OBSERVED,nowMillis()) }
+        return legacy.size
+    }
+
+    /** Owner statements that are stored but deliberately NOT confirmed facts (hypothetical, uncertain, ...). */
+    /** Read-only: every owner statement (confirmed, held, revoked) with its confirmability, oldest first. */
+    internal fun ownerStatementHistory():List<Pair<LearningExperience,Boolean>> = synchronized(CORE_LOCK) {
+        store.all().filter { it.type==LearningExperienceType.USER_FACT && it.trust==LearningTrustClass.OWNER_CONFIRMED }
+            .sortedWith(compareBy<LearningExperience> { it.createdAt }.thenBy { it.id })
+            .map { it to (it.status!=LearningStatus.OBSERVED && confirmable(it)) }
+    }
+
+    fun unconfirmedOwnerStatements():List<LearningExperience> = synchronized(CORE_LOCK) {
+        store.all().filter { it.type==LearningExperienceType.USER_FACT && it.status==LearningStatus.OBSERVED &&
+            it.trust==LearningTrustClass.OWNER_CONFIRMED }
+    }
+
+    /**
+     * Read-only view for the temporal memory specialist: every owner statement of the canonical ledger
+     * including revocation tombstones and held statements, so validity and knowledge time stay reconstructable.
+     * No copy, no second store; [ContinuumTemporalMemory] decides what may answer.
+     */
+    fun temporalMemoryView(working:List<WorkingTurn> = emptyList(),
+                           zone:java.time.ZoneId = ContinuumTemporalMemory.VIENNA):ContinuumTemporalMemory =
+        synchronized(CORE_LOCK) {
+            // M2.1: the ledger-only view is cached per directory+zone, keyed by the ledger's SHA-256 content
+            // fingerprint read under the store's file lock on EVERY call. A changed ledger (incl. a revocation
+            // between answer and re-check) always rebuilds; working memory is merged per call, never cached.
+            val key=directory.canonicalPath+"|"+zone.id
+            val cached=synchronized(VIEW_CACHE) { VIEW_CACHE[key] }
+            val (fingerprint,records)=store.snapshotIfChanged(cached?.first)
+            val ledgerView=if(records==null && cached!=null) {
+                viewCacheHits.incrementAndGet(); cached.second
+            } else {
+                viewCacheMisses.incrementAndGet()
+                ContinuumTemporalMemory.fromLedger((records ?: store.all()).filter { it.type==LearningExperienceType.USER_FACT &&
+                    it.trust==LearningTrustClass.OWNER_CONFIRMED && it.provenance==LearningProvenance.USER_CONFIRMED },
+                    emptyList(),zone).also { v -> synchronized(VIEW_CACHE) { VIEW_CACHE[key]=fingerprint to v } }
+            }
+            ledgerView.withWorking(working)
+        }
 
     /** Adds a missing owner fact; a fact the owner revoked stays revoked (see [confirmOwnerFact]). */
     fun recordOwnerFact(content:String):Boolean=synchronized(CORE_LOCK) {
@@ -593,32 +672,70 @@ class ContinuumLearningCore(
     /**
      * Mirrors the Android owner memory into the ledger with one read and at most
      * one write. Like [recordOwnerFact] it never re-activates a revoked fact, so a
-     * revocation is not undone by facts that are still listed elsewhere.
+     * revocation is not undone by facts that are still listed elsewhere. After
+     * recovery, missing historical facts are not imported as new confirmations.
      */
-    fun syncOwnerFacts(facts:List<String>):Int=synchronized(CORE_LOCK) {
-        store.appendMissing(facts.map(::ownerFact))
-    }
+    fun syncOwnerFacts(facts:List<String>):Int=synchronized(CORE_LOCK) { signedOwnerMutation {
+        quarantineUnconfirmableOwnerFacts()
+        store.appendHistoricalOwnerFacts(facts.map(::ownerFact))
+    } }
 
     /**
      * An explicit owner statement ("Merke dir: ..."): adds the fact, or confirms
      * again a fact the owner revoked earlier (the id is the content hash, so the
      * revoked record would otherwise stay revoked forever).
      */
-    fun confirmOwnerFact(content:String):OwnerFactChange=synchronized(CORE_LOCK) {
+    fun confirmOwnerFact(content:String):OwnerFactChange=synchronized(CORE_LOCK) { signedOwnerMutation { confirmOwnerFactUnsigned(content) } }
+
+    private fun confirmOwnerFactUnsigned(content:String):OwnerFactChange {
         val item=ownerFact(content)
-        if(store.append(item))return@synchronized OwnerFactChange.ADDED
+        if(item.status==LearningStatus.OBSERVED) {
+            store.append(item)
+            return OwnerFactChange.HELD_UNCONFIRMED
+        }
+        if(store.append(item))return OwnerFactChange.ADDED
         val existing=store.all().first { it.id==item.id }
+        if(existing.id in store.pendingOwnerReconfirmation())return OwnerFactChange.HELD_UNCONFIRMED
         if(existing.status!=LearningStatus.REVOKED && existing.status!=LearningStatus.REJECTED)
-            return@synchronized OwnerFactChange.ALREADY_ACTIVE
+            return OwnerFactChange.ALREADY_ACTIVE
         check(store.updateStatus(item.id,LearningStatus.CONFIRMED,nowMillis())) { "Owner fact vanished" }
-        OwnerFactChange.REACTIVATED
+        return OwnerFactChange.REACTIVATED
+    }
+
+    /** Display these concrete statements before collecting an owner decision. No model/tool can supply a yes. */
+    fun recoveredOwnerFactsForReview():OwnerRecoveryReview = synchronized(CORE_LOCK) { store.ownerRecoveryReview() }
+
+    /** The proof binds an explicit displayed subset and the current ledger/consent revision. No bulk default. */
+    fun reconfirmRecoveredOwnerFacts(review:OwnerRecoveryReview,proof:OwnerReconfirmationProof?):Set<String> =
+        synchronized(CORE_LOCK) { signedOwnerMutation {
+            val ids=store.reconfirmRecoveredOwnerFacts(review,proof)
+            if(ids.isNotEmpty())dialogue.clear()
+            ids
+        } }
+
+    private val correctionJournal=correctionSigner?.let { SignedOwnerCorrectionJournal(directory,it) }
+
+    /** Runs an owner-fact mutation; with a signer, the resulting ledger diff is signed into the sidecar journal
+     * after the ledger write succeeded. A failed journal write leaves an auditable UNSIGNED_LEDGER_CHANGE. */
+    private fun <T> signedOwnerMutation(block:()->T):T {
+        val journal=correctionJournal ?: return block()
+        val before=SignedOwnerCorrectionJournal.ownerFacts(store.all())
+        val result=block()
+        journal.recordDiff(before,SignedOwnerCorrectionJournal.ownerFacts(store.all()),nowMillis())
+        return result
+    }
+
+    /** M2.3: verifies the signed correction journal against the current ledger (read-only). */
+    fun correctionAudit():CorrectionAudit = synchronized(CORE_LOCK) {
+        correctionJournal?.audit(store.all()) ?: CorrectionAudit(CorrectionAuditStatus.NOT_CONFIGURED,0,emptyList())
     }
 
     /** Confirmed, not revoked owner facts (the memory the chat may cite), oldest first. */
     fun activeOwnerFacts():List<LearningExperience> = synchronized(CORE_LOCK) {
         store.all().filter {
             it.type==LearningExperienceType.USER_FACT && it.trust==LearningTrustClass.OWNER_CONFIRMED &&
-                it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING)
+                it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING) &&
+                confirmable(it)
         }
     }
 
@@ -629,21 +746,42 @@ class ContinuumLearningCore(
         loadModel().save() to activeOwnerFacts()
     }
 
-    fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) {
+    /** One read-only view for the optional EWM answer gate. Keep tombstones in
+     * the scope calculation so an older active fact cannot reappear through a
+     * different answer path after a newer assertion is revoked.
+     */
+    internal fun brainAnswerView(question:String,proposedIds:List<String>,conversationId:String):Pair<List<LearningExperience>,Set<String>?> =
+        synchronized(CORE_LOCK) {
+            val all=store.all()
+            val active=all.filter { it.type==LearningExperienceType.USER_FACT &&
+                it.provenance==LearningProvenance.USER_CONFIRMED && it.trust==LearningTrustClass.OWNER_CONFIRMED &&
+                it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING) }
+            val proposed=active.filter { it.id in proposedIds }.map {
+                ContinuumMemoryHit(it.id,it.content,"Bestätigte Nutzererinnerung",it.sourceRef,0.0,0.0)
+            }
+            val resolved=runCatching { dialogue.history(conversationId).lastOrNull() }
+                .getOrNull()?.takeIf { it.input==question.trim().take(320) }?.resolvedQuery ?: question
+            val scope=OwnerAttributeEvidenceScope.select(resolved,all,proposed)
+                ?: if(Regex("(?u)^[Uu]nd\\s+\\p{Lu}[\\p{L}'’-]*(?:s|['’])(?:\\s.*?)?\\?$").matches(question.trim()))
+                    emptySet() else null
+            active to scope
+        }
+
+    fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) { signedOwnerMutation {
         dialogue.clear()
         store.updateMatching(
             LearningExperienceType.USER_FACT,content.trim(),
             LearningStatus.REVOKED,nowMillis()
         )
-    }
+    } }
 
-    fun revokeAllOwnerFacts():Int=synchronized(CORE_LOCK) {
+    fun revokeAllOwnerFacts():Int=synchronized(CORE_LOCK) { signedOwnerMutation {
         dialogue.clear()
         store.updateMatching(
             LearningExperienceType.USER_FACT,null,
             LearningStatus.REVOKED,nowMillis()
         )
-    }
+    } }
 
     fun recordCommandMapping(phrase:String,tool:String):Boolean=synchronized(CORE_LOCK) {
         require(phrase.trim().length in 3..320 && tool.matches(Regex("[a-z_]{2,64}")))
@@ -1022,6 +1160,54 @@ class ContinuumLearningCore(
     }
 
     companion object {
+        internal fun prepareSourceBatch(sources:List<MentorSource>):List<MentorSource>? {
+            val snapshot=java.util.Collections.unmodifiableList(ArrayList(sources))
+            return snapshot.takeIf { sourceExperiences(it,0L)!=null }
+        }
+
+        private fun sourceExperiences(sources:List<MentorSource>,at:Long):List<LearningExperience>? {
+            sources.forEach { source ->
+                MentorSourceValidation.checkSource(source)
+                require(source.subject.trim().length>=3)
+                TrainableSubwordEncoder.subwordBuckets(source.subject)
+                TrainableSubwordEncoder.subwordBuckets(source.excerpt)
+            }
+            val requested=sources.map { source ->
+                LearningExperienceFactory.create(
+                    type=LearningExperienceType.SOURCE_TEXT,
+                    provenance=if(source.url.startsWith("https://de.wikipedia.org/wiki/"))
+                        LearningProvenance.MENTOR_WIKIPEDIA else LearningProvenance.PUBLIC_WEB_SOURCE,
+                    trust=LearningTrustClass.SOURCE_OBSERVATION,
+                    status=LearningStatus.OBSERVED,
+                    content=source.excerpt,
+                    annotation=source.subject,
+                    sourceRef=source.url+"#sha256="+source.sha,
+                    now=at
+                )
+            }.distinctBy { it.id }
+            return requested.takeIf { it.size<=17 }
+        }
+
+        /** Explicit owner-approved recovery policy; existing constructors retain strict integrity reads. */
+        fun withAutomaticRecovery(baseDirectory:File, nowMillis:()->Long=System::currentTimeMillis):ContinuumLearningCore =
+            ContinuumLearningCore(baseDirectory,null,nowMillis,true)
+
+        fun withAutomaticRecovery(baseDirectory:File, correctionSigner:at.heinz.deviceai.cognitive.IdentitySigner?,
+                                  nowMillis:()->Long=System::currentTimeMillis):ContinuumLearningCore =
+            ContinuumLearningCore(baseDirectory,correctionSigner,nowMillis,true)
+
+        /** Ledger-view cache: key = canonical directory + zone, value = (content fingerprint, ledger-only view).
+         * Bounded LRU; entries are immutable views, so sharing them across instances is safe. */
+        private const val VIEW_CACHE_MAX=8
+        private val VIEW_CACHE=object:LinkedHashMap<String,Pair<String,ContinuumTemporalMemory>>(16,0.75f,true) {
+            override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Pair<String,ContinuumTemporalMemory>>?)=
+                size>VIEW_CACHE_MAX
+        }
+        private val viewCacheHits=java.util.concurrent.atomic.AtomicLong()
+        private val viewCacheMisses=java.util.concurrent.atomic.AtomicLong()
+        /** (hits, misses) of the ledger-view cache, process-wide. */
+        internal fun ledgerViewCacheStats():Pair<Long,Long> = viewCacheHits.get() to viewCacheMisses.get()
+
         private val CORE_LOCK=Any()
 
         val INTENT_BOOTSTRAP=listOf(

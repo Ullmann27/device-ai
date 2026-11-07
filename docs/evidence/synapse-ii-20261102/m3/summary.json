@@ -1,0 +1,72 @@
+{
+  "schema": "continuum-synapse-ii-m3-host-proof",
+  "version": 1,
+  "status": "HOST_REPAIR_VERIFIED_PENDING_REVIEW",
+  "sourceCommit": "ec37288555fc29d8af99a276ea7323792a9f4bf8",
+  "sourceBranch": "research/continuum-synapse-ii-20261102",
+  "fixtureSourceCommit": "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+  "fixtureSeedCommit": "397cd42df1bd63a58763583b939f834d97e45eb7",
+  "fixtureCandidateCommit": "ccf1108a3249c28fc2c53f03d5fa558bbed1c50b",
+  "patchSha256": "da5c8bbf0e3a012d3cab4d8877c73f9c21ad6beec04df3411f169c2dd52a5a43",
+  "taskId": "t-35ec97302687a24a",
+  "job": "219b42d6-2b36-41d4-b2fd-5d68752b58c7",
+  "chain": "node",
+  "strategy": "JS_TYPO_REFERENCE",
+  "node": "v24.19.0",
+  "platform": "linux",
+  "arch": "x64",
+  "startedFixtureAt": "/tmp/continuum-synapse-m3-9KKVjI",
+  "fixtureExecution": {
+    "mode": "HOST_LEGACY",
+    "cancellation": "STEP_WATCHDOG"
+  },
+  "baseline": {
+    "phase": "baseline",
+    "exitCode": 1,
+    "passed": false,
+    "executed": 4,
+    "failed": 3,
+    "timedOut": false,
+    "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+  },
+  "candidate": {
+    "phase": "candidate",
+    "exitCode": 0,
+    "passed": true,
+    "executed": 4,
+    "failed": 0,
+    "timedOut": false,
+    "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+  },
+  "independent": {
+    "phase": "independent",
+    "exitCode": 0,
+    "passed": true,
+    "executed": 4,
+    "failed": 0,
+    "timedOut": false,
+    "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+  },
+  "committedControlExitCode": 0,
+  "mainBlocked": true,
+  "approvalState": "FIXTURE_EXECUTION_AUTHORIZED; MERGE_NOT_APPROVED",
+  "sourceCheckoutPatched": false,
+  "ownerDataWritten": false,
+  "paidApiCalls": 0,
+  "modelInvocations": 0,
+  "device": "DEVICE_NOT_RUN",
+  "androidBuild": "NOT_RUN",
+  "release": "NOT_RUN",
+  "push": "NOT_PUSHED_BY_M3_AGENT",
+  "sourceFiles": {
+    ".github/continuum/repair-loop.mjs": "750aeaf3b59d6a037eb5035ee8d27f0dd9c436875e6ee55f16e7deaf6ae90ce1",
+    ".github/continuum/repair-publish.mjs": "ed35b61aab80d7740e4a607bdc456255ac6a9b2707c280d74c555030128bda35",
+    ".github/continuum/repair-strategies.mjs": "775029842cdae34ee3cad5b4c0045241d86e5e0dbf3858e7e7e1a77b2c21c289",
+    ".github/continuum/backlog-repair-worker.mjs": "d02e617df2a49df0f71cc506bf9e2dffb4c5decc03b79acc264a87e283a8c337",
+    ".github/continuum/ccc1-worker.mjs": "4dca4d28df8f4a884ae9e913a36d83d3dfc4239249b45701ecb13d3f33c3f219",
+    ".github/continuum/ccc1-envelope.mjs": "74c040d9df6f77759da428e5df32fea1be171a8024c5bed57759f83a19cc36dc",
+    ".github/continuum/ccc1-verifier.mjs": "35df4d673a3b7c5bc86b32ec4a9577386c046e900c6ae85da342ad84943e09e7",
+    "scripts/continuum-mobile-coding.mjs": "f116fdffd33d3282608340af373d703d29d6b8cb9ef71f4356087fee0c01466d",
+    "tools/continuum-worker-proof/run-m3.mjs": "ab3c4a5c747a66b4c12817c7cdfd3cb6a2545e61228bd7460f6314a4e50e5f8e"
+  }
+}

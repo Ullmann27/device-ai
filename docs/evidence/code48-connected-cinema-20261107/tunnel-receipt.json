@@ -1,0 +1,40 @@
+{
+  "sourceBase": "6d52d74aba5bef0e9e0bfdc444245b3acd21b1d9",
+  "focusedProductionExclusions": [
+    "AgentActivity.kt",
+    "JarvisWorkWindowHost.kt"
+  ],
+  "productionCompilationExit": 0,
+  "testCompilationExit": 0,
+  "tunnelGreen": {
+    "tests": 9,
+    "failures": 0
+  },
+  "queuedStopGreen": {
+    "tests": 5,
+    "failures": 0
+  },
+  "independentStopRed": {
+    "tests": 1,
+    "failures": 1
+  },
+  "physicalDevice": "NOT_RUN",
+  "fullSourceApk": "PENDING",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "42fdde28a12edcb5c1762d7579ba27bf27ba2b4c35a4e390048c4ef454eca0b3",
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "b18311b21c8767d8db5e1441518baef45fb86f1e1206d8c646ed1e43f7f421dc",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarIconBurst.kt": "281633a50029b24b7410158122a8696a38d1cd5189f4f45a9aa0c35a2eac5a99",
+    "app/src/main/java/at/heinz/deviceai/avatar/ContinuumAvatarRenderer.kt": "c09d7de2100d55eb4912dff47ed95678280621c3b27534276c13b2375d4b5fc2",
+    "app/src/main/java/at/heinz/deviceai/avatar/JarvisHoloAvatar.kt": "25745448c714901bda0a1372cfa1abbc1fef5dbd5e2b027ffbfa3da530aed27f",
+    "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt": "6873b4652a01873e8736781c9eafc13b006e92c9a537e457e151630e029b94b6",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitAnimationPresenter.kt": "74deb988e0800be8a3fe0089115e51ac7e3b853e573b0ce230942c619ad4564f",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt": "e789cd7d336d33f04868adb749db9c6cb7736de195dd4a6263e640327a0240e5",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt": "8fb85579b8c4a7f7f491e9473afbd6dcdf6eaedfe858218784879c7b9c459add",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt": "8e3413955fc2783862db291ca759ecc4be2848cb27418971974c1b2709bab972",
+    "app/src/main/java/at/heinz/deviceai/ui/video3/Video3FileTunnel.kt": "a2e59a8c69a4a66c175bce73077349b3bbd630a76c8dc9b56e91c050de8dd098",
+    "app/src/main/java/at/heinz/deviceai/ui/video3/Video3WarpScene.kt": "5b44cd79b10a9cb60ada8dafb607856c0a2997aa800c1315a53fda7e7f3ceb79",
+    "app/src/test/java/at/heinz/deviceai/ui/video3/Video3FileTunnelTest.kt": "942b16e31cff4ab589fda3551f6c9d99f8b41108c280ff0f988f02296a89f929",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumDashboardVisibilityUiTest.kt": "c310cf972ea1bbc5034d2f2726c1d78fdd915e2ca268a394148bf88c52994e05",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitCinematicCueUiTest.kt": "33012e58bc16299d3e574957166f2ec371129ac7ef56f7d4c22808cbc3e02493"
+  }
+}

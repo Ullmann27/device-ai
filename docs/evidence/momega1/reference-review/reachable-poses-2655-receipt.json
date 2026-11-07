@@ -1,0 +1,25 @@
+{
+  "schema": "reviewer-actual-mapper-export-receipt",
+  "version": 1,
+  "source": "26555aa6c59fdd4dd2e190defcdf49b983305555",
+  "command": "bash tools/jarvis-reference-review/export-mapper-poses.sh /workspace/jarvis-reference-ui-fixed 26555aa6c59fdd4dd2e190defcdf49b983305555 /workspace/jarvis-reference-review-results/reachable-poses-2655",
+  "exit": 0,
+  "frameCount": 260,
+  "sequences": {
+    "idle-24fps": 224,
+    "idle-anchors": 10,
+    "clock-wrap": 6,
+    "task-state": 6,
+    "observed-look": 3,
+    "speech-reachable": 5,
+    "speech-stopped": 5,
+    "reduced-motion": 1
+  },
+  "limits": "Actual production Kotlin output from synthetic inputs; no device, camera, audio or model execution. Render acceptance is separate.",
+  "sha256": {
+    "tools/jarvis-reference-review/ExportReachableMapperPoses.kt": "ed63461928682b84f50721fe96a0167d5e7b18030782c6ddf36be7be6e67efcb",
+    "tools/jarvis-reference-review/export-mapper-poses.sh": "d06b377224c8a53efed6e2cb9911780b37793e5cf5b81176632479e2f78b56a0",
+    "docs/evidence/momega1/reference-review/reachable-poses-2655.json": "6c6ad2a59f881a0855cf19a5c6a8966e48b6ecdcb06bed13049bd3da466a6496",
+    "docs/evidence/momega1/reference-review/reachable-poses-2655-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

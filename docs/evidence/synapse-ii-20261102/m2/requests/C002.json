@@ -1,0 +1,18 @@
+{
+  "id": "C002",
+  "question": "Wo wohnt Zyfitoti?",
+  "sources": [
+    {
+      "revision": 2,
+      "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+      "sourceId": "bc:C002:s1",
+      "text": "Qeruvile wohnt in Uvnapulu Uvgusuci Uvvelara, Zyfitoti wohnt in Uvlafeci Uvvaputi."
+    },
+    {
+      "revision": 3,
+      "sha256": "cb2ccdca37929a4ee8c5a1730e4274a5cf88063ccfb9f048c8e97d46638b7237",
+      "sourceId": "bc:C002:s2",
+      "text": "Qedugoka wohnt in Uvsisaku. Qehelupu wohnt in Uvgocofi."
+    }
+  ]
+}

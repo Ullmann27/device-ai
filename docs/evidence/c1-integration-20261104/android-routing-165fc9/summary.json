@@ -1,0 +1,202 @@
+{
+  "taskId": "C1-ROUTING-006-ANDROID",
+  "testedLocal": "165fc9f58ae9e36295690df60145174fd5dc58e7",
+  "testedRemote": "401a5d01a7b2e0e0f8c50531daf5fa24814fbbda",
+  "testedTree": "4b3e47f30517cf952ab50c0a52b27bb96d281504",
+  "appTree": "b2b0cd21327ac1d5c8dd1f0cb35e94e2dcfbee1e",
+  "sourceUnchanged": true,
+  "runnerResult": {
+    "taskId": "C1-COMBINED-GATES-001",
+    "label": "android-routing-03",
+    "source": {
+      "commit": "165fc9f58ae9e36295690df60145174fd5dc58e7",
+      "tree": "4b3e47f30517cf952ab50c0a52b27bb96d281504",
+      "dirty": ""
+    },
+    "command": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+      "--offline",
+      "--no-daemon",
+      "--rerun-tasks",
+      "--max-workers=2",
+      "--console=plain",
+      "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-PdeviceAiMentorPreview=true",
+      "-PcontinuumUiWidgetTests=true",
+      "-PcontinuumLocalStandaloneQa=true",
+      "-PcontinuumStandaloneVersionCode=41",
+      "-PcontinuumAuditProgressFile=/workspace/scratch/174c84456ee3/qa/android-routing-03-active-test.json",
+      "-PcontinuumAuditTestClasses=at.heinz.deviceai.chief.ChiefBotAddressRouterTest,at.heinz.deviceai.ContinuumBotTaskRoutingUiTest",
+      "-I",
+      "/workspace/scratch/174c84456ee3/qa/observe-tests.init.gradle",
+      ":app:compileDebugKotlin",
+      ":app:testDebugUnitTest",
+      ":app:lintDebug"
+    ],
+    "requestedAt": "2026-11-04T20:42:46.331580+00:00",
+    "locks": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+      "/workspace/scratch/d663e8444310/qa/gradle.lock"
+    ],
+    "exitCode": 0,
+    "status": "PASS",
+    "freeBytesAtStart": 2083217408,
+    "startedAt": "2026-11-04T20:42:46.331814+00:00",
+    "finishedAt": "2026-11-04T20:46:04.522810+00:00",
+    "sourceUnchanged": true,
+    "recordedAt": "2026-11-04T20:46:04.562565+00:00"
+  },
+  "suites": [
+    {
+      "class": "at.heinz.deviceai.ContinuumBotTaskRoutingUiTest",
+      "tests": 11,
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "testNames": [
+        "unreadableRegistryNeverAuthorizesNaturalSelectionFallback",
+        "changedDraftCannotReceiveALateUnknownSelectionFallback",
+        "busyTaskDoesNotAcceptAnotherAssignmentOrCancelTheCurrentWork",
+        "staleProfileRefusalKeepsTheWholeTaskTextAvailable",
+        "ambiguousNaturalSelectionNeverFallsBackToOrdinaryInput",
+        "unknownExplicitMentionNeverFallsBackToOrdinaryInput",
+        "changedSessionCannotShowLateCodingReview",
+        "unknownNaturalSelectionsReachTheOrdinaryInputPath",
+        "codingAssignmentPrefillsCompleteExistingReviewWithoutRunningAnything",
+        "unknownNaturalSelectionKeepsAnExistingPrivateConversationSelected",
+        "missingModelRefusesTaskWithoutConsumingTheDraftOrChangingBot"
+      ]
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBotAddressRouterTest",
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "testNames": [
+        "unknownNaturalSelectionsReturnNoProfileWithoutChangingTheRegistry",
+        "stableIdsStayExactAndRemainCallableAfterRenaming",
+        "unknownExplicitNamesRemainVisibleToTheCallerWithoutCreatingProfiles",
+        "colonAddressingRetainsEditableMultiwordNames",
+        "oversizedNamesAreNotSilentlyTruncatedOrPartiallyAddressed",
+        "unreadableRegistryDoesNotTurnANaturalSelectionIntoAnUnknownName",
+        "missingBodiesAndOrdinaryTextAreNotAddressedMessages",
+        "colonWithoutASeparatedBodyDoesNotCaptureUrlsTimesOrPaths",
+        "naturalSelectionCommandsHaveNoTaskBodyOrAuthority",
+        "completeMultilineRequestsKeepLateRestrictionsForEveryMessageSyntax",
+        "duplicateDisplayNamesFailClosedWithoutChangingEitherProfile",
+        "explicitMentionsAddressTheNamedBot",
+        "existingCommaAddressingAndJarvisSelectionRemainAvailable",
+        "addressingNeverRegistersWorkOrGrantsProfileCapabilities",
+        "bodyWhitespaceIsPreservedAfterTheAddressSeparator",
+        "jarvisMessagesRetainTheWholeBodyAcrossAddressForms",
+        "naturalSelectionsStillResolveKnownEditableNamesAndStableIds",
+        "naturalSelectionKeepsAnExplicitMentionDistinguishableFromOrdinaryText"
+      ]
+    }
+  ],
+  "total": 29,
+  "passed": 29,
+  "failed": 0,
+  "skipped": 0,
+  "compile": "PASS actual compileDebugKotlin, complete enabled UI source set compiled",
+  "lint": {
+    "status": "PASS",
+    "configuredChecks": [
+      "NewApi"
+    ],
+    "issues": 0
+  },
+  "priorAttempts": [
+    {
+      "label": "android-routing-01",
+      "exitCode": 1,
+      "testsExecuted": false,
+      "reason": "Gradle task allowlist rejected CLI --tests selectors; guard unchanged"
+    },
+    {
+      "label": "android-routing-02",
+      "outerExitCode": 75,
+      "testsExecuted": false,
+      "reason": "Both existing resource locks could not be acquired in45seconds"
+    }
+  ],
+  "selection": "Two explicit classes through standard Gradle Test.filter; NOT a full Android gate",
+  "qaVersionCode": 41,
+  "versionMeaning": "Historical explicit compile/test/lint QA parameter; no current owner-update version selected",
+  "limits": [
+    "No real loaded local model",
+    "No physical device or native Filament proof",
+    "Activity fixture executes actual intake methods and Android queues but not complete Activity.onCreate/model path",
+    "Prior isolated27and current29 overlap and must not be added",
+    "Full unit/UI and final combined gates remain pending"
+  ],
+  "archive": {
+    "name": "android-routing-165fc9.tar.xz",
+    "bytes": 9332,
+    "sha256": "2815f76c19c903cf2cabf73ef69ac2eae66e70f5453fa45b4d59eb8a887976d6",
+    "members": [
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ContinuumBotTaskRoutingUiTest.xml",
+        "bytes": 1982,
+        "sha256": "349c8765b6692c20b680d92e4262c230e736d27a17811dcc705f8d928e7e60d8"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.chief.ChiefBotAddressRouterTest.xml",
+        "bytes": 3064,
+        "sha256": "c1efa550d759ef1728f3f48bd144a3293c51e06f7cfc023b1bd28e1126958914"
+      },
+      {
+        "path": "lint/lint-results-debug.xml",
+        "bytes": 87,
+        "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809"
+      },
+      {
+        "path": "lint/lint-results-debug.txt",
+        "bytes": 17,
+        "sha256": "a69ecb171bea9d40de22744c85220b4a4ea12f5a25ce7976d67f2c88c9195334"
+      },
+      {
+        "path": "run/android-routing-01.result.json",
+        "bytes": 1363,
+        "sha256": "a98c4973958003fa963d86420698ac696ca7ab4535973b53100a64b62222bcba"
+      },
+      {
+        "path": "run/android-routing-01.log",
+        "bytes": 2475,
+        "sha256": "1dffd7a25cd5a8b6745772d72da780ec6331e60c570eaeb7a6e96ad31a5f90ef"
+      },
+      {
+        "path": "run/android-routing-02.result.json",
+        "bytes": 1419,
+        "sha256": "3ff7919a9460679b5b11b4f5880b534b98242ea59915431892e6ea901bd8cfbf"
+      },
+      {
+        "path": "run/android-routing-03.result.json",
+        "bytes": 1539,
+        "sha256": "52bb0550a0ba1ddafcd14d7326fb15cd08b25152abd31422e6eff2733934b2ee"
+      },
+      {
+        "path": "run/android-routing-03.log",
+        "bytes": 43665,
+        "sha256": "f1a0d4dca4fe12676531d84794ce5d3a0ae54e03cd5ec87ba7536674263b61f4"
+      },
+      {
+        "path": "run/android-routing-03-active-test.json",
+        "bytes": 212,
+        "sha256": "35cd2d2c1db482dc3c608dd1afaba75d0fd26b778ccedbada77b361ccb107e71"
+      },
+      {
+        "path": "runner/run_c1_gate.py",
+        "bytes": 3945,
+        "sha256": "5299b2744e961f05f2a25c037c37481dab148c6d0baa5c8de697926e349c62e5"
+      },
+      {
+        "path": "runner/observe-tests.init.gradle",
+        "bytes": 1798,
+        "sha256": "5c2471c275872167f60a2ada33f018d01921bb1c563608de00014b568a66fdeb"
+      }
+    ]
+  }
+}

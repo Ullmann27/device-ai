@@ -44,15 +44,19 @@ class ContinuumResidualSpanCore private constructor(
         val positionFeatures: Boolean = true,
         val entityProximity: Boolean = false,
         val excludeCueWords: Boolean = false,
-        val multiTokenSpans: Boolean = false
+        val multiTokenSpans: Boolean = false,
+        val naturalEntityBindings: Boolean = false
     ) {
-        init { require(!(entityProximity && positionFeatures)) { "entityProximity replaces the position inputs" } }
+        init {
+            require(!(entityProximity && positionFeatures)) { "entityProximity replaces the position inputs" }
+            require(!naturalEntityBindings || entityProximity) { "natural bindings require entity proximity" }
+        }
         internal val flags: Int get() = (if (identifierPlaceholders) 1 else 0) or (if (positionFeatures) 0 else 2) or
-            (if (entityProximity) 4 else 0) or (if (excludeCueWords) 8 else 0) or (if (multiTokenSpans) 16 else 0)
+            (if (entityProximity) 4 else 0) or (if (excludeCueWords) 8 else 0) or (if (multiTokenSpans) 16 else 0) or (if (naturalEntityBindings) 32 else 0)
         companion object {
             internal fun fromFlags(flags: Int): Features {
-                require(flags in 0..31 && !(flags and 4 != 0 && flags and 2 == 0)) { "unknown CSX1 feature flags " + flags }
-                return Features(flags and 1 != 0, flags and 2 == 0, flags and 4 != 0, flags and 8 != 0, flags and 16 != 0)
+                require(flags in 0..63 && !(flags and 4 != 0 && flags and 2 == 0)) { "unknown CSX1 feature flags " + flags }
+                return Features(flags and 1 != 0, flags and 2 == 0, flags and 4 != 0, flags and 8 != 0, flags and 16 != 0, flags and 32 != 0)
             }
         }
     }
@@ -226,7 +230,7 @@ class ContinuumResidualSpanCore private constructor(
         val bos = ByteArrayOutputStream(SERIALIZED_BYTES)
         DataOutputStream(bos).use { out ->
             out.writeInt(MAGIC)
-            out.writeInt(VERSION)
+            out.writeInt(if (features.naturalEntityBindings) 3 else VERSION)
             out.writeInt(features.flags)
             out.writeInt(seed)
             out.writeInt(updates)
@@ -255,7 +259,10 @@ class ContinuumResidualSpanCore private constructor(
         require(tokens.size <= MAX_TOKENS)
         require(tokens.map { it.clause }.distinct().size <= MAX_CLAUSES)
         val qTokens = tokenize(question).map { normalize(it.value) }
-        val ids = qTokens.filter { it.any(Char::isDigit) }.toSet()
+        val naturalSubject = if (features.naturalEntityBindings) Regex(
+            """(?iu)^\s*wo\s+(?:ist|wohnt|lebt|steht)\s+([\p{L}][\p{L}\p{M}-]{1,31})\s*\?\s*$"""
+        ).matchEntire(question)?.groupValues?.get(1)?.let(::normalize) else null
+        val ids = qTokens.filter { it.any(Char::isDigit) }.toSet() + listOfNotNull(naturalSubject)
         val questionWords = qTokens.filter { it !in ids && it.length >= 2 }
         val qBuckets = buckets(questionWords.flatMap(::grams) + questionWords.map { "q:" + it })
         val qb = embed(qBuckets, true, false)
@@ -446,8 +453,12 @@ class ContinuumResidualSpanCore private constructor(
             return DataInputStream(ByteArrayInputStream(payload)).use { input ->
                 require(input.readInt() == MAGIC)
                 val version = input.readInt()
-                require(version == if (payloadSize == PAYLOAD_BYTES) VERSION else 1)
-                val features = if (version == 1) Features() else Features.fromFlags(input.readInt())
+                require(if (payloadSize == PAYLOAD_BYTES) version in 2..3 else version == 1)
+                val features = if (version == 1) Features() else {
+                    val flags = input.readInt()
+                    require(if (version == 2) flags in 0..31 else flags in 32..63)
+                    Features.fromFlags(flags)
+                }
                 val seed = input.readInt()
                 val updates = input.readInt()
                 require(updates in 0..MAX_UPDATES)

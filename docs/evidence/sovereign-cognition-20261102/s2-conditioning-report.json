@@ -1,0 +1,131 @@
+{
+  "structuredCorrectPairs": 12,
+  "identicalBucketSets": 0,
+  "encoderSnapshotsUnchanged": true,
+  "decoder": "NEW_UNTRAINED_SEEDED_CONTROL_NOT_DEVICE_CHECKPOINT",
+  "rows": [
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.0063480424367515255,
+      "orderedBindingsCorrect": true,
+      "seed": 113,
+      "untrainedNextTokenMaxDifference": 3.6696753737564675E-7,
+      "sameBucketSet": false,
+      "id": "113-0-short/113-1-short",
+      "sameLast8Bytes": true
+    },
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.006386433286291346,
+      "orderedBindingsCorrect": true,
+      "seed": 113,
+      "untrainedNextTokenMaxDifference": 5.008484750190431E-7,
+      "sameBucketSet": false,
+      "id": "113-2-short/113-3-short",
+      "sameLast8Bytes": true
+    },
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.007384771506442751,
+      "orderedBindingsCorrect": true,
+      "seed": 113,
+      "untrainedNextTokenMaxDifference": 7.145988126454859E-7,
+      "sameBucketSet": false,
+      "id": "113-4-short/113-5-short",
+      "sameLast8Bytes": true
+    },
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.0056922268616436626,
+      "orderedBindingsCorrect": true,
+      "seed": 113,
+      "untrainedNextTokenMaxDifference": 4.5647522354305E-7,
+      "sameBucketSet": false,
+      "id": "113-6-short/113-7-short",
+      "sameLast8Bytes": true
+    },
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.003336316212302978,
+      "orderedBindingsCorrect": true,
+      "seed": 227,
+      "untrainedNextTokenMaxDifference": 3.024833057944584E-7,
+      "sameBucketSet": false,
+      "id": "227-0-short/227-1-short",
+      "sameLast8Bytes": true
+    },
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.006522894281352802,
+      "orderedBindingsCorrect": true,
+      "seed": 227,
+      "untrainedNextTokenMaxDifference": 6.07048660757406E-7,
+      "sameBucketSet": false,
+      "id": "227-2-short/227-3-short",
+      "sameLast8Bytes": true
+    },
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.004240506259343472,
+      "orderedBindingsCorrect": true,
+      "seed": 227,
+      "untrainedNextTokenMaxDifference": 3.541031477045063E-7,
+      "sameBucketSet": false,
+      "id": "227-4-short/227-5-short",
+      "sameLast8Bytes": true
+    },
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.0033828488511571473,
+      "orderedBindingsCorrect": true,
+      "seed": 227,
+      "untrainedNextTokenMaxDifference": 3.0060435032364455E-7,
+      "sameBucketSet": false,
+      "id": "227-6-short/227-7-short",
+      "sameLast8Bytes": true
+    },
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.005715526655780634,
+      "orderedBindingsCorrect": true,
+      "seed": 409,
+      "untrainedNextTokenMaxDifference": 6.276797158278995E-7,
+      "sameBucketSet": false,
+      "id": "409-0-short/409-1-short",
+      "sameLast8Bytes": true
+    },
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.0047360156102469715,
+      "orderedBindingsCorrect": true,
+      "seed": 409,
+      "untrainedNextTokenMaxDifference": 4.863620462983859E-7,
+      "sameBucketSet": false,
+      "id": "409-2-short/409-3-short",
+      "sameLast8Bytes": true
+    },
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.003983566255613099,
+      "orderedBindingsCorrect": true,
+      "seed": 409,
+      "untrainedNextTokenMaxDifference": 4.5075463577263705E-7,
+      "sameBucketSet": false,
+      "id": "409-4-short/409-5-short",
+      "sameLast8Bytes": true
+    },
+    {
+      "orderedRepresentationsDiffer": true,
+      "conditionL2": 0.007221984161923489,
+      "orderedBindingsCorrect": true,
+      "seed": 409,
+      "untrainedNextTokenMaxDifference": 6.273764057221354E-7,
+      "sameBucketSet": false,
+      "id": "409-6-short/409-7-short",
+      "sameLast8Bytes": true
+    }
+  ],
+  "pairs": 12,
+  "status": "RESEARCH_SHADOW",
+  "corpusSha256": "c29f57dca626901ca65cbba36027b22897794cc73d4e6a35e252da5dd442e3cf"
+}

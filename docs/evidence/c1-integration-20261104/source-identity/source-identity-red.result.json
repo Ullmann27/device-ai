@@ -1,0 +1,14 @@
+{
+  "taskId": "C1-QA-SOURCE-002",
+  "phase": "RED",
+  "sourceBase": "a15a2b771bb934d998b2f9c9552c30d30400f707",
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "scripts/continuum-reliability-source-identity.test.mjs"
+  ],
+  "startedAt": "2026-11-04T20:02:28.295134+00:00",
+  "exitCode": 1,
+  "finishedAt": "2026-11-04T20:02:28.847458+00:00"
+}

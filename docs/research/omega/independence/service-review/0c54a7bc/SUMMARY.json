@@ -1,0 +1,34 @@
+{
+  "schema": "continuum-independent-service-review",
+  "version": 1,
+  "source": "0c54a7bc33bc3979f59a1b4d1bcd9e5b4e39a115",
+  "reviewHarnessCommit": "002895de",
+  "environment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "v24.19.0",
+    "kernel": "6.18.57"
+  },
+  "testResult": {
+    "pass": 4,
+    "fail": 0,
+    "skip": 0,
+    "durationMs": 28137.227588
+  },
+  "cliProcesses": 50,
+  "activeChildFaults": 3,
+  "crossConfigGlobalExclusion": true,
+  "crossConfigOrphanExclusion": true,
+  "nativeCalls": 0,
+  "nativeCallMethod": "Private approved executable removed before task submission; cannot be launched at configured path",
+  "memoryMeasurement": "NOT_RUN",
+  "energyMeasurement": "NOT_RUN",
+  "sourceBlobSha256": {
+    ".github/continuum/coding-service-store.mjs": "fca1d6b390916cb109cd49dda50610512fc78d9ede7ed9bc44132215656fad3d",
+    ".github/continuum/coding-service-reader.mjs": "a7e49b231bbddbb87cda7636068e9576aa9805cd0fe3abdd616559b507807ba0",
+    ".github/continuum/coding-service.mjs": "6a60507f0ac574b0a904bbe5dbdab10ce33b8ce8ac479803d60c694915fba54e",
+    ".github/continuum/coding-service-worker.mjs": "f22a011fa9ac817bcebd8796cbbafc25a6593b2aafd2c56a5332933419e70ee8",
+    "scripts/continuum-coding-service.mjs": "c2231cbf013358da6b193ab8234ca4db85420d989ee0c790cfef3c0ae766487f"
+  },
+  "fold7": "NOT_RUN"
+}

@@ -1,0 +1,33 @@
+{
+  "certificateGitCommit": "f3c89d0c83dc864c67a9b73f651af296439700c1",
+  "certificatePath": "docs/evidence/momega1/challenger/APPROVED-7B-PAIR-REVIEW.json",
+  "certificateSha256": "29a14463a22b722eb948bb1afaa4ba8683d40b929955b725fa8fe3837a5b60ec",
+  "candidateSourceReviewed": "a135a9ae72e1494676d709ae496cf74048310537",
+  "currentSourceMatchesReviewed": true,
+  "normalExit": 0,
+  "decodedTokens": 156,
+  "elapsedMs": 104746,
+  "combinedRssKiB": 5412020,
+  "authorExtraInferenceRun": false,
+  "original60SecondBenchmarkRun": false,
+  "completeCertificateTupleMatched": true,
+  "productionChange": "Exact7B tuple status and independent review SHA only",
+  "sourceSha256": {
+    "scripts/continuum-local-model-pins.mjs": "dd8807c91a25bc1397562acca65ab6258993ebb4e0856ebc230d3b4dec1d64b5",
+    "scripts/continuum-local-model-7b.test.mjs": "f473abf8b85ccf918a776351cda03e7c2198275d83be18f80e98afcd924fbab5"
+  },
+  "evidenceFiles": {
+    "production-promotion.diff": "56541abb21b34f1923ac2e88870407c3b20a789ad51382060b0869cfcc4c142b",
+    "baseline-red.tap": "1142ac24305240c5c80b4e2aa479b2ac245ea3ab8f8a6a34bcf36d96d77418d1",
+    "cpu-green.tap": "bf82a285a809e419b08b6134007e1cca124806f2cd23fc4eefbc085c4f61b06b",
+    "cpu-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "certificate-validation.json": "998ee69744bcdb80bacc7857264d3c6ec65cca42533f18403fda0433493b14f1",
+    "baseline-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "regression-green.tap": "9417e85bdae9245fe9461afc167a0c89dc2d8f4a021f799cfbe23e186515a4fd",
+    "regression-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "frozenSourceCommit": "fb0f8152cfe4e85b778c2f2ef17034b2ef6333be",
+  "frozenSourceHashesMatch": true,
+  "hostRegressionPass": 93,
+  "dockerCpuResourcePass": 7
+}

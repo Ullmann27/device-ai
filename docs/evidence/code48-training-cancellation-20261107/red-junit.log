@@ -1,0 +1,37 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=42261 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42261 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest#expiredBudgetBeforeCdxStartIsDeferredWithoutFailure
+.Intent = Intent { act=android.intent.action.BATTERY_CHANGED (has extras) }; Matching wrappers: []
+E
+Time: 1.943
+There was 1 failure:
+1) expiredBudgetBeforeCdxStartIsDeferredWithoutFailure(at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest)
+org.junit.ComparisonFailure: Budget/owner cancellation is not a training fault expected:<[DEFERR]ED> but was:<[FAIL]ED>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest.delayedCdxStart(ContinuumTrainingCancellationUiTest.kt:65)
+	at at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest.expiredBudgetBeforeCdxStartIsDeferredWithoutFailure(ContinuumTrainingCancellationUiTest.kt:87)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+CASE at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest#ownerPauseBeforeCdxStartIsInterruptedWithoutFailure
+.Intent = Intent { act=android.intent.action.BATTERY_CHANGED (has extras) }; Matching wrappers: []
+E
+Time: 0.059
+There was 1 failure:
+1) ownerPauseBeforeCdxStartIsInterruptedWithoutFailure(at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest)
+org.junit.ComparisonFailure: Budget/owner cancellation is not a training fault expected:<[INTERRUPT]ED> but was:<[FAIL]ED>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest.delayedCdxStart(ContinuumTrainingCancellationUiTest.kt:65)
+	at at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest.ownerPauseBeforeCdxStartIsInterruptedWithoutFailure(ContinuumTrainingCancellationUiTest.kt:90)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+CASE at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest#realStorageFailureRemainsFailedAndRetryable
+.Intent = Intent { act=android.intent.action.BATTERY_CHANGED (has extras) }; Matching wrappers: []
+
+Time: 0.047
+
+OK (1 test)
+
+TOTAL tests=3 failures=2

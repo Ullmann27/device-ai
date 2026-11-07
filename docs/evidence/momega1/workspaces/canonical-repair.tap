@@ -1,0 +1,11 @@
+✔ HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs (1328.868595ms)
+✔ HOST_INTEGRATION: live canonical lease clamps the real Docker timeout (590.136821ms)
+✔ HOST_INTEGRATION: in-flight owner revocation suppresses the completed profile result at checkpoint (1910.720516ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3918.183143

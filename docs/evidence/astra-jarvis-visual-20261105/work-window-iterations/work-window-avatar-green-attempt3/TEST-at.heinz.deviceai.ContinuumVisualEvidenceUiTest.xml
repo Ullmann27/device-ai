@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumVisualEvidenceUiTest" tests="4" skipped="0" failures="4" errors="0" timestamp="2026-11-05T16:53:44" hostname="6e2f8005d77e" time="242.011">
+  <properties/>
+  <testcase name="fold7CoverAndPhone" classname="at.heinz.deviceai.ContinuumVisualEvidenceUiTest" time="34.385">
+    <failure message="java.lang.NullPointerException" type="java.lang.NullPointerException">java.lang.NullPointerException
+</failure>
+  </testcase>
+  <testcase name="fold7InnerLargerFont" classname="at.heinz.deviceai.ContinuumVisualEvidenceUiTest" time="48.691">
+    <failure message="java.lang.AssertionError: expected:&lt;1.0&gt; but was:&lt;1.0023121&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;1.0&gt; but was:&lt;1.0023121&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.systemStatusScenes(ContinuumVisualEvidenceUiTest.kt:179)
+	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.scenes(ContinuumVisualEvidenceUiTest.kt:305)
+	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.fold7InnerLargerFont(ContinuumVisualEvidenceUiTest.kt:319)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="referenceTablet" classname="at.heinz.deviceai.ContinuumVisualEvidenceUiTest" time="100.146">
+    <failure message="java.lang.AssertionError: Open panel width is visible expected:&lt;640&gt; but was:&lt;641&gt;" type="java.lang.AssertionError">java.lang.AssertionError: Open panel width is visible expected:&lt;640&gt; but was:&lt;641&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.systemStatusScenes(ContinuumVisualEvidenceUiTest.kt:182)
+	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.scenes(ContinuumVisualEvidenceUiTest.kt:305)
+	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.referenceTablet(ContinuumVisualEvidenceUiTest.kt:325)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="fold7Inner" classname="at.heinz.deviceai.ContinuumVisualEvidenceUiTest" time="58.789">
+    <failure message="java.lang.AssertionError: expected:&lt;1.0&gt; but was:&lt;1.0013483&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;1.0&gt; but was:&lt;1.0013483&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.systemStatusScenes(ContinuumVisualEvidenceUiTest.kt:179)
+	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.scenes(ContinuumVisualEvidenceUiTest.kt:305)
+	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.fold7Inner(ContinuumVisualEvidenceUiTest.kt:316)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <system-out><![CDATA[EVIDENCE_CAPTURE fold7-cover-phone-412x915-1-start 412x915 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-cover-phone-412x915-2-listening 412x915 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-cover-phone-412x915-3-thinking 412x915 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-cover-phone-412x915-4-speaking 412x915 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-cover-phone-412x915-5-tile-pressed 412x915 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-cover-phone-412x915-6a-systemstatus-opening 412x915 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-cover-phone-412x915-6b-systemstatus-open 412x915 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-cover-phone-412x915-6c-systemstatus-closing 412x915 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-font130-1-start 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-font130-2-listening 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-font130-3-thinking 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-font130-4-speaking 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-font130-5-tile-pressed 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-font130-6a-systemstatus-opening 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE reference-1536x1024-1-start 1536x1024 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE reference-1536x1024-2-listening 1536x1024 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE reference-1536x1024-3-thinking 1536x1024 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE reference-1536x1024-4-speaking 1536x1024 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE reference-1536x1024-5-tile-pressed 1536x1024 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE reference-1536x1024-6a-systemstatus-opening 1536x1024 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-1-start 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-2-listening 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-3-thinking 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-4-speaking 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-5-tile-pressed 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+EVIDENCE_CAPTURE fold7-inner-884x760-6a-systemstatus-opening 884x760 HOST_ROBOLECTRIC_NATIVE_CANVAS_2D_HEAD_NOT_FILAMENT
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

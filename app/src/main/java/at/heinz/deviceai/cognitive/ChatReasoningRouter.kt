@@ -47,12 +47,15 @@ class ChatReasoningRouter(
             // candidate/critic/verifier passes need the same evidence as data.
             // Do not clip either governance context or the exact retrieved text.
             val baseContext = context.ifBlank { task }
+            // Advisory work is optional; a prefix can invert an evidence/request
+            // suffix. Skip before any model call instead of shortening either.
+            if (task.length > config.maxTaskChars || baseContext.length > config.maxContextChars) return null
             val reasoningContext = if (groundedRecall != null) {
                 val evidence = groundedRecall.render()
                 if (baseContext.length.toLong() + 2L + evidence.length > config.maxContextChars)
                     return null
                 baseContext + "\n\n" + evidence
-            } else baseContext.take(config.maxContextChars)
+            } else baseContext
 
             val deadline = nowMillis() + config.totalDeadlineMillis
             var calls = 0
@@ -70,7 +73,7 @@ class ChatReasoningRouter(
             }
             val request = ContinuumIntelligenceRequest(
                 taskId = taskId,
-                userRequest = task.take(config.maxTaskChars),
+                userRequest = task,
                 compiledContext = reasoningContext,
                 requestedStrategy = ReasoningStrategy.STANDARD
             )

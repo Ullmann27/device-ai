@@ -1,0 +1,52 @@
+{
+  "schema": "momega1-independent-workspace-review-v1",
+  "candidateSourceSha": "8aba17c6cc24b00a66d6c5de59d0c1fe1dc5c2db",
+  "criteriaCommit": "c081ca09c2992fdb3127951b9d74b81f7e26d6ec",
+  "claimTestFreeze": "637a644f",
+  "mailboxTestFreeze": "a4bf4e57",
+  "sourceFiles": {
+    ".github/continuum/ccc1-workspace.mjs": "2a10e1284720a96d15ae7e5248826ee06bd6c9b0bd483c06882d0e891808e4db",
+    ".github/continuum/isolated-executor.mjs": "7dda3445ade45c8a484a312e3a30f5e6c5200f80f9333a96970c52eefcce3594",
+    ".github/continuum/backlog-repair-worker.mjs": "8b36cf7aadc5d6e0a1238ed4b689d3587ef4db6a163cd4cb16f3d39ea95d1fb5",
+    "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkspaceWiring.kt": "2634eccce83eecf296004336b7b4a24b21e8554cfd9afada81daf60ecfed209c"
+  },
+  "reviewTests": {
+    "tools/momega1-workspace-review/WorkspaceIndependentReviewTest.kt": "c66722c02b84da71e773370d401590e9aefa9dd12b59de4d67fdd55be3385206",
+    "tools/momega1-workspace-review/adversarial.test.mjs": "125f64f1c5d91d6244c41728d223505385bc1c54903aaaeca22456fa119d9400",
+    "tools/momega1-workspace-review/claim-adversarial.test.mjs": "73fb2d0d600fb86a051c48adc7fe8a54354b14bda2b3a58125b2ce344c5888ae",
+    "tools/momega1-workspace-review/kotlin-review.sh": "6c46b3385585ed53f784f079e1cbf7b7f016d49168088fd071f9db38e07e356d"
+  },
+  "results": {
+    "claimAdversarial": {
+      "tests": 13,
+      "pass": 13,
+      "exit": 0
+    },
+    "authorNodeIndependentRerun": {
+      "tests": 13,
+      "pass": 13,
+      "exit": 0,
+      "skipped": 0
+    },
+    "kotlinExisting": {
+      "tests": 19,
+      "pass": 19,
+      "exit": 0
+    },
+    "kotlinIndependent": {
+      "tests": 3,
+      "pass": 3,
+      "exit": 0
+    },
+    "kotlinActualDockerHost": {
+      "tests": 2,
+      "pass": 2,
+      "exit": 0
+    }
+  },
+  "decision": "ACCEPT_HOST_WORKSPACE_SLICE",
+  "device": "FOLD7_NOT_RUN",
+  "actualModelInference": false,
+  "canonicalCancellation": "CHECKPOINT_BOUNDARY_ONLY",
+  "initialRejectedSource": "4665302f6c967c1bfb1e13c9acf01fad4e7eec20"
+}

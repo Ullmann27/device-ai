@@ -1,0 +1,68 @@
+{"source": "faa41d4028a8c6cd113d7a73f205295d39f1a055", "tree": "68a9968a3c55233a16bca6382514fe2495fa43b3", "dirty": "", "checkout": "/workspace/scratch/d663e8444310/continuum-anschluss", "args": ["/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle", "--offline", "--no-daemon", "--max-workers=1", "--console=plain", "-Pkotlin.compiler.execution.strategy=in-process", "-PcontinuumUiWidgetTests=true", ":app:testDebugUnitTest", "--tests", "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest", "--tests", "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest", "--tests", "at.heinz.deviceai.ContinuumBotPersonalityUiTest", "--tests", "at.heinz.deviceai.ContinuumBotTaskRoutingUiTest", "--tests", "at.heinz.deviceai.ContinuumBotToolTaskUiTest", "--tests", "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest", "--tests", "at.heinz.deviceai.MemoryRecallActivityUiTest", "--tests", "at.heinz.deviceai.avatar.AvatarDirectorTest", "--tests", "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest", "--tests", "at.heinz.deviceai.avatar.AvatarNativeRegressionTest", "--tests", "at.heinz.deviceai.avatar.AvatarObservedGazeTest", "--tests", "at.heinz.deviceai.avatar.AvatarPortedPartsTest", "--tests", "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest", "--tests", "at.heinz.deviceai.avatar3d.Avatar3dContractTest", "--tests", "at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest", "--tests", "at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest", "--tests", "at.heinz.deviceai.chief.ChiefBotAddressRouterTest", "--tests", "at.heinz.deviceai.chief.ChiefBotConversationTest", "--tests", "at.heinz.deviceai.chief.ChiefBotPersonasTest", "--tests", "at.heinz.deviceai.chief.ChiefBotTaskIntakeTest", "--tests", "at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest", "--tests", "at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest", "--tests", "at.heinz.deviceai.cockpit.CockpitContractsTest", "--tests", "at.heinz.deviceai.cockpit.CockpitTimelineTest", "--tests", "at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest", "--tests", "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest", "--tests", "at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest", "--tests", "at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest", "--tests", "at.heinz.deviceai.cockpit.MemoryEventSourceTest", "--tests", "at.heinz.deviceai.cockpit.PillGateMappingTest", "--tests", "at.heinz.deviceai.cockpit.RetrievalCalculationSourceTest", "--tests", "at.heinz.deviceai.cockpit.SafeFlowsFgTest", "--tests", "at.heinz.deviceai.cognitive.HybridMemoryIdentityTest", "--tests", "at.heinz.deviceai.cognitive.HybridMemoryRetrievalParityTest", "--tests", "at.heinz.deviceai.cognitive.MemoryContextBoundaryTest", "--tests", "at.heinz.deviceai.cognitive.MemoryContextIdentityTest", "--tests", "at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest", "--tests", "at.heinz.deviceai.cognitive.MemoryRecallObservationTest", "--tests", "at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest", "--tests", "at.heinz.deviceai.learning.TemporalCueCalendarTest", "--tests", "at.heinz.deviceai.motion.LipSyncFaceSourceTest", "--tests", "at.heinz.deviceai.motion.MotionCurvesTest", "--tests", "at.heinz.deviceai.motion.MotionLibraryTest", "--tests", "at.heinz.deviceai.routines.RoutineBookAdmissionTest", "--tests", "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest", "--tests", "at.heinz.deviceai.AvatarRangeFrameConnectionUiTest", "--tests", "at.heinz.deviceai.AvatarSpeechReattachmentUiTest", "--tests", "at.heinz.deviceai.TtsHologramSignalTest", "--tests", "at.heinz.deviceai.avatar.*", "--tests", "at.heinz.deviceai.avatar3d.*", ":app:lintDebug"], "started_at": "2026-11-04T19:35:48.617115+00:00"}
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:testDebugUnitTest
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintReportDebug
+> Task :app:lintDebug
+[Incubating] Problems report is available at: file:///workspace/scratch/d663e8444310/continuum-anschluss/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 2m 10s
+40 actionable tasks: 10 executed, 30 up-to-date
+
+EXIT_CODE=0

@@ -22,7 +22,7 @@ test('Android source routes bootstrap actions through the existing cognitive age
   assert.doesNotMatch(action, /gate\.execute\(/, 'bootstrap must not retain a competing execution path');
   const executor = source('DeviceToolExecutor.kt');
   const probe = executor.indexOf('DeviceStorageProbe.read(context.filesDir)');
-  assert.ok(probe > 0 && probe < executor.indexOf('if (!bridge.isReady())'));
+  assert.ok(probe > 0 && probe < executor.indexOf('if (!bridgeReady())'));
   assert.match(activity, /decision\.tool != "get_storage_info" && !bridge\.isReady\(\)/);
 });
 

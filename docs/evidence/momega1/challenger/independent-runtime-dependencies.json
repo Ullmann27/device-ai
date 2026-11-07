@@ -1,0 +1,41 @@
+{
+  "binarySha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+  "dependencies": [
+    {
+      "path": "/lib/x86_64-linux-gnu/libstdc++.so.6",
+      "realpath": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33",
+      "sha256": "972bb2a18b71140dab0240f8a1f68ab3fb1d56bcd4c4f824a91b70888faf5a00",
+      "uid": 0,
+      "mode": "0o644"
+    },
+    {
+      "path": "/lib/x86_64-linux-gnu/libm.so.6",
+      "realpath": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+      "sha256": "6d567d53e895273ca14a1f9dc164fc6c8d39aed2f60aa46a733c2784228915f3",
+      "uid": 0,
+      "mode": "0o644"
+    },
+    {
+      "path": "/lib/x86_64-linux-gnu/libgcc_s.so.1",
+      "realpath": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+      "sha256": "30c61ab012a4241bed033725a09b61f5fdd3bb7df95ee852d0b096520524c7af",
+      "uid": 0,
+      "mode": "0o644"
+    },
+    {
+      "path": "/lib/x86_64-linux-gnu/libc.so.6",
+      "realpath": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+      "sha256": "9792e3cbb541c8f44c7acf5f14f4022ea62998ecc787d326bed4d8b6547dfd92",
+      "uid": 0,
+      "mode": "0o755"
+    },
+    {
+      "path": "/lib64/ld-linux-x86-64.so.2",
+      "realpath": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+      "sha256": "c8438e4fde1934e61c88311633f00949ff645d5c04cdb8671fa3d78164d2f307",
+      "uid": 0,
+      "mode": "0o755"
+    }
+  ],
+  "note": "llama/ggml statically linked; these system loader libraries are part of the trusted host compute base."
+}

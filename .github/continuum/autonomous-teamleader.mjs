@@ -328,7 +328,7 @@ export function runTeamleaderCycle({
 }
 
 /** No external services: actual git worktree, static analyzer and fixed tests. */
-export async function localTeamleaderDriver({candidateProvider=null,executor=null,executorAbortMode=null}={}){
+export async function localTeamleaderDriver({candidateProvider=null,executor=null,verifierExecutor=null,executorAbortMode=null}={}){
  const [{git,createWorktree,removeWorktree,repairSession,runChain,evidenceSufficient},
   {loadLedger,emptyLedger,recordSession,saveLedger},
   {BacklogStore,nextEligible},
@@ -378,7 +378,7 @@ export async function localTeamleaderDriver({candidateProvider=null,executor=nul
    return executeOwnerRepairTask({
     root,file:path.join(stateDir,'development-backlog.json'),
     out:path.join(stateDir,'reports','owner-repair'),
-    id:taskId,budgetMinutes,actor:'continuum-task-worker',candidateProvider,executor,executorAbortMode
+    id:taskId,budgetMinutes,actor:'continuum-task-worker',candidateProvider,executor,verifierExecutor,executorAbortMode
    });
   },
   readyInvestigation(root,stateDir){
@@ -390,10 +390,8 @@ export async function localTeamleaderDriver({candidateProvider=null,executor=nul
    return nextEligible(store.read().doc,['INVESTIGATE']);
   },
   prepareSafeInvestigation(root,stateDir){
-   // A Node-only owner repository has no Kotlin capability to discover.
-   if(!fsApi.existsSync(path.join(root,'app/src')))return null;
-   // JS-only and partial repositories have no Android source tree to inspect.
-   // This is an idle discovery, not a failed repair or a reason to retry.
+   // Node-only and partial repositories have no Android source tree to inspect.
+   // Idle discovery is neither a failed repair nor a reason to retry.
    if(!fsApi.existsSync(path.join(root,'app','src')))return null;
    const backlog=new BacklogStore(path.join(stateDir,'development-backlog.json'),
     {actor:'continuum-teamleader'});

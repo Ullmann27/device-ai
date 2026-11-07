@@ -1,0 +1,4 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=39617 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=39617 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentOutcomeEvidenceTest.kt:43:43: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+            assertNull(result.taskEvidence!!.learningCandidateExperienceId)
+                                          ^^

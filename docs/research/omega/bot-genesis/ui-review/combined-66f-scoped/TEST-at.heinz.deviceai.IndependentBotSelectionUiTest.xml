@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentBotSelectionUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:10:45" hostname="5268aff5350a" time="1.636">
+  <properties/>
+  <testcase name="staleContextEditCannotInvalidateOrWriteAfterAnotherWindowOpens" classname="at.heinz.deviceai.IndependentBotSelectionUiTest" time="0.256"/>
+  <testcase name="contextInvalidationHappensBeforeSelectedIdentityWriteIsQueuedOrCompleted" classname="at.heinz.deviceai.IndependentBotSelectionUiTest" time="0.274"/>
+  <testcase name="selectionDeliveredAfterActivityDestroyIsIgnored" classname="at.heinz.deviceai.IndependentBotSelectionUiTest" time="0.116"/>
+  <testcase name="customRenamedIdentityComesFromStoreAndOnlyExplicitClickSelects" classname="at.heinz.deviceai.IndependentBotSelectionUiTest" time="0.134"/>
+  <testcase name="selectionDeliveredAfterDismissIsIgnored" classname="at.heinz.deviceai.IndependentBotSelectionUiTest" time="0.112"/>
+  <testcase name="oldSelectionCannotCloseOrSelectFromNewWindow" classname="at.heinz.deviceai.IndependentBotSelectionUiTest" time="0.307"/>
+  <testcase name="detailSelectionUsesSavedRenameOnSameStableIdentity" classname="at.heinz.deviceai.IndependentBotSelectionUiTest" time="0.253"/>
+  <testcase name="repeatedClickOnSameSelectionIsConsumedExactlyOnce" classname="at.heinz.deviceai.IndependentBotSelectionUiTest" time="0.182"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

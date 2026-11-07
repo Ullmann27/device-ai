@@ -17,6 +17,44 @@ class LocalConversationBoundaryTest {
         assertTrue(continued.closed);assertTrue(next.messages.isEmpty())
     }
 
+    @Test fun startupConversationCanBeUsedForExactlyOneFreshOwnerTurnWithoutNativeReallocation() {
+        val initial = Conversation()
+        var created = 0
+        var closed = 0
+        val selected = selectLocalConversation(initial, true,
+            create = { created++; Conversation() },
+            close = { closed++; it.closed = true },
+            reusePristineOnFirstPrompt = true
+        )
+        assertSame(initial, selected)
+        assertFalse(initial.closed)
+        assertEquals(0, created)
+        assertEquals(0, closed)
+        selected.messages += "first full owner prompt"
+        val next = selectLocalConversation(selected, true,
+            create = { created++; Conversation() },
+            close = { closed++; it.closed = true }
+        )
+        assertNotSame(initial, next)
+        assertTrue(initial.closed)
+        assertEquals(1, created)
+        assertEquals(1, closed)
+        assertTrue(next.messages.isEmpty())
+    }
+
+    @Test fun pristineReuseWithoutAnActualConversationMustFailInsteadOfCreatingHiddenSession() {
+        var created = false
+        try {
+            selectLocalConversation<Conversation>(null, true,
+                create = { created = true; Conversation() },
+                close = { },
+                reusePristineOnFirstPrompt = true
+            )
+            fail("Missing initial conversation accepted")
+        } catch (_: IllegalStateException) { }
+        assertFalse(created)
+    }
+
     @Test fun absentContinuationAndFailedReleaseCannotUseStaleConversation() {
         try { selectLocalConversation<Conversation>(null,false,{Conversation()},{}) ; fail("Missing continuation accepted") }
         catch (_:IllegalStateException) {}

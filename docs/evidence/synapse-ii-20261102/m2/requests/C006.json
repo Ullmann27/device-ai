@@ -1,0 +1,18 @@
+{
+  "id": "C006",
+  "question": "Wo wohnt Zylifuku?",
+  "sources": [
+    {
+      "revision": 6,
+      "sha256": "9a78620c1d5be63ce0d206c58f612e59886923a23d195e9e2ce137e3f55f9ca7",
+      "sourceId": "bc:C006:s1",
+      "text": "Zylifuku wohnt in Uvbuguba Uvriledu Uvpafoha."
+    },
+    {
+      "revision": 7,
+      "sha256": "4ed67f3a57a8f3463ff94eb2f647ae5de78ed3452d7f57bf8400a15043c94940",
+      "sourceId": "bc:C006:s2",
+      "text": "Qepahoka wohnt in Uvjanuza. Qedesuve wohnt in Uvgusura."
+    }
+  ]
+}

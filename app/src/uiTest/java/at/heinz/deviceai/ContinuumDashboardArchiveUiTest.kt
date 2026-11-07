@@ -39,6 +39,15 @@ class ContinuumDashboardArchiveUiTest {
                 ContinuumDiagnostics(java.io.File(dir, "qa-diagnostics.tsv"), "host-qa"))
             val live = ContinuumDashboardCollector.Live(null, false, false, "OFF",
                 false, false, false, false, false, false, false, false, false, emptyList())
+            val snapshot = collector.collect(live)
+            assertEquals("A research scheduler must not appear as a synchronization service",
+                at.heinz.deviceai.ui.ContinuumDashboardState.UNKNOWN, snapshot.storage.syncLabel)
+            assertTrue("The separately labelled research state remains available",
+                snapshot.storage.researchLabel.contains("Forschung", ignoreCase = true))
+            val sync = at.heinz.deviceai.ui.JarvisCockpitPanels.statusSegments(snapshot)
+                .single { it.kind == at.heinz.deviceai.ui.JarvisCockpitPanels.Seg.SYNC }
+            assertEquals("Continuum-Sync: —", sync.text)
+            assertFalse("An unconnected synchronization source has no green success badge", sync.ok)
             assertEquals(2, collector.collect(live).storage.totalSources)
             assertEquals(2, collector.collect(live).storage.activeSources)
             add(3)

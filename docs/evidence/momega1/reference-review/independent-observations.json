@@ -1,0 +1,49 @@
+{
+  "schema": "jarvis-reference-independent-observation",
+  "version": 1,
+  "primaryVideoSha256": "a9c525346b200c2aa062ff9d2c7495f8492fbaa9016a4cf125364dda77b35893",
+  "primaryAdditionalSampling": {
+    "command": [
+      "ffmpeg",
+      "-v",
+      "error",
+      "-threads",
+      "1",
+      "-i",
+      "<private-primary-video>",
+      "-vf",
+      "fps=2,scale=480:-1,tile=4x5",
+      "-filter_threads",
+      "1",
+      "-frames:v",
+      "1",
+      "-threads",
+      "1",
+      "-y",
+      "<local-contact-sheet>"
+    ],
+    "exit": 0,
+    "sampleCount": 20,
+    "purpose": "Time-spanning visual inspection only; not full audiovisual playback or recovered motion capture."
+  },
+  "existing3DSource": "7247e99d0b93b62dfb2b5eee22486d22911cb722",
+  "runtimeGlbSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "inspectedSourceArtifactsSha256": {
+    "docs/avatar-live/geometry-work/runtime-anchors/semantic-contact-sheet.png": "65e8f98f4e977fa353f8813d435daf6857e9a22b22fe41dc11402e90473ffb97",
+    "docs/avatar-live/geometry-work/runtime-anchors/01-neutral.png": "511d222cada7bae06a40ced370ec7d51578ebac98362683a16ebf353394af5a3",
+    "docs/avatar-live/geometry-work/runtime-anchors/03-left45.png": "629a63e5514331b3593228a0be27a4b5c6b5a6407ce1b5accb41d94e1f481af2",
+    "docs/avatar-live/geometry-work/runtime-anchors/README.md": "783c75a066761801cf53c549014a343807de64a916f268e996db1de553b00257",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "d12224172eb34e96fb198454f7329b42858bf0504616bbcf4b43a5d1eaddb394"
+  },
+  "appearance": "NOT_ACCEPTED",
+  "genuine3DTopology": "Observed front/yaw/profile/depth in exact-GLB Blender anchor renders; not a live Filament/device render.",
+  "gaps": [
+    "Opaque/dim face and weak luminous contour compared with reference",
+    "Sparse angular neural wires rather than dense smooth light-flow impression",
+    "Eyes and lips less visually legible",
+    "Current mapper uses fixed head/eye offsets from events; neutral idle only blinks, without head or gaze motion"
+  ],
+  "excludedFalseFinding": "Anchor24 is documented adverse AA1/JawOpen0/innerJaw12.6 stress, not faithful runtime mapper replay. No reachable Android collision defect is inferred from it.",
+  "audioListening": "NOT_RUN",
+  "fold7": "NOT_RUN"
+}

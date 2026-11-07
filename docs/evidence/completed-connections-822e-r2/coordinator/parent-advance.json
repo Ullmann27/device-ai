@@ -1,0 +1,18 @@
+{
+  "reason": "One bounded advance to completed published parent changes before combined verification; no foreign uncommitted files copied",
+  "remote": "a54583816df92bcd0cdf4e75f06cdefffb5dafcc",
+  "local": "0dac310728a84bd1adc296377ed7d124bc09692a",
+  "tree": "3e9373b19dc0b7b3751ebfbdd2ac09cd7455b667",
+  "original_base": "1a5302c504a78a50d5e64ca727f2915529bf2b06",
+  "inherited": [
+    "C1 published source-contract test reconciliation with its retained raw negative results",
+    "C1 imported and tested AvatarIdleMotion signed-zero/cycle boundary correction and regression wrapper"
+  ],
+  "no_overlap": [
+    "LmModel.kt",
+    "AiContextCompiler.kt",
+    ".github/continuum/development-backlog.mjs"
+  ],
+  "verification": "Historical parent results are not new child acceptance. Child will select AvatarIdleMotionBoundaryTest alongside its focused integration classes.",
+  "uncommitted_parent_work": "Observed nine active source-contract test edits in the foreign C1 worktree; deliberately used only frozen commit0dac310, without copying them."
+}

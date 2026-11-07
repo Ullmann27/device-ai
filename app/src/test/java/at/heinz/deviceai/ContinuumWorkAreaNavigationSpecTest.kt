@@ -55,7 +55,8 @@ class ContinuumWorkAreaNavigationSpecTest {
         assertFalse(ContinuumWorkAreaNavigationSpec.showBottomBar(false, true))
         assertFalse(ContinuumWorkAreaNavigationSpec.showBottomBar(true, false))
         assertFalse(ContinuumWorkAreaNavigationSpec.showBottomBar(true, true))
-        assertTrue(ContinuumWorkAreaNavigationSpec.showBottomBar(true, false, portraitFold = true))
+        // Heinz 04.11.: the open Fold7 uses the labelled side rail in both orientations, never the 74 dp bar.
+        assertFalse(ContinuumWorkAreaNavigationSpec.showBottomBar(true, false, portraitFold = true))
         assertFalse(ContinuumWorkAreaNavigationSpec.showBottomBar(true, true, portraitFold = true))
     }
 }

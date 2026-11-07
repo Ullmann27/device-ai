@@ -1,0 +1,13 @@
+CASE at.heinz.deviceai.cockpit.MemoryEventMapperStopUiTest#bufferedRecallCannotSurviveTheActualSurfaceStop
+.
+Time: 3.924
+
+OK (1 test)
+
+CASE at.heinz.deviceai.cockpit.MemoryEventMapperStopUiTest#freshRecallAfterStopStillReachesTheVisibleSurface
+.
+Time: 0.183
+
+OK (1 test)
+
+TOTAL tests=2 failures=0

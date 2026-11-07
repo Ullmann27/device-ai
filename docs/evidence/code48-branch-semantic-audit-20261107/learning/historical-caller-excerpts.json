@@ -1,0 +1,189 @@
+[
+  {
+    "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+    "blob": "14eeec836dc360680ecd370c0b7028a7dc4a7620",
+    "bytes": 5142,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/0e10beac455ca4418d513aa1a7ad57ee3db23452/LocalConversationContext.kt",
+    "matchedLines": [
+      11,
+      56
+    ],
+    "excerpt": "9: \n10: class LocalConversationContext(\n11:     private val argonShadow: Argon4ConversationShadow = Argon4ConversationShadow()\n12: ) {\n13:     private data class Turn(val request: String, val response: String)\n14:     private var session: String? = null\n54:     @Synchronized fun clear() { turns.clear(); session = null;explicitFocus=null;argonShadow.clear() }\n55: \n56:     @Synchronized fun argonShadowReport(): Argon4ShadowReport = argonShadow.report()\n57: \n58:     @Synchronized fun render(sessionId: String): String {\n59:         if (session != sessionId || turns.isEmpty() && explicitFocus==null) return \"\""
+  },
+  {
+    "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+    "blob": "f790e4320ee433efd9f8721a3b9cd17c10d42233",
+    "bytes": 12059,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/0e10beac455ca4418d513aa1a7ad57ee3db23452/ContinuumCognitiveRuntime.kt",
+    "matchedLines": [
+      37,
+      38,
+      53,
+      54,
+      140,
+      141,
+      142
+    ],
+    "excerpt": "35:         AuthorizedHybridShadowStatus.NO_AUTHORIZED_EVIDENCE\n36:     ),\n37:     val argonShadow:at.heinz.deviceai.cognitive.Argon4ShadowReport =\n38:         at.heinz.deviceai.cognitive.Argon4ShadowReport(at.heinz.deviceai.cognitive.Argon4ShadowStatus.NO_TURN)\n39: ) {\n40:     val grounded:Boolean get()=dialogue.grounded\n41:     val answer:String get()=dialogue.answer\n51:     priorScopedGroundedQuestion:String?=null,\n52:     private val turnTrace:at.heinz.deviceai.cognitive.CognitiveTurnTrace?=null,\n53:     private val argonShadowMode:at.heinz.deviceai.cognitive.Argon4ShadowMode=\n54:         at.heinz.deviceai.cognitive.Argon4ShadowMode.SHADOW\n55: ) {\n56:     // Persisted retrieval is conversation-bound. Model prompts still use only the\n57:     // explicitly carried, bounded topic of this runtime/session (defence in depth).\n138:         }\n139:         val argonShadow=if(exactSameTurnEvidence)\n140:             at.heinz.deviceai.cognitive.Argon4EvidenceShadow.observe(turn,ranked,argonShadowMode)\n141:         else at.heinz.deviceai.cognitive.Argon4ShadowReport(\n142:             at.heinz.deviceai.cognitive.Argon4ShadowStatus.REJECTED_EVIDENCE)\n143:         turn.memoryIds.forEach { turnTrace?.reference(at.heinz.deviceai.cognitive.TraceStage.MEMORY_REF,it) }\n144:         ranked.mapNotNull { it.sourceRef }.forEach { turnTrace?.reference(at.heinz.deviceai.cognitive.TraceStage.SOURCE_REF,it) }\n145:         if(scores.isNotEmpty())turnTrace?.event(if(didRerank)at.heinz.deviceai.cognitive.TraceStage.CRE1_ACTIVE else at.heinz.deviceai.cognitive.TraceStage.CRE1_SHADOW)"
+  },
+  {
+    "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "blob": "3903450b27397930cec0ea0d086e5c2c2e1a8e7c",
+    "bytes": 473744,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/0e10beac455ca4418d513aa1a7ad57ee3db23452/AgentActivity.kt",
+    "matchedLines": [
+      4,
+      2610,
+      6343
+    ],
+    "excerpt": "2: \n3: import at.heinz.deviceai.learning.NeuralDialogue\n4: import at.heinz.deviceai.learning.NeuralTutorBatchHint\n5: import at.heinz.deviceai.learning.NeuralDemoSandbox\n6: import at.heinz.deviceai.learning.NeuralCommand\n7: import at.heinz.deviceai.learning.NeuralCommandKind\n2608:         // A pasted training batch outside an active Tutor must never be\n2609:         // interpreted as an unrelated Android device-inspection request.\n2610:         if (!neuralCoach.isActive() && NeuralTutorBatchHint.isInactiveTutorPaste(request)) {\n2611:             input.text.clear()\n2612:             addUserMessage(request)\n2613:             addAssistantMessage(\n6341:                     // SHADOW: check the finished answer against the retrieval it was given; only a trace stage.\n6342:                     if (successful && groundedRecall != null)\n6343:                         turnTrace.event(at.heinz.deviceai.cognitive.LocalModelClaimAudit.stage(run.response, groundedRecall))\n6344:                     publishCognitiveTrace(turnTrace,if(successful)TraceOutcome.MODEL_INTERPRETATION else TraceOutcome.FAILED)\n6345:                     onLearningIo({\n6346:                         at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)"
+  },
+  {
+    "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/ChatReasoningRouter.kt",
+    "blob": "f21a114c9ed810cc0ac52cf10fe00b5d56ff2a5e",
+    "bytes": 6541,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/0e10beac455ca4418d513aa1a7ad57ee3db23452/ChatReasoningRouter.kt",
+    "matchedLines": [
+      10,
+      32,
+      46,
+      47,
+      48,
+      50,
+      51
+    ],
+    "excerpt": "8:     private val config: Config = Config(),\n9:     private val nowMillis: () -> Long = System::currentTimeMillis,\n10:     private val argonShadowMode: Argon4ShadowMode = Argon4ShadowMode.SHADOW\n11: ) {\n12:     data class Config(\n13:         val maxExtraCalls: Int = 4,\n30:     private val cancellation = DeliberationCancellation()\n31:     /** Uncalibrated proposal only; never changes calls, deadlines, tools or answers. */\n32:     var argonShadowChoice: at.heinz.deviceai.research.argon4.ComputeAllocationPolicy.Action? = null\n33:         private set\n34: \n35:     fun cancel() {\n44:         return try {\n45:             val assessment = ContinuumTaskClassifier.classify(task)\n46:             argonShadowChoice = if (argonShadowMode == Argon4ShadowMode.SHADOW) runCatching {\n47:                 val p = at.heinz.deviceai.research.argon4.ComputeAllocationPolicy()\n48:                 p.choose(at.heinz.deviceai.research.argon4.ComputeAllocationPolicy.Signals(\n49:                     evidence = if (groundedRecall == null)\n50:                         at.heinz.deviceai.research.argon4.ComputeAllocationPolicy.EvidenceDecision.NONE\n51:                     else at.heinz.deviceai.research.argon4.ComputeAllocationPolicy.EvidenceDecision.QUERY,\n52:                     // Attribute coverage/claim-check verdicts are not exposed by\n53:                     // this path. Do not fabricate full coverage or a verified answer.\n54:                     coverage = 0.0, claimFlags = 0, unresolvedReference = false,"
+  },
+  {
+    "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveTurnTrace.kt",
+    "blob": "76e43960fdc280b24ef8395279c077bd18598464",
+    "bytes": 4961,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/0e10beac455ca4418d513aa1a7ad57ee3db23452/CognitiveTurnTrace.kt",
+    "matchedLines": [
+      13
+    ],
+    "excerpt": "11:     MODEL_NOT_READY, GATED_FALLBACK, LOCAL_MODEL_SYNTHESIS, TOOL_PROPOSED, TOOL_EXECUTED,\n12:     CORRECTION_SCOPE, CLARIFICATION, TEST_DOUBLE_CALL,\n13:     // SHADOW claim audit of a local-model answer against this turn's retrieval (LocalModelClaimAudit); metadata only\n14:     CLAIM_AUDIT_SUPPORTED, CLAIM_AUDIT_UNSUPPORTED, CLAIM_AUDIT_SKIPPED,\n15:     // the retrieval itself states two incompatible values for the same thing (M12); still metadata only\n16:     CLAIM_AUDIT_CONFLICT"
+  },
+  {
+    "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+    "blob": "90becae5673661b85babfc3938b2bec71f152d45",
+    "bytes": 17590,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/0e10beac455ca4418d513aa1a7ad57ee3db23452/ContinuumBrain.kt",
+    "matchedLines": [
+      200,
+      201
+    ],
+    "excerpt": "198:                 val answer=asked?.first\n199:                 val timeline=if(answer!=null && answer.decision==\"QUERY\" && answer.route==\"MEMORY\")\n200:                     at.heinz.deviceai.cognitive.MemoryTimeline.check(answer.cited,active).decision else \"NO_MEMORY_ANSWER\"\n201:                 val relation=at.heinz.deviceai.cognitive.MemoryQuestionResolver.resolve(request.trim().take(512),active)!=null\n202:                 ContinuumBrainShadowLog(appDirectory).record(answer,baseline,millis,nowMillis,timeline,relation)\n203:             }\n204:             return ContinuumBrainResult(baseline,mode,ContinuumBrainStatus.SHADOW)"
+  },
+  {
+    "sha": "30fbef96182ed83ee55a1e6ec732d1c533df4a51",
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "blob": "f394900df19f7945668a227c4173de1747d2205c",
+    "bytes": 464692,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/30fbef96182ed83ee55a1e6ec732d1c533df4a51/AgentActivity.kt",
+    "matchedLines": [
+      4,
+      101,
+      321,
+      2574
+    ],
+    "excerpt": "2: \n3: import at.heinz.deviceai.learning.NeuralDialogue\n4: import at.heinz.deviceai.learning.NeuralTutorBatchHint\n5: import at.heinz.deviceai.learning.NeuralDemoSandbox\n6: import at.heinz.deviceai.learning.NeuralCommand\n7: import at.heinz.deviceai.learning.NeuralCommandKind\n99: import at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProvider\n100: import at.heinz.deviceai.cognitive.WebLearningInbox\n101: import at.heinz.deviceai.cognitive.AuthorizedWebLearningReviewInbox\n102: import at.heinz.deviceai.cognitive.WebLearningJournal\n103: import at.heinz.deviceai.cognitive.WebLearningCandidate\n104: import at.heinz.deviceai.cognitive.GroundedWebRecall\n319:     private val approvedModelWebSession = java.util.concurrent.atomic.AtomicReference<at.heinz.deviceai.cognitive.ApprovedWebResearchSession?>()\n320:     private var activeWebResearchSession:at.heinz.deviceai.cognitive.ApprovedWebResearchSession?=null\n321:     private val modelWebLearningReview = AuthorizedWebLearningReviewInbox()\n322:     private var researchArmed = false\n323:     private var researchResumeRequested = false\n324:     private var researchMode = ResearchMode.STANDARD\n2572:         // A pasted training batch outside an active Tutor must never be\n2573:         // interpreted as an unrelated Android device-inspection request.\n2574:         if (!neuralCoach.isActive() && NeuralTutorBatchHint.isInactiveTutorPaste(request)) {\n2575:             input.text.clear()\n2576:             addUserMessage(request)\n2577:             addAssistantMessage("
+  },
+  {
+    "sha": "ccbf0431d446789234fe8d5f0583cf9b8d40b8ba",
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "blob": "224db7195f4995bc7086a775ce095e9672f6b3bb",
+    "bytes": 477511,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/ccbf0431d446789234fe8d5f0583cf9b8d40b8ba/AgentActivity.kt",
+    "matchedLines": [
+      2681
+    ],
+    "excerpt": "2679:         // de-identified public knowledge questions to a real research cycle.\n2680:         // Personal or ambiguous dialogue remains local; no silent chat upload.\n2681:         val explicitlyOffline = at.heinz.deviceai.cognitive.ConversationResearchIntent.forbidsWeb(request)\n2682:         if (explicitlyOffline) researchArmed = false\n2683:         val publicTopic = if (!explicitlyOffline && internetConsent.mode ==\n2684:             at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)"
+  },
+  {
+    "sha": "4678a98f62e9b339cc723497e58839e6216b1c8f",
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+    "blob": "9a6dac63b2ecd97a6f1bf338b7d54163104dbf5d",
+    "bytes": 37014,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/4678a98f62e9b339cc723497e58839e6216b1c8f/ContinuumLearningCore.kt",
+    "matchedLines": [
+      428,
+      433,
+      440,
+      449,
+      458
+    ],
+    "excerpt": "426:         require(clean.length in 3..500 && clean.none { it.code==0 })\n427:         val item=LearningExperienceFactory.create(\n428:             type=LearningExperienceType.ANSWER_CORRECTION,\n429:             provenance=LearningProvenance.USER_CONFIRMED,\n430:             trust=LearningTrustClass.OWNER_CONFIRMED,\n431:             status=LearningStatus.CONFIRMED,\n432:             content=clean,\n433:             annotation=ContinuumAnswerCorrection.queryKey(question),\n434:             now=nowMillis()\n435:         )\n436:         store.putAnswerCorrection(item,nowMillis())\n438: \n439:     fun correctionSummary():ContinuumCorrectionSummary=synchronized(CORE_LOCK) {\n440:         val all=store.all().filter { it.type==LearningExperienceType.ANSWER_CORRECTION }\n441:         ContinuumCorrectionSummary(\n442:             active=all.count { it.status==LearningStatus.CONFIRMED },\n443:             revoked=all.count { it.status==LearningStatus.REVOKED }\n447:     /** Owner-directed selective correction removal, without touching other questions. */\n448:     fun revokeAnswerCorrection(question:String):Int=synchronized(CORE_LOCK) {\n449:         val key=ContinuumAnswerCorrection.queryKey(question)\n450:         val count=store.revokeCorrectionByQuestionKey(key,nowMillis())\n451:         // A previously corrected response may remain in a recent chat turn.\n452:         // Clear derived conversation context only after the ledger write succeeds.\n456: \n457:     fun revokeAnswerCorrections():Int=synchronized(CORE_LOCK) {\n458:         val revoked=store.updateMatching(LearningExperienceType.ANSWER_CORRECTION,\n459:             status=LearningStatus.REVOKED,now=nowMillis())\n460:         // A past corrected answer may remain in the last eight dialogue turns.\n461:         // Remove stale derived context only after the ledger revocation commits."
+  },
+  {
+    "sha": "4678a98f62e9b339cc723497e58839e6216b1c8f",
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+    "blob": "91e8f9a8214422354dd874cf1c0fa0ac3621fe38",
+    "bytes": 12327,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/4678a98f62e9b339cc723497e58839e6216b1c8f/ContinuumMemoryDialogue.kt",
+    "matchedLines": [
+      42
+    ],
+    "excerpt": "40:         val resolved=if(followUp&&previousTopic.isNotBlank())(previousTopic+\" \"+text).take(512) else text\n41:         val greeting=Regex(\"(?i)^(hallo|servus|guten (morgen|tag|abend)|hey)[!.\\\\s]*$\").matches(text)\n42:         val correction=if(greeting)null else ContinuumAnswerCorrection.find(resolved,experiences)\n43:         val hits=if(correction==null)rank(bytes,resolved,experiences) else emptyList()\n44:         // A greeting must not accidentally cite memories containing the word \"Hallo\".\n45:         // An unanswered new question invalidates the old topic; only retrieved evidence"
+  },
+  {
+    "sha": "4678a98f62e9b339cc723497e58839e6216b1c8f",
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt",
+    "blob": "2efa737f3e968bdc1235046874898ca92e8d85d1",
+    "bytes": 18188,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/4678a98f62e9b339cc723497e58839e6216b1c8f/ContinuumLearningExperience.kt",
+    "matchedLines": [
+      16,
+      151,
+      162,
+      168,
+      173,
+      182,
+      262
+    ],
+    "excerpt": "14: enum class LearningExperienceType {\n15:     INTENT_LABEL, SOURCE_TEXT, SEMANTIC_PAIR, TRAINING_AUDIT,\n16:     USER_FACT, COMMAND_MAPPING, USER_FEEDBACK, ANSWER_CORRECTION\n17: }\n18: enum class LearningProvenance { USER_CONFIRMED, MENTOR_WIKIPEDIA, SYNTHETIC_FIXTURE, LOCAL_TRAINING, REVIEWED_WEB_SOURCE }\n19: enum class LearningTrustClass { OWNER_CONFIRMED, SOURCE_OBSERVATION, SYNTHETIC, SYSTEM_MEASUREMENT }\n149:      */\n150:     fun putAnswerCorrection(item:LearningExperience,now:Long):Boolean=synchronized(FILE_LOCK) {\n151:         require(item.type==LearningExperienceType.ANSWER_CORRECTION &&\n152:             item.trust==LearningTrustClass.OWNER_CONFIRMED &&\n153:             item.provenance==LearningProvenance.USER_CONFIRMED &&\n154:             item.status==LearningStatus.CONFIRMED &&\n160:         // actual confirmation, not lexicographically smallest content hash.\n161:         val latest=current.asSequence()\n162:             .filter { it.type==LearningExperienceType.ANSWER_CORRECTION }\n163:             .maxOfOrNull { it.updatedAt } ?: -1L\n164:         check(latest<Long.MAX_VALUE) { \"Correction timestamp exhausted\" }\n165:         val effectiveNow=maxOf(now,latest+1)\n166:         val same=current.firstOrNull { it.id==item.id }\n167:         if(same?.status==LearningStatus.CONFIRMED &&\n168:             current.none { it.id!=item.id && it.type==LearningExperienceType.ANSWER_CORRECTION &&\n169:                 it.annotation==item.annotation && it.status==LearningStatus.CONFIRMED })\n170:             return@synchronized false\n171:         val revised=current.map { e ->\n172:             when {\n173:                 e.type!=LearningExperienceType.ANSWER_CORRECTION ||\n174:                     e.annotation!=item.annotation -> e\n175:                 e.id==item.id -> e.copy(status=LearningStatus.CONFIRMED,updatedAt=maxOf(effectiveNow,e.updatedAt))\n176:                 e.status==LearningStatus.CONFIRMED ->\n180:         }\n181:         val combined=if(same==null) revised+item.copy(createdAt=effectiveNow,updatedAt=effectiveNow) else revised\n182:         val corrections=combined.filter { it.type==LearningExperienceType.ANSWER_CORRECTION }\n183:             // Retire revoked revisions before evicting still-active answers.\n184:             .sortedWith(compareBy<LearningExperience>{it.status!=LearningStatus.REVOKED}\n185:                 .thenBy{it.updatedAt}.thenBy{it.id})\n260:         var count=0\n261:         val next=current.map { entry ->\n262:             if(entry.type==LearningExperienceType.ANSWER_CORRECTION &&\n263:                 entry.annotation==questionKey &&\n264:                 entry.provenance==LearningProvenance.USER_CONFIRMED &&\n265:                 entry.trust==LearningTrustClass.OWNER_CONFIRMED &&"
+  },
+  {
+    "sha": "fe7292685d4f4105d59eed297079484df2fc157d",
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "blob": "932b21d9ddf134b8de4fc7f00b07629d09691094",
+    "bytes": 425617,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/fe7292685d4f4105d59eed297079484df2fc157d/AgentActivity.kt",
+    "matchedLines": [
+      2304,
+      2759
+    ],
+    "excerpt": "2302:         }\n2303:         // Research uses the existing cognitive conversation, never a parallel fact store.\n2304:         val cdxQuestion=at.heinz.deviceai.learning.ContinuumCdx1ChatShadow.questionOrNull(request)\n2305:         if (cdxQuestion!=null) {\n2306:             input.text.clear()\n2307:             addUserMessage(request)\n2757:                 else null\n2758:                 val shadowObservation=if(shadowResearch)\n2759:                     at.heinz.deviceai.learning.ContinuumCdx1ChatShadow.observe(\n2760:                         question=request,\n2761:                         grounded=turn.grounded,\n2762:                         memoryIds=turn.memoryIds.toSet(),"
+  },
+  {
+    "sha": "6a153f1334d3762eaf2c103a3f5f1b637fe55325",
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "blob": "6932e97bafa925ec1ff84d875f6323d4c28847d4",
+    "bytes": 477315,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/6a153f1334d3762eaf2c103a3f5f1b637fe55325/AgentActivity.kt",
+    "matchedLines": [
+      3531
+    ],
+    "excerpt": "3529:                     \"\\nIdentitätskonflikte: \" + plan.identityConflicts.size +\n3530:                     \"\\nKapazitätsgrenze überschritten: \" + plan.capacityExceeded +\n3531:                     at.heinz.deviceai.learning.PersonalLearningPreviewCopy.explainReviewOnly(plan.reviewOnlyCount) +\n3532:                     \"\\n\\nEine Prüfsumme bestätigt keine Herkunft. Jeder persönliche Fakt benötigt deine eigene Bestätigung.\"\n3533:             }\n3534:         }) { result ->"
+  },
+  {
+    "sha": "febffb293f12702df5714ee20c8fb66471b493b9",
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "blob": "ae7d2241bd512d442e2a2ce45bf44476f35846ac",
+    "bytes": 407302,
+    "snapshot": "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/historical-callers/febffb293f12702df5714ee20c8fb66471b493b9/AgentActivity.kt",
+    "matchedLines": [
+      100,
+      6256,
+      6257,
+      6258
+    ],
+    "excerpt": "98: import at.heinz.deviceai.cognitive.GroundedWebRecall\n99: import at.heinz.deviceai.localmodel.ImportedLocalModel\n100: import at.heinz.deviceai.localmodel.LocalModelImportPreset\n101: import at.heinz.deviceai.localmodel.LocalInferenceEvent\n102: import at.heinz.deviceai.localmodel.LocalModelBackend\n103: import at.heinz.deviceai.localmodel.LocalModelCatalog\n6254:         fields.addView(digest, matchWidth(top = 6))\n6255:         if (preselectGemma4) {\n6256:             id.setText(LocalModelImportPreset.GEMMA4_E4B_ID)\n6257:             version.setText(LocalModelImportPreset.GEMMA4_E4B_VERSION)\n6258:             digest.setText(LocalModelImportPreset.GEMMA4_E4B_SHA256)\n6259:             fields.addView(textView(\n6260:                 \"Gemma 4 E4B: Die veröffentlichten Dateiangaben wurden vorbefüllt. \" +\n6261:                     \"Wähle nur die unveränderte Originaldatei aus dem offiziellen LiteRT-Archiv. \" +"
+  }
+]

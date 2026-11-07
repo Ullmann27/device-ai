@@ -1,0 +1,37 @@
+{
+  "classification": "HOST_CAPABILITY_ONLY",
+  "fold7": "FOLD7_NOT_RUN",
+  "adb_path": null,
+  "usb_directory": false,
+  "usb_nodes": 0,
+  "tailscale_path": null,
+  "bwrap_path": "/usr/bin/bwrap",
+  "uid": 1000,
+  "adb_daemon_present": false,
+  "network_policy": {
+    "version": 1,
+    "vpn_configured": false,
+    "automatic_tailscale_access": false,
+    "tcp_network_access": {
+      "domains": [],
+      "ip_ranges": []
+    }
+  },
+  "shared_host_cgroup": {
+    "memory.max": "17179869184",
+    "cpu.max": "400000 100000",
+    "pids.max": "max"
+  },
+  "namespace_probe": {
+    "exit": 0,
+    "parent_netns": "net:[4026531833]",
+    "sentinel_unchanged": true,
+    "child": {
+      "netns": "net:[4026532216]",
+      "interfaces": [
+        "lo"
+      ],
+      "host_write_errno": 30
+    }
+  }
+}

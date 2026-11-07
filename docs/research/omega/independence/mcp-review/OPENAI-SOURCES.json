@@ -1,0 +1,29 @@
+[
+  {
+    "name": "connect",
+    "url": "https://developers.openai.com/plugins/deploy/connect-chatgpt",
+    "status": 200,
+    "finalUrl": "https://developers.openai.com/plugins/deploy/connect-chatgpt",
+    "bytes": 375673,
+    "sha256": "a25dc7b0bc6ebc9a113d215e6023b5796590242af7ffde8059766f4a07c5d7a8",
+    "retrievedAt": "2026-11-03"
+  },
+  {
+    "name": "auth",
+    "url": "https://developers.openai.com/plugins/build/auth",
+    "status": 200,
+    "finalUrl": "https://developers.openai.com/plugins/build/auth",
+    "bytes": 542395,
+    "sha256": "42024d7a5a1929422758bfcab233f3fd04cba40d67775b9e6d008b2c8ca44287",
+    "retrievedAt": "2026-11-03"
+  },
+  {
+    "name": "tunnel",
+    "url": "https://developers.openai.com/api/docs/guides/secure-mcp-tunnels",
+    "status": 200,
+    "finalUrl": "https://developers.openai.com/api/docs/guides/secure-mcp-tunnels",
+    "bytes": 447051,
+    "sha256": "9a07f90e48aa7cd8c22d7b24643ce58db2930d06407e8c9f6a63f01e8105c2d5",
+    "retrievedAt": "2026-11-03"
+  }
+]

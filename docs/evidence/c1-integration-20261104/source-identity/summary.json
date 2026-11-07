@@ -1,0 +1,36 @@
+{
+  "taskId": "C1-QA-SOURCE-002",
+  "sourceBaseLocal": "a15a2b771bb934d998b2f9c9552c30d30400f707",
+  "sourceBaseRemote": "474a457f5fa6230d45fd4c773fe67e219df73984",
+  "sourceBaseTree": "a457d368b13ec939f4f71438a3cfda3ef5a4c10d",
+  "recordedUtc": "2026-11-04T20:06:12.236878+00:00",
+  "productionChange": "Bounded maxBuffer of 16 MiB for complete Git source metadata; no path exclusions or weaker acceptance.",
+  "filesSha256": {
+    "scripts/continuum-reliability-qa.mjs": "ed57537bd748481088372e76291afee541c1b52f47261f1f9efd71218404ceca",
+    "scripts/continuum-reliability-source-identity.test.mjs": "f6e11e12473e0c8d7644906030b9ea84eefe59758f47df198e7a31d41f630e73"
+  },
+  "red": {
+    "tests": 2,
+    "pass": 1,
+    "fail": 1,
+    "skip": 0,
+    "exitCode": 1,
+    "reason": "Actual production identity fails on a complete real Git file inventory exceeding one MiB."
+  },
+  "green": {
+    "tests": 30,
+    "pass": 30,
+    "fail": 0,
+    "skip": 0,
+    "exitCode": 0,
+    "scope": "New source identity regression plus existing reliability QA, evidence and architecture tests."
+  },
+  "priorFullGate": {
+    "label": "node-critical-01",
+    "exitCode": 1,
+    "reason": "GIT_METADATA_UNAVAILABLE caused by ENOBUFS before test execution; no critical tests passed."
+  },
+  "independentReview": "PENDING",
+  "fullGates": "NOT_RUN_ON_FIXED_SOURCE",
+  "rollback": "Revert only C1-QA-SOURCE-002 production/test changes; retain negative evidence. Last targeted ECHO checkpoint stays a15a2b7 / remote474a457."
+}

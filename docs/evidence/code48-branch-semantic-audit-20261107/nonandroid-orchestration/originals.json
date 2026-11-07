@@ -1,0 +1,906 @@
+[
+  {
+    "path": ".github/continuum/alpha-squad-ccc1.mjs",
+    "blob": "8b30a2c1895ece735bd88af77ac1d7fe9ca74de2",
+    "sources": [
+      {
+        "branch": "feature/continuum-alpha-squad-ccc1-entry-20261103",
+        "sha": "eed77e56b526d199141b658a4bdd38acd2d896e0",
+        "pr": 387
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/8b30a2c1895ece735bd88af77ac1d7fe9ca74de2-alpha-squad-ccc1.mjs",
+    "lines": 106,
+    "endsWithNewline": true,
+    "sha256": "e676607a4da0248ac3346c910ed7f3b166f4665e999457af51dbd43ec8eb43ef",
+    "bytes": 5057,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/backlog-interop.mjs",
+    "blob": "280d1ac7661397dd48b0fb1b039981639dd6ce00",
+    "sources": [
+      {
+        "branch": "development/continuum-backlog-20261015",
+        "sha": "cd860569ba0a2596bf3270873e0dccd98770c201",
+        "pr": null
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/280d1ac7661397dd48b0fb1b039981639dd6ce00-backlog-interop.mjs",
+    "lines": 7,
+    "endsWithNewline": true,
+    "sha256": "3886b2e126f37841cb9e0a6a07b24c70b383b2c6476be9020b058fe3573454e1",
+    "bytes": 531,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/ccc1-transfer-research.mjs",
+    "blob": "6e2104caafe5a91208bcf525084622ded022935a",
+    "sources": [
+      {
+        "branch": "research/continuum-evidence-bound-transfer-20261028",
+        "sha": "8ce96f05a90ef9552f246d1977fa33fee996fce4",
+        "pr": 207
+      },
+      {
+        "branch": "research/continuum-local-microagents-20261028",
+        "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+        "pr": 208
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/6e2104caafe5a91208bcf525084622ded022935a-ccc1-transfer-research.mjs",
+    "lines": 70,
+    "endsWithNewline": true,
+    "sha256": "c1c2fbfc5f714fd14d9ecec533c2fe901dc1b33d1e6cd705b75822e6b141fbb9",
+    "bytes": 4313,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/coding-public-docs.mjs",
+    "blob": "db61646ef99a8abb69067aba62005499e36ec0a1",
+    "sources": [
+      {
+        "branch": "research/continuum-local-microagents-20261028",
+        "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+        "pr": 208
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/db61646ef99a8abb69067aba62005499e36ec0a1-coding-public-docs.mjs",
+    "lines": 109,
+    "endsWithNewline": true,
+    "sha256": "b99da2ab75d24ff275a848e3675a144e9d68594738e70a3338927ad366bd0043",
+    "bytes": 6364,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/continuum-cloud-gpu-admission.mjs",
+    "blob": "95926ed8a8f4fa9b8667362e28e75b433b3d2860",
+    "sources": [
+      {
+        "branch": "research/continuum-cloud-gpu-admission-20261030",
+        "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+        "pr": 268
+      },
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      },
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/95926ed8a8f4fa9b8667362e28e75b433b3d2860-continuum-cloud-gpu-admission.mjs",
+    "lines": 114,
+    "endsWithNewline": false,
+    "sha256": "686cc75727ade41fa65a9d0a52a73da264ce113cee46b75b3b7d2145f6dad466",
+    "bytes": 6288,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/dev-loop-kernel.mjs",
+    "blob": "6de7fb62996d9b50cc4b73a5b15eafc7900f5036",
+    "sources": [
+      {
+        "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+        "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+        "pr": 258
+      },
+      {
+        "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+        "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+        "pr": 259
+      },
+      {
+        "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+        "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+        "pr": 259
+      },
+      {
+        "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+        "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+        "pr": 256
+      },
+      {
+        "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+        "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+        "pr": null
+      },
+      {
+        "branch": "claude/m8-coding-agent-loop-kxrxy2",
+        "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+        "pr": null
+      },
+      {
+        "branch": "claude/m8-gvisor-executor-kxrxy2",
+        "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+        "pr": 264
+      },
+      {
+        "branch": "integration/continuum-brain-system-20261029",
+        "sha": "7924ba0793963dd84eef61517359a743071829bf",
+        "pr": 242
+      },
+      {
+        "branch": "opus/continuum-m1-m8-20261030",
+        "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+        "pr": 244
+      },
+      {
+        "branch": "opus/continuum-m9-m16-20261030",
+        "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+        "pr": 245
+      },
+      {
+        "branch": "opus/jarvis-voice1-fix-20261030",
+        "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+        "pr": 252
+      },
+      {
+        "branch": "research/continuum-cloud-gpu-admission-20261030",
+        "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+        "pr": 268
+      },
+      {
+        "branch": "research/continuum-counterexample-acceptance-20261029",
+        "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+        "pr": 243
+      },
+      {
+        "branch": "research/continuum-mastercode-bounded-search-20261030",
+        "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+        "pr": 248
+      },
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      },
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      },
+      {
+        "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+        "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+        "pr": 251
+      },
+      {
+        "branch": "research/continuum-self-evolution-shadow-20261030",
+        "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+        "pr": 249
+      },
+      {
+        "branch": "research/exp20-p2-context-contract-20261030",
+        "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+        "pr": 255
+      },
+      {
+        "branch": "research/exp20-p2-opus-project-brief-20261030",
+        "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+        "pr": 254
+      },
+      {
+        "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+        "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+        "pr": 250
+      },
+      {
+        "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+        "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+        "pr": 253
+      },
+      {
+        "branch": "research/jpi1-presence-initiative-shadow-20261030",
+        "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+        "pr": 247
+      },
+      {
+        "branch": "research/jpi1-presence-shadow-20261030",
+        "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+        "pr": 246
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/6de7fb62996d9b50cc4b73a5b15eafc7900f5036-dev-loop-kernel.mjs",
+    "lines": 265,
+    "endsWithNewline": true,
+    "sha256": "8ee4e2a8cde94dffef3546e666f24ccb332f3f79baede58f6a33ca7903b7fe23",
+    "bytes": 17011,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/dev-loop-kernel.mjs",
+    "blob": "84c6b701187b4b8d5e72f74ace0db43160571b0e",
+    "sources": [
+      {
+        "branch": "opus/argon4-research-20261029",
+        "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+        "pr": 240
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/84c6b701187b4b8d5e72f74ace0db43160571b0e-dev-loop-kernel.mjs",
+    "lines": 254,
+    "endsWithNewline": true,
+    "sha256": "b3e62874622c09d2d3649c5ec9e8aab33dfc6ce08f94a785354cdf44b0b6499c",
+    "bytes": 16039,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/dev-loop-shadow.mjs",
+    "blob": "c49f080df702cdee2654013fbe1a86215ec591d3",
+    "sources": [
+      {
+        "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+        "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+        "pr": 258
+      },
+      {
+        "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+        "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+        "pr": 259
+      },
+      {
+        "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+        "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+        "pr": 259
+      },
+      {
+        "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+        "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+        "pr": 256
+      },
+      {
+        "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+        "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+        "pr": null
+      },
+      {
+        "branch": "claude/m8-coding-agent-loop-kxrxy2",
+        "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+        "pr": null
+      },
+      {
+        "branch": "claude/m8-gvisor-executor-kxrxy2",
+        "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+        "pr": 264
+      },
+      {
+        "branch": "integration/continuum-brain-system-20261029",
+        "sha": "7924ba0793963dd84eef61517359a743071829bf",
+        "pr": 242
+      },
+      {
+        "branch": "opus/continuum-m1-m8-20261030",
+        "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+        "pr": 244
+      },
+      {
+        "branch": "opus/continuum-m9-m16-20261030",
+        "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+        "pr": 245
+      },
+      {
+        "branch": "opus/jarvis-voice1-fix-20261030",
+        "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+        "pr": 252
+      },
+      {
+        "branch": "research/continuum-cloud-gpu-admission-20261030",
+        "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+        "pr": 268
+      },
+      {
+        "branch": "research/continuum-counterexample-acceptance-20261029",
+        "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+        "pr": 243
+      },
+      {
+        "branch": "research/continuum-mastercode-bounded-search-20261030",
+        "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+        "pr": 248
+      },
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      },
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      },
+      {
+        "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+        "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+        "pr": 251
+      },
+      {
+        "branch": "research/continuum-self-evolution-shadow-20261030",
+        "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+        "pr": 249
+      },
+      {
+        "branch": "research/exp20-p2-context-contract-20261030",
+        "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+        "pr": 255
+      },
+      {
+        "branch": "research/exp20-p2-opus-project-brief-20261030",
+        "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+        "pr": 254
+      },
+      {
+        "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+        "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+        "pr": 250
+      },
+      {
+        "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+        "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+        "pr": 253
+      },
+      {
+        "branch": "research/jpi1-presence-initiative-shadow-20261030",
+        "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+        "pr": 247
+      },
+      {
+        "branch": "research/jpi1-presence-shadow-20261030",
+        "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+        "pr": 246
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/c49f080df702cdee2654013fbe1a86215ec591d3-dev-loop-shadow.mjs",
+    "lines": 96,
+    "endsWithNewline": true,
+    "sha256": "559de7dcad64f2ee044354c8cb6cf02426048abbc24d7c7364d695594f3e6b21",
+    "bytes": 5912,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/development-backlog-cli.mjs",
+    "blob": "896558e3ab29cc2cfdfd5ac301d1089c4ef7d8c3",
+    "sources": [
+      {
+        "branch": "development/continuum-backlog-20261015",
+        "sha": "cd860569ba0a2596bf3270873e0dccd98770c201",
+        "pr": null
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/896558e3ab29cc2cfdfd5ac301d1089c4ef7d8c3-development-backlog-cli.mjs",
+    "lines": 74,
+    "endsWithNewline": true,
+    "sha256": "a6d3ef195bdcc153ffba7637f997f1312cb418ee271f642261d3fda57d002c8e",
+    "bytes": 5777,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/export-argon-source.py",
+    "blob": "eb5c787c12bf786d071390fa1fe9a5f451c15f3d",
+    "sources": [
+      {
+        "branch": "copilot/continuum-argon-source-review-20261015",
+        "sha": "4678a98f62e9b339cc723497e58839e6216b1c8f",
+        "pr": null
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/eb5c787c12bf786d071390fa1fe9a5f451c15f3d-export-argon-source.py",
+    "lines": 121,
+    "endsWithNewline": true,
+    "sha256": "e0f818fc3bc4b78792a04e128f905815a7d77b0af6250b85c6b8cd1305b4e8af",
+    "bytes": 6722,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/nvidia-nim-public-coding-lab.mjs",
+    "blob": "ba04f8eda09f70e35ef6b6ad94d985096b59c3b8",
+    "sources": [
+      {
+        "branch": "research/continuum-cloud-gpu-admission-20261030",
+        "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+        "pr": 268
+      },
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      },
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/ba04f8eda09f70e35ef6b6ad94d985096b59c3b8-nvidia-nim-public-coding-lab.mjs",
+    "lines": 157,
+    "endsWithNewline": false,
+    "sha256": "68b321c704f12e7626bdd707d230f855e6e645860e43117a56960c409e64fc87",
+    "bytes": 8303,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/nvidia-nim-synthetic-benchmark.mjs",
+    "blob": "24bdc789d16fbbda8058bfc972096be43ce84444",
+    "sources": [
+      {
+        "branch": "research/continuum-cloud-gpu-admission-20261030",
+        "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+        "pr": 268
+      },
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      },
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/24bdc789d16fbbda8058bfc972096be43ce84444-nvidia-nim-synthetic-benchmark.mjs",
+    "lines": 114,
+    "endsWithNewline": true,
+    "sha256": "02b371895410e444e7706d3fa971821d376237e90302160c7000be26d69e3d14",
+    "bytes": 4975,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/test-failure-environment.mjs",
+    "blob": "eb100afc9627a924ea079f8b0f91647ca166310d",
+    "sources": [
+      {
+        "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+        "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+        "pr": 258
+      },
+      {
+        "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+        "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+        "pr": 259
+      },
+      {
+        "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+        "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+        "pr": 259
+      },
+      {
+        "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+        "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+        "pr": 256
+      },
+      {
+        "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+        "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+        "pr": null
+      },
+      {
+        "branch": "claude/m8-coding-agent-loop-kxrxy2",
+        "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+        "pr": null
+      },
+      {
+        "branch": "claude/m8-gvisor-executor-kxrxy2",
+        "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+        "pr": 264
+      },
+      {
+        "branch": "opus/continuum-m1-m8-20261030",
+        "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+        "pr": 244
+      },
+      {
+        "branch": "opus/continuum-m9-m16-20261030",
+        "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+        "pr": 245
+      },
+      {
+        "branch": "opus/jarvis-voice1-fix-20261030",
+        "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+        "pr": 252
+      },
+      {
+        "branch": "research/continuum-mastercode-bounded-search-20261030",
+        "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+        "pr": 248
+      },
+      {
+        "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+        "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+        "pr": 251
+      },
+      {
+        "branch": "research/continuum-self-evolution-shadow-20261030",
+        "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+        "pr": 249
+      },
+      {
+        "branch": "research/exp20-p2-context-contract-20261030",
+        "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+        "pr": 255
+      },
+      {
+        "branch": "research/exp20-p2-opus-project-brief-20261030",
+        "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+        "pr": 254
+      },
+      {
+        "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+        "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+        "pr": 250
+      },
+      {
+        "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+        "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+        "pr": 253
+      },
+      {
+        "branch": "research/jpi1-presence-initiative-shadow-20261030",
+        "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+        "pr": 247
+      },
+      {
+        "branch": "research/jpi1-presence-shadow-20261030",
+        "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+        "pr": 246
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/eb100afc9627a924ea079f8b0f91647ca166310d-test-failure-environment.mjs",
+    "lines": 53,
+    "endsWithNewline": true,
+    "sha256": "eba358319073fa25cb72b5791f49d2927d69784189061e993fe73616ab147817",
+    "bytes": 3174,
+    "blobVerified": true
+  },
+  {
+    "path": ".github/continuum/workspace-nav-contract.mjs",
+    "blob": "49416958d7074edda8303087cfa248aa5c2e852d",
+    "sources": [
+      {
+        "branch": "opus/continuum-app-navigation-wip-archive-20261022",
+        "sha": "68a819c0b27769b49b70a3ec4ad1a23c2742b8c9",
+        "pr": null
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/49416958d7074edda8303087cfa248aa5c2e852d-workspace-nav-contract.mjs",
+    "lines": 21,
+    "endsWithNewline": true,
+    "sha256": "e57d4157e51ea638729af6f479498ccf082460fe92d2008289f98fc398c9af57",
+    "bytes": 1404,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-aider-nvidia-lab.sh",
+    "blob": "a425a8c9b472bbf925f7eb60e4b3476db7268f49",
+    "sources": [
+      {
+        "branch": "research/continuum-cloud-gpu-admission-20261030",
+        "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+        "pr": 268
+      },
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      },
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/a425a8c9b472bbf925f7eb60e4b3476db7268f49-continuum-aider-nvidia-lab.sh",
+    "lines": 42,
+    "endsWithNewline": true,
+    "sha256": "ff1a8afe78ae7671046874c853ff3bea403a93dc9b47829fa73fb97eb28a745b",
+    "bytes": 2220,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-microagents.mjs",
+    "blob": "31d5648ca4485385b7a1b4f05fbb1cf548ad4343",
+    "sources": [
+      {
+        "branch": "research/continuum-local-microagents-20261028",
+        "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+        "pr": 208
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/31d5648ca4485385b7a1b4f05fbb1cf548ad4343-continuum-microagents.mjs",
+    "lines": 133,
+    "endsWithNewline": true,
+    "sha256": "04a8eac8bbc4e8894b1c0814f72f669d8199112382455e48965e50de65a82c62",
+    "bytes": 6227,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-nvidia-coding-lab.mjs",
+    "blob": "9174f2be1bc0e275f79d814775f0e20f4a792290",
+    "sources": [
+      {
+        "branch": "research/continuum-cloud-gpu-admission-20261030",
+        "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+        "pr": 268
+      },
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      },
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/9174f2be1bc0e275f79d814775f0e20f4a792290-continuum-nvidia-coding-lab.mjs",
+    "lines": 48,
+    "endsWithNewline": false,
+    "sha256": "8cab4b65082614b39d9be68ef3281154522df12163486d557e0a304c92c1fd82",
+    "bytes": 2181,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-nvidia-execution-claim.mjs",
+    "blob": "304c830a1f417dfc06661fb8953dcbe9c130e5af",
+    "sources": [
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      },
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/304c830a1f417dfc06661fb8953dcbe9c130e5af-continuum-nvidia-execution-claim.mjs",
+    "lines": 29,
+    "endsWithNewline": true,
+    "sha256": "4f8d165e6204cce1c120e59855a0bb0144fcc12a7e53e07a0062bbd1091a858b",
+    "bytes": 1432,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-nvidia-execution-claim.mjs",
+    "blob": "c05b50517fc4d7cd4704db6b8a527a786e8e6f4d",
+    "sources": [
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/c05b50517fc4d7cd4704db6b8a527a786e8e6f4d-continuum-nvidia-execution-claim.mjs",
+    "lines": 17,
+    "endsWithNewline": true,
+    "sha256": "ce3fbc19807c1ff3a2c4614a4cd7a83d0f683ea2b8f60ee1b8b3c09bb173c52c",
+    "bytes": 900,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-nvidia-nim-benchmark.mjs",
+    "blob": "a22f508ee70d5341635ddad3d44bacba52137177",
+    "sources": [
+      {
+        "branch": "research/continuum-cloud-gpu-admission-20261030",
+        "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+        "pr": 268
+      },
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      },
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/a22f508ee70d5341635ddad3d44bacba52137177-continuum-nvidia-nim-benchmark.mjs",
+    "lines": 41,
+    "endsWithNewline": false,
+    "sha256": "0e75b54406535a3550499055573493defab1be3f5d985efa7d512fee24e9c38b",
+    "bytes": 1896,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-nvidia-owner-consent.mjs",
+    "blob": "e2a03ac882f8f0da7877359a331d50f6e99b2ac8",
+    "sources": [
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/e2a03ac882f8f0da7877359a331d50f6e99b2ac8-continuum-nvidia-owner-consent.mjs",
+    "lines": 11,
+    "endsWithNewline": true,
+    "sha256": "237b94da8c68e208740104a23882167f32411873a3de30cb5caf6fd55619fd73",
+    "bytes": 500,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-nvidia-scheduled.mjs",
+    "blob": "75bb5a4f2693dc1397b095c1b0aa1531edbfdd3e",
+    "sources": [
+      {
+        "branch": "research/continuum-cloud-gpu-admission-20261030",
+        "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+        "pr": 268
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/75bb5a4f2693dc1397b095c1b0aa1531edbfdd3e-continuum-nvidia-scheduled.mjs",
+    "lines": 109,
+    "endsWithNewline": false,
+    "sha256": "c0e80d60448ee5d80f7b9786eb625bd88e5a3f61f5d93ee28e02362a847325d1",
+    "bytes": 6412,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-nvidia-scheduled.mjs",
+    "blob": "82dd6d53dc1429594f75a1f70f8e177615f08643",
+    "sources": [
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/82dd6d53dc1429594f75a1f70f8e177615f08643-continuum-nvidia-scheduled.mjs",
+    "lines": 152,
+    "endsWithNewline": false,
+    "sha256": "797207df487ec4ccf12ad2fed3d98064a828fae1e25c20092a740af7546be624",
+    "bytes": 9013,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-nvidia-scheduled.mjs",
+    "blob": "c47c8ca463ac51af53adc1e6f1fa1b73976e135e",
+    "sources": [
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/c47c8ca463ac51af53adc1e6f1fa1b73976e135e-continuum-nvidia-scheduled.mjs",
+    "lines": 159,
+    "endsWithNewline": false,
+    "sha256": "0406d61c94320d6c98f71da6c913bb2d2b34db4d5ae2982a6efcef3fa9898d44",
+    "bytes": 9538,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-nvidia-scheduled.mjs",
+    "blob": "5510cd16c7d795b4dfcd85729791f15434bbda67",
+    "sources": [
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/5510cd16c7d795b4dfcd85729791f15434bbda67-continuum-nvidia-scheduled.mjs",
+    "lines": 140,
+    "endsWithNewline": false,
+    "sha256": "94c703ca494ce20ecd542d1cd9bbe3926a41e4d5b81489646b5bf0109544d553",
+    "bytes": 8254,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-nvidia-ultra-review.mjs",
+    "blob": "351eb7d8cb4a419cb42913fbeb701605eb8ea0cd",
+    "sources": [
+      {
+        "branch": "research/continuum-cloud-gpu-admission-20261030",
+        "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+        "pr": 268
+      },
+      {
+        "branch": "research/continuum-nvidia-claim-readback-20261031",
+        "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+        "pr": 271
+      },
+      {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      {
+        "branch": "research/continuum-nvidia-single-use-claim-20261031",
+        "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+        "pr": 270
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/351eb7d8cb4a419cb42913fbeb701605eb8ea0cd-continuum-nvidia-ultra-review.mjs",
+    "lines": 172,
+    "endsWithNewline": true,
+    "sha256": "0744e6046274c89983d1e5b1155aea3460d62eaed6a40a1f50ed8aa00f5e0323",
+    "bytes": 10288,
+    "blobVerified": true
+  },
+  {
+    "path": "scripts/continuum-public-docs.mjs",
+    "blob": "febded6d945e0a22920e144581bef2792d315fe5",
+    "sources": [
+      {
+        "branch": "research/continuum-local-microagents-20261028",
+        "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+        "pr": 208
+      }
+    ],
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/originals/febded6d945e0a22920e144581bef2792d315fe5-continuum-public-docs.mjs",
+    "lines": 30,
+    "endsWithNewline": true,
+    "sha256": "50a3c36ff657db558d81261f03512457918277cfdfda116573570a2a9ec2a95f",
+    "bytes": 1675,
+    "blobVerified": true
+  }
+]

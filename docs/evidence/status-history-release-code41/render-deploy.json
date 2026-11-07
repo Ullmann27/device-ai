@@ -1,0 +1,14 @@
+{
+  "commit": {
+    "createdAt": "2026-11-04T04:35:58Z",
+    "id": "a8e58ae09f6f1a8f43bd0a6f3b30b7e81bb79be6",
+    "message": "fix: preserve full clock times in status history cards\n\nReproduce the owner screenshot defect on actual Android widgets, preserve clock/URL colons and decode complete stored interruption/deferral events. RED 3/3; GREEN controls 10/10, wiring 29/29, configured lint 0. Models, scheduling, original signer, owner state and S01 no-run barrier unchanged.\n\nFull original-publisher gates and code41 download readback remain pending."
+  },
+  "createdAt": "2026-11-04T04:37:08.896492Z",
+  "finishedAt": "2026-11-04T04:51:07.038382Z",
+  "id": "dep-dblbct6gekts73fte14g",
+  "startedAt": "2026-11-04T04:37:08.8946Z",
+  "status": "live",
+  "trigger": "api",
+  "updatedAt": "2026-11-04T04:51:07.038727Z"
+}

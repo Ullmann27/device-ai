@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C016:s3",
+    "decision": "SPAN",
+    "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+    "endExclusive": 26,
+    "start": 18,
+    "text": "Uvpatema",
+    "offsetEncoding": "UTF-16",
+    "revision": 4
+  },
+  "RULE": {
+    "sourceId": "bc:C016:s3",
+    "decision": "SPAN",
+    "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+    "endExclusive": 26,
+    "start": 18,
+    "text": "Uvpatema",
+    "offsetEncoding": "UTF-16",
+    "revision": 4
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C016:s3",
+    "decision": "SPAN",
+    "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+    "endExclusive": 26,
+    "start": 18,
+    "text": "Uvpatema",
+    "offsetEncoding": "UTF-16",
+    "revision": 4
+  },
+  "rawMillis": 66.691101
+}

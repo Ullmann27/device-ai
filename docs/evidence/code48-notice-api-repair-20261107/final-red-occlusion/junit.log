@@ -1,0 +1,18 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=34131 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=34131 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.FullStageMemoryReviewUiTest#actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight
+.E
+Time: 6.635
+There was 1 failure:
+1) actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight(at.heinz.deviceai.FullStageMemoryReviewUiTest)
+java.lang.AssertionError: Notice text remains visible above the memory scene at 189,21 expected:<-16718337> but was:<-4128769>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.FullStageMemoryReviewUiTest.actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight$lambda$0(FullStageMemoryReviewUiTest.kt:308)
+	at at.heinz.deviceai.FullStageMemoryReviewUiTest.withActivity(FullStageMemoryReviewUiTest.kt:114)
+	at at.heinz.deviceai.FullStageMemoryReviewUiTest.actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight(FullStageMemoryReviewUiTest.kt:251)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=1 failures=1

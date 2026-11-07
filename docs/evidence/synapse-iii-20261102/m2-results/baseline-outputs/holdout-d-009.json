@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-009:s1",
+    "decision": "SPAN",
+    "sha256": "0ac6b04b1a48895609e1b2ab8ef262ebd5f0be5f52022867c94546988abdc3b3",
+    "endExclusive": 26,
+    "start": 18,
+    "text": "Darocari",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {
+    "sourceId": "holdout-d-009:s1",
+    "decision": "SPAN",
+    "sha256": "0ac6b04b1a48895609e1b2ab8ef262ebd5f0be5f52022867c94546988abdc3b3",
+    "endExclusive": 26,
+    "start": 18,
+    "text": "Darocari",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "VERIFIED": {
+    "sourceId": "holdout-d-009:s1",
+    "decision": "SPAN",
+    "sha256": "0ac6b04b1a48895609e1b2ab8ef262ebd5f0be5f52022867c94546988abdc3b3",
+    "endExclusive": 26,
+    "start": 18,
+    "text": "Darocari",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "rawMillis": 72.805884
+}

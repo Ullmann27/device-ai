@@ -6,6 +6,8 @@
 #   android-all-15.jar  org.robolectric:android-all:15-robolectric-13954326 (Android 15 framework classes)
 #   okhttp.jar okio.jar com.squareup.okhttp3:okhttp:4.12.0, com.squareup.okio:okio-jvm:3.6.0
 #   shizuku-*.jar       classes.jar of dev.rikka.shizuku:{api,aidl,shared,provider}:13.1.5
+#   filament-android-1.56.0.jar gltfio-android-1.56.0.jar (optional) classes.jar of com.google.android.filament:*:1.56.0
+#   opencv-4.13.0.jar   (optional) classes.jar of org.opencv:opencv:4.13.0 (Maven Central)
 # plus generated stubs: R (from app/src/main/res), BuildConfig, AIDL interfaces (from app/src/main/aidl) and
 # androidx.annotation.Keep. LiteRT-LM exists only on Google Maven; compile errors in the files that import it are
 # listed separately and do not fail the check. android-all carries strict android.annotation.Nullable where the SDK
@@ -75,6 +77,7 @@ for folder, _, files in os.walk(src):
 PY
 mkdir -p "$out/stubs/androidx/annotation"
 printf 'package androidx.annotation;\npublic @interface Keep {}\n' > "$out/stubs/androidx/annotation/Keep.java"
+printf 'package androidx.annotation;\npublic @interface RequiresApi { int value() default 1; int api() default 1; }\n' > "$out/stubs/androidx/annotation/RequiresApi.java"
 
 version_name=$(grep -m1 'versionName = ' "$root/app/build.gradle.kts" | grep -o '"[^"]*"' | tail -1)
 cat > "$out/stubs/at/heinz/deviceai/BuildConfig.java" <<EOF
@@ -88,6 +91,11 @@ public final class BuildConfig {
 EOF
 
 cp="$deps/android-all-15.jar:$deps/okhttp.jar:$deps/okio.jar:$deps/shizuku-api.jar:$deps/shizuku-aidl.jar:$deps/shizuku-shared.jar:$deps/shizuku-provider.jar"
+# Optional: Filament/gltfio classes.jar (com.google.android.filament:{filament-android,gltfio-android}:1.56.0, Maven Central)
+# for app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt. Without them that file fails to resolve.
+for jar in filament-android-1.56.0.jar gltfio-android-1.56.0.jar; do [ -f "$deps/$jar" ] && cp="$cp:$deps/$jar"; done
+# Optional: OpenCV classes.jar (org.opencv:opencv:4.13.0 AAR, Maven Central) for OpenCvOwnerFaceEngine.kt.
+[ -f "$deps/opencv-4.13.0.jar" ] && cp="$cp:$deps/opencv-4.13.0.jar"
 mapfile -t sources < <(find "$root/app/src/main/java" -name '*.kt' -o -name '*.java' | sort)
 unavailable=$(grep -l 'com.google.ai.edge.litertlm' "${sources[@]}" | sed "s#^$root/##" || true)
 set +e
@@ -96,12 +104,22 @@ kotlinc "${sources[@]}" "${stubs[@]}" -cp "$cp" -jvm-target 17 -nowarn -d "$out/
   -Xnullability-annotations=@android.annotation:warn -XXLanguage:+BreakContinueInInlineLambdas > "$out/kotlinc.log" 2>&1
 status=$?
 set -e
+# Only ordinary diagnostic exit 1 can be the documented missing-LiteRT case.
+# A killed/crashed compiler may also have printed those diagnostics before dying.
+if [ "$status" -ne 0 ] && [ "$status" -ne 1 ]; then
+  echo "KOTLIN_COMPILE_CHECK_FAILED: compiler exited $status; see $out/kotlinc.log"
+  exit "$status"
+fi
+if grep -Eq '(^exception:|^Exception in thread|OutOfMemoryError|Internal compiler error|^error:)' "$out/kotlinc.log"; then
+  echo "KOTLIN_COMPILE_CHECK_FAILED: compiler failure; see $out/kotlinc.log"
+  if [ "$status" -eq 0 ]; then exit 1; else exit "$status"; fi
+fi
 errors=$(grep -E '^[^ ]+\.(kt|java):[0-9]+:[0-9]+: error:' "$out/kotlinc.log" || true)
 external=""; own=""
 while IFS= read -r line; do
   [ -z "$line" ] && continue
   file=${line%%:*}; file=${file#"$root/"}
-  if printf '%s\n' "$unavailable" | grep -qxF "$file"; then external+="$line"$'\n'; else own+="$line"$'\n'; fi
+  if grep -qxF "$file" <<< "$unavailable"; then external+="$line"$'\n'; else own+="$line"$'\n'; fi
 done <<< "$errors"
 echo "sources=${#sources[@]} kotlinc_exit=$status"
 echo "errors in files that need LiteRT-LM (Google Maven, unavailable here): $(printf '%s' "$external" | grep -c . || true)"

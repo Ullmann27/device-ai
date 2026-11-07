@@ -1,0 +1,36 @@
+JUnit version 4.13.2
+.E.E.E...E.
+Time: 0.197
+There were 4 failures:
+1) normalDispatchSignalsOnceAfterDurableCommitBeforeBackend(at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest)
+java.lang.AssertionError: expected:<[DISPATCH_COMMITTED]> but was:<[START_PENDING]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest.normalDispatchSignalsOnceAfterDurableCommitBeforeBackend(ToolWorkJournalDispatchBoundaryTest.kt:91)
+2) failedDurableCommitNeverSignalsActualDispatch(at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest)
+java.lang.AssertionError: No actual dispatch; no start signal expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest.assertNoDispatch(ToolWorkJournalDispatchBoundaryTest.kt:83)
+	at at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest.failedDurableCommitNeverSignalsActualDispatch(ToolWorkJournalDispatchBoundaryTest.kt:113)
+3) expiredDeadlineAfterEarlyObserverNeverSignalsActualDispatch(at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest)
+java.lang.AssertionError: No actual dispatch; no start signal expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest.assertNoDispatch(ToolWorkJournalDispatchBoundaryTest.kt:83)
+	at at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest.expiredDeadlineAfterEarlyObserverNeverSignalsActualDispatch(ToolWorkJournalDispatchBoundaryTest.kt:108)
+4) stopAfterEarlyObserverNeverSignalsActualDispatch(at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest)
+java.lang.AssertionError: No actual dispatch; no start signal expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest.assertNoDispatch(ToolWorkJournalDispatchBoundaryTest.kt:83)
+	at at.heinz.deviceai.cognitive.ToolWorkJournalDispatchBoundaryTest.stopAfterEarlyObserverNeverSignalsActualDispatch(ToolWorkJournalDispatchBoundaryTest.kt:104)
+
+FAILURES!!!
+Tests run: 7,  Failures: 4
+

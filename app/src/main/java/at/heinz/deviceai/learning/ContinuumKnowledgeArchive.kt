@@ -1,5 +1,7 @@
 package at.heinz.deviceai.learning
 
+import at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider
+
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
@@ -40,7 +42,7 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
         transaction { Unit } // Complete a previously validated import after process death.
     }
 
-    enum class Kind { WIKIPEDIA_EXCERPT, RIS_LEGISLATION, RIS_CASE_LAW }
+    enum class Kind { WIKIPEDIA_EXCERPT, RIS_LEGISLATION, RIS_CASE_LAW, PUBLIC_WEB_EXCERPT }
 
     data class SourceRecord(
         val id:String,
@@ -56,6 +58,15 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
 
     data class Hit(val source:SourceRecord,val score:Int)
 
+    /** Resolve one indexed source to its complete verified stored excerpt.
+     * IDs never become paths supplied by web text. No new store or revision.
+     */
+    fun readSource(id:String):SourceRecord? = transaction {
+        require(id.matches(Regex("[a-f0-9]{64}")))
+        val file=File(root,"$id.rec")
+        if(!file.exists())null else runCatching { readFile(file) }.getOrNull()
+    }
+
     /** Caller must confirm the licence/usage policy before import. */
     fun save(kind:Kind,title:String,url:String,attribution:String,
              text:String,collectedAt:Long=System.currentTimeMillis(),
@@ -68,7 +79,10 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
         val uri=java.net.URI(url)
         require(uri.scheme=="https" && uri.userInfo==null && uri.fragment==null &&
             uri.port==-1 && uri.rawQuery?.length.orEmptyLength()<=600)
+        if (kind==Kind.PUBLIC_WEB_EXCERPT)
+            HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(uri)
         require(uri.host in when(kind) {
+            Kind.PUBLIC_WEB_EXCERPT -> setOf(requireNotNull(uri.host))
             Kind.WIKIPEDIA_EXCERPT -> setOf("de.wikipedia.org")
             Kind.RIS_LEGISLATION,Kind.RIS_CASE_LAW -> setOf(
                 "ris.bka.gv.at","www.ris.bka.gv.at","data.bka.gv.at")
@@ -153,6 +167,13 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
 
     /** Cheap change check for a cached index: hashes the sorted record file names only. */
     fun indexState():String = transaction { stateOf(files().take(MAX_RECORDS)) }
+
+    /** All currently archived source hashes; complements the bounded attempt journal. */
+    fun archivedHashes():Set<String> = transaction {
+        files().take(MAX_RECORDS)
+            .mapNotNull { f -> runCatching { readFile(f).sha256.lowercase(Locale.ROOT) }.getOrNull() }
+            .toSet()
+    }
 
     data class IndexSnapshot(val state:String,val records:List<SourceRecord>)
 
@@ -374,7 +395,10 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
         require(uri.scheme=="https" && uri.userInfo==null &&
             uri.fragment==null && uri.port==-1 &&
             uri.rawQuery?.length.orEmptyLength()<=600)
+        if (record.kind==Kind.PUBLIC_WEB_EXCERPT)
+            HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(uri)
         require(uri.host in when(record.kind) {
+            Kind.PUBLIC_WEB_EXCERPT -> setOf(requireNotNull(uri.host))
             Kind.WIKIPEDIA_EXCERPT -> setOf("de.wikipedia.org")
             Kind.RIS_LEGISLATION,Kind.RIS_CASE_LAW ->
                 setOf("ris.bka.gv.at","www.ris.bka.gv.at","data.bka.gv.at")

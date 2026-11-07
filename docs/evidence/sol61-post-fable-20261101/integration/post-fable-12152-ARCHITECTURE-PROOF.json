@@ -1,0 +1,215 @@
+{
+  "schema": 3,
+  "kind": "CONTINUUM_ARCHITECTURE_QA_RECEIPT",
+  "sourceCommit": "12152f94f9e4e6fdc614271bda7cb9aa64a34eb9",
+  "runId": "2eb1c520-0de8-4f41-9020-c3e13975e5cc",
+  "packageName": "at.heinz.deviceai.continuumlocal",
+  "versionCode": 36,
+  "scope": "HOST_QA_UNSIGNED_ONLY",
+  "proofMethod": "LOCAL_PROCESS_EXIT_CODES_AND_REPORT_HASHES_NOT_INDEPENDENT_ATTESTATION",
+  "qa": {
+    "termuxRecovery": "AUTOMATED_TEST_RUN_PASS",
+    "toolRouting": "AUTOMATED_TEST_RUN_PASS",
+    "evidenceBinding": "AUTOMATED_JUNIT_PASS_NOT_FACTUAL_TRUTH",
+    "memoryRegression": "AUTOMATED_JUNIT_PASS",
+    "androidBuildAndLint": "AUTOMATED_TEST_RUN_PASS",
+    "codingAgentContracts": "AUTOMATED_TEST_RUN_PASS",
+    "backendMockTests": "AUTOMATED_TEST_RUN_PASS",
+    "unsignedOwnerApkAndAab": "ASSEMBLED_NOT_INSTALLABLE",
+    "logs": {
+      "ARCHITECTURE-PROOF-TESTS.txt": {
+        "bytes": 1901,
+        "sha256": "30f3f8d382252699b62382bc64a79d109b58057d485202e05a6759896aec016e"
+      },
+      "TERMUX-RECOVERY-TESTS.txt": {
+        "bytes": 1310,
+        "sha256": "d5b25205e827b142f1e155261a8958597f5f3d03ebc4453e3a577558b7d09c72"
+      },
+      "NODE-TESTS.txt": {
+        "bytes": 3153,
+        "sha256": "ac11fa9fac54c193e6006fb3b31d688f0dc0e2b585ba5bcfbb2a7f03bd719cba"
+      },
+      "FRONTIER-NODE-TESTS.txt": {
+        "bytes": 8018,
+        "sha256": "cf7bedd39803731cb6979adf094434a473c00afaf5f8787613011cfabb5106d2"
+      },
+      "RELEASE-CONTRACT-TESTS.txt": {
+        "bytes": 1485,
+        "sha256": "7550a9d24be0cd52e0b06e3578fb69bc6fc7e688d1672d2cafad6df99d49a126"
+      },
+      "JARVIS-READBACK-TESTS.txt": {
+        "bytes": 6680,
+        "sha256": "3ac78425e777208c9b022852ac7886433897f8ae4ff8ef14b72246f6d9282f55"
+      },
+      "BACKEND-TESTS.txt": {
+        "bytes": 13714,
+        "sha256": "8dc12d5ca6fd234699e957067a3f2f2a0b2cc134fbe6fa8a7bc1a3eb4a493f29"
+      },
+      "GRADLE-QA.txt": {
+        "bytes": 16698,
+        "sha256": "42af67c8b9744bf00c1cbec9b597332b51723f15a16de7317143864b31c6ce65"
+      },
+      "ASSEMBLY.txt": {
+        "bytes": 13269,
+        "sha256": "1ee056cdd61ff6a3e2a9063431f1fdbf66bb4df901aa560ad9c047f6eb1465ec"
+      },
+      "APK-BADGING.txt": {
+        "bytes": 1344,
+        "sha256": "9bea995f9ceeb9cfd7395e9b40d4621877a917af6440eff23eb9ff7c8ef34539"
+      }
+    },
+    "nodeTestSummaries": {
+      "ARCHITECTURE-PROOF-TESTS.txt": {
+        "tests": 9,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "TERMUX-RECOVERY-TESTS.txt": {
+        "tests": 6,
+        "pass": 6,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "NODE-TESTS.txt": {
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "FRONTIER-NODE-TESTS.txt": {
+        "tests": 47,
+        "pass": 47,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "RELEASE-CONTRACT-TESTS.txt": {
+        "tests": 7,
+        "pass": 7,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "JARVIS-READBACK-TESTS.txt": {
+        "tests": 31,
+        "pass": 31,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "BACKEND-TESTS.txt": {
+        "tests": 64,
+        "pass": 64,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    "junitSuites": {
+      "at.heinz.deviceai.cognitive.NetworkTurnConstraintTest": {
+        "tests": 5,
+        "bytes": 1090,
+        "sha256": "2007f0895d6b8c1a943f3f78d90258a6c39cc7473763259b801a7d9ebee8ad4a"
+      },
+      "at.heinz.deviceai.cognitive.Cdx1EvidenceSlotBinderTest": {
+        "tests": 5,
+        "bytes": 1103,
+        "sha256": "737d865904e382ffeda195debe458b31f6e3c854e62cc641503ec05e2697c0c4"
+      },
+      "at.heinz.deviceai.intelligence.ewm.Ewm2ProductEquivalenceTest": {
+        "tests": 2,
+        "bytes": 678,
+        "sha256": "57606245823736259d5d4ae83f2ffb78202ab6440e156c760fa48f3193e95ad5"
+      },
+      "at.heinz.deviceai.learning.ContinuumEvidenceWindowTest": {
+        "tests": 7,
+        "bytes": 1449,
+        "sha256": "84c0d012fff1d319fbbb5f137aa1878312b39eebf901addfa641b46d4c89b991"
+      },
+      "at.heinz.deviceai.learning.span.EvidenceBoundNaturalLocationProbeTest": {
+        "tests": 6,
+        "bytes": 1325,
+        "sha256": "0ac55590249d30583774dc6a68fed2ee6e2fa935fc7c3273cd61dafb71d0a549"
+      },
+      "at.heinz.deviceai.learning.span.NaturalLocationVerificationTest": {
+        "tests": 6,
+        "bytes": 1389,
+        "sha256": "940ab15f1851f644f98d6fc68596b21b0bbf778834c8ec986565ba84575b76c1"
+      },
+      "at.heinz.deviceai.learning.span.NaturalEntitySpanCoreTest": {
+        "tests": 1,
+        "bytes": 536,
+        "sha256": "e9bfd569c3362a618622fe75550de756e4d6a1de24ada7026c3f0084d3e84003"
+      },
+      "at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest": {
+        "tests": 4,
+        "bytes": 1033,
+        "sha256": "ec271f5ea65d51942109664e470a7e33132e4ae45ebdab78af6d56c6c1a6a576"
+      },
+      "at.heinz.deviceai.learning.span.NaturalLocationLabComparisonTest": {
+        "tests": 3,
+        "bytes": 859,
+        "sha256": "be365453edc51728a59d4283b0fd6d3e611b80fa040c46a397cbf2eeb5837510"
+      },
+      "at.heinz.deviceai.learning.span.RoleAwareShadowTest": {
+        "tests": 4,
+        "bytes": 996,
+        "sha256": "0489dbd00ad4426796feab223b0ad396eebfc6dda88c6d2c8bd4735f42e0fb94"
+      },
+      "at.heinz.deviceai.learning.span.DualEvidenceReadContractTest": {
+        "tests": 3,
+        "bytes": 872,
+        "sha256": "10525104344ac2098b6d75a40e544c4bd592d9ea3ceac9360809a2b627d36570"
+      },
+      "at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest": {
+        "tests": 15,
+        "bytes": 2571,
+        "sha256": "ae20787ae7c968931a118adf769365954cb2dc19d58ea60b89967d25c29800ed"
+      },
+      "at.heinz.deviceai.cognitive.TurnScopedInternetModeTest": {
+        "tests": 3,
+        "bytes": 777,
+        "sha256": "7f053de9b6802046c732482f9a4e56bfb4a7d7b83f24a38e7b831179a049944f"
+      },
+      "at.heinz.deviceai.cognitive.JarvisUnifiedEvidenceContractTest": {
+        "tests": 2,
+        "bytes": 680,
+        "sha256": "8016ffcd6d75c6087ad47c4d5ea53d71072ae7cad9f68c2eff0d5592f8f9aa07"
+      }
+    },
+    "unsignedApkIdentity": {
+      "packageName": "at.heinz.deviceai.continuumlocal",
+      "versionCode": 36,
+      "versionName": "0.3.35"
+    },
+    "unsignedApk": {
+      "bytes": 54586351,
+      "sha256": "c21165649c2d15afac9c8dcdff5ceba95cbca52e7eb518859e6f391d59259b72"
+    },
+    "unsignedAab": {
+      "bytes": 26474460,
+      "sha256": "1d729e4197e3ddc49071c5c84eb2193033e250fd493080c3f6ee321a41538f07"
+    }
+  },
+  "notYetProven": [
+    "CDX1_20_OF_20_BLIND_SUPPORTED_ANSWERS",
+    "CDX1_5_OF_5_MISSING_EVIDENCE_ABSTENTIONS",
+    "SUSTAINED_LOCAL_REASONING_BENCHMARK",
+    "FOLD7_REAL_DEVICE_SMOKE_TEST",
+    "CLOSED_REPAIR_BUILD_PROOF_ON_DEVICE",
+    "ORIGINAL_OWNER_SIGNED_AND_PUBLISHED_APK",
+    "LONG_TERM_LEARNING_WITHOUT_DRIFT",
+    "SUPERINTELLIGENCE_OR_MODEL_PARITY"
+  ]
+}

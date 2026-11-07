@@ -1,0 +1,12 @@
+✔ square positive control (0.815546ms)
+✔ quad positive regression (0.148502ms)
+✔ quad zero regression (0.099996ms)
+✔ quad negative regression (0.29531ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 154.969206

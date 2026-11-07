@@ -86,7 +86,7 @@ class ContinuumCdxLargeCurriculumTest {
             val initial=runner.status()
             assertEquals(0,initial.completed)
             assertFalse(initial.available)
-            assertThrows(IllegalStateException::class.java) {
+            assertThrows(java.util.concurrent.CancellationException::class.java) {
                 runner.next {true}
             }
             assertEquals(initial,runner.status())

@@ -1,0 +1,1605 @@
+{
+  "schema": "SHADOW_REPLAY_CORPUS_V1",
+  "cases": [
+    {
+      "id": "train-001",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tavosiko?",
+      "sources": [
+        {
+          "sourceId": "train-001:s1",
+          "revision": 1,
+          "sha256": "93aefa3e78c9113adfd746987eaf49959997642a3b2259438279e98ca58e1b14",
+          "text": "Takelone lebt in Tafarato. Tavosiko lebt in Tagehele."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-001:s1",
+        "revision": 1,
+        "sha256": "93aefa3e78c9113adfd746987eaf49959997642a3b2259438279e98ca58e1b14",
+        "text": "Tagehele",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "train-002",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tadotore?",
+      "sources": [
+        {
+          "sourceId": "train-002:s1",
+          "revision": 1,
+          "sha256": "d8f2140f99301092ce913896f7da56978cd75dd28b6930fadbfc2ed29530c372",
+          "text": "Tarojimu wohnt in Tatekegi. Tadotore wohnt in Tamibuvi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-002:s1",
+        "revision": 1,
+        "sha256": "d8f2140f99301092ce913896f7da56978cd75dd28b6930fadbfc2ed29530c372",
+        "text": "Tamibuvi",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-003",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tasalaca?",
+      "sources": [
+        {
+          "sourceId": "train-003:s1",
+          "revision": 1,
+          "sha256": "35f7cc215218ceb84771b3b30196f83883f96bc665db8899663109c28a417d8e",
+          "text": "Tarinuti lebt in Tasutuju. Tasalaca lebt in Tajuvino."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-003:s1",
+        "revision": 1,
+        "sha256": "35f7cc215218ceb84771b3b30196f83883f96bc665db8899663109c28a417d8e",
+        "text": "Tajuvino",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "train-004",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Takijiho?",
+      "sources": [
+        {
+          "sourceId": "train-004:s1",
+          "revision": 1,
+          "sha256": "2fd1bb2d96c45a535eda483b7b119e568091d38b77b45ab667966b1684b6f2ba",
+          "text": "Tabacopi ist in Tatijogi. Takijiho ist in Talovose."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-004:s1",
+        "revision": 1,
+        "sha256": "2fd1bb2d96c45a535eda483b7b119e568091d38b77b45ab667966b1684b6f2ba",
+        "text": "Talovose",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "train-005",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tavabala?",
+      "sources": [
+        {
+          "sourceId": "train-005:s1",
+          "revision": 1,
+          "sha256": "48dbfc362f366839517adf76ab0d532d603c67f2fa4035b7b5363a5973040f98",
+          "text": "Tavudolo ist in Tafenogo. Tavabala ist in Tasupagu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-005:s1",
+        "revision": 1,
+        "sha256": "48dbfc362f366839517adf76ab0d532d603c67f2fa4035b7b5363a5973040f98",
+        "text": "Tasupagu",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "train-006",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Takudigi?",
+      "sources": [
+        {
+          "sourceId": "train-006:s1",
+          "revision": 1,
+          "sha256": "6d223d434dff1d7b55f81538dc8bb23d4bf5934c6dbe0d54590ec09f2915d4dd",
+          "text": "Tapekoko ist in Tatubipu. Takudigi ist in Tacicaro."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-006:s1",
+        "revision": 1,
+        "sha256": "6d223d434dff1d7b55f81538dc8bb23d4bf5934c6dbe0d54590ec09f2915d4dd",
+        "text": "Tacicaro",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "train-007",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Takumuho?",
+      "sources": [
+        {
+          "sourceId": "train-007:s1",
+          "revision": 1,
+          "sha256": "6f84456a6eda7b5d13e55876405415fd16c0b2eac36c656b6bf479f5f0363fb1",
+          "text": "Tadihuda ist in Tadopovi. Takumuho ist in Tarevofu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-007:s1",
+        "revision": 1,
+        "sha256": "6f84456a6eda7b5d13e55876405415fd16c0b2eac36c656b6bf479f5f0363fb1",
+        "text": "Tarevofu",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "train-008",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Tanumife?",
+      "sources": [
+        {
+          "sourceId": "train-008:s1",
+          "revision": 1,
+          "sha256": "85ebaf1a0495709ada12308cec8476767da6363332e1bee4745875b2c4e4b7d4",
+          "text": "Tapefupu steht in Talofice. Tanumife steht in Tabuvame."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-008:s1",
+        "revision": 1,
+        "sha256": "85ebaf1a0495709ada12308cec8476767da6363332e1bee4745875b2c4e4b7d4",
+        "text": "Tabuvame",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-009",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tameteka?",
+      "sources": [
+        {
+          "sourceId": "train-009:s1",
+          "revision": 1,
+          "sha256": "9d0a5b91e8c759d1fa2f83dece37fae20e0ae8dff74e8c8cd332470e10a52086",
+          "text": "Tavatubi ist in Tacajuvu. Tameteka ist in Talejodi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-009:s1",
+        "revision": 1,
+        "sha256": "9d0a5b91e8c759d1fa2f83dece37fae20e0ae8dff74e8c8cd332470e10a52086",
+        "text": "Talejodi",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "train-010",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tatomegu?",
+      "sources": [
+        {
+          "sourceId": "train-010:s1",
+          "revision": 1,
+          "sha256": "07d6b6da2b9941c96d111744e4067638a2b6ad1d0e9706664a91bda1d3fe01d2",
+          "text": "Tajinimo lebt in Tabujoke. Tatomegu lebt in Tasofufo."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-010:s1",
+        "revision": 1,
+        "sha256": "07d6b6da2b9941c96d111744e4067638a2b6ad1d0e9706664a91bda1d3fe01d2",
+        "text": "Tasofufo",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "train-011",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tadogena?",
+      "sources": [
+        {
+          "sourceId": "train-011:s1",
+          "revision": 1,
+          "sha256": "d64d67439a49dc22b20a742574b29b903b631b5bdcf408dfa4925ef6e9c8a2ef",
+          "text": "Tagubima ist in Tapahugi. Tadogena ist in Tadecape."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-011:s1",
+        "revision": 1,
+        "sha256": "d64d67439a49dc22b20a742574b29b903b631b5bdcf408dfa4925ef6e9c8a2ef",
+        "text": "Tadecape",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "train-012",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tamefoti?",
+      "sources": [
+        {
+          "sourceId": "train-012:s1",
+          "revision": 1,
+          "sha256": "9cbff025733ea970fc41762de9d64f52b4948ea5eecbe1eb26d91790354118f9",
+          "text": "Tanocoje lebt in Tasajamu. Tamefoti lebt in Tabuhama."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-012:s1",
+        "revision": 1,
+        "sha256": "9cbff025733ea970fc41762de9d64f52b4948ea5eecbe1eb26d91790354118f9",
+        "text": "Tabuhama",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "train-013",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Tapebuso?",
+      "sources": [
+        {
+          "sourceId": "train-013:s1",
+          "revision": 1,
+          "sha256": "43ba3f4667f2948c729edd782471a71f5bc10582db02fdcbfeefd23123075f8d",
+          "text": "Tatocile steht in Tahajoga. Tapebuso steht in Takacoru."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-013:s1",
+        "revision": 1,
+        "sha256": "43ba3f4667f2948c729edd782471a71f5bc10582db02fdcbfeefd23123075f8d",
+        "text": "Takacoru",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-014",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tabemusu?",
+      "sources": [
+        {
+          "sourceId": "train-014:s1",
+          "revision": 1,
+          "sha256": "660d526adbdd351a6777f6cd47bc617af087aedf17e52d579da2d0ca6977e703",
+          "text": "Tadakusu ist in Tafilimo. Tabemusu ist in Tabicepi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-014:s1",
+        "revision": 1,
+        "sha256": "660d526adbdd351a6777f6cd47bc617af087aedf17e52d579da2d0ca6977e703",
+        "text": "Tabicepi",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "train-015",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Talorone?",
+      "sources": [
+        {
+          "sourceId": "train-015:s1",
+          "revision": 1,
+          "sha256": "4f8e3ea59f9e136d4a26007cdbab6cc7c349659dae1e18c73dac385eeeb215c7",
+          "text": "Talakoro steht in Tafagase. Talorone steht in Tafiheli."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-015:s1",
+        "revision": 1,
+        "sha256": "4f8e3ea59f9e136d4a26007cdbab6cc7c349659dae1e18c73dac385eeeb215c7",
+        "text": "Tafiheli",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-016",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tanudese?",
+      "sources": [
+        {
+          "sourceId": "train-016:s1",
+          "revision": 1,
+          "sha256": "0e9f219d3acfd1e86b9189b97da7ae62844072e983af2cda8ec0a645d76141a0",
+          "text": "Taforifu wohnt in Tativebu. Tanudese wohnt in Tarositi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-016:s1",
+        "revision": 1,
+        "sha256": "0e9f219d3acfd1e86b9189b97da7ae62844072e983af2cda8ec0a645d76141a0",
+        "text": "Tarositi",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-017",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tajifaja?",
+      "sources": [
+        {
+          "sourceId": "train-017:s1",
+          "revision": 1,
+          "sha256": "ad9b1ce4400ddc90002793fa160e9034a2630629c4cb22ea16f27085c5927a10",
+          "text": "Tatepeni lebt in Tacakina. Tajifaja lebt in Tabelara."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-017:s1",
+        "revision": 1,
+        "sha256": "ad9b1ce4400ddc90002793fa160e9034a2630629c4cb22ea16f27085c5927a10",
+        "text": "Tabelara",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "train-018",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Taledadu?",
+      "sources": [
+        {
+          "sourceId": "train-018:s1",
+          "revision": 1,
+          "sha256": "c989ec813ed21c7648160f2e52431effbd3c8ce5178f312151482268f35683d8",
+          "text": "Tabobana steht in Tasojupi. Taledadu steht in Tanetita."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-018:s1",
+        "revision": 1,
+        "sha256": "c989ec813ed21c7648160f2e52431effbd3c8ce5178f312151482268f35683d8",
+        "text": "Tanetita",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-019",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Tavinapa?",
+      "sources": [
+        {
+          "sourceId": "train-019:s1",
+          "revision": 1,
+          "sha256": "6a6a65c1284f3dc695c2faae50074ed4fcd615afc80ebc070e60b272c947de55",
+          "text": "Tafaceju steht in Taleharu. Tavinapa steht in Tacipubu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-019:s1",
+        "revision": 1,
+        "sha256": "6a6a65c1284f3dc695c2faae50074ed4fcd615afc80ebc070e60b272c947de55",
+        "text": "Tacipubu",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-020",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tagenase?",
+      "sources": [
+        {
+          "sourceId": "train-020:s1",
+          "revision": 1,
+          "sha256": "5d3948e08bccc2fdd0e29c31780e5ff206934d3db4128ebdf6feecfe93ddebf5",
+          "text": "Tarufane wohnt in Takatope. Tagenase wohnt in Tavapeve."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-020:s1",
+        "revision": 1,
+        "sha256": "5d3948e08bccc2fdd0e29c31780e5ff206934d3db4128ebdf6feecfe93ddebf5",
+        "text": "Tavapeve",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-021",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tahekesi?",
+      "sources": [
+        {
+          "sourceId": "train-021:s1",
+          "revision": 1,
+          "sha256": "c55df4b56866ace2c6014b7c60547e015d6c811937b9859ae5f8cf80dc0b0d36",
+          "text": "Tasucusa wohnt in Tafajite. Tahekesi wohnt in Tahupune."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-021:s1",
+        "revision": 1,
+        "sha256": "c55df4b56866ace2c6014b7c60547e015d6c811937b9859ae5f8cf80dc0b0d36",
+        "text": "Tahupune",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-022",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tabilupo?",
+      "sources": [
+        {
+          "sourceId": "train-022:s1",
+          "revision": 1,
+          "sha256": "2ea43ce41071149e83d00daaa8aeb617608e678be27b4672fb9928eb8e6228d3",
+          "text": "Tapimuhi wohnt in Takeviva. Tabilupo wohnt in Tacapota."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-022:s1",
+        "revision": 1,
+        "sha256": "2ea43ce41071149e83d00daaa8aeb617608e678be27b4672fb9928eb8e6228d3",
+        "text": "Tacapota",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-023",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tapomiro?",
+      "sources": [
+        {
+          "sourceId": "train-023:s1",
+          "revision": 1,
+          "sha256": "22182e4d32218e953dd340b29d46497fc01c064c7418251b603d36a16e45446b",
+          "text": "Taciveca wohnt in Taluboji. Tapomiro wohnt in Tapocote."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-023:s1",
+        "revision": 1,
+        "sha256": "22182e4d32218e953dd340b29d46497fc01c064c7418251b603d36a16e45446b",
+        "text": "Tapocote",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-024",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tajibiki?",
+      "sources": [
+        {
+          "sourceId": "train-024:s1",
+          "revision": 1,
+          "sha256": "adbbbd1c93fabdb94dd963d913fcb24d21f9b07f291e7880afe55854e8d76206",
+          "text": "Tabenoha wohnt in Tafogefe. Tajibiki wohnt in Tafahuju."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-024:s1",
+        "revision": 1,
+        "sha256": "adbbbd1c93fabdb94dd963d913fcb24d21f9b07f291e7880afe55854e8d76206",
+        "text": "Tafahuju",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-025",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tapibuhi?",
+      "sources": [
+        {
+          "sourceId": "train-025:s1",
+          "revision": 1,
+          "sha256": "5b4360f35f177386648d3d91f119c1659b99262780c3456d1ea82d0856970b04",
+          "text": "Tafajivi lebt in Tavufejo. Tapibuhi lebt in Tapefohe."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-025:s1",
+        "revision": 1,
+        "sha256": "5b4360f35f177386648d3d91f119c1659b99262780c3456d1ea82d0856970b04",
+        "text": "Tapefohe",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "train-026",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tanuvile?",
+      "sources": [
+        {
+          "sourceId": "train-026:s1",
+          "revision": 1,
+          "sha256": "ff6bd67708b60ddfa892efbf422122cbea3da155f03b75bbd6cdc0106336be39",
+          "text": "Tahidobi wohnt in Tarifoso. Tanuvile wohnt in Tamatomi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-026:s1",
+        "revision": 1,
+        "sha256": "ff6bd67708b60ddfa892efbf422122cbea3da155f03b75bbd6cdc0106336be39",
+        "text": "Tamatomi",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-027",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tanijufo?",
+      "sources": [
+        {
+          "sourceId": "train-027:s1",
+          "revision": 1,
+          "sha256": "07d4ab02d06e013dbbe09b585981e961b47d216dcf29c8bbf4280a1ee961d1e3",
+          "text": "Tavulito ist in Tajupime. Tanijufo ist in Tamoleda."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-027:s1",
+        "revision": 1,
+        "sha256": "07d4ab02d06e013dbbe09b585981e961b47d216dcf29c8bbf4280a1ee961d1e3",
+        "text": "Tamoleda",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "train-028",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Talibege?",
+      "sources": [
+        {
+          "sourceId": "train-028:s1",
+          "revision": 1,
+          "sha256": "4fb8c79f149b7f7e063854987f0696ff1d7776551bdcb992de8b57bfbe234c92",
+          "text": "Taceredo lebt in Tamiroru. Talibege lebt in Tavimimu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-028:s1",
+        "revision": 1,
+        "sha256": "4fb8c79f149b7f7e063854987f0696ff1d7776551bdcb992de8b57bfbe234c92",
+        "text": "Tavimimu",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "train-029",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tasosiga?",
+      "sources": [
+        {
+          "sourceId": "train-029:s1",
+          "revision": 1,
+          "sha256": "3f3ce737b5743c1d1d27074d290d5e734e39a9827d6399b8b6b85358accbb8af",
+          "text": "Tahogume ist in Tadajusu. Tasosiga ist in Tavisepi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-029:s1",
+        "revision": 1,
+        "sha256": "3f3ce737b5743c1d1d27074d290d5e734e39a9827d6399b8b6b85358accbb8af",
+        "text": "Tavisepi",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "train-030",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tajarehe?",
+      "sources": [
+        {
+          "sourceId": "train-030:s1",
+          "revision": 1,
+          "sha256": "fc8cf5d4a0dd8b38774eee20e5942b638ae2016c2c70bcb0cef1389967a67aa7",
+          "text": "Tagivoce wohnt in Tanonipo. Tajarehe wohnt in Tafogenu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-030:s1",
+        "revision": 1,
+        "sha256": "fc8cf5d4a0dd8b38774eee20e5942b638ae2016c2c70bcb0cef1389967a67aa7",
+        "text": "Tafogenu",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-031",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Takosono?",
+      "sources": [
+        {
+          "sourceId": "train-031:s1",
+          "revision": 1,
+          "sha256": "e1d919a373ba29f7eebb1e3c5745d9ae74cf9df0f43bb96cd70e0044444d2a04",
+          "text": "Tajebufu ist in Tahokeka. Takosono ist in Tajesoko."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-031:s1",
+        "revision": 1,
+        "sha256": "e1d919a373ba29f7eebb1e3c5745d9ae74cf9df0f43bb96cd70e0044444d2a04",
+        "text": "Tajesoko",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "train-032",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tavenodo?",
+      "sources": [
+        {
+          "sourceId": "train-032:s1",
+          "revision": 1,
+          "sha256": "9cd8d9efc2e46b0c3761cdfb794b8a9e944d6c46484bc5b3cf9a7b73cc91de97",
+          "text": "Tafikaro wohnt in Tagepece. Tavenodo wohnt in Tarabevu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-032:s1",
+        "revision": 1,
+        "sha256": "9cd8d9efc2e46b0c3761cdfb794b8a9e944d6c46484bc5b3cf9a7b73cc91de97",
+        "text": "Tarabevu",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-033",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tanucecu?",
+      "sources": [
+        {
+          "sourceId": "train-033:s1",
+          "revision": 1,
+          "sha256": "ade32bbf640752fe439666208d86781b476a4724e9cdc69e14b15ec93b2b364e",
+          "text": "Takimave lebt in Tatabami. Tanucecu lebt in Tafetiro."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-033:s1",
+        "revision": 1,
+        "sha256": "ade32bbf640752fe439666208d86781b476a4724e9cdc69e14b15ec93b2b364e",
+        "text": "Tafetiro",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "train-034",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Tabososu?",
+      "sources": [
+        {
+          "sourceId": "train-034:s1",
+          "revision": 1,
+          "sha256": "b2d28fb8c027cf55fc0f692c2def97f78cf6c3f02616c1801fe319ca30868229",
+          "text": "Tasigige steht in Tajanoti. Tabososu steht in Tafiheno."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-034:s1",
+        "revision": 1,
+        "sha256": "b2d28fb8c027cf55fc0f692c2def97f78cf6c3f02616c1801fe319ca30868229",
+        "text": "Tafiheno",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-035",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tarijiri?",
+      "sources": [
+        {
+          "sourceId": "train-035:s1",
+          "revision": 1,
+          "sha256": "7b19a65b5ee853e39d22b2d1b295c28d36af887621942b136116add73d194c8a",
+          "text": "Tatanije wohnt in Tajujuke. Tarijiri wohnt in Tapadalu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-035:s1",
+        "revision": 1,
+        "sha256": "7b19a65b5ee853e39d22b2d1b295c28d36af887621942b136116add73d194c8a",
+        "text": "Tapadalu",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-036",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tafimami?",
+      "sources": [
+        {
+          "sourceId": "train-036:s1",
+          "revision": 1,
+          "sha256": "86c352dd7201634fa7d227b065e5a78bc265d0837eeffb32d082a509c6bb3f15",
+          "text": "Taruduru wohnt in Tamuleke. Tafimami wohnt in Tasunija."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-036:s1",
+        "revision": 1,
+        "sha256": "86c352dd7201634fa7d227b065e5a78bc265d0837eeffb32d082a509c6bb3f15",
+        "text": "Tasunija",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-037",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tavusegi?",
+      "sources": [
+        {
+          "sourceId": "train-037:s1",
+          "revision": 1,
+          "sha256": "25ac13b8a04f8a6eb7535e72db167c5daec3fe874268398293034d1192fcb928",
+          "text": "Tajecebi wohnt in Takidopa. Tavusegi wohnt in Tavujuco."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-037:s1",
+        "revision": 1,
+        "sha256": "25ac13b8a04f8a6eb7535e72db167c5daec3fe874268398293034d1192fcb928",
+        "text": "Tavujuco",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-038",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Tacurepe?",
+      "sources": [
+        {
+          "sourceId": "train-038:s1",
+          "revision": 1,
+          "sha256": "9ba01bea3f2cd05d6ac6738c7b26c6b89888b7a9feea625fa5c989038c0c36e9",
+          "text": "Tacofeve steht in Tafibemu. Tacurepe steht in Tasovido."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-038:s1",
+        "revision": 1,
+        "sha256": "9ba01bea3f2cd05d6ac6738c7b26c6b89888b7a9feea625fa5c989038c0c36e9",
+        "text": "Tasovido",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-039",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tadapege?",
+      "sources": [
+        {
+          "sourceId": "train-039:s1",
+          "revision": 1,
+          "sha256": "13dbbb77ec5c190f23db2939fa58a9abedd239dde4dd9088427028b2d68970aa",
+          "text": "Tapadugu ist in Tasoheku. Tadapege ist in Taloriju."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-039:s1",
+        "revision": 1,
+        "sha256": "13dbbb77ec5c190f23db2939fa58a9abedd239dde4dd9088427028b2d68970aa",
+        "text": "Taloriju",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "train-040",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tafobevo?",
+      "sources": [
+        {
+          "sourceId": "train-040:s1",
+          "revision": 1,
+          "sha256": "d86f1b02ea4dbd85f95de17c5e5811a45ea5d227653e125ada62847da7f6324c",
+          "text": "Tasekogi lebt in Tacihine. Tafobevo lebt in Tagajebo."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-040:s1",
+        "revision": 1,
+        "sha256": "d86f1b02ea4dbd85f95de17c5e5811a45ea5d227653e125ada62847da7f6324c",
+        "text": "Tagajebo",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "train-041",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tadegege?",
+      "sources": [
+        {
+          "sourceId": "train-041:s1",
+          "revision": 1,
+          "sha256": "e608d07ea5a365881df7a930841484f42d73f14b361d10a57f3a74a9fa6f2fd1",
+          "text": "Tadegege ist in Tabibebo, Tadegege wohnt in Tacifunu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-042",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tavafufo?",
+      "sources": [
+        {
+          "sourceId": "train-042:s1",
+          "revision": 1,
+          "sha256": "0df5f36b89890b678c0fbaeeb839b494977019ebdc90cd5a5ecabc243ea2b1e6",
+          "text": "Tavafufo ist in Tasaluhu."
+        },
+        {
+          "sourceId": "train-042:s2",
+          "revision": 2,
+          "sha256": "4e494cf9d96f8335a6f009085617c037f2c9a0954a44161209657d2546890887",
+          "text": "Tavafufo lebt in Tafefipi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-043",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tabikuko?",
+      "sources": [
+        {
+          "sourceId": "train-043:s1",
+          "revision": 1,
+          "sha256": "b2701b0b776eb6da89cc80713cf58c3fd7fdfdec67a038f97571fea0f23ba188",
+          "text": "Tabikuko wohnt in Talonobu, Tabikuko ist in Taluvepe."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-044",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tanokihe?",
+      "sources": [
+        {
+          "sourceId": "train-044:s1",
+          "revision": 1,
+          "sha256": "89b4c3f42ccdaaf2ef45cb864d78742bd993463b3c117a2b7de0ebecd5b414ed",
+          "text": "Tanokihe wohnt in Tabanufe."
+        },
+        {
+          "sourceId": "train-044:s2",
+          "revision": 2,
+          "sha256": "39c816b07ae975b85e44207f94c4a2916224c324a2812284e54a8265f7eecd09",
+          "text": "Tanokihe ist in Tapepuvu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-045",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tabocogu?",
+      "sources": [
+        {
+          "sourceId": "train-045:s1",
+          "revision": 1,
+          "sha256": "be4a952c9efbc14ee8ceb512e773fd409c5ea45b5520a8560273458d478a3e6f",
+          "text": "Tabocogu ist in Tacecoma, Tabocogu wohnt in Tasuhugo."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-046",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tavehehu?",
+      "sources": [
+        {
+          "sourceId": "train-046:s1",
+          "revision": 1,
+          "sha256": "167aadfd895856c694e560a0e8dd4c88dff9dd23714c73005e054e6b66e020cf",
+          "text": "Tavehehu ist in Tanuceve."
+        },
+        {
+          "sourceId": "train-046:s2",
+          "revision": 2,
+          "sha256": "f338bf4f8969889b6af5f5012282d866f86b650a23ea43852ea0a4c737f747a2",
+          "text": "Tavehehu lebt in Tavicuti."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-047",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tamefive?",
+      "sources": [
+        {
+          "sourceId": "train-047:s1",
+          "revision": 1,
+          "sha256": "008ed2e66b84deb236725be8e607e862476e5a7ad5a823f2bd3879578be95acc",
+          "text": "Tamefive ist in Takidene, Tamefive wohnt in Tanavefo."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-048",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Tarebame?",
+      "sources": [
+        {
+          "sourceId": "train-048:s1",
+          "revision": 1,
+          "sha256": "73e414855981fdda6caae7ee333a030e9fd8a022d7e3a3a398ee67bce2d754f6",
+          "text": "Tarebame ist in Tabolono."
+        },
+        {
+          "sourceId": "train-048:s2",
+          "revision": 2,
+          "sha256": "0170236d0d1d7416995dbb8088a3189bdd0c9b5f22929d17417b500429e50672",
+          "text": "Tarebame steht in Tamocime."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-049",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Tagaguvu?",
+      "sources": [
+        {
+          "sourceId": "train-049:s1",
+          "revision": 1,
+          "sha256": "0f840232544ed9f52f143d9767bf6c30cc383d4bb4c5d3d0dd0c35227ef74635",
+          "text": "Tagaguvu steht in Tasasuma, Tagaguvu ist in Tabiniki."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-050",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Tavelote?",
+      "sources": [
+        {
+          "sourceId": "train-050:s1",
+          "revision": 1,
+          "sha256": "bd0d9440c1f2139a6d058367a58e8c633cb31f01dee513fe6b3675db7d00e48a",
+          "text": "Tavelote ist in Tatomuca."
+        },
+        {
+          "sourceId": "train-050:s2",
+          "revision": 2,
+          "sha256": "3051bf6d95735ba7c0b68c0b018071c4ace652239503ef38bfc4f4a7a2228a69",
+          "text": "Tavelote steht in Tamulovu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-051",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Takelesi?",
+      "sources": [
+        {
+          "sourceId": "train-051:s1",
+          "revision": 1,
+          "sha256": "d3007b7da7e1bc3ebfeba6cfd13735628e00169ba793eadc1e2c4d09e3280deb",
+          "text": "Takelesi ist in Tarecuka, Takelesi wohnt in Takuvaje."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-052",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tatupuba?",
+      "sources": [
+        {
+          "sourceId": "train-052:s1",
+          "revision": 1,
+          "sha256": "cea599ae6aa459994f6ff3b872e453fd1a2e05e110018d22a7d7c640a05b2d22",
+          "text": "Tatupuba ist in Tabujofi."
+        },
+        {
+          "sourceId": "train-052:s2",
+          "revision": 2,
+          "sha256": "37449bff2a5f1b75fa2a96813053707fba7df37176e4ac4760d773a75e074362",
+          "text": "Tatupuba wohnt in Takomopi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-053",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tajeboca?",
+      "sources": [
+        {
+          "sourceId": "train-053:s1",
+          "revision": 1,
+          "sha256": "0f7be986b81c170d2b4a58aa604c52f26bffd49c351b1b8dfa10d4b84765bebf",
+          "text": "Tajeboca lebt in Tadafimi, Tajeboca ist in Tabiboso."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-054",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Takubona?",
+      "sources": [
+        {
+          "sourceId": "train-054:s1",
+          "revision": 1,
+          "sha256": "40dfe5c5432274b4547070d7bc2fac7ebb3162b0a24535cdba29e8c2c4a820ed",
+          "text": "Takubona ist in Takihege."
+        },
+        {
+          "sourceId": "train-054:s2",
+          "revision": 2,
+          "sha256": "cfc74f93068042637a5e6d97bc75cee019069df28cdf3363ca5af0bfe9c49c8d",
+          "text": "Takubona lebt in Tapinaho."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-055",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tahocino?",
+      "sources": [
+        {
+          "sourceId": "train-055:s1",
+          "revision": 1,
+          "sha256": "fa2abd745dd1d7c5ef48826900b05707a0b276b73139f564fdb658fe1e9cd55a",
+          "text": "Tahocino lebt in Taboheci, Tahocino ist in Tatoduhe."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-056",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tafecopa?",
+      "sources": [
+        {
+          "sourceId": "train-056:s1",
+          "revision": 1,
+          "sha256": "3d060537457b052e0b8e9dc2fe4cef1443bc6e2977af10518b05434757074c08",
+          "text": "Tafecopa wohnt in Tagemofi."
+        },
+        {
+          "sourceId": "train-056:s2",
+          "revision": 2,
+          "sha256": "677339b21e42740633d07f1624d092a7e18b990ccaac464145b6bca97300e162",
+          "text": "Tafecopa ist in Tanaguja."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-057",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tacahuci?",
+      "sources": [
+        {
+          "sourceId": "train-057:s1",
+          "revision": 1,
+          "sha256": "053f61c697aa73138931c8895fc9c687599bfe184ddfc8f45f7ec68e090f46e7",
+          "text": "Tacahuci ist in Tajecefe, Tacahuci wohnt in Tapehabi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-058",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Takocuta?",
+      "sources": [
+        {
+          "sourceId": "train-058:s1",
+          "revision": 1,
+          "sha256": "87a2ec247928853bc2686f80a8b41e0f73fc4b7c67626473a9781ade0d6b04f2",
+          "text": "Takocuta ist in Talibaca."
+        },
+        {
+          "sourceId": "train-058:s2",
+          "revision": 2,
+          "sha256": "8411d0bd028fbd7949913950b3c26cbbfd56f3c17c39329932c97728c4dbe4ae",
+          "text": "Takocuta steht in Tasupibo."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-059",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tamukenu?",
+      "sources": [
+        {
+          "sourceId": "train-059:s1",
+          "revision": 1,
+          "sha256": "6b6464532efa636b119662d8acbe9159e0cebebb7309a26309eaf69bde55f73c",
+          "text": "Tamukenu wohnt in Tajaledu, Tamukenu ist in Talikeku."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-060",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Tapetiba?",
+      "sources": [
+        {
+          "sourceId": "train-060:s1",
+          "revision": 1,
+          "sha256": "b1a362703167724c0ec9de9531b0eb468eb652e2cb83a4fd2a03d35dbfdc2901",
+          "text": "Tapetiba ist in Tafoceje."
+        },
+        {
+          "sourceId": "train-060:s2",
+          "revision": 2,
+          "sha256": "66c8ca853c5b7c1c00e28fb262e865e7725add25f64f4214de3049ee90353d6d",
+          "text": "Tapetiba steht in Tadobuhu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-061",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tanesoro?",
+      "sources": [
+        {
+          "sourceId": "train-061:s1",
+          "revision": 1,
+          "sha256": "812d08930058bec8ae3d7f881b281d7600efa69bc66055d653ae14b1b85a3598",
+          "text": "Tanesoro wohnt in Takitete, Tanesoro ist in Tajijuvu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-062",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tafuteso?",
+      "sources": [
+        {
+          "sourceId": "train-062:s1",
+          "revision": 1,
+          "sha256": "96e69b129fb99e4d00600a8e94782f16104b6c818198f39b8c081c7caac94147",
+          "text": "Tafuteso wohnt in Tavivada."
+        },
+        {
+          "sourceId": "train-062:s2",
+          "revision": 2,
+          "sha256": "4e75694e6dae60ba2a78b846992fe1078f253ac1803f1ffc0ec6135e3a202c91",
+          "text": "Tafuteso ist in Tanefili."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-063",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tacepifa?",
+      "sources": [
+        {
+          "sourceId": "train-063:s1",
+          "revision": 1,
+          "sha256": "3305dc2f642569294993d0a55259ed8949b97d5291040a3270e34c1fd2cb7161",
+          "text": "Tacepifa wohnt in Tafasolo, Tacepifa ist in Tarokive."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-064",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Tapesibi?",
+      "sources": [
+        {
+          "sourceId": "train-064:s1",
+          "revision": 1,
+          "sha256": "f68525fb000bc57737d51eb3916a407d99581bf9110cedff40c155a1c299e172",
+          "text": "Tapesibi ist in Tagojimu."
+        },
+        {
+          "sourceId": "train-064:s2",
+          "revision": 2,
+          "sha256": "acd0d06689afb1aa84ace3f3ce194722b317cf7a45ab3d6f76988315847827b9",
+          "text": "Tapesibi steht in Tahufese."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-065",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tasupore?",
+      "sources": [
+        {
+          "sourceId": "train-065:s1",
+          "revision": 1,
+          "sha256": "d6502fae924702311b482aa1912bf7ad1f1411e732fc1c468623eefebfa97e39",
+          "text": "Tasupore lebt in Tadumefu, Tasupore ist in Tajofoce."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-066",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Takudugi?",
+      "sources": [
+        {
+          "sourceId": "train-066:s1",
+          "revision": 1,
+          "sha256": "b10eb6d9d77046e2e03cd76cd6197c32480988cc0e5d0c15d07b49be14606875",
+          "text": "Takudugi wohnt in Takenufe."
+        },
+        {
+          "sourceId": "train-066:s2",
+          "revision": 2,
+          "sha256": "5ba49ad1d320e3b84fe8b534d08e2b68c849790f182e67b5a50eea01b06be6cf",
+          "text": "Takudugi ist in Tanebivu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-067",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tajicesi?",
+      "sources": [
+        {
+          "sourceId": "train-067:s1",
+          "revision": 1,
+          "sha256": "7772824c72402de7750d40b77fbe99d9bb1e9eb13b2baa9eed0e7ac3355c2e13",
+          "text": "Tajicesi ist in Tabuvupo, Tajicesi wohnt in Takesubu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-068",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tafobusi?",
+      "sources": [
+        {
+          "sourceId": "train-068:s1",
+          "revision": 1,
+          "sha256": "2693f4d6c335f8b4f6346f4e04b9570b9a8b62f67d4be6892aef7587a9985ec8",
+          "text": "Tafobusi wohnt in Tacusadu."
+        },
+        {
+          "sourceId": "train-068:s2",
+          "revision": 2,
+          "sha256": "ed6aa1b24dc97d01ccdf6630c3c66c38f5bb9d43f0bfddb1f8bfa72a5e250784",
+          "text": "Tafobusi ist in Taganasa."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-069",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tatetada?",
+      "sources": [
+        {
+          "sourceId": "train-069:s1",
+          "revision": 1,
+          "sha256": "9bc1e92d8a57581a0b1d3534d3da478f1bc28d4f22b917c878f5f1a434cd10ff",
+          "text": "Tatetada ist in Tasitugi, Tatetada wohnt in Tavosohi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-070",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tagolote?",
+      "sources": [
+        {
+          "sourceId": "train-070:s1",
+          "revision": 1,
+          "sha256": "0da8aca8e72b9816e6ea6ac304d7a70d49a2a644f5f173397a6fc5582755645d",
+          "text": "Tagolote ist in Tasajunu."
+        },
+        {
+          "sourceId": "train-070:s2",
+          "revision": 2,
+          "sha256": "c8812f8ad6abaf0ced25df233db7116ed22dcb2f8743fc903ff5c5de114399a3",
+          "text": "Tagolote wohnt in Tacedoni."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-071",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tarefuki?",
+      "sources": [
+        {
+          "sourceId": "train-071:s1",
+          "revision": 1,
+          "sha256": "2ae6add13dce91d51cfa520b63befbae30bd27d9faff9a5f38a5ca20686edfa3",
+          "text": "Tarefuki ist in Tasevaji, Tarefuki wohnt in Tasadivo."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-072",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Tadumojo?",
+      "sources": [
+        {
+          "sourceId": "train-072:s1",
+          "revision": 1,
+          "sha256": "7d3fd18c321b7eadbb60d2c9afaa97158be66dd937de323cf8344276e92415f9",
+          "text": "Tadumojo ist in Taganeso."
+        },
+        {
+          "sourceId": "train-072:s2",
+          "revision": 2,
+          "sha256": "0df15363dc485aeceea0018d45acaa426c89320a3598694c4cff7d0321a23fd3",
+          "text": "Tadumojo lebt in Tacovici."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-073",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tafirado?",
+      "sources": [
+        {
+          "sourceId": "train-073:s1",
+          "revision": 1,
+          "sha256": "214b081adba7a1aeaebb16c89638c3ec096616e8e0d59654550a846c55821bbe",
+          "text": "Tafirado ist in Tahucava, Tafirado wohnt in Tarinapa."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-074",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tagotedi?",
+      "sources": [
+        {
+          "sourceId": "train-074:s1",
+          "revision": 1,
+          "sha256": "4cc249a09f12fe4e8fdd5c4521b5bc1235b40aec2e2510e4274765657489af26",
+          "text": "Tagotedi ist in Tafuvuhi."
+        },
+        {
+          "sourceId": "train-074:s2",
+          "revision": 2,
+          "sha256": "31e4b003690846c32a46ef547cd68bfbc912464bc8626511474a3714860ed036",
+          "text": "Tagotedi wohnt in Tafosuta."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-075",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tahohuda?",
+      "sources": [
+        {
+          "sourceId": "train-075:s1",
+          "revision": 1,
+          "sha256": "b7d8c7bda7676e4ed22b2bb2c92520f002d8c6744a35aab8ab3e88d833eefe28",
+          "text": "Tahohuda ist in Tanekeru, Tahohuda wohnt in Tararoda."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-076",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tacetege?",
+      "sources": [
+        {
+          "sourceId": "train-076:s1",
+          "revision": 1,
+          "sha256": "61975b1dc18cb03ba2cd20e8f8a0bc597b8565da861ff39de9dcbe3f90689998",
+          "text": "Tacetege wohnt in Tacasocu."
+        },
+        {
+          "sourceId": "train-076:s2",
+          "revision": 2,
+          "sha256": "15151912d7ccc30fd668fbd9490ae5f0c438a98061e7c17931b4489f2d2df2ca",
+          "text": "Tacetege ist in Tanujebu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-077",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Tagotobe?",
+      "sources": [
+        {
+          "sourceId": "train-077:s1",
+          "revision": 1,
+          "sha256": "b08b5ef3f0652dc369336ab8d82c3ba85595356445f6439bdea5a48ce4d2304e",
+          "text": "Tagotobe steht in Tabosuke, Tagotobe ist in Talefuja."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-078",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tapiligo?",
+      "sources": [
+        {
+          "sourceId": "train-078:s1",
+          "revision": 1,
+          "sha256": "638cafc2e8c245282b13373f34a2b7298ecbd9155f3f9d46eb6219e77d6937de",
+          "text": "Tapiligo wohnt in Tadorire."
+        },
+        {
+          "sourceId": "train-078:s2",
+          "revision": 2,
+          "sha256": "16b4011f2912253263faa1f6c7b48246c972fe362cacc2afbb6d6acfad570dd6",
+          "text": "Tapiligo ist in Takefuti."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-079",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Tabelafu?",
+      "sources": [
+        {
+          "sourceId": "train-079:s1",
+          "revision": 1,
+          "sha256": "4e77ce00cdf27cc84fb4f32b6cdf18587a05dadfcc4ae2e3df3bad4849d64d30",
+          "text": "Tabelafu wohnt in Tacumoko, Tabelafu ist in Tadisona."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-080",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Tamepinu?",
+      "sources": [
+        {
+          "sourceId": "train-080:s1",
+          "revision": 1,
+          "sha256": "4be5b6a32938e3171f3713ad41a46588a955a0f74892464fa49abca65963013f",
+          "text": "Tamepinu wohnt in Tatajaga."
+        },
+        {
+          "sourceId": "train-080:s2",
+          "revision": 2,
+          "sha256": "42d566dad1942795b812a7d51224b4831411285b4e03da6c237b47199bccf9a1",
+          "text": "Tamepinu ist in Tapokoma."
+        }
+      ],
+      "expected": null
+    }
+  ]
+}

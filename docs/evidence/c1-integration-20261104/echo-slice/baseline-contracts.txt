@@ -1,0 +1,35 @@
+✔ existing profile port selects distinct immutable identities without changing task budget (15.750692ms)
+✔ copied JSON and unregistered identities cannot acquire assignment origin (1.429489ms)
+✔ same builder/verifier and unsupported stage are rejected (4.931656ms)
+✔ prepared task fingerprint and canonical task cannot be exchanged (0.970329ms)
+✔ rename retains identity; removal and workspace change invalidate current association (1.981429ms)
+✔ replacing the external store method cannot substitute the admitted reader (4.661309ms)
+✔ profile model cap restricts task and a later budget reduction revokes the association (1.040664ms)
+✔ bot execution requires actual admitted isolation before reading journals or invoking provider (1.123419ms)
+✔ Echo executes deterministic canonical report without extra model call, journal mutation or owner text (3305.003217ms)
+✔ reporter must still exist; rename preserves stable identity (39.8885ms)
+✔ current prepared grant fingerprint cannot be replaced (0.803658ms)
+✔ changed source is blocked before a success report (13.176049ms)
+✔ tampered canonical journal MAC cannot be summarized (8.775344ms)
+✔ owner abort cannot be promoted to confirmed success (11.224381ms)
+✔ missing or modified execution receipt invalidates confirmed result (45.996522ms)
+✔ modified report artifact is rejected rather than silently overwritten (62.721479ms)
+✔ assignment expiry blocks reporter with no additional inference (0.691018ms)
+✔ typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source (3493.304853ms)
+✔ private durable config keeps service, project, model and profile identities separate (29.876584ms)
+✔ read-only status leaves unstarted state byte-identical and cannot create canonical keys (11.411642ms)
+✔ public permissions, symlinks, hardlinks and oversized private files fail closed (1.641707ms)
+✔ runtime configuration rejects unknown cloud controls and nonreviewed model hashes (1.197891ms)
+✔ bounded inbox rejects duplicate identities, unknown delivery states and excess records (8.240235ms)
+✔ profile bridge code change invalidates its pinned artifact (10.611208ms)
+✔ source/profile overlap and artificial unbounded queue limits are rejected (18.253375ms)
+✔ inherited cloud flags and Node injection never reach the worker environment (14.244359ms)
+✔ process identity binds boot and kernel start ticks, never a PID alone (1.995149ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8127.649711

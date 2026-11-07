@@ -1,0 +1,26 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=45931 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45931 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.OwnerAppActionWorkSceneUiTest#chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult
+.
+Time: 19.394
+
+OK (1 test)
+
+CASE at.heinz.deviceai.OwnerAppActionWorkSceneUiTest#stopBeforePostedBackendStartCannotReopenScene
+.
+Time: 1.536
+
+OK (1 test)
+
+CASE at.heinz.deviceai.OwnerAppActionWorkSceneUiTest#foregroundLaunchKeepsActualResultForReturn
+.
+Time: 2.752
+
+OK (1 test)
+
+CASE at.heinz.deviceai.OwnerAppActionWorkSceneUiTest#missingAppAndPermissionNeverBecomeSuccessText
+.
+Time: 1.791
+
+OK (1 test)
+
+TOTAL tests=4 failures=0

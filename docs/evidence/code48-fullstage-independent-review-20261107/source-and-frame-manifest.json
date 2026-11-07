@@ -1,0 +1,192 @@
+{
+  "evidenceClass": "REAL_ACTIVITY_NATIVE_ANDROID_CANVAS_SYNTHETIC_MEMORY_EVENTS",
+  "testCommit": "17890105fc47dfbd14001ebbe2e9be8c149b007c",
+  "baselineCompiledCommit": "d73fc46b5a14ea5fc3b82a3bd3b96cacebe7d4de",
+  "fiveCaseProductionCommit": "284716538321cdf2d1f109aa57cf33eec907a64c",
+  "finalPositiveProductionCommit": "a16e36bf97504a1423c1bc2fae1d7b038907ddfd",
+  "physicalDeviceTested": false,
+  "filamentGpuPixelsTested": false,
+  "completeFramesLocalPath": "/workspace/scratch/3d1967be6193/qa/fullstage-review/final-evidence/frames/fullstage-native-activity",
+  "sampleIntervalMs": 220,
+  "durationSampledMs": 5060,
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "15abd69ca6d6dadf17d46e2bb83e4a0ca00f4ba9f6ed8e2955f1ac07bec727da",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt": "8acf6133f8869ff5f962c3a266d2d38c15d988d24f58ee674ece23e4bd229eea",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt": "10ec28048f1c6ed70d54a875d0f3dfd73089fa2454fc085631c14edda6b46712",
+    "app/src/main/java/at/heinz/deviceai/ui/video3/Video3WarpScene.kt": "6fd8bd37cfea684ce2eefb21cab285bd6cabe6df9dfb0a3f2845dc8caa481ccf",
+    "app/src/main/java/at/heinz/deviceai/ui/video3/Video3FileTunnel.kt": "a2e59a8c69a4a66c175bce73077349b3bbd630a76c8dc9b56e91c050de8dd098",
+    "app/src/main/java/at/heinz/deviceai/ui/video3/Video3MemoryScene.kt": "b81563d4b46b9b1d46a46aa57b3cd588291d013dd97cfa91716bfac29aa29a35",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt": "4b926e83c22da4d1fa0d16f3d26d6d89945a42ccf7ad64cfd1110eeca619a468",
+    "app/src/uiTest/java/at/heinz/deviceai/FullStageMemoryReviewUiTest.kt": "16cef342bb37e8e8a650a625c9655ddfa7bef51ffbedff99d721a2043501a218"
+  },
+  "frames": [
+    {
+      "name": "frame-00.png",
+      "sampleOffsetMs": 0,
+      "bytes": 1049552,
+      "sha256": "d7543769406f9b42c9f9887bc24f31825a70f676c049c7e2d96a03283b6073c0",
+      "committedSample": false
+    },
+    {
+      "name": "frame-01.png",
+      "sampleOffsetMs": 220,
+      "bytes": 619951,
+      "sha256": "bcc75b4f31ec3160c7e8d8e81d412f41852fb888095013acff0c57d77e30a6ea",
+      "committedSample": false
+    },
+    {
+      "name": "frame-02.png",
+      "sampleOffsetMs": 440,
+      "bytes": 622495,
+      "sha256": "b5d7304b6995a29da21a277f6b010dc695edacd1a7e95280c7f152d0baf4e843",
+      "committedSample": false
+    },
+    {
+      "name": "frame-03.png",
+      "sampleOffsetMs": 660,
+      "bytes": 628248,
+      "sha256": "7b7b65b7b5b950ac1169afe4c0c791fa4e4b9dc09bd9c427180a9659b9e9abec",
+      "committedSample": false
+    },
+    {
+      "name": "frame-04.png",
+      "sampleOffsetMs": 880,
+      "bytes": 658360,
+      "sha256": "4bad62cbd7d920e52dcd4983e80ad1e45b02485a7938397d889d3219f611a3a2",
+      "committedSample": false
+    },
+    {
+      "name": "frame-05.png",
+      "sampleOffsetMs": 1100,
+      "bytes": 652595,
+      "sha256": "14c303566ee85dca51eebdcc8df5f74ec16570a5aaed4ac78d41020b09382ece",
+      "committedSample": false
+    },
+    {
+      "name": "frame-06.png",
+      "sampleOffsetMs": 1320,
+      "bytes": 652457,
+      "sha256": "9dee705fa104943371afaf767eb01f028c87658ad2a359272e3fda077fc75ae0",
+      "committedSample": false
+    },
+    {
+      "name": "frame-07.png",
+      "sampleOffsetMs": 1540,
+      "bytes": 653584,
+      "sha256": "06466718c7e6a2a314cb52fbee840c32855d779e1ce8f32679a4adabb143c486",
+      "committedSample": false
+    },
+    {
+      "name": "frame-08.png",
+      "sampleOffsetMs": 1760,
+      "bytes": 655113,
+      "sha256": "1ee1bab754fd2ac330480aa94725e6663ec540be24d5ad94e5a5c97be4aa5f89",
+      "committedSample": false
+    },
+    {
+      "name": "frame-09.png",
+      "sampleOffsetMs": 1980,
+      "bytes": 695881,
+      "sha256": "c78fb96f0c498463208a283ac42b1797234ea6f1d3ffff748648d8696cfc42e5",
+      "committedSample": false
+    },
+    {
+      "name": "frame-10.png",
+      "sampleOffsetMs": 2200,
+      "bytes": 857224,
+      "sha256": "03e5efe8061f98f9c3d9ffd64aba22e96562970d5e3a3843911c3ef6f0a7d4dc",
+      "committedSample": false
+    },
+    {
+      "name": "frame-11.png",
+      "sampleOffsetMs": 2420,
+      "bytes": 972603,
+      "sha256": "9ce3698aaa2bc43fe326af74f3ca607b4efac2ff30049bf857c8cd6e904fc819",
+      "committedSample": false
+    },
+    {
+      "name": "frame-12.png",
+      "sampleOffsetMs": 2640,
+      "bytes": 974428,
+      "sha256": "13cab1f6e46f468f31cbcf1ceb205dd01a5f3259617f662110113bc847c95d0b",
+      "committedSample": false
+    },
+    {
+      "name": "frame-13.png",
+      "sampleOffsetMs": 2860,
+      "bytes": 975033,
+      "sha256": "bc70c290cf70ba4b39c5b28adf639efb24b097860515e9404e2904c056322626",
+      "committedSample": false
+    },
+    {
+      "name": "frame-14.png",
+      "sampleOffsetMs": 3080,
+      "bytes": 975555,
+      "sha256": "229aa3aa75983c5ade7daae3f8ea17498a6e66250e275274a7c3178d7a7ea8f7",
+      "committedSample": false
+    },
+    {
+      "name": "frame-15.png",
+      "sampleOffsetMs": 3300,
+      "bytes": 975541,
+      "sha256": "d77c7bbac7d665505848ec4fc5be5477330e82fe064d3a724031a3679b6d8a00",
+      "committedSample": false
+    },
+    {
+      "name": "frame-16.png",
+      "sampleOffsetMs": 3520,
+      "bytes": 976929,
+      "sha256": "1d3190465dc155dffd98642431a83c1510cbdf219ea071ad86ac4ed9a013a854",
+      "committedSample": false
+    },
+    {
+      "name": "frame-17.png",
+      "sampleOffsetMs": 3740,
+      "bytes": 975234,
+      "sha256": "c539a79cec494c01d617767274d2970df2854da2e57e03eab222beafa9a8ecd1",
+      "committedSample": false
+    },
+    {
+      "name": "frame-18.png",
+      "sampleOffsetMs": 3960,
+      "bytes": 964702,
+      "sha256": "79fd2de0003a9353799d04c8bb9c123d4019bf767f976648f69e8d00c3d2fefe",
+      "committedSample": false
+    },
+    {
+      "name": "frame-19.png",
+      "sampleOffsetMs": 4180,
+      "bytes": 1000661,
+      "sha256": "0359e68e2261c153cec2baa6dae1a40c895fa42289c83a2c683811bb3adddd34",
+      "committedSample": false
+    },
+    {
+      "name": "frame-20.png",
+      "sampleOffsetMs": 4400,
+      "bytes": 1043331,
+      "sha256": "1daff77a1f9521a7ae5a4c330f9f9e6349017331da1c50c01729e10172414ef0",
+      "committedSample": false
+    },
+    {
+      "name": "frame-21.png",
+      "sampleOffsetMs": 4620,
+      "bytes": 1070030,
+      "sha256": "20ba489bf492ce8d659ee06cd45db84df55ca1a1f74f1fc850b6b4232d31e695",
+      "committedSample": false
+    },
+    {
+      "name": "frame-22.png",
+      "sampleOffsetMs": 4840,
+      "bytes": 1097454,
+      "sha256": "5967a74a6e824d0dcc8205851e39c4745e97d169374a1cc0cd70b811fc17bd43",
+      "committedSample": false
+    },
+    {
+      "name": "frame-23.png",
+      "sampleOffsetMs": 5060,
+      "bytes": 1096824,
+      "sha256": "d7afb3eb683a2cccb7a046e377afac9a433c8fc37f52e9dcb33f0a1821f20aab",
+      "committedSample": false
+    }
+  ]
+}

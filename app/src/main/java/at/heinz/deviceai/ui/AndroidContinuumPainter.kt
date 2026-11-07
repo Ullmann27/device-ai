@@ -2,6 +2,8 @@ package at.heinz.deviceai.ui
 
 import android.content.res.AssetManager
 import android.graphics.Canvas
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
@@ -22,6 +24,22 @@ class AndroidContinuumPainter(private val assets: AssetManager) : ContinuumPaint
     private val rect = RectF()
     private val shaders = IdentityHashMap<Fill, Shader>()
     private val paths = IdentityHashMap<VectorPath, Pair<Int, Path>>()
+    private val rasters = HashMap<String, Bitmap?>()
+
+    override fun drawRaster(assetPath: String, left: Float, top: Float, right: Float, bottom: Float, alpha: Float): Boolean {
+        if (right <= left || bottom <= top || alpha <= 0f) return true
+        if (!assetPath.startsWith("jarvis-reference/") || ".." in assetPath) return false
+        val bitmap = if (rasters.containsKey(assetPath)) rasters[assetPath] else {
+            if (rasters.size >= 8) return false
+            runCatching { assets.open(assetPath).use { BitmapFactory.decodeStream(it) } }.getOrNull()
+                .also { rasters[assetPath] = it }
+        } ?: return false
+        paint.shader = null; paint.style = Paint.Style.FILL; paint.alpha = (255 * alpha.coerceIn(0f, 1f)).toInt()
+        paint.isFilterBitmap = true
+        rect.set(left, top, right, bottom)
+        canvas.drawBitmap(bitmap, null, rect, paint)
+        return true
+    }
 
     private val additiveMode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.ADD)
 
@@ -36,6 +54,9 @@ class AndroidContinuumPainter(private val assets: AssetManager) : ContinuumPaint
     override fun setAdditive(on: Boolean) { paint.xfermode = if (on) additiveMode else null }
 
     override fun save() { canvas.save() }
+    override fun saveAlpha(alpha: Float) {
+        canvas.saveLayerAlpha(null, (alpha.coerceIn(0f, 1f) * 255f + .5f).toInt())
+    }
     override fun restore() { canvas.restore() }
     override fun translate(dx: Float, dy: Float) = canvas.translate(dx, dy)
     override fun scale(sx: Float, sy: Float, px: Float, py: Float) = canvas.scale(sx, sy, px, py)

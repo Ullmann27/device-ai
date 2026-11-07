@@ -1,0 +1,172 @@
+[
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s7_pending_agentMessagesUrgentWakesInfoWaits",
+    "message": null,
+    "text": null,
+    "reason": "PENDING Punkt 7 (Continuum 1): Keine Agent-zu-Agent-Nachrichten mit Stufen dringend/Info auf #373.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+    "line": 384,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s4b_pending_profileDiarySharedLayers",
+    "message": null,
+    "text": null,
+    "reason": "PENDING Punkt 4 (Continuum Gedaechtnis): Schichten Profil/Tagebuch/geteiltes Wissen fuer alle Agenten gibt es auf #373 nicht als API. Vorhanden sind nur MemoryType (SELF/EPISODIC/SEMANTIC) und HybridMemoryRetriever; ein agentenuebergreifender Speicher fehlt.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+    "line": 337,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+    "message": null,
+    "text": null,
+    "reason": "PENDING Punkt 8 (REPERATEUR): ConstrainedResourceFabric ist im Produktivcode nirgends aufgerufen (nur Tests). Es fehlt die Verdrahtung des RAM-/Temperatur-/Nutzungslimitwaechters vor Modell-/Arbeiterstart.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+    "line": 439,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s5b_pending_textFileSkillLibraryLoadedOnDemand",
+    "message": null,
+    "text": null,
+    "reason": "PENDING Punkt 5 (Continuum Gedaechtnis): Faehigkeiten-Bibliothek als Textdatei (Name + wann benutzen + Anleitung), bei Bedarf geladen, existiert auf #373 nicht.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+    "line": 366,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s6_pending_routineReportsOnlyWhenSomethingIsNew",
+    "message": null,
+    "text": null,
+    "reason": "PENDING Punkt 6 (Continuum 1): Kein Routinen-Speicher mit Zeitplan/Ausloeser und 'nur bei Neuem melden'. Vorhandene learning/*Scheduler sind Lern-/Studienjobs, keine Nutzer-Routinen.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+    "line": 375,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+    "message": null,
+    "text": null,
+    "reason": "PENDING ...SCHARF:e2echief-e2efakeget_battery_infofakeAkku: ${obs.last().output}81 %Wie ist mein Akkustand?Akku: 81 %fakeGuten Morgen, Heinz.kein Werkzeug erwartetGuten MorgenGuten Morgen, Heinz.verifiziertslowget_storage_info64 GB freiworker-1Analysiere den Speicher gruendlichArbeiter hat das Modell nicht erreichtfakeEs ist 14:35.unusedchief-quickWie spaet ist es?Es ist 14:35.Schnelle Antwort darf nicht auf den Arbeiter wartenNach Abbruch darf kein Werkzeug laufenPENDING Punkt 2 (HAUPT): Es gibt noch keine Chief/Arbeiter-API mit eigenem Auftrag, eigener Werkzeug-Whitelist und strukturiertem Bericht zurueck. Heute ist ein 'Arbeiter' nur ein zweiter BoundedAgentOrchestrator-Lauf; docs/CHIEF-PATTERN.md existiert auf #373 noch nicht.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+    "line": 64,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+    "name": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+    "message": null,
+    "text": null,
+    "reason": "CONTINUUM_WORKSPACE_CHIEF_HOST_PROOF != 1; no actual Docker host proof enabled in this Gradle run. This lane did not execute containers during the Android gate.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringHostTest.kt",
+    "line": 78,
+    "kind": "external host gate"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+    "name": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+    "message": null,
+    "text": null,
+    "reason": "CONTINUUM_WORKSPACE_CHIEF_HOST_PROOF != 1; no actual Docker host proof enabled in this Gradle run. This lane did not execute containers during the Android gate.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringHostTest.kt",
+    "line": 78,
+    "kind": "external host gate"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+    "message": null,
+    "text": null,
+    "reason": "PENDING – wartet auf REPERATEUR: S4-Injektionsschutz + Freigabe-Gate in der Schleife (Klasse/Methode im Integrationszweig noch nicht vorhanden).",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+    "line": 199,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+    "message": null,
+    "text": null,
+    "reason": "PENDING – wartet auf <Bot>: <Klasse/Methode>Ziel: Schaffe Platz im Download-Ordner, ohne etwas zu loeschen.mem-archivDownload-Ordner: grosse Dateien bitte nach /sdcard/Archiv verschieben, nie loeschenmem-katzeDie Katze heisst Mimiskriptget_large_filesrootsDownloadlimitget_large_filesskriptmove_filesource/sdcard/Download/film.mp4destination/sdcard/Archiv/film.mp4move_fileskriptVerschoben: film.mp4 (2,1 GB) nach Archiv. Naechster Schritt: Rest pruefen.Nicht verschoben – keine Freigabe. Naechster Schritt: auf deine Entscheidung warten.get_large_files/sdcard/Download/film.mp4 2.1GBmove_filemoved /sdcard/Download/film.mp4 -> /sdcard/Archiv/film.mp4unerwartet: ${call.name}Verschobenpruefungdenk-${if (ownerSaysYes)  else }PENDING – wartet auf HAUPT: chief/TurnLifecycle.acknowledge()/deliver() (PR #379, continuum/haupt-chief-pattern-20261103) ist noch nicht im Integrationszweig.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+    "line": 45,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+    "message": null,
+    "text": null,
+    "reason": "PENDING – wartet auf HAUPT (Merge #379) + Lumo: Aufgabenschleife als ChiefWorkerPool-Job in chief/ (WorkerBrief/WorkerScope.runner/model) mit Geraetewerkzeugen nur im Job-Scope.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+    "line": 191,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt6b_lernen_hypotheseUndTagebuchEintrag",
+    "message": null,
+    "text": null,
+    "reason": "PENDING – wartet auf Continuum Gedaechtnis: Reflexionsschritt 'was habe ich gelernt' -> Hypothesen-Speicher + datierter Tagebuch-Eintrag pro Schleifenschritt (keine Klasse im Integrationszweig).",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+    "line": 246,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+    "message": null,
+    "text": null,
+    "reason": "PENDING – wartet auf Continuum Gedaechtnis + HAUPT: MemoryLayers.shared()/search() und Anbindung 'jeder Schleifenschritt liest relevantes Gedaechtnis' existieren in keinem Zweig.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+    "line": 160,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+    "message": null,
+    "text": null,
+    "reason": "PENDING – wartet auf Lumo: Aufgabenschleife (chief/) muss einen strukturierten naechsten Schritt liefern und selbststaendig den naechsten Durchlauf anstossen; heute steht er nur im Modelltext.",
+    "source": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+    "line": 264,
+    "kind": "historical @Ignore placeholder"
+  },
+  {
+    "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+    "name": "actualNodeKotlinNodeTrainingParity",
+    "message": null,
+    "text": null,
+    "reason": "CONTINUUM_CONTRASTIVE_PARITY_DIR not supplied to this Gradle run; Node-produced training fixture required.",
+    "source": "app/src/test/java/at/heinz/deviceai/learning/ContinuumContrastiveParityTest.kt",
+    "line": 28,
+    "kind": "external parity fixture gate"
+  },
+  {
+    "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+    "name": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+    "message": null,
+    "text": null,
+    "reason": "CONTINUUM_CONTRASTIVE_PARITY_DIR not supplied to this Gradle run; Node-produced training fixture required.",
+    "source": "app/src/test/java/at/heinz/deviceai/learning/ContinuumContrastiveParityTest.kt",
+    "line": 89,
+    "kind": "external parity fixture gate"
+  },
+  {
+    "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+    "name": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+    "message": null,
+    "text": null,
+    "reason": "CONTINUUM_CRE1_PARITY_DIR not supplied to this Gradle run; trained Node checkpoint fixture required.",
+    "source": "app/src/test/java/at/heinz/deviceai/learning/Cre1InferenceEncoderTest.kt",
+    "line": 22,
+    "kind": "external parity fixture gate"
+  }
+]

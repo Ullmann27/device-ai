@@ -101,11 +101,16 @@ class UntrustedResearchEvidenceTest {
         )
 
         assertTrue(compiled.text.contains("<<<UNTRUSTED_EVIDENCE>>>"))
-        assertTrue(compiled.text.contains("[TRUNCATED]"))
+        // The compiler now preserves a complete sanitized evidence unit. Requiring
+        // clipping here would reintroduce suffix loss; keep every injection assertion
+        // below and additionally require the entire sanitized hostile literal.
+        assertFalse(compiled.text.contains("[TRUNCATED]"))
+        assertTrue(compiled.text.contains("<<<UNTRUSTED_EVIDENCE>>>" +
+            sanitizeUntrustedResearchText(hostile, hostile.length * 20) + "\n<<<END_UNTRUSTED_EVIDENCE>>>"))
         assertTrue(compiled.text.contains("[U+202E]"))
         assertTrue(compiled.text.contains("[U+200B]"))
         assertTrue(compiled.text.contains("[U+0000]"))
-        assertTrue(compiled.truncated)
+        assertTrue(compiled.text.toByteArray(Charsets.UTF_8).size <= 6000)
         assertTrue(compiled.text.contains("identity_generation=${setup.identity.generation}"))
         assertTrue(compiled.text.contains("governance_version=${setup.seed.governanceVersion.value}"))
         assertFalse(compiled.text.substringBefore("## USER REQUEST").contains("identity_generation=999"))

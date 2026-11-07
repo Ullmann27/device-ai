@@ -1,0 +1,12 @@
+✔ S09: cancellation of a real dispatched child reaches the canonical task and cannot become late success (7336.418948ms)
+✔ S10: actual daemon crash after dispatch preserves UNKNOWN and never restarts the claimed work (6293.128766ms)
+✔ S02 supplement: per-UID admission excludes a second different project and state directory until verified stop (6001.911906ms)
+✔ S10 supplement: per-UID admission retains a live orphan across different project and state directories (8427.595221ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 28137.227588

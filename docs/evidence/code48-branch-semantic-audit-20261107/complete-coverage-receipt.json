@@ -1,0 +1,39 @@
+{
+  "recordedAt": "2026-11-07T06:50:20.436180+00:00",
+  "sourceCommit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "sourceTree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "initialInventorySource": "f55d5b3c7134399f93362c304da344f807719202",
+  "initialInventoryAt": "2026-11-07T04:27:34.314229+00:00",
+  "branchHeadsInventoried": 653,
+  "initialBranchClasses": {
+    "divergent": 321,
+    "ancestor": 328,
+    "unresolved": 4
+  },
+  "independentHeadsResolved": 4,
+  "independentHeadInspection": "Commit/tree/path metadata only; no model/state/blob content read",
+  "originalMissingPathUnion": 125,
+  "androidMapped": 56,
+  "nonAndroidMapped": 69,
+  "nonAndroidGroups": {
+    "nonandroid-learning": 29,
+    "nonandroid-orchestration": 22,
+    "nonandroid-release-device": 18
+  },
+  "missingAssignments": [],
+  "duplicateAssignments": [],
+  "unexpectedAssignments": [],
+  "originalPathsNowPresent": [
+    "app/src/main/java/at/heinz/deviceai/ui/video3/Video3WarpScene.kt"
+  ],
+  "oldNamesStillAbsent": 124,
+  "wholeBranchesSemanticallyAccepted": false,
+  "allHistoricalCallersReviewed": false,
+  "sourceExecutionInStaticAudits": false,
+  "androidAuditSource": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "productionDeltaToFinal": [
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt"
+  ],
+  "carryForwardScope": "The only later production diff repairs the existing Home notice API layout/geometry/Z; no memory scene/event routing or other Android matrix module changed. Matrix source remains explicitly 3ff; path presence rechecked on 5d.",
+  "historicalCallerLimitation": "Release/device audit: 18 of 20 historical caller searches had unavailable additional local blobs; all 20 original script blobs were read. Other audits declare their targeted caller scope."
+}

@@ -1,0 +1,13 @@
+{
+  "productionSourceCommit": "26555aa6c59fdd4dd2e190defcdf49b983305555",
+  "independent": false,
+  "exitCode": 1,
+  "tests": 4,
+  "pass": 1,
+  "fail": 3,
+  "skip": 0,
+  "initialTestSha256": "ce056c2dae0767c51b2f6380a8ea326fd588be859d9855a4b42eb7cdaaf4d79d",
+  "rawLogSha256": "22e811f87057c33397964f29cce0f1a56325f99bb104a9dd750d1e8fda1ae6af",
+  "interpretation": "AA and O double-add the shared opening; an active opening cue does not move the inner jaw. Initial total-deformation bound conflates independent O-pursing movement with the shared mouth-open basis; corrected explicitly before candidate implementation.",
+  "device": "NOT_RUN"
+}

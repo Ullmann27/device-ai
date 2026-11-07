@@ -1,0 +1,2174 @@
+{
+  "schema": "CDX2_BLIND_SCORE_V1",
+  "cases": 55,
+  "splits": {
+    "PRIMARY": {
+      "RAW": {
+        "supported": 20,
+        "exactSupported": 20,
+        "missing": 5,
+        "correctAbstentions": 5,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "primaryGate": true
+      },
+      "VERIFIED": {
+        "supported": 20,
+        "exactSupported": 20,
+        "missing": 5,
+        "correctAbstentions": 5,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "primaryGate": true
+      },
+      "RULE": {
+        "supported": 20,
+        "exactSupported": 20,
+        "missing": 5,
+        "correctAbstentions": 5,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "primaryGate": true
+      }
+    },
+    "ADVERSARIAL": {
+      "RAW": {
+        "supported": 10,
+        "exactSupported": 10,
+        "missing": 20,
+        "correctAbstentions": 10,
+        "unsupportedPositive": 10,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.7224672001371218,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.29929800819821695,
+          0.700701991801783
+        ],
+        "primaryGate": false
+      },
+      "VERIFIED": {
+        "supported": 10,
+        "exactSupported": 10,
+        "missing": 20,
+        "correctAbstentions": 20,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.7224672001371218,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "primaryGate": false
+      },
+      "RULE": {
+        "supported": 10,
+        "exactSupported": 10,
+        "missing": 20,
+        "correctAbstentions": 20,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.7224672001371218,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "primaryGate": false
+      }
+    }
+  },
+  "records": [
+    {
+      "id": "holdout-d-001",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-001:s1",
+        "revision": 1,
+        "sha256": "6d13abec3f2e8463ef7a047b69c53ddb5585f3d5de5f77883e088fc2a2916249",
+        "text": "EDanehado",
+        "start": 17,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-001:s1",
+          "decision": "SPAN",
+          "sha256": "6d13abec3f2e8463ef7a047b69c53ddb5585f3d5de5f77883e088fc2a2916249",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDanehado",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-001:s1",
+          "decision": "SPAN",
+          "sha256": "6d13abec3f2e8463ef7a047b69c53ddb5585f3d5de5f77883e088fc2a2916249",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDanehado",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-001:s1",
+          "decision": "SPAN",
+          "sha256": "6d13abec3f2e8463ef7a047b69c53ddb5585f3d5de5f77883e088fc2a2916249",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDanehado",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-002",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-002:s1",
+        "revision": 1,
+        "sha256": "5b7708a59b2aa1628f485a4848b2d548c1cf8e80473dca24666d644c59c369bc",
+        "text": "EDapefoco",
+        "start": 17,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-002:s1",
+          "decision": "SPAN",
+          "sha256": "5b7708a59b2aa1628f485a4848b2d548c1cf8e80473dca24666d644c59c369bc",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDapefoco",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-002:s1",
+          "decision": "SPAN",
+          "sha256": "5b7708a59b2aa1628f485a4848b2d548c1cf8e80473dca24666d644c59c369bc",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDapefoco",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-002:s1",
+          "decision": "SPAN",
+          "sha256": "5b7708a59b2aa1628f485a4848b2d548c1cf8e80473dca24666d644c59c369bc",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDapefoco",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-003",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-003:s1",
+        "revision": 1,
+        "sha256": "060b16c61d955618f8e0864d5d8d5fd5b07130d7872d281cc0d66fc331b77431",
+        "text": "EDacidufo",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-003:s1",
+          "decision": "SPAN",
+          "sha256": "060b16c61d955618f8e0864d5d8d5fd5b07130d7872d281cc0d66fc331b77431",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDacidufo",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-003:s1",
+          "decision": "SPAN",
+          "sha256": "060b16c61d955618f8e0864d5d8d5fd5b07130d7872d281cc0d66fc331b77431",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDacidufo",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-003:s1",
+          "decision": "SPAN",
+          "sha256": "060b16c61d955618f8e0864d5d8d5fd5b07130d7872d281cc0d66fc331b77431",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDacidufo",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-004",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-004:s1",
+        "revision": 1,
+        "sha256": "ab1fe3e618723b578623784a5b169f6cf3dceffaf696cadb4ac11b0d2af33431",
+        "text": "EDaserogu",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-004:s1",
+          "decision": "SPAN",
+          "sha256": "ab1fe3e618723b578623784a5b169f6cf3dceffaf696cadb4ac11b0d2af33431",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDaserogu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-004:s1",
+          "decision": "SPAN",
+          "sha256": "ab1fe3e618723b578623784a5b169f6cf3dceffaf696cadb4ac11b0d2af33431",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDaserogu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-004:s1",
+          "decision": "SPAN",
+          "sha256": "ab1fe3e618723b578623784a5b169f6cf3dceffaf696cadb4ac11b0d2af33431",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDaserogu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-005",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-005:s1",
+        "revision": 1,
+        "sha256": "ba68bb7eec0a9265f132a078d3169a9a440a1a9f4e06b104c3fe17fc6fbc5ad3",
+        "text": "EDapelani",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-005:s1",
+          "decision": "SPAN",
+          "sha256": "ba68bb7eec0a9265f132a078d3169a9a440a1a9f4e06b104c3fe17fc6fbc5ad3",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDapelani",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-005:s1",
+          "decision": "SPAN",
+          "sha256": "ba68bb7eec0a9265f132a078d3169a9a440a1a9f4e06b104c3fe17fc6fbc5ad3",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDapelani",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-005:s1",
+          "decision": "SPAN",
+          "sha256": "ba68bb7eec0a9265f132a078d3169a9a440a1a9f4e06b104c3fe17fc6fbc5ad3",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDapelani",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-006",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-006:s1",
+        "revision": 1,
+        "sha256": "3ed587cf2c410ebfa7dd9f42bd35a549f654c08d9aba7db78af5872b48a880b7",
+        "text": "EDahacibi",
+        "start": 17,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-006:s1",
+          "decision": "SPAN",
+          "sha256": "3ed587cf2c410ebfa7dd9f42bd35a549f654c08d9aba7db78af5872b48a880b7",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDahacibi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-006:s1",
+          "decision": "SPAN",
+          "sha256": "3ed587cf2c410ebfa7dd9f42bd35a549f654c08d9aba7db78af5872b48a880b7",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDahacibi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-006:s1",
+          "decision": "SPAN",
+          "sha256": "3ed587cf2c410ebfa7dd9f42bd35a549f654c08d9aba7db78af5872b48a880b7",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDahacibi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-007",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-007:s1",
+        "revision": 1,
+        "sha256": "1060d9d5f522a2b12f57c2baabef4473e0285b4f5c0b72a52e586db60078154d",
+        "text": "EDaruluke",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-007:s1",
+          "decision": "SPAN",
+          "sha256": "1060d9d5f522a2b12f57c2baabef4473e0285b4f5c0b72a52e586db60078154d",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDaruluke",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-007:s1",
+          "decision": "SPAN",
+          "sha256": "1060d9d5f522a2b12f57c2baabef4473e0285b4f5c0b72a52e586db60078154d",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDaruluke",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-007:s1",
+          "decision": "SPAN",
+          "sha256": "1060d9d5f522a2b12f57c2baabef4473e0285b4f5c0b72a52e586db60078154d",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDaruluke",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-008",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-008:s1",
+        "revision": 1,
+        "sha256": "6741b71fa0d417a4046a5e6a590bc8f20a493dab102ab15cab7886e4f26fef41",
+        "text": "EDavaripu",
+        "start": 17,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-008:s1",
+          "decision": "SPAN",
+          "sha256": "6741b71fa0d417a4046a5e6a590bc8f20a493dab102ab15cab7886e4f26fef41",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDavaripu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-008:s1",
+          "decision": "SPAN",
+          "sha256": "6741b71fa0d417a4046a5e6a590bc8f20a493dab102ab15cab7886e4f26fef41",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDavaripu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-008:s1",
+          "decision": "SPAN",
+          "sha256": "6741b71fa0d417a4046a5e6a590bc8f20a493dab102ab15cab7886e4f26fef41",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDavaripu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-009",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-009:s1",
+        "revision": 1,
+        "sha256": "80ecf191bb20fc32e52c3d3f8ccd1d28ad6ad00435447d4912b973a55020c876",
+        "text": "EDadelupi",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-009:s1",
+          "decision": "SPAN",
+          "sha256": "80ecf191bb20fc32e52c3d3f8ccd1d28ad6ad00435447d4912b973a55020c876",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDadelupi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-009:s1",
+          "decision": "SPAN",
+          "sha256": "80ecf191bb20fc32e52c3d3f8ccd1d28ad6ad00435447d4912b973a55020c876",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDadelupi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-009:s1",
+          "decision": "SPAN",
+          "sha256": "80ecf191bb20fc32e52c3d3f8ccd1d28ad6ad00435447d4912b973a55020c876",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDadelupi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-010",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-010:s1",
+        "revision": 1,
+        "sha256": "4a16f16ceca49eb927763a4e00aa803791cb3e3d35df656439064596639cd260",
+        "text": "EDadoneva",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-010:s1",
+          "decision": "SPAN",
+          "sha256": "4a16f16ceca49eb927763a4e00aa803791cb3e3d35df656439064596639cd260",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDadoneva",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-010:s1",
+          "decision": "SPAN",
+          "sha256": "4a16f16ceca49eb927763a4e00aa803791cb3e3d35df656439064596639cd260",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDadoneva",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-010:s1",
+          "decision": "SPAN",
+          "sha256": "4a16f16ceca49eb927763a4e00aa803791cb3e3d35df656439064596639cd260",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDadoneva",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-011",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-011:s1",
+        "revision": 1,
+        "sha256": "ef273a5fc8b12a917f383b638c90be2b7a11a6cfe7204cc36e32d8b5a58dc7da",
+        "text": "EDajagimu",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-011:s1",
+          "decision": "SPAN",
+          "sha256": "ef273a5fc8b12a917f383b638c90be2b7a11a6cfe7204cc36e32d8b5a58dc7da",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDajagimu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-011:s1",
+          "decision": "SPAN",
+          "sha256": "ef273a5fc8b12a917f383b638c90be2b7a11a6cfe7204cc36e32d8b5a58dc7da",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDajagimu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-011:s1",
+          "decision": "SPAN",
+          "sha256": "ef273a5fc8b12a917f383b638c90be2b7a11a6cfe7204cc36e32d8b5a58dc7da",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDajagimu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-012",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-012:s1",
+        "revision": 1,
+        "sha256": "e0c23cf17241f6564c884526576ecee3c6d80de880aa9eba3d5eb42671a66941",
+        "text": "EDavapisa",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-012:s1",
+          "decision": "SPAN",
+          "sha256": "e0c23cf17241f6564c884526576ecee3c6d80de880aa9eba3d5eb42671a66941",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDavapisa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-012:s1",
+          "decision": "SPAN",
+          "sha256": "e0c23cf17241f6564c884526576ecee3c6d80de880aa9eba3d5eb42671a66941",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDavapisa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-012:s1",
+          "decision": "SPAN",
+          "sha256": "e0c23cf17241f6564c884526576ecee3c6d80de880aa9eba3d5eb42671a66941",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDavapisa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-013",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-013:s1",
+        "revision": 1,
+        "sha256": "2661560c46698d8f68cad3a6455fdb088bdec1d8621573a6448e23f06ffc7cf6",
+        "text": "EDadagadi",
+        "start": 18,
+        "endExclusive": 27
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-013:s1",
+          "decision": "SPAN",
+          "sha256": "2661560c46698d8f68cad3a6455fdb088bdec1d8621573a6448e23f06ffc7cf6",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDadagadi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-013:s1",
+          "decision": "SPAN",
+          "sha256": "2661560c46698d8f68cad3a6455fdb088bdec1d8621573a6448e23f06ffc7cf6",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDadagadi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-013:s1",
+          "decision": "SPAN",
+          "sha256": "2661560c46698d8f68cad3a6455fdb088bdec1d8621573a6448e23f06ffc7cf6",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDadagadi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-014",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-014:s1",
+        "revision": 1,
+        "sha256": "ddf535e2b5446d2b2c3e269e96e8912ef340a7afa605cbbeb9f1331a67e7dc40",
+        "text": "EDakepiji",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-014:s1",
+          "decision": "SPAN",
+          "sha256": "ddf535e2b5446d2b2c3e269e96e8912ef340a7afa605cbbeb9f1331a67e7dc40",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDakepiji",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-014:s1",
+          "decision": "SPAN",
+          "sha256": "ddf535e2b5446d2b2c3e269e96e8912ef340a7afa605cbbeb9f1331a67e7dc40",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDakepiji",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-014:s1",
+          "decision": "SPAN",
+          "sha256": "ddf535e2b5446d2b2c3e269e96e8912ef340a7afa605cbbeb9f1331a67e7dc40",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDakepiji",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-015",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-015:s1",
+        "revision": 1,
+        "sha256": "93298a78052ff59a46998f051566a9f702150b905d28defea920940dc08bf7e2",
+        "text": "EDajigove",
+        "start": 18,
+        "endExclusive": 27
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-015:s1",
+          "decision": "SPAN",
+          "sha256": "93298a78052ff59a46998f051566a9f702150b905d28defea920940dc08bf7e2",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDajigove",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-015:s1",
+          "decision": "SPAN",
+          "sha256": "93298a78052ff59a46998f051566a9f702150b905d28defea920940dc08bf7e2",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDajigove",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-015:s1",
+          "decision": "SPAN",
+          "sha256": "93298a78052ff59a46998f051566a9f702150b905d28defea920940dc08bf7e2",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDajigove",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-016",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-016:s1",
+        "revision": 1,
+        "sha256": "7f2bd28feb33058769492f92b20d62ea0a1ca035d6183afc2808b084f37874f3",
+        "text": "EDajedube",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-016:s1",
+          "decision": "SPAN",
+          "sha256": "7f2bd28feb33058769492f92b20d62ea0a1ca035d6183afc2808b084f37874f3",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDajedube",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-016:s1",
+          "decision": "SPAN",
+          "sha256": "7f2bd28feb33058769492f92b20d62ea0a1ca035d6183afc2808b084f37874f3",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDajedube",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-016:s1",
+          "decision": "SPAN",
+          "sha256": "7f2bd28feb33058769492f92b20d62ea0a1ca035d6183afc2808b084f37874f3",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDajedube",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-017",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-017:s1",
+        "revision": 1,
+        "sha256": "eefa7d276d33e3f7132852a8ad4f562d83e4a350da515cea87fe599f9df73bcb",
+        "text": "EDacepufa",
+        "start": 18,
+        "endExclusive": 27
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-017:s1",
+          "decision": "SPAN",
+          "sha256": "eefa7d276d33e3f7132852a8ad4f562d83e4a350da515cea87fe599f9df73bcb",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDacepufa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-017:s1",
+          "decision": "SPAN",
+          "sha256": "eefa7d276d33e3f7132852a8ad4f562d83e4a350da515cea87fe599f9df73bcb",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDacepufa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-017:s1",
+          "decision": "SPAN",
+          "sha256": "eefa7d276d33e3f7132852a8ad4f562d83e4a350da515cea87fe599f9df73bcb",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDacepufa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-018",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-018:s1",
+        "revision": 1,
+        "sha256": "3f24a6c9dde2ed1cffa07c104577e6174c556f51155be367eef6e3ceded7258b",
+        "text": "EDalufugo",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-018:s1",
+          "decision": "SPAN",
+          "sha256": "3f24a6c9dde2ed1cffa07c104577e6174c556f51155be367eef6e3ceded7258b",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDalufugo",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-018:s1",
+          "decision": "SPAN",
+          "sha256": "3f24a6c9dde2ed1cffa07c104577e6174c556f51155be367eef6e3ceded7258b",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDalufugo",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-018:s1",
+          "decision": "SPAN",
+          "sha256": "3f24a6c9dde2ed1cffa07c104577e6174c556f51155be367eef6e3ceded7258b",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDalufugo",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-019",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-019:s1",
+        "revision": 1,
+        "sha256": "080cbac75b8668c22c1ce5bf6ed62298626740494b63740b396735310900b819",
+        "text": "EDadefife",
+        "start": 19,
+        "endExclusive": 28
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-019:s1",
+          "decision": "SPAN",
+          "sha256": "080cbac75b8668c22c1ce5bf6ed62298626740494b63740b396735310900b819",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDadefife",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-019:s1",
+          "decision": "SPAN",
+          "sha256": "080cbac75b8668c22c1ce5bf6ed62298626740494b63740b396735310900b819",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDadefife",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-019:s1",
+          "decision": "SPAN",
+          "sha256": "080cbac75b8668c22c1ce5bf6ed62298626740494b63740b396735310900b819",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDadefife",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-020",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "holdout-d-020:s1",
+        "revision": 1,
+        "sha256": "b67072472af10a98a54d92dcf013f2860bcb2792aa25dad484f0f5349c7d31d9",
+        "text": "EDakaluna",
+        "start": 18,
+        "endExclusive": 27
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-020:s1",
+          "decision": "SPAN",
+          "sha256": "b67072472af10a98a54d92dcf013f2860bcb2792aa25dad484f0f5349c7d31d9",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDakaluna",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-020:s1",
+          "decision": "SPAN",
+          "sha256": "b67072472af10a98a54d92dcf013f2860bcb2792aa25dad484f0f5349c7d31d9",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDakaluna",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-020:s1",
+          "decision": "SPAN",
+          "sha256": "b67072472af10a98a54d92dcf013f2860bcb2792aa25dad484f0f5349c7d31d9",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDakaluna",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-021",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-022",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-023",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-024",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-025",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-026",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "holdout-d-026:s1",
+        "revision": 1,
+        "sha256": "e9b5bbb1993f0371a0658734a0aee82a0e88899480e3703b6fa9c4c3b2ae2211",
+        "text": "EDavasofa",
+        "start": 47,
+        "endExclusive": 56
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-026:s1",
+          "decision": "SPAN",
+          "sha256": "e9b5bbb1993f0371a0658734a0aee82a0e88899480e3703b6fa9c4c3b2ae2211",
+          "endExclusive": 56,
+          "start": 47,
+          "text": "EDavasofa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-026:s1",
+          "decision": "SPAN",
+          "sha256": "e9b5bbb1993f0371a0658734a0aee82a0e88899480e3703b6fa9c4c3b2ae2211",
+          "endExclusive": 56,
+          "start": 47,
+          "text": "EDavasofa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-026:s1",
+          "decision": "SPAN",
+          "sha256": "e9b5bbb1993f0371a0658734a0aee82a0e88899480e3703b6fa9c4c3b2ae2211",
+          "endExclusive": 56,
+          "start": 47,
+          "text": "EDavasofa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-027",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "holdout-d-027:s1",
+        "revision": 1,
+        "sha256": "8271286ad632033ebaecd4171c718be930ea984cb593f99f8a2befc008dd0804",
+        "text": "EDavomadi",
+        "start": 47,
+        "endExclusive": 56
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-027:s1",
+          "decision": "SPAN",
+          "sha256": "8271286ad632033ebaecd4171c718be930ea984cb593f99f8a2befc008dd0804",
+          "endExclusive": 56,
+          "start": 47,
+          "text": "EDavomadi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-027:s1",
+          "decision": "SPAN",
+          "sha256": "8271286ad632033ebaecd4171c718be930ea984cb593f99f8a2befc008dd0804",
+          "endExclusive": 56,
+          "start": 47,
+          "text": "EDavomadi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-027:s1",
+          "decision": "SPAN",
+          "sha256": "8271286ad632033ebaecd4171c718be930ea984cb593f99f8a2befc008dd0804",
+          "endExclusive": 56,
+          "start": 47,
+          "text": "EDavomadi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-028",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "holdout-d-028:s1",
+        "revision": 1,
+        "sha256": "2d2aab010ccb281ce42cad94fcfb2cfc542b9e86bb7667509ce14dfc3ba0abd5",
+        "text": "EDanibaje",
+        "start": 45,
+        "endExclusive": 54
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-028:s1",
+          "decision": "SPAN",
+          "sha256": "2d2aab010ccb281ce42cad94fcfb2cfc542b9e86bb7667509ce14dfc3ba0abd5",
+          "endExclusive": 54,
+          "start": 45,
+          "text": "EDanibaje",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-028:s1",
+          "decision": "SPAN",
+          "sha256": "2d2aab010ccb281ce42cad94fcfb2cfc542b9e86bb7667509ce14dfc3ba0abd5",
+          "endExclusive": 54,
+          "start": 45,
+          "text": "EDanibaje",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-028:s1",
+          "decision": "SPAN",
+          "sha256": "2d2aab010ccb281ce42cad94fcfb2cfc542b9e86bb7667509ce14dfc3ba0abd5",
+          "endExclusive": 54,
+          "start": 45,
+          "text": "EDanibaje",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-029",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "holdout-d-029:s1",
+        "revision": 1,
+        "sha256": "127102d3d61382bb9ca11e4a2b8224520bbd024a369646041f5a01eacd3d0881",
+        "text": "EDatasefi",
+        "start": 49,
+        "endExclusive": 58
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-029:s1",
+          "decision": "SPAN",
+          "sha256": "127102d3d61382bb9ca11e4a2b8224520bbd024a369646041f5a01eacd3d0881",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDatasefi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-029:s1",
+          "decision": "SPAN",
+          "sha256": "127102d3d61382bb9ca11e4a2b8224520bbd024a369646041f5a01eacd3d0881",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDatasefi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-029:s1",
+          "decision": "SPAN",
+          "sha256": "127102d3d61382bb9ca11e4a2b8224520bbd024a369646041f5a01eacd3d0881",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDatasefi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-030",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "holdout-d-030:s1",
+        "revision": 1,
+        "sha256": "9449c1bbe7acffa03e0b7bc061fa7fe073a88e88c29758400560393840d17ff2",
+        "text": "EDavesoju",
+        "start": 49,
+        "endExclusive": 58
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-030:s1",
+          "decision": "SPAN",
+          "sha256": "9449c1bbe7acffa03e0b7bc061fa7fe073a88e88c29758400560393840d17ff2",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDavesoju",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-030:s1",
+          "decision": "SPAN",
+          "sha256": "9449c1bbe7acffa03e0b7bc061fa7fe073a88e88c29758400560393840d17ff2",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDavesoju",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-030:s1",
+          "decision": "SPAN",
+          "sha256": "9449c1bbe7acffa03e0b7bc061fa7fe073a88e88c29758400560393840d17ff2",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDavesoju",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-031",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "holdout-d-031:s1",
+        "revision": 1,
+        "sha256": "cb5b1438bf58ce9abc183554a039c10354324a18b2ae13a60169317302adf127",
+        "text": "EDahedumu",
+        "start": 49,
+        "endExclusive": 58
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-031:s1",
+          "decision": "SPAN",
+          "sha256": "cb5b1438bf58ce9abc183554a039c10354324a18b2ae13a60169317302adf127",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDahedumu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-031:s1",
+          "decision": "SPAN",
+          "sha256": "cb5b1438bf58ce9abc183554a039c10354324a18b2ae13a60169317302adf127",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDahedumu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-031:s1",
+          "decision": "SPAN",
+          "sha256": "cb5b1438bf58ce9abc183554a039c10354324a18b2ae13a60169317302adf127",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDahedumu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-032",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "holdout-d-032:s1",
+        "revision": 1,
+        "sha256": "b3d37796b6290164b1eadbfd2d28cac7b1224bba55ac99f589cc75eb3f664415",
+        "text": "EDakurohu",
+        "start": 49,
+        "endExclusive": 58
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-032:s1",
+          "decision": "SPAN",
+          "sha256": "b3d37796b6290164b1eadbfd2d28cac7b1224bba55ac99f589cc75eb3f664415",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDakurohu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-032:s1",
+          "decision": "SPAN",
+          "sha256": "b3d37796b6290164b1eadbfd2d28cac7b1224bba55ac99f589cc75eb3f664415",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDakurohu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-032:s1",
+          "decision": "SPAN",
+          "sha256": "b3d37796b6290164b1eadbfd2d28cac7b1224bba55ac99f589cc75eb3f664415",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDakurohu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-033",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "holdout-d-033:s1",
+        "revision": 1,
+        "sha256": "18de00aa811ae0fdb4bf2f28f912d980b8b3e4b41d20417e5da2dcfa2cfc65e8",
+        "text": "EDamupitu",
+        "start": 47,
+        "endExclusive": 56
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-033:s1",
+          "decision": "SPAN",
+          "sha256": "18de00aa811ae0fdb4bf2f28f912d980b8b3e4b41d20417e5da2dcfa2cfc65e8",
+          "endExclusive": 56,
+          "start": 47,
+          "text": "EDamupitu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-033:s1",
+          "decision": "SPAN",
+          "sha256": "18de00aa811ae0fdb4bf2f28f912d980b8b3e4b41d20417e5da2dcfa2cfc65e8",
+          "endExclusive": 56,
+          "start": 47,
+          "text": "EDamupitu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-033:s1",
+          "decision": "SPAN",
+          "sha256": "18de00aa811ae0fdb4bf2f28f912d980b8b3e4b41d20417e5da2dcfa2cfc65e8",
+          "endExclusive": 56,
+          "start": 47,
+          "text": "EDamupitu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-034",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "holdout-d-034:s1",
+        "revision": 1,
+        "sha256": "5f6e1188020faf3786f433e86521afbba6f5aabee3fb18d9d457ff5eaf657255",
+        "text": "EDapususi",
+        "start": 49,
+        "endExclusive": 58
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-034:s1",
+          "decision": "SPAN",
+          "sha256": "5f6e1188020faf3786f433e86521afbba6f5aabee3fb18d9d457ff5eaf657255",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDapususi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-034:s1",
+          "decision": "SPAN",
+          "sha256": "5f6e1188020faf3786f433e86521afbba6f5aabee3fb18d9d457ff5eaf657255",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDapususi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-034:s1",
+          "decision": "SPAN",
+          "sha256": "5f6e1188020faf3786f433e86521afbba6f5aabee3fb18d9d457ff5eaf657255",
+          "endExclusive": 58,
+          "start": 49,
+          "text": "EDapususi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-035",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "holdout-d-035:s1",
+        "revision": 1,
+        "sha256": "bf605fcfecbf65756992cdad28bf69fa9d16405fc4557f38f289c51dca2781bf",
+        "text": "EDalicogo",
+        "start": 45,
+        "endExclusive": 54
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-035:s1",
+          "decision": "SPAN",
+          "sha256": "bf605fcfecbf65756992cdad28bf69fa9d16405fc4557f38f289c51dca2781bf",
+          "endExclusive": 54,
+          "start": 45,
+          "text": "EDalicogo",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "holdout-d-035:s1",
+          "decision": "SPAN",
+          "sha256": "bf605fcfecbf65756992cdad28bf69fa9d16405fc4557f38f289c51dca2781bf",
+          "endExclusive": 54,
+          "start": 45,
+          "text": "EDalicogo",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "holdout-d-035:s1",
+          "decision": "SPAN",
+          "sha256": "bf605fcfecbf65756992cdad28bf69fa9d16405fc4557f38f289c51dca2781bf",
+          "endExclusive": 54,
+          "start": 45,
+          "text": "EDalicogo",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-036",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-037",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-037:s1",
+          "decision": "SPAN",
+          "sha256": "edb57d828207e9efd889f92ab4e742ddecf2c20e70811c3238efe800ee566907",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDahimitu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-038",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-039",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-039:s1",
+          "decision": "SPAN",
+          "sha256": "2bb92410a01e9f40f7a6432772a2ef289bf9bff8a43294fff14e3827363ae02f",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDabuhofo",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-040",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-041",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-041:s1",
+          "decision": "SPAN",
+          "sha256": "fc6bf1bd44b4f6a0ee914940132a698e8b1794f82f0e729cc7ea9db73ba359c0",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDabifeno",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-042",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-043",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-043:s1",
+          "decision": "SPAN",
+          "sha256": "8634b787f34b82c7c84ee79c7d194fb967808c9a277a263e5fdd58663a5d5962",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDacimake",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-044",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-045",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-045:s1",
+          "decision": "SPAN",
+          "sha256": "78de890388ceb91913cb429a9349961fd952d3f8717232c298d1b038c0e1f539",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDakakudu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-046",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-047",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-047:s1",
+          "decision": "SPAN",
+          "sha256": "dc265e19735823616be1f7d8511af7d36e48d31d0276cad149799d90d0df6cb2",
+          "endExclusive": 28,
+          "start": 19,
+          "text": "EDatifilu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-048",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-049",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-049:s1",
+          "decision": "SPAN",
+          "sha256": "dd922176330ac3f49cfa860a1602588ff6757569ffdcf1fae334ce9221d6a0da",
+          "endExclusive": 27,
+          "start": 18,
+          "text": "EDagaceju",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-050",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-051",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-051:s1",
+          "decision": "SPAN",
+          "sha256": "73275c8cc9d4ccae8f7f535f1b811c756f6486747a78debd4e4451b030f003b1",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDagasavo",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-052",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-053",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-053:s1",
+          "decision": "SPAN",
+          "sha256": "296fe2e69bcd324663bb1eeeee32a0fa1201885a37d27c018b0af3a17889ed0d",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDasejoka",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-054",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "holdout-d-055",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": {
+          "sourceId": "holdout-d-055:s1",
+          "decision": "SPAN",
+          "sha256": "5d1930432a34b37e2d4d1254ff7711cb42aa73ebaea38d0cab2b444837a3d584",
+          "endExclusive": 26,
+          "start": 17,
+          "text": "EDafotopi",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    }
+  ],
+  "corpusSha256": "894d2c61e1df9f21f67e9c6de7d3476bee4095d12af29091ac5bc77cae9dcab4",
+  "predictionsSha256": "1822a064fcd8f63605520f3faa7b9c9fb4a19e6da3dd5534e8f202a1bf180398",
+  "promotion": "FORBIDDEN_RESEARCH_ONLY"
+}

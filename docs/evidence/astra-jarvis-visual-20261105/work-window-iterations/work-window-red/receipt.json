@@ -1,0 +1,39 @@
+{
+  "label": "work-window-red",
+  "head": "2859f18d94cb56e2b1f280db73ca785cb58d2459",
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-I",
+    "/workspace/scratch/76b7222771d5/build-env/observe-tests.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest"
+  ],
+  "started": 1793896237.8388274,
+  "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+  "statusBefore": "?? app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt\n",
+  "exitCode": 1,
+  "ended": 1793896262.8697166,
+  "sourceUnchanged": true,
+  "statusAfter": "?? app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt\n",
+  "log": "/workspace/scratch/76b7222771d5/build-env/logs/work-window-red.log",
+  "sourceBeforeManifestSha256": "5a9eb8ffcdc3db814a060a1005d0a39de4ae614e405110339894a89606a3bdba",
+  "sourceAfterManifestSha256": "5a9eb8ffcdc3db814a060a1005d0a39de4ae614e405110339894a89606a3bdba",
+  "changedSourceSha256": {
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt": "e27aed522cf5d60a9f6a0c3ff05502ebb8ac041363ffb0fad8efeb2143218841"
+  },
+  "observedCounts": {
+    "tests": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "countBasis": "AUDIT_TESTS plus fresh JUnit XML"
+}

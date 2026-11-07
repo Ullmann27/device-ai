@@ -1,0 +1,113 @@
+# {"utc": "2026-11-03T18:29:02.341604+00:00", "head": "34e6dbcd488e5eb2c5e11343f6f9710f61ca62f8", "command": ["node", "--test", "--test-reporter=tap", ".github/continuum/ccc1-redgreen-verifier.test.mjs"], "source": "/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.mjs", "sourceSha256": "c2995353ec6a5f82dec94717699daec9792a755a028bfdac8897f87136eec53d", "exit": 0}
+TAP version 13
+# Subtest: genuine RED→GREEN chain is VERIFIED from re-executed tests and bound to the receipt bytes
+ok 1 - genuine RED→GREEN chain is VERIFIED from re-executed tests and bound to the receipt bytes
+  ---
+  duration_ms: 321.35051
+  type: 'test'
+  ...
+# Subtest: forged receipts are rejected against the real repository
+ok 2 - forged receipts are rejected against the real repository
+  ---
+  duration_ms: 914.669084
+  type: 'test'
+  ...
+# Subtest: a fix that edits the target test is rejected even if everything is green
+ok 3 - a fix that edits the target test is rejected even if everything is green
+  ---
+  duration_ms: 64.537239
+  type: 'test'
+  ...
+# Subtest: patch mode (CCC1 repair): base fails, base+patch passes, tampered patch is rejected
+ok 4 - patch mode (CCC1 repair): base fails, base+patch passes, tampered patch is rejected
+  ---
+  duration_ms: 299.210148
+  type: 'test'
+  ...
+# Subtest: JUnit parser maps node test files to stable ids and sees failures
+ok 5 - JUnit parser maps node test files to stable ids and sees failures
+  ---
+  duration_ms: 0.315635
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects missing in commit and patch modes
+ok 6 - executor coverage rejects missing in commit and patch modes
+  ---
+  duration_ms: 551.369914
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects renamed in commit and patch modes
+ok 7 - executor coverage rejects renamed in commit and patch modes
+  ---
+  duration_ms: 524.848964
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects skipped in commit and patch modes
+ok 8 - executor coverage rejects skipped in commit and patch modes
+  ---
+  duration_ms: 496.870156
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects todo in commit and patch modes
+ok 9 - executor coverage rejects todo in commit and patch modes
+  ---
+  duration_ms: 506.72329
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects suite in commit and patch modes
+ok 10 - executor coverage rejects suite in commit and patch modes
+  ---
+  duration_ms: 526.254428
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects duplicate in commit and patch modes
+ok 11 - executor coverage rejects duplicate in commit and patch modes
+  ---
+  duration_ms: 528.902312
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects reordered in commit and patch modes
+ok 12 - executor coverage rejects reordered in commit and patch modes
+  ---
+  duration_ms: 524.368128
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects skipType in commit and patch modes
+ok 13 - executor coverage rejects skipType in commit and patch modes
+  ---
+  duration_ms: 498.365294
+  type: 'test'
+  ...
+# Subtest: executor coverage accepts retain
+ok 14 - executor coverage accepts retain
+  ---
+  duration_ms: 498.512181
+  type: 'test'
+  ...
+# Subtest: executor coverage accepts extension
+ok 15 - executor coverage accepts extension
+  ---
+  duration_ms: 511.793215
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects interrupted execution and then verifies a fresh retry
+ok 16 - executor coverage rejects interrupted execution and then verifies a fresh retry
+  ---
+  duration_ms: 487.169882
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects ambiguous repeated target claims before running
+ok 17 - executor coverage rejects ambiguous repeated target claims before running
+  ---
+  duration_ms: 52.014218
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7400.273824

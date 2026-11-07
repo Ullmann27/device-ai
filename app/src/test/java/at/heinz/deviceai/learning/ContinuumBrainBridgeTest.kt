@@ -44,7 +44,7 @@ class ContinuumBrainBridgeTest {
             (request.contains("?") || request.startsWith("Was ist ",true) || request.startsWith("Erkläre ",true)))
             runCatching { ContinuumArchiveAnswerPolicy.select(request,ContinuumKnowledgeArchive(dir).search(request,limit=20)) }.getOrNull()
         else null
-        val archiveAnswer=archiveHit?.source?.let { ContinuumBrainBridge.archiveAnswer(it) }
+        val archiveAnswer=archiveHit?.source?.let { ContinuumBrainBridge.archiveAnswerForQuestion(it,request) }
         val evidence=if(archiveAnswer!=null)"QUELLENABRUF · lokal archivierter, nicht bestätigter Beleg"
             else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+turn.memoryIds.size+" aktuelle Erinnerungen"
         return ContinuumChatOutcome(archiveAnswer ?: cognitive.answer,evidence,cognitive.trace,
@@ -53,7 +53,7 @@ class ContinuumBrainBridgeTest {
                 archiveAnswer!=null -> ContinuumBaselineSource.ARCHIVE
                 turn.grounded -> ContinuumBaselineSource.MEMORY
                 else -> ContinuumBaselineSource.NONE
-            },turn.memoryIds,archiveHit?.source?.id)
+            },turn.memoryIds,archiveHit?.source?.id?.takeIf { archiveAnswer!=null })
     }
 
     private fun idOf(core:ContinuumLearningCore,text:String)=core.activeOwnerFacts().single { it.content==text }.id
@@ -103,6 +103,85 @@ class ContinuumBrainBridgeTest {
         assertTrue(source.outcome.answer.contains("Quelle: https://de.wikipedia.org/wiki/Linz"))
         // a source never becomes an owner fact
         assertTrue(core.activeOwnerFacts().none { it.content.contains("Landeshauptstadt") })
+    }
+
+    @Test fun sourceAnswerReopensFullArchivedTextAndQuotesRelevantLateEvidence() {
+        val text="Allgemeiner Vorspann und Navigation. ".repeat(35)+
+            "Das Quarzkompassverfahren verwendet die Kennung ZIRKON-492 für Resonanzmessung."
+        val (dir,core)=app(sources=listOf("Quarzkompassverfahren" to text))
+        try {
+            val archive=ContinuumKnowledgeArchive(dir)
+            val record=archive.search("Quarzkompassverfahren").single().source
+            assertEquals(record,archive.readSource(record.id))
+            assertFalse(record.text.take(350).contains("ZIRKON-492"))
+            assertTrue(ContinuumBrainBridge.archiveAnswerForQuestion(record,"Was ist Quarzkompassverfahren?")!!.contains("ZIRKON-492"))
+            val factsBefore=core.activeOwnerFacts()
+            ContinuumBrainSettings(dir).set(ContinuumBrainMode.ON)
+            val result=ContinuumBrainBridge.decide(dir,core,"late-source","Was ist Quarzkompassverfahren?",
+                baseline(dir,core,"late-source","Was ist Quarzkompassverfahren?"))
+            assertEquals(ContinuumBrainStatus.ON_SOURCE,result.status)
+            assertTrue(result.outcome.answer.contains("ZIRKON-492"))
+            assertTrue(result.outcome.answer.contains(record.sha256))
+            assertTrue(result.outcome.answer.contains("UTF-8-Bytes"))
+            assertTrue(result.outcome.answer.contains("kein unabhängig geprüfter Antwortbeweis"))
+            assertEquals(factsBefore,core.activeOwnerFacts())
+            assertEquals(record,archive.readSource(record.id))
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun aTitleMatchWithoutAQuotableAnchorCannotCreateArchiveGrounding() {
+        val (dir,core)=app(sources=listOf("Quarzkompassverfahren" to
+            "Dieser allgemeine Text behandelt ausschließlich Zimmerpflanzen und ihre Pflege."))
+        try {
+            val today=baseline(dir,core,"no-quote","Was ist Quarzkompassverfahren?")
+            assertFalse(today.grounded)
+            assertNull(today.archiveId)
+            assertEquals(ContinuumBaselineSource.NONE,today.source)
+            ContinuumBrainSettings(dir).set(ContinuumBrainMode.ON)
+            val result=ContinuumBrainBridge.decide(dir,core,"no-quote","Was ist Quarzkompassverfahren?",today)
+            assertSame(today,result.outcome)
+            assertEquals(ContinuumBrainStatus.ON_KEPT_BASELINE,result.status)
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun enabledBrainCannotResurrectTheOldResidenceAfterNewerRevocation() {
+        val dir=Files.createTempDirectory("continuum-brain-attribute-tombstone").toFile()
+        try {
+            var at=10L
+            val core=ContinuumLearningCore(dir) { at++ }
+            core.confirmOwnerFact("Mira wohnt in Wien.")
+            core.confirmOwnerFact("Mira wohnt jetzt in Graz.")
+            core.revokeOwnerFact("Mira wohnt jetzt in Graz.")
+            val today=baseline(dir,core,"tombstone","Wo wohnt Mira?")
+            assertFalse(today.grounded)
+            ContinuumBrainSettings(dir).set(ContinuumBrainMode.ON)
+            val result=ContinuumBrainBridge.decide(dir,core,"tombstone","Wo wohnt Mira?",today)
+            assertFalse(result.outcome.grounded)
+            assertFalse(result.outcome.answer.contains("Mira wohnt in Wien."))
+            assertTrue(result.outcome.memoryIds.isEmpty())
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun enabledBrainUsesResolvedPossessiveScopeAndCannotRestoreARevokedNewerProperty() {
+        val dir=Files.createTempDirectory("continuum-brain-elliptic-tombstone").toFile()
+        try {
+            var at=10L
+            val core=ContinuumLearningCore(dir) { at++ }
+            core.confirmOwnerFact("Elif besitzt einen blauen Rucksack.")
+            core.confirmOwnerFact("Elif besitzt jetzt einen roten Rucksack.")
+            core.confirmOwnerFact("Daria besitzt einen grünen Rucksack.")
+            core.revokeOwnerFact("Elif besitzt jetzt einen roten Rucksack.")
+            ContinuumBrainSettings(dir).set(ContinuumBrainMode.ON)
+            val first="Welche Farbe hat Darias Rucksack?"
+            assertTrue(ContinuumBrainBridge.decide(dir,core,"elliptic-tombstone",first,
+                baseline(dir,core,"elliptic-tombstone",first)).outcome.grounded)
+            val next="Und Elifs?"
+            val today=baseline(dir,core,"elliptic-tombstone",next)
+            assertFalse(today.grounded)
+            val shown=ContinuumBrainBridge.decide(dir,core,"elliptic-tombstone",next,today)
+            assertFalse(shown.outcome.grounded)
+            assertFalse(shown.outcome.answer.contains("Elif besitzt einen blauen Rucksack."))
+        } finally { dir.deleteRecursively() }
     }
 
     @Test fun onReplacesAnUnsupportedOwnerCitationWithHonestNotKnowingButKeepsWebNotes() {

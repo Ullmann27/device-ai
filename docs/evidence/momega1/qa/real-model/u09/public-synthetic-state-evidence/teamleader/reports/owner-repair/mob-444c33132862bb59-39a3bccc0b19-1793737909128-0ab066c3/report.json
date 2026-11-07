@@ -1,0 +1,446 @@
+{
+  "schemaVersion": 1,
+  "base": "39a3bccc0b19800dd3b973ea4f150367d8602ad2",
+  "chain": "node",
+  "startedAt": "2026-11-03T20:31:49.142Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "modelInvocations": 2,
+    "localRequests": 2,
+    "verifiedModelExecution": true,
+    "candidateStatus": "REPEATED_PATCH_REJECTED",
+    "repeatedCandidates": 1,
+    "history": [
+      {
+        "candidate": "b6bb0f79996075d7",
+        "outcome": "FAILED_TESTS",
+        "diagnostic": "TEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n+     priority: 1\n-     priority: 2\n    },\n    {\n+     priority: 2\n-     priority: 1\n    }\n  ]",
+        "hypothesis": "The issue is with the comparison function in the `sort` method, which is not correctly comparing the `priority` property of the objects."
+      },
+      {
+        "candidate": "822cbd44c7a25061",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_REPEATED_PATCH",
+        "hypothesis": ""
+      }
+    ],
+    "rejections": [
+      {
+        "code": "CODING_REPEATED_PATCH",
+        "repeated": false,
+        "responseSha256": "822cbd44c7a250618055de759feb860033812d1ef3864d33a3ff059bf1e77c0d"
+      }
+    ],
+    "reason": "Original local inference observations; candidate correctness requires separate verification",
+    "lastRejectCode": "CODING_REPEATED_PATCH"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 15000,
+          "runtime": "runc",
+          "sourceSha256": "b4bb40237fe3a1c78dba6e78568daaa746f82b7aba97164ad0e8a30d1a952218",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-71d535c66a931f6541db1d74",
+          "workspaceBinding": {
+            "workerId": "typed-coding-worker",
+            "taskId": "t-84b4a607abd31b8f",
+            "requestMessageId": "5d117f92-9119-4cb8-88ce-32cadb5a12c1",
+            "requestHash": "8e1ec1f51c44e8638bac4498b5f9b38832de4d5e4d1724e55e70210401283850",
+            "sourceCommit": "39a3bccc0b19800dd3b973ea4f150367d8602ad2",
+            "jobId": "41289204-0355-4fac-a857-0c4cf70c0cc4"
+          },
+          "observed": {
+            "containerId": "6e8951429b8c1859827725e154202418fe6361ab2e7b61696ed2fdcbf906af80",
+            "runtime": "runc",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 1,
+          "failed": 1,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 1,
+          "passed": 0,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"Immutable queue\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "db34d29d8e713c549b97aa7ce0a3f2a461c34fa0148af940249c870d8cfd2013"
+          ],
+          "executedCaseHashes": [
+            "7ad3805ec0f4544936e53391a2e6c2122dfd979b5e384168db8890ba50eeae46"
+          ]
+        },
+        "diagnostics": 1
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.Immutable queue",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 5,
+        "col": 106,
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n+     priority: 1\n-     priority: 2\n    },\n    {\n+     priority: 2\n-     priority: 1\n    }\n  ]",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "500a8426c4013ab7"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "b6bb0f79996075d7",
+      "strategy": "LOCAL_SCOPED_PATCH",
+      "diagnostic": "500a8426c4013ab7",
+      "diagnosticKind": "TEST_FAILURE",
+      "description": "Task-scoped local proposal; fixed tests and independent owner review required",
+      "hypothesis": "The issue is with the comparison function in the `sort` method, which is not correctly comparing the `priority` property of the objects.",
+      "plan": [
+        "Identify the issue with the code",
+        "Understand the expected behavior",
+        "Create a test case to reproduce the issue",
+        "Analyze the test case to identify the root cause",
+        "Propose a fix for the issue",
+        "Test the fix to ensure it works as expected",
+        "Verify the fix against the original code"
+      ],
+      "score": 0.38,
+      "critic": {
+        "approved": true,
+        "risk": 0.253,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": true
+      },
+      "edits": [
+        {
+          "file": "lib/subject.mjs",
+          "oldText": "export const run = queue => queue.sort((a,b)=>a.priority-b.priority);\n",
+          "newText": "export const run = queue => queue.sort((a,b)=>a.priority - b.priority);\n"
+        }
+      ],
+      "proposalSha256": "abf2041c6fc3e916305846dc93b30e3caa60fb35fe49eb9a5134f56e2d4663ef",
+      "modelObservation": {
+        "schema": "momega1-local-process-observation-v1",
+        "evidenceClass": "LOCAL_MODEL_HOST",
+        "verifiedModelExecution": true,
+        "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64",
+        "reviewedModelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+        "reviewedRuntimeSourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+        "reviewedModelRevision": "f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+        "reviewedBuildEvidenceSha256": "ff9b688bbdcda0cea5dbf36f63313a01f055259f241f07eaeb7776327b05f067",
+        "independentReviewEvidenceSha256": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe",
+        "executionId": "48a12f3d9c3fa7bff885101350ba0d6b467abe616dff712f7ff516b2aee9ae7c",
+        "taskId": "mob-444c33132862bb59",
+        "sourceCommit": "39a3bccc0b19800dd3b973ea4f150367d8602ad2",
+        "taskFingerprint": "e040a00f783227a81df947e99e657fc5eea83229cf60c0241d10b9eebcafb26a",
+        "requestIndex": 1,
+        "contextSha256": "cc64cfb879d0a74ac64866f53c83d3a1ac2b7f30f1361bebabcd0fde2cac9a1c",
+        "promptSha256": "3a266ce91603d774eacec7c8d0f7bef37c32007eedee464898d42156ef4d3a00",
+        "requestSha256": "a66ba11a1ff45550a0a1bcbede4dde3911cac78497d79ba4a0dd78160acc3c54",
+        "runtimePromptSha256": "24935d6fb90378e2b368b218af5055fbe0542762bf22460372b37a69c96d096d",
+        "runtimeSchemaSha256": "98fe5b9bd97fa7deefb4981f38d465056cd2c316325597ddb71100cdd78ab844",
+        "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+        "outputSha256": "5e8a8da0354e6c67838d4bf0e833d4868f725363cb05344db9ae6efcf6f67886",
+        "proposalSha256": "abf2041c6fc3e916305846dc93b30e3caa60fb35fe49eb9a5134f56e2d4663ef",
+        "responseStatus": "PROPOSAL",
+        "outputTokens": 177,
+        "pid": 213863,
+        "exitCode": 0,
+        "isolation": "BWRAP_UNSHARE_ALL",
+        "elapsedMs": 28122
+      },
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          "lib/subject.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "exitCode": 1,
+          "ms": 0,
+          "tests": {
+            "total": 1,
+            "failed": 1,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 1,
+            "passed": 0,
+            "evidenceComplete": true,
+            "caseIdentities": [
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"Immutable queue\",1]",
+                "skipped": false,
+                "skipType": null
+              }
+            ],
+            "junitSha256": [
+              "94bf60742644d8b22b924f0bd88164acf1a3a16ee82ffdb3896178a108873590"
+            ],
+            "executedCaseHashes": [
+              "7ad3805ec0f4544936e53391a2e6c2122dfd979b5e384168db8890ba50eeae46"
+            ]
+          },
+          "isolation": {
+            "schema": "continuum-isolation-v1",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "network": "none",
+            "user": "1000:1000",
+            "readOnly": true,
+            "noNewPrivileges": true,
+            "capabilities": [],
+            "memoryMb": 256,
+            "pids": 64,
+            "cpus": 1,
+            "timeoutMs": 15000,
+            "runtime": "runc",
+            "sourceSha256": "36b38734e1ae1d1e91dd7491c90c5bb6412ad57e13d753b66cb26456565bbe1f",
+            "profile": "node-continuum",
+            "untrustedReports": true,
+            "workspaceId": "continuum-7ac7996ef7a221e0271283b3",
+            "workspaceBinding": {
+              "workerId": "typed-coding-worker",
+              "taskId": "t-84b4a607abd31b8f",
+              "requestMessageId": "5d117f92-9119-4cb8-88ce-32cadb5a12c1",
+              "requestHash": "8e1ec1f51c44e8638bac4498b5f9b38832de4d5e4d1724e55e70210401283850",
+              "sourceCommit": "39a3bccc0b19800dd3b973ea4f150367d8602ad2",
+              "jobId": "41289204-0355-4fac-a857-0c4cf70c0cc4"
+            },
+            "observed": {
+              "containerId": "a0e116d353ce194ff5a0242639d01f4f40915853314d620deda4e4f49dcd8df3",
+              "runtime": "runc",
+              "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+              "user": "1000:1000",
+              "network": "none",
+              "readOnly": true,
+              "memoryBytes": 268435456,
+              "memorySwapBytes": 268435456,
+              "nanoCpus": 1000000000,
+              "pids": 64,
+              "capDrop": [
+                "ALL"
+              ],
+              "securityOpt": [
+                "no-new-privileges:true"
+              ],
+              "writableHostMounts": 0
+            },
+            "teardownConfirmed": true
+          }
+        }
+      ],
+      "remainingDiagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.Immutable queue",
+          "file": ".github/continuum/frozen.test.mjs",
+          "line": 5,
+          "col": 106,
+          "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n+     priority: 1\n-     priority: 2\n    },\n    {\n+     priority: 2\n-     priority: 1\n    }\n  ]",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "500a8426c4013ab7"
+        }
+      ],
+      "evidence": {
+        "sufficient": false,
+        "reasons": [
+          "node-continuum did not pass"
+        ]
+      },
+      "outcome": "FAILED_TESTS"
+    }
+  ],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "progress": [
+    {
+      "phase": "CHECKING_BASELINE",
+      "at": "2026-11-03T20:31:49.142Z",
+      "attempt": 0
+    },
+    {
+      "phase": "BASELINE_FAILED",
+      "at": "2026-11-03T20:31:49.566Z",
+      "attempt": 0
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T20:31:49.577Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PLAN_CREATED",
+      "at": "2026-11-03T20:32:17.779Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PATCH_PROPOSED",
+      "at": "2026-11-03T20:32:17.781Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CHECKING_PATCH",
+      "at": "2026-11-03T20:32:17.821Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CHECK_FAILED",
+      "at": "2026-11-03T20:32:18.261Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CORRECTING",
+      "at": "2026-11-03T20:32:18.270Z",
+      "attempt": 1
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T20:32:18.271Z",
+      "attempt": 2
+    },
+    {
+      "phase": "PLAN_CREATED",
+      "at": "2026-11-03T20:32:47.434Z",
+      "attempt": 2
+    },
+    {
+      "phase": "PATCH_PROPOSED",
+      "at": "2026-11-03T20:32:47.436Z",
+      "attempt": 2
+    }
+  ],
+  "coding": {
+    "taskId": "mob-444c33132862bb59",
+    "taskFingerprint": "e040a00f783227a81df947e99e657fc5eea83229cf60c0241d10b9eebcafb26a",
+    "sourceCommit": "39a3bccc0b19800dd3b973ea4f150367d8602ad2",
+    "allowedPaths": [
+      "lib/subject.mjs"
+    ],
+    "milestones": [
+      "BASELINE_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED",
+      "CANDIDATE_CRITIC_APPROVED",
+      "CANDIDATE_TESTS_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED"
+    ],
+    "candidateCount": 1,
+    "contextSha256": "cc64cfb879d0a74ac64866f53c83d3a1ac2b7f30f1361bebabcd0fde2cac9a1c",
+    "plan": [
+      "Identify the comparison function in the `sort` method.",
+      "Check the comparison function to ensure it correctly compares the `priority` property of the objects.",
+      "If the comparison function is not correctly comparing the `priority` property, fix it."
+    ]
+  },
+  "finishedAt": "2026-11-03T20:32:47.444Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "39a3bccc0b19800dd3b973ea4f150367d8602ad2",
+    "chain": "node",
+    "conclusion": "NO_VERIFIED_REPAIR",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 1,
+        "proof": "e638aa0917974f8a5c26b0add711a48b928d069a9b646632afc59d1bd512886c"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "2156204fe53bd209",
+        "approved": true,
+        "proof": "b56d6d360edd3ae54b50e20618d5619691cc867cb9f767dd0f4bcf2dd5b1272e"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "2156204fe53bd209",
+        "editedFiles": 1,
+        "proof": "1af0c73d82178cd63fac087b851729c37ca09c78312cda276ac279af060039d7"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "2156204fe53bd209",
+        "passed": false,
+        "executed": true,
+        "profiles": 1,
+        "proof": "f364471a36276237f95db03305793990c60b1e18751718e8cf251e92b04970da"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "NO_AUTOMATIC_MERGE",
+        "outcome": "NO_VERIFIED_REPAIR",
+        "approvedForMerge": false,
+        "proof": "002b7ec5cc192a22e716d0e8429c1678d46968ab641821cca6af54cf7b17e41d"
+      }
+    ],
+    "integrity": "a320a4456a9fe0a61395379308e8b83582b30bff3070d48068168442f0bf3f84"
+  }
+}

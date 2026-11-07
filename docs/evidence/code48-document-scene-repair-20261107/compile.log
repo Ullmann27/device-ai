@@ -1,0 +1,7 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=42289 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42289 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentFlowUiTest.kt:109:38: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Class<*>'.
+            runCatching { return type!!.getDeclaredField(name).apply { isAccessible = true }.get(owner) }
+                                     ^^
+app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentFlowUiTest.kt:489:109: warning: 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+        ScreenObservationRevisionTest.RootedService.root = android.view.accessibility.AccessibilityNodeInfo.obtain().apply {
+                                                                                                            ^^^^^^

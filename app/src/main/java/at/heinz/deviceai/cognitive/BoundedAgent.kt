@@ -30,12 +30,33 @@ data class AgentReflection(val failure: String, val evidence: String, val correc
     }
 }
 
-data class AgentModelOutput(
+@ConsistentCopyVisibility
+data class AgentModelOutput private constructor(
     val modelId: String,
     val response: String,
-    val proposal: ToolProposal? = null
+    val proposal: ToolProposal?,
+    val responseCompletion: LocalGenerationCompletion,
+    private val ownerDialogue: Boolean
 ) {
-    init { require(modelId.isNotBlank() && response.length <= 8_000) }
+    constructor(modelId: String, response: String, proposal: ToolProposal? = null) :
+        this(modelId, response, proposal, LocalGenerationCompletion.COMPLETE, false)
+
+    val responseComplete: Boolean get() = responseCompletion == LocalGenerationCompletion.COMPLETE
+
+    init {
+        require(modelId.isNotBlank())
+        val limit = if (ownerDialogue) LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS else 8_000
+        require(response.length <= limit) { "LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT" }
+        require(!ownerDialogue || proposal == null)
+        require(ownerDialogue || responseComplete)
+        require(responseCompletion != LocalGenerationCompletion.CANCELLED)
+    }
+
+    companion object {
+        fun ownerDialogue(modelId: String, response: String,
+            completion: LocalGenerationCompletion = LocalGenerationCompletion.COMPLETE): AgentModelOutput =
+            AgentModelOutput(modelId, response, null, completion, true)
+    }
 }
 
 data class AgentToolObservation(
@@ -159,8 +180,12 @@ data class AgentRunResult(
     val state: AgentState,
     val auditTrail: List<AgentAuditEvent>,
     val experience: Experience?,
-    val blocker: String? = null
-)
+    val blocker: String? = null,
+    val taskEvidence: AgentTaskEvidence? = null,
+    val responseCompletion: LocalGenerationCompletion = LocalGenerationCompletion.COMPLETE
+) {
+    val responseComplete: Boolean get() = responseCompletion == LocalGenerationCompletion.COMPLETE
+}
 
 class BoundedAgentOrchestrator(
     private val model: AgentModel,
@@ -182,7 +207,10 @@ class BoundedAgentOrchestrator(
     private val evaluationConfirmsOutcome: Boolean = true,
     private val turnTrace: CognitiveTurnTrace? = null,
     // OFF by default: original runtime and tool-policy behavior are unchanged.
-    private val recallPriorExperiences: Boolean = false
+    private val recallPriorExperiences: Boolean = false,
+    private val eventObserver: (AgentCognitiveEvent) -> Unit = {},
+    /** Actual dispatch callback only; never called for model proposals. */
+    private val onToolStarted: (String, String) -> Unit = { _, _ -> }
 ) {
     init {
         require(callIdPrefix.matches(Regex("[A-Za-z0-9._:-]{1,64}")))
@@ -264,7 +292,42 @@ class BoundedAgentOrchestrator(
         val toolObservations = mutableListOf<AgentToolObservation>()
         val toolEvidence = mutableListOf<String>()
         val modelIds = mutableListOf<String>()
-        fun hasFreshToolOutcomes(): Boolean = toolEvidence.isNotEmpty() &&
+        var ephemeralScreenContext=false
+        val callProofs = mutableListOf<AgentToolEvidence>()
+        val cognitiveEvents = mutableListOf<AgentCognitiveEvent>()
+        val plannedToolNames = (model as? ReadOnlyToolPlan)?.plannedToolNames.orEmpty()
+        fun emit(state: CognitiveWorkState, callId: String? = null) {
+            val stage = when(state) {
+                CognitiveWorkState.UNDERSTANDING -> TraceStage.TASK_RECEIVED
+                CognitiveWorkState.PLANNING -> TraceStage.PLAN_CREATED
+                CognitiveWorkState.WAITING_FOR_APPROVAL -> TraceStage.APPROVAL_REQUESTED
+                CognitiveWorkState.EXECUTING -> TraceStage.TOOL_EXECUTION_STARTED
+                CognitiveWorkState.VERIFYING -> TraceStage.OUTCOME_CHECK_STARTED
+                CognitiveWorkState.COMPLETED -> TraceStage.OUTCOME_CONFIRMED
+                CognitiveWorkState.BLOCKED -> TraceStage.OUTCOME_UNCONFIRMED
+                else -> null
+            }
+            val terminal = setOf(CognitiveWorkState.COMPLETED, CognitiveWorkState.BLOCKED)
+            val event = synchronized(cognitiveEvents) {
+                // A delayed worker notification cannot supersede a terminal phase.
+                if (cognitiveEvents.lastOrNull()?.state in terminal && state !in terminal) return
+                AgentCognitiveEvent(cognitiveEvents.size, callIdPrefix, currentRun, state,
+                    (clock() - startedAt).coerceAtLeast(0), callId).also {
+                    cognitiveEvents += it
+                    stage?.let { value -> turnTrace?.event(value) }
+                }
+            }
+            // Callbacks may cross threads. Consumers use task/attempt/sequence,
+            // never callback arrival time, to discard stale presentation events.
+            runCatching { eventObserver(event) }
+        }
+        fun proof(verified: Boolean = false, candidateId: String? = null) = AgentTaskEvidence(
+            callIdPrefix, currentRun, sha256Bytes(task.toByteArray(Charsets.UTF_8)).toHex(),
+            plannedToolNames, callProofs.toList(), synchronized(cognitiveEvents) { cognitiveEvents.toList() },
+            lastEvaluation.success, evaluationConfirmsOutcome, verified, candidateId)
+
+        fun hasFreshToolOutcomes(): Boolean = !ephemeralScreenContext && toolEvidence.isNotEmpty() &&
+            callProofs.none { it.outcomeUncertain } &&
             toolObservations.isNotEmpty() && toolObservations.all {
                 it.status == ToolExecutionStatus.SUCCEEDED && !it.output.isNullOrBlank()
             }
@@ -274,13 +337,16 @@ class BoundedAgentOrchestrator(
             if (steps >= limits.maxSteps) throw StepLimitReached()
             steps++
             audit += AgentAuditEvent(audit.size, state, detail.take(256))
-            checkpointStore?.save(checkpoint(task, state, retry))
+            if(!ephemeralScreenContext)checkpointStore?.save(checkpoint(task, state, retry))
         }
 
         try {
+            turnTrace?.reference(TraceStage.TASK_REF, callIdPrefix)
+            emit(CognitiveWorkState.UNDERSTANDING)
             if (checkpoint == null || checkpoint.state.ordinal < AgentState.OBSERVE.ordinal) transition(AgentState.OBSERVE, "Task received.")
             if (checkpoint == null || checkpoint.state.ordinal < AgentState.RETRIEVE.ordinal) transition(AgentState.RETRIEVE, "Memory retrieval completed.")
             if (checkpoint == null || checkpoint.state.ordinal < AgentState.PLAN.ordinal) transition(AgentState.PLAN, "Plan bounded to one registered-tool proposal.")
+            emit(CognitiveWorkState.PLANNING)
             var done = false
             while (!done) {
                 transition(AgentState.MODEL, "Model response requested.")
@@ -292,6 +358,10 @@ class BoundedAgentOrchestrator(
                 transition(AgentState.VALIDATE, "Response and optional proposal validated.")
                 val proposal = chosen.proposal
                 if (proposal != null) {
+                    if(proposal.toolName=="read_app_screen"){
+                        ephemeralScreenContext=true
+                        checkpointStore?.clear()
+                    }
                     turnTrace?.event(TraceStage.TOOL_PROPOSED)
                     transition(AgentState.TOOL_PROPOSAL, "Registered tool proposal received.")
                     if (calls >= limits.maxToolCalls) {
@@ -316,19 +386,36 @@ class BoundedAgentOrchestrator(
                             transition(AgentState.GATED_EXECUTION, "Tool policy gate evaluated.")
                             usedTools += proposal.toolName
                             val risk = ToolRegistry.get(proposal.toolName)!!.risk
+                            // S4: tool results are untrusted data; they cannot create owner intent.
+                            ExternalContentActionGuard.refusal(task, proposal.toolName, risk, proposal.arguments,
+                                untrustedObservationsSeen = toolObservations.isNotEmpty())?.let { refused ->
+                                lastRecord = ToolExecutionRecord("$callIdPrefix-$calls", proposal.toolName, risk, emptyMap(),
+                                    refused, ToolExecutionStatus.REJECTED, 0)
+                                transition(AgentState.OBSERVE_RESULT, "Tool proposal derived from external content refused.")
+                                emit(CognitiveWorkState.BLOCKED)
+                                return AgentRunResult(refused, AgentState.OBSERVE_RESULT, audit.toList(), null, refused, proof())
+                            }
                             val invocation = proposal.invocation("$callIdPrefix-$calls")
                             val priorReceipt = toolGate.recordProposal(invocation)
                             val requiresReview = priorReceipt != null &&
                                 priorReceipt.state !in setOf(ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED)
-                            val approval = if (risk == Risk.READ_ONLY || requiresReview) {
+                            val approvalRequested = risk != Risk.READ_ONLY && !requiresReview
+                            val approval = if (!approvalRequested) {
                                 AgentToolApproval(false)
                             } else {
+                                emit(CognitiveWorkState.WAITING_FOR_APPROVAL, invocation.id)
                                 approvalProvider.requestApproval(proposal, risk)
                             }
                             val execution = toolGate.execute(
                                 invocation,
                                 approval.userConfirmed,
-                                approval.destructiveConfirmed
+                                approval.destructiveConfirmed,
+                                onExecutionStarted = {
+                                    emit(CognitiveWorkState.EXECUTING, invocation.id)
+                                },
+                                onDispatchStarted = {
+                                    runCatching { onToolStarted(invocation.id, proposal.toolName) }
+                                }
                             )
                             lastRecord = execution.record
                             turnTrace?.reference(TraceStage.CALL_REF, lastRecord.callId)
@@ -342,7 +429,31 @@ class BoundedAgentOrchestrator(
                                     .joinToString("") { "%02x".format(it) }
                                 toolEvidence += "tool-call:${lastRecord.callId}:sha256:$digest"
                             }
+                            val fresh = lastRecord.status == ToolExecutionStatus.SUCCEEDED &&
+                                !lastRecord.outcomeUncertain && !execution.replayed && !execution.output.isNullOrBlank()
+                            callProofs += AgentToolEvidence(invocation.id, proposal.toolName,
+                                at.heinz.deviceai.toolArgumentFingerprint(invocation.request.arguments),
+                                approvalRequested, approval.userConfirmed.takeIf { approvalRequested },
+                                lastRecord.status, execution.output?.takeIf { fresh }?.let {
+                                    sha256Bytes(it.toByteArray(Charsets.UTF_8)).toHex()
+                                }, fresh, lastRecord.outcomeUncertain, execution.replayed)
                             transition(AgentState.OBSERVE_RESULT, "Tool result status: ${lastRecord.status}.")
+                            if (lastRecord.outcomeUncertain || requiresReview || execution.replayed) {
+                                // Do not let a model reissue an unresolved effect under
+                                // a new call id or turn a replay into fresh experience.
+                                val blocked = if(lastRecord.outcomeUncertain && execution.journalUnavailableBeforeDispatch)
+                                    "Werkzeugjournal nicht lesbar: In diesem Durchlauf wurde nichts ausgeführt. " +
+                                        "Ob diese Aufruf-ID früher bereits ausgeführt wurde, ist unbekannt. " +
+                                        "Weitere Aktionen sind bis zur Besitzerprüfung blockiert."
+                                else if(lastRecord.outcomeUncertain)
+                                    "Werkzeugausgang UNKNOWN: Eine bereits ausgelöste Wirkung kann fortbestehen. " +
+                                        "Weitere Aktionen sind bis zur Besitzerprüfung blockiert."
+                                else "Gespeicherte Quittung: keine neue Ausführung oder frische Beobachtung. " +
+                                    "Weitere Aktionen benötigen Besitzerprüfung."
+                                emit(CognitiveWorkState.BLOCKED, invocation.id)
+                                return AgentRunResult(blocked,AgentState.OBSERVE_RESULT,audit.toList(),
+                                    null,blocked,proof())
+                            }
                             toolObservations += AgentToolObservation(
                                 proposal.toolName, execution.record.status, execution.output
                             )
@@ -354,8 +465,27 @@ class BoundedAgentOrchestrator(
                     lastOutput = chosen.response
                 }
                 transition(AgentState.EVALUATE, "Result evaluated.")
+                emit(CognitiveWorkState.VERIFYING)
                 lastEvaluation = evaluator.evaluate(lastOutput, lastRecord)
                 cancellation.throwIfCancelled()
+                if (!chosen.responseComplete) {
+                    val acceptedText = if (lastEvaluation.success) lastOutput else ""
+                    val reason = if (!lastEvaluation.success)
+                        "Unvollständige Antwort zurückgehalten: Die lokale Qualitätsprüfung wurde nicht bestanden."
+                    else when (chosen.responseCompletion) {
+                        LocalGenerationCompletion.OUTPUT_LIMIT ->
+                            "Antwort unvollständig: Das lokale Ausgabelimit wurde erreicht."
+                        LocalGenerationCompletion.STALLED ->
+                            "Antwort unvollständig: Die lokale Textausgabe ist zum Stillstand gekommen."
+                        else -> "Antwort unvollständig: Die lokale Generierung ist fehlgeschlagen."
+                    }
+                    lastEvaluation = Evaluation(false, 0.0, reason)
+                    transition(AgentState.RESPOND, "Incomplete response; no outcome or learning.")
+                    emit(CognitiveWorkState.BLOCKED)
+                    checkpointStore?.clear()
+                    return AgentRunResult(acceptedText, AgentState.RESPOND, audit.toList(), null,
+                        reason, proof(), chosen.responseCompletion)
+                }
                 modelReputation?.takeIf { evaluationConfirmsOutcome && hasFreshToolOutcomes() }?.updateAfterEvaluation(
                     chosen.modelId,
                     ModelCapability.TOOL_USE,
@@ -383,7 +513,7 @@ class BoundedAgentOrchestrator(
                     lastRecord = null
                 }
             }
-            transition(AgentState.STORE_EXPERIENCE, "Evaluated attempt stored.")
+            transition(AgentState.STORE_EXPERIENCE, if(ephemeralScreenContext)"Ephemeral screen run; learning skipped." else "Evaluated attempt stored.")
             val finishedAt = clock().coerceAtLeast(startedAt)
             val resultExperience = Experience(
                 id = experienceId(task, finishedAt, currentRun),
@@ -409,34 +539,42 @@ class BoundedAgentOrchestrator(
                 completedAt = finishedAt,
                 evaluation = lastEvaluation
             )
-            experienceStore.store(resultExperience)
+            if(!ephemeralScreenContext)experienceStore.store(resultExperience)
             val blocker = if (lastEvaluation.success) null else
                 "Retry budget exhausted: ${lastEvaluation.notes.ifBlank { "evaluation failed" }}"
             transition(AgentState.RESPOND, if (blocker == null) "Response ready." else "Structured blocker returned.")
+            val verifiedOutcome = lastEvaluation.success && evaluationConfirmsOutcome && hasFreshToolOutcomes()
+            emit(if (verifiedOutcome) CognitiveWorkState.COMPLETED else CognitiveWorkState.BLOCKED)
             val result = AgentRunResult(
                 if (blocker == null) lastOutput else blocker,
                 AgentState.RESPOND,
                 audit.toList(),
-                resultExperience,
-                blocker
+                resultExperience.takeUnless { ephemeralScreenContext },
+                blocker,
+                proof(verifiedOutcome, resultExperience.id.takeIf { verifiedOutcome })
             )
             checkpointStore?.clear()
             return result
         } catch (_: StepLimitReached) {
             checkpointStore?.clear()
+            emit(CognitiveWorkState.BLOCKED)
             return AgentRunResult(
                 "Agent step budget exhausted.",
                 audit.lastOrNull()?.state ?: AgentState.OBSERVE,
                 audit.toList(),
                 null,
-                "Hard maximum step count reached; no further model or tool calls were made."
+                "Hard maximum step count reached; no further model or tool calls were made.",
+                proof()
             )
+        } catch (failure: Exception) {
+            emit(CognitiveWorkState.BLOCKED)
+            throw failure
         }
     }
 
     private fun experienceId(task: String, completedAt: Long, run: Int): String {
-        val digest = MessageDigest.getInstance("SHA-256").digest(task.toByteArray())
-            .take(8).joinToString("") { "%02x".format(it) }
+        val digest = MessageDigest.getInstance("SHA-256").digest((callIdPrefix + "\u0000" + task).toByteArray(Charsets.UTF_8))
+            .take(16).joinToString("") { "%02x".format(it) }
         return "agent-$digest-$completedAt-$run"
     }
 

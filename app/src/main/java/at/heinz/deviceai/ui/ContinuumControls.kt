@@ -10,6 +10,7 @@ import android.graphics.drawable.StateListDrawable
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.TextView
+import android.widget.EditText
 
 /** Shared native control states. No listeners, data access or perpetual animations: the owning screen keeps its actions. */
 object ContinuumControls {
@@ -70,6 +71,12 @@ object ContinuumControls {
 
     /** Foreground feedback leaves the measured/custom-drawn card, its content and its hit testing intact. */
     fun feedback(view: View, radius: Float = 18f) {
+        // A foreground is drawn ABOVE selectable/editable text and stays fixed
+        // while the editor scrolls. Native cursor, selection and IME own EditText.
+        if (view is EditText) {
+            view.foreground = null
+            return
+        }
         val ctx = view.context
         val outline = StateListDrawable().apply {
             addState(intArrayOf(-android.R.attr.state_enabled), shape(ctx, radius, 0, 0, 0))

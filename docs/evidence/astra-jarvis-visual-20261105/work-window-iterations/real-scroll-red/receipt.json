@@ -1,0 +1,41 @@
+{
+  "label": "real-scroll-red",
+  "head": "9468eb87cd875c5e07f689aeb53767880ccd6765",
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-I",
+    "/workspace/scratch/76b7222771d5/build-env/observe-tests.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.ContinuumWorkWindowScrollUiTest"
+  ],
+  "started": 1793900237.1970868,
+  "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+  "statusBefore": " M app/src/uiTest/java/at/heinz/deviceai/ContinuumVisualEvidenceUiTest.kt\n M docs/evidence/astra-jarvis-visual-20261105/FOLD7-OWNER-ACCEPTANCE.md\n?? app/src/uiTest/java/at/heinz/deviceai/ContinuumWorkWindowScrollUiTest.kt\n?? docs/evidence/astra-jarvis-visual-20261105/C1-AgentActivity-minimal.patch\n?? docs/evidence/astra-jarvis-visual-20261105/C1-HANDOFF.md\n?? docs/evidence/astra-jarvis-visual-20261105/avatar-identity.json\n?? docs/evidence/astra-jarvis-visual-20261105/original-glb-replay-8c851a09/\n?? docs/evidence/astra-jarvis-visual-20261105/source-invariants.json\n?? docs/evidence/astra-jarvis-visual-20261105/work-window-iterations/\n?? tools/__pycache__/\n?? tools/measure_ref5_app_colors.py\n",
+  "sourcePatchSha256": "4a1c63c1a060be9d2c7dc85d151d901bdf77b3c1bd4ad06a27ede621ebdfc7a0",
+  "exitCode": 1,
+  "ended": 1793900277.9182582,
+  "sourceUnchanged": true,
+  "statusAfter": " M app/src/uiTest/java/at/heinz/deviceai/ContinuumVisualEvidenceUiTest.kt\n M docs/evidence/astra-jarvis-visual-20261105/FOLD7-OWNER-ACCEPTANCE.md\n?? app/src/uiTest/java/at/heinz/deviceai/ContinuumWorkWindowScrollUiTest.kt\n?? docs/evidence/astra-jarvis-visual-20261105/C1-AgentActivity-minimal.patch\n?? docs/evidence/astra-jarvis-visual-20261105/C1-HANDOFF.md\n?? docs/evidence/astra-jarvis-visual-20261105/avatar-identity.json\n?? docs/evidence/astra-jarvis-visual-20261105/original-glb-replay-8c851a09/\n?? docs/evidence/astra-jarvis-visual-20261105/source-invariants.json\n?? docs/evidence/astra-jarvis-visual-20261105/work-window-iterations/\n?? tools/__pycache__/\n?? tools/measure_ref5_app_colors.py\n",
+  "log": "/workspace/scratch/76b7222771d5/build-env/logs/real-scroll-red.log",
+  "sourceBeforeManifestSha256": "7beecc967ef2a3030d79f1093bbd404725628c4ad4475b83b829a97d34d9a5cf",
+  "sourceAfterManifestSha256": "7beecc967ef2a3030d79f1093bbd404725628c4ad4475b83b829a97d34d9a5cf",
+  "changedSourceSha256": {
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumVisualEvidenceUiTest.kt": "51e7fad4f1b1e21ad8a783660fc02ab90182b50df54d5607d9138ff26464767f",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumWorkWindowScrollUiTest.kt": "1c279b4adf219878f496ab37b492dff18853b221664208b79a9dbb53ecd92552"
+  },
+  "observedCounts": {
+    "tests": 2,
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0
+  },
+  "countBasis": "AUDIT_TESTS and fresh JUnit XML"
+}

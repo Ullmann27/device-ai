@@ -1,0 +1,4429 @@
+{
+  "baseline": "64ec06a73f50cae9ee49035c840710d87777d50f",
+  "freeze": "e12c9dc8",
+  "node": "v24.19.0",
+  "verifierPath": "/workspace/delta-challenger-followup/.github/continuum/ccc1-redgreen-verifier.mjs",
+  "verifierSha256": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+  "harnessSha256": "79c1dea750cc704049d0a5cea91af54d80932a56a49a0e965a409cba68c50cdb",
+  "profile": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+  "fixtures": [
+    {
+      "id": "ordinary",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+      "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+      "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+      "testsSha256": "85adc363ca5d808e9b49f0265d383ce26bb1292fd81f66ba8c67e268c833afa7",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "473fc6e3133e80f06048b2b57ffa168c77b6c9ffe72753cf7f5ba1a9d416680b",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "e8da8d7369b99927f953e7f6a48a59adacf3722aa2d6a9b4da60ba1e8b26d286",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 3,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "78340b99046acf6d114b19077186ac841a3e7cde351c8d33095a09690a1d66ab",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 3,
+        "failed": 0
+      }
+    },
+    {
+      "id": "extension",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "26923c2fa1f5037c2b50ae6dde1efcd56aa6adf9",
+      "greenSha": "14d5e6651a45e20dd94eb442a0750cae616fa206",
+      "patchSha256": "f3f80ff39eac76d048ddf759f6ef29d7151052293be0510926caf4241a9c215c",
+      "testsSha256": "a3dda3dceb0b2ec6c2409b4c7536208e9bd009c2bb5d096e717899357bd21f95",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "ddfe1c42fb9859f4f5fcc99d83b9719ae09ba1aab69002c86912dcfbb9b06b93",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "e2002213a93f542e7a44a1f2aedb07f48bad81847ad052af8fdd448ed3ffe035",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 3,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "17532ddfbed8b46e2232cef719cb733d7bf2149480b0cf67ab38134f92156347",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ],
+          [
+            "check.added",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.added",
+              "identity": "[\"tests/check.test.mjs\",[],\"added\",1]",
+              "alias": "test.added"
+            }
+          ]
+        ],
+        "executed": 4,
+        "failed": 0
+      }
+    },
+    {
+      "id": "drop",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "95db4be76bedce8cd35781ba9e6282c614f926eb",
+      "greenSha": "7ca2b68e47ade6127f8c397910e4f7d501def189",
+      "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+      "testsSha256": "91995e55f2ccec79b3948a6a9470b5fef9d165f4531e2bd6b57daf2029fa4903",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "b8e5bb28959ecbb27da36833562cbe3797aa5b607ae7b09da8c6c09c33301ddc",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "1b2403f79bf0266174ae8e6c94db7db4a35513856761f268d81bcda38f9bfa5f",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 3,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "eeaa3d68d2f1254d395aee3e7d49ddf3e8512996c623724196f6f0522869cb2d",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ]
+        ],
+        "executed": 2,
+        "failed": 0
+      }
+    },
+    {
+      "id": "replace",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "e3d4d98e798cccfc9b027f8bb2bf975af5bd7c79",
+      "greenSha": "182588e637f320cfde883c7413d7888917fa272c",
+      "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+      "testsSha256": "4d1d6e83c8aff1d3f40c5cb242e4c418046eee4370174e6a31156fbdf17aa559",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "b8e5bb28959ecbb27da36833562cbe3797aa5b607ae7b09da8c6c09c33301ddc",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "256ab4556c9c0edda108197db3c1ae62dbb86ce9d588260689ed2ce3d68a459c",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 3,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "f1b3e7cbc27666c8caf1ed2da1629631efc8405ee1ef0d980598c56a815546b9",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.replacement",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.replacement",
+              "identity": "[\"tests/check.test.mjs\",[],\"replacement\",1]",
+              "alias": "test.replacement"
+            }
+          ]
+        ],
+        "executed": 3,
+        "failed": 0
+      }
+    },
+    {
+      "id": "skip",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "4a5541dc8a5d0500539f5199ee09f9ffb0d322c2",
+      "greenSha": "9398bada9dcce71b0e175125d7c338fe7f08f0b0",
+      "patchSha256": "7f2f3615cfcdab1f59a43260b43e75d2755c57d0d49b320055592d5eb4014ffc",
+      "testsSha256": "9dc67460846fa4965559d9f39136eed018bc6e18bc85b00376e9df494ce0bd3e",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "7d851b1098669ab873785983d370a6b524d48124672af652403079c8bed20a75",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "94578798b596a713b4ea1ed8f192a05a694e46ae8a5c3152bfe1af2ea907b7f1",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 3,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "ab9872264a62e1792aa28006e33cf4f6993eb98633b3cda474cf59bcbe816bf8",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": true,
+              "skipType": "skipped",
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 2,
+        "failed": 0
+      }
+    },
+    {
+      "id": "todo",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "c0539aa297e58e2bd312af86444b4a21404a0c21",
+      "greenSha": "16331bff5b033ce3086209f84b41627e9245ff1f",
+      "patchSha256": "a2c328ac471c29d806c6de4190dc13ad2a94c281cbce6c22aea6351a030f7a1d",
+      "testsSha256": "48e4e3ace2ac47c46d8bd35e75e0b457638755813f78cc182bfb90f10a0cbf49",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "832f11cf6455c10f4d72b790e2a98c548e419d87a05d5386e69f5a633598e432",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "1549502b0d22aba5dd3636b69a10c67adcc32b02d4674431ab69ffd662ebd807",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 3,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "f1226476d8e1e0aef2a7e06ea84e3516549f17eba9d0d8b9bf76354964637216",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": true,
+              "skipType": "todo",
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 2,
+        "failed": 0
+      }
+    },
+    {
+      "id": "duplicate",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "e2c84c49aaf61485623755d238d07790e9c2adac",
+      "greenSha": "71077c49ac340fd3898afe77e8035adc5668a163",
+      "patchSha256": "7f1267cc42c04aa0514cb8d2b8c35714171a5abdb7aec29c0fc87f48ca0816ff",
+      "testsSha256": "bb87d05ab8038c11abdd67a0e02ee496c7407793764402d32f7c72f9249dde22",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "f5eb026012e1743108f8fd28f8bd2324ac157f2dcccec81a384a42f02d4da5d9",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "73b85389eee701c7f0a039d727182c73f799fa62e48d70d2aef345fc202a3446",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.repeated",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.repeated",
+              "identity": "[\"tests/check.test.mjs\",[],\"repeated\",1]",
+              "alias": "test.repeated"
+            }
+          ],
+          [
+            "check.repeated\u0000",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.repeated",
+              "identity": "[\"tests/check.test.mjs\",[],\"repeated\",2]",
+              "alias": "test.repeated"
+            }
+          ]
+        ],
+        "executed": 4,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "ebd732b368fdcd9d4a922002e3c6c008cdacd3f4f284e37b1cb88950525f91bc",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.repeated",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.repeated",
+              "identity": "[\"tests/check.test.mjs\",[],\"repeated\",1]",
+              "alias": "test.repeated"
+            }
+          ]
+        ],
+        "executed": 3,
+        "failed": 0
+      }
+    },
+    {
+      "id": "nested-loss",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "70d80438ee1821e2ea63aeefd561372082c40bc9",
+      "greenSha": "a9355abf9502a3980713869097c5c08fe6381680",
+      "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+      "testsSha256": "e8553dd4e3556ddcc83b1c41321dda4997ddf19cdb4090da9dcba3f9ddc855e8",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "b8e5bb28959ecbb27da36833562cbe3797aa5b607ae7b09da8c6c09c33301ddc",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "35902826a63d0ecb996fb770143d65421d67a41bd48cacab4459f0088e3dc5c8",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.leaf",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.leaf",
+              "identity": "[\"tests/check.test.mjs\",[\"north\"],\"leaf\",1]",
+              "alias": "test.leaf"
+            }
+          ],
+          [
+            "check.leaf\u0000",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.leaf",
+              "identity": "[\"tests/check.test.mjs\",[\"south\"],\"leaf\",1]",
+              "alias": "test.leaf"
+            }
+          ]
+        ],
+        "executed": 4,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "581986825af83e5df1319f0d2e813b46f9eee718addbd992142685f8d4cced04",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.leaf",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.leaf",
+              "identity": "[\"tests/check.test.mjs\",[\"north\"],\"leaf\",1]",
+              "alias": "test.leaf"
+            }
+          ],
+          [
+            "check.south",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.south",
+              "identity": "[\"tests/check.test.mjs\",[],\"south\",1]",
+              "alias": "test.south"
+            }
+          ]
+        ],
+        "executed": 4,
+        "failed": 0
+      }
+    },
+    {
+      "id": "nested-retained",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "70d80438ee1821e2ea63aeefd561372082c40bc9",
+      "greenSha": "7ab174764340ddcbfc27a9afc8e81125f5bdf601",
+      "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+      "testsSha256": "e8553dd4e3556ddcc83b1c41321dda4997ddf19cdb4090da9dcba3f9ddc855e8",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "473fc6e3133e80f06048b2b57ffa168c77b6c9ffe72753cf7f5ba1a9d416680b",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "27a75a441744d208f4f9501bfb113912b932e94922b83bcb0f35b32e22293b48",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.leaf",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.leaf",
+              "identity": "[\"tests/check.test.mjs\",[\"north\"],\"leaf\",1]",
+              "alias": "test.leaf"
+            }
+          ],
+          [
+            "check.leaf\u0000",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.leaf",
+              "identity": "[\"tests/check.test.mjs\",[\"south\"],\"leaf\",1]",
+              "alias": "test.leaf"
+            }
+          ]
+        ],
+        "executed": 4,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "304d82b5a83d5916d3676ff888e590436abca3c5bfd18bf0f3e412222757cfb4",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.leaf",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.leaf",
+              "identity": "[\"tests/check.test.mjs\",[\"north\"],\"leaf\",1]",
+              "alias": "test.leaf"
+            }
+          ],
+          [
+            "check.leaf\u0000",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.leaf",
+              "identity": "[\"tests/check.test.mjs\",[\"south\"],\"leaf\",1]",
+              "alias": "test.leaf"
+            }
+          ]
+        ],
+        "executed": 4,
+        "failed": 0
+      }
+    },
+    {
+      "id": "path-loss",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "e4d4085eb6882065024450fc2cdc0a11f9718802",
+      "greenSha": "ead588213818af3eb80de42e017c455f31d117b0",
+      "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+      "testsSha256": "94a442c2f66bd158d45e5516574b58925014d627057701c65eb6ec0d405c3e9e",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "b8e5bb28959ecbb27da36833562cbe3797aa5b607ae7b09da8c6c09c33301ddc",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "b262448f4b0719227f5350c6d8b326792093fe8d1ad061885d6c454a8c14e590",
+        "cases": [
+          [
+            "shared.leaf",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "shared.leaf",
+              "identity": "[\"tests/a/shared.test.mjs\",[],\"leaf\",1]",
+              "alias": "test.leaf"
+            }
+          ],
+          [
+            "shared.leaf\u0000",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "shared.leaf",
+              "identity": "[\"tests/b/shared.test.mjs\",[],\"leaf\",1]",
+              "alias": "test.leaf"
+            }
+          ],
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ]
+        ],
+        "executed": 4,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "5e9607d8ebaf9e4efb32efa5381e193bd5ca34a50e0cda031c3ebb8411af9d20",
+        "cases": [
+          [
+            "shared.leaf",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "shared.leaf",
+              "identity": "[\"tests/a/shared.test.mjs\",[],\"leaf\",1]",
+              "alias": "test.leaf"
+            }
+          ],
+          [
+            "shared.tests/b/shared.test.mjs",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "shared.tests/b/shared.test.mjs",
+              "identity": "[\"tests/b/shared.test.mjs\",[],\"tests/b/shared.test.mjs\",1]",
+              "alias": "test.tests/b/shared.test.mjs"
+            }
+          ],
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ]
+        ],
+        "executed": 4,
+        "failed": 0
+      }
+    },
+    {
+      "id": "alias-ambiguous",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "ed92a86aae6a6c77c445498a956be19cbf891994",
+      "greenSha": "3775cd1f31946e113f6c26b544332f10236f862a",
+      "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+      "testsSha256": "96b1733ce5d096b9148ef1ada0969f4ac4fbd2963aba5fbb10c6a202f04fb5e3",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "473fc6e3133e80f06048b2b57ffa168c77b6c9ffe72753cf7f5ba1a9d416680b",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "f48c7af9c830e98f71d6546cba0db208c75dacb036a30341fb37f252141ddbf2",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "else.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "else.target",
+              "identity": "[\"tests/else.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ]
+        ],
+        "executed": 3,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "56662a90f6ffefd84d16af0551b3f2e8fda61df5a945aa78c37b2dbfa7db8322",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "else.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "else.target",
+              "identity": "[\"tests/else.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ]
+        ],
+        "executed": 3,
+        "failed": 0
+      }
+    },
+    {
+      "id": "preexisting-skip",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "f56d828077e628bea043d81eafcbd1309a449fe6",
+      "greenSha": "7d7e47de92bbea411b8307ea47b1b68174c1265d",
+      "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+      "testsSha256": "cc32209ed2c688f58c982213a0074bc3ba8ceb3e308ba7c5bc9c6d95e36cfc93",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "473fc6e3133e80f06048b2b57ffa168c77b6c9ffe72753cf7f5ba1a9d416680b",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "5cf4471195e24d7c40cf45aa97664af2bc499642c696672847254457dffc6780",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": true,
+              "skipType": "skipped",
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 2,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "a7f49b3334e547978ea1e7ab25c3e081cd3be027dbddc42332ac5949dbf2257f",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": true,
+              "skipType": "skipped",
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 2,
+        "failed": 0
+      }
+    },
+    {
+      "id": "preexisting-todo",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "13124ca2cc4ff97224970f3269a88926ac0ea655",
+      "greenSha": "ada1cd3e1fd8435c1a2b46f8d752419208f4175d",
+      "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+      "testsSha256": "f71772709ba3cc320f0fd70dfa850b1d5152423fb2b4b7b9db04fc226ef81654",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "473fc6e3133e80f06048b2b57ffa168c77b6c9ffe72753cf7f5ba1a9d416680b",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "da7aa47d87c2a9f391e07c6c1bd689ea8fda5082800f3a90266701a7d65de6c7",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": true,
+              "skipType": "todo",
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 2,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "2638ec34a2c3e5f44ac9846287d9e733856b3d2d588c0e8e382fc5ad7ab58208",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ],
+          [
+            "check.retained",
+            {
+              "failed": false,
+              "skipped": true,
+              "skipType": "todo",
+              "legacyId": "check.retained",
+              "identity": "[\"tests/check.test.mjs\",[],\"retained\",1]",
+              "alias": "test.retained"
+            }
+          ]
+        ],
+        "executed": 2,
+        "failed": 0
+      }
+    },
+    {
+      "id": "timeout",
+      "base": "83522b52bc997277719adf0f091ffd9121684087",
+      "redSha": "a2654ad4d7de4bccb1e6aa2854d73baf101fa1e3",
+      "greenSha": "e84662f06dcade0b2a75896d2caa454a11f07dbd",
+      "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+      "testsSha256": "8bc7919fdae5428e6f12f548b895cfaba9e7baeeaef86171832805fe181f25f5",
+      "redSourceSha256": "c0a593a1b22d28e5c001a5894b66fc20a2358c247b5bfbedd02b82fea7307035",
+      "greenSourceSha256": "b8e5bb28959ecbb27da36833562cbe3797aa5b607ae7b09da8c6c09c33301ddc",
+      "red": {
+        "ok": true,
+        "exitCode": 1,
+        "xmlSha256": "cc6a18a6ab11bf3e5881a666cf22e6789d6190304b16e26977c36ddc0905c777",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": true,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ]
+        ],
+        "executed": 2,
+        "failed": 1
+      },
+      "green": {
+        "ok": true,
+        "exitCode": 0,
+        "xmlSha256": "3d4b662cf0fb4e80703917522365aeaa2203c2f719bedbe0071bb23b786ce0e1",
+        "cases": [
+          [
+            "basic.smoke",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "basic.smoke",
+              "identity": "[\"tests/basic.test.mjs\",[],\"smoke\",1]",
+              "alias": "test.smoke"
+            }
+          ],
+          [
+            "check.target",
+            {
+              "failed": false,
+              "skipped": false,
+              "skipType": null,
+              "legacyId": "check.target",
+              "identity": "[\"tests/check.test.mjs\",[],\"target\",1]",
+              "alias": "test.target"
+            }
+          ]
+        ],
+        "executed": 2,
+        "failed": 0
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "D01",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "d8cb439ad96484b871858d2014f5fac71df9db095155be23e137ea51888ed8cd",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "3dbb7616bb3e3b6ca6d928d55dacd12596cca666f543e746ecd6d0f7c9c801ce",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "e89d7a44aaf4f1a48404e8441512fcfee74ec715f6088b722536449ea92471b6",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D01",
+      "fixture": "ordinary",
+      "mode": "patch",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "d8cb439ad96484b871858d2014f5fac71df9db095155be23e137ea51888ed8cd",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "566f7976a20657d6644de27bd7b11a7a4cc6030569aaddb85f84c134795ca64e",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "bf19c273958d8cef8a5e5994368ff4e0c8084025fd3599477c4fe1caa9add1f4",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D02",
+      "fixture": "extension",
+      "mode": "commit",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "26923c2fa1f5037c2b50ae6dde1efcd56aa6adf9",
+        "greenSha": "14d5e6651a45e20dd94eb442a0750cae616fa206",
+        "patchSha256": "f3f80ff39eac76d048ddf759f6ef29d7151052293be0510926caf4241a9c215c",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "26923c2fa1f5037c2b50ae6dde1efcd56aa6adf9",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "14d5e6651a45e20dd94eb442a0750cae616fa206",
+          "command": "node-redgreen",
+          "executed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "c38b70554367494d5ebd855973c6557981f4e9dfbe6ba5e98ea3744a867692cd",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "f3f80ff39eac76d048ddf759f6ef29d7151052293be0510926caf4241a9c215c",
+        "red": {
+          "xmlSha256": "b9b0ebc422b697f28ea00a08f8d64507a06b354d250a3c2e441e79c1b9455e69",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "565f03ec719cc2a9eba69ff80cf92c33da5a104ee100b3eed7c6ced129b44593",
+          "exitCode": 0,
+          "executed": 4,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D02",
+      "fixture": "extension",
+      "mode": "patch",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "26923c2fa1f5037c2b50ae6dde1efcd56aa6adf9",
+        "greenSha": "14d5e6651a45e20dd94eb442a0750cae616fa206",
+        "patchSha256": "f3f80ff39eac76d048ddf759f6ef29d7151052293be0510926caf4241a9c215c",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "26923c2fa1f5037c2b50ae6dde1efcd56aa6adf9",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "14d5e6651a45e20dd94eb442a0750cae616fa206",
+          "command": "node-redgreen",
+          "executed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "c38b70554367494d5ebd855973c6557981f4e9dfbe6ba5e98ea3744a867692cd",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "f3f80ff39eac76d048ddf759f6ef29d7151052293be0510926caf4241a9c215c",
+        "red": {
+          "xmlSha256": "5933a1b24178e09c2f2e2f3dc2c3d4a913e70e147648b38ed487402b7666bc90",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "823fa7fd18e836226fb96aa55de6d9a7ac6b762e12a082b41a455d28932e5e60",
+          "exitCode": 0,
+          "executed": 4,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D03",
+      "fixture": "drop",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "95db4be76bedce8cd35781ba9e6282c614f926eb",
+        "greenSha": "7ca2b68e47ade6127f8c397910e4f7d501def189",
+        "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "95db4be76bedce8cd35781ba9e6282c614f926eb",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "7ca2b68e47ade6127f8c397910e4f7d501def189",
+          "command": "node-redgreen",
+          "executed": 2,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "9b5e1e28f4b814ad3bd8d2f5f0f0112de728426c0e6716f4e8956d67af2dfa56",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+        "red": {
+          "xmlSha256": "19117b3e763ba9625e417dab8297b39780697b66fe366bf0a8d53c6b11dcb2e3",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "a015af9e35661d6b73245e6684bbc60294fa442e56366d586c3977fad1c21486",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D03",
+      "fixture": "drop",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "95db4be76bedce8cd35781ba9e6282c614f926eb",
+        "greenSha": "7ca2b68e47ade6127f8c397910e4f7d501def189",
+        "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "95db4be76bedce8cd35781ba9e6282c614f926eb",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "7ca2b68e47ade6127f8c397910e4f7d501def189",
+          "command": "node-redgreen",
+          "executed": 2,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "9b5e1e28f4b814ad3bd8d2f5f0f0112de728426c0e6716f4e8956d67af2dfa56",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+        "red": {
+          "xmlSha256": "ddebc575910d649fcdef30d37fa410547654be6a31125553e1a9c00e64a3268a",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "cbd0f77acc81e29d83ff1db932e4bd679e35f9b9f6a9a0c94082b1e597736de7",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D04",
+      "fixture": "replace",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "e3d4d98e798cccfc9b027f8bb2bf975af5bd7c79",
+        "greenSha": "182588e637f320cfde883c7413d7888917fa272c",
+        "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "e3d4d98e798cccfc9b027f8bb2bf975af5bd7c79",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "182588e637f320cfde883c7413d7888917fa272c",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "0f399e64e1134ef58937d604c976c791ef4a3b3887d04562e8a89e2266aa8609",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+        "red": {
+          "xmlSha256": "3e0de281e9213e8ea68e94285b27c51c136cbacc262088b063cad8d93908c7e8",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "dda8dfc941119549014cc9803fd1fd1eafaeed2ad841b8c4ebe9a359e1686092",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D05",
+      "fixture": "skip",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4a5541dc8a5d0500539f5199ee09f9ffb0d322c2",
+        "greenSha": "9398bada9dcce71b0e175125d7c338fe7f08f0b0",
+        "patchSha256": "7f2f3615cfcdab1f59a43260b43e75d2755c57d0d49b320055592d5eb4014ffc",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4a5541dc8a5d0500539f5199ee09f9ffb0d322c2",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "9398bada9dcce71b0e175125d7c338fe7f08f0b0",
+          "command": "node-redgreen",
+          "executed": 2,
+          "failed": 0,
+          "skipped": 1,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "fe6ad089fd117b60be214598f662856165db56a258d3f791d5d6bdce299344e8",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_EXECUTION_CHANGED"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "7f2f3615cfcdab1f59a43260b43e75d2755c57d0d49b320055592d5eb4014ffc",
+        "red": {
+          "xmlSha256": "8bcf27ad3c3c711f6cc40a0e3ed096894f12ebe04a97d6bf593dc62cb358853e",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "bd15b6cc2026afbd38a91aab3aa9f87c0fe193c61458977d555318d129b26bae",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D06",
+      "fixture": "todo",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "c0539aa297e58e2bd312af86444b4a21404a0c21",
+        "greenSha": "16331bff5b033ce3086209f84b41627e9245ff1f",
+        "patchSha256": "a2c328ac471c29d806c6de4190dc13ad2a94c281cbce6c22aea6351a030f7a1d",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "c0539aa297e58e2bd312af86444b4a21404a0c21",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "16331bff5b033ce3086209f84b41627e9245ff1f",
+          "command": "node-redgreen",
+          "executed": 2,
+          "failed": 0,
+          "skipped": 1,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "cc410e8171ce74279f845e81a696630b127d7bc8ed71b271765e33d3c6d17cc4",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_EXECUTION_CHANGED"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a2c328ac471c29d806c6de4190dc13ad2a94c281cbce6c22aea6351a030f7a1d",
+        "red": {
+          "xmlSha256": "033bff4db33d7f1a6f8a89fb0851fe8e4a920978cacc8ea6031d75fec51d3a87",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "c5d978aa0f6f4046752aba78e84d7c744688fa1b3a3283a4919982958fa8b749",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D07",
+      "fixture": "duplicate",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "e2c84c49aaf61485623755d238d07790e9c2adac",
+        "greenSha": "71077c49ac340fd3898afe77e8035adc5668a163",
+        "patchSha256": "7f1267cc42c04aa0514cb8d2b8c35714171a5abdb7aec29c0fc87f48ca0816ff",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "e2c84c49aaf61485623755d238d07790e9c2adac",
+          "command": "node-redgreen",
+          "executed": 4,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "71077c49ac340fd3898afe77e8035adc5668a163",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "2b34ecc2028e9f05d4631f2ae6911e7ddd7553a6675705d31ee41106fd35faa9",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "7f1267cc42c04aa0514cb8d2b8c35714171a5abdb7aec29c0fc87f48ca0816ff",
+        "red": {
+          "xmlSha256": "e1a04e32a8db004ea027d5cae6704543faeb527020ccbabe0e8ba7d5159abc20",
+          "exitCode": 1,
+          "executed": 4,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "9bc8d3dacbb31127591e389a8c929526e89ba540b6f8433772985c3783b02e8c",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D08",
+      "fixture": "nested-loss",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "70d80438ee1821e2ea63aeefd561372082c40bc9",
+        "greenSha": "a9355abf9502a3980713869097c5c08fe6381680",
+        "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "70d80438ee1821e2ea63aeefd561372082c40bc9",
+          "command": "node-redgreen",
+          "executed": 4,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "a9355abf9502a3980713869097c5c08fe6381680",
+          "command": "node-redgreen",
+          "executed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "18edc6fe6cd9e9851302a8c269be7c948ae260acafd2f62cf2c395802979c146",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+        "red": {
+          "xmlSha256": "33b60d48e9b4927ae51431d803fcc540aa0d18b728d37fe24e1f27c18eaba2c0",
+          "exitCode": 1,
+          "executed": 4,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "ee229d8911bac99d75adbf3960c653e2de8d2d3db39d1fe300780e394527999a",
+          "exitCode": 0,
+          "executed": 4,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D09",
+      "fixture": "nested-retained",
+      "mode": "commit",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "70d80438ee1821e2ea63aeefd561372082c40bc9",
+        "greenSha": "7ab174764340ddcbfc27a9afc8e81125f5bdf601",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "70d80438ee1821e2ea63aeefd561372082c40bc9",
+          "command": "node-redgreen",
+          "executed": 4,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "7ab174764340ddcbfc27a9afc8e81125f5bdf601",
+          "command": "node-redgreen",
+          "executed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "d4204802210e1e802a70f07aeb9f76d87802a4eba463952170a589821b1b3956",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "14fc05ec0cb11e585fdde4421c94e0c3dc5e60e90ee8e3dfe5f9a11338fc3a27",
+          "exitCode": 1,
+          "executed": 4,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "9edf7733d14e03e9dfea5d5aa091214df8f628640af3aa096598b2d3f1bf7f95",
+          "exitCode": 0,
+          "executed": 4,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D10",
+      "fixture": "path-loss",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "e4d4085eb6882065024450fc2cdc0a11f9718802",
+        "greenSha": "ead588213818af3eb80de42e017c455f31d117b0",
+        "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "e4d4085eb6882065024450fc2cdc0a11f9718802",
+          "command": "node-redgreen",
+          "executed": 4,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "ead588213818af3eb80de42e017c455f31d117b0",
+          "command": "node-redgreen",
+          "executed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "19d1542c4306ba697455223e361d33c6740ccb3e190856465a9a5095759e2e0f",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "98a8a9de7bec34a6012eddbd9633cf3ed6222b3f92b0a88f83d501311b167645",
+        "red": {
+          "xmlSha256": "0cc8bc9dc018d1f5f0e1e83a45955f472f5948dce56660a44dddc886f6e4183b",
+          "exitCode": 1,
+          "executed": 4,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "b2552772be80f227ad26c0d54dafb4abac233aa4cf68dc2b6b5e6cfdb09309f8",
+          "exitCode": 0,
+          "executed": 4,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D11",
+      "fixture": "alias-ambiguous",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "ed92a86aae6a6c77c445498a956be19cbf891994",
+        "greenSha": "3775cd1f31946e113f6c26b544332f10236f862a",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "test.target"
+        ],
+        "red": {
+          "sha": "ed92a86aae6a6c77c445498a956be19cbf891994",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "3775cd1f31946e113f6c26b544332f10236f862a",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "test.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "a3a6c70c4d86c8c4a53c81f105153963e8435cf2ea45df98e18b0c8808ec139e",
+        "verdict": "REJECTED",
+        "reasons": [
+          "TARGET_MISSING_IN_RED",
+          "TARGET_IDENTITY_AMBIGUOUS",
+          "TARGET_NOT_PASSING_IN_GREEN",
+          "CLAIMED_GREEN_TARGETS_DIFFER"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "7ff77c8e09fac6084bfa2d2bad0dcb72d90841d977c0c7d81d28ca0f6fb849a7",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "77270edb80e03fe42beb619f81661b653f35ea8799e98eb3ca6e0e915eb6d284",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D12",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "test.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "test.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "67348bc3ca51513d6282fdb6f2a947ddd7a92327424f093c8cf271dd57fe54bf",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "586cfe4b03569a7d7920b26f130fc4be9038003b7c471d51e46d2fd21aa28c73",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "b57bf7bba39c1bfb0ab71471214919de11c67812c7e8ad8186a58fb4a591977c",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D13",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target",
+          "test.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target",
+            "test.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "4ca0da11813521802d392a9e336370edf1b84a94a66c7b5a5b5d920d99937b93",
+        "verdict": "REJECTED",
+        "reasons": [
+          "TARGET_IDENTITY_DUPLICATE",
+          "CLAIMED_GREEN_TARGETS_DIFFER"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "fb92d137e05ee7b45214d3a7033c27c2e3826732b337394b8a9eb1dc54ee82d1",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "e207c6a9ce84685bf2f83f2e60ff93ba0c59818b4f9ddca80be62f5907814a06",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D14",
+      "fixture": "preexisting-skip",
+      "mode": "commit",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "f56d828077e628bea043d81eafcbd1309a449fe6",
+        "greenSha": "7d7e47de92bbea411b8307ea47b1b68174c1265d",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "f56d828077e628bea043d81eafcbd1309a449fe6",
+          "command": "node-redgreen",
+          "executed": 2,
+          "failed": 1,
+          "skipped": 1,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "7d7e47de92bbea411b8307ea47b1b68174c1265d",
+          "command": "node-redgreen",
+          "executed": 2,
+          "failed": 0,
+          "skipped": 1,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "9755646204f8cf82bee5490f9775cec84638e8b3d1ffcd0383984c459e5fd91d",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "1341839282e7db14a314f18e909753769d6219d55b9e8993acab2417357d7fbd",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "3ee9753960ff8d5f4c78ff6ea6ea650e5e28558430fa03d5687e7f6832891c58",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D15",
+      "fixture": "preexisting-todo",
+      "mode": "commit",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "13124ca2cc4ff97224970f3269a88926ac0ea655",
+        "greenSha": "ada1cd3e1fd8435c1a2b46f8d752419208f4175d",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "13124ca2cc4ff97224970f3269a88926ac0ea655",
+          "command": "node-redgreen",
+          "executed": 2,
+          "failed": 1,
+          "skipped": 1,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "ada1cd3e1fd8435c1a2b46f8d752419208f4175d",
+          "command": "node-redgreen",
+          "executed": 2,
+          "failed": 0,
+          "skipped": 1,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "440240101492560a1eb19f0e6040a96f05c01d35789737d0da7e6877182d20ca",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "5c692ee6910ba932907480baa91976707015e768b03c53f11e5451edb3e0dbe1",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "a23c19479e6de28565eda3a5214b1493d54fa75e035e5e57c587f7b3223ed253",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-red-exitCode",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "4e6525c59a1a0b92fe94cbe3717e9fc315278b1f2add54ff35d8e55c690078a1",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_RED_EXITCODE_DIFFERS"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "b22bf849f683a5c079e78309cf4c3085eaa6d34bf21afc4b17ea2f6ffa1cccbd",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "d93233c257f013afa4802bf2c80dc661847cc68ff5cdcd38286a5591cb91c582",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-red-command",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "not-node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "ae716033a6555e2e190ef5bfbde013921731a919dfee16e53bff53bd2aa0fb72",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_RED_COMMAND_DIFFERS"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "e6d56bed33b9d6466ddaab8a346b19e1c970a9cfcc54c49a1b5b889d78007917",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "7a8e375c0e35ae30d65c64742b0d9440b8852b03fbc7e01d1ff72a7234166483",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-red-timedOut",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": true,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "748dc50d4e879160f483a67bb130b014fb5c1cdd2b8b8c365ea826451dcd47db",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_RED_TIMEDOUT_DIFFERS"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "b6ff5539d5a019151e3872e48feb97973db35d01730fa399b45774d329749209",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "6958ee6fb90f46377a565a3d554b1f143764e0d11858be5ed0ccb71ed92c05aa",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-red-cancelled",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": true
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "b6301bf48c37aedc39fe1c998068e0480580133bb0cc730e5f1bd951dc3002d0",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_RED_CANCELLED_DIFFERS"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "cd6749f542fa4895b060d9618a55db91f4c360900fcdf7a05ff7e33348e26dfb",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "586f2d68ff165f1fcfffbf723b9673574cc11846b0d49f55de5b55c703083435",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-red-skipped",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 99,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "50f5d0f1df52ddb0480cccb8026d5f697ad710b291e2d62932e634bfdb685bbd",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_RED_SKIPPED_DIFFERS"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "af96ba3f91441c87092faeb24af30a76354e1fd38656e46d865b58f3168266b4",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "0ae4f5a9ced63bd53968d441f8755558540edccea04073ed0804cfd97abaef7a",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-red-passedTargets",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [
+            "not.real"
+          ],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "b30387925f84d1b0f847094cb3a63a19dc5f101eca826b03e654e9e2a675ee9e",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_RED_TARGETS_DIFFER"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "ff7c2f9fcdf128ff6d244a8468dd93b32d16fbc316206802763a91139fd6dbcf",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "1ad808d646c54ef1a69384e4aab06dc84f7d41700d22950fce3b48bb807803d5",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-green-exitCode",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 9,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "312d301428fdd6bae02956034e5bd6e7e021b9231f69c8cb880c800c6d8e76b0",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_GREEN_EXITCODE_DIFFERS"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "5f93b3e8fab1fe8c4d857238d6bdb8819d87c0817e372e7a4ef9a132568c8fd4",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "e10c3f7222e68298250edc4a8be539b29861099db718da25c73a75fc7ab2d0f2",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-green-command",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "not-node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "d3f1868075393ac75f589cf098d0e34d90ddbdd0d4f5cff09c943f18033dcc2c",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_GREEN_COMMAND_DIFFERS"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "2bfe1edf388f9c135d324c8ba73f9fefe2cd0c91953b7d990362b52ba2223b2e",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "cbbe59515caf02622dc6ba126d9bff8c07b1b11ef1fc9449977cc975082b1c48",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-green-timedOut",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": true,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "2fee71d58ef9df71bf6567a57a4b940b5f801c2db6371a4d7cc9a2d907c0ec1d",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_GREEN_TIMEDOUT_DIFFERS"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "d72400c90d569def4b7f09d6a04db993e4ef107e019c9387445f5878a8b2e871",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "13974ad59b25736e54cab0f5a3cc64943a664d1756cd0c02bdf43c8516aa81d5",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-green-cancelled",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": true
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "7c9c9b9609a0985bec45250018fc6d40d0e6695e72454dae34acc1cc7c74881e",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_GREEN_CANCELLED_DIFFERS"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "4923aa9eda622dd7f9f7520c98f6b4b2f67c8b61126c90e90a4e408bcca7789d",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "a2565f0dbe554638052b1ab83c95790cf66ac64c594e555e69cc1d80c755bbbc",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-green-skipped",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 99,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "9b0c4a163677aff8c123914137ca3f0338919c37f8f913b7ce93ef9252694430",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_GREEN_SKIPPED_DIFFERS"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "01e9f754bfb3b0ab07d3db90c4b547dc65dbe03d4fc1e2dacae949bfe25d2c49",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "011d8a9397175cd11785658c42cc6ab63b428056e9f557d1508c20664eadddea",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-green-passedTargets",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "not.real"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "62b2106ce3b2f1747497461a9bffbf630962433daa51ffaf24771a9ffd4671db",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_GREEN_TARGETS_DIFFER"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "a242963a6a131307e4dad69cbb144eb0bbdc16d5f494f9b7f35201d19782825e",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "9d2c8f242edc866370800a4e9c807305ac6c4864edb74bb4a39e9e25b8281f1e",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-malformed-red-failingTests",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": null,
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "a014c87aa2fe48aa9bd0a21f29ce87f32f7573456ee92b24b882fb95b4114796",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_RUN_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "c6a70838ba2804ff36568e3c58aee0a1b64ac8a0a21fc0f0785c7ca9159046a9",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "d3a9f8289da11f8f30c3be86ddd392b7e406c97983478298717908dc912480a2",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-malformed-green-failingTests",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": null,
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "012981c5f9db1c492d5b92b9183f68e3372acc39dd5bed958c3524e7be69998c",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_RUN_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "cd6574370165d522942dc9a0fd31beed86acc2a93edc3a54fe8b2d6db2a05ad3",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "18a8049349a789b451ca9171c36835ead83d069e941c11241397899223b3d4a1",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D16-malformed-green-passedTargets",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": null,
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "10005010e14c121e5af2ff0f434aee9185ef26c64bb5bae86b298e3d1ebb823c",
+        "verdict": "REJECTED",
+        "reasons": [
+          "CLAIMED_RUN_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "66278f8f8b0f68348dcb7d2935fb4c97fcf89735aa122daeb907f795f86fe5a0",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "87d9728504b4c9fe47627f6a4c83a1e37767842cdf8f7fe5aaaf0acee5f523ee",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D17-approvedForMerge",
+      "fixture": "ordinary",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": true,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "bbbec55ca8e03eb69ec6ac06154a041cb420b0329eefc54ff3817169618d1d51",
+        "verdict": "REJECTED",
+        "reasons": [
+          "FORBIDDEN_CLAIM"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      }
+    },
+    {
+      "id": "D17-installed",
+      "fixture": "ordinary",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": true,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "d0760cdb75a9df9bdd9d83789f704ff3c392385e094926a9a4e46880b681c7ac",
+        "verdict": "REJECTED",
+        "reasons": [
+          "FORBIDDEN_CLAIM"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      }
+    },
+    {
+      "id": "D17-deviceVerified",
+      "fixture": "ordinary",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": true
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "aeae886306fd984ec1b9ce7ee52a5b5343f8a636c727cab32af5583c7d4e98ce",
+        "verdict": "REJECTED",
+        "reasons": [
+          "FORBIDDEN_CLAIM"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      }
+    },
+    {
+      "id": "D17-schema",
+      "fixture": "ordinary",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "forged",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "c6a9a57d930fb1afa5dbd66fe2225d51c3609bdce1e3afbbabc9ea520c315591",
+        "verdict": "REJECTED",
+        "reasons": [
+          "RECEIPT_SCHEMA"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      }
+    },
+    {
+      "id": "D17-version",
+      "fixture": "ordinary",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 999,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "103b358e9f72f66e158bb0c71644f4319fb080b9d1f68a1e7637403a4a74a053",
+        "verdict": "REJECTED",
+        "reasons": [
+          "RECEIPT_SCHEMA"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      }
+    },
+    {
+      "id": "D18-truncated",
+      "mode": "parser-only",
+      "expected": "NO_USABLE_CASES_OR_THROW",
+      "actual": "1_CASES",
+      "pass": false
+    },
+    {
+      "id": "D18-absent",
+      "mode": "parser-only",
+      "expected": "NO_USABLE_CASES_OR_THROW",
+      "actual": "0_CASES",
+      "pass": true
+    },
+    {
+      "id": "D18-zero",
+      "mode": "parser-only",
+      "expected": "NO_USABLE_CASES_OR_THROW",
+      "actual": "0_CASES",
+      "pass": true
+    },
+    {
+      "id": "D18-unclosed",
+      "mode": "parser-only",
+      "expected": "NO_USABLE_CASES_OR_THROW",
+      "actual": "1_CASES",
+      "pass": false
+    },
+    {
+      "id": "D19",
+      "mode": "actual-profile",
+      "expected": "TIMEOUT_THEN_SUCCESS",
+      "actual": {
+        "timeoutRun": {
+          "ok": false,
+          "reason": "TIMEOUT_OR_SIGNAL"
+        },
+        "retry": {
+          "ok": true,
+          "exitCode": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "D20-wrong-patch-hash",
+      "fixture": "ordinary",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "d8cb439ad96484b871858d2014f5fac71df9db095155be23e137ea51888ed8cd",
+        "verdict": "REJECTED",
+        "reasons": [
+          "PATCH_HASH_MISMATCH"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      }
+    },
+    {
+      "id": "D20-missing-target",
+      "fixture": "ordinary",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "absent.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "absent.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "b45a6bc5bda94710e799a7eabde670ef9b22a408b48fc760662293e1a1f835d0",
+        "verdict": "REJECTED",
+        "reasons": [
+          "RED_FAILS_OUTSIDE_TARGETS",
+          "TARGET_MISSING_IN_RED",
+          "TARGET_NOT_PASSING_IN_GREEN",
+          "CLAIMED_GREEN_TARGETS_DIFFER"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "red": {
+          "xmlSha256": "ceef48252a0ab8728c5284e9f8bea8d82f2a5435b9f3d9e45e5ca87ee88df87c",
+          "exitCode": 1,
+          "executed": 3,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "f70ce0c2b33c92fc81923d9b688e099bc2544ea0470b39215dd06e03a248422b",
+          "exitCode": 0,
+          "executed": 3,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "id": "D20-test-edit",
+      "fixture": "ordinary",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "pass": true,
+      "callerPreserved": true,
+      "receipt": {
+        "schema": "continuum-ccc1-patch-receipt",
+        "version": 1,
+        "repo": "Ullmann27/device-ai",
+        "baseSha": "83522b52bc997277719adf0f091ffd9121684087",
+        "redSha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+        "greenSha": "666310b877d004b501151058b53a7417f84a2f42",
+        "patchSha256": "a235c78f3692aa456765ffac8e6187bd4cae55099a9eef82bb83da51a821afba",
+        "targetTests": [
+          "check.target"
+        ],
+        "red": {
+          "sha": "4aaf2b2211163a25bf84c438514d0b9a381def81",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 1,
+          "skipped": 0,
+          "failingTests": [
+            "check.target"
+          ],
+          "passedTargets": [],
+          "exitCode": 1,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "green": {
+          "sha": "666310b877d004b501151058b53a7417f84a2f42",
+          "command": "node-redgreen",
+          "executed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failingTests": [],
+          "passedTargets": [
+            "check.target"
+          ],
+          "exitCode": 0,
+          "timedOut": false,
+          "cancelled": false
+        },
+        "approvedForMerge": false,
+        "installed": false,
+        "deviceVerified": false
+      },
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "d8cb439ad96484b871858d2014f5fac71df9db095155be23e137ea51888ed8cd",
+        "verdict": "REJECTED",
+        "reasons": [
+          "FIX_MODIFIES_TESTS"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      }
+    }
+  ],
+  "summary": {
+    "total": 46,
+    "pass": 44,
+    "fail": 2
+  }
+}

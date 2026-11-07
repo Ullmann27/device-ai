@@ -1,0 +1,44 @@
+{
+  "kind": "SOURCE_READBACK_NOT_DEVICE_TEST",
+  "sourceCommit": "7c3523cde9dae302a52d69818867a9abe8cf0fb7",
+  "baselineCommit": "b294fc9139f1a458fccf815bb931eb61b2f7b0e8",
+  "unchangedFiles": [
+    {
+      "path": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+      "unchanged": true,
+      "bytes": 12038416,
+      "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "unchanged": true,
+      "bytes": 6022,
+      "sha256": "2fe747922fe352e3f2f4a52ad196198d784ad4f0e3a7b27c3684584f5bdef5c0"
+    },
+    {
+      "path": "app/build.gradle.kts",
+      "unchanged": true,
+      "bytes": 16720,
+      "sha256": "9b695ad6f30cecb182684aca97ca9f7898d71e2e95f6c8731c859fa7a6b2a171"
+    },
+    {
+      "path": "gradle.properties",
+      "unchanged": true,
+      "bytes": 102,
+      "sha256": "949550ad13b20c9dbd693a5c4dd59896c55bc5c441f473b1e83ed1e5ccca6923"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt",
+      "unchanged": true,
+      "bytes": 6318,
+      "sha256": "0e2c3d38729f7814584524fa1b1003bf8a70a519c8274c586fda0a6dada7d4a3"
+    }
+  ],
+  "orb": {
+    "transparentOriginalCallPresent": true,
+    "originalRendererInstantiated": true,
+    "brainRendererReferenceInCockpit": false,
+    "pulseSignalConnected": true,
+    "recallSignalConnected": true
+  }
+}

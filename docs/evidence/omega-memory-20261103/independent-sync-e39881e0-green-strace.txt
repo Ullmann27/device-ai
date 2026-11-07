@@ -1,0 +1,31 @@
+51154 --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=NULL} ---
+51154 fsync(11)                         = 0
+51154 rename("/workspace/scratch/review/memory-sync/green-fixture/experiences-v3/lex3-8908550732878051332.tmp", "/workspace/scratch/review/memory-sync/green-fixture/experiences-v3/56132510e2dc9da1f1a1d54fb99efb6c740e974497910391a75d6ea72c5c6ae4.seg") = 0
+51154 fsync(11)                         = 0
+51154 fsync(11)                         = 0
+51154 rename("/workspace/scratch/review/memory-sync/green-fixture/lex3-7821506445722195895.tmp", "/workspace/scratch/review/memory-sync/green-fixture/experiences-v2.bin") = 0
+51154 fsync(11)                         = -1 EIO (Input/output error) (INJECTED)
+51154 fsync(11)                         = 0
+51154 fsync(11)                         = 0
+51170 +++ exited with 0 +++
+51158 +++ exited with 0 +++
+51159 +++ exited with 0 +++
+51156 +++ exited with 0 +++
+51163 +++ exited with 0 +++
+51160 +++ exited with 0 +++
+51154 +++ exited with 0 +++
+51174 +++ exited with 0 +++
+51166 +++ exited with 0 +++
+51165 +++ exited with 0 +++
+51164 +++ exited with 0 +++
+51173 +++ exited with 0 +++
+51157 +++ exited with 0 +++
+51168 +++ exited with 0 +++
+51172 +++ exited with 0 +++
+51171 +++ exited with 0 +++
+51167 +++ exited with 0 +++
+51155 +++ exited with 0 +++
+51169 +++ exited with 0 +++
+51161 +++ exited with 0 +++
+51162 +++ exited with 0 +++
+51153 +++ exited with 0 +++

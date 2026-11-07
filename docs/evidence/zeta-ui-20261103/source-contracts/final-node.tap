@@ -1,0 +1,232 @@
+TAP version 13
+# Subtest: transparent native 3D hero has no network, model execution or fake status
+ok 1 - transparent native 3D hero has no network, model execution or fake status
+  ---
+  duration_ms: 1.856894
+  type: 'test'
+  ...
+# Subtest: reference start screen reaches all seven real Android feature paths
+ok 2 - reference start screen reaches all seven real Android feature paths
+  ---
+  duration_ms: 0.96354
+  type: 'test'
+  ...
+# Subtest: responsive dashboard retains chat composer, updates and keyboard visibility
+ok 3 - responsive dashboard retains chat composer, updates and keyboard visibility
+  ---
+  duration_ms: 0.340613
+  type: 'test'
+  ...
+# Subtest: reference-style composer keeps real model/web/file actions and truthful idle state
+ok 4 - reference-style composer keeps real model/web/file actions and truthful idle state
+  ---
+  duration_ms: 0.473803
+  type: 'test'
+  ...
+# Subtest: large text is bounded and propagated into adaptive layout without window shrinking
+ok 5 - large text is bounded and propagated into adaptive layout without window shrinking
+  ---
+  duration_ms: 0.368424
+  type: 'test'
+  ...
+# Subtest: start screen never manufactures ready model or internet state
+ok 6 - start screen never manufactures ready model or internet state
+  ---
+  duration_ms: 1.275329
+  type: 'test'
+  ...
+# Subtest: exactly five owner-visible work areas remain in fixed order
+ok 7 - exactly five owner-visible work areas remain in fixed order
+  ---
+  duration_ms: 2.362254
+  type: 'test'
+  ...
+# Subtest: phone bottom navigation stays outside conversation pane and above system bar
+ok 8 - phone bottom navigation stays outside conversation pane and above system bar
+  ---
+  duration_ms: 0.340352
+  type: 'test'
+  ...
+# Subtest: all navigation taps route to existing trusted screens
+ok 9 - all navigation taps route to existing trusted screens
+  ---
+  duration_ms: 0.298179
+  type: 'test'
+  ...
+# Subtest: home work areas are reachable without expert-only controls
+ok 10 - home work areas are reachable without expert-only controls
+  ---
+  duration_ms: 0.674255
+  type: 'test'
+  ...
+# Subtest: Fold rail offers the five work areas without a second bottom bar
+ok 11 - Fold rail offers the five work areas without a second bottom bar
+  ---
+  duration_ms: 0.316496
+  type: 'test'
+  ...
+# Subtest: existing chat, learning monitoring and owner permission boundaries remain
+ok 12 - existing chat, learning monitoring and owner permission boundaries remain
+  ---
+  duration_ms: 0.31925
+  type: 'test'
+  ...
+# Subtest: Fold rail and start screen reach all actions at short heights
+ok 13 - Fold rail and start screen reach all actions at short heights
+  ---
+  duration_ms: 0.209685
+  type: 'test'
+  ...
+# Subtest: start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+ok 14 - start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+  ---
+  duration_ms: 0.394884
+  type: 'test'
+  ...
+# Subtest: recreated activity preserves chat selection and draft without persistent More selection
+ok 15 - recreated activity preserves chat selection and draft without persistent More selection
+  ---
+  duration_ms: 0.439331
+  type: 'test'
+  ...
+# Subtest: design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+ok 16 - design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+  ---
+  duration_ms: 0.529386
+  type: 'test'
+  ...
+# Subtest: living hologram schedules subsequent visible frames and stops callbacks on detach
+ok 17 - living hologram schedules subsequent visible frames and stops callbacks on detach
+  ---
+  duration_ms: 2.945142
+  type: 'test'
+  ...
+# Subtest: orbital rings use visible phase movement, not the old near-static factor
+ok 18 - orbital rings use visible phase movement, not the old near-static factor
+  ---
+  duration_ms: 0.586863
+  type: 'test'
+  ...
+# Subtest: header and six live action tiles fit their boxes while legacy orbital controls stay available
+ok 19 - header and six live action tiles fit their boxes while legacy orbital controls stay available
+  ---
+  duration_ms: 1.02315
+  type: 'test'
+  ...
+# Subtest: battery, app CPU, RAM and GPU measurements remain honestly distinguished
+ok 20 - battery, app CPU, RAM and GPU measurements remain honestly distinguished
+  ---
+  duration_ms: 0.18595
+  type: 'test'
+  ...
+# Subtest: CCC1 integrated in same owner-app source without changing private app identity
+ok 21 - CCC1 integrated in same owner-app source without changing private app identity
+  ---
+  duration_ms: 1.02309
+  type: 'test'
+  ...
+# Subtest: existing on-device learning state and protected independent training are never reset by launch
+ok 22 - existing on-device learning state and protected independent training are never reset by launch
+  ---
+  duration_ms: 0.188844
+  type: 'test'
+  ...
+# Subtest: portrait selection keeps actual Fold window threshold and separate landscape rail
+ok 23 - portrait selection keeps actual Fold window threshold and separate landscape rail
+  ---
+  duration_ms: 0.964611
+  type: 'test'
+  ...
+# Subtest: seven live cards reflow in shared columns and remain inside scrolling content
+ok 24 - seven live cards reflow in shared columns and remain inside scrolling content
+  ---
+  duration_ms: 0.414904
+  type: 'test'
+  ...
+# Subtest: six controls stay below the shared hero and all real card data remains connected
+ok 25 - six controls stay below the shared hero and all real card data remains connected
+  ---
+  duration_ms: 0.686583
+  type: 'test'
+  ...
+# Subtest: Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling
+ok 26 - Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling
+  ---
+  duration_ms: 0.326181
+  type: 'test'
+  ...
+# Subtest: phone and Fold preserve renderer lifecycle through the shared adaptive layout
+ok 27 - phone and Fold preserve renderer lifecycle through the shared adaptive layout
+  ---
+  duration_ms: 0.286842
+  type: 'test'
+  ...
+# Subtest: the five beginner destinations stay reachable from the reference start screen
+ok 28 - the five beginner destinations stay reachable from the reference start screen
+  ---
+  duration_ms: 3.943113
+  type: 'test'
+  ...
+# Subtest: start-screen routes use real existing Android screens, not placeholder success actions
+ok 29 - start-screen routes use real existing Android screens, not placeholder success actions
+  ---
+  duration_ms: 0.565962
+  type: 'test'
+  ...
+# Subtest: advanced routes remain available from the start screen, its rail and the More sheet
+ok 30 - advanced routes remain available from the start screen, its rail and the More sheet
+  ---
+  duration_ms: 0.67114
+  type: 'test'
+  ...
+# Subtest: Nexus keeps real hologram and voice entry tied to Android speech and system state
+ok 31 - Nexus keeps real hologram and voice entry tied to Android speech and system state
+  ---
+  duration_ms: 0.576708
+  type: 'test'
+  ...
+# Subtest: fold, small display and enlarged-font behaviour are expressed by a pure policy
+ok 32 - fold, small display and enlarged-font behaviour are expressed by a pure policy
+  ---
+  duration_ms: 0.261333
+  type: 'test'
+  ...
+# Subtest: personalisation is a real choice and cannot silently train models or install apps
+ok 33 - personalisation is a real choice and cannot silently train models or install apps
+  ---
+  duration_ms: 0.321163
+  type: 'test'
+  ...
+# Subtest: start screen and chat never overlap after leaving or returning from chat
+ok 34 - start screen and chat never overlap after leaving or returning from chat
+  ---
+  duration_ms: 0.594104
+  type: 'test'
+  ...
+# Subtest: phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+ok 35 - phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+  ---
+  duration_ms: 1.45576
+  type: 'test'
+  ...
+# Subtest: home dashboard remains in a scrolling viewport, not hidden behind the navigation
+ok 36 - home dashboard remains in a scrolling viewport, not hidden behind the navigation
+  ---
+  duration_ms: 0.387263
+  type: 'test'
+  ...
+# Subtest: keyboard hides phone navigation and frees the same reserved space
+ok 37 - keyboard hides phone navigation and frees the same reserved space
+  ---
+  duration_ms: 0.233621
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 189.782682

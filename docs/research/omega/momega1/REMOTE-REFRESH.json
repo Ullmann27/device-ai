@@ -1,0 +1,2465 @@
+{
+  "observedAt": "2026-11-03T19:29:14.208Z",
+  "main": "2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a",
+  "chief": "6393d49ff7c3dae88875e628200323060b490b80",
+  "pr": {
+    "url": "https://github.com/Ullmann27/device-ai/pull/392",
+    "number": 392,
+    "state": "open",
+    "merged": false,
+    "mergeable": true,
+    "draft": true,
+    "body": "Current combined brain source `c8c0615bc9f5398ad2e47b94669e3117ecf9f32d` is in final host QA. The previously verified milestone remains `64ec06a7`; its full-test/APK evidence must not be attributed to the newer source.\n\nNew isolated increments were accepted after independent checks: bounded quantity-claim withdrawal handling; replay selection reuse with full segment integrity checks; literal research claims bound to the supplying document and quoted control markers; existing RED/GREEN CLI verifier retaining executed test identities and checking supplied run metadata. No second brain, memory database, scheduler or TTS pipeline.\n\nMeasured limits matter: cognition gained only1/20 on a fresh reserve (8→9;11 withdrawals still missed), while consumed development24 improved8→24. Independent replay4096 median49.085→4.925ms, but caller-shaped alternating source/intent work showed no benefit. Research first unseen16 improved6→15; after fixing the exposed token boundary, consumed16/16. CCC1 counterpart closes all17 discovered metadata contradictions;42/42 actual executor observations pass. That verifier is currently CLI/tests with no identified active Android/job caller; standalone embedded-source consistency limitations remain. No general autonomous model-coding claim.\n\nThe experimental15-weight CDX2 candidate is REJECTED: DEV RAW24→32/40, oldC55→54/55 with an unsupported answer, independent64 no gain over current13/RULE/VERIFIED. Existing production weights are unchanged; research branch402 remains isolated.\n\nPrior64ec milestone: Android2089pass/12skip/0fail; Node2153pass/7skip/0fail at source-equivalent67f; backend64/64. Unsigned original-package Code40/0.3.39 APK built, hash dc201d6b674b458fd13bbf1404b74b87fd94fcfb4b289cab670dd3f707f1ba57. No signing, publication, installation or main merge; owner signedCode39 verified read-only.\n\nMandatory3D/avatar and adaptiveUI work continues separately in Draft404/405/408 with independent geometry/UI challengers. Their assets/builds do not inherit brain QA. Fold7/Gemma/thermal/energy acceptance remains NOT_RUN. QuotaNOT_VISIBLE; checkpoints pushed regularly.\n\nStart at docs/research/omega/BREAKTHROUGH-CHIEF-HANDOFF.md and ASTRA-OMEGA-HANDOFF-20261103.md; raw paired failures/successes and source hashes are in docs/evidence/. Draft only.",
+    "title": "Continuum Ω: evidence-bound context, memory and verifier improvements",
+    "base": "fix/continuum-code40-router-race-review-20261103",
+    "base_sha": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+    "head": "codex/team-chief/omega-20261103",
+    "head_sha": "6393d49ff7c3dae88875e628200323060b490b80",
+    "head_repo_id": 1415878393,
+    "head_repo_full_name": "Ullmann27/device-ai",
+    "merge_commit_sha": "fe10ac2b10fb2b0677cfcbc8596211012e39c858",
+    "user": {
+      "login": "Ullmann27",
+      "name": "Ullmann27",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/64243701?v=4",
+      "id": 64243701
+    },
+    "requested_reviewers": null,
+    "requested_team_reviewers": null,
+    "diff": null,
+    "comments": null,
+    "created_at": "2026-11-03T17:52:40Z",
+    "updated_at": "2026-11-03T19:25:09Z",
+    "closed_at": null,
+    "merged_at": null,
+    "commits": 133,
+    "changed_files": 863,
+    "additions": 186390,
+    "deletions": 406,
+    "display_url": "https://github.com/Ullmann27/device-ai/pull/392",
+    "display_title": "Continuum Ω: evidence-bound context, memory and verifier improvements"
+  },
+  "compare": {
+    "repository_full_name": "Ullmann27/device-ai",
+    "base": "786436f58c966366a97941c3fbc949b296b9b4f7",
+    "head": "6393d49ff7c3dae88875e628200323060b490b80",
+    "status": "ahead",
+    "ahead_by": 26,
+    "behind_by": 0,
+    "total_commits": 26,
+    "too_large": null,
+    "base_commit": {
+      "sha": "786436f58c966366a97941c3fbc949b296b9b4f7",
+      "url": "https://api.github.com/repos/Ullmann27/device-ai/commits/786436f58c966366a97941c3fbc949b296b9b4f7",
+      "html_url": "https://github.com/Ullmann27/device-ai/commit/786436f58c966366a97941c3fbc949b296b9b4f7"
+    },
+    "merge_base_commit": {
+      "sha": "786436f58c966366a97941c3fbc949b296b9b4f7",
+      "url": "https://api.github.com/repos/Ullmann27/device-ai/commits/786436f58c966366a97941c3fbc949b296b9b4f7",
+      "html_url": "https://github.com/Ullmann27/device-ai/commit/786436f58c966366a97941c3fbc949b296b9b4f7"
+    },
+    "files": [
+      {
+        "filename": ".github/continuum/continuum-hologram-context-wiring.test.mjs",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/build.gradle.kts",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 0,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/assets/avatar3d/LICENSE.ASSETS.md",
+        "status": "added",
+        "additions": 41,
+        "deletions": 0,
+        "changes": 41,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/assets/avatar3d/NOTICE.json",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+        "status": "modified",
+        "additions": 155,
+        "deletions": 17,
+        "changes": 172,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt",
+        "status": "added",
+        "additions": 219,
+        "deletions": 0,
+        "changes": 219,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+        "status": "added",
+        "additions": 48,
+        "deletions": 0,
+        "changes": 48,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+        "status": "added",
+        "additions": 129,
+        "deletions": 0,
+        "changes": 129,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/java/at/heinz/deviceai/ui/ContinuumCockpitElements.kt",
+        "status": "added",
+        "additions": 149,
+        "deletions": 0,
+        "changes": 149,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt",
+        "status": "modified",
+        "additions": 11,
+        "deletions": 16,
+        "changes": 27,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+        "status": "modified",
+        "additions": 79,
+        "deletions": 149,
+        "changes": 228,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeScreen.kt",
+        "status": "modified",
+        "additions": 12,
+        "deletions": 33,
+        "changes": 45,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 3,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt",
+        "status": "added",
+        "additions": 126,
+        "deletions": 0,
+        "changes": 126,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/test/java/at/heinz/deviceai/ui/ContinuumAdaptiveCockpitLayoutTest.kt",
+        "status": "added",
+        "additions": 41,
+        "deletions": 0,
+        "changes": 41,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/test/java/at/heinz/deviceai/ui/ContinuumHomeLayoutTest.kt",
+        "status": "modified",
+        "additions": 46,
+        "deletions": 65,
+        "changes": 111,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/uiTest/java/at/heinz/deviceai/ContinuumAdaptiveCockpitUiTest.kt",
+        "status": "added",
+        "additions": 109,
+        "deletions": 0,
+        "changes": 109,
+        "previous_filename": null
+      },
+      {
+        "filename": "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatar3dLifecycleUiTest.kt",
+        "status": "added",
+        "additions": 79,
+        "deletions": 0,
+        "changes": 79,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/RESULT.json",
+        "status": "added",
+        "additions": 63,
+        "deletions": 0,
+        "changes": 63,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/contrastive-parity/kotlin-candidate.swb1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/contrastive-parity/kotlin-metrics.tsv",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/contrastive-parity/kotlin-swb2.swb2",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/contrastive-parity/node-candidate.swb1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/contrastive-parity/node-metrics.tsv",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/contrastive-parity/node-swb2.swb2",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/cre1-parity/kotlin-scores.tsv",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/cre1-parity/kotlin-sgd.cre1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/cre1-parity/node-cre1.cre1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/cre1-parity/node-features.tsv",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/cre1-parity/node-scores.tsv",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/cre1-parity/node-seed73.cre1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/cre1-parity/node-sgd-losses.tsv",
+        "status": "added",
+        "additions": 3,
+        "deletions": 0,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/cre1-parity/node-sgd.cre1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/environment-source.txt",
+        "status": "added",
+        "additions": 28,
+        "deletions": 0,
+        "changes": 28,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/first-failed-junit-results.tar.gz",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/first-failed-junit-summary.json",
+        "status": "added",
+        "additions": 17,
+        "deletions": 0,
+        "changes": 17,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/first-failed-temporal-benchmark.xml",
+        "status": "added",
+        "additions": 66,
+        "deletions": 0,
+        "changes": 66,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/first-m3-report.tsv",
+        "status": "added",
+        "additions": 92,
+        "deletions": 0,
+        "changes": 92,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/gradle-full.exit",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/gradle-full.log",
+        "status": "added",
+        "additions": 221,
+        "deletions": 0,
+        "changes": 221,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/parity-prepare.txt",
+        "status": "added",
+        "additions": 2,
+        "deletions": 0,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/parity-verify.exit",
+        "status": "added",
+        "additions": 2,
+        "deletions": 0,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/parity-verify.txt",
+        "status": "added",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/action-disabled.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/action-normal.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/action-pressed.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/action-selected.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/head-410x291-closed.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/head-410x291-speaking.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/head-410x291-stopped.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/head-412x307-closed.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/head-412x307-speaking.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/head-412x307-stopped.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/orb-410x291-0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/orb-410x291-1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/orb-410x291-2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/orb-412x307-0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/orb-412x307-1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/orb-412x307-2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/panel-320dp-font130.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/first-busy-run/ui/panel-720dp-font130.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/matched-quiet-probes/MethodRunner.java",
+        "status": "added",
+        "additions": 9,
+        "deletions": 0,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/matched-quiet-probes/baseline-execution.txt",
+        "status": "added",
+        "additions": 8,
+        "deletions": 0,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/matched-quiet-probes/baseline-provenance.json",
+        "status": "added",
+        "additions": 20,
+        "deletions": 0,
+        "changes": 20,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/matched-quiet-probes/candidate-execution.txt",
+        "status": "added",
+        "additions": 8,
+        "deletions": 0,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/matched-quiet-probes/candidate-provenance.json",
+        "status": "added",
+        "additions": 20,
+        "deletions": 0,
+        "changes": 20,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/node-first-attempt/backend-setup.exit",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/node-first-attempt/backend-setup.txt",
+        "status": "added",
+        "additions": 2,
+        "deletions": 0,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/node-first-attempt/backend.exit",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/node-first-attempt/backend.tap",
+        "status": "added",
+        "additions": 394,
+        "deletions": 0,
+        "changes": 394,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/node-first-attempt/node-full.exit",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/node-first-attempt/node-full.tap",
+        "status": "added",
+        "additions": 13377,
+        "deletions": 0,
+        "changes": 13377,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/node-first-attempt/source.txt",
+        "status": "added",
+        "additions": 2,
+        "deletions": 0,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/TEST-at.heinz.deviceai.ContinuumAvatarNativeUiTest.xml",
+        "status": "added",
+        "additions": 9,
+        "deletions": 0,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/TEST-at.heinz.deviceai.ContinuumHologramMotionUiTest.xml",
+        "status": "added",
+        "additions": 12,
+        "deletions": 0,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/TEST-at.heinz.deviceai.cognitive.ContinuumOfflineEvalTest.xml",
+        "status": "added",
+        "additions": 100,
+        "deletions": 0,
+        "changes": 100,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/TEST-at.heinz.deviceai.cognitive.OwnerStatementTimelineContextIntegrationTest.xml",
+        "status": "added",
+        "additions": 9,
+        "deletions": 0,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/TEST-at.heinz.deviceai.cognitive.OwnerStatementTimelineTest.xml",
+        "status": "added",
+        "additions": 30,
+        "deletions": 0,
+        "changes": 30,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/TEST-at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest.xml",
+        "status": "added",
+        "additions": 15,
+        "deletions": 0,
+        "changes": 15,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/TEST-at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest.xml",
+        "status": "added",
+        "additions": 12,
+        "deletions": 0,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/TEST-at.heinz.deviceai.learning.ContinuumGermanLongMemEvalHoldoutTest.xml",
+        "status": "added",
+        "additions": 53,
+        "deletions": 0,
+        "changes": 53,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/TEST-at.heinz.deviceai.learning.LearningExperienceReplayCacheTest.xml",
+        "status": "added",
+        "additions": 16,
+        "deletions": 0,
+        "changes": 16,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/contrastive-parity/kotlin-candidate.swb1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/contrastive-parity/kotlin-metrics.tsv",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/contrastive-parity/kotlin-swb2.swb2",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/contrastive-parity/node-candidate.swb1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/contrastive-parity/node-metrics.tsv",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/contrastive-parity/node-swb2.swb2",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/cre1-parity/kotlin-scores.tsv",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/cre1-parity/kotlin-sgd.cre1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/cre1-parity/node-cre1.cre1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/cre1-parity/node-features.tsv",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/cre1-parity/node-scores.tsv",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/cre1-parity/node-seed73.cre1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/cre1-parity/node-sgd-losses.tsv",
+        "status": "added",
+        "additions": 3,
+        "deletions": 0,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/cre1-parity/node-sgd.cre1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/environment-source.txt",
+        "status": "added",
+        "additions": 28,
+        "deletions": 0,
+        "changes": 28,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/gradle-full.exit",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/gradle-full.log",
+        "status": "added",
+        "additions": 68,
+        "deletions": 0,
+        "changes": 68,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/junit-case-retention.json",
+        "status": "added",
+        "additions": 174,
+        "deletions": 0,
+        "changes": 174,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/junit-results.tar.gz",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/junit-summary.json",
+        "status": "added",
+        "additions": 2784,
+        "deletions": 0,
+        "changes": 2784,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/lint-results-debug.xml",
+        "status": "added",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/m3-comparison.exit",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/m3-comparison.json",
+        "status": "added",
+        "additions": 153,
+        "deletions": 0,
+        "changes": 153,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/m3-report.tsv",
+        "status": "added",
+        "additions": 92,
+        "deletions": 0,
+        "changes": 92,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/parity-prepare.txt",
+        "status": "added",
+        "additions": 2,
+        "deletions": 0,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/parity-verify.exit",
+        "status": "added",
+        "additions": 2,
+        "deletions": 0,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/parity-verify.txt",
+        "status": "added",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/action-disabled.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/action-normal.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/action-pressed.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/action-selected.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/head-410x291-closed.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/head-410x291-speaking.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/head-410x291-stopped.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/head-412x307-closed.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/head-412x307-speaking.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/head-412x307-stopped.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/orb-410x291-0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/orb-410x291-1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/orb-410x291-2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/orb-412x307-0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/orb-412x307-1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/orb-412x307-2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/panel-320dp-font130.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/quiet-full-rerun/ui/panel-720dp-font130.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/brain-c8c0615b/summarize-junit.py",
+        "status": "added",
+        "additions": 31,
+        "deletions": 0,
+        "changes": 31,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/DEPENDENCY-SHA256.txt",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/OFFICIAL-DEPENDENCIES.txt",
+        "status": "added",
+        "additions": 3,
+        "deletions": 0,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/SOURCE-BINDING.json",
+        "status": "added",
+        "additions": 21,
+        "deletions": 0,
+        "changes": 21,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/cognitive-pass/action-receipt.txt",
+        "status": "added",
+        "additions": 12,
+        "deletions": 0,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/cognitive-pass/actual-storage.txt",
+        "status": "added",
+        "additions": 5,
+        "deletions": 0,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/cognitive-pass/actual-two-step.txt",
+        "status": "added",
+        "additions": 27,
+        "deletions": 0,
+        "changes": 27,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/cognitive-pass/compile.txt",
+        "status": "added",
+        "additions": 9,
+        "deletions": 0,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/cognitive-pass/compiler.txt",
+        "status": "added",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/cognitive-pass/execution.exit",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/cognitive-pass/execution.txt",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/cognitive-pass/junit.txt",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/cognitive-pass/shell-bounds.tsv",
+        "status": "added",
+        "additions": 2,
+        "deletions": 0,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/cognitive-pass/source-blobs.sha256",
+        "status": "added",
+        "additions": 86,
+        "deletions": 0,
+        "changes": 86,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/dialogue-initial-incomplete/compile.txt",
+        "status": "added",
+        "additions": 12,
+        "deletions": 0,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/dialogue-initial-incomplete/execution.exit",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/dialogue-initial-incomplete/execution.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/dialogue-initial-incomplete/source-blobs.sha256",
+        "status": "added",
+        "additions": 158,
+        "deletions": 0,
+        "changes": 158,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/dialogue-pass/compile.txt",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/dialogue-pass/execution.exit",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/dialogue-pass/execution.txt",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/dialogue-pass/junit.txt",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/breakthrough-quality-20261103/native-harness-fix-54a338e3/dialogue-pass/source-blobs.sha256",
+        "status": "added",
+        "additions": 157,
+        "deletions": 0,
+        "changes": 157,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/A-CANDIDATE-ANDROID-PREFLIGHT.json",
+        "status": "added",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/A-CANDIDATE-INDEPENDENT-VALIDATION.json",
+        "status": "added",
+        "additions": 9,
+        "deletions": 0,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/A-DIAGNOSTIC-INDEPENDENT-VALIDATION.json",
+        "status": "added",
+        "additions": 228,
+        "deletions": 0,
+        "changes": 228,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/A-LOCALITY-DIAGNOSTICS.json",
+        "status": "added",
+        "additions": 242,
+        "deletions": 0,
+        "changes": 242,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/A-V2-ANDROID-PREFLIGHT.json",
+        "status": "added",
+        "additions": 39,
+        "deletions": 0,
+        "changes": 39,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/A-V2-INDEPENDENT-VALIDATION.json",
+        "status": "added",
+        "additions": 55,
+        "deletions": 0,
+        "changes": 55,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/DIAGNOSTIC-DERIVATIVE.json",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/FILAMENT-ARM64-ELF.txt",
+        "status": "added",
+        "additions": 28,
+        "deletions": 0,
+        "changes": 28,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/FILAMENT-ARTIFACTS.json",
+        "status": "added",
+        "additions": 40,
+        "deletions": 0,
+        "changes": 40,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/FOCUSED-JUNIT.txt",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/GLTFIO-ARM64-ELF.txt",
+        "status": "added",
+        "additions": 28,
+        "deletions": 0,
+        "changes": 28,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/INDEPENDENT-CONTRACT-FREEZE.md",
+        "status": "added",
+        "additions": 22,
+        "deletions": 0,
+        "changes": 22,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/INDEPENDENT-VALIDATOR-TESTS.txt",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/RUNTIME-REVIEW.md",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/VIEW-COMPILE.txt",
+        "status": "added",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/VISUAL-REVIEW.md",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/WIRING-TESTS.txt",
+        "status": "added",
+        "additions": 16,
+        "deletions": 0,
+        "changes": 16,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/camera-review/BLENDER-LOG.txt",
+        "status": "added",
+        "additions": 302,
+        "deletions": 0,
+        "changes": 302,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/camera-review/IMAGE-SHA256.json",
+        "status": "added",
+        "additions": 9,
+        "deletions": 0,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/camera-review/camera-spec.json",
+        "status": "added",
+        "additions": 78,
+        "deletions": 0,
+        "changes": 78,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/camera-review/fold-full-bust.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/camera-review/fold-head-upper-neck.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/camera-review/phone-full-bust.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/epsilon-android-20261103/camera-review/phone-head-upper-neck.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/omega-inventory-20261103/dual-agent-pr-snapshot.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/REPORT.md",
+        "status": "added",
+        "additions": 42,
+        "deletions": 0,
+        "changes": 42,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/ZetaCardAudit.kt",
+        "status": "added",
+        "additions": 31,
+        "deletions": 0,
+        "changes": 31,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/ZetaHoldouts.kt",
+        "status": "added",
+        "additions": 90,
+        "deletions": 0,
+        "changes": 90,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/ZetaInkAudit.kt",
+        "status": "added",
+        "additions": 28,
+        "deletions": 0,
+        "changes": 28,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/ZetaNativeHoldouts.kt",
+        "status": "added",
+        "additions": 57,
+        "deletions": 0,
+        "changes": 57,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/acceptance-freeze.md",
+        "status": "added",
+        "additions": 20,
+        "deletions": 0,
+        "changes": 20,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/card-audit.tsv",
+        "status": "added",
+        "additions": 105,
+        "deletions": 0,
+        "changes": 105,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/compile.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/images/287x611@1.0-LABEL_DEVELOPING.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/images/287x611@2.0-LABEL_DEVELOPING.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/native/compile-initial-failed.txt",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/native/compile.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/native/images/287x611-font2.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/native/images/521x333-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/native/images/713x897-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/native/junit.txt",
+        "status": "added",
+        "additions": 24,
+        "deletions": 0,
+        "changes": 24,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/results.tsv",
+        "status": "added",
+        "additions": 7121,
+        "deletions": 0,
+        "changes": 7121,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/source-commit.txt",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/source.sha256",
+        "status": "added",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/source/ContinuumHomeElements.kt",
+        "status": "added",
+        "additions": 561,
+        "deletions": 0,
+        "changes": 561,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/source/ContinuumHomeLayout.kt",
+        "status": "added",
+        "additions": 208,
+        "deletions": 0,
+        "changes": 208,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/source/ContinuumHomeScreen.kt",
+        "status": "added",
+        "additions": 75,
+        "deletions": 0,
+        "changes": 75,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/source/ContinuumHomeView.kt",
+        "status": "added",
+        "additions": 289,
+        "deletions": 0,
+        "changes": 289,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/baseline/stderr.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/card-audit.tsv",
+        "status": "added",
+        "additions": 19,
+        "deletions": 0,
+        "changes": 19,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/compile.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/images/287x611@1.0-LABEL_DEVELOPING.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/images/287x611@2.0-LABEL_DEVELOPING.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/ink-audit.txt",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/ink-images/model-Continuum-Kern-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/ink-images/model-Continuum-Kern-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/ink-images/model-Continuum-Kern-font2.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/ink-images/model-gypqgypq-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/ink-images/model-gypqgypq-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/ink-images/model-gypqgypq-font2.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/ink-images/model-qwen-3-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/ink-images/model-qwen-3-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/ink-images/model-qwen-3-font2.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/results.tsv",
+        "status": "added",
+        "additions": 8081,
+        "deletions": 0,
+        "changes": 8081,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/source-commit.txt",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/source.sha256",
+        "status": "added",
+        "additions": 5,
+        "deletions": 0,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/source/ContinuumCockpitElements.kt",
+        "status": "added",
+        "additions": 149,
+        "deletions": 0,
+        "changes": 149,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/source/ContinuumHomeElements.kt",
+        "status": "added",
+        "additions": 556,
+        "deletions": 0,
+        "changes": 556,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/source/ContinuumHomeLayout.kt",
+        "status": "added",
+        "additions": 138,
+        "deletions": 0,
+        "changes": 138,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/source/ContinuumHomeScreen.kt",
+        "status": "added",
+        "additions": 54,
+        "deletions": 0,
+        "changes": 54,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/source/ContinuumHomeView.kt",
+        "status": "added",
+        "additions": 288,
+        "deletions": 0,
+        "changes": 288,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate-de86/stderr.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/card-audit.tsv",
+        "status": "added",
+        "additions": 23,
+        "deletions": 0,
+        "changes": 23,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/compile.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/images/287x611@1.0-LABEL_DEVELOPING.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/images/287x611@2.0-LABEL_DEVELOPING.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/native/compile.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/native/images/287x611-font2.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/native/images/521x333-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/native/images/713x897-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/native/junit.txt",
+        "status": "added",
+        "additions": 24,
+        "deletions": 0,
+        "changes": 24,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/results.tsv",
+        "status": "added",
+        "additions": 8081,
+        "deletions": 0,
+        "changes": 8081,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/source-commit.txt",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/source.sha256",
+        "status": "added",
+        "additions": 5,
+        "deletions": 0,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/source/ContinuumCockpitElements.kt",
+        "status": "added",
+        "additions": 149,
+        "deletions": 0,
+        "changes": 149,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/source/ContinuumHomeElements.kt",
+        "status": "added",
+        "additions": 556,
+        "deletions": 0,
+        "changes": 556,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/source/ContinuumHomeLayout.kt",
+        "status": "added",
+        "additions": 137,
+        "deletions": 0,
+        "changes": 137,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/source/ContinuumHomeScreen.kt",
+        "status": "added",
+        "additions": 54,
+        "deletions": 0,
+        "changes": 54,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/source/ContinuumHomeView.kt",
+        "status": "added",
+        "additions": 288,
+        "deletions": 0,
+        "changes": 288,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/candidate/stderr.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/card-audit-compile.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/checkpoint.md",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/ink-audit-compile.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/prepared-classes.sha256",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/run-holdouts.sh",
+        "status": "added",
+        "additions": 26,
+        "deletions": 0,
+        "changes": 26,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/run-native.sh",
+        "status": "added",
+        "additions": 15,
+        "deletions": 0,
+        "changes": 15,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/run-supplementary.sh",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-challenger-20261103/toolchain.txt",
+        "status": "added",
+        "additions": 5,
+        "deletions": 0,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/README.md",
+        "status": "added",
+        "additions": 42,
+        "deletions": 0,
+        "changes": 42,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/acceptance-red.txt",
+        "status": "added",
+        "additions": 20,
+        "deletions": 0,
+        "changes": 20,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/compile.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-1280x800-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-1280x800-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-1280x800-font1.6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-320x720-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-320x720-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-320x720-font1.6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-412x915-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-412x915-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-412x915-font1.6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-600x840-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-600x840-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-600x840-font1.6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-840x960-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-840x960-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/images/cockpit-840x960-font1.6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/junit.txt",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/legacy-junit.txt",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/legacy-layout-test.kt.txt",
+        "status": "added",
+        "additions": 120,
+        "deletions": 0,
+        "changes": 120,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/legacy-screen-test.kt.txt",
+        "status": "added",
+        "additions": 75,
+        "deletions": 0,
+        "changes": 75,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/baseline/source.txt",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/development/README.md",
+        "status": "added",
+        "additions": 3,
+        "deletions": 0,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/development/font-bounds-red.txt",
+        "status": "added",
+        "additions": 16,
+        "deletions": 0,
+        "changes": 16,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/development/sidebar-font-red.txt",
+        "status": "added",
+        "additions": 17,
+        "deletions": 0,
+        "changes": 17,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/commands.txt",
+        "status": "added",
+        "additions": 5,
+        "deletions": 0,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/layout/compile.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/layout/junit.txt",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/layout/source.txt",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/manifest.json",
+        "status": "added",
+        "additions": 31,
+        "deletions": 0,
+        "changes": 31,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/compile.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-1280x800-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-1280x800-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-1280x800-font1.6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-320x720-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-320x720-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-320x720-font1.6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-412x915-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-412x915-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-412x915-font1.6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-600x840-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-600x840-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-600x840-font1.6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-840x960-font1.0.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-840x960-font1.3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/images/cockpit-840x960-font1.6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/junit.txt",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/native/source.txt",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/screen/compile.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/zeta-ui-20261103/final/screen/junit.txt",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      }
+    ]
+  }
+}

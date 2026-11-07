@@ -1,0 +1,558 @@
+{
+  "source": "7c3523cde9dae302a52d69818867a9abe8cf0fb7",
+  "capture_run": "final-scroll-cockpit-validation",
+  "receipt": {
+    "head": "7c3523cde9dae302a52d69818867a9abe8cf0fb7",
+    "exitCode": 0,
+    "sourceUnchanged": true
+  },
+  "run_totals": {
+    "tests": 39,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "suite": "at.heinz.deviceai.AvatarExplicitConfirmationUiTest",
+      "xml": "/workspace/scratch/76b7222771d5/build-env/logs/final-scroll-cockpit-validation-xml/TEST-at.heinz.deviceai.AvatarExplicitConfirmationUiTest.xml",
+      "xml_sha256": "795e06c3a641117e569c0043b92db2c13157517909dc55a268836386b2d7c220",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "xml": "/workspace/scratch/76b7222771d5/build-env/logs/final-scroll-cockpit-validation-xml/TEST-at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.xml",
+      "xml_sha256": "6e087f8e4074443fcb290fc83a483e813563f08e102dd26300f45a502a731155",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.ContinuumCockpitHandsFreeUiTest",
+      "xml": "/workspace/scratch/76b7222771d5/build-env/logs/final-scroll-cockpit-validation-xml/TEST-at.heinz.deviceai.ContinuumCockpitHandsFreeUiTest.xml",
+      "xml_sha256": "d7324838c33b1d5e56901ea72d50aeea8aa2ec3f2fa591c9603736ba76b4d7a6",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "xml": "/workspace/scratch/76b7222771d5/build-env/logs/final-scroll-cockpit-validation-xml/TEST-at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.xml",
+      "xml_sha256": "64ce1baafbe53bf6abd3ca4b5757afde8fbd4268a02a1c1610f1761facd15eab",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+      "xml": "/workspace/scratch/76b7222771d5/build-env/logs/final-scroll-cockpit-validation-xml/TEST-at.heinz.deviceai.ContinuumVisualEvidenceUiTest.xml",
+      "xml_sha256": "57c73348d8f8f158435f69f6873af39490b2235e5b58dd8f7627dca18701c118",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.ContinuumWorkWindowScrollUiTest",
+      "xml": "/workspace/scratch/76b7222771d5/build-env/logs/final-scroll-cockpit-validation-xml/TEST-at.heinz.deviceai.ContinuumWorkWindowScrollUiTest.xml",
+      "xml_sha256": "2b3b4dfdbb23910f5e32eb8d0cc1b660f7da2ec91b8950f5c445697f94b6b6d7",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest",
+      "xml": "/workspace/scratch/76b7222771d5/build-env/logs/final-scroll-cockpit-validation-xml/TEST-at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest.xml",
+      "xml_sha256": "f7eb54e1056f85dfe777df00c53ec869c5996750f96e14ec3abb6b5a6e486c84",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisShellMotionUiTest",
+      "xml": "/workspace/scratch/76b7222771d5/build-env/logs/final-scroll-cockpit-validation-xml/TEST-at.heinz.deviceai.JarvisShellMotionUiTest.xml",
+      "xml_sha256": "f26f9392f5490d787efbde3d157e448161159e61df16c5a2f0e5e58f7b6cb39c",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest",
+      "xml": "/workspace/scratch/76b7222771d5/build-env/logs/final-scroll-cockpit-validation-xml/TEST-at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest.xml",
+      "xml_sha256": "cfa1b089601c6f8e157b08c22ecd2b6bf689531a05907bea60761491bf966713",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisWorkWindowUiTest",
+      "xml": "/workspace/scratch/76b7222771d5/build-env/logs/final-scroll-cockpit-validation-xml/TEST-at.heinz.deviceai.JarvisWorkWindowUiTest.xml",
+      "xml_sha256": "9c3f121ef86d34989e4b854d5ffe25163092aeb9dd1313a619addc30347297ba",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "evidence_class": "ACTUAL_ROBOLECTRIC_NATIVE_CANVAS_NOT_FILAMENT_DEVICE",
+  "visually_inspected_all_20": true,
+  "lint": {
+    "path": "/workspace/scratch/76b7222771d5/continuum/app/build/reports/lint-results-debug.xml",
+    "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+    "reported_issues": 0,
+    "scope": "Existing checkOnly NewApi; abortOnError=true; not a full lint audit",
+    "config": "app/build.gradle.kts"
+  },
+  "profiles": {
+    "fold7-cover-phone-412x915": {
+      "phases": {
+        "6a-systemstatus-opening": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-cover-phone-412x915-6a-systemstatus-opening.png",
+          "png_sha256": "85e2c19343616486f393b8e535b4a1cfc1051ea9c489c35317be38e55b249cba",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-cover-phone-412x915-6a-systemstatus-opening.views.txt",
+          "views_sha256": "d0e9018abff9d4d109d709b2be5c39d8e48689926d0b006fd192b766b4bd7772",
+          "image_size": [
+            412,
+            915
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(11, 72 - 401, 394) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(152, 708 - 402, 839) alpha=0.28708035 scale=0.62733746/0.44280338 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(330, 710 - 397, 732) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(157, 731 - 397, 836) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6b-systemstatus-open": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-cover-phone-412x915-6b-systemstatus-open.png",
+          "png_sha256": "a363f462e35cb0fa735c64a104ac874ff1d6beaf5f38a5b313190ae5da965682",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-cover-phone-412x915-6b-systemstatus-open.views.txt",
+          "views_sha256": "2e36d0c46d268d7330aad9beb246f093e06fe766674c1f9a7b0c87ca9322904f",
+          "image_size": [
+            412,
+            915
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(12, 74 - 400, 394) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(8, 540 - 404, 833) alpha=1.0 scale=1.0/1.0 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(292, 544 - 396, 592) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(16, 592 - 396, 825) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6b-data-systemstatus-scrolled": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-cover-phone-412x915-6b-data-systemstatus-scrolled.png",
+          "png_sha256": "a1aa1f55b7027fc6bcd1795c397c482cfecf0f8debcfe44c111f089cfbdc205e",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-cover-phone-412x915-6b-data-systemstatus-scrolled.views.txt",
+          "views_sha256": "3e34152e5b1b747333eac39926ac1975634215ce45154a5b6a536743a65ba210",
+          "image_size": [
+            412,
+            915
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(12, 74 - 400, 394) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(8, 540 - 404, 833) alpha=1.0 scale=1.0/1.0 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(292, 544 - 396, 592) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(16, 592 - 396, 825) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6c-systemstatus-closing": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-cover-phone-412x915-6c-systemstatus-closing.png",
+          "png_sha256": "4cff99e4aa722130b62bf33b2bdef6487881aad783d6c64732206ff28117fa74",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-cover-phone-412x915-6c-systemstatus-closing.views.txt",
+          "views_sha256": "14b04a104b66c67d2c00308704fc5185d5678e365d520c0a3c5ccdab7f2830a3",
+          "image_size": [
+            412,
+            915
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(12, 74 - 400, 394) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(23, 557 - 404, 834) alpha=0.39437038 scale=0.9603501/0.9407165 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(296, 561 - 397, 607) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(31, 606 - 397, 827) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6d-systemstatus-closed": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-cover-phone-412x915-6d-systemstatus-closed.png",
+          "png_sha256": "aca15e76e55a06318409d2f87ecf2b6863cdc50706494c1f30e32805dbd31acf",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-cover-phone-412x915-6d-systemstatus-closed.views.txt",
+          "views_sha256": "d205789a4d9391e2b284fb42b902f9454ed8c4c09245f72e400ad5cbc92e323e",
+          "image_size": [
+            412,
+            915
+          ],
+          "visually_inspected": true,
+          "work_window_count": 0,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(12, 74 - 400, 394) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": null,
+          "close": null,
+          "scroll": null
+        }
+      },
+      "model_card": {
+        "dump_line": "LinearLayout tag=null shown=true bounds=Rect(210, 592 - 369, 654) alpha=1.0 scale=1.0/1.0 text=Sprachmodell: keines geladen",
+        "native_visible_bounds": [
+          210,
+          592,
+          369,
+          654
+        ],
+        "inner_scroll_bounds": [
+          16,
+          592,
+          396,
+          825
+        ],
+        "contained_by_scroll": true,
+        "label": "Sprachmodell",
+        "actual_value": "keines geladen",
+        "complete_card_visually_visible": true,
+        "note": "Full native width/height equality and unchanged Hologram object are additionally asserted by passing VisualEvidence test."
+      }
+    },
+    "fold7-inner-884x760": {
+      "phases": {
+        "6a-systemstatus-opening": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-6a-systemstatus-opening.png",
+          "png_sha256": "9615a1093c4459cd04fa0d596cbbb4c845ce64bdcaf4402cb0c09fe26887a668",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-6a-systemstatus-opening.views.txt",
+          "views_sha256": "09f769625f6e03e6d4171685e4c8b63ae89e2da6ebe717df7fd3ff97dabc5d32",
+          "image_size": [
+            884,
+            760
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(146, 39 - 698, 423) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(534, 466 - 818, 594) alpha=0.28708035 scale=0.4421599/0.3959061 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(767, 468 - 814, 488) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(538, 487 - 814, 591) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6b-systemstatus-open": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-6b-systemstatus-open.png",
+          "png_sha256": "9063500b803a38bf7d44991d821801734d44b79925191171cf7469f9dbbe4aec",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-6b-systemstatus-open.views.txt",
+          "views_sha256": "0bc7ad5af0528342787dcb44b175b17728d31f585fd9328d182ef2dfd6487587",
+          "image_size": [
+            884,
+            760
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(147, 40 - 697, 422) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(37, 431 - 676, 752) alpha=1.0 scale=1.0/1.0 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(564, 435 - 668, 483) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(45, 483 - 668, 744) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6b-data-systemstatus-scrolled": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-6b-data-systemstatus-scrolled.png",
+          "png_sha256": "8bc1de5a5a86e5640ff6452481096d85286628907d1f814626358764ba8df424",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-6b-data-systemstatus-scrolled.views.txt",
+          "views_sha256": "dc91205642fafc5cfd72f3f194ad900b98b8515744f5643d114539e3c57870fa",
+          "image_size": [
+            884,
+            760
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(147, 40 - 697, 422) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(37, 431 - 676, 752) alpha=1.0 scale=1.0/1.0 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(564, 435 - 668, 483) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(45, 483 - 668, 744) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6c-systemstatus-closing": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-6c-systemstatus-closing.png",
+          "png_sha256": "cda9ed7cf19296e58a84ffab11dd6d4aea236304393fdce626f178006f125325",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-6c-systemstatus-closing.views.txt",
+          "views_sha256": "29be0839efdb96d17d766eec549e1393a966a195055d874ff777241c1a489444",
+          "image_size": [
+            884,
+            760
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(147, 40 - 697, 422) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(89, 434 - 692, 736) alpha=0.39437038 scale=0.940648/0.93572676 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(585, 438 - 684, 484) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(97, 483 - 684, 728) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6d-systemstatus-closed": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-6d-systemstatus-closed.png",
+          "png_sha256": "3b79a2dab5b73c101adc93d3b4cd394622081a8439e1f39bffc71c031e80085b",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-6d-systemstatus-closed.views.txt",
+          "views_sha256": "8429167dc0846f7bb17d18719e2002dafa234172bbb2b3bbe7cc0bf650c7c7e0",
+          "image_size": [
+            884,
+            760
+          ],
+          "visually_inspected": true,
+          "work_window_count": 0,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(147, 40 - 697, 422) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": null,
+          "close": null,
+          "scroll": null
+        }
+      },
+      "model_card": {
+        "dump_line": "LinearLayout tag=null shown=true bounds=Rect(456, 483 - 641, 545) alpha=1.0 scale=1.0/1.0 text=Sprachmodell: keines geladen",
+        "native_visible_bounds": [
+          456,
+          483,
+          641,
+          545
+        ],
+        "inner_scroll_bounds": [
+          45,
+          483,
+          668,
+          744
+        ],
+        "contained_by_scroll": true,
+        "label": "Sprachmodell",
+        "actual_value": "keines geladen",
+        "complete_card_visually_visible": true,
+        "note": "Full native width/height equality and unchanged Hologram object are additionally asserted by passing VisualEvidence test."
+      }
+    },
+    "fold7-inner-884x760-font130": {
+      "phases": {
+        "6a-systemstatus-opening": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-font130-6a-systemstatus-opening.png",
+          "png_sha256": "9f60840a8be1bcfefca0c0ecbc2ce690d7b6889dc21899d280be23c4fd81a69f",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-font130-6a-systemstatus-opening.views.txt",
+          "views_sha256": "dc347064ab81763f6eb1d926cee002fa39bb0b6aba6ba92e00ed20e866dc9e0e",
+          "image_size": [
+            884,
+            760
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(190, 91 - 874, 460) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(422, 484 - 627, 594) alpha=0.28708035 scale=0.663279/0.6332379 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(551, 486 - 622, 518) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(428, 517 - 622, 589) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6b-systemstatus-open": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-font130-6b-systemstatus-open.png",
+          "png_sha256": "e0eb8308725bc6be7c5a1f43ebe8796e83170a116522b9e8c88273497cde09b1",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-font130-6b-systemstatus-open.views.txt",
+          "views_sha256": "3ca053d7cfc57aa6e0aa12d5359e56fd4160a93aeeffebaeca46b093decb41e9",
+          "image_size": [
+            884,
+            760
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(191, 93 - 872, 460) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(569, 8 - 876, 181) alpha=1.0 scale=1.0/1.0 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(763, 12 - 868, 60) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(577, 60 - 868, 173) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6b-data-systemstatus-scrolled": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-font130-6b-data-systemstatus-scrolled.png",
+          "png_sha256": "70432a467dcbe7a2853101cca10fb362825681e0c9245cad2d006028dba74125",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-font130-6b-data-systemstatus-scrolled.views.txt",
+          "views_sha256": "867ec0b570926ab243ece606282523d8b04e204068167009ddee76fd1974498b",
+          "image_size": [
+            884,
+            760
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(191, 93 - 872, 460) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(569, 8 - 876, 181) alpha=1.0 scale=1.0/1.0 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(763, 12 - 868, 60) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(577, 60 - 868, 173) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6c-systemstatus-closing": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-font130-6c-systemstatus-closing.png",
+          "png_sha256": "8803e3f58568d6074e7ed778d7a843d2f3d969e505488a5ede91dc3a529adaab",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-font130-6c-systemstatus-closing.views.txt",
+          "views_sha256": "57ff329f642d4c2b4d2e86f34aea7772f05276d5c14f6381dab3d7b6968e3693",
+          "image_size": [
+            884,
+            760
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(191, 93 - 872, 460) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(553, 58 - 850, 225) alpha=0.39437038 scale=0.96417415/0.9609779 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(740, 62 - 842, 109) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(561, 108 - 842, 218) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6d-systemstatus-closed": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-font130-6d-systemstatus-closed.png",
+          "png_sha256": "e311d076082bfb4dcfa17a6bda41d3b0055e890b560a7773c91c3c13cbd278dc",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/fold7-inner-884x760-font130-6d-systemstatus-closed.views.txt",
+          "views_sha256": "c2bbb0c1365645376d708ebdf202313817478ff44e39930233a7778082d8a0c6",
+          "image_size": [
+            884,
+            760
+          ],
+          "visually_inspected": true,
+          "work_window_count": 0,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(191, 93 - 872, 460) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": null,
+          "close": null,
+          "scroll": null
+        }
+      },
+      "model_card": {
+        "dump_line": "LinearLayout tag=null shown=true bounds=Rect(604, 60 - 841, 133) alpha=1.0 scale=1.0/1.0 text=Sprachmodell: keines geladen",
+        "native_visible_bounds": [
+          604,
+          60,
+          841,
+          133
+        ],
+        "inner_scroll_bounds": [
+          577,
+          60,
+          868,
+          173
+        ],
+        "contained_by_scroll": true,
+        "label": "Sprachmodell",
+        "actual_value": "keines geladen",
+        "complete_card_visually_visible": true,
+        "note": "Full native width/height equality and unchanged Hologram object are additionally asserted by passing VisualEvidence test."
+      }
+    },
+    "reference-1536x1024": {
+      "phases": {
+        "6a-systemstatus-opening": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/reference-1536x1024-6a-systemstatus-opening.png",
+          "png_sha256": "01ac8c9733098a3f36234aadbea7a12e5dd28571b5873aae6c9327b4119430b3",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/reference-1536x1024-6a-systemstatus-opening.views.txt",
+          "views_sha256": "acb57a811a3bf884002b8da926d0599741183559f1fcf5a07889246a2c773382",
+          "image_size": [
+            1536,
+            1024
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(254, 68 - 1214, 497) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(934, 572 - 1291, 781) alpha=0.28708035 scale=0.55819064/0.40566778 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(1228, 574 - 1287, 594) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(938, 593 - 1287, 777) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6b-systemstatus-open": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/reference-1536x1024-6b-systemstatus-open.png",
+          "png_sha256": "e97eb1223687a55aa12450f81d5df78d64a3ba2ff814dfc2bdced6481a2ce2c5",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/reference-1536x1024-6b-systemstatus-open.views.txt",
+          "views_sha256": "a067bda4a23900031805bba4c9293caca362c9224ed77573e3c6c2c5f5540cf7",
+          "image_size": [
+            1536,
+            1024
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(256, 70 - 1212, 497) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(83, 505 - 722, 1016) alpha=1.0 scale=1.0/1.0 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(610, 509 - 714, 557) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(91, 557 - 714, 1008) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6b-data-systemstatus-scrolled": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/reference-1536x1024-6b-data-systemstatus-scrolled.png",
+          "png_sha256": "668fffe9f115495962b15b5c9a13a6582b2a9f33a260d2d347e82b336490d32e",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/reference-1536x1024-6b-data-systemstatus-scrolled.views.txt",
+          "views_sha256": "4d45e2b71d5fe9ef0bc68dc81a99c485a54d61e6e08e8f651583355fd32794d1",
+          "image_size": [
+            1536,
+            1024
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(256, 70 - 1212, 497) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(83, 505 - 722, 1016) alpha=1.0 scale=1.0/1.0 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(610, 509 - 714, 557) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(91, 557 - 714, 1008) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6c-systemstatus-closing": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/reference-1536x1024-6c-systemstatus-closing.png",
+          "png_sha256": "47a0b33bad4a260287757cce9b380ff66b2356aaad122fb6accdff08b617fcbf",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/reference-1536x1024-6c-systemstatus-closing.views.txt",
+          "views_sha256": "680aeb0aa9917259417c5b885bd52466166699314fac99935b3b1d0817bb62d0",
+          "image_size": [
+            1536,
+            1024
+          ],
+          "visually_inspected": true,
+          "work_window_count": 1,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(256, 70 - 1212, 497) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": "GlassPanel tag=jarvis-work-window:panel shown=true bounds=Rect(173, 512 - 783, 991) alpha=0.39437038 scale=0.9529932/0.9367654 text=",
+          "close": "TextView tag=jarvis-work-window:close shown=true bounds=Rect(675, 515 - 775, 561) alpha=1.0 scale=1.0/1.0 text=SCHLIESSEN",
+          "scroll": "ScrollView tag=jarvis-work-window:scroll shown=true bounds=Rect(181, 560 - 775, 984) alpha=1.0 scale=1.0/1.0 text="
+        },
+        "6d-systemstatus-closed": {
+          "png": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/reference-1536x1024-6d-systemstatus-closed.png",
+          "png_sha256": "9428e3bfa34d1de96ee0cafc4de60cd71c9c3a42099a8b96b9547a43af41e9e1",
+          "views": "/workspace/scratch/76b7222771d5/build-env/final-visual-scroll-fixed/reference-1536x1024-6d-systemstatus-closed.views.txt",
+          "views_sha256": "841a9e14b76450c4e19fee6bb8968362e6be3dc520dd47381b4e9f9adc4a2fde",
+          "image_size": [
+            1536,
+            1024
+          ],
+          "visually_inspected": true,
+          "work_window_count": 0,
+          "combined_hologram_surface": "ContinuumHologramView tag=null shown=true bounds=Rect(256, 70 - 1212, 497) alpha=1.0 scale=1.0/1.0 text=",
+          "panel": null,
+          "close": null,
+          "scroll": null
+        }
+      },
+      "model_card": {
+        "dump_line": "LinearLayout tag=null shown=true bounds=Rect(502, 557 - 687, 619) alpha=1.0 scale=1.0/1.0 text=Sprachmodell: keines geladen",
+        "native_visible_bounds": [
+          502,
+          557,
+          687,
+          619
+        ],
+        "inner_scroll_bounds": [
+          91,
+          557,
+          714,
+          1008
+        ],
+        "contained_by_scroll": true,
+        "label": "Sprachmodell",
+        "actual_value": "keines geladen",
+        "complete_card_visually_visible": true,
+        "note": "Full native width/height equality and unchanged Hologram object are additionally asserted by passing VisualEvidence test."
+      }
+    }
+  },
+  "scroll_evidence": {
+    "source_xml": "/workspace/scratch/76b7222771d5/build-env/logs/final-scroll-cockpit-validation-xml/TEST-at.heinz.deviceai.ContinuumWorkWindowScrollUiTest.xml",
+    "inner": "0->48 workShown=true",
+    "background": "0->32 workShown=false",
+    "synthetic_vto_events": false,
+    "gaze_fixture": "Initial glance checked at80ms; production wall clock/2500ms TTL untouched."
+  },
+  "observations": {
+    "window_protection": "No additional WorkWindow coverage of head, original orb or existing dialog in any of20 inspected images. Private head/orb bounds and shared Hologram identity assertions pass.",
+    "initial_status_visibility": "Cover shows version and part of next row; normal Fold shows version/Shizuku/diagnostic; font130 mainly duplicate title/intro; Tablet shows multiple live-read status rows. All four new inner-scroll captures display the complete actual model card.",
+    "data_scope": "Robolectric runtime state, including no loaded model and unavailable AndroidKeyStore, is not physical-device state. No Gmail/document/tool-success claim.",
+    "motion": "Intermediate opening/closing scales, exact REST scale1 and removal afterclosing asserted; static images are not FPS evidence.",
+    "canvas_limit": "Wide/Tablet existing dialog overlays part of lower2D fallback head silhouette; unchanged from pre-window scene. Not Filament framing evidence.",
+    "font130_transition_limit": "Opening body is largely clipped by protected zones; faint trail/transition remains visible. No claim of legible opening text.",
+    "pixel_protection_method": "Window-only bitmap samples alpha0 on a7pxgrid with1pxinset inside actual private head/orb bounds; not every-pixel validation.",
+    "viewport": "Opening ancestor transform can slightly change combined global Hologram bounds; private region rectangles remain equal. No all-frame global-bound identity claim."
+  },
+  "original_glb": {
+    "size": 12038416,
+    "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+    "byte_equal_to_b294": true,
+    "morph_count": 21
+  },
+  "physical_device": "NOT_RUN"
+}

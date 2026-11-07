@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-005:s1",
+    "decision": "SPAN",
+    "sha256": "19bf14f1d34d5b1e3d447d8b03ad6fa5cb70541db3ebc93e07449424705c4b51",
+    "endExclusive": 24,
+    "start": 16,
+    "text": "Dacepini",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {
+    "sourceId": "holdout-d-005:s1",
+    "decision": "SPAN",
+    "sha256": "19bf14f1d34d5b1e3d447d8b03ad6fa5cb70541db3ebc93e07449424705c4b51",
+    "endExclusive": 24,
+    "start": 16,
+    "text": "Dacepini",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "VERIFIED": {
+    "sourceId": "holdout-d-005:s1",
+    "decision": "SPAN",
+    "sha256": "19bf14f1d34d5b1e3d447d8b03ad6fa5cb70541db3ebc93e07449424705c4b51",
+    "endExclusive": 24,
+    "start": 16,
+    "text": "Dacepini",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "rawMillis": 75.311132
+}

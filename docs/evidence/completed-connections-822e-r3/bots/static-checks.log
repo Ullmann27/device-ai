@@ -1,0 +1,23 @@
+$ node --check .github/continuum/branch-bots-cli.mjs
+exit=0
+$ node --check .github/continuum/branch-bots-cli.test.mjs
+exit=0
+$ node --check .github/continuum/branch-discovery.mjs
+exit=0
+$ node --check .github/continuum/branch-discovery.test.mjs
+exit=0
+$ node --check .github/continuum/local-teamleader-loop-source-preflight.test.mjs
+exit=0
+$ node --check .github/continuum/local-teamleader-loop.mjs
+exit=0
+$ node --check .github/continuum/repair-critic.mjs
+exit=0
+$ node --check scripts/continuum-release-host-preflight.mjs
+exit=0
+$ node --check scripts/continuum-release-host-preflight.test.mjs
+exit=0
+$ bash -n scripts/render-continuum-owner-continuous-qa.sh
+exit=0
+$ git diff --check
+exit=0
+15 imported/preserved source blobs verified; development-backlog optimized blob preserved.

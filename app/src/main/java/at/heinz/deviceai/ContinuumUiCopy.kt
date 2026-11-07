@@ -49,6 +49,18 @@ object ContinuumUiCopy {
                 "versuche einen genaueren Suchbegriff oder gib eine HTTPS-Adresse an."
     }
 
+    /**
+     * #567 P0-12: a general question without a matching memory and without a loaded local model is not a memory
+     * gap. Add what is really missing; the original memory reply and its guidance stay. Exact recalls stay unchanged;
+     * with a ready model this path is not reached for general questions (LocalFirstPolicy routes them to the model).
+     */
+    fun memoryFallbackAnswer(answer: String, grounded: Boolean, modelReady: Boolean): String =
+        if (grounded || modelReady || answer != at.heinz.deviceai.learning.ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER) answer
+        // The memory reply stays first (personal questions and revoked memories keep the „Merke dir“ guidance);
+        // the missing model is added as the real reason a general question cannot be answered now.
+        else answer + "\n\nHinweis: Das lokale Sprachmodell ist gerade nicht geladen. Allgemeine Wissensfragen kann ich " +
+            "erst beantworten, wenn du es in der Modellverwaltung lädst. Ich habe dafür nicht im Internet gesucht."
+
     fun researchFailure(reason: String?): String = when {
         reason?.contains("too large", ignoreCase = true) == true -> emptyResearch(reason)
         reason?.contains("timeout", ignoreCase = true) == true ||
@@ -67,6 +79,13 @@ object ContinuumUiCopy {
             "Deine Eingabe bleibt stehen."
 
     fun modelFailure(problem: String?): String = when {
+        problem == "LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT" ->
+            "Die lokale Modellantwort überschreitet das Ausgabelimit. " +
+                "Bitte fordere eine kürzere Antwort an oder teile die Aufgabe in kleinere Schritte."
+        problem == "LOCAL_MODEL_UNLOAD_REQUIRED" ->
+            "Das bisherige Modell wurde noch nicht vollständig entladen. " +
+                "Entlade es zuerst in der Modellverwaltung. Lade das gewünschte Modell erst " +
+                "nach erfolgreichem Entladen erneut."
         problem?.contains("sha", ignoreCase = true) == true ||
             problem?.contains("checksum", ignoreCase = true) == true ||
             problem?.contains("digest", ignoreCase = true) == true ->

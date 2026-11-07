@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AvatarRangeFrameConnectionUiTest" tests="3" skipped="0" failures="3" errors="0" timestamp="2026-11-04T19:16:48" hostname="04c8b0ba7ea6" time="5.575">
+  <properties/>
+  <testcase name="invalidAudioMarkerCannotStartAVisibleWordThroughTheActualCallback" classname="at.heinz.deviceai.AvatarRangeFrameConnectionUiTest" time="4.822">
+    <failure message="java.lang.AssertionError: expected:&lt;[]&gt; but was:&lt;[VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819813426), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819813586)]&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;[]&gt; but was:&lt;[VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819813426), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819813586)]&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.AvatarRangeFrameConnectionUiTest.invalidAudioMarkerCannotStartAVisibleWordThroughTheActualCallback$lambda$0(AvatarRangeFrameConnectionUiTest.kt:130)
+	at at.heinz.deviceai.AvatarRangeFrameConnectionUiTest.withListener(AvatarRangeFrameConnectionUiTest.kt:81)
+	at at.heinz.deviceai.AvatarRangeFrameConnectionUiTest.invalidAudioMarkerCannotStartAVisibleWordThroughTheActualCallback(AvatarRangeFrameConnectionUiTest.kt:127)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="installedCallbackRejectsBackwardAudioMarkerAndAcceptsTheNextValidWord" classname="at.heinz.deviceai.AvatarRangeFrameConnectionUiTest" time="0.429">
+    <failure message="java.lang.AssertionError: A newer text range with an older audio marker is stale expected:&lt;[VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814184), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819814344)]&gt; but was:&lt;[VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814184), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819814344), VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814184), VisemeCue(utteranceId=range-frame-current, viseme=O, weight=1.0, durationMs=160, atMillis=1793819814344)]&gt;" type="java.lang.AssertionError">java.lang.AssertionError: A newer text range with an older audio marker is stale expected:&lt;[VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814184), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819814344)]&gt; but was:&lt;[VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814184), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819814344), VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814184), VisemeCue(utteranceId=range-frame-current, viseme=O, weight=1.0, durationMs=160, atMillis=1793819814344)]&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.AvatarRangeFrameConnectionUiTest.installedCallbackRejectsBackwardAudioMarkerAndAcceptsTheNextValidWord$lambda$0(AvatarRangeFrameConnectionUiTest.kt:106)
+	at at.heinz.deviceai.AvatarRangeFrameConnectionUiTest.withListener(AvatarRangeFrameConnectionUiTest.kt:81)
+	at at.heinz.deviceai.AvatarRangeFrameConnectionUiTest.installedCallbackRejectsBackwardAudioMarkerAndAcceptsTheNextValidWord(AvatarRangeFrameConnectionUiTest.kt:99)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="tiedAudioMarkersKeepNewTextButDoNotReplayTheSameOrEarlierWord" classname="at.heinz.deviceai.AvatarRangeFrameConnectionUiTest" time="0.324">
+    <failure message="java.lang.AssertionError: Replay must not replace a newer valid word expected:&lt;[VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819814662), VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=O, weight=1.0, durationMs=160, atMillis=1793819814662)]&gt; but was:&lt;[VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819814662), VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=O, weight=1.0, durationMs=160, atMillis=1793819814662), VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=O, weight=1.0, durationMs=160, atMillis=1793819814662), VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819814662)]&gt;" type="java.lang.AssertionError">java.lang.AssertionError: Replay must not replace a newer valid word expected:&lt;[VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819814662), VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=O, weight=1.0, durationMs=160, atMillis=1793819814662)]&gt; but was:&lt;[VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819814662), VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=O, weight=1.0, durationMs=160, atMillis=1793819814662), VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=O, weight=1.0, durationMs=160, atMillis=1793819814662), VisemeCue(utteranceId=range-frame-current, viseme=SIL, weight=0.0, durationMs=160, atMillis=1793819814502), VisemeCue(utteranceId=range-frame-current, viseme=AA, weight=1.0, durationMs=160, atMillis=1793819814662)]&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.AvatarRangeFrameConnectionUiTest.tiedAudioMarkersKeepNewTextButDoNotReplayTheSameOrEarlierWord$lambda$0(AvatarRangeFrameConnectionUiTest.kt:123)
+	at at.heinz.deviceai.AvatarRangeFrameConnectionUiTest.withListener(AvatarRangeFrameConnectionUiTest.kt:81)
+	at at.heinz.deviceai.AvatarRangeFrameConnectionUiTest.tiedAudioMarkersKeepNewTextButDoNotReplayTheSameOrEarlierWord(AvatarRangeFrameConnectionUiTest.kt:113)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

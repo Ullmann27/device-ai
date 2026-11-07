@@ -41,7 +41,9 @@ internal object ContinuumPublicStudyCycleResult {
     fun markTopicCompleted(phase: String): Boolean {
         val primary = phase.substringBefore(';')
         return primary in setOf("TRAINING_ACCEPTED", "TRAINING_REJECTED", "SOURCE_UNCHANGED",
-            "SOURCE_UNAVAILABLE", "SOURCE_UNAVAILABLE_MISSING_PAGE", "SOURCE_UNAVAILABLE_EMPTY_EXCERPT")
+            "SOURCE_UNAVAILABLE", "SOURCE_UNAVAILABLE_MISSING_PAGE", "SOURCE_UNAVAILABLE_EMPTY_EXCERPT",
+            "SOURCE_UNAVAILABLE_NO_PUBLIC_WEB_RESULTS") ||
+            primary.startsWith("SOURCE_UNAVAILABLE_WEB_")
     }
 }
 

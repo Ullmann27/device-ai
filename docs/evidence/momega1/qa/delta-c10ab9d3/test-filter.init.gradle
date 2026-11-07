@@ -1,0 +1,6 @@
+allprojects {
+ tasks.withType(Test).configureEach {
+  executable = '/usr/bin/java'
+  filter { includeTestsMatching 'at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest' }
+ }
+}

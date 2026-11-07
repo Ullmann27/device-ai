@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentFinalVisualPolishUiTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T22:30:14" hostname="b354f2cb821b" time="5.684">
+  <properties/>
+  <testcase name="actualActiveAndBlockedWorkStatusRemainVisible" classname="at.heinz.deviceai.IndependentFinalVisualPolishUiTest" time="4.012"/>
+  <testcase name="portraitPaintsOuterRingsWithoutMovingHeroOrControls" classname="at.heinz.deviceai.IndependentFinalVisualPolishUiTest" time="1.639"/>
+  <testcase name="actualIdleWorkStatusDoesNotOccupyDashboardSpace" classname="at.heinz.deviceai.IndependentFinalVisualPolishUiTest" time="0.032"/>
+  <system-out><![CDATA[NATIVE_OUTER_RING_PIXELS=27339 hero=240,60,360,343
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

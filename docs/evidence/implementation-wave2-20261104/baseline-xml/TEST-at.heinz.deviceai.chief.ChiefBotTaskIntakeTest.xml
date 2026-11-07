@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefBotTaskIntakeTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:07:41" hostname="04c8b0ba7ea6" time="0.054">
+  <properties/>
+  <testcase name="privateConversationBudgetDoesNotBecomeTheExplicitOwnerTaskBudget" classname="at.heinz.deviceai.chief.ChiefBotTaskIntakeTest" time="0.017"/>
+  <testcase name="preparedTaskCannotCrossASessionOrRevocation" classname="at.heinz.deviceai.chief.ChiefBotTaskIntakeTest" time="0.002"/>
+  <testcase name="ownerTaskModelCallsAreFiniteAndDeadlineIsMonotonic" classname="at.heinz.deviceai.chief.ChiefBotTaskIntakeTest" time="0.004"/>
+  <testcase name="freshProfileRevisionAndMissingBotFailClosed" classname="at.heinz.deviceai.chief.ChiefBotTaskIntakeTest" time="0.006"/>
+  <testcase name="modelReservationRevalidatesSessionAndProfileBeforeSpendingBudget" classname="at.heinz.deviceai.chief.ChiefBotTaskIntakeTest" time="0.007"/>
+  <testcase name="utf8AndLateNegationAreNeverSilentlyShortened" classname="at.heinz.deviceai.chief.ChiefBotTaskIntakeTest" time="0.01"/>
+  <testcase name="completeOwnerTaskAndStableBotIdentitySurvivePreparation" classname="at.heinz.deviceai.chief.ChiefBotTaskIntakeTest" time="0.003"/>
+  <testcase name="renamedOrEditedProfileInvalidatesAVisibleDraft" classname="at.heinz.deviceai.chief.ChiefBotTaskIntakeTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

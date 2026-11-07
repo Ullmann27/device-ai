@@ -1,0 +1,21 @@
+{
+  "sourceSha": "54a338e3ee5bb961622ca21c325119d860219b72",
+  "applicationSourceSha": "c8c0615bc9f5398ad2e47b94669e3117ecf9f32d",
+  "changes": [
+    "scripts/continuum-cognitive-action-jvm.sh",
+    "scripts/continuum-dialogue-jvm.sh"
+  ],
+  "cognitiveJUnit": {
+    "pass": 84,
+    "fail": 0
+  },
+  "dialogueJUnit": {
+    "pass": 59,
+    "fail": 0
+  },
+  "testsRemoved": 0,
+  "fakeApiStubs": false,
+  "deps": "/workspace/continuum-build-env/native-graph-deps",
+  "isolatedCheckout": "/workspace/continuum-quality-harness-fix",
+  "limit": "Host real source selected graph; no Android UI/model inference/device claim"
+}

@@ -1,0 +1,405 @@
+{
+  "schema": "SHADOW_REPLAY_CORPUS_V1",
+  "cases": [
+    {
+      "id": "validation-001",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Vamesepa?",
+      "sources": [
+        {
+          "sourceId": "validation-001:s1",
+          "revision": 1,
+          "sha256": "5e58313accc48139e42631d0a847c32f3dd04f96c04c169b1cd94f711767954d",
+          "text": "Vacahuvi wohnt in Vafagate. Vamesepa wohnt in Vatulecu."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-001:s1",
+        "revision": 1,
+        "sha256": "5e58313accc48139e42631d0a847c32f3dd04f96c04c169b1cd94f711767954d",
+        "text": "Vatulecu",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "validation-002",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Vacaveli?",
+      "sources": [
+        {
+          "sourceId": "validation-002:s1",
+          "revision": 1,
+          "sha256": "bb7ed45eb6eadd423444f81a36b79a36eae6f1d6983fbf386d968e7c0dd13f06",
+          "text": "Vabanite wohnt in Vabapita. Vacaveli wohnt in Vacumare."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-002:s1",
+        "revision": 1,
+        "sha256": "bb7ed45eb6eadd423444f81a36b79a36eae6f1d6983fbf386d968e7c0dd13f06",
+        "text": "Vacumare",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "validation-003",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Vavovije?",
+      "sources": [
+        {
+          "sourceId": "validation-003:s1",
+          "revision": 1,
+          "sha256": "16d56a040447a7565eec4425a876c2e8f2e13e716cb9f857ad1bf74409551248",
+          "text": "Vanecebe steht in Vajevuji. Vavovije steht in Vasotika."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-003:s1",
+        "revision": 1,
+        "sha256": "16d56a040447a7565eec4425a876c2e8f2e13e716cb9f857ad1bf74409551248",
+        "text": "Vasotika",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "validation-004",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Valopita?",
+      "sources": [
+        {
+          "sourceId": "validation-004:s1",
+          "revision": 1,
+          "sha256": "d34abfe72823cdf51456da5ab9ef6d72fc821dc629e1f07cb9c877881fe93d5d",
+          "text": "Vasubise lebt in Vavelofe. Valopita lebt in Vanejuca."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-004:s1",
+        "revision": 1,
+        "sha256": "d34abfe72823cdf51456da5ab9ef6d72fc821dc629e1f07cb9c877881fe93d5d",
+        "text": "Vanejuca",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "validation-005",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Valavipu?",
+      "sources": [
+        {
+          "sourceId": "validation-005:s1",
+          "revision": 1,
+          "sha256": "9b7f01d91d02b1200e119b1d0f462c5e192f8fb98d607ac6b816f21041fb2f7a",
+          "text": "Vamanubi wohnt in Vamelogi. Valavipu wohnt in Vakamuso."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-005:s1",
+        "revision": 1,
+        "sha256": "9b7f01d91d02b1200e119b1d0f462c5e192f8fb98d607ac6b816f21041fb2f7a",
+        "text": "Vakamuso",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "validation-006",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Vavomofo?",
+      "sources": [
+        {
+          "sourceId": "validation-006:s1",
+          "revision": 1,
+          "sha256": "33b16ba3fe639cf2a2e203b0ace9651955d02e50fc47965819c0ff8cbb2567ce",
+          "text": "Vaculapo steht in Vanogapi. Vavomofo steht in Vagenefu."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-006:s1",
+        "revision": 1,
+        "sha256": "33b16ba3fe639cf2a2e203b0ace9651955d02e50fc47965819c0ff8cbb2567ce",
+        "text": "Vagenefu",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "validation-007",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Vaberopo?",
+      "sources": [
+        {
+          "sourceId": "validation-007:s1",
+          "revision": 1,
+          "sha256": "b0db6ac29b723f05c67a9a4a4562c18b49d0260f83ca4de1bd60b90eaaffc51f",
+          "text": "Vafihali steht in Vabetate. Vaberopo steht in Vadebasu."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-007:s1",
+        "revision": 1,
+        "sha256": "b0db6ac29b723f05c67a9a4a4562c18b49d0260f83ca4de1bd60b90eaaffc51f",
+        "text": "Vadebasu",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "validation-008",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Vacegufu?",
+      "sources": [
+        {
+          "sourceId": "validation-008:s1",
+          "revision": 1,
+          "sha256": "35100e40adb4ae9d0d8cf9e500abd8ba842a42afe126fcfec3b04d391759541f",
+          "text": "Vapuguji lebt in Vasasere. Vacegufu lebt in Vavirilo."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-008:s1",
+        "revision": 1,
+        "sha256": "35100e40adb4ae9d0d8cf9e500abd8ba842a42afe126fcfec3b04d391759541f",
+        "text": "Vavirilo",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "validation-009",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Vacejebo?",
+      "sources": [
+        {
+          "sourceId": "validation-009:s1",
+          "revision": 1,
+          "sha256": "80a7eedd04282448301a3c463bf258f5318570297d9c9268bd6a20a83ba4d625",
+          "text": "Vaganefu ist in Vajasike. Vacejebo ist in Vanefadu."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-009:s1",
+        "revision": 1,
+        "sha256": "80a7eedd04282448301a3c463bf258f5318570297d9c9268bd6a20a83ba4d625",
+        "text": "Vanefadu",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "validation-010",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Vanojiba?",
+      "sources": [
+        {
+          "sourceId": "validation-010:s1",
+          "revision": 1,
+          "sha256": "25585c429cbae2e1ad22a159b1991476df570c341a4af2f37be6b898d56d18cf",
+          "text": "Valujoga wohnt in Vameneke. Vanojiba wohnt in Vakejuvi."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-010:s1",
+        "revision": 1,
+        "sha256": "25585c429cbae2e1ad22a159b1991476df570c341a4af2f37be6b898d56d18cf",
+        "text": "Vakejuvi",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "validation-011",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Vavodiba?",
+      "sources": [
+        {
+          "sourceId": "validation-011:s1",
+          "revision": 1,
+          "sha256": "f508118c386b9c06fd1fddd7f7134881c79268d595bcbf96193a24949149618b",
+          "text": "Vavodiba ist in Vaginoli, Vavodiba wohnt in Varunoso."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-012",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Vacabide?",
+      "sources": [
+        {
+          "sourceId": "validation-012:s1",
+          "revision": 1,
+          "sha256": "f9c400cd63d89dc60db289fc21b662333648c4f329d13993a74731a6f9f91bbe",
+          "text": "Vacabide ist in Vakelibu."
+        },
+        {
+          "sourceId": "validation-012:s2",
+          "revision": 2,
+          "sha256": "4ebf9438b42cb4f8916b9d77869ce1d6975ed4f6076655d6468e1644d0d5dfc1",
+          "text": "Vacabide wohnt in Vanatusi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-013",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Vatemece?",
+      "sources": [
+        {
+          "sourceId": "validation-013:s1",
+          "revision": 1,
+          "sha256": "c12c6f9e46331f19654656cde0204d53e15fb174923dd6ce380023f9ddc427a0",
+          "text": "Vatemece ist in Vajoleho, Vatemece wohnt in Vavuvibe."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-014",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Vabomica?",
+      "sources": [
+        {
+          "sourceId": "validation-014:s1",
+          "revision": 1,
+          "sha256": "28a06f187ebde58f8d6ff9f865642a7740d4803bb8dbfdbfaac9767f47d1a495",
+          "text": "Vabomica ist in Vatajiva."
+        },
+        {
+          "sourceId": "validation-014:s2",
+          "revision": 2,
+          "sha256": "a6daec5dbacd4626a0f441374e2957cb56e61d3902c055b38f3f409120a56f5f",
+          "text": "Vabomica steht in Vagikido."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-015",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht Vagimego?",
+      "sources": [
+        {
+          "sourceId": "validation-015:s1",
+          "revision": 1,
+          "sha256": "f01b5d4d2b16eb128d949e78dfa0d42d927490063c4a065f8b16e3866ee11ce2",
+          "text": "Vagimego steht in Vasomofi, Vagimego ist in Vareneka."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-016",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Vavorice?",
+      "sources": [
+        {
+          "sourceId": "validation-016:s1",
+          "revision": 1,
+          "sha256": "493210b70e7252fd9f8d3090b5f9759548a835775e82bb3df57883a27d10d7ca",
+          "text": "Vavorice ist in Vakucovu."
+        },
+        {
+          "sourceId": "validation-016:s2",
+          "revision": 2,
+          "sha256": "5d58d977f114a7c46f846bb239565ce1d1ada3a20a5bc3f31cbd48e67f4c48d6",
+          "text": "Vavorice lebt in Vacefuve."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-017",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Vadocefa?",
+      "sources": [
+        {
+          "sourceId": "validation-017:s1",
+          "revision": 1,
+          "sha256": "af2cc4703c6ea28f612621b03cd3786b7abf8769f84e0d13b6c7805b212f351c",
+          "text": "Vadocefa lebt in Vacanisu, Vadocefa ist in Vaciteca."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-018",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist Varituhi?",
+      "sources": [
+        {
+          "sourceId": "validation-018:s1",
+          "revision": 1,
+          "sha256": "9227ad6c32c54f4bdeb3aaeb2762a7f7cb6238a3b3b39aa6b55fca48e7d44227",
+          "text": "Varituhi wohnt in Vanugubo."
+        },
+        {
+          "sourceId": "validation-018:s2",
+          "revision": 2,
+          "sha256": "fbc25f7b318eca11d6c1bb98d9da73a2240500886a6ffafb201be49bf696445d",
+          "text": "Varituhi ist in Vajosuju."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-019",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Vakejaku?",
+      "sources": [
+        {
+          "sourceId": "validation-019:s1",
+          "revision": 1,
+          "sha256": "c4b22dcdf9c36ce891df4bae58c81af934e96734e6961ae5ac4c1b3885d90e22",
+          "text": "Vakejaku wohnt in Varigaku, Vakejaku ist in Vakuhupi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-020",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt Vanonacu?",
+      "sources": [
+        {
+          "sourceId": "validation-020:s1",
+          "revision": 1,
+          "sha256": "5aaf527a83ccaa218a71ec0af94ed02574737df203e321384d6a5f319f725ca1",
+          "text": "Vanonacu ist in Vamagobu."
+        },
+        {
+          "sourceId": "validation-020:s2",
+          "revision": 2,
+          "sha256": "e663cbb4a29c2e7ea4c26f8f0f20ffedf3018834ba0f8b2fac610f82f92ed526",
+          "text": "Vanonacu lebt in Vaciboce."
+        }
+      ],
+      "expected": null
+    }
+  ]
+}

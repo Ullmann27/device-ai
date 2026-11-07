@@ -1,0 +1,42 @@
+{
+  "gate": "node-special",
+  "startedAt": "2026-11-06T20:50:42.191344+00:00",
+  "startedEpochMillis": 1793998242191,
+  "finishedAt": "2026-11-06T20:50:49.457394+00:00",
+  "sourceBefore": {
+    "commit": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+    "tree": "57027b6d4cfceda3bbd8241e77341ec67632370c",
+    "branch": "codex/continuum-code47-qa-candidate-20261106",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceAfter": {
+    "commit": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+    "tree": "57027b6d4cfceda3bbd8241e77341ec67632370c",
+    "branch": "codex/continuum-code47-qa-candidate-20261106",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceUnchanged": true,
+  "commands": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "scripts/continuum-atomic-acceptance.test.mjs",
+        "scripts/continuum-gguf-preflight.test.mjs",
+        "scripts/continuum-gguf-preflight.integration.test.mjs",
+        "scripts/continuum-owner-v38-release.test.mjs",
+        "scripts/continuum-owner-continuous-release.test.mjs",
+        "scripts/continuum-owner-backend-gate.test.mjs"
+      ],
+      "cwd": "/workspace/scratch/b31a9d731016/device-ai-wiring",
+      "exitCode": 0
+    }
+  ],
+  "logSha256": "0498ae1b15bc6dc9e3782e3cd330a7ae39ce0caee7cf02435e564e15e8794148",
+  "logBytes": 2507,
+  "localUnsignedQaOnly": true,
+  "deviceAcceptance": "NOT_RUN",
+  "status": "PASS"
+}

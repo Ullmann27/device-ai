@@ -1,0 +1,31 @@
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#queuedRecallCannotSurviveAnActualStop
+.
+Time: 4.211
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#realRecallStartsRecoveredDocumentTunnel
+.
+Time: 0.195
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#actualTaskStopClearsRecoveredTunnel
+.
+Time: 0.106
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#delayedBootDoesNotReplayAfterBackground
+.
+Time: 0.139
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ui.CockpitCinematicCueUiTest#queuedBootDoesNotReplayAfterPauseResume
+.
+Time: 0.136
+
+OK (1 test)
+
+TOTAL tests=5 failures=0

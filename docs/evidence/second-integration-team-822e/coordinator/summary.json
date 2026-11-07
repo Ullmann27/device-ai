@@ -1,0 +1,388 @@
+{
+  "schemaVersion": 1,
+  "observedUtc": "2026-11-04T19:21:08.451986+00:00",
+  "baseRemoteCommit": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+  "actualTestCommit": "377ac199b1e360cecefbe1e04bf43e68e94695b9",
+  "publishedEquivalentCommit": "52fbfc624c9a2846c1da571d330327c7874b1639",
+  "identicalCompleteTree": "2be53764ed72e00e780c7b87ff1401c195ac0a50",
+  "worktreeCleanBeforeAndAfterRun": true,
+  "androidHost": {
+    "exitCode": 0,
+    "classCount": 45,
+    "totals": {
+      "tests": 305,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "suites": [
+      {
+        "class": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.ContinuumBotPersonalityUiTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.ContinuumBotTaskRoutingUiTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.ContinuumBotToolTaskUiTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.MemoryRecallActivityUiTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.avatar.AvatarDirectorTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.avatar.AvatarNativeRegressionTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.avatar.AvatarObservedGazeTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.avatar.AvatarPortedPartsTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefBotAddressRouterTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefBotConversationTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefBotPersonasTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefBotTaskIntakeTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cockpit.CockpitContractsTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cockpit.CockpitTimelineTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cockpit.MemoryEventSourceTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cockpit.PillGateMappingTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cockpit.RetrievalCalculationSourceTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cockpit.SafeFlowsFgTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cognitive.HybridMemoryIdentityTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cognitive.HybridMemoryRetrievalParityTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cognitive.MemoryContextBoundaryTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cognitive.MemoryContextIdentityTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest",
+        "tests": 25,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cognitive.MemoryRecallObservationTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.learning.TemporalCueCalendarTest",
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.motion.LipSyncFaceSourceTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.motion.MotionCurvesTest",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.motion.MotionLibraryTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.routines.RoutineBookAdmissionTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "lint": {
+    "enabledChecks": [
+      "NewApi"
+    ],
+    "issues": 0,
+    "exitCode": 0
+  },
+  "qaPreflight": {
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "scripts/continuum-owner-continuous-qa-preflight.test.mjs",
+      "scripts/continuum-owner-catalog-contract.test.mjs",
+      "scripts/continuum-owner-continuous-release.test.mjs",
+      "scripts/continuum-one-tap-updater-contract.test.mjs",
+      "scripts/continuum-owner-v38-release.test.mjs",
+      "scripts/continuum-release-host-preflight.test.mjs"
+    ],
+    "tests": 70,
+    "pass": 70,
+    "fail": 0,
+    "skipped": 0,
+    "exitCode": 0
+  },
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt": "f8898aa6d06b4b74da04f1a99a3e445bb257c87e6b8ab5c5c0f7c3ffa93ea01d",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt": "8d095be29157246c8f7dad09e2ae3960519ae816c428dfe399ebcdfe65463e1d",
+    "scripts/render-continuum-owner-continuous-qa.sh": "9673936c27c789c66ba2cd55a9fbd95479d66c5a24b6c1e0c4e6d2ce7fe3d2e3",
+    "app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt": "f067041dfbb12e29abf4c5b004acd7de2bb94d2a70cb3f96403549e6d02a96b6"
+  },
+  "sourceSubtrees": {
+    "app": "9d689d6664aaad1e7c0b0c6a1fb0c6a1e177ea7b",
+    "scripts": "d5bc5ebea9ce73901ec8b773fbc845e6250b99b8",
+    "tools": "4bac96f4e0fed5dcecefc3debb064ec0d6ad01df",
+    ".github": "e0b9388c5f643432b3eca31a6bdfdd6851a43f03"
+  },
+  "limits": [
+    "45 selected classes, not a fresh complete regular unit suite",
+    "Robolectric host tests and pure JVM tests, not a Fold7/device run",
+    "TTS accepted-request fixture and synthetic PCM, not actual audible synthesis",
+    "GLB rig_hierarchy_orientation gate unresolved and assets unchanged",
+    "M2.9 main-chat activation not introduced; historical rank regression remains open",
+    "No native model, APK, signing, installation, publisher execution or main merge"
+  ],
+  "logNormalization": {
+    "rule": "Trailing horizontal whitespace removed from archived Gradle text logs only; line order, values and final newlines unchanged. Original runtime logs retained in the task workspace.",
+    "originalRuntimeLogSha256": {
+      "combined-gradle.log": "be2e593b120e1bcb8011e4e1a15f886fff58fd45dd5f382dd80c5d39123b0c33",
+      "baseline-compile.log": "017bd4be493b1460c68b10f4d6c59b0e3e305023c13f3acd9c022069f0f00d19"
+    }
+  }
+}

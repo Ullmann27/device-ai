@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentBotAddressRouterTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:10:39" hostname="5268aff5350a" time="0.254">
+  <properties/>
+  <testcase name="renamedProfileBeyondFirstHundredIsResolvedWithoutMutatingRightsOrRegistry" classname="at.heinz.deviceai.IndependentBotAddressRouterTest" time="0.147"/>
+  <testcase name="displayNameCannotSilentlyImpersonateAnotherStableId" classname="at.heinz.deviceai.IndependentBotAddressRouterTest" time="0.001"/>
+  <testcase name="duplicateNamesAreRejectedAcrossPageBoundary" classname="at.heinz.deviceai.IndependentBotAddressRouterTest" time="0.105"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

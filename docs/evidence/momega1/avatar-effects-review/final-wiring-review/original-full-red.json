@@ -1,0 +1,12 @@
+{
+  "source": "645b2215022008e2149da81b48683f15077b1fb0",
+  "rawPath": "/workspace/momega1-build-env/final-node-645b2215/node-full.tap",
+  "sha256": "e08b8cc3b213172ed578e7c1cb7252fe89e18b01b25721a06bdcc739e887f2de",
+  "tests": 2311,
+  "pass": 2292,
+  "fail": 15,
+  "skip": 4,
+  "exit": 1,
+  "scope": "six failing cases in four assigned static contracts; other failures separately owned",
+  "command": "node --test --test-reporter=tap --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs tools/continuum-virtual-fabric/*.test.mjs"
+}

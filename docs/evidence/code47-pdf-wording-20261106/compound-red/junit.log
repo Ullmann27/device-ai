@@ -1,0 +1,15 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=35833 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=35833 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+JUnit version 4.13.2
+......E...
+Time: 0.066
+There was 1 failure:
+1) extraAppStepsKeepTheCompleteRequestInPlanning(at.heinz.deviceai.cognitive.OwnerDocumentPoliteIntentTest)
+java.lang.AssertionError: Öffne die PDF und starte WhatsApp. expected null, but was:<Request(wantsDraft=false, reuse=false)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at at.heinz.deviceai.cognitive.OwnerDocumentPoliteIntentTest.extraAppStepsKeepTheCompleteRequestInPlanning(OwnerDocumentPoliteIntentTest.kt:55)
+
+FAILURES!!!
+Tests run: 9,  Failures: 1
+

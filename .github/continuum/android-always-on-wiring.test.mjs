@@ -4,7 +4,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 const activity=fs.readFileSync('app/src/main/java/at/heinz/deviceai/AgentActivity.kt','utf8');
 test('persistent ALWAYS_ON is explicit, revocable and uses the existing web gate',()=>{
- assert.match(activity,/InternetAccessMode\.valueOf/);
+ assert.match(activity,/InternetConsentPolicy\.restoredMode\(stored\)/);
+ const policy=fs.readFileSync('app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt','utf8');
+ assert.match(policy,/else -> InternetAccessMode\.OFF/);
  assert.match(activity,/Dauerhaft erlauben/);
  assert.match(activity,/authorizeAlwaysOn\(call,mode\)/);
  assert.match(activity,/approvedModelWebSession\.getAndSet\(null\)\?\.cancel\(\)/);

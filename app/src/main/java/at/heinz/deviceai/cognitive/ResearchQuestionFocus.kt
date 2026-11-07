@@ -13,6 +13,9 @@ internal object ResearchQuestionFocus {
         "welcher", "welches", "wann", "womit", "wodurch", "how", "what",
         "why", "where", "when", "which", "who"
     )
+    private val lookupCommands = setOf(
+        "suche", "finde", "recherchiere", "prüfe", "zeige", "nenne"
+    )
     private val generic = interrogatives + setOf(
         "funktioniert", "funktionieren", "funktioniere", "geht", "gehts",
         "ist", "sind", "das", "die", "der", "den", "dem", "des", "ein",
@@ -22,7 +25,11 @@ internal object ResearchQuestionFocus {
         "erklären", "erklärt", "erklärung", "etwas", "über", "zum",
         "zur", "ich", "du", "es", "sie", "wir", "the", "does", "do",
         "did", "are", "is", "can", "work", "works", "working", "about",
-        "please", "tell", "me", "of", "for", "in", "a", "an", "and"
+        "please", "tell", "me", "of", "for", "in", "a", "an", "and",
+        "suche", "such", "finde", "recherchiere", "prüfe", "prüfen", "zeige",
+        "nenne", "nenn", "online", "aktuell", "aktuelle", "aktuellen",
+        "aktueller", "fassung", "quelle", "quellen", "konkrete",
+        "konkreten", "link", "im"
     )
 
     private fun tokens(text: String): List<String> =
@@ -45,7 +52,9 @@ internal object ResearchQuestionFocus {
 
     private fun isQuestion(text: String): Boolean {
         val first = tokens(text).firstOrNull()
-        return '?' in text || first in interrogatives
+        // An imperative search request may have no question mark, but still
+        // needs topic-aware relevance filtering after discovery.
+        return '?' in text || first in interrogatives || first in lookupCommands
     }
 
     fun searchText(question: String): String {

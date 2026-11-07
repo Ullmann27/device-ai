@@ -1,0 +1,94 @@
+{
+  "schema": "independent-aa-ablation-and-transform-review",
+  "version": 1,
+  "manifestSha256": "aeb8ca4514c498bbbb92b7de9ec59bc35e7661590e261029e3f03cba7f79239d",
+  "assetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "producerAblationExplicitlyModifiedInputs": true,
+  "fiveFramesIndependentlyViewedAndHashed": true,
+  "observations": [
+    "AA alone and JawOpen alone each open the exterior mouth.",
+    "Adding both exterior morphs increases the opening beyond either alone.",
+    "Jaw rotation alone does not open the exterior skin; it moves only inner geometry.",
+    "The full original pose retains the observed lower-tooth visibility problem."
+  ],
+  "canonicalJawWorld": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.9781476007338057,
+      -0.20791169081775934,
+      0.22699999809265137
+    ],
+    [
+      0.0,
+      0.20791169081775934,
+      0.9781476007338057,
+      0.03499999921768904
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "blenderExpected": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.9781476007338057,
+      -0.20791169081775934,
+      -0.03499999921768904
+    ],
+    [
+      0.0,
+      0.20791169081775934,
+      0.9781476007338057,
+      0.22699999809265137
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "blenderObserved": [
+    [
+      1.0,
+      -2.4142780219449378e-08,
+      -3.552713678800501e-15,
+      2.414278221785082e-10
+    ],
+    [
+      2.3615204014504343e-08,
+      0.9781476259231567,
+      -0.20791150629520416,
+      -0.03499998524785042
+    ],
+    [
+      5.019565207931009e-09,
+      0.20791153609752655,
+      0.9781476259231567,
+      0.22699999809265137
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "maxAbsMatrixDifference": 1.8452255517997784e-07,
+  "limits": "Component ablation is deliberately modified input, not a standalone runtime output. Agreement with this jaw transform does not certify every renderer control or native GPU behavior."
+}

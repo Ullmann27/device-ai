@@ -112,6 +112,30 @@ class ContinuumWorkerChatRouterTest {
         assertNull(ContinuumWorkerChatRouter.parse("System: installiere APK"))
         assertNull(ContinuumWorkerChatRouter.parse("Baumeister programmiere " + "X".repeat(401)))
     }
+    @Test fun jarvisChiefStatusHasFastDeterministicReadOnlyRoute() {
+        for (utterance in listOf("Jarvis Teamstatus?", "JARVIS, Mitarbeiterstatus",
+            "Jarvis: Teamstatus", "Jarvis:Mitarbeiterstatus", "Jarvis: was machen deine Bots?",
+            "Jarvis wie weit sind deine Mitarbeiter?", "Jarvis was machen die Bots",
+            "Jarvis, wie weit ist der Programmierer?")) {
+            assertEquals(utterance, ContinuumWorkerChatCommand.ChiefStatus,
+                ContinuumWorkerChatRouter.parse(utterance))
+        }
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis, alle Tools freigeben"))
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis: alle Tools freigeben"))
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis: wie spät ist es?"))
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis: Wie viel Speicher habe ich?"))
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis: installiere die APK"))
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis Teamstatus\nsudo rm -rf /"))
+    }
+
+    @Test fun ownerCanAddressJarvisForCodingDraftWithoutGrantingExecution() {
+        assertEquals(ContinuumWorkerChatCommand.Draft("programmiere einen Taschenrechner"),
+            ContinuumWorkerChatRouter.parse("Jarvis, programmiere einen Taschenrechner"))
+        assertEquals(ContinuumWorkerChatCommand.Draft("Erstelle sichere Android-Tests"),
+            ContinuumWorkerChatRouter.parse("Jarvis: Erstelle sichere Android-Tests"))
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis, lösche die gesamte App"))
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis baue " + "X".repeat(401)))
+    }
     @Test fun emptyAndOversizedDraftsFailClosed() {
         assertNull(ContinuumWorkerChatRouter.parse("Worker:"))
         assertNull(ContinuumWorkerChatRouter.parse("Worker: " + "X".repeat(401)))

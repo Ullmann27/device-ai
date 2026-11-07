@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:04:56" hostname="6e2f8005d77e" time="0.003">
+  <properties/>
+  <testcase name="punctuationCannotExtendThePreviousWordsFallbackOrReattachIt" classname="at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest" time="0.001"/>
+  <testcase name="sinkFailureDoesNotRejectAnOtherwiseAcceptedTtsCallback" classname="at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest" time="0.001"/>
+  <testcase name="acceptedRangeResultSharesTextAndFrameOrderingWithTheCaller" classname="at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest" time="0.0"/>
+  <testcase name="acceptedStartResultRejectsDuplicateSupersededAndEndedIds" classname="at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest" time="0.0"/>
+  <testcase name="punctuationAdvancesAdmissionWithoutInventingSpeechMotion" classname="at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

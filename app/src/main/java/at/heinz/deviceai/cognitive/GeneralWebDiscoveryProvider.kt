@@ -10,9 +10,9 @@ import java.io.StringReader
 import java.util.concurrent.CancellationException
 import javax.xml.parsers.SAXParserFactory
 
-/** Public Bing RSS search, with Wikipedia only when search produces no safe result.
+/** Multi-provider general HTTPS web search; Wikipedia is never an implicit fallback.
  * Every transport shares the research provider's DNS/TLS/redirect/byte bounds.
- * Endpoint availability is not guaranteed; fallback and failures stay visible.
+ * Endpoint availability is not guaranteed; failures stay visible.
  */
 class GeneralWebDiscoveryProvider(
     private val wikipedia:ResearchDiscoveryProvider?=null,
@@ -22,33 +22,66 @@ class GeneralWebDiscoveryProvider(
     @Volatile private var generalWorked=false
     @Volatile var lastIssue:String?=null
         private set
+    /** Only true when BOTH independent web search transports failed. Empty search results are different. */
+    @Volatile var allSearchEndpointsFailed:Boolean=false
+        private set
+    /** No complete negative answer when even one provider transport failed and no candidate survived. */
+    @Volatile var searchIncomplete:Boolean=false
+        private set
     override val isGeneralSearchAvailable:Boolean get()=generalWorked
     override fun discover(query:ResearchQuery):List<ResearchSourceCandidate> {
         checkAccess()
+        lastIssue=null
+        allSearchEndpointsFailed=false
+        searchIncomplete=false
+        generalWorked=false
         val text=query.text.trim().take(512)
         if(text.isBlank())return emptyList()
         val focused=ResearchQuestionFocus.searchText(text)
-        val primary=runCatching {
+        // A single public search backend can fail independently of device
+        // connectivity. Try another bounded HTTPS search endpoint before
+        // degrading to Wikipedia-only discovery. Both obey the same grant and
+        // SSRF/DNS/TLS/byte limits; no private query expansion is performed.
+        val combined = linkedMapOf<String, ResearchSourceCandidate>()
+        val domains = mutableMapOf<String, Int>()
+        var failedEndpoints=0
+        for (url in listOf(searchUrl(focused), duckDuckGoUrl(focused))) {
             checkAccess()
-            parseSearchResults(fetchHtml?.invoke(searchUrl(focused))?:fetchSearchResponse(searchUrl(focused),checkAccess))
-                .filter { ResearchQuestionFocus.titleMatches(text,it.title) }
-        }.getOrElse {
-            rethrowCancellation(it)
-            lastIssue="Allgemeine Websuche fehlgeschlagen: "+(it.message?:it.javaClass.simpleName).take(160)
-            emptyList()
+            val matches=runCatching {
+                parseSearchResults(fetchHtml?.invoke(url)?:fetchSearchResponse(url,checkAccess))
+                    .filter { ResearchQuestionFocus.titleMatches(text,it.title) }
+            }.getOrElse {
+                rethrowCancellation(it)
+                failedEndpoints++
+                lastIssue="Web-Suchanbieter nicht verfügbar: "+(it.message?:it.javaClass.simpleName).take(160)
+                emptyList()
+            }
+            checkAccess()
+            for(candidate in matches) {
+                val host = runCatching { URI(candidate.url).host.lowercase(java.util.Locale.ROOT) }.getOrNull()
+                    ?: continue
+                if((domains[host]?:0)>=2 || candidate.url in combined)continue
+                combined[candidate.url]=candidate
+                domains[host]=(domains[host]?:0)+1
+            }
         }
         checkAccess()
-        if(primary.isNotEmpty()){generalWorked=true;lastIssue=null;return primary}
-        lastIssue=lastIssue?:"Allgemeine Websuche lieferte keine thematisch passenden Quellen."
+        allSearchEndpointsFailed=failedEndpoints==2 && combined.isEmpty()
+        searchIncomplete=failedEndpoints>0 && combined.isEmpty()
+        if(combined.isNotEmpty()) {
+            generalWorked=true
+            lastIssue=null
+            return combined.values.take(12)
+        }
+        lastIssue=lastIssue?:"Beide allgemeinen Web-Suchanbieter lieferten keine thematisch passenden Quellen."
         checkAccess()
         val fallback=runCatching {
-            (wikipedia?:WikipediaResearchDiscoveryProvider(checkAccess=checkAccess))
-                .discover(query.copy(text=focused))
-                .filter { ResearchQuestionFocus.titleMatches(text,it.title) }
+            wikipedia?.discover(query.copy(text=focused))
+                ?.filter { ResearchQuestionFocus.titleMatches(text,it.title) }.orEmpty()
         }
             .getOrElse {
                 rethrowCancellation(it)
-                lastIssue=lastIssue+" Wikipedia-Fallback ebenfalls fehlgeschlagen."
+                lastIssue=lastIssue+" Expliziter Fallback-Suchanbieter fehlgeschlagen."
                 emptyList()
             }
         checkAccess()
@@ -60,12 +93,21 @@ class GeneralWebDiscoveryProvider(
     }
     companion object {
         fun searchUrl(query:String)="https://www.bing.com/search?format=rss&q="+URLEncoder.encode(query,"UTF-8")
+        fun duckDuckGoUrl(query:String)="https://html.duckduckgo.com/html/?q="+URLEncoder.encode(query,"UTF-8")
         private fun candidate(url:String,title:String?):ResearchSourceCandidate? {
             val decoded=url.replace("&amp;","&").trim()
             val uri=runCatching { URI(decoded) }.getOrNull()?:return null
             if(runCatching { HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(uri) }.isFailure)return null
             val host=uri.host.lowercase(java.util.Locale.ROOT).trimEnd('.')
-            if(host=="bing.com"||host.endsWith(".bing.com")||host=="duckduckgo.com"||host.endsWith(".duckduckgo.com")||host=="google.com"||host.endsWith(".google.com"))return null
+            // Search-engine homepages, regional domains and login/navigation pages
+            // are discovery transports, not independent evidence for a fact.
+            // Keep the real publisher host after URI parsing; never match arbitrary URL text.
+            if(host=="bing.com"||host.endsWith(".bing.com")||
+                host=="duckduckgo.com"||host.endsWith(".duckduckgo.com")||
+                Regex("""(^|\.)google\.[a-z]{2,}(\.[a-z]{2,})?$""").containsMatchIn(host)||
+                Regex("""(^|\.)yahoo\.[a-z]{2,}(\.[a-z]{2,})?$""").containsMatchIn(host)||
+                host=="wikipedia.org"||host.endsWith(".wikipedia.org")||
+                host=="wikimedia.org"||host.endsWith(".wikimedia.org"))return null
             return ResearchSourceCandidate(decoded,title?.replace(Regex("\\s+")," ")?.take(256),"general-web-search")
         }
         fun parseSearchResults(raw:String):List<ResearchSourceCandidate> {

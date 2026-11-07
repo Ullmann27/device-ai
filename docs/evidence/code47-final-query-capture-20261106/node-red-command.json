@@ -1,0 +1,17 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "scripts/continuum-fold7-stream-scroll.test.mjs",
+    "scripts/continuum-local-chat-streaming.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/b31a9d731016/app-query-format-evidence/node-red-source",
+  "exit": 1,
+  "utc": "2026-11-06T21:01:33.536561+00:00",
+  "base": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+  "source_sha256": {
+    "scripts/continuum-fold7-stream-scroll.test.mjs": "e255e67bf7a546522071883e96f69ef742a76820aa6881bd6262c5837e30ad49",
+    "scripts/continuum-local-chat-streaming.test.mjs": "692c43942ebe18d4b370f8891168b734d4a0d9f4f4bf10d6d69b04e112ad156d"
+  }
+}

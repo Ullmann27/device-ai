@@ -1,0 +1,15 @@
+{
+  "baseCommit": "3aacf6cba0abdbde5fe9007528aa4b795b1ff3fc",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt": {
+      "red": "ab5d4b2824108da44a9fb5a2a3bd458d816476040d61f759faff6e7551a58350",
+      "green": "4587323bf07e1d5205b56588d94a36f5bef3ad57ea4791f199256321937e6510"
+    },
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt": {
+      "red": "09ee0c48c82fa09200c72b1277f09644b0f21289dbd52f30929670a8b5007828",
+      "green": "1c14802386bbbbb910ec8e91204b5a66d42f9f2b519921ce2734928cacc8236c"
+    }
+  },
+  "physicalDeviceTested": false,
+  "fullIntegratedGradleTested": false
+}

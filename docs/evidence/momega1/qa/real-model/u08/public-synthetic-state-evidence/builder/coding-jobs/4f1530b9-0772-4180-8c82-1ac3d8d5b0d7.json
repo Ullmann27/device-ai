@@ -1,0 +1,57 @@
+{
+  "schema": "continuum-mobile-coding-receipt",
+  "version": 1,
+  "job": "4f1530b9-0772-4180-8c82-1ac3d8d5b0d7",
+  "operation": "code-repair",
+  "taskId": "mob-a66c995207b6bd10",
+  "commit": "2872f613728bc44cd21acda48256296e74ee1753",
+  "toolchain": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64",
+    "git": "git version 2.52.0"
+  },
+  "order": {
+    "chain": "node"
+  },
+  "status": "FAILED_REPAIR",
+  "teamleaderOutcome": "NO_VERIFIED_REPAIR",
+  "patch": null,
+  "evidence": null,
+  "commands": [
+    {
+      "phase": "baseline",
+      "exitCode": 1,
+      "passed": false,
+      "executed": 1,
+      "failed": 1,
+      "timedOut": false,
+      "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+    }
+  ],
+  "failure": {
+    "code": "NO_VERIFIED_REPAIR",
+    "message": "Repair ended NO_VERIFIED_REPAIR"
+  },
+  "backlog": {
+    "state": "READY",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "error": {
+      "code": "NO_VERIFIED_REPAIR",
+      "message": "NO_VERIFIED_REPAIR"
+    }
+  },
+  "approvedForMerge": false,
+  "apk": null,
+  "installed": false,
+  "deviceVerified": false,
+  "createdAt": "2026-11-03T20:30:45.183Z",
+  "repair": {
+    "outcome": "NO_VERIFIED_REPAIR",
+    "strategy": null,
+    "files": [],
+    "diagnostics": 1,
+    "attempts": 0
+  }
+}

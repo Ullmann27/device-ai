@@ -1,0 +1,20 @@
+{
+  "candidateCommit": "8c40d111c557e9ebb0d19f807a098c1f5d196966",
+  "baselineSourceCommit": "97b5b9006f8c60f1a6fc4fb10981894330c55fe4",
+  "baselineBinarySource": "retained original memory-red output; not freshly rebuilt",
+  "candidateBinarySource": "snapshot of parent-provided sol314-final-host output",
+  "corpusSha256": "2bf6acb02afc33a92422994d590b1289c187ee85ffc55a3148e057b5571ad8c0",
+  "baseline-classes-sha256": "7eae0ebdf7a579a0d86803b97f3fef5426285d1c2e4ca85ee2a261fa80002fb8",
+  "candidate-8c40d111-classes-sha256": "5516453e5d66310be11e9ddddea6090a72f8ad465e10e238a108d636c1abc64d",
+  "sourceHashes": {
+    "app/src/main/java/at/heinz/deviceai/learning/LearningSnapshot.kt": "602c3ec18c710ad2d52074241712d94ee6dcacc5a3f471e1be92d3f68a58143a",
+    "app/src/main/java/at/heinz/deviceai/learning/TrainableSubwordEncoder.kt": "557a97d43655e06fd7f8f498a7a8007b255364b9eaa2a89be2697a291ab9f1ff",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt": "d7df0785345f193770e7dd934fab02db246400ba88886b042a6c84d43a579bf3",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumOrthographyProbe.kt": "689d8e379b7364e64dc059085e6704f7a3597c89d8a469618cc090748b499087",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt": "2e13c7a86e8bf05ab84e1b875d2937e8e2b81c3d293ef1f5c9ab8e68775f8553",
+    "app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt": "4b54af735df51f4eede085a81bfc2d6736ff2ba9803eb82a74db173a524dd850",
+    "app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1Lexicon.kt": "aee0953c667286c3155ea64c0d56522eb78785e5b9a458b8fda63bc73e1a1257",
+    "app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1EvidenceWorkspace.kt": "91648023ddb00e0732699a62bb4f922dfa6c00c7a9df93b4c9951cd86d5d9c28",
+    "app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1Workspace.kt": "a7df8bfe32669c52f45899437910c6bbadb92dfab6e1229f29f959d66e8348db"
+  }
+}

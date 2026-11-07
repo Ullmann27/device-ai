@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 2,
+  "asset": "continuum-avatar.glb",
+  "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "bytes": 12038416,
+  "meshLicense": {
+    "spdx": "CC0-1.0",
+    "scope": "Inherited MakeHuman graphical mesh assets only",
+    "text": "LICENSE.ASSETS.md",
+    "upstream": "https://github.com/makehumancommunity/makehuman/tree/a8bc2d54ff0ac92e78ff71431b1023eda42bf482"
+  },
+  "textureProvenance": {
+    "sourceKind": "AI_GENERATED_2D_ARTWORK",
+    "source": "assets/avatar/reference/continuum-neural-front-20261104.png",
+    "sha256": "0ca742ef92bb9db1bd012df7677594c37b58e77c40e4fc92a946e8e0fb886b1e",
+    "metadata": "assets/avatar/reference/continuum-neural-front-20261104.provenance.json",
+    "generationTool": "image_gen.imagegen",
+    "ownerReferenceSha256": "b1575d98f24db11e68c449728c0252652657ad4fd252431e962fd5e7e9288c40",
+    "use": "Original generated artwork retained for torso and mouth; owner-supplied correction projected onto head surface",
+    "atlasSha256": "d1006978fb39d742e066742c911d59b0889c1c9229d40a59e429dfbfdac4df1d",
+    "atlasPixels": [
+      2048,
+      2048
+    ],
+    "headCorrection": {
+      "sourceKind": "OWNER_SUPPLIED_VISUAL_CORRECTION",
+      "source": "assets/avatar/reference/continuum-owner-head-correction-20261104.png",
+      "sha256": "f70460e42e7b89db5dd4c1f94228d3b7afa7c54a06774ebd57132ab27ecad7a4",
+      "metadata": "assets/avatar/reference/continuum-owner-head-correction-20261104.provenance.json",
+      "selectedPanel": "Right Nachher panel",
+      "tool": "tools/avatar-3d/reference-atlas/correct_head_surface.py",
+      "toolSha256": "735d55ee03b31cada330c6eff1e4de26cbda8ffc5f9b2f16c4c693b75cea37ae",
+      "sourceCommit": "653a885435d95a19f341a80a89be1e9fbeccf1f1",
+      "sourceAssetSha256": "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145",
+      "geometryRigMorphsMaterialsUnchanged": true,
+      "lowerTorsoTexelsUnchanged": 1183703,
+      "newImageGeneration": false,
+      "unseenSide": "Mirrored, color-adjusted continuation"
+    }
+  },
+  "derivation": {
+    "tool": "tools/avatar-3d/reference-atlas/build_reference_avatar.py",
+    "toolSha256": "159a64f34c392170d738e55c917ab91415005ace1b4107063653e0ad59fb914e",
+    "sourceRepository": "Ullmann27/device-ai",
+    "sourceCommit": "28b228698aef8c52e46c72b71fdd5e1915d6e76c",
+    "sourceAssetPath": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+    "sourceAssetSha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+    "sourceBytes": 10165644,
+    "method": "UV seam vertex duplication with mapped preservation of oriented triangles, all 21 morph deltas, normals, joint influences and skin weights",
+    "faceVerticesBefore": 12980,
+    "faceVerticesAfter": 16650,
+    "rigAndNodeTransformsUnchanged": true
+  },
+  "adaptationRepository": "https://github.com/Ullmann27/device-ai/pull/521",
+  "historicalRigProvenance": {
+    "priorAdaptationRepository": "https://github.com/Ullmann27/device-ai/pull/404",
+    "priorBuilderCommit": "9633d4e9",
+    "rigAdaptation": {
+      "originalAssetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+      "tool": "tools/epsilon-avatar-contract/derive-jaw-pivot-candidate.py",
+      "hingeTranslationMetres": 0.04,
+      "neutralRigidChildTransformsPreserved": true,
+      "meshMorphMaterialsUnchanged": true,
+      "requiresMapperSharedOpeningFix": "9a23e5d6a9dc96d15525347c99ff682d632d7277",
+      "independentReview": "PR #434: six original maximum poses and 113 reducer holdouts, zero front-surface tooth intersections; final source-pin regression pending"
+    }
+  },
+  "identityStatus": "REFERENCE_GUIDED_UV_APPROXIMATION_REQUIRES_OWNER_REVIEW",
+  "runtime": "No authored animation clips. Existing AvatarPose and the same 21-target rig controls.",
+  "limitations": [
+    "Frontal artwork plus an owner-supplied quarter-view correction; unseen anatomy remains approximate",
+    "Portrait lighting is baked into surface color",
+    "Inherited independent rig_hierarchy_orientation window failure remains open; geometry preservation is not anatomical approval",
+    "Native Filament/Fold7 rendering, performance and audible lip synchronization are not established by host renders"
+  ]
+}

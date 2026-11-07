@@ -1,0 +1,100 @@
+TAP version 13
+# Subtest: bounded process executes argv directly and reports its actual exit
+ok 1 - bounded process executes argv directly and reports its actual exit
+  ---
+  duration_ms: 95.756465
+  type: 'test'
+  ...
+# Subtest: timeout kills the process group and never reports success
+ok 2 - timeout kills the process group and never reports success
+  ---
+  duration_ms: 553.465526
+  type: 'test'
+  ...
+# Subtest: owner cancellation is asynchronous and cannot become a successful exit
+ok 3 - owner cancellation is asynchronous and cannot become a successful exit
+  ---
+  duration_ms: 513.517626
+  type: 'test'
+  ...
+# Subtest: the signal that ended the direct child is reported, an exit code is not
+ok 4 - the signal that ended the direct child is reported, an exit code is not
+  ---
+  duration_ms: 137.055643
+  type: 'test'
+  ...
+# Subtest: oversized process logs are bounded and fail closed
+ok 5 - oversized process logs are bounded and fail closed
+  ---
+  duration_ms: 419.195863
+  type: 'test'
+  ...
+# Subtest: cancellation also stops a child that detached like the Gradle daemon
+ok 6 - cancellation also stops a child that detached like the Gradle daemon
+  ---
+  duration_ms: 816.49933
+  type: 'test'
+  ...
+# Subtest: inherited run identity catches a rapidly orphaned detached child on linux
+ok 7 - inherited run identity catches a rapidly orphaned detached child on linux
+  ---
+  duration_ms: 461.917075
+  type: 'test'
+  ...
+# Subtest: inherited run identity catches a rapidly orphaned detached child on android
+ok 8 - inherited run identity catches a rapidly orphaned detached child on android
+  ---
+  duration_ms: 459.922755
+  type: 'test'
+  ...
+# Subtest: an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup
+ok 9 - an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup
+  ---
+  duration_ms: 62.185242
+  type: 'test'
+  ...
+# Subtest: an unreadable process younger than the run blocks a confirmed cleanup
+ok 10 - an unreadable process younger than the run blocks a confirmed cleanup
+  ---
+  duration_ms: 1874.767789
+  type: 'test'
+  ...
+# Subtest: unreadable proc stat is not confused with an exited process
+ok 11 - unreadable proc stat is not confused with an exited process
+  ---
+  duration_ms: 1872.177512
+  type: 'test'
+  ...
+# Subtest: denied proc access still stops its direct child and returns a bounded unconfirmed timeout
+ok 12 - denied proc access still stops its direct child and returns a bounded unconfirmed timeout
+  ---
+  duration_ms: 1966.647388
+  type: 'test'
+  ...
+# Subtest: a reused root PID cannot hide an earlier detached descendant from cleanup
+ok 13 - a reused root PID cannot hide an earlier detached descendant from cleanup
+  ---
+  duration_ms: 407.099769
+  type: 'test'
+  ...
+# Subtest: incomplete proc scans are retried within the cleanup bound: transient
+ok 14 - incomplete proc scans are retried within the cleanup bound: transient
+  ---
+  duration_ms: 373.869118
+  type: 'test'
+  ...
+# Subtest: incomplete proc scans are retried within the cleanup bound: persistent
+ok 15 - incomplete proc scans are retried within the cleanup bound: persistent
+  ---
+  duration_ms: 1773.33759
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11853.446789

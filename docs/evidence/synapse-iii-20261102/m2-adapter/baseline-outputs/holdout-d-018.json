@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-018:s1",
+    "decision": "SPAN",
+    "sha256": "3f24a6c9dde2ed1cffa07c104577e6174c556f51155be367eef6e3ceded7258b",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDalufugo",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {
+    "sourceId": "holdout-d-018:s1",
+    "decision": "SPAN",
+    "sha256": "3f24a6c9dde2ed1cffa07c104577e6174c556f51155be367eef6e3ceded7258b",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDalufugo",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "VERIFIED": {
+    "sourceId": "holdout-d-018:s1",
+    "decision": "SPAN",
+    "sha256": "3f24a6c9dde2ed1cffa07c104577e6174c556f51155be367eef6e3ceded7258b",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDalufugo",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "rawMillis": 72.93452
+}

@@ -1,0 +1,168 @@
+{
+  "currentSourceCommit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "currentSourceTree": "5206abd91b3740838661aa0e27e6702b3891591b",
+  "referenceContactSheetReadOnly": true,
+  "referenceMediaCopied": false,
+  "hostFramesCopied": false,
+  "captureMetadata": {
+    "kind": "ANDROID_NATIVE_CANVAS_HOST",
+    "syntheticMemoryMetadata": true,
+    "physicalDeviceTested": false,
+    "filamentGpuPixelsTested": false,
+    "frames": 24,
+    "sampleIntervalMs": 220,
+    "durationSampledMs": 5060
+  },
+  "captureReceiptPath": "/workspace/scratch/3d1967be6193/qa/fullstage-review/final-evidence/receipt.json",
+  "captureReceiptSha256": "88f203c07e756bb62fb3010a5352ed507fb037b44e9e28face248c12f6346b3a",
+  "reviewedFrames": [
+    {
+      "name": "frame-00.png",
+      "sampleOffsetMs": 0,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "d7543769406f9b42c9f9887bc24f31825a70f676c049c7e2d96a03283b6073c0"
+    },
+    {
+      "name": "frame-03.png",
+      "sampleOffsetMs": 660,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "7b7b65b7b5b950ac1169afe4c0c791fa4e4b9dc09bd9c427180a9659b9e9abec"
+    },
+    {
+      "name": "frame-06.png",
+      "sampleOffsetMs": 1320,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "9dee705fa104943371afaf767eb01f028c87658ad2a359272e3fda077fc75ae0"
+    },
+    {
+      "name": "frame-09.png",
+      "sampleOffsetMs": 1980,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "c78fb96f0c498463208a283ac42b1797234ea6f1d3ffff748648d8696cfc42e5"
+    },
+    {
+      "name": "frame-12.png",
+      "sampleOffsetMs": 2640,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "13cab1f6e46f468f31cbcf1ceb205dd01a5f3259617f662110113bc847c95d0b"
+    },
+    {
+      "name": "frame-15.png",
+      "sampleOffsetMs": 3300,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "d77c7bbac7d665505848ec4fc5be5477330e82fe064d3a724031a3679b6d8a00"
+    },
+    {
+      "name": "frame-18.png",
+      "sampleOffsetMs": 3960,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "79fd2de0003a9353799d04c8bb9c123d4019bf767f976648f69e8d00c3d2fefe"
+    },
+    {
+      "name": "frame-19.png",
+      "sampleOffsetMs": 4180,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "0359e68e2261c153cec2baa6dae1a40c895fa42289c83a2c683811bb3adddd34"
+    },
+    {
+      "name": "frame-20.png",
+      "sampleOffsetMs": 4400,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "1daff77a1f9521a7ae5a4c330f9f9e6349017331da1c50c01729e10172414ef0"
+    },
+    {
+      "name": "frame-21.png",
+      "sampleOffsetMs": 4620,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "20ba489bf492ce8d659ee06cd45db84df55ca1a1f74f1fc850b6b4232d31e695"
+    },
+    {
+      "name": "frame-22.png",
+      "sampleOffsetMs": 4840,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "5967a74a6e824d0dcc8205851e39c4745e97d169374a1cc0cd70b811fc17bd43"
+    },
+    {
+      "name": "frame-23.png",
+      "sampleOffsetMs": 5060,
+      "dimensionsPx": [
+        884,
+        760
+      ],
+      "sha256": "d7afb3eb683a2cccb7a046e377afac9a433c8fc37f52e9dcb33f0a1821f20aab"
+    }
+  ],
+  "productionSources": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "captureSha256": "15abd69ca6d6dadf17d46e2bb83e4a0ca00f4ba9f6ed8e2955f1ac07bec727da",
+      "currentSha256": "15abd69ca6d6dadf17d46e2bb83e4a0ca00f4ba9f6ed8e2955f1ac07bec727da",
+      "match": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+      "captureSha256": "8acf6133f8869ff5f962c3a266d2d38c15d988d24f58ee674ece23e4bd229eea",
+      "currentSha256": "8acf6133f8869ff5f962c3a266d2d38c15d988d24f58ee674ece23e4bd229eea",
+      "match": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+      "captureSha256": "10ec28048f1c6ed70d54a875d0f3dfd73089fa2454fc085631c14edda6b46712",
+      "currentSha256": "10ec28048f1c6ed70d54a875d0f3dfd73089fa2454fc085631c14edda6b46712",
+      "match": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3WarpScene.kt",
+      "captureSha256": "6fd8bd37cfea684ce2eefb21cab285bd6cabe6df9dfb0a3f2845dc8caa481ccf",
+      "currentSha256": "6fd8bd37cfea684ce2eefb21cab285bd6cabe6df9dfb0a3f2845dc8caa481ccf",
+      "match": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3FileTunnel.kt",
+      "captureSha256": "a2e59a8c69a4a66c175bce73077349b3bbd630a76c8dc9b56e91c050de8dd098",
+      "currentSha256": "a2e59a8c69a4a66c175bce73077349b3bbd630a76c8dc9b56e91c050de8dd098",
+      "match": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3MemoryScene.kt",
+      "captureSha256": "b81563d4b46b9b1d46a46aa57b3cd588291d013dd97cfa91716bfac29aa29a35",
+      "currentSha256": "b81563d4b46b9b1d46a46aa57b3cd588291d013dd97cfa91716bfac29aa29a35",
+      "match": true
+    }
+  ],
+  "newTestsRun": false,
+  "captureSourcesMatchCurrent": true
+}

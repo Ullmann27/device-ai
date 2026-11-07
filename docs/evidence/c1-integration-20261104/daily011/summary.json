@@ -1,0 +1,118 @@
+{
+  "taskId": "C1-TEMPORAL-011",
+  "baseLocal": "53ca8b6e3284c27c9c06f1462c469c7cff300e7d",
+  "baseRemote": "5d7ddf0762455b92353ba9a559546e8683ad82fe",
+  "baseTree": "39cbcfbd0b5fd0e1f95360aba42f2fa650f9deae",
+  "sourceCommit": "b2bc510a59e29d4ece478109e12b9785be11ee7d",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+      "action": "modify",
+      "base": {
+        "blob": "fa67f32044e57a3f23fdd158924f1f8bf004d5cf",
+        "sha256": "8d095be29157246c8f7dad09e2ae3960519ae816c428dfe399ebcdfe65463e1d",
+        "bytes": 10389,
+        "mode": "100644"
+      },
+      "target": {
+        "blob": "857eb1fb8bbada8282a095956667bb521e44abe6",
+        "sha256": "ff8671fc578403f5ad53c3b7b0c50ea689dfffdf5f5d6a62ac8ec5e43871486e",
+        "bytes": 10452,
+        "mode": "100644",
+        "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt"
+      }
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/TemporalCueDailyBoundaryTest.kt",
+      "action": "add",
+      "base": {
+        "blob": null,
+        "sha256": null,
+        "bytes": 0,
+        "mode": null
+      },
+      "target": {
+        "blob": "63ada554c984cd42d235191d8df280bea86f02f2",
+        "sha256": "d4209213a7ddd6df96e09ad73281ed942b1cf0459da6613a76cf99410acdb3f6",
+        "bytes": 6145,
+        "mode": "100644",
+        "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/app/src/test/java/at/heinz/deviceai/learning/TemporalCueDailyBoundaryTest.kt"
+      }
+    },
+    {
+      "path": "tools/temporal-cue-host-check/run.sh",
+      "action": "modify",
+      "base": {
+        "blob": "eebce493ffa12c009997a897c913951d2b638aea",
+        "sha256": "3cd1bf43eb9becd21614bfaa6081567a4b7c8cbf2e0d6a4571ed6c0d6a205f5a",
+        "bytes": 2353,
+        "mode": "100755"
+      },
+      "target": {
+        "blob": "31073b670a1f1999039357e34b844a1eaeda2427",
+        "sha256": "7d45db86c724933654fee5e1aee7ad19e82e0abf9f6c27e6a2f39de619bb8dcf",
+        "bytes": 2542,
+        "mode": "100755",
+        "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/b2bc510a59e29d4ece478109e12b9785be11ee7d/tools/temporal-cue-host-check/run.sh"
+      }
+    }
+  ],
+  "patch": {
+    "path": "C1-INTAKE-011-daily.patch",
+    "blob": "0ebfbd31f8606c6f5c1d90b08b502874718ff7fd",
+    "sha256": "476f92efe30e27ba31b60e5718b25f1c04b93da2df646a54276b6197639d1351",
+    "bytes": 10912,
+    "includedRepositoryPaths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/TemporalCueDailyBoundaryTest.kt",
+      "tools/temporal-cue-host-check/run.sh"
+    ]
+  },
+  "archive": {
+    "name": "C1-INTAKE-011-daily-review.tar.gz",
+    "bytes": 21889,
+    "sha256": "66d7eedbad44ee61aaf94b206a59bcb503ccfc8eaed73fc8508173d2d27edd50"
+  },
+  "staticReview": "Independent source_audit and C1 inspected source, complete old/new blobs, fixed UTC oracles and unchanged corpus/trust tests. Exactly3paths, runner remains100755.",
+  "upstream": {
+    "executionBy": "Upstream #505 memory author; not this intake",
+    "red": {
+      "tests": 29,
+      "failures": 8,
+      "passed": 21
+    },
+    "green": {
+      "tests": 29,
+      "failures": 0,
+      "passed": 29
+    },
+    "rawFiles": [
+      {
+        "blob": "55583a4ba039f6ae1fdf5668948d5aaa9a5c3d64",
+        "sha256": "4bb426b1ed5f1496c91952923ff467b9e33ed05d69eb008df394a2826c7a1680",
+        "bytes": 9710,
+        "packagePath": "evidence/upstream/host-red.log",
+        "sourcePath": "docs/evidence/three-repair-bots-round2-20261104/memory/host-red.log",
+        "sourceCommit": "e83f6ac18243b42aadbe8da88df074c7ea1811ef",
+        "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/e83f6ac18243b42aadbe8da88df074c7ea1811ef/docs/evidence/three-repair-bots-round2-20261104/memory/host-red.log"
+      },
+      {
+        "blob": "e131376476ccfc69cd4fde2d682b03677a1c1608",
+        "sha256": "0cdd0a14288c2d92fab2b71fa04b442dccc58aa3e680e06d80478fcd888d4b55",
+        "bytes": 3669,
+        "packagePath": "evidence/upstream/host-green-before-commit.log",
+        "sourcePath": "docs/evidence/three-repair-bots-round2-20261104/memory/host-green-before-commit.log",
+        "sourceCommit": "e83f6ac18243b42aadbe8da88df074c7ea1811ef",
+        "sourceUrl": "https://github.com/Ullmann27/device-ai/blob/e83f6ac18243b42aadbe8da88df074c7ea1811ef/docs/evidence/three-repair-bots-round2-20261104/memory/host-green-before-commit.log"
+      }
+    ],
+    "scope": "Host JVM; complete original retriever, fail-fast compile-only EventEmittingRetriever stand-in; no event, Android or model execution"
+  },
+  "ownExecution": "PENDING_HOST_JVM_RUN; then full Android suite required",
+  "limits": [
+    "No change to corpus, scoring, trust or activation of M2.9 in main chat",
+    "Known default42/44Recall@3 remains open",
+    "No Android event decorator, loaded model or device proof from the host check"
+  ],
+  "rollback": "Only the3listed paths; previous13-test Avatar checkpoint remains in53ca8b6/5d7ddf."
+}

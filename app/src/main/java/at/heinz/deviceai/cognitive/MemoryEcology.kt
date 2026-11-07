@@ -1,5 +1,6 @@
 package at.heinz.deviceai.cognitive
 
+import java.util.Collections
 import java.util.Locale
 
 enum class MemoryType { WORKING, EPISODIC, SEMANTIC, PROCEDURAL, SELF, MODEL, SOURCE }
@@ -55,15 +56,21 @@ interface MemoryStore {
     fun all(): List<MemoryRecord>
 }
 
+// A Kotlin read-only List can still wrap a mutable JVM collection. Stored
+// provenance must remain stable when a caller receives a record from get/all.
+// Freeze once on write, so repeated recall does not need another deep copy.
+private fun <T> frozenListSnapshot(values: List<T>): List<T> =
+    Collections.unmodifiableList(ArrayList(values))
+
 class InMemoryMemoryStore : MemoryStore {
     private val records = linkedMapOf<String, MemoryRecord>()
 
     @Synchronized override fun put(record: MemoryRecord) {
         require(record.id !in records) { "memory id already exists: ${record.id}" }
         records[record.id] = record.copy(
-            tags = record.tags.toList(),
-            parentIds = record.parentIds.toList(),
-            validationEvidenceReferences = record.validationEvidenceReferences.toList()
+            tags = frozenListSnapshot(record.tags),
+            parentIds = frozenListSnapshot(record.parentIds),
+            validationEvidenceReferences = frozenListSnapshot(record.validationEvidenceReferences)
         )
     }
 
@@ -180,9 +187,9 @@ class MemoryWritePolicy(private val minimumConfidence: Double = 0.6) {
     fun decide(context: MemoryWriteContext): MemoryWriteDecision {
         require(context.confidence.isFinite() && context.confidence in 0.0..1.0)
         val privacy = when {
+            context.containsSensitiveInformation -> PrivacyClass.SENSITIVE
             context.containsDeviceInformation || context.provenance == ProvenanceType.DEVICE_OBSERVATION ->
                 PrivacyClass.DEVICE_LOCAL_ONLY
-            context.containsSensitiveInformation -> PrivacyClass.SENSITIVE
             context.containsPersonalInformation || context.provenance == ProvenanceType.USER_PROVIDED ->
                 PrivacyClass.PRIVATE
             else -> PrivacyClass.PUBLIC
@@ -208,9 +215,10 @@ class InMemoryExperienceStore : ExperienceStore, ExperienceLookup {
     @Synchronized override fun store(e: Experience) {
         require(e.id !in experiences) { "experience id already exists: ${e.id}" }
         experiences[e.id] = e.copy(
-            memoryIds = e.memoryIds.toList(), modelIds = e.modelIds.toList(),
-            sourceIds = e.sourceIds.toList(), toolIds = e.toolIds.toList(),
-            failures = e.failures.toList(), evaluatorScores = e.evaluatorScores.toMap()
+            memoryIds = frozenListSnapshot(e.memoryIds), modelIds = frozenListSnapshot(e.modelIds),
+            sourceIds = frozenListSnapshot(e.sourceIds), toolIds = frozenListSnapshot(e.toolIds),
+            failures = frozenListSnapshot(e.failures),
+            evaluatorScores = Collections.unmodifiableMap(LinkedHashMap(e.evaluatorScores))
         )
     }
 

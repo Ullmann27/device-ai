@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "48c0fb1f2b4db06619e170bf36f8d070e002eca4",
+  "packageName": "at.heinz.deviceai.continuumlocal",
+  "versionName": "0.3.37",
+  "versionCode": 38,
+  "sha256": "abf0664e2bb79190e932c4f8e46adf8545fc50c006c9e37bdc34f5d4a9669845",
+  "bytes": 54669275,
+  "zipCrcVerified": true,
+  "v1SignatureFilesPresent": false,
+  "apkSigningBlockPresent": false,
+  "ownerSigned": false,
+  "published": false,
+  "installed": false,
+  "deviceVerified": false
+}

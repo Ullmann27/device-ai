@@ -32,4 +32,26 @@ class ContinuumSourceNoveltyTest {
             assertTrue(ContinuumSourceNovelty.completedHashes(dir).isEmpty())
         } finally { dir.deleteRecursively() }
     }
+
+    @Test fun archivedHashSurvivesJournalCompaction() {
+        val dir=Files.createTempDirectory("continuum-source-known").toFile()
+        try {
+            val archive=ContinuumKnowledgeArchive(dir)
+            val excerpt="Photovoltaikmodule erzeugen Gleichstrom aus Sonnenlicht durch den photoelektrischen Effekt."
+            val record=archive.save(ContinuumKnowledgeArchive.Kind.PUBLIC_WEB_EXCERPT,
+                "Photovoltaik","https://solar.example.org/pv-effekt",
+                "Öffentliche HTTPS-Quelle · unbestätigter kurzer Auszug",excerpt)
+            val high=(1..125).map { idx -> MentorSource("Thema $idx",
+                "https://uni.example.org/thema-$idx","f"+"%063x".format(idx),
+                "Ein ausreichend langer wissenschaftlicher Quellentext für Thema Nummer $idx.") }
+            ContinuumSourceNovelty.markCompleted(dir,high)
+            assertEquals(120,ContinuumSourceNovelty.completedHashes(dir).size)
+            val known=ContinuumSourceNovelty.knownHashes(dir)
+            assertTrue(record.sha256 in known)
+            assertTrue(ContinuumSourceNovelty.pending(
+                listOf(MentorSource("Photovoltaik","https://solar.example.org/pv-effekt",record.sha256,excerpt)),
+                known).isEmpty())
+        } finally { dir.deleteRecursively() }
+    }
+
 }

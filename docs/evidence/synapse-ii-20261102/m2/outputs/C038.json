@@ -1,0 +1,11 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": false,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {"decision": "NOANSWER"},
+  "RULE": {"decision": "NOANSWER"},
+  "VERIFIED": {"decision": "NOANSWER"},
+  "rawMillis": 51.252569
+}

@@ -1,0 +1,17 @@
+{
+  "baseline_commit": "d81be49e851a3c7f2196bcce288bc2fb40c7e22b",
+  "source_sha256": {
+    "continuum-architecture-proof.mjs": "b25c2190cefaae164a83881278027f6bea3139f672f46216efea1d7f9753b0f7",
+    "continuum-architecture-proof.test.mjs": "73349101cd1a819168baf805ab012a89790cb2a921ddb2206b39ed4c887db398",
+    "render-continuum-m8-qa.sh": "f35b2efc56d213e596e3a2f34db9054330e4de657d2ef0ea7ff97d3a4a8e7c8c"
+  },
+  "node_version": "v24.19.0",
+  "existing_tests": "9/9_PASS",
+  "additional_exact_field_negative": "RED_9_OF_10_PASS",
+  "scratch_boundary_fix": "GREEN_10_OF_10_PASS",
+  "shell_syntax_check": "PASS",
+  "diff_whitespace_check": "PASS",
+  "shared_source_edits": false,
+  "android_aapt2_render_execution_by_reviewer": false,
+  "requires_new_final_sha_render_qa": true
+}

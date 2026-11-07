@@ -3,8 +3,25 @@ package at.heinz.deviceai.learning
 import org.junit.Assert.*
 import org.junit.Test
 import java.nio.file.Files
+import java.io.File
 
 class ContinuumKnowledgeArchiveTest {
+    @Test fun sourceIdReadIsBoundedVerifiedAndDoesNotChangeTheArchive() {
+        val dir=Files.createTempDirectory("continuum-source-by-id").toFile()
+        try {
+            val archive=ContinuumKnowledgeArchive(dir)
+            val saved=archive.save(ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
+                "Quarzforschung","https://de.wikipedia.org/wiki/Quarzforschung","Synthetischer Test",
+                "Die Quarzforschung untersucht die Resonanz und stellt geprüfte Messverfahren bereit.")
+            val state=archive.indexState()
+            assertEquals(saved,archive.readSource(saved.id))
+            assertNull(archive.readSource("0".repeat(64)))
+            assertThrows(IllegalArgumentException::class.java) { archive.readSource("../outside") }
+            assertEquals(state,archive.indexState())
+            File(dir,"continuum-knowledge-v1/${saved.id}.rec").writeBytes(byteArrayOf(1,2,3))
+            assertNull(archive.readSource(saved.id))
+        } finally { dir.deleteRecursively() }
+    }
     private fun publicRecord(archive:ContinuumKnowledgeArchive,topic:String) = archive.save(
         ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,topic,
         "https://de.wikipedia.org/wiki/$topic","Wikipedia-Mitwirkende · CC BY-SA 4.0",

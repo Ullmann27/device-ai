@@ -1,0 +1,722 @@
+[
+  {
+    "number": 492,
+    "title": "research: integrate fail-closed training gates and audit 6–10M LM1 profiles",
+    "head": "research/continuum-weight-space-audit-20261104",
+    "sha": "303f225fafff9b3929aed800deff065f7b97b5d6",
+    "base": "fix/continuum-device-experience-resume-20261104",
+    "base_sha": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944",
+    "url": "https://github.com/Ullmann27/device-ai/pull/492",
+    "updated_at": "2026-11-04T19:05:16Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 159,
+      "behind_by": 10,
+      "merge_base": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 508,
+    "title": "[DRAFT] Research LM1 training recovery: EOS diagnosis and independently tested intent learning",
+    "head": "research/continuum-lm1-training-recovery-20261104",
+    "sha": "7131c1a50a9c697e481a6debe259758dbf422eef",
+    "base": "research/continuum-weight-space-audit-20261104",
+    "base_sha": "30cd3a89810ed14fa84eca95236d3177e016118d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/508",
+    "updated_at": "2026-11-04T19:05:08Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 159,
+      "behind_by": 13,
+      "merge_base": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 507,
+    "title": "[DRAFT] LM1 16M: verified phase-write fix, EOS audit and checkpoint preflight",
+    "head": "research/continuum-16m-support-20261104-319f3e",
+    "sha": "e726deb96dc74bacd40c2fe0ef640c6db57903f5",
+    "base": "research/continuum-weight-space-audit-20261104",
+    "base_sha": "30cd3a89810ed14fa84eca95236d3177e016118d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/507",
+    "updated_at": "2026-11-04T19:01:29Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 159,
+      "behind_by": 11,
+      "merge_base": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 495,
+    "title": "[Draft] Verify connected avatar helpers through the real speech callback path",
+    "head": "codex/continuum-three-avatar-helpers-20261104",
+    "sha": "0e2b9ea59e71255e36580d695b16220d1d2974c6",
+    "base": "codex/astra-jarvis-takeover-20261104",
+    "base_sha": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/495",
+    "updated_at": "2026-11-04T19:00:33Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 11,
+      "merge_base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 505,
+    "title": "[Draft] Three repair bots: cockpit lifecycle, QA preflight and calendar fixes",
+    "head": "repair/continuum-three-bots-20261104",
+    "sha": "4ddbcb092d955226bb83c2a10f7ac52bb34f59eb",
+    "base": "codex/astra-jarvis-takeover-20261104",
+    "base_sha": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/505",
+    "updated_at": "2026-11-04T18:55:50Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 6,
+      "merge_base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 510,
+    "title": "[Draft] Three bot probes: 105 checks, prepared tasks and live activation blockers",
+    "head": "codex/continuum-bot-activation-20261104",
+    "sha": "2a364005b52e3240eb799f86aea31be90b390b10",
+    "base": "codex/astra-jarvis-takeover-20261104",
+    "base_sha": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/510",
+    "updated_at": "2026-11-04T18:53:59Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 2,
+      "merge_base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 493,
+    "title": "[DRAFT] Continuum: 20 callable personalities and connected bot assignments",
+    "head": "feat/continuum-personality-bots-20261104",
+    "sha": "ee2fa0ee5567e5d34bcdfe229425a71df9818183",
+    "base": "integration/jarvis-on-chatgpt-untested-20261104",
+    "base_sha": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/493",
+    "updated_at": "2026-11-04T18:52:54Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 10,
+      "behind_by": 4,
+      "merge_base": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 456,
+    "title": "WIP: Lokaler CCC1-Dienst und lesender MCP — Softwaregates PASS, S01 FAIL",
+    "head": "codex/continuum-independence-chief-20261103",
+    "sha": "546e056648d04a2d084f3c1cd99d725a35496156",
+    "base": "codex/bot-genesis-chief-20261103",
+    "base_sha": "527d43f93f6b1837bd8da38cfefcfc84a84fd464",
+    "url": "https://github.com/Ullmann27/device-ai/pull/456",
+    "updated_at": "2026-11-04T18:52:53Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "ahead",
+      "ahead_by": 389,
+      "behind_by": 0,
+      "merge_base": "546e056648d04a2d084f3c1cd99d725a35496156"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 506,
+    "title": "[Draft] Connect completed bot, memory and worker components with three integration helpers",
+    "head": "integration/continuum-ready-connections-20261104",
+    "sha": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+    "base": "codex/astra-jarvis-takeover-20261104",
+    "base_sha": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/506",
+    "updated_at": "2026-11-04T18:46:30Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "identical",
+      "ahead_by": 0,
+      "behind_by": 0,
+      "merge_base": "8abea828833d8833d40e3d3d36feaa6d3685b82e"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 509,
+    "title": "[Draft][Research only] Three completed experiments: autonomy, LM1, live avatar",
+    "head": "research/continuum-three-experiments-20261104",
+    "sha": "b90285bdb3d7e5f5dd4dc723d641182d25442ac5",
+    "base": "codex/astra-jarvis-takeover-20261104",
+    "base_sha": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/509",
+    "updated_at": "2026-11-04T19:04:09Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 3,
+      "merge_base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 503,
+    "title": "[DRAFT] NAVADA: native portrait, speech guards and consent-bound camera integration",
+    "head": "feature/continuum-navada-live-integration-20261104",
+    "sha": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+    "base": "feature/continuum-fable51-avatar-motion-20261104",
+    "base_sha": "6cb9e760f0a16a6f34a8442abf9b79dcf2705799",
+    "url": "https://github.com/Ullmann27/device-ai/pull/503",
+    "updated_at": "2026-11-04T14:32:45Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 7,
+      "merge_base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 502,
+    "title": "[DRAFT] Continue Fable: bounded avatar gaze and blink motion; visual gates remain open",
+    "head": "feature/continuum-fable51-avatar-motion-20261104",
+    "sha": "6cb9e760f0a16a6f34a8442abf9b79dcf2705799",
+    "base": "research/continuum-fable51-jarvis-genesis-20261104",
+    "base_sha": "0e3685a3bc6cb3a4af61988450371f11e9cb0f3c",
+    "url": "https://github.com/Ullmann27/device-ai/pull/502",
+    "updated_at": "2026-11-04T13:11:12Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 5,
+      "merge_base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 498,
+    "title": "docs: ASTRA-NUCLEUS board, ten specialist reviews and seven Continuum follow-ups",
+    "head": "coordination/astra-nucleus-20261104-1027",
+    "sha": "e95076c2a396a785ae80bceca0610890ff1af5d9",
+    "base": "integration/jarvis-on-chatgpt-untested-20261104",
+    "base_sha": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/498",
+    "updated_at": "2026-11-04T13:10:32Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 10,
+      "behind_by": 5,
+      "merge_base": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 500,
+    "title": "[Draft] Fable 5.1 JARVIS Genesis: host toolchain for avatar3d checks, binding references, emergency handoff",
+    "head": "research/continuum-fable51-jarvis-genesis-20261104",
+    "sha": "0e3685a3bc6cb3a4af61988450371f11e9cb0f3c",
+    "base": "codex/astra-jarvis-takeover-20261104",
+    "base_sha": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/500",
+    "updated_at": "2026-11-04T13:10:04Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 3,
+      "merge_base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 501,
+    "title": "[Draft][WIP] GAMMA parameter audit: analytic LM1 parameter counter (unverified checkpoints)",
+    "head": "gamma/parameter-audit-20261104",
+    "sha": "db2c3ba998f480c1213dfbca1aa793899b1d46cd",
+    "base": "research/continuum-fable51-jarvis-genesis-20261104",
+    "base_sha": "0e3685a3bc6cb3a4af61988450371f11e9cb0f3c",
+    "url": "https://github.com/Ullmann27/device-ai/pull/501",
+    "updated_at": "2026-11-04T12:39:50Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 2,
+      "merge_base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 491,
+    "title": "[Draft] Astra: reference cockpit, original avatar/orb and consent-bound memory recovery",
+    "head": "codex/astra-jarvis-takeover-20261104",
+    "sha": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+    "base": "integration/jarvis-on-chatgpt-untested-20261104",
+    "base_sha": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/491",
+    "updated_at": "2026-11-04T12:22:45Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "ahead",
+      "ahead_by": 2,
+      "behind_by": 0,
+      "merge_base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 499,
+    "title": "[Draft] Integrate tested memory recall with the existing Activity and avatar",
+    "head": "integration/continuum-memory-avatar-hooks-20261104",
+    "sha": "999225dc3823cd027c06adf2847e7fec9f772cf4",
+    "base": "codex/astra-jarvis-takeover-20261104",
+    "base_sha": "e10f4785284ab08f1d5d0a77b64ab8631ed5b9cb",
+    "url": "https://github.com/Ullmann27/device-ai/pull/499",
+    "updated_at": "2026-11-04T11:34:17Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 6,
+      "behind_by": 7,
+      "merge_base": "e10f4785284ab08f1d5d0a77b64ab8631ed5b9cb"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 496,
+    "title": "[DRAFT] Ten-bot support: immutable routine/worker scopes and verified handoff",
+    "head": "support/continuum-ten-bot-assist-20261104",
+    "sha": "3968d785df607f8d461162c50bb3d710a925503e",
+    "base": "integration/jarvis-on-chatgpt-untested-20261104",
+    "base_sha": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/496",
+    "updated_at": "2026-11-04T11:34:15Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 10,
+      "behind_by": 10,
+      "merge_base": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 494,
+    "title": "[Draft] Memory integrity, measured retrieval and actual recall-to-avatar bridge",
+    "head": "feat/continuum-memory-brain-20261104",
+    "sha": "93f1f1130a3963062ad4c43c4a1edfe0cf7e2759",
+    "base": "integration/jarvis-on-chatgpt-untested-20261104",
+    "base_sha": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/494",
+    "updated_at": "2026-11-04T11:32:50Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 10,
+      "behind_by": 5,
+      "merge_base": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 497,
+    "title": "[DRAFT] G1-REPAIR-WEIGHT-001: Pflichtgate vor Trainingsfortsetzung reparieren",
+    "head": "research/continuum-weight-helper-team-20261104",
+    "sha": "06f071e5850dd405f374bbb58d826f64740d83af",
+    "base": "research/continuum-weight-space-audit-20261104",
+    "base_sha": "ee5779725690c573d3310c061c6e2e6faf5f0a8b",
+    "url": "https://github.com/Ullmann27/device-ai/pull/497",
+    "updated_at": "2026-11-04T11:11:21Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 159,
+      "behind_by": 7,
+      "merge_base": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 490,
+    "title": "WIP Draft: Kern Phase 2 – CognitiveLoop-Vertrag + ReasoningModel (lokal)",
+    "head": "kern/cognitive-loop-20261104",
+    "sha": "8d7b560ede4623c110f94138da183189991ed4a5",
+    "base": "design/jarvis-cockpit-home-20261104",
+    "base_sha": "764694295667c431ef3e85c5e7e3d1750ce7c4d7",
+    "url": "https://github.com/Ullmann27/device-ai/pull/490",
+    "updated_at": "2026-11-04T09:18:54Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 93,
+      "behind_by": 7,
+      "merge_base": "5a1076caa05330e7436852a938adab8e83fdd319"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 489,
+    "title": "WIP: Jarvis Mathematik – Motion-Bibliothek (Easing, Feder, Stagger, Timeline, Presets A–H) + Avatar-Mimik (FaceWeightsSource)",
+    "head": "jarvis-mathematik/motion-math",
+    "sha": "bc2416abcb7f0a5d05219902588180b9b01c1313",
+    "base": "grok/jarvis-design-system",
+    "base_sha": "0ed6233b47fe37844c961e3e0469c624674b8c22",
+    "url": "https://github.com/Ullmann27/device-ai/pull/489",
+    "updated_at": "2026-11-04T09:16:03Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 123,
+      "behind_by": 3,
+      "merge_base": "18fc049e80803d3ff92d5c9559c33b60dd83143f"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 481,
+    "title": "WIP: Jarvis-Cockpit Startseite Querformat (ref1/ref3) + Animations-Ereignisse – baut auf #477, braucht #479",
+    "head": "design/jarvis-cockpit-home-20261104",
+    "sha": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "base": "fix/continuum-device-experience-resume-20261104",
+    "base_sha": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944",
+    "url": "https://github.com/Ullmann27/device-ai/pull/481",
+    "updated_at": "2026-11-04T09:15:13Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 93,
+      "behind_by": 2,
+      "merge_base": "5a1076caa05330e7436852a938adab8e83fdd319"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 487,
+    "title": "[Lückenfüller] Video 3: Alarm, Warp-Flug, Ganzkörper-Wireframe",
+    "head": "jarvis-luecke/video3-alarm-warp-ganzkoerper",
+    "sha": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "base": "grok/jarvis-design-system",
+    "base_sha": "41b82f5625b0c5eef39fd5ce487cd35ae657a79e",
+    "url": "https://github.com/Ullmann27/device-ai/pull/487",
+    "updated_at": "2026-11-04T09:15:08Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 125,
+      "behind_by": 12,
+      "merge_base": "e600add52c7b9a36d760cd504c7e323ece97d3b6"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 484,
+    "title": "WIP: Jarvis Gedächtnis – CalculationEventSource (echte Abruf-Rechnung) + Orb-Einspeisung (Muster E)",
+    "head": "continuum/m2-calc-events",
+    "sha": "7c5facb2a6cc4d415809796746f737219738bcec",
+    "base": "design/jarvis-cockpit-home-20261104",
+    "base_sha": "5a1076caa05330e7436852a938adab8e83fdd319",
+    "url": "https://github.com/Ullmann27/device-ai/pull/484",
+    "updated_at": "2026-11-04T09:15:07Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 75,
+      "behind_by": 6,
+      "merge_base": "c980315f9d5a33148910a3f48a1db12dd0083e92"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 372,
+    "title": "fix(continuum-m5): ToolGate-Journal-Retention, Sprach-Barge-in/Halbduplex, Diktat-Entwurf (RED→GREEN, volle JUnit grün)",
+    "head": "continuum/m5-integration-repair",
+    "sha": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "base": "continuum/m1-grok-multiturn-routing-20261103",
+    "base_sha": "7316b1f5d32cf9ad52d9f463a987aae23bf26ba2",
+    "url": "https://github.com/Ullmann27/device-ai/pull/372",
+    "updated_at": "2026-11-04T09:14:51Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 1054,
+      "behind_by": 19,
+      "merge_base": "b598dd1f1d5058fcdbaf2b0c9e8f7b43b2003be6"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 479,
+    "title": "WIP: Jarvis Design-System (baut auf #477 auf)",
+    "head": "grok/jarvis-design-system",
+    "sha": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "base": "fix/continuum-device-experience-20261104",
+    "base_sha": "337ab0195434c8657bf131bf431f4c391aacc28c",
+    "url": "https://github.com/Ullmann27/device-ai/pull/479",
+    "updated_at": "2026-11-04T09:14:40Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 124,
+      "behind_by": 2,
+      "merge_base": "0ceedb1fe5a490cd20548020db76e31530f28cc8"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 371,
+    "title": "feat(continuum-m2): Gedächtnis-Kern – Hypothesen-Gate, bitemporales Zeitgedächtnis, Spezialist im EWM2-Gehirn (RED→GREEN, volle JUnit grün)",
+    "head": "continuum/m2-cognitive-memory",
+    "sha": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "base": "continuum/m1-grok-multiturn-routing-20261103",
+    "base_sha": "7316b1f5d32cf9ad52d9f463a987aae23bf26ba2",
+    "url": "https://github.com/Ullmann27/device-ai/pull/371",
+    "updated_at": "2026-11-04T09:13:48Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 1065,
+      "behind_by": 18,
+      "merge_base": "6ec1d5b5d05407258f54482f9cd115fd19424aeb"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 482,
+    "title": "WIP Jarvis Avatar: holographic wireframe head + fly-in sequence (follows #477/#478)",
+    "head": "jarvis-grafik/avatar-ref-match",
+    "sha": "e9659ff553ce90e1248123767930e3447e63380c",
+    "base": "fix/continuum-device-experience-resume-20261104",
+    "base_sha": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944",
+    "url": "https://github.com/Ullmann27/device-ai/pull/482",
+    "updated_at": "2026-11-04T09:13:28Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 104,
+      "behind_by": 3,
+      "merge_base": "2e49ea7456a2eb06f5c495be782ff38026b4df32"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 483,
+    "title": "WIP (untested): Jarvis-Integration auf ChatGPT #478",
+    "head": "integration/jarvis-on-chatgpt-untested-20261104",
+    "sha": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+    "base": "fix/continuum-device-experience-resume-20261104",
+    "base_sha": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944",
+    "url": "https://github.com/Ullmann27/device-ai/pull/483",
+    "updated_at": "2026-11-04T09:12:24Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "ahead",
+      "ahead_by": 10,
+      "behind_by": 0,
+      "merge_base": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 488,
+    "title": "[DRAFT/NICHT MERGEN] CLOSEOUT Jarvis/Continuum 04.11.2026 – Wiederaufnahmeplan",
+    "head": "grok/jarvis-closeout-20261104",
+    "sha": "2375aea3d55a058516d0f1ff3d9e376172fc2124",
+    "base": "main",
+    "base_sha": "2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a",
+    "url": "https://github.com/Ullmann27/device-ai/pull/488",
+    "updated_at": "2026-11-04T09:03:38Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 4585,
+      "behind_by": 29,
+      "merge_base": "64a7550bc4b48ff5317b78067d5751fc4e55e8f4"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 485,
+    "title": "Jarvis Sicherheit – Muster F/G/D sicher + Look (PillActionGate, AccountEventSource, 3D-Umschlag, Pillen, Laser)",
+    "head": "continuum/m5-safe-flows-fg-20261104",
+    "sha": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "base": "design/jarvis-cockpit-home-20261104",
+    "base_sha": "efac2b54095f8e886960eb647a77a3df394f9a26",
+    "url": "https://github.com/Ullmann27/device-ai/pull/485",
+    "updated_at": "2026-11-04T08:58:39Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 92,
+      "behind_by": 2,
+      "merge_base": "f77424c2d543e422a39a06400e53ed263e0f1414"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 486,
+    "title": "WIP: Jarvis Menüführung – ref5-Leiste, Muster A/B, Kamera-Drift, Szene 3b (Integration)",
+    "head": "design/jarvis-menu-navigation-20261104",
+    "sha": "fc33c497913d7442c394ebbad355bd50924c6502",
+    "base": "design/jarvis-cockpit-home-20261104",
+    "base_sha": "5f846eb76722b3a67e32a30d041e42130d80875d",
+    "url": "https://github.com/Ullmann27/device-ai/pull/486",
+    "updated_at": "2026-11-04T08:57:35Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "ahead",
+      "ahead_by": 117,
+      "behind_by": 0,
+      "merge_base": "fc33c497913d7442c394ebbad355bd50924c6502"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 378,
+    "title": "WIP: Jarvis-Avatar live (Holo AAA v1) – Zwischenstand",
+    "head": "jarvis-grafik/avatar-live",
+    "sha": "6218d9ef94e711ceeea6ae4f7832ca762ad12f9f",
+    "base": "continuum/m3-grok-selbstrekonstruktion-20261103",
+    "base_sha": "26162442c88929738600c1862f17e24b944a44d4",
+    "url": "https://github.com/Ullmann27/device-ai/pull/378",
+    "updated_at": "2026-11-04T08:34:25Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "diverged",
+      "ahead_by": 1049,
+      "behind_by": 1,
+      "merge_base": "b95d08cad3f40293743ec414fd6aaa2b5ef9270a"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 375,
+    "title": "[DRAFT/NICHT MERGEN] Integration #369–#373 + #371-H1/H2 – JUnit 1856/0, volle QA",
+    "head": "integration/continuum-grok1-369-372-20261103",
+    "sha": "b49fb847cd3491c8b86fa45449a72a2b72847009",
+    "base": "main",
+    "base_sha": "2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a",
+    "url": "https://github.com/Ullmann27/device-ai/pull/375",
+    "updated_at": "2026-11-04T08:05:31Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "ahead",
+      "ahead_by": 965,
+      "behind_by": 0,
+      "merge_base": "b49fb847cd3491c8b86fa45449a72a2b72847009"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 478,
+    "title": "WIP: reference avatar, cockpit and live work animation integration",
+    "head": "fix/continuum-device-experience-resume-20261104",
+    "sha": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944",
+    "base": "fix/continuum-device-experience-20261104",
+    "base_sha": "337ab0195434c8657bf131bf431f4c391aacc28c",
+    "url": "https://github.com/Ullmann27/device-ai/pull/478",
+    "updated_at": "2026-11-04T06:37:19Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "ahead",
+      "ahead_by": 159,
+      "behind_by": 0,
+      "merge_base": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 477,
+    "title": "WIP: repair owner bot access, finish reference cockpit and expose live capabilities",
+    "head": "fix/continuum-device-experience-20261104",
+    "sha": "337ab0195434c8657bf131bf431f4c391aacc28c",
+    "base": "fix/continuum-status-history-20261104",
+    "base_sha": "cdfb5f752bfb038cfbca2662d3b7891f1205f220",
+    "url": "https://github.com/Ullmann27/device-ai/pull/477",
+    "updated_at": "2026-11-04T05:44:24Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "ahead",
+      "ahead_by": 164,
+      "behind_by": 0,
+      "merge_base": "337ab0195434c8657bf131bf431f4c391aacc28c"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 476,
+    "title": "WIP: implement owner cyan/violet JARVIS reference cockpit",
+    "head": "design/continuum-reference-cockpit-20261104",
+    "sha": "aba86cf023327ce4ce0954045251bd25b16edbab",
+    "base": "fix/continuum-status-history-20261104",
+    "base_sha": "cdfb5f752bfb038cfbca2662d3b7891f1205f220",
+    "url": "https://github.com/Ullmann27/device-ai/pull/476",
+    "updated_at": "2026-11-04T05:08:14Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "ahead",
+      "ahead_by": 165,
+      "behind_by": 0,
+      "merge_base": "aba86cf023327ce4ce0954045251bd25b16edbab"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 475,
+    "title": "Fix status history clock times; original-signed code41 verified on device screen",
+    "head": "fix/continuum-status-history-20261104",
+    "sha": "cdfb5f752bfb038cfbca2662d3b7891f1205f220",
+    "base": "release/continuum-night-integration-20261103",
+    "base_sha": "15e90e4a8d385f46818a8b619d26d3e5ece1806a",
+    "url": "https://github.com/Ullmann27/device-ai/pull/475",
+    "updated_at": "2026-11-04T04:59:27Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "ahead",
+      "ahead_by": 166,
+      "behind_by": 0,
+      "merge_base": "cdfb5f752bfb038cfbca2662d3b7891f1205f220"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  },
+  {
+    "number": 286,
+    "title": "[DRAFT] Render: originalsigniertes Continuum Lokal v29 über bestehenden Updatekanal vorbereiten",
+    "head": "research/continuum-m8-render-signed-release-20261031",
+    "sha": "a8e58ae09f6f1a8f43bd0a6f3b30b7e81bb79be6",
+    "base": "research/continuum-m8-operational-model-20261031",
+    "base_sha": "861d2faed694fc1869050cf5ed81a593701801f5",
+    "url": "https://github.com/Ullmann27/device-ai/pull/286",
+    "updated_at": "2026-11-04T04:39:29Z",
+    "comparison_to_base": {
+      "base_snapshot": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "status": "ahead",
+      "ahead_by": 170,
+      "behind_by": 0,
+      "merge_base": "a8e58ae09f6f1a8f43bd0a6f3b30b7e81bb79be6"
+    },
+    "scope": "Branch ancestry snapshot, not code or runtime acceptance"
+  }
+]

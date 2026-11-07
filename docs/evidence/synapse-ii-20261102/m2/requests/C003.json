@@ -1,0 +1,24 @@
+{
+  "id": "C003",
+  "question": "Wo lebt Zygasubu?",
+  "sources": [
+    {
+      "revision": 3,
+      "sha256": "75d795b5b2fc6dd89f1849c727c606b1f21245dc0f18c23d8954fb2143a89e52",
+      "sourceId": "bc:C003:s1",
+      "text": "Qegujonu lebt in Uvpebani. Qesativa lebt in Uvbifoke."
+    },
+    {
+      "revision": 4,
+      "sha256": "95cd8adf136b8c3a05ea0374341514e2620ac48237233a79eedc4bf73a4641c0",
+      "sourceId": "bc:C003:s2",
+      "text": "Zygasubu lebt in Uvdakezu Uvjerazo Uvjujuce und Qegugeci lebt in Uvlucure."
+    },
+    {
+      "revision": 5,
+      "sha256": "35d4650e4f8635d53a34ebe62d71b44f9d30cf17f7c722cc6d4b5776c9b6fb96",
+      "sourceId": "bc:C003:s3",
+      "text": "Qevelofe lebt in Uvkavepa. Qesativa lebt in Uvbifoke."
+    }
+  ]
+}

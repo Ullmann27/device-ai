@@ -22,10 +22,21 @@ test('coding output cannot add tools, duplicate paths, unknown files or blank hu
 });
 test('coding CLI UTF-8 transport accommodates the character-bounded multilingual context',()=>{
  const input=JSON.stringify({userPrompt:'汉'.repeat(14000),allowedTrackedPaths:['lib/pages.mjs'],timeoutMs:100});
- const r=spawnSync(process.execPath,[new URL('./continuum-local-brain-cli.mjs',import.meta.url).pathname,'coding'],{
-  input,encoding:'utf8',env:{...process.env,CONTINUUM_LOCAL_BRAIN_API_KEY:'',
+ const env={...process.env,CONTINUUM_LOCAL_BRAIN_API_KEY:'',
    CONTINUUM_LOCAL_BRAIN_MODEL:'utf8-protocol-fixture',CONTINUUM_LOCAL_BRAIN_RUNTIME:'llama.cpp',
    CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT:'gguf',CONTINUUM_LOCAL_BRAIN_MODEL_SHA256:'b'.repeat(64),
-   CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL:'OWNER_APPROVED_ALTERNATE_GGUF'},timeout:2000,shell:false});
- assert.match(r.stderr,/LOCAL_AUTH_REQUIRED/);assert.doesNotMatch(r.stderr,/TOO_LARGE/);
+   CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL:'OWNER_APPROVED_ALTERNATE_GGUF'};
+ // The production coding CLI now requires pinned native runtime admission before
+ // auth. Make missing pins explicit, independent of the QA host environment.
+ for(const key of ['MODEL_PATH','RUNTIME_PATH','MODEL_MANIFEST','RUNTIME_SHA256','RUNTIME_KIND'])delete env['CONTINUUM_LOCAL_BRAIN_'+key];
+ const cli=new URL('./continuum-local-brain-cli.mjs',import.meta.url).pathname;
+ const r=spawnSync(process.execPath,[cli,'coding'],{input,encoding:'utf8',env,timeout:2000,shell:false});
+ assert.equal(r.error,undefined);assert.equal(r.signal,null);assert.equal(r.status,1);assert.equal(r.stdout,'');
+ assert.equal(r.stderr,'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n');
+ assert.doesNotMatch(r.stderr,/TOO_LARGE|汉/);
+ const oversized=JSON.stringify({userPrompt:'汉'.repeat(60001),allowedTrackedPaths:['lib/pages.mjs'],timeoutMs:100});
+ assert.ok(Buffer.byteLength(oversized)>180000);
+ const denied=spawnSync(process.execPath,[cli,'coding'],{input:oversized,encoding:'utf8',env,timeout:2000,shell:false});
+ assert.equal(denied.error,undefined);assert.equal(denied.status,1);assert.equal(denied.stdout,'');
+ assert.equal(denied.stderr,'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: LOCAL_PATCH_REQUEST_TOO_LARGE\n');
 });

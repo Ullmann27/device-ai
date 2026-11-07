@@ -1,0 +1,3 @@
+STATE_BEFORE_UNLOAD=READY
+QUEUED_TEXT_AFTER_UNLOAD_RETURNED=true
+QUEUED_UNLOAD_EVENTS=[TextDelta(text=first), TextDelta(text=late), Completed(metrics=LocalInferenceMetrics(promptCharacters=22, responseCharacters=9, streamedChunks=2, inputTokens=100, outputTokens=0, firstTokenLatencyMillis=69, totalLatencyMillis=93))] emitterAlive=false

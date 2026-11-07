@@ -5,9 +5,11 @@ const activity = fs.readFileSync(new URL('../../app/src/main/java/at/heinz/devic
 const section = (a, b) => activity.slice(activity.indexOf(a), activity.indexOf(b, activity.indexOf(a)));
 test('a rejected import cannot relabel the independently loaded runtime as failed', () => {
   const imported = section('private fun importModel(uri: Uri)', 'private fun reloadInstalledModels()');
-  assert.match(imported, /localImportError = error\.message/);
+  assert.match(imported, /localImportError = "Modellimport fehlgeschlagen: " \+ \(operation\.failureType/);
   assert.doesNotMatch(imported, /localRuntimeError =/);
-  assert.match(imported, /source\.use \{ modelCatalog\.import/);
+  assert.match(imported, /modelImports\.start\(metadata\.first, metadata\.second, metadata\.third\)/);
+  const coordinator = fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportCoordinator.kt', import.meta.url), 'utf8');
+  assert.match(coordinator, /openInput\(\)\.use \{ source ->[\s\S]*catalog\.import\(id, version, source, expectedSha256\)/);
   assert.match(imported, /forImport = true/);
   const ui = section('private fun refreshLocalModelUi()', 'private fun scheduleLifecycleTimeout');
   assert.match(ui, /localRuntimeError != null -> LocalModelUiState.ERROR/);

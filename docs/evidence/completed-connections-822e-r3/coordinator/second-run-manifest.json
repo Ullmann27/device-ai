@@ -1,0 +1,2246 @@
+{
+  "android-canonical/build-locks.json": {
+    "sha256": "105ede694134fe8c424850e6a4dcebcf1691cb6ffea687dc9256c622f0a9129a",
+    "bytes": 897
+  },
+  "android-canonical/gradle.txt": {
+    "sha256": "16d5d2dfc10937e3e1133edd16339760f7da40ea6a14f12a5b2799e8889f3a6e",
+    "bytes": 8341
+  },
+  "android-canonical/invocation.json": {
+    "sha256": "999c40e4c4619b324d79ab71caaa9deb004d9deda95d3e7fa6cb071241f79467",
+    "bytes": 758
+  },
+  "android-canonical/observe-tests.init.gradle": {
+    "sha256": "49095b00e2b0f0910add947a8d08c9f41b19e6b204de17a979ebb4c2af2fd335",
+    "bytes": 798
+  },
+  "android-canonical/result.json": {
+    "sha256": "43b38494ab09c3d156a91643dbb0ea0caf43bd42789420aa6ae0adffffb114c5",
+    "bytes": 85680
+  },
+  "android-canonical/run_android_gate.py": {
+    "sha256": "ed64ee317239b47bbbe6c75114fbf2e2c4679af0d5f446da744b77c705583231",
+    "bytes": 6001
+  },
+  "android-canonical/source-after.json": {
+    "sha256": "168610e9fb9b45ec43e07fe479f085ae6c7c81c60e4827a5c2edfe609f9f504f",
+    "bytes": 296319
+  },
+  "android-canonical/source-before.json": {
+    "sha256": "168610e9fb9b45ec43e07fe479f085ae6c7c81c60e4827a5c2edfe609f9f504f",
+    "bytes": 296319
+  },
+  "android-canonical/test-progress.json": {
+    "sha256": "1f371fe50b62a91c838e3a2120b6fd030ffa7dd9f39cb39d92de004ff1611212",
+    "bytes": 167
+  },
+  "android-canonical/wrapper.log": {
+    "sha256": "3b27a3cd9a0a818ce1fc5c49899621776f93c7af4b5be2073171f5a7bdb41c75",
+    "bytes": 9080
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.AgentToolLayerTest.xml": {
+    "sha256": "cfe4ef784363288d937b8f64bfa2d0939059204484f00fc7fd7407cb67c6a15d",
+    "bytes": 1279
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.AndroidAvatarCameraInputUiTest.xml": {
+    "sha256": "ef21e181c77f2b09261080ab1d7fafc846a94f401715f509034cc0a0902d4313",
+    "bytes": 1494
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.AndroidSpeechFailureTest.xml": {
+    "sha256": "77ca9983d9d18d760787798daa2ffe3d1f457eb6ca443b9ee721611dc16c7ded",
+    "bytes": 747
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.AppLookupToolPolicyTest.xml": {
+    "sha256": "a2c2547eeddc3366349df55cc058c4ed11d78ad2896cb3c674202764cae51f34",
+    "bytes": 736
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.AvatarRangeFrameConnectionUiTest.xml": {
+    "sha256": "7e9d942ca153c16814f646e07fe05f693f200507b3e752e99b37d65eb56aea53",
+    "bytes": 1292
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.AvatarSpeechReattachmentUiTest.xml": {
+    "sha256": "2be3422e966e8deda28df64f8218d0a886b6d9599ba3127b12a0e726894b0db7",
+    "bytes": 649
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.xml": {
+    "sha256": "0dec72b9d313941c761493d36bc6ff0431d11b5293379b91aabe46206adc6333",
+    "bytes": 810
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.BootstrapBrainCommaContrastTest.xml": {
+    "sha256": "261f39174ddb0cfd391a981d93ad6de7ba9649daf46693be2e6fe63e1238e083",
+    "bytes": 603
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.BootstrapBrainNegatedToolRoutingTest.xml": {
+    "sha256": "fbd09c29ff680581e6e35d8baea180dc3324c6b1c7947ec9ca2be14c672a313b",
+    "bytes": 630
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.BootstrapBrainNegationDeEnTest.xml": {
+    "sha256": "a37aa24e30729250d5b96d6195327ac6e339206cfe54454b50cb3aba335a58b5",
+    "bytes": 620
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.BootstrapBrainTest.xml": {
+    "sha256": "ca4ae610ca1a84d1cb08c0780d9349f21bca636d387d85933ef55aead4fcfcd2",
+    "bytes": 2222
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.BootstrapOwnerFactRoutingTest.xml": {
+    "sha256": "bfd1c8cdc726ac43f1dad912a896a0f86781687a72c7ef9fc6c20dcd8ffd1e6a",
+    "bytes": 639
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.BootstrapRecoveryCallerUiTest.xml": {
+    "sha256": "d269c60af84fd2a1f6e0e4e1511f15f74c7b8a8d2b8ad578b8aef9277944e99e",
+    "bytes": 1395
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.BoundedIoTest.xml": {
+    "sha256": "ccf62e78c03bf57b68a4a0f4e9d50ed4d29083aaeab51ce5c5bd2f4f213cdbb1",
+    "bytes": 542
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.Ccc1PatchReceiptTest.xml": {
+    "sha256": "31e3f9ee71e794ad1ea7e66228d9412c87759d48bf5b4dcb8957252dc940709f",
+    "bytes": 1249
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.CheckedShellCallDispatcherTest.xml": {
+    "sha256": "316b1d326507e1c30bb5db7b69fe3995f1d3d71b1751c181a788acfb5b1774a6",
+    "bytes": 1049
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ComposerReflowDraftTest.xml": {
+    "sha256": "dd2c01f04ba04caae3c8e7607eef52583849a4561ff7c89cdf1412d464de5542",
+    "bytes": 454
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ComposerUiPolicyTest.xml": {
+    "sha256": "a3a2b0bb17b1d5cd97d5cd259e5aa2fcc9afdba6ce55d0f9ed29add321ed5a0b",
+    "bytes": 786
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ConsequentialActionApprovalTest.xml": {
+    "sha256": "353b85c2ccddd07fac02908a77ded17fc81b6ab58f8cc8e9a4247c9876ad621c",
+    "bytes": 971
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest.xml": {
+    "sha256": "7a5b39684709d2c0d62647fca67dc34c73d89558f624b440d3a60ddf6c615c38",
+    "bytes": 1071
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest.xml": {
+    "sha256": "59fa74431d97bc42af3a8d06a6187ddc325fc5261f677cbc215c962fc4f8e0d8",
+    "bytes": 774
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest.xml": {
+    "sha256": "004e82eb67c83c9714df217a3c7b1a38cb729594c7c0833f0fc58ccf77492d42",
+    "bytes": 951
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumAvatarNativeUiTest.xml": {
+    "sha256": "9faf5cf9379b09c749d82146962873cf8c5532cc887415fef3c5bce882586df1",
+    "bytes": 781
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumAvatarSlotLifecycleUiTest.xml": {
+    "sha256": "739f64f50360bc04baebf913c912b3348a5586dbc0232c69b99cb175faf422ba",
+    "bytes": 798
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumBotPersonalityUiTest.xml": {
+    "sha256": "6027ca96dc31e86aa00191aa86fac8a7eeb87c69c6223cc817a19b7b9f830a69",
+    "bytes": 2053
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumBotRosterStorageUiTest.xml": {
+    "sha256": "07e32bfb5d23ef50e66d3c0e2f642042a09a462e6bc702d7a4883d6724b2c361",
+    "bytes": 1300
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumBotStatusRoutingUiTest.xml": {
+    "sha256": "e0809a1ec1d638bd252c19a66f67769292190da958885099d68d173e72262429",
+    "bytes": 929
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumBotTaskRoutingUiTest.xml": {
+    "sha256": "e2f0db85bf475ea63cfd1cdc84349cc36cb48e270fa6d5a478482e003a889fe4",
+    "bytes": 2281
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumBotToolTaskUiTest.xml": {
+    "sha256": "dca184e013974bccb0857e74bf309715d7952c6a053db2131be8d63b3c0fd1a8",
+    "bytes": 969
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumBuilderLifecycleUiTest.xml": {
+    "sha256": "4460b7a6a560414ca69221beced480a57bb4fb7effe3f6f29d71642b806a6c92",
+    "bytes": 1102
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest.xml": {
+    "sha256": "6037239f95afb95fff53b2fb4936a8133f5550dbf099afef28ffd6bca85b5334",
+    "bytes": 925
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumCcc1BridgeTest.xml": {
+    "sha256": "425bdca062c68b5ab36e48f31fbf99cff6369d3907840c522837fc67a7b19414",
+    "bytes": 836
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumCodingConversationTest.xml": {
+    "sha256": "c2b8d24e0b6e1363163a48e839fd3d59b673af1f100c0bc28b76e501517fdc78",
+    "bytes": 2420
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumCodingPlanningTest.xml": {
+    "sha256": "9e4f0cc8e7462aeec6cbdb05eaccd1d3a865e166a065381af82c83d645505c09",
+    "bytes": 1481
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumCodingPlanningUiTest.xml": {
+    "sha256": "d48f3f3ae07df7bcefa8a042adfeebd844e262a51ea346d4bec76f9739abdb2c",
+    "bytes": 776
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumCodingPreparationReviewTest.xml": {
+    "sha256": "c79ab1011c1f33caa93eb218eb5bb75c039ed3e1281e62e918110ed0f066573b",
+    "bytes": 806
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumCodingTaskTest.xml": {
+    "sha256": "55b2f4e25f700b0580892e5f550074f3e6bd2cd70f2988240732303c582987dc",
+    "bytes": 1337
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumDashboardArchiveUiTest.xml": {
+    "sha256": "fb5eb017a45583db270efb18077cae8b7951c5f9b261cecc10052431cb89f60c",
+    "bytes": 497
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumDialogueSessionResetTest.xml": {
+    "sha256": "23fb9b96669693a3825f7525d19d046a56772b321c567fc5332684160396c8f8",
+    "bytes": 1285
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumFirstVoiceUiTest.xml": {
+    "sha256": "5dc95149611f9e9a7d5dc31e425717bea2dc00ab5187d3936edb0f4c34f22154",
+    "bytes": 619
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumGemmaRestorePolicyTest.xml": {
+    "sha256": "ef7e20ddf0d4b9e5f386b11f1a5fd371d57135c64e827735a351e6f3609e847e",
+    "bytes": 1331
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumHologramMotionUiTest.xml": {
+    "sha256": "345b3889ea882687af0dd06bb5f195460a83cbfd9e54abbc22ec35de41e847b6",
+    "bytes": 1220
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumLiveCapabilitiesUiTest.xml": {
+    "sha256": "307ecaf340b94de8b3a2dd9d23f0d17463d2d5f2e022f368e2a3120f75142ae1",
+    "bytes": 791
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumM2StatusTest.xml": {
+    "sha256": "30e1d98129b4f06244aa3159f242caae675f8c62f5fa273b2256089bca6ee61c",
+    "bytes": 1009
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumM5UiTest.xml": {
+    "sha256": "bc1502d429347968e9e30332b086061a256d5bc1363932c695a6d74c76bacaf4",
+    "bytes": 1435
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumMobileBuildPlanTest.xml": {
+    "sha256": "5484d4f0d64776c245d6def7957797f375b234b8933e13807395e921da6fe238",
+    "bytes": 739
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumMobileBuilderRouteTest.xml": {
+    "sha256": "1151a546c3f954e9a07a2066d302bd4cee2920a042ae0558cf08cca8a9e7fdc8",
+    "bytes": 1048
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumMobileCodingJobTest.xml": {
+    "sha256": "57698bb2c4aef4e533ddf6e15ee8ac85412021ff9909f748474f32d130e89c12",
+    "bytes": 983
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumMobileResultPolicyTest.xml": {
+    "sha256": "65d487139060fc1cad3cb852fa0d2beea5302d8f645628523b4ac7bcc37bfe41",
+    "bytes": 1653
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumModelImportUiTest.xml": {
+    "sha256": "d768b48c35f0dcb9b04676b90d77015aa23d551c3c7aba7c2e307a0242888daa",
+    "bytes": 485
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumNexusHomeSpecTest.xml": {
+    "sha256": "81849fbff8954ea50eedba581dd3602e6c9115b540b56e5411035c5337f00398",
+    "bytes": 718
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumOwnedAppContractTest.xml": {
+    "sha256": "c9fc44dc2b6d537c49f62809917c51d5df6c68bf7affd15582749760ecd4dc8f",
+    "bytes": 859
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumOwnedBuilderUiTest.xml": {
+    "sha256": "2ba828bef3414b64d38e780eef3b42ced5af022123b03be4e1f2e2710b86011f",
+    "bytes": 816
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumOwnedProjectPlanTest.xml": {
+    "sha256": "0f62cddf7b17cf1e863e2b732ca223d26b38c1b40e729a7e5da4894221fe4fe4",
+    "bytes": 930
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumReadinessGuideUiTest.xml": {
+    "sha256": "148b210a0e95792a18b36c7ac1b9ea01dc5da9c307eb1bf4852d21e22143a0ad",
+    "bytes": 1145
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumReferenceCockpitUiTest.xml": {
+    "sha256": "cea5787ec30099ea8b85fabf0cffefc14c23caceea927b042389a0b0bad44206",
+    "bytes": 20599
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumSelectedModelsTest.xml": {
+    "sha256": "e06ead2be3bdeaa7e55b30c9c7c5a9b7734876837911b743200a8f799348fcf6",
+    "bytes": 1023
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumStatusExcerptTest.xml": {
+    "sha256": "247bac77cfc5e544ef31b60dd54c3b04a5f48e1df76490a44fde44a56481f187",
+    "bytes": 844
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest.xml": {
+    "sha256": "1ed07298d7642a30cb355d65af46bf00ed47debdd9b41a3f6530c29bc0353b4f",
+    "bytes": 1059
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumTaskEffectsUiTest.xml": {
+    "sha256": "8482757157cf3412cf11fbe425034b07d6488e4d2a782c60871d0d626b9000ba",
+    "bytes": 776
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumTelemetryMotionUiTest.xml": {
+    "sha256": "3dd9c11440768c959aa10b6b05afbba3c35512e4f12c04c8a3aa1de090fff3be",
+    "bytes": 649
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml": {
+    "sha256": "939574dc2ea5009c335f65d2e437d6ea938056939644668095d32d3374607835",
+    "bytes": 1223
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml": {
+    "sha256": "457574796829c86de329316937dae4b674ff315d59a773734fecb292a44bf892",
+    "bytes": 2213
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumTypedSnapshotBindingTest.xml": {
+    "sha256": "4f3188fbade2e9b6494f6a16efbbb2ed6f8993c35e9c8bed12686a130e1fc37b",
+    "bytes": 659
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumUiCopyTest.xml": {
+    "sha256": "41683427e7e99106f159391664903f0405ca249d6473f92bcba4e4b9ce356648",
+    "bytes": 1383
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumUiFeedbackTest.xml": {
+    "sha256": "a7282993692ff77e1e61e483fbbd1b5e92df06722b755d855581fbbb3e5fde44",
+    "bytes": 907
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumVisibleAvatarUiTest.xml": {
+    "sha256": "0a9e8a11e39ecc1c664c62bd4fc7650b95d3c09e3fec970f2d8137350c6c93f6",
+    "bytes": 906
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumWorkAreaNavigationSpecTest.xml": {
+    "sha256": "49be4017a990209baf5a99e8f33255a7df0f9f4ce3a61b5712e9aed518ec82af",
+    "bytes": 1091
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ContinuumWorkerChatRouterTest.xml": {
+    "sha256": "e0b85848cd640dfa34ae4a6a13c8a030f9e7bed3b4705bb703e4c002c70cb8c6",
+    "bytes": 2000
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.Ctx3ContextTest.xml": {
+    "sha256": "9d24ad09f54ad3b08e2593dad32402d4489e54659220a3df0defa8cce9aa3163",
+    "bytes": 953
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.Ctx3SessionTest.xml": {
+    "sha256": "a69476290649284a385e058ef64258ea2220c44e83a27826a77bd8cefd73154d",
+    "bytes": 457
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.Ctx3ShadowTest.xml": {
+    "sha256": "332af7e2ee660ed028a1f41f6c91a3f64acc396f0b9156ead11d2cbce5ac753a",
+    "bytes": 729
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.DeviceNetworkProbeTest.xml": {
+    "sha256": "1454891801c778818b7517855f2e0fc76693ee4d22a7d29024157524272dd038",
+    "bytes": 732
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.DeviceToolExecutorRunnerTest.xml": {
+    "sha256": "7fc0f8360026c7e2dcf928c2090e3cb8f512a4b668160bd6f4ac6e9f0c9e9579",
+    "bytes": 1145
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.GroqInvocationRouterTest.xml": {
+    "sha256": "aad3ac91741ea710ffa1d3f21c6b285f8e5ba018422810f7fc90827cfc0240b2",
+    "bytes": 836
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.HologramAudioTest.xml": {
+    "sha256": "b05eb4958000377dff5816f4f038d8862b5292c36992f4b86e30943196dda9b1",
+    "bytes": 1302
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.JarvisAvatarSlotUiTest.xml": {
+    "sha256": "86b145f1f6d182e67fe1c6ad22956526f1f8cbebba8af51176f123f496edb093",
+    "bytes": 451
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.JarvisDeterministicCaptureUiTest.xml": {
+    "sha256": "a0b7f5f37db862b54e5490becbf385a136cba92820e1180d4afbce2edf396142",
+    "bytes": 3811
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.JarvisLiveAvatarWiringUiTest.xml": {
+    "sha256": "875b988631c8c9f4eb3d553d6353736b9fcf3ef50e9ff1a2eebc5fc7b39e662f",
+    "bytes": 1818
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.JarvisReferenceHitTargetsUiTest.xml": {
+    "sha256": "1c358c995c7c276e20147497c42a5a2d9f4f20aba3f514097e03e72b071e9a67",
+    "bytes": 1422
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.JarvisShellStageUiTest.xml": {
+    "sha256": "f4b24bc8047cde30f52b7ece62e2b44dab63347201a8de9e523f9667cc3df09b",
+    "bytes": 606
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.LocalFirstPolicyTest.xml": {
+    "sha256": "c83642ece93a0dbd74571fbed34dc03861bc1970402ca9ec9086133b90744faf",
+    "bytes": 1920
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.MemoryRecallActivityUiTest.xml": {
+    "sha256": "e41f19cfa1f4dcd9e812a0f4c39d2239c533dd3fc3976d99eb62639e99c881aa",
+    "bytes": 656
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.NativeClickCandidateTest.xml": {
+    "sha256": "c839865593010029a46ca25a9315fefde13e8fdcfcf7786d85ef724f05727d0e",
+    "bytes": 3076
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.NeuralSnapshotCasTest.xml": {
+    "sha256": "e1898f8eb997fc152cab2af0220d5bc121824aa67b493724e620809c809e4ac8",
+    "bytes": 575
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ReadOnlyToolSizeRegressionTest.xml": {
+    "sha256": "9b6c576305bc81163fb7480b859a043573ce78d414a42b6f0d8d48e840f43f01",
+    "bytes": 763
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ScreenObservationRevisionTest.xml": {
+    "sha256": "2dc25fd52e9bc7bfd61762d6bad45f4d773231b252975730adbb5c9b0c6dd856",
+    "bytes": 2064
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ShellExecutionTest.xml": {
+    "sha256": "5fe13afe42f7d3b2af8d812662b5e5369410230efeea7e89020d12ce18bda7e2",
+    "bytes": 1834
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ShizukuBridgeLifecycleTest.xml": {
+    "sha256": "670e8a7e9b8bb9d784b012f74b92154f3175ecedbb97185842b9fc46eaf7769e",
+    "bytes": 2352
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ShizukuConnectionDialogTest.xml": {
+    "sha256": "ad90d1ee4d4cfaa98a2eccb831e61384145ad6bb8ace61b21a08a189a5c73187",
+    "bytes": 630
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ToolDurableOutcomeTest.xml": {
+    "sha256": "4a0456d705f16ccf0a51c4416ea0747902018a41eaf62cecf0d3030231ef4e35",
+    "bytes": 1448
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ToolExecutionReceiptStoreTest.xml": {
+    "sha256": "5ad1b84c7cf5f1eebd9069a30f0b5c564588f0185cf434dcf5baedc1b61963f9",
+    "bytes": 1075
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ToolExecutionStartLatchTest.xml": {
+    "sha256": "6509393ba75fc73ed49ee616ee6cdb161429a2bde8aa7d59bf6254f2f1dde23d",
+    "bytes": 1322
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ToolOutputCapTest.xml": {
+    "sha256": "389464282e68e25726952aa6689523c334775a40cd12986817d283258987f484",
+    "bytes": 792
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ToolReceiptJournalRetentionTest.xml": {
+    "sha256": "f80a973b5853d52d63829d57b994b50ec0a158739f2599f8adf0f8e264f58385",
+    "bytes": 802
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ToolRegistryTest.xml": {
+    "sha256": "9e0b727407d8b27be87cafb9c759a33d7cff31b77047c7888a5bae6f8ad7990a",
+    "bytes": 746
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ToolReplayGuardTest.xml": {
+    "sha256": "4c9e66b926c1d18c9c439df4b246c975cd1b7b06a151a4f6b018b5c9c30647c5",
+    "bytes": 573
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.TtsHologramSignalTest.xml": {
+    "sha256": "8626fce4be0cc0574186459296234a2c50044a0e4d224fc12c05e6c80794929b",
+    "bytes": 1271
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.VerifiedAppDispatchTest.xml": {
+    "sha256": "13adc058777b814998a3b60bb3617debec62aa46e312bf3f1dd92df4c15d9544",
+    "bytes": 625
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.AvatarDirectorTest.xml": {
+    "sha256": "c8f5b5c12f762b4c20583ad1c821d126a751f56bdfc28c53cffb689c3cf437d9",
+    "bytes": 884
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest.xml": {
+    "sha256": "7f064fda6b91dce36221d32eec8893082330e028e6c95b4e9e7804edf8547476",
+    "bytes": 802
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.AvatarNativeRegressionTest.xml": {
+    "sha256": "8637df73794277b58e1ac48930a61ea64aca0cc848ab0c18647ba611cd5db744",
+    "bytes": 938
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.AvatarObservedGazeTest.xml": {
+    "sha256": "32d20d7d7275e1ef346801bc42bdc567d98452c4109be0d6c1ca7d7d82f740d2",
+    "bytes": 2071
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.AvatarPortedPartsTest.xml": {
+    "sha256": "bbe4ee90b1ff8fcdbdb9d0e04bd74be96a96b0f0ce3001a8327268c9c893ef84",
+    "bytes": 715
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest.xml": {
+    "sha256": "18b978f2bddebc6d21d5d3952d204d8f5fa1411e2ab08f531d3b6d7b8b624fbb",
+    "bytes": 1102
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest.xml": {
+    "sha256": "03e646e702c092d90e3e6f2c91d61fe042b367dada3fc05c7c253f9be06dfa2a",
+    "bytes": 1399
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.AvatarSpeechClockTest.xml": {
+    "sha256": "10dfa8300d4094a871658bab27027509bdcd623f9366ef61a9b945afe83be57f",
+    "bytes": 926
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.xml": {
+    "sha256": "a60ba8f51853a8e512ef4b55237927227585bddce8d463f4b59cd2a80c394034",
+    "bytes": 1901
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.AvatarSpeechReattachmentTest.xml": {
+    "sha256": "a8f55026a8a2be08da61c2f5584fc5d6f73205ea94ac6138fd232ff389b0621f",
+    "bytes": 1230
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.ContinuumAvatarIconBurstPreviewUiTest.xml": {
+    "sha256": "458753106b35beb936d0452c269d0a18a6242559b80efa15f53ec93d5c9fe104",
+    "bytes": 479
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.ContinuumAvatarLookPreviewUiTest.xml": {
+    "sha256": "62a2c55ad611893f4b5fe25fdde28559fbc26c342ce4b6e3ff2c0abacad8bade",
+    "bytes": 488
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.JarvisHoloAvatarUiTest.xml": {
+    "sha256": "cbd78da573d13716ab785cbf4386ec82e53986976950275051567723641418ce",
+    "bytes": 476
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar.JarvisShellWithAvatarPreviewUiTest.xml": {
+    "sha256": "67abe2a41ccc3bcb133b8906c55e11136325cabd636409154aee2b2c733a8561",
+    "bytes": 490
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar3d.Avatar3dContractTest.xml": {
+    "sha256": "1ad76c91b421953b77a4af1c9d3e9cb3139f738dda9ace8df1ba54c0fb16ad54",
+    "bytes": 1746
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest.xml": {
+    "sha256": "6ffbcc38b78bed31e3f1c6fef434940e1c168998133c6ae27760ce0f1916d304",
+    "bytes": 978
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar3d.AvatarAssetProvenanceTest.xml": {
+    "sha256": "1900249db9825a8c945e393587177503eb8f629fe7ca99e267de99cd84723bba",
+    "bytes": 482
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar3d.AvatarIdleMotionBoundaryTest.xml": {
+    "sha256": "a8732bf5ce4d4ab92e261260673c5a79582bef8ae4dbda7d992d7f978df1a9cf",
+    "bytes": 637
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.xml": {
+    "sha256": "02ef417cef8bfe203edc102fa6f5a7a95013e95671ade9f71e7220834aeebd69",
+    "bytes": 1398
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest.xml": {
+    "sha256": "74b30c353279f805147b9e4bb82dc28e08c20f6300be479ad04a399e8dc8e1f5",
+    "bytes": 950
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.avatar3d.AvatarPortraitFramingTest.xml": {
+    "sha256": "484eda5d8bf43c18368857e537f9f636d3bba164e3e562d53c70374f3bd702fb",
+    "bytes": 661
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.benchmark.BenchmarkRunnerTest.xml": {
+    "sha256": "679ee8f86412b221b5f2750a786b9c8659a3c3797231f5fc607c35f462fad7da",
+    "bytes": 2060
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.benchmark.CoreGemmaRaceTest.xml": {
+    "sha256": "73900de7df5075161eef092a3e514d1844d2c111d5efa757dcab80f54cb84157",
+    "bytes": 1747
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest.xml": {
+    "sha256": "cc91bf5de8074adc3c194821c5d92569d0f3fb347c734664fb7f460f5e70030e",
+    "bytes": 1845
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefBotAddressRouterTest.xml": {
+    "sha256": "f37205c8260209cb82aa955a4517f35ad17156cfc0f2af1608aebd2c887e43ac",
+    "bytes": 3059
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefBotConversationTest.xml": {
+    "sha256": "473863ec6c661f792b433de08a45340e684b28248e88b114e51d543fc793a7f2",
+    "bytes": 1860
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefBotPersonasTest.xml": {
+    "sha256": "7cb70a559688b418e6469311fdc42eab7b8c67a50b0deb5773ff00c01f1bddc1",
+    "bytes": 1273
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefBotPracticeConversationTest.xml": {
+    "sha256": "eab6c4eda8a12e7afe3691b9c85d91863883e6c6215f4d4baac249e9080279ea",
+    "bytes": 1865
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefBotPracticeTest.xml": {
+    "sha256": "775ec8f91a70d57971b4024c0dc67c3b651d96174715fc4e725a51a3f3ca550f",
+    "bytes": 1662
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefBotProfileStoreTest.xml": {
+    "sha256": "a6b8971e4f7b1fccd2faa4e94f44675deb8310078e29b348f8056954e70269b2",
+    "bytes": 1772
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefBotStorageBoundaryTest.xml": {
+    "sha256": "0d7f61cb50f8865c53c38feb524f2ad9298895ad982023486b6d73395e9cae4b",
+    "bytes": 2032
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefBotTaskIntakeTest.xml": {
+    "sha256": "6af91ebd02c4f44a0ade668e5f871ad6ab8f5b4c9185fb78ec5ef45e962eb779",
+    "bytes": 1490
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefBrainWiringTest.xml": {
+    "sha256": "28641dc3b8ee5b6fbc0740badfbe58d5d3818aeb53e79b8532ff02ef69e4bf76",
+    "bytes": 1038
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefDelegationCoordinatorTest.xml": {
+    "sha256": "2d8f7d77839e5b918c16700ae6cbd01b769f0dadfc1159b0e761712108426c4a",
+    "bytes": 992
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculumTest.xml": {
+    "sha256": "cc0158f941cd9f4de06f21eadce2ca0d96d39665e6c76b58d16c859e95a45535",
+    "bytes": 2417
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefMemoryAndJobTest.xml": {
+    "sha256": "f2c850c27977ed85b1d2def8998ab0a7e51e72cf1a166fddd033bd7c65f18957",
+    "bytes": 1165
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml": {
+    "sha256": "1a1dc5b89d8945f031936d87ab44c6d61e2c21455d15f407e448176e08599d92",
+    "bytes": 2936
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest.xml": {
+    "sha256": "5645cd81ad1d15e7b19137c0d27ca3a2107c5cae0f67bb86a2563f3f38122200",
+    "bytes": 1145
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefWorkerPoolTest.xml": {
+    "sha256": "f5cfd7fa04df8c268a2ad9c4122e0fbbebae7bc40379566c173198861eb27576",
+    "bytes": 1639
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest.xml": {
+    "sha256": "aceb705b518fad0f9f46f9559d15939815c553b37603cd52974e8aa3cb5aacf9",
+    "bytes": 1208
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest.xml": {
+    "sha256": "2d6e80664e86ca4e58862f2c18403245b681e03e8b62a51ba609fc4dbca085f3",
+    "bytes": 716
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ChiefWorkspaceWiringTest.xml": {
+    "sha256": "7383ad5e928ca54d0deed1e3d67c125bac538d16fd4539f8134ceb26d97ff29f",
+    "bytes": 1105
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml": {
+    "sha256": "33a4cb7bde1b5891e03b78efcdc2c7dcb5a6f6c0057212b32e409b753e9aa63b",
+    "bytes": 2770
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.ToolSchemaSafetyTest.xml": {
+    "sha256": "b4961db7b4320492b491ebba29d35e3825918a7ddc49ab2e0c0626e2f8f6e6c3",
+    "bytes": 746
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.chief.TurnLifecycleTest.xml": {
+    "sha256": "8574c0aa52332cb44096754c07ba0a51dddf418068f58c2e340143ac9fba71b2",
+    "bytes": 861
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest.xml": {
+    "sha256": "479c4d7325ae61dc61707551530676d27af5e5041d3c77f5b44e191f024c857a",
+    "bytes": 1381
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.CockpitContractsTest.xml": {
+    "sha256": "55abc62dabf7b6a6f755e0dfcd8caae6b22b73ed06693420586e4f75f39e39fc",
+    "bytes": 741
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.CockpitTimelineTest.xml": {
+    "sha256": "4d4ea3169711220c4811a3fac1974013e35b4e8d9338444f986b6295eaff2621",
+    "bytes": 879
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest.xml": {
+    "sha256": "7caa2742815c0bbef2eb12a61a7356d1b98c79103ba47f2160c2d80d4e202511",
+    "bytes": 1048
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest.xml": {
+    "sha256": "801915ea19ac0c4dc9ca450735e7748033916854fa0c203efdee1b30167243ff",
+    "bytes": 2411
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest.xml": {
+    "sha256": "941ad84812a8e92e101b52b4a09f4d35602f775bca82c36c599017617e4977be",
+    "bytes": 1754
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest.xml": {
+    "sha256": "e7ccc9d4aeb5dd0d91e8c311e0ccb019f44fbc413f371ddf272bad63be67d923",
+    "bytes": 684
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest.xml": {
+    "sha256": "fd3c2e3e464b045ecc71e07e4dcbaa30f587fb7523d7d0c475e1a2e93e50dbcc",
+    "bytes": 1031
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.MemoryEventSourceTest.xml": {
+    "sha256": "ac63f575be587afa74b01167c5ee9a69cb3fd7c1a77dd75a154961cc435dcda6",
+    "bytes": 601
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.PillGateMappingTest.xml": {
+    "sha256": "1934b73d94720838eb64709c27a74c72025bea1a095545e34d175053c7d7c0de",
+    "bytes": 564
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.RealMemoryEventSourceTest.xml": {
+    "sha256": "934c657905d496abadf0b54674b0bd8abc0d7b5a0b7c6d084484ca2e42302628",
+    "bytes": 787
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.RetrievalCalculationSourceTest.xml": {
+    "sha256": "5c09a93acb5937007685584372e7fe7bbb242a94b053c446de83bd282c5162b5",
+    "bytes": 1064
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cockpit.SafeFlowsFgTest.xml": {
+    "sha256": "da53e6b9fe3c3e78f5275a6fe909a7839839da50139ea43b961381516943befc",
+    "bytes": 1385
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AdaptiveIdentityTest.xml": {
+    "sha256": "a970f1b310eb709fb7ae7cc6d735ce46a0953626694354e2b89e91fc606d099a",
+    "bytes": 3339
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AgentCancellationRegressionTest.xml": {
+    "sha256": "6900676095373c1a27d4f89dfe55c5e0867fdc4c106610323934d3b676fc31b5",
+    "bytes": 824
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AgentCheckpointStoreTest.xml": {
+    "sha256": "f0174dc4ea6e7a4ff4f4353d57348840c3a0c21dafc71e08eb0b8aeb97941f88",
+    "bytes": 630
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AgentContextFallbackTest.xml": {
+    "sha256": "4c009810c61bbe2db5b9402a41453af5c117797c098862c2c33f875551f70e5c",
+    "bytes": 618
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AgentExperiencePairedBenchmarkTest.xml": {
+    "sha256": "1ceda97ccbb28037875577814a3ba87a39294da5d882eaea94425270a40b8685",
+    "bytes": 880
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AgentExperienceRecallTest.xml": {
+    "sha256": "7d31b5f20e33c97472c4dd08a79f4953b02de9e3d4a6b3996cebed904e0612cd",
+    "bytes": 1718
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AgentModelOutputBoundaryTest.xml": {
+    "sha256": "aa159c051b0240dd7eb2b2687677af4761a5291d3947fe2a0fff22d134a1c3a7",
+    "bytes": 821
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AgentTaskEvidenceTest.xml": {
+    "sha256": "c0c69bd27dc129f15dc9b4d97998e6521941d2feff2835edac90c99cbfc9dcc5",
+    "bytes": 1275
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AgentTaskIdentityTest.xml": {
+    "sha256": "c6bacb1554bdccc1c892540081b224e46ebba9274e09eed0e3295579b3f72f4f",
+    "bytes": 487
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AiContextByteBudgetTest.xml": {
+    "sha256": "0cbb378d5dd07194eaa212dcf594d8835d0b277278031c003b59962a67f42e53",
+    "bytes": 1286
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AiContextCompilerTest.xml": {
+    "sha256": "8208897aa8f430c5f9d358202f0e47688840059ba8cbf960416033a7b413a3e1",
+    "bytes": 957
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AiContextIntegrityTest.xml": {
+    "sha256": "c9378252762aa060c359501359952fd6f1e223d8793ac922fd8074c40b55a967",
+    "bytes": 1714
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest.xml": {
+    "sha256": "95b960ba527dbef0c037369d02df0d17f690c230c93b1a538effb13fe7c32f77",
+    "bytes": 1669
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ApprovedWebToolGateTest.xml": {
+    "sha256": "f7f033b4d1495b8dae3d1389b97d4687e98496c446846b57b3f870a3f67cdcde",
+    "bytes": 1275
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest.xml": {
+    "sha256": "526fa9890c2453ad06a5304c2f3b7957d9bf81e35b27471bbe4511f19abc02f2",
+    "bytes": 1401
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.AvatarCameraPolicyTest.xml": {
+    "sha256": "fb9ecf5ec3fcc26957cb1671e22420db4e74871d24f136a2fe8821fc91be8984",
+    "bytes": 2770
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest.xml": {
+    "sha256": "f3dbbfde9fb5bf88d644101ba9034a80c9b3720391d5d998184620187a3b5bff",
+    "bytes": 677
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.BoundedAgentTest.xml": {
+    "sha256": "cd6e6731fd6728c213fec455d07c46dd0ddb560ab67128a780915bff28b028aa",
+    "bytes": 1236
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.BoundedScreenReaderTest.xml": {
+    "sha256": "0a3958cf3a0d91eb16bd030e4220a86c6576e253f5083920f9214a1235556b82",
+    "bytes": 1257
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.Cdx1EvidenceSlotBinderTest.xml": {
+    "sha256": "a5ad5e81a35a40f36ad5223acd43a4a609167504593db85473ef05c7c576345e",
+    "bytes": 1085
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.CertifiedLocationReflexTest.xml": {
+    "sha256": "5a32623b2a79041f6ed38c4d8f973f666d4ecea629b2fc8f90e51710949ef4f1",
+    "bytes": 963
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ChatReasoningRouterTest.xml": {
+    "sha256": "fdeeb730807bad8f243c64715896f3837e6843e6dbde89ff7156ecd54ef2a8f2",
+    "bytes": 1575
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ChatSpecialistChainTest.xml": {
+    "sha256": "96a76f0b2193af939f35c9d8218f11e59928eca26b7b43aa8280216a8638f936",
+    "bytes": 772
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest.xml": {
+    "sha256": "2959b5ec0de05aa88abaea33646ab4ab8c564f2bc1248aa1f4305576210892bb",
+    "bytes": 1805
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.CognitivePersistenceTest.xml": {
+    "sha256": "154d6a1e2da4ffd36938194515cbbe59e95a331ae8aa02e57a5d02ad111a80b3",
+    "bytes": 942
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.CognitiveRaidTest.xml": {
+    "sha256": "cf84684013897ada70082b9d93f72b0cc7bd469a2ce673f902fffbdda79c403a",
+    "bytes": 620
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.CognitiveTurnTraceTest.xml": {
+    "sha256": "c5cbc0d9374f44b8fc6a595fb4c72c9934242cefa38733ce835e5be2873bc1e6",
+    "bytes": 970
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ComputeFabricTest.xml": {
+    "sha256": "d49b4ed8662a7c4565a006d8cec6140d5b431b8d6dc199201364b24741b9889f",
+    "bytes": 1846
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ComputeResultVerifierTest.xml": {
+    "sha256": "49aacf54b841b3bd9e49e51034552067fb388c046ec03aaf9731659d3541022c",
+    "bytes": 755
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ConstrainedResourceFabricTest.xml": {
+    "sha256": "3b3b9cbf6d83cd945fd728c163a62ce5f1cec52df9290d3596bc9f26588d9526",
+    "bytes": 609
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumAutonomyControlTest.xml": {
+    "sha256": "6f0c2bd864571a4c7fe3ce337184a858401a1bcb8f0bd42904898ab0d8ad4e07",
+    "bytes": 768
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumBenchmarkTest.xml": {
+    "sha256": "ab48c451d32b11a206578794b1f0920e53b79b301bcba913e4f885f967448a45",
+    "bytes": 625
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumComputeReuseResearchTest.xml": {
+    "sha256": "d140e081a4020568c805500f3a920d7adef551e5035652f15053a59e4d0f94bb",
+    "bytes": 1705
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest.xml": {
+    "sha256": "0196a41fba7196828aa7981dba7a0b0e2fb9cd17eb2ee991a3c58aaa79f38fbf",
+    "bytes": 1253
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumEvidenceSwitchProbeTest.xml": {
+    "sha256": "3e97c96e11eecfa145e53679df47f558ddfbc74337563b52ee9a2a18646ee6c3",
+    "bytes": 4171
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test.xml": {
+    "sha256": "a65504cb41382377f683e8c64158c572d7e86decdf942b4c0e5a653bb7def8ba",
+    "bytes": 1127
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumLocalAgentModelTest.xml": {
+    "sha256": "e3b35f42ea92d9516cb67749cac3d673054c62125f6059050590778752725e6b",
+    "bytes": 1611
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumOfflineEvalTest.xml": {
+    "sha256": "97e5aaca2aa1efe14d7acc56844eb5e925076d152d2d7541c3c677264488eba4",
+    "bytes": 3467
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest.xml": {
+    "sha256": "af7f23febabbdf8a251953ac0a34fb75c901b5f5140b09371c6fe40f02c1edc0",
+    "bytes": 1735
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest.xml": {
+    "sha256": "3384f9c823c137c8d09056e00abd693da2c2bbde097b34c91dc751cc23cffe23",
+    "bytes": 1969
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumRuntimeStoreTest.xml": {
+    "sha256": "8dc791ae38516f0a70417f6a3192a4b92a34b796abe248a02941807c4385ca89",
+    "bytes": 627
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumSeedStoreTest.xml": {
+    "sha256": "255df15ed413a99b92e40c8b397b7c2bbebd5b3fec45025815a37231bf416dfd",
+    "bytes": 465
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumSeedTest.xml": {
+    "sha256": "8a612be3fe8897f94f2d62a69e60ad5ac032eca0cfe629963d7c9c63463b1318",
+    "bytes": 836
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumStateTest.xml": {
+    "sha256": "18d32658664d7c350a4cc7bd4b85a229e74e5b5d73aa81c704630e91e5a4cdc6",
+    "bytes": 704
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContinuumTaskClassifierWordBoundaryTest.xml": {
+    "sha256": "02c12635c0524eea69db42c0716de70570484911740c91b1f950da13a1eb7b3e",
+    "bytes": 944
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest.xml": {
+    "sha256": "649fa711496a3baccb65a8a0a1fb0b2e913908c4a7b4ca14bb16557670327e78",
+    "bytes": 1352
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest.xml": {
+    "sha256": "b776654bfc09164cf26207f46168b30a56ac90687f60cbce5cce5b8e997123cb",
+    "bytes": 1044
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ConversationControlTest.xml": {
+    "sha256": "3cfb3fe832a1acdb91daa1493bdf34ecd15a355231aec1c5f936f49837b62f0e",
+    "bytes": 969
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.DeliberationTest.xml": {
+    "sha256": "343c639d55da152a069e6e0da00223b170720a0ae497ac22d9e1be598c5dc6ae",
+    "bytes": 880
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.DevelopmentBacklogRoundtripTest.xml": {
+    "sha256": "3d91f2cda7ca77e9297d3cf05b9bab38da2c5dd3aa0624e715c089af07626951",
+    "bytes": 496
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.DevelopmentBacklogTest.xml": {
+    "sha256": "6c8ce5b1f40d1ac21658efe7361375d0a32fe482a5489348547a972b55d7a451",
+    "bytes": 2918
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.DevelopmentClaimGateTest.xml": {
+    "sha256": "86726e34a45ad92a53185a9932814382c23ad7f1f716581eb556775de6c8c6b1",
+    "bytes": 647
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest.xml": {
+    "sha256": "b2d4bca85eff6c98984cc27f8b4a161f4c34c1f28a33469cb8e22333effbc06e",
+    "bytes": 4137
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.DevelopmentFakeModelDemonstrationTest.xml": {
+    "sha256": "99803a4faddf4eacfe1b9cfd41aa1d360fd57e439a1d0820b74313c201cafdae",
+    "bytes": 1372
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest.xml": {
+    "sha256": "95da4dbf1886cb9de5399b795bfb693fa1d2519b6e1a6c545144b22f7ce19120",
+    "bytes": 2003
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.DevelopmentSharedHashTest.xml": {
+    "sha256": "c0a52fc3ffba08a0d0570b62685cdff538c9165c5be1a1cb29de3bfad68f0047",
+    "bytes": 764
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.DevelopmentUiControllerTest.xml": {
+    "sha256": "da115c35f0ed1e190b624ad5cfa8f4d14d3c2b7c93000f525e1ef500b628218b",
+    "bytes": 1683
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest.xml": {
+    "sha256": "7fbbe2713773a6a6a57cd2d710faa0f6cb3571bf3ee89dbab541f1d1d405827b",
+    "bytes": 1536
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.DeviceTeamleaderTest.xml": {
+    "sha256": "cf188e22ce2e71b0fbb5cf0d05f326ceeae6a51448bd43eef472442ac379002b",
+    "bytes": 1991
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest.xml": {
+    "sha256": "2c4c372e9fd5f32c2ec8f74f7ead405c3f24ad235b905b575d74d4456729058b",
+    "bytes": 1548
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ExplicitEvidenceAndRevocationTest.xml": {
+    "sha256": "8e009b226149486fafbfb427c03b21f35e1966aa24aaf655bae82c7bb447c16e",
+    "bytes": 998
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ExternalContentInjectionGuardTest.xml": {
+    "sha256": "9250c2f7d9ef68b2912a7c16205ec93180112bdaee63d3c2e66c959a829c9191",
+    "bytes": 1333
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.FreshKnowledgeNeedTest.xml": {
+    "sha256": "2025b1b70af879e4a0c1a2bbe06f732ef1f95af4ab37baf716800400684a93f4",
+    "bytes": 1196
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest.xml": {
+    "sha256": "66b426e6261bafa2eda31623a3f91fa3b8c5a76eec310af8dd1be53428ee37e7",
+    "bytes": 3433
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.GroundedWebRecallTest.xml": {
+    "sha256": "369451675d2f8549e449430fd0087eec059af1e83454561ea12aa00b63e18eac",
+    "bytes": 743
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.HybridMemoryIdentityTest.xml": {
+    "sha256": "8386475aed36aaceb9587dd79c482aa0e050ba57dcd7b1cd103487d7c341c3c8",
+    "bytes": 1400
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.HybridMemoryRetrievalParityTest.xml": {
+    "sha256": "7c21d7c314d21da695542daeb3b1f51556fa5396b4a0fe6378e032d4b7210d88",
+    "bytes": 1291
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest.xml": {
+    "sha256": "154225c655fc5edb91684b603e49b15bcc54552f39368c26529b64e30a289c1c",
+    "bytes": 1237
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.IdentityStateTest.xml": {
+    "sha256": "456e0302556df8889ca329c1517a324e8fc7b5b232a94332928fb61f6231d9a5",
+    "bytes": 1038
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.InternetConsentPolicyTest.xml": {
+    "sha256": "d26205c68e0ba23d4901f1732e9dbfe907abcf08e3ba7615dd7b8436907bcf12",
+    "bytes": 1471
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.JarvisCounterfactualShadowMatrixTest.xml": {
+    "sha256": "df565e5226f29425b3cfc104380292b7acfaa785d07dc224f73ce64089791fea",
+    "bytes": 672
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.JarvisIntentIntakeTest.xml": {
+    "sha256": "cdd6d3973c40120ae448e975bab3946029b6b953358d6929080f4dacc949ac9b",
+    "bytes": 1242
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.JarvisUnifiedEvidenceContractTest.xml": {
+    "sha256": "96dd523bc307bce9043ca1d887164021a46aaa4e5533234456851be92823aa4d",
+    "bytes": 662
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.JarvisVoiceProfileTest.xml": {
+    "sha256": "b47d4d089bb879acf1e94a6d6a4fdeb0161b255e3b9ff4d3fc9ecf6bd3f03d35",
+    "bytes": 1301
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.JournalAvailabilityTest.xml": {
+    "sha256": "c2d322fded0e6a6916d4f8cdafb1691f2b78c61b988b0d36af0f179790fbad2d",
+    "bytes": 615
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.JournalUnavailableOwnerMessageTest.xml": {
+    "sha256": "1c27b0f0b22fb16e6912f2144dc29b4b9ff14f3743a3832668e5611f754735bd",
+    "bytes": 693
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LegalRisDiscoveryProviderTest.xml": {
+    "sha256": "476fdbe3fe14b8bcab97f978fbfc379df4baf008a361ef260c732d569c157a71",
+    "bytes": 1136
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LegalRisEvidenceProviderTest.xml": {
+    "sha256": "6dfc6b6f92e45c4cab6cd10636e0ecd524fa274c4ad6a49f92380b67a1d72dfe",
+    "bytes": 1265
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalChatPromptBudgetTest.xml": {
+    "sha256": "367df0bce6710b5118cfb69b2cce717d103b85a136b4c28515d0dee64cda8fa7",
+    "bytes": 765
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalClockIntentTest.xml": {
+    "sha256": "d465b98505ead0b801326a4e886a1e02834eae8969f616f52a7d3b2426b095eb",
+    "bytes": 926
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalContextIntegrityProbeTest.xml": {
+    "sha256": "40575e6afef2e87497b59a61d6d3c125c73d4d1ca249f4179fb6d5f20470aa62",
+    "bytes": 1122
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalContextRetentionTest.xml": {
+    "sha256": "4b81417f60ac468dcd68484ae8c58ceb44ed1543456727317b1c17e30948fbbe",
+    "bytes": 1080
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest.xml": {
+    "sha256": "d2f6b8e1de7adf785950eeedb5dec1d92584e64c395a691f1073615448dfe4a5",
+    "bytes": 853
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.xml": {
+    "sha256": "e6f1b46c7e862e6f323123f6bb01bddbe9790f27a9e07d3017f4afe9e229046c",
+    "bytes": 845
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalConversationPromptFirewallTest.xml": {
+    "sha256": "10cfc7cfd075b933ab66427d806a3def363abe3a6f668f603b03564de7d3f4a0",
+    "bytes": 646
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest.xml": {
+    "sha256": "8a7ff324e7dc41e0aa1307e8f1e89e46a34181b6640abbf67e2056ef13aecd79",
+    "bytes": 2001
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalDialogueRetentionTest.xml": {
+    "sha256": "a5dbb205f9a95b8c105a4e22eebb9ef01939c76eee0941af2f3682f94a29e0d7",
+    "bytes": 902
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalFollowUpTaskFrameTest.xml": {
+    "sha256": "01d84c95c599fc457c2872e5fceec2c3e10c8a0064f2a4714ea8b71051c24f0d",
+    "bytes": 1719
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicyTest.xml": {
+    "sha256": "5a17e2782fd58aa6984d9872dc7b4ba47b7b334f382be74fff86ae156bd217ec",
+    "bytes": 943
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalGroundedRecallTest.xml": {
+    "sha256": "aa04809b2e100ec868ecff484c966cf1db5175d5be7da49c8d137722706d9234",
+    "bytes": 807
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalIntelligenceIntegrationTest.xml": {
+    "sha256": "f0e1b371ac39a0581b4912d3b567ec478bd336330606749c0411f37f4e4f8950",
+    "bytes": 1328
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest.xml": {
+    "sha256": "820a88198291197990559026cee19b0fee89fb53161dba91018a5c81e6a327ed",
+    "bytes": 1139
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalPromptFrameTest.xml": {
+    "sha256": "a8f30ea70e71c0b9cd1a648150ee3a63190fe0bc20d1735e49f0f97adb32a248",
+    "bytes": 1690
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest.xml": {
+    "sha256": "a69777ccea2539eeff986992b1774d09aea8588ff6371ef4be18bb6c9a71491e",
+    "bytes": 744
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalReasoningBoundaryRegressionTest.xml": {
+    "sha256": "a85241edb0294b7f1d148bdb377bc3b60255c1d66f139771ae2da115a1cc2af4",
+    "bytes": 1266
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalSpeechEngineTest.xml": {
+    "sha256": "f8b62f52525d743564fcd3661e9d97e5f20591036c88723d0be1455c06027a14",
+    "bytes": 898
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalSpeechInputPolicyTest.xml": {
+    "sha256": "33e693d84465084784d38c60df1ff17b63ce49a135b78a75a13bfc468040d756",
+    "bytes": 1378
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.LocalSpeechSessionTest.xml": {
+    "sha256": "bbae5e670276600c53d77fb13227f08ff48774817d0bb70cb062c717c518d5c4",
+    "bytes": 3026
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.M3EvalGapsTest.xml": {
+    "sha256": "8878ce1ee729cd88df9daad11226cc4b6b686da0ed498a89a821a8b7284d6f02",
+    "bytes": 1333
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.MemoryContextBoundaryTest.xml": {
+    "sha256": "5dafa21bd7630521a143c6515af6cd0f9c833329527484469b893c1472832de1",
+    "bytes": 959
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.MemoryContextIdentityTest.xml": {
+    "sha256": "e067a1206555b70d8765c8e9124de4d003b9e05506be3fff085f5fffec11fd12",
+    "bytes": 814
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.MemoryEcologyTest.xml": {
+    "sha256": "177a8b51378aee065030b7c65b79de61cdf71cc66bdf693c6d5f95087fac26da",
+    "bytes": 1690
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.MemoryIdentityHoldoutTest.xml": {
+    "sha256": "f60f797aab959a18d538ec7434481ff2a958ae88dbbd0ea2a2927d471cf39031",
+    "bytes": 4151
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.MemoryRecallObservationTest.xml": {
+    "sha256": "9a395573d28bbb448c4730d16909323b56b7a134408cac958c04dbec6300b4c6",
+    "bytes": 1297
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest.xml": {
+    "sha256": "6fe2e52b8f1531e230fbff921c20e5b43d16b68eb653248431f8ebb5565283e0",
+    "bytes": 1314
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest.xml": {
+    "sha256": "67a615f148a566e7dc9850f215da10b33a8d2aaa59c49f8633833f563518a2e2",
+    "bytes": 1769
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest.xml": {
+    "sha256": "c7a18b859d1b30d0f55143ebf3f891d18087441ca5dad9aa9076093d1a1661bf",
+    "bytes": 1254
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ModelNeutralBrainIntegrationTest.xml": {
+    "sha256": "aa66bbae894e9c881bcfc84b72dac287340dc33d4edaa724859ef559a2379bd3",
+    "bytes": 513
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.NativeAppLookupTest.xml": {
+    "sha256": "7086683dbbcec147f8abc967caa53d9d1c7193b39338c39a993bbdddd5972000",
+    "bytes": 1464
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.NegatedMoveReviewTest.xml": {
+    "sha256": "9651e9c805fb131af68beb714fd4b2bfe858c39c8ac7a8b5b8bfc59c29623595",
+    "bytes": 741
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.NetworkTurnConstraintTest.xml": {
+    "sha256": "13ccbd6dd744808118d1cc496fbca0fef428f6bff3576297e1e628380d267d55",
+    "bytes": 1555
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.OwnerAppLookupIntentTest.xml": {
+    "sha256": "eb7642dad5638e728c21082e6ec6b43dbaeef0a8fb7a8240ac021c6e0986279b",
+    "bytes": 796
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.OwnerCapabilityReplyTest.xml": {
+    "sha256": "569c4a4ca351b29e11338a4e0d7b08e6d079ef24969c09680933444819a6dcf7",
+    "bytes": 1841
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest.xml": {
+    "sha256": "ec44c9d17547dfb8319fc434566474666047e3ac4c20563b24050a9c905573d0",
+    "bytes": 1086
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.OwnerFactAdmissionTest.xml": {
+    "sha256": "ee0d9380860a414675b623afb98faba3f3f188a79ee5f9310356a6a4b7a1e7dc",
+    "bytes": 614
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.OwnerNegationPhrasesTest.xml": {
+    "sha256": "44d654620ded48caacc0ee17736b559612afb9237815845830d96f73fc224271",
+    "bytes": 583
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.OwnerStatementTimelineContextIntegrationTest.xml": {
+    "sha256": "4873677e465ffff819cfeaf8455f7c6afe81cfe2cd52672d2aee4db3ba9f38da",
+    "bytes": 867
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.OwnerStatementTimelineTest.xml": {
+    "sha256": "96c92fda7f3d1d2edc81325ff96ab6f821787f632ace008a0acc0bf167537e55",
+    "bytes": 3967
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.PinnedResearchHttpsConnectionTest.xml": {
+    "sha256": "935c542ca15f6e29c85652fd22e95d00e49a4136b8687aedb401df4636807056",
+    "bytes": 525
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouterTest.xml": {
+    "sha256": "cca58aaa7acf16484eb7a78e80fdebd79d486b5cc64c5145df68e555d7fb3357",
+    "bytes": 1219
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest.xml": {
+    "sha256": "f706a45f9c453e0b59268ea229ca2cbda2f98baed025a82aba5dfb5af1a2c58d",
+    "bytes": 827
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ReadOnlyToolPlanTest.xml": {
+    "sha256": "f41f340d34591d3f193e35801b5593d16b9e3a6d0f59e3e739927234d72133ee",
+    "bytes": 971
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest.xml": {
+    "sha256": "01d31d8e684d02516f90fcd97b20a76b720b884da8c55845c9eebc17ce19f758",
+    "bytes": 1750
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest.xml": {
+    "sha256": "8f420698f6e1b44aab9b93b5858633b6843b7c2278e22fb6399b23238d74e52a",
+    "bytes": 2884
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ResearchEngineTest.xml": {
+    "sha256": "9dcabe10956e8c69fdf581edd5579361af79eb7c48ba301dccc250d8a28cfcb7",
+    "bytes": 2428
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ResearchHttpTransportTest.xml": {
+    "sha256": "0cf3a179035a670ff7151fe0378f51a9e16051cf400172282b70703f2b38bdd0",
+    "bytes": 1127
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ResearchNegationSignalsTest.xml": {
+    "sha256": "86082a7431f663a2ef748b637b6ef76245091ee20d9a711bb17be47474ce55a6",
+    "bytes": 916
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest.xml": {
+    "sha256": "f7ff086f74a23fff277069d9dc1b1d3d32c9b118fa44b44553bd7209090bd165",
+    "bytes": 1284
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ResearchPromptGraphBoundaryTest.xml": {
+    "sha256": "55f2daa333b6443c166c4b685f17fc7682703c2de9f5b3ef8faaa54c0493a7c2",
+    "bytes": 495
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ResearchQuestionFocusTest.xml": {
+    "sha256": "35cee2a9f15107ac592df0f8d53586ce431045c10d1f87e39bac26b035e01479",
+    "bytes": 802
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest.xml": {
+    "sha256": "445007542ec287a83ef0ae6db7c702bd32c68cfecf985c995910aebbb58f7e2e",
+    "bytes": 1076
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest.xml": {
+    "sha256": "77331cc35fc1e1d160c7dffa1e55a54e110d47a9641ba5a15ecf0f24b9580e59",
+    "bytes": 950
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ResearchTest.xml": {
+    "sha256": "d70ff32f431b03766ccdb0d87e42f58956223ba722909c7ac8a2f8c19288b418",
+    "bytes": 1211
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ScreenEvidenceContractTest.xml": {
+    "sha256": "66d75e93f42b65ee9699eacbd361217d8b818800d0a250167509bdf2e75147c2",
+    "bytes": 647
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ScreenExperiencePrivacyTest.xml": {
+    "sha256": "26d20eff6f3fb522893de7c5ac9e2c06635239d2b35d12dee4daf573db1ff789",
+    "bytes": 682
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ScreenObservationPromptTest.xml": {
+    "sha256": "28118466c7d81bd19c837b6451ec5a7a92307542f1639350102ff1275ac4bdca",
+    "bytes": 819
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest.xml": {
+    "sha256": "f79135b500269f9b887140101d8094971135f7b69f5097a6bbe3a4758e06deef",
+    "bytes": 1759
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.SessionLocationRoutingTest.xml": {
+    "sha256": "b3843ec02a9c5ee5e3c89ba25af3962ce59511747b83fa6116d50e502074675c",
+    "bytes": 1179
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.SessionRevisionRoutingTest.xml": {
+    "sha256": "1d9f656b31627458fe81139a7ee5b86faab18eaff943f68e0be7acdeac70b31e",
+    "bytes": 967
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.SovereignReviewRegressionTest.xml": {
+    "sha256": "2ec1efbc92e0116dc91807e912178017c437ecf3ebfd6d0e0dce88346d6686cf",
+    "bytes": 1151
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.SpeechDictationDraftTest.xml": {
+    "sha256": "75a3e403309e74f3afa3d99c21d16745ca9710a35baf9a72dbbd997f70c6249f",
+    "bytes": 1022
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.TaskScopedRingStateProjectorTest.xml": {
+    "sha256": "a94ddf5ce585cd141a71e8954eb6f89109f959fffd270f3525bb1fb4e8dd8d36",
+    "bytes": 1597
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.TemporalRoleEvidenceLedgerTest.xml": {
+    "sha256": "668c7c158b4f0b13375271765e369ca507ef6bb5e0521fe94a6161d1d1fcc9ea",
+    "bytes": 981
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.ToolJournalSaturationE2eTest.xml": {
+    "sha256": "577088af4661b547dc5168467d9a2a800dd0eb17f2003fb4a2f9c1610e36f593",
+    "bytes": 500
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.TurnScopedInternetModeTest.xml": {
+    "sha256": "f4aa8225208c3e0c302175442d0c84a80ee466ab1397586c58dafdc78d397178",
+    "bytes": 1386
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.UnansweredOwnerTurnTest.xml": {
+    "sha256": "3afc763c1cc1e85ee1aa4c29c0613e90b441b9a6e2c38987e3b31f0fd4a120a4",
+    "bytes": 935
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest.xml": {
+    "sha256": "8e0c46727b81287e62605e4a3c17dd64c001530d0cd2ce5b54b7475df841e891",
+    "bytes": 800
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.UnscopedLocationCorrectionTest.xml": {
+    "sha256": "4d0f56e3a6897b0c345e37fce530d5e457c1378f9b002a0617eb05771d625222",
+    "bytes": 1005
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.UntrustedResearchEvidenceTest.xml": {
+    "sha256": "f7f7f41ce2d322e4d4673df251a3924eb9dc8f8adf99dfd98fae9751d5fe2a2b",
+    "bytes": 1039
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.VerifiedForegroundLaunchTest.xml": {
+    "sha256": "e319274165a4995ff5369c52a999788a4165079eadaa701148642dec7f5fee2e",
+    "bytes": 1242
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.VerifiedNodeClickTest.xml": {
+    "sha256": "1adbbe04cdb442c7862d42aac6ae73990d9abe33b89bfa15f57994da41009cc9",
+    "bytes": 1172
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.VerifiedSkillReviewTest.xml": {
+    "sha256": "9e54b350dd9c787676dbfab191e48065642fb9d51b6afa5aa80708b1aaffd6bd",
+    "bytes": 1532
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.VirtualModelFabricTest.xml": {
+    "sha256": "169983ff347a51db9f4e2779737d8c7e92be2cb2a56af454fc4ca7c28fe158f8",
+    "bytes": 803
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.VoiceDuplexBargeInTest.xml": {
+    "sha256": "9ec26ece218107a829dc3d3bbbaa21a53971e888cded07cf1240b2a5e653b750",
+    "bytes": 640
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.WebLearningInboxTest.xml": {
+    "sha256": "8a2d71e7a0a18ad8eaccfc1f219295edf08f0f6ab146112e226dd69300699683",
+    "bytes": 918
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.WebResearchIntegrationTest.xml": {
+    "sha256": "424e5419e49868810af7b3d5af008d40d3a2bb0ba220be768a32270eb9574023",
+    "bytes": 1461
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest.xml": {
+    "sha256": "8575aab07618278de4db37faa88304403666a987767b50e41aa011c1df278551",
+    "bytes": 1155
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest.xml": {
+    "sha256": "45c1626eb7bda258af4b6b53420fd4680a0e4bbbf37d509f36abbd277333f8f8",
+    "bytes": 1143
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.diagnostics.ContinuumDiagnosticsTest.xml": {
+    "sha256": "6aba0ec035c68a9430b834572a3c743d8f9de964c7c78d2a7011c9a0046011ae",
+    "bytes": 1410
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.ContinuumCognitiveSpineTest.xml": {
+    "sha256": "88614d4adf47559f766b68c1a7f47cca77cf5dea73c3c352e7db46341c14b4ab",
+    "bytes": 533
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.ContinuumLanguageCoreSelectionTest.xml": {
+    "sha256": "1f28af435507696076b942e6eeaa0b3f3ac27cea1160422dc61639336dd653fc",
+    "bytes": 1529
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.ContinuumOwnerUpdateCatalogTest.xml": {
+    "sha256": "1456593ba2c0a578a4a7c947d05c5e855c90f52e51f1f6817112e2c13d432848",
+    "bytes": 1905
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.ContinuumSignedUpdatePolicyTest.xml": {
+    "sha256": "076647a1ebbef0cbf623d377f7c02ae4a3cd0a069a2c945b742a7f76296f3477",
+    "bytes": 1512
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.ResidualSpanResearchAdapterTest.xml": {
+    "sha256": "12cd10f5f93a38fb84721a3cc677fdd11a49477221e52e2ee191c01b1c3e9e49",
+    "bytes": 675
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.ewm.Ewm1BrainTest.xml": {
+    "sha256": "efe8c8415941aff1fef2f15b5577f53234bc173271a291d5f7b2e8f5cae388b1",
+    "bytes": 1040
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest.xml": {
+    "sha256": "ebc8d902475120f85d538ee68a8d3cae744361b802579b445c416cac62a27943",
+    "bytes": 5964
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.ewm.Ewm1SourceIndexTest.xml": {
+    "sha256": "09a7851af6adbee59f77d61a6a7920e5d77aea52bf7538a2a7fc24753dfe3947",
+    "bytes": 1182
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest.xml": {
+    "sha256": "114edfecade7bc57b0ac4826bfa4a6e9160edcc9fee45b42b663867d36a85666",
+    "bytes": 1685
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.ewm.Ewm2ProductEquivalenceTest.xml": {
+    "sha256": "7e5ab78918502d5391d7398e81e6a956998d860b1c661f6a1a0fc610546c130a",
+    "bytes": 660
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.maxultra.ContinuumCortexPipelineTest.xml": {
+    "sha256": "0181c0cedc85f9a86643e91c87bd0463c2a28c81ab9c1a9b4042101d402c4c8b",
+    "bytes": 578
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.maxultra.ContinuumCortexShadowTest.xml": {
+    "sha256": "7be34f6e511a26d70d22ae2f7047afe7b0fbf83e4979d7e5895693878204ba46",
+    "bytes": 572
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest.xml": {
+    "sha256": "b67f3f57b687c096b5e2465fd41d010a68e5060da737acef84aabe78847aacce",
+    "bytes": 1840
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest.xml": {
+    "sha256": "7f6d396d667bf3a26aa7b80b5851e5e4e6231e17cf3ae540d1019d0a76928c74",
+    "bytes": 1300
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ctx2NegationTest.xml": {
+    "sha256": "e4b46e4453d41d928d21e97bd2969ec2b943670fb1352163de5a38ea008d6077",
+    "bytes": 945
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.maxultra.Lct1ReasoningTest.xml": {
+    "sha256": "1afb59de0a3ead16e9333ba93eada06eb7d6f398ff923b11a476048ee2cf6158",
+    "bytes": 823
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ttt1WorkingMemoryTest.xml": {
+    "sha256": "6025d1674377182c87c711d7b645935a6174cf87d3bfe8fe8e4a64c1353a32f3",
+    "bytes": 787
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.intelligence.maxultra.Wsc1ConsolidationTest.xml": {
+    "sha256": "fc41aaf071ba4111009cc8abf87b506344fe1dc5e79243dcc6a7a3a44254f63b",
+    "bytes": 697
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.Cdx1PatchAnomalyExperimentTest.xml": {
+    "sha256": "6cdc7b5d002f3d16a03831e00136055c4e1507f61ffadb3abe90329938b064d1",
+    "bytes": 783
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.Cdx1PatchShadowStudyTest.xml": {
+    "sha256": "6227385887671dff43380533f30b38bed319702925f9ab6aad42af346816906d",
+    "bytes": 626
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest.xml": {
+    "sha256": "44667e5594381fbcb49e784c1272019d55179e53c01fb7df0e0a248ad8fb5594",
+    "bytes": 1201
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumAutoDialogueCurriculumTest.xml": {
+    "sha256": "3658cd16264ebef7b899227a277a4272757ad61893805895f580a6363c0ece02",
+    "bytes": 935
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumAutoDialogueLabTest.xml": {
+    "sha256": "d1428c06b573a0847e548b3e0293f28b48724dba5ef7c3f9065a29cca5ad49ee",
+    "bytes": 998
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumAutonomousSchedulerTest.xml": {
+    "sha256": "e67872c9b112d90e1f1f0aa3b98213843e6afb87f4ad11a96db9cea342161e79",
+    "bytes": 1277
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumBimodalConditionerTest.xml": {
+    "sha256": "6705d6f0901532b28663f3317cd378829efee8ca180ed1e3baa7cbbbd03f5ec7",
+    "bytes": 764
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumBrainBridgeTest.xml": {
+    "sha256": "075a7c3229acba0826bf6ee344c333a5a8217ef63407c8407660ed46ed93aa8b",
+    "bytes": 2791
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumCycleTest.xml": {
+    "sha256": "e60c88516d6ab8436314baee637cc6f39f9748a18132a73159c77d27e7d0a0d3",
+    "bytes": 701
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumTest.xml": {
+    "sha256": "0b5a94689e5375aa75c7c282828da023e28a8f983aa26c031ac64406038a5feb",
+    "bytes": 1323
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest.xml": {
+    "sha256": "f7920266fc39d8230f376fa019dfa1f58b031f1e409e3d2d7f500375bfe9ba82",
+    "bytes": 2827
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumContrastiveGateTest.xml": {
+    "sha256": "0fe3ed98a37219438c98ec338d629ce43d59a9059f707fb1a5bd4782108d31ee",
+    "bytes": 880
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumContrastiveParityTest.xml": {
+    "sha256": "fbcdb6f85ad3d1635ad206da6eb7ebdf0526c94e3bea59be67f8fbde3ba1b393",
+    "bytes": 690
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumContrastiveViewsTest.xml": {
+    "sha256": "87065a47f8b115ade344fcc0b55f019ff5219b1f1f2ed1ed26141fb7eb873191",
+    "bytes": 772
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumDecoderBridgeTest.xml": {
+    "sha256": "701ae5bf85f526cf2058fa409cd790bcb629bbda42ca1b23e2d05437aeefdb17",
+    "bytes": 2785
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumDecoderCoreIntegrationTest.xml": {
+    "sha256": "fdcf23e0e07a30ef65cf382d4320cdc20a2c0d60f798ceaec425b1324cf8006b",
+    "bytes": 511
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumDeviceTeamleaderSchedulerTest.xml": {
+    "sha256": "92853d8e25e35f9bcdc8f28f4854f3bc9d3f5ffcbf5663d72ba0bb9a0aacf158",
+    "bytes": 1010
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumDialogueAuditTest.xml": {
+    "sha256": "2f7a389626e366c4d5aaaa71928c58a42d6349f3fbf06209a90ece193e3ece4c",
+    "bytes": 833
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest.xml": {
+    "sha256": "df4a1d56869525ebee0f2b62779cd5fe127f9e0df3a95123d0d6fb2acd7409ff",
+    "bytes": 2616
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumDualCoreAutoStudyTest.xml": {
+    "sha256": "c35d97631c9ccc0409f0c2504fbf69a50ce5aa44f7cf64f8247921d0d0e73a5c",
+    "bytes": 480
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumEvidenceSpanProbeTest.xml": {
+    "sha256": "255b66f63d22942d5cca2db9d7fae3fae28684e6df6cfb48e9ec3137630d43cc",
+    "bytes": 786
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumEvidenceWindowTest.xml": {
+    "sha256": "8e83142c1d89c2cbc55736d85a75315e0400618fd48364dc2857e7ebfb510fcb",
+    "bytes": 1433
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumExtendedCurriculumTest.xml": {
+    "sha256": "6f8ace6f8b9b6987f20cbbc8ea7968da114bfa3dee017f0ffb3f87738df5a16d",
+    "bytes": 790
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumGermanLongMemEvalHoldoutTest.xml": {
+    "sha256": "8dd902cb3c3c2482b38fa54f15d973308278cf40eb70f4a58e7fc75142a77d0b",
+    "bytes": 8346
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumIdentifierGroundingTest.xml": {
+    "sha256": "da6832238bfc925073395377166159a6e6f383a7677ee641a3020f5be1fcabbf",
+    "bytes": 704
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest.xml": {
+    "sha256": "de5a9c040b21e6c39ba65adc81095cacb96f53bf9cba6e11d90c22d366995fc5",
+    "bytes": 2027
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest.xml": {
+    "sha256": "bba4fc0dc7703f9879289b3258d89927e1761d09aa2b8bbc1695b798892b9158",
+    "bytes": 2913
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumLearningCoreTest.xml": {
+    "sha256": "a29035273e44ce20bc5e7818ad675fecff9e31fa29da1146672ea4925ffbf57c",
+    "bytes": 2858
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumLocalContrastiveProbeTest.xml": {
+    "sha256": "de2b7da4c7f9a8e65368cf94249113ee503c5f5d19466985be1c5b90b56c9280",
+    "bytes": 824
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumMemoryDialogueTest.xml": {
+    "sha256": "130ce5f713a3730a8afe16e49f9286aa245b836465ac128c5c3ffd407613efbb",
+    "bytes": 2913
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumMemoryEventQueueTest.xml": {
+    "sha256": "7cd1bc629ac9ddf802ddea64373cf1ff123945bb36ae379b3ee84e861478dcae",
+    "bytes": 779
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumMemoryLayersTest.xml": {
+    "sha256": "62831fd5d789da519e60eec860cecfb5286dd859590d3fa8cbdeef57507b88fe",
+    "bytes": 1052
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumMemoryStatsTest.xml": {
+    "sha256": "fcae8764397fe2fe0396c5f4fb92fbff54cf15df02289bbbbe232ba1b91bc858",
+    "bytes": 605
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumOfflineLearningBudgetTest.xml": {
+    "sha256": "da06254b7eaed64209ba49d0ea12c5b6038dd0ac97bd93048bc12273657b3c09",
+    "bytes": 1271
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumOpenWebStudyFetchTest.xml": {
+    "sha256": "24eb2c218ead6b8510ae5534d978f20b66210b4e3d8f4de3ac910f5a6fc19ae5",
+    "bytes": 1815
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumOrthographyProbeTest.xml": {
+    "sha256": "8ab24beb37a0aa0dd3f0116491b107c9cef20da792c5d022ae820c9456994595",
+    "bytes": 768
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumOwnerFactTest.xml": {
+    "sha256": "75ac0e5b1c5ac3e29508d6c94ba5fa616e905432b284ea11b3b67ca287c6d143",
+    "bytes": 1362
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumOwnerRoleDialogueTest.xml": {
+    "sha256": "634b22fb429929a7de7c3ac68e11b75bb15cd5217014bc37915dda4cfd1487c6",
+    "bytes": 2137
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumPublicCurriculumTest.xml": {
+    "sha256": "7a7d97a487682646a1a3c1422b86ae208a408458cfde9930004f5bbac3f6a694",
+    "bytes": 955
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumPublicModelPackageTest.xml": {
+    "sha256": "1c75071cc3e23d1c48f2fa0946169572a17005e8b3086095897fe47bc7f2c047",
+    "bytes": 1183
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumPublicStudyCycleResultTest.xml": {
+    "sha256": "14d63fc0758e1b618053da9a133d6026c2898d495c290c11a9c3642c4b775eec",
+    "bytes": 1182
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest.xml": {
+    "sha256": "3c9b45257bc22db6844843bf1a6261865973f2cf794f4953101fcf7a23cd59d8",
+    "bytes": 1737
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumPublicStudyPolicyTest.xml": {
+    "sha256": "7ed4211b1f42398f403418c495b5547cc3a45b6fc786f0ac73e78df164dc8c64",
+    "bytes": 788
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumRetrievalExperimentTest.xml": {
+    "sha256": "e52362e37b16f22ec34a894e2fdf257b56943fa72a009da9c7f8e849746486e1",
+    "bytes": 3144
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumRuntimeEventJournalTest.xml": {
+    "sha256": "04a4ed47ae1ac79ad2dd215a48169f160624e3d212d0bba867ce9124eebc8011",
+    "bytes": 645
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest.xml": {
+    "sha256": "c4f9456c537920dbf728aeb5678fcaa4364ac7b3b9c20915afc1f0bd8cf84063",
+    "bytes": 942
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumSkillLibraryTest.xml": {
+    "sha256": "d8eb893c2ac6d334a0753b462a87d3de8c7bdf587132f19e3e474543d14ead93",
+    "bytes": 1169
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumSourceNoveltyTest.xml": {
+    "sha256": "a5adcceefc3c1c9de309ba4fad3a83ea3fe772ba9ce3e76e01b68dc6841a785f",
+    "bytes": 753
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest.xml": {
+    "sha256": "7ebb3302a49c522e8455f7d34a20a2824d5525368e8b5ddd77298b50a17ba1a3",
+    "bytes": 1266
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumSwb2DecoderResearchTest.xml": {
+    "sha256": "8c0bf1fd2495899f151b71074798c16cd2aa4811e4f465b55af9242e41dea56a",
+    "bytes": 501
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest.xml": {
+    "sha256": "91611a7640b65feb59d8c3f11e3675852f5ed3ea4fe86cea01ee474662f56450",
+    "bytes": 1526
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumTemporalMemoryCacheTest.xml": {
+    "sha256": "c40c4f06306a4f5b9a908e23c07120cf03a5d928bf5e14978d08cf8b4af75b25",
+    "bytes": 1113
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumTemporalMemoryHoldoutTest.xml": {
+    "sha256": "e6c29ccccc9751d89daa6aaad1126be403dfd4a415eaabfac8d312644478b077",
+    "bytes": 553
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumTemporalMemorySpecialistTest.xml": {
+    "sha256": "3960356faf934aa7a1d6d69194edf8d8ef4cfd7311d6838f420cda956c6f44e3",
+    "bytes": 1249
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumTemporalMemoryTest.xml": {
+    "sha256": "657c68c120b9667a50be80b9ee42b623b235937ee39bfc021248aadf1f074b36",
+    "bytes": 3165
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumThinkingMemoryTest.xml": {
+    "sha256": "386b6c0aa6e3ffdbf22faf4312354ab277ae835aa8f5ad0b9cd92e86d250e52d",
+    "bytes": 908
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ContinuumTopicFrontierTest.xml": {
+    "sha256": "9ca2b34d1c8f4dd226c926fc9bfab1401f7dc3eddb8c0fbae2208ea9e48bb7aa",
+    "bytes": 971
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.Cre1FrozenBenchmarkTest.xml": {
+    "sha256": "d190b31ff07d14bb998063069193b1d69197d92e098a39276a7e99ad34aecb02",
+    "bytes": 788
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.Cre1InferenceEncoderTest.xml": {
+    "sha256": "3b3f4f91e08e9bdd5b48791f5da867d27a80f4bcfc14e12e2d0c527fee2b79a2",
+    "bytes": 634
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.Cre1PromotionAuditTest.xml": {
+    "sha256": "731fcad879d9a6e623b6cb3f589271b74e31f2dbc30bc96887e65c5879a417d5",
+    "bytes": 1110
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.Cre1PromotionGateTest.xml": {
+    "sha256": "27b57e726b6f3ba57cccf2748338be2ec1442107d687ff3c93b22c3acba3055e",
+    "bytes": 1216
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.Cre1ResearchLabTest.xml": {
+    "sha256": "07370131a5cc8d1081430f90ce1ac7d55903e5873aa4b1b3c2192acfd3828c5c",
+    "bytes": 1090
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.DecoderGenerativeGateTest.xml": {
+    "sha256": "5cc732f99ed8b07b38fc733102777693ce85f46c45945eee20c95af11d0e8a85",
+    "bytes": 1096
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.DecoderGenerativePromotionTest.xml": {
+    "sha256": "a3abe2847da126996540df0efe92ab67fe28b348d686309c4a576cc3d5c6ee70",
+    "bytes": 834
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.HistoricalLearningLedgerTest.xml": {
+    "sha256": "f04abd35bf26e1355222aefbb5cbba0e324861843f718ee4d61bb51ad37f651b",
+    "bytes": 1160
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.KnowledgeDialogueTest.xml": {
+    "sha256": "5e5391d17667568d3d49ed7801e72dd57237130c88b6c1cebef3c74d4ea30b71",
+    "bytes": 486
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.KnowledgeReasoningTest.xml": {
+    "sha256": "3e1880ddcd2fe1e65c3de67bf4b0e4063f29e3f425df30d5fffccc9707d1d838",
+    "bytes": 1064
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.LearningExperienceReplayCacheTest.xml": {
+    "sha256": "419c6af6fa1219aae05525ccdf22e23ab274c10fa13e95ca9044e61f98d7de8d",
+    "bytes": 1974
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.LearningExperienceStoreTest.xml": {
+    "sha256": "70d492a4e53d07312f5f195689d85570aeef1daba5a4cdad95d9c66f50234aff",
+    "bytes": 929
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.LearningIntegrationTest.xml": {
+    "sha256": "e266b557d05dfd0c1aee922cb9d9a2370fc95f03705b414af1036296987345e3",
+    "bytes": 652
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.xml": {
+    "sha256": "75665b25d363d7c9c50cfe5f72067f0d333be351d7fe58892b2ff080c8046d45",
+    "bytes": 3706
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.MentorConceptNetworkTest.xml": {
+    "sha256": "3ee25719e5e90f523c6901b403b55f177fbf807cc87dc9cc79abe1d2ff5469f8",
+    "bytes": 923
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.MentorCuriosityPlannerTest.xml": {
+    "sha256": "5479ea71bbc1066a05b3272ffc12c9e3f7a86b58cad36f95e9f735b1c3f7d49d",
+    "bytes": 896
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.MentorCurriculumTest.xml": {
+    "sha256": "983b0c2e27d2fc3516e8b560908515398106bd24fb8c94c22e99cf4b91262e70",
+    "bytes": 592
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.MentorRecallTest.xml": {
+    "sha256": "6ac9c6588e4c4129958c5e7b1db4c8d9ec293b4cb567d1fa6da59759adbde587",
+    "bytes": 588
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.MentorSemanticModelTest.xml": {
+    "sha256": "c15b94a315ab860af909be6d0afda2bb4542340b26ca39ace77c4e8a6e545a0a",
+    "bytes": 903
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.ModelCheckpointStoreTest.xml": {
+    "sha256": "5b1df6e8657ba00eb7157f6a6a86172145a80bf791bf4052ee7537e4f4bc3323",
+    "bytes": 1627
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.NeuralCommandParserTest.xml": {
+    "sha256": "558fa97d2b16771fbc27f26381a8b10e29522be6e588456a5accb98b7696c580",
+    "bytes": 475
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.NeuralCuriosityRadarTest.xml": {
+    "sha256": "673f883b76ced1464f9fc254da33c90e86312407e98e7e4eab5e7a4afffe4929",
+    "bytes": 638
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.NeuralDemoSandboxTest.xml": {
+    "sha256": "49036a6a41b6a6e9bdd155c562c81f364a149d9dbe6d5db8a7a1523f21a814bc",
+    "bytes": 771
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.NeuralDialogueTest.xml": {
+    "sha256": "dea7971d25362e93324818fd4d6df8fe6e89456dbcac57cabbafec6ee57657f3",
+    "bytes": 1382
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.NeuralGeneralizationComparisonTest.xml": {
+    "sha256": "4d9e204d77332a6a238b2ca53f22bdb9ebd85bce5fa8bf526b6f1d2a9e58fdbb",
+    "bytes": 1012
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.NeuralGradientTest.xml": {
+    "sha256": "270fd04e0fc50c300b867ac59a241a805dab9e0d6753f45f6b36ca3f4bf2baa0",
+    "bytes": 614
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.NeuralLearningCoachTest.xml": {
+    "sha256": "0f5e3e7bd59a89c37d20662506708998f68e655f10e4e076fcd94812d146e629",
+    "bytes": 1042
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.NeuralPracticeTest.xml": {
+    "sha256": "54c8bd34a835b6773eb2244889f660d1c56180f9fb9ff99c016f6cdfa1968996",
+    "bytes": 1157
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.NeuralSnapshotImportTest.xml": {
+    "sha256": "5fbcf5b5f25505017a2a43f816a5f5775d635de998c7ab9fe67af9ce0b6fa96e",
+    "bytes": 806
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.NeuralTeachingAuditTest.xml": {
+    "sha256": "58e030aea988e87ae54d8c8d7d21124700dbe2827b113eacd1c1667604adaeb9",
+    "bytes": 1076
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.NeuralTransferExperimentTest.xml": {
+    "sha256": "ea6806fce7fb5ff08fa786d10342fdf2d4d6d07c6bc46e4ef0c9e0f036736ce7",
+    "bytes": 836
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OnlineNaiveBayesTest.xml": {
+    "sha256": "7516b9a9ee6614d7defdf42da319b003fb03f0771e25c3673a7e3c3fc34d7c77",
+    "bytes": 617
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerFamilyAgeScopeTest.xml": {
+    "sha256": "1dc6ae6bed0e1d59ae7dee01fc233f5f9d73d18cd8e3af47c621ecce0a9d47a2",
+    "bytes": 907
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerHypotheticalGateTest.xml": {
+    "sha256": "68cb1c77a704d9a88e2ef2c7518aeef96d850150943fceb884ffd4e46ceac7be",
+    "bytes": 1059
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerLocationRevisionBarrierTest.xml": {
+    "sha256": "81d7ef61d599dd5aacf69caf8e1fb87ca1cdfe458caca64a7afc0be2d41d177b",
+    "bytes": 1011
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest.xml": {
+    "sha256": "4be95330840de760154e1c33181c8d9177797335fb6b8c7dd55fb02a2d4e5619",
+    "bytes": 1608
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerMemoryLocationSpecialistTest.xml": {
+    "sha256": "85af08bbf87053bff1329b96af5948bce08aac3c72a1c81aa9cc14991cee4984",
+    "bytes": 1009
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerMemoryPerspectiveTest.xml": {
+    "sha256": "a9c74d3a416a88dfa5c6b287d0fe60ebe04b60150eccf39fcd8b3b120f3a8732",
+    "bytes": 786
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerMemoryRecoveryDialogTest.xml": {
+    "sha256": "f1f36fe6344349a0ac36ed3adcd549cc0122d66c2012171badb065f585e6e108",
+    "bytes": 1292
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerMemoryRecoverySafetyTest.xml": {
+    "sha256": "f84868b089dc96c2c16df9c588e7720162ea09c3f9080769a40ca043533cfb93",
+    "bytes": 2384
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerMemoryRecoveryTest.xml": {
+    "sha256": "a4c351ac4484f8190287b5bb78780ec24fd476628c2f6ddd6470b003a2b5d129",
+    "bytes": 644
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerRecoveryDialogDecisionTest.xml": {
+    "sha256": "8e4c8c7995bf8d9e5685ef7e5c6431d5e20bee997cfa69b3705c5a86cceec769",
+    "bytes": 1563
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerRecoveryHistoricalImportTest.xml": {
+    "sha256": "2833be866cf0105c08f8d943c00a9c6df4a86b81cd6b1e85b67c0f730323d455",
+    "bytes": 869
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.OwnerStatementModalityTest.xml": {
+    "sha256": "9b9727ce1fc2d4e5f3b2b2924dd781a690fe3181a7eb9f68d12645e0a475cbc0",
+    "bytes": 1434
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.PersonalLearningTransferTest.xml": {
+    "sha256": "481e657a49ec8a2b40e969221d711682ac7a7d7cff29b5fdc8a9a07f270fcb0a",
+    "bytes": 2246
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.RetrievalBenchmarkTest.xml": {
+    "sha256": "416e99bef1a8595e6c3628b362ede2acd8cb7f451802a7c8a64a45d3f0966185",
+    "bytes": 764
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.SignedOwnerCorrectionJournalTest.xml": {
+    "sha256": "692c7170079f66a61902184b1d1af4fe2d59852e3264884ebf122fd313866f89",
+    "bytes": 1227
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.StrictJsonTest.xml": {
+    "sha256": "7b4993b563bbde0defa61799693c06fd569ac7857f10e0006ab224a98b808899",
+    "bytes": 1008
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.Swb2ExperimentalEncoderTest.xml": {
+    "sha256": "1b06fc551a518f9a9148235888fe0c58f47a65c84f7164199e5d5888ebe0dd7c",
+    "bytes": 480
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.TemporalCueCalendarTest.xml": {
+    "sha256": "2a5337507328e2d700904901b7e397e7abd9b343e44a03aed0b1c3390ad83e37",
+    "bytes": 2594
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.xml": {
+    "sha256": "47c2c5f58f49f7b5c9176d9b3a8eabdcc04fb6bc9cb491a02e160846bbd6f807",
+    "bytes": 2208
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.TinyContextDecoderTest.xml": {
+    "sha256": "23b102ab7e37e5ef6bcf7acc17331ed46a69d01418ef3d9bbcd3e31270737f22",
+    "bytes": 1255
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.TinyNeuralNetworkTest.xml": {
+    "sha256": "617ec4b3e3669f1d56ed6fbc734dd36788ed805a3c3154fe1357cf9fdc827533",
+    "bytes": 1001
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.TrainableSubwordEncoderTest.xml": {
+    "sha256": "eff1e821f5de5721d7e76abaff29c4a35aa795d85ef439eaf2adbe733f00467c",
+    "bytes": 943
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest.xml": {
+    "sha256": "29ca9f7b9efa3e3a9c60348904f329ece664a8bac506321f61824475f6713366",
+    "bytes": 685
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.interactive.ResearchFeedbackTest.xml": {
+    "sha256": "58395cfb3170e96b9cf5fa673f39ec059b7d8c0044fc0d73d480f0afe6a422f6",
+    "bytes": 985
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.lm.LmCoreTest.xml": {
+    "sha256": "1b497fe792c99974a66a4da1b36b0b663fefe50bf21fee2cae223b2e9f6b294f",
+    "bytes": 1237
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.lm.LmRuntimeTest.xml": {
+    "sha256": "09ba8656ba9c5532e6439f379debf3f909cca73dc20f6c4cc21b31783e78f8a1",
+    "bytes": 1026
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.lm.LmSamplingTest.xml": {
+    "sha256": "194a08f4dd6d00a4450a40a373897df10505c2c4d6dd8b7a48abcb7c4a968457",
+    "bytes": 1047
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.lm.LmStep7Test.xml": {
+    "sha256": "714bad073f59ffbf70674d949dfb3ab6b20ce4819800cccbb04b4ab5bd014888",
+    "bytes": 1280
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.nf.NfCoreTest.xml": {
+    "sha256": "b3c2b01daeb31f9fa681aef9523dcb94317e454830f769f4eea378184b9dab53",
+    "bytes": 1189
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.nf.NfHybridTest.xml": {
+    "sha256": "a906c94070bc60f9b96196e62e090eeae397c97975fa0d3b167c9813e237c14d",
+    "bytes": 935
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.nf.NfResidualTest.xml": {
+    "sha256": "7f0f4bdfcca5a172f617ddf7a7538b0f1ef9e84042f46af4639d9c948121321f",
+    "bytes": 1568
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest.xml": {
+    "sha256": "f10db188665b737cb635c9fef5c71857b8031751c7794495995395c6c225a58f",
+    "bytes": 1107
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreSpanTest.xml": {
+    "sha256": "586ae1d3dc6b22eaf64df801931e349892e6b05dba2e7fcbb4a4746fb6b2eb7f",
+    "bytes": 678
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest.xml": {
+    "sha256": "1b20a7761257793604b537903d905b93083e093bd98ef1e874ca853028005940",
+    "bytes": 1258
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest.xml": {
+    "sha256": "6cfdbc06a19a4bb8de2265178359d6792724d2ef992a1a330a08eae54afeea6c",
+    "bytes": 1171
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest.xml": {
+    "sha256": "4f09d94135346424c41546cf162e4b5c01710deaf370ef2be6deaf5ffa57cd87",
+    "bytes": 1776
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest.xml": {
+    "sha256": "89335baccfb1959da728cc83e70679049050adbc023fcfd1eaa08b9dd6c38056",
+    "bytes": 965
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.DualEvidenceReadContractTest.xml": {
+    "sha256": "2a8bf5157f7ff8d0155bde87fcb1603660f3c582d46b3842015670ace41522fd",
+    "bytes": 856
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.EvidenceBoundNaturalLocationProbeTest.xml": {
+    "sha256": "79fa2ab6e4c79495c0d306b344a419364bc0b6dce3fd65642d73561bf85cb117",
+    "bytes": 1303
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest.xml": {
+    "sha256": "e667176eed89f137cc4cda1dc7da5919d432c72020c9843b5e570ed1db5c034c",
+    "bytes": 1013
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.NaturalEntitySpanCoreTest.xml": {
+    "sha256": "c0014f3c380c5a54243deddb1e4b6eabb73e770822c932b90c6f7bcc4580734e",
+    "bytes": 518
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.NaturalLocationLabComparisonTest.xml": {
+    "sha256": "ef405547a6d4822a3930c5780767d0ecc513d8eeb90895c037531fa82e3146fb",
+    "bytes": 841
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.NaturalLocationVerificationTest.xml": {
+    "sha256": "3df04e91079d30879c7c3e6e1408578d808b23b4665702ca33449626e45a51d6",
+    "bytes": 1369
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.learning.span.RoleAwareShadowTest.xml": {
+    "sha256": "9673489c5a37c2eb52c8006104cfa1cc412f58ca3a85cdfeed614bd2f8efa16f",
+    "bytes": 976
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalConversationBoundaryTest.xml": {
+    "sha256": "df84253cb3fa555e7734bca6467e9a564dc72047f10530f4ebe15cc0075dbada",
+    "bytes": 1041
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalInferenceDeliveryTest.xml": {
+    "sha256": "73263c9fe69ec64e8b113b287494a7047f4d4874144eac6199e52b86b5f294f9",
+    "bytes": 661
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalInferenceProfileTest.xml": {
+    "sha256": "108f049e2488dc88503df1933d3bff3bac8b41d78d7fbe40a4af138fdf00ef53",
+    "bytes": 1479
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalModelCatalogTest.xml": {
+    "sha256": "8b42e0210103c1041f7a74dee48edebf98b086726c958c1165cb9c34f99a2052",
+    "bytes": 1144
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalModelGenerationPolicyTest.xml": {
+    "sha256": "bc94b2b88c6a5ca5c4ca226a8c97066f44cb9c54c7f28bf02114f609b07477b7",
+    "bytes": 796
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalModelImportCoordinatorTest.xml": {
+    "sha256": "b9e1b10bacc5ed609dc937f5b2969434c3c8cd3372a4196b3c502bb9070d47a8",
+    "bytes": 1059
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalModelImportProgressTest.xml": {
+    "sha256": "20c7b08d15efae06081c9a6bd878cfdab4ab25a4560eb87a2ff8b72cbfb265f5",
+    "bytes": 1662
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalModelImportStreamTest.xml": {
+    "sha256": "6131ee3063c89c7a8898931c2827e08d1b580dd750c29ab083aae37ce61c8234",
+    "bytes": 1698
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalModelLifecycleFakeRuntimeTest.xml": {
+    "sha256": "2c5f083a15b1d60a4b736ebde50f53e7decf735fa4b3b35897d67c9f8f990896",
+    "bytes": 508
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest.xml": {
+    "sha256": "307c1c439ea7d527a2f592eba2679f9bbd24e364981e716d88e7fbe51004cea6",
+    "bytes": 1229
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest.xml": {
+    "sha256": "d14a3427ca3981fbeb3bf83b699b34ae4b211267931e1fb8d7d23fbafc575c86",
+    "bytes": 720
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalQwenPromptPolicyTest.xml": {
+    "sha256": "7b0b05e254578c57fc372fb17ba2d805b0927814f14c7c3464f68843fc744ddc",
+    "bytes": 1092
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalToolContinuationTest.xml": {
+    "sha256": "a79583a118ca7bac46dddb72ff3955a6390e5ac812d182d6aa32e734d96349a5",
+    "bytes": 2550
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalToolTurnGateTest.xml": {
+    "sha256": "39fda3df05b4cada9746050a986846998c6fe15a50d7c1d5e3567a854418f66c",
+    "bytes": 853
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.localmodel.LocalTurnModelBindingTest.xml": {
+    "sha256": "4de03af22801e680cbe4e1734536cd31d9c262b93e138cfad7c2e7cf856001fa",
+    "bytes": 595
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.motion.LipSyncFaceSourceTest.xml": {
+    "sha256": "0bc470713a532aefdb91528c878aa2efb159d15755e9de7ff364c710ad37f749",
+    "bytes": 1443
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.motion.MotionCurvesTest.xml": {
+    "sha256": "3825fb313e57d6e2f87530063dffcd2d22a3d150bf9ba525b15fb4f6bf2af98e",
+    "bytes": 1552
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.motion.MotionLibraryTest.xml": {
+    "sha256": "9b2ea7dbe872fcdb1fa8ee4f4bfbb8eaf6925d4dad9b945a81391bcf2cbc75f8",
+    "bytes": 568
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.research.neuro.ReviewedEvidenceGraphTest.xml": {
+    "sha256": "52c3e659ba39ea6ca21d019dd6582fb1104edad8b7f550a8f2991b157ccbaffc",
+    "bytes": 1923
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.research.neuro.TemporalNeuralShadowTest.xml": {
+    "sha256": "635dfb9cd97200104393dec4d2cccb7b1dbe6bf4aa3138238ae70e95cb6a04a8",
+    "bytes": 1150
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.routines.ContinuumRoutinesTest.xml": {
+    "sha256": "588dc25d0a0c6ed9aa4ad7a3afa379617da38a5cd48839a3a00f5f7c5bf92cd6",
+    "bytes": 1614
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.routines.RoutineBookAdmissionTest.xml": {
+    "sha256": "23685610b04425cbc279ffe316f92a551395291a6eeb3a0dcef10af293569a5f",
+    "bytes": 773
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.BrainOrbSignalsTest.xml": {
+    "sha256": "418287f62f286a34f016c2c99261cff2258ee174bf07462dd76e23d4286fe738",
+    "bytes": 938
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.CognitiveWorkPresentationTest.xml": {
+    "sha256": "87a8ddf5cf9de1b2b8473532ac6a3608bba0be737e8996c53557d7e299175459",
+    "bytes": 870
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest.xml": {
+    "sha256": "27488a78980505bf3df3540cf3694e1ac6d173ee814e5d0327ce72c03c90defa",
+    "bytes": 820
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumCockpitLiveStatusTest.xml": {
+    "sha256": "c53511e068981a3496c554e7823d26bbca00385eeb0fb0c60a3740b792e605c3",
+    "bytes": 473
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumCockpitMemoryTest.xml": {
+    "sha256": "b47fbeac63d28b4a80cc126e27a35e3a9a6ddc15f926b10941481dcc0ae526db",
+    "bytes": 618
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumCockpitPresentationTest.xml": {
+    "sha256": "c3a3255403b517585ea1e9ad42a11b68da9e5d23820956687b9913d645dfab2a",
+    "bytes": 1050
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumControlsTest.xml": {
+    "sha256": "152008577260a5c465adf4768927defabf982a8a19241168be501b633e9ff413",
+    "bytes": 1806
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumCoreMirrorTest.xml": {
+    "sha256": "63ff1e2a9a0735dd26e26ca3ef8648e967ee7367e6eb714df7cdd9e031109c23",
+    "bytes": 1193
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumDashboardMathTest.xml": {
+    "sha256": "d6e69935088cc1c3f4e1b6a459f70e4606ca12b80f0d13746034b4b196d1b0e3",
+    "bytes": 1009
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumGridPolicyTest.xml": {
+    "sha256": "3b6829adf93316c98f1d4b8eb8a787ae83c430b19eb7ad243f03af63d1309b23",
+    "bytes": 597
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumHologramPlexusTest.xml": {
+    "sha256": "d5ce5b3c1ed047cd704ceb53b46c0d84a63e1e82d0d8c632a3014bb7b6ba072e",
+    "bytes": 1019
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumHomeLayoutTest.xml": {
+    "sha256": "3186c304c98ccb270a33f1fc402bdf584583a1f31b6301c926ce6ed655031391",
+    "bytes": 1183
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest.xml": {
+    "sha256": "960c6144fbe458eabb2114cc81fc408125abead496c9ba71229a1b0d14ee0b40",
+    "bytes": 942
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest.xml": {
+    "sha256": "305920d348efa11c8af2eed1643e676d828befb7c86a9120cbeda06a7797630f",
+    "bytes": 756
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumOrbitalRingTest.xml": {
+    "sha256": "adbd4972d9911ef082edd1fe6c6f80830a392f6151582a6e18f1b4f50d3cbec6",
+    "bytes": 635
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumReferenceCockpitLayoutTest.xml": {
+    "sha256": "8ad5df3f473b36a29deb833c754d7b3711fb3f109c41f5472c621ccaf1807b91",
+    "bytes": 1296
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumSystemStatusFieldsTest.xml": {
+    "sha256": "9635018da20c3963331cf7da53dcc171106d61071bb4818e461d9317e849dd5a",
+    "bytes": 596
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.ContinuumTaskEffectsTest.xml": {
+    "sha256": "5f7037b3aa1e522aa17bfdf351bae7c56663f136d8d9ab455e1dbf847e88c297",
+    "bytes": 1458
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisCockpitGridTest.xml": {
+    "sha256": "f554b359fc85d9db83f0b82f1249b3e7ce955260681964e2eeda4cff253ed6ee",
+    "bytes": 1215
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisDepthViewsUiTest.xml": {
+    "sha256": "5ad63de28245808e0a5398e58adf3870820b57031fa9cb4c8ff3a09674fd739f",
+    "bytes": 450
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisExternalRailLayoutTest.xml": {
+    "sha256": "5dab7c64568ddfcc0ba9e8dd0bae1daaab2fa7d42ce1d280f3846b5751140f45",
+    "bytes": 789
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisLivePanelsRegressionTest.xml": {
+    "sha256": "56f851a31e064dc31cec89fbd9184436723ea9bef58241d612d69480c0cde53a",
+    "bytes": 1087
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisMemoryActivityPanelTest.xml": {
+    "sha256": "61d8d7fa34a84c9203cbf0baf02cb3be5ad438c0ac559521d83e452d42323a15",
+    "bytes": 701
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisMemorySignalWiringUiTest.xml": {
+    "sha256": "9fb3ae381f156ba30e86938df27812303628bfd322e912282e67983594898df6",
+    "bytes": 1114
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisMenuMotionTest.xml": {
+    "sha256": "f9f1c6dfc0d556d3d4323cbe30600228f908e98495e6a6ee4def36895887a057",
+    "bytes": 847
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisMenuNavigationTest.xml": {
+    "sha256": "03f4fa1b86d13bb9db8cde5670e09d549037ee797b9596cacbde6a7c78adefad",
+    "bytes": 1921
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisMotionTest.xml": {
+    "sha256": "6ab932197eba124e130f844f1e4f5a23775e8ff2d78c699e1caf74acb144b246",
+    "bytes": 1826
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisOwnerCardContentTest.xml": {
+    "sha256": "d39a9904d67a17f6668de6eac2ff6fb5e044308f68d3366926d607a7ad94ca81",
+    "bytes": 761
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisPresentationPolicyTest.xml": {
+    "sha256": "e8770fc6915c39ee9bd66ae845a958495a68395a318d0a7ee6355ec0e7aa9bb9",
+    "bytes": 1237
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisReferenceDialogReadabilityTest.xml": {
+    "sha256": "867291713e913017661ca1cdc5b9ca79d7efdd0ec71336b433d06da99d820b8d",
+    "bytes": 508
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisReferenceWindowLayoutTest.xml": {
+    "sha256": "53d7038195d00d43fdcc7258603aa4300fb8df6c45f237f5697f47e0e1f220f2",
+    "bytes": 2200
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisRenderQualityTest.xml": {
+    "sha256": "0be868231282f4b4d3fc5b9639f5e579626195078b7437e21129c353e99a0388",
+    "bytes": 909
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisSequenceEffectsUiTest.xml": {
+    "sha256": "97dda35784a29ada11247ca5414607517c95529cc7c7882f30334be341b5842a",
+    "bytes": 475
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisSequenceFgdTest.xml": {
+    "sha256": "6522399e48fa020382d17c31793e85443223e8a5b24221e8cbc96273877c9959",
+    "bytes": 1371
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.xml": {
+    "sha256": "b1255399a97633da4e0d4b3971c4977b72a23113480b9dd4c020768e216a0420",
+    "bytes": 4091
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisSequenceViewDockingUiTest.xml": {
+    "sha256": "51240a607a01fb8d74086d088afe5f61a66b73cb2b4cadeb51e1ce546fa4032a",
+    "bytes": 487
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisShellContentTest.xml": {
+    "sha256": "5a992eb8d0ddfa0363eb44916e0a5a897f44b8f33928da650ca91109c7135fdb",
+    "bytes": 869
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisShellLayoutTest.xml": {
+    "sha256": "ead68bfe932e070e7c83d4cffbb722e336a826981a22bed9359b6e8641a33f6a",
+    "bytes": 1419
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.JarvisTextScalePainterTest.xml": {
+    "sha256": "3e811a7c96e2fcabaeba1904c351c45f7e767597da6e25f69a7c9d7b0b7ea5f6",
+    "bytes": 624
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.LocalModelStatusPresentationTest.xml": {
+    "sha256": "67f19ba0292912531d2d5f05ca8b87f66243de7b61f0f76148ab3bc3191d1cb3",
+    "bytes": 990
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.RidgeChartTest.xml": {
+    "sha256": "2111b1b644ae42161929b0dde7c439820f3896fe79fa383df26f5fda736022ef",
+    "bytes": 690
+  },
+  "android-canonical/xml/TEST-at.heinz.deviceai.ui.WaveChartMarkerTest.xml": {
+    "sha256": "3edd832a175fde8b400af3b80080a69671da6ec758e8e15c87f0b201cc6821db",
+    "bytes": 570
+  },
+  "node-final/critical/android-source-contracts.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "node-final/critical/android-source-contracts.xml": {
+    "sha256": "b78d0503641c95643ac7706da27dcf68d8066f419d962cf7b1655b8768ffc2e8",
+    "bytes": 15445
+  },
+  "node-final/critical/host-checker.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "node-final/critical/host-checker.xml": {
+    "sha256": "787b68f9e9716f7b57b17db29059119539b736b337acec188e1d2467145d8c98",
+    "bytes": 708
+  },
+  "node-final/critical/process.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "node-final/critical/process.xml": {
+    "sha256": "ea7b116d5e81a76a5c0290f88c2722148430a4f31ceaa6385eb7a358543d9d12",
+    "bytes": 8771
+  },
+  "node-final/critical/report.json": {
+    "sha256": "c43239e40d59d413e961ff9dd65f867f76fc0865e13a789aa40b1075a0797a24",
+    "bytes": 2125013
+  },
+  "node-final/critical/report.md": {
+    "sha256": "b266879f93fdee250b464932eb37072d2be939beb438029b963fc7d0d2e2b6e9",
+    "bytes": 1014
+  },
+  "node-final/critical/storage-agent.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "node-final/critical/storage-agent.xml": {
+    "sha256": "51755df9266bd873c01d78145c4f918b0a10981f8234ec0d6f2c1228d726f681",
+    "bytes": 8077
+  },
+  "node-final/critical-runner.txt": {
+    "sha256": "326407b026eda56ccdae4f6d797651569b5f22519cc33d4619a3bdafe4fe0fcf",
+    "bytes": 86
+  },
+  "node-final/full-node/full-node.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "node-final/full-node/full-node.xml": {
+    "sha256": "849736e0bc4f1d0665bbae78aed3c3f6d88d48d7a546fedcc267ac5c4156a6a1",
+    "bytes": 563205
+  },
+  "node-final/full-node/report.json": {
+    "sha256": "37d08d0139a84b5dc19308523a3fccf0345ba4ea45c03e83e30ccc49e745edbb",
+    "bytes": 2316222
+  },
+  "node-final/full-node/report.md": {
+    "sha256": "3d7c505db2ba0b01a3cf6f527bd88e943ce435f5d98e394071a6959a33aeaa77",
+    "bytes": 870
+  },
+  "node-final/full-node-runner.txt": {
+    "sha256": "7f2450979c7859addcefc238c8dbd9d3e7a349c7b4ad92e3b351be2cd2569548",
+    "bytes": 87
+  },
+  "node-final/kotlin-version.txt": {
+    "sha256": "7d43aace8ff8790655bbaebb1799ca5b79bec132c851cc22e77e302b41bdd163",
+    "bytes": 42
+  },
+  "node-final/result.json": {
+    "sha256": "472d4bba040607235ed0acded30032d938703649de6fef73c53faae8592185a7",
+    "bytes": 1230
+  },
+  "node-final/run_node_gates.py": {
+    "sha256": "4fb0444578fb2946fb48fdea09994afd1660b701fe3a37d00c3ab5952ac1e61e",
+    "bytes": 2450
+  },
+  "archive_gate.py": {
+    "sha256": "d1dc0fab5466335283a3a7ddb7aa846b938197f95407119514b9f40fcb644633",
+    "bytes": 5253
+  }
+}

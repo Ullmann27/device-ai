@@ -1,0 +1,60 @@
+{
+  "schema": "completed-connections-bots-source-provenance-v1",
+  "sourceRepository": "Ullmann27/device-ai",
+  "sourcePullRequest": 516,
+  "sourceCommit": "2cd6381f924019c044f3c265b461012b08082222",
+  "sourceTree": "80cc6628c5a69a851915621af4e2ebd2ec4fb80e",
+  "integrationCommit": "c79486eb49d2ca5273956a161c6e3732ddfd5672",
+  "retrieval": "Exact git fetch from verified /workspace/scratch/8f5df1fd155a/continuum-internal-bot-training",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumBotRosterDialog.kt",
+      "sourceBlob": "900693c0cb22cd339ddd49bde56512e8717b0688",
+      "integratedBlob": "900693c0cb22cd339ddd49bde56512e8717b0688"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefAvatarPracticeCurriculum.kt",
+      "sourceBlob": "99a641489d384280b1daa3dea90f70680545fa03",
+      "integratedBlob": "99a641489d384280b1daa3dea90f70680545fa03"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt",
+      "sourceBlob": "6dc2eb0bdce0a79af6502afe99bd4a70cb09a028",
+      "integratedBlob": "6dc2eb0bdce0a79af6502afe99bd4a70cb09a028"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotPractice.kt",
+      "sourceBlob": "6dc65ca39618d75508f72bff23626a55501d7a23",
+      "integratedBlob": "6dc65ca39618d75508f72bff23626a55501d7a23"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefEngineeringPracticeCurriculum.kt",
+      "sourceBlob": "25539602965254ae0bfd767dd879967d19c380c5",
+      "integratedBlob": "25539602965254ae0bfd767dd879967d19c380c5"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefAvatarPracticeCurriculumTest.kt",
+      "sourceBlob": "8769bd5fb7ae24e59dd9ab087fcc40452e771f74",
+      "integratedBlob": "8769bd5fb7ae24e59dd9ab087fcc40452e771f74"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefBotPracticeConversationTest.kt",
+      "sourceBlob": "606b78567c9fb3097b207c2b0a589c0839dbbd15",
+      "integratedBlob": "606b78567c9fb3097b207c2b0a589c0839dbbd15"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefBotPracticeTest.kt",
+      "sourceBlob": "ea64ce3af218fb238aa330418a98b7ea86d20953",
+      "integratedBlob": "ea64ce3af218fb238aa330418a98b7ea86d20953"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefEngineeringPracticeCurriculumTest.kt",
+      "sourceBlob": "94eb7474388170129c0b3335f823236732864498",
+      "integratedBlob": "94eb7474388170129c0b3335f823236732864498"
+    }
+  ],
+  "sharedActivity": "Parent integrates Activity separately; untouched in worker",
+  "gradleExecutedByWorker": false,
+  "historicalSourceTestCount": 70,
+  "historicalResultIsNewIntegrationTest": false
+}

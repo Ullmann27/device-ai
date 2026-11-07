@@ -1,0 +1,36 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "sourceCommit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "versionCode": 48,
+  "versionName": "0.3.47",
+  "serviceId": "srv-dbf1tr2vcj2c73ehpfog",
+  "workspaceId": "tea-d7qe6dosfn5c73e2rnag",
+  "branch": "research/continuum-m8-render-signed-release-20261031",
+  "expectedBranchHead": "7732b8668f912419d7aac7a1609a97097d727cbf",
+  "forcePush": false,
+  "autoDeployObserved": "no",
+  "envMergeOnly": true,
+  "publicEnvUpdates": {
+    "CONTINUUM_RELEASE_FREEZE_LIFTED_BY_OWNER": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "CONTINUUM_RELEASE_APPROVED_SHA": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "CONTINUUM_RELEASE_VERSION_CODE": "48"
+  },
+  "requiresBeforeExecution": [
+    "All final local gates and artifact checks completed",
+    "Exact source owner signing/publication approval",
+    "Fresh service, branch lease and live catalog readback"
+  ],
+  "afterApproval": [
+    "Fast-forward release branch only after fresh expected-SHA comparison",
+    "Merge only listed public environment fields, preserving private publisher signing material",
+    "Inspect queued deployments before any explicit trigger; avoid duplicate deployment",
+    "Monitor exact deployment and source, verify full QA, original signature and actual served binary/catalog"
+  ],
+  "privateSigningMaterialReadOrExport": false,
+  "deviceInstallation": "NOT_AUTHORIZED_BY_THIS_PLAN",
+  "mutationsPerformed": [],
+  "connectorExpectedShaGuardRequired": true,
+  "atomicCompareAndSwapClaimed": false,
+  "refUpdateGuard": "Fresh expected-SHA read and connector expected_sha check, force=false; no atomic REST compare-and-swap guarantee claimed.",
+  "documentationScope": "Owner-update-channel document contains historical Code38 wording; current Code39+ dispatcher and exact Code48 gate source were separately read. No previous-version approval authorizes this source."
+}

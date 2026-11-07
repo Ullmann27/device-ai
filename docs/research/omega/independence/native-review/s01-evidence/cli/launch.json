@@ -1,0 +1,37 @@
+{
+  "source": "/workspace/independence-final-source",
+  "sourceSha": "8fd58d00c53c6c2257a102922243f413afb6bac1",
+  "fixture": {
+    "schema": "independence-s01-materialization-v1",
+    "repository": "/workspace/independence-s01-experiment/fixture",
+    "commit": "866678a7ac757b734276d8cf857c5b4d6d4afb41",
+    "tree": "cf49e839c1534c938ff43814161d92a751845016",
+    "status": "",
+    "freezeManifestSha256": "0b20c64e441b40d50a659c7dd231f9215138b5e1451a4b4dfce581b5abb0fd27",
+    "sourceSha256": "6a7234f12a390636bca6ef61a981ffb78f6e1ea4d909472a1a3d2c079cb5333b",
+    "ownerTestSha256": "c7add227a67e4ff0a638397780180aa123d1caa425af65a479d12e63cef1c965",
+    "independentTestSha256": "87d59c6ba8fbea1e6becd1106fb3f12997d03671a1ed3c573848155915f71432",
+    "testTransformation": "Only relative import from ./subject.mjs to ../../lib/subject.mjs",
+    "independentTestsInOwnerRepository": false,
+    "modelCalls": 0
+  },
+  "typedTaskSha256": "97b36f35948882c5b52118a2771f3d59d3ef002a798388e84dd6987f23d8bc42",
+  "driverSha256": "ec8cd05852e114504f854964473f27492aed9c75e7524bc20dea4f371b23aa5e",
+  "classpathFile": "/workspace/independence-profile-aa52e7e6/runtime-classpath.txt",
+  "classpath": "/workspace/independence-profile-aa52e7e6/classes:/workspace/synapse-ui-candidate/app/build/tmp/kotlin-classes/debug:/workspace/continuum-build-env/native-graph-deps/json-20240303.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlinx-coroutines-core-jvm-1.8.0.jar",
+  "approvedArtifacts": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": {
+      "path": "/workspace/synapse-local-model/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+      "sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "bytes": 1117320768
+    },
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": {
+      "path": "/workspace/synapse-local-model/build-cpu/bin/llama-completion",
+      "sha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+      "bytes": 12476968
+    }
+  },
+  "maxModelCalls": 1,
+  "externalAnswer": false,
+  "startedAt": 1793744575.3707263
+}

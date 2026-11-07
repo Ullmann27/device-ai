@@ -1,0 +1,30 @@
+{
+  "label": "frame-clock-green",
+  "head": "a15624bed87470260adef810ce1610b986f9f02d",
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-I",
+    "/workspace/scratch/76b7222771d5/build-env/observe-tests.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.JarvisShellMotionUiTest"
+  ],
+  "started": 1793894777.3059113,
+  "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+  "statusBefore": " M app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt\n M app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt\n",
+  "exitCode": 0,
+  "ended": 1793894809.0993035,
+  "sourceUnchanged": true,
+  "statusAfter": " M app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt\n M app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt\n",
+  "log": "/workspace/scratch/76b7222771d5/build-env/logs/frame-clock-green.log",
+  "sourceBeforeSha256": "ee6f4c59d093b754f35c79aef20d3c51ded98b6d516b5796b860f8a6df62183a",
+  "sourceAfterSha256": "ee6f4c59d093b754f35c79aef20d3c51ded98b6d516b5796b860f8a6df62183a",
+  "sourceNote": "Baseline source b294fc91. Subsequent a15624be differs only by the continuation document. Root frame-clock source delta is archived separately."
+}

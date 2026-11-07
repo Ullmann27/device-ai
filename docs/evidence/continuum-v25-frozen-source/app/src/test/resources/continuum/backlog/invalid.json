@@ -1,0 +1,62 @@
+[
+ {
+  "file": "invalid-duplicate-key.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-float.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-integrity.json",
+  "code": "INTEGRITY_MISMATCH"
+ },
+ {
+  "file": "invalid-utf8.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-bom.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-trailing.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-lone-surrogate.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-future-version.json",
+  "code": "UNSUPPORTED_VERSION"
+ },
+ {
+  "file": "invalid-state.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-done-without-evidence.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-forged-evidence.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-cycle.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-unsorted.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-claim-outside-progress.json",
+  "code": "CORRUPT"
+ },
+ {
+  "file": "invalid-not-backlog.json",
+  "code": "CORRUPT"
+ }
+]

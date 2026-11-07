@@ -1,0 +1,1412 @@
+✖ persistent ALWAYS_ON is explicit, revocable and uses the existing web gate (2.987282ms)
+✔ local model receives web policy and keeps bounded tool requests (0.882679ms)
+✔ orb states follow real work and Android TTS callbacks (3.645048ms)
+✔ learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android (4.606368ms)
+✔ cognitive runtime owns the single chat path, privacy boundaries and background diagnostics (1.469821ms)
+✔ background consolidation records failure without losing interrupted source trials (0.202237ms)
+✔ experimental module is inspectable and not on any automatic model promotion path (0.682385ms)
+✖ activity request codes are unique and every one has a result handler (3.645211ms)
+✔ scheduled offline job names the JobService declared in the manifest (0.280178ms)
+✔ user-visible texts contain line breaks, not a literal backslash-n (10.356101ms)
+✔ learning-core and research store I/O stays off the UI thread in dialogs and chat input (2.184466ms)
+✔ neural weights are saved by compare-and-swap and foreground practice can be stopped (0.418136ms)
+✔ startup bootstrap training stops with the activity and is retried later (0.284808ms)
+✔ startup I/O off the UI thread and shell commands stop with their activity (1.370614ms)
+✔ local language model path is reachable: model center, loading, chat escalation and reasoning chain (1.045423ms)
+✔ every area has a center reachable from the start screen; no demo buttons; experiments marked (2.992536ms)
+✔ Teamleader Android UI reports status without false success (0.175867ms)
+✔ live model status does not revert the beginner cockpit to English (0.76706ms)
+✔ model setup stays usable for beginners while preserving SHA-256 integrity (1.042357ms)
+✔ new visual start screen is local, accessible and honest about capabilities (1.229022ms)
+✔ neural training failures expose bounded diagnostics without claiming saved weights (0.22072ms)
+✖ Wikipedia article research uses bounded authentic extracts and original citations (0.474805ms)
+✔ Android-first Teamleader is scheduled, observable and serialized across background and chat (1.125538ms)
+✔ explicit M5 project planning command reaches reviewed builder without bypassing approval (0.741705ms)
+✔ auto-discovered titles can reach only the official MediaWiki API (0.883177ms)
+✔ bounded topic frontier persists discoveries and avoids duplicate processing (2.247173ms)
+✔ provider rate limits are obeyed, and background work remains finite (0.196726ms)
+✔ archive capacity grows without deleting sources or exhausting phone storage (0.157827ms)
+✔ training rejection identifies each failing holdout and does not promote unsafe candidates (0.260028ms)
+✖ owner facts win, and retrieval is clearly labelled a non-verified excerpt (1.699053ms)
+✔ research and legal backup menu indices match their action labels (0.285945ms)
+✔ coding agent has one integrated entry from Android home, no second app (1.090176ms)
+✖ developer speech uses actual German Android recognizer and a unique callback (1.807594ms)
+✖ voice text is always previewed; neither recognition nor chat command executes code (21.823715ms)
+✔ existing mobile builder remains opt-in, not falsely labelled an app generator (0.413242ms)
+✔ Gemma restoration is scheduled once on Activity creation, not on every onResume (9.636578ms)
+✔ restore is not a separate worker, timer or background service (0.238948ms)
+✔ only owner-selected original SHA and version can be restored (0.137328ms)
+✔ restart cannot start a second engine while loading, generating or unloading (0.131807ms)
+✔ owner manual unload disables restoration immediately (0.12324ms)
+✔ a verified successful original load alone enables future restore (0.113398ms)
+✔ a failed load stops repeated startup retries (0.103286ms)
+✔ process-wide loaded Gemma is intentionally retained at Activity finish (5.535763ms)
+✔ a cold restart verifies the stored file SHA-256 before initializing the engine (0.252359ms)
+✔ the old model download is never required on restart (0.344455ms)
+✔ a fresh restoration does not invent a successful local answer (0.195114ms)
+✖ original 3.66 GB model import remains separate and SHA-verified (1.056912ms)
+✔ regression suite covers correct original, opt-out, foreign SHA, busy engine (0.148835ms)
+✔ external mentor has an explicit per-request consent UI (1.657422ms)
+✖ Android only sends bounded question text to the private backend (2.770648ms)
+✔ server never accepts mentor request without owner grant and bearer authentication (0.267227ms)
+✔ external reply is labelled unverified and cannot write memory or perform tools (0.762094ms)
+✖ a rejected import cannot relabel the independently loaded runtime as failed (5.237007ms)
+✔ smoke result names the captured catalog identity and rejects a model swap (0.67253ms)
+✔ the five beginner destinations stay reachable from the reference start screen (2.053481ms)
+✔ start-screen routes use real existing Android screens, not placeholder success actions (0.377122ms)
+✔ advanced routes remain available from the start screen, its rail and the More sheet (0.340958ms)
+✖ Nexus keeps real hologram and voice entry tied to Android speech and system state (1.857483ms)
+✔ fold, small display and enlarged-font behaviour are expressed by a pure policy (0.190432ms)
+✔ personalisation is a real choice and cannot silently train models or install apps (0.260976ms)
+✔ start screen and chat never overlap after leaving or returning from chat (0.459043ms)
+✔ Android 14+ background network jobs declare ACCESS_NETWORK_STATE (0.946237ms)
+✔ persisted source research job is registered but never exported (4.355167ms)
+✖ owner consent, cellular network and measured 20pct resource gates remain required (6.051281ms)
+ℹ tests 64
+ℹ suites 0
+ℹ pass 53
+ℹ fail 11
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 454.339092
+
+✖ failing tests:
+
+test at .github/continuum/android-always-on-wiring.test.mjs:6:1
+✖ persistent ALWAYS_ON is explicit, revocable and uses the existing web gate (2.987282ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /InternetAccessMode\.valueOf/. Input:
+  
+  'package at.heinz.deviceai\n' +
+    '\n' +
+    'import at.heinz.deviceai.learning.NeuralDialogue\n' +
+    'import at.heinz.deviceai.learning.NeuralDemoSandbox\n' +
+    'import at.heinz.deviceai.learning.NeuralCommand\n' +
+    'import at.heinz.deviceai.learning.NeuralCommandKind\n' +
+    'import at.heinz.deviceai.learning.NeuralCommandParser\n' +
+    'import at.heinz.deviceai.learning.NeuralLearningCoach\n' +
+    'import at.heinz.deviceai.learning.NeuralLearningProgress\n' +
+    'import at.heinz.deviceai.learning.NeuralPracticeScheduler\n' +
+    'import at.heinz.deviceai.learning.NeuralCuriosityRadar\n' +
+    'import at.heinz.deviceai.learning.NeuralTransferExperiment\n' +
+    'import at.heinz.deviceai.learning.NeuralGeneralizationComparison\n' +
+    'import at.heinz.deviceai.learning.MentorStudyScheduler\n' +
+    'import at.heinz.deviceai.learning.MentorSourceNotebook\n' +
+    'import at.heinz.deviceai.learning.MentorSource\n' +
+    'import at.heinz.deviceai.learning.MentorRecall\n' +
+    'import at.heinz.deviceai.learning.MentorAssociativeRecall\n' +
+    'import at.heinz.deviceai.learning.MentorSemanticRecall\n' +
+    'import at.heinz.deviceai.learning.ContinuumLearningCore\n' +
+    'import at.heinz.deviceai.learning.OwnerFactChange\n' +
+    'import android.app.Activity\n' +
+    'import android.app.AlertDialog\n' +
+    'import android.content.Intent\n' +
+    'import android.content.ActivityNotFoundException\n' +
+    'import android.graphics.Color\n' +
+    'import android.graphics.Typeface\n' +
+    'import android.text.SpannableString\n' +
+    'import android.text.Spanned\n' +
+    'import android.text.style.ForegroundColorSpan\n' +
+    'import android.widget.ImageView\n' +
+    'import android.graphics.drawable.GradientDrawable\n' +
+    'import android.net.Uri\n' +
+    'import android.os.Bundle\n' +
+    'import android.os.Handler\n' +
+    'import android.os.Looper\n' +
+    'import android.speech.tts.TextToSpeech\n' +
+    'import java.util.Locale\n' +
+    'import android.text.InputType\n' +
+    'import android.view.Gravity\n' +
+    'import android.view.WindowInsets\n' +
+    'import android.view.WindowManager\n' +
+    'import android.view.View\n' +
+    'import android.widget.Button\n' +
+    'import android.widget.EditText\n' +
+    'import android.widget.HorizontalScrollView\n' +
+    'import android.widget.LinearLayout\n' +
+    'import android.widget.ProgressBar\n' +
+    'import android.widget.ScrollView\n' +
+    'import android.widget.TextView\n' +
+    'import android.widget.Toast\n' +
+    'import at.heinz.deviceai.cognitive.AgentEvaluator\n' +
+    'import at.heinz.deviceai.cognitive.LocalDialogueQualityGate\n' +
+    'import at.heinz.deviceai.cognitive.AgentModel\n' +
+    'import at.heinz.deviceai.cognitive.AgentModelOutput\n' +
+    'import at.heinz.deviceai.cognitive.AgentToolApproval\n' +
+    'import at.heinz.deviceai.cognitive.AgentToolApprovalProvider\n' +
+    'import at.heinz.deviceai.cognitive.AiContextCompiler\n' +
+    'import at.heinz.deviceai.cognitive.AiContextInput\n' +
+    'import at.heinz.deviceai.cognitive.AiContextPolicy\n' +
+    'import at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner\n' +
+    'import at.heinz.deviceai.cognitive.CognitiveTurnTrace\n' +
+    'import at.heinz.deviceai.cognitive.TraceStage\n' +
+    'import at.heinz.deviceai.cognitive.TraceOutcome\n' +
+    'import at.heinz.deviceai.cognitive.BoundedAgentOrchestrator\n' +
+    'import at.heinz.deviceai.cognitive.ChatReasoningRouter\n' +
+    'import at.heinz.deviceai.cognitive.LocalModelReasoningAdapter\n' +
+    'import at.heinz.deviceai.cognitive.ContinuumRuntimeState\n' +
+    'import at.heinz.deviceai.cognitive.ContinuumRuntimeStore\n' +
+    'import at.heinz.deviceai.cognitive.Evaluation\n' +
+    'import at.heinz.deviceai.cognitive.FileAgentCheckpointStore\n' +
+    'import at.heinz.deviceai.cognitive.InMemoryExperienceStore\n' +
+    'import at.heinz.deviceai.cognitive.InMemoryMemoryStore\n' +
+    'import at.heinz.deviceai.cognitive.MemoryRecord\n' +
+    'import at.heinz.deviceai.cognitive.MemoryType\n' +
+    'import at.heinz.deviceai.cognitive.MemoryWriteContext\n' +
+    'import at.heinz.deviceai.cognitive.MemoryWritePolicy\n' +
+    'import at.heinz.deviceai.cognitive.ProvenanceType\n' +
+    'import at.heinz.deviceai.cognitive.DeepResearchEngine\n' +
+    'import at.heinz.deviceai.cognitive.BacklogException\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentBacklog\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentCoordinator\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentUiController\n' +
+    'import at.heinz.deviceai.cognitive.DeviceDevelopmentBacklog\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentUiPhase\n' +
+    'import at.heinz.deviceai.cognitive.DeterministicResearchSynthesizer\n' +
+    'import at.heinz.deviceai.cognitive.FileResearchDossierStore\n' +
+    'import at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider\n' +
+    'import at.heinz.deviceai.cognitive.ResearchBudgetPolicy\n' +
+    'import at.heinz.deviceai.cognitive.ResearchMode\n' +
+    'import at.heinz.deviceai.cognitive.ResearchOptInPolicy\n' +
+    'import at.heinz.deviceai.cognitive.ResearchPhase\n' +
+    'import at.heinz.deviceai.cognitive.ResearchPromptBoundary\n' +
+    'import at.heinz.deviceai.cognitive.ResearchProviderPolicy\n' +
+    'import at.heinz.deviceai.cognitive.ResearchSynthesisOutput\n' +
+    'import at.heinz.deviceai.cognitive.ResearchSynthesizer\n' +
+    'import at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProvider\n' +
+    'import at.heinz.deviceai.cognitive.WebLearningInbox\n' +
+    'import at.heinz.deviceai.cognitive.WebLearningJournal\n' +
+    'import at.heinz.deviceai.cognitive.WebLearningCandidate\n' +
+    'import at.heinz.deviceai.cognitive.GroundedWebRecall\n' +
+    'import at.heinz.deviceai.localmodel.ImportedLocalModel\n' +
+    'import at.heinz.deviceai.localmodel.LocalInferenceEvent\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelBackend\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelCatalog\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelRuntime\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelState\n' +
+    'import at.heinz.deviceai.localmodel.LocalToolResponse\n' +
+    'import java.util.concurrent.CountDownLatch\n' +
+    'import java.util.concurrent.Executors\n' +
+    'import java.util.concurrent.TimeUnit\n' +
+    'import java.util.UUID\n' +
+    '\n' +
+    'class AgentActivity : Activity() {\n' +
+    '    private var pendingContinuumPackageModel:ByteArray?=null\n' +
+    '    private data class LocalGeneration(\n' +
+    '        val response: String,\n' +
+    '        val proposal: ToolProposal?,\n' +
+    '        val rejectedToolResponses: List<LocalToolResponse>,\n' +
+    '        val failure: String?\n' +
+    '    )\n' +
+    '\n' +
+    '    companion object {\n' +
+    '        @Volatile private var crashHandlerInstalled = false\n' +
+    '        private const val SPEECH_REQUEST = 2207\n' +
+    '        private const val LOCAL_SPEECH_PERMISSION_REQUEST = 2241\n' +
+    '        private const val MODEL_IMPORT_REQUEST = 2208\n' +
+    '        private const val DEV_SOURCE_REQUEST = 2209\n' +
+    '        private const val DEV_EXPORT_REQUEST = 2210\n' +
+    '        private const val DEV_SPEECH_REQUEST = 2221\n' +
+    '        // Every *_REQUEST code must be unique: onActivityResult dispatches on the\n' +
+    '        // first matching branch (checked by android-integration-wiring.test.mjs).\n' +
+    '        private const val DEV_BACKLOG_EXPORT_REQUEST = 2214\n' +
+    '        private const val DEV_OPLOG_EXPORT_REQUEST = 2215\n' +
+    '        private const val DEV_BACKLOG_IMPORT_REQUEST = 2216\n' +
+    '        private const val DEV_BACKLOG_MAX_IMPORT_BYTES = 4_000_000\n' +
+    '        private const val NEURAL_IMPORT_REQUEST = 2211\n' +
+    '        private const val CONTINUUM_CORE_EXPORT_REQUEST = 2218\n' +
+    '        private const val CONTINUUM_ARCHIVE_EXPORT_REQUEST = 2219\n' +
+    '        private const val CONTINUUM_ARCHIVE_IMPORT_REQUEST = 2220\n' +
+    '        private const val PERSONAL_LEARNING_EXPORT_REQUEST = 2231\n' +
+    '        private const val PERSONAL_LEARNING_PREVIEW_REQUEST = 2232\n' +
+    '        private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212\n' +
+    '        private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213\n' +
+    '        private const val DEV_MAX_SOURCE_READ_BYTES = 4_000\n' +
+    '        private const val SWB1_BYTES = 32_960\n' +
+    '        private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"\n' +
+    '        private const val WORK_AREA_STATE_KEY = "continuum_work_area_state"\n' +
+    '        // Public catalog metadata only, never private model bytes or credentials.\n' +
+    '        private const val MODEL_IMPORT_ID_STATE_KEY = "continuum_model_import_id_v1"\n' +
+    '        private const val MODEL_IMPORT_VERSION_STATE_KEY = "continuum_model_import_version_v1"\n' +
+    '        private const val MODEL_IMPORT_SHA256_STATE_KEY = "continuum_model_import_sha256_v1"\n' +
+    '        private val BG = Color.rgb(5, 8, 23)\n' +
+    '        private val PANEL = Color.rgb(12, 17, 40)\n' +
+    '        private val PANEL_2 = Color.rgb(18, 23, 57)\n' +
+    '        private val SURFACE = Color.rgb(23, 34, 77)\n' +
+    '        private val BORDER = Color.rgb(73, 91, 171)\n' +
+    '        private val TEXT = Color.rgb(245, 248, 253)\n' +
+    '        private val MUTED = Color.rgb(155, 169, 191)\n' +
+    '        private val ACCENT = Color.rgb(64, 159, 255)\n' +
+    '        private val ACCENT_DARK = Color.rgb(37, 87, 224)\n' +
+    '        private val CYAN = Color.rgb(58, 220, 255)\n' +
+    '        private val GREEN = Color.rgb(78, 214, 145)\n' +
+    '        private val AMBER = Color.rgb(255, 192, 82)\n' +
+    '        private val RED = Color.rgb(255, 102, 112)\n' +
+    '        private val USER_BUBBLE = Color.rgb(48, 72, 148)\n' +
+    '        private val ASSISTANT_BUBBLE = Color.rgb(24, 33, 47)\n' +
+    '    }\n' +
+    '\n' +
+    '    private lateinit var bridge: ShizukuBridge\n' +
+    '    private lateinit var executor: DeviceToolExecutor\n' +
+    '    private lateinit var backend: AgentBackendClient\n' +
+    '    private lateinit var modelCatalog: LocalModelCatalog\n' +
+    '    private lateinit var localRuntime: LocalModelRuntime\n' +
+    '    private lateinit var receiptStore: FileToolExecutionReceiptStore\n' +
+    '    // opened on localAgentExecutor (Keystore and file I/O), see initializeContinuum\n' +
+    '    @Volatile private var continuumStore: ContinuumRuntimeStore? = null\n' +
+    '    @Volatile private var continuumState: ContinuumRuntimeState? = null\n' +
+    '    @Volatile private var continuumStartupNote: String? = null\n' +
+    '    private val contextCompiler = AiContextCompiler(\n' +
+    '        AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4)\n' +
+    '    )\n' +
+    '\n' +
+    '    private lateinit var shizukuBadge: TextView\n' +
+    '    private lateinit var cloudBadge: TextView\n' +
+    '    private lateinit var localBadge: TextView\n' +
+    '    // views of the open model center (null while it is closed)\n' +
+    '    private var modelCardText: TextView? = null\n' +
+    '    private var selectedModelStatusText: TextView? = null\n' +
+    '    private var localActionButton: TextView? = null\n' +
+    '    private var modelCenterDialog: AlertDialog? = null\n' +
+    '    // catalog listing, refreshed off the UI thread (reloadInstalledModels)\n' +
+    '    private var installedModels: List<ImportedLocalModel> = emptyList()\n' +
+    '    private lateinit var activityText: TextView\n' +
+    '    private lateinit var planCard: LinearLayout\n' +
+    '    private lateinit var planText: TextView\n' +
+    '    private lateinit var chatScroll: ScrollView\n' +
+    '    private lateinit var chatContainer: LinearLayout\n' +
+    '    private lateinit var input: EditText\n' +
+    '    private lateinit var sendButton: Bu'... 491479 more characters
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/android-always-on-wiring.test.mjs:7:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'package at.heinz.deviceai\n\nimport at.heinz.deviceai.learning.NeuralDialogue\nimport at.heinz.deviceai.learning.NeuralDemoSandbox\nimport at.heinz.deviceai.learning.NeuralCommand\nimport at.heinz.deviceai.learning.NeuralCommandKind\nimport at.heinz.deviceai.learning.NeuralCommandParser\nimport at.heinz.deviceai.learning.NeuralLearningCoach\nimport at.heinz.deviceai.learning.NeuralLearningProgress\nimport at.heinz.deviceai.learning.NeuralPracticeScheduler\nimport at.heinz.deviceai.learning.NeuralCuriosityRadar\nimport at.heinz.deviceai.learning.NeuralTransferExperiment\nimport at.heinz.deviceai.learning.NeuralGeneralizationComparison\nimport at.heinz.deviceai.learning.MentorStudyScheduler\nimport at.heinz.deviceai.learning.MentorSourceNotebook\nimport at.heinz.deviceai.learning.MentorSource\nimport at.heinz.deviceai.learning.MentorRecall\nimport at.heinz.deviceai.learning.MentorAssociativeRecall\nimport at.heinz.deviceai.learning.MentorSemanticRecall\nimport at.heinz.deviceai.learning.ContinuumLearningCore\nimport at.heinz.deviceai.learning.OwnerFactChange\nimport android.app.Activity\nimport android.app.AlertDialog\nimport android.content.Intent\nimport android.content.ActivityNotFoundException\nimport android.graphics.Color\nimport android.graphics.Typeface\nimport android.text.SpannableString\nimport android.text.Spanned\nimport android.text.style.ForegroundColorSpan\nimport android.widget.ImageView\nimport android.graphics.drawable.GradientDrawable\nimport android.net.Uri\nimport android.os.Bundle\nimport android.os.Handler\nimport android.os.Looper\nimport android.speech.tts.TextToSpeech\nimport java.util.Locale\nimport android.text.InputType\nimport android.view.Gravity\nimport android.view.WindowInsets\nimport android.view.WindowManager\nimport android.view.View\nimport android.widget.Button\nimport android.widget.EditText\nimport android.widget.HorizontalScrollView\nimport android.widget.LinearLayout\nimport android.widget.ProgressBar\nimport android.widget.ScrollView\nimport android.widget.TextView\nimport android.widget.Toast\nimport at.heinz.deviceai.cognitive.AgentEvaluator\nimport at.heinz.deviceai.cognitive.LocalDialogueQualityGate\nimport at.heinz.deviceai.cognitive.AgentModel\nimport at.heinz.deviceai.cognitive.AgentModelOutput\nimport at.heinz.deviceai.cognitive.AgentToolApproval\nimport at.heinz.deviceai.cognitive.AgentToolApprovalProvider\nimport at.heinz.deviceai.cognitive.AiContextCompiler\nimport at.heinz.deviceai.cognitive.AiContextInput\nimport at.heinz.deviceai.cognitive.AiContextPolicy\nimport at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner\nimport at.heinz.deviceai.cognitive.CognitiveTurnTrace\nimport at.heinz.deviceai.cognitive.TraceStage\nimport at.heinz.deviceai.cognitive.TraceOutcome\nimport at.heinz.deviceai.cognitive.BoundedAgentOrchestrator\nimport at.heinz.deviceai.cognitive.ChatReasoningRouter\nimport at.heinz.deviceai.cognitive.LocalModelReasoningAdapter\nimport at.heinz.deviceai.cognitive.ContinuumRuntimeState\nimport at.heinz.deviceai.cognitive.ContinuumRuntimeStore\nimport at.heinz.deviceai.cognitive.Evaluation\nimport at.heinz.deviceai.cognitive.FileAgentCheckpointStore\nimport at.heinz.deviceai.cognitive.InMemoryExperienceStore\nimport at.heinz.deviceai.cognitive.InMemoryMemoryStore\nimport at.heinz.deviceai.cognitive.MemoryRecord\nimport at.heinz.deviceai.cognitive.MemoryType\nimport at.heinz.deviceai.cognitive.MemoryWriteContext\nimport at.heinz.deviceai.cognitive.MemoryWritePolicy\nimport at.heinz.deviceai.cognitive.ProvenanceType\nimport at.heinz.deviceai.cognitive.DeepResearchEngine\nimport at.heinz.deviceai.cognitive.BacklogException\nimport at.heinz.deviceai.cognitive.DevelopmentBacklog\nimport at.heinz.deviceai.cognitive.DevelopmentCoordinator\nimport at.heinz.deviceai.cognitive.DevelopmentUiController\nimport at.heinz.deviceai.cognitive.DeviceDevelopmentBacklog\nimport at.heinz.deviceai.cognitive.DevelopmentUiPhase\nimport at.heinz.deviceai.cognitive.DeterministicResearchSynthesizer\nimport at.heinz.deviceai.cognitive.FileResearchDossierStore\nimport at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider\nimport at.heinz.deviceai.cognitive.ResearchBudgetPolicy\nimport at.heinz.deviceai.cognitive.ResearchMode\nimport at.heinz.deviceai.cognitive.ResearchOptInPolicy\nimport at.heinz.deviceai.cognitive.ResearchPhase\nimport at.heinz.deviceai.cognitive.ResearchPromptBoundary\nimport at.heinz.deviceai.cognitive.ResearchProviderPolicy\nimport at.heinz.deviceai.cognitive.ResearchSynthesisOutput\nimport at.heinz.deviceai.cognitive.ResearchSynthesizer\nimport at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProvider\nimport at.heinz.deviceai.cognitive.WebLearningInbox\nimport at.heinz.deviceai.cognitive.WebLearningJournal\nimport at.heinz.deviceai.cognitive.WebLearningCandidate\nimport at.heinz.deviceai.cognitive.GroundedWebRecall\nimport at.heinz.deviceai.localmodel.ImportedLocalModel\nimport at.heinz.deviceai.localmodel.LocalInferenceEvent\nimport at.heinz.deviceai.localmodel.LocalModelBackend\nimport at.heinz.deviceai.localmodel.LocalModelCatalog\nimport at.heinz.deviceai.localmodel.LocalModelRuntime\nimport at.heinz.deviceai.localmodel.LocalModelState\nimport at.heinz.deviceai.localmodel.LocalToolResponse\nimport java.util.concurrent.CountDownLatch\nimport java.util.concurrent.Executors\nimport java.util.concurrent.TimeUnit\nimport java.util.UUID\n\nclass AgentActivity : Activity() {\n    private var pendingContinuumPackageModel:ByteArray?=null\n    private data class LocalGeneration(\n        val response: String,\n        val proposal: ToolProposal?,\n        val rejectedToolResponses: List<LocalToolResponse>,\n        val failure: String?\n    )\n\n    companion object {\n        @Volatile private var crashHandlerInstalled = false\n        private const val SPEECH_REQUEST = 2207\n        private const val LOCAL_SPEECH_PERMISSION_REQUEST = 2241\n        private const val MODEL_IMPORT_REQUEST = 2208\n        private const val DEV_SOURCE_REQUEST = 2209\n        private const val DEV_EXPORT_REQUEST = 2210\n        private const val DEV_SPEECH_REQUEST = 2221\n        // Every *_REQUEST code must be unique: onActivityResult dispatches on the\n        // first matching branch (checked by android-integration-wiring.test.mjs).\n        private const val DEV_BACKLOG_EXPORT_REQUEST = 2214\n        private const val DEV_OPLOG_EXPORT_REQUEST = 2215\n        private const val DEV_BACKLOG_IMPORT_REQUEST = 2216\n        private const val DEV_BACKLOG_MAX_IMPORT_BYTES = 4_000_000\n        private const val NEURAL_IMPORT_REQUEST = 2211\n        private const val CONTINUUM_CORE_EXPORT_REQUEST = 2218\n        private const val CONTINUUM_ARCHIVE_EXPORT_REQUEST = 2219\n        private const val CONTINUUM_ARCHIVE_IMPORT_REQUEST = 2220\n        private const val PERSONAL_LEARNING_EXPORT_REQUEST = 2231\n        private const val PERSONAL_LEARNING_PREVIEW_REQUEST = 2232\n        private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212\n        private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213\n        private const val DEV_MAX_SOURCE_READ_BYTES = 4_000\n        private const val SWB1_BYTES = 32_960\n        private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"\n        private const val WORK_AREA_STATE_KEY = "continuum_work_area_state"\n        // Public catalog metadata only, never private model bytes or credentials.\n        private const val MODEL_IMPORT_ID_STATE_KEY = "continuum_model_import_id_v1"\n        private const val MODEL_IMPORT_VERSION_STATE_KEY = "continuum_model_import_version_v1"\n        private const val MODEL_IMPORT_SHA256_STATE_KEY = "continuum_model_import_sha256_v1"\n        private val BG = Color.rgb(5, 8, 23)\n        private val PANEL = Color.rgb(12, 17, 40)\n        private val PANEL_2 = Color.rgb(18, 23, 57)\n        private val SURFACE = Color.rgb(23, 34, 77)\n        private val BORDER = Color.rgb(73, 91, 171)\n        private val TEXT = Color.rgb(245, 248, 253)\n        private val MUTED = Color.rgb(155, 169, 191)\n        private val ACCENT = Color.rgb(64, 159, 255)\n        private val ACCENT_DARK = Color.rgb(37, 87, 224)\n        private val CYAN = Color.rgb(58, 220, 255)\n        private val GREEN = Color.rgb(78, 214, 145)\n        private val AMBER = Color.rgb(255, 192, 82)\n        private val RED = Color.rgb(255, 102, 112)\n        private val USER_BUBBLE = Color.rgb(48, 72, 148)\n        private val ASSISTANT_BUBBLE = Color.rgb(24, 33, 47)\n    }\n\n    private lateinit var bridge: ShizukuBridge\n    private lateinit var executor: DeviceToolExecutor\n    private lateinit var backend: AgentBackendClient\n    private lateinit var modelCatalog: LocalModelCatalog\n    private lateinit var localRuntime: LocalModelRuntime\n    private lateinit var receiptStore: FileToolExecutionReceiptStore\n    // opened on localAgentExecutor (Keystore and file I/O), see initializeContinuum\n    @Volatile private var continuumStore: ContinuumRuntimeStore? = null\n    @Volatile private var continuumState: ContinuumRuntimeState? = null\n    @Volatile private var continuumStartupNote: String? = null\n    private val contextCompiler = AiContextCompiler(\n        AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4)\n    )\n\n    private lateinit var shizukuBadge: TextView\n    private lateinit var cloudBadge: TextView\n    private lateinit var localBadge: TextView\n    // views of the open model center (null while it is closed)\n    private var modelCardText: TextView? = null\n    private var selectedModelStatusText: TextView? = null\n    private var localActionButton: TextView? = null\n    private var modelCenterDialog: AlertDialog? = null\n    // catalog listing, refreshed off the UI thread (reloadInstalledModels)\n    private var installedModels: List<ImportedLocalModel> = emptyList()\n    private lateinit var activityText: TextView\n    private lateinit var planCard: LinearLayout\n    private lateinit var planText: TextView\n    private lateinit var chatScroll: ScrollView\n    private lateinit var chatContainer: LinearLayout\n    private lateinit var input: EditText\n    private lateinit var sendButton: Bu'... 491479 more characters,
+    expected: /InternetAccessMode\.valueOf/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/android-integration-wiring.test.mjs:132:1
+✖ activity request codes are unique and every one has a result handler (3.645211ms)
+  AssertionError [ERR_ASSERTION]: Disconnected or unsupported code path: AgentActivity.kt: SPEECH_REQUEST handled in onActivityResult
+      at ensure (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/android-integration-wiring.test.mjs:16:34)
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/android-integration-wiring.test.mjs:145:4)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at .github/continuum/android-integration-wiring.test.mjs:388:1
+✖ Wikipedia article research uses bounded authentic extracts and original citations (0.474805ms)
+  AssertionError [ERR_ASSERTION]: Disconnected or unsupported code path: Android research wraps its existing HTTPS provider in a bounded Wikipedia extractor
+      at ensure (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/android-integration-wiring.test.mjs:16:34)
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/android-integration-wiring.test.mjs:390:2)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at .github/continuum/autonomous-topic-frontier.test.mjs:69:1
+✖ owner facts win, and retrieval is clearly labelled a non-verified excerpt (1.699053ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /nicht unabhängig verifizierter/. Input:
+  
+  'private fun runContinuumDialogue(request:String,sourceFallback:Boolean=false) {\n' +
+    '        if(busy || localAgentExecutor.isShutdown)return\n' +
+    '        val cancellation=at.heinz.deviceai.cognitive.DeliberationCancellation()\n' +
+    '        val requestSessionId=sessionId\n' +
+    '        val turnTrace=CognitiveTurnTrace(requestSessionId)\n' +
+    '        val priorScopedTopic=scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic\n' +
+    '        activeChatCancellation=cancellation\n' +
+    '        activeLocalRequest=true\n' +
+    '        setBusy(true)\n' +
+    '        localAgentExecutor.execute {\n' +
+    '            val result=runCatching {\n' +
+    '                cancellation.throwIfCancelled()\n' +
+    '                val core=ContinuumLearningCore(filesDir)\n' +
+    '                // Existing confirmed Android memories remain authoritative. This\n' +
+    '                // also reconnects installations whose facts predate Learning Core v2.\n' +
+    '                core.syncOwnerFacts(bootstrapMemory.facts())\n' +
+    '                val reviewedNotes=WebLearningJournal(this).notes()\n' +
+    '                core.synchronizeReviewedWebObservations(reviewedNotes.filter {\n' +
+    '                    !it.contradictory && it.text.length in 20..400 && it.sourceUrl.length in 10..400\n' +
+    '                }.map { at.heinz.deviceai.learning.ReviewedWebObservation(it.text,it.sourceUrl,it.sourceHash) })\n' +
+    '                val decision=at.heinz.deviceai.cognitive.CognitiveDecisionBridge(\n' +
+    '                    at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,\n' +
+    '                        conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic,turnTrace=turnTrace),\n' +
+    '                    // Confirmed facts retain their exact deterministic meaning. Lexical\n' +
+    '                    // anchors cannot prove that a model paraphrase is entailed.\n' +
+    '                    null\n' +
+    '                ).respond(request.take(512))\n' +
+    '                cancellation.throwIfCancelled()\n' +
+    '                val cognitive=decision.turn\n' +
+    '                val turn=cognitive.dialogue\n' +
+    '                val legacyFallback=sourceFallback && !turn.grounded\n' +
+    '                // Retrieval is evidence display, not model-generated truth. Only a\n' +
+    '                // title-level match may supply a plainly labelled public quote.\n' +
+    '                // Confirmed owner memory always wins and source observations never\n' +
+    '                // grant model tools, device authority or Owner-Fact privileges.\n' +
+    '                val archiveHit=if(!turn.grounded && request.length in 6..240 &&\n' +
+    '                    (request.contains("?") || request.startsWith("Was ist ",true) ||\n' +
+    '                        request.startsWith("Erkläre ",true))) {\n' +
+    '                    runCatching {\n' +
+    '                        at.heinz.deviceai.learning.ContinuumArchiveAnswerPolicy.select(\n' +
+    '                            request,\n' +
+    '                            at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)\n' +
+    '                                .search(request,limit=20)\n' +
+    '                        )\n' +
+    '                    }.getOrNull()\n' +
+    '                } else null\n' +
+    '                val archiveAnswer=archiveHit?.source?.let { document ->\n' +
+    '                    at.heinz.deviceai.learning.ContinuumBrainBridge.archiveAnswerForQuestion(document,request)\n' +
+    '                }\n' +
+    '                val fallback=if(legacyFallback)\n' +
+    '                    GroundedWebRecall.answer(request,reviewedNotes)\n' +
+    '                else null\n' +
+    '                val answer=archiveAnswer ?: fallback ?: decision.finalAnswer\n' +
+    '                val evidence=(if(archiveAnswer!=null)\n' +
+    '                    "QUELLENABRUF · lokal archivierter, nicht bestätigter Beleg"\n' +
+    '                    else if(legacyFallback)\n' +
+    '                    "QUELLENGEDÄCHTNIS · vorhandener lexikalischer Abruf"\n' +
+    '                    else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+\n' +
+    '                        turn.memoryIds.size+" aktuelle Erinnerungen") +\n' +
+    '                    (if(turn.contextReset)\n' +
+    '                        " · Gesprächskontext war unlesbar: gesichert und neu begonnen, Erinnerungen unverändert"\n' +
+    '                        else "")\n' +
+    "                // Today's outcome, unchanged. The EWM2 brain (owner switch, default OFF) returns this exact\n" +
+    '                // object in OFF and SHADOW; in ON its evidence decides, and any failure keeps this outcome.\n' +
+    '                val baseline=at.heinz.deviceai.learning.ContinuumChatOutcome(answer,evidence,cognitive.trace+\n' +
+    '                    (if(decision.usedLocalModel)" · lokale Formulierung mit Ankerprüfung" else ""),\n' +
+    '                    turn.grounded || archiveAnswer!=null || legacyFallback && fallback!=null,\n' +
+    '                    when {\n' +
+    '                        archiveAnswer!=null -> at.heinz.deviceai.learning.ContinuumBaselineSource.ARCHIVE\n' +
+    '                        legacyFallback && fallback!=null -> at.heinz.deviceai.learning.ContinuumBaselineSource.WEB_NOTES\n' +
+    '                        turn.grounded -> at.heinz.deviceai.learning.ContinuumBaselineSource.MEMORY\n' +
+    '                        else -> at.heinz.deviceai.learning.ContinuumBaselineSource.NONE\n' +
+    '                    },turn.memoryIds,archiveHit?.source?.id?.takeIf { archiveAnswer!=null })\n' +
+    '                val shown=runCatching {\n' +
+    '                    at.heinz.deviceai.learning.ContinuumBrainBridge.decide(filesDir,core,requestSessionId,\n' +
+    '                        request.take(512),baseline).outcome\n' +
+    '                }.getOrDefault(baseline)\n' +
+    '                Triple(Triple(shown.answer,shown.evidenceLine,shown.grounded),\n' +
+    '                    cognitive.localModelPrompt,cognitive.nextScopedGroundedQuestion)\n' +
+    '            }\n' +
+    '            runOnUiThread {\n' +
+    '                if(isFinishing || isDestroyed || activeChatCancellation !== cancellation)return@runOnUiThread\n' +
+    '                activeChatCancellation=null\n' +
+    '                activeLocalRequest=false\n' +
+    '                setBusy(false)\n' +
+    '                result.onSuccess { (dialogueResult,localPrompt,nextTopic) ->\n' +
+    "                    // An old queued reply cannot set the next chat's runtime context.\n" +
+    '                    if(sessionId==requestSessionId)\n' +
+    '                        scopedLocalPromptSession=LocalPromptSession(requestSessionId,nextTopic)\n' +
+    '                    val (answer,evidence,grounded)=dialogueResult\n' +
+    '                    // Direct recall remains exact. Explicit synthesis uses the existing\n' +
+    '                    // local agent; its conclusions acquire no confirmed-memory authority.\n' +
+    '                    if(LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&\n' +
+    '                            localRuntime.loadedModel!=null, request)==AssistantRoute.LOCAL_MODEL) {\n' +
+    '                        val modelQuestion=LocalFirstPolicy.localModelQuestion(\n' +
+    '                            request,localPrompt,\n' +
+    '                            hasSameSessionLocalTurn=localConversationContext\n' +
+    '                                .render(requestSessionId).isNotBlank(),\n' +
+    '                            grounded=grounded\n' +
+    '                        )\n' +
+    '                        if(grounded) {\n' +
+    '                            val recall=at.heinz.deviceai.cognitive.LocalGroundedRecall\n' +
+    '                                .boundedOrNull(answer,evidence)\n' +
+    '                            if(recall==null) {\n' +
+    '                                // A confirmed retrieval must remain exact. If it cannot fit\n' +
+    "                                // the model's bounded evidence envelope, do not truncate it,\n" +
+    '                                // throw from the UI callback or synthesize on incomplete facts.\n' +
+    '                                turnTrace.event(TraceStage.GATED_FALLBACK)\n' +
+    '                                publishCognitiveTrace(turnTrace,TraceOutcome.MEMORY_EXACT)\n' +
+    '                                addAssistantMessage(answer)\n' +
+    '                                addToolActivity(evidence.take(2_000)+\n' +
+    '                                    " · Zusatzanalyse nicht gestartet: Abruf überschreitet sichere Modellgrenzen.")\n' +
+    '                            } else {\n' +
+    '                                addToolActivity(evidence+" · Zusatzaufgabe → lokale Modellschlussfolgerung, nicht bestätigt")\n' +
+    '                                runLocal(request,modelQuestion,recall,turnTrace)\n' +
+    '                            }\n' +
+    '                        } else {\n' +
+    '                            addToolActivity(evidence+" · keine passende Erinnerung → lokales Sprachmodell")\n' +
+    '                            if(modelQuestion==request)runLocal(request,turnTrace=turnTrace)\n' +
+    '                            else runLocal(request,modelQuestion,turnTrace=turnTrace)\n' +
+    '                        }\n' +
+    '                        return@onSuccess\n' +
+    '                    }\n' +
+    '                    turnTrace.event(if(grounded)TraceStage.MEMORY_EXACT else TraceStage.GATED_FALLBACK)\n' +
+    '                    publishCognitiveTrace(turnTrace,if(grounded)TraceOutcome.MEMORY_EXACT else TraceOutcome.BLOCKED)\n' +
+    '                    addAssistantMessage(answer)\n' +
+    '                    addToolActivity(evidence)\n' +
+    '                }.onFailure {\n' +
+    '                    publishCognitiveTrace(turnTrace,TraceOutcome.FAILED)\n' +
+    '                    addAssistantMessage("Continuum-Gedächtnis nicht lesbar: "+(it.message ?: "Prüfung fehlgeschlagen")+". Bestehende Lernstände bleiben erhalten.")\n' +
+    '                }\n' +
+    '            }\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    '
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/autonomous-topic-frontier.test.mjs:76:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: `private fun runContinuumDialogue(request:String,sourceFallback:Boolean=false) {\n        if(busy || localAgentExecutor.isShutdown)return\n        val cancellation=at.heinz.deviceai.cognitive.DeliberationCancellation()\n        val requestSessionId=sessionId\n        val turnTrace=CognitiveTurnTrace(requestSessionId)\n        val priorScopedTopic=scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic\n        activeChatCancellation=cancellation\n        activeLocalRequest=true\n        setBusy(true)\n        localAgentExecutor.execute {\n            val result=runCatching {\n                cancellation.throwIfCancelled()\n                val core=ContinuumLearningCore(filesDir)\n                // Existing confirmed Android memories remain authoritative. This\n                // also reconnects installations whose facts predate Learning Core v2.\n                core.syncOwnerFacts(bootstrapMemory.facts())\n                val reviewedNotes=WebLearningJournal(this).notes()\n                core.synchronizeReviewedWebObservations(reviewedNotes.filter {\n                    !it.contradictory && it.text.length in 20..400 && it.sourceUrl.length in 10..400\n                }.map { at.heinz.deviceai.learning.ReviewedWebObservation(it.text,it.sourceUrl,it.sourceHash) })\n                val decision=at.heinz.deviceai.cognitive.CognitiveDecisionBridge(\n                    at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,\n                        conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic,turnTrace=turnTrace),\n                    // Confirmed facts retain their exact deterministic meaning. Lexical\n                    // anchors cannot prove that a model paraphrase is entailed.\n                    null\n                ).respond(request.take(512))\n                cancellation.throwIfCancelled()\n                val cognitive=decision.turn\n                val turn=cognitive.dialogue\n                val legacyFallback=sourceFallback && !turn.grounded\n                // Retrieval is evidence display, not model-generated truth. Only a\n                // title-level match may supply a plainly labelled public quote.\n                // Confirmed owner memory always wins and source observations never\n                // grant model tools, device authority or Owner-Fact privileges.\n                val archiveHit=if(!turn.grounded && request.length in 6..240 &&\n                    (request.contains("?") || request.startsWith("Was ist ",true) ||\n                        request.startsWith("Erkläre ",true))) {\n                    runCatching {\n                        at.heinz.deviceai.learning.ContinuumArchiveAnswerPolicy.select(\n                            request,\n                            at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)\n                                .search(request,limit=20)\n                        )\n                    }.getOrNull()\n                } else null\n                val archiveAnswer=archiveHit?.source?.let { document ->\n                    at.heinz.deviceai.learning.ContinuumBrainBridge.archiveAnswerForQuestion(document,request)\n                }\n                val fallback=if(legacyFallback)\n                    GroundedWebRecall.answer(request,reviewedNotes)\n                else null\n                val answer=archiveAnswer ?: fallback ?: decision.finalAnswer\n                val evidence=(if(archiveAnswer!=null)\n                    "QUELLENABRUF · lokal archivierter, nicht bestätigter Beleg"\n                    else if(legacyFallback)\n                    "QUELLENGEDÄCHTNIS · vorhandener lexikalischer Abruf"\n                    else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+\n                        turn.memoryIds.size+" aktuelle Erinnerungen") +\n                    (if(turn.contextReset)\n                        " · Gesprächskontext war unlesbar: gesichert und neu begonnen, Erinnerungen unverändert"\n                        else "")\n                // Today's outcome, unchanged. The EWM2 brain (owner switch, default OFF) returns this exact\n                // object in OFF and SHADOW; in ON its evidence decides, and any failure keeps this outcome.\n                val baseline=at.heinz.deviceai.learning.ContinuumChatOutcome(answer,evidence,cognitive.trace+\n                    (if(decision.usedLocalModel)" · lokale Formulierung mit Ankerprüfung" else ""),\n                    turn.grounded || archiveAnswer!=null || legacyFallback && fallback!=null,\n                    when {\n                        archiveAnswer!=null -> at.heinz.deviceai.learning.ContinuumBaselineSource.ARCHIVE\n                        legacyFallback && fallback!=null -> at.heinz.deviceai.learning.ContinuumBaselineSource.WEB_NOTES\n                        turn.grounded -> at.heinz.deviceai.learning.ContinuumBaselineSource.MEMORY\n                        else -> at.heinz.deviceai.learning.ContinuumBaselineSource.NONE\n                    },turn.memoryIds,archiveHit?.source?.id?.takeIf { archiveAnswer!=null })\n                val shown=runCatching {\n                    at.heinz.deviceai.learning.ContinuumBrainBridge.decide(filesDir,core,requestSessionId,\n                        request.take(512),baseline).outcome\n                }.getOrDefault(baseline)\n                Triple(Triple(shown.answer,shown.evidenceLine,shown.grounded),\n                    cognitive.localModelPrompt,cognitive.nextScopedGroundedQuestion)\n            }\n            runOnUiThread {\n                if(isFinishing || isDestroyed || activeChatCancellation !== cancellation)return@runOnUiThread\n                activeChatCancellation=null\n                activeLocalRequest=false\n                setBusy(false)\n                result.onSuccess { (dialogueResult,localPrompt,nextTopic) ->\n                    // An old queued reply cannot set the next chat's runtime context.\n                    if(sessionId==requestSessionId)\n                        scopedLocalPromptSession=LocalPromptSession(requestSessionId,nextTopic)\n                    val (answer,evidence,grounded)=dialogueResult\n                    // Direct recall remains exact. Explicit synthesis uses the existing\n                    // local agent; its conclusions acquire no confirmed-memory authority.\n                    if(LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&\n                            localRuntime.loadedModel!=null, request)==AssistantRoute.LOCAL_MODEL) {\n                        val modelQuestion=LocalFirstPolicy.localModelQuestion(\n                            request,localPrompt,\n                            hasSameSessionLocalTurn=localConversationContext\n                                .render(requestSessionId).isNotBlank(),\n                            grounded=grounded\n                        )\n                        if(grounded) {\n                            val recall=at.heinz.deviceai.cognitive.LocalGroundedRecall\n                                .boundedOrNull(answer,evidence)\n                            if(recall==null) {\n                                // A confirmed retrieval must remain exact. If it cannot fit\n                                // the model's bounded evidence envelope, do not truncate it,\n                                // throw from the UI callback or synthesize on incomplete facts.\n                                turnTrace.event(TraceStage.GATED_FALLBACK)\n                                publishCognitiveTrace(turnTrace,TraceOutcome.MEMORY_EXACT)\n                                addAssistantMessage(answer)\n                                addToolActivity(evidence.take(2_000)+\n                                    " · Zusatzanalyse nicht gestartet: Abruf überschreitet sichere Modellgrenzen.")\n                            } else {\n                                addToolActivity(evidence+" · Zusatzaufgabe → lokale Modellschlussfolgerung, nicht bestätigt")\n                                runLocal(request,modelQuestion,recall,turnTrace)\n                            }\n                        } else {\n                            addToolActivity(evidence+" · keine passende Erinnerung → lokales Sprachmodell")\n                            if(modelQuestion==request)runLocal(request,turnTrace=turnTrace)\n                            else runLocal(request,modelQuestion,turnTrace=turnTrace)\n                        }\n                        return@onSuccess\n                    }\n                    turnTrace.event(if(grounded)TraceStage.MEMORY_EXACT else TraceStage.GATED_FALLBACK)\n                    publishCognitiveTrace(turnTrace,if(grounded)TraceOutcome.MEMORY_EXACT else TraceOutcome.BLOCKED)\n                    addAssistantMessage(answer)\n                    addToolActivity(evidence)\n                }.onFailure {\n                    publishCognitiveTrace(turnTrace,TraceOutcome.FAILED)\n                    addAssistantMessage("Continuum-Gedächtnis nicht lesbar: "+(it.message ?: "Prüfung fehlgeschlagen")+". Bestehende Lernstände bleiben erhalten.")\n                }\n            }\n        }\n    }\n\n    `,
+    expected: /nicht unabhängig verifizierter/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/coding-agent-speech-wiring.test.mjs:21:1
+✖ developer speech uses actual German Android recognizer and a unique callback (1.807594ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/. Input:
+  
+  'package at.heinz.deviceai\n' +
+    '\n' +
+    'import at.heinz.deviceai.learning.NeuralDialogue\n' +
+    'import at.heinz.deviceai.learning.NeuralDemoSandbox\n' +
+    'import at.heinz.deviceai.learning.NeuralCommand\n' +
+    'import at.heinz.deviceai.learning.NeuralCommandKind\n' +
+    'import at.heinz.deviceai.learning.NeuralCommandParser\n' +
+    'import at.heinz.deviceai.learning.NeuralLearningCoach\n' +
+    'import at.heinz.deviceai.learning.NeuralLearningProgress\n' +
+    'import at.heinz.deviceai.learning.NeuralPracticeScheduler\n' +
+    'import at.heinz.deviceai.learning.NeuralCuriosityRadar\n' +
+    'import at.heinz.deviceai.learning.NeuralTransferExperiment\n' +
+    'import at.heinz.deviceai.learning.NeuralGeneralizationComparison\n' +
+    'import at.heinz.deviceai.learning.MentorStudyScheduler\n' +
+    'import at.heinz.deviceai.learning.MentorSourceNotebook\n' +
+    'import at.heinz.deviceai.learning.MentorSource\n' +
+    'import at.heinz.deviceai.learning.MentorRecall\n' +
+    'import at.heinz.deviceai.learning.MentorAssociativeRecall\n' +
+    'import at.heinz.deviceai.learning.MentorSemanticRecall\n' +
+    'import at.heinz.deviceai.learning.ContinuumLearningCore\n' +
+    'import at.heinz.deviceai.learning.OwnerFactChange\n' +
+    'import android.app.Activity\n' +
+    'import android.app.AlertDialog\n' +
+    'import android.content.Intent\n' +
+    'import android.content.ActivityNotFoundException\n' +
+    'import android.graphics.Color\n' +
+    'import android.graphics.Typeface\n' +
+    'import android.text.SpannableString\n' +
+    'import android.text.Spanned\n' +
+    'import android.text.style.ForegroundColorSpan\n' +
+    'import android.widget.ImageView\n' +
+    'import android.graphics.drawable.GradientDrawable\n' +
+    'import android.net.Uri\n' +
+    'import android.os.Bundle\n' +
+    'import android.os.Handler\n' +
+    'import android.os.Looper\n' +
+    'import android.speech.tts.TextToSpeech\n' +
+    'import java.util.Locale\n' +
+    'import android.text.InputType\n' +
+    'import android.view.Gravity\n' +
+    'import android.view.WindowInsets\n' +
+    'import android.view.WindowManager\n' +
+    'import android.view.View\n' +
+    'import android.widget.Button\n' +
+    'import android.widget.EditText\n' +
+    'import android.widget.HorizontalScrollView\n' +
+    'import android.widget.LinearLayout\n' +
+    'import android.widget.ProgressBar\n' +
+    'import android.widget.ScrollView\n' +
+    'import android.widget.TextView\n' +
+    'import android.widget.Toast\n' +
+    'import at.heinz.deviceai.cognitive.AgentEvaluator\n' +
+    'import at.heinz.deviceai.cognitive.LocalDialogueQualityGate\n' +
+    'import at.heinz.deviceai.cognitive.AgentModel\n' +
+    'import at.heinz.deviceai.cognitive.AgentModelOutput\n' +
+    'import at.heinz.deviceai.cognitive.AgentToolApproval\n' +
+    'import at.heinz.deviceai.cognitive.AgentToolApprovalProvider\n' +
+    'import at.heinz.deviceai.cognitive.AiContextCompiler\n' +
+    'import at.heinz.deviceai.cognitive.AiContextInput\n' +
+    'import at.heinz.deviceai.cognitive.AiContextPolicy\n' +
+    'import at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner\n' +
+    'import at.heinz.deviceai.cognitive.CognitiveTurnTrace\n' +
+    'import at.heinz.deviceai.cognitive.TraceStage\n' +
+    'import at.heinz.deviceai.cognitive.TraceOutcome\n' +
+    'import at.heinz.deviceai.cognitive.BoundedAgentOrchestrator\n' +
+    'import at.heinz.deviceai.cognitive.ChatReasoningRouter\n' +
+    'import at.heinz.deviceai.cognitive.LocalModelReasoningAdapter\n' +
+    'import at.heinz.deviceai.cognitive.ContinuumRuntimeState\n' +
+    'import at.heinz.deviceai.cognitive.ContinuumRuntimeStore\n' +
+    'import at.heinz.deviceai.cognitive.Evaluation\n' +
+    'import at.heinz.deviceai.cognitive.FileAgentCheckpointStore\n' +
+    'import at.heinz.deviceai.cognitive.InMemoryExperienceStore\n' +
+    'import at.heinz.deviceai.cognitive.InMemoryMemoryStore\n' +
+    'import at.heinz.deviceai.cognitive.MemoryRecord\n' +
+    'import at.heinz.deviceai.cognitive.MemoryType\n' +
+    'import at.heinz.deviceai.cognitive.MemoryWriteContext\n' +
+    'import at.heinz.deviceai.cognitive.MemoryWritePolicy\n' +
+    'import at.heinz.deviceai.cognitive.ProvenanceType\n' +
+    'import at.heinz.deviceai.cognitive.DeepResearchEngine\n' +
+    'import at.heinz.deviceai.cognitive.BacklogException\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentBacklog\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentCoordinator\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentUiController\n' +
+    'import at.heinz.deviceai.cognitive.DeviceDevelopmentBacklog\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentUiPhase\n' +
+    'import at.heinz.deviceai.cognitive.DeterministicResearchSynthesizer\n' +
+    'import at.heinz.deviceai.cognitive.FileResearchDossierStore\n' +
+    'import at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider\n' +
+    'import at.heinz.deviceai.cognitive.ResearchBudgetPolicy\n' +
+    'import at.heinz.deviceai.cognitive.ResearchMode\n' +
+    'import at.heinz.deviceai.cognitive.ResearchOptInPolicy\n' +
+    'import at.heinz.deviceai.cognitive.ResearchPhase\n' +
+    'import at.heinz.deviceai.cognitive.ResearchPromptBoundary\n' +
+    'import at.heinz.deviceai.cognitive.ResearchProviderPolicy\n' +
+    'import at.heinz.deviceai.cognitive.ResearchSynthesisOutput\n' +
+    'import at.heinz.deviceai.cognitive.ResearchSynthesizer\n' +
+    'import at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProvider\n' +
+    'import at.heinz.deviceai.cognitive.WebLearningInbox\n' +
+    'import at.heinz.deviceai.cognitive.WebLearningJournal\n' +
+    'import at.heinz.deviceai.cognitive.WebLearningCandidate\n' +
+    'import at.heinz.deviceai.cognitive.GroundedWebRecall\n' +
+    'import at.heinz.deviceai.localmodel.ImportedLocalModel\n' +
+    'import at.heinz.deviceai.localmodel.LocalInferenceEvent\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelBackend\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelCatalog\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelRuntime\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelState\n' +
+    'import at.heinz.deviceai.localmodel.LocalToolResponse\n' +
+    'import java.util.concurrent.CountDownLatch\n' +
+    'import java.util.concurrent.Executors\n' +
+    'import java.util.concurrent.TimeUnit\n' +
+    'import java.util.UUID\n' +
+    '\n' +
+    'class AgentActivity : Activity() {\n' +
+    '    private var pendingContinuumPackageModel:ByteArray?=null\n' +
+    '    private data class LocalGeneration(\n' +
+    '        val response: String,\n' +
+    '        val proposal: ToolProposal?,\n' +
+    '        val rejectedToolResponses: List<LocalToolResponse>,\n' +
+    '        val failure: String?\n' +
+    '    )\n' +
+    '\n' +
+    '    companion object {\n' +
+    '        @Volatile private var crashHandlerInstalled = false\n' +
+    '        private const val SPEECH_REQUEST = 2207\n' +
+    '        private const val LOCAL_SPEECH_PERMISSION_REQUEST = 2241\n' +
+    '        private const val MODEL_IMPORT_REQUEST = 2208\n' +
+    '        private const val DEV_SOURCE_REQUEST = 2209\n' +
+    '        private const val DEV_EXPORT_REQUEST = 2210\n' +
+    '        private const val DEV_SPEECH_REQUEST = 2221\n' +
+    '        // Every *_REQUEST code must be unique: onActivityResult dispatches on the\n' +
+    '        // first matching branch (checked by android-integration-wiring.test.mjs).\n' +
+    '        private const val DEV_BACKLOG_EXPORT_REQUEST = 2214\n' +
+    '        private const val DEV_OPLOG_EXPORT_REQUEST = 2215\n' +
+    '        private const val DEV_BACKLOG_IMPORT_REQUEST = 2216\n' +
+    '        private const val DEV_BACKLOG_MAX_IMPORT_BYTES = 4_000_000\n' +
+    '        private const val NEURAL_IMPORT_REQUEST = 2211\n' +
+    '        private const val CONTINUUM_CORE_EXPORT_REQUEST = 2218\n' +
+    '        private const val CONTINUUM_ARCHIVE_EXPORT_REQUEST = 2219\n' +
+    '        private const val CONTINUUM_ARCHIVE_IMPORT_REQUEST = 2220\n' +
+    '        private const val PERSONAL_LEARNING_EXPORT_REQUEST = 2231\n' +
+    '        private const val PERSONAL_LEARNING_PREVIEW_REQUEST = 2232\n' +
+    '        private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212\n' +
+    '        private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213\n' +
+    '        private const val DEV_MAX_SOURCE_READ_BYTES = 4_000\n' +
+    '        private const val SWB1_BYTES = 32_960\n' +
+    '        private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"\n' +
+    '        private const val WORK_AREA_STATE_KEY = "continuum_work_area_state"\n' +
+    '        // Public catalog metadata only, never private model bytes or credentials.\n' +
+    '        private const val MODEL_IMPORT_ID_STATE_KEY = "continuum_model_import_id_v1"\n' +
+    '        private const val MODEL_IMPORT_VERSION_STATE_KEY = "continuum_model_import_version_v1"\n' +
+    '        private const val MODEL_IMPORT_SHA256_STATE_KEY = "continuum_model_import_sha256_v1"\n' +
+    '        private val BG = Color.rgb(5, 8, 23)\n' +
+    '        private val PANEL = Color.rgb(12, 17, 40)\n' +
+    '        private val PANEL_2 = Color.rgb(18, 23, 57)\n' +
+    '        private val SURFACE = Color.rgb(23, 34, 77)\n' +
+    '        private val BORDER = Color.rgb(73, 91, 171)\n' +
+    '        private val TEXT = Color.rgb(245, 248, 253)\n' +
+    '        private val MUTED = Color.rgb(155, 169, 191)\n' +
+    '        private val ACCENT = Color.rgb(64, 159, 255)\n' +
+    '        private val ACCENT_DARK = Color.rgb(37, 87, 224)\n' +
+    '        private val CYAN = Color.rgb(58, 220, 255)\n' +
+    '        private val GREEN = Color.rgb(78, 214, 145)\n' +
+    '        private val AMBER = Color.rgb(255, 192, 82)\n' +
+    '        private val RED = Color.rgb(255, 102, 112)\n' +
+    '        private val USER_BUBBLE = Color.rgb(48, 72, 148)\n' +
+    '        private val ASSISTANT_BUBBLE = Color.rgb(24, 33, 47)\n' +
+    '    }\n' +
+    '\n' +
+    '    private lateinit var bridge: ShizukuBridge\n' +
+    '    private lateinit var executor: DeviceToolExecutor\n' +
+    '    private lateinit var backend: AgentBackendClient\n' +
+    '    private lateinit var modelCatalog: LocalModelCatalog\n' +
+    '    private lateinit var localRuntime: LocalModelRuntime\n' +
+    '    private lateinit var receiptStore: FileToolExecutionReceiptStore\n' +
+    '    // opened on localAgentExecutor (Keystore and file I/O), see initializeContinuum\n' +
+    '    @Volatile private var continuumStore: ContinuumRuntimeStore? = null\n' +
+    '    @Volatile private var continuumState: ContinuumRuntimeState? = null\n' +
+    '    @Volatile private var continuumStartupNote: String? = null\n' +
+    '    private val contextCompiler = AiContextCompiler(\n' +
+    '        AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4)\n' +
+    '    )\n' +
+    '\n' +
+    '    private lateinit var shizukuBadge: TextView\n' +
+    '    private lateinit var cloudBadge: TextView\n' +
+    '    private lateinit var localBadge: TextView\n' +
+    '    // views of the open model center (null while it is closed)\n' +
+    '    private var modelCardText: TextView? = null\n' +
+    '    private var selectedModelStatusText: TextView? = null\n' +
+    '    private var localActionButton: TextView? = null\n' +
+    '    private var modelCenterDialog: AlertDialog? = null\n' +
+    '    // catalog listing, refreshed off the UI thread (reloadInstalledModels)\n' +
+    '    private var installedModels: List<ImportedLocalModel> = emptyList()\n' +
+    '    private lateinit var activityText: TextView\n' +
+    '    private lateinit var planCard: LinearLayout\n' +
+    '    private lateinit var planText: TextView\n' +
+    '    private lateinit var chatScroll: ScrollView\n' +
+    '    private lateinit var chatContainer: LinearLayout\n' +
+    '    private lateinit var input: EditText\n' +
+    '    private lateinit var sendButton: Bu'... 491479 more characters
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/coding-agent-speech-wiring.test.mjs:24:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'package at.heinz.deviceai\n\nimport at.heinz.deviceai.learning.NeuralDialogue\nimport at.heinz.deviceai.learning.NeuralDemoSandbox\nimport at.heinz.deviceai.learning.NeuralCommand\nimport at.heinz.deviceai.learning.NeuralCommandKind\nimport at.heinz.deviceai.learning.NeuralCommandParser\nimport at.heinz.deviceai.learning.NeuralLearningCoach\nimport at.heinz.deviceai.learning.NeuralLearningProgress\nimport at.heinz.deviceai.learning.NeuralPracticeScheduler\nimport at.heinz.deviceai.learning.NeuralCuriosityRadar\nimport at.heinz.deviceai.learning.NeuralTransferExperiment\nimport at.heinz.deviceai.learning.NeuralGeneralizationComparison\nimport at.heinz.deviceai.learning.MentorStudyScheduler\nimport at.heinz.deviceai.learning.MentorSourceNotebook\nimport at.heinz.deviceai.learning.MentorSource\nimport at.heinz.deviceai.learning.MentorRecall\nimport at.heinz.deviceai.learning.MentorAssociativeRecall\nimport at.heinz.deviceai.learning.MentorSemanticRecall\nimport at.heinz.deviceai.learning.ContinuumLearningCore\nimport at.heinz.deviceai.learning.OwnerFactChange\nimport android.app.Activity\nimport android.app.AlertDialog\nimport android.content.Intent\nimport android.content.ActivityNotFoundException\nimport android.graphics.Color\nimport android.graphics.Typeface\nimport android.text.SpannableString\nimport android.text.Spanned\nimport android.text.style.ForegroundColorSpan\nimport android.widget.ImageView\nimport android.graphics.drawable.GradientDrawable\nimport android.net.Uri\nimport android.os.Bundle\nimport android.os.Handler\nimport android.os.Looper\nimport android.speech.tts.TextToSpeech\nimport java.util.Locale\nimport android.text.InputType\nimport android.view.Gravity\nimport android.view.WindowInsets\nimport android.view.WindowManager\nimport android.view.View\nimport android.widget.Button\nimport android.widget.EditText\nimport android.widget.HorizontalScrollView\nimport android.widget.LinearLayout\nimport android.widget.ProgressBar\nimport android.widget.ScrollView\nimport android.widget.TextView\nimport android.widget.Toast\nimport at.heinz.deviceai.cognitive.AgentEvaluator\nimport at.heinz.deviceai.cognitive.LocalDialogueQualityGate\nimport at.heinz.deviceai.cognitive.AgentModel\nimport at.heinz.deviceai.cognitive.AgentModelOutput\nimport at.heinz.deviceai.cognitive.AgentToolApproval\nimport at.heinz.deviceai.cognitive.AgentToolApprovalProvider\nimport at.heinz.deviceai.cognitive.AiContextCompiler\nimport at.heinz.deviceai.cognitive.AiContextInput\nimport at.heinz.deviceai.cognitive.AiContextPolicy\nimport at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner\nimport at.heinz.deviceai.cognitive.CognitiveTurnTrace\nimport at.heinz.deviceai.cognitive.TraceStage\nimport at.heinz.deviceai.cognitive.TraceOutcome\nimport at.heinz.deviceai.cognitive.BoundedAgentOrchestrator\nimport at.heinz.deviceai.cognitive.ChatReasoningRouter\nimport at.heinz.deviceai.cognitive.LocalModelReasoningAdapter\nimport at.heinz.deviceai.cognitive.ContinuumRuntimeState\nimport at.heinz.deviceai.cognitive.ContinuumRuntimeStore\nimport at.heinz.deviceai.cognitive.Evaluation\nimport at.heinz.deviceai.cognitive.FileAgentCheckpointStore\nimport at.heinz.deviceai.cognitive.InMemoryExperienceStore\nimport at.heinz.deviceai.cognitive.InMemoryMemoryStore\nimport at.heinz.deviceai.cognitive.MemoryRecord\nimport at.heinz.deviceai.cognitive.MemoryType\nimport at.heinz.deviceai.cognitive.MemoryWriteContext\nimport at.heinz.deviceai.cognitive.MemoryWritePolicy\nimport at.heinz.deviceai.cognitive.ProvenanceType\nimport at.heinz.deviceai.cognitive.DeepResearchEngine\nimport at.heinz.deviceai.cognitive.BacklogException\nimport at.heinz.deviceai.cognitive.DevelopmentBacklog\nimport at.heinz.deviceai.cognitive.DevelopmentCoordinator\nimport at.heinz.deviceai.cognitive.DevelopmentUiController\nimport at.heinz.deviceai.cognitive.DeviceDevelopmentBacklog\nimport at.heinz.deviceai.cognitive.DevelopmentUiPhase\nimport at.heinz.deviceai.cognitive.DeterministicResearchSynthesizer\nimport at.heinz.deviceai.cognitive.FileResearchDossierStore\nimport at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider\nimport at.heinz.deviceai.cognitive.ResearchBudgetPolicy\nimport at.heinz.deviceai.cognitive.ResearchMode\nimport at.heinz.deviceai.cognitive.ResearchOptInPolicy\nimport at.heinz.deviceai.cognitive.ResearchPhase\nimport at.heinz.deviceai.cognitive.ResearchPromptBoundary\nimport at.heinz.deviceai.cognitive.ResearchProviderPolicy\nimport at.heinz.deviceai.cognitive.ResearchSynthesisOutput\nimport at.heinz.deviceai.cognitive.ResearchSynthesizer\nimport at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProvider\nimport at.heinz.deviceai.cognitive.WebLearningInbox\nimport at.heinz.deviceai.cognitive.WebLearningJournal\nimport at.heinz.deviceai.cognitive.WebLearningCandidate\nimport at.heinz.deviceai.cognitive.GroundedWebRecall\nimport at.heinz.deviceai.localmodel.ImportedLocalModel\nimport at.heinz.deviceai.localmodel.LocalInferenceEvent\nimport at.heinz.deviceai.localmodel.LocalModelBackend\nimport at.heinz.deviceai.localmodel.LocalModelCatalog\nimport at.heinz.deviceai.localmodel.LocalModelRuntime\nimport at.heinz.deviceai.localmodel.LocalModelState\nimport at.heinz.deviceai.localmodel.LocalToolResponse\nimport java.util.concurrent.CountDownLatch\nimport java.util.concurrent.Executors\nimport java.util.concurrent.TimeUnit\nimport java.util.UUID\n\nclass AgentActivity : Activity() {\n    private var pendingContinuumPackageModel:ByteArray?=null\n    private data class LocalGeneration(\n        val response: String,\n        val proposal: ToolProposal?,\n        val rejectedToolResponses: List<LocalToolResponse>,\n        val failure: String?\n    )\n\n    companion object {\n        @Volatile private var crashHandlerInstalled = false\n        private const val SPEECH_REQUEST = 2207\n        private const val LOCAL_SPEECH_PERMISSION_REQUEST = 2241\n        private const val MODEL_IMPORT_REQUEST = 2208\n        private const val DEV_SOURCE_REQUEST = 2209\n        private const val DEV_EXPORT_REQUEST = 2210\n        private const val DEV_SPEECH_REQUEST = 2221\n        // Every *_REQUEST code must be unique: onActivityResult dispatches on the\n        // first matching branch (checked by android-integration-wiring.test.mjs).\n        private const val DEV_BACKLOG_EXPORT_REQUEST = 2214\n        private const val DEV_OPLOG_EXPORT_REQUEST = 2215\n        private const val DEV_BACKLOG_IMPORT_REQUEST = 2216\n        private const val DEV_BACKLOG_MAX_IMPORT_BYTES = 4_000_000\n        private const val NEURAL_IMPORT_REQUEST = 2211\n        private const val CONTINUUM_CORE_EXPORT_REQUEST = 2218\n        private const val CONTINUUM_ARCHIVE_EXPORT_REQUEST = 2219\n        private const val CONTINUUM_ARCHIVE_IMPORT_REQUEST = 2220\n        private const val PERSONAL_LEARNING_EXPORT_REQUEST = 2231\n        private const val PERSONAL_LEARNING_PREVIEW_REQUEST = 2232\n        private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212\n        private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213\n        private const val DEV_MAX_SOURCE_READ_BYTES = 4_000\n        private const val SWB1_BYTES = 32_960\n        private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"\n        private const val WORK_AREA_STATE_KEY = "continuum_work_area_state"\n        // Public catalog metadata only, never private model bytes or credentials.\n        private const val MODEL_IMPORT_ID_STATE_KEY = "continuum_model_import_id_v1"\n        private const val MODEL_IMPORT_VERSION_STATE_KEY = "continuum_model_import_version_v1"\n        private const val MODEL_IMPORT_SHA256_STATE_KEY = "continuum_model_import_sha256_v1"\n        private val BG = Color.rgb(5, 8, 23)\n        private val PANEL = Color.rgb(12, 17, 40)\n        private val PANEL_2 = Color.rgb(18, 23, 57)\n        private val SURFACE = Color.rgb(23, 34, 77)\n        private val BORDER = Color.rgb(73, 91, 171)\n        private val TEXT = Color.rgb(245, 248, 253)\n        private val MUTED = Color.rgb(155, 169, 191)\n        private val ACCENT = Color.rgb(64, 159, 255)\n        private val ACCENT_DARK = Color.rgb(37, 87, 224)\n        private val CYAN = Color.rgb(58, 220, 255)\n        private val GREEN = Color.rgb(78, 214, 145)\n        private val AMBER = Color.rgb(255, 192, 82)\n        private val RED = Color.rgb(255, 102, 112)\n        private val USER_BUBBLE = Color.rgb(48, 72, 148)\n        private val ASSISTANT_BUBBLE = Color.rgb(24, 33, 47)\n    }\n\n    private lateinit var bridge: ShizukuBridge\n    private lateinit var executor: DeviceToolExecutor\n    private lateinit var backend: AgentBackendClient\n    private lateinit var modelCatalog: LocalModelCatalog\n    private lateinit var localRuntime: LocalModelRuntime\n    private lateinit var receiptStore: FileToolExecutionReceiptStore\n    // opened on localAgentExecutor (Keystore and file I/O), see initializeContinuum\n    @Volatile private var continuumStore: ContinuumRuntimeStore? = null\n    @Volatile private var continuumState: ContinuumRuntimeState? = null\n    @Volatile private var continuumStartupNote: String? = null\n    private val contextCompiler = AiContextCompiler(\n        AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4)\n    )\n\n    private lateinit var shizukuBadge: TextView\n    private lateinit var cloudBadge: TextView\n    private lateinit var localBadge: TextView\n    // views of the open model center (null while it is closed)\n    private var modelCardText: TextView? = null\n    private var selectedModelStatusText: TextView? = null\n    private var localActionButton: TextView? = null\n    private var modelCenterDialog: AlertDialog? = null\n    // catalog listing, refreshed off the UI thread (reloadInstalledModels)\n    private var installedModels: List<ImportedLocalModel> = emptyList()\n    private lateinit var activityText: TextView\n    private lateinit var planCard: LinearLayout\n    private lateinit var planText: TextView\n    private lateinit var chatScroll: ScrollView\n    private lateinit var chatContainer: LinearLayout\n    private lateinit var input: EditText\n    private lateinit var sendButton: Bu'... 491479 more characters,
+    expected: /RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/coding-agent-speech-wiring.test.mjs:33:1
+✖ voice text is always previewed; neither recognition nor chat command executes code (21.823715ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(speech.length>0)
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/coding-agent-speech-wiring.test.mjs:35:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at .github/continuum/gemma-reopen-lifecycle.test.mjs:81:1
+✖ original 3.66 GB model import remains separate and SHA-verified (1.056912ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /modelCatalog\.import\(/. Input:
+  
+  'private fun importModel(uri: Uri) {\n' +
+    '        val metadata = pendingModelImport\n' +
+    '        if (metadata == null) {\n' +
+    '            localImportError = "Die Dateiauswahl wurde ohne Modellangaben zurückgegeben. Bitte den Import erneut öffnen."\n' +
+    '            Toast.makeText(this, "Gemma-Import abgebrochen: Modellangaben fehlen.", Toast.LENGTH_LONG).show()\n' +
+    '            refreshLocalModelUi()\n' +
+    '            return\n' +
+    '        }\n' +
+    '        pendingModelImport = null\n' +
+    '        resetM2NativeProof()\n' +
+    '        modelImportActive = true\n' +
+    '        latestModelImportSnapshot = null\n' +
+    '        localImportError = null\n' +
+    '        refreshLocalModelUi()\n' +
+    '        // The process-owned job captures only the application resolver and URI.\n' +
+    '        // Activity destruction stops observation, never this multi-GB import.\n' +
+    '        val resolver = applicationContext.contentResolver\n' +
+    '        val started = modelImports.start(metadata.first, metadata.second, metadata.third) {\n' +
+    '            resolver.openInputStream(uri) ?: error("Dokument kann nicht geöffnet werden.")\n' +
+    '        }\n' +
+    '        Toast.makeText(this, if (started) "Modelldatei wird lokal geprüft. Status unter Modellverwaltung."\n' +
+    '            else "Ein Modellimport läuft bereits. Sein Fortschritt bleibt sichtbar.", Toast.LENGTH_LONG).show()\n' +
+    '        if (modelImports.snapshot()?.running == true) scheduleLifecycleTimeout(\n' +
+    '            "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Dateianbieter oder Modellinspektion möglicherweise noch beschäftigt.",\n' +
+    '            forImport = true\n' +
+    '        )\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun displayModelImport(operation: at.heinz.deviceai.localmodel.LocalModelImportOperation) {\n' +
+    '        if (operation.token < displayedImportToken ||\n' +
+    '            operation.token == displayedImportToken && operation.revision <= displayedImportRevision) return\n' +
+    '        val wasRunning = modelImportActive\n' +
+    '        displayedImportToken = operation.token\n' +
+    '        displayedImportRevision = operation.revision\n' +
+    '        modelImportActive = operation.running\n' +
+    '        latestModelImportSnapshot = operation.progress\n' +
+    '        if (operation.running) {\n' +
+    '            if (!wasRunning) scheduleLifecycleTimeout(\n' +
+    '                "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Vorgang läuft weiter.", forImport = true)\n' +
+    '            refreshLocalModelUi()\n' +
+    '            return\n' +
+    '        }\n' +
+    '        clearLifecycleTimeout()\n' +
+    '        val model = operation.model\n' +
+    '        if (model != null) {\n' +
+    '            localImportError = null\n' +
+    '            addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt" +\n' +
+    '                (operation.progress?.let { " · Phase: ${it.phase.name} · Bytes: ${it.copiedBytes} · ms: ${it.elapsedMs}" } ?: ""))\n' +
+    '            reloadInstalledModels()\n' +
+    '            if ((localRuntime.state == LocalModelState.EMPTY || localRuntime.state == LocalModelState.FAILED) &&\n' +
+    '                modelImports.claimResultForLoading(operation.token)) {\n' +
+    '                Toast.makeText(this, "Modelldatei geprüft. Gemma wird jetzt geladen.", Toast.LENGTH_LONG).show()\n' +
+    '                loadModel(model)\n' +
+    '            }\n' +
+    '        } else {\n' +
+    '            localImportError = "Modellimport fehlgeschlagen: " + (operation.failureType ?: "ImportFailure") +\n' +
+    '                (operation.progress?.let { " · Phase: ${it.phase.name}, Bytes: ${it.copiedBytes}, ms: ${it.elapsedMs}" } ?: "")\n' +
+    '            AlertDialog.Builder(this).setTitle("Gemma-Import fehlgeschlagen")\n' +
+    '                .setMessage(localImportError).setPositiveButton("VERSTANDEN", null).show()\n' +
+    '            addToolActivity(localImportError.orEmpty())\n' +
+    '        }\n' +
+    '        refreshLocalModelUi()\n' +
+    '    }\n' +
+    '\n' +
+    '    '
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/gemma-reopen-lifecycle.test.mjs:82:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'private fun importModel(uri: Uri) {\n        val metadata = pendingModelImport\n        if (metadata == null) {\n            localImportError = "Die Dateiauswahl wurde ohne Modellangaben zurückgegeben. Bitte den Import erneut öffnen."\n            Toast.makeText(this, "Gemma-Import abgebrochen: Modellangaben fehlen.", Toast.LENGTH_LONG).show()\n            refreshLocalModelUi()\n            return\n        }\n        pendingModelImport = null\n        resetM2NativeProof()\n        modelImportActive = true\n        latestModelImportSnapshot = null\n        localImportError = null\n        refreshLocalModelUi()\n        // The process-owned job captures only the application resolver and URI.\n        // Activity destruction stops observation, never this multi-GB import.\n        val resolver = applicationContext.contentResolver\n        val started = modelImports.start(metadata.first, metadata.second, metadata.third) {\n            resolver.openInputStream(uri) ?: error("Dokument kann nicht geöffnet werden.")\n        }\n        Toast.makeText(this, if (started) "Modelldatei wird lokal geprüft. Status unter Modellverwaltung."\n            else "Ein Modellimport läuft bereits. Sein Fortschritt bleibt sichtbar.", Toast.LENGTH_LONG).show()\n        if (modelImports.snapshot()?.running == true) scheduleLifecycleTimeout(\n            "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Dateianbieter oder Modellinspektion möglicherweise noch beschäftigt.",\n            forImport = true\n        )\n    }\n\n    private fun displayModelImport(operation: at.heinz.deviceai.localmodel.LocalModelImportOperation) {\n        if (operation.token < displayedImportToken ||\n            operation.token == displayedImportToken && operation.revision <= displayedImportRevision) return\n        val wasRunning = modelImportActive\n        displayedImportToken = operation.token\n        displayedImportRevision = operation.revision\n        modelImportActive = operation.running\n        latestModelImportSnapshot = operation.progress\n        if (operation.running) {\n            if (!wasRunning) scheduleLifecycleTimeout(\n                "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Vorgang läuft weiter.", forImport = true)\n            refreshLocalModelUi()\n            return\n        }\n        clearLifecycleTimeout()\n        val model = operation.model\n        if (model != null) {\n            localImportError = null\n            addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt" +\n                (operation.progress?.let { " · Phase: ${it.phase.name} · Bytes: ${it.copiedBytes} · ms: ${it.elapsedMs}" } ?: ""))\n            reloadInstalledModels()\n            if ((localRuntime.state == LocalModelState.EMPTY || localRuntime.state == LocalModelState.FAILED) &&\n                modelImports.claimResultForLoading(operation.token)) {\n                Toast.makeText(this, "Modelldatei geprüft. Gemma wird jetzt geladen.", Toast.LENGTH_LONG).show()\n                loadModel(model)\n            }\n        } else {\n            localImportError = "Modellimport fehlgeschlagen: " + (operation.failureType ?: "ImportFailure") +\n                (operation.progress?.let { " · Phase: ${it.phase.name}, Bytes: ${it.copiedBytes}, ms: ${it.elapsedMs}" } ?: "")\n            AlertDialog.Builder(this).setTitle("Gemma-Import fehlgeschlagen")\n                .setMessage(localImportError).setPositiveButton("VERSTANDEN", null).show()\n            addToolActivity(localImportError.orEmpty())\n        }\n        refreshLocalModelUi()\n    }\n\n    ',
+    expected: /modelCatalog\.import\(/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/groq-mentor-ui-wiring.test.mjs:23:1
+✖ Android only sends bounded question text to the private backend (2.770648ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /put\("provider", "GROQ"\)/. Input:
+  
+  'fun groqMentor(question: String, callback: (Result<String>) -> Unit) =\n' +
+    '        externalMentor(question, "GROQ", callback)\n' +
+    '\n' +
+    '    fun openRouterMentor(question: String, callback: (Result<String>) -> Unit) =\n' +
+    '        externalMentor(question, "OPENROUTER", callback)\n' +
+    '\n' +
+    '    private fun externalMentor(\n' +
+    '        question: String,\n' +
+    '        provider: String,\n' +
+    '        callback: (Result<String>) -> Unit\n' +
+    '    ) {\n' +
+    '        require(provider == "GROQ" || provider == "OPENROUTER")\n' +
+    '        val base = backendUrl()\n' +
+    '        val token = SecureTokenStore.loadMentorToken(context) ?: SecureTokenStore.load(context)\n' +
+    '        if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {\n' +
+    '            callback(Result.failure(IllegalStateException("Mentor-Gerätefreigabe oder Device-Token fehlt.")))\n' +
+    '            return\n' +
+    '        }\n' +
+    '        if (question.trim().length !in 3..1800) {\n' +
+    '            callback(Result.failure(IllegalArgumentException("Mentorfrage muss zwischen 3 und 1800 Zeichen lang sein.")))\n' +
+    '            return\n' +
+    '        }\n' +
+    '        Thread({\n' +
+    '            val outcome = runCatching {\n' +
+    '                val payload = JSONObject().apply {\n' +
+    '                    put("consent", true)\n' +
+    '                    put("provider", provider)\n' +
+    '                    put("question", question.trim())\n' +
+    '                }\n' +
+    '                val raw = mentorRequestWithOneAuthRecovery(\n' +
+    '                    "POST", "$base/v1/mentor/answer", payload.toString(), base\n' +
+    '                )\n' +
+    '                val json = JSONObject(raw)\n' +
+    '                require(json.optString("provider") == provider &&\n' +
+    '                    json.optString("trust") == "UNVERIFIED_EXTERNAL" &&\n' +
+    '                    !json.optBoolean("memory_written", true) &&\n' +
+    '                    json.optJSONArray("tool_calls")?.length() == 0) {\n' +
+    '                    "Ungültige oder nicht isolierte Mentorantwort."\n' +
+    '                }\n' +
+    '                json.optString("message").trim().take(4200)\n' +
+    '                    .takeIf { it.isNotBlank() }\n' +
+    '                    ?: throw IllegalStateException("Leere Mentorantwort.")\n' +
+    '            }\n' +
+    '            mainHandler.post { callback(outcome) }\n' +
+    '        }, "continuum-remote-mentor").apply { isDaemon = true; start() }\n' +
+    '    }\n' +
+    '\n' +
+    '    '
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/groq-mentor-ui-wiring.test.mjs:29:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'fun groqMentor(question: String, callback: (Result<String>) -> Unit) =\n        externalMentor(question, "GROQ", callback)\n\n    fun openRouterMentor(question: String, callback: (Result<String>) -> Unit) =\n        externalMentor(question, "OPENROUTER", callback)\n\n    private fun externalMentor(\n        question: String,\n        provider: String,\n        callback: (Result<String>) -> Unit\n    ) {\n        require(provider == "GROQ" || provider == "OPENROUTER")\n        val base = backendUrl()\n        val token = SecureTokenStore.loadMentorToken(context) ?: SecureTokenStore.load(context)\n        if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {\n            callback(Result.failure(IllegalStateException("Mentor-Gerätefreigabe oder Device-Token fehlt.")))\n            return\n        }\n        if (question.trim().length !in 3..1800) {\n            callback(Result.failure(IllegalArgumentException("Mentorfrage muss zwischen 3 und 1800 Zeichen lang sein.")))\n            return\n        }\n        Thread({\n            val outcome = runCatching {\n                val payload = JSONObject().apply {\n                    put("consent", true)\n                    put("provider", provider)\n                    put("question", question.trim())\n                }\n                val raw = mentorRequestWithOneAuthRecovery(\n                    "POST", "$base/v1/mentor/answer", payload.toString(), base\n                )\n                val json = JSONObject(raw)\n                require(json.optString("provider") == provider &&\n                    json.optString("trust") == "UNVERIFIED_EXTERNAL" &&\n                    !json.optBoolean("memory_written", true) &&\n                    json.optJSONArray("tool_calls")?.length() == 0) {\n                    "Ungültige oder nicht isolierte Mentorantwort."\n                }\n                json.optString("message").trim().take(4200)\n                    .takeIf { it.isNotBlank() }\n                    ?: throw IllegalStateException("Leere Mentorantwort.")\n            }\n            mainHandler.post { callback(outcome) }\n        }, "continuum-remote-mentor").apply { isDaemon = true; start() }\n    }\n\n    ',
+    expected: /put\("provider", "GROQ"\)/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/model-import-identity.test.mjs:6:1
+✖ a rejected import cannot relabel the independently loaded runtime as failed (5.237007ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /localImportError = error\.message/. Input:
+  
+  'private fun importModel(uri: Uri) {\n' +
+    '        val metadata = pendingModelImport\n' +
+    '        if (metadata == null) {\n' +
+    '            localImportError = "Die Dateiauswahl wurde ohne Modellangaben zurückgegeben. Bitte den Import erneut öffnen."\n' +
+    '            Toast.makeText(this, "Gemma-Import abgebrochen: Modellangaben fehlen.", Toast.LENGTH_LONG).show()\n' +
+    '            refreshLocalModelUi()\n' +
+    '            return\n' +
+    '        }\n' +
+    '        pendingModelImport = null\n' +
+    '        resetM2NativeProof()\n' +
+    '        modelImportActive = true\n' +
+    '        latestModelImportSnapshot = null\n' +
+    '        localImportError = null\n' +
+    '        refreshLocalModelUi()\n' +
+    '        // The process-owned job captures only the application resolver and URI.\n' +
+    '        // Activity destruction stops observation, never this multi-GB import.\n' +
+    '        val resolver = applicationContext.contentResolver\n' +
+    '        val started = modelImports.start(metadata.first, metadata.second, metadata.third) {\n' +
+    '            resolver.openInputStream(uri) ?: error("Dokument kann nicht geöffnet werden.")\n' +
+    '        }\n' +
+    '        Toast.makeText(this, if (started) "Modelldatei wird lokal geprüft. Status unter Modellverwaltung."\n' +
+    '            else "Ein Modellimport läuft bereits. Sein Fortschritt bleibt sichtbar.", Toast.LENGTH_LONG).show()\n' +
+    '        if (modelImports.snapshot()?.running == true) scheduleLifecycleTimeout(\n' +
+    '            "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Dateianbieter oder Modellinspektion möglicherweise noch beschäftigt.",\n' +
+    '            forImport = true\n' +
+    '        )\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun displayModelImport(operation: at.heinz.deviceai.localmodel.LocalModelImportOperation) {\n' +
+    '        if (operation.token < displayedImportToken ||\n' +
+    '            operation.token == displayedImportToken && operation.revision <= displayedImportRevision) return\n' +
+    '        val wasRunning = modelImportActive\n' +
+    '        displayedImportToken = operation.token\n' +
+    '        displayedImportRevision = operation.revision\n' +
+    '        modelImportActive = operation.running\n' +
+    '        latestModelImportSnapshot = operation.progress\n' +
+    '        if (operation.running) {\n' +
+    '            if (!wasRunning) scheduleLifecycleTimeout(\n' +
+    '                "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Vorgang läuft weiter.", forImport = true)\n' +
+    '            refreshLocalModelUi()\n' +
+    '            return\n' +
+    '        }\n' +
+    '        clearLifecycleTimeout()\n' +
+    '        val model = operation.model\n' +
+    '        if (model != null) {\n' +
+    '            localImportError = null\n' +
+    '            addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt" +\n' +
+    '                (operation.progress?.let { " · Phase: ${it.phase.name} · Bytes: ${it.copiedBytes} · ms: ${it.elapsedMs}" } ?: ""))\n' +
+    '            reloadInstalledModels()\n' +
+    '            if ((localRuntime.state == LocalModelState.EMPTY || localRuntime.state == LocalModelState.FAILED) &&\n' +
+    '                modelImports.claimResultForLoading(operation.token)) {\n' +
+    '                Toast.makeText(this, "Modelldatei geprüft. Gemma wird jetzt geladen.", Toast.LENGTH_LONG).show()\n' +
+    '                loadModel(model)\n' +
+    '            }\n' +
+    '        } else {\n' +
+    '            localImportError = "Modellimport fehlgeschlagen: " + (operation.failureType ?: "ImportFailure") +\n' +
+    '                (operation.progress?.let { " · Phase: ${it.phase.name}, Bytes: ${it.copiedBytes}, ms: ${it.elapsedMs}" } ?: "")\n' +
+    '            AlertDialog.Builder(this).setTitle("Gemma-Import fehlgeschlagen")\n' +
+    '                .setMessage(localImportError).setPositiveButton("VERSTANDEN", null).show()\n' +
+    '            addToolActivity(localImportError.orEmpty())\n' +
+    '        }\n' +
+    '        refreshLocalModelUi()\n' +
+    '    }\n' +
+    '\n' +
+    '    '
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/model-import-identity.test.mjs:8:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'private fun importModel(uri: Uri) {\n        val metadata = pendingModelImport\n        if (metadata == null) {\n            localImportError = "Die Dateiauswahl wurde ohne Modellangaben zurückgegeben. Bitte den Import erneut öffnen."\n            Toast.makeText(this, "Gemma-Import abgebrochen: Modellangaben fehlen.", Toast.LENGTH_LONG).show()\n            refreshLocalModelUi()\n            return\n        }\n        pendingModelImport = null\n        resetM2NativeProof()\n        modelImportActive = true\n        latestModelImportSnapshot = null\n        localImportError = null\n        refreshLocalModelUi()\n        // The process-owned job captures only the application resolver and URI.\n        // Activity destruction stops observation, never this multi-GB import.\n        val resolver = applicationContext.contentResolver\n        val started = modelImports.start(metadata.first, metadata.second, metadata.third) {\n            resolver.openInputStream(uri) ?: error("Dokument kann nicht geöffnet werden.")\n        }\n        Toast.makeText(this, if (started) "Modelldatei wird lokal geprüft. Status unter Modellverwaltung."\n            else "Ein Modellimport läuft bereits. Sein Fortschritt bleibt sichtbar.", Toast.LENGTH_LONG).show()\n        if (modelImports.snapshot()?.running == true) scheduleLifecycleTimeout(\n            "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Dateianbieter oder Modellinspektion möglicherweise noch beschäftigt.",\n            forImport = true\n        )\n    }\n\n    private fun displayModelImport(operation: at.heinz.deviceai.localmodel.LocalModelImportOperation) {\n        if (operation.token < displayedImportToken ||\n            operation.token == displayedImportToken && operation.revision <= displayedImportRevision) return\n        val wasRunning = modelImportActive\n        displayedImportToken = operation.token\n        displayedImportRevision = operation.revision\n        modelImportActive = operation.running\n        latestModelImportSnapshot = operation.progress\n        if (operation.running) {\n            if (!wasRunning) scheduleLifecycleTimeout(\n                "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Vorgang läuft weiter.", forImport = true)\n            refreshLocalModelUi()\n            return\n        }\n        clearLifecycleTimeout()\n        val model = operation.model\n        if (model != null) {\n            localImportError = null\n            addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt" +\n                (operation.progress?.let { " · Phase: ${it.phase.name} · Bytes: ${it.copiedBytes} · ms: ${it.elapsedMs}" } ?: ""))\n            reloadInstalledModels()\n            if ((localRuntime.state == LocalModelState.EMPTY || localRuntime.state == LocalModelState.FAILED) &&\n                modelImports.claimResultForLoading(operation.token)) {\n                Toast.makeText(this, "Modelldatei geprüft. Gemma wird jetzt geladen.", Toast.LENGTH_LONG).show()\n                loadModel(model)\n            }\n        } else {\n            localImportError = "Modellimport fehlgeschlagen: " + (operation.failureType ?: "ImportFailure") +\n                (operation.progress?.let { " · Phase: ${it.phase.name}, Bytes: ${it.copiedBytes}, ms: ${it.elapsedMs}" } ?: "")\n            AlertDialog.Builder(this).setTitle("Gemma-Import fehlgeschlagen")\n                .setMessage(localImportError).setPositiveButton("VERSTANDEN", null).show()\n            addToolActivity(localImportError.orEmpty())\n        }\n        refreshLocalModelUi()\n    }\n\n    ',
+    expected: /localImportError = error\.message/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/nexus-beginner-ui.test.mjs:47:1
+✖ Nexus keeps real hologram and voice entry tied to Android speech and system state (1.857483ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/. Input:
+  
+  'package at.heinz.deviceai\n' +
+    '\n' +
+    'import at.heinz.deviceai.learning.NeuralDialogue\n' +
+    'import at.heinz.deviceai.learning.NeuralDemoSandbox\n' +
+    'import at.heinz.deviceai.learning.NeuralCommand\n' +
+    'import at.heinz.deviceai.learning.NeuralCommandKind\n' +
+    'import at.heinz.deviceai.learning.NeuralCommandParser\n' +
+    'import at.heinz.deviceai.learning.NeuralLearningCoach\n' +
+    'import at.heinz.deviceai.learning.NeuralLearningProgress\n' +
+    'import at.heinz.deviceai.learning.NeuralPracticeScheduler\n' +
+    'import at.heinz.deviceai.learning.NeuralCuriosityRadar\n' +
+    'import at.heinz.deviceai.learning.NeuralTransferExperiment\n' +
+    'import at.heinz.deviceai.learning.NeuralGeneralizationComparison\n' +
+    'import at.heinz.deviceai.learning.MentorStudyScheduler\n' +
+    'import at.heinz.deviceai.learning.MentorSourceNotebook\n' +
+    'import at.heinz.deviceai.learning.MentorSource\n' +
+    'import at.heinz.deviceai.learning.MentorRecall\n' +
+    'import at.heinz.deviceai.learning.MentorAssociativeRecall\n' +
+    'import at.heinz.deviceai.learning.MentorSemanticRecall\n' +
+    'import at.heinz.deviceai.learning.ContinuumLearningCore\n' +
+    'import at.heinz.deviceai.learning.OwnerFactChange\n' +
+    'import android.app.Activity\n' +
+    'import android.app.AlertDialog\n' +
+    'import android.content.Intent\n' +
+    'import android.content.ActivityNotFoundException\n' +
+    'import android.graphics.Color\n' +
+    'import android.graphics.Typeface\n' +
+    'import android.text.SpannableString\n' +
+    'import android.text.Spanned\n' +
+    'import android.text.style.ForegroundColorSpan\n' +
+    'import android.widget.ImageView\n' +
+    'import android.graphics.drawable.GradientDrawable\n' +
+    'import android.net.Uri\n' +
+    'import android.os.Bundle\n' +
+    'import android.os.Handler\n' +
+    'import android.os.Looper\n' +
+    'import android.speech.tts.TextToSpeech\n' +
+    'import java.util.Locale\n' +
+    'import android.text.InputType\n' +
+    'import android.view.Gravity\n' +
+    'import android.view.WindowInsets\n' +
+    'import android.view.WindowManager\n' +
+    'import android.view.View\n' +
+    'import android.widget.Button\n' +
+    'import android.widget.EditText\n' +
+    'import android.widget.HorizontalScrollView\n' +
+    'import android.widget.LinearLayout\n' +
+    'import android.widget.ProgressBar\n' +
+    'import android.widget.ScrollView\n' +
+    'import android.widget.TextView\n' +
+    'import android.widget.Toast\n' +
+    'import at.heinz.deviceai.cognitive.AgentEvaluator\n' +
+    'import at.heinz.deviceai.cognitive.LocalDialogueQualityGate\n' +
+    'import at.heinz.deviceai.cognitive.AgentModel\n' +
+    'import at.heinz.deviceai.cognitive.AgentModelOutput\n' +
+    'import at.heinz.deviceai.cognitive.AgentToolApproval\n' +
+    'import at.heinz.deviceai.cognitive.AgentToolApprovalProvider\n' +
+    'import at.heinz.deviceai.cognitive.AiContextCompiler\n' +
+    'import at.heinz.deviceai.cognitive.AiContextInput\n' +
+    'import at.heinz.deviceai.cognitive.AiContextPolicy\n' +
+    'import at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner\n' +
+    'import at.heinz.deviceai.cognitive.CognitiveTurnTrace\n' +
+    'import at.heinz.deviceai.cognitive.TraceStage\n' +
+    'import at.heinz.deviceai.cognitive.TraceOutcome\n' +
+    'import at.heinz.deviceai.cognitive.BoundedAgentOrchestrator\n' +
+    'import at.heinz.deviceai.cognitive.ChatReasoningRouter\n' +
+    'import at.heinz.deviceai.cognitive.LocalModelReasoningAdapter\n' +
+    'import at.heinz.deviceai.cognitive.ContinuumRuntimeState\n' +
+    'import at.heinz.deviceai.cognitive.ContinuumRuntimeStore\n' +
+    'import at.heinz.deviceai.cognitive.Evaluation\n' +
+    'import at.heinz.deviceai.cognitive.FileAgentCheckpointStore\n' +
+    'import at.heinz.deviceai.cognitive.InMemoryExperienceStore\n' +
+    'import at.heinz.deviceai.cognitive.InMemoryMemoryStore\n' +
+    'import at.heinz.deviceai.cognitive.MemoryRecord\n' +
+    'import at.heinz.deviceai.cognitive.MemoryType\n' +
+    'import at.heinz.deviceai.cognitive.MemoryWriteContext\n' +
+    'import at.heinz.deviceai.cognitive.MemoryWritePolicy\n' +
+    'import at.heinz.deviceai.cognitive.ProvenanceType\n' +
+    'import at.heinz.deviceai.cognitive.DeepResearchEngine\n' +
+    'import at.heinz.deviceai.cognitive.BacklogException\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentBacklog\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentCoordinator\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentUiController\n' +
+    'import at.heinz.deviceai.cognitive.DeviceDevelopmentBacklog\n' +
+    'import at.heinz.deviceai.cognitive.DevelopmentUiPhase\n' +
+    'import at.heinz.deviceai.cognitive.DeterministicResearchSynthesizer\n' +
+    'import at.heinz.deviceai.cognitive.FileResearchDossierStore\n' +
+    'import at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider\n' +
+    'import at.heinz.deviceai.cognitive.ResearchBudgetPolicy\n' +
+    'import at.heinz.deviceai.cognitive.ResearchMode\n' +
+    'import at.heinz.deviceai.cognitive.ResearchOptInPolicy\n' +
+    'import at.heinz.deviceai.cognitive.ResearchPhase\n' +
+    'import at.heinz.deviceai.cognitive.ResearchPromptBoundary\n' +
+    'import at.heinz.deviceai.cognitive.ResearchProviderPolicy\n' +
+    'import at.heinz.deviceai.cognitive.ResearchSynthesisOutput\n' +
+    'import at.heinz.deviceai.cognitive.ResearchSynthesizer\n' +
+    'import at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProvider\n' +
+    'import at.heinz.deviceai.cognitive.WebLearningInbox\n' +
+    'import at.heinz.deviceai.cognitive.WebLearningJournal\n' +
+    'import at.heinz.deviceai.cognitive.WebLearningCandidate\n' +
+    'import at.heinz.deviceai.cognitive.GroundedWebRecall\n' +
+    'import at.heinz.deviceai.localmodel.ImportedLocalModel\n' +
+    'import at.heinz.deviceai.localmodel.LocalInferenceEvent\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelBackend\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelCatalog\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelRuntime\n' +
+    'import at.heinz.deviceai.localmodel.LocalModelState\n' +
+    'import at.heinz.deviceai.localmodel.LocalToolResponse\n' +
+    'import java.util.concurrent.CountDownLatch\n' +
+    'import java.util.concurrent.Executors\n' +
+    'import java.util.concurrent.TimeUnit\n' +
+    'import java.util.UUID\n' +
+    '\n' +
+    'class AgentActivity : Activity() {\n' +
+    '    private var pendingContinuumPackageModel:ByteArray?=null\n' +
+    '    private data class LocalGeneration(\n' +
+    '        val response: String,\n' +
+    '        val proposal: ToolProposal?,\n' +
+    '        val rejectedToolResponses: List<LocalToolResponse>,\n' +
+    '        val failure: String?\n' +
+    '    )\n' +
+    '\n' +
+    '    companion object {\n' +
+    '        @Volatile private var crashHandlerInstalled = false\n' +
+    '        private const val SPEECH_REQUEST = 2207\n' +
+    '        private const val LOCAL_SPEECH_PERMISSION_REQUEST = 2241\n' +
+    '        private const val MODEL_IMPORT_REQUEST = 2208\n' +
+    '        private const val DEV_SOURCE_REQUEST = 2209\n' +
+    '        private const val DEV_EXPORT_REQUEST = 2210\n' +
+    '        private const val DEV_SPEECH_REQUEST = 2221\n' +
+    '        // Every *_REQUEST code must be unique: onActivityResult dispatches on the\n' +
+    '        // first matching branch (checked by android-integration-wiring.test.mjs).\n' +
+    '        private const val DEV_BACKLOG_EXPORT_REQUEST = 2214\n' +
+    '        private const val DEV_OPLOG_EXPORT_REQUEST = 2215\n' +
+    '        private const val DEV_BACKLOG_IMPORT_REQUEST = 2216\n' +
+    '        private const val DEV_BACKLOG_MAX_IMPORT_BYTES = 4_000_000\n' +
+    '        private const val NEURAL_IMPORT_REQUEST = 2211\n' +
+    '        private const val CONTINUUM_CORE_EXPORT_REQUEST = 2218\n' +
+    '        private const val CONTINUUM_ARCHIVE_EXPORT_REQUEST = 2219\n' +
+    '        private const val CONTINUUM_ARCHIVE_IMPORT_REQUEST = 2220\n' +
+    '        private const val PERSONAL_LEARNING_EXPORT_REQUEST = 2231\n' +
+    '        private const val PERSONAL_LEARNING_PREVIEW_REQUEST = 2232\n' +
+    '        private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212\n' +
+    '        private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213\n' +
+    '        private const val DEV_MAX_SOURCE_READ_BYTES = 4_000\n' +
+    '        private const val SWB1_BYTES = 32_960\n' +
+    '        private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"\n' +
+    '        private const val WORK_AREA_STATE_KEY = "continuum_work_area_state"\n' +
+    '        // Public catalog metadata only, never private model bytes or credentials.\n' +
+    '        private const val MODEL_IMPORT_ID_STATE_KEY = "continuum_model_import_id_v1"\n' +
+    '        private const val MODEL_IMPORT_VERSION_STATE_KEY = "continuum_model_import_version_v1"\n' +
+    '        private const val MODEL_IMPORT_SHA256_STATE_KEY = "continuum_model_import_sha256_v1"\n' +
+    '        private val BG = Color.rgb(5, 8, 23)\n' +
+    '        private val PANEL = Color.rgb(12, 17, 40)\n' +
+    '        private val PANEL_2 = Color.rgb(18, 23, 57)\n' +
+    '        private val SURFACE = Color.rgb(23, 34, 77)\n' +
+    '        private val BORDER = Color.rgb(73, 91, 171)\n' +
+    '        private val TEXT = Color.rgb(245, 248, 253)\n' +
+    '        private val MUTED = Color.rgb(155, 169, 191)\n' +
+    '        private val ACCENT = Color.rgb(64, 159, 255)\n' +
+    '        private val ACCENT_DARK = Color.rgb(37, 87, 224)\n' +
+    '        private val CYAN = Color.rgb(58, 220, 255)\n' +
+    '        private val GREEN = Color.rgb(78, 214, 145)\n' +
+    '        private val AMBER = Color.rgb(255, 192, 82)\n' +
+    '        private val RED = Color.rgb(255, 102, 112)\n' +
+    '        private val USER_BUBBLE = Color.rgb(48, 72, 148)\n' +
+    '        private val ASSISTANT_BUBBLE = Color.rgb(24, 33, 47)\n' +
+    '    }\n' +
+    '\n' +
+    '    private lateinit var bridge: ShizukuBridge\n' +
+    '    private lateinit var executor: DeviceToolExecutor\n' +
+    '    private lateinit var backend: AgentBackendClient\n' +
+    '    private lateinit var modelCatalog: LocalModelCatalog\n' +
+    '    private lateinit var localRuntime: LocalModelRuntime\n' +
+    '    private lateinit var receiptStore: FileToolExecutionReceiptStore\n' +
+    '    // opened on localAgentExecutor (Keystore and file I/O), see initializeContinuum\n' +
+    '    @Volatile private var continuumStore: ContinuumRuntimeStore? = null\n' +
+    '    @Volatile private var continuumState: ContinuumRuntimeState? = null\n' +
+    '    @Volatile private var continuumStartupNote: String? = null\n' +
+    '    private val contextCompiler = AiContextCompiler(\n' +
+    '        AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4)\n' +
+    '    )\n' +
+    '\n' +
+    '    private lateinit var shizukuBadge: TextView\n' +
+    '    private lateinit var cloudBadge: TextView\n' +
+    '    private lateinit var localBadge: TextView\n' +
+    '    // views of the open model center (null while it is closed)\n' +
+    '    private var modelCardText: TextView? = null\n' +
+    '    private var selectedModelStatusText: TextView? = null\n' +
+    '    private var localActionButton: TextView? = null\n' +
+    '    private var modelCenterDialog: AlertDialog? = null\n' +
+    '    // catalog listing, refreshed off the UI thread (reloadInstalledModels)\n' +
+    '    private var installedModels: List<ImportedLocalModel> = emptyList()\n' +
+    '    private lateinit var activityText: TextView\n' +
+    '    private lateinit var planCard: LinearLayout\n' +
+    '    private lateinit var planText: TextView\n' +
+    '    private lateinit var chatScroll: ScrollView\n' +
+    '    private lateinit var chatContainer: LinearLayout\n' +
+    '    private lateinit var input: EditText\n' +
+    '    private lateinit var sendButton: Bu'... 491479 more characters
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/nexus-beginner-ui.test.mjs:49:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'package at.heinz.deviceai\n\nimport at.heinz.deviceai.learning.NeuralDialogue\nimport at.heinz.deviceai.learning.NeuralDemoSandbox\nimport at.heinz.deviceai.learning.NeuralCommand\nimport at.heinz.deviceai.learning.NeuralCommandKind\nimport at.heinz.deviceai.learning.NeuralCommandParser\nimport at.heinz.deviceai.learning.NeuralLearningCoach\nimport at.heinz.deviceai.learning.NeuralLearningProgress\nimport at.heinz.deviceai.learning.NeuralPracticeScheduler\nimport at.heinz.deviceai.learning.NeuralCuriosityRadar\nimport at.heinz.deviceai.learning.NeuralTransferExperiment\nimport at.heinz.deviceai.learning.NeuralGeneralizationComparison\nimport at.heinz.deviceai.learning.MentorStudyScheduler\nimport at.heinz.deviceai.learning.MentorSourceNotebook\nimport at.heinz.deviceai.learning.MentorSource\nimport at.heinz.deviceai.learning.MentorRecall\nimport at.heinz.deviceai.learning.MentorAssociativeRecall\nimport at.heinz.deviceai.learning.MentorSemanticRecall\nimport at.heinz.deviceai.learning.ContinuumLearningCore\nimport at.heinz.deviceai.learning.OwnerFactChange\nimport android.app.Activity\nimport android.app.AlertDialog\nimport android.content.Intent\nimport android.content.ActivityNotFoundException\nimport android.graphics.Color\nimport android.graphics.Typeface\nimport android.text.SpannableString\nimport android.text.Spanned\nimport android.text.style.ForegroundColorSpan\nimport android.widget.ImageView\nimport android.graphics.drawable.GradientDrawable\nimport android.net.Uri\nimport android.os.Bundle\nimport android.os.Handler\nimport android.os.Looper\nimport android.speech.tts.TextToSpeech\nimport java.util.Locale\nimport android.text.InputType\nimport android.view.Gravity\nimport android.view.WindowInsets\nimport android.view.WindowManager\nimport android.view.View\nimport android.widget.Button\nimport android.widget.EditText\nimport android.widget.HorizontalScrollView\nimport android.widget.LinearLayout\nimport android.widget.ProgressBar\nimport android.widget.ScrollView\nimport android.widget.TextView\nimport android.widget.Toast\nimport at.heinz.deviceai.cognitive.AgentEvaluator\nimport at.heinz.deviceai.cognitive.LocalDialogueQualityGate\nimport at.heinz.deviceai.cognitive.AgentModel\nimport at.heinz.deviceai.cognitive.AgentModelOutput\nimport at.heinz.deviceai.cognitive.AgentToolApproval\nimport at.heinz.deviceai.cognitive.AgentToolApprovalProvider\nimport at.heinz.deviceai.cognitive.AiContextCompiler\nimport at.heinz.deviceai.cognitive.AiContextInput\nimport at.heinz.deviceai.cognitive.AiContextPolicy\nimport at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner\nimport at.heinz.deviceai.cognitive.CognitiveTurnTrace\nimport at.heinz.deviceai.cognitive.TraceStage\nimport at.heinz.deviceai.cognitive.TraceOutcome\nimport at.heinz.deviceai.cognitive.BoundedAgentOrchestrator\nimport at.heinz.deviceai.cognitive.ChatReasoningRouter\nimport at.heinz.deviceai.cognitive.LocalModelReasoningAdapter\nimport at.heinz.deviceai.cognitive.ContinuumRuntimeState\nimport at.heinz.deviceai.cognitive.ContinuumRuntimeStore\nimport at.heinz.deviceai.cognitive.Evaluation\nimport at.heinz.deviceai.cognitive.FileAgentCheckpointStore\nimport at.heinz.deviceai.cognitive.InMemoryExperienceStore\nimport at.heinz.deviceai.cognitive.InMemoryMemoryStore\nimport at.heinz.deviceai.cognitive.MemoryRecord\nimport at.heinz.deviceai.cognitive.MemoryType\nimport at.heinz.deviceai.cognitive.MemoryWriteContext\nimport at.heinz.deviceai.cognitive.MemoryWritePolicy\nimport at.heinz.deviceai.cognitive.ProvenanceType\nimport at.heinz.deviceai.cognitive.DeepResearchEngine\nimport at.heinz.deviceai.cognitive.BacklogException\nimport at.heinz.deviceai.cognitive.DevelopmentBacklog\nimport at.heinz.deviceai.cognitive.DevelopmentCoordinator\nimport at.heinz.deviceai.cognitive.DevelopmentUiController\nimport at.heinz.deviceai.cognitive.DeviceDevelopmentBacklog\nimport at.heinz.deviceai.cognitive.DevelopmentUiPhase\nimport at.heinz.deviceai.cognitive.DeterministicResearchSynthesizer\nimport at.heinz.deviceai.cognitive.FileResearchDossierStore\nimport at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider\nimport at.heinz.deviceai.cognitive.ResearchBudgetPolicy\nimport at.heinz.deviceai.cognitive.ResearchMode\nimport at.heinz.deviceai.cognitive.ResearchOptInPolicy\nimport at.heinz.deviceai.cognitive.ResearchPhase\nimport at.heinz.deviceai.cognitive.ResearchPromptBoundary\nimport at.heinz.deviceai.cognitive.ResearchProviderPolicy\nimport at.heinz.deviceai.cognitive.ResearchSynthesisOutput\nimport at.heinz.deviceai.cognitive.ResearchSynthesizer\nimport at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProvider\nimport at.heinz.deviceai.cognitive.WebLearningInbox\nimport at.heinz.deviceai.cognitive.WebLearningJournal\nimport at.heinz.deviceai.cognitive.WebLearningCandidate\nimport at.heinz.deviceai.cognitive.GroundedWebRecall\nimport at.heinz.deviceai.localmodel.ImportedLocalModel\nimport at.heinz.deviceai.localmodel.LocalInferenceEvent\nimport at.heinz.deviceai.localmodel.LocalModelBackend\nimport at.heinz.deviceai.localmodel.LocalModelCatalog\nimport at.heinz.deviceai.localmodel.LocalModelRuntime\nimport at.heinz.deviceai.localmodel.LocalModelState\nimport at.heinz.deviceai.localmodel.LocalToolResponse\nimport java.util.concurrent.CountDownLatch\nimport java.util.concurrent.Executors\nimport java.util.concurrent.TimeUnit\nimport java.util.UUID\n\nclass AgentActivity : Activity() {\n    private var pendingContinuumPackageModel:ByteArray?=null\n    private data class LocalGeneration(\n        val response: String,\n        val proposal: ToolProposal?,\n        val rejectedToolResponses: List<LocalToolResponse>,\n        val failure: String?\n    )\n\n    companion object {\n        @Volatile private var crashHandlerInstalled = false\n        private const val SPEECH_REQUEST = 2207\n        private const val LOCAL_SPEECH_PERMISSION_REQUEST = 2241\n        private const val MODEL_IMPORT_REQUEST = 2208\n        private const val DEV_SOURCE_REQUEST = 2209\n        private const val DEV_EXPORT_REQUEST = 2210\n        private const val DEV_SPEECH_REQUEST = 2221\n        // Every *_REQUEST code must be unique: onActivityResult dispatches on the\n        // first matching branch (checked by android-integration-wiring.test.mjs).\n        private const val DEV_BACKLOG_EXPORT_REQUEST = 2214\n        private const val DEV_OPLOG_EXPORT_REQUEST = 2215\n        private const val DEV_BACKLOG_IMPORT_REQUEST = 2216\n        private const val DEV_BACKLOG_MAX_IMPORT_BYTES = 4_000_000\n        private const val NEURAL_IMPORT_REQUEST = 2211\n        private const val CONTINUUM_CORE_EXPORT_REQUEST = 2218\n        private const val CONTINUUM_ARCHIVE_EXPORT_REQUEST = 2219\n        private const val CONTINUUM_ARCHIVE_IMPORT_REQUEST = 2220\n        private const val PERSONAL_LEARNING_EXPORT_REQUEST = 2231\n        private const val PERSONAL_LEARNING_PREVIEW_REQUEST = 2232\n        private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212\n        private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213\n        private const val DEV_MAX_SOURCE_READ_BYTES = 4_000\n        private const val SWB1_BYTES = 32_960\n        private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"\n        private const val WORK_AREA_STATE_KEY = "continuum_work_area_state"\n        // Public catalog metadata only, never private model bytes or credentials.\n        private const val MODEL_IMPORT_ID_STATE_KEY = "continuum_model_import_id_v1"\n        private const val MODEL_IMPORT_VERSION_STATE_KEY = "continuum_model_import_version_v1"\n        private const val MODEL_IMPORT_SHA256_STATE_KEY = "continuum_model_import_sha256_v1"\n        private val BG = Color.rgb(5, 8, 23)\n        private val PANEL = Color.rgb(12, 17, 40)\n        private val PANEL_2 = Color.rgb(18, 23, 57)\n        private val SURFACE = Color.rgb(23, 34, 77)\n        private val BORDER = Color.rgb(73, 91, 171)\n        private val TEXT = Color.rgb(245, 248, 253)\n        private val MUTED = Color.rgb(155, 169, 191)\n        private val ACCENT = Color.rgb(64, 159, 255)\n        private val ACCENT_DARK = Color.rgb(37, 87, 224)\n        private val CYAN = Color.rgb(58, 220, 255)\n        private val GREEN = Color.rgb(78, 214, 145)\n        private val AMBER = Color.rgb(255, 192, 82)\n        private val RED = Color.rgb(255, 102, 112)\n        private val USER_BUBBLE = Color.rgb(48, 72, 148)\n        private val ASSISTANT_BUBBLE = Color.rgb(24, 33, 47)\n    }\n\n    private lateinit var bridge: ShizukuBridge\n    private lateinit var executor: DeviceToolExecutor\n    private lateinit var backend: AgentBackendClient\n    private lateinit var modelCatalog: LocalModelCatalog\n    private lateinit var localRuntime: LocalModelRuntime\n    private lateinit var receiptStore: FileToolExecutionReceiptStore\n    // opened on localAgentExecutor (Keystore and file I/O), see initializeContinuum\n    @Volatile private var continuumStore: ContinuumRuntimeStore? = null\n    @Volatile private var continuumState: ContinuumRuntimeState? = null\n    @Volatile private var continuumStartupNote: String? = null\n    private val contextCompiler = AiContextCompiler(\n        AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4)\n    )\n\n    private lateinit var shizukuBadge: TextView\n    private lateinit var cloudBadge: TextView\n    private lateinit var localBadge: TextView\n    // views of the open model center (null while it is closed)\n    private var modelCardText: TextView? = null\n    private var selectedModelStatusText: TextView? = null\n    private var localActionButton: TextView? = null\n    private var modelCenterDialog: AlertDialog? = null\n    // catalog listing, refreshed off the UI thread (reloadInstalledModels)\n    private var installedModels: List<ImportedLocalModel> = emptyList()\n    private lateinit var activityText: TextView\n    private lateinit var planCard: LinearLayout\n    private lateinit var planText: TextView\n    private lateinit var chatScroll: ScrollView\n    private lateinit var chatContainer: LinearLayout\n    private lateinit var input: EditText\n    private lateinit var sendButton: Bu'... 491479 more characters,
+    expected: /RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/research-job-permission.test.mjs:21:1
+✖ owner consent, cellular network and measured 20pct resource gates remain required (6.051281ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /if\(!enabled\)/. Input:
+  
+  'package at.heinz.deviceai.learning\n' +
+    '\n' +
+    'import android.app.job.JobInfo\n' +
+    'import android.app.job.JobParameters\n' +
+    'import android.app.job.JobScheduler\n' +
+    'import android.app.job.JobService\n' +
+    'import android.content.ComponentName\n' +
+    'import android.content.Context\n' +
+    'import android.os.SystemClock\n' +
+    'import android.util.Log\n' +
+    'import org.json.JSONObject\n' +
+    'import java.io.ByteArrayOutputStream\n' +
+    'import java.net.URL\n' +
+    'import java.nio.charset.StandardCharsets\n' +
+    'import java.time.ZonedDateTime\n' +
+    'import java.time.format.DateTimeFormatter\n' +
+    'import java.util.concurrent.atomic.AtomicBoolean\n' +
+    'import javax.net.ssl.HttpsURLConnection\n' +
+    '\n' +
+    '/**\n' +
+    ' * Explicitly owner-enabled, budgeted, recurrent public-source research.\n' +
+    ' * No full web autonomy, no arbitrary URLs, no device commands and no LLM API.\n' +
+    ' */\n' +
+    'class ContinuumPublicStudyScheduler(context:Context) {\n' +
+    '    private val app=context.applicationContext\n' +
+    '    private val jobs get()=app.getSystemService(JobScheduler::class.java)\n' +
+    '    private val prefs get()=app.getSharedPreferences(PREFS,Context.MODE_PRIVATE)\n' +
+    '\n' +
+    '    val enabled get()=prefs.getBoolean("enabled",false)\n' +
+    '    fun internetAllowed():Boolean=app.getSharedPreferences("continuum-internet",Context.MODE_PRIVATE)\n' +
+    '        .getString("mode","ASK")=="ALWAYS_ON"\n' +
+    '    fun isRateLimited():Boolean = System.currentTimeMillis()<\n' +
+    '        prefs.getLong("retry_after_at",0L)\n' +
+    '    fun postponeDueToProvider(seconds:Long) {\n' +
+    '        val waitMs=seconds.coerceAtLeast(3600L).coerceAtMost(30L*24L*3600L)*1000L\n' +
+    '        val until=System.currentTimeMillis()+waitMs\n' +
+    '        prefs.edit().putLong("retry_after_at",until)\n' +
+    '            .putString("phase","PROVIDER_RATE_LIMIT").commit()\n' +
+    '    }\n' +
+    '    fun display():String {\n' +
+    '        val phase=prefs.getString("phase","NOT_RUN") ?: "NOT_RUN"\n' +
+    '        val nextAllowed=prefs.getLong("retry_after_at",0L)\n' +
+    '        val pending=runCatching { jobs.getPendingJob(JOB_ID) }.getOrNull()\n' +
+    '        val jobStatus=if(pending!=null)"REGISTRIERT" else "NICHT REGISTRIERT"\n' +
+    '        val pendingReason=if(pending!=null && android.os.Build.VERSION.SDK_INT>=34)\n' +
+    '            runCatching { jobs.getPendingJobReason(JOB_ID) }.getOrNull()\n' +
+    '        else null\n' +
+    '        val pendingTopics=loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING)\n' +
+    '        val seenTopics=loadTopics("topic_visited",ContinuumTopicFrontier.MAX_VISITED)\n' +
+    '        val nextTopic=ContinuumTopicFrontier.select(prefs.getLong("attempts",0L),pendingTopics)\n' +
+    '        return "AUTONOME ÖFFENTLICHE FORSCHUNG: "+\n' +
+    '            (if(enabled)"FREIGEGEBEN" else "AUS")+"\\n"+\n' +
+    '            "Android-Forschungsjob: "+jobStatus+\n' +
+    '            (pendingReason?.let { " · Wartegrund-Code: "+it } ?: "")+"\\n"+\n' +
+    '            "Letzter Status: "+phase+(if(isRateLimited())\n' +
+    '                " · Pause bis "+java.util.Date(nextAllowed) else "")+"\\n"+\n' +
+    '            "Versuche: "+prefs.getLong("attempts",0)+\n' +
+    '            " · neue Quellen: "+prefs.getLong("sources",0)+\n' +
+    '            " · akzeptierte SWB1-Runden: "+prefs.getLong("accepted",0)+\n' +
+    '            "\\nAutomatisch entdeckte Themen in Warteschlange: "+pendingTopics.size+\n' +
+    '            " · untersuchte Thementitel: "+seenTopics.size+\n' +
+    '            "\\nNächstes Forschungsthema: "+nextTopic+\n' +
+    '            "\\nPro Zyklus eine externe öffentliche Webquelle, mit Beleg und Sicherheitsprüfung; "+\n' +
+    '            "Android steuert die tatsächliche Häufigkeit. Jederzeit abschaltbar."\n' +
+    '    }\n' +
+    '\n' +
+    '    fun enable():Boolean {\n' +
+    '        if(!prefs.edit().putBoolean("enabled",true).commit()) return false\n' +
+    '        return restore()\n' +
+    '    }\n' +
+    '\n' +
+    '    fun disable():Boolean {\n' +
+    '        val saved=prefs.edit().putBoolean("enabled",false)\n' +
+    '            .putString("phase","DISABLED").commit()\n' +
+    '        jobs.cancel(JOB_ID)\n' +
+    '        return saved\n' +
+    '    }\n' +
+    '\n' +
+    '    fun restore():Boolean {\n' +
+    '        if(!enabled || !internetAllowed()) { jobs.cancel(JOB_ID); return false }\n' +
+    '        return try {\n' +
+    '            val pending=jobs.getPendingJob(JOB_ID)\n' +
+    '            if(pending!=null &&\n' +
+    '                pending.service.className==ContinuumPublicStudyJobService::class.java.name &&\n' +
+    '                !pending.isRequireCharging &&\n' +
+    '                pending.networkType==JobInfo.NETWORK_TYPE_ANY &&\n' +
+    '                pending.isPersisted &&\n' +
+    '                pending.intervalMillis==ContinuumPublicStudyPolicy.PERIOD_MS &&\n' +
+    '                !pending.isRequireBatteryNotLow &&\n' +
+    '                pending.isRequireStorageNotLow) return true\n' +
+    '            val request=JobInfo.Builder(JOB_ID,\n' +
+    '                ComponentName(app,ContinuumPublicStudyJobService::class.java))\n' +
+    '                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)\n' +
+    '                .setRequiresCharging(false)\n' +
+    '                .setRequiresBatteryNotLow(false)\n' +
+    '                .setRequiresStorageNotLow(true)\n' +
+    '                .setPersisted(true)\n' +
+    '                .setPeriodic(ContinuumPublicStudyPolicy.PERIOD_MS)\n' +
+    '                .build()\n' +
+    '            val ok=jobs.schedule(request)==JobScheduler.RESULT_SUCCESS\n' +
+    '            if(!ok)recordPhase("SCHEDULE_FAILED")\n' +
+    '            ok\n' +
+    '        } catch(e:RuntimeException) {\n' +
+    '            recordPhase("SCHEDULE_FAILED_"+e.javaClass.simpleName.take(30))\n' +
+    '            false\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun loadTopics(key:String,limit:Int):List<String> =\n' +
+    `        prefs.getString(key,"").orEmpty().split('\\n')\n` +
+    '            .filter(ContinuumPublicStudyPolicy::validArticleTitle)\n' +
+    '            .distinct().take(limit)\n' +
+    '\n' +
+    '    @Synchronized fun nextTopic():String =\n' +
+    '        ContinuumTopicFrontier.select(prefs.getLong("attempts",0L),\n' +
+    '            loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING))\n' +
+    '\n' +
+    '    /** Every new topic is a trusted encyclopedia link title, not a web command. */\n' +
+    '    @Synchronized fun addDiscovered(titles:List<String>):Int {\n' +
+    '        if(!enabled || titles.isEmpty())return 0\n' +
+    '        val before=loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING)\n' +
+    '        val next=ContinuumTopicFrontier.enqueue(before,\n' +
+    '            loadTopics("topic_visited",ContinuumTopicFrontier.MAX_VISITED),titles)\n' +
+    '        if(next==before)return 0\n' +
+    '        check(prefs.edit().putString("topic_pending",next.joinToString("\\n")).commit()) {\n' +
+    '            "Research topic queue not persisted"\n' +
+    '        }\n' +
+    '        return next.size-before.size\n' +
+    '    }\n' +
+    '\n' +
+    '    @Synchronized fun recordCycle(phase:String,topic:String?,sourceAdded:Boolean=false,\n' +
+    '                                  weightsAccepted:Boolean=false,stopRequested:()->Boolean={ false }) {\n' +
+    '        val edit=prefs.edit()\n' +
+    '            .putLong("attempts",(prefs.getLong("attempts",0L)+1L).coerceAtMost(Long.MAX_VALUE-1))\n' +
+    '            .putString("phase",phase.take(65))\n' +
+    '        if(topic!=null && ContinuumPublicStudyPolicy.validArticleTitle(topic) &&\n' +
+    '            ContinuumPublicStudyCycleResult.markTopicCompleted(phase)) {\n' +
+    '            val (remaining,history)=ContinuumTopicFrontier.afterAttempt(\n' +
+    '                loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING),\n' +
+    '                loadTopics("topic_visited",ContinuumTopicFrontier.MAX_VISITED),\n' +
+    '                topic,true)\n' +
+    '            edit.putString("topic_pending",remaining.joinToString("\\n"))\n' +
+    '                .putString("topic_visited",history.joinToString("\\n"))\n' +
+    '        }\n' +
+    '        if(sourceAdded)edit.putLong("sources",prefs.getLong("sources",0L)+1L)\n' +
+    '        if(weightsAccepted)edit.putLong("accepted",prefs.getLong("accepted",0L)+1L)\n' +
+    '        val prefsDir=java.io.File(app.applicationInfo.dataDir,"shared_prefs")\n' +
+    '        ContinuumStudyAuditWrite.commit({ edit.commit() },stopRequested,\n' +
+    '            { android.os.StatFs(prefsDir.path).availableBytes },{ prefsDir.canWrite() })\n' +
+    '            ?.let { throw ContinuumStudyAuditNotPersisted(it) }\n' +
+    '    }\n' +
+    '\n' +
+    '    fun recordResourceDeferral(reason:String) {\n' +
+    '        require(reason in setOf("DEFERRED_BATTERY_LOW","DEFERRED_BATTERY_UNKNOWN",\n' +
+    '            "DEFERRED_THERMAL_LIMIT","DEFERRED_STORAGE_LOW"))\n' +
+    '        prefs.edit().putString("phase",reason).commit()\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun recordPhase(phase:String) {\n' +
+    '        prefs.edit().putString("phase",phase).apply()\n' +
+    '    }\n' +
+    '\n' +
+    '    companion object {\n' +
+    '        const val JOB_ID=620137\n' +
+    '        private const val PREFS="continuum-public-study-v1"\n' +
+    '    }\n' +
+    '}\n' +
+    '\n' +
+    'internal class WikimediaRateLimited(val waitSeconds:Long):\n' +
+    '    java.io.IOException("Wikimedia API asked research bot to reduce requests")\n' +
+    '\n' +
+    '/** A title without a suitable article is not an app crash or a learned source. */\n' +
+    'internal class WikimediaSourceUnavailable(val reason:String = "EMPTY_EXCERPT"):\n' +
+    '    java.io.IOException("SOURCE_UNAVAILABLE_"+reason)\n' +
+    '\n' +
+    '/** Fixed codes only: never publish response bodies or exception messages. */\n' +
+    'internal class WikimediaFetchFailure(val code:String): java.io.IOException(code)\n' +
+    'internal class WikimediaFetchCancelled: java.io.IOException("CANCELLED")\n' +
+    '\n' +
+    '/** Source retrieval is isolated from user permission scopes and model ToolGate. */\n' +
+    'internal object ContinuumPublicStudyFetch {\n' +
+    '    private fun decodePages(text:String):JSONObject {\n' +
+    '        val json=try { JSONObject(text) } catch (_:org.json.JSONException) {\n' +
+    '            throw WikimediaFetchFailure("FETCH_INVALID_JSON")\n' +
+    '        }\n' +
+    '        if(json.has("error"))throw WikimediaFetchFailure("FETCH_API_ERROR")\n' +
+    '        val pages=json.optJSONObject("query")?.optJSONObject("pages")\n' +
+    '            ?: throw WikimediaFetchFailure("FETCH_INVALID_RESPONSE")\n' +
+    '        if(pages.length() !in 1..4)throw WikimediaFetchFailure("FETCH_INVALID_RESPONSE")\n' +
+    '        return pages\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun requireSuccessfulResponse(conn:HttpsURLConnection):Int {\n' +
+    '        val status=conn.responseCode\n' +
+    '        if(status==429 || status==503) {\n' +
+    '            val retry=conn.getHeaderField("Retry-After")?.trim().orEmpty()\n' +
+    '            val value=retry.toLongOrNull() ?: runCatching {\n' +
+    '                val at=ZonedDateTime.parse(retry,DateTimeFormatter.RFC_1123_DATE_TIME)\n' +
+    '                    .toInstant().toEpochMilli()\n' +
+    '                ((at-System.currentTimeMillis()+999L)/1000L).coerceAtLeast(3600L)\n' +
+    '            }.getOrDefault(6L*3600L)\n' +
+    '            throw WikimediaRateLimited(value)\n' +
+    '        }\n' +
+    '        if(status!=200)throw WikimediaFetchFailure("FETCH_HTTP_"+status)\n' +
+    '        return status\n' +
+    '    }\n' +
+    '\n' +
+    '    fun fetch(title:String,cancelled:()->Boolean,\n' +
+    '              openConnection:'... 16881 more characters
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/research-job-permission.test.mjs:22:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: `package at.heinz.deviceai.learning\n\nimport android.app.job.JobInfo\nimport android.app.job.JobParameters\nimport android.app.job.JobScheduler\nimport android.app.job.JobService\nimport android.content.ComponentName\nimport android.content.Context\nimport android.os.SystemClock\nimport android.util.Log\nimport org.json.JSONObject\nimport java.io.ByteArrayOutputStream\nimport java.net.URL\nimport java.nio.charset.StandardCharsets\nimport java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\nimport java.util.concurrent.atomic.AtomicBoolean\nimport javax.net.ssl.HttpsURLConnection\n\n/**\n * Explicitly owner-enabled, budgeted, recurrent public-source research.\n * No full web autonomy, no arbitrary URLs, no device commands and no LLM API.\n */\nclass ContinuumPublicStudyScheduler(context:Context) {\n    private val app=context.applicationContext\n    private val jobs get()=app.getSystemService(JobScheduler::class.java)\n    private val prefs get()=app.getSharedPreferences(PREFS,Context.MODE_PRIVATE)\n\n    val enabled get()=prefs.getBoolean("enabled",false)\n    fun internetAllowed():Boolean=app.getSharedPreferences("continuum-internet",Context.MODE_PRIVATE)\n        .getString("mode","ASK")=="ALWAYS_ON"\n    fun isRateLimited():Boolean = System.currentTimeMillis()<\n        prefs.getLong("retry_after_at",0L)\n    fun postponeDueToProvider(seconds:Long) {\n        val waitMs=seconds.coerceAtLeast(3600L).coerceAtMost(30L*24L*3600L)*1000L\n        val until=System.currentTimeMillis()+waitMs\n        prefs.edit().putLong("retry_after_at",until)\n            .putString("phase","PROVIDER_RATE_LIMIT").commit()\n    }\n    fun display():String {\n        val phase=prefs.getString("phase","NOT_RUN") ?: "NOT_RUN"\n        val nextAllowed=prefs.getLong("retry_after_at",0L)\n        val pending=runCatching { jobs.getPendingJob(JOB_ID) }.getOrNull()\n        val jobStatus=if(pending!=null)"REGISTRIERT" else "NICHT REGISTRIERT"\n        val pendingReason=if(pending!=null && android.os.Build.VERSION.SDK_INT>=34)\n            runCatching { jobs.getPendingJobReason(JOB_ID) }.getOrNull()\n        else null\n        val pendingTopics=loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING)\n        val seenTopics=loadTopics("topic_visited",ContinuumTopicFrontier.MAX_VISITED)\n        val nextTopic=ContinuumTopicFrontier.select(prefs.getLong("attempts",0L),pendingTopics)\n        return "AUTONOME ÖFFENTLICHE FORSCHUNG: "+\n            (if(enabled)"FREIGEGEBEN" else "AUS")+"\\n"+\n            "Android-Forschungsjob: "+jobStatus+\n            (pendingReason?.let { " · Wartegrund-Code: "+it } ?: "")+"\\n"+\n            "Letzter Status: "+phase+(if(isRateLimited())\n                " · Pause bis "+java.util.Date(nextAllowed) else "")+"\\n"+\n            "Versuche: "+prefs.getLong("attempts",0)+\n            " · neue Quellen: "+prefs.getLong("sources",0)+\n            " · akzeptierte SWB1-Runden: "+prefs.getLong("accepted",0)+\n            "\\nAutomatisch entdeckte Themen in Warteschlange: "+pendingTopics.size+\n            " · untersuchte Thementitel: "+seenTopics.size+\n            "\\nNächstes Forschungsthema: "+nextTopic+\n            "\\nPro Zyklus eine externe öffentliche Webquelle, mit Beleg und Sicherheitsprüfung; "+\n            "Android steuert die tatsächliche Häufigkeit. Jederzeit abschaltbar."\n    }\n\n    fun enable():Boolean {\n        if(!prefs.edit().putBoolean("enabled",true).commit()) return false\n        return restore()\n    }\n\n    fun disable():Boolean {\n        val saved=prefs.edit().putBoolean("enabled",false)\n            .putString("phase","DISABLED").commit()\n        jobs.cancel(JOB_ID)\n        return saved\n    }\n\n    fun restore():Boolean {\n        if(!enabled || !internetAllowed()) { jobs.cancel(JOB_ID); return false }\n        return try {\n            val pending=jobs.getPendingJob(JOB_ID)\n            if(pending!=null &&\n                pending.service.className==ContinuumPublicStudyJobService::class.java.name &&\n                !pending.isRequireCharging &&\n                pending.networkType==JobInfo.NETWORK_TYPE_ANY &&\n                pending.isPersisted &&\n                pending.intervalMillis==ContinuumPublicStudyPolicy.PERIOD_MS &&\n                !pending.isRequireBatteryNotLow &&\n                pending.isRequireStorageNotLow) return true\n            val request=JobInfo.Builder(JOB_ID,\n                ComponentName(app,ContinuumPublicStudyJobService::class.java))\n                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)\n                .setRequiresCharging(false)\n                .setRequiresBatteryNotLow(false)\n                .setRequiresStorageNotLow(true)\n                .setPersisted(true)\n                .setPeriodic(ContinuumPublicStudyPolicy.PERIOD_MS)\n                .build()\n            val ok=jobs.schedule(request)==JobScheduler.RESULT_SUCCESS\n            if(!ok)recordPhase("SCHEDULE_FAILED")\n            ok\n        } catch(e:RuntimeException) {\n            recordPhase("SCHEDULE_FAILED_"+e.javaClass.simpleName.take(30))\n            false\n        }\n    }\n\n    private fun loadTopics(key:String,limit:Int):List<String> =\n        prefs.getString(key,"").orEmpty().split('\\n')\n            .filter(ContinuumPublicStudyPolicy::validArticleTitle)\n            .distinct().take(limit)\n\n    @Synchronized fun nextTopic():String =\n        ContinuumTopicFrontier.select(prefs.getLong("attempts",0L),\n            loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING))\n\n    /** Every new topic is a trusted encyclopedia link title, not a web command. */\n    @Synchronized fun addDiscovered(titles:List<String>):Int {\n        if(!enabled || titles.isEmpty())return 0\n        val before=loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING)\n        val next=ContinuumTopicFrontier.enqueue(before,\n            loadTopics("topic_visited",ContinuumTopicFrontier.MAX_VISITED),titles)\n        if(next==before)return 0\n        check(prefs.edit().putString("topic_pending",next.joinToString("\\n")).commit()) {\n            "Research topic queue not persisted"\n        }\n        return next.size-before.size\n    }\n\n    @Synchronized fun recordCycle(phase:String,topic:String?,sourceAdded:Boolean=false,\n                                  weightsAccepted:Boolean=false,stopRequested:()->Boolean={ false }) {\n        val edit=prefs.edit()\n            .putLong("attempts",(prefs.getLong("attempts",0L)+1L).coerceAtMost(Long.MAX_VALUE-1))\n            .putString("phase",phase.take(65))\n        if(topic!=null && ContinuumPublicStudyPolicy.validArticleTitle(topic) &&\n            ContinuumPublicStudyCycleResult.markTopicCompleted(phase)) {\n            val (remaining,history)=ContinuumTopicFrontier.afterAttempt(\n                loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING),\n                loadTopics("topic_visited",ContinuumTopicFrontier.MAX_VISITED),\n                topic,true)\n            edit.putString("topic_pending",remaining.joinToString("\\n"))\n                .putString("topic_visited",history.joinToString("\\n"))\n        }\n        if(sourceAdded)edit.putLong("sources",prefs.getLong("sources",0L)+1L)\n        if(weightsAccepted)edit.putLong("accepted",prefs.getLong("accepted",0L)+1L)\n        val prefsDir=java.io.File(app.applicationInfo.dataDir,"shared_prefs")\n        ContinuumStudyAuditWrite.commit({ edit.commit() },stopRequested,\n            { android.os.StatFs(prefsDir.path).availableBytes },{ prefsDir.canWrite() })\n            ?.let { throw ContinuumStudyAuditNotPersisted(it) }\n    }\n\n    fun recordResourceDeferral(reason:String) {\n        require(reason in setOf("DEFERRED_BATTERY_LOW","DEFERRED_BATTERY_UNKNOWN",\n            "DEFERRED_THERMAL_LIMIT","DEFERRED_STORAGE_LOW"))\n        prefs.edit().putString("phase",reason).commit()\n    }\n\n    private fun recordPhase(phase:String) {\n        prefs.edit().putString("phase",phase).apply()\n    }\n\n    companion object {\n        const val JOB_ID=620137\n        private const val PREFS="continuum-public-study-v1"\n    }\n}\n\ninternal class WikimediaRateLimited(val waitSeconds:Long):\n    java.io.IOException("Wikimedia API asked research bot to reduce requests")\n\n/** A title without a suitable article is not an app crash or a learned source. */\ninternal class WikimediaSourceUnavailable(val reason:String = "EMPTY_EXCERPT"):\n    java.io.IOException("SOURCE_UNAVAILABLE_"+reason)\n\n/** Fixed codes only: never publish response bodies or exception messages. */\ninternal class WikimediaFetchFailure(val code:String): java.io.IOException(code)\ninternal class WikimediaFetchCancelled: java.io.IOException("CANCELLED")\n\n/** Source retrieval is isolated from user permission scopes and model ToolGate. */\ninternal object ContinuumPublicStudyFetch {\n    private fun decodePages(text:String):JSONObject {\n        val json=try { JSONObject(text) } catch (_:org.json.JSONException) {\n            throw WikimediaFetchFailure("FETCH_INVALID_JSON")\n        }\n        if(json.has("error"))throw WikimediaFetchFailure("FETCH_API_ERROR")\n        val pages=json.optJSONObject("query")?.optJSONObject("pages")\n            ?: throw WikimediaFetchFailure("FETCH_INVALID_RESPONSE")\n        if(pages.length() !in 1..4)throw WikimediaFetchFailure("FETCH_INVALID_RESPONSE")\n        return pages\n    }\n\n    private fun requireSuccessfulResponse(conn:HttpsURLConnection):Int {\n        val status=conn.responseCode\n        if(status==429 || status==503) {\n            val retry=conn.getHeaderField("Retry-After")?.trim().orEmpty()\n            val value=retry.toLongOrNull() ?: runCatching {\n                val at=ZonedDateTime.parse(retry,DateTimeFormatter.RFC_1123_DATE_TIME)\n                    .toInstant().toEpochMilli()\n                ((at-System.currentTimeMillis()+999L)/1000L).coerceAtLeast(3600L)\n            }.getOrDefault(6L*3600L)\n            throw WikimediaRateLimited(value)\n        }\n        if(status!=200)throw WikimediaFetchFailure("FETCH_HTTP_"+status)\n        return status\n    }\n\n    fun fetch(title:String,cancelled:()->Boolean,\n              openConnection:`... 16881 more characters,
+    expected: /if\(!enabled\)/,
+    operator: 'match',
+    diff: 'simple'
+  }

@@ -1,0 +1,19 @@
+{
+  "schema": "independent-styled-asset-mouth-holdout",
+  "version": 1,
+  "assetSha256": "3805ba43261784993d3f4c65bb24df2a0ee306b89962167d81763c12c9d81deb",
+  "source": "9a23e5d6a9dc96d15525347c99ff682d632d7277",
+  "poseSha256": "00a6c4cfa6992c3bfd3344c578e182ae1cee3e1e63f162800e10832bce16df69",
+  "cases": 113,
+  "frontmostCrossings": 0,
+  "actualExit": 0,
+  "checkerSha256": "886c9760ae518a88ffd407bd3555e08a24f4d38dd2c29f5b7ec4c881b2a775e2",
+  "rawJsonSha256": "ce73dd2940f3ed9c2f5c426fcbb11cebe23928cd817a26aaa6ff9921810c6326",
+  "compressedSha256": "ab6ce38e493dce09b92b64c889a798f68e18e97534bc3a5e3eb58112d9393701",
+  "decision": "PASS_SAMPLED_FRONTMOST_GEOMETRY_ONLY",
+  "limits": [
+    "Same frozen113 input family and unchanged checker.",
+    "Experimental HDR material remains unpromoted; no native appearance or device claim.",
+    "Hidden internal contacts remain in raw evidence; this is not universal collision freedom."
+  ]
+}

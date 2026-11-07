@@ -1,0 +1,12 @@
+properNames=false targetIncluded=true citations=1 records=8 longText=false contentBytes=176 ledgerBytes=1592 p50Ms=3.405703 p95Ms=3.713535
+properNames=false targetIncluded=true citations=1 records=8 longText=true contentBytes=13352 ledgerBytes=14768 p50Ms=7.479293 p95Ms=30.193394
+properNames=false targetIncluded=true citations=1 records=64 longText=false contentBytes=1463 ledgerBytes=12511 p50Ms=2.747802 p95Ms=4.505709
+properNames=false targetIncluded=true citations=1 records=64 longText=true contentBytes=106871 ledgerBytes=117919 p50Ms=15.644721 p95Ms=22.355624
+properNames=false targetIncluded=true citations=1 records=256 longText=false contentBytes=6036 ledgerBytes=50108 p50Ms=3.230245 p95Ms=3.812342
+properNames=false targetIncluded=true citations=1 records=256 longText=true contentBytes=427668 ledgerBytes=471740 p50Ms=45.221202 p95Ms=63.675374
+properNames=true targetIncluded=true citations=3 records=8 longText=false contentBytes=168 ledgerBytes=1584 p50Ms=1.251911 p95Ms=2.126939
+properNames=true targetIncluded=true citations=3 records=8 longText=true contentBytes=13344 ledgerBytes=14760 p50Ms=4.361311 p95Ms=5.048828
+properNames=true targetIncluded=true citations=3 records=64 longText=false contentBytes=1344 ledgerBytes=12392 p50Ms=3.597485 p95Ms=7.632597
+properNames=true targetIncluded=true citations=3 records=64 longText=true contentBytes=106752 ledgerBytes=117800 p50Ms=26.390653 p95Ms=36.18392
+properNames=true targetIncluded=true citations=3 records=256 longText=false contentBytes=5376 ledgerBytes=49448 p50Ms=12.889624 p95Ms=28.86475
+properNames=true targetIncluded=true citations=3 records=256 longText=true contentBytes=427008 ledgerBytes=471080 p50Ms=92.698215 p95Ms=112.391519

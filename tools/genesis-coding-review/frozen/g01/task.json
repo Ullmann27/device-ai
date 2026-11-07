@@ -1,0 +1,1 @@
+{"id":"g01","requirements":["prefixCodePoints(text, count) must return the first count Unicode code points of text, preserving their order and values. count is a nonnegative integer. Return all code points when count exceeds the length; do not perform grapheme segmentation or normalization."]}

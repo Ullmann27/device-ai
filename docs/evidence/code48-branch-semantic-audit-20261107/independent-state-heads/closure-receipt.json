@@ -1,0 +1,21 @@
+{
+  "recordedAtUtc": "2026-11-07T06:47:38.768597+00:00",
+  "comparisonSource": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "comparisonTree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "headsAssigned": 4,
+  "metadataInspected": 4,
+  "missingMetadataObjects": [],
+  "independentRoots": 4,
+  "codePathsInHeadTrees": 0,
+  "headTreeEntries": 394,
+  "blobPayloadsRead": 0,
+  "checkpointWeightStateContentsRead": false,
+  "lazyFetchDisabled": true,
+  "projectExecutionPerformed": false,
+  "sourceRefConfigurationChanges": false,
+  "candidateHead": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "candidateStatus": "",
+  "matrixSha256": "0b9b537967dc1e0d07fe6ec2234277257849f5aaf12c6f17eb5f02f40b68bbfe",
+  "jsonSha256": "b054d494f1098b1896cc7dab4b0bd9f12166c3532e48696b2cf31d58399617f0",
+  "metadataSha256": "ec5c3922d21e38b0c110be44e74c7ad450c8b2c8ca5bf382aec7a28319fca20e"
+}

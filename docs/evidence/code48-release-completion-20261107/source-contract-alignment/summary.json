@@ -1,0 +1,34 @@
+{
+  "baseSource": "a7d7881e31a84b378008379783d22ff5fb97efb5",
+  "productionChanges": false,
+  "red": {
+    "critical": {
+      "passed": 134,
+      "failed": 1,
+      "skipped": 0
+    },
+    "fullNode": {
+      "passed": 2395,
+      "failed": 3,
+      "skipped": 31
+    }
+  },
+  "focusedGreen": {
+    "tests": 26,
+    "passed": 26,
+    "failed": 0,
+    "skipped": 0
+  },
+  "publisherAttempt": {
+    "id": "dep-dbndml7f3r2c738cbce0",
+    "observedGate": "QA_RED node-critical",
+    "signedOrPublished": false
+  },
+  "fixedChecks": [
+    "Completion now owned by core; cancellation passed to journal; scheduler cannot complete independently",
+    "Public acquired source validated as immutable batch before use",
+    "SAVE_EVIDENCE emitted by core and observed by caller; typed failure preserved"
+  ],
+  "limits": "Complete final-source gates pending; Fold7 not run",
+  "archiveSha256": "e30a6c3623f6a5ac5bc0454c5de0eddcab04b35685cdd069d1a52e0d0d94c673"
+}

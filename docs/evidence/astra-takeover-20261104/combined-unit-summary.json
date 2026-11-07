@@ -1,0 +1,11 @@
+{
+  "source_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+  "source_worktree": "/workspace/scratch/b3170a7ae924/device-ai-qa-f14",
+  "recorded_utc": "2026-11-04T10:38:56.009657+00:00",
+  "suite_count": 434,
+  "tests": 2416,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 19,
+  "passed": 2397
+}

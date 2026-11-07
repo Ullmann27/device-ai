@@ -288,15 +288,26 @@ class AgentBackendClient(private val context: Context) {
     }
 
     /**
-     * An owner-confirmed one-shot remote request.
-     * Does not transmit device identifiers, previous chat, tool outputs or memory.
-     * The Groq key exists exclusively in the owner's backend environment.
+     * Explicitly consented one-shot cloud mentor. Both providers use the existing
+     * paired device token, never an API key inside the Android app.
+     * No local memory, device context or tool outputs are uploaded.
      */
-    fun groqMentor(question: String, callback: (Result<String>) -> Unit) {
+    fun groqMentor(question: String, callback: (Result<String>) -> Unit) =
+        externalMentor(question, "GROQ", callback)
+
+    fun openRouterMentor(question: String, callback: (Result<String>) -> Unit) =
+        externalMentor(question, "OPENROUTER", callback)
+
+    private fun externalMentor(
+        question: String,
+        provider: String,
+        callback: (Result<String>) -> Unit
+    ) {
+        require(provider == "GROQ" || provider == "OPENROUTER")
         val base = backendUrl()
         val token = SecureTokenStore.loadMentorToken(context) ?: SecureTokenStore.load(context)
         if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {
-            callback(Result.failure(IllegalStateException("Groq-Gerätefreigabe oder Device-Token fehlt.")))
+            callback(Result.failure(IllegalStateException("Mentor-Gerätefreigabe oder Device-Token fehlt.")))
             return
         }
         if (question.trim().length !in 3..1800) {
@@ -307,14 +318,14 @@ class AgentBackendClient(private val context: Context) {
             val outcome = runCatching {
                 val payload = JSONObject().apply {
                     put("consent", true)
-                    put("provider", "GROQ")
+                    put("provider", provider)
                     put("question", question.trim())
                 }
                 val raw = mentorRequestWithOneAuthRecovery(
                     "POST", "$base/v1/mentor/answer", payload.toString(), base
                 )
                 val json = JSONObject(raw)
-                require(json.optString("provider") == "GROQ" &&
+                require(json.optString("provider") == provider &&
                     json.optString("trust") == "UNVERIFIED_EXTERNAL" &&
                     !json.optBoolean("memory_written", true) &&
                     json.optJSONArray("tool_calls")?.length() == 0) {
@@ -325,7 +336,7 @@ class AgentBackendClient(private val context: Context) {
                     ?: throw IllegalStateException("Leere Mentorantwort.")
             }
             mainHandler.post { callback(outcome) }
-        }, "continuum-groq-mentor").apply { isDaemon = true; start() }
+        }, "continuum-remote-mentor").apply { isDaemon = true; start() }
     }
 
     private fun request(

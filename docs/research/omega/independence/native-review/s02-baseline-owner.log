@@ -1,0 +1,109 @@
+✔ ordinary text is unchanged (0.800083ms)
+✖ every less-than and greater-than character is escaped (0.822377ms)
+✖ all original ampersands are escaped (0.357748ms)
+✖ both kinds of quotes use the specified entities (0.276827ms)
+✖ inserted entity ampersands are not escaped again (1.431874ms)
+✔ preexisting entity-like input is treated as raw text (0.1201ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 2
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 78.903925
+
+✖ failing tests:
+
+test at tools/independence-native-review/frozen/s02/owner.test.mjs:9:1
+✖ every less-than and greater-than character is escaped (0.822377ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '&amp;lt;a&gt;<b>'
+  - '&lt;a&gt;&lt;b&gt;'
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s02/owner.test.mjs:10:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '&amp;lt;a&gt;<b>',
+    expected: '&lt;a&gt;&lt;b&gt;',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/independence-native-review/frozen/s02/owner.test.mjs:12:1
+✖ all original ampersands are escaped (0.357748ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'bread &amp; butter & jam'
+  - 'bread &amp; butter &amp; jam'
+                         ^
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s02/owner.test.mjs:13:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'bread &amp; butter & jam',
+    expected: 'bread &amp; butter &amp; jam',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/independence-native-review/frozen/s02/owner.test.mjs:15:1
+✖ both kinds of quotes use the specified entities (0.276827ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + `&amp;quot;a" and &#39;b'`
+  - '&quot;a&quot; and &#39;b&#39;'
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s02/owner.test.mjs:16:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: `&amp;quot;a" and &#39;b'`,
+    expected: '&quot;a&quot; and &#39;b&#39;',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/independence-native-review/frozen/s02/owner.test.mjs:18:1
+✖ inserted entity ampersands are not escaped again (1.431874ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '&amp;lt;&&gt;'
+  - '&lt;&amp;&gt;'
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s02/owner.test.mjs:19:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '&amp;lt;&&gt;',
+    expected: '&lt;&amp;&gt;',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

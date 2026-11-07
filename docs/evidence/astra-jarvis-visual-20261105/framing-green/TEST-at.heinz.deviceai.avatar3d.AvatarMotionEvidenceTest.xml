@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-05T16:18:47" hostname="6e2f8005d77e" time="0.019">
+  <properties/>
+  <testcase name="conversationSceneDrivesEyesHeadMouthAndStopsCleanly" classname="at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest" time="0.019"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,1190 @@
+{
+  "comparisonSource": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "comparisonTree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "readOnly": true,
+  "projectCodeExecuted": false,
+  "pathsReviewed": 22,
+  "originalVariants": 27,
+  "rows": [
+    {
+      "path": ".github/continuum/alpha-squad-ccc1.mjs",
+      "status": "EXISTING_CORE_WRAPPER_DELTA",
+      "selectedSource": {
+        "branch": "feature/continuum-alpha-squad-ccc1-entry-20261103",
+        "sha": "eed77e56b526d199141b658a4bdd38acd2d896e0",
+        "pr": 387
+      },
+      "selectedBlob": "8b30a2c1895ece735bd88af77ac1d7fe9ca74de2",
+      "variants": [
+        {
+          "blob": "8b30a2c1895ece735bd88af77ac1d7fe9ca74de2",
+          "sources": [
+            {
+              "branch": "feature/continuum-alpha-squad-ccc1-entry-20261103",
+              "sha": "eed77e56b526d199141b658a4bdd38acd2d896e0",
+              "pr": 387
+            }
+          ]
+        }
+      ],
+      "capability": "Vier benannte Prüfschritte eines einzelnen vorhandenen CCC1-Auftrags; plan/run-once bindet exakt einen offenen Task, Reparaturkette und erwarteten Source-Commit.",
+      "oldCaller": "Eigener CLI ruft compileRepair/listTasks/runCcc1Cycle auf. Vorreview #387 wiederverwendet; kein Aufruf von Kotlin-DAG oder ProofLedger.",
+      "currentReplacement": "ccc1-cli.mjs bietet compile/submit/status/run-once/loop; run-once ruft denselben Worker auf.",
+      "missingHook": "Kein fehlender Vier-Bot-Executor. Optional die zusätzliche Ein-Auftrag-/Head-Prüfung in den vorhandenen CLI übernehmen; keine zweite Orchestrierung.",
+      "currentPaths": [
+        ".github/continuum/ccc1-cli.mjs",
+        ".github/continuum/ccc1-worker.mjs"
+      ],
+      "priority": "Niedrig; gezielte Wrapper-Prüfung"
+    },
+    {
+      "path": ".github/continuum/backlog-interop.mjs",
+      "status": "TEST_HELPER_REPLACED",
+      "selectedSource": {
+        "branch": "development/continuum-backlog-20261015",
+        "sha": "cd860569ba0a2596bf3270873e0dccd98770c201",
+        "pr": null
+      },
+      "selectedBlob": "280d1ac7661397dd48b0fb1b039981639dd6ce00",
+      "variants": [
+        {
+          "blob": "280d1ac7661397dd48b0fb1b039981639dd6ce00",
+          "sources": [
+            {
+              "branch": "development/continuum-backlog-20261015",
+              "sha": "cd860569ba0a2596bf3270873e0dccd98770c201",
+              "pr": null
+            }
+          ]
+        }
+      ],
+      "capability": "Siebenzeiliger stdin/stdout-Codec-Treiber mit create/advance für den alten Backlog-Vertrag.",
+      "oldCaller": "DevelopmentBacklogV2Test startet diesen Node-Prozess und importiert/exportiert den Kotlin-Store.",
+      "currentReplacement": "Heutige backlog-fixtures.mjs sowie DevelopmentBacklogTest/RoundtripTest prüfen den aktuellen gemeinsamen Vertrag.",
+      "missingHook": "Alten Testtreiber nicht als fehlenden Produktpfad werten; alter Codec-Vertrag passt nicht automatisch zur heutigen API.",
+      "currentPaths": [
+        ".github/continuum/backlog-fixtures.mjs",
+        "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentBacklogTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentBacklogRoundtripTest.kt"
+      ],
+      "priority": "Keine Rückübernahme"
+    },
+    {
+      "path": ".github/continuum/ccc1-transfer-research.mjs",
+      "status": "RESEARCH_ONLY_UNWIRED",
+      "selectedSource": {
+        "branch": "research/continuum-evidence-bound-transfer-20261028",
+        "sha": "8ce96f05a90ef9552f246d1977fa33fee996fce4",
+        "pr": 207
+      },
+      "selectedBlob": "6e2104caafe5a91208bcf525084622ded022935a",
+      "variants": [
+        {
+          "blob": "6e2104caafe5a91208bcf525084622ded022935a",
+          "sources": [
+            {
+              "branch": "research/continuum-evidence-bound-transfer-20261028",
+              "sha": "8ce96f05a90ef9552f246d1977fa33fee996fce4",
+              "pr": 207
+            },
+            {
+              "branch": "research/continuum-local-microagents-20261028",
+              "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+              "pr": 208
+            }
+          ]
+        }
+      ],
+      "capability": "Erstellt aus genau zwei unabhängig authentifizierten Node-Reparaturbelegen einen eingefrorenen Skill-Kandidaten mit Voraussetzungen/Ausschlüssen; nur Anwendbarkeitsempfehlung.",
+      "oldCaller": "Externe checkReceipt-Funktion zwingend. Microagent-Front prüft den zugehörigen Test; kein produktiver Transfer-Aufrufer in den gezielt geprüften Dateien belegt.",
+      "currentReplacement": "Aktuelle CCC1-Erfahrungs-/Recall-/Verifier-Pfade vorhanden; kein freezeResearchSkill/assessResearchApplicability-Treffer.",
+      "missingHook": "Zusätzlicher Forschungsvertrag, keine aktive Lernfunktion. Erforderlich wären vertrauenswürdiger Receipt-Adapter, Prüfung des Task-Kontexts und expliziter Verbraucher; promotionEligible bleibt false.",
+      "currentPaths": [
+        ".github/continuum/ccc1-experience.mjs",
+        ".github/continuum/ccc1-technical-recall.mjs",
+        ".github/continuum/ccc1-independent-verifier.mjs"
+      ],
+      "priority": "Später; erst echte Belege/Caller"
+    },
+    {
+      "path": ".github/continuum/coding-public-docs.mjs",
+      "status": "SMALL_TOOL_CANDIDATE",
+      "selectedSource": {
+        "branch": "research/continuum-local-microagents-20261028",
+        "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+        "pr": 208
+      },
+      "selectedBlob": "db61646ef99a8abb69067aba62005499e36ec0a1",
+      "variants": [
+        {
+          "blob": "db61646ef99a8abb69067aba62005499e36ec0a1",
+          "sources": [
+            {
+              "branch": "research/continuum-local-microagents-20261028",
+              "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+              "pr": 208
+            }
+          ]
+        }
+      ],
+      "capability": "Sieben feste offizielle Dokumentations-URLs, lokale Themenauswahl; explizit genehmigter GET ohne Prompt/Codeübertragung, harte Byte-/Zeitgrenzen, untrusted Ausschnitt.",
+      "oldCaller": "continuum-public-docs.mjs ruft exactPublicDocTopic/fetchPublicCodingDoc auf. Alter coding-provider enthält keinen Import/Caller; heuristischer Planer nicht automatisch angeschlossen.",
+      "currentReplacement": "public-web.mjs wird von zero-cost-core.mjs verwendet, ist aber generischer Public-Web-Fetch mit anderer URL-/Redirect-Policy.",
+      "missingHook": "Echter kleiner fehlender Spezialhelfer. Für App-/Coding-Nutzen fehlt expliziter Context-/UI-Anschluss; nicht als automatische Webrecherche oder zusätzliche Lernquelle einschalten.",
+      "currentPaths": [
+        ".github/continuum/public-web.mjs",
+        ".github/continuum/zero-cost-core.mjs",
+        ".github/continuum/coding-provider.mjs"
+      ],
+      "priority": "Kleiner späterer Kandidat"
+    },
+    {
+      "path": ".github/continuum/continuum-cloud-gpu-admission.mjs",
+      "status": "ADVISORY_ONLY_PARTIAL_REPLACEMENT",
+      "selectedSource": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "selectedBlob": "95926ed8a8f4fa9b8667362e28e75b433b3d2860",
+      "variants": [
+        {
+          "blob": "95926ed8a8f4fa9b8667362e28e75b433b3d2860",
+          "sources": [
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            }
+          ]
+        }
+      ],
+      "capability": "Reine Angebotsprüfung: ganzzahlige Abrechnungsrundung, Kosten-/Speicher-/VRAM-/Revisionsbindung an vorhandenen Registry-Plan; alle Ausführungsrechte false.",
+      "oldCaller": "Importiert compute-fabric-model-adapter; alter Cloud-QA-Workflow führt Vertragsprüfungen aus. Kein Provider-/GPU-Ausführer in diesem Modul.",
+      "currentReplacement": "compute-fabric-model-adapter + continuum-virtual-model-fabric bestehen; deklarierte Kosten und Routing vorhanden, quantisierte GPU-Angebotsrechnung fehlt.",
+      "missingHook": "Zusätzliche Beratungslogik für hypothetische Angebote, keine GPU-Kapazität. Echte Quotes/Attestierung und getrennte Berechtigungs-/Ausführungsadapter fehlen.",
+      "currentPaths": [
+        ".github/continuum/compute-fabric-model-adapter.mjs",
+        ".github/continuum/continuum-virtual-model-fabric.mjs"
+      ],
+      "priority": "Cloud-Forschung, keine Aktivierung"
+    },
+    {
+      "path": ".github/continuum/dev-loop-kernel.mjs",
+      "status": "RESEARCH_ONLY_UNWIRED",
+      "selectedSource": {
+        "branch": "integration/continuum-brain-system-20261029",
+        "sha": "7924ba0793963dd84eef61517359a743071829bf",
+        "pr": 242
+      },
+      "selectedBlob": "6de7fb62996d9b50cc4b73a5b15eafc7900f5036",
+      "variants": [
+        {
+          "blob": "6de7fb62996d9b50cc4b73a5b15eafc7900f5036",
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "integration/continuum-brain-system-20261029",
+              "sha": "7924ba0793963dd84eef61517359a743071829bf",
+              "pr": 242
+            },
+            {
+              "branch": "opus/continuum-m1-m8-20261030",
+              "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+              "pr": 244
+            },
+            {
+              "branch": "opus/continuum-m9-m16-20261030",
+              "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+              "pr": 245
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-counterexample-acceptance-20261029",
+              "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+              "pr": 243
+            },
+            {
+              "branch": "research/continuum-mastercode-bounded-search-20261030",
+              "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+              "pr": 248
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/continuum-self-evolution-shadow-20261030",
+              "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+              "pr": 249
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            },
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            }
+          ]
+        },
+        {
+          "blob": "84c6b701187b4b8d5e72f74ace0db43160571b0e",
+          "sources": [
+            {
+              "branch": "opus/argon4-research-20261029",
+              "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+              "pr": 240
+            }
+          ]
+        }
+      ],
+      "capability": "Reine Zustandsmaschine, Hashjournal, gebundene Versuchsergebnisse, Thompson-Reihenfolge und versiegelte Holdout-Registry; führt weder Patch noch Test aus.",
+      "oldCaller": "dev-loop-shadow importiert mineWeaknesses/thompsonRank/frozenRank. In den drei gezielt geprüften Host-Einstiegen auf #242 und #258 kein Anschluss dieser beiden Module.",
+      "currentReplacement": "Aktuelle coding-orchestrator/coding-agent-loop/repair-loop und unabhängiger CCC1-Verifier führen bereits die wirkliche begrenzte Arbeit aus.",
+      "missingHook": "Zusätzliche Experiment-/Policy-Forschung, kein fehlender ausführbarer Dev-Loop. Actor-Strings/JSON sind keine Authentisierung; Host-Receipt-/Registry-Anschluss fehlt. Alte schwächere Variante #240 nicht bevorzugen.",
+      "currentPaths": [
+        ".github/continuum/coding-orchestrator.mjs",
+        ".github/continuum/coding-agent-loop.mjs",
+        ".github/continuum/repair-loop.mjs",
+        ".github/continuum/ccc1-independent-verifier.mjs"
+      ],
+      "priority": "Später isoliert erforschen"
+    },
+    {
+      "path": ".github/continuum/dev-loop-shadow.mjs",
+      "status": "RESEARCH_ONLY_UNWIRED",
+      "selectedSource": {
+        "branch": "integration/continuum-brain-system-20261029",
+        "sha": "7924ba0793963dd84eef61517359a743071829bf",
+        "pr": 242
+      },
+      "selectedBlob": "c49f080df702cdee2654013fbe1a86215ec591d3",
+      "variants": [
+        {
+          "blob": "c49f080df702cdee2654013fbe1a86215ec591d3",
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "integration/continuum-brain-system-20261029",
+              "sha": "7924ba0793963dd84eef61517359a743071829bf",
+              "pr": 242
+            },
+            {
+              "branch": "opus/continuum-m1-m8-20261030",
+              "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+              "pr": 244
+            },
+            {
+              "branch": "opus/continuum-m9-m16-20261030",
+              "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+              "pr": 245
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-counterexample-acceptance-20261029",
+              "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+              "pr": 243
+            },
+            {
+              "branch": "research/continuum-mastercode-bounded-search-20261030",
+              "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+              "pr": 248
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/continuum-self-evolution-shadow-20261030",
+              "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+              "pr": 249
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            },
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            }
+          ]
+        }
+      ],
+      "capability": "Begrenzter Beobachter existierender CCC1-Reports: SUMMARY_MATCH, schwache Strategieklassen, Reihenfolgen-Proxy; verändert weder Ranking noch Lernfreigabe.",
+      "oldCaller": "Ruft Kernel-Helfer auf; exportiert summarizeDevLoopShadow/runDevLoopShadow. Kein Caller in den geprüften Repair-/Worker-/Developer-Hosts #242/#258.",
+      "currentReplacement": "Aktuelle CCC1-Reports/Erfahrungsdaten existieren. Kein gleichnamiger Observer angeschlossen.",
+      "missingHook": "Optionaler fehlender Diagnose-Observer; nicht als zusätzliche Verifikation zählen. Host-Aufruf und UI/Report-Verbraucher fehlen.",
+      "currentPaths": [
+        ".github/continuum/ccc1-worker.mjs",
+        ".github/continuum/repair-loop.mjs",
+        ".github/continuum/ccc1-experience.mjs"
+      ],
+      "priority": "Niedrig; Diagnosebeitrag"
+    },
+    {
+      "path": ".github/continuum/development-backlog-cli.mjs",
+      "status": "REPLACED_CLI",
+      "selectedSource": {
+        "branch": "development/continuum-backlog-20261015",
+        "sha": "cd860569ba0a2596bf3270873e0dccd98770c201",
+        "pr": null
+      },
+      "selectedBlob": "896558e3ab29cc2cfdfd5ac301d1089c4ef7d8c3",
+      "variants": [
+        {
+          "blob": "896558e3ab29cc2cfdfd5ac301d1089c4ef7d8c3",
+          "sources": [
+            {
+              "branch": "development/continuum-backlog-20261015",
+              "sha": "cd860569ba0a2596bf3270873e0dccd98770c201",
+              "pr": null
+            }
+          ]
+        }
+      ],
+      "capability": "Alter CLI-Vertrag mit backlog-list/add/claim/start/import/export und generation-basierten Transaktionen.",
+      "oldCaller": "Alter developer-agent importiert BACKLOG_HELP/backlogCommand tatsächlich.",
+      "currentReplacement": "Heutiger developer-agent importiert backlog-cli.mjs; BacklogStore, Operationen, Claim-Leases/Token, Submit und isoliertes Verify sind angeschlossen.",
+      "missingHook": "Zweck ersetzt, inkompatibler älterer Befehls-/Datenvertrag. Kein paralleler alter CLI erforderlich.",
+      "currentPaths": [
+        ".github/continuum/developer-agent.mjs",
+        ".github/continuum/backlog-cli.mjs",
+        ".github/continuum/development-backlog.mjs"
+      ],
+      "priority": "Keine Rückübernahme"
+    },
+    {
+      "path": ".github/continuum/export-argon-source.py",
+      "status": "EXPORT_FORMAT_VARIANT",
+      "selectedSource": {
+        "branch": "copilot/continuum-argon-source-review-20261015",
+        "sha": "4678a98f62e9b339cc723497e58839e6216b1c8f",
+        "pr": null
+      },
+      "selectedBlob": "eb5c787c12bf786d071390fa1fe9a5f451c15f3d",
+      "variants": [
+        {
+          "blob": "eb5c787c12bf786d071390fa1fe9a5f451c15f3d",
+          "sources": [
+            {
+              "branch": "copilot/continuum-argon-source-review-20261015",
+              "sha": "4678a98f62e9b339cc723497e58839e6216b1c8f",
+              "pr": null
+            }
+          ]
+        }
+      ],
+      "capability": "Manueller lokaler Export getrackter UTF-8-Quellen als PDF+TXT, Manifest mit Hashes; zusätzliche Schlüssel-/Tokenmuster-Blockade.",
+      "oldCaller": "Eigenständig ausführbares Exportskript; kein App-/Modell-/Provider-Aufruf. Nicht ausgeführt.",
+      "currentReplacement": "export-review-packet.py erstellt bereits Manifest, PDF und exaktes ZIP.",
+      "missingHook": "Kein fehlender KI-Pfad. TXT statt ZIP und zusätzliche Inhaltsprüfung sind getrennte Werkzeugdeltas. Alter Prompt enthält fest verdrahteten Commit; vor Nutzung an echte Quellenbindung anpassen.",
+      "currentPaths": [
+        ".github/continuum/export-review-packet.py"
+      ],
+      "priority": "Optionaler Exporthelfer"
+    },
+    {
+      "path": ".github/continuum/nvidia-nim-public-coding-lab.mjs",
+      "status": "CLOUD_LAB_SYNTHETIC",
+      "selectedSource": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "selectedBlob": "ba04f8eda09f70e35ef6b6ad94d985096b59c3b8",
+      "variants": [
+        {
+          "blob": "ba04f8eda09f70e35ef6b6ad94d985096b59c3b8",
+          "sources": [
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            }
+          ]
+        }
+      ],
+      "capability": "Ein entfernter Request für drei feste öffentliche synthetische Reparaturen; striktes Proposal-Schema und exakter Golden-Vergleich, kein Patchvollzug.",
+      "oldCaller": "continuum-nvidia-coding-lab --run und bestätigter One-Shot-Workflow rufen das Modul auf; Offline-QA ist getrennt.",
+      "currentReplacement": "Heutige Coding-Provider/Orchestrator existieren; dieser feste synthetische NVIDIA-Labortest fehlt.",
+      "missingHook": "Bewusst getrenntes Cloud-Labor, kein produktiver CCC1-Generator oder Geräteleistungsbeleg. API-/Kosten-/Modellverfügbarkeit hier nicht geprüft.",
+      "currentPaths": [
+        ".github/continuum/coding-provider.mjs",
+        ".github/continuum/coding-orchestrator.mjs"
+      ],
+      "priority": "Nicht aktivieren"
+    },
+    {
+      "path": ".github/continuum/nvidia-nim-synthetic-benchmark.mjs",
+      "status": "CLOUD_LAB_SYNTHETIC",
+      "selectedSource": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "selectedBlob": "24bdc789d16fbbda8058bfc972096be43ce84444",
+      "variants": [
+        {
+          "blob": "24bdc789d16fbbda8058bfc972096be43ce84444",
+          "sources": [
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            }
+          ]
+        }
+      ],
+      "capability": "Ein Remote-Request mit selbst erzeugter CSV-Arithmetik; exakter erwarteter Integer und gemessene End-to-End-Zeit, kein physischer GPU-Beweis.",
+      "oldCaller": "Manuelles Benchmark-CLI importiert runNvidiaNimSyntheticBenchmark; Cloud-QA prüft nur Offline-Verträge.",
+      "currentReplacement": "Kein identischer aktueller NVIDIA-Synthese-Benchmark. Allgemeine Test-/Benchmark-Infrastruktur ist vorhanden.",
+      "missingHook": "Isolierter Anbieter-Benchmark, keine fehlende lokale Modellfunktion. Modellnamen sind Source-Strings, keine nachgewiesene aktuelle Anbieter-Verfügbarkeit.",
+      "currentPaths": [
+        "scripts/continuum-reliability-qa.mjs"
+      ],
+      "priority": "Nicht aktivieren"
+    },
+    {
+      "path": ".github/continuum/test-failure-environment.mjs",
+      "status": "DIAGNOSTIC_HELPER_CANDIDATE",
+      "selectedSource": {
+        "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+        "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+        "pr": 258
+      },
+      "selectedBlob": "eb100afc9627a924ea079f8b0f91647ca166310d",
+      "variants": [
+        {
+          "blob": "eb100afc9627a924ea079f8b0f91647ca166310d",
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "opus/continuum-m1-m8-20261030",
+              "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+              "pr": 244
+            },
+            {
+              "branch": "opus/continuum-m9-m16-20261030",
+              "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+              "pr": 245
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-mastercode-bounded-search-20261030",
+              "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+              "pr": 248
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/continuum-self-evolution-shadow-20261030",
+              "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+              "pr": 249
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            },
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            }
+          ]
+        }
+      ],
+      "capability": "Begrenzter JUnit-Textklassifikator für konkrete Netzwerk-, Speicherplatz-, Speicher-, Timeout- und Encoding-Signaturen; Verdict nur HOST_ENVIRONMENT_SUSPECTED.",
+      "oldCaller": "Direkter CLI-Einstieg liest begrenzte reguläre Datei; keine Freigabe oder Lernmarkierung. Kein zusätzlicher produktiver Caller belegt.",
+      "currentReplacement": "continuum-reliability-qa bewahrt Prozessfehler und unvollständige Tests als FAIL; keine gleichartige konservative Signatur-Zusammenfassung gefunden.",
+      "missingHook": "Kleiner fehlender Diagnosehelfer. Kein generischer Node-TAP-/Gradle-Daemon-Diagnostiker; darf FAIL nicht in PASS umdeuten.",
+      "currentPaths": [
+        "scripts/continuum-reliability-qa.mjs"
+      ],
+      "priority": "Kleiner späterer Kandidat"
+    },
+    {
+      "path": ".github/continuum/workspace-nav-contract.mjs",
+      "status": "TEST_HELPER_REPLACED",
+      "selectedSource": {
+        "branch": "opus/continuum-app-navigation-wip-archive-20261022",
+        "sha": "68a819c0b27769b49b70a3ec4ad1a23c2742b8c9",
+        "pr": null
+      },
+      "selectedBlob": "49416958d7074edda8303087cfa248aa5c2e852d",
+      "variants": [
+        {
+          "blob": "49416958d7074edda8303087cfa248aa5c2e852d",
+          "sources": [
+            {
+              "branch": "opus/continuum-app-navigation-wip-archive-20261022",
+              "sha": "68a819c0b27769b49b70a3ec4ad1a23c2742b8c9",
+              "pr": null
+            }
+          ]
+        }
+      ],
+      "capability": "Statischer Quelltextparser für alten ContinuumWorkspaceNavSpec, homeGrid/bottomBar und openWorkArea.",
+      "oldCaller": "workspace-navigation.test.mjs importiert und verwendet workspaceNav tatsächlich.",
+      "currentReplacement": "Heutiger app-navigation-wiring.test liest ContinuumWorkAreaNavigationSpec und prüft navigateWorkArea/navigateDashboardTarget sowie echte Menü-/Kachelziele.",
+      "missingHook": "Alter Testvertrag ersetzt. Kein fehlender Navigations-Executor oder verlorene Arbeitsfläche.",
+      "currentPaths": [
+        ".github/continuum/app-navigation-wiring.test.mjs",
+        "app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt",
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+      ],
+      "priority": "Keine Rückübernahme"
+    },
+    {
+      "path": "scripts/continuum-aider-nvidia-lab.sh",
+      "status": "CLOUD_LAB_EXTERNAL_TOOL",
+      "selectedSource": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "selectedBlob": "a425a8c9b472bbf925f7eb60e4b3476db7268f49",
+      "variants": [
+        {
+          "blob": "a425a8c9b472bbf925f7eb60e4b3476db7268f49",
+          "sources": [
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            }
+          ]
+        }
+      ],
+      "capability": "Optionaler Aider-Installations-/Remote-Experiment-Wrapper in wegwerfbarem Worktree; festes Research-Branch-Gate und begrenzte Aider-Optionen.",
+      "oldCaller": "Eigener --check/--install/--run-Einstieg; startet externes Aider mit technischem Repository-Inhalt, nicht nur synthetischen Fixtures.",
+      "currentReplacement": "Vorhandener eigener CCC1/Coding-Agent arbeitet bereits über die kanonischen Verträge.",
+      "missingHook": "Kein fehlendes On-Device-Modul. Externes ungepinntes Installationswerkzeug/Cloud-Nutzung und harter Altbranch erfordern separate Prüfung; Wegwerf-Worktree ist keine Datenfreigabegrenze.",
+      "currentPaths": [
+        ".github/continuum/coding-agent-loop.mjs",
+        ".github/continuum/ccc1-cli.mjs"
+      ],
+      "priority": "Nicht aktivieren"
+    },
+    {
+      "path": "scripts/continuum-microagents.mjs",
+      "status": "OFFLINE_CONTRACT_FRONTEND",
+      "selectedSource": {
+        "branch": "research/continuum-local-microagents-20261028",
+        "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+        "pr": 208
+      },
+      "selectedBlob": "31d5648ca4485385b7a1b4f05fbb1cf548ad4343",
+      "variants": [
+        {
+          "blob": "31d5648ca4485385b7a1b4f05fbb1cf548ad4343",
+          "sources": [
+            {
+              "branch": "research/continuum-local-microagents-20261028",
+              "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+              "pr": 208
+            }
+          ]
+        }
+      ],
+      "capability": "Serieller Runner für fünf Rollen mit acht fest benannten Node-Vertragstestdateien; keine LLMs, keine Codegenerierung, kein nativer Inferenznachweis.",
+      "oldCaller": "Eigenes --run/--list; historischer Android-Termux-Bridge-Caller bereits in semantic-core-3ff nachgewiesen.",
+      "currentReplacement": "Sechs der acht Testpfade vorhanden; Transfer-Test und continuum-fold7-update.test fehlen. Aktuelle QA führt heutige Verträge über eigene Gates aus.",
+      "missingHook": "Echter fehlender Audit-Frontend-Aufruf, nicht fehlende Agentenintelligenz. Alten Testplan aktualisieren und gemeinsam mit Android-Bridge/Callback portieren.",
+      "currentPaths": [
+        "scripts/continuum-reliability-qa.mjs",
+        "scripts/continuum-fold7-update.sh"
+      ],
+      "priority": "Überschaubar, mit Android-Bridge"
+    },
+    {
+      "path": "scripts/continuum-nvidia-coding-lab.mjs",
+      "status": "CLOUD_LAB_SYNTHETIC",
+      "selectedSource": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "selectedBlob": "9174f2be1bc0e275f79d814775f0e20f4a792290",
+      "variants": [
+        {
+          "blob": "9174f2be1bc0e275f79d814775f0e20f4a792290",
+          "sources": [
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            }
+          ]
+        }
+      ],
+      "capability": "Manueller --check/--run-Wrapper für genau einen synthetischen NVIDIA-Coding-Request mit festen Fehlercodes.",
+      "oldCaller": "Importiert Public-Coding-Lab; One-Shot-Workflow verlangt RUN_PUBLIC_SYNTHETIC.",
+      "currentReplacement": "Kein identischer aktueller Laboreinstieg; vorhandener produktiver Coding-Pfad ist anderer Zweck.",
+      "missingHook": "Nur zusammen mit Cloud-Lab und ausdrücklicher Nutzung sinnvoll; kein automatischer Provider-Fallback.",
+      "currentPaths": [
+        ".github/continuum/coding-provider.mjs"
+      ],
+      "priority": "Nicht aktivieren"
+    },
+    {
+      "path": "scripts/continuum-nvidia-execution-claim.mjs",
+      "status": "CLOUD_LAB_SAFETY_HELPER",
+      "selectedSource": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "selectedBlob": "304c830a1f417dfc06661fb8953dcbe9c130e5af",
+      "variants": [
+        {
+          "blob": "304c830a1f417dfc06661fb8953dcbe9c130e5af",
+          "sources": [
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            }
+          ]
+        },
+        {
+          "blob": "c05b50517fc4d7cd4704db6b8a527a786e8e6f4d",
+          "sources": [
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            }
+          ]
+        }
+      ],
+      "capability": "Reiner 30-Minuten-Einmalclaim auf Reservierung; neuere Variante prüft unabhängigen Rücklesebeleg anhand runId/sequence/claimedAt.",
+      "oldCaller": "Scheduler persistiert Claim per GitHub-SHA-CAS und prüft anschließenden GET vor Provideraufruf.",
+      "currentReplacement": "Kein aktueller NVIDIA-Scheduler; heutige lokale CCC1-Receipts lösen andere Ausführungsfälle.",
+      "missingHook": "Wichtige Härtung nur für dieses Cloud-Labor. Nicht isoliert als globale Idempotenz/Exactly-once-Garantie übernehmen.",
+      "currentPaths": [
+        ".github/continuum/ccc1-journal.mjs",
+        ".github/continuum/ccc1-worker.mjs"
+      ],
+      "priority": "Bei späterem Lab zwingend mitnehmen"
+    },
+    {
+      "path": "scripts/continuum-nvidia-nim-benchmark.mjs",
+      "status": "CLOUD_LAB_SYNTHETIC",
+      "selectedSource": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "selectedBlob": "a22f508ee70d5341635ddad3d44bacba52137177",
+      "variants": [
+        {
+          "blob": "a22f508ee70d5341635ddad3d44bacba52137177",
+          "sources": [
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            }
+          ]
+        }
+      ],
+      "capability": "Manueller Preflight-/Run-Wrapper für ein synthetisches NVIDIA-Arithmetikbenchmark.",
+      "oldCaller": "Ruft runNvidiaNimSyntheticBenchmark; Cloud-QA verwendet --check ohne API-Request.",
+      "currentReplacement": "Kein identischer aktueller Wrapper, kein App-Caller.",
+      "missingHook": "Teil des bewusst getrennten Cloud-Labors; kein Hinweis auf fehlende lokale CPU/GPU-Nutzung.",
+      "currentPaths": [
+        "scripts/continuum-reliability-qa.mjs"
+      ],
+      "priority": "Nicht aktivieren"
+    },
+    {
+      "path": "scripts/continuum-nvidia-owner-consent.mjs",
+      "status": "CLOUD_LAB_SAFETY_HELPER",
+      "selectedSource": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "selectedBlob": "e2a03ac882f8f0da7877359a331d50f6e99b2ac8",
+      "variants": [
+        {
+          "blob": "e2a03ac882f8f0da7877359a331d50f6e99b2ac8",
+          "sources": [
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            }
+          ]
+        }
+      ],
+      "capability": "Vergleicht bereitgestellte Zustimmung mit einem nichtleeren erwarteten Grant; Provider-Key allein reicht nicht.",
+      "oldCaller": "Neuester Scheduler ruft den Helfer vor Budget-GET/PUT und vor Verbrauch des Claims auf.",
+      "currentReplacement": "Kein aktueller NVIDIA-Scheduler; bestehende Owner-/Tool-Gates sind andere reale Autoritäten.",
+      "missingHook": "Der Stringvertrag ist ein Caller-Gate, keine Authentisierung. Als Teil späterer Cloud-Einbindung mit vertrauenswürdigem Grant-Verbraucher erforderlich.",
+      "currentPaths": [
+        ".github/continuum/mcp-adapter.mjs",
+        ".github/continuum/ccc1-independent-verifier.mjs"
+      ],
+      "priority": "Bei späterem Lab zwingend mitnehmen"
+    },
+    {
+      "path": "scripts/continuum-nvidia-scheduled.mjs",
+      "status": "CLOUD_LAB_SCHEDULER",
+      "selectedSource": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "selectedBlob": "c47c8ca463ac51af53adc1e6f1fa1b73976e135e",
+      "variants": [
+        {
+          "blob": "75bb5a4f2693dc1397b095c1b0aa1531edbfdd3e",
+          "sources": [
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            }
+          ]
+        },
+        {
+          "blob": "82dd6d53dc1429594f75a1f70f8e177615f08643",
+          "sources": [
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            }
+          ]
+        },
+        {
+          "blob": "c47c8ca463ac51af53adc1e6f1fa1b73976e135e",
+          "sources": [
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            }
+          ]
+        },
+        {
+          "blob": "5510cd16c7d795b4dfcd85729791f15434bbda67",
+          "sources": [
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            }
+          ]
+        }
+      ],
+      "capability": "Research-Ledger mit 3/UTC-Tag, mindestens 4 Stunden Abstand, maximal 100 Reservierungen; GitHub-CAS, Einmalclaim/Rücklesen, danach Remote-Review.",
+      "oldCaller": "Eigener --reserve/--execute-Einstieg; importiert Ultra-Review, Neuro-Budget, Claim und Consent. Die drei gelesenen Workflows belegen Offline-QA/manuelle Aufrufe, keinen aktiven Cron-Anschluss dieses Schedulers.",
+      "currentReplacement": "Kein aktueller NVIDIA-Scheduler. Lokaler Teamleader-Loop hat andere Aufgabe und keinen solchen Provider-Ledger.",
+      "missingHook": "Separates Cloud-Automationswerkzeug. Nicht als bereits aktive Automation zählen. Alte Varianten auto-reichten Consent durch; nur neueste explizite Consent-/Readback-Variante überhaupt weiterprüfen.",
+      "currentPaths": [
+        ".github/continuum/local-teamleader-loop.mjs",
+        ".github/continuum/ccc1-cli.mjs"
+      ],
+      "priority": "Nicht aktivieren"
+    },
+    {
+      "path": "scripts/continuum-nvidia-ultra-review.mjs",
+      "status": "CLOUD_LAB_TECHNICAL_REVIEW",
+      "selectedSource": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "selectedBlob": "351eb7d8cb4a419cb42913fbeb701605eb8ea0cd",
+      "variants": [
+        {
+          "blob": "351eb7d8cb4a419cb42913fbeb701605eb8ea0cd",
+          "sources": [
+            {
+              "branch": "research/continuum-cloud-gpu-admission-20261030",
+              "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+              "pr": 268
+            },
+            {
+              "branch": "research/continuum-nvidia-claim-readback-20261031",
+              "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+              "pr": 271
+            },
+            {
+              "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+              "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+              "pr": 273
+            },
+            {
+              "branch": "research/continuum-nvidia-single-use-claim-20261031",
+              "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+              "pr": 270
+            }
+          ]
+        }
+      ],
+      "capability": "Ein ausdrücklich autorisierter Remote-Review mit Brief+acht technischen Quelldateien, begrenztem SSE, lokalem Bericht/Receipt außerhalb Repo; keine Ausführung oder Übernahme der Antwort.",
+      "oldCaller": "Direktes CLI, separater manual workflow mit Consent und festem Checkout-Commit sowie Scheduler rufen den Review auf.",
+      "currentReplacement": "Kein identischer aktueller NVIDIA-Source-Review-Wrapper; Export-/Coding-Werkzeuge bestehen separat.",
+      "missingHook": "Überträgt ausdrücklich technischen Source, anders als synthetische Benchmarks. Forschungsausgabe bleibt unverifiziert; keine Reparatur-/Lern-/Release-Freigabe.",
+      "currentPaths": [
+        ".github/continuum/export-review-packet.py",
+        ".github/continuum/coding-provider.mjs"
+      ],
+      "priority": "Nicht aktivieren"
+    },
+    {
+      "path": "scripts/continuum-public-docs.mjs",
+      "status": "SMALL_TOOL_CANDIDATE",
+      "selectedSource": {
+        "branch": "research/continuum-local-microagents-20261028",
+        "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+        "pr": 208
+      },
+      "selectedBlob": "febded6d945e0a22920e144581bef2792d315fe5",
+      "variants": [
+        {
+          "blob": "febded6d945e0a22920e144581bef2792d315fe5",
+          "sources": [
+            {
+              "branch": "research/continuum-local-microagents-20261028",
+              "sha": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+              "pr": 208
+            }
+          ]
+        }
+      ],
+      "capability": "CLI list/plan/fetch für feste Dokumentations-IDs; nur fetch mit --approve-network ruft extern ab.",
+      "oldCaller": "Tatsächlicher Aufrufer von coding-public-docs; gibt begrenzten untrusted Ausschnitt aus.",
+      "currentReplacement": "Generischer public-web/zero-cost-core vorhanden; dieser spezialisierte Termux-CLI fehlt.",
+      "missingHook": "Gemeinsamer kleiner Kandidat mit coding-public-docs. Noch kein App-/Codegenerator-Context-Connector belegt.",
+      "currentPaths": [
+        ".github/continuum/public-web.mjs",
+        ".github/continuum/zero-cost-core.mjs"
+      ],
+      "priority": "Mit Dokumentationshelfer bündeln"
+    }
+  ]
+}

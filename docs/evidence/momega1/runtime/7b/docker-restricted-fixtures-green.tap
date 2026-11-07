@@ -1,0 +1,160 @@
+TAP version 13
+# Subtest: normal caller cannot certify a serialized runtime observation
+ok 1 - normal caller cannot certify a serialized runtime observation
+  ---
+  duration_ms: 1.510942
+  type: 'test'
+  ...
+# Subtest: coding CLI blocks endpoint-only configuration before any network/model call
+ok 2 - coding CLI blocks endpoint-only configuration before any network/model call
+  ---
+  duration_ms: 64.546369
+  type: 'test'
+  ...
+# Subtest: unapproved or absent local weights never produce runtime observations
+ok 3 - unapproved or absent local weights never produce runtime observations
+  ---
+  duration_ms: 1.157999
+  type: 'test'
+  ...
+# Subtest: actual namespace binds admitted descriptors and fixture output; never inference evidence
+ok 4 - actual namespace binds admitted descriptors and fixture output; never inference evidence
+  ---
+  duration_ms: 65.627871
+  type: 'test'
+  ...
+# Subtest: altered model/runtime, unsafe executable and mismatched request cannot execute
+ok 5 - altered model/runtime, unsafe executable and mismatched request cannot execute
+  ---
+  duration_ms: 49.903262
+  type: 'test'
+  ...
+# Subtest: deadline cancels actual isolated process with bounded return
+ok 6 - deadline cancels actual isolated process with bounded return
+  ---
+  duration_ms: 299.322449
+  type: 'test'
+  ...
+# Subtest: STOP cancels actual isolated process and leaves no trusted observation
+ok 7 - STOP cancels actual isolated process and leaves no trusted observation
+  ---
+  duration_ms: 186.103177
+  type: 'test'
+  ...
+# Subtest: malformed/oversized output and missing generation counters are rejected
+ok 8 - malformed/oversized output and missing generation counters are rejected
+  ---
+  duration_ms: 151.853321
+  type: 'test'
+  ...
+# Subtest: sandbox exposes no checkout, HOME, network, secret or configurable shell
+ok 9 - sandbox exposes no checkout, HOME, network, secret or configurable shell
+  ---
+  duration_ms: 0.931727
+  type: 'test'
+  ...
+# Subtest: actual FD mount retains selected inode across model path replacement
+ok 10 - actual FD mount retains selected inode across model path replacement
+  ---
+  duration_ms: 58.173073
+  type: 'test'
+  ...
+# Subtest: prompt evaluation counter alone cannot masquerade as output generation
+ok 11 - prompt evaluation counter alone cannot masquerade as output generation
+  ---
+  duration_ms: 54.032156
+  type: 'test'
+  ...
+# Subtest: inference sandbox denies host files, external interfaces, secrets and writable model
+ok 12 - inference sandbox denies host files, external interfaces, secrets and writable model
+  ---
+  duration_ms: 68.96338
+  type: 'test'
+  ...
+# Subtest: seccomp denies fork and rlimits bound native memory/descriptor budgets
+ok 13 - seccomp denies fork and rlimits bound native memory/descriptor budgets
+  ---
+  duration_ms: 54.309751
+  type: 'test'
+  ...
+# Subtest: changing model during actual execution invalidates otherwise valid output
+ok 14 - changing model during actual execution invalidates otherwise valid output
+  ---
+  duration_ms: 254.433057
+  type: 'test'
+  ...
+# Subtest: production provider rejects synthetic fixture receipt even when transport MAC is valid
+ok 15 - production provider rejects synthetic fixture receipt even when transport MAC is valid
+  ---
+  duration_ms: 193.305408
+  type: 'test'
+  ...
+# Subtest: self-asserted inference flag is rejected instead of upgraded or accepted
+ok 16 - self-asserted inference flag is rejected instead of upgraded or accepted
+  ---
+  duration_ms: 97.782658
+  type: 'test'
+  ...
+# Subtest: native worker threads remain permitted while process creation stays denied
+ok 17 - native worker threads remain permitted while process creation stays denied
+  ---
+  duration_ms: 62.665085
+  type: 'test'
+  ...
+# Subtest: unavailable isolation launcher fails closed and creates no observation
+ok 18 - unavailable isolation launcher fails closed and creates no observation
+  ---
+  duration_ms: 49.046914
+  type: 'test'
+  ...
+# Subtest: integration strict observation option rejects injected unobserved provider replies
+ok 19 - integration strict observation option rejects injected unobserved provider replies
+  ---
+  duration_ms: 77.469979
+  type: 'test'
+  ...
+# Subtest: integration technical recall enters prompt as bounded untrusted data within context budget
+ok 20 - integration technical recall enters prompt as bounded untrusted data within context budget
+  ---
+  duration_ms: 72.588373
+  type: 'test'
+  ...
+# Subtest: integration malformed recall and strict remote selection fail before transport
+ok 21 - integration malformed recall and strict remote selection fail before transport
+  ---
+  duration_ms: 58.265507
+  type: 'test'
+  ...
+# Subtest: process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+ok 22 - process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+  ---
+  duration_ms: 194.91921
+  type: 'test'
+  ...
+# Subtest: genuine admission registry rejects unknown model/runtime tuple and caller assertions
+ok 23 - genuine admission registry rejects unknown model/runtime tuple and caller assertions
+  ---
+  duration_ms: 0.529359
+  type: 'test'
+  ...
+# Subtest: invalid model JSON retains authenticated process observation without a candidate
+ok 24 - invalid model JSON retains authenticated process observation without a candidate
+  ---
+  duration_ms: 72.720788
+  type: 'test'
+  ...
+# Subtest: provider retains authenticated rejected-response observation and consumed durable budget
+ok 25 - provider retains authenticated rejected-response observation and consumed durable budget
+  ---
+  duration_ms: 157.374909
+  type: 'test'
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2485.743542

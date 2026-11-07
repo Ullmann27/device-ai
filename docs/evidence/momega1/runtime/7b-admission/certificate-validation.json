@@ -1,0 +1,13 @@
+{
+  "certificateGitCommit": "f3c89d0c83dc864c67a9b73f651af296439700c1",
+  "certificatePath": "docs/evidence/momega1/challenger/APPROVED-7B-PAIR-REVIEW.json",
+  "certificateSha256": "29a14463a22b722eb948bb1afaa4ba8683d40b929955b725fa8fe3837a5b60ec",
+  "candidateSourceReviewed": "a135a9ae72e1494676d709ae496cf74048310537",
+  "currentSourceMatchesReviewed": true,
+  "normalExit": 0,
+  "decodedTokens": 156,
+  "elapsedMs": 104746,
+  "combinedRssKiB": 5412020,
+  "authorExtraInferenceRun": false,
+  "original60SecondBenchmarkRun": false
+}

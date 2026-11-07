@@ -9,11 +9,12 @@ function fixture(t){
  return {temp,root,bin,git,executable};
 }
 test('HTTPS setup verifies access first, converts only official origin and redacts credential tool output',t=>{
+ // Noninteractive shell startup must not replace this fixture's fake gh/git with live credentials.
  const f=fixture(t),realGit=spawnSync('which',['git'],{encoding:'utf8'}).stdout.trim();
  fs.copyFileSync(new URL('./continuum-github-https.sh',import.meta.url),path.join(f.root,'scripts/access.sh'));
  f.executable('gh','echo PRIVATE_AUTH_SENTINEL\nif [[ "$1 $2" == "auth status" && "${TEST_AUTH_FAIL:-}" == 1 ]]; then exit 1; fi\n');
  f.executable('git','for arg in "$@"; do if [[ "$arg" == ls-remote ]]; then echo PRIVATE_AUTH_SENTINEL; exit "${TEST_READ_EXIT:-0}"; fi; done\nexec '+realGit+' "$@"\n');
- const run=(mode,extra={})=>spawnSync('bash',[path.join(f.root,'scripts/access.sh'),mode],{env:{...process.env,PATH:f.bin+':'+process.env.PATH,...extra},encoding:'utf8',timeout:5000});
+ const run=(mode,extra={})=>spawnSync('bash',[path.join(f.root,'scripts/access.sh'),mode],{env:{...process.env,BASH_ENV:'',PATH:f.bin+':'+process.env.PATH,...extra},encoding:'utf8',timeout:5000});
  const doctor=run('doctor');assert.equal(doctor.status,0,doctor.stderr);assert.match(doctor.stdout,/SSH_UNCHANGED_RUN_SETUP/);
  assert.match(f.git('remote','get-url','origin'),/^git@/);
  const denied=run('setup',{TEST_READ_EXIT:'1'});assert.equal(denied.status,69);assert.match(f.git('remote','get-url','origin'),/^git@/);
@@ -26,7 +27,7 @@ test('HTTPS setup verifies access first, converts only official origin and redac
 test('missing auth gives bounded device login instructions without changing remote',t=>{
  const f=fixture(t);fs.copyFileSync(new URL('./continuum-github-https.sh',import.meta.url),path.join(f.root,'scripts/access.sh'));
  f.executable('gh','exit 1\n');
- const r=spawnSync('bash',[path.join(f.root,'scripts/access.sh'),'setup'],{env:{...process.env,PATH:f.bin+':'+process.env.PATH},encoding:'utf8'});
+ const r=spawnSync('bash',[path.join(f.root,'scripts/access.sh'),'setup'],{env:{...process.env,BASH_ENV:'',PATH:f.bin+':'+process.env.PATH},encoding:'utf8'});
  assert.equal(r.status,69);assert.match(r.stderr,/timeout --foreground 300 gh auth login/);assert.match(f.git('remote','get-url','origin'),/^git@/);
 });
 test('owner doctor rejects a JRE and uses complete JAVA_HOME ahead of system Java',t=>{

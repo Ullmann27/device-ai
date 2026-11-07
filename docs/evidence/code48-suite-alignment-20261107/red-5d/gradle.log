@@ -1,0 +1,31 @@
+COMMAND ["gradle", "--no-daemon", "--max-workers=2", "--console=plain", "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m", "-Pkotlin.compiler.execution.strategy=in-process", "-PdeviceAiMentorPreview=true", "-PcontinuumStandaloneVersionCode=48", "-PcontinuumUiWidgetTests=true", "-PcontinuumLocalStandaloneQa=true", ":app:testDebugUnitTest", "--tests", "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest.semanticMenuDestinationsOpenTheirNamedScreensWithoutStartingATurn", "--tests", "at.heinz.deviceai.cockpit.MemoryEventMapperStopUiTest.freshRecallAfterStopStillReachesTheVisibleSurface"]
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=32793 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=32793 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+[Incubating] Problems report is available at: file:///workspace/scratch/3d1967be6193/candidate/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* Where:
+Build file '/workspace/scratch/3d1967be6193/candidate/app/build.gradle.kts' line: 111
+
+* What went wrong:
+Disposable Continuum Lokal QA allows only debug unit tests, lint and compilation.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 7s

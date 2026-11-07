@@ -1,0 +1,264 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt b/app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt
+index d8c4ccb82..dec986a4c 100644
+--- a/app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt
++++ b/app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt
+@@ -163,6 +163,16 @@ class ToolGate(
+         userConfirmed: Boolean = false,
+         destructiveConfirmed: Boolean = false,
+         onExecutionStarted: (() -> Unit)? = null
++    ): ToolExecutionResult = execute(invocation, userConfirmed, destructiveConfirmed,
++        onExecutionStarted, onDispatchStarted = null)
++
++    /** Dispatch observer follows durable commitment. */
++    fun execute(
++        invocation: ToolInvocation,
++        userConfirmed: Boolean,
++        destructiveConfirmed: Boolean,
++        onExecutionStarted: (() -> Unit)?,
++        onDispatchStarted: (() -> Unit)?
+     ): ToolExecutionResult {
+         val request = invocation.request
+         val spec = ToolRegistry.get(request.name)
+@@ -347,6 +357,7 @@ class ToolGate(
+                             "Durable dispatch commitment failed; backend was not invoked.")
+                     }
+                 }
++                runCatching { onDispatchStarted?.invoke() }
+                 runner.execute(request)
+             })
+             activeFutures += future
+diff --git a/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt b/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt
+index ff2850167..1009db067 100644
+--- a/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt
++++ b/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt
+@@ -391,6 +391,8 @@ class BoundedAgentOrchestrator(
+                                 approval.destructiveConfirmed,
+                                 onExecutionStarted = {
+                                     emit(CognitiveWorkState.EXECUTING, invocation.id)
++                                },
++                                onDispatchStarted = {
+                                     runCatching { onToolStarted(invocation.id, proposal.toolName) }
+                                 }
+                             )
+diff --git a/app/src/test/java/at/heinz/deviceai/ToolDispatchObserverTest.kt b/app/src/test/java/at/heinz/deviceai/ToolDispatchObserverTest.kt
+new file mode 100644
+index 000000000..18f94dbcc
+--- /dev/null
++++ b/app/src/test/java/at/heinz/deviceai/ToolDispatchObserverTest.kt
+@@ -0,0 +1,81 @@
++package at.heinz.deviceai
++
++import org.junit.Assert.*
++import org.junit.Rule
++import org.junit.Test
++import org.junit.rules.TemporaryFolder
++import java.util.concurrent.CountDownLatch
++import java.util.concurrent.TimeUnit
++import java.util.concurrent.atomic.AtomicInteger
++
++class ToolDispatchObserverTest {
++    @get:Rule val dir = TemporaryFolder()
++
++    private fun invocation(id: String) =
++        ToolProposal("get_storage_info", emptyMap()).invocation(id)
++
++    @Test fun legacyTrailingObserverStillRunsBeforeCommitAndCanCancel() {
++        val store = FileToolExecutionReceiptStore(dir.root)
++        val backendCalls = AtomicInteger()
++        var observedState: ToolReceiptState? = null
++        lateinit var gate: ToolGate
++        gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner {
++            backendCalls.incrementAndGet()
++            "must not run"
++        }, receiptStore = store)
++        val result = gate.execute(invocation("legacy-observer")) {
++            observedState = store.get("legacy-observer")?.state
++            gate.cancel()
++        }
++        assertEquals(ToolReceiptState.START_PENDING, observedState)
++        assertEquals(ToolExecutionStatus.CANCELLED, result.record.status)
++        assertEquals(0, backendCalls.get())
++        assertEquals(ToolReceiptState.CANCELLED, store.get("legacy-observer")?.state)
++    }
++
++    @Test fun throwingDispatchObserverDoesNotChangeBackendOrReceipt() {
++        val store = FileToolExecutionReceiptStore(dir.root)
++        val starts = AtomicInteger()
++        val backendCalls = AtomicInteger()
++        var observedState: ToolReceiptState? = null
++        val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner {
++            backendCalls.incrementAndGet()
++            "fresh storage result"
++        }, receiptStore = store)
++        val result = gate.execute(invocation("throwing-observer"), false, false,
++            onExecutionStarted = null, onDispatchStarted = {
++                starts.incrementAndGet()
++                observedState = store.get("throwing-observer")?.state
++                error("Presentation unavailable")
++            })
++        assertEquals(1, starts.get())
++        assertEquals(1, backendCalls.get())
++        assertEquals(ToolReceiptState.DISPATCH_COMMITTED, observedState)
++        assertEquals(ToolExecutionStatus.SUCCEEDED, result.record.status)
++        assertEquals(ToolReceiptState.SUCCEEDED, store.get("throwing-observer")?.state)
++    }
++
++    @Test fun cancellationAfterDispatchCommitRemainsUnknown() {
++        val store = FileToolExecutionReceiptStore(dir.root)
++        val backendEntered = CountDownLatch(1)
++        val backendCalls = AtomicInteger()
++        val starts = AtomicInteger()
++        lateinit var gate: ToolGate
++        gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner {
++            backendCalls.incrementAndGet()
++            backendEntered.countDown()
++            "late storage result"
++        }, receiptStore = store)
++        val result = gate.execute(invocation("post-commit-cancel"), false, false,
++            onExecutionStarted = null, onDispatchStarted = {
++                starts.incrementAndGet()
++                gate.cancel()
++            })
++        assertTrue(backendEntered.await(2, TimeUnit.SECONDS))
++        assertEquals(1, starts.get())
++        assertEquals(1, backendCalls.get())
++        assertEquals(ToolExecutionStatus.CANCELLED, result.record.status)
++        assertTrue(result.record.outcomeUncertain)
++        assertEquals(ToolReceiptState.UNKNOWN_AFTER_DISPATCH, store.get("post-commit-cancel")?.state)
++    }
++}
+diff --git a/app/src/test/java/at/heinz/deviceai/cognitive/ToolWorkJournalDispatchBoundaryTest.kt b/app/src/test/java/at/heinz/deviceai/cognitive/ToolWorkJournalDispatchBoundaryTest.kt
+new file mode 100644
+index 000000000..9bd488bad
+--- /dev/null
++++ b/app/src/test/java/at/heinz/deviceai/cognitive/ToolWorkJournalDispatchBoundaryTest.kt
+@@ -0,0 +1,129 @@
++package at.heinz.deviceai.cognitive
++
++import at.heinz.deviceai.*
++import org.junit.Assert.*
++import org.junit.Rule
++import org.junit.Test
++import org.junit.rules.TemporaryFolder
++import java.io.IOException
++import java.util.concurrent.ConcurrentLinkedQueue
++import java.util.concurrent.atomic.AtomicInteger
++import java.util.concurrent.atomic.AtomicLong
++
++class ToolWorkJournalDispatchBoundaryTest {
++    @get:Rule val dir = TemporaryFolder()
++
++    private data class Probe(
++        val result: AgentRunResult,
++        val journal: CockpitWorkJournal,
++        val starts: Int,
++        val backendCalls: Int,
++        val statesAtStart: List<ToolReceiptState?>,
++        val callsAtStart: List<Int>
++    )
++
++    private fun probe(
++        allow: Boolean = true,
++        beforeCommit: (ToolGate, AtomicLong) -> Unit = { _, _ -> },
++        refuseCommit: Boolean = false,
++        observerFails: Boolean = false,
++        replay: Boolean = false
++    ): Probe {
++        val name = ToolWorkJournalBridge.FIRST_TOOL
++        val prefix = "m2-dispatch-boundary"
++        val durable = FileToolExecutionReceiptStore(dir.newFolder("receipts"))
++        val store = if (!refuseCommit) durable else object : ToolExecutionReceiptStore by durable {
++            override fun transition(callId: String, expected: ToolReceiptState, next: ToolReceiptState,
++                                    atMillis: Long, outputLength: Int, outputSha256: String?): ToolExecutionReceipt? {
++                if (next == ToolReceiptState.DISPATCH_COMMITTED) throw IOException("Commit unavailable")
++                return durable.transition(callId, expected, next, atMillis, outputLength, outputSha256)
++            }
++        }
++        if (replay) {
++            val previous = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { "Earlier storage result" },
++                receiptStore = durable).execute(ToolProposal(name, emptyMap()).invocation("$prefix-1"))
++            assertEquals(ToolExecutionStatus.SUCCEEDED, previous.record.status)
++        }
++        val journal = CockpitWorkJournal(dir.newFolder("work"))
++        val starts = AtomicInteger()
++        val backendCalls = AtomicInteger()
++        val clockReads = AtomicInteger()
++        val nanos = AtomicLong()
++        val statesAtStart = ConcurrentLinkedQueue<ToolReceiptState>()
++        val callsAtStart = ConcurrentLinkedQueue<Int>()
++        lateinit var gate: ToolGate
++        gate = ToolGate(ToolPolicy(readOnlyEnabled = allow, timeoutMillis = 1_000), ToolRunner {
++            backendCalls.incrementAndGet()
++            "Fresh storage result"
++        }, clock = {
++            if (Thread.currentThread().name == "device-ai-tool" && clockReads.incrementAndGet() == 2)
++                beforeCommit(gate, nanos)
++            nanos.get()
++        }, receiptStore = store)
++        val plan = ReadOnlyToolPlan(ToolProposal(name, emptyMap()))
++        val result = BoundedAgentOrchestrator(
++            plan, { emptyList() }, gate, plan, InMemoryExperienceStore(),
++            callIdPrefix = prefix,
++            limits = AgentLimits(maxToolCalls = 1, maxRetries = 0),
++            onToolStarted = { id, tool ->
++                starts.incrementAndGet()
++                statesAtStart += requireNotNull(durable.get(id)).state
++                callsAtStart += backendCalls.get()
++                if (observerFails) error("Journal observer unavailable")
++                journal.beginTool(id, tool)
++            }
++        ).run("Prüfe den freien Speicher")
++        return Probe(result, journal, starts.get(), backendCalls.get(),
++            statesAtStart.toList(), callsAtStart.toList())
++    }
++
++    private fun assertNoDispatch(probe: Probe, status: ToolExecutionStatus) {
++        assertEquals(status, requireNotNull(probe.result.taskEvidence).calls.single().status)
++        assertEquals("Backend must remain untouched", 0, probe.backendCalls)
++        assertEquals("No actual dispatch; no start signal", 0, probe.starts)
++        assertTrue("No premature running journal entry", probe.journal.all().isEmpty())
++    }
++
++    @Test fun normalDispatchSignalsOnceAfterDurableCommitBeforeBackend() {
++        val probe = probe()
++        assertEquals(1, probe.starts)
++        assertEquals(1, probe.backendCalls)
++        assertEquals(listOf(ToolReceiptState.DISPATCH_COMMITTED), probe.statesAtStart)
++        assertEquals(listOf(0), probe.callsAtStart)
++        assertEquals(CockpitWorkJournal.ToolState.EXECUTING, probe.journal.all().single().toolState)
++        ToolWorkJournalBridge.settle(probe.journal,
++            requireNotNull(probe.result.taskEvidence).calls.single(), current = true)
++        assertEquals(CockpitWorkJournal.ToolState.SUCCEEDED, probe.journal.all().single().toolState)
++    }
++
++    @Test fun deniedPolicyNeverSignalsActualDispatch() {
++        assertNoDispatch(probe(allow = false), ToolExecutionStatus.REJECTED)
++    }
++
++    @Test fun stopAfterEarlyObserverNeverSignalsActualDispatch() {
++        assertNoDispatch(probe(beforeCommit = { gate, _ -> gate.cancel() }), ToolExecutionStatus.CANCELLED)
++    }
++
++    @Test fun expiredDeadlineAfterEarlyObserverNeverSignalsActualDispatch() {
++        assertNoDispatch(probe(beforeCommit = { _, nanos -> nanos.set(2_000_000_000L) }),
++            ToolExecutionStatus.TIMED_OUT)
++    }
++
++    @Test fun failedDurableCommitNeverSignalsActualDispatch() {
++        assertNoDispatch(probe(refuseCommit = true), ToolExecutionStatus.FAILED)
++    }
++
++    @Test fun replayedReceiptNeverSignalsANewDispatch() {
++        val probe = probe(replay = true)
++        assertNoDispatch(probe, ToolExecutionStatus.SUCCEEDED)
++        assertTrue(requireNotNull(probe.result.taskEvidence).calls.single().replayed)
++    }
++
++    @Test fun observerFailureCannotPreventTheAuthorizedBackendCall() {
++        val probe = probe(observerFails = true)
++        assertEquals(1, probe.starts)
++        assertEquals(1, probe.backendCalls)
++        assertEquals(ToolExecutionStatus.SUCCEEDED,
++            requireNotNull(probe.result.taskEvidence).calls.single().status)
++    }
++}

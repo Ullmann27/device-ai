@@ -152,4 +152,23 @@ class LocalFirstPolicyTest {
             LocalFirstPolicy.afterMemory(true, true,
                 "Was bedeutet das Wort analysiere und warum ist es wichtig?"))
     }
+    @Test
+    fun explanatoryRequestsWithKnownMemoriesUseLocalSynthesisWithoutChangingStoredFacts() {
+        val requests = listOf(
+            "Erkläre mir den Unterschied zwischen Wissen speichern und logisch schlussfolgern.",
+            "Bitte beschreibe, welche Folgen die bestätigten Fakten haben.",
+            "Erklären Sie den Unterschied zwischen zwei gespeicherten Projektständen."
+        )
+        for (request in requests) {
+            assertEquals(request, AssistantRoute.LOCAL_MODEL,
+                LocalFirstPolicy.afterMemory(grounded = true, localModelReady = true, request = request))
+            assertEquals(request, AssistantRoute.LOCAL_CORE,
+                LocalFirstPolicy.afterMemory(grounded = true, localModelReady = false, request = request))
+        }
+        assertEquals(AssistantRoute.LOCAL_CORE,
+            LocalFirstPolicy.afterMemory(true, true, "Was bedeutet das Wort erkläre?"))
+        assertEquals(AssistantRoute.LOCAL_CORE,
+            LocalFirstPolicy.afterMemory(true, true, "Was habe ich über erkläre gespeichert?"))
+    }
+
 }

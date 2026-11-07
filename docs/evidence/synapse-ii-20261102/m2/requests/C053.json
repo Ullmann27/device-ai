@@ -1,0 +1,18 @@
+{
+  "id": "C053",
+  "question": "Wo lebt Zytimoca?",
+  "sources": [
+    {
+      "revision": 4,
+      "sha256": "6df6c5633b1d80d40e3ca3c28e7aade40c7161084fee0d533b99f59db2b318e9",
+      "sourceId": "bc:C053:s1",
+      "text": "Zytimoca lebt in Uvdadafa Uvvisozi Uvmasolo."
+    },
+    {
+      "revision": 5,
+      "sha256": "0b9cf4a8402c4fec065fe4029b46fd01b8f4c50a6f676997221d07c7c4187d72",
+      "sourceId": "bc:C053:s2",
+      "text": "Zytimoca lebt heute in Uvfumohi."
+    }
+  ]
+}

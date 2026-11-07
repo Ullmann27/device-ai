@@ -1,0 +1,9 @@
+{
+  "corpusSha256": "2843d83946c9e2fec2fbb42826c410667ef77d72455b5d400c6569fc8406e40b",
+  "sourceBeforeSha256": "84fca0adf6e4a30f4643b647967d5a8fb788eca0e3c0e7a13c8f4235aaef2498",
+  "sourceIsCommitted": false,
+  "candidateCompiledFrom": "parent-provided sol314-window-host (linear implementation), copied before execution",
+  "candidateBinaryTreeSha256": "f3234b55c66d4ac485096eb8ffaa6a0fc48b8d65f397b54c329723e34ea8c558",
+  "sourceAfterSha256": "84fca0adf6e4a30f4643b647967d5a8fb788eca0e3c0e7a13c8f4235aaef2498",
+  "sourceStable": true
+}
