@@ -56,8 +56,8 @@ class JarvisLiveTabsUiTest {
                                 val home: ContinuumHomeView, val calls: MutableList<String>) : AutoCloseable {
         val shell get() = home.jarvisShell
         private var bitmap: Bitmap? = null
-        private val width = home.resources.displayMetrics.widthPixels
-        private val height = home.resources.displayMetrics.heightPixels
+        private var width = home.resources.displayMetrics.widthPixels
+        private var height = home.resources.displayMetrics.heightPixels
 
         fun node(tag: String): View = descendants(home).single { it.tag == tag }
         fun panel(): View = node("jarvis-live-panel")
@@ -67,6 +67,22 @@ class JarvisLiveTabsUiTest {
             viewport.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
             viewport.layout(0, 0, width, height)
+        }
+
+        fun resize(widthDp: Int, heightDp: Int) {
+            val density = home.resources.displayMetrics.density
+            width = (widthDp * density).toInt()
+            height = (heightDp * density).toInt()
+            viewport.layoutParams = viewport.layoutParams.apply {
+                this.width = this@Fixture.width
+                this.height = this@Fixture.height
+            }
+            home.configure(widthDp.toFloat(), widthDp >= 600, windowHeightDp = heightDp.toFloat())
+            layout()
+            advance(32L)
+            assertEquals(width, home.width)
+            assertEquals(width, viewport.width)
+            assertEquals(height, viewport.height)
         }
 
         fun drawRequestedFrame() {
@@ -92,7 +108,7 @@ class JarvisLiveTabsUiTest {
 
         fun tap(tag: String) {
             JarvisHomeTestRoutes.touch(viewport, node(tag))
-            advance(1L)
+            advance(32L)
             layout()
             drawRequestedFrame()
         }
@@ -198,7 +214,7 @@ class JarvisLiveTabsUiTest {
         f.tap("jarvis-live-panel:close")
         f.assertClosed()
         JarvisHomeTestRoutes.touch(f.viewport, JarvisHomeTestRoutes.destination(f.home, "chat"))
-        f.advance(1L)
+        f.advance(32L)
         assertEquals("Closed drawers allow underlying feature touches", listOf("chat"), f.calls)
     }
 
@@ -206,6 +222,32 @@ class JarvisLiveTabsUiTest {
 
     @Test @Config(qualifiers = "w412dp-h915dp-port-mdpi")
     fun phoneHandlesOpenAndCloseWithoutReplacingFeatureCards() = withHome { assertHandles(it) }
+
+    @Test fun openDrawerReflowsAndKeepsItsSelectionAndNativeActions() = withHome { f ->
+        f.home.state = f.home.state.copy(system = ContinuumDashboardState.SystemStatus(appCpuPercent = 37))
+        f.open("system")
+        val panel = f.panel()
+        val measured = f.values()
+        for (width in listOf(412, 692)) {
+            f.resize(width, 700)
+            assertSame("Resize retains the native panel", panel, f.panel())
+            assertTrue(panel.isShown && panel.isEnabled)
+            assertEquals(1f, panel.alpha, .001f)
+            assertEquals(0f, panel.translationX, .001f)
+            assertTrue(f.node("jarvis-live-tab:system").isSelected)
+            assertEquals("Reflow cannot change measurements", measured, f.values())
+            assertTrue("The drawer fits the new width", panel.left >= 0 && panel.right <= f.home.width)
+            val stage = requireNotNull(f.shell.currentShell()?.get(JarvisShellLayout.Slot.AVATAR))
+            val density = f.home.resources.displayMetrics.density
+            assertTrue("The drawer remains within the hero", panel.top >= stage.top * density &&
+                panel.bottom <= stage.bottom * density + 1f)
+            assertEquals(10, JarvisHomeTestRoutes.controls(f.home).size)
+            f.assertQuiet()
+        }
+        f.tap("jarvis-live-panel:appearance")
+        f.assertClosed()
+        assertEquals(listOf("avatar-appearance"), f.calls)
+    }
 
     @Test fun systemValuesOnlyFollowSuppliedMeasurementsAndUnknownNeverBecomesZero() = withHome { f ->
         f.open("system")

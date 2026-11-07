@@ -50,7 +50,7 @@ class JarvisFeatureCardReadabilityUiTest {
                             val measured = object : ContinuumPainter by native {
                                 override fun drawText(text: String, x: Float, y: Float, style: TextStyle,
                                                       fill: Fill, align: TextAlign, alpha: Float) {
-                                    assertFalse("$key truncated '$text'", text.contains('…'))
+                                    assertFalse("$key truncated '$text', size=${style.size}, card=${b.width}", text.contains('…'))
                                     assertEquals(TextAlign.CENTER, align)
                                     val textWidth = native.measureText(text, style)
                                     assertTrue("$key '$text' outside width",

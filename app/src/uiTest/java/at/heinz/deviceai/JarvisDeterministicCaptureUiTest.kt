@@ -55,7 +55,7 @@ class JarvisDeterministicCaptureUiTest {
     }
 
     private fun capture(label: String, width: Int, height: Int, fontScale: Float = 1f,
-                        captureScrollDetails: Boolean = false) {
+                        captureScrollDetails: Boolean = false, captureLiveTab: Boolean = false) {
         val app = RuntimeEnvironment.getApplication()
         val resolver = app.contentResolver
         val previousScale = durationScale()
@@ -152,6 +152,7 @@ class JarvisDeterministicCaptureUiTest {
                             .put("viewport_height_dp", (height / density).toDouble())
                             .put("density", density.toDouble()).put("font_scale", fontScale.toDouble())
                             .put("has_feature_tiles", shell.hasFeatureTiles)
+                            .put("live_panel_expanded", home.findViewWithTag<View>("jarvis-live-panel")?.isShown == true)
                             .put("animation_duration_scale", 0)
                             .put("head_mode", "existing_2d_renderer_explicitly_selected")
                             .put("native_filament_verified", false).put("physical_device_verified", false)
@@ -175,6 +176,16 @@ class JarvisDeterministicCaptureUiTest {
                 }
             }
             render(label, "home")
+            if (captureLiveTab) {
+                val tab = requireNotNull(home.findViewWithTag<View>("jarvis-live-tab:system"))
+                JarvisHomeTestRoutes.touch(root, tab)
+                shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+                render("$label-live-system", "live_system")
+                val panel = requireNotNull(home.findViewWithTag<View>("jarvis-live-panel"))
+                assertTrue("The capture shows the real expanded drawer", panel.isShown && panel.alpha == 1f)
+                JarvisHomeTestRoutes.touch(root, tab)
+                shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+            }
             if (captureScrollDetails) {
                 assertTrue("All profiles keep their reference cards", shell.hasFeatureTiles)
                 assertEquals("The fixed Home rail is removed", null, shell[JarvisShellLayout.Slot.NAV_RAIL])
@@ -218,7 +229,8 @@ class JarvisDeterministicCaptureUiTest {
     @Test @Config(qualifiers = "w832dp-h748dp-land-mdpi")
     fun mediumNearSquare() = capture("activity-medium-832x748", 832, 748)
     @Test @Config(qualifiers = "w692dp-h768dp-port-xhdpi")
-    fun ownerFoldAspect() = capture("activity-fold-1384x1536", 1384, 1536, captureScrollDetails = true)
+    fun ownerFoldAspect() = capture("activity-fold-1384x1536", 1384, 1536,
+        captureScrollDetails = true, captureLiveTab = true)
     @Test @Config(qualifiers = "w864dp-h1536dp-port-mdpi")
     fun referenceTallAspect() = capture("activity-reference-864x1536", 864, 1536)
     @Test @Config(qualifiers = "w960dp-h640dp-land-mdpi")

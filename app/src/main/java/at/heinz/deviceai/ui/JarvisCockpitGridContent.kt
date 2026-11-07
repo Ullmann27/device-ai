@@ -348,8 +348,16 @@ object JarvisCockpitGridContent {
             JarvisTiles.compoundBreaks[tile.label]?.toList()?.joinToString(" ") ?: tile.label else tile.label
         fun fitted(parts: List<String>, style: TextStyle, minimum: Float): TextStyle {
             val widest = parts.maxByOrNull { p.measureText(it, style) }.orEmpty()
-            return JarvisShellRenderer.shrinkToFit(p, widest, style, room - 1f,
+            var result = JarvisShellRenderer.shrinkToFit(p, widest, style, room - 1f,
                 minScale = minimum * .88f / style.size)
+            repeat(6) {
+                val measured = p.measureText(widest, result)
+                if (measured <= room - 1f) return result
+                val size = maxOf(minimum * .88f, result.size * (room - 2f) / measured)
+                if (size >= result.size) return result
+                result = result.copy(size = size)
+            }
+            return result
         }
         val labelStyle = fitted(labelText.split(' '), titleBase, 15f)
         val subtitleStyle = fitted(subtitle, Type.subtitle.copy(size = (b.width * .09f).coerceIn(12f, 14f)), 12f)

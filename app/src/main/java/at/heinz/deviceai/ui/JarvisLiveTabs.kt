@@ -97,7 +97,7 @@ internal class JarvisLiveTabs(
     }
 
     fun setGeometry(value: JarvisShellLayout.Shell) {
-        if (shell != null && shell != value) collapseImmediately()
+        // Measurement may probe several widths.
         shell = value
     }
 
@@ -196,7 +196,8 @@ internal class JarvisLiveTabs(
         tabs.forEach { it.measure(exact(48f), exact(56f)) }
         val panelWidth = minOf(336f * d, width - 48f * d).toInt().coerceAtLeast(px(176f))
         val stage = shell?.get(JarvisShellLayout.Slot.AVATAR)
-        val panelHeight = minOf(stage?.height ?: 360f, 400f * resources.configuration.fontScale)
+        val panelHeight = minOf(((stage?.height ?: 360f) - 16f).coerceAtLeast(48f),
+            400f * resources.configuration.fontScale)
         panel.measure(MeasureSpec.makeMeasureSpec(panelWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(px(panelHeight), MeasureSpec.AT_MOST))
         setMeasuredDimension(width, height)
