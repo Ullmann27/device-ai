@@ -1,9 +1,10 @@
 # Code47 APK continuation
 
-Status: WIP / NOT_RELEASED. Owner requests continuation and the original-signed
-APK. Fresh GitHub and publisher readback confirms PR587 source
-7b9c03804301e00ab9801708eef8a2b50ed3e5f2 on both the prior release branch and
-the original publisher branch. No main merge is authorized.
+Status: RELEASED / SERVED_APK_VERIFIED, 2026-11-07 03:27 UTC.
+Original-signed Code47 / 0.3.46 is live from source
+7732b8668f912419d7aac7a1609a97097d727cbf. The complete original publisher
+QA and independent served-binary verification passed. PR588 retains the
+continuation and evidence; main is unmerged.
 
 ## Recovered result
 
@@ -12,7 +13,8 @@ Its real Android run completed 3718 tests: 3 failed, 20 skipped, 3695 passed.
 All failures are in OwnerAppActionWorkSceneUiTest: foreground return,
 STOP, and the visible work window. Failure lines 187/176/155 wait for a
 backend while the confirmation callback remains on the paused main looper.
-Signing and publication correctly remained blocked. Code46 stays live.
+Signing and publication correctly remained blocked for that failed run.
+Code46 remained live until the verified Code47 deployment below.
 
 The previous uncommitted follow-up was initially LOCAL_ONLY / NOT_PUSHED.
 Its exact recovered diff is now `docs/evidence/code47-apk-20261107/
@@ -24,7 +26,7 @@ raw output is recovered-wip-red.log. This historical patch is WIP/UNVERIFIED
 and superseded by verified repair 7732b8668f912419d7aac7a1609a97097d727cbf.
 Production is unchanged from PR587.
 
-## Bounded next steps
+## Completed build sequence
 
 1. Repair actual host event delivery and controlled backend lifetime while
    retaining approval, STOP, progress, gaze and return assertions.
@@ -39,8 +41,11 @@ EXP-05/12 interfaces remain unchanged. No new service, paid API, key export,
 package change, user-data deletion, test waiver or device installation.
 Physical Fold7/GPU/local-model/audio/thermal acceptance: NOT_RUN.
 
-Resume from this branch's actual remote HEAD and recorded receipts. Rollback
-is retaining Code46 and reverting only this continuation's own changes.
+Resume from PR588 actual remote HEAD and recorded receipts. The publisher
+branch remains pinned to the built source 7732b8668; do not advance it for
+documentation-only commits. Any future repair needs a new exact-source
+QA/signing cycle and a version code greater than 47. Do not attempt an
+Android downgrade to Code46 over an installed Code47.
 
 ## Test repair checkpoint
 
@@ -50,11 +55,11 @@ while native Canvas renders, and delivers frames across animated close.
 All four cases pass individually and together in normal JUnit ordering.
 Production, original avatar/orb and mandatory release gates are unchanged.
 Raw compile/tests/receipts: docs/evidence/code47-apk-20261107/.
-The original publisher must still pass its complete exact-source gate.
+The original publisher passed its complete exact-source gate at 03:25:04 UTC.
 
 ## Frozen build and independent reproduction
 
-Original publisher build dep-dbn8vhpsrm7s738np9jg runs source
+Original publisher build dep-dbn8vhpsrm7s738np9jg completed from source
 7732b8668f912419d7aac7a1609a97097d727cbf. This documentation follow-up
 does not change that source or restart the publisher.
 
@@ -75,3 +80,22 @@ gradle --no-daemon --max-workers=2 --console=plain \
 This command is a reproduction instruction, not a claim of an additional
 completed Gradle run. The publisher independently runs the entire suite
 without a class filter, followed by lint and original-package assembly.
+
+## Final release receipt
+
+Original deployment `dep-dbn8vhpsrm7s738np9jg` became LIVE on
+2026-11-07 at 03:26:55 UTC. Independent served-binary verification passed
+at 03:27:24 UTC. Full publisher QA, release lint, original signing, catalog
+publication and actual APK hash/package/version/certificate checks passed.
+
+- APK: [0.3.46 / Code47](https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/Continuum-Lokal-35f93b41ed835bf2ec16890b62d4e640d3b1ea28c2e8a098065bd08f64dc2481.apk)
+- Source: `7732b8668f912419d7aac7a1609a97097d727cbf`
+- Package: `at.heinz.deviceai.continuumlocal`
+- Size: `101925655` bytes
+- APK SHA-256: `35f93b41ed835bf2ec16890b62d4e640d3b1ea28c2e8a098065bd08f64dc2481`
+- Original certificate SHA-256: `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`
+- ABI: `arm64-v8a`; original avatar GLB byte identity verified.
+
+Evidence: `docs/evidence/code47-apk-20261107/publisher-pass.json` and
+`docs/evidence/code47-apk-20261107/served-apk/`.
+Physical Fold7/GPU/local-model/audio/thermal acceptance remains NOT_RUN.
