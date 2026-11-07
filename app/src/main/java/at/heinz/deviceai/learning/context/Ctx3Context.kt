@@ -75,7 +75,7 @@ class Ctx3Context {
   val ref=words.withIndex().firstOrNull { it.value in setOf("er","ihn","ihm","sie","es","damit","dazu","darüber","davon","des") }
   if(ref!=null) {
    if(negative(ref.index)||trailingCorrection){focus=emptyList();return Ctx3Decision.Clarify("REJECTED_PRONOUN")}
-   val possible=focus.filter { ref.value in it.pronouns || ref.value in setOf("damit","dazu","darüber","des") }.distinctBy { it.id }
+   val possible=focus.filter { ref.value in it.pronouns || ref.value in setOf("damit","dazu","darüber","davon","des") }.distinctBy { it.id }
    if(possible.size!=1)return Ctx3Decision.Clarify("NO_UNIQUE_REFERENT")
    val target=possible.single();age=0
    focus=listOf(target)
