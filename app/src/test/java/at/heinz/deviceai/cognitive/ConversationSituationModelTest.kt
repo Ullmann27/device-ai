@@ -21,6 +21,15 @@ class ConversationSituationModelTest {
         assertEquals("lumo",m.snapshot().currentThreadId)
     }
 
+    @Test fun unrelatedQuestionCannotJumpToRecentPausedThreadByRecencyAlone() {
+        val m=ConversationSituationModel()
+        m.openThread("thermal","Android Thermik",listOf("android thermik","hitze"),atTurn=1)
+        m.pauseActive()
+        val r=m.resolveReturn("Wie wird morgen das Wetter?",atTurn=2)
+        assertTrue(r is ConversationSituationModel.Resolution.NoMatch)
+        assertNull(m.snapshot().currentThreadId)
+    }
+
     @Test fun closeCandidatesAskInsteadOfGuessing() {
         val m=ConversationSituationModel()
         m.openThread("a","Renderer",listOf("shader","layout"),atTurn=1)
