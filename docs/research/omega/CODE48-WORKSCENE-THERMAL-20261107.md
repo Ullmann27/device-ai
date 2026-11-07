@@ -62,3 +62,22 @@ then remove proved redundant scene allocations with bounded RAM reuse.
 Inspection also found dashboard status/holdout work every five seconds,
 including while the dashboard is hidden; measure before choosing a cache.
 No thermal savings have been measured or claimed.
+
+## Visual acceptance correction
+
+The existing Systemstatus work window was explicitly rejected as a
+demonstration of the requested cinematic task presentation. It is a generic
+status card inside JarvisWorkWindow, with duplicated panel headings; its
+opening transition is not acceptance of the reference-video objective.
+Do not send the owner through settings or repeat this route as a solution.
+
+The requested sequence must visibly coordinate the existing original
+avatar/camera, an app or real document arriving as a spatial work surface,
+actual processing/content changes, result presentation and return to the
+cockpit. Existing partial motion primitives and green functional tests do
+not prove that integrated visual result. Recover the original reference
+videos before redesign; retain original palette, avatar and orb.
+
+The two reproduced routing/layout failures remain valid but their repair
+alone cannot satisfy this visual acceptance. New production changes: NONE.
+Current APK remains Code47. No physical animation/thermal acceptance.
