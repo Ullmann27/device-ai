@@ -53,6 +53,10 @@ internal class ApprovedStreamingSpeechAssembler(
 
     private fun drainCompletedSentences(): List<Candidate> {
         val out = ArrayList<Candidate>()
+        // The retained suffix is rescanned from index 0 on every append. Rebuild code
+        // state from that same origin instead of carrying end-state into a fresh scan.
+        fenced = null
+        inlineCode = false
         var scan = 0
         var sentenceStart = 0
         while (scan < buffer.length) {
