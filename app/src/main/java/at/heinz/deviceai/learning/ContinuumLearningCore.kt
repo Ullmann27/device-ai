@@ -23,6 +23,11 @@ data class ContinualLearningReport(
     val completedEvaluation:Boolean=true
 )
 
+internal class ContinuumSourceEvidenceNotPersisted(
+    val modelCommitted:Boolean,
+    cause:Exception
+):java.io.IOException("Source evaluation evidence not persisted",cause)
+
 data class PublicCurriculumReport(
     val accepted:Boolean,
     val completed:Boolean,
@@ -483,32 +488,23 @@ class ContinuumLearningCore private constructor(
         cancelled:()->Boolean={false}
     ):ContinualLearningReport? = synchronized(CORE_LOCK) {
         if(sources.isEmpty())return@synchronized null
-        sources.forEach(MentorSourceValidation::checkSource)
-        val ids=mutableListOf<String>()
-        sources.forEach { source ->
-            val experience=LearningExperienceFactory.create(
-                type=LearningExperienceType.SOURCE_TEXT,
-                provenance=if (source.url.startsWith("https://de.wikipedia.org/wiki/"))
-                    LearningProvenance.MENTOR_WIKIPEDIA else LearningProvenance.PUBLIC_WEB_SOURCE,
-                trust=LearningTrustClass.SOURCE_OBSERVATION,
-                status=LearningStatus.OBSERVED,
-                content=source.excerpt,
-                annotation=source.subject,
-                sourceRef=source.url+"#sha256="+source.sha,
-                now=nowMillis()
-            )
-            store.append(experience)
-            ids+=experience.id
-        }
+        val batch=java.util.Collections.unmodifiableList(ArrayList(sources))
+        val requested=sourceExperiences(batch,nowMillis()) ?: return@synchronized null
+        ContinuumSourceNovelty.markStarted(directory.parentFile!!,batch)
+        store.appendMissing(requested)
+        val ids=requested.map { it.id }
+        val requestedIds=ids.toSet()
         // Capacity refusal or revocation must not turn into a claimed source
         // training round backed only by the unrelated public curriculum.
-        val activeIds=store.all().filter {
+        val active=store.all().filter {
             it.status!=LearningStatus.REVOKED && it.status!=LearningStatus.REJECTED
-        }.map { it.id }.toSet()
-        // Callers mark the whole source batch completed after this report.
-        if(ids.any { it !in activeIds })return@synchronized null
+        }.associateBy { it.id }
+        // Require the complete persisted batch.
+        if(ids.any { it !in active })return@synchronized null
 
-        val replay=store.replay(LearningExperienceType.SOURCE_TEXT,48)
+        val replay=(store.replay(LearningExperienceType.SOURCE_TEXT,48).filter {
+            it.id !in requestedIds && it.annotation.orEmpty().length>=3
+        }+ids.map(active::getValue)).takeLast(48)
         val positives=replay.mapNotNull { item ->
             val topic=item.annotation?.takeIf { it.length>=3 } ?: return@mapNotNull null
             SubwordSemanticExample(topic,item.content,true)
@@ -535,12 +531,15 @@ class ContinuumLearningCore private constructor(
             holdoutAfter.correct>=holdoutBefore.correct &&
             holdoutAfter.loss<=holdoutBefore.loss+0.045
         if(accepted)saveModel(candidate.save(),"semantic")
+        emitTrainingPhase("SAVE_EVIDENCE")
+        try {
         ids.forEach { id ->
             store.updateStatus(id,
                 if(accepted)LearningStatus.LEARNED else LearningStatus.REPLAY_PENDING,
                 nowMillis())
         }
         val reason=when {
+            accepted && cancelled() -> "Modell gespeichert; Abschluss unterbrochen"
             cancelled() || train.stoppedEarly -> "Abgebrochen; Snapshot unverändert"
             !otherRetained -> "Gemeinsame Gewichte würden Intent oder persönliche Lektionen verschlechtern"
             holdoutAfter.correct<holdoutBefore.correct -> "Semantik-Holdout würde Treffer verlieren"
@@ -549,11 +548,20 @@ class ContinuumLearningCore private constructor(
             else -> "Quellenkontexte verbessert; semantischer Holdout nicht verschlechtert"
         }
         appendAudit("semantic",accepted,train.steps,before,after,holdoutBefore,holdoutAfter,ids,reason)
-        ContinualLearningReport(
-            "semantic",accepted,train.steps,replay.size,before,after,
+        val report=ContinualLearningReport(
+            "semantic",accepted,train.steps,sourcePairs.size,before,after,
             holdoutBefore,holdoutAfter,ids,reason,
             completedEvaluation=!cancelled() && !train.stoppedEarly
         )
+        if(report.completedEvaluation &&
+            !ContinuumSourceNovelty.markCompleted(directory.parentFile!!,batch,cancelled))
+            report.copy(completedEvaluation=false,reason=if(accepted)
+                "Modell gespeichert; Abschluss unterbrochen" else
+                "Abschluss unterbrochen; Snapshot unverändert") else report
+        } catch(error:Exception) {
+            if(error is java.util.concurrent.CancellationException)throw error
+            throw ContinuumSourceEvidenceNotPersisted(accepted,error)
+        }
     }
 
     /** Already owner-reviewed notes join retrieval, never become truth labels. */
@@ -1152,6 +1160,34 @@ class ContinuumLearningCore private constructor(
     }
 
     companion object {
+        internal fun prepareSourceBatch(sources:List<MentorSource>):List<MentorSource>? {
+            val snapshot=java.util.Collections.unmodifiableList(ArrayList(sources))
+            return snapshot.takeIf { sourceExperiences(it,0L)!=null }
+        }
+
+        private fun sourceExperiences(sources:List<MentorSource>,at:Long):List<LearningExperience>? {
+            sources.forEach { source ->
+                MentorSourceValidation.checkSource(source)
+                require(source.subject.trim().length>=3)
+                TrainableSubwordEncoder.subwordBuckets(source.subject)
+                TrainableSubwordEncoder.subwordBuckets(source.excerpt)
+            }
+            val requested=sources.map { source ->
+                LearningExperienceFactory.create(
+                    type=LearningExperienceType.SOURCE_TEXT,
+                    provenance=if(source.url.startsWith("https://de.wikipedia.org/wiki/"))
+                        LearningProvenance.MENTOR_WIKIPEDIA else LearningProvenance.PUBLIC_WEB_SOURCE,
+                    trust=LearningTrustClass.SOURCE_OBSERVATION,
+                    status=LearningStatus.OBSERVED,
+                    content=source.excerpt,
+                    annotation=source.subject,
+                    sourceRef=source.url+"#sha256="+source.sha,
+                    now=at
+                )
+            }.distinctBy { it.id }
+            return requested.takeIf { it.size<=17 }
+        }
+
         /** Explicit owner-approved recovery policy; existing constructors retain strict integrity reads. */
         fun withAutomaticRecovery(baseDirectory:File, nowMillis:()->Long=System::currentTimeMillis):ContinuumLearningCore =
             ContinuumLearningCore(baseDirectory,null,nowMillis,true)

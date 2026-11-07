@@ -116,7 +116,10 @@ test('background consolidation records failure without losing interrupted source
  ensure('onStartJob',scheduler.includes('override fun onStartJob('));
  ensure('onStopJob',scheduler.includes('override fun onStopJob('));
  ensure('Android service in manifest',manifest.includes('.learning.ContinuumAutonomousJobService'));
- ensure('interruption cannot mark source done',scheduler.includes('report?.completedEvaluation==true'));
+ ensure('scheduler delegates source completion',scheduler.includes('core.learnFromSources(fresh,cancelled)') &&
+   !scheduler.includes('ContinuumSourceNovelty.markCompleted('));
+ ensure('interruption cannot mark source done',
+   /if\(report\.completedEvaluation\s*&&\s*!ContinuumSourceNovelty\.markCompleted\(directory\.parentFile!!,batch,cancelled\)\)\s*report\.copy\(completedEvaluation=false/.test(codeOnly(core)));
  ensure('report has evaluation completion field',core.includes('val completedEvaluation:Boolean=true'));
  ensure('incomplete training requires retry',core.includes('completedEvaluation=!cancelled() && !train.stoppedEarly'));
  ensure('started observed',scheduler.includes('ContinuumOfflineJobStatus.started('));

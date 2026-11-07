@@ -38,6 +38,15 @@ class ContinuumBrainOrbRenderer {
         drawNet(p, cx, cy, r, stable)
         drawCore(p, cx, cy, r, stable)
         drawBrain(p, cx, cy - r * .33f, r, stable)
+        // Unconfirmed memory stays visibly distinct.
+        if (stable.hypothesis) {
+            p.setAdditive(true)
+            for (i in 0 until 12) {
+                p.strokeArc(cx - r * .90f, cy - r * .90f, cx + r * .90f, cy + r * .90f,
+                    i * 30f, 16f, r * .014f, Fill.Solid(C.violetRim), .65f)
+            }
+            p.setAdditive(false)
+        }
         // Rand-Bloom: mehrere additive Ringe (violett oben/rechts, cyan unten/links), dann scharfe Kante.
         p.setAdditive(true)
         // 59509: a markedly stronger violet/magenta rim bloom around the glass sphere.

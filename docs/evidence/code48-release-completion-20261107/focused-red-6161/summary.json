@@ -1,0 +1,9 @@
+{
+  "status": "FAIL",
+  "tests": 77,
+  "passed": 76,
+  "failures": 1,
+  "errors": 0,
+  "skipped": 0,
+  "remaining": "Real AlertDialog close callback awaits the next window traversal; opening and native hypothesis pixels now pass."
+}

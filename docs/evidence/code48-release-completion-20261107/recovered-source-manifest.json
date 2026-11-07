@@ -1,0 +1,50 @@
+{
+  "sourceParent": "4c198ec81462702e5b39b28a6ead2b42d084d4c4",
+  "status": "WIP_UNVERIFIED",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "sha256": "f3c3502ab443af94ca786a13c41cc387474843c079c45aeec08dabdca3cbcdf1"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "sha256": "08ab8fefa4a8b2743d33cd274714620cd03437827ef8439147e47d2c5fff70c6"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "sha256": "0cf8ba612acd55b7c750f668600c875467bdb71a20d77bcf4f639d564b77f8da"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "sha256": "ce9412aaa85aa641bcf4475fe3f7696edbe00549d722dc045b4f185cc18d7688"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+      "sha256": "d0515714e2fd813e24594565e01ae02928978d8b8736b9842bd366be1b55a153"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumSourceNovelty.kt",
+      "sha256": "35205791ea0129c26b4f5b73d72f82275963722b0bc0b64b9095755be96070e3"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer.kt",
+      "sha256": "91110f5e001364f005bd9d7533865ab0f5c62c1535e68aeefab2cb87c56483a7"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/RecoveredContextCredentialBoundaryTest.kt",
+      "sha256": "fbedc35c3579a1b8b35381bc2196e1a8b33d478cc3de6c9c6ec94f40a42596df"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceRoundJournalTest.kt",
+      "sha256": "396c7f69930d6f8160e57409f0387931c7362ffc7ad9e818ae9360935f26b17b"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceRoundRecoveryTest.kt",
+      "sha256": "03aa2daf9b0201a1289ee7201cf924e259bf8b9f60d8d59c2273c271bb9fe2b9"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumBrainHypothesisUiTest.kt",
+      "sha256": "069b0e2c41a9151f329d5d33da27fb720b5306c35f2710f6c9c073a16b8b78e2"
+    }
+  ]
+}
