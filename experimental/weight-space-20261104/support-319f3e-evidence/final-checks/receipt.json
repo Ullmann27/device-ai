@@ -1,0 +1,105 @@
+{
+  "schema": "continuum-support-final-checks-v1",
+  "startedUtc": "2026-11-04T18:55:17.848067+00:00",
+  "finishedUtc": "2026-11-04T18:55:19.534932+00:00",
+  "sourceHashesBefore": {
+    "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/run_experiment.py": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+    "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/eos_diagnostics.py": "07fc0fe393c15d5c60654bf946a8083da8aa7e1354dc0f291c78d75763af2fe3",
+    "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/weight16m_preflight.py": "73aaaeaeb0f65ba584d5e66a3a65b32b8d4132b27dbef276a59248b9ae72f0ba",
+    "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/tests/test_eos_diagnostics.py": "fd559c97a8af11f7e988d9a501e12dd6cb58d04f59ac8c4239a4cbe3066dc969",
+    "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/tests/test_weight16m_preflight.py": "b3cecb919b223f4ed2e38ca5f75841e3c1d87cb737ba460356375d151d9190de",
+    "/workspace/scratch/319f3e4563d9/model16m/model/continuum-lm1-16011776.lm1": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+    "/workspace/scratch/319f3e4563d9/model16m/tokenizer/lm1-tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+  },
+  "sourceHashesAfter": {
+    "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/run_experiment.py": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+    "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/eos_diagnostics.py": "07fc0fe393c15d5c60654bf946a8083da8aa7e1354dc0f291c78d75763af2fe3",
+    "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/weight16m_preflight.py": "73aaaeaeb0f65ba584d5e66a3a65b32b8d4132b27dbef276a59248b9ae72f0ba",
+    "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/tests/test_eos_diagnostics.py": "fd559c97a8af11f7e988d9a501e12dd6cb58d04f59ac8c4239a4cbe3066dc969",
+    "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/tests/test_weight16m_preflight.py": "b3cecb919b223f4ed2e38ca5f75841e3c1d87cb737ba460356375d151d9190de",
+    "/workspace/scratch/319f3e4563d9/model16m/model/continuum-lm1-16011776.lm1": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+    "/workspace/scratch/319f3e4563d9/model16m/tokenizer/lm1-tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+  },
+  "inputsUnchanged": true,
+  "results": [
+    {
+      "name": "eos-tests",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/tests",
+        "-p",
+        "test_eos_diagnostics.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "passedTests": 9,
+      "evidence": "eos-tests.log",
+      "evidenceSha256": "827ae12f64c744f87ca2238b16c08d0bd4ce64aa869b0fe6118ec26e3e18f28c"
+    },
+    {
+      "name": "preflight-tests",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/tests",
+        "-p",
+        "test_weight16m_preflight.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "passedTests": 14,
+      "evidence": "preflight-tests.log",
+      "evidenceSha256": "6d4108f41b3cdd0905686016cd3e6c60fceb4bf46a180d633fa2f2f64e73f044"
+    },
+    {
+      "name": "eos-actual-audit",
+      "command": [
+        "python3",
+        "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/eos_diagnostics.py",
+        "--repo",
+        "/workspace/scratch/319f3e4563d9/weight16m-worktree"
+      ],
+      "exitCode": 0,
+      "passedTests": null,
+      "evidence": "eos-actual-audit.json",
+      "evidenceSha256": "921e6dc7d0c9c262e35371da233f08a96e8468a5e7c3ff116497232fc94cae9e"
+    },
+    {
+      "name": "preflight-real16m",
+      "command": [
+        "python3",
+        "/workspace/scratch/319f3e4563d9/weight16m-worktree/experimental/weight-space-20261104/weight16m_preflight.py",
+        "--checkpoint",
+        "/workspace/scratch/319f3e4563d9/model16m/model/continuum-lm1-16011776.lm1",
+        "--tokenizer",
+        "/workspace/scratch/319f3e4563d9/model16m/tokenizer/lm1-tokenizer.lmbp",
+        "--expect-parameters",
+        "16011776",
+        "--expect-checkpoint-sha256",
+        "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+        "--expect-tokenizer-sha256",
+        "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+      ],
+      "exitCode": 0,
+      "passedTests": null,
+      "evidence": "preflight-real16m.json",
+      "evidenceSha256": "1b6548c6b70c69d2d1931a3e29671982295eb82a154bdd44864de201c487a09a"
+    }
+  ],
+  "unitTestsPassed": 23,
+  "unitTestsFailed": 0,
+  "previouslyVerifiedGateTests": 86,
+  "combinedTestsPassed": 109,
+  "combinedTestsFailed": 0,
+  "historicalLogAuditInputs": 16,
+  "realTrainingRuns": 0,
+  "quality": "NOT_EVALUATED",
+  "android": "NOT_RUN"
+}

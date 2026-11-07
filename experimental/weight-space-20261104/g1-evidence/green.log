@@ -1,0 +1,16 @@
+test_competing_writers_have_exactly_one_complete_winner (__main__.PublicationGate.test_competing_writers_have_exactly_one_complete_winner) ... ok
+test_complete_unicode_publication (__main__.PublicationGate.test_complete_unicode_publication) ... ok
+test_constructor_restarts_after_interrupted_environment_write (__main__.PublicationGate.test_constructor_restarts_after_interrupted_environment_write) ... ok
+test_dangling_symlink_is_not_replaced_or_followed (__main__.PublicationGate.test_dangling_symlink_is_not_replaced_or_followed) ... ok
+test_existing_invalid_marker_is_not_silently_repaired (__main__.PublicationGate.test_existing_invalid_marker_is_not_silently_repaired) ... ok
+test_existing_marker_is_not_overwritten (__main__.PublicationGate.test_existing_marker_is_not_overwritten) ... ok
+test_existing_symlink_and_referent_are_unchanged (__main__.PublicationGate.test_existing_symlink_and_referent_are_unchanged) ... ok
+test_in_progress_json_is_not_visible_under_final_name (__main__.PublicationGate.test_in_progress_json_is_not_visible_under_final_name) ... ok
+test_partial_write_failure_leaves_no_marker_and_allows_retry (__main__.PublicationGate.test_partial_write_failure_leaves_no_marker_and_allows_retry) ... ok
+test_serialization_failure_leaves_no_marker_and_allows_retry (__main__.PublicationGate.test_serialization_failure_leaves_no_marker_and_allows_retry) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.149s
+
+OK
+{"report": "/workspace/scratch/319f3e4563d9/agents/gate/evidence/green/publication-e991683e6abf-4llxgdav/report.json", "sha256": "c14a347115ba0a16702592b344bda548538e209494ff6fe3244f82dd225bb0bf", "passed": 10, "failed": 0}

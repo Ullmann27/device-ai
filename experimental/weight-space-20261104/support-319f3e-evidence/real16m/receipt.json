@@ -1,0 +1,33 @@
+{
+  "phase": "READ_ONLY_CURRENT_HOST_CAPACITY",
+  "baseSourceCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "compilerVersion": "2.0.20",
+  "javaVersion": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "argv": [
+    "java",
+    "-Xms64m",
+    "-Xmx1g",
+    "-cp",
+    "/workspace/scratch/319f3e4563d9/build/experiment.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmCapacityBenchmark",
+    "/workspace/scratch/319f3e4563d9/model16m/model/continuum-lm1-16011776.lm1",
+    "/workspace/scratch/319f3e4563d9/model16m/tokenizer/lm1-tokenizer.lmbp"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 6.495357056999637,
+  "before": {
+    "model": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+    "tokenizer": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+  },
+  "after": {
+    "model": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+    "tokenizer": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+  },
+  "inputsUnchanged": true,
+  "jarSha256": "299da40e98f03cbb24278df9d7266066594bf9f161042441194763188482256c",
+  "stdoutSha256": "5f70dc1030022b265481d46e2766a2471f2edbb19625ee423cd8ec4932a78ff7",
+  "trainingRuns": 0,
+  "androidValidation": "NOT_RUN",
+  "qualityGain": "NOT_EVALUATED"
+}

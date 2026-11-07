@@ -1,0 +1,61 @@
+test_competing_writers_have_exactly_one_complete_winner (__main__.PublicationGate.test_competing_writers_have_exactly_one_complete_winner) ... ok
+test_complete_unicode_publication (__main__.PublicationGate.test_complete_unicode_publication) ... ok
+test_constructor_restarts_after_interrupted_environment_write (__main__.PublicationGate.test_constructor_restarts_after_interrupted_environment_write) ... ERROR
+test_dangling_symlink_is_not_replaced_or_followed (__main__.PublicationGate.test_dangling_symlink_is_not_replaced_or_followed) ... ok
+test_existing_invalid_marker_is_not_silently_repaired (__main__.PublicationGate.test_existing_invalid_marker_is_not_silently_repaired) ... ok
+test_existing_marker_is_not_overwritten (__main__.PublicationGate.test_existing_marker_is_not_overwritten) ... ok
+test_existing_symlink_and_referent_are_unchanged (__main__.PublicationGate.test_existing_symlink_and_referent_are_unchanged) ... ok
+test_in_progress_json_is_not_visible_under_final_name (__main__.PublicationGate.test_in_progress_json_is_not_visible_under_final_name) ... FAIL
+test_partial_write_failure_leaves_no_marker_and_allows_retry (__main__.PublicationGate.test_partial_write_failure_leaves_no_marker_and_allows_retry) ... FAIL
+test_serialization_failure_leaves_no_marker_and_allows_retry (__main__.PublicationGate.test_serialization_failure_leaves_no_marker_and_allows_retry) ... FAIL
+
+======================================================================
+ERROR: test_constructor_restarts_after_interrupted_environment_write (__main__.PublicationGate.test_constructor_restarts_after_interrupted_environment_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/319f3e4563d9/agents/gate/experimental/weight-space-20261104/tests/atomic_phase_publication_gate.py", line 180, in test_constructor_restarts_after_interrupted_environment_write
+    resumed = self.driver.Experiment(args)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/319f3e4563d9/agents/gate/evidence/red/publication-8f2f49bda56c-vn24zs5t/test_constructor_restarts_after_interrupted_environment_write/run_experiment.py", line 119, in __init__
+    previous = json.loads((self.out / "environment.json").read_text())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py", line 354, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ^^^^^^^^^^^^^^^^^^^^^^
+json.decoder.JSONDecodeError: Unterminated string starting at: line 1 column 11 (char 10)
+
+======================================================================
+FAIL: test_in_progress_json_is_not_visible_under_final_name (__main__.PublicationGate.test_in_progress_json_is_not_visible_under_final_name)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/319f3e4563d9/agents/gate/experimental/weight-space-20261104/tests/atomic_phase_publication_gate.py", line 95, in test_in_progress_json_is_not_visible_under_final_name
+    self.assertFalse(visible_while_incomplete, "reader could observe incomplete final JSON")
+AssertionError: True is not false : reader could observe incomplete final JSON
+
+======================================================================
+FAIL: test_partial_write_failure_leaves_no_marker_and_allows_retry (__main__.PublicationGate.test_partial_write_failure_leaves_no_marker_and_allows_retry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/319f3e4563d9/agents/gate/experimental/weight-space-20261104/tests/atomic_phase_publication_gate.py", line 70, in test_partial_write_failure_leaves_no_marker_and_allows_retry
+    self.assertFalse(self.driver.path_present(self.target), "failed write published a marker")
+AssertionError: True is not false : failed write published a marker
+
+======================================================================
+FAIL: test_serialization_failure_leaves_no_marker_and_allows_retry (__main__.PublicationGate.test_serialization_failure_leaves_no_marker_and_allows_retry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/319f3e4563d9/agents/gate/experimental/weight-space-20261104/tests/atomic_phase_publication_gate.py", line 62, in test_serialization_failure_leaves_no_marker_and_allows_retry
+    self.assertFalse(self.driver.path_present(self.target), "failed serialization published a marker")
+AssertionError: True is not false : failed serialization published a marker
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.171s
+
+FAILED (failures=3, errors=1)
+{"report": "/workspace/scratch/319f3e4563d9/agents/gate/evidence/red/publication-8f2f49bda56c-vn24zs5t/report.json", "sha256": "978b1acf6dd310dd88721f80ef4da3c50866b24b3803937f471e399241c25770", "passed": 6, "failed": 4}

@@ -1,0 +1,177 @@
+{
+  "experimentId": "ATOMIC-PHASE-PUBLICATION-20261104",
+  "status": "LOCAL_VERIFIED_FOR_ROOT_INTEGRATION",
+  "baseCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "baseSourceSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "fixedSourceSha256": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+  "harnessSha256": "d19eecec009a08417c117e97c14ee8744e6b29307567324ab8dfa286ae621cf5",
+  "python": "3.12.14",
+  "implementationChange": "Only write_new plus tempfile import; same-directory staging, flush/fsync, close, exclusive atomic hard link, cleanup of own staging file.",
+  "unchangedAstOutsideWriteNewAndTempfileImport": true,
+  "red": {
+    "passed": 6,
+    "failed": 4,
+    "reportSha256": "978b1acf6dd310dd88721f80ef4da3c50866b24b3803937f471e399241c25770",
+    "sourceSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+    "sourceHashAfterRun": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+    "reportPath": "/workspace/scratch/319f3e4563d9/agents/gate/evidence/red/publication-8f2f49bda56c-vn24zs5t/report.json",
+    "logPath": "/workspace/scratch/319f3e4563d9/agents/gate/red.log",
+    "cases": [
+      {
+        "case": "test_competing_writers_have_exactly_one_complete_winner",
+        "pass": true
+      },
+      {
+        "case": "test_complete_unicode_publication",
+        "pass": true
+      },
+      {
+        "case": "test_constructor_restarts_after_interrupted_environment_write",
+        "pass": false,
+        "error": "Unterminated string starting at: line 1 column 11 (char 10)"
+      },
+      {
+        "case": "test_dangling_symlink_is_not_replaced_or_followed",
+        "pass": true
+      },
+      {
+        "case": "test_existing_invalid_marker_is_not_silently_repaired",
+        "pass": true
+      },
+      {
+        "case": "test_existing_marker_is_not_overwritten",
+        "pass": true
+      },
+      {
+        "case": "test_existing_symlink_and_referent_are_unchanged",
+        "pass": true
+      },
+      {
+        "case": "test_in_progress_json_is_not_visible_under_final_name",
+        "pass": false,
+        "error": "True is not false : reader could observe incomplete final JSON"
+      },
+      {
+        "case": "test_partial_write_failure_leaves_no_marker_and_allows_retry",
+        "pass": false,
+        "error": "True is not false : failed write published a marker"
+      },
+      {
+        "case": "test_serialization_failure_leaves_no_marker_and_allows_retry",
+        "pass": false,
+        "error": "True is not false : failed serialization published a marker"
+      }
+    ]
+  },
+  "green": {
+    "passed": 10,
+    "failed": 0,
+    "reportSha256": "c14a347115ba0a16702592b344bda548538e209494ff6fe3244f82dd225bb0bf",
+    "sourceSha256": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+    "sourceHashAfterRun": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+    "reportPath": "/workspace/scratch/319f3e4563d9/agents/gate/evidence/green/publication-e991683e6abf-4llxgdav/report.json",
+    "logPath": "/workspace/scratch/319f3e4563d9/agents/gate/green.log",
+    "cases": [
+      {
+        "case": "test_competing_writers_have_exactly_one_complete_winner",
+        "pass": true
+      },
+      {
+        "case": "test_complete_unicode_publication",
+        "pass": true
+      },
+      {
+        "case": "test_constructor_restarts_after_interrupted_environment_write",
+        "pass": true
+      },
+      {
+        "case": "test_dangling_symlink_is_not_replaced_or_followed",
+        "pass": true
+      },
+      {
+        "case": "test_existing_invalid_marker_is_not_silently_repaired",
+        "pass": true
+      },
+      {
+        "case": "test_existing_marker_is_not_overwritten",
+        "pass": true
+      },
+      {
+        "case": "test_existing_symlink_and_referent_are_unchanged",
+        "pass": true
+      },
+      {
+        "case": "test_in_progress_json_is_not_visible_under_final_name",
+        "pass": true
+      },
+      {
+        "case": "test_partial_write_failure_leaves_no_marker_and_allows_retry",
+        "pass": true
+      },
+      {
+        "case": "test_serialization_failure_leaves_no_marker_and_allows_retry",
+        "pass": true
+      }
+    ]
+  },
+  "existingGateRegression": {
+    "adversarial_driver_gate": {
+      "passed": 36,
+      "failed": 0,
+      "reportSha256": "825317fb777266261a9f31a973b6d47b3011102ecb8e90ec75cdb026b4dfc419",
+      "sourceSha256": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+      "sourceHashAfterRun": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+      "reportPath": "/workspace/scratch/319f3e4563d9/agents/gate/evidence/regression/audit-e991683e6abf-75v1nw30/report.json",
+      "logPath": "/workspace/scratch/319f3e4563d9/agents/gate/adversarial_driver_gate.log"
+    },
+    "targeted_final_creation_gate": {
+      "passed": 6,
+      "failed": 0,
+      "reportSha256": "7b97e5b49c81169e74920433d779acad996d2d040e7a805cab387d680ece4dd6",
+      "sourceSha256": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+      "sourceHashAfterRun": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+      "reportPath": "/workspace/scratch/319f3e4563d9/agents/gate/evidence/regression/targeted-e991683e6abf-3s3s4iu_/report.json",
+      "logPath": "/workspace/scratch/319f3e4563d9/agents/gate/targeted_final_creation_gate.log"
+    },
+    "direct_dispatch_gate": {
+      "passed": 4,
+      "failed": 0,
+      "reportSha256": "d2232122b439b8548ec3f77849292c0a11455ded070d51a13fa0214b21f9a5ca",
+      "sourceSha256": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+      "sourceHashAfterRun": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+      "reportPath": "/workspace/scratch/319f3e4563d9/agents/gate/evidence/regression/direct-e991683e6abf-a4f6rbku/report.json",
+      "logPath": "/workspace/scratch/319f3e4563d9/agents/gate/direct_dispatch_gate.log"
+    },
+    "registered_profiles_gate": {
+      "passed": 29,
+      "failed": 0,
+      "reportSha256": "80ead02608a3830a0da99edc3d94019ac567264e465c91c8d09c6e5d56eb7d18",
+      "sourceSha256": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+      "sourceHashAfterRun": "e991683e6abf222ca0f213cc703ff0d23ea646efd2772204c069d89e8f542c8f",
+      "reportPath": "/workspace/scratch/319f3e4563d9/agents/gate/evidence/regression/profiles-e991683e6abf-yryqcd1x/report.json",
+      "logPath": "/workspace/scratch/319f3e4563d9/agents/gate/registered_profiles_gate-with-plan.log"
+    }
+  },
+  "greenTotal": {
+    "passed": 85,
+    "failed": 0
+  },
+  "setupInvocationFailure": {
+    "suite": "registered_profiles_gate",
+    "reason": "Initial copied-fixture invocation lacked CORE_6_10M_PLAN.md beside the driver; no cases ran.",
+    "resolution": "Reran with --plan pointing to unchanged base CORE_6_10M_PLAN.md; 29/29 passed.",
+    "logPath": "/workspace/scratch/319f3e4563d9/agents/gate/registered_profiles_gate.log"
+  },
+  "realModelProcesses": 0,
+  "realTrainingRuns": 0,
+  "realHoldoutEvaluations": 0,
+  "limitations": [
+    "Local filesystem must support same-directory hard links; unsupported publication fails closed.",
+    "No power-loss or directory-entry durability guarantee; directory fsync is outside this fix.",
+    "SIGKILL can leave a staging file; it is not a phase marker and is not reused.",
+    "Previously damaged final markers are preserved and still require explicit recovery review.",
+    "This is atomic JSON publication, not a transaction across logs, checkpoints and receipts.",
+    "All constructor/runtime/orchestrator identity gates are unchanged; prior 8f2f49... studies are not newly allowlisted.",
+    "No model quality, 16M training, Android build/device, release or promotion claim."
+  ]
+}

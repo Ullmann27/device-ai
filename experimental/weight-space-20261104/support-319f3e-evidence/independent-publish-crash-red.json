@@ -1,0 +1,13 @@
+{
+  "case": "real_process_kill_during_phase_serialization",
+  "sourceSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "childReturnCode": -9,
+  "finalMarkerPresent": true,
+  "finalMarkerComplete": false,
+  "parseError": "JSONDecodeError",
+  "passed": false,
+  "stderr": "",
+  "modelProcesses": 0,
+  "trainingRuns": 0,
+  "scope": "local synthetic phase marker; Linux SIGKILL, not power-loss durability"
+}

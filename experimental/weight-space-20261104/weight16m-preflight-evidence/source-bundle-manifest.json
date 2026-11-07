@@ -1,0 +1,136 @@
+{
+  "format": "CONTINUUM_LM1_EXPERIMENT_BUNDLE_V1",
+  "date": "2026-11-04",
+  "status": "OFFLINE_RESEARCH_CAPACITY_CANDIDATE",
+  "selected_model": {
+    "archive_path": "model/continuum-lm1-16011776.lm1",
+    "sha256": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+    "bytes": 64048511,
+    "parameters": 16011776,
+    "arch": "MINGRU",
+    "dim": 512,
+    "layers": 5,
+    "mlp": 2048,
+    "vocab": 512,
+    "context": 256,
+    "float_format": "FP32",
+    "adaptation": "function-preserving expansion; rejected continuation weights are not included"
+  },
+  "tokenizer": {
+    "archive_path": "tokenizer/lm1-tokenizer.lmbp",
+    "sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "bytes": 2040
+  },
+  "original_model_sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+  "source_repository": "https://github.com/Ullmann27/device-ai",
+  "draft_pr": "https://github.com/Ullmann27/device-ai/pull/492",
+  "experiment_source_commit": "ee5779725690c573d3310c061c6e2e6faf5f0a8b",
+  "selection_sha256": "8c433e76c28ceafa5e5149c9b0469d37eb4e217f1887868bce2a2ed1330dc6f9",
+  "holdout_sha256": "d5a5858f0eaff24495cd98c337fc662271c4a1b41027b1142764735c244942af",
+  "originals_unchanged": true,
+  "android_validation": "NOT_RUN",
+  "runtime_integration": "NOT_PERFORMED",
+  "capacity_stages": [
+    {
+      "stage": "baseline",
+      "parameters": 132160,
+      "status": "PASS",
+      "first_token_call_max_ms": "6.144873",
+      "generation_32_max_ms": "13.537797",
+      "peak_rss_kib": "82728"
+    },
+    {
+      "stage": "width-2",
+      "parameters": 460928,
+      "status": "PASS",
+      "first_token_call_max_ms": "15.807079",
+      "generation_32_max_ms": "27.545821",
+      "peak_rss_kib": "91980"
+    },
+    {
+      "stage": "width-4",
+      "parameters": 1708288,
+      "status": "PASS",
+      "first_token_call_max_ms": "61.892489",
+      "generation_32_max_ms": "107.19653",
+      "peak_rss_kib": "129340"
+    },
+    {
+      "stage": "width-8",
+      "parameters": 6562304,
+      "status": "PASS",
+      "first_token_call_max_ms": "207.119902",
+      "generation_32_max_ms": "309.075345",
+      "peak_rss_kib": "156232"
+    },
+    {
+      "stage": "depth-3",
+      "parameters": 9712128,
+      "status": "PASS",
+      "first_token_call_max_ms": "297.938758",
+      "generation_32_max_ms": "382.237779",
+      "peak_rss_kib": "202496"
+    },
+    {
+      "stage": "depth-4",
+      "parameters": 12861952,
+      "status": "PASS",
+      "first_token_call_max_ms": "357.80746",
+      "generation_32_max_ms": "563.861441",
+      "peak_rss_kib": "239792"
+    },
+    {
+      "stage": "depth-5",
+      "parameters": 16011776,
+      "status": "PASS",
+      "first_token_call_max_ms": "505.048452",
+      "generation_32_max_ms": "755.396291",
+      "peak_rss_kib": "263388",
+      "peak_rss_kib_terminal_record": "262548"
+    },
+    {
+      "stage": "depth-6",
+      "parameters": 19161600,
+      "status": "PREFLIGHT_REJECTED",
+      "first_token_call_max_ms": null,
+      "generation_32_max_ms": null,
+      "peak_rss_kib": null
+    }
+  ],
+  "quality_results": [
+    {
+      "model": "baseline",
+      "parameters": 132160,
+      "development_bpb": 2.3525414158359124,
+      "holdout_bpb": 3.1305153325891126,
+      "capacity_eligible": true,
+      "exact_probe_score": "0/6"
+    },
+    {
+      "model": "depth-5",
+      "parameters": 16011776,
+      "development_bpb": 2.352541414133888,
+      "holdout_bpb": 3.130515321898561,
+      "capacity_eligible": true,
+      "exact_probe_score": "0/6"
+    },
+    {
+      "model": "continued-small",
+      "parameters": 132160,
+      "development_bpb": 2.35250680129539,
+      "holdout_bpb": 3.127703803155492,
+      "capacity_eligible": false,
+      "exact_probe_score": "0/6"
+    },
+    {
+      "model": "continued-expanded",
+      "parameters": 16011776,
+      "development_bpb": 2.4633614382348035,
+      "holdout_bpb": 3.1892262256692696,
+      "capacity_eligible": false,
+      "exact_probe_score": "0/6"
+    }
+  ],
+  "stop_reason": "CHECKPOINT_64_MIB_CONTRACT",
+  "memory_reporting": "maximum across all CAPACITY_MEMORY samples; original logs retained"
+}
