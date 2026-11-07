@@ -1,0 +1,321 @@
+name: Continuum Code48 - GitHub original update
+
+on:
+  push:
+    branches:
+      - codex/continuum-code48-github-owner-20261107
+    paths:
+      - .github/workflows/continuum-code48-github-owner.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-code48-github-owner
+  cancel-in-progress: false
+
+env:
+  FROZEN_SOURCE_SHA: c9fffb7dda9c173b6c5ccd4104672b09fd94de15
+  OWNER_VERSION_CODE: "48"
+  OWNER_VERSION_NAME: "0.3.47"
+  OWNER_PACKAGE: at.heinz.deviceai.continuumlocal
+  ORIGINAL_CERT_SHA256: 6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23
+
+jobs:
+  node-backend:
+    if: github.repository == 'Ullmann27/device-ai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: c9fffb7dda9c173b6c5ccd4104672b09fd94de15
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Verify exact source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$FROZEN_SOURCE_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          git fetch --no-tags --depth=1 origin 5270202e0699764b0eac5d4dd3e6a587b982ae05 || true
+          test "$(git rev-parse HEAD)" = "$FROZEN_SOURCE_SHA"
+      - name: Original release special contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs scripts/continuum-owner-v38-release.test.mjs scripts/continuum-owner-continuous-release.test.mjs scripts/continuum-owner-backend-gate.test.mjs
+      - name: Critical and full Node checks
+        shell: bash
+        # Ubuntu runners install global Git-LFS clean/process filters.
+        # Exclude only those inherited config layers; retain local repo guards.
+        env:
+          GIT_CONFIG_GLOBAL: /dev/null
+          GIT_CONFIG_SYSTEM: /dev/null
+        run: |
+          set -euo pipefail
+          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code48-critical"
+          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code48-full"
+          node -e "for(const [name,p] of [['critical',process.env.RUNNER_TEMP+'/code48-critical/report.json'],['full-node',process.env.RUNNER_TEMP+'/code48-full/report.json']]){let r=require(p);if(r.status!=='PASS'||r.source.commit!==process.env.FROZEN_SOURCE_SHA||!r.sourceUnchanged)process.exit(69);console.log(name+' FULL SOURCE-BOUND PASS')}"
+      - name: Backend lockfile and tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+          npm --prefix backend run check
+          npm --prefix backend test
+      - name: Preserve Node/Backend evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: continuum-code48-github-node-receipts
+          path: |
+            ${{ runner.temp }}/code48-critical/
+            ${{ runner.temp }}/code48-full/
+          if-no-files-found: warn
+          retention-days: 14
+
+  android-unsigned:
+    if: github.repository == 'Ullmann27/device-ai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: c9fffb7dda9c173b6c5ccd4104672b09fd94de15
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Android SDK 36 and build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+      - name: Verify immutable release source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$FROZEN_SOURCE_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          test "$(node --version | cut -d. -f1)" = v24
+      - name: Full Android compile, unit and UI tests, lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          date +%s%3N > "$RUNNER_TEMP/code48-gradle-start.txt"
+          gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true \
+            -PcontinuumUiWidgetTests=true \
+            -PcontinuumLocalStandaloneQa=true \
+            -PcontinuumStandaloneVersionCode=48 \
+            :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
+          node scripts/continuum-qa-evidence.mjs android "$PWD" "$(cat "$RUNNER_TEMP/code48-gradle-start.txt")" > "$RUNNER_TEMP/code48-android-receipt.json"
+      - name: Compile original-package unsigned ARM64 release
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true \
+            -PcontinuumLocalRenderUnsigned=true \
+            -PcontinuumStandaloneVersionCode=48 \
+            :app:assembleRelease :app:bundleRelease
+          apk="app/build/outputs/apk/release/app-release-unsigned.apk"
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging "$apk" |
+            grep -F "package: name='at.heinz.deviceai.continuumlocal' versionCode='48' versionName='0.3.47'"
+          if "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify "$apk" >/dev/null 2>&1; then
+            echo "::error::Original unsigned QA APK unexpectedly carries a signature"
+            exit 69
+          fi
+          test "$(git rev-parse HEAD)" = "$FROZEN_SOURCE_SHA"
+          mkdir -p "$RUNNER_TEMP/code48-unsigned"
+          cp "$apk" "$RUNNER_TEMP/code48-unsigned/Continuum-Lokal-Code48-UNSIGNED.apk"
+          (cd "$RUNNER_TEMP/code48-unsigned" && sha256sum Continuum-Lokal-Code48-UNSIGNED.apk > SHA256SUMS.txt)
+          printf 'source_sha=%s\nversion_code=48\nversion_name=0.3.47\npackage=%s\nowner_signed=FALSE\nstatus=QA_UNSIGNED_NOT_INSTALLABLE\nfold7_test=NOT_RUN\n' \
+            "$FROZEN_SOURCE_SHA" "$OWNER_PACKAGE" > "$RUNNER_TEMP/code48-unsigned/BUILD-INFO.txt"
+      - name: Upload unsigned candidate for separate original signing
+        uses: actions/upload-artifact@v4
+        with:
+          name: continuum-code48-github-unsigned-not-installable
+          path: ${{ runner.temp }}/code48-unsigned/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Preserve Android test and lint evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: continuum-code48-github-android-receipts
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/
+            ${{ runner.temp }}/code48-gradle-start.txt
+            ${{ runner.temp }}/code48-android-receipt.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  original-sign-and-release:
+    needs: [node-backend, android-unsigned]
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/codex/continuum-code48-github-owner-20261107'
+    environment: continuum-original-signing
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Check original P12 availability without exposing credentials
+        id: signer
+        shell: bash
+        env:
+          ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
+          ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$ORIGINAL_P12" && -n "$ORIGINAL_PASSWORD" ]]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Original signing secrets unavailable. The unsigned QA APK is NOT installable."
+            exit 69
+          fi
+      - uses: actions/checkout@v4
+        if: steps.signer.outputs.ready == 'true'
+        with:
+          ref: c9fffb7dda9c173b6c5ccd4104672b09fd94de15
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        if: steps.signer.outputs.ready == 'true'
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Install Android signing tools
+        if: steps.signer.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"
+      - uses: actions/download-artifact@v4
+        if: steps.signer.outputs.ready == 'true'
+        with:
+          name: continuum-code48-github-unsigned-not-installable
+          path: ${{ runner.temp }}/unsigned
+      - name: Sign with original certificate and verify exact APK
+        if: steps.signer.outputs.ready == 'true'
+        id: signed
+        shell: bash
+        env:
+          ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
+          ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}
+        run: |
+          set -euo pipefail
+          set +x
+          test "$(git rev-parse HEAD)" = "$FROZEN_SOURCE_SHA"
+          unsigned="$RUNNER_TEMP/unsigned/Continuum-Lokal-Code48-UNSIGNED.apk"
+          test -s "$unsigned"
+          (cd "$RUNNER_TEMP/unsigned" && grep -Eq "^[0-9a-f]{64}  Continuum-Lokal-Code48-UNSIGNED\\.apk$" SHA256SUMS.txt && sha256sum -c SHA256SUMS.txt)
+          tools="$ANDROID_HOME/build-tools/35.0.0"
+          "$tools/aapt2" dump badging "$unsigned" |
+            grep -F "package: name='at.heinz.deviceai.continuumlocal' versionCode='48' versionName='0.3.47'"
+          if "$tools/apksigner" verify "$unsigned" >/dev/null 2>&1; then
+            echo "::error::Refusing pre-signed or swapped unsigned artifact"
+            exit 69
+          fi
+          private="$(mktemp -d)"
+          chmod 700 "$private"
+          trap 'rm -rf -- "$private"' EXIT
+          printf '%s' "$ORIGINAL_P12" | base64 --decode > "$private/continuum-local.p12"
+          chmod 600 "$private/continuum-local.p12"
+          unset ORIGINAL_P12
+          export SIGN_PASS="$ORIGINAL_PASSWORD"
+          unset ORIGINAL_PASSWORD
+          keyinfo="$(keytool -list -v -storetype PKCS12 \
+            -alias continuum-local -keystore "$private/continuum-local.p12" \
+            -storepass:env SIGN_PASS 2>/dev/null)"
+          grep -Fq 'Entry type: PrivateKeyEntry' <<< "$keyinfo"
+          keyfp="$(sed -n 's/^[[:space:]]*SHA256: //p' <<< "$keyinfo" | head -n1 | tr -d ':' | tr '[:upper:]' '[:lower:]')"
+          unset keyinfo
+          test "$keyfp" = "$ORIGINAL_CERT_SHA256"
+          mkdir -p "$RUNNER_TEMP/code48-signed"
+          "$tools/zipalign" -p -f 4 "$unsigned" "$RUNNER_TEMP/code48-signed/aligned.apk"
+          "$tools/apksigner" sign --ks "$private/continuum-local.p12" --ks-type PKCS12 \
+            --ks-key-alias continuum-local --ks-pass env:SIGN_PASS --key-pass env:SIGN_PASS \
+            --out "$RUNNER_TEMP/code48-signed/signed.apk" "$RUNNER_TEMP/code48-signed/aligned.apk"
+          unset SIGN_PASS
+          rm -rf -- "$private"
+          trap - EXIT
+          verify="$("$tools/apksigner" verify --verbose --print-certs "$RUNNER_TEMP/code48-signed/signed.apk")"
+          grep -Fq 'Verified using v2 scheme (APK Signature Scheme v2): true' <<< "$verify"
+          actual="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' <<< "$verify" | head -n1 | tr '[:upper:]' '[:lower:]')"
+          test "$actual" = "$ORIGINAL_CERT_SHA256"
+          "$tools/aapt2" dump badging "$RUNNER_TEMP/code48-signed/signed.apk" |
+            grep -F "package: name='at.heinz.deviceai.continuumlocal' versionCode='48' versionName='0.3.47'"
+          digest="$(sha256sum "$RUNNER_TEMP/code48-signed/signed.apk" | cut -d' ' -f1)"
+          bytes="$(stat -c %s "$RUNNER_TEMP/code48-signed/signed.apk")"
+          [[ "$bytes" -ge 1000000 && "$bytes" -le 2000000000 ]]
+          name="Continuum-Lokal-$digest.apk"
+          mv "$RUNNER_TEMP/code48-signed/signed.apk" "$RUNNER_TEMP/code48-signed/$name"
+          rm -f "$RUNNER_TEMP/code48-signed/aligned.apk"
+          printf 'source_sha=%s\nversion_code=48\nversion_name=0.3.47\npackage=%s\nsigner_sha256=%s\napk_sha256=%s\napk_bytes=%s\nfold7_test=NOT_RUN\nstatus=ORIGINAL_SIGNED_CANDIDATE\n' \
+            "$FROZEN_SOURCE_SHA" "$OWNER_PACKAGE" "$actual" "$digest" "$bytes" > "$RUNNER_TEMP/code48-signed/BUILD-INFO.txt"
+          printf '%s\n' "$name" > "$RUNNER_TEMP/code48-signed/filename.txt"
+          echo "apk_name=$name" >> "$GITHUB_OUTPUT"
+          echo "apk_sha256=$digest" >> "$GITHUB_OUTPUT"
+      - name: Publish original-signed GitHub Release only after all gates
+        if: steps.signed.outcome == 'success'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="continuum-local-code48-$FROZEN_SOURCE_SHA"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::Immutable Code48 release tag already exists; refusing overwrite"
+            exit 69
+          fi
+          file="$RUNNER_TEMP/code48-signed/$(cat "$RUNNER_TEMP/code48-signed/filename.txt")"
+          test -s "$file"
+          cat > "$RUNNER_TEMP/code48-release-notes.txt" <<EOF
+          Originalsigniertes Continuum Lokal Code48 / 0.3.47.
+          Source: $FROZEN_SOURCE_SHA
+          Package: $OWNER_PACKAGE
+          Original certificate SHA256: $ORIGINAL_CERT_SHA256
+          APK SHA256: $(sha256sum "$file" | cut -d' ' -f1)
+          Android Fold7 physical device tests: NOT_RUN.
+          The existing in-app updater remains pinned to Render; this GitHub APK is a direct/manual in-place update, not a replacement update catalog.
+          EOF
+          gh release create "$tag" "$file" "$RUNNER_TEMP/code48-signed/BUILD-INFO.txt" \
+            --repo "$GITHUB_REPOSITORY" --target "$FROZEN_SOURCE_SHA" \
+            --title "Continuum Lokal 0.3.47 (Code48) - Originalsigniert" \
+            --notes-file "$RUNNER_TEMP/code48-release-notes.txt" --latest=false
+          mkdir -p "$RUNNER_TEMP/github-readback"
+          gh release download "$tag" --repo "$GITHUB_REPOSITORY" \
+            --pattern "$(basename "$file")" --dir "$RUNNER_TEMP/github-readback"
+          test "$(sha256sum "$RUNNER_TEMP/github-readback/$(basename "$file")" | cut -d' ' -f1)" = \
+            "$(sha256sum "$file" | cut -d' ' -f1)"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs \
+            "$RUNNER_TEMP/github-readback/$(basename "$file")" |
+            grep -F "Signer #1 certificate SHA-256 digest: $ORIGINAL_CERT_SHA256"
+      - name: Keep independent signed APK receipt
+        if: steps.signed.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: continuum-code48-originalsigned-verified
+          path: |
+            ${{ runner.temp }}/code48-signed/Continuum-Lokal-*.apk
+            ${{ runner.temp }}/code48-signed/BUILD-INFO.txt
+          if-no-files-found: error
+          retention-days: 30

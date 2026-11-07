@@ -1,0 +1,216 @@
+name: Continuum Code48 - Resume verified original signing
+
+on:
+  push:
+    branches:
+      - codex/continuum-code48-github-owner-20261107
+    paths:
+      - .github/workflows/continuum-code48-signing-resume.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: continuum-code48-signing-resume
+  cancel-in-progress: false
+
+env:
+  ORIGINAL_SOURCE_SHA: c9fffb7dda9c173b6c5ccd4104672b09fd94de15
+  VERIFIED_BUILD_SHA: 5324223e591718888582f6fad28c1e1fdb630a45
+  VERIFIED_RUN_ID: "42364691949"
+  ORIGINAL_CERT_SHA256: 6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23
+  OWNER_PACKAGE: at.heinz.deviceai.continuumlocal
+  OWNER_VERSION_CODE: "48"
+  OWNER_VERSION_NAME: "0.3.47"
+
+jobs:
+  original-signing:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/codex/continuum-code48-github-owner-20261107'
+    runs-on: ubuntu-latest
+    environment: continuum-original-signing
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: c9fffb7dda9c173b6c5ccd4104672b09fd94de15
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Verify original source and both completed QA jobs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$ORIGINAL_SOURCE_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          run="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_RUN_ID")"
+          test "$(jq -r .head_sha <<< "$run")" = "$VERIFIED_BUILD_SHA"
+          test "$(jq -r .status <<< "$run")" = "completed"
+          jobs="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_RUN_ID/jobs?per_page=100")"
+          for target in node-backend android-unsigned; do
+            jq -e --arg name "$target" '
+              [.jobs[] | select(.name == $name and .status == "completed" and .conclusion == "success")] |
+              length == 1
+            ' <<< "$jobs" >/dev/null || {
+              echo "::error::QA_JOB_NOT_VERIFIED_$target"
+              exit 69
+            }
+          done
+          echo "ORIGINAL_QA_JOBS_VERIFIED source=$ORIGINAL_SOURCE_SHA"
+      - name: Prepare signing tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'build-tools;35.0.0' >/dev/null
+          for executable in zipalign aapt2 apksigner; do
+            test -x "$ANDROID_HOME/build-tools/35.0.0/$executable"
+          done
+      - uses: actions/download-artifact@v4
+        with:
+          name: continuum-code48-github-unsigned-not-installable
+          run-id: 42364691949
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: Ullmann27/device-ai
+          path: ${{ runner.temp }}/unsigned
+      - name: Validate unsigned APK and original signing key
+        id: sign
+        shell: bash
+        env:
+          ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
+          ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}
+        run: |
+          set -euo pipefail
+          set +x
+          if [[ -z "$ORIGINAL_P12" || -z "$ORIGINAL_PASSWORD" ]]; then
+            echo "::error::ORIGINAL_SIGNING_SECRET_MISSING"
+            exit 69
+          fi
+          file="$RUNNER_TEMP/unsigned/Continuum-Lokal-Code48-UNSIGNED.apk"
+          test -s "$file" || { echo "::error::UNSIGNED_ARTIFACT_MISSING"; exit 69; }
+          (
+            cd "$RUNNER_TEMP/unsigned"
+            grep -Eq '^[a-f0-9]{64}  Continuum-Lokal-Code48-UNSIGNED\.apk$' SHA256SUMS.txt &&
+              sha256sum -c SHA256SUMS.txt
+          ) || { echo "::error::UNSIGNED_ARTIFACT_HASH_MISMATCH"; exit 69; }
+          tools="$ANDROID_HOME/build-tools/35.0.0"
+          "$tools/aapt2" dump badging "$file" |
+            grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='48' versionName='0.3.47'" ||
+            { echo "::error::UNSIGNED_APK_IDENTITY_MISMATCH"; exit 69; }
+          if "$tools/apksigner" verify "$file" >/dev/null 2>&1; then
+            echo "::error::UNSIGNED_ARTIFACT_ALREADY_SIGNED"
+            exit 69
+          fi
+          private="$(mktemp -d)"
+          chmod 700 "$private"
+          trap 'rm -rf -- "$private"' EXIT
+          if ! printf '%s' "$ORIGINAL_P12" | base64 --decode > "$private/owner.p12"; then
+            echo "::error::ORIGINAL_P12_BASE64_INVALID"
+            exit 69
+          fi
+          unset ORIGINAL_P12
+          chmod 600 "$private/owner.p12"
+          export SIGN_PASS="$ORIGINAL_PASSWORD"
+          unset ORIGINAL_PASSWORD
+          if ! keyinfo="$(keytool -list -v -storetype PKCS12 \
+              -alias continuum-local -keystore "$private/owner.p12" \
+              -storepass:env SIGN_PASS 2>/dev/null)"; then
+            echo "::error::ORIGINAL_P12_PASSWORD_OR_FORMAT_INVALID"
+            exit 69
+          fi
+          grep -Fq 'Entry type: PrivateKeyEntry' <<< "$keyinfo" ||
+            { echo "::error::ORIGINAL_P12_PRIVATE_KEY_MISSING"; exit 69; }
+          fingerprint="$(sed -n 's/^[[:space:]]*SHA256: //p' <<< "$keyinfo" |
+            head -n1 | tr -d ':' | tr '[:upper:]' '[:lower:]')"
+          unset keyinfo
+          test "$fingerprint" = "$ORIGINAL_CERT_SHA256" ||
+            { echo "::error::ORIGINAL_SIGNING_CERTIFICATE_MISMATCH"; exit 69; }
+          mkdir -p "$RUNNER_TEMP/signed"
+          "$tools/zipalign" -p -f 4 "$file" "$RUNNER_TEMP/signed/aligned.apk" ||
+            { echo "::error::APK_ZIPALIGN_FAILED"; exit 69; }
+          "$tools/apksigner" sign --ks "$private/owner.p12" --ks-type PKCS12 \
+            --ks-key-alias continuum-local --ks-pass env:SIGN_PASS --key-pass env:SIGN_PASS \
+            --out "$RUNNER_TEMP/signed/signed.apk" "$RUNNER_TEMP/signed/aligned.apk" >/dev/null ||
+            { echo "::error::APK_ORIGINAL_SIGN_FAILED"; exit 69; }
+          unset SIGN_PASS
+          rm -rf "$private"
+          trap - EXIT
+          signed="$RUNNER_TEMP/signed/signed.apk"
+          result="$("$tools/apksigner" verify --verbose --print-certs "$signed")" ||
+            { echo "::error::APK_SIGNATURE_VERIFY_FAILED"; exit 69; }
+          grep -Fq 'Verified using v2 scheme (APK Signature Scheme v2): true' <<< "$result" ||
+            { echo "::error::APK_V2_SIGNATURE_MISSING"; exit 69; }
+          actual="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' <<< "$result" |
+            head -n1 | tr '[:upper:]' '[:lower:]')"
+          test "$actual" = "$ORIGINAL_CERT_SHA256" ||
+            { echo "::error::SIGNED_CERTIFICATE_CHANGED"; exit 69; }
+          "$tools/aapt2" dump badging "$signed" |
+            grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='48' versionName='0.3.47'" ||
+            { echo "::error::SIGNED_APK_IDENTITY_MISMATCH"; exit 69; }
+          bytes="$(stat -c %s "$signed")"
+          (( bytes >= 1000000 && bytes <= 2000000000 )) ||
+            { echo "::error::SIGNED_APK_SIZE_INVALID"; exit 69; }
+          digest="$(sha256sum "$signed" | cut -d' ' -f1)"
+          [[ "$digest" =~ ^[0-9a-f]{64}$ ]] ||
+            { echo "::error::SIGNED_APK_DIGEST_INVALID"; exit 69; }
+          name="Continuum-Lokal-$digest.apk"
+          mv "$signed" "$RUNNER_TEMP/signed/$name"
+          rm -f "$RUNNER_TEMP/signed/aligned.apk"
+          printf 'source_sha=%s\nversion_code=48\nversion_name=0.3.47\npackage=%s\nsigner_sha256=%s\napk_sha256=%s\napk_bytes=%s\nfold7_test=NOT_RUN\nstatus=ORIGINAL_SIGNED_CANDIDATE\n' \
+            "$ORIGINAL_SOURCE_SHA" "$OWNER_PACKAGE" "$actual" "$digest" "$bytes" > "$RUNNER_TEMP/signed/BUILD-INFO.txt"
+          echo "filename=$name" >> "$GITHUB_OUTPUT"
+          echo "sha256=$digest" >> "$GITHUB_OUTPUT"
+          echo "ORIGINAL_CERTIFICATE_APK_SIGNED_AND_VERIFIED"
+      - name: Publish and independently read back GitHub release
+        if: steps.sign.outcome == 'success'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SIGNED_NAME: ${{ steps.sign.outputs.filename }}
+          SIGNED_DIGEST: ${{ steps.sign.outputs.sha256 }}
+        run: |
+          set -euo pipefail
+          file="$RUNNER_TEMP/signed/$SIGNED_NAME"
+          test -s "$file"
+          test "$(sha256sum "$file" | cut -d' ' -f1)" = "$SIGNED_DIGEST"
+          tag="continuum-local-code48-$ORIGINAL_SOURCE_SHA"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::IMMUTABLE_RELEASE_ALREADY_EXISTS"
+            exit 69
+          fi
+          {
+            echo "Originalsigniertes Continuum Lokal 0.3.47 (Code 48)"
+            echo "Source: $ORIGINAL_SOURCE_SHA"
+            echo "Package: $OWNER_PACKAGE"
+            echo "Signer certificate SHA256: $ORIGINAL_CERT_SHA256"
+            echo "APK SHA256: $SIGNED_DIGEST"
+            echo "Fold7 physical thermal/animation tests: NOT_RUN"
+            echo "Manual in-place Android update; existing in-app update button remains pinned to Render."
+          } > "$RUNNER_TEMP/release-notes.txt"
+          gh release create "$tag" "$file" "$RUNNER_TEMP/signed/BUILD-INFO.txt" \
+            --repo "$GITHUB_REPOSITORY" --target "$ORIGINAL_SOURCE_SHA" \
+            --title "Continuum Lokal 0.3.47 (Code48) - Originalsigniert" \
+            --notes-file "$RUNNER_TEMP/release-notes.txt" --latest=false
+          mkdir -p "$RUNNER_TEMP/readback"
+          gh release download "$tag" --repo "$GITHUB_REPOSITORY" \
+            --pattern "$SIGNED_NAME" --dir "$RUNNER_TEMP/readback"
+          downloaded="$RUNNER_TEMP/readback/$SIGNED_NAME"
+          test "$(sha256sum "$downloaded" | cut -d' ' -f1)" = "$SIGNED_DIGEST" ||
+            { echo "::error::PUBLISHED_APK_HASH_MISMATCH"; exit 69; }
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$downloaded" |
+            grep -Fq "Signer #1 certificate SHA-256 digest: $ORIGINAL_CERT_SHA256" ||
+            { echo "::error::PUBLISHED_APK_SIGNER_MISMATCH"; exit 69; }
+          echo "GITHUB_ORIGINAL_CODE48_PUBLISHED_AND_VERIFIED"
+      - uses: actions/upload-artifact@v4
+        if: steps.sign.outcome == 'success'
+        with:
+          name: continuum-code48-originalsigned-receipt
+          path: |
+            ${{ runner.temp }}/signed/Continuum-Lokal-*.apk
+            ${{ runner.temp }}/signed/BUILD-INFO.txt
+          if-no-files-found: error
+          retention-days: 30
