@@ -5,7 +5,7 @@ import java.util.Locale
 /** Explicit evidence identities. Not personal memory, tool authority or a trained model. */
 data class Ctx3Entity(val id:String,val label:String,val aliases:Set<String>,val pronouns:Set<String>,val sourceIds:Set<String>)
 sealed interface Ctx3Decision {
- data class Query(val query:String,val sourceIds:Set<String> = emptySet()):Ctx3Decision
+ data class Query(val query:String,val sourceIds:Set<String> = emptySet(),val resolution:String=""):Ctx3Decision
  data class Clarify(val reason:String):Ctx3Decision
  data class Abstain(val reason:String):Ctx3Decision
 }
@@ -14,11 +14,14 @@ sealed interface Ctx3Decision {
 class Ctx3Context {
  private var version=""
  private var focus=emptyList<Ctx3Entity>()
+ private val discourse=Ctx3DiscourseState()
  private var age=0
- fun reset(){focus=emptyList();age=0;version=""}
+ fun reset(){focus=emptyList();discourse.reset();age=0;version=""}
  fun stateSize()=focus.size
+ internal fun discourseStateSize()=discourse.frameCount()
  fun decide(input:String,entities:List<Ctx3Entity>,sourceVersion:String):Ctx3Decision {
   if(version!=sourceVersion){reset();version=sourceVersion}
+  discourse.nextTurn()
   age++;if(age>32)focus=emptyList()
   if(input.isBlank()||input.length>512||entities.size>128)return Ctx3Decision.Clarify("INPUT_OR_REGISTRY_LIMIT")
   if(entities.any { it.label.isBlank()||it.label.length>80||it.aliases.size>8||it.sourceIds.isEmpty()||it.sourceIds.size>128 })
@@ -58,17 +61,27 @@ class Ctx3Context {
    if(mentions.filterNot { negative(it.start) }.groupBy { it.start to it.end }.any { it.value.map { m->m.e.id }.distinct().size>1 })
     {focus=emptyList();return Ctx3Decision.Clarify("ALIAS_COLLISION")}
    focus=positive.takeLast(8);age=0
-   return Ctx3Decision.Query(input,positive.flatMap { it.sourceIds }.toSet())
+   discourse.observeExplicit(focus)
+   return Ctx3Decision.Query(input,positive.flatMap { it.sourceIds }.toSet(),"EXPLICIT_REFERENT")
   }
   if(rejected.isNotEmpty()){focus=emptyList();return Ctx3Decision.Clarify("ONLY_NEGATED_ENTITIES")}
-  val ref=words.withIndex().firstOrNull { it.value in setOf("er","ihn","ihm","sie","es","damit","dazu","darüber","des") }
+  if(discourse.hasDiscourseCue(input)) {
+   val binding=discourse.resolve(input,focus,entities)
+    ?: return Ctx3Decision.Clarify("NO_UNIQUE_DISCOURSE_REFERENT")
+   focus=listOf(binding.entity);age=0
+   discourse.observeResolved(binding.entity)
+   return Ctx3Decision.Query(input+" "+binding.entity.label,binding.entity.sourceIds,"DISCOURSE_"+binding.cue.name)
+  }
+  val ref=words.withIndex().firstOrNull { it.value in setOf("er","ihn","ihm","sie","es","damit","dazu","darüber","davon","des") }
   if(ref!=null) {
    if(negative(ref.index)||trailingCorrection){focus=emptyList();return Ctx3Decision.Clarify("REJECTED_PRONOUN")}
-   val possible=focus.filter { ref.value in it.pronouns || ref.value in setOf("damit","dazu","darüber","des") }.distinctBy { it.id }
+   val possible=focus.filter { ref.value in it.pronouns || ref.value in setOf("damit","dazu","darüber","davon","des") }.distinctBy { it.id }
    if(possible.size!=1)return Ctx3Decision.Clarify("NO_UNIQUE_REFERENT")
    val target=possible.single();age=0
+   focus=listOf(target)
+   discourse.observeResolved(target)
    val rewritten=input.replace(Regex("(?iu)(?<![\\p{L}\\p{N}])"+Regex.escape(ref.value)+"(?![\\p{L}\\p{N}])"),Regex.escapeReplacement(target.label))
-   return Ctx3Decision.Query(rewritten,target.sourceIds)
+   return Ctx3Decision.Query(rewritten,target.sourceIds,"PRONOUN_BINDING")
   }
   if(Regex("(?u)\\b(?:von|über|sondern|ist)\\s+(\\p{Lu}[\\p{L}-]+)").findAll(input).any { m->
     val word=m.groupValues[1].lowercase(Locale.ROOT)
@@ -79,7 +92,7 @@ class Ctx3Context {
  }
  fun observe(ids:Set<String>,entities:List<Ctx3Entity>) {
   val matches=entities.filter { it.sourceIds.intersect(ids).isNotEmpty() }
-  if(matches.size==1){focus=matches;age=0}
+  if(matches.size==1){focus=matches;age=0;discourse.observeResolved(matches.single())}
  }
  companion object { fun tokens(text:String)=Regex("[\\p{L}\\p{N}]+",RegexOption.IGNORE_CASE).findAll(text).map { it.value.lowercase(Locale.ROOT) }.toList() }
 }
