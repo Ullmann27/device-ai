@@ -35,3 +35,13 @@ Physical Fold7/GPU/local-model/audio/thermal acceptance: NOT_RUN.
 
 Resume from this branch's actual remote HEAD and recorded receipts. Rollback
 is retaining Code46 and reverting only this continuation's own changes.
+
+## Test repair checkpoint
+
+OwnerAppActionWorkSceneUiTest now pumps the queued actual confirmation
+callback until stable device-port entry, keeps the simulated backend alive
+while native Canvas renders, and delivers frames across animated close.
+All four cases pass individually and together in normal JUnit ordering.
+Production, original avatar/orb and mandatory release gates are unchanged.
+Raw compile/tests/receipts: docs/evidence/code47-apk-20261107/.
+The original publisher must still pass its complete exact-source gate.

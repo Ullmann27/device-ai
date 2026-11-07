@@ -49,7 +49,7 @@ class OwnerAppActionWorkSceneUiTest {
         override fun execute(call: ToolCallRequest, callback: (Result<String>) -> Unit) {
             calls.incrementAndGet()
             entered.countDown()
-            check(release.await(10, TimeUnit.SECONDS))
+            check(release.await(60, TimeUnit.SECONDS))
             callback(failure?.let { Result.failure(IllegalStateException(it)) } ?: Result.success(
                 """{"schema":"CONTINUUM_DEVICE_ACTION_V1","action":"LAUNCH_APP","package":"org.example.signal","status":"VERIFIED_FOREGROUND","windowRevision":7}"""))
         }
@@ -80,6 +80,10 @@ class OwnerAppActionWorkSceneUiTest {
         root.measure(View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY))
         root.layout(0, 0, 884, 760)
+    }
+    private fun elapse(ms: Long) {
+        shadowOf(Looper.getMainLooper()).idleFor(ms, TimeUnit.MILLISECONDS)
+        pump?.drawRequestedFrame()
     }
     private fun await(condition: () -> Boolean) {
         val end = System.nanoTime() + TimeUnit.SECONDS.toNanos(5)
@@ -137,12 +141,13 @@ class OwnerAppActionWorkSceneUiTest {
         (get(a, "input") as EditText).setText(request)
         assertTrue((get(a, "sendButton") as Button).performClick())
     }
-    private fun approve(): AlertDialog {
+    private fun approve(port: Port): AlertDialog {
         await { ShadowAlertDialog.getLatestAlertDialog()?.let {
             it.isShowing && shadowOf(it).message.toString().contains("org.example.signal")
         } == true }
         return ShadowAlertDialog.getLatestAlertDialog().also {
             it.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            await { port.entered.count == 0L }
         }
     }
     private fun pose(a: AgentActivity) = (get(get(a, "hologramView")!!, "avatarPose") as AvatarPoseReducer)
@@ -151,12 +156,13 @@ class OwnerAppActionWorkSceneUiTest {
     @Test fun chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult() = withActivity { a, port, _ ->
         submit(a, "Jarvis kannst du mir bitte Signal öffnen?")
         assertEquals(0, port.calls.get())
-        approve()
+        approve(port)
         assertTrue(port.entered.await(5, TimeUnit.SECONDS))
-        advance(80); measure(a.window.decorView); advance(3_200)
+        advance(80); measure(a.window.decorView); elapse(3_200)
         val views = descendants(a.window.decorView)
         assertTrue(views.any { it.tag == "jarvis-work-window" && it.isShown })
-        assertTrue(views.filterIsInstance<ProgressBar>().any { it.isShown && it.isIndeterminate })
+        assertTrue("Running app keeps progress: ${(get(a, "activityText") as TextView).text}",
+            views.filterIsInstance<ProgressBar>().any { it.isShown && it.isIndeterminate })
         assertTrue("Actual tool gaze outlives opening glance", pose(a).reading)
         assertEquals(ContinuumWorkArea.START, get(a, "activeWorkArea"))
         port.release.countDown()
@@ -172,10 +178,10 @@ class OwnerAppActionWorkSceneUiTest {
 
     @Test fun stopBeforePostedBackendStartCannotReopenScene() = withActivity { a, port, _ ->
         submit(a, "Öffne Signal", chat = false)
-        approve()
+        approve(port)
         assertTrue(port.entered.await(5, TimeUnit.SECONDS))
         (get(a, "sendButton") as Button).performClick()
-        advance(3_000)
+        elapse(3_000)
         assertFalse(pose(a).reading)
         assertFalse(descendants(a.window.decorView).any { it.tag == "jarvis-work-window" && it.isShown })
         assertNull(get(a, "activeOwnerAppFlow"))
@@ -183,7 +189,7 @@ class OwnerAppActionWorkSceneUiTest {
 
     @Test fun foregroundLaunchKeepsActualResultForReturn() = withActivity { a, port, controller ->
         submit(a, "Mach mir Signal auf", chat = false)
-        approve()
+        approve(port)
         assertTrue(port.entered.await(5, TimeUnit.SECONDS))
         advance(80)
         controller.pause()
@@ -203,7 +209,7 @@ class OwnerAppActionWorkSceneUiTest {
         assertEquals(0, port.calls.get())
         port.failure = "ACCESSIBILITY_OBSERVATION_NOT_GRANTED"
         submit(a, "Öffne Signal", chat = false)
-        approve()
+        approve(port)
         port.release.countDown()
         await { get(a, "busy") == false }
         assertFalse(descendants(a.window.decorView).filterIsInstance<TextView>()
