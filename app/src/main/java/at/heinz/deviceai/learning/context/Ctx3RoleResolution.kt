@@ -30,20 +30,21 @@ internal object Ctx3RoleIndex {
 
     private const val ROLE =
         "(Tochter|Sohn|Schwester|Bruder|Frau|Mann|Partnerin|Partner|Mutter|Vater|Oma|Opa|Enkelin|Enkel)"
-    private const val NAME =
-        "([\\p{Lu}][\\p{L}'’-]{1,39}(?:\\s+[\\p{Lu}][\\p{L}'’-]{1,39})?)"
+    private const val NAME_SEGMENT = "(.{2,80}?)"
+    private val nameShape = Regex("""^[\p{L}][\p{L}'’-]{1,39}(?:\s+[\p{L}][\p{L}'’-]{1,39}){0,2}$""")
 
     private val directNamed = Regex(
-        "^(?:Mein|Meine|Unser|Unsere)\\s+$ROLE\\s+$NAME(?=\\s|[,.!?]|$)",
-        setOf(RegexOption.IGNORE_CASE)
+        "^(?:Mein|Meine|Unser|Unsere)\\s+$ROLE\\s+$NAME_SEGMENT" +
+            "(?=\\s+(?:ist|hat|wohnt|lebt|arbeitet|war|wird)\\b|[,.!?]|$)",
+        RegexOption.IGNORE_CASE
     )
     private val directHeisst = Regex(
-        "^(?:Mein|Meine|Unser|Unsere)\\s+$ROLE\\s+heißt\\s+$NAME(?=\\s|[,.!?]|$)",
-        setOf(RegexOption.IGNORE_CASE)
+        "^(?:Mein|Meine|Unser|Unsere)\\s+$ROLE\\s+heißt\\s+$NAME_SEGMENT(?=[,.!?]|$)",
+        RegexOption.IGNORE_CASE
     )
     private val inverted = Regex(
-        "^$NAME\\s+ist\\s+(?:mein|meine|unser|unsere)\\s+$ROLE(?=\\s|[,.!?]|$)",
-        setOf(RegexOption.IGNORE_CASE)
+        "^$NAME_SEGMENT\\s+ist\\s+(?:mein|meine|unser|unsere)\\s+$ROLE(?=\\s|[,.!?]|$)",
+        RegexOption.IGNORE_CASE
     )
 
     private data class RoleMention(val name: String, val role: Ctx3OwnerRole)
@@ -119,7 +120,9 @@ internal object Ctx3RoleIndex {
 
     private fun mention(roleRaw: String, name: String): RoleMention? {
         val role = roleWords[roleRaw.lowercase(Locale.GERMAN)] ?: return null
-        return RoleMention(name.trim(), role)
+        val clean = name.trim()
+        if (!nameShape.matches(clean)) return null
+        return RoleMention(clean, role)
     }
 
     private fun containsName(text: String, name: String): Boolean =
