@@ -70,6 +70,7 @@ class JarvisWorkWindowHostViewportUiTest {
         }
         val container: ViewGroup
         var opened: JarvisWorkWindow? = null
+        var launch: RectF? = null
         var closed = 0
         var routed = 0
         val viewport = RectF(88f, 94f, 764f, 592f)
@@ -83,6 +84,7 @@ class JarvisWorkWindowHostViewportUiTest {
                 routed++
                 opened = host.show(home, TextView(activity).apply { text = "Echte Statusansicht" },
                     "Systemstatus", requireNotNull(JarvisActionScenes.forCentre("Systemstatus", target))) { closed++ }
+                launch = opened?.let(::launchBounds)
             }
             activity.setContentView(page)
             controller.visible()
@@ -110,6 +112,7 @@ class JarvisWorkWindowHostViewportUiTest {
                 val event = MotionEvent.obtain(now, time, action, shown.centerX(), shown.centerY(), 0)
                 try { assertTrue(container.dispatchTouchEvent(event)) } finally { event.recycle() }
             }
+            shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
             assertEquals(1, routed)
             return shown
         }
@@ -144,7 +147,7 @@ class JarvisWorkWindowHostViewportUiTest {
             val origin = f.tapCard()
             assertEquals("Opening preserves the tapped scroll position", 700, f.scroll.scrollY)
             val window = requireNotNull(f.opened) { "Scrolled card must open its work window" }
-            sameBounds(origin, f.launchBounds(window))
+            sameBounds(origin, requireNotNull(f.launch))
             val destination = requireNotNull(window.shownBounds())
             assertTrue("Window stays within ancestor clipping", f.viewport.contains(destination))
             assertTrue("Scroll does not collapse usable height", destination.height() >= 460f)
@@ -165,7 +168,7 @@ class JarvisWorkWindowHostViewportUiTest {
             assertEquals(60f, origin.height(), .01f)
             assertEquals(initial, f.scroll.scrollY)
             val window = requireNotNull(f.opened) { "Visible card fragment must remain actionable" }
-            sameBounds(origin, f.launchBounds(window))
+            sameBounds(origin, requireNotNull(f.launch))
             assertTrue(f.viewport.contains(requireNotNull(window.shownBounds())))
             f.scroll.scrollTo(0, initial + 1)
             assertFalse("Changed geometry closes the old overlay", f.host.isShowing)

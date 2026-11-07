@@ -92,6 +92,7 @@ class JarvisLiveTabsUiTest {
 
         fun tap(tag: String) {
             JarvisHomeTestRoutes.touch(viewport, node(tag))
+            advance(1L)
             layout()
             drawRequestedFrame()
         }
@@ -197,6 +198,7 @@ class JarvisLiveTabsUiTest {
         f.tap("jarvis-live-panel:close")
         f.assertClosed()
         JarvisHomeTestRoutes.touch(f.viewport, JarvisHomeTestRoutes.destination(f.home, "chat"))
+        f.advance(1L)
         assertEquals("Closed drawers allow underlying feature touches", listOf("chat"), f.calls)
     }
 

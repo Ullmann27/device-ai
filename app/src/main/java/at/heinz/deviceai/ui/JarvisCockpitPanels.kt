@@ -111,7 +111,8 @@ object JarvisCockpitPanels {
         JarvisReferenceHud.surface(p, b, minOf(18f, b.height / 3f), Colors.violetRim, Colors.cyan)
         val segments = statusSegments(s).filter { it.kind in setOf(Seg.LOCAL_AI, Seg.PRIVACY, Seg.SYSTEM) }
             .sortedBy { when (it.kind) { Seg.LOCAL_AI -> 0; Seg.PRIVACY -> 1; else -> 2 } }
-        val columns = if (b.width < 480f && p.capHeight(Type.status) > 11f) 1 else 3
+        val textStyle = Type.status.copy(size = (b.width / 55f).coerceIn(12f, 16f))
+        val columns = if (b.width < 600f) 1 else 3
         val rows = (segments.size + columns - 1) / columns
         val rowHeight = b.height / rows
         segments.forEachIndexed { i, segment ->
@@ -121,25 +122,26 @@ object JarvisCockpitPanels {
             val cy = b.top + (row + .5f) * rowHeight
             if (column > 0) p.drawLine(left, cy - rowHeight * .32f, left, cy + rowHeight * .32f,
                 .8f, Fill.Solid(Colors.rim))
-            val x = left + 12f
+            val x = left + 19f
             when (segment.kind) {
                 Seg.SYSTEM -> {
-                    if (segment.ok) JarvisNeon.halo(p, x, cy, 9f, Colors.ok, .25f)
-                    p.fillCircle(x, cy, 3.5f, Fill.Solid(if (segment.ok) Colors.ok else Colors.textMuted))
+                    JarvisRailIcons.draw(p, "memory", x - 10f, cy - 10f, 20f, Colors.cyanSoft)
                 }
                 Seg.DEVICE -> JarvisRailIcons.draw(p, "device", x - 6f, cy - 6f, 12f, Colors.cyanSoft)
-                Seg.LOCAL_AI -> ContinuumIcons.draw(p, Icon.CPU, x, cy, 14f, Fill.Solid(Colors.cyanSoft))
+                Seg.LOCAL_AI -> ContinuumIcons.draw(p, Icon.CPU, x, cy, 20f, Fill.Solid(Colors.cyanSoft))
                 Seg.SYNC -> ContinuumIcons.draw(p, Icon.REFRESH, x, cy, 14f, Fill.Solid(Colors.cyanSoft))
-                Seg.PRIVACY -> shield(p, x, cy, 14f, Colors.cyanSoft)
+                Seg.PRIVACY -> shield(p, x, cy, 20f, Colors.cyanSoft)
                 Seg.LOAD -> JarvisRailIcons.draw(p, "system", x - 6f, cy - 6f, 12f, Colors.cyanSoft)
             }
-            val lines = JarvisCockpitGridContent.wrap(p, segment.text, Type.status, width - 28f)
-            val lineHeight = p.capHeight(Type.status) + 3f
+            if (segment.ok) JarvisNeon.halo(p, x + 21f, cy, 9f, Colors.ok, .25f)
+            p.fillCircle(x + 21f, cy, 3.5f, Fill.Solid(if (segment.ok) Colors.ok else Colors.textMuted))
+            val lines = JarvisCockpitGridContent.wrap(p, segment.text, textStyle, width - 62f)
+            val lineHeight = p.capHeight(textStyle) + 3f
             val available = (rowHeight / lineHeight).toInt().coerceAtLeast(1)
             val visible = lines.take(available)
             visible.forEachIndexed { j, line ->
-                p.drawText(line, left + 24f, cy - visible.size * lineHeight / 2f + p.capHeight(Type.status) + j * lineHeight,
-                    Type.status, Fill.Solid(if (segment.kind == Seg.SYSTEM && segment.ok) Colors.ok else Colors.textSecondary))
+                p.drawText(line, left + 53f, cy - visible.size * lineHeight / 2f + p.capHeight(textStyle) + j * lineHeight,
+                    textStyle, Fill.Solid(Colors.textSecondary))
             }
         }
     }

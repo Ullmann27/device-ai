@@ -116,7 +116,7 @@ object JarvisShellRenderer {
             p.restore()
         }
         p.restore()
-        JarvisReferenceHud.frame(p, shell.width, shell.height)
+        JarvisReferenceHud.frame(p, shell.width, shell[Slot.STATUS]?.bottom?.plus(12f) ?: shell.height)
         if (!deferForeground) drawForeground(p, shell, content)
     }
 

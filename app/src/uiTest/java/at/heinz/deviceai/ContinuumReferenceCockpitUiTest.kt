@@ -518,8 +518,18 @@ class ContinuumReferenceCockpitUiTest {
         if (requireNotNull(home.jarvisShell.currentShell()).ref5Grid) {
             tap(root, shellControl(activity, "jarvis-header:mode"))
         } else {
-            tap(root, shellControl(activity, "jarvis-live-tab:system"))
-            tap(root, shellControl(activity, "jarvis-live-panel:appearance"))
+            val tab = shellControl(activity, "jarvis-live-tab:system")
+            tap(root, tab)
+            val appearance = descendants(home).single { it.tag == "jarvis-live-panel:appearance" }
+            val panel = descendants(home).single { it.tag == "jarvis-live-panel" }
+            val values = descendants(home).filterIsInstance<TextView>()
+                .single { it.tag == "jarvis-live-panel:values" }.text
+            assertTrue("Appearance must be visible after the native system-tab touch: " +
+                "font=${home.resources.configuration.fontScale}, compact=${home.jarvisShell.compactPresentation}, " +
+                "tabSelected=${tab.isSelected}, panelVisibility=${panel.visibility}, panelAlpha=${panel.alpha}, " +
+                "values=$values; tab=${geometry(tab)}; appearance=${geometry(appearance)}",
+                appearance.isAttachedToWindow && appearance.isShown)
+            tap(root, appearance)
         }
         val dialog = assertDialog("Continuum · Darstellung")
         val adapter = requireNotNull(dialog.listView).adapter
@@ -1087,6 +1097,16 @@ class ContinuumReferenceCockpitUiTest {
 
     @Test @Config(qualifiers = "w840dp-h1050dp-port-mdpi")
     fun foldPortraitCompactChooserRestoresExact2dGeometry() = checkWideCompactPresentation(840, 1050)
+
+    @Test @Config(qualifiers = "w840dp-h1050dp-port-mdpi")
+    fun wideLargeTypeSystemTabReachesAppearanceWithoutChangingPresentation() {
+        for (font in listOf(1.5f, 2f)) withActivity(840, 1050, font) { activity, _, _ ->
+            assertFalse(currentHome(activity).jarvisShell.compactPresentation)
+            closeDialogThroughDecor(appearanceDialog(activity))
+            assertFalse(currentHome(activity).jarvisShell.compactPresentation)
+            assertFalse("Presentation navigation submits no task", field(activity, "busy") as Boolean)
+        }
+    }
 
     private fun checkWideCompactPresentation(width: Int, height: Int) {
         fun bounds(view: View) = Rect(view.left, view.top, view.right, view.bottom)

@@ -26,16 +26,16 @@ object JarvisCockpitGridContent {
     const val COMPANION_SHORT = "Dein KI-Begleiter"
 
     val tileSubtitles: Map<String, List<String>> = mapOf(
-        "chat" to listOf("Natürlich sprechen", "und nachfragen"),
-        "memory" to listOf("Persönlicher Kontext", "und Erinnerungen"),
-        "logic" to listOf("Überlegen, planen", "und Probleme lösen"),
-        "research" to listOf("Recherchieren", "mit Quellen"),
-        "agents" to listOf("Spezialisierte", "KI-Helfer"),
-        "tasks" to listOf("Planen, verfolgen", "und erledigen"),
-        "web" to listOf("Suchen und", "zusammenfassen"),
-        "learning" to listOf("Anpassen, verbessern", "und dazulernen"),
-        "device" to listOf("Android und Apps", "nach Freigabe steuern"),
-        "system" to listOf("Zustand, Leistung", "und Modellstatus"))
+        "chat" to listOf("Natürlich", "sprechen und", "nachfragen"),
+        "memory" to listOf("Persönlicher", "Kontext und", "Erinnerungen"),
+        "logic" to listOf("Überlegen,", "planen und", "Probleme lösen"),
+        "research" to listOf("Recherchieren", "und Wissen", "vernetzen"),
+        "agents" to listOf("Spezialisierte", "KI-Helfer", "nutzen"),
+        "tasks" to listOf("Planen,", "verfolgen", "und erledigen"),
+        "web" to listOf("Suchen und", "Informationen", "zusammenfassen"),
+        "learning" to listOf("Anpassen,", "verbessern", "und dazulernen"),
+        "device" to listOf("Android und Apps", "nach Freigabe", "steuern"),
+        "system" to listOf("Zustand, Leistung", "und Modellstatus", "überwachen"))
 
     data class Module(val label: String, val icon: Icon, val value: String, val ok: Boolean)
 
@@ -120,7 +120,7 @@ object JarvisCockpitGridContent {
     private fun header(p: ContinuumPainter, b: Box, g: JarvisCockpitGrid.Grid?, shell: Shell?,
                        s: ContinuumDashboardState, now: Long) {
         val brand = g?.areas?.get(Area.BRAND) ?: Box(b.left + 9f, b.top + 4f, b.right - 104f, b.bottom - 4f)
-        val brandStyle = Type.brand
+        val brandStyle = Type.brand.copy(size = if (g != null) 24f else 18f)
         val cap = p.capHeight(brandStyle)
         val cy = brand.centerY
         // Reference uses two brand lines.
@@ -157,33 +157,36 @@ object JarvisCockpitGridContent {
         }
         g?.areas?.get(Area.TAGLINE)?.let { tag ->
             p.drawLine(tag.left, tag.top + 3f, tag.left, tag.bottom - 5f, 1f, Fill.Solid(Colors.cyan), .7f)
+            val caption = Type.caption.copy(size = 13f)
+            val lineHeight = p.capHeight(caption) + 3f
+            val textTop = tag.centerY - lineHeight + 1.5f
             listOf("Deine persönliche KI", "auf deinem Gerät").forEachIndexed { i, line ->
-                p.drawText(fit(p, line, Type.caption, tag.width - 18f), tag.left + 17f,
-                    tag.top + 5f + p.capHeight(Type.caption) + i * (p.capHeight(Type.caption) + 3f),
-                    Type.caption, Fill.Solid(Colors.text))
+                p.drawText(fit(p, line, caption, tag.width - 18f), tag.left + 14f,
+                    textTop + p.capHeight(caption) + i * lineHeight, caption, Fill.Solid(Colors.text))
             }
         }
         g?.areas?.get(Area.MODE_PILL)?.let { mode ->
-            val box = Box(mode.left, mode.centerY - 14f, mode.right, mode.centerY + 14f)
-            JarvisReferenceHud.surface(p, box, 14f, Colors.cyan, Colors.violetRim)
+            val box = Box(mode.left, mode.centerY - 17f, mode.right, mode.centerY + 17f)
+            JarvisReferenceHud.surface(p, box, 17f, Colors.cyan, Colors.violetRim)
             JarvisReferenceHud.crown(p, Box(box.left + 9f, box.centerY - 7f, box.left + 25f, box.centerY + 7f))
             val room = box.width - 35f
-            val modeStyle = JarvisShellRenderer.shrinkToFit(p, MODE_LABEL, Type.heading, room)
+            val modeStyle = JarvisShellRenderer.shrinkToFit(p, MODE_LABEL, Type.heading.copy(size = 18f), room)
             p.drawText(fit(p, MODE_LABEL, modeStyle, room), box.left + 31f,
                 box.centerY + p.capHeight(modeStyle) / 2f, modeStyle, Fill.Solid(Colors.text))
         }
         g?.areas?.get(Area.PRIVACY_PILL)?.let { priv ->
-            val box = Box(priv.left, priv.centerY - 13f, priv.right, priv.centerY + 13f)
-            JarvisReferenceHud.surface(p, box, 13f, Colors.cyanDeep, Colors.cyanDeep)
+            val box = Box(priv.left, priv.centerY - 16f, priv.right, priv.centerY + 16f)
+            JarvisReferenceHud.surface(p, box, 16f, Colors.cyanDeep, Colors.cyanDeep)
             val local = s.presentation.localOnly
             p.fillCircle(box.left + 11f, box.centerY, 4f, Fill.Solid(if (local == true) Colors.ok else Colors.textMuted))
             val text = when (local) { true -> "Lokal · Internet gesperrt"; false -> "Online nach Freigabe"; null -> "Freigaben: —" }
-            p.drawText(fit(p, text, Type.caption, box.width - 27f), box.left + 22f,
-                box.centerY + p.capHeight(Type.caption) / 2f, Type.caption, Fill.Solid(Colors.text))
+            val caption = JarvisShellRenderer.shrinkToFit(p, text, Type.caption.copy(size = 13f), box.width - 27f)
+            p.drawText(fit(p, text, caption, box.width - 27f), box.left + 22f,
+                box.centerY + p.capHeight(caption) / 2f, caption, Fill.Solid(Colors.text))
         }
         val actions = shell?.headerActionBoxes().orEmpty()
         actions.forEach { (target, box) ->
-            val radius = minOf(16f, box.width * .35f)
+            val radius = minOf(20f, box.width * .42f)
             p.strokeCircle(box.centerX, box.centerY, radius, 1f, Fill.Solid(Colors.rim))
             ContinuumIcons.draw(p, when (target) { "notifications" -> Icon.BELL; "settings" -> Icon.GEAR; else -> Icon.DOTS_HORIZONTAL },
                 box.centerX, box.centerY, radius * 1.3f, Fill.Solid(Colors.cyanSoft))
@@ -204,8 +207,9 @@ object JarvisCockpitGridContent {
             Type.title.copy(size = (b.width * .10f).coerceIn(24f, 36f)), b.right - x)
         val titleBaseline = b.top + 6f + p.capHeight(titleStyle)
         p.drawText("Continuum", x, titleBaseline, titleStyle, Fill.Solid(Colors.text))
-        p.drawText(fit(p, "Ein Gedächtnis für alle deine Geräte", Type.caption, b.right - x),
-            x, titleBaseline + p.capHeight(Type.caption) + 7f, Type.caption, Fill.Solid(Colors.textSecondary))
+        val caption = Type.caption.copy(size = 12f)
+        p.drawText(fit(p, "Ein Gedächtnis für alle deine Geräte", caption, b.right - x),
+            x, titleBaseline + p.capHeight(caption) + 5f, caption, Fill.Solid(Colors.textSecondary))
         p.drawLine(b.left, b.top + 9f, b.left, b.top + 1f, 1f, Fill.Solid(Colors.cyan), .7f)
         p.drawLine(b.left, b.top + 1f, b.left + 12f, b.top + 1f, 1f, Fill.Solid(Colors.cyan), .7f)
         p.drawLine(b.right, b.bottom - 9f, b.right, b.bottom - 1f, 1f, Fill.Solid(Colors.cyan), .7f)
@@ -214,9 +218,10 @@ object JarvisCockpitGridContent {
         val strip = Box(b.left, stripTop, b.right, b.bottom)
         if (strip.height >= 12f) {
             JarvisReferenceHud.surface(p, strip, 10f, Colors.cyan, Colors.cyanDeep)
-            p.drawText(fit(p, "Reden · Denken · Forschen · Handeln · Lernen · Wachsen", Type.status, strip.width - 10f),
-                strip.centerX, strip.centerY + p.capHeight(Type.status) / 2f,
-                Type.status, Fill.Solid(Colors.text), TextAlign.CENTER)
+            val stripStyle = Type.status.copy(size = 11f)
+            p.drawText(fit(p, "Reden · Denken · Forschen · Handeln · Lernen · Wachsen", stripStyle, strip.width - 10f),
+                strip.centerX, strip.centerY + p.capHeight(stripStyle) / 2f,
+                stripStyle, Fill.Solid(Colors.text), TextAlign.CENTER)
         }
     }
 
@@ -249,8 +254,8 @@ object JarvisCockpitGridContent {
     }
 
     private fun dialog(p: ContinuumPainter, b: Box, s: ContinuumDashboardState, shell: Shell?) {
-        val title = Type.heading.copy(size = 16f)
-        val detail = Type.caption.copy(size = 11f)
+        val title = Type.heading.copy(size = (b.width * .095f).coerceIn(16f, 22f))
+        val detail = Type.caption.copy(size = 14f)
         val badge = when {
             s.presentation.listening -> "Hört zu"
             s.presentation.speaking -> "Spricht"
@@ -297,7 +302,7 @@ object JarvisCockpitGridContent {
             room >= 140f -> "Was möchtest du tun?"
             else -> "Gespräch öffnen"
         }
-        val style = if (latest != null) Type.body else Type.body.copy(size = 15f)
+        val style = if (latest != null) Type.body else Type.body.copy(size = (b.width * .027f).coerceIn(15f, 23f))
         val lineHeight = p.capHeight(style) + 4f
         val count = ((b.height - 16f) / lineHeight).toInt().coerceIn(1, 2)
         val lines = wrap(p, latest ?: prompt, style, room)
@@ -338,39 +343,43 @@ object JarvisCockpitGridContent {
 
     fun drawTile(p: ContinuumPainter, b: Box, tile: JarvisTile, subtitle: List<String>) {
         val room = b.width - 16f
-        val titleBase = Type.tileLabel.copy(size = if (b.width >= 132f) 16f else 15f)
+        val titleBase = Type.tileLabel.copy(size = (b.width * .13f).coerceIn(15f, 20f))
         val labelText = if (p.measureText(tile.label, titleBase) > room)
             JarvisTiles.compoundBreaks[tile.label]?.toList()?.joinToString(" ") ?: tile.label else tile.label
-        val subtitleText = subtitle.joinToString(" ")
-        fun fitted(text: String, style: TextStyle): TextStyle {
-            val widest = text.split(' ').maxByOrNull { p.measureText(it, style) }.orEmpty()
-            return JarvisShellRenderer.shrinkToFit(p, widest, style, room - 1f, minScale = .88f)
+        fun fitted(parts: List<String>, style: TextStyle, minimum: Float): TextStyle {
+            val widest = parts.maxByOrNull { p.measureText(it, style) }.orEmpty()
+            return JarvisShellRenderer.shrinkToFit(p, widest, style, room - 1f,
+                minScale = minimum * .88f / style.size)
         }
-        val labelStyle = fitted(labelText, titleBase)
-        val subtitleStyle = fitted(subtitleText, Type.subtitle.copy(size = 12f))
+        val labelStyle = fitted(labelText.split(' '), titleBase, 15f)
+        val subtitleStyle = fitted(subtitle, Type.subtitle.copy(size = (b.width * .09f).coerceIn(12f, 14f)), 12f)
         val labels = wrap(p, labelText, labelStyle, room)
-        val lines = wrap(p, subtitleText, subtitleStyle, room)
+        val lines = subtitle.flatMap { wrap(p, it, subtitleStyle, room) }
         val labelCap = p.capHeight(labelStyle)
         val subtitleCap = p.capHeight(subtitleStyle)
-        val labelPitch = labelCap + 4f
-        val subtitlePitch = subtitleCap + 3f
-        val labelHeight = labelCap + (labels.size - 1).coerceAtLeast(0) * labelPitch
-        val labelArea = maxOf(labelCap + labelPitch, labelHeight)
-        val subtitleHeight = subtitleCap + (lines.size - 1).coerceAtLeast(0) * subtitlePitch
+        val labelDescent = labelCap * .35f
         val subtitleDescent = subtitleCap * .35f
-        val roomForIcon = (b.height - 16f - 18f - labelArea - subtitleHeight - subtitleDescent) / 1.22f
-        val iconSize = minOf(44f, maxOf(38f, b.width * .34f), roomForIcon.coerceAtLeast(28f))
-        val iconY = b.top + 8f + iconSize * .5f
+        val labelPitch = labelCap + labelDescent + maxOf(2f, labelCap * .15f)
+        val subtitlePitch = subtitleCap + subtitleDescent + maxOf(2f, subtitleCap * .15f)
+        val labelHeight = labelCap + (labels.size - 1).coerceAtLeast(0) * labelPitch + labelDescent
+        val subtitleHeight = subtitleCap + (lines.size - 1).coerceAtLeast(0) * subtitlePitch + subtitleDescent
+        val gap = maxOf(8f, subtitleCap * .4f)
+        val titleTop = minOf(b.top + b.height * .46f,
+            b.bottom - 12f - labelHeight - gap - subtitleHeight)
+        val descriptionTop = maxOf(minOf(b.top + b.height * .63f,
+            b.bottom - 12f - subtitleHeight), titleTop + labelHeight + gap)
+        val iconGap = maxOf(8f, labelCap * .25f)
+        val iconSize = minOf(72f, b.width * .42f, b.height * .28f,
+            (titleTop - b.top - 12f - iconGap) / 1.22f).coerceAtLeast(1f)
+        val iconY = maxOf(b.top + 12f + iconSize * .5f,
+            minOf(b.top + b.height * .22f, titleTop - iconGap - iconSize * .72f))
         JarvisTiles.drawFeatureIcon(p, tile, b.centerX, iconY, iconSize)
-        val titleTop = iconY + iconSize * .72f + 10f
-        var y = titleTop + (labelArea - labelHeight) / 2f + labelCap
+        var y = titleTop + labelCap
         labels.forEach { line ->
             p.drawText(line, b.centerX, y, labelStyle, Fill.Solid(Colors.text), TextAlign.CENTER)
             y += labelPitch
         }
-        val descriptionTop = titleTop + labelArea + 8f
-        val descriptionBottom = b.bottom - 8f - subtitleDescent
-        y = descriptionTop + ((descriptionBottom - descriptionTop - subtitleHeight) / 2f).coerceAtLeast(0f) + subtitleCap
+        y = descriptionTop + subtitleCap
         lines.forEach { line ->
             p.drawText(line, b.centerX, y, subtitleStyle, Fill.Solid(Colors.textSecondary), TextAlign.CENTER)
             y += subtitlePitch

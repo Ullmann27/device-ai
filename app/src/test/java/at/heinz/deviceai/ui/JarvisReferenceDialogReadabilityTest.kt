@@ -6,10 +6,12 @@ import org.junit.Test
 
 /** Actual compact badge and reply preview. */
 class JarvisReferenceDialogReadabilityTest {
-    @Test fun inputRetainsTheActualReplyPreviewWithReadableBounds() {
+    @Test fun inputShowsLiveReplyAndRestoresIdlePromptWithReadableBounds() {
         val reply = "Reale Antwort."
-        val state = ContinuumDashboardState(cockpit = CockpitStatus(dialog = listOf(CockpitStatus.DialogLine(false, reply))))
-        for (font in listOf(1f, 1.3f, 1.5f, 2f)) {
+        for (active in listOf(true, false)) for (font in listOf(1f, 1.3f, 1.5f, 2f)) {
+            val state = ContinuumDashboardState(
+                cockpit = CockpitStatus(dialog = listOf(CockpitStatus.DialogLine(false, reply))),
+                presentation = ContinuumDashboardState.PresentationStatus(speaking = active))
             val shell = JarvisShellLayout.create(840f, 760f, font)
             val b = requireNotNull(shell[JarvisShellLayout.Slot.INPUT])
             val drawn = mutableListOf<String>()
@@ -27,7 +29,9 @@ class JarvisReferenceDialogReadabilityTest {
             val p = JarvisTextScalePainter(base).apply { fontScale = font }
             assertTrue(JarvisCockpitGridContent.draw(p, JarvisShellLayout.Slot.INPUT, b,
                 shell.grid, state, 0L, shell))
-            assertTrue("font$font must retain the actual answer: $drawn", drawn.joinToString(" ").contains(reply))
+            val expected = if (active) reply else "Was soll ich für dich erledigen?"
+            assertTrue("font$font must show $expected: $drawn", drawn.joinToString(" ").contains(expected))
+            if (!active) assertFalse("Idle input restores its prompt", drawn.joinToString(" ").contains(reply))
             assertTrue("text remains inside input", baselines.all { it > b.top && it < b.bottom })
             assertTrue(shell.dialogControlBoxes().all { it.height >= 48f - .01f })
         }
