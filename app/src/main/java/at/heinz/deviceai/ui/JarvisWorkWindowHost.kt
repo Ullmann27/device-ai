@@ -1,6 +1,8 @@
 package at.heinz.deviceai.ui
 
 import android.app.Activity
+import android.graphics.Point
+import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Build
 import android.view.View
@@ -78,7 +80,6 @@ class JarvisWorkWindowHost(
         while (parent is View) {
             if (parent is ScrollView) {
                 background = parent
-                parent.scrollTo(0, 0)
                 break
             }
             parent = parent.parent
@@ -184,21 +185,20 @@ class JarvisWorkWindowHost(
         val geometry = shell.currentShell() ?: return null
         val density = activity.resources.displayMetrics.density
         val offset = localBounds(shell, container)
-        val viewport = RectF(0f, 0f, container.width.toFloat(),
-            minOf(container.height.toFloat(), offset.top + geometry.viewportHeight * density))
+        val viewport = visibleBounds(shell, container) ?: return null
         fun local(box: JarvisShellLayout.Box) = RectF(offset.left + box.left * density,
             offset.top + box.top * density, offset.left + box.right * density,
             offset.top + box.bottom * density)
         val face = (geometry.headStage ?: geometry.headBounds)?.let(::local)
+        val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
+        val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))
+        val destination = JarvisWorkWindowGeometry.destination(viewport, withOrb, density) ?: return null
         val navigation = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let {
             val prefix = if (geometry.hasFeatureTiles) "jarvis-tile:" else "jarvis-rail:"
             home.findViewWithTag<View>("$prefix${it.target}")
         }
-        val origin = navigation?.let { localBounds(it, container) }?.takeIf(JarvisWorkWindowGeometry::valid)
+        val origin = navigation?.let { visibleBounds(it, container) }
             ?: besideFace(face, viewport, density)
-        val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
-        val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))
-        val destination = JarvisWorkWindowGeometry.destination(viewport, withOrb, density) ?: return null
         return Planned(JarvisWorkWindow.Plan(origin, destination, withOrb), face, viewport)
     }
 
@@ -247,5 +247,17 @@ class JarvisWorkWindowHost(
         view.getLocationInWindow(point); root.getLocationInWindow(rootPoint)
         val x = (point[0] - rootPoint[0]).toFloat(); val y = (point[1] - rootPoint[1]).toFloat()
         return RectF(x, y, x + view.width, y + view.height)
+    }
+
+    /** Ancestor clipping in overlay coordinates. */
+    private fun visibleBounds(view: View, root: View): RectF? {
+        if (!view.isShown || !root.isShown) return null
+        val visible = Rect()
+        val rootVisible = Rect()
+        val rootOffset = Point()
+        if (!view.getGlobalVisibleRect(visible) || !root.getGlobalVisibleRect(rootVisible, rootOffset) ||
+            !visible.intersect(rootVisible)) return null
+        return RectF(visible).apply { offset(-rootOffset.x.toFloat(), -rootOffset.y.toFloat()) }
+            .takeIf(JarvisWorkWindowGeometry::valid)
     }
 }
