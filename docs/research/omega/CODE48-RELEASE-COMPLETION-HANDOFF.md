@@ -138,3 +138,21 @@ acknowledgement is claimed. Use PR593 and this existing handoff for shared state
 
 This reuses the existing release pipeline; it creates no new paid agent service,
 runner, credential, worker protocol or competing receipt system.
+
+## Full host gate: source-contract alignment
+
+On frozen a7d7881e, release checks passed 23/23 and backend passed 64/64.
+Critical Node passed 134 with one failed assertion. Full Node passed 2395 with
+three failed assertions and 31 explicit optional integration skips. All three
+assertions referenced former source locations/names: scheduler-owned completion,
+`source` before validated `acquiredSource` batch construction, and a caller-local
+SAVE_EVIDENCE assignment now emitted by the core observer.
+
+The two source-contract files now assert the current validated path, cancellation
+passed into durable completion, no independent scheduler completion, and both
+the real SAVE_EVIDENCE observer and typed failure. Their 26 tests pass. Production
+code is unchanged. RED logs, XML, complete reports, skip inventory and exact GREEN
+overlay are in `source-contract-alignment/`. The full Android/UI/lint run continues
+on unchanged a7d7881e. The first publisher attempt dep-dbndml7f3r2c738cbce0 also
+reported QA_RED node-critical; it is not a signed/published Build48. Re-run all
+required final-source gates before publication; no test or release gate removed.

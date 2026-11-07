@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 
 const read = filename => readFileSync(new URL('../../' + filename, import.meta.url), 'utf8');
 const source = read('app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt');
+const core = read('app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt');
 const states = read('app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt');
 const kotlinTests = read('app/src/test/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResultTest.kt');
 
@@ -13,15 +14,18 @@ test('unavailable encyclopedia extracts are explicitly classified and never lear
   assert.match(source, /catch \(_:IllegalArgumentException\) \{\s*throw WikimediaSourceUnavailable\(\)/);
   assert.match(states, /error is WikimediaSourceUnavailable -> "SOURCE_UNAVAILABLE_"\+error.reason/);
   assert.match(source, /e !is WikimediaSourceUnavailable/);
-  assert.match(source, /ContinuumSourceNovelty\.pending\(listOf\(source\)/);
+  assert.match(source, /ContinuumLearningCore\.prepareSourceBatch\(\s*ContinuumSourceNovelty\.pending\(listOf\(acquiredSource\),completedHashes\)\)/);
 });
 
 test('failure reports identify safe operation and may not become accepted after separate stage', () => {
   assert.match(source, /var operation="SELECT_TOPIC"/);
   for (const phase of ['FETCH_SOURCE','ARCHIVE_SOURCE','INDEX_SOURCE','TRAIN_SOURCE',
-    'AUDIT_SOURCE','SAVE_EVIDENCE']) {
+    'AUDIT_SOURCE']) {
     assert.ok(source.includes('operation="'+phase+'"'), 'missing '+phase);
   }
+  assert.match(core, /emitTrainingPhase\("SAVE_EVIDENCE"\)/);
+  assert.match(source, /observeTraining \{ trainingPhase ->\s*operation=trainingPhase/);
+  assert.match(source, /e is ContinuumSourceEvidenceNotPersisted\)\s*"FAILED_SAVE_EVIDENCE_"/);
   assert.match(states, /"FAILED_"\+operation\+"_"\+error\.javaClass\.simpleName/);
   assert.match(source, /failurePhase\(operation,e,cancelled\(\)\)/);
   assert.match(source, /ContinuumPublicStudyCycleResult\.outcome\(phase\)/);
