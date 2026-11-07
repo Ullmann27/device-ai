@@ -83,7 +83,7 @@ class JarvisCockpitGridTest {
 
     @Test fun tenTilesCanCarryRealValuesAndTheirReferenceSubtitles() {
         val s = ContinuumDashboardState()
-        assertTrue(JarvisShellContent.tiles(s, 0L, subtitles = true).all { it.subtitle.size == 2 })
+        assertTrue(JarvisShellContent.tiles(s, 0L, subtitles = true).all { it.subtitle.size == 3 })
         assertTrue(JarvisShellContent.tiles(s, 0L).all { it.subtitle.isEmpty() })
     }
 
