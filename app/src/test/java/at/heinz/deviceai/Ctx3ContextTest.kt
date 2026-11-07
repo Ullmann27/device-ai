@@ -24,7 +24,7 @@ class Ctx3ContextTest {
 
  @Test fun explicitTwoWayAlternativeCanResolveDasAndereButNeverInventAThirdOption() {
   val c=Ctx3Context()
-  c.decide("Vergleiche Fokus App und Liste App",listOf(a,b),"v1")
+  c.decide("Fokus App und Liste App",listOf(a,b),"v1")
   c.decide("Ich meine Fokus App",listOf(a,b),"v1")
   val other=c.decide("Nicht das, das andere",listOf(a,b),"v1") as Ctx3Decision.Query
   assertEquals(setOf("s2"),other.sourceIds)
@@ -32,7 +32,7 @@ class Ctx3ContextTest {
 
   val third=Ctx3Entity("app-c","Dritte App",setOf("Dritte App"),setOf("sie"),setOf("s3"))
   val d=Ctx3Context()
-  d.decide("Vergleiche Fokus App und Liste App und Dritte App",listOf(a,b,third),"v1")
+  d.decide("Fokus App und Liste App und Dritte App",listOf(a,b,third),"v1")
   d.decide("Ich meine Fokus App",listOf(a,b,third),"v1")
   assertTrue(d.decide("Nicht das, das andere",listOf(a,b,third),"v1") is Ctx3Decision.Clarify)
  }
