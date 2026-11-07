@@ -28,6 +28,23 @@ class AnswerClaimVerifierTest {
         )
     }
 
+    @Test fun numericWordNegationAndMixedNumbersFailClosed() {
+        assertEquals(
+            AnswerClaimVerifier.Verdict.CONTRADICTION,
+            AnswerClaimVerifier.verifyFocusedSentence("Du hast nicht zwei Kinder.", claim("2")).verdict
+        )
+        assertEquals(
+            AnswerClaimVerifier.Verdict.INSUFFICIENT_EVIDENCE,
+            AnswerClaimVerifier.verifyFocusedSentence("Du hast zwei Kinder und bist 33 Jahre alt.", claim("2")).verdict
+        )
+        assertEquals(
+            AnswerClaimVerifier.Verdict.CONTRADICTION,
+            AnswerClaimVerifier.verifyFocusedSentence(
+                "Du hast zwei, nicht drei Kinder.", claim("2", forbidden=setOf("3"))
+            ).verdict
+        )
+    }
+
     @Test fun supersededAndNegatedValuesAreRejected() {
         assertEquals(
             AnswerClaimVerifier.Verdict.CONTRADICTION,
