@@ -7,6 +7,29 @@ import java.nio.file.Files
 import java.util.Base64
 import java.util.concurrent.Executors
 class Ctx3SessionTest {
+ @Test fun discourseReturnNeverCrossesConversationNamespace() {
+  val dir=Files.createTempDirectory("ctx3-discourse-session").toFile()
+  val bytes=Base64.getDecoder().decode(javaClass.getResourceAsStream("/continuum-neural-swb1.base64")!!.bufferedReader().readText().trim())
+  val max=LearningExperienceFactory.create(
+   LearningExperienceType.USER_FACT,LearningProvenance.USER_CONFIRMED,LearningTrustClass.OWNER_CONFIRMED,
+   LearningStatus.CONFIRMED,"Max wohnt in Graz.",now=1)
+  val anna=LearningExperienceFactory.create(
+   LearningExperienceType.USER_FACT,LearningProvenance.USER_CONFIRMED,LearningTrustClass.OWNER_CONFIRMED,
+   LearningStatus.CONFIRMED,"Anna wohnt in Wels.",now=2)
+  try {
+   Ctx3Shadow.configure(dir,true)
+   Ctx3Shadow.evaluate(dir,bytes,listOf(max,anna),"Wo wohnt Max?",emptyList(),"chat-a")
+   Ctx3Shadow.evaluate(dir,bytes,listOf(max,anna),"Wo wohnt Anna?",emptyList(),"chat-a")
+   Ctx3Shadow.evaluate(dir,bytes,listOf(max,anna),"Und davor?",emptyList(),"chat-a")
+   assertEquals("DISCOURSE_PREVIOUS",Ctx3Shadow.events(dir,"chat-a").last().referenceResolution)
+   assertEquals(listOf(max.id),Ctx3Shadow.events(dir,"chat-a").last().proposedIds)
+
+   Ctx3Shadow.evaluate(dir,bytes,listOf(max,anna),"Und davor?",emptyList(),"chat-b")
+   assertEquals("CLARIFY",Ctx3Shadow.events(dir,"chat-b").last().decision)
+   assertTrue(Ctx3Shadow.events(dir,"chat-b").last().proposedIds.isEmpty())
+  } finally {dir.deleteRecursively()}
+ }
+
  @Test fun sessionsNamespacesWithdrawalAndConcurrentQueriesStayIsolated() {
   val dir=Files.createTempDirectory("ctx3-sessions").toFile()
   val other=Files.createTempDirectory("ctx3-profile").toFile()
