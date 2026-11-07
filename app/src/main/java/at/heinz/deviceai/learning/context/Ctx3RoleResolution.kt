@@ -2,9 +2,9 @@ package at.heinz.deviceai.learning.context
 
 import java.util.Locale
 
-internal enum class Ctx3Gender { MASCULINE, FEMININE, UNKNOWN }
+enum class Ctx3Gender { MASCULINE, FEMININE, UNKNOWN }
 
-internal enum class Ctx3OwnerRole {
+enum class Ctx3OwnerRole {
     DAUGHTER, SON, SISTER, BROTHER, WIFE, HUSBAND, PARTNER_FEMALE, PARTNER_MALE,
     MOTHER, FATHER, GRANDMOTHER, GRANDFATHER, GRANDDAUGHTER, GRANDSON
 }
