@@ -44,7 +44,8 @@ object JarvisReferenceHud {
         JarvisNeon.halo(p, width * .67f, height * .37f, width * .22f, Colors.cyan, .14f)
         JarvisNeon.halo(p, width * .04f, height * .86f, width * .16f, Colors.magenta, .16f)
         JarvisNeon.halo(p, width * .55f, height * .50f, width * .30f, Colors.violet, .08f)
-        p.scale(width, height)
+        p.translate(0f, height * .5f)
+        p.scale(width, height * .5f)
         p.setAdditive(true)
         (heroRibbons + railRibbons).forEachIndexed { i, path ->
             p.strokePath(path, .009f, ribbonGradient, .04f)

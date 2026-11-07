@@ -44,3 +44,9 @@ Read this file, fetch the exact branch HEAD and inspect its PR before continuing
 Frozen source `b12acea2d4fb2dcea5c100b12fed4c6c09436864`: real offline SDK/Gradle `:app:testDebugUnitTest` ran 247 tests: 245 passed, 2 failed. `JarvisHeaderBrandFitTest` exposed a truncated header caption; `JarvisLivingSceneTest` still asserted the old horizontal dialog/head relationship. The native routing, avatar framing, all 12 real Activity reference tests and deterministic captures passed. The failures are being corrected, with native font checks for complete rail/card labels and revised saturated surfaces pending a fresh source-bound run. This checkpoint does not claim those fixes passed.
 
 The initial CLI `--tests` invocation was rejected by the existing QA task allowlist. The subsequent run used a Gradle init-script test filter and the permitted `:app:testDebugUnitTest` task; no gate was disabled.
+
+### Saturated-material and readability checkpoint
+
+Source `c318e2d0ada64e8f95aef463ab72d1f45366e5d0`: **239/239 focused Android host/JVM tests passed**, zero failures/errors/skips, Gradle succeeded in 1m43s. Native font checks include all ten cards across three widths and font factors 1/1.5/2 (90 cases) plus complete rail labels. Actual owner-profile captures are 1384x1536 pixels at density 2; the diagnostic capture scrolls the real dashboard by 1283px, and all four diagnostic panels are visible below the main status strip.
+
+Final visual review found decorative fine ribbons crossing the face. The last material adjustment moves only those normalized ribbons into the lower half of the hero/input backdrop; avatar/orb signals and geometry are unchanged. This small final adjustment awaits the fresh checkpoint run before completion.
