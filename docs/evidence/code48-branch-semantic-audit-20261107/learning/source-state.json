@@ -1,0 +1,13 @@
+{
+  "sourceRoot": "/workspace/scratch/3d1967be6193/candidate",
+  "head": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "tree": "5206abd91b3740838661aa0e27e6702b3891591b",
+  "statusPorcelain": "",
+  "originalPaths": 19,
+  "uniquePathBlobVariants": 24,
+  "historicalCallerSnapshots": 18,
+  "testsRunForThisAudit": false,
+  "trainingRun": false,
+  "privateDataRead": false,
+  "candidateMutated": false
+}

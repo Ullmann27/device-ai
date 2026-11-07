@@ -65,7 +65,7 @@ class CockpitCinematicCueUiTest {
         }
     }
 
-    private fun frame(sequence: JarvisSequenceView): Bitmap =
+    private fun frame(sequence: View): Bitmap =
         Bitmap.createBitmap(sequence.width, sequence.height, Bitmap.Config.ARGB_8888).also {
             sequence.draw(Canvas(it))
         }
@@ -141,70 +141,73 @@ class CockpitCinematicCueUiTest {
         assertTrue("Queued presentation must belong to its foreground session", greetings.isEmpty())
     }
 
+    private fun memoryFrame(home: ContinuumHomeView): Bitmap =
+        frame(home.findViewWithTag<View>("continuum-memory-fullstage"))
+
     private fun recall(home: ContinuumHomeView, count: Int = 2) {
         CockpitAnimationPresenter(home).render(CockpitAnimationEvent.RecallHits(MEMORY_TURN, 1L,
             "synthetic-recall", count, if (count > 0) .9f else null))
-        shadowOf(Looper.getMainLooper()).idle()
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(16))
     }
 
     @Test fun realRecallStartsRecoveredDocumentTunnel() = withCockpit { home, _, sequence ->
         var now = 1_000L
         sequence.clock = { now }
-        val empty = frame(sequence)
+        val empty = memoryFrame(home)
         recall(home)
         sequence.effects.clear()
         now = 2_200L
-        val flying = frame(sequence)
+        val flying = memoryFrame(home)
         assertFalse("Real recall must reach the recovered document tunnel", empty.sameAs(flying))
-        now = 5_000L
-        assertTrue("The tunnel must finish", empty.sameAs(frame(sequence)))
+        now = 6_000L
+        assertTrue("The tunnel must finish", empty.sameAs(memoryFrame(home)))
         empty.recycle(); flying.recycle()
     }
 
     @Test fun actualTaskStopClearsRecoveredTunnel() = withCockpit { home, live, sequence ->
         var now = 1_000L
         sequence.clock = { now }
-        val empty = frame(sequence)
+        val empty = memoryFrame(home)
         recall(home)
         live.setTaskEffectScope(null)
         now = 2_200L
-        assertTrue("STOP clears every cinematic overlay", empty.sameAs(frame(sequence)))
+        assertTrue("STOP clears every cinematic overlay", empty.sameAs(memoryFrame(home)))
         empty.recycle()
     }
 
     @Test fun queuedRecallCannotSurviveAnActualStop() = withCockpit { home, live, sequence ->
         var now = 1_000L
         sequence.clock = { now }
-        val empty = frame(sequence)
+        val empty = memoryFrame(home)
         CockpitAnimationPresenter(home).render(CockpitAnimationEvent.RecallHits(MEMORY_TURN, 1L,
             "synthetic-recall", 2, .9f))
         live.setTaskEffectScope(null)
         shadowOf(Looper.getMainLooper()).idle()
         now = 2_200L
-        assertTrue("A queued recall cannot cross STOP", empty.sameAs(frame(sequence)))
+        assertTrue("A queued recall cannot cross STOP", empty.sameAs(memoryFrame(home)))
         empty.recycle()
     }
 
     @Test fun emptyRecallDoesNotInventAFileFlight() = withCockpit { home, _, sequence ->
         var now = 1_000L
         sequence.clock = { now }
-        val empty = frame(sequence)
+        val empty = memoryFrame(home)
         recall(home, 0)
         now = 2_200L
-        assertTrue("No hits means no file flight", empty.sameAs(frame(sequence)))
+        assertTrue("No hits means no file flight", empty.sameAs(memoryFrame(home)))
         empty.recycle()
     }
 
     @Test fun repeatRecallCannotExtendTheActiveTunnel() = withCockpit { home, _, sequence ->
         var now = 1_000L
         sequence.clock = { now }
-        val empty = frame(sequence)
+        val empty = memoryFrame(home)
         recall(home)
         now = 3_500L
         recall(home)
         sequence.effects.clear()
-        now = 4_100L
-        assertTrue("Repeated input cannot prolong this transition", empty.sameAs(frame(sequence)))
+        now = 5_900L
+        assertTrue("Repeated input cannot prolong this transition", empty.sameAs(memoryFrame(home)))
         empty.recycle()
     }
 }

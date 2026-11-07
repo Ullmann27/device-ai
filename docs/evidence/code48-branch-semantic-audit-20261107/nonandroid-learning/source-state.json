@@ -1,0 +1,20 @@
+{
+  "recordedAtUtc": "2026-11-07T06:40:45.842378+00:00",
+  "referencedSource": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "referencedTree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "head": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "worktreeStatus": [],
+  "worktreeClean": true,
+  "originalProjectScriptsExecuted": false,
+  "testsExecuted": false,
+  "buildsExecuted": false,
+  "modelsOrProvidersInvoked": false,
+  "sourceRefsOrConfigurationChangedByAudit": false,
+  "secretFilesRead": false,
+  "currentScriptNameReferenceScope": "rg over app/src, scripts, .github, tools and docs; 159 name references, all in documentation/inventory. This does not claim an exhaustive semantic callgraph of all historical branches.",
+  "frozenEwmBlobs": {
+    "Ewm1Lexicon.kt": "8c1e6acd4a7ee2cf632b115550eb7c7d5c801df6",
+    "Ewm1EvidenceWorkspace.kt": "cb19581af34ad177add22a89638988a74a9c7aad"
+  },
+  "frozenEwmBlobsEqualToM6HarnessPins": true
+}

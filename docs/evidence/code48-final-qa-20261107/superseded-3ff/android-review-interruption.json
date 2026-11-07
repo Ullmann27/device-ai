@@ -1,0 +1,13 @@
+{
+  "status": "INTERRUPTED_FOR_CONFIRMED_REVIEW_FIX",
+  "sourceCommit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "sourceTree": "5206abd91b3740838661aa0e27e6702b3891591b",
+  "endedAt": "2026-11-07T05:58:46.726312+00:00",
+  "processExit": 130,
+  "reason": "Review finding: full-stage memory scene has higher Z than transient notice cards. Current source confirms overlap. Full acceptance must follow repair.",
+  "reviewUrl": "https://github.com/Ullmann27/device-ai/pull/591#discussion_r4500300174",
+  "logSha256": "98d2bec3f73140bd16c3d9f0f89d8fae6215141edc613246c4851ed8ab051514",
+  "logBytes": 20801,
+  "androidSuitePassed": false,
+  "deviceAcceptance": "NOT_RUN"
+}

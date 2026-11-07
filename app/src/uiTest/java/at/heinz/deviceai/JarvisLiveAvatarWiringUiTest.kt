@@ -19,6 +19,7 @@ import at.heinz.deviceai.ui.ContinuumHomeView
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
 import at.heinz.deviceai.ui.JarvisSequenceView
 import at.heinz.deviceai.ui.JarvisMenuNavigator
+import at.heinz.deviceai.ui.JarvisWorkWindow
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -217,19 +218,71 @@ class JarvisLiveAvatarWiringUiTest {
 
     @Test fun semanticMenuDestinationsOpenTheirNamedScreensWithoutStartingATurn() = withShell { activity, _, _ ->
         val navigator = (field(activity, "menuNavigator\$delegate") as Lazy<*>).value as JarvisMenuNavigator
-        assertEquals(false, field(activity, "activeLocalRequest"))
+        val root = activity.window.decorView
+        val width = root.width
+        val height = root.height
+        val frames = CockpitHostFramePump { activity.window.decorView }
+        val initialRequest = field(activity, "activeLocalRequest")
+        assertEquals(false, initialRequest)
         val initialTurn = field(activity, "activeChiefTurn")
-        listOf("logic" to "Logik und Planung", "tasks" to "Entwicklungsaufgaben", "web" to "Web und Quellen").forEach { (target, title) ->
-            navigator.navigate(target)
-            shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
-            val dialog = ShadowAlertDialog.getLatestAlertDialog()
-            assertNotNull("The $target destination must open a real dialog", dialog)
-            assertTrue(dialog.isShowing)
-            val texts = descendants(dialog.window!!.decorView).filterIsInstance<TextView>().map { it.text.toString() }
-            assertTrue("$target must show its own title; actual text: $texts", title in texts)
-            assertEquals("Opening a menu destination must not start a local request", false, field(activity, "activeLocalRequest"))
-            assertSame("Opening a menu destination must not start a chief turn", initialTurn, field(activity, "activeChiefTurn"))
-            dialog.dismiss()
+        fun windows() = descendants(root).filterIsInstance<JarvisWorkWindow>()
+        fun settle() {
+            repeat(2) {
+                measure(root, width, height)
+                frames.drawRequestedFrame()
+            }
+            shadowOf(Looper.getMainLooper()).idle()
+        }
+        fun unchangedTurn(target: String) {
+            assertEquals("$target must not start a local request", initialRequest, field(activity, "activeLocalRequest"))
+            assertSame("$target must not start a chief turn", initialTurn, field(activity, "activeChiefTurn"))
+        }
+        try {
+            listOf("logic" to "Logik und Planung", "tasks" to "Entwicklungsaufgaben", "web" to "Web und Quellen").forEach { (target, title) ->
+                assertTrue("The previous destination must be removed", windows().isEmpty())
+                val previousDialog = ShadowAlertDialog.getLatestAlertDialog()
+                navigator.navigate(target)
+                settle()
+                unchangedTurn(target)
+                if (target == "tasks") {
+                    assertTrue("Tasks retain their dedicated dialog", windows().isEmpty())
+                    val dialog = ShadowAlertDialog.getLatestAlertDialog()
+                    assertNotNull("Tasks must open their real dialog", dialog)
+                    assertNotSame("Tasks must open a new dialog", previousDialog, dialog)
+                    assertTrue(dialog.isShowing)
+                    val texts = descendants(dialog.window!!.decorView).filterIsInstance<TextView>()
+                        .filter { it.isShown }.map { it.text.toString() }
+                    assertTrue("Tasks must show their own title: $texts", title in texts)
+                    val close = dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                    assertEquals("Schließen", close.text.toString())
+                    assertTrue(close.isShown && close.isEnabled)
+                    assertTrue("The dialog close button must be wired", close.performClick())
+                    settle()
+                    assertFalse("The task dialog must close", dialog.isShowing)
+                } else {
+                    assertSame("$target must use the cockpit window", previousDialog, ShadowAlertDialog.getLatestAlertDialog())
+                    val shown = windows()
+                    assertEquals("$target must open exactly one work window", 1, shown.size)
+                    val window = shown.single()
+                    assertTrue(window.isAttachedToWindow && window.isShown && window.isShowing)
+                    val panel = window.findViewWithTag<View>("jarvis-work-window:panel")
+                    assertTrue("$target must have a laid-out panel", panel.isShown && panel.width > 0 && panel.height > 0)
+                    assertEquals("$target must finish opening visibly", 1f, panel.alpha, .001f)
+                    val texts = descendants(panel).filterIsInstance<TextView>()
+                        .filter { it.isShown }.map { it.text.toString() }
+                    assertTrue("$target must show its own title: $texts", title in texts)
+                    val close = window.findViewWithTag<View>("jarvis-work-window:close")
+                    assertTrue(close.isShown && close.isEnabled)
+                    assertTrue("$target close button must be wired", close.performClick())
+                    settle()
+                    assertFalse("$target must finish closing", window.isShowing)
+                    assertFalse("$target must detach its window", window.isAttachedToWindow)
+                    assertTrue("$target must remove its window", windows().isEmpty())
+                }
+                unchangedTurn("Closing $target")
+            }
+        } finally {
+            frames.close()
         }
     }
 

@@ -1,0 +1,528 @@
+[
+  {
+    "tag": "old-backlog-developer",
+    "ref": "cd860569ba0a2596bf3270873e0dccd98770c201",
+    "path": ".github/continuum/developer-agent.mjs",
+    "patterns": [
+      "development-backlog-cli",
+      "backlogCommand",
+      "BACKLOG_HELP"
+    ],
+    "blob": "7b9fd5fe6d8f4641947c50ffa7e59200751bde3c",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/7b9fd5fe6d8f4641947c50ffa7e59200751bde3c-developer-agent.mjs",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/cd860569ba0a2596bf3270873e0dccd98770c201/.github/continuum/developer-agent.mjs",
+    "matches": [
+      {
+        "line": 85,
+        "text": "if(o.help==='true'||cmd==='help'){const {BACKLOG_HELP}=await import('./development-backlog-cli.mjs');return BACKLOG_HELP;}"
+      },
+      {
+        "line": 92,
+        "text": "const {backlogCommand}=await import('./development-backlog-cli.mjs');"
+      },
+      {
+        "line": 93,
+        "text": "return backlogCommand(cmd,o,{root,out:outDir(o),ledger,log});"
+      }
+    ],
+    "bytes": 12210,
+    "sha256": "db6eba21857b861f575e978a29a85894084615ecf5eb0f3adc37d21b94403796",
+    "blobVerified": true
+  },
+  {
+    "tag": "old-shadow-repair-loop",
+    "ref": "7924ba0793963dd84eef61517359a743071829bf",
+    "path": ".github/continuum/repair-loop.mjs",
+    "patterns": [
+      "dev-loop",
+      "DevLoop",
+      "devLoop",
+      "shadow",
+      "summarizeDev"
+    ],
+    "blob": "2795af8194e9824dbc574f3e9dd9578b5841f680",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/2795af8194e9824dbc574f3e9dd9578b5841f680-repair-loop.mjs",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/7924ba0793963dd84eef61517359a743071829bf/.github/continuum/repair-loop.mjs",
+    "matches": [
+      {
+        "line": 493,
+        "text": "const order=proposal?.shadowOrder;"
+      },
+      {
+        "line": 507,
+        "text": "productionOrder:active,shadowOrder:order};"
+      },
+      {
+        "line": 510,
+        "text": "reordered:false,modelSha256:null,productionOrder:active,shadowOrder:active};"
+      },
+      {
+        "line": 714,
+        "text": "export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,candidateVerifier=null,checkpoint=null,abortWatch=null,executor=null,executorAbortMode=null,onProgress=null,contextualExperience=false}){"
+      },
+      {
+        "line": 800,
+        "text": "const shadow=runRepairShadowObserver(shadowObserver,proposals,ranked,"
+      },
+      {
+        "line": 802,
+        "text": "if(shadow!==null)report.cefrShadow=shadow;"
+      }
+    ],
+    "bytes": 53110,
+    "sha256": "5fc7ac00a5524a9186b758422ba9146c6cf203b82c6b31340d8eedafad7a8e20",
+    "blobVerified": true
+  },
+  {
+    "tag": "old-micro-coding-provider",
+    "ref": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+    "path": ".github/continuum/coding-provider.mjs",
+    "patterns": [
+      "public-doc",
+      "PublicCoding",
+      "freezeResearch",
+      "transfer"
+    ],
+    "blob": "0272d65e3ecb559a7785d8295b18e7beb38ca997",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/0272d65e3ecb559a7785d8295b18e7beb38ca997-coding-provider.mjs",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/cc6c6295002cce1fa46e10c28f4e7436dd7fa967/.github/continuum/coding-provider.mjs",
+    "matches": [],
+    "bytes": 14152,
+    "sha256": "7b705e4cbc58de221cf1adda3747338eed2a26e2d4e31daac8cd2ea928e678ee",
+    "blobVerified": true
+  },
+  {
+    "tag": "old-cloud-workflow",
+    "ref": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+    "path": ".github/workflows/continuum-cloud-gpu-admission.yml",
+    "patterns": [
+      "run:",
+      "nvidia",
+      "cron:",
+      "workflow_dispatch"
+    ],
+    "blob": "6f2da696c7328b8e1863e7e2235a34c8f023db36",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/6f2da696c7328b8e1863e7e2235a34c8f023db36-continuum-cloud-gpu-admission.yml",
+    "endsWithNewline": false,
+    "url": "https://github.com/Ullmann27/device-ai/blob/80aed831fb5578138b0b77c4bd3c3d2a5114f158/.github/workflows/continuum-cloud-gpu-admission.yml",
+    "matches": [
+      {
+        "line": 9,
+        "text": "- .github/continuum/nvidia-nim-synthetic-benchmark.mjs"
+      },
+      {
+        "line": 10,
+        "text": "- .github/continuum/nvidia-nim-synthetic-benchmark.test.mjs"
+      },
+      {
+        "line": 11,
+        "text": "- .github/continuum/nvidia-nim-public-coding-lab.mjs"
+      },
+      {
+        "line": 12,
+        "text": "- .github/continuum/nvidia-nim-public-coding-lab.test.mjs"
+      },
+      {
+        "line": 13,
+        "text": "- .github/continuum/nvidia-nim-public-coding-oracle.test.mjs"
+      },
+      {
+        "line": 14,
+        "text": "- scripts/continuum-nvidia-nim-benchmark.mjs"
+      },
+      {
+        "line": 15,
+        "text": "- scripts/continuum-nvidia-coding-lab.mjs"
+      },
+      {
+        "line": 16,
+        "text": "- scripts/continuum-nvidia-ultra-review.mjs"
+      },
+      {
+        "line": 17,
+        "text": "- scripts/continuum-nvidia-ultra-review.test.mjs"
+      },
+      {
+        "line": 24,
+        "text": "workflow_dispatch:"
+      },
+      {
+        "line": 41,
+        "text": "run: |"
+      },
+      {
+        "line": 44,
+        "text": ".github/continuum/nvidia-nim-synthetic-benchmark.test.mjs \\"
+      },
+      {
+        "line": 45,
+        "text": ".github/continuum/nvidia-nim-public-coding-lab.test.mjs \\"
+      },
+      {
+        "line": 46,
+        "text": ".github/continuum/nvidia-nim-public-coding-oracle.test.mjs \\"
+      },
+      {
+        "line": 47,
+        "text": "scripts/continuum-nvidia-ultra-review.test.mjs \\"
+      },
+      {
+        "line": 53,
+        "text": "run: |"
+      },
+      {
+        "line": 56,
+        "text": "node --check .github/continuum/nvidia-nim-synthetic-benchmark.mjs"
+      },
+      {
+        "line": 57,
+        "text": "node --check .github/continuum/nvidia-nim-synthetic-benchmark.test.mjs"
+      },
+      {
+        "line": 58,
+        "text": "node --check .github/continuum/nvidia-nim-public-coding-lab.mjs"
+      },
+      {
+        "line": 59,
+        "text": "node --check .github/continuum/nvidia-nim-public-coding-lab.test.mjs"
+      },
+      {
+        "line": 60,
+        "text": "node --check .github/continuum/nvidia-nim-public-coding-oracle.test.mjs"
+      },
+      {
+        "line": 61,
+        "text": "node --check scripts/continuum-nvidia-coding-lab.mjs"
+      },
+      {
+        "line": 62,
+        "text": "node scripts/continuum-nvidia-coding-lab.mjs --check"
+      },
+      {
+        "line": 63,
+        "text": "node --check scripts/continuum-nvidia-ultra-review.mjs"
+      },
+      {
+        "line": 64,
+        "text": "node --check scripts/continuum-nvidia-ultra-review.test.mjs"
+      },
+      {
+        "line": 69,
+        "text": "node scripts/continuum-nvidia-ultra-review.mjs --check"
+      },
+      {
+        "line": 70,
+        "text": "node scripts/continuum-nvidia-nim-benchmark.mjs --check"
+      }
+    ],
+    "bytes": 3374,
+    "sha256": "3e0e8987ce645eec243a0a793f3ef4184428210e8ec71afaab9c08a067cb1414",
+    "blobVerified": true
+  },
+  {
+    "tag": "old-nvidia-oneshot-workflow",
+    "ref": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+    "path": ".github/workflows/continuum-nvidia-one-shot.yml",
+    "patterns": [
+      "run:",
+      "nvidia",
+      "cron:",
+      "workflow_dispatch",
+      "CONSENT"
+    ],
+    "blob": "e75ca8eca14d8e1d694550191af8fa9a020ba399",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/e75ca8eca14d8e1d694550191af8fa9a020ba399-continuum-nvidia-one-shot.yml",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/80aed831fb5578138b0b77c4bd3c3d2a5114f158/.github/workflows/continuum-nvidia-one-shot.yml",
+    "matches": [
+      {
+        "line": 4,
+        "text": "# IMPORTANT: workflow_dispatch is available after this workflow is reviewed"
+      },
+      {
+        "line": 7,
+        "text": "workflow_dispatch:"
+      },
+      {
+        "line": 18,
+        "text": "group: continuum-nvidia-once"
+      },
+      {
+        "line": 22,
+        "text": "nvidia-one-shot:"
+      },
+      {
+        "line": 38,
+        "text": "run: |"
+      },
+      {
+        "line": 40,
+        "text": ".github/continuum/nvidia-nim-public-coding-lab.test.mjs \\"
+      },
+      {
+        "line": 41,
+        "text": ".github/continuum/nvidia-nim-public-coding-oracle.test.mjs"
+      },
+      {
+        "line": 42,
+        "text": "node scripts/continuum-nvidia-coding-lab.mjs --check"
+      },
+      {
+        "line": 48,
+        "text": "run: |"
+      },
+      {
+        "line": 58,
+        "text": "run: node scripts/continuum-nvidia-coding-lab.mjs --run"
+      },
+      {
+        "line": 62,
+        "text": "run: |"
+      }
+    ],
+    "bytes": 2108,
+    "sha256": "1d7e8370bdc5ffe289fb6112b1978b0f3cfd850288e59a4702479eed8ffe089f",
+    "blobVerified": true
+  },
+  {
+    "tag": "old-nvidia-manual-workflow",
+    "ref": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+    "path": ".github/workflows/continuum-nvidia-ultra-manual.yml",
+    "patterns": [
+      "run:",
+      "nvidia",
+      "cron:",
+      "workflow_dispatch",
+      "CONSENT"
+    ],
+    "blob": "8674055fcdc15922158510b693308d2a1e39d51f",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/8674055fcdc15922158510b693308d2a1e39d51f-continuum-nvidia-ultra-manual.yml",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/80aed831fb5578138b0b77c4bd3c3d2a5114f158/.github/workflows/continuum-nvidia-ultra-manual.yml",
+    "matches": [
+      {
+        "line": 4,
+        "text": "# For workflow_dispatch in GitHub UI, first review and add this workflow"
+      },
+      {
+        "line": 7,
+        "text": "workflow_dispatch:"
+      },
+      {
+        "line": 18,
+        "text": "group: continuum-nvidia-ultra-master-once"
+      },
+      {
+        "line": 36,
+        "text": "run: |"
+      },
+      {
+        "line": 37,
+        "text": "node --test scripts/continuum-nvidia-ultra-review.test.mjs"
+      },
+      {
+        "line": 38,
+        "text": "node scripts/continuum-nvidia-ultra-review.mjs --check"
+      },
+      {
+        "line": 43,
+        "text": "run: |"
+      },
+      {
+        "line": 53,
+        "text": "CONTINUUM_ULTRA_CONSENT: ONE_REMOTE_TECHNICAL_REVIEW"
+      },
+      {
+        "line": 55,
+        "text": "run: |"
+      },
+      {
+        "line": 59,
+        "text": "node scripts/continuum-nvidia-ultra-review.mjs --run"
+      },
+      {
+        "line": 64,
+        "text": "name: continuum-nvidia-ultra-owner-review"
+      },
+      {
+        "line": 70,
+        "text": "run: |"
+      }
+    ],
+    "bytes": 2645,
+    "sha256": "5725c59fb23e45dc7396f1a1972b47d2a5444f45067ac9d7d8f220d8a9d6c81f",
+    "blobVerified": true
+  },
+  {
+    "tag": "old-shadow-ccc1-worker",
+    "ref": "7924ba0793963dd84eef61517359a743071829bf",
+    "path": ".github/continuum/ccc1-worker.mjs",
+    "patterns": [
+      "dev-loop",
+      "DevLoop",
+      "devLoop",
+      "summarizeDev",
+      "runDev"
+    ],
+    "blob": "76560ab8497e1347f58c5fd72353ff3052e129f5",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/76560ab8497e1347f58c5fd72353ff3052e129f5-ccc1-worker.mjs",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/7924ba0793963dd84eef61517359a743071829bf/.github/continuum/ccc1-worker.mjs",
+    "matches": [],
+    "bytes": 15519,
+    "sha256": "4dca4d28df8f4a884ae9e913a36d83d3dfc4239249b45701ecb13d3f33c3f219",
+    "blobVerified": true
+  },
+  {
+    "tag": "old-shadow-developer-agent",
+    "ref": "7924ba0793963dd84eef61517359a743071829bf",
+    "path": ".github/continuum/developer-agent.mjs",
+    "patterns": [
+      "dev-loop",
+      "DevLoop",
+      "devLoop",
+      "summarizeDev",
+      "runDev"
+    ],
+    "blob": "767dfe1328ca7247539b9d36c2a05e92b5d8ae78",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/767dfe1328ca7247539b9d36c2a05e92b5d8ae78-developer-agent.mjs",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/7924ba0793963dd84eef61517359a743071829bf/.github/continuum/developer-agent.mjs",
+    "matches": [],
+    "bytes": 19842,
+    "sha256": "eaaac5daeef0353429d34faa8d10a4d924e250dcec3d37b3c5d00136090c0d46",
+    "blobVerified": true
+  },
+  {
+    "tag": "old-backlog-jvm",
+    "ref": "cd860569ba0a2596bf3270873e0dccd98770c201",
+    "path": "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentBacklogV2Test.kt",
+    "patterns": [
+      "backlog-interop",
+      "node",
+      "ProcessBuilder"
+    ],
+    "blob": "91b4ba51398fe85eb11eeb30a9498eed6ccf6ca5",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/91b4ba51398fe85eb11eeb30a9498eed6ccf6ca5-DevelopmentBacklogV2Test.kt",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/cd860569ba0a2596bf3270873e0dccd98770c201/app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentBacklogV2Test.kt",
+    "matches": [
+      {
+        "line": 12,
+        "text": "val script = File(\"../.github/continuum/backlog-interop.mjs\").canonicalFile"
+      },
+      {
+        "line": 13,
+        "text": "fun node(mode: String, input: String = \"\"): String {"
+      },
+      {
+        "line": 14,
+        "text": "val process = ProcessBuilder(\"node\", script.path, mode).redirectError(ProcessBuilder.Redirect.INHERIT).start()"
+      },
+      {
+        "line": 21,
+        "text": "store.importBridge(node(\"create\"))"
+      },
+      {
+        "line": 25,
+        "text": "val returned = node(\"advance\", store.exportBridge())"
+      },
+      {
+        "line": 31,
+        "text": "val remote = node(\"advance\", returned)"
+      }
+    ],
+    "bytes": 2916,
+    "sha256": "6037146ed0ddf5ee0ff2aa703a2d7b2d780e54c12690c6794ca299e789b4d415",
+    "blobVerified": true
+  },
+  {
+    "tag": "old-nav-test",
+    "ref": "68a819c0b27769b49b70a3ec4ad1a23c2742b8c9",
+    "path": ".github/continuum/workspace-navigation.test.mjs",
+    "patterns": [
+      "workspace-nav-contract",
+      "workspaceNav"
+    ],
+    "blob": "2dee2f0c2a796e41a2039e2a088b3d0d97a722be",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/2dee2f0c2a796e41a2039e2a088b3d0d97a722be-workspace-navigation.test.mjs",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/68a819c0b27769b49b70a3ec4ad1a23c2742b8c9/.github/continuum/workspace-navigation.test.mjs",
+    "matches": [
+      {
+        "line": 4,
+        "text": "import { workspaceNav } from './workspace-nav-contract.mjs';"
+      },
+      {
+        "line": 7,
+        "text": "const nav = workspaceNav(activity);"
+      }
+    ],
+    "bytes": 2123,
+    "sha256": "77eaa8beed6d7f4886600ec395a078570741ef4f6dbbd4fc710a684df62ee2cc",
+    "blobVerified": true
+  },
+  {
+    "tag": "later-shadow-repair-loop",
+    "ref": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+    "path": ".github/continuum/repair-loop.mjs",
+    "patterns": [
+      "dev-loop",
+      "DevLoop",
+      "devLoop",
+      "summarizeDev",
+      "runDev"
+    ],
+    "blob": "2795af8194e9824dbc574f3e9dd9578b5841f680",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/2795af8194e9824dbc574f3e9dd9578b5841f680-repair-loop.mjs",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/0e10beac455ca4418d513aa1a7ad57ee3db23452/.github/continuum/repair-loop.mjs",
+    "matches": [],
+    "bytes": 53110,
+    "sha256": "5fc7ac00a5524a9186b758422ba9146c6cf203b82c6b31340d8eedafad7a8e20",
+    "blobVerified": true
+  },
+  {
+    "tag": "later-shadow-ccc1-worker",
+    "ref": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+    "path": ".github/continuum/ccc1-worker.mjs",
+    "patterns": [
+      "dev-loop",
+      "DevLoop",
+      "devLoop",
+      "summarizeDev",
+      "runDev"
+    ],
+    "blob": "76560ab8497e1347f58c5fd72353ff3052e129f5",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/76560ab8497e1347f58c5fd72353ff3052e129f5-ccc1-worker.mjs",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/0e10beac455ca4418d513aa1a7ad57ee3db23452/.github/continuum/ccc1-worker.mjs",
+    "matches": [],
+    "bytes": 15519,
+    "sha256": "4dca4d28df8f4a884ae9e913a36d83d3dfc4239249b45701ecb13d3f33c3f219",
+    "blobVerified": true
+  },
+  {
+    "tag": "later-shadow-developer-agent",
+    "ref": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+    "path": ".github/continuum/developer-agent.mjs",
+    "patterns": [
+      "dev-loop",
+      "DevLoop",
+      "devLoop",
+      "summarizeDev",
+      "runDev"
+    ],
+    "blob": "767dfe1328ca7247539b9d36c2a05e92b5d8ae78",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/nonandroid-orchestration/callers/767dfe1328ca7247539b9d36c2a05e92b5d8ae78-developer-agent.mjs",
+    "endsWithNewline": true,
+    "url": "https://github.com/Ullmann27/device-ai/blob/0e10beac455ca4418d513aa1a7ad57ee3db23452/.github/continuum/developer-agent.mjs",
+    "matches": [],
+    "bytes": 19842,
+    "sha256": "eaaac5daeef0353429d34faa8d10a4d924e250dcec3d37b3c5d00136090c0d46",
+    "blobVerified": true
+  }
+]

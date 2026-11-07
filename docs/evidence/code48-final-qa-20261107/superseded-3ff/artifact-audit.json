@@ -1,0 +1,1764 @@
+{
+  "status": "PASS",
+  "sourceCommit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "sourceTree": "5206abd91b3740838661aa0e27e6702b3891591b",
+  "sourceUnchanged": true,
+  "buildReceipt": "/workspace/scratch/3d1967be6193/qa/combined/final-3ff83387af64-unsigned-isolated-cache/unsigned-receipt.json",
+  "buildReceiptSha256": "972fec5deeacb0a802ee2ad70d5fe06ef3bc448a41f1d3ddf7b0077caf741153",
+  "buildReceiptSourceUnchanged": true,
+  "kind": "independent read-only artifact audit",
+  "toolCommands": [
+    {
+      "label": "apk-badging",
+      "command": [
+        "/workspace/scratch/b31a9d731016/build-env/android-sdk/build-tools/35.0.0/aapt2",
+        "dump",
+        "badging",
+        "/workspace/scratch/3d1967be6193/unsigned-build/app/build/outputs/apk/release/app-release-unsigned.apk"
+      ],
+      "exitCode": 0,
+      "stdout": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/apk-badging.stdout.txt",
+      "stderr": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/apk-badging.stderr.txt",
+      "stdoutSha256": "d99de5907ac7db74f55651fe65b02a1517e4fe369de47d4d2c24fb9972f635eb",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "apk-manifest",
+      "command": [
+        "/workspace/scratch/b31a9d731016/build-env/android-sdk/cmdline-tools/latest/bin/apkanalyzer",
+        "manifest",
+        "print",
+        "/workspace/scratch/3d1967be6193/unsigned-build/app/build/outputs/apk/release/app-release-unsigned.apk"
+      ],
+      "exitCode": 0,
+      "stdout": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/apk-manifest.stdout.txt",
+      "stderr": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/apk-manifest.stderr.txt",
+      "stdoutSha256": "bbd0d9f470e7ef82e3127c0a39680064f520a56438b34c73802b0e76ae3b7f77",
+      "stderrSha256": "7322050d1c365b8c472d4d5cd56cf89bbdd43f2c7d339438e7a72b4ca0251125"
+    },
+    {
+      "label": "apk-debuggable",
+      "command": [
+        "/workspace/scratch/b31a9d731016/build-env/android-sdk/cmdline-tools/latest/bin/apkanalyzer",
+        "manifest",
+        "debuggable",
+        "/workspace/scratch/3d1967be6193/unsigned-build/app/build/outputs/apk/release/app-release-unsigned.apk"
+      ],
+      "exitCode": 0,
+      "stdout": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/apk-debuggable.stdout.txt",
+      "stderr": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/apk-debuggable.stderr.txt",
+      "stdoutSha256": "2ed27c1421e6928dbe13dbfdb5c59e1045b30341fe7ebe05700006bc5ac572c0",
+      "stderrSha256": "7322050d1c365b8c472d4d5cd56cf89bbdd43f2c7d339438e7a72b4ca0251125"
+    },
+    {
+      "label": "apk-signature",
+      "command": [
+        "/workspace/scratch/b31a9d731016/build-env/android-sdk/build-tools/35.0.0/apksigner",
+        "verify",
+        "--verbose",
+        "/workspace/scratch/3d1967be6193/unsigned-build/app/build/outputs/apk/release/app-release-unsigned.apk"
+      ],
+      "exitCode": 1,
+      "stdout": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/apk-signature.stdout.txt",
+      "stderr": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/apk-signature.stderr.txt",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "52b00428fc5aa11c1c5aad408a7c8bf8831e00a418770cc782bd9bdbf62d03cd"
+    },
+    {
+      "label": "apk-zipalign",
+      "command": [
+        "/workspace/scratch/b31a9d731016/build-env/android-sdk/build-tools/35.0.0/zipalign",
+        "-c",
+        "-P",
+        "16",
+        "-v",
+        "4",
+        "/workspace/scratch/3d1967be6193/unsigned-build/app/build/outputs/apk/release/app-release-unsigned.apk"
+      ],
+      "exitCode": 0,
+      "stdout": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/apk-zipalign.stdout.txt",
+      "stderr": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/apk-zipalign.stderr.txt",
+      "stdoutSha256": "52d099091f68ae718e485b51ff02dd1b64ff7f722ba0e9b234c0c29d2c8421ab",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "aab-signature",
+      "command": [
+        "jarsigner",
+        "-verify",
+        "/workspace/scratch/3d1967be6193/unsigned-build/app/build/outputs/bundle/release/app-release.aab"
+      ],
+      "exitCode": 0,
+      "stdout": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/aab-signature.stdout.txt",
+      "stderr": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/aab-signature.stderr.txt",
+      "stdoutSha256": "cf97a22d129a9e4df5018f53fe9e4c8079cb9276c6885371e2e233cec4d74fe2",
+      "stderrSha256": "7322050d1c365b8c472d4d5cd56cf89bbdd43f2c7d339438e7a72b4ca0251125"
+    },
+    {
+      "label": "aab-manifest",
+      "command": [
+        "java",
+        "-Xmx192m",
+        "-cp",
+        "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.android.tools.build/bundletool/1.18.0/e84038fddca7582ddf5c98568f517cae401172d9/bundletool-1.18.0.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.android.tools.build/aapt2-proto/8.10.0-12782657/a84d081abdc62c114ec7ebf78da0a7c89cb76041/aapt2-proto-8.10.0-12782657.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.auto.value/auto-value-annotations/1.6.2/ed193d86e0af90cc2342aedbe73c5d86b03fa09b/auto-value-annotations-1.6.2.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.protobuf/protobuf-java-util/3.25.5/38cc5ce479603e36466feda2a9f1dfdb2210ef00/protobuf-java-util-3.25.5.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.guava/guava/33.3.1-jre/852f8b363da0111e819460021ca693cacca3e8db/guava-33.3.1-jre.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.30.0/ff171acb7fb9cbe2b9f50b391e1d52459d30ee62/error_prone_annotations-2.30.0.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.protobuf/protobuf-java/3.25.5/5ae5c9ec39930ae9b5a61b32b93288818ec05ec1/protobuf-java-3.25.5.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.dagger/dagger/2.28.3/10d83810ef9e19714116ed518896c90c6606d633/dagger-2.28.3.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/org.bitbucket.b_c/jose4j/0.9.5/e4ca26802488e6f16e24558d74ac8775a955fdd3/jose4j-0.9.5.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.30/b5a4b6d16ab13e34a88fae84c35cd5d68cac922c/slf4j-api-1.7.30.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.2/c4a06a64e650562f30b7bf9aaec1bfed43aca12b/failureaccess-1.0.2.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.43.0/9425eee39e56b116d2b998b7c2cebcbd11a3c98b/checker-qual-3.43.0.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/3.0.0/7399e65dd7e9ff3404f4535b2f017093bdb134c7/j2objc-annotations-3.0.0.jar:/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.code.gson/gson/2.11.0/527175ca6d81050b53bdd4c457a6d6e017626b0e/gson-2.11.0.jar",
+        "com.android.tools.build.bundletool.BundleToolMain",
+        "dump",
+        "manifest",
+        "--bundle=/workspace/scratch/3d1967be6193/unsigned-build/app/build/outputs/bundle/release/app-release.aab",
+        "--module=base"
+      ],
+      "exitCode": 0,
+      "stdout": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/aab-manifest.stdout.txt",
+      "stderr": "/workspace/scratch/3d1967be6193/qa/artifact-audit-3ff/aab-manifest.stderr.txt",
+      "stdoutSha256": "4d529462383b593d3fbeac91c7ae846c1632f2da9eb62af223c213c94ffe7c71",
+      "stderrSha256": "7322050d1c365b8c472d4d5cd56cf89bbdd43f2c7d339438e7a72b4ca0251125"
+    }
+  ],
+  "bundletoolClasspath": [
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.android.tools.build/bundletool/1.18.0/e84038fddca7582ddf5c98568f517cae401172d9/bundletool-1.18.0.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.android.tools.build/aapt2-proto/8.10.0-12782657/a84d081abdc62c114ec7ebf78da0a7c89cb76041/aapt2-proto-8.10.0-12782657.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.auto.value/auto-value-annotations/1.6.2/ed193d86e0af90cc2342aedbe73c5d86b03fa09b/auto-value-annotations-1.6.2.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.protobuf/protobuf-java-util/3.25.5/38cc5ce479603e36466feda2a9f1dfdb2210ef00/protobuf-java-util-3.25.5.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.guava/guava/33.3.1-jre/852f8b363da0111e819460021ca693cacca3e8db/guava-33.3.1-jre.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.30.0/ff171acb7fb9cbe2b9f50b391e1d52459d30ee62/error_prone_annotations-2.30.0.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.protobuf/protobuf-java/3.25.5/5ae5c9ec39930ae9b5a61b32b93288818ec05ec1/protobuf-java-3.25.5.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.dagger/dagger/2.28.3/10d83810ef9e19714116ed518896c90c6606d633/dagger-2.28.3.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/org.bitbucket.b_c/jose4j/0.9.5/e4ca26802488e6f16e24558d74ac8775a955fdd3/jose4j-0.9.5.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.30/b5a4b6d16ab13e34a88fae84c35cd5d68cac922c/slf4j-api-1.7.30.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.2/c4a06a64e650562f30b7bf9aaec1bfed43aca12b/failureaccess-1.0.2.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.43.0/9425eee39e56b116d2b998b7c2cebcbd11a3c98b/checker-qual-3.43.0.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/3.0.0/7399e65dd7e9ff3404f4535b2f017093bdb134c7/j2objc-annotations-3.0.0.jar",
+    "/workspace/scratch/3d1967be6193/unsigned-gradle-cache/caches/modules-2/files-2.1/com.google.code.gson/gson/2.11.0/527175ca6d81050b53bdd4c457a6d6e017626b0e/gson-2.11.0.jar"
+  ],
+  "sourceAssets": {
+    "avatar3d/LICENSE.ASSETS.md": {
+      "bytes": 6962,
+      "sha256": "f6089cba01cb570a24712b41ab8a586ccd3cc5ef53dc266ca50b95c288956d2c",
+      "blob": "f3ede1fc3318f8d794e2cb51924186c62f02f71a"
+    },
+    "avatar3d/NOTICE.json": {
+      "bytes": 4254,
+      "sha256": "f32229b321c3be99752686e7730f5dcbb570d22d1800aa9125a5b113a0c6ed9d",
+      "blob": "91f05ac554172da5b5c79a9e6b845731d27fb801"
+    },
+    "avatar3d/continuum-avatar.glb": {
+      "bytes": 12038416,
+      "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+      "blob": "3498c003a8bf186a8abb47048e2d36be4810b88c"
+    },
+    "continuum-owned-project-plans-v1.json": {
+      "bytes": 3744,
+      "sha256": "29611eb49a3bd7583793ac8b1838be69892aa2f7c759958919804c6272d4f410",
+      "blob": "d19297d5715821ac1073934adde07c64ddf25d5b"
+    },
+    "continuum-research/natural-location-v3.csx": {
+      "bytes": 32932,
+      "sha256": "c28c44c21e6b79aea5d13254760a0a782714e662294b366826d9d8c940697e92",
+      "blob": "fa8ac7b7367cfa570c21f2bb77c92f1f810e0bb2"
+    },
+    "continuum-training-studio-v1.json": {
+      "bytes": 169019,
+      "sha256": "9f9a26b4e2928554ccedf49a53f5927fdb1e169b2e049232d96bb18098e6cf98",
+      "blob": "c0e4fc9a075ec88e3be572b29d15bc718a838fad"
+    },
+    "faceid/LICENSE-LIBCXX.txt": {
+      "bytes": 16703,
+      "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b",
+      "blob": "e159d283443f92ac78b964d2bccebe8f95d5d445"
+    },
+    "faceid/LICENSE-OPENCV.txt": {
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "blob": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+    },
+    "faceid/LICENSE-SFACE.txt": {
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "blob": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+    },
+    "faceid/LICENSE-YUNET.txt": {
+      "bytes": 1085,
+      "sha256": "c83b8120c50ccbd4c4f96edf53141bdd566ebb8f8e9227e415326aa1b1aba958",
+      "blob": "4cdf89a445b7e84d2352700309440f8428be5f71"
+    },
+    "faceid/NOTICE.txt": {
+      "bytes": 1475,
+      "sha256": "6211caf5b0f3b50e13f73501a878729b560db18d57066ff345a6b1803390db7f",
+      "blob": "e070d2186448ed48bc99e09a84185cc1caa18a85"
+    },
+    "fonts/LICENSE-Roboto-Apache-2.0.txt": {
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "blob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+    },
+    "fonts/Montserrat-Light.ttf": {
+      "bytes": 444356,
+      "sha256": "853de0dd715d6681f7038cf6cd53c1695b614657cbc57c8f542fe08d5b84e006",
+      "blob": "b3c3fcee92e6f63aa86150cda571787d7407a4ae"
+    },
+    "fonts/Montserrat-Medium.ttf": {
+      "bytes": 447320,
+      "sha256": "dae47428bb041f9716604e0e07b5b0c8585b3bdd8183362f75c69fe7bb3cfaf4",
+      "blob": "62ebd66a36cd3534bd67228cd82e6917e0b05533"
+    },
+    "fonts/Montserrat-Regular.ttf": {
+      "bytes": 445928,
+      "sha256": "3e8abe50c44c82e2242e97d1ec8c0d385c4890cdc50447bcdb8605c81a38cfb2",
+      "blob": "3ef210ab1107142c0aa19cb916ae38a5f99e86ba"
+    },
+    "fonts/Montserrat-SemiBold.ttf": {
+      "bytes": 454716,
+      "sha256": "b4e1563393d73fdff491a869441245aef31add2ec03d9c97a6dae4de07c52fd0",
+      "blob": "e36320fb70339b14a9077f637637d6a459301e20"
+    },
+    "fonts/OFL-Montserrat.txt": {
+      "bytes": 4400,
+      "sha256": "8b7141c03fa4f8d44e6345d5d4931709290f0f67875e452e95ac1fd3a027802e",
+      "blob": "fe576a2ee1f96353b05d030c0b7620d525cc53a8"
+    },
+    "fonts/Roboto-Bold.ttf": {
+      "bytes": 514260,
+      "sha256": "61f89f8db49261c2f6106e8dccc35df7b2f7ed909020db40a3fc905e95f99334",
+      "blob": "8869666f245c6f474b98024327df7082e4c868b8"
+    },
+    "fonts/Roboto-Light.ttf": {
+      "bytes": 518580,
+      "sha256": "028f843b1990ba46e2a1c4ef1b82729c4da9a946b0d9d8dbf59e623d1095e454",
+      "blob": "e19094a8845f3d8db5deb9890059e51f4d21b37b"
+    },
+    "fonts/Roboto-Medium.ttf": {
+      "bytes": 511592,
+      "sha256": "2879a5ecb7fbfa13a7fc3e2cdd7fecbf73aa45e91b541dfdfa2c442eed0aac21",
+      "blob": "6a9513371a957b50eae98c8725e89ddc4668ab52"
+    },
+    "fonts/Roboto-Regular.ttf": {
+      "bytes": 515100,
+      "sha256": "56a45233d29f11b4dfb86d248e921939d115778f87325e7ae8cc108383d6664d",
+      "blob": "ddee473e02035bfce6244746d5d2a281616f7ff8"
+    },
+    "jarvis-reference/device-ai-mark.png": {
+      "bytes": 12058,
+      "sha256": "5e663f030e25c1026178d1b1191f34657f478f7bf92f2eb2f5292c236b4d7274",
+      "blob": "6bcea4539b5c5f4bc691d3d7dfa1fe1fc6e14314"
+    },
+    "jarvis-reference/provenance.json": {
+      "bytes": 1581,
+      "sha256": "3b7f4e5d09fb2f3bd7f45551d5901c98e4329f88f17afb6520ae1a34fd856dd6",
+      "blob": "c86f776f69ee36af923bc3571a7915e3c2cbc666"
+    },
+    "jarvis-reference/rail-energy.png": {
+      "bytes": 75507,
+      "sha256": "18a610c4b9a24dcfc43577f09f06e99dc9205fc20000af9420969410fc6c0ea6",
+      "blob": "c2cb349359ccb9fd2e1e974007efe920f64d27e4"
+    },
+    "jarvis-reference/tile-cyan-energy.png": {
+      "bytes": 5511,
+      "sha256": "c1cb975f73e899457c5897faf5e247a06d1007ed6071897c55beedb77f9b40b4",
+      "blob": "4a0660fcaf998251b875ad6de7f7b52e0ebeeaec"
+    },
+    "jarvis-reference/tile-violet-energy.png": {
+      "bytes": 5912,
+      "sha256": "7bd893567fa30e410d58fa90205c7504f4f73f7e126fdfdec4d50d3a78d6aca6",
+      "blob": "16520a48998052900623a20f83ff805fe3f5896e"
+    }
+  },
+  "modelLockSha256": "4644aaf7590afe63d4a785895215ce9ad7de7092cb7cc9b6f177ab902406a39e",
+  "apk": {
+    "path": "/workspace/scratch/3d1967be6193/unsigned-build/app/build/outputs/apk/release/app-release-unsigned.apk",
+    "bytes": 101937943,
+    "sha256": "7447f2e62871b8fbe0b56345c412665bea9d5abf7f708e4e2f0876dd2b0cf87d",
+    "entryCount": 72,
+    "crcValid": true,
+    "badCrcEntry": null,
+    "duplicateEntries": [],
+    "unsafeEntries": [],
+    "nativeLibraries": [
+      {
+        "path": "lib/arm64-v8a/libc++_shared.so",
+        "abi": "arm64-v8a",
+        "elfClass": 2,
+        "machine": 183,
+        "sha256": "4397241b4bd20a8e579bfb41d21107857e12985f6a01ca0c2a5f83380d1270b4"
+      },
+      {
+        "path": "lib/arm64-v8a/libfilament-jni.so",
+        "abi": "arm64-v8a",
+        "elfClass": 2,
+        "machine": 183,
+        "sha256": "d75914906f58575b70012edc4848fad5981d57de4a776d6486cdfabbf1c90da4"
+      },
+      {
+        "path": "lib/arm64-v8a/libgltfio-jni.so",
+        "abi": "arm64-v8a",
+        "elfClass": 2,
+        "machine": 183,
+        "sha256": "d0646ee3858dc865bc861529ce817fe4a667806c36a5c1fab67d7e2f1fcd9a2b"
+      },
+      {
+        "path": "lib/arm64-v8a/liblitertlm_jni.so",
+        "abi": "arm64-v8a",
+        "elfClass": 2,
+        "machine": 183,
+        "sha256": "4a94a3f955ad7c58cbcdfc5cb4ff566187bb9e8c5bc2c4056b4e226646c7e8fd"
+      },
+      {
+        "path": "lib/arm64-v8a/libopencv_java4.so",
+        "abi": "arm64-v8a",
+        "elfClass": 2,
+        "machine": 183,
+        "sha256": "d331aac20d0a76981ea652f7df7978e3b82ccc46d5926dc7c394d33c813694ab"
+      }
+    ],
+    "nativeAbis": [
+      "arm64-v8a"
+    ],
+    "assetCount": 29,
+    "sourceAssetCount": 26,
+    "sourceAssetMismatches": [],
+    "unexpectedAssets": [],
+    "modelManifestMatchesLock": true,
+    "modelPins": [
+      {
+        "path": "faceid/face_detection_yunet_2023mar.onnx",
+        "expectedBytes": 232589,
+        "expectedSha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "actual": {
+          "bytes": 232589,
+          "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4"
+        },
+        "match": true
+      },
+      {
+        "path": "faceid/face_recognition_sface_2021dec.onnx",
+        "expectedBytes": 38696353,
+        "expectedSha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "actual": {
+          "bytes": 38696353,
+          "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79"
+        },
+        "match": true
+      }
+    ],
+    "unexpectedModelFiles": [],
+    "privateKeyMarkerEntries": [],
+    "keyContainerEntries": [],
+    "jarSignatureEntries": [],
+    "manifestMfPresent": false,
+    "assets": {
+      "avatar3d/LICENSE.ASSETS.md": {
+        "bytes": 6962,
+        "sha256": "f6089cba01cb570a24712b41ab8a586ccd3cc5ef53dc266ca50b95c288956d2c"
+      },
+      "avatar3d/NOTICE.json": {
+        "bytes": 4254,
+        "sha256": "f32229b321c3be99752686e7730f5dcbb570d22d1800aa9125a5b113a0c6ed9d"
+      },
+      "avatar3d/continuum-avatar.glb": {
+        "bytes": 12038416,
+        "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+      },
+      "continuum-owned-project-plans-v1.json": {
+        "bytes": 3744,
+        "sha256": "29611eb49a3bd7583793ac8b1838be69892aa2f7c759958919804c6272d4f410"
+      },
+      "continuum-research/natural-location-v3.csx": {
+        "bytes": 32932,
+        "sha256": "c28c44c21e6b79aea5d13254760a0a782714e662294b366826d9d8c940697e92"
+      },
+      "continuum-training-studio-v1.json": {
+        "bytes": 169019,
+        "sha256": "9f9a26b4e2928554ccedf49a53f5927fdb1e169b2e049232d96bb18098e6cf98"
+      },
+      "faceid/LICENSE-LIBCXX.txt": {
+        "bytes": 16703,
+        "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b"
+      },
+      "faceid/LICENSE-OPENCV.txt": {
+        "bytes": 11358,
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      "faceid/LICENSE-SFACE.txt": {
+        "bytes": 11358,
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      "faceid/LICENSE-YUNET.txt": {
+        "bytes": 1085,
+        "sha256": "c83b8120c50ccbd4c4f96edf53141bdd566ebb8f8e9227e415326aa1b1aba958"
+      },
+      "faceid/NOTICE.txt": {
+        "bytes": 1475,
+        "sha256": "6211caf5b0f3b50e13f73501a878729b560db18d57066ff345a6b1803390db7f"
+      },
+      "faceid/face_detection_yunet_2023mar.onnx": {
+        "bytes": 232589,
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4"
+      },
+      "faceid/face_recognition_sface_2021dec.onnx": {
+        "bytes": 38696353,
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79"
+      },
+      "faceid/model-manifest.json": {
+        "bytes": 880,
+        "sha256": "4644aaf7590afe63d4a785895215ce9ad7de7092cb7cc9b6f177ab902406a39e"
+      },
+      "fonts/LICENSE-Roboto-Apache-2.0.txt": {
+        "bytes": 11357,
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      "fonts/Montserrat-Light.ttf": {
+        "bytes": 444356,
+        "sha256": "853de0dd715d6681f7038cf6cd53c1695b614657cbc57c8f542fe08d5b84e006"
+      },
+      "fonts/Montserrat-Medium.ttf": {
+        "bytes": 447320,
+        "sha256": "dae47428bb041f9716604e0e07b5b0c8585b3bdd8183362f75c69fe7bb3cfaf4"
+      },
+      "fonts/Montserrat-Regular.ttf": {
+        "bytes": 445928,
+        "sha256": "3e8abe50c44c82e2242e97d1ec8c0d385c4890cdc50447bcdb8605c81a38cfb2"
+      },
+      "fonts/Montserrat-SemiBold.ttf": {
+        "bytes": 454716,
+        "sha256": "b4e1563393d73fdff491a869441245aef31add2ec03d9c97a6dae4de07c52fd0"
+      },
+      "fonts/OFL-Montserrat.txt": {
+        "bytes": 4400,
+        "sha256": "8b7141c03fa4f8d44e6345d5d4931709290f0f67875e452e95ac1fd3a027802e"
+      },
+      "fonts/Roboto-Bold.ttf": {
+        "bytes": 514260,
+        "sha256": "61f89f8db49261c2f6106e8dccc35df7b2f7ed909020db40a3fc905e95f99334"
+      },
+      "fonts/Roboto-Light.ttf": {
+        "bytes": 518580,
+        "sha256": "028f843b1990ba46e2a1c4ef1b82729c4da9a946b0d9d8dbf59e623d1095e454"
+      },
+      "fonts/Roboto-Medium.ttf": {
+        "bytes": 511592,
+        "sha256": "2879a5ecb7fbfa13a7fc3e2cdd7fecbf73aa45e91b541dfdfa2c442eed0aac21"
+      },
+      "fonts/Roboto-Regular.ttf": {
+        "bytes": 515100,
+        "sha256": "56a45233d29f11b4dfb86d248e921939d115778f87325e7ae8cc108383d6664d"
+      },
+      "jarvis-reference/device-ai-mark.png": {
+        "bytes": 12058,
+        "sha256": "5e663f030e25c1026178d1b1191f34657f478f7bf92f2eb2f5292c236b4d7274"
+      },
+      "jarvis-reference/provenance.json": {
+        "bytes": 1581,
+        "sha256": "3b7f4e5d09fb2f3bd7f45551d5901c98e4329f88f17afb6520ae1a34fd856dd6"
+      },
+      "jarvis-reference/rail-energy.png": {
+        "bytes": 75507,
+        "sha256": "18a610c4b9a24dcfc43577f09f06e99dc9205fc20000af9420969410fc6c0ea6"
+      },
+      "jarvis-reference/tile-cyan-energy.png": {
+        "bytes": 5511,
+        "sha256": "c1cb975f73e899457c5897faf5e247a06d1007ed6071897c55beedb77f9b40b4"
+      },
+      "jarvis-reference/tile-violet-energy.png": {
+        "bytes": 5912,
+        "sha256": "7bd893567fa30e410d58fa90205c7504f4f73f7e126fdfdec4d50d3a78d6aca6"
+      }
+    },
+    "inventory": [
+      {
+        "path": "META-INF/com/android/build/gradle/app-metadata.properties",
+        "bytes": 57,
+        "compressedBytes": 53,
+        "crc32": "4c47c10d",
+        "sha256": "04662d0fa65117ed87a4a934e99b41f0f28f26d73b57ae97610d0b69da42c3bc"
+      },
+      {
+        "path": "META-INF/version-control-info.textproto",
+        "bytes": 42,
+        "compressedBytes": 44,
+        "crc32": "d7d0a339",
+        "sha256": "577a29846b9d2ab88f013ed5ce0cc75355d4cfbef540ef637c49c95d233c236f"
+      },
+      {
+        "path": "classes.dex",
+        "bytes": 11857660,
+        "compressedBytes": 4380240,
+        "crc32": "d05642d1",
+        "sha256": "179f8cd259b9e1521621fc06c74a7e7febe1f3f16d520c2108aa9dc2d8609198"
+      },
+      {
+        "path": "classes2.dex",
+        "bytes": 3114908,
+        "compressedBytes": 1148789,
+        "crc32": "978c71ea",
+        "sha256": "4600364fa90e2033f2ee721720de43744bc5a40b35190fdbd9b659b673be86cf"
+      },
+      {
+        "path": "lib/arm64-v8a/libc++_shared.so",
+        "bytes": 1292904,
+        "compressedBytes": 1292904,
+        "crc32": "51e3dcdc",
+        "sha256": "4397241b4bd20a8e579bfb41d21107857e12985f6a01ca0c2a5f83380d1270b4"
+      },
+      {
+        "path": "lib/arm64-v8a/libfilament-jni.so",
+        "bytes": 2266408,
+        "compressedBytes": 2266408,
+        "crc32": "81fe410b",
+        "sha256": "d75914906f58575b70012edc4848fad5981d57de4a776d6486cdfabbf1c90da4"
+      },
+      {
+        "path": "lib/arm64-v8a/libgltfio-jni.so",
+        "bytes": 4679472,
+        "compressedBytes": 4679472,
+        "crc32": "dd57ed0a",
+        "sha256": "d0646ee3858dc865bc861529ce817fe4a667806c36a5c1fab67d7e2f1fcd9a2b"
+      },
+      {
+        "path": "lib/arm64-v8a/liblitertlm_jni.so",
+        "bytes": 22155680,
+        "compressedBytes": 22155680,
+        "crc32": "1b1d2ae2",
+        "sha256": "4a94a3f955ad7c58cbcdfc5cb4ff566187bb9e8c5bc2c4056b4e226646c7e8fd"
+      },
+      {
+        "path": "lib/arm64-v8a/libopencv_java4.so",
+        "bytes": 23972544,
+        "compressedBytes": 23972544,
+        "crc32": "6338d842",
+        "sha256": "d331aac20d0a76981ea652f7df7978e3b82ccc46d5926dc7c394d33c813694ab"
+      },
+      {
+        "path": "assets/avatar3d/LICENSE.ASSETS.md",
+        "bytes": 6962,
+        "compressedBytes": 2660,
+        "crc32": "4f9735df",
+        "sha256": "f6089cba01cb570a24712b41ab8a586ccd3cc5ef53dc266ca50b95c288956d2c"
+      },
+      {
+        "path": "assets/avatar3d/NOTICE.json",
+        "bytes": 4254,
+        "compressedBytes": 2110,
+        "crc32": "1fb28a8d",
+        "sha256": "f32229b321c3be99752686e7730f5dcbb570d22d1800aa9125a5b113a0c6ed9d"
+      },
+      {
+        "path": "assets/avatar3d/continuum-avatar.glb",
+        "bytes": 12038416,
+        "compressedBytes": 3859456,
+        "crc32": "6c3ce53b",
+        "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+      },
+      {
+        "path": "assets/continuum-owned-project-plans-v1.json",
+        "bytes": 3744,
+        "compressedBytes": 812,
+        "crc32": "d41e88bd",
+        "sha256": "29611eb49a3bd7583793ac8b1838be69892aa2f7c759958919804c6272d4f410"
+      },
+      {
+        "path": "assets/continuum-research/natural-location-v3.csx",
+        "bytes": 32932,
+        "compressedBytes": 2854,
+        "crc32": "27a88e97",
+        "sha256": "c28c44c21e6b79aea5d13254760a0a782714e662294b366826d9d8c940697e92"
+      },
+      {
+        "path": "assets/continuum-training-studio-v1.json",
+        "bytes": 169019,
+        "compressedBytes": 15272,
+        "crc32": "3e099a32",
+        "sha256": "9f9a26b4e2928554ccedf49a53f5927fdb1e169b2e049232d96bb18098e6cf98"
+      },
+      {
+        "path": "assets/faceid/LICENSE-LIBCXX.txt",
+        "bytes": 16703,
+        "compressedBytes": 5444,
+        "crc32": "080866a5",
+        "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b"
+      },
+      {
+        "path": "assets/faceid/LICENSE-OPENCV.txt",
+        "bytes": 11358,
+        "compressedBytes": 3949,
+        "crc32": "86e2b4b4",
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      {
+        "path": "assets/faceid/LICENSE-SFACE.txt",
+        "bytes": 11358,
+        "compressedBytes": 3949,
+        "crc32": "86e2b4b4",
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      {
+        "path": "assets/faceid/LICENSE-YUNET.txt",
+        "bytes": 1085,
+        "compressedBytes": 643,
+        "crc32": "1daf9ce6",
+        "sha256": "c83b8120c50ccbd4c4f96edf53141bdd566ebb8f8e9227e415326aa1b1aba958"
+      },
+      {
+        "path": "assets/faceid/NOTICE.txt",
+        "bytes": 1475,
+        "compressedBytes": 854,
+        "crc32": "3edf7a4f",
+        "sha256": "6211caf5b0f3b50e13f73501a878729b560db18d57066ff345a6b1803390db7f"
+      },
+      {
+        "path": "assets/faceid/face_detection_yunet_2023mar.onnx",
+        "bytes": 232589,
+        "compressedBytes": 202604,
+        "crc32": "bfdf4e40",
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4"
+      },
+      {
+        "path": "assets/faceid/face_recognition_sface_2021dec.onnx",
+        "bytes": 38696353,
+        "compressedBytes": 35912476,
+        "crc32": "4ab8b732",
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79"
+      },
+      {
+        "path": "assets/faceid/model-manifest.json",
+        "bytes": 880,
+        "compressedBytes": 432,
+        "crc32": "4f99d56e",
+        "sha256": "4644aaf7590afe63d4a785895215ce9ad7de7092cb7cc9b6f177ab902406a39e"
+      },
+      {
+        "path": "assets/fonts/LICENSE-Roboto-Apache-2.0.txt",
+        "bytes": 11357,
+        "compressedBytes": 3948,
+        "crc32": "7b5d04bc",
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      {
+        "path": "assets/fonts/Montserrat-Light.ttf",
+        "bytes": 444356,
+        "compressedBytes": 186466,
+        "crc32": "98e3d4a7",
+        "sha256": "853de0dd715d6681f7038cf6cd53c1695b614657cbc57c8f542fe08d5b84e006"
+      },
+      {
+        "path": "assets/fonts/Montserrat-Medium.ttf",
+        "bytes": 447320,
+        "compressedBytes": 188095,
+        "crc32": "bc34122f",
+        "sha256": "dae47428bb041f9716604e0e07b5b0c8585b3bdd8183362f75c69fe7bb3cfaf4"
+      },
+      {
+        "path": "assets/fonts/Montserrat-Regular.ttf",
+        "bytes": 445928,
+        "compressedBytes": 187336,
+        "crc32": "6a38604b",
+        "sha256": "3e8abe50c44c82e2242e97d1ec8c0d385c4890cdc50447bcdb8605c81a38cfb2"
+      },
+      {
+        "path": "assets/fonts/Montserrat-SemiBold.ttf",
+        "bytes": 454716,
+        "compressedBytes": 190251,
+        "crc32": "61a4a673",
+        "sha256": "b4e1563393d73fdff491a869441245aef31add2ec03d9c97a6dae4de07c52fd0"
+      },
+      {
+        "path": "assets/fonts/OFL-Montserrat.txt",
+        "bytes": 4400,
+        "compressedBytes": 1947,
+        "crc32": "85541068",
+        "sha256": "8b7141c03fa4f8d44e6345d5d4931709290f0f67875e452e95ac1fd3a027802e"
+      },
+      {
+        "path": "assets/fonts/Roboto-Bold.ttf",
+        "bytes": 514260,
+        "compressedBytes": 262448,
+        "crc32": "335c5250",
+        "sha256": "61f89f8db49261c2f6106e8dccc35df7b2f7ed909020db40a3fc905e95f99334"
+      },
+      {
+        "path": "assets/fonts/Roboto-Light.ttf",
+        "bytes": 518580,
+        "compressedBytes": 262201,
+        "crc32": "9b696099",
+        "sha256": "028f843b1990ba46e2a1c4ef1b82729c4da9a946b0d9d8dbf59e623d1095e454"
+      },
+      {
+        "path": "assets/fonts/Roboto-Medium.ttf",
+        "bytes": 511592,
+        "compressedBytes": 259550,
+        "crc32": "5b30aa85",
+        "sha256": "2879a5ecb7fbfa13a7fc3e2cdd7fecbf73aa45e91b541dfdfa2c442eed0aac21"
+      },
+      {
+        "path": "assets/fonts/Roboto-Regular.ttf",
+        "bytes": 515100,
+        "compressedBytes": 261151,
+        "crc32": "c38d4ac7",
+        "sha256": "56a45233d29f11b4dfb86d248e921939d115778f87325e7ae8cc108383d6664d"
+      },
+      {
+        "path": "assets/jarvis-reference/device-ai-mark.png",
+        "bytes": 12058,
+        "compressedBytes": 12058,
+        "crc32": "3a484a85",
+        "sha256": "5e663f030e25c1026178d1b1191f34657f478f7bf92f2eb2f5292c236b4d7274"
+      },
+      {
+        "path": "assets/jarvis-reference/provenance.json",
+        "bytes": 1581,
+        "compressedBytes": 604,
+        "crc32": "72dd1685",
+        "sha256": "3b7f4e5d09fb2f3bd7f45551d5901c98e4329f88f17afb6520ae1a34fd856dd6"
+      },
+      {
+        "path": "assets/jarvis-reference/rail-energy.png",
+        "bytes": 75507,
+        "compressedBytes": 75507,
+        "crc32": "2e867b3b",
+        "sha256": "18a610c4b9a24dcfc43577f09f06e99dc9205fc20000af9420969410fc6c0ea6"
+      },
+      {
+        "path": "assets/jarvis-reference/tile-cyan-energy.png",
+        "bytes": 5511,
+        "compressedBytes": 5511,
+        "crc32": "06de27c8",
+        "sha256": "c1cb975f73e899457c5897faf5e247a06d1007ed6071897c55beedb77f9b40b4"
+      },
+      {
+        "path": "assets/jarvis-reference/tile-violet-energy.png",
+        "bytes": 5912,
+        "compressedBytes": 5912,
+        "crc32": "82b8b415",
+        "sha256": "7bd893567fa30e410d58fa90205c7504f4f73f7e126fdfdec4d50d3a78d6aca6"
+      },
+      {
+        "path": "DebugProbesKt.bin",
+        "bytes": 1728,
+        "compressedBytes": 774,
+        "crc32": "ca0d86c5",
+        "sha256": "065bd792b8527764f33147188302af5bf9e2a8da40fde0830dc111ad26dae40e"
+      },
+      {
+        "path": "META-INF/androidx/annotation/annotation/LICENSE.txt",
+        "bytes": 10175,
+        "compressedBytes": 3563,
+        "crc32": "f9a816a8",
+        "sha256": "809fa1ed21450f59827d1e9aec720bbc4b687434fa22283c6cb5dd82a47ab9c0"
+      },
+      {
+        "path": "META-INF/kotlinx_coroutines_android.version",
+        "bytes": 6,
+        "compressedBytes": 6,
+        "crc32": "40f5cd2d",
+        "sha256": "f1deeb62e209be1a1fa35478861037ecdc5d1ad1d6f8fd692680f7f5cb1a4991"
+      },
+      {
+        "path": "META-INF/kotlinx_coroutines_core.version",
+        "bytes": 6,
+        "compressedBytes": 6,
+        "crc32": "40f5cd2d",
+        "sha256": "f1deeb62e209be1a1fa35478861037ecdc5d1ad1d6f8fd692680f7f5cb1a4991"
+      },
+      {
+        "path": "META-INF/services/kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoader",
+        "bytes": 90,
+        "compressedBytes": 72,
+        "crc32": "9463aeee",
+        "sha256": "4d68a8097263fcde72d0a9aec5c1343ec3b20202b4678a8a548317fdba0afc9b"
+      },
+      {
+        "path": "META-INF/services/kotlin.reflect.jvm.internal.impl.km.internal.extensions.MetadataExtensions",
+        "bytes": 70,
+        "compressedBytes": 60,
+        "crc32": "bb8c15c1",
+        "sha256": "24eabd1eec4317a143010d4e7bf0443279deb1d9070abc3edd51bfa3fa102b51"
+      },
+      {
+        "path": "META-INF/services/kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition",
+        "bytes": 235,
+        "compressedBytes": 99,
+        "crc32": "30ff9918",
+        "sha256": "6730196e2039ec378b9a553d59f6b0346c99b9d48b8fce1d16761fa6da64c5d0"
+      },
+      {
+        "path": "META-INF/services/kotlinx.coroutines.CoroutineExceptionHandler",
+        "bytes": 54,
+        "compressedBytes": 50,
+        "crc32": "8f594b50",
+        "sha256": "3129b8edf6db07de6f8ff47695e2177c8bba4eed2962d3085c719e5acbb58a33"
+      },
+      {
+        "path": "META-INF/services/kotlinx.coroutines.internal.MainDispatcherFactory",
+        "bytes": 52,
+        "compressedBytes": 49,
+        "crc32": "4b95597f",
+        "sha256": "a1ea77ea8f93f419256b6e66f29713f950d8d6e90442b608d880a48003b5eb72"
+      },
+      {
+        "path": "continuum/benchmark-v1.json",
+        "bytes": 12533,
+        "compressedBytes": 3934,
+        "crc32": "7914b9cc",
+        "sha256": "d34afafdf98ab5cf58753d6533db9cbc6ff7027883a4bc2a60a9107576751fee"
+      },
+      {
+        "path": "kotlin-tooling-metadata.json",
+        "bytes": 626,
+        "compressedBytes": 283,
+        "crc32": "23cacce0",
+        "sha256": "9ba94abecb5944779d488330770abbeba11a0c6546995dfe52e48e0aaa846083"
+      },
+      {
+        "path": "kotlin/annotation/annotation.kotlin_builtins",
+        "bytes": 1022,
+        "compressedBytes": 542,
+        "crc32": "9ba69669",
+        "sha256": "ae9ec2e633ab0777b8ec1e7c15218382ceac8c5ead2cdedde7cc9ea31457ce85"
+      },
+      {
+        "path": "kotlin/collections/collections.kotlin_builtins",
+        "bytes": 8625,
+        "compressedBytes": 1890,
+        "crc32": "db78dd29",
+        "sha256": "ce49200a7ebbdc82ec217d2f717e90ce752534e02ec8b737518a744850bc8e3e"
+      },
+      {
+        "path": "kotlin/concurrent/atomics/atomics.kotlin_builtins",
+        "bytes": 2882,
+        "compressedBytes": 1111,
+        "crc32": "3ca2aa63",
+        "sha256": "dd63195c7714bd3755d938dce9600132ff508a2838674fdf19108275c8dc9077"
+      },
+      {
+        "path": "kotlin/coroutines/coroutines.kotlin_builtins",
+        "bytes": 139,
+        "compressedBytes": 118,
+        "crc32": "13fe752e",
+        "sha256": "f947b45a78233ddbe229290e0c240c946910649cf6ce1c5fd003f834f6f90369"
+      },
+      {
+        "path": "kotlin/internal/internal.kotlin_builtins",
+        "bytes": 596,
+        "compressedBytes": 359,
+        "crc32": "66c650ba",
+        "sha256": "6e29094940ebfc967e34d9ccf24521a52ffef3c4b6b47566b19960a04131557e"
+      },
+      {
+        "path": "kotlin/kotlin.kotlin_builtins",
+        "bytes": 30920,
+        "compressedBytes": 5503,
+        "crc32": "df618e5c",
+        "sha256": "8f37cbb253a76650c4e313f98f70d081d2ae66d05174abf6a5824cbf7926616b"
+      },
+      {
+        "path": "kotlin/ranges/ranges.kotlin_builtins",
+        "bytes": 4353,
+        "compressedBytes": 1380,
+        "crc32": "217cddfb",
+        "sha256": "629c166aa811101d3954f76c58b7ce3648647a1b3529d2351a799fcb43347a34"
+      },
+      {
+        "path": "kotlin/reflect/reflect.kotlin_builtins",
+        "bytes": 4859,
+        "compressedBytes": 1447,
+        "crc32": "1792992d",
+        "sha256": "eeb5c2f4756a5d80414002948483b375378cb0bd5c2fc54a1d1d2e2ad3c038f6"
+      },
+      {
+        "path": "okhttp3/internal/publicsuffix/NOTICE",
+        "bytes": 218,
+        "compressedBytes": 149,
+        "crc32": "df32c7fc",
+        "sha256": "8a9c58fbded5ea3474315e4a9824ca8b1486098a1a03e897e0b19419d5e1876a"
+      },
+      {
+        "path": "okhttp3/internal/publicsuffix/publicsuffixes.gz",
+        "bytes": 41394,
+        "compressedBytes": 41394,
+        "crc32": "f59fa4f6",
+        "sha256": "9af43e9995ec749e7a30eec4e5a87770d7e2027847084a07cca82060eff0c791"
+      },
+      {
+        "path": "AndroidManifest.xml",
+        "bytes": 9532,
+        "compressedBytes": 2382,
+        "crc32": "10583089",
+        "sha256": "0e016ceceabbd8ec62f4bf7cc8adfb2ae9a16604cb4ae6d961cd80905bfc0eaf"
+      },
+      {
+        "path": "res/-7.xml",
+        "bytes": 4572,
+        "compressedBytes": 1245,
+        "crc32": "37a65b2e",
+        "sha256": "6a53776ccab38a33c1f79f99b147817cd5dda3c47bb2f1fc04b74181e16a44bb"
+      },
+      {
+        "path": "res/Aa.xml",
+        "bytes": 716,
+        "compressedBytes": 350,
+        "crc32": "9084b5c0",
+        "sha256": "1c632530b8805912cbbdadf25efba9484e0078048659bd519720b3f7ba3b391c"
+      },
+      {
+        "path": "res/Gv.xml",
+        "bytes": 2564,
+        "compressedBytes": 886,
+        "crc32": "65f345d3",
+        "sha256": "0159832924b314a77919aff36ec0caca453d974a836ecbd63281e47b2c1b9e0f"
+      },
+      {
+        "path": "res/NT.xml",
+        "bytes": 552,
+        "compressedBytes": 304,
+        "crc32": "d8294689",
+        "sha256": "4e7dbd9267e86ad183b118218fe28e5ea7e5316b2355113347194cee5438c305"
+      },
+      {
+        "path": "res/TJ.xml",
+        "bytes": 1188,
+        "compressedBytes": 450,
+        "crc32": "1ab8665a",
+        "sha256": "846db089c4cbf7a8c9423d1515d0a65673bf75d9cbb9bb497256cda656037104"
+      },
+      {
+        "path": "res/Xo.xml",
+        "bytes": 632,
+        "compressedBytes": 353,
+        "crc32": "4b6d2828",
+        "sha256": "d08841839786735dcdc14f80f32e2dcd6eb20048e2183e1106954a879beaf3d5"
+      },
+      {
+        "path": "res/Zp.xml",
+        "bytes": 1668,
+        "compressedBytes": 630,
+        "crc32": "25641569",
+        "sha256": "9fa7f5ab548d052cce709a069cf480bef2adbb873acd0e201e5d61992091b123"
+      },
+      {
+        "path": "res/_x.xml",
+        "bytes": 1652,
+        "compressedBytes": 649,
+        "crc32": "ee105d2d",
+        "sha256": "e053e6a303c713f4e54b587a55b5aede1a42f505edcf937a2ab1605d8744a50d"
+      },
+      {
+        "path": "res/color/continuum_dialog_button_text.xml",
+        "bytes": 588,
+        "compressedBytes": 266,
+        "crc32": "6051410f",
+        "sha256": "f0c51efa246e4ca9657cc47cab005a763b7a9d8bb771bfc86e2cedf7d6e4d58a"
+      },
+      {
+        "path": "res/en.xml",
+        "bytes": 4100,
+        "compressedBytes": 1366,
+        "crc32": "5699e893",
+        "sha256": "47d10131c4f16e409415284ae04b5ca5388a717eb34217baa4e369c629876e76"
+      },
+      {
+        "path": "res/iS.xml",
+        "bytes": 576,
+        "compressedBytes": 271,
+        "crc32": "85ab5013",
+        "sha256": "bb427544b360e78e5462f3c272eb59457b27d4fb3a0a82f28bbcb5d35b30ec51"
+      },
+      {
+        "path": "resources.arsc",
+        "bytes": 4124,
+        "compressedBytes": 4124,
+        "crc32": "9682ef4c",
+        "sha256": "a29759b655d8b99d519a5dad2b072a5caeb1b05c63d66d99ac8ed6d7d2064145"
+      }
+    ],
+    "centralDirectoryOffset": 101932112,
+    "apkSigningBlockPresent": false,
+    "manifest": {
+      "package": "at.heinz.deviceai.continuumlocal",
+      "versionCode": "48",
+      "versionName": "0.3.47",
+      "debuggableAttribute": null,
+      "debuggable": false,
+      "minSdk": "26",
+      "targetSdk": "36"
+    },
+    "debuggableToolOutput": "false",
+    "zipalign4And16KiB": true,
+    "unsignedVerified": true,
+    "manifestMatchesExpected": true,
+    "nativeArm64Only": true,
+    "allChecksPassed": true
+  },
+  "aab": {
+    "path": "/workspace/scratch/3d1967be6193/unsigned-build/app/build/outputs/bundle/release/app-release.aab",
+    "bytes": 71400296,
+    "sha256": "75a7514094a1f83b0176ed8de3c8d2adbfa5a9fb79fd38218ed00f22f90b2751",
+    "entryCount": 78,
+    "crcValid": true,
+    "badCrcEntry": null,
+    "duplicateEntries": [],
+    "unsafeEntries": [],
+    "nativeLibraries": [
+      {
+        "path": "base/lib/arm64-v8a/libc++_shared.so",
+        "abi": "arm64-v8a",
+        "elfClass": 2,
+        "machine": 183,
+        "sha256": "4397241b4bd20a8e579bfb41d21107857e12985f6a01ca0c2a5f83380d1270b4"
+      },
+      {
+        "path": "base/lib/arm64-v8a/libfilament-jni.so",
+        "abi": "arm64-v8a",
+        "elfClass": 2,
+        "machine": 183,
+        "sha256": "d75914906f58575b70012edc4848fad5981d57de4a776d6486cdfabbf1c90da4"
+      },
+      {
+        "path": "base/lib/arm64-v8a/libgltfio-jni.so",
+        "abi": "arm64-v8a",
+        "elfClass": 2,
+        "machine": 183,
+        "sha256": "d0646ee3858dc865bc861529ce817fe4a667806c36a5c1fab67d7e2f1fcd9a2b"
+      },
+      {
+        "path": "base/lib/arm64-v8a/liblitertlm_jni.so",
+        "abi": "arm64-v8a",
+        "elfClass": 2,
+        "machine": 183,
+        "sha256": "4a94a3f955ad7c58cbcdfc5cb4ff566187bb9e8c5bc2c4056b4e226646c7e8fd"
+      },
+      {
+        "path": "base/lib/arm64-v8a/libopencv_java4.so",
+        "abi": "arm64-v8a",
+        "elfClass": 2,
+        "machine": 183,
+        "sha256": "d331aac20d0a76981ea652f7df7978e3b82ccc46d5926dc7c394d33c813694ab"
+      }
+    ],
+    "nativeAbis": [
+      "arm64-v8a"
+    ],
+    "assetCount": 29,
+    "sourceAssetCount": 26,
+    "sourceAssetMismatches": [],
+    "unexpectedAssets": [],
+    "modelManifestMatchesLock": true,
+    "modelPins": [
+      {
+        "path": "faceid/face_detection_yunet_2023mar.onnx",
+        "expectedBytes": 232589,
+        "expectedSha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "actual": {
+          "bytes": 232589,
+          "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4"
+        },
+        "match": true
+      },
+      {
+        "path": "faceid/face_recognition_sface_2021dec.onnx",
+        "expectedBytes": 38696353,
+        "expectedSha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "actual": {
+          "bytes": 38696353,
+          "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79"
+        },
+        "match": true
+      }
+    ],
+    "unexpectedModelFiles": [],
+    "privateKeyMarkerEntries": [],
+    "keyContainerEntries": [],
+    "jarSignatureEntries": [],
+    "manifestMfPresent": false,
+    "assets": {
+      "avatar3d/LICENSE.ASSETS.md": {
+        "bytes": 6962,
+        "sha256": "f6089cba01cb570a24712b41ab8a586ccd3cc5ef53dc266ca50b95c288956d2c"
+      },
+      "avatar3d/NOTICE.json": {
+        "bytes": 4254,
+        "sha256": "f32229b321c3be99752686e7730f5dcbb570d22d1800aa9125a5b113a0c6ed9d"
+      },
+      "avatar3d/continuum-avatar.glb": {
+        "bytes": 12038416,
+        "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+      },
+      "continuum-owned-project-plans-v1.json": {
+        "bytes": 3744,
+        "sha256": "29611eb49a3bd7583793ac8b1838be69892aa2f7c759958919804c6272d4f410"
+      },
+      "continuum-research/natural-location-v3.csx": {
+        "bytes": 32932,
+        "sha256": "c28c44c21e6b79aea5d13254760a0a782714e662294b366826d9d8c940697e92"
+      },
+      "continuum-training-studio-v1.json": {
+        "bytes": 169019,
+        "sha256": "9f9a26b4e2928554ccedf49a53f5927fdb1e169b2e049232d96bb18098e6cf98"
+      },
+      "faceid/LICENSE-LIBCXX.txt": {
+        "bytes": 16703,
+        "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b"
+      },
+      "faceid/LICENSE-OPENCV.txt": {
+        "bytes": 11358,
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      "faceid/LICENSE-SFACE.txt": {
+        "bytes": 11358,
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      "faceid/LICENSE-YUNET.txt": {
+        "bytes": 1085,
+        "sha256": "c83b8120c50ccbd4c4f96edf53141bdd566ebb8f8e9227e415326aa1b1aba958"
+      },
+      "faceid/NOTICE.txt": {
+        "bytes": 1475,
+        "sha256": "6211caf5b0f3b50e13f73501a878729b560db18d57066ff345a6b1803390db7f"
+      },
+      "faceid/face_detection_yunet_2023mar.onnx": {
+        "bytes": 232589,
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4"
+      },
+      "faceid/face_recognition_sface_2021dec.onnx": {
+        "bytes": 38696353,
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79"
+      },
+      "faceid/model-manifest.json": {
+        "bytes": 880,
+        "sha256": "4644aaf7590afe63d4a785895215ce9ad7de7092cb7cc9b6f177ab902406a39e"
+      },
+      "fonts/LICENSE-Roboto-Apache-2.0.txt": {
+        "bytes": 11357,
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      "fonts/Montserrat-Light.ttf": {
+        "bytes": 444356,
+        "sha256": "853de0dd715d6681f7038cf6cd53c1695b614657cbc57c8f542fe08d5b84e006"
+      },
+      "fonts/Montserrat-Medium.ttf": {
+        "bytes": 447320,
+        "sha256": "dae47428bb041f9716604e0e07b5b0c8585b3bdd8183362f75c69fe7bb3cfaf4"
+      },
+      "fonts/Montserrat-Regular.ttf": {
+        "bytes": 445928,
+        "sha256": "3e8abe50c44c82e2242e97d1ec8c0d385c4890cdc50447bcdb8605c81a38cfb2"
+      },
+      "fonts/Montserrat-SemiBold.ttf": {
+        "bytes": 454716,
+        "sha256": "b4e1563393d73fdff491a869441245aef31add2ec03d9c97a6dae4de07c52fd0"
+      },
+      "fonts/OFL-Montserrat.txt": {
+        "bytes": 4400,
+        "sha256": "8b7141c03fa4f8d44e6345d5d4931709290f0f67875e452e95ac1fd3a027802e"
+      },
+      "fonts/Roboto-Bold.ttf": {
+        "bytes": 514260,
+        "sha256": "61f89f8db49261c2f6106e8dccc35df7b2f7ed909020db40a3fc905e95f99334"
+      },
+      "fonts/Roboto-Light.ttf": {
+        "bytes": 518580,
+        "sha256": "028f843b1990ba46e2a1c4ef1b82729c4da9a946b0d9d8dbf59e623d1095e454"
+      },
+      "fonts/Roboto-Medium.ttf": {
+        "bytes": 511592,
+        "sha256": "2879a5ecb7fbfa13a7fc3e2cdd7fecbf73aa45e91b541dfdfa2c442eed0aac21"
+      },
+      "fonts/Roboto-Regular.ttf": {
+        "bytes": 515100,
+        "sha256": "56a45233d29f11b4dfb86d248e921939d115778f87325e7ae8cc108383d6664d"
+      },
+      "jarvis-reference/device-ai-mark.png": {
+        "bytes": 12058,
+        "sha256": "5e663f030e25c1026178d1b1191f34657f478f7bf92f2eb2f5292c236b4d7274"
+      },
+      "jarvis-reference/provenance.json": {
+        "bytes": 1581,
+        "sha256": "3b7f4e5d09fb2f3bd7f45551d5901c98e4329f88f17afb6520ae1a34fd856dd6"
+      },
+      "jarvis-reference/rail-energy.png": {
+        "bytes": 75507,
+        "sha256": "18a610c4b9a24dcfc43577f09f06e99dc9205fc20000af9420969410fc6c0ea6"
+      },
+      "jarvis-reference/tile-cyan-energy.png": {
+        "bytes": 5511,
+        "sha256": "c1cb975f73e899457c5897faf5e247a06d1007ed6071897c55beedb77f9b40b4"
+      },
+      "jarvis-reference/tile-violet-energy.png": {
+        "bytes": 5912,
+        "sha256": "7bd893567fa30e410d58fa90205c7504f4f73f7e126fdfdec4d50d3a78d6aca6"
+      }
+    },
+    "inventory": [
+      {
+        "path": "BundleConfig.pb",
+        "bytes": 628,
+        "compressedBytes": 271,
+        "crc32": "97ed0ce5",
+        "sha256": "537a1cd3794083981aeabc22c27bca818cc7b57714f1259b4f352d8a91897c0e"
+      },
+      {
+        "path": "BUNDLE-METADATA/com.android.tools.build.libraries/dependencies.pb",
+        "bytes": 2309,
+        "compressedBytes": 1490,
+        "crc32": "b353b34e",
+        "sha256": "cc9c09c36c8f5ea034932cd4e04b3a74a7fbd0ff643d74c3d10b0bcef476c466"
+      },
+      {
+        "path": "BUNDLE-METADATA/com.android.tools.build.gradle/app-metadata.properties",
+        "bytes": 57,
+        "compressedBytes": 53,
+        "crc32": "4c47c10d",
+        "sha256": "04662d0fa65117ed87a4a934e99b41f0f28f26d73b57ae97610d0b69da42c3bc"
+      },
+      {
+        "path": "BUNDLE-METADATA/com.android.tools/d8.json",
+        "bytes": 96,
+        "compressedBytes": 90,
+        "crc32": "29b5a179",
+        "sha256": "d406fcecb57ea6c77a08f4498f72191dd07a64e1619ce8e0671466e7608d5a50"
+      },
+      {
+        "path": "base/assets/avatar3d/LICENSE.ASSETS.md",
+        "bytes": 6962,
+        "compressedBytes": 2660,
+        "crc32": "4f9735df",
+        "sha256": "f6089cba01cb570a24712b41ab8a586ccd3cc5ef53dc266ca50b95c288956d2c"
+      },
+      {
+        "path": "base/assets/avatar3d/NOTICE.json",
+        "bytes": 4254,
+        "compressedBytes": 2110,
+        "crc32": "1fb28a8d",
+        "sha256": "f32229b321c3be99752686e7730f5dcbb570d22d1800aa9125a5b113a0c6ed9d"
+      },
+      {
+        "path": "base/assets/avatar3d/continuum-avatar.glb",
+        "bytes": 12038416,
+        "compressedBytes": 3859456,
+        "crc32": "6c3ce53b",
+        "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+      },
+      {
+        "path": "base/assets/continuum-owned-project-plans-v1.json",
+        "bytes": 3744,
+        "compressedBytes": 812,
+        "crc32": "d41e88bd",
+        "sha256": "29611eb49a3bd7583793ac8b1838be69892aa2f7c759958919804c6272d4f410"
+      },
+      {
+        "path": "base/assets/continuum-research/natural-location-v3.csx",
+        "bytes": 32932,
+        "compressedBytes": 2854,
+        "crc32": "27a88e97",
+        "sha256": "c28c44c21e6b79aea5d13254760a0a782714e662294b366826d9d8c940697e92"
+      },
+      {
+        "path": "base/assets/continuum-training-studio-v1.json",
+        "bytes": 169019,
+        "compressedBytes": 15272,
+        "crc32": "3e099a32",
+        "sha256": "9f9a26b4e2928554ccedf49a53f5927fdb1e169b2e049232d96bb18098e6cf98"
+      },
+      {
+        "path": "base/assets/faceid/LICENSE-LIBCXX.txt",
+        "bytes": 16703,
+        "compressedBytes": 5444,
+        "crc32": "080866a5",
+        "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b"
+      },
+      {
+        "path": "base/assets/faceid/LICENSE-OPENCV.txt",
+        "bytes": 11358,
+        "compressedBytes": 3949,
+        "crc32": "86e2b4b4",
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      {
+        "path": "base/assets/faceid/LICENSE-SFACE.txt",
+        "bytes": 11358,
+        "compressedBytes": 3949,
+        "crc32": "86e2b4b4",
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      {
+        "path": "base/assets/faceid/LICENSE-YUNET.txt",
+        "bytes": 1085,
+        "compressedBytes": 643,
+        "crc32": "1daf9ce6",
+        "sha256": "c83b8120c50ccbd4c4f96edf53141bdd566ebb8f8e9227e415326aa1b1aba958"
+      },
+      {
+        "path": "base/assets/faceid/NOTICE.txt",
+        "bytes": 1475,
+        "compressedBytes": 854,
+        "crc32": "3edf7a4f",
+        "sha256": "6211caf5b0f3b50e13f73501a878729b560db18d57066ff345a6b1803390db7f"
+      },
+      {
+        "path": "base/assets/faceid/face_detection_yunet_2023mar.onnx",
+        "bytes": 232589,
+        "compressedBytes": 202604,
+        "crc32": "bfdf4e40",
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4"
+      },
+      {
+        "path": "base/assets/faceid/face_recognition_sface_2021dec.onnx",
+        "bytes": 38696353,
+        "compressedBytes": 35912476,
+        "crc32": "4ab8b732",
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79"
+      },
+      {
+        "path": "base/assets/faceid/model-manifest.json",
+        "bytes": 880,
+        "compressedBytes": 432,
+        "crc32": "4f99d56e",
+        "sha256": "4644aaf7590afe63d4a785895215ce9ad7de7092cb7cc9b6f177ab902406a39e"
+      },
+      {
+        "path": "base/assets/fonts/LICENSE-Roboto-Apache-2.0.txt",
+        "bytes": 11357,
+        "compressedBytes": 3948,
+        "crc32": "7b5d04bc",
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      {
+        "path": "base/assets/fonts/Montserrat-Light.ttf",
+        "bytes": 444356,
+        "compressedBytes": 186466,
+        "crc32": "98e3d4a7",
+        "sha256": "853de0dd715d6681f7038cf6cd53c1695b614657cbc57c8f542fe08d5b84e006"
+      },
+      {
+        "path": "base/assets/fonts/Montserrat-Medium.ttf",
+        "bytes": 447320,
+        "compressedBytes": 188095,
+        "crc32": "bc34122f",
+        "sha256": "dae47428bb041f9716604e0e07b5b0c8585b3bdd8183362f75c69fe7bb3cfaf4"
+      },
+      {
+        "path": "base/assets/fonts/Montserrat-Regular.ttf",
+        "bytes": 445928,
+        "compressedBytes": 187336,
+        "crc32": "6a38604b",
+        "sha256": "3e8abe50c44c82e2242e97d1ec8c0d385c4890cdc50447bcdb8605c81a38cfb2"
+      },
+      {
+        "path": "base/assets/fonts/Montserrat-SemiBold.ttf",
+        "bytes": 454716,
+        "compressedBytes": 190251,
+        "crc32": "61a4a673",
+        "sha256": "b4e1563393d73fdff491a869441245aef31add2ec03d9c97a6dae4de07c52fd0"
+      },
+      {
+        "path": "base/assets/fonts/OFL-Montserrat.txt",
+        "bytes": 4400,
+        "compressedBytes": 1947,
+        "crc32": "85541068",
+        "sha256": "8b7141c03fa4f8d44e6345d5d4931709290f0f67875e452e95ac1fd3a027802e"
+      },
+      {
+        "path": "base/assets/fonts/Roboto-Bold.ttf",
+        "bytes": 514260,
+        "compressedBytes": 262448,
+        "crc32": "335c5250",
+        "sha256": "61f89f8db49261c2f6106e8dccc35df7b2f7ed909020db40a3fc905e95f99334"
+      },
+      {
+        "path": "base/assets/fonts/Roboto-Light.ttf",
+        "bytes": 518580,
+        "compressedBytes": 262201,
+        "crc32": "9b696099",
+        "sha256": "028f843b1990ba46e2a1c4ef1b82729c4da9a946b0d9d8dbf59e623d1095e454"
+      },
+      {
+        "path": "base/assets/fonts/Roboto-Medium.ttf",
+        "bytes": 511592,
+        "compressedBytes": 259550,
+        "crc32": "5b30aa85",
+        "sha256": "2879a5ecb7fbfa13a7fc3e2cdd7fecbf73aa45e91b541dfdfa2c442eed0aac21"
+      },
+      {
+        "path": "base/assets/fonts/Roboto-Regular.ttf",
+        "bytes": 515100,
+        "compressedBytes": 261151,
+        "crc32": "c38d4ac7",
+        "sha256": "56a45233d29f11b4dfb86d248e921939d115778f87325e7ae8cc108383d6664d"
+      },
+      {
+        "path": "base/assets/jarvis-reference/device-ai-mark.png",
+        "bytes": 12058,
+        "compressedBytes": 12063,
+        "crc32": "3a484a85",
+        "sha256": "5e663f030e25c1026178d1b1191f34657f478f7bf92f2eb2f5292c236b4d7274"
+      },
+      {
+        "path": "base/assets/jarvis-reference/provenance.json",
+        "bytes": 1581,
+        "compressedBytes": 604,
+        "crc32": "72dd1685",
+        "sha256": "3b7f4e5d09fb2f3bd7f45551d5901c98e4329f88f17afb6520ae1a34fd856dd6"
+      },
+      {
+        "path": "base/assets/jarvis-reference/rail-energy.png",
+        "bytes": 75507,
+        "compressedBytes": 75532,
+        "crc32": "2e867b3b",
+        "sha256": "18a610c4b9a24dcfc43577f09f06e99dc9205fc20000af9420969410fc6c0ea6"
+      },
+      {
+        "path": "base/assets/jarvis-reference/tile-cyan-energy.png",
+        "bytes": 5511,
+        "compressedBytes": 5456,
+        "crc32": "06de27c8",
+        "sha256": "c1cb975f73e899457c5897faf5e247a06d1007ed6071897c55beedb77f9b40b4"
+      },
+      {
+        "path": "base/assets/jarvis-reference/tile-violet-energy.png",
+        "bytes": 5912,
+        "compressedBytes": 5865,
+        "crc32": "82b8b415",
+        "sha256": "7bd893567fa30e410d58fa90205c7504f4f73f7e126fdfdec4d50d3a78d6aca6"
+      },
+      {
+        "path": "base/dex/classes.dex",
+        "bytes": 11857660,
+        "compressedBytes": 4380240,
+        "crc32": "d05642d1",
+        "sha256": "179f8cd259b9e1521621fc06c74a7e7febe1f3f16d520c2108aa9dc2d8609198"
+      },
+      {
+        "path": "base/dex/classes2.dex",
+        "bytes": 3114908,
+        "compressedBytes": 1148789,
+        "crc32": "978c71ea",
+        "sha256": "4600364fa90e2033f2ee721720de43744bc5a40b35190fdbd9b659b673be86cf"
+      },
+      {
+        "path": "base/root/DebugProbesKt.bin",
+        "bytes": 1728,
+        "compressedBytes": 774,
+        "crc32": "ca0d86c5",
+        "sha256": "065bd792b8527764f33147188302af5bf9e2a8da40fde0830dc111ad26dae40e"
+      },
+      {
+        "path": "base/root/META-INF/androidx/annotation/annotation/LICENSE.txt",
+        "bytes": 10175,
+        "compressedBytes": 3563,
+        "crc32": "f9a816a8",
+        "sha256": "809fa1ed21450f59827d1e9aec720bbc4b687434fa22283c6cb5dd82a47ab9c0"
+      },
+      {
+        "path": "base/root/META-INF/kotlinx_coroutines_android.version",
+        "bytes": 6,
+        "compressedBytes": 8,
+        "crc32": "40f5cd2d",
+        "sha256": "f1deeb62e209be1a1fa35478861037ecdc5d1ad1d6f8fd692680f7f5cb1a4991"
+      },
+      {
+        "path": "base/root/META-INF/kotlinx_coroutines_core.version",
+        "bytes": 6,
+        "compressedBytes": 8,
+        "crc32": "40f5cd2d",
+        "sha256": "f1deeb62e209be1a1fa35478861037ecdc5d1ad1d6f8fd692680f7f5cb1a4991"
+      },
+      {
+        "path": "base/root/META-INF/services/kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoader",
+        "bytes": 90,
+        "compressedBytes": 72,
+        "crc32": "9463aeee",
+        "sha256": "4d68a8097263fcde72d0a9aec5c1343ec3b20202b4678a8a548317fdba0afc9b"
+      },
+      {
+        "path": "base/root/META-INF/services/kotlin.reflect.jvm.internal.impl.km.internal.extensions.MetadataExtensions",
+        "bytes": 70,
+        "compressedBytes": 60,
+        "crc32": "bb8c15c1",
+        "sha256": "24eabd1eec4317a143010d4e7bf0443279deb1d9070abc3edd51bfa3fa102b51"
+      },
+      {
+        "path": "base/root/META-INF/services/kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition",
+        "bytes": 235,
+        "compressedBytes": 99,
+        "crc32": "30ff9918",
+        "sha256": "6730196e2039ec378b9a553d59f6b0346c99b9d48b8fce1d16761fa6da64c5d0"
+      },
+      {
+        "path": "base/root/META-INF/services/kotlinx.coroutines.CoroutineExceptionHandler",
+        "bytes": 54,
+        "compressedBytes": 50,
+        "crc32": "8f594b50",
+        "sha256": "3129b8edf6db07de6f8ff47695e2177c8bba4eed2962d3085c719e5acbb58a33"
+      },
+      {
+        "path": "base/root/META-INF/services/kotlinx.coroutines.internal.MainDispatcherFactory",
+        "bytes": 52,
+        "compressedBytes": 49,
+        "crc32": "4b95597f",
+        "sha256": "a1ea77ea8f93f419256b6e66f29713f950d8d6e90442b608d880a48003b5eb72"
+      },
+      {
+        "path": "base/root/continuum/benchmark-v1.json",
+        "bytes": 12533,
+        "compressedBytes": 3934,
+        "crc32": "7914b9cc",
+        "sha256": "d34afafdf98ab5cf58753d6533db9cbc6ff7027883a4bc2a60a9107576751fee"
+      },
+      {
+        "path": "base/root/kotlin-tooling-metadata.json",
+        "bytes": 626,
+        "compressedBytes": 283,
+        "crc32": "23cacce0",
+        "sha256": "9ba94abecb5944779d488330770abbeba11a0c6546995dfe52e48e0aaa846083"
+      },
+      {
+        "path": "base/root/kotlin/annotation/annotation.kotlin_builtins",
+        "bytes": 1022,
+        "compressedBytes": 542,
+        "crc32": "9ba69669",
+        "sha256": "ae9ec2e633ab0777b8ec1e7c15218382ceac8c5ead2cdedde7cc9ea31457ce85"
+      },
+      {
+        "path": "base/root/kotlin/collections/collections.kotlin_builtins",
+        "bytes": 8625,
+        "compressedBytes": 1890,
+        "crc32": "db78dd29",
+        "sha256": "ce49200a7ebbdc82ec217d2f717e90ce752534e02ec8b737518a744850bc8e3e"
+      },
+      {
+        "path": "base/root/kotlin/concurrent/atomics/atomics.kotlin_builtins",
+        "bytes": 2882,
+        "compressedBytes": 1111,
+        "crc32": "3ca2aa63",
+        "sha256": "dd63195c7714bd3755d938dce9600132ff508a2838674fdf19108275c8dc9077"
+      },
+      {
+        "path": "base/root/kotlin/coroutines/coroutines.kotlin_builtins",
+        "bytes": 139,
+        "compressedBytes": 118,
+        "crc32": "13fe752e",
+        "sha256": "f947b45a78233ddbe229290e0c240c946910649cf6ce1c5fd003f834f6f90369"
+      },
+      {
+        "path": "base/root/kotlin/internal/internal.kotlin_builtins",
+        "bytes": 596,
+        "compressedBytes": 359,
+        "crc32": "66c650ba",
+        "sha256": "6e29094940ebfc967e34d9ccf24521a52ffef3c4b6b47566b19960a04131557e"
+      },
+      {
+        "path": "base/root/kotlin/kotlin.kotlin_builtins",
+        "bytes": 30920,
+        "compressedBytes": 5503,
+        "crc32": "df618e5c",
+        "sha256": "8f37cbb253a76650c4e313f98f70d081d2ae66d05174abf6a5824cbf7926616b"
+      },
+      {
+        "path": "base/root/kotlin/ranges/ranges.kotlin_builtins",
+        "bytes": 4353,
+        "compressedBytes": 1380,
+        "crc32": "217cddfb",
+        "sha256": "629c166aa811101d3954f76c58b7ce3648647a1b3529d2351a799fcb43347a34"
+      },
+      {
+        "path": "base/root/kotlin/reflect/reflect.kotlin_builtins",
+        "bytes": 4859,
+        "compressedBytes": 1447,
+        "crc32": "1792992d",
+        "sha256": "eeb5c2f4756a5d80414002948483b375378cb0bd5c2fc54a1d1d2e2ad3c038f6"
+      },
+      {
+        "path": "base/root/okhttp3/internal/publicsuffix/NOTICE",
+        "bytes": 218,
+        "compressedBytes": 149,
+        "crc32": "df32c7fc",
+        "sha256": "8a9c58fbded5ea3474315e4a9824ca8b1486098a1a03e897e0b19419d5e1876a"
+      },
+      {
+        "path": "base/root/okhttp3/internal/publicsuffix/publicsuffixes.gz",
+        "bytes": 41394,
+        "compressedBytes": 41409,
+        "crc32": "f59fa4f6",
+        "sha256": "9af43e9995ec749e7a30eec4e5a87770d7e2027847084a07cca82060eff0c791"
+      },
+      {
+        "path": "base/res/color/continuum_dialog_button_text.xml",
+        "bytes": 540,
+        "compressedBytes": 241,
+        "crc32": "694239ee",
+        "sha256": "4443a3d42db4ca950fb4c634eb47ea12f4decfbb8e3d9e53c6e954e5931f1fcc"
+      },
+      {
+        "path": "base/res/drawable/continuum_dialog_surface.xml",
+        "bytes": 1036,
+        "compressedBytes": 448,
+        "crc32": "e24860cf",
+        "sha256": "6e2afad5c31286e4937ea131d223648e8cee8e695b3e7482b0a6c30bd2c5690c"
+      },
+      {
+        "path": "base/res/drawable/continuum_widget_chip.xml",
+        "bytes": 445,
+        "compressedBytes": 229,
+        "crc32": "5245bbc1",
+        "sha256": "0b335d31499a97801cba20862eadc745cb7cc42decfd93b484d8356c535180b4"
+      },
+      {
+        "path": "base/res/drawable/continuum_widget_panel.xml",
+        "bytes": 700,
+        "compressedBytes": 327,
+        "crc32": "35cbef53",
+        "sha256": "bb75da563cb4a3d39987f08fad6d0ac87541449b235c68456cd0a2ad17d780c9"
+      },
+      {
+        "path": "base/res/drawable/device_ai_holo_logo.xml",
+        "bytes": 2428,
+        "compressedBytes": 714,
+        "crc32": "f2ba5ec7",
+        "sha256": "ff46715e5117afadfa9abfdefba7ee8298734ed3fbfec87b6970b9971197a85a"
+      },
+      {
+        "path": "base/res/drawable/device_ai_model_stack.xml",
+        "bytes": 4216,
+        "compressedBytes": 1052,
+        "crc32": "f004a4bf",
+        "sha256": "44d17cde31b7aa58289707a94f8a76bbea403a0fae25353a34bffaa9d59887c9"
+      },
+      {
+        "path": "base/res/drawable/device_ai_robot.xml",
+        "bytes": 6418,
+        "compressedBytes": 1635,
+        "crc32": "d1ce3a96",
+        "sha256": "8a38b232639850660b6a995b480c4e05bfed66575c5ee4f642e157f3faf3f1d3"
+      },
+      {
+        "path": "base/res/drawable/ic_device_ai.xml",
+        "bytes": 2452,
+        "compressedBytes": 707,
+        "crc32": "1e800f4d",
+        "sha256": "9c6f4ee2fe1c36f84fd915ecfc59bf7aa7a3d2285af15b83d5c116be2c3377a4"
+      },
+      {
+        "path": "base/res/layout/continuum_training_widget.xml",
+        "bytes": 12164,
+        "compressedBytes": 2071,
+        "crc32": "4d7a663c",
+        "sha256": "7a55e61e92d86652f968eaec74f1b5a0753f6777cb7ba8cba81a787f232371ce"
+      },
+      {
+        "path": "base/res/xml/continuum_screen_observation.xml",
+        "bytes": 829,
+        "compressedBytes": 361,
+        "crc32": "572f2c7e",
+        "sha256": "0428d932dd48054c0726ab5afc0c82ff091ce01a23630ca545472aa84876b407"
+      },
+      {
+        "path": "base/res/xml/continuum_training_widget_info.xml",
+        "bytes": 1008,
+        "compressedBytes": 424,
+        "crc32": "475d52d5",
+        "sha256": "cfaaaad2c305f573910e5e60d03356109c5bca8b0c54a8e84c5405c0fde85381"
+      },
+      {
+        "path": "base/root/META-INF/com/android/build/gradle/app-metadata.properties",
+        "bytes": 57,
+        "compressedBytes": 53,
+        "crc32": "4c47c10d",
+        "sha256": "04662d0fa65117ed87a4a934e99b41f0f28f26d73b57ae97610d0b69da42c3bc"
+      },
+      {
+        "path": "base/root/META-INF/version-control-info.textproto",
+        "bytes": 42,
+        "compressedBytes": 44,
+        "crc32": "d7d0a339",
+        "sha256": "577a29846b9d2ab88f013ed5ce0cc75355d4cfbef540ef637c49c95d233c236f"
+      },
+      {
+        "path": "base/lib/arm64-v8a/libc++_shared.so",
+        "bytes": 1292904,
+        "compressedBytes": 406563,
+        "crc32": "51e3dcdc",
+        "sha256": "4397241b4bd20a8e579bfb41d21107857e12985f6a01ca0c2a5f83380d1270b4"
+      },
+      {
+        "path": "base/lib/arm64-v8a/libfilament-jni.so",
+        "bytes": 2266408,
+        "compressedBytes": 883529,
+        "crc32": "81fe410b",
+        "sha256": "d75914906f58575b70012edc4848fad5981d57de4a776d6486cdfabbf1c90da4"
+      },
+      {
+        "path": "base/lib/arm64-v8a/libgltfio-jni.so",
+        "bytes": 4679472,
+        "compressedBytes": 3352164,
+        "crc32": "dd57ed0a",
+        "sha256": "d0646ee3858dc865bc861529ce817fe4a667806c36a5c1fab67d7e2f1fcd9a2b"
+      },
+      {
+        "path": "base/lib/arm64-v8a/liblitertlm_jni.so",
+        "bytes": 22155680,
+        "compressedBytes": 9707228,
+        "crc32": "1b1d2ae2",
+        "sha256": "4a94a3f955ad7c58cbcdfc5cb4ff566187bb9e8c5bc2c4056b4e226646c7e8fd"
+      },
+      {
+        "path": "base/lib/arm64-v8a/libopencv_java4.so",
+        "bytes": 23972544,
+        "compressedBytes": 9512122,
+        "crc32": "6338d842",
+        "sha256": "d331aac20d0a76981ea652f7df7978e3b82ccc46d5926dc7c394d33c813694ab"
+      },
+      {
+        "path": "base/manifest/AndroidManifest.xml",
+        "bytes": 10370,
+        "compressedBytes": 2562,
+        "crc32": "ecef2374",
+        "sha256": "229953daeaf8121fed4ed50c25948e3697cc7b73303eaeeb65a8015435dac5b1"
+      },
+      {
+        "path": "base/assets.pb",
+        "bytes": 130,
+        "compressedBytes": 97,
+        "crc32": "0d024f09",
+        "sha256": "9f366ee11c6d6568938c881c75f692ecc60dbb6b75c954ee1def41a50bee6329"
+      },
+      {
+        "path": "base/native.pb",
+        "bytes": 23,
+        "compressedBytes": 25,
+        "crc32": "be2fa933",
+        "sha256": "b41c06532b4a517243be1d3b12076054b983d643331c3bf5f44109dc821739a9"
+      },
+      {
+        "path": "base/resources.pb",
+        "bytes": 4733,
+        "compressedBytes": 1967,
+        "crc32": "bd74910b",
+        "sha256": "37c910f6db163f9b9c6db11c17f0eb7e9b4253d9a837aa40e1b0728dc73de130"
+      }
+    ],
+    "centralDirectoryOffset": 71392503,
+    "apkSigningBlockPresent": false,
+    "manifest": {
+      "package": "at.heinz.deviceai.continuumlocal",
+      "versionCode": "48",
+      "versionName": "0.3.47",
+      "debuggableAttribute": null,
+      "debuggable": false,
+      "minSdk": "26",
+      "targetSdk": "36"
+    },
+    "zipalign": "NOT_APPLICABLE_TO_APP_BUNDLE",
+    "unsignedVerified": true,
+    "manifestMatchesExpected": true,
+    "nativeArm64Only": true,
+    "allChecksPassed": true
+  },
+  "apkAabAssetsIdentical": true,
+  "apkAabNativeLibrariesIdentical": true,
+  "limits": [
+    "Unsigned transport artifacts; no owner signature or installability claimed.",
+    "No build, signing, device installation or runtime tests performed in this audit.",
+    "Key scan checks entry names and PEM private-key markers; not a proof against every possible encoded secret.",
+    "Model audit checks complete asset inventory and exact public-model pins; no private model files found."
+  ]
+}

@@ -1,0 +1,560 @@
+{
+  "currentCommit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "currentTree": "5206abd91b3740838661aa0e27e6702b3891591b",
+  "scopeFiles": 15,
+  "readOnly": true,
+  "testsRun": false,
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumAvatarLabActivity.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "102be10cf702145622db497583450de92116d1a0",
+          "sha256": "df5cdd40b38f70bb9cf60daa13e897efa36b24c6da1a68c6bd7be6062d1a1631",
+          "bytes": 16852,
+          "sources": [
+            {
+              "branch": "experiment/continuum-avatar-lab-offline-20261101",
+              "sha": "6f082d062e50e91cfe5bc586f2977d5b75874976",
+              "pr": 338
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumPcmLevel.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "76e7540220f1a14aca373200cf6ac3d757a82289",
+          "sha256": "73b9883d67c2a63273d154329738478a7c3b32d7c8e32cd4716bd89332aaf808",
+          "bytes": 907,
+          "sources": [
+            {
+              "branch": "astra/continuum-holographic-ui-20261019",
+              "sha": "f5b88ad052e1f237053319822fbcee248d685045",
+              "pr": 35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkspaceNavSpec.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "7113feafbd7634fad2cb33a7b6baf9c410eb4942",
+          "sha256": "c3484b6a2e1c9f7155b3e54461bcaafa703a9e4d9358fbdbfb488595b01ca259",
+          "bytes": 3583,
+          "sources": [
+            {
+              "branch": "opus/continuum-app-navigation-wip-archive-20261022",
+              "sha": "68a819c0b27769b49b70a3ec4ad1a23c2742b8c9",
+              "pr": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/jarvis/ContinuumJarvisPresenceEngine.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "4a8a59deb89ceead86e1c88a2f019ee00fc83f09",
+          "sha256": "051d2132311eb5cd2be4b765f1c5b8e4285da8b67b8e4e2a321df0ea2379f519",
+          "bytes": 14533,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            }
+          ]
+        },
+        {
+          "blob": "797f699f239bf7b12dd9799ac40dedda25b11b75",
+          "sha256": "13ba6aa1253b09f05f80983e83224cba5775c1e6ff08a2e9f52db12f3a1417a3",
+          "bytes": 12563,
+          "sources": [
+            {
+              "branch": "research/jpi1-presence-shadow-20261030",
+              "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+              "pr": 246
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/jarvis/JarvisInitiativePolicy.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "d2f77aa493c95ed35ac5aa68bbfcf42dd7b8afdc",
+          "sha256": "19e20eed61ce2a914053695fa43d5ec86cda460f944f610141b8cdcf73e511f0",
+          "bytes": 2267,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/jarvis/JarvisSessionHandoff.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "885826ad8579f1be7a10a0d1f873c74e0d49ce76",
+          "sha256": "e2b9ec7c1b5d189b5a537d8628c8328ee77a8ebd5fe13f3fecf7986e3cfb7502",
+          "bytes": 1513,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            },
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            },
+            {
+              "branch": "research/jpi1-presence-initiative-shadow-20261030",
+              "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+              "pr": 247
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/jarvis/JarvisVoiceConversationPolicy.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "e974aabc4e3d42249d23a1fa1085235614fc144c",
+          "sha256": "7df38dea45cf8e3eeeccc706e1b6f15383698663f81a7bfe9e31b1b54c99ab3f",
+          "bytes": 4683,
+          "sources": [
+            {
+              "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+              "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+              "pr": 258
+            },
+            {
+              "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+              "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+              "pr": 259
+            },
+            {
+              "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+              "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+              "pr": 256
+            },
+            {
+              "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+              "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-coding-agent-loop-kxrxy2",
+              "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+              "pr": null
+            },
+            {
+              "branch": "claude/m8-gvisor-executor-kxrxy2",
+              "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+              "pr": 264
+            },
+            {
+              "branch": "research/exp20-p2-context-contract-20261030",
+              "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+              "pr": 255
+            },
+            {
+              "branch": "research/exp20-p2-opus-project-brief-20261030",
+              "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+              "pr": 254
+            },
+            {
+              "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+              "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+              "pr": 253
+            }
+          ]
+        },
+        {
+          "blob": "1f7df97552d0393155f02fc10bc7061b86434a2c",
+          "sha256": "ccd838d4481403ba079dcbe6ce005283a61d61532c3b9e7c5f79175cb326fad6",
+          "bytes": 4486,
+          "sources": [
+            {
+              "branch": "opus/jarvis-voice1-fix-20261030",
+              "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+              "pr": 252
+            }
+          ]
+        },
+        {
+          "blob": "1ae940325eec16e5137e586269a4845bb26cc04c",
+          "sha256": "d26b099772b4801114bc4d1f39d57361de45fdd730f2f8c955e6d16a0e830546",
+          "bytes": 3268,
+          "sources": [
+            {
+              "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+              "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+              "pr": 251
+            },
+            {
+              "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+              "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+              "pr": 250
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/video3/JarvisGreetingCard.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "b6b05a71181a2df29140b5df4b4b563d4afa6072",
+          "sha256": "e9c3f78ec5931bc2543f647725e6d8fc05d594e9aaef3b269bf7857e5584527f",
+          "bytes": 4832,
+          "sources": [
+            {
+              "branch": "jarvis-luecke/video3-alarm-warp-ganzkoerper",
+              "sha": "85a0562d02542ff3cea020690d4d7f38bece2783",
+              "pr": 487
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/video3/JarvisUserCard.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "381e2e8dd75580dc57f90e294fe07d0fa149b2f9",
+          "sha256": "0c24a3f2c8bed45ac5fa6866a9642fcf53cb7e5c51034daed30b1ed028687a66",
+          "bytes": 6734,
+          "sources": [
+            {
+              "branch": "jarvis-luecke/video3-alarm-warp-ganzkoerper",
+              "sha": "85a0562d02542ff3cea020690d4d7f38bece2783",
+              "pr": 487
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3AlarmScene.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "82ec6c440a7b7e08fa4ee4a2c9f3cc4edf2e8423",
+          "sha256": "69cc690f73dd01c62796644def9bf11700817b757333b0bc7ec8a0d1875548d2",
+          "bytes": 11401,
+          "sources": [
+            {
+              "branch": "jarvis-luecke/video3-alarm-warp-ganzkoerper",
+              "sha": "85a0562d02542ff3cea020690d4d7f38bece2783",
+              "pr": 487
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3CalmNotice.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "4a4773f9e252672ee7338e32ef28cab2147233e7",
+          "sha256": "7760021dbfac13e3ce8f1a73943ebf6d02adf69380b4c58d99d0e4dea834331e",
+          "bytes": 3253,
+          "sources": [
+            {
+              "branch": "jarvis-luecke/video3-alarm-warp-ganzkoerper",
+              "sha": "85a0562d02542ff3cea020690d4d7f38bece2783",
+              "pr": 487
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3Contracts.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "08013088ca88143a06cb26fd5a29967c1b2ba6c2",
+          "sha256": "e0d8078ad6a4eccdb19db12b3f0ca9a60052f0fb6f2e56183d0ee0cc7256b0d2",
+          "bytes": 6933,
+          "sources": [
+            {
+              "branch": "jarvis-luecke/video3-alarm-warp-ganzkoerper",
+              "sha": "85a0562d02542ff3cea020690d4d7f38bece2783",
+              "pr": 487
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3Curves.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "0331e4bd444769ff4da62ecf152977dbaf5a6aac",
+          "sha256": "36c7f62780f3819e3c310b8f77344553bf9b05730f04c47311b0bd5f16c3c113",
+          "bytes": 2624,
+          "sources": [
+            {
+              "branch": "jarvis-luecke/video3-alarm-warp-ganzkoerper",
+              "sha": "85a0562d02542ff3cea020690d4d7f38bece2783",
+              "pr": 487
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3Pills.kt",
+      "presentAtFreeze": false,
+      "versions": [
+        {
+          "blob": "90fa81ed6df661a8b8204aff87b8c724102f9166",
+          "sha256": "6521886c25ddd4b81dbc77d31ff3c9b450d5acbbaf5b1f9042731116dce50127",
+          "bytes": 3820,
+          "sources": [
+            {
+              "branch": "jarvis-luecke/video3-alarm-warp-ganzkoerper",
+              "sha": "85a0562d02542ff3cea020690d4d7f38bece2783",
+              "pr": 487
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3WarpScene.kt",
+      "presentAtFreeze": true,
+      "versions": [
+        {
+          "blob": "2bd5ab15507b524c3527a5f6e2fed3b2cd99c1da",
+          "sha256": "cc92d7106426582295d86ae66f00e3501e94017dd1579904b092c273ee8df0fa",
+          "bytes": 8321,
+          "sources": [
+            {
+              "branch": "jarvis-luecke/video3-alarm-warp-ganzkoerper",
+              "sha": "85a0562d02542ff3cea020690d4d7f38bece2783",
+              "pr": 487
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

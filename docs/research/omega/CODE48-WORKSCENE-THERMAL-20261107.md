@@ -81,3 +81,30 @@ videos before redesign; retain original palette, avatar and orb.
 The two reproduced routing/layout failures remain valid but their repair
 alone cannot satisfy this visual acceptance. New production changes: NONE.
 Current APK remains Code47. No physical animation/thermal acceptance.
+
+## Original Code47 evidence and continuation
+
+This is the historical investigation checkpoint, not the final Code48 status.
+The original served Code47 source is
+`7732b8668f912419d7aac7a1609a97097d727cbf`, APK SHA256
+`35f93b41ed835bf2ec16890b62d4e640d3b1ea28c2e8a098065bd08f64dc2481`,
+101,925,655 bytes. The original readback was at 2026-11-07 03:27 UTC;
+it is not a fresh download at this documentation update. Source-bound
+publisher markers and binary metadata are preserved in
+[Code47 evidence](../../evidence/code47-apk-20261107/README.md),
+[publisher receipt](../../evidence/code47-apk-20261107/publisher-pass.json) and
+[binary verification](../../evidence/code47-apk-20261107/served-apk/verification.json).
+That selected publisher receipt does not expose aggregate successful test
+counts or complete tool-version output; do not infer them from an earlier
+failed run or from the later local environment.
+
+The Code48 PDF routing regression is exercised through `AgentActivity` input,
+`CockpitAnimationPresenter`, `JarvisWorkWindow` and the existing hologram host.
+The regression methods are
+`typedPdfRequestReturnsFromChatIntoAnimatedDocumentWork` and
+`documentWorkWaitsForFreshShellGeometry`; raw compiler/JUnit commands and
+hashes are in `docs/evidence/code48-workscene-thermal-20261107/` and the later
+`docs/evidence/code48-document-scene-repair-20261107/`. Subsequent fixes,
+commands, current gate states and entry points are in
+[the combined cinema continuation](CODE48-FULLSTAGE-CINEMA-20261107.md).
+These focused native-host results do not prove phone temperature or GPU FPS.

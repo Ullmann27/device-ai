@@ -1,0 +1,347 @@
+{
+  "sourceSha": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "tree": "5206abd91b3740838661aa0e27e6702b3891591b",
+  "scope": "Nine remaining Android origin paths; static read-only comparison, no execution of original code or tests.",
+  "pathCount": 9,
+  "distinctPathBlobVariants": 11,
+  "rows": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/RemoteMentorProtocol.kt",
+      "sourceVariants": [
+        {
+          "blob": "f92bddb48bb312239021e165bc2a2024da62d2d6",
+          "bytes": 1587,
+          "snapshot": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/originals/RemoteMentorProtocol/f92bddb48bb312239021e165bc2a2024da62d2d6.kt",
+          "sources": [
+            {
+              "branch": "feat/continuum-inworld-router-20261104",
+              "sha": "370871b3aa48fdf94ecc2eaa5b11e9ac1cc91959",
+              "pr": null
+            }
+          ]
+        }
+      ],
+      "preferredSourceSha": "370871b3aa48fdf94ecc2eaa5b11e9ac1cc91959",
+      "preferredBlob": "f92bddb48bb312239021e165bc2a2024da62d2d6",
+      "category": "OWNER_SHELVED_PROTOTYPE",
+      "function": "Textvertrag für GROQ/OPENROUTER/INWORLD: begrenzte Frage, explizites consent, isolierte UNVERIFIED_EXTERNAL-Antwort ohne Memory-Schreiben/Toolaufrufe. Die Klasse ruft selbst keinen Anbieter auf.",
+      "originalCallerAndBoundary": "Historischer echter Caller: AgentBackendClient.externalMentor verwendet request/answer; inworldMentor ergänzt den dritten Provider. INWORLD-ROUTER-HANDOFF verknüpft Draft-PR504 und kennzeichnet den gesamten Ansatz nach Owner-Klärung ausdrücklich als zurückgestellt, ohne Auswahl zum Merge/Deploy/Aktivieren.",
+      "currentEquivalentAndCaller": "3ff: AgentBackendClient.groqMentor/openRouterMentor und die Activity-Aufrufe bestehen bereits. Der Vertrag wird dort inline geprüft; INWORLD und diese Hilfsklasse fehlen. Die Prüfungen sind nicht byte- oder verhaltensgleich: der alte Helfer verlangt u. a. ok==true, einen echten String und maximal 4200 Zeichen, während der aktuelle Parser die Nachricht auf 4200 Zeichen kürzt; auch die Frage-Steuerzeichenprüfung ist dort nicht identisch.",
+      "missingConnection": "Provider-Prototyp bewusst zurückgestellt lassen. Einzelne Parser-Härtungen sind ein getrennt prüfbarer späterer Kandidat; daraus folgt keine Provider-Aktivierung. Ein Inworld-Anschluss wäre eine erneute Produktentscheidung plus Host-/Client-/UI-Anschluss, keine Wiederherstellung eines aktiven Lernpfads.",
+      "evidence": [
+        "remote-mentor-caller-excerpt.txt",
+        "prior-handoffs/370871b3aa48fdf94ecc2eaa5b11e9ac1cc91959/INWORLD-ROUTER-HANDOFF.md",
+        "prior-handoffs/370871b3aa48fdf94ecc2eaa5b11e9ac1cc91959/INWORLD-FIT-ASSESSMENT-20261104.md",
+        "current-evidence.json"
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefTaskGraph.kt",
+      "sourceVariants": [
+        {
+          "blob": "719aaf495c06f888a2914219f8462dba1a6148c9",
+          "bytes": 6618,
+          "snapshot": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/originals/ChiefTaskGraph/719aaf495c06f888a2914219f8462dba1a6148c9.kt",
+          "sources": [
+            {
+              "branch": "feature/continuum-alpha-squad-ccc1-entry-20261103",
+              "sha": "eed77e56b526d199141b658a4bdd38acd2d896e0",
+              "pr": 387
+            },
+            {
+              "branch": "feature/continuum-chief-task-dag-20261103",
+              "sha": "8f64178818399c0d5412bbe20bab6b178b98c037",
+              "pr": 385
+            }
+          ]
+        },
+        {
+          "blob": "68423b89893e059cf37300561e878b722f50fb72",
+          "bytes": 5784,
+          "snapshot": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/originals/ChiefTaskGraph/68423b89893e059cf37300561e878b722f50fb72.kt",
+          "sources": [
+            {
+              "branch": "feature/continuum-chief-proof-gated-strategy-ledger-20261103",
+              "sha": "ee9b2dfde74499a499f86ba3e07c19f48b89c446",
+              "pr": 386
+            }
+          ]
+        }
+      ],
+      "preferredSourceSha": "eed77e56b526d199141b658a4bdd38acd2d896e0",
+      "preferredBlob": "719aaf495c06f888a2914219f8462dba1a6148c9",
+      "category": "UNCONNECTED_PLANNING_PRIMITIVE",
+      "function": "Deterministischer DAG mit höchstens 64 Aufgaben, begrenzten sicheren Dateipfaden, Konflikt-Serialisierung und eigenständigem Verifier für Codeänderungen. ready/releaseReady arbeiten ausschließlich mit extern vertrauenswürdig akzeptierten Resultat-IDs; die Klasse führt nichts aus.",
+      "originalCallerAndBoundary": "Vorreview #385/#386: Planungsbaustein, kein produktiver Ausführer. #387 korrigiert gegenüber #386 die Konfliktkanten anhand bereits transitiv erklärter Abhängigkeiten. Der korrigierte Blob liegt auch am inventarisierten #385-Head. Der zusätzliche #387-CLI-Caller führt den vorhandenen Node-CCC1-Worker aus und ruft diesen Kotlin-DAG nicht auf.",
+      "currentEquivalentAndCaller": "3ff enthält ChiefWorkerPool/Delegation-/Jobbausteine und tatsächliche BoundedAgentOrchestrator-Activity-Pfade; die sichtbare Pool-Diagnose ist read-only. Keine Referenz auf ChiefTaskGraph in aktueller Android-Produktion. Vorhandene Workerklassen belegen keinen aktiven DAG-Codeänderungsplaner.",
+      "missingConnection": "DAG an genau einen tatsächlichen Scheduler/Pool anschließen, Dateileases und STOP/Lifecycle erhalten, acceptedResults ausschließlich aus dem unabhängigen Verifier speisen. Kein DONE- oder releaseReady-Wert ersetzt Owner-Freigabe/Release-Gates. Bei späterer Auswahl korrigierte #385/#387-Variante verwenden.",
+      "evidence": [
+        "pr387-vs386.diff",
+        "followup-comparisons.json",
+        "alpha-squad-ccc1.mjs",
+        "current-evidence.json"
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefProofGatedStrategyLedger.kt",
+      "sourceVariants": [
+        {
+          "blob": "b80cc59eea8db88cdc6e6347b926f0a433751e0e",
+          "bytes": 6660,
+          "snapshot": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/originals/ChiefProofGatedStrategyLedger/b80cc59eea8db88cdc6e6347b926f0a433751e0e.kt",
+          "sources": [
+            {
+              "branch": "feature/continuum-alpha-squad-ccc1-entry-20261103",
+              "sha": "eed77e56b526d199141b658a4bdd38acd2d896e0",
+              "pr": 387
+            },
+            {
+              "branch": "feature/continuum-chief-proof-gated-strategy-ledger-20261103",
+              "sha": "ee9b2dfde74499a499f86ba3e07c19f48b89c446",
+              "pr": 386
+            }
+          ]
+        }
+      ],
+      "preferredSourceSha": "eed77e56b526d199141b658a4bdd38acd2d896e0",
+      "preferredBlob": "b80cc59eea8db88cdc6e6347b926f0a433751e0e",
+      "category": "UNCONNECTED_PROOF_LEDGER",
+      "function": "Begrenztes RAM-Ledger (Default 512, maximal 4096): bindet bestätigte RED/GREEN-Strategieergebnisse an exakte Source-, Fehler- und Strategiehashes. RED sperrt nur den identischen Wiederholungsversuch; GREEN liefert Kandidaten, keine automatische Routine/Promotion.",
+      "originalCallerAndBoundary": "Die Klasse verlangt independentVerifier; der Default liefert null und verhindert Aufnahme. Sie ruft weder ein Modell noch Owner-Gedächtnis auf. #386 und #387 sind bytegleich. Der #387-Node-Einstieg verwendet dieses Kotlin-Ledger nicht.",
+      "currentEquivalentAndCaller": "3ff hat eine tatsächlich aufgerufene technische Recall-/Belegkette: coding-orchestrator ruft ccc1-technical-recall.recallTechnicalExperiences/recordTechnicalExperience; ccc1-independent-verifier liefert die unabhängige Prüfstrecke. Das ist verwandte aktive Funktionalität, kein identischer Android-Retry-Veto-Vertrag. Keine aktuelle Android-Referenz auf das Ledger.",
+      "missingConnection": "Bei späterem Bedarf bestehenden Verifier/Technical-Recall wiederverwenden und den exakten Retry-Veto in die reale Aufgabenauswahl integrieren. Für dauerhafte Wirkung fehlen Persistenz/Lifecycle-/Integritätsanbindung; ein syntaktisch richtiger Hash oder ungeprüfter Callback reicht nicht. Kein Beleg für fehlendes bzw. repariertes Modelltraining.",
+      "evidence": [
+        "original-sources.json",
+        "alpha-squad-ccc1.mjs",
+        "current-evidence.json"
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentSourceStreamImport.kt",
+      "sourceVariants": [
+        {
+          "blob": "629a36df393dd246663c6b7c1fb06c537e22b578",
+          "bytes": 4851,
+          "snapshot": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/originals/DevelopmentSourceStreamImport/629a36df393dd246663c6b7c1fb06c537e22b578.kt",
+          "sources": [
+            {
+              "branch": "fix/continuum-m5-chunk-index-provenance-20261101",
+              "sha": "e193411d37339b4c91a4e24ef341b03794a0aa7f",
+              "pr": 326
+            },
+            {
+              "branch": "research/continuum-m5-persistent-chunk-index-20261101",
+              "sha": "bc75bae6562fc05b5ff0abcf0f3154ef099f21d1",
+              "pr": 318
+            },
+            {
+              "branch": "research/continuum-m5-source-stream-20261101",
+              "sha": "08a7f13ce9dbb2180e244789917d64e7b28ce49f",
+              "pr": 316
+            }
+          ]
+        }
+      ],
+      "preferredSourceSha": "e193411d37339b4c91a4e24ef341b03794a0aa7f",
+      "preferredBlob": "629a36df393dd246663c6b7c1fb06c537e22b578",
+      "category": "UNCONNECTED_LARGE_SOURCE_FOUNDATION",
+      "function": "Owner-ausgewählten UTF-8-Quelltext diskbasiert importieren: höchstens 100 MiB je Quelle, 64-KiB-Puffer, SHA, Größen-/Pfad-/Dateityp-/UTF-8-Prüfung, Cancel/Progress, privater Temp-/Commitpfad. Kein SourceSnapshot, Task, Modellaufruf oder Export.",
+      "originalCallerAndBoundary": "Verwendet bestehende DevelopmentPathPolicy; der Chunkindex konsumiert den importierten Source-Vertrag. Die Datei ist in #316, #318 und #326 bytegleich. Kein Activity-/Retrieval-Anschluss durch diese Folgeversionen; das steht auch im vorherigen Source-Review.",
+      "currentEquivalentAndCaller": "3ff: AgentActivity.loadDevelopmentSources importiert tatsächlich per SAF im lokalen Worker, begrenzt aber auf 4000 Bytes je Quelle; DevelopmentUiController.addSource erzeugt den kleinen SourceSnapshot. DevelopmentLimits begrenzen Quellen-/Promptbudget. Dieser aktive Kleinimport ersetzt keinen diskbasierten 100-MiB-Import.",
+      "missingConnection": "Echter späterer Erweiterungskandidat: SAF-/UI-Auswahl, privater Speicher mit Gesamtquote/Retention, Worker-/STOP-/Lifecycle-Anschluss und indexierte Auswahl kleiner Ausschnitte für den vorhandenen SourceSnapshot. Prompt-/Modellgrenzen nicht durch große importierbare Dateien aufheben.",
+      "evidence": [
+        "original-sources.json",
+        "current-evidence.json"
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentSourceChunkIndex.kt",
+      "sourceVariants": [
+        {
+          "blob": "f09183fc116c0b6f009b296d46dc1551a7a11095",
+          "bytes": 9459,
+          "snapshot": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/originals/DevelopmentSourceChunkIndex/f09183fc116c0b6f009b296d46dc1551a7a11095.kt",
+          "sources": [
+            {
+              "branch": "fix/continuum-m5-chunk-index-provenance-20261101",
+              "sha": "e193411d37339b4c91a4e24ef341b03794a0aa7f",
+              "pr": 326
+            }
+          ]
+        },
+        {
+          "blob": "dc30c8504f2886646555c2add32dc77c86dc1f5e",
+          "bytes": 7835,
+          "snapshot": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/originals/DevelopmentSourceChunkIndex/dc30c8504f2886646555c2add32dc77c86dc1f5e.kt",
+          "sources": [
+            {
+              "branch": "research/continuum-m5-persistent-chunk-index-20261101",
+              "sha": "bc75bae6562fc05b5ff0abcf0f3154ef099f21d1",
+              "pr": 318
+            }
+          ]
+        }
+      ],
+      "preferredSourceSha": "e193411d37339b4c91a4e24ef341b03794a0aa7f",
+      "preferredBlob": "f09183fc116c0b6f009b296d46dc1551a7a11095",
+      "category": "UNCONNECTED_LARGE_SOURCE_FOUNDATION",
+      "function": "Persistenter Locator mit 64-KiB-Chunks, höchstens 2000 Einträgen, Byte-/Zeilenbereichen und Chunkhash; build/load/read arbeiten begrenzt und prüfen die Quelle. Kein semantisches Ranking oder automatischer Modellkontext.",
+      "originalCallerAndBoundary": "#326 ist ein Nachfahr von #318 und verbessert load: jede tatsächliche Chunk-Zeilenangabe und jeder Chunkhash werden aus dem Quellstream rekonstruiert; UTF-8-Chunkstart, EOF und Gesamthash werden geprüft. read validiert den ausgewählten Chunk separat. Zwei entsprechende Testdefinitionen sind ergänzt; hier nicht ausgeführt.",
+      "currentEquivalentAndCaller": "3ff besitzt weiterhin den kleinen SourceSnapshot-Import, keinen produktiven persistenten Chunkindex und keine Referenz auf diesen Typ. Der Folgefix behebt Provenienz innerhalb des Indexhelfers und erzeugt keinen App-Caller.",
+      "missingConnection": "Zusammen mit StreamImport anschließen, geprüften Index wiederöffnen und daraus nur passende begrenzte Ausschnitte auswählen; Auswahl/Retrieval, Fehler-/Recovery-UI, Quote/Retention und Cancellation fehlen am Produktanschluss. Bei späterer Übernahme die #326-Variante bevorzugen; nicht den älteren #318-Loader.",
+      "evidence": [
+        "pr326-vs318.diff",
+        "followup-comparisons.json",
+        "current-evidence.json"
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoop.kt",
+      "sourceVariants": [
+        {
+          "blob": "d9b47db526bb0179ed286f7d80b822fb5d3b08b4",
+          "bytes": 8687,
+          "snapshot": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/originals/CognitiveLoop/d9b47db526bb0179ed286f7d80b822fb5d3b08b4.kt",
+          "sources": [
+            {
+              "branch": "kern/cognitive-loop-20261104",
+              "sha": "8d7b560ede4623c110f94138da183189991ed4a5",
+              "pr": 490
+            }
+          ]
+        }
+      ],
+      "preferredSourceSha": "8d7b560ede4623c110f94138da183189991ed4a5",
+      "preferredBlob": "d9b47db526bb0179ed286f7d80b822fb5d3b08b4",
+      "category": "ALTERNATIVE_RUNTIME_RESEARCH",
+      "function": "Synchrone Schleife je Ziel: Recall → Plan → erster Toolschritt → Verifier → MemoryOutcome → Neuplanung. Injizierte Ports/Uhr, begrenzte Schritte/Zeit, kooperative Cancellation; kein eingebautes LLM.",
+      "originalCallerAndBoundary": "#490-Handover und Architektur benennen ausdrücklich fehlenden ReasoningModel-/lokalen Modelladapter, Planneradapter und Activity-Verdrahtung. Interne Tool-/Approval-/Memory-/Listener-Aufrufe bestehen, aber ein ausführender Produktcaller ist dort noch offen.",
+      "currentEquivalentAndCaller": "3ff betreibt bereits BoundedAgentOrchestrator in AgentActivity (lokaler Modellpfad und Read-only-Bootstrap), mit vorhandenem ToolGate, Gedächtnis, Evaluator und ChiefTurnBridge. Keine Referenz auf den alternativen CognitiveLoop. Die fehlende Datei bedeutet daher keinen fehlenden Agentenloop.",
+      "missingConnection": "Nur als bewusster Ersatz/einzelner ausgewählter Ablauf integrieren, nach Adaptern für aktuelles Modell, Planner, Resultatprüfung, Gedächtnis und Owner-Rückfrage samt realen Deadlines/STOP/Lifecycle. Keine zweite konkurrierende Laufzeit aktivieren.",
+      "evidence": [
+        "prior-handoffs/8d7b560ede4623c110f94138da183189991ed4a5/HANDOVER-kern-kognition-20261104.md",
+        "prior-handoffs/8d7b560ede4623c110f94138da183189991ed4a5/ARCHITEKTUR-KOGNITION.md",
+        "current-evidence.json"
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoopContracts.kt",
+      "sourceVariants": [
+        {
+          "blob": "c098bdf9d834329fd7992711d3def5814c7cb421",
+          "bytes": 8027,
+          "snapshot": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/originals/CognitiveLoopContracts/c098bdf9d834329fd7992711d3def5814c7cb421.kt",
+          "sources": [
+            {
+              "branch": "kern/cognitive-loop-20261104",
+              "sha": "8d7b560ede4623c110f94138da183189991ed4a5",
+              "pr": 490
+            }
+          ]
+        }
+      ],
+      "preferredSourceSha": "8d7b560ede4623c110f94138da183189991ed4a5",
+      "preferredBlob": "c098bdf9d834329fd7992711d3def5814c7cb421",
+      "category": "ALTERNATIVE_RUNTIME_CONTRACTS",
+      "function": "Reine Kotlin-Verträge für Ziele, Plan-/Tool-/Prüf-/Memory-/Owner-Ports, Ereignisse, Budget und Outcome; Default 8 Schritte, 60 s je Schritt, 300 s gesamt. RecallHit ist eine lokale Zwischenstruktur.",
+      "originalCallerAndBoundary": "Interne Abhängigkeit der drei weiteren #490-Dateien, selbst kein aktiver Lauf/Caller. Eigenes Handoff nennt die noch offene Angleichung des RecallHit-/Memory-Vertrags und fehlende Modell-/Planerports.",
+      "currentEquivalentAndCaller": "3ff hat eigene etablierte BoundedAgent-, Tool-, Memory- und Chief-Verträge in den tatsächlichen Activity-Pfaden; der neue Namensraum wird nirgends aus aktueller Android-Produktion referenziert. Keine zusätzliche trainierte Fähigkeit allein durch diese Datenklassen.",
+      "missingConnection": "Verträge auf bestehende Typen/Trust-/Zeitgrenzen abbilden, lokale Zwischenstruktur konsolidieren; erst zusammen mit einer ausgewählten Runtime-Integration sinnvoll. Kein eigenständiger Feature-Schalter.",
+      "evidence": [
+        "prior-handoffs/8d7b560ede4623c110f94138da183189991ed4a5/ARCHITEKTUR-KOGNITION.md",
+        "current-evidence.json"
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoopCockpitBridge.kt",
+      "sourceVariants": [
+        {
+          "blob": "6ce348e8ba123796e14530319cac18c28bb14759",
+          "bytes": 4144,
+          "snapshot": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/originals/CognitiveLoopCockpitBridge/6ce348e8ba123796e14530319cac18c28bb14759.kt",
+          "sources": [
+            {
+              "branch": "kern/cognitive-loop-20261104",
+              "sha": "8d7b560ede4623c110f94138da183189991ed4a5",
+              "pr": 490
+            }
+          ]
+        }
+      ],
+      "preferredSourceSha": "8d7b560ede4623c110f94138da183189991ed4a5",
+      "preferredBlob": "6ce348e8ba123796e14530319cac18c28bb14759",
+      "category": "ALTERNATIVE_RUNTIME_UI_BRIDGE",
+      "function": "Mappt echte Loop-Ereignisse auf vorhandenen CockpitAnimationBus: cognitive_loop-Extension, ProcessTimeline und ActionStarted(TOOL); begrenzte Schritte/Labels, pro Turn aufgeräumt, Abbruch als FAILED/BLOCKED statt Alarm.",
+      "originalCallerAndBoundary": "Implementiert den Listener des alternativen Loops; der Busanschluss innerhalb des Adapters ist real. Der #490-Handover fordert den Activity-/Runtime-Anschluss noch ausdrücklich. Ein isolierter Adapter ist kein aktiver Ereignisproduzent.",
+      "currentEquivalentAndCaller": "3ff: AgentActivity nutzt CockpitAnimationTriggers und ChiefTurnBridge.observer für tatsächliche Orchestrator-Milestones. Die aktuelle Vollflächenszene hängt an echten Dokument-/Recall-Ereignissen. Kein aktueller Caller für diesen Bridge-Typ; vorhandene Visualisierung wird durch den fehlenden Dateinamen nicht widerlegt.",
+      "missingConnection": "Nur wenn die alternative Runtime ausgewählt wird: deren Listener einmal an den vorhandenen Bus/Presenter binden und Besitzer/Lifecycle klären. Keine doppelten Timelines oder synthetischen Erfolgs-/Gedächtnisereignisse hinzufügen.",
+      "evidence": [
+        "prior-handoffs/8d7b560ede4623c110f94138da183189991ed4a5/ARCHITEKTUR-KOGNITION.md",
+        "current-evidence.json"
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoopGatePorts.kt",
+      "sourceVariants": [
+        {
+          "blob": "56052b55af5d268c71d0e12b01b2cb1ec66f516d",
+          "bytes": 3503,
+          "snapshot": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/originals/CognitiveLoopGatePorts/56052b55af5d268c71d0e12b01b2cb1ec66f516d.kt",
+          "sources": [
+            {
+              "branch": "kern/cognitive-loop-20261104",
+              "sha": "8d7b560ede4623c110f94138da183189991ed4a5",
+              "pr": 490
+            }
+          ]
+        }
+      ],
+      "preferredSourceSha": "8d7b560ede4623c110f94138da183189991ed4a5",
+      "preferredBlob": "56052b55af5d268c71d0e12b01b2cb1ec66f516d",
+      "category": "ALTERNATIVE_RUNTIME_TOOL_ADAPTERS",
+      "function": "ToolGateLoopToolPort übersetzt Loop-Aktionen in den bestehenden ToolGate; destructiveConfirmed bleibt false und cancel wird weitergereicht. PillActionGateApprovalPort wartet begrenzt auf bestehende PillActionGate-Antworten; keine selbständige Werkzeuglaufzeit.",
+      "originalCallerAndBoundary": "#490 hat die Adapter, aber OwnerQuestionPort/Activity fehlen. Die eigene Architektur sagt ausdrücklich: PillActionGate kennt Dokument-Pillen; allgemeine Werkzeug-Pille ist offen. Das übergebene LoopBudget ist keine Implementierung eines neuen Host-Schedulers.",
+      "currentEquivalentAndCaller": "3ff verwendet den ToolGate bereits im aktiven BoundedAgentOrchestrator und besitzt bestehende Owner-/Pill-Gates. Kein Caller für die neuen Loop-Portklassen. Ein fehlender Adaptername ist kein Beleg für ungeschützte aktuelle Werkzeuge.",
+      "missingConnection": "Nur für ausgewählten Loop verbinden: korrekte Tool-/Owner-UI, echte Frist-/STOP-Weiterleitung und späte Antwortverwerfung auf aktuellem Host nachweisen. Bestehende Zustimmung/Toolbegrenzungen beibehalten; dokumentenspezifische Pillen nicht als allgemeine Freigabe ausgeben.",
+      "evidence": [
+        "prior-handoffs/8d7b560ede4623c110f94138da183189991ed4a5/ARCHITEKTUR-KOGNITION.md",
+        "current-evidence.json"
+      ]
+    }
+  ],
+  "followupComparisons": [
+    {
+      "name": "pr326-vs318",
+      "before": "bc75bae6562fc05b5ff0abcf0f3154ef099f21d1",
+      "after": "e193411d37339b4c91a4e24ef341b03794a0aa7f",
+      "beforeIsAncestor": true,
+      "allChangedPaths": [
+        "M\tapp/src/main/java/at/heinz/deviceai/cognitive/DevelopmentSourceChunkIndex.kt",
+        "M\tapp/src/test/java/at/heinz/deviceai/cognitive/DevelopmentSourceChunkIndexTest.kt",
+        "M\tscripts/render-continuum-m8-qa.sh"
+      ],
+      "diff": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/pr326-vs318.diff"
+    },
+    {
+      "name": "pr387-vs386",
+      "before": "ee9b2dfde74499a499f86ba3e07c19f48b89c446",
+      "after": "eed77e56b526d199141b658a4bdd38acd2d896e0",
+      "beforeIsAncestor": false,
+      "allChangedPaths": [
+        "A\t.github/continuum/alpha-squad-ccc1.mjs",
+        "A\t.github/continuum/alpha-squad-ccc1.test.mjs",
+        "M\tapp/src/main/java/at/heinz/deviceai/chief/ChiefTaskGraph.kt",
+        "M\tapp/src/test/java/at/heinz/deviceai/chief/ChiefTaskGraphTest.kt",
+        "A\tdocs/ALPHA-SQUAD-CCC1-START-20261103.md"
+      ],
+      "diff": "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/pr387-vs386.diff"
+    }
+  ],
+  "limits": [
+    "No exhaustive historical-tree caller search is claimed. Historical caller status is bounded by exact classes, named handoffs/prior reviews and targeted caller files.",
+    "Current production search contains no reference to the nine names; source excerpts are read from exact 3ff Git objects.",
+    "This audit ran no application code, tests, builds, training or provider calls and changed no source/ref.",
+    "Candidate worktree has unrelated test/docs edits at receipt time; source-state.json records them. Android main production matches the referenced commit.",
+    "No conclusion about the real phone training failure without its actual monitor code/phase."
+  ]
+}

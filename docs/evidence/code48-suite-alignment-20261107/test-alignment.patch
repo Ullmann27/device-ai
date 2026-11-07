@@ -1,0 +1,161 @@
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/JarvisLiveAvatarWiringUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/JarvisLiveAvatarWiringUiTest.kt
+index d13c7acd3..edfab82ea 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/JarvisLiveAvatarWiringUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/JarvisLiveAvatarWiringUiTest.kt
+@@ -19,6 +19,7 @@ import at.heinz.deviceai.ui.ContinuumHomeView
+ import at.heinz.deviceai.ui.ContinuumHologramRenderer
+ import at.heinz.deviceai.ui.JarvisSequenceView
+ import at.heinz.deviceai.ui.JarvisMenuNavigator
++import at.heinz.deviceai.ui.JarvisWorkWindow
+ import org.junit.Assert.*
+ import org.junit.Test
+ import org.junit.runner.RunWith
+@@ -217,19 +218,71 @@ class JarvisLiveAvatarWiringUiTest {
+ 
+     @Test fun semanticMenuDestinationsOpenTheirNamedScreensWithoutStartingATurn() = withShell { activity, _, _ ->
+         val navigator = (field(activity, "menuNavigator\$delegate") as Lazy<*>).value as JarvisMenuNavigator
+-        assertEquals(false, field(activity, "activeLocalRequest"))
++        val root = activity.window.decorView
++        val width = root.width
++        val height = root.height
++        val frames = CockpitHostFramePump { activity.window.decorView }
++        val initialRequest = field(activity, "activeLocalRequest")
++        assertEquals(false, initialRequest)
+         val initialTurn = field(activity, "activeChiefTurn")
+-        listOf("logic" to "Logik und Planung", "tasks" to "Entwicklungsaufgaben", "web" to "Web und Quellen").forEach { (target, title) ->
+-            navigator.navigate(target)
+-            shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+-            val dialog = ShadowAlertDialog.getLatestAlertDialog()
+-            assertNotNull("The $target destination must open a real dialog", dialog)
+-            assertTrue(dialog.isShowing)
+-            val texts = descendants(dialog.window!!.decorView).filterIsInstance<TextView>().map { it.text.toString() }
+-            assertTrue("$target must show its own title; actual text: $texts", title in texts)
+-            assertEquals("Opening a menu destination must not start a local request", false, field(activity, "activeLocalRequest"))
+-            assertSame("Opening a menu destination must not start a chief turn", initialTurn, field(activity, "activeChiefTurn"))
+-            dialog.dismiss()
++        fun windows() = descendants(root).filterIsInstance<JarvisWorkWindow>()
++        fun settle() {
++            repeat(2) {
++                measure(root, width, height)
++                frames.drawRequestedFrame()
++            }
++            shadowOf(Looper.getMainLooper()).idle()
++        }
++        fun unchangedTurn(target: String) {
++            assertEquals("$target must not start a local request", initialRequest, field(activity, "activeLocalRequest"))
++            assertSame("$target must not start a chief turn", initialTurn, field(activity, "activeChiefTurn"))
++        }
++        try {
++            listOf("logic" to "Logik und Planung", "tasks" to "Entwicklungsaufgaben", "web" to "Web und Quellen").forEach { (target, title) ->
++                assertTrue("The previous destination must be removed", windows().isEmpty())
++                val previousDialog = ShadowAlertDialog.getLatestAlertDialog()
++                navigator.navigate(target)
++                settle()
++                unchangedTurn(target)
++                if (target == "tasks") {
++                    assertTrue("Tasks retain their dedicated dialog", windows().isEmpty())
++                    val dialog = ShadowAlertDialog.getLatestAlertDialog()
++                    assertNotNull("Tasks must open their real dialog", dialog)
++                    assertNotSame("Tasks must open a new dialog", previousDialog, dialog)
++                    assertTrue(dialog.isShowing)
++                    val texts = descendants(dialog.window!!.decorView).filterIsInstance<TextView>()
++                        .filter { it.isShown }.map { it.text.toString() }
++                    assertTrue("Tasks must show their own title: $texts", title in texts)
++                    val close = dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
++                    assertEquals("Schließen", close.text.toString())
++                    assertTrue(close.isShown && close.isEnabled)
++                    assertTrue("The dialog close button must be wired", close.performClick())
++                    settle()
++                    assertFalse("The task dialog must close", dialog.isShowing)
++                } else {
++                    assertSame("$target must use the cockpit window", previousDialog, ShadowAlertDialog.getLatestAlertDialog())
++                    val shown = windows()
++                    assertEquals("$target must open exactly one work window", 1, shown.size)
++                    val window = shown.single()
++                    assertTrue(window.isAttachedToWindow && window.isShown && window.isShowing)
++                    val panel = window.findViewWithTag<View>("jarvis-work-window:panel")
++                    assertTrue("$target must have a laid-out panel", panel.isShown && panel.width > 0 && panel.height > 0)
++                    assertEquals("$target must finish opening visibly", 1f, panel.alpha, .001f)
++                    val texts = descendants(panel).filterIsInstance<TextView>()
++                        .filter { it.isShown }.map { it.text.toString() }
++                    assertTrue("$target must show its own title: $texts", title in texts)
++                    val close = window.findViewWithTag<View>("jarvis-work-window:close")
++                    assertTrue(close.isShown && close.isEnabled)
++                    assertTrue("$target close button must be wired", close.performClick())
++                    settle()
++                    assertFalse("$target must finish closing", window.isShowing)
++                    assertFalse("$target must detach its window", window.isAttachedToWindow)
++                    assertTrue("$target must remove its window", windows().isEmpty())
++                }
++                unchangedTurn("Closing $target")
++            }
++        } finally {
++            frames.close()
+         }
+     }
+ 
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/cockpit/MemoryEventMapperStopUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/cockpit/MemoryEventMapperStopUiTest.kt
+index d6140acf1..87e622f32 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/cockpit/MemoryEventMapperStopUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/cockpit/MemoryEventMapperStopUiTest.kt
+@@ -32,7 +32,7 @@ class MemoryEventMapperStopUiTest {
+     @Test fun bufferedRecallCannotSurviveTheActualSurfaceStop() = withCockpit { home, live, sequence ->
+         var now = 1_000L
+         sequence.clock = { now }
+-        val empty = frame(sequence)
++        val empty = memoryFrame(home)
+         try {
+             withMapper(home) { mapper, seen ->
+                 mapper.recallHits("synthetic-before-stop", 2, .9f, System.currentTimeMillis())
+@@ -41,8 +41,9 @@ class MemoryEventMapperStopUiTest {
+                 assertTrue(sequence.cueGeneration > generation)
+                 shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(200))
+                 assertTrue(seen.isEmpty())
++                assertFalse("STOP must leave fullstage inactive", live.memoryScene.isActive)
+                 now = 2_200L
+-                val after = frame(sequence)
++                val after = memoryFrame(home)
+                 try { assertTrue("STOP must discard buffered visuals", empty.sameAs(after)) }
+                 finally { after.recycle() }
+             }
+@@ -52,19 +53,22 @@ class MemoryEventMapperStopUiTest {
+     @Test fun freshRecallAfterStopStillReachesTheVisibleSurface() = withCockpit { home, live, sequence ->
+         var now = 1_000L
+         sequence.clock = { now }
+-        val empty = frame(sequence)
++        val empty = memoryFrame(home)
+         try {
+             withMapper(home) { mapper, seen ->
+                 mapper.documentLearned("old-document", "PDF", 2, 100L)
+                 mapper.memoryStored("old-entry", "CONFIRMED", 101L)
+                 mapper.recallHits("old-query", 2, .8f, 102L)
+                 live.setTaskEffectScope(null)
++                assertFalse("STOP must clear fullstage", live.memoryScene.isActive)
+                 mapper.recallHits("fresh-query", 3, .9f, 1L)
+                 shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(200))
+                 assertEquals(listOf(CockpitAnimationEvent.RecallHits(MEMORY_TURN, 1L, "fresh-query", 3, .9f)), seen)
++                assertTrue("Fresh recall must start fullstage", live.memoryScene.isActive)
++                assertEquals(3, sequence.effects.recallCount)
+                 sequence.effects.clear()
+                 now = 2_200L
+-                val fresh = frame(sequence)
++                val fresh = memoryFrame(home)
+                 try { assertFalse("Fresh recall must animate", empty.sameAs(fresh)) }
+                 finally { fresh.recycle() }
+             }
+@@ -85,8 +89,13 @@ class MemoryEventMapperStopUiTest {
+         finally { mapper.detach(); presenter.close(); observer.close() }
+     }
+ 
+-    private fun frame(sequence: JarvisSequenceView): Bitmap =
+-        Bitmap.createBitmap(sequence.width, sequence.height, Bitmap.Config.ARGB_8888).also { sequence.draw(Canvas(it)) }
++    private fun memoryFrame(home: ContinuumHomeView): Bitmap {
++        val surface = requireNotNull(home.findViewWithTag<View>("continuum-memory-fullstage"))
++        assertTrue(surface.isAttachedToWindow && surface.isShown)
++        assertTrue(surface.width > 0 && surface.height > 0)
++        return Bitmap.createBitmap(surface.width, surface.height, Bitmap.Config.ARGB_8888)
++            .also { surface.draw(Canvas(it)) }
++    }
+ 
+     private fun withCockpit(check: (ContinuumHomeView, ContinuumHologramView, JarvisSequenceView) -> Unit) {
+         ShadowChoreographer.setPaused(true)

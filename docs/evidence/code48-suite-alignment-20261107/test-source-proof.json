@@ -1,0 +1,18 @@
+{
+  "status": "WIP_NOT_YET_GREEN",
+  "baseCommit": "c97f810b33061748b8600ea3b31ba011730e9614",
+  "priorFullGateCommit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "productionChanged": false,
+  "tests": [
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisLiveAvatarWiringUiTest.kt",
+      "beforeSha256": "88d25e843be6b53eccf0ec59dfab2876520e86ee94d4db49750c17246f4ef75c",
+      "afterSha256": "062bcf373a821b39b99e2de989c084bed97ee57c6571702b395130f65b0c53f5"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/cockpit/MemoryEventMapperStopUiTest.kt",
+      "beforeSha256": "3bb650e282e1077811d299a86b615c1812618c0b5cf6ecd24ae2b1089de3a314",
+      "afterSha256": "09f94f69a3f24d5c87a99b1108f7846e50f7325162cf4447e2a31d13ca1a6ff9"
+    }
+  ]
+}

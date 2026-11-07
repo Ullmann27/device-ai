@@ -1,0 +1,107 @@
+{
+  "gate": "node-full",
+  "status": "PASS",
+  "sourceCommit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "sourceTree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "sourceUnchanged": true,
+  "startedAt": "2026-11-07T06:26:46.270310+00:00",
+  "finishedAt": "2026-11-07T06:30:11.481998+00:00",
+  "commands": [
+    {
+      "command": [
+        "node",
+        "scripts/continuum-reliability-qa.mjs",
+        "full-node",
+        "--out",
+        "/workspace/scratch/3d1967be6193/qa/combined/final-5d91442e98f7-notice-final/full-node"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/candidate",
+      "exitCode": 0
+    }
+  ],
+  "deviceAcceptance": "NOT_RUN",
+  "signingAndPublication": "NOT_RUN",
+  "checks": [
+    {
+      "id": "full-node",
+      "status": "PASS",
+      "reason": null,
+      "tests": {
+        "total": 2429,
+        "failed": 0,
+        "skipped": 31,
+        "placeholders": 0,
+        "executed": 2398,
+        "passed": 2398,
+        "evidenceComplete": true
+      }
+    },
+    {
+      "id": "gradle",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+      "tests": {}
+    },
+    {
+      "id": "lint",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+      "tests": {}
+    },
+    {
+      "id": "apk",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+      "tests": {}
+    },
+    {
+      "id": "fold7",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+      "tests": {}
+    },
+    {
+      "id": "model-inference",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+      "tests": {}
+    }
+  ],
+  "rawEvidence": {
+    "archive": "node-full-evidence.zip",
+    "bytes": 837387,
+    "sha256": "4963b4dac28e43e1f71ba90781112eb9149853dc33592f28ffadedea3f199b23",
+    "files": [
+      {
+        "path": "full-node/full-node.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "full-node/full-node.xml",
+        "bytes": 547217,
+        "sha256": "93789da5752b791ecae37ac16a98cc15204bbc1e10dcba92fa5238ea2bdca9fc"
+      },
+      {
+        "path": "full-node/report.json",
+        "bytes": 2535261,
+        "sha256": "637f4f7691981ae89d2d82a9909388258c1523fa665f190324e4f5a6b9ca798c"
+      },
+      {
+        "path": "full-node/report.md",
+        "bytes": 870,
+        "sha256": "6987aba0769f98fedafb290d1e8026604e13f536473fae6793290ba4fd1b1602"
+      },
+      {
+        "path": "node-full-receipt.json",
+        "bytes": 1231,
+        "sha256": "26b19e1ec551542a1a992e320ce69a9d9252799808bf3698636f391e0b24d6ea"
+      },
+      {
+        "path": "node-full.log",
+        "bytes": 272,
+        "sha256": "0372fe31bd10569bc290b9b2bf081c169a268e664b351360a53cce0dbff320e6"
+      }
+    ]
+  }
+}

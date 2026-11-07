@@ -1,0 +1,70 @@
+{
+  "baseCommit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "compiledBaselineCommit": "d73fc46b5a14ea5fc3b82a3bd3b96cacebe7d4de",
+  "testMethod": "actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight",
+  "scope": "Actual Activity, MEMORY bus and public Home notice API; no Calculation bus claim",
+  "productionSourceSha256": "79bd15a4713fb56b4d076d8dacb756839ae7f4f8421cc82b4a8208a294528e6a",
+  "testSourceSha256": "408be078c3d3a13f65b73834d62e8de12edba839a107fde2fee8c111916c365b",
+  "patchSha256": "3a8f13a2f90857989739973e460f71fc9c584dd01fea263a2fc07691cd76c91c",
+  "sameTestProof": [
+    {
+      "run": "final-red-layout",
+      "reason": "3ff: notice has no positive layout",
+      "tests": 1,
+      "failures": 1,
+      "compilerExitCodes": [
+        0,
+        0
+      ],
+      "junitExitCode": 1,
+      "productionSourceUnchanged": true,
+      "testSourceUnchanged": true,
+      "homeSourceSha256": "8acf6133f8869ff5f962c3a266d2d38c15d988d24f58ee674ece23e4bd229eea",
+      "testSourceSha256": "408be078c3d3a13f65b73834d62e8de12edba839a107fde2fee8c111916c365b",
+      "receiptSha256": "41a153ce8b127d7e5395add3270a84eb97520ab23a8588ff846a9e85a5a0f8b4"
+    },
+    {
+      "run": "final-geometry-red-occlusion",
+      "reason": "correct current layout but no Z: opaque text pixel is overpainted",
+      "tests": 1,
+      "failures": 1,
+      "compilerExitCodes": [
+        0,
+        0
+      ],
+      "junitExitCode": 1,
+      "productionSourceUnchanged": true,
+      "testSourceUnchanged": true,
+      "homeSourceSha256": "80be0215d6107e88530a804643ca787f73ae1c83dadd14f29f32680d90bfe305",
+      "testSourceSha256": "408be078c3d3a13f65b73834d62e8de12edba839a107fde2fee8c111916c365b",
+      "receiptSha256": "565b6a5cfb53caf33dca8a55833af90ec05a4d4b83ac43ea2337d544d945aa9b"
+    },
+    {
+      "run": "final-geometry-green",
+      "reason": "current layout and .75 density Z: visible text and actual dismissal tap pass",
+      "tests": 1,
+      "failures": 0,
+      "compilerExitCodes": [
+        0,
+        0
+      ],
+      "junitExitCode": 0,
+      "productionSourceUnchanged": true,
+      "testSourceUnchanged": true,
+      "homeSourceSha256": "79bd15a4713fb56b4d076d8dacb756839ae7f4f8421cc82b4a8208a294528e6a",
+      "testSourceSha256": "408be078c3d3a13f65b73834d62e8de12edba839a107fde2fee8c111916c365b",
+      "receiptSha256": "8596446a6354ffcc4a8c38a9ed31967906f51329d224c548b27b10197a3aa491"
+    }
+  ],
+  "physicalDeviceTested": false,
+  "filamentGpuPixelsTested": false,
+  "sameTestGeometryFailure": {
+    "run": "final-green",
+    "reason": "old HERO geometry plus .75 Z: center tap reaches another control; notice does not dismiss",
+    "tests": 1,
+    "failures": 1,
+    "homeSourceSha256": "0951b16bc8800f041508022a53faaa76c96a1fa009d52fa8adf6c6271b294100",
+    "testSourceSha256": "408be078c3d3a13f65b73834d62e8de12edba839a107fde2fee8c111916c365b",
+    "receiptSha256": "86f279761b18129b53891e53d086fd0c81e5dd1905da4534d5aded4a13bb86ec"
+  }
+}

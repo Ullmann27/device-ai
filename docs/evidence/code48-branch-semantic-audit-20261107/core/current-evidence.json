@@ -1,0 +1,794 @@
+{
+  "sourceCommit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "sourceTree": "5206abd91b3740838661aa0e27e6702b3891591b",
+  "worktreeClean": true,
+  "kind": "read-only semantic source inspection; no builds or tests",
+  "originalsVerified": [
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/68aff2d084-ContinuumDualControlPolicy.kt",
+      "expectedBlob": "68aff2d084e6ec5523b73fe5470884004c032cef",
+      "actualBlob": "68aff2d084e6ec5523b73fe5470884004c032cef",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/2734513d82-ContinuumMicroAgentBridge.kt",
+      "expectedBlob": "2734513d826f6a1beaf04e88ab91783559a65932",
+      "actualBlob": "2734513d826f6a1beaf04e88ab91783559a65932",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/301d6be6fd-ContinuumSelfInspectionQuery.kt",
+      "expectedBlob": "301d6be6fdcae462626527aa9b5fe38ac1dd062e",
+      "actualBlob": "301d6be6fdcae462626527aa9b5fe38ac1dd062e",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/0d690672b3-ContinuumTermuxFailureDiagnosis.kt",
+      "expectedBlob": "0d690672b3974df0d9949275e299b378f68fd55e",
+      "actualBlob": "0d690672b3974df0d9949275e299b378f68fd55e",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/67c60057a4-TaskComplexityAnalyzer.kt",
+      "expectedBlob": "67c60057a44768622cfef92a721e0e08a95d7633",
+      "actualBlob": "67c60057a44768622cfef92a721e0e08a95d7633",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/c12f80972a-AiContextCompiler.kt",
+      "expectedBlob": "c12f80972a9c3a3005dd509cfb02bb574faef98f",
+      "actualBlob": "c12f80972a9c3a3005dd509cfb02bb574faef98f",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/62ffc0baa4-BenchmarkHarness.kt",
+      "expectedBlob": "62ffc0baa4da6c32b279c2c78b0fcc9ec6873aff",
+      "actualBlob": "62ffc0baa4da6c32b279c2c78b0fcc9ec6873aff",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/c2ff4e4ba3-CognitiveRaid.kt",
+      "expectedBlob": "c2ff4e4ba3e850a15b1a2a237e1d885ca83719fb",
+      "actualBlob": "c2ff4e4ba3e850a15b1a2a237e1d885ca83719fb",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/f4e1960dff-ComputeFabric.kt",
+      "expectedBlob": "f4e1960dfff3d1779f8ea806c6109e21249b68ed",
+      "actualBlob": "f4e1960dfff3d1779f8ea806c6109e21249b68ed",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/c9317ee094-ContinuumLocalContextAdapter.kt",
+      "expectedBlob": "c9317ee094d7931cb7992a62192964781be0e297",
+      "actualBlob": "c9317ee094d7931cb7992a62192964781be0e297",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/56573ef418-ContinuumObjectStore.kt",
+      "expectedBlob": "56573ef418d5891f93865cc59c8a075b5a0f10b2",
+      "actualBlob": "56573ef418d5891f93865cc59c8a075b5a0f10b2",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/3aebea1dce-ContinuumSeed.kt",
+      "expectedBlob": "3aebea1dce40a0a1c8d6643d3b03ec437da6fea0",
+      "actualBlob": "3aebea1dce40a0a1c8d6643d3b03ec437da6fea0",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/5ed157c891-Deliberation.kt",
+      "expectedBlob": "5ed157c8917f1c2d007218ae5507f928d919b7af",
+      "actualBlob": "5ed157c8917f1c2d007218ae5507f928d919b7af",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-dual-activity.kt",
+      "expectedBlob": "fbb0db014f04efbf56a0fb29bfdbd169ba10c640",
+      "actualBlob": "fbb0db014f04efbf56a0fb29bfdbd169ba10c640",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-dual-mission.kt",
+      "expectedBlob": "4a637e3327dad0dd6fb8bbcff8f59cf2fc8f306c",
+      "actualBlob": "4a637e3327dad0dd6fb8bbcff8f59cf2fc8f306c",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-micro-builder.kt",
+      "expectedBlob": "86540bef0846ee3c6b0760ebf5d8554dbdcfb5cf",
+      "actualBlob": "86540bef0846ee3c6b0760ebf5d8554dbdcfb5cf",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-micro-receiver.kt",
+      "expectedBlob": "fe273bfb5e744d53c7ffed04f6c521ff47523c56",
+      "actualBlob": "fe273bfb5e744d53c7ffed04f6c521ff47523c56",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-self-activity.kt",
+      "expectedBlob": "8c9f1213c5d082ca167fe068e080dfe7fc2f5c8c",
+      "actualBlob": "8c9f1213c5d082ca167fe068e080dfe7fc2f5c8c",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-termux-receiver.kt",
+      "expectedBlob": "f191fabb96605e06940257c719ab3acf933086e0",
+      "actualBlob": "f191fabb96605e06940257c719ab3acf933086e0",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-phase1-activity.kt",
+      "expectedBlob": "2034a29002c67038bbd22ba18f29cc308e824f45",
+      "actualBlob": "2034a29002c67038bbd22ba18f29cc308e824f45",
+      "match": true
+    },
+    {
+      "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-phase2-deliberation.kt",
+      "expectedBlob": "38c0186cbef8f75a0f29c82753d846cac2b8389d",
+      "actualBlob": "38c0186cbef8f75a0f29c82753d846cac2b8389d",
+      "match": true
+    }
+  ],
+  "currentFiles": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "blob": "de358ac1f50614465144e5e9878acacb1f624dec",
+      "sha256": "73133db72a87dbf4aeb1311e7f64a15c4072c85f97db53531bd07686ee263602",
+      "matches": [
+        {
+          "line": 70,
+          "text": "import at.heinz.deviceai.cognitive.AiContextCompiler"
+        },
+        {
+          "line": 79,
+          "text": "import at.heinz.deviceai.cognitive.ChatReasoningRouter"
+        },
+        {
+          "line": 82,
+          "text": "import at.heinz.deviceai.cognitive.ContinuumRuntimeStore"
+        },
+        {
+          "line": 215,
+          "text": "@Volatile private var continuumStore: ContinuumRuntimeStore? = null"
+        },
+        {
+          "line": 219,
+          "text": "AiContextCompiler("
+        },
+        {
+          "line": 509,
+          "text": "@Volatile private var activeReasoningRouter: ChatReasoningRouter? = null"
+        },
+        {
+          "line": 4949,
+          "text": "val gate = createToolGate(ownerTurn = request)"
+        },
+        {
+          "line": 5540,
+          "text": "if (isContinuumSelfCheck(request)) {"
+        },
+        {
+          "line": 5543,
+          "text": "showContinuumSelfCheck()"
+        },
+        {
+          "line": 5656,
+          "text": "private fun isContinuumSelfCheck(request:String):Boolean ="
+        },
+        {
+          "line": 5665,
+          "text": "private fun showContinuumSelfCheck() {"
+        },
+        {
+          "line": 6220,
+          "text": "val gate = createToolGate()"
+        },
+        {
+          "line": 8866,
+          "text": "createToolGate().recordProposal(ToolInvocation(call.callId, call))"
+        },
+        {
+          "line": 8939,
+          "text": "gate: ToolGate = createToolGate(),"
+        },
+        {
+          "line": 8958,
+          "text": "private fun createToolGate(ownerTurn: String? = null, consentRevisionAtTurnStart: Long? = null,"
+        },
+        {
+          "line": 9161,
+          "text": "* bypasses ChatReasoningRouter, orchestration, memory writes and ToolGate,"
+        },
+        {
+          "line": 9328,
+          "text": "val compiledContext = state?.let { runtimeState ->"
+        },
+        {
+          "line": 9345,
+          "text": "ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace), { localRuntime.cancel() })"
+        },
+        {
+          "line": 9347,
+          "text": ".advise(\"chat-$turnId\", task, compiledContext?.text ?: task,"
+        },
+        {
+          "line": 9424,
+          "text": "if (compiledContext == null) append(\"Aktueller Auftrag:\\n\").append(task).append('\\n')"
+        },
+        {
+          "line": 9426,
+          "text": "if (compiledContext != null) {"
+        },
+        {
+          "line": 9427,
+          "text": "append(compiledContext.text)"
+        },
+        {
+          "line": 9485,
+          "text": "compiledContext?.requireCompleteIn(prompt)"
+        },
+        {
+          "line": 9560,
+          "text": "toolGate = createToolGate(ownerTurn = text, consentRevisionAtTurnStart = internetRevisionAtTurnStart,"
+        },
+        {
+          "line": 9908,
+          "text": "val store = ContinuumRuntimeStore("
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt",
+      "blob": "dec986a4c4206f90780c3c368693d38e4371504e",
+      "sha256": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f",
+      "matches": [
+        {
+          "line": 119,
+          "text": "class ToolGate("
+        },
+        {
+          "line": 130,
+          "text": "private val startCommitLock = Any()"
+        },
+        {
+          "line": 131,
+          "text": "private val consumedCallIds = ConcurrentHashMap.newKeySet<String>()"
+        },
+        {
+          "line": 134,
+          "text": "synchronized(startCommitLock) {"
+        },
+        {
+          "line": 256,
+          "text": "Risk.READ_ONLY -> if (!policy.readOnlyEnabled) {"
+        },
+        {
+          "line": 259,
+          "text": "Risk.CONFIRM -> if (!userConfirmed) {"
+        },
+        {
+          "line": 262,
+          "text": "Risk.DESTRUCTIVE -> {"
+        },
+        {
+          "line": 277,
+          "text": "if (!consumedCallIds.add(request.callId)) {"
+        },
+        {
+          "line": 303,
+          "text": "fun persistTerminal(state: ToolReceiptState, output: String?): Boolean = synchronized(startCommitLock) {"
+        },
+        {
+          "line": 325,
+          "text": "synchronized(startCommitLock) {"
+        },
+        {
+          "line": 348,
+          "text": "synchronized(startCommitLock) {"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+      "blob": "bfd1d91736523deeef92b5a0d92ec5d76af2b3dd",
+      "sha256": "f1e350348a9c9acd3736cc7dbc386e736e335ff0bd869e266583704d67326821",
+      "matches": [
+        {
+          "line": 52,
+          "text": "val ccc1 = ContinuumCcc1Bridge.Operation.ofJobOperation(operationName)"
+        },
+        {
+          "line": 53,
+          "text": "val abortSlot = ccc1 == ContinuumCcc1Bridge.Operation.ABORT"
+        },
+        {
+          "line": 89,
+          "text": "val evaluated = ContinuumCcc1Bridge.evaluate(ccc1, exitCode, errorCode, if (truncated) null else stdout,"
+        },
+        {
+          "line": 94,
+          "text": "evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && runCatching {"
+        },
+        {
+          "line": 97,
+          "text": "val result = if (abortSlot && evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && !abortTargetMatches)"
+        },
+        {
+          "line": 98,
+          "text": "evaluated.copy(outcome = ContinuumCcc1Bridge.Outcome.INVALID_RESULT, status = \"INVALID_RESULT\","
+        },
+        {
+          "line": 113,
+          "text": "else if (result.outcome == ContinuumCcc1Bridge.Outcome.OK &&"
+        },
+        {
+          "line": 114,
+          "text": "(ccc1 == ContinuumCcc1Bridge.Operation.STATUS || ccc1 == ContinuumCcc1Bridge.Operation.ABORT)"
+        },
+        {
+          "line": 119,
+          "text": "if (abortSlot && abortTargetMatches && result.outcome == ContinuumCcc1Bridge.Outcome.OK &&"
+        },
+        {
+          "line": 217,
+          "text": "ContinuumMobileResultPolicy.projectStatusExplanation("
+        },
+        {
+          "line": 220,
+          "text": "ContinuumMobileResultPolicy.statusExplanation(reportedStatus)"
+        },
+        {
+          "line": 222,
+          "text": "ContinuumMobileResultPolicy.explanation(outcome)"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt",
+      "blob": "a62abbbf1d005a1ea6fc05310c1dd7b401ecc740",
+      "sha256": "e1e8e7be980c2b2e962aa19eb3f5e2228ab7cb019bd892aaf4ea3c3495e4a9f3",
+      "matches": [
+        {
+          "line": 6,
+          "text": "* CCC1 through the existing Termux bridge (`scripts/continuum-mobile-builder.mjs ccc1-*`)."
+        },
+        {
+          "line": 83,
+          "text": "fun diagnose(exitCode: Int?, termuxError: Int?, stderr: String?): String? {"
+        },
+        {
+          "line": 91,
+          "text": "\"Cannot find module\" in text && \"continuum-mobile-builder.mjs\" in text ->"
+        },
+        {
+          "line": 93,
+          "text": "exitCode == 127 -> \"Termux fand ein benötigtes Programm nicht (Node.js oder Git). Nichts ausgeführt.\""
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "blob": "0515672d5469fee6845f61b4a51dc784da57ba85",
+      "sha256": "40a78cee9e558c6f75acea361c43b3e3bc2862ac303df296a4a36b684a106390",
+      "matches": [
+        {
+          "line": 68,
+          "text": "fun requireCompleteIn(prompt: String) {"
+        },
+        {
+          "line": 73,
+          "text": "class AiContextCompiler("
+        },
+        {
+          "line": 116,
+          "text": "check(!required) { \"MANDATORY_CONTEXT_EXCEEDS_BUDGET\" }"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeed.kt",
+      "blob": "784acffa9f0e322a369ec7609fbe2a96c5d92cc8",
+      "sha256": "567eca9ee9748ec70aee2064d0a3057af006ecc196065585be1718287708c110",
+      "matches": [
+        {
+          "line": 31,
+          "text": "data class ContinuumSeed("
+        },
+        {
+          "line": 35,
+          "text": "val memorySchemaVersion: Int,"
+        },
+        {
+          "line": 36,
+          "text": "val skillSchemaVersion: Int,"
+        },
+        {
+          "line": 46,
+          "text": "require(memorySchemaVersion in 1..10_000 && skillSchemaVersion in 1..10_000)"
+        },
+        {
+          "line": 147,
+          "text": "out.writeInt(seed.memorySchemaVersion)"
+        },
+        {
+          "line": 148,
+          "text": "out.writeInt(seed.skillSchemaVersion)"
+        },
+        {
+          "line": 171,
+          "text": "val memorySchema = input.readInt()"
+        },
+        {
+          "line": 172,
+          "text": "val skillSchema = input.readInt()"
+        },
+        {
+          "line": 185,
+          "text": "instanceId, governance, stateFormat, memorySchema, skillSchema, abi,"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeedStore.kt",
+      "blob": "e45a4faa14126b4024af889bc9bf61654cbf867d",
+      "sha256": "1222259d3256b53db302ec107b7e5a571cf1c1322cfb035f0f54b86b27347327",
+      "matches": [
+        {
+          "line": 17,
+          "text": "class FileContinuumSeedStore("
+        },
+        {
+          "line": 25,
+          "text": "fun save(seed: ContinuumSeed) {"
+        },
+        {
+          "line": 42,
+          "text": "fun load(): ContinuumSeedLoadResult? {"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt",
+      "blob": "492d881a615803c5dc4a48cdd789a79d6b6869f3",
+      "sha256": "6e3694bb3a27c307d10f84d6e21ec469a0575517feab05dee4d1a86d061f1713",
+      "matches": [
+        {
+          "line": 63,
+          "text": "val generation: Long,"
+        },
+        {
+          "line": 65,
+          "text": "val previousRootObjectId: ContinuumObjectId?,"
+        },
+        {
+          "line": 69,
+          "text": "require(generation >= 1 && createdAtMillis >= 0)"
+        },
+        {
+          "line": 70,
+          "text": "require((generation == 1L) == (previousRootObjectId == null))"
+        },
+        {
+          "line": 74,
+          "text": "generation.toString() + \"|\" + rootObjectId.value + \"|\" +"
+        },
+        {
+          "line": 75,
+          "text": "(previousRootObjectId?.value ?: \"\") + \"|\" + createdAtMillis"
+        },
+        {
+          "line": 97,
+          "text": "class FileContinuumObjectStore("
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumRuntimeStore.kt",
+      "blob": "131a3db803a4e5c9e0cf0049b2b399ac54326d4b",
+      "sha256": "15123e381ce78cce3f74e7d22119c55bf36b80990736bc7d52938970ee94070e",
+      "matches": [
+        {
+          "line": 95,
+          "text": "class ContinuumRuntimeStore("
+        },
+        {
+          "line": 105,
+          "text": "private val seedStore = FileContinuumSeedStore(File(baseDirectory, \"seed\"), signer)"
+        },
+        {
+          "line": 106,
+          "text": "private val objectStore = FileContinuumObjectStore(File(baseDirectory, \"objects\"))"
+        },
+        {
+          "line": 114,
+          "text": "fun openOrCreate(): ContinuumRuntimeState {"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ChatReasoningRouter.kt",
+      "blob": "15e6ab37391e2fa6d0f1a4f8f14a84523433a48f",
+      "sha256": "1f8350fc97a4204f39e3e9c075b2c1cd99c25fccd657784a0379b4a6594a211b",
+      "matches": [
+        {
+          "line": 37,
+          "text": "/** Returns a bounded, unverified advisory for hard tool-free tasks, or null (never throws). */"
+        },
+        {
+          "line": 41,
+          "text": "val assessment = ContinuumTaskClassifier.classify(task)"
+        },
+        {
+          "line": 42,
+          "text": "if (assessment.expectedToolUse || assessment.taskClass == IntelligenceTaskClass.DEVICE) return null"
+        },
+        {
+          "line": 43,
+          "text": "val strategy = ReasoningStrategySelector.select(assessment.strategyProfile())"
+        },
+        {
+          "line": 60,
+          "text": "val deadline = nowMillis() + config.totalDeadlineMillis"
+        },
+        {
+          "line": 65,
+          "text": "check(nowMillis() < deadline) { \"Reasoning deadline expired.\" }"
+        },
+        {
+          "line": 70,
+          "text": "deadlineMillis = minOf(request.deadlineMillis, deadline)"
+        },
+        {
+          "line": 101,
+          "text": "\"never overrides identity, governance, tool rules or the user's request]\\n\""
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumIntelligence.kt",
+      "blob": "8ab20e1ca371b021e67ee19067105c3cca9d898d",
+      "sha256": "37fd455568dcedc7ea7d5e384f91175448bf4a5bb105225a078127642dd5c32f",
+      "matches": [
+        {
+          "line": 39,
+          "text": "object ContinuumTaskClassifier {"
+        },
+        {
+          "line": 193,
+          "text": "val assessment = ContinuumTaskClassifier.classify(request.userRequest, request.requestedStrategy)"
+        },
+        {
+          "line": 194,
+          "text": "val strategy = ReasoningStrategySelector.select(assessment.strategyProfile())"
+        },
+        {
+          "line": 216,
+          "text": "val orchestrator = BoundedDeliberationOrchestrator("
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/Deliberation.kt",
+      "blob": "38c0186cbef8f75a0f29c82753d846cac2b8389d",
+      "sha256": "d499bf6992116571d886487b9f1d8de9f104a9a5b7b25e036dd3a553721b3d95",
+      "matches": [
+        {
+          "line": 60,
+          "text": "object ReasoningStrategySelector {"
+        },
+        {
+          "line": 140,
+          "text": "class BoundedDeliberationOrchestrator("
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumBenchmark.kt",
+      "blob": "b6499cbe2fc452c274d8146a58b852a586a0ad09",
+      "sha256": "dcb0c3570ffd7069b979d6e6ebbbdf7194c7886546ed002b8634b19c875811e7",
+      "matches": [
+        {
+          "line": 3,
+          "text": "enum class BenchmarkCategory {"
+        },
+        {
+          "line": 76,
+          "text": "object ContinuumBenchmarkHarness {"
+        },
+        {
+          "line": 141,
+          "text": "object ModelMortalityExperiment {"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveRaid.kt",
+      "blob": "45f399e578af990270cea4042e121a3df23fcd1f",
+      "sha256": "1378641dda8ec32587556ac151542ebdba2fcc502eb4e8216a23fdc82a7e3894",
+      "matches": [
+        {
+          "line": 56,
+          "text": "object CognitiveRaidPlanner {"
+        },
+        {
+          "line": 57,
+          "text": "fun assess("
+        },
+        {
+          "line": 64,
+          "text": "val tierReplicas = replicas.filter { it.tier == policy.tier }"
+        },
+        {
+          "line": 65,
+          "text": "val healthy = tierReplicas.count { it.health == ReplicaHealth.AVAILABLE }"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ComputeFabric.kt",
+      "blob": "d0f5626a12025bb6414a4b9a6853f85599db2f8a",
+      "sha256": "500b752e7e8f7b70ac97d8dbdc685ee32589301178738a3d3150d0a58979718b",
+      "matches": [
+        {
+          "line": 142,
+          "text": "class ComputeScheduler("
+        },
+        {
+          "line": 146,
+          "text": "fun select(task: ComputeTask): NodeCapabilityManifest? {"
+        },
+        {
+          "line": 229,
+          "text": "class ComputeResultVerifier("
+        },
+        {
+          "line": 269,
+          "text": "fun interface LocalComputeWorker {"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/VirtualModelFabric.kt",
+      "blob": "8c9c8edb2b2326936a24afc5914e469a0bcdb5aa",
+      "sha256": "35f3e4ccf939d4ee422b85c448b6dcd9eafcb4d26c9bc706d7e4e4d918d953c7",
+      "matches": [
+        {
+          "line": 9,
+          "text": "class VirtualModelFabricSnapshotExporter("
+        },
+        {
+          "line": 19,
+          "text": "val scheduler = ComputeScheduler(registry) { now }"
+        },
+        {
+          "line": 28,
+          "text": "scheduler.select(task.copy(assignedNodeId = node.nodeId)) == node &&"
+        },
+        {
+          "line": 36,
+          "text": "append(\",\\\"executable\\\":false,\\\"task\\\":{\")"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt",
+      "blob": "824e1455982be5b1c252e9b4c3ca5751dd6a1da2",
+      "sha256": "00f9193cd3f8973f0fc409203be0b0f372818856214493c3c98e738e56fffa23",
+      "matches": [
+        {
+          "line": 5,
+          "text": "import at.heinz.deviceai.cognitive.FileContinuumObjectStore"
+        },
+        {
+          "line": 80,
+          "text": "* Working notes reuse FileContinuumObjectStore and never enter the owner's LEX3/fact store."
+        },
+        {
+          "line": 178,
+          "text": "val stored = FileContinuumObjectStore(directory.toFile(), maxContextBytes + 256, maxContextStoreBytes)"
+        },
+        {
+          "line": 200,
+          "text": "val stored = FileContinuumObjectStore(directory.toFile(), maxContextBytes + 256, maxContextStoreBytes)"
+        },
+        {
+          "line": 239,
+          "text": "val stored = FileContinuumObjectStore(directory.toFile(), ChiefBotConversationCodec.MAX_BYTES, CONVERSATION_STORE_BYTES)"
+        },
+        {
+          "line": 261,
+          "text": "val stored = FileContinuumObjectStore(directory.toFile(), ChiefBotConversationCodec.MAX_BYTES, CONVERSATION_STORE_BYTES)"
+        }
+      ]
+    },
+    {
+      "path": ".github/continuum/mcp-adapter.mjs",
+      "blob": "74bf88d961d9631e8cd84783fa01d68e7beb45fd",
+      "sha256": "36d97d71535dc7cb2e35d3a33c2791d32546aa6013be2d283853d25f2a754d97",
+      "matches": [
+        {
+          "line": 3,
+          "text": "* owner allowlist, the dual-control decision of ContinuumDualControlPolicy.kt (same table, mirrored here), workspace"
+        },
+        {
+          "line": 19,
+          "text": "/** Mirror of ContinuumDualControlPolicy.evaluate: DENY, REQUIRE_OWNER_REVIEW or ALLOW (REVIEW is not authorization). */"
+        },
+        {
+          "line": 20,
+          "text": "export function decideToolCall({profile,name,spec,grant}){"
+        },
+        {
+          "line": 25,
+          "text": "if(profile==='OWNER_AUTONOMOUS'&&grant.reusableConsentToolNames?.includes(name))return 'ALLOW';"
+        },
+        {
+          "line": 62,
+          "text": "export async function createMcpSession({command,args=[],cwd,env={},allowlist,profile='PROTECTED',grant,workspace=null,"
+        },
+        {
+          "line": 65,
+          "text": "if(!['PROTECTED','OWNER_AUTONOMOUS'].includes(profile))fail('MCP_PROFILE_INVALID');"
+        },
+        {
+          "line": 102,
+          "text": "const decision=spec?decideToolCall({profile,name,spec,grant}):'DENY';"
+        }
+      ]
+    },
+    {
+      "path": ".github/continuum/teamleader-mcp-preflight.mjs",
+      "blob": "8cba1914419649ceac72b7360df38b5965924b55",
+      "sha256": "606543e8f4f7bb0db4efdf892efa7dca4c3bf874f2c75a5d8db03e966eaf8527",
+      "matches": [
+        {
+          "line": 10,
+          "text": "import {createMcpSession} from './mcp-adapter.mjs';"
+        },
+        {
+          "line": 14,
+          "text": "const ALLOWLIST=Object.freeze({git_head:{risk:'READ_ONLY'},git_status:{risk:'READ_ONLY'}});"
+        },
+        {
+          "line": 17,
+          "text": "export async function mcpPreflight({root,stateDir,grant,profile='PROTECTED',approvedServers,limits={},now=Date.now}){"
+        },
+        {
+          "line": 20,
+          "text": "const session=await createMcpSession({command:process.execPath,args:[GIT_READONLY_SERVER],workspace:source,"
+        },
+        {
+          "line": 21,
+          "text": "allowlist:ALLOWLIST,grant,profile,approvedServers,limits:{maxCalls:2,callTimeoutMs:10000,...limits}});"
+        }
+      ]
+    },
+    {
+      "path": "docs/research/omega/CODE48-CONNECTED-CINEMA-20261107.md",
+      "blob": "c3508aa700a52dbd19dc60423e5a2e48138eb38f",
+      "sha256": "1c066fc3e32c09168136f48c894895c869851441df50add39ed456f3d4e562e8",
+      "matches": [
+        {
+          "line": 88,
+          "text": "- PR490: absent CognitiveLoop contract/engine/bridge/gates. Its own handoff"
+        },
+        {
+          "line": 91,
+          "text": "- PR385/386: absent ChiefTaskGraph and ChiefProofGatedStrategyLedger. Source"
+        },
+        {
+          "line": 94,
+          "text": "- PR316/318: absent disk-backed source-stream import and UTF-8 chunk index."
+        }
+      ]
+    }
+  ],
+  "oldMicroAgentScript": {
+    "ref": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+    "path": "scripts/continuum-microagents.mjs",
+    "blob": "31d5648ca4485385b7a1b4f05fbb1cf548ad4343",
+    "contentReadInThisAudit": false
+  }
+}

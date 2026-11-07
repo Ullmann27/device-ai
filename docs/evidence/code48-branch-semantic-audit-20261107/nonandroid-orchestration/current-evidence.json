@@ -1,0 +1,1166 @@
+{
+  "comparisonSource": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "comparisonTree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "candidateUnchanged": true,
+  "pathsCovered": 22,
+  "originalVariantsVerified": 27,
+  "historicalCallerReadsVerified": 13,
+  "uniqueHistoricalCallerBlobs": 10,
+  "currentFilesPinned": [
+    {
+      "path": ".github/continuum/app-navigation-wiring.test.mjs",
+      "blob": "c60d45ef41e00da831c314ad7eeeabaf0cc357c6",
+      "sha256": "f7da42649c7a61a4e1762063eafaf040b10d279a479a83543db4f6c646f24f0a",
+      "matches": [
+        {
+          "line": 10,
+          "text": "const spec = read('app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt');"
+        },
+        {
+          "line": 44,
+          "text": "assert.match(activity, /ContinuumWorkAreaNavigationSpec\\.showBottomBar/);"
+        },
+        {
+          "line": 49,
+          "text": "const navigation = member('private fun navigateWorkArea(');"
+        },
+        {
+          "line": 52,
+          "text": "assert.match(navigation, /ContinuumWorkArea\\.LERNEN -> showDashboardCategory\\(\"KI-System\", ContinuumWorkAreaNavigationSpec\\.systemEntries\\)/);"
+        },
+        {
+          "line": 53,
+          "text": "assert.match(navigation, /ContinuumWorkArea\\.ENTWICKELN -> showDashboardCategory\\(\"Werkzeuge\", ContinuumWorkAreaNavigationSpec\\.toolEntries\\)/);"
+        },
+        {
+          "line": 55,
+          "text": "assert.match(member('private fun showMoreWorkAreas()'), /showDashboardCategory\\(\"Mehr\", ContinuumWorkAreaNavigationSpec\\.moreEntries\\)/);"
+        },
+        {
+          "line": 71,
+          "text": "assert.match(activity, /contentDescription = ContinuumWorkAreaNavigationSpec\\.accessibilityLabel\\(destination\\)/);"
+        },
+        {
+          "line": 76,
+          "text": "assert.match(bar, /for \\(destination in ContinuumWorkAreaNavigationSpec\\.destinations\\)/);"
+        },
+        {
+          "line": 77,
+          "text": "assert.match(bar, /setOnClickListener \\{ navigateWorkArea\\(destination\\) \\}/);"
+        },
+        {
+          "line": 78,
+          "text": "assert.match(bar, /contentDescription = ContinuumWorkAreaNavigationSpec\\.accessibilityLabel\\(destination\\)/);"
+        },
+        {
+          "line": 107,
+          "text": "assert.match(member('private fun showMoreWorkAreas()'), /ContinuumWorkAreaNavigationSpec\\.moreEntries/);"
+        },
+        {
+          "line": 148,
+          "text": "assert.match(activity, /activeWorkArea = ContinuumWorkAreaNavigationSpec\\.selectionAfterTap/);"
+        }
+      ],
+      "matchedLineCount": 12
+    },
+    {
+      "path": ".github/continuum/backlog-cli.mjs",
+      "blob": "64d6dd3a48d769c475d919c1828da926fae9ad08",
+      "sha256": "cca0682632da6b3a3a0bf1aca0aac848877888aff2f15ada7830ad481f2105ea",
+      "matches": [
+        {
+          "line": 37,
+          "text": "export function formatBacklog(doc){"
+        },
+        {
+          "line": 50,
+          "text": "export async function backlogCommand(sub,o,{root=process.cwd(),log=console.log,now=Date.now}={}){"
+        },
+        {
+          "line": 52,
+          "text": "const store=new B.BacklogStore(safePath(o.file,'file'),{actor});"
+        }
+      ],
+      "matchedLineCount": 3
+    },
+    {
+      "path": ".github/continuum/backlog-fixtures.mjs",
+      "blob": "c0f76805eddd0ba9f023a87b542e96b0d3f5aebd",
+      "sha256": "910eb3cfc6ff039efbd9c1b168053fe8ce9f0f269d685c20ea9d7e85cf5eda91",
+      "matches": [
+        {
+          "line": 11,
+          "text": "*   node .github/continuum/backlog-fixtures.mjs write"
+        },
+        {
+          "line": 13,
+          "text": "*   node .github/continuum/backlog-fixtures.mjs roundtrip-prepare <dir>"
+        },
+        {
+          "line": 15,
+          "text": "*   node .github/continuum/backlog-fixtures.mjs roundtrip-verify <dir>"
+        },
+        {
+          "line": 17,
+          "text": "export const FIXTURE_DIR=fileURLToPath(new URL('../../app/src/test/resources/continuum/backlog/',import.meta.url));"
+        },
+        {
+          "line": 24,
+          "text": "export function evidence(taskId,token,artifact,{at,executed=12,passed=true,failed=0,profile='node-continuum',repair=null}){"
+        },
+        {
+          "line": 147,
+          "text": "export function runCase(c){"
+        },
+        {
+          "line": 156,
+          "text": "export function conformance(){"
+        },
+        {
+          "line": 169,
+          "text": "export function fixtureFiles(){"
+        },
+        {
+          "line": 214,
+          "text": "export const ROUNDTRIP={nodeActor:'node-roundtrip',kotlinActor:'android-roundtrip'};"
+        },
+        {
+          "line": 216,
+          "text": "export function roundtripPrepare(dir){"
+        },
+        {
+          "line": 220,
+          "text": "const store=new B.BacklogStore(file,{actor:ROUNDTRIP.nodeActor,clock:()=>1_800_000_000_000});"
+        },
+        {
+          "line": 244,
+          "text": "export function roundtripKotlinPlan(){"
+        },
+        {
+          "line": 264,
+          "text": "export function roundtripSimulateKotlin(dir){"
+        },
+        {
+          "line": 266,
+          "text": "const store=new B.BacklogStore(path.join(dir,'backlog.json'),{actor:ROUNDTRIP.kotlinActor});"
+        },
+        {
+          "line": 272,
+          "text": "export function roundtripVerify(dir){"
+        },
+        {
+          "line": 291,
+          "text": "const store=new B.BacklogStore(file,{actor:ROUNDTRIP.nodeActor});"
+        },
+        {
+          "line": 311,
+          "text": "}else{console.error('usage: backlog-fixtures.mjs write | roundtrip-prepare <dir> | roundtrip-verify <dir>');process.exitCode=2;}"
+        }
+      ],
+      "matchedLineCount": 17
+    },
+    {
+      "path": ".github/continuum/ccc1-cli.mjs",
+      "blob": "916f98a2be5c211dccea260612777296789da541",
+      "sha256": "2c2252fa0d24b1b045a83fefdd8442e837237038b306d0fde36608d501b8ae74",
+      "matches": [
+        {
+          "line": 20,
+          "text": "import {submitOnce,listTasks,runCcc1Cycle,compileGoal,compileRepair,abortTask,patchForReview} from './ccc1-worker.mjs';"
+        },
+        {
+          "line": 23,
+          "text": "import {runTeamleaderLoop} from './local-teamleader-loop.mjs';"
+        },
+        {
+          "line": 26,
+          "text": "export function parseArgs(argv){"
+        },
+        {
+          "line": 41,
+          "text": "export const STATUS_TASK_LIMIT=40;"
+        },
+        {
+          "line": 49,
+          "text": "export function statusJson(tasks,experience,reviews=new Map()){"
+        },
+        {
+          "line": 67,
+          "text": "out(JSON.stringify(compileRepair({project:o.project,stateDir:o.state,chain:o.repair})));"
+        },
+        {
+          "line": 81,
+          "text": "const {taskId,duplicate}=submitOnce({project:o.project,stateDir:o.state,order:o.order??null,chain:o.repair??null,"
+        },
+        {
+          "line": 105,
+          "text": "out(JSON.stringify(await runCcc1Cycle({project:o.project,stateDir:o.state,core:o.core??'disambiguate',indexOnIdle:o['index-on-idle']==='true'})));"
+        },
+        {
+          "line": 117,
+          "text": "const summary=await runTeamleaderLoop({"
+        },
+        {
+          "line": 118,
+          "text": "work:({signal})=>runCcc1Cycle({project:o.project,stateDir:o.state,core:o.core??'disambiguate',signal,indexOnIdle:o['index-on-idle']==='true'}),"
+        }
+      ],
+      "matchedLineCount": 10
+    },
+    {
+      "path": ".github/continuum/ccc1-experience.mjs",
+      "blob": "395e359bf9432d6fab53a0301707a46cea43ae53",
+      "sha256": "81e27f07d92a183cdd6d87d0fe3e834e48f16db9b55c7ee76056cc9c04cc3b1d",
+      "matches": [
+        {
+          "line": 15,
+          "text": "export function experienceOf(taskId,entries,{coreId=null,unchecked=[]}={}){"
+        },
+        {
+          "line": 38,
+          "text": "export const EXPERIENCE_LIMITS=Object.freeze({maxRecords:4096,maxBytes:16*1024*1024,maxRecordBytes:256*1024,lockWaitMs:2000});"
+        },
+        {
+          "line": 59,
+          "text": "export class ExperienceLog{"
+        }
+      ],
+      "matchedLineCount": 3
+    },
+    {
+      "path": ".github/continuum/ccc1-independent-verifier.mjs",
+      "blob": "d416ab3fdb152b97a7436e36cd6cab927355ee75",
+      "sha256": "b66ed4d1a1d4b03cce0933b00121d09bc094ad33847e728e69a420e8f91bac3d",
+      "matches": [
+        {
+          "line": 11,
+          "text": "import {git,createWorktree,removeWorktree,runChain,evidenceSufficient,boundedWorktreeFile} from './repair-loop.mjs';"
+        },
+        {
+          "line": 16,
+          "text": "export const CCC1_RESEARCH_OUTCOMES=Object.freeze({"
+        },
+        {
+          "line": 54,
+          "text": "export function assertCcc1WorktreePatchScope(wt,file,base){"
+        },
+        {
+          "line": 60,
+          "text": "export function assertCcc1RunMeasurement(run){"
+        },
+        {
+          "line": 78,
+          "text": "export function assertCcc1TestEvidenceParity(baselineRun,candidateRun){"
+        },
+        {
+          "line": 125,
+          "text": "export function validateCcc1CandidateBinding({typedTask,candidate,file}={}){"
+        },
+        {
+          "line": 146,
+          "text": "export function validateCcc1ResearchRequest({typedTask,candidate,file,executor}={}){"
+        },
+        {
+          "line": 153,
+          "text": "export function verifyCcc1OwnerGrant({projectRoot,stateDir,typedTask}={}){"
+        },
+        {
+          "line": 170,
+          "text": "export function runIndependentCcc1PatchVerification({typedTask,candidate,file,projectRoot,stateDir,executor,deadline=Date.now()+900000}={}){"
+        },
+        {
+          "line": 176,
+          "text": "verifyCcc1OwnerGrant({projectRoot:project,stateDir,typedTask:task});"
+        },
+        {
+          "line": 202,
+          "text": "if(!primaryEvidence.passed||!evidenceSufficient(red.results,green.results).sufficient)"
+        },
+        {
+          "line": 204,
+          "text": "fresh=createWorktree(project,task.sourceCommit);"
+        },
+        {
+          "line": 213,
+          "text": "if(!verified.passed||!evidenceSufficient(red.results,second.results).sufficient||"
+        }
+      ],
+      "matchedLineCount": 13
+    },
+    {
+      "path": ".github/continuum/ccc1-journal.mjs",
+      "blob": "1a2ffbfc932b2ec59d5522b220ea92bfe7ccb384",
+      "sha256": "e4cfe7b3cf59e42c25d890751eb21ccf97f0e7c81c20c7f29641235c6a43f1c0",
+      "matches": [
+        {
+          "line": 19,
+          "text": "export function runtimeKey(stateDir){"
+        },
+        {
+          "line": 28,
+          "text": "export class JournalCorruption extends Error{}"
+        },
+        {
+          "line": 30,
+          "text": "export class DurableTaskJournal{"
+        },
+        {
+          "line": 121,
+          "text": "export class WriterLock{"
+        }
+      ],
+      "matchedLineCount": 4
+    },
+    {
+      "path": ".github/continuum/ccc1-technical-recall.mjs",
+      "blob": "ab0d5464c64beb26491da3f2c8a4b04f44e6eb9d",
+      "sha256": "b37f88b38e4ccb6cb787e5609f1653a1c0dbb604995839ef2044e448b7fc75d6",
+      "matches": [
+        {
+          "line": 19,
+          "text": "export const TECHNICAL_RECALL_LIMITS=Object.freeze({maxItems:3,maxChars:4096,maxAgeMs:30*86400000,maxProofBytes:180000,maxLineageChecks:8,maxGitCalls:32,maxGitMillis:10000});"
+        },
+        {
+          "line": 109,
+          "text": "export function recordTechnicalExperience({stateDir,taskId,task,modelTask,modelObservation,verification,reflection,key,now=Date.now()}={}){"
+        },
+        {
+          "line": 151,
+          "text": "export function revokeTechnicalExperience({stateDir,taskId,task,key,reason,now=Date.now()}={}){"
+        },
+        {
+          "line": 261,
+          "text": "export function recallTechnicalExperiences({stateDir,task,repoFullName,key,now=Date.now(),limit=3,maxChars=4096,project=null}={}){"
+        }
+      ],
+      "matchedLineCount": 4
+    },
+    {
+      "path": ".github/continuum/ccc1-worker.mjs",
+      "blob": "3f5d5d5a3df05b8461874ea5dfaa369d7c027cf7",
+      "sha256": "30770fe9316f85ee96fdd09448a22129027eb3ec1f8569e35c3ec4d1e32a6d41",
+      "matches": [
+        {
+          "line": 1,
+          "text": "// CCC1 worker cycle for the existing local loop (local-teamleader-loop.mjs runTeamleaderLoop): no second scheduler."
+        },
+        {
+          "line": 28,
+          "text": "export const OUTCOME_FOR={COMPLETED:'VERIFIED_PATCH_PENDING_REVIEW',ABSTAINED:'DONE_INVESTIGATION',ABORTED:'DONE_INVESTIGATION',"
+        },
+        {
+          "line": 42,
+          "text": "export function repositoryOf(project){"
+        },
+        {
+          "line": 51,
+          "text": "export function submitGoal({project,stateDir,text,repoFullName=null,maxRounds=3,deadlineMinutes=24*60,expectedSourceCommit=null}){"
+        },
+        {
+          "line": 62,
+          "text": "export function submitRepair({project,stateDir,chain,repoFullName=null,maxRounds=2,deadlineMinutes=24*60,expectedSourceCommit=null}){"
+        },
+        {
+          "line": 74,
+          "text": "export function compileRepair({project,stateDir,chain}){"
+        },
+        {
+          "line": 114,
+          "text": "export function abortTask({project,stateDir,taskId,reason='Besitzer hat den Auftrag abgebrochen'}){"
+        },
+        {
+          "line": 169,
+          "text": "export function submitOnce({project,stateDir,order=null,chain=null,text=null,repoFullName=null,sourceCommit}){"
+        },
+        {
+          "line": 200,
+          "text": "export function patchForReview({stateDir,taskId,previewBytes=4000}){"
+        },
+        {
+          "line": 218,
+          "text": "export function listTasks(stateDir){"
+        },
+        {
+          "line": 240,
+          "text": "export async function runCcc1Cycle({project,stateDir,core='disambiguate',maxTurns=24,signal=null,indexOnIdle=false}){"
+        }
+      ],
+      "matchedLineCount": 11
+    },
+    {
+      "path": ".github/continuum/coding-agent-loop.mjs",
+      "blob": "c31689ce331db9ecc3180439a3daf865505dbdc6",
+      "sha256": "c5743cd6e5866b97b9ff04a9449e4d22d5687d115f9b0a39ecf54570057f5ce1",
+      "matches": [
+        {
+          "line": 24,
+          "text": "export const AGENT_LIMITS=Object.freeze({maxSteps:24,maxObservationChars:6000,maxReadChars:80000,maxLines:300,"
+        },
+        {
+          "line": 28,
+          "text": "export const AGENT_TOOLS=Object.freeze(["
+        },
+        {
+          "line": 42,
+          "text": "export const ACTION_SCHEMA=Object.freeze({type:'object',additionalProperties:false,required:['tool','args'],"
+        },
+        {
+          "line": 45,
+          "text": "export const AGENT_SYSTEM_PROMPT=["
+        },
+        {
+          "line": 60,
+          "text": "export function isReadablePath(file){"
+        },
+        {
+          "line": 78,
+          "text": "export function minimalPatch(before,after,maxChars=AGENT_LIMITS.maxPatchChars){"
+        },
+        {
+          "line": 98,
+          "text": "export function createScriptedBrain(actions){"
+        },
+        {
+          "line": 111,
+          "text": "export function createChatCompletionsBrain({endpoint='http://127.0.0.1:8089/v1/chat/completions',model='local',apiKey=null,"
+        },
+        {
+          "line": 139,
+          "text": "export function createScratchTestRunner({wt,base,chain,executor=null,deadline=Date.now()+600000}){"
+        },
+        {
+          "line": 175,
+          "text": "export function createAgentCandidateProvider({task,brain,runTests=null,limits={},onStep=null,evidenceDir=null,now=Date.now}={}){"
+        },
+        {
+          "line": 394,
+          "text": "export function createAgentProviderFromEnv({task,env=process.env,evidenceDir=null}={}){"
+        },
+        {
+          "line": 406,
+          "text": "export function scoutRequest({wt,base,request,brain,limits={},deadline=Date.now()+600000,onStep=null,evidenceDir=null}){"
+        }
+      ],
+      "matchedLineCount": 12
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator.mjs",
+      "blob": "31f7a598d4d560e0374b9e8656446b30c512e611",
+      "sha256": "0ef121bb5dfba45a800f73543bacb0c6fbded3b4a4020a674df999d7503131dd",
+      "matches": [
+        {
+          "line": 8,
+          "text": "import {createAgentProviderFromEnv} from './coding-agent-loop.mjs';"
+        },
+        {
+          "line": 27,
+          "text": "export function codingTaskFailureResult(error){return FAILURE_RESULTS.get(error)??null;}"
+        },
+        {
+          "line": 41,
+          "text": "export function prepareCodingTask({project,stateDir,task}){"
+        },
+        {
+          "line": 78,
+          "text": "export function assertCodingModelObservationBinding({task,raw,seen=new Set()}={}){"
+        },
+        {
+          "line": 85,
+          "text": "export function assertCodingInferenceFailureBinding({task,error,seen=new Set()}={}){"
+        },
+        {
+          "line": 96,
+          "text": "providerFactory=options=>(options.env?.CONTINUUM_CODING_AGENT_LOOP==='1'?createAgentProviderFromEnv:createCodingCandidateProvider)(options),"
+        }
+      ],
+      "matchedLineCount": 6
+    },
+    {
+      "path": ".github/continuum/coding-provider.mjs",
+      "blob": "b481ca578a10c22743e57c8d27d7fab1e6240998",
+      "sha256": "15b59137c396fe1544ba36336c1e9925fb35700b585e4eb2d15344af646a80e8",
+      "matches": [
+        {
+          "line": 14,
+          "text": "export const isTrustedLocalModelObservation=observation=>!!observation&&trustedObservations.has(observation);"
+        },
+        {
+          "line": 22,
+          "text": "export function createCodingCandidateProvider({root,task,env=process.env,run=spawnSync,evidenceDir=null,remoteTeacher=null,modelTimeoutMs=60_000,technicalRecall='',requireLocalModelObservation=false}={}){"
+        },
+        {
+          "line": 258,
+          "text": "const localProcess=!remoteTeacher&&/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (LOCAL_RUNTIME_(?:SIGNAL_SIGXCPU|SIGNAL_SIGKILL|EXIT_137|EXIT_152|PROCESS_FAILED))$/.exec(String(response.stderr??'').trim());"
+        }
+      ],
+      "matchedLineCount": 3
+    },
+    {
+      "path": ".github/continuum/compute-fabric-model-adapter.mjs",
+      "blob": "234ee3f3787b183153541dbff30ab3c84c3f8930",
+      "sha256": "5654cc13f7a1bf10421e4b0842520032aef3234b9288522efb0bb908ba09dec1",
+      "matches": [
+        {
+          "line": 6,
+          "text": "import {planVirtualModelRoute} from './continuum-virtual-model-fabric.mjs';"
+        },
+        {
+          "line": 48,
+          "text": "export function planVirtualModelRouteFromRegistry({snapshotJson,request,modelOffers,nowMillis}={}){"
+        },
+        {
+          "line": 59,
+          "text": "planVirtualModelRoute({request,offers:modelOffers,nowMillis});"
+        },
+        {
+          "line": 71,
+          "text": "const plan=planVirtualModelRoute({request,offers,nowMillis});"
+        }
+      ],
+      "matchedLineCount": 4
+    },
+    {
+      "path": ".github/continuum/continuum-virtual-model-fabric.mjs",
+      "blob": "dfc9b61fa79a6104f9ff8514d7014c55747bdaed",
+      "sha256": "33f5ddaa4b0e4c48358123a95dbb06c02fd1467c0280f88b269d527117ad0cfd",
+      "matches": [
+        {
+          "line": 14,
+          "text": "export const FABRIC_SCHEMA='continuum-virtual-model-fabric-plan';"
+        },
+        {
+          "line": 15,
+          "text": "export const FABRIC_VERSION=1;"
+        },
+        {
+          "line": 22,
+          "text": "export function buildPinnedDeepSeekResourceManifest(hubSnapshot){"
+        },
+        {
+          "line": 35,
+          "text": "export function planVirtualModelRoute({request,offers,nowMillis}={}){"
+        },
+        {
+          "line": 94,
+          "text": "ownerEnrollmentAttested:false,actualModelRevisionAttested:false,executable:false"
+        }
+      ],
+      "matchedLineCount": 5
+    },
+    {
+      "path": ".github/continuum/developer-agent.mjs",
+      "blob": "767dfe1328ca7247539b9d36c2a05e92b5d8ae78",
+      "sha256": "eaaac5daeef0353429d34faa8d10a4d924e250dcec3d37b3c5d00136090c0d46",
+      "matches": [
+        {
+          "line": 10,
+          "text": "export function triageRun(run, jobs=[]) {"
+        },
+        {
+          "line": 24,
+          "text": "export function summarize(runs,jobsByRun={}) {"
+        },
+        {
+          "line": 105,
+          "text": "const {backlogCommand}=await import('./backlog-cli.mjs');"
+        },
+        {
+          "line": 106,
+          "text": "return backlogCommand(o._[1],o,{root,log});"
+        }
+      ],
+      "matchedLineCount": 4
+    },
+    {
+      "path": ".github/continuum/development-backlog.mjs",
+      "blob": "dfa1f4b762a9e45c81d47b3431ca35d013d85d9c",
+      "sha256": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d",
+      "matches": [
+        {
+          "line": 21,
+          "text": "export const SCHEMA='continuum-development-backlog';"
+        },
+        {
+          "line": 22,
+          "text": "export const SCHEMA_VERSION=2;"
+        },
+        {
+          "line": 23,
+          "text": "export const STATES=Object.freeze(['PROPOSED','READY','IN_PROGRESS','VERIFYING','BLOCKED','DONE','FAILED','ABORTED','REJECTED']);"
+        },
+        {
+          "line": 24,
+          "text": "export const OPS=Object.freeze(['propose','accept','reject','claim','claimNext','renew','submit','complete','fail','expire','abort','retry','setPriority']);"
+        },
+        {
+          "line": 25,
+          "text": "export const ARTIFACT_TYPES=Object.freeze(['PATCH','PROPOSAL','REPORT']);"
+        },
+        {
+          "line": 26,
+          "text": "export const TEST_PROFILES=Object.freeze(['node-continuum','node-backend','android-unit','jvm-harness']);"
+        },
+        {
+          "line": 27,
+          "text": "export const LIMITS=Object.freeze({tasks:500,history:40,evidence:8,dependsOn:16,profiles:8,title:200,text:400,"
+        },
+        {
+          "line": 52,
+          "text": "export class BacklogError extends Error{"
+        },
+        {
+          "line": 63,
+          "text": "export function clip(value,n){"
+        },
+        {
+          "line": 68,
+          "text": "export const singleLine=(value,n)=>clip(String(value).replace(CONTROL_ALL,' '),n);"
+        },
+        {
+          "line": 70,
+          "text": "export function canonical(value,depth=0){"
+        },
+        {
+          "line": 94,
+          "text": "export const sha256Hex=data=>crypto.createHash('sha256').update(data).digest('hex');"
+        },
+        {
+          "line": 97,
+          "text": "export function parseStrict(text){"
+        },
+        {
+          "line": 194,
+          "text": "export function validateEvidence(e,code='INVALID_FIELD'){"
+        },
+        {
+          "line": 218,
+          "text": "export function evidenceProblems(task,e){"
+        },
+        {
+          "line": 276,
+          "text": "export function validateDocument(doc){"
+        },
+        {
+          "line": 316,
+          "text": "export const integrityOf=doc=>sha256Hex(Buffer.from(canonical(withoutIntegrity(doc)),'utf8'));"
+        },
+        {
+          "line": 318,
+          "text": "export function emptyDocument(at,actor){"
+        },
+        {
+          "line": 323,
+          "text": "export function encodeDocument(doc){"
+        },
+        {
+          "line": 335,
+          "text": "export function decodeDocument(bytes,{migrate=null}={}){"
+        },
+        {
+          "line": 354,
+          "text": "export const repoPath=file=>/^(main|test|androidTest)\\//.test(file)?'app/src/'+file:file;"
+        },
+        {
+          "line": 355,
+          "text": "export const findingTaskId=(kind,file,symbol)=>'inv-'+sha256Hex(kind+'\\u0000'+file+'\\u0000'+symbol).slice(0,16);"
+        },
+        {
+          "line": 356,
+          "text": "export function findingPriority(kind,confidence){"
+        },
+        {
+          "line": 359,
+          "text": "export function findingTask(f){"
+        },
+        {
+          "line": 368,
+          "text": "export function migrateV1(v1,{at,actor}){"
+        },
+        {
+          "line": 579,
+          "text": "export function applyOp(doc,op){"
+        },
+        {
+          "line": 602,
+          "text": "export function applyOps(doc,ops,{stopOnError=true}={}){"
+        },
+        {
+          "line": 618,
+          "text": "export function nextEligible(doc,kinds=null,sources=null,base=null,taskId=null,operation=null){"
+        },
+        {
+          "line": 632,
+          "text": "export const newToken=()=>crypto.randomBytes(16).toString('hex');"
+        },
+        {
+          "line": 648,
+          "text": "export class BacklogStore{"
+        }
+      ],
+      "matchedLineCount": 30
+    },
+    {
+      "path": ".github/continuum/export-review-packet.py",
+      "blob": "0ad7438a5fa77f6a61ec817e1dc692a18ca23349",
+      "sha256": "f6ca548eb2f643e24d3184c77a1b0ad8f5a83d1d03c4c914765dc39b3a1124b8",
+      "matches": [],
+      "matchedLineCount": 0
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "blob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+      "sha256": "a6f9cf6b556386ca7f04eeedaa97fdf277817ed160f40f7a6945d4b28641e71e",
+      "matches": [
+        {
+          "line": 15,
+          "text": "export const DEFAULT_INTERVAL_MINUTES=60;"
+        },
+        {
+          "line": 16,
+          "text": "export const MAX_FAILURE_BACKOFF_MS=60*60*1000;"
+        },
+        {
+          "line": 28,
+          "text": "export function validateWorkerHeartbeat(hb){"
+        },
+        {
+          "line": 49,
+          "text": "export function isFailedCycleOutcome(outcome){"
+        },
+        {
+          "line": 53,
+          "text": "export function validateLoopOptions({intervalMinutes=60,maxCycles=null}={}){"
+        },
+        {
+          "line": 196,
+          "text": "export async function runTeamleaderLoop({"
+        }
+      ],
+      "matchedLineCount": 6
+    },
+    {
+      "path": ".github/continuum/mcp-adapter.mjs",
+      "blob": "74bf88d961d9631e8cd84783fa01d68e7beb45fd",
+      "sha256": "36d97d71535dc7cb2e35d3a33c2791d32546aa6013be2d283853d25f2a754d97",
+      "matches": [
+        {
+          "line": 16,
+          "text": "export const MCP_LIMITS=Object.freeze({maxCalls:20,callTimeoutMs:30000,startTimeoutMs:15000,maxResultChars:20000,maxLineChars:2_000_000,maxSessionMs:300000});"
+        },
+        {
+          "line": 20,
+          "text": "export function decideToolCall({profile,name,spec,grant}){"
+        },
+        {
+          "line": 36,
+          "text": "export function withinScope(args,workspace,depth=0){"
+        },
+        {
+          "line": 51,
+          "text": "export function approvedServer(command,args,approvedServers){"
+        }
+      ],
+      "matchedLineCount": 4
+    },
+    {
+      "path": ".github/continuum/public-web.mjs",
+      "blob": "6c0158794a82c30b5091cf95e33e54637616289e",
+      "sha256": "689efe9a2891900e83076ab437ad8c42a629c38518c71d866f6df6a705ffaf16",
+      "matches": [
+        {
+          "line": 27,
+          "text": "export function isBlockedAddress(address) {"
+        },
+        {
+          "line": 96,
+          "text": "export async function fetchPublicPage(value, { maxBytes = 350000, respectRobots = true } = {}) {"
+        },
+        {
+          "line": 131,
+          "text": "const page=await fetchPublicPage(normalized);"
+        },
+        {
+          "line": 170,
+          "text": "export function extractPage(html,url,contentType=\"text/html\"){"
+        }
+      ],
+      "matchedLineCount": 4
+    },
+    {
+      "path": ".github/continuum/repair-loop.mjs",
+      "blob": "baf1eeb8c68f80f2e508738a6b3b71f3bdc1f88d",
+      "sha256": "82c85fc68ed5fbdf21daa78c0bad448906d6d7a8407d0f906ba9011ba1e4184a",
+      "matches": [
+        {
+          "line": 28,
+          "text": "export const BRANCH_PREFIX='continuum-agent/';"
+        },
+        {
+          "line": 98,
+          "text": "export function git(cwd,args,opts={}){"
+        },
+        {
+          "line": 126,
+          "text": "export function continuumGradleProfile(wt,kind,{env=process.env,arch=process.arch}={}){"
+        },
+        {
+          "line": 149,
+          "text": "export const PROFILES=Object.freeze({"
+        },
+        {
+          "line": 174,
+          "text": "export const CHAINS=Object.freeze({"
+        },
+        {
+          "line": 181,
+          "text": "export const TEST_PROFILES=Object.freeze(['node-continuum','node-backend','android-unit','jvm-harness']);"
+        },
+        {
+          "line": 185,
+          "text": "export function validateRepairExecutor(executor,{abortWatch=null,executorAbortMode=null}={}){"
+        },
+        {
+          "line": 194,
+          "text": "export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=null,abortWatch=null,executorAbortMode=null}={}){"
+        },
+        {
+          "line": 294,
+          "text": "export function evidenceSufficient(baselineResults,candidateResults){"
+        },
+        {
+          "line": 323,
+          "text": "export function runChain(chain,wt,out,{deadline=null,forceRerun=false,executor=null,checkpoint=null,abortWatch=null,executorAbortMode=null}={}){"
+        },
+        {
+          "line": 338,
+          "text": "export function createWorktree(root,base){"
+        },
+        {
+          "line": 355,
+          "text": "export function resetWorktree(wt,base){"
+        },
+        {
+          "line": 359,
+          "text": "export function removeWorktree(root,wt){"
+        },
+        {
+          "line": 377,
+          "text": "export function parseUnifiedZeroHunks(diff){"
+        },
+        {
+          "line": 390,
+          "text": "export function boundedWorktreeFile(wt,relative){"
+        },
+        {
+          "line": 408,
+          "text": "export function checkCandidateJsSyntax(wt,relativeFiles,{timeoutMs=10000}={}){"
+        },
+        {
+          "line": 433,
+          "text": "export function checkCandidateKotlinSyntax(wt,relativeFiles,{base=null}={}){"
+        },
+        {
+          "line": 489,
+          "text": "export function repairCandidateRiskTier(strategy){"
+        },
+        {
+          "line": 497,
+          "text": "export function rankCandidates(candidates,stats=[],failedIds=new Set()){"
+        },
+        {
+          "line": 511,
+          "text": "export function runRepairShadowObserver(observer,candidates,ranked,stats,failedIds,diagnostics){"
+        },
+        {
+          "line": 720,
+          "text": "attempt.evidence=evidenceSufficient(baseline.results,check.results);"
+        },
+        {
+          "line": 776,
+          "text": "export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,candidateVerifier=null,independentVerifier=null,checkpoint=null,abortWatch=null,executor=null,executorAbortMode=null,onProgress=null}){"
+        },
+        {
+          "line": 912,
+          "text": "const evidence=evidenceSufficient(baseline.results,check.results);"
+        },
+        {
+          "line": 931,
+          "text": "export function commitProposal(wt,report,{branch,message}){"
+        }
+      ],
+      "matchedLineCount": 24
+    },
+    {
+      "path": ".github/continuum/zero-cost-core.mjs",
+      "blob": "e0450f9f9495e5a528f0b46fa21970d104a909df",
+      "sha256": "0f46bc1ab3549ad6fee0ca5cdfcc840eb455d67ecb9855839edf3726d2da3d48",
+      "matches": [
+        {
+          "line": 10,
+          "text": "fetchPublicPage, crawlPublicWeb, searchGitHubRepositories"
+        },
+        {
+          "line": 802,
+          "text": "const page=await fetchPublicPage(value);"
+        }
+      ],
+      "matchedLineCount": 2
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "blob": "de358ac1f50614465144e5e9878acacb1f624dec",
+      "sha256": "73133db72a87dbf4aeb1311e7f64a15c4072c85f97db53531bd07686ee263602",
+      "matches": [
+        {
+          "line": 1061,
+          "text": "val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(wide, viewport.compactDashboard)"
+        },
+        {
+          "line": 1362,
+          "text": "at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_THINKING -> navigateWorkArea(ContinuumWorkArea.CHAT)"
+        },
+        {
+          "line": 1363,
+          "text": "at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.COMPOSER -> navigateWorkArea(ContinuumWorkArea.CHAT)"
+        },
+        {
+          "line": 1383,
+          "text": "at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.PROCESSES -> navigateWorkArea(ContinuumWorkArea.CHAT)"
+        },
+        {
+          "line": 1384,
+          "text": "at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LIVE_DIALOG -> navigateWorkArea(ContinuumWorkArea.CHAT)"
+        },
+        {
+          "line": 1725,
+          "text": "for ((index, destination) in ContinuumWorkAreaNavigationSpec.destinations.withIndex()) {"
+        },
+        {
+          "line": 1748,
+          "text": "contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)"
+        },
+        {
+          "line": 1753,
+          "text": "setOnClickListener { navigateWorkArea(destination) }"
+        },
+        {
+          "line": 1780,
+          "text": "for (destination in ContinuumWorkAreaNavigationSpec.destinations) {"
+        },
+        {
+          "line": 1782,
+          "text": "contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)"
+        },
+        {
+          "line": 1787,
+          "text": "setOnClickListener { navigateWorkArea(destination) }"
+        },
+        {
+          "line": 1798,
+          "text": "val index = ContinuumWorkAreaNavigationSpec.destinations.indexOf(activeWorkArea).coerceAtLeast(0)"
+        },
+        {
+          "line": 1806,
+          "text": "for (destination in ContinuumWorkAreaNavigationSpec.destinations) {"
+        },
+        {
+          "line": 1811,
+          "text": "private fun navigateWorkArea(destination: ContinuumWorkArea) {"
+        },
+        {
+          "line": 1812,
+          "text": "activeWorkArea = ContinuumWorkAreaNavigationSpec.selectionAfterTap(activeWorkArea, destination)"
+        },
+        {
+          "line": 1817,
+          "text": "ContinuumWorkArea.LERNEN -> showDashboardCategory(\"KI-System\", ContinuumWorkAreaNavigationSpec.systemEntries)"
+        },
+        {
+          "line": 1818,
+          "text": "ContinuumWorkArea.ENTWICKELN -> showDashboardCategory(\"Werkzeuge\", ContinuumWorkAreaNavigationSpec.toolEntries)"
+        },
+        {
+          "line": 1824,
+          "text": "showDashboardCategory(\"Mehr\", ContinuumWorkAreaNavigationSpec.moreEntries)"
+        },
+        {
+          "line": 1826,
+          "text": "private fun showDashboardCategory(title: String, entries: List<ContinuumWorkAreaNavigationSpec.CategoryEntry>) {"
+        },
+        {
+          "line": 7271,
+          "text": "val trial=core.experimentalPairedDecoderContinuation("
+        },
+        {
+          "line": 7343,
+          "text": "val output=core.experimentalPairedDecoderContinuation("
+        },
+        {
+          "line": 9440,
+          "text": "append(at.heinz.deviceai.localmodel.LocalToolContinuation.observationData("
+        },
+        {
+          "line": 9464,
+          "text": "at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicy.requestsContinuation(text)"
+        },
+        {
+          "line": 9465,
+          "text": "if (continuingAnswer && !localConversationContext.hasContinuation(localSessionId))"
+        },
+        {
+          "line": 9501,
+          "text": "check(at.heinz.deviceai.localmodel.LocalToolContinuation.containsCompleteOutput(prompt, it)) {"
+        },
+        {
+          "line": 9520,
+          "text": "at.heinz.deviceai.localmodel.LocalToolContinuation.submit("
+        },
+        {
+          "line": 9524,
+          "text": "at.heinz.deviceai.localmodel.LocalToolContinuation.encode("
+        }
+      ],
+      "matchedLineCount": 27
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt",
+      "blob": "e3f633b789ae7156d26e2bf875c1195e29e35c48",
+      "sha256": "8fac7dae07e62b470c34657febd394e9de7165084b402c54fb700c37c6e4e097",
+      "matches": [
+        {
+          "line": 19,
+          "text": "object ContinuumWorkAreaNavigationSpec {"
+        }
+      ],
+      "matchedLineCount": 1
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentBacklogRoundtripTest.kt",
+      "blob": "2260abaff9819f2dd19da011a54672f79bfc40d3",
+      "sha256": "ffd4e8aa2208d0d9d3d7f3361abac682f474571ff5bcceb9fca034672b946321",
+      "matches": [
+        {
+          "line": 15,
+          "text": "* output right after it (backlog-fixtures.mjs roundtrip-verify). Without the"
+        }
+      ],
+      "matchedLineCount": 1
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentBacklogTest.kt",
+      "blob": "929c39f68ab357011bb7b8c69febf59a26c3ed10",
+      "sha256": "17d2b4112900aebaf71e30b8e0ae8b90c36cd6104a219eb771f99454b45ee9d2",
+      "matches": [
+        {
+          "line": 22,
+          "text": "* (node .github/continuum/backlog-fixtures.mjs write) and are checked here byte by byte."
+        }
+      ],
+      "matchedLineCount": 1
+    },
+    {
+      "path": "scripts/continuum-fold7-update.sh",
+      "blob": "45b7702d9f97e7e1b6d2c43e24918343ee026e37",
+      "sha256": "2a25f1a3950366c2a3d24188f9cd99928ba6a0f40dc9b5d45b5703685ccc7969",
+      "matches": [],
+      "matchedLineCount": 0
+    },
+    {
+      "path": "scripts/continuum-reliability-qa.mjs",
+      "blob": "67b0f9ccb2b9e2777e5aa304934572d268d7bd48",
+      "sha256": "ed57537bd748481088372e76291afee541c1b52f47261f1f9efd71218404ceca",
+      "matches": [
+        {
+          "line": 15,
+          "text": "export const GATES=Object.freeze(["
+        },
+        {
+          "line": 26,
+          "text": "export function assessNodeOutcome(result,xml,project=root) {"
+        },
+        {
+          "line": 32,
+          "text": "return {status:'FAIL',reason:result.error||'PROCESS_FAILED_OR_UNCONFIRMED',tests};"
+        },
+        {
+          "line": 34,
+          "text": "return {status:'FAIL',reason:'MISSING_FAILED_OR_INCOMPLETE_TEST_EVIDENCE',tests};"
+        },
+        {
+          "line": 56,
+          "text": "export function sameSource(before,after) {"
+        },
+        {
+          "line": 59,
+          "text": "export function renderReport(report) {"
+        },
+        {
+          "line": 87,
+          "text": "platform:process.platform,arch:process.arch,release:os.release()},checks:[],status:'FAIL',sourceUnchanged:false};"
+        }
+      ],
+      "matchedLineCount": 7
+    }
+  ],
+  "absentPathsVerified": [
+    ".github/continuum/alpha-squad-ccc1.mjs",
+    ".github/continuum/backlog-interop.mjs",
+    ".github/continuum/ccc1-transfer-research.mjs",
+    ".github/continuum/coding-public-docs.mjs",
+    ".github/continuum/continuum-cloud-gpu-admission.mjs",
+    ".github/continuum/dev-loop-kernel.mjs",
+    ".github/continuum/dev-loop-shadow.mjs",
+    ".github/continuum/development-backlog-cli.mjs",
+    ".github/continuum/export-argon-source.py",
+    ".github/continuum/nvidia-nim-public-coding-lab.mjs",
+    ".github/continuum/nvidia-nim-synthetic-benchmark.mjs",
+    ".github/continuum/test-failure-environment.mjs",
+    ".github/continuum/workspace-nav-contract.mjs",
+    "scripts/continuum-aider-nvidia-lab.sh",
+    "scripts/continuum-microagents.mjs",
+    "scripts/continuum-nvidia-coding-lab.mjs",
+    "scripts/continuum-nvidia-execution-claim.mjs",
+    "scripts/continuum-nvidia-nim-benchmark.mjs",
+    "scripts/continuum-nvidia-owner-consent.mjs",
+    "scripts/continuum-nvidia-scheduled.mjs",
+    "scripts/continuum-nvidia-ultra-review.mjs",
+    "scripts/continuum-public-docs.mjs"
+  ],
+  "microAgentTestPlan": [
+    {
+      "path": "scripts/continuum-gemma-picker-lifecycle.test.mjs",
+      "exists": true
+    },
+    {
+      "path": ".github/continuum/gemma-reopen-lifecycle.test.mjs",
+      "exists": true
+    },
+    {
+      "path": "scripts/continuum-deepseek-bridge.test.mjs",
+      "exists": true
+    },
+    {
+      "path": "scripts/continuum-deepseek-tier-plan.test.mjs",
+      "exists": true
+    },
+    {
+      "path": ".github/continuum/ccc1-local-preflight.test.mjs",
+      "exists": true
+    },
+    {
+      "path": ".github/continuum/coding-provider.test.mjs",
+      "exists": true
+    },
+    {
+      "path": ".github/continuum/ccc1-transfer-research.test.mjs",
+      "exists": false
+    },
+    {
+      "path": "scripts/continuum-fold7-update.test.mjs",
+      "exists": false
+    }
+  ],
+  "noProjectCodeExecution": true,
+  "noTestsModelsProvidersBuildsExecuted": true,
+  "historicalCallerSearchScope": "Three named host entrypoints on PR242 and PR258; other caller snapshots specified by path+ref. No exhaustive historical-tree caller scan claimed."
+}
