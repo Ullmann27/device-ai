@@ -785,7 +785,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         // Reduced-motion remains authoritative. Power-save/thermal pressure no longer
         // kills mouth/eyes/head completely; JarvisRenderQuality suppresses decoration.
         motionAllowed = at.heinz.deviceai.ui.AvatarEssentialMotionPolicy.essentialAllowed(
-            foreground = true,
+            foreground = foregroundActive,
             animationsEnabled = animationsEnabled,
             systemAnimatorsEnabled = ValueAnimator.areAnimatorsEnabled()
         )
@@ -874,7 +874,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         resolveHeadBounds(width, height)
         updateOrbTarget(width, height)
         if (headEnabled && cockpitHeadBounds != null) {
-            val t = if (canAnimateFrame()) avatarSeconds else 0f
+            val t = if (canAnimateFrame() && renderBudget().animate) avatarSeconds else 0f
             val stageWidth = width / density
             val stageHeight = height / density
             val flowTop = if (cockpit) stageHeight * .62f else 0f
@@ -982,7 +982,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                 headDrawBounds.height() / density)
             canvas.restoreToCount(streams)
         }
-        if (!canAnimateFrame()) return
+        if (!canAnimateFrame() || !renderBudget().animate) return
         val density=resources.displayMetrics.density
         val saved=canvas.save()
         canvas.scale(density,density)
