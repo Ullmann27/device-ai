@@ -30,6 +30,17 @@ class ApprovedStreamingSpeechAssemblerTest {
         assertTrue(out[1].speakableText.contains("Fertig"))
     }
 
+    @Test fun codeFenceSplitAcrossDeltasCannotLeakCodeAsSpeech() {
+        val a = ApprovedStreamingSpeechAssembler()
+        val fence = CharArray(3) { 96.toChar() }.concatToString()
+        assertTrue(a.append("Vorher. " + fence + "kotlin\nval secret = ").size == 1)
+        val out = a.append("42.\n" + fence + "\nDanach.")
+        assertEquals(1, out.size)
+        assertFalse(out.single().speakableText.contains("val secret"))
+        assertTrue(out.single().speakableText.contains("Codebeispiel ausgelassen"))
+        assertTrue(out.single().speakableText.contains("Danach"))
+    }
+
     @Test fun abbreviationsAndDecimalsDoNotSplitEarly() {
         val a = ApprovedStreamingSpeechAssembler()
         assertTrue(a.append("Das gilt z. B. bei Version 3.5 und ").isEmpty())
