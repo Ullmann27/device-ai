@@ -3,6 +3,7 @@ package at.heinz.deviceai
 import android.app.Activity
 import android.content.Context
 import android.os.Looper
+import android.os.SystemClock
 import android.provider.Settings
 import android.view.MotionEvent
 import android.view.View
@@ -11,6 +12,7 @@ import at.heinz.deviceai.avatar.JarvisHoloAvatar
 import at.heinz.deviceai.cockpit.JarvisAvatarSlot
 import at.heinz.deviceai.ui.ContinuumHomeView
 import at.heinz.deviceai.ui.JarvisControlState
+import at.heinz.deviceai.ui.JarvisShellLayout
 import at.heinz.deviceai.ui.JarvisTiles
 import org.junit.Assert.*
 import org.junit.Test
@@ -51,6 +53,27 @@ class JarvisReferenceHitTargetsUiTest {
         }
         shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.MILLISECONDS)
         assertEquals("Framework parent preserves the resized window width", w, home.width)
+    }
+
+    private fun tapThroughViewport(home: ContinuumHomeView, target: View) {
+        val viewport = home.parent as android.widget.ScrollView
+        assertSame("Input controls remain native siblings", home, target.parent)
+        assertEquals(View.VISIBLE, target.visibility)
+        val contentY = home.top + target.top + target.height / 2f
+        viewport.scrollTo(0, (contentY - viewport.height / 2f).toInt().coerceAtLeast(0))
+        val x = home.left + target.left + target.width / 2f - viewport.scrollX
+        val y = contentY - viewport.scrollY
+        assertTrue("Touch must be inside the viewport: $x/$y", x >= 0f && x < viewport.width && y >= 0f && y < viewport.height)
+        val downTime = SystemClock.uptimeMillis()
+        for ((action, elapsed) in listOf(MotionEvent.ACTION_DOWN to 0L, MotionEvent.ACTION_UP to 24L)) {
+            val event = MotionEvent.obtain(downTime, downTime + elapsed, action, x, y, 0)
+            try {
+                assertTrue("The actual viewport must consume ${target.tag}", viewport.dispatchTouchEvent(event))
+            } finally {
+                event.recycle()
+            }
+        }
+        shadowOf(Looper.getMainLooper()).idleFor(50, TimeUnit.MILLISECONDS)
     }
 
     private fun withHome(check: (ContinuumHomeView, MutableList<String>) -> Unit) {
@@ -130,6 +153,53 @@ class JarvisReferenceHitTargetsUiTest {
         assertEquals(View.IMPORTANT_FOR_ACCESSIBILITY_NO, foreground.importantForAccessibility)
         assertTrue("Live renderer below readable HUD", foreground.z > home.hologram.z)
         assertTrue("Actions above HUD", control(home, "dialog:voice-input").z > foreground.z)
+    }
+
+    @Test fun inputActionsAndConversationRouteRealTouchesAcrossWindowReflow() = withHome { home, calls ->
+        val routes = linkedMapOf(
+            "dialog:voice-input" to "voice-input", "dialog:camera-settings" to "camera-settings",
+            "dialog:avatar-appearance" to "avatar-appearance", "input:conversation" to "chat"
+        )
+        val identities = routes.keys.associateWith { control(home, it).id }
+        val live = home.hologram
+        val fontBefore = RuntimeEnvironment.getFontScale()
+        try {
+            for ((width, height, font) in listOf(Triple(412, 915, 1f), Triple(884, 760, 1f),
+                Triple(840, 1050, 1f), Triple(412, 915, 1.5f))) {
+                RuntimeEnvironment.setFontScale(font)
+                size(home, width, height)
+                val shell = requireNotNull(home.jarvisShell.currentShell())
+                val input = requireNotNull(shell[JarvisShellLayout.Slot.INPUT])
+                val density = home.resources.displayMetrics.density
+                val controls = routes.keys.map { control(home, it) }
+                controls.forEach { button ->
+                    assertEquals("Reflow preserves control identity", identities[button.tag.toString().removePrefix("jarvis-")], button.id)
+                    assertTrue("${button.tag} remains a readable touch target", button.width / density >= 48f && button.height / density >= 48f)
+                    assertTrue("${button.tag} stays inside the drawn input bar",
+                        button.left >= (input.left * density).toInt() && button.right <= (input.right * density).toInt() &&
+                            button.top >= (input.top * density).toInt() && button.bottom <= (input.bottom * density).toInt())
+                }
+                for (i in controls.indices) for (j in i + 1 until controls.size) {
+                    val first = controls[i]; val second = controls[j]
+                    assertFalse("Input hit targets overlap: ${first.tag}/${second.tag}",
+                        first.left < second.right && second.left < first.right &&
+                            first.top < second.bottom && second.top < first.bottom)
+                }
+                for ((key, expected) in routes) {
+                    calls.clear()
+                    tapThroughViewport(home, control(home, key))
+                    assertEquals("$width/$height font$font $key reaches only its own route", listOf(expected), calls)
+                }
+                calls.clear()
+                val badge = control(home, "dialog:conversation")
+                assertTrue("Companion badge stays usable", badge.width / density >= 48f && badge.height / density >= 48f)
+                tapThroughViewport(home, badge)
+                assertEquals("Companion badge opens the real conversation", listOf("chat"), calls)
+                assertSame("Input navigation preserves the live avatar", live, home.hologram)
+            }
+        } finally {
+            RuntimeEnvironment.setFontScale(fontBefore)
+        }
     }
 
     @Test fun movingOutsideOrCancellingTheGestureNeverNavigates() = withHome { home, calls ->
@@ -222,6 +292,8 @@ class JarvisReferenceHitTargetsUiTest {
             val button = control(home, "dialog:$target")
             assertFalse(button.isEnabled)
             assertTrue(button.contentDescription.toString().contains("nicht verfügbar"))
+            tapThroughViewport(home, button)
+            assertTrue("A disabled action cannot fall through to conversation", calls.isEmpty())
         }
         assertTrue(control(home, "tile:chat").isEnabled)
         control(home, "tile:chat").performClick()

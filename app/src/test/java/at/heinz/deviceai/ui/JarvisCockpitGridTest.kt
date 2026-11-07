@@ -11,7 +11,7 @@ import org.junit.Test
 
 /** Latest owner-reference geometry, evaluated against available window dp rather than a device-name guess. */
 class JarvisCockpitGridTest {
-    private val sizes = listOf(840f to 560f, 884f to 760f, 960f to 640f, 1280f to 800f, 1536f to 1024f, 1536f to 1224f)
+    private val sizes = listOf(692f to 700f, 832f to 748f, 840f to 560f, 884f to 760f, 960f to 640f, 1280f to 800f, 1536f to 1024f, 1536f to 1224f)
 
     private fun overlaps(a: JarvisShellLayout.Box, b: JarvisShellLayout.Box) =
         a.left < b.right - .01f && b.left < a.right - .01f && a.top < b.bottom - .01f && b.top < a.bottom - .01f
@@ -20,10 +20,11 @@ class JarvisCockpitGridTest {
         for ((w, h) in sizes) {
             assertTrue("$w×$h is Fold7 open", JarvisCockpitGrid.applies(w, h, 1f))
             val g = JarvisCockpitGrid.create(w, h)
-            assertEquals(Area.values().toSet() - Area.USER_CARD, g.areas.keys)
+            assertEquals(Area.values().toSet() - setOf(Area.USER_CARD, Area.DEVICE_STATUS, Area.TAGLINE),
+                g.areas.keys - Area.TAGLINE)
             val e = g.areas.entries.toList()
             e.forEach { (k, b) ->
-                assertTrue("$k inside $w×$h: $b", b.left >= 0f && b.top >= 0f && b.right <= w + .01f && b.bottom <= h + .01f)
+                assertTrue("$k inside $w×$h: $b", b.left >= 0f && b.top >= 0f && b.right <= w + .01f && b.bottom <= g.height + .01f)
                 assertTrue("$k non-empty $w×$h", b.width > 4f && b.height > 4f)
             }
             for (i in e.indices) for (j in i + 1 until e.size) {
@@ -34,38 +35,41 @@ class JarvisCockpitGridTest {
         }
     }
 
-    @Test fun ref5Arrangement() {
-        val g = JarvisCockpitGrid.create(884f, 760f)
+    @Test fun referenceHeroAndCardsLeadBeforeSecondaryInformation() {
+        val g = JarvisCockpitGrid.create(692f, 700f)
         val head = g[Area.HEAD]; val orb = g[Area.ORB]
         assertTrue("rail left of content", g[Area.RAIL].right < head.left)
-        assertTrue("orb right of head", orb.left >= head.right)
-        assertTrue("modules right of orb", g[Area.MODULES].left > orb.right)
-        assertTrue("latest reference has no owner card shrinking the face", Area.USER_CARD !in g.areas)
-        // Owner correction 2026-11-05: the head stays completely free; the dialogue sits beside it.
-        assertFalse("dialog never covers the head stage", overlaps(g[Area.DIALOG], head))
-        assertTrue("dialog left of the free head", g[Area.DIALOG].right <= head.left)
-        assertTrue("tiles under the stage", g[Area.TILES].top > head.bottom)
-        listOf(Area.ROW_AGENTS, Area.ROW_TASKS, Area.ROW_MEMORY, Area.ROW_MODEL).zipWithNext().forEach { (a, b) ->
-            assertTrue("$a left of $b", g[a].right < g[b].left); assertEquals(g[a].top, g[b].top, .01f)
+        assertTrue("orb right of head", orb.left > head.right)
+        assertTrue("modules follow primary status", g[Area.MODULES].top > g[Area.STATUS].bottom)
+        assertFalse(Area.USER_CARD in g.areas)
+        assertTrue("badge stays inside its stage", head.contains(g[Area.DIALOG]))
+        assertEquals(56f, g[Area.DIALOG].height, .01f)
+        assertTrue("conversation beneath stage", g[Area.INPUT].top > head.bottom)
+        assertTrue("cards beneath conversation", g[Area.TILES].top > g[Area.INPUT].bottom)
+        assertTrue("status closes primary composition", g[Area.STATUS].top > g[Area.TILES].bottom)
+        for (area in listOf(Area.ROW_AGENTS, Area.ROW_TASKS, Area.ROW_MEMORY, Area.ROW_MODEL))
+            assertTrue("$area remains reachable below status", g[area].top > g[Area.STATUS].bottom)
+        assertTrue("head keeps useful height", head.height >= 260f)
+        assertTrue("full cards need both rows", g[Area.TILES].height >= 2f * 158f)
+    }
+
+    @Test fun bothIdentitiesShareTheFullWidthWithoutASidePanel() {
+        for ((w, h) in sizes) {
+            val g = JarvisCockpitGrid.create(w, h)
+            val head = g[Area.HEAD]; val orb = g[Area.ORB]
+            assertEquals(w - 12f, orb.right, .01f)
+            assertTrue("broad head stage", head.width > (orb.right - head.left) * .48f)
+            assertTrue("independent viewports", !overlaps(head, orb))
+            assertTrue("heading above original orb", g[Area.CONTINUUM_HEADER].bottom < orb.top)
+            assertTrue("camera no longer covers hero", g[Area.CAMERA_STATUS].top > g[Area.STATUS].bottom)
         }
-        assertTrue("status at the very bottom", g[Area.STATUS].top > g[Area.ROW_MODEL].bottom)
-        // compact sizes as in ref5
-        assertTrue("tiles compact", g[Area.TILES].height < 130f)
-        assertTrue("head stage dominant", head.height > 300f)
     }
 
-    @Test fun independentSceneViewportsUseTheLatestMeasuredCoordinates() {
-        val g = JarvisCockpitGrid.create(1536f, 1024f)
-        assertEquals(JarvisShellLayout.Box(548f, 70f, 800f, 497f), g[Area.HEAD])
-        assertEquals(JarvisShellLayout.Box(805f, 183f, 1212f, 497f), g[Area.ORB])
-        assertEquals(JarvisShellLayout.Box(1199f, 83f, 1520f, 141f), g[Area.CAMERA_STATUS])
-        assertTrue("bust stage is taller than wide", g[Area.HEAD].height > g[Area.HEAD].width)
-    }
-
-    @Test fun referenceCompositionRequiresExpandedReadableWindow() {
+    @Test fun referenceCompositionRequiresReadableFiveColumns() {
         assertTrue(JarvisShellLayout.create(884f, 760f).ref5Grid)
         assertTrue(!JarvisShellLayout.create(884f, 760f, 1.5f).ref5Grid)
-        assertTrue(!JarvisShellLayout.create(832f, 750f).ref5Grid)
+        assertTrue(JarvisShellLayout.create(832f, 750f).ref5Grid)
+        assertTrue(JarvisShellLayout.create(692f, 700f).ref5Grid)
         assertTrue(!JarvisShellLayout.create(412f, 915f).ref5Grid)
         assertTrue(JarvisShellLayout.create(1280f, 800f).ref5Grid)
         assertNull(JarvisShellLayout.create(412f, 915f)[JarvisShellLayout.Slot.USER_CARD])

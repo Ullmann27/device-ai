@@ -58,7 +58,7 @@ object JarvisCockpitGrid {
         val privacyLeft = privacyRight - (widthDp * .19f).coerceIn(136f, 176f)
         val modeRight = privacyLeft - gap
         val modeLeft = modeRight - 112f
-        val brandRight = minOf(modeLeft - gap, margin + (widthDp * .28f).coerceIn(180f, 264f))
+        val brandRight = minOf(modeLeft - 8f, margin + (widthDp * .28f).coerceIn(220f, 264f))
         a[Area.BRAND] = Box(margin + 6f, 8f, brandRight, headerBottom)
         a[Area.MODE_PILL] = Box(modeLeft, 8f, modeRight, headerBottom)
         a[Area.PRIVACY_PILL] = Box(privacyLeft, 8f, privacyRight, headerBottom)

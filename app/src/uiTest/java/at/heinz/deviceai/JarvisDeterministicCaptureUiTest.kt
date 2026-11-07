@@ -167,6 +167,8 @@ class JarvisDeterministicCaptureUiTest {
     fun mediumMultiwindow() = capture("activity-medium-700x720", 700, 720)
     @Test @Config(qualifiers = "w832dp-h748dp-land-mdpi")
     fun mediumNearSquare() = capture("activity-medium-832x748", 832, 748)
+    @Test @Config(qualifiers = "w692dp-h768dp-mdpi")
+    fun ownerFoldAspect() = capture("activity-fold-692x768", 692, 768)
     @Test @Config(qualifiers = "w960dp-h640dp-land-mdpi")
     fun expandedCanonical() = capture("activity-expanded-960x640", 960, 640)
     @Test @Config(qualifiers = "w1280dp-h800dp-land-mdpi")

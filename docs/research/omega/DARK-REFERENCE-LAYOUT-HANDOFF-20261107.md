@@ -16,9 +16,9 @@ Portrait, open Fold and tablet retain all ten feature destinations. Native actio
 
 ## Implementation plan
 
-- [ ] Layout assistant: `JarvisCockpitGrid.kt`, `JarvisShellLayout.kt`, optional `JarvisWindowProfile.kt`; update composition assertions while preserving bounds and minimum hit sizes.
-- [ ] Surface assistant: `JarvisReferenceHud.kt`, `JarvisTiles.kt`, palette in `JarvisDesign.kt`; dark glass, bounded rims and static dimensional icon pedestals.
-- [ ] Integrator: `JarvisCockpitGridContent.kt`, `JarvisShellRenderer.kt`, `ContinuumHomeView.kt`; full card labels, compact companion badge, input controls and native action routing.
+- [x] Layout assistant: `JarvisCockpitGrid.kt`, `JarvisShellLayout.kt`, `JarvisWindowProfile.kt`; tall cards, shared input bounds and scrollable secondary details.
+- [x] Surface assistant: `JarvisReferenceHud.kt`, `JarvisTiles.kt`, palette in `JarvisDesign.kt`; dark glass, bounded rims and static dimensional icon pedestals.
+- [x] Integrator: `JarvisCockpitGridContent.kt`, `JarvisShellRenderer.kt`, `ContinuumHomeView.kt`; full card labels, compact companion badge, input controls and native action routing.
 - [ ] Reviewer: existing native UI routing, resize and accessibility tests; inspect the combined diff and actual rendered frames.
 - [ ] Run focused geometry/drawing tests and real Android host UI tests. Use `JarvisDeterministicCaptureUiTest` for code-rendered images, not generated mockups.
 - [ ] Commit and push source-bound results, exact commands and limitations.
@@ -32,6 +32,8 @@ No main merge, signing, publication, device installation or claim of physical Fo
 ## Verification
 
 Initial checkpoint: NOT_RUN. The base's results are not evidence for the changed layout.
+
+Source checkpoint `ac6f363e07795d70341b19c719aae59b8cf37144`: real offline Android SDK/Gradle `:app:compileDebugKotlin` succeeded in 1m11s. A later small header-width adjustment and the final tests require a fresh run. Current test sources cover live input touch dispatch, disabled controls, responsive bounds, dark materials and real avatar pose/framing. Physical-device results remain NOT_RUN.
 
 ## Resume and rollback
 

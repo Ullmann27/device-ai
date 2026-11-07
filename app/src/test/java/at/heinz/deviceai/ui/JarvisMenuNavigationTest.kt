@@ -173,10 +173,10 @@ class JarvisMenuNavigationTest {
     }
 
     @Test fun railUsesDesignTokensOnly() {
-        // Welten-Optik's ref5 tokens (#479 @69b76b2f): button 108 x 32 dp, fill #041521, active #012C3C / rim #32D6ED, nav 11 sp
+        // Dark surfaces, preserved active rim.
         val st = JarvisDesign.Styles.button
-        assertEquals(32f, st.height, 0f); assertEquals(Argb.rgb(0x04, 0x15, 0x21), st.fill)
-        assertEquals(Argb.rgb(0x01, 0x2C, 0x3C), JarvisDesign.Styles.buttonActive.fill)
+        assertEquals(32f, st.height, 0f); assertEquals(Argb.rgb(0x03, 0x0A, 0x18), st.fill)
+        assertEquals(Argb.rgb(0x02, 0x20, 0x2D), JarvisDesign.Styles.buttonActive.fill)
         assertEquals(Argb.rgb(0x32, 0xD6, 0xED), JarvisDesign.Styles.buttonActive.rim)
         assertEquals(13f, JarvisDesign.Type.nav.size, 0f)
         assertEquals(JarvisMenuRail.MARGIN + 108f, JarvisMenuRail.MIN_WIDTH, 0f)
