@@ -95,7 +95,7 @@ internal class Ctx3DiscourseState(private val maxFrames: Int = 8) {
 
     private fun remember(ids: List<String>) {
         if (frames.lastOrNull()?.entityIds == ids) frames.removeLast()
-        frames.addLast(Frame(ids, turn))
+        frames.add(Frame(ids, turn))
         while (frames.size > maxFrames) frames.removeFirst()
     }
 }
