@@ -11,7 +11,8 @@ object Ctx3Shadow {
   val inputSha256:String,val decision:String,val reason:String,val baselineIds:List<String>,val proposedIds:List<String>,
   val conversationSha256:String="",val modelSha256:String="",val sourceVersion:String="",
   val stateTelegramStatus:String="",val stateTelegramSha256:String="",val stateTelegramBytes:Int=0,
-  val rawSelectedBytes:Int=0,val stateKeyCount:Int=0,val stateConflictCount:Int=0,val stateUnresolvedCount:Int=0
+  val rawSelectedBytes:Int=0,val stateKeyCount:Int=0,val stateConflictCount:Int=0,val stateUnresolvedCount:Int=0,
+  val referenceResolution:String=""
  )
  private data class Session(val context:Ctx3Context=Ctx3Context(),val events:MutableList<Event> = arrayListOf(),var touched:Long=System.nanoTime())
  private data class Key(val directory:String,val conversationId:String)
@@ -75,7 +76,8 @@ object Ctx3Shadow {
       rawSelectedBytes=telegram?.rawSelectedBytes?:0,
       stateKeyCount=telegram?.keyCount?:0,
       stateConflictCount=telegram?.conflictCount?:0,
-      stateUnresolvedCount=telegram?.unresolvedCount?:0
+      stateUnresolvedCount=telegram?.unresolvedCount?:0,
+      referenceResolution=decision.resolution
      )
     }
     is Ctx3Decision.Clarify->Event(ContinuumMemoryDialogue.hash(input.toByteArray()),"CLARIFY",decision.reason,baseline.take(3),emptyList())
