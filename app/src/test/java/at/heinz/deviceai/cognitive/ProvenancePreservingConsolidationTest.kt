@@ -9,10 +9,11 @@ class ProvenancePreservingConsolidationTest {
     private fun record(
         id:String,
         provenance:ProvenanceType=ProvenanceType.USER_PROVIDED,
-        validation:ValidationState=ValidationState.CORROBORATED
+        validation:ValidationState=ValidationState.VERIFIED
     ) = MemoryRecord(
         id=id,type=MemoryType.SEMANTIC,content="Beleg $id",provenance=provenance,
-        confidence=.9,createdAt=1,updatedAt=1,validationState=validation
+        confidence=.9,createdAt=1,updatedAt=1,validationState=validation,
+        validationEvidenceReferences=if(validation==ValidationState.VERIFIED) listOf("proof:$id") else emptyList()
     )
 
     @Test fun summaryCanNeverServeAsHardProof() {
@@ -25,7 +26,7 @@ class ProvenancePreservingConsolidationTest {
     }
 
     @Test fun missingOrModelGeneratedSourcePreventsCompleteProofResolution() {
-        val model=record("m",ProvenanceType.MODEL_GENERATED,ValidationState.CORROBORATED)
+        val model=record("m",ProvenanceType.MODEL_GENERATED,ValidationState.VERIFIED)
         val good=record("g")
         val summary=ProvenancePreservingConsolidation.NavigationSummary(
             "sum-2","Navigation",listOf("g","m","missing"),10)
