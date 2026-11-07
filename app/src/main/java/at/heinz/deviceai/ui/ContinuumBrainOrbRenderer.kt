@@ -77,18 +77,24 @@ class ContinuumBrainOrbRenderer {
             val tilt = inclinations[ring]
             val yaw = azimuths[ring] + s.phase * (.07f + ring * .013f)
             val size = 1.25f + ring * .07f
-            fun point(angle: Float): FloatArray {
+            fun point(angle: Float, out: FloatArray) {
                 val x = cos(angle) * size
                 val y = sin(angle) * sin(tilt) * size
                 val z = sin(angle) * cos(tilt) * size
                 val xx = x * cos(yaw) - y * sin(yaw)
                 val yy = x * sin(yaw) + y * cos(yaw)
                 val perspective = 3.8f / (3.8f - z * .15f)
-                return floatArrayOf(cx + xx * r * perspective, cy + (yy + .10f) * r * perspective, z)
+                out[0] = cx + xx * r * perspective
+                out[1] = cy + (yy + .10f) * r * perspective
+                out[2] = z
             }
-            var a = point(0f)
+            val first = FloatArray(3)
+            val second = FloatArray(3)
+            point(0f, first)
+            var a = first
+            var b = second
             for (i in 1..segments) {
-                val b = point((2.0 * PI * i / segments).toFloat())
+                point((2.0 * PI * i / segments).toFloat(), b)
                 val behind = (a[2] + b[2]) < 0f
                 if (behind == back) {
                     val alpha = if (behind) .28f else .70f
@@ -100,10 +106,13 @@ class ContinuumBrainOrbRenderer {
                     p.drawLine(a[0], a[1], b[0], b[1], r * .012f, Fill.Solid(color), alpha)
                     p.drawLine(a[0], a[1], b[0], b[1], r * .004f, Fill.Solid(c.glowCore), alpha)
                 }
+                val swap = a
                 a = b
+                b = swap
             }
             // An orbit light is decoration; event intensity is supplied separately by real memory/turn state.
-            val bead = point(s.phase * (.91f + ring * .11f) + ring * 2.1f)
+            val bead = a
+            point(s.phase * (.91f + ring * .11f) + ring * 2.1f, bead)
             if ((bead[2] < 0f) == back) {
                 val color = if (ring == 1) c.violetRim else c.cyan
                 JarvisNeon.halo(p, bead[0], bead[1], r * .09f, color, .35f)
@@ -116,34 +125,47 @@ class ContinuumBrainOrbRenderer {
     private fun drawNet(p: ContinuumPainter, cx: Float, cy: Float, r: Float, s: Signals) {
         val C = JarvisDesign.Colors
         val tilt = .32f; val rot = s.phase * 2f * PI.toFloat() / 12f
-        fun proj(lat: Float, lon: Float): FloatArray {
+        fun proj(lat: Float, lon: Float, out: FloatArray) {
             val x = cos(lat) * sin(lon); val y = sin(lat); val z = cos(lat) * cos(lon)
             val y2 = y * cos(tilt) - z * sin(tilt); val z2 = y * sin(tilt) + z * cos(tilt)
-            return floatArrayOf(cx + x * r * .97f, cy - y2 * r * .97f, z2)
+            out[0] = cx + x * r * .97f
+            out[1] = cy - y2 * r * .97f
+            out[2] = z2
         }
         p.setAdditive(true)
         val lats = 7; val lons = 14; val steps = 40
         val a = .28f + .25f * s.recall
+        val first = FloatArray(3)
+        val second = FloatArray(3)
         for (i in 1 until lats) {
             val lat = (-PI / 2 + PI * i / lats).toFloat()
-            var prev = proj(lat, 0f + rot)
+            var prev = first
+            var q = second
+            proj(lat, 0f + rot, prev)
             for (k in 1..steps) {
-                val q = proj(lat, (2 * PI * k / steps).toFloat() + rot)
+                proj(lat, (2 * PI * k / steps).toFloat() + rot, q)
                 if (q[2] > -.15f && prev[2] > -.15f) p.drawLine(prev[0], prev[1], q[0], q[1], r * .006f, Fill.Solid(C.cyan), a * (.35f + .65f * q[2].coerceAtLeast(0f)))
+                val swap = prev
                 prev = q
+                q = swap
             }
         }
         for (j in 0 until lons) {
             val lon = (2 * PI * j / lons).toFloat() + rot
-            var prev = proj((-PI / 2).toFloat(), lon)
+            var prev = first
+            var q = second
+            proj((-PI / 2).toFloat(), lon, prev)
             for (k in 1..steps) {
-                val q = proj((-PI / 2 + PI * k / steps).toFloat(), lon)
+                proj((-PI / 2 + PI * k / steps).toFloat(), lon, q)
                 if (q[2] > -.15f && prev[2] > -.15f) p.drawLine(prev[0], prev[1], q[0], q[1], r * .006f, Fill.Solid(C.cyan), a * (.35f + .65f * q[2].coerceAtLeast(0f)))
+                val swap = prev
                 prev = q
+                q = swap
             }
         }
         for (i in 1 until lats) for (j in 0 until lons) {
-            val q = proj((-PI / 2 + PI * i / lats).toFloat(), (2 * PI * j / lons).toFloat() + rot)
+            proj((-PI / 2 + PI * i / lats).toFloat(), (2 * PI * j / lons).toFloat() + rot, first)
+            val q = first
             if (q[2] < 0f) continue
             val col = if ((i + j) % 3 == 0) JarvisDesign.Colors.violetSoft else C.cyanSoft
             p.fillCircle(q[0], q[1], r * (.012f + .01f * q[2]), Fill.Solid(col), .5f + .5f * q[2])
