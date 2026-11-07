@@ -2483,6 +2483,8 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.ui.JarvisActionScenes.forDocument(), emblem,
                 depthLayers = at.heinz.deviceai.ui.JarvisWorkWindowDepth.layers(doc.pageCount)) {}
         }
+        if (window != null) cockpitTriggers.documentReceived(
+            "document-" + episode.id, doc.name, "application/pdf", request)
         // The same facts in the conversation; with an open window the cockpit stays (no switch to the chat area).
         addAssistantMessage(report, preserveLocalContext = false, keepCockpit = window != null)
         if (wantsDraft && hasText && localModelReady()) startDocumentDraft(doc)
@@ -9293,6 +9295,13 @@ class AgentActivity : Activity() {
         val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
         activeChatCancellation = cancellation
         setBusy(true)
+        if (botTask == null && codingPlanning == null && documentDraftTurn == null &&
+            activeWorkArea == ContinuumWorkArea.CHAT && foregroundLearningActive &&
+            centerDialog?.isShowing != true) {
+            showHomeDashboard()
+            cockpitTriggers.areaChanged("chat", "home",
+                at.heinz.deviceai.cockpit.TransitionPattern.C_WARP)
+        }
         addToolActivity(if (botTask == null) "Lokales Modell plant …" else "${botTask.profile.displayName} · Auftrag wird geplant")
         planCard.visibility = View.GONE
         val turnId = UUID.randomUUID().toString().replace("-", "").take(16)
