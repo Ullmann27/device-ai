@@ -248,6 +248,77 @@ class FullStageMemoryReviewUiTest {
 
     @Test
     @Config(qualifiers = "w884dp-h760dp-land-hdpi")
+    fun actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight() = withActivity { f ->
+        var now = 1_000L
+        f.sequence.clock = { now }
+        emit(f, document())
+        now += 2_800L
+        frame(f.root).recycle()
+        assertTrue(f.live.memoryScene.isActive)
+        f.home.showTransientCard("Synthetischer Hinweis", listOf("2 + 2 = 4"), animate = true)
+        advance(32L)
+        val delivered = field(f.home, "transientCard") as? View
+        assertNotNull("The public notice API adds its view", delivered)
+        val card = delivered!!
+        f.root.measure(View.MeasureSpec.makeMeasureSpec(f.root.width, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(f.root.height, View.MeasureSpec.EXACTLY))
+        f.root.layout(0, 0, f.root.measuredWidth, f.root.measuredHeight)
+        assertTrue("The actual shell lays out its notice", card.width > 0 && card.height > 0)
+
+        advance(80L)
+        assertTrue("The real entrance is still moving", card.translationX > 0f)
+        assertTrue("The real entrance is fading in", card.alpha > 0f && card.alpha < 1f)
+        val animated = frame(f.root)
+        card.visibility = View.INVISIBLE
+        val withoutCard = frame(f.root)
+        card.visibility = View.VISIBLE
+        val visible = Rect()
+        assertTrue(card.getGlobalVisibleRect(visible))
+        val rootPosition = IntArray(2).also(f.root::getLocationOnScreen)
+        visible.offset(-rootPosition[0], -rootPosition[1])
+        assertTrue(visible.intersect(0, 0, animated.width, animated.height))
+        var changed = 0
+        for (y in visible.top until visible.bottom) for (x in visible.left until visible.right) {
+            if (animated.getPixel(x, y) != withoutCard.getPixel(x, y)) changed++
+        }
+        animated.recycle(); withoutCard.recycle()
+        assertTrue("The moving notice contributes visible native pixels", changed > 0)
+
+        advance(320L)
+        assertEquals(0f, card.translationX, .001f)
+        assertEquals(1f, card.alpha, .001f)
+        val landed = frame(f.root)
+        val sceneAlpha = f.stage.alpha
+        f.stage.alpha = 0f
+        val unobscured = try { frame(f.root) } finally { f.stage.alpha = sceneAlpha }
+        assertTrue("Reference capture preserves the active scene", f.live.memoryScene.isActive)
+        val notice = frame(card)
+        val origin = IntArray(2).also(card::getLocationOnScreen)
+        origin[0] -= rootPosition[0]; origin[1] -= rootPosition[1]
+        var opaqueTextPixels = 0
+        try {
+            for (y in 0 until notice.height) for (x in 0 until notice.width) {
+                val pixel = notice.getPixel(x, y)
+                if (pixel != at.heinz.deviceai.ui.JarvisDesign.Colors.cyan &&
+                    pixel != at.heinz.deviceai.ui.JarvisDesign.Colors.text) continue
+                val screenX = origin[0] + x; val screenY = origin[1] + y
+                if (screenX !in 0 until landed.width || screenY !in 0 until landed.height) continue
+                if (unobscured.getPixel(screenX, screenY) != pixel) continue
+                opaqueTextPixels++
+                assertEquals("Notice text remains visible above the memory scene at $x,$y", pixel,
+                    landed.getPixel(screenX, screenY))
+            }
+            assertTrue("The native notice contains actual text", opaqueTextPixels > 0)
+        } finally { landed.recycle(); unobscured.recycle(); notice.recycle() }
+        assertTrue(f.live.memoryScene.isActive)
+        tap(f.root, card)
+        advance(16L)
+        assertNull("The actual notice receives its dismissal tap", field(f.home, "transientCard"))
+        assertTrue("Dismissing the notice preserves the scene", f.live.memoryScene.isActive)
+    }
+
+    @Test
+    @Config(qualifiers = "w884dp-h760dp-land-hdpi")
     fun theEntireActualControlRectangleStaysOutsideTheCompositor() = withActivity { f ->
         var now = 1_000L
         f.sequence.clock = { now }

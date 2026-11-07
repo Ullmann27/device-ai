@@ -1,0 +1,145 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt b/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt
+index 6b994fa98..59096ac2e 100644
+--- a/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt
++++ b/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt
+@@ -498,6 +498,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
+             transientCard?.let { removeView(it) }; transientCard = null
+         }
+         view.state = state
++        view.translationZ = density * .75f
+         transientCard = view
+         addView(view)
+         if (animate) {
+@@ -507,11 +508,15 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
+         postDelayed({ if (transientCard === view) { removeView(view); transientCard = null } }, durationMs)
+     }
+ 
+-    private fun transientBox(): ContinuumHomeLayout.Box? {
+-        val hero = layoutSpec?.get(Slot.HERO) ?: return null
++    private fun transientBox(widthPx: Int, heightPx: Int): ContinuumHomeLayout.Box? {
++        val hero = if (jarvisShellStage) shellAvatarBox(widthPx, heightPx)?.let {
++            ContinuumHomeLayout.Box(it.left, it.top, it.right, it.bottom)
++        } else layoutSpec?.get(Slot.HERO)
++        hero ?: return null
++        val railOffset = if (jarvisShellStage) 0f else offset
+         val h = 84f
+-        val l = hero.left + 12f - offset
+-        val r = hero.right - 12f - offset
++        val l = hero.left + 12f - railOffset
++        val r = hero.right - 12f - railOffset
+         return ContinuumHomeLayout.Box(l, hero.bottom - h - 8f, r, hero.bottom - 8f)
+     }
+ 
+@@ -549,7 +554,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
+             hologram.measure(MeasureSpec.makeMeasureSpec((box.right * density).toInt() - (box.left * density).toInt(), MeasureSpec.EXACTLY),
+                 MeasureSpec.makeMeasureSpec((box.bottom * density).toInt() - (box.top * density).toInt(), MeasureSpec.EXACTLY))
+         }
+-        transientCard?.let { card -> transientBox()?.let { box ->
++        transientCard?.let { card -> transientBox(width, h)?.let { box ->
+             card.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
+                 MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
+         } }
+@@ -847,6 +852,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
+         shellForeground.layout(0, 0, r - l, b - t)
+         memoryFullStage.layout(0, 0, r - l, b - t)
+         updateCockpitRegions(r - l, b - t)
++        transientCard?.let { card -> transientBox(r - l, b - t)?.let { box ->
++            card.layout((box.left * density).toInt(), (box.top * density).toInt(),
++                (box.right * density).toInt(), (box.bottom * density).toInt())
++        } }
+         if (jarvisShellStage) {
+             publishUserCardBounds(r - l, b - t)
+             if (changed) jarvisShell.tiles = shellTiles(state)
+@@ -867,10 +876,6 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
+             layoutAvatarSlot((box.left * density).toInt(), (box.top * density).toInt(),
+                 (box.right * density).toInt(), (box.bottom * density).toInt())
+         }
+-        transientCard?.let { card -> transientBox()?.let { box ->
+-            card.layout((box.left * density).toInt(), (box.top * density).toInt(),
+-                (box.right * density).toInt(), (box.bottom * density).toInt())
+-        } }
+     }
+ 
+     private fun boxOf(child: View): ContinuumHomeLayout.Box? {
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/FullStageMemoryReviewUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/FullStageMemoryReviewUiTest.kt
+index 4baf4f306..41f4ea427 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/FullStageMemoryReviewUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/FullStageMemoryReviewUiTest.kt
+@@ -246,6 +246,77 @@ class FullStageMemoryReviewUiTest {
+             .any { it.tag == "jarvis-work-window" && it.isShown })
+     }
+ 
++    @Test
++    @Config(qualifiers = "w884dp-h760dp-land-hdpi")
++    fun actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight() = withActivity { f ->
++        var now = 1_000L
++        f.sequence.clock = { now }
++        emit(f, document())
++        now += 2_800L
++        frame(f.root).recycle()
++        assertTrue(f.live.memoryScene.isActive)
++        f.home.showTransientCard("Synthetischer Hinweis", listOf("2 + 2 = 4"), animate = true)
++        advance(32L)
++        val delivered = field(f.home, "transientCard") as? View
++        assertNotNull("The public notice API adds its view", delivered)
++        val card = delivered!!
++        f.root.measure(View.MeasureSpec.makeMeasureSpec(f.root.width, View.MeasureSpec.EXACTLY),
++            View.MeasureSpec.makeMeasureSpec(f.root.height, View.MeasureSpec.EXACTLY))
++        f.root.layout(0, 0, f.root.measuredWidth, f.root.measuredHeight)
++        assertTrue("The actual shell lays out its notice", card.width > 0 && card.height > 0)
++
++        advance(80L)
++        assertTrue("The real entrance is still moving", card.translationX > 0f)
++        assertTrue("The real entrance is fading in", card.alpha > 0f && card.alpha < 1f)
++        val animated = frame(f.root)
++        card.visibility = View.INVISIBLE
++        val withoutCard = frame(f.root)
++        card.visibility = View.VISIBLE
++        val visible = Rect()
++        assertTrue(card.getGlobalVisibleRect(visible))
++        val rootPosition = IntArray(2).also(f.root::getLocationOnScreen)
++        visible.offset(-rootPosition[0], -rootPosition[1])
++        assertTrue(visible.intersect(0, 0, animated.width, animated.height))
++        var changed = 0
++        for (y in visible.top until visible.bottom) for (x in visible.left until visible.right) {
++            if (animated.getPixel(x, y) != withoutCard.getPixel(x, y)) changed++
++        }
++        animated.recycle(); withoutCard.recycle()
++        assertTrue("The moving notice contributes visible native pixels", changed > 0)
++
++        advance(320L)
++        assertEquals(0f, card.translationX, .001f)
++        assertEquals(1f, card.alpha, .001f)
++        val landed = frame(f.root)
++        val sceneAlpha = f.stage.alpha
++        f.stage.alpha = 0f
++        val unobscured = try { frame(f.root) } finally { f.stage.alpha = sceneAlpha }
++        assertTrue("Reference capture preserves the active scene", f.live.memoryScene.isActive)
++        val notice = frame(card)
++        val origin = IntArray(2).also(card::getLocationOnScreen)
++        origin[0] -= rootPosition[0]; origin[1] -= rootPosition[1]
++        var opaqueTextPixels = 0
++        try {
++            for (y in 0 until notice.height) for (x in 0 until notice.width) {
++                val pixel = notice.getPixel(x, y)
++                if (pixel != at.heinz.deviceai.ui.JarvisDesign.Colors.cyan &&
++                    pixel != at.heinz.deviceai.ui.JarvisDesign.Colors.text) continue
++                val screenX = origin[0] + x; val screenY = origin[1] + y
++                if (screenX !in 0 until landed.width || screenY !in 0 until landed.height) continue
++                if (unobscured.getPixel(screenX, screenY) != pixel) continue
++                opaqueTextPixels++
++                assertEquals("Notice text remains visible above the memory scene at $x,$y", pixel,
++                    landed.getPixel(screenX, screenY))
++            }
++            assertTrue("The native notice contains actual text", opaqueTextPixels > 0)
++        } finally { landed.recycle(); unobscured.recycle(); notice.recycle() }
++        assertTrue(f.live.memoryScene.isActive)
++        tap(f.root, card)
++        advance(16L)
++        assertNull("The actual notice receives its dismissal tap", field(f.home, "transientCard"))
++        assertTrue("Dismissing the notice preserves the scene", f.live.memoryScene.isActive)
++    }
++
+     @Test
+     @Config(qualifiers = "w884dp-h760dp-land-hdpi")
+     fun theEntireActualControlRectangleStaysOutsideTheCompositor() = withActivity { f ->

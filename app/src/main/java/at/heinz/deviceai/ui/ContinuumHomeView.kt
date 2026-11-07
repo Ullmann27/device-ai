@@ -498,6 +498,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             transientCard?.let { removeView(it) }; transientCard = null
         }
         view.state = state
+        view.translationZ = density * .75f
         transientCard = view
         addView(view)
         if (animate) {
@@ -507,11 +508,15 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         postDelayed({ if (transientCard === view) { removeView(view); transientCard = null } }, durationMs)
     }
 
-    private fun transientBox(): ContinuumHomeLayout.Box? {
-        val hero = layoutSpec?.get(Slot.HERO) ?: return null
+    private fun transientBox(widthPx: Int, heightPx: Int): ContinuumHomeLayout.Box? {
+        val hero = if (jarvisShellStage) shellAvatarBox(widthPx, heightPx)?.let {
+            ContinuumHomeLayout.Box(it.left, it.top, it.right, it.bottom)
+        } else layoutSpec?.get(Slot.HERO)
+        hero ?: return null
+        val railOffset = if (jarvisShellStage) 0f else offset
         val h = 84f
-        val l = hero.left + 12f - offset
-        val r = hero.right - 12f - offset
+        val l = hero.left + 12f - railOffset
+        val r = hero.right - 12f - railOffset
         return ContinuumHomeLayout.Box(l, hero.bottom - h - 8f, r, hero.bottom - 8f)
     }
 
@@ -549,7 +554,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             hologram.measure(MeasureSpec.makeMeasureSpec((box.right * density).toInt() - (box.left * density).toInt(), MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec((box.bottom * density).toInt() - (box.top * density).toInt(), MeasureSpec.EXACTLY))
         }
-        transientCard?.let { card -> transientBox()?.let { box ->
+        transientCard?.let { card -> transientBox(width, h)?.let { box ->
             card.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
         } }
@@ -847,6 +852,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         shellForeground.layout(0, 0, r - l, b - t)
         memoryFullStage.layout(0, 0, r - l, b - t)
         updateCockpitRegions(r - l, b - t)
+        transientCard?.let { card -> transientBox(r - l, b - t)?.let { box ->
+            card.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                (box.right * density).toInt(), (box.bottom * density).toInt())
+        } }
         if (jarvisShellStage) {
             publishUserCardBounds(r - l, b - t)
             if (changed) jarvisShell.tiles = shellTiles(state)
@@ -867,10 +876,6 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             layoutAvatarSlot((box.left * density).toInt(), (box.top * density).toInt(),
                 (box.right * density).toInt(), (box.bottom * density).toInt())
         }
-        transientCard?.let { card -> transientBox()?.let { box ->
-            card.layout((box.left * density).toInt(), (box.top * density).toInt(),
-                (box.right * density).toInt(), (box.bottom * density).toInt())
-        } }
     }
 
     private fun boxOf(child: View): ContinuumHomeLayout.Box? {

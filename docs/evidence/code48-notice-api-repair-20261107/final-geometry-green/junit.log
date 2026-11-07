@@ -1,0 +1,8 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=42255 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42255 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.FullStageMemoryReviewUiTest#actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight
+.
+Time: 6.645
+
+OK (1 test)
+
+TOTAL tests=1 failures=0
