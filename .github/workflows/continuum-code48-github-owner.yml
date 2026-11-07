@@ -50,6 +50,11 @@ jobs:
           node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs scripts/continuum-owner-v38-release.test.mjs scripts/continuum-owner-continuous-release.test.mjs scripts/continuum-owner-backend-gate.test.mjs
       - name: Critical and full Node checks
         shell: bash
+        # Ubuntu runners install global Git-LFS clean/process filters.
+        # Exclude only those inherited config layers; retain local repo guards.
+        env:
+          GIT_CONFIG_GLOBAL: /dev/null
+          GIT_CONFIG_SYSTEM: /dev/null
         run: |
           set -euo pipefail
           node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code48-critical"
