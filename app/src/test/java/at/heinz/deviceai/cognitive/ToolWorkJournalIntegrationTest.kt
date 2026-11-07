@@ -49,6 +49,30 @@ class ToolWorkJournalIntegrationTest {
         assertFalse("Never store raw tool result", persisted.toString().contains("Gesamt:"))
     }
 
+    @Test fun secondReadOnlyToolUsesTheSameReceiptJournalPath() {
+        val journal = CockpitWorkJournal(dir.root)
+        val plan = ReadOnlyToolPlan(ToolProposal("get_device_info", emptyMap()))
+        var executions = 0
+        val result = BoundedAgentOrchestrator(
+            plan, { emptyList() },
+            ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner {
+                executions++
+                "Gerät: Testgerät"
+            }), plan, InMemoryExperienceStore(),
+            callIdPrefix = "device-info-journal",
+            limits = AgentLimits(maxToolCalls = 1, maxRetries = 0),
+            onToolStarted = { id, name -> journal.beginTool(id, name) }
+        ).run("Prüfe Geräteinformationen")
+        assertEquals(1, executions)
+        val proof = requireNotNull(result.taskEvidence).calls.single()
+        assertEquals("get_device_info", proof.toolName)
+        ToolWorkJournalBridge.settle(journal, proof, current = true)
+        val persisted = journal.all().single()
+        assertEquals("get_device_info", persisted.toolName)
+        assertEquals(CockpitWorkJournal.ToolState.SUCCEEDED, persisted.toolState)
+        assertEquals(proof.outputSha256, persisted.toolOutputSha256)
+    }
+
     @Test fun deniedReadOnlyToolDoesNotEmitDispatchOrFakeSuccessfulJournal() {
         val journal = CockpitWorkJournal(dir.root)
         val plan = ReadOnlyToolPlan(ToolProposal("get_storage_info", emptyMap()))
