@@ -121,10 +121,12 @@ internal class ConversationSituationModel(
      */
     fun resolveReturn(text: String, atTurn: Int = turn): Resolution {
         val query = tokens(text)
-        if (query.isEmpty()) return Resolution.NoMatch
+        val genericReturn = GENERIC_RETURN.containsMatchIn(text)
+        if (query.isEmpty() && !genericReturn) return Resolution.NoMatch
         val candidates = threads.values.filter { it.lifecycle in setOf(Lifecycle.PAUSED, Lifecycle.DORMANT) }
-            .map { state ->
+            .mapNotNull { state ->
                 val overlap = query.intersect(state.cues).size
+                if (overlap == 0 && !genericReturn) return@mapNotNull null
                 val openBoost = if (state.openQuestions.isNotEmpty()) 0.20f else 0f
                 val correctionBoost = if (state.recentCorrections.isNotEmpty()) 0.12f else 0f
                 val recency = 1f / (1f + .08f * (atTurn - state.lastTouchedTurn).coerceAtLeast(0))
@@ -214,6 +216,7 @@ internal class ConversationSituationModel(
         private val ID = Regex("[A-Za-z0-9._:-]{1,96}")
         private const val MIN_RETURN_SCORE = .25f
         private const val MIN_MARGIN = .18f
+        private val GENERIC_RETURN = Regex("(?iu)\\b(?:vorhin|davor|weiter|fortsetzen|dort\\s+weiter|zurück\\s+zu)\\b")
         private val STOP = setOf(
             "und","aber","das","die","der","den","dem","von","vorhin","davor","weiter",
             "bitte","mach","mache","wir","ich","du","jetzt","noch","mal","zurück"
