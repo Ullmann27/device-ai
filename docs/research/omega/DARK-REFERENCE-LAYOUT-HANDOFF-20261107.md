@@ -1,52 +1,37 @@
-# Dark reference home layout
+# Dark reference home layout — completed source and host QA
 
-## Source and authorization
+## Current status
 
-- Owner requested the supplied darker reference layout on 2026-11-07, with three assistants.
-- Base: PR #594, `88dfd45139471463618673a1f827ee062e9bf6d5`.
-- Branch: `codex/continuum-dark-reference-layout-20261107`.
-- Scope: native home composition, static surfaces and functional hit targets.
-- Status at initial checkpoint: **WIP / UNVERIFIED**.
+**IMPLEMENTED / PUSHED / HOST_QA_PASS.** Review: [PR #597](https://github.com/Ullmann27/device-ai/pull/597).
+Verified application/test source: [`3b0e4dd2f40575561b87bd84327caea0a8e63eb9`](https://github.com/Ullmann27/device-ai/commit/3b0e4dd2f40575561b87bd84327caea0a8e63eb9). The final evidence commit changes documentation only.
 
-## Design
+- Base: PR #594 at `88dfd45139471463618673a1f827ee062e9bf6d5`.
+- Own branch: `codex/continuum-dark-reference-layout-20261107`.
+- Owner requested the darker reference layout with three helpers; later explicitly asked for stronger contrast/color intensity and diagnostics reached by scrolling below the home composition.
+- Scope: EXP-05/EXP-11 presentation, static surfaces, responsive bounds and existing native controls.
 
-Keep the original cyan/violet identity, live avatar and original orb. Use near-black card interiors, saturated cyan/violet edge illumination against dark interiors and larger, vertically arranged feature cards. Restore the home input bar. The hero owns the primary area; secondary diagnostics follow all ten feature cards and the main status strip in the scrollable content. The owner explicitly confirmed scrolling and requested stronger color intensity/contrast on 2026-11-07. Preserve actual runtime status rather than copying the reference's illustrative green indicators.
+## Delivered design and connections
 
-Portrait, open Fold and tablet retain all ten feature destinations. Native action bounds follow the drawn controls; microphone, camera, appearance, notifications, settings, model details and navigation stay reachable. No extra animation timer, render loop, remote model, asset dependency or permission is introduced.
+Near-black glass interiors now separate clearly from saturated cyan/violet borders. Static corner lighting, narrow bright cores and dimensional vector-icon pedestals retain the project identity without another rendering clock, dependency or generated artwork. Decorative fine waves stay under the face and stop with the hero/input area.
 
-## Implementation plan
+The hero uses the original avatar/orb. A compact JARVIS status badge and restored conversation strip precede ten tall feature cards. Normal open-Fold profiles use five columns and two rows; narrow windows and large fonts reflow and scroll. Card titles/descriptions and rail names are complete in the tested font matrix. The duplicate in-app system clock is removed.
 
-- [x] Layout assistant: `JarvisCockpitGrid.kt`, `JarvisShellLayout.kt`, `JarvisWindowProfile.kt`; tall cards, shared input bounds and scrollable secondary details.
-- [x] Surface assistant: `JarvisReferenceHud.kt`, `JarvisTiles.kt`, palette in `JarvisDesign.kt`; dark glass, bounded rims and static dimensional icon pedestals.
-- [x] Integrator: `JarvisCockpitGridContent.kt`, `JarvisShellRenderer.kt`, `ContinuumHomeView.kt`; full card labels, compact companion badge, input controls and native action routing.
-- [x] Reviewer: inspect native routing, resize/accessibility tests and actual native Canvas frames; preserve unchanged avatar pose/camera assertions.
-- [ ] Run focused geometry/drawing tests and real Android host UI tests. Use `JarvisDeterministicCaptureUiTest` for code-rendered images, not generated mockups.
-- [ ] Commit and push source-bound results, exact commands and limitations.
-
-## Compatibility and review focus
-
-Presentation-only change around EXP-05/EXP-11; no model, memory, worker, authority or release protocol changes. Retain large-font scrolling, original render identity, meaningful status, cancelled/stale-task behavior and minimum 48dp controls. Existing PR #594 review findings outside the layout scope remain separate.
-
-No main merge, signing, publication, device installation or claim of physical Fold7/GPU/thermal acceptance. Original signing/package/version contract is untouched. No GitHub Actions trigger requested for this layout work; checkpoint commits use `[skip ci]`.
+The primary status strip closes the home composition. Active agents, current process, memory activity, model/device and camera/module details follow below it. Native hit bounds derive from the same geometry as the visible microphone, camera, appearance and conversation controls. The existing route IDs, permission gates, disabled-control behavior, avatar lifetime and real state sources remain connected.
 
 ## Verification
 
-Initial checkpoint: NOT_RUN. The base's results are not evidence for the changed layout.
+**239/239 focused tests passed** at the exact source above; no errors or skips. Gradle `:app:testDebugUnitTest` succeeded in 1m29s with actual Android SDK compilation. Native font checks exercise 90 card cases and 9 rail profiles. The independent real-source geometry harness passed 150 window/font/compact cases.
 
-Source checkpoint `ac6f363e07795d70341b19c719aae59b8cf37144`: real offline Android SDK/Gradle `:app:compileDebugKotlin` succeeded in 1m11s. A later small header-width adjustment and the final tests require a fresh run. Current test sources cover live input touch dispatch, disabled controls, responsive bounds, dark materials and real avatar pose/framing. Physical-device results remain NOT_RUN.
+Evidence, exact commands, complete test-name receipt, source hashes and image metadata: [`docs/evidence/dark-reference-layout-20261107/README.md`](../../evidence/dark-reference-layout-20261107/README.md).
 
-## Resume and rollback
+The first integrated run at `b12acea2d4fb2dcea5c100b12fed4c6c09436864` ran 247 tests with two failures: full header caption did not fit, and an old test assumed the face still sat right of the previous large dialog. The caption now fits the real available width; the structural test follows the new centered-head/compact-badge contract while real posed-face/camera assertions are retained. All targeted assertions pass in the final run. The later saturated-material checkpoint `c318e2d0ada64e8f95aef463ab72d1f45366e5d0` also passed 239/239 before the final fine-wave placement adjustment.
 
-Read this file, fetch the exact branch HEAD and inspect its PR before continuing. Revert only this branch's layout commits to return to PR #594. Other active branches must remain untouched.
+Three helpers covered geometry/typography, surfaces/icons, and independent native routing/capture review. The primary integrator reviewed actual code-rendered images and reran the final source after the visual adjustment.
 
-### First integrated test checkpoint
+## Explicit remaining boundaries
 
-Frozen source `b12acea2d4fb2dcea5c100b12fed4c6c09436864`: real offline SDK/Gradle `:app:testDebugUnitTest` ran 247 tests: 245 passed, 2 failed. `JarvisHeaderBrandFitTest` exposed a truncated header caption; `JarvisLivingSceneTest` still asserted the old horizontal dialog/head relationship. The native routing, avatar framing, all 12 real Activity reference tests and deterministic captures passed. The failures are being corrected, with native font checks for complete rail/card labels and revised saturated surfaces pending a fresh source-bound run. This checkpoint does not claim those fixes passed.
+Physical Fold7, native Filament/GPU and thermal acceptance: **NOT_RUN**. Captures use the actual Android Activity/native Canvas with the existing 2D head explicitly selected. The original 3D asset was not replaced. No APK assembly, original signing, installation, main merge or release was performed. No package/version contract, model, memory/worker authority, CCC1/ToolGate rule or paid service was changed. Existing PR #594 findings outside this layout scope remain separate.
 
-The initial CLI `--tests` invocation was rejected by the existing QA task allowlist. The subsequent run used a Gradle init-script test filter and the permitted `:app:testDebugUnitTest` task; no gate was disabled.
+## Next entry and rollback
 
-### Saturated-material and readability checkpoint
-
-Source `c318e2d0ada64e8f95aef463ab72d1f45366e5d0`: **239/239 focused Android host/JVM tests passed**, zero failures/errors/skips, Gradle succeeded in 1m43s. Native font checks include all ten cards across three widths and font factors 1/1.5/2 (90 cases) plus complete rail labels. Actual owner-profile captures are 1384x1536 pixels at density 2; the diagnostic capture scrolls the real dashboard by 1283px, and all four diagnostic panels are visible below the main status strip.
-
-Final visual review found decorative fine ribbons crossing the face. The last material adjustment moves only those normalized ribbons into the lower half of the hero/input backdrop; avatar/orb signals and geometry are unchanged. This small final adjustment awaits the fresh checkpoint run before completion.
+Fetch this branch and review the verified source plus evidence before integration. A future owner APK must follow the existing combined-source, original-signature and physical-device gates; this layout PR is not an APK delivery. Revert only the commits introduced by this branch to return to the PR #594 base; leave other active branches untouched.

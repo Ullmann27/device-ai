@@ -1,0 +1,1632 @@
+{
+  "schema_version": 1,
+  "source_commit": "3b0e4dd2f40575561b87bd84327caea0a8e63eb9",
+  "task": ":app:testDebugUnitTest",
+  "gradle_result": "BUILD SUCCESSFUL",
+  "elapsed": "1m29s",
+  "toolchain": {
+    "gradle": "8.11.1",
+    "jdk": "17",
+    "compile_sdk": "36",
+    "native_canvas_api": 28
+  },
+  "totals": {
+    "tests": 239,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "scope": "Focused UI, geometry, appearance, actual touch dispatch, avatar framing, lifecycle and native captures; see focused-tests.init.gradle",
+  "card_font_matrix_cases": 90,
+  "rail_font_matrix_profiles": 9,
+  "physical_device_verified": false,
+  "native_filament_verified": false,
+  "apk_built": false,
+  "suites": [
+    {
+      "name": "at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 13.277,
+      "cases": [
+        {
+          "name": "renderPhoneFoldAndTabletAtNormalAndLargeFonts",
+          "seconds": 12.708,
+          "result": "PASS"
+        },
+        {
+          "name": "largeTypeAndRealLongValuesStayInsideEachCardWithoutTextCollisions",
+          "seconds": 0.513,
+          "result": "PASS"
+        },
+        {
+          "name": "enlargedActionLabelsLeaveSpaceBelowTheirIcons",
+          "seconds": 0.056,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 40.052,
+      "cases": [
+        {
+          "name": "shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable",
+          "seconds": 40.052,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 7.969,
+      "cases": [
+        {
+          "name": "referenceTallAspect",
+          "seconds": 0.623,
+          "result": "PASS"
+        },
+        {
+          "name": "expandedCanonical",
+          "seconds": 0.489,
+          "result": "PASS"
+        },
+        {
+          "name": "compact390",
+          "seconds": 0.305,
+          "result": "PASS"
+        },
+        {
+          "name": "compact412",
+          "seconds": 0.293,
+          "result": "PASS"
+        },
+        {
+          "name": "expandedTablet",
+          "seconds": 0.584,
+          "result": "PASS"
+        },
+        {
+          "name": "ownerFoldAspect",
+          "seconds": 1.633,
+          "result": "PASS"
+        },
+        {
+          "name": "mediumNearSquare",
+          "seconds": 0.438,
+          "result": "PASS"
+        },
+        {
+          "name": "mediumMultiwindow",
+          "seconds": 0.372,
+          "result": "PASS"
+        },
+        {
+          "name": "mediumFont150",
+          "seconds": 0.405,
+          "result": "PASS"
+        },
+        {
+          "name": "mediumFont200",
+          "seconds": 0.382,
+          "result": "PASS"
+        },
+        {
+          "name": "referenceRasterActivityCanvas",
+          "seconds": 0.814,
+          "result": "PASS"
+        },
+        {
+          "name": "mediumShortLandscape",
+          "seconds": 0.295,
+          "result": "PASS"
+        },
+        {
+          "name": "expandedFont150",
+          "seconds": 0.414,
+          "result": "PASS"
+        },
+        {
+          "name": "expandedFont200",
+          "seconds": 0.387,
+          "result": "PASS"
+        },
+        {
+          "name": "compactFont150",
+          "seconds": 0.257,
+          "result": "PASS"
+        },
+        {
+          "name": "compactFont200",
+          "seconds": 0.277,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisReferenceHitTargetsUiTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 1.961,
+      "cases": [
+        {
+          "name": "movingOutsideOrCancellingTheGestureNeverNavigates",
+          "seconds": 1.172,
+          "result": "PASS"
+        },
+        {
+          "name": "heightOnlyUpdateReservesTheExternalBottomBarExactlyOnce",
+          "seconds": 0.12,
+          "result": "PASS"
+        },
+        {
+          "name": "inputActionsAndConversationRouteRealTouchesAcrossWindowReflow",
+          "seconds": 0.253,
+          "result": "PASS"
+        },
+        {
+          "name": "unavailableSpecialActionsAreDisabledInsteadOfPretendingToStartCapture",
+          "seconds": 0.072,
+          "result": "PASS"
+        },
+        {
+          "name": "tenNativeTileButtonsRouteAndExposeTheirRealState",
+          "seconds": 0.07,
+          "result": "PASS"
+        },
+        {
+          "name": "responsiveRemeasureKeepsTheSameLiveSurfaceAndReachableTenRoutes",
+          "seconds": 0.128,
+          "result": "PASS"
+        },
+        {
+          "name": "heightOnlyViewportChangesPreserveChildrenAndAreIdempotent",
+          "seconds": 0.078,
+          "result": "PASS"
+        },
+        {
+          "name": "elevenRailDestinationsAndDialogHeaderActionsHaveSeparateNativeControls",
+          "seconds": 0.066,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarFramingTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 7.011,
+      "cases": [
+        {
+          "name": "withoutAKeepOutTheHeadNeverMovesSidewaysAndStillFitsAnyAspect",
+          "seconds": 0.913,
+          "result": "PASS"
+        },
+        {
+          "name": "turningChinNeverEntersTheDialogueCard",
+          "seconds": 0.713,
+          "result": "PASS"
+        },
+        {
+          "name": "contractReachAndSilhouetteCoverTheSkinnedFace",
+          "seconds": 0.811,
+          "result": "PASS"
+        },
+        {
+          "name": "fold7CameraPullsBackAndReturnsToTheExactOriginalWindow",
+          "seconds": 0.588,
+          "result": "PASS"
+        },
+        {
+          "name": "cockpitHeadStaysInsideEveryStageInEveryPose",
+          "seconds": 0.616,
+          "result": "PASS"
+        },
+        {
+          "name": "formerCentredFitCutTheFold7FaceAndCoveredTheDialogue",
+          "seconds": 0.613,
+          "result": "PASS"
+        },
+        {
+          "name": "cameraFlightKeepsEveryPosedFaceClearThroughoutThePath",
+          "seconds": 0.907,
+          "result": "PASS"
+        },
+        {
+          "name": "cameraFlightWithTheExistingIdleDriftClearsTheDialogue",
+          "seconds": 0.714,
+          "result": "PASS"
+        },
+        {
+          "name": "unconstrainedRoomyStageKeepsCompositionAndCrownMarginNeverMoves",
+          "seconds": 0.56,
+          "result": "PASS"
+        },
+        {
+          "name": "formerFold7StageKeepsALargerHeadByMovingItBeforeShrinkingIt",
+          "seconds": 0.576,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.CockpitCinematicCueUiTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.429,
+      "cases": [
+        {
+          "name": "repeatRecallCannotExtendTheActiveTunnel",
+          "seconds": 0.047,
+          "result": "PASS"
+        },
+        {
+          "name": "realRecallStartsRecoveredDocumentTunnel",
+          "seconds": 0.041,
+          "result": "PASS"
+        },
+        {
+          "name": "backgroundDropsHeadIconsWithoutResumeReplay",
+          "seconds": 0.055,
+          "result": "PASS"
+        },
+        {
+          "name": "emptyRecallDoesNotInventAFileFlight",
+          "seconds": 0.042,
+          "result": "PASS"
+        },
+        {
+          "name": "reducedMotionNeverQueuesAHeadBurst",
+          "seconds": 0.043,
+          "result": "PASS"
+        },
+        {
+          "name": "delayedBootDoesNotReplayAfterBackground",
+          "seconds": 0.044,
+          "result": "PASS"
+        },
+        {
+          "name": "queuedBootDoesNotReplayAfterPauseResume",
+          "seconds": 0.039,
+          "result": "PASS"
+        },
+        {
+          "name": "actualTaskStopClearsRecoveredTunnel",
+          "seconds": 0.035,
+          "result": "PASS"
+        },
+        {
+          "name": "queuedRecallCannotSurviveAnActualStop",
+          "seconds": 0.043,
+          "result": "PASS"
+        },
+        {
+          "name": "actualPresenterMakesHeadIconsVisibleAboveTheLiveSurface",
+          "seconds": 0.039,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.FullStageMemorySceneUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.405,
+      "cases": [
+        {
+          "name": "realRecallDrawsBeyondTheAvatarSlot",
+          "seconds": 0.405,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisActionScenesTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.005,
+      "cases": [
+        {
+          "name": "centresEmergeFromTheTouchedTileOrBesideTheFace",
+          "seconds": 0.004,
+          "result": "PASS"
+        },
+        {
+          "name": "everyRealToolHasAScene",
+          "seconds": 0.001,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisCockpitGridTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.018,
+      "cases": [
+        {
+          "name": "ownerRecognitionOnlyFromUnlock",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "noInventedValuesWithoutSources",
+          "seconds": 0.006,
+          "result": "PASS"
+        },
+        {
+          "name": "tenTilesCanCarryRealValuesAndTheirReferenceSubtitles",
+          "seconds": 0.004,
+          "result": "PASS"
+        },
+        {
+          "name": "allNamedAreasInsideAndNoOverlap",
+          "seconds": 0.005,
+          "result": "PASS"
+        },
+        {
+          "name": "referenceCompositionRequiresReadableFiveColumns",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "referenceHeroAndCardsLeadBeforeSecondaryInformation",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "bothIdentitiesShareTheFullWidthWithoutASidePanel",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisDeckClearanceTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.001,
+      "cases": [
+        {
+          "name": "progressFollowsTheFrameClockAndReducedMotionSnaps",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "centreTilesLeaveFirstAndEveryCardIsGoneAtTheEnd",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "onlyTilesAndLowerRowsMakeRoom",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisDepthViewsUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.041,
+      "cases": [
+        {
+          "name": "farPanelsTiltShrinkAndResetIsFlat",
+          "seconds": 0.041,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisExternalRailLayoutTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.0,
+      "cases": [
+        {
+          "name": "aStandaloneShellRetainsItsOwnNavigation",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "contentCoordinatesStillMatchTheFullWindowReferenceAfterTheSingleOffset",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "aRealActivityRailDoesNotReserveOrDrawAnotherRailInsideTheHome",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisFeatureCardReadabilityUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.111,
+      "cases": [
+        {
+          "name": "realFontsKeepEveryCardLabelAndDescriptionComplete",
+          "seconds": 0.111,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisGermanTerminologyTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.005,
+      "cases": [
+        {
+          "name": "visibleCockpitTextContainsNoEnglishReferenceWords",
+          "seconds": 0.002,
+          "result": "PASS"
+        },
+        {
+          "name": "longGermanLabelsShrinkBeforeTheyAreEllipsized",
+          "seconds": 0.002,
+          "result": "PASS"
+        },
+        {
+          "name": "railBreaksGermanCompoundsInsteadOfCuttingThem",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "railAndTilesUseTheOwnerTermsForTheUnchangedTargets",
+          "seconds": 0.001,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisHeadAuraSignalTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.002,
+      "cases": [
+        {
+          "name": "readyStateRetainsReferenceLighting",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "extremeAndInvalidInputsCannotOverflowTheHalo",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "realThinkingAndSpeechSignalsIncreaseButBoundTheGlow",
+          "seconds": 0.001,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisHeaderBrandFitTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.005,
+      "cases": [
+        {
+          "name": "scaledBrandKeepsTextThatFitsAndStaysInsideTheBox",
+          "seconds": 0.003,
+          "result": "PASS"
+        },
+        {
+          "name": "brandLinesStayInsideTheBrandBox",
+          "seconds": 0.002,
+          "result": "PASS"
+        },
+        {
+          "name": "systemClockIsNotDuplicatedInTheReferenceHeader",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisLivePanelsRegressionTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.004,
+      "cases": [
+        {
+          "name": "denseButtonsMeetWhileTouchRowsStaySeparateAndReachable",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "internetConnectionCannotMakeAnUnloadedLocalModelLookOnline",
+          "seconds": 0.002,
+          "result": "PASS"
+        },
+        {
+          "name": "aReadyLocalModelRemainsOnlineWithoutInternet",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "actualGridShowsMeasuredMemoryCountsWithoutInventingActivity",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "actualGridUsesTheModelCardAndItsRealReadiness",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisLivingSceneTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.014,
+      "cases": [
+        {
+          "name": "drawCostPerFrameIsBoundedAndIndependentOfTime",
+          "seconds": 0.004,
+          "result": "PASS"
+        },
+        {
+          "name": "huesCycleSmoothlyThroughTheNeonPalette",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "reducedMotionTimeIsStableAndDisabledLayersDrawNothing",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "headStageCentersTheFaceAboveTheCompactBadge",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "realPulseAndProcessingBrightenTheOrbCore",
+          "seconds": 0.006,
+          "result": "PASS"
+        },
+        {
+          "name": "motionIsContinuousWithoutJumps",
+          "seconds": 0.001,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisMemoryActivityPanelTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.004,
+      "cases": [
+        {
+          "name": "neverShowsRef5Numbers",
+          "seconds": 0.003,
+          "result": "PASS"
+        },
+        {
+          "name": "showsRealStatsAndTrackerValues",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "withoutDataEveryValueIsDash",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisMemorySignalWiringUiTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.118,
+      "cases": [
+        {
+          "name": "startingResearchDoesNotInventLearnedDocumentsOrAnArrivalPulse",
+          "seconds": 0.028,
+          "result": "PASS"
+        },
+        {
+          "name": "onlyConfirmedWritesFlashAndHypothesesRemainDistinct",
+          "seconds": 0.025,
+          "result": "PASS"
+        },
+        {
+          "name": "pausingTheLiveSurfaceClearsEffectsAndRejectsNewBackgroundCallbacks",
+          "seconds": 0.02,
+          "result": "PASS"
+        },
+        {
+          "name": "detachedSequenceDoesNotAcceptLateMemoryCallbacks",
+          "seconds": 0.025,
+          "result": "PASS"
+        },
+        {
+          "name": "actualMemoryEventsReachTheOrbWhileAConversationTurnIsActive",
+          "seconds": 0.02,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisMenuMotionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.007,
+      "cases": [
+        {
+          "name": "phoneSceneScalesFromCentreThenTiltsEaseInOutTwoSeconds",
+          "seconds": 0.004,
+          "result": "PASS"
+        },
+        {
+          "name": "patternBCentreFirstStaggeredSidesAndSpec",
+          "seconds": 0.002,
+          "result": "PASS"
+        },
+        {
+          "name": "patternADepthEightHundredMs",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "cameraDriftIsLinearDollyOneToOnePointZeroThree",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisMenuNavigationTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.01,
+      "cases": [
+        {
+          "name": "dedicatedDestinationsKeepSelectionAndEventsWithoutOpeningTheObsoleteSlot",
+          "seconds": 0.003,
+          "result": "PASS"
+        },
+        {
+          "name": "deviceStatusShowsOnlyRealValuesOtherwiseDash",
+          "seconds": 0.002,
+          "result": "PASS"
+        },
+        {
+          "name": "railSpecFold7BothOrientationsCoverAndPhoneBottomBar",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "railHasTheElevenRef5EntriesInOrder",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "barActionsLeadToRealPathsOtherwiseQuelleFehlt",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "everyRailAndTileTargetOpensAnExistingScreen",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "areaToAreaIsPatternBSceneIsPatternA",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "everyRailEntryHasItsRef5Icon",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "unknownTargetDoesNothing",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "railUsesDesignTokensOnly",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "missingPathIsDisabledAndPerformIsNoOp",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "theExistingOtherPaneRailFitsTheSharedNavigationLabels",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisMotionTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.003,
+      "cases": [
+        {
+          "name": "animatorScaleStretchesTime",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "panelStartsAt80PercentInvisibleFromLeft",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "easingsHitEndpoints",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "sceneZExponentialEaseIn",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "reducedMotionJumpsToRest",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "depthLayersScaleBlurTiltDrift",
+          "seconds": 0.002,
+          "result": "PASS"
+        },
+        {
+          "name": "landsAtRestAndFlashesRim",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "cubicEaseOutAtHalfTime",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "dollyInIsLinearOneToOnePointZeroThree",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "idleFloat",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "laserAndEnvelope",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "widgetsGrowFromHalf",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "centreFirstAndSides",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "pillsDoNotFadeAndDecelerateStrongly",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisOwnerCardContentTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.003,
+      "cases": [
+        {
+          "name": "missingSensorsNeverImplyPresenceAttentionGazeOrEmotion",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "unknownRecognitionDoesNotExposeAnUnverifiedMethod",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "unlockedDeviceDoesNotClaimPersonalRecognition",
+          "seconds": 0.002,
+          "result": "PASS"
+        },
+        {
+          "name": "actualRecognitionKeepsItsOwnSource",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisPresentationPolicyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.0,
+      "cases": [
+        {
+          "name": "trackingRequiresBothAnActiveSessionAndAnObservedTrackingState",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "logicOnlyReportsWorkDuringTheActualWorkingPhase",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "onlyActualListeningSpeakingOrProcessingMakesTheDialogLive",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "aLoadedModelCannotFabricateLogicLearningMemoryOrWorkers",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "malformedAudioMeasurementsStayUnknownAndValidBoundariesArePreserved",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "absentSourcesDoNotClaimLiveSpeechCameraOrAudio",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisRailLabelReadabilityUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.098,
+      "cases": [
+        {
+          "name": "nativeRailKeepsEveryDestinationNameComplete",
+          "seconds": 0.098,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisReferenceDialogReadabilityTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.006,
+      "cases": [
+        {
+          "name": "inputRetainsTheActualReplyPreviewWithReadableBounds",
+          "seconds": 0.005,
+          "result": "PASS"
+        },
+        {
+          "name": "compactBadgeNeverInventsReadyWhileTheModelIsUnavailable",
+          "seconds": 0.001,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisReferenceSurfaceTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.009,
+      "cases": [
+        {
+          "name": "glassSurfacesBalancePaintStateAndReuseShaders",
+          "seconds": 0.003,
+          "result": "PASS"
+        },
+        {
+          "name": "featureIconsLeaveThePainterReadyForText",
+          "seconds": 0.006,
+          "result": "PASS"
+        },
+        {
+          "name": "invalidIconBoundsLeaveThePainterUntouched",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisReferenceWindowLayoutTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.012,
+      "cases": [
+        {
+          "name": "widthBreakpointsAreExplicitAndNotGuessedFromTheDeviceModel",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "compactPhoneKeepsHeadAndSphereBesideEachOtherAboveDialogue",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "missingOwnerCardNoLongerShrinksThePortraitViewport",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "reservationsAreSubtractedOnceAndDoNotCreateASecondNavigationRail",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "nearSquareFoldKeepsTallCardsAndUsesHonestScrolling",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "actualControlsHaveDisjointFortyEightDpHitBoxes",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "compactModeKeepsTheSameDestinationsAndDisjointInputActions",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "extraHeightGrowsTheHeroWithoutStretchingCards",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "primaryReferencePrecedesScrollableDiagnostics",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "optionalStandalonePhoneBarIsOnlyAddedWhenRequested",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "shortWideWindowAndLargeFontsReflowWithoutNegativeHeroBounds",
+          "seconds": 0.007,
+          "result": "PASS"
+        },
+        {
+          "name": "theTenTileDestinationsKeepTheReferenceRowMajorOrder",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "expandedWindowsUseFourInformationColumnsMediumWindowsUseTwoRows",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "coverKeepsBothIdentitiesAndARealWorkAreaAtLargeFonts",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "compactBadgeLeavesTheUpperHeadClearAndMovesControlsBelowIt",
+          "seconds": 0.001,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisRenderQualityTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.001,
+      "cases": [
+        {
+          "name": "reducedMotionAndPowerSavingSuppressAnimationEvenDuringInference",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "activeInferenceReservesCapacityWhileNormalForegroundKeepsFullQuality",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "moderateHeatReducesFrameWorkBeforeSevereWithoutDroppingAnimation",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "thermalPressureNeverIncreasesRenderWork",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "hiddenScenesSuspendForEveryDeviceAndInferenceState",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisSequenceEffectsUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 1.47,
+      "cases": [
+        {
+          "name": "commandFliesInThenCardsStackWithReportedOutcomes",
+          "seconds": 1.47,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisSequenceFgdTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.003,
+      "cases": [
+        {
+          "name": "pillLabelsComeFromTheGateAndDisabledOnesSaySourceMissing",
+          "seconds": 0.002,
+          "result": "PASS"
+        },
+        {
+          "name": "pillsHaveNoAlphaFadeAndHardDeceleration",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "flapOpensIn300msAsXRotationWithForeshortening",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "envelopeComesFromDepthInHalfASecondWithPerspective",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "tapHitsOnlyAnEnabledLandedPill",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "reducedMotionShowsFinalPoseAndNoGlowHasAFallback",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "documentRisesAfterFlapThenLasersDrawIn300ms",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "sparksAndLasersAreBounded",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.004,
+      "cases": [
+        {
+          "name": "exitingCardCannotSlideIntoProtectedRegion",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "ringsRemainVisibleAroundAProtectedInterior",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "movingPointCannotReachAProtectedRegionBesideItsLine",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "diagonalSparksRemainVisibleBesideAProtectedRegion",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "commandTrailCannotCrossTheOrbWhenChipAndHubAreClear",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "leavingLastCardIsCheckedBeyondTheActiveStack",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "flyingCommandChipCannotCoverTheHeadWhenHubIsClear",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "liveCardConnectionCannotCrossAProtectedRegion",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "dismissingTheOnlyCardKeepsTheHeadProtected",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "unobstructedCommandsAndCardsStillAnimate",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "expandingCommandRingsCannotReachAProtectedHead",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "enteringCardTrailCannotCrossAProtectedRegion",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "cardNeonRimCannotReachAProtectedHead",
+          "seconds": 0.001,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest",
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.683,
+      "cases": [
+        {
+          "name": "memoryRecallRemainsIndependentOfCompletedTurns",
+          "seconds": 0.029,
+          "result": "PASS"
+        },
+        {
+          "name": "unrelatedCompletionDuringPauseDoesNotRetireLiveWork",
+          "seconds": 0.027,
+          "result": "PASS"
+        },
+        {
+          "name": "completionReceivedWhileMotionIsPausedRejectsLateTimeline",
+          "seconds": 0.024,
+          "result": "PASS"
+        },
+        {
+          "name": "detachedSubscriberRetiresBackgroundCompletionsWithoutReattach",
+          "seconds": 0.055,
+          "result": "PASS"
+        },
+        {
+          "name": "completionQueuedBeforeMotionPauseSurvivesGenerationChange",
+          "seconds": 0.036,
+          "result": "PASS"
+        },
+        {
+          "name": "unseenCompletionReceivedDuringPauseRejectsDelayedCommand",
+          "seconds": 0.025,
+          "result": "PASS"
+        },
+        {
+          "name": "completionQueuedBeforeDetachSurvivesReattach",
+          "seconds": 0.025,
+          "result": "PASS"
+        },
+        {
+          "name": "delayedCommandCannotReopenACompletedTurn",
+          "seconds": 0.025,
+          "result": "PASS"
+        },
+        {
+          "name": "bootEventDoesNotBlockTheFirstWorker",
+          "seconds": 0.022,
+          "result": "PASS"
+        },
+        {
+          "name": "queuedVisualEventIsStillDiscardedAcrossDetach",
+          "seconds": 0.027,
+          "result": "PASS"
+        },
+        {
+          "name": "completionReceivedWhileMotionIsPausedRejectsLateWorker",
+          "seconds": 0.02,
+          "result": "PASS"
+        },
+        {
+          "name": "lateTimelineCannotReopenACompletedTurn",
+          "seconds": 0.026,
+          "result": "PASS"
+        },
+        {
+          "name": "aNewWorkerCanStartAfterACompletedTurn",
+          "seconds": 0.024,
+          "result": "PASS"
+        },
+        {
+          "name": "recentCompletionsRemainClosedAfterALongSession",
+          "seconds": 0.025,
+          "result": "PASS"
+        },
+        {
+          "name": "motionPauseKeepsCompletedTurnsClosed",
+          "seconds": 0.022,
+          "result": "PASS"
+        },
+        {
+          "name": "motionPauseDoesNotDeclareActiveWorkCompleted",
+          "seconds": 0.021,
+          "result": "PASS"
+        },
+        {
+          "name": "delayedOldCommandCannotDisplaceTheCurrentTurn",
+          "seconds": 0.02,
+          "result": "PASS"
+        },
+        {
+          "name": "backgroundCompletionBeforeFirstAttachDoesNotWaitForAttachment",
+          "seconds": 0.022,
+          "result": "PASS"
+        },
+        {
+          "name": "directlySubscribedViewRetainsCompletionReceivedWhileDetached",
+          "seconds": 0.022,
+          "result": "PASS"
+        },
+        {
+          "name": "anAcknowledgedCommandShowsEachStepOnce",
+          "seconds": 0.026,
+          "result": "PASS"
+        },
+        {
+          "name": "directlySubscribedViewRetainsBackgroundCompletionReceivedWhileDetached",
+          "seconds": 0.031,
+          "result": "PASS"
+        },
+        {
+          "name": "unfinishedWorkCanResumeAfterDetach",
+          "seconds": 0.022,
+          "result": "PASS"
+        },
+        {
+          "name": "navigationEventDoesNotBlockTheFirstWorker",
+          "seconds": 0.023,
+          "result": "PASS"
+        },
+        {
+          "name": "lateCallbackFromANonvisibleCompletedTurnIsDropped",
+          "seconds": 0.019,
+          "result": "PASS"
+        },
+        {
+          "name": "newWorkStartsAfterCompletionReceivedDuringPause",
+          "seconds": 0.022,
+          "result": "PASS"
+        },
+        {
+          "name": "queuedVisualEventIsStillDiscardedAcrossMotionPause",
+          "seconds": 0.042,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisSequenceViewDockingUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.027,
+      "cases": [
+        {
+          "name": "cockpitEventsDriveTheSequenceAndStaleTurnsAreDropped",
+          "seconds": 0.027,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisShellContentTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.003,
+      "cases": [
+        {
+          "name": "everyContentSlotOfEveryFormFactorHasRealRowsOrNotAvailable",
+          "seconds": 0.002,
+          "result": "PASS"
+        },
+        {
+          "name": "timelineTimingsArePinnedToJarvisMotion",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "tilesShowOnlyRealValuesAndRouteToExistingScreens",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "hitTestFindsTileRailAndBottomNavTargets",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisShellLayoutTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.001,
+      "cases": [
+        {
+          "name": "glowLevelsAreOrdered",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "tabletRetainsTheSameHeadLeftSphereRightComposition",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "jarvisColoursFollowVideoSpec",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "expandedLargeFontReflowsAndReservesReadableLabels",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "iconRailHasASeparateReadableSixtyFourDpColumn",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "compactPhoneStacksReadableComponentsAndAllTenTiles",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "fold7OpenKeepsTheDarkReferenceStructure",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "referenceTilesFromRef5",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "largeFontStaysSane",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisTextScalePainterTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.0,
+      "cases": [
+        {
+          "name": "invalidFontScaleCannotMakeTextNonFinite",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "measuredAndDrawnTextUseTheSameScaledStyleWhileShapesKeepTheirBounds",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisTileAmbientNeonTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.006,
+      "cases": [
+        {
+          "name": "movingGlowBeadAddsExactlyThreeBoundedLightSamples",
+          "seconds": 0.001,
+          "result": "PASS"
+        },
+        {
+          "name": "slowColourCycleIsStableAndContinuous",
+          "seconds": 0.004,
+          "result": "PASS"
+        },
+        {
+          "name": "livingRimAddsTwoBoundedDrawsAndDisabledTileHasNoAmbientEffect",
+          "seconds": 0.001,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisTileEnergyTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.082,
+      "cases": [
+        {
+          "name": "repeatsWithoutJumpAfterCompleteCycle",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "travelsContinuouslyAcrossCornersAndCycleBoundary",
+          "seconds": 0.059,
+          "result": "PASS"
+        },
+        {
+          "name": "followsRealRoundedRimAtAllFourCorners",
+          "seconds": 0.023,
+          "result": "PASS"
+        },
+        {
+          "name": "differentTilesAreStaggeredWithoutStateInference",
+          "seconds": 0.0,
+          "result": "PASS"
+        },
+        {
+          "name": "minSizeRadiusAndExtremeInputsRemainSafe",
+          "seconds": 0.0,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisWorkWindowDepthTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.09,
+      "cases": [
+        {
+          "name": "aNarrowWindowKeepsItsSheetsInsideTheirOwnWidth",
+          "seconds": 0.019,
+          "result": "PASS"
+        },
+        {
+          "name": "nonFiniteOrEmptyGeometryDrawsNothing",
+          "seconds": 0.019,
+          "result": "PASS"
+        },
+        {
+          "name": "thePageRecedesFromItsPlaceInTheDocumentToTheSourceSlotOfTheDraft",
+          "seconds": 0.014,
+          "result": "PASS"
+        },
+        {
+          "name": "rearLayersFollowTheRealPageCountUpToThree",
+          "seconds": 0.014,
+          "result": "PASS"
+        },
+        {
+          "name": "theDocumentPlaneSettlesAsTheFirstRearLayerOfTheDraft",
+          "seconds": 0.012,
+          "result": "PASS"
+        },
+        {
+          "name": "rearLayersStepBackAndUpBehindTheFrontWhileItIsOpen",
+          "seconds": 0.012,
+          "result": "PASS"
+        }
+      ]
+    }
+  ]
+}
