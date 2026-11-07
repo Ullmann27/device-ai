@@ -7,7 +7,12 @@ import java.nio.file.StandardCopyOption
 
 /** Opt-in, read-only comparison. No response replacement, fact insertion, tool call or weight update. */
 object Ctx3Shadow {
- data class Event(val inputSha256:String,val decision:String,val reason:String,val baselineIds:List<String>,val proposedIds:List<String>,val conversationSha256:String="",val modelSha256:String="",val sourceVersion:String="")
+ data class Event(
+  val inputSha256:String,val decision:String,val reason:String,val baselineIds:List<String>,val proposedIds:List<String>,
+  val conversationSha256:String="",val modelSha256:String="",val sourceVersion:String="",
+  val stateTelegramStatus:String="",val stateTelegramSha256:String="",val stateTelegramBytes:Int=0,
+  val rawSelectedBytes:Int=0,val stateKeyCount:Int=0,val stateConflictCount:Int=0,val stateUnresolvedCount:Int=0
+ )
  private data class Session(val context:Ctx3Context=Ctx3Context(),val events:MutableList<Event> = arrayListOf(),var touched:Long=System.nanoTime())
  private data class Key(val directory:String,val conversationId:String)
  private val sessions=linkedMapOf<Key,Session>()
@@ -54,7 +59,22 @@ object Ctx3Shadow {
      val allowed=if(decision.sourceIds.isEmpty())facts else facts.filter { it.id in decision.sourceIds }
      val hits=ContinuumMemoryDialogue.rank(bytes,decision.query,allowed).take(3).map { it.id }
      s.context.observe(hits.toSet(),entities)
-     Event(ContinuumMemoryDialogue.hash(input.toByteArray()),"QUERY",if(decision.sourceIds.isEmpty())"UNRESOLVED_RETRIEVAL_SCOPE" else "CURRENT_CONFIRMED_SOURCE_SCOPE",baseline.take(3),hits)
+     val telegram=if(hits.isEmpty())null else runCatching {
+      Ctx3StateTelegram.compile(
+       ContinuumTemporalMemory.fromLedger(facts),hits.toSet(),System.currentTimeMillis())
+     }.getOrNull()
+     Event(
+      ContinuumMemoryDialogue.hash(input.toByteArray()),"QUERY",
+      if(decision.sourceIds.isEmpty())"UNRESOLVED_RETRIEVAL_SCOPE" else "CURRENT_CONFIRMED_SOURCE_SCOPE",
+      baseline.take(3),hits,
+      stateTelegramStatus=when { hits.isEmpty()->"NO_SELECTED_SOURCES";telegram==null->"SAFE_SHADOW_FAILURE";else->"OK" },
+      stateTelegramSha256=telegram?.sha256.orEmpty(),
+      stateTelegramBytes=telegram?.telegramBytes?:0,
+      rawSelectedBytes=telegram?.rawSelectedBytes?:0,
+      stateKeyCount=telegram?.keyCount?:0,
+      stateConflictCount=telegram?.conflictCount?:0,
+      stateUnresolvedCount=telegram?.unresolvedCount?:0
+     )
     }
     is Ctx3Decision.Clarify->Event(ContinuumMemoryDialogue.hash(input.toByteArray()),"CLARIFY",decision.reason,baseline.take(3),emptyList())
     is Ctx3Decision.Abstain->Event(ContinuumMemoryDialogue.hash(input.toByteArray()),"ABSTAIN",decision.reason,baseline.take(3),emptyList())
