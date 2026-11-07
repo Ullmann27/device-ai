@@ -742,11 +742,19 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun canAnimateFrame() =
         foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE
 
-    private fun renderBudget() = at.heinz.deviceai.ui.JarvisRenderQuality.resolve(
-        foregroundActive && isAttachedToWindow && isShown && windowVisibility == VISIBLE,
-        powerManager.isPowerSaveMode, thermalStatus,
-        !animationsEnabled || !ValueAnimator.areAnimatorsEnabled(),
-        currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING)
+    private fun renderBudget(): at.heinz.deviceai.ui.JarvisRenderQuality.Budget {
+        val base = at.heinz.deviceai.ui.JarvisRenderQuality.resolve(
+            foregroundActive && isAttachedToWindow && isShown && windowVisibility == VISIBLE,
+            powerManager.isPowerSaveMode, thermalStatus,
+            !animationsEnabled || !ValueAnimator.areAnimatorsEnabled(),
+            currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING)
+        // When speech is already playing the heavy LLM phase is normally over. Keep
+        // essential lip/eye motion readable even in LOW, while decoration stays off.
+        return if (base.tier == at.heinz.deviceai.ui.JarvisRenderQuality.Tier.LOW &&
+            currentState == State.SPEAKING && foregroundActive)
+            base.copy(frameDelayMillis = minOf(base.frameDelayMillis, 50L), particleCount = 0)
+        else base
+    }
 
     internal fun presentationRenderBudget() = renderBudget()
 
@@ -764,16 +772,18 @@ class ContinuumHologramView @JvmOverloads constructor(
     internal fun motionDiagnostics(): String = when {
         !animationsEnabled -> "Avatar: In-App-Animation ausgeschaltet"
         !ValueAnimator.areAnimatorsEnabled() -> "Avatar: Android-Animationen ausgeschaltet. Bedienungshilfen/Entwickleroptionen prüfen."
-        powerManager.isPowerSaveMode -> "Avatar: Energiesparmodus blockiert Bewegung."
-        thermalStatus >= 3 -> "Avatar: Temperatur hoch · Bewegung pausiert."
         !foregroundActive -> "Avatar: Activity nicht im Vordergrund."
         !isAttachedToWindow -> "Avatar: View nicht am Fenster."
         !isShown || windowVisibility != VISIBLE -> "Avatar: View derzeit unsichtbar."
+        powerManager.isPowerSaveMode || thermalStatus >= 3 ->
+            "Avatar: ESSENTIAL · Dekoration gedrosselt · " + avatarTrace.diagnose()
         else -> "Avatar: LIVE · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)} · ${avatarTrace.diagnose()}"
     }
 
     private fun updateMotionPolicy() {
-        motionAllowed = animationsEnabled && ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode && thermalStatus < 3
+        // Reduced-motion remains authoritative. Power-save/thermal pressure no longer
+        // kills mouth/eyes/head completely; JarvisRenderQuality suppresses decoration.
+        motionAllowed = animationsEnabled && ValueAnimator.areAnimatorsEnabled()
         removeCallbacks(drawFrame)
         framePending = false
         lastFrameMs = 0L
@@ -788,8 +798,9 @@ class ContinuumHologramView @JvmOverloads constructor(
             pendingAudioMs = 0L
             consumedAudioMs = 0L
         }
-        cockpitSequence?.setMotionAllowed(canAnimateFrame())
-        renderBudget().let { cockpitSequence?.setFrameBudget(it.frameDelayMillis, it.reducedBloom) }
+        val presentationBudget = renderBudget()
+        cockpitSequence?.setMotionAllowed(canAnimateFrame() && presentationBudget.animate)
+        presentationBudget.let { cockpitSequence?.setFrameBudget(it.frameDelayMillis, it.reducedBloom) }
         update3d()
         native3d?.setQuality(renderBudget().reducedBloom)
         presentationBudgetObservers.toList().forEach { it() }
@@ -1067,7 +1078,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         audioEnergy = if (currentState == State.SPEAKING) sqrt(audio.valueAt(now)) else 0f
         val targetEnergy = if (currentState == State.SPEAKING) .12f + audioEnergy * .88f else stateEnergy(currentState)
         energy += (targetEnergy - energy) * (1f - exp(-delta * 9f))
-        phase = (phase + delta * (.28f + energy * .72f)) % 1000f
+        if (renderBudget().animate) phase = (phase + delta * (.28f + energy * .72f)) % 1000f
     }
 
     private fun stateEnergy(state: State) = when (state) {
