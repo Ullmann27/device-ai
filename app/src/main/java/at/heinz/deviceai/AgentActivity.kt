@@ -5808,8 +5808,17 @@ class AgentActivity : Activity() {
                     temporal={ b -> at.heinz.deviceai.learning.ContinuumTemporalMemorySpecialist.decide(filesDir,core,
                         request.take(512),b,working=at.heinz.deviceai.cognitive.ChatSpecialistChain.workingTurns(
                             localConversationContext.priorUserTurns(requestSessionId),nowMs),nowMillis=nowMs).outcome })
-                Triple(Triple(shown.answer,shown.evidenceLine,shown.grounded),
-                    cognitive.localModelPrompt,cognitive.nextScopedGroundedQuestion)
+                val stateTelegram = if (
+                    shown.source == at.heinz.deviceai.learning.ContinuumBaselineSource.MEMORY &&
+                    shown.memoryIds.isNotEmpty()
+                ) runCatching {
+                    core.stateTelegramForSources(shown.memoryIds.toSet(), nowMs).text
+                }.getOrDefault("") else ""
+                Triple(
+                    Triple(shown.answer,shown.evidenceLine,shown.grounded) to stateTelegram,
+                    cognitive.localModelPrompt,
+                    cognitive.nextScopedGroundedQuestion
+                )
             }
             runOnUiThread {
                 if(isFinishing || isDestroyed || activeChatCancellation !== cancellation)return@runOnUiThread
@@ -5818,10 +5827,11 @@ class AgentActivity : Activity() {
                 setBusy(false)
                 if (sessionId != requestSessionId || runCatching { cancellation.throwIfCancelled() }.isFailure)
                     return@runOnUiThread
-                result.onSuccess { (dialogueResult,localPrompt,nextTopic) ->
+                result.onSuccess { (dialogueAndTelegram,localPrompt,nextTopic) ->
                     // An old queued reply cannot set the next chat's runtime context.
                     if(sessionId==requestSessionId)
                         scopedLocalPromptSession=LocalPromptSession(requestSessionId,nextTopic)
+                    val (dialogueResult,stateTelegram)=dialogueAndTelegram
                     val (answer,evidence,grounded)=dialogueResult
                     // Direct recall remains exact. Explicit synthesis uses the existing
                     // local agent; its conclusions acquire no confirmed-memory authority.
@@ -5835,7 +5845,7 @@ class AgentActivity : Activity() {
                         )
                         if(grounded) {
                             val recall=at.heinz.deviceai.cognitive.LocalGroundedRecall
-                                .boundedOrNull(answer,evidence)
+                                .boundedOrNull(answer,evidence,stateTelegram.ifBlank { null })
                             if(recall==null) {
                                 // A confirmed retrieval must remain exact. If it cannot fit
                                 // the model's bounded evidence envelope, do not truncate it,
