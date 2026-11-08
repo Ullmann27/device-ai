@@ -99,6 +99,22 @@ internal class AvatarTraceRingBuffer(private val capacity: Int = 120) {
     }
 }
 
+internal object AvatarProofCompletion {
+    data class Summary(val callbackDelta: Long, val drawDelta: Long, val verdict: String) {
+        val live: Boolean get() = verdict.startsWith("AVATAR_PIPELINE_LIVE")
+    }
+
+    fun summarize(callbackDelta: Long, drawDelta: Long, trace: String): Summary {
+        require(callbackDelta >= 0L && drawDelta >= 0L)
+        val verdict = when {
+            callbackDelta == 0L -> "BROKEN_AT_FRAME_LOOP: keine sichtbaren Animations-Callbacks im Proof"
+            drawDelta == 0L -> "BROKEN_AT_CANVAS: Animations-Callbacks ohne echte Canvas-Zeichnung"
+            else -> trace.ifBlank { "BROKEN_AT_TRACE: kein Renderer-Trace" }
+        }
+        return Summary(callbackDelta, drawDelta, verdict)
+    }
+}
+
 internal data class AvatarProofFrame(
     val pose: AvatarPose,
     val orbEnergy: Float,
