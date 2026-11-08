@@ -154,7 +154,7 @@ class OwnerAppActionFlowTest {
         val message = OwnerAppLookupIntent.inspect("Schreibe WhatsApp") as OwnerAppLookupIntent.Intake.Lookup
         assertTrue(message.requireInstalledCandidate)
         assertTrue(message.messagePlanningIfMatched)
-        assertTrue(OwnerAppLookupIntent.shouldClarifyMessage(message, true, 1))
+        assertTrue(OwnerAppLookupIntent.shouldClarifyMessage(message, true, 1, true))
         assertNull(OwnerAppLookupIntent.inspect("Schreibe einen langen Bericht über Wien"))
         assertTrue(OwnerAppLookupIntent.inspect("Ich will was von WhatsApp") is OwnerAppLookupIntent.Intake.Clarify)
         for (request in listOf("Öffne die PDF", "Öffne den Download-Ordner", "Öffne /sdcard/Download"))
@@ -188,4 +188,85 @@ class OwnerAppActionFlowTest {
     }
 
 
+
+    @Test fun fuzzyImplicitAppNeedsFallBackBeforeAnySelection() {
+        val examples = listOf(
+            "Ich brauche Whats" to NativeAppCandidate("org.example.messenger", "WhatsApp"),
+            "Ich brauche Urlaub" to NativeAppCandidate("org.example.trip", "Urlaub Planer")
+        )
+        examples.forEach { (request, app) ->
+            val intake = OwnerAppLookupIntent.inspect(request) as OwnerAppLookupIntent.Intake.Lookup
+            assertTrue(intake.requireInstalledCandidate)
+            val dispatched = mutableListOf<String>()
+            val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { call ->
+                dispatched += call.name
+                if (call.name == "find_app") lookup(call, listOf(app))
+                else error("Unexpected launch for fuzzy request")
+            })
+            val flow = OwnerAppActionFlow(intake.opening, intake.requireInstalledCandidate)
+            val step = flow.returned(invoke(gate, flow.start(intake.query)))
+            assertTrue(request, step is OwnerAppActionFlow.Step.Done)
+            assertEquals(listOf("find_app"), dispatched)
+            assertTrue(flow.lookupVerified)
+            assertFalse(flow.exactMatchVerified)
+            assertTrue(flow.lookupFinishedWithoutInteraction)
+            assertTrue(OwnerAppLookupIntent.shouldFallbackToConversation(
+                intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified
+            ))
+            assertNull(flow.choose(app))
+            assertNull(flow.confirm(true))
+        }
+    }
+
+    @Test fun explicitFuzzyAppSelectionRetainsCancelAndLaunchReceipts() {
+        val app = NativeAppCandidate("org.example.messenger", "WhatsApp")
+        val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { call ->
+            if (call.name == "find_app") lookup(call, listOf(app))
+            else JSONObject().put("schema", "CONTINUUM_DEVICE_ACTION_V1")
+                .put("action", "LAUNCH_APP").put("package", app.packageName)
+                .put("status", "VERIFIED_FOREGROUND").put("windowRevision", 7).toString()
+        })
+        val intake = OwnerAppLookupIntent.inspect("Öffne Whats") as OwnerAppLookupIntent.Intake.Lookup
+        assertFalse(intake.requireInstalledCandidate)
+
+        val cancelled = OwnerAppActionFlow(intake.opening, intake.requireInstalledCandidate)
+        val offered = cancelled.returned(invoke(gate, cancelled.start(intake.query)))
+        assertTrue(offered is OwnerAppActionFlow.Step.Choose)
+        assertFalse(cancelled.lookupFinishedWithoutInteraction)
+        val cancelReceipt = cancelled.choose(null) as OwnerAppActionFlow.Step.Done
+        assertTrue(cancelReceipt.message.contains("abgebrochen"))
+        assertFalse(cancelled.lookupFinishedWithoutInteraction)
+
+        val launched = OwnerAppActionFlow(intake.opening, intake.requireInstalledCandidate)
+        val choices = launched.returned(invoke(gate, launched.start(intake.query))) as
+            OwnerAppActionFlow.Step.Choose
+        val confirmation = launched.choose(choices.candidates.single()) as
+            OwnerAppActionFlow.Step.Confirm
+        assertEquals(app.packageName, confirmation.candidate.packageName)
+        val receipt = launched.returned(invoke(gate, checkNotNull(launched.confirm(true)))) as
+            OwnerAppActionFlow.Step.Done
+        assertTrue(receipt.message.contains("neuen aktiven Fenster"))
+        assertFalse(launched.lookupFinishedWithoutInteraction)
+    }
+
+    @Test fun lookupFallbackGuardRejectsPostSelectionCompletionEvenWithFuzzyNeed() {
+        val intake = OwnerAppLookupIntent.inspect("Ich brauche Whats") as OwnerAppLookupIntent.Intake.Lookup
+        val app = NativeAppCandidate("org.example.messenger", "WhatsApp")
+        val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { lookup(it, listOf(app)) })
+        val legacySelection = OwnerAppActionFlow(intake.opening)
+        assertTrue(legacySelection.returned(invoke(gate, legacySelection.start(intake.query))) is
+            OwnerAppActionFlow.Step.Choose)
+        val cancelReceipt = legacySelection.choose(null) as OwnerAppActionFlow.Step.Done
+        assertTrue(cancelReceipt.message.contains("abgebrochen"))
+        assertFalse(legacySelection.lookupFinishedWithoutInteraction)
+        assertTrue(OwnerAppLookupIntent.shouldFallbackToConversation(
+            intake, legacySelection.lookupVerified, legacySelection.candidates.size,
+            legacySelection.exactMatchVerified
+        ))
+        assertFalse(legacySelection.lookupFinishedWithoutInteraction &&
+            OwnerAppLookupIntent.shouldFallbackToConversation(
+                intake, legacySelection.lookupVerified, legacySelection.candidates.size,
+                legacySelection.exactMatchVerified
+            ))
+    }
 }
