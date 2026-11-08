@@ -254,6 +254,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var auraAnchor = Float.NaN
     private var auraCloseUp = Float.NaN
     private var auraKeepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null
+    private var auraCameraProfile = AvatarCameraFraming.Profile.LEGACY
     private var auraScale = 1f
     private var auraAnchorEffective = .5f
     private val cameraMotion = AvatarCameraMotion()
@@ -262,12 +263,19 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var cameraFraming: AvatarCameraFraming? = null
     private var cameraWindow: AvatarFraming.Window? = null
     private var cameraDirection = 0f
+    private var cameraProfile = AvatarCameraFraming.Profile.LEGACY
 
     /** Actual accepted work-window presentation only. */
-    fun setWorkWindowCamera(active: Boolean, direction: Float = 0f, immediate: Boolean = false) {
+    fun setWorkWindowCamera(
+        active: Boolean,
+        direction: Float = 0f,
+        immediate: Boolean = false,
+        profile: AvatarCameraFraming.Profile = AvatarCameraFraming.Profile.LEGACY
+    ) {
         require(direction.isFinite() && direction in -1f..1f)
         // The face and the orb stay free while a window works: the sequence cards dock into its status strip.
         workWindowActive = active
+        if (active) cameraProfile = profile
         cockpitSequence?.setCardsDocked(active)
         if (immediate || !canAnimateFrame() || !hasWindowFocus() || !headEnabled || cockpitHeadBounds == null) {
             resetCamera()
@@ -331,11 +339,12 @@ class ContinuumHologramView @JvmOverloads constructor(
             return
         }
         if (focus !== auraFocus || w != auraWidth || h != auraHeight || headAnchorX != auraAnchor ||
-            headCloseUp != auraCloseUp || headKeepOut != auraKeepOut) {
+            headCloseUp != auraCloseUp || headKeepOut != auraKeepOut || cameraProfile != auraCameraProfile) {
             auraFocus = focus; auraWidth = w; auraHeight = h; auraAnchor = headAnchorX; auraCloseUp = headCloseUp
             auraKeepOut = headKeepOut
+            auraCameraProfile = cameraProfile
             cameraFraming = AvatarCameraFraming(focus, w.toDouble() / h,
-                headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut)
+                headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut, cameraProfile)
         }
         cameraWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection)
         val window = requireNotNull(cameraWindow)
