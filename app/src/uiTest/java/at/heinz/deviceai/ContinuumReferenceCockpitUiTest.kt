@@ -666,8 +666,11 @@ class ContinuumReferenceCockpitUiTest {
             titles.any { it.equals(title, ignoreCase = true) })
         assertTrue("The original avatar stays present",
             (field(activity, "hologramView") as ContinuumHologramView).isShown)
-        val deck = JarvisHomeTestRoutes.deck(home)
-        assertTrue("Cleared deck items must not receive touches", deck.none { it.isShown && it.isClickable })
+        val footprint = JarvisHomeTestRoutes.footprintOfCentre(title)
+        assertTrue("Cleared deck items must not receive touches",
+            JarvisHomeTestRoutes.clearedBy(home, footprint).none { it.isShown && it.isClickable })
+        assertTrue("Deck items the $footprint window leaves in place stay usable",
+            JarvisHomeTestRoutes.keptBy(home, footprint).all { it.isShown && it.isClickable })
         return work
     }
 

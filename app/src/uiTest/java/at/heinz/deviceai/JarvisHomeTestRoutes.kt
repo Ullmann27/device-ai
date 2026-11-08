@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import at.heinz.deviceai.ui.ContinuumHomeView
+import at.heinz.deviceai.ui.JarvisActionScenes
+import at.heinz.deviceai.ui.JarvisActionScenes.WorkspaceFootprint
 import at.heinz.deviceai.ui.JarvisShellLayout
 import org.junit.Assert.*
 
@@ -64,6 +66,28 @@ internal object JarvisHomeTestRoutes {
         val cards = all.filter { it.tag?.toString()?.startsWith("jarvis-tile:") == true }
         assertEquals("Every deck retains ten cards", 10, cards.size)
         return panels + cards
+    }
+
+    /** Footprint of the work window that the centre called [title] opens. */
+    fun footprintOfCentre(title: String): WorkspaceFootprint =
+        requireNotNull(JarvisActionScenes.forCentre(title)) { "$title opens a cockpit work window" }.footprint
+
+    /**
+     * Airbus deck: a MEDIUM_TERMINAL window makes room by clearing the ten cards; only a FULL_MISSION_BAY window clears
+     * the four mission rows as well. The rows of a medium window stay visible and usable.
+     */
+    fun clearedBy(root: View, footprint: WorkspaceFootprint): List<View> = deck(root).filter { clears(it, footprint) }
+
+    /** The deck controls that stay on the deck while a window of [footprint] is open. */
+    fun keptBy(root: View, footprint: WorkspaceFootprint): List<View> = deck(root).filterNot { clears(it, footprint) }
+
+    private fun clears(view: View, footprint: WorkspaceFootprint): Boolean {
+        val tag = view.tag.toString()
+        return when (footprint) {
+            WorkspaceFootprint.CONVERSATION_IDLE -> false
+            WorkspaceFootprint.MEDIUM_TERMINAL -> tag.startsWith("jarvis-tile:")
+            WorkspaceFootprint.FULL_MISSION_BAY -> tag.startsWith("jarvis-tile:") || tag.startsWith("jarvis-panel:ROW_")
+        }
     }
 
     fun scrollIntoView(target: View) {
