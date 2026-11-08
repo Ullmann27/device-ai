@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "a69b0f290b64f61a3a04978673d90eec2bf08ed8",
+  "workingTree": "?? app/src/test/java/at/heinz/deviceai/cognitive/SituationReturnMorphologyTest.kt\n?? scripts/continuum-h4b-check.sh\n?? tools/continuum-cognitive-pilots/H4BReturnPilot.kt\n?? tools/continuum-cognitive-pilots/h4b-arms/\n?? tools/continuum-cognitive-pilots/h4b-measure.py\n?? tools/continuum-cognitive-pilots/h4b-score-test.py\n?? tools/continuum-cognitive-pilots/h4b-score.py\n?? tools/continuum-cognitive-pilots/h4b-stories.py",
+  "split": "dev",
+  "platform": "Linux-6.12.8+-x86_64-with-glibc2.39",
+  "jars": {
+    "original": "ae5aaa7d658677713a22bcb484e2103085dab64fc58b6e09bcd94d3e49eac129"
+  },
+  "datasetSha256": "cfc37f0ed219eeb48f41063e771fe59f3847738d6f4703babfb461ef9c766dea",
+  "summary": {
+    "original": {
+      "CORRECT": 8,
+      "WRONG": 0,
+      "OVERCOMMIT": 0,
+      "AMBIGUOUS_CORRECT": 8,
+      "AMBIGUOUS_UNDER": 0,
+      "NOMATCH_CORRECT": 8,
+      "MISSED": 36,
+      "wrongBindings": 0,
+      "wrongOnNoReferent": 0,
+      "acceptable": 24,
+      "medianWallNs": 60552503,
+      "medianCpuNs": 47533028,
+      "maxProcessRssKiB": 65772,
+      "maxP95StoryWallNs": 1962223
+    }
+  },
+  "perStratum": {
+    "original": {
+      "long": {
+        "CORRECT": 0,
+        "WRONG": 0,
+        "OVERCOMMIT": 0,
+        "AMBIGUOUS_CORRECT": 0,
+        "AMBIGUOUS_UNDER": 0,
+        "NOMATCH_CORRECT": 0,
+        "MISSED": 9
+      },
+      "inflected": {
+        "CORRECT": 0,
+        "WRONG": 0,
+        "OVERCOMMIT": 0,
+        "AMBIGUOUS_CORRECT": 0,
+        "AMBIGUOUS_UNDER": 0,
+        "NOMATCH_CORRECT": 0,
+        "MISSED": 9
+      },
+      "asr": {
+        "CORRECT": 0,
+        "WRONG": 0,
+        "OVERCOMMIT": 0,
+        "AMBIGUOUS_CORRECT": 0,
+        "AMBIGUOUS_UNDER": 0,
+        "NOMATCH_CORRECT": 0,
+        "MISSED": 9
+      },
+      "head": {
+        "CORRECT": 0,
+        "WRONG": 0,
+        "OVERCOMMIT": 0,
+        "AMBIGUOUS_CORRECT": 0,
+        "AMBIGUOUS_UNDER": 0,
+        "NOMATCH_CORRECT": 0,
+        "MISSED": 9
+      },
+      "short": {
+        "CORRECT": 8,
+        "WRONG": 0,
+        "OVERCOMMIT": 0,
+        "AMBIGUOUS_CORRECT": 0,
+        "AMBIGUOUS_UNDER": 0,
+        "NOMATCH_CORRECT": 0,
+        "MISSED": 0
+      },
+      "ambiguous": {
+        "CORRECT": 0,
+        "WRONG": 0,
+        "OVERCOMMIT": 0,
+        "AMBIGUOUS_CORRECT": 8,
+        "AMBIGUOUS_UNDER": 0,
+        "NOMATCH_CORRECT": 0,
+        "MISSED": 0
+      },
+      "none": {
+        "CORRECT": 0,
+        "WRONG": 0,
+        "OVERCOMMIT": 0,
+        "AMBIGUOUS_CORRECT": 0,
+        "AMBIGUOUS_UNDER": 0,
+        "NOMATCH_CORRECT": 8,
+        "MISSED": 0
+      }
+    }
+  },
+  "comparisons": {},
+  "gate": null,
+  "runs": [
+    {
+      "round": 0,
+      "arm": "original",
+      "log": "0-original.tsv",
+      "wallNs": 60552503,
+      "cpuNs": 47533028,
+      "p95StoryWallNs": 1962223,
+      "maxProcessRssKiB": 65772
+    }
+  ],
+  "cases": {
+    "original": {
+      "dev-000": "MISSED",
+      "dev-001": "MISSED",
+      "dev-002": "MISSED",
+      "dev-003": "MISSED",
+      "dev-004": "CORRECT",
+      "dev-005": "AMBIGUOUS_CORRECT",
+      "dev-006": "NOMATCH_CORRECT",
+      "dev-007": "MISSED",
+      "dev-008": "MISSED",
+      "dev-009": "MISSED",
+      "dev-010": "MISSED",
+      "dev-011": "CORRECT",
+      "dev-012": "AMBIGUOUS_CORRECT",
+      "dev-013": "NOMATCH_CORRECT",
+      "dev-014": "MISSED",
+      "dev-015": "MISSED",
+      "dev-016": "MISSED",
+      "dev-017": "MISSED",
+      "dev-018": "CORRECT",
+      "dev-019": "AMBIGUOUS_CORRECT",
+      "dev-020": "NOMATCH_CORRECT",
+      "dev-021": "MISSED",
+      "dev-022": "MISSED",
+      "dev-023": "MISSED",
+      "dev-024": "MISSED",
+      "dev-025": "CORRECT",
+      "dev-026": "AMBIGUOUS_CORRECT",
+      "dev-027": "NOMATCH_CORRECT",
+      "dev-028": "MISSED",
+      "dev-029": "MISSED",
+      "dev-030": "MISSED",
+      "dev-031": "MISSED",
+      "dev-032": "CORRECT",
+      "dev-033": "AMBIGUOUS_CORRECT",
+      "dev-034": "NOMATCH_CORRECT",
+      "dev-035": "MISSED",
+      "dev-036": "MISSED",
+      "dev-037": "MISSED",
+      "dev-038": "MISSED",
+      "dev-039": "CORRECT",
+      "dev-040": "AMBIGUOUS_CORRECT",
+      "dev-041": "NOMATCH_CORRECT",
+      "dev-042": "MISSED",
+      "dev-043": "MISSED",
+      "dev-044": "MISSED",
+      "dev-045": "MISSED",
+      "dev-046": "CORRECT",
+      "dev-047": "AMBIGUOUS_CORRECT",
+      "dev-048": "NOMATCH_CORRECT",
+      "dev-049": "MISSED",
+      "dev-050": "MISSED",
+      "dev-051": "MISSED",
+      "dev-052": "MISSED",
+      "dev-053": "CORRECT",
+      "dev-054": "AMBIGUOUS_CORRECT",
+      "dev-055": "NOMATCH_CORRECT",
+      "dev-056": "MISSED",
+      "dev-057": "MISSED",
+      "dev-058": "MISSED",
+      "dev-059": "MISSED"
+    }
+  },
+  "energyJoules": null,
+  "device": "NOT_RUN",
+  "localModel": "NOT_RUN"
+}

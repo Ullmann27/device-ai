@@ -220,6 +220,22 @@
         "status": "RESEARCH_SHADOW",
         "result": "Existing broker plus independent verification: repeated expensive synthetic work saves 88.0% CPU; unique, cheap and epoch-churn workloads fail the preregistered benefit gate. 55 native Node tests and 72000 exact final-result checks pass. No live integration, energy or model-performance claim.",
         "entry": "docs/research/omega/CONTINUUM-VERIFIED-REUSE-PILOT-20261108.md"
+      },
+      "robustTransferPilot": {
+        "pullRequest": 655,
+        "sourceCommit": "d93eaeb6ea8fc3e2a09a040b16edbdc3eed38171",
+        "status": "RESEARCH_SHADOW",
+        "result": "H4-A prospective self-authored TEST: 44/192 correct certificates versus 35 sequential, 34 batch and 26 nonadaptive; zero accepted wrong or unsupported diagnoses. Frozen acceptance FAIL: sequential paired p=0.061039 exceeds 0.05. CPU approximately 4.7x sequential. Four paired rounds and negative results archived; no TEST tuning.",
+        "gate": "FAIL; H4-C and production activation NOT_RUN. Owner closure order: hand off tested research only to SOL/Astra.",
+        "entry": "docs/research/omega/CONTINUUM-H4-HANDOFF-20261108.md"
+      },
+      "returnMorphologyPilot": {
+        "pullRequest": 655,
+        "sourceCommit": "3ab39fcd41b0d0015197bdbab6e22b76a1e424da",
+        "status": "RESEARCH_SHADOW",
+        "result": "H4-B1 shared cue normalization (umlaut folding, aligned 10-char truncation, prefix tolerance >=6) in ConversationSituationModel/LocalConversationSituationTracker. Prospective self-authored TEST seed 77419, 180 German/de-AT stories: 109/180 correct return bindings versus 26/180 for the unchanged Code50 source, paired +83/-0, p=1.0e-25, zero wrong bindings in both arms, 25/25 ambiguity and 25/25 no-referent controls preserved. Prefix>=3 ablation: 14 wrong (6 on no-referent); truncation-only: 55/180. Head-noun returns (Versicherung for Autoversicherung) remain unsolved: 5/26. Candidate median CPU 101 ms versus 94 ms per 180 stories, p95 story 1.75 ms. Preregistered gate PASS.",
+        "gate": "Vocabulary is self-authored and not blind; a natural de-AT owner-turn corpus and an adversarial prefix-collision set (Arbeit/Arbeitsamt) are missing. Component is live in the production prompt hint path, so device/Gemma QA is required before any release claim: NOT_RUN.",
+        "entry": "docs/research/omega/CONTINUUM-H4-HANDOFF-20261108.md"
       }
     }
   ]

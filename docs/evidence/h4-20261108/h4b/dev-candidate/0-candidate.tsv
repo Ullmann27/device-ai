@@ -1,0 +1,61 @@
+id	arm	kind	target	turn_threads	wall_ns	cpu_ns
+dev-000	candidate	RESOLVED	topic-0bb7203770cfdeed	topic-0bb7203770cfdeed,topic-fcf6cc664c32f62c,topic-1c503ed1c5889b82	1105942	1059602
+dev-001	candidate	RESOLVED	topic-95917dc65d7bb84c	topic-95917dc65d7bb84c,topic-4561c776a8e41a4a,topic-1c503ed1c5889b82	1074055	1077008
+dev-002	candidate	RESOLVED	topic-20fef55afeaa4858	topic-20fef55afeaa4858,topic-1c503ed1c5889b82,topic-1b6e121fb2e76a73	1353840	1356744
+dev-003	candidate	NOMATCH		topic-83e7de70ca3322b9,topic-7a5ed3d8706f7e9d,topic-6240a8aefd6c67ef,topic-91e0a71a9356d112,topic-aa2976168b2d6dfa	1713194	1712321
+dev-004	candidate	RESOLVED	topic-2f73a91afebf155c	topic-2f73a91afebf155c,topic-71edcb4df16b89ff,topic-aef27ea490df4564,topic-1c503ed1c5889b82	1233682	1199531
+dev-005	candidate	AMBIGUOUS	topic-251d3d3ab2ae1142|topic-82a9b7ecb922f562	topic-2ab03072235066a5,topic-82a9b7ecb922f562,topic-86ebc9c50b1cab13,topic-251d3d3ab2ae1142,topic-1c503ed1c5889b82,topic-c831bab54d73078f	1902384	1905578
+dev-006	candidate	NOMATCH		topic-378f9e44883e2966,topic-6240a8aefd6c67ef,topic-62bdfafa2c294658	960807	964000
+dev-007	candidate	RESOLVED	topic-c9b80233b59aecc8	topic-c9b80233b59aecc8,topic-6240a8aefd6c67ef,topic-592012007a771499	941978	945123
+dev-008	candidate	RESOLVED	topic-1afab8f366acf3c4	topic-1afab8f366acf3c4,topic-1c503ed1c5889b82,topic-10a0e7b572806072	793769	796182
+dev-009	candidate	RESOLVED	topic-1fa218de378be6b7	topic-1fa218de378be6b7,topic-6240a8aefd6c67ef,topic-e71bfdcf2fe46bea,topic-d12e8f344168f708	1238588	1236325
+dev-010	candidate	NOMATCH		topic-0ef437e0b73391e2,topic-1c503ed1c5889b82,topic-088f711db9782f9e,topic-c8cad7da1605b892,topic-b3f5870637a56b9f	1532806	1496842
+dev-011	candidate	RESOLVED	topic-b3f5870637a56b9f	topic-b3f5870637a56b9f,topic-e9155a6ed8545bd5,topic-6240a8aefd6c67ef	872376	874969
+dev-012	candidate	AMBIGUOUS	topic-575dc1e5b78050bb|topic-82a9b7ecb922f562	topic-82a9b7ecb922f562,topic-1c503ed1c5889b82,topic-575dc1e5b78050bb,topic-1c775bdaaf61b45e,topic-1fa218de378be6b7	1581197	1584171
+dev-013	candidate	NOMATCH		topic-cda3f3dfd3a0e771,topic-a36902ecb8ec3a72,topic-6240a8aefd6c67ef	1085331	1059241
+dev-014	candidate	RESOLVED	topic-de37ff11cae30f6e	topic-9e4169dd081cff03,topic-de37ff11cae30f6e,topic-64b60895856360fc,topic-1c503ed1c5889b82,topic-3bcdda5294e32613	1470474	1433798
+dev-015	candidate	RESOLVED	topic-67a4a30554544d32	topic-67a4a30554544d32,topic-2f73a91afebf155c,topic-581e349a59f2e778,topic-6240a8aefd6c67ef,topic-8080a829ea196861	1370615	1369763
+dev-016	candidate	RESOLVED	topic-d12e8f344168f708	topic-d12e8f344168f708,topic-1c503ed1c5889b82,topic-684210c8d0a9e769,topic-9d8f051fd8ca908d,topic-8780ca4be391989c	1312449	1283895
+dev-017	candidate	RESOLVED	topic-6f70f39ff80b27cb	topic-6f70f39ff80b27cb,topic-90e4effc69c87bd3,topic-1c503ed1c5889b82	757695	760338
+dev-018	candidate	RESOLVED	topic-2f73a91afebf155c	topic-2f73a91afebf155c,topic-f664d1fd7c05a166,topic-6240a8aefd6c67ef,topic-d934e96293fc0d26,topic-ffc8281518fe175f	1977847	1981141
+dev-019	candidate	AMBIGUOUS	topic-9a4fd0c120ff0f5e|topic-a07c86760ffc9c55	topic-05c2d1b6cab904cf,topic-1c503ed1c5889b82,topic-a07c86760ffc9c55,topic-9a4fd0c120ff0f5e,topic-2ab03072235066a5	3846691	1713062
+dev-020	candidate	NOMATCH		topic-c959618c72da6736,topic-1c503ed1c5889b82,topic-de37ff11cae30f6e	1061426	1022267
+dev-021	candidate	RESOLVED	topic-e5397a7263af3d37	topic-e5397a7263af3d37,topic-cde5f81cbbcb61ee,topic-1c503ed1c5889b82,topic-8080a829ea196861	1220252	1200811
+dev-022	candidate	RESOLVED	topic-2a0dd2a91741bb7a	topic-2a0dd2a91741bb7a,topic-1c503ed1c5889b82,topic-592012007a771499	833677	815786
+dev-023	candidate	RESOLVED	topic-90e4effc69c87bd3	topic-90e4effc69c87bd3,topic-378f9e44883e2966,topic-2bd8d5115735e14e,topic-6240a8aefd6c67ef,topic-2f73a91afebf155c	1335303	1338206
+dev-024	candidate	NOMATCH		topic-bf265584d83f9348,topic-d934e96293fc0d26,topic-1c503ed1c5889b82	827228	829942
+dev-025	candidate	RESOLVED	topic-8c29f93e5e8499a9	topic-4561c776a8e41a4a,topic-8c29f93e5e8499a9,topic-1235500348531975,topic-4013697e3d94487a,topic-6240a8aefd6c67ef	1505435	1430001
+dev-026	candidate	AMBIGUOUS	topic-78732fd1ca4e674e|topic-ed04800f73aee93b	topic-ed04800f73aee93b,topic-78732fd1ca4e674e,topic-fd3f65a7941c4ee1,topic-6240a8aefd6c67ef	1174123	1177077
+dev-027	candidate	NOMATCH		topic-314cbea89fec3991,topic-6f63025396779827,topic-1c503ed1c5889b82	793669	796613
+dev-028	candidate	RESOLVED	topic-31150db187f34aef	topic-31150db187f34aef,topic-1c503ed1c5889b82,topic-aefb724dfecf9f76,topic-bd1fa15a5fd3a293	1069809	1072753
+dev-029	candidate	RESOLVED	topic-2f04e511f03c0f71	topic-2f04e511f03c0f71,topic-1c503ed1c5889b82,topic-fd3f65a7941c4ee1	6259613	970124
+dev-030	candidate	RESOLVED	topic-40578d66c3cef9d2	topic-c550fb41a23bcfdf,topic-40578d66c3cef9d2,topic-6240a8aefd6c67ef,topic-a5e0333cab2f3cbe	1066543	1069678
+dev-031	candidate	NOMATCH		topic-e9155a6ed8545bd5,topic-a6bb72da90ff78ef,topic-6240a8aefd6c67ef,topic-4b10661dd2fdc0ed	1177138	1181113
+dev-032	candidate	RESOLVED	topic-a2537752fe2ba9b9	topic-a2537752fe2ba9b9,topic-508f7fcb5cf59fa1,topic-1c503ed1c5889b82	694472	697335
+dev-033	candidate	AMBIGUOUS	topic-bced31046a096fab|topic-063cf301bba1e0d2	topic-063cf301bba1e0d2,topic-1c503ed1c5889b82,topic-bced31046a096fab,topic-ea0cc7ae5b9c6baf,topic-e9155a6ed8545bd5	3638642	1547226
+dev-034	candidate	NOMATCH		topic-ac83eda540a020db,topic-b502b49684be5efb,topic-6240a8aefd6c67ef	773208	776172
+dev-035	candidate	RESOLVED	topic-0d1be8b39e1a3af2	topic-0d1be8b39e1a3af2,topic-4561c776a8e41a4a,topic-1c503ed1c5889b82	2306995	881304
+dev-036	candidate	RESOLVED	topic-cf8f79a6c90892f0	topic-cf8f79a6c90892f0,topic-34337d128e36b40f,topic-6240a8aefd6c67ef,topic-a8eef0eee7ab7298,topic-881eaf3200cf8258	1040345	1037585
+dev-037	candidate	RESOLVED	topic-f0da9ea6ff9588e5	topic-2a0dd2a91741bb7a,topic-f0da9ea6ff9588e5,topic-3dea44d23ba40d73,topic-6240a8aefd6c67ef,topic-ebbcb8890a220f28	875319	878023
+dev-038	candidate	NOMATCH		topic-518363bbae436267,topic-4c3fe25ee66f2f5d,topic-1c503ed1c5889b82	759187	762512
+dev-039	candidate	RESOLVED	topic-49949e7df21e5ffa	topic-49949e7df21e5ffa,topic-62bdfafa2c294658,topic-6240a8aefd6c67ef,topic-8d1156ab4853e490	825756	829010
+dev-040	candidate	AMBIGUOUS	topic-10ca826146f3dff5|topic-753f038cf34ee91e	topic-753f038cf34ee91e,topic-10ca826146f3dff5,topic-ea0cc7ae5b9c6baf,topic-6240a8aefd6c67ef,topic-c831bab54d73078f,topic-91e0a71a9356d112	6401339	1264959
+dev-041	candidate	NOMATCH		topic-f362827a2522fb7c,topic-b724fa84eae3db0b,topic-1c503ed1c5889b82	633150	571724
+dev-042	candidate	RESOLVED	topic-1712c1e1e213c905	topic-1712c1e1e213c905,topic-378f9e44883e2966,topic-1c503ed1c5889b82,topic-432f68df7d0baf3c,topic-2ed4a2efc71b6ee2	674030	677365
+dev-043	candidate	RESOLVED	topic-67a4a30554544d32	topic-67a4a30554544d32,topic-ce4108f94c41a2a7,topic-6240a8aefd6c67ef	445321	448125
+dev-044	candidate	RESOLVED	topic-1b5ca274a19b1031	topic-36af07c4255981b2,topic-1b5ca274a19b1031,topic-31150db187f34aef,topic-6240a8aefd6c67ef	541945	544698
+dev-045	candidate	RESOLVED	topic-ab0c1c70cad8fb9f	topic-ab0c1c70cad8fb9f,topic-ed609e882cd0acdc,topic-1c503ed1c5889b82,topic-7a5ed3d8706f7e9d	578549	581493
+dev-046	candidate	RESOLVED	topic-67a4a30554544d32	topic-67a4a30554544d32,topic-592012007a771499,topic-149aae12d54e3a6b,topic-6240a8aefd6c67ef,topic-45650dcbd2962dbd	827299	830603
+dev-047	candidate	AMBIGUOUS	topic-1101a2f5778fc62d|topic-a97a9534bbffcc20	topic-f67b3488469a6e26,topic-a97a9534bbffcc20,topic-1101a2f5778fc62d,topic-1c503ed1c5889b82,topic-6c8f3ab9e5075603,topic-d676be6b2ee9210f	808080	827518
+dev-048	candidate	NOMATCH		topic-904f0a9b8912b4af,topic-dddcaaab14937754,topic-83e7de70ca3322b9,topic-1c503ed1c5889b82	507985	510868
+dev-049	candidate	RESOLVED	topic-722d736449a303c6	topic-722d736449a303c6,topic-1c503ed1c5889b82,topic-6f961340489a5852,topic-10a0e7b572806072	525571	528294
+dev-050	candidate	RESOLVED	topic-8022ba643eb4b231	topic-8022ba643eb4b231,topic-6240a8aefd6c67ef,topic-780782190abcf581	356590	359303
+dev-051	candidate	RESOLVED	topic-cddcb89dcb10e268	topic-cddcb89dcb10e268,topic-1c503ed1c5889b82,topic-fa81add5420b1bc3	336309	338592
+dev-052	candidate	NOMATCH		topic-2d3983013f883af2,topic-6699ba5358883d7c,topic-1c503ed1c5889b82,topic-bd1fa15a5fd3a293,topic-83e7de70ca3322b9	636405	618418
+dev-053	candidate	RESOLVED	topic-4ba2205547a79f8d	topic-cddcb89dcb10e268,topic-eb480a7012ceb36e,topic-4ba2205547a79f8d,topic-6240a8aefd6c67ef,topic-d45866b4db7cc847	574984	577728
+dev-054	candidate	AMBIGUOUS	topic-f0e9876bf6d279a4|topic-c7f37f57d6977950	topic-c7f37f57d6977950,topic-6240a8aefd6c67ef,topic-f0e9876bf6d279a4,topic-cf8f79a6c90892f0	521334	523998
+dev-055	candidate	NOMATCH		topic-270e3701060e4adf,topic-fed3ebed42a018f1,topic-6240a8aefd6c67ef	434155	436988
+dev-056	candidate	RESOLVED	topic-1712c1e1e213c905	topic-58c9961bd5e901c2,topic-1712c1e1e213c905,topic-a36902ecb8ec3a72,topic-1c503ed1c5889b82,topic-508f7fcb5cf59fa1	581914	584998
+dev-057	candidate	RESOLVED	topic-7a205d11430dd796	topic-7a205d11430dd796,topic-4b78046dcc77cefd,topic-1c503ed1c5889b82,topic-a24781795a270363	452322	454905
+dev-058	candidate	RESOLVED	topic-4013697e3d94487a	topic-4013697e3d94487a,topic-a2537752fe2ba9b9,topic-4c3fe25ee66f2f5d,topic-6240a8aefd6c67ef,topic-9dee7f8c13cfab8f	560863	563717
+dev-059	candidate	NOMATCH		topic-a8eef0eee7ab7298,topic-ecb3c8067696b0f5,topic-817ea26fcced4e4d,topic-9046a01d01f125dc,topic-6240a8aefd6c67ef	908158	911743

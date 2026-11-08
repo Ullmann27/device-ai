@@ -1,0 +1,7366 @@
+{
+  "schemaVersion": 1,
+  "origin": "prospective self-authored; not blind",
+  "split": "test",
+  "seed": 77419,
+  "stories": [
+    {
+      "id": "test-000",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Handyvertrag an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit der Matura sollten wir am Freitag klären.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Handyvertrag von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "vertrag",
+          "noun": "Handyvertrag"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        }
+      ]
+    },
+    {
+      "id": "test-001",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Sackerl sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen der Garage muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu den Sackerln von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-002",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Zum Zahnarzttermin hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Wegen der Straßenbahn muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Schau dir bitte die Wohnungsübergabe an, da stimmt irgendwas ned.",
+          "topic": 2
+        },
+        {
+          "text": "Die Sache mit dem Führerschein sollten wir am Freitag klären.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu der Strassenbahn von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 2
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Zahnarzttermin"
+        },
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "wohnung",
+          "noun": "Wohnungsübergabe"
+        },
+        {
+          "family": "fuehrerschein",
+          "noun": "Führerschein"
+        }
+      ]
+    },
+    {
+      "id": "test-003",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Wegen der Eigentumswohnung muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Friseurtermin hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Apropos Garage: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Termin von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "wohnung",
+          "noun": "Eigentumswohnung"
+        },
+        {
+          "family": "termin",
+          "noun": "Friseurtermin"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-004",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Balkon sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte die Marillenmarmelade an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Balkon von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        }
+      ]
+    },
+    {
+      "id": "test-005",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Bei der Rechnung von der Werkstatt hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Rechnung von der Bank: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Zum Jahrespickerl hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Rechnung von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Rechnung von der Werkstatt"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung von der Bank"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-006",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Apropos Matura: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Zum Mietvertrag hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Router von davor.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "matura",
+          "noun": "Matura"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Mietvertrag"
+        }
+      ]
+    },
+    {
+      "id": "test-007",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Beim Mietvertrag brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Heizung: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Zum Friseurtermin hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Mietvertrag von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "vertrag",
+          "noun": "Mietvertrag"
+        },
+        {
+          "family": "heizung",
+          "noun": "Heizung"
+        },
+        {
+          "family": "termin",
+          "noun": "Friseurtermin"
+        }
+      ]
+    },
+    {
+      "id": "test-008",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Schau dir bitte das Parkpickerl an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen der Rechnung muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Küche hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        },
+        {
+          "text": "Beim Kindergartenplatz brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu den Rechnungen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "pickerl",
+          "noun": "Parkpickerl"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung"
+        },
+        {
+          "family": "kueche",
+          "noun": "Küche"
+        },
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        }
+      ]
+    },
+    {
+      "id": "test-009",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Zum Führerschein hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte den Kindergartenplatz an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Der Erdäpfelsalat ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu dem Fuehrerschein von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "fuehrerschein",
+          "noun": "Führerschein"
+        },
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        },
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        }
+      ]
+    },
+    {
+      "id": "test-010",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Mietvertrag sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Bei der Matura hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Vertrag von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "vertrag",
+          "noun": "Mietvertrag"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        }
+      ]
+    },
+    {
+      "id": "test-011",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Zum Drucker hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Beim Kindergartenplatz brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu dem Drucker von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        }
+      ]
+    },
+    {
+      "id": "test-012",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Beim Termin vom Elektriker brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Apropos Termin von der Werkstatt: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen dem Kindergartenplatz muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Der Schlüssel ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu dem Termin von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          2
+        ]
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Termin vom Elektriker"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin von der Werkstatt"
+        },
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        },
+        {
+          "family": "schluessel",
+          "noun": "Schlüssel"
+        }
+      ]
+    },
+    {
+      "id": "test-013",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Bei der Stromrechnung hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit dem Sackerl sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Drucker von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Stromrechnung"
+        },
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        }
+      ]
+    },
+    {
+      "id": "test-014",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Elternabend an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Zum Bügeleisen hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Die Sache mit dem Parkpickerl sollten wir am Freitag klären.",
+          "topic": 2
+        },
+        {
+          "text": "Bei der Wohnungsübergabe hakt es gerade, das nervt ziemlich.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Elternabend von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Parkpickerl"
+        },
+        {
+          "family": "wohnung",
+          "noun": "Wohnungsübergabe"
+        }
+      ]
+    },
+    {
+      "id": "test-015",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Zum Balkon hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit der Marillenmarmelade sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Wegen der Heizung muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Der Elternabend ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu den Heizungen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 3
+      },
+      "topics": [
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        },
+        {
+          "family": "heizung",
+          "noun": "Heizung"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        }
+      ]
+    },
+    {
+      "id": "test-016",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Beim Elternabend brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte den Erdaepfelsalat an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen der Küche muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Der Kindergartenplatz ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu dem Erdäpfelsalat von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 2
+      },
+      "topics": [
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        },
+        {
+          "family": "kueche",
+          "noun": "Küche"
+        },
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        }
+      ]
+    },
+    {
+      "id": "test-017",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Schau dir bitte das Jahrespickerl an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Zum Bügeleisen hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Pickerl von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        },
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        }
+      ]
+    },
+    {
+      "id": "test-018",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Wegen der Polizze muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Zum Schlüssel hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu der Polizze von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "schluessel",
+          "noun": "Schlüssel"
+        }
+      ]
+    },
+    {
+      "id": "test-019",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Schau dir bitte die Eigentumswohnung an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Beim Vertrag vom Installateur brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Bei der Marillenmarmelade hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        },
+        {
+          "text": "Zum Vertrag vom Zahnarzt hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 3
+        },
+        {
+          "text": "Apropos Router: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 4
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Vertrag von davor.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          2,
+          4
+        ]
+      },
+      "topics": [
+        {
+          "family": "wohnung",
+          "noun": "Eigentumswohnung"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Vertrag vom Installateur"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Vertrag vom Zahnarzt"
+        },
+        {
+          "family": "router",
+          "noun": "Router"
+        }
+      ]
+    },
+    {
+      "id": "test-020",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Schau dir bitte die Matura an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Zu der Marillenmarmelade hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Apropos Schlüssel: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Balkon von davor.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "matura",
+          "noun": "Matura"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        },
+        {
+          "family": "schluessel",
+          "noun": "Schlüssel"
+        }
+      ]
+    },
+    {
+      "id": "test-021",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Handyvertrag sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Die Straßenbahn ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte das Fenster an, da stimmt irgendwas ned.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Handyvertrag von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "vertrag",
+          "noun": "Handyvertrag"
+        },
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        }
+      ]
+    },
+    {
+      "id": "test-022",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Schau dir bitte das Fenster an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Garage: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu den Fenstern von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-023",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Wegen der Straßenbahn muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Bei der Polizze hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Strassenbahn von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        }
+      ]
+    },
+    {
+      "id": "test-024",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Zu der Gasrechnung hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit der Garage sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Apropos Wäsche: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu der Rechnung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Gasrechnung"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        }
+      ]
+    },
+    {
+      "id": "test-025",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Die Polizze ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit der Matura sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Apropos Elternabend: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        },
+        {
+          "text": "Bei der Wäsche hakt es gerade, das nervt ziemlich.",
+          "topic": 3
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Polizze von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        }
+      ]
+    },
+    {
+      "id": "test-026",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Apropos Erdäpfelsalat: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Termin vom Zahnarzt hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Der Termin vom Installateur ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        },
+        {
+          "text": "Wegen dem Schlüssel muss ich heuer noch was erledigen.",
+          "topic": 3
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Termin von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          1,
+          2
+        ]
+      },
+      "topics": [
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin vom Zahnarzt"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin vom Installateur"
+        },
+        {
+          "family": "schluessel",
+          "noun": "Schlüssel"
+        }
+      ]
+    },
+    {
+      "id": "test-027",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Beim Kindergartenplatz brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte die Autoversicherung an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Zu der Küche hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Balkon von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        },
+        {
+          "family": "versicherung",
+          "noun": "Autoversicherung"
+        },
+        {
+          "family": "kueche",
+          "noun": "Küche"
+        }
+      ]
+    },
+    {
+      "id": "test-028",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Beim Semmelknödel hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Druckertreiber: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Der Führerschein ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Druckertreiber von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "treiber",
+          "noun": "Druckertreiber"
+        },
+        {
+          "family": "fuehrerschein",
+          "noun": "Führerschein"
+        }
+      ]
+    },
+    {
+      "id": "test-029",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Bei der Garage hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Das Fahrradservice ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Beim Balkon brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit den Garagen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "fahrrad",
+          "noun": "Fahrradservice"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        }
+      ]
+    },
+    {
+      "id": "test-030",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Das Bügeleisen ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Semmelknoedel brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Apropos Elternabend: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        },
+        {
+          "text": "Wegen dem Drucker muss ich heuer noch was erledigen.",
+          "topic": 3
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Semmelknödel von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        },
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        }
+      ]
+    },
+    {
+      "id": "test-031",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Die Sache mit der Stromrechnung sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen dem Friseurtermin muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Bei der Haushaltsversicherung brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Termin von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Stromrechnung"
+        },
+        {
+          "family": "termin",
+          "noun": "Friseurtermin"
+        },
+        {
+          "family": "versicherung",
+          "noun": "Haushaltsversicherung"
+        }
+      ]
+    },
+    {
+      "id": "test-032",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Zu der Rechnung hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Bügeleisen: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu der Rechnung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Rechnung"
+        },
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        }
+      ]
+    },
+    {
+      "id": "test-033",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Die Sache mit der Rechnung vom Elektriker sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Spital hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Zu der Rechnung vom Installateur hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Wegen dem Sackerl muss ich heuer noch was erledigen.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu der Rechnung von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          3
+        ]
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Rechnung vom Elektriker"
+        },
+        {
+          "family": "spital",
+          "noun": "Spital"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung vom Installateur"
+        },
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        }
+      ]
+    },
+    {
+      "id": "test-034",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Wegen dem Zahnarzttermin muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Der Führerschein ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Keller von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Zahnarzttermin"
+        },
+        {
+          "family": "fuehrerschein",
+          "noun": "Führerschein"
+        }
+      ]
+    },
+    {
+      "id": "test-035",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Zum Kindergartenplatz hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte das Jahrespickerl an, da stimmt irgendwas ned.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu dem Kindergartenplatz von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-036",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Der Erdäpfelsalat ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Fenster hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Schau dir bitte die Polizze an, da stimmt irgendwas ned.",
+          "topic": 2
+        },
+        {
+          "text": "Apropos Kühlschrank: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 3
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu den Fenstern von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        },
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "kuehlschrank",
+          "noun": "Kühlschrank"
+        }
+      ]
+    },
+    {
+      "id": "test-037",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Wegen der Wohnungsübergabe muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte den Friseurtermin an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Beim Keller brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu der Wohnungsuebergabe von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "wohnung",
+          "noun": "Wohnungsübergabe"
+        },
+        {
+          "family": "termin",
+          "noun": "Friseurtermin"
+        },
+        {
+          "family": "keller",
+          "noun": "Keller"
+        }
+      ]
+    },
+    {
+      "id": "test-038",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Jahrespickerl sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Beim Fahrradservice brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Apropos Küche: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Pickerl von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        },
+        {
+          "family": "fahrrad",
+          "noun": "Fahrradservice"
+        },
+        {
+          "family": "kueche",
+          "noun": "Küche"
+        }
+      ]
+    },
+    {
+      "id": "test-039",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Bei der Polizze brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Das Fenster ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu der Polizze von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        }
+      ]
+    },
+    {
+      "id": "test-040",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Der Router ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Rechnung vom Installateur brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen der Rechnung vom Elektriker muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Apropos Schlüssel: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 3
+        },
+        {
+          "text": "Die Sache mit dem Bügeleisen sollten wir am Freitag klären.",
+          "topic": 4
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Rechnung von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          2,
+          3
+        ]
+      },
+      "topics": [
+        {
+          "family": "router",
+          "noun": "Router"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung vom Installateur"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung vom Elektriker"
+        },
+        {
+          "family": "schluessel",
+          "noun": "Schlüssel"
+        },
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        }
+      ]
+    },
+    {
+      "id": "test-041",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Beim Kindergartenplatz brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Die Matura ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Balkon von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        }
+      ]
+    },
+    {
+      "id": "test-042",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Schau dir bitte das Parkpickerl an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Der Kühlschrank ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Parkpickerl von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "pickerl",
+          "noun": "Parkpickerl"
+        },
+        {
+          "family": "kuehlschrank",
+          "noun": "Kühlschrank"
+        }
+      ]
+    },
+    {
+      "id": "test-043",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Apropos Rechnung: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte die Garage an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit den Rechnungen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Rechnung"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-044",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Beim Schlüssel hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Die Garage ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Schluessel von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "schluessel",
+          "noun": "Schlüssel"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-045",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Die Sache mit der Gemeindewohnung sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Zu der Marillenmarmelade hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen dem Friseurtermin muss ich heuer noch was erledigen.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Wohnung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "wohnung",
+          "noun": "Gemeindewohnung"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        },
+        {
+          "family": "termin",
+          "noun": "Friseurtermin"
+        }
+      ]
+    },
+    {
+      "id": "test-046",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Apropos Rechnung: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Matura hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu der Rechnung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Rechnung"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        }
+      ]
+    },
+    {
+      "id": "test-047",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Apropos Termin vom Elektriker: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Wegen dem Elternabend muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Schau dir bitte den Keller an, da stimmt irgendwas ned.",
+          "topic": 2
+        },
+        {
+          "text": "Beim Termin vom Zahnarzt brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 3
+        },
+        {
+          "text": "Beim Parkpickerl hakt es gerade, das nervt ziemlich.",
+          "topic": 4
+        }
+      ],
+      "returnText": "Zurück zu dem Termin von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          4
+        ]
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Termin vom Elektriker"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "keller",
+          "noun": "Keller"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin vom Zahnarzt"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Parkpickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-048",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Wegen der Küche muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit dem Fahrradservice sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Schau dir bitte den Balkon an, da stimmt irgendwas ned.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Spital von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "kueche",
+          "noun": "Küche"
+        },
+        {
+          "family": "fahrrad",
+          "noun": "Fahrradservice"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        }
+      ]
+    },
+    {
+      "id": "test-049",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Die Sache mit der Marillenmarmelade sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Zum Jahrespickerl hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Marillenmarmelade von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-050",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Die Sache mit der Rechnung sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte das Jahrespickerl an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit den Rechnungen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Rechnung"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-051",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Zu der Waesche hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit dem Zahnarzttermin sollten wir am Freitag klären.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Wäsche von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        },
+        {
+          "family": "termin",
+          "noun": "Zahnarzttermin"
+        }
+      ]
+    },
+    {
+      "id": "test-052",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Zum Grafiktreiber hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Beim Elternabend brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen dem Bügeleisen muss ich heuer noch was erledigen.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Treiber von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Grafiktreiber"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        }
+      ]
+    },
+    {
+      "id": "test-053",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Zu der Polizze hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Der Balkon ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Polizze von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        }
+      ]
+    },
+    {
+      "id": "test-054",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Apropos Kindergartenplatz: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Termin vom Zahnarzt hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Bei der Straßenbahn brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        },
+        {
+          "text": "Der Termin vom Installateur ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        },
+        {
+          "text": "Zum Spital hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 4
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Termin von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          1,
+          3
+        ]
+      },
+      "topics": [
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin vom Zahnarzt"
+        },
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin vom Installateur"
+        },
+        {
+          "family": "spital",
+          "noun": "Spital"
+        }
+      ]
+    },
+    {
+      "id": "test-055",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Der Schlüssel ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Rechnung brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Router von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "schluessel",
+          "noun": "Schlüssel"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung"
+        }
+      ]
+    },
+    {
+      "id": "test-056",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Bei der Wäsche brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Zu der Eigentumswohnung hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Die Sache mit der Heizung sollten wir am Freitag klären.",
+          "topic": 2
+        },
+        {
+          "text": "Apropos Grafiktreiber: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Eigentumswohnung von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 2
+      },
+      "topics": [
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        },
+        {
+          "family": "wohnung",
+          "noun": "Eigentumswohnung"
+        },
+        {
+          "family": "heizung",
+          "noun": "Heizung"
+        },
+        {
+          "family": "treiber",
+          "noun": "Grafiktreiber"
+        }
+      ]
+    },
+    {
+      "id": "test-057",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Drucker an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen dem Semmelknödel muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu den Druckern von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        }
+      ]
+    },
+    {
+      "id": "test-058",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Zum Fahrradservice hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte den Semmelknödel an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Beim Erdaepfelsalat brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        },
+        {
+          "text": "Die Eigentumswohnung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Erdäpfelsalat von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 3
+      },
+      "topics": [
+        {
+          "family": "fahrrad",
+          "noun": "Fahrradservice"
+        },
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        },
+        {
+          "family": "wohnung",
+          "noun": "Eigentumswohnung"
+        }
+      ]
+    },
+    {
+      "id": "test-059",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Bei der Gasrechnung brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte das Jahrespickerl an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Beim Balkon hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Rechnung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Gasrechnung"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        }
+      ]
+    },
+    {
+      "id": "test-060",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Bei der Polizze brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit dem Balkon sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu der Polizze von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        }
+      ]
+    },
+    {
+      "id": "test-061",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Bei der Rechnung von der Werkstatt hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit der Rechnung vom Installateur sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen der Straßenbahn muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Apropos Matura: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 3
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu der Rechnung von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Rechnung von der Werkstatt"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung vom Installateur"
+        },
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        }
+      ]
+    },
+    {
+      "id": "test-062",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Führerschein an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Die Haushaltsversicherung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Zum Kühlschrank hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Router von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "fuehrerschein",
+          "noun": "Führerschein"
+        },
+        {
+          "family": "versicherung",
+          "noun": "Haushaltsversicherung"
+        },
+        {
+          "family": "kuehlschrank",
+          "noun": "Kühlschrank"
+        }
+      ]
+    },
+    {
+      "id": "test-063",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Der Elternabend ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Führerschein brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Elternabend von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "fuehrerschein",
+          "noun": "Führerschein"
+        }
+      ]
+    },
+    {
+      "id": "test-064",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Bei der Wäsche hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Bei der Straßenbahn brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Zu der Garage hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Schau dir bitte die Heizungsablesung an, da stimmt irgendwas ned.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu den Garagen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 3
+      },
+      "topics": [
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        },
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        }
+      ]
+    },
+    {
+      "id": "test-065",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Schau dir bitte das Buegeleisen an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen dem Fenster muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Zum Schlüssel hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Bügeleisen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        },
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        },
+        {
+          "family": "schluessel",
+          "noun": "Schlüssel"
+        }
+      ]
+    },
+    {
+      "id": "test-066",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Beim Bügeleisen hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Apropos Mietvertrag: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Die Autoversicherung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Vertrag von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 2
+      },
+      "topics": [
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Mietvertrag"
+        },
+        {
+          "family": "versicherung",
+          "noun": "Autoversicherung"
+        }
+      ]
+    },
+    {
+      "id": "test-067",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Apropos Spital: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Zu der Marillenmarmelade hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Beim Elternabend hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu dem Spital von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "spital",
+          "noun": "Spital"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        }
+      ]
+    },
+    {
+      "id": "test-068",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Apropos Vertrag vom Elektriker: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Wegen dem Vertrag von der Bank muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Das Sackerl ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu dem Vertrag von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          2
+        ]
+      },
+      "topics": [
+        {
+          "family": "vertrag",
+          "noun": "Vertrag vom Elektriker"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Vertrag von der Bank"
+        },
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        }
+      ]
+    },
+    {
+      "id": "test-069",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Zu der Polizze hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit dem Semmelknödel sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Beim Bügeleisen brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu der Rechnung von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        }
+      ]
+    },
+    {
+      "id": "test-070",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Bei der Autoversicherung hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Die Wäsche ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu der Autoversicherung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "versicherung",
+          "noun": "Autoversicherung"
+        },
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        }
+      ]
+    },
+    {
+      "id": "test-071",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Elternabend an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Bei der Polizze brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Apropos Keller: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        },
+        {
+          "text": "Beim Schlüssel hakt es gerade, das nervt ziemlich.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei den Polizzen von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "keller",
+          "noun": "Keller"
+        },
+        {
+          "family": "schluessel",
+          "noun": "Schlüssel"
+        }
+      ]
+    },
+    {
+      "id": "test-072",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Wegen dem Fuehrerschein muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Sackerl hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Führerschein von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "fuehrerschein",
+          "noun": "Führerschein"
+        },
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        }
+      ]
+    },
+    {
+      "id": "test-073",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Erdäpfelsalat sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen der Autoversicherung muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Apropos Eigentumswohnung: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Versicherung von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        },
+        {
+          "family": "versicherung",
+          "noun": "Autoversicherung"
+        },
+        {
+          "family": "wohnung",
+          "noun": "Eigentumswohnung"
+        }
+      ]
+    },
+    {
+      "id": "test-074",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Beim Balkon hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Bei der Autoversicherung brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Balkon von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        },
+        {
+          "family": "versicherung",
+          "noun": "Autoversicherung"
+        }
+      ]
+    },
+    {
+      "id": "test-075",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Der Termin von der Werkstatt ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Termin vom Installateur brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Beim Spital hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Termin von davor.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Termin von der Werkstatt"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin vom Installateur"
+        },
+        {
+          "family": "spital",
+          "noun": "Spital"
+        }
+      ]
+    },
+    {
+      "id": "test-076",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Zum Kühlschrank hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Matura hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu dem Spital von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "kuehlschrank",
+          "noun": "Kühlschrank"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        }
+      ]
+    },
+    {
+      "id": "test-077",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Apropos Jahrespickerl: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte den Kühlschrank an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit dem Fenster sollten wir am Freitag klären.",
+          "topic": 2
+        },
+        {
+          "text": "Wegen der Wäsche muss ich heuer noch was erledigen.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu dem Jahrespickerl von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        },
+        {
+          "family": "kuehlschrank",
+          "noun": "Kühlschrank"
+        },
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        },
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        }
+      ]
+    },
+    {
+      "id": "test-078",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Apropos Garage: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Wegen der Haushaltsversicherung muss ich heuer noch was erledigen.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu den Garagen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "versicherung",
+          "noun": "Haushaltsversicherung"
+        }
+      ]
+    },
+    {
+      "id": "test-079",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Apropos Heizungsablesung: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Zu der Strassenbahn hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Die Eigentumswohnung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Beim Führerschein hakt es gerade, das nervt ziemlich.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu der Straßenbahn von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        },
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "wohnung",
+          "noun": "Eigentumswohnung"
+        },
+        {
+          "family": "fuehrerschein",
+          "noun": "Führerschein"
+        }
+      ]
+    },
+    {
+      "id": "test-080",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Bei der Autoversicherung hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Bei der Straßenbahn brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen der Marillenmarmelade muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu der Versicherung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "versicherung",
+          "noun": "Autoversicherung"
+        },
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        }
+      ]
+    },
+    {
+      "id": "test-081",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Bei der Garage brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Das Sackerl ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Wegen dem Router muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Beim Jahrespickerl hakt es gerade, das nervt ziemlich.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Sackerl von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        },
+        {
+          "family": "router",
+          "noun": "Router"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-082",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Beim Termin von der Werkstatt brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte den Termin vom Installateur an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Zum Balkon hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Termin von davor.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Termin von der Werkstatt"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin vom Installateur"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        }
+      ]
+    },
+    {
+      "id": "test-083",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Wegen dem Elternabend muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Apropos Keller: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Router von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "keller",
+          "noun": "Keller"
+        }
+      ]
+    },
+    {
+      "id": "test-084",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Druckertreiber an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Die Heizungsablesung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen dem Handyvertrag muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Apropos Keller: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 3
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Heizungsablesung von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Druckertreiber"
+        },
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Handyvertrag"
+        },
+        {
+          "family": "keller",
+          "noun": "Keller"
+        }
+      ]
+    },
+    {
+      "id": "test-085",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Drucker sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte die Gasrechnung an, da stimmt irgendwas ned.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei den Druckern von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Gasrechnung"
+        }
+      ]
+    },
+    {
+      "id": "test-086",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Wegen der Gemeindewohnung muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Das Bügeleisen ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Beim Keller brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        },
+        {
+          "text": "Apropos Garage: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Buegeleisen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 2
+      },
+      "topics": [
+        {
+          "family": "wohnung",
+          "noun": "Gemeindewohnung"
+        },
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        },
+        {
+          "family": "keller",
+          "noun": "Keller"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-087",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Grafiktreiber sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Parkpickerl hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Treiber von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Grafiktreiber"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Parkpickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-088",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Zu der Autoversicherung hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit der Garage sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen dem Fenster muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Apropos Balkon: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu der Garage von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 2
+      },
+      "topics": [
+        {
+          "family": "versicherung",
+          "noun": "Autoversicherung"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        }
+      ]
+    },
+    {
+      "id": "test-089",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Die Sache mit der Rechnung vom Installateur sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte die Rechnung vom Elektriker an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Wegen dem Handyvertrag muss ich heuer noch was erledigen.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Rechnung von davor.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Rechnung vom Installateur"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung vom Elektriker"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Handyvertrag"
+        }
+      ]
+    },
+    {
+      "id": "test-090",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Wegen dem Semmelknödel muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Die Wohnungsübergabe ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu dem Keller von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "wohnung",
+          "noun": "Wohnungsübergabe"
+        }
+      ]
+    },
+    {
+      "id": "test-091",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Elternabend sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Wäsche: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Elternabend von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        }
+      ]
+    },
+    {
+      "id": "test-092",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Zum Sackerl hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Garage: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Das Fenster ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        },
+        {
+          "text": "Die Sache mit dem Mietvertrag sollten wir am Freitag klären.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit den Garagen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Mietvertrag"
+        }
+      ]
+    },
+    {
+      "id": "test-093",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Semmelknödel sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Drucker: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Die Garage ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Semmelknoedel von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-094",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Beim Zahnarzttermin brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Beim Führerschein hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen dem Drucker muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Das Spital ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Termin von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Zahnarzttermin"
+        },
+        {
+          "family": "fuehrerschein",
+          "noun": "Führerschein"
+        },
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "spital",
+          "noun": "Spital"
+        }
+      ]
+    },
+    {
+      "id": "test-095",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Die Sache mit der Rechnung sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Polizze: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Rechnung von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Rechnung"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        }
+      ]
+    },
+    {
+      "id": "test-096",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Wegen dem Termin vom Elektriker muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Zum Semmelknödel hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Die Sache mit dem Termin von der Bank sollten wir am Freitag klären.",
+          "topic": 2
+        },
+        {
+          "text": "Der Keller ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Termin von davor.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          2
+        ]
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Termin vom Elektriker"
+        },
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin von der Bank"
+        },
+        {
+          "family": "keller",
+          "noun": "Keller"
+        }
+      ]
+    },
+    {
+      "id": "test-097",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Apropos Sackerl: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Wäsche brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Keller von davor.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        },
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        }
+      ]
+    },
+    {
+      "id": "test-098",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Bei der Marillenmarmelade brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Wegen der Polizze muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Apropos Router: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Marillenmarmelade von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "router",
+          "noun": "Router"
+        }
+      ]
+    },
+    {
+      "id": "test-099",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Apropos Keller: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit dem Handyvertrag sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Bei der Marillenmarmelade brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        },
+        {
+          "text": "Wegen dem Erdäpfelsalat muss ich heuer noch was erledigen.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei den Kellern von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "keller",
+          "noun": "Keller"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Handyvertrag"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        },
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        }
+      ]
+    },
+    {
+      "id": "test-100",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Beim Buegeleisen hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Beim Erdäpfelsalat brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Bügeleisen von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        },
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        }
+      ]
+    },
+    {
+      "id": "test-101",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Grafiktreiber an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Zum Router hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Treiber von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Grafiktreiber"
+        },
+        {
+          "family": "router",
+          "noun": "Router"
+        }
+      ]
+    },
+    {
+      "id": "test-102",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Beim Sackerl brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Router hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Sackerl von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        },
+        {
+          "family": "router",
+          "noun": "Router"
+        }
+      ]
+    },
+    {
+      "id": "test-103",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Vertrag von der Werkstatt sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte den Vertrag von der Bank an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Der Drucker ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Vertrag von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "vertrag",
+          "noun": "Vertrag von der Werkstatt"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Vertrag von der Bank"
+        },
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        }
+      ]
+    },
+    {
+      "id": "test-104",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Apropos Bügeleisen: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Die Wäsche ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Zum Elternabend hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Heizung von davor.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        },
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        }
+      ]
+    },
+    {
+      "id": "test-105",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Zu der Heizungsablesung hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte das Jahrespickerl an, da stimmt irgendwas ned.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu der Heizungsablesung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-106",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Apropos Drucker: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Die Matura ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu den Druckern von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        }
+      ]
+    },
+    {
+      "id": "test-107",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Wegen dem Erdäpfelsalat muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Balkon brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Erdaepfelsalat von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        }
+      ]
+    },
+    {
+      "id": "test-108",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Bei der Wohnungsübergabe hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte die Garage an, da stimmt irgendwas ned.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Wohnung von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "wohnung",
+          "noun": "Wohnungsübergabe"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-109",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Beim Router brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte den Friseurtermin an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Apropos Fenster: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        },
+        {
+          "text": "Bei der Marillenmarmelade hakt es gerade, das nervt ziemlich.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu dem Router von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "router",
+          "noun": "Router"
+        },
+        {
+          "family": "termin",
+          "noun": "Friseurtermin"
+        },
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        }
+      ]
+    },
+    {
+      "id": "test-110",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Zum Handyvertrag hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Rechnung von der Werkstatt: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Die Sache mit dem Semmelknödel sollten wir am Freitag klären.",
+          "topic": 2
+        },
+        {
+          "text": "Bei der Rechnung vom Vermieter hakt es gerade, das nervt ziemlich.",
+          "topic": 3
+        },
+        {
+          "text": "Bei der Heizung brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 4
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Rechnung von davor.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          1,
+          3
+        ]
+      },
+      "topics": [
+        {
+          "family": "vertrag",
+          "noun": "Handyvertrag"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung von der Werkstatt"
+        },
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung vom Vermieter"
+        },
+        {
+          "family": "heizung",
+          "noun": "Heizung"
+        }
+      ]
+    },
+    {
+      "id": "test-111",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Wegen dem Kühlschrank muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Der Router ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu der Garage von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "kuehlschrank",
+          "noun": "Kühlschrank"
+        },
+        {
+          "family": "router",
+          "noun": "Router"
+        }
+      ]
+    },
+    {
+      "id": "test-112",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Die Sache mit der Gasrechnung sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Die Wäsche ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Beim Kindergartenplatz hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        },
+        {
+          "text": "Zu der Garage hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Gasrechnung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Gasrechnung"
+        },
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        },
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-113",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Beim Drucker hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte die Heizungsablesung an, da stimmt irgendwas ned.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit den Druckern von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        }
+      ]
+    },
+    {
+      "id": "test-114",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Wegen der Strassenbahn muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte die Steuererklärung an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Straßenbahn von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "steuer",
+          "noun": "Steuererklärung"
+        }
+      ]
+    },
+    {
+      "id": "test-115",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Apropos Heizungsablesung: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Die Rechnung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Beim Spital brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte die Marillenmarmelade an, da stimmt irgendwas ned.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu der Heizung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung"
+        },
+        {
+          "family": "spital",
+          "noun": "Spital"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        }
+      ]
+    },
+    {
+      "id": "test-116",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Die Heizung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Zum Drucker hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen dem Friseurtermin muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Beim Bügeleisen hakt es gerade, das nervt ziemlich.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Heizung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "heizung",
+          "noun": "Heizung"
+        },
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "termin",
+          "noun": "Friseurtermin"
+        },
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        }
+      ]
+    },
+    {
+      "id": "test-117",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Beim Termin vom Zahnarzt brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit dem Termin vom Installateur sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Der Kühlschrank ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Termin von davor.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Termin vom Zahnarzt"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin vom Installateur"
+        },
+        {
+          "family": "kuehlschrank",
+          "noun": "Kühlschrank"
+        }
+      ]
+    },
+    {
+      "id": "test-118",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Schau dir bitte die Matura an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Fenster hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit dem Jahrespickerl sollten wir am Freitag klären.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu dem Spital von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "matura",
+          "noun": "Matura"
+        },
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-119",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Wegen dem Drucker muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte das Fahrradservice an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit der Steuererklärung sollten wir am Freitag klären.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu dem Fahrradservice von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "fahrrad",
+          "noun": "Fahrradservice"
+        },
+        {
+          "family": "steuer",
+          "noun": "Steuererklärung"
+        }
+      ]
+    },
+    {
+      "id": "test-120",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Semmelknödel an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Zu der Polizze hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Die Sache mit dem Mietvertrag sollten wir am Freitag klären.",
+          "topic": 2
+        },
+        {
+          "text": "Wegen der Garage muss ich heuer noch was erledigen.",
+          "topic": 3
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei den Polizzen von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Mietvertrag"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-121",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Bei der Kueche brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen der Marillenmarmelade muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Apropos Elternabend: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Küche von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "kueche",
+          "noun": "Küche"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        }
+      ]
+    },
+    {
+      "id": "test-122",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Wegen dem Druckertreiber muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Straßenbahn: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Die Küche ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Treiber von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Druckertreiber"
+        },
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "kueche",
+          "noun": "Küche"
+        }
+      ]
+    },
+    {
+      "id": "test-123",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Beim Router brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit dem Erdäpfelsalat sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Bei der Gemeindewohnung hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Router von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "router",
+          "noun": "Router"
+        },
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        },
+        {
+          "family": "wohnung",
+          "noun": "Gemeindewohnung"
+        }
+      ]
+    },
+    {
+      "id": "test-124",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Der Keller ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Bei der Rechnung vom Zahnarzt brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Zu der Rechnung vom Vermieter hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit dem Elternabend sollten wir am Freitag klären.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Rechnung von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          1,
+          2
+        ]
+      },
+      "topics": [
+        {
+          "family": "keller",
+          "noun": "Keller"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung vom Zahnarzt"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung vom Vermieter"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        }
+      ]
+    },
+    {
+      "id": "test-125",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Schau dir bitte das Fenster an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Wegen dem Handyvertrag muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Bei der Gemeindewohnung hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Keller von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Handyvertrag"
+        },
+        {
+          "family": "wohnung",
+          "noun": "Gemeindewohnung"
+        }
+      ]
+    },
+    {
+      "id": "test-126",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Beim Parkpickerl brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Steuererklärung hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Apropos Matura: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        },
+        {
+          "text": "Die Sache mit dem Erdäpfelsalat sollten wir am Freitag klären.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Parkpickerl von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "pickerl",
+          "noun": "Parkpickerl"
+        },
+        {
+          "family": "steuer",
+          "noun": "Steuererklärung"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        },
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        }
+      ]
+    },
+    {
+      "id": "test-127",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Die Sache mit der Polizze sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Der Zahnarzttermin ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte den Keller an, da stimmt irgendwas ned.",
+          "topic": 2
+        },
+        {
+          "text": "Apropos Kindergartenplatz: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu den Kellern von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 3
+      },
+      "topics": [
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "termin",
+          "noun": "Zahnarzttermin"
+        },
+        {
+          "family": "keller",
+          "noun": "Keller"
+        },
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        }
+      ]
+    },
+    {
+      "id": "test-128",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Schau dir bitte die Straßenbahn an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen dem Semmelknödel muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Beim Sackerl brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        },
+        {
+          "text": "Apropos Kindergartenplatz: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 3
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Strassenbahn von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        },
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        }
+      ]
+    },
+    {
+      "id": "test-129",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Wegen dem Jahrespickerl muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit dem Erdäpfelsalat sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Apropos Kindergartenplatz: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Pickerl von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        },
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        },
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        }
+      ]
+    },
+    {
+      "id": "test-130",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Beim Spital brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Die Polizze ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Spital von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "spital",
+          "noun": "Spital"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        }
+      ]
+    },
+    {
+      "id": "test-131",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Die Sache mit der Rechnung von der Bank sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Rechnung von der Werkstatt: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Autoversicherung hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu der Rechnung von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Rechnung von der Bank"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung von der Werkstatt"
+        },
+        {
+          "family": "versicherung",
+          "noun": "Autoversicherung"
+        }
+      ]
+    },
+    {
+      "id": "test-132",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Das Bügeleisen ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Garage hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Die Sache mit dem Router sollten wir am Freitag klären.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Matura von davor.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "router",
+          "noun": "Router"
+        }
+      ]
+    },
+    {
+      "id": "test-133",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Das Jahrespickerl ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen dem Balkon muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Jahrespickerl von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        }
+      ]
+    },
+    {
+      "id": "test-134",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Das Sackerl ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Apropos Balkon: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit den Sackerln von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        }
+      ]
+    },
+    {
+      "id": "test-135",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Zum Semmelknödel hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen der Polizze muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Semmelknoedel von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        }
+      ]
+    },
+    {
+      "id": "test-136",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Zu der Heizung hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Druckertreiber: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Bei der Gasrechnung hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Treiber von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "heizung",
+          "noun": "Heizung"
+        },
+        {
+          "family": "treiber",
+          "noun": "Druckertreiber"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Gasrechnung"
+        }
+      ]
+    },
+    {
+      "id": "test-137",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Zu der Garage hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Balkon: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Schau dir bitte die Polizze an, da stimmt irgendwas ned.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Der Erdäpfelsalat ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu der Polizze von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 2
+      },
+      "topics": [
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        }
+      ]
+    },
+    {
+      "id": "test-138",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Wegen dem Elternabend muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte den Termin vom Zahnarzt an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Zum Termin vom Vermieter hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Beim Schlüssel brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 3
+        },
+        {
+          "text": "Die Sache mit dem Router sollten wir am Freitag klären.",
+          "topic": 4
+        }
+      ],
+      "returnText": "Zurück zu dem Termin von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          1,
+          3
+        ]
+      },
+      "topics": [
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin vom Zahnarzt"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin vom Vermieter"
+        },
+        {
+          "family": "schluessel",
+          "noun": "Schlüssel"
+        },
+        {
+          "family": "router",
+          "noun": "Router"
+        }
+      ]
+    },
+    {
+      "id": "test-139",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Bei der Garage brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen dem Bügeleisen muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Bei der Wohnungsübergabe hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Spital von davor.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        },
+        {
+          "family": "wohnung",
+          "noun": "Wohnungsübergabe"
+        }
+      ]
+    },
+    {
+      "id": "test-140",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Zum Elternabend hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen dem Führerschein muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Elternabend von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "fuehrerschein",
+          "noun": "Führerschein"
+        }
+      ]
+    },
+    {
+      "id": "test-141",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Die Steuererklärung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Wegen dem Kindergartenplatz muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Beim Drucker hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        },
+        {
+          "text": "Schau dir bitte das Jahrespickerl an, da stimmt irgendwas ned.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei den Druckern von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 3
+      },
+      "topics": [
+        {
+          "family": "steuer",
+          "noun": "Steuererklärung"
+        },
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        },
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-142",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Zu der Strassenbahn hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Bügeleisen brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Apropos Parkpickerl: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Straßenbahn von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Parkpickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-143",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Zu der Heizungsablesung hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Das Bügeleisen ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Bei der Garage hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Heizung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        },
+        {
+          "family": "buegeleisen",
+          "noun": "Bügeleisen"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-144",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Zu der Garage hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen dem Semmelknödel muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Garage von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        }
+      ]
+    },
+    {
+      "id": "test-145",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Beim Vertrag von der Werkstatt brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Vertrag vom Vermieter: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen der Stromrechnung muss ich heuer noch was erledigen.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Der Führerschein ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Vertrag von davor.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "vertrag",
+          "noun": "Vertrag von der Werkstatt"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Vertrag vom Vermieter"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Stromrechnung"
+        },
+        {
+          "family": "fuehrerschein",
+          "noun": "Führerschein"
+        }
+      ]
+    },
+    {
+      "id": "test-146",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Bei der Matura hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit dem Kindergartenplatz sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu der Garage von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "matura",
+          "noun": "Matura"
+        },
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        }
+      ]
+    },
+    {
+      "id": "test-147",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Erdäpfelsalat sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte das Jahrespickerl an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen dem Zahnarzttermin muss ich heuer noch was erledigen.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu dem Jahrespickerl von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 2
+      },
+      "topics": [
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        },
+        {
+          "family": "termin",
+          "noun": "Zahnarzttermin"
+        }
+      ]
+    },
+    {
+      "id": "test-148",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Beim Drucker brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Wegen dem Friseurtermin muss ich heuer noch was erledigen.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei den Druckern von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "termin",
+          "noun": "Friseurtermin"
+        }
+      ]
+    },
+    {
+      "id": "test-149",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Bei der Kueche brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Erdäpfelsalat hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu der Küche von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "kueche",
+          "noun": "Küche"
+        },
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        }
+      ]
+    },
+    {
+      "id": "test-150",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Wegen der Haushaltsversicherung muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte das Sackerl an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Beim Router brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        },
+        {
+          "text": "Die Polizze ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Versicherung von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "versicherung",
+          "noun": "Haushaltsversicherung"
+        },
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        },
+        {
+          "family": "router",
+          "noun": "Router"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        }
+      ]
+    },
+    {
+      "id": "test-151",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Bei der Eigentumswohnung hakt es gerade, das nervt ziemlich.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit dem Kühlschrank sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Zu der Polizze hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Das Fahrradservice ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Zurück zu der Polizze von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 3
+      },
+      "topics": [
+        {
+          "family": "wohnung",
+          "noun": "Eigentumswohnung"
+        },
+        {
+          "family": "kuehlschrank",
+          "noun": "Kühlschrank"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "fahrrad",
+          "noun": "Fahrradservice"
+        }
+      ]
+    },
+    {
+      "id": "test-152",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Wegen der Rechnung von der Bank muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Bei der Rechnung von der Werkstatt hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Matura brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Rechnung von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "rechnung",
+          "noun": "Rechnung von der Bank"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung von der Werkstatt"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        }
+      ]
+    },
+    {
+      "id": "test-153",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Schau dir bitte die Steuererklärung an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Matura brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Wegen der Polizze muss ich heuer noch was erledigen.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Spital von davor.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "steuer",
+          "noun": "Steuererklärung"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        }
+      ]
+    },
+    {
+      "id": "test-154",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Elternabend an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit der Straßenbahn sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Bei der Garage brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Elternabend von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-155",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Die Sache mit dem Kindergartenplatz sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Bei der Rechnung brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Apropos Heizungsablesung: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        },
+        {
+          "text": "Der Keller ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 3
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei den Rechnungen von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "kindergarten",
+          "noun": "Kindergartenplatz"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung"
+        },
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        },
+        {
+          "family": "keller",
+          "noun": "Keller"
+        }
+      ]
+    },
+    {
+      "id": "test-156",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Die Sache mit der Steuererklärung sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte den Router an, da stimmt irgendwas ned.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Steuererklaerung von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "steuer",
+          "noun": "Steuererklärung"
+        },
+        {
+          "family": "router",
+          "noun": "Router"
+        }
+      ]
+    },
+    {
+      "id": "test-157",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Zu der Autoversicherung hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Apropos Garage: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu der Versicherung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "versicherung",
+          "noun": "Autoversicherung"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        }
+      ]
+    },
+    {
+      "id": "test-158",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Keller an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Die Wohnungsübergabe ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Keller von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "keller",
+          "noun": "Keller"
+        },
+        {
+          "family": "wohnung",
+          "noun": "Wohnungsübergabe"
+        }
+      ]
+    },
+    {
+      "id": "test-159",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Wegen dem Termin von der Werkstatt muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Termin von der Bank brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Beim Semmelknödel hakt es gerade, das nervt ziemlich.",
+          "topic": 2
+        },
+        {
+          "text": "Schau dir bitte das Fahrradservice an, da stimmt irgendwas ned.",
+          "topic": 3
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Termin von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Termin von der Werkstatt"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin von der Bank"
+        },
+        {
+          "family": "knoedel",
+          "noun": "Semmelknödel"
+        },
+        {
+          "family": "fahrrad",
+          "noun": "Fahrradservice"
+        }
+      ]
+    },
+    {
+      "id": "test-160",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Wegen der Wäsche muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit dem Fenster sollten wir am Freitag klären.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Spital von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        },
+        {
+          "family": "fenster",
+          "noun": "Fenster"
+        }
+      ]
+    },
+    {
+      "id": "test-161",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Apropos Heizungsablesung: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Beim Handyvertrag hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Heizungsablesung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Handyvertrag"
+        }
+      ]
+    },
+    {
+      "id": "test-162",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Wegen der Heizung muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Die Sache mit dem Spital sollten wir am Freitag klären.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit den Heizungen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "heizung",
+          "noun": "Heizung"
+        },
+        {
+          "family": "spital",
+          "noun": "Spital"
+        }
+      ]
+    },
+    {
+      "id": "test-163",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Beim Handyvertrag brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Wegen der Autoversicherung muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Zu der Steuererklaerung hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Schau dir bitte das Fahrradservice an, da stimmt irgendwas ned.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Steuererklärung von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 3
+      },
+      "topics": [
+        {
+          "family": "vertrag",
+          "noun": "Handyvertrag"
+        },
+        {
+          "family": "versicherung",
+          "noun": "Autoversicherung"
+        },
+        {
+          "family": "steuer",
+          "noun": "Steuererklärung"
+        },
+        {
+          "family": "fahrrad",
+          "noun": "Fahrradservice"
+        }
+      ]
+    },
+    {
+      "id": "test-164",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Apropos Friseurtermin: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen dem Mietvertrag muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Termin von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Friseurtermin"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Mietvertrag"
+        }
+      ]
+    },
+    {
+      "id": "test-165",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Schau dir bitte die Polizze an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Apropos Mietvertrag: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Die Rechnung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Polizze von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Mietvertrag"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Rechnung"
+        }
+      ]
+    },
+    {
+      "id": "test-166",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Wegen dem Termin vom Elektriker muss ich heuer noch was erledigen.",
+          "topic": 0
+        },
+        {
+          "text": "Schau dir bitte den Termin von der Werkstatt an, da stimmt irgendwas ned.",
+          "topic": 1
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Apropos Garage: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 2
+        },
+        {
+          "text": "Beim Jahrespickerl brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit dem Termin von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          1
+        ]
+      },
+      "topics": [
+        {
+          "family": "termin",
+          "noun": "Termin vom Elektriker"
+        },
+        {
+          "family": "termin",
+          "noun": "Termin von der Werkstatt"
+        },
+        {
+          "family": "garage",
+          "noun": "Garage"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        }
+      ]
+    },
+    {
+      "id": "test-167",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Die Sache mit der Küche sollten wir am Freitag klären.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Beim Mietvertrag hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Die Straßenbahn ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Polizze von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "kueche",
+          "noun": "Küche"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Mietvertrag"
+        },
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        }
+      ]
+    },
+    {
+      "id": "test-168",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Die Heizungsablesung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Wegen der Straßenbahn muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Zu der Polizze hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Schau dir bitte den Erdäpfelsalat an, da stimmt irgendwas ned.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Heizungsablesung von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        },
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "erdaepfel",
+          "noun": "Erdäpfelsalat"
+        }
+      ]
+    },
+    {
+      "id": "test-169",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Apropos Polizze: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Balkon brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Der Keller ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        },
+        {
+          "text": "Schau dir bitte den Elternabend an, da stimmt irgendwas ned.",
+          "topic": 3
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit den Balkonen von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        },
+        {
+          "family": "keller",
+          "noun": "Keller"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        }
+      ]
+    },
+    {
+      "id": "test-170",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Zu der Küche hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Wegen der Steuererklärung muss ich heuer noch was erledigen.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Bei der Haushaltsversicherung brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu der Steuererklaerung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "kueche",
+          "noun": "Küche"
+        },
+        {
+          "family": "steuer",
+          "noun": "Steuererklärung"
+        },
+        {
+          "family": "versicherung",
+          "noun": "Haushaltsversicherung"
+        }
+      ]
+    },
+    {
+      "id": "test-171",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Apropos Polizze: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Die Steuererklärung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Zu der Heizungsablesung hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Die Sache mit dem Keller sollten wir am Freitag klären.",
+          "topic": 3
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit der Heizung von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 2
+      },
+      "topics": [
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        },
+        {
+          "family": "steuer",
+          "noun": "Steuererklärung"
+        },
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        },
+        {
+          "family": "keller",
+          "noun": "Keller"
+        }
+      ]
+    },
+    {
+      "id": "test-172",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Beim Spital brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Die Polizze ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Spital von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "spital",
+          "noun": "Spital"
+        },
+        {
+          "family": "polizze",
+          "noun": "Polizze"
+        }
+      ]
+    },
+    {
+      "id": "test-173",
+      "stratum": "ambiguous",
+      "turns": [
+        {
+          "text": "Zum Vertrag vom Elektriker hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Der Vertrag von der Bank ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Die Sache mit dem Grafiktreiber sollten wir am Freitag klären.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu dem Vertrag von vorhin.",
+      "key": {
+        "kind": "AMBIGUOUS",
+        "turns": [
+          0,
+          2
+        ]
+      },
+      "topics": [
+        {
+          "family": "vertrag",
+          "noun": "Vertrag vom Elektriker"
+        },
+        {
+          "family": "vertrag",
+          "noun": "Vertrag von der Bank"
+        },
+        {
+          "family": "treiber",
+          "noun": "Grafiktreiber"
+        }
+      ]
+    },
+    {
+      "id": "test-174",
+      "stratum": "none",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Balkon an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Drucker hakt es gerade, das nervt ziemlich.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Zu der Heizungsablesung hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Zurück zu dem Keller von vorhin.",
+      "key": {
+        "kind": "NONE"
+      },
+      "topics": [
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        },
+        {
+          "family": "treiber",
+          "noun": "Drucker"
+        },
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        }
+      ]
+    },
+    {
+      "id": "test-175",
+      "stratum": "long",
+      "turns": [
+        {
+          "text": "Zu der Straßenbahn hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 0
+        },
+        {
+          "text": "Beim Jahrespickerl brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Der Elternabend ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 2
+        },
+        {
+          "text": "Apropos Marillenmarmelade: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 3
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Zurück zu dem Jahrespickerl von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 1
+      },
+      "topics": [
+        {
+          "family": "strassenbahn",
+          "noun": "Straßenbahn"
+        },
+        {
+          "family": "pickerl",
+          "noun": "Jahrespickerl"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        }
+      ]
+    },
+    {
+      "id": "test-176",
+      "stratum": "inflected",
+      "turns": [
+        {
+          "text": "Schau dir bitte den Keller an, da stimmt irgendwas ned.",
+          "topic": 0
+        },
+        {
+          "text": "Bei der Matura brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        }
+      ],
+      "returnText": "Fortsetzen bitte mit den Kellern von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "keller",
+          "noun": "Keller"
+        },
+        {
+          "family": "matura",
+          "noun": "Matura"
+        }
+      ]
+    },
+    {
+      "id": "test-177",
+      "stratum": "asr",
+      "turns": [
+        {
+          "text": "Apropos Waesche: da fehlt noch die Bestätigung vom Amt.",
+          "topic": 0
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        },
+        {
+          "text": "Die Marillenmarmelade ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        }
+      ],
+      "returnText": "Zurück zu der Wäsche von vorhin.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "waesche",
+          "noun": "Wäsche"
+        },
+        {
+          "family": "marille",
+          "noun": "Marillenmarmelade"
+        }
+      ]
+    },
+    {
+      "id": "test-178",
+      "stratum": "head",
+      "turns": [
+        {
+          "text": "Bei der Heizungsablesung brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Die Gasrechnung ist mir gestern eingefallen, Gschicht ohne Ende.",
+          "topic": 1
+        },
+        {
+          "text": "Der Mitarbeiter vom Finanzamt hat wegen dem Beitrag angerufen.",
+          "topic": null
+        },
+        {
+          "text": "Schau dir bitte den Friseurtermin an, da stimmt irgendwas ned.",
+          "topic": 2
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei der Heizung von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "heizung",
+          "noun": "Heizungsablesung"
+        },
+        {
+          "family": "rechnung",
+          "noun": "Gasrechnung"
+        },
+        {
+          "family": "termin",
+          "noun": "Friseurtermin"
+        }
+      ]
+    },
+    {
+      "id": "test-179",
+      "stratum": "short",
+      "turns": [
+        {
+          "text": "Beim Sackerl brauch ich deine Hilfe, ehrlich gsagt.",
+          "topic": 0
+        },
+        {
+          "text": "Zum Elternabend hätte ich eine Frage, das pressiert aber nicht.",
+          "topic": 1
+        },
+        {
+          "text": "Schau dir bitte den Balkon an, da stimmt irgendwas ned.",
+          "topic": 2
+        },
+        {
+          "text": "Passt, danke dir, bis später.",
+          "topic": null
+        }
+      ],
+      "returnText": "Und jetzt bitte weiter bei dem Sackerl von davor.",
+      "key": {
+        "kind": "TOPIC",
+        "turn": 0
+      },
+      "topics": [
+        {
+          "family": "sackerl",
+          "noun": "Sackerl"
+        },
+        {
+          "family": "eltern",
+          "noun": "Elternabend"
+        },
+        {
+          "family": "balkon",
+          "noun": "Balkon"
+        }
+      ]
+    }
+  ]
+}
