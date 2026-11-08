@@ -142,6 +142,12 @@ class OwnerAppActionFlowTest {
         assertEquals("WhatsApp", needed.query)
         assertTrue(needed.opening)
         assertNull(OwnerAppLookupIntent.inspect("Ich brauche die PDF"))
+        val maps = OwnerAppLookupIntent.inspect("Ich brauche die App Google Maps") as OwnerAppLookupIntent.Intake.Lookup
+        assertEquals("Google Maps", maps.query)
+        assertTrue(maps.opening)
+        for (ordinary in listOf("Ich brauche Hilfe", "Ich brauche eine Pause", "Ich brauche einen Rat",
+                "Ich brauche dich", "Ich brauche Hilfe bei der Steuer", "Ich brauche Ruhe"))
+            assertNull(ordinary, OwnerAppLookupIntent.inspect(ordinary))
         assertTrue(OwnerAppLookupIntent.inspect("Ich brauche Signal und schreibe Anna") is
             OwnerAppLookupIntent.Intake.Planning)
         val message = OwnerAppLookupIntent.inspect("Schreibe WhatsApp") as OwnerAppLookupIntent.Intake.Planning
