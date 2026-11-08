@@ -39,7 +39,7 @@ test('Fold portrait uses the shared width/font profile, one Activity rail and no
  assert.match(profile,/val reference = size != WidthClass\.COMPACT && heightDp >= REFERENCE_MIN_HEIGHT_DP &&\s*font <= 1\.3f && readableColumns == JarvisCockpitGrid\.TILE_COLUMNS/);
  assert.match(profile,/\s0f, reference\)/);
  assert.match(shell,/fun create\(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail\.LABELLED,\s*includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false\): Shell \{/);
- assert.match(shell,/val full = create\(widthDp \+ externalRailWidthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation\)/);
+ assert.match(shell,/return create\(widthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation\)/);
  assert.match(shell,/val profile = JarvisWindowProfile\.resolve\(widthDp, heightDp, fontScale, foldRail\)/);
  assert.match(shell,/return if \(profile\.referenceComposition\) reference\(widthDp, heightDp, profile\)\.let \{\s*if \(compactPresentation\) compactReference\(it\) else it\s*\} else reflow\(widthDp, heightDp, profile, includeBottomNavigation, compactPresentation\)/);
  const ui=activityMember('private fun buildUi(): View');
