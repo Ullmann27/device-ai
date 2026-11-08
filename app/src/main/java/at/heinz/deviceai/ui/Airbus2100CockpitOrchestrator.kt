@@ -74,7 +74,7 @@ class Airbus2100CockpitOrchestrator(
             is CockpitAnimationEvent.DocumentQuestion -> if (event.turnId == activeTurnId) {
                 promote(Phase.AWAITING_DECISION, JarvisActionScenes.forDocument())
                 onLiveData(HollywoodFuiLiveData.document(
-                    event.documentName, event.mimeType, event.question
+                    event.documentName, event.mimeType, event.question, pageCount = event.pageCount
                 ))
             }
             is CockpitAnimationEvent.DocumentLearned -> if (event.turnId == activeTurnId) {

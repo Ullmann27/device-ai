@@ -87,7 +87,9 @@ class Airbus2100CockpitOrchestratorTest {
 
         orchestrator.render(CockpitAnimationEvent.ActionStarted("t", 1L, CockpitAction.TOOL, "launch_app"))
         orchestrator.render(CockpitAnimationEvent.AccountCardFlyIn("t", 2L, "Gmail", "owner@example.invalid"))
-        orchestrator.render(CockpitAnimationEvent.DocumentQuestion("t", 3L, "x.pdf", "application/pdf", "Was tun?"))
+        orchestrator.render(CockpitAnimationEvent.DocumentQuestion(
+            "t", 3L, "x.pdf", "application/pdf", "Was tun?", pageCount = 4
+        ))
         orchestrator.render(CockpitAnimationEvent.CalculationShown(
             "t", 4L, "1+1", listOf(at.heinz.deviceai.cockpit.CalcStep("Summe", 2.0)),
             2.0, null, ChartKind.NONE
@@ -112,7 +114,7 @@ class Airbus2100CockpitOrchestratorTest {
         val security = payloads.filterIsInstance<HollywoodFuiLiveData.Security>().single()
         assertEquals("Package scan", security.sourceLabel)
         val document = payloads.filterIsInstance<HollywoodFuiLiveData.Document>().single()
-        assertEquals(1, document.pageCount ?: 1)
+        assertEquals(4, document.pageCount)
         assertEquals("x.pdf", document.documentName)
     }
 

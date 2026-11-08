@@ -2536,7 +2536,7 @@ class AgentActivity : Activity() {
                 depthLayers = at.heinz.deviceai.ui.JarvisWorkWindowDepth.layers(doc.pageCount)) {}
         }
         if (window != null) cockpitTriggers.documentReceived(
-            "document-" + episode.id, doc.name, "application/pdf", request)
+            "document-" + episode.id, doc.name, "application/pdf", request, doc.pageCount)
         // The same facts in the conversation; with an open window the cockpit stays (no switch to the chat area).
         addAssistantMessage(report, preserveLocalContext = true, keepCockpit = window != null)
         if (wantsDraft && hasText && localModelReady()) startDocumentDraft(doc)

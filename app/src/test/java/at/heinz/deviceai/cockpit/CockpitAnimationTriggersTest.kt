@@ -91,4 +91,15 @@ class CockpitAnimationTriggersTest {
         local.emit(MathPreview())
         assertEquals("math", (seen.single() as CockpitAnimationEvent.Extension).kind)
     }
+    @Test fun documentEventCarriesOnlyMeasuredPageCount() {
+        triggers.commandAcknowledged("doc", "PDF prüfen")
+        triggers.documentReceived("doc", "vertrag.pdf", "application/pdf", "Bitte prüfen", 7)
+        val event = only<CockpitAnimationEvent.DocumentQuestion>().single()
+        assertEquals(7, event.pageCount)
+
+        triggers.commandAcknowledged("bad-doc", "PDF prüfen")
+        triggers.documentReceived("bad-doc", "x.pdf", "application/pdf", "Bitte prüfen", -1)
+        assertNull(only<CockpitAnimationEvent.DocumentQuestion>().last().pageCount)
+    }
+
 }
