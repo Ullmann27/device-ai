@@ -1,0 +1,19 @@
+✔ strict Kotlin integer acceptance cases reject untrusted code-shaped JSON (1.800512ms)
+✔ generated Kotlin code must compile RED before and GREEN after, then compute two expected outputs (8192.773469ms)
+✔ wrong independent expected output rejects a compiling patch (6438.080573ms)
+✔ an arbitrary red baseline is never accepted as proof of the requested missing method (2561.130335ms)
+✔ owner specification yields a critic-approved production-only Kotlin patch (4.549851ms)
+✔ unaccepted, foreign, forged and unsupported tasks do not generate patches (0.375237ms)
+✔ existing methods, overloaded delegates, unsupported headers and test paths fail closed (0.448636ms)
+✔ new method compiles and computes a nontrivial result with real kotlinc (6390.429269ms)
+✔ owner Kotlin IMPLEMENT generates real reviewable Git patch with two independent JVM oracles (13334.520715ms)
+✔ false owner output cannot create a verified Kotlin preview (8995.144321ms)
+✔ output symlink back into checkout is rejected before Kotlin compilation (89.958876ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 51978.800226

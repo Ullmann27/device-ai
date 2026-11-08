@@ -9,7 +9,7 @@ No main merge, signing, APK publication, device installation or research promoti
 
 ## Source audit
 
-| PR | Actual remote HEAD | Decision |
+| PR | Audited remote HEAD at freeze | Decision |
 |---|---|---|
 | #646 | `f3f90736f4addb027dcc4f42a1f3cd3300713d3b` | Already an ancestor; repair three open speech reviews in place |
 | #650 | `82590f532d0b070823d82e6007f53e5e825cf70f` | Already an ancestor; preserve bounded tools and result evidence |
@@ -30,6 +30,9 @@ files; `SituationReturnMorphologyTest.kt` originates in earlier commit
 Relevant contracts: EXP-05 local model, EXP-06 provenance/context, EXP-11
 existing delegation, EXP-12 lifecycle, EXP-16 discourse research. Preserve
 ToolGate, owner consent, private bot contexts and the single rendering budget.
+Later remote observations (#659 `6d392e3efc38feaf12debb91dc1b6149ee5e43aa`,
+#662 `5a0fd0a8e1bc2cd098693a62e766f3be19d23429`) are recorded separately in the
+inventory. They were not silently imported into or certified by this freeze.
 
 Full per-PR changed-file/status inventories, exact merge bases, ancestry and the
 candidate's actual changed files are in
@@ -93,10 +96,12 @@ GitHub-Actions/signing workaround.
 
 ## Resume and rollback
 
-First repair #646, then bounded #659/#661 integration, then optional H4-B1
-only if negatives pass. Run full host suites and actual Gradle gates.
-Investigate the existing authorized Render QA host if local SDK is blocked;
-the Code50-only GitHub Actions/signing exception does not apply.
+The bounded repairs, graphics integration, H4-B1 gate and host regressions are
+complete below. Resume with actual Android Gradle/widget/device acceptance on
+an authorized working SDK host, then a separately pinned combined #662 and
+late-graphics checkpoint. The Code50-only GitHub Actions/signing exception does
+not apply. Re-read upstream heads before new work; do not extend this freeze
+by inheriting later branches' test claims.
 
 Commit each independent repair/integration separately and verify its remote
 SHA. Roll back with a new revert commit of the affected checkpoint, never
@@ -170,8 +175,8 @@ bash scripts/hollywood-fui-reference-fidelity.sh <external-output> code51-v2
 
 JDK21/Kotlin2.2.21; use the actual production UI sources plus
 `HollywoodFuiConstructTest`, `HollywoodFuiCinematicsTest`,
-`HollywoodFuiMaterialRegressionTest` with JUnit4.13.2. Final complete-source
-runner and SHA-bound evidence follow. Rollback graphics independently of
+`HollywoodFuiMaterialRegressionTest` with JUnit4.13.2. The complete-source
+runner and SHA-bound evidence are recorded below. Rollback graphics independently of
 speech; the runtime switch disables film layers without changing tool grants.
 
 ## H4-B1 independent gate
@@ -197,7 +202,7 @@ per model turn and appended only as navigation. Bot/coding contexts are excluded
 `AiContextCompiler -> HybridMemoryRetriever` and owner-fact/privacy gates are
 unchanged. Added actual `LocalConversationContext` tests verify the hint does
 not alter owner evidence and disappears on clear/exit/session/topic/correction.
-Those broader tests await the complete host runner.
+Those broader tests passed in the complete host runner.
 H4-A, research scorers/certificates and Genesis remain excluded.
 
 Update: constrained H4 integration
@@ -253,8 +258,8 @@ assets, GitHub contracts and root build configuration identities.
 | `SOURCE_INTEGRATED` | Speech repairs, bounded #659 graphics, repaired #661 tooling and constrained H4-B1; independent commits below |
 | `HOST_TESTED` Kotlin | Complete main/test source compilation; **637 JUnit classes / 3600 tests PASS**; four executable Checks PASS, one no-main helper not executable |
 | `HOST_TESTED` focused | **44/44 PASS** on compiled frozen source; not additional unique tests beyond the full 3600 |
-| `HOST_TESTED` Node | Final supported-Node sweep in progress; no full-green claim until its log is published |
-| `HOST_TESTED` backend | **64/64 PASS**, Node24.11.0, locked dependencies |
+| `HOST_TESTED` Node | **2503 discovered: 2480 PASS, 0 FAIL, 0 cancelled, 23 skipped**. Supplements below subsequently execute seven of those skipped cases; **16 remain NOT_RUN** |
+| `HOST_TESTED` backend | **64/64 PASS**, Node24.22.2, locked dependencies |
 | `HOST_TESTED` graphics | 7 metric assertions, four probe samples and two rejecting controls; one-sided envelope only |
 | `HOST_TESTED` original asset | Original GLB SHA-256 `63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca`; 62 structural assertions, Khronos 0 errors/0 warnings |
 | `ANDROID_BUILD_VERIFIED` | **BLOCKED**, actual compile/unit/UI/lint invocation stops at AGP resolution |
@@ -265,17 +270,33 @@ Primary logs and comparison images:
 [`evidence/code51-master-integrator-20261108/`](evidence/code51-master-integrator-20261108/).
 No model weights, owner dialogues, credentials or signing material are included.
 
+The three real-Kotlin oracle suites subsequently pass **11/11**, including six
+previously skipped RED/GREEN/compiler/independent-output cases. Real JVM export
+from the frozen compiled graph into the existing Node adapter passes **9/9**,
+including one previously skipped cross-language byte-identity case. Do not add
+all 20 to the full-sweep pass count: 13 repeat already-passed tests. Combined
+coverage is 2487 passing canonical Node cases and 16 still unexecuted, plus
+the separate 64 backend cases.
+
+The 16 remaining cases need separately provisioned Docker/CCC1 workspaces,
+approved Harness SDK, private cgroup resources or the older standalone
+shell/cognitive subset compiler harness. No unavailable native/model/device
+capability is inferred from their skip. The broad exploratory `tools/*` sweep
+also hit specialized external-review prerequisites and historical fixed
+workspace paths; these remain outside canonical acceptance, with failures
+retained in `node-exploratory-attempts.json`.
+
 ### Host prerequisites and commands
 
 Use an unprivileged user with a writable checkout/output directory and UTF-8
 locale. The actual run used an independent local clone of `b3e288f7`, not
 mutable sources or the root user's read-only-permission bypass. Toolchain:
-Ubuntu OpenJDK21.0.12.1, official Kotlin2.2.21, official Node24.11.0.
+Ubuntu OpenJDK21.0.12.1, official Kotlin2.2.21, official Node24.22.2.
 Kotlin archive SHA-256:
 `a623871f1cd9c938946948b70ef9170879f0758043885bbd30c32f024e511714`.
-Node `node-v24.11.0-linux-x64.tar.xz` SHA-256:
-`46da9a098973ab7ba4fca76945581ecb2eaf468de347173897044382f10e0a0a`.
-Official origins: JetBrains/kotlin release `v2.2.21`, `nodejs.org/dist/v24.11.0`,
+Node `node-v24.22.2-linux-x64.tar.xz` SHA-256:
+`48cc0e21e048790e54c0cf5749c2725005313d652651c40b7a21feb9697aaf75`.
+Official origins: JetBrains/kotlin release `v2.2.21`, `nodejs.org/dist/v24.22.2`,
 and `repo.maven.apache.org/maven2`. Publisher checksums were verified.
 
 Set `DEPS` to official Maven artifacts with the names expected by
@@ -316,13 +337,39 @@ npm --prefix tools/avatar-3d run validate
   :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
 ```
 
+Supplemental commands use the same frozen checkout, with the restored
+`kotlinc` on PATH and `JAVA_OPTS=-Xmx1g`:
+
+```sh
+env -u GIT_CONFIG_COUNT -u NODE_TEST_CONTEXT node --test --test-concurrency=1 \
+  .github/continuum/kotlin-delegate-acceptance.test.mjs \
+  .github/continuum/kotlin-delegate-synthesizer.test.mjs \
+  .github/continuum/owner-kotlin-preview.test.mjs
+
+java -cp "$OUT/jvm/test:$OUT/jvm/main:$OUT/jvm/stubclasses:$DEPS/*:$KOTLIN_HOME/lib/kotlin-stdlib.jar:app/src/test/resources:app/src/main/resources" \
+  at.heinz.deviceai.cognitive.VirtualModelFabricFixtureMain > "$OUT/registry-snapshot.json"
+CONTINUUM_FABRIC_SNAPSHOT_FILE="$OUT/registry-snapshot.json" \
+  node --test .github/continuum/compute-fabric-model-adapter.test.mjs
+```
+
+The export uses the already compiled complete graph, not the older subset
+compile script. It proves synthetic JVM/Node contract compatibility only, not
+shared model weights, live remote compute or a new training capability.
+
 The Node command removes only inherited per-process test/config injection:
 `GIT_CONFIG_COUNT` forced `core.fsmonitor=false` and masked the synthetic
 unsafe-config fixture. The same failure reproduced on unchanged #658 (16/17),
 then the clean fixture environment passed 17/17; system Git configuration and
 production guards were not changed. Node26 is rejected by the host-admission
-contract; Node22 lacks the actual JUnit file identities required by CCC1.
-Those exploratory runs are not green acceptance. No test assertion was weakened.
+contract; Node22 and early Node24.11.0 lack the actual JUnit file identities
+required by CCC1. The current official Node24.22.2 was selected from
+`nodejs.org/dist/index.json`, checksum-verified, and passed all 62 targeted
+runtime/host-admission checks before the final sweep.
+Ubuntu's bubblewrap0.9.0 was restored after the missing-executable probe; an
+actual unprivileged user/network namespace plus read-only root bind returned
+exit 0. No system namespace policy or isolation guard was weakened.
+Exploratory failures are retained in `node-exploratory-attempts.json`, not
+relabelled as green. No test assertion was weakened.
 
 Fresh focused JVM rerun after the complete runner:
 
@@ -368,11 +415,11 @@ on the integration branch, never force-push or reset another developer's work.
 
 | Change | Exact checkpoint | Rollback boundary |
 |---|---|---|
-| Audit | `a01e9a3ae98a096b6919118289cba4c6b02ef544` | Documentation only |
-| Speech repairs | `c8d5d0b7de6348525e5bc844051088b79f13ab77` | Revert speech files/tests together only if regressions justify it |
-| Graphics/reference tooling | `72f2a690a96a7597a91a3038ee567d1cae9d677a` | Disable cinematic mode first; for source rollback revert graphics follow-up before this checkpoint |
-| H4-B1 constrained repair | `001ece73d8d78970b222473a644fe93ad1999299` | Revert both cognitive files and coupled tests together; leaves canonical #658 context/memory intact |
-| Graphics follow-up | `b3e288f79d3bce6da23dbf5a498d50811a246358` | Independently revert disabled-frame/zero-bar/truthful-label cleanup if required |
+| Audit | [`a01e9a3ae98a096b6919118289cba4c6b02ef544`](https://github.com/Ullmann27/device-ai/commit/a01e9a3ae98a096b6919118289cba4c6b02ef544) | Documentation only |
+| Speech repairs | [`c8d5d0b7de6348525e5bc844051088b79f13ab77`](https://github.com/Ullmann27/device-ai/commit/c8d5d0b7de6348525e5bc844051088b79f13ab77) | Revert speech files/tests together only if regressions justify it |
+| Graphics/reference tooling | [`72f2a690a96a7597a91a3038ee567d1cae9d677a`](https://github.com/Ullmann27/device-ai/commit/72f2a690a96a7597a91a3038ee567d1cae9d677a) | Disable cinematic mode first; for source rollback revert graphics follow-up before this checkpoint |
+| H4-B1 constrained repair | [`001ece73d8d78970b222473a644fe93ad1999299`](https://github.com/Ullmann27/device-ai/commit/001ece73d8d78970b222473a644fe93ad1999299) | Revert both cognitive files and coupled tests together; leaves canonical #658 context/memory intact |
+| Graphics follow-up | [`b3e288f79d3bce6da23dbf5a498d50811a246358`](https://github.com/Ullmann27/device-ai/commit/b3e288f79d3bce6da23dbf5a498d50811a246358) | Independently revert disabled-frame/zero-bar/truthful-label cleanup if required |
 
 No persistent owner-data schema changed in these integrations. Do not delete
 profiles, dialogue, memory, receipts or APK data as a rollback technique.

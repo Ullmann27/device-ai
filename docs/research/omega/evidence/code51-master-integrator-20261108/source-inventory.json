@@ -1861,5 +1861,15 @@
     "h4B1ConstrainedIntegration": "001ece73d8d78970b222473a644fe93ad1999299",
     "graphicsV2Integration": "72f2a690a96a7597a91a3038ee567d1cae9d677a",
     "graphicsFollowupIntegration": "b3e288f79d3bce6da23dbf5a498d50811a246358"
-  }
+  },
+  "laterHeadsObservedNotImported": [
+    {
+      "pullRequest": 659,
+      "headSha": "6d392e3efc38feaf12debb91dc1b6149ee5e43aa"
+    },
+    {
+      "pullRequest": 662,
+      "headSha": "5a0fd0a8e1bc2cd098693a62e766f3be19d23429"
+    }
+  ]
 }
