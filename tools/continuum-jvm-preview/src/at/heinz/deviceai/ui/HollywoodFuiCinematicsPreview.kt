@@ -81,11 +81,29 @@ object HollywoodFuiCinematicsPreview {
             t.translate(-box.centerX.toDouble(), -box.centerY.toDouble())
             g.transform(t)
         }
+        paintConstruct(g, root, box, scene.originX, scene.originY, frame, timeMs, budget, working)
+        g.transform = saved
+        g.color = Color(0xAB, 0xF8, 0xFF, 200)
+        g.font = g.font.deriveFont(9f)
+        g.drawString("$label  anchor=%.2f brackets=%.2f grid=%.2f glass=%.2f data=%.2f tilt=%.1f° pulse=%.2f close=%.2f/%.2f/%.2f"
+            .format(frame.anchor, frame.brackets, frame.grid, frame.glass, frame.data, frame.tiltDegrees, frame.pulse,
+                frame.closeData, frame.closeGlass, frame.closeFrame), 8f, scene.heightDp - 8f)
+        g.dispose()
+        ImageIO.write(image, "png", File(out, "${scene.name}-$label.png"))
+    }
+
+    /**
+     * The one production-painter stack of the construct (glass layers → anchor → grid/scan → data pane → motes → brackets),
+     * shared by the phase preview and the reference-fidelity measurement so both tools render identical pixels.
+     */
+    @JvmStatic fun paintConstruct(g: java.awt.Graphics2D, root: File, box: HollywoodFuiCinematics.Box, originX: Float,
+                                  originY: Float, frame: HollywoodFuiConstruct.Frame, timeMs: Long,
+                                  budget: HollywoodFuiCinematics.Budget, working: Boolean) {
         val painter = Java2DContinuumPainter(g, File(root, "app/src/main/assets"))
         val cinematics = HollywoodFuiCinematics.Painterly(JarvisDesign.Colors.cyan)
         val bloom = budget.bloom && budget.animate
         cinematics.drawGlassLayers(painter, box, frame, 6f)
-        cinematics.drawAnchor(painter, scene.originX, scene.originY, box, frame, bloom)
+        cinematics.drawAnchor(painter, originX, originY, box, frame, bloom)
         painter.save(); painter.clipRect(box.left, box.top, box.right, box.bottom)
         cinematics.drawGridAndScan(painter, box, if (budget.animate) frame else frame.copy(scanEnabled = false), bloom)
         // Front glass of the real window (drawn by JarvisWorkWindow on device) as a dark pane so the stack reads.
@@ -98,13 +116,5 @@ object HollywoodFuiCinematicsPreview {
         cinematics.drawMotesAndEnergy(painter, box, frame, timeMs, if (budget.animate) budget.motes else 0, 7,
             working, bloom, 6f)
         cinematics.drawBrackets(painter, box, frame.brackets * frame.closeFrame, bloom)
-        g.transform = saved
-        g.color = Color(0xAB, 0xF8, 0xFF, 200)
-        g.font = g.font.deriveFont(9f)
-        g.drawString("$label  anchor=%.2f brackets=%.2f grid=%.2f glass=%.2f data=%.2f tilt=%.1f° pulse=%.2f close=%.2f/%.2f/%.2f"
-            .format(frame.anchor, frame.brackets, frame.grid, frame.glass, frame.data, frame.tiltDegrees, frame.pulse,
-                frame.closeData, frame.closeGlass, frame.closeFrame), 8f, scene.heightDp - 8f)
-        g.dispose()
-        ImageIO.write(image, "png", File(out, "${scene.name}-$label.png"))
     }
 }
