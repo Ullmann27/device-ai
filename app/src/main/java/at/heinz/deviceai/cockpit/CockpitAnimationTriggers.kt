@@ -26,7 +26,7 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
         }
         val now = clock()
         bus.emit(CockpitAnimationEvent.CommandFlyIn(turnId, now, clean(command, 60)))
-        bus.emit(CockpitAnimationEvent.ActionStarted(turnId, now, CockpitAction.THINK, "Auftrag angenommen", stepKey = "ack"))
+        // The timeline owns the single local-reasoning scene; emitting THINK here created a duplicate card.
         bus.emit(CockpitAnimationEvent.ProcessTimeline(turnId, now, steps))
     }
 
