@@ -64,7 +64,11 @@ object AnswerClaimVerifier {
         }
 
         val expected = normalize(claim.expectedValue)
-        val forbidden = claim.forbiddenValues.map(::normalize).filter(String::isNotBlank).toSet()
+        val textualForbidden = claim.forbiddenValues
+            .filter { numericTermsRaw(it).isEmpty() }
+            .map(::normalize)
+            .filter(String::isNotBlank)
+            .toSet()
 
         val expectedNumbers = numericTermsRaw(claim.expectedValue)
         val candidateNumbers = numericTermsRaw(sentence)
@@ -102,7 +106,7 @@ object AnswerClaimVerifier {
             }
         }
 
-        if (forbidden.any { containsWhole(candidate, it) }) {
+        if (textualForbidden.any { containsWhole(candidate, it) }) {
             return Result(
                 Verdict.CONTRADICTION,
                 "FORBIDDEN_SUPERSEDED_VALUE",
