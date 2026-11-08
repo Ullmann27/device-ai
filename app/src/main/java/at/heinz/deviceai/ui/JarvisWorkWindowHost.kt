@@ -94,6 +94,11 @@ class JarvisWorkWindowHost(
         currentClientClosed = onClosed
         currentFootprint = strongerFootprint(currentFootprint, scene.footprint)
         home.setWorkspaceFootprint(currentFootprint)
+        home.hologram.setWorkWindowCamera(
+            true,
+            currentCameraSide,
+            profile = cameraProfile(currentFootprint)
+        )
         return window
     }
 
