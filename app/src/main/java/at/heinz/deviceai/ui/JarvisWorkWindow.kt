@@ -94,6 +94,8 @@ class JarvisWorkWindow(
             if (phase == Phase.OPENING) {
                 openness = 1f
                 opacity = 1f
+                trailAlpha = 0f
+                panel.edgeFlash = 0f
                 phase = Phase.OPEN
                 handOver()
                 val callback = onOpened
