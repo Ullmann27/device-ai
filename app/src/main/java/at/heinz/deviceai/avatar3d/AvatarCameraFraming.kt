@@ -109,6 +109,30 @@ class AvatarCameraFraming(
     }
 
     companion object {
+        /**
+         * Blends two already-safe projection windows without changing their clipping solution.
+         * Used only while switching Airbus profiles so a mid-flight upgrade cannot jump in one frame.
+         */
+        internal fun blend(
+            from: AvatarFraming.Window,
+            to: AvatarFraming.Window,
+            progress: Float
+        ): AvatarFraming.Window {
+            require(progress.isFinite() && progress in 0f..1f)
+            if (progress == 0f) return from
+            if (progress == 1f) return to
+            val t = progress.toDouble()
+            fun lerp(a: Double, b: Double) = a + (b - a) * t
+            return AvatarFraming.Window(
+                left = lerp(from.left, to.left),
+                right = lerp(from.right, to.right),
+                halfHeight = lerp(from.halfHeight, to.halfHeight),
+                cameraCenterY = lerp(from.cameraCenterY, to.cameraCenterY),
+                headScale = lerp(from.headScale, to.headScale),
+                anchorX = lerp(from.anchorX, to.anchorX)
+            )
+        }
+
         /** Compatibility constants retained for existing callers/tests. */
         const val PULLBACK = .08
         const val MAX_PAN = .025
