@@ -188,3 +188,12 @@ Das ist ein **Hinweis, kein Beweis** (p > 0,10, kleine Stichprobe, Lastprofil de
 
 **14.6 Agenten.** Alle zwölf Agenten stehen im Status „abgebrochen“ (durch neue Nachrichten); es gibt keine laufenden Agenten. Verwertet wurden nur die auf Platte geschriebenen, geprüften Teilergebnisse (Agent 1 vollständig, Agent 3 Runbook). Die übrigen Berichte sind Zwischenstände und nicht unabhängig abgenommen.
 
+## 15. Besitzerentscheidung C: GitHub statt Render für Code 50 (08.11.2026, Opus 5.5)
+
+Der Besitzer hat für Code 50 den Kanal **GitHub** festgelegt (Render entfällt). Das ist die Kanalwahl, **keine** Signierfreigabe, **keine** Aufhebung des Release-Freeze und **keine** Abnahme eines Commits. Die Ausnahme ist eng begrenzt in `AGENTS.md`/`CLAUDE.md` dokumentiert. Details, Gates und Besitzerschritte: `docs/release/CODE50-GITHUB-RELEASE-KANAL-20261108.md`.
+
+- **Geändert:** QA-Workflow nur noch `workflow_dispatch` mit `expected_sha`, Branch-Guard, harte JUnit-Prüfung 4032/0/0/20, erweitertes Receipt, gesonderter JDK-21-Lifecycle-Job. Dies ersetzt den früheren Push-Trigger (Entscheidung C, Variante „nur manuell“).
+- **Neu:** `continuum-code50-sign-release.yml` und `scripts/continuum-code50-github-signer.sh` (aus dem Code-48-Präzedenzweg abgeleitet, nicht unverändert übernommen), dazu ein statischer und ein funktionaler Test (Fake-`gh`).
+- **Befund Environment `continuum-original-signing` (lesend, ohne Werte):** keine Pflicht-Reviewer, nur die Branch-Regel `codex/continuum-code48-github-owner-20261107`. Das Skript bricht deshalb absichtlich ab, bis der Besitzer Reviewer und die Code-50-Branch-Regel setzt. Secret-Existenz nicht prüfbar (HTTP 403).
+- **Nicht ausgeführt:** QA auf dem neuen Kandidaten, Signierung, Veröffentlichung. Der ältere grüne Lauf 42478725998 (`8bc695f`) ist nur Diagnose.
+

@@ -1,10 +1,14 @@
 name: "Continuum Code50 — GitHub source QA and unsigned APK"
 
+# Besitzerentscheidung C (08.11.2026, nur Code 50): QA über GitHub statt Render.
+# Nur manueller Start; jeder Lauf ist per expected_sha an genau einen Quell-Commit gebunden.
 on:
-  push:
-    branches:
-      - chatgpt/code50-qa-staging-20261108
   workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Exakter 40-stelliger Quell-Commit, der geprüft werden soll (muss dem HEAD des gewählten Branches entsprechen)"
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -15,13 +19,20 @@ concurrency:
 
 jobs:
   node-backend:
-    if: github.repository == 'Ullmann27/device-ai'
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Bind run to expected source SHA
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$EXPECTED_SHA" = "$GITHUB_SHA"
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
@@ -58,7 +69,7 @@ jobs:
           retention-days: 14
 
   android-host:
-    if: github.repository == 'Ullmann27/device-ai'
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:
@@ -67,6 +78,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Bind run to expected source SHA
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$EXPECTED_SHA" = "$GITHUB_SHA"
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -96,6 +114,23 @@ jobs:
             -PcontinuumStandaloneVersionCode=50 \
             :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Verify JUnit totals (4032 tests, 0 failures, 0 errors, 20 skips)
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import glob, os, sys, xml.etree.ElementTree as ET
+          t = f = e = k = 0
+          files = glob.glob('app/build/test-results/testDebugUnitTest/*.xml')
+          for p in files:
+              r = ET.parse(p).getroot()
+              t += int(r.get('tests', 0)); f += int(r.get('failures', 0))
+              e += int(r.get('errors', 0)); k += int(r.get('skipped', 0))
+          print(f'junit_files={len(files)} tests={t} failures={f} errors={e} skipped={k}')
+          open(os.environ['RUNNER_TEMP'] + '/junit-totals.txt', 'w').write(f'tests_total={t}\ntests_failed={f}\ntests_errors={e}\ntests_skipped={k}\n')
+          if f != 0 or e != 0 or t != 4032 or k != 20:
+              print('::error::JUnit totals differ from the Code 50 acceptance baseline 4032/0/0/20')
+              sys.exit(69)
+          PY
       - name: Build original-package unsigned APK and AAB
         run: |
           set -euo pipefail
@@ -115,7 +150,8 @@ jobs:
           mkdir -p "$RUNNER_TEMP/code50-unsigned"
           cp "$apk" "$RUNNER_TEMP/code50-unsigned/Continuum-Code50-UNSIGNED-NOT-INSTALLABLE.apk"
           (cd "$RUNNER_TEMP/code50-unsigned" && sha256sum Continuum-Code50-UNSIGNED-NOT-INSTALLABLE.apk > SHA256SUMS.txt)
-          printf 'status=UNSIGNED_QA_NOT_INSTALLABLE\nsource_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=50\nversionName=0.3.49\noriginalSigner=NOT_USED\nFold7=NOT_RUN\n' "$GITHUB_SHA" > "$RUNNER_TEMP/code50-unsigned/BUILD-INFO.txt"
+          printf 'status=UNSIGNED_QA_NOT_INSTALLABLE\nsource_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=50\nversionName=0.3.49\noriginalSigner=NOT_USED\nFold7=NOT_RUN\nqa_run_id=%s\nqa_run_attempt=%s\nqa_ref=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$GITHUB_REF" > "$RUNNER_TEMP/code50-unsigned/BUILD-INFO.txt"
+          cat "$RUNNER_TEMP/junit-totals.txt" >> "$RUNNER_TEMP/code50-unsigned/BUILD-INFO.txt"
       - name: Upload unsigned APK ONLY if every Android gate passed
         if: success()
         uses: actions/upload-artifact@v4
@@ -132,5 +168,72 @@ jobs:
           path: |
             app/build/test-results/testDebugUnitTest/
             app/build/reports/
+          if-no-files-found: warn
+          retention-days: 14
+
+  # Gesonderter Nachweis: LocalModelReloadLifecycleTest ist per assumeTrue erst ab JDK 21 aktiv.
+  # Dieser Job blockiert weder die Abnahme noch die Signierung; sein Ergebnis wird im Release gesondert ausgewiesen.
+  android-lifecycle-jdk21:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Bind run to expected source SHA
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$EXPECTED_SHA" = "$GITHUB_SHA"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Install pinned Android SDK components
+        run: |
+          set -euo pipefail
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+      - name: LocalModelReloadLifecycleTest on JDK 21
+        run: |
+          set -euo pipefail
+          java -version
+          gradle --no-daemon --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true \
+            -PcontinuumUiWidgetTests=true \
+            -PcontinuumLocalStandaloneQa=true \
+            -PcontinuumStandaloneVersionCode=50 \
+            :app:testDebugUnitTest --tests 'at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest'
+      - name: Summarize lifecycle result (skips must be 0 on JDK 21)
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import glob, xml.etree.ElementTree as ET
+          t = f = e = k = 0
+          for p in glob.glob('app/build/test-results/testDebugUnitTest/*LocalModelReloadLifecycleTest*.xml'):
+              r = ET.parse(p).getroot()
+              t += int(r.get('tests', 0)); f += int(r.get('failures', 0))
+              e += int(r.get('errors', 0)); k += int(r.get('skipped', 0))
+          print(f'lifecycle_tests={t} failures={f} errors={e} skipped={k}')
+          if t == 0 or f or e or k:
+              print('::error::JDK-21 lifecycle evidence incomplete (no tests, failures, errors or skips)')
+              raise SystemExit(69)
+          PY
+      - name: Preserve lifecycle receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: code50-github-lifecycle-jdk21-evidence
+          path: app/build/test-results/testDebugUnitTest/
           if-no-files-found: warn
           retention-days: 14
