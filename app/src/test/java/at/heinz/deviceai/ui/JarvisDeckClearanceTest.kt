@@ -37,7 +37,9 @@ class JarvisDeckClearanceTest {
         assertEquals(0f, JarvisDeckClearance.clearance(Slot.ROW_AGENTS, 1f, 0f), 0f)
         assertEquals(1f, JarvisDeckClearance.clearance(Slot.ROW_AGENTS, 1f, 1f), 0f)
         assertEquals(0f, JarvisDeckClearance.clearance(Slot.DIALOG, 1f, 1f), 0f)
-        assertEquals(.5f, JarvisDeckClearance.step(0f, .5f, 360L, motion = true), 0f)
+        var partial = 0f
+        repeat(2) { partial = JarvisDeckClearance.step(partial, .5f, 90L, motion = true) }
+        assertEquals(.5f, partial, 0f)
     }
 
     @Test fun progressFollowsTheFrameClockAndReducedMotionSnaps() {
