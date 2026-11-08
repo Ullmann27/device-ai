@@ -11,14 +11,14 @@ class HollywoodFuiConstructTest {
         assertEquals(0f, HollywoodFuiConstruct.frame(0L).brackets, 0.0001f)
         assertEquals(1f, HollywoodFuiConstruct.frame(120L).brackets, 0.0001f)
         assertEquals(0f, HollywoodFuiConstruct.frame(120L).grid, 0.0001f)
-        assertEquals(1f, HollywoodFuiConstruct.frame(260L).grid, 0.0001f)
-        assertEquals(0f, HollywoodFuiConstruct.frame(260L).data, 0.0001f)
-        assertEquals(1f, HollywoodFuiConstruct.frame(420L).data, 0.0001f)
+        assertEquals(1f, HollywoodFuiConstruct.frame(250L).grid, 0.0001f)
+        assertEquals(0f, HollywoodFuiConstruct.frame(250L).data, 0.0001f)
+        assertEquals(1f, HollywoodFuiConstruct.frame(450L).data, 0.0001f)
     }
 
     @Test
     fun everyPhaseIsClampedAndMonotonic() {
-        val frames = listOf(-200L, 0L, 60L, 120L, 190L, 260L, 340L, 420L, 900L)
+        val frames = listOf(-200L, 0L, 60L, 120L, 185L, 250L, 350L, 450L, 900L)
             .map(HollywoodFuiConstruct::frame)
 
         listOf(
@@ -33,9 +33,9 @@ class HollywoodFuiConstructTest {
 
     @Test
     fun closeFactorCollapsesWithoutReopeningPhases() {
-        val open = HollywoodFuiConstruct.frame(420L)
-        val halfClosed = HollywoodFuiConstruct.frame(420L, closingElapsedMs = 160L)
-        val closed = HollywoodFuiConstruct.frame(420L, closingElapsedMs = 320L)
+        val open = HollywoodFuiConstruct.frame(450L)
+        val halfClosed = HollywoodFuiConstruct.frame(450L, closingElapsedMs = 160L)
+        val closed = HollywoodFuiConstruct.frame(450L, closingElapsedMs = 320L)
 
         assertEquals(1f, open.closeFactor, 0.0001f)
         assertEquals(0.5f, halfClosed.closeFactor, 0.0001f)
@@ -65,5 +65,7 @@ class HollywoodFuiConstructTest {
             requireNotNull(JarvisActionScenes.forCentre("Systemstatus")).fuiProfile)
         assertEquals(JarvisActionScenes.FuiProfile.SWARM_GRID,
             requireNotNull(JarvisActionScenes.forCentre("Logik und Planung")).fuiProfile)
+        assertEquals(JarvisActionScenes.FuiProfile.CHRONO_GAUGE,
+            JarvisActionScenes.forCalculation().fuiProfile)
     }
 }
