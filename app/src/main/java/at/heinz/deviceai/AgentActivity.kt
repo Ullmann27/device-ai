@@ -3186,9 +3186,14 @@ class AgentActivity : Activity() {
         val lease = localReasoningWorkScene ?: return
         if (lease.turnId != turnId || lease.phase != WorkscenePhase.LOCAL_REASONING) return
         lease.promptBudget = promptBudget
+        if (promptBudget == at.heinz.deviceai.cognitive.LocalChatPromptBudget.FULL_CHARACTERS && !lease.opened) {
+            lease.pendingShow?.let(mainHandler::removeCallbacks)
+            lease.pendingShow = null
+            if (localReasoningSceneCurrent(lease)) showLocalReasoningWorkScene(lease)
+        }
         val elapsed = ((android.os.SystemClock.uptimeMillis() - lease.startedAtMillis).coerceAtLeast(0L) / 100L) / 10.0
         lease.statusView?.text = "Lokaler Denk-Kern · Kontext geprüft"
-        lease.telemetryView?.text = "Kontextobjekte " + contextCount + " · Budget " +
+        lease.telemetryView?.text = "Erinnerungen " + contextCount + " · Budget " +
             localReasoningBudgetLabel(promptBudget) + " · Modell " +
             lease.modelHash.ifBlank { "unbekannt" } + " · " +
             "%.1f".format(java.util.Locale.ROOT, elapsed) + " s"
