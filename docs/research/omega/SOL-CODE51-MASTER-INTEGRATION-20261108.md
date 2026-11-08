@@ -1,10 +1,42 @@
 # Code51 master integration
 
-Status: bounded integration milestone HOST-PASS; Draft PRs #650 and #653.
+Status: bounded integration milestone HOST-PASS; Draft PRs #650, #653 and the
+reconciliation PR on `sol/code51-reconcile-20261108` (see next section).
 Overall Code51 remains WIP; no APK or device acceptance. Closing under the
 owner's 10% limit instruction; no further projects started.
 Owner canon #642, execution #643; read #637-641.
 No main merge, signing, release, installation, private data or signer access.
+
+## Reconciliation checkpoint (resume here)
+
+Branch `sol/code51-reconcile-20261108`, stacked on #653 (`cb11db2f`). After the
+10% closure, Fable opened #654/#656 that duplicated SOL's #639 navigation and
+conversational research. Exactly one recognizer per concern now remains; Fable's
+branches were not modified.
+
+| Merge | Pinned SHA | Decision |
+|---|---|---|
+| #657 memory fact/meta separation (#640) | `b1117df1` | clean merge, no overlap |
+| #654 internal navigation (#639) | `c61bf171` | **canonical**: `OwnerInternalNavigationIntent` (18 route keys). SOL `centerTarget`/`localCenter` removed; Code50 exact-title block restored; `OwnerAppLookupIntent.inspect` returns null for internal screens (invariant). Added missing owner cases: `oeffne/offne`, "Arbeitsaufträge"/"Aufgabenübersicht" -> `tasks` |
+| #656 chat web research | `1bbdab1a` | **canonical**: `OwnerResearchCommand.parse`. Also owns router-only forms ("Suche die neuesten Quellen zu …", "Prüfe im RIS …") through `PublicKnowledgeTopicRouter.explicitTopic`; second actions (sende/lösche/installiere …) are `Refused` on every phrasing. Activity: Fable OFF/Refused UX + selected `researchMode` + SOL session/foreground/isFinishing guards |
+| #655 H4 robust transfer | `e5ece222` | **not merged**: research-only, own gate FAIL |
+
+`sendCurrentInput` order: document intent -> internal navigation -> research
+command -> app lookup. `WebToolRequest.fromChat` (explicit Web path) unchanged.
+
+Evidence (JDK 21, Kotlin 2.2.21, SDK-less runner, unprivileged `nobody`):
+
+- RED (Fable recognizers unmodified, same tests): 5/12 fail.
+- GREEN targeted: 62/62 PASS (research single entry, OwnerResearchCommand,
+  public research/approval, topic router, gate, focus, navigation, app lookup).
+- Full: `scripts/android-kotlin-unit-check.sh` -> 635 classes, **OK (3568
+  tests)**, Checks PASS (one no-main helper skipped), 5:39, max RSS 2.25 GB.
+- Node: no JS/MJS change since `cb11db2f`; previous 202/202 PASS stands.
+- NOT run: Gradle/AGP/lint/Robolectric/APK (`dl.google.com` DNS), Fold7.
+
+Next: owner/Fable review of the canonical choice; persistent profile-bound bot
+work orders (no restoring ephemeral leases as owner runs); authorized Gradle/SDK
+QA; Fold7 speech/TTS/STOP/thermal/navigation/research acceptance.
 
 ## Frozen source graph
 
