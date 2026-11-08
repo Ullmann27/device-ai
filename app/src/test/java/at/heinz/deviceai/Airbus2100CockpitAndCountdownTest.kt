@@ -94,7 +94,7 @@ class Airbus2100CockpitAndCountdownTest {
     }
 
     @Test
-    fun oldRelativeTodayMemoryCannotFireOnA laterDay() {
+    fun oldRelativeTodayMemoryCannotFireOnALaterDay() {
         val now = LocalDate.of(2026, 11, 8)
             .atTime(17, 0)
             .atZone(zone)
