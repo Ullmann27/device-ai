@@ -77,6 +77,20 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         invalidate()
     }
 
+    /**
+     * Reuses this exact overlay for a stronger scene in the same turn.
+     * Geometry stays in place; only the FUI grammar rematerializes.
+     */
+    fun morphInPlace(bounds: RectF, scene: JarvisActionScenes.Scene) {
+        val profileChanged = profile != scene.fuiProfile || accent != scene.accent
+        stage.set(bounds)
+        if (!profileChanged) {
+            invalidate()
+            return
+        }
+        open(bounds, scene)
+    }
+
     fun setWorkActive(value: Boolean) {
         if (active == value) return
         active = value
