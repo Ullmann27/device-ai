@@ -34,6 +34,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private var reducedMotion = false
     private var bracketsLatched = false
     private var dataLatched = false
+    private var telemetryText: String? = null
     private var animator: ValueAnimator? = null
 
     init {
@@ -97,6 +98,13 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         if (value) invalidate()
     }
 
+    fun setTelemetryText(value: String?) {
+        val cleaned = value?.filterNot(Char::isISOControl)?.trim()?.take(64)?.ifEmpty { null }
+        if (telemetryText == cleaned) return
+        telemetryText = cleaned
+        invalidate()
+    }
+
     fun close(immediate: Boolean) {
         active = false
         animator?.cancel()
@@ -152,6 +160,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         }
         canvas.restore()
         drawCornerBrackets(canvas, constructed, frame.brackets * alpha)
+        drawTelemetry(canvas, constructed, alpha)
 
         if (active && isAttachedToWindow) postInvalidateDelayed(ACTIVE_FRAME_DELAY_MS)
     }
@@ -398,6 +407,17 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         }
         path.close()
         canvas.drawPath(path, target)
+    }
+
+    private fun drawTelemetry(canvas: Canvas, box: RectF, alpha: Float) {
+        val text = telemetryText ?: return
+        paint.style = Paint.Style.FILL
+        paint.textAlign = Paint.Align.RIGHT
+        paint.textSize = dp(10f)
+        paint.typeface = android.graphics.Typeface.MONOSPACE
+        paint.color = withAlpha(JarvisDesign.Colors.glowCore, 0.88f * alpha)
+        canvas.drawText(text, box.right - dp(10f), box.top + dp(16f), paint)
+        paint.textAlign = Paint.Align.LEFT
     }
 
     private fun drawCornerBrackets(canvas: Canvas, box: RectF, alpha: Float) {
