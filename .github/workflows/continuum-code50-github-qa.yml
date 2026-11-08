@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - chatgpt/code50-qa-staging-20261108
-      - chatgpt/code50-android27-repair-20261108
   workflow_dispatch:
 
 permissions:
@@ -16,7 +15,7 @@ concurrency:
 
 jobs:
   node-backend:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref_name == 'chatgpt/code50-qa-staging-20261108'
+    if: github.repository == 'Ullmann27/device-ai'
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -59,7 +58,7 @@ jobs:
           retention-days: 14
 
   android-host:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref_name == 'chatgpt/code50-qa-staging-20261108'
+    if: github.repository == 'Ullmann27/device-ai'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:
@@ -133,51 +132,5 @@ jobs:
           path: |
             app/build/test-results/testDebugUnitTest/
             app/build/reports/
-          if-no-files-found: warn
-          retention-days: 14
-
-  focused-repair:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref_name == 'chatgpt/code50-android27-repair-20261108'
-    runs-on: ubuntu-latest
-    timeout-minutes: 115
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: "8.11.1"
-      - name: Install SDK 36
-        run: |
-          set -euo pipefail
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
-      - name: Run 27 original failing cases with actual Gradle and Robolectric
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          test -z "$(git status --porcelain --untracked-files=normal)"
-          gradle --no-daemon --max-workers=2 --console=plain \
-            -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' \
-            -Pkotlin.compiler.execution.strategy=in-process \
-            -PdeviceAiMentorPreview=true \
-            -PcontinuumUiWidgetTests=true \
-            -PcontinuumLocalStandaloneQa=true \
-            -PcontinuumStandaloneVersionCode=50 \
-            -I docs/evidence/code50-android27-qa/two-cases.init.gradle \
-            :app:testDebugUnitTest
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-      - name: Record exact-source Android JUnit evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: code50-android27-targeted-evidence
-          path: |
-            app/build/test-results/testDebugUnitTest/
-            app/build/reports/tests/testDebugUnitTest/
           if-no-files-found: warn
           retention-days: 14

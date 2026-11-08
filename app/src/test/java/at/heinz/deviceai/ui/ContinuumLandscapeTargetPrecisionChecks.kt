@@ -35,7 +35,6 @@ internal object ContinuumLandscapeTargetPrecisionChecks {
     }
 
     fun unchangedHeroBounds() {
-        // C1 pixel coordinates predate the current reference composition.
         val windows = listOf(
             floatArrayOf(840f, 649f, 1f), floatArrayOf(840f, 649f, 1.3f),
             floatArrayOf(832f, 700f, 1f), floatArrayOf(832f, 700f, 1.3f),
@@ -46,22 +45,31 @@ internal object ContinuumLandscapeTargetPrecisionChecks {
         for ((width, height, font) in windows) {
             val layout = ContinuumHomeLayout.wide(width, height, font)
             val hero = requireNotNull(layout[Slot.HERO])
-            val direct = requireNotNull(
-                ContinuumLandscapeCockpitLayout.create(width, height, font)[Slot.HERO]
-            )
-            val repeated = requireNotNull(ContinuumHomeLayout.wide(width, height, font)[Slot.HERO])
-            val actual = floatArrayOf(hero.left, hero.top, hero.right, hero.bottom)
-            val expected = floatArrayOf(direct.left, direct.top, direct.right, direct.bottom)
-            val replay = floatArrayOf(repeated.left, repeated.top, repeated.right, repeated.bottom)
-            check(actual.indices.all {
-                actual[it].toRawBits() == expected[it].toRawBits() &&
-                    actual[it].toRawBits() == replay[it].toRawBits()
-            }) { "Reference hero differs between direct, normal and repeated layout" }
+            val model = requireNotNull(layout[Slot.MODEL])
+            val system = requireNotNull(layout[Slot.SYSTEM_STATUS])
+            val pill = requireNotNull(layout[Slot.VIEW_AVATAR])
+            val composer = requireNotNull(layout[Slot.COMPOSER])
             val rail = requireNotNull(layout[Slot.RAIL])
+            val gap = JarvisDesign.Metrics.gap
+            // Independent neighbours catch misplaced or overlapping avatar bounds.
+            val actualGaps = floatArrayOf(
+                hero.left - model.right, system.left - hero.right,
+                hero.top - pill.bottom, composer.top - hero.bottom
+            )
+            val requiredGaps = floatArrayOf(gap, gap, 6f, gap)
+            check(actualGaps.indices.all {
+                kotlin.math.abs(actualGaps[it] - requiredGaps[it]) <= .02f
+            }) { "$width/$height/$font: displaced HERO $hero; gaps=${actualGaps.toList()}" }
             check(hero.left >= rail.right && hero.right <= width &&
                 hero.top >= 0f && hero.bottom <= height &&
                 hero.width >= 48f && hero.height >= 48f) {
-                "Avatar must remain visible and inside the usable pane"
+                "$width/$height/$font: avatar not fully reachable"
+            }
+            val replay = requireNotNull(ContinuumHomeLayout.wide(width, height, font)[Slot.HERO])
+            val bits = floatArrayOf(hero.left, hero.top, hero.right, hero.bottom)
+            val replayBits = floatArrayOf(replay.left, replay.top, replay.right, replay.bottom)
+            check(bits.indices.all { bits[it].toRawBits() == replayBits[it].toRawBits() }) {
+                "Repeated layout must produce identical avatar pixels"
             }
         }
     }
