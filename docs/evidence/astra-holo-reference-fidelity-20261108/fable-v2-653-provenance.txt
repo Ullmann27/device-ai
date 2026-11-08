@@ -1,0 +1,23 @@
+label=fable-v2-653
+head=cb11db2f967110680da92db8c0b07f01f3d2b47d
+dirty:  M tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiCinematicsPreview.kt
+dirty: ?? scripts/hollywood-fui-reference-fidelity.sh
+dirty: ?? tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiReferenceFidelity.kt
+cinematics_override=none
+9f3d0b53d4c68581332be7ceb75bf9be0d7ebc41e3ae41a21ce21a2d7ae5164d  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt
+9045765c008c3110a68d6324270738e3dff9dfe37d57801a6877f4b9dc3ceca2  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/app/src/main/java/at/heinz/deviceai/ui/ContinuumFonts.kt
+09a9174238a21fe1765358ee9abe4cb46907eabd21c5656a7e28489d91eed661  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/app/src/main/java/at/heinz/deviceai/ui/ContinuumTheme.kt
+0404d8b8b8cbf1dba1b551fb56f162d1c08d004e8577985c387eafd39d209443  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt
+48407cb6f0fbe048d28e44c6c45170b97f168d91fbf229379cc319385f3b2303  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/app/src/main/java/at/heinz/deviceai/ui/JarvisRenderQuality.kt
+2d823d5bc2565e411eb372f80a810d0edb9fb03d75c4d5de1ad7c5088815cae2  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiConstruct.kt
+a2fbc638b25261269b68f587606a8b88e78d5bc6ea1ca8daa284e82f2160f303  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiCinematics.kt
+9006b4c2a127547b46443ea015c850a1fa0608bddcb7895efa5e749dd1ff1f74  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/Java2DContinuumPainter.kt
+ffae25f5cec01644e02d777785c5061baa48533ed37a28bc89185e796e1e5009  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiCinematicsPreview.kt
+5196af0470b06009410b81817f89f1f815827209ae860aabd63748f1c3c7bf46  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiReferenceFidelity.kt
+05fe60aa19e297fdf7bb4a0a286cebafa72c7a023a26e65e65adc38a7077892f  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/docs/design-screenshots/ref5-fold7-offen.png
+e0afbdd199f619e0e8ee4ed791c8f930d34dd7769c3f0a9b154ccbfbb80749de  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/docs/design-screenshots/jarvis-master-20261104.jpg
+info: kotlinc-jvm 2.2.21 (JRE 27+35)
+openjdk version "27" 2026-09-15
+OpenJDK Runtime Environment Temurin-27+35 (build 27+35)
+OpenJDK 64-Bit Server VM Temurin-27+35 (build 27+35, mixed mode, sharing)
+exit=0
