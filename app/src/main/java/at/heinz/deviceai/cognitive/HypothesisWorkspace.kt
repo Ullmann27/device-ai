@@ -85,6 +85,19 @@ internal class HypothesisWorkspace(
 
     fun entropyBits(): Float = entropy(hypotheses.values.map { it.weight })
 
+    data class ProbeObservation(val probeId: String, val result: Boolean?)
+
+    /** Research entry point; initial control delegates to the existing greedy policy. */
+    fun selectCertificateProbe(
+        probes: List<Probe>,
+        observations: List<ProbeObservation>,
+        remainingProbes: Int,
+        costBudget: Float,
+        maxErrors: Int = 1
+    ): Probe? = selectNextProbe(probes.filter { probe ->
+        observations.none { it.probeId == probe.id } && probe.latencyCostMs <= costBudget
+    })
+
     /**
      * Chooses the most discriminating cheap probe. Returns null when there are fewer than two
      * live hypotheses or no probe can change their relative weights.

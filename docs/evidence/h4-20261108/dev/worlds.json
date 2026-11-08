@@ -1,0 +1,8202 @@
+{
+  "schemaVersion": 1,
+  "origin": "prospective self-authored; not blind",
+  "split": "dev",
+  "seed": 41073,
+  "worlds": [
+    {
+      "id": "dev-000",
+      "stratum": 0,
+      "causes": [
+        3,
+        7,
+        2,
+        5,
+        3
+      ],
+      "truth": 2,
+      "priors": [
+        100,
+        1,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-001",
+      "stratum": 1,
+      "causes": [
+        6,
+        4,
+        5,
+        2
+      ],
+      "truth": 3,
+      "priors": [
+        1,
+        100,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-002",
+      "stratum": 2,
+      "causes": [
+        7,
+        5,
+        3
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-003",
+      "stratum": 3,
+      "causes": [
+        6,
+        5,
+        3,
+        7,
+        2,
+        1
+      ],
+      "truth": 3,
+      "priors": [
+        1,
+        1,
+        100,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-004",
+      "stratum": 0,
+      "causes": [
+        7,
+        6,
+        3,
+        4,
+        5,
+        2
+      ],
+      "truth": 3,
+      "priors": [
+        1,
+        1,
+        1,
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-005",
+      "stratum": 1,
+      "causes": [
+        1,
+        3
+      ],
+      "truth": 1,
+      "priors": [
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-006",
+      "stratum": 2,
+      "causes": [
+        4,
+        1,
+        6,
+        7,
+        3,
+        5
+      ],
+      "truth": 4,
+      "priors": [
+        100,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-007",
+      "stratum": 3,
+      "causes": [
+        7,
+        3,
+        6,
+        5,
+        2,
+        1
+      ],
+      "truth": 5,
+      "priors": [
+        1,
+        1,
+        1,
+        100,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-008",
+      "stratum": 0,
+      "causes": [
+        6,
+        7,
+        4,
+        3,
+        5
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        1,
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-009",
+      "stratum": 1,
+      "causes": [
+        7,
+        4,
+        3,
+        6
+      ],
+      "truth": 3,
+      "priors": [
+        1,
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-010",
+      "stratum": 2,
+      "causes": [
+        5,
+        7,
+        4,
+        2,
+        3
+      ],
+      "truth": 1,
+      "priors": [
+        1,
+        1,
+        100,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-011",
+      "stratum": 3,
+      "causes": [
+        5,
+        6,
+        1
+      ],
+      "truth": 2,
+      "priors": [
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-012",
+      "stratum": 0,
+      "causes": [
+        3,
+        6,
+        1,
+        7,
+        3
+      ],
+      "truth": 3,
+      "priors": [
+        100,
+        1,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-013",
+      "stratum": 1,
+      "causes": [
+        2,
+        3
+      ],
+      "truth": 1,
+      "priors": [
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-014",
+      "stratum": 2,
+      "causes": [
+        4,
+        6,
+        1,
+        7
+      ],
+      "truth": 3,
+      "priors": [
+        1,
+        100,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-015",
+      "stratum": 3,
+      "causes": [
+        7,
+        6,
+        4,
+        2
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        100,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-016",
+      "stratum": 0,
+      "causes": [
+        3,
+        2,
+        7,
+        5,
+        1,
+        6
+      ],
+      "truth": 2,
+      "priors": [
+        1,
+        1,
+        1,
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-017",
+      "stratum": 1,
+      "causes": [
+        2,
+        3,
+        4,
+        1
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-018",
+      "stratum": 2,
+      "causes": [
+        3,
+        5
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-019",
+      "stratum": 3,
+      "causes": [
+        6,
+        2
+      ],
+      "truth": 1,
+      "priors": [
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-020",
+      "stratum": 0,
+      "causes": [
+        4,
+        1,
+        2
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-021",
+      "stratum": 1,
+      "causes": [
+        4,
+        1
+      ],
+      "truth": 1,
+      "priors": [
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-022",
+      "stratum": 2,
+      "causes": [
+        7,
+        6,
+        3
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-023",
+      "stratum": 3,
+      "causes": [
+        7,
+        2,
+        3
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-024",
+      "stratum": 0,
+      "causes": [
+        6,
+        5,
+        4,
+        1,
+        6
+      ],
+      "truth": 4,
+      "priors": [
+        1,
+        1,
+        100,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-025",
+      "stratum": 1,
+      "causes": [
+        4,
+        7,
+        5
+      ],
+      "truth": 1,
+      "priors": [
+        100,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-026",
+      "stratum": 2,
+      "causes": [
+        2,
+        7,
+        1,
+        4
+      ],
+      "truth": 2,
+      "priors": [
+        1,
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-027",
+      "stratum": 3,
+      "causes": [
+        6,
+        3
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-028",
+      "stratum": 0,
+      "causes": [
+        6,
+        7,
+        4
+      ],
+      "truth": 1,
+      "priors": [
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-029",
+      "stratum": 1,
+      "causes": [
+        1,
+        6,
+        4,
+        7,
+        5,
+        3
+      ],
+      "truth": 4,
+      "priors": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-030",
+      "stratum": 2,
+      "causes": [
+        2,
+        3
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-031",
+      "stratum": 3,
+      "causes": [
+        1,
+        6,
+        5,
+        4,
+        2,
+        7
+      ],
+      "truth": 5,
+      "priors": [
+        1,
+        100,
+        1,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-032",
+      "stratum": 0,
+      "causes": [
+        5,
+        1,
+        6,
+        7,
+        4,
+        3
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-033",
+      "stratum": 1,
+      "causes": [
+        3,
+        6,
+        1,
+        4,
+        2,
+        5
+      ],
+      "truth": 3,
+      "priors": [
+        1,
+        1,
+        100,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-034",
+      "stratum": 2,
+      "causes": [
+        4,
+        6,
+        1,
+        7,
+        5
+      ],
+      "truth": 3,
+      "priors": [
+        1,
+        100,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-035",
+      "stratum": 3,
+      "causes": [
+        5,
+        1,
+        7
+      ],
+      "truth": 2,
+      "priors": [
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-036",
+      "stratum": 0,
+      "causes": [
+        1,
+        6,
+        3,
+        5,
+        7,
+        1
+      ],
+      "truth": 1,
+      "priors": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-037",
+      "stratum": 1,
+      "causes": [
+        1,
+        3,
+        4,
+        2,
+        5
+      ],
+      "truth": 3,
+      "priors": [
+        1,
+        100,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-038",
+      "stratum": 2,
+      "causes": [
+        7,
+        3,
+        2,
+        6,
+        4,
+        5
+      ],
+      "truth": 4,
+      "priors": [
+        1,
+        1,
+        100,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-039",
+      "stratum": 3,
+      "causes": [
+        3,
+        4,
+        6,
+        2,
+        1
+      ],
+      "truth": 3,
+      "priors": [
+        100,
+        1,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-040",
+      "stratum": 0,
+      "causes": [
+        3,
+        4,
+        2,
+        1,
+        5
+      ],
+      "truth": 4,
+      "priors": [
+        1,
+        1,
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-041",
+      "stratum": 1,
+      "causes": [
+        1,
+        2,
+        7
+      ],
+      "truth": 1,
+      "priors": [
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-042",
+      "stratum": 2,
+      "causes": [
+        5,
+        6,
+        4,
+        1,
+        2,
+        7
+      ],
+      "truth": 1,
+      "priors": [
+        1,
+        1,
+        100,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-043",
+      "stratum": 3,
+      "causes": [
+        3,
+        5,
+        6,
+        4,
+        2,
+        7
+      ],
+      "truth": 1,
+      "priors": [
+        1,
+        1,
+        1,
+        100,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-044",
+      "stratum": 0,
+      "causes": [
+        3,
+        6,
+        2,
+        4,
+        5,
+        1
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-045",
+      "stratum": 1,
+      "causes": [
+        7,
+        2,
+        3
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-046",
+      "stratum": 2,
+      "causes": [
+        6,
+        1,
+        3,
+        4
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-047",
+      "stratum": 3,
+      "causes": [
+        4,
+        6
+      ],
+      "truth": 1,
+      "priors": [
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-048",
+      "stratum": 0,
+      "causes": [
+        3,
+        1,
+        3
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-049",
+      "stratum": 1,
+      "causes": [
+        5,
+        6
+      ],
+      "truth": 1,
+      "priors": [
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-050",
+      "stratum": 2,
+      "causes": [
+        6,
+        3,
+        7
+      ],
+      "truth": 1,
+      "priors": [
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-051",
+      "stratum": 3,
+      "causes": [
+        5,
+        3,
+        6
+      ],
+      "truth": 2,
+      "priors": [
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-052",
+      "stratum": 0,
+      "causes": [
+        1,
+        4
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 4,
+          "blockedRoots": 3,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-053",
+      "stratum": 1,
+      "causes": [
+        4,
+        6,
+        3,
+        1,
+        2
+      ],
+      "truth": 4,
+      "priors": [
+        1,
+        100,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-054",
+      "stratum": 2,
+      "causes": [
+        4,
+        2,
+        3,
+        5
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        1,
+        1,
+        100
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-055",
+      "stratum": 3,
+      "causes": [
+        4,
+        3,
+        5,
+        1,
+        7
+      ],
+      "truth": 0,
+      "priors": [
+        1,
+        100,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 2,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-056",
+      "stratum": 0,
+      "causes": [
+        6,
+        1
+      ],
+      "truth": 1,
+      "priors": [
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-057",
+      "stratum": 1,
+      "causes": [
+        2,
+        5,
+        1
+      ],
+      "truth": 2,
+      "priors": [
+        1,
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 2,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 2,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-058",
+      "stratum": 2,
+      "causes": [
+        1,
+        7
+      ],
+      "truth": 1,
+      "priors": [
+        100,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-059",
+      "stratum": 3,
+      "causes": [
+        1,
+        6,
+        7,
+        4,
+        2
+      ],
+      "truth": 4,
+      "priors": [
+        1,
+        100,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 1,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 1,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-060",
+      "stratum": 0,
+      "causes": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "truth": 1,
+      "priors": [
+        100,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 3,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 3,
+          "blockedRoots": 4,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-061",
+      "stratum": 1,
+      "causes": [
+        1,
+        2,
+        4,
+        3,
+        5,
+        7
+      ],
+      "truth": 3,
+      "priors": [
+        1,
+        100,
+        1,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 3,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 4,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 5,
+          "predictions": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-062",
+      "stratum": 2,
+      "causes": [
+        1,
+        5,
+        6,
+        3,
+        4,
+        2
+      ],
+      "truth": 3,
+      "priors": [
+        1,
+        100,
+        1,
+        1,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 4,
+          "requiredRoots": 7,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 3,
+          "requiredRoots": 1,
+          "blockedRoots": 6,
+          "predictions": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 1,
+          "requiredRoots": 1,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-063",
+      "stratum": 3,
+      "causes": [
+        7,
+        1,
+        4,
+        6
+      ],
+      "truth": 3,
+      "priors": [
+        1,
+        100,
+        1,
+        1
+      ],
+      "probes": [
+        {
+          "id": "p0",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p1",
+          "cost": 1,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p2",
+          "cost": 4,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p3",
+          "cost": 1,
+          "requiredRoots": 5,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "p4",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p5",
+          "cost": 2,
+          "requiredRoots": 4,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "id": "p6",
+          "cost": 4,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p7",
+          "cost": 3,
+          "requiredRoots": 2,
+          "blockedRoots": 0,
+          "predictions": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "p8",
+          "cost": 2,
+          "requiredRoots": 6,
+          "blockedRoots": 1,
+          "predictions": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}

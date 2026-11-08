@@ -1,0 +1,15 @@
+JUnit version 4.13.2
+..........E
+Time: 0.048
+There was 1 failure:
+1) threeProbesCertifyDespiteOneWrongObservationAndWrongPrior(at.heinz.deviceai.cognitive.HypothesisRobustProbeTest)
+java.lang.AssertionError: expected:<[a]> but was:<[a, c]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.HypothesisRobustProbeTest.threeProbesCertifyDespiteOneWrongObservationAndWrongPrior(HypothesisRobustProbeTest.kt:31)
+
+FAILURES!!!
+Tests run: 10,  Failures: 1
+
