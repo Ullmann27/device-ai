@@ -29,3 +29,11 @@ Fold7 voice, 15-second avatar proof, FUI/thermal acceptance and original-signed 
 - Updated the stale `shouldClarifyMessage` test to supply exact-match evidence.
 - Added real-Activity regressions for implicit fuzzy discovery and explicit fuzzy cancellation. These new UI regressions are NOT_RUN at this checkpoint; the production routing bug remains unfixed.
 - Local Gradle 8.11.1 and Android SDK 36 are available. The source's QA task-name guard rejects CLI `--tests`, so focused filtering uses an external Gradle init script without changing the project guard. The next attempt stopped before compilation because the preinstalled Java 21 runtime has no compiler. A checksum-verified JDK 17 setup is in progress.
+
+## Compile repair checkpoint
+
+- Temurin JDK 17.0.21+9 is installed; archive SHA-256 `8b9b611d917e3dfd8419d3566b5949226f69b052fed7e109c1368add1dfe8711` matches Adoptium metadata. SDK 36/build-tools 35.0.0 and Gradle 8.11.1 run locally.
+- Real Gradle run on `86333b3c1a61e7b765114bafcfd3db48ccc9afcf`: `compileDebugKotlin` FAILED with three diagnostics. `turnId !in ConcurrentHashMap` is rejected because Java `contains` means value lookup; two Evidence member accesses lacked an explicit null guard. No JUnit test executed in this failed compile.
+- Minimal compile corrections: explicit `containsKey(turnId)` and `evidence != null && count > 0`. These corrections still require the next Gradle run.
+- Related cockpit Node checks found one further stale geometry contract: the pane width no longer adds the removed shell rail. The assertion now follows the current available-pane contract. No layout source or safety gate changed.
+- Render's historical log confirms exhausted pipeline minutes at 2026-11-08T02:58:29Z; its configured branch is the older recall RED fixture, not current Code50. No new Render deployment or billing change was requested.

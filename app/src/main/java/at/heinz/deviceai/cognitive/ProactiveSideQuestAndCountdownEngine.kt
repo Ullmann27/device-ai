@@ -45,7 +45,7 @@ class ProactiveSideQuestAndCountdownEngine(
     ) {
         require(turnId.isNotBlank() && turnId.length <= 192)
         require(nowNanos >= 0L)
-        if (missionStartNanos.size >= MAX_ACTIVE_MISSIONS && turnId !in missionStartNanos) {
+        if (missionStartNanos.size >= MAX_ACTIVE_MISSIONS && !missionStartNanos.containsKey(turnId)) {
             val oldest = missionStartNanos.minByOrNull { it.value }?.key
             if (oldest != null) {
                 missionStartNanos.remove(oldest)
