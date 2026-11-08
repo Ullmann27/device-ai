@@ -1,0 +1,23 @@
+JUnit version 4.13.2
+...........E.E....E
+Time: 0.089
+There were 3 failures:
+1) umlautLessAsrSpellingStillBindsReturn(at.heinz.deviceai.cognitive.SituationReturnMorphologyTest)
+java.lang.AssertionError: expected Resolved, got NoMatch
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.SituationReturnMorphologyTest.umlautLessAsrSpellingStillBindsReturn(SituationReturnMorphologyTest.kt:32)
+2) inflectedReturnBindsToSameTopic(at.heinz.deviceai.cognitive.SituationReturnMorphologyTest)
+java.lang.AssertionError: expected Resolved, got NoMatch
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.SituationReturnMorphologyTest.inflectedReturnBindsToSameTopic(SituationReturnMorphologyTest.kt:41)
+3) longCompoundReturnBindsToEarlierTopic(at.heinz.deviceai.cognitive.SituationReturnMorphologyTest)
+java.lang.AssertionError: expected Resolved, got NoMatch
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.SituationReturnMorphologyTest.longCompoundReturnBindsToEarlierTopic(SituationReturnMorphologyTest.kt:22)
+
+FAILURES!!!
+Tests run: 16,  Failures: 3
+

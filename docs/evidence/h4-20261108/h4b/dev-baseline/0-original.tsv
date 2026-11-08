@@ -1,0 +1,61 @@
+id	arm	kind	target	turn_threads	wall_ns	cpu_ns
+dev-000	original	NOMATCH		topic-0bb7203770cfdeed,topic-fcf6cc664c32f62c,topic-08c060c05a31193f	930932	934507
+dev-001	original	NOMATCH		topic-95917dc65d7bb84c,topic-102bf9b0e599808c,topic-08c060c05a31193f	780238	782972
+dev-002	original	NOMATCH		topic-20fef55afeaa4858,topic-08c060c05a31193f,topic-b7679c4d4e21ef87	1009459	1012794
+dev-003	original	NOMATCH		topic-2042fb7aceb26caa,topic-7a5ed3d8706f7e9d,topic-6240a8aefd6c67ef,topic-91e0a71a9356d112,topic-304a29e96a606744	1188604	1191258
+dev-004	original	RESOLVED	topic-2a4662aa9436beb2	topic-2a4662aa9436beb2,topic-71edcb4df16b89ff,topic-461b03f82fd41464,topic-08c060c05a31193f	1746272	1723639
+dev-005	original	AMBIGUOUS	topic-251d3d3ab2ae1142|topic-82a9b7ecb922f562	topic-2ab03072235066a5,topic-82a9b7ecb922f562,topic-86ebc9c50b1cab13,topic-251d3d3ab2ae1142,topic-08c060c05a31193f,topic-6c9fbda29d90e098	1937587	1805248
+dev-006	original	NOMATCH		topic-378f9e44883e2966,topic-6240a8aefd6c67ef,topic-62bdfafa2c294658	980746	921899
+dev-007	original	NOMATCH		topic-f8700f9adb611a8b,topic-6240a8aefd6c67ef,topic-592012007a771499	1550242	990699
+dev-008	original	NOMATCH		topic-1afab8f366acf3c4,topic-08c060c05a31193f,topic-c8b8acc88301c61d	601003	604437
+dev-009	original	NOMATCH		topic-c9fd03dac30dd906,topic-6240a8aefd6c67ef,topic-79e494f2985d4837,topic-b2f528afc4e4848f	1962223	1180834
+dev-010	original	NOMATCH		topic-0ef437e0b73391e2,topic-08c060c05a31193f,topic-efab1fe0485b962a,topic-ec88ec38a72fbe96,topic-b3f5870637a56b9f	1547036	1186179
+dev-011	original	RESOLVED	topic-b3f5870637a56b9f	topic-b3f5870637a56b9f,topic-88fe993309095c3c,topic-6240a8aefd6c67ef	836211	780758
+dev-012	original	AMBIGUOUS	topic-575dc1e5b78050bb|topic-82a9b7ecb922f562	topic-82a9b7ecb922f562,topic-08c060c05a31193f,topic-575dc1e5b78050bb,topic-1c775bdaaf61b45e,topic-81776f7dccb12e34	1460529	1219933
+dev-013	original	NOMATCH		topic-cda3f3dfd3a0e771,topic-85018e11e9ad9df9,topic-6240a8aefd6c67ef	1370044	767517
+dev-014	original	NOMATCH		topic-6577881bca0009dd,topic-de37ff11cae30f6e,topic-64b60895856360fc,topic-08c060c05a31193f,topic-d7373810063894e2	1240001	1079302
+dev-015	original	NOMATCH		topic-67a4a30554544d32,topic-2a4662aa9436beb2,topic-581e349a59f2e778,topic-6240a8aefd6c67ef,topic-5de0ec325bb04fbf	886035	888899
+dev-016	original	NOMATCH		topic-d12e8f344168f708,topic-08c060c05a31193f,topic-11176b77baf11029,topic-9d8f051fd8ca908d,topic-8780ca4be391989c	1990525	1085079
+dev-017	original	NOMATCH		topic-6f70f39ff80b27cb,topic-c9776cedc5572751,topic-08c060c05a31193f	496607	499031
+dev-018	original	RESOLVED	topic-2a4662aa9436beb2	topic-2a4662aa9436beb2,topic-626f784791ea4416,topic-6240a8aefd6c67ef,topic-342d6b7c68a6df1a,topic-ffc8281518fe175f	1638233	1642338
+dev-019	original	AMBIGUOUS	topic-9a4fd0c120ff0f5e|topic-a07c86760ffc9c55	topic-22a1dc99a03debc7,topic-08c060c05a31193f,topic-a07c86760ffc9c55,topic-9a4fd0c120ff0f5e,topic-2ab03072235066a5	838976	842210
+dev-020	original	NOMATCH		topic-c959618c72da6736,topic-08c060c05a31193f,topic-de37ff11cae30f6e	5157607	811083
+dev-021	original	NOMATCH		topic-e5397a7263af3d37,topic-cde5f81cbbcb61ee,topic-08c060c05a31193f,topic-5de0ec325bb04fbf	1058661	1026123
+dev-022	original	NOMATCH		topic-2a0dd2a91741bb7a,topic-08c060c05a31193f,topic-592012007a771499	589245	592279
+dev-023	original	NOMATCH		topic-c9776cedc5572751,topic-378f9e44883e2966,topic-2bd8d5115735e14e,topic-6240a8aefd6c67ef,topic-2a4662aa9436beb2	945584	948698
+dev-024	original	NOMATCH		topic-64c3d8a7dc5c9d1c,topic-342d6b7c68a6df1a,topic-08c060c05a31193f	504288	507333
+dev-025	original	RESOLVED	topic-b73184b988fbf80a	topic-102bf9b0e599808c,topic-b73184b988fbf80a,topic-1235500348531975,topic-384b67b70a3cc03d,topic-6240a8aefd6c67ef	825546	828730
+dev-026	original	AMBIGUOUS	topic-78732fd1ca4e674e|topic-ed04800f73aee93b	topic-ed04800f73aee93b,topic-78732fd1ca4e674e,topic-6284828381d62c8a,topic-6240a8aefd6c67ef	832756	812376
+dev-027	original	NOMATCH		topic-59e1e93cf3a1e076,topic-c50e7240e4aea352,topic-08c060c05a31193f	501685	504639
+dev-028	original	NOMATCH		topic-6480f7458fdc7cf9,topic-08c060c05a31193f,topic-a8952fa2b6076eaa,topic-bd1fa15a5fd3a293	693240	696124
+dev-029	original	NOMATCH		topic-2f04e511f03c0f71,topic-08c060c05a31193f,topic-6284828381d62c8a	558719	561974
+dev-030	original	NOMATCH		topic-e30665c6a4b6997e,topic-40578d66c3cef9d2,topic-6240a8aefd6c67ef,topic-a5e0333cab2f3cbe	1185230	731335
+dev-031	original	NOMATCH		topic-88fe993309095c3c,topic-a6bb72da90ff78ef,topic-6240a8aefd6c67ef,topic-04484bd8bf8f401a	2352363	734250
+dev-032	original	RESOLVED	topic-63730e9096334b92	topic-63730e9096334b92,topic-94b35c4c85b02783,topic-08c060c05a31193f	639780	642874
+dev-033	original	AMBIGUOUS	topic-bced31046a096fab|topic-063cf301bba1e0d2	topic-063cf301bba1e0d2,topic-08c060c05a31193f,topic-bced31046a096fab,topic-a411eb471572aa65,topic-88fe993309095c3c	905525	909230
+dev-034	original	NOMATCH		topic-59e817da8e823094,topic-b502b49684be5efb,topic-6240a8aefd6c67ef	519220	522265
+dev-035	original	NOMATCH		topic-0d1be8b39e1a3af2,topic-102bf9b0e599808c,topic-08c060c05a31193f	335157	338092
+dev-036	original	NOMATCH		topic-cf8f79a6c90892f0,topic-d62dfd9bededdbfd,topic-6240a8aefd6c67ef,topic-a8eef0eee7ab7298,topic-f9f989d30b618723	688783	691917
+dev-037	original	NOMATCH		topic-2a0dd2a91741bb7a,topic-f0da9ea6ff9588e5,topic-d5e022300f47a810,topic-6240a8aefd6c67ef,topic-a4ed79876ef86485	642534	645588
+dev-038	original	NOMATCH		topic-117196f1f6fc1930,topic-4c3fe25ee66f2f5d,topic-08c060c05a31193f	349149	351923
+dev-039	original	RESOLVED	topic-1a3a3fc9519037b2	topic-1a3a3fc9519037b2,topic-62bdfafa2c294658,topic-6240a8aefd6c67ef,topic-8d1156ab4853e490	504650	507524
+dev-040	original	AMBIGUOUS	topic-10ca826146f3dff5|topic-753f038cf34ee91e	topic-753f038cf34ee91e,topic-10ca826146f3dff5,topic-a411eb471572aa65,topic-6240a8aefd6c67ef,topic-6c9fbda29d90e098,topic-91e0a71a9356d112	818135	821089
+dev-041	original	NOMATCH		topic-c677d8cfb61366cc,topic-b724fa84eae3db0b,topic-08c060c05a31193f	465631	468546
+dev-042	original	NOMATCH		topic-1712c1e1e213c905,topic-378f9e44883e2966,topic-08c060c05a31193f,topic-ebe6b6fa038c7b8e,topic-2ed4a2efc71b6ee2	1324407	914437
+dev-043	original	NOMATCH		topic-67a4a30554544d32,topic-86fc3470ad713013,topic-6240a8aefd6c67ef	561795	584187
+dev-044	original	NOMATCH		topic-3a6721e1b09ca528,topic-bb44786521a4fcd9,topic-6480f7458fdc7cf9,topic-6240a8aefd6c67ef	528855	531940
+dev-045	original	NOMATCH		topic-8179d1103fe23f65,topic-ed609e882cd0acdc,topic-08c060c05a31193f,topic-7a5ed3d8706f7e9d	610436	613901
+dev-046	original	RESOLVED	topic-67a4a30554544d32	topic-67a4a30554544d32,topic-592012007a771499,topic-149aae12d54e3a6b,topic-6240a8aefd6c67ef,topic-188cae17f0af6163	584708	588083
+dev-047	original	AMBIGUOUS	topic-1101a2f5778fc62d|topic-a97a9534bbffcc20	topic-f67b3488469a6e26,topic-a97a9534bbffcc20,topic-1101a2f5778fc62d,topic-08c060c05a31193f,topic-158063651e9185c9,topic-4175856f8d5ac36c	1916776	1011900
+dev-048	original	NOMATCH		topic-9fef797d845fff8a,topic-6be25b4882eea50a,topic-2042fb7aceb26caa,topic-08c060c05a31193f	1205239	659538
+dev-049	original	NOMATCH		topic-35f213ce89d5185b,topic-08c060c05a31193f,topic-df2f59a0b2a90e6d,topic-c8b8acc88301c61d	1626495	674042
+dev-050	original	NOMATCH		topic-8022ba643eb4b231,topic-6240a8aefd6c67ef,topic-10c4e8178459a615	508566	511870
+dev-051	original	NOMATCH		topic-cddcb89dcb10e268,topic-08c060c05a31193f,topic-27dcef8d18a18512	378943	381897
+dev-052	original	NOMATCH		topic-2d3983013f883af2,topic-6699ba5358883d7c,topic-08c060c05a31193f,topic-bd1fa15a5fd3a293,topic-2042fb7aceb26caa	621122	624156
+dev-053	original	RESOLVED	topic-4ba2205547a79f8d	topic-bb30f5ea18c8a146,topic-36e65747cb946793,topic-4ba2205547a79f8d,topic-6240a8aefd6c67ef,topic-d45866b4db7cc847	947958	951332
+dev-054	original	AMBIGUOUS	topic-f0e9876bf6d279a4|topic-c7f37f57d6977950	topic-c7f37f57d6977950,topic-6240a8aefd6c67ef,topic-f0e9876bf6d279a4,topic-cf8f79a6c90892f0	857834	861739
+dev-055	original	NOMATCH		topic-270e3701060e4adf,topic-fed3ebed42a018f1,topic-6240a8aefd6c67ef	717305	720800
+dev-056	original	NOMATCH		topic-58c9961bd5e901c2,topic-1712c1e1e213c905,topic-85018e11e9ad9df9,topic-08c060c05a31193f,topic-94b35c4c85b02783	601093	604738
+dev-057	original	NOMATCH		topic-7a205d11430dd796,topic-0d33be9f1d94ff60,topic-08c060c05a31193f,topic-87acd7e4ad1b5310	503247	506141
+dev-058	original	NOMATCH		topic-6ac424fa8076c020,topic-63730e9096334b92,topic-4c3fe25ee66f2f5d,topic-6240a8aefd6c67ef,topic-48c771b0d979e5b2	565549	568664
+dev-059	original	NOMATCH		topic-a8eef0eee7ab7298,topic-14cf9696c370150f,topic-a58b82ac33e546d0,topic-9046a01d01f125dc,topic-6240a8aefd6c67ef	427184	430138

@@ -346,3 +346,29 @@ per-story p95 ≤ 20 ms. Otherwise FAIL is retained without TEST tuning.
 **Boundaries:** hint stays navigation-only (no fact, memory, tool authority);
 no new return-cue regex patterns in H4-B1 (cue coverage such as `zurück zum`
 is logged as separate future hypothesis H4-B2); no Android/Gemma/Fold7 claim.
+
+### H4-B1 pre-run amendments (before any DEV arm run, same day)
+
+* The preregistered "ambiguous" stratum (two compounds sharing a head noun,
+  return by head noun) is unreachable for both arms because the head is a
+  *suffix*; it would have tested nothing about over-commitment. It is replaced
+  by same-noun/different-qualifier ambiguity ("Rechnung vom Elektriker" vs
+  "Rechnung vom Zahnarzt", return "Rechnung"), which the original resolves as
+  Ambiguous and the candidate must preserve. The compound-head case is kept as
+  the separate exploratory stratum **head** (unique referent, both arms
+  expected MISSED; documents a limitation for a later hypothesis H4-B2). The
+  180-story denominator keeps the head stratum, making the +20 gate harder.
+* Inflected variants use stem-preserving dative plurals ("zu den Garagen");
+  umlaut plurals (Spitäler) are excluded on purpose.
+
+### H4-B1 RED and DEV baseline (`a69b0f29`, source unchanged since Code50)
+
+`scripts/continuum-h4b-check.sh <out> HEAD`: 16 JUnit tests, **3 failures**
+exactly on the predicted cases (long compound, umlaut-less ASR spelling,
+inflected return -> `NoMatch`); 9 existing + 4 control tests pass
+(`docs/evidence/h4-20261108/h4b/red/`). Scorer controls: 14/14
+(`h4b-score-test.py`). DEV (seed 50321, 60 stories, JSON SHA-256
+`cfc37f0e…`): original arm CORRECT 8/60 (all "short"), MISSED 36 (long 9,
+inflected 9, asr 9, head 9), AMBIGUOUS_CORRECT 8/8, NOMATCH_CORRECT 8/8, wrong
+0, process max RSS 65772 KiB, p95 story wall 1.96 ms
+(`docs/evidence/h4-20261108/h4b/dev-baseline/`). No candidate code exists yet.
