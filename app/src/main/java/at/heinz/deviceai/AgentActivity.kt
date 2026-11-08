@@ -5228,6 +5228,7 @@ class AgentActivity : Activity() {
                 }
                 is OwnerAppActionFlow.Step.Done -> {
                     if (flow.canRetainAppLookupContext) appLookupContext = ownerSession to flow.candidates
+                    else if (flow.lookupVerified && appLookupContext?.first == ownerSession) appLookupContext = null
                     val fallbackToConversation = flow.lookupFinishedWithoutInteraction &&
                         OwnerAppLookupIntent.shouldFallbackToConversation(
                             intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified)
