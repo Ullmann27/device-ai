@@ -135,7 +135,8 @@ internal class ApprovedStreamingSpeechAssembler(
         if (index - tokenStart == 1) {
             var next = index + 1
             while (next < buffer.length && buffer[next].isWhitespace()) next++
-            if (next + 1 < buffer.length && buffer[next].isLetter() && buffer[next + 1] == '.') return true
+            if (next + 1 >= buffer.length) return true
+            if (buffer[next].isLetter() && buffer[next + 1] == '.') return true
         }
         return false
     }
