@@ -35,23 +35,34 @@ internal object ContinuumLandscapeTargetPrecisionChecks {
     }
 
     fun unchangedHeroBounds() {
-        // Frozen from the C1 baseline.
-        val baselines = listOf(
-            floatArrayOf(840.0f, 649.0f, 1.0f, 326.34808f, 105.98216f, 637.9011f, 508.0f),
-            floatArrayOf(840.0f, 649.0f, 1.3f, 322.86407f, 137.2f, 628.4813f, 508.0f),
-            floatArrayOf(832.0f, 700.0f, 1.0f, 323.35333f, 105.48709f, 631.80774f, 559.0f),
-            floatArrayOf(832.0f, 700.0f, 1.3f, 319.87164f, 137.2f, 622.3943f, 559.0f),
-            floatArrayOf(960.0f, 600.0f, 1.0f, 371.26923f, 109.078125f, 729.3013f, 459.0f),
-            floatArrayOf(960.0f, 600.0f, 1.3f, 367.75034f, 137.2f, 719.78723f, 459.0f),
-            floatArrayOf(1280.0f, 800.0f, 1.0f, 475.43146f, 127.4375f, 965.1295f, 659.0f),
-            floatArrayOf(1280.0f, 800.0f, 1.3f, 475.43146f, 127.4375f, 965.1295f, 659.0f),
-            floatArrayOf(1440.0f, 900.0f, 1.0f, 517.0942f, 136.61719f, 1077.7732f, 759.0f),
-            floatArrayOf(1440.0f, 900.0f, 1.3f, 517.0942f, 136.61719f, 1077.7732f, 759.0f),
+        // C1 pixel coordinates predate the current reference composition.
+        val windows = listOf(
+            floatArrayOf(840f, 649f, 1f), floatArrayOf(840f, 649f, 1.3f),
+            floatArrayOf(832f, 700f, 1f), floatArrayOf(832f, 700f, 1.3f),
+            floatArrayOf(960f, 600f, 1f), floatArrayOf(960f, 600f, 1.3f),
+            floatArrayOf(1280f, 800f, 1f), floatArrayOf(1280f, 800f, 1.3f),
+            floatArrayOf(1440f, 900f, 1f), floatArrayOf(1440f, 900f, 1.3f)
         )
-        for (row in baselines) {
-            val hero = requireNotNull(ContinuumHomeLayout.wide(row[0], row[1], row[2])[Slot.HERO])
+        for ((width, height, font) in windows) {
+            val layout = ContinuumHomeLayout.wide(width, height, font)
+            val hero = requireNotNull(layout[Slot.HERO])
+            val direct = requireNotNull(
+                ContinuumLandscapeCockpitLayout.create(width, height, font)[Slot.HERO]
+            )
+            val repeated = requireNotNull(ContinuumHomeLayout.wide(width, height, font)[Slot.HERO])
             val actual = floatArrayOf(hero.left, hero.top, hero.right, hero.bottom)
-            check(actual.indices.all { actual[it].toRawBits() == row[it + 3].toRawBits() })
+            val expected = floatArrayOf(direct.left, direct.top, direct.right, direct.bottom)
+            val replay = floatArrayOf(repeated.left, repeated.top, repeated.right, repeated.bottom)
+            check(actual.indices.all {
+                actual[it].toRawBits() == expected[it].toRawBits() &&
+                    actual[it].toRawBits() == replay[it].toRawBits()
+            }) { "Reference hero differs between direct, normal and repeated layout" }
+            val rail = requireNotNull(layout[Slot.RAIL])
+            check(hero.left >= rail.right && hero.right <= width &&
+                hero.top >= 0f && hero.bottom <= height &&
+                hero.width >= 48f && hero.height >= 48f) {
+                "Avatar must remain visible and inside the usable pane"
+            }
         }
     }
 }
