@@ -17,6 +17,7 @@ class JarvisWorkWindowHost(
     private val director: AvatarDirector
 ) {
     private var current: JarvisWorkWindow? = null
+    private var currentFui: HollywoodFuiStageOverlay? = null
     private var cameraHome: ContinuumHomeView? = null
     private var serial = 0L
     private var back: android.window.OnBackInvokedCallback? = null
@@ -44,6 +45,7 @@ class JarvisWorkWindowHost(
             if (emphasize) ToolWorkSceneLease.workingGaze(target) else target)
         emphasizedWork = admitted && emphasize
         workingId = if (admitted) id else null
+        currentFui?.setWorkActive(admitted)
         return admitted
     }
 
@@ -53,6 +55,7 @@ class JarvisWorkWindowHost(
      */
     fun showStatus(steps: List<at.heinz.deviceai.cockpit.ProcessStep>) {
         current?.setStatus(statusLine(steps))
+        currentFui?.setWorkActive(steps.any { it.state == at.heinz.deviceai.cockpit.StepState.ACTIVE })
     }
 
     /** The real work ended (result, failure, STOP): the reading gaze ends with it. */
@@ -60,10 +63,12 @@ class JarvisWorkWindowHost(
         workingId?.let(director::windowWorkEnded)
         workingId = null
         emphasizedWork = false
+        currentFui?.setWorkActive(false)
     }
 
     fun close(immediate: Boolean = false) {
         if (immediate) cameraHome?.hologram?.setWorkWindowCamera(false, immediate = true)
+        currentFui?.close(immediate)
         current?.close(immediate)
     }
 
@@ -99,6 +104,7 @@ class JarvisWorkWindowHost(
             currentCameraSide,
             profile = cameraProfile(currentFootprint)
         )
+        window.shownBounds()?.let { currentFui?.morphInPlace(it, scene) }
         return window
     }
 
@@ -143,8 +149,10 @@ class JarvisWorkWindowHost(
         close(immediate = true)
         val id = "work-window-${++serial}"
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
+        val fui = HollywoodFuiStageOverlay(activity)
         var releaseGeometry: () -> Unit = {}
         container.addView(window, ViewGroup.LayoutParams(-1, -1))
+        container.addView(fui, ViewGroup.LayoutParams(-1, -1))
         // A first layout at another size (rotation/fold/keyboard still pending) plans again on the real size.
         val refit = {
             if (current === window) plan(home, container, scene)?.also {
@@ -156,6 +164,7 @@ class JarvisWorkWindowHost(
                 currentCameraSide = cameraSide(it)
                 home.hologram.setWorkWindowCamera(true, currentCameraSide,
                     profile = cameraProfile(currentFootprint))
+                fui.retarget(it.plan.destination)
             }?.plan else null
         }
         val accepted = window.open(body, first.plan.origin, first.plan.destination, title, first.plan.protectedBounds,
@@ -163,8 +172,10 @@ class JarvisWorkWindowHost(
             recession = recession, onClosed = {
             releaseGeometry()
             (window.parent as? ViewGroup)?.removeView(window)
+            (fui.parent as? ViewGroup)?.removeView(fui)
             director.windowClosed(id)
             if (workingId == id) { workingId = null; emphasizedWork = false }
+            if (currentFui === fui) currentFui = null
             if (current === window) {
                 val clientClosed = currentClientClosed
                 current = null
@@ -180,11 +191,18 @@ class JarvisWorkWindowHost(
                 clientClosed?.invoke()
             }
         })
-        if (!accepted) { window.dispose(); container.removeView(window); return null }
+        if (!accepted) {
+            window.dispose()
+            container.removeView(window)
+            container.removeView(fui)
+            return null
+        }
         currentClientClosed = onClosed
         current = window
+        currentFui = fui
         currentId = id
         currentGaze = gaze(first)
+        fui.open(first.plan.destination, scene)
         // Airbus deck: footprint controls how much of the cockpit physically clears for this real window.
         currentFootprint = scene.footprint
         home.setWorkspaceFootprint(currentFootprint)
