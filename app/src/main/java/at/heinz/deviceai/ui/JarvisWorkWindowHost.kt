@@ -212,7 +212,7 @@ class JarvisWorkWindowHost(
         val destination = planned.plan.destination
         val headX = planned.face?.centerX() ?: viewport.centerX()
         val headY = planned.face?.centerY() ?: viewport.centerY()
-        return GazeTarget(((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.6f, .6f),
+        return GazeTarget(((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.7f, .7f),
             ((headY - destination.centerY()) / viewport.height()).coerceIn(-.4f, .4f))
     }
 
