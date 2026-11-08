@@ -1,0 +1,78 @@
+{
+ "critical-lauf1": {
+  "profil": "critical",
+  "status": "PASS",
+  "quelle_unveraendert": true,
+  "start": "2026-11-08T14:08:40.840Z",
+  "ende": "2026-11-08T14:09:14.171Z",
+  "pruefungen": {
+   "process": "PASS",
+   "storage-agent": "PASS",
+   "android-source-contracts": "PASS",
+   "host-checker": "PASS",
+   "gradle": "NOT_RUN",
+   "lint": "NOT_RUN",
+   "apk": "NOT_RUN",
+   "fold7": "NOT_RUN",
+   "model-inference": "NOT_RUN"
+  }
+ },
+ "critical-lauf2": {
+  "profil": "critical",
+  "status": "PASS",
+  "quelle_unveraendert": true,
+  "start": "2026-11-08T14:09:18.927Z",
+  "ende": "2026-11-08T14:09:53.158Z",
+  "pruefungen": {
+   "process": "PASS",
+   "storage-agent": "PASS",
+   "android-source-contracts": "PASS",
+   "host-checker": "PASS",
+   "gradle": "NOT_RUN",
+   "lint": "NOT_RUN",
+   "apk": "NOT_RUN",
+   "fold7": "NOT_RUN",
+   "model-inference": "NOT_RUN"
+  }
+ },
+ "critical-lauf3": {
+  "profil": "critical",
+  "status": "PASS",
+  "quelle_unveraendert": true,
+  "start": "2026-11-08T14:09:53.997Z",
+  "ende": "2026-11-08T14:10:23.643Z",
+  "pruefungen": {
+   "process": "PASS",
+   "storage-agent": "PASS",
+   "android-source-contracts": "PASS",
+   "host-checker": "PASS",
+   "gradle": "NOT_RUN",
+   "lint": "NOT_RUN",
+   "apk": "NOT_RUN",
+   "fold7": "NOT_RUN",
+   "model-inference": "NOT_RUN"
+  }
+ },
+ "full-node": {
+  "profil": "full-node",
+  "status": "PASS",
+  "quelle_unveraendert": true,
+  "start": "2026-11-08T14:10:25.270Z",
+  "ende": "2026-11-08T14:13:06.258Z",
+  "pruefungen": {
+   "full-node": "PASS",
+   "gradle": "NOT_RUN",
+   "lint": "NOT_RUN",
+   "apk": "NOT_RUN",
+   "fold7": "NOT_RUN",
+   "model-inference": "NOT_RUN"
+  },
+  "full-node-PASS/FAIL/SKIP": {
+   "gesamt": 2430,
+   "bestanden": 2393,
+   "fehlgeschlagen": 0,
+   "uebersprungen": 37,
+   "platzhalter": 0
+  }
+ }
+}

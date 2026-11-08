@@ -39,7 +39,8 @@ async function fixture(t, {quotaBytes = 524288, cacheQuotaBytes = 262144} = {}) 
    child.stdout.on('data', chunk => { output += chunk; if (output.includes('\n')) { clearTimeout(timer); try { resolve(JSON.parse(output.split('\n')[0])); } catch { reject(Error('INVALID_READY')); } } });
   });
   configs[index] = {port: Number(new URL(ready.url).port)};
-  adapters[index] = new LocalBlockAdapter({nodeId: `node-${index}`, namespace: 'research', baseUrl: ready.url, token, timeoutMs: 500});
+  // Fixture-Timeout wie Produktionsstandard (1500 ms): 500 ms erzeugte unter CPU-Last Fehlalarme (TimeoutError auf gesunden Replikaten). Der Fail-Closed-Pfad in storage-fabric-catalog.mjs bleibt unverändert; der dedizierte 50-ms-Timeouttest setzt seinen eigenen Wert.
+  adapters[index] = new LocalBlockAdapter({nodeId: `node-${index}`, namespace: 'research', baseUrl: ready.url, token, timeoutMs: 1500});
   return ready;
  }
  async function stop(index) {
