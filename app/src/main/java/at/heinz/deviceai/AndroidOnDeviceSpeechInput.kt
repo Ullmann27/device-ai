@@ -90,6 +90,7 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                                 retryRunnable = null
                                 if (closed) return@Runnable
                                 runCatching { startNative() }.onFailure {
+                                    destroyWarmRecognizer()
                                     callbacks.failed(LocalSpeechInputPolicy.Failure.START_FAILED)
                                 }
                             }
