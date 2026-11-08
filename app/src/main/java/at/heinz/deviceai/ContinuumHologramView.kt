@@ -748,13 +748,23 @@ class ContinuumHologramView @JvmOverloads constructor(
             powerManager.isPowerSaveMode, thermalStatus,
             !animationsEnabled || !ValueAnimator.areAnimatorsEnabled(),
             currentState == State.THINKING || currentState == State.RESEARCH || currentState == State.LEARNING)
+        val phase = when(currentState) {
+            State.READY -> at.heinz.deviceai.ui.JarvisComputePhasePolicy.Phase.IDLE
+            State.LISTENING -> at.heinz.deviceai.ui.JarvisComputePhasePolicy.Phase.LISTENING
+            State.THINKING -> at.heinz.deviceai.ui.JarvisComputePhasePolicy.Phase.THINKING
+            State.SPEAKING -> at.heinz.deviceai.ui.JarvisComputePhasePolicy.Phase.SPEAKING
+            State.RESEARCH -> at.heinz.deviceai.ui.JarvisComputePhasePolicy.Phase.RESEARCH
+            State.LEARNING -> at.heinz.deviceai.ui.JarvisComputePhasePolicy.Phase.LEARNING
+        }
+        val phased = at.heinz.deviceai.ui.JarvisComputePhasePolicy.apply(
+            base, phase, diagnosticProofActive = avatarProofStartedAt != Long.MIN_VALUE)
         // When speech is already playing the heavy LLM phase is normally over. Keep
         // essential lip/eye motion readable even in LOW, while decoration stays off.
         val delay = at.heinz.deviceai.ui.AvatarEssentialMotionPolicy.frameDelayMillis(
-            base, currentState == State.SPEAKING && foregroundActive)
-        return if (delay != base.frameDelayMillis)
-            base.copy(frameDelayMillis = delay, particleCount = 0)
-        else base
+            phased, currentState == State.SPEAKING && foregroundActive)
+        return if (delay != phased.frameDelayMillis)
+            phased.copy(frameDelayMillis = delay, particleCount = 0)
+        else phased
     }
 
     internal fun presentationRenderBudget() = renderBudget()
