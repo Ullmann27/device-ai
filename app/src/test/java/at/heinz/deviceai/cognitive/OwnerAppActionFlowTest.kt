@@ -23,7 +23,7 @@ class OwnerAppActionFlowTest {
 
     @Test fun ownerInputReachesRealLookupThenExactConfirmationThenGate() {
         for (input in listOf("Jarvis öffne mir Signal", "Kannst du mir bitte Signal öffnen?",
-                "Mach bitte die App Signal auf.")) {
+                "Mach bitte die App Signal auf.", "Ich brauche Signal")) {
             val intake = OwnerAppLookupIntent.inspect(input) as OwnerAppLookupIntent.Intake.Lookup
             val calls = mutableListOf<ToolCallRequest>()
             val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { call ->
@@ -138,6 +138,12 @@ class OwnerAppActionFlowTest {
         assertEquals("Kalender", (OwnerAppLookupIntent.inspect(
             "Nova, könntest du bitte die Kalender App öffnen?", "Nova") as OwnerAppLookupIntent.Intake.Lookup).query)
         assertEquals("Signal", OwnerAppLookupIntent.parse("Mach mir Signal auf"))
+        val needed = OwnerAppLookupIntent.inspect("Ich brauche WhatsApp") as OwnerAppLookupIntent.Intake.Lookup
+        assertEquals("WhatsApp", needed.query)
+        assertTrue(needed.opening)
+        assertNull(OwnerAppLookupIntent.inspect("Ich brauche die PDF"))
+        assertTrue(OwnerAppLookupIntent.inspect("Ich brauche Signal und schreibe Anna") is
+            OwnerAppLookupIntent.Intake.Planning)
         assertTrue(OwnerAppLookupIntent.inspect("Ich will was von WhatsApp") is OwnerAppLookupIntent.Intake.Clarify)
         for (request in listOf("Öffne die PDF", "Öffne den Download-Ordner", "Öffne /sdcard/Download"))
             assertNull(request, OwnerAppLookupIntent.inspect(request))
