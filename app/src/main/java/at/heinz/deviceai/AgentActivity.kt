@@ -890,6 +890,9 @@ class AgentActivity : Activity() {
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         // The sensor/display mapping belongs to the current foreground test only.
         stopReadinessCamera()
+        // Old work-window bounds cannot survive a Fold/rotation transition.
+        workWindowHost.close(immediate = true)
+        homeView?.setDeckCleared(false)
         super.onConfigurationChanged(newConfig)
         refreshReadinessGuide()
     }

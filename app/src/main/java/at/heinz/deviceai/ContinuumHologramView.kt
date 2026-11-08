@@ -1161,6 +1161,9 @@ class ContinuumHologramView @JvmOverloads constructor(
         entranceMotion.advance(now)
         cameraMotion.advance(now, hasWindowFocus(), Settings.Global.getFloat(context.contentResolver,
             Settings.Global.ANIMATOR_DURATION_SCALE, 1f))
+        // The visible 3D projection follows motion even if Canvas draws are deferred.
+        if (head3dEnabled && cameraFraming != null && cockpitHeadBounds != null &&
+            (cameraMotion.workActive || cameraMotion.progress > 0f)) updateAuraFraming()
         val delta = if (lastFrameMs == 0L) 0f else ((now - lastFrameMs) / 1000f).coerceIn(0f, .1f)
         lastFrameMs = now
         avatarSeconds = (avatarSeconds + delta) % 460f

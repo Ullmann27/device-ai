@@ -135,8 +135,15 @@ class ContinuumSystemStatusWorkWindowUiTest {
 
             tap(root, JarvisHomeTestRoutes.destination(root, "system"))
             advance(800L); draw(root)
-            assertTrue("Open work window must pull back the original head projection",
-                (field(avatar, "auraScale") as Float) < restScale - .02f)
+            val currentScale = field(avatar, "auraScale") as Float
+            val progress = avatar.cameraProgress()
+            val framing = field(avatar, "cameraFraming") as? at.heinz.deviceai.avatar3d.AvatarCameraFraming
+            val direction = field(avatar, "cameraDirection") as Float
+            val safeTarget = framing?.sample(progress, direction)?.headScale
+            assertTrue("Original head pullback: rest=$restScale actual=$currentScale " +
+                "progress=$progress target=$safeTarget framing=${framing != null} " +
+                "shown=${avatar.isShown} focus=${avatar.hasWindowFocus()} native=${field(avatar, "native3dDrawn")}",
+                currentScale < restScale - .02f)
             assertEquals("Head viewport stays fixed", headBounds, field(avatar, "cockpitHeadBounds"))
             assertEquals("Original orb stays fixed", orbBounds, field(avatar, "cockpitOrbBounds"))
 
@@ -653,6 +660,8 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 RuntimeEnvironment.setQualifiers(qualifiers)
                 controller.configurationChange(Configuration(app.resources.configuration))
                 assertSame("the manifest keeps the Activity across $qualifiers", activity, controller.get())
+                assertFalse("configuration change retires the previous work window", windowShown())
+                assertEquals("configuration change releases all deck actions", 0, hidden())
                 // As on the device: the window manager reports the new window frame to the view hierarchy.
                 Shadow.extract<ShadowViewRootImpl>(root.parent).callDispatchResized()
                 width = w; height = h

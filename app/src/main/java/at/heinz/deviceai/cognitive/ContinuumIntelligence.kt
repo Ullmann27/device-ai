@@ -88,9 +88,11 @@ object ContinuumTaskClassifier {
             request.length >= 200 -> 0.35
             else -> 0.15
         }
-        if (containsAny(text, words, "mehrere", "vergleich", "widerspruch", "constraint", "bedingung", "komplex")) {
-            complexity += 0.15
-        }
+        val multipleConditions = containsAny(
+            text, words, "mehrere", "vergleich", "widerspruch", "constraint", "bedingung", "komplex"
+        )
+        if (multipleConditions) complexity += 0.15
+        if (plan && multipleConditions) complexity += 0.1
         if (research || verify) complexity += 0.1
         complexity = complexity.coerceIn(0.0, 1.0)
 
