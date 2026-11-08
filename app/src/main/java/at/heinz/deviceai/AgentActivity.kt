@@ -5580,6 +5580,28 @@ class AgentActivity : Activity() {
             }
             null -> Unit
         }
+        // Explicit public research precedes generic app discovery ("Suche die neuesten Quellen").
+        if (at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.isResearchRequest(request)) {
+            researchArmed = false
+            val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.explicitTopic(request)
+            input.text.clear()
+            addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            if (topic == null) {
+                addAssistantMessage("Diese Recherche bleibt lokal: Der Auftrag enthält private, mehrdeutige " +
+                    "oder zusätzliche Handlungsangaben oder verbietet Internetzugriff. " +
+                    "Bitte nenne ausschließlich das öffentliche Thema, ohne persönliche Daten oder Dokumentinhalte.",
+                    preserveLocalContext = false,
+                    keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            } else {
+                val researchSession = sessionId
+                confirmWebRequest(at.heinz.deviceai.cognitive.WebToolRequest.Search(topic), ResearchMode.STANDARD) { session ->
+                    if (session != null && !busy && sessionId == researchSession && foregroundLearningActive &&
+                        !isFinishing && !isDestroyed) runResearch(session)
+                    else session?.cancel()
+                }
+            }
+            return
+        }
         // Recognition grants no execution.
         OwnerAppLookupIntent.inspect(request, at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
             continuumState?.archive?.identityState?.chosenName))?.let { intake ->
@@ -13213,6 +13235,4 @@ class AgentActivity : Activity() {
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
 }
-
-
 

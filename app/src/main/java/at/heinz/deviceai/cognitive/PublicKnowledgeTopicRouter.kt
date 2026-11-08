@@ -13,7 +13,17 @@ internal object PublicKnowledgeTopicRouter {
         RegexOption.IGNORE_CASE
     )
     private val privateMarkers = Regex(
-        "(?i)(@|https?://|[/\\\\]|\\b(passwort|password|pin|token|geheim|privat|mein|meine|meinen|meiner|meinem|konto|telefon|adresse|wohnort|sozialversicherung|iban|krankheit|arzt|meine\\s+tochter)\\b)"
+        "(?iu)(@|https?://|[/\\\\]|[\"„“”«»]|\\b\\d{6,}\\b|\\b(passwort|password|pin|token|geheim|privat|private[nmrs]?|mein|meine|meinen|meiner|meinem|unser[enmsr]*|euer[enmsr]*|ihr[enmsr]*|my|our|your|konto|telefon|adresse|wohnort|sozialversicherung|iban|krankheit|arzt|datei|dateien|pdf|dokument[en]*|notizen|gespräch|chat|erinnerung[en]*|app)\\b)"
+    )
+    private val researchCommand = Regex(
+        "(?iu)^(?:recherchier(?:e)?|such(?:e)?\\s+(?:nach|im\\s+(?:internet|web)|online)|prüfe\\s+im\\s+ris)(?:\\s*:\\s*|\\s+).+"
+    )
+    private val researchVerb = Regex("(?iu)^(?:such(?:e)?|finde|prüfe)\\s+")
+    private val researchMarkers = Regex(
+        "(?iu)\\b(?:quellen?|informationen|infos|internet|web|online|ris|aktuell[enmsr]*|neueste[nmsr]?)\\b"
+    )
+    private val additionalAction = Regex(
+        "(?iu)(?<![\\p{L}\\p{N}_])(?:sende|senden|schicke|schreib|schreibe|lösche|installiere|kaufe|bezahle|öffne|übertrage)(?![\\p{L}\\p{N}_])"
     )
     private val topicPattern = Regex("[\\p{L}][\\p{L}\\p{N} .,'()\\-]{2,79}")
     /**
@@ -26,11 +36,13 @@ internal object PublicKnowledgeTopicRouter {
     )
 
     fun topic(message: String): String? {
-        val cleaned = message.trim().replace(Regex("\\s+"), " ")
+        if (message.length !in 8..220 || message.any { it.isISOControl() }) return null
+        val cleaned = normalized(message)
         if (OwnerChatIntentRouter.route(cleaned) != null) return null
-        if (cleaned.length !in 8..220 || !startsAsKnowledgeQuestion.containsMatchIn(cleaned) ||
+        if ((!startsAsKnowledgeQuestion.containsMatchIn(cleaned) && !isResearchRequest(cleaned)) ||
             privateMarkers.containsMatchIn(cleaned) || dialogueReference.containsMatchIn(cleaned) ||
-            cleaned.any { it.isISOControl() }) return null
+            additionalAction.containsMatchIn(cleaned) ||
+            NetworkTurnConstraint.forbidsExternalResearch(message)) return null
         val result = ResearchQuestionFocus.searchText(cleaned)
             .removeSuffix("?").trim().take(80).trim()
         if (!topicPattern.matches(result)) return null
@@ -38,4 +50,17 @@ internal object PublicKnowledgeTopicRouter {
         if (normalized in setOf("wie gehts", "was kannst du", "wer bin ich", "wie geht es dir")) return null
         return result
     }
+
+    fun isResearchRequest(message: String): Boolean {
+        if (message.length !in 8..220 || message.any { it.isISOControl() }) return false
+        val text = normalized(message)
+        return researchCommand.matches(text) ||
+            (researchVerb.containsMatchIn(text) && researchMarkers.containsMatchIn(text))
+    }
+
+    fun explicitTopic(message: String): String? = if (isResearchRequest(message)) topic(message) else null
+
+    private fun normalized(message: String): String =
+        OwnerAppLookupIntent.stripAddress(message.trim(), null)
+            .replace(Regex("(?iu)^bitte\\s+"), "").replace(Regex("\\s+"), " ")
 }

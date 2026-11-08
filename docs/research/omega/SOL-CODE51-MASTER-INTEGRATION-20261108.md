@@ -58,6 +58,28 @@ abbreviations are restricted to internal centers, preserving existing app
 negatives. Full Android-source JVM compilation/regressions running; GREEN
 not yet asserted. No claim that the original device incident is resolved.
 
+Navigation checkpoint `561a88659208eebf178a8c5a1db16ad333ff5e9a` pushed and
+read back from the remote: 11 targeted tests PASS. Additional independent
+research RED: 16 tests / 2 failures (natural/addressed commands and questions).
+Candidate extraction plus old privacy/explanation/app tests: 21 tests PASS.
+Explicit research now precedes generic app discovery and uses the existing
+WebToolRequest/approval/engine path. Personal, quoted, compound and offline
+requests remain local with a visible explanation. Approval tickets unchanged.
+
+First full main/test Kotlin compile PASS; JUnit 3488 tests / 3 failures:
+root bypasses read-only filesystem permissions; existing JDK19+ Unicode
+word-boundary failure in app planning; one stale pre-fix `Zeig` regression.
+The latter is fixed in checkpoint 561a8865; the planning boundary is now changed
+to the same Unicode-lookaround prior art as OwnerDocumentIntent. Full suite
+must be rerun on final source; this earlier result is not final GREEN.
+
+Changed Android integration files compiled against the full compiled main
+module: PASS. Targeted combined app routing, web approval/engine, private
+negatives, freshness/explanation and independent speech hand-off: 55 tests PASS.
+Speech checks cover 20 two-chunk replies, STOP/barge-in/stale callbacks,
+approval/focus/session suppression; pure checks, not Android ASR/TTS playback.
+No competing recovery changes to #646.
+
 Restored JDK21, Kotlin 2.2.21 and pinned Maven Central compile/JUnit jars after
 actual prerequisite failures. Gradle QA on JDK21 still fails resolving AGP
 8.10.0 from Google Maven (`dl.google.com` DNS unavailable). No alternate,

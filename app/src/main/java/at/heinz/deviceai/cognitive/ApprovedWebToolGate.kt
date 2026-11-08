@@ -20,8 +20,10 @@ sealed class WebToolRequest {
             val value=text.trim()
             // Same-turn prohibition overrides even a previously armed Web button.
             if (NetworkTurnConstraint.forbidsExternalResearch(value)) return null
-            val search=Regex("(?is)^(?:/?web_search|/search|suche im internet|recherchiere)(?:\\s*:\\s*|\\s+)(.+)$").matchEntire(value)
+            val search=Regex("(?is)^(?:/?web_search|/search)(?:\\s*:\\s*|\\s+)(.+)$").matchEntire(value)
             if(search!=null)return Search(search.groupValues[1].trim())
+            PublicKnowledgeTopicRouter.explicitTopic(value)?.let { return Search(it) }
+            if(PublicKnowledgeTopicRouter.isResearchRequest(value))return null
             val read=Regex("(?is)^(?:/?web_read|/read|lies die seite)(?:\\s*:\\s*|\\s+)(.+)$").matchEntire(value)
             if(read!=null)return Read(read.groupValues[1].trim())
             if(value.startsWith("https://",true)&&!value.contains(Regex("\\s")))return Read(value)

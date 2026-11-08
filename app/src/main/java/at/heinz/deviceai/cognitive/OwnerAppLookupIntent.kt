@@ -33,7 +33,9 @@ internal object OwnerAppLookupIntent {
     private val nonAppNeedTargets = setOf("hilfe", "pause", "rat", "dich", "mich", "dir", "mir",
         "zeit", "ruhe", "mehr", "antwort", "auskunft")
     private val vague = Regex("(?iu)^(?:ich\\s+)?(?:bräuchte|brauche|hätte\\s+gern(?:e)?|möchte|will)\\s+(?:bitte\\s+)?(?:etwas|was)\\s+(?:von|aus|in)\\s+(.+?)[.!?]*$")
-    private val action = Regex("(?iu)\\b(öffne|öffnen|starte|starten|suche|suchen|finde|finden|aufmachen)\\b")
+    private val action = Regex(
+        "(?iu)(?<![\\p{L}\\p{N}_])(öffne|öffnen|starte|starten|suche|suchen|finde|finden|aufmachen)(?![\\p{L}\\p{N}_])"
+    )
     private val requestStart = Regex("(?iu)^(?:öffne|starte|suche|finde|zeige|mach(?:e)?|kannst|könntest|würdest|magst|ich)\\b")
     private val query = Regex("[\\p{L}\\p{N}][\\p{L}\\p{N} ._+-]{0,79}")
     private val courtesy = Regex("(?iu)^(?:(?:bitte|mir|mal|kurz|eben)|für\\s+mich)\\s+")
