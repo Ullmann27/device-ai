@@ -35,4 +35,53 @@ class OwnerAppLookupIntentTest {
         assertNull(OwnerAppLookupIntent.parse("Ich dachte, du öffnest die App."))
         assertNull(OwnerAppLookupIntent.parse("Öffne meine WhatsApp und schreib Peter."))
     }
+
+    @Test fun ambiguousOneWordNeedRequiresVerifiedInstalledCandidate() {
+        val whatsapp = OwnerAppLookupIntent.inspect("Ich brauche WhatsApp") as OwnerAppLookupIntent.Intake.Lookup
+        assertEquals("WhatsApp", whatsapp.query)
+        assertTrue(whatsapp.opening)
+        assertTrue(whatsapp.requireInstalledCandidate)
+        assertFalse(whatsapp.messagePlanningIfMatched)
+        assertNull(OwnerAppLookupIntent.parse("Ich brauche WhatsApp"))
+        assertTrue(OwnerAppLookupIntent.shouldFallbackToConversation(whatsapp, true, 0))
+        assertFalse(OwnerAppLookupIntent.shouldFallbackToConversation(whatsapp, true, 1))
+        assertFalse(OwnerAppLookupIntent.shouldFallbackToConversation(whatsapp, false, 0))
+
+        for (ordinary in listOf(
+            "Ich brauche Geld", "Ich brauche Urlaub", "Ich brauche Schlaf",
+            "Ich brauche Kaffee", "Ich brauche Motivation"
+        )) {
+            val possible = OwnerAppLookupIntent.inspect(ordinary) as OwnerAppLookupIntent.Intake.Lookup
+            assertTrue(ordinary, possible.requireInstalledCandidate)
+            assertTrue(ordinary, OwnerAppLookupIntent.shouldFallbackToConversation(possible, true, 0))
+        }
+
+        for (pronoun in listOf("Ich brauche es", "Ich brauche sie", "Ich brauche das")) {
+            assertNull(pronoun, OwnerAppLookupIntent.inspect(pronoun))
+        }
+
+        val explicit = OwnerAppLookupIntent.inspect("Ich brauche die App Google Maps") as
+            OwnerAppLookupIntent.Intake.Lookup
+        assertFalse(explicit.requireInstalledCandidate)
+        assertEquals("Google Maps", explicit.query)
+    }
+
+    @Test fun bareMessageTargetNeedsInstalledAppEvidenceBeforeClarification() {
+        for (request in listOf("Schreib weiter", "Schreibe Gedichte", "Schreibe Python", "Schreibe auf Deutsch")) {
+            val possible = OwnerAppLookupIntent.inspect(request) as OwnerAppLookupIntent.Intake.Lookup
+            assertTrue(request, possible.requireInstalledCandidate)
+            assertTrue(request, possible.messagePlanningIfMatched)
+            assertNull(request, OwnerAppLookupIntent.parse(request))
+            assertTrue(request, OwnerAppLookupIntent.shouldFallbackToConversation(possible, true, 0))
+        }
+
+        val whatsapp = OwnerAppLookupIntent.inspect("Schreibe WhatsApp") as OwnerAppLookupIntent.Intake.Lookup
+        assertTrue(whatsapp.messagePlanningIfMatched)
+        assertTrue(OwnerAppLookupIntent.shouldClarifyMessage(whatsapp, true, 1))
+        assertFalse(OwnerAppLookupIntent.shouldClarifyMessage(whatsapp, true, 0))
+
+        val explicit = OwnerAppLookupIntent.inspect("Schreibe App WhatsApp") as
+            OwnerAppLookupIntent.Intake.Planning
+        assertTrue(explicit.clarification!!.contains("konkreten Empfänger"))
+    }
 }
