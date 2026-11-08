@@ -166,21 +166,40 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         if (turn == null) turn = event.turnId
         if (event.turnId != turn) return
         val key = { k: String -> safeId("${event.turnId}.$k") }
+        val mainSceneId = key("main_scene")
+        fun primaryTimelineStep(steps: List<at.heinz.deviceai.cockpit.ProcessStep>):
+            at.heinz.deviceai.cockpit.ProcessStep? {
+            // One visible work scene per turn. Prefer a real active/waiting tool or milestone,
+            // then the generic work step, then acknowledgement/completed history.
+            return steps.lastOrNull { it.state == StepState.FAILED || it.state == StepState.BLOCKED }
+                ?: steps.lastOrNull { it.state == StepState.WAITING }
+                ?: steps.lastOrNull { it.state == StepState.ACTIVE && it.key != "work" }
+                ?: steps.lastOrNull { it.key == "work" }
+                ?: steps.lastOrNull()
+        }
         when (event) {
-            // One fact, one card: an action that is also a timeline step uses that step's identity (no duplicate).
-            is CockpitAnimationEvent.ActionStarted -> step(event.stepKey?.let { key("s.$it") }
-                ?: key("a.${event.action.name}"), event.detail)
-            is CockpitAnimationEvent.ProcessTimeline -> for (s in event.steps) {
-                val id = key("s.${s.key}")
-                val old = stepStates[id]
-                if (old == s.state) continue
-                if (old == null) step(id, s.label)
-                when (s.state) {
-                    StepState.DONE -> stepFinished(id, true)
-                    StepState.FAILED, StepState.BLOCKED -> stepFinished(id, false)
-                    StepState.ACTIVE, StepState.WAITING -> Unit
+            // THINK/tool/research are phases of the same turn scene, never parallel cards.
+            is CockpitAnimationEvent.ActionStarted -> {
+                val id = if (event.action == at.heinz.deviceai.cockpit.CockpitAction.WORKER)
+                    event.stepKey?.let { key("s.$it") } ?: key("a.${event.action.name}")
+                else mainSceneId
+                step(id, event.detail)
+            }
+            is CockpitAnimationEvent.ProcessTimeline -> {
+                val primary = primaryTimelineStep(event.steps)
+                if (primary != null) {
+                    val old = stepStates[mainSceneId]
+                    step(mainSceneId, primary.label)
+                    when (primary.state) {
+                        StepState.DONE -> if (event.steps.none {
+                            it.state == StepState.ACTIVE || it.state == StepState.WAITING
+                        }) stepFinished(mainSceneId, true)
+                        StepState.FAILED, StepState.BLOCKED -> stepFinished(mainSceneId, false)
+                        StepState.ACTIVE, StepState.WAITING -> Unit
+                    }
+                    stepStates[mainSceneId] = primary.state
+                    if (old != primary.state) kick()
                 }
-                stepStates[id] = s.state
             }
             is CockpitAnimationEvent.AccountCardFlyIn ->
                 if (event.provider.contains("mail", ignoreCase = true)) {
