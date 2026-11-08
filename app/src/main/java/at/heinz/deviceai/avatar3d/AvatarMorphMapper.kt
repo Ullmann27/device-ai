@@ -28,9 +28,11 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
     private val visemeBlend = FloatArray(Viseme.entries.size)
     private var lastSeconds = Float.NaN
     private val idleMotion = AvatarIdleMotion()
-    /** Damped head state behind the instantaneous gaze target (eyes lead, head follows). */
-    private var followedYaw = 0f
-    private var followedPitch = 0f
+    /** Critically damped gaze states: eyes lead, head follows without overshoot. */
+    private val headYawSpring = CriticalDampedSpring()
+    private val headPitchSpring = CriticalDampedSpring()
+    private val eyeYawSpring = CriticalDampedSpring()
+    private val eyePitchSpring = CriticalDampedSpring()
     private var followSeconds = Float.NaN
     /** Smoothed real mouth opening while speaking; drives the speech accents. */
     private var speechAccent = 0f
@@ -65,22 +67,36 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         // Right-handed Y-up +Z front: positive yaw goes viewer right, negative pitch looks up.
         // Owner request (Fold7, 05.11.): turn and nod in a wide, human radius; eyes lead, head follows.
         val targetHeadYaw = gx * HEAD_YAW_DEGREES; val targetHeadPitch = -gy * HEAD_PITCH_DEGREES
-        // Head follows with a first-order lag; the first frame, clock jumps and reduced motion snap.
+        // Critically damped follow: eye spring reaches ~80 % in 55 ms; head spring in ~220 ms.
+        // First frame, clock jumps and reduced motion snap. Repeated timestamps are strictly idempotent.
         val followDt = if (followSeconds.isFinite() && seconds.isFinite()) seconds - followSeconds else Float.NaN
-        if (!motion || !followDt.isFinite() || followDt < 0f || followDt > 1f) {
-            followedYaw = targetHeadYaw; followedPitch = targetHeadPitch
-        } else if (followDt > 0f) {
-            val a = 1f - kotlin.math.exp(-followDt / HEAD_FOLLOW_TAU_S)
-            followedYaw += (targetHeadYaw - followedYaw) * a; followedPitch += (targetHeadPitch - followedPitch) * a
+        val snap = !motion || !followDt.isFinite() || followDt < 0f || followDt > 1f
+        if (snap) {
+            headYawSpring.snap(targetHeadYaw)
+            headPitchSpring.snap(targetHeadPitch)
+        } else {
+            headYawSpring.step(targetHeadYaw, followDt, HEAD_SPRING_OMEGA)
+            headPitchSpring.step(targetHeadPitch, followDt, HEAD_SPRING_OMEGA)
         }
-        followSeconds = if (motion) seconds else Float.NaN
-        headYaw = followedYaw; headPitch = followedPitch
-        // Eyes lead: they hold the full gaze target while the head is still catching up.
-        // Written as eye share + remaining head lag, so a settled head yields the exact eye share.
-        eyeYaw = cameraAzimuthDegrees.toFloat() +
-            (gx * EYE_YAW_DEGREES + (targetHeadYaw - followedYaw)).coerceIn(-EYE_MAX_YAW_DEGREES, EYE_MAX_YAW_DEGREES)
-        eyePitch = (-gy * EYE_PITCH_DEGREES + (targetHeadPitch - followedPitch))
+        headYaw = headYawSpring.value
+        headPitch = headPitchSpring.value
+
+        // Eyes target the direct ocular share plus the head lag, then follow with their much faster spring.
+        val targetEyeYaw = cameraAzimuthDegrees.toFloat() +
+            (gx * EYE_YAW_DEGREES + (targetHeadYaw - headYaw))
+                .coerceIn(-EYE_MAX_YAW_DEGREES, EYE_MAX_YAW_DEGREES)
+        val targetEyePitch = (-gy * EYE_PITCH_DEGREES + (targetHeadPitch - headPitch))
             .coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
+        if (snap) {
+            eyeYawSpring.snap(targetEyeYaw)
+            eyePitchSpring.snap(targetEyePitch)
+        } else {
+            eyeYawSpring.step(targetEyeYaw, followDt, EYE_SPRING_OMEGA)
+            eyePitchSpring.step(targetEyePitch, followDt, EYE_SPRING_OMEGA)
+        }
+        eyeYaw = eyeYawSpring.value
+        eyePitch = eyePitchSpring.value
+        followSeconds = if (motion) seconds else Float.NaN
         jawPitch = 0f
         when (pose.expression) {
             AvatarExpression.ATTENTIVE -> weight("BrowUp", .20f)
@@ -310,8 +326,9 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         const val JAW_BONE_DEGREES = 15f
         /** Cosmetic idle head sway gain (idle only, never during observed gaze or speech). */
         const val IDLE_HEAD_GAIN = 2.5f
-        /** Head follow time constant: eyes reach the target at once, the head ~95 % after 3τ. */
-        const val HEAD_FOLLOW_TAU_S = .18f
+        /** Critically damped natural frequencies: step response reaches ~80 % at 55 ms / 220 ms. */
+        const val EYE_SPRING_OMEGA = 54.44f
+        const val HEAD_SPRING_OMEGA = 13.61f
         /** Human oculomotor range used while the head is still turning. */
         const val EYE_MAX_YAW_DEGREES = 30f
         const val EYE_MAX_PITCH_DEGREES = 20f
