@@ -12063,8 +12063,8 @@ class AgentActivity : Activity() {
     /** [keepCockpit]: the result is already shown in an open cockpit work window – record it without leaving START. */
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean) {
         recordCockpitDialog(false, value)
-        // A non-model answer becomes the latest turn and invalidates any older
-        // local-model prompt context. Successful local model runs set it after rendering.
+        // Rendering a normal assistant reply never owns session invalidation. Callers pass false only
+        // after a semantic policy decided that older dialogue is stale (for example a confirmed memory change).
         lastLocalReply = null
         if (!preserveLocalContext) localConversationContext.clear()
         if (requestStartedAt > 0L) {
