@@ -470,15 +470,17 @@ class BoundedAgentOrchestrator(
                 cancellation.throwIfCancelled()
                 if (!chosen.responseComplete) {
                     val acceptedText = if (lastEvaluation.success) lastOutput else ""
-                    val reason = if (!lastEvaluation.success)
-                        "Unvollständige Antwort zurückgehalten: Die lokale Qualitätsprüfung wurde nicht bestanden."
-                    else when (chosen.responseCompletion) {
-                        LocalGenerationCompletion.OUTPUT_LIMIT ->
-                            "Antwort unvollständig: Das lokale Ausgabelimit wurde erreicht."
-                        LocalGenerationCompletion.STALLED ->
-                            "Antwort unvollständig: Die lokale Textausgabe ist zum Stillstand gekommen."
-                        else -> "Antwort unvollständig: Die lokale Generierung ist fehlgeschlagen."
+                    val cause = when (chosen.responseCompletion) {
+                        LocalGenerationCompletion.OUTPUT_LIMIT -> "Das lokale Ausgabelimit wurde erreicht."
+                        LocalGenerationCompletion.STALLED -> "Die lokale Textausgabe ist zum Stillstand gekommen."
+                        else -> "Die lokale Generierung wurde abgebrochen (zum Beispiel wegen Gerätewärme oder eines Laufzeitfehlers)."
                     }
+                    // Fold7 (#642): name the real cause as well, not only the failed quality check; the owner
+                    // otherwise cannot tell a thermal stop from a bad model answer.
+                    val reason = if (!lastEvaluation.success)
+                        "Unvollständige Antwort zurückgehalten: $cause Der Teiltext hat die lokale Qualitätsprüfung nicht bestanden" +
+                            (lastEvaluation.notes.takeIf { it.isNotBlank() }?.let { " ($it)" } ?: "") + "."
+                    else "Antwort unvollständig: $cause"
                     lastEvaluation = Evaluation(false, 0.0, reason)
                     transition(AgentState.RESPOND, "Incomplete response; no outcome or learning.")
                     emit(CognitiveWorkState.BLOCKED)

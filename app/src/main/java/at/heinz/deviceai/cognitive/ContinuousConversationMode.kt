@@ -26,6 +26,15 @@ class ContinuousConversationMode {
     private var session: String? = null
     private var replyUtterance: String? = null
     private var silentAttempts = 0
+    private var recoveryAttempts = 0
+
+    /** True after a recognizer handover failure (busy/client) paused or is being retried: the
+     * next microphone start should use a cold (freshly created) native recognizer. */
+    var coldRecognizerRecommended: Boolean = false
+        private set
+
+    /** Recoverable listen failures of the current turn (0 after any successful recognition). */
+    val recoveryAttemptsUsed: Int get() = recoveryAttempts
 
     val active: Boolean get() = state != State.OFF
 
@@ -35,6 +44,8 @@ class ContinuousConversationMode {
         session = sessionId
         replyUtterance = null
         silentAttempts = 0
+        recoveryAttempts = 0
+        coldRecognizerRecommended = false
         state = State.LISTENING
         turn++
         return true
@@ -45,8 +56,13 @@ class ContinuousConversationMode {
         session = null
         replyUtterance = null
         silentAttempts = 0
+        recoveryAttempts = 0
+        coldRecognizerRecommended = false
         turn++
     }
+
+    /** The adapter has created a fresh native recognizer; the recommendation is consumed. */
+    fun coldRecognizerUsed() { coldRecognizerRecommended = false }
 
     /** Token for a recognizer started now, or null when this is ordinary dictation. */
     fun listeningTurn(sessionId: String): Long? =
@@ -60,18 +76,40 @@ class ContinuousConversationMode {
             null -> if (text.isBlank()) silence() else {
                 state = State.THINKING
                 silentAttempts = 0
+                recoveryAttempts = 0
+                coldRecognizerRecommended = false
                 replyUtterance = null
                 Decision.SEND
             }
         }
     }
 
-    /** A silent recognizer timeout is retried once; a second silence or any error pauses. */
-    fun listenFailed(turnToken: Long, sessionId: String, silence: Boolean): Decision {
+    /**
+     * A silent recognizer timeout is retried once. A recoverable handover failure (recognizer
+     * busy/client error, start failure) is retried up to [MAX_RECOVERY_RETRIES] times with a cold
+     * recognizer recommended from the second attempt on; afterwards, and for any other error,
+     * the mode pauses so the owner decides. The mode never loops without bound.
+     */
+    fun listenFailed(turnToken: Long, sessionId: String, silence: Boolean, recoverable: Boolean = false): Decision {
         if (!current(turnToken, sessionId)) return Decision.IGNORE
         if (silence) return silence()
+        if (recoverable && recoveryAttempts < MAX_RECOVERY_RETRIES) {
+            recoveryAttempts++
+            coldRecognizerRecommended = recoveryAttempts >= 2
+            turn++
+            return Decision.RETRY_LISTEN
+        }
         pause()
+        // After exhausted recovery the owner's next tap must not reuse the stale recognizer.
+        if (recoverable) coldRecognizerRecommended = true
         return Decision.PAUSE
+    }
+
+    /** Delay before a recovery retry; grows per attempt so the service can free the session. */
+    fun recoveryRetryDelayMs(): Long = when (recoveryAttempts) {
+        0, 1 -> 800L
+        2 -> 1_600L
+        else -> 2_500L
     }
 
     /** The chat path did not accept the turn (for example busy or a pending draft). */
@@ -140,6 +178,7 @@ class ContinuousConversationMode {
         }
         state = State.LISTENING
         silentAttempts = 0
+        recoveryAttempts = 0
         replyUtterance = null
         turn++
         return Decision.LISTEN
@@ -162,11 +201,27 @@ class ContinuousConversationMode {
         state = State.PAUSED
         replyUtterance = null
         silentAttempts = 0
+        recoveryAttempts = 0
         turn++
     }
 
     companion object {
         const val MAX_SILENT_RETRIES = 1
+        /** Automatic retries after „Spracherkenner belegt“ before the owner is asked to tap. */
+        const val MAX_RECOVERY_RETRIES = 3
+
+        /** Failures the on-device service typically clears by itself within seconds. */
+        internal fun isRecoverable(failure: LocalSpeechInputPolicy.Failure): Boolean = when (failure) {
+            LocalSpeechInputPolicy.Failure.BUSY, LocalSpeechInputPolicy.Failure.START_FAILED,
+            LocalSpeechInputPolicy.Failure.AUDIO, LocalSpeechInputPolicy.Failure.SERVICE_FAILURE -> true
+            else -> false
+        }
+
+        internal fun isSilence(failure: LocalSpeechInputPolicy.Failure): Boolean = when (failure) {
+            LocalSpeechInputPolicy.Failure.NO_MATCH, LocalSpeechInputPolicy.Failure.NO_INPUT,
+            LocalSpeechInputPolicy.Failure.TIMEOUT -> true
+            else -> false
+        }
 
         private val stopPhrases = setOf(
             "stopp", "stop", "halt", "ende", "beenden", "gespräch beenden", "gespräch stoppen",

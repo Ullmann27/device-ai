@@ -29,6 +29,7 @@ internal class LocalSpeechSession(
         val onState: (Boolean) -> Unit,
         val onText: (String) -> Unit,
         val onError: (String) -> Unit,
+        val onFailure: ((LocalSpeechInputPolicy.Failure) -> Unit)?,
         var recognizer: Recognizer? = null,
         var cancelTimeout: (() -> Unit)? = null
     )
@@ -55,7 +56,13 @@ internal class LocalSpeechSession(
         old?.let { release(it, cancel = true) }
     }
 
-    fun start(onState: (Boolean) -> Unit, onText: (String) -> Unit, onError: (String) -> Unit) {
+    /** [onFailure] (optional) receives the structured reason before the owner-facing [onError] text. */
+    fun start(
+        onState: (Boolean) -> Unit,
+        onText: (String) -> Unit,
+        onError: (String) -> Unit,
+        onFailure: ((LocalSpeechInputPolicy.Failure) -> Unit)? = null
+    ) {
         val requestedRevision = ++revision
         cancelCurrent()
         if (revision != requestedRevision) return
@@ -63,11 +70,15 @@ internal class LocalSpeechSession(
         val permission = runCatching { platform.microphoneGranted() }.getOrDefault(false)
         if (!permission || !availability) {
             onState(false)
-            if (revision == requestedRevision) onError(LocalSpeechInputPolicy.message(
-                if (!availability) LocalSpeechInputPolicy.Failure.SERVICE_UNAVAILABLE else LocalSpeechInputPolicy.Failure.PERMISSION))
+            if (revision == requestedRevision) {
+                val failure = if (!availability) LocalSpeechInputPolicy.Failure.SERVICE_UNAVAILABLE
+                    else LocalSpeechInputPolicy.Failure.PERMISSION
+                onFailure?.invoke(failure)
+                onError(LocalSpeechInputPolicy.message(failure))
+            }
             return
         }
-        val current = Active(turn.start(), onState, onText, onError)
+        val current = Active(turn.start(), onState, onText, onError, onFailure)
         active = current
         val callbacks = object : Callbacks {
             override fun ready() { if (isCurrent(current) && turn.isActive(current.token)) current.onState(true) }
@@ -81,7 +92,11 @@ internal class LocalSpeechSession(
                 val accepted = turn.accept(current.token, text)
                 complete(current, cancel = false) {
                     if (accepted != null) current.onText(accepted)
-                    else current.onError(LocalSpeechInputPolicy.message(if (timely) LocalSpeechInputPolicy.Failure.NO_MATCH else LocalSpeechInputPolicy.Failure.TIMEOUT))
+                    else {
+                        val failure = if (timely) LocalSpeechInputPolicy.Failure.NO_MATCH else LocalSpeechInputPolicy.Failure.TIMEOUT
+                        current.onFailure?.invoke(failure)
+                        current.onError(LocalSpeechInputPolicy.message(failure))
+                    }
                 }
             }
             override fun failed(failure: LocalSpeechInputPolicy.Failure) { if (isCurrent(current)) fail(current, failure) }
@@ -105,6 +120,7 @@ internal class LocalSpeechSession(
 
     private fun isCurrent(current: Active) = active === current && turn.isCurrent(current.token)
     private fun fail(current: Active, failure: LocalSpeechInputPolicy.Failure) = complete(current, cancel = true) {
+        current.onFailure?.invoke(failure)
         current.onError(LocalSpeechInputPolicy.message(failure))
     }
     private fun complete(current: Active, cancel: Boolean, deliver: () -> Unit) {

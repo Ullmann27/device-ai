@@ -24,7 +24,10 @@ object LocalModelHost {
     fun get(context: Context): Host = host ?: synchronized(this) {
         host ?: context.applicationContext.let { app ->
             val catalog = LocalModelCatalog(File(app.filesDir, "local-models"), NativeLiteRtModelInspector())
-            Host(catalog, thermallyGuarded(app, LiteRtLmLocalModelRuntime(catalog, File(app.cacheDir, "litertlm"))))
+            val power = app.getSystemService(Context.POWER_SERVICE) as? PowerManager
+            val runtime = LiteRtLmLocalModelRuntime(catalog, File(app.cacheDir, "litertlm"),
+                cpuThreadCount = { inferenceThreads(app, power) })
+            Host(catalog, thermallyGuarded(app, runtime, power))
         }.also { host = it }
     }
 
@@ -32,13 +35,29 @@ object LocalModelHost {
      * #569: every caller (chat, research, bots, planning) shares this one runtime, so the thermal guard sits here.
      * The listener lives as long as the process-wide runtime; it only reads Android's thermal level.
      */
-    private fun thermallyGuarded(app: Context, native: LocalModelRuntime): LocalModelRuntime {
-        val power = app.getSystemService(Context.POWER_SERVICE) as? PowerManager
-        val status: () -> Int? = { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) power?.currentThermalStatus else null }
+    private fun thermallyGuarded(app: Context, native: LocalModelRuntime, power: PowerManager?): LocalModelRuntime {
+        val status: () -> Int? = { thermalStatus(power) }
         val runtime = LocalModelThermalGuard.wrap(native, status)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) runCatching {
             power?.addThermalStatusListener(app.mainExecutor) { level -> LocalModelThermalGuard.onThermalStatus(runtime, level) }
         }
         return runtime
     }
+
+    private fun thermalStatus(power: PowerManager?): Int? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) runCatching { power?.currentThermalStatus }.getOrNull() else null
+
+    fun coolingMode(context: Context): LocalModelComputeBudget.CoolingMode = LocalModelComputeBudget.parseMode(
+        context.applicationContext.getSharedPreferences(LocalModelComputeBudget.PREFERENCES, Context.MODE_PRIVATE)
+            .getString(LocalModelComputeBudget.KEY_COOLING_MODE, null))
+
+    /** Owner preference; takes effect at the next model load (engine thread count is fixed per load). */
+    fun setCoolingMode(context: Context, mode: LocalModelComputeBudget.CoolingMode) {
+        context.applicationContext.getSharedPreferences(LocalModelComputeBudget.PREFERENCES, Context.MODE_PRIVATE)
+            .edit().putString(LocalModelComputeBudget.KEY_COOLING_MODE, mode.name).apply()
+    }
+
+    /** Thread budget for the LiteRT-LM CPU backend, decided from the core count, thermal level and cooling mode. */
+    fun inferenceThreads(context: Context, power: PowerManager?): Int = LocalModelComputeBudget.inferenceThreads(
+        Runtime.getRuntime().availableProcessors(), thermalStatus(power), coolingMode(context))
 }
