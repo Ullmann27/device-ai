@@ -152,3 +152,53 @@ referents, ASR/dialect, end-to-end inference, Android/Gradle and joules: **SKIP*
 Next falsifiable context trial: freeze independently authored ambiguous
 conversations, measure actual answer accuracy and unnecessary clarification
 with the same Gemma checkpoint on the phone.
+
+## Completed first research milestone / exact-source index
+
+These are three **stacked Draft PRs**, not three merges into Code50. H1 is
+based on #630; H2 depends on H1; H3 depends on H2. Fable's graphics branch,
+main, release/signing configuration, owner memory and model weights were not
+modified. Later evidence-only commits do not change the measured algorithms.
+
+| Pilot | Branch | Algorithm/source commit | Result / handoff |
+|---|---|---|---|
+| H1, #647 | `research/continuum-cognitive-pilots-20261108` | `f93b661ff2652b0783ab6224810edd85b8c368ff` | This document; 20 JVM tests, context HOLDOUT 1/12 to 12/12 |
+| H2, #648 | `research/continuum-prior-batch-pilot-20261108` | `9b8bf1d947323cecc75d6dd7dd2c1da8e73870b3` | [Prior-batch result](CONTINUUM-PRIOR-BATCH-PILOT-20261108.md); 17 JVM tests, verified synthetic diagnoses 48/96 to 96/96 |
+| H3, #649 | `research/continuum-verified-reuse-pilot-20261108` | `64b9c6d7ae0f968c1f7d34f0ee5941bdbe9cfe5e` | [Verified-reuse result](CONTINUUM-VERIFIED-REUSE-PILOT-20261108.md); 55 Node tests, 72,000 exact audited results, narrow CPU benefit and three failed benefit controls |
+
+Strongest confirmed cognitive bottleneck in this pilot: sequential
+normalization distorted diagnostic priors and used a scarce probe budget
+inefficiently. Atomic prior admission fixes that explicit mechanism without
+replacing the existing workspace. The result is not unrestricted reasoning,
+continual learning or human-level intelligence.
+
+Remaining scientific questions: does the gain survive miscalibrated priors,
+noisy observations and real costs; do correctly routed utterances actually
+improve same-model answers; what fraction of real on-device work is safely
+reusable before memory/model/policy revisions invalidate it?
+
+No positive result here justifies a 16M-parameter expansion, new learned
+checkpoint, autonomous product agent or planner activation. The next
+highest-priority falsifiable experiment is the noisy/cost-asymmetric
+diagnostic holdout specified in H2; the first real device acceptance still
+requires the existing permission/receipt path and an actual Fold7 run.
+
+### Resume checkpoint and final targeted regression
+
+On clean combined commit `25b160a564d2dd72663f621ab72c8dfa2b2a5f7d`,
+the two checked-in Kotlin runners were executed again: **20 + 17 JUnit PASS**,
+all frozen positive assertions PASS, zero skips. Existing plus new Node tests:
+**55 PASS**, zero failures/skips. Actual host tools: Kotlin 2.2.21, JDK 27+35,
+Node v26.12.1, Linux x64; Kotlin emits JVM 17 bytecode. This is not official
+Android/Gradle QA. Final logs and source bindings are under
+`docs/evidence/cognitive-pilots-20261108/`.
+
+All three branches were pushed and checked with `git ls-remote`; PRs
+#647/#648/#649 are Draft. Final evidence-only commits may follow the tested
+SHA without changing code. To resume, fetch the current H3 branch, check
+its real HEAD against the PR, read this index and the H2/H3 protocols, and
+start the specified noisy/cost-asymmetric holdout as a **new frozen trial**.
+There is no unfinished implementation or failed candidate regression in this
+milestone; deliberately red baseline/ablation logs and failed compute-benefit
+gates are retained scientific results. Do not rerun this consumed holdout
+and describe it as a new independent test.

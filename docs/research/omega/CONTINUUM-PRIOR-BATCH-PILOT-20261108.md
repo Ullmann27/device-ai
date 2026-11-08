@@ -108,6 +108,8 @@ include JIT/GC. Raw results: `docs/evidence/cognitive-pilots-20261108/reasoning/
 
 **Supported:** in these explicit four-cause worlds, preserving priors doubles
 the number of externally consistent diagnoses at the same probe budget.
+Permutation cases are correlated: 96 cases are **not 96 independent real-world
+problems**, and simulated probe costs are not measured device-tool costs.
 **Negative result:** not a latency improvement: about 5.7% more wall time and
 4.0% more CPU in this sample. Six-cause cases test distributions only.
 Sequential admission on the candidate reproduces 0/768 and 48/96, isolating
