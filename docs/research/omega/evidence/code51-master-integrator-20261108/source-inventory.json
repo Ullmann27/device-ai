@@ -1,0 +1,1766 @@
+{
+  "candidateSourceSha": "b3e288f79d3bce6da23dbf5a498d50811a246358",
+  "sourceBaseSha": "f153758dfd19d1c12f6fe63b6c4c4bd1da95e4cb",
+  "audit": "2026-11-08, remote heads read again before freeze; pin decisions in handoff",
+  "pullRequests": [
+    {
+      "pullRequest": 646,
+      "headSha": "f3f90736f4addb027dcc4f42a1f3cd3300713d3b",
+      "baseRefSha": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "mergeBaseSha": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "ancestorOfCandidate": true,
+      "changedFiles": [
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumUiCopy.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuousConversationMode.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalSpeechSession.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/SpeechRecoveryPolicy.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/SpeechTurnRecovery.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelComputeBudget.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisRenderQuality.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/MemoryFallbackModelNotReadyTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuousConversationRecoveryTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/SpeechRecoveryPolicyTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/SpeechTurnRecoveryTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelComputeBudgetTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisRenderQualityTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/uiTest/java/at/heinz/deviceai/AndroidOnDeviceSpeechRetryUiTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/FABLE51-CODE51-P0-SPEECH-THERMAL-HANDOFF-20261108.md"
+        },
+        {
+          "status": "M",
+          "path": "scripts/android-jvm-stubs/LiteRtLmCompileStub.kt"
+        }
+      ]
+    },
+    {
+      "pullRequest": 647,
+      "headSha": "f93b661ff2652b0783ab6224810edd85b8c368ff",
+      "baseRefSha": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "mergeBaseSha": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "ancestorOfCandidate": true,
+      "changedFiles": [
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContextDiscoursePrefixTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/context/baseline.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/context/candidate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/context/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/context/green-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/context/red-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/fabric-baseline.tap"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/CONTINUUM-COGNITIVE-PILOTS-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "scripts/continuum-context-pilot.sh"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/ContextPilot.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/context-cases.tsv"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/measure-context.py"
+        }
+      ]
+    },
+    {
+      "pullRequest": 648,
+      "headSha": "9b8bf1d947323cecc75d6dd7dd2c1da8e73870b3",
+      "baseRefSha": "f93b661ff2652b0783ab6224810edd85b8c368ff",
+      "mergeBaseSha": "f93b661ff2652b0783ab6224810edd85b8c368ff",
+      "ancestorOfCandidate": true,
+      "changedFiles": [
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/HypothesisWorkspace.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/HypothesisPriorBatchTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "docs/CONTINUUM-EXPERIMENTE.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/ablation.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/baseline-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/baseline.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/candidate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/green-junit.txt"
+        },
+        {
+          "status": "M",
+          "path": "docs/research/omega/CONTINUUM-COGNITIVE-PILOTS-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/CONTINUUM-PRIOR-BATCH-PILOT-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "scripts/continuum-reasoning-pilot.sh"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/ReasoningPilot.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/admission-batch.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/admission-sequential.kt"
+        },
+        {
+          "status": "D",
+          "path": "tools/continuum-cognitive-pilots/measure-context.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/measure-kotlin-pilots.py"
+        }
+      ]
+    },
+    {
+      "pullRequest": 649,
+      "headSha": "8688f855e967c72b345debce3cd6c2c90fae5806",
+      "baseRefSha": "9b8bf1d947323cecc75d6dd7dd2c1da8e73870b3",
+      "mergeBaseSha": "9b8bf1d947323cecc75d6dd7dd2c1da8e73870b3",
+      "ancestorOfCandidate": true,
+      "changedFiles": [
+        {
+          "status": "M",
+          "path": "docs/CONTINUUM-EXPERIMENTE.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/compute/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/compute/tests.tap"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/final-compute.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/final-context.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/final-reasoning.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/final-verification.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/source-bindings.json"
+        },
+        {
+          "status": "M",
+          "path": "docs/research/omega/CONTINUUM-COGNITIVE-PILOTS-20261108.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/research/omega/CONTINUUM-PRIOR-BATCH-PILOT-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/CONTINUUM-VERIFIED-REUSE-PILOT-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/reuse-protocol.json"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/verified-reuse-pilot.mjs"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/verified-reuse-pilot.test.mjs"
+        }
+      ]
+    },
+    {
+      "pullRequest": 650,
+      "headSha": "82590f532d0b070823d82e6007f53e5e825cf70f",
+      "baseRefSha": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "mergeBaseSha": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "ancestorOfCandidate": true,
+      "changedFiles": [
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/FreshKnowledgeNeed.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDocumentIntent.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchQuestionFocus.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/AgentExecutionTruthIntegrationTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentOutcomeEvidenceTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/ConversationResearchApprovalIntegrationTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/ConversationSpeechIntegrationRegressionTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntegrationTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/PublicConversationResearchTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/SOL-CODE51-MASTER-INTEGRATION-20261108.md"
+        }
+      ]
+    },
+    {
+      "pullRequest": 651,
+      "headSha": "09722adf6c88453ac7607a2a484ae97f00a8fc00",
+      "baseRefSha": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "mergeBaseSha": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "ancestorOfCandidate": true,
+      "changedFiles": [
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumUiCopy.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiCinematics.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiConstruct.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/Argon4CockpitAndBudgetRegressionTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ContinuumUiCopyTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumCockpitPresentationTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiCinematicsTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiConstructTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisMotionTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/fable51-fui-cinematics-20261108/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/fable51-fui-cinematics-20261108/sheet-fold-close.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/fable51-fui-cinematics-20261108/sheet-fold-open.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/fable51-fui-cinematics-20261108/sheet-phone.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/fable51-fui-cinematics-20261108/zoom-fold.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/FABLE51-CODE51-FUI-CINEMATIC-HANDOFF-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "scripts/hollywood-fui-cinematics-preview.sh"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiCinematicsPreview.kt"
+        }
+      ]
+    },
+    {
+      "pullRequest": 653,
+      "headSha": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "baseRefSha": "82590f532d0b070823d82e6007f53e5e825cf70f",
+      "mergeBaseSha": "82590f532d0b070823d82e6007f53e5e825cf70f",
+      "ancestorOfCandidate": true,
+      "changedFiles": [
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumUiCopy.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuousConversationMode.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/HypothesisWorkspace.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalSpeechSession.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/SpeechRecoveryPolicy.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/SpeechTurnRecovery.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelComputeBudget.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiCinematics.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiConstruct.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisRenderQuality.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/Argon4CockpitAndBudgetRegressionTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ContinuumUiCopyTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/MemoryFallbackModelNotReadyTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContextDiscoursePrefixTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuousConversationRecoveryTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModelTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/HypothesisPriorBatchTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/SpeechRecoveryPolicyTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/SpeechTurnRecoveryTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelComputeBudgetTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumCockpitPresentationTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiCinematicsTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiConstructTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisMotionTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisRenderQualityTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/uiTest/java/at/heinz/deviceai/AndroidOnDeviceSpeechRetryUiTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "docs/CONTINUUM-EXPERIMENTE.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/compute/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/compute/tests.tap"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/context/baseline.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/context/candidate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/context/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/context/green-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/context/red-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/fabric-baseline.tap"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/final-compute.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/final-context.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/final-reasoning.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/final-verification.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/ablation.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/baseline-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/baseline.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/candidate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/reasoning/green-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/cognitive-pilots-20261108/source-bindings.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/fable51-fui-cinematics-20261108/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/fable51-fui-cinematics-20261108/sheet-fold-close.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/fable51-fui-cinematics-20261108/sheet-fold-open.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/fable51-fui-cinematics-20261108/sheet-phone.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/fable51-fui-cinematics-20261108/zoom-fold.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/CONTINUUM-COGNITIVE-PILOTS-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/CONTINUUM-PRIOR-BATCH-PILOT-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/CONTINUUM-VERIFIED-REUSE-PILOT-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/FABLE51-CODE51-FUI-CINEMATIC-HANDOFF-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/FABLE51-CODE51-P0-SPEECH-THERMAL-HANDOFF-20261108.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/research/omega/SOL-CODE51-MASTER-INTEGRATION-20261108.md"
+        },
+        {
+          "status": "M",
+          "path": "scripts/android-jvm-stubs/LiteRtLmCompileStub.kt"
+        },
+        {
+          "status": "A",
+          "path": "scripts/continuum-context-pilot.sh"
+        },
+        {
+          "status": "A",
+          "path": "scripts/continuum-reasoning-pilot.sh"
+        },
+        {
+          "status": "A",
+          "path": "scripts/hollywood-fui-cinematics-preview.sh"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/ContextPilot.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/ReasoningPilot.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/admission-batch.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/admission-sequential.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/context-cases.tsv"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/measure-kotlin-pilots.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/reuse-protocol.json"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/verified-reuse-pilot.mjs"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/verified-reuse-pilot.test.mjs"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiCinematicsPreview.kt"
+        }
+      ]
+    },
+    {
+      "pullRequest": 655,
+      "headSha": "c90f020b8db929ae9a53e2cd95c39419497281b4",
+      "baseRefSha": "8688f855e967c72b345debce3cd6c2c90fae5806",
+      "mergeBaseSha": "8688f855e967c72b345debce3cd6c2c90fae5806",
+      "ancestorOfCandidate": false,
+      "changedFiles": [
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ConversationSituationModel.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/HypothesisWorkspace.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationSituationTracker.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/HypothesisRobustProbeTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/SituationReturnMorphologyTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "docs/CONTINUUM-EXPERIMENTE.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/auditor-tests.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/batch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/batch.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/sequential.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/sequential.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/uniform.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/uniform.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/v1-certificate.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/v1-certificate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/v1-myopic.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/v1-myopic.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/v2-certificate.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/v2-certificate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/worlds.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/dev/worlds.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/frozen-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/frozen-source-sha.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h1-regression-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h2-regression-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/dev-baseline/0-original.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/dev-baseline/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/dev-baseline/stories.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/dev-candidate/0-ablation-prefix3.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/dev-candidate/0-ablation-truncate-only.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/dev-candidate/0-candidate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/dev-candidate/0-original.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/dev-candidate/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/green/junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/green/provenance.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/red/junit-a69b0f29.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/red/provenance.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/0-ablation-prefix3.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/0-ablation-truncate-only.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/0-candidate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/0-original.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/1-ablation-prefix3.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/1-ablation-truncate-only.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/1-candidate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/1-original.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/2-ablation-prefix3.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/2-ablation-truncate-only.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/2-candidate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/2-original.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/3-ablation-prefix3.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/3-ablation-truncate-only.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/3-candidate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/3-original.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/generation.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/junit-candidate.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/junit-original-a69b0f29.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/provenance-candidate.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/provenance-original.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/h4b/test/stories.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/red-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/0-batch.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/0-certificate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/0-myopic.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/0-sequential.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/0-uniform.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/1-batch.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/1-certificate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/1-myopic.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/1-sequential.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/1-uniform.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/2-batch.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/2-certificate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/2-myopic.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/2-sequential.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/2-uniform.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/3-batch.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/3-certificate.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/3-myopic.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/3-sequential.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/3-uniform.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/worlds.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/test/worlds.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/v1-red-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/h4-20261108/v2-green-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/CONTINUUM-H4-HANDOFF-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "scripts/continuum-h4-check.sh"
+        },
+        {
+          "status": "A",
+          "path": "scripts/continuum-h4b-check.sh"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/H4BReturnPilot.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/H4DiagnosisPilot.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/h4-audit-test.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/h4-audit.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/h4-measure.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/h4-worlds.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/h4b-arms/candidate/H4BArms.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/h4b-arms/original/H4BArms.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/h4b-measure.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/h4b-score-test.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/h4b-score.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-cognitive-pilots/h4b-stories.py"
+        }
+      ]
+    },
+    {
+      "pullRequest": 658,
+      "headSha": "f153758dfd19d1c12f6fe63b6c4c4bd1da95e4cb",
+      "baseRefSha": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "mergeBaseSha": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "ancestorOfCandidate": true,
+      "changedFiles": [
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerFactMetaSeparator.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerResearchCommand.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/learning/OwnerMemoryPerspective.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/BootstrapBrainTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/ApprovedWebToolGateTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/ConversationResearchSingleEntryTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerFactMetaSeparatorTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntegrationTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntentTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerResearchCommandTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/FABLE51-CODE51-P1-CHAT-WEB-RESEARCH-HANDOFF-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/FABLE51-CODE51-P1-INTERNAL-NAVIGATION-HANDOFF-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/FABLE51-CODE51-P1-MEMORY-META-SEPARATION-HANDOFF-20261108.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/research/omega/SOL-CODE51-MASTER-INTEGRATION-20261108.md"
+        }
+      ]
+    },
+    {
+      "pullRequest": 659,
+      "headSha": "76b26e227e898f375820b872d674859016e6bad2",
+      "baseRefSha": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "mergeBaseSha": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "ancestorOfCandidate": false,
+      "changedFiles": [
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCoreLighting.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiCinematics.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiConstruct.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCinematicSettings.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCoreLightingTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiCinematicsTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiConstructTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiMaterialRegressionTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/uiTest/java/at/heinz/deviceai/ui/HollywoodFuiWindowUiTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/android-ui-lint-blocked.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/checks.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/choreography.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/compile-check.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/core-light-junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/geometry-after.csv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/geometry-before.csv"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/junit.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/material-comparison.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/material-green.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/material-red.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holographic-v2-20261108/phone-budgets.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/ASTRA-HOLOGRAPHIC-V2-HANDOFF-20261108.md"
+        },
+        {
+          "status": "M",
+          "path": "scripts/hollywood-fui-cinematics-preview.sh"
+        },
+        {
+          "status": "M",
+          "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiCinematicsPreview.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiPainterBenchmark.kt"
+        }
+      ]
+    },
+    {
+      "pullRequest": 660,
+      "headSha": "26b0ebc5a4b194e837f706784b6810052f592a86",
+      "baseRefSha": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "mergeBaseSha": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "ancestorOfCandidate": false,
+      "changedFiles": [
+        {
+          "status": "A",
+          "path": "docs/research/genesis-lab/AUDIT-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/genesis-lab/PROTOCOL-G1.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/genesis-lab/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/genesis-lab/challenges.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/genesis-lab/check_pack.py"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/genesis-lab/contract-result.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/GENESIS-INDEPENDENT-HANDOFF-20261108.md"
+        }
+      ]
+    },
+    {
+      "pullRequest": 661,
+      "headSha": "58c545aaefefb233371c92948ad1a9a002c7c004",
+      "baseRefSha": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "mergeBaseSha": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "ancestorOfCandidate": false,
+      "changedFiles": [
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-contact-sheet-half.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-fidelity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-fold-glassend-high.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-fold-settled-high.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-provenance.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-run.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-contact-sheet-half.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-control-hue-rotated-180.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-fidelity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-fold-glassend-high.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-fold-settled-high.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-provenance.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-run.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/ASTRA-HOLO-REFERENCE-FIDELITY-HANDOFF-20261108.md"
+        },
+        {
+          "status": "A",
+          "path": "scripts/hollywood-fui-reference-fidelity.sh"
+        },
+        {
+          "status": "M",
+          "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiCinematicsPreview.kt"
+        },
+        {
+          "status": "A",
+          "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiReferenceFidelity.kt"
+        }
+      ]
+    },
+    {
+      "pullRequest": 662,
+      "headSha": "6b299c33efc2e334661db4c92710753f802ac8a7",
+      "baseRefSha": "f153758dfd19d1c12f6fe63b6c4c4bd1da95e4cb",
+      "mergeBaseSha": "f153758dfd19d1c12f6fe63b6c4c4bd1da95e4cb",
+      "ancestorOfCandidate": false,
+      "changedFiles": [
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumBotRosterDialog.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotTeam.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotTeamState.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefEngineeringPracticeCurriculum.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefJobs.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefBotTeamSkillsTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefBotTeamTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefEngineeringPracticeCurriculumTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisGermanTerminologyTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisShellLayoutTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumBotRosterStorageUiTest.kt"
+        },
+        {
+          "status": "M",
+          "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumBotTaskRoutingUiTest.kt"
+        },
+        {
+          "status": "A",
+          "path": "docs/research/omega/ASTRA-BOT-UNIVERSE-HANDOFF-20261108.md"
+        }
+      ]
+    }
+  ],
+  "candidateChangedFiles": [
+    {
+      "status": "M",
+      "path": ".github/continuum/gemma-reopen-lifecycle.test.mjs"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuousConversationMode.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ConversationSituationModel.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationSituationTracker.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiCinematics.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiConstruct.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt"
+    },
+    {
+      "status": "A",
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCinematicSettings.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuousConversationRecoveryTest.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationContextInvalidationTest.kt"
+    },
+    {
+      "status": "A",
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/SituationReturnMorphologyTest.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiCinematicsTest.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiConstructTest.kt"
+    },
+    {
+      "status": "A",
+      "path": "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiMaterialRegressionTest.kt"
+    },
+    {
+      "status": "M",
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowLifecycleUiTest.kt"
+    },
+    {
+      "status": "A",
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ui/HollywoodFuiWindowUiTest.kt"
+    },
+    {
+      "status": "A",
+      "path": "docs/research/omega/ASTRA-HOLO-REFERENCE-FIDELITY-HANDOFF-20261108.md"
+    },
+    {
+      "status": "A",
+      "path": "docs/research/omega/ASTRA-HOLOGRAPHIC-V2-HANDOFF-20261108.md"
+    },
+    {
+      "status": "A",
+      "path": "docs/research/omega/CODE51-MASTER-INTEGRATOR-HANDOFF-20261108.md"
+    },
+    {
+      "status": "M",
+      "path": "scripts/hollywood-fui-cinematics-preview.sh"
+    },
+    {
+      "status": "A",
+      "path": "scripts/hollywood-fui-reference-fidelity.sh"
+    },
+    {
+      "status": "M",
+      "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiCinematicsPreview.kt"
+    },
+    {
+      "status": "A",
+      "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiPainterBenchmark.kt"
+    },
+    {
+      "status": "A",
+      "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiReferenceFidelity.kt"
+    },
+    {
+      "status": "A",
+      "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiReferenceFidelityChecks.kt"
+    }
+  ]
+}
