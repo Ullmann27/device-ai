@@ -44,8 +44,11 @@ def diagnosable(world):
 
 
 def audit(worlds_path, trace_path):
+    if not __debug__:
+        raise RuntimeError("Auditing requires enabled assertions; do not use python -O")
     worlds = {w["id"]: w for w in json.loads(Path(worlds_path).read_text())["worlds"]}
-    rows = list(csv.DictReader(Path(trace_path).open(), delimiter="\t"))
+    with Path(trace_path).open() as stream:
+        rows = list(csv.DictReader(stream, delimiter="\t"))
     assert len(rows) == len(worlds) and len({r["id"] for r in rows}) == len(worlds)
     totals = dict(correct=0, wrong=0, unsupported=0, abstain=0, justifiedAbstain=0,
                   avoidableAbstain=0, rawWrong=0, probes=0, simulatedCost=0, gainBits=0)

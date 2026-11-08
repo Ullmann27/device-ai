@@ -86,7 +86,7 @@ host evidence-logic tests cannot establish free-language model understanding.
 Reuse existing temporal/causal/contradiction/counterfactual components; no
 parallel memory. Only demonstrated deficits justify a minimal shadow extension.
 
-## Checkpoint
+## Initial checkpoint (historical)
 
 At this checkpoint: protocol only, experiments NOT_RUN. Next: implement the
 frozen world generator, original-source DEV baseline and independent verifier;
@@ -125,3 +125,33 @@ used as evidence. Our basic bound is independently checkable: with three
 fixed binary probes, each cause needs four distinct one-error transcripts;
 four disjoint such sets cannot fit into eight transcripts. The experiment
 does not assume that every four-cause world can always be solved.
+
+## Closure checkpoint: candidate v2 freeze
+
+The owner requested closure at the remaining usage limit. No H4-B/H4-C or
+new research project will start in this session. Finish the begun H4-A
+comparison, preserve negative as well as positive results, then hand over.
+
+V2 passes the original RED and all 14 workspace/prior/robust-probe JVM tests.
+DEV: **17/64** correct versus sequential 14, batch 13, nonadaptive 11;
+zero accepted wrong/unsupported decisions, 160 probes, simulated cost 279,
+11 oracle-avoidable abstentions. This is DEV, not confirmation of the gate.
+Six independent-auditor controls cover fabricated observations, duplicate
+receipts, foreign source IDs, stale feasible sets, instruction text and false
+claims. These are synthetic data-boundary tests, not Android privacy-gate
+or live tool-authorization acceptance.
+
+New `h4-measure.py` runs four rotating paired rounds, enforces the frozen TEST
+size/seed, uses a 256 MiB JVM and 120-second subprocess timeout, checks repeated
+decision outputs, and reports paired exact discordance tests, thread CPU,
+wall time and process high-water RSS. It requires a clean committed source.
+Reader handles are closed explicitly; optimized Python cannot disable the
+auditor's assertions silently. The harness stops when a policy returns no
+probe instead of repeating an identical null decision.
+
+Integration boundary: `selectCertificateProbe` is implemented directly in
+the existing `HypothesisWorkspace` and exercised through the H4 harness.
+There is **no new memory/planner service and no production caller activation**.
+SOL/Astra must not connect this bounded synthetic policy to real observations,
+tools or permanent facts without the H4-B/C evidence and existing ToolGate/
+privacy/provenance checks. No external agent's execution is claimed.

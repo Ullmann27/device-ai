@@ -45,7 +45,7 @@ object H4DiagnosisPilot {
         val cpuEnabled = bean.isCurrentThreadCpuTimeSupported && bean.isThreadCpuTimeEnabled
         val cpuStart = if (cpuEnabled) bean.currentThreadCpuTime else 0
         val started = System.nanoTime()
-        repeat(3) { step ->
+        for (step in 0 until 3) {
             val available = model.probes.filter { probe ->
                 seen.none { it.probe.id == probe.id } && probe.latencyCostMs <= 9f - cost
             }
@@ -56,7 +56,7 @@ object H4DiagnosisPilot {
                     model.probes, seen.map { HypothesisWorkspace.ProbeObservation(it.probe.id, it.value) },
                     if (arm == "myopic") 1 else 3 - step, 9f - cost)
                 else -> error("Unknown arm: $arm")
-            } ?: return@repeat
+            } ?: break
             val observed = when {
                 step == 0 && world.stratum in setOf(1, 3) -> null
                 step == 1 && world.stratum in setOf(2, 3) ->

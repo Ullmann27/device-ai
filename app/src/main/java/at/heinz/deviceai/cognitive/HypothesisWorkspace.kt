@@ -91,7 +91,7 @@ internal class HypothesisWorkspace(
 
     /**
      * Bounded, read-only experimental design under an explicit observation-error bound.
-     * Scores short plans by singleton-certificate transcript coverage per cost, not by priors.
+     * Prioritizes causes certifiable for every admissible error placement, per cost, not priors.
      * A certificate is conditional on the supplied model/error bound, never tool authority.
      */
     fun selectCertificateProbe(
@@ -125,26 +125,32 @@ internal class HypothesisWorkspace(
         val available = probes.filter { probe ->
             observations.none { it.probeId == probe.id } && cost(probe) <= costBudget
         }.sortedBy { it.id }
+        var bestGuarantee = 0.0
         var bestScore = 0.0
         var bestCost = Double.POSITIVE_INFINITY
         var bestPlan: List<Probe> = emptyList()
 
         fun evaluate(plan: List<Probe>, totalCost: Double) {
             var certificates = 0
+            val guaranteed = BooleanArray(ids.size) { errors[it] <= maxErrors }
             for (transcript in 0 until (1 shl plan.size)) {
-                var compatible = 0
+                val compatible = mutableListOf<Int>()
                 ids.forEachIndexed { index, id ->
                     var contradictions = errors[index]
                     plan.forEachIndexed { position, probe ->
                         val expected = probe.expectedByHypothesis[id]
                         if (expected != null && expected != (transcript and (1 shl position) != 0)) contradictions++
                     }
-                    if (contradictions <= maxErrors) compatible++
+                    if (contradictions <= maxErrors) compatible += index
                 }
-                if (compatible == 1) certificates++
+                if (compatible.size == 1) certificates++
+                else compatible.forEach { guaranteed[it] = false }
             }
+            val guarantee = guaranteed.count { it }.toDouble() / ids.size / totalCost
             val score = certificates.toDouble() / (1 shl plan.size) / totalCost
-            if (score > bestScore || score > 0.0 && score == bestScore && totalCost < bestCost) {
+            if (guarantee > bestGuarantee || guarantee == bestGuarantee &&
+                (score > bestScore || score > 0.0 && score == bestScore && totalCost < bestCost)) {
+                bestGuarantee = guarantee
                 bestScore = score
                 bestCost = totalCost
                 bestPlan = plan.toList()
