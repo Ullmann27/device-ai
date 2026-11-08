@@ -9560,10 +9560,20 @@ class AgentActivity : Activity() {
                         value.failure ?: "LOCAL_GENERATION_INCOMPLETE"
                     }
                 }
+                val speechShadow = if (
+                    ownerDialogueOutput && observations.isEmpty() && reflection == null &&
+                    submittedToolObservationCount == 0
+                ) at.heinz.deviceai.cognitive.StreamingSpeechShadowTrace() else null
                 var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
                     internetRevisionAtTurnStart, internetConsent::revision) {
                     val taskRemaining = botTask?.reserveModelCall(sessionId)
-                    generateLocal(cancellation,turnTrace,prompt.length, hardDeadlineMillis = taskRemaining) { callback ->
+                    generateLocal(
+                        cancellation,turnTrace,prompt.length,
+                        hardDeadlineMillis = taskRemaining,
+                        streamCandidateObserver = speechShadow?.let { trace ->
+                            { candidate, elapsed -> trace.observe(candidate, elapsed) }
+                        }
+                    ) { callback ->
                         at.heinz.deviceai.localmodel.LocalToolContinuation.submit(
                             localRuntime, prompt, forceFresh = hasScreen || (botTask != null && observations.isEmpty()),
                             responses = {
@@ -9573,6 +9583,20 @@ class AgentActivity : Activity() {
                                     ) ?: error("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET")
                                 }
                             }, callback = callback)
+                    }
+                }
+                if (speechShadow != null && generation.proposal == null &&
+                    generation.rejectedToolResponses.isEmpty()) {
+                    val speechSnapshot = speechShadow.snapshot()
+                    if (speechSnapshot.candidateCount > 0) runOnUiThread {
+                        if (sessionId == localSessionId && activeChatCancellation === cancellation) {
+                            addToolActivity(
+                                "SPEECH SHADOW · erster vollständiger Satz nach " +
+                                    speechSnapshot.firstCandidateMillis + " ms · Kandidaten " +
+                                    speechSnapshot.candidateCount + " · Zeichen " +
+                                    speechSnapshot.totalSpeakableChars + " · noch NICHT gesprochen"
+                            )
+                        }
                     }
                 }
                 requireUsableGeneration(generation)
