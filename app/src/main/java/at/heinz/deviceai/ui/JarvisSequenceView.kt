@@ -6,9 +6,11 @@ import android.os.Handler
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.View
+import at.heinz.deviceai.cockpit.CockpitAction
 import at.heinz.deviceai.cockpit.CockpitAnimationEvent
 import at.heinz.deviceai.cockpit.CockpitAnimationRenderer
 import at.heinz.deviceai.cockpit.MEMORY_TURN
+import at.heinz.deviceai.cockpit.ProcessStep
 import at.heinz.deviceai.cockpit.StepState
 
 /**
