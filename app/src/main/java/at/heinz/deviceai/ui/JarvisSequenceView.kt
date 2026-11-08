@@ -98,8 +98,7 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
     private var turn: String? = null
     private val stepStates = HashMap<String, StepState>()
     private val mainSceneActions = setOf(
-        CockpitAction.THINK, CockpitAction.RESEARCH, CockpitAction.TOOL,
-        CockpitAction.EXECUTE, CockpitAction.VERIFY
+        CockpitAction.THINK, CockpitAction.RESEARCH, CockpitAction.TOOL
     )
     // Bounded presentation history, matching the producer's recent-turn window.
     // A completed or displaced turn must not become visible again through a late callback.
@@ -210,11 +209,11 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         if (relevant.isEmpty()) return null
         val failed = relevant.lastOrNull { it.state == StepState.FAILED || it.state == StepState.BLOCKED }
         val live = relevant.lastOrNull { it.state == StepState.ACTIVE || it.state == StepState.WAITING }
-        val chosen = failed ?: live ?: relevant.last()
+        val chosen = live ?: failed ?: relevant.last()
         val state = when {
-            failed != null -> failed.state
             relevant.any { it.state == StepState.ACTIVE } -> StepState.ACTIVE
             relevant.any { it.state == StepState.WAITING } -> StepState.WAITING
+            failed != null -> failed.state
             relevant.all { it.state == StepState.DONE } -> StepState.DONE
             else -> chosen.state
         }
