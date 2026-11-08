@@ -100,8 +100,21 @@ internal object EntityRoleResolutionEngine {
         }
         val resolvedAnchor = anchor as? Resolution.Resolved ?: return anchor
         val relationKey = relation.trim().uppercase()
+        val canonicalKey = when (relationKey) {
+            "SCHWESTER" -> "SISTER"
+            "TOCHTER", "SOHN", "KIND" -> "CHILD"
+            else -> relationKey
+        }
+        val targetGender = when (relationKey) {
+            "TOCHTER" -> Gender.FEMININE
+            "SOHN" -> Gender.MASCULINE
+            else -> null
+        }
         val matching = edges.filter {
-            it.fromId == resolvedAnchor.entity.id && it.relation.uppercase() == relationKey
+            val edgeKey = it.relation.uppercase()
+            it.fromId == resolvedAnchor.entity.id &&
+                (edgeKey == relationKey || (edgeKey == canonicalKey &&
+                    (targetGender == null || entities[it.toId]?.gender == targetGender)))
         }
         if (matching.isEmpty()) return Resolution.NoEvidence
         val targets = matching.mapNotNull { edge -> entities[edge.toId]?.let { it to edge.sourceIds } }

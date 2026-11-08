@@ -176,6 +176,31 @@ class OwnerAppActionWorkSceneUiTest {
             .any { it.text.contains("neuen aktiven Fenster") })
     }
 
+    @Test fun implicitFuzzyNeedReturnsToConversationBeforeAppSelection() = withActivity { a, port, _ ->
+        submit(a, "Ich brauche Sig", chat = false)
+        await {
+            get(a, "appLookupActive") == false ||
+                ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true
+        }
+        assertFalse("Fuzzy implicit needs must not offer app selection",
+            ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
+        assertEquals(0, port.calls.get())
+        assertNull(get(a, "activeOwnerAppFlow"))
+        assertNull("Unaccepted matches must not become pronoun context", get(a, "appLookupContext"))
+    }
+
+    @Test fun explicitFuzzySelectionKeepsCancellationReceipt() = withActivity { a, port, _ ->
+        submit(a, "Öffne Sig", chat = false)
+        await { ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
+        val dialog = ShadowAlertDialog.getLatestAlertDialog()
+        assertEquals(1, dialog.listView.adapter.count)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+        await { get(a, "busy") == false }
+        assertEquals(0, port.calls.get())
+        assertTrue(descendants(a.window.decorView).filterIsInstance<TextView>()
+            .any { it.text.contains("App-Auswahl abgebrochen") })
+    }
+
     @Test fun stopBeforePostedBackendStartCannotReopenScene() = withActivity { a, port, _ ->
         submit(a, "Öffne Signal", chat = false)
         approve(port)

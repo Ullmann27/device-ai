@@ -69,4 +69,43 @@ class EntityRoleResolutionEngineTest {
             "owner","assistant",entities,listOf(ownerEdge))
         assertTrue(yours is EntityRoleResolutionEngine.Resolution.NoEvidence)
     }
+
+    @Test fun childTermsRequireTheKnownTargetGender() {
+        val son=EntityRoleResolutionEngine.Entity(
+            "synthetic-son","OWNER.CHILD[2]","Testsohn",EntityRoleResolutionEngine.Gender.MASCULINE)
+        val registry=entities + (son.id to son)
+        val edges=listOf(
+            EntityRoleResolutionEngine.RelationEdge("owner","CHILD","alina",setOf("daughter-evidence")),
+            EntityRoleResolutionEngine.RelationEdge("owner","CHILD",son.id,setOf("son-evidence")))
+        val frame=EntityRoleResolutionEngine.CenteringFrame(null,null,emptyList())
+        fun resolve(relation:String)=EntityRoleResolutionEngine.resolvePossessiveRelation(
+            "mein",relation,frame,"owner","assistant",registry,edges)
+        val daughter=resolve("Tochter") as EntityRoleResolutionEngine.Resolution.Resolved
+        assertEquals("alina",daughter.entity.id)
+        assertEquals(setOf("daughter-evidence"),daughter.sourceIds)
+        assertEquals(son.id,(resolve("Sohn") as EntityRoleResolutionEngine.Resolution.Resolved).entity.id)
+        assertTrue(resolve("Kind") is EntityRoleResolutionEngine.Resolution.Ambiguous)
+        assertTrue(resolve("CHILD") is EntityRoleResolutionEngine.Resolution.Ambiguous)
+    }
+
+    @Test fun unknownGenderChildCannotBeDeclaredDaughterOrSon() {
+        val child=EntityRoleResolutionEngine.Entity(
+            "synthetic-child","OWNER.CHILD[2]","Testkind",EntityRoleResolutionEngine.Gender.UNKNOWN)
+        val edge=EntityRoleResolutionEngine.RelationEdge("owner","CHILD",child.id,setOf("child-evidence"))
+        for (relation in listOf("Tochter","Sohn")) {
+            assertTrue(EntityRoleResolutionEngine.resolvePossessiveRelation(
+                "mein",relation,EntityRoleResolutionEngine.CenteringFrame(null,null,emptyList()),
+                "owner","assistant",entities + (child.id to child),listOf(edge))
+                is EntityRoleResolutionEngine.Resolution.NoEvidence)
+        }
+    }
+
+    @Test fun sharedOwnerChildEdgesDoNotInventASisterEdge() {
+        val edges=listOf(
+            EntityRoleResolutionEngine.RelationEdge("owner","CHILD","alina",setOf("first-child")),
+            EntityRoleResolutionEngine.RelationEdge("owner","CHILD","zoey",setOf("second-child")))
+        assertTrue(EntityRoleResolutionEngine.resolvePossessiveRelation(
+            "ihre","Schwester",EntityRoleResolutionEngine.advanceFrame("alina",emptyList()),
+            "owner","assistant",entities,edges) is EntityRoleResolutionEngine.Resolution.NoEvidence)
+    }
 }

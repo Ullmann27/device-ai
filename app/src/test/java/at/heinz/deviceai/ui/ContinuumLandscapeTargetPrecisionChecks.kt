@@ -35,18 +35,18 @@ internal object ContinuumLandscapeTargetPrecisionChecks {
     }
 
     fun unchangedHeroBounds() {
-        // Frozen from the C1 baseline.
+        // Frozen before Code50 target rounding.
         val baselines = listOf(
-            floatArrayOf(840.0f, 649.0f, 1.0f, 326.34808f, 105.98216f, 637.9011f, 508.0f),
-            floatArrayOf(840.0f, 649.0f, 1.3f, 322.86407f, 137.2f, 628.4813f, 508.0f),
-            floatArrayOf(832.0f, 700.0f, 1.0f, 323.35333f, 105.48709f, 631.80774f, 559.0f),
-            floatArrayOf(832.0f, 700.0f, 1.3f, 319.87164f, 137.2f, 622.3943f, 559.0f),
-            floatArrayOf(960.0f, 600.0f, 1.0f, 371.26923f, 109.078125f, 729.3013f, 459.0f),
-            floatArrayOf(960.0f, 600.0f, 1.3f, 367.75034f, 137.2f, 719.78723f, 459.0f),
-            floatArrayOf(1280.0f, 800.0f, 1.0f, 475.43146f, 127.4375f, 965.1295f, 659.0f),
-            floatArrayOf(1280.0f, 800.0f, 1.3f, 475.43146f, 127.4375f, 965.1295f, 659.0f),
-            floatArrayOf(1440.0f, 900.0f, 1.0f, 517.0942f, 136.61719f, 1077.7732f, 759.0f),
-            floatArrayOf(1440.0f, 900.0f, 1.3f, 517.0942f, 136.61719f, 1077.7732f, 759.0f),
+            floatArrayOf(840.0f, 649.0f, 1.0f, 327.06042f, 138.30939f, 636.4197f, 508.0f),
+            floatArrayOf(840.0f, 649.0f, 1.3f, 327.06042f, 161.20218f, 636.4197f, 508.0f),
+            floatArrayOf(832.0f, 700.0f, 1.0f, 324.04193f, 137.58261f, 630.2621f, 559.0f),
+            floatArrayOf(832.0f, 700.0f, 1.3f, 324.04193f, 160.2574f, 630.2621f, 559.0f),
+            floatArrayOf(960.0f, 600.0f, 1.0f, 372.3376f, 149.21072f, 728.78235f, 459.0f),
+            floatArrayOf(960.0f, 600.0f, 1.3f, 372.3376f, 175.37393f, 728.78235f, 459.0f),
+            floatArrayOf(1280.0f, 800.0f, 1.0f, 478.36002f, 158.0f, 969.64f, 659.0f),
+            floatArrayOf(1280.0f, 800.0f, 1.3f, 478.36002f, 186.79999f, 969.64f, 659.0f),
+            floatArrayOf(1440.0f, 900.0f, 1.0f, 521.56006f, 158.0f, 1086.4401f, 759.0f),
+            floatArrayOf(1440.0f, 900.0f, 1.3f, 521.56006f, 186.79999f, 1086.4401f, 759.0f),
         )
         for (row in baselines) {
             val hero = requireNotNull(ContinuumHomeLayout.wide(row[0], row[1], row[2])[Slot.HERO])
