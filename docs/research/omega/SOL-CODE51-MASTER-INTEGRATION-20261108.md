@@ -1,6 +1,7 @@
 # Code51 master integration
 
-Status: WIP / UNVERIFIED; Draft PR #650. Owner canon #642, execution #643; read #637-641.
+Status: WIP / host integration; Draft PRs #650 and #653. No device acceptance.
+Owner canon #642, execution #643; read #637-641.
 No main merge, signing, release, installation, private data or signer access.
 
 ## Frozen source graph
@@ -12,7 +13,10 @@ No main merge, signing, release, installation, private data or signer access.
 | #646 | `f3f90736f4addb027dcc4f42a1f3cd3300713d3b` | Fable speech recovery / model status / thermal budget |
 | #647 | `f93b661ff2652b0783ab6224810edd85b8c368ff` | Cognitive discourse pilot |
 | #648 (stacked on #647) | `9b8bf1d947323cecc75d6dd7dd2c1da8e73870b3` | Hypothesis prior / diagnostic pilot |
-| This branch | `sol/code51-master-integration-20261108` | Existing UI/router/web integration and independent regression tests |
+| #649 (includes #647/#648) | `8688f855e967c72b345debce3cd6c2c90fae5806` | Research-only verified-reuse pilot |
+| #651 | `09722adf6c88453ac7607a2a484ae97f00a8fc00` | Fable cinematic workscene / shared render budget |
+| #650 | `82590f532d0b070823d82e6007f53e5e825cf70f` | Own routing, approved research and truthful agent checkpoint |
+| #653 | `10139f21edfb088ddb8349bcaf987f1211bd1024` | Combined candidate on `sol/code51-pinned-integration-20261108` |
 
 Older #574/#614/#600/#601/#602/#635 metadata inspected; no blind merges.
 Experiment contracts #41, AGENTS.md and the experiment register read.
@@ -116,3 +120,28 @@ Reproduce #639, preserve negative file/app/compound cases, wire only existing
 centers and the existing approved research path. Keep speech/cognitive changes
 owned by their current PRs. Commit/push each meaningful checkpoint.
 Rollback is reverting this branch's commits, never rewriting others' branches.
+
+## Combined candidate checkpoint
+
+All five current team heads were read back immediately before integration and
+matched the pins above. Three explicit merge commits (`3539fcd2`, `838605a7`,
+`10139f21`) combine #646, #649 and #651 on #650; no conflicts, main changes or
+production promotion. Draft #653 is stacked on #650.
+
+Exact candidate `10139f21` native Node selection: 202 PASS, 0 FAIL, 0 SKIP.
+This includes routing/lifecycle/builder/backlog/independent-verifier controls,
+virtual-fabric tests and the verified-reuse research negative controls.
+Original-source context pilot: 20 PASS. Reasoning batch pilot: 17 PASS,
+768 tested permutations with matching priors, 26 negative controls.
+These are synthetic host assertions, not device intelligence or energy proof.
+
+Full combined Kotlin main/test compile: PASS; 631 JUnit classes, 3544 executed
+tests, 2 failures. Executed as an unprivileged user so the existing read-only
+filesystem negative is meaningful. One additional coupled native-model bridge
+test still expected PARTIAL after a denied tool; it now asserts FAILURE,
+blocker and absence of the fabricated success text (8 bridge tests PASS).
+The other failure is the scorer's generated `app/build/continuum-eval` report
+being root-owned from the earlier run, not a product error. Final full rerun
+with writable generated-report artifacts is pending; no suite-wide GREEN claim.
+Four executable Checks programs PASS; one Checks helper has no main and is
+covered by JUnit rather than being an executable program.
