@@ -62,6 +62,27 @@ class AvatarCameraFramingTest {
         }
     }
 
+    @Test fun profileBlendStartsAtVisibleWindowAndEndsAtNewSafeTarget() {
+        val focus = AvatarGlbContract.Focus(0.0, 0.0, 0.0, .2, .5)
+        val medium = AvatarCameraFraming(
+            focus, 2.0, .7, 1.0, profile = AvatarCameraFraming.Profile.MEDIUM_TERMINAL
+        ).sample(.5f, 1f)
+        val full = AvatarCameraFraming(
+            focus, 2.0, .7, 1.0, profile = AvatarCameraFraming.Profile.FULL_MISSION_BAY
+        ).sample(.5f, 1f)
+
+        assertSame(medium, AvatarCameraFraming.blend(medium, full, 0f))
+        assertSame(full, AvatarCameraFraming.blend(medium, full, 1f))
+        val mid = AvatarCameraFraming.blend(medium, full, .5f)
+        assertEquals((medium.anchorX + full.anchorX) / 2.0, mid.anchorX, 1e-12)
+        assertEquals((medium.headScale + full.headScale) / 2.0, mid.headScale, 1e-12)
+        assertTrue(mid.anchorX < medium.anchorX)
+        assertTrue(mid.anchorX > full.anchorX)
+        assertThrows(IllegalArgumentException::class.java) {
+            AvatarCameraFraming.blend(medium, full, Float.NaN)
+        }
+    }
+
     @Test fun unreachableKeepOutCannotIntroduceCameraTravel() {
         val focus = AvatarGlbContract.Focus(0.0, 0.0, 0.0, .2, .5,
             face = AvatarGlbContract.FaceProfile(-.2, .1, listOf(-.2)))
