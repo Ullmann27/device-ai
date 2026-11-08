@@ -157,7 +157,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         closingElapsedMs = closing
         reducedMotion = reduced || !budget.animate
         openness = open
-        if (cinematicEffectsEnabled && !reducedMotion && closing < 0L) emitPhaseFeedback(elapsed)
+        if (!cinematicEffectsEnabled) return false
+        if (!reducedMotion && closing < 0L) emitPhaseFeedback(elapsed)
         invalidate()
         return budget.needsLiveFrames(active, reducedMotion,
             isAttachedToWindow && isShown && windowVisibility == VISIBLE && hasWindowFocus(),
@@ -346,7 +347,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             canvas.drawLine(card.centerX(), card.centerY(), centreX, centreY, paint)
             drawSmallLabel(
                 canvas,
-                "AGENT %02d".format(Locale.ROOT, index + 1),
+                "SCHRITT %02d".format(Locale.ROOT, index + 1),
                 card.left + dp(6f),
                 card.top + dp(15f),
                 alpha,
@@ -416,7 +417,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             val reveal = ((timelineElapsed - HollywoodFuiConstruct.DATA_END_MS - index * 80L) / 180f).coerceIn(0f, 1f)
             val barLeft = box.left + size + dp(16f)
             val y = box.top + box.height() * (index + 1f) / 5f
-            val fraction = (kotlin.math.abs(step.value) / maxAbs).toFloat().coerceIn(.08f, 1f) * reveal
+            val fraction = (kotlin.math.abs(step.value) / maxAbs).toFloat().coerceIn(0f, 1f) * reveal
             paint.strokeWidth = dp(3f)
             paint.color = withAlpha(JarvisDesign.Colors.violet, (.30f + index * .08f) * alpha)
             canvas.drawLine(barLeft, y, barLeft + box.width() * .28f * fraction, y, paint)
@@ -480,7 +481,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         lines.take(8).forEachIndexed { index, line ->
             val y = box.top + dp(18f + index * 18f)
             if (y > box.bottom) return@forEachIndexed
-            val prefix = if (prefixAgents) "AGENT %02d · ".format(Locale.ROOT, index + 1) else ""
+            val prefix = if (prefixAgents) "SCHRITT %02d · ".format(Locale.ROOT, index + 1) else ""
             drawSmallLabel(canvas, prefix + line.label, box.left + dp(6f), y, alpha, stateColor(line.state))
         }
     }

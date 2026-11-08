@@ -1,6 +1,7 @@
 # Astra: holografische Glaskonstruktion V2
 
-Status: WIP / NOT_DEVICE_VERIFIED. Experiment: VIS-HOLO-V2-20261108.
+Status: SOURCE_INTEGRATED / KOTLIN_UNIT_TESTS_CHECKED / NOT_DEVICE_VERIFIED.
+Experiment: VIS-HOLO-V2-20261108. Draft-PR #659, kein Release-/AAA-Abnahmeversprechen.
 
 ## Integrationsvertrag
 
@@ -75,6 +76,102 @@ Zugaengliches Video tatsaechlich dekodiert:
 884x804, 15 fps, 20,2 s. Frame bei 3 s betrachtet: explizite
 Robolectric-Hostaufnahme mit 2D-Kopf und simuliertem Toolinput, **kein**
 Fold7-/Filament-/Gemini-Referenznachweis.
+
+## Finaler Nachweis und Reproduktion
+
+Gesicherte Entwicklungs-Checkpoints: `3e481449bc9671ce74e974959e96294d6d003f0b`
+(Audit), `a9cf4b8de89589b085943681cc0293da5652aace` (Material),
+`452591edd31215fecea7a3110036157a7c1ed438` (Zeitbasis/Fallback).
+Jeweils Commit -> Push -> `git ls-remote` mit identischem SHA ausgefuehrt.
+Finale Evidenz liegt in `docs/evidence/astra-holographic-v2-20261108/`.
+
+| Pruefung | Ergebnis / Grenze |
+|---|---|
+| Material-RED | 5 Tests, 4 reproduzierte Fehler auf unveraendertem Baseline-Painter |
+| Material-GREEN | 9/9; Anker-Ausblendung, Close-Puls, scheibengrosse Gradienten, konstante Shader-/Path-Identitaeten und harter 24-Motes-Deckel |
+| Vollstaendige Kotlin-Main-/Test-Kompilation | PASS, JDK21.0.13 / Kotlin2.2.21; bestehender compile-only LiteRT-Stub, kein echtes LiteRT |
+| Vollstaendige JVM-Regression | 632 JUnit-Klassen, 3551 Tests PASS; vier ausfuehrbare Checks PASS (fuenfter Helper hat kein main) |
+| Schlusskorrekturen | Erneute Typpruefung der Android-Fenster-/Overlay-Klassen, voller JVM-Lauf mit diesen Klassen zuerst im Classpath |
+| Neue UI-Tests | 5 Robolectric-Faelle typgeprueft: nur eine Uhr, Content-Freigabe, spaetes Schliessen, Rueckfall/reduzierte Bewegung, geschuetzte Bereiche/STOP/Thermik; Ausfuehrung BLOCKED |
+| Android-Gradle / Lint / native UI | Tatsaechlich versucht, AGP8.10.0 aus Google-Maven nicht aufloesbar; kein SDK/adb/Emulator. Kein APK |
+| Java2D | 36 Baseline-, 36 Material- und 40 finale Frames; Materialvergleich bei identischen 760 ms, danach korrigierte Preview mit Frontinhalt vor dem Dekor |
+| Fold7 / Android17 / ARM64 | NOT_RUN: Filament-Pixel, Touch/TalkBack/200%-Schrift, Falten/Rotation, STOP waehrend Inferenz, Vorder-/Hintergrund, Framezeiten/Jank/GPU/Temperatur/Akku |
+
+Kommandos (aus Repo-Root; vorhandene Dependencies gemaess
+`scripts/android-kotlin-compile-check.sh` und `android-kotlin-unit-check.sh`):
+
+```sh
+export JAVA_HOME=/pfad/zu/jdk21
+export PATH="$JAVA_HOME/bin:/pfad/zu/kotlinc/bin:$PATH"
+export LANG=C.UTF-8 LC_ALL=C.UTF-8 JAVA_OPTS=-Xmx3g
+export CONTINUUM_ANDROID_DEPS=/pfad/zu/deps
+export CONTINUUM_JUNIT_JARS="$CONTINUUM_ANDROID_DEPS/junit.jar:$CONTINUUM_ANDROID_DEPS/hamcrest.jar"
+# Normaler unprivilegierter Benutzer empfohlen. Im root-Host wurde nur fuer
+# diese Testprozesse DAC-Bypass entzogen, damit read-only wirklich read-only ist:
+setpriv --bounding-set=-dac_override,-dac_read_search \
+  scripts/android-kotlin-unit-check.sh "$PWD/build/astra-v2/final-unit"
+scripts/hollywood-fui-cinematics-preview.sh build/astra-v2/final
+./gradlew -PcontinuumUiWidgetTests=true :app:testDebugUnitTest \
+  --tests at.heinz.deviceai.ui.HollywoodFuiWindowUiTest :app:lintDebug --no-daemon
+```
+
+Baseline-Frames lassen sich in einem separaten Checkout von `cb11db2f9` mit
+dem dortigen Preview-Skript reproduzieren; Material-Frames entsprechend auf
+`a9cf4b8de`. Keine Golden-Master-Gleichheit mit dem Referenzbild behauptet:
+Layout, Avatar, nativer Inhalt und Android-Perspektive fehlen der Java2D-Vorschau.
+Die Kontaktblaetter sind verkleinerte Zusammenstellungen dieser Frames; die
+Vollbilder werden durch das Skript erzeugt. Blau/Violett-Verlauf, Reflex und
+entfernter Anker wurden in den gerenderten Vorher-/Nachher-Frames betrachtet.
+
+## Ressourcen: gemessen versus Budget
+
+`HollywoodFuiPainterBenchmark` misst 2000 Warmup- und 4000 Sample-Aufrufe pro
+Budget mit ThreadMXBean auf dem **x86_64-Host**. Derselbe Probe-Quellcode wurde
+gegen Baseline- und neuen Painter kompiliert. CountingPainter ohne echte
+Rasterisierung, keine Android-Canvas-/GPU-/Filamentkosten; JIT kann Arbeit
+eliminieren. Das ist ein begrenzter Allokations-/Dispatch-Vergleich, **keine
+App-Framezeit und kein 60-FPS-Beweis**. Drei Glasschichten und Scanraster sind
+fuer diesen Vergleich in beiden Versionen absichtlich identisch beauftragt;
+die App reduziert zusaetzlich auf zwei/eine Schicht und blendet das Raster aus.
+
+| Host-Probe | Bytes/Aufruf vorher -> nachher | p95 Mikrosekunden vorher -> nachher |
+|---|---:|---:|
+| HIGH | 4328 -> 232 | 6,630 -> 4,346 |
+| Warm + Inferenz | 1664 -> 119,4 | 3,995 -> 1,021 |
+| LOW (ein statischer Aufruf, keine App-Dauerschleife) | 704,8 -> 64,1 | 3,065 -> 0,341 |
+
+JarvisRenderQuality bleibt alleinige Budgetquelle: HIGH 16 ms, maximal 24
+Motes/3 Scheiben; warme Inferenz 80 ms, 6 Motes/2 Scheiben; LOW/SUSPENDED
+keine Live-Dekoration, kein Bloom, 0 Motes und eine statische Scheibe.
+Sichtbarkeit, echte Arbeit, reduzierte Bewegung, Close und Kill-Switch
+muessen alle Live-Frames erlauben. Die Shell taktet; kein eigener Overlay-Timer.
+Keine Aenderung der essentiellen Avatar-/Sprach-Policy.
+
+## Grenzen und SOL-Abnahme
+
+Die drei priorisierten Luecken sind im Android-Code geschlossen: korrekt
+dimensionierte Materialien, Dekor hinter nativem Inhalt, gemeinsame Zeitbasis.
+Beide #651-Review-Hinweise sind adressiert: Anker verschwindet vollstaendig;
+Experiment-ID, Kill-Switch, Rueckfall und naechster Einstieg sind dokumentiert.
+Keine fremden Review-Threads als erledigt markiert.
+
+Sieben vorhandene Profile bleiben am selben Ereignispfad. Timeline-Zeilen
+heissen jetzt SCHRITT statt erfundener AGENT-Instanzen; ein numerischer Nullwert
+erzeugt keinen kuenstlichen Mindestbalken. Die Profile sind **nicht** sieben
+neu fertiggestellte Fachanwendungen: Gedaechtnis nutzt derzeit Evidence,
+Planung Swarm, Chrono zeigt echte Calculation-Daten. Die umfassende
+Memory-/Timeline-Gestaltung, neue dynamische Filament-Kernbeleuchtung,
+Dialog-/Typografie-/Navigation-Ueberarbeitung und alle sieben Geraete-Workscenes
+bleiben offen. Keine Ersatzavatararbeit.
+
+SOL kann diesen gepinnten Vorschlag separat auf #653 oder den spaeteren
+Reconciliation-Stand pruefen. Vor Integration: native UI-Suite ausfuehren,
+Original-3D sichtbar + Blick/Blink/Visemen erhalten bestaetigen, Ankerherkunft
+und Neigung am Fold7 filmen; alle sieben Profile mit wirklichen Ereignissen,
+fontScale 2.0, beide Displays, Rotation/Fold, STOP, Hintergrund und Wechsel
+des Kill-Switch waehrend Aufbau/Arbeit/Abbau pruefen. Je 2 Minuten Idle/Arbeit/
+Modellinferenz mit Framezeiten, Jank, CPU/GPU, RAM und Temperatur erfassen.
+Ohne diese Nachweise bleibt die filmische Produktabnahme offen.
 
 ## Rueckfall / naechster Einstieg
 
