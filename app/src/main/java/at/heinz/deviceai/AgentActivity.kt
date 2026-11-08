@@ -3112,7 +3112,7 @@ class AgentActivity : Activity() {
             "Kontextobjekte $contextCount · Budget ${promptBudgetLabel(promptCap)} · Modell ${lease.modelHash.ifBlank { "unbekannt" }}")
     }
 
-    private fun presentLocalReasoningWorkScene(lease: LocalReasoningWorkScene) {
+    private fun presentLocalReasoningWorkScene(lease: LocalReasoningWorkScene, retry: Boolean = false) {
         if (localReasoningWorkScene !== lease || lease.shown ||
             sessionId != lease.session || workPresentationGeneration != lease.generation ||
             lease.phase.rank > WorkscenePhase.LOCAL_REASONING.rank ||
@@ -3153,8 +3153,8 @@ class AgentActivity : Activity() {
             lease.status = status
             lease.telemetry = telemetry
             workWindowHost.workStarted(emphasize = true)
-        } else home.post {
-            if (localReasoningWorkScene === lease && !lease.shown) presentLocalReasoningWorkScene(lease)
+        } else if (!retry) home.post {
+            if (localReasoningWorkScene === lease && !lease.shown) presentLocalReasoningWorkScene(lease, retry = true)
         }
     }
 
