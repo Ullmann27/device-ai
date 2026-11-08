@@ -27,7 +27,7 @@ internal object LocalChatPromptBudget {
         hasObservations: Boolean,
         hasReflection: Boolean
     ): Int {
-        if (task.isBlank() || task.length !in 1..240 || hasMemories || hasConversationContext ||
+        if (task.isBlank() || task.length > 240 || hasMemories || hasConversationContext ||
             hasGroundedEvidence || hasObservations || hasReflection) return FULL_CHARACTERS
         val assessment = ContinuumTaskClassifier.classify(task)
         if (assessment.expectedToolUse || assessment.freshnessNeeded ||
