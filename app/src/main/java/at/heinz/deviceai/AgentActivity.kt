@@ -2123,7 +2123,7 @@ class AgentActivity : Activity() {
             addAssistantMessage(if (draftTarget)
                 "Einen früheren Entwurf finde ich im Arbeitsverlauf nicht. Welchen meinst du – oder soll ich einen neuen erstellen?"
                 else "Eine frühere PDF, die ich noch öffnen darf, finde ich nicht. Welche meinst du? Ich kann die Auswahl öffnen.",
-                false, keepCockpit = inCockpit)
+                true, keepCockpit = inCockpit)
             return
         }
         val whenText = at.heinz.deviceai.cognitive.WorkRecall.whenText(meant.startedAt, now, zone)
@@ -2135,18 +2135,18 @@ class AgentActivity : Activity() {
             val basis = at.heinz.deviceai.cognitive.DocumentDraftPrompt(meant.request, "", meant.coveredChars, meant.sourceChars)
             val window = presentDraftScene(DocumentDraftTurn(basis, name, meant.id), meant.draft.orEmpty())
             addAssistantMessage("Verstanden – du meinst den Entwurf von $whenText zu „$name“. Hier ist er.",
-                false, keepCockpit = window != null || inCockpit)
+                true, keepCockpit = window != null || inCockpit)
             return
         }
         val readable = runCatching {
             contentResolver.persistedUriPermissions.filter { it.isReadPermission }.map { it.uri.toString() }.toSet()
         }.getOrDefault(emptySet())
         if (meant.documentUri in readable) {
-            addAssistantMessage("Verstanden – du meinst „$name“ von $whenText. Ich öffne sie.", false, keepCockpit = inCockpit)
+            addAssistantMessage("Verstanden – du meinst „$name“ von $whenText. Ich öffne sie.", true, keepCockpit = inCockpit)
             pendingDocumentRequest = spoken
             readPdfDocument(android.net.Uri.parse(meant.documentUri))
         } else addAssistantMessage("Du meinst „$name“ von $whenText – die darf ich nicht mehr öffnen. Wähle sie bitte neu aus.",
-            false, keepCockpit = inCockpit)
+            true, keepCockpit = inCockpit)
     }
 
     /** „die ausgewählte PDF“: the PDF chosen before, if Android still lets JARVIS read it; otherwise one short question. */
@@ -2164,7 +2164,7 @@ class AgentActivity : Activity() {
                 readPdfDocument(android.net.Uri.parse(last.documentUri), remembered = last)
             } else {
                 addAssistantMessage("Welche PDF meinst du? Eine zuvor gewählte darf ich nicht mehr öffnen – ich zeige dir die Auswahl.",
-                    false, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+                    true, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
                 openPdfDocumentPicker(document.wantsDraft, request)
             }
         }
@@ -2204,21 +2204,21 @@ class AgentActivity : Activity() {
         when {
             // A second tap while this draft runs changes nothing: the window keeps saying what really happens.
             documentDraftTurn != null -> addAssistantMessage("Der Entwurf läuft bereits – mit STOP brichst du ihn ab.",
-                false, keepCockpit = inCockpit)
+                true, keepCockpit = inCockpit)
             prompt == null -> {
                 showDocumentDraftStatus("Für einen Entwurf fehlt der Dokumenttext.")
-                addAssistantMessage("Für einen Entwurf fehlt der Dokumenttext.", false, keepCockpit = inCockpit)
+                addAssistantMessage("Für einen Entwurf fehlt der Dokumenttext.", true, keepCockpit = inCockpit)
             }
             busy -> {
                 showDocumentDraftStatus("Entwurf nicht gestartet – JARVIS arbeitet an einem anderen Auftrag.")
                 addAssistantMessage("JARVIS arbeitet gerade an einem anderen Auftrag – der Entwurf startet nicht nebenher.",
-                    false, keepCockpit = inCockpit)
+                    true, keepCockpit = inCockpit)
             }
             !localModelReady() -> {
                 recordWork(workEpisodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.NO_MODEL) }
                 showDocumentDraftStatus("Entwurf: Lokales Modell nicht geladen · in der Modellverwaltung laden.")
                 addAssistantMessage("Entwurf: Lokales Modell nicht geladen · in der Modellverwaltung laden.",
-                    false, keepCockpit = inCockpit)
+                    true, keepCockpit = inCockpit)
             }
             else -> {
                 recordWork(workEpisodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING) }
@@ -2343,7 +2343,7 @@ class AgentActivity : Activity() {
         runCatching { startActivityForResult(picker, DRAFT_SAVE_REQUEST) }.onFailure {
             pendingDraftSave = null
             addAssistantMessage("Der Android-Speicherdialog ist nicht verfügbar – der Entwurf wurde nicht gespeichert.",
-                false, keepCockpit = workWindowHost.isShowing)
+                true, keepCockpit = workWindowHost.isShowing)
         }
     }
 
@@ -2387,13 +2387,13 @@ class AgentActivity : Activity() {
                     val stay = activeWorkArea == ContinuumWorkArea.START
                     if (remembered == null) {
                         addAssistantMessage("Die PDF ließ sich nicht lesen (${failure.message ?: failure.javaClass.simpleName}). " +
-                            "An der Datei wurde nichts verändert.", false, keepCockpit = stay)
+                            "An der Datei wurde nichts verändert.", true, keepCockpit = stay)
                         return@fold
                     }
                     val name = remembered.source ?: "die zuletzt verwendete PDF"
                     addAssistantMessage("Die zuletzt verwendete PDF „$name“ lässt sich nicht mehr lesen – vermutlich " +
                         "verschoben oder gelöscht. An der Datei wurde nichts verändert. Ich zeige dir die Auswahl.",
-                        false, keepCockpit = stay)
+                        true, keepCockpit = stay)
                     val attempt = workJournal.newEpisode(at.heinz.deviceai.cognitive.CockpitWorkJournal.Kind.DOCUMENT,
                         request.ifBlank { "Letzte PDF öffnen" }, at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED,
                         name, documentUri = uri.toString())
@@ -2496,7 +2496,7 @@ class AgentActivity : Activity() {
         if (window != null) cockpitTriggers.documentReceived(
             "document-" + episode.id, doc.name, "application/pdf", request)
         // The same facts in the conversation; with an open window the cockpit stays (no switch to the chat area).
-        addAssistantMessage(report, preserveLocalContext = false, keepCockpit = window != null)
+        addAssistantMessage(report, preserveLocalContext = true, keepCockpit = window != null)
         if (wantsDraft && hasText && localModelReady()) startDocumentDraft(doc)
     }
 
@@ -3225,14 +3225,17 @@ class AgentActivity : Activity() {
             " · " + metrics.responseCharacters + " Zeichen · " + metrics.streamedChunks + " Chunks · " +
             "%.1f".format(java.util.Locale.ROOT, metrics.totalLatencyMillis / 1000.0) + " s"
     }
-    private fun promoteLocalReasoningWorkSceneToTool() {
-        val lease = localReasoningWorkScene ?: return
-        if (lease.phase.rank >= WorkscenePhase.TOOL_ACTIVE.rank) return
+    private fun promoteLocalReasoningWorkSceneToTool(): Boolean {
+        val lease = localReasoningWorkScene ?: return false
+        if (lease.phase.rank >= WorkscenePhase.TOOL_ACTIVE.rank) return false
+        val inPlace = lease.opened && workWindowHost.isShowing
         lease.phase = WorkscenePhase.TOOL_ACTIVE
         lease.pendingShow?.let(mainHandler::removeCallbacks)
         lease.pendingShow = null
-        if (lease.opened) workWindowHost.workEnded()
+        // In-place takeover keeps the same window id and reading gaze continuously alive.
+        if (lease.opened && !inPlace) workWindowHost.workEnded()
         localReasoningWorkScene = null
+        return inPlace
     }
 
     private fun finishLocalReasoningWorkScene(turnId: String, immediate: Boolean = false) {
@@ -3279,8 +3282,8 @@ class AgentActivity : Activity() {
         toolSceneProgress = null
         toolSceneDialog?.dismiss()
         toolSceneDialog = null
-        promoteLocalReasoningWorkSceneToTool()
-        workWindowHost.close(immediate = true)
+        val reasoningTakeover = promoteLocalReasoningWorkSceneToTool()
+        if (!reasoningTakeover) workWindowHost.close(immediate = true)
         showHomeDashboard()
         val home = homeView ?: run { key?.let(toolSceneLease::closed); return }
         val label = ToolRegistry.label(toolName)
@@ -3332,12 +3335,18 @@ class AgentActivity : Activity() {
                 closed()
                 return
             }
-            val window = workWindowHost.show(home, body, title,
-                at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName),
-                emblem = app?.icon?.let(::drawableCopy), crystal = app != null, onClosed = ::closed)
+            val scene = at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName)
+            val emblem = app?.icon?.let(::drawableCopy)
+            val window = if (reasoningTakeover && !retry) {
+                workWindowHost.replaceCurrent(home, body, title, scene,
+                    emblem = emblem, crystal = app != null, onClosed = ::closed)
+            } else workWindowHost.show(home, body, title, scene,
+                emblem = emblem, crystal = app != null, onClosed = ::closed)
             if (window != null) {
                 if (key == null || toolSceneLease.running) workWindowHost.workStarted(emphasize = true)
             } else if (!retry) {
+                // Geometry takeover failed: only now fall back to the old close/reopen path.
+                if (reasoningTakeover) workWindowHost.close(immediate = true)
                 home.post { show(true) }
             } else {
                 (body.parent as? android.view.ViewGroup)?.removeView(body)
@@ -6499,7 +6508,8 @@ class AgentActivity : Activity() {
                     bootstrapMemory.recordAssessment(report.passed, report.total)
                     "Gelernt: „$phrase“ → ${ToolRegistry.label(name)}. Trainingscheck: ${report.passed}/${report.total}." +
                         core.fold({ "" }, { " Der Continuum-Lernkern hat die Zuordnung nicht übernommen (${failureName(it)})." })
-                }) { result -> addAssistantMessage(result.getOrElse { "Lernbeispiel nicht übernommen: ${failureName(it)}." }) }
+                }) { result -> addAssistantMessage(result.getOrElse { "Lernbeispiel nicht übernommen: ${failureName(it)}." },
+                    preserveLocalContext = result.isFailure) }
             }.show()
     }
 
@@ -6571,7 +6581,8 @@ class AgentActivity : Activity() {
                             (if (cleared) "Gelernte Befehlssätze gelöscht. " else "Gelernte Befehlssätze konnten nicht gelöscht werden; bitte wiederholen. ") +
                                 revoked.fold({ "Im Continuum-Lernkern wurden $it Zuordnungen widerrufen." },
                                     { "Der Widerruf im Continuum-Lernkern ist fehlgeschlagen (${failureName(it)}); bitte wiederholen." })
-                        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." }) }
+                        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." },
+                            preserveLocalContext = result.isFailure) }
                     }.show()
             }.show()
     }
@@ -8183,7 +8194,8 @@ class AgentActivity : Activity() {
                 "Im lokalen Lernspeicher gemerkt, aber der Continuum-Lernkern hat die Information nicht übernommen " +
                     "(${failureName(e)}). Wiederhole „Merke dir“, um es erneut zu versuchen."
             })
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." }) }
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." },
+            preserveLocalContext = result.isFailure) }
     }
 
     /**
@@ -8208,7 +8220,8 @@ class AgentActivity : Activity() {
                 { "Information geändert; bisherige Ableitungen und die alte Continuum-Experience sind widerrufen." },
                 { e -> "Im lokalen Lernspeicher geändert und die alte Information widerrufen, aber der Continuum-Lernkern " +
                     "hat die neue noch nicht übernommen (${failureName(e)}); das nächste Continuum-Gespräch holt das nach." })
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht geändert: ${failureName(it)}." }) }
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht geändert: ${failureName(it)}." },
+            preserveLocalContext = result.isFailure) }
     }
 
     /** Revokes in the learning core first, so a repeated deletion still reaches it. */
@@ -8220,7 +8233,8 @@ class AgentActivity : Activity() {
                 { "Der Widerruf im Continuum-Lernkern ist fehlgeschlagen (${failureName(it)}); bitte „Fakten löschen“ wiederholen." })
             (if (cleared) "Alle gemerkten Fakten wurden aus dem lokalen Lernspeicher gelöscht. "
                 else "Der lokale Lernspeicher konnte nicht geleert werden; bitte wiederholen. ") + core
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." }) }
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." },
+            preserveLocalContext = result.isFailure) }
     }
 
     private fun showBootstrapMemory() {
@@ -12048,14 +12062,14 @@ class AgentActivity : Activity() {
         addAssistantMessage(value, preserveLocalContext = keep)
     }
 
-    private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = false) =
+    private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = true) =
         addAssistantMessage(value, preserveLocalContext, keepCockpit = false)
 
     /** [keepCockpit]: the result is already shown in an open cockpit work window – record it without leaving START. */
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean) {
         recordCockpitDialog(false, value)
-        // A non-model answer becomes the latest turn and invalidates any older
-        // local-model prompt context. Successful local model runs set it after rendering.
+        // Rendering a normal assistant reply never owns session invalidation. Callers pass false only
+        // after a semantic policy decided that older dialogue is stale (for example a confirmed memory change).
         lastLocalReply = null
         if (!preserveLocalContext) localConversationContext.clear()
         if (requestStartedAt > 0L) {
@@ -12646,7 +12660,7 @@ class AgentActivity : Activity() {
                 val uri = data?.data
                 val inCockpit = workWindowHost.isShowing
                 if (resultCode != RESULT_OK || uri == null || save == null) {
-                    addAssistantMessage("Nicht gespeichert – kein Speicherort gewählt.", false, keepCockpit = inCockpit)
+                    addAssistantMessage("Nicht gespeichert – kein Speicherort gewählt.", true, keepCockpit = inCockpit)
                 } else documentIoExecutor.execute {
                     val text = save.text
                     val written = runCatching {
@@ -12665,7 +12679,7 @@ class AgentActivity : Activity() {
                         }
                         addAssistantMessage(written.fold({ "Entwurf gespeichert (${text.length} Zeichen)." }) {
                             "Entwurf nicht gespeichert (${it.message ?: it.javaClass.simpleName})."
-                        }, false, keepCockpit = workWindowHost.isShowing)
+                        }, true, keepCockpit = workWindowHost.isShowing)
                     }
                 }
             }
