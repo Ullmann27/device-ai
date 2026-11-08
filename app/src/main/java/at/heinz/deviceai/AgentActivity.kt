@@ -890,6 +890,9 @@ class AgentActivity : Activity() {
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         // The sensor/display mapping belongs to the current foreground test only.
         stopReadinessCamera()
+        // Old work-window bounds cannot survive a Fold/rotation transition.
+        workWindowHost.close(immediate = true)
+        homeView?.setDeckCleared(false)
         super.onConfigurationChanged(newConfig)
         refreshReadinessGuide()
     }
@@ -5192,7 +5195,7 @@ class AgentActivity : Activity() {
             return
         }
         val generation = ++appLookupGeneration
-        val flow = OwnerAppActionFlow(intake.opening, requireExactMatch = intake.requireInstalledCandidate)
+        val flow = OwnerAppActionFlow(intake.opening, intake.requireInstalledCandidate)
         activeOwnerAppFlow = flow
         appLookupActive = true
         activeLocalRequest = true
@@ -5227,13 +5230,14 @@ class AgentActivity : Activity() {
                     }
                 }
                 is OwnerAppActionFlow.Step.Done -> {
-                    val fallbackToConversation = OwnerAppLookupIntent.shouldFallbackToConversation(
-                        intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified)
-                    val clarifyMessage = OwnerAppLookupIntent.shouldClarifyMessage(
-                        intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified)
-                    if (!fallbackToConversation && flow.candidates.isNotEmpty()) {
-                        appLookupContext = ownerSession to flow.candidates
-                    }
+                    if (flow.canRetainAppLookupContext) appLookupContext = ownerSession to flow.candidates
+                    else if (flow.lookupVerified && appLookupContext?.first == ownerSession) appLookupContext = null
+                    val fallbackToConversation = flow.lookupFinishedWithoutInteraction &&
+                        OwnerAppLookupIntent.shouldFallbackToConversation(
+                            intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified)
+                    val clarifyMessage = flow.lookupFinishedWithoutInteraction &&
+                        OwnerAppLookupIntent.shouldClarifyMessage(
+                            intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified)
                     activeOwnerAppFlow = null
                     activeOwnerAppGate = null
                     appLookupActive = false

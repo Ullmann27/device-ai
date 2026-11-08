@@ -22,7 +22,8 @@ class ContinuumVisibleAvatarUiTest {
                                val home: ContinuumHomeView, val chat: LinearLayout)
     private fun setup(): Fixture {
         val a = Robolectric.buildActivity(AgentActivity::class.java).get()
-        val head = ContinuumHologramView(a)
+        // This fixture verifies the explicitly 2D movable avatar.
+        val head = ContinuumHologramView(a).apply { setNativeHeadEnabled(true) }
         val home = ContinuumHomeView(a, head) { _, _, _ -> }.apply { configure(412f, false) }
         val chat = LinearLayout(a).apply { orientation = LinearLayout.VERTICAL; addView(TextView(a)) }
         set(a, "hologramView", head); set(a, "homeView", home)

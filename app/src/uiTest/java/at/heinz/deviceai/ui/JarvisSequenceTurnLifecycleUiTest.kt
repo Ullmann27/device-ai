@@ -386,8 +386,11 @@ class JarvisSequenceTurnLifecycleUiTest {
                     if (i == 7) "Werkzeug fehlgeschlagen" else "Meilenstein $i",
                     if (i == 7) StepState.FAILED else StepState.DONE)
             }))
-        assertEquals(1, view.effects.cardCount)
+        assertEquals("one main scene plus bounded real details", JarvisSequenceEffects.MAX_CARDS,
+            view.effects.cardCount)
         assertTrue("bounded timeline failure must not terminalize the live main scene",
+            view.stepFinished("turn-1.main_scene", true))
+        assertFalse("only one canonical main scene may complete",
             view.stepFinished("turn-1.main_scene", true))
     }
 

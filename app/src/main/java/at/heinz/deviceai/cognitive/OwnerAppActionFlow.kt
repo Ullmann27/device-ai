@@ -10,7 +10,7 @@ import java.util.UUID
 /** Selection never grants execution. */
 internal class OwnerAppActionFlow(
     private val opening: Boolean,
-    private val requireExactMatch: Boolean = false
+    private val requireExactInstalledCandidate: Boolean = false
 ) {
     sealed interface Step {
         data class Run(val call: ToolCallRequest, val confirmed: Boolean = false) : Step
@@ -29,6 +29,10 @@ internal class OwnerAppActionFlow(
         private set
     var exactMatchVerified: Boolean = false
         private set
+    var lookupFinishedWithoutInteraction: Boolean = false
+        private set
+    val canRetainAppLookupContext: Boolean get() = lookupVerified && candidates.isNotEmpty() &&
+        (!requireExactInstalledCandidate || exactMatchVerified)
     val launching: Boolean get() = phase == Phase.LAUNCH
 
     fun start(query: String): Step.Run {
@@ -64,7 +68,9 @@ internal class OwnerAppActionFlow(
         candidates = matches.candidates
         if (candidates.isEmpty()) return done("Ich habe keine passende startbare App gefunden. " +
             "Das beweist nicht, dass sie nicht installiert ist. Welche App meinst du genau?")
-        if (requireExactMatch && !exactMatchVerified) return done("Kein exakter App-Treffer bestätigt.")
+        if (requireExactInstalledCandidate && !matches.exactLabel) return done(
+            "Kein exakter installierter App-Treffer bestätigt. Keine App gestartet."
+        )
         if (!opening) return done("Gefundene Apps: " + candidates.joinToString("; ") {
             "${it.label} (${it.packageName})"
         } + ". Welche davon möchtest du öffnen?")
@@ -124,6 +130,7 @@ internal class OwnerAppActionFlow(
             !result.record.outcomeUncertain && !result.journalUnavailableBeforeDispatch
 
     private fun done(message: String): Step.Done {
+        lookupFinishedWithoutInteraction = phase == Phase.LOOKUP
         phase = Phase.DONE
         expected = null
         return Step.Done(message)

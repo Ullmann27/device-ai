@@ -1,0 +1,35 @@
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType(Test).configureEach {
+            filter {
+                includeTestsMatching 'at.heinz.deviceai.ContinuumDocumentSceneUiTest.theDocumentArrivesAsItsOwnPageOnTheTrailAndJarvisLooksAtIt'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumLongReplySpeechUiTest.replyBeyondTheQueueCapacityAnnouncesTheRest'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.foldLandscapeHasRealDestinationsAndReadableLargeType'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.narrowPhoneHasRealDestinationsAndReadableLargeType'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.phoneHasRealDestinationsAndReadableLargeType'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.foldPortraitHasRealDestinationsAndReadableLargeType'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.shortenedWideWindowKeepsEveryCardScrollableAndConversationRailClickable'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.workWindowMovesTheOriginalHeadProjectionAndReturns'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.appToolShowsTheRealInstalledAppIdentityAndNeverAnInventedOne'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.rotatingOrFoldingWithAnOpenWindowAlwaysGivesTheDeckBack'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.openWindowClearsTheDeckAndItReturnsAfterClosing'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.largeFontDeckClearsOnlyForAnAcceptedWindowAndAlwaysReturns'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumVisibleAvatarUiTest.repeatedKeyboardChangesResizeWithoutDuplicatingAvatar'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumVisibleAvatarUiTest.enteringChatKeepsTheSameAvatarInTheVisibleColumn'
+                includeTestsMatching 'at.heinz.deviceai.JarvisLiveAvatarWiringUiTest.foldSlotContainsTheSeparateHeadAndOrbAreas'
+                includeTestsMatching 'at.heinz.deviceai.JarvisLiveAvatarWiringUiTest.crossingThe600DpBoundaryReassignsNavigationEvenForASmallWidthDelta'
+                includeTestsMatching 'at.heinz.deviceai.JarvisLiveAvatarWiringUiTest.shortMediumWindowOwnsOneSidebarAndNoPhoneBottomNavigation'
+                includeTestsMatching 'at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest.windowIntentExpiresAndClearRejectsQueuedReplay'
+                includeTestsMatching 'at.heinz.deviceai.cognitive.LocalReasoningWorkScenePolicyTest.complexToolAndGroundedTurnsOpenImmediately'
+                includeTestsMatching 'at.heinz.deviceai.learning.context.EntityRoleResolutionEngineTest.ownerAndAssistantPossessivesUseExplicitAnchors'
+                includeTestsMatching 'at.heinz.deviceai.learning.context.EntityRoleResolutionEngineTest.multipleRelationTargetsAreAmbiguousInsteadOfRegistryOrder'
+                includeTestsMatching 'at.heinz.deviceai.learning.context.EntityRoleResolutionEngineTest.feminineCenterResolvesHerSisterOnlyThroughEvidenceEdge'
+                includeTestsMatching 'at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest.everythingFitsOneScreenWithUsableTargetsAndNoOverlap'
+                includeTestsMatching 'at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest.legacyWindowsRetainStrictGeometry'
+                includeTestsMatching 'at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest.avatarBoundsRemainBitIdentical'
+                includeTestsMatching 'at.heinz.deviceai.ui.ContinuumReferenceCockpitLayoutTest.everyDirectDestinationRemainsReachableAtPhoneFoldAndLargeType'
+                includeTestsMatching 'at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest.trimmedWorkCannotLeaveMainSceneTerminalAfterToolFailure'
+            }
+        }
+    }
+}

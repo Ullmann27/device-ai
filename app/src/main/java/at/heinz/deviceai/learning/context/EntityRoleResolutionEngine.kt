@@ -1,5 +1,7 @@
 package at.heinz.deviceai.learning.context
 
+import java.util.Locale
+
 /**
  * Deterministic role/centering resolver over externally supplied canonical entities and relation edges.
  * It stores no personal facts and never infers a relation that is absent from [RelationEdge].
@@ -99,25 +101,20 @@ internal object EntityRoleResolutionEngine {
             else -> Resolution.NoEvidence
         }
         val resolvedAnchor = anchor as? Resolution.Resolved ?: return anchor
-        val relationKey = relation.trim().uppercase()
-        val canonicalKey = when (relationKey) {
-            "SCHWESTER" -> "SISTER"
-            "TOCHTER", "SOHN", "KIND" -> "CHILD"
-            else -> relationKey
-        }
-        val targetGender = when (relationKey) {
-            "TOCHTER" -> Gender.FEMININE
-            "SOHN" -> Gender.MASCULINE
-            else -> null
+        // A lexical alias is not evidence; target gender must also agree.
+        val (relationKey, requiredGender) = when (relation.trim().lowercase(Locale.ROOT)) {
+            "schwester" -> "SISTER" to Gender.FEMININE
+            "tochter" -> "CHILD" to Gender.FEMININE
+            "sohn" -> "CHILD" to Gender.MASCULINE
+            "kind" -> "CHILD" to null
+            else -> relation.trim().uppercase(Locale.ROOT) to null
         }
         val matching = edges.filter {
-            val edgeKey = it.relation.uppercase()
-            it.fromId == resolvedAnchor.entity.id &&
-                (edgeKey == relationKey || (edgeKey == canonicalKey &&
-                    (targetGender == null || entities[it.toId]?.gender == targetGender)))
+            it.fromId == resolvedAnchor.entity.id && it.relation.uppercase(Locale.ROOT) == relationKey
         }
         if (matching.isEmpty()) return Resolution.NoEvidence
         val targets = matching.mapNotNull { edge -> entities[edge.toId]?.let { it to edge.sourceIds } }
+            .filter { requiredGender == null || it.first.gender == requiredGender }
             .distinctBy { it.first.id }
         if (targets.isEmpty()) return Resolution.NoEvidence
         if (targets.size > 1) return Resolution.Ambiguous(targets.map { it.first.id })

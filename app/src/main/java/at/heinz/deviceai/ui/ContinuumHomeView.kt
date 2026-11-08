@@ -767,9 +767,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private fun deckHides(key: String): Boolean {
         val medium = workspaceFootprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
-        val full = workspaceFootprint == JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY
-        return medium && (key.startsWith("tile:") || key == "panel:COCKPIT_SECONDARY") ||
-            full && key.startsWith("panel:ROW_")
+        return medium && (key.startsWith("tile:") || key.startsWith("panel:ROW_") ||
+            key == "panel:COCKPIT_SECONDARY")
     }
 
     private fun applyDeckToActions() {

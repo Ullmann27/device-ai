@@ -132,6 +132,9 @@ class OwnerAppActionWorkSceneUiTest {
             LocalDialogueRetention.context.clear()
         }
     }
+    private fun lookupGeneration(a: AgentActivity): Long =
+        (get(a, "appLookupGeneration") as Number).toLong()
+
     private fun submit(a: AgentActivity, request: String, chat: Boolean = true) {
         if (chat) {
             val target = JarvisHomeTestRoutes.destination(a.window.decorView, "chat")
@@ -177,16 +180,36 @@ class OwnerAppActionWorkSceneUiTest {
     }
 
     @Test fun implicitFuzzyNeedReturnsToConversationBeforeAppSelection() = withActivity { a, port, _ ->
+        val previousGeneration = lookupGeneration(a)
         submit(a, "Ich brauche Sig", chat = false)
         await {
-            get(a, "appLookupActive") == false ||
-                ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true
+            lookupGeneration(a) > previousGeneration && get(a, "appLookupActive") == false
         }
         assertFalse("Fuzzy implicit needs must not offer app selection",
             ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
         assertEquals(0, port.calls.get())
         assertNull(get(a, "activeOwnerAppFlow"))
         assertNull("Unaccepted matches must not become pronoun context", get(a, "appLookupContext"))
+    }
+
+    @Test fun rejectedFuzzyNeedClearsPriorVerifiedPronounCandidate() = withActivity { a, port, _ ->
+        val first = lookupGeneration(a)
+        submit(a, "Suche Signal", chat = false)
+        await {
+            lookupGeneration(a) > first && get(a, "appLookupActive") == false &&
+                get(a, "appLookupContext") != null
+        }
+        val second = lookupGeneration(a)
+        submit(a, "Ich brauche Sig", chat = false)
+        await {
+            lookupGeneration(a) > second && get(a, "appLookupActive") == false
+        }
+        assertNull("Rejected fuzzy need must clear older reference", get(a, "appLookupContext"))
+        val third = lookupGeneration(a)
+        submit(a, "Öffne sie", chat = false)
+        advance(100)
+        assertEquals("Unresolved pronoun must not dispatch lookup", third, lookupGeneration(a))
+        assertEquals(0, port.calls.get())
     }
 
     @Test fun explicitFuzzySelectionKeepsCancellationReceipt() = withActivity { a, port, _ ->

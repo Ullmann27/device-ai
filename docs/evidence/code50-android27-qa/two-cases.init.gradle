@@ -1,0 +1,10 @@
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType(Test).configureEach {
+            filter {
+                includeTestsMatching 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.workWindowMovesTheOriginalHeadProjectionAndReturns'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.rotatingOrFoldingWithAnOpenWindowAlwaysGivesTheDeckBack'
+            }
+        }
+    }
+}

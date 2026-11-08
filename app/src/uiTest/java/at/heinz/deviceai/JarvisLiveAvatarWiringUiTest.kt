@@ -16,6 +16,7 @@ import at.heinz.deviceai.avatar.AvatarState
 import at.heinz.deviceai.avatar.JarvisHoloAvatar
 import at.heinz.deviceai.cockpit.JarvisAvatarSlot
 import at.heinz.deviceai.ui.ContinuumHomeView
+import at.heinz.deviceai.ui.JarvisCockpitGrid
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
 import at.heinz.deviceai.ui.JarvisSequenceView
 import at.heinz.deviceai.ui.JarvisMenuNavigator
@@ -126,22 +127,24 @@ class JarvisLiveAvatarWiringUiTest {
         val railInset = homeOrigin[0] - rootOrigin[0]
         assertEquals("Dashboard owns its rail; Activity must not reserve a second rail", 0, railInset)
         assertEquals("The dashboard must fill the available pane without an inset-scrollbar gutter", root.width, home.width)
-        // The live scene uses the latest reference's independent head and orb regions in the actual pane.
-        assertEquals((home.width * 256f / 1536f).toInt(), slot.left)
-        assertEquals("The orb keeps its own dedicated right boundary",
-            (home.width * 1212f / 1536f).toInt(), slot.right)
+        // Check against the current ten-card reference grid, not the retired ref5 offsets.
+        val grid = JarvisCockpitGrid.create(home.width.toFloat(), 760f)
+        val headStage = grid[JarvisCockpitGrid.Area.HEAD]
+        val orbStage = grid[JarvisCockpitGrid.Area.ORB]
+        assertEquals(headStage.left.toInt(), slot.left)
+        assertEquals("The orb keeps its own dedicated right boundary", orbStage.right.toInt(), slot.right)
         assertEquals(slot.left, live.left)
         assertEquals(slot.right, live.right)
         assertTrue(live.width > 0 && live.height > 0)
         val head = field(live, "cockpitHeadBounds") as android.graphics.Rect
         val orb = field(live, "cockpitOrbBounds") as android.graphics.Rect
         assertEquals("No obsolete owner-card offset may shrink the new head viewport", 0, head.left)
-        assertEquals((home.width * 800f / 1536f).toInt() - slot.left, head.right)
-        assertEquals((home.width * 805f / 1536f).toInt() - slot.left, orb.left)
+        assertEquals(headStage.right.toInt() - slot.left, head.right)
+        assertEquals(orbStage.left.toInt() - slot.left, orb.left)
         assertTrue("Head and orb have separate, positive viewports", head.width() > 0 && head.right < orb.left)
         assertEquals("The orb keeps its full dedicated width", live.width, orb.right)
-        assertEquals(.70f, field(live, "headAnchorX") as Float, .001f)
-        assertEquals(.92f, field(live, "headCloseUp") as Float, .001f)
+        assertEquals(JarvisCockpitGrid.HEAD_ANCHOR_X, field(live, "headAnchorX") as Float, .001f)
+        assertEquals(JarvisCockpitGrid.HEAD_CLOSE_UP, field(live, "headCloseUp") as Float, .001f)
     }
 
     @Test fun resizingTheSlotPreservesTheSurfaceAndCurrentSpeech() = withShell { activity, home, live ->
@@ -191,8 +194,8 @@ class JarvisLiveAvatarWiringUiTest {
     fun shortMediumWindowOwnsOneSidebarAndNoPhoneBottomNavigation() = withShell(780, 360) { activity, home, _ ->
         assertEquals(780, home.width)
         assertEquals(360f, home.jarvisShell.viewportHeightDp, .01f)
-        assertEquals("A short medium window still has exactly one sidebar", 1, visibleRails(activity, home).size)
-        assertTrue((field(home, "shellRailScroll") as View).isShown)
+        assertEquals("The reference home has no duplicated fixed sidebar", 0, visibleRails(activity, home).size)
+        assertFalse((field(home, "shellRailScroll") as View).isShown)
         assertFalse("Phone navigation must not consume medium-window height",
             (field(activity, "bottomWorkAreaBar") as? View)?.isShown == true)
     }
@@ -208,8 +211,9 @@ class JarvisLiveAvatarWiringUiTest {
 
         val resized = field(activity, "homeView") as ContinuumHomeView
         assertEquals(606, resized.width)
-        assertEquals("Crossing 600 dp must reflow even when the delta is only 14 dp", 1, visibleRails(activity, resized).size)
-        assertTrue((field(resized, "shellRailScroll") as View).isShown)
+        assertEquals("Crossing 600 dp must reflow without reinstating the removed home sidebar",
+            0, visibleRails(activity, resized).size)
+        assertFalse((field(resized, "shellRailScroll") as View).isShown)
         assertFalse((field(activity, "bottomWorkAreaBar") as? View)?.isShown == true)
         assertSame("Reflow retains the real surface", live, field(activity, "hologramView"))
         assertSame(director, field(activity, "avatarDirector"))

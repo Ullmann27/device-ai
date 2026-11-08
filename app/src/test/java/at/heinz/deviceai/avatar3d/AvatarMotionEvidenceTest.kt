@@ -125,8 +125,8 @@ class AvatarMotionEvidenceTest {
         val s = Scene()
         assertTrue(open(s, "window-expiry", GazeTarget(1f, -1f)))
         val first = s.reducer.pose(0)
-        assertEquals("bounded side gaze", .95f, first.gazeX, 1e-6f)
-        assertEquals("bounded vertical gaze", -.35f, first.gazeY, 1e-6f)
+        assertEquals(AvatarPoseReducer.MAX_DIRECTED_GAZE_X, first.gazeX, 1e-6f)
+        assertEquals(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, first.gazeY, 1e-6f)
         s.now = 2_400
         s.director.onObservedGaze(GazeTarget(-.3f, .2f), 95, 0)
         s.now = 2_500
