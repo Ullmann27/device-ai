@@ -71,6 +71,12 @@ class LocalReasoningWorkSceneUiTest {
                 inputTokens = 240, outputTokens = outputTokens, firstTokenLatencyMillis = 310,
                 totalLatencyMillis = 2000
             ))
+    private fun invokeContext(a: AgentActivity, turn: String, promptBudget: Int, memories: Int) =
+        AgentActivity::class.java.getDeclaredMethod(
+            "updateLocalReasoningContext", String::class.java, Int::class.javaPrimitiveType,
+            Int::class.javaPrimitiveType
+        ).apply { isAccessible = true }.invoke(a, turn, promptBudget, memories)
+
     private fun invokePromoteToTool(a: AgentActivity) =
         AgentActivity::class.java.getDeclaredMethod("promoteLocalReasoningWorkSceneToTool")
             .apply { isAccessible = true }.invoke(a)
@@ -115,6 +121,16 @@ class LocalReasoningWorkSceneUiTest {
             shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.MILLISECONDS)
             assertTrue(descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
             invokeFinish(a, "grace-turn", true)
+            shadowOf(Looper.getMainLooper()).idle()
+
+            invokeSchedule(a, "upgrade-turn", "Prüfe das bitte", 1_000L)
+            shadowOf(Looper.getMainLooper()).idleFor(200, TimeUnit.MILLISECONDS)
+            assertFalse(descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+            invokeContext(a, "upgrade-turn", 15_500, 3)
+            shadowOf(Looper.getMainLooper()).idle()
+            assertTrue("full-context upgrade opens immediately",
+                descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+            invokeFinish(a, "upgrade-turn", true)
             shadowOf(Looper.getMainLooper()).idle()
 
             invokeSchedule(a, "tool-turn", "Öffne Signal", 1_000L)
