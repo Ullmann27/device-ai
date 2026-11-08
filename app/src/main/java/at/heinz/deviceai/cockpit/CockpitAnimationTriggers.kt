@@ -93,10 +93,19 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
     }
 
     /** (e) Only for a real document intake. No general PDF intake exists yet (Quelle fehlt, see docs). */
-    fun documentReceived(turnId: String, documentName: String, mimeType: String, question: String) {
+    fun documentReceived(
+        turnId: String,
+        documentName: String,
+        mimeType: String,
+        question: String,
+        pageCount: Int? = null
+    ) {
         if (isClosed(turnId)) return
-        bus.emit(CockpitAnimationEvent.DocumentQuestion(turnId, clock(), clean(documentName, 64), clean(mimeType, 64),
-            clean(question, 120)))
+        val safePages = pageCount?.takeIf { it in 0..100_000 }
+        bus.emit(CockpitAnimationEvent.DocumentQuestion(
+            turnId, clock(), clean(documentName, 64), clean(mimeType, 64),
+            clean(question, 120), safePages
+        ))
     }
 
     @Synchronized fun timeline(turnId: String): List<ProcessStep> = timelines[turnId]?.toList().orEmpty()
