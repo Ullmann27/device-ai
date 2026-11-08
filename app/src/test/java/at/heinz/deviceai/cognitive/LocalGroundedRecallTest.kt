@@ -28,10 +28,22 @@ class LocalGroundedRecallTest {
         assertTrue(rendered.contains("kein neuer Fakt"))
     }
 
-    @Test fun oversizedStateTelegramFailsClosedInsteadOfBeingTruncated() {
+    @Test fun optionalOversizedOrBlankTelegramIsDroppedWithoutDroppingExactRecall() {
         val valid="[STATE_TELEGRAM_V1@1]\nS=ich|P=x|V=y"
-        assertNotNull(LocalGroundedRecall.boundedOrNull("Antwort","Beleg",valid))
-        assertNull(LocalGroundedRecall.boundedOrNull("Antwort","Beleg","T".repeat(3_001)))
+        val withValid=LocalGroundedRecall.boundedOrNull("Antwort","Beleg",valid)
+        assertNotNull(withValid)
+        assertEquals(valid,withValid!!.stateTelegram)
+
+        val withOversized=LocalGroundedRecall.boundedOrNull("Antwort","Beleg","T".repeat(3_001))
+        assertNotNull(withOversized)
+        assertEquals("Antwort",withOversized!!.answer)
+        assertEquals("Beleg",withOversized.provenance)
+        assertNull(withOversized.stateTelegram)
+
+        val withBlank=LocalGroundedRecall.boundedOrNull("Antwort","Beleg","   ")
+        assertNotNull(withBlank)
+        assertEquals("Antwort",withBlank!!.answer)
+        assertNull(withBlank.stateTelegram)
     }
 
     @Test fun failedSynthesisKeepsOriginalRecallAndNeverClaimsCompletedReasoning() {

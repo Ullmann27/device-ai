@@ -7,7 +7,7 @@ const main=readFileSync(fileURLToPath(new URL('../../app/src/main/java/at/heinz/
 const recall=readFileSync(fileURLToPath(new URL('../../app/src/main/java/at/heinz/deviceai/cognitive/LocalGroundedRecall.kt',import.meta.url)),'utf8');
 const call=main.slice(main.indexOf('if(LocalFirstPolicy.afterMemory('),main.indexOf('return@onSuccess',main.indexOf('if(LocalFirstPolicy.afterMemory(')));
 
-test('confirmed recall remains exact when supplementary model context is not representable',()=>{
+test('confirmed recall remains exact while optional unrepresentable telegram is omitted',()=>{
  assert.ok(call.length>250 && call.length<7000);
  assert.match(call,/LocalGroundedRecall\s*\n\s*\.boundedOrNull\(answer,evidence,stateTelegram\.ifBlank \{ null \}\)/);
  assert.match(call,/if\(recall==null\)\s*\{[\s\S]*addNonModelReply\(request,\s*answer,\s*at\.heinz\.deviceai\.cognitive\.NonModelReplyKind\.MEMORY_RECALL\)/);
@@ -15,9 +15,10 @@ test('confirmed recall remains exact when supplementary model context is not rep
  assert.match(call,/runLocal\(request,modelQuestion,recall,turnTrace\)/);
  assert.doesNotMatch(call,/LocalGroundedRecall\(answer,evidence/);
  assert.match(recall,/fun boundedOrNull\([\s\S]*answer: String,[\s\S]*provenance: String,[\s\S]*stateTelegram: String\? = null[\s\S]*\): LocalGroundedRecall\?/);
- assert.match(recall,/answer\.length <= 4_000/);
- assert.match(recall,/provenance\.length <= 2_000/);
- assert.match(recall,/stateTelegram\.length in 1\.\.3_000/);
+ assert.match(recall,/if\(answer\.isBlank\(\) \|\| answer\.length > 4_000 \|\|[\s\S]*provenance\.isBlank\(\) \|\| provenance\.length > 2_000\) return null/);
+ assert.match(recall,/val boundedTelegram=stateTelegram\?\.takeIf \{[\s\S]*it\.isNotBlank\(\) && it\.length <= 3_000[\s\S]*\}/);
+ assert.match(recall,/return LocalGroundedRecall\(answer, provenance, boundedTelegram\)/);
+ assert.doesNotMatch(recall,/stateTelegram\.length in 1\.\.3_000/);
  assert.match(recall,/"state_telegram"/);
  assert.match(recall,/kein neuer Fakt/);
  assert.match(call,/Zusatzanalyse nicht gestartet/);

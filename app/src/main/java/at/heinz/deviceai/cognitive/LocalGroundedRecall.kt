@@ -18,16 +18,22 @@ data class LocalGroundedRecall(
     companion object {
         /** Never throw on an out-of-bounds retrieval inside Android's UI
          * success handler. Exact owner facts are returned by the caller's
-         * deterministic memory path rather than truncated for the model. */
+         * deterministic memory path rather than truncated for the model.
+         * The state telegram is optional diagnostic context: blank or
+         * oversized telemetry is omitted without invalidating a bounded
+         * exact answer and provenance. */
         fun boundedOrNull(
             answer: String,
             provenance: String,
             stateTelegram: String? = null
-        ): LocalGroundedRecall? =
-            if(answer.isNotBlank() && answer.length <= 4_000 &&
-                provenance.isNotBlank() && provenance.length <= 2_000 &&
-                (stateTelegram == null || stateTelegram.length in 1..3_000))
-                LocalGroundedRecall(answer, provenance, stateTelegram) else null
+        ): LocalGroundedRecall? {
+            if(answer.isBlank() || answer.length > 4_000 ||
+                provenance.isBlank() || provenance.length > 2_000) return null
+            val boundedTelegram=stateTelegram?.takeIf {
+                it.isNotBlank() && it.length <= 3_000
+            }
+            return LocalGroundedRecall(answer, provenance, boundedTelegram)
+        }
     }
 
     fun render(): String {
