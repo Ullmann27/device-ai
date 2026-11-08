@@ -1,0 +1,61 @@
+{
+  "schema": "continuum.exact-sha-evidence.v1",
+  "source_commit": "8bc695fd0d0fcc10ef0aa88684da8b57acc928f4",
+  "note": "Last code-bearing commit of the Code 50 QA staging line at the time of measurement. Merge of #634 (c98ce02) into staging (d8353c2). Diff against d8353c2: 7 files (+185/-9), app/src/main unchanged, no .github/scripts/backend change. Sandbox results are host evidence; the GitHub run is DIAGNOSTIC ONLY and not the official acceptance gate (repository rule).",
+  "parents": ["d8353c20717217f69aee3ea8353849f22df2892e", "c98ce02eb6447235c302e22f91084dfa329c4a2c"],
+  "host_sandbox": {
+    "environment": "Node 24.22.2 linux/x64, non-root user, fresh clone at the exact SHA, status clean. Only the sandbox-injected core.fsmonitor=false GIT_CONFIG entry was removed from the child environment (2 of 3 entries kept). No test or production file was modified.",
+    "runs": [
+      {"id": "full-node", "status": "PASS", "total": 2430, "pass": 2393, "fail": 0, "skip": 37, "sourceUnchanged": true},
+      {"id": "critical-run-1", "status": "FAIL", "suites": {"process": "37/0/0", "storage-agent": "30/2/0", "android-source-contracts": "64/0/0", "host-checker": "2/0/0"},
+       "failed_cases": [
+         "real two-process replication, corruption failover, repair, unavailable node, cache and restart",
+         "versions survive restart; tombstone commits before unavailable replica deletion and reconciles recovery"],
+       "error": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED (.github/continuum/storage-fabric-catalog.mjs:103)",
+       "report_preserved_as": "sandbox /home/qa/evidence/critical-run1-FAIL-8bc695f (not committed)"},
+      {"id": "critical-run-2", "status": "PASS", "tests": 135, "pass": 135, "fail": 0,
+       "suites": {"process": 37, "storage-agent": 32, "android-source-contracts": 64, "host-checker": 2}, "sourceUnchanged": true},
+      {"id": "backend", "commands": ["npm ci --ignore-scripts", "npm run check", "npm test"], "tests": 64, "pass": 64, "fail": 0}
+    ],
+    "critical_run_1_diagnosis": {
+      "cause": "Load-sensitive timing in the test fixture: the loopback HTTP adapters of the real two-process fixture use timeoutMs: 500 (.github/continuum/storage-fabric.test.mjs:42). A rejected node put makes put() throw FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED.",
+      "pre_existing": true,
+      "merge_related": false,
+      "reproduction": {
+        "quiet_machine_storage_fabric_file_8_runs": "8/8 clean (8 tests each)",
+        "cpu_contention_4_busy_loops_on_2_cores_8_runs": "1/8 runs failed (cold first run): 6 pass / 2 fail, same error code; runs 2-8 clean"
+      },
+      "decision": "Test and production code unchanged; failure reported, not hidden. Optional hardening for the owner to decide: use the adapter default timeout (1500 ms) in the fixture."
+    }
+  },
+  "github_actions_diagnostic": {
+    "acceptance": false,
+    "run": "https://github.com/Ullmann27/device-ai/actions/runs/42478725998",
+    "trigger": "push of the merge commit to chatgpt/code50-qa-staging-20261108",
+    "node_backend_job": {"conclusion": "success", "critical": "135/135 PASS", "full_node": "2393 pass / 0 fail / 37 skip", "note": "No sandbox GIT_CONFIG overlay on the runner; the git-config test passes unmodified."},
+    "android_host_job": {
+      "conclusion": "success",
+      "gradle_gate": "BUILD SUCCESSFUL in 29m 9s, 41 tasks (:app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug; flags deviceAiMentorPreview, continuumUiWidgetTests, continuumLocalStandaloneQa, continuumStandaloneVersionCode=50)",
+      "junit_robolectric": {"result_files": 713, "tests": 4032, "failures": 0, "errors": 0, "skipped": 20},
+      "previous_run_on_d8353c2": {"tests": 4032, "failures": 10, "skipped": 20},
+      "repaired_classes": {"ContinuumDocumentSceneUiTest": "12 tests, 0 fail", "ContinuumReferenceCockpitUiTest": "13 tests, 0 fail", "ContinuumSystemStatusWorkWindowUiTest": "10 tests, 0 fail", "JarvisActionScenesTest": "3 tests, 0 fail (includes the 9256f63 mapping pin)"},
+      "skips_20": {
+        "ignore_pending_feature_specs": "12: 6 ChiefPatternE2ETest + 6 FirstThinkingRunE2ETest carry @Ignore(\"PENDING ...\") for features that do not exist yet",
+        "env_gated_host_proof": "2: ChiefWorkspaceWiringHostTest needs CONTINUUM_WORKSPACE_CHIEF_HOST_PROOF=1",
+        "ci_supplied_fixtures": "3: 2 ContinuumContrastiveParityTest (Node training vectors) + 1 Cre1InferenceEncoderTest (CRE1 fixture)",
+        "jdk21_host_required": "2: LocalModelReloadLifecycleTest assumeTrue(host Java >= 21); the workflow builds with Temurin 17, so the model reload/unload lifecycle host tests were NOT exercised",
+        "device_clip_evidence": "1: ContinuumVisualEvidenceUiTest.fold7InnerMotionClip (evidence-only, needs a frame directory)"
+      },
+      "lint": "No issues found.",
+      "unsigned_qa_build": "BUILD SUCCESSFUL in 2m 59s; aapt: package at.heinz.deviceai.continuumlocal versionCode 50 versionName 0.3.49",
+      "unsigned_qa_artifact": "Code50-UNSIGNED-NOT-INSTALLABLE (artifact 13617746829): UNSIGNED_QA_NOT_INSTALLABLE, originalSigner NOT_USED. Not an owner update and never to be offered as one."
+    }
+  },
+  "not_run": {
+    "official_android_gate": "NOT_RUN: no Render QA access and no reachable Android SDK in the sandbox (dl.google.com blocked); GitHub results above are diagnostic only",
+    "signed_release_build": "NOT_RUN",
+    "signature_match_with_installed_app": "NOT_RUN",
+    "signed_apk_sha256_and_download_link": "NOT_AVAILABLE: no signed artifact exists",
+    "fold7": "REAL_DEVICE_NOT_RUN"
+  }
+}
