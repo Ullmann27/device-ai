@@ -37,4 +37,15 @@ class CockpitConversationPresentationTest {
         assertFalse(CockpitConversationPresentation.keepHomeForResult(false, true, true))
         assertFalse(CockpitConversationPresentation.keepHomeForResult(true, false, true))
     }
+    @Test fun liveHandsFreeOrNative3dSurfaceCannotBeReparented() {
+        assertFalse(CockpitConversationPresentation.mayReparentHologram(
+            handsFreeActive = true, native3dEnabled = false))
+        assertFalse(CockpitConversationPresentation.mayReparentHologram(
+            handsFreeActive = false, native3dEnabled = true))
+        assertFalse(CockpitConversationPresentation.mayReparentHologram(
+            handsFreeActive = true, native3dEnabled = true))
+        assertTrue(CockpitConversationPresentation.mayReparentHologram(
+            handsFreeActive = false, native3dEnabled = false))
+    }
+
 }
