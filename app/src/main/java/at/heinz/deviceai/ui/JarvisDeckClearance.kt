@@ -11,9 +11,9 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Slot
  */
 object JarvisDeckClearance {
     /** Vertical travel of a fully cleared card, dp. */
-    const val TRAVEL_DP = 140f
+    const val TRAVEL_DP = 180f
     /** Outward drift as a fraction of the card's distance from the centre. */
-    const val SPREAD = .10f
+    const val SPREAD = .12f
     const val SHRINK = .18f
     /** Share of the motion used for the centre-outward stagger. */
     const val STAGGER = .35f
@@ -21,8 +21,14 @@ object JarvisDeckClearance {
 
     private val rows = setOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL)
 
-    /** Tiles have no slot of their own (null); the four lower rows clear as well. */
-    fun clears(slot: Slot?): Boolean = slot == null || slot in rows
+    /** Tiles have no slot of their own (null); the secondary panel and lower rows may clear as well. */
+    fun clears(slot: Slot?): Boolean = slot == null || slot == Slot.COCKPIT_SECONDARY || slot in rows
+
+    fun clearance(slot: Slot?, tileProgress: Float, missionProgress: Float): Float = when {
+        slot == null || slot == Slot.COCKPIT_SECONDARY -> tileProgress.coerceIn(0f, 1f)
+        slot in rows -> missionProgress.coerceIn(0f, 1f)
+        else -> 0f
+    }
 
     /** 0 = leaves first. Centre tiles first, outer tiles later, rows after the tiles. */
     fun order(slot: Slot?, centerX: Float, width: Float): Float {
@@ -44,11 +50,14 @@ object JarvisDeckClearance {
     fun dy(local: Float) = TRAVEL_DP * local.coerceIn(0f, 1f)
     fun dx(local: Float, centerX: Float, width: Float) = (centerX - width / 2f) * SPREAD * local.coerceIn(0f, 1f)
 
-    /** Next deck progress for a frame of [elapsedMs] towards [cleared]; reduced motion snaps. */
-    fun step(progress: Float, cleared: Boolean, elapsedMs: Long, motion: Boolean): Float {
-        val target = if (cleared) 1f else 0f
-        if (!motion || !progress.isFinite()) return target
+    /** Next deck progress for a frame of [elapsedMs] towards [target]; reduced motion snaps. */
+    fun step(progress: Float, target: Float, elapsedMs: Long, motion: Boolean): Float {
+        val goal = if (target.isFinite()) target.coerceIn(0f, 1f) else 0f
+        if (!motion || !progress.isFinite()) return goal
         val delta = elapsedMs.coerceIn(0L, 100L).toFloat() / DURATION_MS
-        return if (cleared) minOf(1f, progress + delta) else maxOf(0f, progress - delta)
+        return if (progress < goal) minOf(goal, progress + delta) else maxOf(goal, progress - delta)
     }
+
+    fun step(progress: Float, cleared: Boolean, elapsedMs: Long, motion: Boolean): Float =
+        step(progress, if (cleared) 1f else 0f, elapsedMs, motion)
 }
