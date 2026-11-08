@@ -72,4 +72,76 @@ class ApprovedWebToolGateTest {
         assertNull(gate.approve(old,ResearchMode.QUICK))
         assertNull(gate.approve(current,ResearchMode.QUICK))
     }
+
+    @Test fun revokedDialogNeverDeliversApprovalOrDeclineFallback() {
+        for (accepted in listOf(false, true)) {
+            val gate = ApprovedWebToolGate(InternetConsentPolicy())
+            val pending = gate.prepare(WebToolRequest.Search("weather"))!!
+            gate.cancel()
+            var callbacks = 0
+            assertFalse(gate.completeApproval(pending, ResearchMode.QUICK, accepted) { callbacks++ })
+            assertEquals(0, callbacks)
+        }
+    }
+
+    @Test fun staleDialogCannotCancelTheReplacementRequest() {
+        for (accepted in listOf(false, true)) {
+            val gate = ApprovedWebToolGate(InternetConsentPolicy())
+            val old = gate.prepare(WebToolRequest.Search("old topic"))!!
+            val replacement = gate.prepare(WebToolRequest.Search("new topic"))!!
+            assertFalse(gate.completeApproval(old, ResearchMode.QUICK, accepted) { fail("Stale callback") })
+            var calls = 0
+            assertTrue(gate.completeApproval(replacement, ResearchMode.QUICK, true) { session ->
+                assertNotNull(session)
+                session!!.execute(replacement.call) { calls++ }
+            })
+            assertEquals(1, calls)
+        }
+    }
+
+    @Test fun modeChangeAndReenableDoNotRevivePendingDialogs() {
+        for (accepted in listOf(false, true)) {
+            val consent = InternetConsentPolicy()
+            val gate = ApprovedWebToolGate(consent)
+            val pending = gate.prepare(WebToolRequest.Search("weather"))!!
+            consent.setMode(InternetAccessMode.OFF)
+            consent.setMode(InternetAccessMode.ASK)
+            assertFalse(gate.completeApproval(pending, ResearchMode.QUICK, accepted) { fail("Revoked callback") })
+        }
+    }
+
+    @Test fun currentDialogCompletesExactlyOnceIncludingGenuineDecline() {
+        for (accepted in listOf(false, true)) {
+            val gate = ApprovedWebToolGate(InternetConsentPolicy())
+            val pending = gate.prepare(WebToolRequest.Search("weather"))!!
+            var callbacks = 0
+            assertTrue(gate.completeApproval(pending, ResearchMode.QUICK, accepted) { session ->
+                callbacks++
+                assertEquals(accepted, session != null)
+            })
+            assertFalse(gate.completeApproval(pending, ResearchMode.QUICK, !accepted) { callbacks++ })
+            assertEquals(1, callbacks)
+        }
+    }
+
+    @Test fun revokedInFlightResultCannotBePublishedOrReused() {
+        for (mode in listOf(InternetAccessMode.ASK, InternetAccessMode.ALWAYS_ON)) {
+            val gate = ApprovedWebToolGate(InternetConsentPolicy(mode))
+            val call = WebToolRequest.Search("weather")
+            val session = if (mode == InternetAccessMode.ASK)
+                gate.approve(gate.prepare(call)!!, ResearchMode.QUICK)!!
+            else gate.authorizeAlwaysOn(call, ResearchMode.QUICK)!!
+            var published = false
+            assertThrows(IllegalStateException::class.java) {
+                session.execute(call) {
+                    gate.cancel()
+                    "late result"
+                }
+                published = true
+            }
+            assertFalse(published)
+            assertFalse(session.isAuthorized())
+            assertThrows(IllegalStateException::class.java) { session.execute(call) { fail("Reused") } }
+        }
+    }
 }

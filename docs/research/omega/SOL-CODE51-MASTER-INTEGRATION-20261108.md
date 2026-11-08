@@ -7,7 +7,35 @@ owner's 10% limit instruction; no further projects started.
 Owner canon #642, execution #643; read #637-641.
 No main merge, signing, release, installation, private data or signer access.
 
-## Review repair checkpoint (resume here)
+## Research cancellation checkpoint (resume here)
+
+Continuation on the same isolated #658 branch; EXP-06 evidence admission and
+EXP-12 lifecycle continuity. No bot-persistence redesign or release work.
+
+- Existing `ApprovedWebToolGate.completeApproval` accepts a decision only from
+  the still-pending, unrevoked dialog. A stale positive/negative/cancel callback
+  cannot cancel a newer request or start the automatic local-answer fallback.
+  Genuine current declines retain that fallback.
+- All seven `confirmWebRequest` call sites share foreground/session checks.
+  The model-tool caller receives an explicit invalidation callback so a waiting
+  model turn is not stranded. Each dialog response is delivered at most once.
+- New-session and pause paths revoke pending web requests. Pause additionally
+  cancels the active research token and its model synthesis.
+- Progress requires the active token, matching conversation, foreground state
+  and current consent. Late cancelled/revoked results release the busy lane but
+  do not publish an answer, speech or new conversation context.
+
+Focused compilation/JUnit: **14 PASS** across `ApprovedWebToolGateTest` and
+`ConversationResearchApprovalIntegrationTest`, including five added regressions
+for revocation, replacement, mode changes, one-shot decisions and late results.
+Controlled providers only, no live HTTP. Actual Android callback timing and
+Fold7 remain NOT_RUN. Full current-source JVM regression is pending at this
+checkpoint; the earlier whole-text admission repair remains included.
+
+Rollback: revert this cancellation checkpoint as a unit, not individual dialog
+handlers; keep the independent full-text memory admission repair below.
+
+## Review repair checkpoint
 
 Source: `b557652e5eb10844d832d4f91055aa39a67e6ca4`, pushed and remote-verified.
 This closes the fact/meta admission regression reported on #658; Fable's

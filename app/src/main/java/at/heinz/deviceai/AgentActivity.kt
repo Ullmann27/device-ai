@@ -780,6 +780,10 @@ class AgentActivity : Activity() {
         webToolGate.cancel()
         approvedModelWebSession.getAndSet(null)?.cancel()
         activeWebResearchSession?.cancel()
+        activeResearchCancellation?.let {
+            it.cancel()
+            localRuntime.cancel()
+        }
         mainHandler.removeCallbacks(foregroundLearningCheck)
         mainHandler.removeCallbacks(dashboardRefresh)
         super.onPause()
@@ -9006,7 +9010,9 @@ class AgentActivity : Activity() {
     /** ASK consumes an exact dialog ticket; ALWAYS_ON uses the persisted owner
      * grant. Both paths mint the same bounded, revocable ToolGate capability. */
     private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
+        invalidated:()->Unit = {},
         completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) {
+        if (!foregroundLearningActive || isFinishing || isDestroyed) { invalidated(); return }
         restoreInternetMode()
         if(internetConsent.mode==at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
             completed(webToolGate.authorizeAlwaysOn(call,mode))
@@ -9017,20 +9023,33 @@ class AgentActivity : Activity() {
             addAssistantMessage("Kein Internetzugriff: Modus AUS oder ungültige Webanfrage. Öffentliche HTTPS-Quellen sind erforderlich.")
             completed(null);return
         }
+        val approvalSession = sessionId
+        var responded = false
+        fun respond(accepted: Boolean) {
+            if (responded) return
+            responded = true
+            val current = sessionId == approvalSession && foregroundLearningActive && !isFinishing && !isDestroyed
+            if (!current || !webToolGate.completeApproval(approval, mode, accepted, completed)) {
+                invalidated()
+                if (!isFinishing && !isDestroyed)
+                    addToolActivity("WEB · veraltete Freigabe verworfen · kein neuer Auftrag")
+            }
+        }
         AlertDialog.Builder(this)
             .setTitle("Internetzugriff einmal erlauben?")
             .setMessage((if(call is at.heinz.deviceai.cognitive.WebToolRequest.Search)
                 "Diese Suchfrage wird an öffentliche Suchanbieter übertragen. Externe Webquellen werden unabhängig geprüft. "
                 else "Diese eine HTTPS-Quelle wird gelesen; sichere öffentliche Weiterleitungen sind begrenzt erlaubt. ")+
                 "Gilt nur für diese Anfrage, ohne Gerätefreigabe oder automatische Folgeaufträge.\n\n"+call.question)
-            .setNegativeButton("Ablehnen") { _,_->webToolGate.cancel();completed(null) }
-            .setOnCancelListener { webToolGate.cancel();completed(null) }
-            .setPositiveButton("Einmal erlauben") { _,_->completed(webToolGate.approve(approval,mode)) }
+            .setNegativeButton("Ablehnen") { _,_->respond(false) }
+            .setOnCancelListener { respond(false) }
+            .setPositiveButton("Einmal erlauben") { _,_->respond(true) }
             .show()
     }
 
     private fun runResearch(session:at.heinz.deviceai.cognitive.ApprovedWebResearchSession,mentorArea:String?=null) {
-        if(busy || localAgentExecutor.isShutdown){session.cancel();return}
+        if(busy || localAgentExecutor.isShutdown || !foregroundLearningActive || isFinishing || isDestroyed ||
+            !session.isAuthorized()){session.cancel();return}
         val question=session.question
         val mode=session.mode
         activeWebResearchSession=session
@@ -9081,7 +9100,8 @@ class AgentActivity : Activity() {
             at.heinz.deviceai.cognitive.WikipediaExtractResearchProvider(provider))
         val reportPhase: (ResearchPhase) -> Unit = { phase ->
             runOnUiThread {
-                if (!isFinishing && !isDestroyed) {
+                if (!isFinishing && !isDestroyed && foregroundLearningActive && sessionId == researchSessionId &&
+                    activeResearchCancellation === cancellation && !cancellation.isCancelled() && session.isAuthorized()) {
                     val label = when (phase) {
                         ResearchPhase.PLAN, ResearchPhase.DISCOVERY -> "PLANNING"
                         ResearchPhase.FETCH -> "FETCHING"
@@ -9150,6 +9170,13 @@ class AgentActivity : Activity() {
                 activeWebResearchSession = null
                 activeLocalRequest = false
                 input.hint = "Was soll ich auf deinem Gerät tun?"
+                if (sessionId != researchSessionId || !foregroundLearningActive ||
+                    cancellation.isCancelled() || !session.isAuthorized()) {
+                    addToolActivity("RESEARCH · abgebrochen oder Freigabe widerrufen · Ergebnis verworfen")
+                    setBusy(false)
+                    refreshLocalModelUi()
+                    return@runOnUiThread
+                }
                 result.onSuccess { dossier ->
                     if(!session.isAuthorized()) {
                         addToolActivity("WEB · Freigabe widerrufen, Ergebnis verworfen")
@@ -9505,7 +9532,7 @@ class AgentActivity : Activity() {
         if(proposal.toolName in setOf("web_search","web_read")) {
             val call=runCatching { at.heinz.deviceai.cognitive.WebToolRequest.fromTool(proposal.toolName,proposal.arguments) }.getOrNull()
             if(call==null){callback(false);return}
-            confirmWebRequest(call,ResearchMode.QUICK) { session ->
+            confirmWebRequest(call,ResearchMode.QUICK, invalidated = { callback(false) }) { session ->
                 approvedModelWebSession.getAndSet(session)?.cancel()
                 callback(session!=null)
             }
@@ -12147,6 +12174,8 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
             return
         }
+        webToolGate.cancel()
+        approvedModelWebSession.getAndSet(null)?.cancel()
         clearTaskEffects()
         selectedBot?.let { profile ->
             if (botLookupPending || backlogExecutor.isShutdown) return
@@ -13321,4 +13350,3 @@ class AgentActivity : Activity() {
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
 }
-
