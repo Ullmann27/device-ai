@@ -23,6 +23,8 @@ class JarvisWorkWindowHost(
     private var currentId: String? = null
     private var currentGaze: GazeTarget? = null
     private var currentClientClosed: (() -> Unit)? = null
+    private var currentFootprint = JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
+    private var currentCameraSide = 0f
     /** Window whose content the local model is really working on (JARVIS reads it until the work ends). */
     private var workingId: String? = null
     private var emphasizedWork = false
@@ -90,7 +92,13 @@ class JarvisWorkWindowHost(
                 depthLayers = depthLayers
             )) return null
         currentClientClosed = onClosed
-        home.setWorkspaceFootprint(scene.footprint)
+        currentFootprint = strongerFootprint(currentFootprint, scene.footprint)
+        home.setWorkspaceFootprint(currentFootprint)
+        home.hologram.setWorkWindowCamera(
+            true,
+            currentCameraSide,
+            profile = cameraProfile(currentFootprint)
+        )
         return window
     }
 
@@ -145,7 +153,9 @@ class JarvisWorkWindowHost(
                 currentGaze = gaze(it)
                 director.windowMoved(id, if (workingId == id && emphasizedWork)
                     ToolWorkSceneLease.workingGaze(gaze(it)) else gaze(it))
-                home.hologram.setWorkWindowCamera(true, cameraSide(it))
+                currentCameraSide = cameraSide(it)
+                home.hologram.setWorkWindowCamera(true, currentCameraSide,
+                    profile = cameraProfile(currentFootprint))
             }?.plan else null
         }
         val accepted = window.open(body, first.plan.origin, first.plan.destination, title, first.plan.protectedBounds,
@@ -161,6 +171,8 @@ class JarvisWorkWindowHost(
                 currentId = null
                 currentGaze = null
                 currentClientClosed = null
+                currentFootprint = JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
+                currentCameraSide = 0f
                 home.hologram.setWorkWindowCamera(false)
                 cameraHome = null
                 home.setWorkspaceFootprint(JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE)
@@ -174,7 +186,8 @@ class JarvisWorkWindowHost(
         currentId = id
         currentGaze = gaze(first)
         // Airbus deck: footprint controls how much of the cockpit physically clears for this real window.
-        home.setWorkspaceFootprint(scene.footprint)
+        currentFootprint = scene.footprint
+        home.setWorkspaceFootprint(currentFootprint)
         val initialX = background?.scrollX ?: 0
         val initialY = background?.scrollY ?: 0
         background?.setOnScrollChangeListener { _, x, y, _, _ ->
@@ -183,7 +196,9 @@ class JarvisWorkWindowHost(
         releaseGeometry = { if (current === window) background?.setOnScrollChangeListener(null) }
         // #571: the bounded camera move follows the accepted window (towards its side, at most 2.5 % stage travel).
         cameraHome = home
-        home.hologram.setWorkWindowCamera(true, cameraSide(first))
+        currentCameraSide = cameraSide(first)
+        home.hologram.setWorkWindowCamera(true, currentCameraSide,
+            profile = cameraProfile(currentFootprint))
         director.windowOpened(id, gaze(first))
         if (Build.VERSION.SDK_INT >= 33) {
             val callback = android.window.OnBackInvokedCallback { close() }
@@ -202,7 +217,7 @@ class JarvisWorkWindowHost(
         val destination = planned.plan.destination
         val headX = planned.face?.centerX() ?: viewport.centerX()
         val headY = planned.face?.centerY() ?: viewport.centerY()
-        return GazeTarget(((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.6f, .6f),
+        return GazeTarget(((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.7f, .7f),
             ((headY - destination.centerY()) / viewport.height()).coerceIn(-.4f, .4f))
     }
 
@@ -248,6 +263,22 @@ class JarvisWorkWindowHost(
         val left = x.coerceIn(viewport.left, viewport.right - size)
         val top = y.coerceIn(viewport.top, viewport.bottom - size)
         return RectF(left, top, left + size, top + size)
+    }
+
+    private fun strongerFootprint(
+        a: JarvisActionScenes.WorkspaceFootprint,
+        b: JarvisActionScenes.WorkspaceFootprint
+    ): JarvisActionScenes.WorkspaceFootprint = if (a.ordinal >= b.ordinal) a else b
+
+    private fun cameraProfile(
+        footprint: JarvisActionScenes.WorkspaceFootprint
+    ): at.heinz.deviceai.avatar3d.AvatarCameraFraming.Profile = when (footprint) {
+        JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE ->
+            at.heinz.deviceai.avatar3d.AvatarCameraFraming.Profile.LEGACY
+        JarvisActionScenes.WorkspaceFootprint.MEDIUM_TERMINAL ->
+            at.heinz.deviceai.avatar3d.AvatarCameraFraming.Profile.MEDIUM_TERMINAL
+        JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY ->
+            at.heinz.deviceai.avatar3d.AvatarCameraFraming.Profile.FULL_MISSION_BAY
     }
 
     private fun unregisterBack() {

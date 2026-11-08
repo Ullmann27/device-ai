@@ -254,6 +254,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var auraAnchor = Float.NaN
     private var auraCloseUp = Float.NaN
     private var auraKeepOut: at.heinz.deviceai.avatar3d.AvatarFraming.KeepOut? = null
+    private var auraCameraProfile = AvatarCameraFraming.Profile.LEGACY
     private var auraScale = 1f
     private var auraAnchorEffective = .5f
     private val cameraMotion = AvatarCameraMotion()
@@ -262,18 +263,35 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var cameraFraming: AvatarCameraFraming? = null
     private var cameraWindow: AvatarFraming.Window? = null
     private var cameraDirection = 0f
+    private var cameraProfile = AvatarCameraFraming.Profile.LEGACY
+    private var cameraProfileBlendFrom: AvatarFraming.Window? = null
+    private var cameraProfileBlendStartedAtMs = -1L
 
     /** Actual accepted work-window presentation only. */
-    fun setWorkWindowCamera(active: Boolean, direction: Float = 0f, immediate: Boolean = false) {
+    fun setWorkWindowCamera(
+        active: Boolean,
+        direction: Float = 0f,
+        immediate: Boolean = false,
+        profile: AvatarCameraFraming.Profile = AvatarCameraFraming.Profile.LEGACY
+    ) {
         require(direction.isFinite() && direction in -1f..1f)
         // The face and the orb stay free while a window works: the sequence cards dock into its status strip.
         workWindowActive = active
+        val now = SystemClock.uptimeMillis()
+        if (active && profile != cameraProfile) {
+            // Freeze the exact currently visible projection before changing profile. The next frames blend
+            // from that safe window into the new safe target while the existing camera motion keeps running.
+            updateAuraFraming()
+            cameraProfileBlendFrom = cameraWindow
+            cameraProfileBlendStartedAtMs = now
+            cameraProfile = profile
+        }
         cockpitSequence?.setCardsDocked(active)
         if (immediate || !canAnimateFrame() || !hasWindowFocus() || !headEnabled || cockpitHeadBounds == null) {
             resetCamera()
         } else {
             if (active) cameraDirection = direction
-            cameraMotion.setWorkActive(active, SystemClock.uptimeMillis())
+            cameraMotion.setWorkActive(active, now)
         }
         invalidate()
     }
@@ -281,6 +299,8 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun resetCamera() {
         cameraMotion.reset()
         cameraDirection = 0f
+        cameraProfileBlendFrom = null
+        cameraProfileBlendStartedAtMs = -1L
         cameraWindow = cameraFraming?.rest
         cameraWindow?.let { auraScale = it.headScale.toFloat(); auraAnchorEffective = it.anchorX.toFloat() }
     }
@@ -331,13 +351,26 @@ class ContinuumHologramView @JvmOverloads constructor(
             return
         }
         if (focus !== auraFocus || w != auraWidth || h != auraHeight || headAnchorX != auraAnchor ||
-            headCloseUp != auraCloseUp || headKeepOut != auraKeepOut) {
+            headCloseUp != auraCloseUp || headKeepOut != auraKeepOut || cameraProfile != auraCameraProfile) {
             auraFocus = focus; auraWidth = w; auraHeight = h; auraAnchor = headAnchorX; auraCloseUp = headCloseUp
             auraKeepOut = headKeepOut
+            auraCameraProfile = cameraProfile
             cameraFraming = AvatarCameraFraming(focus, w.toDouble() / h,
-                headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut)
+                headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut, cameraProfile)
         }
-        cameraWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection)
+        val targetWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection)
+        val fromWindow = cameraProfileBlendFrom
+        cameraWindow = if (fromWindow != null && cameraProfileBlendStartedAtMs >= 0L) {
+            val raw = ((SystemClock.uptimeMillis() - cameraProfileBlendStartedAtMs) / 260f).coerceIn(0f, 1f)
+            if (raw >= 1f) {
+                cameraProfileBlendFrom = null
+                cameraProfileBlendStartedAtMs = -1L
+                targetWindow
+            } else {
+                val smooth = raw * raw * (3f - 2f * raw)
+                AvatarCameraFraming.blend(fromWindow, targetWindow, smooth)
+            }
+        } else targetWindow
         val window = requireNotNull(cameraWindow)
         auraScale = window.headScale.toFloat(); auraAnchorEffective = window.anchorX.toFloat()
     }
