@@ -749,20 +749,32 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
      * Airbus deck (owner brief 06.11.2026): while a work window is open the tiles and lower rows make room. Their hit
      * targets leave with them, so nothing invisible can be touched or focused; they return when the window has closed.
      */
-    fun setDeckCleared(cleared: Boolean) {
-        deckCleared = cleared
-        if (cleared) liveTabs.collapseImmediately()
-        liveTabs.visibility = if (jarvisShellStage && !cleared) View.VISIBLE else View.GONE
-        jarvisShell.setDeckCleared(cleared)
+    fun setWorkspaceFootprint(footprint: JarvisActionScenes.WorkspaceFootprint) {
+        workspaceFootprint = footprint
+        val active = footprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
+        if (active) liveTabs.collapseImmediately()
+        liveTabs.visibility = if (jarvisShellStage && !active) View.VISIBLE else View.GONE
+        jarvisShell.setWorkspaceFootprint(footprint)
         applyDeckToActions()
     }
 
-    private var deckCleared = false
+    fun setDeckCleared(cleared: Boolean) = setWorkspaceFootprint(
+        if (cleared) JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY
+        else JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE)
+
+    private var workspaceFootprint = JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
+    private val deckCleared: Boolean
+        get() = workspaceFootprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
 
     private fun applyDeckToActions() {
+        val medium = workspaceFootprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
+        val full = workspaceFootprint == JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY
         shellActions.forEach { (key, view) ->
-            if (key.startsWith("tile:") || key.startsWith("panel:ROW_"))
-                view.visibility = if (deckCleared) View.INVISIBLE else View.VISIBLE
+            val leaves = key.startsWith("tile:") ||
+                key == "panel:COCKPIT_SECONDARY" ||
+                full && key.startsWith("panel:ROW_")
+            if (leaves || key.startsWith("panel:ROW_"))
+                view.visibility = if (leaves && medium) View.INVISIBLE else View.VISIBLE
         }
     }
 
