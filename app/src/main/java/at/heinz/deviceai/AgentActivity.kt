@@ -9782,6 +9782,20 @@ class AgentActivity : Activity() {
                     }
                     val hasPartialResponse = !run.responseComplete && run.response.isNotBlank()
                     val successful = run.responseComplete && run.blocker == null && run.response.isNotBlank()
+                    val answerVerificationShadow = if (
+                        successful && botTask == null && codingPlanning == null &&
+                        !groundedRecall?.stateTelegram.isNullOrBlank()
+                    ) at.heinz.deviceai.cognitive.StateTelegramAnswerShadow.assess(
+                        run.response, groundedRecall?.stateTelegram
+                    ) else null
+                    answerVerificationShadow?.let { assessment ->
+                        addToolActivity(
+                            "VERIFY SHADOW · " + assessment.status.name +
+                                " · claims " + assessment.checkedClaims +
+                                " · contradictions " + assessment.contradictions +
+                                " · conflicts " + assessment.conflicts
+                        )
+                    }
                     publishCognitiveTrace(turnTrace,if(successful)TraceOutcome.MODEL_INTERPRETATION else TraceOutcome.FAILED)
                     if (botTask != null) {
                         val calls = run.taskEvidence?.calls.orEmpty()
