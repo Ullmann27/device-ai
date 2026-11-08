@@ -22,7 +22,7 @@ class LocalReasoningWorkScenePolicyTest {
         for (task in listOf(
             "Öffne die App Einstellungen",
             "Recherchiere die aktuellen Quellen und prüfe die Aussage",
-            "Vergleiche mehrere Bedingungen und entwickle eine ausführliche Strategie"
+            "Vergleiche mehrere Bedingungen und entwickle eine ausführliche Strategie".padEnd(200, ' ')
         )) {
             assertTrue(task, LocalReasoningWorkScenePolicy.decide(
                 task, false, false, false
@@ -34,6 +34,22 @@ class LocalReasoningWorkScenePolicyTest {
             hasConversationContext = false,
             hasGroundedEvidence = true
         ).immediate)
+    }
+
+    @Test fun complexityThresholdIsStrictAndKeepsShortPlanningInGrace() {
+        val shortPlan = LocalReasoningWorkScenePolicy.decide(
+            "Vergleiche mehrere Bedingungen und entwickle eine ausführliche Strategie", false, false, false)
+        assertEquals(.30, shortPlan.assessment.complexity, 1e-9)
+        assertEquals(1_000L, shortPlan.delayMillis)
+        val boundary = LocalReasoningWorkScenePolicy.decide(
+            "Wie funktioniert das?".padEnd(200, ' '), false, false, false)
+        assertEquals(.35, boundary.assessment.complexity, 1e-9)
+        assertEquals(LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS, boundary.promptBudget)
+        assertEquals(1_000L, boundary.delayMillis)
+        val above = LocalReasoningWorkScenePolicy.decide(
+            "Vergleiche mehrere Bedingungen.".padEnd(200, ' '), false, false, false)
+        assertTrue(above.assessment.complexity > .35)
+        assertEquals(0L, above.delayMillis)
     }
 
     @Test fun priorConversationContextUsesFullBudgetAndImmediateScene() {
