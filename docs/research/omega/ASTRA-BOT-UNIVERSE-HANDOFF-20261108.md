@@ -4,9 +4,10 @@ Branch: `astra/continuum-bot-universe-20261108`
 Base: SOL #658, remote checked at `f153758dfd19d1c12f6fe63b6c4c4bd1da95e4cb`.
 Draft: #662. Initial checkpoint: `350ceaf2aea4ccde68645645ef6c92bac729c2f2`.
 Implementation checkpoint: `48d2150d946ad90d0c939e2c5141e75a8ad487e3`.
-Status: WIP / HOST VALIDATION IN PROGRESS. No Android/device acceptance, merge,
-signing or release. The requested real-model Kotlin repair proof is BLOCKED,
-not fulfilled by text review.
+Tested source: [`5a16c1efa01f83a3b181b712fb7eca5874ea5a02`](https://github.com/Ullmann27/device-ai/commit/5a16c1efa01f83a3b181b712fb7eca5874ea5a02).
+Status: HOST CONTRACTS PASS / ANDROID AND CODING PROOF BLOCKED. No device
+acceptance, merge, signing or release. The requested real-model Kotlin repair
+proof is NOT fulfilled by text review.
 
 ## Inventory and integration boundary
 
@@ -112,25 +113,45 @@ node --test .github/continuum/ccc1-bot-assignment.test.mjs \
   --tests 'at.heinz.deviceai.ContinuumBotTaskRoutingUiTest'
 ```
 
-Current results before this checkpoint:
-- Initial complete main-source SDK-less compile: PASS (535 source files;
-  compile-only LiteRT stub, not native runtime).
-- Initial all-test compile: INVALID RUN (sources edited between main/test
-  compilation); discard that mixed-source result.
-- Focused host JUnit: 32 PASS for team/store/lifecycle/skills/practice before
-  adding history-deletion coverage. Injected model responses only.
-- Current frozen full host rerun and Node regressions: PENDING.
-- Robolectric widget tests, Gradle/Android build, real local model, Fold7,
-  thermals and device restart: NOT_RUN / environment not provisioned.
-- Owner package/certificate/installed version checks: NOT_RUN; no release work.
+Final results for `5a16c1efa01f83a3b181b712fb7eca5874ea5a02`:
+- Complete main-source SDK-less compile: PASS (535 source files, JVM target17;
+  compile-only LiteRT stub, not native runtime). Main source was compiled at
+  `18d8a42935f966a80f4599dc58e720fbe0223db7`; `git diff` confirms no production
+  changes between that SHA and the tested source above.
+- All 637 host JUnit classes: **3599 PASS** with Temurin27, Kotlin2.2.21,
+  JUnit4.13.2, `LANG=C.UTF-8 LC_ALL=C.UTF-8`, non-root user and a writable
+  tracked-source snapshot. Four executable Checks programs passed; one helper
+  has no main and is not an executable test. Injected model ports are contracts,
+  not real local-model intelligence or independent coding proof.
+- Existing canonical CCC1 assignment/report/service/task Node tests: **29 PASS**
+  on Node26.12.1. Node sources are unchanged across the tested checkpoints.
+  This is host regression evidence, not the pinned Node20/22/24 release gate.
+- Eight focused navigation tests PASS, including "Mein KI-Team", Bot Universe,
+  TeamViewer, negation and PDF boundaries.
+- Initial mixed-source test compilation was INVALID and discarded. The first
+  frozen host run found three obsolete "Assistenten" label expectations, now
+  corrected, plus root/ASCII-runner failures. Those environment failures were
+  resolved by a genuine non-root UTF-8 rerun, not skipping/changing the tests.
+- Gradle/widget QA was **attempted, BLOCKED**: JDK27 is incompatible with
+  Gradle8.11.1; retried with verified Temurin21.0.13. That retry cannot resolve
+  `com.android.application:8.10.0` from Google/Maven/plugin repositories.
+  New Robolectric cases are checked in but **NOT_RUN**. SDK-less JUnit does not
+  execute `src/uiTest`, Android lint, Gradle, native LiteRT or APK packaging.
+- Real local model, Fold7, thermal measurements, Android restart, owner
+  package/certificate/installed-version checks: **NOT_RUN**. No release work.
 
-Do not inherit SOL's test results as evidence for this branch. Before final
-handoff record exact tested commit, actual totals/failures and commands.
+Machine-readable result and log hashes:
+[`ASTRA-BOT-UNIVERSE-HOST-20261108.json`](evidence/ASTRA-BOT-UNIVERSE-HOST-20261108.json).
+For permission tests, run the command above as an ordinary non-root user in
+that user's writable checkout, not root in another user's build directory.
+The host run's cognitive fixture scores are not new generalization claims.
 
 ## Next bounded step and integration
 
-1. Finish frozen host/Node validation, review negative cases and publish exact
-   results on #662; deliver the tested source separately to SOL #658.
+1. SOL: independently review #662 against unchanged integration
+   `f153758dfd19d1c12f6fe63b6c4c4bd1da95e4cb`. No foreign branch was modified.
+   The three current review findings (handoff reproducibility, stuck active
+   result rejection, permanent full history) are addressed.
 2. On a provisioned host/device, run the widget tests and real shared-model
    text-team slice. Do not mark Fold7/native QA from a JVM run.
 3. Independently design the reviewed CCC1 participant binding in the existing
