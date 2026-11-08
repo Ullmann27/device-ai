@@ -1,0 +1,33 @@
+JUnit version 4.13.2
+.E..E.E.E
+Time: 0.046
+There were 4 failures:
+1) glassGradientsSpanThePaneRatherThanOneDrawingUnit(at.heinz.deviceai.ui.HollywoodFuiMaterialRegressionTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.ui.HollywoodFuiMaterialRegressionTest.glassGradientsSpanThePaneRatherThanOneDrawingUnit(HollywoodFuiMaterialRegressionTest.kt:35)
+2) particleRequestCannotExceedTheHardBudget(at.heinz.deviceai.ui.HollywoodFuiMaterialRegressionTest)
+java.lang.AssertionError: expected:<24> but was:<10000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ui.HollywoodFuiMaterialRegressionTest.particleRequestCannotExceedTheHardBudget(HollywoodFuiMaterialRegressionTest.kt:53)
+3) liveDrawingReusesGradientAndPathIdentities(at.heinz.deviceai.ui.HollywoodFuiMaterialRegressionTest)
+java.lang.AssertionError: Unbounded path identities: 200
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ui.HollywoodFuiMaterialRegressionTest.liveDrawingReusesGradientAndPathIdentities(HollywoodFuiMaterialRegressionTest.kt:48)
+4) settledAnchorSubmitsNoHaloGlintOrBeam(at.heinz.deviceai.ui.HollywoodFuiMaterialRegressionTest)
+java.lang.AssertionError: expected:<0> but was:<7>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ui.HollywoodFuiMaterialRegressionTest.settledAnchorSubmitsNoHaloGlintOrBeam(HollywoodFuiMaterialRegressionTest.kt:16)
+
+FAILURES!!!
+Tests run: 5,  Failures: 4
+

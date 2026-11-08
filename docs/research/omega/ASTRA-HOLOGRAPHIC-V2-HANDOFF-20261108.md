@@ -81,7 +81,8 @@ Fold7-/Filament-/Gemini-Referenznachweis.
 
 Gesicherte Entwicklungs-Checkpoints: `3e481449bc9671ce74e974959e96294d6d003f0b`
 (Audit), `a9cf4b8de89589b085943681cc0293da5652aace` (Material),
-`452591edd31215fecea7a3110036157a7c1ed438` (Zeitbasis/Fallback).
+`452591edd31215fecea7a3110036157a7c1ed438` (Zeitbasis/Fallback),
+`839017298f78d825d82118f359c5d56874bfae57` (abgenommene Host-Evidenz).
 Jeweils Commit -> Push -> `git ls-remote` mit identischem SHA ausgefuehrt.
 Finale Evidenz liegt in `docs/evidence/astra-holographic-v2-20261108/`.
 
@@ -90,7 +91,8 @@ Finale Evidenz liegt in `docs/evidence/astra-holographic-v2-20261108/`.
 | Material-RED | 5 Tests, 4 reproduzierte Fehler auf unveraendertem Baseline-Painter |
 | Material-GREEN | 9/9; Anker-Ausblendung, Close-Puls, scheibengrosse Gradienten, konstante Shader-/Path-Identitaeten und harter 24-Motes-Deckel |
 | Vollstaendige Kotlin-Main-/Test-Kompilation | PASS, JDK21.0.13 / Kotlin2.2.21; bestehender compile-only LiteRT-Stub, kein echtes LiteRT |
-| Vollstaendige JVM-Regression | 632 JUnit-Klassen, 3551 Tests PASS; vier ausfuehrbare Checks PASS (fuenfter Helper hat kein main) |
+| Vollstaendige JVM-Regression Fenster | 632 JUnit-Klassen, 3551 Tests PASS; vier ausfuehrbare Checks PASS (fuenfter Helper hat kein main) |
+| Folge-Meilenstein Kernlicht | Zusaetzliche Filament-/View-Typpruefung und 5 neue Policytests, zusammen 3556 JVM-Tests PASS |
 | Schlusskorrekturen | Erneute Typpruefung der Android-Fenster-/Overlay-Klassen, voller JVM-Lauf mit diesen Klassen zuerst im Classpath |
 | Neue UI-Tests | 5 Robolectric-Faelle typgeprueft: nur eine Uhr, Content-Freigabe, spaetes Schliessen, Rueckfall/reduzierte Bewegung, geschuetzte Bereiche/STOP/Thermik; Ausfuehrung BLOCKED |
 | Android-Gradle / Lint / native UI | Tatsaechlich versucht, AGP8.10.0 aus Google-Maven nicht aufloesbar; kein SDK/adb/Emulator. Kein APK |
@@ -160,7 +162,7 @@ heissen jetzt SCHRITT statt erfundener AGENT-Instanzen; ein numerischer Nullwert
 erzeugt keinen kuenstlichen Mindestbalken. Die Profile sind **nicht** sieben
 neu fertiggestellte Fachanwendungen: Gedaechtnis nutzt derzeit Evidence,
 Planung Swarm, Chrono zeigt echte Calculation-Daten. Die umfassende
-Memory-/Timeline-Gestaltung, neue dynamische Filament-Kernbeleuchtung,
+Memory-/Timeline-Gestaltung, visuelle Abnahme der neuen Filament-Kernbeleuchtung,
 Dialog-/Typografie-/Navigation-Ueberarbeitung und alle sieben Geraete-Workscenes
 bleiben offen. Keine Ersatzavatararbeit.
 
@@ -173,11 +175,36 @@ des Kill-Switch waehrend Aufbau/Arbeit/Abbau pruefen. Je 2 Minuten Idle/Arbeit/
 Modellinferenz mit Framezeiten, Jank, CPU/GPU, RAM und Temperatur erfassen.
 Ohne diese Nachweise bleibt die filmische Produktabnahme offen.
 
+## Autonomer Folge-Meilenstein: bestehendes Kernlicht
+
+Nach dem gesicherten Fenster-Meilenstein wurde eine unabhaengige, kleine
+Verbindung ergaenzt: Die **vorhandene** Cyan-Point-Fill von Filament erhaelt
+dieselbe pro Frame einmal gelesene reale Energie wie die originale Kugel
+(geglaetteter KI-/Sprachzustand und bestehende orbPulse/recallBrightness-Ereignisse).
+Keine neue Lichtquelle, kein neuer Renderer, keine Uhr und kein Avatarcontroller.
+
+`AvatarCoreLighting` bildet .18 Idle-Energie auf die unveraenderten 24000 lm ab,
+aktive Energie weich und monoton auf maximal 30000 lm (+25%). Authored
+Materialien, Morphs, feste Belichtung, Farbwerte, Lichtposition, Schatten und
+Bloom bleiben unveraendert. Updates unter 1 lm werden nicht erneut an Filament
+gesendet. Bei reduziertem Budget, reduzierter Bewegung oder ausgeschaltetem
+zentralem Film-Schalter gilt exakt die alte statische Lichtstaerke.
+Die funktionale Avatar-/Sprachverarbeitung bleibt aktiv.
+
+Fuenf echte Kotlin-Tests pruefen Neutralwert/Fallback, monotone begrenzte
+Arbeitsreaktion, Determinismus, nicht-endliche Samples und weiche Randsteigungen.
+Die produktiven Filament-/HologramView-Klassen wurden gegen Filament1.56.0 und
+Android-Framework typgeprueft. Gesamte JVM-Suite mit den neuen Klassen erneut:
+**3556 PASS**, Beleg `core-light-junit.txt`. Das ist ein Anschluss-/Policybeleg,
+kein Bildnachweis der Leuchte: Filament-/Fold7-Pixel und GPU-Kosten bleiben
+NOT_RUN. Das Licht wird deshalb nicht in Java2D als echter Avatar nachgebaut.
+
 ## Rueckfall / naechster Einstieg
 
 Zentraler Praesentationsschalter: `JarvisCinematicSettings.KEY`,
 `continuum-cockpit-presentation/cinematic-work-windows` (Standard true).
-Aus bedeutet vorhandener einfacher Fenstereinflug ohne Film-Layer/Neigung;
+Aus bedeutet vorhandener einfacher Fenstereinflug ohne Film-Layer/Neigung und
+die originale statische Cyan-Fuellleuchte;
 kein Abschalten der Avatar-/Sprach-/Berechtigungsfunktionen.
 Rollback nur eigener Commits, niemals Reset der SOL-/Fable-Branches.
 Naechster Einstieg: finale Host-Frames und Regressionen; danach autorisierter
