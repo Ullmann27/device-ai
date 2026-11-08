@@ -9478,7 +9478,15 @@ class AgentActivity : Activity() {
         }
         if (botTask == null && codingPlanning == null && documentDraftTurn == null &&
             activeWorkArea == ContinuumWorkArea.START) {
-            presentLocalReasoningWorkScene(chiefTurn.turnId, text)
+            val preflightPromptCap = at.heinz.deviceai.cognitive.LocalChatPromptBudget.limit(
+                task = text,
+                hasMemories = false,
+                hasConversationContext = previousLocalReply != null,
+                hasGroundedEvidence = groundedRecall != null,
+                hasObservations = false,
+                hasReflection = false
+            )
+            scheduleLocalReasoningWorkScene(chiefTurn.turnId, text, preflightPromptCap)
         }
         // Context may resolve pronouns, but owner-write authorization always
         // uses the untouched original user message ('text').
@@ -9648,6 +9656,10 @@ class AgentActivity : Activity() {
                     hasObservations = observations.isNotEmpty(),
                     hasReflection = reflection != null
                 )
+                if (botTask == null && codingPlanning == null) runOnUiThread {
+                    if (sessionId == localSessionId && activeChatCancellation === cancellation)
+                        promoteLocalReasoningWorkScene(chiefTurn.turnId, promptCap, memories.size)
+                }
                 val briefInstruction = if (promptCap ==
                     at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS)
                     "\nKurze Einstiegsfrage: Antworte möglichst direkt in höchstens drei kurzen Sätzen. " +
