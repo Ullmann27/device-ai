@@ -2,7 +2,7 @@
 # Compiles the situation tracker/model from a git ref (original arm) or the worktree
 # (candidate arms) together with the JUnit tests and the H4-B replay harness.
 set -euo pipefail
-root=$(cd "$(dirname "$0")/.." && pwd)
+root=$(cd "$(dirname "$0")/.." && pwd -P)
 out=${1:?external output directory}
 ref=${2:-WORKTREE}
 junit=${CONTINUUM_JUNIT_JARS:?JUnit4 and Hamcrest classpath}

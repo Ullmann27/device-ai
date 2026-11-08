@@ -211,6 +211,11 @@ The common independent certificate check, not that argmax, admits answers.
 The one-step ablation takes no probe because no single observation can
 certify a cause with one possible error. It establishes a planning-horizon
 dependency, not a comparison with an optimized myopic exploration policy.
+Review correction (2026-11-08): with `remainingProbes = 1` and `maxErrors = 1`
+every one-probe plan scores 0, so this arm is **degenerate by construction**;
+its 0/64 and 0/192 rows are not empirical ablation evidence and must not be
+cited as such. A myopic arm with a greedy fallback was not run because H4-A is
+closed as FAIL and stays deactivated.
 
 ### Executed checks and reproduction
 
