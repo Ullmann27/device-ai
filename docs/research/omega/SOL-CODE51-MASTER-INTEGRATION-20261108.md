@@ -1,11 +1,81 @@
 # Code51 master integration
 
-Status: bounded integration milestone HOST-PASS; Draft PRs #650, #653 and the
-reconciliation PR on `sol/code51-reconcile-20261108` (see next section).
+Status: bounded integration milestone HOST-PASS; Draft PRs #650, #653 and #658
+on `sol/code51-reconcile-20261108` (see next section).
 Overall Code51 remains WIP; no APK or device acceptance. Closing under the
 owner's 10% limit instruction; no further projects started.
 Owner canon #642, execution #643; read #637-641.
 No main merge, signing, release, installation, private data or signer access.
+
+## Review repair checkpoint (resume here)
+
+Source: `b557652e5eb10844d832d4f91055aa39a67e6ca4`, pushed and remote-verified.
+This closes the fact/meta admission regression reported on #658; Fable's
+upstream #657 is still pinned at `b1117df179cbc92284d779399f83c381125bda43`
+and was not modified.
+
+`BootstrapBrain.decide("Merke dir: ...")` is also the safety gate used by
+`AgentActivity.handleNeuralRequest` before neural TEACH. The latter trains on
+the **complete** `command.text`, not on `split.fact`. Validating only the
+shortened fact let a sensitive or overlong trailing instruction bypass the
+original gate. The instruction could also appear in the memory write note.
+
+The existing gate now checks sensitive markers and the 3–320-character limit
+against the complete content. Valid content still stores only the fact and
+acknowledges the instruction. Rejected content produces no fact, no neural
+recall permission and no echoed instruction. No second validator, memory store,
+schema migration, deletion of existing records or permission change.
+Relevant experiments: EXP-04 learning admission, EXP-06 owner-fact provenance.
+Compatibility: existing callers and fact/meta separation are preserved.
+
+Evidence (JDK 21, Kotlin 2.2.21; synthetic inputs only):
+
+- RED on `f1ad10a7`: `BootstrapBrainTest` 19 tests / **3 failures**
+  (sensitive instruction, neural TEACH admission, whole-content 321-character
+  rejection).
+- GREEN on the repaired source: **39/39 PASS**, nine JUnit classes, zero skips.
+  Five added tests cover safe fact separation, both memory prefixes and 12
+  existing sensitive markers, exact 2/3/320/321 boundaries, rejected neural
+  input and accepted safe neural input.
+- Current `BootstrapBrain`, separator and display sources compiled against the
+  existing SDK-less JVM dependency classes. This is a focused host regression,
+  **not** a fresh full Android build or device persistence test.
+- Previous full 3568-test PASS below belongs to `a9e17405`, not to this repair.
+  Full suite, Node, Gradle/lint/Robolectric/APK and Fold7 were not rerun here.
+  The earlier Gradle DNS blocker has not been re-probed.
+
+Executed targeted command (the prior SDK-less runner output supplies dependency
+classes; compile the current changed sources first):
+
+```sh
+prior=/path/to/previous/android-kotlin-unit-check-output
+deps=/path/to/android-and-junit-jars
+out=/path/to/memory-gate-green
+cp="$prior/main:$prior/stubclasses:$deps/junit.jar:$deps/hamcrest.jar:$deps/android-all-15.jar"
+s=app/src/main/java/at/heinz/deviceai
+t=app/src/test/java/at/heinz/deviceai
+kotlinc "$s/BootstrapBrain.kt" "$s/cognitive/OwnerFactMetaSeparator.kt" \
+  "$s/learning/OwnerMemoryPerspective.kt" "$t"/BootstrapBrain*Test.kt \
+  "$t/cognitive/OwnerFactMetaSeparatorTest.kt" "$t/learning/KnowledgeDialogueTest.kt" \
+  "$t/learning/NeuralDialogueTest.kt" "$t/learning/NeuralTeachingAuditTest.kt" \
+  -module-name app -Xfriend-paths="$prior/main" -cp "$cp" -jvm-target 17 -nowarn -d "$out/classes"
+java -cp "$out/classes:$cp:$KOTLIN_HOME/lib/kotlin-stdlib.jar" org.junit.runner.JUnitCore \
+  at.heinz.deviceai.BootstrapBrainTest \
+  at.heinz.deviceai.BootstrapBrainNegatedToolRoutingTest \
+  at.heinz.deviceai.BootstrapBrainCommaContrastTest \
+  at.heinz.deviceai.BootstrapBrainNegationDeEnTest \
+  at.heinz.deviceai.cognitive.OwnerFactMetaSeparatorTest \
+  at.heinz.deviceai.learning.KnowledgeDialogueTest \
+  at.heinz.deviceai.learning.NeuralDialogueTest \
+  at.heinz.deviceai.learning.NeuralCommandParserTest \
+  at.heinz.deviceai.learning.NeuralTeachingAuditTest
+```
+
+Next: carry this gate fix when integrating #657 independently; authorized
+Gradle/SDK and Fold7 acceptance remain open. Bot restart persistence is still
+unfinished, not started under the closure budget. Rollback: do not revert this
+gate alone (that restores the bypass); if fact/meta separation is withdrawn,
+retain whole-input admission and its regression tests.
 
 ## Reconciliation checkpoint (resume here)
 
