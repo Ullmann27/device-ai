@@ -1,6 +1,6 @@
 # Code50 acceptance repair — 2026-11-08
 
-Status: WIP, app-routing host regression PASS; full acceptance repair in progress. Integration source: `0c59dcc7b249d7eb6bfc9fb21d2306f814105ed6` (PR #603). Work branch: `chatgpt/code50-acceptance-repair-20261108`, draft PR #627. The checkpoints below are chronological; later actual runs supersede earlier NOT_RUN statuses.
+Status: ordinary Unit/Lint PASS and focused host UI PASS on `5ba76afcd306db11273dae1e0fe83dd467a34ea0`; full optional UI and device acceptance remain open. Integration source: `0c59dcc7b249d7eb6bfc9fb21d2306f814105ed6` (PR #603). Work branch: `chatgpt/code50-acceptance-repair-20261108`, draft PR #627. The checkpoints below are chronological; later actual runs supersede earlier NOT_RUN statuses.
 
 ## Observed blockers
 
@@ -64,3 +64,14 @@ Fold7 voice, 15-second avatar proof, FUI/thermal acceptance and original-signed 
 - Three layout failures expose a Float endpoint rounding a nominal 48-dp top-bar target down to 47.999996 dp. The repair rounds only that bottom endpoint outward by one representable Float when needed. Strict >=48 assertions and non-overlap checks are retained.
 - The fourth layout failure was a frozen C1 avatar snapshot predating the already-integrated Code50 shell. The replacement snapshot was measured from compiled, unmodified 8374252 **before** applying the touch rounding repair; the bit-identical avatar check remains. Raw pre-fix coordinates and undersized targets are in `evidence/code50-hero-before-touch-rounding-20261108.txt`.
 - These role/layout repairs are source-saved WIP until the next full unit/lint run. Main and #603 are unchanged. Optional full UI, Fold7 and original signing remain separate open gates.
+
+## Verified host acceptance on 5ba76af
+
+- Clean source `5ba76afcd306db11273dae1e0fe83dd467a34ea0`: `:app:testDebugUnitTest :app:lintDebug` completed with `BUILD SUCCESSFUL` in 4m39s. No test filter; ordinary unit configuration, one worker, Gradle heap 1,600 MB. JUnit: **3,488 total, 3,469 PASS, 0 FAIL, 0 ERROR, 19 SKIP**, 618 suites. Lint: **0 issues** in the configured NewApi scope. All seven failures from the previous completed baseline are closed by actual rerun.
+- The 19 skips are retained explicitly in the machine-readable receipt: pending Chief integration cases, opt-in container/Node-fixture checks, and two LiteRT lifecycle checks requiring Java21. They are not counted as passed. No skip/ignore or lint exclusion was added by this repair.
+- Scoped Node contracts rerun on the same source: **33 PASS, 0 FAIL, 0 SKIP** across the nine recorded files.
+- Focused host Android/UI run on the same source: **35 PASS, 0 FAIL, 0 SKIP**, `BUILD SUCCESSFUL` in 2m11s. This includes all six OwnerAppActionWorkSceneUiTest methods; real Activity checks for 999/1,000-ms reasoning admission and in-place tool morph; two Hands-Free cockpit tests; ERROR_CLIENT/ERROR_RECOGNIZER_BUSY retry classification with the 250-ms contract; Airbus, Argon, AvatarMorphMapper and ToolGate flow tests.
+- These are JVM/Robolectric host results with controlled app/model inputs. They do not prove recognition of ten real microphone sentences, live Filament rendering, thermal performance, original signing or an installed Fold7 APK.
+- The earlier full optional UI attempt remains NOT_COMPLETED. Its specifically last-started PDF late-answer/STOP case passed in isolation on the same production/test source: **1/1 PASS**, `BUILD SUCCESSFUL` in 50s, no watchdog timeout and no thread dump. Thus no product deadlock was established by the earlier silent run. This isolated PASS does not complete the optional UI catalog.
+- Receipt and reproduction inputs: `evidence/code50-acceptance-20261108.json`, `evidence/code50-unit-suites-20261108.json`, `evidence/code50-ui-scope-20261108.init.gradle`, `evidence/code50-test-progress-20261108.init.gradle`, and `evidence/code50-node-20261108.tap`.
+- ADB readback had no attached device. Fold7 ten-sentence speech, 15-second avatar video, actual four-page PDF/FUI and thermal acceptance remain NOT_RUN. No APK was assembled, signed or installed. #603 and main remain unchanged at this checkpoint.
