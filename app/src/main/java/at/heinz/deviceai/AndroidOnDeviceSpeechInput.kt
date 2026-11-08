@@ -16,7 +16,8 @@ import at.heinz.deviceai.cognitive.LocalSpeechInputPolicy
 import at.heinz.deviceai.cognitive.LocalSpeechSession
 
 /** Owner-gesture, main-thread, bounded on-device recognition. No service launch,
- * download, transcript persistence, retry or automatic tool execution. */
+ * download, transcript persistence or automatic tool execution. A single 250 ms warm retry
+ * is allowed only for Android client/busy handover failures. */
 internal class AndroidOnDeviceSpeechInput(private val context: Context) {
     private val handler = Handler(Looper.getMainLooper())
     private var warmRecognizer: SpeechRecognizer? = null
