@@ -7,21 +7,25 @@ import java.util.Locale
  * Ephemeral navigation over owner turns. It stores topic cues/labels only, never
  * facts, model answers, tool grants or executable old instructions.
  */
-internal class LocalConversationSituationTracker {
+internal class LocalConversationSituationTracker(
+    private val normalization: ConversationSituationModel.CueNormalization =
+        ConversationSituationModel.CueNormalization.DEFAULT
+) {
     sealed interface Hint {
         data class Resolved(val threadId: String, val label: String, val score: Float): Hint
         data class Ambiguous(val labels: List<String>): Hint
         data object NoMatch: Hint
     }
 
-    private val model = ConversationSituationModel()
+    private val model = ConversationSituationModel(normalization = normalization)
 
     fun reset() = model.reset()
 
     fun observeOwnerTurn(text: String) {
         val clean = text.trim().take(512)
         val turn = model.nextTurn()
-        val cues = cues(clean)
+        val words = words(clean)
+        val cues = words.mapNotNull(normalization::normalize).toSet()
         if (cues.isEmpty()) return
 
         val snapshot = model.snapshot()
@@ -43,7 +47,7 @@ internal class LocalConversationSituationTracker {
         val existing = model.snapshot().threads.firstOrNull { it.id == id }
         model.openThread(
             id = id,
-            label = existing?.label ?: label(cues),
+            label = existing?.label ?: label(words),
             cues = cues,
             atTurn = turn
         )
@@ -76,17 +80,17 @@ internal class LocalConversationSituationTracker {
 
     internal fun snapshot(): ConversationSituationModel.Situation = model.snapshot()
 
-    private fun cues(text: String): Set<String> =
+    /** Raw lowercase words keep labels readable; matching uses the shared normalization. */
+    private fun words(text: String): List<String> =
         WORD.findAll(text.lowercase(Locale.GERMAN))
             .map { it.value }
             .filter { it.length >= 4 && it !in STOP }
-            .map { it.take(10) }
             .distinct()
             .take(12)
-            .toSet()
+            .toList()
 
-    private fun label(cues: Set<String>): String =
-        cues.take(3).joinToString(" · ").take(120).ifBlank { "früheres Thema" }
+    private fun label(words: List<String>): String =
+        words.take(3).joinToString(" · ") { it.take(10) }.take(120).ifBlank { "früheres Thema" }
 
     private fun threadId(cues: Set<String>): String {
         val canonical = cues.sorted().joinToString("\u0000")

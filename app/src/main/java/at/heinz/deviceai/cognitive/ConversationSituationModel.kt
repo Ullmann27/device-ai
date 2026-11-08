@@ -11,9 +11,43 @@ import java.util.Locale
  */
 internal class ConversationSituationModel(
     private val maxThreads: Int = 8,
-    private val maxCuesPerThread: Int = 16
+    private val maxCuesPerThread: Int = 16,
+    private val normalization: CueNormalization = CueNormalization.DEFAULT
 ) {
     enum class Lifecycle { ACTIVE, PAUSED, DORMANT, RESOLVED }
+
+    /**
+     * Shared H4-B1 normalization keeps complete bounded words. Only common inflection
+     * suffixes may extend a stem of at least [prefixMin] characters; arbitrary compounds
+     * such as Arbeit/Arbeitsamt must not bind. No fact, memory or tool authority.
+     */
+    data class CueNormalization(val foldUmlauts: Boolean, val maxLength: Int, val prefixMin: Int?) {
+        init {
+            require(maxLength in 4..80)
+            require(prefixMin == null || prefixMin >= 3)
+        }
+
+        fun normalize(word: String): String? {
+            val lower = word.lowercase(Locale.GERMAN)
+            val folded = if (foldUmlauts) {
+                lower.replace("ä", "ae").replace("ö", "oe").replace("ü", "ue").replace("ß", "ss")
+            } else lower
+            return folded.takeIf { it.length <= maxLength }
+        }
+
+        fun matches(query: String, cue: String): Boolean {
+            if (query == cue) return true
+            val minimum = prefixMin ?: return false
+            val (short, long) = if (query.length <= cue.length) query to cue else cue to query
+            return short.length >= minimum && long.startsWith(short) &&
+                long.substring(short.length) in INFLECTION_SUFFIXES
+        }
+
+        companion object {
+            private val INFLECTION_SUFFIXES = setOf("e", "en", "er", "es", "n", "s")
+            val DEFAULT = CueNormalization(foldUmlauts = true, maxLength = 80, prefixMin = 6)
+        }
+    }
 
     data class ThreadState(
         val id: String,
@@ -125,7 +159,7 @@ internal class ConversationSituationModel(
         if (query.isEmpty() && !genericReturn) return Resolution.NoMatch
         val candidates = threads.values.filter { it.lifecycle in setOf(Lifecycle.PAUSED, Lifecycle.DORMANT) }
             .mapNotNull { state ->
-                val overlap = query.intersect(state.cues).size
+                val overlap = query.count { token -> state.cues.any { cue -> normalization.matches(token, cue) } }
                 if (overlap == 0 && !genericReturn) return@mapNotNull null
                 val openBoost = if (state.openQuestions.isNotEmpty()) 0.20f else 0f
                 val correctionBoost = if (state.recentCorrections.isNotEmpty()) 0.12f else 0f
@@ -210,7 +244,8 @@ internal class ConversationSituationModel(
 
     private fun tokens(value: String): Set<String> =
         Regex("[\\p{L}\\p{N}]+").findAll(value.lowercase(Locale.GERMAN))
-            .map { it.value }.filter { it.length >= 3 && it !in STOP }.take(64).toSet()
+            .map { it.value }.filter { it.length >= 3 && it !in STOP }.take(64)
+            .mapNotNull(normalization::normalize).toSet()
 
     companion object {
         private val ID = Regex("[A-Za-z0-9._:-]{1,96}")

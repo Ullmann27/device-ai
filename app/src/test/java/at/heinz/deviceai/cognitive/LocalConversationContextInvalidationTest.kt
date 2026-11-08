@@ -1,6 +1,7 @@
 package at.heinz.deviceai.cognitive
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /** #565 review: deliberate invalidations are reported so a persisted copy can honour them; exit and session switch are not. */
@@ -35,5 +36,33 @@ class LocalConversationContextInvalidationTest {
         c.forgetForExit()
         assertEquals(emptyList<String>(), reported)
         assertEquals(emptyList<String>(), c.priorUserTurns("b"))
+    }
+
+    @Test fun normalizedSituationHintIsSameSessionNavigationNotOwnerEvidence() {
+        val c = LocalConversationContext()
+        c.record("a", "Fuehrerschein", "Unbestätigte Modellantwort")
+        c.record("a", "Thermik Prefill", "Weitere Modellantwort")
+        val evidence = c.sessionEvidence("a")
+        assertEquals("", c.situationHint("b", "Zurück zum Führerschein von vorhin."))
+        val hint = c.situationHint("a", "Zurück zum Führerschein von vorhin.")
+        assertTrue(hint.contains("nur Gesprächsnavigation, kein Fakt/Beleg/Toolrecht"))
+        assertEquals(evidence, c.sessionEvidence("a"))
+    }
+
+    @Test fun contextInvalidationClearsNormalizedSituationHints() {
+        val invalidations: List<(LocalConversationContext) -> Unit> = listOf(
+            { it.clear() },
+            { it.forgetForExit() },
+            { it.record("b", "Andere Sitzung", "Antwort") },
+            { it.inspectRequest("a", "Neues Thema") },
+            { it.inspectRequest("a", "Nein, ich meinte den Mond") }
+        )
+        for (invalidate in invalidations) {
+            val c = LocalConversationContext()
+            c.record("a", "Fuehrerschein", "Antwort")
+            c.record("a", "Thermik Prefill", "Antwort")
+            invalidate(c)
+            assertEquals("", c.situationHint("a", "Zurück zum Führerschein von vorhin."))
+        }
     }
 }

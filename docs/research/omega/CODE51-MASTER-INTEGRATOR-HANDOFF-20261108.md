@@ -125,3 +125,29 @@ JDK21/Kotlin2.2.21; use the actual production UI sources plus
 `HollywoodFuiMaterialRegressionTest` with JUnit4.13.2. Final complete-source
 runner and SHA-bound evidence follow. Rollback graphics independently of
 speech; the runtime switch disables film layers without changing tool grants.
+
+## H4-B1 independent gate
+
+The exact two-file candidate from `3ab39fcd41b0d0015197bdbab6e22b76a1e424da`
+plus upstream morphology tests was tested independently. New negatives produced
+**3 failures / 19 tests**: Arbeit bound Arbeitsamt, long compounds collapsed
+into the same ten-character topic, and oversized words collided after truncation.
+The original candidate therefore is **not accepted unchanged**.
+
+The constrained integration keeps shared umlaut folding and complete words up
+to 80 characters (overlength words are omitted, never truncated into another
+topic). Only `e/en/er/es/n/s` suffixes on stems of at least six characters may
+match; arbitrary longer compounds cannot. Positive compound/ASR/plural,
+ambiguity, explicit-return and reset cases plus the new bidirectional collision
+negatives pass: **20/20 focused JUnit**. This is a conservative heuristic, not
+general German semantic understanding; upstream H4 scores do not apply.
+
+Productive path already exists:
+`AgentActivity.runLocal -> LocalConversationContext.situationHint ->
+LocalConversationSituationTracker -> ConversationSituationModel`, frozen once
+per model turn and appended only as navigation. Bot/coding contexts are excluded.
+`AiContextCompiler -> HybridMemoryRetriever` and owner-fact/privacy gates are
+unchanged. Added actual `LocalConversationContext` tests verify the hint does
+not alter owner evidence and disappears on clear/exit/session/topic/correction.
+Those broader tests await the complete host runner.
+H4-A, research scorers/certificates and Genesis remain excluded.
