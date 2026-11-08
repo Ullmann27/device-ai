@@ -2976,19 +2976,25 @@ class AgentActivity : Activity() {
         val target: android.view.ViewGroup = if (chat) column else home
         val height = dp(if (keyboardCompact) 88 else if (resources.configuration.screenHeightDp < 520) 120
             else if (home.wide) 200 else 160)
-        if (head.parent !== target) {
+        if (head.parent !== target &&
+            at.heinz.deviceai.cognitive.CockpitConversationPresentation.mayReparentHologram(
+                handsFreeActive = continuousConversation.active,
+                native3dEnabled = head.isNative3dEnabled()
+            )
+        ) {
             (head.parent as? android.view.ViewGroup)?.removeView(head)
             if (chat) column.addView(head, minOf(1, column.childCount),
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height))
             // The home restores its own drawing order: above the opaque shell, never behind it.
             else home.adoptHologram()
-            // Detach clears transient speech geometry; reattach the same current utterance.
+            // A deliberate non-3D reparent may detach transient speech geometry; restore Director state.
             avatarDirector.attach(head)
         }
-        if (chat && head.layoutParams.height != height) {
+        val mountedInChat = head.parent === column
+        if (mountedInChat && head.layoutParams.height != height) {
             head.layoutParams = head.layoutParams.apply { this.height = height }
         }
-        head.setGeometry(if (chat) at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.PHONE
+        head.setGeometry(if (mountedInChat) at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.PHONE
             else home.intendedGeometry)
         head.setForegroundActive(foregroundLearningActive)
         currentTaskEffectContext?.takeIf { it.session == sessionId && foregroundLearningActive }
