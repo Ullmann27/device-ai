@@ -101,17 +101,18 @@ internal object EntityRoleResolutionEngine {
             else -> Resolution.NoEvidence
         }
         val resolvedAnchor = anchor as? Resolution.Resolved ?: return anchor
-        // Lexical labels never supply a relation edge.
-        val relationKey = when (relation.trim().lowercase(Locale.ROOT)) {
-            "schwester" -> "SISTER"
-            "tochter" -> "CHILD"
-            else -> relation.trim().uppercase(Locale.ROOT)
+        // A lexical alias is not evidence; target gender must also agree.
+        val (relationKey, requiredGender) = when (relation.trim().lowercase(Locale.ROOT)) {
+            "schwester" -> "SISTER" to Gender.FEMININE
+            "tochter" -> "CHILD" to Gender.FEMININE
+            else -> relation.trim().uppercase(Locale.ROOT) to null
         }
         val matching = edges.filter {
-            it.fromId == resolvedAnchor.entity.id && it.relation.uppercase() == relationKey
+            it.fromId == resolvedAnchor.entity.id && it.relation.uppercase(Locale.ROOT) == relationKey
         }
         if (matching.isEmpty()) return Resolution.NoEvidence
         val targets = matching.mapNotNull { edge -> entities[edge.toId]?.let { it to edge.sourceIds } }
+            .filter { requiredGender == null || it.first.gender == requiredGender }
             .distinctBy { it.first.id }
         if (targets.isEmpty()) return Resolution.NoEvidence
         if (targets.size > 1) return Resolution.Ambiguous(targets.map { it.first.id })
