@@ -4,6 +4,7 @@ import at.heinz.deviceai.chief.TurnMilestone
 import at.heinz.deviceai.chief.WorkerReport
 import at.heinz.deviceai.chief.WorkerStatus
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
