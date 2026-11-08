@@ -1,0 +1,15 @@
+JUnit version 4.13.2
+.........................E.......
+Time: 0.062
+There was 1 failure:
+1) actualPostFailureDelaysMatchTheDocumentedSchedule(at.heinz.deviceai.cognitive.ContinuousConversationRecoveryTest)
+java.lang.AssertionError: expected:<800> but was:<1600>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at at.heinz.deviceai.cognitive.ContinuousConversationRecoveryTest.actualPostFailureDelaysMatchTheDocumentedSchedule(ContinuousConversationRecoveryTest.kt:57)
+
+FAILURES!!!
+Tests run: 32,  Failures: 1
+

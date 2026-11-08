@@ -144,6 +144,14 @@ the actual HSV-value threshold and 180-degree control. JSON now says
 `hue-rotated-180`; documentation matches edge snapping, denominator floors and
 weighted RGB (not physical linear-light luminance).
 
+Graphics integration commit:
+[`72f2a690a96a7597a91a3038ee567d1cae9d677a`](https://github.com/Ullmann27/device-ai/commit/72f2a690a96a7597a91a3038ee567d1cae9d677a).
+After the isolated upstream follow-up, all 19 graphics tests were rerun as part
+of both the full suite and the 44-test focused selection on
+[`b3e288f79d3bce6da23dbf5a498d50811a246358`](https://github.com/Ullmann27/device-ai/commit/b3e288f79d3bce6da23dbf5a498d50811a246358).
+The measurement was also regenerated on clean `b3e288f7`; checked-in
+`graphics-provenance.txt` records the exact source hashes.
+
 Focused graphics: **19 JUnit PASS**, **7 metric checks PASS**. Fresh one-sided
 reference gate PASS with both negative controls failing as intended. The
 fold-settled sample has rimL 0.2871, interiorL 0.0455, rimContrast 6.3126 and
@@ -192,6 +200,12 @@ not alter owner evidence and disappears on clear/exit/session/topic/correction.
 Those broader tests await the complete host runner.
 H4-A, research scorers/certificates and Genesis remain excluded.
 
+Update: constrained H4 integration
+[`001ece73d8d78970b222473a644fe93ad1999299`](https://github.com/Ullmann27/device-ai/commit/001ece73d8d78970b222473a644fe93ad1999299)
+is now covered on frozen `b3e288f7` by the complete 3600-test run and a fresh
+44-test selection: 19 graphics, 20 situation/morphology and 5 real context
+invalidation tests. The earlier pending context status is resolved.
+
 ## Separate Bot Universe checkpoint
 
 The entry observation (documentation only at `350ceaf2`) is historical, not a
@@ -218,3 +232,147 @@ two-stage execution, restart or selected-bot coding. No substitute architecture
 was created. Next gate: pin completed upstream evidence, run combined host and
 widget regressions, then exercise the real native model lane/STOP on authorized
 Android QA. Existing 20 profiles, private contexts and owner data remain intact.
+
+Independent check performed here: compile the five changed Chief core files
+and three new/updated test files from exact `6b299c33` against the completely
+compiled `b3e288f7` main/stub module, then run `ChiefBotTeamTest`,
+`ChiefBotTeamSkillsTest`, `ChiefEngineeringPracticeCurriculumTest` as `nobody`.
+**33/33 PASS**, persisted in `bot-overlay-junit.txt`. This is a bounded core
+overlay check, not full #662 Activity/widget/native-model acceptance.
+
+## Frozen acceptance and reproducibility
+
+Tested source:
+[`b3e288f79d3bce6da23dbf5a498d50811a246358`](https://github.com/Ullmann27/device-ai/commit/b3e288f79d3bce6da23dbf5a498d50811a246358).
+Subsequent commits only add documentation/evidence.
+`tested-source-trees.json` records unchanged app, scripts, tools, backend,
+assets, GitHub contracts and root build configuration identities.
+
+| Gate | Exact result on the frozen source |
+|---|---|
+| `SOURCE_INTEGRATED` | Speech repairs, bounded #659 graphics, repaired #661 tooling and constrained H4-B1; independent commits below |
+| `HOST_TESTED` Kotlin | Complete main/test source compilation; **637 JUnit classes / 3600 tests PASS**; four executable Checks PASS, one no-main helper not executable |
+| `HOST_TESTED` focused | **44/44 PASS** on compiled frozen source; not additional unique tests beyond the full 3600 |
+| `HOST_TESTED` Node | Final supported-Node sweep in progress; no full-green claim until its log is published |
+| `HOST_TESTED` backend | **64/64 PASS**, Node24.11.0, locked dependencies |
+| `HOST_TESTED` graphics | 7 metric assertions, four probe samples and two rejecting controls; one-sided envelope only |
+| `HOST_TESTED` original asset | Original GLB SHA-256 `63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca`; 62 structural assertions, Khronos 0 errors/0 warnings |
+| `ANDROID_BUILD_VERIFIED` | **BLOCKED**, actual compile/unit/UI/lint invocation stops at AGP resolution |
+| `DEVICE_VERIFIED` | **NOT_RUN**, no Fold7/Android17/ARM64, native model/audio/thermal/FPS or physical restart evidence |
+| Signing / APK / release | **NOT_RUN**, no owner approval or authorized working channel for Code51; no main merge |
+
+Primary logs and comparison images:
+[`evidence/code51-master-integrator-20261108/`](evidence/code51-master-integrator-20261108/).
+No model weights, owner dialogues, credentials or signing material are included.
+
+### Host prerequisites and commands
+
+Use an unprivileged user with a writable checkout/output directory and UTF-8
+locale. The actual run used an independent local clone of `b3e288f7`, not
+mutable sources or the root user's read-only-permission bypass. Toolchain:
+Ubuntu OpenJDK21.0.12.1, official Kotlin2.2.21, official Node24.11.0.
+Kotlin archive SHA-256:
+`a623871f1cd9c938946948b70ef9170879f0758043885bbd30c32f024e511714`.
+Node `node-v24.11.0-linux-x64.tar.xz` SHA-256:
+`46da9a098973ab7ba4fca76945581ecb2eaf468de347173897044382f10e0a0a`.
+Official origins: JetBrains/kotlin release `v2.2.21`, `nodejs.org/dist/v24.11.0`,
+and `repo.maven.apache.org/maven2`. Publisher checksums were verified.
+
+Set `DEPS` to official Maven artifacts with the names expected by
+`scripts/android-kotlin-compile-check.sh`: android-all15-robolectric-13954326,
+OkHttp4.12.0, Okio3.6.0, Shizuku api/aidl/shared/provider13.1.5,
+Filament/gltfio1.56.0, OpenCV4.13.0, JUnit4.13.2, Hamcrest1.3.
+For AARs extract their `classes.jar`; no native model implementation is supplied.
+[`host-dependency-sha256.txt`](evidence/code51-master-integrator-20261108/host-dependency-sha256.txt)
+pins every jar actually used. Put the installed Kotlin/JDK/Node bins on PATH.
+The existing LiteRT compile-only stand-in throws rather than claiming inference.
+
+Actual runner commands (paths parameterized; run from the exact clean checkout):
+
+```sh
+export LC_ALL=C.UTF-8 JAVA_OPTS=-Xmx3g
+export CONTINUUM_ANDROID_DEPS="$DEPS"
+export CONTINUUM_JUNIT_JARS="$DEPS/junit.jar:$DEPS/hamcrest.jar"
+bash scripts/android-kotlin-unit-check.sh "$OUT/jvm"
+
+env -u GIT_CONFIG_COUNT -u NODE_TEST_CONTEXT node --test --test-concurrency=2 \
+  .github/continuum/*.test.mjs scripts/*.test.mjs \
+  tools/continuum-virtual-fabric/*.test.mjs \
+  tools/continuum-cognitive-pilots/verified-reuse-pilot.test.mjs
+
+npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+npm --prefix backend run check
+node --test --test-concurrency=2 backend/test/*.test.js
+
+bash scripts/hollywood-fui-cinematics-preview.sh "$OUT/frames"
+bash scripts/hollywood-fui-reference-fidelity.sh "$OUT/metrics" code51-b3e288f
+npm --prefix tools/avatar-3d ci --ignore-scripts --no-audit --no-fund
+npm --prefix tools/avatar-3d run validate
+
+./gradlew --no-daemon --console=plain \
+  -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true \
+  -PcontinuumStandaloneVersionCode=51 -PcontinuumOwnerArm64=true \
+  -PcontinuumUiWidgetTests=true \
+  :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
+```
+
+The Node command removes only inherited per-process test/config injection:
+`GIT_CONFIG_COUNT` forced `core.fsmonitor=false` and masked the synthetic
+unsafe-config fixture. The same failure reproduced on unchanged #658 (16/17),
+then the clean fixture environment passed 17/17; system Git configuration and
+production guards were not changed. Node26 is rejected by the host-admission
+contract; Node22 lacks the actual JUnit file identities required by CCC1.
+Those exploratory runs are not green acceptance. No test assertion was weakened.
+
+Fresh focused JVM rerun after the complete runner:
+
+```sh
+CP="$OUT/jvm/test:$OUT/jvm/main:$OUT/jvm/stubclasses:$DEPS/*:$KOTLIN_HOME/lib/kotlin-stdlib.jar:src/test/resources:src/main/resources"
+cd app
+java -cp "$CP" org.junit.runner.JUnitCore \
+  at.heinz.deviceai.ui.HollywoodFuiConstructTest \
+  at.heinz.deviceai.ui.HollywoodFuiCinematicsTest \
+  at.heinz.deviceai.ui.HollywoodFuiMaterialRegressionTest \
+  at.heinz.deviceai.cognitive.ConversationSituationModelTest \
+  at.heinz.deviceai.cognitive.LocalConversationSituationTrackerTest \
+  at.heinz.deviceai.cognitive.SituationReturnMorphologyTest \
+  at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest
+```
+
+Use absolute `OUT`, `DEPS`, `KOTLIN_HOME` paths. The original GLB validator
+writes generated reports under `docs/avatar-live/geometry-work`; its two
+timestamp/path-only changes were removed, preserving the original evidence.
+
+### Visible comparison and limitations
+
+Rendered baseline #658 with its own archived preview/assets (36 frames) and
+the candidate with its unchanged frozen preview/assets (40 frames). Retained
+nine PNGs with SHA-256 provenance, including matching 760/2400 ms Fold frames,
+phone low budget, reduced motion and the candidate's new disabled-effects
+fallback. These are Java2D stand-ins, not screenshots of Android.
+
+At 760 ms the candidate has subdued grid lines under a native-content
+placeholder, localized cyan/blue/violet depth rims and a faint diagonal
+reflection; the old preview is dominated by a uniform grid and permanent
+source beam. At 2400 ms the candidate is quieter and preserves an uncluttered
+content area, but remains very dark with strong cyan edges. The old preview's
+drawn source orb is absent from the new *preview*: the actual app's existing
+avatar and energy orb were not removed. Java2D cannot prove native content
+occlusion, Android Camera perspective, animation smoothness or frame rate.
+The measured darkness/contrast discrepancy remains an explicit quality gap.
+
+### Isolated rollback checkpoints
+
+All commits were pushed and their remote SHAs read back. Revert with new commits
+on the integration branch, never force-push or reset another developer's work.
+
+| Change | Exact checkpoint | Rollback boundary |
+|---|---|---|
+| Audit | `a01e9a3ae98a096b6919118289cba4c6b02ef544` | Documentation only |
+| Speech repairs | `c8d5d0b7de6348525e5bc844051088b79f13ab77` | Revert speech files/tests together only if regressions justify it |
+| Graphics/reference tooling | `72f2a690a96a7597a91a3038ee567d1cae9d677a` | Disable cinematic mode first; for source rollback revert graphics follow-up before this checkpoint |
+| H4-B1 constrained repair | `001ece73d8d78970b222473a644fe93ad1999299` | Revert both cognitive files and coupled tests together; leaves canonical #658 context/memory intact |
+| Graphics follow-up | `b3e288f79d3bce6da23dbf5a498d50811a246358` | Independently revert disabled-frame/zero-bar/truthful-label cleanup if required |
+
+No persistent owner-data schema changed in these integrations. Do not delete
+profiles, dialogue, memory, receipts or APK data as a rollback technique.
