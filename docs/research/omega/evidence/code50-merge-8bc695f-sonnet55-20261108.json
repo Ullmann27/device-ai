@@ -12,7 +12,21 @@
          "real two-process replication, corruption failover, repair, unavailable node, cache and restart",
          "versions survive restart; tombstone commits before unavailable replica deletion and reconciles recovery"],
        "error": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED (.github/continuum/storage-fabric-catalog.mjs:103)",
-       "report_preserved_as": "sandbox /home/qa/evidence/critical-run1-FAIL-8bc695f (not committed)"},
+       "harness_note": "scripts/continuum-reliability-qa.mjs runs storage-agent with --test-concurrency=2 (storage-fabric, coding-agent-loop and architecture-proof test files in parallel). The sandbox has 2 cores. startedAt 2026-11-08T12:07:54.607Z, finishedAt 2026-11-08T12:08:25.986Z. The production code failed closed as designed: a replica that does not answer within the fixture timeout leaves the metadata uncommitted (pinned by the passing test 'a measured HTTP timeout withholds metadata and a queued healthy write still commits').",
+       "report_preserved_as": "docs/research/omega/evidence/code50-critical-run1-FAIL-8bc695f/ (verbatim, byte-identical copies of the harness outputs)",
+       "preserved_sha256": {
+         "report.md": "c42be58ba2e1a5241f27d8426e9616fc463e14e1ddc7e8b8a435ac015f2f63a4",
+         "storage-agent.xml": "e4868b40151ff9b7ecdd47e1036aded696d3c410ed412c613eb5587e1b53d00e",
+         "process.xml": "b18357eedc2dc2d563815b5b2d035c4db92f5d8ee2da10aae5c562ef008ce8ae",
+         "android-source-contracts.xml": "4a64e3c130aaba6cecf3fa7bd26cca17879d566a018ee46854ddc3cdca5cbf5b",
+         "host-checker.xml": "8f044fcfb5079038dafb4273da5705bf7239207cd8b5a0a4ab9dce111987a201"},
+       "full_report_json": {
+         "committed": false,
+         "bytes": 2382035,
+         "sha256": "bd2c64fe03c75b4946bda145e84c15761b84baf0b593187728534e9040f130de",
+         "reason": "2.3 MB, dominated by a 14,989-entry per-file inputsSha256 map that is reproducible from commit 8bc695f. Case identities, outcomes and the failure stack traces are preserved verbatim in the committed JUnit XML; the harness-recorded junitSha256 of storage-agent equals the committed storage-agent.xml hash.",
+         "source_treeDigest": "6d1bcc8ede26dc2516b98e3ceb8f1f27080adac4a31011007bc0d31bfbc2b42e",
+         "storage_agent_regressionFingerprint": "d3d419388d2e7ac2c74d958e2331da8d27ec9de7de5016a504a3ea46f03687cf"}},
       {"id": "critical-run-2", "status": "PASS", "tests": 135, "pass": 135, "fail": 0,
        "suites": {"process": 37, "storage-agent": 32, "android-source-contracts": 64, "host-checker": 2}, "sourceUnchanged": true},
       {"id": "backend", "commands": ["npm ci --ignore-scripts", "npm run check", "npm test"], "tests": 64, "pass": 64, "fail": 0}
