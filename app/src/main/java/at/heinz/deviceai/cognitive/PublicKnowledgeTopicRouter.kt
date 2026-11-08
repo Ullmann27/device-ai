@@ -25,6 +25,10 @@ internal object PublicKnowledgeTopicRouter {
         "(?iu)\\b(ich|wir)\\b.*\\b(dir|dich|euch)\\b|\\b(du|ihr)\\b.*\\b(dir|mir|uns|hast|hattest|habt)\\b|\\b(habe|hab|hatte)\\s+ich\\b"
     )
 
+    /** Personal markers or a reference to this dialogue: such text never reaches a search provider. */
+    fun looksPrivate(text: String): Boolean =
+        privateMarkers.containsMatchIn(text) || dialogueReference.containsMatchIn(text)
+
     fun topic(message: String): String? {
         val cleaned = message.trim().replace(Regex("\\s+"), " ")
         if (OwnerChatIntentRouter.route(cleaned) != null) return null

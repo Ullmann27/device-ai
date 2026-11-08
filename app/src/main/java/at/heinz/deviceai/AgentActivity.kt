@@ -5586,6 +5586,41 @@ class AgentActivity : Activity() {
             }
             null -> Unit
         }
+        // Owner wish (#643): „Jarvis recherchiere …“ / „Such nach …“ / „Prüfe neueste Quellen zu …“ starts research
+        // from chat or speech without the Web button. ALWAYS_ON → the persisted grant, ASK → the one-time dialog,
+        // OFF → no request. Only the de-identified topic may leave the device; personal markers are refused.
+        at.heinz.deviceai.cognitive.OwnerResearchCommand.parse(request,
+            at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+                continuumState?.archive?.identityState?.chosenName))?.let { command ->
+            input.text.clear()
+            when (command) {
+                is at.heinz.deviceai.cognitive.OwnerResearchCommand.Outcome.Refused -> {
+                    addUserMessage(request)
+                    addToolActivity("WEB · zurückgehalten · ${command.reason} · keine Anfrage gesendet")
+                    addNonModelReply(request, command.reply, at.heinz.deviceai.cognitive.NonModelReplyKind.SAFETY_REFUSAL)
+                }
+                is at.heinz.deviceai.cognitive.OwnerResearchCommand.Outcome.Research -> {
+                    restoreInternetMode()
+                    if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF) {
+                        addUserMessage(request)
+                        addToolActivity(command.activityLine(internetConsent.mode))
+                        addNonModelReply(request, at.heinz.deviceai.cognitive.OwnerResearchCommand.offlineReply(),
+                            at.heinz.deviceai.cognitive.NonModelReplyKind.READ_ONLY_TOOL)
+                    } else {
+                        researchArmed = false
+                        addToolActivity(command.activityLine(internetConsent.mode))
+                        confirmWebRequest(at.heinz.deviceai.cognitive.WebToolRequest.Search(command.topic),
+                            researchMode) { session ->
+                            if (busy) { session?.cancel(); return@confirmWebRequest }
+                            addUserMessage(request)
+                            if (session != null) runResearch(session)
+                            else addToolActivity("WEB · nicht freigegeben · keine Anfrage gesendet")
+                        }
+                    }
+                }
+            }
+            return
+        }
         // Recognition grants no execution.
         OwnerAppLookupIntent.inspect(request, at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
             continuumState?.archive?.identityState?.chosenName))?.let { intake ->
