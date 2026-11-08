@@ -182,3 +182,23 @@ checkpoint, autonomous product agent or planner activation. The next
 highest-priority falsifiable experiment is the noisy/cost-asymmetric
 diagnostic holdout specified in H2; the first real device acceptance still
 requires the existing permission/receipt path and an actual Fold7 run.
+
+### Resume checkpoint and final targeted regression
+
+On clean combined commit `25b160a564d2dd72663f621ab72c8dfa2b2a5f7d`,
+the two checked-in Kotlin runners were executed again: **20 + 17 JUnit PASS**,
+all frozen positive assertions PASS, zero skips. Existing plus new Node tests:
+**55 PASS**, zero failures/skips. Actual host tools: Kotlin 2.2.21, JDK 27+35,
+Node v26.12.1, Linux x64; Kotlin emits JVM 17 bytecode. This is not official
+Android/Gradle QA. Final logs and source bindings are under
+`docs/evidence/cognitive-pilots-20261108/`.
+
+All three branches were pushed and checked with `git ls-remote`; PRs
+#647/#648/#649 are Draft. Final evidence-only commits may follow the tested
+SHA without changing code. To resume, fetch the current H3 branch, check
+its real HEAD against the PR, read this index and the H2/H3 protocols, and
+start the specified noisy/cost-asymmetric holdout as a **new frozen trial**.
+There is no unfinished implementation or failed candidate regression in this
+milestone; deliberately red baseline/ablation logs and failed compute-benefit
+gates are retained scientific results. Do not rerun this consumed holdout
+and describe it as a new independent test.
