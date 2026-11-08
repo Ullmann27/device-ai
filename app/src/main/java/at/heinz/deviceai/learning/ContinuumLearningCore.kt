@@ -664,6 +664,17 @@ class ContinuumLearningCore private constructor(
             ledgerView.withWorking(working)
         }
 
+    /** Read-only compact projection of the canonical temporal ledger for already-selected source ids. */
+    internal fun stateTelegramForSources(
+        sourceIds: Set<String>,
+        nowMillis: Long = nowMillis()
+    ): at.heinz.deviceai.learning.context.Ctx3StateTelegram.Result = synchronized(CORE_LOCK) {
+        require(sourceIds.size <= 64 && sourceIds.none(String::isBlank))
+        at.heinz.deviceai.learning.context.Ctx3StateTelegram.compile(
+            temporalMemoryView(), sourceIds, nowMillis
+        )
+    }
+
     /** Adds a missing owner fact; a fact the owner revoked stays revoked (see [confirmOwnerFact]). */
     fun recordOwnerFact(content:String):Boolean=synchronized(CORE_LOCK) {
         store.append(ownerFact(content))
