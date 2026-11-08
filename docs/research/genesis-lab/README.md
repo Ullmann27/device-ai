@@ -12,7 +12,17 @@ Draft [#660](https://github.com/Ullmann27/device-ai/pull/660), nicht mergen.
   oeffentliche Loesungen/Begruendungen und Messgrenzen.
 - [Vertragstest](check_pack.py): nutzt ausschliesslich den unveraenderten
   Scorer aus PR573; implementiert keine zweite Bewertungspipeline.
+- [Hashgebundener Vertragsreport](contract-result.json): acht bestandene
+  Pakettests, explizit Modell/Geraet NOT_RUN.
 - [Handoff](../omega/GENESIS-INDEPENDENT-HANDOFF-20261108.md): Status und Grenzen.
+
+Paket-Freeze und verifizierter Remote-Checkpoint:
+[`611ea5b75d6b671983f0c277fb6395175651872c`](https://github.com/Ullmann27/device-ai/commit/611ea5b75d6b671983f0c277fb6395175651872c).
+Der Report wurde danach mit unveraenderten Aufgaben und unveraendertem
+Checker erzeugt. Zusaetzlich bestaetigt: ein falscher Scorerhash und ein
+bereits vorhandener Report werden mit Exitcode 2 abgelehnt; der vorhandene
+Report bleibt byte-identisch. **G1-Artefakt-Gate PASS, Intelligenzgewinn
+NOT_MEASURED.** Dies schliesst den einzigen Meilenstein, keinen Modellversuch.
 
 ## Reproduzieren ohne App-Aenderung
 

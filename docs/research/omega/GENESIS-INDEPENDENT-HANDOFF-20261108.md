@@ -47,8 +47,28 @@ aufzaehlbare Loesungen. Kein Modell-, Geraete- oder Lernlauf.
 
 Suite-ID:
 `10301f1b7f840a82bab891b1e6249a1761cc3a7fe697630fa2fcdbd81dbc4124`.
-Nach dem Commit dieses Pakets wird einmal mit identischen Quellen ein
-hashgebundener Vertragsreport gesichert. Danach stoppen, kein G2.
+Paket-Freeze:
+[`611ea5b75d6b671983f0c277fb6395175651872c`](https://github.com/Ullmann27/device-ai/commit/611ea5b75d6b671983f0c277fb6395175651872c),
+gepusht und per `git ls-remote` bestaetigt.
+
+## Checkpoint 3: Abschluss und bewusster Stop
+
+[Vertragsreport](../genesis-lab/contract-result.json) nach Paket-Freeze
+erzeugt, erneut **8 PASS / 0 FAIL / 0 SKIP**, mit SHA-256 fuer Aufgaben,
+Checker und vorhandenen Scorer. Zwei zusaetzliche negative CLI-Pruefungen:
+falscher Scorerhash und vorhandener Ausgabepfad jeweils Exitcode 2;
+vorhandener Report unveraendert. Reporthashes gegen echte Dateien geprueft.
+
+G1-Artefakt-Gate **PASS**; Modellleistung, blinder Transfer, langfristige
+Retention, kontinuierliches Lernen, Energie und Geraetelauf **NOT_RUN /
+NOT_MEASURED**. Es existiert **kein** neues Ergebnis, das eine gesteigerte
+allgemeine Intelligenz, Autonomie oder Superintelligenz belegt.
+
+Draft [#660](https://github.com/Ullmann27/device-ai/pull/660) bleibt
+Review-only. Keine Folgeentwicklung begonnen. Fuer einen spaeteren
+Modellversuch sind zuerst der separate Testverwalter, ein eingefrorener
+autorisierter Runtime-/Modellstand und neue verdeckte Familien erforderlich;
+das ist keine Aufforderung, den Build51-Kandidaten hier zu veraendern.
 
 ## Schutz und Rueckfall
 
