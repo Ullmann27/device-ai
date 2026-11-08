@@ -58,6 +58,29 @@ class JarvisWorkWindowHost(
         currentFui?.setWorkActive(steps.any { it.state == at.heinz.deviceai.cockpit.StepState.ACTIVE })
     }
 
+    fun setMissionTelemetry(text: String?) {
+        currentFui?.setTelemetryText(text)
+    }
+
+    /**
+     * Promotes only the visual grammar/footprint of the already-open physical work window.
+     * No content, tool state, window id or AvatarDirector lease is replaced.
+     */
+    fun morphPresentation(home: ContinuumHomeView, scene: JarvisActionScenes.Scene): Boolean {
+        val window = current?.takeIf { it.isShowing } ?: return false
+        if (cameraHome !== home || currentId == null) return false
+        val bounds = window.shownBounds() ?: return false
+        currentFootprint = strongerFootprint(currentFootprint, scene.footprint)
+        home.setWorkspaceFootprint(currentFootprint)
+        home.hologram.setWorkWindowCamera(
+            true,
+            currentCameraSide,
+            profile = cameraProfile(currentFootprint)
+        )
+        currentFui?.morphInPlace(bounds, scene)
+        return true
+    }
+
     /** The real work ended (result, failure, STOP): the reading gaze ends with it. */
     fun workEnded() {
         workingId?.let(director::windowWorkEnded)
@@ -97,14 +120,7 @@ class JarvisWorkWindowHost(
                 depthLayers = depthLayers
             )) return null
         currentClientClosed = onClosed
-        currentFootprint = strongerFootprint(currentFootprint, scene.footprint)
-        home.setWorkspaceFootprint(currentFootprint)
-        home.hologram.setWorkWindowCamera(
-            true,
-            currentCameraSide,
-            profile = cameraProfile(currentFootprint)
-        )
-        window.shownBounds()?.let { currentFui?.morphInPlace(it, scene) }
+        morphPresentation(home, scene)
         return window
     }
 

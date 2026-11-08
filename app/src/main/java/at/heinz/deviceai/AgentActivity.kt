@@ -709,6 +709,7 @@ class AgentActivity : Activity() {
         if (::modelCatalog.isInitialized) reloadInstalledModels()
         refreshNeuralPracticeUi()
         foregroundLearningActive = true
+        airbusCockpitOrchestrator?.setForeground(true)
         // Only the foreground Activity may advance the hologram's orbital clock.
         hologramView?.setForegroundActive(true)
         homeView?.setForegroundActive(true)
@@ -738,6 +739,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        airbusCockpitOrchestrator?.setForeground(false)
         workWindowHost.close(immediate = true)
         avatarDirector.clearAnimationIntents()
         ownerRecoveryReview?.close()
@@ -803,6 +805,8 @@ class AgentActivity : Activity() {
         ownerRecoveryReview?.close()
         ownerRecoveryReview = null
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
+        airbusCockpitOrchestrator?.close()
+        airbusCockpitOrchestrator = null
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cockpitSubscriptions = emptyList()
         cameraDrift?.close()
@@ -1131,12 +1135,43 @@ class AgentActivity : Activity() {
         // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar(home.hologram))
         cockpitSubscriptions.forEach { runCatching { it.close() } }
+        airbusCockpitOrchestrator?.close()
         cameraDrift?.close()
         // Controls and their native hit targets stay fixed; motion belongs to the 3D scene.
         cameraDrift = null
+        val airbus = at.heinz.deviceai.ui.Airbus2100CockpitOrchestrator(
+            schedule = { runnable, delay -> mainHandler.postDelayed(runnable, delay) },
+            cancel = mainHandler::removeCallbacks,
+            onSceneProfile = { scene ->
+                runOnUiThread {
+                    if (homeView === home && !isFinishing && !isDestroyed) {
+                        workWindowHost.morphPresentation(home, scene)
+                    }
+                }
+            },
+            onTelemetry = { value ->
+                runOnUiThread {
+                    if (homeView === home && !isFinishing && !isDestroyed) {
+                        workWindowHost.setMissionTelemetry(value)
+                    }
+                }
+            },
+            onHoloCue = {
+                runOnUiThread {
+                    if (homeView === home && foregroundLearningActive && !isFinishing && !isDestroyed) {
+                        playUiFeedback(at.heinz.deviceai.ui.ContinuumUiFeedback.Cue.TASK_STARTED)
+                    }
+                }
+            },
+            onPostMission = ::evaluateAirbusPostMission
+        ).also {
+            it.setForeground(foregroundLearningActive)
+            airbusCockpitOrchestrator = it
+        }
         cockpitSubscriptions = listOf(
             cockpitBus.subscribe(at.heinz.deviceai.ui.CockpitAnimationPresenter(home, cockpitBus, cockpitSessionId,
                 onGreeting = { line -> runOnUiThread { recordCockpitDialog(false, line) } }, drift = cameraDrift)),
+            cockpitBus.subscribe(airbus),
             cockpitBus.subscribe { runOnUiThread { pushCockpitState() } }
         )
         subscribeMemoryEvents()
@@ -3069,6 +3104,7 @@ class AgentActivity : Activity() {
 
     private var centerDialog: AlertDialog? = null
     private val workWindowHost by lazy { at.heinz.deviceai.ui.JarvisWorkWindowHost(this, avatarDirector) }
+    private var airbusCockpitOrchestrator: at.heinz.deviceai.ui.Airbus2100CockpitOrchestrator? = null
 
     private enum class WorkscenePhase(val rank: Int) {
         IDLE(0), LOCAL_REASONING(1), TOOL_ACTIVE(2), AWAITING_DECISION(3), COMPLETED(4)
@@ -10198,6 +10234,37 @@ class AgentActivity : Activity() {
                 " · Modellaufrufe "+snapshot.modelInvocations+"/"+snapshot.completedModelCalls+
                 " · Zusatzaufrufe "+snapshot.advisoryCalls+" · "+snapshot.elapsedMillis+" ms")
             else addToolActivity("TRACE · Metadaten nicht gespeichert; keine neue Faktenautorität")
+        }
+    }
+
+    /**
+     * Post-mission initiative is evaluated off the UI thread against the same canonical
+     * in-memory Continuum records plus explicitly confirmed owner facts.
+     */
+    private fun evaluateAirbusPostMission(turnId: String) {
+        val orchestrator = airbusCockpitOrchestrator ?: return
+        if (!foregroundLearningActive || localAgentExecutor.isShutdown) return
+        val expectedSession = sessionId
+        try {
+            localAgentExecutor.execute {
+                val records = (memoryStore.all() + ownerFactMemories()).distinctBy { it.id }
+                val quest = orchestrator.evaluatePostMissionInitiative(records, System.currentTimeMillis())
+                    ?: return@execute
+                runOnUiThread {
+                    if (airbusCockpitOrchestrator !== orchestrator ||
+                        sessionId != expectedSession || !foregroundLearningActive ||
+                        isFinishing || isDestroyed
+                    ) return@runOnUiThread
+                    addToolActivity("MISSION $turnId · proaktiver bestätigter Gedächtnisimpuls")
+                    addAssistantMessage(
+                        quest.spokenInitiativeLine,
+                        preserveLocalContext = true,
+                        keepCockpit = activeWorkArea == ContinuumWorkArea.START
+                    )
+                }
+            }
+        } catch (_: java.util.concurrent.RejectedExecutionException) {
+            // Activity is closing; no initiative may outlive it.
         }
     }
 
