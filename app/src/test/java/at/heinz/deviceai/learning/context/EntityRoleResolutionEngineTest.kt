@@ -33,9 +33,22 @@ class EntityRoleResolutionEngineTest {
         val missing = EntityRoleResolutionEngine.resolvePossessiveRelation(
             "ihre", "Schwester", frame, "owner", "assistant", entities,
             listOf(EntityRoleResolutionEngine.RelationEdge(
-                "owner", "CHILD", "zoey", setOf("unrelated-edge")))
+                "alina", "CHILD", "zoey", setOf("unrelated-edge")))
         )
         assertTrue(missing is EntityRoleResolutionEngine.Resolution.NoEvidence)
+    }
+
+    @Test fun daughterLabelCannotResolveMasculineChildWithoutGenderEvidence() {
+        val son = EntityRoleResolutionEngine.Entity(
+            "son", "OWNER.CHILD[3]", "Sohn", EntityRoleResolutionEngine.Gender.MASCULINE
+        )
+        val result = EntityRoleResolutionEngine.resolvePossessiveRelation(
+            "meine", "Tochter", EntityRoleResolutionEngine.CenteringFrame(null, null, emptyList()),
+            "owner", "assistant", entities + (son.id to son),
+            listOf(EntityRoleResolutionEngine.RelationEdge(
+                "owner", "CHILD", "son", setOf("verified-child-only")))
+        )
+        assertTrue(result is EntityRoleResolutionEngine.Resolution.NoEvidence)
     }
 
     @Test fun nextSheResolvesToNewSubjectAfterCenteringShift() {
