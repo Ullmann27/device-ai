@@ -9772,7 +9772,23 @@ class AgentActivity : Activity() {
                         hardDeadlineMillis = taskRemaining,
                         streamCandidateObserver = speechShadow?.let { trace ->
                             { candidate, elapsed -> trace.observe(candidate, elapsed) }
-                        }
+                        },
+                        runtimeProgressObserver = if (ownerDialogueOutput) {
+                            { chars, chunks, elapsed ->
+                                runOnUiThread {
+                                    if (sessionId == localSessionId && activeChatCancellation === cancellation)
+                                        updateLocalReasoningStream(chiefTurn.turnId, chars, chunks, elapsed)
+                                }
+                            }
+                        } else null,
+                        runtimeCompletedObserver = if (ownerDialogueOutput) {
+                            { metrics ->
+                                runOnUiThread {
+                                    if (sessionId == localSessionId && activeChatCancellation === cancellation)
+                                        updateLocalReasoningCompleted(chiefTurn.turnId, metrics)
+                                }
+                            }
+                        } else null
                     ) { callback ->
                         at.heinz.deviceai.localmodel.LocalToolContinuation.submit(
                             localRuntime, prompt, forceFresh = hasScreen || (botTask != null && observations.isEmpty()),
@@ -10782,6 +10798,8 @@ class AgentActivity : Activity() {
         hardDeadlineMillis: Long? = null,
         maxOutputBytes: Int? = null,
         streamCandidateObserver: ((at.heinz.deviceai.cognitive.ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit)? = null,
+        runtimeProgressObserver: ((Int, Int, Long) -> Unit)? = null,
+        runtimeCompletedObserver: ((at.heinz.deviceai.localmodel.LocalInferenceMetrics) -> Unit)? = null,
         start: (at.heinz.deviceai.localmodel.LocalInferenceCallback) -> Unit
     ): LocalGeneration {
         require(hardDeadlineMillis == null || hardDeadlineMillis in 1..600_000)
@@ -10798,6 +10816,7 @@ class AgentActivity : Activity() {
         var cancelNative = false
         val generationStartedNanos = System.nanoTime()
         var lastPreviewNanos = generationStartedNanos
+        var lastRuntimeProgressNanos = generationStartedNanos
         val previewToken = Any()
         fun elapsedMillis() = (System.nanoTime() - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
         fun capturedGeneration(
@@ -10856,6 +10875,14 @@ class AgentActivity : Activity() {
                                 }
                             }
                             if (event.text.isNotEmpty() && (snapshot.streamedChunks == 1 ||
+                                    now - lastRuntimeProgressNanos >= TimeUnit.MILLISECONDS.toNanos(100))) {
+                                lastRuntimeProgressNanos = now
+                                runCatching {
+                                    runtimeProgressObserver?.invoke(
+                                        snapshot.response.length, snapshot.streamedChunks, elapsedMillis())
+                                }
+                            }
+                            if (event.text.isNotEmpty() && (snapshot.streamedChunks == 1 ||
                                     now - lastPreviewNanos >= TimeUnit.MILLISECONDS.toNanos(1_000))) {
                                 lastPreviewNanos = now
                                 val elapsed = elapsedMillis()
@@ -10892,6 +10919,7 @@ class AgentActivity : Activity() {
                             speechAssembler?.flushFinal()?.let { candidate ->
                                 runCatching { streamCandidateObserver?.invoke(candidate, elapsedMillis()) }
                             }
+                            runCatching { runtimeCompletedObserver?.invoke(event.metrics) }
                             turnTrace?.event(TraceStage.MODEL_COMPLETED)
                             capture.complete()
                             completed.countDown()
