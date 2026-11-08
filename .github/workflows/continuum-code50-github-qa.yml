@@ -168,7 +168,7 @@ jobs:
             -PcontinuumUiWidgetTests=true \
             -PcontinuumLocalStandaloneQa=true \
             -PcontinuumStandaloneVersionCode=50 \
-            -I docs/evidence/code50-android27-qa/focused-tests.init.gradle \
+            -I docs/evidence/code50-android27-qa/two-cases.init.gradle \
             :app:testDebugUnitTest
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
       - name: Record exact-source Android JUnit evidence
