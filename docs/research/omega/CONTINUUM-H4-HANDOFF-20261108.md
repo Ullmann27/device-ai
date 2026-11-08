@@ -281,3 +281,68 @@ Require an independently verified correctness gain against sequential and
 batch baselines plus a separately frozen CPU overhead ceiling before opening
 new TEST. This TEST is consumed and must not become a fresh holdout.
 Rollback is simply not activating/merging this research; no migration is needed.
+
+## H4-B1 preregistration (owner continuation order, 2026-11-08 19:29 UTC)
+
+The owner lifted the closure mode ("Weiter … konzentriere dich auf die
+Erweiterung Stufe super Intelligenz"). Superintelligence remains the long-term
+research direction, not a property claimed here. H4-A stays **FAIL**; H4-B1
+starts as a *separately* preregistered experiment under owner direction, not
+as a consequence of a passed H4-A gate. Same branch and Draft #655.
+
+**Scope (host-only):** the deterministic sub-competence "binding a delayed
+explicit return reference to an earlier topic" in the real production path
+`AgentActivity.situationHint -> LocalConversationContext ->
+LocalConversationSituationTracker -> ConversationSituationModel`. Free-language
+pronoun, role, causal and counterfactual understanding needs the local Gemma
+runtime, which is unavailable here: **NOT_RUN**, not inferred from this test.
+
+**Source audit before code change (to be runtime-confirmed by RED):** the
+tracker truncates topic cues to 10 characters, but the model tokenizes the
+return utterance untruncated, so German compounds longer than 10 characters
+(Druckertreiber, Steuererklärung, Versicherungspolizze) can never overlap;
+no umlaut/ß folding for ASR variants (Fuehrerschein); no inflection tolerance
+(Rechnung/Rechnungen). `recordCorrection`/`addOpenQuestion` are never called
+in production. Both files are byte-identical from Code50 `473f7972` through
+H3 `8688f855`, so "Code50" and "H1–H3" are **one** baseline arm here.
+
+**Hypothesis H4-B1:** one shared cue normalization inside the existing model
+(identical truncation for cues and queries, umlaut/ß folding, prefix tolerance
+requiring at least 6 shared leading characters) increases correct bindings on
+prospective German/de-AT stories without increasing wrong bindings on
+ambiguous and no-referent controls. Falsified if the gain is absent, if wrong
+bindings increase, or if the too-tolerant ablation is equally safe (then the
+minimum-prefix safeguard is not a necessary mechanism).
+
+**Data origin:** procedural, seeded, self-authored, prospective, **not blind**.
+DEV seed **50321**, 60 stories; TEST seed **77419**, 180 stories; TEST is not
+generated or inspected before candidate and scorer are committed. Each story:
+2–4 topic segments of 1–2 owner turns (German/de-AT vocabulary, compounds,
+inflected forms, umlaut-less ASR variants, one distractor turn), then one
+return turn that always contains a cue the *baseline* regex recognizes
+(`vorhin`, `davor`, `zurück zu dem/der`, `fortsetzen`), so only matching
+differs. Strata: unique-long-compound, unique-inflected, unique-ASR,
+unique-short (≤10 chars; baseline expected to work), ambiguous (two topics
+share the head noun -> key AMBIGUOUS), no-referent (never-discussed topic ->
+key NONE). Solution keys are derived from story structure, not from code.
+
+**Arms:** (a) original tracker+model compiled from `git show 8688f855…`;
+(b) H4-B1 candidate; (c) ablation prefix minimum 3 (expected over-merging);
+(d) ablation truncation alignment only (no folding, no prefix tolerance).
+Identical stories, order, JVM flags and independent scorer.
+
+**Metrics:** correct binding; **wrong binding** (critical); correct abstention
+(Ambiguous/NoMatch where the key says so); under-commitment (Ambiguous where
+unique); missed reference (NoMatch where a referent exists). Thread CPU and
+wall per story, p95, process RSS; four rotating paired rounds, 256 MiB heap,
+120 s subprocess cap, one JVM at a time. CPU is not energy.
+
+**Acceptance frozen now (TEST):** candidate ≥ **+20 correct bindings /180**
+versus the original, paired one-sided exact discordance p < .05; wrong
+bindings **not above** the original's count; **zero** wrong bindings on
+no-referent cases; all existing tracker/model/context JVM tests pass;
+per-story p95 ≤ 20 ms. Otherwise FAIL is retained without TEST tuning.
+
+**Boundaries:** hint stays navigation-only (no fact, memory, tool authority);
+no new return-cue regex patterns in H4-B1 (cue coverage such as `zurück zum`
+is logged as separate future hypothesis H4-B2); no Android/Gemma/Fold7 claim.
