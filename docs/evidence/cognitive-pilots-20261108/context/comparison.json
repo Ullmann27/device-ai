@@ -1,0 +1,750 @@
+{
+  "schemaVersion": 1,
+  "platform": "Linux-6.12.8+-x86_64-with-glibc2.39",
+  "fixtureSha256": "6ef65216c243b3d82a1fefc1e4be76a38c9403cd51597212be23949924702946",
+  "jarSha256": {
+    "baseline": "b72bb1503c63b6f37dbf403cef6eb525e47725b70e9b4fd8614d7214d64e73da",
+    "candidate": "7ee926fa68c9dbabce94f71177c50e21966ba95958b323605a39eab5e78b7588"
+  },
+  "energyJoules": null,
+  "device": "HOST_ONLY",
+  "limits": "Includes JVM/JIT/GC. RSS units are KiB on Linux. No model inference.",
+  "summary": {
+    "baseline": {
+      "quality": {
+        "DEV": {
+          "correct": 2,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 1,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "medianRoutingWallNsPer2400Calls": 12585090.0,
+      "medianRoutingCpuNsPer2400Calls": 11378946.5,
+      "maxProcessRssKiB": 86572
+    },
+    "candidate": {
+      "quality": {
+        "DEV": {
+          "correct": 4,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 12,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "medianRoutingWallNsPer2400Calls": 10248882.0,
+      "medianRoutingCpuNsPer2400Calls": 9375635.5,
+      "maxProcessRssKiB": 86024
+    }
+  },
+  "runs": [
+    {
+      "pair": 0,
+      "arm": "baseline",
+      "quality": {
+        "DEV": {
+          "correct": 2,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 1,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 318150264,
+      "processCpuSeconds": 0.5264179999999999,
+      "maxRssKiB": 79320,
+      "routingSamples": [
+        [
+          25755839,
+          23349489,
+          200
+        ],
+        [
+          31865675,
+          22155807,
+          200
+        ],
+        [
+          8064834,
+          7489305,
+          200
+        ],
+        [
+          7408229,
+          7365282,
+          200
+        ],
+        [
+          7987449,
+          7406513,
+          200
+        ],
+        [
+          8906143,
+          6427100,
+          200
+        ],
+        [
+          7346276,
+          6444555,
+          200
+        ]
+      ]
+    },
+    {
+      "pair": 0,
+      "arm": "candidate",
+      "quality": {
+        "DEV": {
+          "correct": 4,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 12,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 269295020,
+      "processCpuSeconds": 0.43302399999999996,
+      "maxRssKiB": 83488,
+      "routingSamples": [
+        [
+          13807951,
+          12896841,
+          1500
+        ],
+        [
+          13480284,
+          10021068,
+          1500
+        ],
+        [
+          10087748,
+          9755229,
+          1500
+        ],
+        [
+          10849514,
+          9484829,
+          1500
+        ],
+        [
+          9146950,
+          8546576,
+          1500
+        ],
+        [
+          8323557,
+          8291507,
+          1500
+        ],
+        [
+          8230049,
+          8199210,
+          1500
+        ]
+      ]
+    },
+    {
+      "pair": 1,
+      "arm": "candidate",
+      "quality": {
+        "DEV": {
+          "correct": 4,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 12,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 269854019,
+      "processCpuSeconds": 0.449114,
+      "maxRssKiB": 74404,
+      "routingSamples": [
+        [
+          16127364,
+          15176165,
+          1500
+        ],
+        [
+          23504176,
+          14060638,
+          1500
+        ],
+        [
+          13936421,
+          13479026,
+          1500
+        ],
+        [
+          11922151,
+          11223327,
+          1500
+        ],
+        [
+          6764323,
+          6214235,
+          1500
+        ],
+        [
+          7519960,
+          6684332,
+          1500
+        ],
+        [
+          7076426,
+          7020805,
+          1500
+        ]
+      ]
+    },
+    {
+      "pair": 1,
+      "arm": "baseline",
+      "quality": {
+        "DEV": {
+          "correct": 2,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 1,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 264701674,
+      "processCpuSeconds": 0.444285,
+      "maxRssKiB": 86036,
+      "routingSamples": [
+        [
+          21125975,
+          21097823,
+          200
+        ],
+        [
+          21123432,
+          21081960,
+          200
+        ],
+        [
+          22103637,
+          21744050,
+          200
+        ],
+        [
+          16035197,
+          14785396,
+          200
+        ],
+        [
+          8297790,
+          8212206,
+          200
+        ],
+        [
+          7896634,
+          7900026,
+          200
+        ],
+        [
+          7897185,
+          7882398,
+          200
+        ]
+      ]
+    },
+    {
+      "pair": 2,
+      "arm": "baseline",
+      "quality": {
+        "DEV": {
+          "correct": 2,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 1,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 259604783,
+      "processCpuSeconds": 0.433786,
+      "maxRssKiB": 76448,
+      "routingSamples": [
+        [
+          20255243,
+          20212250,
+          200
+        ],
+        [
+          18381071,
+          17383601,
+          200
+        ],
+        [
+          17089803,
+          17056516,
+          200
+        ],
+        [
+          16583952,
+          13882180,
+          200
+        ],
+        [
+          6928887,
+          6913435,
+          200
+        ],
+        [
+          7696217,
+          6930047,
+          200
+        ],
+        [
+          6781989,
+          6762847,
+          200
+        ]
+      ]
+    },
+    {
+      "pair": 2,
+      "arm": "candidate",
+      "quality": {
+        "DEV": {
+          "correct": 4,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 12,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 251744533,
+      "processCpuSeconds": 0.414438,
+      "maxRssKiB": 82840,
+      "routingSamples": [
+        [
+          12312780,
+          11137749,
+          1500
+        ],
+        [
+          10669001,
+          9556333,
+          1500
+        ],
+        [
+          9479274,
+          9123049,
+          1500
+        ],
+        [
+          8973053,
+          8976493,
+          1500
+        ],
+        [
+          9458103,
+          7835671,
+          1500
+        ],
+        [
+          7489800,
+          7493352,
+          1500
+        ],
+        [
+          7462750,
+          7456437,
+          1500
+        ]
+      ]
+    },
+    {
+      "pair": 3,
+      "arm": "candidate",
+      "quality": {
+        "DEV": {
+          "correct": 4,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 12,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 255680727,
+      "processCpuSeconds": 0.41560199999999997,
+      "maxRssKiB": 80876,
+      "routingSamples": [
+        [
+          15076705,
+          15054435,
+          1500
+        ],
+        [
+          11992985,
+          11971775,
+          1500
+        ],
+        [
+          11718509,
+          11664309,
+          1500
+        ],
+        [
+          12180334,
+          12048843,
+          1500
+        ],
+        [
+          9936723,
+          8858257,
+          1500
+        ],
+        [
+          8095719,
+          8099301,
+          1500
+        ],
+        [
+          8239804,
+          8202144,
+          1500
+        ]
+      ]
+    },
+    {
+      "pair": 3,
+      "arm": "baseline",
+      "quality": {
+        "DEV": {
+          "correct": 2,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 1,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 280995111,
+      "processCpuSeconds": 0.46832599999999996,
+      "maxRssKiB": 81732,
+      "routingSamples": [
+        [
+          26529688,
+          26058971,
+          200
+        ],
+        [
+          26065289,
+          23633604,
+          200
+        ],
+        [
+          16873352,
+          16849058,
+          200
+        ],
+        [
+          11551020,
+          11505913,
+          200
+        ],
+        [
+          7368710,
+          7313872,
+          200
+        ],
+        [
+          8645395,
+          7456841,
+          200
+        ],
+        [
+          6871302,
+          6809826,
+          200
+        ]
+      ]
+    },
+    {
+      "pair": 4,
+      "arm": "baseline",
+      "quality": {
+        "DEV": {
+          "correct": 2,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 1,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 252970773,
+      "processCpuSeconds": 0.426429,
+      "maxRssKiB": 84128,
+      "routingSamples": [
+        [
+          14661568,
+          14668461,
+          200
+        ],
+        [
+          13619160,
+          13604412,
+          200
+        ],
+        [
+          20062256,
+          11251980,
+          200
+        ],
+        [
+          8326573,
+          8306319,
+          200
+        ],
+        [
+          8301124,
+          8280000,
+          200
+        ],
+        [
+          8715459,
+          8700423,
+          200
+        ],
+        [
+          15339094,
+          12247740,
+          200
+        ]
+      ]
+    },
+    {
+      "pair": 4,
+      "arm": "candidate",
+      "quality": {
+        "DEV": {
+          "correct": 4,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 12,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 220464932,
+      "processCpuSeconds": 0.384461,
+      "maxRssKiB": 84856,
+      "routingSamples": [
+        [
+          13016035,
+          12909897,
+          1500
+        ],
+        [
+          10759755,
+          10693010,
+          1500
+        ],
+        [
+          10612606,
+          10616718,
+          1500
+        ],
+        [
+          10659206,
+          10623947,
+          1500
+        ],
+        [
+          10410016,
+          9266442,
+          1500
+        ],
+        [
+          9146519,
+          9123401,
+          1500
+        ],
+        [
+          9098829,
+          9081429,
+          1500
+        ]
+      ]
+    },
+    {
+      "pair": 5,
+      "arm": "candidate",
+      "quality": {
+        "DEV": {
+          "correct": 4,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 12,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 254807540,
+      "processCpuSeconds": 0.438816,
+      "maxRssKiB": 86024,
+      "routingSamples": [
+        [
+          18326058,
+          17399101,
+          1500
+        ],
+        [
+          21327415,
+          17160659,
+          1500
+        ],
+        [
+          14705674,
+          14263847,
+          1500
+        ],
+        [
+          9878146,
+          8022026,
+          1500
+        ],
+        [
+          7033342,
+          6508711,
+          1500
+        ],
+        [
+          6280896,
+          6265519,
+          1500
+        ],
+        [
+          6262218,
+          6254883,
+          1500
+        ]
+      ]
+    },
+    {
+      "pair": 5,
+      "arm": "baseline",
+      "quality": {
+        "DEV": {
+          "correct": 2,
+          "total": 4
+        },
+        "HOLDOUT": {
+          "correct": 1,
+          "total": 12
+        },
+        "NEGATIVE": {
+          "correct": 8,
+          "total": 8
+        }
+      },
+      "processWallNs": 260651697,
+      "processCpuSeconds": 0.44552299999999995,
+      "maxRssKiB": 86572,
+      "routingSamples": [
+        [
+          19822931,
+          19706990,
+          200
+        ],
+        [
+          23517767,
+          19303272,
+          200
+        ],
+        [
+          21910591,
+          18773734,
+          200
+        ],
+        [
+          14047956,
+          14009355,
+          200
+        ],
+        [
+          6823471,
+          6826902,
+          200
+        ],
+        [
+          6820326,
+          6808645,
+          200
+        ],
+        [
+          8983628,
+          7836842,
+          200
+        ]
+      ]
+    }
+  ]
+}

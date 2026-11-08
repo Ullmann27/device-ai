@@ -28,8 +28,10 @@ kotlinc "$out/LocalConversationFollowUpPolicy.kt" \
     "$root/app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicyTest.kt" \
     "$root/app/src/test/java/at/heinz/deviceai/cognitive/ContextDiscoursePrefixTest.kt" \
     -jvm-target 17 -cp "$junit" -include-runtime -d "$out/context.jar" > "$out/compile.txt" 2>&1
+assertion=()
+[[ "$ref" != WORKTREE ]] || assertion=(--assert)
 java -cp "$out/context.jar" at.heinz.deviceai.cognitive.ContextPilot \
-    "$root/tools/continuum-cognitive-pilots/context-cases.tsv" > "$out/context.tsv"
+    "$root/tools/continuum-cognitive-pilots/context-cases.tsv" "${assertion[@]}" > "$out/context.tsv"
 # A baseline RED is an actual nonzero exit, never converted to success.
 java -cp "$out/context.jar:$junit" org.junit.runner.JUnitCore \
     at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest \

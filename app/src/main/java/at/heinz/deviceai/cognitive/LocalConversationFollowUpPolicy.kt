@@ -35,7 +35,7 @@ internal object LocalConversationFollowUpPolicy {
     // match lowercase only: the formal „Sie/Ihnen“ addresses JARVIS („Was können Sie für mich tun?“) and must not be
     // refused as a follow-up without history (#565 review); „es“ is left out („Wie spät ist es?“, „Was kostet es?“),
     private val anaphoric = Regex(
-        """(?u)^(?:(?i:wo|wie|wann|was|wer|warum|wohin|woher|welche\p{L}*)\s+\p{L}+\s+(?:er|sie|ihn|ihm|ihnen|dort|dorthin)|(?i:kann|könnte|soll|sollte|darf|muss|müsste|wird|würde|hat|hatte|ist|war)\s+(?:er|sie|ihn|ihm|ihnen)(?!\p{L})|(?i:fass|lies|zeig|zeige|erklär|erkläre|vergleich|vergleiche|übersetz|übersetze)\s+(?:sie|ihn|ihm|ihnen))(?!\p{L})""")
+        """(?u)^(?:(?i:und|aber|also)\s+)?(?:(?i:wo|wie|wann|was|wer|warum|wohin|woher|welche\p{L}*)\s+\p{L}+\s+(?:er|sie|ihn|ihm|ihnen|dort|dorthin)|(?i:kann|könnte|soll|sollte|darf|muss|müsste|wird|würde|hat|hatte|ist|war)\s+(?:er|sie|ihn|ihm|ihnen)(?!\p{L})|(?i:fass|lies|zeig|zeige|erklär|erkläre|vergleich|vergleiche|übersetz|übersetze)\s+(?:sie|ihn|ihm|ihnen))(?!\p{L})""")
     // and asking again for something said before – only after a recall verb („Wie hieß der Handwerker nochmal?“), not
     // a polite repeat („Kannst du mir nochmal erklären …“) or a general question („Was war nochmal die Hauptstadt …“).
     private val again = Regex(

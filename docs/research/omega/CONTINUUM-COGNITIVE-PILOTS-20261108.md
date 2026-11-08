@@ -108,3 +108,47 @@ Rollback: keep the baseline branch and weights; do not merge these Draft PRs.
 No database migration or durable memory write exists in these experiments.
 If reviewed source is later integrated, revert its narrow commit rather than
 resetting a shared branch. Actual results, SHAs and next trials follow below.
+
+## Milestone H1: measured context-routing result
+
+Draft #647. Frozen preregistration/data commit:
+`d237523bc65988e6dd1110562c19227799783562`.
+Candidate changes **one anchored anaphora regex** in the existing policy:
+optional `Und/Aber/Also`, preserving case-sensitive pronouns, formal-address,
+definition, control-character and length boundaries. No new parser/store.
+
+Actual commands:
+
+```sh
+export CONTINUUM_JUNIT_JARS=/path/junit-4.13.2.jar:/path/hamcrest-core-1.3.jar
+bash scripts/continuum-context-pilot.sh /tmp/h1-red 473f79727e4b52509cc7d1af71e59b80ab9b6be5
+# Expected RED exit 1: 20 tests, 1 failure, 0 skips.
+bash scripts/continuum-context-pilot.sh /tmp/h1-green
+# GREEN: 20 tests, 0 failures, 0 skips; frozen fixture assertions also pass.
+python3 tools/continuum-cognitive-pilots/measure-context.py \
+  /tmp/h1-red/context.jar /tmp/h1-green/context.jar /tmp/h1-paired
+node --test tools/continuum-virtual-fabric/*.test.mjs
+# Existing native baseline: 47 PASS, 0 FAIL, 0 SKIP.
+```
+
+Six paired JVM launches per arm, alternating order, seven measured batches
+after each warmup. Raw evidence: `docs/evidence/cognitive-pilots-20261108/`.
+
+| Metric | Code50 | Candidate |
+|---|---:|---:|
+| DEV routing | 2/4 | 4/4 |
+| Disjoint HOLDOUT routing | 1/12 | 12/12 |
+| Negative controls correct | 8/8 | 8/8 |
+| Median wall time / 2,400 routing calls | 12.585 ms | 10.249 ms |
+| Median thread CPU / 2,400 routing calls | 11.379 ms | 9.376 ms |
+| Maximum process RSS across launches | 86,572 KiB | 86,024 KiB |
+
+This is a deterministic routing improvement, **not** evidence that Gemma
+resolves these references correctly. Host timing includes JIT/GC variability;
+the small timing difference is not a claimed speed breakthrough. The live
+frame call was source-traced, not Android-executed. The old policy is the
+prefix-removal ablation. More than four-turn continuity, ambiguous local
+referents, ASR/dialect, end-to-end inference, Android/Gradle and joules: **SKIP**.
+Next falsifiable context trial: freeze independently authored ambiguous
+conversations, measure actual answer accuracy and unnecessary clarification
+with the same Gemma checkpoint on the phone.
