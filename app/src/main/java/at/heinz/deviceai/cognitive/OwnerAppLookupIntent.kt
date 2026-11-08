@@ -24,6 +24,9 @@ internal object OwnerAppLookupIntent {
     private val reference = Regex("(?iu)^(?:sie|es|diese|diese\\s+app|die\\s+app|die|erste|zweite|dritte|vierte|fünfte|letzte|[1-9]|[1-9]\\.)$")
     private val fileTarget = Regex("(?iu)\\b(datei|dateien|ordner|verzeichnis|download-ordner|downloads|pdf|dokument|dokumente)\\b|[/\\\\]|\\.(?:pdf|txt|docx|csv|json|jpg|png)\\b")
     private val messageAction = Regex("(?iu)\\b(schreib|schreibe|schreiben|sende|senden|schick|schicke|schicken|nachricht)\\b")
+    private val shortMessageTarget = Regex(
+        "(?iu)^(?:schreib|schreibe|sende|schick|schicke)\\s+(?:(?:in|über|auf)\\s+)?(?:(?:die|eine)\\s+)?(?:app\\s+)?([\\p{L}\\p{N}._+-]{2,40})(?:\\s+app)?[.!?]*$"
+    )
 
     fun parse(utterance: String): String? = (inspect(utterance) as? Intake.Lookup)?.query
 
@@ -33,6 +36,7 @@ internal object OwnerAppLookupIntent {
         text = text.replace(Regex("(?iu)^bitte\\s+"), "")
         if (negation.containsMatchIn(text)) return null
         vague.matchEntire(text)?.let { return Intake.Clarify(it.groupValues[1].trim().take(100)) }
+        shortMessageTarget.matchEntire(text)?.let { return planning(utterance) }
         val opening: Boolean
         val target: String
         val d = direct.matchEntire(text)
@@ -60,7 +64,7 @@ internal object OwnerAppLookupIntent {
 
     private fun planning(original: String) = Intake.Planning(original,
         if (messageAction.containsMatchIn(original)) "Welche Nachricht soll ich für welchen konkreten Empfänger vorbereiten? " +
-            "Ich kann einen Entwurf vorbereiten und die App nach deiner Bestätigung öffnen. " +
+            "Wenn du eine App meinst, kann ich einen Entwurf vorbereiten und sie nach deiner Bestätigung öffnen. " +
             "Direktes Eingeben oder Senden in fremden Apps ist hier noch nicht angebunden." else null)
 
     fun isReference(query: String): Boolean = reference.matches(query)
