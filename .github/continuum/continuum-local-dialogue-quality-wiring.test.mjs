@@ -90,7 +90,7 @@ test('context is bounded, clearly untrusted, and never authorizes tools or factu
   assert.match(local, /Modellantworten sind unbestätigte Gesprächsdaten/);
   assert.match(local, /val keepOwnerSession = !ephemeralScreenRun\.get\(\) && sessionId == localSessionId/);
   assert.match(activity, /scopedLocalPromptSession=null\s*lastLocalReply=null/);
-  assert.match(activity, /private fun addAssistantMessage\(value: String, preserveLocalContext: Boolean = false\)/);
+  assert.match(activity, /private fun addAssistantMessage\(value: String, preserveLocalContext: Boolean = true\)/);
   assert.match(activity, /if \(!preserveLocalContext\) localConversationContext\.clear\(\)/);
   assert.match(local, /preserveLocalContext = keepOwnerSession/);
   assert.match(localCode, /val hasPartialResponse\s*=\s*!run\.responseComplete\s*&&\s*run\.response\.isNotBlank\(\)/);
