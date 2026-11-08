@@ -65,10 +65,20 @@ internal class AvatarTraceRingBuffer(private val capacity: Int = 120) {
         return frames[(frame % capacity).toInt()].also { it.reset(frame, frameNanos) }
     }
 
-    fun diagnose(sampleLimit: Int = 60): String {
+    fun frameNumber(): Long = cursor.get()
+
+    fun diagnose(sampleLimit: Int = 60): String = diagnoseSince(0L, sampleLimit)
+
+    /** Only receipts created after [afterFrameExclusive] may prove this run live. */
+    fun diagnoseSince(afterFrameExclusive: Long, sampleLimit: Int = 60): String {
+        require(afterFrameExclusive >= 0L)
         val current = cursor.get()
-        if (current <= 0L) return "BROKEN_AT_ROOT: kein sichtbarer Avatar-Frame"
-        val count = minOf(current, sampleLimit.coerceIn(1, capacity).toLong()).toInt()
+        if (current <= afterFrameExclusive) return "BROKEN_AT_ROOT: kein neuer sichtbarer Avatar-Frame"
+        val count = minOf(
+            current - afterFrameExclusive,
+            capacity.toLong(),
+            sampleLimit.coerceIn(1, capacity).toLong()
+        ).toInt()
         var selected = 0
         var surface = 0
         var texture = 0
@@ -76,8 +86,11 @@ internal class AvatarTraceRingBuffer(private val capacity: Int = 120) {
         var morph = 0
         var begin = 0
         var rendered = 0
+        var newest: AvatarFrameReceipt? = null
         for (i in 0 until count) {
             val r = frames[((current - i) % capacity).toInt()]
+            if (r.frameNumber <= afterFrameExclusive) continue
+            if (newest == null) newest = r
             if (r.stageFlags and AvatarFrameReceipt.HEAD_3D_SELECTED != 0) selected++
             if (r.stageFlags and AvatarFrameReceipt.SURFACE_VALID != 0) surface++
             if (r.stageFlags and AvatarFrameReceipt.TEXTURE_VISIBLE != 0) texture++
@@ -87,6 +100,7 @@ internal class AvatarTraceRingBuffer(private val capacity: Int = 120) {
             if (r.stageFlags and AvatarFrameReceipt.FILAMENT_RENDERED != 0) rendered++
         }
         return when {
+            newest == null -> "BROKEN_AT_ROOT: kein neuer sichtbarer Avatar-Frame"
             selected == 0 -> "3D_NOT_SELECTED: sichtbarer Pfad benutzt keinen 3D-Kopf"
             surface == 0 -> "BROKEN_AT_SURFACE: keine gültige Filament-Surface"
             texture == 0 -> "BROKEN_AT_TEXTURE: TextureView nicht sichtbar"
@@ -94,7 +108,7 @@ internal class AvatarTraceRingBuffer(private val capacity: Int = 120) {
             morph == 0 -> "BROKEN_AT_MAPPER: Pose da, Morph-Upload fehlt"
             begin == 0 -> "BROKEN_AT_FILAMENT_BEGIN: beginFrame liefert keinen Frame"
             rendered == 0 -> "BROKEN_AT_FILAMENT_RENDER: Renderpass wird nicht abgeschlossen"
-            else -> "AVATAR_PIPELINE_LIVE: " + frames[(current % capacity).toInt()].compact()
+            else -> "AVATAR_PIPELINE_LIVE: " + newest.compact()
         }
     }
 }
