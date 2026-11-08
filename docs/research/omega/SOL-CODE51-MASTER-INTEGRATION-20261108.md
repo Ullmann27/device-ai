@@ -1,6 +1,6 @@
 # Code51 master integration
 
-Status: WIP / UNVERIFIED. Owner canon #642, execution #643; read #637-641.
+Status: WIP / UNVERIFIED; Draft PR #650. Owner canon #642, execution #643; read #637-641.
 No main merge, signing, release, installation, private data or signer access.
 
 ## Frozen source graph
@@ -46,6 +46,22 @@ Focused read-only security review of the baseline conversation/tool/web
 boundaries found no substantiated exploitable vulnerability. No runtime exploit
 testing and no complete security audit of #646-648. Local sandbox storage without
 extra content encryption is a threat-model limitation, not a proved leak.
+
+Navigation RED: 11 tests / 4 failures on the original source, using identical
+new tests and JDK21/Kotlin 2.2.21. The exact owner sentence already passes pure
+baseline intake; its device failure is NOT reproduced by that host test.
+Confirmed gaps: `Zeig` / possessive / split ASR center title, the conjunction in
+`Logik und Planung`, natural work-order overview, and a named `.pdf` picker route.
+Candidate now normalizes only supported center names in the existing app
+router and dispatches through a shared Activity center mapping. Extended
+abbreviations are restricted to internal centers, preserving existing app
+negatives. Full Android-source JVM compilation/regressions running; GREEN
+not yet asserted. No claim that the original device incident is resolved.
+
+Restored JDK21, Kotlin 2.2.21 and pinned Maven Central compile/JUnit jars after
+actual prerequisite failures. Gradle QA on JDK21 still fails resolving AGP
+8.10.0 from Google Maven (`dl.google.com` DNS unavailable). No alternate,
+untrusted artifact mirror used. Gradle, lint, Robolectric and APK remain blocked.
 
 ## Scope and recovery
 

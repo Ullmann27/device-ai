@@ -5498,13 +5498,7 @@ class AgentActivity : Activity() {
             showModelVersions()
             return
         }
-        val center: (() -> Unit)? = when (request.lowercase(Locale.GERMAN)) {
-            "lernzentrum" -> ::showLearningCenter
-            "entwicklungszentrum" -> ::showDevelopmentCenter
-            "gedächtnis", "gedächtniszentrum" -> ::showMemoryCenter
-            "systemstatus" -> ::showSystemCenter
-            else -> null
-        }
+        val center = localCenter(request)
         if (center != null) {
             input.text.clear()
             addUserMessage(request)
@@ -5595,14 +5589,7 @@ class AgentActivity : Activity() {
             addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
             when (intake) {
                 is OwnerAppLookupIntent.Intake.Lookup -> {
-                    val localArea: (() -> Unit)? = if (intake.opening) when (intake.query.lowercase(Locale.GERMAN)) {
-                        "lernzentrum" -> ::showLearningCenter
-                        "entwicklungszentrum" -> ::showDevelopmentCenter
-                        "gedächtnis", "gedächtniszentrum" -> ::showMemoryCenter
-                        "systemstatus" -> ::showSystemCenter
-                        "modelle", "modellverwaltung" -> ::showModelCenter
-                        else -> null
-                    } else null
+                    val localArea = if (intake.opening) localCenter(intake.query) else null
                     if (localArea != null) localArea() else runExplicitAppLookup(request, intake)
                 }
                 is OwnerAppLookupIntent.Intake.Clarify -> clarifyAppRequest(request,
@@ -5836,6 +5823,17 @@ class AgentActivity : Activity() {
         presentBootstrapDecision(request, BootstrapBrain.decide(request, emptyList(), bootstrapMemory.learnedCommands(),
             identityDescription = at.heinz.deviceai.cognitive.LocalAssistantIdentity.selfDescription(
                 continuumState?.archive?.identityState?.chosenName, localRuntime.loadedModel, localRuntime.state)))
+    }
+
+    private fun localCenter(query: String): (() -> Unit)? = when (OwnerAppLookupIntent.centerTarget(query)) {
+        "gedächtniszentrum" -> ::showMemoryCenter
+        "logik und planung" -> ::showLogicCenter
+        "entwicklungsaufgaben" -> ::showDevelopmentBacklog
+        "lernzentrum" -> ::showLearningCenter
+        "entwicklungszentrum" -> ::showDevelopmentCenter
+        "systemstatus" -> ::showSystemCenter
+        "modelle" -> ::showModelCenter
+        else -> null
     }
 
     private fun presentBootstrapDecision(request: String, decision: BootstrapDecision, requestRecorded: Boolean = false) {
@@ -13215,7 +13213,6 @@ class AgentActivity : Activity() {
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
 }
-
 
 
 
