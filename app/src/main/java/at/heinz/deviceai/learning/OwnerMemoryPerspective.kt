@@ -22,7 +22,9 @@ internal object OwnerMemoryPerspective {
     )
 
     fun display(fact: String): String {
-        val literal = fact.take(250)
+        // #640: legacy records may still carry a trailing dialogue instruction;
+        // show only the fact, keep the stored record untouched.
+        val literal = at.heinz.deviceai.cognitive.OwnerFactMetaSeparator.split(fact).fact.take(250)
         val match = initialPossessive.find(literal)
         if (match != null) {
             val possessive = secondPerson[match.groupValues[1]]!!

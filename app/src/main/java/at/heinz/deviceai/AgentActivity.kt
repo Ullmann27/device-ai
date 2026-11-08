@@ -780,6 +780,10 @@ class AgentActivity : Activity() {
         webToolGate.cancel()
         approvedModelWebSession.getAndSet(null)?.cancel()
         activeWebResearchSession?.cancel()
+        activeResearchCancellation?.let {
+            it.cancel()
+            localRuntime.cancel()
+        }
         mainHandler.removeCallbacks(foregroundLearningCheck)
         mainHandler.removeCallbacks(dashboardRefresh)
         super.onPause()
@@ -5498,7 +5502,13 @@ class AgentActivity : Activity() {
             showModelVersions()
             return
         }
-        val center = localCenter(request)
+        val center: (() -> Unit)? = when (request.lowercase(Locale.GERMAN)) {
+            "lernzentrum" -> ::showLearningCenter
+            "entwicklungszentrum" -> ::showDevelopmentCenter
+            "gedächtnis", "gedächtniszentrum" -> ::showMemoryCenter
+            "systemstatus" -> ::showSystemCenter
+            else -> null
+        }
         if (center != null) {
             input.text.clear()
             addUserMessage(request)
@@ -5580,24 +5590,54 @@ class AgentActivity : Activity() {
             }
             null -> Unit
         }
-        // Explicit public research precedes generic app discovery ("Suche die neuesten Quellen").
-        if (at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.isResearchRequest(request)) {
-            researchArmed = false
-            val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.explicitTopic(request)
+        // #639: an internal cockpit screen („öffne das Gedächtniszentrum“, „Logik und Planung“) is navigation
+        // through the rail's own route table – never an app lookup, a file question or a model turn.
+        at.heinz.deviceai.cognitive.OwnerInternalNavigationIntent.resolve(request,
+            at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+                continuumState?.archive?.identityState?.chosenName))?.let { screen ->
+            webToolGate.cancel()
+            approvedModelWebSession.getAndSet(null)?.cancel()
             input.text.clear()
             addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
-            if (topic == null) {
-                addAssistantMessage("Diese Recherche bleibt lokal: Der Auftrag enthält private, mehrdeutige " +
-                    "oder zusätzliche Handlungsangaben oder verbietet Internetzugriff. " +
-                    "Bitte nenne ausschließlich das öffentliche Thema, ohne persönliche Daten oder Dokumentinhalte.",
-                    preserveLocalContext = false,
-                    keepCockpit = activeWorkArea == ContinuumWorkArea.START)
-            } else {
-                val researchSession = sessionId
-                confirmWebRequest(at.heinz.deviceai.cognitive.WebToolRequest.Search(topic), ResearchMode.STANDARD) { session ->
-                    if (session != null && !busy && sessionId == researchSession && foregroundLearningActive &&
-                        !isFinishing && !isDestroyed) runResearch(session)
-                    else session?.cancel()
+            addToolActivity(screen.activityLine)
+            navigateDashboardTarget(screen.target)
+            return
+        }
+        // Owner wish (#643): „Jarvis recherchiere …“ / „Such nach …“ / „Prüfe neueste Quellen zu …“ starts research
+        // from chat or speech without the Web button. ALWAYS_ON → the persisted grant, ASK → the one-time dialog,
+        // OFF → no request. Only the de-identified topic may leave the device; personal markers are refused.
+        // Single entry (#650/#653 + #656): OwnerResearchCommand also owns the PublicKnowledgeTopicRouter forms.
+        at.heinz.deviceai.cognitive.OwnerResearchCommand.parse(request,
+            at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+                continuumState?.archive?.identityState?.chosenName))?.let { command ->
+            input.text.clear()
+            researchArmed = false
+            when (command) {
+                is at.heinz.deviceai.cognitive.OwnerResearchCommand.Outcome.Refused -> {
+                    addUserMessage(request)
+                    addToolActivity("WEB · zurückgehalten · ${command.reason} · keine Anfrage gesendet")
+                    addNonModelReply(request, command.reply, at.heinz.deviceai.cognitive.NonModelReplyKind.SAFETY_REFUSAL)
+                }
+                is at.heinz.deviceai.cognitive.OwnerResearchCommand.Outcome.Research -> {
+                    restoreInternetMode()
+                    addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+                    addToolActivity(command.activityLine(internetConsent.mode))
+                    if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF) {
+                        addNonModelReply(request, at.heinz.deviceai.cognitive.OwnerResearchCommand.offlineReply(),
+                            at.heinz.deviceai.cognitive.NonModelReplyKind.READ_ONLY_TOOL)
+                    } else {
+                        val researchSession = sessionId
+                        confirmWebRequest(at.heinz.deviceai.cognitive.WebToolRequest.Search(command.topic),
+                            researchMode) { session ->
+                            if (session != null && !busy && sessionId == researchSession && foregroundLearningActive &&
+                                !isFinishing && !isDestroyed) runResearch(session)
+                            else {
+                                session?.cancel()
+                                if (!isFinishing && !isDestroyed)
+                                    addToolActivity("WEB · nicht freigegeben oder Sitzung gewechselt · keine Anfrage gesendet")
+                            }
+                        }
+                    }
                 }
             }
             return
@@ -5610,10 +5650,7 @@ class AgentActivity : Activity() {
             input.text.clear()
             addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
             when (intake) {
-                is OwnerAppLookupIntent.Intake.Lookup -> {
-                    val localArea = if (intake.opening) localCenter(intake.query) else null
-                    if (localArea != null) localArea() else runExplicitAppLookup(request, intake)
-                }
+                is OwnerAppLookupIntent.Intake.Lookup -> runExplicitAppLookup(request, intake)
                 is OwnerAppLookupIntent.Intake.Clarify -> clarifyAppRequest(request,
                     "Was brauchst du aus ${intake.subject}: die App öffnen, etwas nachsehen oder einen Inhalt vorbereiten?")
                 is OwnerAppLookupIntent.Intake.Planning -> {
@@ -5847,17 +5884,6 @@ class AgentActivity : Activity() {
                 continuumState?.archive?.identityState?.chosenName, localRuntime.loadedModel, localRuntime.state)))
     }
 
-    private fun localCenter(query: String): (() -> Unit)? = when (OwnerAppLookupIntent.centerTarget(query)) {
-        "gedächtniszentrum" -> ::showMemoryCenter
-        "logik und planung" -> ::showLogicCenter
-        "entwicklungsaufgaben" -> ::showDevelopmentBacklog
-        "lernzentrum" -> ::showLearningCenter
-        "entwicklungszentrum" -> ::showDevelopmentCenter
-        "systemstatus" -> ::showSystemCenter
-        "modelle" -> ::showModelCenter
-        else -> null
-    }
-
     private fun presentBootstrapDecision(request: String, decision: BootstrapDecision, requestRecorded: Boolean = false) {
         if (decision.kind == BootstrapKind.DEVICE_TOOL && decision.tool != "get_storage_info" && !bridge.isReady()) {
             addToolActivity("GERÄTEZUGRIFF NICHT BEREIT · Auftrag nicht ausgeführt")
@@ -5870,7 +5896,7 @@ class AgentActivity : Activity() {
             addUserMessage(request)
         }
         when (decision.kind) {
-            BootstrapKind.REMEMBER -> rememberOwnerFact(checkNotNull(decision.fact))
+            BootstrapKind.REMEMBER -> rememberOwnerFact(checkNotNull(decision.fact), decision.message)
             BootstrapKind.REVISE -> {
                 AlertDialog.Builder(this)
                     .setTitle("Gespeicherte Information ändern?")
@@ -8290,7 +8316,7 @@ class AgentActivity : Activity() {
     private fun failureName(e: Throwable) = e.javaClass.simpleName.ifEmpty { "Fehler" }
 
     /** "Merke dir": app memory first, then the learning core; the reply says what actually happened. */
-    private fun rememberOwnerFact(fact: String) {
+    private fun rememberOwnerFact(fact: String, note: String = "") {
         onLearningIo(work@{
             // H2: a hypothetical/uncertain/planned/questioned/reported statement never enters the
             // app fact list as owner-confirmed; the learning core keeps it as an unconfirmed statement.
@@ -8333,7 +8359,8 @@ class AgentActivity : Activity() {
                 "Im lokalen Lernspeicher gemerkt, aber der Continuum-Lernkern hat die Information nicht übernommen " +
                     "(${failureName(e)}). Wiederhole „Merke dir“, um es erneut zu versuchen."
             })
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." },
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." } +
+            (if (note.isNotBlank() && result.isSuccess) "\n\n$note" else ""),
             preserveLocalContext = result.isFailure) }
     }
 
@@ -8983,7 +9010,9 @@ class AgentActivity : Activity() {
     /** ASK consumes an exact dialog ticket; ALWAYS_ON uses the persisted owner
      * grant. Both paths mint the same bounded, revocable ToolGate capability. */
     private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
+        invalidated:()->Unit = {},
         completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) {
+        if (!foregroundLearningActive || isFinishing || isDestroyed) { invalidated(); return }
         restoreInternetMode()
         if(internetConsent.mode==at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
             completed(webToolGate.authorizeAlwaysOn(call,mode))
@@ -8994,20 +9023,33 @@ class AgentActivity : Activity() {
             addAssistantMessage("Kein Internetzugriff: Modus AUS oder ungültige Webanfrage. Öffentliche HTTPS-Quellen sind erforderlich.")
             completed(null);return
         }
+        val approvalSession = sessionId
+        var responded = false
+        fun respond(accepted: Boolean) {
+            if (responded) return
+            responded = true
+            val current = sessionId == approvalSession && foregroundLearningActive && !isFinishing && !isDestroyed
+            if (!current || !webToolGate.completeApproval(approval, mode, accepted, completed)) {
+                invalidated()
+                if (!isFinishing && !isDestroyed)
+                    addToolActivity("WEB · veraltete Freigabe verworfen · kein neuer Auftrag")
+            }
+        }
         AlertDialog.Builder(this)
             .setTitle("Internetzugriff einmal erlauben?")
             .setMessage((if(call is at.heinz.deviceai.cognitive.WebToolRequest.Search)
                 "Diese Suchfrage wird an öffentliche Suchanbieter übertragen. Externe Webquellen werden unabhängig geprüft. "
                 else "Diese eine HTTPS-Quelle wird gelesen; sichere öffentliche Weiterleitungen sind begrenzt erlaubt. ")+
                 "Gilt nur für diese Anfrage, ohne Gerätefreigabe oder automatische Folgeaufträge.\n\n"+call.question)
-            .setNegativeButton("Ablehnen") { _,_->webToolGate.cancel();completed(null) }
-            .setOnCancelListener { webToolGate.cancel();completed(null) }
-            .setPositiveButton("Einmal erlauben") { _,_->completed(webToolGate.approve(approval,mode)) }
+            .setNegativeButton("Ablehnen") { _,_->respond(false) }
+            .setOnCancelListener { respond(false) }
+            .setPositiveButton("Einmal erlauben") { _,_->respond(true) }
             .show()
     }
 
     private fun runResearch(session:at.heinz.deviceai.cognitive.ApprovedWebResearchSession,mentorArea:String?=null) {
-        if(busy || localAgentExecutor.isShutdown){session.cancel();return}
+        if(busy || localAgentExecutor.isShutdown || !foregroundLearningActive || isFinishing || isDestroyed ||
+            !session.isAuthorized()){session.cancel();return}
         val question=session.question
         val mode=session.mode
         activeWebResearchSession=session
@@ -9058,7 +9100,8 @@ class AgentActivity : Activity() {
             at.heinz.deviceai.cognitive.WikipediaExtractResearchProvider(provider))
         val reportPhase: (ResearchPhase) -> Unit = { phase ->
             runOnUiThread {
-                if (!isFinishing && !isDestroyed) {
+                if (!isFinishing && !isDestroyed && foregroundLearningActive && sessionId == researchSessionId &&
+                    activeResearchCancellation === cancellation && !cancellation.isCancelled() && session.isAuthorized()) {
                     val label = when (phase) {
                         ResearchPhase.PLAN, ResearchPhase.DISCOVERY -> "PLANNING"
                         ResearchPhase.FETCH -> "FETCHING"
@@ -9127,6 +9170,13 @@ class AgentActivity : Activity() {
                 activeWebResearchSession = null
                 activeLocalRequest = false
                 input.hint = "Was soll ich auf deinem Gerät tun?"
+                if (sessionId != researchSessionId || !foregroundLearningActive ||
+                    cancellation.isCancelled() || !session.isAuthorized()) {
+                    addToolActivity("RESEARCH · abgebrochen oder Freigabe widerrufen · Ergebnis verworfen")
+                    setBusy(false)
+                    refreshLocalModelUi()
+                    return@runOnUiThread
+                }
                 result.onSuccess { dossier ->
                     if(!session.isAuthorized()) {
                         addToolActivity("WEB · Freigabe widerrufen, Ergebnis verworfen")
@@ -9482,7 +9532,7 @@ class AgentActivity : Activity() {
         if(proposal.toolName in setOf("web_search","web_read")) {
             val call=runCatching { at.heinz.deviceai.cognitive.WebToolRequest.fromTool(proposal.toolName,proposal.arguments) }.getOrNull()
             if(call==null){callback(false);return}
-            confirmWebRequest(call,ResearchMode.QUICK) { session ->
+            confirmWebRequest(call,ResearchMode.QUICK, invalidated = { callback(false) }) { session ->
                 approvedModelWebSession.getAndSet(session)?.cancel()
                 callback(session!=null)
             }
@@ -12124,6 +12174,8 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
             return
         }
+        webToolGate.cancel()
+        approvedModelWebSession.getAndSet(null)?.cancel()
         clearTaskEffects()
         selectedBot?.let { profile ->
             if (botLookupPending || backlogExecutor.isShutdown) return
@@ -13298,4 +13350,3 @@ class AgentActivity : Activity() {
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
 }
-

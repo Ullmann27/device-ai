@@ -66,6 +66,14 @@ class ApprovedWebToolGate(private val consent:InternetConsentPolicy) {
         if(!consent.consume(approval.ticket))return null
         return ApprovedWebResearchSession(approval.call,mode,consent,approval.ticket)
     }
+    /** A stale dialog is not a new owner decision and must not cancel a newer request. */
+    @Synchronized fun completeApproval(approval:WebToolApproval,mode:ResearchMode,accepted:Boolean,
+        completed:(ApprovedWebResearchSession?)->Unit):Boolean {
+        if(pending !== approval || !consent.isCurrent(approval.ticket))return false
+        val session=if(accepted)approve(approval,mode) else {cancel();null}
+        completed(session)
+        return true
+    }
     @Synchronized fun cancel(){pending=null;consent.cancel()}
 }
 

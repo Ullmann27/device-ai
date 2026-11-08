@@ -35,6 +35,13 @@ internal object PublicKnowledgeTopicRouter {
         "(?iu)\\b(ich|wir)\\b.*\\b(dir|dich|euch)\\b|\\b(du|ihr)\\b.*\\b(dir|mir|uns|hast|hattest|habt)\\b|\\b(habe|hab|hatte)\\s+ich\\b"
     )
 
+    /** Personal markers or a reference to this dialogue: such text never reaches a search provider. */
+    fun looksPrivate(text: String): Boolean =
+        privateMarkers.containsMatchIn(text) || dialogueReference.containsMatchIn(text)
+
+    /** A second action (send, delete, install, pay …) inside a research topic is never forwarded or executed. */
+    fun hasAdditionalAction(text: String): Boolean = additionalAction.containsMatchIn(text)
+
     fun topic(message: String): String? {
         if (message.length !in 8..220 || message.any { it.isISOControl() }) return null
         val cleaned = normalized(message)

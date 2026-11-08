@@ -1,5 +1,7 @@
 package at.heinz.deviceai
 
+import at.heinz.deviceai.learning.NeuralCommandKind
+import at.heinz.deviceai.learning.NeuralCommandParser
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -52,6 +54,67 @@ class BootstrapBrainTest {
             "Meine ausdrücklich gespeicherten Fakten:\n• Ich mag Blau\n• Ich mag Tee", recall.message)
         assertEquals(BootstrapKind.FORGET, BootstrapBrain.decide("Vergiss alles", emptyList()).kind)
     }
+
+    @Test fun factMetaSeparationPreservesSafeOwnerFacts() {
+        val fact = "Mein Testwort lautet Nebel 731."
+        val decision = BootstrapBrain.decide(
+            "Merke dir: $fact Danach fragen: Wie lautet mein Testwort?", emptyList())
+        assertEquals(BootstrapKind.REMEMBER, decision.kind)
+        assertEquals(fact, decision.fact)
+        assertTrue(decision.message.contains("nicht als Fakt gespeichert"))
+        assertTrue(decision.message.contains("Wie lautet mein Testwort?"))
+    }
+
+    @Test fun sensitiveMetaInstructionsAreRejectedWithoutEchoingTheirContents() {
+        val markers = listOf("Passwort", "password", "Kennwort", "PIN", "IBAN", "BIC",
+            "Kreditkarte", "API-Key", "secret", "token", "TANNummer", "Zugangscode")
+        for (prefix in listOf("Merke dir:", "Merk dir:")) {
+            for (marker in markers) {
+                assertMemoryRejected("$prefix Servus. Danach fragen: $marker synthetic-only-731")
+            }
+        }
+    }
+
+    @Test fun memoryLengthLimitCoversTheInstructionNotJustTheFact() {
+        val fact = "Mein Testwort lautet Nebel 731."
+        val prefix = "$fact Danach fragen: "
+        val content = prefix + "x".repeat(320 - prefix.length)
+        assertEquals(320, content.length)
+        val accepted = BootstrapBrain.decide("Merke dir: $content", emptyList())
+        assertEquals(BootstrapKind.REMEMBER, accepted.kind)
+        assertEquals(fact, accepted.fact)
+        assertMemoryRejected("Merke dir: ${content}x")
+        assertMemoryRejected("Merke dir: ab")
+        assertEquals(BootstrapKind.REMEMBER, BootstrapBrain.decide("Merke dir: abc", emptyList()).kind)
+    }
+
+    @Test fun neuralTeachGateChecksTheSameCompleteTextThatWouldBeTrained() {
+        val command = requireNotNull(NeuralCommandParser.parse(
+            "Neuron lerne: Servus. Danach fragen: Mein Passwort ist synthetic-only-731 => Gruß"))
+        assertEquals(NeuralCommandKind.TEACH, command.kind)
+        assertTrue(command.text.contains("synthetic-only-731"))
+        assertMemoryRejected("Merke dir: ${command.text}")
+    }
+
+    @Test fun neuralTeachGateStillAcceptsSafeCompleteExamples() {
+        val command = requireNotNull(NeuralCommandParser.parse("Neuron lerne: Servus miteinander => Gruß"))
+        assertEquals(NeuralCommandKind.TEACH, command.kind)
+        val decision = BootstrapBrain.decide("Merke dir: ${command.text}", emptyList())
+        assertEquals(BootstrapKind.REMEMBER, decision.kind)
+        assertEquals(command.text, decision.fact)
+    }
+
+    private fun assertMemoryRejected(request: String) {
+        val decision = BootstrapBrain.decide(request, emptyList())
+        assertEquals(request, BootstrapKind.REPLY, decision.kind)
+        assertNull(request, decision.fact)
+        assertNull(request, decision.tool)
+        assertFalse(request, decision.allowNeuralRecall)
+        assertTrue(request, decision.message.contains("nicht speichern"))
+        assertFalse(request, decision.message.contains("synthetic-only-731"))
+        assertFalse(request, decision.message.contains("Danach fragen"))
+    }
+
     @Test fun savingProhibitionIsConversationNotStorageInspection() {
         val utterances = listOf(
             "Für diese Testaufgabe gilt: In der roten Kiste liegen 4 Kupferringe und in der blauen Kiste 7 Kupferringe. Welche Kiste enthält mehr? Antworte kurz. Speichere diese Angaben nicht dauerhaft.",
@@ -240,4 +303,3 @@ class BootstrapBrainTest {
     }
 
 }
-

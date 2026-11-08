@@ -199,10 +199,16 @@ object BootstrapBrain {
                 fact = candidate.first, tool = candidate.second)
         }
         if (low.startsWith("merke dir:") || low.startsWith("merk dir:")) {
-            val fact = text.substringAfter(':').trim()
-            return if (fact.length in 3..320 && !unsafe.containsMatchIn(fact) &&
+            // #640: a trailing dialogue instruction („Danach fragen: …“) is not part of the fact.
+            val content = text.substringAfter(':').trim()
+            val split = at.heinz.deviceai.cognitive.OwnerFactMetaSeparator.split(content)
+            val fact = split.fact
+            // Neural TEACH reuses this gate but trains on the complete, unsplit text.
+            return if (content.length in 3..320 && !unsafe.containsMatchIn(content) && fact.length in 3..320 &&
                 (!KnowledgeSyntax.isStructured(fact) || KnowledgeSyntax.statement(fact) != null)) {
-                BootstrapDecision(BootstrapKind.REMEMBER, fact = fact)
+                BootstrapDecision(BootstrapKind.REMEMBER, fact = fact,
+                    message = split.instruction?.let {
+                        at.heinz.deviceai.cognitive.OwnerFactMetaSeparator.writeNote(it) } ?: "")
             } else BootstrapDecision(BootstrapKind.REPLY,
                 "Das kann ich nicht speichern: Bitte 3–320 Zeichen, ohne Passwörter, Zugangsdaten oder Bankdaten.")
         }
@@ -314,5 +320,4 @@ object BootstrapBrain {
                 "oder lerne mir etwas ausdrücklich mit „Merke dir: ...“.", allowNeuralRecall = true)
     }
 }
-
 
