@@ -176,7 +176,7 @@ jobs:
   android-lifecycle-jdk21:
     if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -201,7 +201,9 @@ jobs:
           set -euo pipefail
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
-      - name: LocalModelReloadLifecycleTest on JDK 21
+      # Die QA-Whitelist in app/build.gradle.kts lässt keine Task-Optionen wie --tests zu;
+      # daher läuft die gesamte Suite auf JDK 21 und nur das Lifecycle-XML wird bewertet.
+      - name: Unit tests on JDK 21 (LocalModelReloadLifecycleTest evidence)
         run: |
           set -euo pipefail
           java -version
@@ -212,7 +214,7 @@ jobs:
             -PcontinuumUiWidgetTests=true \
             -PcontinuumLocalStandaloneQa=true \
             -PcontinuumStandaloneVersionCode=50 \
-            :app:testDebugUnitTest --tests 'at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest'
+            :app:testDebugUnitTest
       - name: Summarize lifecycle result (skips must be 0 on JDK 21)
         if: always()
         run: |
@@ -234,6 +236,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: code50-github-lifecycle-jdk21-evidence
-          path: app/build/test-results/testDebugUnitTest/
+          path: app/build/test-results/testDebugUnitTest/*LocalModelReloadLifecycleTest*.xml
           if-no-files-found: warn
           retention-days: 14
