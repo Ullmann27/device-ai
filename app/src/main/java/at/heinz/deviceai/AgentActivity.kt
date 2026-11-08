@@ -3063,55 +3063,114 @@ class AgentActivity : Activity() {
 
     private var centerDialog: AlertDialog? = null
     private val workWindowHost by lazy { at.heinz.deviceai.ui.JarvisWorkWindowHost(this, avatarDirector) }
-    private data class LocalReasoningWorkScene(val turnId: String, val session: String, val generation: Long)
+
+    private enum class WorkscenePhase(val rank: Int) {
+        IDLE(0), LOCAL_REASONING(1), TOOL_ACTIVE(2), AWAITING_DECISION(3), COMPLETED(4)
+    }
+
+    private class LocalReasoningWorkScene(
+        val turnId: String,
+        val session: String,
+        val generation: Long,
+        val request: String
+    ) {
+        var phase = WorkscenePhase.LOCAL_REASONING
+        var opened = false
+        var pendingShow: Runnable? = null
+    }
+
     private var localReasoningWorkScene: LocalReasoningWorkScene? = null
 
-    private fun presentLocalReasoningWorkScene(turnId: String, request: String) {
+    private fun localReasoningSceneCurrent(lease: LocalReasoningWorkScene): Boolean =
+        localReasoningWorkScene === lease &&
+            lease.phase == WorkscenePhase.LOCAL_REASONING &&
+            sessionId == lease.session &&
+            workPresentationGeneration == lease.generation &&
+            busy && activeLocalRequest && foregroundLearningActive &&
+            !isFinishing && !isDestroyed
+
+    private fun scheduleLocalReasoningWorkScene(turnId: String, request: String, delayMillis: Long) {
         if (!foregroundLearningActive || isFinishing || isDestroyed || centerDialog?.isShowing == true) return
-        val home = homeView ?: return
-        val lease = LocalReasoningWorkScene(turnId, sessionId, workPresentationGeneration)
+        localReasoningWorkScene?.let { previous ->
+            previous.pendingShow?.let(mainHandler::removeCallbacks)
+            if (previous.opened) {
+                workWindowHost.workEnded()
+                workWindowHost.close(immediate = true)
+            }
+        }
+        val lease = LocalReasoningWorkScene(turnId, sessionId, workPresentationGeneration, request)
         localReasoningWorkScene = lease
+        val show = Runnable {
+            lease.pendingShow = null
+            if (localReasoningSceneCurrent(lease)) showLocalReasoningWorkScene(lease)
+        }
+        lease.pendingShow = show
+        if (delayMillis <= 0L) show.run() else mainHandler.postDelayed(show, delayMillis)
+    }
+
+    /** Test/manual entry: immediate canonical THINK scene. */
+    private fun presentLocalReasoningWorkScene(turnId: String, request: String) =
+        scheduleLocalReasoningWorkScene(turnId, request, 0L)
+
+    private fun showLocalReasoningWorkScene(lease: LocalReasoningWorkScene) {
+        if (!localReasoningSceneCurrent(lease)) return
+        val home = homeView ?: return
         val status = textView("Lokale Bearbeitung läuft · Ergebnis folgt erst nach Abschluss.", 13f, MUTED).apply {
-            tag = "jarvis-local-work-status:$turnId"
+            tag = "jarvis-local-work-status:" + lease.turnId
         }
         val progress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             isIndeterminate = true
-            tag = "jarvis-local-work-progress:$turnId"
+            tag = "jarvis-local-work-progress:" + lease.turnId
             contentDescription = "Lokales Modell bearbeitet den Auftrag"
         }
         val model = localRuntime.loadedModel?.id?.take(48) ?: "lokales Modell"
         val body = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             addView(textView("AUFTRAG", 11f, CYAN, bold = true))
-            addView(textView(request.take(320), 14f, TEXT), matchWidth(top = 4))
-            addView(textView("$model · reale lokale Inferenz", 11f, MUTED), matchWidth(top = 10))
+            addView(textView(lease.request.take(320), 14f, TEXT), matchWidth(top = 4))
+            addView(textView(model + " · reale lokale Inferenz", 11f, MUTED), matchWidth(top = 10))
             addView(status, matchWidth(top = 4))
             addView(progress, matchWidth(top = 8))
             addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this@AgentActivity, "STOP") {
                 cancelLocalRequest()
             }, matchWidth(top = 10))
         }
-        fun current() = localReasoningWorkScene === lease && sessionId == lease.session &&
-            workPresentationGeneration == lease.generation && busy && activeLocalRequest && foregroundLearningActive
         fun show(retry: Boolean) {
-            if (!current()) return
+            if (!localReasoningSceneCurrent(lease)) return
             val scene = requireNotNull(at.heinz.deviceai.ui.JarvisActionScenes.forCentre("Logik und Planung"))
             val window = workWindowHost.show(home, body, "LOKALE KI · DENKEN", scene, onClosed = {
                 if (localReasoningWorkScene === lease) localReasoningWorkScene = null
             })
-            if (window != null) workWindowHost.workStarted(emphasize = true)
-            else if (!retry) home.post { show(true) }
+            if (window != null) {
+                lease.opened = true
+                workWindowHost.workStarted(emphasize = true)
+            } else if (!retry) home.post { show(true) }
             else if (localReasoningWorkScene === lease) localReasoningWorkScene = null
         }
         show(false)
     }
 
+    private fun promoteLocalReasoningWorkSceneToTool() {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.phase.rank >= WorkscenePhase.TOOL_ACTIVE.rank) return
+        lease.phase = WorkscenePhase.TOOL_ACTIVE
+        lease.pendingShow?.let(mainHandler::removeCallbacks)
+        lease.pendingShow = null
+        if (lease.opened) workWindowHost.workEnded()
+        localReasoningWorkScene = null
+    }
+
     private fun finishLocalReasoningWorkScene(turnId: String, immediate: Boolean = false) {
         val lease = localReasoningWorkScene ?: return
         if (lease.turnId != turnId) return
+        lease.phase = WorkscenePhase.COMPLETED
+        lease.pendingShow?.let(mainHandler::removeCallbacks)
+        lease.pendingShow = null
         localReasoningWorkScene = null
-        workWindowHost.workEnded()
-        workWindowHost.close(immediate)
+        if (lease.opened) {
+            workWindowHost.workEnded()
+            workWindowHost.close(immediate)
+        }
     }
 
     /**
@@ -3145,10 +3204,7 @@ class AgentActivity : Activity() {
         toolSceneProgress = null
         toolSceneDialog?.dismiss()
         toolSceneDialog = null
-        if (localReasoningWorkScene != null) {
-            localReasoningWorkScene = null
-            workWindowHost.workEnded()
-        }
+        promoteLocalReasoningWorkSceneToTool()
         workWindowHost.close(immediate = true)
         showHomeDashboard()
         val home = homeView ?: run { key?.let(toolSceneLease::closed); return }
@@ -9390,7 +9446,14 @@ class AgentActivity : Activity() {
         }
         if (botTask == null && codingPlanning == null && documentDraftTurn == null &&
             activeWorkArea == ContinuumWorkArea.START) {
-            presentLocalReasoningWorkScene(chiefTurn.turnId, text)
+            val presentation = at.heinz.deviceai.cognitive.LocalReasoningWorkScenePolicy.decide(
+                task = resolvedQuestion,
+                hasMemories = groundedRecall != null,
+                hasConversationContext = previousLocalReply != null ||
+                    localConversationContext.priorUserTurns(localSessionId).isNotEmpty(),
+                hasGroundedEvidence = groundedRecall != null
+            )
+            scheduleLocalReasoningWorkScene(chiefTurn.turnId, text, presentation.delayMillis)
         }
         // Context may resolve pronouns, but owner-write authorization always
         // uses the untouched original user message ('text').
@@ -12081,6 +12144,11 @@ class AgentActivity : Activity() {
         toolSceneLease.clear()
         toolScene = null
         toolSceneReturnArea = null
+        localReasoningWorkScene?.let { lease ->
+            lease.phase = WorkscenePhase.COMPLETED
+            lease.pendingShow?.let(mainHandler::removeCallbacks)
+            lease.pendingShow = null
+        }
         localReasoningWorkScene = null
         currentTaskEffectContext = null
         chiefTaskEffectContexts.clear()

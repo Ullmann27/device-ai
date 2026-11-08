@@ -49,10 +49,68 @@ class LocalReasoningWorkSceneUiTest {
             "presentLocalReasoningWorkScene", String::class.java, String::class.java
         ).apply { isAccessible = true }.invoke(a, turn, request)
 
+    private fun invokeSchedule(a: AgentActivity, turn: String, request: String, delayMillis: Long) =
+        AgentActivity::class.java.getDeclaredMethod(
+            "scheduleLocalReasoningWorkScene", String::class.java, String::class.java,
+            Long::class.javaPrimitiveType
+        ).apply { isAccessible = true }.invoke(a, turn, request, delayMillis)
+
+    private fun invokePromoteToTool(a: AgentActivity) =
+        AgentActivity::class.java.getDeclaredMethod("promoteLocalReasoningWorkSceneToTool")
+            .apply { isAccessible = true }.invoke(a)
+
     private fun invokeFinish(a: AgentActivity, turn: String, immediate: Boolean) =
         AgentActivity::class.java.getDeclaredMethod(
             "finishLocalReasoningWorkScene", String::class.java, Boolean::class.javaPrimitiveType
         ).apply { isAccessible = true }.invoke(a, turn, immediate)
+
+    @Test fun simpleTurnWaitsOneSecondAndToolPromotionCancelsAStaleOpen() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE)
+            .edit().putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE)
+            .edit().putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
+            .edit().putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
+            .edit().putBoolean("jarvis-shell", true).commit()
+
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible()
+            repeat(3) { shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS) }
+            controller.windowFocusChanged(true)
+            val a = controller.get()
+            val root = a.window.decorView
+            root.measure(
+                View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY)
+            )
+            root.layout(0, 0, 884, 760)
+            val home = field(a, "homeView") as ContinuumHomeView
+            home.setJarvisShellStage(true)
+            set(a, "busy", true)
+            set(a, "activeLocalRequest", true)
+            set(a, "activeWorkArea", ContinuumWorkArea.START)
+
+            invokeSchedule(a, "grace-turn", "Hallo", 1_000L)
+            shadowOf(Looper.getMainLooper()).idleFor(999, TimeUnit.MILLISECONDS)
+            assertFalse(descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+            shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.MILLISECONDS)
+            assertTrue(descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+            invokeFinish(a, "grace-turn", true)
+            shadowOf(Looper.getMainLooper()).idle()
+
+            invokeSchedule(a, "tool-turn", "Öffne Signal", 1_000L)
+            invokePromoteToTool(a)
+            shadowOf(Looper.getMainLooper()).idleFor(1_200, TimeUnit.MILLISECONDS)
+            assertFalse("stale reasoning callback must not reopen after tool promotion",
+                descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+            assertNull(field(a, "localReasoningWorkScene"))
+        } finally {
+            controller.close()
+        }
+    }
 
     @Test fun ownerLocalTurnGetsRealWindowAndOnlyItsTurnCanCloseIt() {
         val app = RuntimeEnvironment.getApplication()
