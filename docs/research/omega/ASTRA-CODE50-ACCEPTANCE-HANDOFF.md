@@ -1,6 +1,6 @@
 # Code50 acceptance repair — 2026-11-08
 
-Status: focused host QA PASS; full unit/UI/lint acceptance pending. Integration source: `0c59dcc7b249d7eb6bfc9fb21d2306f814105ed6` (PR #603). Work branch: `chatgpt/code50-acceptance-repair-20261108`, draft PR #627. The checkpoints below are chronological; later actual runs supersede earlier NOT_RUN statuses.
+Status: WIP, app-routing host regression PASS; full acceptance repair in progress. Integration source: `0c59dcc7b249d7eb6bfc9fb21d2306f814105ed6` (PR #603). Work branch: `chatgpt/code50-acceptance-repair-20261108`, draft PR #627. The checkpoints below are chronological; later actual runs supersede earlier NOT_RUN statuses.
 
 ## Observed blockers
 
@@ -56,3 +56,11 @@ Fold7 voice, 15-second avatar proof, FUI/thermal acceptance and original-signed 
 - Reproduced the two failures separately on the same clean source: 10 tests, 8 PASS, 2 FAIL, 0 SKIP. AvatarMotionEvidenceTest still expected the old horizontal bound 0.65, while the integrated Side-Gaze contract clamps at 0.95; vertical bound and 2,500-ms expiry are unchanged. LocalReasoningWorkScenePolicyTest expected immediate display for a short planning sentence actually classified at 0.30, below the specified strict >0.35 threshold.
 - Test-only corrections preserve the runtime contracts: assert exact 0.95/-0.35 gaze limits; exercise a genuinely above-threshold request; add explicit 0.30 and exactly-0.35 grace checks. These latest test corrections are UNVERIFIED until rerun.
 - `:app:lintDebug` completed successfully on c65b40e (NewApi scope); the combined command still exited 1 because the two reproduced JUnit failures remained. No lint exclusions or runtime thresholds were changed.
+
+## Completed ordinary unit baseline and bounded repairs
+
+- Clean `8374252da0a545f1ae2234781d98d1ed73490e3e`, one worker / 1,600-MB Gradle heap: all 3,485 ordinary JUnit cases reached a completed report: 3,459 PASS, 7 FAIL, 19 SKIP. The two corrected Side-Gaze/reasoning suites now pass, including the strict 0.35 boundary. Lint did not execute in this failed command because `--continue` was absent; its separate earlier PASS remains bound to c65b40e.
+- Three failures expose the role resolver comparing German `Schwester`/`Tochter` literally against canonical `SISTER`/`CHILD` edges. The bounded repair accepts those German relation labels (plus Sohn/Kind) only through existing edges. Daughter/son selection from a generic CHILD edge requires matching known target gender; absent relations, unknown gender and multiple matching targets still abstain or remain ambiguous. Three regression methods cover those negative boundaries. This does not create a relation, memory record, calendar source or new production wiring.
+- Three layout failures expose a Float endpoint rounding a nominal 48-dp top-bar target down to 47.999996 dp. The repair rounds only that bottom endpoint outward by one representable Float when needed. Strict >=48 assertions and non-overlap checks are retained.
+- The fourth layout failure was a frozen C1 avatar snapshot predating the already-integrated Code50 shell. The replacement snapshot was measured from compiled, unmodified 8374252 **before** applying the touch rounding repair; the bit-identical avatar check remains. Raw pre-fix coordinates and undersized targets are in `evidence/code50-hero-before-touch-rounding-20261108.txt`.
+- These role/layout repairs are source-saved WIP until the next full unit/lint run. Main and #603 are unchanged. Optional full UI, Fold7 and original signing remain separate open gates.
