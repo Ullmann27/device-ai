@@ -116,9 +116,9 @@ class OwnerAppPlanningContextUiTest {
         }
     }
     private fun submit(activity: AgentActivity, request: String) {
-        val chat = activity.window.decorView.findViewWithTag<View>("jarvis-tile:chat")
+        val chat = JarvisHomeTestRoutes.destination(activity.window.decorView, "chat")
         assertNotNull("Chat entry exists", chat)
-        assertTrue(chat.performClick())
+        JarvisHomeTestRoutes.touch(activity.window.decorView, chat)
         (field(activity, "input") as EditText).setText(request)
         assertTrue((field(activity, "sendButton") as Button).performClick())
     }

@@ -10,7 +10,20 @@ import at.heinz.deviceai.ui.JarvisDesign.Colors
  * carries no data. The window body shows only what the real source returned.
  */
 object JarvisActionScenes {
+    enum class WorkspaceFootprint { CONVERSATION_IDLE, MEDIUM_TERMINAL, FULL_MISSION_BAY }
     enum class Kind { STATUS, MEMORY, PLANNING, WEB, LEARNING, DEVELOPMENT, APP, FILES, SCREEN, GENERIC }
+
+    /** Visual grammar only; authority and real content remain with the owning source/tool. */
+    enum class FuiProfile {
+        DOCUMENT_BLUEPRINT,
+        APP_CONDUIT,
+        CODE_FORGE,
+        SWARM_GRID,
+        EVIDENCE_CONSTELLATION,
+        CHRONO_GAUGE,
+        SECURITY_XRAY,
+        GENERIC
+    }
 
     /** Where the window emerges: the tile the owner touched, or the point beside the face Jarvis glances at first. */
     sealed class Origin {
@@ -18,7 +31,13 @@ object JarvisActionScenes {
         object BesideFace : Origin()
     }
 
-    data class Scene(val kind: Kind, val origin: Origin, val accent: Int)
+    data class Scene(
+        val kind: Kind,
+        val origin: Origin,
+        val accent: Int,
+        val footprint: WorkspaceFootprint = footprintFor(kind),
+        val fuiProfile: FuiProfile = profileFor(kind)
+    )
 
     /** Centre title → kind and the START tile that opens it (null: no tile, the window emerges beside the face). */
     private val centres = mapOf(
@@ -45,6 +64,15 @@ object JarvisActionScenes {
     /** A document the owner picked: it arrives beside the face (no tile), in the files colour. */
     fun forDocument(): Scene = Scene(Kind.FILES, Origin.BesideFace, accent(Kind.FILES))
 
+    /** Real calculation/score presentation; no tool authority is granted by this scene. */
+    fun forCalculation(): Scene = Scene(
+        Kind.GENERIC,
+        Origin.BesideFace,
+        Colors.cyanSoft,
+        WorkspaceFootprint.MEDIUM_TERMINAL,
+        FuiProfile.CHRONO_GAUGE
+    )
+
     /** Every entry of the real ToolRegistry has a kind; GENERIC only for names outside it. */
     fun toolKind(name: String): Kind = when (name) {
         "launch_app", "find_app", "get_app_info", "list_installed_apps", "restart_app", "stop_app",
@@ -56,6 +84,21 @@ object JarvisActionScenes {
         "read_logcat" -> Kind.DEVELOPMENT
         "web_search", "web_read" -> Kind.WEB
         else -> Kind.GENERIC
+    }
+
+    fun footprintFor(kind: Kind): WorkspaceFootprint = when (kind) {
+        Kind.PLANNING, Kind.LEARNING, Kind.DEVELOPMENT -> WorkspaceFootprint.FULL_MISSION_BAY
+        else -> WorkspaceFootprint.MEDIUM_TERMINAL
+    }
+
+    fun profileFor(kind: Kind): FuiProfile = when (kind) {
+        Kind.FILES -> FuiProfile.DOCUMENT_BLUEPRINT
+        Kind.APP -> FuiProfile.APP_CONDUIT
+        Kind.DEVELOPMENT -> FuiProfile.CODE_FORGE
+        Kind.PLANNING, Kind.LEARNING -> FuiProfile.SWARM_GRID
+        Kind.WEB, Kind.MEMORY -> FuiProfile.EVIDENCE_CONSTELLATION
+        Kind.STATUS, Kind.SCREEN -> FuiProfile.SECURITY_XRAY
+        Kind.GENERIC -> FuiProfile.GENERIC
     }
 
     /** Leading colour of the trail and window rim; the rest of the gradient stays the shared cockpit material. */

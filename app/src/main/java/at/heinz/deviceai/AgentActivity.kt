@@ -142,8 +142,11 @@ class AgentActivity : Activity() {
         /** One ordered writer for the persistent central-chat transcript (#568), shared across Activity instances. */
         internal val chatTranscriptIo: java.util.concurrent.ExecutorService =
             java.util.concurrent.Executors.newSingleThreadExecutor { java.lang.Thread(it, "continuum-chat-transcript").apply { isDaemon = true } }
-        /** Last spoken piece when a reply exceeds the speech queue capacity (#566 review). */
+        /** Last spoken piece when a reply exceeds the bounded speech queue capacity. */
         private const val SPOKEN_REST_IN_CHAT = "Der Rest der Antwort steht im Chat."
+        /** 31 reply chunks + one truncation notice. */
+        private const val SPEECH_QUEUE_MAX_CHUNKS = 32
+        private const val SPEECH_CONTENT_MAX_CHUNKS = SPEECH_QUEUE_MAX_CHUNKS - 1
         @Volatile private var crashHandlerInstalled = false
         private const val SPEECH_REQUEST = 2207
         private const val CONVERSATION_RESUME_DELAY_MS = 450L
@@ -272,7 +275,7 @@ class AgentActivity : Activity() {
     private var voiceListening = false
     @Volatile private var voiceUtteranceId: String? = null
     /** Ordered pieces of the reply being read aloud (#566); only the UI thread touches the turn/chunk ids. */
-    private val speechChunks = at.heinz.deviceai.cognitive.ApprovedSpeechChunkQueue()
+    private val speechChunks = at.heinz.deviceai.cognitive.ApprovedSpeechChunkQueue(SPEECH_QUEUE_MAX_CHUNKS)
     private var speechTurnId: String? = null
     private var speechChunkId: String? = null
     private val voiceSignal = TtsHologramSignal()
@@ -500,6 +503,10 @@ class AgentActivity : Activity() {
     private var botTaskTimeout: Runnable? = null
     private val botTaskStatuses = LinkedHashMap<String, String>()
     private val memoryStore = InMemoryMemoryStore()
+    /**
+     * Process cache of the canonical ContinuumRuntimeStore experience archive.
+     * openContinuum() restores it; checkpointContinuumAsync() persists it.
+     */
     private val experienceStore = InMemoryExperienceStore()
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
     private var lastVisibleCognitiveTrace: Pair<String,String>? = null
@@ -702,6 +709,7 @@ class AgentActivity : Activity() {
         if (::modelCatalog.isInitialized) reloadInstalledModels()
         refreshNeuralPracticeUi()
         foregroundLearningActive = true
+        airbusCockpitOrchestrator?.setForeground(true)
         // Only the foreground Activity may advance the hologram's orbital clock.
         hologramView?.setForegroundActive(true)
         homeView?.setForegroundActive(true)
@@ -731,6 +739,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        airbusCockpitOrchestrator?.setForeground(false)
         workWindowHost.close(immediate = true)
         avatarDirector.clearAnimationIntents()
         ownerRecoveryReview?.close()
@@ -796,6 +805,8 @@ class AgentActivity : Activity() {
         ownerRecoveryReview?.close()
         ownerRecoveryReview = null
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
+        airbusCockpitOrchestrator?.close()
+        airbusCockpitOrchestrator = null
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cockpitSubscriptions = emptyList()
         cameraDrift?.close()
@@ -1124,12 +1135,50 @@ class AgentActivity : Activity() {
         // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar(home.hologram))
         cockpitSubscriptions.forEach { runCatching { it.close() } }
+        airbusCockpitOrchestrator?.close()
         cameraDrift?.close()
         // Controls and their native hit targets stay fixed; motion belongs to the 3D scene.
         cameraDrift = null
+        val airbus = at.heinz.deviceai.ui.Airbus2100CockpitOrchestrator(
+            schedule = { runnable, delay -> mainHandler.postDelayed(runnable, delay) },
+            cancel = mainHandler::removeCallbacks,
+            onSceneProfile = { scene ->
+                runOnUiThread {
+                    if (homeView === home && !isFinishing && !isDestroyed) {
+                        workWindowHost.morphPresentation(home, scene)
+                    }
+                }
+            },
+            onLiveData = { data ->
+                runOnUiThread {
+                    if (homeView === home && !isFinishing && !isDestroyed) {
+                        workWindowHost.setFuiLiveData(data)
+                    }
+                }
+            },
+            onTelemetry = { value ->
+                runOnUiThread {
+                    if (homeView === home && !isFinishing && !isDestroyed) {
+                        workWindowHost.setMissionTelemetry(value)
+                    }
+                }
+            },
+            onHoloCue = {
+                runOnUiThread {
+                    if (homeView === home && foregroundLearningActive && !isFinishing && !isDestroyed) {
+                        playUiFeedback(at.heinz.deviceai.ui.ContinuumUiFeedback.Cue.TASK_STARTED)
+                    }
+                }
+            },
+            onPostMission = ::evaluateAirbusPostMission
+        ).also {
+            it.setForeground(foregroundLearningActive)
+            airbusCockpitOrchestrator = it
+        }
         cockpitSubscriptions = listOf(
             cockpitBus.subscribe(at.heinz.deviceai.ui.CockpitAnimationPresenter(home, cockpitBus, cockpitSessionId,
                 onGreeting = { line -> runOnUiThread { recordCockpitDialog(false, line) } }, drift = cameraDrift)),
+            cockpitBus.subscribe(airbus),
             cockpitBus.subscribe { runOnUiThread { pushCockpitState() } }
         )
         subscribeMemoryEvents()
@@ -1859,10 +1908,14 @@ class AgentActivity : Activity() {
         if (documentIoExecutor.isShutdown) apply.run() else documentIoExecutor.execute(apply)
     }
 
-    /** The existing document I/O lane serializes tool records too. No second store. */
-    private fun recordStorageToolStarted(started: MutableSet<String>, callId: String, toolName: String) {
-        if (toolName != at.heinz.deviceai.cognitive.ToolWorkJournalBridge.FIRST_TOOL ||
-            !started.add(callId) || documentIoExecutor.isShutdown) return
+    /** The existing document I/O lane serializes trusted tool dispatch records too. No second store. */
+    private fun recordToolStarted(started: MutableMap<String, String>, callId: String, toolName: String) {
+        if (documentIoExecutor.isShutdown) return
+        val existing = started.putIfAbsent(callId, toolName)
+        if (existing != null) {
+            require(existing == toolName) { "Tool call ID changed tool identity." }
+            return
+        }
         documentIoExecutor.execute {
             runCatching { workJournal.beginTool(callId, toolName) }.onFailure {
                 runOnUiThread { if (!isFinishing && !isDestroyed)
@@ -1872,26 +1925,25 @@ class AgentActivity : Activity() {
         }
     }
 
-    /** Only real ToolGate receipts may turn a started storage probe into a result. */
-    private fun settleStorageToolRun(started: Set<String>,
-                                     result: Result<at.heinz.deviceai.cognitive.AgentRunResult>,
-                                     startedSession: String,
-                                     cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation) {
+    /** Only real ToolGate receipts may settle a started tool; missing receipts remain UNKNOWN. */
+    private fun settleToolRuns(started: Map<String, String>,
+                               result: Result<at.heinz.deviceai.cognitive.AgentRunResult>,
+                               startedSession: String,
+                               cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation) {
         if (documentIoExecutor.isShutdown) return
-        val receipts = result.getOrNull()?.taskEvidence?.calls.orEmpty().filter {
-            it.toolName == at.heinz.deviceai.cognitive.ToolWorkJournalBridge.FIRST_TOOL
-        }
-        val ids = (started.toList() + receipts.map { it.callId }).distinct()
+        val receipts = result.getOrNull()?.taskEvidence?.calls.orEmpty()
+        val proofById = receipts.associateBy { it.callId }
+        val ids = (started.keys + proofById.keys).distinct()
         if (ids.isEmpty()) return
         val currentAtReturn = sessionId == startedSession &&
             runCatching { cancellation.throwIfCancelled() }.isSuccess
         documentIoExecutor.execute {
             ids.forEach { callId ->
                 runCatching {
-                    val proof = receipts.firstOrNull { it.callId == callId }
+                    val proof = proofById[callId]
+                    val toolName = proof?.toolName ?: started[callId] ?: return@runCatching
                     if (proof == null) {
-                        workJournal.finishTool(callId,
-                            at.heinz.deviceai.cognitive.ToolWorkJournalBridge.FIRST_TOOL,
+                        workJournal.finishTool(callId, toolName,
                             at.heinz.deviceai.cognitive.CockpitWorkJournal.ToolState.UNKNOWN)
                     } else {
                         at.heinz.deviceai.cognitive.ToolWorkJournalBridge.settle(
@@ -2113,7 +2165,7 @@ class AgentActivity : Activity() {
             addAssistantMessage(if (draftTarget)
                 "Einen früheren Entwurf finde ich im Arbeitsverlauf nicht. Welchen meinst du – oder soll ich einen neuen erstellen?"
                 else "Eine frühere PDF, die ich noch öffnen darf, finde ich nicht. Welche meinst du? Ich kann die Auswahl öffnen.",
-                false, keepCockpit = inCockpit)
+                true, keepCockpit = inCockpit)
             return
         }
         val whenText = at.heinz.deviceai.cognitive.WorkRecall.whenText(meant.startedAt, now, zone)
@@ -2125,18 +2177,18 @@ class AgentActivity : Activity() {
             val basis = at.heinz.deviceai.cognitive.DocumentDraftPrompt(meant.request, "", meant.coveredChars, meant.sourceChars)
             val window = presentDraftScene(DocumentDraftTurn(basis, name, meant.id), meant.draft.orEmpty())
             addAssistantMessage("Verstanden – du meinst den Entwurf von $whenText zu „$name“. Hier ist er.",
-                false, keepCockpit = window != null || inCockpit)
+                true, keepCockpit = window != null || inCockpit)
             return
         }
         val readable = runCatching {
             contentResolver.persistedUriPermissions.filter { it.isReadPermission }.map { it.uri.toString() }.toSet()
         }.getOrDefault(emptySet())
         if (meant.documentUri in readable) {
-            addAssistantMessage("Verstanden – du meinst „$name“ von $whenText. Ich öffne sie.", false, keepCockpit = inCockpit)
+            addAssistantMessage("Verstanden – du meinst „$name“ von $whenText. Ich öffne sie.", true, keepCockpit = inCockpit)
             pendingDocumentRequest = spoken
             readPdfDocument(android.net.Uri.parse(meant.documentUri))
         } else addAssistantMessage("Du meinst „$name“ von $whenText – die darf ich nicht mehr öffnen. Wähle sie bitte neu aus.",
-            false, keepCockpit = inCockpit)
+            true, keepCockpit = inCockpit)
     }
 
     /** „die ausgewählte PDF“: the PDF chosen before, if Android still lets JARVIS read it; otherwise one short question. */
@@ -2154,7 +2206,7 @@ class AgentActivity : Activity() {
                 readPdfDocument(android.net.Uri.parse(last.documentUri), remembered = last)
             } else {
                 addAssistantMessage("Welche PDF meinst du? Eine zuvor gewählte darf ich nicht mehr öffnen – ich zeige dir die Auswahl.",
-                    false, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+                    true, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
                 openPdfDocumentPicker(document.wantsDraft, request)
             }
         }
@@ -2194,21 +2246,21 @@ class AgentActivity : Activity() {
         when {
             // A second tap while this draft runs changes nothing: the window keeps saying what really happens.
             documentDraftTurn != null -> addAssistantMessage("Der Entwurf läuft bereits – mit STOP brichst du ihn ab.",
-                false, keepCockpit = inCockpit)
+                true, keepCockpit = inCockpit)
             prompt == null -> {
                 showDocumentDraftStatus("Für einen Entwurf fehlt der Dokumenttext.")
-                addAssistantMessage("Für einen Entwurf fehlt der Dokumenttext.", false, keepCockpit = inCockpit)
+                addAssistantMessage("Für einen Entwurf fehlt der Dokumenttext.", true, keepCockpit = inCockpit)
             }
             busy -> {
                 showDocumentDraftStatus("Entwurf nicht gestartet – JARVIS arbeitet an einem anderen Auftrag.")
                 addAssistantMessage("JARVIS arbeitet gerade an einem anderen Auftrag – der Entwurf startet nicht nebenher.",
-                    false, keepCockpit = inCockpit)
+                    true, keepCockpit = inCockpit)
             }
             !localModelReady() -> {
                 recordWork(workEpisodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.NO_MODEL) }
                 showDocumentDraftStatus("Entwurf: Lokales Modell nicht geladen · in der Modellverwaltung laden.")
                 addAssistantMessage("Entwurf: Lokales Modell nicht geladen · in der Modellverwaltung laden.",
-                    false, keepCockpit = inCockpit)
+                    true, keepCockpit = inCockpit)
             }
             else -> {
                 recordWork(workEpisodeId) { it.copy(state = at.heinz.deviceai.cognitive.CockpitWorkJournal.State.DRAFTING) }
@@ -2333,7 +2385,7 @@ class AgentActivity : Activity() {
         runCatching { startActivityForResult(picker, DRAFT_SAVE_REQUEST) }.onFailure {
             pendingDraftSave = null
             addAssistantMessage("Der Android-Speicherdialog ist nicht verfügbar – der Entwurf wurde nicht gespeichert.",
-                false, keepCockpit = workWindowHost.isShowing)
+                true, keepCockpit = workWindowHost.isShowing)
         }
     }
 
@@ -2377,13 +2429,13 @@ class AgentActivity : Activity() {
                     val stay = activeWorkArea == ContinuumWorkArea.START
                     if (remembered == null) {
                         addAssistantMessage("Die PDF ließ sich nicht lesen (${failure.message ?: failure.javaClass.simpleName}). " +
-                            "An der Datei wurde nichts verändert.", false, keepCockpit = stay)
+                            "An der Datei wurde nichts verändert.", true, keepCockpit = stay)
                         return@fold
                     }
                     val name = remembered.source ?: "die zuletzt verwendete PDF"
                     addAssistantMessage("Die zuletzt verwendete PDF „$name“ lässt sich nicht mehr lesen – vermutlich " +
                         "verschoben oder gelöscht. An der Datei wurde nichts verändert. Ich zeige dir die Auswahl.",
-                        false, keepCockpit = stay)
+                        true, keepCockpit = stay)
                     val attempt = workJournal.newEpisode(at.heinz.deviceai.cognitive.CockpitWorkJournal.Kind.DOCUMENT,
                         request.ifBlank { "Letzte PDF öffnen" }, at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED,
                         name, documentUri = uri.toString())
@@ -2484,9 +2536,9 @@ class AgentActivity : Activity() {
                 depthLayers = at.heinz.deviceai.ui.JarvisWorkWindowDepth.layers(doc.pageCount)) {}
         }
         if (window != null) cockpitTriggers.documentReceived(
-            "document-" + episode.id, doc.name, "application/pdf", request)
+            "document-" + episode.id, doc.name, "application/pdf", request, doc.pageCount)
         // The same facts in the conversation; with an open window the cockpit stays (no switch to the chat area).
-        addAssistantMessage(report, preserveLocalContext = false, keepCockpit = window != null)
+        addAssistantMessage(report, preserveLocalContext = true, keepCockpit = window != null)
         if (wantsDraft && hasText && localModelReady()) startDocumentDraft(doc)
     }
 
@@ -2966,19 +3018,25 @@ class AgentActivity : Activity() {
         val target: android.view.ViewGroup = if (chat) column else home
         val height = dp(if (keyboardCompact) 88 else if (resources.configuration.screenHeightDp < 520) 120
             else if (home.wide) 200 else 160)
-        if (head.parent !== target) {
+        if (head.parent !== target &&
+            at.heinz.deviceai.cognitive.CockpitConversationPresentation.mayReparentHologram(
+                handsFreeActive = continuousConversation.active,
+                native3dEnabled = head.isNative3dEnabled()
+            )
+        ) {
             (head.parent as? android.view.ViewGroup)?.removeView(head)
             if (chat) column.addView(head, minOf(1, column.childCount),
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height))
             // The home restores its own drawing order: above the opaque shell, never behind it.
             else home.adoptHologram()
-            // Detach clears transient speech geometry; reattach the same current utterance.
+            // A deliberate non-3D reparent may detach transient speech geometry; restore Director state.
             avatarDirector.attach(head)
         }
-        if (chat && head.layoutParams.height != height) {
+        val mountedInChat = head.parent === column
+        if (mountedInChat && head.layoutParams.height != height) {
             head.layoutParams = head.layoutParams.apply { this.height = height }
         }
-        head.setGeometry(if (chat) at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.PHONE
+        head.setGeometry(if (mountedInChat) at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.PHONE
             else home.intendedGeometry)
         head.setForegroundActive(foregroundLearningActive)
         currentTaskEffectContext?.takeIf { it.session == sessionId && foregroundLearningActive }
@@ -3053,6 +3111,194 @@ class AgentActivity : Activity() {
 
     private var centerDialog: AlertDialog? = null
     private val workWindowHost by lazy { at.heinz.deviceai.ui.JarvisWorkWindowHost(this, avatarDirector) }
+    private var airbusCockpitOrchestrator: at.heinz.deviceai.ui.Airbus2100CockpitOrchestrator? = null
+
+    private enum class WorkscenePhase(val rank: Int) {
+        IDLE(0), LOCAL_REASONING(1), TOOL_ACTIVE(2), AWAITING_DECISION(3), COMPLETED(4)
+    }
+
+    private class LocalReasoningWorkScene(
+        val turnId: String,
+        val session: String,
+        val generation: Long,
+        val request: String,
+        var promptBudget: Int,
+        val modelHash: String,
+        val startedAtMillis: Long = android.os.SystemClock.uptimeMillis()
+    ) {
+        var phase = WorkscenePhase.LOCAL_REASONING
+        var opened = false
+        var pendingShow: Runnable? = null
+        var statusView: TextView? = null
+        var telemetryView: TextView? = null
+    }
+
+    private var localReasoningWorkScene: LocalReasoningWorkScene? = null
+
+    private fun localReasoningSceneCurrent(lease: LocalReasoningWorkScene): Boolean =
+        localReasoningWorkScene === lease &&
+            lease.phase == WorkscenePhase.LOCAL_REASONING &&
+            sessionId == lease.session &&
+            workPresentationGeneration == lease.generation &&
+            busy && activeLocalRequest && foregroundLearningActive &&
+            !isFinishing && !isDestroyed
+
+    private fun scheduleLocalReasoningWorkScene(turnId: String, request: String, delayMillis: Long) =
+        scheduleLocalReasoningWorkScene(
+            turnId, request, delayMillis,
+            if (delayMillis <= 0L) at.heinz.deviceai.cognitive.LocalChatPromptBudget.FULL_CHARACTERS
+            else at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS
+        )
+
+    private fun scheduleLocalReasoningWorkScene(
+        turnId: String,
+        request: String,
+        delayMillis: Long,
+        promptBudget: Int
+    ) {
+        if (!foregroundLearningActive || isFinishing || isDestroyed || centerDialog?.isShowing == true) return
+        localReasoningWorkScene?.let { previous ->
+            previous.pendingShow?.let(mainHandler::removeCallbacks)
+            if (previous.opened) {
+                workWindowHost.workEnded()
+                workWindowHost.close(immediate = true)
+            }
+        }
+        val lease = LocalReasoningWorkScene(
+            turnId, sessionId, workPresentationGeneration, request, promptBudget,
+            localRuntime.loadedModel?.sha256.orEmpty().take(12)
+        )
+        localReasoningWorkScene = lease
+        val show = Runnable {
+            lease.pendingShow = null
+            if (localReasoningSceneCurrent(lease)) showLocalReasoningWorkScene(lease)
+        }
+        lease.pendingShow = show
+        if (delayMillis <= 0L) show.run() else mainHandler.postDelayed(show, delayMillis)
+    }
+
+    /** Test/manual entry: immediate canonical THINK scene. */
+    private fun presentLocalReasoningWorkScene(turnId: String, request: String) =
+        scheduleLocalReasoningWorkScene(turnId, request, 0L)
+
+    private fun showLocalReasoningWorkScene(lease: LocalReasoningWorkScene) {
+        if (!localReasoningSceneCurrent(lease)) return
+        val home = homeView ?: return
+        val status = textView("Kontext & Gedächtnis · lokaler Turn läuft.", 13f, MUTED).apply {
+            tag = "jarvis-local-work-status:" + lease.turnId
+        }
+        val telemetry = textView(
+            "Budget " + localReasoningBudgetLabel(lease.promptBudget) +
+                " · Modell " + lease.modelHash.ifBlank { "unbekannt" } + " · 0.0 s",
+            11f, MUTED
+        ).apply { tag = "jarvis-local-work-telemetry:" + lease.turnId }
+        val progress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+            isIndeterminate = true
+            tag = "jarvis-local-work-progress:" + lease.turnId
+            contentDescription = "Lokales Modell bearbeitet den Auftrag"
+        }
+        val model = localRuntime.loadedModel?.id?.take(48) ?: "lokales Modell"
+        val body = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(textView("AUFTRAG", 11f, CYAN, bold = true))
+            addView(textView(lease.request.take(320), 14f, TEXT), matchWidth(top = 4))
+            addView(textView(model + " · reale lokale Inferenz", 11f, MUTED), matchWidth(top = 10))
+            addView(status, matchWidth(top = 4))
+            addView(telemetry, matchWidth(top = 4))
+            addView(progress, matchWidth(top = 8))
+            addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this@AgentActivity, "STOP") {
+                cancelLocalRequest()
+            }, matchWidth(top = 10))
+        }
+        fun show(retry: Boolean) {
+            if (!localReasoningSceneCurrent(lease)) return
+            val scene = requireNotNull(at.heinz.deviceai.ui.JarvisActionScenes.forCentre("Logik und Planung"))
+            val window = workWindowHost.show(home, body, "LOKALE KI · DENKEN", scene, onClosed = {
+                if (localReasoningWorkScene === lease) localReasoningWorkScene = null
+            })
+            if (window != null) {
+                lease.opened = true
+                lease.statusView = status
+                lease.telemetryView = telemetry
+                workWindowHost.workStarted(emphasize = true)
+            } else if (!retry) home.post { show(true) }
+            else if (localReasoningWorkScene === lease) localReasoningWorkScene = null
+        }
+        show(false)
+    }
+
+    private fun localReasoningBudgetLabel(value: Int): String =
+        if (value == at.heinz.deviceai.cognitive.LocalChatPromptBudget.FULL_CHARACTERS)
+            "15.5k Vollkontext" else "6.0k kompakt"
+
+    private fun updateLocalReasoningContext(turnId: String, promptBudget: Int, contextCount: Int) {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.turnId != turnId || lease.phase != WorkscenePhase.LOCAL_REASONING) return
+        lease.promptBudget = promptBudget
+        if (promptBudget == at.heinz.deviceai.cognitive.LocalChatPromptBudget.FULL_CHARACTERS && !lease.opened) {
+            lease.pendingShow?.let(mainHandler::removeCallbacks)
+            lease.pendingShow = null
+            if (localReasoningSceneCurrent(lease)) showLocalReasoningWorkScene(lease)
+        }
+        val elapsed = ((android.os.SystemClock.uptimeMillis() - lease.startedAtMillis).coerceAtLeast(0L) / 100L) / 10.0
+        lease.statusView?.text = "Lokaler Denk-Kern · Kontext geprüft"
+        lease.telemetryView?.text = "Erinnerungen " + contextCount + " · Budget " +
+            localReasoningBudgetLabel(promptBudget) + " · Modell " +
+            lease.modelHash.ifBlank { "unbekannt" } + " · " +
+            "%.1f".format(java.util.Locale.ROOT, elapsed) + " s"
+    }
+
+    private fun updateLocalReasoningStream(turnId: String, responseChars: Int, chunks: Int, elapsedMillis: Long) {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.turnId != turnId || lease.phase != WorkscenePhase.LOCAL_REASONING) return
+        lease.statusView?.text = "Antwort-Synthese · lokaler Stream"
+        lease.telemetryView?.text = "Ausgabe " + responseChars + " Zeichen · " + chunks + " Chunks · " +
+            "%.1f".format(java.util.Locale.ROOT, elapsedMillis / 1000.0) + " s"
+    }
+
+    private fun updateLocalReasoningCompleted(
+        turnId: String,
+        metrics: at.heinz.deviceai.localmodel.LocalInferenceMetrics
+    ) {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.turnId != turnId || lease.phase != WorkscenePhase.LOCAL_REASONING) return
+        lease.statusView?.text = "Antwort-Synthese abgeschlossen"
+        val tokenText = metrics.outputTokens?.let { it.toString() + " Output-Tokens" } ?: "Tokenzahl nicht gemeldet"
+        val rate = if (metrics.outputTokens != null && metrics.totalLatencyMillis > 0L)
+            " · " + "%.1f".format(
+                java.util.Locale.ROOT,
+                metrics.outputTokens * 1000.0 / metrics.totalLatencyMillis
+            ) + " tok/s"
+        else ""
+        lease.telemetryView?.text = tokenText + rate +
+            " · " + metrics.responseCharacters + " Zeichen · " + metrics.streamedChunks + " Chunks · " +
+            "%.1f".format(java.util.Locale.ROOT, metrics.totalLatencyMillis / 1000.0) + " s"
+    }
+    private fun promoteLocalReasoningWorkSceneToTool(): Boolean {
+        val lease = localReasoningWorkScene ?: return false
+        if (lease.phase.rank >= WorkscenePhase.TOOL_ACTIVE.rank) return false
+        val inPlace = lease.opened && workWindowHost.isShowing
+        lease.phase = WorkscenePhase.TOOL_ACTIVE
+        lease.pendingShow?.let(mainHandler::removeCallbacks)
+        lease.pendingShow = null
+        // In-place takeover keeps the same window id and reading gaze continuously alive.
+        if (lease.opened && !inPlace) workWindowHost.workEnded()
+        localReasoningWorkScene = null
+        return inPlace
+    }
+
+    private fun finishLocalReasoningWorkScene(turnId: String, immediate: Boolean = false) {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.turnId != turnId) return
+        lease.phase = WorkscenePhase.COMPLETED
+        lease.pendingShow?.let(mainHandler::removeCallbacks)
+        lease.pendingShow = null
+        localReasoningWorkScene = null
+        if (lease.opened) {
+            workWindowHost.workEnded()
+            workWindowHost.close(immediate)
+        }
+    }
 
     /**
      * Cockpit scene of a tool run the ToolGate runner really started (#565, owner brief „Einfliegen der Apps“): the
@@ -3085,7 +3331,8 @@ class AgentActivity : Activity() {
         toolSceneProgress = null
         toolSceneDialog?.dismiss()
         toolSceneDialog = null
-        workWindowHost.close(immediate = true)
+        val reasoningTakeover = promoteLocalReasoningWorkSceneToTool()
+        if (!reasoningTakeover) workWindowHost.close(immediate = true)
         showHomeDashboard()
         val home = homeView ?: run { key?.let(toolSceneLease::closed); return }
         val label = ToolRegistry.label(toolName)
@@ -3137,12 +3384,18 @@ class AgentActivity : Activity() {
                 closed()
                 return
             }
-            val window = workWindowHost.show(home, body, title,
-                at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName),
-                emblem = app?.icon?.let(::drawableCopy), crystal = app != null, onClosed = ::closed)
+            val scene = at.heinz.deviceai.ui.JarvisActionScenes.forTool(toolName)
+            val emblem = app?.icon?.let(::drawableCopy)
+            val window = if (reasoningTakeover && !retry) {
+                workWindowHost.replaceCurrent(home, body, title, scene,
+                    emblem = emblem, crystal = app != null, onClosed = ::closed)
+            } else workWindowHost.show(home, body, title, scene,
+                emblem = emblem, crystal = app != null, onClosed = ::closed)
             if (window != null) {
                 if (key == null || toolSceneLease.running) workWindowHost.workStarted(emphasize = true)
             } else if (!retry) {
+                // Geometry takeover failed: only now fall back to the old close/reopen path.
+                if (reasoningTakeover) workWindowHost.close(immediate = true)
                 home.post { show(true) }
             } else {
                 (body.parent as? android.view.ViewGroup)?.removeView(body)
@@ -3488,7 +3741,9 @@ class AgentActivity : Activity() {
                 append("LM1: Kotlin-Laufzeit vorhanden, kein nachgewiesener aktiver Modelladapter/Checkpoint im Hauptchat.\n")
                 append("CCC1: bestehende Owner-Freigabe-/Receipt-Grenzen unverändert.\n\n")
                 append("SKILL-ABSTRAKTION · EXISTIERENDER EXPERIENCE-COMPILER\n")
-                append("Beobachtungen nur aus dieser laufenden App-Sitzung: ").append(experiences.size)
+                append("Agentenerfahrungen aus ContinuumRuntimeStore + aktueller Sitzung " +
+                    "(nur verifizierte SUCCESS-Nachweise dürfen als Erfolgsmuster zählen): ")
+                    .append(experiences.size)
                 skills.fold(onSuccess={ candidates ->
                     append("\nZur Besitzerprüfung geeignete Vorschläge: ")
                         .append(candidates.count { it.eligibleForOwnerReview })
@@ -4937,7 +5192,7 @@ class AgentActivity : Activity() {
             return
         }
         val generation = ++appLookupGeneration
-        val flow = OwnerAppActionFlow(intake.opening)
+        val flow = OwnerAppActionFlow(intake.opening, requireExactMatch = intake.requireInstalledCandidate)
         activeOwnerAppFlow = flow
         appLookupActive = true
         activeLocalRequest = true
@@ -4972,15 +5227,40 @@ class AgentActivity : Activity() {
                     }
                 }
                 is OwnerAppActionFlow.Step.Done -> {
-                    if (flow.candidates.isNotEmpty()) appLookupContext = ownerSession to flow.candidates
+                    val fallbackToConversation = OwnerAppLookupIntent.shouldFallbackToConversation(
+                        intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified)
+                    val clarifyMessage = OwnerAppLookupIntent.shouldClarifyMessage(
+                        intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified)
+                    if (!fallbackToConversation && flow.candidates.isNotEmpty()) {
+                        appLookupContext = ownerSession to flow.candidates
+                    }
                     activeOwnerAppFlow = null
                     activeOwnerAppGate = null
                     appLookupActive = false
                     activeLocalRequest = false
                     setBusy(false)
-                    val reply = AppActionReply(ownerSession, generation, request, step.message)
-                    if (foregroundLearningActive) deliverAppActionReply(reply)
-                    else pendingAppActionReply = reply
+                    when {
+                        fallbackToConversation -> {
+                            if (::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY) {
+                                runLocal(request)
+                            } else {
+                                localConversationContext.recordUnanswered(ownerSession, request)
+                                addAssistantMessage(
+                                    "Der Satz wurde nicht als installierter App-Auftrag bestätigt. " +
+                                        "Das lokale Modell ist gerade nicht bereit, ihn als normales Gespräch zu beantworten.",
+                                    preserveLocalContext = true,
+                                    keepCockpit = activeWorkArea == ContinuumWorkArea.START
+                                )
+                            }
+                        }
+                        clarifyMessage -> clarifyAppRequest(
+                            request, OwnerAppLookupIntent.messageClarification())
+                        else -> {
+                            val reply = AppActionReply(ownerSession, generation, request, step.message)
+                            if (foregroundLearningActive) deliverAppActionReply(reply)
+                            else pendingAppActionReply = reply
+                        }
+                    }
                 }
             }
         }
@@ -5799,8 +6079,17 @@ class AgentActivity : Activity() {
                     temporal={ b -> at.heinz.deviceai.learning.ContinuumTemporalMemorySpecialist.decide(filesDir,core,
                         request.take(512),b,working=at.heinz.deviceai.cognitive.ChatSpecialistChain.workingTurns(
                             localConversationContext.priorUserTurns(requestSessionId),nowMs),nowMillis=nowMs).outcome })
-                Triple(Triple(shown.answer,shown.evidenceLine,shown.grounded),
-                    cognitive.localModelPrompt,cognitive.nextScopedGroundedQuestion)
+                val stateTelegram = if (
+                    shown.source == at.heinz.deviceai.learning.ContinuumBaselineSource.MEMORY &&
+                    shown.memoryIds.isNotEmpty()
+                ) runCatching {
+                    core.stateTelegramForSources(shown.memoryIds.toSet(), nowMs).text
+                }.getOrDefault("") else ""
+                Triple(
+                    Triple(shown.answer,shown.evidenceLine,shown.grounded) to stateTelegram,
+                    cognitive.localModelPrompt,
+                    cognitive.nextScopedGroundedQuestion
+                )
             }
             runOnUiThread {
                 if(isFinishing || isDestroyed || activeChatCancellation !== cancellation)return@runOnUiThread
@@ -5809,10 +6098,11 @@ class AgentActivity : Activity() {
                 setBusy(false)
                 if (sessionId != requestSessionId || runCatching { cancellation.throwIfCancelled() }.isFailure)
                     return@runOnUiThread
-                result.onSuccess { (dialogueResult,localPrompt,nextTopic) ->
+                result.onSuccess { (dialogueAndTelegram,localPrompt,nextTopic) ->
                     // An old queued reply cannot set the next chat's runtime context.
                     if(sessionId==requestSessionId)
                         scopedLocalPromptSession=LocalPromptSession(requestSessionId,nextTopic)
+                    val (dialogueResult,stateTelegram)=dialogueAndTelegram
                     val (answer,evidence,grounded)=dialogueResult
                     // Direct recall remains exact. Explicit synthesis uses the existing
                     // local agent; its conclusions acquire no confirmed-memory authority.
@@ -5826,7 +6116,7 @@ class AgentActivity : Activity() {
                         )
                         if(grounded) {
                             val recall=at.heinz.deviceai.cognitive.LocalGroundedRecall
-                                .boundedOrNull(answer,evidence)
+                                .boundedOrNull(answer,evidence,stateTelegram.ifBlank { null })
                             if(recall==null) {
                                 // A confirmed retrieval must remain exact. If it cannot fit
                                 // the model's bounded evidence envelope, do not truncate it,
@@ -6220,7 +6510,7 @@ class AgentActivity : Activity() {
         val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
         val plan = at.heinz.deviceai.cognitive.ReadOnlyToolPlan.forRequest(request, ToolProposal(name, decision.arguments))
         val gate = createToolGate()
-        val startedStorageCalls = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
+        val startedToolCalls = java.util.concurrent.ConcurrentHashMap<String, String>()
         val orchestrator = BoundedAgentOrchestrator(
             model = plan,
             memories = { memoryStore.all() + ownerFactMemories() },
@@ -6236,7 +6526,7 @@ class AgentActivity : Activity() {
             cancellation = cancellation,
             turnTrace = turnTrace,
             onToolStarted = { callId, toolName ->
-                recordStorageToolStarted(startedStorageCalls, callId, toolName)
+                recordToolStarted(startedToolCalls, callId, toolName)
             }
         )
         activeBootstrapGate = gate
@@ -6244,7 +6534,7 @@ class AgentActivity : Activity() {
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
             val result = runCatching { orchestrator.run(request) }
-            settleStorageToolRun(startedStorageCalls, result, actionSessionId, cancellation)
+            settleToolRuns(startedToolCalls, result, actionSessionId, cancellation)
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 if (activeBootstrapGate !== gate || activeChatCancellation !== cancellation) return@runOnUiThread
@@ -6292,7 +6582,8 @@ class AgentActivity : Activity() {
                     bootstrapMemory.recordAssessment(report.passed, report.total)
                     "Gelernt: „$phrase“ → ${ToolRegistry.label(name)}. Trainingscheck: ${report.passed}/${report.total}." +
                         core.fold({ "" }, { " Der Continuum-Lernkern hat die Zuordnung nicht übernommen (${failureName(it)})." })
-                }) { result -> addAssistantMessage(result.getOrElse { "Lernbeispiel nicht übernommen: ${failureName(it)}." }) }
+                }) { result -> addAssistantMessage(result.getOrElse { "Lernbeispiel nicht übernommen: ${failureName(it)}." },
+                    preserveLocalContext = result.isFailure) }
             }.show()
     }
 
@@ -6364,7 +6655,8 @@ class AgentActivity : Activity() {
                             (if (cleared) "Gelernte Befehlssätze gelöscht. " else "Gelernte Befehlssätze konnten nicht gelöscht werden; bitte wiederholen. ") +
                                 revoked.fold({ "Im Continuum-Lernkern wurden $it Zuordnungen widerrufen." },
                                     { "Der Widerruf im Continuum-Lernkern ist fehlgeschlagen (${failureName(it)}); bitte wiederholen." })
-                        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." }) }
+                        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." },
+                            preserveLocalContext = result.isFailure) }
                     }.show()
             }.show()
     }
@@ -7976,7 +8268,8 @@ class AgentActivity : Activity() {
                 "Im lokalen Lernspeicher gemerkt, aber der Continuum-Lernkern hat die Information nicht übernommen " +
                     "(${failureName(e)}). Wiederhole „Merke dir“, um es erneut zu versuchen."
             })
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." }) }
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." },
+            preserveLocalContext = result.isFailure) }
     }
 
     /**
@@ -8001,7 +8294,8 @@ class AgentActivity : Activity() {
                 { "Information geändert; bisherige Ableitungen und die alte Continuum-Experience sind widerrufen." },
                 { e -> "Im lokalen Lernspeicher geändert und die alte Information widerrufen, aber der Continuum-Lernkern " +
                     "hat die neue noch nicht übernommen (${failureName(e)}); das nächste Continuum-Gespräch holt das nach." })
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht geändert: ${failureName(it)}." }) }
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht geändert: ${failureName(it)}." },
+            preserveLocalContext = result.isFailure) }
     }
 
     /** Revokes in the learning core first, so a repeated deletion still reaches it. */
@@ -8013,7 +8307,8 @@ class AgentActivity : Activity() {
                 { "Der Widerruf im Continuum-Lernkern ist fehlgeschlagen (${failureName(it)}); bitte „Fakten löschen“ wiederholen." })
             (if (cleared) "Alle gemerkten Fakten wurden aus dem lokalen Lernspeicher gelöscht. "
                 else "Der lokale Lernspeicher konnte nicht geleert werden; bitte wiederholen. ") + core
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." }) }
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." },
+            preserveLocalContext = result.isFailure) }
     }
 
     private fun showBootstrapMemory() {
@@ -8186,8 +8481,9 @@ class AgentActivity : Activity() {
             !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired,
                 microphoneActive = voiceListening)) return
         stopVoiceAnimation()
-        // #566: the whole visible reply is read, as ordered sentence-bounded pieces (formerly only 480 characters).
-        val chunks = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(message, maxChunks = 15)
+        // Read substantially beyond the former 15-chunk ceiling while keeping a hard bounded queue.
+        val chunks = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(
+            message, maxChunks = SPEECH_CONTENT_MAX_CHUNKS)
         if (chunks.pieces.isEmpty()) return
         // Beyond the queue capacity the cut is announced instead of ending silently.
         val pieces = if (chunks.truncated) chunks.pieces + SPOKEN_REST_IN_CHAT else chunks.pieces
@@ -9311,6 +9607,18 @@ class AgentActivity : Activity() {
             addToolActivity("CHIEF · " + it)
             cockpitTriggers.commandAcknowledged(chiefTurn.turnId, text)
         }
+        if (botTask == null && codingPlanning == null && documentDraftTurn == null &&
+            activeWorkArea == ContinuumWorkArea.START) {
+            val presentation = at.heinz.deviceai.cognitive.LocalReasoningWorkScenePolicy.decide(
+                task = resolvedQuestion,
+                hasMemories = groundedRecall != null,
+                hasConversationContext = previousLocalReply != null ||
+                    localConversationContext.priorUserTurns(localSessionId).isNotEmpty(),
+                hasGroundedEvidence = groundedRecall != null
+            )
+            scheduleLocalReasoningWorkScene(
+                chiefTurn.turnId, text, presentation.delayMillis, presentation.promptBudget)
+        }
         // Context may resolve pronouns, but owner-write authorization always
         // uses the untouched original user message ('text').
         // Dossier 4.2: a same-session follow-up ("Nun ... statt 4", "ursprünglich")
@@ -9319,13 +9627,17 @@ class AgentActivity : Activity() {
         val followUpFrame = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.composeFrame(
             text, resolvedQuestion, if (botTask == null && codingPlanning == null)
                 localConversationContext.sessionEvidence(localSessionId) else null)
+        // Freeze same-session topic navigation once for this turn. A retry/model pass must not
+        // mutate the situation focus a second time. This carries no facts or tool authority.
+        val situationHint = if (botTask == null && codingPlanning == null)
+            localConversationContext.situationHint(localSessionId, text) else ""
         val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task
         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
         var submittedToolObservationCount = 0
         var modelWebCalls = 0
         val modelWebSessions = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cognitive.ApprovedWebResearchSession>()
-        val startedStorageCalls = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
+        val startedToolCalls = java.util.concurrent.ConcurrentHashMap<String, String>()
         val orchestrator = BoundedAgentOrchestrator(
             model = codingPlanning?.model(localRuntime,cancellation) ?: AgentModel { task, memories, reflection, rawObservations ->
                 cancellation.throwIfCancelled()
@@ -9442,6 +9754,7 @@ class AgentActivity : Activity() {
                         at.heinz.deviceai.cognitive.OwnerStatementTimeline
                             .project(priorOwnerEvidence, text)?.let { append(it.render()) }
                     }
+                    if (situationHint.isNotBlank()) append(situationHint)
                     // Current task and retrieval precede optional compiled/history data.
                     // A long request must never disappear behind the512-char memory lookup.
                     if (compiledContext == null) append("Aktueller Auftrag:\n").append(task).append('\n')
@@ -9474,6 +9787,10 @@ class AgentActivity : Activity() {
                     hasObservations = observations.isNotEmpty(),
                     hasReflection = reflection != null
                 )
+                if (botTask == null && codingPlanning == null) runOnUiThread {
+                    if (sessionId == localSessionId && activeChatCancellation === cancellation)
+                        updateLocalReasoningContext(chiefTurn.turnId, promptCap, memories.size)
+                }
                 val briefInstruction = if (promptCap ==
                     at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS)
                     "\nKurze Einstiegsfrage: Antworte möglichst direkt in höchstens drei kurzen Sätzen. " +
@@ -9536,10 +9853,36 @@ class AgentActivity : Activity() {
                         value.failure ?: "LOCAL_GENERATION_INCOMPLETE"
                     }
                 }
+                val speechShadow = if (
+                    ownerDialogueOutput && observations.isEmpty() && reflection == null &&
+                    submittedToolObservationCount == 0
+                ) at.heinz.deviceai.cognitive.StreamingSpeechShadowTrace() else null
                 var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
                     internetRevisionAtTurnStart, internetConsent::revision) {
                     val taskRemaining = botTask?.reserveModelCall(sessionId)
-                    generateLocal(cancellation,turnTrace,prompt.length, hardDeadlineMillis = taskRemaining) { callback ->
+                    generateLocal(
+                        cancellation,turnTrace,prompt.length,
+                        hardDeadlineMillis = taskRemaining,
+                        streamCandidateObserver = speechShadow?.let { trace ->
+                            { candidate, elapsed -> trace.observe(candidate, elapsed) }
+                        },
+                        runtimeProgressObserver = if (ownerDialogueOutput) {
+                            { chars, chunks, elapsed ->
+                                runOnUiThread {
+                                    if (sessionId == localSessionId && activeChatCancellation === cancellation)
+                                        updateLocalReasoningStream(chiefTurn.turnId, chars, chunks, elapsed)
+                                }
+                            }
+                        } else null,
+                        runtimeCompletedObserver = if (ownerDialogueOutput) {
+                            { metrics ->
+                                runOnUiThread {
+                                    if (sessionId == localSessionId && activeChatCancellation === cancellation)
+                                        updateLocalReasoningCompleted(chiefTurn.turnId, metrics)
+                                }
+                            }
+                        } else null
+                    ) { callback ->
                         at.heinz.deviceai.localmodel.LocalToolContinuation.submit(
                             localRuntime, prompt, forceFresh = hasScreen || (botTask != null && observations.isEmpty()),
                             responses = {
@@ -9549,6 +9892,20 @@ class AgentActivity : Activity() {
                                     ) ?: error("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET")
                                 }
                             }, callback = callback)
+                    }
+                }
+                if (speechShadow != null && generation.proposal == null &&
+                    generation.rejectedToolResponses.isEmpty()) {
+                    val speechSnapshot = speechShadow.snapshot()
+                    if (speechSnapshot.candidateCount > 0) runOnUiThread {
+                        if (sessionId == localSessionId && activeChatCancellation === cancellation) {
+                            addToolActivity(
+                                "SPEECH SHADOW · erster vollständiger Satz nach " +
+                                    speechSnapshot.firstCandidateMillis + " ms · Kandidaten " +
+                                    speechSnapshot.candidateCount + " · Zeichen " +
+                                    speechSnapshot.totalSpeakableChars + " · noch NICHT gesprochen"
+                            )
+                        }
                     }
                 }
                 requireUsableGeneration(generation)
@@ -9601,6 +9958,8 @@ class AgentActivity : Activity() {
                     maxRetries = if (botTask == null) 1 else 0),
             evaluationConfirmsOutcome = false,
             turnTrace = turnTrace,
+            // Historical runs are injected only as UNVERIFIED device-local hints.
+            recallPriorExperiences = botTask == null && codingPlanning == null,
             approvalProvider = AgentToolApprovalProvider { proposal, risk ->
                 cancellation.throwIfCancelled()
                 botTask?.let(::requireBotTaskCurrent)
@@ -9666,7 +10025,7 @@ class AgentActivity : Activity() {
             }),
             onToolStarted = { callId, toolName ->
                 if (botTask == null && codingPlanning == null)
-                    recordStorageToolStarted(startedStorageCalls, callId, toolName)
+                    recordToolStarted(startedToolCalls, callId, toolName)
             }
         )
         activeOrchestrator = orchestrator
@@ -9681,7 +10040,7 @@ class AgentActivity : Activity() {
                 }
             }
             if (botTask == null && codingPlanning == null)
-                settleStorageToolRun(startedStorageCalls, result, localSessionId, cancellation)
+                settleToolRuns(startedToolCalls, result, localSessionId, cancellation)
             fun deliverResult() {
                 if (isFinishing || isDestroyed || activeChatCancellation !== cancellation) return
                 // Cancellation may return before native inference has terminated. The bot
@@ -9699,6 +10058,7 @@ class AgentActivity : Activity() {
                         cancellation, localSessionId, imported).isCurrent(
                         activeChatCancellation, this@AgentActivity.sessionId, localRuntime.loadedModel)
                 cockpitTriggers.turnEnded(chiefTurn.turnId, chiefTurn.deliver())
+                finishLocalReasoningWorkScene(chiefTurn.turnId)
                 activeChatCancellation = null
                 activeOrchestrator = null
                 activeLocalRequest = false
@@ -9756,6 +10116,20 @@ class AgentActivity : Activity() {
                     }
                     val hasPartialResponse = !run.responseComplete && run.response.isNotBlank()
                     val successful = run.responseComplete && run.blocker == null && run.response.isNotBlank()
+                    val answerVerificationShadow = if (
+                        successful && botTask == null && codingPlanning == null &&
+                        !groundedRecall?.stateTelegram.isNullOrBlank()
+                    ) at.heinz.deviceai.cognitive.StateTelegramAnswerShadow.assess(
+                        run.response, groundedRecall?.stateTelegram
+                    ) else null
+                    answerVerificationShadow?.let { assessment ->
+                        addToolActivity(
+                            "VERIFY SHADOW · " + assessment.status.name +
+                                " · claims " + assessment.checkedClaims +
+                                " · contradictions " + assessment.contradictions +
+                                " · conflicts " + assessment.conflicts
+                        )
+                    }
                     publishCognitiveTrace(turnTrace,if(successful)TraceOutcome.MODEL_INTERPRETATION else TraceOutcome.FAILED)
                     if (botTask != null) {
                         val calls = run.taskEvidence?.calls.orEmpty()
@@ -9892,6 +10266,37 @@ class AgentActivity : Activity() {
                 " · Modellaufrufe "+snapshot.modelInvocations+"/"+snapshot.completedModelCalls+
                 " · Zusatzaufrufe "+snapshot.advisoryCalls+" · "+snapshot.elapsedMillis+" ms")
             else addToolActivity("TRACE · Metadaten nicht gespeichert; keine neue Faktenautorität")
+        }
+    }
+
+    /**
+     * Post-mission initiative is evaluated off the UI thread against the same canonical
+     * in-memory Continuum records plus explicitly confirmed owner facts.
+     */
+    private fun evaluateAirbusPostMission(turnId: String) {
+        val orchestrator = airbusCockpitOrchestrator ?: return
+        if (!foregroundLearningActive || localAgentExecutor.isShutdown) return
+        val expectedSession = sessionId
+        try {
+            localAgentExecutor.execute {
+                val records = (memoryStore.all() + ownerFactMemories()).distinctBy { it.id }
+                val quest = orchestrator.evaluatePostMissionInitiative(records, System.currentTimeMillis())
+                    ?: return@execute
+                runOnUiThread {
+                    if (airbusCockpitOrchestrator !== orchestrator ||
+                        sessionId != expectedSession || !foregroundLearningActive ||
+                        isFinishing || isDestroyed
+                    ) return@runOnUiThread
+                    addToolActivity("MISSION $turnId · proaktiver bestätigter Gedächtnisimpuls")
+                    addAssistantMessage(
+                        quest.spokenInitiativeLine,
+                        preserveLocalContext = true,
+                        keepCockpit = activeWorkArea == ContinuumWorkArea.START
+                    )
+                }
+            }
+        } catch (_: java.util.concurrent.RejectedExecutionException) {
+            // Activity is closing; no initiative may outlive it.
         }
     }
 
@@ -10516,6 +10921,9 @@ class AgentActivity : Activity() {
         promptCharacters: Int? = null,
         hardDeadlineMillis: Long? = null,
         maxOutputBytes: Int? = null,
+        streamCandidateObserver: ((at.heinz.deviceai.cognitive.ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit)? = null,
+        runtimeProgressObserver: ((Int, Int, Long) -> Unit)? = null,
+        runtimeCompletedObserver: ((at.heinz.deviceai.localmodel.LocalInferenceMetrics) -> Unit)? = null,
         start: (at.heinz.deviceai.localmodel.LocalInferenceCallback) -> Unit
     ): LocalGeneration {
         require(hardDeadlineMillis == null || hardDeadlineMillis in 1..600_000)
@@ -10525,10 +10933,14 @@ class AgentActivity : Activity() {
         val capture = at.heinz.deviceai.cognitive.LocalGenerationCapture()
         val rejectedResponses = mutableListOf<LocalToolResponse>()
         val proposalGuard = ToolProposalTurnGuard()
+        val speechAssembler = streamCandidateObserver?.let {
+            at.heinz.deviceai.cognitive.ApprovedStreamingSpeechAssembler()
+        }
         val eventLock = Any()
         var cancelNative = false
         val generationStartedNanos = System.nanoTime()
         var lastPreviewNanos = generationStartedNanos
+        var lastRuntimeProgressNanos = generationStartedNanos
         val previewToken = Any()
         fun elapsedMillis() = (System.nanoTime() - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
         fun capturedGeneration(
@@ -10579,8 +10991,21 @@ class AgentActivity : Activity() {
                     when (event) {
                         is LocalInferenceEvent.TextDelta -> {
                             val now = System.nanoTime()
-                            val snapshot = capture.append(event.text,
-                                (now - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L)
+                            val elapsed = (now - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+                            val snapshot = capture.append(event.text, elapsed)
+                            if (event.text.isNotEmpty()) {
+                                speechAssembler?.append(event.text)?.forEach { candidate ->
+                                    runCatching { streamCandidateObserver?.invoke(candidate, elapsed) }
+                                }
+                            }
+                            if (event.text.isNotEmpty() && (snapshot.streamedChunks == 1 ||
+                                    now - lastRuntimeProgressNanos >= TimeUnit.MILLISECONDS.toNanos(100))) {
+                                lastRuntimeProgressNanos = now
+                                runCatching {
+                                    runtimeProgressObserver?.invoke(
+                                        snapshot.response.length, snapshot.streamedChunks, elapsedMillis())
+                                }
+                            }
                             if (event.text.isNotEmpty() && (snapshot.streamedChunks == 1 ||
                                     now - lastPreviewNanos >= TimeUnit.MILLISECONDS.toNanos(1_000))) {
                                 lastPreviewNanos = now
@@ -10615,6 +11040,10 @@ class AgentActivity : Activity() {
                             completed.countDown()
                         }
                         is LocalInferenceEvent.Completed -> {
+                            speechAssembler?.flushFinal()?.let { candidate ->
+                                runCatching { streamCandidateObserver?.invoke(candidate, elapsedMillis()) }
+                            }
+                            runCatching { runtimeCompletedObserver?.invoke(event.metrics) }
                             turnTrace?.event(TraceStage.MODEL_COMPLETED)
                             capture.complete()
                             completed.countDown()
@@ -11738,14 +12167,14 @@ class AgentActivity : Activity() {
         addAssistantMessage(value, preserveLocalContext = keep)
     }
 
-    private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = false) =
+    private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = true) =
         addAssistantMessage(value, preserveLocalContext, keepCockpit = false)
 
     /** [keepCockpit]: the result is already shown in an open cockpit work window – record it without leaving START. */
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean) {
         recordCockpitDialog(false, value)
-        // A non-model answer becomes the latest turn and invalidates any older
-        // local-model prompt context. Successful local model runs set it after rendering.
+        // Rendering a normal assistant reply never owns session invalidation. Callers pass false only
+        // after a semantic policy decided that older dialogue is stale (for example a confirmed memory change).
         lastLocalReply = null
         if (!preserveLocalContext) localConversationContext.clear()
         if (requestStartedAt > 0L) {
@@ -11942,6 +12371,12 @@ class AgentActivity : Activity() {
         toolSceneLease.clear()
         toolScene = null
         toolSceneReturnArea = null
+        localReasoningWorkScene?.let { lease ->
+            lease.phase = WorkscenePhase.COMPLETED
+            lease.pendingShow?.let(mainHandler::removeCallbacks)
+            lease.pendingShow = null
+        }
+        localReasoningWorkScene = null
         currentTaskEffectContext = null
         chiefTaskEffectContexts.clear()
         hologramView?.setTaskEffectScope(null)
@@ -12002,8 +12437,8 @@ class AgentActivity : Activity() {
         speechScopeGeneration++;pendingLocalSpeechRequest=null;pendingLocalSpeechSession=null
         pendingLocalSpeechGeneration=-1L;pendingLocalSpeechDialog=null;activeLocalSpeechRequest=null
         voiceListening=false
-        onDeviceSpeech?.cancel()
-        // Ending the full recognition scope (pause, chat/bot switch) also ends hands-free mode.
+        onDeviceSpeech?.shutdown()
+        // Ending the full recognition scope (pause, chat/bot switch) destroys the warm native recognizer.
         stopConversationState()
     }
 
@@ -12072,7 +12507,7 @@ class AgentActivity : Activity() {
     private fun endContinuousConversation(message: String?) {
         val listening = voiceListening && activeLocalSpeechRequest == SPEECH_REQUEST
         stopConversationState()
-        if (listening) cancelSpeechInputScope()
+        if (listening) cancelSpeechInputScope() else onDeviceSpeech?.shutdown()
         if (message != null && !isFinishing && !isDestroyed)
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
@@ -12330,7 +12765,7 @@ class AgentActivity : Activity() {
                 val uri = data?.data
                 val inCockpit = workWindowHost.isShowing
                 if (resultCode != RESULT_OK || uri == null || save == null) {
-                    addAssistantMessage("Nicht gespeichert – kein Speicherort gewählt.", false, keepCockpit = inCockpit)
+                    addAssistantMessage("Nicht gespeichert – kein Speicherort gewählt.", true, keepCockpit = inCockpit)
                 } else documentIoExecutor.execute {
                     val text = save.text
                     val written = runCatching {
@@ -12349,7 +12784,7 @@ class AgentActivity : Activity() {
                         }
                         addAssistantMessage(written.fold({ "Entwurf gespeichert (${text.length} Zeichen)." }) {
                             "Entwurf nicht gespeichert (${it.message ?: it.javaClass.simpleName})."
-                        }, false, keepCockpit = workWindowHost.isShowing)
+                        }, true, keepCockpit = workWindowHost.isShowing)
                     }
                 }
             }

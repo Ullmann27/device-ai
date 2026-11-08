@@ -69,16 +69,16 @@ class ContinuumWorkWindowScrollUiTest {
     }
 
     private fun touch(root: View, target: View) {
-        target.requestRectangleOnScreen(Rect(0, 0, target.width, target.height), true)
+        JarvisHomeTestRoutes.scrollIntoView(target)
         advance(32L)
         measure(root)
-        val bounds = Rect()
-        assertTrue("Actual tile is visible", target.getGlobalVisibleRect(bounds))
-        assertEquals(target.width, bounds.width())
-        assertEquals(target.height, bounds.height())
+        JarvisHomeTestRoutes.scrollIntoView(target)
+        val bounds = JarvisHomeTestRoutes.visibleBounds(target)
+        val position = IntArray(2).also(root::getLocationOnScreen)
         val now = SystemClock.uptimeMillis()
         for ((action, time) in listOf(MotionEvent.ACTION_DOWN to now, MotionEvent.ACTION_UP to now + 16L)) {
-            val event = MotionEvent.obtain(now, time, action, bounds.exactCenterX(), bounds.exactCenterY(), 0)
+            val event = MotionEvent.obtain(now, time, action,
+                bounds.exactCenterX() - position[0], bounds.exactCenterY() - position[1], 0)
             try { assertTrue(root.dispatchTouchEvent(event)) } finally { event.recycle() }
         }
     }
@@ -114,7 +114,7 @@ class ContinuumWorkWindowScrollUiTest {
             assertTrue(home.jarvisShellStage)
             assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
             val beforeDialog = ShadowAlertDialog.getLatestAlertDialog()
-            touch(root, shown(root, "jarvis-tile:system"))
+            touch(root, JarvisHomeTestRoutes.destination(root, "system"))
             advance(80L); measure(root)
             val work = shown(root, "jarvis-work-window")
             assertSame(beforeDialog, ShadowAlertDialog.getLatestAlertDialog())

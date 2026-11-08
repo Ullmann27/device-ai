@@ -9,10 +9,13 @@ import org.json.JSONObject
  * This file describes an update; the actual APK bytes, package/version and
  * original Android signing certificate must be verified independently.
  */
+internal enum class ContinuumOwnerUpdateSource { RENDER, GITHUB_RELEASE }
+
 internal data class ContinuumOwnerUpdateRelease(
     val descriptor: ContinuumOwnerReleaseDescriptor,
     val versionName: String,
-    val notes: String
+    val notes: String,
+    val source: ContinuumOwnerUpdateSource = ContinuumOwnerUpdateSource.RENDER
 )
 
 internal object ContinuumOwnerUpdateCatalog {

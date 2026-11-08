@@ -10,7 +10,8 @@ class JarvisDeckClearanceTest {
     @Test fun onlyTilesAndLowerRowsMakeRoom() {
         assertTrue(JarvisDeckClearance.clears(null))
         for (row in listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL)) assertTrue(JarvisDeckClearance.clears(row))
-        for (stay in listOf(Slot.DIALOG, Slot.AVATAR, Slot.NAV_RAIL, Slot.STATUS, Slot.TOP_BAR, Slot.COCKPIT_SECONDARY))
+        assertTrue(JarvisDeckClearance.clears(Slot.COCKPIT_SECONDARY))
+        for (stay in listOf(Slot.DIALOG, Slot.AVATAR, Slot.NAV_RAIL, Slot.STATUS, Slot.TOP_BAR))
             assertFalse(stay.name, JarvisDeckClearance.clears(stay))
     }
 
@@ -28,6 +29,17 @@ class JarvisDeckClearanceTest {
         }
         assertEquals(JarvisDeckClearance.TRAVEL_DP, JarvisDeckClearance.dy(1f), 0f)
         assertEquals(1f, JarvisDeckClearance.scale(0f), 0f)
+    }
+
+    @Test fun mediumAndFullFootprintsUseSeparateClearanceTracks() {
+        assertEquals(1f, JarvisDeckClearance.clearance(null, 1f, 0f), 0f)
+        assertEquals(1f, JarvisDeckClearance.clearance(Slot.COCKPIT_SECONDARY, 1f, 0f), 0f)
+        assertEquals(0f, JarvisDeckClearance.clearance(Slot.ROW_AGENTS, 1f, 0f), 0f)
+        assertEquals(1f, JarvisDeckClearance.clearance(Slot.ROW_AGENTS, 1f, 1f), 0f)
+        assertEquals(0f, JarvisDeckClearance.clearance(Slot.DIALOG, 1f, 1f), 0f)
+        var partial = 0f
+        repeat(2) { partial = JarvisDeckClearance.step(partial, .5f, 90L, motion = true) }
+        assertEquals(.5f, partial, 0f)
     }
 
     @Test fun progressFollowsTheFrameClockAndReducedMotionSnaps() {

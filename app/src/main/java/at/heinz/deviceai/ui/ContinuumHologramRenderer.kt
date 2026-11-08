@@ -304,14 +304,16 @@ class ContinuumHologramRenderer {
 
     private fun drawFloor(p: ContinuumPainter, f: Frame) {
         val y = floorY
+        val reference = geometry == Geometry.REFERENCE_COCKPIT
         for (i in 0..3) {
             val rx = r * (1.72f + i * .2f); val ry = r * (.25f + i * .045f) * geometry.flat
             val color = if (i % 2 == 0) Argb.rgb(60, 180, 255) else Argb.rgb(140, 110, 255)
-            p.strokeOval(cx - rx, y - ry, cx + rx, y + ry, .7f * scale, floorFills[i], .5f - i * .1f)
+            p.strokeOval(cx - rx, y - ry, cx + rx, y + ry, .7f * scale, floorFills[i],
+                if (reference) .22f - i * .045f else .5f - i * .1f)
         }
         val rx = r * 1.72f; val ry = r * .25f * geometry.flat
         p.strokeArc(cx - rx, y - ry, cx + rx, y + ry, 15f + f.phase * 12f, 60f, 1.1f * scale,
-            Fill.Solid(Argb.rgb(150, 230, 255)), .55f)
+            Fill.Solid(Argb.rgb(150, 230, 255)), if (reference) .24f else .55f)
     }
 
     private fun drawPedestal(p: ContinuumPainter, f: Frame) {

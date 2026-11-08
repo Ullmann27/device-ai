@@ -21,4 +21,11 @@ internal object CockpitConversationPresentation {
         pinHomeCockpit: Boolean,
         homeSelected: Boolean
     ): Boolean = handsFreeActive && pinHomeCockpit && homeSelected
+
+    /**
+     * Reparenting a live hologram detaches its TextureView. Keep the native surface mounted
+     * while hands-free owns the cockpit or native 3D is enabled.
+     */
+    fun mayReparentHologram(handsFreeActive: Boolean, native3dEnabled: Boolean): Boolean =
+        !handsFreeActive && !native3dEnabled
 }

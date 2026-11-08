@@ -48,10 +48,11 @@ object JarvisShellLayout {
         val headCloseUp: Float get() = if (headStage != null) JarvisCockpitGrid.HEAD_CLOSE_UP else 1f
         /** Compatibility name: now the latest owner reference, not the superseded eight-tile ref5. */
         val ref5Grid: Boolean get() = grid != null
+        val hasFeatureTiles: Boolean get() = Slot.TILES in boxes
         val requiresVerticalScroll: Boolean get() = height > viewportHeight + .5f
         operator fun get(slot: Slot) = boxes[slot]
 
-        /** Exactly ten independently reachable tiles, including an incomplete last row when reflowed. */
+        /** Home destinations across window sizes. */
         fun tileBoxes(gap: Float = tileGap): List<Box> {
             val t = boxes[Slot.TILES] ?: return emptyList()
             if (tileColumns <= 0 || tileRows <= 0) return emptyList()
@@ -65,20 +66,26 @@ object JarvisShellLayout {
             }
         }
 
-        /** The camera, microphone and appearance controls share these bounds with their native hit targets. */
+        /** Shared drawing and touch bounds. */
         fun dialogControlBoxes(): List<Box> {
-            val b = boxes[Slot.DIALOG] ?: return emptyList()
-            val size = minOf(48f, b.width / 3f - 2f)
-            val y = b.bottom - size - 3f
-            if (b.width * .24f >= size + 2f) return listOf(.26f, .50f, .74f).map { fraction ->
-                val cx = b.left + b.width * fraction
-                Box(cx - size / 2f, y, cx + size / 2f, y + size)
+            boxes[Slot.INPUT]?.let { input ->
+                val y = input.centerY - 24f
+                return listOf(input.left + 4f, input.right - 52f)
+                    .map { x -> Box(x, y, x + 48f, y + 48f) }
             }
-            val gap = (b.width - 3f * size) / 4f
-            return List(3) { i ->
+            val b = boxes[Slot.DIALOG] ?: return emptyList()
+            val size = minOf(48f, b.width / 2f - 2f)
+            val y = b.bottom - size - 3f
+            val gap = (b.width - 2f * size) / 3f
+            return List(2) { i ->
                 val left = b.left + gap + i * (size + gap)
                 Box(left, y, left + size, y + size)
             }
+        }
+
+        /** Excludes microphone and send. */
+        fun inputConversationBox(): Box? = boxes[Slot.INPUT]?.let {
+            Box(it.left + 56f, it.top, it.right - 56f, it.bottom)
         }
 
         /** Only meaningful Android actions. Optional menu is omitted when three safe targets do not fit. */
@@ -103,170 +110,142 @@ object JarvisShellLayout {
         else -> FormFactor.TABLET_LANDSCAPE
     }
 
-    /**
-     * The Activity can retain its rail / bottom bar on non-dashboard panes. Subtract these reservations exactly
-     * once. Dashboard callers normally pass zero rail because the full-width home owns its reference rail.
-     */
+    /** Width is the available pane. */
     fun forContent(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,
                    externalRailWidthDp: Float = 0f, externalBottomBarHeightDp: Float = 0f,
                    includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false): Shell {
         require(externalRailWidthDp.isFinite() && externalRailWidthDp >= 0f)
         require(externalBottomBarHeightDp.isFinite() && externalBottomBarHeightDp >= 0f && externalBottomBarHeightDp < heightDp)
         val viewport = heightDp - externalBottomBarHeightDp
-        val full = create(widthDp + externalRailWidthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation)
-        if (externalRailWidthDp == 0f) return full
-        fun shift(box: Box): Box = Box(maxOf(0f, box.left - externalRailWidthDp), box.top,
-            maxOf(0f, box.right - externalRailWidthDp), box.bottom)
-        val boxes = full.boxes.filterKeys { it != Slot.NAV_RAIL }.mapValues { shift(it.value) }
-            .filterValues { it.width > 0f }
-        val grid = full.grid?.let { original ->
-            val areas = original.areas.filterKeys { it != Area.RAIL && it != Area.DEVICE_STATUS }
-                .mapValues { shift(it.value) }.filterValues { it.width > 0f }
-            original.copy(width = widthDp, areas = areas)
-        }
-        return full.copy(width = widthDp, boxes = boxes, grid = grid,
-            headBounds = full.headBounds?.let(::shift), orbBounds = full.orbBounds?.let(::shift),
-            headStage = full.headStage?.let(::shift))
+        return create(widthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation)
     }
 
     fun create(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,
                includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false): Shell {
         require(widthDp.isFinite() && widthDp >= 240f && heightDp.isFinite() && heightDp >= 160f)
         val profile = JarvisWindowProfile.resolve(widthDp, heightDp, fontScale, foldRail)
-        return if (profile.referenceComposition) reference(widthDp, heightDp, profile, foldRail).let {
+        return if (profile.referenceComposition) reference(widthDp, heightDp, profile).let {
             if (compactPresentation) compactReference(it) else it
-        } else reflow(widthDp, heightDp, profile, foldRail, includeBottomNavigation, compactPresentation)
+        } else reflow(widthDp, heightDp, profile, includeBottomNavigation, compactPresentation)
     }
 
     private fun compactReference(shell: Shell): Shell {
-        val avatar = shell.boxes.getValue(Slot.AVATAR)
-        val dialog = shell.boxes.getValue(Slot.DIALOG)
-        val gap = shell.tileGap
-        val delta = minOf(avatar.height - 112f,
-            dialog.top - shell.boxes.getValue(Slot.TOP_BAR).bottom - gap,
-            shell.boxes.getValue(Slot.TILES).top - shell.boxes.getValue(Slot.COCKPIT_SECONDARY).bottom - gap)
-            .coerceAtLeast(0f)
-        if (delta == 0f) return shell
-        fun raised(box: Box) = box.copy(top = box.top - delta, bottom = box.bottom - delta)
-        val raisedSlots = setOf(Slot.DIALOG, Slot.TILES, Slot.ROW_AGENTS, Slot.ROW_TASKS,
-            Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS)
-        val boxes = shell.boxes.mapValues { (slot, box) -> when {
-            slot in raisedSlots -> raised(box)
-            slot == Slot.AVATAR || slot == Slot.NAV_RAIL -> box.copy(bottom = box.bottom - delta)
-            else -> box
-        } }
-        val raisedAreas = setOf(Area.DIALOG, Area.TILES, Area.ROW_AGENTS, Area.ROW_TASKS,
-            Area.ROW_MEMORY, Area.ROW_MODEL, Area.STATUS)
-        val grid = shell.grid?.let { original -> original.copy(height = original.height - delta,
-            areas = original.areas.mapValues { (area, box) -> when {
-                area in raisedAreas -> raised(box)
-                area == Area.HEAD || area == Area.ORB || area == Area.RAIL -> box.copy(bottom = box.bottom - delta)
-                else -> box
-            } }) }
-        return shell.copy(height = shell.height - delta, boxes = boxes, grid = grid,
-            headBounds = shell.headBounds?.let { it.copy(bottom = it.bottom - delta) },
-            orbBounds = shell.orbBounds?.let { it.copy(bottom = it.bottom - delta) },
-            headStage = shell.headStage?.let { it.copy(bottom = it.bottom - delta) })
+        return reflow(shell.width, shell.viewportHeight, shell.profile, false, true)
     }
 
-    private fun reference(w: Float, h: Float, profile: JarvisWindowProfile, rail: Rail): Shell {
+    private fun reference(w: Float, h: Float, profile: JarvisWindowProfile): Shell {
         val gr = JarvisCockpitGrid.create(w, h, profile.fontScale)
         val head = gr[Area.HEAD]
         val orb = gr[Area.ORB]
-        val stage = Box(gr[Area.DIALOG].left, head.top, head.right, head.bottom)
+        val stage = head
         val b = linkedMapOf(
-            Slot.TOP_BAR to gr[Area.HEADER], Slot.NAV_RAIL to gr[Area.RAIL],
+            Slot.TOP_BAR to gr[Area.HEADER],
             Slot.AVATAR to Box(stage.left, minOf(head.top, orb.top), orb.right, maxOf(head.bottom, orb.bottom)),
-            Slot.DIALOG to gr[Area.DIALOG], Slot.CONTINUUM_HEADER to gr[Area.CONTINUUM_HEADER],
+            Slot.DIALOG to gr[Area.DIALOG], Slot.INPUT to gr[Area.INPUT], Slot.TILES to gr[Area.TILES],
+            Slot.CONTINUUM_HEADER to gr[Area.CONTINUUM_HEADER],
             Slot.CAMERA_STATUS to gr[Area.CAMERA_STATUS], Slot.COCKPIT_SECONDARY to gr[Area.MODULES],
-            Slot.TILES to gr[Area.TILES], Slot.ROW_AGENTS to gr[Area.ROW_AGENTS],
+            Slot.ROW_AGENTS to gr[Area.ROW_AGENTS],
             Slot.ROW_TASKS to gr[Area.ROW_TASKS], Slot.ROW_MEMORY to gr[Area.ROW_MEMORY],
             Slot.ROW_MODEL to gr[Area.ROW_MODEL], Slot.STATUS to gr[Area.STATUS]
         )
-        return Shell(formFactor(w, h), w, h, b, 5, 2, rail,
-            setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER,
-                Slot.AVATAR to Slot.TOP_BAR, Slot.AVATAR to Slot.CAMERA_STATUS,
-                Slot.TOP_BAR to Slot.CONTINUUM_HEADER, Slot.TOP_BAR to Slot.CAMERA_STATUS),
-            gr, h, profile, 12f * gr.unit, head, orb, headStage = stage)
+        return Shell(formFactor(w, h), w, gr.height, b, JarvisCockpitGrid.TILE_COLUMNS, JarvisCockpitGrid.TILE_ROWS, null,
+            setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER),
+            gr, h, profile, JarvisCockpitGrid.TILE_GAP_DP, head, orb, headStage = stage)
     }
 
-    /** Readable vertical composition; there is no aspect-ratio container and nothing is squeezed to fit height. */
-    private fun reflow(w: Float, viewport: Float, p: JarvisWindowProfile, rail: Rail,
+    /** Reflow preserves readable labels. */
+    private fun reflow(w: Float, viewport: Float, p: JarvisWindowProfile,
                        includeBottomNavigation: Boolean, compactPresentation: Boolean): Shell {
         val b = linkedMapOf<Slot, Box>()
         val gap = 10f
         val margin = 12f
         val font = maxOf(1f, p.fontScale)
         val compact = p.widthClass == WidthClass.COMPACT
-        val left = if (compact) margin else p.railWidthDp + gap
+        val left = margin
         val right = w - margin
         val room = right - left
-        val top = 64f * font
-        b[Slot.TOP_BAR] = Box(margin, 4f, right, top)
+        val top = if (compact) 64f * font else 8f + (w * .1065f).coerceIn(64f, 96f) * font
+        b[Slot.TOP_BAR] = Box(margin, if (compact) 4f else 8f, right, top)
         var y = top + gap
         val head: Box
         val orb: Box
         if (compactPresentation) {
+            b[Slot.CONTINUUM_HEADER] = Box(left, y, right, y + 70f * font)
+            y += 70f * font + gap
             orb = Box(left, y, right, y + 112f)
             head = orb
             y = orb.bottom + gap
-            b[Slot.DIALOG] = Box(left, y, right, y + 128f * font)
-            y = b.getValue(Slot.DIALOG).bottom + gap
-            b[Slot.CONTINUUM_HEADER] = Box(left, y, right, y + 70f * font)
-            y += 70f * font + gap
-        } else if (compact) {
-            val minimumHero = maxOf(220f, 74f * font + 112f)
-            val heroH = minOf(320f, maxOf(minimumHero,
-                viewport - y - 128f * font - gap - 178f))
-            val split = left + room * .55f
-            head = Box(left, y, split - gap / 2f, y + heroH)
-            b[Slot.CONTINUUM_HEADER] = Box(split + gap / 2f, y, right, y + 74f * font)
-            orb = Box(split + gap / 2f, y + 74f * font, right, y + heroH)
-            y += heroH + gap
-            b[Slot.DIALOG] = Box(left, y, right, y + 128f * font)
-            y = b.getValue(Slot.DIALOG).bottom + gap
         } else {
-            val heroH = maxOf(280f, minOf(room * .54f, 400f))
-            val split = left + room * .55f
+            val minimumHero = maxOf(220f, 74f * font + 112f)
+            val heroH = if (compact) minOf(320f, maxOf(minimumHero,
+                viewport - y - 56f * font - gap - 178f))
+                else (room * JarvisCockpitGrid.HERO_HEIGHT_RATIO).coerceAtMost(JarvisCockpitGrid.MAX_HERO_DP)
+            val split = left + room * if (compact) .55f else .54f
             head = Box(left, y, split - gap / 2f, y + heroH)
             b[Slot.CONTINUUM_HEADER] = Box(split + gap / 2f, y, right, y + 74f * font)
             orb = Box(split + gap / 2f, y + 74f * font, right, y + heroH)
             y += heroH + gap
-            b[Slot.DIALOG] = Box(left, y, right, y + 128f * font)
-            y += 128f * font + gap
         }
-        // One existing surface spans both bounds. The renderers only draw inside their respective local regions.
         b[Slot.AVATAR] = Box(left, head.top, right, orb.bottom)
-        b[Slot.INPUT] = Box(left, y, right, y + 52f * font)
-        y += 52f * font + gap
-        val rows = (10 + p.tileColumns - 1) / p.tileColumns
-        val tileH = maxOf(64f * font, 48f)
-        b[Slot.TILES] = Box(left, y, right, y + rows * tileH + (rows - 1) * gap)
-        y = b.getValue(Slot.TILES).bottom + gap
-        val infos = listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL)
-        val infoH = 148f * font
-        val infoW = (room - (p.informationColumns - 1) * gap) / p.informationColumns
-        infos.forEachIndexed { i, slot ->
-            val x = left + (i % p.informationColumns) * (infoW + gap)
-            val t = y + (i / p.informationColumns) * (infoH + gap)
-            b[slot] = Box(x, t, x + infoW, t + infoH)
+        val overlayBadge = !compact && !compactPresentation
+        if (overlayBadge) {
+            val badgeWidth = minOf(224f * font, head.width - 12f)
+            b[Slot.DIALOG] = Box(left + 6f, head.bottom - 56f * font - 6f,
+                left + 6f + badgeWidth, head.bottom - 6f)
+        } else {
+            b[Slot.DIALOG] = Box(left, y, right, y + 56f * font)
+            y += 56f * font + gap
         }
-        y += ((infos.size + p.informationColumns - 1) / p.informationColumns) * (infoH + gap)
+        val inputHeight = if (compact) 56f * font else (room * .10f).coerceIn(56f, 88f) * font
+        b[Slot.INPUT] = Box(left, y, right, y + inputHeight)
+        y += inputHeight + gap
+        val rows = (10 + p.tileColumns - 1) / p.tileColumns
         val statusH = if (compact) 90f * font else 56f * font
-        val navH = if (compact && includeBottomNavigation) 68f * font else 0f
-        y = maxOf(y, viewport - statusH - navH - margin - if (navH > 0f) gap else 0f)
+        val tileGap = JarvisCockpitGrid.TILE_GAP_DP
+        val tileWidth = (room - (p.tileColumns - 1) * tileGap) / p.tileColumns
+        val tileH = maxOf(JarvisCockpitGrid.MIN_TILE_DP * font, tileWidth / JarvisCockpitGrid.TILE_ASPECT)
+        b[Slot.TILES] = Box(left, y, right, y + rows * tileH + (rows - 1) * tileGap)
+        y = b.getValue(Slot.TILES).bottom + gap
         b[Slot.STATUS] = Box(margin, y, right, y + statusH)
-        y += statusH + margin
-        if (navH > 0f) {
+        y += statusH + 24f
+
+        val infoW = (room - (p.informationColumns - 1) * gap) / p.informationColumns
+        fun informationRow(slots: List<Slot>, cardHeight: Float) {
+            slots.forEachIndexed { i, slot ->
+                val x = left + (i % p.informationColumns) * (infoW + gap)
+                val t = y + (i / p.informationColumns) * (cardHeight + gap)
+                b[slot] = Box(x, t, x + infoW, t + cardHeight)
+            }
+            y += ((slots.size + p.informationColumns - 1) / p.informationColumns) * (cardHeight + gap)
+        }
+        if (compact) {
+            informationRow(listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL), 164f * font)
+        } else {
+            informationRow(listOf(Slot.ROW_MEMORY, Slot.ROW_MODEL), 190f * font)
+            informationRow(listOf(Slot.ROW_AGENTS, Slot.ROW_TASKS), 132f * font)
+        }
+        if (compact || p.informationColumns == 1) {
+            b[Slot.CAMERA_STATUS] = Box(left, y, right, y + 56f * font)
+            y += 56f * font + gap
+            b[Slot.COCKPIT_SECONDARY] = Box(left, y, right, y + 164f * font)
+            y += 164f * font + margin
+        } else {
+            val detailWidth = (room - gap) / 2f
+            b[Slot.CAMERA_STATUS] = Box(left, y, left + detailWidth, y + 56f * font)
+            b[Slot.COCKPIT_SECONDARY] = Box(left + detailWidth + gap, y, right, y + 164f * font)
+            y += 164f * font + margin
+        }
+        if (compact && includeBottomNavigation) {
+            val navH = 68f * font
             b[Slot.BOTTOM_NAV] = Box(0f, y, w, y + navH)
             y += navH
         }
-        if (!compact) b[Slot.NAV_RAIL] = Box(margin, top + gap, p.railWidthDp, b.getValue(Slot.STATUS).top - gap)
+        val overlays = buildSet {
+            add(Slot.AVATAR to Slot.CONTINUUM_HEADER)
+            if (overlayBadge) add(Slot.AVATAR to Slot.DIALOG)
+        }
         return Shell(formFactor(w, viewport), w, maxOf(viewport, y), b, p.tileColumns, rows,
-            if (compact) null else rail,
-            if (compact) setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER)
-                else setOf(Slot.AVATAR to Slot.CONTINUUM_HEADER),
-            viewportHeight = viewport, profile = p, tileGap = gap,
+            null, overlays, viewportHeight = viewport, profile = p, tileGap = tileGap,
             headBounds = if (compactPresentation) null else head, orbBounds = orb)
     }
 }

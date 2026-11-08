@@ -1,0 +1,28 @@
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType(Test).configureEach {
+            filter {
+                includeTestsMatching 'at.heinz.deviceai.ui.Jarvis*'
+                includeTestsMatching 'at.heinz.deviceai.ui.LocalModelStatusPresentationTest'
+                includeTestsMatching 'at.heinz.deviceai.avatar3d.AvatarFramingTest'
+                includeTestsMatching 'at.heinz.deviceai.JarvisReferenceHitTargetsUiTest'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.foldLandscapeHasRealDestinationsAndReadableLargeType'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumReferenceCockpitUiTest.shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumDocumentSceneUiTest.theDocumentArrivesAsItsOwnPageOnTheTrailAndJarvisLooksAtIt'
+                includeTestsMatching 'at.heinz.deviceai.FullStageMemoryReviewUiTest.actualWindowCloseAndSystemTapRemainUsableAboveTheScene'
+                includeTestsMatching 'at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult'
+                includeTestsMatching 'at.heinz.deviceai.OwnerAppPlanningContextUiTest.planningPromptContainsCurrentRequestOnceAndOnlyEarlierTurnsAsHistory'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumWorkWindowScrollUiTest'
+                includeTestsMatching 'at.heinz.deviceai.ContinuumVisualEvidenceUiTest.fold7Inner'
+                includeTestsMatching 'at.heinz.deviceai.ui.CockpitCinematicCueUiTest'
+                includeTestsMatching 'at.heinz.deviceai.ui.FullStageMemorySceneUiTest'
+                includeTestsMatching 'at.heinz.deviceai.JarvisDeterministicCaptureUiTest.ownerFoldAspect'
+                includeTestsMatching 'at.heinz.deviceai.JarvisDeterministicCaptureUiTest.referenceTallAspect'
+                includeTestsMatching 'at.heinz.deviceai.JarvisDeterministicCaptureUiTest.compact412'
+                includeTestsMatching 'at.heinz.deviceai.JarvisDeterministicCaptureUiTest.mediumFont200'
+            }
+        }
+    }
+}

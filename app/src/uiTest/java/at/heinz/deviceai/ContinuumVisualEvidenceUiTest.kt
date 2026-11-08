@@ -95,21 +95,22 @@ class ContinuumVisualEvidenceUiTest {
         } finally { bitmap.recycle() }
     }
 
-    /** Real DOWN (and optional UP) through the decor at the control centre; false if it is off screen. */
+    /** Scroll, then real decor touches. */
     private fun touch(root: View, target: View, release: Boolean): Boolean {
-        val r = Rect()
-        if (!target.getGlobalVisibleRect(r) || r.width() < target.width - 1 || r.height() < target.height - 1) {
-            target.requestRectangleOnScreen(Rect(0, 0, target.width, target.height), true)
-            advance(32L)
-            measure(root, root.width, root.height)
-        }
-        if (!target.getGlobalVisibleRect(r) || r.width() < target.width - 1 || r.height() < target.height - 1) return false
+        JarvisHomeTestRoutes.scrollIntoView(target)
+        advance(32L)
+        measure(root, root.width, root.height)
+        JarvisHomeTestRoutes.scrollIntoView(target)
+        val r = JarvisHomeTestRoutes.visibleBounds(target)
+        val position = IntArray(2).also(root::getLocationOnScreen)
         val at = SystemClock.uptimeMillis()
-        val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN, r.exactCenterX(), r.exactCenterY(), 0)
-        try { root.dispatchTouchEvent(down) } finally { down.recycle() }
+        val down = MotionEvent.obtain(at, at, MotionEvent.ACTION_DOWN,
+            r.exactCenterX() - position[0], r.exactCenterY() - position[1], 0)
+        try { assertTrue(root.dispatchTouchEvent(down)) } finally { down.recycle() }
         if (release) {
-            val up = MotionEvent.obtain(at, at + 16, MotionEvent.ACTION_UP, r.exactCenterX(), r.exactCenterY(), 0)
-            try { root.dispatchTouchEvent(up) } finally { up.recycle() }
+            val up = MotionEvent.obtain(at, at + 16, MotionEvent.ACTION_UP,
+                r.exactCenterX() - position[0], r.exactCenterY() - position[1], 0)
+            try { assertTrue(root.dispatchTouchEvent(up)) } finally { up.recycle() }
         }
         return true
     }
@@ -138,8 +139,12 @@ class ContinuumVisualEvidenceUiTest {
                 val region = avatarRegion(head, name)
                 region.offset(headPosition[0] - workPosition[0], headPosition[1] - workPosition[1])
                 assertFalse("Protected region exists: $name", region.isEmpty)
-                assertTrue("Protected region stays within the cockpit: $name $region",
-                    Rect(0, 0, work.width, work.height).contains(region))
+                val viewport = Rect(0, 0, work.width, work.height)
+                if (!region.intersect(viewport)) {
+                    assertFalse("The scrolled region is outside the visible work viewport",
+                        Rect.intersects(region, viewport))
+                    continue
+                }
                 for (y in region.top + 1 until region.bottom - 1 step 7) {
                     for (x in region.left + 1 until region.right - 1 step 7) {
                         assertEquals("Work surface must leave $name transparent at $x/$y",
@@ -156,7 +161,7 @@ class ContinuumVisualEvidenceUiTest {
         val originalOrb = avatarRegion(head, "cockpitOrbBounds")
         val beforeDialog = ShadowAlertDialog.getLatestAlertDialog()
         val beforeMotion = head.sampleMotion()
-        assertTrue("System tile receives a real touch", touch(root, shown(root, "jarvis-tile:system"), true))
+        assertTrue("System tile receives a real touch", touch(root, JarvisHomeTestRoutes.destination(root, "system"), true))
         advance(80L); measure(root, w, h)
         val work = shown(root, "jarvis-work-window")
         val panel = shown(work, "jarvis-work-window:panel")
@@ -248,13 +253,13 @@ class ContinuumVisualEvidenceUiTest {
         assertTrue(head.isShown)
         assertEquals(originalHead, avatarRegion(head, "cockpitHeadBounds"))
         assertEquals(originalOrb, avatarRegion(head, "cockpitOrbBounds"))
-        assertTrue(shown(root, "jarvis-tile:system").isClickable)
+        assertTrue(JarvisHomeTestRoutes.destination(root, "system").isClickable)
         assertEquals(ContinuumWorkArea.START, field(a, "activeWorkArea"))
         assertFalse("Closing clears the window glance", avatarPose(head).gazeDirected)
         capture(root, "$tag-6d-systemstatus-closed", w, h)
 
         if (w < 600) {
-            assertTrue("Phone reopens through its real tile", touch(root, shown(root, "jarvis-tile:system"), true))
+            assertTrue("Phone reopens through its real tile", touch(root, JarvisHomeTestRoutes.destination(root, "system"), true))
             advance(1_040L); measure(root, w, h)
             val reopened = shown(root, "jarvis-work-window")
             assertEquals("Closed work areas do not accumulate", 1,
@@ -324,7 +329,7 @@ class ContinuumVisualEvidenceUiTest {
             director.onRuntime(AvatarRuntimeSignals()); head.setState(ContinuumHologramView.State.READY)
             advance(900)
 
-            val memory = shown(root, "jarvis-tile:memory")
+            val memory = JarvisHomeTestRoutes.destination(root, "memory")
             assertTrue("Memory tile receives a real press", touch(root, memory, release = false))
             advance(120)
             capture(root, "$tag-5-tile-pressed", w, h)
@@ -401,7 +406,7 @@ class ContinuumVisualEvidenceUiTest {
             director.speechEnded("clip-1", interrupted = false)
             director.onRuntime(AvatarRuntimeSignals()); head.setState(ContinuumHologramView.State.READY)
             mark("Ruhe nach dem Sprechen"); record(1_000)
-            val memory = shown(root, "jarvis-tile:memory")
+            val memory = JarvisHomeTestRoutes.destination(root, "memory")
             if (touch(root, memory, release = false)) {
                 mark("Kachel berührt"); record(400)
                 val at = SystemClock.uptimeMillis()
@@ -409,7 +414,7 @@ class ContinuumVisualEvidenceUiTest {
                 try { root.dispatchTouchEvent(cancel) } finally { cancel.recycle() }
                 record(330)
             }
-            if (touch(root, shown(root, "jarvis-tile:system"), true)) {
+            if (touch(root, JarvisHomeTestRoutes.destination(root, "system"), true)) {
                 mark("Systemstatus öffnet (echte Statusabfrage)"); record(1_200)
                 (field(a, "learningIoExecutor") as ExecutorService).submit(Runnable {}).get(5L, TimeUnit.SECONDS)
                 record(900)

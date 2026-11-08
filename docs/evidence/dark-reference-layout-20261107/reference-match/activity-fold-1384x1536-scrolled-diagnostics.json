@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "fidelity": "android_activity_host_native_canvas_api28_explicit_2d_head",
+  "source_commit": "60ec75e3fc468b6cf96237a338f3f6388e6bcaf0",
+  "capture_state": "scrolled_diagnostics",
+  "pixel_width": 1384,
+  "pixel_height": 1536,
+  "viewport_width_dp": 692,
+  "viewport_height_dp": 768,
+  "density": 2,
+  "font_scale": 1,
+  "has_feature_tiles": true,
+  "live_panel_expanded": false,
+  "animation_duration_scale": 0,
+  "head_mode": "existing_2d_renderer_explicitly_selected",
+  "native_filament_verified": false,
+  "physical_device_verified": false,
+  "data_policy": "isolated empty test storage; real application startup; no invented status data",
+  "bounds_coordinate_space": "each View relative to its real parent; no synthetic composition",
+  "home_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 1384,
+    "bottom": 3253
+  },
+  "avatar_bounds": {
+    "left": 24,
+    "top": 187,
+    "right": 1360,
+    "bottom": 1149
+  },
+  "shell_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 1384,
+    "bottom": 3253
+  },
+  "scroll_viewport_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 1384,
+    "bottom": 1536
+  },
+  "scroll_x_px": 0,
+  "scroll_y_px": 1800,
+  "scroll_y_dp": 900,
+  "scroll_content_height_px": 3336,
+  "slot_bounds_coordinate_space": "actual shell-local dp",
+  "slot_bounds_dp": {
+    "TILES": {
+      "left": 12,
+      "top": 665.4580078125,
+      "right": 680,
+      "bottom": 1012.5931396484375
+    },
+    "STATUS": {
+      "left": 12,
+      "top": 1024.5931396484375,
+      "right": 680,
+      "bottom": 1080.5931396484375
+    },
+    "ROW_AGENTS": {
+      "left": 12,
+      "top": 1306.5931396484375,
+      "right": 340,
+      "bottom": 1438.5931396484375
+    },
+    "ROW_TASKS": {
+      "left": 352,
+      "top": 1306.5931396484375,
+      "right": 680,
+      "bottom": 1438.5931396484375
+    },
+    "ROW_MEMORY": {
+      "left": 12,
+      "top": 1104.5931396484375,
+      "right": 340,
+      "bottom": 1294.5931396484375
+    },
+    "ROW_MODEL": {
+      "left": 352,
+      "top": 1104.5931396484375,
+      "right": 680,
+      "bottom": 1294.5931396484375
+    }
+  },
+  "png_sha256": "cf51de07630dd7338877888a79102162c7b2480ea91e82c03a274c2333685410"
+}

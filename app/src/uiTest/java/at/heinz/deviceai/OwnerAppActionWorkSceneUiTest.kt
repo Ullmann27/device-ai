@@ -134,9 +134,9 @@ class OwnerAppActionWorkSceneUiTest {
     }
     private fun submit(a: AgentActivity, request: String, chat: Boolean = true) {
         if (chat) {
-            val target = a.window.decorView.findViewWithTag<View>("jarvis-tile:chat")
+            val target = JarvisHomeTestRoutes.destination(a.window.decorView, "chat")
             assertNotNull(target)
-            assertTrue(target.performClick())
+            JarvisHomeTestRoutes.touch(a.window.decorView, target)
         }
         (get(a, "input") as EditText).setText(request)
         assertTrue((get(a, "sendButton") as Button).performClick())
@@ -174,6 +174,31 @@ class OwnerAppActionWorkSceneUiTest {
         assertEquals(ContinuumWorkArea.CHAT, get(a, "activeWorkArea"))
         assertTrue(descendants(a.window.decorView).filterIsInstance<TextView>()
             .any { it.text.contains("neuen aktiven Fenster") })
+    }
+
+    @Test fun implicitFuzzyNeedReturnsToConversationBeforeAppSelection() = withActivity { a, port, _ ->
+        submit(a, "Ich brauche Sig", chat = false)
+        await {
+            get(a, "appLookupActive") == false ||
+                ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true
+        }
+        assertFalse("Fuzzy implicit needs must not offer app selection",
+            ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true)
+        assertEquals(0, port.calls.get())
+        assertNull(get(a, "activeOwnerAppFlow"))
+        assertNull("Unaccepted matches must not become pronoun context", get(a, "appLookupContext"))
+    }
+
+    @Test fun explicitFuzzySelectionKeepsCancellationReceipt() = withActivity { a, port, _ ->
+        submit(a, "Öffne Sig", chat = false)
+        await { ShadowAlertDialog.getLatestAlertDialog()?.isShowing == true }
+        val dialog = ShadowAlertDialog.getLatestAlertDialog()
+        assertEquals(1, dialog.listView.adapter.count)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+        await { get(a, "busy") == false }
+        assertEquals(0, port.calls.get())
+        assertTrue(descendants(a.window.decorView).filterIsInstance<TextView>()
+            .any { it.text.contains("App-Auswahl abgebrochen") })
     }
 
     @Test fun stopBeforePostedBackendStartCannotReopenScene() = withActivity { a, port, _ ->

@@ -4,6 +4,7 @@ import at.heinz.deviceai.chief.TurnMilestone
 import at.heinz.deviceai.chief.WorkerReport
 import at.heinz.deviceai.chief.WorkerStatus
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -15,12 +16,12 @@ class CockpitAnimationTriggersTest {
 
     private inline fun <reified T> only(): List<T> = events.filterIsInstance<T>()
 
-    @Test fun acknowledgedCommandFliesInStartsThinkingAndOpensTimeline() {
+    @Test fun acknowledgedCommandUsesOneTimelineWithoutDuplicateThinkAction() {
         triggers.commandAcknowledged("t1", "Zeig mir\u0007 die Downloads")
         val fly = only<CockpitAnimationEvent.CommandFlyIn>().single()
         assertEquals("t1", fly.turnId)
         assertEquals("Zeig mir die Downloads", fly.commandPreview)
-        assertEquals(CockpitAction.THINK, only<CockpitAnimationEvent.ActionStarted>().single().action)
+        assertTrue(only<CockpitAnimationEvent.ActionStarted>().isEmpty())
         val steps = only<CockpitAnimationEvent.ProcessTimeline>().last().steps
         assertEquals(listOf(StepState.DONE, StepState.ACTIVE), steps.map { it.state })
         assertEquals("Auftrag angenommen", steps.first().label)
@@ -31,7 +32,7 @@ class CockpitAnimationTriggersTest {
         triggers.toolStarted("t1", "c1", "web_search")
         triggers.toolStarted("t1", "c2", "list_downloads")
         val actions = only<CockpitAnimationEvent.ActionStarted>().map { it.action }
-        assertEquals(listOf(CockpitAction.THINK, CockpitAction.RESEARCH, CockpitAction.TOOL), actions)
+        assertEquals(listOf(CockpitAction.RESEARCH, CockpitAction.TOOL), actions)
         triggers.toolFinished("t1", "c1", "web_search", succeeded = true)
         triggers.toolFinished("t1", "c2", "list_downloads", succeeded = false)
         val steps = triggers.timeline("t1").associateBy { it.key }
@@ -91,4 +92,15 @@ class CockpitAnimationTriggersTest {
         local.emit(MathPreview())
         assertEquals("math", (seen.single() as CockpitAnimationEvent.Extension).kind)
     }
+    @Test fun documentEventCarriesOnlyMeasuredPageCount() {
+        triggers.commandAcknowledged("doc", "PDF prüfen")
+        triggers.documentReceived("doc", "vertrag.pdf", "application/pdf", "Bitte prüfen", 7)
+        val event = only<CockpitAnimationEvent.DocumentQuestion>().single()
+        assertEquals(7, event.pageCount)
+
+        triggers.commandAcknowledged("bad-doc", "PDF prüfen")
+        triggers.documentReceived("bad-doc", "x.pdf", "application/pdf", "Bitte prüfen", -1)
+        assertNull(only<CockpitAnimationEvent.DocumentQuestion>().last().pageCount)
+    }
+
 }

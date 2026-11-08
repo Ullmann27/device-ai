@@ -33,9 +33,15 @@ sealed class CockpitAnimationEvent {
     data class AccountCardFlyIn(override val turnId: String, override val atMillis: Long, val provider: String,
                                 val accountLabel: String) : CockpitAnimationEvent()
 
-    /** (e) A real document (PDF) intake: the document card appears and Jarvis asks about it. Source currently missing. */
-    data class DocumentQuestion(override val turnId: String, override val atMillis: Long, val documentName: String,
-                                val mimeType: String, val question: String) : CockpitAnimationEvent()
+    /** (e) Real owner-selected document intake. pageCount is supplied only when PdfRenderer measured it. */
+    data class DocumentQuestion(
+        override val turnId: String,
+        override val atMillis: Long,
+        val documentName: String,
+        val mimeType: String,
+        val question: String,
+        val pageCount: Int? = null
+    ) : CockpitAnimationEvent()
 
     /** The turn delivered its single result (or was dropped); renderers settle all running effects. */
     data class TurnEnded(override val turnId: String, override val atMillis: Long, val delivered: Boolean) :

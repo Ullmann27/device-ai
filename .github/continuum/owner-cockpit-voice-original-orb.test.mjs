@@ -20,7 +20,7 @@ test('home microphone retains the cockpit for continuous voice replies', () => {
   assert.doesNotMatch(decision, /\bconversationActive\b/);
   assert.match(presentation, /homeSelected: Boolean\s*\): Boolean = handsFreeActive && pinHomeCockpit && homeSelected/);
   assert.match(activityMember('private fun addUserMessage(value: String)'), /addUserMessage\(value, keepCockpit = false\)/);
-  assert.match(activityMember('private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = false)'),
+  assert.match(activityMember('private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = true)'),
     /addAssistantMessage\(value, preserveLocalContext, keepCockpit = false\)/);
   for (const signature of [
     'private fun addUserMessage(value: String, keepCockpit: Boolean)',

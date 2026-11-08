@@ -65,7 +65,7 @@ internal class ToolWorkSceneLease {
 
     companion object {
         fun workingGaze(target: GazeTarget): GazeTarget = GazeTarget(
-            (target.x * 1.35f).coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
+            (target.x * 1.70f).coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
             (target.y * 1.25f).coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y))
     }
 }

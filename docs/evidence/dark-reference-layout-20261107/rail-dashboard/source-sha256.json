@@ -1,0 +1,31 @@
+{
+  "source_commit": "101c0810334a347001a7b50da3faff378987ff00",
+  "files": {
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt": "ee559cfb2b03954634aa0c2619653e8d89b4f05f05875a290322c2d4d32c011b",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisMemoryActivityPanel.kt": "5c2539f555a6cb5955ebf41c304b38e7ed1e8c074ef072ae938296b65ba06301",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisRailIcons.kt": "6568efa347e1256280c61ec14e511f62f8cd048a9c7a98d5ed0289f25d632a51",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt": "596fb9357e6e833038d03b85ab5a9fdf95671b54f10fe44121f72048fa11cbf8",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt": "babaa81d18b13f3b40fb213e2c63178af9b4614a6bae7aa4fdd8ed5154da8439",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt": "250e8171929cffcf7b9f60df44b35eaf5cf8dec08fbc7c939c913a515c9bbbd4",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt": "0da582e0dd7dd83835790a1a071295730e3b67b83fd9cf44fb28a1f7f4bd3475",
+    "app/src/main/java/at/heinz/deviceai/ui/LocalModelStatusPresentation.kt": "5d318a50becf48138fea877cc480b2ab2959b70e788533757f35d7279061b8f9",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitGridTest.kt": "1dc9ec067f6636bbe2796e58d5c5c971561d3a92fb42a6fc50cba6a9b0d70942",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisExternalRailLayoutTest.kt": "11d39def771a839684ee988d841b1453e9d3792f8360d94302fd1954c0919b90",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisLivePanelsRegressionTest.kt": "b267c2e3bb8690485ac2fe7b2447f048bd4365dc283c33f3b4fc3b5df805f368",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt": "1ec9e29a7b5d56d819c4906c99d77bb1ea560764aae40dd56de912d72af6235f",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisShellContentTest.kt": "9257b508aaaf0b88ca8e9f8139ce454b689454ed1a819f48a68f1063c3bfe37e",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisShellLayoutTest.kt": "5e0ae1180b6bacc219d121587adabe170767cd2e64f51ce7996ec05fa70fadfa",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentSceneUiTest.kt": "e363d9d8f5648f5787c46ef19bbbcc18bb582935a4e7d20aa1abc04457563367",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt": "758c10a8a306deb341df7c4014fc069df63074d3fa01bd2dc6e0efdab8cc08eb",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt": "e7cb60aee71789f29f921cb6efae24ecb26e2a2f30bad9216200ed1409141223",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumVisualEvidenceUiTest.kt": "7885a583fe5aae445651a87f27b743d91e0ec67e5f08859735c8081dcf077231",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumWorkWindowScrollUiTest.kt": "cadadd82a1e0beb30b59ef676ff8337dee0cc150c7d63ff707a2952f5f69580a",
+    "app/src/uiTest/java/at/heinz/deviceai/FullStageMemoryReviewUiTest.kt": "3f31099cbd39aa426de0c4c0d6d0caf32d7aa971f83fee37a1a9a3b3f91e896b",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisDeterministicCaptureUiTest.kt": "0d5b976f00fb454cef51aca2236e6d43edd98da913405f03ceb31de1caa228dc",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisHomeTestRoutes.kt": "9f9e8a34e12dc75d6645180e36d17facdfb340f593ea7f98b3e7a5165169f5d7",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisReferenceHitTargetsUiTest.kt": "20eabc235ac61c7759ea70ac5fa0f5239fb4894c5756d8df700de6e6bcc0e6f5",
+    "app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt": "13cd30e6b89b2b276773c7c9db8c84577086d339bc5c7d71df76c22b9766c4c6",
+    "app/src/uiTest/java/at/heinz/deviceai/OwnerAppPlanningContextUiTest.kt": "f44cc26b1777f54cdf5a0956cb0a47c93f283f60d2bbd702aea02fcf4dbac762",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisFeatureCardReadabilityUiTest.kt": "ad674990a4fe49bf6a1b7dcbbbde1857ff074b89b9b75d7ce1e015a687b963d4"
+  }
+}

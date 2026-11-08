@@ -539,7 +539,20 @@ class BoundedAgentOrchestrator(
                 completedAt = finishedAt,
                 evaluation = lastEvaluation
             )
-            if(!ephemeralScreenContext)experienceStore.store(resultExperience)
+            val experienceStored = if (ephemeralScreenContext) false else runCatching {
+                experienceStore.store(resultExperience)
+            }.fold(
+                onSuccess = { true },
+                onFailure = {
+                    // Learning persistence is not execution authority. A completed owner task must not
+                    // be retroactively failed because optional experience storage is unavailable/refused.
+                    audit += AgentAuditEvent(
+                        audit.size, AgentState.STORE_EXPERIENCE,
+                        "Experience not persisted; task result retained and learning skipped."
+                    )
+                    false
+                }
+            )
             val blocker = if (lastEvaluation.success) null else
                 "Retry budget exhausted: ${lastEvaluation.notes.ifBlank { "evaluation failed" }}"
             transition(AgentState.RESPOND, if (blocker == null) "Response ready." else "Structured blocker returned.")
@@ -551,7 +564,7 @@ class BoundedAgentOrchestrator(
                 audit.toList(),
                 resultExperience.takeUnless { ephemeralScreenContext },
                 blocker,
-                proof(verifiedOutcome, resultExperience.id.takeIf { verifiedOutcome })
+                proof(verifiedOutcome, resultExperience.id.takeIf { verifiedOutcome && experienceStored })
             )
             checkpointStore?.clear()
             return result

@@ -63,12 +63,14 @@ class ToolWorkSceneLeaseTest {
 
     @Test fun workingGazeIsStrongerOnlyWithinExistingLimits() {
         val work = ToolWorkSceneLease.workingGaze(GazeTarget(.3f, -.2f))
-        assertEquals(.405f, work.x, 1e-6f)
+        assertEquals(.51f, work.x, 1e-6f)
         assertEquals(-.25f, work.y, 1e-6f)
         val limit = ToolWorkSceneLease.workingGaze(GazeTarget(-.6f, .4f))
         assertEquals(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, limit.x, 1e-6f)
         assertEquals(AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, limit.y, 1e-6f)
         assertEquals(GazeTarget(0f, 0f), ToolWorkSceneLease.workingGaze(GazeTarget(0f, 0f)))
+        val standardWindow = ToolWorkSceneLease.workingGaze(GazeTarget.WORK_WINDOW)
+        assertTrue("standard work target reaches a strong three-quarter gaze", standardWindow.x >= .90f)
     }
 
     @Test fun existingDirectorHoldsWorkBeyondGlanceThenReturns() {

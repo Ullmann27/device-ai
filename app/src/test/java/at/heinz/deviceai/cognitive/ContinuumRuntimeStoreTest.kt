@@ -39,6 +39,41 @@ class ContinuumRuntimeStoreTest {
     }
 
     @Test
+    fun experienceArchiveSurvivesRestartAndCanFeedBoundedRecall() {
+        val dir = Files.createTempDirectory("continuum-runtime-experience").toFile()
+        try {
+            val signer = TestSigner()
+            val firstStore = store(dir, signer)
+            val first = firstStore.openOrCreate()
+            val experience = Experience(
+                id = "experience-1",
+                taskType = "agent_task",
+                requestSummary = "repair battery service",
+                sourceIds = listOf("tool-call:agent-1:sha256:" + "a".repeat(64)),
+                toolIds = listOf("get_device_info"),
+                outcome = ExperienceOutcome.SUCCESS,
+                confidenceAfter = .95,
+                startedAt = 80,
+                completedAt = 90,
+                evaluation = Evaluation(true, .95)
+            )
+            firstStore.checkpoint(first, experiences = listOf(experience))
+
+            val restarted = store(dir, signer).openOrCreate()
+            assertEquals(listOf("experience-1"), restarted.archive.experiences.map { it.id })
+
+            val cache = InMemoryExperienceStore()
+            restarted.archive.experiences.forEach(cache::store)
+            val hints = AgentExperienceRecall.hints(cache, "repair battery service", nowMillis = 100)
+            assertEquals(1, hints.size)
+            assertTrue("success-hint" in hints.single().tags)
+            assertEquals(ValidationState.UNVERIFIED, hints.single().validationState)
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
+
+    @Test
     fun processDeathBetweenArchiveAndSeedUsesMatchingLkgArchive() {
         val dir = Files.createTempDirectory("continuum-runtime-reconcile").toFile()
         try {

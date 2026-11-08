@@ -49,9 +49,12 @@ class AvatarFramingTest {
         return Fit(l, r, t, d)
     }
 
-    private class Stage(val label: String, val shell: JarvisShellLayout.Shell, val box: JarvisShellLayout.Box) {
+    private class Stage(val label: String, val box: JarvisShellLayout.Box,
+                        val dialog: JarvisShellLayout.Box, val anchorX: Double, val closeUp: Double) {
+        constructor(label: String, shell: JarvisShellLayout.Shell, box: JarvisShellLayout.Box) : this(
+            label, box, requireNotNull(shell[JarvisShellLayout.Slot.DIALOG]),
+            shell.headAnchorX.toDouble(), shell.headCloseUp.toDouble())
         val aspect get() = box.width.toDouble() / box.height
-        val dialog: JarvisShellLayout.Box get() = requireNotNull(shell[JarvisShellLayout.Slot.DIALOG])
         /** Same normalization and 6 dp gap as ContinuumHomeView.dialogKeepOut. */
         val keepOut get() = AvatarFraming.KeepOut(((dialog.right + 6f - box.left) / box.width).toDouble(),
             ((dialog.top - 6f - box.top) / box.height).toDouble())
@@ -61,17 +64,23 @@ class AvatarFramingTest {
     private fun stages() = listOf(884f to 760f, 832f to 748f, 840f to 649f, 960f to 640f, 1280f to 800f, 1536f to 1024f)
         .mapNotNull { (w, h) -> JarvisShellLayout.create(w, h).let { s -> s.headStage?.let { Stage("${w.toInt()}x${h.toInt()}", s, it) } } }
 
-    private fun Stage.window(keep: Boolean) = AvatarFraming.window(focus, aspect, shell.headAnchorX.toDouble(),
-        shell.headCloseUp.toDouble(), if (keep) keepOut else null)
+    // Geometry frozen at 88dfd45139471463618673a1f827ee062e9bf6d5.
+    private fun formerFoldStage() = Stage("former-884x760",
+        JarvisShellLayout.Box(147.33334f, 40.286457f, 460.41666f, 422.5672f),
+        JarvisShellLayout.Box(147.33334f, 275.6896f, 310.78125f, 419.6896f),
+        .70f.toDouble(), .92f.toDouble())
+
+    private fun Stage.window(keep: Boolean) = AvatarFraming.window(focus, aspect, anchorX,
+        closeUp, if (keep) keepOut else null)
 
     private fun Stage.fit(w: AvatarFraming.Window) = measure(box.width.toDouble(), box.height.toDouble(),
         w.left, w.right, w.halfHeight, w.cameraCenterY, dialogLocal)
 
     @Test fun formerCentredFitCutTheFold7FaceAndCoveredTheDialogue() {
         // Root cause, recomputed from the former renderer formula (vertical = verticalHalfSpan · closeUp).
-        val stage = stages().first { it.label == "884x760" }
-        val full = focus.verticalHalfSpan(stage.aspect); val v = full * stage.shell.headCloseUp
-        val h = v * stage.aspect; val a = stage.shell.headAnchorX.toDouble()
+        val stage = formerFoldStage()
+        val full = focus.verticalHalfSpan(stage.aspect); val v = full * stage.closeUp
+        val h = v * stage.aspect; val a = stage.anchorX
         val former = stage.fit(AvatarFraming.Window(-2 * h * a, 2 * h * (1 - a), v, focus.centerY + (full - v), 1.0, a))
         assertTrue("Former Fold7 window must reproduce the right-edge cut: $former", former.rightDp > 20.0)
         assertTrue("Former Fold7 window let the chin enter the dialogue card: $former", former.dialogDp > 20.0)
@@ -117,16 +126,13 @@ class AvatarFramingTest {
         }
     }
 
-    @Test fun fold7KeepsALargerHeadByMovingItBeforeShrinkingIt() {
-        // 884×760 dp: open Fold7 in the reference composition (832×748 dp is a MEDIUM window and reflows).
-        for (label in listOf("884x760")) {
-            val stage = stages().first { it.label == label }
-            val sizeOnly = stage.window(keep = false)
-            val cockpit = stage.window(keep = true)
-            assertTrue("$label size-only fit ${sizeOnly.headScale}", sizeOnly.headScale < .70)
-            assertTrue("$label cockpit fit ${cockpit.headScale} at ${cockpit.anchorX}", cockpit.headScale > sizeOnly.headScale + .05)
-            assertEquals("$label moving face clears dialogue", 0.0, stage.fit(cockpit).dialogDp, 0.0)
-        }
+    @Test fun formerFold7StageKeepsALargerHeadByMovingItBeforeShrinkingIt() {
+        val stage = formerFoldStage()
+        val sizeOnly = stage.window(keep = false)
+        val cockpit = stage.window(keep = true)
+        assertTrue("${stage.label} size-only fit ${sizeOnly.headScale}", sizeOnly.headScale < .70)
+        assertTrue("${stage.label} cockpit fit ${cockpit.headScale} at ${cockpit.anchorX}", cockpit.headScale > sizeOnly.headScale + .05)
+        assertEquals("${stage.label} moving face clears dialogue", 0.0, stage.fit(cockpit).dialogDp, 0.0)
     }
 
     @Test fun withoutAKeepOutTheHeadNeverMovesSidewaysAndStillFitsAnyAspect() {
@@ -139,9 +145,10 @@ class AvatarFramingTest {
     }
 
     @Test fun unconstrainedRoomyStageKeepsCompositionAndCrownMarginNeverMoves() {
-        val wide = stages().first { it.label == "1536x1024" }.window(keep = false)
+        val stage = stages().first { it.label == "1536x1024" }
+        val wide = stage.window(keep = false)
         assertEquals("Unconstrained reference composition stays unchanged", 1.0, wide.headScale, 0.0)
-        assertEquals(.70, wide.anchorX, 1e-6)
+        assertEquals(stage.anchorX, wide.anchorX, 1e-6)
         val fold = stages().first { it.label == "884x760" }
         val f = fold.window(keep = true)
         // The window top (crown margin) is the calibrated one; only the neck side grows.
@@ -172,8 +179,8 @@ class AvatarFramingTest {
 
     @Test fun cameraFlightWithTheExistingIdleDriftClearsTheDialogue() {
         for (stage in stages()) {
-            val path = AvatarCameraFraming(focus, stage.aspect, stage.shell.headAnchorX.toDouble(),
-                stage.shell.headCloseUp.toDouble(), stage.keepOut)
+            val path = AvatarCameraFraming(focus, stage.aspect, stage.anchorX,
+                stage.closeUp, stage.keepOut)
             for (progress in listOf(0f, .25f, .5f, .75f, 1f)) for (direction in listOf(-1f, 1f)) {
                 val window = path.sample(progress, direction)
                 for (pixels in listOf(-6.5, 6.5)) {
@@ -188,8 +195,8 @@ class AvatarFramingTest {
 
     @Test fun fold7CameraPullsBackAndReturnsToTheExactOriginalWindow() {
         val stage = stages().first { it.label == "884x760" }
-        val path = AvatarCameraFraming(focus, stage.aspect, stage.shell.headAnchorX.toDouble(),
-            stage.shell.headCloseUp.toDouble(), stage.keepOut)
+        val path = AvatarCameraFraming(focus, stage.aspect, stage.anchorX,
+            stage.closeUp, stage.keepOut)
         for (direction in listOf(-1f, 0f, 1f)) {
             assertEquals(stage.window(true), path.sample(0f, direction))
             val far = path.sample(1f, direction)

@@ -24,6 +24,29 @@ class BoundedAgentOutcomeEvidenceTest {
         assertEquals(0, reputation.get("test-planner", ModelCapability.TOOL_USE, "agent").taskCount)
     }
 
+    @Test fun verifiedTaskSurvivesExperiencePersistenceFailureButIsNotLearningCandidate() {
+        val failingStore = object : ExperienceStore {
+            override fun store(e: Experience) { error("experience storage unavailable") }
+            override fun all(): List<Experience> = emptyList()
+        }
+        val result = BoundedAgentOrchestrator(
+            model(), { emptyList() },
+            ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { "fresh measurement" }),
+            AgentEvaluator { _, record ->
+                Evaluation(record?.status == ToolExecutionStatus.SUCCEEDED, 1.0)
+            },
+            failingStore,
+            evaluationConfirmsOutcome = true,
+            callIdPrefix = "store-failure"
+        ).run("Prüfe den freien Speicher")
+
+        assertNull(result.blocker)
+        assertEquals(ExperienceOutcome.SUCCESS, result.experience!!.outcome)
+        assertTrue(result.taskEvidence!!.outcomeVerified)
+        assertNull(result.taskEvidence!!.learningCandidateExperienceId)
+        assertTrue(result.auditTrail.any { it.detail.contains("learning skipped") })
+    }
+
     @Test fun replayedSucceededReceiptDoesNotCreateFreshPositiveEvidence() {
         val dir = Files.createTempDirectory("agent-replay-evidence").toFile()
         try {

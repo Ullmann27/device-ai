@@ -33,7 +33,8 @@ object JarvisHeadAura {
     }
 
     fun draw(p: ContinuumPainter, stage: Box, anchorX: Float = .5f, t: Float = 0f, enabled: Boolean = true,
-             headScale: Float = 1f, activityEnergy: Float = .18f, speechLevel: Float = 0f) {
+             headScale: Float = 1f, activityEnergy: Float = .18f, speechLevel: Float = 0f,
+             referenceMode: Boolean = false) {
         if (!enabled || stage.width <= 8f || stage.height <= 8f || !t.isFinite()) return
         val (cx, cy) = faceCenter(stage, anchorX, headScale)
         val h = stage.height * validScale(headScale)
@@ -42,6 +43,7 @@ object JarvisHeadAura {
         JarvisSceneFills.halo(p, cx + h * .12f, cy + h * .04f, h * .46f, Colors.cyan, .14f + signal * .65f)
         if (signal > .015f) JarvisSceneFills.halo(p, cx + h * .03f,
             cy - h * .04f, h * .24f, Colors.glowCore, signal * .34f)
+        if (referenceMode) return
         p.setAdditive(true)
         ring(p, cx, cy - h * .12f, h * .62f, h * .13f, -14f + 3f * wave(t, 9f), Colors.magenta, Colors.violet, 1.5f,
             bead = t / 14f)

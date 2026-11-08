@@ -2,12 +2,13 @@ package at.heinz.deviceai.cognitive
 
 import at.heinz.deviceai.ToolExecutionStatus
 
-/** Only the first read-only tool is journalled in Code47 M2. */
+/** Bridges trusted ToolGate evidence into the bounded work journal. */
 internal object ToolWorkJournalBridge {
+    /** Retained for older tests/callers; no longer the only journalled tool. */
     const val FIRST_TOOL = "get_storage_info"
 
     fun classify(proof: AgentToolEvidence, current: Boolean): CockpitWorkJournal.ToolState {
-        if (!current || proof.toolName != FIRST_TOOL || proof.outcomeUncertain || proof.replayed)
+        if (!current || proof.outcomeUncertain || proof.replayed)
             return CockpitWorkJournal.ToolState.UNKNOWN
         return when (proof.status) {
             ToolExecutionStatus.SUCCEEDED ->
@@ -20,9 +21,11 @@ internal object ToolWorkJournalBridge {
         }
     }
 
-    fun settle(journal: CockpitWorkJournal, proof: AgentToolEvidence, current: Boolean): CockpitWorkJournal.Episode? =
-        if (proof.toolName != FIRST_TOOL) null else journal.finishTool(
-            proof.callId, proof.toolName, classify(proof, current),
-            proof.outputSha256.takeIf { current && classify(proof, current) == CockpitWorkJournal.ToolState.SUCCEEDED }
+    fun settle(journal: CockpitWorkJournal, proof: AgentToolEvidence, current: Boolean): CockpitWorkJournal.Episode? {
+        val state = classify(proof, current)
+        return journal.finishTool(
+            proof.callId, proof.toolName, state,
+            proof.outputSha256.takeIf { current && state == CockpitWorkJournal.ToolState.SUCCEEDED }
         )
+    }
 }

@@ -54,6 +54,19 @@ class JarvisVoiceProfileTest {
         assertNull(JarvisVoiceProfile.speakable(" \n\t"))
     }
 
+    @Test fun extendedReplyBudgetGoesBeyondLegacyFifteenChunksButStaysBounded() {
+        val medium = "Ein vollständiger Satz für die Sprachausgabe. ".repeat(210)
+        val mediumChunks = JarvisVoiceProfile.speakableChunks(medium, chunkCharacters = 480, maxChunks = 31)
+        assertTrue("legacy 15-chunk ceiling must be exceeded", mediumChunks.pieces.size > 15)
+        assertFalse("ordinary long reply should fit the extended budget", mediumChunks.truncated)
+        assertTrue(mediumChunks.pieces.all { it.length in 1..480 })
+
+        val huge = "Noch ein vollständiger Satz für die harte Obergrenze. ".repeat(800)
+        val hugeChunks = JarvisVoiceProfile.speakableChunks(huge, chunkCharacters = 480, maxChunks = 31)
+        assertEquals(31, hugeChunks.pieces.size)
+        assertTrue(hugeChunks.truncated)
+    }
+
     @Test fun invalidSpeechBudgetFailsClosed() {
         assertThrows(IllegalArgumentException::class.java) { JarvisVoiceProfile.speakable("Hallo", 20) }
     }

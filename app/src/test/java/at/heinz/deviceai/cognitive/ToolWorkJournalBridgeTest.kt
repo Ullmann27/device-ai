@@ -107,13 +107,26 @@ class ToolWorkJournalBridgeTest {
             proof(uncertain = true),
             proof(replayed = true),
             proof(status = ToolExecutionStatus.TIMED_OUT, fresh = false),
-            proof(fresh = false),
-            proof(toolName = "get_device_info")
+            proof(fresh = false)
         )
         cases.forEach {
             assertEquals(CockpitWorkJournal.ToolState.UNKNOWN,
                 ToolWorkJournalBridge.classify(it, current = true))
         }
+    }
+
+    @Test fun anyRealToolMayBeJournalledButSuccessStillIsNotIndependentProof() {
+        val other = proof(toolName = "get_device_info")
+        assertEquals(CockpitWorkJournal.ToolState.SUCCEEDED,
+            ToolWorkJournalBridge.classify(other, current = true))
+        val journal = CockpitWorkJournal(dir.root)
+        journal.beginTool(other.callId, other.toolName)
+        ToolWorkJournalBridge.settle(journal, other, current = true)
+        val e = journal.all().single()
+        assertEquals("get_device_info", e.toolName)
+        assertEquals(CockpitWorkJournal.ToolState.SUCCEEDED, e.toolState)
+        assertEquals(hash, e.toolOutputSha256)
+        assertTrue(CockpitWorkJournal.stateText(e, e.updatedAt).contains("nicht unabhängig bestätigt"))
     }
 
     @Test fun aKilledProcessTurnsRunningToolIntoUnknownNotDone() {

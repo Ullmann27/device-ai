@@ -9,37 +9,42 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class JarvisExternalRailLayoutTest {
-    @Test fun aRealActivityRailDoesNotReserveOrDrawAnotherRailInsideTheHome() {
+    @Test fun availableActivityPaneContainsTheWholeHomeWithoutAnyInternalRail() {
         val shell = JarvisShellLayout.forContent(754f, 760f, externalRailWidthDp = 130f)
         assertNull(shell[Slot.NAV_RAIL])
         assertEquals(JarvisShellLayout.FormFactor.FOLD_OPEN, shell.formFactor)
         assertTrue(shell.ref5Grid)
         val grid = requireNotNull(shell.grid)
-        assertEquals(548f / 1536f * 884f - 130f, grid[Area.HEAD].left, .01f)
-        assertTrue("The released rail space belongs to the main content", grid[Area.DIALOG].left < 20f)
+        val full = JarvisShellLayout.create(754f, 760f)
+        assertEquals(full.headBounds!!.left, grid[Area.HEAD].left, .01f)
+        assertTrue("The released rail space belongs to the main content", grid[Area.DIALOG].left < 40f)
         assertTrue(grid[Area.ORB].left > grid[Area.HEAD].right)
-        assertTrue(grid[Area.MODULES].left > grid[Area.ORB].right)
+        assertTrue(grid[Area.MODULES].top > grid[Area.STATUS].bottom)
         assertFalse("Rail has no competing visual or hit region", Area.RAIL in grid.areas)
         shell.boxes.forEach { (slot, box) ->
             assertTrue("$slot remains inside the actual pane", box.left >= 0f && box.right <= 754f && box.width > 0f)
         }
+        assertTrue(shell.hasFeatureTiles)
         assertEquals(10, shell.tileBoxes().size)
+        assertEquals(12f, shell[Slot.TILES]!!.left, .01f)
+        assertEquals(742f, shell[Slot.TILES]!!.right, .01f)
     }
 
-    @Test fun contentCoordinatesStillMatchTheFullWindowReferenceAfterTheSingleOffset() {
-        val full = JarvisShellLayout.create(884f, 760f)
+    @Test fun externalReservationDoesNotCropOrOffsetTheAlreadyAvailableWidth() {
+        val full = JarvisShellLayout.create(754f, 760f)
         val content = JarvisShellLayout.forContent(754f, 760f, externalRailWidthDp = 130f)
-        for (slot in listOf(Slot.AVATAR, Slot.DIALOG, Slot.TILES, Slot.ROW_MEMORY, Slot.ROW_MODEL)) {
+        for (slot in listOf(Slot.AVATAR, Slot.DIALOG, Slot.INPUT, Slot.TILES, Slot.ROW_MEMORY, Slot.ROW_MODEL)) {
             val before = requireNotNull(full[slot])
             val after = requireNotNull(content[slot])
-            assertEquals(before.left, after.left + 130f, .001f)
-            assertEquals(before.right, after.right + 130f, .001f)
+            assertEquals(before.left, after.left, .001f)
+            assertEquals(before.right, after.right, .001f)
             assertEquals(before.top, after.top, .001f)
             assertEquals(before.bottom, after.bottom, .001f)
         }
+        assertEquals(full.tileBoxes(), content.tileBoxes())
     }
 
-    @Test fun aStandaloneShellRetainsItsOwnNavigation() {
+    @Test fun standaloneAndContentShellsShareTheSameFeatureCards() {
         assertEquals(JarvisShellLayout.create(884f, 760f), JarvisShellLayout.forContent(884f, 760f))
         assertEquals(JarvisShellLayout.create(412f, 915f), JarvisShellLayout.forContent(412f, 915f))
     }

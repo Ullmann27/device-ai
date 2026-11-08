@@ -1,6 +1,8 @@
 package at.heinz.deviceai.ui
 
 import android.app.Activity
+import android.graphics.Point
+import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Build
 import android.view.View
@@ -15,11 +17,15 @@ class JarvisWorkWindowHost(
     private val director: AvatarDirector
 ) {
     private var current: JarvisWorkWindow? = null
+    private var currentFui: HollywoodFuiStageOverlay? = null
     private var cameraHome: ContinuumHomeView? = null
     private var serial = 0L
     private var back: android.window.OnBackInvokedCallback? = null
     private var currentId: String? = null
     private var currentGaze: GazeTarget? = null
+    private var currentClientClosed: (() -> Unit)? = null
+    private var currentFootprint = JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
+    private var currentCameraSide = 0f
     /** Window whose content the local model is really working on (JARVIS reads it until the work ends). */
     private var workingId: String? = null
     private var emphasizedWork = false
@@ -39,6 +45,7 @@ class JarvisWorkWindowHost(
             if (emphasize) ToolWorkSceneLease.workingGaze(target) else target)
         emphasizedWork = admitted && emphasize
         workingId = if (admitted) id else null
+        currentFui?.setWorkActive(admitted)
         return admitted
     }
 
@@ -48,6 +55,34 @@ class JarvisWorkWindowHost(
      */
     fun showStatus(steps: List<at.heinz.deviceai.cockpit.ProcessStep>) {
         current?.setStatus(statusLine(steps))
+        currentFui?.setWorkActive(steps.any { it.state == at.heinz.deviceai.cockpit.StepState.ACTIVE })
+    }
+
+    fun setMissionTelemetry(text: String?) {
+        currentFui?.setTelemetryText(text)
+    }
+
+    fun setFuiLiveData(data: HollywoodFuiLiveData?) {
+        currentFui?.setLiveData(data)
+    }
+
+    /**
+     * Promotes only the visual grammar/footprint of the already-open physical work window.
+     * No content, tool state, window id or AvatarDirector lease is replaced.
+     */
+    fun morphPresentation(home: ContinuumHomeView, scene: JarvisActionScenes.Scene): Boolean {
+        val window = current?.takeIf { it.isShowing } ?: return false
+        if (cameraHome !== home || currentId == null) return false
+        val bounds = window.shownBounds() ?: return false
+        currentFootprint = strongerFootprint(currentFootprint, scene.footprint)
+        home.setWorkspaceFootprint(currentFootprint)
+        home.hologram.setWorkWindowCamera(
+            true,
+            currentCameraSide,
+            profile = cameraProfile(currentFootprint)
+        )
+        currentFui?.morphInPlace(bounds, scene)
+        return true
     }
 
     /** The real work ended (result, failure, STOP): the reading gaze ends with it. */
@@ -55,11 +90,42 @@ class JarvisWorkWindowHost(
         workingId?.let(director::windowWorkEnded)
         workingId = null
         emphasizedWork = false
+        currentFui?.setWorkActive(false)
     }
 
     fun close(immediate: Boolean = false) {
         if (immediate) cameraHome?.hologram?.setWorkWindowCamera(false, immediate = true)
+        currentFui?.close(immediate)
         current?.close(immediate)
+    }
+
+    /**
+     * Morphs the current work window in place. Geometry, camera framing, deck clearance,
+     * window id and AvatarDirector ownership stay continuous.
+     */
+    fun replaceCurrent(
+        home: ContinuumHomeView,
+        body: View,
+        title: String,
+        scene: JarvisActionScenes.Scene,
+        emblem: android.graphics.drawable.Drawable? = null,
+        crystal: Boolean = false,
+        depthLayers: Int = 0,
+        onClosed: () -> Unit
+    ): JarvisWorkWindow? {
+        val window = current?.takeIf { it.isShowing } ?: return null
+        if (cameraHome !== home || currentId == null) return null
+        if (!window.replaceContent(
+                body = body,
+                title = title,
+                accent = scene.accent,
+                emblem = emblem,
+                crystal = crystal,
+                depthLayers = depthLayers
+            )) return null
+        currentClientClosed = onClosed
+        morphPresentation(home, scene)
+        return window
     }
 
     /**
@@ -78,7 +144,6 @@ class JarvisWorkWindowHost(
         while (parent is View) {
             if (parent is ScrollView) {
                 background = parent
-                parent.scrollTo(0, 0)
                 break
             }
             parent = parent.parent
@@ -104,8 +169,10 @@ class JarvisWorkWindowHost(
         close(immediate = true)
         val id = "work-window-${++serial}"
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
+        val fui = HollywoodFuiStageOverlay(activity)
         var releaseGeometry: () -> Unit = {}
         container.addView(window, ViewGroup.LayoutParams(-1, -1))
+        container.addView(fui, ViewGroup.LayoutParams(-1, -1))
         // A first layout at another size (rotation/fold/keyboard still pending) plans again on the real size.
         val refit = {
             if (current === window) plan(home, container, scene)?.also {
@@ -114,7 +181,10 @@ class JarvisWorkWindowHost(
                 currentGaze = gaze(it)
                 director.windowMoved(id, if (workingId == id && emphasizedWork)
                     ToolWorkSceneLease.workingGaze(gaze(it)) else gaze(it))
-                home.hologram.setWorkWindowCamera(true, cameraSide(it))
+                currentCameraSide = cameraSide(it)
+                home.hologram.setWorkWindowCamera(true, currentCameraSide,
+                    profile = cameraProfile(currentFootprint))
+                fui.retarget(it.plan.destination)
             }?.plan else null
         }
         val accepted = window.open(body, first.plan.origin, first.plan.destination, title, first.plan.protectedBounds,
@@ -122,25 +192,40 @@ class JarvisWorkWindowHost(
             recession = recession, onClosed = {
             releaseGeometry()
             (window.parent as? ViewGroup)?.removeView(window)
+            (fui.parent as? ViewGroup)?.removeView(fui)
             director.windowClosed(id)
             if (workingId == id) { workingId = null; emphasizedWork = false }
+            if (currentFui === fui) currentFui = null
             if (current === window) {
+                val clientClosed = currentClientClosed
                 current = null
                 currentId = null
                 currentGaze = null
+                currentClientClosed = null
+                currentFootprint = JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
+                currentCameraSide = 0f
                 home.hologram.setWorkWindowCamera(false)
                 cameraHome = null
-                home.setDeckCleared(false)
+                home.setWorkspaceFootprint(JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE)
                 unregisterBack()
-                onClosed()
+                clientClosed?.invoke()
             }
         })
-        if (!accepted) { window.dispose(); container.removeView(window); return null }
+        if (!accepted) {
+            window.dispose()
+            container.removeView(window)
+            container.removeView(fui)
+            return null
+        }
+        currentClientClosed = onClosed
         current = window
+        currentFui = fui
         currentId = id
         currentGaze = gaze(first)
-        // Airbus deck: the cockpit makes room for the window and gets it back after the window has folded away.
-        home.setDeckCleared(true)
+        fui.open(first.plan.destination, scene)
+        // Airbus deck: footprint controls how much of the cockpit physically clears for this real window.
+        currentFootprint = scene.footprint
+        home.setWorkspaceFootprint(currentFootprint)
         val initialX = background?.scrollX ?: 0
         val initialY = background?.scrollY ?: 0
         background?.setOnScrollChangeListener { _, x, y, _, _ ->
@@ -149,7 +234,9 @@ class JarvisWorkWindowHost(
         releaseGeometry = { if (current === window) background?.setOnScrollChangeListener(null) }
         // #571: the bounded camera move follows the accepted window (towards its side, at most 2.5 % stage travel).
         cameraHome = home
-        home.hologram.setWorkWindowCamera(true, cameraSide(first))
+        currentCameraSide = cameraSide(first)
+        home.hologram.setWorkWindowCamera(true, currentCameraSide,
+            profile = cameraProfile(currentFootprint))
         director.windowOpened(id, gaze(first))
         if (Build.VERSION.SDK_INT >= 33) {
             val callback = android.window.OnBackInvokedCallback { close() }
@@ -168,7 +255,7 @@ class JarvisWorkWindowHost(
         val destination = planned.plan.destination
         val headX = planned.face?.centerX() ?: viewport.centerX()
         val headY = planned.face?.centerY() ?: viewport.centerY()
-        return GazeTarget(((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.6f, .6f),
+        return GazeTarget(((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.7f, .7f),
             ((headY - destination.centerY()) / viewport.height()).coerceIn(-.4f, .4f))
     }
 
@@ -184,18 +271,20 @@ class JarvisWorkWindowHost(
         val geometry = shell.currentShell() ?: return null
         val density = activity.resources.displayMetrics.density
         val offset = localBounds(shell, container)
-        val viewport = RectF(0f, 0f, container.width.toFloat(),
-            minOf(container.height.toFloat(), offset.top + geometry.viewportHeight * density))
+        val viewport = visibleBounds(shell, container) ?: return null
         fun local(box: JarvisShellLayout.Box) = RectF(offset.left + box.left * density,
             offset.top + box.top * density, offset.left + box.right * density,
             offset.top + box.bottom * density)
         val face = (geometry.headStage ?: geometry.headBounds)?.let(::local)
-        val tile = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let { home.findViewWithTag<View>("jarvis-tile:${it.target}") }
-        val origin = tile?.let { localBounds(it, container) }?.takeIf(JarvisWorkWindowGeometry::valid)
-            ?: besideFace(face, viewport, density)
         val protected = listOfNotNull(face, geometry[JarvisShellLayout.Slot.DIALOG]?.let(::local))
         val withOrb = protected + listOfNotNull(geometry.orbBounds?.let(::local))
         val destination = JarvisWorkWindowGeometry.destination(viewport, withOrb, density) ?: return null
+        val navigation = (scene.origin as? JarvisActionScenes.Origin.Tile)?.let {
+            val prefix = if (geometry.hasFeatureTiles) "jarvis-tile:" else "jarvis-rail:"
+            home.findViewWithTag<View>("$prefix${it.target}")
+        }
+        val origin = navigation?.let { visibleBounds(it, container) }
+            ?: besideFace(face, viewport, density)
         return Planned(JarvisWorkWindow.Plan(origin, destination, withOrb), face, viewport)
     }
 
@@ -212,6 +301,22 @@ class JarvisWorkWindowHost(
         val left = x.coerceIn(viewport.left, viewport.right - size)
         val top = y.coerceIn(viewport.top, viewport.bottom - size)
         return RectF(left, top, left + size, top + size)
+    }
+
+    private fun strongerFootprint(
+        a: JarvisActionScenes.WorkspaceFootprint,
+        b: JarvisActionScenes.WorkspaceFootprint
+    ): JarvisActionScenes.WorkspaceFootprint = if (a.ordinal >= b.ordinal) a else b
+
+    private fun cameraProfile(
+        footprint: JarvisActionScenes.WorkspaceFootprint
+    ): at.heinz.deviceai.avatar3d.AvatarCameraFraming.Profile = when (footprint) {
+        JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE ->
+            at.heinz.deviceai.avatar3d.AvatarCameraFraming.Profile.LEGACY
+        JarvisActionScenes.WorkspaceFootprint.MEDIUM_TERMINAL ->
+            at.heinz.deviceai.avatar3d.AvatarCameraFraming.Profile.MEDIUM_TERMINAL
+        JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY ->
+            at.heinz.deviceai.avatar3d.AvatarCameraFraming.Profile.FULL_MISSION_BAY
     }
 
     private fun unregisterBack() {
@@ -244,5 +349,17 @@ class JarvisWorkWindowHost(
         view.getLocationInWindow(point); root.getLocationInWindow(rootPoint)
         val x = (point[0] - rootPoint[0]).toFloat(); val y = (point[1] - rootPoint[1]).toFloat()
         return RectF(x, y, x + view.width, y + view.height)
+    }
+
+    /** Ancestor clipping in overlay coordinates. */
+    private fun visibleBounds(view: View, root: View): RectF? {
+        if (!view.isShown || !root.isShown) return null
+        val visible = Rect()
+        val rootVisible = Rect()
+        val rootOffset = Point()
+        if (!view.getGlobalVisibleRect(visible) || !root.getGlobalVisibleRect(rootVisible, rootOffset) ||
+            !visible.intersect(rootVisible)) return null
+        return RectF(visible).apply { offset(-rootOffset.x.toFloat(), -rootOffset.y.toFloat()) }
+            .takeIf(JarvisWorkWindowGeometry::valid)
     }
 }

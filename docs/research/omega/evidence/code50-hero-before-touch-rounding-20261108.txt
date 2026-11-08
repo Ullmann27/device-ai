@@ -1,0 +1,20 @@
+floatArrayOf(840.0f, 649.0f, 1.0f, 327.06042f, 138.30939f, 636.4197f, 508.0f),
+TARGET Box(left=309.6848, top=22.15469, right=365.40402, bottom=70.15469) height=48.000004
+floatArrayOf(840.0f, 649.0f, 1.3f, 327.06042f, 161.20218f, 636.4197f, 508.0f),
+TARGET Box(left=309.6848, top=33.601093, right=365.40402, bottom=81.60109) height=47.999996
+floatArrayOf(832.0f, 700.0f, 1.0f, 324.04193f, 137.58261f, 630.2621f, 559.0f),
+TARGET Box(left=306.87103, top=21.79131, right=361.72586, bottom=69.791306) height=47.999996
+floatArrayOf(832.0f, 700.0f, 1.3f, 324.04193f, 160.2574f, 630.2621f, 559.0f),
+TARGET Box(left=306.87103, top=33.1287, right=361.72586, bottom=81.1287) height=48.0
+floatArrayOf(960.0f, 600.0f, 1.0f, 372.3376f, 149.21072f, 728.78235f, 459.0f),
+TARGET Box(left=351.89117, top=27.605362, right=420.576, bottom=75.60536) height=48.0
+floatArrayOf(960.0f, 600.0f, 1.3f, 372.3376f, 175.37393f, 728.78235f, 459.0f),
+TARGET Box(left=351.89117, top=40.68697, right=420.576, bottom=88.686966) height=47.999996
+floatArrayOf(1280.0f, 800.0f, 1.0f, 478.36002f, 158.0f, 969.64f, 659.0f),
+TARGET Box(left=428.0, top=32.0, right=537.3333, bottom=80.0) height=48.0
+floatArrayOf(1280.0f, 800.0f, 1.3f, 478.36002f, 186.79999f, 969.64f, 659.0f),
+TARGET Box(left=428.0, top=46.399994, right=537.3333, bottom=94.399994) height=48.0
+floatArrayOf(1440.0f, 900.0f, 1.0f, 521.56006f, 158.0f, 1086.4401f, 759.0f),
+TARGET Box(left=428.0, top=32.0, right=564.0, bottom=80.0) height=48.0
+floatArrayOf(1440.0f, 900.0f, 1.3f, 521.56006f, 186.79999f, 1086.4401f, 759.0f),
+TARGET Box(left=428.0, top=46.399994, right=564.0, bottom=94.399994) height=48.0

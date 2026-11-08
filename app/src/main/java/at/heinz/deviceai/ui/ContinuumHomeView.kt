@@ -81,6 +81,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         if (foregroundActive && !active) presentationGeneration++
         foregroundActive = active
         if (!active) hologram.clearMemoryScene()
+        if (!active) liveTabs.collapseImmediately()
+        jarvisShell.refreshMotionPolicy()
         updateWaveAnimation()
     }
     internal fun isPresentationActive() = foregroundActive && isAttachedToWindow &&
@@ -126,6 +128,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        presentationBudgetRegistration?.close()
+        presentationBudgetRegistration = hologram.observePresentationBudget { jarvisShell.refreshMotionPolicy() }
         presentationPrefs.registerOnSharedPreferenceChangeListener(presentationListener)
         refreshPresentationPreference()
         slotRegistration?.close()
@@ -136,6 +140,9 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onDetachedFromWindow() {
         presentationGeneration++
+        presentationBudgetRegistration?.close()
+        presentationBudgetRegistration = null
+        liveTabs.collapseImmediately()
         hologram.clearMemoryScene()
         presentationPrefs.unregisterOnSharedPreferenceChangeListener(presentationListener)
         removeCallbacks(presentationUpdate)
@@ -152,6 +159,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         super.onWindowVisibilityChanged(visibility)
         if (visibility != View.VISIBLE) presentationGeneration++
         if (visibility != View.VISIBLE) hologram.clearMemoryScene()
+        if (visibility != View.VISIBLE) liveTabs.collapseImmediately()
         updateWaveAnimation()
     }
 
@@ -159,6 +167,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         super.onVisibilityChanged(changedView, visibility)
         if (!isShown) presentationGeneration++
         if (!isShown) hologram.clearMemoryScene()
+        if (!isShown) liveTabs.collapseImmediately()
         updateWaveAnimation()
     }
     var state: ContinuumDashboardState = ContinuumDashboardState()
@@ -168,6 +177,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until
             if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until
             field = value
+            liveTabs.updateState(value)
             views.values.forEach { it.refresh() }
             if (jarvisShellStage) jarvisShell.tiles = shellTiles(value)
             shellForeground.invalidate()
@@ -182,6 +192,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
      * targets and tile destinations (docs/ARCHITEKTUR-JARVIS.md, "Fehlt an der Schnittstelle").
      */
     val jarvisShell = JarvisShellView(context)
+    private val liveTabs = JarvisLiveTabs(context, jarvisShell, ::openJarvisTarget).apply {
+        translationZ = density * 2f
+    }
+    private var presentationBudgetRegistration: AutoCloseable? = null
     private val shellForeground = object : View(context) {
         init {
             tag = "jarvis-foreground"
@@ -267,7 +281,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         views.values.forEach { it.visibility = if (jarvisShellStage) View.GONE else View.VISIBLE }
         shellActions.values.forEach { it.visibility = if (jarvisShellStage) View.VISIBLE else View.GONE }
         if (jarvisShellStage) applyDeckToActions()
-        shellRailScroll.visibility = if (jarvisShellStage && shellRailScroll.width > 0) View.VISIBLE else View.GONE
+        shellRailScroll.visibility = View.GONE
+        liveTabs.visibility = if (jarvisShellStage && !deckCleared) View.VISIBLE else View.GONE
         applyAvatarSlot()
     }
 
@@ -309,7 +324,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     /** Children added by a docked renderer (attach): sized to the slot; the renderer positions them via x/y. */
     private fun isForeign(child: View) = child !== jarvisShell && child !== hologram && child !== avatarPlaceholder &&
-        child !== shellForeground && child !== memoryFullStage && child !== transientCard && child !== shellRailScroll && child !in views.values && child !in shellActions.values
+        child !== shellForeground && child !== memoryFullStage && child !== transientCard && child !== shellRailScroll &&
+        child !== liveTabs && child !in views.values && child !in shellActions.values
 
     private fun layoutForeign() {
         val w = avatarRect.width(); val h = avatarRect.height()
@@ -394,6 +410,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
                 JarvisShellLayout.Slot.NAV_RAIL to JarvisShellRenderer.SlotContent { _, _ -> },
                 JarvisShellLayout.Slot.AVATAR to JarvisShellRenderer.SlotContent { _, _ -> })
         jarvisShell.onFrameDrawn = { shellForeground.invalidate() }
+        jarvisShell.motionBudgetProvider = {
+            if (foregroundActive) hologram.presentationRenderBudget()
+            else JarvisRenderQuality.resolve(false, false, null, false, false)
+        }
         jarvisShell.tiles = shellTiles(state)
         // Drawing and hit targets are separate. Real Views own DOWN/MOVE/CANCEL/UP, keyboard focus and TalkBack.
         jarvisShell.isClickable = false
@@ -403,7 +423,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         addView(avatarPlaceholder)
         addView(memoryFullStage)
         addView(shellForeground)
-        addView(shellRailScroll)
+        addView(liveTabs)
         hologram.memorySceneHostReady = {
             jarvisShellStage && hologram.parent === this && isPresentationActive() &&
                 memoryFullStage.isShown && width > 0 && height > 0
@@ -548,7 +568,11 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         jarvisShell.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         shellForeground.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         memoryFullStage.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
-        if (jarvisShellStage) shellGeometry(width, h)?.let(::measureShellActions)
+        if (jarvisShellStage) shellGeometry(width, h)?.let {
+            measureShellActions(it)
+            liveTabs.setGeometry(it)
+        }
+        liveTabs.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         updateCockpitRegions(width, h)
         if (jarvisShellStage && hologram.parent === this) shellAvatarBox(width, h)?.let { box ->
             hologram.measure(MeasureSpec.makeMeasureSpec((box.right * density).toInt() - (box.left * density).toInt(), MeasureSpec.EXACTLY),
@@ -640,14 +664,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         }
         shell[JarvisShellLayout.Slot.DIALOG]?.let { b ->
             add("dialog:conversation", "chat", "JARVIS: Konversation öffnen",
-                JarvisShellLayout.Box(b.left, b.top, b.right, b.bottom - 55f))
-            val controls = listOf("voice-input" to "Mikrofon starten",
-                "camera-settings" to "Kamera und Wahrnehmung: Einstellungen", "avatar-appearance" to "Avatar-Darstellung")
+                b)
+            val controls = listOf(Triple("voice-input", "voice-input", "Mikrofon starten"),
+                Triple("send", "chat", "Gespräch öffnen"))
             shell.dialogControlBoxes().forEachIndexed { i, box ->
-                add("dialog:${controls[i].first}", controls[i].first, controls[i].second, box)
+                add("dialog:${controls[i].first}", controls[i].second, controls[i].third, box)
             }
         }
-        add("input:conversation", "chat", "Konversation öffnen", shell[JarvisShellLayout.Slot.INPUT])
+        add("input:conversation", "chat", "Konversation öffnen", shell.inputConversationBox())
         add("camera:settings", "camera-settings", "Kamera und Wahrnehmung: Einstellungen", shell[JarvisShellLayout.Slot.CAMERA_STATUS])
         val panelTargets = listOf(JarvisShellLayout.Slot.ROW_AGENTS to "agents", JarvisShellLayout.Slot.ROW_TASKS to "tasks",
             JarvisShellLayout.Slot.ROW_MEMORY to "memory", JarvisShellLayout.Slot.ROW_MODEL to "model-management",
@@ -692,8 +716,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             val view = shellActions.getOrPut(spec.key) {
                 ShellActionView(context, spec.key, spec.target, spec.label).also { addView(it) }
             }
-            view.visibility = if (deckCleared && (spec.key.startsWith("tile:") || spec.key.startsWith("panel:ROW_")))
-                View.INVISIBLE else View.VISIBLE
+            view.visibility = if (deckHides(spec.key)) View.INVISIBLE else View.VISIBLE
             view.refresh()
             val px = spec.box.width * density
             val py = spec.box.height * density
@@ -725,18 +748,33 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
      * Airbus deck (owner brief 06.11.2026): while a work window is open the tiles and lower rows make room. Their hit
      * targets leave with them, so nothing invisible can be touched or focused; they return when the window has closed.
      */
-    fun setDeckCleared(cleared: Boolean) {
-        deckCleared = cleared
-        jarvisShell.setDeckCleared(cleared)
+    fun setWorkspaceFootprint(footprint: JarvisActionScenes.WorkspaceFootprint) {
+        workspaceFootprint = footprint
+        val active = footprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
+        if (active) liveTabs.collapseImmediately()
+        liveTabs.visibility = if (jarvisShellStage && !active) View.VISIBLE else View.GONE
+        jarvisShell.setWorkspaceFootprint(footprint)
         applyDeckToActions()
     }
 
-    private var deckCleared = false
+    fun setDeckCleared(cleared: Boolean) = setWorkspaceFootprint(
+        if (cleared) JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY
+        else JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE)
+
+    private var workspaceFootprint = JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
+    private val deckCleared: Boolean
+        get() = workspaceFootprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
+
+    private fun deckHides(key: String): Boolean {
+        val medium = workspaceFootprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
+        val full = workspaceFootprint == JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY
+        return medium && (key.startsWith("tile:") || key == "panel:COCKPIT_SECONDARY") ||
+            full && key.startsWith("panel:ROW_")
+    }
 
     private fun applyDeckToActions() {
         shellActions.forEach { (key, view) ->
-            if (key.startsWith("tile:") || key.startsWith("panel:ROW_"))
-                view.visibility = if (deckCleared) View.INVISIBLE else View.VISIBLE
+            view.visibility = if (deckHides(key)) View.INVISIBLE else View.VISIBLE
         }
     }
 
@@ -851,6 +889,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         jarvisShell.layout(0, 0, r - l, b - t)
         shellForeground.layout(0, 0, r - l, b - t)
         memoryFullStage.layout(0, 0, r - l, b - t)
+        liveTabs.layout(0, 0, r - l, b - t)
         updateCockpitRegions(r - l, b - t)
         transientCard?.let { card -> transientBox(r - l, b - t)?.let { box ->
             card.layout((box.left * density).toInt(), (box.top * density).toInt(),

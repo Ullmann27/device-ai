@@ -1,0 +1,341 @@
+{
+  "source_base": "d6b3f8ce9bb44aab1af667020a24ff9ad5809cc0",
+  "verified_green_code_commit": "c65b40e2be80d22e27a9e3c20b44531bf8abb9d7",
+  "host": "Linux x86_64, Temurin 17.0.21+9, Gradle 8.11.1, SDK 36, build-tools 35.0.0",
+  "device_proof": false,
+  "runs": {
+    "red": {
+      "counts": {
+        "tests": 22,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": [
+        {
+          "suite": "at.heinz.deviceai.Airbus2100CockpitAndCountdownTest",
+          "counts": {
+            "tests": 3,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "aa8d81b4905a2afb0be093eb6ca08fdae8b1519aa7a54c3fc6fb3d76c1815d45",
+          "cases": [
+            {
+              "name": "missionProfilesCreateMediumAndFullAvionicsFraming",
+              "status": "PASSED"
+            },
+            {
+              "name": "missionCountdownAndTrustedTodaySideQuestEnforceCooldown",
+              "status": "PASSED"
+            },
+            {
+              "name": "oldRelativeTodayMemoryCannotFireOnALaterDay",
+              "status": "PASSED"
+            }
+          ]
+        },
+        {
+          "suite": "at.heinz.deviceai.Argon4CockpitAndBudgetRegressionTest",
+          "counts": {
+            "tests": 4,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "f4e1829e3ff05bfd71d48de6d4236d9967e5ec33930d96a1ab1fc39fa26f7c3f",
+          "cases": [
+            {
+              "name": "briefFirstTurnAndFullComplexOrLongTurnUseTheirCorrectBudgets",
+              "status": "PASSED"
+            },
+            {
+              "name": "fuiMaterializationUsesExactThreePhaseContract",
+              "status": "PASSED"
+            },
+            {
+              "name": "acknowledgementUsesTimelineOnlyAndNeverEmitsDuplicateThinkAction",
+              "status": "PASSED"
+            },
+            {
+              "name": "handsFreePinsHomeAndLiveNative3dCannotBeDetachedForReparent",
+              "status": "PASSED"
+            }
+          ]
+        },
+        {
+          "suite": "at.heinz.deviceai.OwnerAppActionWorkSceneUiTest",
+          "counts": {
+            "tests": 2,
+            "failures": 1,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "815c5be9f954edc5e9b4b53300e15aea82e7662d8b8ff90033dcf3bfd034990e",
+          "cases": [
+            {
+              "name": "implicitFuzzyNeedReturnsToConversationBeforeAppSelection",
+              "status": "FAILED",
+              "failure": "java.lang.AssertionError: Fuzzy implicit needs must not offer app selection"
+            },
+            {
+              "name": "explicitFuzzySelectionKeepsCancellationReceipt",
+              "status": "PASSED"
+            }
+          ]
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarMorphMapperComparisonTest",
+          "counts": {
+            "tests": 4,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "fcd4c814baf37e07f855a43722d0629b059272946bd148322103e2da29941712",
+          "cases": [
+            {
+              "name": "eyesLeadHeadAndReducedMotionSnapsExactly",
+              "status": "PASSED"
+            },
+            {
+              "name": "criticallyDampedSpringsReachPinnedEightyPercentTimesWithoutOvershoot",
+              "status": "PASSED"
+            },
+            {
+              "name": "silenceAndBilabialSealStillCloseMouthImmediately",
+              "status": "PASSED"
+            },
+            {
+              "name": "repeatedTimestampIsStrictlyIdempotent",
+              "status": "PASSED"
+            }
+          ]
+        },
+        {
+          "suite": "at.heinz.deviceai.cognitive.OwnerAppActionFlowTest",
+          "counts": {
+            "tests": 9,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "589d730a27e0f3c8abc5f4ecbc3ee25123c976c90b2bb3dec6ec47a10a25f6ce",
+          "cases": [
+            {
+              "name": "singleCharacterAppLabelStillRequiresConcreteApproval",
+              "status": "PASSED"
+            },
+            {
+              "name": "declinedConfirmationAndStoppedApprovalNeverCallLaunchBackend",
+              "status": "PASSED"
+            },
+            {
+              "name": "staleCallAndReplayCannotSelectOrReopenAnApp",
+              "status": "PASSED"
+            },
+            {
+              "name": "ambiguousAppsRequireSelectionBeforeConcreteConfirmation",
+              "status": "PASSED"
+            },
+            {
+              "name": "permissionFailureCannotBecomeVerifiedOpening",
+              "status": "PASSED"
+            },
+            {
+              "name": "missingAppAndLookupOnlyDoNotOfferExecution",
+              "status": "PASSED"
+            },
+            {
+              "name": "ownerInputReachesRealLookupThenExactConfirmationThenGate",
+              "status": "PASSED"
+            },
+            {
+              "name": "compoundRequestsStayWholeAndReferencesNeedActualCandidates",
+              "status": "PASSED"
+            },
+            {
+              "name": "lookupVerifiedOnlyAfterFreshValidatedDiscoveryPayload",
+              "status": "PASSED"
+            }
+          ]
+        }
+      ]
+    },
+    "green": {
+      "counts": {
+        "tests": 25,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": [
+        {
+          "suite": "at.heinz.deviceai.Airbus2100CockpitAndCountdownTest",
+          "counts": {
+            "tests": 3,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "299f1ff4d85689ba59c9e62963ec52e0fad1121ec8e6a0315a64d8cf45ff0b53",
+          "cases": [
+            {
+              "name": "missionProfilesCreateMediumAndFullAvionicsFraming",
+              "status": "PASSED"
+            },
+            {
+              "name": "missionCountdownAndTrustedTodaySideQuestEnforceCooldown",
+              "status": "PASSED"
+            },
+            {
+              "name": "oldRelativeTodayMemoryCannotFireOnALaterDay",
+              "status": "PASSED"
+            }
+          ]
+        },
+        {
+          "suite": "at.heinz.deviceai.Argon4CockpitAndBudgetRegressionTest",
+          "counts": {
+            "tests": 4,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "bcca3052f6b977cbb87cd92a92a663eb286ccf542edc06178e324afb39e321a1",
+          "cases": [
+            {
+              "name": "briefFirstTurnAndFullComplexOrLongTurnUseTheirCorrectBudgets",
+              "status": "PASSED"
+            },
+            {
+              "name": "fuiMaterializationUsesExactThreePhaseContract",
+              "status": "PASSED"
+            },
+            {
+              "name": "acknowledgementUsesTimelineOnlyAndNeverEmitsDuplicateThinkAction",
+              "status": "PASSED"
+            },
+            {
+              "name": "handsFreePinsHomeAndLiveNative3dCannotBeDetachedForReparent",
+              "status": "PASSED"
+            }
+          ]
+        },
+        {
+          "suite": "at.heinz.deviceai.OwnerAppActionWorkSceneUiTest",
+          "counts": {
+            "tests": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "f46492b17cbb963146e8923ed7a51b24d593615740a3223b3467bb2f711737b1",
+          "cases": [
+            {
+              "name": "implicitFuzzyNeedReturnsToConversationBeforeAppSelection",
+              "status": "PASSED"
+            },
+            {
+              "name": "explicitFuzzySelectionKeepsCancellationReceipt",
+              "status": "PASSED"
+            }
+          ]
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarMorphMapperComparisonTest",
+          "counts": {
+            "tests": 4,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "4bd84de0120de2f44e23495a5616883c373248fa0adcae159964a83d91773eea",
+          "cases": [
+            {
+              "name": "eyesLeadHeadAndReducedMotionSnapsExactly",
+              "status": "PASSED"
+            },
+            {
+              "name": "criticallyDampedSpringsReachPinnedEightyPercentTimesWithoutOvershoot",
+              "status": "PASSED"
+            },
+            {
+              "name": "silenceAndBilabialSealStillCloseMouthImmediately",
+              "status": "PASSED"
+            },
+            {
+              "name": "repeatedTimestampIsStrictlyIdempotent",
+              "status": "PASSED"
+            }
+          ]
+        },
+        {
+          "suite": "at.heinz.deviceai.cognitive.OwnerAppActionFlowTest",
+          "counts": {
+            "tests": 12,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "d82cd930bf65a90880eae74b2eaf8fb42037e6d290cb3dffcc2ab1dfd463836c",
+          "cases": [
+            {
+              "name": "singleCharacterAppLabelStillRequiresConcreteApproval",
+              "status": "PASSED"
+            },
+            {
+              "name": "explicitFuzzyLaunchPreservesApprovedAndRejectedReceipts",
+              "status": "PASSED"
+            },
+            {
+              "name": "declinedConfirmationAndStoppedApprovalNeverCallLaunchBackend",
+              "status": "PASSED"
+            },
+            {
+              "name": "staleCallAndReplayCannotSelectOrReopenAnApp",
+              "status": "PASSED"
+            },
+            {
+              "name": "ambiguousAppsRequireSelectionBeforeConcreteConfirmation",
+              "status": "PASSED"
+            },
+            {
+              "name": "permissionFailureCannotBecomeVerifiedOpening",
+              "status": "PASSED"
+            },
+            {
+              "name": "missingAppAndLookupOnlyDoNotOfferExecution",
+              "status": "PASSED"
+            },
+            {
+              "name": "ownerInputReachesRealLookupThenExactConfirmationThenGate",
+              "status": "PASSED"
+            },
+            {
+              "name": "exactImplicitAmbiguityPreservesCancellationReceipt",
+              "status": "PASSED"
+            },
+            {
+              "name": "compoundRequestsStayWholeAndReferencesNeedActualCandidates",
+              "status": "PASSED"
+            },
+            {
+              "name": "lookupVerifiedOnlyAfterFreshValidatedDiscoveryPayload",
+              "status": "PASSED"
+            },
+            {
+              "name": "fuzzyImplicitIntentsFinishBeforeSelectionOrLaunch",
+              "status": "PASSED"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "red_source_delta": {
+    "description": "Only add missing org.junit.Assert.assertNull import in CockpitAnimationTriggersTest to allow compilation",
+    "patch_sha256": "d3981e32d0e16881428d1c9766ec3e7b283e68336d74579095383b75f765064d"
+  }
+}

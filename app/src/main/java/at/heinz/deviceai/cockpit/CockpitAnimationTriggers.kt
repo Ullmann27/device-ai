@@ -26,7 +26,7 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
         }
         val now = clock()
         bus.emit(CockpitAnimationEvent.CommandFlyIn(turnId, now, clean(command, 60)))
-        bus.emit(CockpitAnimationEvent.ActionStarted(turnId, now, CockpitAction.THINK, "Auftrag angenommen", stepKey = "ack"))
+        // The timeline owns the single local-reasoning scene; emitting THINK here created a duplicate card.
         bus.emit(CockpitAnimationEvent.ProcessTimeline(turnId, now, steps))
     }
 
@@ -93,10 +93,19 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
     }
 
     /** (e) Only for a real document intake. No general PDF intake exists yet (Quelle fehlt, see docs). */
-    fun documentReceived(turnId: String, documentName: String, mimeType: String, question: String) {
+    fun documentReceived(
+        turnId: String,
+        documentName: String,
+        mimeType: String,
+        question: String,
+        pageCount: Int? = null
+    ) {
         if (isClosed(turnId)) return
-        bus.emit(CockpitAnimationEvent.DocumentQuestion(turnId, clock(), clean(documentName, 64), clean(mimeType, 64),
-            clean(question, 120)))
+        val safePages = pageCount?.takeIf { it in 0..100_000 }
+        bus.emit(CockpitAnimationEvent.DocumentQuestion(
+            turnId, clock(), clean(documentName, 64), clean(mimeType, 64),
+            clean(question, 120), safePages
+        ))
     }
 
     @Synchronized fun timeline(turnId: String): List<ProcessStep> = timelines[turnId]?.toList().orEmpty()
