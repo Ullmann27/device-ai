@@ -1,0 +1,26 @@
+name: Airbus 2100 source map
+
+on:
+  push:
+    branches:
+      - codex/airbus2100-hollywood-fui-20261108
+    paths:
+      - scripts/airbus2100_source_map.py
+      - .github/workflows/airbus2100-source-map.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: airbus2100-source-map-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print production contracts
+        run: python3 scripts/airbus2100_source_map.py
