@@ -33,7 +33,7 @@ class OwnerAppActionFlowTest {
                     .put("package", "org.example.messenger").put("status", "VERIFIED_FOREGROUND")
                     .put("windowRevision", 7).toString()
             })
-            val flow = OwnerAppActionFlow(intake.opening)
+            val flow = OwnerAppActionFlow(intake.opening, intake.requireInstalledCandidate)
             val confirm = flow.returned(invoke(gate, flow.start(intake.query))) as OwnerAppActionFlow.Step.Confirm
             assertEquals(listOf("find_app"), calls.map { it.name })
             assertEquals("org.example.messenger", confirm.call.arguments["packageOrName"])
@@ -186,8 +186,6 @@ class OwnerAppActionFlowTest {
         assertFalse(replayed.lookupVerified)
         assertFalse(replayed.exactMatchVerified)
     }
-
-
 
     @Test fun fuzzyImplicitAppNeedsFallBackBeforeAnySelection() {
         val examples = listOf(
