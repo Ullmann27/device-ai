@@ -11,7 +11,7 @@ import kotlin.math.PI
 import kotlin.math.sin
 
 /** Bounded, allocation-free per-frame diagnostics for the real visible avatar path. */
-internal class AvatarFrameReceipt {
+class AvatarFrameReceipt internal constructor() {
     var frameNumber: Long = 0L
     var frameNanos: Long = 0L
     var stateOrdinal: Int = 0
