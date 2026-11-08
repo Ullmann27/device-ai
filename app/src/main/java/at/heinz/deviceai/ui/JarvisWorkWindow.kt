@@ -63,6 +63,7 @@ private const val HANDOVER_SLOT_LEFT_DP = 16f
 private const val HANDOVER_SLOT_TOP_DP = 60f
 private const val HANDOVER_SLOT_W_DP = 44f
 private const val HANDOVER_SLOT_H_DP = 58f
+private const val CONTENT_MORPH_MS = 250L
 
 /** In-cockpit content, shell frames only. */
 class JarvisWorkWindow(
@@ -201,6 +202,55 @@ class JarvisWorkWindow(
         else statusView.visibility = if (value == null) GONE else VISIBLE
     }
 
+    /**
+     * Replaces the semantic work surface without closing/reopening this window.
+     * Geometry, openness, frame subscription and camera ownership remain unchanged.
+     */
+    fun replaceContent(
+        body: View,
+        title: String,
+        accent: Int = Colors.cyan,
+        emblem: android.graphics.drawable.Drawable? = null,
+        crystal: Boolean = false,
+        depthLayers: Int = 0,
+        onClosed: () -> Unit = {}
+    ): Boolean {
+        if (disposed || !isShowing || deliveringFrame || isInLayout) return false
+        if (body.parent != null && body.parent !== scroll) return false
+        generation++
+        pendingCleanup?.let { removeCallbacks(it) }
+        pendingCleanup = null
+        this.onClosed = onClosed
+        this.onOpened = {}
+        this.emblem = emblem?.mutate()
+        this.crystal = crystal && emblem != null
+        this.accent = accent
+        this.depthLayers = depthLayers.coerceIn(0, JarvisWorkWindowDepth.MAX_LAYERS)
+        recession = null
+        handedOver = true
+        titleView.text = title
+        statusText = null
+        statusView.text = ""
+        statusView.visibility = GONE
+        val oldBody = scroll.getChildAt(0)
+        if (oldBody !== body) {
+            oldBody?.animate()?.cancel()
+            scroll.removeAllViews()
+            body.animate().cancel()
+            body.alpha = 0f
+            scroll.addView(body, FrameLayout.LayoutParams(-1, -2))
+            body.animate().alpha(1f).setDuration(CONTENT_MORPH_MS).start()
+        } else body.alpha = 1f
+        scroll.scrollTo(0, 0)
+        val params = panel.layoutParams as? LayoutParams
+        if (params != null && params.width > 0 && params.height > 0) fitTitle(params.width, params.height)
+        edge = Fill.Linear(origin.centerX() / density, origin.centerY() / density,
+            destination.centerX() / density, destination.centerY() / density,
+            intArrayOf(accent, Colors.cardRimEnd, Colors.violet, Colors.magenta))
+        invalidate()
+        requestFrame()
+        return true
+    }
     /** Where the window stands (overlay pixels) while it is shown; null when closed. */
     fun shownBounds(): RectF? = if (isShowing && JarvisWorkWindowGeometry.valid(destination)) RectF(destination) else null
 
