@@ -1,5 +1,7 @@
 package at.heinz.deviceai.learning.context
 
+import java.util.Locale
+
 /**
  * Deterministic role/centering resolver over externally supplied canonical entities and relation edges.
  * It stores no personal facts and never infers a relation that is absent from [RelationEdge].
@@ -99,7 +101,12 @@ internal object EntityRoleResolutionEngine {
             else -> Resolution.NoEvidence
         }
         val resolvedAnchor = anchor as? Resolution.Resolved ?: return anchor
-        val relationKey = relation.trim().uppercase()
+        // Lexical labels never supply a relation edge.
+        val relationKey = when (relation.trim().lowercase(Locale.ROOT)) {
+            "schwester" -> "SISTER"
+            "tochter" -> "CHILD"
+            else -> relation.trim().uppercase(Locale.ROOT)
+        }
         val matching = edges.filter {
             it.fromId == resolvedAnchor.entity.id && it.relation.uppercase() == relationKey
         }
