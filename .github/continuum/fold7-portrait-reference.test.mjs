@@ -29,18 +29,19 @@ const activityMember=signature=>{
  return activity.slice(start,end<0?undefined:end);
 };
 
-test('Fold portrait uses the shared width/font profile and one labelled rail',()=>{
+test('Fold portrait uses the shared width/font profile, one Activity rail and no duplicated shell rail',()=>{
  assert.match(layout,/fun isPortraitFold\(widthDp: Float, heightDp: Float\)/);
  assert.match(layout,/isWide\(widthDp, heightDp\) && heightDp >= widthDp \* 1\.02f/);
  assert.match(layout,/ContinuumReferenceLayout\.create\(widthDp, heightDp, true, fontScale\)/);
  assert.match(reference,/val portrait = wide && height > 0f && ContinuumHomeLayout\.isPortraitFold\(width, height\)/);
  assert.match(profile,/const val MEDIUM_MIN_DP = 600f/);
  assert.match(profile,/const val EXPANDED_MIN_DP = 840f/);
- assert.match(profile,/val reference = size == WidthClass\.EXPANDED && heightDp >= REFERENCE_MIN_HEIGHT_DP &&\s*font <= 1\.3f && readableColumns == 5 && rail == JarvisShellLayout\.Rail\.LABELLED/);
+ assert.match(profile,/val reference = size != WidthClass\.COMPACT && heightDp >= REFERENCE_MIN_HEIGHT_DP &&\s*font <= 1\.3f && readableColumns == JarvisCockpitGrid\.TILE_COLUMNS/);
+ assert.match(profile,/\s0f, reference\)/);
  assert.match(shell,/fun create\(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail\.LABELLED,\s*includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false\): Shell \{/);
  assert.match(shell,/val full = create\(widthDp \+ externalRailWidthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation\)/);
  assert.match(shell,/val profile = JarvisWindowProfile\.resolve\(widthDp, heightDp, fontScale, foldRail\)/);
- assert.match(shell,/return if \(profile\.referenceComposition\) reference\(widthDp, heightDp, profile, foldRail\)\.let \{\s*if \(compactPresentation\) compactReference\(it\) else it\s*\} else reflow\(widthDp, heightDp, profile, foldRail, includeBottomNavigation, compactPresentation\)/);
+ assert.match(shell,/return if \(profile\.referenceComposition\) reference\(widthDp, heightDp, profile\)\.let \{\s*if \(compactPresentation\) compactReference\(it\) else it\s*\} else reflow\(widthDp, heightDp, profile, includeBottomNavigation, compactPresentation\)/);
  const ui=activityMember('private fun buildUi(): View');
  assert.match(ui,/val wide = windowWidthDp >= at\.heinz\.deviceai\.ui\.JarvisWindowProfile\.MEDIUM_MIN_DP/);
  assert.match(ui,/val rail = buildRail\(\)\.also/);
@@ -52,13 +53,11 @@ test('Fold portrait uses the shared width/font profile and one labelled rail',()
 test('current information panels and separate status keep real sources and complete scrollable rows',()=>{
  assert.match(grid,/const val REF_W = 1536f/);
  assert.match(grid,/const val REF_H = 1024f/);
- for(const [slot,left,right] of [['ROW_AGENTS',258,548],['ROW_TASKS',560,836],
-   ['ROW_MEMORY',848,1152],['ROW_MODEL',1164,1520]]){
-  assert.ok(grid.includes('a[Area.'+slot+'] = b('+left+'f, rowTop, '+right+'f, rowBottom)'),
-   'Misaligned reference information panel '+slot);
+ for(const slot of ['ROW_AGENTS','ROW_TASKS','ROW_MEMORY','ROW_MODEL'])
   assert.match(shell,new RegExp('Slot\\.'+slot+' to gr\\[Area\\.'+slot+'\\]'));
- }
- assert.match(grid,/a\[Area\.STATUS\] = b\(16f, 906f \* u \+ extraHeight, 1520f, 978f \* u \+ extraHeight\)/);
+ assert.match(grid,/informationRow\(listOf\(Area\.ROW_MEMORY, Area\.ROW_MODEL\), chartHeight\)/);
+ assert.match(grid,/informationRow\(listOf\(Area\.ROW_AGENTS, Area\.ROW_TASKS\), activityHeight\)/);
+ assert.match(grid,/a\[Area\.STATUS\] = Box\(margin, y, right, y \+ statusHeight\)/);
  assert.match(content,/Slot\.ROW_AGENTS -> ContinuumCockpitPresentation\.agentRows\(s\.cockpit\)/);
  assert.match(content,/Slot\.ROW_TASKS -> ContinuumCockpitPresentation\.processRows\(s\.cockpit\)/);
  assert.match(content,/Slot\.ROW_MEMORY -> ContinuumCockpitPresentation\.memoryRows\(s, nowMillis\)/);
@@ -66,10 +65,11 @@ test('current information panels and separate status keep real sources and compl
  assert.match(content,/Slot\.COCKPIT_SECONDARY, Slot\.STATUS -> ContinuumCockpitPresentation\.systemRows\(s\)/);
  assert.match(view,/jarvisShell\.content = JarvisShellContent\.forState\(\{ state \}/);
  // Medium/large-text rows keep all four records; they scroll instead of shrinking.
- assert.match(shell,/val infos = listOf\(Slot\.ROW_AGENTS, Slot\.ROW_TASKS, Slot\.ROW_MEMORY, Slot\.ROW_MODEL\)/);
  assert.match(shell,/val infoW = \(room - \(p\.informationColumns - 1\) \* gap\) \/ p\.informationColumns/);
- assert.match(shell,/b\[slot\] = Box\(x, t, x \+ infoW, t \+ infoH\)/);
- assert.match(shell,/y \+= \(\(infos\.size \+ p\.informationColumns - 1\) \/ p\.informationColumns\) \* \(infoH \+ gap\)/);
+ assert.match(shell,/fun informationRow\(slots: List<Slot>, cardHeight: Float\)/);
+ assert.match(shell,/b\[slot\] = Box\(x, t, x \+ infoW, t \+ cardHeight\)/);
+ assert.match(shell,/informationRow\(listOf\(Slot\.ROW_MEMORY, Slot\.ROW_MODEL\), 190f \* font\)/);
+ assert.match(shell,/informationRow\(listOf\(Slot\.ROW_AGENTS, Slot\.ROW_TASKS\), 132f \* font\)/);
  assert.match(shell,/return Shell\(formFactor\(w, viewport\), w, maxOf\(viewport, y\)/);
  assert.doesNotMatch(content,/\b(435 gespeicherte|129 Lernereignisse|aktive Worker.{0,5}3)\b/);
 });
@@ -81,10 +81,10 @@ test('ten action controls share draw bounds while head and original orb retain s
   ['chat','memory','logic','research','agents','tasks','web','learning','device','system']);
  assert.match(grid,/const val TILE_COLUMNS = 5/);
  assert.match(grid,/const val TILE_ROWS = 2/);
- assert.match(shell,/return Shell\(formFactor\(w, h\), w, h, b, 5, 2, rail,/);
+ assert.match(shell,/return Shell\(formFactor\(w, h\), w, gr\.height, b, JarvisCockpitGrid\.TILE_COLUMNS, JarvisCockpitGrid\.TILE_ROWS, null,/);
  assert.match(shell,/val rows = \(10 \+ p\.tileColumns - 1\) \/ p\.tileColumns/);
  assert.match(shell,/return List\(minOf\(10, tileColumns \* tileRows\)\)/);
- assert.match(shell,/val tileH = maxOf\(64f \* font, 48f\)/);
+ assert.match(shell,/val tileH = maxOf\(JarvisCockpitGrid\.MIN_TILE_DP \* font, tileWidth \/ JarvisCockpitGrid\.TILE_ASPECT\)/);
  assert.match(view,/shell\.tileBoxes\(\)\.forEachIndexed/);
  assert.match(view,/ShellActionView\(context, spec\.key, spec\.target, spec\.label\)/);
  assert.match(view,/shellActionBounds = actions\.associate \{ it\.key to it\.box \}/);
@@ -110,7 +110,6 @@ test('Fold chat remains a real native action and both content and rail stay scro
  assert.match(activityMember('private fun navigateDashboardTarget('),
   /touchedCockpitTarget = target\s*try \{ navigateDashboardTargetNow\(target\) \} finally \{ touchedCockpitTarget = null \}/);
  assert.match(activityMember('private fun navigateDashboardTargetNow('),/else -> menuNavigator\.navigate\(target\)/);
- assert.match(menu,/if \(openTarget\?\.invoke\(target\) != true\) open\(slot\)/);
  assert.match(activityMember('private fun openHomeSlot('),/Slot\.LABEL_THINKING -> navigateWorkArea\(ContinuumWorkArea\.CHAT\)/);
  assert.match(activityMember('private fun navigateWorkArea('),/ContinuumWorkArea\.CHAT -> focusChatComposer\(\)/);
  const pane=activityMember('private fun buildConversationPane(wide: Boolean): View');

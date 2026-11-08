@@ -7,6 +7,7 @@ const root='app/src/main/java/at/heinz/deviceai/';
 const orb=readFileSync(root+'ContinuumHologramView.kt','utf8');
 const activity=readFileSync(root+'AgentActivity.kt','utf8');
 const cognition=readFileSync(root+'learning/ContinuumCognitiveRuntime.kt','utf8');
+const essential=readFileSync(root+'ui/AvatarEssentialMotionPolicy.kt','utf8');
 
 const segment=(src,start,end)=>{
  const a=src.indexOf(start);
@@ -34,7 +35,7 @@ test('Android window visibility and focus can restore orbital clock without cach
  assert.ok(orb.includes('visibleFrameCount++'), 'frames must be countable for device diagnosis');
  assert.ok(orb.includes('motionDiagnostics()'), 'owner must see blocked system gate');
 });
-test('foreground lifecycle explicitly pauses, cancels, and resumes hologram',()=>{
+test('foreground lifecycle explicitly pauses, cancels, and resumes hologram while low budgets preserve only essential motion',()=>{
  const paused=segment(activity,'override fun onPause() {','override fun onSaveInstanceState(');
  const resumed=segment(activity,'override fun onResume() {','override fun onPause()');
  const policy=segment(orb,'private fun updateMotionPolicy() {','private fun settleState()');
@@ -48,7 +49,10 @@ test('foreground lifecycle explicitly pauses, cancels, and resumes hologram',()=
  assert.ok(policy.includes('lastFrameMs = 0L'));
  assert.ok(policy.includes('scheduleFrame()'));
  assert.ok(orb.includes('ValueAnimator.areAnimatorsEnabled()'));
- assert.ok(orb.includes('!powerManager.isPowerSaveMode'));
+ assert.ok(orb.includes('powerManager.isPowerSaveMode'));
+ assert.ok(policy.includes('AvatarEssentialMotionPolicy.frameLoopAllowed'));
+ assert.match(essential,/budget\.animate \|\| avatarEnabled/);
+ assert.match(essential,/frameLoopAllowed && budget\.animate/);
 });
 test('local model prompt never reads a profile-wide old dialogue after session change',()=>{
  const reply=segment(cognition,'fun reply(input:String):ContinuumCognitiveTurn {','internal fun localPrompt(question:String,resolved:String):String');
@@ -68,13 +72,16 @@ test('local model prompt never reads a profile-wide old dialogue after session c
  assert.ok(!prompt.includes('prior.lastOrNull'));
 });
 
-test('each AgentActivity chat turn captures only its session-scoped local-model topic',()=>{
+test('each AgentActivity chat turn captures only its session-scoped local-model topic plus bounded state telegram',()=>{
  assert.ok(activity.includes('private data class LocalPromptSession(val id:String,val groundedTopic:String?)'));
  assert.ok(activity.includes('private var scopedLocalPromptSession:LocalPromptSession?=null'));
  assert.ok(activity.includes('val requestSessionId=sessionId'));
  assert.ok(activity.includes('scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic'));
  assert.ok(activity.includes('conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic'));
- assert.ok(activity.includes('cognitive.localModelPrompt,cognitive.nextScopedGroundedQuestion'));
+ assert.ok(activity.includes('cognitive.localModelPrompt'));
+ assert.ok(activity.includes('cognitive.nextScopedGroundedQuestion'));
+ assert.ok(activity.includes('stateTelegramForSources(shown.memoryIds.toSet(), nowMs)'));
+ assert.ok(activity.includes('Triple(shown.answer,shown.evidenceLine,shown.grounded) to stateTelegram'));
  assert.ok(activity.includes('scopedLocalPromptSession=LocalPromptSession(requestSessionId,nextTopic)'));
  assert.ok(activity.includes('scopedLocalPromptSession=null'), 'new chat must clear old session topic');
 });
