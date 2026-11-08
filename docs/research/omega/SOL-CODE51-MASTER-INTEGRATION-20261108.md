@@ -1,6 +1,8 @@
 # Code51 master integration
 
-Status: WIP / host integration; Draft PRs #650 and #653. No device acceptance.
+Status: bounded integration milestone HOST-PASS; Draft PRs #650 and #653.
+Overall Code51 remains WIP; no APK or device acceptance. Closing under the
+owner's 10% limit instruction; no further projects started.
 Owner canon #642, execution #643; read #637-641.
 No main merge, signing, release, installation, private data or signer access.
 
@@ -23,20 +25,20 @@ Experiment contracts #41, AGENTS.md and the experiment register read.
 Relevant interfaces: EXP-06 provenance, EXP-08 jobs, EXP-11 delegation,
 EXP-12 recovery. No promotion of research experiments or schema migration.
 
-## Initial integration matrix
+## Integration matrix
 
 | Capability | Existing source / actual UI entry | Execution / missing connection |
 |---|---|---|
-| Memory | `showMemoryCenter`, confirmed facts / learning core | Manual UI connected; free-language routing must be reproduced |
-| Logic / planning | `showLogicCenter`, dashboard action `logic` | Manual UI connected; no natural-language alias in current chat center switch |
+| Memory | `OwnerAppLookupIntent -> localCenter -> showMemoryCenter` | Manual and bounded natural navigation connected; #639's exact device incident and #640 output remain unverified |
+| Logic / planning | `centerTarget -> localCenter -> showLogicCenter` | Natural title and manual dashboard use the same center; no second planning system |
 | External apps | `OwnerAppLookupIntent -> OwnerAppActionFlow -> ToolGate` | Discovery is read-only; launch requires permission and fresh foreground receipt |
-| PDF | `OwnerDocumentIntent -> openOrReuseDocument` | Android picker; distinguish file names from internal centers |
-| Public research | `PublicKnowledgeTopicRouter -> WebToolRequest -> ApprovedWebToolGate -> DeepResearchEngine` | Existing real HTTP pipeline; narrow prefix recognition misses natural research commands |
-| Voice | `ContinuousConversationMode`, Android ASR, local model, Android TTS | Existing half-duplex integration; #646 owns recovery. Physical playback/restart unverified here |
-| Avatar / work scenes | `JarvisActionScenes`, cockpit events / task effects | Existing scene pipeline; #638 reference quality and Fold7 performance remain open |
-| Bots | 20 profiles, local conversation / `ChiefWorkerPool` status diagnosis | Profiles are not executable capabilities; worker/job boundaries to audit |
+| PDF | `OwnerDocumentIntent -> openOrReuseDocument` | Named PDF and generic document commands reach the existing Android picker, not a fabricated file result |
+| Public research | `PublicKnowledgeTopicRouter -> WebToolRequest -> ApprovedWebToolGate -> DeepResearchEngine` | Natural intake now connected before generic app lookup; OFF/ASK/ALWAYS_ON and private negatives checked with controlled providers, live HTTP/device operation unverified |
+| Voice | `ContinuousConversationMode`, Android ASR, local model, Android TTS | Pinned #646 recovery/thermal changes integrated; independent 20-turn handoff tests. Physical playback/restart unverified |
+| Avatar / work scenes | `JarvisActionScenes`, cognitive/cockpit events, #651 workscene | Same event/render-budget path; decorative cinematic phases are not evidence of tool progress. #638 reference quality/Fold7 performance remain open |
+| Bots | 20 profiles, `ChiefBotTaskIntake -> runLocal -> BoundedAgent -> ToolGate` | Existing explicit assignments retain scoped permissions; denied tools cannot report success. Persistent bot queue/status and restart UI remain incomplete |
 | Development | Existing development backlog, teamleader, Android/Termux builder | READY diagnosis is not a completed coding job or APK proof |
-| Cognitive pilots | Existing memory/context/reasoning plus #647/#648 | Research/holdout evidence is not a tool execution receipt |
+| Cognitive pilots | Existing brain plus pinned #647/#648/#649 | Context/reasoning/reuse host assertions checked; optional research is not autonomously enabled or treated as a tool receipt |
 
 ## Validation checkpoint
 
@@ -145,3 +147,116 @@ being root-owned from the earlier run, not a product error. Final full rerun
 with writable generated-report artifacts is pending; no suite-wide GREEN claim.
 Four executable Checks programs PASS; one Checks helper has no main and is
 covered by JUnit rather than being an executable program.
+
+## Final acceptance evidence and restart handoff
+
+Validated immutable source:
+`f25dc510b8b94c9008191b361567f6cb0d9c79fd`.
+This contains the three pinned merges and the final adapter assertion fix.
+The final handoff commit changes documentation only; obtain its exact pushed
+SHA from #653 or `git ls-remote origin refs/heads/sol/code51-pinned-integration-20261108`.
+
+| Check | Final result |
+|---|---|
+| Full Kotlin main/test compilation, JVM17 target on JDK21 | PASS, including merged Android source against compile-only stubs |
+| Existing complete JVM runner | PASS: 631 JUnit classes, `OK (3544 tests)`, zero failures |
+| Checks programs | PASS: four executables; one no-main helper skipped as an executable, covered by JUnit |
+| Native Node regression/research selection | PASS: 202 tests, zero failures/cancellations/skips |
+| Original-source context pilot | PASS: 20 tests |
+| Original-source reasoning batch pilot | PASS: 17 tests, 768 permutations, 26 controls |
+| Gradle QA on restored JDK21 | FAIL / environmental: AGP 8.10.0 resolution, `dl.google.com` DNS unavailable |
+| AGP/SDK36, lint, Robolectric UI, APK | BLOCKED / NOT_VERIFIED; no Android SDK and unavailable Google Maven |
+| ARM64 native Gemma, Fold7 / Android17 speech/TTS/UI/thermal/security acceptance | NOT_RUN; no device/adb |
+
+The normal JUnit runner retains repository Ignore/Assume behavior; its OK
+count is not a claim that disabled tests ran. The read-only filesystem
+negative passed as user `nobody`. The scorer's previously root-owned generated
+report directory/file were made writable for that user; no source-test
+semantics or broad workspace permissions were weakened. Both earlier
+complete-suite failures are resolved on the final run.
+
+Actual complete-run output:
+
+```text
+f25dc510b8b94c9008191b361567f6cb0d9c79fd
+classes=631 checks=5 junit: OK (3544 tests)
+KOTLIN_UNIT_TESTS_CHECKED: all JUnit classes and Checks programs pass (outside Gradle; not lint, not an APK, not a device)
+f25dc510b8b94c9008191b361567f6cb0d9c79fd
+Elapsed: 5:11.62; maximum resident set size: 2114420 kbytes; exit status: 0
+```
+
+The resource numbers include host compilation and tests, not Android runtime
+memory, thermal behavior, energy savings or simultaneous model/GPU load.
+Full logs persist in the session's `final-qa-location.txt` location
+(`final-result/`, `final-resources.txt`) and `node-final-f25dc510.tap`.
+The evidence and source pins needed for takeover are in this pushed document.
+
+Reproduction (set `QA` to a writable artifact directory, `KOTLIN_HOME` to the
+official Kotlin 2.2.21 compiler and `DEPS` to the pinned dependency jars):
+
+```bash
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 LC_ALL=C.UTF-8
+export PATH="$JAVA_HOME/bin:$KOTLIN_HOME/bin:$PATH" JAVA_OPTS=-Xmx3g
+export CONTINUUM_ANDROID_DEPS="$DEPS"
+export CONTINUUM_JUNIT_JARS="$DEPS/junit.jar:$DEPS/hamcrest.jar"
+bash scripts/android-kotlin-unit-check.sh "$QA"
+bash scripts/continuum-context-pilot.sh "$QA/context"
+bash scripts/continuum-reasoning-pilot.sh "$QA/reasoning" batch
+node --test \
+  scripts/continuum-owner-local-routing.test.mjs \
+  scripts/continuum-ui-routing.test.mjs \
+  scripts/continuum-jarvis-mission-control-contract.test.mjs \
+  scripts/continuum-local-chat-streaming.test.mjs \
+  scripts/continuum-gemma-picker-lifecycle.test.mjs \
+  scripts/android-kotlin-compile-check.test.mjs \
+  scripts/continuum-mobile-builder.test.mjs \
+  scripts/continuum-session-evidence-routing.test.mjs \
+  .github/continuum/development-backlog.test.mjs \
+  .github/continuum/ccc1-redgreen-verifier.test.mjs \
+  .github/continuum/ccc1-independent-verifier.test.mjs \
+  .github/continuum/ccc1-experience-durability.test.mjs \
+  tools/continuum-virtual-fabric/*.test.mjs \
+  tools/continuum-cognitive-pilots/verified-reuse-pilot.test.mjs
+```
+
+For the permission negative, run the complete suite without root and ensure
+`app/build/continuum-eval` is writable by the test user. No SDK-less result
+substitutes for Gradle QA (`:app:compileDebugKotlin :app:testDebugUnitTest
+:app:lintDebug`, with the repository's existing owner-authorized QA settings).
+The attempted Gradle validation stopped at plugin resolution, before these
+tasks could run; no new Code51 signing/CI exception was assumed.
+Dependencies restored from official artifacts: android-all
+`15-robolectric-13954326`, OkHttp 4.12.0, Okio 3.6.0, Shizuku 13.1.5,
+Filament/gltfio 1.56.0, OpenCV 4.13.0, JUnit 4.13.2, Hamcrest 1.3.
+LiteRT's stand-in is compile-only and never a native inference claim.
+
+Verified RED -> GREEN checkpoints:
+navigation `561a8865` (11 / 4 failures -> 11 PASS);
+research `25b7aeea` (16 / 2 failures -> 21 PASS; combined integration 55 PASS);
+agent truth `82590f53` (3 / 1 failure -> coupled 36 PASS);
+native adapter `f25dc510` (stale PARTIAL expectation -> 8 PASS).
+All useful code checkpoints were committed, pushed and read back.
+
+Lifecycle/defensive boundary evidence remains bounded: Activity pause cancels
+ASR/web sessions, stops TTS/camera and marks rendering background; destroy
+invalidates bot/tool actions and closes subscriptions/executors. #651 reuses
+the render-budget subscription and releases it on close/failed open.
+Manifest disables backup/cleartext; private jobs/update/callback components
+are not exported, accessibility and Shizuku services have platform permissions.
+These reads and negative tests are not a complete Android exploit/leak audit.
+No signing material, owner permissions or model/update trust roots changed.
+
+**Next handoff, not started:** authorized release-host Gradle/SDK validation
+at the pinned candidate, followed by real Fold7 STOP/recovery/TTS/thermal and
+natural-navigation/research acceptance. Astra receives #647-649 unchanged and
+the context/reasoning results; Fable receives the pinned speech/visual merge
+and independent regressions. SOL's combined candidate is #653.
+
+Remaining functional work: persistent profile-bound bot work orders/status
+and recovery UI; memory output #640; original #639 device reproduction.
+Do not simply enable ordinary checkpoints for bot turns: their ephemeral
+profile/permission leases must not be restored as an unrestricted owner run.
+Reuse the existing scoped intake, checkpoint and receipt mechanisms with
+fresh authorization; interrupted post-proposal actions need review, not replay.
+No main merge, signing, publication or product acceptance is authorized by
+this handoff. Working area closes with these limitations explicit.
