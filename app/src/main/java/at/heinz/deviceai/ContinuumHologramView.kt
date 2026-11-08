@@ -36,6 +36,7 @@ import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer
 import at.heinz.deviceai.avatar3d.AvatarFrameReceipt
 import at.heinz.deviceai.avatar3d.AvatarTraceRingBuffer
 import at.heinz.deviceai.avatar3d.AvatarProofFrame
+import at.heinz.deviceai.avatar3d.AvatarProofCompletion
 import at.heinz.deviceai.avatar3d.DeterministicAvatarProofRunner
 import at.heinz.deviceai.ui.AndroidContinuumPainter
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
@@ -79,6 +80,9 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val avatarTrace = AvatarTraceRingBuffer()
     private val pendingAvatarTraceFlags = java.util.concurrent.atomic.AtomicInteger(0)
     private var avatarProofStartedAt = Long.MIN_VALUE
+    private var avatarProofStartCallbacks = 0L
+    private var avatarProofStartDraws = 0L
+    private val avatarProofFinish = Runnable { finishAvatarProof() }
     private val presentationBudgetObservers = linkedSetOf<() -> Unit>()
     private var avatarSeconds = 0f
     private val avatarInvalidationPending = java.util.concurrent.atomic.AtomicBoolean(false)
@@ -540,21 +544,51 @@ class ContinuumHologramView @JvmOverloads constructor(
             Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
             return
         }
+        cancelAvatarProof()
         setNative3dEnabled(true)
+        avatarProofStartCallbacks = visibleFrameCount
+        avatarProofStartDraws = drawnFrameCount
         avatarProofStartedAt = SystemClock.uptimeMillis()
+        mainHandler.postDelayed(avatarProofFinish, DeterministicAvatarProofRunner.DURATION_MS + 100L)
         Toast.makeText(context, "15s Avatar-Proof: Idle · Blink · Blick · Mund · Denken · Karte", Toast.LENGTH_LONG).show()
         invalidate()
         scheduleFrame()
+    }
+
+    private fun finishAvatarProof() {
+        if (avatarProofStartedAt == Long.MIN_VALUE) return
+        avatarProofStartedAt = Long.MIN_VALUE
+        val summary = AvatarProofCompletion.summarize(
+            (visibleFrameCount - avatarProofStartCallbacks).coerceAtLeast(0L),
+            (drawnFrameCount - avatarProofStartDraws).coerceAtLeast(0L),
+            avatarTrace.diagnose()
+        )
+        invalidate()
+        val activity = context as? android.app.Activity ?: return
+        if (!foregroundActive || !isAttachedToWindow || !isShown || activity.isFinishing || activity.isDestroyed) return
+        AlertDialog.Builder(context)
+            .setTitle(if (summary.live) "Avatar-Proof · LIVE" else "Avatar-Proof · Fehler gefunden")
+            .setMessage(
+                "15-Sekunden-Proof abgeschlossen.\n" +
+                    "Animations-Callbacks: ${summary.callbackDelta}\n" +
+                    "Wirkliche Canvas-Zeichnungen: ${summary.drawDelta}\n\n" +
+                    summary.verdict +
+                    "\n\nKein Modell, Web, ASR oder TTS wurde für diesen Test verwendet."
+            )
+            .setPositiveButton("Schließen", null)
+            .show()
+    }
+
+    private fun cancelAvatarProof() {
+        avatarProofStartedAt = Long.MIN_VALUE
+        mainHandler.removeCallbacks(avatarProofFinish)
     }
 
     private fun avatarProofFrame(nowMillis: Long): AvatarProofFrame? {
         val started = avatarProofStartedAt
         if (started == Long.MIN_VALUE) return null
         val elapsed = nowMillis - started
-        if (elapsed < 0L || elapsed >= DeterministicAvatarProofRunner.DURATION_MS) {
-            avatarProofStartedAt = Long.MIN_VALUE
-            return null
-        }
+        if (elapsed < 0L || elapsed >= DeterministicAvatarProofRunner.DURATION_MS) return null
         return DeterministicAvatarProofRunner.frame(elapsed)
     }
 
@@ -583,6 +617,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     fun setForegroundActive(active: Boolean) {
         if (foregroundActive == active) return
         foregroundActive = active
+        if (!active) cancelAvatarProof()
         if (!active) synchronized(avatarPose) {
             avatarPose.clearSpeech()
             avatarPose.clearObservedGaze(System.currentTimeMillis())
@@ -691,6 +726,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        cancelAvatarProof()
         resetCamera()
         resetAvatarEntrance()
         cockpitSequence?.setMotionAllowed(false)
