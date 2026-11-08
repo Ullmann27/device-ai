@@ -754,16 +754,19 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     override fun onVisibilityAggregated(isVisible: Boolean) {
         super.onVisibilityAggregated(isVisible)
+        if (!isVisible) cancelAvatarProof()
         updateMotionPolicy()
     }
 
     override fun onWindowVisibilityChanged(visibility: Int) {
         super.onWindowVisibilityChanged(visibility)
+        if (visibility != VISIBLE) cancelAvatarProof()
         if (isAttachedToWindow) updateMotionPolicy()
     }
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
+        if (!isShown) cancelAvatarProof()
         if (isAttachedToWindow) updateMotionPolicy()
     }
 
