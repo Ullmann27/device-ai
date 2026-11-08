@@ -5870,7 +5870,7 @@ class AgentActivity : Activity() {
             addUserMessage(request)
         }
         when (decision.kind) {
-            BootstrapKind.REMEMBER -> rememberOwnerFact(checkNotNull(decision.fact))
+            BootstrapKind.REMEMBER -> rememberOwnerFact(checkNotNull(decision.fact), decision.message)
             BootstrapKind.REVISE -> {
                 AlertDialog.Builder(this)
                     .setTitle("Gespeicherte Information ändern?")
@@ -8290,7 +8290,7 @@ class AgentActivity : Activity() {
     private fun failureName(e: Throwable) = e.javaClass.simpleName.ifEmpty { "Fehler" }
 
     /** "Merke dir": app memory first, then the learning core; the reply says what actually happened. */
-    private fun rememberOwnerFact(fact: String) {
+    private fun rememberOwnerFact(fact: String, note: String = "") {
         onLearningIo(work@{
             // H2: a hypothetical/uncertain/planned/questioned/reported statement never enters the
             // app fact list as owner-confirmed; the learning core keeps it as an unconfirmed statement.
@@ -8333,7 +8333,8 @@ class AgentActivity : Activity() {
                 "Im lokalen Lernspeicher gemerkt, aber der Continuum-Lernkern hat die Information nicht übernommen " +
                     "(${failureName(e)}). Wiederhole „Merke dir“, um es erneut zu versuchen."
             })
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." },
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." } +
+            (if (note.isNotBlank() && result.isSuccess) "\n\n$note" else ""),
             preserveLocalContext = result.isFailure) }
     }
 
