@@ -372,15 +372,20 @@ class JarvisSequenceTurnLifecycleUiTest {
     }
 
     /**
-     * Owner addendum 06.11.: „Auftrag angenommen“ appeared twice. The triggers announce one fact twice – as the action
-     * that started and as its timeline step. The card follows the fact's identity (step key), so each step shows once;
-     * no valid event is lost (the following tool step still appears).
+     * ARGON 4 / owner addendum: acknowledgement, generic work and a later tool are phases of one visible
+     * turn scene. Logical ProcessSteps remain intact, but they must never stack duplicate cards.
      */
-    @Test fun anAcknowledgedCommandShowsEachStepOnce() {
+    @Test fun acknowledgedReasoningAndToolStayInOneMainScene() {
         val triggers = at.heinz.deviceai.cockpit.CockpitAnimationTriggers(bus) { 1_000L }
         triggers.commandAcknowledged("turn-1", "Prüfe den Auftrag")
-        assertEquals("„Auftrag angenommen“ once plus „Bearbeitung“", 2, view.effects.cardCount)
+        assertEquals("ack + work share the main scene", 1, view.effects.cardCount)
+
         triggers.toolStarted("turn-1", "call-1", "launch_app")
-        assertEquals("the real tool step is added once", 3, view.effects.cardCount)
+        assertEquals("tool promotes the same turn scene instead of adding a card", 1, view.effects.cardCount)
+
+        val history = JarvisSequenceView::class.java.getDeclaredField("retiredTurns").apply {
+            isAccessible = true
+        }.get(view) as Set<*>
+        assertFalse("tool promotion must not retire the live turn", "turn-1" in history)
     }
 }
