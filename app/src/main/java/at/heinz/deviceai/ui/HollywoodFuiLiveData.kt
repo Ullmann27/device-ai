@@ -28,8 +28,8 @@ sealed class HollywoodFuiLiveData {
 
         companion object {
             fun from(steps: List<ProcessStep>): Timeline = Timeline(
-                steps.distinctBy { it.key }.takeLast(MAX_LINES).map {
-                    Line(clean(it.label, 64), it.state)
+                steps.distinctBy { it.key }.takeLast(HollywoodFuiLiveData.MAX_LINES).map {
+                    Line(HollywoodFuiLiveData.clean(it.label, 64), it.state)
                 }
             )
         }
