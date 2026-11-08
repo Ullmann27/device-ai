@@ -26,3 +26,7 @@ Für jeden Slice: unabhängiger RED-Fall, geprüfter Patch, GREEN in Node/JVM/Ro
 
 ## Nächster Entwickler
 Lies zuerst #643 und #642 und nenne exakten HEAD; fange bei #641 an. Der Eigentümer verlangt echte Reparaturen/Experimente, nicht nur Statusprosa.
+
+## Besitzer-Nachtrag: AUTONOMER UMSETZUNGSMODUS (08.11.2026)
+
+Der Benutzer will **möglichst wenig manuelle Arbeit**. Daher sind Implementierung, Verbindung vorhandener Funktionen, Reparaturen, Codeprüfungen, Sicherheits-/Negativtests und nachweisbare Optimierungen im Rahmen erteilter Rechte **direkte Arbeitsaufträge**, nicht bloße Vorschläge oder an ihn delegierte To-dos. Aufgaben sollen ohne unnötige Rückfrage bis zu einem echten, messbaren Prüfergebnis vorangebracht werden. Auch neu gefundene Fehler bearbeiten, soweit nötig und erlaubt. Für Referenzgrafik: aktive IST/SOLL-Abweichungsanalyse, echte neue Android-Rendering-Schichten und Tests; nicht nur theoretische Designbriefe. Zwei oder drei Grafikrollen nur bei begründetem Nutzen einsetzen, sonst sequenziell statt kostspieliger Parallel-Modelle. Ausschließlich schreibgeschützte Diagnosen und sichere Änderungen dürfen ohne zusätzliche Freigabe durchgeführt werden; Besitzer-Reviews/Sicherheitsgates bleiben erhalten. Externes Fable/Opus-Tool muss wirklich verfügbar sein; ein GitHub-Kommentar ist noch kein gestarteter Agent.
