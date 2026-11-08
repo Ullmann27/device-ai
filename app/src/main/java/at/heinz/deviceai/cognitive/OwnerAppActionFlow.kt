@@ -24,6 +24,8 @@ internal class OwnerAppActionFlow(private val opening: Boolean) {
         private set
     var lookupVerified: Boolean = false
         private set
+    var exactMatchVerified: Boolean = false
+        private set
     val launching: Boolean get() = phase == Phase.LAUNCH
 
     fun start(query: String): Step.Run {
@@ -55,6 +57,7 @@ internal class OwnerAppActionFlow(private val opening: Boolean) {
             checked.copy(total = total)
         }.getOrElse { return done("Appsuche konnte nicht vollständig geprüft werden. Keine App gestartet.") }
         lookupVerified = true
+        exactMatchVerified = matches.exactLabel
         candidates = matches.candidates
         if (candidates.isEmpty()) return done("Ich habe keine passende startbare App gefunden. " +
             "Das beweist nicht, dass sie nicht installiert ist. Welche App meinst du genau?")

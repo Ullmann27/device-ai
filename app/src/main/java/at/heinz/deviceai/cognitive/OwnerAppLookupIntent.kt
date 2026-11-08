@@ -65,8 +65,12 @@ internal object OwnerAppLookupIntent {
             if (app != null) return planning(utterance)
         }
         shortMessageTarget.matchEntire(text)?.let { match ->
+            val target = match.groupValues[1].trim()
+            if (isReference(target) ||
+                target.lowercase() in setOf("das", "den", "ihn", "ihm", "ihr", "uns", "euch")
+            ) return null
             return Intake.Lookup(
-                query = match.groupValues[1].trim(),
+                query = target,
                 opening = false,
                 requireInstalledCandidate = true,
                 messagePlanningIfMatched = true
@@ -114,14 +118,18 @@ internal object OwnerAppLookupIntent {
     fun shouldFallbackToConversation(
         intake: Intake.Lookup,
         lookupVerified: Boolean,
-        candidateCount: Int
-    ): Boolean = intake.requireInstalledCandidate && lookupVerified && candidateCount == 0
+        candidateCount: Int,
+        exactMatch: Boolean
+    ): Boolean = intake.requireInstalledCandidate && lookupVerified &&
+        (candidateCount == 0 || !exactMatch)
 
     fun shouldClarifyMessage(
         intake: Intake.Lookup,
         lookupVerified: Boolean,
-        candidateCount: Int
-    ): Boolean = intake.messagePlanningIfMatched && lookupVerified && candidateCount > 0
+        candidateCount: Int,
+        exactMatch: Boolean
+    ): Boolean = intake.messagePlanningIfMatched && lookupVerified &&
+        candidateCount > 0 && exactMatch
 
     fun messageClarification(): String =
         "Welche Nachricht soll ich für welchen konkreten Empfänger vorbereiten? " +

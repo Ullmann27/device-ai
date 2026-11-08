@@ -177,12 +177,14 @@ class OwnerAppActionFlowTest {
         val result = invoke(gate, run)
         assertTrue(flow.returned(result) is OwnerAppActionFlow.Step.Confirm)
         assertTrue(flow.lookupVerified)
+        assertTrue(flow.exactMatchVerified)
 
         val replayed = OwnerAppActionFlow(true)
         val replayRun = replayed.start("Signal")
         val replayResult = invoke(gate, replayRun).copy(replayed = true)
         assertTrue(replayed.returned(replayResult) is OwnerAppActionFlow.Step.Done)
         assertFalse(replayed.lookupVerified)
+        assertFalse(replayed.exactMatchVerified)
     }
 
 
