@@ -14,6 +14,8 @@ import android.os.SystemClock
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.animation.LinearInterpolator
+import at.heinz.deviceai.cockpit.StepState
+import java.util.Locale
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
@@ -35,6 +37,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private var bracketsLatched = false
     private var dataLatched = false
     private var telemetryText: String? = null
+    private var liveData: HollywoodFuiLiveData? = null
     private var animator: ValueAnimator? = null
 
     init {
@@ -54,6 +57,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         closingElapsedMs = -1L
         bracketsLatched = false
         dataLatched = false
+        liveData = null
         visibility = VISIBLE
         reducedMotion = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled()
         if (reducedMotion) {
@@ -102,6 +106,12 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         val cleaned = value?.filterNot(Char::isISOControl)?.trim()?.take(64)?.ifEmpty { null }
         if (telemetryText == cleaned) return
         telemetryText = cleaned
+        invalidate()
+    }
+
+    fun setLiveData(value: HollywoodFuiLiveData?) {
+        if (liveData == value) return
+        liveData = value
         invalidate()
     }
 
@@ -251,151 +261,280 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     }
 
     private fun drawDocument(canvas: Canvas, box: RectF, alpha: Float) {
-        val pageWidth = min(box.width() * 0.22f, dp(92f))
-        val pageHeight = min(box.height() * 0.68f, dp(126f))
-        for (index in 2 downTo 0) {
+        val data = liveData as? HollywoodFuiLiveData.Document
+        val pages = (data?.pageCount ?: 1).coerceIn(1, 4)
+        val pageWidth = min(box.width() * 0.24f, dp(96f))
+        val pageHeight = min(box.height() * 0.68f, dp(132f))
+        for (index in pages - 1 downTo 0) {
             val offset = dp(10f) * index
-            val page = RectF(box.left + offset, box.centerY() - pageHeight / 2f - offset * 0.4f,
-                box.left + offset + pageWidth, box.centerY() + pageHeight / 2f - offset * 0.4f)
+            val page = RectF(
+                box.left + offset,
+                box.centerY() - pageHeight / 2f - offset * .35f,
+                box.left + offset + pageWidth,
+                box.centerY() + pageHeight / 2f - offset * .35f
+            )
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = dp(1f)
-            paint.color = withAlpha(if (index == 0) accent else JarvisDesign.Colors.violet, (0.48f - index * 0.1f) * alpha)
+            paint.color = withAlpha(
+                if (index == 0) accent else JarvisDesign.Colors.violet,
+                (0.55f - index * .09f) * alpha
+            )
             canvas.drawRoundRect(page, dp(3f), dp(3f), paint)
-            repeat(5) { line ->
-                val y = page.top + dp(16f + line * 15f)
-                canvas.drawLine(page.left + dp(9f), y,
-                    page.left + page.width() * if (line % 2 == 0) 0.78f else 0.62f, y, paint)
-            }
+        }
+        data ?: return
+        val textLeft = box.left + pageWidth + dp(24f)
+        drawSmallLabel(canvas, data.documentName, textLeft, box.top + dp(20f), alpha, accent)
+        data.question?.let {
+            drawWrappedLines(canvas, listOf(it), textLeft, box.top + dp(44f), box.right, alpha)
+        }
+        data.entriesAdded?.let {
+            drawSmallLabel(canvas, "$it bestätigte Einträge", textLeft, box.bottom - dp(18f), alpha, JarvisDesign.Colors.ok)
         }
     }
 
     private fun drawAppConduit(canvas: Canvas, box: RectF, alpha: Float) {
-        val radius = min(box.width(), box.height()) * 0.19f
+        val radius = min(box.width(), box.height()) * .19f
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = dp(1.2f)
-        paint.color = withAlpha(accent, 0.45f * alpha)
+        paint.color = withAlpha(accent, .48f * alpha)
         drawHexagon(canvas, box.centerX(), box.centerY(), radius, paint)
-        paint.color = withAlpha(JarvisDesign.Colors.violet, 0.28f * alpha)
+        paint.color = withAlpha(JarvisDesign.Colors.violet, .30f * alpha)
         drawHexagon(canvas, box.centerX(), box.centerY(), radius * 1.35f, paint)
-        repeat(6) { index ->
-            val angle = index * PI / 3.0
-            val x = box.centerX() + cos(angle).toFloat() * radius * 1.75f
-            val y = box.centerY() + sin(angle).toFloat() * radius * 1.25f
-            canvas.drawCircle(x, y, dp(4f), paint)
-            canvas.drawLine(box.centerX(), box.centerY(), x, y, paint)
-        }
+
+        val data = liveData as? HollywoodFuiLiveData.App ?: return
+        drawSmallLabel(canvas, data.provider, box.left, box.top + dp(18f), alpha, accent)
+        drawSmallLabel(canvas, data.accountLabel, box.left, box.top + dp(38f), alpha, JarvisDesign.Colors.text)
     }
 
     private fun drawCodeForge(canvas: Canvas, box: RectF, alpha: Float) {
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = dp(1.1f)
-        repeat(7) { index ->
-            val y = box.top + box.height() * (index + 1f) / 9f
-            val width = box.width() * if (index % 3 == 0) 0.40f else 0.29f
-            paint.color = withAlpha(if (index % 4 == 0) JarvisDesign.Colors.ok else accent, 0.38f * alpha)
-            canvas.drawLine(box.left, y, box.left + width, y, paint)
-        }
-        val graphLeft = box.left + box.width() * 0.58f
-        val nodes = listOf(
-            graphLeft to box.top + box.height() * 0.24f,
-            box.right - dp(8f) to box.top + box.height() * 0.38f,
-            graphLeft + box.width() * 0.08f to box.bottom - box.height() * 0.25f,
-            box.right - box.width() * 0.18f to box.bottom - dp(8f)
-        )
-        paint.color = withAlpha(JarvisDesign.Colors.violet, 0.34f * alpha)
-        nodes.zipWithNext().forEach { (a, b) -> canvas.drawLine(a.first, a.second, b.first, b.second, paint) }
-        paint.color = withAlpha(accent, 0.58f * alpha)
-        nodes.forEach { canvas.drawCircle(it.first, it.second, dp(4f), paint) }
+        paint.strokeWidth = dp(1f)
+        paint.color = withAlpha(accent, .42f * alpha)
+        canvas.drawRoundRect(box, dp(4f), dp(4f), paint)
+        val timeline = liveData as? HollywoodFuiLiveData.Timeline
+        drawTimelineLines(canvas, timeline?.lines.orEmpty(), box, alpha, prefixAgents = false)
     }
 
     private fun drawSwarm(canvas: Canvas, box: RectF, alpha: Float) {
-        val cardWidth = box.width() * 0.25f
-        val cardHeight = box.height() * 0.22f
+        val lines = (liveData as? HollywoodFuiLiveData.Timeline)?.lines.orEmpty().take(6)
+        if (lines.isEmpty()) {
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = dp(1f)
+            paint.color = withAlpha(accent, .28f * alpha)
+            canvas.drawCircle(box.centerX(), box.centerY(), dp(7f), paint)
+            return
+        }
+        val cardWidth = box.width() * .28f
+        val cardHeight = box.height() * .30f
         val centreX = box.centerX()
         val centreY = box.centerY()
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = dp(1f)
-        repeat(6) { index ->
+        lines.forEachIndexed { index, line ->
             val column = index % 3
             val row = index / 3
             val left = box.left + column * (box.width() - cardWidth) / 2f
             val top = box.top + row * (box.height() - cardHeight)
             val card = RectF(left, top, left + cardWidth, top + cardHeight)
-            paint.color = withAlpha(if (index % 2 == 0) accent else JarvisDesign.Colors.violet, 0.38f * alpha)
-            canvas.drawRoundRect(card, dp(3f), dp(3f), paint)
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = dp(1f)
+            paint.color = withAlpha(stateColor(line.state), .52f * alpha)
+            canvas.drawRoundRect(card, dp(4f), dp(4f), paint)
             canvas.drawLine(card.centerX(), card.centerY(), centreX, centreY, paint)
+            drawSmallLabel(
+                canvas,
+                "AGENT %02d".format(Locale.ROOT, index + 1),
+                card.left + dp(6f),
+                card.top + dp(15f),
+                alpha,
+                stateColor(line.state)
+            )
+            drawSmallLabel(canvas, line.label, card.left + dp(6f), card.top + dp(31f), alpha, JarvisDesign.Colors.text)
         }
-        paint.color = withAlpha(JarvisDesign.Colors.glowCore, 0.72f * alpha)
+        paint.color = withAlpha(JarvisDesign.Colors.glowCore, .72f * alpha)
         canvas.drawCircle(centreX, centreY, dp(5f), paint)
     }
 
     private fun drawEvidence(canvas: Canvas, box: RectF, alpha: Float) {
-        val cx = box.centerX()
-        val cy = box.centerY()
-        val radiusX = box.width() * 0.34f
-        val radiusY = box.height() * 0.31f
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = dp(1f)
-        val points = (0 until 7).map { index ->
-            val angle = index * (2.0 * PI / 7.0)
-            Pair(cx + cos(angle).toFloat() * radiusX, cy + sin(angle).toFloat() * radiusY)
-        }
-        paint.color = withAlpha(accent, 0.30f * alpha)
-        points.forEachIndexed { index, point ->
-            val next = points[(index + 2) % points.size]
-            canvas.drawLine(point.first, point.second, next.first, next.second, paint)
-        }
-        points.forEachIndexed { index, point ->
-            paint.color = withAlpha(if (index == 3) JarvisDesign.Colors.magenta else accent, 0.62f * alpha)
-            canvas.drawCircle(point.first, point.second, dp(if (index == 3) 5f else 3.5f), paint)
+        val evidence = liveData as? HollywoodFuiLiveData.Evidence
+        val timeline = liveData as? HollywoodFuiLiveData.Timeline
+        val count = evidence?.count?.coerceIn(0, 8) ?: 0
+        if (count > 0) {
+            val cx = box.centerX()
+            val cy = box.centerY()
+            val radiusX = box.width() * .34f
+            val radiusY = box.height() * .31f
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = dp(1f)
+            val points = (0 until count).map { index ->
+                val angle = index * (2.0 * PI / count.toDouble())
+                Pair(cx + cos(angle).toFloat() * radiusX, cy + sin(angle).toFloat() * radiusY)
+            }
+            paint.color = withAlpha(accent, .34f * alpha)
+            points.forEachIndexed { index, point ->
+                if (points.size > 1) {
+                    val next = points[(index + 1) % points.size]
+                    canvas.drawLine(point.first, point.second, next.first, next.second, paint)
+                }
+                canvas.drawCircle(point.first, point.second, dp(4f), paint)
+            }
+            drawSmallLabel(canvas, evidence.sourceLabel, box.left, box.top + dp(18f), alpha, accent)
+            evidence.topScore?.let {
+                drawSmallLabel(canvas, "TOP ${formatNumber(it.toDouble())}", box.left, box.top + dp(38f), alpha, JarvisDesign.Colors.ok)
+            }
+        } else {
+            drawTimelineLines(canvas, timeline?.lines.orEmpty(), box, alpha, prefixAgents = false)
         }
     }
 
     private fun drawChrono(canvas: Canvas, box: RectF, alpha: Float) {
-        val size = min(box.width(), box.height()) * 0.58f
+        val data = liveData as? HollywoodFuiLiveData.Calculation
+        val size = min(box.width(), box.height()) * .52f
         val gauge = RectF(box.left, box.centerY() - size / 2f, box.left + size, box.centerY() + size / 2f)
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = dp(2f)
-        paint.color = withAlpha(accent, 0.48f * alpha)
+        paint.color = withAlpha(accent, .52f * alpha)
         canvas.drawArc(gauge, 140f, 260f, false, paint)
-        repeat(4) { index ->
-            val barLeft = box.left + size + dp(18f)
+        data ?: return
+
+        drawSmallLabel(canvas, data.expression, box.left, box.top + dp(18f), alpha, accent)
+        drawSmallLabel(
+            canvas,
+            formatNumber(data.result) + (data.unit?.let { " $it" } ?: ""),
+            gauge.centerX() - dp(18f),
+            gauge.centerY() + dp(5f),
+            alpha,
+            JarvisDesign.Colors.ok
+        )
+
+        val maxAbs = data.steps.maxOfOrNull { kotlin.math.abs(it.value) }?.takeIf { it > 0.0 } ?: 1.0
+        val timelineElapsed = if (active) {
+            maxOf(elapsedMs, SystemClock.uptimeMillis() - openedAt)
+        } else elapsedMs
+        data.steps.take(4).forEachIndexed { index, step ->
+            val reveal = ((timelineElapsed - HollywoodFuiConstruct.DATA_END_MS - index * 80L) / 180f).coerceIn(0f, 1f)
+            val barLeft = box.left + size + dp(16f)
             val y = box.top + box.height() * (index + 1f) / 5f
+            val fraction = (kotlin.math.abs(step.value) / maxAbs).toFloat().coerceIn(.08f, 1f) * reveal
             paint.strokeWidth = dp(3f)
-            paint.color = withAlpha(if (index == 3) JarvisDesign.Colors.ok else JarvisDesign.Colors.violet,
-                (0.26f + index * 0.08f) * alpha)
-            canvas.drawLine(barLeft, y, barLeft + box.width() * (0.16f + index * 0.08f), y, paint)
+            paint.color = withAlpha(JarvisDesign.Colors.violet, (.30f + index * .08f) * alpha)
+            canvas.drawLine(barLeft, y, barLeft + box.width() * .28f * fraction, y, paint)
+            drawSmallLabel(canvas, step.label, barLeft, y - dp(5f), alpha, JarvisDesign.Colors.text)
         }
     }
 
     private fun drawSecurity(canvas: Canvas, box: RectF, alpha: Float) {
-        val phoneWidth = min(box.width() * 0.28f, dp(82f))
-        val phoneHeight = min(box.height() * 0.70f, dp(150f))
-        val phone = RectF(box.centerX() - phoneWidth / 2f, box.centerY() - phoneHeight / 2f,
-            box.centerX() + phoneWidth / 2f, box.centerY() + phoneHeight / 2f)
+        val phoneWidth = min(box.width() * .28f, dp(82f))
+        val phoneHeight = min(box.height() * .70f, dp(150f))
+        val phone = RectF(
+            box.centerX() - phoneWidth / 2f,
+            box.centerY() - phoneHeight / 2f,
+            box.centerX() + phoneWidth / 2f,
+            box.centerY() + phoneHeight / 2f
+        )
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = dp(1.2f)
-        paint.color = withAlpha(accent, 0.52f * alpha)
+        paint.color = withAlpha(accent, .52f * alpha)
         canvas.drawRoundRect(phone, dp(9f), dp(9f), paint)
         canvas.drawLine(phone.centerX(), phone.top + dp(6f), phone.centerX(), phone.bottom - dp(6f), paint)
         canvas.drawLine(phone.left + dp(6f), phone.centerY(), phone.right - dp(6f), phone.centerY(), paint)
-        paint.strokeWidth = dp(3f)
-        paint.color = withAlpha(JarvisDesign.Colors.violet, 0.16f * alpha)
-        canvas.drawLine(box.left, phone.centerY(), box.right, phone.centerY(), paint)
+
+        val data = liveData as? HollywoodFuiLiveData.Security ?: return
+        drawSmallLabel(canvas, data.sourceLabel, box.left, box.top + dp(18f), alpha, accent)
+        val measurement = listOfNotNull(
+            data.measured?.let { "IST ${formatNumber(it)}" },
+            data.threshold?.let { "LIMIT ${formatNumber(it)}" }
+        ).joinToString(" · ")
+        if (measurement.isNotEmpty()) {
+            drawSmallLabel(canvas, measurement, box.left, box.top + dp(38f), alpha, JarvisDesign.Colors.text)
+        }
     }
 
     private fun drawGeneric(canvas: Canvas, box: RectF, alpha: Float) {
-        val size = min(box.width(), box.height()) * 0.46f
-        val ring = RectF(box.centerX() - size, box.centerY() - size * 0.55f,
-            box.centerX() + size, box.centerY() + size * 0.55f)
+        val size = min(box.width(), box.height()) * .46f
+        val ring = RectF(
+            box.centerX() - size, box.centerY() - size * .55f,
+            box.centerX() + size, box.centerY() + size * .55f
+        )
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = dp(1.1f)
-        paint.color = withAlpha(accent, 0.40f * alpha)
+        paint.color = withAlpha(accent, .40f * alpha)
         canvas.drawOval(ring, paint)
-        ring.inset(size * 0.18f, size * 0.10f)
-        paint.color = withAlpha(JarvisDesign.Colors.violet, 0.32f * alpha)
-        canvas.drawOval(ring, paint)
+        drawTimelineLines(
+            canvas,
+            (liveData as? HollywoodFuiLiveData.Timeline)?.lines.orEmpty(),
+            box,
+            alpha,
+            prefixAgents = false
+        )
     }
+
+    private fun drawTimelineLines(
+        canvas: Canvas,
+        lines: List<HollywoodFuiLiveData.Timeline.Line>,
+        box: RectF,
+        alpha: Float,
+        prefixAgents: Boolean
+    ) {
+        lines.take(8).forEachIndexed { index, line ->
+            val y = box.top + dp(18f + index * 18f)
+            if (y > box.bottom) return@forEachIndexed
+            val prefix = if (prefixAgents) "AGENT %02d · ".format(Locale.ROOT, index + 1) else ""
+            drawSmallLabel(canvas, prefix + line.label, box.left + dp(6f), y, alpha, stateColor(line.state))
+        }
+    }
+
+    private fun drawWrappedLines(
+        canvas: Canvas,
+        lines: List<String>,
+        left: Float,
+        top: Float,
+        right: Float,
+        alpha: Float
+    ) {
+        var y = top
+        lines.flatMap { line ->
+            val words = line.split(Regex("\\s+"))
+            val result = mutableListOf<String>()
+            var current = ""
+            words.forEach { word ->
+                val next = if (current.isEmpty()) word else "$current $word"
+                paint.textSize = dp(10f)
+                if (paint.measureText(next) <= right - left || current.isEmpty()) current = next
+                else { result += current; current = word }
+            }
+            if (current.isNotEmpty()) result += current
+            result
+        }.take(4).forEach { line ->
+            drawSmallLabel(canvas, line, left, y, alpha, JarvisDesign.Colors.text)
+            y += dp(16f)
+        }
+    }
+
+    private fun drawSmallLabel(
+        canvas: Canvas,
+        text: String,
+        x: Float,
+        y: Float,
+        alpha: Float,
+        color: Int
+    ) {
+        if (text.isBlank()) return
+        paint.style = Paint.Style.FILL
+        paint.textAlign = Paint.Align.LEFT
+        paint.typeface = android.graphics.Typeface.MONOSPACE
+        paint.textSize = dp(10f)
+        paint.color = withAlpha(color, .88f * alpha)
+        canvas.drawText(text.take(72), x, y, paint)
+    }
+
+    private fun stateColor(state: StepState): Int = when (state) {
+        StepState.DONE -> JarvisDesign.Colors.ok
+        StepState.ACTIVE -> accent
+        StepState.WAITING -> JarvisDesign.Colors.violet
+        StepState.BLOCKED, StepState.FAILED -> JarvisDesign.Colors.magenta
+    }
+
+    private fun formatNumber(value: Double): String =
+        String.format(Locale.GERMANY, if (kotlin.math.abs(value) >= 100.0) "%.0f" else "%.2f", value)
 
     private fun drawHexagon(canvas: Canvas, cx: Float, cy: Float, radius: Float, target: Paint) {
         path.reset()
