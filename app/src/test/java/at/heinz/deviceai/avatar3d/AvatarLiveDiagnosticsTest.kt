@@ -64,8 +64,9 @@ class AvatarLiveDiagnosticsTest {
             val r = ring.beginFrame((10 + it).toLong())
             r.stageFlags = AvatarFrameReceipt.FRAME_DRAW or AvatarFrameReceipt.HEAD_3D_SELECTED
         }
-        assertTrue(ring.diagnose().startsWith("BROKEN_AT_SURFACE"))
-        assertTrue(ring.diagnoseSince(proofStart).startsWith("BROKEN_AT_SURFACE"))
+        assertTrue("unscoped history still contains the old live run", ring.diagnose().startsWith("AVATAR_PIPELINE_LIVE"))
+        assertTrue("current proof must ignore old live receipts",
+            ring.diagnoseSince(proofStart).startsWith("BROKEN_AT_SURFACE"))
     }
 
     @Test fun traceNamesTheBrokenStageInsteadOfGuessing() {
