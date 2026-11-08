@@ -44,10 +44,11 @@ class LocalReasoningWorkSceneUiTest {
         if (view is ViewGroup) for (i in 0 until view.childCount) addAll(descendants(view.getChildAt(i)))
     }
 
-    private fun invokePresent(a: AgentActivity, turn: String, request: String) =
+    private fun invokeSchedule(a: AgentActivity, turn: String, request: String, promptCap: Int) =
         AgentActivity::class.java.getDeclaredMethod(
-            "presentLocalReasoningWorkScene", String::class.java, String::class.java
-        ).apply { isAccessible = true }.invoke(a, turn, request)
+            "scheduleLocalReasoningWorkScene", String::class.java, String::class.java,
+            Int::class.javaPrimitiveType
+        ).apply { isAccessible = true }.invoke(a, turn, request, promptCap)
 
     private fun invokeFinish(a: AgentActivity, turn: String, immediate: Boolean) =
         AgentActivity::class.java.getDeclaredMethod(
@@ -83,14 +84,14 @@ class LocalReasoningWorkSceneUiTest {
             set(a, "activeLocalRequest", true)
             set(a, "activeWorkArea", ContinuumWorkArea.START)
 
-            invokePresent(a, "local-proof", "Analysiere diese Aufgabe lokal und zeige die Bearbeitung.")
+            invokeSchedule(a, "local-proof", "Analysiere diese Aufgabe lokal und zeige die Bearbeitung.", 15_500)
             shadowOf(Looper.getMainLooper()).idleFor(64, TimeUnit.MILLISECONDS)
 
             var views = descendants(root)
             assertTrue(views.any { it.tag == "jarvis-work-window" && it.isShown })
             assertTrue(views.filterIsInstance<TextView>().any {
                 it.tag == "jarvis-local-work-status:local-proof" &&
-                    it.text.toString().contains("Lokale Bearbeitung läuft")
+                    it.text.toString().contains("Kontext & Gedächtnis")
             })
             assertTrue(views.filterIsInstance<ProgressBar>().any {
                 it.tag == "jarvis-local-work-progress:local-proof" && it.isShown && it.isIndeterminate
@@ -107,6 +108,19 @@ class LocalReasoningWorkSceneUiTest {
             shadowOf(Looper.getMainLooper()).idle()
             assertNull(field(a, "localReasoningWorkScene"))
             assertFalse(descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+
+            // Brief first turns keep the cockpit calm unless real local inference lasts >= 1 s.
+            set(a, "busy", true)
+            set(a, "activeLocalRequest", true)
+            invokeSchedule(a, "brief-proof", "Hallo", 6_000)
+            shadowOf(Looper.getMainLooper()).idleFor(999, TimeUnit.MILLISECONDS)
+            assertFalse("brief turn must not flash a work window before the grace threshold",
+                descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+            shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.MILLISECONDS)
+            assertTrue("brief turn still running at 1 s gets the reasoning window",
+                descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
+            invokeFinish(a, "brief-proof", true)
+            shadowOf(Looper.getMainLooper()).idle()
         } finally {
             controller.close()
         }
