@@ -10556,6 +10556,7 @@ class AgentActivity : Activity() {
         promptCharacters: Int? = null,
         hardDeadlineMillis: Long? = null,
         maxOutputBytes: Int? = null,
+        streamCandidateObserver: ((at.heinz.deviceai.cognitive.ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit)? = null,
         start: (at.heinz.deviceai.localmodel.LocalInferenceCallback) -> Unit
     ): LocalGeneration {
         require(hardDeadlineMillis == null || hardDeadlineMillis in 1..600_000)
@@ -10565,6 +10566,9 @@ class AgentActivity : Activity() {
         val capture = at.heinz.deviceai.cognitive.LocalGenerationCapture()
         val rejectedResponses = mutableListOf<LocalToolResponse>()
         val proposalGuard = ToolProposalTurnGuard()
+        val speechAssembler = streamCandidateObserver?.let {
+            at.heinz.deviceai.cognitive.ApprovedStreamingSpeechAssembler()
+        }
         val eventLock = Any()
         var cancelNative = false
         val generationStartedNanos = System.nanoTime()
@@ -10619,8 +10623,13 @@ class AgentActivity : Activity() {
                     when (event) {
                         is LocalInferenceEvent.TextDelta -> {
                             val now = System.nanoTime()
-                            val snapshot = capture.append(event.text,
-                                (now - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L)
+                            val elapsed = (now - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+                            val snapshot = capture.append(event.text, elapsed)
+                            if (event.text.isNotEmpty()) {
+                                speechAssembler?.append(event.text)?.forEach { candidate ->
+                                    runCatching { streamCandidateObserver?.invoke(candidate, elapsed) }
+                                }
+                            }
                             if (event.text.isNotEmpty() && (snapshot.streamedChunks == 1 ||
                                     now - lastPreviewNanos >= TimeUnit.MILLISECONDS.toNanos(1_000))) {
                                 lastPreviewNanos = now
@@ -10655,6 +10664,9 @@ class AgentActivity : Activity() {
                             completed.countDown()
                         }
                         is LocalInferenceEvent.Completed -> {
+                            speechAssembler?.flushFinal()?.let { candidate ->
+                                runCatching { streamCandidateObserver?.invoke(candidate, elapsedMillis()) }
+                            }
                             turnTrace?.event(TraceStage.MODEL_COMPLETED)
                             capture.complete()
                             completed.countDown()
