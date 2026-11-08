@@ -97,6 +97,10 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
 
     private var turn: String? = null
     private val stepStates = HashMap<String, StepState>()
+    private val mainSceneActions = setOf(
+        CockpitAction.THINK, CockpitAction.RESEARCH, CockpitAction.TOOL,
+        CockpitAction.EXECUTE, CockpitAction.VERIFY
+    )
     // Bounded presentation history, matching the producer's recent-turn window.
     // A completed or displaced turn must not become visible again through a late callback.
     private val retiredTurns = LinkedHashSet<String>()
@@ -166,21 +170,22 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         if (turn == null) turn = event.turnId
         if (event.turnId != turn) return
         val key = { k: String -> safeId("${event.turnId}.$k") }
+        val mainScene = key("main_scene")
         when (event) {
-            // One fact, one card: an action that is also a timeline step uses that step's identity (no duplicate).
-            is CockpitAnimationEvent.ActionStarted -> step(event.stepKey?.let { key("s.$it") }
-                ?: key("a.${event.action.name}"), event.detail)
-            is CockpitAnimationEvent.ProcessTimeline -> for (s in event.steps) {
-                val id = key("s.${s.key}")
-                val old = stepStates[id]
-                if (old == s.state) continue
-                if (old == null) step(id, s.label)
-                when (s.state) {
-                    StepState.DONE -> stepFinished(id, true)
-                    StepState.FAILED, StepState.BLOCKED -> stepFinished(id, false)
-                    StepState.ACTIVE, StepState.WAITING -> Unit
+            // THINK and its real tool continuation share one visible scene for this turn.
+            is CockpitAnimationEvent.ActionStarted -> {
+                val id = if (event.action in mainSceneActions) mainScene
+                    else event.stepKey?.let { key("s.$it") } ?: key("a.${event.action.name}")
+                step(id, if (id == mainScene && event.action == CockpitAction.THINK) "Bearbeitung" else event.detail)
+            }
+            is CockpitAnimationEvent.ProcessTimeline -> {
+                mainSceneStep(event.steps)?.let { (label, state) ->
+                    applyStepState(mainScene, label, state, refreshLabel = true)
                 }
-                stepStates[id] = s.state
+                for (process in event.steps) {
+                    if (isMainSceneStep(process)) continue
+                    applyStepState(key("s.${process.key}"), process.label, process.state)
+                }
             }
             is CockpitAnimationEvent.AccountCardFlyIn ->
                 if (event.provider.contains("mail", ignoreCase = true)) {
@@ -195,6 +200,36 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
             }
             else -> Unit
         }
+    }
+
+    private fun isMainSceneStep(step: ProcessStep): Boolean =
+        step.key == "ack" || step.key == "work" || step.key.startsWith("tool:")
+
+    private fun mainSceneStep(steps: List<ProcessStep>): Pair<String, StepState>? {
+        val relevant = steps.filter(::isMainSceneStep)
+        if (relevant.isEmpty()) return null
+        val failed = relevant.lastOrNull { it.state == StepState.FAILED || it.state == StepState.BLOCKED }
+        val live = relevant.lastOrNull { it.state == StepState.ACTIVE || it.state == StepState.WAITING }
+        val chosen = failed ?: live ?: relevant.last()
+        val state = when {
+            failed != null -> failed.state
+            relevant.any { it.state == StepState.ACTIVE } -> StepState.ACTIVE
+            relevant.any { it.state == StepState.WAITING } -> StepState.WAITING
+            relevant.all { it.state == StepState.DONE } -> StepState.DONE
+            else -> chosen.state
+        }
+        return chosen.label to state
+    }
+
+    private fun applyStepState(id: String, label: String, state: StepState, refreshLabel: Boolean = false) {
+        val old = stepStates[id]
+        if (old == null || refreshLabel) step(id, label)
+        if (old != state) when (state) {
+            StepState.DONE -> stepFinished(id, true)
+            StepState.FAILED, StepState.BLOCKED -> stepFinished(id, false)
+            StepState.ACTIVE, StepState.WAITING -> Unit
+        }
+        stepStates[id] = state
     }
 
     private fun safeId(raw: String) = raw.map { if (it.isLetterOrDigit() && it.code < 128 || it in "._:-") it else '_' }
