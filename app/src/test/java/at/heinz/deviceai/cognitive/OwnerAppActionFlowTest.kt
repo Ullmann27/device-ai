@@ -154,7 +154,7 @@ class OwnerAppActionFlowTest {
         val message = OwnerAppLookupIntent.inspect("Schreibe WhatsApp") as OwnerAppLookupIntent.Intake.Lookup
         assertTrue(message.requireInstalledCandidate)
         assertTrue(message.messagePlanningIfMatched)
-        assertTrue(OwnerAppLookupIntent.shouldClarifyMessage(message, true, 1))
+        assertTrue(OwnerAppLookupIntent.shouldClarifyMessage(message, true, 1, true))
         assertNull(OwnerAppLookupIntent.inspect("Schreibe einen langen Bericht über Wien"))
         assertTrue(OwnerAppLookupIntent.inspect("Ich will was von WhatsApp") is OwnerAppLookupIntent.Intake.Clarify)
         for (request in listOf("Öffne die PDF", "Öffne den Download-Ordner", "Öffne /sdcard/Download"))

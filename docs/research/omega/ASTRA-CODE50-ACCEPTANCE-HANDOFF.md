@@ -22,3 +22,10 @@ Status: WIP / UNVERIFIED. Integration source: `0c59dcc7b249d7eb6bfc9fb21d2306f81
 Relevant experiments: EXP-02, EXP-07, EXP-11. Existing ToolGate, receipt formats and canonical conversation routing remain authoritative. No new worker, memory store, app action permission or signing path. No main merge, release or device-installation claim.
 
 Fold7 voice, 15-second avatar proof, FUI/thermal acceptance and original-signed Code50 APK remain NOT_RUN. Rollback: revert only this repair branch's commits. Next entry: inspect current #603 and repair branch heads, read this file, then run the targeted tests before claiming a fix.
+
+## Test checkpoint
+
+- Updated both stale Node assertions to the integrated `preserveLocalContext = true` default; explicit invalidation and cockpit retention assertions remain enforced. Actual combined run: 5 tests, 5 PASS, 0 FAIL, 0 SKIP.
+- Updated the stale `shouldClarifyMessage` test to supply exact-match evidence.
+- Added real-Activity regressions for implicit fuzzy discovery and explicit fuzzy cancellation. These new UI regressions are NOT_RUN at this checkpoint; the production routing bug remains unfixed.
+- Local Gradle 8.11.1 and Android SDK 36 are available. The source's QA task-name guard rejects CLI `--tests`, so focused filtering uses an external Gradle init script without changing the project guard. The next attempt stopped before compilation because the preinstalled Java 21 runtime has no compiler. A checksum-verified JDK 17 setup is in progress.
