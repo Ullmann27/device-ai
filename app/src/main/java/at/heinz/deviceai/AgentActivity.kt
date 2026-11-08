@@ -5586,6 +5586,19 @@ class AgentActivity : Activity() {
             }
             null -> Unit
         }
+        // #639: an internal cockpit screen („öffne das Gedächtniszentrum“, „Logik und Planung“) is navigation
+        // through the rail's own route table – never an app lookup, a file question or a model turn.
+        at.heinz.deviceai.cognitive.OwnerInternalNavigationIntent.resolve(request,
+            at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+                continuumState?.archive?.identityState?.chosenName))?.let { screen ->
+            webToolGate.cancel()
+            approvedModelWebSession.getAndSet(null)?.cancel()
+            input.text.clear()
+            addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            addToolActivity(screen.activityLine)
+            navigateDashboardTarget(screen.target)
+            return
+        }
         // Recognition grants no execution.
         OwnerAppLookupIntent.inspect(request, at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
             continuumState?.archive?.identityState?.chosenName))?.let { intake ->
@@ -5594,17 +5607,7 @@ class AgentActivity : Activity() {
             input.text.clear()
             addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
             when (intake) {
-                is OwnerAppLookupIntent.Intake.Lookup -> {
-                    val localArea: (() -> Unit)? = if (intake.opening) when (intake.query.lowercase(Locale.GERMAN)) {
-                        "lernzentrum" -> ::showLearningCenter
-                        "entwicklungszentrum" -> ::showDevelopmentCenter
-                        "gedächtnis", "gedächtniszentrum" -> ::showMemoryCenter
-                        "systemstatus" -> ::showSystemCenter
-                        "modelle", "modellverwaltung" -> ::showModelCenter
-                        else -> null
-                    } else null
-                    if (localArea != null) localArea() else runExplicitAppLookup(request, intake)
-                }
+                is OwnerAppLookupIntent.Intake.Lookup -> runExplicitAppLookup(request, intake)
                 is OwnerAppLookupIntent.Intake.Clarify -> clarifyAppRequest(request,
                     "Was brauchst du aus ${intake.subject}: die App öffnen, etwas nachsehen oder einen Inhalt vorbereiten?")
                 is OwnerAppLookupIntent.Intake.Planning -> {
