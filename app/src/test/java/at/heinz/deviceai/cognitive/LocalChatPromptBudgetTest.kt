@@ -47,6 +47,11 @@ class LocalChatPromptBudgetTest {
         }
         assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget(" "))
     }
+    @Test fun multipleConditionsAndStrategyReceiveFullReasoningBudget() {
+        val query = "Vergleiche mehrere Bedingungen und entwickle eine ausführliche Strategie"
+        assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget(query))
+    }
+
     @Test fun lengthBoundaryKeeps240BriefAnd241Full() {
         assertEquals(LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS, budget("a".repeat(240)))
         assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget("a".repeat(241)))
