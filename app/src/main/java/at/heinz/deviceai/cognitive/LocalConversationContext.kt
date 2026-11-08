@@ -15,6 +15,7 @@ class LocalConversationContext {
     private var session: String? = null
     private val turns = ArrayDeque<Turn>()
     private var explicitFocus:String?=null
+    private val situation = LocalConversationSituationTracker()
     /** Latest web-research digest: external, unverified data kept apart from owner memory and model dialogue. */
     private var research: ResearchDialogueHandoff.Digest? = null
 
@@ -68,6 +69,7 @@ class LocalConversationContext {
         turns.addLast(Turn(bounded.request, bounded.response,
             bounded.request.takeIf { bounded.requestComplete }, responseComplete = bounded.responseComplete,
             modelResponse = bounded.modelResponse, responseHasEnd = bounded.responseHasEnd))
+        if (bounded.requestComplete) situation.observeOwnerTurn(bounded.request)
         while (turns.size > LocalDialogueContextLimits.MAX_TURNS) turns.removeFirst()
         if (notify) runCatching { onTurnRecorded?.invoke(sessionId, bounded) }
     }
@@ -130,21 +132,33 @@ class LocalConversationContext {
      * correction, new session); the argument is the conversation they belonged to. A persisted copy of the
      * context must honour this (#565 review). Not called by [forgetForExit] or when another session replaces them.
      */
+    /** Navigation-only topic hint from this session; never fact/evidence/tool authority. */
+    @Synchronized fun situationHint(sessionId: String, request: String): String =
+        if (session == sessionId) situation.renderHint(request) else ""
+
+    @Synchronized internal fun situationSnapshot(sessionId: String): ConversationSituationModel.Situation? =
+        if (session == sessionId) situation.snapshot() else null
+
     @Volatile var onTurnsInvalidated: ((String) -> Unit)? = null
     @Volatile var onTurnRecorded: ((String, LocalChatTranscriptStore.ContextTurn) -> Unit)? = null
 
     private fun dropTurns() {
-        if (turns.isEmpty()) return
+        val hadTurns = turns.isNotEmpty()
         turns.clear()
-        session?.let { id -> runCatching { onTurnsInvalidated?.invoke(id) } }
+        situation.reset()
+        if (hadTurns) session?.let { id -> runCatching { onTurnsInvalidated?.invoke(id) } }
     }
 
-    private fun switchTo(sessionId: String) { turns.clear(); session = sessionId; explicitFocus = null; research = null }
+    private fun switchTo(sessionId: String) {
+        turns.clear(); situation.reset(); session = sessionId; explicitFocus = null; research = null
+    }
 
     @Synchronized fun clear() { dropTurns(); session = null;explicitFocus=null;research=null }
 
     /** End of the process-scoped RAM lifetime (real Activity finish): nothing was invalidated, so nothing is reported. */
-    @Synchronized fun forgetForExit() { turns.clear(); session = null; explicitFocus = null; research = null }
+    @Synchronized fun forgetForExit() {
+        turns.clear(); situation.reset(); session = null; explicitFocus = null; research = null
+    }
 
     /** Access is supplied by the current turn, never inferred from a saved research digest.
      * onlineApprovalActive must come from an existing authorized session of this turn. */
