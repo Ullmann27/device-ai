@@ -376,6 +376,21 @@ class JarvisSequenceTurnLifecycleUiTest {
      * that started and as its timeline step. The card follows the fact's identity (step key), so each step shows once;
      * no valid event is lost (the following tool step still appears).
      */
+    @Test fun trimmedWorkCannotLeaveMainSceneTerminalAfterToolFailure() {
+        command("turn-1")
+        bus.emit(CockpitAnimationEvent.ActionStarted("turn-1", 2L, CockpitAction.THINK,
+            "Bearbeitung", stepKey = "ack"))
+        bus.emit(CockpitAnimationEvent.ProcessTimeline("turn-1", 3L,
+            (0 until 8).map { i ->
+                ProcessStep(if (i == 7) "tool:failed" else "m:$i",
+                    if (i == 7) "Werkzeug fehlgeschlagen" else "Meilenstein $i",
+                    if (i == 7) StepState.FAILED else StepState.DONE)
+            }))
+        assertEquals(1, view.effects.cardCount)
+        assertTrue("bounded timeline failure must not terminalize the live main scene",
+            view.stepFinished("turn-1.main_scene", true))
+    }
+
     @Test fun reasoningAndToolContinuationShareOneMainScene() {
         val triggers = at.heinz.deviceai.cockpit.CockpitAnimationTriggers(bus) { 1_000L }
         triggers.commandAcknowledged("turn-1", "Prüfe den Auftrag")
