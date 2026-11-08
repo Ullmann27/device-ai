@@ -6508,7 +6508,8 @@ class AgentActivity : Activity() {
                     bootstrapMemory.recordAssessment(report.passed, report.total)
                     "Gelernt: „$phrase“ → ${ToolRegistry.label(name)}. Trainingscheck: ${report.passed}/${report.total}." +
                         core.fold({ "" }, { " Der Continuum-Lernkern hat die Zuordnung nicht übernommen (${failureName(it)})." })
-                }) { result -> addAssistantMessage(result.getOrElse { "Lernbeispiel nicht übernommen: ${failureName(it)}." }) }
+                }) { result -> addAssistantMessage(result.getOrElse { "Lernbeispiel nicht übernommen: ${failureName(it)}." },
+                    preserveLocalContext = result.isFailure) }
             }.show()
     }
 
@@ -6580,7 +6581,8 @@ class AgentActivity : Activity() {
                             (if (cleared) "Gelernte Befehlssätze gelöscht. " else "Gelernte Befehlssätze konnten nicht gelöscht werden; bitte wiederholen. ") +
                                 revoked.fold({ "Im Continuum-Lernkern wurden $it Zuordnungen widerrufen." },
                                     { "Der Widerruf im Continuum-Lernkern ist fehlgeschlagen (${failureName(it)}); bitte wiederholen." })
-                        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." }) }
+                        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." },
+                            preserveLocalContext = result.isFailure) }
                     }.show()
             }.show()
     }
@@ -8192,7 +8194,8 @@ class AgentActivity : Activity() {
                 "Im lokalen Lernspeicher gemerkt, aber der Continuum-Lernkern hat die Information nicht übernommen " +
                     "(${failureName(e)}). Wiederhole „Merke dir“, um es erneut zu versuchen."
             })
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." }) }
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." },
+            preserveLocalContext = result.isFailure) }
     }
 
     /**
@@ -8217,7 +8220,8 @@ class AgentActivity : Activity() {
                 { "Information geändert; bisherige Ableitungen und die alte Continuum-Experience sind widerrufen." },
                 { e -> "Im lokalen Lernspeicher geändert und die alte Information widerrufen, aber der Continuum-Lernkern " +
                     "hat die neue noch nicht übernommen (${failureName(e)}); das nächste Continuum-Gespräch holt das nach." })
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht geändert: ${failureName(it)}." }) }
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht geändert: ${failureName(it)}." },
+            preserveLocalContext = result.isFailure) }
     }
 
     /** Revokes in the learning core first, so a repeated deletion still reaches it. */
@@ -8229,7 +8233,8 @@ class AgentActivity : Activity() {
                 { "Der Widerruf im Continuum-Lernkern ist fehlgeschlagen (${failureName(it)}); bitte „Fakten löschen“ wiederholen." })
             (if (cleared) "Alle gemerkten Fakten wurden aus dem lokalen Lernspeicher gelöscht. "
                 else "Der lokale Lernspeicher konnte nicht geleert werden; bitte wiederholen. ") + core
-        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." }) }
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." },
+            preserveLocalContext = result.isFailure) }
     }
 
     private fun showBootstrapMemory() {
