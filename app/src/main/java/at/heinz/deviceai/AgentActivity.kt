@@ -5229,9 +5229,9 @@ class AgentActivity : Activity() {
                 is OwnerAppActionFlow.Step.Done -> {
                     if (flow.candidates.isNotEmpty()) appLookupContext = ownerSession to flow.candidates
                     val fallbackToConversation = OwnerAppLookupIntent.shouldFallbackToConversation(
-                        intake, flow.lookupVerified, flow.candidates.size)
+                        intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified)
                     val clarifyMessage = OwnerAppLookupIntent.shouldClarifyMessage(
-                        intake, flow.lookupVerified, flow.candidates.size)
+                        intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified)
                     activeOwnerAppFlow = null
                     activeOwnerAppGate = null
                     appLookupActive = false
