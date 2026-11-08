@@ -82,6 +82,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var avatarProofStartedAt = Long.MIN_VALUE
     private var avatarProofStartCallbacks = 0L
     private var avatarProofStartDraws = 0L
+    private var avatarProofStartTraceFrame = 0L
     private val avatarProofFinish = Runnable { finishAvatarProof() }
     private val presentationBudgetObservers = linkedSetOf<() -> Unit>()
     private var avatarSeconds = 0f
@@ -548,6 +549,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         setNative3dEnabled(true)
         avatarProofStartCallbacks = visibleFrameCount
         avatarProofStartDraws = drawnFrameCount
+        avatarProofStartTraceFrame = avatarTrace.frameNumber()
         avatarProofStartedAt = SystemClock.uptimeMillis()
         mainHandler.postDelayed(avatarProofFinish, DeterministicAvatarProofRunner.DURATION_MS + 100L)
         Toast.makeText(context, "15s Avatar-Proof: Idle · Blink · Blick · Mund · Denken · Karte", Toast.LENGTH_LONG).show()
@@ -561,7 +563,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         val summary = AvatarProofCompletion.summarize(
             (visibleFrameCount - avatarProofStartCallbacks).coerceAtLeast(0L),
             (drawnFrameCount - avatarProofStartDraws).coerceAtLeast(0L),
-            avatarTrace.diagnose()
+            avatarTrace.diagnoseSince(avatarProofStartTraceFrame)
         )
         invalidate()
         val activity = context as? android.app.Activity ?: return
