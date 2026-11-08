@@ -15,21 +15,25 @@ class AvatarHeadFollowTest {
         AvatarPose(state, AvatarExpression.NEUTRAL, x, y, 0f, Viseme.SIL, 0f, 0f, gazeObserved = observed)
     private val totalYaw = AvatarMorphMapper.HEAD_YAW_DEGREES + AvatarMorphMapper.EYE_YAW_DEGREES
 
-    @Test fun eyesReachTheTargetAtOnceWhileTheHeadStillTurns() {
+    @Test fun eyesLeadWithinTheFirstFrameWhileTheHeadStillTurns() {
         val m = AvatarMorphMapper(AvatarGlbContract.TARGETS)
         m.update(pose(0f), 10f, true)
         assertEquals(0f, m.headYaw, 0f)
         m.update(pose(.5f), 10.016f, true)
-        assertTrue("head must lag behind a sudden gaze change", m.headYaw > 0f && m.headYaw < AvatarMorphMapper.HEAD_YAW_DEGREES * .1f)
-        assertEquals("eyes compensate: total gaze is on target in the first frame", .5f * totalYaw, m.headYaw + m.eyeYaw, 1e-4f)
+        assertTrue("head must lag behind a sudden gaze change",
+            m.headYaw > 0f && m.headYaw < AvatarMorphMapper.HEAD_YAW_DEGREES * .1f)
+        assertTrue("fast eye spring must move farther than the head spring", m.eyeYaw > m.headYaw)
+        assertTrue("critical damping approaches instead of teleporting to the full gaze",
+            m.headYaw + m.eyeYaw < .5f * totalYaw)
     }
 
-    @Test fun largeJumpsSaturateTheEyesAtTheHumanLimitWhileTheHeadCatchesUp() {
+    @Test fun largeJumpsLetEyesCrossFirstWhileTheHeadCatchesUp() {
         val m = AvatarMorphMapper(AvatarGlbContract.TARGETS)
         m.update(pose(-1f), 20f, true)
-        m.update(pose(1f), 20.016f, true)
-        assertEquals(AvatarMorphMapper.EYE_MAX_YAW_DEGREES, m.eyeYaw, 0f)
-        assertTrue(m.headYaw + m.eyeYaw < totalYaw)
+        m.update(pose(1f), 20.055f, true)
+        assertTrue("eyes should already cross toward the new target", m.eyeYaw > 0f)
+        assertTrue("head remains on the old side during the fast eye lead", m.headYaw < 0f)
+        assertTrue(kotlin.math.abs(m.eyeYaw) <= AvatarMorphMapper.EYE_MAX_YAW_DEGREES)
     }
 
     @Test fun headConvergesSmoothlyWithoutOvershoot() {
