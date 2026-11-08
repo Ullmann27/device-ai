@@ -23,9 +23,10 @@ test('transparent native 3D hero has no network, model execution or fake status'
  assert.match(orb,/override fun onDraw\(canvas: Canvas\)/);
  assert.match(orb,/private val renderFrame = ContinuumHologramRenderer\.Frame\(/);
  assert.match(orb,/renderFrame\.phase = phase/);
- assert.match(orb,/renderFrame\.energy = energy/);
- assert.match(orb,/renderFrame\.audio = audioEnergy/);
- assert.match(orb,/renderer\.draw\(painter, renderFrame\)/);
+ assert.match(orb,/renderFrame\.energy = proof\?\.orbEnergy \?: energy/);
+ assert.match(orb,/renderFrame\.audio = if \(proof != null\) proof\.pose\.speakEnergy else audioEnergy/);
+ assert.match(orb,/diagnosticBlink = proof\?\.blinkOverride/);
+ assert.match(orb,/receipt = receipt/);
  assert.match(renderer,/Fill\.Radial\(/);
  assert.match(renderer,/drawOrbits\(p, f, front = true\)/);
  // the backdrop glow ends in a fully transparent stop: the view paints no opaque background of its own
@@ -120,7 +121,7 @@ test('large text is bounded and propagated into adaptive layout without window s
  assert.match(layout,/font > 1\.3f/);
  const shell=fs.readFileSync(ui+'JarvisShellLayout.kt','utf8');
  assert.match(shell,/val profile = JarvisWindowProfile\.resolve\(widthDp, heightDp, fontScale, foldRail\)/);
- assert.match(shell,/val tileH = maxOf\(64f \* font, 48f\)/);
+ assert.match(shell,/val tileH = maxOf\(JarvisCockpitGrid\.MIN_TILE_DP \* font, tileWidth \/ JarvisCockpitGrid\.TILE_ASPECT\)/);
  // text that does not fit its card is shortened with an ellipsis instead of running into a neighbour
  assert.match(drawn,/fun fit\(p: ContinuumPainter, text: String, style: TextStyle, maxWidth: Float\): String/);
  assert.match(drawn,/"…"/);
