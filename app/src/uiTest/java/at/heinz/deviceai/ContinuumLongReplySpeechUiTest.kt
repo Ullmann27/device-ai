@@ -161,7 +161,7 @@ class ContinuumLongReplySpeechUiTest {
             val id = field(a, "voiceUtteranceId") as String? ?: break
             listener.onStart(id); listener.onDone(id)
         }
-        assertEquals(16, spoken(tts).size)
+        assertEquals("31 answer pieces plus one truncation notice", 32, spoken(tts).size)
         assertEquals("Der Rest der Antwort steht im Chat.", spoken(tts).last())
     }
 }
