@@ -83,6 +83,7 @@ import at.heinz.deviceai.cognitive.ContinuumRuntimeStore
 import at.heinz.deviceai.cognitive.Evaluation
 import at.heinz.deviceai.cognitive.FileAgentCheckpointStore
 import at.heinz.deviceai.cognitive.InMemoryExperienceStore
+import at.heinz.deviceai.cognitive.FileExperienceStore
 import at.heinz.deviceai.cognitive.InMemoryMemoryStore
 import at.heinz.deviceai.cognitive.MemoryRecord
 import at.heinz.deviceai.cognitive.MemoryType
@@ -500,7 +501,10 @@ class AgentActivity : Activity() {
     private var botTaskTimeout: Runnable? = null
     private val botTaskStatuses = LinkedHashMap<String, String>()
     private val memoryStore = InMemoryMemoryStore()
-    private val experienceStore = InMemoryExperienceStore()
+    /** Procedural agent history only; never owner facts. Survives process restarts. */
+    private val experienceStore by lazy {
+        FileExperienceStore(java.io.File(filesDir, "agent-experience"))
+    }
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
     private var lastVisibleCognitiveTrace: Pair<String,String>? = null
     private var activeChatCancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null
@@ -3491,7 +3495,8 @@ class AgentActivity : Activity() {
                 append("LM1: Kotlin-Laufzeit vorhanden, kein nachgewiesener aktiver Modelladapter/Checkpoint im Hauptchat.\n")
                 append("CCC1: bestehende Owner-Freigabe-/Receipt-Grenzen unverändert.\n\n")
                 append("SKILL-ABSTRAKTION · EXISTIERENDER EXPERIENCE-COMPILER\n")
-                append("Beobachtungen nur aus dieser laufenden App-Sitzung: ").append(experiences.size)
+                append("Persistente Agentenerfahrungen (nur verifizierte SUCCESS-Nachweise dürfen als Erfolgsmuster zählen): ")
+                    .append(experiences.size)
                 skills.fold(onSuccess={ candidates ->
                     append("\nZur Besitzerprüfung geeignete Vorschläge: ")
                         .append(candidates.count { it.eligibleForOwnerReview })
@@ -9604,6 +9609,8 @@ class AgentActivity : Activity() {
                     maxRetries = if (botTask == null) 1 else 0),
             evaluationConfirmsOutcome = false,
             turnTrace = turnTrace,
+            // Historical runs are injected only as UNVERIFIED device-local hints.
+            recallPriorExperiences = botTask == null && codingPlanning == null,
             approvalProvider = AgentToolApprovalProvider { proposal, risk ->
                 cancellation.throwIfCancelled()
                 botTask?.let(::requireBotTaskCurrent)
