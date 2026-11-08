@@ -81,6 +81,11 @@ class LocalReasoningWorkSceneUiTest {
         AgentActivity::class.java.getDeclaredMethod("promoteLocalReasoningWorkSceneToTool")
             .apply { isAccessible = true }.invoke(a)
 
+    private fun invokeToolScene(a: AgentActivity, callId: String, toolName: String) =
+        AgentActivity::class.java.getDeclaredMethod(
+            "presentToolScene", String::class.java, String::class.java, java.util.Map::class.java
+        ).apply { isAccessible = true }.invoke(a, callId, toolName, emptyMap<String, Any?>())
+
     private fun invokeFinish(a: AgentActivity, turn: String, immediate: Boolean) =
         AgentActivity::class.java.getDeclaredMethod(
             "finishLocalReasoningWorkScene", String::class.java, Boolean::class.javaPrimitiveType
@@ -139,6 +144,53 @@ class LocalReasoningWorkSceneUiTest {
             assertFalse("stale reasoning callback must not reopen after tool promotion",
                 descendants(root).any { it.tag == "jarvis-work-window" && it.isShown })
             assertNull(field(a, "localReasoningWorkScene"))
+        } finally {
+            controller.close()
+        }
+    }
+
+    @Test fun visibleReasoningWindowMorphsIntoToolWithoutPhysicalReopen() {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE)
+            .edit().putBoolean("voice_enabled", false).commit()
+        app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE)
+            .edit().putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
+            .edit().putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
+            .edit().putBoolean("jarvis-shell", true).commit()
+
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        try {
+            controller.setup().visible()
+            repeat(3) { shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS) }
+            controller.windowFocusChanged(true)
+            val a = controller.get()
+            val root = a.window.decorView
+            root.measure(
+                View.MeasureSpec.makeMeasureSpec(884, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(760, View.MeasureSpec.EXACTLY)
+            )
+            root.layout(0, 0, 884, 760)
+            val home = field(a, "homeView") as ContinuumHomeView
+            home.setJarvisShellStage(true)
+            set(a, "busy", true)
+            set(a, "activeLocalRequest", true)
+            set(a, "activeWorkArea", ContinuumWorkArea.START)
+
+            invokePresent(a, "morph-turn", "Öffne nach der lokalen Prüfung ein Werkzeug.")
+            shadowOf(Looper.getMainLooper()).idleFor(64, TimeUnit.MILLISECONDS)
+            val before = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
+
+            invokeToolScene(a, "call-morph", "launch_app")
+            shadowOf(Looper.getMainLooper()).idleFor(64, TimeUnit.MILLISECONDS)
+            val after = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
+
+            assertSame("reasoning -> tool keeps the same physical work window", before, after)
+            assertNull("reasoning lease is monotonically promoted away", field(a, "localReasoningWorkScene"))
+            assertTrue(descendants(root).filterIsInstance<TextView>().any {
+                it.tag == "jarvis-tool-status:call-morph"
+            })
         } finally {
             controller.close()
         }

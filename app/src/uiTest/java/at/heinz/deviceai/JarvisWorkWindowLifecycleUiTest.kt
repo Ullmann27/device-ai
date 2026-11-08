@@ -145,6 +145,32 @@ class JarvisWorkWindowLifecycleUiTest {
         assertNull(second.parent)
     }
 
+    @Test fun replacingContentKeepsTheSamePhysicalWindowAndGeometry() = withWindow { f ->
+        val first = f.body("Reasoning")
+        val second = f.body("Tool")
+        var closed = 0
+        assertTrue(f.open(first) { closed++ })
+        f.draw(1_000); f.draw(2_000)
+        val before = requireNotNull(f.window.shownBounds())
+        assertEquals(1, f.clock.listeners.size)
+
+        assertTrue(f.window.replaceContent(
+            second, "WERKZEUG · Test", accent = at.heinz.deviceai.ui.JarvisDesign.Colors.cyan))
+        f.layout()
+        val after = requireNotNull(f.window.shownBounds())
+
+        assertTrue(f.window.isShowing)
+        assertEquals(before, after)
+        assertNull(first.parent)
+        assertNotNull(second.parent)
+        assertEquals("same frame subscription survives morph", 1, f.clock.listeners.size)
+        assertEquals("morph is not a close", 0, closed)
+
+        f.window.close(immediate = true)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals(1, closed)
+    }
+
     @Test fun fractionalDestinationSettlesExactlyInsideSafePixelBounds() = withWindow { f ->
         val requested = RectF(220.35f, 440.75f, 820.9f, 700.2f)
         val keepOut = RectF(0f, 0f, 220.34f, 760f)

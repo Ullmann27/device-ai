@@ -22,6 +22,7 @@ class JarvisWorkWindowHost(
     private var back: android.window.OnBackInvokedCallback? = null
     private var currentId: String? = null
     private var currentGaze: GazeTarget? = null
+    private var currentClientClosed: (() -> Unit)? = null
     /** Window whose content the local model is really working on (JARVIS reads it until the work ends). */
     private var workingId: String? = null
     private var emphasizedWork = false
@@ -62,6 +63,35 @@ class JarvisWorkWindowHost(
     fun close(immediate: Boolean = false) {
         if (immediate) cameraHome?.hologram?.setWorkWindowCamera(false, immediate = true)
         current?.close(immediate)
+    }
+
+    /**
+     * Morphs the current work window in place. Geometry, camera framing, deck clearance,
+     * window id and AvatarDirector ownership stay continuous.
+     */
+    fun replaceCurrent(
+        home: ContinuumHomeView,
+        body: View,
+        title: String,
+        scene: JarvisActionScenes.Scene,
+        emblem: android.graphics.drawable.Drawable? = null,
+        crystal: Boolean = false,
+        depthLayers: Int = 0,
+        onClosed: () -> Unit
+    ): JarvisWorkWindow? {
+        val window = current?.takeIf { it.isShowing } ?: return null
+        if (cameraHome !== home || currentId == null) return null
+        if (!window.replaceContent(
+                body = body,
+                title = title,
+                accent = scene.accent,
+                emblem = emblem,
+                crystal = crystal,
+                depthLayers = depthLayers
+            )) return null
+        currentClientClosed = onClosed
+        home.setWorkspaceFootprint(scene.footprint)
+        return window
     }
 
     /**
@@ -126,17 +156,20 @@ class JarvisWorkWindowHost(
             director.windowClosed(id)
             if (workingId == id) { workingId = null; emphasizedWork = false }
             if (current === window) {
+                val clientClosed = currentClientClosed
                 current = null
                 currentId = null
                 currentGaze = null
+                currentClientClosed = null
                 home.hologram.setWorkWindowCamera(false)
                 cameraHome = null
                 home.setWorkspaceFootprint(JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE)
                 unregisterBack()
-                onClosed()
+                clientClosed?.invoke()
             }
         })
         if (!accepted) { window.dispose(); container.removeView(window); return null }
+        currentClientClosed = onClosed
         current = window
         currentId = id
         currentGaze = gaze(first)
