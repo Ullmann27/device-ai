@@ -141,6 +141,7 @@ class OwnerAppActionFlowTest {
         val needed = OwnerAppLookupIntent.inspect("Ich brauche WhatsApp") as OwnerAppLookupIntent.Intake.Lookup
         assertEquals("WhatsApp", needed.query)
         assertTrue(needed.opening)
+        assertTrue(needed.requireInstalledCandidate)
         assertNull(OwnerAppLookupIntent.inspect("Ich brauche die PDF"))
         val maps = OwnerAppLookupIntent.inspect("Ich brauche die App Google Maps") as OwnerAppLookupIntent.Intake.Lookup
         assertEquals("Google Maps", maps.query)
@@ -150,8 +151,10 @@ class OwnerAppActionFlowTest {
             assertNull(ordinary, OwnerAppLookupIntent.inspect(ordinary))
         assertTrue(OwnerAppLookupIntent.inspect("Ich brauche Signal und schreibe Anna") is
             OwnerAppLookupIntent.Intake.Planning)
-        val message = OwnerAppLookupIntent.inspect("Schreibe WhatsApp") as OwnerAppLookupIntent.Intake.Planning
-        assertTrue(message.clarification!!.contains("konkreten Empfänger"))
+        val message = OwnerAppLookupIntent.inspect("Schreibe WhatsApp") as OwnerAppLookupIntent.Intake.Lookup
+        assertTrue(message.requireInstalledCandidate)
+        assertTrue(message.messagePlanningIfMatched)
+        assertTrue(OwnerAppLookupIntent.shouldClarifyMessage(message, true, 1))
         assertNull(OwnerAppLookupIntent.inspect("Schreibe einen langen Bericht über Wien"))
         assertTrue(OwnerAppLookupIntent.inspect("Ich will was von WhatsApp") is OwnerAppLookupIntent.Intake.Clarify)
         for (request in listOf("Öffne die PDF", "Öffne den Download-Ordner", "Öffne /sdcard/Download"))
@@ -166,4 +169,21 @@ class OwnerAppActionFlowTest {
         assertNull(OwnerAppLookupIntent.contextualTarget("9", available))
         assertEquals(available[1].packageName, OwnerAppLookupIntent.contextualTarget("zweite", available))
     }
+    @Test fun lookupVerifiedOnlyAfterFreshValidatedDiscoveryPayload() {
+        val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner(::lookup))
+        val flow = OwnerAppActionFlow(true)
+        val run = flow.start("Signal")
+        assertFalse(flow.lookupVerified)
+        val result = invoke(gate, run)
+        assertTrue(flow.returned(result) is OwnerAppActionFlow.Step.Confirm)
+        assertTrue(flow.lookupVerified)
+
+        val replayed = OwnerAppActionFlow(true)
+        val replayRun = replayed.start("Signal")
+        val replayResult = invoke(gate, replayRun).copy(replayed = true)
+        assertTrue(replayed.returned(replayResult) is OwnerAppActionFlow.Step.Done)
+        assertFalse(replayed.lookupVerified)
+    }
+
+
 }

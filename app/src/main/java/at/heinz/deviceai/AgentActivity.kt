@@ -5228,14 +5228,37 @@ class AgentActivity : Activity() {
                 }
                 is OwnerAppActionFlow.Step.Done -> {
                     if (flow.candidates.isNotEmpty()) appLookupContext = ownerSession to flow.candidates
+                    val fallbackToConversation = OwnerAppLookupIntent.shouldFallbackToConversation(
+                        intake, flow.lookupVerified, flow.candidates.size)
+                    val clarifyMessage = OwnerAppLookupIntent.shouldClarifyMessage(
+                        intake, flow.lookupVerified, flow.candidates.size)
                     activeOwnerAppFlow = null
                     activeOwnerAppGate = null
                     appLookupActive = false
                     activeLocalRequest = false
                     setBusy(false)
-                    val reply = AppActionReply(ownerSession, generation, request, step.message)
-                    if (foregroundLearningActive) deliverAppActionReply(reply)
-                    else pendingAppActionReply = reply
+                    when {
+                        fallbackToConversation -> {
+                            if (::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY) {
+                                runLocal(request)
+                            } else {
+                                localConversationContext.recordUnanswered(ownerSession, request)
+                                addAssistantMessage(
+                                    "Der Satz wurde nicht als installierter App-Auftrag bestätigt. " +
+                                        "Das lokale Modell ist gerade nicht bereit, ihn als normales Gespräch zu beantworten.",
+                                    preserveLocalContext = true,
+                                    keepCockpit = activeWorkArea == ContinuumWorkArea.START
+                                )
+                            }
+                        }
+                        clarifyMessage -> clarifyAppRequest(
+                            request, OwnerAppLookupIntent.messageClarification())
+                        else -> {
+                            val reply = AppActionReply(ownerSession, generation, request, step.message)
+                            if (foregroundLearningActive) deliverAppActionReply(reply)
+                            else pendingAppActionReply = reply
+                        }
+                    }
                 }
             }
         }

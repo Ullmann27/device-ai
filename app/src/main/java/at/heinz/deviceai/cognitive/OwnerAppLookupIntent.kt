@@ -3,7 +3,12 @@ package at.heinz.deviceai.cognitive
 /** Intents never grant execution. */
 internal object OwnerAppLookupIntent {
     sealed interface Intake {
-        data class Lookup(val query: String, val opening: Boolean) : Intake
+        data class Lookup(
+            val query: String,
+            val opening: Boolean,
+            val requireInstalledCandidate: Boolean = false,
+            val messagePlanningIfMatched: Boolean = false
+        ) : Intake
         data class Planning(val original: String, val clarification: String? = null) : Intake
         data class Clarify(val subject: String) : Intake
     }
@@ -19,8 +24,11 @@ internal object OwnerAppLookupIntent {
         "(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\s+(?:bitte\\s+)?(?:(?:die|eine)\\s+)?app\\s+" +
             "([\\p{L}\\p{N}][\\p{L}\\p{N} ._+-]{0,79})[.!?]*$"
     )
+    private val needTrailingApp = Regex(
+        "(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\s+(?:bitte\\s+)?([\\p{L}\\p{N}][\\p{L}\\p{N}._+-]{1,39})\\s+app[.!?]*$"
+    )
     private val needSingleApp = Regex(
-        "(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\s+(?:bitte\\s+)?([\\p{L}\\p{N}][\\p{L}\\p{N}._+-]{1,39})(?:\\s+app)?[.!?]*$"
+        "(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\s+(?:bitte\\s+)?([\\p{L}\\p{N}][\\p{L}\\p{N}._+-]{1,39})[.!?]*$"
     )
     private val nonAppNeedTargets = setOf("hilfe", "pause", "rat", "dich", "mich", "dir", "mir",
         "zeit", "ruhe", "mehr", "antwort", "auskunft")
@@ -33,11 +41,18 @@ internal object OwnerAppLookupIntent {
     private val reference = Regex("(?iu)^(?:sie|es|diese|diese\\s+app|die\\s+app|die|erste|zweite|dritte|vierte|fünfte|letzte|[1-9]|[1-9]\\.)$")
     private val fileTarget = Regex("(?iu)\\b(datei|dateien|ordner|verzeichnis|download-ordner|downloads|pdf|dokument|dokumente)\\b|[/\\\\]|\\.(?:pdf|txt|docx|csv|json|jpg|png)\\b")
     private val messageAction = Regex("(?iu)\\b(schreib|schreibe|schreiben|sende|senden|schick|schicke|schicken|nachricht)\\b")
+    private val explicitMessageApp = Regex(
+        "(?iu)^(?:schreib|schreibe|sende|schick|schicke)\\s+(?:(?:in|über|auf)\\s+)?(?:(?:die|eine)\\s+)?" +
+            "(?:app\\s+([\\p{L}\\p{N}._+-]{2,40})|([\\p{L}\\p{N}._+-]{2,40})\\s+app)[.!?]*$"
+    )
     private val shortMessageTarget = Regex(
-        "(?iu)^(?:schreib|schreibe|sende|schick|schicke)\\s+(?:(?:in|über|auf)\\s+)?(?:(?:die|eine)\\s+)?(?:app\\s+)?([\\p{L}\\p{N}._+-]{2,40})(?:\\s+app)?[.!?]*$"
+        "(?iu)^(?:schreib|schreibe|sende|schick|schicke)\\s+(?:(?:in|über|auf)\\s+)?(?:(?:die|eine)\\s+)?" +
+            "([\\p{L}\\p{N}._+-]{2,40})[.!?]*$"
     )
 
-    fun parse(utterance: String): String? = (inspect(utterance) as? Intake.Lookup)?.query
+    fun parse(utterance: String): String? = (inspect(utterance) as? Intake.Lookup)
+        ?.takeUnless { it.requireInstalledCandidate }
+        ?.query
 
     fun inspect(utterance: String, assistantName: String? = null): Intake? {
         if (utterance.length !in 5..1_000 || utterance.any { it.isISOControl() || it in "\"„“”«»" }) return null
@@ -45,12 +60,29 @@ internal object OwnerAppLookupIntent {
         text = text.replace(Regex("(?iu)^bitte\\s+"), "")
         if (negation.containsMatchIn(text)) return null
         vague.matchEntire(text)?.let { return Intake.Clarify(it.groupValues[1].trim().take(100)) }
-        shortMessageTarget.matchEntire(text)?.let { return planning(utterance) }
+        explicitMessageApp.matchEntire(text)?.let { match ->
+            val app = match.groupValues.drop(1).firstOrNull { it.isNotBlank() }
+            if (app != null) return planning(utterance)
+        }
+        shortMessageTarget.matchEntire(text)?.let { match ->
+            return Intake.Lookup(
+                query = match.groupValues[1].trim(),
+                opening = false,
+                requireInstalledCandidate = true,
+                messagePlanningIfMatched = true
+            )
+        }
         if (needPrefix.containsMatchIn(text) && messageAction.containsMatchIn(text)) return planning(utterance)
-        val needTarget = needExplicitApp.matchEntire(text)?.groupValues?.get(1)?.trim()
-            ?: needSingleApp.matchEntire(text)?.groupValues?.get(1)?.trim()?.takeIf {
-                it.lowercase() !in nonAppNeedTargets
+        val explicitNeedTarget = needExplicitApp.matchEntire(text)?.groupValues?.get(1)?.trim()
+            ?: needTrailingApp.matchEntire(text)?.groupValues?.get(1)?.trim()
+        val implicitNeedTarget = if (explicitNeedTarget == null) {
+            needSingleApp.matchEntire(text)?.groupValues?.get(1)?.trim()?.takeIf {
+                it.lowercase() !in nonAppNeedTargets && !isReference(it) &&
+                    it.lowercase() !in setOf("das", "den", "ihn", "ihm", "ihr", "uns", "euch")
             }
+        } else null
+        val needTarget = explicitNeedTarget ?: implicitNeedTarget
+        val needRequiresInstalledCandidate = explicitNeedTarget == null && implicitNeedTarget != null
         val opening: Boolean
         val target: String
         val d = direct.matchEntire(text)
@@ -72,13 +104,34 @@ internal object OwnerAppLookupIntent {
             .replace(Regex("(?iu)^app\\s+"), "").replace(Regex("(?iu)\\s+app$"), "").trim()
         if (!query.matches(name) || name.contains("..") || name.contains(Regex("(?iu)\\b(etwas|irgendwas|irgendetwas)\\b")))
             return planning(utterance)
-        return Intake.Lookup(name, opening)
+        return Intake.Lookup(
+            query = name,
+            opening = opening,
+            requireInstalledCandidate = needRequiresInstalledCandidate
+        )
     }
 
-    private fun planning(original: String) = Intake.Planning(original,
-        if (messageAction.containsMatchIn(original)) "Welche Nachricht soll ich für welchen konkreten Empfänger vorbereiten? " +
+    fun shouldFallbackToConversation(
+        intake: Intake.Lookup,
+        lookupVerified: Boolean,
+        candidateCount: Int
+    ): Boolean = intake.requireInstalledCandidate && lookupVerified && candidateCount == 0
+
+    fun shouldClarifyMessage(
+        intake: Intake.Lookup,
+        lookupVerified: Boolean,
+        candidateCount: Int
+    ): Boolean = intake.messagePlanningIfMatched && lookupVerified && candidateCount > 0
+
+    fun messageClarification(): String =
+        "Welche Nachricht soll ich für welchen konkreten Empfänger vorbereiten? " +
             "Wenn du eine App meinst, kann ich einen Entwurf vorbereiten und sie nach deiner Bestätigung öffnen. " +
-            "Direktes Eingeben oder Senden in fremden Apps ist hier noch nicht angebunden." else null)
+            "Direktes Eingeben oder Senden in fremden Apps ist hier noch nicht angebunden."
+
+    private fun planning(original: String) = Intake.Planning(
+        original,
+        if (messageAction.containsMatchIn(original)) messageClarification() else null
+    )
 
     fun isReference(query: String): Boolean = reference.matches(query)
 

@@ -22,6 +22,8 @@ internal class OwnerAppActionFlow(private val opening: Boolean) {
     private var selected: NativeAppCandidate? = null
     var candidates: List<NativeAppCandidate> = emptyList()
         private set
+    var lookupVerified: Boolean = false
+        private set
     val launching: Boolean get() = phase == Phase.LAUNCH
 
     fun start(query: String): Step.Run {
@@ -52,6 +54,7 @@ internal class OwnerAppActionFlow(private val opening: Boolean) {
             check(checked.candidates.size == supplied.size)
             checked.copy(total = total)
         }.getOrElse { return done("Appsuche konnte nicht vollständig geprüft werden. Keine App gestartet.") }
+        lookupVerified = true
         candidates = matches.candidates
         if (candidates.isEmpty()) return done("Ich habe keine passende startbare App gefunden. " +
             "Das beweist nicht, dass sie nicht installiert ist. Welche App meinst du genau?")
