@@ -191,7 +191,9 @@ class ContinuumLocalAgentModelTest {
             callIdPrefix = "bridge-deny"
         )
         val result = agent.run("Inspect device")
-        assertEquals(ExperienceOutcome.PARTIAL, result.experience?.outcome)
+        assertEquals(ExperienceOutcome.FAILURE, result.experience?.outcome)
+        assertTrue(result.blocker != null)
+        assertFalse(result.response.contains("claimed success"))
         assertTrue(result.experience!!.sourceIds.isEmpty())
     }
 

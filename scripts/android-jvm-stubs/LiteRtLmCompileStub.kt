@@ -5,7 +5,7 @@ package com.google.ai.edge.litertlm
 
 enum class BackendType { CPU, GPU, NPU }
 enum class Modality { TEXT, VISION, AUDIO }
-sealed class Backend { class CPU : Backend() }
+sealed class Backend { class CPU(val threadCount: Int? = null) : Backend() }
 sealed class Content {
     class Text(val text: String) : Content()
     class ToolResponse(val name: String, val response: Any?) : Content()

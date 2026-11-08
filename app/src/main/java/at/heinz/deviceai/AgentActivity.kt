@@ -6164,7 +6164,8 @@ class AgentActivity : Activity() {
                     turnTrace.event(if(grounded)TraceStage.MEMORY_EXACT else TraceStage.GATED_FALLBACK)
                     publishCognitiveTrace(turnTrace,if(grounded)TraceOutcome.MEMORY_EXACT else TraceOutcome.BLOCKED)
                     addNonModelReply(request, ContinuumUiCopy.memoryFallbackAnswer(answer,grounded,
-                        localRuntime.state==LocalModelState.READY && localRuntime.loadedModel!=null),
+                        if (localRuntime.loadedModel == null && localRuntime.state == LocalModelState.READY) LocalModelState.EMPTY
+                        else localRuntime.state),
                         at.heinz.deviceai.cognitive.NonModelReplyKind.MEMORY_RECALL)
                     addToolActivity(evidence)
                 }.onFailure {
@@ -7417,6 +7418,27 @@ class AgentActivity : Activity() {
             if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
         }
         cockpit.grid(this, box, listOf(importButton, action), 2)
+        // Fold7 heat (#642): the CPU backend no longer uses every core; the owner can trade speed for heat.
+        box.addView(cockpit.section(this, "WÄRME · RECHENBUDGET DER LOKALEN INFERENZ"), matchWidth(top = 11))
+        val coolingStatus = textView(coolingModeStatus(), 12f, MUTED).apply {
+            background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
+            setPadding(dp(13), dp(12), dp(13), dp(12))
+        }
+        box.addView(coolingStatus, matchWidth(top = 8))
+        lateinit var coolingAction: android.widget.TextView
+        coolingAction = cockpit.action(this, coolingModeActionLabel()) {
+            val current = at.heinz.deviceai.localmodel.LocalModelHost.coolingMode(this)
+            val next = if (current == at.heinz.deviceai.localmodel.LocalModelComputeBudget.CoolingMode.COOL)
+                at.heinz.deviceai.localmodel.LocalModelComputeBudget.CoolingMode.BALANCED
+            else at.heinz.deviceai.localmodel.LocalModelComputeBudget.CoolingMode.COOL
+            at.heinz.deviceai.localmodel.LocalModelHost.setCoolingMode(this, next)
+            coolingStatus.text = coolingModeStatus()
+            coolingAction.text = coolingModeActionLabel()
+            Toast.makeText(this, if (localRuntime.loadedModel != null)
+                "Gespeichert. Wirkt beim nächsten Laden des Modells (Modell entladen und neu laden)."
+                else "Gespeichert. Wirkt beim nächsten Laden des Modells.", Toast.LENGTH_LONG).show()
+        }
+        box.addView(coolingAction, matchWidth(top = 6))
         box.addView(cockpit.section(this, "OPTIONAL · NUR NACH AUSDRÜCKLICHER FREIGABE"), matchWidth(top = 10))
         box.addView(cockpit.action(this, "GROQ-MENTOR · EXTERNE EINZELFRAGE") {
             modelCenterDialog?.dismiss()
@@ -8039,6 +8061,25 @@ class AgentActivity : Activity() {
      * Rollback restores the newest archived state that differs from the active
      * weights; the restore itself is archived, so it can be undone the same way.
      */
+    private fun coolingModeStatus(): String {
+        val mode = at.heinz.deviceai.localmodel.LocalModelHost.coolingMode(this)
+        val cores = Runtime.getRuntime().availableProcessors()
+        val power = getSystemService(android.content.Context.POWER_SERVICE) as? android.os.PowerManager
+        val planned = at.heinz.deviceai.localmodel.LocalModelHost.inferenceThreads(this, power)
+        val loaded = localRuntime.computeThreads
+        val thermal = if (android.os.Build.VERSION.SDK_INT >= 29) power?.currentThermalStatus else null
+        return at.heinz.deviceai.localmodel.LocalModelComputeBudget.describe(planned, cores, mode) +
+            (if (loaded != null) " Aktuell geladen mit $loaded Threads." else " Kein Modell geladen.") +
+            "\nAndroid-Thermalstufe jetzt: " + (thermal?.toString() ?: "unbekannt") +
+            " (0 = kühl … 3 = stark erwärmt; Android liefert Apps keine Gradzahl). " +
+            "Ab Stufe 3 wird eine laufende Antwort angehalten und nichts automatisch neu gestartet."
+    }
+
+    private fun coolingModeActionLabel(): String =
+        if (at.heinz.deviceai.localmodel.LocalModelHost.coolingMode(this) ==
+            at.heinz.deviceai.localmodel.LocalModelComputeBudget.CoolingMode.COOL)
+            "KÜHLMODUS AUS · AUSGEWOGEN NUTZEN" else "KÜHLMODUS AN · WENIGER WÄRME, LANGSAMER"
+
     private fun showModelVersions() {
         onLearningIo({ modelVersionsText() }) { result ->
             showModelVersionsDialog(result.getOrElse { "Modellverlauf nicht lesbar: ${failureName(it)}" })
@@ -9406,7 +9447,7 @@ class AgentActivity : Activity() {
             canChangeDevice && (it.outcomeUncertain || it.state == ToolReceiptState.START_PENDING)
         }
         if (uncertain.isEmpty()) return
-        addToolActivity("${uncertain.size} tool call(s) require operator review")
+        addToolActivity(ContinuumUiCopy.pendingToolReview(uncertain.size))
         AlertDialog.Builder(this)
             .setTitle("Previous tool outcome requires review")
             .setMessage(
@@ -12505,6 +12546,7 @@ class AgentActivity : Activity() {
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.LISTEN -> {
                 mainHandler.removeCallbacks(conversationResume)
                 mainHandler.removeCallbacks(conversationIdleCheck)
+                mainHandler.removeCallbacks(conversationListen)
                 startVoiceInput()
             }
             else -> endContinuousConversation("Gesprächsmodus beendet: neue Chat-Sitzung.")
@@ -12549,6 +12591,13 @@ class AgentActivity : Activity() {
         startVoiceInput()
     }
 
+    /** A pooled recognizer that just reported „belegt“ is dropped before the hands-free start. */
+    private fun applyColdRecognizerIfRecommended() {
+        if (!continuousConversation.coldRecognizerRecommended) return
+        onDeviceSpeech?.resetRecognizer()
+        continuousConversation.coldRecognizerUsed()
+    }
+
     /** A recognized hands-free utterance becomes one ordinary chat turn via the Send path. */
     private fun applyConversationSpeech(turnToken: Long, spoken: String) {
         if (isFinishing || isDestroyed) return
@@ -12581,18 +12630,28 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun onConversationListenFailed(turnToken: Long, message: String) {
-        val silence = message == at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.message(
-                at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Failure.NO_MATCH) ||
-            message == at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.message(
-                at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Failure.NO_INPUT) ||
-            message == at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.message(
-                at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Failure.TIMEOUT)
-        when (continuousConversation.listenFailed(turnToken, sessionId, silence)) {
-            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.RETRY_LISTEN ->
-                mainHandler.postDelayed(conversationListen, CONVERSATION_RETRY_DELAY_MS)
-            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.PAUSE ->
-                pauseContinuousConversationNotice(if (silence) "Ich habe nichts gehört." else message)
+    /**
+     * Structured recognizer failure of a hands-free turn (#641). Silence is retried once;
+     * busy/client handover failures are retried a bounded number of times with a growing delay
+     * and a cold recognizer; everything else pauses and tells the owner the real reason.
+     */
+    private fun onConversationListenFailed(turnToken: Long, failure: at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Failure) {
+        val silence = at.heinz.deviceai.cognitive.ContinuousConversationMode.isSilence(failure)
+        val recoverable = at.heinz.deviceai.cognitive.ContinuousConversationMode.isRecoverable(failure)
+        when (continuousConversation.listenFailed(turnToken, sessionId, silence, recoverable)) {
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.RETRY_LISTEN -> {
+                mainHandler.removeCallbacks(conversationListen)
+                mainHandler.postDelayed(conversationListen,
+                    if (silence) CONVERSATION_RETRY_DELAY_MS else continuousConversation.recoveryRetryDelayMs())
+            }
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.PAUSE -> {
+                if (recoverable) onDeviceSpeech?.resetRecognizer()
+                pauseContinuousConversationNotice(when {
+                    silence -> "Ich habe nichts gehört."
+                    recoverable -> "Der lokale Spracherkenner war mehrfach belegt; ich habe ihn neu gestartet."
+                    else -> at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.message(failure)
+                })
+            }
             else -> Unit
         }
     }
@@ -12659,6 +12718,7 @@ class AgentActivity : Activity() {
         val conversationTurn = if (requestCode == SPEECH_REQUEST) continuousConversation.listeningTurn(scopeSession) else null
         activeLocalSpeechRequest=requestCode
         val speech=onDeviceSpeech?:AndroidOnDeviceSpeechInput(this).also { onDeviceSpeech=it }
+        if (conversationTurn != null) applyColdRecognizerIfRecommended()
         val route=at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.route(internetConsent.mode,
             offlineVeto=true,onDeviceAvailable=speech.available(),microphoneGranted=speech.microphoneGranted())
         when(route){
@@ -12679,9 +12739,12 @@ class AgentActivity : Activity() {
                     (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog) &&
                     (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true)){
                     if(conversationTurn!=null)applyConversationSpeech(conversationTurn,spoken) else applyLocalSpeechText(requestCode,spoken)}},
-                onError={message->
+                onFailure={failure->
                     if (conversationTurn != null && speechScopeGeneration == scopeGeneration && sessionId == scopeSession &&
-                        !isFinishing && !isDestroyed) onConversationListenFailed(conversationTurn, message)
+                        !isFinishing && !isDestroyed) onConversationListenFailed(conversationTurn, failure)
+                },
+                onError={message->
+                    if (conversationTurn != null) Unit // handled structurally in onFailure
                     else if (speechScopeGeneration == scopeGeneration && sessionId == scopeSession && !isFinishing && !isDestroyed &&
                         (requestCode != DEV_SPEECH_REQUEST || devDialog === scopeDialog && scopeDialog?.isShowing == true) &&
                         (requestCode != READINESS_SPEECH_REQUEST || readinessDialog === readinessScope && readinessScope?.isShowing == true)) {
