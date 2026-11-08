@@ -18,11 +18,41 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  source-probe:
+  integration-probe:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Map integration points
-        run: python3 scripts/airbus2100_probe.py
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Assemble repair stack without publishing
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git config user.name "Continuum Integration Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git checkout -b airbus2100-probe
+          git merge --no-edit origin/chatgpt/code50-context-inplace-tool-20261108
+          git cherry-pick \
+            3d1df45c4947c199396486da32339c324aa26c64 \
+            eb68797e6ce0c85ec1068253f80fa9f26a31eed2 \
+            4f0f30fd750692e480468c04537f84d4ac6cce26 \
+            ad54bb513bcccd547d626cf1add475f2d393193e \
+            ca0bf6e5d8468df585891fd998963cddd195d0a5
+          git merge --no-edit origin/chatgpt/code50-warm-speech-recognizer-20261108
+          git status --short
+          git log --oneline --decorate -20
+      - name: Verify imported regression slices
+        shell: bash
+        run: |
+          set -euxo pipefail
+          chmod +x gradlew
+          ./gradlew :app:testDebugUnitTest \
+            --tests "at.heinz.deviceai.ui.HollywoodFuiConstructTest" \
+            --tests "at.heinz.deviceai.cognitive.LocalSpeechSessionTest" \
+            --stacktrace
+          ./gradlew :app:compileDebugKotlin --stacktrace
