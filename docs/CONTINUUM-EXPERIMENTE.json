@@ -213,7 +213,14 @@
       "present": "Code50 baseline 473f7972, drafts #647/#648: context routing prospective HOLDOUT 1/12 to 12/12 with 8/8 negative controls unchanged; batch admission into existing HypothesisWorkspace yields 768/768 invariant prior permutations and 96/96 versus 48/96 verified diagnoses on each of two synthetic four-cause sets at a two-probe budget. No model inference, learning, private data, live planner activation or device claim. Timing and negative results in handoffs.",
       "entry": "docs/research/omega/CONTINUUM-PRIOR-BATCH-PILOT-20261108.md",
       "depends": "Existing conversation policy, HypothesisWorkspace, JTMS; Kotlin/JDK/JUnit host tools",
-      "gate": "Independent natural-language and noisy/cost-asymmetric causal holdouts, same-model device ablation, Android regression and thermal/energy evidence before promotion"
+      "gate": "Independent natural-language and noisy/cost-asymmetric causal holdouts, same-model device ablation, Android regression and thermal/energy evidence before promotion",
+      "computePilot": {
+        "pullRequest": 649,
+        "sourceCommit": "64b9c6d7ae0f968c1f7d34f0ee5941bdbe9cfe5e",
+        "status": "RESEARCH_SHADOW",
+        "result": "Existing broker plus independent verification: repeated expensive synthetic work saves 88.0% CPU; unique, cheap and epoch-churn workloads fail the preregistered benefit gate. 55 native Node tests and 72000 exact final-result checks pass. No live integration, energy or model-performance claim.",
+        "entry": "docs/research/omega/CONTINUUM-VERIFIED-REUSE-PILOT-20261108.md"
+      }
     }
   ]
 }

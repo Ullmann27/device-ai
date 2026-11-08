@@ -43,3 +43,63 @@ independent tasks. Final request IDs distinguish the requested outputs.
 This is deliberately a bounded replication/counterexample experiment, not a
 new universal compute algorithm. No cache or scheduler is wired into the
 live Android chat, no trainable parameters or owner data are changed.
+
+## Executed result
+
+Draft #649. Protocol commit:
+`90e3afdd0f39fd7cc800d1e22f0ca07d839c4c3a`.
+Measured tracked source:
+`64b9c6d7ae0f968c1f7d34f0ee5941bdbe9cfe5e`.
+Host: Linux x64, Node v26.12.1. No source changes during measurements.
+The raw working-tree record reports an untracked Python `__pycache__` from
+syntax validation; it was not an input to any Node worker and was subsequently
+removed. This was not a completely clean checkout, despite unchanged tracked
+sources; the report retains that fact.
+
+```sh
+node --test tools/continuum-virtual-fabric/*.test.mjs \
+  tools/continuum-cognitive-pilots/verified-reuse-pilot.test.mjs
+node tools/continuum-cognitive-pilots/verified-reuse-pilot.mjs /tmp/h3.json
+```
+
+**55 PASS / 0 FAIL / 0 SKIP**: 47 existing tests and 8 new independent-oracle,
+forged-result, binding, scope, revision, repetition, uniqueness and bounds tests.
+The integrity-only control accepts an incorrect self-checksummed result; the
+new mathematical verifier rejects it. This is not a change to the broker's
+default-deny policy, and is not remote worker authentication.
+
+All **72,000 final results** (4 workloads x 6 pairs x 3 arms x 1,000) match the
+independent oracle. Raw samples, source/config hashes, memory observations,
+per-arm audits and no-reuse ablation are in
+`docs/evidence/cognitive-pilots-20261108/compute/comparison.json`.
+
+| Workload | Direct wall / CPU median | Verified reuse wall / CPU median | Paired wins (both) | >=10% gate |
+|---|---:|---:|---:|---|
+| Repeated expensive | 207.777 / 212.089 ms | 17.728 / 25.454 ms | 6/6 | PASS |
+| Unique expensive | 207.301 / 211.500 ms | 353.752 / 372.279 ms | 0/6 | FAIL |
+| Repeated cheap | 5.457 / 8.688 ms | 9.435 / 14.209 ms | 0/6 | FAIL |
+| Epoch churn | 210.504 / 215.988 ms | 192.244 / 210.856 ms | 5/6 | FAIL |
+
+Repeated-expensive savings: **91.5% wall / 88.0% CPU** in this synthetic kernel.
+There are 10 kernel calls **plus 10 verifier calls**, not free verification.
+With reuse disabled, that workload requires 1,000 + 1,000 calls and measures
+358.632 ms wall / 373.226 ms CPU. The no-reuse ablation retains the same verifier.
+Peak process RSS for repeated-expensive: direct 64,204 KiB vs reuse 66,424 KiB;
+640 UTF-8 payload bytes retained, excluding keys/maps/runtime overhead.
+
+**Falsified generalization:** avoiding 990/1,000 production-kernel calls does
+not guarantee faster computation: cheap repeated work is about 73% slower in
+wall time. Unique work is about 71% slower. Churn fails the preregistered
+benefit gate despite 500 cache hits. No thresholds were changed after seeing
+these results. No attempt is made to promote the unfavorable workloads.
+
+**SKIP:** energy/Joule, thermal pressure, Android/Termux, real model inference,
+actual source-analysis workloads, real consenting peers. CPU time is not an
+energy substitute; no GPU/RAM capacity or universal speedup was created.
+
+Next falsifiable trial: a preregistered admission policy based on measured
+stage cost and revision-local repeat rate should recover >=10% CPU savings
+on a held-out mixed workload while adding <=5% overhead to unique/cheap work.
+Validate on read-only real repository-analysis stages before any canonical
+Kotlin ComputeFabric adapter or phone activation. Keep ToolGate, consent,
+ComputeNodeRegistry and ComputeResultVerifier authoritative.
