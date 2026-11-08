@@ -1,0 +1,31 @@
+JUnit version 4.13.2
+.E.E....E.E.....
+Time: 0.07
+There were 4 failures:
+1) workThatStartsDuringSpokenAcknowledgementWaitsWithoutStealingAttention(at.heinz.deviceai.avatar.AvatarWindowWorkReadingTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.avatar.AvatarWindowWorkReadingTest.workThatStartsDuringSpokenAcknowledgementWaitsWithoutStealingAttention(AvatarWindowWorkReadingTest.kt:200)
+2) stopCompletionAndCloseDiscardWorkQueuedDuringSpeech(at.heinz.deviceai.avatar.AvatarWindowWorkReadingTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.avatar.AvatarWindowWorkReadingTest.stopCompletionAndCloseDiscardWorkQueuedDuringSpeech(AvatarWindowWorkReadingTest.kt:227)
+3) workThatStartsWhileListeningUsesItsLatestTargetAfterTheOwnerFinishes(at.heinz.deviceai.avatar.AvatarWindowWorkReadingTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.avatar.AvatarWindowWorkReadingTest.workThatStartsWhileListeningUsesItsLatestTargetAfterTheOwnerFinishes(AvatarWindowWorkReadingTest.kt:212)
+4) deferredWorkKeepsItsOriginalLifetimeAndRejectsBlankIds(at.heinz.deviceai.avatar.AvatarWindowWorkReadingTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.avatar.AvatarWindowWorkReadingTest.deferredWorkKeepsItsOriginalLifetimeAndRejectsBlankIds(AvatarWindowWorkReadingTest.kt:243)
+
+FAILURES!!!
+Tests run: 12,  Failures: 4

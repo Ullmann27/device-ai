@@ -83,7 +83,8 @@ Gesicherte Entwicklungs-Checkpoints: `3e481449bc9671ce74e974959e96294d6d003f0b`
 (Audit), `a9cf4b8de89589b085943681cc0293da5652aace` (Material),
 `452591edd31215fecea7a3110036157a7c1ed438` (Zeitbasis/Fallback),
 `839017298f78d825d82118f359c5d56874bfae57` (gepruefte Host-Evidenz),
-`76b26e227e898f375820b872d674859016e6bad2` (bestehendes Cyan-Kernlicht).
+`76b26e227e898f375820b872d674859016e6bad2` (bestehendes Cyan-Kernlicht),
+`6d392e3efc38feaf12debb91dc1b6149ee5e43aa` (projizierter Fensterblick).
 Jeweils Commit -> Push -> `git ls-remote` mit identischem SHA ausgefuehrt.
 Finale Evidenz liegt in `docs/evidence/astra-holographic-v2-20261108/`.
 
@@ -95,6 +96,7 @@ Finale Evidenz liegt in `docs/evidence/astra-holographic-v2-20261108/`.
 | Vollstaendige JVM-Regression Fenster | 632 JUnit-Klassen, 3551 Tests PASS; vier ausfuehrbare Checks PASS (fuenfter Helper hat kein main) |
 | Folge-Meilenstein Kernlicht | Zusaetzliche Filament-/View-Typpruefung und 5 neue Policytests, zusammen 3556 JVM-Tests PASS |
 | Folge-Meilenstein Blickprojektion | Aktuelle Window-/Host-Klassen typgeprueft, 634 JVM-Klassen / 3563 Tests PASS; `window-gaze-junit.txt` |
+| Folge-Meilenstein paralleler Arbeitsbeginn | RED: vier neue Fehler in 12 Reading-Tests; GREEN: 95 gezielte Avatar-/Blicktests; finale Gesamtsuite 3567 PASS, `work-admission-final-junit.txt` |
 | Schlusskorrekturen | Erneute Typpruefung der Android-Fenster-/Overlay-Klassen, voller JVM-Lauf mit diesen Klassen zuerst im Classpath |
 | Neue UI-Tests | 5 Robolectric-Faelle typgeprueft: nur eine Uhr, Content-Freigabe, spaetes Schliessen, Rueckfall/reduzierte Bewegung, geschuetzte Bereiche/STOP/Thermik; Ausfuehrung BLOCKED |
 | Android-Gradle / Lint / native UI | Tatsaechlich versucht, AGP8.10.0 aus Google-Maven nicht aufloesbar; kein SDK/adb/Emulator. Kein APK |
@@ -237,6 +239,30 @@ ist erreichbar, aber AndroidX Monitor 1.7.2 und Espresso-Idling 3.6.1 bleiben
 wegen DNS-Ausfall von Google Maven und dem getesteten Mirror unaufloesbar.
 Beleg: `native-runtime-blocked.txt`. Kein nativer UI-PASS behauptet.
 
+## Regie-Folgeauftrag: Arbeitsbeginn waehrend einer Bestaetigung
+
+Zweite echte Anschlussluecke: `AgentActivity` meldet PDF-/Modell-/Toolarbeit
+einmal ueber `workWindowHost.workStarted`. `AvatarDirector.windowWorkStarted`
+hat diese reale Meldung aber waehrend LISTENING/SPEAKING oder einer aktiven
+TTS-Utterance verworfen. Ein spaeteres Sprachende hatte dann keinen
+Arbeitsanspruch, zu dem der Avatar haette zurueckkehren koennen.
+
+Der **bestehende** `workIntent` nimmt den echten Arbeitsbeginn nun auch dann
+auf. Das bedeutet nur Annahme der Praesentations-Lease, **nicht** sofortige
+Blickuebernahme und niemals Ausfuehrungsfreigabe. Sprache/Zuhoeren behalten die
+Augen. Der vorhandene Resume-Pfad uebernimmt danach die zuletzt projizierte
+Position. STOP, echtes Ende, Fensterschliessen und TTL loeschen auch einen
+solchen wartenden Anspruch. Keine Queue, kein Timer, kein Eventbus hinzugefuegt;
+Inferenz und Werkzeuge werden nicht fuer die Inszenierung verzoegert.
+
+RED gegen den vorherigen Director: 12 Tests, genau die vier neuen Faelle
+scheitern. GREEN: 95 Avatar-/Blicktests PASS. Anschliessend gesamte JVM-Suite
+mit neu kompiliertem Director, Window/Host, Kernlicht und deren Tests:
+**3567 PASS**. Ein bisheriger Test erwartete absichtlich die alte Ablehnung
+waehrend SPEAKING; er prueft nun Annahme **bei weiterhin ungerichtetem Blick**.
+Das geaenderte Verhalten ist damit explizit geprueft, nicht stillschweigend
+aus einem fehlenden Test entfernt.
+
 ### Weiter offene Regieanforderungen
 
 | Forderung | Praeziser Stand |
@@ -245,6 +271,7 @@ Beleg: `native-runtime-blocked.txt`. Kein nativer UI-PASS behauptet.
 | Laufende Arbeit | Vorhandene reale Arbeits-Lease, Reading-/Sprach-/Idle-Morphs und budgetierte FUI-Liveframes bleiben aktiv; semantische PDF-Zeilen-/Codebereichsziele fehlen |
 | Sprache | Vorhandene TTS-Ranges/PCM-Huelle und PP-Visem bleiben unveraendert; keine neue phonemgenaue Audioanalyse oder Geraete-Lipsync-Abnahme |
 | Mehrere bedienbare Fenster | Host besitzt weiterhin ein aktuelles Fenster; hintere Dokumentebenen sind keine parallelen interaktiven Fenster |
+| Abschluss | Reale Arbeit gibt die Blick-Lease frei; editierbare Ergebnisse/Bestaetigungen bleiben zugaenglich. Bestehendes Schliessen ist filmisch, kein neuer automatischer Inhaltsverlust |
 | Sieben Arbeitswelten | Vorhandene echte Datenpfade erhalten; umfassende fachliche Live-Flachen und sieben durchgefilmte Owner-Auftraege offen |
 | Vollstaendiger Abnahmefilm | BLOCKED: kein Android-Runtime-/Originalavatar-Render und kein Fold7; Java2D-Frames/Policytests ersetzen diesen Nachweis nicht |
 
@@ -256,7 +283,10 @@ Aus bedeutet vorhandener einfacher Fenstereinflug ohne Film-Layer/Neigung und
 die originale statische Cyan-Fuellleuchte;
 kein Abschalten der Avatar-/Sprach-/Berechtigungsfunktionen.
 Rollback nur eigener Commits, niemals Reset der SOL-/Fable-Branches.
-Naechster Einstieg: finale Host-Frames und Regressionen; danach autorisierter
-Android-QA-Host und Fold7-Abnahme. SOL hat inzwischen #658 als separaten
+Naechster Einstieg: die sieben nativen UI-Faelle auf einem autorisierten
+Android-QA-Host ausfuehren, Blickprojektion am Original-GLB filmen und die
+offenen metrischen Kamera-/Mehrfenster-/Live-Inhaltsanforderungen daran
+weiterentwickeln. Kein weiteres subjektives Grafik-Abnahmeversprechen aus
+Host-Policytests ableiten. SOL hat inzwischen #658 als separaten
 Reconciliation-Kandidaten; dieser Branch bleibt bewusst auf dem beauftragten
 #653 gepinnt. Keine fremden Aenderungen uebernommen oder ueberschrieben.
