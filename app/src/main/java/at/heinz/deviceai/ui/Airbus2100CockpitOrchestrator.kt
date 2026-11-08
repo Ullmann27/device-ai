@@ -21,6 +21,7 @@ class Airbus2100CockpitOrchestrator(
     private val schedule: (Runnable, Long) -> Unit,
     private val cancel: (Runnable) -> Unit,
     private val onSceneProfile: (JarvisActionScenes.Scene) -> Unit,
+    private val onLiveData: (HollywoodFuiLiveData?) -> Unit,
     private val onTelemetry: (String?) -> Unit,
     private val onHoloCue: () -> Unit,
     private val onPostMission: (String) -> Unit,
@@ -46,7 +47,9 @@ class Airbus2100CockpitOrchestrator(
         if (closed) return
         when (event) {
             is CockpitAnimationEvent.CommandFlyIn -> beginMission(event.turnId)
-            is CockpitAnimationEvent.ActionStarted -> if (event.turnId == activeTurnId) {
+            is CockpitAnimationEvent.ActionStarted -> {
+                if (activeTurnId == null && event.action == CockpitAction.WORKER) beginMission(event.turnId)
+                if (event.turnId != activeTurnId) return
                 val next = when (event.action) {
                     CockpitAction.THINK -> Phase.LOCAL_REASONING
                     CockpitAction.TOOL, CockpitAction.RESEARCH, CockpitAction.DEVELOP,
@@ -54,21 +57,46 @@ class Airbus2100CockpitOrchestrator(
                     CockpitAction.WORKER -> Phase.TOOL_ACTIVE
                 }
                 promote(next, sceneFor(event))
+                if (event.detail.isNotBlank()) {
+                    onLiveData(HollywoodFuiLiveData.Timeline(listOf(
+                        HollywoodFuiLiveData.Timeline.Line(event.detail.take(64), StepState.ACTIVE)
+                    )))
+                }
             }
             is CockpitAnimationEvent.ProcessTimeline -> if (event.turnId == activeTurnId) {
+                onLiveData(HollywoodFuiLiveData.Timeline.from(event.steps))
                 if (event.steps.any { it.state == StepState.WAITING }) promote(Phase.AWAITING_DECISION, null)
             }
             is CockpitAnimationEvent.AccountCardFlyIn -> if (event.turnId == activeTurnId) {
                 promote(Phase.TOOL_ACTIVE, scene(JarvisActionScenes.Kind.APP))
+                onLiveData(HollywoodFuiLiveData.app(event.provider, event.accountLabel))
             }
             is CockpitAnimationEvent.DocumentQuestion -> if (event.turnId == activeTurnId) {
                 promote(Phase.AWAITING_DECISION, JarvisActionScenes.forDocument())
+                onLiveData(HollywoodFuiLiveData.document(
+                    event.documentName, event.mimeType, event.question
+                ))
+            }
+            is CockpitAnimationEvent.DocumentLearned -> if (event.turnId == activeTurnId) {
+                promote(Phase.TOOL_ACTIVE, JarvisActionScenes.forDocument())
+                onLiveData(HollywoodFuiLiveData.document(
+                    event.docId, event.kind, question = null, entriesAdded = event.entriesAdded
+                ))
+            }
+            is CockpitAnimationEvent.RecallHits -> if (event.turnId == activeTurnId) {
+                onLiveData(HollywoodFuiLiveData.evidence(event.count, event.topScore, "Recall"))
             }
             is CockpitAnimationEvent.CalculationShown -> if (event.turnId == activeTurnId) {
                 promote(Phase.TOOL_ACTIVE, JarvisActionScenes.forCalculation())
+                onLiveData(HollywoodFuiLiveData.calculation(
+                    event.expression, event.steps, event.result, event.unit
+                ))
             }
             is CockpitAnimationEvent.AlarmRaised -> if (event.kind == AlarmKind.SECURITY_FINDING) {
                 onSceneProfile(scene(JarvisActionScenes.Kind.STATUS))
+                onLiveData(HollywoodFuiLiveData.security(
+                    event.sourceLabel, event.measured, event.threshold
+                ))
                 onHoloCue()
             }
             is CockpitAnimationEvent.TurnEnded -> if (event.turnId == activeTurnId) finishMission(event.turnId)
@@ -106,6 +134,7 @@ class Airbus2100CockpitOrchestrator(
         activeTurnId?.let { sideQuestEngine.stopMissionCountdown(it, clockNanos()) }
         activeTurnId = null
         phase = Phase.IDLE
+        onLiveData(null)
         onTelemetry(null)
     }
 
@@ -114,6 +143,7 @@ class Airbus2100CockpitOrchestrator(
             activeTurnId?.let { sideQuestEngine.stopMissionCountdown(it, clockNanos()) }
             activeTurnId = turnId
             phase = Phase.LOCAL_REASONING
+            onLiveData(null)
             sideQuestEngine.startMissionCountdown(turnId, nowNanos = clockNanos())
         }
         publishTimer()
