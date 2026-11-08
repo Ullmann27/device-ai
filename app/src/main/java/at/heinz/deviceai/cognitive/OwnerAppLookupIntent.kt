@@ -14,6 +14,16 @@ internal object OwnerAppLookupIntent {
     private val polite = Regex("(?iu)^(?:kannst|könntest|würdest|magst)\\s+du\\s+(.+?)\\s+(öffnen|starten|suchen|finden|zeigen)(?:\\s+bitte)?[.!?]*$")
     private val desire = Regex("(?iu)^ich\\s+(?:möchte|will|würde\\s+gern(?:e)?)\\s+(.+?)\\s+(öffnen|starten)[.!?]*$")
     private val openUp = Regex("(?iu)^mach(?:e)?\\s+(.+?)\\s+auf[.!?]*$")
+    private val needPrefix = Regex("(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\b")
+    private val needExplicitApp = Regex(
+        "(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\s+(?:bitte\\s+)?(?:(?:die|eine)\\s+)?app\\s+" +
+            "([\\p{L}\\p{N}][\\p{L}\\p{N} ._+-]{0,79})[.!?]*$"
+    )
+    private val needSingleApp = Regex(
+        "(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\s+(?:bitte\\s+)?([\\p{L}\\p{N}][\\p{L}\\p{N}._+-]{1,39})(?:\\s+app)?[.!?]*$"
+    )
+    private val nonAppNeedTargets = setOf("hilfe", "pause", "rat", "dich", "mich", "dir", "mir",
+        "zeit", "ruhe", "mehr", "antwort", "auskunft")
     private val vague = Regex("(?iu)^(?:ich\\s+)?(?:bräuchte|brauche|hätte\\s+gern(?:e)?|möchte|will)\\s+(?:bitte\\s+)?(?:etwas|was)\\s+(?:von|aus|in)\\s+(.+?)[.!?]*$")
     private val action = Regex("(?iu)\\b(öffne|öffnen|starte|starten|suche|suchen|finde|finden|aufmachen)\\b")
     private val requestStart = Regex("(?iu)^(?:öffne|starte|suche|finde|zeige|mach(?:e)?|kannst|könntest|würdest|magst|ich)\\b")
@@ -23,6 +33,9 @@ internal object OwnerAppLookupIntent {
     private val reference = Regex("(?iu)^(?:sie|es|diese|diese\\s+app|die\\s+app|die|erste|zweite|dritte|vierte|fünfte|letzte|[1-9]|[1-9]\\.)$")
     private val fileTarget = Regex("(?iu)\\b(datei|dateien|ordner|verzeichnis|download-ordner|downloads|pdf|dokument|dokumente)\\b|[/\\\\]|\\.(?:pdf|txt|docx|csv|json|jpg|png)\\b")
     private val messageAction = Regex("(?iu)\\b(schreib|schreibe|schreiben|sende|senden|schick|schicke|schicken|nachricht)\\b")
+    private val shortMessageTarget = Regex(
+        "(?iu)^(?:schreib|schreibe|sende|schick|schicke)\\s+(?:(?:in|über|auf)\\s+)?(?:(?:die|eine)\\s+)?(?:app\\s+)?([\\p{L}\\p{N}._+-]{2,40})(?:\\s+app)?[.!?]*$"
+    )
 
     fun parse(utterance: String): String? = (inspect(utterance) as? Intake.Lookup)?.query
 
@@ -32,6 +45,12 @@ internal object OwnerAppLookupIntent {
         text = text.replace(Regex("(?iu)^bitte\\s+"), "")
         if (negation.containsMatchIn(text)) return null
         vague.matchEntire(text)?.let { return Intake.Clarify(it.groupValues[1].trim().take(100)) }
+        shortMessageTarget.matchEntire(text)?.let { return planning(utterance) }
+        if (needPrefix.containsMatchIn(text) && messageAction.containsMatchIn(text)) return planning(utterance)
+        val needTarget = needExplicitApp.matchEntire(text)?.groupValues?.get(1)?.trim()
+            ?: needSingleApp.matchEntire(text)?.groupValues?.get(1)?.trim()?.takeIf {
+                it.lowercase() !in nonAppNeedTargets
+            }
         val opening: Boolean
         val target: String
         val d = direct.matchEntire(text)
@@ -41,6 +60,7 @@ internal object OwnerAppLookupIntent {
             d != null -> { opening = d.groupValues[1].lowercase() in setOf("öffne", "starte"); target = d.groupValues[2] }
             p != null -> { opening = p.groupValues[2].lowercase() in setOf("öffnen", "starten"); target = p.groupValues[1] }
             m != null -> { opening = true; target = m.groupValues[1] }
+            needTarget != null -> { opening = true; target = needTarget }
             else -> return if (requestStart.containsMatchIn(text) && action.containsMatchIn(text)) planning(utterance) else null
         }
         if (!Regex("(?iu)\\bapp\\b").containsMatchIn(target) && fileTarget.containsMatchIn(target)) return null
@@ -57,7 +77,7 @@ internal object OwnerAppLookupIntent {
 
     private fun planning(original: String) = Intake.Planning(original,
         if (messageAction.containsMatchIn(original)) "Welche Nachricht soll ich für welchen konkreten Empfänger vorbereiten? " +
-            "Ich kann einen Entwurf vorbereiten und die App nach deiner Bestätigung öffnen. " +
+            "Wenn du eine App meinst, kann ich einen Entwurf vorbereiten und sie nach deiner Bestätigung öffnen. " +
             "Direktes Eingeben oder Senden in fremden Apps ist hier noch nicht angebunden." else null)
 
     fun isReference(query: String): Boolean = reference.matches(query)
