@@ -20,7 +20,7 @@ object JarvisActionScenes {
     }
 
     data class Scene(val kind: Kind, val origin: Origin, val accent: Int,
-                     val footprint: WorkspaceFootprint = footprintFor(kind))
+                     val footprint: WorkspaceFootprint = JarvisActionScenes.footprintFor(kind))
 
     /** Centre title → kind and the START tile that opens it (null: no tile, the window emerges beside the face). */
     private val centres = mapOf(
