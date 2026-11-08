@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="opt-in verifier rejects a test-passing constant and feeds the counterexample into the same repair loop" time="1.144496" classname="test" file="/home/qa/repo-m/.github/continuum/research-verifier-integration.test.mjs"/>
+	<testcase name="independent research veto blocks completion even after primary tests passed" time="0.842488" classname="test" file="/home/qa/repo-m/.github/continuum/research-verifier-integration.test.mjs"/>
+	<testcase name="a throwing optional verifier exhausts the fixed proposal budget without publishing a patch" time="0.606337" classname="test" file="/home/qa/repo-m/.github/continuum/research-verifier-integration.test.mjs"/>
+	<testcase name="a completion I/O failure preserves the owner abort receipt" time="0.087906" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="an existing completion cannot be overwritten or turn a failed delivery into success" time="0.080656" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="unreadable proc cannot turn a live detached child into watchdog success" time="1.863646" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="repair profile requires a valid completion: confirmed" time="0.156186" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="repair profile requires a valid completion: denied proc" time="1.918870" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="repair profile requires a valid completion: missing completion" time="0.123242" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="repair profile requires a valid completion: wrong task" time="0.126827" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="a supervisor signal cannot become success when the command exits zero on SIGTERM" time="0.365925" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="a watched step passes streams, exit code and ending signal through unchanged" time="0.210743" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="a spawnSync timeout still reads as a timeout and also ends the detached grandchild" time="1.815303" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="an owner abort ends a running step and its detached grandchild within seconds" time="0.852601" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="a task aborted before the step starts never runs the command" time="0.082114" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="a watched step stops when the waiting parent is gone" time="0.888085" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="the watchdog refuses incomplete or relative arguments" time="0.211318" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="an abort watch ends a running check profile and the chain never uses its result" time="0.848999" classname="test" file="/home/qa/repo-m/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="actual offline Teamleader repairs a broken Git fixture and retains only a reviewable patch" time="0.390645" classname="test" file="/home/qa/repo-m/.github/continuum/teamleader-end-to-end.test.mjs"/>
+	<testcase name="scheduled owner task completes full real Git repair and independent verification" time="0.580253" classname="test" file="/home/qa/repo-m/.github/continuum/teamleader-end-to-end.test.mjs"/>
+	<testcase name="actual passing Git fixture generates no fake repair, patch, or changed source" time="0.148020" classname="test" file="/home/qa/repo-m/.github/continuum/teamleader-end-to-end.test.mjs"/>
+	<testcase name="actual offline Teamleader completes a priority investigation with real Git checks and evidence" time="0.288205" classname="test" file="/home/qa/repo-m/.github/continuum/teamleader-end-to-end.test.mjs"/>
+	<testcase name="bounded process executes argv directly and reports its actual exit" time="0.028997" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="timeout kills the process group and never reports success" time="0.456908" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="owner cancellation is asynchronous and cannot become a successful exit" time="0.381840" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="the signal that ended the direct child is reported, an exit code is not" time="0.042558" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="oversized process logs are bounded and fail closed" time="0.299220" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="cancellation also stops a child that detached like the Gradle daemon" time="0.658420" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="inherited run identity catches a rapidly orphaned detached child on linux" time="0.308121" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="inherited run identity catches a rapidly orphaned detached child on android" time="0.309985" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup" time="0.027602" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="an unreadable process younger than the run blocks a confirmed cleanup" time="1.791103" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="unreadable proc stat is not confused with an exited process" time="1.786167" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="denied proc access still stops its direct child and returns a bounded unconfirmed timeout" time="1.862322" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="a reused root PID cannot hide an earlier detached descendant from cleanup" time="0.309726" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="incomplete proc scans are retried within the cleanup bound: transient" time="0.297222" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="incomplete proc scans are retried within the cleanup bound: persistent" time="1.793434" classname="test" file="/home/qa/repo-m/scripts/continuum-owned-process.test.mjs"/>
+	<!-- tests 37 -->
+	<!-- suites 0 -->
+	<!-- pass 37 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 16706.130233 -->
+</testsuites>

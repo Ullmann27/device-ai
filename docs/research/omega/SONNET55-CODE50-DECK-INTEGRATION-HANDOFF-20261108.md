@@ -140,3 +140,30 @@ Quelle: heruntergeladene JUnit-XML des Diagnoselaufs 42478725998 auf `8bc695f` (
 | App-Start-Receipts (nur nach beobachtetem Vordergrundfenster) | `OwnerAppActionFlowTest` 15 · `OwnerAppLookupIntentTest` 5 |
 
 **Weiterhin unbewiesen (kein Test ersetzt das Gerät):** echte SpeechRecognizer-Engine und Rundenwechsel, TTS-Barge-in und Lippen-Viseme auf dem Gerät, Thermik/CPU/RAM/GPU, ElevenLabs (nicht verdrahtet, keine autorisierte Integration), echte PDF-Szene, Falten/Rotation/200 % Schrift auf dem Fold7. Die 12 nicht verdrahteten Forschungsmodule (Abschnitt 6) sind in keiner Oberfläche oder Doku als „aktiv“ ausgewiesen (statisch geprüft).
+
+## 13. Nachtrag 08.11.2026 (Folgesitzung): `critical`-Fehlschlag auf `cc8ee5f`, Beweislage zum Fixture-Timeout, Multi-Agenten-Lauf
+
+**Status dieses Nachtrags: WIP / UNVERIFIED.** Reine Dokumentation, kein Produktions- und kein Testcode geändert.
+
+**13.1 Stand.** Staging stand vor diesem Nachtrag auf `cc8ee5fe2dffd98f41c505c01b5d9ffdae4d8cf9` (nur Doku auf `6f0137f`/`8bc695f`; die Git-Baumhashes von `app`, `backend`, `scripts`, `.github`, `gradle` sind identisch). Host-Lauf `critical` auf genau diesem SHA (Sandbox): **FAIL**, `storage-agent` 28 PASS / 4 FAIL / 0 SKIP, alle vier mit `FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED`. Auf `6f0137f` (gleicher Code) war `critical` 135/135 grün. `full-node` und Backend wurden auf `cc8ee5f` **nicht** wiederholt (`NOT_RUN`, Code identisch zu `6f0137f`).
+
+**13.2 Ursache (belegt).** Fixture-Adapter mit `timeoutMs: 500` (`storage-fabric.test.mjs:42`) gegen Produktionsstandard 1500 ms (`storage-fabric.mjs:100`); `Promise.allSettled` mit Fail-closed in `storage-fabric-catalog.mjs:103` (unverändert); Harness `--test-concurrency=2` auf 2 Kernen. Ein instrumentierter Lauf zeigt in den unbeabsichtigten Fehlschlägen ein gesundes Replikat mit `TimeoutError` bei `t=500`. Details, Rohdaten und Reproduktion: `evidence/code50-storage-flake-lead-20261108/LIESMICH.md`.
+
+**13.3 Messdaten** (abwechselnd A = 500 ms, B = Kandidat 1500 ms; „Fehlrunde“ = mindestens ein fehlgeschlagener Fall von 32):
+
+| Gruppe | A | B | einseitiges Fisher-p |
+|---|---|---|---|
+| isoliert | 0/6 | 0/6 | 1,000 |
+| Stress (3 CPU-Burner) | 2/6 | 0/6 | 0,227 |
+| Harness `critical` | 1/5 | 0/5 | 0,500 |
+| gepoolt Stress + Harness | 3/11 | 0/11 | 0,107 |
+
+Das ist ein **Hinweis, kein Beweis** (p > 0,10, kleine Stichprobe, Lastprofil der Harness-Läufe nicht protokolliert). Der Mechanismus ist direkt belegt, die Häufigkeit nicht.
+
+**13.4 Kandidat und Besitzerentscheidung A.** Der Ein-Zeilen-Kandidat (Fixture 500 → 1500 ms) liegt nur als Patch `kandidat/c7fe719-…-WIP-UNVERIFIED-NICHT-ANGEWENDET.patch` vor. Entscheidung A (§11) bleibt offen; das Fail-closed-Verhalten des Produktionscodes darf nicht abgeschwächt werden. Agent 1 (`a1-test-stability-v2`) wiederholt die Messung mit vorregistrierter Entscheidungsregel (≥ 10 abwechselnde Runden je Variante, gepooltes p ≤ 0,10 und B ohne Fehlschlag, Mutationsbeweis für Fail-closed, Prüfung weiterer kurzer Timeouts; bei Fehlschlägen von A = 0 „unentschieden“, nichts wird gepusht).
+
+**13.5 Multi-Agenten-Lauf.** Die erste Agentengruppe wurde durch eine neue Nutzernachricht abgebrochen (6× `Cancelled`, kein Ergebnis übernommen). Danach wurden sechs neue Hintergrundagenten gestartet (`a1-test-stability-v2`, `a2-android-qa-v2`, `a3-release-path-v2`, `a4-integration-v2`, `a5-ai-voice-avatar-v2`, `a6-reviewer-v2`); die Statusabfrage dieser Sitzung zeigte alle sechs als `Running`. **Ergebnisse liegen noch nicht vor** und werden erst nach Gegenprüfung durch den Hauptagenten dokumentiert. Vorgabe an alle Agenten: kein Schreibzugriff auf Staging, `codex/*` oder `main`, keine PR-Aktionen und kein Auslösen von Actions; Schreibzugriffe nur auf eigene `sonnet55/code50-…`-Zweige.
+
+**13.6 Release-Gate unverändert `BLOCKED`.** Kein Render-Zugang, kein Android-SDK (`dl.google.com` gesperrt, daher kein Gradle-/Lint-/APK-Lauf in der Sandbox), kein Original-P12, keine Besitzerfreigabe (Freeze-Aufhebung, genehmigter SHA), installierte Fold7-Version unbestätigt. Es gibt **keine** originalsignierte APK 50, **keinen** SHA-256 und **keinen** Download-Link. Die unsignierte QA-APK aus dem GitHub-Diagnoselauf ist niemals ein Besitzer-Update.
+
+**13.7 Offen beim Besitzer:** Entscheidung A (Fixture-Timeout), Entscheidung B („Continuum Brain“-Dialog), Aufhebung des Release-Freeze mit genehmigtem SHA, Original-P12-Host, Render-Kapazität/Kosten, Bestätigung der installierten Fold7-Version, JDK-21-Lauf für den Modell-Reload-Lebenszyklustest (auf dem Release-Host bleibt er per `assumeTrue` übersprungen).

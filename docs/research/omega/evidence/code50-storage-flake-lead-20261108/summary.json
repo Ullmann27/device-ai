@@ -1,0 +1,399 @@
+{
+ "schema": "continuum.code50-storage-flake-summary.v1",
+ "quellstand": "cc8ee5fe2dffd98f41c505c01b5d9ffdae4d8cf9",
+ "status": "WIP / UNVERIFIED (Kandidat nicht angewendet; Stichprobe klein)",
+ "hinweis": "A = Original (500 ms), B = Kandidat (1500 ms). Vorab-Daten des Hauptagenten; die vorregistrierte Entscheidungsregel gilt für NEUE Runden des Agenten 1.",
+ "kritischer_fehlschlag_cc8ee5f": {
+  "datei": "critical-cc8ee5f-FAIL/storage-agent.xml",
+  "faelle": 32,
+  "fehlgeschlagen": 4,
+  "fehler": [
+   {
+    "name": "real two-process replication, corruption failover, repair, unavailable node, cache and restart",
+    "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+   },
+   {
+    "name": "versions survive restart; tombstone commits before unavailable replica deletion and reconciles recovery",
+    "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+   },
+   {
+    "name": "real disk/quota limits reject new writes without committing object or claiming synthetic capacity",
+    "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+   },
+   {
+    "name": "root/block/cache symlinks and catalog HMAC tampering fail closed; untrusted bytes are data only",
+    "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+   }
+  ]
+ },
+ "gruppen": [
+  {
+   "gruppe": "isoliert (ohne künstliche Last)",
+   "A_runden": 6,
+   "A_runden_mit_fehlschlag": 0,
+   "A_fehlgeschlagene_faelle": 0,
+   "B_runden": 6,
+   "B_runden_mit_fehlschlag": 0,
+   "B_fehlgeschlagene_faelle": 0,
+   "p_einseitig_fisher_A_schlechter": 1.0,
+   "runden_A": [
+    {
+     "datei": "isoliert-ab/A-1.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "isoliert-ab/A-2.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "isoliert-ab/A-3.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "isoliert-ab/A-4.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "isoliert-ab/A-5.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "isoliert-ab/A-6.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    }
+   ],
+   "runden_B": [
+    {
+     "datei": "isoliert-ab/B-1.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "isoliert-ab/B-2.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "isoliert-ab/B-3.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "isoliert-ab/B-4.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "isoliert-ab/B-5.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "isoliert-ab/B-6.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    }
+   ]
+  },
+  {
+   "gruppe": "Stress (3 begrenzte CPU-Burner, Dateien S-*)",
+   "A_runden": 6,
+   "A_runden_mit_fehlschlag": 2,
+   "A_fehlgeschlagene_faelle": 5,
+   "B_runden": 6,
+   "B_runden_mit_fehlschlag": 0,
+   "B_fehlgeschlagene_faelle": 0,
+   "p_einseitig_fisher_A_schlechter": 0.2273,
+   "runden_A": [
+    {
+     "datei": "stress-ab/S-A-1.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 3,
+     "fehler": [
+      {
+       "name": "real two-process replication, corruption failover, repair, unavailable node, cache and restart",
+       "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+      },
+      {
+       "name": "versions survive restart; tombstone commits before unavailable replica deletion and reconciles recovery",
+       "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+      },
+      {
+       "name": "real disk/quota limits reject new writes without committing object or claiming synthetic capacity",
+       "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+      }
+     ]
+    },
+    {
+     "datei": "stress-ab/S-A-2.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "stress-ab/S-A-3.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "stress-ab/S-A-4.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "stress-ab/S-A-5.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 2,
+     "fehler": [
+      {
+       "name": "bounded encrypted cache evicts within quota and does not replace object/tombstone checks",
+       "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+      },
+      {
+       "name": "a measured HTTP timeout withholds metadata and a queued healthy write still commits",
+       "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+      }
+     ]
+    },
+    {
+     "datei": "stress-ab/S-A-6.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    }
+   ],
+   "runden_B": [
+    {
+     "datei": "stress-ab/S-B-1.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "stress-ab/S-B-2.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "stress-ab/S-B-3.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "stress-ab/S-B-4.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "stress-ab/S-B-5.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "stress-ab/S-B-6.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    }
+   ]
+  },
+  {
+   "gruppe": "Harness critical (Lastprofil im Rohlog nicht festgehalten)",
+   "A_runden": 5,
+   "A_runden_mit_fehlschlag": 1,
+   "A_fehlgeschlagene_faelle": 1,
+   "B_runden": 5,
+   "B_runden_mit_fehlschlag": 0,
+   "B_fehlgeschlagene_faelle": 0,
+   "p_einseitig_fisher_A_schlechter": 0.5,
+   "runden_A": [
+    {
+     "datei": "harness-ab/A-1/storage-agent.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "harness-ab/A-2/storage-agent.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "harness-ab/A-3/storage-agent.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "harness-ab/A-4/storage-agent.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "harness-ab/A-5/storage-agent.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 1,
+     "fehler": [
+      {
+       "name": "real two-process replication, corruption failover, repair, unavailable node, cache and restart",
+       "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+      }
+     ]
+    }
+   ],
+   "runden_B": [
+    {
+     "datei": "harness-ab/B-1/storage-agent.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "harness-ab/B-2/storage-agent.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "harness-ab/B-3/storage-agent.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "harness-ab/B-4/storage-agent.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    },
+    {
+     "datei": "harness-ab/B-5/storage-agent.xml",
+     "faelle": 32,
+     "fehlgeschlagen": 0,
+     "fehler": []
+    }
+   ]
+  }
+ ],
+ "gepoolt": {
+  "gruppe": "gepoolt Stress + Harness (ohne isolierte Läufe)",
+  "A_runden": 11,
+  "A_runden_mit_fehlschlag": 3,
+  "B_runden": 11,
+  "B_runden_mit_fehlschlag": 0,
+  "p_einseitig_fisher_A_schlechter": 0.1071
+ },
+ "mechanismus": {
+  "lauf_1": {
+   "datei": "mechanismus/lauf-1.xml",
+   "faelle": 32,
+   "fehlgeschlagen": 0,
+   "fehler": []
+  },
+  "lauf_2": {
+   "datei": "mechanismus/lauf-2.xml",
+   "faelle": 32,
+   "fehlgeschlagen": 2,
+   "fehler": [
+    {
+     "name": "real two-process replication, corruption failover, repair, unavailable node, cache and restart",
+     "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+    },
+    {
+     "name": "versions survive restart; tombstone commits before unavailable replica deletion and reconciles recovery",
+     "meldung": "FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED"
+    }
+   ]
+  },
+  "abgelehnte_replikate": [
+   {
+    "zeile": 1,
+    "abgelehnt": [
+     {
+      "node": 0,
+      "t": 500,
+      "name": "TimeoutError",
+      "message": "The operation was aborted due to timeout"
+     }
+    ],
+    "art": [
+     "500-ms-Fixture-Timeout"
+    ]
+   },
+   {
+    "zeile": 2,
+    "abgelehnt": [
+     {
+      "node": 1,
+      "t": 500,
+      "name": "TimeoutError",
+      "message": "The operation was aborted due to timeout"
+     }
+    ],
+    "art": [
+     "500-ms-Fixture-Timeout"
+    ]
+   },
+   {
+    "zeile": 3,
+    "abgelehnt": [
+     {
+      "node": 0,
+      "t": 500,
+      "name": "Error",
+      "message": "NODE_HTTP_507"
+     },
+     {
+      "node": 1,
+      "t": 500,
+      "name": "Error",
+      "message": "NODE_HTTP_507"
+     }
+    ],
+    "art": [
+     "NODE_HTTP_507 (Quota-Test)"
+    ]
+   },
+   {
+    "zeile": 4,
+    "abgelehnt": [
+     {
+      "node": 1,
+      "t": 50,
+      "name": "TimeoutError",
+      "message": "The operation was aborted due to timeout"
+     }
+    ],
+    "art": [
+     "dedizierter 50-ms-Timeout-Test"
+    ]
+   }
+  ]
+ }
+}
