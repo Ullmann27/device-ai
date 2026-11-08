@@ -80,6 +80,31 @@ Speech checks cover 20 two-chunk replies, STOP/barge-in/stale callbacks,
 approval/focus/session suppression; pure checks, not Android ASR/TTS playback.
 No competing recovery changes to #646.
 
+Additional P0 RED on the unchanged BoundedAgent: a denied `launch_app` (zero
+backend dispatches) followed by a form-only evaluator returned a claimed
+successful completion. Candidate outcome guard refuses successful evaluation
+when a proposed tool has a failed/rejected observation; unavailable registry
+tools explicitly report UNAVAILABLE. No replacement planner, gate or journal.
+The existing two tests expecting PARTIAL/accepted prose after rejection now
+assert FAILURE/BLOCKED. 36 coupled agent/Chief/tool-plan tests PASS.
+
+One host end-to-end work order is verified through the real
+`DeviceStorageProbe -> DeviceToolExecutorRunner -> ToolGate -> evaluator ->
+AgentCognitiveEvent -> FileToolExecutionReceiptStore` path, with a controlled
+planner: a real app-volume filesystem measurement, checked completion,
+persisted output hash, and restart/replay prevention. The existing checkpoint
+store restores pre-tool planning; post-proposal state requires operator
+review, never automatic replay. This is NOT native Gemma, a running bot on
+Fold7, Android/Termux coding, or an independent device acceptance. Bot profile
+metadata and volatile UI task status still do not constitute a persistent
+autonomous bot backlog; that remaining integration must not be concealed.
+
+During this audit, #649 (`8688f855e967c72b345debce3cd6c2c90fae5806`, stacked on
+#648/#647) and visual #651 (`09722adf6c88453ac7607a2a484ae97f00a8fc00`) appeared.
+Their scope/SHAs were read; neither changes tool approval. The next step is
+an isolated combined candidate with pinned #646/#649/#651, then full final
+Kotlin/JVM and targeted Node regressions. No production activation of research.
+
 Restored JDK21, Kotlin 2.2.21 and pinned Maven Central compile/JUnit jars after
 actual prerequisite failures. Gradle QA on JDK21 still fails resolving AGP
 8.10.0 from Google Maven (`dl.google.com` DNS unavailable). No alternate,
