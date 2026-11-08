@@ -43,9 +43,9 @@ class OwnerAppLookupIntentTest {
         assertTrue(whatsapp.requireInstalledCandidate)
         assertFalse(whatsapp.messagePlanningIfMatched)
         assertNull(OwnerAppLookupIntent.parse("Ich brauche WhatsApp"))
-        assertTrue(OwnerAppLookupIntent.shouldFallbackToConversation(whatsapp, true, 0))
-        assertFalse(OwnerAppLookupIntent.shouldFallbackToConversation(whatsapp, true, 1))
-        assertFalse(OwnerAppLookupIntent.shouldFallbackToConversation(whatsapp, false, 0))
+        assertTrue(OwnerAppLookupIntent.shouldFallbackToConversation(whatsapp, true, 0, false))
+        assertFalse(OwnerAppLookupIntent.shouldFallbackToConversation(whatsapp, true, 1, true))
+        assertFalse(OwnerAppLookupIntent.shouldFallbackToConversation(whatsapp, false, 0, false))
 
         for (ordinary in listOf(
             "Ich brauche Geld", "Ich brauche Urlaub", "Ich brauche Schlaf",
@@ -53,7 +53,7 @@ class OwnerAppLookupIntentTest {
         )) {
             val possible = OwnerAppLookupIntent.inspect(ordinary) as OwnerAppLookupIntent.Intake.Lookup
             assertTrue(ordinary, possible.requireInstalledCandidate)
-            assertTrue(ordinary, OwnerAppLookupIntent.shouldFallbackToConversation(possible, true, 0))
+            assertTrue(ordinary, OwnerAppLookupIntent.shouldFallbackToConversation(possible, true, 0, false))
         }
 
         for (pronoun in listOf("Ich brauche es", "Ich brauche sie", "Ich brauche das")) {
@@ -72,16 +72,24 @@ class OwnerAppLookupIntentTest {
             assertTrue(request, possible.requireInstalledCandidate)
             assertTrue(request, possible.messagePlanningIfMatched)
             assertNull(request, OwnerAppLookupIntent.parse(request))
-            assertTrue(request, OwnerAppLookupIntent.shouldFallbackToConversation(possible, true, 0))
+            assertTrue(request, OwnerAppLookupIntent.shouldFallbackToConversation(possible, true, 0, false))
         }
 
         val whatsapp = OwnerAppLookupIntent.inspect("Schreibe WhatsApp") as OwnerAppLookupIntent.Intake.Lookup
         assertTrue(whatsapp.messagePlanningIfMatched)
-        assertTrue(OwnerAppLookupIntent.shouldClarifyMessage(whatsapp, true, 1))
-        assertFalse(OwnerAppLookupIntent.shouldClarifyMessage(whatsapp, true, 0))
+        assertTrue(OwnerAppLookupIntent.shouldClarifyMessage(whatsapp, true, 1, true))
+        assertFalse(OwnerAppLookupIntent.shouldClarifyMessage(whatsapp, true, 0, false))
 
         val explicit = OwnerAppLookupIntent.inspect("Schreibe App WhatsApp") as
             OwnerAppLookupIntent.Intake.Planning
         assertTrue(explicit.clarification!!.contains("konkreten Empfänger"))
+
+        for (reference in listOf("Schreib es", "Schreib sie", "Schreib das")) {
+            assertNull(reference, OwnerAppLookupIntent.inspect(reference))
+        }
+
+        val fuzzy = OwnerAppLookupIntent.inspect("Schreibe Notizen") as OwnerAppLookupIntent.Intake.Lookup
+        assertTrue(OwnerAppLookupIntent.shouldFallbackToConversation(fuzzy, true, 1, false))
+        assertFalse(OwnerAppLookupIntent.shouldClarifyMessage(fuzzy, true, 1, false))
     }
 }
