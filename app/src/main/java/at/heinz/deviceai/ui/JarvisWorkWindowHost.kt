@@ -62,6 +62,10 @@ class JarvisWorkWindowHost(
         currentFui?.setTelemetryText(text)
     }
 
+    fun setFuiLiveData(data: HollywoodFuiLiveData?) {
+        currentFui?.setLiveData(data)
+    }
+
     /**
      * Promotes only the visual grammar/footprint of the already-open physical work window.
      * No content, tool state, window id or AvatarDirector lease is replaced.
