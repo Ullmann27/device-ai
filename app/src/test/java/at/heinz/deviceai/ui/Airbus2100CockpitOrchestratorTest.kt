@@ -18,12 +18,14 @@ class Airbus2100CockpitOrchestratorTest {
         val scheduled = mutableListOf<Runnable>()
         val scenes = mutableListOf<JarvisActionScenes.FuiProfile>()
         val telemetry = mutableListOf<String?>()
+        val payloads = mutableListOf<HollywoodFuiLiveData?>()
         val finished = mutableListOf<String>()
         var cues = 0
         val orchestrator = Airbus2100CockpitOrchestrator(
             schedule = { runnable, _ -> scheduled += runnable },
             cancel = { scheduled.remove(it) },
             onSceneProfile = { scenes += it.fuiProfile },
+            onLiveData = { payloads += it },
             onTelemetry = { telemetry += it },
             onHoloCue = { cues++ },
             onPostMission = { finished += it },
@@ -43,6 +45,8 @@ class Airbus2100CockpitOrchestratorTest {
         orchestrator.render(CockpitAnimationEvent.ActionStarted(
             "t1", 1L, CockpitAction.DEVELOP, "build", stepKey = "dev"))
         assertEquals(JarvisActionScenes.FuiProfile.CODE_FORGE, scenes.last())
+        assertTrue(payloads.last() is HollywoodFuiLiveData.Timeline)
+        assertEquals("build", (payloads.last() as HollywoodFuiLiveData.Timeline).lines.single().label)
         assertEquals(2, orchestrator.phaseRankForTest())
 
         orchestrator.render(CockpitAnimationEvent.ProcessTimeline(
@@ -65,10 +69,12 @@ class Airbus2100CockpitOrchestratorTest {
     fun realEventFamiliesRouteToTheSevenExistingProfilesWithoutInventingTools() {
         var now = 0L
         val scenes = mutableListOf<JarvisActionScenes.FuiProfile>()
+        val payloads = mutableListOf<HollywoodFuiLiveData?>()
         val orchestrator = Airbus2100CockpitOrchestrator(
             schedule = { _, _ -> },
             cancel = {},
             onSceneProfile = { scenes += it.fuiProfile },
+            onLiveData = { payloads += it },
             onTelemetry = {},
             onHoloCue = {},
             onPostMission = {},
@@ -85,6 +91,12 @@ class Airbus2100CockpitOrchestratorTest {
         assertTrue(JarvisActionScenes.FuiProfile.DOCUMENT_BLUEPRINT in scenes)
         assertTrue(JarvisActionScenes.FuiProfile.CHRONO_GAUGE in scenes)
         assertTrue(JarvisActionScenes.FuiProfile.SECURITY_XRAY in scenes)
+        assertTrue(payloads.any { it is HollywoodFuiLiveData.Document })
+        assertTrue(payloads.any { it is HollywoodFuiLiveData.Calculation })
+        assertTrue(payloads.any { it is HollywoodFuiLiveData.Security })
+        val document = payloads.filterIsInstance<HollywoodFuiLiveData.Document>().single()
+        assertEquals(1, document.pageCount ?: 1)
+        assertEquals("x.pdf", document.documentName)
     }
 
     @Test
@@ -94,6 +106,7 @@ class Airbus2100CockpitOrchestratorTest {
             schedule = { runnable, _ -> scheduled += runnable },
             cancel = { scheduled.remove(it) },
             onSceneProfile = {},
+            onLiveData = {},
             onTelemetry = {},
             onHoloCue = {},
             onPostMission = {}
