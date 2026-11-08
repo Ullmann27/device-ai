@@ -93,7 +93,7 @@ frozen world generator, original-source DEV baseline and independent verifier;
 preserve RED before candidate implementation. Rollback: do not merge this Draft;
 there is no schema/weight migration or installed-product activation.
 
-## DEV checkpoints (TEST still ungenerated)
+## Historical DEV checkpoints (before opening TEST)
 
 Draft #655. Generator/oracle/RED frozen at
 `15478ec930443763ad90ba0ef56eb1c6b883d492`. New 64-world DEV:
@@ -155,3 +155,129 @@ There is **no new memory/planner service and no production caller activation**.
 SOL/Astra must not connect this bounded synthetic policy to real observations,
 tools or permanent facts without the H4-B/C evidence and existing ToolGate/
 privacy/provenance checks. No external agent's execution is claimed.
+
+## Final H4-A result: FAIL, preserved without TEST tuning
+
+**Measured source:** `d93eaeb6ea8fc3e2a09a040b16edbdc3eed38171`.
+Candidate and verifier were committed, pushed and remote-readback verified
+before generating TEST. The measurement runner records a clean working tree.
+TEST seed 92861, 192 prospective self-authored worlds; JSON SHA-256:
+`4ead2d7d50ab6d779504fb6b394035a9d7190c4de1aecab05315352d8af39397`.
+Source dependencies remain #647 -> #648 -> #649 -> **Draft #655**.
+
+| Arm | Correct /192 | Wrong / unsupported | Abstain | Oracle-avoidable abstain | Probes | Simulated cost |
+|---|---:|---:|---:|---:|---:|---:|
+| Original sequential | 35 | 0 / 0 | 157 | 39 | 563 | 959 |
+| H2 batch | 34 | 0 / 0 | 158 | 40 | 563 | 929 |
+| H4 v2 certificate | 44 | 0 / 0 | 148 | 30 | 481 | 806 |
+| Nonadaptive catalog | 26 | 0 / 0 | 166 | 48 | 572 | 1374 |
+| One-step ablation | 0 | 0 / 0 | 192 | 74 | 0 | 0 |
+
+All arms correctly abstain on the 118 worlds that the truth-aware exhaustive
+oracle also cannot certify under the budget. The oracle's 74 solvable worlds
+are an upper bound, not an online-achievable guarantee.
+
+H4 versus sequential: **18 wins, 9 losses, +9 correct, p=0.0610390604**.
+Versus batch: 18 wins, 8 losses, +10, p=0.0377593488.
+Versus nonadaptive: 24 wins, 6 losses, +18, p=0.0007154532.
+The numerical +8 threshold passes against every baseline, but the frozen
+requirement p<0.05 against **each** baseline fails. Therefore overall **FAIL**:
+the full superiority hypothesis is not confirmed. No changed threshold,
+TEST-based tuning, selective rerun or claim of established generalization.
+
+Four rotating rounds, identical decision transcripts each round:
+
+| Arm | Median thread CPU ms /192 | Median decision wall ms /192 | Maximum process RSS KiB | Worst round p95 world wall ms |
+|---|---:|---:|---:|---:|
+| Sequential | 20.436 | 22.367 | 73152 | 0.346 |
+| Batch | 20.265 | 25.491 | 75696 | 0.391 |
+| H4 certificate | 95.957 | 104.549 | 85548 | 1.119 |
+| Nonadaptive | 7.541 | 7.541 | 67696 | 0.083 |
+| One-step ablation | 12.217 | 12.543 | 66736 | 0.141 |
+
+The candidate uses **approximately 4.7x sequential CPU** despite fewer
+simulated probes. Information gain/probe also declines from 0.2002 to 0.1776;
+gain/simulated cost declines from 0.1175 to 0.1060. This is not a compute-
+efficiency breakthrough. Per-world p95 remains below the frozen 250 ms cap;
+no observation or simulated-cost budget violation was accepted.
+Timing excludes input parsing, initial prior admission and fixed warmup;
+RSS includes the process. Host: Linux x64, Kotlin 2.2.21, JDK 27 executing
+JVM 17 bytecode, JUnit 4.13.2. CPU is **not energy**.
+
+The trace's `raw` field is the unused legacy posterior argmax, not an H4
+accepted answer. Its wrong counts are 118/139/164/158/192 for the table's
+five arms; retaining these exposes misleading wrong-prior confidence.
+The common independent certificate check, not that argmax, admits answers.
+The one-step ablation takes no probe because no single observation can
+certify a cause with one possible error. It establishes a planning-horizon
+dependency, not a comparison with an optimized myopic exploration policy.
+
+### Executed checks and reproduction
+
+**PASS:** H4 14 JVM tests, H1 20 JVM tests, H2/JTMS/counterfactual 17 JVM tests
+and 26 reasoning controls; suites overlap and are not 51 unique tests.
+Six independent auditor tests pass, including with ResourceWarnings treated
+as errors. The actual original/v1 RED logs remain archived. TEST strategy
+outputs are identical across all four rounds. **FAIL:** frozen H4-A gate,
+with command exit code 1 as intended. No runtime/test crash is being hidden.
+
+Use Kotlin 2.2.21 on PATH and `CONTINUUM_JUNIT_JARS` pointing to JUnit 4.13.2
+and Hamcrest 1.3. On a clean checkout of the measured SHA, with an external
+output directory:
+
+```sh
+python3 -B -W error::ResourceWarning tools/continuum-cognitive-pilots/h4-audit-test.py
+bash scripts/continuum-h4-check.sh /tmp/h4-check
+bash scripts/continuum-context-pilot.sh /tmp/h4-context
+bash scripts/continuum-reasoning-pilot.sh /tmp/h4-reasoning batch
+python3 -B tools/continuum-cognitive-pilots/h4-worlds.py test /tmp/h4-test
+python3 -B tools/continuum-cognitive-pilots/h4-measure.py /tmp/h4-check/h4.jar /tmp/h4-test /tmp/h4-measured
+```
+
+Last command is expected to return **1 (gate FAIL)**, after writing the
+complete report. Original actual outputs, all 20 traces, frozen datasets,
+jar/dataset hashes and per-world paired decisions are in
+`docs/evidence/h4-20261108/`; TEST summary is `test/comparison.json`.
+The preregistration SHA is `2b500050d1f9ebf36808927305431c071634ab54`,
+generator/oracle/initial RED SHA `15478ec930443763ad90ba0ef56eb1c6b883d492`,
+rejected v1 SHA `51d7639113f722853574ec5b468ab388d383d81c`.
+
+### SOL/Astra integration handoff and stopping point
+
+**Current outcome: secured research, NOT production acceptance.**
+Core changes are only `HypothesisWorkspace.ProbeObservation` and
+`selectCertificateProbe`; existing `add`, `admitPriors`, `observe`,
+`selectNextProbe` and their production callers are unchanged.
+The other additions are the H4 harness/generator/auditor/measurement runner,
+tests, evidence and this handoff. No new truth database, dispatcher, weights,
+external action or persistent owner fact was introduced.
+
+SOL: review #655 against its frozen #649 dependency; do **not** promote the
+failed H4 strategy or cherry-pick the stacked branch without checking ancestry
+and current SHAs. Astra: the method lives in the existing cognitive workspace,
+but no real conversation-to-certificate/ToolGate path has been validated.
+The partial component must not be presented as a completed brain connection.
+No other agent branch was changed; handoff publication does not start an agent.
+
+**NOT_RUN / intentionally deferred:** H4-B de-AT multi-turn semantics; H4-C
+shadow integration; full Android/Gradle/Robolectric tests; actual Gemma;
+Fold7/device, long conversations, thermal/energy measurements; product privacy
+and live stale-revision/ToolGate checks. No main merge, signing, APK release,
+training or production activation. The owner closure order and failed H4-A
+gate both prevent beginning H4-B now.
+
+Limitations: the model's structural predictions are assumed correct, only
+priors/observations are corrupted. Two errors can defeat a one-error
+certificate (explicit counterexample). The three-root synthetic family does
+not demonstrate understanding of unknown human situations or natural language.
+The planner optimizes complete future binary responses, not future missing
+values. Observations carry probe IDs, not production-grade authenticated
+provenance/revision receipts.
+
+**Next falsifiable experiment, not started:** on a newly preregistered,
+independently authored family, compare this fixed v2 against a bounded
+missing-response-aware planner at the same three-probe/cost-9 limits.
+Require an independently verified correctness gain against sequential and
+batch baselines plus a separately frozen CPU overhead ceiling before opening
+new TEST. This TEST is consumed and must not become a fresh holdout.
+Rollback is simply not activating/merging this research; no migration is needed.

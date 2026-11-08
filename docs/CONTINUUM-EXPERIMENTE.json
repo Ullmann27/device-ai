@@ -220,6 +220,14 @@
         "status": "RESEARCH_SHADOW",
         "result": "Existing broker plus independent verification: repeated expensive synthetic work saves 88.0% CPU; unique, cheap and epoch-churn workloads fail the preregistered benefit gate. 55 native Node tests and 72000 exact final-result checks pass. No live integration, energy or model-performance claim.",
         "entry": "docs/research/omega/CONTINUUM-VERIFIED-REUSE-PILOT-20261108.md"
+      },
+      "robustTransferPilot": {
+        "pullRequest": 655,
+        "sourceCommit": "d93eaeb6ea8fc3e2a09a040b16edbdc3eed38171",
+        "status": "RESEARCH_SHADOW",
+        "result": "H4-A prospective self-authored TEST: 44/192 correct certificates versus 35 sequential, 34 batch and 26 nonadaptive; zero accepted wrong or unsupported diagnoses. Frozen acceptance FAIL: sequential paired p=0.061039 exceeds 0.05. CPU approximately 4.7x sequential. Four paired rounds and negative results archived; no TEST tuning.",
+        "gate": "FAIL; H4-B/C and production activation NOT_RUN. Owner closure order: hand off tested research only to SOL/Astra.",
+        "entry": "docs/research/omega/CONTINUUM-H4-HANDOFF-20261108.md"
       }
     }
   ]
