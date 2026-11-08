@@ -18,6 +18,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import at.heinz.deviceai.ui.JarvisDesign.Colors
+import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.hypot
@@ -83,6 +84,7 @@ class JarvisWorkWindow(
     class Recession(val document: RectF, val page: RectF?, val pageImage: android.graphics.drawable.Drawable?,
                     val handover: View?)
     private val density = resources.displayMetrics.density
+    private var lastAnimatorScale = 1f
     private val origin = RectF()
     private val destination = RectF()
     private var protectedBounds = emptyList<RectF>()
@@ -434,6 +436,7 @@ class JarvisWorkWindow(
         trailProgress = JarvisMotion.laser(elapsed, animatorScale)
         trailAlpha = if (phase == Phase.CLOSING) openness else 1f - openness
         panel.edgeFlash = state.glow
+        lastAnimatorScale = animatorScale
         applyFrame()
         if (!handedOver && JarvisWorkWindowDepth.handedOver(openness)) handOver()
         if (state.done && phase == Phase.OPENING) {
@@ -453,15 +456,25 @@ class JarvisWorkWindow(
             panel.translationY = 0f
             panel.scaleX = 1f
             panel.scaleY = 1f
+            panel.rotationY = 0f
         } else {
             panel.translationX = origin.left + (destination.left - origin.left) * openness - params.leftMargin
             panel.translationY = origin.top + (destination.top - origin.top) * openness - params.topMargin
             panel.scaleX = (origin.width() + (destination.width() - origin.width()) * openness) / params.width
             panel.scaleY = (origin.height() + (destination.height() - origin.height()) * openness) / params.height
+            // #643 C: the glass swings in around its vertical axis from the side it comes from and settles flat.
+            panel.cameraDistance = density * JarvisMotion.Depth.CAMERA_DISTANCE_DP
+            panel.rotationY = JarvisMotion.Depth.entranceTilt(openness, entranceSide(), lastAnimatorScale)
         }
         panel.alpha = opacity
         panel.invalidate()
         invalidate()
+    }
+
+    /** −1 when the window comes from the left of its destination, +1 from the right, 0 when it grows in place. */
+    private fun entranceSide(): Float {
+        val delta = origin.centerX() - destination.centerX()
+        return if (abs(delta) < density * 8f) 0f else if (delta < 0f) -1f else 1f
     }
 
     /** The flight of the real page has arrived: the body's page view takes over, the drawn page ends. */

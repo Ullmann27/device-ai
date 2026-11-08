@@ -75,4 +75,14 @@ class ContinuumUiCopyTest {
         assertTrue(ContinuumUiCopy.developerModelMissing().contains("Cloud-Ersatz"))
         assertTrue(ContinuumUiCopy.modelStatus(false).contains("noch nicht geladen"))
     }
+
+    @Test fun pendingToolReviewFooterSpeaksGermanAndCountsHonestly() {
+        // Fold7 IST 2026-11-08 showed the raw English "1 tool call(s) require operator review" under the cockpit.
+        val one = ContinuumUiCopy.pendingToolReview(1)
+        val many = ContinuumUiCopy.pendingToolReview(3)
+        assertTrue(one, one.startsWith("1 Werkzeugaufruf wartet"))
+        assertTrue(many, many.startsWith("3 Werkzeugaufrufe warten"))
+        assertFalse(one.contains("tool call"))
+        assertTrue(one.contains("Freigabe"))
+    }
 }
