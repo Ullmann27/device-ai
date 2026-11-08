@@ -142,7 +142,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             val safeTarget = framing?.sample(progress, direction)?.headScale
             assertTrue("Original head pullback: rest=$restScale actual=$currentScale " +
                 "progress=$progress target=$safeTarget framing=${framing != null} " +
-                "shown=${avatar.isShown} focus=${avatar.hasWindowFocus()} native=${field(avatar, \"native3dDrawn\")}",
+                "shown=${avatar.isShown} focus=${avatar.hasWindowFocus()} native=${field(avatar, "native3dDrawn")}",
                 currentScale < restScale - .02f)
             assertEquals("Head viewport stays fixed", headBounds, field(avatar, "cockpitHeadBounds"))
             assertEquals("Original orb stays fixed", orbBounds, field(avatar, "cockpitOrbBounds"))
