@@ -144,6 +144,9 @@ class OwnerAppActionFlowTest {
         assertNull(OwnerAppLookupIntent.inspect("Ich brauche die PDF"))
         assertTrue(OwnerAppLookupIntent.inspect("Ich brauche Signal und schreibe Anna") is
             OwnerAppLookupIntent.Intake.Planning)
+        val message = OwnerAppLookupIntent.inspect("Schreibe WhatsApp") as OwnerAppLookupIntent.Intake.Planning
+        assertTrue(message.clarification!!.contains("konkreten Empfänger"))
+        assertNull(OwnerAppLookupIntent.inspect("Schreibe einen langen Bericht über Wien"))
         assertTrue(OwnerAppLookupIntent.inspect("Ich will was von WhatsApp") is OwnerAppLookupIntent.Intake.Clarify)
         for (request in listOf("Öffne die PDF", "Öffne den Download-Ordner", "Öffne /sdcard/Download"))
             assertNull(request, OwnerAppLookupIntent.inspect(request))
