@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import at.heinz.deviceai.ui.ContinuumHomeView
+import at.heinz.deviceai.ui.JarvisActionScenes
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -436,11 +437,15 @@ class ContinuumSystemStatusWorkWindowUiTest {
             fun deck() = JarvisHomeTestRoutes.deck(root).count { it.isShown }
             val before = deck()
             assertEquals("Ten cards and four diagnostics occupy the deck", 14, before)
+            val footprint = JarvisHomeTestRoutes.footprintOfCentre("Gedächtniszentrum")
+            fun cleared() = JarvisHomeTestRoutes.clearedBy(root, footprint)
+            fun kept() = JarvisHomeTestRoutes.keptBy(root, footprint)
+            assertEquals("A medium window leaves the four mission rows on the deck", 4, kept().size)
             val memory = JarvisHomeTestRoutes.destination(root, "memory")
             JarvisHomeTestRoutes.scrollIntoView(memory)
             advance(32L); measure(root); draw(root)
             // Owner review 06.11.: prove it with real touches and the accessibility tree, not only isShown.
-            val deckPoints = JarvisHomeTestRoutes.deck(root).flatMap { view ->
+            val deckPoints = cleared().flatMap { view ->
                 val bounds = Rect()
                 if (!view.getGlobalVisibleRect(bounds)) emptyList() else listOf(
                     bounds.left + 2f to bounds.top + 2f,
@@ -456,9 +461,10 @@ class ContinuumSystemStatusWorkWindowUiTest {
             tap(root, memory)
             advance(640L); measure(root); draw(root)
             val work = shown(root, "jarvis-work-window")
-            assertEquals("no tile or row stays under the open window", 0, deck())
+            assertEquals("no card stays under the open window", 0, cleared().count { it.isShown })
+            assertTrue("the mission rows stay usable beside the medium window", kept().all { it.isShown && it.isClickable })
             assertEquals("all tiles and rows were offered before", before, a11yBefore)
-            assertEquals("TalkBack no longer offers the cleared tiles and rows", 0, a11yChildren())
+            assertEquals("TalkBack no longer offers the cleared tiles, only the kept mission rows", kept().size, a11yChildren())
             val panel = field(work, "panel") as View
             val panelBox = Rect().also { panel.getGlobalVisibleRect(it) }
             var probed = 0
@@ -548,7 +554,10 @@ class ContinuumSystemStatusWorkWindowUiTest {
             assertTrue("the real icon is shown", descendants(row).any { it is android.widget.ImageView && it.drawable != null })
             assertTrue(labels(row).containsAll(listOf("Notizen Beispiel", pkg)))
             assertTrue(labels(work).any { it.startsWith("Öffnet Notizen Beispiel") })
-            assertEquals("the deck made room", 0, deck())
+            val toolFootprint = JarvisActionScenes.footprintFor(JarvisActionScenes.Kind.APP)
+            assertEquals("the cards made room", 0, JarvisHomeTestRoutes.clearedBy(root, toolFootprint).count { it.isShown })
+            assertTrue("the mission rows stay usable beside the medium app window",
+                JarvisHomeTestRoutes.keptBy(root, toolFootprint).all { it.isShown })
             assertTrue("the avatar glances at the app", windowIntent() != null)
             call("finishToolScene", "call-app", false)
             assertTrue(labels(work).any { it.startsWith("Werkzeug nicht abgeschlossen") })
@@ -601,7 +610,8 @@ class ContinuumSystemStatusWorkWindowUiTest {
             val windowShown = descendants(root).any { it.tag == "jarvis-work-window" && it.isShown }
             println("LARGE_FONT_200_WORK_WINDOW_ACCEPTED=$windowShown")
             if (windowShown) {
-                assertEquals("accepted window: the deck made room", 0, deck())
+                assertEquals("accepted window: the cards made room", 0,
+                    JarvisHomeTestRoutes.clearedBy(root, JarvisHomeTestRoutes.footprintOfCentre("Gedächtniszentrum")).count { it.isShown })
                 tap(root, shown(shown(root, "jarvis-work-window"), "jarvis-work-window:close"))
                 advance(640L + 480L); measure(root); draw(root)
             } else {
@@ -656,7 +666,8 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 tap(root, JarvisHomeTestRoutes.destination(root, "memory"))
                 advance(640L); measure(root, width, height); draw(root)
                 assertTrue("a work window is open before $qualifiers", windowShown())
-                assertEquals("the open window cleared the deck before $qualifiers", 0, deck())
+                assertEquals("the open window cleared the cards before $qualifiers", 0,
+                    JarvisHomeTestRoutes.clearedBy(root, JarvisHomeTestRoutes.footprintOfCentre("Gedächtniszentrum")).count { it.isShown })
                 RuntimeEnvironment.setQualifiers(qualifiers)
                 controller.configurationChange(Configuration(app.resources.configuration))
                 assertSame("the manifest keeps the Activity across $qualifiers", activity, controller.get())
