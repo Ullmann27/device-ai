@@ -181,7 +181,10 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
             }
             is CockpitAnimationEvent.ProcessTimeline -> {
                 mainSceneStep(event.steps)?.let { (label, state) ->
-                    applyStepState(mainScene, label, state, refreshLabel = true)
+                    // The turn is still alive until TurnEnded. Tool failures/done steps may be trimmed or followed
+                    // by recovery work; never make the shared scene terminal from a bounded timeline snapshot.
+                    val visibleState = if (state == StepState.WAITING) StepState.WAITING else StepState.ACTIVE
+                    applyStepState(mainScene, label, visibleState, refreshLabel = true)
                 }
                 for (process in event.steps) {
                     if (isMainSceneStep(process)) continue
