@@ -40,6 +40,35 @@ class AvatarLiveDiagnosticsTest {
         }
     }
 
+    @Test fun proofCompletionRequiresCallbacksCanvasAndLiveRendererTrace() {
+        assertTrue(AvatarProofCompletion.summarize(0, 0, "AVATAR_PIPELINE_LIVE").verdict.startsWith("BROKEN_AT_FRAME_LOOP"))
+        assertTrue(AvatarProofCompletion.summarize(4, 0, "AVATAR_PIPELINE_LIVE").verdict.startsWith("BROKEN_AT_CANVAS"))
+        assertTrue(AvatarProofCompletion.summarize(4, 4, "BROKEN_AT_SURFACE: x").verdict.startsWith("BROKEN_AT_SURFACE"))
+        val live = AvatarProofCompletion.summarize(4, 4, "AVATAR_PIPELINE_LIVE: frame=4")
+        assertTrue(live.live)
+        assertEquals(4L, live.callbackDelta)
+        assertEquals(4L, live.drawDelta)
+    }
+
+    @Test fun currentProofCannotBorrowLiveTraceFromAnEarlierRun() {
+        val ring = AvatarTraceRingBuffer(32)
+        repeat(4) {
+            val r = ring.beginFrame(it.toLong())
+            r.stageFlags = AvatarFrameReceipt.FRAME_DRAW or AvatarFrameReceipt.HEAD_3D_SELECTED or
+                AvatarFrameReceipt.SURFACE_VALID or AvatarFrameReceipt.TEXTURE_VISIBLE or
+                AvatarFrameReceipt.POSE_SAMPLED or AvatarFrameReceipt.MORPH_UPLOADED or
+                AvatarFrameReceipt.FILAMENT_BEGIN or AvatarFrameReceipt.FILAMENT_RENDERED
+        }
+        val proofStart = ring.frameNumber()
+        repeat(4) {
+            val r = ring.beginFrame((10 + it).toLong())
+            r.stageFlags = AvatarFrameReceipt.FRAME_DRAW or AvatarFrameReceipt.HEAD_3D_SELECTED
+        }
+        assertTrue("unscoped history still contains the old live run", ring.diagnose().startsWith("AVATAR_PIPELINE_LIVE"))
+        assertTrue("current proof must ignore old live receipts",
+            ring.diagnoseSince(proofStart).startsWith("BROKEN_AT_SURFACE"))
+    }
+
     @Test fun traceNamesTheBrokenStageInsteadOfGuessing() {
         val ring = AvatarTraceRingBuffer(32)
         assertTrue(ring.diagnose().startsWith("BROKEN_AT_ROOT"))
