@@ -117,6 +117,24 @@ Weitere geprüfte Verbindungen (statisch gelesen, Tests vorhanden, hier nicht au
 
 **Verbleibende Skips (20, Ursachen in den Quellen geprüft):** 12× `@Ignore("PENDING …")` (Chief-/First-Thinking-Spezifikationen für noch nicht vorhandene Funktionen), 2× `ChiefWorkspaceWiringHostTest` (braucht `CONTINUUM_WORKSPACE_CHIEF_HOST_PROOF=1`), 3× Node-Trainingsvektoren/CRE1-Fixture (CI-geliefert), 2× `LocalModelReloadLifecycleTest` (`assumeTrue(host Java >= 21)`; der Workflow baut mit JDK 17 — **die Tests zu Laden/Entladen des Modells liefen daher nicht**), 1× `fold7InnerMotionClip` (reiner Evidenzclip).
 
-## 11. Parallele Arbeit (nicht berührt)
+## 11. Parallele Arbeit und offene Besitzerentscheidungen (nichts davon angefasst)
 
 - #635 (`research/continuum-epistemic-lab-20261108`, `[RESEARCH ONLY]`, 5 Dateien +215) hat den Staging-Zweig als Basis. Nicht gemergt, nicht verändert. Empfehlung (Entscheidung beim Besitzer): erst nach dem Code-50-Release mergen oder auf einen eigenen Forschungszweig umhängen, damit reine Forschungsdokumente nicht in die Release-Linie gelangen.
+- **Besitzerentscheidung A (Testhärtung):** Fixture-Timeout `timeoutMs: 500` in `.github/continuum/storage-fabric.test.mjs:42` auf den Adapter-Standard 1500 ms anheben? Würde die lastabhängige `critical`-Instabilität (Abschnitt 10) mindern. Nicht angewendet, weil die Wirkung nur statistisch (1 von 8 Läufen unter Last) und nicht auf dem offiziellen Host belegt wäre.
+- **Besitzerentscheidung B („Gehirnkugel“):** Der Cockpit-Held ist die ursprüngliche Continuum-Kugel (UI-Tests pinnen `isNativeHeadEnabled() == false` bei Kugelwahl). Der Menüeintrag „Continuum Brain“ (KI-System, `ContinuumWorkAreaNavigationSpec.kt:14,34`) öffnet aber weiterhin einen eigenen Dialog mit separater Szene (`AgentActivity.showBrainScene`, `ContinuumBrainSceneView`); das Abo am Cockpit-Bus wird beim Schließen beendet. Ob dieser Dialog entfallen soll, ist eine Produktentscheidung; nichts geändert.
+
+## 12. Pflichtanforderungen → pinnende Tests (nur Diagnose, kein Gerätebeweis)
+
+Quelle: heruntergeladene JUnit-XML des Diagnoselaufs 42478725998 auf `8bc695f` (713 Klassen, 4032 Tests, 0 Fehler, 20 Skips). Alle genannten Klassen: 0 Fehler, 0 Errors, 0 Skips.
+
+| Anforderung | Pinnende Tests (Klasse: Anzahl) |
+|---|---|
+| Footprints, Deck-Rückkehr, Hit-Targets, A11y | `ContinuumReferenceCockpitUiTest` 13 · `ContinuumSystemStatusWorkWindowUiTest` 10 · `ContinuumDocumentSceneUiTest` 12 · `JarvisActionScenesTest` 3 |
+| Eine Seitenleiste; Fold-Slot mit getrenntem Kopf- und Kugelbereich | `JarvisLiveAvatarWiringUiTest` 10 (`shortMediumWindowOwnsOneSidebarAndNoPhoneBottomNavigation`, `foldSlotContainsTheSeparateHeadAndOrbAreas`) |
+| Ursprüngliche Kugel bleibt; Avatar-Lebenszyklus (Standard/pausiert startet weder Asset noch Native-Arbeit) | `ContinuumAvatar3dLifecycleUiTest` 4 · `ContinuumHologramMotionUiTest` 6 · `AvatarEntranceUiTest` 5 |
+| Karten liegen nie über Kopf/Kugel | `ContinuumDocumentFlowUiTest` 19 · `JarvisPhoneWorkWindowDensityUiTest` 2 · `FullStageMemoryReviewUiTest` 6 |
+| Keine doppelte THINK-Aktion | `Argon4CockpitAndBudgetRegressionTest` 4 (`acknowledgementUsesTimelineOnlyAndNeverEmitsDuplicateThinkAction`) |
+| `ERROR_CLIENT` / `ERROR_RECOGNIZER_BUSY` | `AndroidSpeechFailureTest` 3 · `AndroidOnDeviceSpeechRetryUiTest` 1 |
+| App-Start-Receipts (nur nach beobachtetem Vordergrundfenster) | `OwnerAppActionFlowTest` 15 · `OwnerAppLookupIntentTest` 5 |
+
+**Weiterhin unbewiesen (kein Test ersetzt das Gerät):** echte SpeechRecognizer-Engine und Rundenwechsel, TTS-Barge-in und Lippen-Viseme auf dem Gerät, Thermik/CPU/RAM/GPU, ElevenLabs (nicht verdrahtet, keine autorisierte Integration), echte PDF-Szene, Falten/Rotation/200 % Schrift auf dem Fold7. Die 12 nicht verdrahteten Forschungsmodule (Abschnitt 6) sind in keiner Oberfläche oder Doku als „aktiv“ ausgewiesen (statisch geprüft).
