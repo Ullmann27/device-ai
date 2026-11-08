@@ -86,6 +86,8 @@ class JarvisWorkWindow(
     private val density = resources.displayMetrics.density
     private var lastAnimatorScale = 1f
     internal var onCinematicFrame: ((Long, Long, Boolean, Float) -> Boolean)? = null
+    internal var onPresentedCenter: ((Float, Float) -> Unit)? = null
+    private val projectedCenter = FloatArray(2)
     internal var cinematicEffectsEnabled = true
         set(value) {
             if (field == value) return
@@ -523,8 +525,20 @@ class JarvisWorkWindow(
                 JarvisMotion.Depth.entranceTilt(openness, entranceSide(), lastAnimatorScale) else 0f
         }
         panel.alpha = opacity
+        reportPresentedCenter()
         panel.invalidate()
         invalidate()
+    }
+
+    internal fun reportPresentedCenter() {
+        if (!isShowing) return
+        val report = onPresentedCenter ?: return
+        val params = panel.layoutParams as LayoutParams
+        projectedCenter[0] = params.width * .5f
+        projectedCenter[1] = params.height * .5f
+        // View.matrix includes scale, translation and the actual Android camera perspective around the panel pivot.
+        panel.matrix.mapPoints(projectedCenter)
+        report(params.leftMargin + projectedCenter[0], params.topMargin + projectedCenter[1])
     }
 
     /** −1 when the window comes from the left of its destination, +1 from the right, 0 when it grows in place. */

@@ -63,7 +63,7 @@ Vollstaendige SDK-lose Kotlin-Main-/Test-Kompilation PASS. Erster Gesamtlauf:
 Gezielte Wiederholung beider Klassen mit C.UTF-8 und ohne DAC-Bypass:
 22/22 PASS, keine Codeaenderung an diesen Modulen. Vier Checks-Programme PASS.
 Neue UI-Lifecycle-/Z-Order-/Fallbacktests hinzugefuegt, Android-Ausfuehrung wegen
-fehlendem SDK/Google-Maven noch NOT_RUN. Finale Wiederholung folgt.
+fehlendem SDK/Google-Maven noch NOT_RUN. Finale Ergebnisse stehen unten.
 
 Original-GLB: SHA256 `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`,
 12038416 Bytes, 31 Nodes / 25 Meshes / 8 Materialien. FaceMesh und NeuralThreadsMesh
@@ -82,7 +82,8 @@ Fold7-/Filament-/Gemini-Referenznachweis.
 Gesicherte Entwicklungs-Checkpoints: `3e481449bc9671ce74e974959e96294d6d003f0b`
 (Audit), `a9cf4b8de89589b085943681cc0293da5652aace` (Material),
 `452591edd31215fecea7a3110036157a7c1ed438` (Zeitbasis/Fallback),
-`839017298f78d825d82118f359c5d56874bfae57` (abgenommene Host-Evidenz).
+`839017298f78d825d82118f359c5d56874bfae57` (gepruefte Host-Evidenz),
+`76b26e227e898f375820b872d674859016e6bad2` (bestehendes Cyan-Kernlicht).
 Jeweils Commit -> Push -> `git ls-remote` mit identischem SHA ausgefuehrt.
 Finale Evidenz liegt in `docs/evidence/astra-holographic-v2-20261108/`.
 
@@ -93,6 +94,7 @@ Finale Evidenz liegt in `docs/evidence/astra-holographic-v2-20261108/`.
 | Vollstaendige Kotlin-Main-/Test-Kompilation | PASS, JDK21.0.13 / Kotlin2.2.21; bestehender compile-only LiteRT-Stub, kein echtes LiteRT |
 | Vollstaendige JVM-Regression Fenster | 632 JUnit-Klassen, 3551 Tests PASS; vier ausfuehrbare Checks PASS (fuenfter Helper hat kein main) |
 | Folge-Meilenstein Kernlicht | Zusaetzliche Filament-/View-Typpruefung und 5 neue Policytests, zusammen 3556 JVM-Tests PASS |
+| Folge-Meilenstein Blickprojektion | Aktuelle Window-/Host-Klassen typgeprueft, 634 JVM-Klassen / 3563 Tests PASS; `window-gaze-junit.txt` |
 | Schlusskorrekturen | Erneute Typpruefung der Android-Fenster-/Overlay-Klassen, voller JVM-Lauf mit diesen Klassen zuerst im Classpath |
 | Neue UI-Tests | 5 Robolectric-Faelle typgeprueft: nur eine Uhr, Content-Freigabe, spaetes Schliessen, Rueckfall/reduzierte Bewegung, geschuetzte Bereiche/STOP/Thermik; Ausfuehrung BLOCKED |
 | Android-Gradle / Lint / native UI | Tatsaechlich versucht, AGP8.10.0 aus Google-Maven nicht aufloesbar; kein SDK/adb/Emulator. Kein APK |
@@ -198,6 +200,53 @@ Android-Framework typgeprueft. Gesamte JVM-Suite mit den neuen Klassen erneut:
 **3556 PASS**, Beleg `core-light-junit.txt`. Das ist ein Anschluss-/Policybeleg,
 kein Bildnachweis der Leuchte: Filament-/Fold7-Pixel und GPU-Kosten bleiben
 NOT_RUN. Das Licht wird deshalb nicht in Java2D als echter Avatar nachgebaut.
+
+## Regie-Folgeauftrag: den wirklichen Einflug verfolgen
+
+Bei der erneuten Pruefung waren #651 weiterhin auf `09722adf6`, #653 auf
+`cb11db2f9`, #658 auf `f153758df` und der eigene Licht-Checkpoint auf
+`76b26e227`. Keine fremde Linie wurde veraendert.
+
+Nachgewiesene Anschlussluecke: Der Host setzte bislang nur die **Endposition**
+als Blickziel und aktualisierte sie bei einem Layout-Refit. Waehrend des
+Einflugs sah der Avatar damit nicht auf die bewegte Scheibe.
+
+`JarvisWorkWindow` meldet jetzt nach `applyFrame` die durch **View.matrix**
+projizierte Scheibenmitte, inklusive nativer rotationY-Kameraperspektive,
+Skalierung, Translation und Layoutversatz. Ein wiederverwendetes FloatArray
+genuegt. Der Host normiert den Punkt im selben Overlay-Koordinatenraum wie
+Kopf/Viewport und ruft ausschliesslich `AvatarDirector.windowMoved` auf.
+Refit aktualisiert die Bezugsgeometrie vor der naechsten Projektion.
+Keine neue Uhr, kein Polling und kein zweiter Kopfcontroller. Identische Ziele
+erzeugen kein zweites Ereignis; die bestehende Lease wird nicht verlaengert.
+STOP/Ende/Schliessen koennen durch folgende Projektionsframes nicht wieder
+aufgehoben werden. Sprache behaelt Vorrang, ihr Ende verwendet das letzte
+waehrenddessen bewegte Arbeitsziel.
+
+Der bestehende Mapper liefert weiterhin die schnelle Augen- und langsamere
+Kopffeder sowie den 65%-Halsanteil. Ein reiner Pipeline-Test prueft eine
+sichtbare Seitendrehung im Bereich 15..30 Grad und fortgesetzte Augenbewegung
+mehr als zwei Sekunden nach dem Einflug. Das ist **kein** Filament-Bildbeleg.
+Zwei zusaetzliche native UI-Faelle pruefen echte Matrixprojektion, Uhrstillstand,
+Docking, Reduced Motion und Live-Fallback; typgeprueft, Ausfuehrung BLOCKED.
+
+Zweiter nativer Ausfuehrungsweg ohne AGP versucht: Standalone-Robolectric.
+Die JDK21-Zertifikatskette wurde pro Prozess mit dem vorhandenen Host-JDK-
+Truststore bereitgestellt (keine TLS-Pruefung abgeschaltet). Maven Central
+ist erreichbar, aber AndroidX Monitor 1.7.2 und Espresso-Idling 3.6.1 bleiben
+wegen DNS-Ausfall von Google Maven und dem getesteten Mirror unaufloesbar.
+Beleg: `native-runtime-blocked.txt`. Kein nativer UI-PASS behauptet.
+
+### Weiter offene Regieanforderungen
+
+| Forderung | Praeziser Stand |
+|---|---|
+| Gemeinsamer Raum | Geteilte projizierte Overlay-Koordinaten und bestehender normierter Rig-Vertrag; **noch keine** gemeinsame metrische Filament-/Android-Kamera oder z-genaue optische Blickrekonstruktion |
+| Laufende Arbeit | Vorhandene reale Arbeits-Lease, Reading-/Sprach-/Idle-Morphs und budgetierte FUI-Liveframes bleiben aktiv; semantische PDF-Zeilen-/Codebereichsziele fehlen |
+| Sprache | Vorhandene TTS-Ranges/PCM-Huelle und PP-Visem bleiben unveraendert; keine neue phonemgenaue Audioanalyse oder Geraete-Lipsync-Abnahme |
+| Mehrere bedienbare Fenster | Host besitzt weiterhin ein aktuelles Fenster; hintere Dokumentebenen sind keine parallelen interaktiven Fenster |
+| Sieben Arbeitswelten | Vorhandene echte Datenpfade erhalten; umfassende fachliche Live-Flachen und sieben durchgefilmte Owner-Auftraege offen |
+| Vollstaendiger Abnahmefilm | BLOCKED: kein Android-Runtime-/Originalavatar-Render und kein Fold7; Java2D-Frames/Policytests ersetzen diesen Nachweis nicht |
 
 ## Rueckfall / naechster Einstieg
 

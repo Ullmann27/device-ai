@@ -170,6 +170,17 @@ class JarvisWorkWindowHost(
         val id = "work-window-${++serial}"
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
         val fui = HollywoodFuiStageOverlay(activity)
+        var framing = first
+        window.onPresentedCenter = { x, y ->
+            if (current === window) {
+                val target = gaze(framing, x, y)
+                if (target != currentGaze) {
+                    currentGaze = target
+                    director.windowMoved(id, if (workingId == id && emphasizedWork)
+                        ToolWorkSceneLease.workingGaze(target) else target)
+                }
+            }
+        }
         fui.requestFrame = { shell.invalidate() }
         window.onCinematicFrame = fui::present
         val presentation = JarvisCinematicSettings.preferences(activity)
@@ -194,11 +205,8 @@ class JarvisWorkWindowHost(
         // A first layout at another size (rotation/fold/keyboard still pending) plans again on the real size.
         val refit = {
             if (current === window) plan(home, container, scene)?.also {
-                // The window moved to the real size: JARVIS looks where it is now (#565 review) and the camera leans
-                // towards its new side (progress is still ~0).
-                currentGaze = gaze(it)
-                director.windowMoved(id, if (workingId == id && emphasizedWork)
-                    ToolWorkSceneLease.workingGaze(gaze(it)) else gaze(it))
+                // applyFrame publishes the projected centre after the new layout and transform are installed.
+                framing = it
                 currentCameraSide = cameraSide(it)
                 home.hologram.setWorkWindowCamera(true, currentCameraSide,
                     profile = cameraProfile(currentFootprint))
@@ -243,7 +251,8 @@ class JarvisWorkWindowHost(
         current = window
         currentFui = fui
         currentId = id
-        currentGaze = gaze(first)
+        val initialGaze = gaze(first, first.plan.origin.centerX(), first.plan.origin.centerY())
+        currentGaze = initialGaze
         // The light anchor stands where the window really comes from (avatar core or the tapped control, #643 C).
         fui.open(first.plan.destination, scene, first.plan.origin, first.plan.protectedBounds)
         // Airbus deck: footprint controls how much of the cockpit physically clears for this real window.
@@ -260,7 +269,9 @@ class JarvisWorkWindowHost(
         currentCameraSide = cameraSide(first)
         home.hologram.setWorkWindowCamera(true, currentCameraSide,
             profile = cameraProfile(currentFootprint))
-        director.windowOpened(id, gaze(first))
+        director.windowOpened(id, initialGaze)
+        currentGaze = initialGaze
+        window.reportPresentedCenter()
         if (Build.VERSION.SDK_INT >= 33) {
             val callback = android.window.OnBackInvokedCallback { close() }
             back = callback
@@ -272,14 +283,12 @@ class JarvisWorkWindowHost(
 
     private class Planned(val plan: JarvisWorkWindow.Plan, val face: RectF?, val viewport: RectF)
 
-    /** Where JARVIS looks for the window of [planned]: its centre relative to the face, in the gaze range. */
-    private fun gaze(planned: Planned): GazeTarget {
+    /** Projected panel and head use the same local overlay coordinates, including a refit after folding. */
+    private fun gaze(planned: Planned, x: Float, y: Float): GazeTarget {
         val viewport = planned.viewport
-        val destination = planned.plan.destination
         val headX = planned.face?.centerX() ?: viewport.centerX()
         val headY = planned.face?.centerY() ?: viewport.centerY()
-        return GazeTarget(((destination.centerX() - headX) / viewport.width() * 2f).coerceIn(-.7f, .7f),
-            ((headY - destination.centerY()) / viewport.height()).coerceIn(-.4f, .4f))
+        return JarvisWindowGaze.fromProjection(x, y, headX, headY, viewport.width(), viewport.height())
     }
 
     /** Camera lean of #571: the window's horizontal offset from the face, in viewport half-widths. */
