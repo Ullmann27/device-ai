@@ -15,7 +15,8 @@ function section(source, start, end) {
 function previewConnected(a, c) {
   const generate = section(a, 'private fun generateLocal(', 'private fun updateLocalStreamPreview(');
   const delta = section(generate, 'is LocalInferenceEvent.TextDelta -> {', 'is LocalInferenceEvent.ToolProposal ->');
-  assert.match(delta, /val snapshot = capture\.append\(event\.text,\s*\(now - generationStartedNanos\)\.coerceAtLeast\(0L\) \/ 1_000_000L\)/);
+  assert.match(delta, /val elapsed = \(now - generationStartedNanos\)\.coerceAtLeast\(0L\) \/ 1_000_000L/);
+  assert.match(delta, /val snapshot = capture\.append\(event\.text,\s*elapsed\)/);
   assert.match(delta, /if \(event\.text\.isNotEmpty\(\) && \(snapshot\.streamedChunks == 1 \|\|\s*now - lastPreviewNanos >= TimeUnit\.MILLISECONDS\.toNanos\(1_000\)\)\)/);
   assert.match(delta, /runOnUiThread \{\s*updateLocalStreamPreview\(previewToken, cancellation,\s*snapshot\.response, snapshot\.streamedChunks, elapsed, snapshot\.firstTextMillis\)/);
   assert.match(delta, /if \(snapshot\.terminal\) \{\s*turnTrace\?\.event\(TraceStage\.MODEL_FAILED\)\s*cancelNative = true\s*completed\.countDown\(\)/);
