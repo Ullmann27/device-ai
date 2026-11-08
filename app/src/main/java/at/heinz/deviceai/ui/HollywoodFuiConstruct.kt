@@ -5,8 +5,8 @@ import kotlin.math.max
 /** Pure timing model for the canonical work-window visual layer. */
 object HollywoodFuiConstruct {
     const val BRACKETS_END_MS = 120L
-    const val GRID_END_MS = 260L
-    const val DATA_END_MS = 420L
+    const val GRID_END_MS = 250L
+    const val DATA_END_MS = 450L
     const val CLOSE_END_MS = 320L
     const val SCAN_PERIOD_MS = 2_200L
 
