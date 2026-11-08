@@ -131,6 +131,11 @@ object ContinuumUiCopy {
         else -> "Das Modell konnte nicht verarbeitet werden. Prüfe Dateiformat, Modellversion und Gerätespeicher."
     }
 
+    /** Cockpit footer for tool calls whose outcome is unknown and awaits the owner (German, honest count). */
+    fun pendingToolReview(count: Int): String =
+        if (count == 1) "1 Werkzeugaufruf wartet auf deine Freigabe · Ergebnis unbekannt, kein automatischer Neuversuch"
+        else "$count Werkzeugaufrufe warten auf deine Freigabe · Ergebnis unbekannt, kein automatischer Neuversuch"
+
     fun modelStatus(ready: Boolean): String =
         if (ready) "Sprachmodell bereit" else "Freies Sprachmodell noch nicht geladen"
 }

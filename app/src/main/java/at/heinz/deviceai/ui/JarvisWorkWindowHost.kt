@@ -171,6 +171,11 @@ class JarvisWorkWindowHost(
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
         val fui = HollywoodFuiStageOverlay(activity)
         var releaseGeometry: () -> Unit = {}
+        // One cockpit budget drives the decorative layer too (thermal/power/inference): no second quality model.
+        fui.setRenderBudget(home.hologram.presentationRenderBudget())
+        val budgetSubscription = runCatching {
+            home.hologram.observePresentationBudget { fui.setRenderBudget(home.hologram.presentationRenderBudget()) }
+        }.getOrNull()
         container.addView(window, ViewGroup.LayoutParams(-1, -1))
         container.addView(fui, ViewGroup.LayoutParams(-1, -1))
         // A first layout at another size (rotation/fold/keyboard still pending) plans again on the real size.
@@ -191,6 +196,7 @@ class JarvisWorkWindowHost(
             accent = scene.accent, emblem = emblem, refit = refit, crystal = crystal, depthLayers = inheritedLayers,
             recession = recession, onClosed = {
             releaseGeometry()
+            runCatching { budgetSubscription?.close() }
             (window.parent as? ViewGroup)?.removeView(window)
             (fui.parent as? ViewGroup)?.removeView(fui)
             director.windowClosed(id)
@@ -212,6 +218,7 @@ class JarvisWorkWindowHost(
             }
         })
         if (!accepted) {
+            runCatching { budgetSubscription?.close() }
             window.dispose()
             container.removeView(window)
             container.removeView(fui)
@@ -222,7 +229,8 @@ class JarvisWorkWindowHost(
         currentFui = fui
         currentId = id
         currentGaze = gaze(first)
-        fui.open(first.plan.destination, scene)
+        // The light anchor stands where the window really comes from (avatar core or the tapped control, #643 C).
+        fui.open(first.plan.destination, scene, first.plan.origin.centerX(), first.plan.origin.centerY())
         // Airbus deck: footprint controls how much of the cockpit physically clears for this real window.
         currentFootprint = scene.footprint
         home.setWorkspaceFootprint(currentFootprint)

@@ -141,4 +141,12 @@ class ContinuumCockpitLiveStatusTest {
             assertTrue(ContinuumCockpitPresentation.processRows(live).none { it.label == "Keine laufenden Prozesse" })
         } finally { release.countDown(); pool.awaitIdle(5_000); pool.shutdown() }
     }
+
+    @Test fun panelsNameTheMissingAgentPoolInsteadOfADashAndOffline() {
+        // Fold7 IST 2026-11-08: "Aktive Agenten" showed "—   offline" when the worker pool was not started.
+        val row = JarvisCockpitPanels.agentRows(ContinuumDashboardState(cockpit = CockpitStatus(workers = null))).single()
+        assertEquals("Agenten-Pool", row.label)
+        assertEquals("nicht gestartet", row.value)
+        assertEquals(ContinuumCockpitPresentation.Tone.NEUTRAL, row.state)
+    }
 }

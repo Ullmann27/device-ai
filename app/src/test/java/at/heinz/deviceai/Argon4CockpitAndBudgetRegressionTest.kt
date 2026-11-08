@@ -85,22 +85,33 @@ class Argon4CockpitAndBudgetRegressionTest {
     }
 
     @Test
-    fun fuiMaterializationUsesExactThreePhaseContract() {
+    fun fuiMaterializationFollowsTheFivePhaseConstructLaw() {
+        // Code 51: anchor → brackets → scan raster → glass layers → data (#643 C). Phases stay strictly ordered.
         val start = HollywoodFuiConstruct.frame(0L)
+        assertEquals(0f, start.anchor, 0f)
         assertEquals(0f, start.brackets, 0f)
         assertEquals(0f, start.grid, 0f)
+        assertEquals(0f, start.glass, 0f)
         assertEquals(0f, start.data, 0f)
 
-        val brackets = HollywoodFuiConstruct.frame(120L)
+        val anchor = HollywoodFuiConstruct.frame(HollywoodFuiConstruct.ANCHOR_END_MS)
+        assertEquals(1f, anchor.anchor, 0f)
+        assertEquals(0f, anchor.brackets, 0f)
+
+        val brackets = HollywoodFuiConstruct.frame(HollywoodFuiConstruct.BRACKETS_END_MS)
         assertEquals(1f, brackets.brackets, 0f)
         assertEquals(0f, brackets.grid, 0f)
 
-        val frame = HollywoodFuiConstruct.frame(250L)
-        assertEquals(1f, frame.grid, 0f)
-        assertEquals(0f, frame.data, 0f)
-        assertTrue(frame.scanEnabled)
+        val grid = HollywoodFuiConstruct.frame(HollywoodFuiConstruct.GRID_END_MS)
+        assertEquals(1f, grid.grid, 0f)
+        assertTrue(grid.scanEnabled)
 
-        val data = HollywoodFuiConstruct.frame(450L)
+        val glass = HollywoodFuiConstruct.frame(HollywoodFuiConstruct.GLASS_END_MS)
+        assertEquals(1f, glass.glass, 0f)
+
+        val data = HollywoodFuiConstruct.frame(HollywoodFuiConstruct.DATA_END_MS)
         assertEquals(1f, data.data, 0f)
+        assertTrue(data.settled)
+        assertEquals(0f, data.tiltDegrees, 0f)
     }
 }

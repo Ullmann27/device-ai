@@ -9447,7 +9447,7 @@ class AgentActivity : Activity() {
             canChangeDevice && (it.outcomeUncertain || it.state == ToolReceiptState.START_PENDING)
         }
         if (uncertain.isEmpty()) return
-        addToolActivity("${uncertain.size} tool call(s) require operator review")
+        addToolActivity(ContinuumUiCopy.pendingToolReview(uncertain.size))
         AlertDialog.Builder(this)
             .setTitle("Previous tool outcome requires review")
             .setMessage(
