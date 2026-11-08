@@ -9328,6 +9328,10 @@ class AgentActivity : Activity() {
         val followUpFrame = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.composeFrame(
             text, resolvedQuestion, if (botTask == null && codingPlanning == null)
                 localConversationContext.sessionEvidence(localSessionId) else null)
+        // Freeze same-session topic navigation once for this turn. A retry/model pass must not
+        // mutate the situation focus a second time. This carries no facts or tool authority.
+        val situationHint = if (botTask == null && codingPlanning == null)
+            localConversationContext.situationHint(localSessionId, text) else ""
         val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task
         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
@@ -9451,6 +9455,7 @@ class AgentActivity : Activity() {
                         at.heinz.deviceai.cognitive.OwnerStatementTimeline
                             .project(priorOwnerEvidence, text)?.let { append(it.render()) }
                     }
+                    if (situationHint.isNotBlank()) append(situationHint)
                     // Current task and retrieval precede optional compiled/history data.
                     // A long request must never disappear behind the512-char memory lookup.
                     if (compiledContext == null) append("Aktueller Auftrag:\n").append(task).append('\n')
