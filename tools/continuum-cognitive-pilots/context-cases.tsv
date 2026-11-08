@@ -1,0 +1,25 @@
+id	split	expected	request
+dev-modal	DEV	true	Und kann er die Aufgabe erledigen?
+dev-imperative	DEV	true	Aber zeige sie mir.
+dev-plain	DEV	true	Wo arbeitet er?
+dev-formal	DEV	false	Und können Sie mir helfen?
+hold-time	HOLDOUT	true	Also wann kommt sie?
+hold-causal	HOLDOUT	true	Aber warum fehlt ihm die Zeit?
+hold-past	HOLDOUT	true	Und hatte er genug Material?
+hold-conditional	HOLDOUT	true	Also könnte sie das schaffen?
+hold-translate	HOLDOUT	true	Aber übersetze sie bitte.
+hold-compare	HOLDOUT	true	Und vergleiche ihn bitte.
+hold-pronoun	HOLDOUT	true	Aber woher kennt er das?
+hold-future	HOLDOUT	true	Also wird sie rechtzeitig fertig?
+hold-negative-question	HOLDOUT	true	Und darf er das nicht?
+hold-recipient	HOLDOUT	true	Aber erkläre ihnen den Unterschied.
+hold-location	HOLDOUT	true	Also wo liegt dort der Eingang?
+hold-original	HOLDOUT	true	Kann er das schaffen?
+negative-formal	NEGATIVE	false	Aber können Sie mir helfen?
+negative-formal-object	NEGATIVE	false	Also erkläre Ihnen das Wort Haus.
+negative-name	NEGATIVE	false	Und kann Leon die Aufgabe erledigen?
+negative-definition	NEGATIVE	false	Was bedeutet das Wort ursprünglich?
+negative-prefix-definition	NEGATIVE	false	Also was bedeutet das Wort Haus?
+negative-clock	NEGATIVE	false	Also wie spät ist es?
+negative-hello	NEGATIVE	false	Also hallo!
+negative-embedded	NEGATIVE	false	Das Beispiel lautet: kann er helfen?
