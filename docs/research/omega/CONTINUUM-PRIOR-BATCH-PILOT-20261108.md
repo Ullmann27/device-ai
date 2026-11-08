@@ -67,3 +67,59 @@ No evidence justifies expanding trainable parameters or integrating this
 planner into the chat router. Next gate after a positive trial: novel causal
 graphs with misleading/missing observations and held-out cost distributions,
 then actual authorized local diagnostic tools. No broad intelligence claim.
+
+## Measured candidate and ablation
+
+Draft #648. Frozen trial commit:
+`edb567cef673a3c77a3465a618775d35852ce499`. The later harness change only
+adds enforcement of the already declared diagnosis/probe-variant criterion;
+no scenarios, priors, probes, costs or labels changed.
+
+Candidate: `HypothesisWorkspace.admitPriors`, 25 lines, existing workspace.
+Double-precision sum avoids overflow for finite Float priors; unrepresentable
+ratios explicitly fail before mutation. The legacy `add` remains unchanged.
+Six new regression methods cover ratios, atomic rejection, alias isolation,
+large/invalid weights and evidence/cost selection.
+
+```sh
+bash scripts/continuum-reasoning-pilot.sh /tmp/h2-green batch
+# PASS: 17 JUnit tests, 768 prior permutations, two 96-case diagnosis sets.
+bash scripts/continuum-reasoning-pilot.sh /tmp/h2-ablation sequential
+# Expected FAIL (exit 1): candidate source without batch admission retains RED.
+python3 tools/continuum-cognitive-pilots/measure-kotlin-pilots.py \
+  /tmp/h2-red/reasoning.jar /tmp/h2-green/reasoning.jar /tmp/h2-paired reasoning
+```
+
+Six alternating paired process runs, same frozen inputs, JVM heap capped at
+256 MiB. Each has a 50-iteration admission/probe warmup; complete trials still
+include JIT/GC. Raw results: `docs/evidence/cognitive-pilots-20261108/reasoning/`.
+
+| Metric | Baseline / sequential ablation | Batch candidate |
+|---|---:|---:|
+| Correct prior permutations | 0/768 | 768/768 |
+| DEV verified diagnoses, two-probe budget | 48/96 | 96/96 |
+| Unequal-prior HOLDOUT verified diagnoses | 48/96 | 96/96 |
+| False diagnoses | 0 | 0 |
+| First-probe variants per four-cause set | 4 | 1 |
+| Dependency/revocation/overlay controls | 26/26 | 26/26 |
+| Median complete-trial wall time | 97.711 ms | 103.275 ms |
+| Median complete-trial thread CPU | 69.530 ms | 72.301 ms |
+| Max process RSS across launches | 77,968 KiB | 76,636 KiB |
+
+**Supported:** in these explicit four-cause worlds, preserving priors doubles
+the number of externally consistent diagnoses at the same probe budget.
+**Negative result:** not a latency improvement: about 5.7% more wall time and
+4.0% more CPU in this sample. Six-cause cases test distributions only.
+Sequential admission on the candidate reproduces 0/768 and 48/96, isolating
+the mechanism. The 26 controls are deliberately unchanged, not new gains.
+
+**SKIP:** Gemma answers, natural-language causal extraction, real device tools,
+Android/Gradle, Fold7 heat/joules, subjective consciousness and long-term
+learning. Batch admission remains unused by the installed app; no promotion
+is justified by this small synthetic result alone.
+
+Next falsifiable trial: under three probes, randomize cost asymmetry and inject
+one missing or wrong observation into previously unseen causal graphs. Require
+zero unsupported execution claims and compare verified diagnosis rate against
+both sequential and uniform non-adaptive selection. If priors are wrong or
+observations unreliable, batching alone may offer no benefit.

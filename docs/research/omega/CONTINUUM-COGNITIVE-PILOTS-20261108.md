@@ -125,7 +125,7 @@ bash scripts/continuum-context-pilot.sh /tmp/h1-red 473f79727e4b52509cc7d1af71e5
 # Expected RED exit 1: 20 tests, 1 failure, 0 skips.
 bash scripts/continuum-context-pilot.sh /tmp/h1-green
 # GREEN: 20 tests, 0 failures, 0 skips; frozen fixture assertions also pass.
-python3 tools/continuum-cognitive-pilots/measure-context.py \
+python3 tools/continuum-cognitive-pilots/measure-kotlin-pilots.py \
   /tmp/h1-red/context.jar /tmp/h1-green/context.jar /tmp/h1-paired
 node --test tools/continuum-virtual-fabric/*.test.mjs
 # Existing native baseline: 47 PASS, 0 FAIL, 0 SKIP.

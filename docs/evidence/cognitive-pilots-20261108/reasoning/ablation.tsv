@@ -1,0 +1,7 @@
+scenario	permutations	correct_priors	max_error	first_probe_variants	diagnoses	abstentions
+DEV-equal4	24	0	0.25	4	48	48
+HOLDOUT-unequal4	24	0	0.5357142857142857	4	48	48
+HOLDOUT-equal6	720	0	0.5833333333333334	0	0	0
+METRICS wall_ns=153699306 cpu_ns=59370407 controls=26 energy_joules=UNAVAILABLE
+Exception in thread "main" java.lang.IllegalStateException: 768 prior invariance failures
+	at at.heinz.deviceai.cognitive.ReasoningPilot.main(ReasoningPilot.kt:130)

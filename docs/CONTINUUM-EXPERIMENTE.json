@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "project": "Ullmann27/device-ai",
-  "updated": "2026-10-27",
+  "updated": "2026-11-08",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
   "externalResearchIntegration": {
@@ -205,6 +205,15 @@
       "entry": "experimental/omega/repair/numeric-verifier.mjs",
       "depends": "Existing CCC1 owner backlog, coding task, exact patches, repair tests and receipts; Node and Git for host experiment",
       "gate": "Controlled synthetic replay archived: 2/10 versus 8/10 correct, zero model calls, higher actual verifier compute; not a blind generalization result. Real-model fixed-budget holdout and Fold7 execution NOT_RUN. See docs/research/omega/ASTRA-HANDOFF.md."
+    },
+    {
+      "id": "EXP-16",
+      "title": "Source-bound context and prior-preserving diagnostic pilots",
+      "status": "RESEARCH_SHADOW",
+      "present": "Code50 baseline 473f7972, drafts #647/#648: context routing prospective HOLDOUT 1/12 to 12/12 with 8/8 negative controls unchanged; batch admission into existing HypothesisWorkspace yields 768/768 invariant prior permutations and 96/96 versus 48/96 verified diagnoses on each of two synthetic four-cause sets at a two-probe budget. No model inference, learning, private data, live planner activation or device claim. Timing and negative results in handoffs.",
+      "entry": "docs/research/omega/CONTINUUM-PRIOR-BATCH-PILOT-20261108.md",
+      "depends": "Existing conversation policy, HypothesisWorkspace, JTMS; Kotlin/JDK/JUnit host tools",
+      "gate": "Independent natural-language and noisy/cost-asymmetric causal holdouts, same-model device ablation, Android regression and thermal/energy evidence before promotion"
     }
   ]
 }

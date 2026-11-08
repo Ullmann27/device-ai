@@ -94,6 +94,7 @@ object ReasoningPilot {
         val start = System.nanoTime()
         val cpuStart = if (cpuAvailable) bean.currentThreadCpuTime else 0
         var failedPriors = 0
+        var failedPlans = 0
         println("scenario\tpermutations\tcorrect_priors\tmax_error\tfirst_probe_variants\tdiagnoses\tabstentions")
         for (scenario in scenarios) {
             var correct = 0
@@ -123,10 +124,14 @@ object ReasoningPilot {
                 check(workspace.selectNextProbe(listOf(useless)) == null)
             }
             println("${scenario.name}\t${orders.size}\t$correct\t$maxError\t${firstProbes.size}\t$diagnoses\t$abstentions")
+            if (scenario.ids.size == 4 &&
+                (diagnoses != orders.size * 4 || abstentions != 0 || firstProbes.size != 1)) failedPlans++
         }
         val controls = dependencyControls()
         val cpu = if (cpuAvailable) bean.currentThreadCpuTime - cpuStart else -1
         println("METRICS wall_ns=${System.nanoTime() - start} cpu_ns=$cpu controls=$controls energy_joules=UNAVAILABLE")
-        if (args.isNotEmpty()) check(failedPriors == 0) { "$failedPriors prior invariance failures" }
+        if (args.isNotEmpty()) check(failedPriors == 0 && failedPlans == 0) {
+            "$failedPriors prior invariance failures; $failedPlans planning scenario failures"
+        }
     }
 }

@@ -40,5 +40,5 @@ kotlinc "${sources[@]}" "${tests[@]}" \
     "$root/tools/continuum-cognitive-pilots/ReasoningPilot.kt" \
     "$root/tools/continuum-cognitive-pilots/admission-$arm.kt" \
     -jvm-target 17 -cp "$junit" -include-runtime -d "$out/reasoning.jar" > "$out/compile.txt" 2>&1
-java -cp "$out/reasoning.jar:$junit" org.junit.runner.JUnitCore "${classes[@]}" | tee "$out/junit.txt"
-java -cp "$out/reasoning.jar" at.heinz.deviceai.cognitive.ReasoningPilot --assert | tee "$out/reasoning.tsv"
+java -Xmx256m -cp "$out/reasoning.jar:$junit" org.junit.runner.JUnitCore "${classes[@]}" | tee "$out/junit.txt"
+java -Xmx256m -cp "$out/reasoning.jar" at.heinz.deviceai.cognitive.ReasoningPilot --assert 2>&1 | tee "$out/reasoning.tsv"
