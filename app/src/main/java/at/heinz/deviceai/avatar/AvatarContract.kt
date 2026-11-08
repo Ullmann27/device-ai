@@ -362,7 +362,7 @@ class AvatarPoseReducer {
         const val LEGACY_WINDOW_GAZE_TTL_MS = 1_100L
         const val THINKING_DURATION_MS = 900L
         const val CONFIRMATION_DURATION_MS = 650L
-        const val MAX_DIRECTED_GAZE_X = .65f
+        const val MAX_DIRECTED_GAZE_X = .95f
         const val MAX_DIRECTED_GAZE_Y = .35f
         const val OBSERVED_GAZE_TTL_MS = 750L
         const val MIN_GAZE_CONFIDENCE = 60
