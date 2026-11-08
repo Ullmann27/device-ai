@@ -3072,11 +3072,16 @@ class AgentActivity : Activity() {
         val turnId: String,
         val session: String,
         val generation: Long,
-        val request: String
+        val request: String,
+        var promptBudget: Int,
+        val modelHash: String,
+        val startedAtMillis: Long = android.os.SystemClock.uptimeMillis()
     ) {
         var phase = WorkscenePhase.LOCAL_REASONING
         var opened = false
         var pendingShow: Runnable? = null
+        var statusView: TextView? = null
+        var telemetryView: TextView? = null
     }
 
     private var localReasoningWorkScene: LocalReasoningWorkScene? = null
@@ -3089,7 +3094,19 @@ class AgentActivity : Activity() {
             busy && activeLocalRequest && foregroundLearningActive &&
             !isFinishing && !isDestroyed
 
-    private fun scheduleLocalReasoningWorkScene(turnId: String, request: String, delayMillis: Long) {
+    private fun scheduleLocalReasoningWorkScene(turnId: String, request: String, delayMillis: Long) =
+        scheduleLocalReasoningWorkScene(
+            turnId, request, delayMillis,
+            if (delayMillis <= 0L) at.heinz.deviceai.cognitive.LocalChatPromptBudget.FULL_CHARACTERS
+            else at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS
+        )
+
+    private fun scheduleLocalReasoningWorkScene(
+        turnId: String,
+        request: String,
+        delayMillis: Long,
+        promptBudget: Int
+    ) {
         if (!foregroundLearningActive || isFinishing || isDestroyed || centerDialog?.isShowing == true) return
         localReasoningWorkScene?.let { previous ->
             previous.pendingShow?.let(mainHandler::removeCallbacks)
@@ -3098,7 +3115,10 @@ class AgentActivity : Activity() {
                 workWindowHost.close(immediate = true)
             }
         }
-        val lease = LocalReasoningWorkScene(turnId, sessionId, workPresentationGeneration, request)
+        val lease = LocalReasoningWorkScene(
+            turnId, sessionId, workPresentationGeneration, request, promptBudget,
+            localRuntime.loadedModel?.sha256.orEmpty().take(12)
+        )
         localReasoningWorkScene = lease
         val show = Runnable {
             lease.pendingShow = null
@@ -3115,9 +3135,14 @@ class AgentActivity : Activity() {
     private fun showLocalReasoningWorkScene(lease: LocalReasoningWorkScene) {
         if (!localReasoningSceneCurrent(lease)) return
         val home = homeView ?: return
-        val status = textView("Lokale Bearbeitung läuft · Ergebnis folgt erst nach Abschluss.", 13f, MUTED).apply {
+        val status = textView("Kontext & Gedächtnis · lokaler Turn läuft.", 13f, MUTED).apply {
             tag = "jarvis-local-work-status:" + lease.turnId
         }
+        val telemetry = textView(
+            "Budget " + localReasoningBudgetLabel(lease.promptBudget) +
+                " · Modell " + lease.modelHash.ifBlank { "unbekannt" } + " · 0.0 s",
+            11f, MUTED
+        ).apply { tag = "jarvis-local-work-telemetry:" + lease.turnId }
         val progress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             isIndeterminate = true
             tag = "jarvis-local-work-progress:" + lease.turnId
@@ -3130,6 +3155,7 @@ class AgentActivity : Activity() {
             addView(textView(lease.request.take(320), 14f, TEXT), matchWidth(top = 4))
             addView(textView(model + " · reale lokale Inferenz", 11f, MUTED), matchWidth(top = 10))
             addView(status, matchWidth(top = 4))
+            addView(telemetry, matchWidth(top = 4))
             addView(progress, matchWidth(top = 8))
             addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this@AgentActivity, "STOP") {
                 cancelLocalRequest()
@@ -3143,6 +3169,8 @@ class AgentActivity : Activity() {
             })
             if (window != null) {
                 lease.opened = true
+                lease.statusView = status
+                lease.telemetryView = telemetry
                 workWindowHost.workStarted(emphasize = true)
             } else if (!retry) home.post { show(true) }
             else if (localReasoningWorkScene === lease) localReasoningWorkScene = null
@@ -3150,6 +3178,48 @@ class AgentActivity : Activity() {
         show(false)
     }
 
+    private fun localReasoningBudgetLabel(value: Int): String =
+        if (value == at.heinz.deviceai.cognitive.LocalChatPromptBudget.FULL_CHARACTERS)
+            "15.5k Vollkontext" else "6.0k kompakt"
+
+    private fun updateLocalReasoningContext(turnId: String, promptBudget: Int, contextCount: Int) {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.turnId != turnId || lease.phase != WorkscenePhase.LOCAL_REASONING) return
+        lease.promptBudget = promptBudget
+        val elapsed = ((android.os.SystemClock.uptimeMillis() - lease.startedAtMillis).coerceAtLeast(0L) / 100L) / 10.0
+        lease.statusView?.text = "Lokaler Denk-Kern · Kontext geprüft"
+        lease.telemetryView?.text = "Kontextobjekte " + contextCount + " · Budget " +
+            localReasoningBudgetLabel(promptBudget) + " · Modell " +
+            lease.modelHash.ifBlank { "unbekannt" } + " · " +
+            "%.1f".format(java.util.Locale.ROOT, elapsed) + " s"
+    }
+
+    private fun updateLocalReasoningStream(turnId: String, responseChars: Int, chunks: Int, elapsedMillis: Long) {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.turnId != turnId || lease.phase != WorkscenePhase.LOCAL_REASONING) return
+        lease.statusView?.text = "Antwort-Synthese · lokaler Stream"
+        lease.telemetryView?.text = "Ausgabe " + responseChars + " Zeichen · " + chunks + " Chunks · " +
+            "%.1f".format(java.util.Locale.ROOT, elapsedMillis / 1000.0) + " s"
+    }
+
+    private fun updateLocalReasoningCompleted(
+        turnId: String,
+        metrics: at.heinz.deviceai.localmodel.LocalInferenceMetrics
+    ) {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.turnId != turnId || lease.phase != WorkscenePhase.LOCAL_REASONING) return
+        lease.statusView?.text = "Antwort-Synthese abgeschlossen"
+        val tokenText = metrics.outputTokens?.let { it.toString() + " Output-Tokens" } ?: "Tokenzahl nicht gemeldet"
+        val rate = if (metrics.outputTokens != null && metrics.totalLatencyMillis > 0L)
+            " · " + "%.1f".format(
+                java.util.Locale.ROOT,
+                metrics.outputTokens * 1000.0 / metrics.totalLatencyMillis
+            ) + " tok/s"
+        else ""
+        lease.telemetryView?.text = tokenText + rate +
+            " · " + metrics.responseCharacters + " Zeichen · " + metrics.streamedChunks + " Chunks · " +
+            "%.1f".format(java.util.Locale.ROOT, metrics.totalLatencyMillis / 1000.0) + " s"
+    }
     private fun promoteLocalReasoningWorkSceneToTool() {
         val lease = localReasoningWorkScene ?: return
         if (lease.phase.rank >= WorkscenePhase.TOOL_ACTIVE.rank) return
@@ -9453,7 +9523,8 @@ class AgentActivity : Activity() {
                     localConversationContext.priorUserTurns(localSessionId).isNotEmpty(),
                 hasGroundedEvidence = groundedRecall != null
             )
-            scheduleLocalReasoningWorkScene(chiefTurn.turnId, text, presentation.delayMillis)
+            scheduleLocalReasoningWorkScene(
+                chiefTurn.turnId, text, presentation.delayMillis, presentation.promptBudget)
         }
         // Context may resolve pronouns, but owner-write authorization always
         // uses the untouched original user message ('text').
@@ -9623,6 +9694,10 @@ class AgentActivity : Activity() {
                     hasObservations = observations.isNotEmpty(),
                     hasReflection = reflection != null
                 )
+                if (botTask == null && codingPlanning == null) runOnUiThread {
+                    if (sessionId == localSessionId && activeChatCancellation === cancellation)
+                        updateLocalReasoningContext(chiefTurn.turnId, promptCap, memories.size)
+                }
                 val briefInstruction = if (promptCap ==
                     at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS)
                     "\nKurze Einstiegsfrage: Antworte möglichst direkt in höchstens drei kurzen Sätzen. " +
