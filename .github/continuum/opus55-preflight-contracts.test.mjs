@@ -33,7 +33,7 @@ test('latency is measured without claiming inaudible TTS callbacks are audio', (
   assert.doesNotMatch(latency, /FIRST_AUDIBLE_FRAME/);
 });
 
-test('frustum probe and renderer use the same orthographic framing', () => {
+test('frustum probe and renderer use the same orthographic framing while live diagnostics stay observational', () => {
   assert.match(filament, /restWindow = AvatarFraming\.window\(focus, width\.toDouble\(\) \/ height, anchorX, closeUp, keepOut\)/);
   assert.match(filament, /framing: AvatarFraming\.Window\? = null/);
   assert.match(filament, /val fitted = framing \?: requireNotNull\(restWindow\)/);
@@ -42,7 +42,7 @@ test('frustum probe and renderer use the same orthographic framing', () => {
   assert.match(cameraFraming, /if \(progress == 0f \|\| !enabled\) return rest/);
   assert.match(hologram, /cameraWindow = requireNotNull\(cameraFraming\)\.sample\(cameraMotion\.progress, cameraDirection\)/);
   assert.match(hologram, /val window = requireNotNull\(cameraWindow\)\s*auraScale = window\.headScale\.toFloat\(\); auraAnchorEffective = window\.anchorX\.toFloat\(\)/);
-  assert.match(hologram, /native3d!!\.render\(pose, avatarSeconds, canAnimateFrame\(\), nativeTexture\?\.width \?: 0,\s*nativeTexture\?\.height \?: 0, if \(cockpitHeadBounds != null\) cameraWindow else null\)/);
+  assert.match(hologram, /native3d!!\.render\([\s\S]{0,500}?framing = if \(cockpitHeadBounds != null\) cameraWindow else null,[\s\S]{0,240}?diagnosticBlink = proof\?\.blinkOverride,[\s\S]{0,160}?receipt = receipt/);
   assert.match(frustum, /val fitted = AvatarFraming\.window\(focus, widthPx\.toDouble\(\) \/ heightPx, anchorX, closeUp\)/);
   assert.match(frustum, /return Window\(widthPx, heightPx, fitted\.left, fitted\.right, -fitted\.halfHeight, fitted\.halfHeight\)/);
   assert.match(framing, /return Window\(-2\.0 \* horizontal \* anchor, 2\.0 \* horizontal \* \(1\.0 - anchor\), vertical,/);
