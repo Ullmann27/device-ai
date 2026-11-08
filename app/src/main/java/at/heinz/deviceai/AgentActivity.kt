@@ -142,8 +142,11 @@ class AgentActivity : Activity() {
         /** One ordered writer for the persistent central-chat transcript (#568), shared across Activity instances. */
         internal val chatTranscriptIo: java.util.concurrent.ExecutorService =
             java.util.concurrent.Executors.newSingleThreadExecutor { java.lang.Thread(it, "continuum-chat-transcript").apply { isDaemon = true } }
-        /** Last spoken piece when a reply exceeds the speech queue capacity (#566 review). */
+        /** Last spoken piece when a reply exceeds the bounded speech queue capacity. */
         private const val SPOKEN_REST_IN_CHAT = "Der Rest der Antwort steht im Chat."
+        /** 31 reply chunks + one truncation notice. */
+        private const val SPEECH_QUEUE_MAX_CHUNKS = 32
+        private const val SPEECH_CONTENT_MAX_CHUNKS = SPEECH_QUEUE_MAX_CHUNKS - 1
         @Volatile private var crashHandlerInstalled = false
         private const val SPEECH_REQUEST = 2207
         private const val CONVERSATION_RESUME_DELAY_MS = 450L
@@ -272,7 +275,7 @@ class AgentActivity : Activity() {
     private var voiceListening = false
     @Volatile private var voiceUtteranceId: String? = null
     /** Ordered pieces of the reply being read aloud (#566); only the UI thread touches the turn/chunk ids. */
-    private val speechChunks = at.heinz.deviceai.cognitive.ApprovedSpeechChunkQueue()
+    private val speechChunks = at.heinz.deviceai.cognitive.ApprovedSpeechChunkQueue(SPEECH_QUEUE_MAX_CHUNKS)
     private var speechTurnId: String? = null
     private var speechChunkId: String? = null
     private val voiceSignal = TtsHologramSignal()
@@ -8205,8 +8208,9 @@ class AgentActivity : Activity() {
             !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired,
                 microphoneActive = voiceListening)) return
         stopVoiceAnimation()
-        // #566: the whole visible reply is read, as ordered sentence-bounded pieces (formerly only 480 characters).
-        val chunks = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(message, maxChunks = 15)
+        // Read substantially beyond the former 15-chunk ceiling while keeping a hard bounded queue.
+        val chunks = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(
+            message, maxChunks = SPEECH_CONTENT_MAX_CHUNKS)
         if (chunks.pieces.isEmpty()) return
         // Beyond the queue capacity the cut is announced instead of ending silently.
         val pieces = if (chunks.truncated) chunks.pieces + SPOKEN_REST_IN_CHAT else chunks.pieces
