@@ -28,9 +28,14 @@ internal class LocalConversationSituationTracker {
         val active = snapshot.currentThreadId?.let { id ->
             snapshot.threads.firstOrNull { it.id == id }
         }
-        if (active != null && cues.intersect(active.cues).isNotEmpty()) {
-            model.openThread(active.id, active.label, cues, atTurn = turn)
-            return
+        if (active != null) {
+            val overlap = cues.intersect(active.cues)
+            val sameNarrowTopic = overlap.size >= 2 ||
+                (overlap.size == 1 && cues.size == 1 && active.cues.size == 1)
+            if (sameNarrowTopic) {
+                model.openThread(active.id, active.label, cues, atTurn = turn)
+                return
+            }
         }
 
         model.pauseActive()
@@ -109,7 +114,7 @@ internal class LocalConversationSituationTracker {
         )
         private val STOP = setOf(
             "aber","auch","bitte","dann","dass","davor","dort","eine","einen","einer",
-            "für","haben","jetzt","machen","mach","noch","oder","schon","weiter","wieder",
+            "für","haben","jetzt","machen","mach","noch","oder","schon","weiter","wieder","fehler","offen","problem",
             "zurück","zurueck","vorhin","fortsetzen","beim","beim","über","ueber","unser",
             "unsere","dieses","dieser","diese","wurde","werden","soll","sollen"
         )
