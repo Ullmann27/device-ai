@@ -1,6 +1,6 @@
 # Code50 acceptance repair — 2026-11-08
 
-Status: WIP / UNVERIFIED. Integration source: `0c59dcc7b249d7eb6bfc9fb21d2306f814105ed6` (PR #603). Work branch: `chatgpt/code50-acceptance-repair-20261108`.
+Status: ordinary Unit/Lint PASS and focused host UI PASS on `5ba76afcd306db11273dae1e0fe83dd467a34ea0`; full optional UI and device acceptance remain open. Integration source: `0c59dcc7b249d7eb6bfc9fb21d2306f814105ed6` (PR #603). Work branch: `chatgpt/code50-acceptance-repair-20261108`, draft PR #627. The checkpoints below are chronological; later actual runs supersede earlier NOT_RUN statuses.
 
 ## Observed blockers
 
@@ -37,3 +37,41 @@ Fold7 voice, 15-second avatar proof, FUI/thermal acceptance and original-signed 
 - Minimal compile corrections: explicit `containsKey(turnId)` and `evidence != null && count > 0`. These corrections still require the next Gradle run.
 - Related cockpit Node checks found one further stale geometry contract: the pane width no longer adds the removed shell rail. The assertion now follows the current available-pane contract. No layout source or safety gate changed.
 - Render's historical log confirms exhausted pipeline minutes at 2026-11-08T02:58:29Z; its configured branch is the older recall RED fixture, not current Code50. No new Render deployment or billing change was requested.
+
+## App routing red/green checkpoint
+
+- Main compilation passed after the two compile corrections. Test compilation then exposed one missing `assertNull` import in `CockpitAnimationTriggersTest`; adding that import preserves its real PDF page-count assertion.
+- Actual RED: `d6b3f8ce9bb44aab1af667020a24ff9ad5809cc0` plus that import, 22 tests, 21 PASS, 1 FAIL, 0 SKIP. The real Robolectric Activity showed an app selection dialog for `Ich brauche Sig`; `implicitFuzzyNeedReturnsToConversationBeforeAppSelection` failed at the no-dialog assertion. Explicit fuzzy cancellation already passed.
+- Root correction: `OwnerAppActionFlow` now requires fresh exact installed-app evidence before Choose/Confirm for implicit requests. `AgentActivity` supplies the intake flag and does not save rejected fuzzy candidates as app pronoun context. Explicit fuzzy opening still supports selection, concrete ToolGate approval/rejection and cancellation receipts.
+- Added ToolGate regressions for fuzzy implicit needs/message requests, exact ambiguous cancellation, and approved/rejected explicit fuzzy launch. Actual GREEN: 25 tests, 25 PASS, 0 FAIL, 0 SKIP; Gradle `BUILD SUCCESSFUL`. This includes Airbus2100CockpitAndCountdownTest, Argon4CockpitAndBudgetRegressionTest, AvatarMorphMapperComparisonTest and the two Activity regressions.
+- Related Node contracts: 33 tests, 33 PASS, 0 FAIL, 0 SKIP across nine cockpit/voice/context/layout files. These are scoped contracts, not the whole repository's Node suite.
+- Reproduce the focused Android run with JDK17, Android SDK36/build-tools35.0.0 and Gradle8.11.1: `./gradlew --no-daemon --max-workers=2 --console=plain -I scripts/continuum-code50-focused.init.gradle -Dorg.gradle.jvmargs='-Xmx4g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=50 -PcontinuumUiWidgetTests=true :app:testDebugUnitTest`. Configure the host's authorized proxy and CA trust when needed. The init filter avoids the existing QA task guard's rejection of CLI `--tests`; the guard is unchanged.
+- Next: clean exact-SHA full `:app:testDebugUnitTest :app:lintDebug` with the same properties and no init filter. Existing lint scope is `NewApi`. Record skips explicitly, including JDK21-only LiteRT lifecycle tests under JDK17.
+- #603 remains unchanged; its review is not resolved merely because #627 contains a tested correction. Main, signing credentials and release lanes are untouched. Fold7 and signed-APK gates remain NOT_RUN.
+
+## Broader gate checkpoint (pending rerun)
+
+- The optional full Robolectric catalog did not complete. A diagnostic run recorded 267 successful cases before interruption, with the last started case `ContinuumDocumentFlowUiTest.aLateAnswerAfterStopChangesNothingAndALaterFailureKeepsItsCause`. This is partial progress, not full UI acceptance and not yet a proven product deadlock. Targeted investigation remains open.
+- The unfiltered ordinary unit/lint run on clean `c65b40e2be80d22e27a9e3c20b44531bf8abb9d7` ended when the Gradle daemon disappeared. Its progress log recorded 2,027 completed cases, including two failures and 14 skips. No completed-suite PASS is claimed. The disappearance's cause is unverified; retry with a smaller heap and one worker avoids overlapping lint/test memory demand.
+- Reproduced the two failures separately on the same clean source: 10 tests, 8 PASS, 2 FAIL, 0 SKIP. AvatarMotionEvidenceTest still expected the old horizontal bound 0.65, while the integrated Side-Gaze contract clamps at 0.95; vertical bound and 2,500-ms expiry are unchanged. LocalReasoningWorkScenePolicyTest expected immediate display for a short planning sentence actually classified at 0.30, below the specified strict >0.35 threshold.
+- Test-only corrections preserve the runtime contracts: assert exact 0.95/-0.35 gaze limits; exercise a genuinely above-threshold request; add explicit 0.30 and exactly-0.35 grace checks. These latest test corrections are UNVERIFIED until rerun.
+- `:app:lintDebug` completed successfully on c65b40e (NewApi scope); the combined command still exited 1 because the two reproduced JUnit failures remained. No lint exclusions or runtime thresholds were changed.
+
+## Completed ordinary unit baseline and bounded repairs
+
+- Clean `8374252da0a545f1ae2234781d98d1ed73490e3e`, one worker / 1,600-MB Gradle heap: all 3,485 ordinary JUnit cases reached a completed report: 3,459 PASS, 7 FAIL, 19 SKIP. The two corrected Side-Gaze/reasoning suites now pass, including the strict 0.35 boundary. Lint did not execute in this failed command because `--continue` was absent; its separate earlier PASS remains bound to c65b40e.
+- Three failures expose the role resolver comparing German `Schwester`/`Tochter` literally against canonical `SISTER`/`CHILD` edges. The bounded repair accepts those German relation labels (plus Sohn/Kind) only through existing edges. Daughter/son selection from a generic CHILD edge requires matching known target gender; absent relations, unknown gender and multiple matching targets still abstain or remain ambiguous. Three regression methods cover those negative boundaries. This does not create a relation, memory record, calendar source or new production wiring.
+- Three layout failures expose a Float endpoint rounding a nominal 48-dp top-bar target down to 47.999996 dp. The repair rounds only that bottom endpoint outward by one representable Float when needed. Strict >=48 assertions and non-overlap checks are retained.
+- The fourth layout failure was a frozen C1 avatar snapshot predating the already-integrated Code50 shell. The replacement snapshot was measured from compiled, unmodified 8374252 **before** applying the touch rounding repair; the bit-identical avatar check remains. Raw pre-fix coordinates and undersized targets are in `evidence/code50-hero-before-touch-rounding-20261108.txt`.
+- These role/layout repairs are source-saved WIP until the next full unit/lint run. Main and #603 are unchanged. Optional full UI, Fold7 and original signing remain separate open gates.
+
+## Verified host acceptance on 5ba76af
+
+- Clean source `5ba76afcd306db11273dae1e0fe83dd467a34ea0`: `:app:testDebugUnitTest :app:lintDebug` completed with `BUILD SUCCESSFUL` in 4m39s. No test filter; ordinary unit configuration, one worker, Gradle heap 1,600 MB. JUnit: **3,488 total, 3,469 PASS, 0 FAIL, 0 ERROR, 19 SKIP**, 618 suites. Lint: **0 issues** in the configured NewApi scope. All seven failures from the previous completed baseline are closed by actual rerun.
+- The 19 skips are retained explicitly in the machine-readable receipt: pending Chief integration cases, opt-in container/Node-fixture checks, and two LiteRT lifecycle checks requiring Java21. They are not counted as passed. No skip/ignore or lint exclusion was added by this repair.
+- Scoped Node contracts rerun on the same source: **33 PASS, 0 FAIL, 0 SKIP** across the nine recorded files.
+- Focused host Android/UI run on the same source: **35 PASS, 0 FAIL, 0 SKIP**, `BUILD SUCCESSFUL` in 2m11s. This includes all six OwnerAppActionWorkSceneUiTest methods; real Activity checks for 999/1,000-ms reasoning admission and in-place tool morph; two Hands-Free cockpit tests; ERROR_CLIENT/ERROR_RECOGNIZER_BUSY retry classification with the 250-ms contract; Airbus, Argon, AvatarMorphMapper and ToolGate flow tests.
+- These are JVM/Robolectric host results with controlled app/model inputs. They do not prove recognition of ten real microphone sentences, live Filament rendering, thermal performance, original signing or an installed Fold7 APK.
+- The earlier full optional UI attempt remains NOT_COMPLETED. Its specifically last-started PDF late-answer/STOP case passed in isolation on the same production/test source: **1/1 PASS**, `BUILD SUCCESSFUL` in 50s, no watchdog timeout and no thread dump. Thus no product deadlock was established by the earlier silent run. This isolated PASS does not complete the optional UI catalog.
+- Receipt and reproduction inputs: `evidence/code50-acceptance-20261108.json`, `evidence/code50-unit-suites-20261108.json`, `evidence/code50-ui-scope-20261108.init.gradle`, `evidence/code50-test-progress-20261108.init.gradle`, and `evidence/code50-node-20261108.tap`.
+- ADB readback had no attached device. Fold7 ten-sentence speech, 15-second avatar video, actual four-page PDF/FUI and thermal acceptance remain NOT_RUN. No APK was assembled, signed or installed. #603 and main remain unchanged at this checkpoint.

@@ -105,6 +105,8 @@ internal object EntityRoleResolutionEngine {
         val (relationKey, requiredGender) = when (relation.trim().lowercase(Locale.ROOT)) {
             "schwester" -> "SISTER" to Gender.FEMININE
             "tochter" -> "CHILD" to Gender.FEMININE
+            "sohn" -> "CHILD" to Gender.MASCULINE
+            "kind" -> "CHILD" to null
             else -> relation.trim().uppercase(Locale.ROOT) to null
         }
         val matching = edges.filter {
