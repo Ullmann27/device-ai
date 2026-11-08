@@ -20,7 +20,7 @@ class Ctx3Context {
  fun stateSize()=focus.size
  fun decide(input:String,entities:List<Ctx3Entity>,sourceVersion:String):Ctx3Decision {
   if(version!=sourceVersion){reset();version=sourceVersion}
-  age++;if(age>32)focus=emptyList()
+  age++;if(age>32){focus=emptyList();selectedFocusIndex=-1}
   if(input.isBlank()||input.length>512||entities.size>128)return Ctx3Decision.Clarify("INPUT_OR_REGISTRY_LIMIT")
   if(entities.any { it.label.isBlank()||it.label.length>80||it.aliases.size>8||it.sourceIds.isEmpty()||it.sourceIds.size>128 })
    return Ctx3Decision.Clarify("INVALID_SOURCE_REGISTRY")
@@ -56,12 +56,12 @@ class Ctx3Context {
   val unknown=Regex("[\\p{L}\\p{N}]+").findAll(input).map { it.value }.withIndex().any {
    it.index !in covered&&it.value.first().isUpperCase()&&it.value.lowercase(Locale.ROOT) !in ordinary
   }
-  if(unknown){focus=emptyList();return if(positive.isNotEmpty())Ctx3Decision.Clarify("MIXED_UNKNOWN_REFERENT")else Ctx3Decision.Abstain("NO_CONFIRMED_ENTITY")}
+  if(unknown){focus=emptyList();selectedFocusIndex=-1;return if(positive.isNotEmpty())Ctx3Decision.Clarify("MIXED_UNKNOWN_REFERENT")else Ctx3Decision.Abstain("NO_CONFIRMED_ENTITY")}
   if(positive.isNotEmpty()) {
-   if(rejected.isNotEmpty()&&positive.size!=1){focus=emptyList();return Ctx3Decision.Clarify("MULTIPLE_REPLACEMENTS")}
+   if(rejected.isNotEmpty()&&positive.size!=1){focus=emptyList();selectedFocusIndex=-1;return Ctx3Decision.Clarify("MULTIPLE_REPLACEMENTS")}
    // A single surface span which denotes several entities is not a multi-entity question.
    if(mentions.filterNot { negative(it.start) }.groupBy { it.start to it.end }.any { it.value.map { m->m.e.id }.distinct().size>1 })
-    {focus=emptyList();return Ctx3Decision.Clarify("ALIAS_COLLISION")}
+    {focus=emptyList();selectedFocusIndex=-1;return Ctx3Decision.Clarify("ALIAS_COLLISION")}
    focus=positive.takeLast(8);selectedFocusIndex=if(focus.size==1)0 else -1;age=0
    return Ctx3Decision.Query(input,positive.flatMap { it.sourceIds }.toSet())
   }
@@ -87,7 +87,7 @@ class Ctx3Context {
 
   val ref=words.withIndex().firstOrNull { it.value in setOf("er","ihn","ihm","sie","es","damit","dazu","darüber","des") }
   if(ref!=null) {
-   if(negative(ref.index)||trailingCorrection){focus=emptyList();return Ctx3Decision.Clarify("REJECTED_PRONOUN")}
+   if(negative(ref.index)||trailingCorrection){focus=emptyList();selectedFocusIndex=-1;return Ctx3Decision.Clarify("REJECTED_PRONOUN")}
    val possible=focus.filter { ref.value in it.pronouns || ref.value in setOf("damit","dazu","darüber","des") }.distinctBy { it.id }
    if(possible.size!=1)return Ctx3Decision.Clarify("NO_UNIQUE_REFERENT")
    val target=possible.single();selectedFocusIndex=focus.indexOfFirst { it.id==target.id };age=0
