@@ -212,15 +212,13 @@ class JarvisWorkWindow(
         accent: Int = Colors.cyan,
         emblem: android.graphics.drawable.Drawable? = null,
         crystal: Boolean = false,
-        depthLayers: Int = 0,
-        onClosed: () -> Unit = {}
+        depthLayers: Int = 0
     ): Boolean {
         if (disposed || !isShowing || deliveringFrame || isInLayout) return false
         if (body.parent != null && body.parent !== scroll) return false
         generation++
         pendingCleanup?.let { removeCallbacks(it) }
         pendingCleanup = null
-        this.onClosed = onClosed
         this.onOpened = {}
         this.emblem = emblem?.mutate()
         this.crystal = crystal && emblem != null
