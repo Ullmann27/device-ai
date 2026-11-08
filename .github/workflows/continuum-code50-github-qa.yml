@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - chatgpt/code50-qa-staging-20261108
-      - chatgpt/code50-node22-repair-20261108
   workflow_dispatch:
 
 permissions:
@@ -59,7 +58,7 @@ jobs:
           retention-days: 14
 
   android-host:
-    if: github.repository == 'Ullmann27/device-ai' && github.ref_name == 'chatgpt/code50-qa-staging-20261108'
+    if: github.repository == 'Ullmann27/device-ai'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:
