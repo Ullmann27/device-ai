@@ -264,6 +264,8 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var cameraWindow: AvatarFraming.Window? = null
     private var cameraDirection = 0f
     private var cameraProfile = AvatarCameraFraming.Profile.LEGACY
+    private var cameraProfileBlendFrom: AvatarFraming.Window? = null
+    private var cameraProfileBlendStartedAtMs = -1L
 
     /** Actual accepted work-window presentation only. */
     fun setWorkWindowCamera(
@@ -275,13 +277,21 @@ class ContinuumHologramView @JvmOverloads constructor(
         require(direction.isFinite() && direction in -1f..1f)
         // The face and the orb stay free while a window works: the sequence cards dock into its status strip.
         workWindowActive = active
-        if (active) cameraProfile = profile
+        val now = SystemClock.uptimeMillis()
+        if (active && profile != cameraProfile) {
+            // Freeze the exact currently visible projection before changing profile. The next frames blend
+            // from that safe window into the new safe target while the existing camera motion keeps running.
+            updateAuraFraming()
+            cameraProfileBlendFrom = cameraWindow
+            cameraProfileBlendStartedAtMs = now
+            cameraProfile = profile
+        }
         cockpitSequence?.setCardsDocked(active)
         if (immediate || !canAnimateFrame() || !hasWindowFocus() || !headEnabled || cockpitHeadBounds == null) {
             resetCamera()
         } else {
             if (active) cameraDirection = direction
-            cameraMotion.setWorkActive(active, SystemClock.uptimeMillis())
+            cameraMotion.setWorkActive(active, now)
         }
         invalidate()
     }
@@ -289,6 +299,8 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun resetCamera() {
         cameraMotion.reset()
         cameraDirection = 0f
+        cameraProfileBlendFrom = null
+        cameraProfileBlendStartedAtMs = -1L
         cameraWindow = cameraFraming?.rest
         cameraWindow?.let { auraScale = it.headScale.toFloat(); auraAnchorEffective = it.anchorX.toFloat() }
     }
@@ -346,7 +358,19 @@ class ContinuumHologramView @JvmOverloads constructor(
             cameraFraming = AvatarCameraFraming(focus, w.toDouble() / h,
                 headAnchorX.toDouble(), headCloseUp.toDouble(), headKeepOut, cameraProfile)
         }
-        cameraWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection)
+        val targetWindow = requireNotNull(cameraFraming).sample(cameraMotion.progress, cameraDirection)
+        val fromWindow = cameraProfileBlendFrom
+        cameraWindow = if (fromWindow != null && cameraProfileBlendStartedAtMs >= 0L) {
+            val raw = ((SystemClock.uptimeMillis() - cameraProfileBlendStartedAtMs) / 260f).coerceIn(0f, 1f)
+            if (raw >= 1f) {
+                cameraProfileBlendFrom = null
+                cameraProfileBlendStartedAtMs = -1L
+                targetWindow
+            } else {
+                val smooth = raw * raw * (3f - 2f * raw)
+                AvatarCameraFraming.blend(fromWindow, targetWindow, smooth)
+            }
+        } else targetWindow
         val window = requireNotNull(cameraWindow)
         auraScale = window.headScale.toFloat(); auraAnchorEffective = window.anchorX.toFloat()
     }
