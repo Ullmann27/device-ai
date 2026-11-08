@@ -34,7 +34,7 @@ EXP-02 (testgesteuerter Bugfix), EXP-07 (adversarialer Holdout), EXP-12 (korrekt
 - Gepushte produktive Code-Commits: `31a39852516506de529f0f63805c1687e48bc0ce`, `7a014c1245f4ab359d21c368374fcc73228164dd`. Tests: `d6de443b7c278652f1a38c22221da7381d9ea84b`, `14dc3294c5f06ccf07e3df0e325ef53aa33a454d`.
 
 ## Tatsächliche Prüfung
-- **SOURCE_CONTRACT_TEXT_CHECK**: 10/10 String-/Reihenfolgeprüfungen auf den echten über GitHub gefetchten Dateien **PASS**. Kein Ersatz für Kotlin-Ausführung, JUnit oder Android.
+- **SOURCE_CONTRACT_TEXT_CHECK**: 16/16 String-/Reihenfolgeprüfungen auf den echten über GitHub gefetchten Dateien **PASS**. Kein Ersatz für Kotlin-Ausführung, JUnit oder Android.
 - JUnit/Kotlin-Kompilation: **NOT_RUN**. Native Android SDK/Gradle nicht in der vorhandenen lokalen Shell; Internet-DNS-Zugriff auf GitHub dort nicht verfügbar.
 - Node-Cockpit-/Voice-Verträge: **NOT_RUN** in diesem Zweig. Die unabhängigen PRs #627 und #629 melden jeweils initiale lokale Node-Fehler im alten same-session-Testvertrag; diese Ergebnisse nicht als Erfolg von #628 übertragen.
 - Render-Service `srv-dbnual1srm7s73afh69g` ist auf `chatgpt/code50-recall-qa-fix-20261108` (nicht #628) konfiguriert. Letztes Ereignis: `pipeline_minutes_exhausted` am 08.11.2026 02:58:29 UTC; vor Checkout/Gradle. Kein Deploy ausgelöst.
@@ -60,3 +60,12 @@ Erst reproduzierbar grüner exakter Quellenstand; anschließend Hardware- und Pu
 - #627: eigener Abnahme-/Routing-Zweig; ändert auch `OwnerAppActionFlowTest` und zwei Node/UI-Verträge. Bei Integration Konflikte auf Testebene fachlich vereinigen, **nicht** blind überschreiben.
 - #629: separate Node-/Gradle-Quellenabnahme (Handoff). Seine Testbefunde bleiben unabhängig.
 - PR #603 ist die Integrationsbasis; **kein Merge nach main**. Auch diesen Draft-PR erst nach tatsächlicher QA integrieren.
+
+## Zusätzliche Kontext-P0-Härtung
+Ein verworfener nur fuzzy passender App-Kandidat darf auch nicht später durch ein Referenzpronomen (`öffne sie`) zum scheinbar bestätigten Kandidaten werden. `OwnerAppActionFlow.canRetainAppLookupContext` akzeptiert im ambigen Pfad nur frisch verifizierte exakte Treffer; `AgentActivity.Step.Done` speichert daher keine fuzzy Rückfall-Kandidaten. Die seitens der Benutzerin/des Benutzers bewusst gewählte explizite fuzzy Suche bleibt unverändert möglich.
+- Produktiv-Commits: `6da05fe3b3973d4b41ba5ee84c52874bad6b55fb`, `ab84c6c23d9240f2e1f8687eef5c90a0200485f2`.
+- Test-Commit: `3ac997f2b8eb3c4970a1c21c5fa3bae25fa18da5` (Cacheable-/Non-cacheable-Referenz-Pfade).
+- **Kein eigener Android-Compile-/Laufbeleg.** Textprüfungen sind strukturelle Plausibilitätsbelege, kein funktionaler Test.
+
+## Offener Freigabestatus
+`SOURCE_INTEGRATED` im isolierten Draft-PR #628; nicht in PR #603 gemerged. PR #603 Reviewer-Fund bleibt bis integrierter, getesteter Reparatur offen. Render kann derzeit keine QA starten; Originalsignatur und Fold7 nicht geprüft. Keine Code50-APK.
