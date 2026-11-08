@@ -1,0 +1,28 @@
+name: Airbus 2100 integration
+
+on:
+  push:
+    branches:
+      - codex/airbus2100-hollywood-fui-20261108
+    paths:
+      - scripts/airbus2100_probe.py
+      - scripts/apply_airbus2100.py
+      - .github/workflows/airbus2100-integration.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: airbus2100-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Map integration points
+        run: python3 scripts/airbus2100_probe.py
