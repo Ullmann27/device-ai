@@ -50,6 +50,10 @@ object HollywoodFuiCinematicsPreview {
                 render(root, out, scene, scale, "settled-$name", HollywoodFuiConstruct.frame(2400L), 2400L, budget, true); count++
             }
             render(root, out, scene, scale, "reduced-motion", HollywoodFuiConstruct.frame(0L, reducedMotion = true), 0L,
+                budgets[0].second, working = true, reduced = true); count++
+            render(root, out, scene, scale, "fallback", HollywoodFuiConstruct.frame(900L), 900L,
+                budgets[0].second, working = true, enabled = false); count++
+            render(root, out, scene, scale, "idle", HollywoodFuiConstruct.frame(2400L), 2400L,
                 budgets[0].second, working = false); count++
         }
         println("$count production-painter construct frames (Java2D stand-in, tilt approximated by shear; not device FPS)")
@@ -57,54 +61,83 @@ object HollywoodFuiCinematicsPreview {
     }
 
     private fun render(root: File, out: File, scene: Scene, scale: Float, label: String, frame: HollywoodFuiConstruct.Frame,
-                       timeMs: Long, budget: HollywoodFuiCinematics.Budget, working: Boolean) {
+                       timeMs: Long, budget: HollywoodFuiCinematics.Budget, working: Boolean,
+                       reduced: Boolean = !budget.animate, enabled: Boolean = true) {
         val image = BufferedImage((scene.widthDp * scale).toInt(), (scene.heightDp * scale).toInt(), BufferedImage.TYPE_INT_ARGB)
         val g = image.createGraphics()
         g.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
         g.paint = GradientPaint(0f, 0f, Color(0x03, 0x07, 0x16), 0f, image.height.toFloat(), Color(0x05, 0x0B, 0x22))
         g.fillRect(0, 0, image.width, image.height)
         g.scale(scale.toDouble(), scale.toDouble())
-        // Stand-in for the avatar core position (a soft cyan disc), so the beam has a visible origin.
-        g.paint = Color(0x00, 0xE5, 0xFF, 40); g.fillOval((scene.originX - 48f).toInt(), (scene.originY - 48f).toInt(), 96, 96)
-        g.paint = Color(0xAB, 0xF8, 0xFF, 160); g.fillOval((scene.originX - 5f).toInt(), (scene.originY - 5f).toInt(), 10, 10)
+        // A labelled geometry marker, not a replacement avatar or an alleged device capture.
+        g.paint = Color(0xAB, 0xF8, 0xFF, 160)
+        g.font = g.font.deriveFont(11f)
+        g.drawString("Ursprung (kein Avatar gerendert)", 12f, scene.originY - 16f)
+        g.drawLine((scene.originX - 4f).toInt(), scene.originY.toInt(), (scene.originX + 4f).toInt(), scene.originY.toInt())
 
-        val box = scene.box
-        val side = if (scene.originX < box.centerX - 8f) -1f else if (scene.originX > box.centerX + 8f) 1f else 0f
-        val saved = g.transform
-        if (frame.tiltDegrees != 0f && side != 0f) {
-            // Shear/scale stand-in for Camera.rotateY around the box centre (sign convention as on device: unverified).
-            val radians = Math.toRadians((frame.tiltDegrees * side).toDouble())
-            val t = AffineTransform()
-            t.translate(box.centerX.toDouble(), box.centerY.toDouble())
-            t.scale(Math.cos(radians), 1.0)
-            t.shear(0.0, Math.sin(radians) * .35)
-            t.translate(-box.centerX.toDouble(), -box.centerY.toDouble())
-            g.transform(t)
-        }
-        val painter = Java2DContinuumPainter(g, File(root, "app/src/main/assets"))
-        val cinematics = HollywoodFuiCinematics.Painterly(JarvisDesign.Colors.cyan)
-        val bloom = budget.bloom && budget.animate
-        cinematics.drawGlassLayers(painter, box, frame, 6f)
-        cinematics.drawAnchor(painter, scene.originX, scene.originY, box, frame, bloom)
-        painter.save(); painter.clipRect(box.left, box.top, box.right, box.bottom)
-        cinematics.drawGridAndScan(painter, box, if (budget.animate) frame else frame.copy(scanEnabled = false), bloom)
-        // Front glass of the real window (drawn by JarvisWorkWindow on device) as a dark pane so the stack reads.
-        val dataAlpha = frame.data * frame.closeData
-        if (dataAlpha > 0f) {
-            painter.fillRoundRect(box.left, box.top, box.right, box.bottom, 6f,
-                Fill.Solid(Argb.of(120, 0x04, 0x0C, 0x1E)), dataAlpha * .6f)
-        }
-        painter.restore()
-        cinematics.drawMotesAndEnergy(painter, box, frame, timeMs, if (budget.animate) budget.motes else 0, 7,
-            working, bloom, 6f)
-        cinematics.drawBrackets(painter, box, frame.brackets * frame.closeFrame, bloom)
-        g.transform = saved
+        paintConstruct(g, root, scene.box, scene.originX, scene.originY, frame, timeMs, budget, working, reduced, enabled)
         g.color = Color(0xAB, 0xF8, 0xFF, 200)
         g.font = g.font.deriveFont(9f)
+        g.drawString("Java2D | KEIN Fold7-/Filament-Nachweis | native Inhalte fehlen", 8f, scene.heightDp - 24f)
         g.drawString("$label  anchor=%.2f brackets=%.2f grid=%.2f glass=%.2f data=%.2f tilt=%.1f° pulse=%.2f close=%.2f/%.2f/%.2f"
             .format(frame.anchor, frame.brackets, frame.grid, frame.glass, frame.data, frame.tiltDegrees, frame.pulse,
                 frame.closeData, frame.closeGlass, frame.closeFrame), 8f, scene.heightDp - 8f)
         g.dispose()
         ImageIO.write(image, "png", File(out, "${scene.name}-$label.png"))
+    }
+
+    /** Same V2 layer order and flight for phase previews and measurements; native content is only a placeholder. */
+    @JvmStatic fun paintConstruct(g: java.awt.Graphics2D, root: File, box: HollywoodFuiCinematics.Box,
+                                  originX: Float, originY: Float, frame: HollywoodFuiConstruct.Frame, timeMs: Long,
+                                  budget: HollywoodFuiCinematics.Budget, working: Boolean,
+                                  reduced: Boolean = !budget.animate, enabled: Boolean = true) {
+        val side = if (originX < box.centerX - 8f) -1f else if (originX > box.centerX + 8f) 1f else 0f
+        val saved = g.transform
+        val painter = Java2DContinuumPainter(g, File(root, "app/src/main/assets"))
+        val cinematics = HollywoodFuiCinematics.Painterly(JarvisDesign.Colors.cyan)
+        val bloom = budget.bloom && !reduced
+        if (enabled) cinematics.drawAnchor(painter, originX, originY, box, frame, bloom)
+        val open = if (reduced || !enabled) 1f else
+            HollywoodFuiConstruct.flight(timeMs) * frame.closeFrame
+        val source = HollywoodFuiCinematics.Box(originX - 24f, originY - 16f,
+            originX + 24f, originY + 16f)
+        g.translate(((source.left - box.left) * (1f - open)).toDouble(),
+            ((source.top - box.top) * (1f - open)).toDouble())
+        g.translate(box.left.toDouble(), box.top.toDouble())
+        g.scale(((source.width + (box.width - source.width) * open) / box.width).toDouble(),
+            ((source.height + (box.height - source.height) * open) / box.height).toDouble())
+        g.translate(-box.left.toDouble(), -box.top.toDouble())
+        val tilt = if (reduced || !enabled) 0f else HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES *
+            (1f - open) * (1f - open) * (1f - open) * side
+        if (tilt != 0f) {
+            // Shear/scale stand-in for Camera.rotateY around the box centre (sign convention as on device: unverified).
+            val radians = Math.toRadians(tilt.toDouble())
+            val t = AffineTransform()
+            t.translate(box.left.toDouble(), box.top.toDouble())
+            t.scale(Math.cos(radians), 1.0)
+            t.shear(0.0, Math.sin(radians) * .35)
+            t.translate(-box.left.toDouble(), -box.top.toDouble())
+            g.transform(t)
+        }
+        if (enabled) cinematics.drawGlassLayers(painter, box, frame, 6f, budget.glassLayers)
+        painter.save(); painter.clipRect(box.left, box.top, box.right, box.bottom)
+        if (enabled) cinematics.drawGridAndScan(painter, box,
+            frame.copy(grid = frame.grid * (1f - frame.data), scanEnabled = frame.scanEnabled && !reduced), bloom)
+        painter.restore()
+        if (enabled) {
+            cinematics.drawMotesAndEnergy(painter, box, frame, timeMs,
+                if (!reduced && (working || !frame.settled)) budget.motes else 0, 7,
+                working && !reduced, bloom, 6f)
+            cinematics.drawBrackets(painter, box, frame.brackets * frame.closeFrame, bloom)
+        }
+        // Front glass of the real window (drawn by JarvisWorkWindow on device) as a dark pane so the stack reads.
+        val dataAlpha = frame.data * frame.closeData
+        if (dataAlpha > 0f) {
+            painter.fillRoundRect(box.left, box.top, box.right, box.bottom, 6f,
+                Fill.Solid(Argb.of(240, 0x04, 0x0C, 0x1E)), dataAlpha)
+            painter.drawText("NATIVER INHALT / HIER NICHT GERENDERT", box.left + 12f, box.top + 28f,
+                TextStyle(FontFamily.TEXT, 400, 10f), Fill.Solid(JarvisDesign.Colors.text), alpha = dataAlpha)
+        }
+        g.transform = saved
     }
 }

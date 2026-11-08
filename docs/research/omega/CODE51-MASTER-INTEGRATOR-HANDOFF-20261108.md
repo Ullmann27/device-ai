@@ -77,3 +77,51 @@ RED on base implementation: 32 focused JUnit tests, 1 failure (second retry
 1600 instead of 800 ms); Node lifecycle regression detects missing diagnostic
 reset. GREEN and exact source SHA are recorded at the next acceptance checkpoint.
 No audio, native inference or device behavior is proved by these host tests.
+
+Verified speech source: `c8d5d0b7de6348525e5bc844051088b79f13ab77`
+(`SOURCE_INTEGRATED`, `HOST_TESTED`): 33 focused JUnit and 19 Node checks.
+
+## Graphics and measurement integration
+
+Imported #659's three commits through `452591edd31215fecea7a3110036157a7c1ed438`
+onto #658 without replaying #651. The canonical `JarvisWorkWindowHost` connects
+the native window's existing shell clock to `HollywoodFuiStageOverlay.present`.
+`JarvisShellView` applies the shared motion/thermal budget and cadence.
+The overlay sits below native content and clips protected avatar/input bounds.
+Original avatar, orb, seven world profiles and event sources are unchanged.
+`JarvisCinematicSettings` provides a reversible presentation-only fallback.
+
+Fixed the missing `RobolectricTestRunner` import. Updated two old close-lifecycle
+assertions to the intentional first-supplied-frame start and full 420 ms close;
+they still require deferred hierarchy cleanup and exactly-once callbacks.
+UI execution remains `NOT_RUN`, not passed by the pure painter tests.
+
+From #661 only the measurement tool/script and corrected documentation are
+imported, not its old images/JSON or obsolete #653 preview stack.
+The complete V2 preview shares `paintConstruct` with measurement; all **40/40**
+PNG files are byte-identical before/after extraction. Synthetic checks freeze
+the actual HSV-value threshold and 180-degree control. JSON now says
+`hue-rotated-180`; documentation matches edge snapping, denominator floors and
+weighted RGB (not physical linear-light luminance).
+
+Focused graphics: **19 JUnit PASS**, **7 metric checks PASS**. Fresh one-sided
+reference gate PASS with both negative controls failing as intended. The
+fold-settled sample has rimL 0.2871, interiorL 0.0455, rimContrast 6.3126 and
+litRimShare 0.6790. This is **not reference equivalence**: interior remains
+too dark and contrast/cyan share too high versus the design reference.
+Viewed fold 760/2400 ms and phone low-budget frames: separate cyan/violet rims,
+subtle diagonal reflection, no persistent source beam; native content is only
+a placeholder. Java2D shear is not Android Camera, Filament or Fold7 evidence.
+
+Commands:
+
+```sh
+bash scripts/hollywood-fui-cinematics-preview.sh <external-output>
+bash scripts/hollywood-fui-reference-fidelity.sh <external-output> code51-v2
+```
+
+JDK21/Kotlin2.2.21; use the actual production UI sources plus
+`HollywoodFuiConstructTest`, `HollywoodFuiCinematicsTest`,
+`HollywoodFuiMaterialRegressionTest` with JUnit4.13.2. Final complete-source
+runner and SHA-bound evidence follow. Rollback graphics independently of
+speech; the runtime switch disables film layers without changing tool grants.

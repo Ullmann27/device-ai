@@ -13,6 +13,7 @@ import android.widget.FrameLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import at.heinz.deviceai.ui.JarvisWorkWindow
+import at.heinz.deviceai.ui.HollywoodFuiConstruct
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -104,6 +105,8 @@ class JarvisWorkWindowLifecycleUiTest {
         f.draw(2_000)
         f.window.close()
         f.draw(2_400)
+        assertTrue("First supplied close frame starts the close clock", f.window.isShowing)
+        f.draw(2_400 + HollywoodFuiConstruct.CLOSE_END_MS)
         assertFalse(f.window.isShowing)
         assertEquals(View.GONE, f.window.visibility)
         assertTrue(f.clock.listeners.isEmpty())
@@ -130,6 +133,8 @@ class JarvisWorkWindowLifecycleUiTest {
         f.draw(2_000)
         f.window.close()
         f.draw(2_400)
+        assertTrue(f.window.isShowing)
+        f.draw(2_400 + HollywoodFuiConstruct.CLOSE_END_MS)
         assertTrue(f.open(second) { newCloses++ })
         shadowOf(Looper.getMainLooper()).idle()
         assertTrue(f.window.isShowing)
