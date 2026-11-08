@@ -24,6 +24,12 @@ class JarvisActionScenesTest {
             JarvisActionScenes.forCentre("Logik und Planung")!!.footprint)
         assertEquals(JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY,
             JarvisActionScenes.forCentre("Entwicklungszentrum")!!.footprint)
+        // The cockpit UI tests derive their expected deck from this mapping, so it is pinned here independently.
+        assertEquals(JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY,
+            JarvisActionScenes.forCentre("Lernzentrum")!!.footprint)
+        for (title in listOf("Systemstatus", "Gedächtniszentrum", "Web und Quellen"))
+            assertEquals(title, JarvisActionScenes.WorkspaceFootprint.MEDIUM_TERMINAL,
+                JarvisActionScenes.forCentre(title)!!.footprint)
     }
 
     @Test fun centresEmergeFromTheTouchedTileOrBesideTheFace() {
