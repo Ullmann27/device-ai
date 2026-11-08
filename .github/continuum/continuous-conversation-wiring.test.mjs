@@ -53,7 +53,9 @@ test('owner decision: a microphone tap starts hands-free talk; long press keeps 
 
 test('listening resumes only after the bound reply and never over dialogs or approvals', () => {
   const bootstrap = body('private fun speakBootstrap(');
-  assert.match(bootstrap, /speakableChunks\(message, maxChunks = 15\)/);
+  assert.match(activity, /private const val SPEECH_QUEUE_MAX_CHUNKS = 32/);
+  assert.match(activity, /private const val SPEECH_CONTENT_MAX_CHUNKS = SPEECH_QUEUE_MAX_CHUNKS - 1/);
+  assert.match(bootstrap, /speakableChunks\(\s*message, maxChunks = SPEECH_CONTENT_MAX_CHUNKS\)/);
   assert.match(bootstrap, /if \(chunks\.truncated\) chunks\.pieces \+ SPOKEN_REST_IN_CHAT else chunks\.pieces/);
   assert.match(bootstrap, /if \(!speechChunks\.beginTurn\(turn\)\) return\s*pieces\.forEachIndexed \{ index, piece ->\s*speechChunks\.appendApproved\(turn, "\$turn-\$index", piece, approvalEvidenceId = "visible-final-reply"\)\s*\}\s*speechChunks\.markLastChunkSubmitted\(turn\)\s*speechTurnId = turn\s*if \(!speakNextChunk\(turn, TextToSpeech\.QUEUE_FLUSH\)\) stopVoiceAnimation\(\)/);
   assert.doesNotMatch(bootstrap, /assistantSpeechQueued\(/);

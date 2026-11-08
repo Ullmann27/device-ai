@@ -8,6 +8,11 @@ import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {BacklogStore} from './development-backlog.mjs';
 
+// CLI fixture repositories must ignore host-global Git clean filters.
+// The production discovery guard still rejects repository-local filters.
+process.env.GIT_CONFIG_NOSYSTEM = '1';
+process.env.GIT_CONFIG_GLOBAL = '/dev/null';
+
 const cli=fileURLToPath(new URL('./branch-bots-cli.mjs',import.meta.url));
 function fixture(t){
  const temp=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-branch-cli-')),root=path.join(temp,'repo'),state=path.join(temp,'state');fs.mkdirSync(root);
