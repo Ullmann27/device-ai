@@ -2387,13 +2387,13 @@ class AgentActivity : Activity() {
                     val stay = activeWorkArea == ContinuumWorkArea.START
                     if (remembered == null) {
                         addAssistantMessage("Die PDF ließ sich nicht lesen (${failure.message ?: failure.javaClass.simpleName}). " +
-                            "An der Datei wurde nichts verändert.", false, keepCockpit = stay)
+                            "An der Datei wurde nichts verändert.", true, keepCockpit = stay)
                         return@fold
                     }
                     val name = remembered.source ?: "die zuletzt verwendete PDF"
                     addAssistantMessage("Die zuletzt verwendete PDF „$name“ lässt sich nicht mehr lesen – vermutlich " +
                         "verschoben oder gelöscht. An der Datei wurde nichts verändert. Ich zeige dir die Auswahl.",
-                        false, keepCockpit = stay)
+                        true, keepCockpit = stay)
                     val attempt = workJournal.newEpisode(at.heinz.deviceai.cognitive.CockpitWorkJournal.Kind.DOCUMENT,
                         request.ifBlank { "Letzte PDF öffnen" }, at.heinz.deviceai.cognitive.CockpitWorkJournal.State.FAILED,
                         name, documentUri = uri.toString())
