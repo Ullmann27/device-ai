@@ -131,7 +131,7 @@ class JarvisWorkWindowHost(
                 currentGaze = null
                 home.hologram.setWorkWindowCamera(false)
                 cameraHome = null
-                home.setDeckCleared(false)
+                home.setWorkspaceFootprint(JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE)
                 unregisterBack()
                 onClosed()
             }
@@ -140,8 +140,8 @@ class JarvisWorkWindowHost(
         current = window
         currentId = id
         currentGaze = gaze(first)
-        // Airbus deck: the cockpit makes room for the window and gets it back after the window has folded away.
-        home.setDeckCleared(true)
+        // Airbus deck: footprint controls how much of the cockpit physically clears for this real window.
+        home.setWorkspaceFootprint(scene.footprint)
         val initialX = background?.scrollX ?: 0
         val initialY = background?.scrollY ?: 0
         background?.setOnScrollChangeListener { _, x, y, _, _ ->

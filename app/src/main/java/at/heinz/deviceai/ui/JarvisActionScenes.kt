@@ -10,6 +10,7 @@ import at.heinz.deviceai.ui.JarvisDesign.Colors
  * carries no data. The window body shows only what the real source returned.
  */
 object JarvisActionScenes {
+    enum class WorkspaceFootprint { CONVERSATION_IDLE, MEDIUM_TERMINAL, FULL_MISSION_BAY }
     enum class Kind { STATUS, MEMORY, PLANNING, WEB, LEARNING, DEVELOPMENT, APP, FILES, SCREEN, GENERIC }
 
     /** Where the window emerges: the tile the owner touched, or the point beside the face Jarvis glances at first. */
@@ -18,7 +19,8 @@ object JarvisActionScenes {
         object BesideFace : Origin()
     }
 
-    data class Scene(val kind: Kind, val origin: Origin, val accent: Int)
+    data class Scene(val kind: Kind, val origin: Origin, val accent: Int,
+                     val footprint: WorkspaceFootprint = JarvisActionScenes.footprintFor(kind))
 
     /** Centre title → kind and the START tile that opens it (null: no tile, the window emerges beside the face). */
     private val centres = mapOf(
@@ -56,6 +58,11 @@ object JarvisActionScenes {
         "read_logcat" -> Kind.DEVELOPMENT
         "web_search", "web_read" -> Kind.WEB
         else -> Kind.GENERIC
+    }
+
+    fun footprintFor(kind: Kind): WorkspaceFootprint = when (kind) {
+        Kind.PLANNING, Kind.LEARNING, Kind.DEVELOPMENT -> WorkspaceFootprint.FULL_MISSION_BAY
+        else -> WorkspaceFootprint.MEDIUM_TERMINAL
     }
 
     /** Leading colour of the trail and window rim; the rest of the gradient stays the shared cockpit material. */

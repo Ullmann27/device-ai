@@ -154,18 +154,24 @@ class JarvisShellView(context: Context) : View(context) {
     var shell: JarvisShellLayout.Shell? = null
         private set
 
-    /** Airbus deck: 0 = tiles and rows in place, 1 = cleared for an open work window (see JarvisDeckClearance). */
+    /** Airbus deck: tiles/secondary and mission rows move on separate bounded tracks. */
     var deckClearance = 0f
         private set
-    private var deckCleared = false
+    var missionClearance = 0f
+        private set
+    private var workspaceFootprint = JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
     private var deckFrameMs = -1L
 
-    fun setDeckCleared(cleared: Boolean) {
-        if (deckCleared == cleared) return
-        deckCleared = cleared
+    fun setWorkspaceFootprint(footprint: JarvisActionScenes.WorkspaceFootprint) {
+        if (workspaceFootprint == footprint) return
+        workspaceFootprint = footprint
         deckFrameMs = -1L
         invalidate()
     }
+
+    fun setDeckCleared(cleared: Boolean) = setWorkspaceFootprint(
+        if (cleared) JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY
+        else JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE)
 
     /**
      * Geometry for the size the view has now (dp), from the same cache onDraw uses – so a work window can be planned
@@ -203,15 +209,20 @@ class JarvisShellView(context: Context) : View(context) {
         textPainter.fontScale = font
         canvas.save(); canvas.scale(d, d)
         val sceneTime = if (ambientMotion(scale)) now else 0L
-        val deckMoving = (deckCleared && deckClearance < 1f) || (!deckCleared && deckClearance > 0f)
+        val tileTarget = if (workspaceFootprint == JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE) 0f else 1f
+        val missionTarget = if (workspaceFootprint == JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY) 1f else 0f
+        val deckMoving = kotlin.math.abs(deckClearance - tileTarget) > .0001f ||
+            kotlin.math.abs(missionClearance - missionTarget) > .0001f
         if (deckMoving) {
             val frame = if (deckFrameMs < 0L) 0L else now - deckFrameMs
-            deckClearance = JarvisDeckClearance.step(deckClearance, deckCleared, (frame / scale.coerceAtLeast(.05f)).toLong(),
-                motionAllowed(scale))
+            val elapsed = (frame / scale.coerceAtLeast(.05f)).toLong()
+            val animate = motionAllowed(scale)
+            deckClearance = JarvisDeckClearance.step(deckClearance, tileTarget, elapsed, animate)
+            missionClearance = JarvisDeckClearance.step(missionClearance, missionTarget, elapsed, animate)
         }
         deckFrameMs = now
         JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true,
-            deckClearance = deckClearance)
+            deckClearance = deckClearance, missionClearance = missionClearance)
         canvas.restore()
         var workWindowMoving = false
         val effectiveScale = if (motionAllowed(scale)) scale else 0f
@@ -222,7 +233,8 @@ class JarvisShellView(context: Context) : View(context) {
         val total = JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, s.boxes.size + s.tileBoxes().size, animatorScale = scale)
         // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
         removeCallbacks(ambientFrame)
-        val deckStillMoving = (deckCleared && deckClearance < 1f) || (!deckCleared && deckClearance > 0f)
+        val deckStillMoving = kotlin.math.abs(deckClearance - tileTarget) > .0001f ||
+            kotlin.math.abs(missionClearance - missionTarget) > .0001f
         val frameDelay = motionBudgetProvider?.invoke()?.frameDelayMillis ?: 16L
         if (motionAllowed(scale) && (workWindowMoving || deckStillMoving || startMs >= 0 && elapsed < total)) {
             if (frameDelay <= 16L) postInvalidateOnAnimation() else postDelayed(ambientFrame, frameDelay)
@@ -238,7 +250,7 @@ class JarvisShellView(context: Context) : View(context) {
         textPainter.fontScale = resources.configuration.fontScale
         val save = canvas.save()
         canvas.scale(d, d)
-        JarvisShellRenderer.drawForeground(textPainter, s, content)
+        JarvisShellRenderer.drawForeground(textPainter, s, content, deckClearance)
         canvas.restoreToCount(save)
     }
 
