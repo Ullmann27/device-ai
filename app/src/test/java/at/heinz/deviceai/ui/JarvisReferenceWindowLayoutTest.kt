@@ -79,7 +79,7 @@ class JarvisReferenceWindowLayoutTest {
         assertEquals(2, shell.tileRows)
         assertEquals(listOf("chat", "memory", "logic", "research", "agents", "tasks", "web", "learning", "device", "system"),
             JarvisTiles.reference.map { it.target })
-        assertEquals(listOf("Gespräch", "Gedächtnis", "Denken und Planen", "Forschung", "Assistenten", "Aufgaben", "Internet", "Lernen", "Gerätesteuerung", "Systemstatus"),
+        assertEquals(listOf("Gespräch", "Gedächtnis", "Denken und Planen", "Forschung", "Mein KI-Team", "Aufgaben", "Internet", "Lernen", "Gerätesteuerung", "Systemstatus"),
             JarvisTiles.reference.map { it.label })
         assertTrue(shell.tileBoxes()[5].top > shell.tileBoxes()[4].bottom)
         assertEquals(shell.tileBoxes()[0].left, shell.tileBoxes()[5].left, .001f)
