@@ -3063,7 +3063,7 @@ class AgentActivity : Activity() {
 
     private var centerDialog: AlertDialog? = null
     private val workWindowHost by lazy { at.heinz.deviceai.ui.JarvisWorkWindowHost(this, avatarDirector) }
-    private data class LocalReasoningWorkScene(val turnId: String, val session: String, val generation: Int)
+    private data class LocalReasoningWorkScene(val turnId: String, val session: String, val generation: Long)
     private var localReasoningWorkScene: LocalReasoningWorkScene? = null
 
     private fun presentLocalReasoningWorkScene(turnId: String, request: String) {
