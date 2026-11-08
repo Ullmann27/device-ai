@@ -1149,6 +1149,13 @@ class AgentActivity : Activity() {
                     }
                 }
             },
+            onLiveData = { data ->
+                runOnUiThread {
+                    if (homeView === home && !isFinishing && !isDestroyed) {
+                        workWindowHost.setFuiLiveData(data)
+                    }
+                }
+            },
             onTelemetry = { value ->
                 runOnUiThread {
                     if (homeView === home && !isFinishing && !isDestroyed) {
