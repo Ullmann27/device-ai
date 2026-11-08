@@ -50,6 +50,31 @@ class ContinuousConversationRecoveryTest {
         assertEquals(Decision.IGNORE, mode.listenFailed(tokens.first(), session, silence = false, recoverable = true))
     }
 
+    @Test fun actualPostFailureDelaysMatchTheDocumentedSchedule() {
+        val mode = listening()
+        for (delay in listOf(800L, 800L, 1_600L)) {
+            assertEquals(Decision.RETRY_LISTEN, failBusy(mode))
+            assertEquals(delay, mode.recoveryRetryDelayMs())
+        }
+        assertEquals(Decision.PAUSE, failBusy(mode))
+        assertEquals(Decision.LISTEN, mode.ownerTap(session))
+        assertEquals(Decision.RETRY_LISTEN, failBusy(mode))
+        assertEquals(800L, mode.recoveryRetryDelayMs())
+    }
+
+    @Test fun exhaustedRecoveryReportsTheActualFailureWithoutClaimingARestart() {
+        for (failure in listOf(Failure.BUSY, Failure.AUDIO, Failure.SERVICE_FAILURE, Failure.START_FAILED)) {
+            val reason = ContinuousConversationMode.pauseReason(failure)
+            assertTrue(reason.startsWith(LocalSpeechInputPolicy.message(failure)))
+            assertTrue(reason.contains("beim nächsten Start"))
+            assertFalse(reason.contains("neu gestartet"))
+            if (failure != Failure.BUSY) assertFalse(reason.contains("belegt"))
+        }
+        assertEquals(LocalSpeechInputPolicy.message(Failure.PERMISSION),
+            ContinuousConversationMode.pauseReason(Failure.PERMISSION))
+        assertEquals("Ich habe nichts gehört.", ContinuousConversationMode.pauseReason(Failure.NO_INPUT))
+    }
+
     @Test fun ownerTapAfterBusyPauseKeepsColdRecommendationUntilConsumed() {
         val mode = listening()
         repeat(ContinuousConversationMode.MAX_RECOVERY_RETRIES + 1) { failBusy(mode) }

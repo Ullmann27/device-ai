@@ -593,6 +593,7 @@ class LiteRtLmLocalModelRuntime(
                 activeStart = null
                 engine = null
                 loadedModel = null
+                computeThreads = null
             }
             state = if (result.isSuccess) LocalModelState.EMPTY else LocalModelState.FAILED
         }

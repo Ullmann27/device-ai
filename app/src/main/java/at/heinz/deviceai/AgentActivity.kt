@@ -12698,11 +12698,8 @@ class AgentActivity : Activity() {
             }
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.PAUSE -> {
                 if (recoverable) onDeviceSpeech?.resetRecognizer()
-                pauseContinuousConversationNotice(when {
-                    silence -> "Ich habe nichts gehört."
-                    recoverable -> "Der lokale Spracherkenner war mehrfach belegt; ich habe ihn neu gestartet."
-                    else -> at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.message(failure)
-                })
+                pauseContinuousConversationNotice(
+                    at.heinz.deviceai.cognitive.ContinuousConversationMode.pauseReason(failure))
             }
             else -> Unit
         }

@@ -2,7 +2,7 @@
 
 Branch: `copilot/code51-master-integrator-20261108`.
 Base: #658, `f153758dfd19d1c12f6fe63b6c4c4bd1da95e4cb`.
-Remote audit: 2026-11-08. WIP; this initial checkpoint changes documentation only.
+Remote audit: 2026-11-08. Draft PR: #663. WIP.
 No main merge, signing, APK publication, device installation or research promotion.
 
 ## Source audit
@@ -63,3 +63,17 @@ SHA. Roll back with a new revert commit of the affected checkpoint, never
 reset/force-push another team's branch or discard existing bot/memory data.
 Persistent owner-selected chief/two-specialist execution is not implemented
 by #662 and is not claimed here.
+
+## Speech review repair
+
+The existing runtime clears `computeThreads` together with `loadedModel` only
+after a successful native close; failed closes still retain owned resources.
+ASR retries now match the documented post-increment 800/800/1600 ms schedule.
+The Activity uses the existing conversation policy for failure-specific pause
+text. `resetRecognizer()` destroys the pooled recognizer, so the message says
+the next start creates it anew, not that a restart already succeeded.
+
+RED on base implementation: 32 focused JUnit tests, 1 failure (second retry
+1600 instead of 800 ms); Node lifecycle regression detects missing diagnostic
+reset. GREEN and exact source SHA are recorded at the next acceptance checkpoint.
+No audio, native inference or device behavior is proved by these host tests.
