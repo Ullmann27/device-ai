@@ -567,8 +567,17 @@ class ContinuumHologramView @JvmOverloads constructor(
                 dialog.dismiss()
             }
             .setPositiveButton("15s Animationstest") { _, _ -> startAvatarProof() }
-            .setNeutralButton("Bewegung prüfen") { _, _ ->
-                Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
+            .setNeutralButton("Film-Effekte") { _, _ ->
+                AlertDialog.Builder(context).setTitle("Arbeitsfenster · Darstellung")
+                    .setSingleChoiceItems(arrayOf("Filmische Glaskonstruktion", "Statische Effekte · Rückfall"),
+                        if (at.heinz.deviceai.ui.JarvisCinematicSettings.enabled(context)) 0 else 1) { dialog, item ->
+                        presentation.edit().putBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.KEY, item == 0).apply()
+                        dialog.dismiss()
+                    }
+                    .setNeutralButton("Bewegung prüfen") { _, _ ->
+                        Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
+                    }
+                    .setNegativeButton("Schließen", null).show()
             }
             .setNegativeButton("Schließen", null).show()
     }

@@ -30,6 +30,10 @@ object HollywoodFuiConstruct {
     private const val CLOSE_GLASS_END_MS = 300L
     private const val CLOSE_FRAME_START_MS = 160L
 
+    /** Zero velocity at lift-off and landing; shared by the native panel and its construction layers. */
+    fun flight(elapsedMs: Long): Float =
+        easeInOutCubic(progress(elapsedMs, ANCHOR_END_MS, GLASS_END_MS))
+
     data class Frame(
         val anchor: Float,
         val brackets: Float,

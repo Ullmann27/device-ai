@@ -170,14 +170,27 @@ class JarvisWorkWindowHost(
         val id = "work-window-${++serial}"
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
         val fui = HollywoodFuiStageOverlay(activity)
+        fui.requestFrame = { shell.invalidate() }
+        window.onCinematicFrame = fui::present
+        val presentation = JarvisCinematicSettings.preferences(activity)
+        fun applyCinematics() {
+            val enabled = JarvisCinematicSettings.enabled(activity)
+            fui.cinematicEffectsEnabled = enabled
+            window.cinematicEffectsEnabled = enabled
+        }
+        applyCinematics()
+        val preferenceListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == JarvisCinematicSettings.KEY) applyCinematics()
+        }
+        presentation.registerOnSharedPreferenceChangeListener(preferenceListener)
         var releaseGeometry: () -> Unit = {}
         // One cockpit budget drives the decorative layer too (thermal/power/inference): no second quality model.
         fui.setRenderBudget(home.hologram.presentationRenderBudget())
         val budgetSubscription = runCatching {
             home.hologram.observePresentationBudget { fui.setRenderBudget(home.hologram.presentationRenderBudget()) }
         }.getOrNull()
-        container.addView(window, ViewGroup.LayoutParams(-1, -1))
         container.addView(fui, ViewGroup.LayoutParams(-1, -1))
+        container.addView(window, ViewGroup.LayoutParams(-1, -1))
         // A first layout at another size (rotation/fold/keyboard still pending) plans again on the real size.
         val refit = {
             if (current === window) plan(home, container, scene)?.also {
@@ -189,13 +202,14 @@ class JarvisWorkWindowHost(
                 currentCameraSide = cameraSide(it)
                 home.hologram.setWorkWindowCamera(true, currentCameraSide,
                     profile = cameraProfile(currentFootprint))
-                fui.retarget(it.plan.destination)
+                fui.retarget(it.plan.destination, it.plan.origin, it.plan.protectedBounds)
             }?.plan else null
         }
         val accepted = window.open(body, first.plan.origin, first.plan.destination, title, first.plan.protectedBounds,
             accent = scene.accent, emblem = emblem, refit = refit, crystal = crystal, depthLayers = inheritedLayers,
             recession = recession, onClosed = {
             releaseGeometry()
+            presentation.unregisterOnSharedPreferenceChangeListener(preferenceListener)
             runCatching { budgetSubscription?.close() }
             (window.parent as? ViewGroup)?.removeView(window)
             (fui.parent as? ViewGroup)?.removeView(fui)
@@ -218,6 +232,7 @@ class JarvisWorkWindowHost(
             }
         })
         if (!accepted) {
+            presentation.unregisterOnSharedPreferenceChangeListener(preferenceListener)
             runCatching { budgetSubscription?.close() }
             window.dispose()
             container.removeView(window)
@@ -230,7 +245,7 @@ class JarvisWorkWindowHost(
         currentId = id
         currentGaze = gaze(first)
         // The light anchor stands where the window really comes from (avatar core or the tapped control, #643 C).
-        fui.open(first.plan.destination, scene, first.plan.origin.centerX(), first.plan.origin.centerY())
+        fui.open(first.plan.destination, scene, first.plan.origin, first.plan.protectedBounds)
         // Airbus deck: footprint controls how much of the cockpit physically clears for this real window.
         currentFootprint = scene.footprint
         home.setWorkspaceFootprint(currentFootprint)

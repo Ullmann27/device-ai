@@ -1,8 +1,6 @@
 package at.heinz.deviceai.ui
 
 import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
@@ -33,6 +31,10 @@ object HollywoodFuiCinematics {
 
     /** Presentation budget of this layer, derived from the single cockpit budget (never a second quality model). */
     data class Budget(val motes: Int, val bloom: Boolean, val frameDelayMs: Long, val animate: Boolean) {
+        val glassLayers: Int get() = if (!animate) 1 else if (bloom) GLASS_LAYERS else 2
+        fun needsLiveFrames(working: Boolean, reducedMotion: Boolean, visible: Boolean,
+                            enabled: Boolean, closing: Boolean): Boolean =
+            animate && working && !reducedMotion && visible && enabled && !closing
         companion object {
             val FULL = Budget(MAX_MOTES, bloom = true, frameDelayMs = 16L, animate = true)
 
@@ -255,9 +257,9 @@ object HollywoodFuiCinematics {
             while (y < box.bottom) { p.drawLine(box.left, y, box.right, y, .7f, accentFill, .16f * a); y += step }
             p.drawLine(box.centerX, box.top, box.centerX, box.bottom, .7f, violet, .10f * a)
             p.drawLine(box.left, box.centerY, box.right, box.centerY, .7f, violet, .10f * a)
-            val cut = min(14f, min(box.width, box.height) * .12f)
-            val r = box.inset(1.2f)
             if (gridBox != box) {
+                val cut = min(14f, min(box.width, box.height) * .12f)
+                val r = box.inset(1.2f)
                 gridBox = box
                 gridPath.reset().moveTo(r.left + cut, r.top).lineTo(r.right - cut, r.top).lineTo(r.right, r.top + cut)
                     .lineTo(r.right, r.bottom - cut).lineTo(r.right - cut, r.bottom).lineTo(r.left + cut, r.bottom)
@@ -281,31 +283,4 @@ object HollywoodFuiCinematics {
         return h
     }
 
-    private fun alongRim(box: Box, distance: Float): Pair<Float, Float> {
-        var d = distance
-        if (d < box.width) return (box.left + d) to box.top
-        d -= box.width
-        if (d < box.height) return box.right to (box.top + d)
-        d -= box.height
-        if (d < box.width) return (box.right - d) to box.bottom
-        d -= box.width
-        return box.left to (box.bottom - d.coerceAtMost(box.height))
-    }
-
-    private fun outwardNormal(box: Box, x: Float, y: Float): Pair<Float, Float> {
-        val dl = abs(x - box.left); val dr = abs(box.right - x); val dt = abs(y - box.top); val db = abs(box.bottom - y)
-        val m = minOf(dl, dr, dt, db)
-        return when (m) {
-            dl -> -1f to 0f
-            dr -> 1f to 0f
-            dt -> 0f to -1f
-            else -> 0f to 1f
-        }
-    }
-
-    @Suppress("unused")
-    private fun polar(cx: Float, cy: Float, r: Float, deg: Float): Pair<Float, Float> {
-        val rad = Math.toRadians(deg.toDouble())
-        return (cx + cos(rad).toFloat() * r) to (cy + sin(rad).toFloat() * r)
-    }
 }
