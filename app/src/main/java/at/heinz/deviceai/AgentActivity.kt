@@ -3063,55 +3063,143 @@ class AgentActivity : Activity() {
 
     private var centerDialog: AlertDialog? = null
     private val workWindowHost by lazy { at.heinz.deviceai.ui.JarvisWorkWindowHost(this, avatarDirector) }
-    private data class LocalReasoningWorkScene(val turnId: String, val session: String, val generation: Long)
+    private val LOCAL_REASONING_GRACE_MS = 1_000L
+
+    private enum class WorkscenePhase(val rank: Int) {
+        IDLE(0), LOCAL_REASONING(1), TOOL_ACTIVE(2), AWAITING_DECISION(3), COMPLETED(4)
+    }
+
+    private class LocalReasoningWorkScene(
+        val turnId: String,
+        val session: String,
+        val generation: Long,
+        val request: String,
+        var promptCap: Int,
+        val modelHash: String,
+        val startedAtMillis: Long = android.os.SystemClock.uptimeMillis()
+    ) {
+        var shown = false
+        var phase = WorkscenePhase.LOCAL_REASONING
+        var status: TextView? = null
+        var telemetry: TextView? = null
+    }
+
     private var localReasoningWorkScene: LocalReasoningWorkScene? = null
 
-    private fun presentLocalReasoningWorkScene(turnId: String, request: String) {
+    private fun scheduleLocalReasoningWorkScene(turnId: String, request: String, promptCap: Int) {
         if (!foregroundLearningActive || isFinishing || isDestroyed || centerDialog?.isShowing == true) return
-        val home = homeView ?: return
-        val lease = LocalReasoningWorkScene(turnId, sessionId, workPresentationGeneration)
+        val lease = LocalReasoningWorkScene(
+            turnId = turnId,
+            session = sessionId,
+            generation = workPresentationGeneration,
+            request = request,
+            promptCap = promptCap,
+            modelHash = localRuntime.loadedModel?.sha256.orEmpty().take(12)
+        )
         localReasoningWorkScene = lease
-        val status = textView("Lokale Bearbeitung läuft · Ergebnis folgt erst nach Abschluss.", 13f, MUTED).apply {
-            tag = "jarvis-local-work-status:$turnId"
+        val open = Runnable { presentLocalReasoningWorkScene(lease) }
+        if (promptCap == at.heinz.deviceai.cognitive.LocalChatPromptBudget.FULL_CHARACTERS) open.run()
+        else homeView?.postDelayed(open, LOCAL_REASONING_GRACE_MS)
+    }
+
+    private fun promoteLocalReasoningWorkScene(turnId: String, promptCap: Int, contextCount: Int) {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.turnId != turnId || lease.phase.rank > WorkscenePhase.LOCAL_REASONING.rank) return
+        lease.promptCap = promptCap
+        if (promptCap == at.heinz.deviceai.cognitive.LocalChatPromptBudget.FULL_CHARACTERS && !lease.shown)
+            presentLocalReasoningWorkScene(lease)
+        updateLocalReasoningWorkScene(turnId, "Lokaler Denk-Kern",
+            "Kontextobjekte $contextCount · Budget ${promptBudgetLabel(promptCap)} · Modell ${lease.modelHash.ifBlank { "unbekannt" }}")
+    }
+
+    private fun presentLocalReasoningWorkScene(lease: LocalReasoningWorkScene) {
+        if (localReasoningWorkScene !== lease || lease.shown ||
+            sessionId != lease.session || workPresentationGeneration != lease.generation ||
+            lease.phase.rank > WorkscenePhase.LOCAL_REASONING.rank ||
+            !busy || !activeLocalRequest || !foregroundLearningActive ||
+            isFinishing || isDestroyed || centerDialog?.isShowing == true) return
+        val home = homeView ?: return
+        val status = textView("Kontext & Gedächtnis · lokaler Turn läuft.", 13f, MUTED).apply {
+            tag = "jarvis-local-work-status:${lease.turnId}"
         }
+        val telemetry = textView(
+            "Budget ${promptBudgetLabel(lease.promptCap)} · Modell ${lease.modelHash.ifBlank { "unbekannt" }} · 0.0 s",
+            11f, MUTED
+        ).apply { tag = "jarvis-local-work-telemetry:${lease.turnId}" }
         val progress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             isIndeterminate = true
-            tag = "jarvis-local-work-progress:$turnId"
+            tag = "jarvis-local-work-progress:${lease.turnId}"
             contentDescription = "Lokales Modell bearbeitet den Auftrag"
         }
         val model = localRuntime.loadedModel?.id?.take(48) ?: "lokales Modell"
         val body = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             addView(textView("AUFTRAG", 11f, CYAN, bold = true))
-            addView(textView(request.take(320), 14f, TEXT), matchWidth(top = 4))
+            addView(textView(lease.request.take(320), 14f, TEXT), matchWidth(top = 4))
             addView(textView("$model · reale lokale Inferenz", 11f, MUTED), matchWidth(top = 10))
             addView(status, matchWidth(top = 4))
+            addView(telemetry, matchWidth(top = 4))
             addView(progress, matchWidth(top = 8))
             addView(at.heinz.deviceai.ui.ContinuumBentoCockpit.action(this@AgentActivity, "STOP") {
                 cancelLocalRequest()
             }, matchWidth(top = 10))
         }
-        fun current() = localReasoningWorkScene === lease && sessionId == lease.session &&
-            workPresentationGeneration == lease.generation && busy && activeLocalRequest && foregroundLearningActive
-        fun show(retry: Boolean) {
-            if (!current()) return
-            val scene = requireNotNull(at.heinz.deviceai.ui.JarvisActionScenes.forCentre("Logik und Planung"))
-            val window = workWindowHost.show(home, body, "LOKALE KI · DENKEN", scene, onClosed = {
-                if (localReasoningWorkScene === lease) localReasoningWorkScene = null
-            })
-            if (window != null) workWindowHost.workStarted(emphasize = true)
-            else if (!retry) home.post { show(true) }
-            else if (localReasoningWorkScene === lease) localReasoningWorkScene = null
+        val scene = requireNotNull(at.heinz.deviceai.ui.JarvisActionScenes.forCentre("Logik und Planung"))
+        val window = workWindowHost.show(home, body, "LOKALE KI · DENKEN", scene, onClosed = {
+            if (localReasoningWorkScene === lease) localReasoningWorkScene = null
+        })
+        if (window != null) {
+            lease.shown = true
+            lease.status = status
+            lease.telemetry = telemetry
+            workWindowHost.workStarted(emphasize = true)
+        } else home.post {
+            if (localReasoningWorkScene === lease && !lease.shown) presentLocalReasoningWorkScene(lease)
         }
-        show(false)
     }
+
+    private fun updateLocalReasoningWorkScene(turnId: String, phaseLabel: String, telemetry: String) {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.turnId != turnId || lease.phase.rank > WorkscenePhase.LOCAL_REASONING.rank) return
+        val elapsed = ((android.os.SystemClock.uptimeMillis() - lease.startedAtMillis).coerceAtLeast(0L) / 100L) / 10.0
+        lease.status?.text = phaseLabel
+        lease.telemetry?.text = "$telemetry · ${"%.1f".format(java.util.Locale.ROOT, elapsed)} s"
+    }
+
+    private fun updateLocalReasoningStream(turnId: String, responseChars: Int, chunks: Int, elapsedMillis: Long) {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.turnId != turnId || lease.phase.rank > WorkscenePhase.LOCAL_REASONING.rank) return
+        lease.status?.text = "Antwort-Synthese · lokaler Stream"
+        lease.telemetry?.text = "Ausgabe $responseChars Zeichen · $chunks Chunks · " +
+            "${"%.1f".format(java.util.Locale.ROOT, elapsedMillis / 1000.0)} s"
+    }
+
+    private fun updateLocalReasoningCompleted(
+        turnId: String,
+        metrics: at.heinz.deviceai.localmodel.LocalInferenceMetrics
+    ) {
+        val lease = localReasoningWorkScene ?: return
+        if (lease.turnId != turnId || lease.phase.rank > WorkscenePhase.LOCAL_REASONING.rank) return
+        val tokens = metrics.outputTokens?.let { "$it Output-Tokens" } ?: "Tokenzahl nicht gemeldet"
+        lease.status?.text = "Antwort-Synthese abgeschlossen"
+        lease.telemetry?.text = "$tokens · ${metrics.responseCharacters} Zeichen · ${metrics.streamedChunks} Chunks · " +
+            "${"%.1f".format(java.util.Locale.ROOT, metrics.totalLatencyMillis / 1000.0)} s"
+    }
+
+    private fun promptBudgetLabel(value: Int): String =
+        if (value == at.heinz.deviceai.cognitive.LocalChatPromptBudget.FULL_CHARACTERS) "15.5k Vollkontext"
+        else "6.0k kompakt"
 
     private fun finishLocalReasoningWorkScene(turnId: String, immediate: Boolean = false) {
         val lease = localReasoningWorkScene ?: return
         if (lease.turnId != turnId) return
+        if (lease.phase.rank > WorkscenePhase.LOCAL_REASONING.rank) return
+        lease.phase = WorkscenePhase.COMPLETED
         localReasoningWorkScene = null
-        workWindowHost.workEnded()
-        workWindowHost.close(immediate)
+        if (lease.shown) {
+            workWindowHost.workEnded()
+            workWindowHost.close(immediate)
+        }
     }
 
     /**
