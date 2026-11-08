@@ -50,6 +50,24 @@ class AvatarLiveDiagnosticsTest {
         assertEquals(4L, live.drawDelta)
     }
 
+    @Test fun currentProofCannotBorrowLiveTraceFromAnEarlierRun() {
+        val ring = AvatarTraceRingBuffer(32)
+        repeat(4) {
+            val r = ring.beginFrame(it.toLong())
+            r.stageFlags = AvatarFrameReceipt.FRAME_DRAW or AvatarFrameReceipt.HEAD_3D_SELECTED or
+                AvatarFrameReceipt.SURFACE_VALID or AvatarFrameReceipt.TEXTURE_VISIBLE or
+                AvatarFrameReceipt.POSE_SAMPLED or AvatarFrameReceipt.MORPH_UPLOADED or
+                AvatarFrameReceipt.FILAMENT_BEGIN or AvatarFrameReceipt.FILAMENT_RENDERED
+        }
+        val proofStart = ring.frameNumber()
+        repeat(4) {
+            val r = ring.beginFrame((10 + it).toLong())
+            r.stageFlags = AvatarFrameReceipt.FRAME_DRAW or AvatarFrameReceipt.HEAD_3D_SELECTED
+        }
+        assertTrue(ring.diagnose().startsWith("BROKEN_AT_SURFACE"))
+        assertTrue(ring.diagnoseSince(proofStart).startsWith("BROKEN_AT_SURFACE"))
+    }
+
     @Test fun traceNamesTheBrokenStageInsteadOfGuessing() {
         val ring = AvatarTraceRingBuffer(32)
         assertTrue(ring.diagnose().startsWith("BROKEN_AT_ROOT"))
