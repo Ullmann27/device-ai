@@ -716,8 +716,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             val view = shellActions.getOrPut(spec.key) {
                 ShellActionView(context, spec.key, spec.target, spec.label).also { addView(it) }
             }
-            view.visibility = if (deckCleared && (spec.key.startsWith("tile:") || spec.key.startsWith("panel:ROW_")))
-                View.INVISIBLE else View.VISIBLE
+            view.visibility = if (deckHides(spec.key)) View.INVISIBLE else View.VISIBLE
             view.refresh()
             val px = spec.box.width * density
             val py = spec.box.height * density
@@ -766,15 +765,16 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private val deckCleared: Boolean
         get() = workspaceFootprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
 
-    private fun applyDeckToActions() {
+    private fun deckHides(key: String): Boolean {
         val medium = workspaceFootprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE
         val full = workspaceFootprint == JarvisActionScenes.WorkspaceFootprint.FULL_MISSION_BAY
+        return medium && (key.startsWith("tile:") || key == "panel:COCKPIT_SECONDARY") ||
+            full && key.startsWith("panel:ROW_")
+    }
+
+    private fun applyDeckToActions() {
         shellActions.forEach { (key, view) ->
-            val leaves = key.startsWith("tile:") ||
-                key == "panel:COCKPIT_SECONDARY" ||
-                full && key.startsWith("panel:ROW_")
-            if (leaves || key.startsWith("panel:ROW_"))
-                view.visibility = if (leaves && medium) View.INVISIBLE else View.VISIBLE
+            view.visibility = if (deckHides(key)) View.INVISIBLE else View.VISIBLE
         }
     }
 
