@@ -5498,7 +5498,13 @@ class AgentActivity : Activity() {
             showModelVersions()
             return
         }
-        val center = localCenter(request)
+        val center: (() -> Unit)? = when (request.lowercase(Locale.GERMAN)) {
+            "lernzentrum" -> ::showLearningCenter
+            "entwicklungszentrum" -> ::showDevelopmentCenter
+            "gedächtnis", "gedächtniszentrum" -> ::showMemoryCenter
+            "systemstatus" -> ::showSystemCenter
+            else -> null
+        }
         if (center != null) {
             input.text.clear()
             addUserMessage(request)
@@ -5580,6 +5586,19 @@ class AgentActivity : Activity() {
             }
             null -> Unit
         }
+        // #639: an internal cockpit screen („öffne das Gedächtniszentrum“, „Logik und Planung“) is navigation
+        // through the rail's own route table – never an app lookup, a file question or a model turn.
+        at.heinz.deviceai.cognitive.OwnerInternalNavigationIntent.resolve(request,
+            at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+                continuumState?.archive?.identityState?.chosenName))?.let { screen ->
+            webToolGate.cancel()
+            approvedModelWebSession.getAndSet(null)?.cancel()
+            input.text.clear()
+            addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            addToolActivity(screen.activityLine)
+            navigateDashboardTarget(screen.target)
+            return
+        }
         // Explicit public research precedes generic app discovery ("Suche die neuesten Quellen").
         if (at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.isResearchRequest(request)) {
             researchArmed = false
@@ -5610,10 +5629,7 @@ class AgentActivity : Activity() {
             input.text.clear()
             addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
             when (intake) {
-                is OwnerAppLookupIntent.Intake.Lookup -> {
-                    val localArea = if (intake.opening) localCenter(intake.query) else null
-                    if (localArea != null) localArea() else runExplicitAppLookup(request, intake)
-                }
+                is OwnerAppLookupIntent.Intake.Lookup -> runExplicitAppLookup(request, intake)
                 is OwnerAppLookupIntent.Intake.Clarify -> clarifyAppRequest(request,
                     "Was brauchst du aus ${intake.subject}: die App öffnen, etwas nachsehen oder einen Inhalt vorbereiten?")
                 is OwnerAppLookupIntent.Intake.Planning -> {
@@ -5845,17 +5861,6 @@ class AgentActivity : Activity() {
         presentBootstrapDecision(request, BootstrapBrain.decide(request, emptyList(), bootstrapMemory.learnedCommands(),
             identityDescription = at.heinz.deviceai.cognitive.LocalAssistantIdentity.selfDescription(
                 continuumState?.archive?.identityState?.chosenName, localRuntime.loadedModel, localRuntime.state)))
-    }
-
-    private fun localCenter(query: String): (() -> Unit)? = when (OwnerAppLookupIntent.centerTarget(query)) {
-        "gedächtniszentrum" -> ::showMemoryCenter
-        "logik und planung" -> ::showLogicCenter
-        "entwicklungsaufgaben" -> ::showDevelopmentBacklog
-        "lernzentrum" -> ::showLearningCenter
-        "entwicklungszentrum" -> ::showDevelopmentCenter
-        "systemstatus" -> ::showSystemCenter
-        "modelle" -> ::showModelCenter
-        else -> null
     }
 
     private fun presentBootstrapDecision(request: String, decision: BootstrapDecision, requestRecorded: Boolean = false) {
