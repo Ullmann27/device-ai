@@ -4,11 +4,13 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class ExperiencePatternMaturityTest {
-    private fun exp(id:String, success:Boolean, score:Double=.9, tools:List<String> = listOf("get_storage_info")) =
+    private fun exp(id:String, success:Boolean, score:Double=.9,
+                    tools:List<String> = listOf("get_storage_info"),
+                    request:String = "Prüfe Zustand") =
         Experience(
             id=id,
             taskType="agent_task",
-            requestSummary="Prüfe Zustand",
+            requestSummary=request,
             sourceIds=if(success) listOf("tool-call:$id") else emptyList(),
             toolIds=tools,
             outcome=if(success) ExperienceOutcome.SUCCESS else ExperienceOutcome.FAILURE,
@@ -23,14 +25,28 @@ class ExperiencePatternMaturityTest {
     }
 
     @Test fun threeVerifiedRunsCanBecomeValidatedPattern() {
-        val items=listOf(exp("a",true),exp("b",true),exp("c",true))
+        val items=listOf(
+            exp("a",true,request="Prüfe Zustand"),
+            exp("b",true,request="Kontrolliere den aktuellen Zustand"),
+            exp("c",true,request="Zustand jetzt prüfen")
+        )
         val a=ExperiencePatternMaturity.assess(items,"agent_task",listOf("get_storage_info"))
         assertEquals(ExperiencePatternMaturity.Maturity.VALIDATED_PATTERN,a.maturity)
         assertEquals(3,a.verifiedSuccesses)
     }
 
+    @Test fun repeatedIdenticalSuccessesDoNotGeneralizeIntoValidatedPattern() {
+        val items=listOf(exp("a",true),exp("b",true),exp("c",true))
+        val a=ExperiencePatternMaturity.assess(items,"agent_task",listOf("get_storage_info"))
+        assertEquals(ExperiencePatternMaturity.Maturity.QUARANTINED_OBSERVATION,a.maturity)
+        assertEquals(1,a.contextDiversity)
+    }
+
     @Test fun repeatedFailuresWithoutVerifiedSuccessBecomeKnownTrap() {
-        val items=listOf(exp("a",false,.2),exp("b",false,.3))
+        val items=listOf(
+            exp("a",false,.2,request="Prüfe Zustand"),
+            exp("b",false,.3,request="Kontrolliere den aktuellen Zustand")
+        )
         val a=ExperiencePatternMaturity.assess(items,"agent_task",listOf("get_storage_info"))
         assertEquals(ExperiencePatternMaturity.Maturity.KNOWN_TRAP,a.maturity)
     }
