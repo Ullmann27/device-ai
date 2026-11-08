@@ -200,9 +200,11 @@ object BootstrapBrain {
         }
         if (low.startsWith("merke dir:") || low.startsWith("merk dir:")) {
             // #640: a trailing dialogue instruction („Danach fragen: …“) is not part of the fact.
-            val split = at.heinz.deviceai.cognitive.OwnerFactMetaSeparator.split(text.substringAfter(':').trim())
+            val content = text.substringAfter(':').trim()
+            val split = at.heinz.deviceai.cognitive.OwnerFactMetaSeparator.split(content)
             val fact = split.fact
-            return if (fact.length in 3..320 && !unsafe.containsMatchIn(fact) &&
+            // Neural TEACH reuses this gate but trains on the complete, unsplit text.
+            return if (content.length in 3..320 && !unsafe.containsMatchIn(content) && fact.length in 3..320 &&
                 (!KnowledgeSyntax.isStructured(fact) || KnowledgeSyntax.statement(fact) != null)) {
                 BootstrapDecision(BootstrapKind.REMEMBER, fact = fact,
                     message = split.instruction?.let {
@@ -318,5 +320,4 @@ object BootstrapBrain {
                 "oder lerne mir etwas ausdrücklich mit „Merke dir: ...“.", allowNeuralRecall = true)
     }
 }
-
 
