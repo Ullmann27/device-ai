@@ -14,7 +14,7 @@ class AndroidSpeechFailureTest {
         assertEquals(Failure.LANGUAGE_UNAVAILABLE, classifySpeechError(SpeechRecognizer.ERROR_LANGUAGE_UNAVAILABLE))
     }
     @Test fun platformClientErrorsAreNotReportedAsUserCancellation() {
-        assertEquals(Failure.SERVICE_FAILURE, classifySpeechError(SpeechRecognizer.ERROR_CLIENT))
+        assertEquals(Failure.BUSY, classifySpeechError(SpeechRecognizer.ERROR_CLIENT))
         assertEquals(Failure.SERVICE_FAILURE, classifySpeechError(Int.MAX_VALUE))
     }
     @Test fun busyAudioNetworkAndServerStayActionable() {
