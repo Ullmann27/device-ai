@@ -12,6 +12,8 @@ import at.heinz.deviceai.cognitive.AgentToolApprovalProvider
 import at.heinz.deviceai.cognitive.DeliberationCancellation
 import at.heinz.deviceai.cognitive.Evaluation
 import at.heinz.deviceai.cognitive.InMemoryExperienceStore
+import at.heinz.deviceai.learning.ContinuumSkillLibrary
+import at.heinz.deviceai.learning.SkillSummary
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
@@ -31,7 +33,8 @@ class ChiefBotTeam(
     private val profiles: ChiefBotProfileStore,
     private val model: ChiefTeamModel,
     private val changed: () -> Unit = {},
-    private val clock: () -> Long = System::currentTimeMillis
+    private val clock: () -> Long = System::currentTimeMillis,
+    private val skills: ContinuumSkillLibrary? = null
 ) {
     private data class Run(
         val task: ChiefTeamTask,
@@ -45,12 +48,15 @@ class ChiefBotTeam(
         private set
     private var initialized = false
     private var closed = false
+    private var admissionRevision = 0L
     private var run: Run? = null
     private var coordinator: ChiefDelegationCoordinator? = null
     private val pool = ChiefWorkerPool(1, 1, ::job)
 
     fun snapshot(): ChiefBotTeamState = view
     fun active(): Boolean = pool.active().isNotEmpty()
+    @Synchronized fun admissionToken(): Long = admissionRevision
+    fun skillIndex(): List<SkillSummary> = skills?.index().orEmpty()
 
     @Synchronized fun initialize() {
         check(!closed) { "BOT_TEAM_CLOSED" }
@@ -76,10 +82,12 @@ class ChiefBotTeam(
         cancelRunning()
     }
 
-    /** Same request ID is never re-executed, even after restart. Missing consent never creates work. */
-    @Synchronized fun submit(requestId: String, text: String, expectedRevision: Long, ownerApproved: Boolean): ChiefTeamTask {
+    /** A bound (ID, revision) request is never replayed, even after restart or explicit history deletion. */
+    @Synchronized fun submit(requestId: String, text: String, expectedRevision: Long, ownerApproved: Boolean,
+                             admissionToken: Long = admissionToken()): ChiefTeamTask {
         initialize()
         check(ownerApproved) { "BOT_TEAM_APPROVAL_REQUIRED" }
+        check(admissionToken == admissionRevision) { "BOT_TEAM_ADMISSION_EXPIRED" }
         val state = profiles.teamState()
         state.tasks.firstOrNull { it.id == requestId }?.let {
             check(it.request == text && it.teamRevision == expectedRevision) { "BOT_TEAM_REQUEST_ID_CONFLICT" }
@@ -108,15 +116,21 @@ class ChiefBotTeam(
             finish(task.id, ChiefTeamStatus.BLOCKED, "MODEL_BUDGET_UNAVAILABLE")
             return view.tasks.last()
         }
-        val execution = Run(task, bound)
-        run = execution
-        val dispatcher = ChiefDelegationCoordinator(pool, approveSpecialist = { specialist ->
-            specialist.id in state.specialistIds && specialist.allowedTools.isEmpty()
-        }, profileStore = profiles)
-        check(dispatcher.register(ChiefSpecialist(task.analystId, setOf("text.analyze"), emptySet())))
-        check(dispatcher.register(ChiefSpecialist(task.reviewerId, setOf("text.review"), emptySet())))
-        coordinator = dispatcher
-        dispatch(execution, 0)
+        try {
+            val execution = Run(task, bound)
+            run = execution
+            val dispatcher = ChiefDelegationCoordinator(pool, approveSpecialist = { specialist ->
+                specialist.id in state.specialistIds && specialist.allowedTools.isEmpty()
+            }, profileStore = profiles)
+            check(dispatcher.register(ChiefSpecialist(task.analystId, setOf("text.analyze"), emptySet())))
+            check(dispatcher.register(ChiefSpecialist(task.reviewerId, setOf("text.review"), emptySet())))
+            coordinator = dispatcher
+            dispatch(execution, 0)
+        } catch (failure: Exception) {
+            cancelRunning()
+            recordRejection(task.id, ChiefTeamStatus.FAILED, "DISPATCH_FAILED")
+            throw failure
+        }
         return view.tasks.last()
     }
 
@@ -128,8 +142,23 @@ class ChiefBotTeam(
         cancelRunning()
     }
 
+    @Synchronized fun clearHistory(expectedRevision: Long) {
+        initialize()
+        check(!active()) { "BOT_TEAM_BUSY" }
+        persist { state ->
+            check(state.revision == expectedRevision) { "BOT_TEAM_SELECTION_CHANGED" }
+            check(state.tasks.none { it.active }) { "BOT_TEAM_BUSY" }
+            // Revoke outstanding drafts along with the deleted replay records.
+            state.copy(revision = Math.addExact(state.revision, 1), tasks = emptyList())
+        }
+        invalidate()
+    }
+
     /** UI calls may invalidate synchronously; native generation still owns the runtime until exit. */
-    @Synchronized fun invalidate() { cancelRunning() }
+    @Synchronized fun invalidate() {
+        admissionRevision = Math.addExact(admissionRevision, 1)
+        cancelRunning()
+    }
 
     @Synchronized fun close() {
         closed = true
@@ -154,6 +183,15 @@ class ChiefBotTeam(
         persist { state -> state.copy(tasks = state.tasks.map {
             if (it.id == id && it.active) it.copy(status = status, diagnostic = diagnostic) else it
         }) }
+    }
+
+    private fun recordRejection(id: String, status: ChiefTeamStatus, diagnostic: String) {
+        try { finish(id, status, diagnostic) }
+        catch (_: Exception) {
+            // Corrupt/unwritable storage remains untouched and visible; no automatic replay.
+            storageError = "BOT_TEAM_RESULT_NOT_COMMITTED"
+            changed()
+        }
     }
 
     private fun remainingMillis(execution: Run): Long {
@@ -206,7 +244,7 @@ class ChiefBotTeam(
                 check(model.readySha256() == task.modelSha256) { "BOT_TEAM_MODEL_CHANGED" }
                 check(count.incrementAndGet() == 1) { "BOT_TEAM_MODEL_BUDGET" }
                 val profile = execution.boundProfiles[stage + 1]
-                val prompt = ChiefBotTextHandoff.prompt(task, profile, stage)
+                val prompt = ChiefBotTextHandoff.prompt(task, profile, stage, skills)
                 val started = System.nanoTime()
                 val text = model.generate(prompt, execution.cancellation, remainingMillis(execution))
                 requireCurrent(execution)
@@ -260,17 +298,17 @@ class ChiefBotTeam(
             }) }
             if (stage == 0) dispatch(execution, 1)
         } catch (failure: Exception) {
-            // Pool callbacks cannot hide persistence failures or promote unrecorded output.
-            storageError = "BOT_TEAM_RESULT_NOT_COMMITTED"
             execution.cancellation.cancel()
-            changed()
+            recordRejection(execution.task.id,
+                if (failure is java.util.concurrent.CancellationException) ChiefTeamStatus.CANCELLED else ChiefTeamStatus.FAILED,
+                "RESULT_REJECTED")
         }
     }
 }
 
 /** Local, tool-free handoff; do not forge CCC1 grants/source commits for a text conversation. */
 internal object ChiefBotTextHandoff {
-    fun prompt(task: ChiefTeamTask, profile: ChiefBotProfile, stage: Int): String {
+    fun prompt(task: ChiefTeamTask, profile: ChiefBotProfile, stage: Int, skills: ContinuumSkillLibrary? = null): String {
         require(stage in 0..1)
         require(profile.agentId == if (stage == 0) task.analystId else task.reviewerId) { "BOT_TEAM_HANDOFF_MISMATCH" }
         require(task.responses.size == stage) { "BOT_TEAM_HANDOFF_EVIDENCE_MISSING" }
@@ -279,6 +317,15 @@ internal object ChiefBotTextHandoff {
             val prior = task.responses.single()
             require(prior.agentId == task.analystId && prior.outputSha256 == ChiefTeamResponse.hash(prior.text))
             body.put("analysis", prior.text).put("analysisSha256", prior.outputSha256)
+        }
+        // Existing owner-approved library, one relevant whole instruction; no private dialogue/notes.
+        skills?.match(task.request, limit = 1)?.firstOrNull()?.let { summary ->
+            val skill = skills.load(summary.name)
+            if (skill != null && skill.instructions.toByteArray(Charsets.UTF_8).size <= 2_000) {
+                body.put("optionalSkill", JSONObject().put("name", skill.name)
+                    .put("sourceCandidateId", skill.sourceCandidateId).put("instructions", skill.instructions)
+                    .put("instructionsSha256", ChiefTeamResponse.hash(skill.instructions)))
+            } else body.put("skillOmitted", if (skill == null) "NOT_APPROVED_OR_CHANGED" else "CONTEXT_BUDGET")
         }
         return "Du arbeitest als Fachbot in Continuum. Antworte auf Deutsch, höchstens 1200 Zeichen. " +
             "Keine Werkzeuge, Dateien, Netzwerkzugriffe oder privaten Gespräche. " +

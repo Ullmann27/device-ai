@@ -2652,7 +2652,9 @@ class AgentActivity : Activity() {
                         generated.proposal == null && generated.rejectedToolResponses.isEmpty()) { "BOT_TEAM_GENERATION_FAILED" }
                     return generated.response
                 }
-            }, changed = { runOnUiThread { refreshBotTeam() } }).also { botTeam = it }
+            }, changed = { runOnUiThread { refreshBotTeam() } },
+            skills = at.heinz.deviceai.learning.ContinuumSkillLibrary(java.io.File(filesDir, "skills"))
+        ).also { botTeam = it }
         val roster = botRosterDialog ?: ContinuumBotRosterDialog(this,
             botProfiles, backlogExecutor,
             onSelect = { selectBot(it.agentId) }, runtimeStatus = ::botRuntimeStatus,
@@ -2674,15 +2676,14 @@ class AgentActivity : Activity() {
     private fun submitBotTeam(id: String, text: String, revision: Long): Boolean {
         if (busy || botLookupPending || isFinishing || isDestroyed || backlogExecutor.isShutdown) return false
         val team = botTeam ?: return false
+        val admissionToken = team.admissionToken()
         cancelSpeechInputScope()
         botTeamOwnsLane = true
         setBusy(true)
-        onBacklog({ team.submit(id, text, revision, ownerApproved = true) }) { result ->
+        onBacklog({ team.submit(id, text, revision, ownerApproved = true, admissionToken = admissionToken) }) { result ->
             if (result.isFailure) {
                 Toast.makeText(this, "Teamauftrag nicht angenommen oder Speicherung unklar. Verlauf prüfen.",
                     Toast.LENGTH_LONG).show()
-                botTeamOwnsLane = false
-                setBusy(false)
             }
             refreshBotTeam()
         }
@@ -2694,8 +2695,8 @@ class AgentActivity : Activity() {
         val team = botTeam ?: return
         botRosterDialog?.refreshRuntimeStatus()
         val terminal = team.snapshot().tasks.none { it.active } || team.storageError != null
-        if (botTeamOwnsLane && terminal && !team.active()) {
-            if (::localRuntime.isInitialized && localRuntime.state == LocalModelState.GENERATING) {
+        if (botTeamOwnsLane && terminal) {
+            if (team.active() || (::localRuntime.isInitialized && localRuntime.state == LocalModelState.GENERATING)) {
                 mainHandler.postDelayed({ refreshBotTeam() }, 250L)
             } else {
                 botTeamOwnsLane = false
@@ -2740,6 +2741,10 @@ class AgentActivity : Activity() {
 
     /** False keeps the editable roster draft open. True transfers the complete text to this UI. */
     private fun submitBotTask(request: ChiefBotTaskRequest): Boolean {
+        if (request.mode == ChiefBotTaskMode.PRIVATE_REPLY &&
+            at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum.requestsKotlinRepairPractice(request.text))
+            return submitBotTask(request.copy(mode = ChiefBotTaskMode.CODING_DRAFT,
+                text = at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum.KOTLIN_REPAIR_GOAL))
         if (isFinishing || isDestroyed || busy || botLookupPending || backlogExecutor.isShutdown ||
             (request.mode != ChiefBotTaskMode.CODING_DRAFT && localAgentExecutor.isShutdown)) {
             Toast.makeText(this, "Ein Schritt läuft noch. Dein Auftrag bleibt im Entwurf.", Toast.LENGTH_LONG).show()
@@ -2807,8 +2812,11 @@ class AgentActivity : Activity() {
                                 runLocal(request.text, botTask = task)
                             }
                             ChiefBotTaskMode.CODING_DRAFT -> {
+                                val practice = request.text == at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum.KOTLIN_REPAIR_GOAL
                                 showCodingTaskDraftDialog(ContinuumCodingTask.Draft(
-                                    id = "job-" + UUID.randomUUID(), goal = request.text))
+                                    id = "job-" + UUID.randomUUID(), goal = request.text,
+                                    kind = if (practice) ContinuumCodingTask.Kind.BUGFIX else null,
+                                    chain = if (practice) ContinuumCodingTask.Chain.ANDROID else null))
                                 input.text.clear()
                                 task.finish()
                                 rememberBotTaskStatus(request.agentId, "Coding-Entwurf geöffnet · nichts ausgeführt")
@@ -2981,6 +2989,10 @@ class AgentActivity : Activity() {
 
     private fun runBotDialogue(profile: at.heinz.deviceai.chief.ChiefBotProfile, request: String) {
         if (busy || localAgentExecutor.isShutdown) return
+        if (at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum.requestsKotlinRepairPractice(request)) {
+            submitBotTask(ChiefBotTaskRequest(profile.agentId, profile.profileVersion, request, ChiefBotTaskMode.PRIVATE_REPLY))
+            return
+        }
         addBubble(request, true)
         val model = localRuntime.loadedModel
         val state = continuumState

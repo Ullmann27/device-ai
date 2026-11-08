@@ -14,6 +14,8 @@ import at.heinz.deviceai.chief.ChiefBotPersonas
 import at.heinz.deviceai.chief.ChiefBotProfilePage
 import at.heinz.deviceai.chief.ChiefBotProfileStore
 import at.heinz.deviceai.chief.ChiefBotTaskRequest
+import at.heinz.deviceai.chief.ChiefBotTaskMode
+import at.heinz.deviceai.chief.ChiefEngineeringPracticeCurriculum
 import at.heinz.deviceai.chief.ChiefBotTeam
 import at.heinz.deviceai.chief.ChiefTeamStatus
 import at.heinz.deviceai.chief.ChiefTeamTask
@@ -99,6 +101,7 @@ class ContinuumBotRosterDialog(
                         revision++
                         dialog = null
                         pendingRosterSearch = null
+                        teamRefresh = null
                         statusViews.clear()
                     }
                 }
@@ -305,8 +308,8 @@ class ContinuumBotRosterDialog(
         val token = open("Bot · Arbeitsbereich", body)
         load(token, body, {
             val profile = requireNotNull(store.get(agentId))
-            profile to store.workingContext(profile.agentId, profile.agentId).orEmpty()
-        }) { (profile, notes) ->
+            Triple(profile, store.workingContext(profile.agentId, profile.agentId).orEmpty(), team?.skillIndex().orEmpty())
+        }) { (profile, notes, skills) ->
             body.removeAllViews()
             body.addView(ui.identity(profile))
             val persona = ChiefBotPersonas.describe(profile)
@@ -324,6 +327,15 @@ class ContinuumBotRosterDialog(
                 if (live(token)) { close(); select(profile) }
             }) }
             onAssign?.let { body.addView(action("Auftrag geben") { if (live(token)) showTask(profile) }) }
+            onAssign?.let { assign ->
+                body.addView(action("Kotlin-Reparaturübung vorbereiten") {
+                    if (live(token) && assign(ChiefBotTaskRequest(profile.agentId, profile.profileVersion,
+                            ChiefEngineeringPracticeCurriculum.KOTLIN_REPAIR_GOAL, ChiefBotTaskMode.CODING_DRAFT))) close()
+                })
+                body.addView(ui.label("Öffnet den bestehenden CCC1-Entwurf: Quell-SHA, Dateien, feste Tests " +
+                    "und Freigabe müssen ergänzt werden. Keine Ausführung oder Gewichtsänderung.",
+                    13f, JarvisDesign.Colors.textSecondary))
+            }
             team?.let { currentTeam ->
                 val selection = currentTeam.snapshot()
                 body.addView(action("Als Chefbot bestimmen") {
@@ -347,6 +359,13 @@ class ContinuumBotRosterDialog(
                     "Team-Werkzeuge: keine (nur übergebener Text).\n" +
                     "Coding: vorhandener CCC1-Entwurf; Compiler/Arbeitsbereich separat prüfen.\n" +
                     "Unabhängig bestätigte Coding-Kompetenz: noch kein angebundener Beleg."))
+                body.addView(label("Fachanleitungen (bestehende Skill-Bibliothek): " +
+                    if (skills.isEmpty()) "noch keine gespeichert." else skills.joinToString("\n", prefix = "\n") {
+                        "${it.name} · ${it.status} · ${it.whenToUse}"
+                    }))
+                body.addView(ui.label("Nur eine passende, freigegebene Anleitung wird bei Bedarf geladen. " +
+                    "Eine Anleitung ist keine Werkzeugfreigabe und kein Kompetenznachweis dieses Bots.",
+                    13f, JarvisDesign.Colors.textSecondary))
                 body.addView(action("Aufgaben und Ergebnisbelege ansehen") { if (live(token)) showTeam(profile.agentId) })
             }
             body.addView(label("Arbeitsplatz: ${profile.workspaceId}\n" +
@@ -433,6 +452,17 @@ class ContinuumBotRosterDialog(
                 })
                 body.addView(card)
             }
+            if (state.tasks.isNotEmpty()) body.addView(action("Abgeschlossene Textprüfungen löschen") {
+                if (live(token)) AlertDialog.Builder(activity)
+                    .setTitle("Teamverlauf löschen?")
+                    .setMessage("Alle abgeschlossenen Textprüfungen und Antworten werden gelöscht. " +
+                        "Offene Entwürfe müssen neu freigegeben werden. Private Bot-Gespräche, Profile, " +
+                        "Arbeitsnotizen und CCC1-Belege bleiben erhalten.")
+                    .setNegativeButton("Behalten", null)
+                    .setPositiveButton("Löschen") { _, _ ->
+                        if (live(token)) load(token, body, { currentTeam.clearHistory(state.revision) }) { showTeam(agentId) }
+                    }.show()
+            }.apply { isEnabled = state.tasks.none { it.active } && !currentTeam.active() })
             body.addView(action("Zur Teamübersicht") { if (live(token)) show() })
         }
         teamRefresh = ::render
@@ -449,6 +479,7 @@ class ContinuumBotRosterDialog(
             "Private Bot-Gespräche und Arbeitsnotizen werden nicht geteilt. " +
             "Dies prüft Text; es kompiliert keinen Code und baut keine APK."))
         val text = ui.editor(multiline = true).apply {
+            filters = arrayOf(InputFilter.LengthFilter(1_800))
             setText(initial); hint = "Auftrag und zu prüfenden Text eingeben (max. 1800 Zeichen)"
             contentDescription = "Teamauftrag"; tag = "bot-team-request"
         }

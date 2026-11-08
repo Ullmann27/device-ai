@@ -89,6 +89,20 @@ class ChiefBotTeamTest {
         } finally { team.close() }
     }
 
+    @Test fun queuedAdmissionInvalidatedByPauseCannotStartAfterResume() {
+        val s = store(); val model = Model(sha); val team = configured(s, model)
+        try {
+            val queuedToken = team.admissionToken()
+            team.invalidate()
+            assertThrows(IllegalStateException::class.java) {
+                team.submit(id(), "Vor Pause eingereiht", 1, true, queuedToken)
+            }
+            assertEquals(0, model.calls.get()); assertTrue(s.teamState().tasks.isEmpty())
+            team.submit(id(), "Neu freigegeben", 1, true, team.admissionToken())
+            assertTrue(team.awaitIdle(10_000)); assertEquals(2, model.calls.get())
+        } finally { team.close() }
+    }
+
     @Test fun chiefCanBeChangedWithoutGrantingToolsOrRewritingProfiles() {
         val s = store(); val team = configured(s, Model(sha))
         try {
@@ -225,5 +239,23 @@ class ChiefBotTeamTest {
         val encoded = ChiefBotTeamCodec.encode(state)
         assertEquals(state, ChiefBotTeamCodec.decode(encoded))
         assertThrows(IllegalArgumentException::class.java) { ChiefBotTeamCodec.decode(encoded + byteArrayOf(1)) }
+    }
+
+    @Test fun explicitHistoryDeletionRestoresCapacityButRevokesOldDraftsAndPreservesProfiles() {
+        val s = store(); val model = Model(null); val team = configured(s, model)
+        try {
+            val profiles = s.page(limit = 100).items
+            val old = team.submit(id(), "Alter Auftrag", 1, true)
+            repeat(39) { team.submit(id(), "Text $it", 1, true) }
+            assertThrows(IllegalStateException::class.java) { team.submit(id(), "Voll", 1, true) }
+            team.clearHistory(1)
+            assertTrue(s.teamState().tasks.isEmpty())
+            assertEquals(2L, s.teamState().revision)
+            assertEquals(profiles, s.page(limit = 100).items)
+            assertThrows(IllegalStateException::class.java) { team.submit(old.id, old.request, 1, true) }
+            team.submit(id(), "Neuer Auftrag", 2, true)
+            assertEquals(1, s.teamState().tasks.size)
+            assertEquals(0, model.calls.get())
+        } finally { team.close() }
     }
 }
