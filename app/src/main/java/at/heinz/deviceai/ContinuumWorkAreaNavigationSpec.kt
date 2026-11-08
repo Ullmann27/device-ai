@@ -33,7 +33,7 @@ object ContinuumWorkAreaNavigationSpec {
         CategoryEntry("Lernen", "learning"), CategoryEntry("Lokales Modell", "model-management"),
         CategoryEntry("Continuum Brain", "brain"))
     val toolEntries = listOf(
-        CategoryEntry("Agenten", "agents"), CategoryEntry("Aufgaben", "tasks"),
+        CategoryEntry("Mein KI-Team", "agents"), CategoryEntry("Aufgaben", "tasks"),
         CategoryEntry("Recherche", "research"), CategoryEntry("Web", "web"),
         CategoryEntry("Gerätesteuerung", "device"))
     val moreEntries = listOf(

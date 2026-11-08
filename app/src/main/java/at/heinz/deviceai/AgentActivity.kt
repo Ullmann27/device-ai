@@ -489,6 +489,8 @@ class AgentActivity : Activity() {
     // use a dedicated worker thread, and never touch the shared native Gemma session.
     private var chiefStatusPool: at.heinz.deviceai.chief.ChiefWorkerPool? = null
     private var botRosterDialog: ContinuumBotRosterDialog? = null
+    private var botTeam: at.heinz.deviceai.chief.ChiefBotTeam? = null
+    private var botTeamOwnsLane = false
     private val botProfiles by lazy {
         at.heinz.deviceai.chief.ChiefBotProfileStore(
             java.io.File(filesDir, "chief-bots"), trustedParentDirectory = filesDir)
@@ -739,6 +741,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        botTeam?.invalidate()
+        if (botTeamOwnsLane && ::localRuntime.isInitialized) localRuntime.cancel()
         airbusCockpitOrchestrator?.setForeground(false)
         workWindowHost.close(immediate = true)
         avatarDirector.clearAnimationIntents()
@@ -806,6 +810,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        botTeam?.close()
         ownerRecoveryReview?.close()
         ownerRecoveryReview = null
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
@@ -2630,15 +2635,78 @@ class AgentActivity : Activity() {
     }
 
     private fun showBotRoster() {
+        val team = botTeam ?: at.heinz.deviceai.chief.ChiefBotTeam(botProfiles,
+            object : at.heinz.deviceai.chief.ChiefTeamModel {
+                override fun readySha256(): String? =
+                    if (::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY)
+                        localRuntime.loadedModel?.sha256 else null
+
+                override fun generate(prompt: String, cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation,
+                                      deadlineMillis: Long): String {
+                    val generated = generateLocal(cancellation, promptCharacters = prompt.length,
+                        hardDeadlineMillis = deadlineMillis, maxOutputBytes = 6_000) {
+                        localRuntime.streamThinking(prompt, it)
+                    }
+                    cancellation.throwIfCancelled()
+                    check(generated.failure == null && generated.completion == LocalGenerationCompletion.COMPLETE &&
+                        generated.proposal == null && generated.rejectedToolResponses.isEmpty()) { "BOT_TEAM_GENERATION_FAILED" }
+                    return generated.response
+                }
+            }, changed = { runOnUiThread { refreshBotTeam() } }).also { botTeam = it }
         val roster = botRosterDialog ?: ContinuumBotRosterDialog(this,
             botProfiles, backlogExecutor,
             onSelect = { selectBot(it.agentId) }, runtimeStatus = ::botRuntimeStatus,
-            onContextChanging = ::botContextChanging, onAssign = ::submitBotTask
+            onContextChanging = ::botContextChanging, onAssign = ::submitBotTask,
+            team = team, onTeamSubmit = ::submitBotTeam,
+            onTeamStop = { id ->
+                team.invalidate()
+                if (botTeamOwnsLane && ::localRuntime.isInitialized) localRuntime.cancel()
+                onBacklog({ team.stop(id) }) { result ->
+                    if (result.isFailure) Toast.makeText(this, "Abbruch nicht sicher gespeichert; Auftrag prüfen.",
+                        Toast.LENGTH_LONG).show()
+                    refreshBotTeam()
+                }
+            }
         ).also { botRosterDialog = it }
         roster.show()
     }
 
+    private fun submitBotTeam(id: String, text: String, revision: Long): Boolean {
+        if (busy || botLookupPending || isFinishing || isDestroyed || backlogExecutor.isShutdown) return false
+        val team = botTeam ?: return false
+        cancelSpeechInputScope()
+        botTeamOwnsLane = true
+        setBusy(true)
+        onBacklog({ team.submit(id, text, revision, ownerApproved = true) }) { result ->
+            if (result.isFailure) {
+                Toast.makeText(this, "Teamauftrag nicht angenommen oder Speicherung unklar. Verlauf prüfen.",
+                    Toast.LENGTH_LONG).show()
+                botTeamOwnsLane = false
+                setBusy(false)
+            }
+            refreshBotTeam()
+        }
+        return true
+    }
+
+    private fun refreshBotTeam() {
+        if (isFinishing || isDestroyed) return
+        val team = botTeam ?: return
+        botRosterDialog?.refreshRuntimeStatus()
+        val terminal = team.snapshot().tasks.none { it.active } || team.storageError != null
+        if (botTeamOwnsLane && terminal && !team.active()) {
+            if (::localRuntime.isInitialized && localRuntime.state == LocalModelState.GENERATING) {
+                mainHandler.postDelayed({ refreshBotTeam() }, 250L)
+            } else {
+                botTeamOwnsLane = false
+                setBusy(false)
+            }
+        }
+    }
+
     private fun botContextChanging(agentId: String) {
+        if (botTeam?.snapshot()?.tasks?.any { it.active && agentId in listOf(it.chiefId, it.analystId, it.reviewerId) } == true)
+            botTeam?.invalidate()
         // A pending selection may have loaded this profile before its owner edit.
         botLookupRevision++
         if (activeBotTask?.profile?.agentId == agentId) cancelLocalRequest()
@@ -2663,6 +2731,9 @@ class AgentActivity : Activity() {
         val active = activeBotId == profile.agentId || activeBotTask?.profile?.agentId == profile.agentId
         val availability = at.heinz.deviceai.chief.BotRuntimeAvailability.text(model != null, state, active, busy)
         return availability +
+            (botTeam?.snapshot()?.tasks?.lastOrNull {
+                profile.agentId in listOf(it.chiefId, it.analystId, it.reviewerId)
+            }?.let { "\nTeamauftrag: ${it.status} · ${it.id.takeLast(8)}" } ?: "") +
             "\n" + (botTaskStatuses[profile.agentId] ?: "Noch kein Auftrag in dieser Sitzung") +
             "\nPrivater Dialog · Werkzeugaufträge über JARVIS und bestehende Freigaben"
     }
@@ -3833,7 +3904,7 @@ class AgentActivity : Activity() {
             CenterAction("AUFGABEN · BACKLOG") { showDevelopmentBacklog() },
             CenterAction("ANLEITUNG · DEINE EIGENE KI") { showFirstStepsGuide() },
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
-            CenterAction("TEAM · BOT-ARBEITSBEREICHE") { showBotRoster() },
+            CenterAction("MEIN KI-TEAM") { showBotRoster() },
             CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
             CenterAction("HANDY-BUILDER · TERMUX") { openMobileBuilder() },
             CenterAction("CCC1 · REPARATUR-AGENT (TERMUX)") { openMobileBuilder() },
@@ -10963,6 +11034,12 @@ class AgentActivity : Activity() {
             botTaskTimeout?.let(mainHandler::removeCallbacks)
             botTaskTimeout = null
             rememberBotTaskStatus(task.profile.agentId, "Abbruch angefordert · tatsächliches Ende wird abgewartet")
+        }
+        if (botTeamOwnsLane) {
+            botTeam?.invalidate()
+            localRuntime.cancel()
+            addToolActivity("Teamabbruch angefordert · tatsächliches Modellende wird abgewartet")
+            return
         }
         if (activeBotId != null) {
             // Stop this utterance/model turn only. An independent CCC1 job is not a speech turn.
