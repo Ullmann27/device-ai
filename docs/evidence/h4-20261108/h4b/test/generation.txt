@@ -1,0 +1,1 @@
+{"split": "test", "stories": 180, "strata": {"long": 26, "inflected": 26, "asr": 26, "head": 26, "short": 26, "ambiguous": 25, "none": 25}, "jsonSha256": "c5c1d63bdb8b9235f9257f0f49c897fe232c5422c4036f3b277b50025d1d6119"}

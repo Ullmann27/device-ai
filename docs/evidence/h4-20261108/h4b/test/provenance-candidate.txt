@@ -1,0 +1,15 @@
+3ab39fcd41b0d0015197bdbab6e22b76a1e424da
+source_ref=WORKTREE
+e19a8a464a4d7c0630b98ed45f7ce36fea9a72ec22fb60aa63a373dff42086d0  /root/.copilot/session-state/b4fded2697f54fb4af1edafdea205fe1/files/h4b-final-candidate/LocalConversationSituationTracker.kt
+97c527998df541d329634a089a5c39ca71ac744b0fa598183b6a6ba51d29e1fb  /root/.copilot/session-state/b4fded2697f54fb4af1edafdea205fe1/files/h4b-final-candidate/ConversationSituationModel.kt
+a917fc6da9eed0ccb3bbd7427e5c6874061ebb47b4ff5f8ac3e723b249eaed6b  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/tools/continuum-cognitive-pilots/h4b-arms/candidate/H4BArms.kt
+f6f43b8a8a88a2263193f6db5e61d63bea70b307a1ad7c18afedf55a9d9f24a2  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/tools/continuum-cognitive-pilots/H4BReturnPilot.kt
+ae593dfb4ea483b23b3b91ce6e0f11bd95b8f71467714db10e9173c9433f779a  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/app/src/test/java/at/heinz/deviceai/cognitive/ConversationSituationModelTest.kt
+ebb4aaa8f816c721ec94031d280c877a4628c79935a4a47849f68e5be45f51bc  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationSituationTrackerTest.kt
+99aaf7f2db08b26a7f328c45d299e1b424a38475dc463852a5185f28eab51abd  /workspaces/device-ai/copilot-worktrees/device-ai/glowing-carnival/app/src/test/java/at/heinz/deviceai/cognitive/SituationReturnMorphologyTest.kt
+info: kotlinc-jvm 2.2.21 (JRE 27+35)
+openjdk version "27" 2026-09-15
+OpenJDK Runtime Environment Temurin-27+35 (build 27+35)
+OpenJDK 64-Bit Server VM Temurin-27+35 (build 27+35, mixed mode, sharing)
+Linux x86_64
+junit_exit=0

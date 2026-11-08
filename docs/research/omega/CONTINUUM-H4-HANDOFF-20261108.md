@@ -398,3 +398,58 @@ the minimum-prefix safeguard is a necessary mechanism on DEV. Head-noun
 returns stay unsolved (2/9 only via genuine prefixes such as
 Wohnung/Wohnungsübergabe). Evidence: `docs/evidence/h4-20261108/h4b/green/`,
 `…/dev-candidate/`. TEST is opened only after this commit.
+
+### H4-B1 result — frozen TEST (candidate `3ab39fcd`, original `a69b0f29`)
+
+TEST seed 77419, 180 stories (26 long, 26 inflected, 26 ASR, 26 head, 26
+short, 25 ambiguous, 25 no-referent), JSON SHA-256 `c5c1d63b…`, generated
+after the candidate commit; both jars rebuilt from the frozen commit; clean
+tree enforced; four rotating paired rounds, deterministic outputs verified
+across rounds; `-Xmx256m`, 120 s cap, one JVM at a time.
+
+| arm | CORRECT /180 | wrong bindings | wrong on no-referent | AMBIGUOUS_CORRECT | NOMATCH_CORRECT | under-commit | MISSED | median CPU /180 | max p95 story | max RSS |
+|---|---|---|---|---|---|---|---|---|---|---|
+| original (Code50 = H1–H3) | 26 | 0 | 0 | 25/25 | 25/25 | 0 | 104 | 94.1 ms | 3.09 ms | 85476 KiB |
+| **candidate** | **109** | **0** | **0** | 25/25 | 25/25 | 0 | 21 | 101.2 ms | 1.75 ms | 84636 KiB |
+| ablation prefix ≥3 | 94 | 14 | 6 | 22/25 | 19/25 | 15 | 16 | 100.7 ms | 3.49 ms | 84844 KiB |
+| ablation truncation only | 55 | 0 | 0 | 25/25 | 25/25 | 0 | 75 | 96.0 ms | 1.69 ms | 90948 KiB |
+
+Paired CORRECT indicator (one-sided exact): candidate−original **+83 / −0,
+p = 1.0e-25**; truncation-only−original +29/−0 (p = 1.9e-9); prefix≥3−original
++71/−3; candidate−prefix≥3 +15/−0 (p = 3.1e-5); candidate−truncation-only
++54/−0 (p = 5.6e-17). Per stratum, candidate: long 26/26, inflected 26/26,
+ASR 26/26, short 26/26, head 5/26 (only genuine prefixes such as
+Wohnung/Wohnungsübergabe), ambiguous 25/25 abstentions, no-referent 25/25.
+
+**Preregistered gate: PASS** (gain ≥ +20 ✔, p < .05 ✔, wrong ≤ original
+(0 ≤ 0) ✔, zero wrong on no-referent ✔, p95 story ≤ 20 ms ✔). The hypothesis
+survived; the prefix ≥3 ablation falsified "any tolerance is equally safe"
+(14 wrong), and truncation alone explains only the long-compound stratum.
+
+**Honest limits.** (1) The strata are template-generated from a self-authored
+vocabulary; the 26/26 results show the mechanism covers the morphology classes
+it was designed for, not natural-conversation generalization. (2) Realistic
+false prefixes (Arbeit/Arbeitsamt, Steuer/Steuererklärung are *related*, but
+Rechner/Rechnung is correctly rejected at 5 shared characters) are not in the
+vocabulary; an adversarial collision set is the next negative control. (3) The
+component is already live in the prompt-hint path (`AgentActivity`
+`situationHint`), so this change alters production prompts for return
+references: **device/Gemma/Fold7 QA NOT_RUN**, no energy measurement, host
+JVM only; the hint remains navigation-only. (4) Head-noun returns are
+unsolved by design (H4-B2 candidate: compound-head matching with the same
+safety controls). (5) Free-language pronoun/role/causal/counterfactual
+understanding (issue #652 H4-B remainder) still needs the local model and is
+NOT_RUN.
+
+Reproduce: `scripts/continuum-h4b-check.sh <out-orig> a69b0f29` (3 RED),
+`scripts/continuum-h4b-check.sh <out-cand>` (16 OK),
+`python3 tools/continuum-cognitive-pilots/h4b-stories.py test <data>`,
+`python3 tools/continuum-cognitive-pilots/h4b-measure.py --original
+<out-orig>/h4b.jar --candidate <out-cand>/h4b.jar --split test <data> <result>`.
+Evidence: `docs/evidence/h4-20261108/h4b/test/` (stories, 16 traces,
+`comparison.json`, JUnit and provenance for both builds).
+
+**Handoff.** SOL: the change is two files plus one new test file, source
+compatible (`LocalConversationContext` unchanged); integrate only through the
+normal QA path. Astra: the normalization policy is a constructor value; do not
+add a second tokenizer. Rollback: revert `3ab39fcd` (no data migration).
