@@ -36,6 +36,7 @@ class OwnerAppActionFlowTest {
             val flow = OwnerAppActionFlow(intake.opening, intake.requireInstalledCandidate)
             val confirm = flow.returned(invoke(gate, flow.start(intake.query))) as OwnerAppActionFlow.Step.Confirm
             assertEquals(listOf("find_app"), calls.map { it.name })
+            assertTrue(flow.canRetainAppLookupContext)
             assertEquals("org.example.messenger", confirm.call.arguments["packageOrName"])
             val approved = checkNotNull(flow.confirm(true))
             val result = flow.returned(invoke(gate, approved)) as OwnerAppActionFlow.Step.Done
@@ -208,6 +209,7 @@ class OwnerAppActionFlowTest {
             assertTrue(flow.lookupVerified)
             assertFalse(flow.exactMatchVerified)
             assertTrue(flow.lookupFinishedWithoutInteraction)
+            assertFalse(flow.canRetainAppLookupContext)
             assertTrue(OwnerAppLookupIntent.shouldFallbackToConversation(
                 intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified
             ))
@@ -231,6 +233,7 @@ class OwnerAppActionFlowTest {
         val offered = cancelled.returned(invoke(gate, cancelled.start(intake.query)))
         assertTrue(offered is OwnerAppActionFlow.Step.Choose)
         assertFalse(cancelled.lookupFinishedWithoutInteraction)
+        assertTrue(cancelled.canRetainAppLookupContext)
         val cancelReceipt = cancelled.choose(null) as OwnerAppActionFlow.Step.Done
         assertTrue(cancelReceipt.message.contains("abgebrochen"))
         assertFalse(cancelled.lookupFinishedWithoutInteraction)
@@ -244,6 +247,7 @@ class OwnerAppActionFlowTest {
         val receipt = launched.returned(invoke(gate, checkNotNull(launched.confirm(true)))) as
             OwnerAppActionFlow.Step.Done
         assertTrue(receipt.message.contains("neuen aktiven Fenster"))
+        assertTrue(launched.canRetainAppLookupContext)
         assertFalse(launched.lookupFinishedWithoutInteraction)
     }
 
