@@ -121,7 +121,8 @@ class Airbus2100CockpitOrchestrator(
     }
 
     private fun promote(next: Phase, scene: JarvisActionScenes.Scene?) {
-        if (next.rank < phase.rank) return
+        // Phase authority is monotonic; a later real event may still change the visual world
+        // without lowering that authority (for example calculation while approval remains pending).
         if (next.rank > phase.rank) phase = next
         if (scene != null) {
             onSceneProfile(scene)
