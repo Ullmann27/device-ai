@@ -55,6 +55,22 @@ class LocalReasoningWorkSceneUiTest {
             Long::class.javaPrimitiveType
         ).apply { isAccessible = true }.invoke(a, turn, request, delayMillis)
 
+    private fun invokeStream(a: AgentActivity, turn: String, chars: Int, chunks: Int, elapsed: Long) =
+        AgentActivity::class.java.getDeclaredMethod(
+            "updateLocalReasoningStream", String::class.java, Int::class.javaPrimitiveType,
+            Int::class.javaPrimitiveType, Long::class.javaPrimitiveType
+        ).apply { isAccessible = true }.invoke(a, turn, chars, chunks, elapsed)
+
+    private fun invokeCompleted(a: AgentActivity, turn: String, outputTokens: Int?) =
+        AgentActivity::class.java.getDeclaredMethod(
+            "updateLocalReasoningCompleted", String::class.java,
+            at.heinz.deviceai.localmodel.LocalInferenceMetrics::class.java
+        ).apply { isAccessible = true }.invoke(a, turn,
+            at.heinz.deviceai.localmodel.LocalInferenceMetrics(
+                promptCharacters = 1200, responseCharacters = 420, streamedChunks = 7,
+                inputTokens = 240, outputTokens = outputTokens, firstTokenLatencyMillis = 310,
+                totalLatencyMillis = 2000
+            ))
     private fun invokePromoteToTool(a: AgentActivity) =
         AgentActivity::class.java.getDeclaredMethod("promoteLocalReasoningWorkSceneToTool")
             .apply { isAccessible = true }.invoke(a)
@@ -148,13 +164,22 @@ class LocalReasoningWorkSceneUiTest {
             assertTrue(views.any { it.tag == "jarvis-work-window" && it.isShown })
             assertTrue(views.filterIsInstance<TextView>().any {
                 it.tag == "jarvis-local-work-status:local-proof" &&
-                    it.text.toString().contains("Lokale Bearbeitung läuft")
+                    it.text.toString().contains("Kontext & Gedächtnis")
             })
             assertTrue(views.filterIsInstance<ProgressBar>().any {
                 it.tag == "jarvis-local-work-progress:local-proof" && it.isShown && it.isIndeterminate
             })
             assertNotNull(field(a, "localReasoningWorkScene"))
 
+            val telemetry = views.filterIsInstance<TextView>().single {
+                it.tag == "jarvis-local-work-telemetry:local-proof"
+            }
+            invokeStream(a, "local-proof", 180, 3, 1250L)
+            assertTrue(telemetry.text.toString().contains("180 Zeichen"))
+            assertTrue(telemetry.text.toString().contains("3 Chunks"))
+            invokeCompleted(a, "local-proof", 40)
+            assertTrue(telemetry.text.toString().contains("40 Output-Tokens"))
+            assertTrue(telemetry.text.toString().contains("20.0 tok/s"))
             invokeFinish(a, "fremder-turn", true)
             views = descendants(root)
             assertTrue("foreign turn must not close owner work", views.any {
