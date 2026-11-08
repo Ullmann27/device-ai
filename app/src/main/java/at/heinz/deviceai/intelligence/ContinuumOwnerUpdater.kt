@@ -42,22 +42,60 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
         submit(done) {
             val version = installedVersionCode()
             val signer = installedSignerSha256()
-            val json = readText(ContinuumOwnerUpdateCatalog.MANIFEST_URL,
-                ContinuumOwnerUpdateCatalog.MAX_JSON_BYTES)
-            val release = ContinuumOwnerUpdateCatalog.parseAvailable(json)
-                ?: return@submit Check.NoRelease
-            val policy = ContinuumSignedUpdatePolicy.check(
-                context.packageName, version, signer,
-                ContinuumOwnerUpdateCatalog.HOST, release.descriptor
-            )
-            when (policy) {
-                ContinuumUpdatePreflight.ReadyForActualApkVerification -> Check.Available(release)
-                is ContinuumUpdatePreflight.Rejected ->
-                    if (policy.reason == ContinuumUpdateRejection.OLD_OR_EQUAL_VERSION)
-                        Check.Current
-                    else
-                        Check.Rejected("Freigabeprüfung verweigert: $policy")
+
+            val renderAttempt = runCatching {
+                val json = readTextExact(
+                    ContinuumOwnerUpdateCatalog.MANIFEST_URL,
+                    ContinuumOwnerUpdateCatalog.HOST,
+                    ContinuumOwnerUpdateCatalog.MANIFEST_PATH,
+                    ContinuumOwnerUpdateCatalog.MAX_JSON_BYTES
+                )
+                ContinuumOwnerUpdateCatalog.parseAvailable(json)
             }
+            val githubAttempt = runCatching {
+                val json = readTextExact(
+                    ContinuumGitHubReleaseCatalog.API_URL,
+                    ContinuumGitHubReleaseCatalog.API_HOST,
+                    ContinuumGitHubReleaseCatalog.API_PATH,
+                    ContinuumGitHubReleaseCatalog.MAX_JSON_BYTES,
+                    accept = "application/vnd.github+json"
+                )
+                ContinuumGitHubReleaseCatalog.parseLatest(json)
+            }
+
+            val releases = listOfNotNull(renderAttempt.getOrNull(), githubAttempt.getOrNull())
+            if (releases.isEmpty()) {
+                if (renderAttempt.isFailure && githubAttempt.isFailure) {
+                    val detail = listOfNotNull(
+                        renderAttempt.exceptionOrNull()?.message,
+                        githubAttempt.exceptionOrNull()?.message
+                    ).joinToString(" · ").take(320)
+                    error("Kein sicherer Updatekanal erreichbar: " + detail)
+                }
+                return@submit Check.NoRelease
+            }
+
+            val candidates = releases.map { release ->
+                ContinuumOwnerReleaseSelector.Candidate(
+                    release,
+                    preflight(version, signer, release)
+                )
+            }
+            ContinuumOwnerReleaseSelector.select(candidates)?.let {
+                return@submit Check.Available(it)
+            }
+
+            if (candidates.any {
+                    (it.preflight as? ContinuumUpdatePreflight.Rejected)?.reason ==
+                        ContinuumUpdateRejection.OLD_OR_EQUAL_VERSION
+                }) return@submit Check.Current
+
+            val rejection = candidates.mapNotNull {
+                it.preflight as? ContinuumUpdatePreflight.Rejected
+            }.firstOrNull()
+            if (rejection != null)
+                Check.Rejected("Freigabeprüfung verweigert: " + rejection.reason)
+            else Check.NoRelease
         }
     }
 
@@ -69,10 +107,8 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
         submit(done) {
             val currentVersion = installedVersionCode()
             val original = installedSignerSha256()
-            check(ContinuumSignedUpdatePolicy.check(
-                context.packageName, currentVersion, original,
-                ContinuumOwnerUpdateCatalog.HOST, release.descriptor
-            ) is ContinuumUpdatePreflight.ReadyForActualApkVerification) {
+            check(preflight(currentVersion, original, release)
+                is ContinuumUpdatePreflight.ReadyForActualApkVerification) {
                 "Installationsfreigabe nicht mehr gültig"
             }
 
@@ -113,27 +149,56 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
         }
     }
 
-    private fun connect(url: String, expectedPath: String): HttpsURLConnection {
-        val endpoint = URL(url)
-        check(endpoint.protocol == "https" &&
-            endpoint.host.equals(ContinuumOwnerUpdateCatalog.HOST, ignoreCase = true) &&
-            endpoint.port in listOf(-1, 443) &&
-            endpoint.path == expectedPath && endpoint.query == null && endpoint.ref == null &&
-            java.net.URI(url).userInfo == null) { "Unzulässiger Update-Server" }
-        return (endpoint.openConnection() as HttpsURLConnection).apply {
+    private fun preflight(
+        installedVersion: Int,
+        installedSigner: String,
+        release: ContinuumOwnerUpdateRelease
+    ): ContinuumUpdatePreflight = when (release.source) {
+        ContinuumOwnerUpdateSource.RENDER -> ContinuumSignedUpdatePolicy.check(
+            context.packageName, installedVersion, installedSigner,
+            ContinuumOwnerUpdateCatalog.HOST, release.descriptor
+        )
+        ContinuumOwnerUpdateSource.GITHUB_RELEASE -> ContinuumGitHubSignedUpdatePolicy.check(
+            context.packageName, installedVersion, installedSigner, release.descriptor
+        )
+    }
+
+    private fun openHttps(url: String): HttpsURLConnection =
+        (URL(url).openConnection() as HttpsURLConnection).apply {
             instanceFollowRedirects = false
             connectTimeout = 12_000
             readTimeout = 20_000
             requestMethod = "GET"
             setRequestProperty("Accept-Encoding", "identity")
+            setRequestProperty("User-Agent", "Continuum-Android-Updater")
             useCaches = false
         }
+
+    private fun connectExact(url: String, expectedHost: String, expectedPath: String): HttpsURLConnection {
+        val uri = java.net.URI(url)
+        check(uri.scheme.equals("https", ignoreCase = true) &&
+            uri.host.equals(expectedHost, ignoreCase = true) &&
+            uri.userInfo == null && uri.rawQuery == null && uri.rawFragment == null &&
+            (uri.port == -1 || uri.port == 443) &&
+            uri.rawPath == expectedPath) { "Unzulässiger Update-Server" }
+        return openHttps(url)
     }
 
-    private fun readText(url: String, maxBytes: Int): String {
-        val connection = connect(url, ContinuumOwnerUpdateCatalog.MANIFEST_PATH)
+    private fun readTextExact(
+        url: String,
+        expectedHost: String,
+        expectedPath: String,
+        maxBytes: Int,
+        accept: String? = null
+    ): String {
+        val connection = connectExact(url, expectedHost, expectedPath)
+        accept?.let { connection.setRequestProperty("Accept", it) }
+        if (expectedHost.equals(ContinuumGitHubReleaseCatalog.API_HOST, ignoreCase = true))
+            connection.setRequestProperty("X-GitHub-Api-Version", "2022-11-28")
         try {
-            check(connection.responseCode == 200) { "Kein freigegebener Update-Katalog (HTTP ${connection.responseCode})" }
+            check(connection.responseCode == 200) {
+                "Kein freigegebener Update-Katalog (HTTP " + connection.responseCode + ")"
+            }
             check(connection.contentLengthLong in -1..maxBytes.toLong()) { "Update-Katalog zu groß" }
             val bytes = connection.inputStream.use { source ->
                 val out = java.io.ByteArrayOutputStream()
@@ -152,14 +217,36 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
         }
     }
 
+    private fun openDownloadConnection(release: ContinuumOwnerUpdateRelease): HttpsURLConnection {
+        if (release.source == ContinuumOwnerUpdateSource.RENDER) {
+            val path = java.net.URI(release.descriptor.apkUrl).rawPath
+            return connectExact(release.descriptor.apkUrl, ContinuumOwnerUpdateCatalog.HOST, path)
+        }
+
+        var current = java.net.URI(release.descriptor.apkUrl)
+        var redirects = 0
+        while (true) {
+            val connection = openHttps(current.toString())
+            val code = connection.responseCode
+            if (code !in 300..399) return connection
+            val location = connection.getHeaderField("Location")
+            connection.disconnect()
+            check(redirects < ContinuumGitHubDownloadRedirectPolicy.MAX_REDIRECTS) {
+                "Zu viele GitHub-Download-Weiterleitungen"
+            }
+            current = ContinuumGitHubDownloadRedirectPolicy.resolve(current, location.orEmpty())
+                ?: error("GitHub-Download wurde auf einen nicht freigegebenen Host umgeleitet")
+            redirects++
+        }
+    }
+
     private fun download(
         release: ContinuumOwnerUpdateRelease,
         destination: File,
         progress: (Long, Long) -> Unit
     ) {
         val entry = release.descriptor
-        val expectedPath = java.net.URI(entry.apkUrl).rawPath
-        val connection = connect(entry.apkUrl, expectedPath)
+        val connection = openDownloadConnection(release)
         try {
             check(connection.responseCode == 200) { "APK nicht verfügbar (HTTP ${connection.responseCode})" }
             check(connection.contentLengthLong in listOf(-1L, entry.byteLength)) {
