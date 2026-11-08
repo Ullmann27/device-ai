@@ -115,15 +115,20 @@ class ContinuumCognitiveBench12Test {
     }
 
     @Test fun c12_experienceTransferRequiresRepeatedVerifiedEvidence() {
-        fun e(id:String)=Experience(
-            id=id,taskType="agent_task",requestSummary="Surface prüfen",
+        fun e(id:String, request:String)=Experience(
+            id=id,taskType="agent_task",requestSummary=request,
             sourceIds=listOf("receipt:$id"),toolIds=listOf("get_device_info"),
             outcome=ExperienceOutcome.SUCCESS,startedAt=1,completedAt=2,
             evaluation=Evaluation(true,.9)
         )
-        val one=ExperiencePatternMaturity.assess(listOf(e("1")),"agent_task",listOf("get_device_info"))
+        val one=ExperiencePatternMaturity.assess(
+            listOf(e("1","Surface prüfen")),"agent_task",listOf("get_device_info"))
         val three=ExperiencePatternMaturity.assess(
-            listOf(e("1"),e("2"),e("3")),"agent_task",listOf("get_device_info"))
+            listOf(
+                e("1","Surface prüfen"),
+                e("2","Schwarze Oberfläche beim Fold prüfen"),
+                e("3","Darstellung nach Aufklappen kontrollieren")
+            ),"agent_task",listOf("get_device_info"))
         assertEquals(ExperiencePatternMaturity.Maturity.QUARANTINED_OBSERVATION,one.maturity)
         assertEquals(ExperiencePatternMaturity.Maturity.VALIDATED_PATTERN,three.maturity)
         assertFalse(one.maturity==three.maturity)
