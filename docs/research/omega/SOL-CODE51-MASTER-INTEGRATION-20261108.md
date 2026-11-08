@@ -9,7 +9,8 @@ No main merge, signing, release, installation, private data or signer access.
 
 ## Research cancellation checkpoint (resume here)
 
-Continuation on the same isolated #658 branch; EXP-06 evidence admission and
+Tested source: `d1fb060d95a4207191a665b91f90a208ad941cae`, pushed and
+remote-verified on the same isolated #658 branch. EXP-06 evidence admission and
 EXP-12 lifecycle continuity. No bot-persistence redesign or release work.
 
 - Existing `ApprovedWebToolGate.completeApproval` accepts a decision only from
@@ -29,8 +30,33 @@ Focused compilation/JUnit: **14 PASS** across `ApprovedWebToolGateTest` and
 `ConversationResearchApprovalIntegrationTest`, including five added regressions
 for revocation, replacement, mode changes, one-shot decisions and late results.
 Controlled providers only, no live HTTP. Actual Android callback timing and
-Fold7 remain NOT_RUN. Full current-source JVM regression is pending at this
-checkpoint; the earlier whole-text admission repair remains included.
+Fold7 remain NOT_RUN. The earlier whole-text admission repair is included.
+
+Final current-source validation (JDK 21 / Kotlin 2.2.21):
+
+| Check | Result |
+|---|---|
+| `scripts/android-kotlin-unit-check.sh` as `nobody` | Main + test source compilation PASS; 635 JUnit classes, **OK (3578 tests)** |
+| Existing `*Checks` programs | Four executables PASS; one no-main helper skipped as executable (covered by JUnit) |
+| Documented native Node selection below | **202 PASS, 0 FAIL, 0 cancelled, 0 SKIP** |
+| Gradle compile/unit/lint attempt | **BLOCKED** before app tasks: AGP `com.android.application:8.10.0` could not resolve |
+| Direct Google Maven reachability | `curl -I --max-time 15 https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/8.10.0/gradle-8.10.0.pom` -> exit 6, host DNS resolution failed |
+| Robolectric, APK, Fold7 speech/thermal/runtime | NOT_RUN; no signing, installation or release |
+
+Full JVM command uses the environment and unprivileged runner documented below;
+wall time 4:59.53, max RSS 2,164,712 KiB. These are **host test-runner costs**, not
+Android memory/thermal measurements or a performance-gain claim.
+Gradle was retried with JDK 21:
+
+```sh
+./gradlew --no-daemon --console=plain -PcontinuumLocalStandaloneQa=true \
+  :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
+```
+
+Logs are retained in the session artifacts `research-lifecycle-final/`.
+Next: retry Gradle on an authorized working SDK host and exercise actual
+Android dialog/STOP/pause/resume timing plus Fold7 voice/thermal behavior.
+Profile-bound durable bot recovery remains a separate unfinished milestone.
 
 Rollback: revert this cancellation checkpoint as a unit, not individual dialog
 handlers; keep the independent full-text memory admission repair below.
