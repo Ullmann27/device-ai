@@ -1,0 +1,61 @@
+id	arm	kind	target	turn_threads	wall_ns	cpu_ns
+dev-000	ablation-prefix3	RESOLVED	topic-0bb7203770cfdeed	topic-0bb7203770cfdeed,topic-fcf6cc664c32f62c,topic-1c503ed1c5889b82	1185140	1118200
+dev-001	ablation-prefix3	RESOLVED	topic-95917dc65d7bb84c	topic-95917dc65d7bb84c,topic-4561c776a8e41a4a,topic-1c503ed1c5889b82	861509	864273
+dev-002	ablation-prefix3	RESOLVED	topic-20fef55afeaa4858	topic-20fef55afeaa4858,topic-1c503ed1c5889b82,topic-1b6e121fb2e76a73	1004031	1006635
+dev-003	ablation-prefix3	RESOLVED	topic-6240a8aefd6c67ef	topic-83e7de70ca3322b9,topic-7a5ed3d8706f7e9d,topic-6240a8aefd6c67ef,topic-91e0a71a9356d112,topic-aa2976168b2d6dfa	1523673	1526536
+dev-004	ablation-prefix3	RESOLVED	topic-2f73a91afebf155c	topic-2f73a91afebf155c,topic-71edcb4df16b89ff,topic-aef27ea490df4564,topic-1c503ed1c5889b82	1137189	1139862
+dev-005	ablation-prefix3	AMBIGUOUS	topic-251d3d3ab2ae1142|topic-82a9b7ecb922f562	topic-2ab03072235066a5,topic-82a9b7ecb922f562,topic-86ebc9c50b1cab13,topic-251d3d3ab2ae1142,topic-1c503ed1c5889b82,topic-c831bab54d73078f	2458089	2433682
+dev-006	ablation-prefix3	RESOLVED	topic-6240a8aefd6c67ef	topic-378f9e44883e2966,topic-6240a8aefd6c67ef,topic-62bdfafa2c294658	1078621	1056037
+dev-007	ablation-prefix3	RESOLVED	topic-c9b80233b59aecc8	topic-c9b80233b59aecc8,topic-6240a8aefd6c67ef,topic-592012007a771499	913896	916750
+dev-008	ablation-prefix3	RESOLVED	topic-1afab8f366acf3c4	topic-1afab8f366acf3c4,topic-1c503ed1c5889b82,topic-10a0e7b572806072	813718	816642
+dev-009	ablation-prefix3	AMBIGUOUS	topic-6240a8aefd6c67ef|topic-1fa218de378be6b7	topic-1fa218de378be6b7,topic-6240a8aefd6c67ef,topic-e71bfdcf2fe46bea,topic-d12e8f344168f708	1130809	1133252
+dev-010	ablation-prefix3	NOMATCH		topic-0ef437e0b73391e2,topic-1c503ed1c5889b82,topic-088f711db9782f9e,topic-c8cad7da1605b892,topic-b3f5870637a56b9f	1782246	1719832
+dev-011	ablation-prefix3	RESOLVED	topic-b3f5870637a56b9f	topic-b3f5870637a56b9f,topic-e9155a6ed8545bd5,topic-6240a8aefd6c67ef	969039	972063
+dev-012	ablation-prefix3	AMBIGUOUS	topic-575dc1e5b78050bb|topic-82a9b7ecb922f562	topic-82a9b7ecb922f562,topic-1c503ed1c5889b82,topic-575dc1e5b78050bb,topic-1c775bdaaf61b45e,topic-1fa218de378be6b7	1518715	1521629
+dev-013	ablation-prefix3	NOMATCH		topic-cda3f3dfd3a0e771,topic-a36902ecb8ec3a72,topic-6240a8aefd6c67ef	992193	980445
+dev-014	ablation-prefix3	RESOLVED	topic-de37ff11cae30f6e	topic-9e4169dd081cff03,topic-de37ff11cae30f6e,topic-64b60895856360fc,topic-1c503ed1c5889b82,topic-3bcdda5294e32613	1410565	1391125
+dev-015	ablation-prefix3	RESOLVED	topic-67a4a30554544d32	topic-67a4a30554544d32,topic-2f73a91afebf155c,topic-581e349a59f2e778,topic-6240a8aefd6c67ef,topic-8080a829ea196861	1216977	1219730
+dev-016	ablation-prefix3	RESOLVED	topic-d12e8f344168f708	topic-d12e8f344168f708,topic-1c503ed1c5889b82,topic-684210c8d0a9e769,topic-9d8f051fd8ca908d,topic-8780ca4be391989c	1192340	1189235
+dev-017	ablation-prefix3	RESOLVED	topic-6f70f39ff80b27cb	topic-6f70f39ff80b27cb,topic-90e4effc69c87bd3,topic-1c503ed1c5889b82	730985	733789
+dev-018	ablation-prefix3	RESOLVED	topic-2f73a91afebf155c	topic-2f73a91afebf155c,topic-f664d1fd7c05a166,topic-6240a8aefd6c67ef,topic-d934e96293fc0d26,topic-ffc8281518fe175f	2055973	2026027
+dev-019	ablation-prefix3	AMBIGUOUS	topic-9a4fd0c120ff0f5e|topic-a07c86760ffc9c55	topic-05c2d1b6cab904cf,topic-1c503ed1c5889b82,topic-a07c86760ffc9c55,topic-9a4fd0c120ff0f5e,topic-2ab03072235066a5	5863996	2090874
+dev-020	ablation-prefix3	NOMATCH		topic-c959618c72da6736,topic-1c503ed1c5889b82,topic-de37ff11cae30f6e	2842571	1148786
+dev-021	ablation-prefix3	RESOLVED	topic-e5397a7263af3d37	topic-e5397a7263af3d37,topic-cde5f81cbbcb61ee,topic-1c503ed1c5889b82,topic-8080a829ea196861	1080434	1089116
+dev-022	ablation-prefix3	RESOLVED	topic-2a0dd2a91741bb7a	topic-2a0dd2a91741bb7a,topic-1c503ed1c5889b82,topic-592012007a771499	739298	742101
+dev-023	ablation-prefix3	RESOLVED	topic-90e4effc69c87bd3	topic-90e4effc69c87bd3,topic-378f9e44883e2966,topic-2bd8d5115735e14e,topic-6240a8aefd6c67ef,topic-2f73a91afebf155c	1234122	1237177
+dev-024	ablation-prefix3	NOMATCH		topic-bf265584d83f9348,topic-d934e96293fc0d26,topic-1c503ed1c5889b82	729473	732437
+dev-025	ablation-prefix3	RESOLVED	topic-8c29f93e5e8499a9	topic-4561c776a8e41a4a,topic-8c29f93e5e8499a9,topic-1235500348531975,topic-4013697e3d94487a,topic-6240a8aefd6c67ef	1140884	1144058
+dev-026	ablation-prefix3	AMBIGUOUS	topic-78732fd1ca4e674e|topic-ed04800f73aee93b	topic-ed04800f73aee93b,topic-78732fd1ca4e674e,topic-fd3f65a7941c4ee1,topic-6240a8aefd6c67ef	854178	857233
+dev-027	ablation-prefix3	NOMATCH		topic-314cbea89fec3991,topic-6f63025396779827,topic-1c503ed1c5889b82	679119	681973
+dev-028	ablation-prefix3	RESOLVED	topic-31150db187f34aef	topic-31150db187f34aef,topic-1c503ed1c5889b82,topic-aefb724dfecf9f76,topic-bd1fa15a5fd3a293	780348	783523
+dev-029	ablation-prefix3	RESOLVED	topic-2f04e511f03c0f71	topic-2f04e511f03c0f71,topic-1c503ed1c5889b82,topic-fd3f65a7941c4ee1	797374	800868
+dev-030	ablation-prefix3	AMBIGUOUS	topic-6240a8aefd6c67ef|topic-40578d66c3cef9d2	topic-c550fb41a23bcfdf,topic-40578d66c3cef9d2,topic-6240a8aefd6c67ef,topic-a5e0333cab2f3cbe	802422	805366
+dev-031	ablation-prefix3	RESOLVED	topic-6240a8aefd6c67ef	topic-e9155a6ed8545bd5,topic-a6bb72da90ff78ef,topic-6240a8aefd6c67ef,topic-4b10661dd2fdc0ed	792747	795380
+dev-032	ablation-prefix3	RESOLVED	topic-a2537752fe2ba9b9	topic-a2537752fe2ba9b9,topic-508f7fcb5cf59fa1,topic-1c503ed1c5889b82	650937	654051
+dev-033	ablation-prefix3	AMBIGUOUS	topic-bced31046a096fab|topic-063cf301bba1e0d2	topic-063cf301bba1e0d2,topic-1c503ed1c5889b82,topic-bced31046a096fab,topic-ea0cc7ae5b9c6baf,topic-e9155a6ed8545bd5	961007	963911
+dev-034	ablation-prefix3	NOMATCH		topic-ac83eda540a020db,topic-b502b49684be5efb,topic-6240a8aefd6c67ef	571308	573862
+dev-035	ablation-prefix3	RESOLVED	topic-0d1be8b39e1a3af2	topic-0d1be8b39e1a3af2,topic-4561c776a8e41a4a,topic-1c503ed1c5889b82	573050	576005
+dev-036	ablation-prefix3	RESOLVED	topic-cf8f79a6c90892f0	topic-cf8f79a6c90892f0,topic-34337d128e36b40f,topic-6240a8aefd6c67ef,topic-a8eef0eee7ab7298,topic-881eaf3200cf8258	5170116	1029247
+dev-037	ablation-prefix3	AMBIGUOUS	topic-6240a8aefd6c67ef|topic-f0da9ea6ff9588e5	topic-2a0dd2a91741bb7a,topic-f0da9ea6ff9588e5,topic-3dea44d23ba40d73,topic-6240a8aefd6c67ef,topic-ebbcb8890a220f28	919846	923431
+dev-038	ablation-prefix3	NOMATCH		topic-518363bbae436267,topic-4c3fe25ee66f2f5d,topic-1c503ed1c5889b82	443168	445651
+dev-039	ablation-prefix3	RESOLVED	topic-49949e7df21e5ffa	topic-49949e7df21e5ffa,topic-62bdfafa2c294658,topic-6240a8aefd6c67ef,topic-8d1156ab4853e490	581624	583957
+dev-040	ablation-prefix3	AMBIGUOUS	topic-6240a8aefd6c67ef|topic-10ca826146f3dff5	topic-753f038cf34ee91e,topic-10ca826146f3dff5,topic-ea0cc7ae5b9c6baf,topic-6240a8aefd6c67ef,topic-c831bab54d73078f,topic-91e0a71a9356d112	1005202	1008567
+dev-041	ablation-prefix3	NOMATCH		topic-f362827a2522fb7c,topic-b724fa84eae3db0b,topic-1c503ed1c5889b82	457129	459562
+dev-042	ablation-prefix3	RESOLVED	topic-1712c1e1e213c905	topic-1712c1e1e213c905,topic-378f9e44883e2966,topic-1c503ed1c5889b82,topic-432f68df7d0baf3c,topic-2ed4a2efc71b6ee2	786397	789292
+dev-043	ablation-prefix3	RESOLVED	topic-67a4a30554544d32	topic-67a4a30554544d32,topic-ce4108f94c41a2a7,topic-6240a8aefd6c67ef	484119	486683
+dev-044	ablation-prefix3	RESOLVED	topic-1b5ca274a19b1031	topic-36af07c4255981b2,topic-1b5ca274a19b1031,topic-31150db187f34aef,topic-6240a8aefd6c67ef	783433	786848
+dev-045	ablation-prefix3	RESOLVED	topic-ab0c1c70cad8fb9f	topic-ab0c1c70cad8fb9f,topic-ed609e882cd0acdc,topic-1c503ed1c5889b82,topic-7a5ed3d8706f7e9d	701762	705207
+dev-046	ablation-prefix3	AMBIGUOUS	topic-6240a8aefd6c67ef|topic-67a4a30554544d32	topic-67a4a30554544d32,topic-592012007a771499,topic-149aae12d54e3a6b,topic-6240a8aefd6c67ef,topic-45650dcbd2962dbd	822952	825795
+dev-047	ablation-prefix3	AMBIGUOUS	topic-1101a2f5778fc62d|topic-a97a9534bbffcc20	topic-f67b3488469a6e26,topic-a97a9534bbffcc20,topic-1101a2f5778fc62d,topic-1c503ed1c5889b82,topic-6c8f3ab9e5075603,topic-d676be6b2ee9210f	1007195	1026403
+dev-048	ablation-prefix3	NOMATCH		topic-904f0a9b8912b4af,topic-dddcaaab14937754,topic-83e7de70ca3322b9,topic-1c503ed1c5889b82	641503	644467
+dev-049	ablation-prefix3	RESOLVED	topic-722d736449a303c6	topic-722d736449a303c6,topic-1c503ed1c5889b82,topic-6f961340489a5852,topic-10a0e7b572806072	754651	757715
+dev-050	ablation-prefix3	AMBIGUOUS	topic-6240a8aefd6c67ef|topic-8022ba643eb4b231	topic-8022ba643eb4b231,topic-6240a8aefd6c67ef,topic-780782190abcf581	436198	438712
+dev-051	ablation-prefix3	RESOLVED	topic-cddcb89dcb10e268	topic-cddcb89dcb10e268,topic-1c503ed1c5889b82,topic-fa81add5420b1bc3	2417900	588614
+dev-052	ablation-prefix3	NOMATCH		topic-2d3983013f883af2,topic-6699ba5358883d7c,topic-1c503ed1c5889b82,topic-bd1fa15a5fd3a293,topic-83e7de70ca3322b9	723564	765056
+dev-053	ablation-prefix3	AMBIGUOUS	topic-6240a8aefd6c67ef|topic-4ba2205547a79f8d	topic-cddcb89dcb10e268,topic-eb480a7012ceb36e,topic-4ba2205547a79f8d,topic-6240a8aefd6c67ef,topic-d45866b4db7cc847	672368	674842
+dev-054	ablation-prefix3	AMBIGUOUS	topic-f0e9876bf6d279a4|topic-6240a8aefd6c67ef	topic-c7f37f57d6977950,topic-6240a8aefd6c67ef,topic-f0e9876bf6d279a4,topic-cf8f79a6c90892f0	732106	735402
+dev-055	ablation-prefix3	NOMATCH		topic-270e3701060e4adf,topic-fed3ebed42a018f1,topic-6240a8aefd6c67ef	408746	411090
+dev-056	ablation-prefix3	RESOLVED	topic-1712c1e1e213c905	topic-58c9961bd5e901c2,topic-1712c1e1e213c905,topic-a36902ecb8ec3a72,topic-1c503ed1c5889b82,topic-508f7fcb5cf59fa1	667651	670816
+dev-057	ablation-prefix3	RESOLVED	topic-7a205d11430dd796	topic-7a205d11430dd796,topic-4b78046dcc77cefd,topic-1c503ed1c5889b82,topic-a24781795a270363	612089	615513
+dev-058	ablation-prefix3	AMBIGUOUS	topic-6240a8aefd6c67ef|topic-4013697e3d94487a	topic-4013697e3d94487a,topic-a2537752fe2ba9b9,topic-4c3fe25ee66f2f5d,topic-6240a8aefd6c67ef,topic-9dee7f8c13cfab8f	633341	636044
+dev-059	ablation-prefix3	NOMATCH		topic-a8eef0eee7ab7298,topic-ecb3c8067696b0f5,topic-817ea26fcced4e4d,topic-9046a01d01f125dc,topic-6240a8aefd6c67ef	708792	716404

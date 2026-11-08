@@ -372,3 +372,29 @@ inflected return -> `NoMatch`); 9 existing + 4 control tests pass
 inflected 9, asr 9, head 9), AMBIGUOUS_CORRECT 8/8, NOMATCH_CORRECT 8/8, wrong
 0, process max RSS 65772 KiB, p95 story wall 1.96 ms
 (`docs/evidence/h4-20261108/h4b/dev-baseline/`). No candidate code exists yet.
+
+### H4-B1 candidate frozen (GREEN 16/16, DEV comparison)
+
+Change: `ConversationSituationModel.CueNormalization` (fold ä/ö/ü/ß, truncate
+to the tracker's 10 characters, prefix tolerance only with ≥6 shared leading
+characters) used by both `tokens()` and the tracker's cues; labels stay
+byte-identical; `LocalConversationContext` needs no change (default
+constructor). Ablations are constructor policies only
+(`tools/continuum-cognitive-pilots/h4b-arms/candidate/H4BArms.kt`).
+
+DEV (seed 50321, 60 stories; original arm compiled from `a69b0f29`):
+
+| arm | CORRECT | wrong bindings | AMBIGUOUS_CORRECT | NOMATCH_CORRECT | MISSED | median CPU /60 |
+|---|---|---|---|---|---|---|
+| original | 8 | 0 | 8/8 | 8/8 | 36 | 65.0 ms |
+| candidate | 37 | 0 | 8/8 | 8/8 | 7 (head) | 58.3 ms |
+| ablation prefix ≥3 | 30 | 5 (+7 under-commits) | 6/8 | 7/8 | 5 | 56.2 ms |
+| ablation truncation only | 17 | 0 | 8/8 | 8/8 | 27 | 53.6 ms |
+
+Paired CORRECT: candidate−original +29/0, p=1.9e-9; truncation alone +9 (the
+"long" stratum), folding adds the ASR stratum, prefix ≥6 adds the inflected
+stratum; prefix ≥3 is **not** equally safe (5 wrong incl. 1 no-referent), so
+the minimum-prefix safeguard is a necessary mechanism on DEV. Head-noun
+returns stay unsolved (2/9 only via genuine prefixes such as
+Wohnung/Wohnungsübergabe). Evidence: `docs/evidence/h4-20261108/h4b/green/`,
+`…/dev-candidate/`. TEST is opened only after this commit.

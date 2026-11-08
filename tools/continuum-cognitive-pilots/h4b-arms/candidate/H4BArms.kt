@@ -1,9 +1,13 @@
 package at.heinz.deviceai.cognitive
 
-/** Arm factory compiled against the unchanged source taken from a git ref. */
+/** Arm factory compiled against the worktree; ablations only change the normalization policy. */
 internal object H4BArms {
+    private val default = ConversationSituationModel.CueNormalization.DEFAULT
+
     fun create(arm: String): LocalConversationSituationTracker = when (arm) {
-        "original" -> LocalConversationSituationTracker()
-        else -> error("Arm $arm is not available on the original source")
+        "candidate" -> LocalConversationSituationTracker()
+        "ablation-prefix3" -> LocalConversationSituationTracker(default.copy(prefixMin = 3))
+        "ablation-truncate-only" -> LocalConversationSituationTracker(default.copy(foldUmlauts = false, prefixMin = null))
+        else -> error("Unknown arm: $arm")
     }
 }
