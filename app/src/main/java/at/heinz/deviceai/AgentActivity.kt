@@ -5192,7 +5192,7 @@ class AgentActivity : Activity() {
             return
         }
         val generation = ++appLookupGeneration
-        val flow = OwnerAppActionFlow(intake.opening)
+        val flow = OwnerAppActionFlow(intake.opening, requireExactMatch = intake.requireInstalledCandidate)
         activeOwnerAppFlow = flow
         appLookupActive = true
         activeLocalRequest = true
@@ -5227,11 +5227,13 @@ class AgentActivity : Activity() {
                     }
                 }
                 is OwnerAppActionFlow.Step.Done -> {
-                    if (flow.candidates.isNotEmpty()) appLookupContext = ownerSession to flow.candidates
                     val fallbackToConversation = OwnerAppLookupIntent.shouldFallbackToConversation(
                         intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified)
                     val clarifyMessage = OwnerAppLookupIntent.shouldClarifyMessage(
                         intake, flow.lookupVerified, flow.candidates.size, flow.exactMatchVerified)
+                    if (!fallbackToConversation && flow.candidates.isNotEmpty()) {
+                        appLookupContext = ownerSession to flow.candidates
+                    }
                     activeOwnerAppFlow = null
                     activeOwnerAppGate = null
                     appLookupActive = false

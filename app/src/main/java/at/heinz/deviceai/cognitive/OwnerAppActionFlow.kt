@@ -8,7 +8,10 @@ import org.json.JSONObject
 import java.util.UUID
 
 /** Selection never grants execution. */
-internal class OwnerAppActionFlow(private val opening: Boolean) {
+internal class OwnerAppActionFlow(
+    private val opening: Boolean,
+    private val requireExactMatch: Boolean = false
+) {
     sealed interface Step {
         data class Run(val call: ToolCallRequest, val confirmed: Boolean = false) : Step
         data class Choose(val candidates: List<NativeAppCandidate>) : Step
@@ -61,6 +64,7 @@ internal class OwnerAppActionFlow(private val opening: Boolean) {
         candidates = matches.candidates
         if (candidates.isEmpty()) return done("Ich habe keine passende startbare App gefunden. " +
             "Das beweist nicht, dass sie nicht installiert ist. Welche App meinst du genau?")
+        if (requireExactMatch && !exactMatchVerified) return done("Kein exakter App-Treffer bestätigt.")
         if (!opening) return done("Gefundene Apps: " + candidates.joinToString("; ") {
             "${it.label} (${it.packageName})"
         } + ". Welche davon möchtest du öffnen?")

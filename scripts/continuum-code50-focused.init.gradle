@@ -1,0 +1,12 @@
+allprojects {
+    tasks.withType(Test).configureEach {
+        filter {
+            includeTestsMatching('at.heinz.deviceai.cognitive.OwnerAppActionFlowTest')
+            includeTestsMatching('at.heinz.deviceai.Airbus2100CockpitAndCountdownTest')
+            includeTestsMatching('at.heinz.deviceai.Argon4CockpitAndBudgetRegressionTest')
+            includeTestsMatching('*AvatarMorphMapperComparisonTest')
+            includeTestsMatching('at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.implicitFuzzyNeedReturnsToConversationBeforeAppSelection')
+            includeTestsMatching('at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.explicitFuzzySelectionKeepsCancellationReceipt')
+        }
+    }
+}
