@@ -51,3 +51,21 @@ Danach: kompletter `:app:testDebugUnitTest :app:lintDebug`, Node/Backend-Full, e
 
 ## Rollback
 Staging-PR #630 geschlossen lassen oder nicht mergen; produktive Basis #603 bleibt unverändert. Parallel-PRs #627/#628/#629 nie per Force-Push/Reset überschreiben.
+
+## Code50 owner's APK release readiness — geprüft 08.11.2026
+**Aktueller Staging-Fix:** Der in #627 belegte fehlende `assertNull`-Import in `CockpitAnimationTriggersTest.kt` ist byteidentisch übernommen, Commit `8346e3e14efd6d890df48b0f73f72381f0ef855b`. Ohne diese Übernahme würde der komplette Unit-Compilelauf auf #630 weiterhin fehlschlagen.
+
+**Neuerer unabhängiger Beleg aus #627, NICHT aus dieser Staging-SHA:**
+- #627 HEAD `c65b40e2be80d22e27a9e3c20b44531bf8abb9d7` meldet dokumentierte echte RED-Probe 21/22, korrigierten fokussierten Android-Hostlauf **25/25 PASS** und neun Node-Vertragsdateien **33/33 PASS**.
+- Vollständiger `:app:testDebugUnitTest :app:lintDebug`-Lauf war auf diesem anderen SHA beim jüngsten Readback **RUNNING**, noch nicht grün.
+- **PR #630**: neuer UI-Holdout für stale Pronomenkontext + abweichende Produktivfixes. Ausführbare Node/Gradle/UI-/Lint-Testbelege: **NOT_RUN**. Ausgangs-Hosterfolge dürfen nicht als Bestehen von #630 ausgegeben werden.
+
+**Original-APK-Publisher:**
+- Reales Release-Skript `scripts/render-continuum-owner-continuous-release.sh` ist für versionCode 39+ vorgesehen; Code50 erfordert versionCode **50**, VersionName **0.3.49**, Paket `at.heinz.deviceai.continuumlocal`, Originalsignatur **6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23**.
+- Der Publisher verweigert die Signierung ohne **beide** exakt gleichen Commit-SHA-Freigaben `CONTINUUM_RELEASE_FREEZE_LIFTED_BY_OWNER` und `CONTINUUM_RELEASE_APPROVED_SHA` sowie echte Original-P12-Credentials. Keine Freigabe-/Key-Werte erfinden oder Freeze umgehen.
+- Render-Publisher `srv-dbf1tr2vcj2c73ehpfog` ist weiterhin auf `research/continuum-m8-render-signed-release-20261031` eingestellt, AutoDeploy AUS. Letzter gesichteter Publisher-Deploy vom 07.11.2026 (Code48-SHA) scheiterte wegen `pipeline_minutes_exhausted` schon vor Checkout. Code50 nicht auf Publisher eingecheckt und nicht gebaut.
+- Separater Code50-Render-QA-Dienst `srv-dbnual1srm7s73afh69g`: zuletzt `pipeline_minutes_exhausted` am 08.11.2026 02:58:29Z, außerdem alter Recall-Branch. Keine neue Deployment-/Billing-Aktion.
+- Aktuelle GitHub-Releases: letzter verfügbarer signierter Besitzerrelease ist Code48/0.3.47 mit geprüftem Fingerprint (GitHub `continuum-local-code48-c9fffb7dda9c173b6c5ccd4104672b09fd94de15`); **kein Code50-Release**.
+- Die lokale Container-Umgebung enthält keinen Repo-Checkout und keine Android-SDK/Gradle-Toolchain; `git ls-remote` scheitert an DNS. Eine hier erstellte Code50-Binärdatei oder APK-Prüfsumme ist daher **nicht vorhanden**.
+
+**Freigabekette:** exakter HEAD #630 sauber + reale Tests/QA → Merge NUR in PR #603 Integrationszweig → exakt autorisierter Release-Commit und VersionCode50 → funktionierender Original-Publisher mit Key-Fingerprint-Prüfung → signierte APK/Manifest/GitHub-Release und externer Readback → Besitzerinstallation. Bis dahin **APK_NOT_BUILT / NOT_RELEASED**.
