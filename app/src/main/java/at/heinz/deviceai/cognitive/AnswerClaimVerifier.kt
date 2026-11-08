@@ -1,5 +1,6 @@
 package at.heinz.deviceai.cognitive
 
+import java.math.BigDecimal
 import java.util.Locale
 
 /** Deterministic checks for one already-resolved factual claim. No truth is inferred here. */
@@ -42,6 +43,11 @@ object AnswerClaimVerifier {
         val citedSourceIds: Set<String>
     )
 
+    private data class NumericOccurrence(
+        val value: BigDecimal,
+        val start: Int
+    )
+
     fun verifyFocusedSentence(sentence: String, claim: GroundedClaim): Result {
         val candidate = normalize(sentence)
         if (candidate.isBlank()) {
@@ -60,9 +66,9 @@ object AnswerClaimVerifier {
         val expected = normalize(claim.expectedValue)
         val forbidden = claim.forbiddenValues.map(::normalize).filter(String::isNotBlank).toSet()
 
-        val expectedNumbers = numericTerms(expected)
-        val candidateNumbers = numericTerms(candidate)
-        val forbiddenNumbers = forbidden.flatMap(::numericTerms).toSet()
+        val expectedNumbers = numericTermsRaw(claim.expectedValue)
+        val candidateNumbers = numericTermsRaw(sentence)
+        val forbiddenNumbers = claim.forbiddenValues.flatMap(::numericTermsRaw).toSet()
 
         if (candidateNumbers.intersect(forbiddenNumbers).isNotEmpty()) {
             return Result(
@@ -80,7 +86,7 @@ object AnswerClaimVerifier {
                     claim.sourceIds
                 )
             }
-            if (hasNegatedExpectedNumber(candidate, expectedNumbers)) {
+            if (hasNegatedExpectedNumber(sentence, expectedNumbers)) {
                 return Result(
                     Verdict.CONTRADICTION,
                     "EXPECTED_NUMERIC_VALUE_EXPLICITLY_NEGATED",
@@ -131,15 +137,16 @@ object AnswerClaimVerifier {
     private fun containsCausalAssertion(value: String): Boolean =
         CAUSAL.any { it.containsMatchIn(value) }
 
-    private fun hasNegatedExpectedNumber(candidate: String, expectedNumbers: Set<Long>): Boolean {
-        val words = candidate.split(' ').filter(String::isNotBlank)
-        words.forEachIndexed { index, word ->
-            val number = word.toLongOrNull() ?: NUMBER_WORDS[word]
-            if (number !in expectedNumbers) return@forEachIndexed
-            val from = maxOf(0, index - 3)
-            if (words.subList(from, index).any { it in NEGATIONS }) return true
-        }
-        return false
+    private fun hasNegatedExpectedNumber(
+        candidate: String,
+        expectedNumbers: Set<BigDecimal>
+    ): Boolean = numericOccurrencesRaw(candidate).any { occurrence ->
+        if (occurrence.value !in expectedNumbers) return@any false
+        normalize(candidate.substring(0, occurrence.start))
+            .split(' ')
+            .filter(String::isNotBlank)
+            .takeLast(3)
+            .any { it in NEGATIONS }
     }
 
     private fun containsNegatedExpected(candidate: String, expected: String): Boolean {
@@ -160,11 +167,38 @@ object AnswerClaimVerifier {
         return Regex("(?<![\\p{L}\\p{N}])$escaped(?![\\p{L}\\p{N}])").containsMatchIn(candidate)
     }
 
-    private fun numericTerms(value: String): Set<Long> =
-        TOKENS.findAll(value).mapNotNull { token ->
-            val raw = token.value.lowercase(Locale.GERMAN)
-            raw.toLongOrNull() ?: NUMBER_WORDS[raw]
-        }.toSet()
+    private fun numericTermsRaw(value: String): Set<BigDecimal> =
+        numericOccurrencesRaw(value).mapTo(linkedSetOf()) { it.value }
+
+    private fun numericOccurrencesRaw(value: String): List<NumericOccurrence> {
+        val lower = value.lowercase(Locale.GERMAN)
+        val literals = NUMBER.findAll(lower).mapNotNull { match ->
+            parseNumber(match.value)?.let { NumericOccurrence(it, match.range.first) }
+        }
+        val words = TOKENS.findAll(lower).mapNotNull { match ->
+            NUMBER_WORDS[match.value]?.let {
+                NumericOccurrence(BigDecimal.valueOf(it), match.range.first)
+            }
+        }
+        return (literals + words).sortedBy(NumericOccurrence::start).toList()
+    }
+
+    private fun parseNumber(raw: String): BigDecimal? {
+        val lastComma = raw.lastIndexOf(',')
+        val lastDot = raw.lastIndexOf('.')
+        val canonical = when {
+            lastComma >= 0 && lastDot >= 0 -> {
+                val decimalAt = maxOf(lastComma, lastDot)
+                val integral = raw.substring(0, decimalAt)
+                    .replace(",", "")
+                    .replace(".", "")
+                integral + "." + raw.substring(decimalAt + 1)
+            }
+            lastComma >= 0 -> raw.replace(',', '.')
+            else -> raw
+        }
+        return canonical.toBigDecimalOrNull()?.stripTrailingZeros()
+    }
 
     private fun normalize(value: String): String =
         value.lowercase(Locale.GERMAN)
@@ -172,6 +206,13 @@ object AnswerClaimVerifier {
             .replace(Regex("\\s+"), " ")
             .trim()
 
+    private val NUMBER = Regex(
+        "(?<![\\p{L}\\p{N}])[+-]?(?:" +
+            "\\d{1,3}(?:\\.\\d{3})+,\\d+|" +
+            "\\d{1,3}(?:,\\d{3})+\\.\\d+|" +
+            "\\d+(?:[.,]\\d+)?" +
+            ")(?![\\p{L}\\p{N}])"
+    )
     private val TOKENS = Regex("[\\p{L}\\p{N}]+")
     private val NEGATIONS = setOf("nicht", "kein", "keine", "keinen", "keinem", "keiner", "nie", "niemals")
     private val NUMBER_WORDS = mapOf(

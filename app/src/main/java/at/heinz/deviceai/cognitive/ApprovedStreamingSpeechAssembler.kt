@@ -118,9 +118,10 @@ internal class ApprovedStreamingSpeechAssembler(
     private fun isSentenceBoundary(index: Int): Boolean {
         val c = buffer[index]
         if (c !in charArrayOf('.', '!', '?', '…')) return false
-        if (c == '.' && looksLikeAbbreviationOrDecimal(index)) return false
         val next = index + 1
-        return next >= buffer.length || buffer[next].isWhitespace()
+        if (next >= buffer.length) return false
+        if (c == '.' && looksLikeAbbreviationOrDecimal(index)) return false
+        return buffer[next].isWhitespace()
     }
 
     private fun looksLikeAbbreviationOrDecimal(index: Int): Boolean {

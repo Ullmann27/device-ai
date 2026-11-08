@@ -45,6 +45,56 @@ class AnswerClaimVerifierTest {
         )
     }
 
+    @Test fun decimalValuesRemainAtomicAcrossSeparators() {
+        assertEquals(
+            AnswerClaimVerifier.Verdict.CONTRADICTION,
+            AnswerClaimVerifier.verifyFocusedSentence("Es sind 3 Euro.", claim("3,5 Euro")).verdict
+        )
+        assertEquals(
+            AnswerClaimVerifier.Verdict.CONTRADICTION,
+            AnswerClaimVerifier.verifyFocusedSentence("Es sind 5,3 Euro.", claim("3,5 Euro")).verdict
+        )
+        assertEquals(
+            AnswerClaimVerifier.Verdict.PASS,
+            AnswerClaimVerifier.verifyFocusedSentence("Es sind 3.50 Euro.", claim("3,5 Euro")).verdict
+        )
+    }
+
+    @Test fun groupedDecimalFormatsCompareAsOneValue() {
+        assertEquals(
+            AnswerClaimVerifier.Verdict.PASS,
+            AnswerClaimVerifier.verifyFocusedSentence(
+                "Es sind 1,234.50 Euro.",
+                claim("1234,5 Euro")
+            ).verdict
+        )
+        assertEquals(
+            AnswerClaimVerifier.Verdict.PASS,
+            AnswerClaimVerifier.verifyFocusedSentence(
+                "Es sind 1.234,50 Euro.",
+                claim("1234.5 Euro")
+            ).verdict
+        )
+    }
+
+    @Test fun negatedAndSignedDecimalsStayFailClosed() {
+        assertEquals(
+            AnswerClaimVerifier.Verdict.CONTRADICTION,
+            AnswerClaimVerifier.verifyFocusedSentence("Es sind nicht 3,5 Euro.", claim("3.5 Euro")).verdict
+        )
+        assertEquals(
+            AnswerClaimVerifier.Verdict.CONTRADICTION,
+            AnswerClaimVerifier.verifyFocusedSentence("Die Temperatur ist 5 Grad.", claim("-5 Grad")).verdict
+        )
+        assertEquals(
+            AnswerClaimVerifier.Verdict.INSUFFICIENT_EVIDENCE,
+            AnswerClaimVerifier.verifyFocusedSentence(
+                "Es sind 3,5 Euro plus 4 Euro.",
+                claim("3,5 Euro")
+            ).verdict
+        )
+    }
+
     @Test fun supersededAndNegatedValuesAreRejected() {
         assertEquals(
             AnswerClaimVerifier.Verdict.CONTRADICTION,

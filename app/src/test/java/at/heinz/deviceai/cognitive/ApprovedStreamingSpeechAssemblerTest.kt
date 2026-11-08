@@ -21,7 +21,7 @@ class ApprovedStreamingSpeechAssemblerTest {
     @Test fun fencedAndInlineCodeAreNeverSpokenRaw() {
         val a = ApprovedStreamingSpeechAssembler()
         val fence = CharArray(3) { 96.toChar() }.concatToString()
-        val input = "Ergebnis folgt. " + fence + "kotlin\nval secret = 42.\n" + fence + "\nFertig."
+        val input = "Ergebnis folgt. " + fence + "kotlin\nval secret = 42.\n" + fence + "\nFertig. "
         val out = a.append(input)
         assertEquals(2, out.size)
         assertEquals("Ergebnis folgt.", out[0].speakableText)
@@ -34,7 +34,7 @@ class ApprovedStreamingSpeechAssemblerTest {
         val a = ApprovedStreamingSpeechAssembler()
         val fence = CharArray(3) { 96.toChar() }.concatToString()
         assertTrue(a.append("Vorher. " + fence + "kotlin\nval secret = ").size == 1)
-        val out = a.append("42.\n" + fence + "\nDanach.")
+        val out = a.append("42.\n" + fence + "\nDanach. ")
         assertEquals(1, out.size)
         assertFalse(out.single().speakableText.contains("val secret"))
         assertTrue(out.single().speakableText.contains("Codebeispiel ausgelassen"))
@@ -44,9 +44,32 @@ class ApprovedStreamingSpeechAssemblerTest {
     @Test fun abbreviationsAndDecimalsDoNotSplitEarly() {
         val a = ApprovedStreamingSpeechAssembler()
         assertTrue(a.append("Das gilt z. B. bei Version 3.5 und ").isEmpty())
-        val out = a.append("bleibt so.")
+        val out = a.append("bleibt so. ")
         assertEquals(1, out.size)
         assertTrue(out.single().speakableText.contains("3.5"))
+    }
+
+    @Test fun dotOnlyDeltaWaitsForDecimalLookahead() {
+        val a = ApprovedStreamingSpeechAssembler()
+        assertTrue(a.append("Es kostet 3").isEmpty())
+        assertTrue(a.append(".").isEmpty())
+        val out = a.append("5 Euro. ")
+        assertEquals(1, out.size)
+        assertEquals("Es kostet 3.5 Euro.", out.single().rawText)
+    }
+
+    @Test fun abbreviationFragmentWaitsForFollowingDelta() {
+        val a = ApprovedStreamingSpeechAssembler()
+        assertTrue(a.append("Das gilt z.").isEmpty())
+        val out = a.append(" B. weiterhin. ")
+        assertEquals(1, out.size)
+        assertEquals("Das gilt z. B. weiterhin.", out.single().rawText)
+    }
+
+    @Test fun finalFlushOwnsPunctuationAtEndOfBuffer() {
+        val a = ApprovedStreamingSpeechAssembler()
+        assertTrue(a.append("Fertig.").isEmpty())
+        assertEquals("Fertig.", a.flushFinal()!!.rawText)
     }
 
     @Test fun boundedBufferFailsClosedInsteadOfGrowingWithoutLimit() {
