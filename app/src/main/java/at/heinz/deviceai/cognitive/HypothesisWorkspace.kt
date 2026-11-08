@@ -85,18 +85,83 @@ internal class HypothesisWorkspace(
 
     fun entropyBits(): Float = entropy(hypotheses.values.map { it.weight })
 
-    data class ProbeObservation(val probeId: String, val result: Boolean?)
+    data class ProbeObservation(val probeId: String, val result: Boolean?) {
+        init { require(probeId.matches(Regex("[A-Za-z0-9._:-]{1,64}"))) }
+    }
 
-    /** Research entry point; initial control delegates to the existing greedy policy. */
+    /**
+     * Bounded, read-only experimental design under an explicit observation-error bound.
+     * Scores short plans by singleton-certificate transcript coverage per cost, not by priors.
+     * A certificate is conditional on the supplied model/error bound, never tool authority.
+     */
     fun selectCertificateProbe(
         probes: List<Probe>,
         observations: List<ProbeObservation>,
         remainingProbes: Int,
         costBudget: Float,
         maxErrors: Int = 1
-    ): Probe? = selectNextProbe(probes.filter { probe ->
-        observations.none { it.probeId == probe.id } && probe.latencyCostMs <= costBudget
-    })
+    ): Probe? {
+        require(probes.size <= 12 && hypotheses.size <= 12)
+        require(remainingProbes in 0..3 && observations.size + remainingProbes <= 3)
+        require(maxErrors in 0..1 && costBudget.isFinite() && costBudget >= 0f)
+        require(probes.map { it.id }.distinct().size == probes.size)
+        require(observations.map { it.probeId }.distinct().size == observations.size)
+        val catalog = probes.associateBy { it.id }
+        require(observations.all { it.probeId in catalog }) { "Unknown probe observation" }
+        require(probes.all { probe -> probe.expectedByHypothesis.keys.all { it in hypotheses } })
+        if (remainingProbes == 0 || hypotheses.isEmpty()) return null
+
+        val ids = hypotheses.keys.toList()
+        val errors = ids.map { id ->
+            observations.count { observation ->
+                val expected = catalog.getValue(observation.probeId).expectedByHypothesis[id]
+                expected != null && observation.result != null && expected != observation.result
+            }
+        }
+        if (errors.count { it <= maxErrors } < 2) return null
+        fun cost(probe: Probe): Double =
+            (probe.latencyCostMs.toDouble() + THERMAL_COST_MS_EQUIVALENT * probe.thermalCost)
+                .coerceAtLeast(MIN_COST.toDouble())
+        val available = probes.filter { probe ->
+            observations.none { it.probeId == probe.id } && cost(probe) <= costBudget
+        }.sortedBy { it.id }
+        var bestScore = 0.0
+        var bestCost = Double.POSITIVE_INFINITY
+        var bestPlan: List<Probe> = emptyList()
+
+        fun evaluate(plan: List<Probe>, totalCost: Double) {
+            var certificates = 0
+            for (transcript in 0 until (1 shl plan.size)) {
+                var compatible = 0
+                ids.forEachIndexed { index, id ->
+                    var contradictions = errors[index]
+                    plan.forEachIndexed { position, probe ->
+                        val expected = probe.expectedByHypothesis[id]
+                        if (expected != null && expected != (transcript and (1 shl position) != 0)) contradictions++
+                    }
+                    if (contradictions <= maxErrors) compatible++
+                }
+                if (compatible == 1) certificates++
+            }
+            val score = certificates.toDouble() / (1 shl plan.size) / totalCost
+            if (score > bestScore || score > 0.0 && score == bestScore && totalCost < bestCost) {
+                bestScore = score
+                bestCost = totalCost
+                bestPlan = plan.toList()
+            }
+        }
+
+        fun search(start: Int, plan: List<Probe>, totalCost: Double) {
+            if (plan.isNotEmpty()) evaluate(plan, totalCost)
+            if (plan.size == remainingProbes) return
+            for (index in start until available.size) {
+                val nextCost = totalCost + cost(available[index])
+                if (nextCost <= costBudget) search(index + 1, plan + available[index], nextCost)
+            }
+        }
+        search(0, emptyList(), 0.0)
+        return bestPlan.minWithOrNull(compareBy<Probe> { cost(it) }.thenBy { it.id })
+    }
 
     /**
      * Chooses the most discriminating cheap probe. Returns null when there are fewer than two

@@ -92,3 +92,36 @@ At this checkpoint: protocol only, experiments NOT_RUN. Next: implement the
 frozen world generator, original-source DEV baseline and independent verifier;
 preserve RED before candidate implementation. Rollback: do not merge this Draft;
 there is no schema/weight migration or installed-product activation.
+
+## DEV checkpoints (TEST still ungenerated)
+
+Draft #655. Generator/oracle/RED frozen at
+`15478ec930443763ad90ba0ef56eb1c6b883d492`. New 64-world DEV:
+sequential 14, batch 13, nonadaptive 11 correct certificates; zero accepted
+wrong/unsupported diagnoses. Exhaustive hidden-truth oracle finds 28 worlds
+solvable under the resource budget. The new three-probe regression is genuinely
+RED: the unchanged greedy policy leaves `[a,c]` instead of `[a]`.
+
+Candidate v1 (uniform transcript coverage / cost) is **rejected on DEV**:
+16/64 correct, 12 avoidable abstentions, and the same targeted regression fails.
+It prefers a cheap mixed plan whose certificate coverage is high only for
+some error positions. A one-step ablation solves 0/64 and takes no probes.
+These results are retained; they are not reported as TEST gains.
+
+Pre-TEST algorithm revision v2: prioritize the fraction of still-compatible
+causes that become singleton-certifiable for **every** future response pattern
+consistent with the remaining error budget, per cost. Use the original
+transcript-coverage score only as a secondary tie-break. This is a minimax
+error-placement criterion, not calibrated posterior confidence.
+The original dataset, seeds, oracle, physical budgets, TEST success threshold
+and significance criterion remain unchanged. Revision justified only by DEV.
+
+Research tool check: web search located Nowak's *Noisy Generalized Binary
+Search* (NeurIPS 2009, abstract identifier
+`556f391937dfd4398cbac35e050a2177`) and bounded-lie search literature.
+Direct primary-page retrieval failed DNS; no full-paper review is claimed.
+The search assistant's numerical explanation was inconsistent and is **not**
+used as evidence. Our basic bound is independently checkable: with three
+fixed binary probes, each cause needs four distinct one-error transcripts;
+four disjoint such sets cannot fit into eight transcripts. The experiment
+does not assume that every four-cause world can always be solved.

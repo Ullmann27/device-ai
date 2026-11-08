@@ -1,0 +1,11 @@
+JUnit version 4.13.2
+.............E.
+Time: 0.059
+There was 1 failure:
+1) threeProbesCertifyDespiteOneWrongObservationAndWrongPrior(at.heinz.deviceai.cognitive.HypothesisRobustProbeTest)
+java.lang.IllegalStateException: No probe after [ProbeObservation(probeId=cheap-b, result=false), ProbeObservation(probeId=a-0, result=false)]
+	at at.heinz.deviceai.cognitive.HypothesisRobustProbeTest.threeProbesCertifyDespiteOneWrongObservationAndWrongPrior(HypothesisRobustProbeTest.kt:30)
+
+FAILURES!!!
+Tests run: 14,  Failures: 1
+

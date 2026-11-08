@@ -52,6 +52,9 @@ object H4DiagnosisPilot {
             val selected = when (arm) {
                 "sequential", "batch" -> workspace.selectNextProbe(available)
                 "uniform" -> available.firstOrNull()
+                "certificate", "myopic" -> workspace.selectCertificateProbe(
+                    model.probes, seen.map { HypothesisWorkspace.ProbeObservation(it.probe.id, it.value) },
+                    if (arm == "myopic") 1 else 3 - step, 9f - cost)
                 else -> error("Unknown arm: $arm")
             } ?: return@repeat
             val observed = when {
