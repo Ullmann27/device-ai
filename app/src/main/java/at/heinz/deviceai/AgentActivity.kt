@@ -12332,8 +12332,8 @@ class AgentActivity : Activity() {
         speechScopeGeneration++;pendingLocalSpeechRequest=null;pendingLocalSpeechSession=null
         pendingLocalSpeechGeneration=-1L;pendingLocalSpeechDialog=null;activeLocalSpeechRequest=null
         voiceListening=false
-        onDeviceSpeech?.cancel()
-        // Ending the full recognition scope (pause, chat/bot switch) also ends hands-free mode.
+        onDeviceSpeech?.shutdown()
+        // Ending the full recognition scope (pause, chat/bot switch) destroys the warm native recognizer.
         stopConversationState()
     }
 
@@ -12402,7 +12402,7 @@ class AgentActivity : Activity() {
     private fun endContinuousConversation(message: String?) {
         val listening = voiceListening && activeLocalSpeechRequest == SPEECH_REQUEST
         stopConversationState()
-        if (listening) cancelSpeechInputScope()
+        if (listening) cancelSpeechInputScope() else onDeviceSpeech?.shutdown()
         if (message != null && !isFinishing && !isDestroyed)
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }

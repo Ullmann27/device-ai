@@ -21,6 +21,8 @@ internal class LocalSpeechSession(
         fun microphoneGranted(): Boolean
         fun create(callbacks: Callbacks): Recognizer
         fun scheduleTimeout(task: () -> Unit): () -> Unit
+        /** End the platform lifetime; pooled native recognizers may be destroyed here. */
+        fun shutdown() {}
     }
     private data class Active(
         val token: Long,
@@ -37,6 +39,13 @@ internal class LocalSpeechSession(
     fun cancel() {
         revision++
         cancelCurrent()
+    }
+
+    /** Full recognition-scope end (hands-free stop / Activity pause). */
+    fun shutdown() {
+        revision++
+        cancelCurrent()
+        runCatching { platform.shutdown() }
     }
 
     private fun cancelCurrent() {
@@ -107,6 +116,7 @@ internal class LocalSpeechSession(
         // onState(false) is owner code and may synchronously start a replacement turn.
         if (active == null && revision == completedRevision) deliver()
     }
+    /** Releases this turn lease. Platform implementations may keep native recognizer state warm. */
     private fun release(current: Active, cancel: Boolean) {
         current.cancelTimeout?.let { runCatching(it) }; current.cancelTimeout = null
         val recognizer = current.recognizer; current.recognizer = null

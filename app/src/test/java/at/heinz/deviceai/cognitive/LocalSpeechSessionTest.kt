@@ -10,6 +10,7 @@ class LocalSpeechSessionTest {
         var failCreate: RuntimeException? = null
         val recognizers = mutableListOf<FakeRecognizer>()
         val timers = mutableListOf<Timer>()
+        var shutdowns = 0
         override fun available() = available
         override fun microphoneGranted() = permission
         override fun create(callbacks: LocalSpeechSession.Callbacks): LocalSpeechSession.Recognizer {
@@ -20,6 +21,7 @@ class LocalSpeechSessionTest {
             val timer = Timer(task); timers += timer
             return { timer.cancelled = true }
         }
+        override fun shutdown() { shutdowns++ }
     }
     private class Timer(val fire: () -> Unit, var cancelled: Boolean = false)
     private class FakeRecognizer(val callbacks: LocalSpeechSession.Callbacks) : LocalSpeechSession.Recognizer {
@@ -120,6 +122,15 @@ class LocalSpeechSessionTest {
         val f = Fixture(); f.start(); val r = f.recognizer; f.platform.timers.single().fire(); r.callbacks.result("late")
         assertTrue(f.text.isEmpty()); assertEquals(1, f.errors.size); assertEquals(1, r.cancels); assertEquals(1, r.destroys)
     }
+    @Test fun fullShutdownCancelsActiveTurnAndEndsPlatformLifetime() {
+        val f = Fixture(); f.start(); val r = f.recognizer
+        f.session.shutdown(); f.session.shutdown()
+        assertEquals(2, f.platform.shutdowns)
+        assertEquals(1, r.cancels); assertEquals(1, r.destroys)
+        assertTrue(f.platform.timers.single().cancelled)
+        assertTrue(f.errors.isEmpty())
+    }
+
     @Test fun lifecycleReleaseCancelsEveryTurnAndRemovesTimer() {
         val f = Fixture(); repeat(4) { f.start(); f.session.cancel() }
         assertTrue(f.platform.recognizers.all { it.destroys == 1 && it.cancels == 1 })
