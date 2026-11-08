@@ -1,0 +1,88 @@
+name: "Continuum Code50 — Originalsignierung und GitHub-Release"
+
+# Besitzerentscheidung C (08.11.2026, nur Code 50): Signierung und Veröffentlichung über GitHub.
+# Nur manueller Start. Die Kanalwahl ersetzt NICHT die ausdrückliche SHA-Freigabe des Besitzers:
+# - owner_approved_sha muss exakt dem Quell-Commit entsprechen (bewusste Eingabe des Besitzers),
+# - das Environment continuum-original-signing muss Pflicht-Reviewer (Besitzer) und genau die Branch-Regel
+#   des Staging-Zweigs haben; sonst bricht der Preflight ab, bevor ein Geheimnis freigegeben wird.
+# Der Workflow liest, druckt und kopiert P12/Passwort nie.
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: "Exakter 40-stelliger Quell-Commit (muss dem HEAD des Branches entsprechen)"
+        required: true
+        type: string
+      qa_run_id:
+        description: "ID des vollständig grünen continuum-code50-github-qa-Laufs auf genau diesem Commit"
+        required: true
+        type: string
+      owner_approved_sha:
+        description: "Ausdrückliche Besitzerfreigabe: derselbe 40-stellige Commit-SHA zur Originalsignierung"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-code50-sign-only
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Preflight without secrets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          QA_RUN_ID: ${{ inputs.qa_run_id }}
+          OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}
+        run: |
+          set -euo pipefail
+          bash scripts/continuum-code50-github-signer.sh preflight
+
+  release-original-signed:
+    needs: preflight
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code50-qa-staging-20261108'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    environment: continuum-original-signing
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Prepare official Android 35 signing tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"
+      - name: Verify exact-source QA, sign with original key and publish verified release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          QA_RUN_ID: ${{ inputs.qa_run_id }}
+          OWNER_APPROVED_SHA: ${{ inputs.owner_approved_sha }}
+          ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
+          ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}
+        run: |
+          set -euo pipefail
+          bash scripts/continuum-code50-github-signer.sh sign
