@@ -1,7 +1,7 @@
 # FABLE 5.1 · Code51 · P1 #640 · Fakt-/Meta-Anweisungs-Trennung · Handoff 2026-11-08
 
 **Branch:** `fable/code51-p1-memory-meta-separation-20261108` (Basis `473f7972`, Code50-Source)
-**Status:** Implementiert, Unit-Tests siehe unten. **Fold7-Geräteabnahme offen.**
+**Status:** Implementiert, Unit-Check GREEN (3486 Tests, nur 2 bekannte Umgebungs-Fails). **Fold7-Geräteabnahme offen.**
 **Issue:** #640 (gespeicherter Frage-/Anweisungstext wird mit ausgegeben)
 
 ## Befund
@@ -23,7 +23,7 @@ Kein zweiter Memory-Speicher; `ContinuumLearningCore.confirmOwnerFact`, `Bootstr
 
 ## Tests
 Kommando: `scripts/android-kotlin-unit-check.sh /tmp/unit640` (JDK 21, kotlinc, `CONTINUUM_ANDROID_DEPS`).
-Ergebnis: siehe PR-Beschreibung (wird nach Lauf ergänzt). Bekannte Umgebungs-Fails: `ChiefBotStorageBoundaryTest` (root),
+Ergebnis 2026-11-08: `classes=619 checks=5 junit: Tests run: 3486, Failures: 2` → PASS für alle neuen Tests; Bekannte Umgebungs-Fails: `ChiefBotStorageBoundaryTest` (root),
 `OwnerAppActionFlowTest` (JDK≥19 `\b`).
 
 ## Offen / Nächster Schritt
