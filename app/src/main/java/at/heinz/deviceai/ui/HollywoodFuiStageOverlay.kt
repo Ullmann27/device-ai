@@ -406,8 +406,11 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         )
 
         val maxAbs = data.steps.maxOfOrNull { kotlin.math.abs(it.value) }?.takeIf { it > 0.0 } ?: 1.0
+        val timelineElapsed = if (active) {
+            maxOf(elapsedMs, SystemClock.uptimeMillis() - openedAt)
+        } else elapsedMs
         data.steps.take(4).forEachIndexed { index, step ->
-            val reveal = ((elapsedMs - HollywoodFuiConstruct.DATA_END_MS - index * 80L) / 180f).coerceIn(0f, 1f)
+            val reveal = ((timelineElapsed - HollywoodFuiConstruct.DATA_END_MS - index * 80L) / 180f).coerceIn(0f, 1f)
             val barLeft = box.left + size + dp(16f)
             val y = box.top + box.height() * (index + 1f) / 5f
             val fraction = (kotlin.math.abs(step.value) / maxAbs).toFloat().coerceIn(.08f, 1f) * reveal
