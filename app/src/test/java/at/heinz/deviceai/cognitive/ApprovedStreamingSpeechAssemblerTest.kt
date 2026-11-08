@@ -66,6 +66,14 @@ class ApprovedStreamingSpeechAssemblerTest {
         assertEquals("Das gilt z. B. weiterhin.", out.single().rawText)
     }
 
+    @Test fun abbreviationFragmentWithTrailingSpaceWaitsForFollowingDelta() {
+        val a = ApprovedStreamingSpeechAssembler()
+        assertTrue(a.append("Das gilt z. ").isEmpty())
+        val out = a.append("B. weiterhin. ")
+        assertEquals(1, out.size)
+        assertEquals("Das gilt z. B. weiterhin.", out.single().rawText)
+    }
+
     @Test fun finalFlushOwnsPunctuationAtEndOfBuffer() {
         val a = ApprovedStreamingSpeechAssembler()
         assertTrue(a.append("Fertig.").isEmpty())
