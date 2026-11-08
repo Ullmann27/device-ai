@@ -15,12 +15,18 @@ const labels=read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.
 const gradle=read('app/build.gradle.kts');
 const ccc1=read('app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt');
 const builderActivity=read('app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt');
+const essential=read('app/src/main/java/at/heinz/deviceai/ui/AvatarEssentialMotionPolicy.kt');
+const phasePolicy=read('app/src/main/java/at/heinz/deviceai/ui/JarvisComputePhasePolicy.kt');
 
-test('living hologram schedules subsequent visible frames and stops callbacks on detach',()=>{
+test('living hologram schedules subsequent visible frames, preserves essential avatar motion and stops callbacks on detach',()=>{
   assert.match(hologram,/private val drawFrame = Runnable \{[\s\S]*?advanceFrame\(\)[\s\S]*?postInvalidateOnAnimation\(\)[\s\S]*?scheduleFrame\(\)/);
   assert.match(hologram,/private fun scheduleFrame\(\)[\s\S]*?postOnAnimationDelayed\(drawFrame,/);
   assert.match(hologram,/override fun onDetachedFromWindow\(\) \{[\s\S]*?removeCallbacks\(drawFrame\)/);
-  assert.match(hologram,/motionAllowed = animationsEnabled && ValueAnimator\.areAnimatorsEnabled\(\) && !powerManager\.isPowerSaveMode/);
+  assert.match(hologram,/AvatarEssentialMotionPolicy\.frameLoopAllowed\(/);
+  assert.match(hologram,/JarvisComputePhasePolicy\.apply\(/);
+  assert.match(essential,/budget\.animate \|\| avatarEnabled/);
+  assert.match(essential,/frameLoopAllowed && budget\.animate/);
+  assert.match(phasePolicy,/if \(!base\.animate\) return base/);
   assert.match(hologram,/override fun onVisibilityAggregated\(isVisible: Boolean\)/);
 });
 test('orbital rings use visible phase movement, not the old near-static factor',()=>{
