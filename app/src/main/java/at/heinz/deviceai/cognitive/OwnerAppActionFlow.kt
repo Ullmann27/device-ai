@@ -31,6 +31,8 @@ internal class OwnerAppActionFlow(
         private set
     var lookupFinishedWithoutInteraction: Boolean = false
         private set
+    val canRetainAppLookupContext: Boolean get() = lookupVerified && candidates.isNotEmpty() &&
+        (!requireExactInstalledCandidate || exactMatchVerified)
     val launching: Boolean get() = phase == Phase.LAUNCH
 
     fun start(query: String): Step.Run {
