@@ -376,11 +376,13 @@ class JarvisSequenceTurnLifecycleUiTest {
      * that started and as its timeline step. The card follows the fact's identity (step key), so each step shows once;
      * no valid event is lost (the following tool step still appears).
      */
-    @Test fun anAcknowledgedCommandShowsEachStepOnce() {
+    @Test fun reasoningAndToolContinuationShareOneMainScene() {
         val triggers = at.heinz.deviceai.cockpit.CockpitAnimationTriggers(bus) { 1_000L }
         triggers.commandAcknowledged("turn-1", "Prüfe den Auftrag")
-        assertEquals("„Auftrag angenommen“ once plus „Bearbeitung“", 2, view.effects.cardCount)
+        assertEquals("THINK + ack/work render as one main scene", 1, view.effects.cardCount)
         triggers.toolStarted("turn-1", "call-1", "launch_app")
-        assertEquals("the real tool step is added once", 3, view.effects.cardCount)
+        assertEquals("tool takeover updates the same main scene", 1, view.effects.cardCount)
+        triggers.toolFinished("turn-1", "call-1", "launch_app", succeeded = true)
+        assertEquals("continuing reasoning stays in the same scene", 1, view.effects.cardCount)
     }
 }
