@@ -60,6 +60,18 @@ class AnswerClaimVerifierTest {
         )
     }
 
+    @Test fun correctDecimalDoesNotTextuallyMatchForbiddenInteger() {
+        val current = claim("3,5 Euro", forbidden = setOf("5 Euro"))
+        assertEquals(
+            AnswerClaimVerifier.Verdict.PASS,
+            AnswerClaimVerifier.verifyFocusedSentence("Es sind 3,5 Euro.", current).verdict
+        )
+        assertEquals(
+            AnswerClaimVerifier.Verdict.CONTRADICTION,
+            AnswerClaimVerifier.verifyFocusedSentence("Es sind 5 Euro.", current).verdict
+        )
+    }
+
     @Test fun groupedDecimalFormatsCompareAsOneValue() {
         assertEquals(
             AnswerClaimVerifier.Verdict.PASS,
