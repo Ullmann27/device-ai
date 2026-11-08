@@ -44,7 +44,13 @@ Initial: JDK27, Gradle8.11.1; kein adb, Emulator, Android-SDK oder kotlinc auf P
 Vorschauversuch: FAIL (kotlinc fehlt). Android-Versuch: BLOCKED (JDK27 nicht
 unterstuetzt); Google-SDK-Host `dl.google.com` nicht per DNS erreichbar.
 Kotlin2.2.21 fuer vorhandene Host-Vorschau lokal wiederhergestellt.
-Tests, Frames und konkrete Ressourcenmessungen folgen; bisher kein PASS behauptet.
+Material-Checkpoint: RED 5 Tests / 4 Fehler (Anker, Gradienten, Path-Identitaeten,
+Partikelobergrenze), danach GREEN 9/9 inklusive bestehender Cinematics-Regressionen.
+Je 36 Baseline-/Nachher-Frames mit bestehender Java2D-Vorschau gerendert.
+Frame 760 ms visuell geprueft: Cyan/Violett-Verlauf und diagonaler Reflex sichtbar,
+persistenter Ankerstrahl entfernt. Keine Android-/Filament-Pixelbehauptung.
+JDK21-Wiederholung des Android-Builds: BLOCKED an Google-Maven/AGP8.10.0.
+Naechster Schritt: Zeitbasis/Layering/Fallback, danach Gesamttyppruefung.
 
 ## Rueckfall / naechster Einstieg
 
