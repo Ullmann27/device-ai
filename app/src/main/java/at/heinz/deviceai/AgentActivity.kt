@@ -5599,24 +5599,41 @@ class AgentActivity : Activity() {
             navigateDashboardTarget(screen.target)
             return
         }
-        // Explicit public research precedes generic app discovery ("Suche die neuesten Quellen").
-        if (at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.isResearchRequest(request)) {
-            researchArmed = false
-            val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.explicitTopic(request)
+        // Owner wish (#643): „Jarvis recherchiere …“ / „Such nach …“ / „Prüfe neueste Quellen zu …“ starts research
+        // from chat or speech without the Web button. ALWAYS_ON → the persisted grant, ASK → the one-time dialog,
+        // OFF → no request. Only the de-identified topic may leave the device; personal markers are refused.
+        // Single entry (#650/#653 + #656): OwnerResearchCommand also owns the PublicKnowledgeTopicRouter forms.
+        at.heinz.deviceai.cognitive.OwnerResearchCommand.parse(request,
+            at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+                continuumState?.archive?.identityState?.chosenName))?.let { command ->
             input.text.clear()
-            addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
-            if (topic == null) {
-                addAssistantMessage("Diese Recherche bleibt lokal: Der Auftrag enthält private, mehrdeutige " +
-                    "oder zusätzliche Handlungsangaben oder verbietet Internetzugriff. " +
-                    "Bitte nenne ausschließlich das öffentliche Thema, ohne persönliche Daten oder Dokumentinhalte.",
-                    preserveLocalContext = false,
-                    keepCockpit = activeWorkArea == ContinuumWorkArea.START)
-            } else {
-                val researchSession = sessionId
-                confirmWebRequest(at.heinz.deviceai.cognitive.WebToolRequest.Search(topic), ResearchMode.STANDARD) { session ->
-                    if (session != null && !busy && sessionId == researchSession && foregroundLearningActive &&
-                        !isFinishing && !isDestroyed) runResearch(session)
-                    else session?.cancel()
+            researchArmed = false
+            when (command) {
+                is at.heinz.deviceai.cognitive.OwnerResearchCommand.Outcome.Refused -> {
+                    addUserMessage(request)
+                    addToolActivity("WEB · zurückgehalten · ${command.reason} · keine Anfrage gesendet")
+                    addNonModelReply(request, command.reply, at.heinz.deviceai.cognitive.NonModelReplyKind.SAFETY_REFUSAL)
+                }
+                is at.heinz.deviceai.cognitive.OwnerResearchCommand.Outcome.Research -> {
+                    restoreInternetMode()
+                    addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+                    addToolActivity(command.activityLine(internetConsent.mode))
+                    if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF) {
+                        addNonModelReply(request, at.heinz.deviceai.cognitive.OwnerResearchCommand.offlineReply(),
+                            at.heinz.deviceai.cognitive.NonModelReplyKind.READ_ONLY_TOOL)
+                    } else {
+                        val researchSession = sessionId
+                        confirmWebRequest(at.heinz.deviceai.cognitive.WebToolRequest.Search(command.topic),
+                            researchMode) { session ->
+                            if (session != null && !busy && sessionId == researchSession && foregroundLearningActive &&
+                                !isFinishing && !isDestroyed) runResearch(session)
+                            else {
+                                session?.cancel()
+                                if (!isFinishing && !isDestroyed)
+                                    addToolActivity("WEB · nicht freigegeben oder Sitzung gewechselt · keine Anfrage gesendet")
+                            }
+                        }
+                    }
                 }
             }
             return
