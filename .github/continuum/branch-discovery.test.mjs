@@ -9,6 +9,11 @@ import {BacklogStore} from './development-backlog.mjs';
 import {isCodingPath} from './coding-task.mjs';
 import {critique} from './repair-critic.mjs';
 
+// Synthetic repositories must not inherit runner-global Git LFS clean filters.
+// Local unsafe filters remain observable and are rejected by the real guard.
+process.env.GIT_CONFIG_NOSYSTEM = '1';
+process.env.GIT_CONFIG_GLOBAL = '/dev/null';
+
 function fixture(t){
  const temp=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-branches-'));
  const root=path.join(temp,'repo'),state=path.join(temp,'state');
