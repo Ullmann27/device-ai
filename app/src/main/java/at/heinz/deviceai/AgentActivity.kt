@@ -9734,7 +9734,23 @@ class AgentActivity : Activity() {
                         hardDeadlineMillis = taskRemaining,
                         streamCandidateObserver = speechShadow?.let { trace ->
                             { candidate, elapsed -> trace.observe(candidate, elapsed) }
-                        }
+                        },
+                        runtimeProgressObserver = if (ownerDialogueOutput) {
+                            { chars, chunks, elapsed ->
+                                runOnUiThread {
+                                    if (sessionId == localSessionId && activeChatCancellation === cancellation)
+                                        updateLocalReasoningStream(chiefTurn.turnId, chars, chunks, elapsed)
+                                }
+                            }
+                        } else null,
+                        runtimeCompletedObserver = if (ownerDialogueOutput) {
+                            { metrics ->
+                                runOnUiThread {
+                                    if (sessionId == localSessionId && activeChatCancellation === cancellation)
+                                        updateLocalReasoningCompleted(chiefTurn.turnId, metrics)
+                                }
+                            }
+                        } else null
                     ) { callback ->
                         at.heinz.deviceai.localmodel.LocalToolContinuation.submit(
                             localRuntime, prompt, forceFresh = hasScreen || (botTask != null && observations.isEmpty()),
