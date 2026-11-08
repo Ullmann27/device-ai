@@ -51,6 +51,31 @@ internal class HypothesisWorkspace(
         return true
     }
 
+    /**
+     * Initializes an empty workspace from one explicit prior set, normalized once.
+     * Unlike sequential [add], admission order does not change the supplied prior ratios.
+     * A rejected batch leaves the workspace unchanged; no evidence or tool authority is inferred.
+     */
+    fun admitPriors(candidates: List<Hypothesis>): Boolean {
+        if (hypotheses.isNotEmpty() || candidates.isEmpty() || candidates.size > maxHypotheses) return false
+        if (candidates.map { it.id }.toSet().size != candidates.size) return false
+        if (candidates.groupingBy { it.bucket }.eachCount().values.any { it > maxPerBucket }) return false
+        val copies = candidates.map {
+            it.copy(
+                supportingEvidence = it.supportingEvidence.toMutableList(),
+                contradictingEvidence = it.contradictingEvidence.toMutableList()
+            )
+        }
+        val total = copies.sumOf { it.weight.toDouble() }
+        val admitted = copies.map {
+            val normalized = (it.weight.toDouble() / total).toFloat()
+            require(normalized.isFinite() && normalized > 0f) { "Prior ratio is not representable" }
+            it.copy(weight = normalized)
+        }
+        admitted.forEach { hypotheses[it.id] = it }
+        return true
+    }
+
     fun snapshot(): List<Hypothesis> = hypotheses.values.map {
         it.copy(
             supportingEvidence = it.supportingEvidence.toMutableList(),
