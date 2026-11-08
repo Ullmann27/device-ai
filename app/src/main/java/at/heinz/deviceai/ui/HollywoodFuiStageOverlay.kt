@@ -357,7 +357,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         val evidence = liveData as? HollywoodFuiLiveData.Evidence
         val timeline = liveData as? HollywoodFuiLiveData.Timeline
         val count = evidence?.count?.coerceIn(0, 8) ?: 0
-        if (count > 0) {
+        if (evidence != null && count > 0) {
             val cx = box.centerX()
             val cy = box.centerY()
             val radiusX = box.width() * .34f
