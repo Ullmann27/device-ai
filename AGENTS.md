@@ -1,5 +1,12 @@
 # VERBINDLICH AB 09.11.2026 – SCHLIESSEN STATT ZWEIGE SAMMELN
 
+## PRIORITÄTENREIHENFOLGE FÜR DIE VOLLSTÄNDIGE BESTANDSPRÜFUNG (Besitzer, 09.11.2026)
+
+**Zeitnahe Entwicklungen zuerst, ältere vollständig:** Vor jedem Integrationsdurchlauf PRs und Branches der **letzten 24 Stunden** anhand echter GitHub-Änderungs-/Commitzeiten auswählen und zuerst gründlich prüfen. Danach die gesamte ältere Historie **ohne Aussortieren allein wegen des Alters** bis Projektbeginn abarbeiten. Höhere zeitliche Priorität bedeutet nicht, dass ältere Zweige unvollständig geprüft, pauschal ignoriert oder ohne konkreten Quellvergleich als redundant markiert werden dürfen. Für alle Kandidaten gilt derselbe Integrations-, Sicherheits- und Testmaßstab. Die 24-Stunden-Grenze rollt bei jedem neuen Audit mit, nicht ein statischer Datumsname.
+
+**Kanonischer Katalog:** `docs/integration/PR-BESTAND-20261109.jsonl` (626 PR-Metadaten), `docs/integration/BRANCH-BESTAND-20261109.jsonl` (726 Branch-Spitzen) und `docs/integration/PR-AUDIT-PRIORITY-20261109.jsonl` (zeitgenaue Erstpriorisierung). Sie sind Ausgangspunkt, **kein** Beleg für die bereits abgeschlossene Prüfung jeder Quellzeile. Die jeweils noch offenen inhaltlichen Audits müssen explizit aufgelistet werden.
+
+
 > **Besitzerregel: Jeder wertvolle, bereits entwickelte Technologiekandidat wird sofort auf eine eindeutige gemeinsame Integrationslinie zurückgeführt, angeschlossen, getestet und für den Besitzer sichtbar gemacht.** Der bloße Zustand `DRAFT`, `HANDOFF` oder `SOURCE_STAGED` ist kein Endzustand und kein Grund, die Arbeit unbefristet liegen zu lassen. Diese Regel gilt für alle neuen Continuum-Arbeiten, gerade für Avatar, digitale Arbeitsflächen, Agenten, lokale Forschung, Internetwerkzeuge, Gedächtnis und Coding.
 
 1. **Vor Neuerfindung zuerst die Historie prüfen.** Den vollständigen PR-/Branch-Katalog und den aktuellen originalsignierten Release-SHA abgleichen. Existierende Module, Aufrufpfade, Testbelege und ähnliche parallele Implementierungen bestimmen. Doppelte Renderer, Agenten, Datenbanken und Event-Busse vermeiden. Nicht anhand des PR-Status allein behaupten, eine Funktion fehle.
