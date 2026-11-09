@@ -182,7 +182,10 @@ class JarvisWorkWindowHost(
             }
         }
         fui.requestFrame = { shell.invalidate() }
-        window.onCinematicFrame = fui::present
+        window.onCinematicFrame = { elapsed, closing, reduced, open ->
+            fui.setParallax(shell.spatialTiltX, shell.spatialTiltY)
+            fui.present(elapsed, closing, reduced, open)
+        }
         val presentation = JarvisCinematicSettings.preferences(activity)
         fun applyCinematics() {
             val enabled = JarvisCinematicSettings.enabled(activity)
