@@ -65,3 +65,14 @@ Beim nächsten Durchlauf zuerst diesen Index und beide vollständigen JSONL-Snap
 - `bash scripts/code52-targeted-kotlin-check.sh` kompiliert die **echten** Branch-Dateien `OwnerPreviousBatteryIntent.kt` und `TurnScopedInternetMode.kt` mit einem isolierten Testadapter für den Typ `InternetAccessMode`. Der Test führt zwölf positive/negative Fälle aus; **12 PASS / 0 FAIL** auf JDK 21 mit `kotlinc`, reproduziert vor dem Commit.
 - Die lokal ausgeführten Quelldateien waren Git-Blob-identisch zum GitHub-Branch: `4d243bebea8fe43b5b8369d571fdbc7dbe89e5ac`, `895a69251275d4b25820e99c93bd326803e0e1aa`. Das ist ein echter Zwei-Dateien-Kotlin-Compiler-/Laufcheck, **keine** volle Android/JUnit/Gradle-Suite.
 - Die drei konkreten PR-Review-Befunde (negierte Hauptklausel, online-gerahmte Recherche nach Freigabewiderruf, entfallene Fremd-App-Testannahme) wurden quellgenau korrigiert und als Review-Threads geschlossen. Die vollständige QA und Fold7 bleiben als nächstes Gate offen.
+
+
+### Quellvergleich älterer, zeitnah aktualisierter Zweige (kein pauschaler Merge)
+
+| PR | Source-/Callsite-Abgleich auf Code52 | Nächster Gate |
+|---|---|---|
+| #646 Speech Recovery | Die Git-Blobs von `SpeechRecoveryPolicy.kt`, `SpeechTurnRecovery.kt` und `AndroidOnDeviceSpeechInput.kt` sind **3/3 exakt** mit PR #646 übereinstimmend; `AndroidOnDeviceSpeechInput` konstruiert `SpeechTurnRecovery`. | Übrige Dateien und echten 10-Satz-/Hands-Free-Fold7-Lauf prüfen; **nicht** neu schreiben. |
+| #574 Voice / Follow-Up | Alle nichtleeren PR-Quellzeilen in `JarvisVoiceSelection.kt` sind in Code52 enthalten; `AgentActivity` ruft `chooseAndApply` und Android `TextToSpeech.setVoice` wirklich auf. Drei andere Gehirn-/Sprachdateien sind geändert, nicht bytegleich. | Neue Auswahl-/Korrektheitslogik behalten; de-AT, Folgeturn, Texttempo und differierende Dateien testen. |
+| #651 Film-FUI | `HollywoodFuiConstruct.kt` ist Quell-Superset im überprüften Zeilenvergleich, `HollywoodFuiStageOverlay` ruft seine `frame`-Funktion. `HollywoodFuiCinematics` und `StageOverlay` sind gegenüber #651 wesentlich umgebaut. | Kein blindes Zurückkopieren älterer Varianten; Render-Output, Filament, Fold7-FPS und Details gegenüber Referenz abnehmen. |
+
+Diese Ergebnisse wurden im No-Orphans-Register als **PARTIAL_SOURCE_CONNECTED** festgehalten, **nicht** als vollständige PR-Integration, Laufzeit-/Gerätebestätigung oder fertiger Release.
