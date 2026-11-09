@@ -261,6 +261,14 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val cameraMotion = AvatarCameraMotion()
     private val entranceMotion = AvatarEntranceMotion()
     private var workWindowActive = false
+    private var workWindowAccentArgb: Int? = null
+
+    /** Visual-only scene light; owning window still controls permissions and receipts. */
+    fun setWorkWindowAccent(accentArgb: Int?) {
+        if (workWindowAccentArgb == accentArgb) return
+        workWindowAccentArgb = accentArgb
+        invalidate()
+    }
     private var cameraFraming: AvatarCameraFraming? = null
     private var cameraWindow: AvatarFraming.Window? = null
     private var cameraDirection = 0f
@@ -278,6 +286,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         require(direction.isFinite() && direction in -1f..1f)
         // The face and the orb stay free while a window works: the sequence cards dock into its status strip.
         workWindowActive = active
+        if (!active) workWindowAccentArgb = null
         val now = SystemClock.uptimeMillis()
         if (active && profile != cameraProfile) {
             // Freeze the exact currently visible projection before changing profile. The next frames blend
@@ -1018,7 +1027,11 @@ class ContinuumHologramView @JvmOverloads constructor(
                         diagnosticBlink = proof?.blinkOverride,
                         receipt = receipt,
                         coreEnergy = coreEnergy,
-                        cinematicLighting = cinematicPrefs.getBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.KEY, true)
+                        cinematicLighting = cinematicPrefs.getBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.KEY, true),
+                        windowAccentArgb = workWindowAccentArgb,
+                        windowOpen = workWindowActive &&
+                            at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(context,
+                                at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_06_FACE_LIGHT)
                     )
                 }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
