@@ -38,9 +38,10 @@ object JarvisCockpitPanels {
 
     fun agentsTitle(s: ContinuumDashboardState) = ContinuumCockpitPresentation.agentsTitle(s.cockpit)
 
-    /** Real worker rows (ChiefWorkerPool); none → one "—" row, no invented agents. */
+    /** Real worker rows (ChiefWorkerPool); no pool → one honest "Agenten-Pool · nicht gestartet" row, no invented agents. */
     fun agentRows(s: ContinuumDashboardState): List<Row> =
-        if (s.cockpit.workers == null) listOf(Row(NONE, "offline", null)) else ContinuumCockpitPresentation.agentRows(s.cockpit)
+        if (s.cockpit.workers == null) listOf(Row("Agenten-Pool", "nicht gestartet", null, Tone.NEUTRAL))
+        else ContinuumCockpitPresentation.agentRows(s.cockpit)
 
     fun drawAgents(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
         val y0 = title(p, b, agentsTitle(s)) { x, y -> JarvisRailIcons.draw(p, "logic", x - 7f, y - 7f, 14f, Colors.cyanSoft) }

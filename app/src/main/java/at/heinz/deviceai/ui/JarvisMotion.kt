@@ -208,6 +208,18 @@ object JarvisMotion {
             return a * sin(ph) to a * .6f * sin(2f * ph + 1f)
         }
 
+        /**
+         * Entrance perspective of a work window (#643 C "Perspektive/Rotation/Z-Tiefe"): the glass swings in around its
+         * vertical axis from [HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES] towards the side it comes from ([side] −1 left of
+         * the face … +1 right) and settles flat at full [openness]. Degrees for View.rotationY; 0 for reduced motion.
+         */
+        fun entranceTilt(openness: Float, side: Float, animatorScale: Float = 1f): Float {
+            if (off(animatorScale) || side == 0f) return 0f
+            val remaining = 1f - openness.coerceIn(0f, 1f)
+            val eased = remaining * remaining * remaining
+            return HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES * eased * side.coerceIn(-1f, 1f)
+        }
+
         /** Linear dolly-in camera scale 1.00..1.03 (ping-pong). 1 for reduced motion. */
         fun dolly(timeMs: Long, animatorScale: Float = 1f): Float {
             if (off(animatorScale)) return 1f

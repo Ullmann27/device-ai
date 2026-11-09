@@ -4,8 +4,10 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.Camera
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
@@ -17,16 +19,30 @@ import android.view.animation.LinearInterpolator
 import at.heinz.deviceai.cockpit.StepState
 import java.util.Locale
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-/** Decorative layer owned by the canonical work-window host. */
+/**
+ * Decorative layer owned by the canonical work-window host. Follows the single timing law in [HollywoodFuiConstruct]
+ * (anchor → brackets → scan raster → glass layers → data), tilts the whole construct in perspective while it flies in
+ * or folds away and pays for motes/bloom/frame rate only what the cockpit's [JarvisRenderQuality.Budget] allows.
+ */
 class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val stage = RectF()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
+    private val painter = AndroidContinuumPainter(context.assets)
+    private val camera = Camera()
+    private val cameraMatrix = Matrix()
+    private var cinematics = HollywoodFuiCinematics.Painterly(JarvisDesign.Colors.cyan)
+    private var budget = HollywoodFuiCinematics.Budget.FULL
+    private var originX = Float.NaN
+    private var originY = Float.NaN
+    private var moteSeed = 0
+    private var anchorLatched = false
     private var profile = JarvisActionScenes.FuiProfile.GENERIC
     private var accent = JarvisDesign.Colors.cyan
     private var openedAt = 0L
@@ -47,14 +63,23 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         setWillNotDraw(false)
     }
 
-    fun open(bounds: RectF, scene: JarvisActionScenes.Scene) {
+    /**
+     * Opens the construct at [bounds]. [anchorX]/[anchorY] (px) is where the light anchor stands before the frame
+     * grows – the avatar core or the tapped control; NaN anchors at the construct centre.
+     */
+    fun open(bounds: RectF, scene: JarvisActionScenes.Scene, anchorX: Float = Float.NaN, anchorY: Float = Float.NaN) {
         animator?.cancel()
         stage.set(bounds)
         profile = scene.fuiProfile
+        if (accent != scene.accent) cinematics = HollywoodFuiCinematics.Painterly(scene.accent)
         accent = scene.accent
+        originX = if (anchorX.isNaN()) bounds.centerX() else anchorX
+        originY = if (anchorY.isNaN()) bounds.centerY() else anchorY
+        moteSeed = (SystemClock.uptimeMillis() and 0x7FFF).toInt()
         openedAt = SystemClock.uptimeMillis()
         elapsedMs = 0L
         closingElapsedMs = -1L
+        anchorLatched = false
         bracketsLatched = false
         dataLatched = false
         liveData = null
@@ -101,6 +126,17 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         active = value
         if (value) invalidate()
     }
+
+    /** Couples motes, bloom and the live frame cadence to the cockpit's current render budget. */
+    fun setRenderBudget(value: JarvisRenderQuality.Budget) {
+        val next = HollywoodFuiCinematics.Budget.from(value)
+        if (budget == next) return
+        budget = next
+        invalidate()
+    }
+
+    /** Current frame cadence of the live (working) overlay in ms; 16 at full budget, longer when hot or saving power. */
+    fun liveFrameDelayMs(): Long = budget.frameDelayMs.coerceAtLeast(MIN_FRAME_DELAY_MS)
 
     fun setTelemetryText(value: String?) {
         val cleaned = value?.filterNot(Char::isISOControl)?.trim()?.take(64)?.ifEmpty { null }
@@ -156,23 +192,55 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         val halfWidth = stage.width() * 0.5f * scale
         val halfHeight = stage.height() * 0.5f * scale
         val constructed = RectF(cx - halfWidth, cy - halfHeight, cx + halfWidth, cy + halfHeight)
-        val alpha = frame.closeFactor
+        val density = resources.displayMetrics.density
+        val side = if (originX.isNaN() || abs(originX - cx) < dp(8f)) 0f else if (originX < cx) -1f else 1f
+        val bloom = budget.bloom && budget.animate
 
+        // Whole construct in perspective: swings in around its vertical axis from the anchor side, folds away again.
+        canvas.save()
+        if (frame.tiltDegrees != 0f && side != 0f) {
+            camera.save()
+            camera.rotateY(frame.tiltDegrees * side)
+            camera.getMatrix(cameraMatrix)
+            camera.restore()
+            cameraMatrix.preTranslate(-cx, -cy)
+            cameraMatrix.postTranslate(cx, cy)
+            canvas.concat(cameraMatrix)
+        }
+
+        // Painter layers in dp: anchor + beam, glass depth sheets, grid/scan, rim energy and motes.
+        painter.begin(canvas)
+        canvas.save()
+        canvas.scale(density, density)
+        val boxDp = HollywoodFuiCinematics.Box(constructed.left / density, constructed.top / density,
+            constructed.right / density, constructed.bottom / density)
+        val radiusDp = 6f
+        cinematics.drawGlassLayers(painter, boxDp, frame, radiusDp)
+        cinematics.drawAnchor(painter, originX / density, originY / density, boxDp, frame, bloom)
+        canvas.restore()
+
+        // Profile data stays on the proven Canvas path, scaled with the close choreography (data leaves first).
         canvas.save()
         canvas.clipRect(constructed)
-        if (frame.grid > 0f) {
-            drawGrid(canvas, constructed, frame.grid * alpha)
-            drawChamferedRim(canvas, constructed, frame.grid * alpha)
-            if (frame.scanEnabled) drawScan(canvas, constructed, frame.scanPhase, frame.grid * alpha)
-        }
-        if (frame.data > 0f) {
-            drawProfile(canvas, constructed, frame.data * alpha)
-        }
+        canvas.save()
+        canvas.scale(density, density)
+        cinematics.drawGridAndScan(painter, boxDp, if (budget.animate) frame else frame.copy(scanEnabled = false), bloom)
         canvas.restore()
-        drawCornerBrackets(canvas, constructed, frame.brackets * alpha)
-        drawTelemetry(canvas, constructed, alpha)
+        val dataAlpha = frame.data * frame.closeData
+        if (dataAlpha > 0f) drawProfile(canvas, constructed, dataAlpha)
+        canvas.restore()
 
-        if (active && isAttachedToWindow) postInvalidateDelayed(ACTIVE_FRAME_DELAY_MS)
+        canvas.save()
+        canvas.scale(density, density)
+        cinematics.drawMotesAndEnergy(painter, boxDp, frame, liveElapsed, if (budget.animate) budget.motes else 0,
+            moteSeed, working = active, bloom = bloom, radius = radiusDp)
+        cinematics.drawBrackets(painter, boxDp, frame.brackets * frame.closeFrame, bloom)
+        canvas.restore()
+
+        drawTelemetry(canvas, constructed, frame.closeData)
+        canvas.restore()
+
+        if (active && budget.animate && isAttachedToWindow) postInvalidateDelayed(liveFrameDelayMs())
     }
 
     override fun onDetachedFromWindow() {
@@ -182,6 +250,10 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     }
 
     private fun emitPhaseFeedback(elapsed: Long) {
+        if (!anchorLatched && elapsed >= HollywoodFuiConstruct.ANCHOR_END_MS) {
+            anchorLatched = true
+            performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+        }
         if (!bracketsLatched && elapsed >= HollywoodFuiConstruct.BRACKETS_END_MS) {
             bracketsLatched = true
             performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
@@ -190,59 +262,6 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             dataLatched = true
             performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
         }
-    }
-
-    private fun drawGrid(canvas: Canvas, box: RectF, alpha: Float) {
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = dp(0.7f)
-        paint.color = withAlpha(accent, 0.13f * alpha)
-        val step = dp(24f)
-        var x = box.left + step
-        while (x < box.right) {
-            canvas.drawLine(x, box.top, x, box.bottom, paint)
-            x += step
-        }
-        var y = box.top + step
-        while (y < box.bottom) {
-            canvas.drawLine(box.left, y, box.right, y, paint)
-            y += step
-        }
-        paint.color = withAlpha(JarvisDesign.Colors.violet, 0.10f * alpha)
-        canvas.drawLine(box.centerX(), box.top, box.centerX(), box.bottom, paint)
-        canvas.drawLine(box.left, box.centerY(), box.right, box.centerY(), paint)
-    }
-
-    private fun drawChamferedRim(canvas: Canvas, box: RectF, alpha: Float) {
-        val cut = min(dp(14f), min(box.width(), box.height()) * 0.12f)
-        path.reset()
-        path.moveTo(box.left + cut, box.top)
-        path.lineTo(box.right - cut, box.top)
-        path.lineTo(box.right, box.top + cut)
-        path.lineTo(box.right, box.bottom - cut)
-        path.lineTo(box.right - cut, box.bottom)
-        path.lineTo(box.left + cut, box.bottom)
-        path.lineTo(box.left, box.bottom - cut)
-        path.lineTo(box.left, box.top + cut)
-        path.close()
-
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = dp(1.3f)
-        paint.color = withAlpha(accent, 0.70f * alpha)
-        canvas.drawPath(path, paint)
-        paint.strokeWidth = dp(5f)
-        paint.color = withAlpha(accent, 0.08f * alpha)
-        canvas.drawPath(path, paint)
-    }
-
-    private fun drawScan(canvas: Canvas, box: RectF, phase: Float, alpha: Float) {
-        val y = box.top + box.height() * phase
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = dp(5f)
-        paint.color = withAlpha(accent, 0.07f * alpha)
-        canvas.drawLine(box.left + dp(6f), y, box.right - dp(6f), y, paint)
-        paint.strokeWidth = dp(1.2f)
-        paint.color = withAlpha(JarvisDesign.Colors.glowCore, 0.75f * alpha)
-        canvas.drawLine(box.left + dp(6f), y, box.right - dp(6f), y, paint)
     }
 
     private fun drawProfile(canvas: Canvas, box: RectF, alpha: Float) {
@@ -559,22 +578,6 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         paint.textAlign = Paint.Align.LEFT
     }
 
-    private fun drawCornerBrackets(canvas: Canvas, box: RectF, alpha: Float) {
-        val length = min(dp(20f), min(box.width(), box.height()) * 0.18f)
-        paint.style = Paint.Style.STROKE
-        paint.strokeCap = Paint.Cap.SQUARE
-        paint.strokeWidth = dp(2.2f)
-        paint.color = withAlpha(JarvisDesign.Colors.glowCore, 0.90f * alpha)
-        canvas.drawLine(box.left, box.top, box.left + length, box.top, paint)
-        canvas.drawLine(box.left, box.top, box.left, box.top + length, paint)
-        canvas.drawLine(box.right - length, box.top, box.right, box.top, paint)
-        canvas.drawLine(box.right, box.top, box.right, box.top + length, paint)
-        canvas.drawLine(box.left, box.bottom - length, box.left, box.bottom, paint)
-        canvas.drawLine(box.left, box.bottom, box.left + length, box.bottom, paint)
-        canvas.drawLine(box.right - length, box.bottom, box.right, box.bottom, paint)
-        canvas.drawLine(box.right, box.bottom - length, box.right, box.bottom, paint)
-    }
-
     private fun withAlpha(color: Int, alpha: Float): Int = Color.argb(
         (Color.alpha(color) * alpha.coerceIn(0f, 1f)).roundToInt(),
         Color.red(color),
@@ -585,6 +588,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private fun dp(value: Float): Float = value * resources.displayMetrics.density
 
     private companion object {
+        /** Legacy cadence kept for callers; live cadence now follows [liveFrameDelayMs]. */
         const val ACTIVE_FRAME_DELAY_MS = 33L
+        const val MIN_FRAME_DELAY_MS = 16L
     }
 }

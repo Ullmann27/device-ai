@@ -96,3 +96,18 @@ class JarvisMotionTest {
         assertEquals(1f, D.dolly(D.DOLLY_PERIOD_MS, 0f), 0f)
     }
 }
+
+class JarvisMotionEntranceTiltTest {
+    @Test
+    fun entranceTiltSwingsTheWindowInFromItsNearEdgeAndSettlesFlat() {
+        val right = JarvisMotion.Depth.entranceTilt(openness = 0f, side = 1f)
+        val left = JarvisMotion.Depth.entranceTilt(openness = 0f, side = -1f)
+        org.junit.Assert.assertEquals(HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES, kotlin.math.abs(right), 0.0001f)
+        org.junit.Assert.assertEquals(-right, left, 0.0001f)
+        org.junit.Assert.assertEquals(0f, JarvisMotion.Depth.entranceTilt(1f, 1f), 0.0001f)
+        val mid = JarvisMotion.Depth.entranceTilt(.5f, 1f)
+        org.junit.Assert.assertTrue(kotlin.math.abs(mid) in 0.0001f..HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES)
+        org.junit.Assert.assertEquals(0f, JarvisMotion.Depth.entranceTilt(0f, 0f), 0.0001f)
+        org.junit.Assert.assertEquals(0f, JarvisMotion.Depth.entranceTilt(0f, 1f, animatorScale = 0f), 0.0001f)
+    }
+}
