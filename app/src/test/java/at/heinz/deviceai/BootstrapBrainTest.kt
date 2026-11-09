@@ -302,4 +302,16 @@ class BootstrapBrainTest {
         }
     }
 
+    @Test fun positiveBatteryRemeasureWithComparisonIsNotBlockedAsHistoricalRecall() {
+        val request = "Miss den Akku nochmal und vergleiche mit der letzten Messung."
+        val decision = BootstrapBrain.decide(request, emptyList())
+        assertEquals(BootstrapKind.DEVICE_TOOL, decision.kind)
+        assertEquals("get_battery_info", decision.tool)
+        for (negative in listOf("Akku bitte nicht erneut messen.", "Prüfe nicht den Akku.")) {
+            val blocked = BootstrapBrain.decide(negative, emptyList())
+            assertEquals(negative, BootstrapKind.REPLY, blocked.kind)
+            assertNull(negative, blocked.tool)
+        }
+    }
+
 }
