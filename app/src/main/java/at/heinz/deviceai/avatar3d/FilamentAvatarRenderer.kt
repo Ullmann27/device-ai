@@ -22,6 +22,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private val lightEntities = mutableListOf<Int>()
     private var coreLightInstance = 0
     private var coreLightLumens = AvatarCoreLighting.BASE_LUMENS
+    private var faceMaterial: MaterialInstance? = null
+    private var faceEmission: AvatarGlbContract.SurfaceEmission? = null
+    private var surfaceGain = 1f
     private lateinit var mapper: AvatarMorphMapper
     private var morphInstances = intArrayOf()
     private data class Joint(val instance: Int, val rest: FloatArray)
@@ -126,6 +129,12 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             .color(.18f, .82f, 1f).intensity(AvatarCoreLighting.BASE_LUMENS)
             .position(.32f, .35f, -.16f).falloff(1.2f).castShadows(false))
         coreLightInstance = e.lightManager.getInstance(coreLight)
+        faceEmission = metadata.surfaceEmission
+        faceMaterial = metadata.surfaceEmission?.let { authored ->
+            a.instance.materialInstances.firstOrNull {
+                it.name == authored.materialName && it.material.hasParameter("emissiveFactor")
+            }
+        }
         // The current portrait reference includes a readable iris and pupil.
         // Keep the authored glTF materials and eye meshes; a global cyan
         // emissive override would erase the violet/cyan surface design.
@@ -172,6 +181,19 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         coreLightLumens = lumens
     }
 
+    private fun applySurfaceRadiance(energy: Float, enabled: Boolean) {
+        val material = faceMaterial ?: return
+        val authored = requireNotNull(faceEmission)
+        val gain = AvatarSurfaceRadiance.gain(energy, enabled && !reducedQuality)
+        if (kotlin.math.abs(gain - surfaceGain) < .001f) return
+        try {
+            material.setParameter("emissiveFactor", authored.red * gain, authored.green * gain, authored.blue * gain)
+            surfaceGain = gain
+        } catch (_: RuntimeException) {
+            faceMaterial = null
+        }
+    }
+
     /** Called by the existing View frame clock; never posts a callback of its own. */
     fun render(pose: AvatarPose, seconds: Float, motion: Boolean, width: Int, height: Int,
                framing: AvatarFraming.Window? = null, diagnosticBlink: Float? = null,
@@ -195,6 +217,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         mapper.applyDiagnosticBlink(diagnosticBlink)
         applyGlow(if (motion) pose.speakEnergy else 0f)
         applyCoreLight(coreEnergy, cinematicLighting && motion)
+        applySurfaceRadiance(coreEnergy, cinematicLighting && motion)
         // Cosmetic view drift uses the existing clock. Reduced motion restores
         // the same rest camera immediately; it does not change the actual pose.
         // A close-up keeps the crown margin and crops from below (neck and shoulders dissolve in the view mask).
@@ -235,6 +258,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
 
     override fun close() {
         val e = engine ?: return
+        faceMaterial = null
+        faceEmission = null
         // Each release is independent so a lost surface cannot skip the remaining native cleanup.
         runCatching { asset?.let { scene?.removeEntities(it.entities); loader?.destroyAsset(it) } }; asset = null
         runCatching { loader?.destroy() }; loader = null
