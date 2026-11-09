@@ -28,6 +28,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val stage = RectF()
     private val source = RectF()
     private var protectedBounds = emptyList<RectF>()
+    internal var cinematicArcEnabled = false
     internal var requestFrame: () -> Unit = {}
     internal var cinematicEffectsEnabled = true
         set(value) {
@@ -197,7 +198,9 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         // The source is in screen space, never rotated with the arriving glass.
         cinematics.drawAnchor(painter, originX / density, originY / density, boxDp, frame, bloom)
         canvas.restore()
-        canvas.translate((source.left - stage.left) * (1f - openness), (source.top - stage.top) * (1f - openness))
+        canvas.translate((source.left - stage.left) * (1f - openness),
+            (source.top - stage.top) * (1f - openness) +
+                HollywoodFuiConstruct.arcLiftDp(openness, cinematicArcEnabled && !reducedMotion) * density)
         canvas.scale((source.width() + (stage.width() - source.width()) * openness) / stage.width(),
             (source.height() + (stage.height() - source.height()) * openness) / stage.height(), stage.left, stage.top)
         val tilt = HollywoodFuiConstruct.orientedTilt(frame.tiltDegrees, side, reducedMotion)
