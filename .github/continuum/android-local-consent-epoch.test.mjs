@@ -29,8 +29,11 @@ test('model Web dispatch retains exact-revision and per-session checks', () => {
   assert.match(activity, /modelWebSessions\.forEach \{ session -> session\.checkAuthorized\(\) \}/);
   assert.match(activity, /internetConsent\.revision\(\) != internetRevisionAtTurnStart/);
   assert.match(activity, /modelWebCalls, modelWebSessions\.isNotEmpty\(\)/);
-  assert.match(scope, /fun discardAfterConsentChange\(changed: Boolean, webCallCount: Int, hadWebSession: Boolean\)/);
-  assert.match(scope, /changed && \(webCallCount > 0 \|\| hadWebSession\)/);
+  assert.match(scope, /fun discardAfterConsentChange\([\s\S]*?promptUsedOnlineEvidence: Boolean = false/);
+  assert.match(scope, /changed && \(webCallCount > 0 \|\| hadWebSession \|\| promptUsedOnlineEvidence\)/);
+  assert.match(activity, /onlineResearchFrameUsed\.set\(true\)/);
+  assert.match(activity, /onlineResearchFrameUsed\.get\(\)/);
+  assert.match(activity, /localConversationContext\.hasResearch\(localSessionId\)/);
 });
 
 test('native model scope never grants a newly refreshed Web session', () => {
