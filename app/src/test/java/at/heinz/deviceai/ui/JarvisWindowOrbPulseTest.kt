@@ -9,7 +9,7 @@ class JarvisWindowOrbPulseTest {
         val p = JarvisWindowOrbPulse
         assertEquals(0f, p.energy(-1), 0f)
         assertEquals(0f, p.energy(0), 0f)
-        assertTrue(p.energy(325L) in .70f..0.72f)
+        assertTrue(p.energy(325L) in 0.70f..0.72f)
         assertTrue(p.energy(525L) in 0f..0.72f)
         assertEquals(0f, p.energy(p.DURATION_MS), 0f)
         assertEquals(0f, p.energy(Long.MAX_VALUE), 0f)
