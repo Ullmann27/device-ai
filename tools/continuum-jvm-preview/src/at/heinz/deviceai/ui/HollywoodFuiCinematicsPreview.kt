@@ -29,7 +29,8 @@ object HollywoodFuiCinematicsPreview {
             Scene("phone", 412, 915, HollywoodFuiCinematics.Box(20f, 380f, 392f, 860f), 206f, 200f)
         )
         val opening = listOf(0L, 70L, HollywoodFuiConstruct.ANCHOR_END_MS, 230L, HollywoodFuiConstruct.BRACKETS_END_MS,
-            440L, HollywoodFuiConstruct.GRID_END_MS, HollywoodFuiConstruct.GLASS_END_MS, HollywoodFuiConstruct.DATA_END_MS, 2400L)
+            440L, HollywoodFuiConstruct.GRID_END_MS, HollywoodFuiConstruct.GLASS_END_MS, HollywoodFuiConstruct.DATA_END_MS,
+            2400L, 5200L, 7400L)
         val closing = listOf(60L, 120L, 220L, 300L, HollywoodFuiConstruct.CLOSE_END_MS)
         val budgets = listOf(
             "high" to HollywoodFuiCinematics.Budget.from(JarvisRenderQuality.resolve(true, false, 0, false, false)),

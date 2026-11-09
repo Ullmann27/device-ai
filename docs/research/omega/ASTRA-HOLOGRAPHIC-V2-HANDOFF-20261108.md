@@ -353,6 +353,33 @@ Download abgebrochen, keine zweite Renderarchitektur). Kamera
 `{"left":-0.165,"right":0.165,"halfHeight":0.22,"cameraCenterY":0.232}`,
 384x512, Schrittweite3. Native Darstellung weiterhin separat abzunehmen.
 
+### C: identische Glasprojektion und fortgesetzte Randreflexe
+
+B gesichert: `ec2615f53515e1016be53d32041a77af03d9a7cf`, Push/Remote identisch.
+Die hintere Glaskonstruktion rekonstruierte die Perspektive bisher mit einer
+separaten `Camera`; der native Inhalt verwendete dagegen `View.matrix`.
+Jetzt kopiert das Overlay genau diese native Matrix:
+`T(left, top) * View.matrix * T(-left, -top)`. Inhalt, hinteres Glas und
+verfolgter Mittelpunkt verwenden damit dieselbe Panelprojektion, ohne
+zweite Kamera oder Animationsuhr. Das ist weiterhin **keine gemeinsame
+metrische Filament-/Android-Kamera**.
+
+Zwei schmale, gegenlaeufige Reflexe bewegen sich nur waehrend echter aktiver
+Arbeit auf den aeusseren oberen/unteren Fasen. Der vorhandene Takt und das
+Quality-Budget steuern sie; keine Textueberdeckung, neuen Shader/Paths oder
+Partikel. Reduced Motion/Low/Film-Aus/Arbeitsende bleiben statisch.
+20 gezielte Choreografie-/Paintertests PASS, darunter Bewegung nach 5 s,
+deterministische Wiederholung, Begrenzung auf den Rand und Stillstand ohne
+Arbeit. 44 Produktions-Painterframes neu gerendert; 5.2-/7.4-s-Glasvergleich
+tatsaechlich angesehen: `work-glass-host.png` im fokussierten Evidenzordner.
+Das Bild ist Java2D ohne native Inhalte, nicht Filament/Fold7.
+
+Produktionsklassen und **acht** native UI-Faelle typgeprueft. Der neue Fall
+vergleicht alle vier Glasecken mit der nativen Projektion an fuenf
+Einflugzeitpunkten. **Nicht ausgefuehrt**: Android/Robolectric-Runtime bleibt
+wegen fehlender AndroidX-/SDK-Artefakte blockiert. Pixelgleichheit auf einem
+Geraet wird nicht aus der erfolgreichen Typpruefung abgeleitet.
+
 ### Fortsetzungsstand
 
 Zentraler Praesentationsschalter: `JarvisCinematicSettings.KEY`,
@@ -361,7 +388,7 @@ Aus bedeutet vorhandener einfacher Fenstereinflug ohne Film-Layer/Neigung und
 die originale statische Cyan-Fuellleuchte;
 kein Abschalten der Avatar-/Sprach-/Berechtigungsfunktionen.
 Rollback nur eigener Commits, niemals Reset der SOL-/Fable-Branches.
-Naechster Einstieg: die sieben nativen UI-Faelle auf einem autorisierten
+Naechster Einstieg: die acht nativen UI-Faelle auf einem autorisierten
 Android-QA-Host ausfuehren, Blickprojektion am Original-GLB filmen und die
 offenen metrischen Kamera-/Mehrfenster-/Live-Inhaltsanforderungen daran
 weiterentwickeln. Kein weiteres subjektives Grafik-Abnahmeversprechen aus

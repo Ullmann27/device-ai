@@ -1,7 +1,6 @@
 package at.heinz.deviceai.ui
 
 import android.content.Context
-import android.graphics.Camera
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
@@ -13,7 +12,6 @@ import android.view.View
 import at.heinz.deviceai.cockpit.StepState
 import java.util.Locale
 import kotlin.math.PI
-import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -38,8 +36,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
     private val painter = AndroidContinuumPainter(context.assets)
-    private val camera = Camera()
-    private val cameraMatrix = Matrix()
+    private val panelMatrix = Matrix()
     private var cinematics = HollywoodFuiCinematics.Painterly(JarvisDesign.Colors.cyan)
     private var budget = HollywoodFuiCinematics.Budget.FULL
     private var originX = Float.NaN
@@ -49,7 +46,6 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private var profile = JarvisActionScenes.FuiProfile.GENERIC
     private var accent = JarvisDesign.Colors.cyan
     private var elapsedMs = 0L
-    private var openness = 0f
     private var closingElapsedMs = -1L
     private var active = false
     private var reducedMotion = false
@@ -78,7 +74,6 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         originY = origin.centerY()
         moteSeed = scene.fuiProfile.ordinal
         elapsedMs = 0L
-        openness = 0f
         closingElapsedMs = -1L
         anchorLatched = false
         bracketsLatched = false
@@ -151,12 +146,19 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         if (immediate) visibility = GONE
     }
 
+    /** Same native projective transform for rear glass, front controls and the avatar's tracked centre. */
+    internal fun presentTransform(matrix: Matrix, left: Int, top: Int, width: Int, height: Int) {
+        stage.set(left.toFloat(), top.toFloat(), (left + width).toFloat(), (top + height).toFloat())
+        panelMatrix.set(matrix)
+        panelMatrix.preTranslate(-left.toFloat(), -top.toFloat())
+        panelMatrix.postTranslate(left.toFloat(), top.toFloat())
+    }
+
     /** The native window supplies the only clock, including close and Android animator scale. */
-    internal fun present(elapsed: Long, closing: Long, reduced: Boolean, open: Float): Boolean {
+    internal fun present(elapsed: Long, closing: Long, reduced: Boolean): Boolean {
         elapsedMs = elapsed
         closingElapsedMs = closing
         reducedMotion = reduced || !budget.animate
-        openness = open
         if (!cinematicEffectsEnabled) return false
         if (!reducedMotion && closing < 0L) emitPhaseFeedback(elapsed)
         invalidate()
@@ -171,10 +173,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         val frame = HollywoodFuiConstruct.frame(elapsedMs, closingElapsedMs, reducedMotion)
         if (frame.closeFactor <= 0f) return
 
-        val cx = stage.centerX()
         val constructed = stage
         val density = resources.displayMetrics.density
-        val side = if (originX.isNaN() || abs(originX - cx) < dp(8f)) 0f else if (originX < cx) -1f else 1f
         val bloom = budget.bloom && !reducedMotion
 
         // Whole construct in perspective: swings in around its vertical axis from the anchor side, folds away again.
@@ -188,20 +188,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         // The source is in screen space, never rotated with the arriving glass.
         cinematics.drawAnchor(painter, originX / density, originY / density, boxDp, frame, bloom)
         canvas.restore()
-        canvas.translate((source.left - stage.left) * (1f - openness), (source.top - stage.top) * (1f - openness))
-        canvas.scale((source.width() + (stage.width() - source.width()) * openness) / stage.width(),
-            (source.height() + (stage.height() - source.height()) * openness) / stage.height(), stage.left, stage.top)
-        val tilt = JarvisMotion.Depth.entranceTilt(openness, side, if (reducedMotion) 0f else 1f)
-        if (tilt != 0f) {
-            camera.save()
-            camera.setLocation(0f, 0f, -JarvisMotion.Depth.CAMERA_DISTANCE_DP / 72f)
-            camera.rotateY(tilt)
-            camera.getMatrix(cameraMatrix)
-            camera.restore()
-            cameraMatrix.preTranslate(-stage.left, -stage.top)
-            cameraMatrix.postTranslate(stage.left, stage.top)
-            canvas.concat(cameraMatrix)
-        }
+        canvas.concat(panelMatrix)
 
         // Painter layers in dp: anchor + beam, glass depth sheets, grid/scan, rim energy and motes.
         canvas.save()

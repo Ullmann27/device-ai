@@ -85,8 +85,9 @@ class JarvisWorkWindow(
                     val handover: View?)
     private val density = resources.displayMetrics.density
     private var lastAnimatorScale = 1f
-    internal var onCinematicFrame: ((Long, Long, Boolean, Float) -> Boolean)? = null
+    internal var onCinematicFrame: ((Long, Long, Boolean) -> Boolean)? = null
     internal var onPresentedCenter: ((Float, Float) -> Unit)? = null
+    internal var onPanelTransform: ((android.graphics.Matrix, Int, Int, Int, Int) -> Unit)? = null
     private val projectedCenter = FloatArray(2)
     internal var cinematicEffectsEnabled = true
         set(value) {
@@ -452,7 +453,7 @@ class JarvisWorkWindow(
         val normalized = if (reduced) HollywoodFuiConstruct.DATA_END_MS else (elapsed / animatorScale).toLong()
         if (phase == Phase.OPEN) {
             constructionElapsedMs = maxOf(constructionElapsedMs, normalized, HollywoodFuiConstruct.DATA_END_MS)
-            return onCinematicFrame?.invoke(constructionElapsedMs, -1L, reduced, 1f) == true
+            return onCinematicFrame?.invoke(constructionElapsedMs, -1L, reduced) == true
         }
         if (cinematicEffectsEnabled) {
             lastAnimatorScale = animatorScale
@@ -469,7 +470,7 @@ class JarvisWorkWindow(
             trailAlpha = (1f - frame.brackets) * frame.closeFrame
             panel.edgeFlash = frame.pulse * .35f
             applyFrame()
-            val live = onCinematicFrame?.invoke(constructionElapsedMs, closingTime, reduced, openness) == true
+            val live = onCinematicFrame?.invoke(constructionElapsedMs, closingTime, reduced) == true
             if (isClosing && frame.closeFactor <= 0f) { finishClose(); return false }
             if (!handedOver && JarvisWorkWindowDepth.handedOver(openness)) handOver()
             if (!isClosing && frame.settled) {
@@ -532,8 +533,9 @@ class JarvisWorkWindow(
 
     internal fun reportPresentedCenter() {
         if (!isShowing) return
-        val report = onPresentedCenter ?: return
         val params = panel.layoutParams as LayoutParams
+        onPanelTransform?.invoke(panel.matrix, params.leftMargin, params.topMargin, params.width, params.height)
+        val report = onPresentedCenter ?: return
         projectedCenter[0] = params.width * .5f
         projectedCenter[1] = params.height * .5f
         // View.matrix includes scale, translation and the actual Android camera perspective around the panel pivot.

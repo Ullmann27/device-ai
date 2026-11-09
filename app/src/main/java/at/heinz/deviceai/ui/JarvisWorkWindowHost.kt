@@ -170,6 +170,7 @@ class JarvisWorkWindowHost(
         val id = "work-window-${++serial}"
         val window = JarvisWorkWindow(activity, shell::observeMotionFrames) { shell.invalidate() }
         val fui = HollywoodFuiStageOverlay(activity)
+        window.onPanelTransform = fui::presentTransform
         var framing = first
         window.onPresentedCenter = { x, y ->
             if (current === window) {

@@ -45,6 +45,7 @@ class HollywoodFuiWindowUiTest {
             root.addView(window, FrameLayout.LayoutParams(-1, -1))
             activity.setContentView(root)
             window.onCinematicFrame = overlay::present
+            window.onPanelTransform = overlay::presentTransform
             assertTrue(window.open(body, origin, target, "Dokument", protected, onClosed = {
                 closed++
                 root.removeView(overlay)
@@ -178,5 +179,21 @@ class HollywoodFuiWindowUiTest {
         assertEquals(f.target.centerY(), positions.last().second, .001f)
         f.frame(1_500L, 0f)
         assertEquals(f.target.centerX(), positions.last().first, .001f)
+    }
+
+    @Test fun rearGlassAndNativeContentShareAllFourProjectedCorners() = fixture { f ->
+        for (now in listOf(1_000L, 1_320L, 1_500L, 1_700L, 1_900L)) {
+            f.frame(now)
+            val panel = f.panel
+            val native = floatArrayOf(0f, 0f, panel.width.toFloat(), 0f,
+                panel.width.toFloat(), panel.height.toFloat(), 0f, panel.height.toFloat())
+            val glass = native.copyOf()
+            for (i in glass.indices step 2) { glass[i] += panel.left; glass[i + 1] += panel.top }
+            panel.matrix.mapPoints(native)
+            for (i in native.indices step 2) { native[i] += panel.left; native[i + 1] += panel.top }
+            val field = HollywoodFuiStageOverlay::class.java.getDeclaredField("panelMatrix").apply { isAccessible = true }
+            (field.get(f.overlay) as android.graphics.Matrix).mapPoints(glass)
+            assertArrayEquals("same camera perspective at $now", native, glass, .002f)
+        }
     }
 }

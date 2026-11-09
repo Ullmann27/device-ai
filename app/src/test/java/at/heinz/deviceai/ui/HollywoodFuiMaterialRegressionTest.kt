@@ -54,12 +54,32 @@ class HollywoodFuiMaterialRegressionTest {
             HollywoodFuiCinematics.motes(box, 12_345L, 10_000, 7).size)
     }
 
+    @Test fun sustainedWorkReflectionsMoveOutsideTextAndStopWithTheWork() {
+        val painter = HollywoodFuiCinematics.Painterly(JarvisDesign.Colors.cyan)
+        fun draw(time: Long, working: Boolean): Probe = Probe().also {
+            painter.drawMotesAndEnergy(it.painter, box, HollywoodFuiConstruct.frame(time),
+                time, 0, 0, working, true, 6f)
+            it.assertBalanced()
+        }
+        val first = draw(5_000, true)
+        val later = draw(6_000, true)
+        assertEquals(4, first.lines.size)
+        assertNotEquals(first.lines, later.lines)
+        assertTrue(first.lines.all { line ->
+            line[0] >= box.left && line[2] <= box.right &&
+                (line[1] < box.top || line[1] > box.bottom) && line[1] == line[3]
+        })
+        assertEquals(0, draw(6_000, false).draws)
+        assertEquals(first.lines, draw(5_000, true).lines)
+    }
+
     private class Probe {
         var draws = 0
         private var depth = 0
         private var additive = false
         val fills: MutableSet<Fill> = Collections.newSetFromMap(IdentityHashMap())
         val paths: MutableSet<VectorPath> = Collections.newSetFromMap(IdentityHashMap())
+        val lines = mutableListOf<List<Float>>()
         val painter = Proxy.newProxyInstance(ContinuumPainter::class.java.classLoader,
             arrayOf(ContinuumPainter::class.java)) { _, method, args ->
             args.orEmpty().filterIsInstance<Float>().forEach { assertTrue(it.isFinite()) }
@@ -71,6 +91,7 @@ class HollywoodFuiMaterialRegressionTest {
                 "setAdditive" -> additive = args!![0] as Boolean
             }
             if (method.name.startsWith("fill") || method.name.startsWith("stroke") || method.name == "drawLine") draws++
+            if (method.name == "drawLine") lines += args!!.take(4).map { it as Float }
             when (method.name) {
                 "measureText", "capHeight" -> 0f
                 "drawRaster" -> false

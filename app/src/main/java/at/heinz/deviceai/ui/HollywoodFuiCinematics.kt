@@ -1,6 +1,7 @@
 package at.heinz.deviceai.ui
 
 import kotlin.math.PI
+import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
@@ -219,6 +220,16 @@ object HollywoodFuiCinematics {
                 val breath = .5f + .5f * sin(2f * PI.toFloat() * ((timeMs % 2_400L) / 2_400f))
                 p.strokeRoundRect(box.left, box.top, box.right, box.bottom, radius, 6f, accentFill, (.12f + .14f * breath) * visible)
                 p.strokeRoundRect(box.left, box.top, box.right, box.bottom, radius, 1.6f, glint, (.45f + .45f * breath) * visible)
+                // Narrow reflections remain outside the content plane; opposite travel separates the two bevels.
+                val length = min(48f, box.width * .18f)
+                val travel = (box.width - 2f * radius - length).coerceAtLeast(0f)
+                val phase = .5f - .5f * cos(2f * PI.toFloat() * (timeMs % 4_800L) / 4_800f)
+                for (edge in 0..1) {
+                    val x = box.left + radius + travel * if (edge == 0) phase else 1f - phase
+                    val y = if (edge == 0) box.top - 2f else box.bottom + 2f
+                    if (bloom) p.drawLine(x, y, x + length, y, 4f, accentFill, .10f * visible)
+                    p.drawLine(x, y, x + length, y, 1f, glint, .65f * visible)
+                }
             }
             visitMotes(box, timeMs, motes, seed) { index, x, y, radius, alpha ->
                 val fill = when (index % 3) { 0 -> glint; 1 -> accentFill; else -> violet }
