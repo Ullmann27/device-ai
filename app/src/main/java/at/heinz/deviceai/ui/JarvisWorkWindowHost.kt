@@ -66,6 +66,10 @@ class JarvisWorkWindowHost(
         currentFui?.setLiveData(data)
     }
 
+    /** A successful non-replayed ToolExecutionResult can illuminate this live work window. */
+    fun verifiedStep(callId: String): Boolean = if (current?.isShowing == true)
+        currentFui?.verifiedStep(callId) == true else false
+
     /**
      * Promotes only the visual grammar/footprint of the already-open physical work window.
      * No content, tool state, window id or AvatarDirector lease is replaced.
@@ -194,6 +198,8 @@ class JarvisWorkWindowHost(
                 JarvisCinematicSettings.Experiment.EXP_04_FOLDER_FLIGHT)
             fui.cinematicEffectsEnabled = enabled
             fui.cinematicArcEnabled = arc
+            fui.workPulseEnabled = JarvisCinematicSettings.experimentEnabled(activity,
+                JarvisCinematicSettings.Experiment.EXP_12_RECEIPTS)
             window.cinematicArcEnabled = arc
             window.cinematicEffectsEnabled = enabled
         }
