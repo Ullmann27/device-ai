@@ -228,6 +228,27 @@ object HollywoodFuiCinematics {
             if (bloom) p.setAdditive(false)
         }
 
+        /** Verified tool receipt: one bounded travelling spark, not a fake progress bar. */
+        fun drawVerifiedStepPulse(p: ContinuumPainter, box: Box, frame: HollywoodFuiConstruct.Frame,
+                                  progress: Float) {
+            if (!progress.isFinite() || progress !in 0f..1f || frame.closeFrame <= 0f ||
+                box.width <= 0f || box.height <= 0f) return
+            val travel = progress * (2f * box.width + 2f * box.height)
+            val x: Float
+            val y: Float
+            when {
+                travel <= box.width -> { x = box.left + travel; y = box.top }
+                travel <= box.width + box.height -> { x = box.right; y = box.top + travel - box.width }
+                travel <= 2f * box.width + box.height -> {
+                    x = box.right - (travel - box.width - box.height); y = box.bottom
+                }
+                else -> { x = box.left; y = box.bottom - (travel - 2f * box.width - box.height) }
+            }
+            val alpha = (1f - progress) * frame.closeFrame
+            p.fillCircle(x, y, 7f, violet, .18f * alpha)
+            p.fillCircle(x, y, 2.3f, glint, .82f * alpha)
+        }
+
         /** Four corner brackets of [box] with a soft bloom; [strength] 0..1. */
         fun drawBrackets(p: ContinuumPainter, box: Box, strength: Float, bloom: Boolean) {
             if (strength <= .01f) return
