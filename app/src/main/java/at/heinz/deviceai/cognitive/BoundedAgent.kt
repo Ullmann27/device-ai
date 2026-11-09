@@ -36,10 +36,11 @@ data class AgentModelOutput private constructor(
     val response: String,
     val proposal: ToolProposal?,
     val responseCompletion: LocalGenerationCompletion,
-    private val ownerDialogue: Boolean
+    private val ownerDialogue: Boolean,
+    val failureCause: LocalGenerationFailureCause?
 ) {
     constructor(modelId: String, response: String, proposal: ToolProposal? = null) :
-        this(modelId, response, proposal, LocalGenerationCompletion.COMPLETE, false)
+        this(modelId, response, proposal, LocalGenerationCompletion.COMPLETE, false, null)
 
     val responseComplete: Boolean get() = responseCompletion == LocalGenerationCompletion.COMPLETE
 
@@ -54,8 +55,11 @@ data class AgentModelOutput private constructor(
 
     companion object {
         fun ownerDialogue(modelId: String, response: String,
-            completion: LocalGenerationCompletion = LocalGenerationCompletion.COMPLETE): AgentModelOutput =
-            AgentModelOutput(modelId, response, null, completion, true)
+            completion: LocalGenerationCompletion = LocalGenerationCompletion.COMPLETE,
+            failure: String? = null): AgentModelOutput =
+            AgentModelOutput(modelId, response, null, completion, true,
+                if (completion == LocalGenerationCompletion.COMPLETE) null
+                else LocalGenerationFailureCause.classify(completion, failure))
     }
 }
 
@@ -479,11 +483,8 @@ class BoundedAgentOrchestrator(
                 cancellation.throwIfCancelled()
                 if (!chosen.responseComplete) {
                     val acceptedText = if (lastEvaluation.success) lastOutput else ""
-                    val cause = when (chosen.responseCompletion) {
-                        LocalGenerationCompletion.OUTPUT_LIMIT -> "Das lokale Ausgabelimit wurde erreicht."
-                        LocalGenerationCompletion.STALLED -> "Die lokale Textausgabe ist zum Stillstand gekommen."
-                        else -> "Die lokale Generierung wurde abgebrochen (zum Beispiel wegen Gerätewärme oder eines Laufzeitfehlers)."
-                    }
+                    val cause = chosen.failureCause?.ownerMessage
+                        ?: "Die lokale Generierung wurde nicht vollständig abgeschlossen; die Ursache ist unbekannt."
                     // Fold7 (#642): name the real cause as well, not only the failed quality check; the owner
                     // otherwise cannot tell a thermal stop from a bad model answer.
                     val reason = if (!lastEvaluation.success)

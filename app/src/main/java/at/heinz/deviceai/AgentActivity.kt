@@ -450,6 +450,7 @@ class AgentActivity : Activity() {
     private val modeButtons = linkedMapOf<AssistantMode, Button>()
     private var mode = AssistantMode.AUTO
     @Volatile private var sessionId = UUID.randomUUID().toString()
+    private val lastBatteryObservation = at.heinz.deviceai.cognitive.PreviousBatteryObservation()
     private val chatTranscripts by lazy {
         at.heinz.deviceai.cognitive.LocalChatTranscriptStore(java.io.File(filesDir, "chat-history"))
     }
@@ -5184,6 +5185,11 @@ class AgentActivity : Activity() {
         })
         refreshConversationCameraControls()
         shell.addView(inputRow, matchWidth())
+        if (stackedComposer) {
+            newChat.text = "＋ Neue Sitzung"
+            newChat.textSize = 14f
+            shell.addView(newChat, matchWidth(top = 6))
+        }
 
         val actions = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -5458,6 +5464,16 @@ class AgentActivity : Activity() {
             return
         }
         if (!botRoutingChecked && routeBotInput(input.text.toString())) return
+        // Prior measurement requests never start a new tool, model or network call.
+        if (!neuralCoach.isActive() &&
+            at.heinz.deviceai.cognitive.OwnerPreviousBatteryIntent.isPreviousReadingRequest(request)) {
+            input.text.clear()
+            addUserMessage(request)
+            addNonModelReply(request, lastBatteryObservation.answer(sessionId),
+                at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+            addToolActivity("AKKU · letzte belegte Messung wiedergegeben · keine neue Geräteprüfung")
+            return
+        }
         // „Was haben wir gestern entschieden?“ / „die Entscheidung davor“ / „was davon ist umgesetzt“ / „beim letzten offenen
         // Punkt weitermachen“ – answered from the work journal and the owner's confirmed statements, never by the model.
         at.heinz.deviceai.cognitive.WorkDecisionRecall.parse(request)?.let { ask ->
@@ -6681,6 +6697,8 @@ class AgentActivity : Activity() {
                 val value = result.fold(
                     onSuccess = { item ->
                         checkpointContinuumAsync()
+                        if (name == "get_battery_info")
+                            lastBatteryObservation.recordIfFresh(actionSessionId, item)
                         publishCognitiveTrace(turnTrace,if(item.experience?.outcome == at.heinz.deviceai.cognitive.ExperienceOutcome.SUCCESS) TraceOutcome.ACTION_VERIFIED else TraceOutcome.BLOCKED)
                         if (item.experience?.outcome == at.heinz.deviceai.cognitive.ExperienceOutcome.SUCCESS) {
                             addToolActivity("CONTINUUM · frische Messung belegt · Episode zur Sicherung vorgemerkt · kein Gewichtstraining")
@@ -10127,7 +10145,8 @@ class AgentActivity : Activity() {
                 }
                 check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
                 if (ownerDialogueOutput && generation.proposal == null) AgentModelOutput.ownerDialogue(
-                    "litertlm:${imported.id}@${imported.version}", generation.response, generation.completion)
+                    "litertlm:${imported.id}@${imported.version}", generation.response, generation.completion,
+                    generation.failure)
                 else {
                     check(generation.completion == LocalGenerationCompletion.COMPLETE) { "LOCAL_GENERATION_INCOMPLETE" }
                     AgentModelOutput("litertlm:${imported.id}@${imported.version}", generation.response, generation.proposal)

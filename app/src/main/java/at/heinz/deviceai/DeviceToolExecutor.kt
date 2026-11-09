@@ -47,6 +47,11 @@ class DeviceToolExecutor internal constructor(
             callback(runCatching { DeviceNetworkProbe.read(context) })
             return
         }
+        // Battery data comes from Android's sticky system broadcast, not a shell dump.
+        if (call.name == "get_battery_info") {
+            callback(runCatching { DeviceBatteryProbe.read(context) })
+            return
+        }
         if (!bridgeReady()) {
             callback(Result.failure(IllegalStateException("Shizuku ist nicht verbunden.")))
             return
@@ -100,8 +105,6 @@ class DeviceToolExecutor internal constructor(
                     "echo SDK: $(getprop ro.build.version.sdk); " +
                     "echo Build: $(getprop ro.build.display.id); " +
                     "echo ABI: $(getprop ro.product.cpu.abi)"
-
-            "get_battery_info" -> "dumpsys battery | head -60"
 
             "list_installed_apps" -> {
                 val userOnly = boolArg(call, "userOnly", true)
