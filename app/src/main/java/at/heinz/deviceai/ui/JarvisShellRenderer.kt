@@ -64,7 +64,7 @@ object JarvisShellRenderer {
              tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L,
              deferForeground: Boolean = false, deckClearance: Float = 0f,
              missionClearance: Float = deckClearance, luxuryDepth: Boolean = false,
-             depthBudget: JarvisRenderQuality.Budget? = null) {
+             depthBudget: JarvisRenderQuality.Budget? = null, enableWings: Boolean = luxuryDepth) {
         background(p, shell.width, shell.height)
         val backdropHeight = shell[Slot.INPUT]?.bottom ?: shell[Slot.AVATAR]?.bottom ?: shell.height
         JarvisReferenceHud.backdrop(p, shell.width, backdropHeight)
@@ -101,7 +101,7 @@ object JarvisShellRenderer {
                 f.dy + depth.dy + JarvisDeckClearance.dy(clear))
             val k = f.scale * depth.scale * JarvisDeckClearance.scale(clear)
             p.scale(k, k, box.centerX, box.centerY())
-            val depthState = if (luxuryDepth && depthBudget != null)
+            val depthState = if (enableWings && depthBudget != null)
                 PerimeterWingChoreographer.depth(slot, box, shell.width, clear, true, depthBudget)
                 else JarvisMotion.Depth.FLAT
             val depthNative = depthState != JarvisMotion.Depth.FLAT &&
