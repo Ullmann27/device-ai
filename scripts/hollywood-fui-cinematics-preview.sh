@@ -15,6 +15,7 @@ SOURCES=(
   app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt
   app/src/main/java/at/heinz/deviceai/ui/JarvisRenderQuality.kt
   app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiConstruct.kt
+  app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiWorkActivity.kt
   app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiCinematics.kt
   tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/Java2DContinuumPainter.kt
   tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiCinematicsPreview.kt

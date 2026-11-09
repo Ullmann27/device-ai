@@ -111,6 +111,13 @@ object HollywoodFuiConstruct {
         return -28f * sin(PI.toFloat() * openness.coerceIn(0f, 1f))
     }
 
+    /** Depth only for decorative planes; native text and touch geometry remain unchanged. */
+    fun layerShiftDp(tiltDegrees: Float, depthDp: Float, enabled: Boolean): Float {
+        if (!enabled || !tiltDegrees.isFinite() || !depthDp.isFinite()) return 0f
+        return (depthDp * kotlin.math.sin(Math.toRadians(tiltDegrees.toDouble())).toFloat())
+            .coerceIn(-12f, 12f)
+    }
+
     /** One phase-derived angle shared by native panel and holographic glass. */
     fun orientedTilt(degrees: Float, side: Float, reducedMotion: Boolean): Float {
         if (reducedMotion || !degrees.isFinite() || !side.isFinite()) return 0f

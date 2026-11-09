@@ -32,7 +32,17 @@ test('text-safe 0.09 raster never controls structural rim and scan',()=>{
   assert.match(cinema,/val rimAlpha = HollywoodFuiWorkActivity\.structuralOpacity\(frame\.grid, frame\.closeFrame\)/);
   assert.match(cinema,/val rasterAlpha = HollywoodFuiWorkActivity\.structuralOpacity\(innerRasterAlpha, frame\.closeFrame\)/);
   assert.match(overlay,/innerRasterAlpha = raster/);
-  assert.doesNotMatch(overlay,/frame\.copy\(grid = raster/);
+  assert.match(overlay,/val scanFrame = if \(rimIsolationEnabled\)/);
+  assert.match(overlay,/else frame\.copy\(grid = raster/);
+  assert.match(host,/fui\.rimIsolationEnabled = JarvisCinematicSettings\.experimentEnabled/);
+});
+
+test('EXP01 slices glass and brackets into different Z planes, not native text',()=>{
+  assert.match(core,/fun layerShiftDp\(/);
+  assert.match(overlay,/layerShiftDp\(tilt, -24f, true\)/);
+  assert.match(overlay,/layerShiftDp\(tilt, 20f, true\)/);
+  assert.match(overlay,/canvas\.clipRect\(constructed\)/);
+  assert.match(host,/fui\.zSliceEnabled = JarvisCinematicSettings\.experimentEnabled/);
 });
 
 test('only an honest completed tool result may trigger a current-window pulse',()=>{
@@ -54,6 +64,16 @@ test('cinema uses the owner-controlled existing window and frame budget',()=>{
   assert.match(host,/shell\.spatialTiltX/);
   assert.match(host,/shell\.spatialTiltY/);
   assert.match(orb,/windowAccentArgb = workWindowAccentArgb/);
+});
+
+test('EXP11 orb glow is tied to a real accepted window with a bounded time course',()=>{
+  const cue=read(base+'ui/JarvisWindowOrbPulse.kt');
+  assert.match(cue,/DURATION_MS = 650L/);
+  assert.match(cue,/fun energy\(ageMillis: Long\)/);
+  assert.match(orb,/val firstWindowFrame = active && !workWindowActive/);
+  assert.match(orb,/if \(firstWindowFrame\) workWindowPulseStartedAtMs = now/);
+  assert.match(orb,/JarvisWindowOrbPulse\.energy\(nowMillis - workWindowPulseStartedAtMs\)/);
+  assert.match(orb,/workWindowPulseStartedAtMs = -1L/);
 });
 
 test('no fake external-send or new native frame timers introduced',()=>{
