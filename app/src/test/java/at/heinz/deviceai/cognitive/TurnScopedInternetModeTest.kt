@@ -48,6 +48,9 @@ class TurnScopedInternetModeTest {
         assertEquals(true, TurnScopedInternetMode.discardAfterConsentChange(true, 1, false))
         assertEquals(true, TurnScopedInternetMode.discardAfterConsentChange(true, 0, true))
         assertEquals(false, TurnScopedInternetMode.discardAfterConsentChange(false, 2, true))
+        assertEquals(true, TurnScopedInternetMode.discardAfterConsentChange(true, 0, false, true))
+        assertEquals(false, TurnScopedInternetMode.discardAfterConsentChange(false, 0, false, true))
+        assertEquals(false, TurnScopedInternetMode.discardAfterConsentChange(true, 0, false, false))
     }
 
     @Test fun revocationDuringNativeGenerationDiscardsTheResult() {
