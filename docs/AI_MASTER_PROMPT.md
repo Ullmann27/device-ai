@@ -261,7 +261,7 @@ Die nächste Version soll mindestens enthalten:
 5. mehrstufige Agent-Aufträge,
 6. lokaler Offline-Fallback,
 7. Risk/Approval-System,
-8. LumoSkill als erstes optionales Skill-Beispiel,
+8. generischer App-Skill nur bei belegter Integration,
 9. GitHub-Actions-Build,
 10. installierbare APK.
 
