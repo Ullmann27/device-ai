@@ -50,5 +50,7 @@ test('original certificate bound and no secret echoed', () => {
   assert.ok(script.indexOf('--draft --latest=false') <
     script.indexOf('GITHUB_READBACK_SHA_MISMATCH'));
   assert.doesNotMatch(script, /^set -x$/m);
-  assert.doesNotMatch(script, /\b(echo|printf|cat|tee)\b[^\n]*\$\{?(?:ORIGINAL_P12|ORIGINAL_PASSWORD|SIGN_PASS)\b/);
+  const safeDecode = 'printf \'%s\' "$ORIGINAL_P12" | base64 --decode > "$tmp/original.p12"';
+  assert.equal(script.split(safeDecode).length, 2, 'exact private-file-only P12 decode');
+  assert.doesNotMatch(script.replace(safeDecode, ''), /\b(echo|printf|cat|tee)\b[^\n]*\$\{?(?:ORIGINAL_P12|ORIGINAL_PASSWORD|SIGN_PASS)\b/);
 });
