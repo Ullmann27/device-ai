@@ -14,6 +14,12 @@ internal object HollywoodFuiWorkActivity {
         return (g * (1f - d + live * d)).coerceIn(0f, 1f)
     }
 
+    /** Structural frame opacity is independent of the text-safe interior raster. */
+    fun structuralOpacity(layer: Float, close: Float): Float {
+        if (!layer.isFinite() || !close.isFinite()) return 0f
+        return layer.coerceIn(0f, 1f) * close.coerceIn(0f, 1f)
+    }
+
     /** Fade at the scan wrap so the return does not flash across the settled glass. */
     fun scanEnvelope(phase: Float): Float {
         if (!phase.isFinite()) return 0f
