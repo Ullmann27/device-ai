@@ -64,6 +64,8 @@ interface LocalModelRuntime {
     val loadedModel: ImportedLocalModel?
     /** Bounded numeric diagnostics; no native model/request/response data. */
     val inferenceProfiles: List<LocalInferenceProfile> get() = emptyList()
+    /** CPU threads the loaded engine was configured with; null when unknown or not loaded. */
+    val computeThreads: Int? get() = null
     fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)
     fun unload(callback: (Result<Unit>) -> Unit = {})
     fun stream(prompt: String, callback: LocalInferenceCallback)
@@ -83,7 +85,9 @@ interface LocalModelRuntime {
 class LiteRtLmLocalModelRuntime(
     private val catalog: LocalModelCatalog,
     private val cacheDirectory: File,
-    private val systemPrompt: String = "You are Device AI, an on-device assistant."
+    private val systemPrompt: String = "You are Device AI, an on-device assistant.",
+    /** Evaluated at load time (thermal budget, owner cooling mode); null keeps the LiteRT-LM default (all cores). */
+    private val cpuThreadCount: () -> Int? = { null }
 ) : LocalModelRuntime {
     private val background = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "device-ai-local-model").apply { isDaemon = true }
@@ -99,6 +103,10 @@ class LiteRtLmLocalModelRuntime(
 
     @Volatile
     override var loadedModel: ImportedLocalModel? = null
+        private set
+
+    @Volatile
+    override var computeThreads: Int? = null
         private set
 
     private var engine: Engine? = null
@@ -147,10 +155,11 @@ class LiteRtLmLocalModelRuntime(
                 if (!cacheDirectory.exists() && !cacheDirectory.mkdirs()) {
                     error("Cannot create LiteRT-LM cache directory.")
                 }
+                val threads = runCatching(cpuThreadCount).getOrNull()?.takeIf { it > 0 }
                 val newEngine = Engine(
                     EngineConfig(
                         modelPath = file.absolutePath,
-                        backend = Backend.CPU(),
+                        backend = Backend.CPU(threadCount = threads),
                         cacheDir = cacheDirectory.absolutePath
                     )
                 )
@@ -169,6 +178,7 @@ class LiteRtLmLocalModelRuntime(
                         conversation = newConversation
                         startupConversationUnused = true
                         loadedModel = model
+                        computeThreads = threads
                         state = LocalModelState.READY
                     }
                 } catch (failure: Throwable) {

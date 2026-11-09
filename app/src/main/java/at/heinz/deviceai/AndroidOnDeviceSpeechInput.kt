@@ -14,10 +14,12 @@ import android.speech.SpeechRecognizer
 import at.heinz.deviceai.cognitive.LocalSpeechEngine
 import at.heinz.deviceai.cognitive.LocalSpeechInputPolicy
 import at.heinz.deviceai.cognitive.LocalSpeechSession
+import at.heinz.deviceai.cognitive.SpeechTurnRecovery
 
 /** Owner-gesture, main-thread, bounded on-device recognition. No service launch,
- * download, transcript persistence or automatic tool execution. A single 250 ms warm retry
- * is allowed only for Android client/busy handover failures. */
+ * download, transcript persistence or automatic tool execution. Android client/busy handover
+ * failures are recovered inside the turn by a bounded warm → warm → cold restart
+ * ([at.heinz.deviceai.cognitive.SpeechRecoveryPolicy]); every other error ends the turn. */
 internal class AndroidOnDeviceSpeechInput(private val context: Context) {
     private val handler = Handler(Looper.getMainLooper())
     private var warmRecognizer: SpeechRecognizer? = null
@@ -56,10 +58,9 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
             return { handler.removeCallbacks(runnable) }
         }
         override fun create(callbacks: LocalSpeechSession.Callbacks): LocalSpeechSession.Recognizer {
-            val recognizer = acquireWarmRecognizer()
+            var recognizer = acquireWarmRecognizer()
             var closed = false
-            var warmRetryUsed = false
-            var retryRunnable: Runnable? = null
+            lateinit var recovery: SpeechTurnRecovery
 
             fun intent() = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -75,37 +76,52 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                 if (!closed) recognizer.startListening(intent())
             }
 
+            val listener = object : RecognitionListener {
+                override fun onReadyForSpeech(params: Bundle?) = callbacks.ready()
+                override fun onBeginningOfSpeech() {}
+                override fun onRmsChanged(rmsdB: Float) {}
+                override fun onBufferReceived(buffer: ByteArray?) {}
+                override fun onEndOfSpeech() {}
+                override fun onError(error: Int) {
+                    if (closed) return
+                    val failure = classifySpeechError(error)
+                    // Fold7 (#641): a single warm retry was not enough after TTS released the audio
+                    // path. Escalate warm → warm → cold inside this turn before giving up.
+                    if (isWarmRetryableSpeechError(error) && recovery.recoverableError(failure)) return
+                    if (isWarmRetryableSpeechError(error)) destroyWarmRecognizer()
+                    callbacks.failed(failure)
+                }
+                override fun onResults(results: Bundle?) = callbacks.result(
+                    results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull().orEmpty())
+                override fun onPartialResults(partialResults: Bundle?) {}
+                override fun onEvent(eventType: Int, params: Bundle?) {}
+            }
+
+            fun restartCold() {
+                if (closed) return
+                destroyWarmRecognizer()
+                recognizer = acquireWarmRecognizer()
+                recognizer.setRecognitionListener(listener)
+                startNative()
+            }
+
+            recovery = SpeechTurnRecovery(
+                schedule = { delayMs, task ->
+                    val runnable = Runnable(task)
+                    handler.postDelayed(runnable, delayMs)
+                    val cancel: () -> Unit = { handler.removeCallbacks(runnable) }
+                    cancel
+                },
+                startWarm = ::startNative,
+                restartCold = ::restartCold,
+                giveUp = { failure ->
+                    destroyWarmRecognizer()
+                    if (!closed) callbacks.failed(failure)
+                }
+            )
+
             try {
-                recognizer.setRecognitionListener(object : RecognitionListener {
-                    override fun onReadyForSpeech(params: Bundle?) = callbacks.ready()
-                    override fun onBeginningOfSpeech() {}
-                    override fun onRmsChanged(rmsdB: Float) {}
-                    override fun onBufferReceived(buffer: ByteArray?) {}
-                    override fun onEndOfSpeech() {}
-                    override fun onError(error: Int) {
-                        if (closed) return
-                        if (!warmRetryUsed && isWarmRetryableSpeechError(error)) {
-                            warmRetryUsed = true
-                            val retry = Runnable {
-                                retryRunnable = null
-                                if (closed) return@Runnable
-                                runCatching { startNative() }.onFailure {
-                                    destroyWarmRecognizer()
-                                    callbacks.failed(LocalSpeechInputPolicy.Failure.START_FAILED)
-                                }
-                            }
-                            retryRunnable = retry
-                            handler.postDelayed(retry, WARM_RECOGNIZER_RETRY_MS)
-                            return
-                        }
-                        if (isWarmRetryableSpeechError(error)) destroyWarmRecognizer()
-                        callbacks.failed(classifySpeechError(error))
-                    }
-                    override fun onResults(results: Bundle?) = callbacks.result(
-                        results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull().orEmpty())
-                    override fun onPartialResults(partialResults: Bundle?) {}
-                    override fun onEvent(eventType: Int, params: Bundle?) {}
-                })
+                recognizer.setRecognitionListener(listener)
             } catch (error: RuntimeException) {
                 destroyWarmRecognizer()
                 throw error
@@ -116,15 +132,13 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                 override fun cancel() {
                     if (closed) return
                     closed = true
-                    retryRunnable?.let(handler::removeCallbacks)
-                    retryRunnable = null
+                    recovery.close()
                     runCatching { recognizer.cancel() }
                 }
                 override fun destroy() {
                     // End this turn lease only. The native recognizer stays warm until Platform.shutdown().
                     closed = true
-                    retryRunnable?.let(handler::removeCallbacks)
-                    retryRunnable = null
+                    recovery.close()
                 }
             }
         }
@@ -141,9 +155,16 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
     fun microphoneGranted() = context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
     fun cancel() { checkMainThread(); session.cancel() }
     fun shutdown() { checkMainThread(); session.shutdown() }
-    fun start(onState: (Boolean) -> Unit, onText: (String) -> Unit, onError: (String) -> Unit) {
+    /** Drop the pooled native recognizer so the next [start] creates a fresh one (cold start). */
+    fun resetRecognizer() { checkMainThread(); session.cancel(); destroyWarmRecognizer() }
+    fun start(
+        onState: (Boolean) -> Unit,
+        onText: (String) -> Unit,
+        onError: (String) -> Unit,
+        onFailure: ((LocalSpeechInputPolicy.Failure) -> Unit)? = null
+    ) {
         checkMainThread()
-        session.start(onState, onText, onError)
+        session.start(onState, onText, onError, onFailure)
     }
     private fun checkMainThread() = check(Looper.myLooper() == Looper.getMainLooper())
 }
@@ -166,6 +187,5 @@ internal fun classifySpeechError(error: Int): LocalSpeechInputPolicy.Failure = w
     else -> LocalSpeechInputPolicy.Failure.SERVICE_FAILURE
 }
 
-internal const val WARM_RECOGNIZER_RETRY_MS = 250L
 internal fun isWarmRetryableSpeechError(error: Int): Boolean =
     error == SpeechRecognizer.ERROR_CLIENT || error == SpeechRecognizer.ERROR_RECOGNIZER_BUSY

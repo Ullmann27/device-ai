@@ -34,4 +34,20 @@ class MemoryFallbackModelNotReadyTest {
         assertTrue("original reply first: $text", text.startsWith(gap))
         assertTrue(text.contains("Merke dir"))
     }
+
+    /** Fold7 (#642): right after a successful Gemma test the chat said „nicht geladen“ while Gemma was still busy. */
+    @Test fun aBusyOrLoadingModelIsNotReportedAsMissing() {
+        val busy = ContinuumUiCopy.memoryFallbackAnswer(gap, grounded = false, at.heinz.deviceai.localmodel.LocalModelState.GENERATING)
+        assertTrue(busy, busy.contains("geladen, arbeitet aber gerade"))
+        assertFalse(busy, busy.contains("nicht geladen"))
+        val loading = ContinuumUiCopy.memoryFallbackAnswer(gap, grounded = false, at.heinz.deviceai.localmodel.LocalModelState.LOADING)
+        assertTrue(loading, loading.contains("wird gerade geladen"))
+        val failed = ContinuumUiCopy.memoryFallbackAnswer(gap, grounded = false, at.heinz.deviceai.localmodel.LocalModelState.FAILED)
+        assertTrue(failed, failed.contains("nach einem Fehler"))
+        for (text in listOf(busy, loading, failed)) {
+            assertTrue(text.startsWith(gap))
+            assertTrue(text.contains("nicht im Internet"))
+        }
+        assertEquals(gap, ContinuumUiCopy.memoryFallbackAnswer(gap, grounded = false, at.heinz.deviceai.localmodel.LocalModelState.READY))
+    }
 }

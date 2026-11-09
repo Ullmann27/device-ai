@@ -55,11 +55,34 @@ object ContinuumUiCopy {
      * with a ready model this path is not reached for general questions (LocalFirstPolicy routes them to the model).
      */
     fun memoryFallbackAnswer(answer: String, grounded: Boolean, modelReady: Boolean): String =
-        if (grounded || modelReady || answer != at.heinz.deviceai.learning.ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER) answer
+        memoryFallbackAnswer(answer, grounded, if (modelReady) at.heinz.deviceai.localmodel.LocalModelState.READY
+            else at.heinz.deviceai.localmodel.LocalModelState.EMPTY)
+
+    /**
+     * Fold7 (#642): „nicht geladen“ appeared right after a successful Gemma test because the runtime was still
+     * GENERATING/LOADING/UNLOADING. The hint now names the real state instead of claiming the model is absent.
+     */
+    fun memoryFallbackAnswer(answer: String, grounded: Boolean, modelState: at.heinz.deviceai.localmodel.LocalModelState): String {
+        if (grounded || modelState == at.heinz.deviceai.localmodel.LocalModelState.READY ||
+            answer != at.heinz.deviceai.learning.ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER) return answer
         // The memory reply stays first (personal questions and revoked memories keep the „Merke dir“ guidance);
-        // the missing model is added as the real reason a general question cannot be answered now.
-        else answer + "\n\nHinweis: Das lokale Sprachmodell ist gerade nicht geladen. Allgemeine Wissensfragen kann ich " +
-            "erst beantworten, wenn du es in der Modellverwaltung lädst. Ich habe dafür nicht im Internet gesucht."
+        // the model's actual state is added as the real reason a general question cannot be answered now.
+        val reason = when (modelState) {
+            at.heinz.deviceai.localmodel.LocalModelState.GENERATING ->
+                "Das lokale Sprachmodell ist geladen, arbeitet aber gerade noch an einer anderen Antwort. " +
+                    "Bitte kurz warten und die Frage dann noch einmal stellen."
+            at.heinz.deviceai.localmodel.LocalModelState.LOADING ->
+                "Das lokale Sprachmodell wird gerade geladen. Bitte kurz warten und die Frage dann noch einmal stellen."
+            at.heinz.deviceai.localmodel.LocalModelState.UNLOADING ->
+                "Das lokale Sprachmodell wird gerade entladen. Allgemeine Wissensfragen kann ich erst beantworten, " +
+                    "wenn du es in der Modellverwaltung wieder lädst."
+            at.heinz.deviceai.localmodel.LocalModelState.FAILED ->
+                "Das lokale Sprachmodell ist nach einem Fehler nicht einsatzbereit. Bitte in der Modellverwaltung neu laden."
+            else -> "Das lokale Sprachmodell ist gerade nicht geladen. Allgemeine Wissensfragen kann ich " +
+                "erst beantworten, wenn du es in der Modellverwaltung lädst."
+        }
+        return answer + "\n\nHinweis: " + reason + " Ich habe dafür nicht im Internet gesucht."
+    }
 
     fun researchFailure(reason: String?): String = when {
         reason?.contains("too large", ignoreCase = true) == true -> emptyResearch(reason)

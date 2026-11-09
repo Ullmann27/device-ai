@@ -69,4 +69,16 @@ class JarvisRenderQualityTest {
         assertTrue(inference.reducedBloom)
         assertTrue("Inference need not disable every decorative frame", inference.animate)
     }
+
+    @Test fun inferenceOnAWarmDeviceGetsTheSmallestAnimatedBudget() {
+        val idleWarm = JarvisRenderQuality.resolve(true, false, 1, false, false)
+        val inferringWarm = JarvisRenderQuality.resolve(true, false, 1, false, true)
+        val inferringModerate = JarvisRenderQuality.resolve(true, false, 2, false, true)
+        assertTrue(inferringWarm.frameDelayMillis > idleWarm.frameDelayMillis)
+        assertTrue(inferringWarm.particleCount < idleWarm.particleCount)
+        assertTrue(inferringModerate.frameDelayMillis >= 80L)
+        assertTrue(inferringModerate.particleCount <= 12)
+        assertTrue("the head must keep moving; only the budget shrinks", inferringModerate.animate)
+        assertEquals(JarvisRenderQuality.Tier.MEDIUM, inferringModerate.tier)
+    }
 }
