@@ -344,22 +344,22 @@
       "pr": 672,
       "branch": "chatgpt/code52-project-isolation-20261109",
       "checkpoint_sha": "c402b046c55987e68fc79be610b979e14a8e2faf",
-      "status": "SOURCE_STAGED",
+      "status": "PARTIAL_SOURCE_CONNECTED",
       "integrator": "CODE52_MASTER_INTEGRATOR",
       "target_pr": 671,
       "device_verified": false,
-      "next_step": "Review #672 selektiv in #671 übernehmen; Lumo-Querverweise vollständig entfernen; Node-Gate ausführen",
+      "next_step": "PR #672 source-only isolation cleanup ported to #673 including two extra Continuum production references and obsolete tests; run full Node/JVM/Android gate, then merge selectively into #671.",
       "source": "https://github.com/Ullmann27/device-ai/pull/672"
     },
     {
       "pr": 673,
       "branch": "chatgpt/code52-intent-regression-20261109",
-      "checkpoint_sha": "27f5cb47401375bd251b3e15e747f55d89f58688",
+      "checkpoint_sha": "d5db746910a4b72e92f0ff7bd475241d97d58673",
       "status": "SOURCE_STAGED",
       "integrator": "CODE52_MASTER_INTEGRATOR",
       "target_pr": 671,
       "device_verified": false,
-      "next_step": "#673 quellgenau gegen #671 prüfen; gezielte JUnit/Node/Android-Gates und Fold7 T7/T23/T24 abnehmen",
+      "next_step": "Code52 T7/T20/T23/T24 fixes and project isolation staged; two GitHub review safety findings corrected. Independent exact Android/Node/JUnit QA, owner Fold7 acceptance, then integrate #673 into #671. No signed Code52 build.",
       "source": "https://github.com/Ullmann27/device-ai/pull/673"
     }
   ]
