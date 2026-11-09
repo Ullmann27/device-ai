@@ -28,6 +28,7 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
     private val visemeBlend = FloatArray(Viseme.entries.size)
     private var lastSeconds = Float.NaN
     private val idleMotion = AvatarIdleMotion()
+    private val gazeBlink = GazeBlinkPolicy()
     /** Critically damped gaze states: eyes lead, head follows without overshoot. */
     private val headYawSpring = CriticalDampedSpring()
     private val headPitchSpring = CriticalDampedSpring()
@@ -58,7 +59,8 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         require(cameraAzimuthDegrees.isFinite() && cameraAzimuthDegrees in -45.0..45.0)
     }
 
-    fun update(pose: AvatarPose, seconds: Float, motion: Boolean) {
+    fun update(pose: AvatarPose, seconds: Float, motion: Boolean,
+               gazeBlinkEnabled: Boolean = false) {
         weights.fill(0f)
         fun weight(name: String, value: Float) { weights[indices.getValue(name)] = finite(value, 0f, 1f) }
         val staticWindow = !motion && (pose.gazeDirected || pose.gesture == AvatarGestureIntent.WINDOW_FOCUS)
@@ -108,6 +110,7 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         if (!motion) {
             visemeBlend.fill(0f); lastSeconds = Float.NaN
             layerSeconds = Float.NaN; speechAccent = 0f; speechSeconds = Float.NaN; blinkSeconds = Float.NaN
+            gazeBlink.sample(gx, gy, seconds, enabled = false)
             splitNeck(); return
         }
         idleMotion.update(seconds)
@@ -209,9 +212,13 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         // Compensate the visible blend, including outgoing cues, once; preserve lip shapes.
         weight("JawOpen", (jaw - renderedOpening).coerceAtLeast(0f))
         jawPitch = maxOf(jaw, renderedOpening) * JAW_BONE_DEGREES
-        val lid = lid(idleMotion.blinkWeight,
-            pose.state == AvatarState.SPEAKING && maxOf(jaw, renderedOpening) >= BLINK_DEFER_OPENING, seconds)
-        weight("BlinkLeft", lid); weight("BlinkRight", lid)
+        val syllableOpen = pose.state == AvatarState.SPEAKING &&
+            maxOf(jaw, renderedOpening) >= BLINK_DEFER_OPENING
+        val scheduledLid = lid(idleMotion.blinkWeight, syllableOpen, seconds)
+        val gazeLid = gazeBlink.sample(gx, gy, seconds,
+            gazeBlinkEnabled && motion && pose.gazeDirected && !syllableOpen)
+        val totalLid = maxOf(scheduledLid, gazeLid)
+        weight("BlinkLeft", totalLid); weight("BlinkRight", totalLid)
         splitNeck()
     }
 
