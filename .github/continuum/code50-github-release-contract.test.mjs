@@ -22,9 +22,10 @@ const jobBlock = (text, name) => {
   return match[1];
 };
 
-test('QA-Workflow startet nur manuell, ist SHA- und Branch-gebunden und hat keinen Signier-/Geheimniszugriff', () => {
-  assert.match(qa, /^on:\n  workflow_dispatch:\n    inputs:\n      expected_sha:/m);
-  assert.doesNotMatch(qa, /^\s+(push|pull_request|pull_request_target|schedule|workflow_run):/m);
+test('QA runs only on scoped integrator pushes or explicit SHA-bound dispatch, never accesses signing secrets', () => {
+  assert.match(qa, /^on:\n  push:\n    branches:\n      - copilot\/code51-master-integrator-20261108\n    paths:/m);
+  assert.match(qa, /^  workflow_dispatch:\n    inputs:\n      expected_sha:/m);
+  assert.doesNotMatch(qa, /^\s+(pull_request|pull_request_target|schedule|workflow_run):/m);
   assert.match(qa, /^permissions:\n  contents: read\n/m);
   assert.doesNotMatch(qa, /secrets\./);
   assert.doesNotMatch(qa, /^\s+environment:/m);
@@ -33,8 +34,9 @@ test('QA-Workflow startet nur manuell, ist SHA- und Branch-gebunden und hat kein
     const block = jobBlock(qa, job);
     assert.ok(block.includes(`github.ref == 'refs/heads/${branch}'`), `${job}: Branch-Guard`);
     assert.ok(block.includes('test "$EXPECTED_SHA" = "$GITHUB_SHA"'), `${job}: expected_sha-Bindung`);
+    assert.ok(block.includes('if [[ "$GITHUB_EVENT_NAME" == \'push\' ]]; then EXPECTED_SHA="$GITHUB_SHA"; fi'), `${job}: push input is pinned to event SHA`);
   }
-  assert.match(checker, /EXPECTED_TESTS = 4197/);
+  assert.match(checker, /EXPECTED_TESTS = 4199/);
   assert.match(qa, /name: Code51-UNSIGNED-NOT-INSTALLABLE/);
   assert.match(checker, /tests_skipped=/);
   assert.match(qa, /continuum-code51-junit-check\.py/);
@@ -94,7 +96,7 @@ test('Signierskript: feste Identität und Fail-Closed-Gates', () => {
     'UNSIGNED_APK_UNEXPECTEDLY_SIGNED', 'ORIGINAL_CERTIFICATE_MISMATCH', 'SIGNED_APK_CERTIFICATE_MISMATCH',
     'GITHUB_READBACK_SHA_MISMATCH', 'PUBLIC_LATEST_METADATA_MISMATCH', 'PUBLIC_DOWNLOAD_SHA_MISMATCH'
   ]) assert.ok(script.includes(gate), gate);
-  assert.ok(script.includes('"tests_total=4197" "tests_failed=0" "tests_errors=0" "tests_skipped=18" "lifecycle_jdk21=PASS"'));
+  assert.ok(script.includes('"tests_total=4199" "tests_failed=0" "tests_errors=0" "tests_skipped=18" "lifecycle_jdk21=PASS"'));
   assert.ok(script.includes('CODE50_BASELINE_CHANGED'));
   assert.ok(script.includes('LATEST_RELEASE_UNREADABLE'));
   assert.ok(script.includes('.event=="workflow_dispatch"'));

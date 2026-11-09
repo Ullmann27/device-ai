@@ -86,7 +86,7 @@ grep -Eq "^[0-9a-f]{64}  ${unsigned_name//./[.]}\$" "$tmp/unsigned/SHA256SUMS.tx
 (cd "$tmp/unsigned" && sha256sum -c SHA256SUMS.txt >/dev/null) || fail UNSIGNED_APK_SHA_MISMATCH
 receipt="$tmp/unsigned/BUILD-INFO.txt"
 test -s "$receipt" || fail QA_RECEIPT_MISSING
-for field in "status=UNSIGNED_QA_NOT_INSTALLABLE" "source_sha=$source_sha" "package=$pkg" "versionCode=$code" "versionName=$name_version" "originalSigner=NOT_USED" "qa_run_id=$qa_run" "qa_ref=refs/heads/$branch" "tests_total=4197" "tests_failed=0" "tests_errors=0" "tests_skipped=18" "lifecycle_jdk21=PASS" "code50_apk_sha256=38b39da66a96d8be08b84937dd6412868fa279eb477a3ff5700d9195611a2778"; do
+for field in "status=UNSIGNED_QA_NOT_INSTALLABLE" "source_sha=$source_sha" "package=$pkg" "versionCode=$code" "versionName=$name_version" "originalSigner=NOT_USED" "qa_run_id=$qa_run" "qa_ref=refs/heads/$branch" "tests_total=4199" "tests_failed=0" "tests_errors=0" "tests_skipped=18" "lifecycle_jdk21=PASS" "code50_apk_sha256=38b39da66a96d8be08b84937dd6412868fa279eb477a3ff5700d9195611a2778"; do
   grep -Fxq "$field" "$receipt" || fail QA_RECEIPT_MISMATCH
 done
 tools="$ANDROID_HOME/build-tools/35.0.0"
