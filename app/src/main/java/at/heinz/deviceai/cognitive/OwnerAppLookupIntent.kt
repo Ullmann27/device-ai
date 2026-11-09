@@ -75,11 +75,12 @@ internal object OwnerAppLookupIntent {
         if (negation.containsMatchIn(first)) return null
         val raw = installedCheck.matchEntire(first)?.groupValues?.get(1)
             ?: direct.matchEntire(first)?.takeIf {
-                it.groupValues[1].lowercase() in setOf("suche", "finde", "zeige")
+                clauses.size > 1 && it.groupValues[1].lowercase() in setOf("suche", "finde", "zeige")
             }?.groupValues?.get(2)
             ?: return null
         if (clauses.drop(1).any { !safeLookupTail.matches(it) }) return null
-        val name = raw.trim().replace(Regex("""(?iu)^(?:die\s+)?app\s+"""), "").trim()
+        val name = raw.trim()
+            .replace(Regex("""(?iu)^(?:mir\s+)?(?:(?:die|den|das)\s+)?(?:app\s+)?"""), "").trim()
         if (!query.matches(name) || name.contains("..") || isReference(name) ||
             fileTarget.containsMatchIn(name) || additional.containsMatchIn(name)) return null
         return Intake.Lookup(name, opening = false)
