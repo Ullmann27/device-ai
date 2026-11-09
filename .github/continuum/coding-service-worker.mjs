@@ -4,7 +4,8 @@ import path from 'node:path';
 import {createHmac} from 'node:crypto';
 import {canonical} from './development-backlog.mjs';
 import {runtimeKey} from './ccc1-journal.mjs';
-import {loadCodingServiceConfig,readDeliveries,assertServiceArtifacts,serviceEnvironment,writePrivateJson} from './coding-service-store.mjs';
+import {loadCodingServiceConfig,readDeliveries,assertServiceArtifacts,serviceEnvironment,writePrivateJson,
+ serviceParticipants,assertServiceReviewBinding} from './coding-service-store.mjs';
 import {currentCanonicalTask,readServiceDescriptor} from './coding-service-reader.mjs';
 import {createCcc1BotAssignment,assertCcc1BotAssignment} from './ccc1-bot-assignment.mjs';
 import {profileStoreReader} from '../../tools/genesis-workspaces/adapter-bridge.mjs';
@@ -23,7 +24,7 @@ export async function executeServiceDelivery({configPath,taskId,instanceId}={}){
  if(current.status.terminal)throw Error('SERVICE_TASK_ALREADY_ENDED');
  const env=serviceEnvironment(config),executor=ownerCodingExecutor({project:config.project,env});
  const assignment=createCcc1BotAssignment({task:current.task,ccc1TaskId:delivery.ccc1TaskId,
-  builderId:'bot-forge',verifierId:'bot-lint',reporterId:'bot-echo',
+  ...serviceParticipants(delivery.participants),
   profileStore:profileStoreReader(config.profileDirectory,{classpath:config.profileClasspath})});
  return runCodingServiceTask({config,delivery,current,assignment,executor,env});
 }
@@ -31,6 +32,11 @@ export async function executeServiceDelivery({configPath,taskId,instanceId}={}){
  * source, model observations and branded executor on every attempt. */
 export async function runCodingServiceTask({config,delivery,current,assignment,executor,env}){
  const taskId=delivery.id;
+ assertServiceReviewBinding(config,delivery);
+ assertCcc1BotAssignment(assignment,{task:current.task,ccc1TaskId:delivery.ccc1TaskId,stage:'BUILD'});
+ const participants=serviceParticipants(delivery.participants);
+ if(assignment.builder.agentId!==participants.builderId||assignment.verifier.agentId!==participants.verifierId||
+   assignment.reporter?.agentId!==participants.reporterId)throw Error('SERVICE_ASSIGNMENT_SELECTION_CHANGED');
  const started=Date.now(),before=process.resourceUsage();
  executionStarted=true;
  let result,failure=null;
@@ -55,6 +61,7 @@ export async function runCodingServiceTask({config,delivery,current,assignment,e
  const observation=result.modelExecution??{};
  const identity=observation.identity;
  const snapshot={schema:'continuum-service-result',version:1,taskId,ccc1TaskId:delivery.ccc1TaskId,
+  ...delivery.participants===undefined?{}:{participants,reviewSha256:delivery.reviewSha256,assignmentSha256:assignment.sha256},
   taskFingerprint:delivery.fingerprint,sourceCommit:current.task.sourceCommit,journalHead:final.entries.at(-1).hash,
   resultStatus:result.status,modelExecution:{verifiedCalls:observation.verifiedCalls??0,
    acceptedProposals:observation.acceptedProposals??0,rejectedResponses:observation.rejectedResponses??0,

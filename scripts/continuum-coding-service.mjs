@@ -8,7 +8,8 @@ import {prepareServiceTask,submitOwnerTask,cancelOwnerTask,startCodingService,ru
 import {sameLiveProcess} from '../.github/continuum/coding-service-store.mjs';
 
 const FLAGS={init:['config','project','profiles','classpath','runtime-env','isolation-config','max-queue','max-records','max-cycles'],
- prepare:['config','task'],review:['config','task'],submit:['config','task','approve'],start:['config'],run:['config'],stop:['config'],
+ prepare:['config','task','builder','verifier','reporter'],review:['config','task','builder','verifier','reporter'],
+ submit:['config','task','approve','builder','verifier','reporter'],start:['config'],run:['config'],stop:['config'],
  status:['config'],cancel:['config','task-id'],agents:['config','cursor','limit'],tasks:['config','cursor','limit'],evidence:['config','task-id','evidence-id']};
 function argumentsOf(argv){
  const [command,...rest]=argv,options={};
@@ -24,12 +25,17 @@ function argumentsOf(argv){
 }
 const number=(value,fallback)=>value===undefined?fallback:/^[1-9][0-9]*$/.test(value)?Number(value):NaN;
 const taskFile=file=>{if(!file)throw Error('SERVICE_TASK_FILE_REQUIRED');return JSON.parse(plainBytes(path.resolve(file),16384));};
+function selectedParticipants(o){
+ if(['builder','verifier','reporter'].every(key=>o[key]===undefined))return undefined;
+ if(['builder','verifier','reporter'].some(key=>o[key]===undefined))throw Error('SERVICE_PARTICIPANTS_ALL_REQUIRED');
+ return {builderId:o.builder,verifierId:o.verifier,reporterId:o.reporter};
+}
 export async function codingServiceCli(argv){
  const {command,options:o}=argumentsOf(argv),configPath=o.config;
  if(command==='init')return initializeCodingService({configPath,project:o.project,profileDirectory:o.profiles,profileClasspath:o.classpath,
   runtimeEnvPath:o['runtime-env'],isolationConfig:o['isolation-config'],maxQueue:number(o['max-queue'],8),
   maxRecords:number(o['max-records'],1000),maxCycles:number(o['max-cycles'],1000)});
- if(command==='prepare'||command==='review')return prepareServiceTask({configPath,task:taskFile(o.task)});
+ if(command==='prepare'||command==='review')return prepareServiceTask({configPath,task:taskFile(o.task),participants:selectedParticipants(o)});
  if(command==='start')return startCodingService({configPath});
  if(command==='run')return runCodingService({configPath});
  const reader=createCodingServiceReader({configPath});
@@ -39,8 +45,9 @@ export async function codingServiceCli(argv){
  if(command==='evidence')return reader.getEvidence({taskId:o['task-id'],evidenceId:o['evidence-id']});
  const config=loadCodingServiceConfig(configPath),descriptor=readServiceDescriptor(config),live=descriptor&&sameLiveProcess(descriptor.process);
  if(command==='submit'){
-  const task=taskFile(o.task);
-  return live?serviceRequest({configPath,operation:'submit',payload:{task,approve:o.approve}}):submitOwnerTask({configPath,task,approve:o.approve});
+  const task=taskFile(o.task),participants=selectedParticipants(o);
+  return live?serviceRequest({configPath,operation:'submit',payload:{task,approve:o.approve,participants}}):
+   submitOwnerTask({configPath,task,approve:o.approve,participants});
  }
  if(command==='cancel')return live?serviceRequest({configPath,operation:'cancel',payload:{taskId:o['task-id']}}):cancelOwnerTask({configPath,taskId:o['task-id']});
  if(command==='stop')return live?serviceRequest({configPath,operation:'stop'}):{state:reader.getStatus().state,stopped:false};

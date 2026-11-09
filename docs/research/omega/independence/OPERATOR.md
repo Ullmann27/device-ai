@@ -141,6 +141,31 @@ Lauf. FORGE erzeugt einen Kandidaten, LINT prüft über den vorhandenen unabhän
 Ausführungspfad. ECHO erstellt einen deterministischen beleggebundenen Bericht;
 ein weiterer Sprachmodellaufruf oder eine Modellmehrheit ersetzt keine Tests.
 
+### Andere vorhandene Bots auswählen (GENESIS-CODE)
+
+Optional können bei `prepare`/`review` und anschließend bei `submit` dieselben
+drei Argumente angegeben werden:
+
+```bash
+  --builder bot-mira --verifier bot-atlas --reporter bot-mnemos
+```
+
+Alle drei IDs müssen vorhanden und verschieden sein. Ohne diese Argumente
+bleibt die bisherige Forge/Lint/Echo-Zuordnung einschließlich alter Freigabehashes
+erhalten. Bei expliziter Auswahl bindet `reviewSha256` auch die drei Identitäten.
+Weglassen, Vertauschen oder Ändern nach der Prüfung erfordert eine neue Freigabe;
+eine bereits angenommene Aufgaben-ID wird nicht für ein anderes Team verwendet.
+Auftrag, Worker, Aufgabenanzeige, aktive Profilzuordnung und beleggebundener
+Bericht verwenden dieselbe gespeicherte Auswahl. Bei veralteter Auswahl ist
+weiterhin nur der Widerruf des exakt gebundenen kanonischen Auftrags möglich,
+nicht dessen Ausführung.
+
+Die Auswahl ist **keine Kompetenz- oder Werkzeugfreigabe**. Aktuelle Profile,
+Ressourcengrenzen, kanonischer Auftrag, isolierter Executor und echte
+Modellbeobachtungen werden weiterhin geprüft. Der Reporter erzeugt weiterhin
+nur den deterministischen Bericht. Die Android-Teamwahl ist noch nicht mit
+diesem Host-Vertrag verbunden; das ist kein Nachweis eines Kotlin-Coding-Erfolgs.
+
 ```bash
 node scripts/continuum-coding-service.mjs evidence \
   --config /privat/continuum-dienst/config.json --task-id mein-fehler-001 --evidence-id result

@@ -3,7 +3,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHmac,timingSafeEqual} from 'node:crypto';
-import {loadCodingServiceConfig,readDeliveries,privateJson,plainBytes,realDirectory,sameLiveProcess,gitIdentity,SERVICE_ID,assertProfileBridge,hostExecutionBarrier} from './coding-service-store.mjs';
+import {loadCodingServiceConfig,readDeliveries,privateJson,plainBytes,realDirectory,sameLiveProcess,gitIdentity,SERVICE_ID,assertProfileBridge,hostExecutionBarrier,
+ serviceParticipants,assertServiceReviewBinding} from './coding-service-store.mjs';
 import {DurableTaskJournal} from './ccc1-journal.mjs';
 import {taskState} from './ccc1-orchestrator.mjs';
 import {taskFingerprint,validateCodingTask} from './coding-task.mjs';
@@ -25,8 +26,10 @@ export function readServiceDescriptor(config){
    value.configSha256!==config.configSha256)throw Error('SERVICE_DESCRIPTOR_INVALID');
  return value;
 }
-export function currentCanonicalTask(config,delivery,{requireCurrent=false}={}){
+export function currentCanonicalTask(config,delivery,{requireCurrent=false,forCancellation=false}={}){
  if(!delivery?.ccc1TaskId)throw Error('SERVICE_TASK_RESERVATION_INCOMPLETE');
+ // Revoking an exact canonical grant must remain possible after a review becomes stale.
+ if(!forCancellation)assertServiceReviewBinding(config,delivery);
  const state=path.join(config.stateDir,'ccc1');realDirectory(state);
  const grant=privateJson(path.join(state,'coding-grants',delivery.id+'.json'),16384);
  const task=validateCodingTask(grant.task);
@@ -60,6 +63,10 @@ function evidence(config,delivery,evidenceId){
    result.ccc1TaskId!==delivery.ccc1TaskId||result.taskFingerprint!==delivery.fingerprint||
    result.sourceCommit!==current.task.sourceCommit||result.journalHead!==current.entries.at(-1)?.hash)
   throw Error('SERVICE_RESULT_STALE');
+ const participants=serviceParticipants(delivery.participants);
+ if(delivery.participants!==undefined&&(!result.participants||canonical(result.participants)!==canonical(participants)||
+   result.reviewSha256!==delivery.reviewSha256||!/^[a-f0-9]{64}$/.test(result.assignmentSha256??'')))
+  throw Error('SERVICE_RESULT_PARTICIPANTS_CHANGED');
  // Re-read canonical receipts; a public snapshot and a text status never attest execution.
  const receipts=[];
  for(const entry of current.entries.filter(e=>e.kind==='RECEIPT')){
@@ -76,7 +83,7 @@ function evidence(config,delivery,evidenceId){
  if(current.status.state==='COMPLETED'&&!receipts.some(r=>r.verdict==='CONFIRMED'))throw Error('SERVICE_NO_CONFIRMED_RECEIPT');
  assertProfileBridge(config);
  const store=profileStoreReader(config.profileDirectory,{classpath:config.profileClasspath});
- for(const id of ['bot-forge','bot-lint','bot-echo'])if(store.get(id)?.workspaceId!=='workspace-'+id)throw Error('SERVICE_PROFILE_UNAVAILABLE');
+ for(const id of Object.values(participants))if(store.get(id)?.workspaceId!=='workspace-'+id)throw Error('SERVICE_PROFILE_UNAVAILABLE');
  let content;
  if(evidenceId==='report'){
   if(!/^[a-f0-9]{64}$/.test(result.reportSha256??'')||!/^bot-report-[a-f0-9]{64}\.json$/.test(result.reportFile??''))throw Error('SERVICE_REPORT_UNAVAILABLE');
@@ -85,8 +92,9 @@ function evidence(config,delivery,evidenceId){
   if(sha256Hex(bytes)!==result.reportSha256)throw Error('SERVICE_REPORT_CHANGED');
   const report=JSON.parse(bytes);
   if(report.taskId!==delivery.id||report.canonicalTaskId!==delivery.ccc1TaskId||report.taskFingerprint!==delivery.fingerprint||
-    report.sourceCommit!==current.task.sourceCommit||report.journalHead!==current.entries.at(-1).hash||report.reporterId!=='bot-echo')throw Error('SERVICE_REPORT_BINDING_INVALID');
-  content={schema:'continuum-bot-result-report',version:1,reporterId:'bot-echo',taskId:delivery.id,canonicalTaskId:delivery.ccc1TaskId,
+    report.sourceCommit!==current.task.sourceCommit||report.journalHead!==current.entries.at(-1).hash||report.reporterId!==participants.reporterId||
+    delivery.participants!==undefined&&report.assignmentSha256!==result.assignmentSha256)throw Error('SERVICE_REPORT_BINDING_INVALID');
+  content={schema:'continuum-bot-result-report',version:1,...participants,taskId:delivery.id,canonicalTaskId:delivery.ccc1TaskId,
    sourceCommit:report.sourceCommit,journalHead:report.journalHead,status:current.status.state,
    interpretation:current.status.state==='COMPLETED'?'PATCH_PENDING_OWNER_REVIEW':current.status.terminal?'NO_CONFIRMED_REPAIR':'PENDING_OR_UNKNOWN',
    receipts,modelCalls:0,independentVerifier:false,modelInferenceAttestedByReport:false,deviceVerified:false,approvedForMerge:false};
@@ -102,6 +110,7 @@ function evidence(config,delivery,evidenceId){
     !['NOT_RECORDED','RECORDED_TECHNICAL_REVIEW_ONLY','EXISTING_SUMMARY_NOT_UPGRADED','TECHNICAL_PROOF_UNAVAILABLE'].includes(result.technicalExperienceStatus))
    throw Error('SERVICE_METRICS_INVALID');
   content={schema:'continuum-service-result',version:1,taskId:delivery.id,canonicalTaskId:delivery.ccc1TaskId,
+  ...participants,
   taskFingerprint:delivery.fingerprint,sourceCommit:current.task.sourceCommit,journalHead:current.entries.at(-1).hash,
   status:current.status.state,resultStatus:current.status.state==='COMPLETED'?'PATCH_PENDING_OWNER_REVIEW':current.status.state,
   modelExecution:{verifiedCalls:m.verifiedCalls,acceptedProposals:m.acceptedProposals,rejectedResponses:m.rejectedResponses,
@@ -150,7 +159,7 @@ export function createCodingServiceReader({configPath}={}){
      return {taskId:d.id,canonicalTaskId:d.ccc1TaskId,delivery:d.delivery,
      state:current.status.state,terminal:current.status.terminal,sourceCurrent:current.sourceCurrent,grantCurrent:current.grantCurrent,
      sourceCommit:current.task.sourceCommit,taskFingerprint:d.fingerprint,goal:current.task.goal,
-     builderId:'bot-forge',verifierId:'bot-lint',reporterId:'bot-echo',evidenceIds,
+     ...serviceParticipants(d.participants),evidenceIds,
      failureCode:d.failureCode??null};}catch(error){return {taskId:d.id,canonicalTaskId:d.ccc1TaskId,delivery:d.delivery,state:'BLOCKED',
       terminal:false,evidenceIds:[],failureCode:String(error.message).slice(0,160)};}
    });
@@ -162,11 +171,14 @@ export function createCodingServiceReader({configPath}={}){
    if(typeof store.page!=='function')throw Error('SERVICE_PROFILE_PAGE_BRIDGE_UNAVAILABLE');
    const page=store.page({afterAgentId:cursor,limit});
    const d=readServiceDescriptor(c),active=d&&sameLiveProcess(d.process)?d.activeTaskId:null;
+   const delivery=active?readDeliveries(c).find(item=>item.id===active):null;
+   if(delivery)assertServiceReviewBinding(c,delivery);
+   const assigned=delivery?Object.values(serviceParticipants(delivery.participants)):[];
    return {items:page.items.map(p=>({agentId:p.agentId,profileVersion:p.profileVersion,displayName:p.displayName,role:p.role,
     communicationStyle:p.communicationStyle,workspaceId:p.workspaceId,modelPolicy:p.modelPolicy,verifiedCapabilities:p.verifiedCapabilities??[],
-    permissionScope:p.permissionScope??[],state:active&&['bot-forge','bot-lint','bot-echo'].includes(p.agentId)?'ASSIGNED_TO_ACTIVE_TASK':'REGISTERED',
-    currentTaskId:active&&['bot-forge','bot-lint','bot-echo'].includes(p.agentId)?active:null,executionEnvironment:'HOST',
-    modelActive:active&&['bot-forge','bot-lint','bot-echo'].includes(p.agentId)?null:false,
+    permissionScope:p.permissionScope??[],state:assigned.includes(p.agentId)?'ASSIGNED_TO_ACTIVE_TASK':'REGISTERED',
+    currentTaskId:assigned.includes(p.agentId)?active:null,executionEnvironment:'HOST',
+    modelActive:assigned.includes(p.agentId)?null:false,
     activityDetail:'Canonical task records determine actual stage; a profile is not an active model'})),nextCursor:page.nextAfterId??null};
   },
   getEvidence({taskId,evidenceId}={}){

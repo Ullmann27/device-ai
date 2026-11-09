@@ -14,7 +14,7 @@ import {profileStoreReader} from '../../tools/genesis-workspaces/adapter-bridge.
 import {createCcc1BotAssignment} from './ccc1-bot-assignment.mjs';
 import {loadCodingServiceConfig,readDeliveries,saveDeliveries,privateJson,writePrivateJson,privateDirectory,
  realDirectory,assertServiceSource,assertServiceArtifacts,reviewServiceTask,linuxProcessIdentity,sameLiveProcess,
- serviceEnvironment,SERVICE_ID,assertProfileBridge,hostServiceDirectory,hostExecutionBarrier} from './coding-service-store.mjs';
+ serviceEnvironment,SERVICE_ID,assertProfileBridge,hostServiceDirectory,hostExecutionBarrier,serviceParticipants} from './coding-service-store.mjs';
 import {createCodingServiceReader,readServiceDescriptor,currentCanonicalTask} from './coding-service-reader.mjs';
 
 const CHILD=fileURLToPath(new URL('./coding-service-worker.mjs',import.meta.url));
@@ -60,9 +60,9 @@ function currentConfig(config){
  if(current.configSha256!==config.configSha256)throw Error('SERVICE_CONFIG_CHANGED');
  assertServiceSource(current);return current;
 }
-function requireProfiles(config,task,canonicalTaskId='t-0000000000000000'){
+function requireProfiles(config,task,canonicalTaskId='t-0000000000000000',participants){
  assertProfileBridge(config);
- return createCcc1BotAssignment({task,ccc1TaskId:canonicalTaskId,builderId:'bot-forge',verifierId:'bot-lint',reporterId:'bot-echo',
+ return createCcc1BotAssignment({task,ccc1TaskId:canonicalTaskId,...serviceParticipants(participants),
   profileStore:profileStoreReader(config.profileDirectory,{classpath:config.profileClasspath})});
 }
 function stateBytes(root){
@@ -77,14 +77,14 @@ function stateBytes(root){
  visit(root);return total;
 }
 const STATE_BYTES_LIMIT=1024*1024*1024,TASK_RESERVE_BYTES=128*1024*1024;
-export function prepareServiceTask({configPath,task}={}){
- const config=loadCodingServiceConfig(configPath),review=reviewServiceTask(config,task);
- requireProfiles(config,review.task);return review;
+export function prepareServiceTask({configPath,task,participants}={}){
+ const config=loadCodingServiceConfig(configPath),review=reviewServiceTask(config,task,participants);
+ requireProfiles(config,review.task,undefined,review.participants);return review;
 }
 /** Callable only by the explicit local owner CLI/control socket. The review hash
  * binds a decision; model text and inbox files are not owner decisions. */
-export function submitOwnerTask({configPath,task,approve}={}){
- const config=loadCodingServiceConfig(configPath),review=prepareServiceTask({configPath,task});
+export function submitOwnerTask({configPath,task,approve,participants}={}){
+ const config=loadCodingServiceConfig(configPath),review=prepareServiceTask({configPath,task,participants});
  if(typeof approve!=='string'||approve!==review.reviewSha256)throw Error('SERVICE_EXPLICIT_OWNER_REVIEW_REQUIRED');
  return transaction(config,()=>{
   currentConfig(config);const items=readDeliveries(config),known=items.find(i=>i.id===review.task.id);
@@ -98,6 +98,7 @@ export function submitOwnerTask({configPath,task,approve}={}){
   if(stateBytes(config.stateDir)+(pending+1)*TASK_RESERVE_BYTES>STATE_BYTES_LIMIT)throw Error('SERVICE_STORAGE_BUDGET_FULL');
   // Reserve first. A crash before canonical admission is UNKNOWN, not an implicit retry.
   const delivery={id:review.task.id,fingerprint:review.taskFingerprint,reviewSha256:approve,ccc1TaskId:null,
+   ...participants===undefined?{}:{participants:review.participants},
    delivery:'RESERVING',submittedAt:new Date().toISOString(),workerProcess:null};
   items.push(delivery);saveDeliveries(config,items);
   try{
@@ -116,7 +117,7 @@ export function cancelOwnerTask({configPath,taskId}={}){
   const prior=d.delivery;
   d.delivery='CANCEL_REQUESTED';d.cancelRequestedAt=new Date().toISOString();saveDeliveries(config,items);
   if(!d.ccc1TaskId){d.delivery='RETIRED';saveDeliveries(config,items);return {taskId,delivery:'RETIRED',canonicalState:'UNADMITTED_CANCELLED'};}
-  const current=currentCanonicalTask(config,d);
+  const current=currentCanonicalTask(config,d,{forCancellation:true});
   const cancellation=abortTask({project:config.project,stateDir:current.state,taskId:d.ccc1TaskId,reason:'Local owner coding-service cancellation'});
   if(cancellation.journal!=='WRITER_ACTIVE'&&!sameLiveProcess(d.workerProcess))d.delivery='RETIRED';
   saveDeliveries(config,items);
@@ -221,7 +222,7 @@ export async function runCodingService({configPath}={}){
       boundaryWaitMillis:5000,stopped:false};}
      else if(request.operation==='submit'){
       if(stopping)throw Error('SERVICE_STOPPING');
-      result=submitOwnerTask({configPath,task:request.payload.task,approve:request.payload.approve});notify();
+      result=submitOwnerTask({configPath,task:request.payload.task,approve:request.payload.approve,participants:request.payload.participants});notify();
      }else if(request.operation==='cancel'){result=cancelOwnerTask({configPath,taskId:request.payload.taskId});notify();}
      else throw Error('SERVICE_CONTROL_OPERATION_INVALID');
      answer({ok:true,result});
@@ -245,7 +246,7 @@ export async function runCodingService({configPath}={}){
     try{
      const current=currentCanonicalTask(config,d,{requireCurrent:true});
      if(current.status.terminal){d.delivery='RETIRED';saveDeliveries(config,items);return null;}
-     requireProfiles(config,current.task,d.ccc1TaskId);
+     requireProfiles(config,current.task,d.ccc1TaskId,d.participants);
     }catch(error){
      d.delivery='UNKNOWN';d.failureCode=String(error.message).slice(0,160);saveDeliveries(config,items);return null;
     }

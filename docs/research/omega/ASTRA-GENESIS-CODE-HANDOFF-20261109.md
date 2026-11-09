@@ -13,7 +13,7 @@ its branch remains untouched. Relevant EXP-02/05/07/08/11/12.
 | Surface | Existing route | Authority / remaining boundary |
 |---|---|---|
 | Android | `AgentActivity` reviewed coding draft -> `ContinuumTypedCodingBridge` -> fixed Termux command -> `continuum-typed-coding-bridge.mjs` | Exact owner-reviewed task/source/scope digest, prepare/run separately; no selected-bot field yet |
-| Host owner control | `scripts/continuum-coding-service.mjs` -> `coding-service.mjs` prepare/submit/cancel | Local owner review digest, private inbox, canonical grant and STOP; currently fixed Forge/Lint/Echo |
+| Host owner control | `scripts/continuum-coding-service.mjs` -> `coding-service.mjs` prepare/submit/cancel | Local owner review digest now optionally binds selected builder/verifier/reporter; legacy Forge/Lint/Echo preserved |
 | Execution | `coding-service-worker.mjs` -> `runCodingTask` -> CCC1 `runTask` -> mobile job -> teamleader -> repair loop | Shared scheduler/backlog/journal; no new service allowed |
 | Identity | `ccc1-bot-assignment.mjs` -> read-only Kotlin profile bridge -> `ChiefBotProfileStore` | Process-private assignment brand, distinct builder/verifier/reporter, current budgets, expiry; profiles do not grant rights |
 | Sandbox | `bindCcc1Workspace` -> `createIsolatedExecutor` -> fixed `isolated-profile-runner.mjs` | Task/request/grant/workspace binding, non-root, no network, read-only host binds, bounded CPU/RAM/PIDs/time/output, confirmed teardown |
@@ -68,6 +68,49 @@ its branch remains untouched. Relevant EXP-02/05/07/08/11/12.
    RED -> model patch -> GREEN -> separate verifier, retaining negative cases.
 4. Freeze at least ten independent tasks and A/B/C fixed-budget criteria before
    evaluation; no measurements, skill promotion or weights training claimed yet.
+
+## Selected-role control-plane milestone
+
+The existing host owner CLI now accepts all-or-none `--builder`, `--verifier`,
+`--reporter` on prepare/review/submit. Strict distinct existing IDs become part
+of the owner review digest, private delivery record and signed metrics; the
+worker reconstructs the existing branded assignment and checks it against that
+selection before execution. Current canonical reads reject changed selections.
+Task/report/active-profile projections no longer guess Forge/Lint/Echo for
+explicitly selected teams. Default requests retain their original review hash.
+
+No separate service, journal, profile registry, permissions or competence claims.
+Task SHA/path/limits, source/config/model/toolchain hashes, assignment expiry,
+current-profile guards, canonical receipts and non-replay still use their
+existing contracts. Revocation can still abort the exact canonical grant after
+the selection/review becomes stale; it does not authorize execution.
+
+Initial regression: **47/47 PASS**, no skips, on an exact-byte owned snapshot,
+Node26.12.1, UID65534/GID102, UTF-8 and a private writable HOME. Command:
+
+```bash
+node --test --test-concurrency=1 \
+  .github/continuum/coding-service.test.mjs \
+  .github/continuum/coding-orchestrator-failure-report.test.mjs \
+  .github/continuum/ccc1-bot-assignment.test.mjs \
+  .github/continuum/ccc1-bot-report.test.mjs \
+  .github/continuum/coding-task.test.mjs
+```
+
+This includes distinct/unknown/missing roles, changed/omitted review selection,
+idempotent admission, current roster, restart, stale source, profile revocation,
+STOP after stale selection, worker-role mismatch before execution and a real
+canonical negative journal/report. Profile metadata and unavailable-container
+ports are test doubles; no successful native-model inference is counted.
+Root first failed the intentional isolation UID gate. A non-root run with
+`HOME=/nonexistent` then could not obtain the worker. The private writable HOME
+resolved that environment failure without changing any gate.
+
+Still **NOT_PROVEN**: actual model-authored Kotlin patch, real independent
+second-bot code inspection, full Android selected-bot IPC, JUnit repair-chain
+integration, generalization, verified new skills or competence. This milestone
+can be reviewed independently of those research claims. Prior 3599 JVM checks
+apply to the unchanged Android source, not a new Android acceptance.
 
 Tests for this checkpoint: real Docker, bubblewrap, fixed Kotlin/Node isolation
 and timeout cleanup PASS; model/canonical repair/evaluation NOT_RUN. This is provisioning evidence,
