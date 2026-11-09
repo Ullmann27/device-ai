@@ -4294,7 +4294,7 @@ class AgentActivity : Activity() {
         val selected = experiments.map { prefs.getBoolean("exp52." + it.name, true) }.toBooleanArray()
         AlertDialog.Builder(this)
             .setTitle("Cinema 2030 · angeschlossene Effekte")
-            .setMessage("Die folgenden zehn Funktionen sind im Code verdrahtet und einzeln abschaltbar. " +
+            .setMessage("Die folgenden elf Funktionen sind im Code verdrahtet und einzeln abschaltbar. " +
                 "Noch nicht als eigene Effekte angeschlossen: " +
                 pending.joinToString(", ") { it.name.substring(4, 6) } +
                 ". Auch angeschlossene Funktionen benötigen die Fold7-Geräteabnahme.")
