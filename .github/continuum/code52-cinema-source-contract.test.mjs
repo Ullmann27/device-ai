@@ -66,6 +66,16 @@ test('cinema uses the owner-controlled existing window and frame budget',()=>{
   assert.match(orb,/windowAccentArgb = workWindowAccentArgb/);
 });
 
+test('EXP11 orb glow is tied to a real accepted window with a bounded time course',()=>{
+  const cue=read(base+'ui/JarvisWindowOrbPulse.kt');
+  assert.match(cue,/DURATION_MS = 650L/);
+  assert.match(cue,/fun energy\(ageMillis: Long\)/);
+  assert.match(orb,/val firstWindowFrame = active && !workWindowActive/);
+  assert.match(orb,/if \(firstWindowFrame\) workWindowPulseStartedAtMs = now/);
+  assert.match(orb,/JarvisWindowOrbPulse\.energy\(nowMillis - workWindowPulseStartedAtMs\)/);
+  assert.match(orb,/windowPulseStartedAtMs = -1L/);
+});
+
 test('no fake external-send or new native frame timers introduced',()=>{
   assert.match(agent,/Intent\.ACTION_SEND/);
   assert.match(agent,/kein.*gesendet|nicht als gesendet bestätigt/i);
