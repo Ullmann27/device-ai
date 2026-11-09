@@ -18,6 +18,7 @@ import {taskState} from './ccc1-orchestrator.mjs';
 import {sha256Hex,canonical} from './development-backlog.mjs';
 import {createHmac} from 'node:crypto';
 import {runCodingServiceTask} from './coding-service-worker.mjs';
+import {serviceTaskReviewSha256} from './coding-service-store.mjs';
 import {LOCAL_MODEL_RUNTIME_CANDIDATES} from '../../scripts/continuum-local-model-pins.mjs';
 
 const IMAGE='sha256:'+'a'.repeat(64);
@@ -79,8 +80,11 @@ async function rejection(run){
  catch(error){assert.equal(error.message,'CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');return error;}
 }
 function serviceAttempt(f){
- const delivery={id:f.task.id,ccc1TaskId:f.prepared.ccc1TaskId,fingerprint:f.prepared.fingerprint};
- const config={project:f.project,sourceRoot:f.project,sourceCommit:f.task.sourceCommit,stateDir:f.serviceState};
+ const config=f.serviceConfig??{project:f.project,sourceRoot:f.project,sourceCommit:f.task.sourceCommit,stateDir:f.serviceState,
+  configSha256:'c'.repeat(64)};
+ const delivery={id:f.task.id,ccc1TaskId:f.prepared.ccc1TaskId,fingerprint:f.prepared.fingerprint,
+  ...f.participants===undefined?{}:{participants:f.participants},
+  reviewSha256:serviceTaskReviewSha256(config,f.prepared.fingerprint,f.participants)};
  return ()=>runCodingServiceTask({config,delivery,current:{task:f.task,state:f.stateDir},
   assignment:f.assignment,executor:f.executor,env:{}});
 }
@@ -210,11 +214,14 @@ async function ownerReader(t,f,error){
   CONTINUUM_LOCAL_BRAIN_RUNTIME:'llama.cpp',CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND:'LLAMA_CPP',
   CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH:path.join(f.home,'not-run'),CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256:pin.runtimeSha256,
   CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL:'OWNER_APPROVED_ALTERNATE_GGUF'}));
- const {initializeCodingService,loadCodingServiceConfig,saveDeliveries}=await import(pathToFileURL(path.join(trustedRoot,'.github/continuum/coding-service-store.mjs')));
+ const {initializeCodingService,loadCodingServiceConfig,saveDeliveries,serviceTaskReviewSha256:reviewHash}=await import(pathToFileURL(path.join(trustedRoot,'.github/continuum/coding-service-store.mjs')));
  const configPath=path.join(f.serviceState,'config.json');
  initializeCodingService({configPath,project:f.project,profileDirectory:profiles,profileClasspath:classes,runtimeEnvPath,isolationConfig});
- saveDeliveries(loadCodingServiceConfig(configPath),[{id:f.task.id,fingerprint:f.prepared.fingerprint,reviewSha256:'b'.repeat(64),
-  ccc1TaskId:f.prepared.ccc1TaskId,delivery:'UNKNOWN',failureCode:error.message}]);
+ f.serviceConfig=loadCodingServiceConfig(configPath);
+ saveDeliveries(f.serviceConfig,[{id:f.task.id,fingerprint:f.prepared.fingerprint,
+  reviewSha256:reviewHash(f.serviceConfig,f.prepared.fingerprint,f.participants),
+  ...f.participants===undefined?{}:{participants:f.participants},
+  ccc1TaskId:f.prepared.ccc1TaskId,delivery:'UNKNOWN',failureCode:error?.message??'CODING_LOCAL_MODEL_OBSERVATION_REQUIRED'}]);
  const previousSpawn=childProcess.spawnSync;
  t.mock.method(childProcess,'spawnSync',(command,args,options)=>{
   if(command!=='java')return previousSpawn(command,args,options);
@@ -237,4 +244,36 @@ test('owner lookup offers only the checked negative report for an unknown delive
  assert.throws(()=>reader.getEvidence({taskId:f.task.id,evidenceId:'result'}),/SERVICE_METRICS_INVALID/);
  f.profiles.delete('bot-echo');
  assert.throws(()=>reader.getEvidence({taskId:f.task.id,evidenceId:'report'}),/SERVICE_PROFILE_UNAVAILABLE/);
+});
+
+test('selected bots bind a real negative journal/report and reject mismatched worker roles before execution',async t=>{
+ const f=fixture(t);
+ f.participants={builderId:'bot-mira',verifierId:'bot-atlas',reporterId:'bot-mnemos'};
+ for(const agentId of Object.values(f.participants))f.profiles.set(agentId,{agentId,workspaceId:'workspace-'+agentId,
+  resourceBudget:{maxModelCalls:1,deadlineMillis:120_000}});
+ const reader=await ownerReader(t,f);
+ await assert.rejects(serviceAttempt(f),/SERVICE_ASSIGNMENT_SELECTION_CHANGED/);
+ assert.deepEqual(f.counts(),{executionAttempts:0,providerCalls:0});
+ f.assignment=createCcc1BotAssignment({task:f.task,ccc1TaskId:f.prepared.ccc1TaskId,...f.participants,
+  profileStore:{get:id=>f.profiles.get(id)}});
+ await rejection(serviceAttempt(f));
+ const report=reader.getEvidence({taskId:f.task.id,evidenceId:'report'});
+ assert.equal(report.content.reporterId,'bot-mnemos');
+ assert.equal(report.content.builderId,'bot-mira');
+ assert.equal(report.content.verifierId,'bot-atlas');
+ assert.equal(report.content.status,'ABSTAINED');
+ assert.equal(report.content.modelCalls,0);
+ const item=reader.listTasks().items[0];
+ assert.equal(item.builderId,'bot-mira');assert.equal(item.verifierId,'bot-atlas');
+ assert.deepEqual(item.evidenceIds,['report']);
+ const file=path.join(f.serviceState,'public-evidence',f.task.id+'.json');
+ const {metricsMac,...snapshot}=JSON.parse(fs.readFileSync(file));
+ assert.deepEqual(snapshot.participants,f.participants);
+ assert.equal(snapshot.assignmentSha256,f.assignment.sha256);
+ snapshot.participants={...f.participants,reporterId:'bot-echo'};
+ // Even a runner-signed metrics record must agree with the reviewed selection.
+ fs.writeFileSync(file,JSON.stringify({...snapshot,metricsMac:createHmac('sha256',runtimeKey(f.stateDir))
+  .update(canonical(snapshot)).digest('hex')}));
+ assert.throws(()=>reader.getEvidence({taskId:f.task.id,evidenceId:'report'}),/SERVICE_RESULT_PARTICIPANTS_CHANGED/);
+ assert.equal(fs.existsSync(path.join(f.stateDir,'experience.jsonl')),false);
 });

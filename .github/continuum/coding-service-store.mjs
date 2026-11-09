@@ -11,6 +11,23 @@ import {getReviewedLocalModelPair} from '../../scripts/continuum-local-model-pin
 
 export const SERVICE_SOURCE_ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 export const SERVICE_ID=/^[a-z][a-z0-9-]{2,63}$/;
+const DEFAULT_PARTICIPANTS=Object.freeze({builderId:'bot-forge',verifierId:'bot-lint',reporterId:'bot-echo'});
+export function serviceParticipants(value=DEFAULT_PARTICIPANTS){
+ if(!value||Array.isArray(value)||Object.keys(value).sort().join()!=='builderId,reporterId,verifierId'||
+   Object.values(value).some(id=>typeof id!=='string'||!SERVICE_ID.test(id))||
+   new Set(Object.values(value)).size!==3)throw Error('SERVICE_PARTICIPANTS_INVALID');
+ return Object.freeze({builderId:value.builderId,verifierId:value.verifierId,reporterId:value.reporterId});
+}
+export function serviceTaskReviewSha256(config,fingerprint,participants){
+ const binding={config:config.configSha256,project:config.project,task:fingerprint,source:config.sourceCommit};
+ // Preserve already-reviewed legacy requests, but never drop an explicit selection.
+ if(participants!==undefined)binding.participants=serviceParticipants(participants);
+ return sha256Hex(canonical(binding));
+}
+export function assertServiceReviewBinding(config,delivery){
+ if(delivery.reviewSha256!==serviceTaskReviewSha256(config,delivery.fingerprint,delivery.participants))
+  throw Error('SERVICE_TASK_REVIEW_CHANGED');
+}
 export const hostServiceDirectory=()=>'/tmp/continuum-coding-owner-'+process.getuid();
 export const hostExecutionBarrier=()=>path.join(hostServiceDirectory(),'unresolved-execution.json');
 const SHA=/^[a-f0-9]{64}$/;
@@ -171,19 +188,22 @@ export function readDeliveries(config){
   if(!SERVICE_ID.test(d.id??'')||seen.has(d.id)||!SHA.test(d.fingerprint??'')||!SHA.test(d.reviewSha256??'')||
     !['RESERVING','PENDING','DISPATCHED','RETIRED','CANCEL_REQUESTED','UNKNOWN'].includes(d.delivery)||
     d.ccc1TaskId!==null&&!/^t-[a-f0-9]{16}$/.test(d.ccc1TaskId??''))throw Error('SERVICE_INBOX_CORRUPT');
+  if(d.participants!==undefined)serviceParticipants(d.participants);
   seen.add(d.id);
  }
  return value.items;
 }
 export function saveDeliveries(config,items){writePrivateJson(path.join(config.stateDir,'deliveries.json'),{schema:'continuum-owner-inbox',version:1,items});}
-export function reviewServiceTask(config,input){
+export function reviewServiceTask(config,input,participants){
  const task=validateCodingTask(input);
+ const selected=serviceParticipants(participants);
  assertServiceSource(config);
  if(gitIdentity(config.project,{clean:true})!==task.sourceCommit)throw Error('CODING_TASK_STALE_SOURCE');
  const fingerprint=taskFingerprint(task);
  return {schema:'continuum-owner-task-review',version:1,task,taskFingerprint:fingerprint,
   configSha256:config.configSha256,project:config.project,serviceSourceCommit:config.sourceCommit,
-  reviewSha256:sha256Hex(canonical({config:config.configSha256,project:config.project,task:fingerprint,source:config.sourceCommit})),
+  participants:selected,
+  reviewSha256:serviceTaskReviewSha256(config,fingerprint,participants),
   approvalMeaning:'One bounded local CCC1 attempt; no merge, publication, installation or network grant'};
 }
 export function linuxProcessIdentity(pid=process.pid){

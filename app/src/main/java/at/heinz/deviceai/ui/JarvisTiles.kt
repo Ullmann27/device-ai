@@ -144,7 +144,7 @@ object JarvisTiles {
         JarvisTile("memory", "Gedächtnis", Icon.DATABASE),
         JarvisTile("logic", "Denken und Planen", Icon.ATOM),
         JarvisTile("research", "Forschung", Icon.SEARCH),
-        JarvisTile("agents", "Assistenten", Icon.CUBE),
+        JarvisTile("agents", "Mein KI-Team", Icon.CUBE),
         JarvisTile("tasks", "Aufgaben", Icon.CHECK_CIRCLE),
         JarvisTile("web", "Internet", Icon.GLOBE),
         JarvisTile("learning", "Lernen", Icon.BOOK),
@@ -186,7 +186,7 @@ object JarvisTiles {
     data class NavItem(val target: String, val label: String, val icon: Icon)
     val railNav = listOf(NavItem("home", "Start", Icon.HOME), NavItem("chat", "Gespräch", Icon.CHAT),
         NavItem("memory", "Gedächtnis", Icon.DATABASE), NavItem("logic", "Denken und Planen", Icon.ATOM),
-        NavItem("research", "Forschung", Icon.SEARCH), NavItem("agents", "Assistenten", Icon.CUBE),
+        NavItem("research", "Forschung", Icon.SEARCH), NavItem("agents", "Mein KI-Team", Icon.CUBE),
         NavItem("tasks", "Aufgaben", Icon.CHECK_CIRCLE), NavItem("web", "Internet", Icon.GLOBE),
         NavItem("learning", "Lernen", Icon.BOOK), NavItem("device", "Gerätesteuerung", Icon.CPU),
         NavItem("system", "Systemstatus", Icon.PULSE))

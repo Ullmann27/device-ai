@@ -98,7 +98,7 @@ class ContinuumBotRosterStorageUiTest {
         val aliasedFiles = File(alias, "app/files")
         val store = ChiefBotProfileStore(File(aliasedFiles, "chief-bots"), trustedParentDirectory = aliasedFiles)
         open(store)
-        assertEquals(8, buttons("Profil und Arbeitsbereich öffnen").size)
+        assertEquals(20, buttons("Profil und Arbeitsbereich öffnen").size)
         assertTrue(text().contains("REGISTRIERT"))
         val original = store.page().items.first()
         buttons("Profil und Arbeitsbereich öffnen").first().performClick(); io.drain()
@@ -112,9 +112,47 @@ class ContinuumBotRosterStorageUiTest {
         assertEquals(original.workspaceId, renamed.workspaceId)
         assertTrue(renamed.permissionScope.isEmpty())
         click("Zur Teamübersicht")
-        click("Weitere Bots"); assertEquals(8, buttons("Profil und Arbeitsbereich öffnen").size)
-        click("Weitere Bots"); assertEquals(4, buttons("Profil und Arbeitsbereich öffnen").size)
+        assertEquals(20, buttons("Profil und Arbeitsbereich öffnen").size)
+        assertTrue(buttons("Weitere Bots").isEmpty())
         assertEquals(20, reopened.page().items.size)
+    }
+
+    @Test fun chiefSelectionAndBlockedTaskSurviveReturnToTeamView() {
+        val store = ChiefBotProfileStore(File(parent, "team"))
+        val model = object : at.heinz.deviceai.chief.ChiefTeamModel {
+            override fun readySha256(): String? = null
+            override fun generate(prompt: String, cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation,
+                                  deadlineMillis: Long): String = error("No model in this widget test")
+        }
+        val team = at.heinz.deviceai.chief.ChiefBotTeam(store, model,
+            changed = { activity.runOnUiThread { roster?.refreshRuntimeStatus() } })
+        try {
+            team.initialize()
+            team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), 0)
+            roster = ContinuumBotRosterDialog(activity, store, io, team = team,
+                onTeamSubmit = { id, request, revision ->
+                    io.execute { team.submit(id, request, revision, true) }
+                    true
+                }).also { it.show() }
+            io.drain()
+            val chosen = store.page(limit = 20).items.first()
+            buttons("Profil und Arbeitsbereich öffnen").first().performClick(); io.drain()
+            click("Als Chefbot bestimmen")
+            assertEquals(chosen.agentId, store.teamState().chiefId)
+            click("Zur Teamübersicht")
+            click("Teamaufträge und Ergebnisse")
+            click("Chefbot einen Textprüfauftrag geben")
+            views().filterIsInstance<EditText>().single().setText("Prüfe nur diesen Text.")
+            views().filterIsInstance<android.widget.CheckBox>().single().isChecked = true
+            click("An Chefbot übergeben")
+            assertTrue(text(), text().contains("MODEL_UNAVAILABLE"))
+            assertTrue(text(), text().contains("Blockiert"))
+            assertEquals(1, store.teamState().tasks.size)
+            click("Zur Teamübersicht")
+            click("Teamaufträge und Ergebnisse")
+            assertTrue(text().contains("Prüfe nur diesen Text."))
+            assertEquals(chosen.agentId, store.teamState().chiefId)
+        } finally { team.close() }
     }
 
     @Test fun corruptRegistryShowsAccessibleFixedDiagnosticAndPreservesOwnerBytes() {

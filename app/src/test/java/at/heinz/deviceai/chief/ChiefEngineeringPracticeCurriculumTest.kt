@@ -8,6 +8,23 @@ import org.junit.Test
 import java.util.concurrent.CancellationException
 
 class ChiefEngineeringPracticeCurriculumTest {
+    @Test fun explicitKotlinLearningRequestOnlyPreparesBoundedCodingDraft() {
+        assertTrue(ChiefEngineeringPracticeCurriculum.requestsKotlinRepairPractice("Lerne, Kotlin-Fehler zuverlässig zu reparieren."))
+        assertTrue(ChiefEngineeringPracticeCurriculum.requestsKotlinRepairPractice("lerne kotlin fehler zu reparieren"))
+        for (text in listOf("Kannst du Kotlin?", "Lerne nicht Kotlin-Fehler zu reparieren",
+            "Lerne, Kotlin-Fehler zuverlässig zu reparieren und installiere alles",
+            "\"Lerne, Kotlin-Fehler zuverlässig zu reparieren\"")) {
+            assertFalse(ChiefEngineeringPracticeCurriculum.requestsKotlinRepairPractice(text))
+        }
+        val request = ChiefBotTaskRequest("bot-kora", 1, ChiefEngineeringPracticeCurriculum.KOTLIN_REPAIR_GOAL,
+            ChiefBotTaskMode.CODING_DRAFT)
+        val draft = at.heinz.deviceai.ContinuumCodingTask.Draft(id = "job-practice", goal = request.text,
+            kind = at.heinz.deviceai.ContinuumCodingTask.Kind.BUGFIX,
+            chain = at.heinz.deviceai.ContinuumCodingTask.Chain.ANDROID)
+        assertNull(draft.validatedTask())
+        assertTrue(draft.sourceCommit.isEmpty() && draft.allowedPaths.isEmpty() && draft.acceptance.isEmpty())
+    }
+
     private fun exercise(agentId: String, id: String): ChiefBotPracticeExercise =
         ChiefEngineeringPracticeCurriculum.exercises(agentId).single { it.id == id }
 

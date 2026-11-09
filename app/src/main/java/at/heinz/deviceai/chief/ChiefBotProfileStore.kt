@@ -122,6 +122,39 @@ class ChiefBotProfileStore(
         }
     }
 
+    fun teamState(): ChiefBotTeamState = locked { readTeam() }
+
+    internal fun updateTeam(change: (ChiefBotTeamState) -> ChiefBotTeamState): ChiefBotTeamState = locked {
+        val next = change(readTeam())
+        val profiles = read()
+        require((listOfNotNull(next.chiefId) + next.specialistIds).all { it in profiles }) { "BOT_TEAM_PROFILE_MISSING" }
+        val payload = ChiefBotTeamCodec.encode(next)
+        atomicWrite(root.resolve("bot-team-v1.bin"), payload + digest(payload))
+        next
+    }
+
+    private fun readTeam(): ChiefBotTeamState {
+        val path = root.resolve("bot-team-v1.bin")
+        checkPlain(path)
+        if (!Files.exists(path, NOFOLLOW_LINKS)) return ChiefBotTeamState()
+        require(Files.size(path) in 33..ChiefBotTeamCodec.MAX_BYTES + 32L) { "BOT_TEAM_CAPACITY_OR_CORRUPTION" }
+        val bytes = Files.newInputStream(path, NOFOLLOW_LINKS).use { input ->
+            val output = ByteArrayOutputStream()
+            val block = ByteArray(8192)
+            var size = input.read(block)
+            while (size >= 0) {
+                require(output.size() <= ChiefBotTeamCodec.MAX_BYTES + 32 - size) { "BOT_TEAM_CAPACITY_OR_CORRUPTION" }
+                output.write(block, 0, size)
+                size = input.read(block)
+            }
+            output.toByteArray()
+        }
+        require(bytes.size in 33..ChiefBotTeamCodec.MAX_BYTES + 32) { "BOT_TEAM_CAPACITY_OR_CORRUPTION" }
+        val payload = bytes.copyOfRange(0, bytes.size - 32)
+        require(MessageDigest.isEqual(bytes.copyOfRange(bytes.size - 32, bytes.size), digest(payload))) { "BOT_TEAM_CHECKSUM" }
+        return ChiefBotTeamCodec.decode(payload)
+    }
+
     fun create(agentId: String, name: String, role: String, style: String): ChiefBotProfile {
         val profile = fresh(agentId, name, role, style)
         return locked {
@@ -383,7 +416,11 @@ class ChiefBotProfileStore(
             }
         }.toByteArray()
         require(encoded.size <= maxBytes) { "BOT_REGISTRY_CAPACITY_EXCEEDED" }
-        checkPlain(primary)
+        atomicWrite(primary, encoded)
+    }
+
+    private fun atomicWrite(target: java.nio.file.Path, encoded: ByteArray) {
+        checkPlain(target)
         val temp = Files.createTempFile(root, ".bot-profiles-", ".tmp")
         try {
             FileChannel.open(temp, WRITE, NOFOLLOW_LINKS).use { channel ->
@@ -391,7 +428,7 @@ class ChiefBotProfileStore(
                 while (buffer.hasRemaining()) channel.write(buffer)
                 channel.force(true)
             }
-            Files.move(temp, primary, ATOMIC_MOVE, REPLACE_EXISTING)
+            Files.move(temp, target, ATOMIC_MOVE, REPLACE_EXISTING)
             FileChannel.open(root, READ).use { it.force(true) }
         } catch (e: IOException) {
             throw IllegalStateException("BOT_REGISTRY_WRITE_FAILED", e)
