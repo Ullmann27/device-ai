@@ -368,6 +368,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         if (text[next].isLowerCase()) return null
         var first = last
         while (first > 0 && text[first - 1].isLetterOrDigit()) first--
+        if (AvatarSentenceAccentPolicy.suppress(text, first, last, next)) return null
         for (k in first..last) if (!text[k].isDigit()) return SpeechBoundary.STATEMENT
         return null
     }

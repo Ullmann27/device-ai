@@ -215,8 +215,10 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         canvas.clipRect(constructed)
         canvas.save()
         canvas.scale(density, density)
+        val raster = HollywoodFuiWorkActivity.rasterOpacity(frame.grid, frame.data,
+            active, !reducedMotion && budget.animate)
         cinematics.drawGridAndScan(painter, boxDp,
-            frame.copy(grid = frame.grid * (1f - frame.data), scanEnabled = frame.scanEnabled && !reducedMotion), bloom)
+            frame.copy(grid = raster, scanEnabled = frame.scanEnabled && !reducedMotion), bloom)
         canvas.restore()
         // The native accessible body takes over. Never keep a second text plane behind its labels.
         val dataAlpha = frame.data * (1f - frame.data) * frame.closeData
