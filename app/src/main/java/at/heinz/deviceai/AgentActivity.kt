@@ -283,10 +283,15 @@ class AgentActivity : Activity() {
         override fun run() {
             if (!voiceSpeaking || !foregroundLearningActive || isDestroyed) return
             val utteranceId = voiceUtteranceId
-            val measured = utteranceId?.let { voiceSignal.measuredLevel(it, android.os.SystemClock.elapsedRealtime()) }
+            val now = android.os.SystemClock.elapsedRealtime()
+            val measured = utteranceId?.let { voiceSignal.measuredLevel(it, now) }
             val level = measured ?: 0f
             hologramView?.setAudioLevel(level)
-            utteranceId?.let { avatarDirector.audioLevel(it, level, measuredPcmAvailable = measured != null) }
+            val earlyJaw = if (at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(this@AgentActivity,
+                    at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_08_PRE_SPEECH))
+                utteranceId?.let { voiceSignal.prePhonatoryLevel(it, now) } ?: 0f else 0f
+            utteranceId?.let { avatarDirector.audioLevel(it, maxOf(level, earlyJaw),
+                measuredPcmAvailable = measured != null) }
             mainHandler.postDelayed(this, 33L)
         }
     }
