@@ -120,4 +120,13 @@ class OwnerAppLookupIntentTest {
         assertNull(OwnerAppLookupIntent.parse("Suche WhatsApp und sende eine Nachricht"))
     }
 
+    @Test fun politeReadOnlyAppLookupPreservesExactTargetInsteadOfCourtesies() {
+        assertEquals("Kamera", OwnerAppLookupIntent.parse("Suche mir die App Kamera"))
+        assertEquals("Kalender", OwnerAppLookupIntent.parse("Finde die App Kalender"))
+        assertEquals("Signal", OwnerAppLookupIntent.parse("Zeige mir die App Signal"))
+        val safe = OwnerAppLookupIntent.inspect("Suche mir die App Kamera. Öffne keine App.")
+            as OwnerAppLookupIntent.Intake.Lookup
+        assertEquals("Kamera", safe.query)
+        assertFalse(safe.opening)
+    }
 }
