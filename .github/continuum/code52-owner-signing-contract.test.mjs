@@ -17,8 +17,8 @@ test('signing stays manual, non-main and owner-review protected', () => {
   assert.match(script, /owner_login="Ullmann27"/);
   assert.match(script, /ENVIRONMENT_REQUIRED_OWNER_REVIEWER_MISSING/);
   assert.match(script, /ENVIRONMENT_BRANCH_POLICY_NOT_EXACT/);
-  assert.ok(workflow.indexOf('  preflight:') < workflow.indexOf('  release-original-signed:'));
-  const preflight = workflow.slice(workflow.indexOf('  preflight:'), workflow.indexOf('  release-original-signed:'));
+  assert.ok(workflow.indexOf('  preflight:') < workflow.indexOf('  sign-draft-original:'));
+  const preflight = workflow.slice(workflow.indexOf('  preflight:'), workflow.indexOf('  sign-draft-original:'));
   assert.doesNotMatch(preflight, /secrets\./);
   assert.equal([...workflow.matchAll(/secrets\./g)].length, 2);
 });
@@ -44,7 +44,7 @@ test('original certificate bound and no secret echoed', () => {
   assert.match(script, /pkg="at\.heinz\.deviceai\.continuumlocal"/);
   assert.match(script, /ORIGINAL_CERTIFICATE_MISMATCH/);
   assert.match(script, /SIGNED_APK_CERTIFICATE_MISMATCH/);
-  assert.match(script, /PUBLIC_DOWNLOAD_SHA_MISMATCH/);
+  assert.match(script, /DRAFT_RELEASE_METADATA_MISMATCH/);
   assert.ok(script.indexOf('ENVIRONMENT_REQUIRED_OWNER_REVIEWER_MISSING') <
     script.indexOf('ORIGINAL_P12_BASE64_INVALID'));
   assert.ok(script.indexOf('--draft --latest=false') <
@@ -53,4 +53,16 @@ test('original certificate bound and no secret echoed', () => {
   const safeDecode = 'printf \'%s\' "$ORIGINAL_P12" | base64 --decode > "$tmp/original.p12"';
   assert.equal(script.split(safeDecode).length, 2, 'exact private-file-only P12 decode');
   assert.doesNotMatch(script.replace(safeDecode, ''), /\b(echo|printf|cat|tee)\b[^\n]*\$\{?(?:ORIGINAL_P12|ORIGINAL_PASSWORD|SIGN_PASS)\b/);
+});
+
+test('signed APK never publishes automatically; owner retains a separate release decision', () => {
+  assert.match(script, /gh release create[^\n]*--draft --latest=false/);
+  assert.match(script, /CHECKPOINT=SIGNED_DRAFT_READBACK_VERIFIED/);
+  assert.match(script, /STATUS=SIGNED_DRAFT_VERIFIED_NOT_PUBLISHED/);
+  assert.match(script, /DRAFT_RELEASE_METADATA_MISMATCH/);
+  assert.match(script, /DRAFT_CHANGED_LATEST_RELEASE/);
+  assert.doesNotMatch(script, /\bgh release edit\b/);
+  assert.doesNotMatch(script, /--draft=false|--latest=true|gh release publish/);
+  assert.match(workflow, /  sign-draft-original:/);
+  assert.doesNotMatch(workflow, /  release-original-signed:/);
 });

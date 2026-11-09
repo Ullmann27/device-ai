@@ -137,7 +137,7 @@ printf 'source_sha=%s\npackage=%s\nversion_code=%s\nversion_name=%s\nsigner_sha2
   "$source_sha" "$pkg" "$code" "$name_version" "$fingerprint" "$digest" "$size" "$qa_run" "$lifecycle" > "$tmp/BUILD-INFO.txt"
 echo CHECKPOINT=SIGNED_APK_CERTIFICATE_PACKAGE_AND_HASH_VERIFIED
 
-# 7. Entwurf anlegen, Readback prüfen, erst dann veröffentlichen.
+# 7. Signierte APK ausschließlich als unveröffentlichten GitHub-Entwurf anlegen und prüfen.
 cat > "$tmp/notes.txt" <<EOF
 Continuum Lokal Code $code / $name_version (versionCode $code). Originalsigniert.
 Quelle: $source_sha
@@ -162,20 +162,17 @@ rb_badging="$("$tools/aapt2" dump badging "$rb")" || fail GITHUB_READBACK_BADGIN
 grep -Fq "package: name='$pkg' versionCode='$code' versionName='$name_version'" <<< "$rb_badging" || fail GITHUB_READBACK_PACKAGE_MISMATCH
 echo CHECKPOINT=DRAFT_RELEASE_READBACK_VERIFIED
 
-gh release edit "$tag" --repo "$repo" --draft=false --latest=true >/dev/null || fail GITHUB_PUBLICATION_FAILED
-rollback() { gh release edit "$tag" --repo "$repo" --draft=true >/dev/null 2>&1 || true; fail "$1"; }
-
-# 8. Öffentlicher Readback ohne Anmeldung, exakt wie ihn der In-App-Katalog sieht.
-pub="$(curl -fsSL --max-time 60 "https://api.github.com/repos/$repo/releases/latest")" || rollback PUBLIC_LATEST_UNREADABLE
+# 8. Signierung und unabhängige Prüfung beenden diesen Workflow.
+# Das Release bleibt ausdrücklich ENTWURF. Veröffentlichung nur durch
+# separaten, ausdrücklichen Besitzerentscheid; kein automatisches Publish.
+draft_json="$(gh api "repos/$repo/releases/tags/$tag")" || fail DRAFT_READBACK_UNREADABLE
 jq -e --arg tag "$tag" --arg name "$name" --arg sha "sha256:$digest" --argjson size "$size" '
-  .tag_name==$tag and .draft==false and .prerelease==false
+  .tag_name==$tag and .draft==true and .prerelease==false
   and ([.assets[] | select(.name|test("^Continuum-Lokal-[a-f0-9]{64}[.]apk$"))] | length==1)
   and ([.assets[] | select(.name==$name and .digest==$sha and .size==$size)] | length==1)
-' <<< "$pub" >/dev/null || rollback PUBLIC_LATEST_METADATA_MISMATCH
-url="https://github.com/$repo/releases/download/$tag/$name"
-curl -fsSL --max-time 900 -o "$tmp/public.apk" "$url" || rollback PUBLIC_DOWNLOAD_FAILED
-test "$(sha256sum "$tmp/public.apk" | cut -d' ' -f1)" = "$digest" || rollback PUBLIC_DOWNLOAD_SHA_MISMATCH
-pub_verify="$("$tools/apksigner" verify --verbose --print-certs "$tmp/public.apk")" || rollback PUBLIC_DOWNLOAD_SIGNATURE_FAILED
-grep -Fq "Signer #1 certificate SHA-256 digest: $fingerprint" <<< "$pub_verify" || rollback PUBLIC_DOWNLOAD_CERT_MISMATCH
-echo CHECKPOINT=VERIFIED_PUBLIC_GITHUB_RELEASE_LATEST
-printf 'RELEASE_URL=https://github.com/%s/releases/tag/%s\nAPK_URL=%s\nAPK_SHA256=%s\nAPK_BYTES=%s\n' "$repo" "$tag" "$url" "$digest" "$size"
+' <<< "$draft_json" >/dev/null || fail DRAFT_RELEASE_METADATA_MISMATCH
+latest_after="$(gh api "repos/$repo/releases/latest" --jq .tag_name)" || fail LATEST_AFTER_DRAFT_UNREADABLE
+[[ "$latest_after" == "$latest_tag" ]] || fail DRAFT_CHANGED_LATEST_RELEASE
+echo CHECKPOINT=SIGNED_DRAFT_READBACK_VERIFIED
+echo STATUS=SIGNED_DRAFT_VERIFIED_NOT_PUBLISHED
+printf 'DRAFT_RELEASE_URL=https://github.com/%s/releases/tag/%s\nAPK_SHA256=%s\nAPK_BYTES=%s\nPUBLISHED=false\n' "$repo" "$tag" "$digest" "$size"
