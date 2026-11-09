@@ -535,7 +535,7 @@ class ContinuumReferenceCockpitUiTest {
         val adapter = requireNotNull(dialog.listView).adapter
         assertEquals("Retain all original choices and add the explicit compact choice", appearanceChoices,
             (0 until adapter.count).map { adapter.getItem(it).toString() })
-        assertEquals("Bewegung prüfen", dialog.getButton(AlertDialog.BUTTON_NEUTRAL).text.toString())
+        assertEquals("Film-Effekte", dialog.getButton(AlertDialog.BUTTON_NEUTRAL).text.toString())
         assertEquals("Schließen", dialog.getButton(AlertDialog.BUTTON_NEGATIVE).text.toString())
         return dialog
     }
@@ -738,8 +738,8 @@ class ContinuumReferenceCockpitUiTest {
 
             for ((target, title) in listOf(
                 "memory" to "Gedächtniszentrum",
-                "agents" to "Team · Bots",
-                "agents-panel" to "Team · Bots",
+                "agents" to "Mein KI-Team",
+                "agents-panel" to "Mein KI-Team",
                 "tasks" to "Entwicklungsaufgaben",
                 "device" to "Systemstatus"
             )) {
@@ -1026,7 +1026,7 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun assertRailDestination(target: String): AlertDialog {
         if (target != "research") return assertDialog(requireNotNull(mapOf(
-            "agents" to "Team · Bots", "tasks" to "Entwicklungsaufgaben"
+            "agents" to "Mein KI-Team", "tasks" to "Entwicklungsaufgaben"
         )[target]))
         val dialog = ShadowAlertDialog.getLatestAlertDialog()
         assertNotNull("Research must open the existing gated destination", dialog)

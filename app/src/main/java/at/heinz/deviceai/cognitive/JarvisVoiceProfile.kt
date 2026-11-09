@@ -31,14 +31,28 @@ internal object JarvisVoiceProfile {
             .replace(whitespace, " ")
             .trim()
 
-    /** Length of the first spoken piece of [cleaned]: sentence end, else word end, else hard cut. */
+    private val nonTerminalTitles = setOf("dr", "prof", "mag", "dipl", "ing", "hr", "fr")
+
+    private fun abbreviationBeforeDot(text: String, dot: Int): Boolean {
+        var start = dot
+        while (start > 0 && text[start - 1].isLetter()) start--
+        val word = text.substring(start, dot).lowercase(java.util.Locale.ROOT)
+        return word.length == 1 || word in nonTerminalTitles
+    }
+
+    /** Sentence, clause, word, then limit. */
     private fun boundary(cleaned: String, maxCharacters: Int): Int {
         if (cleaned.length <= maxCharacters) return cleaned.length
         val prefix = cleaned.take(maxCharacters)
-        val lastSentence = listOf(prefix.lastIndexOf(". "), prefix.lastIndexOf("! "), prefix.lastIndexOf("? "))
-            .maxOrNull() ?: -1
-        return if (lastSentence >= maxCharacters / 3) lastSentence + 1
-            else prefix.lastIndexOf(' ').takeIf { it >= maxCharacters / 2 } ?: maxCharacters
+        val sentence = (maxCharacters / 3 until prefix.lastIndex).lastOrNull { i ->
+            prefix[i] in ".!?" && prefix[i + 1] == ' ' &&
+                (prefix[i] != '.' || !abbreviationBeforeDot(prefix, i))
+        }
+        if (sentence != null) return sentence + 1
+        val clause = (maxCharacters / 2 until prefix.lastIndex).lastOrNull { i ->
+            prefix[i] in ",;:" && prefix[i + 1] == ' ' && prefix.getOrNull(i + 2)?.isLetter() == true
+        }
+        return clause?.plus(1) ?: prefix.lastIndexOf(' ').takeIf { it >= maxCharacters / 2 } ?: maxCharacters
     }
 
     /** First speakable piece only (kept for callers that want a short preview). */

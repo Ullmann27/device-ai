@@ -6,6 +6,19 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class HollywoodFuiConstructTest {
+    @Test fun flightIsBoundedMonotonicAndHasSoftLiftOffAndLanding() {
+        assertEquals(0f, HollywoodFuiConstruct.flight(HollywoodFuiConstruct.ANCHOR_END_MS), .00001f)
+        assertEquals(1f, HollywoodFuiConstruct.flight(HollywoodFuiConstruct.GLASS_END_MS), .00001f)
+        val values = (-100L..1_000L).map(HollywoodFuiConstruct::flight)
+        assertTrue(values.all { it in 0f..1f })
+        assertEquals(values.sorted(), values)
+        val liftSpeed = HollywoodFuiConstruct.flight(141L) - HollywoodFuiConstruct.flight(140L)
+        val midSpeed = HollywoodFuiConstruct.flight(451L) - HollywoodFuiConstruct.flight(450L)
+        val landSpeed = HollywoodFuiConstruct.flight(760L) - HollywoodFuiConstruct.flight(759L)
+        assertTrue(liftSpeed < midSpeed * .01f)
+        assertTrue(landSpeed < midSpeed * .01f)
+    }
+
     @Test
     fun constructFollowsTheOwnerSequenceAnchorBracketsGridGlassData() {
         // #643 C: Lichtanker → Eckklammern → Scanraster → Glasschichten → Daten.

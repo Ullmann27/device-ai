@@ -1,8 +1,5 @@
 package at.heinz.deviceai.ui
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Camera
 import android.graphics.Canvas
@@ -11,11 +8,8 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
-import android.os.Build
-import android.os.SystemClock
 import android.view.HapticFeedbackConstants
 import android.view.View
-import android.view.animation.LinearInterpolator
 import at.heinz.deviceai.cockpit.StepState
 import java.util.Locale
 import kotlin.math.PI
@@ -32,6 +26,15 @@ import kotlin.math.sin
  */
 class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val stage = RectF()
+    private val source = RectF()
+    private var protectedBounds = emptyList<RectF>()
+    internal var requestFrame: () -> Unit = {}
+    internal var cinematicEffectsEnabled = true
+        set(value) {
+            field = value
+            invalidate()
+            requestFrame()
+        }
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
     private val painter = AndroidContinuumPainter(context.assets)
@@ -45,8 +48,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private var anchorLatched = false
     private var profile = JarvisActionScenes.FuiProfile.GENERIC
     private var accent = JarvisDesign.Colors.cyan
-    private var openedAt = 0L
     private var elapsedMs = 0L
+    private var openness = 0f
     private var closingElapsedMs = -1L
     private var active = false
     private var reducedMotion = false
@@ -54,7 +57,6 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private var dataLatched = false
     private var telemetryText: String? = null
     private var liveData: HollywoodFuiLiveData? = null
-    private var animator: ValueAnimator? = null
 
     init {
         isClickable = false
@@ -63,53 +65,41 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         setWillNotDraw(false)
     }
 
-    /**
-     * Opens the construct at [bounds]. [anchorX]/[anchorY] (px) is where the light anchor stands before the frame
-     * grows – the avatar core or the tapped control; NaN anchors at the construct centre.
-     */
-    fun open(bounds: RectF, scene: JarvisActionScenes.Scene, anchorX: Float = Float.NaN, anchorY: Float = Float.NaN) {
-        animator?.cancel()
+    /** Origin and destination use the native window's exact overlay-pixel geometry. */
+    fun open(bounds: RectF, scene: JarvisActionScenes.Scene, origin: RectF,
+             protected: List<RectF> = emptyList()) {
         stage.set(bounds)
+        source.set(origin)
+        protectedBounds = protected.map(::RectF)
         profile = scene.fuiProfile
         if (accent != scene.accent) cinematics = HollywoodFuiCinematics.Painterly(scene.accent)
         accent = scene.accent
-        originX = if (anchorX.isNaN()) bounds.centerX() else anchorX
-        originY = if (anchorY.isNaN()) bounds.centerY() else anchorY
-        moteSeed = (SystemClock.uptimeMillis() and 0x7FFF).toInt()
-        openedAt = SystemClock.uptimeMillis()
+        originX = origin.centerX()
+        originY = origin.centerY()
+        moteSeed = scene.fuiProfile.ordinal
         elapsedMs = 0L
+        openness = 0f
         closingElapsedMs = -1L
         anchorLatched = false
         bracketsLatched = false
         dataLatched = false
         liveData = null
         visibility = VISIBLE
-        reducedMotion = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled()
-        if (reducedMotion) {
-            elapsedMs = HollywoodFuiConstruct.DATA_END_MS
-            invalidate()
-            return
-        }
-        animator = ValueAnimator.ofInt(0, HollywoodFuiConstruct.DATA_END_MS.toInt()).apply {
-            duration = HollywoodFuiConstruct.DATA_END_MS
-            interpolator = LinearInterpolator()
-            addUpdateListener {
-                elapsedMs = (it.animatedValue as Int).toLong()
-                emitPhaseFeedback(elapsedMs)
-                invalidate()
-            }
-            start()
-        }
+        invalidate()
     }
 
-    fun retarget(bounds: RectF) {
+    fun retarget(bounds: RectF, origin: RectF = source, protected: List<RectF> = protectedBounds) {
         stage.set(bounds)
+        source.set(origin)
+        originX = source.centerX()
+        originY = source.centerY()
+        protectedBounds = protected.map(::RectF)
         invalidate()
     }
 
     /**
      * Reuses this exact overlay for a stronger scene in the same turn.
-     * Geometry stays in place; only the FUI grammar rematerializes.
+     * Geometry and clock stay in place; only the profile changes.
      */
     fun morphInPlace(bounds: RectF, scene: JarvisActionScenes.Scene) {
         val profileChanged = profile != scene.fuiProfile || accent != scene.accent
@@ -118,13 +108,17 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             invalidate()
             return
         }
-        open(bounds, scene)
+        profile = scene.fuiProfile
+        if (accent != scene.accent) cinematics = HollywoodFuiCinematics.Painterly(scene.accent)
+        accent = scene.accent
+        invalidate()
     }
 
     fun setWorkActive(value: Boolean) {
         if (active == value) return
         active = value
-        if (value) invalidate()
+        invalidate()
+        requestFrame()
     }
 
     /** Couples motes, bloom and the live frame cadence to the cockpit's current render budget. */
@@ -133,6 +127,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         if (budget == next) return
         budget = next
         invalidate()
+        requestFrame()
     }
 
     /** Current frame cadence of the live (working) overlay in ms; 16 at full budget, longer when hot or saving power. */
@@ -153,70 +148,66 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
 
     fun close(immediate: Boolean) {
         active = false
-        animator?.cancel()
-        if (immediate || visibility != VISIBLE || reducedMotion) {
-            visibility = GONE
-            return
-        }
-        closingElapsedMs = 0L
-        animator = ValueAnimator.ofInt(0, HollywoodFuiConstruct.CLOSE_END_MS.toInt()).apply {
-            duration = HollywoodFuiConstruct.CLOSE_END_MS
-            interpolator = LinearInterpolator()
-            addUpdateListener {
-                closingElapsedMs = (it.animatedValue as Int).toLong()
-                invalidate()
-            }
-            addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    visibility = GONE
-                }
-            })
-            start()
-        }
+        if (immediate) visibility = GONE
+    }
+
+    /** The native window supplies the only clock, including close and Android animator scale. */
+    internal fun present(elapsed: Long, closing: Long, reduced: Boolean, open: Float): Boolean {
+        elapsedMs = elapsed
+        closingElapsedMs = closing
+        reducedMotion = reduced || !budget.animate
+        openness = open
+        if (!cinematicEffectsEnabled) return false
+        if (!reducedMotion && closing < 0L) emitPhaseFeedback(elapsed)
+        invalidate()
+        return budget.needsLiveFrames(active, reducedMotion,
+            isAttachedToWindow && isShown && windowVisibility == VISIBLE && hasWindowFocus(),
+            cinematicEffectsEnabled, closing >= 0L)
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if (stage.isEmpty || visibility != VISIBLE) return
-        val liveElapsed = if (active) {
-            maxOf(elapsedMs, SystemClock.uptimeMillis() - openedAt)
-        } else {
-            elapsedMs
-        }
-        val frame = HollywoodFuiConstruct.frame(liveElapsed, closingElapsedMs, reducedMotion)
+        if (!cinematicEffectsEnabled || stage.isEmpty || visibility != VISIBLE) return
+        val frame = HollywoodFuiConstruct.frame(elapsedMs, closingElapsedMs, reducedMotion)
         if (frame.closeFactor <= 0f) return
 
-        val scale = 0.15f + 0.85f * frame.brackets
         val cx = stage.centerX()
-        val cy = stage.centerY()
-        val halfWidth = stage.width() * 0.5f * scale
-        val halfHeight = stage.height() * 0.5f * scale
-        val constructed = RectF(cx - halfWidth, cy - halfHeight, cx + halfWidth, cy + halfHeight)
+        val constructed = stage
         val density = resources.displayMetrics.density
         val side = if (originX.isNaN() || abs(originX - cx) < dp(8f)) 0f else if (originX < cx) -1f else 1f
-        val bloom = budget.bloom && budget.animate
+        val bloom = budget.bloom && !reducedMotion
 
         // Whole construct in perspective: swings in around its vertical axis from the anchor side, folds away again.
         canvas.save()
-        if (frame.tiltDegrees != 0f && side != 0f) {
+        protectedBounds.forEach { canvas.clipOutRect(it) }
+        painter.begin(canvas)
+        canvas.save()
+        canvas.scale(density, density)
+        val boxDp = HollywoodFuiCinematics.Box(stage.left / density, stage.top / density,
+            stage.right / density, stage.bottom / density)
+        // The source is in screen space, never rotated with the arriving glass.
+        cinematics.drawAnchor(painter, originX / density, originY / density, boxDp, frame, bloom)
+        canvas.restore()
+        canvas.translate((source.left - stage.left) * (1f - openness), (source.top - stage.top) * (1f - openness))
+        canvas.scale((source.width() + (stage.width() - source.width()) * openness) / stage.width(),
+            (source.height() + (stage.height() - source.height()) * openness) / stage.height(), stage.left, stage.top)
+        val tilt = JarvisMotion.Depth.entranceTilt(openness, side, if (reducedMotion) 0f else 1f)
+        if (tilt != 0f) {
             camera.save()
-            camera.rotateY(frame.tiltDegrees * side)
+            camera.setLocation(0f, 0f, -JarvisMotion.Depth.CAMERA_DISTANCE_DP / 72f)
+            camera.rotateY(tilt)
             camera.getMatrix(cameraMatrix)
             camera.restore()
-            cameraMatrix.preTranslate(-cx, -cy)
-            cameraMatrix.postTranslate(cx, cy)
+            cameraMatrix.preTranslate(-stage.left, -stage.top)
+            cameraMatrix.postTranslate(stage.left, stage.top)
             canvas.concat(cameraMatrix)
         }
 
         // Painter layers in dp: anchor + beam, glass depth sheets, grid/scan, rim energy and motes.
-        painter.begin(canvas)
         canvas.save()
         canvas.scale(density, density)
-        val boxDp = HollywoodFuiCinematics.Box(constructed.left / density, constructed.top / density,
-            constructed.right / density, constructed.bottom / density)
         val radiusDp = 6f
-        cinematics.drawGlassLayers(painter, boxDp, frame, radiusDp)
-        cinematics.drawAnchor(painter, originX / density, originY / density, boxDp, frame, bloom)
+        cinematics.drawGlassLayers(painter, boxDp, frame, radiusDp, budget.glassLayers)
         canvas.restore()
 
         // Profile data stays on the proven Canvas path, scaled with the close choreography (data leaves first).
@@ -224,29 +215,25 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         canvas.clipRect(constructed)
         canvas.save()
         canvas.scale(density, density)
-        cinematics.drawGridAndScan(painter, boxDp, if (budget.animate) frame else frame.copy(scanEnabled = false), bloom)
+        cinematics.drawGridAndScan(painter, boxDp,
+            frame.copy(grid = frame.grid * (1f - frame.data), scanEnabled = frame.scanEnabled && !reducedMotion), bloom)
         canvas.restore()
-        val dataAlpha = frame.data * frame.closeData
+        // The native accessible body takes over. Never keep a second text plane behind its labels.
+        val dataAlpha = frame.data * (1f - frame.data) * frame.closeData
         if (dataAlpha > 0f) drawProfile(canvas, constructed, dataAlpha)
         canvas.restore()
 
         canvas.save()
         canvas.scale(density, density)
-        cinematics.drawMotesAndEnergy(painter, boxDp, frame, liveElapsed, if (budget.animate) budget.motes else 0,
-            moteSeed, working = active, bloom = bloom, radius = radiusDp)
+        cinematics.drawMotesAndEnergy(painter, boxDp, frame, elapsedMs,
+            if (!reducedMotion && (active || !frame.settled)) budget.motes else 0,
+            moteSeed, working = active && !reducedMotion, bloom = bloom, radius = radiusDp)
         cinematics.drawBrackets(painter, boxDp, frame.brackets * frame.closeFrame, bloom)
         canvas.restore()
 
-        drawTelemetry(canvas, constructed, frame.closeData)
+        if (dataAlpha > 0f) drawTelemetry(canvas, constructed, dataAlpha)
         canvas.restore()
 
-        if (active && budget.animate && isAttachedToWindow) postInvalidateDelayed(liveFrameDelayMs())
-    }
-
-    override fun onDetachedFromWindow() {
-        animator?.cancel()
-        animator = null
-        super.onDetachedFromWindow()
     }
 
     private fun emitPhaseFeedback(elapsed: Long) {
@@ -360,7 +347,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             canvas.drawLine(card.centerX(), card.centerY(), centreX, centreY, paint)
             drawSmallLabel(
                 canvas,
-                "AGENT %02d".format(Locale.ROOT, index + 1),
+                "SCHRITT %02d".format(Locale.ROOT, index + 1),
                 card.left + dp(6f),
                 card.top + dp(15f),
                 alpha,
@@ -425,14 +412,12 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         )
 
         val maxAbs = data.steps.maxOfOrNull { kotlin.math.abs(it.value) }?.takeIf { it > 0.0 } ?: 1.0
-        val timelineElapsed = if (active) {
-            maxOf(elapsedMs, SystemClock.uptimeMillis() - openedAt)
-        } else elapsedMs
+        val timelineElapsed = elapsedMs
         data.steps.take(4).forEachIndexed { index, step ->
             val reveal = ((timelineElapsed - HollywoodFuiConstruct.DATA_END_MS - index * 80L) / 180f).coerceIn(0f, 1f)
             val barLeft = box.left + size + dp(16f)
             val y = box.top + box.height() * (index + 1f) / 5f
-            val fraction = (kotlin.math.abs(step.value) / maxAbs).toFloat().coerceIn(.08f, 1f) * reveal
+            val fraction = (kotlin.math.abs(step.value) / maxAbs).toFloat().coerceIn(0f, 1f) * reveal
             paint.strokeWidth = dp(3f)
             paint.color = withAlpha(JarvisDesign.Colors.violet, (.30f + index * .08f) * alpha)
             canvas.drawLine(barLeft, y, barLeft + box.width() * .28f * fraction, y, paint)
@@ -496,7 +481,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         lines.take(8).forEachIndexed { index, line ->
             val y = box.top + dp(18f + index * 18f)
             if (y > box.bottom) return@forEachIndexed
-            val prefix = if (prefixAgents) "AGENT %02d · ".format(Locale.ROOT, index + 1) else ""
+            val prefix = if (prefixAgents) "SCHRITT %02d · ".format(Locale.ROOT, index + 1) else ""
             drawSmallLabel(canvas, prefix + line.label, box.left + dp(6f), y, alpha, stateColor(line.state))
         }
     }

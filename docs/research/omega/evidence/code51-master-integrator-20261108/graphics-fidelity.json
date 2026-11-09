@@ -1,0 +1,33 @@
+{
+  "tool": "HollywoodFuiReferenceFidelity",
+  "java2dStandIn": true, "deviceVerified": false,
+  "referenceScalePxPerDp": 1.64,
+  "reference": {
+    "ref5-chat-bubble": {"rect": [289,443,565,552], "metrics": {"rimL":0.2915,"haloL":0.1090,"interiorL":0.1202,"rimContrast":2.4256,"haloSpread":0.3738,"cyan":0.5439,"blue":0.4529,"violet":0.0000,"neutral":0.0032,"offPalette":0.0000,"litRimShare":0.8047}},
+    "ref5-chat-tile": {"rect": [289,568,556,647], "metrics": {"rimL":0.1988,"haloL":0.1035,"interiorL":0.1220,"rimContrast":1.6289,"haloSpread":0.5207,"cyan":0.7201,"blue":0.2695,"violet":0.0105,"neutral":0.0000,"offPalette":0.0000,"litRimShare":0.5746}},
+    "ref5-active-agents": {"rect": [285,750,567,914], "metrics": {"rimL":0.2094,"haloL":0.0586,"interiorL":0.1047,"rimContrast":2.0005,"haloSpread":0.2796,"cyan":0.8337,"blue":0.1663,"violet":0.0000,"neutral":0.0000,"offPalette":0.0000,"litRimShare":0.5787}},
+    "ref5-status-right": {"rect": [1170,226,1366,463], "metrics": {"rimL":0.1705,"haloL":0.0644,"interiorL":0.0744,"rimContrast":2.2917,"haloSpread":0.3778,"cyan":0.5826,"blue":0.2607,"violet":0.1567,"neutral":0.0000,"offPalette":0.0000,"litRimShare":0.5852}},
+    "ref5-local-model": {"rect": [1079,750,1363,914], "metrics": {"rimL":0.1970,"haloL":0.0564,"interiorL":0.1017,"rimContrast":1.9378,"haloSpread":0.2864,"cyan":0.6488,"blue":0.3512,"violet":0.0000,"neutral":0.0000,"offPalette":0.0000,"litRimShare":0.6208}},
+    "master-chat-bubble": {"rect": [273,366,648,440], "metrics": {"rimL":0.3058,"haloL":0.1408,"interiorL":0.1064,"rimContrast":2.8753,"haloSpread":0.4605,"cyan":0.5914,"blue":0.3944,"violet":0.0000,"neutral":0.0142,"offPalette":0.0000,"litRimShare":0.7636}},
+    "master-chat-tile": {"rect": [259,504,506,590], "metrics": {"rimL":0.2944,"haloL":0.0779,"interiorL":0.1345,"rimContrast":2.1891,"haloSpread":0.2644,"cyan":0.9101,"blue":0.0899,"violet":0.0000,"neutral":0.0000,"offPalette":0.0000,"litRimShare":0.6734}},
+    "master-active-agents": {"rect": [256,698,547,888], "metrics": {"rimL":0.2331,"haloL":0.0461,"interiorL":0.0750,"rimContrast":3.1086,"haloSpread":0.1977,"cyan":0.7913,"blue":0.2061,"violet":0.0000,"neutral":0.0026,"offPalette":0.0000,"litRimShare":0.5666}},
+    "master-status-right": {"rect": [1219,157,1520,403], "metrics": {"rimL":0.2664,"haloL":0.0951,"interiorL":0.0635,"rimContrast":4.1979,"haloSpread":0.3569,"cyan":0.2753,"blue":0.3120,"violet":0.3828,"neutral":0.0299,"offPalette":0.0000,"litRimShare":0.7838}}
+  },
+  "envelope": {"rimLMin":0.1023,"interiorLMax":0.2018,"rimContrastMin":0.9774,"haloSpreadMin":0.1186,"offPaletteMax":0.0500},
+  "candidate": "code51-b3e288f",
+  "probes": {
+    "fold-settled-high": {"metrics": {"rimL":0.2871,"haloL":0.1363,"interiorL":0.0455,"rimContrast":6.3126,"haloSpread":0.4749,"cyan":0.9705,"blue":0.0251,"violet":0.0017,"neutral":0.0027,"offPalette":0.0000,"litRimShare":0.6790}, "failures": []},
+    "fold-glassend-high": {"metrics": {"rimL":0.1453,"haloL":0.0768,"interiorL":0.0517,"rimContrast":2.8120,"haloSpread":0.5285,"cyan":0.3364,"blue":0.4919,"violet":0.1715,"neutral":0.0002,"offPalette":0.0000,"litRimShare":0.3243}, "failures": []},
+    "phone-settled-high": {"metrics": {"rimL":0.2891,"haloL":0.1404,"interiorL":0.0455,"rimContrast":6.3553,"haloSpread":0.4858,"cyan":0.9223,"blue":0.0752,"violet":0.0012,"neutral":0.0013,"offPalette":0.0000,"litRimShare":0.6769}, "failures": []},
+    "fold-settled-low": {"metrics": {"rimL":0.1156,"haloL":0.0454,"interiorL":0.0455,"rimContrast":2.5413,"haloSpread":0.3928,"cyan":0.3942,"blue":0.3662,"violet":0.2396,"neutral":0.0000,"offPalette":0.0000,"litRimShare":0.2257}, "failures": []}
+  },
+  "controls": {
+    "hue-rotated-180": {"metrics": {"rimL":0.2522,"haloL":0.1801,"interiorL":0.0878,"rimContrast":2.8710,"haloSpread":0.7141,"cyan":0.0000,"blue":0.0000,"violet":0.0000,"neutral":0.0027,"offPalette":0.9973,"litRimShare":0.6790}, "failures": ["offPalette 0.997 > 0.050"], "expected": "FAIL"},
+    "blank-pane": {"metrics": {"rimL":0.0330,"haloL":0.0330,"interiorL":0.0323,"rimContrast":1.0206,"haloSpread":0.9999,"cyan":0.0000,"blue":0.0000,"violet":0.0000,"neutral":0.0000,"offPalette":0.0000,"litRimShare":0.0000}, "failures": ["rimL 0.033 < 0.102"], "expected": "FAIL"}
+  },
+  "referenceSelfCheck": true,
+  "controlsDiscriminate": true,
+  "gateProbes": ["fold-settled-high","phone-settled-high"],
+  "gate": "PASS",
+  "metricTrusted": true
+}

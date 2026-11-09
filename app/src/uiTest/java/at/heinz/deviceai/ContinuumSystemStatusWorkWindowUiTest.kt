@@ -149,7 +149,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             assertEquals("Original orb stays fixed", orbBounds, field(avatar, "cockpitOrbBounds"))
 
             tap(root, shown(root, "jarvis-work-window:close"))
-            advance(1_400L); draw(root)
+            repeat(14) { advance(100L); draw(root) }
             assertEquals("Closing restores the projection", restScale, field(avatar, "auraScale") as Float, .00001f)
             assertEquals("Closing restores the anchor", restAnchor, field(avatar, "auraAnchorEffective") as Float, .00001f)
         } finally {

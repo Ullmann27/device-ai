@@ -33,6 +33,46 @@ class ChiefBotConversationTest {
     private fun profileData(turn: ChiefBotConversationTurn): JSONObject = JSONObject(
         turn.prompt.lineSequence().dropWhile { !it.startsWith("BOT_PROFILE_JSON") }.drop(1).first())
 
+    @Test fun enablingAndClearingTeamLeavesExistingOwnerAndPrivateBotFilesByteIdentical() = fixture { dir, store, state ->
+        val profile = requireNotNull(store.get("bot-kora"))
+        store.saveWorkingContext(profile.agentId, profile.agentId, "PRIVATE_UPGRADE_NOTE", profile.profileVersion)
+        val conversation = ChiefBotConversation(store).also { it.select(profile.agentId) }
+        val turn = conversation.prepare(profile.agentId, "PRIVATE_UPGRADE_REQUEST", state, model, "upgrade")
+        assertTrue(conversation.complete(turn, "PRIVATE_UPGRADE_REPLY", model, "upgrade"))
+        val oldFiles = dir.walkTopDown().filter { it.isFile }.associate {
+            it.relativeTo(dir).path to it.readBytes()
+        }
+        val calls = java.util.concurrent.atomic.AtomicInteger()
+        val port = object : ChiefTeamModel {
+            override fun readySha256() = model.sha256
+            override fun generate(prompt: String, cancellation: DeliberationCancellation, deadlineMillis: Long): String {
+                assertFalse(prompt.contains("PRIVATE_UPGRADE"))
+                assertFalse(prompt.contains("OWNER_PRIVATE_MEMORY"))
+                calls.incrementAndGet()
+                return "Unverified synthetic analysis."
+            }
+        }
+        val team = ChiefBotTeam(store, port)
+        try {
+            team.initialize()
+            team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), 0)
+            team.submit("team-${java.util.UUID.randomUUID()}", "Review this public text.", 1, true)
+            assertTrue(team.awaitIdle(10_000))
+        } finally { team.close() }
+        val reopened = ChiefBotTeam(store, port)
+        try {
+            reopened.initialize()
+            assertEquals(2, calls.get())
+            assertEquals(ChiefTeamStatus.RESPONSES_RECORDED, reopened.snapshot().tasks.single().status)
+            reopened.clearHistory(1)
+            assertEquals(20, store.page().items.size)
+            assertEquals("PRIVATE_UPGRADE_REPLY", store.loadConversation(profile.agentId, profile.agentId).turns.single().response)
+            oldFiles.forEach { (name, bytes) ->
+                assertArrayEquals("Existing file changed during team upgrade: $name", bytes, File(dir, name).readBytes())
+            }
+        } finally { reopened.close() }
+    }
+
     @Test fun savedPersonalityAndOwnVoiceReachTheCompleteRestrictedRequest() = fixture { _, store, state ->
         val original = requireNotNull(store.get("bot-kora"))
         val renamed = store.rename(original.agentId, "Kora Nord", original.profileVersion)

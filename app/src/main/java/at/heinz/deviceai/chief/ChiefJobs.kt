@@ -34,7 +34,8 @@ data class ChiefJobDeps(
     val eventObserver: (at.heinz.deviceai.cognitive.AgentCognitiveEvent) -> Unit = {},
     // Only an independently allocated model/session may receive cancelGeneration().
     // A shared LiteRT-LM runtime may have other Chief/worker turns in flight and sticky cancellation state.
-    val modelOwnedByJob: Boolean = false
+    val modelOwnedByJob: Boolean = false,
+    val onResult: (at.heinz.deviceai.cognitive.AgentRunResult) -> Unit = {}
 )
 
 /**
@@ -80,6 +81,7 @@ object ChiefJobs {
                     cancellation.throwIfCancelled()
                     val result = orchestrator.run(brief.goal)
                     result.blocker?.let { throw WorkerBlocked(it) }
+                    deps.onResult(result)
                     return result.response
                 } finally {
                     active.compareAndSet(orchestrator, null)

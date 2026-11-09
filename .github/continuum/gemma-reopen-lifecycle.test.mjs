@@ -70,6 +70,11 @@ test('a cold restart verifies the stored file SHA-256 before initializing the en
  assert.match(catalog,/if \(verifyBytes && sha256\(file\) != record\.sha256\) return null/);
  assert.match(runtime,/newEngine\.initialize\(\)/);
 });
+test('successful native unload clears model identity and its thread diagnostic together',()=>{
+ const close=runtime.slice(runtime.indexOf('private fun closeResources('),runtime.indexOf('private fun deliver('));
+ assert.match(close,/if \(result\.isSuccess\) \{[\s\S]*loadedModel = null\s+computeThreads = null/);
+ assert.match(close,/state = if \(result\.isSuccess\) LocalModelState\.EMPTY else LocalModelState\.FAILED/);
+});
 test('the old model download is never required on restart',()=>{
  assert.doesNotMatch(policy,/\b(import|fetch|download|network|http)\s*\(/);
  assert.doesNotMatch(restore,/importModel\(|showModelImportDialog\(|startActivityForResult\(/);

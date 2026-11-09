@@ -1,9 +1,8 @@
 package at.heinz.deviceai.ui
 
 import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.cos
 import kotlin.math.hypot
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
 
@@ -11,7 +10,7 @@ import kotlin.math.sin
  * Cinematic layers of the work-window construct, drawn through the platform-neutral [ContinuumPainter] in dp:
  * the light anchor and its beam, the glass depth layers behind the front frame, the dust motes along the rim and the
  * energy rim while the task really runs. Pure geometry is exposed for tests and for the Java2D preview; nothing here
- * reads a clock or allocates per frame beyond the small mote list.
+ * reads a clock. The live draw path reuses its materials, paths and particle storage.
  */
 object HollywoodFuiCinematics {
     const val MAX_MOTES = 24
@@ -32,6 +31,10 @@ object HollywoodFuiCinematics {
 
     /** Presentation budget of this layer, derived from the single cockpit budget (never a second quality model). */
     data class Budget(val motes: Int, val bloom: Boolean, val frameDelayMs: Long, val animate: Boolean) {
+        val glassLayers: Int get() = if (!animate) 1 else if (bloom) GLASS_LAYERS else 2
+        fun needsLiveFrames(working: Boolean, reducedMotion: Boolean, visible: Boolean,
+                            enabled: Boolean, closing: Boolean): Boolean =
+            animate && working && !reducedMotion && visible && enabled && !closing
         companion object {
             val FULL = Budget(MAX_MOTES, bloom = true, frameDelayMs = 16L, animate = true)
 
@@ -76,24 +79,36 @@ object HollywoodFuiCinematics {
 
     /** Deterministic dust motes drifting along the rim; same [seed] and [timeMs] give the same frame. */
     fun motes(box: Box, timeMs: Long, count: Int, seed: Int): List<Mote> {
-        if (count <= 0 || box.width <= 0f || box.height <= 0f) return emptyList()
+        val result = ArrayList<Mote>(count.coerceIn(0, MAX_MOTES))
+        visitMotes(box, timeMs, count, seed) { _, x, y, radius, alpha -> result += Mote(x, y, radius, alpha) }
+        return result
+    }
+
+    private inline fun visitMotes(box: Box, timeMs: Long, count: Int, seed: Int,
+                                 draw: (Int, Float, Float, Float, Float) -> Unit) {
+        if (count <= 0 || box.width <= 0f || box.height <= 0f) return
         val perimeter = 2f * (box.width + box.height)
-        val result = ArrayList<Mote>(count)
-        for (index in 0 until count) {
+        val seconds = timeMs.coerceAtLeast(0L) / 1000.0
+        for (index in 0 until count.coerceAtMost(MAX_MOTES)) {
             val h = hash(seed * 7919 + index * 104_729)
             val speed = .35f + (h and 0xFF) / 255f * .65f
             val offset = ((h ushr 8) and 0xFFFF) / 65535f
             val phase = ((h ushr 24) and 0xFF) / 255f
-            val along = ((timeMs / 1000f) * speed * .08f + offset) % 1f
-            val distance = along * perimeter
-            val (px, py) = alongRim(box, distance)
-            val wobble = sin(2f * PI.toFloat() * (timeMs / 1000f * .5f + phase)) * 4f
-            val outward = outwardNormal(box, px, py)
-            val twinkle = .45f + .55f * (.5f + .5f * sin(2f * PI.toFloat() * (timeMs / 1000f * (.6f + speed) + phase)))
-            result += Mote(px + outward.first * wobble, py + outward.second * wobble,
-                radius = 1.1f + ((h ushr 16) and 0xFF) / 255f * 1.7f, alpha = twinkle.coerceIn(0f, 1f))
+            val distance = (((seconds * speed * .08 + offset) % 1.0) * perimeter).toFloat()
+            val wobble = sin(2.0 * PI * (seconds * .5 + phase)).toFloat() * 4f
+            val x: Float
+            val y: Float
+            when {
+                distance < box.width -> { x = box.left + distance; y = box.top - wobble }
+                distance < box.width + box.height -> { x = box.right + wobble; y = box.top + distance - box.width }
+                distance < 2f * box.width + box.height -> {
+                    x = box.right - (distance - box.width - box.height); y = box.bottom + wobble
+                }
+                else -> { x = box.left - wobble; y = box.bottom - (distance - 2f * box.width - box.height) }
+            }
+            val twinkle = .45f + .55f * (.5f + .5f * sin(2.0 * PI * (seconds * (.6f + speed) + phase)).toFloat())
+            draw(index, x, y, 1.1f + ((h ushr 16) and 0xFF) / 255f * 1.7f, twinkle.coerceIn(0f, 1f))
         }
-        return result
     }
 
     data class Beam(val x0: Float, val y0: Float, val x1: Float, val y1: Float) {
@@ -114,12 +129,23 @@ object HollywoodFuiCinematics {
     // ---- drawing -------------------------------------------------------------------------------------------------
 
     class Painterly(private val accent: Int) {
-        private val glassFill = Fill.Linear(0f, 0f, 0f, 1f,
-            intArrayOf(Argb.of(205, 0x0A, 0x1C, 0x3E), Argb.of(225, 0x04, 0x0A, 0x22)))
-        private val glassSheen = Fill.Linear(0f, 0f, 1f, 0f,
-            intArrayOf(Argb.withAlpha(JarvisDesign.Colors.cyan, .22f), Argb.withAlpha(JarvisDesign.Colors.violet, .10f), 0))
-        private val rim = Fill.Linear(0f, 0f, 1f, 1f,
-            intArrayOf(JarvisDesign.Colors.cyan, JarvisDesign.Colors.cardRimEnd, JarvisDesign.Colors.violet))
+        private class GlassMaterial(val width: Float, val height: Float, accent: Int) {
+            val fill = Fill.Linear(0f, 0f, width * .25f, height,
+                intArrayOf(Argb.of(180, 0x10, 0x2C, 0x46), Argb.of(220, 0x03, 0x08, 0x18)))
+            val sheen = Fill.Linear(0f, 0f, width, height * .35f,
+                intArrayOf(Argb.withAlpha(accent, .20f), Argb.withAlpha(JarvisDesign.Colors.violet, .06f), 0),
+                floatArrayOf(0f, .42f, 1f))
+            val rim = Fill.Linear(0f, 0f, width, height,
+                intArrayOf(accent, JarvisDesign.Colors.cyanSoft, JarvisDesign.Colors.violet, JarvisDesign.Colors.magenta),
+                floatArrayOf(0f, .22f, .72f, 1f))
+            val reflection = VectorPath().moveTo(0f, 0f).lineTo(width * .68f, 0f)
+                .lineTo(width * .28f, height * .42f).lineTo(0f, height * .55f).close()
+        }
+        private var material: GlassMaterial? = null
+        private val gridPath = VectorPath()
+        private var gridBox: Box? = null
+        private val anchorHalo = Fill.Radial(0f, 0f, 1f,
+            intArrayOf(Argb.withAlpha(accent, .55f), Argb.withAlpha(accent, 0f)))
         private val glint = Fill.Solid(JarvisDesign.Colors.glowCore)
         private val accentFill = Fill.Solid(accent)
         private val violet = Fill.Solid(JarvisDesign.Colors.violet)
@@ -127,42 +153,59 @@ object HollywoodFuiCinematics {
         /** Anchor halo, expanding ring and the beam towards the construct; fades as the brackets take over. */
         fun drawAnchor(p: ContinuumPainter, originX: Float, originY: Float, box: Box,
                        frame: HollywoodFuiConstruct.Frame, bloom: Boolean) {
-            val strength = frame.anchor * (1f - frame.brackets * .85f) * frame.closeFrame
+            val strength = frame.anchor * (1f - frame.brackets) * frame.closeFrame
             val pulse = frame.pulse
-            if (strength <= .01f && pulse <= .01f) return
+            val glow = max(strength, pulse * frame.closeFrame)
+            if (glow <= .01f) return
             val haloRadius = 10f + 26f * frame.anchor + 14f * pulse
             if (bloom) p.setAdditive(true)
-            p.fillCircle(originX, originY, haloRadius,
-                Fill.Radial(originX, originY, haloRadius, intArrayOf(Argb.withAlpha(accent, .55f), Argb.withAlpha(accent, 0f))),
-                (.35f + .45f * pulse) * frame.closeFrame)
-            p.strokeCircle(originX, originY, 6f + 34f * frame.anchor, 1.2f, accentFill, .6f * strength)
-            p.fillCircle(originX, originY, 2.4f + 1.6f * pulse, glint, (.6f + .4f * pulse) * frame.closeFrame)
+            if (bloom) drawHalo(p, originX, originY, haloRadius, (.35f + .45f * pulse) * glow)
+            p.strokeCircle(originX, originY, 6f + 34f * frame.anchor, 1.2f, accentFill, .6f * glow)
+            p.fillCircle(originX, originY, 2.4f + 1.6f * pulse, glint, (.6f + .4f * pulse) * glow)
             val beam = anchorBeam(originX, originY, box, frame.anchor)
             if (beam.length > 1f) {
-                p.drawLine(beam.x0, beam.y0, beam.x1, beam.y1, 7f, accentFill, .16f * strength)
-                p.drawLine(beam.x0, beam.y0, beam.x1, beam.y1, 1.6f, glint, .9f * strength)
-                p.fillCircle(beam.x1, beam.y1, 3.2f, glint, .95f * strength)
-                p.fillCircle(beam.x1, beam.y1, 9f, Fill.Radial(beam.x1, beam.y1, 9f,
-                    intArrayOf(Argb.withAlpha(accent, .5f), Argb.withAlpha(accent, 0f))), strength)
+                if (bloom) p.drawLine(beam.x0, beam.y0, beam.x1, beam.y1, 7f, accentFill, .16f * glow)
+                p.drawLine(beam.x0, beam.y0, beam.x1, beam.y1, 1.6f, glint, .9f * glow)
+                p.fillCircle(beam.x1, beam.y1, 3.2f, glint, .95f * glow)
+                if (bloom) drawHalo(p, beam.x1, beam.y1, 9f, glow)
             }
             if (bloom) p.setAdditive(false)
         }
 
+        private fun drawHalo(p: ContinuumPainter, x: Float, y: Float, radius: Float, alpha: Float) {
+            p.save()
+            p.translate(x, y)
+            p.scale(radius, radius)
+            p.fillCircle(0f, 0f, 1f, anchorHalo, alpha)
+            p.restore()
+        }
+
         /** The glass sheets behind the front frame: dark glass, cyan→violet Fresnel rim, glint on the top edge. */
-        fun drawGlassLayers(p: ContinuumPainter, box: Box, frame: HollywoodFuiConstruct.Frame, radius: Float) {
+        fun drawGlassLayers(p: ContinuumPainter, box: Box, frame: HollywoodFuiConstruct.Frame, radius: Float,
+                            layers: Int = GLASS_LAYERS) {
             val alphaScale = frame.closeGlass
-            if (frame.glass <= 0f || alphaScale <= .01f) return
-            for (index in GLASS_LAYERS downTo 1) {
+            if (frame.glass <= 0f || alphaScale <= .01f || box.width <= 0f || box.height <= 0f) return
+            val m = material?.takeIf { it.width == box.width && it.height == box.height }
+                ?: GlassMaterial(box.width, box.height, accent).also { material = it }
+            for (index in layers.coerceIn(0, GLASS_LAYERS) downTo 1) {
                 val layer = glassLayer(box, index, frame.glass)
                 val a = layer.alpha * alphaScale
                 if (a <= .01f) continue
                 val b = layer.box
-                p.fillRoundRect(b.left, b.top, b.right, b.bottom, radius, glassFill, a)
-                p.fillRoundRect(b.left, b.top, b.right, b.top + b.height * .45f, radius, glassSheen, a)
-                p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius, 3.5f, rim, .18f * a)
-                p.strokeRoundRect(b.left, b.top, b.right, b.bottom, radius, 1.2f, rim, a)
-                p.drawLine(b.left + radius, b.top, b.right - radius, b.top, 1.6f, glint, .55f * a)
-                p.drawLine(b.right, b.top + radius, b.right, b.bottom - radius, 1.2f, glint, .35f * a)
+                p.save()
+                p.translate(b.left, b.top)
+                p.scale(layer.scale, layer.scale)
+                p.fillRoundRect(0f, 0f, m.width, m.height, radius, m.fill, a)
+                // A clipped, oblique reflection, not a second translucent rectangle across the text.
+                p.save()
+                p.clipRoundRect(0f, 0f, m.width, m.height, radius)
+                p.fillPath(m.reflection, m.sheen, a)
+                p.restore()
+                p.strokeRoundRect(0f, 0f, m.width, m.height, radius, 3.5f, m.rim, .14f * a)
+                p.strokeRoundRect(0f, 0f, m.width, m.height, radius, 1f, m.rim, a)
+                p.drawLine(radius, 0f, m.width * .42f, 0f, 1.2f, glint, .65f * a)
+                p.drawLine(m.width, m.height * .62f, m.width, m.height - radius, 1f, violet, .5f * a)
+                p.restore()
             }
         }
 
@@ -177,10 +220,10 @@ object HollywoodFuiCinematics {
                 p.strokeRoundRect(box.left, box.top, box.right, box.bottom, radius, 6f, accentFill, (.12f + .14f * breath) * visible)
                 p.strokeRoundRect(box.left, box.top, box.right, box.bottom, radius, 1.6f, glint, (.45f + .45f * breath) * visible)
             }
-            motes(box, timeMs, motes, seed).forEachIndexed { index, mote ->
+            visitMotes(box, timeMs, motes, seed) { index, x, y, radius, alpha ->
                 val fill = when (index % 3) { 0 -> glint; 1 -> accentFill; else -> violet }
-                if (bloom) p.fillCircle(mote.x, mote.y, mote.radius * 2.6f, fill, mote.alpha * .18f * visible)
-                p.fillCircle(mote.x, mote.y, mote.radius, fill, mote.alpha * visible)
+                if (bloom) p.fillCircle(x, y, radius * 2.6f, fill, alpha * .18f * visible)
+                p.fillCircle(x, y, radius, fill, alpha * visible)
             }
             if (bloom) p.setAdditive(false)
         }
@@ -214,14 +257,16 @@ object HollywoodFuiCinematics {
             while (y < box.bottom) { p.drawLine(box.left, y, box.right, y, .7f, accentFill, .16f * a); y += step }
             p.drawLine(box.centerX, box.top, box.centerX, box.bottom, .7f, violet, .10f * a)
             p.drawLine(box.left, box.centerY, box.right, box.centerY, .7f, violet, .10f * a)
-            val cut = min(14f, min(box.width, box.height) * .12f)
-            val r = box.inset(1.2f)
-            val path = VectorPath()
-            path.moveTo(r.left + cut, r.top); path.lineTo(r.right - cut, r.top); path.lineTo(r.right, r.top + cut)
-            path.lineTo(r.right, r.bottom - cut); path.lineTo(r.right - cut, r.bottom); path.lineTo(r.left + cut, r.bottom)
-            path.lineTo(r.left, r.bottom - cut); path.lineTo(r.left, r.top + cut); path.close()
-            p.strokePath(path, 1.3f, accentFill, .80f * a)
-            if (bloom) p.strokePath(path, 5f, accentFill, .12f * a)
+            if (gridBox != box) {
+                val cut = min(14f, min(box.width, box.height) * .12f)
+                val r = box.inset(1.2f)
+                gridBox = box
+                gridPath.reset().moveTo(r.left + cut, r.top).lineTo(r.right - cut, r.top).lineTo(r.right, r.top + cut)
+                    .lineTo(r.right, r.bottom - cut).lineTo(r.right - cut, r.bottom).lineTo(r.left + cut, r.bottom)
+                    .lineTo(r.left, r.bottom - cut).lineTo(r.left, r.top + cut).close()
+            }
+            p.strokePath(gridPath, 1.3f, accentFill, .80f * a)
+            if (bloom) p.strokePath(gridPath, 5f, accentFill, .12f * a)
             if (frame.scanEnabled) {
                 val sy = box.top + box.height * frame.scanPhase
                 if (bloom) p.drawLine(box.left + 6f, sy, box.right - 6f, sy, 5f, accentFill, .07f * a)
@@ -238,31 +283,4 @@ object HollywoodFuiCinematics {
         return h
     }
 
-    private fun alongRim(box: Box, distance: Float): Pair<Float, Float> {
-        var d = distance
-        if (d < box.width) return (box.left + d) to box.top
-        d -= box.width
-        if (d < box.height) return box.right to (box.top + d)
-        d -= box.height
-        if (d < box.width) return (box.right - d) to box.bottom
-        d -= box.width
-        return box.left to (box.bottom - d.coerceAtMost(box.height))
-    }
-
-    private fun outwardNormal(box: Box, x: Float, y: Float): Pair<Float, Float> {
-        val dl = abs(x - box.left); val dr = abs(box.right - x); val dt = abs(y - box.top); val db = abs(box.bottom - y)
-        val m = minOf(dl, dr, dt, db)
-        return when (m) {
-            dl -> -1f to 0f
-            dr -> 1f to 0f
-            dt -> 0f to -1f
-            else -> 0f to 1f
-        }
-    }
-
-    @Suppress("unused")
-    private fun polar(cx: Float, cy: Float, r: Float, deg: Float): Pair<Float, Float> {
-        val rad = Math.toRadians(deg.toDouble())
-        return (cx + cos(rad).toFloat() * r) to (cy + sin(rad).toFloat() * r)
-    }
 }

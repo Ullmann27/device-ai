@@ -1,0 +1,5 @@
+
+> continuum-avatar-asset-verification@1.0.0 validate
+> node validate-glb.mjs ../../assets/avatar/jarvis-research-v1.glb
+
+{"sha256":"63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca","passed":62,"failed":0,"khronosErrors":0,"khronosWarnings":0}

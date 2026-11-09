@@ -1,28 +1,27 @@
 #!/usr/bin/env bash
-# Code 50 (0.3.49 / versionCode 50): Originalsignierung und GitHub-Release.
-# Abgeleitet vom Code-48-Präzedenzweg (Besitzerentscheidung C, 08.11.2026), aber NICHT dessen Skript:
-# andere Jobnamen (android-host), anderes Artefakt- und Receipt-Schema, exakte Bindung an einen QA-Lauf.
+# Code 51 (0.3.50 / versionCode 51), owner-authorized channel 09.11.2026.
+# Historical filename retained for the already registered workflow. Code50 branch is unchanged.
 # Modi: preflight (ohne Geheimnisse) | sign (nur im geschützten Environment).
-# Dieses Skript liest, druckt oder kopiert P12/Passwort niemals; es verwendet sie nur über Umgebungsvariablen.
+# Signing material is used only inside the protected job and never printed or exported.
 set -Eeuo pipefail
 set +x
 umask 077
-fail() { printf '::error::CODE50_SIGN_%s\n' "$1" >&2; exit 69; }
+fail() { printf '::error::CODE51_SIGN_%s\n' "$1" >&2; exit 69; }
 
 mode="${1:-}"
 [[ "$mode" == preflight || "$mode" == sign ]] || fail BAD_MODE
 
 repo="Ullmann27/device-ai"
-branch="chatgpt/code50-qa-staging-20261108"
+branch="copilot/code51-master-integrator-20261108"
 qa_workflow_path=".github/workflows/continuum-code50-github-qa.yml"
 environment_name="continuum-original-signing"
 owner_login="Ullmann27"
 fingerprint="6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23"
 pkg="at.heinz.deviceai.continuumlocal"
-code="50"
-name_version="0.3.49"
-artifact="Code50-UNSIGNED-NOT-INSTALLABLE"
-unsigned_name="Continuum-Code50-UNSIGNED-NOT-INSTALLABLE.apk"
+code="51"
+name_version="0.3.50"
+artifact="Code51-UNSIGNED-NOT-INSTALLABLE"
+unsigned_name="Continuum-Code51-UNSIGNED-NOT-INSTALLABLE.apk"
 
 source_sha="${SOURCE_SHA:-}"
 qa_run="${QA_RUN_ID:-}"
@@ -62,18 +61,17 @@ unset run
 jobs="$(gh api "repos/$repo/actions/runs/$qa_run/jobs?per_page=100")" || fail QA_JOBS_UNREADABLE
 jq -e '[.jobs[]|select(.name=="node-backend" and .conclusion=="success")]|length==1' <<< "$jobs" >/dev/null || fail NODE_BACKEND_NOT_GREEN
 jq -e '[.jobs[]|select(.name=="android-host" and .conclusion=="success")]|length==1' <<< "$jobs" >/dev/null || fail ANDROID_HOST_NOT_GREEN
-lifecycle="$(jq -r '[.jobs[]|select(.name=="android-lifecycle-jdk21")|.conclusion]|first // "NOT_RUN"' <<< "$jobs")"
-[[ "$lifecycle" =~ ^[a-z_A-Z]+$ ]] || lifecycle="UNKNOWN"
+lifecycle="PASS_REQUIRED_IN_ANDROID_HOST"
 unset jobs
 echo CHECKPOINT=EXACT_SOURCE_QA_RUN_GREEN
 echo "INFO=lifecycle_jdk21_job=$lifecycle"
 
-# 3. Kein vorhandenes Release, und Code 50 muss höher als das aktuelle GitHub-Latest sein.
+# 3. Never publish over an existing/newer release or accept unreadable latest metadata.
 if gh release view "$tag" --repo "$repo" >/dev/null 2>&1; then fail RELEASE_ALREADY_EXISTS; fi
-latest_tag="$(gh api "repos/$repo/releases/latest" --jq .tag_name 2>/dev/null || true)"
-if [[ "$latest_tag" =~ ^continuum-local-code([0-9]{2,4})- ]]; then
-  [[ "${BASH_REMATCH[1]}" -lt "$code" ]] || fail NOT_HIGHER_THAN_LATEST_RELEASE
-fi
+latest_tag="$(gh api "repos/$repo/releases/latest" --jq .tag_name)" || fail LATEST_RELEASE_UNREADABLE
+[[ "$latest_tag" =~ ^continuum-local-code([0-9]{2,4})-[0-9a-f]{40}$ ]] || fail LATEST_RELEASE_IDENTITY_INVALID
+[[ "${BASH_REMATCH[1]}" -lt "$code" ]] || fail NOT_HIGHER_THAN_LATEST_RELEASE
+[[ "$latest_tag" == continuum-local-code50-473f79727e4b52509cc7d1af71e59b80ab9b6be5 ]] || fail CODE50_BASELINE_CHANGED
 echo CHECKPOINT=RELEASE_PREFLIGHT_VALID
 [[ "$mode" == sign ]] || { echo STATUS=PREFLIGHT_OK; exit 0; }
 
@@ -88,13 +86,14 @@ grep -Eq "^[0-9a-f]{64}  ${unsigned_name//./[.]}\$" "$tmp/unsigned/SHA256SUMS.tx
 (cd "$tmp/unsigned" && sha256sum -c SHA256SUMS.txt >/dev/null) || fail UNSIGNED_APK_SHA_MISMATCH
 receipt="$tmp/unsigned/BUILD-INFO.txt"
 test -s "$receipt" || fail QA_RECEIPT_MISSING
-for field in "status=UNSIGNED_QA_NOT_INSTALLABLE" "source_sha=$source_sha" "package=$pkg" "versionCode=$code" "versionName=$name_version" "originalSigner=NOT_USED" "qa_run_id=$qa_run" "qa_ref=refs/heads/$branch" "tests_total=4032" "tests_failed=0" "tests_errors=0" "tests_skipped=20"; do
+for field in "status=UNSIGNED_QA_NOT_INSTALLABLE" "source_sha=$source_sha" "package=$pkg" "versionCode=$code" "versionName=$name_version" "originalSigner=NOT_USED" "qa_run_id=$qa_run" "qa_ref=refs/heads/$branch" "tests_total=4200" "tests_failed=0" "tests_errors=0" "tests_skipped=18" "lifecycle_jdk21=PASS" "code50_apk_sha256=38b39da66a96d8be08b84937dd6412868fa279eb477a3ff5700d9195611a2778"; do
   grep -Fxq "$field" "$receipt" || fail QA_RECEIPT_MISMATCH
 done
 tools="$ANDROID_HOME/build-tools/35.0.0"
 test -x "$tools/apksigner" && test -x "$tools/aapt2" && test -x "$tools/zipalign" || fail ANDROID_SIGN_TOOLS_MISSING
 badging="$("$tools/aapt2" dump badging "$unsigned")" || fail UNSIGNED_BADGING_FAILED
 grep -Fq "package: name='$pkg' versionCode='$code' versionName='$name_version'" <<< "$badging" || fail UNSIGNED_PACKAGE_VERSION_MISMATCH
+grep -Fxq "native-code: 'arm64-v8a'" <<< "$badging" || fail UNSIGNED_ABI_MISMATCH
 if "$tools/apksigner" verify "$unsigned" >/dev/null 2>&1; then fail UNSIGNED_APK_UNEXPECTEDLY_SIGNED; fi
 echo CHECKPOINT=UNSIGNED_APK_HASH_PACKAGE_AND_SIGNATURE_STATE_VALID
 
@@ -139,16 +138,16 @@ echo CHECKPOINT=SIGNED_APK_CERTIFICATE_PACKAGE_AND_HASH_VERIFIED
 
 # 7. Entwurf anlegen, Readback prüfen, erst dann veröffentlichen.
 cat > "$tmp/notes.txt" <<EOF
-Continuum Lokal Code 50 / $name_version (versionCode $code). Originalsigniert.
+Continuum Lokal Code $code / $name_version (versionCode $code). Originalsigniert.
 Quelle: $source_sha
 Paket: $pkg
 Zertifikat SHA-256: $fingerprint
 APK SHA-256: $digest
 Größe in Bytes: $size
 QA-Lauf (GitHub, exakt dieser Commit): https://github.com/$repo/actions/runs/$qa_run
-JDK-21-Lifecycle-Job: $lifecycle (gesondert, blockiert die Freigabe nicht)
+JDK-21-Lifecycle: $lifecycle (required, included in the fully green Android suite).
 Echte Fold7-Geräteprüfung (Thermik, Sprache, Avatar, PDF, Rotation, Update): NICHT AUSGEFÜHRT.
-Installiert auf Code 48? Manuelles Update-in-place mit dieser APK, ohne Deinstallation (gleiche Signatur, höherer versionCode). Der eingebaute Update-Knopf ab Code 50 prüft zusätzlich diesen GitHub-Kanal.
+Code50-to-Code51 update compatibility: same package and original certificate, higher versionCode, unchanged existing storage formats. Private data preservation regression passed; a real-device update/data comparison is NOT_RUN. Install only as an update, never uninstall or clear app data. The Code50 updater also validates this GitHub channel.
 EOF
 gh release create "$tag" "$tmp/$name" "$tmp/BUILD-INFO.txt" --repo "$repo" --target "$source_sha" --title "Continuum Lokal $name_version (Code $code)" --notes-file "$tmp/notes.txt" --draft --latest=false >/dev/null || fail GITHUB_DRAFT_CREATE_FAILED
 mkdir "$tmp/readback"

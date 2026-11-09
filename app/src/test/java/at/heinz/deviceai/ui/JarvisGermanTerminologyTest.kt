@@ -9,7 +9,7 @@ import org.junit.Test
 /** Owner order 2026-11-05: every visible cockpit term is German; routing IDs stay unchanged. */
 class JarvisGermanTerminologyTest {
     private val owner = mapOf("home" to "Start", "chat" to "Gespräch", "memory" to "Gedächtnis",
-        "logic" to "Denken und Planen", "research" to "Forschung", "agents" to "Assistenten", "tasks" to "Aufgaben",
+        "logic" to "Denken und Planen", "research" to "Forschung", "agents" to "Mein KI-Team", "tasks" to "Aufgaben",
         "web" to "Internet", "learning" to "Lernen", "device" to "Gerätesteuerung", "system" to "Systemstatus")
     private val english = Regex("\\b(Home|Chat|Memory|Logic|Research|Agents|Tasks|Web|Learning|Device|Control|" +
         "Model|Mode|Local|Active|Current|Flow|Activity|Your|Camera|Brain|Reason|Evolve|Unified|Companion)\\b")

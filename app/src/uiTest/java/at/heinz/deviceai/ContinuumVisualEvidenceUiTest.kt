@@ -168,7 +168,7 @@ class ContinuumVisualEvidenceUiTest {
         assertSame("Work area uses the original window", root, work.rootView)
         assertSame("Systemstatus must not create AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
         assertTrue("Opening has an intermediate scale", panel.scaleX > 0f && panel.scaleX < 1f)
-        assertTrue("Opening has visible content", panel.alpha > 0f && panel.alpha <= 1f)
+        assertEquals("Content stays hidden until the cinematic data phase", 0f, panel.alpha, .001f)
         assertProtectedRegions(work, head)
         assertTrue("Opening reaches the existing avatar gaze", avatarPose(head).gazeDirected)
         assertFalse("Directed glance is not camera tracking", avatarPose(head).gazeObserved)
@@ -242,8 +242,12 @@ class ContinuumVisualEvidenceUiTest {
             close.height / close.resources.displayMetrics.density >= 48f)
         assertTrue("Close receives a real touch", touch(root, close, true))
         advance(80L); measure(root, w, h)
-        assertTrue("Closing remains visible between frames", work.isShown)
-        assertTrue("Closing has an intermediate scale", panel.scaleX > 0f && panel.scaleX < 1f)
+        assertTrue("Closing remains visible during data fade", work.isShown)
+        assertEquals("Data fades before the frame folds", 1f, panel.scaleX, .001f)
+        assertTrue("Data starts fading during the first close phase", panel.alpha > 0f && panel.alpha < 1f)
+        advance(160L); measure(root, w, h)
+        assertTrue("Closing frame must visibly fold after data fade", work.isShown &&
+            panel.scaleX > 0f && panel.scaleX < 1f)
         assertProtectedRegions(work, head)
         capture(root, "$tag-6c-systemstatus-closing", w, h)
 

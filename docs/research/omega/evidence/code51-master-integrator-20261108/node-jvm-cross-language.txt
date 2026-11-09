@@ -1,0 +1,17 @@
+✔ actual registry snapshot constrains the existing planner without granting authority (13.627362ms)
+✔ self-enrolled model offer outside registry cannot create a route (1.091339ms)
+✔ task hash, ID, output, deadline and actual input size stay bound (2.556805ms)
+✔ insufficient RAM/runtime/output and unsupported task/backend exclude node (1.892178ms)
+✔ explicit assignment cannot be replaced with another enrolled node (0.299464ms)
+✔ expired or future snapshot fails closed; duplicated and malformed nodes rejected (2.190471ms)
+✔ remote consent and private-context rules still belong to existing planner (0.673299ms)
+✔ resource snapshot is not permission and cannot attest model bytes or locality (0.246225ms)
+✔ native JVM export feeds Node byte-for-byte when cross-language runner is configured (0.627661ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 95.302525

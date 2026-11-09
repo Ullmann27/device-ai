@@ -34,6 +34,8 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     private var legacyIntentSerial = 0L
     private var thinkingAtMillis = Long.MIN_VALUE
     private val retiredWindows = LinkedHashSet<String>()
+    // An expired glance still needs one terminal event if the physical window closes afterwards.
+    private val closedExpiredWindows = LinkedHashSet<String>()
     private val seenConfirmations = LinkedHashSet<String>()
 
     @Synchronized fun attach(newSink: AvatarSink) {
@@ -166,17 +168,20 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
      * seine Augen auf das Dokument“ while it is processed). Not a timed glance: the eyes stay on the window and read until
      * [windowWorkEnded], STOP, listening or speech; [AvatarPoseReducer.MAX_WINDOW_WORK_MS] only bounds a lost end event.
      * Admitted again for a window whose opening glance already expired – the work is a new real event.
+     * Work starting during listening/speech is retained without taking the eyes; the same lease resumes afterwards.
      */
     @Synchronized fun windowWorkStarted(windowId: String, target: GazeTarget): Boolean {
         val at = clock()
         expireAnimationIntents(at)
-        if (windowId.isBlank() || state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) return false
-        windowIntent?.takeIf { it.id != windowId }?.let { remember(retiredWindows, it.id) }
-        windowIntent = WindowIntent(windowId, GazeTarget(
+        if (windowId.isBlank()) return false
+        val work = WindowIntent(windowId, GazeTarget(
             target.x.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_X, AvatarPoseReducer.MAX_DIRECTED_GAZE_X),
             target.y.coerceIn(-AvatarPoseReducer.MAX_DIRECTED_GAZE_Y, AvatarPoseReducer.MAX_DIRECTED_GAZE_Y)),
             at, AvatarPoseReducer.MAX_WINDOW_WORK_MS, yieldsToObservedGaze = false, reading = true)
-        workIntent = windowIntent
+        workIntent = work
+        if (state == AvatarState.LISTENING || state == AvatarState.SPEAKING || utterance != null) return true
+        windowIntent?.takeIf { it.id != windowId }?.let { remember(retiredWindows, it.id) }
+        windowIntent = work
         thinkingAtMillis = Long.MIN_VALUE
         publishAnimationIntents(at)
         return true
@@ -198,7 +203,16 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     @Synchronized fun windowClosed(windowId: String): Boolean {
         if (workIntent?.id == windowId) workIntent = null
-        if (windowIntent?.id != windowId) return false
+        if (windowIntent?.id != windowId) {
+            // A refit may expire the short opening glance before the real close callback.
+            // The reducer otherwise retains the old pose at its last event time. Refresh it
+            // exactly once, but never cancel a newer window's gaze or replay stale closes.
+            if (windowIntent == null && windowId in retiredWindows && windowId !in closedExpiredWindows) {
+                remember(closedExpiredWindows, windowId)
+                publishAnimationIntents(clock())
+            }
+            return false
+        }
         remember(retiredWindows, windowId)
         windowIntent = null
         publishAnimationIntents(clock())

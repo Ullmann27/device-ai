@@ -1,0 +1,69 @@
+{
+  "schema": "continuum-development-evidence-v1",
+  "scope": "BOT_UNIVERSE_HOST_CONTRACTS_ONLY",
+  "branch": "astra/continuum-bot-universe-20261108",
+  "baseCommit": "f153758dfd19d1c12f6fe63b6c4c4bd1da95e4cb",
+  "testedCommit": "5a16c1efa01f83a3b181b712fb7eca5874ea5a02",
+  "mainCompiledAt": "18d8a42935f966a80f4599dc58e720fbe0223db7",
+  "productionSourceUnchangedSinceCompilation": true,
+  "experiments": ["EXP-11", "EXP-12"],
+  "environment": {
+    "jvm": "Temurin 27+35",
+    "kotlin": "2.2.21",
+    "jvmTarget": 17,
+    "junit": "4.13.2",
+    "locale": "C.UTF-8",
+    "testUser": "non-root",
+    "node": "26.12.1",
+    "nativeLiteRt": false
+  },
+  "mainSourceCompile": {
+    "status": "PASS",
+    "kotlinFiles": 535,
+    "boundary": "SDK-less; generated Android glue and compile-only LiteRT stub"
+  },
+  "junit": {
+    "status": "PASS",
+    "classes": 637,
+    "tests": 3599,
+    "failures": 0,
+    "logSha256": "b0a280b9a6d99240b6326baca44b4a5d6493cae2f2ecdb9bbe22d78ae9484fd7",
+    "modelPort": "EXPLICIT_TEST_DOUBLE_NOT_LLM_PROOF"
+  },
+  "supplementalChecks": {
+    "status": "PASS",
+    "executablePrograms": 4,
+    "nonExecutableHelpers": 1
+  },
+  "nodeRegression": {
+    "status": "PASS",
+    "tests": 29,
+    "failures": 0,
+    "logSha256": "d95131cf106e6cadbab2cb8c108bd81bb6f3c4186558aa5bbc3c62cee1fa418b",
+    "files": [
+      ".github/continuum/ccc1-bot-assignment.test.mjs",
+      ".github/continuum/ccc1-bot-report.test.mjs",
+      ".github/continuum/coding-service.test.mjs",
+      ".github/continuum/coding-task.test.mjs"
+    ],
+    "releaseHostAcceptance": false
+  },
+  "gradleWidgetQa": {
+    "status": "BLOCKED",
+    "compatibleRetryJdk": "Temurin 21.0.13+9",
+    "reason": "AGP_8_10_0_PLUGIN_UNRESOLVED",
+    "widgetTestsExecuted": false
+  },
+  "realCodingProbe": {
+    "status": "BLOCKED",
+    "reason": "CODING_ISOLATION_UNAVAILABLE",
+    "actualModelCalls": 0,
+    "verifiedKotlinRepair": false,
+    "dynamicAndroidCcc1BotAssignment": "NOT_CONNECTED"
+  },
+  "deviceVerified": false,
+  "apkBuilt": false,
+  "signed": false,
+  "published": false,
+  "approvedForMerge": false
+}

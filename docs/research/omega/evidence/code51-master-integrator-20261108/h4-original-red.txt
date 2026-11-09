@@ -1,0 +1,28 @@
+JUnit version 4.13.2
+.............E...E...E
+Time: 0.097
+There were 3 failures:
+1) boundedNormalizationDoesNotTruncateDifferentOversizedWordsIntoTheSameCue(at.heinz.deviceai.cognitive.SituationReturnMorphologyTest)
+java.lang.AssertionError: expected:<NoMatch> but was:<Resolved(threadId=topic-bf2cb58a68f684d9, label=aaaaaaaaaa, score=0.6655172)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.SituationReturnMorphologyTest.boundedNormalizationDoesNotTruncateDifferentOversizedWordsIntoTheSameCue(SituationReturnMorphologyTest.kt:105)
+2) aSharedTruncatedPrefixCannotMergeConsecutiveOwnerTopics(at.heinz.deviceai.cognitive.SituationReturnMorphologyTest)
+java.lang.AssertionError: expected:<2> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.SituationReturnMorphologyTest.aSharedTruncatedPrefixCannotMergeConsecutiveOwnerTopics(SituationReturnMorphologyTest.kt:99)
+3) sharedLongPrefixesDoNotTurnCompoundsIntoInflections(at.heinz.deviceai.cognitive.SituationReturnMorphologyTest)
+java.lang.AssertionError: Arbeit must not bind Arbeitsamt expected:<NoMatch> but was:<Resolved(threadId=topic-f8160d620f938db0, label=arbeit, score=0.6655172)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.SituationReturnMorphologyTest.sharedLongPrefixesDoNotTurnCompoundsIntoInflections(SituationReturnMorphologyTest.kt:90)
+
+FAILURES!!!
+Tests run: 19,  Failures: 3
+

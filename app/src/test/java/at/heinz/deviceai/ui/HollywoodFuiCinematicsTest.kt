@@ -17,6 +17,9 @@ class HollywoodFuiCinematicsTest {
 
         assertEquals(HollywoodFuiCinematics.MAX_MOTES, high.motes)
         assertTrue(high.bloom)
+        assertEquals(3, high.glassLayers)
+        assertEquals(2, warm.glassLayers)
+        assertEquals(1, low.glassLayers)
         assertEquals(16L, high.frameDelayMs)
         assertTrue(warm.motes in 1 until high.motes)
         assertFalse(warm.bloom)
@@ -27,6 +30,22 @@ class HollywoodFuiCinematicsTest {
         assertFalse(low.animate)
         assertFalse(off.animate)
         assertTrue(off.frameDelayMs >= 16L)
+    }
+
+    @Test fun liveFramesRequireRealWorkVisibilityMotionAndEnabledEffects() {
+        val high = HollywoodFuiCinematics.Budget.FULL
+        assertTrue(high.needsLiveFrames(true, false, true, true, false))
+        assertFalse(high.needsLiveFrames(false, false, true, true, false))
+        assertFalse(high.needsLiveFrames(true, true, true, true, false))
+        assertFalse(high.needsLiveFrames(true, false, false, true, false))
+        assertFalse(high.needsLiveFrames(true, false, true, false, false))
+        assertFalse(high.needsLiveFrames(true, false, true, true, true))
+        for (budget in listOf(
+            JarvisRenderQuality.resolve(true, false, 3, false, true),
+            JarvisRenderQuality.resolve(false, false, 0, false, false),
+            JarvisRenderQuality.resolve(true, true, 0, false, false))) {
+            assertFalse(HollywoodFuiCinematics.Budget.from(budget).needsLiveFrames(true, false, true, true, false))
+        }
     }
 
     @Test

@@ -105,11 +105,10 @@ class ContinuousConversationMode {
         return Decision.PAUSE
     }
 
-    /** Delay before a recovery retry; grows per attempt so the service can free the session. */
+    /** Read after listenFailed increments the attempt: 800, 800, then 1600 ms. */
     fun recoveryRetryDelayMs(): Long = when (recoveryAttempts) {
-        0, 1 -> 800L
-        2 -> 1_600L
-        else -> 2_500L
+        0, 1, 2 -> 800L
+        else -> 1_600L
     }
 
     /** The chat path did not accept the turn (for example busy or a pending draft). */
@@ -221,6 +220,13 @@ class ContinuousConversationMode {
             LocalSpeechInputPolicy.Failure.NO_MATCH, LocalSpeechInputPolicy.Failure.NO_INPUT,
             LocalSpeechInputPolicy.Failure.TIMEOUT -> true
             else -> false
+        }
+
+        internal fun pauseReason(failure: LocalSpeechInputPolicy.Failure): String = when {
+            isSilence(failure) -> "Ich habe nichts gehört."
+            isRecoverable(failure) -> LocalSpeechInputPolicy.message(failure) +
+                " Mehrere automatische Versuche sind fehlgeschlagen; beim nächsten Start wird der Erkenner neu erstellt."
+            else -> LocalSpeechInputPolicy.message(failure)
         }
 
         private val stopPhrases = setOf(

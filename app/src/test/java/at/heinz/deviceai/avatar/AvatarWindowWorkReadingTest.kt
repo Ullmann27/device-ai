@@ -62,7 +62,8 @@ class AvatarWindowWorkReadingTest {
         assertTrue(director.windowWorkStarted("doc-2", window))
         director.onRuntime(AvatarRuntimeSignals(speaking = true))
         assertFalse("speaking turns to the owner", reducer.pose(now).reading)
-        assertFalse("no work gaze can start while speaking", director.windowWorkStarted("doc-3", window))
+        assertTrue("real work may start while speaking", director.windowWorkStarted("doc-3", window))
+        assertFalse("but it must not take the eyes from the owner", reducer.pose(now).reading)
     }
 
     @Test fun theEyesSweepTheLinesWhileTheHeadStaysOnTheWindow() {
@@ -192,5 +193,57 @@ class AvatarWindowWorkReadingTest {
         director.windowClosed("doc-3")
         director.speechEnded("u-4", interrupted = false)
         assertFalse("a closed window is not read", reducer.pose(now).reading)
+    }
+
+    @Test fun workThatStartsDuringSpokenAcknowledgementWaitsWithoutStealingAttention() {
+        busy()
+        director.speechStarted("acknowledgement", "Ich pruefe die Datei.")
+        assertTrue(director.windowWorkStarted("document", window))
+        assertFalse(reducer.pose(now).reading)
+        now += 400L
+        assertFalse(director.windowMoved("document", GazeTarget(.7f, -.1f)))
+        assertFalse(reducer.pose(now).gazeDirected)
+        director.speechEnded("acknowledgement", interrupted = false)
+        assertTrue(reducer.pose(now).reading)
+        assertEquals(.7f, reducer.pose(now).gazeX, .0001f)
+    }
+
+    @Test fun workThatStartsWhileListeningUsesItsLatestTargetAfterTheOwnerFinishes() {
+        director.onRuntime(AvatarRuntimeSignals(listening = true, busy = true))
+        assertTrue(director.windowWorkStarted("document", window))
+        assertFalse(reducer.pose(now).gazeDirected)
+        director.windowMoved("document", GazeTarget(-.6f, .1f))
+        now += 300L
+        busy()
+        assertTrue(reducer.pose(now).reading)
+        assertEquals(-.6f, reducer.pose(now).gazeX, .0001f)
+    }
+
+    @Test fun stopCompletionAndCloseDiscardWorkQueuedDuringSpeech() {
+        for (termination in listOf("stop", "complete", "close")) {
+            val poses = AvatarPoseReducer()
+            val d = AvatarDirector(AvatarSink { poses.apply(it) }) { now }
+            d.onRuntime(AvatarRuntimeSignals(busy = true))
+            d.speechStarted("acknowledgement", "Ich pruefe.")
+            assertTrue(d.windowWorkStarted("document", window))
+            when (termination) {
+                "stop" -> d.clearAnimationIntents()
+                "complete" -> assertTrue(d.windowWorkEnded("document"))
+                "close" -> d.windowClosed("document")
+            }
+            assertFalse(d.windowMoved("document", GazeTarget(.7f, 0f)))
+            d.speechEnded("acknowledgement", interrupted = termination == "stop")
+            assertFalse("$termination must not resurrect deferred work", poses.pose(now).reading)
+        }
+    }
+
+    @Test fun deferredWorkKeepsItsOriginalLifetimeAndRejectsBlankIds() {
+        busy()
+        director.speechStarted("acknowledgement", "Ich pruefe.")
+        assertFalse(director.windowWorkStarted(" ", window))
+        assertTrue(director.windowWorkStarted("document", window))
+        now += AvatarPoseReducer.MAX_WINDOW_WORK_MS
+        director.speechEnded("acknowledgement", interrupted = false)
+        assertFalse(reducer.pose(now).reading)
     }
 }

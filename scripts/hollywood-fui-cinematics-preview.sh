@@ -18,6 +18,8 @@ SOURCES=(
   app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiCinematics.kt
   tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/Java2DContinuumPainter.kt
   tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiCinematicsPreview.kt
+  tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiPainterBenchmark.kt
 )
 "${KOTLINC:-kotlinc}" "${SOURCES[@]}" -jvm-target 17 -nowarn -include-runtime -d "$OUT/preview.jar"
 "${JAVA:-java}" -Djava.awt.headless=true -cp "$OUT/preview.jar" at.heinz.deviceai.ui.HollywoodFuiCinematicsPreview "$ROOT" "$OUT"
+"${JAVA:-java}" -cp "$OUT/preview.jar" at.heinz.deviceai.ui.HollywoodFuiPainterBenchmark > "$OUT/geometry-benchmark.csv"

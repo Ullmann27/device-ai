@@ -40,4 +40,38 @@ class AvatarWindowMovedTest {
         assertTrue(d.windowClosed("w-1"))
         assertFalse("a closed window cannot steer the gaze any more", d.windowMoved("w-1", GazeTarget(.2f, 0f)))
     }
+
+    @Test fun flightDuringSpeechUpdatesTheResumedTargetButNeverTakesAttentionFromTheOwner() {
+        val reducer = AvatarPoseReducer()
+        val director = AvatarDirector(AvatarSink { reducer.apply(it) }) { now }
+        director.onRuntime(AvatarRuntimeSignals(busy = true))
+        director.windowWorkStarted("w-1", GazeTarget(.1f, 0f))
+        director.speechStarted("speech-1", "Die Datei ist offen.")
+        for (x in listOf(.2f, .4f, .7f)) {
+            now += 80L
+            assertFalse(director.windowMoved("w-1", GazeTarget(x, -.2f)))
+            assertFalse(reducer.pose(now).gazeDirected)
+        }
+        director.speechEnded("speech-1", interrupted = false)
+        assertTrue(reducer.pose(now).reading)
+        assertEquals(.7f, reducer.pose(now).gazeX, .0001f)
+
+        director.clearAnimationIntents()
+        assertFalse(director.windowMoved("w-1", GazeTarget(-.7f, 0f)))
+        director.onRuntime(AvatarRuntimeSignals(busy = true))
+        assertFalse(reducer.pose(now).reading)
+    }
+
+    @Test fun continuousFlightDoesNotRefreshTheOpeningLease() {
+        val reducer = AvatarPoseReducer()
+        val director = AvatarDirector(AvatarSink { reducer.apply(it) }) { now }
+        director.windowOpened("w-1", GazeTarget(.1f, 0f))
+        val start = now
+        while (now - start < AvatarPoseReducer.WINDOW_GAZE_TTL_MS) {
+            director.windowMoved("w-1", GazeTarget(.5f, -.2f))
+            now += 16L
+        }
+        assertFalse(director.windowMoved("w-1", GazeTarget(.7f, -.2f)))
+        assertFalse(reducer.pose(now).gazeDirected)
+    }
 }
