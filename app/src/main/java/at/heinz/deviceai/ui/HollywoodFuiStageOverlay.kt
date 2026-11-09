@@ -29,6 +29,9 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val source = RectF()
     private var protectedBounds = emptyList<RectF>()
     internal var cinematicArcEnabled = false
+    internal var workPulseEnabled = false
+    private var lastPulseKey: String? = null
+    private var pulseAtElapsedMs = -1L
     internal var requestFrame: () -> Unit = {}
     internal var cinematicEffectsEnabled = true
         set(value) {
@@ -81,6 +84,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         originY = origin.centerY()
         moteSeed = scene.fuiProfile.ordinal
         elapsedMs = 0L
+        pulseAtElapsedMs = -1L
+        lastPulseKey = null
         openness = 0f
         closingElapsedMs = -1L
         anchorLatched = false
@@ -123,6 +128,17 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         parallaxY = if (y.isFinite()) y.coerceIn(-1f, 1f) else 0f
     }
 
+    /** A verified, unique tool receipt; reuses the window's own frame clock. */
+    fun verifiedStep(key: String): Boolean {
+        if (!workPulseEnabled || !cinematicEffectsEnabled || key.isBlank() ||
+            lastPulseKey == key || closingElapsedMs >= 0L || !isShown) return false
+        if (pulseAtElapsedMs >= 0L && elapsedMs - pulseAtElapsedMs in 0L..249L) return false
+        lastPulseKey = key
+        pulseAtElapsedMs = elapsedMs
+        requestFrame()
+        return true
+    }
+
     fun setWorkActive(value: Boolean) {
         if (active == value) return
         active = value
@@ -158,6 +174,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
 
     fun close(immediate: Boolean) {
         active = false
+        pulseAtElapsedMs = -1L
         if (immediate) visibility = GONE
     }
 
@@ -170,7 +187,9 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         if (!cinematicEffectsEnabled) return false
         if (!reducedMotion && closing < 0L) emitPhaseFeedback(elapsed)
         invalidate()
-        return budget.needsLiveFrames(active, reducedMotion,
+        val pendingReceipt = workPulseEnabled && pulseAtElapsedMs >= 0L &&
+            elapsedMs - pulseAtElapsedMs in 0L..379L
+        return budget.needsLiveFrames(active || pendingReceipt, reducedMotion,
             isAttachedToWindow && isShown && windowVisibility == VISIBLE,
             cinematicEffectsEnabled, closing >= 0L)
     }
@@ -244,6 +263,11 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         cinematics.drawMotesAndEnergy(painter, boxDp, frame, elapsedMs,
             if (!reducedMotion && (active || !frame.settled)) budget.motes else 0,
             moteSeed, working = active && !reducedMotion, bloom = bloom, radius = radiusDp)
+        if (workPulseEnabled && pulseAtElapsedMs >= 0L && !reducedMotion) {
+            val pulseAge = elapsedMs - pulseAtElapsedMs
+            if (pulseAge in 0L..380L) cinematics.drawVerifiedStepPulse(painter, boxDp, frame,
+                pulseAge / 380f)
+        }
         cinematics.drawBrackets(painter, boxDp, frame.brackets * frame.closeFrame, bloom)
         canvas.restore()
 
