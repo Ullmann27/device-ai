@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
 
 test('Android receipt gate rejects missing, duplicated, failed and changed-skip evidence', () => {
-  const result = spawnSync('python3', ['-c', `
+  const result = spawnSync('python3', ['-B', '-c', `
 import importlib.util, tempfile, pathlib, xml.etree.ElementTree as ET
 spec = importlib.util.spec_from_file_location('gate', 'scripts/continuum-code51-junit-check.py')
 gate = importlib.util.module_from_spec(spec)
