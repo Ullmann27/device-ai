@@ -32,6 +32,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     internal var cinematicArcEnabled = false
     internal var workPulseEnabled = false
     internal var prismRimEnabled = false
+    internal var rimIsolationEnabled = false
     private var lastPulseKey: String? = null
     private var pulseAtElapsedMs = -1L
     private var pulsePending = false
@@ -262,9 +263,10 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         canvas.scale(density, density)
         val raster = HollywoodFuiWorkActivity.rasterOpacity(frame.grid, frame.data,
             active, !reducedMotion && budget.animate)
-        cinematics.drawGridAndScan(painter, boxDp,
-            frame.copy(scanEnabled = frame.scanEnabled && !reducedMotion), bloom,
-            innerRasterAlpha = raster)
+        val scanFrame = if (rimIsolationEnabled)
+            frame.copy(scanEnabled = frame.scanEnabled && !reducedMotion)
+        else frame.copy(grid = raster, scanEnabled = frame.scanEnabled && !reducedMotion)
+        cinematics.drawGridAndScan(painter, boxDp, scanFrame, bloom, innerRasterAlpha = raster)
         canvas.restore()
         // The native accessible body takes over. Never keep a second text plane behind its labels.
         val dataAlpha = frame.data * (1f - frame.data) * frame.closeData
