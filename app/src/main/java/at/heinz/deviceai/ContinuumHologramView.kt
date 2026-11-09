@@ -261,6 +261,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val cameraMotion = AvatarCameraMotion()
     private val entranceMotion = AvatarEntranceMotion()
     private var workWindowActive = false
+    private var workWindowPulseStartedAtMs = -1L
     private var workWindowAccentArgb: Int? = null
 
     /** Visual-only scene light; owning window still controls permissions and receipts. */
@@ -285,9 +286,12 @@ class ContinuumHologramView @JvmOverloads constructor(
     ) {
         require(direction.isFinite() && direction in -1f..1f)
         // The face and the orb stay free while a window works: the sequence cards dock into its status strip.
+        val firstWindowFrame = active && !workWindowActive
         workWindowActive = active
         if (!active) workWindowAccentArgb = null
         val now = SystemClock.uptimeMillis()
+        if (firstWindowFrame) workWindowPulseStartedAtMs = now
+        if (!active) workWindowPulseStartedAtMs = -1L
         if (active && profile != cameraProfile) {
             // Freeze the exact currently visible projection before changing profile. The next frames blend
             // from that safe window into the new safe target while the existing camera motion keeps running.
@@ -979,8 +983,14 @@ class ContinuumHologramView @JvmOverloads constructor(
         renderFrame.energy = proof?.orbEnergy ?: energy
         renderFrame.audio = if (proof != null) proof.pose.speakEnergy else audioEnergy
         val effects = cockpitSequence?.effects
+        val windowPulse = if (workWindowActive && canAnimateFrame() &&
+            at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(context,
+                at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_11_ORB_LINK) &&
+            workWindowPulseStartedAtMs >= 0L)
+            at.heinz.deviceai.ui.JarvisWindowOrbPulse.energy(nowMillis - workWindowPulseStartedAtMs)
+            else 0f
         val coreEnergy = maxOf(renderFrame.energy, effects?.orbPulseLevel(nowMillis) ?: 0f,
-            effects?.recallBrightness(nowMillis) ?: 0f)
+            effects?.recallBrightness(nowMillis) ?: 0f, windowPulse)
         val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
         if (memoryScene.isActive && (memorySceneHostReady?.invoke() != true ||
                 memoryScene.sample(memorySceneTime()) == null)) clearMemoryScene()
