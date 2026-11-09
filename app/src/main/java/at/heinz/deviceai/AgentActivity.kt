@@ -4271,7 +4271,7 @@ class AgentActivity : Activity() {
                     (if (current) "Cinema 2030 AN" else "Cinema 2030 AUS")
             )
             .setNegativeButton("Abbrechen", null)
-            .setNeutralButton("15 Einzeloptionen") { _, _ -> showCinemaExperimentDetails() }
+            .setNeutralButton("Effekte einzeln") { _, _ -> showCinemaExperimentDetails() }
             .setPositiveButton(if (current) "Standardmodus" else "Cinema 2030 einschalten") { _, _ ->
                 at.heinz.deviceai.ui.JarvisCinematicSettings.preferences(this).edit()
                     .putBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.DEPTH_EXPERIMENT_KEY, !current)
@@ -4284,16 +4284,20 @@ class AgentActivity : Activity() {
 
     private fun showCinemaExperimentDetails() {
         val config = at.heinz.deviceai.ui.JarvisCinematicSettings
-        val experiments = at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.entries
+        val all = at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.entries
+        val experiments = all.filter { it.wired }
+        val pending = all.filterNot { it.wired }
         val prefs = config.preferences(this)
         val labels = experiments.map {
             it.name.substring(4, 6) + " · " + it.label
         }.toTypedArray()
         val selected = experiments.map { prefs.getBoolean("exp52." + it.name, true) }.toBooleanArray()
         AlertDialog.Builder(this)
-            .setTitle("Cinema 2030 · experimentelle Effekte")
-            .setMessage("Jede Einstellung ist einzeln rücknehmbar. Noch nicht angeschlossene Effekte " +
-                "werden hier nur vorbereitet; das Aktivieren ist kein Funktions- oder Gerätenachweis.")
+            .setTitle("Cinema 2030 · angeschlossene Effekte")
+            .setMessage("Die folgenden zehn Funktionen sind im Code verdrahtet und einzeln abschaltbar. " +
+                "Noch nicht als eigene Effekte angeschlossen: " +
+                pending.joinToString(", ") { it.name.substring(4, 6) } +
+                ". Auch angeschlossene Funktionen benötigen die Fold7-Geräteabnahme.")
             .setMultiChoiceItems(labels, selected) { _, index, enabled ->
                 config.setExperiment(this, experiments[index], enabled)
                 homeView?.jarvisShell?.refreshMotionPolicy()
