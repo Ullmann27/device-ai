@@ -51,7 +51,7 @@ object BootstrapBrain {
         """(?iu)(?<![\p{L}\p{N}_])(?:akku|batterie|ladezustand|akkustand)(?![\p{L}\p{N}_])"""
     )
     private val batteryReadCue = Regex(
-        """(?iu)(?<![\p{L}\p{N}_])(?:prüfe|prüfen|prüf|überprüfe|zeige|zeigen|zeig|wie viel|wieviel|wie voll|wie ist|wie steht|wie hoch|lade|ladung|ladestand|status|stand|zustand)(?![\p{L}\p{N}_])"""
+        """(?iu)(?<![\p{L}\p{N}_])(?:prüfe|prüfen|prüf|überprüfe|miss|messe|messen|mess|check|checke|zeige|zeigen|zeig|wie viel|wieviel|wie voll|wie ist|wie steht|wie hoch|lade|ladung|ladestand|status|stand|zustand)(?![\p{L}\p{N}_])"""
     )
     private fun isBatteryReadRequest(input: String): Boolean =
         input.trim().split(storageClauseBoundary).any { untrimmed ->
