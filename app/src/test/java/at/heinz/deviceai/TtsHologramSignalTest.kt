@@ -77,7 +77,7 @@ class TtsHologramSignalTest {
         assertEquals(0f, signal.prePhonatoryLevel("A", 1_050L), 0f)
         signal.anchor("A", 0, 1_000L)
         assertEquals(0f, signal.prePhonatoryLevel("old", 1_050L), 0f)
-        assertTrue(signal.prePhonatoryLevel("A", 1_050L) in .05f..12f)
+        assertTrue(signal.prePhonatoryLevel("A", 1_050L) in .05f..0.12f)
         assertEquals(0f, signal.prePhonatoryLevel("A", 1_150L), 0f)
         signal.stop()
         assertEquals(0f, signal.prePhonatoryLevel("A", 1_050L), 0f)
