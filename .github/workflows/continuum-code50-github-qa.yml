@@ -2,6 +2,16 @@ name: "Continuum Code51 — source QA and unsigned APK"
 
 # Existing registered workflow path; explicit owner Code51 channel approval, 2026-11-09.
 on:
+  push:
+    branches:
+      - copilot/code51-master-integrator-20261108
+    paths:
+      - 'app/**'
+      - '.github/workflows/continuum-code50-github-qa.yml'
+      - '.github/continuum/**'
+      - 'scripts/continuum-code51-*'
+      - 'scripts/continuum-reliability-qa.mjs'
+      - 'backend/**'
   workflow_dispatch:
     inputs:
       expected_sha:
@@ -30,6 +40,8 @@ jobs:
           EXPECTED_SHA: ${{ inputs.expected_sha }}
         run: |
           set -euo pipefail
+          # Push: SHA is GitHub's immutable event revision. Dispatch: explicit owner SHA remains mandatory.
+          if [[ "$GITHUB_EVENT_NAME" == 'push' ]]; then EXPECTED_SHA="$GITHUB_SHA"; fi
           [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
           test "$EXPECTED_SHA" = "$GITHUB_SHA"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
@@ -73,6 +85,8 @@ jobs:
           EXPECTED_SHA: ${{ inputs.expected_sha }}
         run: |
           set -euo pipefail
+          # Push: SHA is GitHub's immutable event revision. Dispatch: explicit owner SHA remains mandatory.
+          if [[ "$GITHUB_EVENT_NAME" == 'push' ]]; then EXPECTED_SHA="$GITHUB_SHA"; fi
           [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
           test "$EXPECTED_SHA" = "$GITHUB_SHA"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
