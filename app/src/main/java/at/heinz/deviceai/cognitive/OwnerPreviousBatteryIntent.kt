@@ -10,9 +10,22 @@ internal object OwnerPreviousBatteryIntent {
         """(?iu)(?:\b(?:laut|gemäß)\s+(?:deiner|der)\b.{0,80}\b(?:messung|geräteprüfung|prüfung|abfrage)\b|\b(?:letzte\p{L}*|vorherige\p{L}*|vorige\p{L}*|gerade|bereits)\s+(?:ausgeführte\p{L}*\s+)?(?:messung|geräteprüfung|prüfung|abfrage)\b|\b(?:vorhin|zuvor|eben)\b.{0,80}\b(?:gemessen|geprüft|abgefragt)\b)"""
     )
 
+    private val explicitFresh = Regex(
+        """(?iu)(?<![\p{L}\p{N}_])(?:miss|messe|mess|messen|prüf(?:e)?|überprüf(?:e)?|check(?:e)?|kontrollier(?:e)?)\s+(?:[\p{L}]+\s+){0,7}(?:akku(?:stand|prozent)?|batterie(?:stand)?|ladezustand)\b"""
+    )
+    private val comparison = Regex("""(?iu)\b(?:vergleich\p{L}*|unterschied|gegenüberstell\p{L}*)\b""")
+
+    private fun valid(request: String) =
+        request.length in 1..700 && request.none { it.isISOControl() && it != '\n' }
+
+    fun isFreshComparisonRequest(request: String): Boolean =
+        valid(request) && battery.containsMatchIn(request) &&
+            explicitFresh.containsMatchIn(request) && comparison.containsMatchIn(request) &&
+            previous.containsMatchIn(request) && !noNewReading.containsMatchIn(request)
+
     fun isPreviousReadingRequest(request: String): Boolean {
-        if (request.length !in 1..700 || request.any { it.isISOControl() && it != '\n' }) return false
-        return battery.containsMatchIn(request) &&
-            (noNewReading.containsMatchIn(request) || previous.containsMatchIn(request))
+        if (!valid(request) || !battery.containsMatchIn(request)) return false
+        if (noNewReading.containsMatchIn(request)) return true
+        return previous.containsMatchIn(request) && !explicitFresh.containsMatchIn(request)
     }
 }
