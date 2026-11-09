@@ -85,6 +85,31 @@ class JarvisWorkWindow(
                     val handover: View?)
     private val density = resources.displayMetrics.density
     private var lastAnimatorScale = 1f
+    internal var onCinematicFrame: ((Long, Long, Boolean) -> Boolean)? = null
+    internal var onPresentedCenter: ((Float, Float) -> Unit)? = null
+    internal var onPanelTransform: ((android.graphics.Matrix, Int, Int, Int, Int) -> Unit)? = null
+    private val projectedCenter = FloatArray(2)
+    internal var cinematicEffectsEnabled = true
+        set(value) {
+            if (field == value) return
+            field = value
+            // A live fallback change settles the same content; it must not replay work or tear down its lease.
+            if (phase == Phase.OPENING) {
+                openness = 1f
+                opacity = 1f
+                trailAlpha = 0f
+                panel.edgeFlash = 0f
+                phase = Phase.OPEN
+                handOver()
+                val callback = onOpened
+                onOpened = {}
+                callback()
+            }
+            if (phase == Phase.CLOSING) finishClose()
+            else if (isShowing) applyFrame()
+            requestFrame()
+        }
+    private var constructionElapsedMs = 0L
     private val origin = RectF()
     private val destination = RectF()
     private var protectedBounds = emptyList<RectF>()
@@ -300,6 +325,7 @@ class JarvisWorkWindow(
         phase = Phase.OPENING
         startedAt = null
         lastFrameTime = null
+        constructionElapsedMs = 0L
         openness = 0f
         opacity = 0f
         trailProgress = 0f
@@ -402,7 +428,7 @@ class JarvisWorkWindow(
         phase = Phase.CLOSING
         closeFrom = openness
         closeAlpha = opacity
-        startedAt = lastFrameTime
+        startedAt = null
         onOpened = {}
         requestFrame()
     }
@@ -421,9 +447,41 @@ class JarvisWorkWindow(
     private fun updateFrame(nowMs: Long, animatorScale: Float): Boolean {
         if (!isShowing) return false
         lastFrameTime = nowMs
-        if (phase == Phase.OPEN) return false
         val start = startedAt ?: nowMs.also { startedAt = it }
         val elapsed = (nowMs - start).coerceAtLeast(0L)
+        val reduced = !animatorScale.isFinite() || animatorScale <= 0f
+        val normalized = if (reduced) HollywoodFuiConstruct.DATA_END_MS else (elapsed / animatorScale).toLong()
+        if (phase == Phase.OPEN) {
+            constructionElapsedMs = maxOf(constructionElapsedMs, normalized, HollywoodFuiConstruct.DATA_END_MS)
+            return onCinematicFrame?.invoke(constructionElapsedMs, -1L, reduced) == true
+        }
+        if (cinematicEffectsEnabled) {
+            lastAnimatorScale = animatorScale
+            val isClosing = phase == Phase.CLOSING
+            if (!isClosing) constructionElapsedMs = normalized
+            val closingTime = if (isClosing) {
+                if (reduced) HollywoodFuiConstruct.CLOSE_END_MS else normalized
+            } else -1L
+            val frame = HollywoodFuiConstruct.frame(constructionElapsedMs, closingTime, reduced)
+            openness = if (isClosing) closeFrom * frame.closeFrame
+                else if (reduced) 1f else HollywoodFuiConstruct.flight(normalized)
+            opacity = if (isClosing) closeAlpha * frame.closeData else frame.data
+            trailProgress = frame.anchor
+            trailAlpha = (1f - frame.brackets) * frame.closeFrame
+            panel.edgeFlash = frame.pulse * .35f
+            applyFrame()
+            val live = onCinematicFrame?.invoke(constructionElapsedMs, closingTime, reduced) == true
+            if (isClosing && frame.closeFactor <= 0f) { finishClose(); return false }
+            if (!handedOver && JarvisWorkWindowDepth.handedOver(openness)) handOver()
+            if (!isClosing && frame.settled) {
+                phase = Phase.OPEN
+                handOver()
+                val callback = onOpened
+                onOpened = {}
+                callback()
+            }
+            return phase == Phase.OPENING || phase == Phase.CLOSING || live
+        }
         val state = JarvisMotion.frame(if (phase == Phase.CLOSING) closing else opening, elapsed, animatorScale)
         if (phase == Phase.CLOSING) {
             openness = closeFrom * (1f - state.scale)
@@ -464,11 +522,25 @@ class JarvisWorkWindow(
             panel.scaleY = (origin.height() + (destination.height() - origin.height()) * openness) / params.height
             // #643 C: the glass swings in around its vertical axis from the side it comes from and settles flat.
             panel.cameraDistance = density * JarvisMotion.Depth.CAMERA_DISTANCE_DP
-            panel.rotationY = JarvisMotion.Depth.entranceTilt(openness, entranceSide(), lastAnimatorScale)
+            panel.rotationY = if (cinematicEffectsEnabled)
+                JarvisMotion.Depth.entranceTilt(openness, entranceSide(), lastAnimatorScale) else 0f
         }
         panel.alpha = opacity
+        reportPresentedCenter()
         panel.invalidate()
         invalidate()
+    }
+
+    internal fun reportPresentedCenter() {
+        if (!isShowing) return
+        val params = panel.layoutParams as LayoutParams
+        onPanelTransform?.invoke(panel.matrix, params.leftMargin, params.topMargin, params.width, params.height)
+        val report = onPresentedCenter ?: return
+        projectedCenter[0] = params.width * .5f
+        projectedCenter[1] = params.height * .5f
+        // View.matrix includes scale, translation and the actual Android camera perspective around the panel pivot.
+        panel.matrix.mapPoints(projectedCenter)
+        report(params.leftMargin + projectedCenter[0], params.topMargin + projectedCenter[1])
     }
 
     /** −1 when the window comes from the left of its destination, +1 from the right, 0 when it grows in place. */

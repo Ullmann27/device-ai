@@ -1,0 +1,3 @@
+sources=531 kotlinc_exit=1
+errors in files that need LiteRT-LM (Google Maven, unavailable here): 135
+KOTLIN_COMPILE_CHECKED: no compile error outside the LiteRT-LM files (not an APK build)

@@ -62,6 +62,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val avatarRenderer = ContinuumAvatarRenderer()
     private val avatarPose = AvatarPoseReducer()
     private val appearancePrefs = context.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
+    private val cinematicPrefs = at.heinz.deviceai.ui.JarvisCinematicSettings.preferences(context)
     private val hasSavedAppearance = appearancePrefs.contains("native-head") || appearancePrefs.contains("native-head-3d")
     // Upgrade legacy enabled heads.
     // Explicit 3D choices remain authoritative.
@@ -567,8 +568,17 @@ class ContinuumHologramView @JvmOverloads constructor(
                 dialog.dismiss()
             }
             .setPositiveButton("15s Animationstest") { _, _ -> startAvatarProof() }
-            .setNeutralButton("Bewegung prüfen") { _, _ ->
-                Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
+            .setNeutralButton("Film-Effekte") { _, _ ->
+                AlertDialog.Builder(context).setTitle("Arbeitsfenster · Darstellung")
+                    .setSingleChoiceItems(arrayOf("Filmische Glaskonstruktion", "Statische Effekte · Rückfall"),
+                        if (at.heinz.deviceai.ui.JarvisCinematicSettings.enabled(context)) 0 else 1) { dialog, item ->
+                        presentation.edit().putBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.KEY, item == 0).apply()
+                        dialog.dismiss()
+                    }
+                    .setNeutralButton("Bewegung prüfen") { _, _ ->
+                        Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
+                    }
+                    .setNegativeButton("Schließen", null).show()
             }
             .setNegativeButton("Schließen", null).show()
     }
@@ -959,6 +969,9 @@ class ContinuumHologramView @JvmOverloads constructor(
         renderFrame.phase = phase
         renderFrame.energy = proof?.orbEnergy ?: energy
         renderFrame.audio = if (proof != null) proof.pose.speakEnergy else audioEnergy
+        val effects = cockpitSequence?.effects
+        val coreEnergy = maxOf(renderFrame.energy, effects?.orbPulseLevel(nowMillis) ?: 0f,
+            effects?.recallBrightness(nowMillis) ?: 0f)
         val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
         if (memoryScene.isActive && (memorySceneHostReady?.invoke() != true ||
                 memoryScene.sample(memorySceneTime()) == null)) clearMemoryScene()
@@ -1003,7 +1016,9 @@ class ContinuumHologramView @JvmOverloads constructor(
                         nativeTexture?.height ?: 0,
                         framing = if (cockpitHeadBounds != null) cameraWindow else null,
                         diagnosticBlink = proof?.blinkOverride,
-                        receipt = receipt
+                        receipt = receipt,
+                        coreEnergy = coreEnergy,
+                        cinematicLighting = cinematicPrefs.getBoolean(at.heinz.deviceai.ui.JarvisCinematicSettings.KEY, true)
                     )
                 }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
@@ -1027,11 +1042,8 @@ class ContinuumHologramView @JvmOverloads constructor(
                 canvas.clipRect(0f, 0f, orbWidth, orbHeight)
                 if (cockpitOrbBounds != null) {
                     // Reuse the exact original animated sphere/rings with no opaque tile.
-                    val now = SystemClock.uptimeMillis()
-                    val effects = cockpitSequence?.effects
                     val originalEnergy = renderFrame.energy
-                    renderFrame.energy = maxOf(originalEnergy, effects?.orbPulseLevel(now) ?: 0f,
-                        effects?.recallBrightness(now) ?: 0f)
+                    renderFrame.energy = coreEnergy
                     renderer.layout(orbWidth, orbHeight)
                     renderer.draw(painter, renderFrame, transparentBackdrop = true)
                     renderFrame.energy = originalEnergy

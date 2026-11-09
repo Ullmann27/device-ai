@@ -1,0 +1,48 @@
+{
+  "evidenceClass": "ACTUAL_GLB_HOST_RENDER_NOT_DEVICE",
+  "scope": "Fixed ROI diagnostic, not reference fidelity or Android exposure equivalence",
+  "frames": [
+    {
+      "label": "Authored baseline 1.00x",
+      "file": "front.png",
+      "sha256": "f8e1d0d74bfd27c3154cc219a7da73c809333caa7db9963a62f023698097a1bf",
+      "faceRoi": [
+        90,
+        65,
+        295,
+        325
+      ],
+      "meanLuma8bit": 47.628595028142584,
+      "whiteClipShare": 0.000525328330206379,
+      "anyChannelClipShare": 0.09902439024390244
+    },
+    {
+      "label": "Bounded peak 1.32x",
+      "file": "front.png",
+      "sha256": "df87c3cf496bb271389bf926027152bce21764c8fb9c2ced4ed928a30e1759dc",
+      "faceRoi": [
+        90,
+        65,
+        295,
+        325
+      ],
+      "meanLuma8bit": 52.689943602251404,
+      "whiteClipShare": 0.0014821763602251407,
+      "anyChannelClipShare": 0.17129455909943714
+    },
+    {
+      "label": "Rejected probe 1.60x",
+      "file": "front.png",
+      "sha256": "b63278b1659cbfe82b3bea5baaae1ccf235d634ff3db48f4b2dbbb21f6fb6d67",
+      "faceRoi": [
+        90,
+        65,
+        295,
+        325
+      ],
+      "meanLuma8bit": 56.56185366228893,
+      "whiteClipShare": 0.002382739212007505,
+      "anyChannelClipShare": 0.21206378986866792
+    }
+  ]
+}

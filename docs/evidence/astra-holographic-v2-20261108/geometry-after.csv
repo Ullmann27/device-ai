@@ -1,0 +1,4 @@
+budget,frames,p50_geometry_us,p95_geometry_us,allocated_bytes_per_frame,draw_calls_per_frame
+high,4000,2.113,4.346,232.0,124.0
+warm-inference,4000,0.641,1.021,119.4,72.0
+low,4000,0.331,0.341,64.1,64.0

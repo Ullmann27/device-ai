@@ -34,6 +34,7 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
     private val eyeYawSpring = CriticalDampedSpring()
     private val eyePitchSpring = CriticalDampedSpring()
     private var followSeconds = Float.NaN
+    private var readingLayer = 0f
     /** Smoothed real mouth opening while speaking; drives the speech accents. */
     private var speechAccent = 0f
     private var speechSeconds = Float.NaN
@@ -64,13 +65,18 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         val staticWindow = !motion && (pose.gazeDirected || pose.gesture == AvatarGestureIntent.WINDOW_FOCUS)
         val gx = finite(if (staticWindow) pose.fallbackGazeX else pose.gazeX, -1f, 1f)
         val gy = finite(if (staticWindow) pose.fallbackGazeY else pose.gazeY, -1f, 1f)
-        // Right-handed Y-up +Z front: positive yaw goes viewer right, negative pitch looks up.
-        // Owner request (Fold7, 05.11.): turn and nod in a wide, human radius; eyes lead, head follows.
-        val targetHeadYaw = gx * HEAD_YAW_DEGREES; val targetHeadPitch = -gy * HEAD_PITCH_DEGREES
         // Critically damped follow: eye spring reaches ~80 % in 55 ms; head spring in ~220 ms.
         // First frame, clock jumps and reduced motion snap. Repeated timestamps are strictly idempotent.
         val followDt = if (followSeconds.isFinite() && seconds.isFinite()) seconds - followSeconds else Float.NaN
         val snap = !motion || !followDt.isFinite() || followDt < 0f || followDt > 1f
+        val readingTarget = if (motion && pose.reading) 1f else 0f
+        readingLayer = if (snap) readingTarget else ease(readingLayer, readingTarget,
+            1f - kotlin.math.exp(-followDt / READING_FADE_TAU_S))
+        // Cosmetic attention inside a real work lease, not a claim that a particular document line was processed.
+        val readYaw = if (seconds.isFinite()) readingYaw(seconds) * readingLayer else 0f
+        val readPitch = if (seconds.isFinite()) readingPitch(seconds) * readingLayer else 0f
+        val targetHeadYaw = gx * HEAD_YAW_DEGREES + readYaw * READING_HEAD_SHARE
+        val targetHeadPitch = -gy * HEAD_PITCH_DEGREES + readPitch * READING_HEAD_SHARE
         if (snap) {
             headYawSpring.snap(targetHeadYaw)
             headPitchSpring.snap(targetHeadPitch)
@@ -83,9 +89,9 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
 
         // Eyes target the direct ocular share plus the head lag, then follow with their much faster spring.
         val targetEyeYaw = cameraAzimuthDegrees.toFloat() +
-            (gx * EYE_YAW_DEGREES + (targetHeadYaw - headYaw))
+            (gx * EYE_YAW_DEGREES + (targetHeadYaw - headYaw) + readYaw * (1f - READING_HEAD_SHARE))
                 .coerceIn(-EYE_MAX_YAW_DEGREES, EYE_MAX_YAW_DEGREES)
-        val targetEyePitch = (-gy * EYE_PITCH_DEGREES + (targetHeadPitch - headPitch))
+        val targetEyePitch = (-gy * EYE_PITCH_DEGREES + (targetHeadPitch - headPitch) + readPitch * (1f - READING_HEAD_SHARE))
             .coerceIn(-EYE_MAX_PITCH_DEGREES, EYE_MAX_PITCH_DEGREES)
         if (snap) {
             eyeYawSpring.snap(targetEyeYaw)
@@ -119,13 +125,6 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         // owns the clock and stops it on pause/reduced motion. Actual task/observed gaze wins.
         // The eyes keep their saccades; the head part fades with the state and yields to the speech layer.
         if (idleEyes) { eyeYaw += idleMotion.eyeYaw; eyePitch += idleMotion.eyePitch }
-        // Reading (owner brief 06.11.: the avatar watches the document while the model really processes it): the eyes
-        // sweep the lines of the directed window – a slow pass to the right, a quick return, a little lower each line –
-        // while the head stays on the window. Only for a real held work gaze (Director windowWorkStarted).
-        if (pose.reading && seconds.isFinite()) {
-            eyeYaw += readingYaw(seconds)
-            eyePitch += READ_LINE_PITCH_DEGREES * (kotlin.math.floor(seconds / READ_LINE_S).toInt().mod(READ_LINES))
-        }
         val idleHead = minOf(idleLayer, 1f - speechLayer)
         if (idleHead > 0f) {
             headYaw += idleMotion.headYaw * IDLE_HEAD_GAIN * idleHead; headPitch += idleMotion.headPitch * IDLE_HEAD_GAIN * idleHead
@@ -307,13 +306,28 @@ class AvatarMorphMapper(targetNames: List<String>, private val cameraAzimuthDegr
         const val READ_SWEEP_DEGREES = 2.4f
         const val READ_LINE_PITCH_DEGREES = .45f
         const val READ_LINES = 4
+        private const val READING_HEAD_SHARE = .18f
+        private const val READING_FADE_TAU_S = .18f
 
         /** Eye yaw offset of the reading sweep at [seconds]: −A → +A slowly, then back quickly. */
         fun readingYaw(seconds: Float): Float {
             val phase = (seconds / READ_LINE_S).let { it - kotlin.math.floor(it) }
             val pass = 1f - READ_RETURN_SHARE
-            return if (phase < pass) -READ_SWEEP_DEGREES + 2f * READ_SWEEP_DEGREES * phase / pass
-                else READ_SWEEP_DEGREES - 2f * READ_SWEEP_DEGREES * (phase - pass) / READ_RETURN_SHARE
+            return if (phase < pass) -READ_SWEEP_DEGREES + 2f * READ_SWEEP_DEGREES * minimumJerk(phase / pass)
+                else READ_SWEEP_DEGREES - 2f * READ_SWEEP_DEGREES * minimumJerk((phase - pass) / READ_RETURN_SHARE)
+        }
+        private fun readingPitch(seconds: Float): Float {
+            val line = kotlin.math.floor(seconds / READ_LINE_S)
+            val phase = seconds / READ_LINE_S - line
+            val from = line.toInt().mod(READ_LINES)
+            val to = (from + 1) % READ_LINES
+            val blend = minimumJerk((phase - (1f - READ_RETURN_SHARE)) / READ_RETURN_SHARE)
+            return READ_LINE_PITCH_DEGREES * (from + (to - from) * blend)
+        }
+
+        private fun minimumJerk(value: Float): Float {
+            val t = value.coerceIn(0f, 1f)
+            return t * t * t * (t * (t * 6f - 15f) + 10f)
         }
         private const val CROSSFADE_S = .07f
         const val CONFIRMATION_PITCH_DEGREES = 3f
