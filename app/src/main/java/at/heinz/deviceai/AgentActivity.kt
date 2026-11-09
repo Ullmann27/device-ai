@@ -10141,8 +10141,9 @@ class AgentActivity : Activity() {
                     ownerDialogueOutput && observations.isEmpty() && reflection == null &&
                     submittedToolObservationCount == 0
                 ) at.heinz.deviceai.cognitive.StreamingSpeechShadowTrace() else null
-                var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
-                    internetRevisionAtTurnStart, internetConsent::revision) {
+                // Local model inference is not a Web capability. The Web ToolGate verifies
+                // exact consent revisions before dispatch; revocation invalidates Web evidence.
+                var generation = run {
                     val taskRemaining = botTask?.reserveModelCall(sessionId)
                     generateLocal(
                         cancellation,turnTrace,prompt.length,
@@ -10202,8 +10203,7 @@ class AgentActivity : Activity() {
                         error("The model repeated a rejected tool request; no tool was executed.")
                     }
                     val rejected = generation.rejectedToolResponses
-                    generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
-                        internetRevisionAtTurnStart, internetConsent::revision) {
+                    generation = run {
                         botTask?.let(::requireBotTaskCurrent)
                         generateLocal(cancellation,turnTrace, hardDeadlineMillis = botTask?.reserveModelCall(sessionId)) {
                             callback -> localRuntime.respondToTools(rejected, callback)
@@ -10316,12 +10316,9 @@ class AgentActivity : Activity() {
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
             val result = runCatching {
-                at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
-                    internetRevisionAtTurnStart, internetConsent::revision) {
-                    orchestrator.run(agentTask).also {
-                        modelWebSessions.forEach { session -> session.checkAuthorized() }
-                        botTask?.let(::requireBotTaskCurrent)
-                    }
+                orchestrator.run(agentTask).also {
+                    modelWebSessions.forEach { session -> session.checkAuthorized() }
+                    botTask?.let(::requireBotTaskCurrent)
                 }
             }
             if (botTask == null && codingPlanning == null)
@@ -10377,7 +10374,9 @@ class AgentActivity : Activity() {
                             else "Coding-Entwurf verworfen · keine gültige aktuelle Modellantwort")
                         return@onSuccess
                     }
-                    if (internetConsent.revision() != internetRevisionAtTurnStart) {
+                    if (at.heinz.deviceai.cognitive.TurnScopedInternetMode.discardAfterConsentChange(
+                            internetConsent.revision() != internetRevisionAtTurnStart,
+                            modelWebCalls, modelWebSessions.isNotEmpty())) {
                         lastLocalReply = null // Revoked turn cannot leave an old apparent-answer anchor.
                         if (botTask == null && sessionId == localSessionId && !ephemeralScreenRun.get())
                             localConversationContext.recordUnanswered(localSessionId, text)
