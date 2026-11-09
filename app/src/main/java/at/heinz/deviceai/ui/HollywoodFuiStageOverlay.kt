@@ -52,6 +52,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private var openness = 0f
     private var closingElapsedMs = -1L
     private var active = false
+    private var parallaxX = 0f
+    private var parallaxY = 0f
     private var reducedMotion = false
     private var bracketsLatched = false
     private var dataLatched = false
@@ -112,6 +114,12 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         if (accent != scene.accent) cinematics = HollywoodFuiCinematics.Painterly(scene.accent)
         accent = scene.accent
         invalidate()
+    }
+
+    /** Decorative glass only; native text, focus and hitboxes never shift. */
+    fun setParallax(x: Float, y: Float) {
+        parallaxX = if (x.isFinite()) x.coerceIn(-1f, 1f) else 0f
+        parallaxY = if (y.isFinite()) y.coerceIn(-1f, 1f) else 0f
     }
 
     fun setWorkActive(value: Boolean) {
@@ -207,6 +215,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         // Painter layers in dp: anchor + beam, glass depth sheets, grid/scan, rim energy and motes.
         canvas.save()
         canvas.scale(density, density)
+        if (!reducedMotion && active) canvas.translate(parallaxX * 5f, parallaxY * 3.5f)
         val radiusDp = 6f
         cinematics.drawGlassLayers(painter, boxDp, frame, radiusDp, budget.glassLayers)
         canvas.restore()
