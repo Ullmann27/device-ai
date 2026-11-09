@@ -12,8 +12,10 @@ internal object TurnScopedInternetMode {
         }
 
     /** A purely local reply has not used a Web capability. Web proposals remain gated. */
-    fun discardAfterConsentChange(changed: Boolean, webCallCount: Int, hadWebSession: Boolean): Boolean =
-        changed && (webCallCount > 0 || hadWebSession)
+    fun discardAfterConsentChange(
+        changed: Boolean, webCallCount: Int, hadWebSession: Boolean,
+        promptUsedOnlineEvidence: Boolean = false
+    ): Boolean = changed && (webCallCount > 0 || hadWebSession || promptUsedOnlineEvidence)
 
     /** Native tool continuations keep their old prompt. A changed consent epoch must
      * abort before dispatch and discard any result that races a revocation. */
