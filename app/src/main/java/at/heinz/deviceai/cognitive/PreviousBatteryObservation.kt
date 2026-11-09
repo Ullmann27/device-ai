@@ -22,6 +22,9 @@ internal class PreviousBatteryObservation {
         return true
     }
 
+    @Synchronized fun lastPercent(sessionId: String): Int? =
+        last?.takeIf { it.session == sessionId }?.percent
+
     @Synchronized fun answer(sessionId: String): String {
         val observed = last?.takeIf { it.session == sessionId }
             ?: return "Für diese Sitzung liegt mir kein belegter früherer Akkustand vor; ich habe keine neue Messung gestartet."
