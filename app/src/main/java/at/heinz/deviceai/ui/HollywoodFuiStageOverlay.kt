@@ -33,6 +33,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     internal var workPulseEnabled = false
     internal var prismRimEnabled = false
     internal var rimIsolationEnabled = false
+    internal var zSliceEnabled = false
     private var lastPulseKey: String? = null
     private var pulseAtElapsedMs = -1L
     private var pulsePending = false
@@ -251,6 +252,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         // Painter layers in dp: anchor + beam, glass depth sheets, grid/scan, rim energy and motes.
         canvas.save()
         canvas.scale(density, density)
+        if (zSliceEnabled && !reducedMotion) canvas.translate(
+            HollywoodFuiConstruct.layerShiftDp(tilt, -24f, true), 0f)
         if (!reducedMotion && active) canvas.translate(parallaxX * 5f, parallaxY * 3.5f)
         val radiusDp = 6f
         cinematics.drawGlassLayers(painter, boxDp, frame, radiusDp, budget.glassLayers)
@@ -283,7 +286,11 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
             if (pulseAge in 0L..380L) cinematics.drawVerifiedStepPulse(painter, boxDp, frame,
                 pulseAge / 380f)
         }
+        canvas.save()
+        if (zSliceEnabled && !reducedMotion) canvas.translate(
+            HollywoodFuiConstruct.layerShiftDp(tilt, 20f, true) * density, 0f)
         cinematics.drawBrackets(painter, boxDp, frame.brackets * frame.closeFrame, bloom)
+        canvas.restore()
         if (prismRimEnabled && bloom && frame.brackets * frame.closeFrame > .1f) {
             prismRim?.draw(canvas, stage, frame.tiltDegrees, frame.pulse, density)
         }
