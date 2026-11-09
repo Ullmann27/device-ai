@@ -20,6 +20,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private var asset: FilamentAsset? = null
     private var cameraEntity = 0
     private val lightEntities = mutableListOf<Int>()
+    private var coreLightInstance = 0
+    private var coreLightLumens = AvatarCoreLighting.BASE_LUMENS
     private lateinit var mapper: AvatarMorphMapper
     private var morphInstances = intArrayOf()
     private data class Joint(val instance: Int, val rest: FloatArray)
@@ -120,9 +122,10 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         addLight(LightManager.Builder(LightManager.Type.POINT)
             .color(.55f, .24f, 1f).intensity(28_000f)
             .position(-.38f, .32f, .38f).falloff(1.5f).castShadows(false))
-        addLight(LightManager.Builder(LightManager.Type.POINT)
-            .color(.18f, .82f, 1f).intensity(24_000f)
+        val coreLight = addLight(LightManager.Builder(LightManager.Type.POINT)
+            .color(.18f, .82f, 1f).intensity(AvatarCoreLighting.BASE_LUMENS)
             .position(.32f, .35f, -.16f).falloff(1.2f).castShadows(false))
+        coreLightInstance = e.lightManager.getInstance(coreLight)
         // The current portrait reference includes a readable iris and pupil.
         // Keep the authored glTF materials and eye meshes; a global cyan
         // emissive override would erase the violet/cyan surface design.
@@ -153,18 +156,27 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         }
     }
 
-    private fun addLight(builder: LightManager.Builder) {
+    private fun addLight(builder: LightManager.Builder): Int {
         val entity = EntityManager.get().create()
         // Track before build: partial initialization follows the same close path.
         lightEntities += entity
         builder.build(requireNotNull(engine), entity)
         requireNotNull(scene).addEntity(entity)
+        return entity
+    }
+
+    private fun applyCoreLight(energy: Float, enabled: Boolean) {
+        val lumens = AvatarCoreLighting.intensity(energy, enabled && !reducedQuality)
+        if (kotlin.math.abs(lumens - coreLightLumens) < 1f) return
+        requireNotNull(engine).lightManager.setIntensity(coreLightInstance, lumens)
+        coreLightLumens = lumens
     }
 
     /** Called by the existing View frame clock; never posts a callback of its own. */
     fun render(pose: AvatarPose, seconds: Float, motion: Boolean, width: Int, height: Int,
                framing: AvatarFraming.Window? = null, diagnosticBlink: Float? = null,
-               receipt: AvatarFrameReceipt? = null): Boolean {
+               receipt: AvatarFrameReceipt? = null, coreEnergy: Float = 0f,
+               cinematicLighting: Boolean = false): Boolean {
         val e = engine ?: return false
         if (width <= 0 || height <= 0 || !surface.isValid) return false
         if (viewportWidth != width || viewportHeight != height || appliedFraming != framingVersion) {
@@ -182,6 +194,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         mapper.update(pose, seconds, motion)
         mapper.applyDiagnosticBlink(diagnosticBlink)
         applyGlow(if (motion) pose.speakEnergy else 0f)
+        applyCoreLight(coreEnergy, cinematicLighting && motion)
         // Cosmetic view drift uses the existing clock. Reduced motion restores
         // the same rest camera immediately; it does not change the actual pose.
         // A close-up keeps the crown margin and crops from below (neck and shoulders dissolve in the view mask).

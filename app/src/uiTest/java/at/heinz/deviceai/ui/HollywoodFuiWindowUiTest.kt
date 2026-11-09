@@ -141,4 +141,42 @@ class HollywoodFuiWindowUiTest {
         assertEquals(1, f.closed)
         assertTrue(f.listeners.isEmpty())
     }
+
+    @Test fun gazeTracksTheActualPerspectiveOnlyOnSuppliedFrames() = fixture { f ->
+        val positions = mutableListOf<Pair<Float, Float>>()
+        f.window.onPresentedCenter = { x, y -> positions += x to y }
+        f.frame(1_000L)
+        f.frame(1_500L)
+        val panel = f.panel
+        val point = floatArrayOf(panel.width * .5f, panel.height * .5f)
+        panel.matrix.mapPoints(point)
+        val flying = positions.last()
+        assertEquals(panel.left + point[0], flying.first, .001f)
+        assertEquals(panel.top + point[1], flying.second, .001f)
+        assertTrue(kotlin.math.abs(flying.first - f.target.centerX()) > 10f)
+        val affineX = panel.left + panel.translationX + panel.width * panel.scaleX * .5f
+        assertTrue("native perspective, not just affine bounds", kotlin.math.abs(affineX - flying.first) > .01f)
+        val count = positions.size
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(2))
+        assertEquals(count, positions.size)
+        f.frame(1_900L)
+        assertEquals(f.target.centerX(), positions.last().first, .001f)
+        assertEquals(f.target.centerY(), positions.last().second, .001f)
+        f.window.close(immediate = true)
+        val closedCount = positions.size
+        f.window.reportPresentedCenter()
+        assertEquals(closedCount, positions.size)
+    }
+
+    @Test fun reducedMotionAndLiveFallbackReportTheDockedCenter() = fixture { f ->
+        val positions = mutableListOf<Pair<Float, Float>>()
+        f.window.onPresentedCenter = { x, y -> positions += x to y }
+        f.frame(1_000L)
+        f.frame(1_400L)
+        f.window.cinematicEffectsEnabled = false
+        assertEquals(f.target.centerX(), positions.last().first, .001f)
+        assertEquals(f.target.centerY(), positions.last().second, .001f)
+        f.frame(1_500L, 0f)
+        assertEquals(f.target.centerX(), positions.last().first, .001f)
+    }
 }
