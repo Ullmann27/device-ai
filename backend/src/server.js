@@ -133,7 +133,7 @@ const functionTools = [
     limit: { type: "integer", minimum: 1, maximum: 250 }
   }, ["query"])),
   tool("find_latest_apk", "Findet aktuelle APKs im Download-Ordner.", objectSchema({
-    filter: stringProp("Optionaler Filter, z. B. lumo.")
+    filter: stringProp("Optionaler Filter, z. B. device-ai.")
   })),
   tool("get_large_files", "Findet große Dateien.", objectSchema({
     roots: { type: "array", items: { type: "string" }, maxItems: 5 },

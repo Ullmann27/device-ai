@@ -73,7 +73,7 @@ internal class OwnerAppActionFlow(
         )
         if (!opening) return done("Gefundene Apps: " + candidates.joinToString("; ") {
             "${it.label} (${it.packageName})"
-        } + ". Welche davon möchtest du öffnen?")
+        } + ". Es wurde nichts geöffnet.")
         phase = Phase.CHOOSE
         return if (matches.exactLabel && matches.total == 1) choose(candidates.single())
             else Step.Choose(candidates)

@@ -295,14 +295,10 @@ class CommandInterpreter(private val context: Context) {
                 "Beispiele anzeigen",
                 "printf '%s\\n' " +
                     "'Öffne WhatsApp' " +
-                    "'Starte Lumo neu' " +
                     "'Zeig meine Downloads' " +
-                    "'Finde Lumo' " +
                     "'Zeig große Dateien' " +
                     "'Geräteinfo und Akku' " +
                     "'Screenshot' " +
-                    "'Zeig Fehler von Lumo' " +
-                    "'Installiere neueste Lumo APK und starte Lumo' " +
                     "'! pm list packages -3'"
             )
         }
@@ -310,7 +306,7 @@ class CommandInterpreter(private val context: Context) {
         if (steps.isEmpty()) {
             steps += CommandStep(
                 "Befehl nicht erkannt",
-                "echo 'Das habe ich noch nicht sicher verstanden. Beispiele: Hilfe, Öffne WhatsApp, Geräteinfo, Downloads, Screenshot, Zeig Fehler von Lumo.'"
+                "echo 'Das habe ich noch nicht sicher verstanden. Beispiele: Hilfe, Öffne WhatsApp, Geräteinfo, Downloads, Screenshot.'"
             )
         }
 
@@ -323,7 +319,7 @@ class CommandInterpreter(private val context: Context) {
     }
 
     private fun apkFilter(lower: String): String? {
-        val known = listOf("lumo", "device-ai", "device ai")
+        val known = listOf("device-ai", "device ai")
         return known.firstOrNull { lower.contains(it) }
             ?.replace(" ", "-")
             ?.replace(Regex("[^a-z0-9._-]"), "")

@@ -336,4 +336,19 @@ class OwnerAppActionFlowTest {
         }
     }
 
+    @Test fun readOnlyDiscoveryNeverSuggestsImplicitOpeningOrExecutesLaunch() {
+        val calls = mutableListOf<String>()
+        val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { call ->
+            calls.add(call.name)
+            check(call.name == "find_app")
+            lookup(call)
+        })
+        val flow = OwnerAppActionFlow(false)
+        val done = flow.returned(invoke(gate, flow.start("Signal"))) as OwnerAppActionFlow.Step.Done
+        assertEquals(listOf("find_app"), calls)
+        assertTrue(done.message.contains("nichts geöffnet"))
+        assertFalse(done.message.contains("möchtest du öffnen"))
+        assertNull(flow.confirm(true))
+    }
+
 }

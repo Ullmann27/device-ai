@@ -18,7 +18,7 @@ class BootstrapBrainNegationDeEnTest {
             "Don\u2019t show my downloads",
             "Do not open my downloads, just say hi",
             "Never list my downloads",
-            "Please don't check the Lumo version",
+            "Please don't check the battery",
             "Zeig mir nie meine Downloads",
             "Weder Downloads noch Apps zeigen",
             "Zeige keine große Dateien",
@@ -34,7 +34,8 @@ class BootstrapBrainNegationDeEnTest {
         assertEquals("list_files", decide("Show my downloads").tool)
         assertEquals("list_files", decide("Zeig mir meine Downloads").tool)
         assertEquals("get_storage_info", decide("Zeige große Dateien").tool)
-        assertEquals("get_app_info", decide("Prüfe die Lumo Version").tool)
+        assertEquals("get_device_info", decide("Geräteinfo").tool)
+        assertEquals("list_installed_apps", decide("Installierte Apps").tool)
         // "Notiz" / "Nietzsche" / "nobody" must not be mistaken for a negation word.
         assertEquals("list_files", decide("Zeig die Downloads mit der Notiz").tool)
         assertEquals("list_files", decide("Downloads von Nietzsche zeigen").tool)

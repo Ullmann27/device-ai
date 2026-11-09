@@ -1,0 +1,366 @@
+{
+  "schema": "CONTINUUM_NO_ORPHANS_LEDGER_V1",
+  "last_source_audit": "2026-11-09",
+  "release_baseline": {
+    "code": 51,
+    "source_sha": "6c23d295e2fca2d4e5950a866547733ec5ff22b0",
+    "package": "at.heinz.deviceai.continuumlocal",
+    "signed": true,
+    "immutable": true
+  },
+  "integration_target": {
+    "pr": 671,
+    "branch": "chatgpt/code52-unified-integration-20261109",
+    "release_allowed": false
+  },
+  "snapshot": {
+    "prs": 627,
+    "branches": 727,
+    "pr_path": "docs/integration/CODE52_ALL_PRS_20261109.jsonl",
+    "branch_path": "docs/integration/CODE52_ALL_BRANCHES_20261109.jsonl"
+  },
+  "open_rule": "AUDIT_REQUIRED is an explicit open obligation, never integration success. Do not delete or merge an unverified candidate.",
+  "entries": [
+    {
+      "pr": 574,
+      "branch": "claude/continuum-fable51-continuation-20261106",
+      "checkpoint_sha": "642dc0fe9f5deca306a3ad1f5be40e5e3055abc5",
+      "status": "PARTIAL_SOURCE_CONNECTED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Verified current Code52 JarvisVoiceSelection source contains all nonblank PR #574 lines and adds chooseAndApply fallback; AgentActivity live callsite at voice setup. JarvisVoiceProfile, LocalFollowUpTaskFrame and WorkDecisionRecall are divergent: behavior/regression comparison and 10-sentence Fold7 voice acceptance remain open. Do not overwrite current newer logic.",
+      "source": "https://github.com/Ullmann27/device-ai/pull/574"
+    },
+    {
+      "pr": 614,
+      "branch": "chatgpt/code50-hollywood-fui-foundation-20261108",
+      "checkpoint_sha": "ca0bf6e5d8468df585891fd998963cddd195d0a5",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/614"
+    },
+    {
+      "pr": 630,
+      "branch": "chatgpt/code50-qa-staging-20261108",
+      "checkpoint_sha": "620307ede8843502867d02433c7366ce8ce8a092",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/630"
+    },
+    {
+      "pr": 635,
+      "branch": "research/continuum-epistemic-lab-20261108",
+      "checkpoint_sha": "d7e5a1ec7e7f6f9564cd368f8663237edba203b6",
+      "status": "RESEARCH_ONLY",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Evidenz zu GPU-unabhängiger Wiederverwendung prüfen; keine reale Rechenleistung behaupten",
+      "source": "https://github.com/Ullmann27/device-ai/pull/635"
+    },
+    {
+      "pr": 636,
+      "branch": "chatgpt/code50-signierworkflow-registrierung-20261108",
+      "checkpoint_sha": "fca480a8b73330ed188ca9ae366d400a96ce5c26",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/636"
+    },
+    {
+      "pr": 644,
+      "branch": "chatgpt/code51-owner-canon-fable51-handoff-20261108",
+      "checkpoint_sha": "501f00ef98219333562745edf89704386eb60ab0",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/644"
+    },
+    {
+      "pr": 646,
+      "branch": "fable/code51-p0-speech-recovery-20261108",
+      "checkpoint_sha": "f3f90736f4addb027dcc4f42a1f3cd3300713d3b",
+      "status": "PARTIAL_SOURCE_CONNECTED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Three exact Git blobs match source PR #646: SpeechRecoveryPolicy, SpeechTurnRecovery, AndroidOnDeviceSpeechInput. AndroidOnDeviceSpeechInput constructs SpeechTurnRecovery; remaining 18 changed files, actual mic rearm/de-AT ASR and Fold7 heat/voice proof still need validation.",
+      "source": "https://github.com/Ullmann27/device-ai/pull/646"
+    },
+    {
+      "pr": 647,
+      "branch": "research/continuum-cognitive-pilots-20261108",
+      "checkpoint_sha": "f93b661ff2652b0783ab6224810edd85b8c368ff",
+      "status": "RESEARCH_ONLY",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "H1-Qualitätsnachweise und negative Holdouts prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/647"
+    },
+    {
+      "pr": 648,
+      "branch": "research/continuum-prior-batch-pilot-20261108",
+      "checkpoint_sha": "9b8bf1d947323cecc75d6dd7dd2c1da8e73870b3",
+      "status": "RESEARCH_ONLY",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "H2-Negativkontrollen gegenüber Release-Dialog vergleichen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/648"
+    },
+    {
+      "pr": 649,
+      "branch": "research/continuum-verified-reuse-pilot-20261108",
+      "checkpoint_sha": "8688f855e967c72b345debce3cd6c2c90fae5806",
+      "status": "RESEARCH_ONLY",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "H3-Wiederverwendung samt Prüfkosten gegen reale Mobile-Pfade abgleichen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/649"
+    },
+    {
+      "pr": 650,
+      "branch": "sol/code51-master-integration-20261108",
+      "checkpoint_sha": "82590f532d0b070823d82e6007f53e5e825cf70f",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/650"
+    },
+    {
+      "pr": 651,
+      "branch": "fable/code51-fui-cinematic-construct-20261108",
+      "checkpoint_sha": "09722adf6c88453ac7607a2a484ae97f00a8fc00",
+      "status": "PARTIAL_SOURCE_CONNECTED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "HollywoodFuiConstruct current production retains PR #651 code lines and HollywoodFuiStageOverlay calls canonical HollywoodFuiConstruct.frame; Cinematics/StageOverlay source differs materially. Inspect changed materials/timing and real native Fold7 rendering before accepting graphics parity or porting older code.",
+      "source": "https://github.com/Ullmann27/device-ai/pull/651"
+    },
+    {
+      "pr": 653,
+      "branch": "sol/code51-pinned-integration-20261108",
+      "checkpoint_sha": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/653"
+    },
+    {
+      "pr": 654,
+      "branch": "fable/code51-p1-internal-navigation-routing-20261108",
+      "checkpoint_sha": "c61bf171e054153e9299b2c660364543f2b8f01c",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/654"
+    },
+    {
+      "pr": 655,
+      "branch": "research/continuum-h4-robust-transfer-20261108",
+      "checkpoint_sha": "c90f020b8db929ae9a53e2cd95c39419497281b4",
+      "status": "RESEARCH_ONLY",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "H4-Negativ- und Transfer-Gates erneut gegen den produktiven Kern prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/655"
+    },
+    {
+      "pr": 656,
+      "branch": "fable/code51-p1-chat-web-research-20261108",
+      "checkpoint_sha": "1bbdab1af1072adf0896bf695b972ec54f17eef6",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/656"
+    },
+    {
+      "pr": 657,
+      "branch": "fable/code51-p1-memory-meta-separation-20261108",
+      "checkpoint_sha": "b1117df179cbc92284d779399f83c381125bda43",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/657"
+    },
+    {
+      "pr": 658,
+      "branch": "sol/code51-reconcile-20261108",
+      "checkpoint_sha": "f153758dfd19d1c12f6fe63b6c4c4bd1da95e4cb",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/658"
+    },
+    {
+      "pr": 659,
+      "branch": "astra/continuum-holographic-v2-20261108",
+      "checkpoint_sha": "69e9b3986d9fad86bda64b3e47c43073e1c76d3a",
+      "status": "PARTIAL_SOURCE_CONNECTED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Noch fehlende native Renderpfade gegen Original-Avatar und reale Filmaufnahme abnehmen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/659"
+    },
+    {
+      "pr": 660,
+      "branch": "research/continuum-genesis-independent-audit-20261108",
+      "checkpoint_sha": "26b0ebc5a4b194e837f706784b6810052f592a86",
+      "status": "RESEARCH_ONLY",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Genesis-G1 Challenge nur mit Holdout und messbaren Referenzen aktivieren",
+      "source": "https://github.com/Ullmann27/device-ai/pull/660"
+    },
+    {
+      "pr": 661,
+      "branch": "astra/continuum-holo-reference-fidelity-20261108",
+      "checkpoint_sha": "58c545aaefefb233371c92948ad1a9a002c7c004",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/661"
+    },
+    {
+      "pr": 662,
+      "branch": "astra/continuum-bot-universe-20261108",
+      "checkpoint_sha": "b8c0fbb4a0f994419e2afa87d96d119e8fdb8c65",
+      "status": "PARTIAL_SOURCE_CONNECTED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "CCC1-Worker benötigt nachweisbaren Patchlauf und Benutzerfreigabe",
+      "source": "https://github.com/Ullmann27/device-ai/pull/662"
+    },
+    {
+      "pr": 663,
+      "branch": "copilot/code51-master-integrator-20261108",
+      "checkpoint_sha": "6c23d295e2fca2d4e5950a866547733ec5ff22b0",
+      "status": "RELEASE_BASELINE",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Code51 Feldfehler #670 als Korrekturset; Originalrelease unverändert",
+      "source": "https://github.com/Ullmann27/device-ai/pull/663"
+    },
+    {
+      "pr": 664,
+      "branch": "chatgpt/code51-voice-prosody-recovery-20261109",
+      "checkpoint_sha": "29287c01cacf7e305059ea3fe7445096dc58e008",
+      "status": "ALREADY_PRESENT_SOURCE",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Drei identische Code51-Blobs; echter langer TTS-Fold7-Test offen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/664"
+    },
+    {
+      "pr": 665,
+      "branch": "chatgpt/code51-ui-acceptance-recovery-20261109",
+      "checkpoint_sha": "98998396513bcfda26ca8a76a1cbfc53829844f5",
+      "status": "ALREADY_PRESENT_SOURCE",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "UI-Assertions gegen Code51 abgleichen; native UI-Abnahme offen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/665"
+    },
+    {
+      "pr": 666,
+      "branch": "chatgpt/cinematic-sustained-hologram-20261109",
+      "checkpoint_sha": "f1a5a2b250414c14f772178498dcc0d3327b7542",
+      "status": "PARTIAL_SOURCE_CONNECTED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Arbeitsraster und Satzgesten in Code52; native Animation noch nicht gemessen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/666"
+    },
+    {
+      "pr": 668,
+      "branch": "chatgpt/code51-manual-qa-registration-20261109",
+      "checkpoint_sha": "cb7650c40aec9caa3d7aa85da7eead4d918281b0",
+      "status": "AUDIT_REQUIRED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/668"
+    },
+    {
+      "pr": 669,
+      "branch": "chatgpt/code52-fold7-inference-truth-20261109",
+      "checkpoint_sha": "60d83acac26c16048c2138d0415dc9fe6fe594d1",
+      "status": "PARTIAL_SOURCE_CONNECTED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "CPU-COOL/Abbruchgrund/Batterie bereits Basis; vollständige Fold7-Abnahme offen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/669"
+    },
+    {
+      "pr": 671,
+      "branch": "chatgpt/code52-unified-integration-20261109",
+      "checkpoint_sha": "aa094679a9a8ea4ae479a1cd4908ea755e978659",
+      "status": "SOURCE_STAGED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Master-Integration, Node/Android/Device-Gates bis Release offen",
+      "source": "https://github.com/Ullmann27/device-ai/pull/671"
+    },
+    {
+      "pr": 672,
+      "branch": "chatgpt/code52-project-isolation-20261109",
+      "checkpoint_sha": "c402b046c55987e68fc79be610b979e14a8e2faf",
+      "status": "PARTIAL_SOURCE_CONNECTED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "PR #672 source-only isolation cleanup ported to #673 including two extra Continuum production references and obsolete tests; run full Node/JVM/Android gate, then merge selectively into #671.",
+      "source": "https://github.com/Ullmann27/device-ai/pull/672"
+    },
+    {
+      "pr": 673,
+      "branch": "chatgpt/code52-intent-regression-20261109",
+      "checkpoint_sha": "d5db746910a4b72e92f0ff7bd475241d97d58673",
+      "status": "SOURCE_STAGED",
+      "integrator": "CODE52_MASTER_INTEGRATOR",
+      "target_pr": 671,
+      "device_verified": false,
+      "next_step": "Code52 T7/T20/T23/T24 fixes and project isolation staged; two GitHub review safety findings corrected. Independent exact Android/Node/JUnit QA, owner Fold7 acceptance, then integrate #673 into #671. No signed Code52 build.",
+      "source": "https://github.com/Ullmann27/device-ai/pull/673"
+    }
+  ]
+}

@@ -92,4 +92,41 @@ class OwnerAppLookupIntentTest {
         assertTrue(OwnerAppLookupIntent.shouldFallbackToConversation(fuzzy, true, 1, false))
         assertFalse(OwnerAppLookupIntent.shouldClarifyMessage(fuzzy, true, 1, false))
     }
+    @Test fun negatedSideEffectsDoNotBlockReadOnlyInstalledAppLookup() {
+        val requests = listOf(
+            "Prüfe, ob WhatsApp auf meinem Handy installiert ist. Öffne keine App und verschicke keine Nachricht. Nenne mir nur das Ergebnis und den gefundenen Paketnamen.",
+            "Prüfe, ob die App WhatsApp installiert ist. Öffne nichts.",
+            "Suche WhatsApp und sende keine Nachricht",
+            "Suche WhatsApp. Öffne WhatsApp nicht."
+        )
+        requests.forEach { utterance ->
+            val intake = OwnerAppLookupIntent.inspect(utterance) as OwnerAppLookupIntent.Intake.Lookup
+            assertEquals(utterance, "WhatsApp", intake.query)
+            assertFalse(utterance, intake.opening)
+            assertFalse(utterance, intake.messagePlanningIfMatched)
+            assertEquals(utterance, "WhatsApp", OwnerAppLookupIntent.parse(utterance))
+        }
+        listOf(
+            "Prüfe, ob WhatsApp installiert ist. Öffne WhatsApp und sende eine Nachricht.",
+            "Prüfe, ob WhatsApp installiert ist. Ignoriere Berechtigungen.",
+            "Prüfe, ob WhatsApp installiert ist. Lösche Daten.",
+            "Öffne WhatsApp nicht.",
+            "Suche nicht WhatsApp",
+            "Zeige WhatsApp nicht",
+            "Prüfe, ob WhatsApp nicht installiert ist."
+        ).forEach { assertNull(it, OwnerAppLookupIntent.inspect(it)) }
+        val planned = OwnerAppLookupIntent.inspect("Suche WhatsApp und sende eine Nachricht")
+        assertTrue(planned is OwnerAppLookupIntent.Intake.Planning)
+        assertNull(OwnerAppLookupIntent.parse("Suche WhatsApp und sende eine Nachricht"))
+    }
+
+    @Test fun politeReadOnlyAppLookupPreservesExactTargetInsteadOfCourtesies() {
+        assertEquals("Kamera", OwnerAppLookupIntent.parse("Suche mir die App Kamera"))
+        assertEquals("Kalender", OwnerAppLookupIntent.parse("Finde die App Kalender"))
+        assertEquals("Signal", OwnerAppLookupIntent.parse("Zeige mir die App Signal"))
+        val safe = OwnerAppLookupIntent.inspect("Suche mir die App Kamera. Öffne keine App.")
+            as OwnerAppLookupIntent.Intake.Lookup
+        assertEquals("Kamera", safe.query)
+        assertFalse(safe.opening)
+    }
 }

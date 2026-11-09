@@ -51,7 +51,7 @@ object BootstrapBrain {
         """(?iu)(?<![\p{L}\p{N}_])(?:akku|batterie|ladezustand|akkustand)(?![\p{L}\p{N}_])"""
     )
     private val batteryReadCue = Regex(
-        """(?iu)(?<![\p{L}\p{N}_])(?:prüfe|prüfen|prüf|überprüfe|zeige|zeigen|zeig|wie viel|wieviel|wie voll|wie ist|wie steht|wie hoch|lade|ladung|ladestand|status|stand|zustand)(?![\p{L}\p{N}_])"""
+        """(?iu)(?<![\p{L}\p{N}_])(?:prüfe|prüfen|prüf|überprüfe|miss|messe|messen|mess|check|checke|zeige|zeigen|zeig|wie viel|wieviel|wie voll|wie ist|wie steht|wie hoch|lade|ladung|ladestand|status|stand|zustand)(?![\p{L}\p{N}_])"""
     )
     private fun isBatteryReadRequest(input: String): Boolean =
         input.trim().split(storageClauseBoundary).any { untrimmed ->
@@ -237,6 +237,10 @@ object BootstrapBrain {
         if (low == "hallo" || low == "hi" || low == "hey" || low == "guten morgen" ||
             low == "guten tag" || low == "servus") return BootstrapDecision(BootstrapKind.REPLY,
                 "Hallo! Der lokale Startkern von Device AI Continuum ist aktiv. Was möchtest du ausprobieren?")
+        // An explicit request for an earlier device reading is not permission to measure again.
+        if (at.heinz.deviceai.cognitive.OwnerPreviousBatteryIntent.isPreviousReadingRequest(text))
+            return BootstrapDecision(BootstrapKind.REPLY,
+                "Keine neue Akkumessung gestartet. Eine frühere Messung kann nur aus einer belegten aktuellen Sitzung wiedergegeben werden.")
         if (at.heinz.deviceai.cognitive.LocalAssistantIdentity.isIdentityQuestion(text)) return BootstrapDecision(
             BootstrapKind.REPLY, identityDescription ?:
                 at.heinz.deviceai.cognitive.LocalAssistantIdentity.selfDescription(null))
@@ -267,10 +271,6 @@ object BootstrapBrain {
             return BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = name,
                 arguments = if (name == "list_files") mapOf("path" to "/sdcard/Download") else emptyMap())
         }
-        if (affirmativeClause(low) { "fehler lumo" in it || ("lumo" in it && "logcat" in it) })
-            return tool("read_logcat", mapOf("packageOrName" to "Lumo", "lines" to 180))
-        if (affirmativeClause(low) { "lumo" in it && ("prüf" in it || "version" in it || "installiert" in it) })
-            return tool("get_app_info", mapOf("packageOrName" to "Lumo"))
         if (affirmativeClause(low) { "downloads" in it || "download-ordner" in it }) return tool("list_files",
             mapOf("path" to "/sdcard/Download"))
         val wantsStorageInspection = isStorageReadRequest(low) ||

@@ -14,6 +14,15 @@ internal object OwnerAppLookupIntent {
     }
 
     private val negation = Regex("(?iu)\\b(nicht|niemals|kein|keine|keinen|keinem|keiner|ohne)\\b")
+    private val installedCheck = Regex(
+        """(?iu)^(?:prüf(?:e)?|überprüf(?:e)?|kontrollier(?:e)?|check(?:e)?)\s*,?\s*ob\s+(?:die\s+app\s+)?([\p{L}\p{N}][\p{L}\p{N} ._+-]{0,79}?)\s+(?:auf\s+(?:meinem|dem|diesem)\s+(?:handy|gerät|smartphone)\s+)?installiert\s+ist$"""
+    )
+    private val safeLookupTail = Regex(
+        """(?iu)^(?:öffne\s+(?:keine\s+app|nichts|[\p{L}\p{N}._+-]{1,40}\s+nicht)|(?:verschick(?:e)?|versende|sende|schick(?:e)?)\s+keine\s+nachricht|nenne\s+mir\s+nur\s+das\s+ergebnis\s+und\s+den\s+gefundenen\s+paketnamen)$"""
+    )
+    private val safeConjunction = Regex(
+        """(?iu)\s+und\s+(?=(?:verschick(?:e)?|versende|sende|schick(?:e)?)\s+keine\s+nachricht\b)"""
+    )
     private val additional = Regex("(?iu)\\b(und|oder|danach|anschließend|sende|senden|schreibe|schreiben|tippe|lösche|installiere|kaufe|bezahle|überweise)\\b")
     private val direct = Regex("(?iu)^(öffne|starte|suche|finde|zeige)\\s+(.+?)[.!?]*$")
     private val polite = Regex("(?iu)^(?:kannst|könntest|würdest|magst)\\s+du\\s+(.+?)\\s+(öffnen|starten|suchen|finden|zeigen)(?:\\s+bitte)?[.!?]*$")
@@ -59,13 +68,32 @@ internal object OwnerAppLookupIntent {
         ?.takeUnless { it.requireInstalledCandidate }
         ?.query
 
+    private fun readOnlyAppLookup(text: String): Intake.Lookup? {
+        val clauses = text.replace(safeConjunction, ". ")
+            .split(Regex("""[.!?]+\s*""")).map(String::trim).filter(String::isNotEmpty)
+        val first = clauses.firstOrNull() ?: return null
+        if (negation.containsMatchIn(first)) return null
+        val raw = installedCheck.matchEntire(first)?.groupValues?.get(1)
+            ?: direct.matchEntire(first)?.takeIf {
+                clauses.size > 1 && it.groupValues[1].lowercase() in setOf("suche", "finde", "zeige")
+            }?.groupValues?.get(2)
+            ?: return null
+        if (clauses.drop(1).any { !safeLookupTail.matches(it) }) return null
+        val name = raw.trim()
+            .replace(Regex("""(?iu)^(?:mir\s+)?(?:(?:die|den|das)\s+)?(?:app\s+)?"""), "").trim()
+        if (!query.matches(name) || name.contains("..") || isReference(name) ||
+            fileTarget.containsMatchIn(name) || additional.containsMatchIn(name)) return null
+        return Intake.Lookup(name, opening = false)
+    }
+
     fun inspect(utterance: String, assistantName: String? = null): Intake? {
         if (utterance.length !in 5..1_000 || utterance.any { it.isISOControl() || it in "\"„“”«»" }) return null
         var text = stripAddress(utterance.trim(), assistantName)
         text = text.replace(Regex("(?iu)^bitte\\s+"), "")
-        if (negation.containsMatchIn(text)) return null
-        // Internal cockpit screens have exactly one owner (OwnerInternalNavigationIntent); never an app lookup.
+        // Internal cockpit screens have exactly one owner (OwnerInternalNavigationIntent).
         if (OwnerInternalNavigationIntent.resolve(utterance, assistantName) != null) return null
+        readOnlyAppLookup(text)?.let { return it }
+        if (negation.containsMatchIn(text)) return null
         vague.matchEntire(text)?.let { return Intake.Clarify(it.groupValues[1].trim().take(100)) }
         explicitMessageApp.matchEntire(text)?.let { match ->
             val app = match.groupValues.drop(1).firstOrNull { it.isNotBlank() }

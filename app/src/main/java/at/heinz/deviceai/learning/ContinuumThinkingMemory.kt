@@ -26,7 +26,7 @@ data class ThinkingJournalEntry(val kind:ThinkingEntryKind, val runId:String, va
 data class ThinkingRun(val runId:String, val goal:String, val lessons:List<String> = emptyList())
 
 /**
- * Sprint 98 — memory side of the thinking loop. The loop (HAUPT's ChiefWorkerPool job / Lumo's task job) calls:
+ * Sprint 98 — memory side of the thinking loop. The Continuum chief/task loop calls:
  *  - [recall] at each step: bounded recall via [ContinuumMemoryLayers] (shared answer, keyword+time search) plus
  *    earlier reflections; revoked statements are never recalled; abstains when nothing matches;
  *  - [journal] after each step: one dated entry;

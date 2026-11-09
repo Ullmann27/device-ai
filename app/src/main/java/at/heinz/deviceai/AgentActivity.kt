@@ -450,6 +450,7 @@ class AgentActivity : Activity() {
     private val modeButtons = linkedMapOf<AssistantMode, Button>()
     private var mode = AssistantMode.AUTO
     @Volatile private var sessionId = UUID.randomUUID().toString()
+    private val lastBatteryObservation = at.heinz.deviceai.cognitive.PreviousBatteryObservation()
     private val chatTranscripts by lazy {
         at.heinz.deviceai.cognitive.LocalChatTranscriptStore(java.io.File(filesDir, "chat-history"))
     }
@@ -4227,6 +4228,7 @@ class AgentActivity : Activity() {
         listOf(
             CenterAction("MEHR · ARBEITSBEREICHE") { showMoreWorkAreas() },
             CenterAction("SHIZUKU · VERBINDEN") { showShizukuConnectionDialog() },
+            CenterAction("WHATSAPP · NACHRICHT ENTWERFEN") { showWhatsAppDraftDialog() },
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
             CenterAction("OPENROUTER · API-KEY EINGEBEN") { showOpenRouterApiKeyDialog() },
@@ -4247,6 +4249,61 @@ class AgentActivity : Activity() {
             CenterAction("HOLOGRAMM · LIVE-FRAMES PRÜFEN", accent = true) { showHologramMotionAudit() }
         )
     )
+
+    private fun showWhatsAppDraftDialog() {
+        if (isFinishing || isDestroyed) return
+        val draft = EditText(this).apply {
+            hint = "Deine Nachricht …"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE or
+                InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            setTextColor(TEXT)
+            setHintTextColor(MUTED)
+            textSize = 15f
+            minLines = 3
+            maxLines = 8
+            setPadding(dp(12), dp(12), dp(12), dp(12))
+            background = rounded(Color.rgb(10, 24, 46), 14, BORDER)
+        }
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(16), dp(12), dp(16), dp(12))
+            addView(textView(
+                "Continuum öffnet nur einen Entwurf. Du wählst in WhatsApp den Kontakt " +
+                    "und sendest selbst. Keine Nachricht wird automatisch versendet oder gelesen.",
+                13f, MUTED), matchWidth())
+            addView(draft, matchWidth(top = 10))
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("WhatsApp · Nachricht entwerfen")
+            .setView(ScrollView(this).apply { addView(content) })
+            .setNegativeButton("Abbrechen", null)
+            .setPositiveButton("In WhatsApp öffnen", null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val text = WhatsAppDraftPolicy.validated(draft.text.toString())
+                if (text == null) {
+                    draft.error = "Bitte 1 bis 2000 Zeichen eingeben, ohne Steuerzeichen."
+                    return@setOnClickListener
+                }
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    setPackage(WhatsAppDraftPolicy.TARGET_PACKAGE)
+                    putExtra(Intent.EXTRA_TEXT, text)
+                }
+                try {
+                    startActivity(intent)
+                    dialog.dismiss()
+                    addToolActivity("WhatsApp-Entwurf angefordert · nicht als gesendet bestätigt")
+                } catch (_: ActivityNotFoundException) {
+                    Toast.makeText(this, "WhatsApp ist nicht als Empfangs-App verfügbar.", Toast.LENGTH_LONG).show()
+                } catch (_: SecurityException) {
+                    Toast.makeText(this, "Android hat die WhatsApp-Übergabe abgelehnt.", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        dialog.show()
+    }
 
     /** Existing local voice/model/speech/camera ports; this screen confers no tool authority. */
     private fun showReadinessGuide() {
@@ -5184,6 +5241,11 @@ class AgentActivity : Activity() {
         })
         refreshConversationCameraControls()
         shell.addView(inputRow, matchWidth())
+        if (stackedComposer) {
+            newChat.text = "＋ Neue Sitzung"
+            newChat.textSize = 14f
+            shell.addView(newChat, matchWidth(top = 6))
+        }
 
         val actions = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -5250,7 +5312,6 @@ class AgentActivity : Activity() {
             val primary = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
-                addView(newChat, LinearLayout.LayoutParams(dp(48), dp(48)))
                 addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply { marginStart = dp(6) })
                 addView(camera, LinearLayout.LayoutParams(dp(48), dp(48)).apply { marginStart = dp(6) })
                 addView(View(this@AgentActivity), LinearLayout.LayoutParams(0, 1, 1f))
@@ -5458,6 +5519,16 @@ class AgentActivity : Activity() {
             return
         }
         if (!botRoutingChecked && routeBotInput(input.text.toString())) return
+        // Prior measurement requests never start a new tool, model or network call.
+        if (!neuralCoach.isActive() &&
+            at.heinz.deviceai.cognitive.OwnerPreviousBatteryIntent.isPreviousReadingRequest(request)) {
+            input.text.clear()
+            addUserMessage(request)
+            addNonModelReply(request, lastBatteryObservation.answer(sessionId),
+                at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+            addToolActivity("AKKU · letzte belegte Messung wiedergegeben · keine neue Geräteprüfung")
+            return
+        }
         // „Was haben wir gestern entschieden?“ / „die Entscheidung davor“ / „was davon ist umgesetzt“ / „beim letzten offenen
         // Punkt weitermachen“ – answered from the work journal and the owner's confirmed statements, never by the model.
         at.heinz.deviceai.cognitive.WorkDecisionRecall.parse(request)?.let { ask ->
@@ -6640,6 +6711,9 @@ class AgentActivity : Activity() {
         setBusy(true)
         addToolActivity("Prüfe ${ToolRegistry.label(name)} …")
         val actionSessionId = sessionId
+        val compareBattery = name == "get_battery_info" &&
+            at.heinz.deviceai.cognitive.OwnerPreviousBatteryIntent.isFreshComparisonRequest(request)
+        val priorBatteryPercent = if (compareBattery) lastBatteryObservation.lastPercent(actionSessionId) else null
         val turnTrace = CognitiveTurnTrace(actionSessionId)
         val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
         val plan = at.heinz.deviceai.cognitive.ReadOnlyToolPlan.forRequest(request, ToolProposal(name, decision.arguments))
@@ -6681,11 +6755,23 @@ class AgentActivity : Activity() {
                 val value = result.fold(
                     onSuccess = { item ->
                         checkpointContinuumAsync()
+                        val freshBattery = if (name == "get_battery_info")
+                            lastBatteryObservation.recordIfFresh(actionSessionId, item) else false
+                        val batteryComparison = if (!compareBattery) "" else {
+                            val current = if (freshBattery) lastBatteryObservation.lastPercent(actionSessionId) else null
+                            when {
+                                current == null -> "\nVergleich nicht möglich: Die neue Messung ist nicht belegt."
+                                priorBatteryPercent == null ->
+                                    "\nKein belegter früherer Akkustand in dieser Sitzung; kein Vergleich möglich."
+                                else -> "\nVergleich zur letzten belegten Messung: $priorBatteryPercent % → $current % " +
+                                    "(${current - priorBatteryPercent} Prozentpunkte)."
+                            }
+                        }
                         publishCognitiveTrace(turnTrace,if(item.experience?.outcome == at.heinz.deviceai.cognitive.ExperienceOutcome.SUCCESS) TraceOutcome.ACTION_VERIFIED else TraceOutcome.BLOCKED)
                         if (item.experience?.outcome == at.heinz.deviceai.cognitive.ExperienceOutcome.SUCCESS) {
                             addToolActivity("CONTINUUM · frische Messung belegt · Episode zur Sicherung vorgemerkt · kein Gewichtstraining")
                         }
-                        item.response
+                        item.response + batteryComparison
                     },
                     onFailure = { publishCognitiveTrace(turnTrace,TraceOutcome.FAILED); "Geräteprüfung fehlgeschlagen: ${it.message ?: "unbekannter Fehler"}" }
                 )
@@ -9835,6 +9921,7 @@ class AgentActivity : Activity() {
         var submittedToolObservationCount = 0
         var modelWebCalls = 0
         val modelWebSessions = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cognitive.ApprovedWebResearchSession>()
+        val onlineResearchFrameUsed = java.util.concurrent.atomic.AtomicBoolean(false)
         val startedToolCalls = java.util.concurrent.ConcurrentHashMap<String, String>()
         val orchestrator = BoundedAgentOrchestrator(
             model = codingPlanning?.model(localRuntime,cancellation) ?: AgentModel { task, memories, reflection, rawObservations ->
@@ -9887,6 +9974,15 @@ class AgentActivity : Activity() {
                     at.heinz.deviceai.cognitive.TurnScopedInternetMode.effective(
                         internetModeAtTurnStart, internetConsent.mode,
                         internetConsent.revision() == internetRevisionAtTurnStart)
+                // A previous research digest is online-framed only while authorized.
+                // If that authorization changes, this answer must not be retained.
+                if (botTask == null && codingPlanning == null &&
+                    localConversationContext.hasResearch(localSessionId) &&
+                    (boundedInternetMode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON ||
+                        (boundedInternetMode == at.heinz.deviceai.cognitive.InternetAccessMode.ASK &&
+                            modelWebSessions.any { it.isAuthorized() }))) {
+                    onlineResearchFrameUsed.set(true)
+                }
                 // Optional read-only decision context; refresh after queued document writes.
                 // Never supply owner records to assigned bots or coding-only planning.
                 val decisionDigest = if (botTask == null && codingPlanning == null &&
@@ -10055,8 +10151,9 @@ class AgentActivity : Activity() {
                     ownerDialogueOutput && observations.isEmpty() && reflection == null &&
                     submittedToolObservationCount == 0
                 ) at.heinz.deviceai.cognitive.StreamingSpeechShadowTrace() else null
-                var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
-                    internetRevisionAtTurnStart, internetConsent::revision) {
+                // Local model inference is not a Web capability. The Web ToolGate verifies
+                // exact consent revisions before dispatch; revocation invalidates Web evidence.
+                var generation = run {
                     val taskRemaining = botTask?.reserveModelCall(sessionId)
                     generateLocal(
                         cancellation,turnTrace,prompt.length,
@@ -10116,8 +10213,7 @@ class AgentActivity : Activity() {
                         error("The model repeated a rejected tool request; no tool was executed.")
                     }
                     val rejected = generation.rejectedToolResponses
-                    generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
-                        internetRevisionAtTurnStart, internetConsent::revision) {
+                    generation = run {
                         botTask?.let(::requireBotTaskCurrent)
                         generateLocal(cancellation,turnTrace, hardDeadlineMillis = botTask?.reserveModelCall(sessionId)) {
                             callback -> localRuntime.respondToTools(rejected, callback)
@@ -10127,7 +10223,8 @@ class AgentActivity : Activity() {
                 }
                 check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
                 if (ownerDialogueOutput && generation.proposal == null) AgentModelOutput.ownerDialogue(
-                    "litertlm:${imported.id}@${imported.version}", generation.response, generation.completion)
+                    "litertlm:${imported.id}@${imported.version}", generation.response, generation.completion,
+                    generation.failure)
                 else {
                     check(generation.completion == LocalGenerationCompletion.COMPLETE) { "LOCAL_GENERATION_INCOMPLETE" }
                     AgentModelOutput("litertlm:${imported.id}@${imported.version}", generation.response, generation.proposal)
@@ -10229,12 +10326,9 @@ class AgentActivity : Activity() {
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
             val result = runCatching {
-                at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
-                    internetRevisionAtTurnStart, internetConsent::revision) {
-                    orchestrator.run(agentTask).also {
-                        modelWebSessions.forEach { session -> session.checkAuthorized() }
-                        botTask?.let(::requireBotTaskCurrent)
-                    }
+                orchestrator.run(agentTask).also {
+                    modelWebSessions.forEach { session -> session.checkAuthorized() }
+                    botTask?.let(::requireBotTaskCurrent)
                 }
             }
             if (botTask == null && codingPlanning == null)
@@ -10290,7 +10384,10 @@ class AgentActivity : Activity() {
                             else "Coding-Entwurf verworfen · keine gültige aktuelle Modellantwort")
                         return@onSuccess
                     }
-                    if (internetConsent.revision() != internetRevisionAtTurnStart) {
+                    if (at.heinz.deviceai.cognitive.TurnScopedInternetMode.discardAfterConsentChange(
+                            internetConsent.revision() != internetRevisionAtTurnStart,
+                            modelWebCalls, modelWebSessions.isNotEmpty(),
+                            onlineResearchFrameUsed.get())) {
                         lastLocalReply = null // Revoked turn cannot leave an old apparent-answer anchor.
                         if (botTask == null && sessionId == localSessionId && !ephemeralScreenRun.get())
                             localConversationContext.recordUnanswered(localSessionId, text)

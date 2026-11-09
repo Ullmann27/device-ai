@@ -1,0 +1,33 @@
+# 09.11.2026 GitHub compare_commits ancestry pass, all 29 rolling-24h PRs
+# baseline=6c23d295e2fca2d4e5950a866547733ec5ff22b0
+# behind = head is ancestor of Code51; diverged != unintegrated; a source commit may be cherry-picked
+# NO RUNTIME OR DEVICE PROOF; all diverged records require changed-file and active call path check
+{"pr":671,"source_sha":"77f4dd29269b8a19a976c732b32d382afebbd98c","compare_to_code51":"ahead","ahead_by":18,"behind_by":0,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":669,"source_sha":"60d83acac26c16048c2138d0415dc9fe6fe594d1","compare_to_code51":"ahead","ahead_by":10,"behind_by":0,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":630,"source_sha":"620307ede8843502867d02433c7366ce8ce8a092","compare_to_code51":"diverged","ahead_by":1,"behind_by":58,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":663,"source_sha":"6c23d295e2fca2d4e5950a866547733ec5ff22b0","compare_to_code51":"identical","ahead_by":0,"behind_by":0,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":668,"source_sha":"cb7650c40aec9caa3d7aa85da7eead4d918281b0","compare_to_code51":"diverged","ahead_by":3,"behind_by":5376,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":659,"source_sha":"69e9b3986d9fad86bda64b3e47c43073e1c76d3a","compare_to_code51":"diverged","ahead_by":10,"behind_by":39,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":666,"source_sha":"f1a5a2b250414c14f772178498dcc0d3327b7542","compare_to_code51":"diverged","ahead_by":14,"behind_by":39,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":665,"source_sha":"98998396513bcfda26ca8a76a1cbfc53829844f5","compare_to_code51":"diverged","ahead_by":4,"behind_by":8,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":664,"source_sha":"29287c01cacf7e305059ea3fe7445096dc58e008","compare_to_code51":"diverged","ahead_by":3,"behind_by":8,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":662,"source_sha":"b8c0fbb4a0f994419e2afa87d96d119e8fdb8c65","compare_to_code51":"diverged","ahead_by":4,"behind_by":21,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":658,"source_sha":"f153758dfd19d1c12f6fe63b6c4c4bd1da95e4cb","compare_to_code51":"behind","ahead_by":0,"behind_by":27,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":661,"source_sha":"58c545aaefefb233371c92948ad1a9a002c7c004","compare_to_code51":"diverged","ahead_by":1,"behind_by":39,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":653,"source_sha":"cb11db2f967110680da92db8c0b07f01f3d2b47d","compare_to_code51":"behind","ahead_by":0,"behind_by":39,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":651,"source_sha":"09722adf6c88453ac7607a2a484ae97f00a8fc00","compare_to_code51":"behind","ahead_by":0,"behind_by":57,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":660,"source_sha":"26b0ebc5a4b194e837f706784b6810052f592a86","compare_to_code51":"diverged","ahead_by":3,"behind_by":58,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":655,"source_sha":"c90f020b8db929ae9a53e2cd95c39419497281b4","compare_to_code51":"diverged","ahead_by":11,"behind_by":50,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":656,"source_sha":"1bbdab1af1072adf0896bf695b972ec54f17eef6","compare_to_code51":"behind","ahead_by":0,"behind_by":57,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":657,"source_sha":"b1117df179cbc92284d779399f83c381125bda43","compare_to_code51":"behind","ahead_by":0,"behind_by":56,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":654,"source_sha":"c61bf171e054153e9299b2c660364543f2b8f01c","compare_to_code51":"behind","ahead_by":0,"behind_by":57,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":650,"source_sha":"82590f532d0b070823d82e6007f53e5e825cf70f","compare_to_code51":"behind","ahead_by":0,"behind_by":54,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":649,"source_sha":"8688f855e967c72b345debce3cd6c2c90fae5806","compare_to_code51":"behind","ahead_by":0,"behind_by":50,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":646,"source_sha":"f3f90736f4addb027dcc4f42a1f3cd3300713d3b","compare_to_code51":"behind","ahead_by":0,"behind_by":57,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":648,"source_sha":"9b8bf1d947323cecc75d6dd7dd2c1da8e73870b3","compare_to_code51":"behind","ahead_by":0,"behind_by":54,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":647,"source_sha":"f93b661ff2652b0783ab6224810edd85b8c368ff","compare_to_code51":"behind","ahead_by":0,"behind_by":56,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":644,"source_sha":"501f00ef98219333562745edf89704386eb60ab0","compare_to_code51":"diverged","ahead_by":2,"behind_by":58,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":614,"source_sha":"ca0bf6e5d8468df585891fd998963cddd195d0a5","compare_to_code51":"diverged","ahead_by":14,"behind_by":254,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":635,"source_sha":"d7e5a1ec7e7f6f9564cd368f8663237edba203b6","compare_to_code51":"diverged","ahead_by":2,"behind_by":67,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":574,"source_sha":"642dc0fe9f5deca306a3ad1f5be40e5e3055abc5","compare_to_code51":"behind","ahead_by":0,"behind_by":597,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
+{"pr":636,"source_sha":"fca480a8b73330ed188ca9ae366d400a96ce5c26","compare_to_code51":"diverged","ahead_by":1,"behind_by":5376,"audit_stage":"ANCESTRY_COMPARED_ONLY"}
