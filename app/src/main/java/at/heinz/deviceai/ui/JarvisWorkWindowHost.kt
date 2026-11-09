@@ -204,6 +204,8 @@ class JarvisWorkWindowHost(
                 JarvisCinematicSettings.Experiment.EXP_14_GLASS_SHADER)
             fui.rimIsolationEnabled = JarvisCinematicSettings.experimentEnabled(activity,
                 JarvisCinematicSettings.Experiment.EXP_02_RIM)
+            fui.zSliceEnabled = JarvisCinematicSettings.experimentEnabled(activity,
+                JarvisCinematicSettings.Experiment.EXP_01_Z_GLASS)
             window.cinematicArcEnabled = arc
             window.cinematicEffectsEnabled = enabled
         }
