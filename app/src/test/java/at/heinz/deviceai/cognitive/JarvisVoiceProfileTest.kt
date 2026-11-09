@@ -70,4 +70,25 @@ class JarvisVoiceProfileTest {
     @Test fun invalidSpeechBudgetFailsClosed() {
         assertThrows(IllegalArgumentException::class.java) { JarvisVoiceProfile.speakable("Hallo", 20) }
     }
+
+    @Test fun aTitleBeforeANameDoesNotBecomeAChunkEnding() {
+        val first = "Die erste Kontrolle ist abgeschlossen."
+        val text = "$first Jetzt meldet sich Dr. Sommer mit dem ausführlichen Bericht zur Kontrolle. Danach folgt der nächste Schritt."
+        val chunks = JarvisVoiceProfile.speakableChunks(text, chunkCharacters = 80)
+
+        assertEquals(first, chunks.pieces.first())
+        assertEquals(text, chunks.pieces.joinToString(" "))
+        assertFalse(chunks.truncated)
+    }
+
+    @Test fun aLongSentencePrefersAnExistingClausePauseToAnArbitraryWord() {
+        val pause = "Ich prüfe jetzt die vorliegenden Quellen,"
+        val text = "$pause damit die Analyse zuverlässig bleibt und keine unbelegte Behauptung entsteht. Danach folgt die Bewertung."
+        val chunks = JarvisVoiceProfile.speakableChunks(text, chunkCharacters = 80)
+
+        assertEquals(pause, chunks.pieces.first())
+        assertEquals(text, chunks.pieces.joinToString(" "))
+        assertTrue(chunks.pieces.all { it.length in 1..80 })
+        assertFalse(chunks.truncated)
+    }
 }
