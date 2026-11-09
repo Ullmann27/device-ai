@@ -85,6 +85,7 @@ class JarvisWorkWindow(
                     val handover: View?)
     private val density = resources.displayMetrics.density
     private var lastAnimatorScale = 1f
+    private var phaseTiltDegrees = HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES
     internal var onCinematicFrame: ((Long, Long, Boolean, Float) -> Boolean)? = null
     internal var onPresentedCenter: ((Float, Float) -> Unit)? = null
     private val projectedCenter = FloatArray(2)
@@ -325,6 +326,7 @@ class JarvisWorkWindow(
         startedAt = null
         lastFrameTime = null
         constructionElapsedMs = 0L
+        phaseTiltDegrees = HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES
         openness = 0f
         opacity = 0f
         trailProgress = 0f
@@ -462,6 +464,7 @@ class JarvisWorkWindow(
                 if (reduced) HollywoodFuiConstruct.CLOSE_END_MS else normalized
             } else -1L
             val frame = HollywoodFuiConstruct.frame(constructionElapsedMs, closingTime, reduced)
+            phaseTiltDegrees = frame.tiltDegrees
             openness = if (isClosing) closeFrom * frame.closeFrame
                 else if (reduced) 1f else HollywoodFuiConstruct.flight(normalized)
             opacity = if (isClosing) closeAlpha * frame.closeData else frame.data
@@ -522,7 +525,7 @@ class JarvisWorkWindow(
             // #643 C: the glass swings in around its vertical axis from the side it comes from and settles flat.
             panel.cameraDistance = density * JarvisMotion.Depth.CAMERA_DISTANCE_DP
             panel.rotationY = if (cinematicEffectsEnabled)
-                JarvisMotion.Depth.entranceTilt(openness, entranceSide(), lastAnimatorScale) else 0f
+                HollywoodFuiConstruct.orientedTilt(phaseTiltDegrees, entranceSide(), lastAnimatorScale <= 0f) else 0f
         }
         panel.alpha = opacity
         reportPresentedCenter()
