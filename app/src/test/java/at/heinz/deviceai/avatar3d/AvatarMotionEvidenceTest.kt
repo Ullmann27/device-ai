@@ -292,7 +292,36 @@ class AvatarMotionEvidenceTest {
     private fun window(w: AvatarFraming.Window) = JSONObject().put("left", w.left).put("right", w.right)
         .put("halfHeight", w.halfHeight).put("cameraCenterY", w.cameraCenterY).put("headScale", w.headScale).put("anchorX", w.anchorX)
 
-    private fun export(s: Scene) {
+    @Test fun sustainedWorkSpeechInterruptionAndStopExportTheOriginalRig() {
+        val s = Scene()
+        s.mark("Idle - scripted host input")
+        s.run(1_000, "idle")
+        s.director.onRuntime(AvatarRuntimeSignals(listening = true))
+        s.mark("Listening - scripted host input")
+        s.run(2_000, "listening")
+        s.director.onRuntime(AvatarRuntimeSignals(busy = true))
+        assertTrue(s.director.windowWorkStarted("host-work", GazeTarget(.1f, 0f)))
+        s.mark("Work / moving focus - scripted, not document results")
+        s.run(2_900, "flight") { t ->
+            val flight = at.heinz.deviceai.ui.HollywoodFuiConstruct.flight(t - 2_000)
+            s.director.windowMoved("host-work", GazeTarget(.1f + .6f * flight, -.2f * flight))
+        }
+        s.run(6_500, "work")
+        assertTrue(s.reducer.pose(s.now).reading)
+        s.speak("host-progress", "Die Datei ist offen. Ich pruefe die Inhalte.", phase = "speaking")
+        s.director.speechEnded("host-progress", interrupted = false)
+        s.mark("Return to still-running work")
+        assertTrue(s.reducer.pose(s.now).reading)
+        s.run(s.now + 4_000, "work-resumed")
+        s.director.clearAnimationIntents()
+        s.director.onRuntime(AvatarRuntimeSignals())
+        s.mark("STOP")
+        s.run(s.now + 1_000, "stopped")
+        assertTrue(!s.reducer.pose(s.now).reading)
+        export(s, "avatar-work-timeline.json")
+    }
+
+    private fun export(s: Scene, filename: String = "avatar-motion-timeline.json") {
         val dir = System.getProperty("continuum.ui.evidenceDir") ?: return
         val focus = AvatarGlbContract.validate(listOf(File("src/main/assets/avatar3d/continuum-avatar.glb"),
             File("app/src/main/assets/avatar3d/continuum-avatar.glb")).first { it.isFile }.readBytes()).focus
@@ -318,6 +347,6 @@ class AvatarMotionEvidenceTest {
             .put("focus", JSONObject().put("centerX", focus.centerX).put("centerY", focus.centerY).put("centerZ", focus.centerZ)
                 .put("reachLeft", focus.reachLeft).put("reachRight", focus.reachRight))
             .put("stages", stages).put("marks", s.marks).put("frames", s.frames)
-        File(dir).apply { mkdirs() }.resolve("avatar-motion-timeline.json").writeText(out.toString())
+        File(dir).apply { mkdirs() }.resolve(filename).writeText(out.toString())
     }
 }

@@ -275,8 +275,6 @@ aus einem fehlenden Test entfernt.
 | Sieben Arbeitswelten | Vorhandene echte Datenpfade erhalten; umfassende fachliche Live-Flachen und sieben durchgefilmte Owner-Auftraege offen |
 | Vollstaendiger Abnahmefilm | BLOCKED: kein Android-Runtime-/Originalavatar-Render und kein Fold7; Java2D-Frames/Policytests ersetzen diesen Nachweis nicht |
 
-## Rueckfall / naechster Einstieg
-
 ## Fokusfortsetzung 09.11.: Original-Avatar / Animation / Stimme
 
 Neuer Fokus ausschliesslich auf den Owner-Regieauftrag. Start/Remote geprueft:
@@ -312,6 +310,48 @@ Reproduktion:
 Analog Baseline 1.0 / Probe 1.6; dann
 `python tools/avatar-3d/measure_radiance.py BASE/front.png BOUNDED/front.png PROBE/front.png OUTPUT`.
 Evidenz: `docs/evidence/astra-avatar-focus-20261109/`.
+
+### B: kontinuierliche Augen und verzoegertes Mitgehen des Kopfes
+
+A gesichert: `2587fadd92fd480addffc771ce72ad994b0c679c`, Push/Remote identisch.
+14 gezielte Asset-/Emissions-/Rigtests PASS.
+
+Die bisherige Arbeitsaugenbewegung sprang beim Zeilenzyklus um **1.35 Grad
+in einem Frame**, der Kopf blieb dabei nachweislich exakt starr (0 Grad
+Spannweite). Auch das Entfernen des Lese-Offsets verursachte einen Sprung.
+Alle drei Regressionstests zuerst RED auf dem unveraenderten Mapper.
+
+Jetzt laufen horizontale Rueckkehr und vertikaler Wechsel ueber Minimum-Jerk,
+der Arbeitsanteil blendet mit 180-ms-Zeitkonstante ein/aus. Die bereits
+vorhandenen Augen-/Kopffedern erhalten denselben Offset, der Kopf folgt mit
+18% Anteil verzoegert. Kein neuer Controller oder Zeitgeber.
+Gemessen: groesster vertikaler Augenschritt bei 120 Hz **0.06493 Grad**
+statt 1.35; Kopfspanne **0.8116 Grad**, Augenspanne **4.3049 Grad** auf
+dem sichtbar gedrehten Arbeitsblick. 205 Avatar-/Originalrigtests PASS,
+einschliesslich Wiederholzeit, Reduced Motion, Sprache und STOP.
+
+Das ist **kosmetische Aufmerksamkeit innerhalb einer realen Arbeits-Lease**,
+kein erfundener Beweis fuer die Verarbeitung konkreter Dokumentzeilen.
+Das bestehende Blink-/Idle-/Visemsystem bleibt erhalten.
+
+Der vorhandene Three.js-/SwiftShader-Pfad rendert das **unveraenderte
+Original-GLB mit den exportierten Produktions-Mapperwerten**: je 147 Frames
+vorher/nachher, 14.553 s Vergleichsfilm. Im Ablauf: Idle, Zuhoeren, Einflug-
+Blickziel, fortgesetzte Arbeit, direkte Sprachunterbrechung, Arbeitsrueckkehr,
+STOP. Frames bei 5.94/7.92/11.88 s betrachtet: seitlicher Arbeitsblick,
+sprechende Frontalansicht, wieder seitlicher Arbeitsblick. Der Film ist
+sichtbar als HOST / SCRIPTED EVENTS / NO AUDIO / NOT FILAMENT/FOLD7
+beschriftet; keine echten Auftragsdaten oder Audioaufnahme werden behauptet.
+Blender-Emissionsvergleich und Three-Motionsfilm haben verschiedene
+Tonemapper; ihre Pixel werden nicht gegeneinander bewertet.
+
+Reproduktion: `AvatarMotionEvidenceTest` mit
+`-Dcontinuum.ui.evidenceDir=OUTPUT` ausfuehren; `avatar-work-timeline.json`
+als `timeline.json` fuer `tools/avatar-host-render` verwenden. Three0.170.0,
+Playwright1.56.1, vorhandenes `/usr/bin/google-chrome` (gestallten Browser-
+Download abgebrochen, keine zweite Renderarchitektur). Kamera
+`{"left":-0.165,"right":0.165,"halfHeight":0.22,"cameraCenterY":0.232}`,
+384x512, Schrittweite3. Native Darstellung weiterhin separat abzunehmen.
 
 ### Fortsetzungsstand
 
