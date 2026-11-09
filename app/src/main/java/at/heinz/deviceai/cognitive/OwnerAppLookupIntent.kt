@@ -72,6 +72,7 @@ internal object OwnerAppLookupIntent {
         val clauses = text.replace(safeConjunction, ". ")
             .split(Regex("""[.!?]+\s*""")).map(String::trim).filter(String::isNotEmpty)
         val first = clauses.firstOrNull() ?: return null
+        if (negation.containsMatchIn(first)) return null
         val raw = installedCheck.matchEntire(first)?.groupValues?.get(1)
             ?: direct.matchEntire(first)?.takeIf {
                 it.groupValues[1].lowercase() in setOf("suche", "finde", "zeige")
