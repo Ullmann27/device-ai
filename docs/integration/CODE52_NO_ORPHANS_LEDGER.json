@@ -25,11 +25,11 @@
       "pr": 574,
       "branch": "claude/continuum-fable51-continuation-20261106",
       "checkpoint_sha": "642dc0fe9f5deca306a3ad1f5be40e5e3055abc5",
-      "status": "AUDIT_REQUIRED",
+      "status": "PARTIAL_SOURCE_CONNECTED",
       "integrator": "CODE52_MASTER_INTEGRATOR",
       "target_pr": 671,
       "device_verified": false,
-      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "next_step": "Verified current Code52 JarvisVoiceSelection source contains all nonblank PR #574 lines and adds chooseAndApply fallback; AgentActivity live callsite at voice setup. JarvisVoiceProfile, LocalFollowUpTaskFrame and WorkDecisionRecall are divergent: behavior/regression comparison and 10-sentence Fold7 voice acceptance remain open. Do not overwrite current newer logic.",
       "source": "https://github.com/Ullmann27/device-ai/pull/574"
     },
     {
@@ -91,11 +91,11 @@
       "pr": 646,
       "branch": "fable/code51-p0-speech-recovery-20261108",
       "checkpoint_sha": "f3f90736f4addb027dcc4f42a1f3cd3300713d3b",
-      "status": "AUDIT_REQUIRED",
+      "status": "PARTIAL_SOURCE_CONNECTED",
       "integrator": "CODE52_MASTER_INTEGRATOR",
       "target_pr": 671,
       "device_verified": false,
-      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "next_step": "Three exact Git blobs match source PR #646: SpeechRecoveryPolicy, SpeechTurnRecovery, AndroidOnDeviceSpeechInput. AndroidOnDeviceSpeechInput constructs SpeechTurnRecovery; remaining 18 changed files, actual mic rearm/de-AT ASR and Fold7 heat/voice proof still need validation.",
       "source": "https://github.com/Ullmann27/device-ai/pull/646"
     },
     {
@@ -146,11 +146,11 @@
       "pr": 651,
       "branch": "fable/code51-fui-cinematic-construct-20261108",
       "checkpoint_sha": "09722adf6c88453ac7607a2a484ae97f00a8fc00",
-      "status": "AUDIT_REQUIRED",
+      "status": "PARTIAL_SOURCE_CONNECTED",
       "integrator": "CODE52_MASTER_INTEGRATOR",
       "target_pr": 671,
       "device_verified": false,
-      "next_step": "Source-Diff, Callsite, UI-Anschluss, Regression und Besitzer-Nutzwert gegenüber Code51/52 prüfen",
+      "next_step": "HollywoodFuiConstruct current production retains PR #651 code lines and HollywoodFuiStageOverlay calls canonical HollywoodFuiConstruct.frame; Cinematics/StageOverlay source differs materially. Inspect changed materials/timing and real native Fold7 rendering before accepting graphics parity or porting older code.",
       "source": "https://github.com/Ullmann27/device-ai/pull/651"
     },
     {
