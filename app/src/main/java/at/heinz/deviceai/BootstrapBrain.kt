@@ -271,10 +271,6 @@ object BootstrapBrain {
             return BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = name,
                 arguments = if (name == "list_files") mapOf("path" to "/sdcard/Download") else emptyMap())
         }
-        if (affirmativeClause(low) { "fehler lumo" in it || ("lumo" in it && "logcat" in it) })
-            return tool("read_logcat", mapOf("packageOrName" to "Lumo", "lines" to 180))
-        if (affirmativeClause(low) { "lumo" in it && ("prüf" in it || "version" in it || "installiert" in it) })
-            return tool("get_app_info", mapOf("packageOrName" to "Lumo"))
         if (affirmativeClause(low) { "downloads" in it || "download-ordner" in it }) return tool("list_files",
             mapOf("path" to "/sdcard/Download"))
         val wantsStorageInspection = isStorageReadRequest(low) ||
