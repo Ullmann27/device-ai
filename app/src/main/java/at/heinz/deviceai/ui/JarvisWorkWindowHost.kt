@@ -200,6 +200,8 @@ class JarvisWorkWindowHost(
             fui.cinematicArcEnabled = arc
             fui.workPulseEnabled = JarvisCinematicSettings.experimentEnabled(activity,
                 JarvisCinematicSettings.Experiment.EXP_12_RECEIPTS)
+            fui.prismRimEnabled = JarvisCinematicSettings.experimentEnabled(activity,
+                JarvisCinematicSettings.Experiment.EXP_14_GLASS_SHADER)
             window.cinematicArcEnabled = arc
             window.cinematicEffectsEnabled = enabled
         }
