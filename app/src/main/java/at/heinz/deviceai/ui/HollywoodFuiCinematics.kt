@@ -280,8 +280,9 @@ object HollywoodFuiCinematics {
             if (bloom) p.strokePath(gridPath, 5f, accentFill, .12f * a)
             if (frame.scanEnabled) {
                 val sy = box.top + box.height * frame.scanPhase
-                if (bloom) p.drawLine(box.left + 6f, sy, box.right - 6f, sy, 5f, accentFill, .07f * a)
-                p.drawLine(box.left + 6f, sy, box.right - 6f, sy, 1.2f, glint, .75f * a)
+                val edge = HollywoodFuiWorkActivity.scanEnvelope(frame.scanPhase)
+                if (bloom) p.drawLine(box.left + 6f, sy, box.right - 6f, sy, 5f, accentFill, .07f * a * edge)
+                p.drawLine(box.left + 6f, sy, box.right - 6f, sy, 1.2f, glint, .75f * a * edge)
             }
         }
     }
