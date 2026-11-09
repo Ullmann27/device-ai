@@ -105,6 +105,12 @@ object HollywoodFuiConstruct {
         )
     }
 
+    /** One phase-derived angle shared by native panel and holographic glass. */
+    fun orientedTilt(degrees: Float, side: Float, reducedMotion: Boolean): Float {
+        if (reducedMotion || !degrees.isFinite() || !side.isFinite()) return 0f
+        return degrees.coerceIn(0f, ENTRANCE_TILT_DEGREES) * side.coerceIn(-1f, 1f)
+    }
+
     private fun progress(value: Long, start: Long, end: Long): Float {
         if (end <= start) return 1f
         return ((value - start).toFloat() / (end - start).toFloat()).coerceIn(0f, 1f)
