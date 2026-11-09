@@ -8,6 +8,7 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
+import android.os.Build
 import android.view.HapticFeedbackConstants
 import android.view.View
 import at.heinz.deviceai.cockpit.StepState
@@ -30,6 +31,7 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private var protectedBounds = emptyList<RectF>()
     internal var cinematicArcEnabled = false
     internal var workPulseEnabled = false
+    internal var prismRimEnabled = false
     private var lastPulseKey: String? = null
     private var pulseAtElapsedMs = -1L
     private var pulsePending = false
@@ -45,6 +47,9 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val painter = AndroidContinuumPainter(context.assets)
     private val camera = Camera()
     private val cameraMatrix = Matrix()
+    private val prismRim by lazy {
+        if (Build.VERSION.SDK_INT >= 33) AgslHologramEdgePainter() else null
+    }
     private var cinematics = HollywoodFuiCinematics.Painterly(JarvisDesign.Colors.cyan)
     private var budget = HollywoodFuiCinematics.Budget.FULL
     private var originX = Float.NaN
@@ -277,6 +282,9 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
                 pulseAge / 380f)
         }
         cinematics.drawBrackets(painter, boxDp, frame.brackets * frame.closeFrame, bloom)
+        if (prismRimEnabled && bloom && frame.brackets * frame.closeFrame > .1f) {
+            prismRim?.draw(canvas, stage, frame.tiltDegrees, frame.pulse, density)
+        }
         canvas.restore()
 
         if (dataAlpha > 0f) drawTelemetry(canvas, constructed, dataAlpha)
