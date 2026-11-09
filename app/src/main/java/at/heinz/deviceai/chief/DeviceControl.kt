@@ -6,12 +6,12 @@ import at.heinz.deviceai.ToolExecutionStatus
 import org.json.JSONObject
 
 /**
- * Device/screen control tools for the multi-step task loop (Lumo, 03.11.2026).
+ * Inactive experimental screen-control candidate within Device AI Continuum.
  *
- * These tools are deliberately NOT in the global [at.heinz.deviceai.ToolRegistry] (HAUPT,
- * 03.11.2026): the chat model never sees them. They exist only in the scope of a
- * [TaskLoopJob] (see [JobScopedTools]) and every risky call is approved per step by the
- * loop's [TaskApprovalGate]. This file contains no approval logic of its own.
+ * This module is not registered in ToolRegistry and is not connected to a
+ * production task executor, owner approval UI or AccessibilityControlPort.
+ * It grants no screen privileges and proves no executed device action.
+ * Any future integration must be independently implemented and verified for Continuum.
  *
  * Opening apps, reading the screen and screenshots deliberately reuse the existing tools
  * `launch_app`, `read_app_screen` and `take_screenshot`; they are not duplicated here.
