@@ -6711,6 +6711,9 @@ class AgentActivity : Activity() {
         setBusy(true)
         addToolActivity("Prüfe ${ToolRegistry.label(name)} …")
         val actionSessionId = sessionId
+        val compareBattery = name == "get_battery_info" &&
+            at.heinz.deviceai.cognitive.OwnerPreviousBatteryIntent.isFreshComparisonRequest(request)
+        val priorBatteryPercent = if (compareBattery) lastBatteryObservation.lastPercent(actionSessionId) else null
         val turnTrace = CognitiveTurnTrace(actionSessionId)
         val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
         val plan = at.heinz.deviceai.cognitive.ReadOnlyToolPlan.forRequest(request, ToolProposal(name, decision.arguments))
@@ -6752,13 +6755,23 @@ class AgentActivity : Activity() {
                 val value = result.fold(
                     onSuccess = { item ->
                         checkpointContinuumAsync()
-                        if (name == "get_battery_info")
-                            lastBatteryObservation.recordIfFresh(actionSessionId, item)
+                        val freshBattery = if (name == "get_battery_info")
+                            lastBatteryObservation.recordIfFresh(actionSessionId, item) else false
+                        val batteryComparison = if (!compareBattery) "" else {
+                            val current = if (freshBattery) lastBatteryObservation.lastPercent(actionSessionId) else null
+                            when {
+                                current == null -> "\nVergleich nicht möglich: Die neue Messung ist nicht belegt."
+                                priorBatteryPercent == null ->
+                                    "\nKein belegter früherer Akkustand in dieser Sitzung; kein Vergleich möglich."
+                                else -> "\nVergleich zur letzten belegten Messung: $priorBatteryPercent % → $current % " +
+                                    "(${current - priorBatteryPercent} Prozentpunkte)."
+                            }
+                        }
                         publishCognitiveTrace(turnTrace,if(item.experience?.outcome == at.heinz.deviceai.cognitive.ExperienceOutcome.SUCCESS) TraceOutcome.ACTION_VERIFIED else TraceOutcome.BLOCKED)
                         if (item.experience?.outcome == at.heinz.deviceai.cognitive.ExperienceOutcome.SUCCESS) {
                             addToolActivity("CONTINUUM · frische Messung belegt · Episode zur Sicherung vorgemerkt · kein Gewichtstraining")
                         }
-                        item.response
+                        item.response + batteryComparison
                     },
                     onFailure = { publishCognitiveTrace(turnTrace,TraceOutcome.FAILED); "Geräteprüfung fehlgeschlagen: ${it.message ?: "unbekannter Fehler"}" }
                 )
