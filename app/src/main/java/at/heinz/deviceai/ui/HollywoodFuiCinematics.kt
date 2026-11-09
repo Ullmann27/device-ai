@@ -228,6 +228,27 @@ object HollywoodFuiCinematics {
             if (bloom) p.setAdditive(false)
         }
 
+        /** Verified tool receipt: one bounded travelling spark, not a fake progress bar. */
+        fun drawVerifiedStepPulse(p: ContinuumPainter, box: Box, frame: HollywoodFuiConstruct.Frame,
+                                  progress: Float) {
+            if (!progress.isFinite() || progress !in 0f..1f || frame.closeFrame <= 0f ||
+                box.width <= 0f || box.height <= 0f) return
+            val travel = progress * (2f * box.width + 2f * box.height)
+            val x: Float
+            val y: Float
+            when {
+                travel <= box.width -> { x = box.left + travel; y = box.top }
+                travel <= box.width + box.height -> { x = box.right; y = box.top + travel - box.width }
+                travel <= 2f * box.width + box.height -> {
+                    x = box.right - (travel - box.width - box.height); y = box.bottom
+                }
+                else -> { x = box.left; y = box.bottom - (travel - 2f * box.width - box.height) }
+            }
+            val alpha = (1f - progress) * frame.closeFrame
+            p.fillCircle(x, y, 7f, violet, .18f * alpha)
+            p.fillCircle(x, y, 2.3f, glint, .82f * alpha)
+        }
+
         /** Four corner brackets of [box] with a soft bloom; [strength] 0..1. */
         fun drawBrackets(p: ContinuumPainter, box: Box, strength: Float, bloom: Boolean) {
             if (strength <= .01f) return
@@ -246,17 +267,25 @@ object HollywoodFuiCinematics {
             corner(box.right, box.bottom, -1f, -1f)
         }
 
-        /** Sparse scan raster, chamfered rim and the moving scan line, all inside [box]. */
-        fun drawGridAndScan(p: ContinuumPainter, box: Box, frame: HollywoodFuiConstruct.Frame, bloom: Boolean) {
-            val a = frame.grid * frame.closeFrame
-            if (a <= .01f) return
+        /** Keep the perimeter visible when the interior raster dims beneath real text. */
+        fun drawGridAndScan(p: ContinuumPainter, box: Box, frame: HollywoodFuiConstruct.Frame,
+                            bloom: Boolean, innerRasterAlpha: Float = frame.grid) {
+            val rimAlpha = HollywoodFuiWorkActivity.structuralOpacity(frame.grid, frame.closeFrame)
+            val rasterAlpha = HollywoodFuiWorkActivity.structuralOpacity(innerRasterAlpha, frame.closeFrame)
+            if (rimAlpha <= .01f && rasterAlpha <= .01f) return
             val step = 24f
             var x = box.left + step
-            while (x < box.right) { p.drawLine(x, box.top, x, box.bottom, .7f, accentFill, .16f * a); x += step }
+            while (x < box.right && rasterAlpha > .005f) {
+                p.drawLine(x, box.top, x, box.bottom, .7f, accentFill, .16f * rasterAlpha)
+                x += step
+            }
             var y = box.top + step
-            while (y < box.bottom) { p.drawLine(box.left, y, box.right, y, .7f, accentFill, .16f * a); y += step }
-            p.drawLine(box.centerX, box.top, box.centerX, box.bottom, .7f, violet, .10f * a)
-            p.drawLine(box.left, box.centerY, box.right, box.centerY, .7f, violet, .10f * a)
+            while (y < box.bottom && rasterAlpha > .005f) {
+                p.drawLine(box.left, y, box.right, y, .7f, accentFill, .16f * rasterAlpha)
+                y += step
+            }
+            p.drawLine(box.centerX, box.top, box.centerX, box.bottom, .7f, violet, .10f * rasterAlpha)
+            p.drawLine(box.left, box.centerY, box.right, box.centerY, .7f, violet, .10f * rasterAlpha)
             if (gridBox != box) {
                 val cut = min(14f, min(box.width, box.height) * .12f)
                 val r = box.inset(1.2f)
@@ -265,13 +294,20 @@ object HollywoodFuiCinematics {
                     .lineTo(r.right, r.bottom - cut).lineTo(r.right - cut, r.bottom).lineTo(r.left + cut, r.bottom)
                     .lineTo(r.left, r.bottom - cut).lineTo(r.left, r.top + cut).close()
             }
-            p.strokePath(gridPath, 1.3f, accentFill, .80f * a)
-            if (bloom) p.strokePath(gridPath, 5f, accentFill, .12f * a)
-            if (frame.scanEnabled) {
+            p.strokePath(gridPath, 2.5f, violet, .26f * rimAlpha)
+            p.strokePath(gridPath, 1.4f, accentFill, .84f * rimAlpha)
+            if (bloom) p.strokePath(gridPath, 5.5f, accentFill, .14f * rimAlpha)
+            if (frame.scanEnabled && rimAlpha > .01f) {
                 val sy = box.top + box.height * frame.scanPhase
                 val edge = HollywoodFuiWorkActivity.scanEnvelope(frame.scanPhase)
-                if (bloom) p.drawLine(box.left + 6f, sy, box.right - 6f, sy, 5f, accentFill, .07f * a * edge)
-                p.drawLine(box.left + 6f, sy, box.right - 6f, sy, 1.2f, glint, .75f * a * edge)
+                if (bloom) {
+                    p.drawLine(box.left + 6f, sy - 2f, box.right - 6f, sy - 2f,
+                        4f, violet, .16f * rimAlpha * edge)
+                    p.drawLine(box.left + 6f, sy, box.right - 6f, sy,
+                        5f, accentFill, .10f * rimAlpha * edge)
+                }
+                p.drawLine(box.left + 6f, sy, box.right - 6f, sy,
+                    1.2f, glint, .78f * rimAlpha * edge)
             }
         }
     }

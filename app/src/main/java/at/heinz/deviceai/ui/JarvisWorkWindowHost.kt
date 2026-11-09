@@ -66,6 +66,10 @@ class JarvisWorkWindowHost(
         currentFui?.setLiveData(data)
     }
 
+    /** A successful non-replayed ToolExecutionResult can illuminate this live work window. */
+    fun verifiedStep(callId: String): Boolean = if (current?.isShowing == true)
+        currentFui?.verifiedStep(callId) == true else false
+
     /**
      * Promotes only the visual grammar/footprint of the already-open physical work window.
      * No content, tool state, window id or AvatarDirector lease is replaced.
@@ -82,6 +86,7 @@ class JarvisWorkWindowHost(
             profile = cameraProfile(currentFootprint)
         )
         currentFui?.morphInPlace(bounds, scene)
+        home.hologram.setWorkWindowAccent(scene.accent)
         return true
     }
 
@@ -182,16 +187,28 @@ class JarvisWorkWindowHost(
             }
         }
         fui.requestFrame = { shell.invalidate() }
-        window.onCinematicFrame = fui::present
+        window.onCinematicFrame = { elapsed, closing, reduced, open ->
+            fui.setParallax(shell.spatialTiltX, shell.spatialTiltY)
+            fui.present(elapsed, closing, reduced, open)
+        }
         val presentation = JarvisCinematicSettings.preferences(activity)
         fun applyCinematics() {
             val enabled = JarvisCinematicSettings.enabled(activity)
+            val arc = JarvisCinematicSettings.experimentEnabled(activity,
+                JarvisCinematicSettings.Experiment.EXP_04_FOLDER_FLIGHT)
             fui.cinematicEffectsEnabled = enabled
+            fui.cinematicArcEnabled = arc
+            fui.workPulseEnabled = JarvisCinematicSettings.experimentEnabled(activity,
+                JarvisCinematicSettings.Experiment.EXP_12_RECEIPTS)
+            fui.prismRimEnabled = JarvisCinematicSettings.experimentEnabled(activity,
+                JarvisCinematicSettings.Experiment.EXP_14_GLASS_SHADER)
+            window.cinematicArcEnabled = arc
             window.cinematicEffectsEnabled = enabled
         }
         applyCinematics()
         val preferenceListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == JarvisCinematicSettings.KEY) applyCinematics()
+            if (key == JarvisCinematicSettings.KEY || key == JarvisCinematicSettings.DEPTH_EXPERIMENT_KEY ||
+                key?.startsWith("exp52.") == true) applyCinematics()
         }
         presentation.registerOnSharedPreferenceChangeListener(preferenceListener)
         var releaseGeometry: () -> Unit = {}
@@ -269,6 +286,7 @@ class JarvisWorkWindowHost(
         currentCameraSide = cameraSide(first)
         home.hologram.setWorkWindowCamera(true, currentCameraSide,
             profile = cameraProfile(currentFootprint))
+        home.hologram.setWorkWindowAccent(scene.accent)
         director.windowOpened(id, initialGaze)
         currentGaze = initialGaze
         window.reportPresentedCenter()

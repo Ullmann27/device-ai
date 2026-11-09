@@ -22,6 +22,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private val lightEntities = mutableListOf<Int>()
     private var coreLightInstance = 0
     private var coreLightLumens = AvatarCoreLighting.BASE_LUMENS
+    private var fillRed = .18f
+    private var fillGreen = .82f
+    private var fillBlue = 1f
     private var faceMaterial: MaterialInstance? = null
     private var faceEmission: AvatarGlbContract.SurfaceEmission? = null
     private var surfaceGain = 1f
@@ -174,11 +177,20 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         return entity
     }
 
-    private fun applyCoreLight(energy: Float, enabled: Boolean) {
-        val lumens = AvatarCoreLighting.intensity(energy, enabled && !reducedQuality)
-        if (kotlin.math.abs(lumens - coreLightLumens) < 1f) return
-        requireNotNull(engine).lightManager.setIntensity(coreLightInstance, lumens)
-        coreLightLumens = lumens
+    private fun applyCoreLight(energy: Float, enabled: Boolean,
+                               windowAccentArgb: Int?, windowOpen: Boolean) {
+        val target = SpatialWindowLight.tint(windowAccentArgb, energy,
+            windowOpen, enabled && !reducedQuality)
+        val light = requireNotNull(engine).lightManager
+        if (kotlin.math.abs(target.lumens - coreLightLumens) >= 1f) {
+            light.setIntensity(coreLightInstance, target.lumens)
+            coreLightLumens = target.lumens
+        }
+        if (kotlin.math.abs(target.red - fillRed) + kotlin.math.abs(target.green - fillGreen) +
+            kotlin.math.abs(target.blue - fillBlue) >= .002f) {
+            light.setColor(coreLightInstance, target.red, target.green, target.blue)
+            fillRed = target.red; fillGreen = target.green; fillBlue = target.blue
+        }
     }
 
     private fun applySurfaceRadiance(energy: Float, enabled: Boolean) {
@@ -198,7 +210,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     fun render(pose: AvatarPose, seconds: Float, motion: Boolean, width: Int, height: Int,
                framing: AvatarFraming.Window? = null, diagnosticBlink: Float? = null,
                receipt: AvatarFrameReceipt? = null, coreEnergy: Float = 0f,
-               cinematicLighting: Boolean = false): Boolean {
+               cinematicLighting: Boolean = false, windowAccentArgb: Int? = null,
+               windowOpen: Boolean = false, gazeBlinkEnabled: Boolean = false): Boolean {
         val e = engine ?: return false
         if (width <= 0 || height <= 0 || !surface.isValid) return false
         if (viewportWidth != width || viewportHeight != height || appliedFraming != framingVersion) {
@@ -213,10 +226,10 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             camera!!.setProjection(Camera.Projection.ORTHO, fitted.left, fitted.right,
                 -fitted.halfHeight, fitted.halfHeight, .05, 10.0)
         }
-        mapper.update(pose, seconds, motion)
+        mapper.update(pose, seconds, motion, gazeBlinkEnabled = gazeBlinkEnabled)
         mapper.applyDiagnosticBlink(diagnosticBlink)
         applyGlow(if (motion) pose.speakEnergy else 0f)
-        applyCoreLight(coreEnergy, cinematicLighting && motion)
+        applyCoreLight(coreEnergy, cinematicLighting && motion, windowAccentArgb, windowOpen)
         applySurfaceRadiance(coreEnergy, cinematicLighting && motion)
         // Cosmetic view drift uses the existing clock. Reduced motion restores
         // the same rest camera immediately; it does not change the actual pose.

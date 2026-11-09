@@ -4,8 +4,10 @@ package at.heinz.deviceai.ui
 object JarvisRenderQuality {
     enum class Tier { HIGH, MEDIUM, LOW, SUSPENDED }
     data class Budget(val tier: Tier, val frameDelayMillis: Long, val particleCount: Int,
-                      val orbitSegments: Int, val animate: Boolean) {
-        val reducedBloom: Boolean get() = tier != Tier.HIGH
+                      val orbitSegments: Int, val animate: Boolean,
+                      val coolInferenceLighting: Boolean = false) {
+        /** Enable cinematic lighting only when Android explicitly reports cool. */
+        val reducedBloom: Boolean get() = tier != Tier.HIGH && !coolInferenceLighting
     }
 
     fun resolve(foreground: Boolean, powerSave: Boolean, thermalStatus: Int?,
@@ -17,7 +19,8 @@ object JarvisRenderQuality {
         inferenceActive && (thermalStatus ?: 0) >= 2 -> Budget(Tier.MEDIUM, 80L, 12, 40, true)
         inferenceActive && (thermalStatus ?: 0) >= 1 -> Budget(Tier.MEDIUM, 50L, 16, 48, true)
         (thermalStatus ?: 0) >= 2 -> Budget(Tier.MEDIUM, 50L, 16, 48, true)
-        inferenceActive || (thermalStatus ?: 0) >= 1 -> Budget(Tier.MEDIUM, 33L, 32, 64, true)
+        inferenceActive || (thermalStatus ?: 0) >= 1 -> Budget(Tier.MEDIUM, 33L, 32, 64, true,
+            coolInferenceLighting = inferenceActive && thermalStatus == 0)
         else -> Budget(Tier.HIGH, 16L, 70, 96, true)
     }
 }

@@ -1,0 +1,165 @@
+name: "Continuum Code52 - Cinema2030 source-bound Android QA (unsigned)"
+# Test pipeline only. No signing secrets, no release, no main merge.
+on:
+  push:
+    branches:
+      - chatgpt/code52-argon4-holographic-rim-20261109
+    paths:
+      - '.github/workflows/continuum-code52-cinematic-qa.yml'
+      - 'app/**'
+      - 'backend/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradle/**'
+      - 'gradle.properties'
+      - 'gradlew'
+      - '.github/continuum/**'
+      - 'docs/integration/**'
+      - 'scripts/code52-targeted-kotlin-check.sh'
+      - 'scripts/continuum-code52-junit-check.py'
+      - 'scripts/continuum-reliability-qa.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-code52-cinematic-unsigned-qa
+  cancel-in-progress: true
+
+jobs:
+  validate-source-and-build:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/chatgpt/code52-argon4-holographic-rim-20261109'
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Bind immutable source
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_SHA" =~ ^[a-f0-9]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          printf 'source_sha=%s\nrelease_state=UNSIGNED_QA_ONLY\n' "$GITHUB_SHA" > "$RUNNER_TEMP/code52-build-info.txt"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Compile and run source-exact safety checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/code52-targeted-kotlin-check.sh
+          node --test .github/continuum/code52-no-orphans-accountability.test.mjs .github/continuum/android-local-consent-epoch.test.mjs .github/continuum/code52-project-isolation.test.mjs .github/continuum/code52-cinema-source-contract.test.mjs
+      - name: Full Node and critical regression gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code52-critical"
+          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code52-full-node"
+          node -e "for(const n of ['code52-critical','code52-full-node']){const r=require(process.env.RUNNER_TEMP+'/'+n+'/report.json');if(r.status!=='PASS'||r.source.commit!==process.env.GITHUB_SHA||!r.sourceUnchanged)process.exit(69);console.log(n+' EXACT_SOURCE_PASS')}"
+      - name: Backend check and tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+          npm --prefix backend run check
+          npm --prefix backend test
+      - name: Install official Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+      - name: Compile native Android app, unit/UI tests and lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2500m -XX:MaxMetaspaceSize=768m' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=52 \
+            :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
+          python3 scripts/continuum-code52-junit-check.py \
+            app/build/test-results/testDebugUnitTest "$RUNNER_TEMP/code52-junit-totals.txt"
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          root = Path('app/build/test-results/testDebugUnitTest')
+          required = {
+              'LuxuryHoloButtonRendererTest',
+              'PerimeterWingChoreographerTest',
+              'SpatialWindowLightTest',
+              'HollywoodFuiWorkActivityTest',
+              'JarvisRenderQualityTest',
+              'TtsHologramSignalTest',
+          }
+          found = {}
+          for file in root.glob('TEST-*.xml'):
+              for c in ET.parse(file).getroot().findall('testcase'):
+                  short = c.get('classname','').split('.')[-1]
+                  if short in required:
+                      found[short] = found.get(short,0) + 1
+                      if c.find('failure') is not None or c.find('error') is not None or c.find('skipped') is not None:
+                          raise SystemExit(f'CINEMA JUNIT RED: {short}::{c.get("name")}')
+          if required != set(found):
+              raise SystemExit('CINEMA JUNIT MISSING: '+repr(required-set(found)))
+          print('CINEMA_SOURCE_EXACT_JUNIT_PASS', found)
+          PY
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Build ARM64 original-package unsigned QA APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2500m -XX:MaxMetaspaceSize=768m' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumLocalRenderUnsigned=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=52 \
+            :app:assembleRelease
+          apk='app/build/outputs/apk/release/app-release-unsigned.apk'
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging "$apk" > "$RUNNER_TEMP/code52-badging.txt"
+          grep -F "package: name='at.heinz.deviceai.continuumlocal' versionCode='52' versionName='0.3.51'" "$RUNNER_TEMP/code52-badging.txt"
+          grep -Fx "native-code: 'arm64-v8a'" "$RUNNER_TEMP/code52-badging.txt"
+          if "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify "$apk" >/dev/null 2>&1; then
+            echo 'QA APK must not be signed with an unapproved certificate.'
+            exit 69
+          fi
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          mkdir -p "$RUNNER_TEMP/code52-unsigned"
+          cp "$apk" "$RUNNER_TEMP/code52-unsigned/Continuum-Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE.apk"
+          (cd "$RUNNER_TEMP/code52-unsigned" && sha256sum *.apk > SHA256SUMS.txt)
+          cat "$RUNNER_TEMP/code52-build-info.txt" "$RUNNER_TEMP/code52-junit-totals.txt" > "$RUNNER_TEMP/code52-unsigned/BUILD-INFO.txt"
+          printf 'versionCode=52\nversionName=0.3.51\npackage=at.heinz.deviceai.continuumlocal\nfold7=NOT_RUN\noriginal_signature=NOT_USED\n' >> "$RUNNER_TEMP/code52-unsigned/BUILD-INFO.txt"
+      - name: Publish unsigned diagnostics only
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code52-CINEMA-UNSIGNED-NOT-INSTALLABLE
+          path: ${{ runner.temp }}/code52-unsigned/
+          retention-days: 14
+          if-no-files-found: error
+      - name: Always preserve source-bound QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code52-Cinema-QA-Evidence
+          path: |
+            ${{ runner.temp }}/code52-critical/
+            ${{ runner.temp }}/code52-full-node/
+            ${{ runner.temp }}/code52-junit-totals.txt
+            ${{ runner.temp }}/code52-badging.txt
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/
+          retention-days: 14
+          if-no-files-found: warn

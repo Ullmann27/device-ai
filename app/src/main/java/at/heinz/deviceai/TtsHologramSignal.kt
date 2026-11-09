@@ -66,6 +66,14 @@ internal class TtsHologramSignal {
     @Synchronized fun measuredLevel(id: String, nowMillis: Long): Float? =
         if (utterance == id) readLevel(nowMillis) else null
 
+    /** Small jaw pre-cue from already-synthesized, not-yet-audible PCM metadata. */
+    @Synchronized fun prePhonatoryLevel(id: String, nowMillis: Long): Float {
+        if (utterance != id || !playing) return 0f
+        val current = readLevel(nowMillis) ?: return 0f
+        val future = readLevel(nowMillis + 75L) ?: return 0f
+        return if (current < .04f && future >= .18f) (future * .22f).coerceIn(0f, .12f) else 0f
+    }
+
     private fun readLevel(nowMillis: Long): Float? {
         if (!playing || sampleRate == 0 || points.isEmpty()) return null
         val frame = anchorFrame + (nowMillis - anchorMillis).coerceAtLeast(0) * sampleRate / 1_000

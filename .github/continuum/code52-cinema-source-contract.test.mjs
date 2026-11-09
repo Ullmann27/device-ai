@@ -1,0 +1,71 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const read=(path)=>fs.readFileSync(path,'utf8');
+const base='app/src/main/java/at/heinz/deviceai/';
+const core=read(base+'ui/HollywoodFuiConstruct.kt');
+const overlay=read(base+'ui/HollywoodFuiStageOverlay.kt');
+const cinema=read(base+'ui/HollywoodFuiCinematics.kt');
+const shell=read(base+'ui/JarvisShellRenderer.kt');
+const window=read(base+'ui/JarvisWorkWindow.kt');
+const host=read(base+'ui/JarvisWorkWindowHost.kt');
+const settings=read(base+'ui/JarvisCinematicSettings.kt');
+const agent=read(base+'AgentActivity.kt');
+const orb=read(base+'ContinuumHologramView.kt');
+
+test('original frame timeline and safe keep-out remain canonical',()=>{
+  for(const stamp of ['ANCHOR_END_MS = 140L','BRACKETS_END_MS = 320L','DATA_END_MS = 900L','CLOSE_END_MS = 420L'])
+    assert.ok(core.includes(stamp),stamp);
+  assert.match(core,/fun orientedTilt\(/);
+  assert.match(core,/fun arcLiftDp\(/);
+  assert.match(window,/HollywoodFuiConstruct\.orientedTilt\(/);
+  assert.match(window,/HollywoodFuiConstruct\.arcLiftDp\(/);
+  assert.match(overlay,/HollywoodFuiConstruct\.orientedTilt\(/);
+  assert.match(overlay,/HollywoodFuiConstruct\.arcLiftDp\(/);
+  assert.match(overlay,/protectedBounds\.forEach \{ canvas\.clipOutRect\(it\) \}/);
+});
+
+test('text-safe 0.09 raster never controls structural rim and scan',()=>{
+  const f=read(base+'ui/HollywoodFuiWorkActivity.kt');
+  assert.match(f,/SETTLED_RASTER_OPACITY = \.09f/);
+  assert.match(f,/fun structuralOpacity\(/);
+  assert.match(cinema,/val rimAlpha = HollywoodFuiWorkActivity\.structuralOpacity\(frame\.grid, frame\.closeFrame\)/);
+  assert.match(cinema,/val rasterAlpha = HollywoodFuiWorkActivity\.structuralOpacity\(innerRasterAlpha, frame\.closeFrame\)/);
+  assert.match(overlay,/innerRasterAlpha = raster/);
+  assert.doesNotMatch(overlay,/frame\.copy\(grid = raster/);
+});
+
+test('only an honest completed tool result may trigger a current-window pulse',()=>{
+  assert.match(host,/fun verifiedStep\(callId: String\): Boolean/);
+  assert.match(overlay,/fun verifiedStep\(key: String\): Boolean/);
+  assert.match(overlay,/lastPulseKey == key/);
+  assert.match(overlay,/pulseAtElapsedMs/);
+  assert.match(agent,/record\.status == ToolExecutionStatus\.SUCCEEDED && !record\.outcomeUncertain && !result\.replayed/);
+  assert.match(agent,/workWindowHost\.verifiedStep\(record\.callId\)/);
+});
+
+test('cinema uses the owner-controlled existing window and frame budget',()=>{
+  assert.match(settings,/DEPTH_EXPERIMENT_KEY = "exp-52-cine-depth"/);
+  assert.equal([...settings.matchAll(/EXP_\d\d_[A-Z_]+\("/g)].length,15);
+  assert.match(settings,/getBoolean\(DEPTH_EXPERIMENT_KEY, false\)/);
+  assert.match(shell,/JarvisTiles\.drawSurface\(/);
+  assert.match(shell,/PerimeterWingChoreographer\.depth/);
+  assert.match(read(base+'ui/JarvisShellView.kt'),/JarvisShellRenderer\.draw\(/);
+  assert.match(host,/shell\.spatialTiltX/);
+  assert.match(host,/shell\.spatialTiltY/);
+  assert.match(orb,/windowAccentArgb = workWindowAccentArgb/);
+});
+
+test('no fake external-send or new native frame timers introduced',()=>{
+  assert.match(agent,/Intent\.ACTION_SEND/);
+  assert.match(agent,/kein.*gesendet|nicht als gesendet bestätigt/i);
+  for(const file of [
+    'ui/HollywoodFuiStageOverlay.kt',
+    'ui/PerimeterWingChoreographer.kt',
+    'ui/SpatialPresenceAndLightBridge.kt',
+    'avatar3d/SpatialWindowLight.kt'
+  ]){
+    const source=read(base+file);
+    assert.doesNotMatch(source,/new Thread|ScheduledExecutor|setInterval|Timer\(/);
+  }
+});

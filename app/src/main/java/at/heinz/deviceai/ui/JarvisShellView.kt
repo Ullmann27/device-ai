@@ -28,6 +28,9 @@ class JarvisShellView(context: Context) : View(context) {
     var onFrameDrawn: (() -> Unit)? = null
     internal var motionBudgetProvider: (() -> JarvisRenderQuality.Budget)? = null
     private val motionFrames = linkedSetOf<(Long, Float) -> Boolean>()
+    private val spatialPresence = SpatialPresenceAndLightBridge(context) { invalidate() }
+    internal val spatialTiltX: Float get() = spatialPresence.tiltX
+    internal val spatialTiltY: Float get() = spatialPresence.tiltY
 
     /** Shares the existing draw clock. */
     fun observeMotionFrames(listener: (Long, Float) -> Boolean): AutoCloseable {
@@ -94,9 +97,18 @@ class JarvisShellView(context: Context) : View(context) {
     private var powerReceiverRegistered = false
 
     private fun refreshMotion() {
+        refreshSpatialPresence()
         removeCallbacks(ambientFrame)
         lastFrameStartNanos = 0L
         invalidate()
+    }
+
+    private fun refreshSpatialPresence() {
+        val enabled = JarvisCinematicSettings.experimentEnabled(context,
+            JarvisCinematicSettings.Experiment.EXP_01_Z_GLASS)
+        val capable = motionBudgetProvider?.invoke()?.animate == true
+        if (enabled && capable && workspaceFootprint != JarvisActionScenes.WorkspaceFootprint.CONVERSATION_IDLE &&
+            motionAllowed(animatorScale())) spatialPresence.start() else spatialPresence.stop()
     }
 
     internal fun refreshMotionPolicy() = refreshMotion()
@@ -118,6 +130,7 @@ class JarvisShellView(context: Context) : View(context) {
     }
 
     override fun onDetachedFromWindow() {
+        spatialPresence.stop()
         removeCallbacks(ambientFrame)
         if (motionObserverRegistered) {
             runCatching { context.contentResolver.unregisterContentObserver(motionObserver) }
@@ -166,6 +179,7 @@ class JarvisShellView(context: Context) : View(context) {
         if (workspaceFootprint == footprint) return
         workspaceFootprint = footprint
         deckFrameMs = -1L
+        refreshSpatialPresence()
         invalidate()
     }
 
@@ -221,8 +235,13 @@ class JarvisShellView(context: Context) : View(context) {
             missionClearance = JarvisDeckClearance.step(missionClearance, missionTarget, elapsed, animate)
         }
         deckFrameMs = now
+        val luxuryDepth = JarvisCinematicSettings.experimentEnabled(context,
+            JarvisCinematicSettings.Experiment.EXP_13_LUXURY)
+        val wings = JarvisCinematicSettings.experimentEnabled(context,
+            JarvisCinematicSettings.Experiment.EXP_05_WINGS)
         JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true,
-            deckClearance = deckClearance, missionClearance = missionClearance)
+            deckClearance = deckClearance, missionClearance = missionClearance,
+            luxuryDepth = luxuryDepth, depthBudget = motionBudgetProvider?.invoke(), enableWings = wings)
         canvas.restore()
         var workWindowMoving = false
         val effectiveScale = if (motionAllowed(scale)) scale else 0f

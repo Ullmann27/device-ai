@@ -8,6 +8,7 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
+import android.os.Build
 import android.view.HapticFeedbackConstants
 import android.view.View
 import at.heinz.deviceai.cockpit.StepState
@@ -28,6 +29,12 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val stage = RectF()
     private val source = RectF()
     private var protectedBounds = emptyList<RectF>()
+    internal var cinematicArcEnabled = false
+    internal var workPulseEnabled = false
+    internal var prismRimEnabled = false
+    private var lastPulseKey: String? = null
+    private var pulseAtElapsedMs = -1L
+    private var pulsePending = false
     internal var requestFrame: () -> Unit = {}
     internal var cinematicEffectsEnabled = true
         set(value) {
@@ -40,6 +47,9 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private val painter = AndroidContinuumPainter(context.assets)
     private val camera = Camera()
     private val cameraMatrix = Matrix()
+    private val prismRim by lazy {
+        if (Build.VERSION.SDK_INT >= 33) AgslHologramEdgePainter() else null
+    }
     private var cinematics = HollywoodFuiCinematics.Painterly(JarvisDesign.Colors.cyan)
     private var budget = HollywoodFuiCinematics.Budget.FULL
     private var originX = Float.NaN
@@ -52,6 +62,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     private var openness = 0f
     private var closingElapsedMs = -1L
     private var active = false
+    private var parallaxX = 0f
+    private var parallaxY = 0f
     private var reducedMotion = false
     private var bracketsLatched = false
     private var dataLatched = false
@@ -78,6 +90,9 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         originY = origin.centerY()
         moteSeed = scene.fuiProfile.ordinal
         elapsedMs = 0L
+        pulseAtElapsedMs = -1L
+        pulsePending = false
+        lastPulseKey = null
         openness = 0f
         closingElapsedMs = -1L
         anchorLatched = false
@@ -114,6 +129,24 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         invalidate()
     }
 
+    /** Decorative glass only; native text, focus and hitboxes never shift. */
+    fun setParallax(x: Float, y: Float) {
+        parallaxX = if (x.isFinite()) x.coerceIn(-1f, 1f) else 0f
+        parallaxY = if (y.isFinite()) y.coerceIn(-1f, 1f) else 0f
+    }
+
+    /** A verified, unique tool receipt; reuses the window's own frame clock. */
+    fun verifiedStep(key: String): Boolean {
+        if (!workPulseEnabled || !cinematicEffectsEnabled || key.isBlank() ||
+            lastPulseKey == key || closingElapsedMs >= 0L || !isShown) return false
+        if (pulsePending || (pulseAtElapsedMs >= 0L && elapsedMs - pulseAtElapsedMs in 0L..249L))
+            return false
+        lastPulseKey = key
+        pulsePending = true
+        requestFrame()
+        return true
+    }
+
     fun setWorkActive(value: Boolean) {
         if (active == value) return
         active = value
@@ -131,7 +164,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
     }
 
     /** Current frame cadence of the live (working) overlay in ms; 16 at full budget, longer when hot or saving power. */
-    fun liveFrameDelayMs(): Long = budget.frameDelayMs.coerceAtLeast(MIN_FRAME_DELAY_MS)
+    fun liveFrameDelayMs(): Long = maxOf(budget.frameDelayMs.coerceAtLeast(MIN_FRAME_DELAY_MS),
+        if (hasWindowFocus()) MIN_FRAME_DELAY_MS else 50L)
 
     fun setTelemetryText(value: String?) {
         val cleaned = value?.filterNot(Char::isISOControl)?.trim()?.take(64)?.ifEmpty { null }
@@ -148,20 +182,28 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
 
     fun close(immediate: Boolean) {
         active = false
+        pulsePending = false
+        pulseAtElapsedMs = -1L
         if (immediate) visibility = GONE
     }
 
     /** The native window supplies the only clock, including close and Android animator scale. */
     internal fun present(elapsed: Long, closing: Long, reduced: Boolean, open: Float): Boolean {
         elapsedMs = elapsed
+        if (pulsePending) {
+            pulseAtElapsedMs = if (workPulseEnabled && closing < 0L) elapsed else -1L
+            pulsePending = false
+        }
         closingElapsedMs = closing
         reducedMotion = reduced || !budget.animate
         openness = open
         if (!cinematicEffectsEnabled) return false
         if (!reducedMotion && closing < 0L) emitPhaseFeedback(elapsed)
         invalidate()
-        return budget.needsLiveFrames(active, reducedMotion,
-            isAttachedToWindow && isShown && windowVisibility == VISIBLE && hasWindowFocus(),
+        val pendingReceipt = workPulseEnabled && pulseAtElapsedMs >= 0L &&
+            elapsedMs - pulseAtElapsedMs in 0L..379L
+        return budget.needsLiveFrames(active || pendingReceipt, reducedMotion,
+            isAttachedToWindow && isShown && windowVisibility == VISIBLE,
             cinematicEffectsEnabled, closing >= 0L)
     }
 
@@ -188,24 +230,27 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         // The source is in screen space, never rotated with the arriving glass.
         cinematics.drawAnchor(painter, originX / density, originY / density, boxDp, frame, bloom)
         canvas.restore()
-        canvas.translate((source.left - stage.left) * (1f - openness), (source.top - stage.top) * (1f - openness))
+        canvas.translate((source.left - stage.left) * (1f - openness),
+            (source.top - stage.top) * (1f - openness) +
+                HollywoodFuiConstruct.arcLiftDp(openness, cinematicArcEnabled && !reducedMotion) * density)
         canvas.scale((source.width() + (stage.width() - source.width()) * openness) / stage.width(),
             (source.height() + (stage.height() - source.height()) * openness) / stage.height(), stage.left, stage.top)
-        val tilt = JarvisMotion.Depth.entranceTilt(openness, side, if (reducedMotion) 0f else 1f)
+        val tilt = HollywoodFuiConstruct.orientedTilt(frame.tiltDegrees, side, reducedMotion)
         if (tilt != 0f) {
             camera.save()
             camera.setLocation(0f, 0f, -JarvisMotion.Depth.CAMERA_DISTANCE_DP / 72f)
             camera.rotateY(tilt)
             camera.getMatrix(cameraMatrix)
             camera.restore()
-            cameraMatrix.preTranslate(-stage.left, -stage.top)
-            cameraMatrix.postTranslate(stage.left, stage.top)
+            cameraMatrix.preTranslate(-cx, -stage.centerY())
+            cameraMatrix.postTranslate(cx, stage.centerY())
             canvas.concat(cameraMatrix)
         }
 
         // Painter layers in dp: anchor + beam, glass depth sheets, grid/scan, rim energy and motes.
         canvas.save()
         canvas.scale(density, density)
+        if (!reducedMotion && active) canvas.translate(parallaxX * 5f, parallaxY * 3.5f)
         val radiusDp = 6f
         cinematics.drawGlassLayers(painter, boxDp, frame, radiusDp, budget.glassLayers)
         canvas.restore()
@@ -218,7 +263,8 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         val raster = HollywoodFuiWorkActivity.rasterOpacity(frame.grid, frame.data,
             active, !reducedMotion && budget.animate)
         cinematics.drawGridAndScan(painter, boxDp,
-            frame.copy(grid = raster, scanEnabled = frame.scanEnabled && !reducedMotion), bloom)
+            frame.copy(scanEnabled = frame.scanEnabled && !reducedMotion), bloom,
+            innerRasterAlpha = raster)
         canvas.restore()
         // The native accessible body takes over. Never keep a second text plane behind its labels.
         val dataAlpha = frame.data * (1f - frame.data) * frame.closeData
@@ -230,7 +276,15 @@ class HollywoodFuiStageOverlay(context: Context) : View(context) {
         cinematics.drawMotesAndEnergy(painter, boxDp, frame, elapsedMs,
             if (!reducedMotion && (active || !frame.settled)) budget.motes else 0,
             moteSeed, working = active && !reducedMotion, bloom = bloom, radius = radiusDp)
+        if (workPulseEnabled && pulseAtElapsedMs >= 0L && !reducedMotion) {
+            val pulseAge = elapsedMs - pulseAtElapsedMs
+            if (pulseAge in 0L..380L) cinematics.drawVerifiedStepPulse(painter, boxDp, frame,
+                pulseAge / 380f)
+        }
         cinematics.drawBrackets(painter, boxDp, frame.brackets * frame.closeFrame, bloom)
+        if (prismRimEnabled && bloom && frame.brackets * frame.closeFrame > .1f) {
+            prismRim?.draw(canvas, stage, frame.tiltDegrees, frame.pulse, density)
+        }
         canvas.restore()
 
         if (dataAlpha > 0f) drawTelemetry(canvas, constructed, dataAlpha)

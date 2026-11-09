@@ -63,7 +63,8 @@ object JarvisShellRenderer {
              elapsedMs: Long = Long.MAX_VALUE / 4, animatorScale: Float = 1f,
              tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L,
              deferForeground: Boolean = false, deckClearance: Float = 0f,
-             missionClearance: Float = deckClearance) {
+             missionClearance: Float = deckClearance, luxuryDepth: Boolean = false,
+             depthBudget: JarvisRenderQuality.Budget? = null, enableWings: Boolean = luxuryDepth) {
         background(p, shell.width, shell.height)
         val backdropHeight = shell[Slot.INPUT]?.bottom ?: shell[Slot.AVATAR]?.bottom ?: shell.height
         JarvisReferenceHud.backdrop(p, shell.width, backdropHeight)
@@ -74,6 +75,8 @@ object JarvisShellRenderer {
         val cards = cardSlots.map { shell[it]!! } + tileBoxes
         val cx = shell.width / 2f
         val ranks = JarvisMotion.centerFirstRanks(cards.map { it.centerX }, cx)
+        val orbX = shell.orbBounds?.centerX ?: shell.width * .70f
+        val orbY = shell.orbBounds?.centerY ?: shell.height * .30f
         shell[Slot.AVATAR]?.let { box ->
             val dy = 0f
             p.save(); p.translate(0f, dy)
@@ -98,13 +101,18 @@ object JarvisShellRenderer {
                 f.dy + depth.dy + JarvisDeckClearance.dy(clear))
             val k = f.scale * depth.scale * JarvisDeckClearance.scale(clear)
             p.scale(k, k, box.centerX, box.centerY())
-            val depthNative = false
+            val depthState = if (enableWings && depthBudget != null)
+                PerimeterWingChoreographer.depth(slot, box, shell.width, clear, true, depthBudget)
+                else JarvisMotion.Depth.FLAT
+            val depthNative = depthState != JarvisMotion.Depth.FLAT &&
+                glass?.beginDepth(box, depthState) == true
             val tile = if (slot == null) tiles.getOrNull(tileIndex) else null
             val ownsSurface = content[slot] != null &&
                 slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS)
             if (tile != null) {
                 JarvisTiles.drawSurface(p, box, tile, f.glow > .5f,
-                    if (animatorScale > 0f) timeMs else 0L)
+                    if (animatorScale > 0f) timeMs else 0L,
+                    luxuryDepth = luxuryDepth, lightSourceX = orbX, lightSourceY = orbY)
             } else if (!ownsSurface) {
                 val r = JarvisDesign.Metrics.radiusCard
                 // Static HUD panels do not need repeated full-screen backdrop-blur copies.

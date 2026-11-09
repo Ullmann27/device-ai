@@ -55,7 +55,8 @@ object JarvisTiles {
     }
 
     fun drawSurface(p: ContinuumPainter, b: Box, tile: JarvisTile, highlighted: Boolean,
-                    timeMs: Long = 0L) {
+                    timeMs: Long = 0L, luxuryDepth: Boolean = false,
+                    lightSourceX: Float = b.centerX, lightSourceY: Float = b.top) {
         val source = style(tile.target)
         val disabled = tile.controlState == JarvisControlState.DISABLED
         val st = if (disabled) source.copy(glow = JarvisDesign.Glow.OFF,
@@ -67,6 +68,15 @@ object JarvisTiles {
             active -> JarvisReferenceHud.Interaction.SELECTED
             tile.controlState == JarvisControlState.LOADING -> JarvisReferenceHud.Interaction.LOADING
             else -> JarvisReferenceHud.Interaction.NORMAL
+        }
+        if (luxuryDepth) {
+            LuxuryHoloButtonRenderer.draw(p, b, lightSourceX, lightSourceY, active,
+                disabled, tile.controlState == JarvisControlState.PRESSED)
+            if (tile.controlState == JarvisControlState.LOADING) {
+                p.drawText("…", b.right - 9f, b.top + 15f, JarvisDesign.Type.caption,
+                    Fill.Solid(Colors.cyanSoft), TextAlign.RIGHT)
+            }
+            return
         }
         JarvisReferenceHud.surface(p, b, st.radius, st.rim, st.rimEnd ?: st.rim,
             interaction, decorativeRibbons = true)

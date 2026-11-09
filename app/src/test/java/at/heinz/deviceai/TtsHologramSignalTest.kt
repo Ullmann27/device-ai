@@ -68,6 +68,21 @@ class TtsHologramSignalTest {
         assertEquals(0f,signal.level(2000),0f)
     }
 
+    @Test fun prePhonatoryJawOnlyTracksActuallyBufferedFutureSpeech() {
+        val signal = TtsHologramSignal()
+        signal.activate("A")
+        signal.begin("A", 8_000, 2, 1)
+        signal.append("A", ByteArray(1_600)) // 100ms silence
+        signal.append("A", ByteArray(1_600) { if (it % 2 == 0) 0 else 64 }) // next 100ms measured amplitude
+        assertEquals(0f, signal.prePhonatoryLevel("A", 1_050L), 0f)
+        signal.anchor("A", 0, 1_000L)
+        assertEquals(0f, signal.prePhonatoryLevel("old", 1_050L), 0f)
+        assertTrue(signal.prePhonatoryLevel("A", 1_050L) in .05f..0.12f)
+        assertEquals(0f, signal.prePhonatoryLevel("A", 1_150L), 0f)
+        signal.stop()
+        assertEquals(0f, signal.prePhonatoryLevel("A", 1_050L), 0f)
+    }
+
     @Test fun channelCountAndNewUtterancesDoNotReuseStaleAmplitude() {
         val signal = TtsHologramSignal()
         signal.activate("A")
