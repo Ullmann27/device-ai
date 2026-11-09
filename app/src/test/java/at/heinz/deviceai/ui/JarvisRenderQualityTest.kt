@@ -70,6 +70,23 @@ class JarvisRenderQualityTest {
         assertTrue("Inference need not disable every decorative frame", inference.animate)
     }
 
+    @Test fun explicitlyCoolInferencePreservesLightingWithoutDefeatingWarmThrottling() {
+        val cool = JarvisRenderQuality.resolve(true, false, 0, false, true)
+        val unknown = JarvisRenderQuality.resolve(true, false, null, false, true)
+        val warm = JarvisRenderQuality.resolve(true, false, 1, false, true)
+        val moderate = JarvisRenderQuality.resolve(true, false, 2, false, true)
+        assertEquals(JarvisRenderQuality.Tier.MEDIUM, cool.tier)
+        assertEquals(33L, cool.frameDelayMillis)
+        assertFalse(cool.reducedBloom)
+        assertEquals(32, cool.particleCount)
+        assertTrue(unknown.reducedBloom)
+        assertTrue(warm.reducedBloom)
+        assertTrue(moderate.reducedBloom)
+        assertEquals(80L, moderate.frameDelayMillis)
+        assertTrue(JarvisRenderQuality.resolve(true, true, 0, false, true).reducedBloom)
+        assertTrue(JarvisRenderQuality.resolve(true, false, 3, false, true).reducedBloom)
+    }
+
     @Test fun inferenceOnAWarmDeviceGetsTheSmallestAnimatedBudget() {
         val idleWarm = JarvisRenderQuality.resolve(true, false, 1, false, false)
         val inferringWarm = JarvisRenderQuality.resolve(true, false, 1, false, true)
