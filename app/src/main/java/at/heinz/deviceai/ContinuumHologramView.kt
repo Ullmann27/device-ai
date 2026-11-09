@@ -1031,7 +1031,9 @@ class ContinuumHologramView @JvmOverloads constructor(
                         windowAccentArgb = workWindowAccentArgb,
                         windowOpen = workWindowActive &&
                             at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(context,
-                                at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_06_FACE_LIGHT)
+                                at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_06_FACE_LIGHT),
+                        gazeBlinkEnabled = at.heinz.deviceai.ui.JarvisCinematicSettings.experimentEnabled(context,
+                            at.heinz.deviceai.ui.JarvisCinematicSettings.Experiment.EXP_09_FOCUS_BLINK)
                     )
                 }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
