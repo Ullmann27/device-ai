@@ -221,8 +221,11 @@ class JarvisShellView(context: Context) : View(context) {
             missionClearance = JarvisDeckClearance.step(missionClearance, missionTarget, elapsed, animate)
         }
         deckFrameMs = now
+        val luxuryDepth = JarvisCinematicSettings.enabled(context) &&
+            JarvisCinematicSettings.depthExperimentEnabled(context)
         JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, sceneTime, deferForeground = true,
-            deckClearance = deckClearance, missionClearance = missionClearance)
+            deckClearance = deckClearance, missionClearance = missionClearance,
+            luxuryDepth = luxuryDepth, depthBudget = motionBudgetProvider?.invoke())
         canvas.restore()
         var workWindowMoving = false
         val effectiveScale = if (motionAllowed(scale)) scale else 0f
