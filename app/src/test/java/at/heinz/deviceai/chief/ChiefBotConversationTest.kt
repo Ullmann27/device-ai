@@ -56,7 +56,7 @@ class ChiefBotConversationTest {
         try {
             team.initialize()
             team.configure("bot-atlas", listOf("bot-kora", "bot-lint"), 0)
-            team.submit("team-upgrade", "Review this public text.", 1, true)
+            team.submit("team-${java.util.UUID.randomUUID()}", "Review this public text.", 1, true)
             assertTrue(team.awaitIdle(10_000))
         } finally { team.close() }
         val reopened = ChiefBotTeam(store, port)
