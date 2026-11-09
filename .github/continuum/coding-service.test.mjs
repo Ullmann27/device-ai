@@ -154,6 +154,7 @@ test('selected owner CLI roles survive admission/restart and cannot change the a
   const value=args[4]==='get'?profiles.get(args[6])??null:{items:[...profiles.values()],nextAfterId:null};
   return {status:0,stdout:JSON.stringify(value),stderr:''};
  });
+
  syncBuiltinESMExports();t.after(()=>{t.mock.restoreAll();syncBuiltinESMExports();});
  const task={schema:'continuum-coding-task',version:1,id:'selected-owner-task',sourceCommit:git(f.project,'rev-parse','HEAD'),
   kind:'BUGFIX',goal:'Repair a synthetic offset function',allowedPaths:['lib/offset.mjs'],acceptance:['offset(2,3) is 5'],
@@ -219,4 +220,49 @@ test('selected owner CLI roles survive admission/restart and cannot change the a
   fs.writeFileSync(path.join(f.project,'lib','offset.mjs'),'export const offset=(a,b)=>a+b;\n');
   await assert.rejects(cli(['prepare',...args]),/SERVICE_SOURCE_DIRTY/);
  });
+});
+
+test('real persisted Kotlin profiles and fresh CLI processes retain the selected owner team',{
+ skip:process.env.CONTINUUM_SERVICE_PROFILE_HOST_PROOF!=='1'?'NOT_RUN: provide the compiled exact-source Kotlin profile bridge':false,
+ timeout:60000
+},t=>{
+ const f=fixture(t),classpath=process.env.GENESIS_HANDOFF_CLASSPATH;
+ assert.ok(classpath,'GENESIS_HANDOFF_CLASSPATH must identify actual compiled source and host runtime dependencies');
+ const run=(command,args,options={})=>{
+  const result=childProcess.spawnSync(command,args,{encoding:'utf8',shell:false,timeout:15000,maxBuffer:512*1024,...options});
+  assert.equal(result.status,0,result.stderr);return result.stdout.trim();
+ };
+ const source=fileURLToPath(new URL('../..',import.meta.url));
+ const cli=(...args)=>JSON.parse(run(process.execPath,[path.join(source,'scripts/continuum-coding-service.mjs'),...args]));
+ const seed=JSON.parse(run('java',['-Xmx128m','-cp',classpath,'at.heinz.deviceai.chief.HandoffHostChecks','seed',f.profiles]));
+ assert.equal(seed.count,20);
+ fs.mkdirSync(path.join(f.project,'lib'));
+ fs.writeFileSync(path.join(f.project,'lib','offset.mjs'),'export const offset=(a,b)=>a-b;\n');
+ for(const args of [['init','-q','-b','real-profile-fixture'],['add','.'],
+  ['-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','synthetic task only']])
+  run('git',args,{cwd:f.project});
+ const task={schema:'continuum-coding-task',version:1,id:'real-profile-task',
+  sourceCommit:run('git',['rev-parse','HEAD'],{cwd:f.project}),kind:'BUGFIX',
+  goal:'Synthetic bounded profile admission; do not execute a coding worker',allowedPaths:['lib/offset.mjs'],
+  acceptance:['offset(2,3) is 5'],chain:'node',limits:{maxModelCalls:1,maxContextChars:4096}};
+ const taskFile=path.join(f.root,'task.json');fs.writeFileSync(taskFile,JSON.stringify(task));
+ initializeCodingService({...f.args,profileClasspath:classpath});
+ const options=['--config',f.configPath,'--task',taskFile];
+ const participants={builderId:'bot-mira',verifierId:'bot-atlas',reporterId:'bot-mnemos'};
+ const selection=['--builder',participants.builderId,'--verifier',participants.verifierId,'--reporter',participants.reporterId];
+ const reviewed=cli('prepare',...options,...selection);
+ assert.deepEqual(reviewed.participants,participants);
+ const first=cli('submit',...options,...selection,'--approve',reviewed.reviewSha256);
+ assert.equal(first.executed,false);assert.equal(first.delivery,'PENDING');
+ const duplicate=cli('submit',...options,...selection,'--approve',reviewed.reviewSha256);
+ assert.equal(duplicate.duplicate,true);assert.equal(duplicate.canonicalTaskId,first.canonicalTaskId);
+ const tasks=cli('tasks','--config',f.configPath).items;assert.equal(tasks.length,1);
+ for(const [role,id] of Object.entries(participants))assert.equal(tasks[0][role],id);
+ assert.deepEqual(tasks[0].evidenceIds,[]);
+ const agents=cli('agents','--config',f.configPath,'--limit','20').items;assert.equal(agents.length,20);
+ assert.ok(agents.every(a=>a.state==='REGISTERED'&&a.modelActive===false&&a.verifiedCapabilities.length===0));
+ assert.equal(cli('cancel','--config',f.configPath,'--task-id',task.id).delivery,'RETIRED');
+ assert.equal(cli('tasks','--config',f.configPath).items[0].terminal,true);
+ assert.equal(cli('status','--config',f.configPath).state,'STOPPED');
+ assert.deepEqual(fs.readdirSync(path.join(f.state,'public-evidence')),[]);
 });

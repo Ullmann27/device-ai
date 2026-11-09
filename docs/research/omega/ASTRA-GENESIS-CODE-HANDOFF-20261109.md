@@ -112,6 +112,63 @@ integration, generalization, verified new skills or competence. This milestone
 can be reviewed independently of those research claims. Prior 3599 JVM checks
 apply to the unchanged Android source, not a new Android acceptance.
 
+## Exact-source expansion and real profile bridge
+
+Pushed implementation:
+https://github.com/Ullmann27/device-ai/commit/38ed5d7694c2ca2ba855a59801626b72357877b4
+
+An owned clean detached clone of that exact commit passed **351 tests, zero
+failures, eight explicit skips** across all 41 `ccc1-*`, `coding-*`,
+`harness-coding-*` and `isolated-*` Node test files. The eight skips require
+separately enabled historical Docker/SDK fixtures; they are not reported as PASS.
+
+The actual `HandoffHostChecks.kt` bridge compiled against the already compiled,
+unchanged Android main source and the required host `org.json:json:20240303`
+dependency. Its **10 existing JVM software contracts passed**. An initial
+attempt to substitute Android's older JSON API did not compile; the existing
+host dependency was restored instead of changing production code.
+
+Added an explicit opt-in integration case in `coding-service.test.mjs`:
+
+```bash
+CONTINUUM_SERVICE_PROFILE_HOST_PROOF=1 \
+GENESIS_HANDOFF_CLASSPATH=/absolute/compiled-bridge:/absolute/compiled-main:/absolute/kotlin-stdlib.jar:/absolute/json-20240303.jar \
+  node --test --test-concurrency=1 .github/continuum/coding-service.test.mjs
+```
+
+Run as non-root with private writable HOME and Java on PATH, from a clean source
+checkout. Compile the actual bridge using Kotlin2.2.21/JVM17 against compiled
+main and `json-20240303.jar` (artifact SHA256
+`3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed`).
+The main source tree is `a756cd70f768aa726fefb8d6e77aa4993540d066`, unchanged
+since the prior SDK-less main compilation. This remains host JVM, not Gradle.
+
+The enabled service suite initially passed **18/18** after separating the
+real-profile case from the mocked metadata test's scope. It seeds a new,
+temporary actual 20-profile Kotlin store and calls prepare/submit/duplicate/
+tasks/agents/cancel/status through fresh real CLI processes. It proves
+cross-process identity persistence and revocation without touching owner data.
+It NEVER starts the coding service/model or generates result evidence; runtime
+metadata is a configuration fixture and model files are deliberately absent.
+The default test run skips this case unless its actual JVM prerequisites are
+explicitly supplied.
+
+### Remaining Android wiring boundary
+
+`AgentActivity` sends only task JSON/SHA to `ContinuumMobileBuilderActivity`;
+`ContinuumTypedCodingBridge` admits only fixed prepare/run arguments.
+`ContinuumMobileBuildResultReceiver` persists expected/prepared task identity,
+consumes RUN consent and checks one-shot callbacks. All four surfaces need one
+joint reviewed selection contract, compatible persistence, stale-callback and
+STOP tests before Android can consume the new host participant selection.
+Copying `ChiefBotTeam` selection into a command argument alone would bypass
+that review binding, so no partial Android shortcut was introduced.
+
+Next experimental prerequisite remains an authorized, SHA-verified restoration
+of the approved GGUF and exact reviewed runtime on a reachable local host.
+Then connect real Kotlin/JUnit repair through CCC1, with a separate verifier,
+before any ten-task A/B/C evaluation or competence promotion.
+
 Tests for this checkpoint: real Docker, bubblewrap, fixed Kotlin/Node isolation
 and timeout cleanup PASS; model/canonical repair/evaluation NOT_RUN. This is provisioning evidence,
 not intelligence. New code changes will have separate exact-SHA test results.
