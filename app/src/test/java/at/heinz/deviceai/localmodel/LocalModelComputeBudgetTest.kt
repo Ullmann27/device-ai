@@ -33,6 +33,20 @@ class LocalModelComputeBudgetTest {
         assertEquals(1, LocalModelComputeBudget.inferenceThreads(2, 0, CoolingMode.COOL))
     }
 
+    @Test fun fold7UsesCoolDefaultButOtherDevicesRemainBalanced() {
+        assertEquals(CoolingMode.COOL, LocalModelComputeBudget.defaultMode("samsung", "SM-F966B"))
+        assertEquals(CoolingMode.COOL, LocalModelComputeBudget.defaultMode("SAMSUNG", "SM-F966U"))
+        assertEquals(CoolingMode.BALANCED, LocalModelComputeBudget.defaultMode("samsung", "SM-F956B"))
+        assertEquals(CoolingMode.BALANCED, LocalModelComputeBudget.defaultMode("other", "SM-F966B"))
+        assertEquals(CoolingMode.BALANCED, LocalModelComputeBudget.defaultMode(null, null))
+    }
+
+    @Test fun fold7CoolDefaultLimitsCpuWorkersEvenBeforeThermalWarning() {
+        val mode = LocalModelComputeBudget.defaultMode("samsung", "SM-F966B")
+        assertEquals(2, LocalModelComputeBudget.inferenceThreads(8, 0, mode))
+        assertEquals(2, LocalModelComputeBudget.inferenceThreads(8, null, mode))
+    }
+
     @Test fun preferenceParsingIsLenientAndDefaultsToBalanced() {
         assertEquals(CoolingMode.COOL, LocalModelComputeBudget.parseMode("cool"))
         assertEquals(CoolingMode.BALANCED, LocalModelComputeBudget.parseMode(null))

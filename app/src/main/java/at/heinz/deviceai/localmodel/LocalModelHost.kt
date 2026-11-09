@@ -47,9 +47,14 @@ object LocalModelHost {
     private fun thermalStatus(power: PowerManager?): Int? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) runCatching { power?.currentThermalStatus }.getOrNull() else null
 
-    fun coolingMode(context: Context): LocalModelComputeBudget.CoolingMode = LocalModelComputeBudget.parseMode(
-        context.applicationContext.getSharedPreferences(LocalModelComputeBudget.PREFERENCES, Context.MODE_PRIVATE)
-            .getString(LocalModelComputeBudget.KEY_COOLING_MODE, null))
+    fun coolingMode(context: Context): LocalModelComputeBudget.CoolingMode {
+        val saved = context.applicationContext
+            .getSharedPreferences(LocalModelComputeBudget.PREFERENCES, Context.MODE_PRIVATE)
+            .getString(LocalModelComputeBudget.KEY_COOLING_MODE, null)
+        return if (saved == null)
+            LocalModelComputeBudget.defaultMode(Build.MANUFACTURER, Build.MODEL)
+        else LocalModelComputeBudget.parseMode(saved)
+    }
 
     /** Owner preference; takes effect at the next model load (engine thread count is fixed per load). */
     fun setCoolingMode(context: Context, mode: LocalModelComputeBudget.CoolingMode) {

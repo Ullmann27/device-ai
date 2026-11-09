@@ -10127,7 +10127,8 @@ class AgentActivity : Activity() {
                 }
                 check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
                 if (ownerDialogueOutput && generation.proposal == null) AgentModelOutput.ownerDialogue(
-                    "litertlm:${imported.id}@${imported.version}", generation.response, generation.completion)
+                    "litertlm:${imported.id}@${imported.version}", generation.response, generation.completion,
+                    generation.failure)
                 else {
                     check(generation.completion == LocalGenerationCompletion.COMPLETE) { "LOCAL_GENERATION_INCOMPLETE" }
                     AgentModelOutput("litertlm:${imported.id}@${imported.version}", generation.response, generation.proposal)

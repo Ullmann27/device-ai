@@ -19,6 +19,12 @@ object LocalModelComputeBudget {
     /** PowerManager.THERMAL_STATUS_MODERATE. */
     const val MODERATE = 2
 
+    /** Fold7 defaults to two threads; explicit user preference always overrides it. */
+    fun defaultMode(manufacturer: String?, model: String?): CoolingMode =
+        if (manufacturer?.trim().equals("samsung", ignoreCase = true) &&
+            model?.trim()?.startsWith("SM-F966", ignoreCase = true) == true) CoolingMode.COOL
+        else CoolingMode.BALANCED
+
     fun inferenceThreads(availableProcessors: Int, thermalStatus: Int?, mode: CoolingMode): Int {
         val cores = availableProcessors.coerceAtLeast(1)
         val base = when (mode) {
