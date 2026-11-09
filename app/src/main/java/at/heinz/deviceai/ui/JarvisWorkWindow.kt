@@ -86,6 +86,7 @@ class JarvisWorkWindow(
     private val density = resources.displayMetrics.density
     private var lastAnimatorScale = 1f
     private var phaseTiltDegrees = HollywoodFuiConstruct.ENTRANCE_TILT_DEGREES
+    internal var cinematicArcEnabled = false
     internal var onCinematicFrame: ((Long, Long, Boolean, Float) -> Boolean)? = null
     internal var onPresentedCenter: ((Float, Float) -> Unit)? = null
     private val projectedCenter = FloatArray(2)
@@ -519,7 +520,8 @@ class JarvisWorkWindow(
             panel.rotationY = 0f
         } else {
             panel.translationX = origin.left + (destination.left - origin.left) * openness - params.leftMargin
-            panel.translationY = origin.top + (destination.top - origin.top) * openness - params.topMargin
+            panel.translationY = origin.top + (destination.top - origin.top) * openness - params.topMargin +
+                HollywoodFuiConstruct.arcLiftDp(openness, cinematicArcEnabled && lastAnimatorScale > 0f) * density
             panel.scaleX = (origin.width() + (destination.width() - origin.width()) * openness) / params.width
             panel.scaleY = (origin.height() + (destination.height() - origin.height()) * openness) / params.height
             // #643 C: the glass swings in around its vertical axis from the side it comes from and settles flat.
