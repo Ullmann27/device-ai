@@ -3552,6 +3552,9 @@ class AgentActivity : Activity() {
         val (id, status) = toolScene ?: return
         if (id != result.record.callId || !currentToolScene()) return
         val record = result.record
+        if (record.status == ToolExecutionStatus.SUCCEEDED && !record.outcomeUncertain && !result.replayed) {
+            workWindowHost.verifiedStep(record.callId)
+        }
         status.text = when {
             record.outcomeUncertain -> "Ausgang unklar · bereits gestartete Wirkungen prüfen."
             result.replayed -> "Bereits vorhandene Rückmeldung · keine neue Ausführung."
