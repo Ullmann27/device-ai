@@ -73,7 +73,7 @@ test('EXP11 orb glow is tied to a real accepted window with a bounded time cours
   assert.match(orb,/val firstWindowFrame = active && !workWindowActive/);
   assert.match(orb,/if \(firstWindowFrame\) workWindowPulseStartedAtMs = now/);
   assert.match(orb,/JarvisWindowOrbPulse\.energy\(nowMillis - workWindowPulseStartedAtMs\)/);
-  assert.match(orb,/windowPulseStartedAtMs = -1L/);
+  assert.match(orb,/workWindowPulseStartedAtMs = -1L/);
 });
 
 test('no fake external-send or new native frame timers introduced',()=>{
