@@ -4,7 +4,7 @@ Du arbeitest direkt am Repository `Ullmann27/device-ai`. Behandle das bestehende
 
 ## Rolle
 
-Handle als Principal Android Engineer, AI Agent Architect, Security Engineer und Product Designer. Ziel ist ein persönlicher Android-Assistent, der auf einem eigenen Samsung Fold läuft, natürlichsprachliche Aufträge versteht, bei Bedarf das Internet recherchiert, sichere lokale Geräteaktionen über Shizuku ausführt und später auch als Assistenzschicht für andere Apps wie Lumo wiederverwendet werden kann.
+Handle als Principal Android Engineer, AI Agent Architect, Security Engineer und Product Designer. Ziel ist ein persönlicher Android-Assistent, der auf einem eigenen Samsung Fold läuft, natürlichsprachliche Aufträge versteht, bei Bedarf das Internet recherchiert, sichere lokale Geräteaktionen über Shizuku ausführt und eigenständig ohne Kopplung an andere App-Projekte arbeitet.
 
 Arbeite autonom, aber zerstöre keine bestehende Funktionalität. Nach jeder größeren Änderung: kompilieren, Tests ausführen, Fehler beheben und den echten Android-Build verifizieren.
 
@@ -26,12 +26,12 @@ Arbeite autonom, aber zerstöre keine bestehende Funktionalität. Nach jeder gr�
 Der Nutzer soll frei formulieren können:
 
 - „Öffne WhatsApp.“
-- „Finde die neueste Lumo APK, installiere sie und starte Lumo.“
-- „Prüfe Lumo auf Fehler und erkläre mir, was wahrscheinlich kaputt ist.“
+- „Finde die neueste Continuum-APK, prüfe sie vor einem Update.“
+- „Prüfe Continuum auf Fehler und erkläre mir, was wahrscheinlich kaputt ist.“
 - „Suche im Internet nach der aktuellen Android-16-Shizuku-Problematik und vergleiche sie mit meinem Gerät.“
 - „Welche meiner Downloads brauchen am meisten Speicher?“
 - „Recherchiere die aktuelle Rechtslage zu Thema X und gib mir Quellen.“
-- „Schau nach, welche App-Version von Lumo installiert ist und ob eine neuere APK in Downloads liegt.“
+- „Prüfe die installierte Continuum-Version und das Update-Angebot.“
 - „Mach einen Screenshot, prüfe anschließend Logcat und erkläre mir den Fehler.“
 
 Die KI plant mehrstufig, ruft nur freigegebene Tools auf, verarbeitet deren Resultate und formuliert danach eine verständliche Antwort.
@@ -120,13 +120,14 @@ Empfohlener Default:
 
 Keinen Modellnamen tief im Android-Client fest verdrahten. Der Backend-Server entscheidet über Modell und Reasoning-Level.
 
-## Wiederverwendbarkeit für Lumo und andere Apps
+## Generische App-Bedienung ohne Projektkopplung
 
-Baue Device AI nicht fest auf Lumo zu.
+Device AI Continuum ist ein unabhängiges Produkt. Allgemeine Android-App-Aktionen
+dürfen über vom Nutzer freigegebene, systemkonforme Schnittstellen erfolgen.
+Dadurch entsteht keinerlei Entwicklungsabhängigkeit oder Datenaustausch mit
+anderen App-Projekten.
 
-Implementiere stattdessen ein App-Plugin-/Skill-Konzept:
-
-`AssistantSkill`
+Ein generischer `AssistantSkill`-Vertrag bleibt bei Bedarf erweiterbar:
 - id
 - displayName
 - description
@@ -134,15 +135,8 @@ Implementiere stattdessen ein App-Plugin-/Skill-Konzept:
 - toolDefinitions
 - promptExtension
 
-Beispiel `LumoSkill`:
-- installierte Lumo-Version lesen
-- Lumo starten/stoppen
-- Lumo-Logcat filtern
-- neueste Lumo-APK finden/installieren
-- Lumo-Diagnose durchführen
-- später Lerninhalte oder App-interne API-Endpunkte anbinden
-
-Dadurch kann dieselbe KI später auch andere eigene Apps bedienen.
+Kein app-spezifischer Sonderfall, kein automatisch eingeräumtes Tool-Recht,
+kein ungeprüfter Codeimport und keine projektexterne Freigabe.
 
 ## Conversation / Memory
 
