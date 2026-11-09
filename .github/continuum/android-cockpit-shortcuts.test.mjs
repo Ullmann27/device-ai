@@ -52,3 +52,17 @@ test('New conversation is reachable and labelled in both composer layouts',()=>{
   assert.match(composer,/if \(!stackedComposer\) inputRow\.addView\(newChat,/);
   assert.match(composer,/if \(stackedComposer\) \{\s*newChat\.text = "＋ Neue Sitzung"[\s\S]*?shell\.addView\(newChat, matchWidth\(top = 6\)\)/);
 });
+
+// Regression: a View cannot have two parents on compact Fold7 layouts.
+test('Fold7 stacked composer attaches the New Session view only once',()=>{
+  const startComposer=activity.indexOf('private fun buildComposer(): View');
+  const endComposer=activity.indexOf('private fun',startComposer+24);
+  const composer=activity.slice(startComposer,endComposer);
+  assert.ok(startComposer>=0&&endComposer>startComposer);
+  assert.equal((composer.match(/addView\(newChat,/g)||[]).length,2,
+    'the view must be added exactly once per exclusive layout branch');
+  assert.match(composer,/if \(!stackedComposer\) inputRow\.addView\(newChat,/);
+  assert.match(composer,/if \(stackedComposer\) \{\s*newChat\.text = "＋ Neue Sitzung"[\s\S]*?shell\.addView\(newChat,/);
+  const primary=composer.slice(composer.indexOf('val primary = LinearLayout(this)'));
+  assert.doesNotMatch(primary,/addView\(newChat,/);
+});

@@ -5256,7 +5256,6 @@ class AgentActivity : Activity() {
             val primary = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
-                addView(newChat, LinearLayout.LayoutParams(dp(48), dp(48)))
                 addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply { marginStart = dp(6) })
                 addView(camera, LinearLayout.LayoutParams(dp(48), dp(48)).apply { marginStart = dp(6) })
                 addView(View(this@AgentActivity), LinearLayout.LayoutParams(0, 1, 1f))

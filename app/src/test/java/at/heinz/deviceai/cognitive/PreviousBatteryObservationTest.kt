@@ -32,8 +32,12 @@ class PreviousBatteryObservationTest {
         assertTrue(OwnerPreviousBatteryIntent.isPreviousReadingRequest(previousQuestion))
         assertTrue(OwnerPreviousBatteryIntent.isPreviousReadingRequest("Wie hoch war mein Akku bei der letzten Messung?"))
         assertTrue(OwnerPreviousBatteryIntent.isPreviousReadingRequest("Akku bitte ohne erneute Abfrage nennen."))
+        assertTrue(OwnerPreviousBatteryIntent.isPreviousReadingRequest("Akku bitte nicht erneut messen."))
+        assertTrue(OwnerPreviousBatteryIntent.isPreviousReadingRequest("Wie viel Akku haben wir vorhin gemessen?"))
         for (q in listOf("Prüfe jetzt meinen Akku", "Wie viel Akku habe ich aktuell?",
-            "Zeige meinen Speicher", "Prüfe die Batterie und lade sie auf")) {
+            "Zeige meinen Speicher", "Prüfe die Batterie und lade sie auf",
+            "Prüf mal eben den Akku", "Check eben die Batterie",
+            "Kannst du den Akku nicht prüfen?", "Kannst du nicht den Akku prüfen?")) {
             assertFalse(q, OwnerPreviousBatteryIntent.isPreviousReadingRequest(q))
         }
         val decision = BootstrapBrain.decide(previousQuestion, emptyList())
