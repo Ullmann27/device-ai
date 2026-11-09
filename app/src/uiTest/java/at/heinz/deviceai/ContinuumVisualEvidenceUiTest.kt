@@ -168,7 +168,7 @@ class ContinuumVisualEvidenceUiTest {
         assertSame("Work area uses the original window", root, work.rootView)
         assertSame("Systemstatus must not create AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
         assertTrue("Opening has an intermediate scale", panel.scaleX > 0f && panel.scaleX < 1f)
-        assertTrue("Opening has visible content", panel.alpha > 0f && panel.alpha <= 1f)
+        assertEquals("Content stays hidden until the cinematic data phase", 0f, panel.alpha, .001f)
         assertProtectedRegions(work, head)
         assertTrue("Opening reaches the existing avatar gaze", avatarPose(head).gazeDirected)
         assertFalse("Directed glance is not camera tracking", avatarPose(head).gazeObserved)
